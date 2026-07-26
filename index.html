@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TheSmallBook — Skim Every Great Book in Minutes</title>
+  <meta name="description" content="TheSmallBook: every lesson from the world's best books — summarized chapter by chapter with real examples and action steps. Skim, understand, apply.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+      <meta property="og:title" content="TheSmallBook — Skim Every Great Book in Minutes">
+  <meta property="og:description" content="Every lesson from the world's best books — summarized chapter by chapter with real examples and action steps.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    // apply saved theme before paint (no flash)
+    try { if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark"); } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📕</text></svg>">
+</head>
+<body>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker__track">
+      <span>📕 EVERY LESSON. EVERY CHAPTER. <em>ZERO FLUFF.</em></span>
+      <span>⚡ SKIM A BOOK IN MINUTES, NOT WEEKS</span>
+      <span>🧠 REAL EXAMPLES + ACTION STEPS</span>
+      <span>🆕 NEW BOOKS ADDED EVERY WEEK</span>
+      <span>📕 EVERY LESSON. EVERY CHAPTER. <em>ZERO FLUFF.</em></span>
+      <span>⚡ SKIM A BOOK IN MINUTES, NOT WEEKS</span>
+      <span>🧠 REAL EXAMPLES + ACTION STEPS</span>
+      <span>🆕 NEW BOOKS ADDED EVERY WEEK</span>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a class="logo" href="index.html">
+      <span class="logo__mark">📕</span>
+      <span>The<span class="logo__small">Small</span>Book</span>
+    </a>
+    <div class="nav__links">
+      <a class="btn btn--yellow" href="#library">LIBRARY</a>
+      <a class="btn btn--red" href="stories.html">✍️ STORIES</a>
+      <button class="btn" id="randomBtn" title="Random book (R)">🎲</button>
+      <button class="btn btn--ink" data-theme-toggle title="Dark mode (D)">🌙</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <span class="deco deco--sq" style="top:12%; left:6%;"></span>
+    <span class="deco deco--circ" style="top:22%; right:8%;"></span>
+    <span class="deco deco--tri" style="bottom:18%; left:10%;"></span>
+    <span class="deco deco--star" style="bottom:24%; right:12%;">✦</span>
+    <span class="deco deco--sq" style="top:55%; right:4%; background:var(--green); animation-duration:13s;"></span>
+    <span class="deco deco--circ" style="top:60%; left:3%; background:var(--purple); animation-duration:7s;"></span>
+    <div class="hero__badge">📚 THE ANTI-LIBRARY LIBRARY</div>
+    <h1>
+      EVERY BOOK'S <span class="hl">LESSONS</span>.<br>
+      NONE OF THE <span class="hl hl--red">FLUFF</span>.
+    </h1>
+    <p class="hero__sub">
+      We broke down the world's greatest books — chapter by chapter — into
+      <strong>lessons, examples & action steps</strong>.
+      Skim it. Understand it. Apply it. No 300-page grind required.
+    </p>
+
+    <!-- SEARCH -->
+    <div class="searchwrap">
+      <div class="search">
+        <input id="searchInput" type="text" placeholder="SEARCH THE SHELF..." autocomplete="off">
+        <button type="button">FIND IT</button>
+      </div>
+      <div class="search__hint">⚡ IMPROVED SEARCH — TYPOS OK</div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat stat--yellow"><div class="stat__num" id="statBooks">0</div><div class="stat__label">Books</div></div>
+      <div class="stat stat--red"><div class="stat__num" id="statLessons">0</div><div class="stat__label">Lessons</div></div>
+      <div class="stat stat--blue"><div class="stat__num" id="statCats">0</div><div class="stat__label">Categories</div></div>
+      <div class="stat stat--green"><div class="stat__num" id="statMins">0</div><div class="stat__label">Total Mins</div></div>
+    </div>
+
+    <!-- GAMIFICATION -->
+    <div class="gamebar" id="gamebar"></div>
+  </header>
+
+  <!-- CONTINUE READING -->
+  <div class="continue" id="continue"></div>
+
+  <!-- LESSON OF THE DAY -->
+  <div class="lod" id="lod"></div>
+
+  <!-- LIBRARY -->
+  <div class="section-head" id="library">
+    <h2>📚 The Shelf</h2>
+    <div class="line"></div>
+  </div>
+
+  <div class="filters" id="filters"></div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <select id="sortSel" title="Sort books">
+      <option value="default">SORT: FEATURED</option>
+      <option value="az">A → Z</option>
+      <option value="shortest">SHORTEST READ</option>
+      <option value="lessons">MOST LESSONS</option>
+      <option value="newest">NEWEST BOOKS</option>
+      <option value="progress">MY PROGRESS</option>
+    </select>
+  </div>
+
+  <main class="grid" id="grid"></main>
+
+  <!-- COMMUNITY CTA -->
+  <section class="storyform" style="margin:0 auto 70px;">
+    <div class="storyform__box" style="background:var(--pink); text-align:center; align-items:center;">
+      <div style="font-family:var(--font-head); font-size:clamp(1.2rem,3vw,1.8rem); text-transform:uppercase;">✍️ Lived one of these lessons?</div>
+      <p style="font-weight:600; max-width:560px;">Turn it into a story. Type it or upload a PDF, add your own AI-generated cover, and publish it on the Community Shelf for everyone to read.</p>
+      <a class="btn btn--ink" href="stories.html" style="font-size:1rem; padding:14px 30px;">GO TO COMMUNITY STORIES →</a>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <div class="section-head" id="how">
+    <h2>⚙️ How It Works</h2>
+    <div class="line"></div>
+  </div>
+  <section class="how" style="margin-top:40px;">
+    <div class="how__step">
+      <div class="how__num">01</div>
+      <h3>Pick a Book</h3>
+      <p>Browse the shelf or search. Every card shows the read time, lesson count, and what the book is really about.</p>
+    </div>
+    <div class="how__step">
+      <div class="how__num">02</div>
+      <h3>Skim the Lessons</h3>
+      <p>Each chapter is distilled into a lesson with a real example straight from the book — stories, studies, and case histories included.</p>
+    </div>
+    <div class="how__step">
+      <div class="how__num">03</div>
+      <h3>Apply Today</h3>
+      <p>Every lesson ends with a "Do This" step, and every book ends with a 5-step action plan. Knowledge you actually use.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="head">📕 TheSmallBook</div>
+    <p>Big books. Small reads. All the lessons, examples and takeaways from the world's best books — no PDFs, no piracy, just pure distilled learning. Summaries are original educational analyses. Please support the authors by buying the full books.</p>
+    <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
+    <p class="tiny">BUILT WITH ❤️ · NEW BOOKS ADDED EVERY WEEK · OPEN SOURCE ON GITHUB</p>
+  </footer>
+
+  <script src="js/prefs.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
