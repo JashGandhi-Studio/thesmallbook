@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — TheSmallBook</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    try { if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark"); } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📕</text></svg>">
+</head>
+<body>
+  <nav class="nav">
+    <a class="logo" href="index.html">
+      <span class="logo__mark">📕</span>
+      <span>The<span class="logo__small">Small</span>Book</span>
+    </a>
+    <div class="nav__links">
+      <button class="btn btn--ink" data-theme-toggle>🌙</button>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <span class="deco deco--sq" style="top:15%; left:8%;"></span>
+    <span class="deco deco--circ" style="top:25%; right:10%;"></span>
+    <span class="deco deco--star" style="bottom:22%; right:15%;">✦</span>
+    <div class="hero__badge">🪦 ERROR 404</div>
+    <h1>SOMEONE <span class="hl hl--red">MOVED</span><br>THIS <span class="hl">PAGE'S CHEESE</span></h1>
+    <p class="hero__sub">The page you're looking for drifted into the maze. But hey — <strong>change happens</strong>. Sniff the air, scurry back, and find new cheese.</p>
+    <div style="margin-top:34px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <a class="btn btn--yellow" href="index.html" style="font-size:1rem; padding:14px 28px;">📚 BACK TO THE SHELF</a>
+      <a class="btn btn--red" href="stories.html" style="font-size:1rem; padding:14px 28px;">✍️ COMMUNITY STORIES</a>
+    </div>
+  </header>
+
+  <footer class="footer">
+    <div class="head">📕 TheSmallBook</div>
+    <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
+    <p class="tiny">EVEN OUR 404 TEACHES A BOOK LESSON</p>
+  </footer>
+
+  <script src="js/prefs.js"></script>
+</body>
+</html>

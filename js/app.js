@@ -1,0 +1,317 @@
+/* ============================================================
+   THESMALLBOOK — HOMEPAGE APP
+   Grid, fuzzy search, filters, sorting, bookmarks, progress,
+   continue-reading, lesson of the day, gamification, shortcuts.
+   ============================================================ */
+
+(function () {
+  const grid = document.getElementById("grid");
+  const searchInput = document.getElementById("searchInput");
+  const filterWrap = document.getElementById("filters");
+  const sortSel = document.getElementById("sortSel");
+  const statBooks = document.getElementById("statBooks");
+  const statLessons = document.getElementById("statLessons");
+  const statCats = document.getElementById("statCats");
+  const statMins = document.getElementById("statMins");
+
+  let activeCat = "ALL";
+  let query = "";
+  let sortMode = "default";
+
+  /* ---------- STATS ---------- */
+  const totalLessons = BOOKS.reduce((n, b) => n + b.lessons.length, 0);
+  const cats = [...new Set(BOOKS.map((b) => b.category))];
+  const totalMins = BOOKS.reduce((n, b) => n + parseInt(b.readTime), 0);
+
+  animateNum(statBooks, BOOKS.length);
+  animateNum(statLessons, totalLessons);
+  animateNum(statCats, cats.length);
+  animateNum(statMins, totalMins);
+
+  function animateNum(el, target) {
+    if (!el) return;
+    let cur = 0;
+    const step = Math.max(1, Math.ceil(target / 30));
+    const t = setInterval(() => {
+      cur += step;
+      if (cur >= target) { cur = target; clearInterval(t); }
+      el.textContent = cur;
+    }, 30);
+  }
+
+  /* ---------- FILTER CHIPS ---------- */
+  const allChip = makeChip("ALL", true);
+  filterWrap.appendChild(allChip);
+  const shelfChip = makeChip("❤️ MY SHELF");
+  filterWrap.appendChild(shelfChip);
+  cats.forEach((c) => filterWrap.appendChild(makeChip(c)));
+
+  function makeChip(label, active) {
+    const b = document.createElement("button");
+    b.className = "chip" + (active ? " active" : "");
+    b.textContent = label;
+    b.addEventListener("click", () => {
+      activeCat = label;
+      document.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
+      b.classList.add("active");
+      render();
+    });
+    return b;
+  }
+
+  /* ---------- SORT ---------- */
+  if (sortSel) {
+    sortSel.addEventListener("change", () => { sortMode = sortSel.value; render(); });
+  }
+
+  /* ---------- SEARCH (fuzzy) ---------- */
+  searchInput.addEventListener("input", (e) => {
+    query = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  function fuzzyMatch(text, q) {
+    text = text.toLowerCase();
+    if (text.includes(q)) return true;
+    return q.split(/\s+/).every((word) => {
+      if (text.includes(word)) return true;
+      if (word.length < 4) return false;
+      return text.split(/\s+/).some((t) => levenshtein(t, word) <= 1 || t.startsWith(word.slice(0, word.length - 1)));
+    });
+  }
+
+  function levenshtein(a, b) {
+    if (Math.abs(a.length - b.length) > 2) return 99;
+    const m = [];
+    for (let i = 0; i <= b.length; i++) m[i] = [i];
+    for (let j = 0; j <= a.length; j++) m[0][j] = j;
+    for (let i = 1; i <= b.length; i++)
+      for (let j = 1; j <= a.length; j++)
+        m[i][j] = b[i - 1] === a[j - 1]
+          ? m[i - 1][j - 1]
+          : Math.min(m[i - 1][j - 1] + 1, m[i][j - 1] + 1, m[i - 1][j] + 1);
+    return m[b.length][a.length];
+  }
+
+  /* ---------- RENDER ---------- */
+  function render() {
+    let results = BOOKS.filter((b) => {
+      let inCat;
+      if (activeCat === "ALL") inCat = true;
+      else if (activeCat === "❤️ MY SHELF") inCat = TSB.bookmarks.has(b.id);
+      else inCat = b.category === activeCat;
+      if (!inCat) return false;
+      if (!query) return true;
+      const hay = `${b.title} ${b.author} ${b.category} ${b.tagline}`;
+      return fuzzyMatch(hay, query);
+    });
+
+    results = sortBooks(results);
+    grid.innerHTML = "";
+
+    if (!results.length) {
+      const msg = activeCat === "❤️ MY SHELF" && !query
+        ? `<span>❤️</span>Your shelf is empty.<br>Tap the heart on any book to save it here!`
+        : `<span>📚</span>No books found.<br>Try another search — typos are OK!`;
+      grid.innerHTML = `<div class="empty">${msg}</div>`;
+      return;
+    }
+
+    results.forEach((b, i) => {
+      const read = TSB.progress.forBook(b.id).length;
+      const pct = Math.round((read / b.lessons.length) * 100);
+      const fav = TSB.bookmarks.has(b.id);
+      const a = document.createElement("a");
+      a.className = "card";
+      a.href = `book.html?id=${b.id}`;
+      a.style.animationDelay = `${Math.min(i, 10) * 50}ms`;
+      a.innerHTML = `
+        <div class="card__top">
+          <span class="card__cat">${b.category}</span>
+          <span class="card__time">⏱ ${b.readTime}</span>
+          <img class="card__cover" src="${b.cover}" alt="${b.title} cover" loading="lazy">
+          <button class="card__fav ${fav ? "on" : ""}" data-fav="${b.id}" aria-label="Bookmark">${fav ? "❤️" : "🤍"}</button>
+        </div>
+        ${pct > 0 ? `<div class="card__progress"><em>${pct === 100 ? "✓ DONE" : pct + "%"}</em><span style="width:${pct}%"></span></div>` : ""}
+        <div class="card__body">
+          <div class="card__title">${b.title}</div>
+          <div class="card__author">by ${b.author} · ${b.year}</div>
+          <div class="card__tag">${b.tagline}</div>
+          <div class="card__footer">
+            <span class="card__lessons">${read > 0 ? read + "/" : ""}${b.lessons.length} lessons</span>
+            <span class="card__go">READ IT →</span>
+          </div>
+        </div>`;
+      grid.appendChild(a);
+    });
+
+    // fav buttons
+    grid.querySelectorAll("[data-fav]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault(); e.stopPropagation();
+        const on = TSB.bookmarks.toggle(btn.dataset.fav);
+        btn.classList.toggle("on", on);
+        btn.textContent = on ? "❤️" : "🤍";
+        if (activeCat === "❤️ MY SHELF") render();
+      });
+    });
+  }
+
+  function sortBooks(list) {
+    const l = [...list];
+    switch (sortMode) {
+      case "az": return l.sort((a, b) => a.title.localeCompare(b.title));
+      case "shortest": return l.sort((a, b) => parseInt(a.readTime) - parseInt(b.readTime));
+      case "lessons": return l.sort((a, b) => b.lessons.length - a.lessons.length);
+      case "newest": return l.sort((a, b) => b.year - a.year);
+      case "progress": return l.sort((a, b) =>
+        TSB.progress.forBook(b.id).length / b.lessons.length - TSB.progress.forBook(a.id).length / a.lessons.length);
+      default: return l;
+    }
+  }
+
+  render();
+
+  /* ---------- RANDOM BOOK ---------- */
+  const randBtn = document.getElementById("randomBtn");
+  if (randBtn) {
+    randBtn.addEventListener("click", () => {
+      TSB.achv.award("explorer");
+      const b = BOOKS[Math.floor(Math.random() * BOOKS.length)];
+      location.href = `book.html?id=${b.id}`;
+    });
+  }
+
+  /* ---------- CONTINUE READING ---------- */
+  (function () {
+    const last = TSB.lastRead.get();
+    const wrap = document.getElementById("continue");
+    if (!wrap || !last) return;
+    const b = BOOKS.find((x) => x.id === last.id);
+    if (!b) return;
+    const read = TSB.progress.forBook(b.id).length;
+    if (read >= b.lessons.length) return;
+    wrap.innerHTML = `
+      <div class="continue__box">
+        <span style="font-size:1.6rem;">📖</span>
+        <div>
+          <div class="head">Continue Reading</div>
+          <div style="font-size:.8rem; font-weight:600;">${b.title} — ${read}/${b.lessons.length} lessons done</div>
+        </div>
+        <a class="btn btn--yellow" href="book.html?id=${b.id}">PICK UP WHERE I LEFT OFF →</a>
+      </div>`;
+  })();
+
+  /* ---------- LESSON OF THE DAY ---------- */
+  (function () {
+    const wrap = document.getElementById("lod");
+    if (!wrap) return;
+    // deterministic daily pick
+    const day = Math.floor(Date.now() / 864e5);
+    const flat = [];
+    BOOKS.forEach((b) => b.lessons.forEach((l, i) => flat.push({ b, l, i })));
+    const pick = flat[day % flat.length];
+    wrap.innerHTML = `
+      <div class="lod__box">
+        <div class="lod__label">💡 Lesson of the Day</div>
+        <img src="${pick.b.cover}" alt="${pick.b.title}">
+        <div>
+          <div class="lod__title">${pick.l.title}</div>
+          <div class="lod__meta">${pick.b.title} · ${pick.b.author}</div>
+        </div>
+        <a class="btn btn--red" href="book.html?id=${pick.b.id}#lesson-${pick.i}">READ IT →</a>
+      </div>`;
+  })();
+
+  /* ---------- GAMEBAR (streak + level + achievements) ---------- */
+  (function () {
+    const bar = document.getElementById("gamebar");
+    if (!bar) return;
+    function draw() {
+      const lvl = TSB.levelFor(TSB.progress.totalRead());
+      const streak = TSB.streak.count();
+      const achvCount = TSB.achv.list().length;
+      const achvTotal = Object.keys(TSB.achv.defs).length;
+      bar.innerHTML = `
+        <span class="gamebar__chip">🔥 <b>${streak}</b> day streak</span>
+        <span class="gamebar__chip">${lvl.icon} <b>${lvl.name}</b> · ${lvl.read} lessons</span>
+        <span class="gamebar__chip" id="achvOpen">🏆 <b>${achvCount}/${achvTotal}</b> badges</span>`;
+      document.getElementById("achvOpen").addEventListener("click", openAchvModal);
+    }
+    draw();
+  })();
+
+  function openAchvModal() {
+    let modal = document.getElementById("achvModal");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "achvModal";
+      modal.className = "modal";
+      document.body.appendChild(modal);
+    }
+    const unlocked = TSB.achv.list();
+    const lvl = TSB.levelFor(TSB.progress.totalRead());
+    const nextAt = lvl.next ? lvl.next.at : lvl.at;
+    const prevAt = lvl.at;
+    const pct = lvl.next ? Math.min(100, Math.round(((lvl.read - prevAt) / (nextAt - prevAt)) * 100)) : 100;
+    modal.innerHTML = `
+      <div class="modal__box">
+        <button class="modal__close">✕</button>
+        <div class="modal__title">🏆 Your Trophy Room</div>
+        <div class="levelbar">
+          <div class="levelbar__label">
+            <span>${lvl.icon} ${lvl.name}</span>
+            <span>${lvl.next ? lvl.next.icon + " " + lvl.next.name + " at " + lvl.next.at : "MAX LEVEL!"}</span>
+          </div>
+          <div class="levelbar__track"><div class="levelbar__fill" style="width:${pct}%"></div></div>
+        </div>
+        <div class="achvgrid">
+          ${Object.entries(TSB.achv.defs).map(([id, a]) => `
+            <div class="achvcard ${unlocked.includes(id) ? "" : "locked"}">
+              <div class="i">${a.icon}</div>
+              <div class="n">${a.name}</div>
+              <div class="d">${a.desc}</div>
+            </div>`).join("")}
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:20px; border-top:2px dashed var(--ink); padding-top:16px;">
+          <button class="btn btn--blue" id="backupBtn" style="font-size:.72rem;">⬇ BACKUP MY PROGRESS</button>
+          <button class="btn" id="restoreBtn" style="font-size:.72rem;">⬆ RESTORE FROM FILE</button>
+          <input type="file" id="restoreFile" accept="application/json" style="display:none;">
+        </div>
+        <p style="font-size:.7rem; font-weight:600; margin-top:8px; opacity:.7;">
+          Progress is saved automatically on this device. Use Backup to move your badges, streaks & progress to another phone or computer.
+        </p>
+      </div>`;
+    modal.classList.add("open");
+    modal.querySelector(".modal__close").addEventListener("click", () => modal.classList.remove("open"));
+    modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("open"); });
+    modal.querySelector("#backupBtn").addEventListener("click", () => TSB.backup.export());
+    const fileInput = modal.querySelector("#restoreFile");
+    modal.querySelector("#restoreBtn").addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", () => {
+      const f = fileInput.files[0];
+      if (!f) return;
+      TSB.backup.import(f, (ok) => {
+        if (ok) { alert("✅ Progress restored! Reloading..."); location.reload(); }
+        else alert("❌ That doesn't look like a TheSmallBook backup file.");
+      });
+    });
+  }
+  window.openAchvModal = openAchvModal;
+
+  /* ---------- KEYBOARD SHORTCUTS ---------- */
+  document.addEventListener("keydown", (e) => {
+    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") return;
+    if (e.key === "/") { e.preventDefault(); searchInput.focus(); }
+    if (e.key.toLowerCase() === "r" && randBtn) randBtn.click();
+    if (e.key.toLowerCase() === "d") TSB.theme.toggle();
+  });
+
+  /* ---------- SCROLL REVEAL ---------- */
+  const targets = document.querySelectorAll(".how__step, .section-head, .storyform__box, .stat, .lod__box");
+  targets.forEach((t) => t.classList.add("reveal"));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+  }, { threshold: 0.15 });
+  targets.forEach((t) => io.observe(t));
+})();

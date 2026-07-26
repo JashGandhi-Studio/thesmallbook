@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book — TheSmallBook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    // apply saved theme before paint (no flash)
+    try { if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark"); } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📕</text></svg>">
+</head>
+<body>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker__track">
+      <span>📕 EVERY LESSON. EVERY CHAPTER. <em>ZERO FLUFF.</em></span>
+      <span>⚡ SKIM A BOOK IN MINUTES, NOT WEEKS</span>
+      <span>🧠 REAL EXAMPLES + ACTION STEPS</span>
+      <span>🆕 NEW BOOKS ADDED EVERY WEEK</span>
+      <span>📕 EVERY LESSON. EVERY CHAPTER. <em>ZERO FLUFF.</em></span>
+      <span>⚡ SKIM A BOOK IN MINUTES, NOT WEEKS</span>
+      <span>🧠 REAL EXAMPLES + ACTION STEPS</span>
+      <span>🆕 NEW BOOKS ADDED EVERY WEEK</span>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a class="logo" href="index.html">
+      <span class="logo__mark">📕</span>
+      <span>The<span class="logo__small">Small</span>Book</span>
+    </a>
+    <div class="nav__links">
+      <a class="btn btn--yellow" href="index.html#library">← SHELF</a>
+      <a class="btn btn--red" href="stories.html">✍️ STORIES</a>
+      <button class="btn btn--ink" data-theme-toggle title="Dark mode (D)">🌙</button>
+    </div>
+  </nav>
+
+  <!-- ACTION BAR -->
+  <div class="actionbar" id="actionbar"></div>
+
+  <!-- BOOK HERO -->
+  <section class="bookhero">
+    <div class="bookhero__coverbox">
+      <img id="cover" src="" alt="Book cover">
+    </div>
+    <div class="bookhero__meta">
+      <span class="bookhero__cat" id="cat"></span>
+      <h1 id="title"></h1>
+      <div class="bookhero__author" id="author"></div>
+      <div class="bookhero__oneliner" id="oneliner"></div>
+      <div class="bookhero__badges" id="badges"></div>
+    </div>
+  </section>
+
+  <!-- BIG IDEA -->
+  <section class="bigidea">
+    <div class="bigidea__box">
+      <div class="bigidea__label">💡 The Big Idea</div>
+      <p id="bigidea"></p>
+    </div>
+  </section>
+
+  <!-- LESSONS -->
+  <div class="section-head" style="margin-top:60px;">
+    <h2>🧠 The Lessons</h2>
+    <div class="line"></div>
+  </div>
+  <section class="lessons" id="lessons"></section>
+
+  <!-- QUOTES -->
+  <div class="section-head">
+    <h2>💬 Lines That Hit</h2>
+    <div class="line"></div>
+  </div>
+  <section class="quotes" id="quotes" style="margin-top:40px;"></section>
+
+  <!-- ACTION PLAN -->
+  <div class="section-head">
+    <h2>⚡ Your 5-Step Plan</h2>
+    <div class="line"></div>
+  </div>
+  <section class="plan" style="margin-top:40px;">
+    <div class="plan__box">
+      <ol id="plan"></ol>
+    </div>
+  </section>
+
+  <!-- PREV / NEXT -->
+  <div class="booknav">
+    <a class="btn btn--blue" id="prevBook" href="#">←</a>
+    <a class="btn btn--red" id="nextBook" href="#">→</a>
+  </div>
+
+  <!-- RELATED -->
+  <div class="section-head">
+    <h2>📚 Read Next</h2>
+    <div class="line"></div>
+  </div>
+  <section class="related" id="related" style="margin-top:36px;"></section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="head">📕 TheSmallBook</div>
+    <p>Big books. Small reads. Summaries are original educational analyses — please support the authors by buying the full books.</p>
+    <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
+    <p class="tiny">BUILT WITH ❤️ · NEW BOOKS ADDED EVERY WEEK · OPEN SOURCE ON GITHUB</p>
+  </footer>
+
+  <script src="js/prefs.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/book.js"></script>
+</body>
+</html>
