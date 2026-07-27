@@ -59,10 +59,10 @@
   }
 
   /* ============================================================
-     SHARE CARD GENERATOR
-     Renders a branded 1080x1350 neo-brutalist card (canvas),
-     then shares it as an IMAGE via the native share sheet
-     (WhatsApp/IG ready) — falls back to download.
+     SHARE CARD GENERATOR v2 — STORY FORMAT (1080×1920)
+     • Uses the LIVE on-screen text — so cards come out in
+       whatever language the reader is using (Hindi, Hinglish...)
+     • WhatsApp-status / Instagram-story ready with full branding
      ============================================================ */
   const PALETTES = [
     { bg: "#ffc800", fg: "#111111" },
@@ -72,24 +72,64 @@
     { bg: "#ff8a3d", fg: "#111111" }
   ];
 
+  /* --- live (translated) text helpers --- */
+  function liveText(sel, fallback) {
+    const el = typeof sel === "string" ? document.querySelector(sel) : sel;
+    const t = el ? (el.innerText || el.textContent || "").replace(/\s+/g, " ").trim() : "";
+    return t || fallback || "";
+  }
+  function liveCallout(lessonIdx, cls) {
+    const el = document.querySelector(`#lesson-${lessonIdx} .${cls}`);
+    if (!el) return "";
+    const clone = el.cloneNode(true);
+    const tag = clone.querySelector("strong.tag");
+    if (tag) tag.remove();
+    return (clone.innerText || clone.textContent || "").replace(/\s+/g, " ").trim();
+  }
+  function liveLesson(i) {
+    return {
+      title: liveText(`#lesson-${i} .lesson__title`, book.lessons[i].title),
+      chapter: liveText(`#lesson-${i} .lesson__chapter`, book.lessons[i].chapter),
+      summary: liveText(`#lesson-${i} .lesson__body p`, book.lessons[i].summary),
+      example: liveCallout(i, "callout--example") || book.lessons[i].example,
+      action: liveCallout(i, "callout--action") || book.lessons[i].action
+    };
+  }
   function loadImage(src) {
     return new Promise((resolve) => {
       const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = () => resolve(null);
+      let done = false;
+      const finish = (v) => { if (!done) { done = true; resolve(v); } };
+      img.onload = () => finish(img);
+      img.onerror = () => finish(null);
+      // safety: never hang the card on a slow/stuck image
+      setTimeout(() => finish(null), 2500);
       img.src = src;
     });
   }
 
+  /* wrapText v2 — handles long words + scripts without spaces (中文, 日本語) */
   function wrapText(ctx, text, maxWidth) {
-    const words = text.split(" ");
     const lines = [];
     let line = "";
-    words.forEach((w) => {
-      if (ctx.measureText((line + " " + w).trim()).width > maxWidth && line) {
-        lines.push(line.trim()); line = w;
-      } else line += " " + w;
-    });
+    const pushWord = (w) => {
+      if (ctx.measureText((line + " " + w).trim()).width <= maxWidth) {
+        line = (line + " " + w).trim();
+        return;
+      }
+      if (line) { lines.push(line); line = ""; }
+      if (ctx.measureText(w).width <= maxWidth) { line = w; return; }
+      // word longer than the line (CJK / URLs): split by character
+      let chunk = "";
+      for (const ch of w) {
+        if (ctx.measureText(chunk + ch).width > maxWidth && chunk) {
+          lines.push(chunk); chunk = "";
+        }
+        chunk += ch;
+      }
+      line = chunk;
+    };
+    text.split(/\s+/).forEach(pushWord);
     if (line.trim()) lines.push(line.trim());
     return lines;
   }
@@ -101,184 +141,249 @@
   }
 
   function drawBrandBar(ctx, W, H) {
-    // black branding strip at the bottom
-    const barH = 130;
+    // black branding strip — clean, no URL (let them ask for the link 😉)
+    const barH = 200;
     ctx.fillStyle = "#111111";
     ctx.fillRect(0, H - barH, W, barH);
+    // yellow top edge accent
     ctx.fillStyle = "#ffc800";
-    ctx.font = "900 46px 'Archivo Black', Arial";
-    ctx.textAlign = "left";
-    ctx.fillText("📕 THESMALLBOOK", 60, H - barH + 62);
-    ctx.fillStyle = "#f2ede2";
-    ctx.font = "bold 26px 'Space Grotesk', Arial";
-    ctx.fillText("EVERY BOOK. EVERY LESSON. ZERO FLUFF.", 60, H - barH + 100);
-    // yellow accent square
-    ctx.fillStyle = "#ffc800";
-    ctx.fillRect(W - 130, H - barH + 30, 70, 70);
-    ctx.strokeStyle = "#f2ede2"; ctx.lineWidth = 5;
-    ctx.strokeRect(W - 130, H - barH + 30, 70, 70);
-    ctx.fillStyle = "#111";
-    ctx.font = "900 40px Arial";
+    ctx.fillRect(0, H - barH, W, 8);
+    // centered branding — bigger and bolder now that it owns the space
     ctx.textAlign = "center";
-    ctx.fillText("✦", W - 95, H - barH + 80);
+    ctx.fillStyle = "#ffc800";
+    ctx.font = "900 60px 'Archivo Black', Arial";
+    ctx.fillText("📕 THESMALLBOOK", W / 2, H - barH + 92);
+    ctx.fillStyle = "#f2ede2";
+    ctx.font = "bold 28px 'Space Grotesk', Arial";
+    ctx.fillText("100 BOOKS · 500+ LESSONS · FREE FOREVER", W / 2, H - barH + 140);
     ctx.textAlign = "left";
   }
 
   async function renderBookCard() {
-    const W = 1080, H = 1350;
+    // STORY FORMAT: 1080×1920 — full-bleed for WhatsApp status / IG stories
+    const W = 1080, H = 1920;
     const canvas = document.createElement("canvas");
     canvas.width = W; canvas.height = H;
     const ctx = canvas.getContext("2d");
     const pal = PALETTES[idx % PALETTES.length];
+
+    // live (translated) content
+    const tTitle = liveText("#title", book.title);
+    const tAuthor = liveText("#author", "by " + book.author);
+    const tOneliner = liveText("#oneliner", book.oneLiner);
+    const tCategory = liveText("#cat", book.category);
 
     // background
     ctx.fillStyle = "#f2ede2";
     ctx.fillRect(0, 0, W, H);
     drawDots(ctx, W, H);
 
-    // main tilted card
-    ctx.save();
-    ctx.translate(W / 2, 560);
-    ctx.rotate(-0.015);
-    const cw = W - 150, ch = 880;
+    // top ticker strip
     ctx.fillStyle = "#111";
-    ctx.fillRect(-cw / 2 + 16, -ch / 2 + 16, cw, ch); // hard shadow
+    ctx.fillRect(0, 0, W, 76);
+    ctx.fillStyle = "#ffc800";
+    ctx.font = "900 30px 'Archivo Black', Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("✦ MUST-READ BREAKDOWN ✦", W / 2, 50);
+
+    // category pill
+    ctx.font = "bold 26px 'Space Grotesk', Arial";
+    const catW = ctx.measureText(tCategory.toUpperCase()).width + 56;
+    ctx.fillStyle = "#111";
+    ctx.fillRect((W - catW) / 2, 120, catW, 54);
+    ctx.fillStyle = "#f2ede2";
+    ctx.fillText(tCategory.toUpperCase(), W / 2, 156);
+
+    // big tilted color card
+    ctx.save();
+    ctx.translate(W / 2, 900);
+    ctx.rotate(-0.012);
+    const cw = W - 130, ch = 1280;
+    ctx.fillStyle = "#111";
+    ctx.fillRect(-cw / 2 + 18, -ch / 2 + 18, cw, ch);
     ctx.fillStyle = pal.bg;
     ctx.fillRect(-cw / 2, -ch / 2, cw, ch);
-    ctx.lineWidth = 9; ctx.strokeStyle = "#111";
+    ctx.lineWidth = 10; ctx.strokeStyle = "#111";
     ctx.strokeRect(-cw / 2, -ch / 2, cw, ch);
     ctx.restore();
 
-    // cover image (tilted, bordered)
+    // cover image — large, centered
     const img = await loadImage(book.cover);
-    const covW = 300, covH = 430;
+    const covW = 380, covH = 545;
     ctx.save();
-    ctx.translate(W / 2, 330);
-    ctx.rotate(0.035);
+    ctx.translate(W / 2, 520);
+    ctx.rotate(0.03);
     ctx.fillStyle = "#111";
-    ctx.fillRect(-covW / 2 + 12, -covH / 2 + 12, covW, covH);
+    ctx.fillRect(-covW / 2 + 14, -covH / 2 + 14, covW, covH);
     if (img) {
       ctx.drawImage(img, -covW / 2, -covH / 2, covW, covH);
     } else {
       ctx.fillStyle = "#fffdf5";
       ctx.fillRect(-covW / 2, -covH / 2, covW, covH);
-      ctx.fillStyle = "#111"; ctx.font = "120px Arial"; ctx.textAlign = "center";
-      ctx.fillText("📕", 0, 40);
+      ctx.fillStyle = "#111"; ctx.font = "140px Arial"; ctx.textAlign = "center";
+      ctx.fillText("📕", 0, 50);
     }
-    ctx.lineWidth = 8; ctx.strokeStyle = "#111";
+    ctx.lineWidth = 9; ctx.strokeStyle = "#111";
     ctx.strokeRect(-covW / 2, -covH / 2, covW, covH);
     ctx.restore();
 
-    // title (max 2 lines, auto-shrink for long titles)
+    // title (auto-shrink)
     ctx.fillStyle = pal.fg;
     ctx.textAlign = "center";
-    let titleSize = book.title.length > 30 ? 50 : 64;
+    let titleSize = tTitle.length > 30 ? 58 : 72;
     ctx.font = `900 ${titleSize}px 'Archivo Black', Arial`;
-    let titleLines = wrapText(ctx, book.title.toUpperCase(), W - 320);
+    let titleLines = wrapText(ctx, tTitle.toUpperCase(), W - 300);
     if (titleLines.length > 2) {
-      titleSize = 42;
+      titleSize = 48;
       ctx.font = `900 ${titleSize}px 'Archivo Black', Arial`;
-      titleLines = wrapText(ctx, book.title.toUpperCase(), W - 300).slice(0, 3);
+      titleLines = wrapText(ctx, tTitle.toUpperCase(), W - 280).slice(0, 3);
     }
-    let y = 640;
-    titleLines.forEach((ln) => { ctx.fillText(ln, W / 2, y); y += titleSize + 12; });
+    let y = 900;
+    titleLines.forEach((ln) => { ctx.fillText(ln, W / 2, y); y += titleSize + 14; });
 
     // author
-    ctx.font = "bold 32px 'Space Grotesk', Arial";
-    ctx.fillText(("by " + book.author).toUpperCase(), W / 2, y + 4);
-    y += 58;
+    ctx.font = "bold 34px 'Space Grotesk', Arial";
+    ctx.fillText(tAuthor.toUpperCase(), W / 2, y + 8);
+    y += 76;
 
-    // one-liner (capped to remaining space above pills)
-    ctx.font = "600 31px 'Space Grotesk', Arial";
-    const olLines = wrapText(ctx, "\u201C" + book.oneLiner + "\u201D", W - 340);
-    const pillY = 1035;
-    const maxOl = Math.max(1, Math.floor((pillY - 40 - y) / 44));
+    // divider
+    ctx.fillRect(W / 2 - 90, y - 20, 180, 6);
+    y += 36;
+
+    // one-liner — big and readable
+    ctx.font = "600 38px 'Space Grotesk', Arial";
+    const olLines = wrapText(ctx, "\u201C" + tOneliner + "\u201D", W - 300);
+    const pillY = 1460;
+    const maxOl = Math.max(1, Math.floor((pillY - 50 - y) / 54));
     olLines.slice(0, maxOl).forEach((ln, i) => {
       const isLast = i === maxOl - 1 && olLines.length > maxOl;
       ctx.fillText(isLast ? ln + "..." : ln, W / 2, y);
-      y += 44;
+      y += 54;
     });
 
     // stats pills
     y = pillY;
-    const pills = [`⏱ ${book.readTime}`, `${book.lessons.length} LESSONS`, book.category.toUpperCase()];
-    ctx.font = "bold 26px 'Space Grotesk', Arial";
-    let totalW = 0;
-    const padX = 26, gap = 18;
+    const pills = [`⏱ ${book.readTime}`, `${book.lessons.length} LESSONS`];
+    ctx.font = "bold 30px 'Space Grotesk', Arial";
+    const padX = 30, gap = 20;
     const widths = pills.map((p) => ctx.measureText(p).width + padX * 2);
-    totalW = widths.reduce((a, b) => a + b, 0) + gap * (pills.length - 1);
+    const totalW = widths.reduce((a, b) => a + b, 0) + gap * (pills.length - 1);
     let px = (W - totalW) / 2;
     pills.forEach((p, i) => {
       ctx.fillStyle = "#fffdf5";
-      ctx.fillRect(px, y, widths[i], 54);
+      ctx.fillRect(px, y, widths[i], 62);
       ctx.strokeStyle = "#111"; ctx.lineWidth = 5;
-      ctx.strokeRect(px, y, widths[i], 54);
+      ctx.strokeRect(px, y, widths[i], 62);
       ctx.fillStyle = "#111";
-      ctx.fillText(p, px + widths[i] / 2, y + 37);
+      ctx.fillText(p, px + widths[i] / 2, y + 42);
       px += widths[i] + gap;
     });
+
+    // call to action
+    ctx.fillStyle = "#111";
+    ctx.font = "bold 30px 'Space Grotesk', Arial";
+    ctx.fillText("📖 READ THE FULL BREAKDOWN — FREE", W / 2, 1620);
 
     drawBrandBar(ctx, W, H);
     return canvas;
   }
 
   async function renderLessonCard(lessonIdx) {
-    const l = book.lessons[lessonIdx];
-    const W = 1080, H = 1350;
+    // STORY FORMAT: 1080×1920 — live translated lesson content
+    const l = liveLesson(lessonIdx);
+    const W = 1080, H = 1920;
     const canvas = document.createElement("canvas");
     canvas.width = W; canvas.height = H;
     const ctx = canvas.getContext("2d");
     const pal = PALETTES[lessonIdx % PALETTES.length];
+    const tTitle = liveText("#title", book.title);
 
     ctx.fillStyle = "#f2ede2";
     ctx.fillRect(0, 0, W, H);
     drawDots(ctx, W, H);
 
     // header tag
-    ctx.fillStyle = "#111";
-    ctx.fillRect(76, 86, 420, 60);
-    ctx.fillStyle = "#ffc800";
-    ctx.font = "900 30px 'Archivo Black', Arial";
     ctx.textAlign = "left";
-    ctx.fillText("🧠 LESSON " + String(lessonIdx + 1).padStart(2, "0"), 96, 128);
+    ctx.fillStyle = "#111";
+    ctx.fillRect(70, 70, 460, 70);
+    ctx.fillStyle = "#ffc800";
+    ctx.font = "900 34px 'Archivo Black', Arial";
+    ctx.fillText("🧠 LESSON " + String(lessonIdx + 1).padStart(2, "0"), 92, 118);
+
+    // small tilted book cover top-right — instant brand recognition
+    const covImg = await loadImage(book.cover);
+    ctx.save();
+    ctx.translate(W - 165, 125);
+    ctx.rotate(0.05);
+    const cvW = 130, cvH = 180;
+    ctx.fillStyle = "#111";
+    ctx.fillRect(-cvW / 2 + 8, -cvH / 2 + 8, cvW, cvH);
+    if (covImg) {
+      ctx.drawImage(covImg, -cvW / 2, -cvH / 2, cvW, cvH);
+    } else {
+      ctx.fillStyle = "#fffdf5";
+      ctx.fillRect(-cvW / 2, -cvH / 2, cvW, cvH);
+      ctx.fillStyle = "#111"; ctx.font = "60px Arial"; ctx.textAlign = "center";
+      ctx.fillText("📕", 0, 20);
+      ctx.textAlign = "left";
+    }
+    ctx.lineWidth = 6; ctx.strokeStyle = "#111";
+    ctx.strokeRect(-cvW / 2, -cvH / 2, cvW, cvH);
+    ctx.restore();
+    ctx.textAlign = "left";
 
     // main card
-    const pad = 70, top = 180, ch = 950;
+    const pad = 60, top = 190, chH = 1450;
     ctx.fillStyle = "#111";
-    ctx.fillRect(pad + 14, top + 14, W - pad * 2, ch);
+    ctx.fillRect(pad + 16, top + 16, W - pad * 2, chH);
     ctx.fillStyle = pal.bg;
-    ctx.fillRect(pad, top, W - pad * 2, ch);
-    ctx.lineWidth = 9; ctx.strokeStyle = "#111";
-    ctx.strokeRect(pad, top, W - pad * 2, ch);
+    ctx.fillRect(pad, top, W - pad * 2, chH);
+    ctx.lineWidth = 10; ctx.strokeStyle = "#111";
+    ctx.strokeRect(pad, top, W - pad * 2, chH);
+
+    const inner = W - pad * 2 - 120;
+    let y = top + 110;
 
     // lesson title
     ctx.fillStyle = pal.fg;
-    ctx.font = "900 54px 'Archivo Black', Arial";
-    let y = top + 110;
-    wrapText(ctx, l.title.toUpperCase(), W - pad * 2 - 120).slice(0, 4).forEach((ln) => {
-      ctx.fillText(ln, pad + 60, y); y += 64;
+    let tSize = l.title.length > 60 ? 46 : 56;
+    ctx.font = `900 ${tSize}px 'Archivo Black', Arial`;
+    wrapText(ctx, l.title.toUpperCase(), inner).slice(0, 4).forEach((ln) => {
+      ctx.fillText(ln, pad + 60, y); y += tSize + 12;
     });
-    y += 8;
+    y += 10;
 
     // divider
-    ctx.fillRect(pad + 60, y, W - pad * 2 - 120, 6);
-    y += 60;
+    ctx.fillRect(pad + 60, y, inner, 6);
+    y += 64;
 
-    // summary (trimmed)
-    ctx.font = "600 31px 'Space Grotesk', Arial";
-    let summary = l.summary;
-    const sumLines = wrapText(ctx, summary, W - pad * 2 - 120);
-    const maxLines = Math.floor((top + ch - 200 - y) / 44);
+    // summary — bigger text, more of it
+    ctx.font = "600 34px 'Space Grotesk', Arial";
+    const actionZone = 300; // reserved for the DO THIS box
+    const sumLines = wrapText(ctx, l.summary, inner);
+    const maxLines = Math.floor((top + chH - actionZone - y) / 50);
     sumLines.slice(0, maxLines).forEach((ln, i) => {
       const isLast = i === maxLines - 1 && sumLines.length > maxLines;
-      ctx.fillText(isLast ? ln.replace(/.{3}$/, "...") : ln, pad + 60, y);
-      y += 44;
+      ctx.fillText(isLast ? ln + "..." : ln, pad + 60, y);
+      y += 50;
     });
 
-    // book attribution inside card
-    y = top + ch - 90;
-    ctx.font = "bold 28px 'Space Grotesk', Arial";
-    ctx.fillText("— " + book.title.toUpperCase() + ", " + book.author, pad + 60, y);
+    // DO THIS box (live translated action)
+    const boxY = top + chH - 250;
+    ctx.fillStyle = "#111";
+    ctx.fillRect(pad + 46, boxY - 8, inner + 28, 200);
+    ctx.fillStyle = "#fffdf5";
+    ctx.fillRect(pad + 38, boxY - 16, inner + 28, 200);
+    ctx.lineWidth = 5; ctx.strokeStyle = "#111";
+    ctx.strokeRect(pad + 38, boxY - 16, inner + 28, 200);
+    ctx.fillStyle = "#111";
+    ctx.font = "900 26px 'Archivo Black', Arial";
+    const doLabel = liveText(`#lesson-${lessonIdx} .callout--action strong.tag`, "DO THIS").replace(/[⚡]/g, "").trim().toUpperCase() || "DO THIS";
+    ctx.fillText("⚡ " + doLabel, pad + 66, boxY + 24);
+    ctx.font = "600 28px 'Space Grotesk', Arial";
+    wrapText(ctx, l.action, inner - 30).slice(0, 3).forEach((ln, i) => {
+      ctx.fillText(ln, pad + 66, boxY + 68 + i * 40);
+    });
 
     drawBrandBar(ctx, W, H);
     return canvas;
@@ -330,10 +435,13 @@
   document.getElementById("bigidea").textContent = book.bigIdea;
 
   /* ============================================================
-     HIGH-QUALITY TEXT-TO-SPEECH
-     - picks the best available natural voice
-     - splits text into sentence chunks (no mid-text cutoffs)
-     - keep-alive workaround for Chrome's 15s speech bug
+     HIGH-QUALITY TEXT-TO-SPEECH v2 — LANGUAGE AWARE
+     • Speaks the LIVE on-screen text (translated if translated)
+     • Picks the best voice FOR THAT LANGUAGE (Hindi voice for
+       Hindi, Gujarati for Gujarati, etc.)
+     • Hinglish/Gujlish are Roman script — but they're Hindi/
+       Gujarati WORDS, so we speak the original script via the
+       matching Indian voice for natural pronunciation.
      ============================================================ */
   let VOICES = [];
   function refreshVoices() { VOICES = speechSynthesis ? speechSynthesis.getVoices() : []; }
@@ -342,24 +450,34 @@
     speechSynthesis.onvoiceschanged = refreshVoices;
   }
 
-  function bestVoice() {
-    const en = VOICES.filter((v) => v.lang && v.lang.toLowerCase().startsWith("en"));
-    if (!en.length) return null;
-    // preference order: premium/natural cloud voices first
-    const ranks = [
-      (v) => /natural|neural|premium|enhanced/i.test(v.name) ? 0 : 99,
-      (v) => /^Google (UK English Female|UK English Male|US English)/i.test(v.name) ? 1 : 99,
-      (v) => /Microsoft (Aria|Jenny|Guy|Sonia|Ryan|Libby)/i.test(v.name) ? 2 : 99,
-      (v) => /Samantha|Daniel|Karen|Moira|Tessa/i.test(v.name) ? 3 : 99,
-      (v) => !v.localService ? 4 : 99,
-      () => 5
-    ];
-    const score = (v) => Math.min(...ranks.map((r) => r(v)));
-    return en.sort((a, b) => score(a) - score(b))[0];
+  /* current reading language: what's actually on screen */
+  function currentSpeechLang() {
+    const saved = (window.TSB_LANG && TSB_LANG.get()) || "en";
+    if (saved === "en") return "en";
+    if (saved === "hi-Latn") return "hi";  // Hinglish = Hindi words
+    if (saved === "gu-Latn") return "gu";  // Gujlish = Gujarati words
+    return saved; // hi, gu, mr, ta, es, fr ... (zh-CN handled below)
   }
 
-  function splitIntoChunks(text, maxLen = 220) {
-    const sentences = text.match(/[^.!?]+[.!?]+["']?|\s*[^.!?]+$/g) || [text];
+  function bestVoice(langCode) {
+    const lc = (langCode || "en").toLowerCase().split("-")[0];
+    const forLang = VOICES.filter((v) => v.lang && v.lang.toLowerCase().split("-")[0] === lc);
+    const pool = forLang.length ? forLang : VOICES.filter((v) => v.lang && v.lang.toLowerCase().startsWith("en"));
+    if (!pool.length) return null;
+    const ranks = [
+      (v) => /natural|neural|premium|enhanced|wavenet/i.test(v.name) ? 0 : 99,
+      (v) => /^Google/i.test(v.name) ? 1 : 99,
+      (v) => /^Microsoft/i.test(v.name) ? 2 : 99,
+      (v) => !v.localService ? 3 : 99,
+      () => 4
+    ];
+    const score = (v) => Math.min(...ranks.map((r) => r(v)));
+    return pool.sort((a, b) => score(a) - score(b))[0];
+  }
+
+  /* punctuation set covers Devanagari danda + CJK stops */
+  function splitIntoChunks(text, maxLen = 200) {
+    const sentences = text.match(/[^.!?।॥。！？]+[.!?।॥。！？]+["']?|\s*[^.!?।॥。！？]+$/g) || [text];
     const chunks = [];
     let cur = "";
     sentences.forEach((s) => {
@@ -367,7 +485,7 @@
       else cur += s;
     });
     if (cur.trim()) chunks.push(cur.trim());
-    return chunks;
+    return chunks.filter(Boolean);
   }
 
   let speakingBtn = null;
@@ -386,7 +504,12 @@
   }
 
   function speakChunks(chunks, btn) {
-    const voice = bestVoice();
+    const lang = currentSpeechLang();
+    const voice = bestVoice(lang);
+    // no voice installed for this language? tell the user honestly
+    if (lang !== "en" && (!voice || voice.lang.toLowerCase().split("-")[0] !== lang.toLowerCase().split("-")[0])) {
+      toast("🔊 No " + lang.toUpperCase() + " voice on this device — using best available");
+    }
     speechQueue = [...chunks];
     function next() {
       if (!speechQueue.length || speakingBtn !== btn) {
@@ -395,14 +518,14 @@
       }
       const u = new SpeechSynthesisUtterance(speechQueue.shift());
       if (voice) u.voice = voice;
-      u.rate = 0.97;    // slightly slower = clearer
+      u.lang = voice ? voice.lang : (lang === "zh-CN" ? "zh-CN" : lang);
+      u.rate = 0.95;    // clear pace for every language
       u.pitch = 1.0;
       u.volume = 1.0;
       u.onend = next;
       u.onerror = () => stopSpeech();
       speechSynthesis.speak(u);
     }
-    // Chrome pauses long speech after ~15s — keep it alive
     keepAlive = setInterval(() => {
       if (speechSynthesis.speaking && !speechSynthesis.paused) {
         speechSynthesis.pause();
@@ -459,14 +582,16 @@
     });
   });
 
-  /* listen buttons */
+  /* listen buttons — speak the LIVE (translated) lesson text */
   lessonsWrap.querySelectorAll("[data-listen]").forEach((btn) => {
+    btn.setAttribute("translate", "no");
     btn.addEventListener("click", () => {
       if (!("speechSynthesis" in window)) { toast("🔇 Speech not supported on this browser"); return; }
       if (speakingBtn === btn) { stopSpeech(); return; }
       stopSpeech();
-      const l = book.lessons[+btn.dataset.listen];
-      const text = `${l.title}. ${l.summary} Here's an example from the book. ${l.example} And here's what to do. ${l.action}`;
+      const i = +btn.dataset.listen;
+      const l = liveLesson(i); // live = translated when page is translated
+      const text = `${l.title}. ${l.summary} ${l.example} ${l.action}`;
       speakingBtn = btn;
       btn.classList.add("speaking");
       btn.textContent = "⏹ STOP";
@@ -514,48 +639,78 @@
     btn.className = "quote__share";
     btn.title = "Share as image card";
     btn.textContent = "🎴";
+    btn.setAttribute("translate", "no");
     btn.addEventListener("click", async () => {
       toast("🎨 Creating your quote card...");
-      const canvas = await renderQuoteCard(q, qidx);
+      // LIVE text — translated if the page is translated
+      const liveQ = liveText(d, q).replace(/🎴/g, "").trim();
+      const canvas = await renderQuoteCard(liveQ, qidx);
       shareCanvas(canvas, `thesmallbook-${book.id}-quote-${qidx + 1}.png`,
-        `💬 From ${book.title} — on TheSmallBook`);
+        `💬 From ${liveText("#title", book.title)} — on TheSmallBook`);
     });
     d.appendChild(btn);
     quotesWrap.appendChild(d);
   });
 
   async function renderQuoteCard(quote, qidx) {
-    const W = 1080, H = 1080;
+    // STORY FORMAT: 1080×1920 — full-bleed quote for status/stories
+    const W = 1080, H = 1920;
     const canvas = document.createElement("canvas");
     canvas.width = W; canvas.height = H;
     const ctx = canvas.getContext("2d");
     const pal = PALETTES[qidx % PALETTES.length];
+    const tTitle = liveText("#title", book.title);
 
-    ctx.fillStyle = "#f2ede2";
-    ctx.fillRect(0, 0, W, H);
-    drawDots(ctx, W, H);
-
-    const pad = 90;
-    ctx.fillStyle = "#111";
-    ctx.fillRect(pad + 16, pad + 16, W - pad * 2, H - pad * 2 - 60);
+    // full-color background for maximum status impact
     ctx.fillStyle = pal.bg;
-    ctx.fillRect(pad, pad, W - pad * 2, H - pad * 2 - 60);
-    ctx.lineWidth = 9; ctx.strokeStyle = "#111";
-    ctx.strokeRect(pad, pad, W - pad * 2, H - pad * 2 - 60);
+    ctx.fillRect(0, 0, W, H);
+    // subtle dots in the fg color
+    ctx.fillStyle = pal.fg === "#ffffff" ? "rgba(255,255,255,.12)" : "rgba(17,17,17,.08)";
+    for (let x = 22; x < W; x += 46)
+      for (let y = 22; y < H; y += 46) { ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); }
 
-    ctx.fillStyle = pal.fg;
+    // top strip
+    ctx.fillStyle = "#111";
+    ctx.fillRect(0, 0, W, 76);
+    ctx.fillStyle = "#ffc800";
+    ctx.font = "900 30px 'Archivo Black', Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("✦ WORDS THAT HIT ✦", W / 2, 50);
     ctx.textAlign = "left";
-    ctx.font = "900 170px Georgia";
-    ctx.fillText("\u201C", pad + 50, pad + 200);
 
-    ctx.font = "bold 52px 'Space Grotesk', Arial";
-    const lines = wrapText(ctx, quote, W - pad * 2 - 140);
-    const startY = (H - 60) / 2 - (lines.length * 66) / 2 + 60;
-    lines.forEach((ln, i) => ctx.fillText(ln, pad + 70, startY + i * 66));
+    // giant quote mark
+    ctx.fillStyle = pal.fg;
+    ctx.font = "900 300px Georgia";
+    ctx.fillText("\u201C", 80, 460);
 
-    ctx.fillRect(pad + 70, H - pad - 210, W - pad * 2 - 140, 5);
-    ctx.font = "bold 33px 'Space Grotesk', Arial";
-    ctx.fillText(`${book.title.toUpperCase()} — ${book.author.toUpperCase()}`, pad + 70, H - pad - 150);
+    // quote text — auto-size: bigger for short quotes
+    let qSize = quote.length < 90 ? 72 : quote.length < 180 ? 58 : 46;
+    ctx.font = `bold ${qSize}px 'Space Grotesk', Arial`;
+    let lines = wrapText(ctx, quote, W - 220);
+    // shrink if overflowing the space
+    while (lines.length * (qSize + 16) > 900 && qSize > 34) {
+      qSize -= 6;
+      ctx.font = `bold ${qSize}px 'Space Grotesk', Arial`;
+      lines = wrapText(ctx, quote, W - 220);
+    }
+    const blockH = lines.length * (qSize + 16);
+    let y = 520 + Math.max(0, (900 - blockH) / 2);
+    lines.forEach((ln) => { ctx.fillText(ln, 110, y); y += qSize + 16; });
+
+    // attribution box
+    y = Math.min(y + 60, 1580);
+    ctx.fillStyle = "#111";
+    ctx.fillRect(110, y - 8, W - 220, 110);
+    ctx.fillStyle = "#fffdf5";
+    ctx.fillRect(98, y - 20, W - 220, 110);
+    ctx.lineWidth = 5; ctx.strokeStyle = "#111";
+    ctx.strokeRect(98, y - 20, W - 220, 110);
+    ctx.fillStyle = "#111";
+    ctx.font = "900 30px 'Archivo Black', Arial";
+    const attr = wrapText(ctx, tTitle.toUpperCase(), W - 300)[0] || "";
+    ctx.fillText(attr, 126, y + 22);
+    ctx.font = "bold 26px 'Space Grotesk', Arial";
+    ctx.fillText("— " + book.author.toUpperCase(), 126, y + 62);
 
     drawBrandBar(ctx, W, H);
     return canvas;
