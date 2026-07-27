@@ -41,7 +41,8 @@
     <div class="nav__links">
       <a class="btn btn--yellow" href="index.html#library">← SHELF</a>
       <a class="btn btn--red" href="stories.html">✍️ STORIES</a>
-      <button class="btn btn--ink" data-theme-toggle title="Dark mode (D)">🌙</button>
+      <button class="btn btn--icon" data-lang-btn title="Change language" aria-label="Language">🌐</button>
+      <button class="btn btn--ink btn--icon" data-theme-toggle title="Dark mode (D)" aria-label="Dark mode">🌙</button>
     </div>
   </nav>
 
@@ -112,11 +113,14 @@
   <footer class="footer">
     <div class="head">📕 TheSmallBook</div>
     <p>Big books. Small reads. Summaries are original educational analyses — please support the authors by buying the full books.</p>
+    <div class="supportbar" data-supportbar style="margin-bottom:14px;"></div>
     <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
     <p class="tiny">BUILT WITH ❤️ · NEW BOOKS ADDED EVERY WEEK · OPEN SOURCE ON GITHUB</p>
   </footer>
 
   <script src="js/prefs.js"></script>
+  <script src="js/support.js"></script>
+  <script src="js/lang.js"></script>
   <script src="js/data.js"></script>
   <script src="js/book.js"></script>
 </body>

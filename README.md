@@ -1,5 +1,7 @@
 # 📕 TheSmallBook
 
+**Live repo:** [github.com/JashGandhi-Studio/thesmallbook](https://github.com/JashGandhi-Studio/thesmallbook) — ⭐ star it if the lessons helped you!
+
 **Big books. Small reads.** Every lesson from the world's greatest books — broken down chapter by chapter with real examples, killer quotes, and action steps. Skim it, understand it, apply it. No 300-page grind.
 
 > 🎨 Design language: **Neo-Brutalism** — thick black borders, hard offset shadows, loud colors, zero subtlety.
@@ -7,7 +9,7 @@
 ## ✨ Features
 
 ### 📚 Library
-- **69 books, 400+ lessons** with covers, read time & lesson count
+- **100 books, 530+ lessons** with covers, read time & lesson count
 - **Fuzzy search** (typos OK), **category filters**, **sorting** (A-Z, shortest, newest, progress...)
 - **My Shelf** — bookmark books with the ❤️ button
 - **Lesson of the Day** — rotates daily, no backend needed
@@ -118,6 +120,18 @@ thesmallbook/
 ├── js/story.js         # Story reader logic
 └── assets/covers/      # Book cover images
 ```
+
+## 🌐 Universal Language Support
+
+The entire app — all 100 books, every lesson — translates into **26 languages** via the 🌐 button: Hindi, Gujarati, Marathi, Bengali, Tamil, Telugu, Kannada, Malayalam, Punjabi, Urdu, Odia, Spanish, French, German, Chinese, Japanese, Arabic, and more. Plus two **exclusive modes** found nowhere else:
+- **Hinglish** — Hindi transliterated to English letters ("tum kya kar rahe ho" style) for readers who speak Hindi but read Roman script best
+- **Gujlish** — the same for Gujarati ("tame shu karo cho")
+
+Built on Google Translate's page engine + our own transliteration engine (`js/lang.js`). Choice is remembered across visits. Requires internet for translation.
+
+## 🍕 Support
+
+Love the project? Hit **Fuel the Library** on the site (UPI) — supporters get early access to new books & features, priority book requests, and exclusive cheat-sheet packs.
 
 ## 👤 Credits
 
