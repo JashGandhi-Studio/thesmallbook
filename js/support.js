@@ -35,7 +35,7 @@
         <button class="modal__close">✕</button>
         <div class="modal__title">🍕 Fuel the Library</div>
         <p style="font-weight:600; margin-bottom:6px;">
-          Reading 80 books so you don't have to burns a <em>lot</em> of chai. ☕
+          Reading 100+ books so you don't have to burns a <em>lot</em> of chai. ☕
           If TheSmallBook saved you from a 300-page grind, toss a coin to your summarizer!
         </p>
         <div class="support__perks">

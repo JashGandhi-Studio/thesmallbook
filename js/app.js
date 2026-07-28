@@ -315,3 +315,27 @@
   }, { threshold: 0.15 });
   targets.forEach((t) => io.observe(t));
 })();
+
+/* ============================================================
+   💀 GRAVEYARD TRANSITION — click the banner, descend in style
+   ============================================================ */
+(function () {
+  const banner = document.querySelector(".gravebanner__box");
+  if (!banner) return;
+  banner.addEventListener("click", (e) => {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return; // straight nav
+    e.preventDefault();
+    let ov = document.getElementById("graveTransition");
+    if (!ov) {
+      ov = document.createElement("div");
+      ov.id = "graveTransition";
+      ov.className = "grave-transition";
+      ov.innerHTML = '<div class="grave-transition__skull">💀</div>' +
+        '<div class="grave-transition__text">Entering the Graveyard</div>' +
+        '<div class="grave-transition__sub">they paid full price · your lesson is free</div>';
+      document.body.appendChild(ov);
+    }
+    requestAnimationFrame(() => ov.classList.add("on"));
+    setTimeout(() => { location.href = banner.href; }, 950);
+  });
+})();

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💀 The Graveyard — TheSmallBook</title>
+  <meta name="description" content="196 legendary real-world failures — bankruptcies, frauds, ego trips, and empires lost. Learn what NOT to do.">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    try { if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark"); } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💀</text></svg>">
+</head>
+<body class="graveyard-page">
+
+  <!-- TICKER -->
+  <div class="ticker ticker--grave">
+    <div class="ticker__track">
+      <span>💀 LEARN FROM THOSE WHO PAID FULL PRICE</span>
+      <span>📉 196 LEGENDARY FAILURES, AUTOPSIED</span>
+      <span>🧠 THE LESSON IS FREE — THEY PAID BILLIONS</span>
+      <span>⚰️ EGO · FRAUD · GREED · HUBRIS</span>
+      <span>💀 LEARN FROM THOSE WHO PAID FULL PRICE</span>
+      <span>📉 196 LEGENDARY FAILURES, AUTOPSIED</span>
+      <span>🧠 THE LESSON IS FREE — THEY PAID BILLIONS</span>
+      <span>⚰️ EGO · FRAUD · GREED · HUBRIS</span>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a class="logo" href="index.html">
+      <span class="logo__mark">📕</span>
+      <span>The<span class="logo__small">Small</span>Book</span>
+    </a>
+    <div class="nav__links">
+      <a class="btn btn--yellow" href="index.html#library">📚 LIBRARY</a>
+      <button class="btn btn--icon" data-lang-btn title="Change language" aria-label="Language">🌐</button>
+      <button class="btn btn--ink btn--icon" data-theme-toggle title="Dark mode (D)" aria-label="Dark mode">🌙</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero hero--grave">
+    <span class="deco deco--sq" style="top:14%; left:6%; background:var(--red);"></span>
+    <span class="deco deco--circ" style="top:24%; right:8%; background:var(--purple);"></span>
+    <span class="deco deco--star" style="bottom:22%; right:13%;">☠️</span>
+    <div class="hero__badge hero__badge--grave">⚰️ REST IN PIECES</div>
+    <h1>THE <span class="hl hl--red">GRAVEYARD</span></h1>
+    <p class="hero__sub">
+      115 books teach you what TO do. This page teaches the opposite —
+      <strong>196 real people, startups and empires</strong> who lost fortunes, freedom, and legacies.
+      Every grave has a story, a fatal mistake, and a lesson.
+      <strong>They paid full price so you can learn for free.</strong>
+    </p>
+
+    <!-- GRAVE STATS -->
+    <div class="stats">
+      <div class="stat stat--red"><div class="stat__num" id="gStatCases">0</div><div class="stat__label">Corpses</div></div>
+      <div class="stat stat--yellow"><div class="stat__num">$1T+</div><div class="stat__label">Burned</div></div>
+      <div class="stat stat--blue"><div class="stat__num" id="gStatCats">0</div><div class="stat__label">Ways to Die</div></div>
+      <div class="stat stat--green"><div class="stat__num">FREE</div><div class="stat__label">Your Tuition</div></div>
+    </div>
+  </header>
+
+  <!-- SEARCH + FILTERS -->
+  <div class="section-head" id="graves">
+    <h2>⚰️ Open Graves</h2>
+    <div class="line"></div>
+  </div>
+  <div class="searchwrap" style="margin-top:26px;">
+    <div class="search">
+      <input id="graveSearch" type="text" placeholder="SEARCH THE GRAVEYARD..." autocomplete="off">
+      <button type="button">DIG</button>
+    </div>
+  </div>
+  <div class="filters" id="graveFilters"></div>
+
+  <!-- GRAVES GRID -->
+  <main class="gravegrid" id="graveGrid"></main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="head">💀 The Graveyard · 📕 TheSmallBook</div>
+    <p>All cases are documented public history, summarized for education. The dead were once the smartest people in the room — that's the whole point.</p>
+    <div class="supportbar" data-supportbar style="margin-bottom:14px;"></div>
+    <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
+    <p class="tiny">LEARN CHEAP. THE ALTERNATIVE IS EXPENSIVE.</p>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/prefs.js"></script>
+  <script src="js/support.js"></script>
+  <script src="js/lang.js"></script>
+  <script src="js/failures.js"></script>
+  <script src="js/graveyard.js"></script>
+</body>
+</html>

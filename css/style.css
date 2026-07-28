@@ -1551,3 +1551,313 @@ html.dark font { color: inherit !important; }
 
 /* the ink button itself (dark-mode toggle) — black bg flips to light in dark mode */
 html.dark .btn--ink { background: #000; color: #f2ead8; }
+
+/* ============================================================
+   💀 THE GRAVEYARD
+   ============================================================ */
+.ticker--grave { background: #1a0505; }
+.ticker--grave .ticker__track em, .ticker--grave { color: #f2ead8; }
+.hero__badge--grave { background: #1a0505; color: var(--red); }
+
+.gravegrid {
+  max-width: 1000px;
+  margin: 34px auto 70px;
+  padding: 0 clamp(16px, 4vw, 48px);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.grave {
+  background: var(--paper);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  transition: transform .15s, box-shadow .15s;
+}
+.grave:hover { transform: translate(-3px,-3px); box-shadow: 9px 9px 0 var(--ink); }
+
+.grave__head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* the tombstone */
+.grave__stone {
+  flex-shrink: 0;
+  width: 74px; height: 88px;
+  background: #6b7280;
+  border: 3px solid var(--ink);
+  border-radius: 36px 36px 4px 4px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 1px;
+  box-shadow: 3px 3px 0 var(--ink);
+  position: relative;
+}
+.grave__rip { font-family: var(--font-head); font-size: .55rem; letter-spacing: 1px; color: #f2ead8; }
+.grave__emoji { font-size: 1.5rem; line-height: 1; }
+.grave__year { font-size: .58rem; font-weight: 800; color: #f2ead8; letter-spacing: .5px; }
+
+.grave__titles { flex: 1; min-width: 0; }
+.grave__name { font-family: var(--font-head); font-size: clamp(1rem, 2.4vw, 1.3rem); text-transform: uppercase; line-height: 1.15; }
+.grave__epitaph { font-size: .85rem; font-weight: 600; color: #777; margin-top: 3px; }
+html.dark .grave__epitaph { color: #b3a98f; }
+.grave__loss {
+  display: inline-block;
+  margin-top: 8px;
+  background: var(--red); color: #fff;
+  border: 2px solid var(--ink);
+  font-size: .68rem; font-weight: 800; letter-spacing: 1px;
+  padding: 3px 10px;
+  transform: rotate(-1deg);
+}
+.grave__toggle {
+  font-family: var(--font-head);
+  font-size: 1.4rem;
+  width: 40px; height: 40px;
+  border: 2px solid var(--ink);
+  background: var(--yellow); color: #111;
+  display: grid; place-items: center;
+  flex-shrink: 0;
+  transition: transform .2s, background .2s;
+}
+.grave.open .grave__toggle { transform: rotate(45deg); background: var(--red); color: #fff; }
+
+.grave__body { display: none; padding: 0 22px 22px; }
+.grave.open .grave__body { display: block; animation: drop .25s ease; }
+
+.grave__section { margin-top: 14px; border: 2px solid var(--ink); padding: 14px 16px; background: var(--bg); }
+.grave__section--mistake { background: #ffe9e9; }
+.grave__section--lesson { background: #e6fff5; }
+html.dark .grave__section { background: #1b1712; }
+html.dark .grave__section--mistake { background: #2b1414; }
+html.dark .grave__section--lesson { background: #10291f; }
+.grave__section p { font-size: .95rem; margin-top: 8px; }
+
+.grave__label {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-size: .62rem; letter-spacing: 2px; text-transform: uppercase;
+  padding: 4px 10px;
+  background: var(--ink); color: var(--paper);
+}
+html.dark .grave__label { background: #000; color: #f2ead8; }
+.grave__label--mistake { background: var(--red); color: #fff; }
+.grave__label--lesson { background: var(--green); color: #111; }
+
+.grave__book {
+  display: block;
+  margin-top: 14px;
+  background: var(--yellow); color: #111;
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 12px 16px;
+  font-weight: 700; font-size: .8rem;
+  letter-spacing: 1px; text-transform: uppercase;
+  text-decoration: none;
+  transition: transform .12s;
+}
+.grave__book:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--ink); }
+html.dark .grave__book { color: #111; }
+
+/* homepage graveyard banner */
+.gravebanner {
+  max-width: 1280px;
+  margin: 40px auto 0;
+  padding: 0 clamp(16px, 4vw, 48px);
+}
+.gravebanner__box {
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  background: #1a0505;
+  color: #f2ead8;
+  border: var(--border);
+  box-shadow: var(--shadow);
+  padding: 22px 26px;
+  position: relative;
+  overflow: hidden;
+  transform: rotate(-.4deg);
+  text-decoration: none;
+  transition: transform .15s, box-shadow .15s;
+}
+.gravebanner__box:hover { transform: rotate(-.4deg) translate(-3px,-3px); box-shadow: 10px 10px 0 var(--ink); }
+.gravebanner__skull { font-size: 3rem; flex-shrink: 0; animation: bob 4s ease-in-out infinite; }
+.gravebanner__text { flex: 1; min-width: 220px; }
+.gravebanner__title { font-family: var(--font-head); font-size: clamp(1.1rem, 3vw, 1.6rem); text-transform: uppercase; color: var(--red); }
+.gravebanner__sub { font-size: .88rem; font-weight: 600; margin-top: 4px; opacity: .9; }
+.gravebanner__cta {
+  background: var(--red); color: #fff;
+  border: 2px solid #f2ead8;
+  box-shadow: 3px 3px 0 rgba(242,234,216,.4);
+  font-family: var(--font-body); font-weight: 800;
+  font-size: .8rem; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 12px 20px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 560px) {
+  .grave__head { gap: 12px; padding: 13px 14px; }
+  .grave__stone { width: 58px; height: 70px; }
+  .grave__emoji { font-size: 1.15rem; }
+  .grave__name { font-size: .92rem; }
+  .grave__epitaph { font-size: .74rem; }
+  .grave__body { padding: 0 14px 16px; }
+  .grave__section p { font-size: .88rem; }
+  .gravebanner__box { padding: 16px; gap: 12px; }
+  .gravebanner__cta { width: 100%; text-align: center; }
+}
+
+/* grave share button */
+.grave__share {
+  display: block; width: 100%;
+  margin-top: 10px;
+  background: #1a0505; color: var(--red);
+  border: 2px solid var(--red);
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 12px 16px;
+  font-family: var(--font-body); font-weight: 800;
+  font-size: .8rem; letter-spacing: 1.5px; text-transform: uppercase;
+  cursor: pointer;
+  transition: transform .12s, background .12s;
+}
+.grave__share:hover { transform: translate(-2px,-2px); background: var(--red); color: #fff; }
+
+/* ============================================================
+   💀 GRAVEYARD TRANSITION — the descent
+   ============================================================ */
+.grave-transition {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #120404;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 18px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s ease;
+}
+.grave-transition.on { opacity: 1; pointer-events: all; }
+.grave-transition__skull {
+  font-size: 5rem;
+  animation: skullDrop .9s cubic-bezier(.3,1.6,.4,1) both;
+}
+.grave-transition__text {
+  font-family: var(--font-head);
+  color: var(--red);
+  font-size: 1.1rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  animation: flickerIn 1s steps(8) both;
+}
+.grave-transition__sub {
+  color: #b3a98f; font-weight: 700; font-size: .75rem; letter-spacing: 2px; text-transform: uppercase;
+}
+@keyframes skullDrop {
+  0% { transform: translateY(-160px) rotate(-20deg); opacity: 0; }
+  60% { transform: translateY(12px) rotate(6deg); opacity: 1; }
+  100% { transform: translateY(0) rotate(0); opacity: 1; }
+}
+@keyframes flickerIn {
+  0% { opacity: 0; } 10% { opacity: 1; } 20% { opacity: .2; } 30% { opacity: 1; }
+  45% { opacity: .4; } 60% { opacity: 1; } 75% { opacity: .6; } 100% { opacity: 1; }
+}
+/* graveyard page entrance: rise from the dirt */
+.graveyard-page .hero--grave h1,
+.graveyard-page .hero--grave .hero__badge,
+.graveyard-page .hero--grave .hero__sub {
+  animation: riseFromDirt .7s cubic-bezier(.2,.9,.3,1.1) both;
+}
+.graveyard-page .hero--grave .hero__sub { animation-delay: .15s; }
+.graveyard-page .hero--grave h1 { animation-delay: .05s; }
+@keyframes riseFromDirt {
+  from { transform: translateY(46px); opacity: 0; filter: blur(3px); }
+  to { transform: none; opacity: 1; filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .grave-transition, .grave-transition__skull, .grave-transition__text { animation: none !important; transition: none !important; }
+}
+
+/* ============================================================
+   💀 GRAVEYARD v2 — juicy, clickable corpses
+   ============================================================ */
+.grave { position: relative; border-top: 8px solid var(--gcat, #888); overflow: hidden; }
+.grave__head { cursor: pointer; user-select: none; position: relative; }
+
+/* colored tombstone */
+.grave__stone {
+  background: var(--gcat, #6b7280) !important;
+  border: 3px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: transform .2s;
+}
+.grave__rip, .grave__year { color: var(--ink) !important; }
+html.dark .grave__rip, html.dark .grave__year { color: #111 !important; }
+.grave:hover .grave__stone { transform: rotate(-3deg) translateY(-2px); }
+
+/* meta row: loss + category pill + fresh */
+.grave__meta { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; margin-top: 7px; }
+.grave__cat {
+  display: inline-block; font-family: var(--font-head); font-size: .52rem;
+  letter-spacing: .5px; text-transform: uppercase; padding: 4px 8px;
+  background: var(--gcat, #888); color: var(--ink); border: 2px solid var(--ink);
+}
+html.dark .grave__cat { color: #111; border-color: #111; }
+.grave__fresh {
+  display: inline-block; font-family: var(--font-head); font-size: .52rem;
+  letter-spacing: .5px; padding: 4px 8px; background: var(--red); color: #fff;
+  border: 2px solid var(--ink); animation: freshGlow 2.4s ease-in-out infinite;
+}
+@keyframes freshGlow { 0%,100% { box-shadow: 0 0 0 rgba(255,77,77,0); } 50% { box-shadow: 0 0 12px rgba(255,77,77,.75); } }
+
+/* DIG IT UP button replaces plain + */
+.grave__dig {
+  flex-shrink: 0; align-self: center;
+  font-family: var(--font-head); font-size: .58rem; letter-spacing: .5px;
+  padding: 10px 12px; background: var(--yellow); color: #111;
+  border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
+  transition: transform .12s, box-shadow .12s, background .12s;
+  white-space: nowrap;
+}
+html.dark .grave__dig { border-color: #000; box-shadow: 3px 3px 0 #000; }
+.grave__dig::after { content: "⚰️ DIG IT UP"; }
+.grave.open .grave__dig { background: var(--red); color: #fff; }
+.grave.open .grave__dig::after { content: "🪦 BURY IT"; }
+.grave__head:hover .grave__dig { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--ink); }
+html.dark .grave__head:hover .grave__dig { box-shadow: 5px 5px 0 #000; }
+
+/* cause-of-death stamp inside autopsy */
+.grave__cause {
+  display: inline-block; font-family: var(--font-head); font-size: .62rem;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--red);
+  border: 3px dashed var(--red); padding: 7px 12px; margin-top: 16px;
+  transform: rotate(-1.5deg); background: transparent;
+}
+
+/* grave of the day spotlight */
+.graveday__label {
+  display: flex; align-items: center; gap: 10px; margin: 30px auto 0;
+  max-width: var(--maxw); padding: 0 20px;
+  font-family: var(--font-head); font-size: clamp(.8rem, 2.2vw, 1.05rem);
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.graveday__label .skull { font-size: 1.4rem; animation: bob 3s ease-in-out infinite; }
+.graveday__tag {
+  background: var(--yellow); border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
+  padding: 6px 12px; color: #111;
+}
+.grave--day { border: 4px solid var(--ink); box-shadow: 8px 8px 0 var(--red); }
+.grave--day:hover { box-shadow: 10px 10px 0 var(--red); }
+
+/* staggered rise */
+.gravegrid .grave.reveal { transition-delay: calc(min(var(--i, 0), 8) * 45ms); }
+
+@media (max-width: 560px) {
+  .grave__dig { font-size: .5rem; padding: 8px 8px; }
+  .grave__dig::after { content: "⚰️ DIG"; }
+  .grave.open .grave__dig::after { content: "🪦 BURY"; }
+  .grave__cat, .grave__fresh { font-size: .46rem; }
+  .grave__cause { font-size: .52rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .grave__stone, .grave__fresh, .graveday__label .skull { animation: none !important; transition: none !important; transform: none !important; }
+}

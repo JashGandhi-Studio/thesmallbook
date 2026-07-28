@@ -9,7 +9,7 @@
 ## ✨ Features
 
 ### 📚 Library
-- **100 books, 530+ lessons** with covers, read time & lesson count
+- **115 books, 590+ lessons** with covers, read time & lesson count
 - **Fuzzy search** (typos OK), **category filters**, **sorting** (A-Z, shortest, newest, progress...)
 - **My Shelf** — bookmark books with the ❤️ button
 - **Lesson of the Day** — rotates daily, no backend needed
@@ -121,9 +121,13 @@ thesmallbook/
 └── assets/covers/      # Book cover images
 ```
 
+## 💀 The Graveyard
+
+The anti-library: **196 legendary real-world failures** — Newton buying the bubble top, Kodak shelving the digital camera, Madoff, Theranos, Napoleon in Russia, Harshad Mehta, Kingfisher, the Trojan Horse — each with the full story, the fatal mistake, and the free lesson, linked to the book that teaches the antidote. Searchable, filterable by 8 ways-to-die (Startups, Money, Fraud, Ego, Business, Trust, History, Fame), with a daily Grave of the Day, a 🎲 random-corpse button, and shareable R.I.P. cards. Add cases in `js/failures.js`.
+
 ## 🌐 Universal Language Support
 
-The entire app — all 100 books, every lesson — translates into **26 languages** via the 🌐 button: Hindi, Gujarati, Marathi, Bengali, Tamil, Telugu, Kannada, Malayalam, Punjabi, Urdu, Odia, Spanish, French, German, Chinese, Japanese, Arabic, and more. Plus two **exclusive modes** found nowhere else:
+The entire app — all 115 books, every lesson — translates into **26 languages** via the 🌐 button: Hindi, Gujarati, Marathi, Bengali, Tamil, Telugu, Kannada, Malayalam, Punjabi, Urdu, Odia, Spanish, French, German, Chinese, Japanese, Arabic, and more. Plus two **exclusive modes** found nowhere else:
 - **Hinglish** — Hindi transliterated to English letters ("tum kya kar rahe ho" style) for readers who speak Hindi but read Roman script best
 - **Gujlish** — the same for Gujarati ("tame shu karo cho")
 
