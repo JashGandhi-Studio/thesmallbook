@@ -1833,21 +1833,6 @@ html.dark .grave__head:hover .grave__dig { box-shadow: 5px 5px 0 #000; }
   transform: rotate(-1.5deg); background: transparent;
 }
 
-/* grave of the day spotlight */
-.graveday__label {
-  display: flex; align-items: center; gap: 10px; margin: 30px auto 0;
-  max-width: var(--maxw); padding: 0 20px;
-  font-family: var(--font-head); font-size: clamp(.8rem, 2.2vw, 1.05rem);
-  text-transform: uppercase; letter-spacing: 1px;
-}
-.graveday__label .skull { font-size: 1.4rem; animation: bob 3s ease-in-out infinite; }
-.graveday__tag {
-  background: var(--yellow); border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
-  padding: 6px 12px; color: #111;
-}
-.grave--day { border: 4px solid var(--ink); box-shadow: 8px 8px 0 var(--red); }
-.grave--day:hover { box-shadow: 10px 10px 0 var(--red); }
-
 /* staggered rise */
 .gravegrid .grave.reveal { transition-delay: calc(min(var(--i, 0), 8) * 45ms); }
 
@@ -1859,5 +1844,5 @@ html.dark .grave__head:hover .grave__dig { box-shadow: 5px 5px 0 #000; }
   .grave__cause { font-size: .52rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .grave__stone, .grave__fresh, .graveday__label .skull { animation: none !important; transition: none !important; transform: none !important; }
+  .grave__stone, .grave__fresh { animation: none !important; transition: none !important; transform: none !important; }
 }

@@ -65,12 +65,42 @@
      • WhatsApp-status / Instagram-story ready with full branding
      ============================================================ */
   const PALETTES = [
+    /* solids */
     { bg: "#ffc800", fg: "#111111" },
     { bg: "#ff90e8", fg: "#111111" },
     { bg: "#00c48c", fg: "#111111" },
     { bg: "#4d7cff", fg: "#ffffff" },
-    { bg: "#ff8a3d", fg: "#111111" }
+    { bg: "#ff8a3d", fg: "#111111" },
+    { bg: "#b28dff", fg: "#111111" },
+    { bg: "#ff4d4d", fg: "#ffffff" },
+    { bg: "#3ec9e6", fg: "#111111" },
+    { bg: "#111111", fg: "#ffc800" },
+    { bg: "#fffdf5", fg: "#111111" },
+    /* gradient mixes */
+    { bg: "#ffc800", bg2: "#ff8a3d", fg: "#111111" },   // sunset gold
+    { bg: "#ff90e8", bg2: "#b28dff", fg: "#111111" },   // candy floss
+    { bg: "#00c48c", bg2: "#3ec9e6", fg: "#111111" },   // mint ocean
+    { bg: "#4d7cff", bg2: "#b28dff", fg: "#ffffff" },   // twilight
+    { bg: "#ff4d4d", bg2: "#ff8a3d", fg: "#ffffff" },   // lava
+    { bg: "#ff90e8", bg2: "#ffc800", fg: "#111111" },   // bubblegum sun
+    { bg: "#3ec9e6", bg2: "#4d7cff", fg: "#ffffff" },   // deep sea
+    { bg: "#111111", bg2: "#4a3800", fg: "#ffc800" },   // midnight gold
+    { bg: "#1a0533", bg2: "#4d1a66", fg: "#ff90e8" },   // neon night
+    { bg: "#00c48c", bg2: "#ffc800", fg: "#111111" }    // tropic punch
   ];
+
+  /* paint a palette onto a canvas region (solid or diagonal gradient mix) */
+  function paintPalette(ctx, pal, W, H) {
+    if (pal.bg2) {
+      const g = ctx.createLinearGradient(0, 0, W, H);
+      g.addColorStop(0, pal.bg);
+      g.addColorStop(1, pal.bg2);
+      ctx.fillStyle = g;
+    } else {
+      ctx.fillStyle = pal.bg;
+    }
+    ctx.fillRect(0, 0, W, H);
+  }
 
   /* --- live (translated) text helpers --- */
   function liveText(sel, fallback) {
@@ -165,7 +195,7 @@
     const canvas = document.createElement("canvas");
     canvas.width = W; canvas.height = H;
     const ctx = canvas.getContext("2d");
-    const pal = PALETTES[idx % PALETTES.length];
+    const pal = PALETTES[idx % 8]; // bright solids for card fills
 
     // live (translated) content
     const tTitle = liveText("#title", book.title);
@@ -295,7 +325,7 @@
     const canvas = document.createElement("canvas");
     canvas.width = W; canvas.height = H;
     const ctx = canvas.getContext("2d");
-    const pal = PALETTES[lessonIdx % PALETTES.length];
+    const pal = PALETTES[lessonIdx % 8]; // bright solids for card fills
     const tTitle = liveText("#title", book.title);
 
     ctx.fillStyle = "#f2ede2";
@@ -631,6 +661,7 @@
 
   /* ---------- QUOTES + IMAGE GENERATOR ---------- */
   const quotesWrap = document.getElementById("quotes");
+  const quoteSpins = {};
   book.quotes.forEach((q, qidx) => {
     const d = document.createElement("div");
     d.className = "quote";
@@ -644,7 +675,10 @@
       toast("🎨 Creating your quote card...");
       // LIVE text — translated if the page is translated
       const liveQ = liveText(d, q).replace(/🎴/g, "").trim();
-      const canvas = await renderQuoteCard(liveQ, qidx);
+      // fresh palette each tap: same quote cycles through all 20 looks
+      const spin = (quoteSpins[qidx] = (quoteSpins[qidx] || 0) + 1);
+      const palIdx = (qidx + spin * 7) % PALETTES.length;
+      const canvas = await renderQuoteCard(liveQ, palIdx);
       shareCanvas(canvas, `thesmallbook-${book.id}-quote-${qidx + 1}.png`,
         `💬 From ${liveText("#title", book.title)} — on TheSmallBook`);
     });
@@ -661,13 +695,15 @@
     const pal = PALETTES[qidx % PALETTES.length];
     const tTitle = liveText("#title", book.title);
 
-    // full-color background for maximum status impact
-    ctx.fillStyle = pal.bg;
-    ctx.fillRect(0, 0, W, H);
-    // subtle dots in the fg color
-    ctx.fillStyle = pal.fg === "#ffffff" ? "rgba(255,255,255,.12)" : "rgba(17,17,17,.08)";
+    // full-color background for maximum status impact (solid or gradient mix)
+    paintPalette(ctx, pal, W, H);
+    // subtle dots in the fg color (works for any palette)
+    ctx.save();
+    ctx.globalAlpha = 0.1;
+    ctx.fillStyle = pal.fg;
     for (let x = 22; x < W; x += 46)
       for (let y = 22; y < H; y += 46) { ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); }
+    ctx.restore();
 
     // top strip
     ctx.fillStyle = "#111";

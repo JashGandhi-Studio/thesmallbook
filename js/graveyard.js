@@ -84,17 +84,11 @@
       ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
 
-  function graveOfTheDayId() {
-    const now = new Date();
-    const day = Math.floor(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) / 86400000);
-    return F.length ? F[day % F.length].id : null;
-  }
-
   function buildGrave(f, opts) {
     const o = opts || {};
     const color = (CAT_META[f.category] || {}).color || "#9aa2ad";
     const d = document.createElement("div");
-    d.className = "grave" + (o.day ? " grave--day" : "") + (o.open ? " open" : "");
+    d.className = "grave" + (o.open ? " open" : "");
     d.style.setProperty("--gcat", color);
     d.dataset.graveId = f.id;
     d.innerHTML = `
@@ -154,23 +148,8 @@
     }
 
     const defaultView = !query && activeCat === "ALL";
-    const dayId = defaultView ? graveOfTheDayId() : null;
-    let list = results;
-
-    if (dayId) {
-      const dayCase = results.find((f) => f.id === dayId);
-      if (dayCase) {
-        const label = document.createElement("div");
-        label.className = "graveday__label";
-        label.innerHTML = `<span class="skull">🪦</span><span class="graveday__tag" translate="no">⚡ GRAVE OF THE DAY</span><span>a new autopsy every 24 hours</span>`;
-        grid.appendChild(label);
-        grid.appendChild(buildGrave(dayCase, { day: true, open: true }));
-        list = results.filter((f) => f.id !== dayId);
-      }
-    }
-
-    list.forEach((f, i) => {
-      const g = buildGrave(f, {});
+    results.forEach((f, i) => {
+      const g = buildGrave(f, { open: defaultView && i === 0 });
       g.style.setProperty("--i", i % 12);
       grid.appendChild(g);
     });
