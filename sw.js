@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v17";
+const CACHE_VERSION = "tsb-v18";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -62,7 +62,7 @@ self.addEventListener("fetch", (e) => {
           caches.open(CACHE_VERSION).then((c) => c.put(e.request, copy));
           return res;
         })
-        .catch(() => caches.match(e.request).then((r) => r || caches.match("./index.html")))
+        .catch(() => caches.match(e.request, { ignoreSearch: true }).then((r) => r || caches.match("./index.html")))
     );
   } else {
     e.respondWith(
