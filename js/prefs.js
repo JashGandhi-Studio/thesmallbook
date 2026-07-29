@@ -202,6 +202,17 @@
   /* ---------- expose ---------- */
   window.TSB = { get, set, theme, bookmarks, progress, plans, streak, levelFor, achv, lastRead, backup };
 
+  /* Amazon affiliate link builder — direct product page when we know the
+     ASIN (converts better), search fallback for everything else. */
+  window.TSB.amazonLink = function (title, author, bookId) {
+    const cfg = window.TSB_CONFIG || {};
+    const tag = cfg.AMAZON_TAG || "thesmallbook-21";
+    const asin = bookId && cfg.AMAZON_ASINS && cfg.AMAZON_ASINS[bookId];
+    if (asin) return "https://www.amazon.in/dp/" + asin + "?tag=" + tag;
+    const q = encodeURIComponent(String(title) + " " + String(author || "").split("&")[0].trim() + " book");
+    return "https://www.amazon.in/s?k=" + q + "&tag=" + tag;
+  };
+
   /* ---------- boot ---------- */
   document.addEventListener("DOMContentLoaded", () => {
     // bind theme toggles

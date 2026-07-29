@@ -31,6 +31,20 @@
   }
   drawBadges();
 
+  /* ---------- 📖 BUY THE FULL BOOK (Amazon affiliate) ---------- */
+  (function () {
+    const meta = document.querySelector(".bookhero__meta");
+    if (!meta) return;
+    const a = document.createElement("a");
+    a.className = "buybtn buybtn--soft";
+    a.href = TSB.amazonLink(book.title, book.author, book.id);
+    a.target = "_blank";
+    a.rel = "noopener sponsored";
+    a.setAttribute("translate", "no");
+    a.innerHTML = `📖 GET THE FULL BOOK <span class="buybtn__amz">on Amazon →</span>`;
+    meta.appendChild(a);
+  })();
+
   /* ---------- ACTION BAR ---------- */
   const bar = document.getElementById("actionbar");
   const fav = TSB.bookmarks.has(book.id);
@@ -506,7 +520,7 @@
   }
 
   /* punctuation set covers Devanagari danda + CJK stops */
-  function splitIntoChunks(text, maxLen = 200) {
+  function splitIntoChunks(text, maxLen = 160) {
     const sentences = text.match(/[^.!?।॥。！？]+[.!?।॥。！？]+["']?|\s*[^.!?।॥。！？]+$/g) || [text];
     const chunks = [];
     let cur = "";
@@ -524,6 +538,7 @@
 
   function stopSpeech() {
     speechQueue = [];
+    currentUtterance = null;
     if (keepAlive) { clearInterval(keepAlive); keepAlive = null; }
     speechSynthesis.cancel();
     if (speakingBtn) {
@@ -533,35 +548,62 @@
     }
   }
 
+  /* TTS v3 — fixes abrupt stops:
+     1. utterance kept in a live reference (Chrome GC used to kill speech mid-sentence)
+     2. spurious "interrupted/canceled" errors no longer kill the queue
+     3. real errors SKIP to the next chunk instead of stopping everything
+     4. pause/resume keep-alive only on desktop Chrome (it BREAKS Android TTS)
+     5. tiny gap between chunks avoids Chrome's speak-after-end race
+     6. watchdog restarts the queue if the engine silently dies */
+  let currentUtterance = null; // MUST stay referenced or Chrome garbage-collects mid-speech
+
   function speakChunks(chunks, btn) {
     const lang = currentSpeechLang();
     const voice = bestVoice(lang);
-    // no voice installed for this language? tell the user honestly
     if (lang !== "en" && (!voice || voice.lang.toLowerCase().split("-")[0] !== lang.toLowerCase().split("-")[0])) {
       toast("🔊 No " + lang.toUpperCase() + " voice on this device — using best available");
     }
     speechQueue = [...chunks];
+    const isAndroid = /android/i.test(navigator.userAgent);
+    const isDesktopChrome = /chrome/i.test(navigator.userAgent) && !isAndroid && !/edge|edg\//i.test(navigator.userAgent);
+    let chunkStarted = 0;
+
     function next() {
-      if (!speechQueue.length || speakingBtn !== btn) {
-        if (speakingBtn === btn) stopSpeech();
-        return;
-      }
+      if (speakingBtn !== btn) return;               // user pressed stop / another button
+      if (!speechQueue.length) { stopSpeech(); return; } // finished naturally
+      try { if (speechSynthesis.paused) speechSynthesis.resume(); } catch (e) {}
       const u = new SpeechSynthesisUtterance(speechQueue.shift());
+      currentUtterance = u;                          // hold the reference (fix #1)
       if (voice) u.voice = voice;
       u.lang = voice ? voice.lang : (lang === "zh-CN" ? "zh-CN" : lang);
-      u.rate = 0.95;    // clear pace for every language
+      u.rate = 0.95;
       u.pitch = 1.0;
       u.volume = 1.0;
-      u.onend = next;
-      u.onerror = () => stopSpeech();
+      u.onstart = () => { chunkStarted = Date.now(); };
+      u.onend = () => { currentUtterance = null; setTimeout(next, 60); };  // fix #5
+      u.onerror = (e) => {                           // fix #2 + #3
+        currentUtterance = null;
+        const err = e && e.error;
+        if (err === "interrupted" || err === "canceled") return; // stop was intentional
+        setTimeout(next, 120);                       // skip bad chunk, keep reading
+      };
       speechSynthesis.speak(u);
     }
+
+    /* fix #4: Chrome desktop 15s cutoff needs pause/resume; Android dies from it */
+    if (keepAlive) clearInterval(keepAlive);
     keepAlive = setInterval(() => {
-      if (speechSynthesis.speaking && !speechSynthesis.paused) {
+      if (speakingBtn !== btn) return;
+      if (isDesktopChrome && speechSynthesis.speaking && !speechSynthesis.paused) {
         speechSynthesis.pause();
         speechSynthesis.resume();
       }
-    }, 10000);
+      /* fix #6: watchdog — engine silently dead but queue not finished? restart */
+      if (!speechSynthesis.speaking && !speechSynthesis.pending && speechQueue.length &&
+          Date.now() - chunkStarted > 3000) {
+        next();
+      }
+    }, 5000);
     next();
   }
 
@@ -607,10 +649,54 @@
       drawBadges();
       if (TSB.progress.forBook(book.id).length >= book.lessons.length) {
         TSB.achv.award("book-complete");
-        toast("🏆 Book complete! Amazing work.");
+        showCompleteCelebration();
       }
     });
   });
+
+  /* ---------- 🏆 BOOK COMPLETE CELEBRATION ---------- */
+  function showCompleteCelebration() {
+    if (document.getElementById("completeModal")) return;
+    const ov = document.createElement("div");
+    ov.className = "modal open";
+    ov.id = "completeModal";
+    ov.innerHTML = `
+      <div class="modal__box celebmodal">
+        <div class="celebmodal__emoji">🏆</div>
+        <h3>BOOK COMPLETE!</h3>
+        <p class="celebmodal__sub">You just absorbed <strong>${book.lessons.length} lessons</strong> from
+        <strong>${book.title}</strong> — most people never finish the book. You finished the wisdom.</p>
+        <a class="buybtn celebmodal__buy" href="${TSB.amazonLink(book.title, book.author, book.id)}" target="_blank" rel="noopener sponsored" translate="no">
+          📖 OWN THE FULL BOOK <span class="buybtn__amz">it goes 10x deeper →</span>
+        </a>
+        <div class="celebmodal__row">
+          <button class="btn" id="celebShare">🎴 SHARE THE WIN</button>
+          <button class="btn btn--ink" id="celebClose">KEEP READING</button>
+        </div>
+      </div>`;
+    document.body.appendChild(ov);
+    // mini confetti
+    try {
+      for (let i = 0; i < 24; i++) {
+        const c = document.createElement("span");
+        c.className = "confetti";
+        c.textContent = ["🎉","✨","📕","🏆"][i % 4];
+        c.style.left = Math.random() * 100 + "vw";
+        c.style.animationDelay = (Math.random() * 0.7) + "s";
+        c.style.fontSize = (14 + Math.random() * 18) + "px";
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 3200);
+      }
+    } catch (e) {}
+    ov.querySelector("#celebClose").addEventListener("click", () => ov.remove());
+    ov.addEventListener("click", (e) => { if (e.target === ov) ov.remove(); });
+    const shareBtn = ov.querySelector("#celebShare");
+    if (shareBtn) shareBtn.addEventListener("click", () => {
+      ov.remove();
+      const sb = document.getElementById("shareBtn");
+      if (sb) sb.click();
+    });
+  }
 
   /* listen buttons — speak the LIVE (translated) lesson text */
   lessonsWrap.querySelectorAll("[data-listen]").forEach((btn) => {
@@ -765,6 +851,19 @@
     });
     planWrap.appendChild(li);
   });
+
+  /* buy nudge under the action plan */
+  (function () {
+    const wrap = document.getElementById("plan");
+    if (!wrap || !wrap.parentElement) return;
+    const box = document.createElement("a");
+    box.className = "buynudge";
+    box.href = TSB.amazonLink(book.title, book.author, book.id);
+    box.target = "_blank";
+    box.rel = "noopener sponsored";
+    box.innerHTML = `<strong>Loved the lessons?</strong> The full book goes 10x deeper — <span>own it on Amazon 📖</span>`;
+    wrap.parentElement.appendChild(box);
+  })();
 
   /* ---------- RELATED BOOKS ---------- */
   (function () {

@@ -7,6 +7,48 @@
 
 window.FAILURES = [
 
+  /* ===== WAVE 5: PAST 200 ===== */
+  {
+    id: "wamu-2008", name: "Washington Mutual", title: "The Biggest Bank Failure in American History", year: "2008",
+    category: "MONEY", emoji: "🏚️", loss: "$307B in assets — seized in a night",
+    story: "WaMu wanted to be the Walmart of banking — home loans for everyone, especially the everyone other banks refused. Its option-ARM mortgages let borrowers pay LESS than the interest owed, with the difference quietly added to their debt; internal risk officers who objected were sidelined while sales staff won trips to Hawaii. When housing turned, depositors pulled $16.7B in nine days, and regulators seized the 119-year-old bank overnight — selling it to JPMorgan for $1.9B, less than one percent of its peak value.",
+    mistake: "Building the growth engine on loans designed to grow the DEBT, not the repayment — and silencing the risk officers who did the math out loud.",
+    lesson: "A product that only works if the customer never has to actually pay is not a product — it's a fuse. When your risk team and your sales team disagree, the one you silence tells you what the company really worships.",
+    book: "black-swan", bookTitle: "The Black Swan"
+  },
+  {
+    id: "general-magic", name: "General Magic", title: "They Built the iPhone... in 1994", year: "2002",
+    category: "STARTUP", emoji: "🪄", loss: "$90M+ and a 13-year head start",
+    story: "General Magic — a legendary Apple spin-off whose team included future iPod father Tony Fadell and Android creator Andy Rubin — built a handheld touchscreen communicator with apps, e-commerce, and downloadable software... in 1994. The press called it the most important company in Silicon Valley. But the infrastructure its magic needed didn't exist: no mobile internet, no cheap touchscreens, batteries from the stone age, and partners (Sony, Motorola, AT&T) each pulling the vision apart. It sold almost nothing, faded through the 90s, and closed in 2002 — five years before its alumni built the exact same dream at Apple, on time.",
+    mistake: "Being right about the destination and catastrophically early on the road — betting everything on a world that wouldn't exist for another decade.",
+    lesson: "Timing is a feature of the product. 'Too early' and 'wrong' cost exactly the same money — before building the future, check whether the present can even charge its battery.",
+    book: "crossing-chasm", bookTitle: "Crossing the Chasm"
+  },
+  {
+    id: "pebble-watch", name: "Pebble", title: "Kickstarter's Biggest Hit, Sold for Parts", year: "2016",
+    category: "STARTUP", emoji: "⌚", loss: "$43M crowdfunded; sold in a fire-sale",
+    story: "Pebble invented the modern smartwatch market — its 2012 Kickstarter raised $10.3M (the platform's record), and its 2015 campaign raised $20.3M more. Fans adored it. Then Apple Watch and Android Wear arrived with billion-dollar budgets, and Pebble responded by expanding: more models, more inventory, more headcount — financed by debt against holiday sales that missed. It reportedly turned down a ~$740M acquisition offer from Citizen in 2015; eighteen months later it sold its software scraps to Fitbit for ~$23M and shut down, refunding backers pennies.",
+    mistake: "Scaling up into a giants' war instead of cashing out or niching down — and declining the golden exit because the crowd's love felt like a moat.",
+    lesson: "Community love is real but it doesn't outspend Apple. When giants enter your category, your options are niche, partner, or sell — 'grow faster than them' is not on the menu.",
+    book: "the-dip", bookTitle: "The Dip"
+  },
+  {
+    id: "micromax-fall", name: "Micromax", title: "India's #1 Phone Brand Missed One Announcement", year: "2016",
+    category: "BUSINESS", emoji: "📴", loss: "#1 in India → under 1% share",
+    story: "By 2014 Micromax was India's largest phone brand — even passing Samsung — by nailing one playbook: cheap feature-rich 3G phones through offline dealers. Then September 2016 happened: Reliance Jio launched free 4G data for everyone. Overnight, 4G went from luxury to mandatory — and Micromax's entire pipeline and inventory was 3G. Chinese brands (Xiaomi, Oppo, Vivo) flooded in with 4G phones, online-first sales, and faster refresh cycles. Micromax, caught mid-stride with dealer shelves full of obsolete stock, fell from #1 to under 1% market share within three years.",
+    mistake: "Treating the 4G transition as a future quarter's problem while a competitor made it TODAY'S problem for the entire country at once.",
+    lesson: "Platform shifts don't ask about your inventory. When infrastructure changes (3G→4G, offline→online, cash→UPI), the calendar belongs to whoever moves first — react in quarters and you'll be history in years.",
+    book: "only-paranoid", bookTitle: "Only the Paranoid Survive"
+  },
+  {
+    id: "hike-messenger", name: "Hike Messenger", title: "India's $1.4B WhatsApp Rival That Vanished", year: "2021",
+    category: "STARTUP", emoji: "💬", loss: "$260M+ raised; app shut down",
+    story: "Hike was India's unicorn messenger — $1.4B valuation, backed by SoftBank and Tencent, founded by Kavin Bharti Mittal with telecom royalty behind it. It threw everything at beating WhatsApp: stickers in Indian languages, hidden chats, news, payments, games — a 'super app' before the term was cool. But WhatsApp was already every Indian's default, free, and pre-installed in the family group. Network effects don't care about features: your messenger is where your people are. Hike pivoted repeatedly, shrank, and in January 2021 shut the messenger entirely.",
+    mistake: "Fighting a network-effect incumbent with FEATURES — every sticker pack answered a question nobody asked, because the only question was 'is my family on it?'",
+    lesson: "In network businesses, distribution beats product and installed base beats innovation. Don't out-feature the default — find the network they CAN'T serve, or build where no network exists yet.",
+    book: "zero-to-one", bookTitle: "Zero to One"
+  },
+
   /* ===== WAVE 4: THE GRAVEYARD EXPANDS (45 fresh corpses) ===== */
   {
     id: "archegos-hwang", name: "Archegos Capital", title: "$20 Billion Vaporized in 2 Days", year: "2021",

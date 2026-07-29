@@ -1846,3 +1846,65 @@ html.dark .grave__head:hover .grave__dig { box-shadow: 5px 5px 0 #000; }
 @media (prefers-reduced-motion: reduce) {
   .grave__stone, .grave__fresh { animation: none !important; transition: none !important; transform: none !important; }
 }
+
+/* ============================================================
+   📖 AMAZON BUY BUTTONS (affiliate)
+   ============================================================ */
+.buybtn {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 18px; padding: 13px 20px;
+  font-family: var(--font-head); font-size: .78rem; letter-spacing: .5px;
+  background: var(--yellow); color: #111; text-decoration: none;
+  border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink);
+  transition: transform .12s, box-shadow .12s;
+}
+.buybtn:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 var(--ink); }
+.buybtn__amz { font-family: var(--font-body); font-weight: 700; font-size: .8rem; opacity: .75; }
+html.dark .buybtn { border-color: #000; box-shadow: 5px 5px 0 #000; color: #111; }
+html.dark .buybtn:hover { box-shadow: 7px 7px 0 #000; }
+
+.buynudge {
+  display: block; margin-top: 22px; padding: 16px 20px;
+  background: var(--paper); border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink);
+  font-size: .95rem; color: var(--ink); text-decoration: none;
+  transition: transform .12s, box-shadow .12s;
+}
+.buynudge:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 var(--ink); }
+.buynudge span { color: #b26a00; font-weight: 800; text-decoration: underline; }
+html.dark .buynudge { background: #1b1712; }
+html.dark .buynudge span { color: var(--yellow); }
+
+.affnote { font-size: .68rem; opacity: .55; margin-top: 10px; }
+
+/* ============================================================
+   🏆 BOOK-COMPLETE CELEBRATION + soft hero buy
+   ============================================================ */
+.buybtn--soft {
+  background: var(--paper);
+  font-size: .68rem;
+  padding: 10px 16px;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.buybtn--soft:hover { background: var(--yellow); }
+html.dark .buybtn--soft { background: #1b1712; color: #f2ead8; }
+html.dark .buybtn--soft:hover { background: var(--yellow); color: #111; }
+
+.celebmodal { text-align: center; max-width: 480px; }
+.celebmodal__emoji { font-size: 4rem; animation: bob 2s ease-in-out infinite; }
+.celebmodal h3 { font-family: var(--font-head); font-size: 1.6rem; margin-top: 6px; text-transform: uppercase; }
+.celebmodal__sub { margin-top: 10px; font-size: .95rem; opacity: .9; }
+.celebmodal__buy { margin: 20px auto 0; display: inline-flex; font-size: .8rem; }
+.celebmodal__row { display: flex; gap: 10px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+
+.confetti {
+  position: fixed; top: -30px; z-index: 500; pointer-events: none;
+  animation: confettiFall 2.6s linear forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0); opacity: 1; }
+  100% { transform: translateY(105vh) rotate(540deg); opacity: .7; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .confetti { display: none; }
+  .celebmodal__emoji { animation: none; }
+}

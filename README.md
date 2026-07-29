@@ -123,7 +123,7 @@ thesmallbook/
 
 ## 💀 The Graveyard
 
-The anti-library: **196 legendary real-world failures** — Newton buying the bubble top, Kodak shelving the digital camera, Madoff, Theranos, Napoleon in Russia, Harshad Mehta, Kingfisher, the Trojan Horse — each with the full story, the fatal mistake, and the free lesson, linked to the book that teaches the antidote. Searchable, filterable by 8 ways-to-die (Startups, Money, Fraud, Ego, Business, Trust, History, Fame), with a daily Grave of the Day, a 🎲 random-corpse button, and shareable R.I.P. cards. Add cases in `js/failures.js`.
+The anti-library: **200+ legendary real-world failures** — Newton buying the bubble top, Kodak shelving the digital camera, Madoff, Theranos, Napoleon in Russia, Harshad Mehta, Kingfisher, the Trojan Horse — each with the full story, the fatal mistake, and the free lesson, linked to the book that teaches the antidote. Searchable, filterable by 8 ways-to-die (Startups, Money, Fraud, Ego, Business, Trust, History, Fame), with a daily Grave of the Day, a 🎲 random-corpse button, and shareable R.I.P. cards. Add cases in `js/failures.js`.
 
 ## 🌐 Universal Language Support
 

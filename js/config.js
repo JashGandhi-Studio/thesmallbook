@@ -33,5 +33,33 @@ window.TSB_CONFIG = {
 
   // Email where readers send their story files for the Global Shelf
   // (used by the no-backend submission flow — set this before launch!)
-  SUBMIT_EMAIL: "jashgandhicreator07@gmail.com"
+  SUBMIT_EMAIL: "jashgandhicreator07@gmail.com",
+
+  /* Amazon Associates (India) — book buy links */
+  AMAZON_TAG: "thesmallbook-21",
+
+  /* Direct product links (higher conversion than search).
+     Key = book id from data.js, value = Amazon ASIN / ISBN-10.
+     HOW TO ADD MORE: open the book on amazon.in → the URL contains
+     /dp/XXXXXXXXXX → copy that 10-character code here.
+     Books not listed automatically use a search link — nothing breaks. */
+  AMAZON_ASINS: {
+    "atomic-habits":        "1847941834",
+    "psychology-of-money":  "9390166268",
+    "rich-dad-poor-dad":    "1612681131",
+    "deep-work":            "0349411905",
+    "48-laws-of-power":     "1861972784",
+    "ikigai":               "178633089X",
+    "sapiens":              "0099590085",
+    "subtle-art":           "0062641549",
+    "cant-hurt-me":         "1544512287",
+    "zero-to-one":          "0753555190",
+    "how-to-win-friends":   "0091906814",
+    "alchemist":            "8172234988",
+    "power-of-habit":       "1847946240",
+    "wings-of-fire":        "8173711461",
+    "mans-search":          "1846041244",
+    "hooked":               "0241184835",
+    "start-with-why":       "0241958229"
+  }
 };
