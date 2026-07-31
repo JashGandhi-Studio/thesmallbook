@@ -7,6 +7,160 @@
 
 window.FAILURES = [
 
+  /* ===== WAVE 6: THE 220 CLUB ===== */
+  {
+    id: "thomas-cook", name: "Thomas Cook", title: "178 Years of Travel, Grounded Overnight", year: "2019",
+    category: "BUSINESS", emoji: "🧳", loss: "£1.7B debt; 600,000 tourists stranded",
+    story: "Thomas Cook invented the package holiday in 1841 — churches chartering trains became a global empire of planes, hotels and high-street stores. But it entered the internet age dragging 560 physical stores and £1.7B of debt from misfired mergers, while Booking.com and budget airlines unbundled its entire reason to exist. When a final rescue deal collapsed in September 2019, the 178-year-old firm ceased trading at 2 AM; 600,000 tourists were abroad mid-holiday, triggering the largest peacetime repatriation in British history.",
+    mistake: "Financing yesterday's business model with debt instead of funding tomorrow's — every pound serviced stores while customers moved to phones.",
+    lesson: "Age is not a moat. When distribution changes, the oldest brand in the industry is just the slowest one with the biggest rent bill. Cannibalize yourself before the internet does it free of charge.",
+    book: "only-paranoid", bookTitle: "Only the Paranoid Survive"
+  },
+  {
+    id: "daewoo-empire", name: "Daewoo", title: "Korea's #2 Chaebol, Dissolved by Its Own Ambition", year: "1999",
+    category: "EGO", emoji: "🏭", loss: "$80B debt — then the biggest corporate collapse ever",
+    story: "Kim Woo-choong built Daewoo from a $10,000 textile trader into Korea's second-largest conglomerate — cars, ships, electronics, 320,000 employees — on one motto: 'The world is wide, and there is much to do.' His strategy was pure expansion: borrow, build, enter every market, never retreat. When the 1997 Asian crisis hit, other chaebols cut back; Kim ACCELERATED, adding 14 new companies. Two years later Daewoo drowned under $80B of debt with $30B of hidden accounting fraud. Kim fled abroad for six years; the empire was dissolved.",
+    mistake: "Treating expansion itself as the strategy — growth was the answer to every question, including the question 'should we stop growing?'",
+    lesson: "Momentum feels like strategy from the inside. If your only plan for a crisis is to accelerate, you don't have a plan — you have a religion, and reality is an atheist.",
+    book: "good-to-great", bookTitle: "Good to Great"
+  },
+  {
+    id: "commodore-64", name: "Commodore", title: "Sold More Computers Than Anyone — Still Died", year: "1994",
+    category: "BUSINESS", emoji: "🖥️", loss: "The best-selling computer ever, wasted",
+    story: "The Commodore 64 remains the best-selling single computer model in history — 12.5M+ units. Commodore OWNED the home-computer boom, even owned its own chip factory. Then management turned every advantage into ash: they price-warred their own products into zero margin, fired the engineers behind their hits, shipped the revolutionary Amiga with almost no marketing budget, and burned cash on failed clones instead. While they coasted on the aging 64, the PC standard ate the future. Bankruptcy came in 1994 — the market leader of 1984 didn't survive one platform cycle.",
+    mistake: "Winning the war and disbanding the army — treating the cash cow as permanent, the engineers as expendable, and marketing as optional.",
+    lesson: "Market share is a snapshot, not a subscription. The team and product culture that got you the lead IS the lead — cut them and you're a brand name waiting for a museum.",
+    book: "innovators-dilemma", bookTitle: "The Innovator's Dilemma"
+  },
+  {
+    id: "palm-webos", name: "Palm", title: "Invented the Smartphone Category, Missed the Smartphone", year: "2011",
+    category: "BUSINESS", emoji: "📟", loss: "From 90% PDA share to a $1.2B fire-sale",
+    story: "Palm put a computer in your pocket before Apple did — the Pilot owned the 90s, the Treo pioneered the smartphone. But years of ownership musical chairs (3Com, spin-offs, split OS companies) left it frozen while the iPhone landed. Palm's CEO famously scoffed: 'PC guys are not going to just figure this out.' The comeback attempt — 2009's webOS, genuinely ahead of its time with card multitasking — arrived underfunded, on weak hardware, exclusive to a struggling carrier. HP bought Palm for $1.2B, killed webOS within 49 days of the TouchPad launch.",
+    mistake: "Corporate restructuring consumed the years that mattered — while Palm reorganized itself, Apple organized the future.",
+    lesson: "Being early buys you a head start, not a finish line. And great technology shipped with weak distribution loses to good technology shipped with power — every single time.",
+    book: "crossing-chasm", bookTitle: "Crossing the Chasm"
+  },
+  {
+    id: "skype-fall", name: "Skype", title: "The Verb That Lost a Pandemic It Should Have Owned", year: "2025",
+    category: "BUSINESS", emoji: "📞", loss: "Bought for $8.5B, shut down worth ~nothing",
+    story: "Skype WAS video calling — a verb, 300M users, bought by Microsoft for $8.5B in 2011. Then a decade of neglect: endless confusing redesigns, sluggish apps, missed mobile-first behavior. When COVID handed video calling the greatest demand shock in history, the world chose Zoom — simpler, faster, just worked — while Skype's own parent pushed Teams instead. Microsoft officially shut Skype down in May 2025: the biggest brand in the category's history didn't even get to attend its market's biggest moment.",
+    mistake: "A decade of redesigning the interface instead of redesigning for reliability — while treating the flagship brand as a legacy chore inside a giant.",
+    lesson: "Brands don't hold markets; experiences do. If your product needs an explanation for why it's worse than the newcomer, the verb you own becomes a word for what people used to do.",
+    book: "innovators-dilemma", bookTitle: "The Innovator's Dilemma"
+  },
+  {
+    id: "tupperware-party", name: "Tupperware", title: "The Party Ended After 78 Years", year: "2024",
+    category: "BUSINESS", emoji: "🥡", loss: "An icon in every kitchen — bankrupt",
+    story: "Tupperware didn't sell containers; it sold the Tupperware Party — a 1950s social-selling revolution that empowered a generation of women entrepreneurs. But the model WAS the moat, and the moat expired: parties died with changing social lives, the company barely entered retail or e-commerce until 2022 (Target, decades too late), and cheaper competitors filled Amazon. Sales fell for years; debt piled; in September 2024 the icon filed for bankruptcy — still famous, still in every kitchen, still unable to sell you anything the way you actually buy.",
+    mistake: "Mistaking a distribution channel (parties) for the brand's essence — and protecting the channel long after customers had left it.",
+    lesson: "Your sales channel is a rental, not an identity. When how people buy changes, loyalty to your old channel is disloyalty to your own survival.",
+    book: "blue-ocean-strategy", bookTitle: "Blue Ocean Strategy"
+  },
+  {
+    id: "red-lobster-shrimp", name: "Red Lobster", title: "Killed by Its Own Endless Shrimp", year: "2024",
+    category: "BUSINESS", emoji: "🦐", loss: "$11M lost on ONE promotion; bankruptcy",
+    story: "Red Lobster's occasional '$20 Endless Shrimp' was a beloved traffic gimmick. In 2023 its owner — Thai Union, which happened to be a giant SHRIMP SUPPLIER — made it permanent. Customers treated it as a professional sport; the chain lost $11M in one quarter on the deal while its supplier-owner sold it all the shrimp. It was the final absurdity atop years of private-equity damage: a sale-leaseback had sold all the restaurants' real estate, saddling every location with rent forever. Bankruptcy filed May 2024.",
+    mistake: "An owner with a conflict of interest ran the menu — the promotion lost money on every plate, but the shrimp supplier got paid on every plate.",
+    lesson: "Check who profits from each decision — when your owner makes money on your costs, your losses are their revenue. And never make a loss-leader permanent: customers will optimize you into the grave.",
+    book: "profit-first", bookTitle: "Profit First"
+  },
+  {
+    id: "bed-bath-beyond", name: "Bed Bath & Beyond", title: "Bought Back Stock While the Ship Sank", year: "2023",
+    category: "MONEY", emoji: "🛏️", loss: "$11.8B in buybacks → bankruptcy",
+    story: "The coupon-famous retailer faced Amazon like everyone else — but chose a spectacular way to die: between 2004 and 2021 it spent $11.8 BILLION buying back its own stock, more than its entire final market value many times over, while stores aged and e-commerce stayed an afterthought. A final act of chaos — replacing beloved brands with unready private labels mid-supply-crisis — emptied shelves and drove away loyalists. It filed for bankruptcy in 2023, having spent the money that could have funded ten reinventions on polishing a sinking share price.",
+    mistake: "Feeding the stock price instead of the business — $11.8B of buybacks was a decade of transformation budget, incinerated for optics.",
+    lesson: "Buybacks reward yesterday's shareholders with tomorrow's survival money. If the core is rotting, every rupee spent making the numbers look good is embezzlement from the future.",
+    book: "intelligent-investor", bookTitle: "The Intelligent Investor"
+  },
+  {
+    id: "vice-media", name: "Vice Media", title: "The $5.7B Media Rebel That Died of Believing Its Hype", year: "2024",
+    category: "STARTUP", emoji: "📰", loss: "$5.7B valuation → sold for $350M scraps",
+    story: "Vice was the future of media — edgy documentaries, a generation's trust, a $5.7B valuation with Disney and Fox money. But the valuation was priced on a fantasy: that cool travels wherever Facebook's algorithm points. Vice (like BuzzFeed News beside it) built its economics on platform reach it didn't control; when algorithms pivoted to video, then away from news entirely, the traffic — and the ad model — evaporated. Expensive bureaus, celebrity executives and swagger remained. Bankruptcy in 2023, sold for ~$350M; by 2024 Vice.com stopped publishing altogether.",
+    mistake: "Building a billion-dollar business on rented land — the entire audience relationship belonged to platforms with zero loyalty.",
+    lesson: "Reach you don't own isn't an asset; it's a weather condition. Convert borrowed audiences into owned ones (email, subscriptions, community) or your valuation is a screenshot of someone else's mood.",
+    book: "company-of-one", bookTitle: "Company of One"
+  },
+  {
+    id: "23andme-dna", name: "23andMe", title: "15 Million DNA Profiles, No Second Act", year: "2025",
+    category: "STARTUP", emoji: "🧬", loss: "$6B valuation → bankruptcy",
+    story: "23andMe made DNA testing a holiday gift — 15M people spat in tubes. But a spit kit is a one-time purchase: once you know your ancestry, you're done, and the company never found a repeatable second product. Drug-discovery bets burned cash slowly; a 2023 data breach exposing millions of profiles burned trust quickly. The stock fell from $6B to penny-stock; the entire board resigned in 2024; bankruptcy followed in 2025 — with the most intimate database ever assembled listed as an asset for sale, exactly what privacy critics had warned all along.",
+    mistake: "A one-and-done product priced like a subscription business — growth masked the absence of any reason for customers to ever return.",
+    lesson: "Ask the brutal question before scaling: what does the customer buy the SECOND time? If the answer is nothing, you're not building a company — you're running a very expensive campaign.",
+    book: "zero-to-one", bookTitle: "Zero to One"
+  },
+  {
+    id: "lordstown-truck", name: "Lordstown Motors", title: "100,000 'Pre-Orders' That Weren't Orders", year: "2023",
+    category: "STARTUP", emoji: "🛻", loss: "$1.6B SPAC → bankruptcy in 3 years",
+    story: "Lordstown bought a shuttered GM plant to build electric trucks and rode the 2020 SPAC mania to a $1.6B valuation, waving '100,000 pre-orders' at investors. A short-seller report found the truth: the 'orders' were non-binding letters of intent — some from companies with no fleets, one from an office with two employees. The CEO resigned, the SEC circled, a prototype burned in testing, and the company produced only a token handful of trucks before 2023 bankruptcy. The factory ended up sold... to Foxconn.",
+    mistake: "Selling vapor metrics to public markets — non-binding interest dressed up as demand, with production reality postponed indefinitely.",
+    lesson: "A pre-order without money attached is a compliment, not a contract. Companies that inflate demand signals aren't early — they're pre-fraud, and the correction always arrives with lawyers.",
+    book: "bad-blood", bookTitle: "Bad Blood"
+  },
+  {
+    id: "clubhouse-fade", name: "Clubhouse", title: "$4B for an App the World Forgot in 18 Months", year: "2023",
+    category: "STARTUP", emoji: "🎙️", loss: "$4B valuation → cultural footnote",
+    story: "In lockdown 2021, Clubhouse was THE app: invite-only audio rooms with Elon and Zuckerberg dropping in, 10M weekly users, a $4B valuation from a16z. But the magic was borrowed from the pandemic: when offices and bars reopened, hours-long audio hangouts collapsed, while Twitter Spaces, Spotify and Discord cloned the feature in months. Clubhouse had scarcity theater but no retention engine — no recordings, no discovery, no reason to return. By 2023 it laid off half its staff and pivoted; the world barely noticed.",
+    mistake: "Confusing a lockdown behavior spike with a permanent human need — and staying a single feature while platforms absorbed it.",
+    lesson: "Ask what your growth is borrowing from: a moment, a gimmick, or a real recurring need. Features get copied in a quarter — retention loops and owned communities are the only defensible parts.",
+    book: "hooked", bookTitle: "Hooked"
+  },
+  {
+    id: "frank-javice", name: "Frank (Charlie Javice)", title: "Sold JPMorgan 4 Million Fake Students", year: "2023",
+    category: "FRAUD", emoji: "🎓", loss: "$175M acquisition, 90% fake users",
+    story: "Charlie Javice — Forbes 30 Under 30 — built Frank, a startup simplifying student financial aid, and sold it to JPMorgan for $175M on the claim of 4.25 million users. When the bank emailed a test batch, delivery rates were catastrophic: prosecutors showed Javice had paid a data scientist $18,000 to fabricate a synthetic list of ~4 million fake students after an employee refused. Real users: under 300,000. JPMorgan sued; in 2025 she was convicted of fraud and sentenced to over 7 years.",
+    mistake: "Buying and selling on a single unverified metric — the world's biggest bank ran less diligence on the user list than it would on a car loan.",
+    lesson: "Verify the metric the whole deal stands on — send the emails, call the customers, count the money. And if your company's value requires inventing 4 million people, the exit you're building is a cell.",
+    book: "bad-blood", bookTitle: "Bad Blood"
+  },
+  {
+    id: "ozy-media", name: "Ozy Media", title: "The COO Impersonated a YouTube Exec on a Live Call", year: "2021",
+    category: "FRAUD", emoji: "🎭", loss: "$83M raised on inflated everything",
+    story: "Ozy Media raised $83M as a buzzy digital-media darling, boasting 50M monthly readers and hit shows. The empire's numbers were heavily inflated — traffic bought and exaggerated, awards self-invented ('we were told we'd have won'). It unraveled with one surreal scene: on a due-diligence call with Goldman Sachs about a $40M investment, Ozy's co-founder COO impersonated a YouTube executive — with a voice-altering app — to vouch for Ozy's fake YouTube numbers. Goldman called YouTube; the New York Times called everyone. Ozy collapsed within days; the founders were later convicted and charged.",
+    mistake: "A culture where every metric was negotiable — until faking a human being on a live call felt like just one more growth hack.",
+    lesson: "Inflated numbers are a loan from the moment of verification. Every fake metric schedules its own due-diligence call — and someone always eventually dials the real YouTube.",
+    book: "bad-blood", bookTitle: "Bad Blood"
+  },
+  {
+    id: "cambridge-analytica", name: "Cambridge Analytica", title: "Harvested 87 Million Friends of Friends", year: "2018",
+    category: "TRUST", emoji: "🕵️", loss: "The company, and Facebook's $5B fine",
+    story: "A cheerful personality quiz — 'thisisyourdigitallife' — was taken by 270,000 Facebook users. Through Facebook's friends-API, it quietly harvested data on up to 87 MILLION people, which Cambridge Analytica turned into psychographic voter-targeting products sold to political campaigns. When whistleblower Christopher Wylie went public in 2018, the blast radius was historic: CA shut down within months, Facebook took a $5B FTC fine and a permanent trust wound, and 'data privacy' went from nerd topic to dinner-table fear.",
+    mistake: "For platforms: building growth APIs with no imagination for abuse — the quiz was within the rules, because the rules were written by the growth team.",
+    lesson: "Any data you collect will eventually be used to the full limit of what's technically possible — by someone. Design systems for the worst plausible user, because they've already signed up.",
+    book: "laws-human-nature", bookTitle: "The Laws of Human Nature"
+  },
+  {
+    id: "gomechanic-india", name: "GoMechanic", title: "India's Car-Repair Unicorn-to-Be Cooked Its Books", year: "2023",
+    category: "FRAUD", emoji: "🔧", loss: "$120M+ raised; 70% staff cut overnight",
+    story: "GoMechanic — Sequoia-backed, on the road to unicorn status — was India's largest car-servicing startup. During due diligence for a new round, investors found the engine was painted on: revenues inflated with fake garages and bogus receivables. Founder Amit Bhasin posted a public confession — 'we got carried away... grave errors in judgment' — 70% of the 1,000+ staff were fired the same week, and the company sold in a distress deal for a fraction of its funding. The confession's most honest line: they chased 'growth at all costs.'",
+    mistake: "When real growth slowed, they manufactured the spreadsheet version — because the next round mattered more than the truth.",
+    lesson: "'Growth at all costs' eventually invoices you for exactly that: ALL costs — company, reputation, employees' livelihoods. Miss a target honestly; it's survivable. Hit it fraudulently; it never is.",
+    book: "extreme-ownership", bookTitle: "Extreme Ownership"
+  },
+  {
+    id: "bharatpe-grover", name: "BharatPe & Ashneer", title: "The Shark Who Bit His Own Company", year: "2022",
+    category: "EGO", emoji: "🦈", loss: "A $2.8B fintech's reputation + his own seat",
+    story: "Ashneer Grover co-built BharatPe into a $2.8B fintech and became a household name as Shark Tank India's bluntest judge. Then a leaked audio surfaced of him abusing a bank employee over IPO shares; his defiance ('I'm not apologizing') turned a PR problem into a board war. A governance review alleged family-run expense fraud — luxury trips and personal bills through fake vendors; his wife (head of controls) was implicated; he resigned minutes before the board could fire him, then live-tweeted the war. Criminal cases followed. The company survived; his throne didn't.",
+    mistake: "Believing the founder IS the company — treating governance as an insult, the board as staff, and the company's account as a family wallet.",
+    lesson: "Aggression can build a company and still be the exact thing that takes it from you. Power earned publicly gets revoked publicly — and boards forgive missed numbers far more easily than humiliation.",
+    book: "ego-is-enemy", bookTitle: "Ego Is the Enemy"
+  },
+  {
+    id: "koo-app", name: "Koo", title: "India's Twitter Died Waiting for Twitter to Die", year: "2024",
+    category: "STARTUP", emoji: "🐦", loss: "$60M+ raised; sold for scrap value",
+    story: "Koo — the yellow bird — was India's answer to Twitter: government ministers onboarded during a 2021 standoff with Twitter, 60M+ downloads, Tiger Global money at a $270M valuation. But its growth spiked only when Twitter had political trouble; between controversies, users drifted back — celebrities, cricketers and news lived where the audience already was. Multi-language features were genuinely good; the network effect never came. When funding winter hit and a sale to Dailyhunt collapsed, Koo shut down in July 2024 with a farewell note: 'the little yellow bird says goodbye.'",
+    mistake: "Building a substitute, not an alternative — Koo's only growth engine was Twitter's bad weeks, and weather is not a strategy.",
+    lesson: "You can't out-network a network by being a local copy. Win a niche the giant structurally ignores, or don't enter — patriotism downloads apps; only utility keeps them open.",
+    book: "zero-to-one", bookTitle: "Zero to One"
+  },
+  {
+    id: "tinyowl-food", name: "TinyOwl", title: "Burned ₹100 Crore, Locked Its Own Founder In", year: "2016",
+    category: "STARTUP", emoji: "🦉", loss: "$27M raised; ended in hostage-style layoffs",
+    story: "TinyOwl was Zomato-before-Zomato-delivered: a slick food-ordering app that raised $27M and expanded to 11 cities in months. Unit economics were an afterthought — deep discounts bought orders that lost money each time, and city launches multiplied the bleeding. The layoffs became legend for the wrong reason: at the Pune office, terminated employees demanding dues locked co-founder Gaurav Choudhary in the office for two days. After more rounds of cuts, the remains were merged into Roadrunnr and vanished. Swiggy — founded a year later, obsessed with delivery economics — took the market.",
+    mistake: "Scaling the map before the math: 11 cities of negative-margin orders is not momentum, it's a countdown with better branding.",
+    lesson: "In operations-heavy businesses, expansion is a multiplier — it multiplies whatever your unit economics are. Multiply a loss by 11 cities and you get 11 cities of loss, plus a locked conference room.",
+    book: "lean-startup", bookTitle: "The Lean Startup"
+  },
+
   /* ===== WAVE 5: PAST 200 ===== */
   {
     id: "wamu-2008", name: "Washington Mutual", title: "The Biggest Bank Failure in American History", year: "2008",

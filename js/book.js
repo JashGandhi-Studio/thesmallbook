@@ -199,7 +199,7 @@
     ctx.fillText("📕 THESMALLBOOK", W / 2, H - barH + 92);
     ctx.fillStyle = "#f2ede2";
     ctx.font = "bold 28px 'Space Grotesk', Arial";
-    ctx.fillText("115 BOOKS · 590+ LESSONS · FREE FOREVER", W / 2, H - barH + 140);
+    ctx.fillText("150+ BOOKS · 700+ LESSONS · FREE FOREVER", W / 2, H - barH + 140);
     ctx.textAlign = "left";
   }
 

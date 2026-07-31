@@ -45,6 +45,42 @@
 
   let activeCat = "ALL";
   let query = "";
+  let sortMode = "default";
+
+  /* parse "$4.6B in 4 months" / "₹14,000 crore ($2B)" → dollars (rough, for sorting/stats) */
+  function lossUSD(f) {
+    const s = String(f.loss || "");
+    let best = 0;
+    const dollar = [...s.matchAll(/\$([\d,.]+)\s*(T|trillion|B|billion|M|million|K)?/gi)];
+    dollar.forEach((m) => {
+      let n = parseFloat(m[1].replace(/,/g, ""));
+      const unit = (m[2] || "").toUpperCase();
+      if (unit.startsWith("T")) n *= 1e12;
+      else if (unit.startsWith("B")) n *= 1e9;
+      else if (unit.startsWith("M")) n *= 1e6;
+      else if (unit.startsWith("K")) n *= 1e3;
+      if (n > best) best = n;
+    });
+    const crore = s.match(/₹\s*([\d,.]+)\s*(lakh\s*crore|crore)/i);
+    if (crore) {
+      let n = parseFloat(crore[1].replace(/,/g, ""));
+      n *= /lakh/i.test(crore[2]) ? 1.2e9 * 100 : 1.2e5 * 1000; // ≈$120k per crore
+      if (n > best) best = n;
+    }
+    return best;
+  }
+  function fmtUSD(n) {
+    if (n >= 1e12) return "$" + (n / 1e12).toFixed(1) + "T";
+    if (n >= 1e9) return "$" + (n / 1e9).toFixed(0) + "B";
+    if (n >= 1e6) return "$" + (n / 1e6).toFixed(0) + "M";
+    return "$" + Math.round(n).toLocaleString();
+  }
+  function yearNum(f) {
+    const s = String(f.year);
+    const m = s.match(/\d{1,4}/);
+    if (!m) return 0;
+    return /BC/i.test(s) ? -(+m[0]) : +m[0];
+  }
 
   /* stats */
   const el = (id) => document.getElementById(id);
@@ -79,6 +115,33 @@
     render();
   });
 
+  /* sort modes */
+  const sortWrap = document.getElementById("graveSort");
+  if (sortWrap) sortWrap.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-sort]");
+    if (!b) return;
+    sortMode = b.dataset.sort;
+    sortWrap.querySelectorAll(".gravesort__btn").forEach((x) => x.classList.toggle("active", x === b));
+    render();
+  });
+
+  /* live data feed */
+  function updateFeed(results) {
+    const el2 = (id) => document.getElementById(id);
+    if (!el2("gfResults")) return;
+    el2("gfResults").textContent = results.length;
+    let burned = 0; results.forEach((f) => { burned += lossUSD(f); });
+    el2("gfBurned").textContent = burned ? fmtUSD(burned) + "+" : "$0";
+    const catCount = {};
+    results.forEach((f) => { catCount[f.category] = (catCount[f.category] || 0) + 1; });
+    const top = Object.entries(catCount).sort((a, b) => b[1] - a[1])[0];
+    el2("gfCause").textContent = top ? ((CAT_META[top[0]] || {}).emoji || "") + " " + top[0] : "—";
+    const eraCount = {};
+    results.forEach((f) => { const y = yearNum(f); if (y) { const era = Math.floor(y / 10) * 10; eraCount[era] = (eraCount[era] || 0) + 1; } });
+    const topEra = Object.entries(eraCount).sort((a, b) => b[1] - a[1])[0];
+    el2("gfEra").textContent = topEra ? topEra[0] + "s" : "—";
+  }
+
   function esc(s) {
     return String(s || "").replace(/[&<>"']/g, (c) =>
       ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -104,6 +167,7 @@
           <div class="grave__meta">
             <span class="grave__loss">💸 ${esc(f.loss)}</span>
             <span class="grave__cat" translate="no">${(CAT_META[f.category] || {}).emoji || "💀"} ${esc(f.category)}</span>
+            ${o.medal ? `<span class="grave__medal" translate="no">${o.medal} TOP BURN</span>` : ""}
             ${FRESH.has(f.id) ? `<span class="grave__fresh" translate="no">🩸 FRESH GRAVE</span>` : ""}
           </div>
         </div>
@@ -134,22 +198,29 @@
   }
 
   function render() {
-    const results = F.filter((f) => {
+    let results = F.filter((f) => {
       if (activeCat !== "ALL" && f.category !== activeCat) return false;
       if (!query) return true;
       return (f.name + " " + f.title + " " + f.story + " " + f.lesson + " " + f.year)
         .toLowerCase().includes(query);
     });
 
+    if (sortMode === "burned") results.sort((a, b) => lossUSD(b) - lossUSD(a));
+    else if (sortMode === "newest") results.sort((a, b) => yearNum(b) - yearNum(a));
+    else if (sortMode === "oldest") results.sort((a, b) => yearNum(a) - yearNum(b));
+
+    updateFeed(results);
     grid.innerHTML = "";
     if (!results.length) {
       grid.innerHTML = `<div class="empty"><span>🪦</span>No corpses match.<br>The graveyard is big — try another word.</div>`;
       return;
     }
 
-    const defaultView = !query && activeCat === "ALL";
+    const defaultView = !query && activeCat === "ALL" && sortMode === "default";
+    const MEDALS = ["🥇", "🥈", "🥉"];
     results.forEach((f, i) => {
-      const g = buildGrave(f, { open: defaultView && i === 0 });
+      const medal = sortMode === "burned" && i < 3 ? MEDALS[i] : "";
+      const g = buildGrave(f, { open: defaultView && i === 0, medal });
       g.style.setProperty("--i", i % 12);
       grid.appendChild(g);
     });

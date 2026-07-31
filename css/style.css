@@ -25,7 +25,12 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* stop iOS/Android from auto-inflating text on large-font devices */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 
 body {
   background: var(--bg);
@@ -1907,4 +1912,59 @@ html.dark .buybtn--soft:hover { background: var(--yellow); color: #111; }
 @media (prefers-reduced-motion: reduce) {
   .confetti { display: none; }
   .celebmodal__emoji { animation: none; }
+}
+
+
+/* ============================================================
+   💀 GRAVEYARD v3 — sort modes, live data feed, top-burn medals
+   ============================================================ */
+.gravesort {
+  max-width: var(--maxw); margin: 18px auto 0; padding: 0 20px;
+  display: flex; gap: 10px; flex-wrap: wrap;
+}
+.gravesort__btn {
+  font-family: var(--font-head); font-size: .6rem; letter-spacing: .5px;
+  padding: 10px 14px; background: var(--paper); color: var(--ink);
+  border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
+  cursor: pointer; transition: transform .12s, box-shadow .12s, background .12s;
+}
+.gravesort__btn:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--ink); }
+.gravesort__btn.active { background: var(--red); color: #fff; }
+html.dark .gravesort__btn { background: #1b1712; color: #f2ead8; border-color: #000; box-shadow: 3px 3px 0 #000; }
+html.dark .gravesort__btn.active { background: var(--red); color: #fff; }
+
+.gravefeed {
+  max-width: var(--maxw); margin: 18px auto 0; padding: 0 20px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+}
+.gravefeed__cell {
+  background: #120404; border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
+  padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;
+  position: relative; overflow: hidden;
+}
+.gravefeed__cell::after {
+  content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255,82,82,.08), transparent);
+  animation: feedSweep 3.2s ease-in-out infinite;
+}
+@keyframes feedSweep { 0% { left: -60%; } 60%, 100% { left: 120%; } }
+.gravefeed__label { font-family: var(--font-head); font-size: .48rem; letter-spacing: 1px; color: #b3a98f; }
+.gravefeed__val { font-family: var(--font-head); font-size: clamp(.9rem, 2.4vw, 1.25rem); color: #f2ead8; }
+.gravefeed__val--red { color: #ff5252; }
+html.dark .gravefeed__cell { border-color: #000; box-shadow: 4px 4px 0 #000; }
+
+.grave__medal {
+  display: inline-block; font-family: var(--font-head); font-size: .52rem;
+  letter-spacing: .5px; padding: 4px 8px; background: #ffd700; color: #111;
+  border: 2px solid var(--ink);
+}
+html.dark .grave__medal { border-color: #111; }
+
+@media (max-width: 700px) {
+  .gravefeed { grid-template-columns: repeat(2, 1fr); }
+  .gravesort__btn { font-size: .52rem; padding: 8px 10px; }
+  .gravefeed__label { font-size: .44rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gravefeed__cell::after { animation: none; display: none; }
 }

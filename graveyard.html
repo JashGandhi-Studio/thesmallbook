@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>💀 The Graveyard — TheSmallBook</title>
-  <meta name="description" content="200+ legendary real-world failures — bankruptcies, frauds, ego trips, and empires lost. Learn what NOT to do.">
+  <meta name="description" content="220 legendary real-world failures — bankruptcies, frauds, ego trips, and empires lost. Learn what NOT to do.">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
   <script>
@@ -22,11 +22,11 @@
   <div class="ticker ticker--grave">
     <div class="ticker__track">
       <span>💀 LEARN FROM THOSE WHO PAID FULL PRICE</span>
-      <span>📉 200+ LEGENDARY FAILURES, AUTOPSIED</span>
+      <span>📉 220 LEGENDARY FAILURES, AUTOPSIED</span>
       <span>🧠 THE LESSON IS FREE — THEY PAID BILLIONS</span>
       <span>⚰️ EGO · FRAUD · GREED · HUBRIS</span>
       <span>💀 LEARN FROM THOSE WHO PAID FULL PRICE</span>
-      <span>📉 200+ LEGENDARY FAILURES, AUTOPSIED</span>
+      <span>📉 220 LEGENDARY FAILURES, AUTOPSIED</span>
       <span>🧠 THE LESSON IS FREE — THEY PAID BILLIONS</span>
       <span>⚰️ EGO · FRAUD · GREED · HUBRIS</span>
     </div>
@@ -53,8 +53,8 @@
     <div class="hero__badge hero__badge--grave">⚰️ REST IN PIECES</div>
     <h1>THE <span class="hl hl--red">GRAVEYARD</span></h1>
     <p class="hero__sub">
-      115 books teach you what TO do. This page teaches the opposite —
-      <strong>200+ real people, startups and empires</strong> who lost fortunes, freedom, and legacies.
+      150+ books teach you what TO do. This page teaches the opposite —
+      <strong>220 real people, startups and empires</strong> who lost fortunes, freedom, and legacies.
       Every grave has a story, a fatal mistake, and a lesson.
       <strong>They paid full price so you can learn for free.</strong>
     </p>
@@ -80,6 +80,22 @@
     </div>
   </div>
   <div class="filters" id="graveFilters"></div>
+
+  <!-- SORT MODES -->
+  <div class="gravesort" id="graveSort">
+    <button class="gravesort__btn active" data-sort="default" translate="no">✨ CLASSIC</button>
+    <button class="gravesort__btn" data-sort="burned" translate="no">🔥 BIGGEST BURN</button>
+    <button class="gravesort__btn" data-sort="newest" translate="no">📅 RECENTLY DIED</button>
+    <button class="gravesort__btn" data-sort="oldest" translate="no">🏛️ ANCIENT HISTORY</button>
+  </div>
+
+  <!-- LIVE DATA FEED -->
+  <div class="gravefeed" id="graveFeed">
+    <div class="gravefeed__cell"><span class="gravefeed__label">RESULTS</span><span class="gravefeed__val" id="gfResults">0</span></div>
+    <div class="gravefeed__cell"><span class="gravefeed__label">CAPITAL BURNED</span><span class="gravefeed__val gravefeed__val--red" id="gfBurned">$0</span></div>
+    <div class="gravefeed__cell"><span class="gravefeed__label">TOP CAUSE</span><span class="gravefeed__val" id="gfCause">—</span></div>
+    <div class="gravefeed__cell"><span class="gravefeed__label">DEADLIEST ERA</span><span class="gravefeed__val" id="gfEra">—</span></div>
+  </div>
 
   <!-- GRAVES GRID -->
   <main class="gravegrid" id="graveGrid"></main>
