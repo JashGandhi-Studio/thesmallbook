@@ -35,6 +35,17 @@ window.TSB_CONFIG = {
   // (used by the no-backend submission flow — set this before launch!)
   SUBMIT_EMAIL: "jashgandhicreator07@gmail.com",
 
+  /* 🆕 NEW THIS WEEK — badges on homepage cards & graveyard.
+     HOW TO UPDATE (weekly, 1 minute): replace these ids with whatever
+     you added this week. Empty list [] = no badges shown. */
+  NEW_THIS_WEEK: [
+    "supercommunicators", "be-useful", "never-finished",
+    "power-of-regret", "daily-stoic", "comfort-crisis"
+  ],
+  NEW_GRAVES_THIS_WEEK: [
+    "thomas-cook", "red-lobster-shrimp", "koo-app", "bharatpe-grover"
+  ],
+
   /* Amazon Associates (India) — book buy links */
   AMAZON_TAG: "thesmallbook-21",
 

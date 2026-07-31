@@ -1968,3 +1968,354 @@ html.dark .grave__medal { border-color: #111; }
 @media (prefers-reduced-motion: reduce) {
   .gravefeed__cell::after { animation: none; display: none; }
 }
+
+/* ============================================================
+   📑 STICKY LESSON JUMP-NAV (book pages)
+   ============================================================ */
+.lessonnav__fab {
+  position: fixed; right: 18px; bottom: 18px; z-index: 250;
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-head); font-size: .8rem;
+  padding: 12px 16px; background: var(--yellow); color: #111;
+  border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
+  cursor: pointer; opacity: 0; transform: translateY(80px);
+  transition: opacity .25s, transform .25s cubic-bezier(.2,.9,.3,1.2), background .15s;
+}
+.lessonnav__fab.show { opacity: 1; transform: none; }
+.lessonnav__fab.open { background: var(--ink); color: var(--yellow); }
+.lessonnav__count { font-size: .68rem; background: #111; color: var(--yellow); padding: 3px 7px; }
+.lessonnav__fab.open .lessonnav__count { background: var(--yellow); color: #111; }
+html.dark .lessonnav__fab { border-color: #000; box-shadow: 4px 4px 0 #000; }
+
+.lessonnav__panel {
+  position: fixed; right: 18px; bottom: 76px; z-index: 250;
+  width: min(340px, calc(100vw - 36px));
+  max-height: 60vh; overflow: auto;
+  background: var(--paper); border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--ink);
+  display: none;
+}
+.lessonnav__panel.open { display: block; animation: navPop .18s cubic-bezier(.2,.9,.3,1.3); }
+@keyframes navPop { from { opacity: 0; transform: translateY(12px) scale(.97); } to { opacity: 1; transform: none; } }
+.lessonnav__item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; text-decoration: none; color: var(--ink);
+  border-bottom: 2px solid rgba(17,17,17,.08);
+  transition: background .12s;
+}
+.lessonnav__item:hover { background: var(--yellow); color: #111; }
+.lessonnav__item:last-child { border-bottom: none; }
+.lessonnav__num { font-family: var(--font-head); font-size: .7rem; flex-shrink: 0; width: 26px; }
+.lessonnav__title { font-size: .82rem; font-weight: 600; line-height: 1.25; flex: 1; }
+.lessonnav__check { font-family: var(--font-head); color: var(--green); flex-shrink: 0; }
+.lessonnav__item--plan { background: #fff6d9; }
+.lessonnav__item--plan:hover { background: var(--yellow); }
+html.dark .lessonnav__panel { background: #1b1712; }
+html.dark .lessonnav__item { color: #f2ead8; border-color: rgba(242,234,216,.1); }
+html.dark .lessonnav__item:hover { color: #111; }
+html.dark .lessonnav__item--plan { background: #2a2417; }
+html.dark .lessonnav__item--plan:hover { background: var(--yellow); }
+
+@media (max-width: 560px) {
+  .lessonnav__fab { right: 12px; bottom: 12px; font-size: .7rem; padding: 10px 13px; }
+  .lessonnav__panel { right: 12px; bottom: 64px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lessonnav__fab, .lessonnav__panel.open { animation: none !important; transition: opacity .1s !important; }
+}
+
+/* ============================================================
+   🆕 NEW BADGE + 🔍 FOUND-INSIDE CHIP (home cards)
+   ============================================================ */
+/* gold bookmark-tab hanging from the card's top edge — premium, no overlap */
+.card__new {
+  position: absolute; top: -3px; left: 50%; transform: translateX(-50%); z-index: 3;
+  font-family: var(--font-head); font-size: .55rem; letter-spacing: 1.5px;
+  padding: 6px 14px 8px;
+  background: linear-gradient(135deg, #ffd94d, var(--yellow) 55%, #e6b400);
+  color: #111;
+  border: 2px solid var(--ink); border-top: none;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 3px 0 var(--ink);
+  overflow: hidden;
+}
+.card__new::after {
+  content: ""; position: absolute; top: 0; left: -80%;
+  width: 50%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.75), transparent);
+  animation: newShine 3s ease-in-out infinite;
+}
+@keyframes newShine { 0%, 55% { left: -80%; } 85%, 100% { left: 130%; } }
+html.dark .card__new { border-color: #000; box-shadow: 0 3px 0 #000; }
+@media (prefers-reduced-motion: reduce) { .card__new::after { animation: none; display: none; } }
+
+.card__hit {
+  margin-top: 8px; font-size: .72rem; font-weight: 700;
+  padding: 7px 10px; background: #fff6d9; border: 2px dashed var(--ink);
+  color: #5a4a00; line-height: 1.3;
+}
+.card__hit strong { color: #111; }
+html.dark .card__hit { background: #2a2417; color: #d8c98a; }
+html.dark .card__hit strong { color: #f2ead8; }
+
+/* ============================================================
+   📄 ABOUT PAGE
+   ============================================================ */
+.about { max-width: 820px; margin: 0 auto; padding: 20px 20px 60px; }
+.about__block {
+  background: var(--paper); border: var(--border); box-shadow: var(--shadow);
+  padding: 28px 30px; margin-top: 28px;
+}
+.about__block--creator { border-left: 10px solid var(--yellow); }
+.about__head { font-family: var(--font-head); font-size: 1.25rem; text-transform: uppercase; margin-bottom: 12px; }
+.about__block p { font-size: 1rem; line-height: 1.65; margin-top: 10px; }
+.about__block a:not(.btn) { color: inherit; font-weight: 700; }
+.about__block--cta .btn--ink { color: #fffdf5 !important; }
+html.dark .about__block--cta .btn--ink { color: #f2ead8 !important; }
+.about__stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-top: 20px; }
+.about__rules { margin: 10px 0 0 20px; display: flex; flex-direction: column; gap: 10px; font-size: 1rem; line-height: 1.6; }
+.about__reach { background: #fff6d9; border: 2px dashed var(--ink); padding: 14px 16px; margin-top: 16px !important; font-size: .95rem !important; }
+html.dark .about__reach { background: #2a2417; }
+.about__block--cta { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; background: transparent; border: none; box-shadow: none; }
+.btn--big { font-size: .85rem; padding: 16px 22px; }
+html.dark .about__block { background: #1b1712; }
+.about__features { list-style: none; margin-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+.about__features li { font-size: .97rem; line-height: 1.55; padding: 10px 14px; background: var(--bg); border: 2px solid var(--ink); }
+html.dark .about__features li { background: #171310; }
+
+/* ============================================================
+   📺 SHELVES VIEW (Netflix-style category rows)
+   ============================================================ */
+.grid--shelves { display: block !important; }
+.shelfrow { margin-bottom: 34px; }
+.shelfrow__head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 14px; flex-wrap: wrap;
+}
+.shelfrow__title {
+  font-family: var(--font-head); font-size: clamp(1rem, 2.6vw, 1.3rem);
+  text-transform: uppercase; display: flex; align-items: center; gap: 10px;
+}
+.shelfrow__count {
+  font-size: .62rem; background: var(--ink); color: var(--yellow);
+  padding: 4px 9px; letter-spacing: 1px;
+}
+.shelfrow__tools { display: flex; gap: 8px; align-items: center; }
+.shelfrow__arrow {
+  width: 38px; height: 38px; font-family: var(--font-head); font-size: .85rem;
+  background: var(--paper); border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
+  cursor: pointer; transition: transform .12s, box-shadow .12s, background .12s;
+}
+.shelfrow__arrow:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--ink); background: var(--yellow); }
+.shelfrow__seeall {
+  font-family: var(--font-head); font-size: .6rem; letter-spacing: .5px;
+  padding: 10px 12px; background: var(--yellow); color: #111;
+  border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
+  cursor: pointer; transition: transform .12s, box-shadow .12s;
+}
+.shelfrow__seeall:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--ink); }
+html.dark .shelfrow__arrow { background: #1b1712; color: #f2ead8; border-color: #000; box-shadow: 3px 3px 0 #000; }
+html.dark .shelfrow__arrow:hover { background: var(--yellow); color: #111; }
+html.dark .shelfrow__seeall { border-color: #000; box-shadow: 3px 3px 0 #000; }
+
+.shelfrow__scroll {
+  display: flex; gap: 18px; overflow-x: auto; padding: 4px 4px 14px;
+  scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin; scrollbar-color: var(--ink) transparent;
+}
+.shelfrow__scroll::-webkit-scrollbar { height: 8px; }
+.shelfrow__scroll::-webkit-scrollbar-thumb { background: var(--ink); border-radius: 0; }
+.card--shelf {
+  flex: 0 0 250px; max-width: 250px; scroll-snap-align: start;
+  animation: none;
+}
+@media (max-width: 560px) {
+  .card--shelf { flex: 0 0 200px; max-width: 200px; }
+  .shelfrow__arrow { display: none; } /* touch scroll on mobile */
+  .shelfrow__scroll { gap: 12px; }
+}
+
+/* ============================================================
+   📊 READING PROGRESS BAR (book pages)
+   ============================================================ */
+.readbar {
+  position: fixed; top: 0; left: 0; right: 0; height: 5px;
+  background: rgba(17,17,17,.12); z-index: 400;
+  opacity: 0; transition: opacity .25s;
+  pointer-events: none;
+}
+.readbar.show { opacity: 1; }
+.readbar__fill {
+  display: block; height: 100%; width: 0%;
+  background: var(--yellow);
+  box-shadow: 0 0 8px rgba(255,200,0,.5);
+  transition: width .1s linear;
+}
+html.dark .readbar { background: rgba(242,234,216,.12); }
+.btn--green { background: var(--green); color: #111; }
+
+/* ============================================================
+   💀 GRAVEYARD v4 — case-file curiosity design
+   ============================================================ */
+/* story teaser: first line, fading out like a torn page — the itch */
+.grave__tease {
+  margin-top: 10px; font-size: .88rem; font-style: italic; line-height: 1.45;
+  color: var(--ink); opacity: .75; max-width: 640px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, #000 30%, transparent 96%);
+  mask-image: linear-gradient(180deg, #000 30%, transparent 96%);
+  transition: opacity .2s;
+}
+.grave:hover .grave__tease { opacity: 1; }
+.grave.open .grave__tease, .grave.open .grave__seals { display: none; }
+html.dark .grave__tease { color: #f2ead8; }
+
+/* sealed-evidence chips: what's buried inside, stamped shut */
+.grave__seals { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.grave__seal {
+  position: relative;
+  font-family: var(--font-head); font-size: .5rem; letter-spacing: 1px;
+  padding: 6px 10px 6px 26px; color: #857c68;
+  border: 2px dashed #a89c82; background: transparent;
+  transition: color .15s, border-color .15s, transform .15s;
+}
+.grave__seal::before {
+  content: "🔒"; position: absolute; left: 8px; top: 50%;
+  transform: translateY(-50%); font-size: .62rem;
+}
+.grave:hover .grave__seal { color: var(--ink); border-color: var(--ink); }
+.grave:hover .grave__seal--book { color: #b26a00; border-color: #b26a00; }
+.grave:hover .grave__seal:nth-child(1) { transform: rotate(-1.2deg); }
+.grave:hover .grave__seal:nth-child(3) { transform: rotate(1.2deg); }
+html.dark .grave__seal { color: #6b6353; border-color: #4a4438; }
+html.dark .grave:hover .grave__seal { color: #f2ead8; border-color: #f2ead8; }
+html.dark .grave:hover .grave__seal--book { color: var(--yellow); border-color: var(--yellow); }
+
+/* DIG button upgrade: pulse-glow so it reads as the key to the seals */
+.grave__dig { position: relative; }
+.grave:hover .grave__dig { animation: digGlow 1.2s ease-in-out infinite; }
+@keyframes digGlow {
+  0%, 100% { box-shadow: 3px 3px 0 var(--ink); }
+  50% { box-shadow: 3px 3px 0 var(--ink), 0 0 16px rgba(255,200,0,.75); }
+}
+html.dark .grave:hover .grave__dig { animation-name: digGlowDark; }
+@keyframes digGlowDark {
+  0%, 100% { box-shadow: 3px 3px 0 #000; }
+  50% { box-shadow: 3px 3px 0 #000, 0 0 16px rgba(255,200,0,.75); }
+}
+
+/* opening feels like a reveal: autopsy sections rise in sequence */
+.grave.open .grave__body > * { animation: autopsyRise .35s ease backwards; }
+.grave.open .grave__body > *:nth-child(2) { animation-delay: .06s; }
+.grave.open .grave__body > *:nth-child(3) { animation-delay: .12s; }
+.grave.open .grave__body > *:nth-child(4) { animation-delay: .18s; }
+.grave.open .grave__body > *:nth-child(5) { animation-delay: .24s; }
+.grave.open .grave__body > *:nth-child(6) { animation-delay: .3s; }
+@keyframes autopsyRise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 560px) {
+  .grave__tease { font-size: .78rem; -webkit-line-clamp: 2; }
+  .grave__seal { font-size: .44rem; padding: 5px 8px 5px 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .grave__dig, .grave.open .grave__body > * { animation: none !important; }
+}
+
+/* ============================================================
+   📄 ABOUT PAGE v2 — glow-up
+   ============================================================ */
+.about__block { position: relative; }
+.about__block--intro { border-left: 10px solid var(--yellow); }
+.about__sticker {
+  position: absolute; font-family: var(--font-head); font-size: .58rem;
+  letter-spacing: 1px; padding: 7px 12px; background: var(--green); color: #111;
+  border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
+  transform: rotate(3deg);
+}
+.about__sticker--tl { top: -14px; right: 18px; }
+
+.about__block--grave {
+  background: #120404; color: #f2ead8;
+  border-color: #000; display: flex; flex-direction: column;
+}
+.about__block--grave p { color: #f2ead8; }
+.about__gravepunch {
+  font-family: var(--font-head); font-size: 1.05rem; text-transform: uppercase;
+  color: #00d99b !important; margin-top: 14px !important;
+}
+html.dark .about__block--grave { background: #120404; }
+
+/* creator ID card */
+.idcard {
+  border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--ink);
+  background: var(--bg); margin-top: 16px; overflow: hidden;
+  transform: rotate(-.5deg);
+}
+.idcard__strip {
+  background: var(--ink); color: var(--yellow);
+  font-family: var(--font-head); font-size: .5rem; letter-spacing: 2px;
+  padding: 6px 10px; white-space: nowrap; overflow: hidden;
+}
+.idcard__body { display: flex; gap: 18px; padding: 18px; align-items: center; flex-wrap: wrap; }
+.idcard__avatar {
+  width: 84px; height: 84px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.6rem; background: var(--yellow);
+  border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
+}
+.idcard__info { flex: 1; min-width: 220px; }
+.idcard__name { font-family: var(--font-head); font-size: 1.3rem; letter-spacing: .5px; }
+.idcard__role { font-size: .85rem; font-weight: 700; margin-top: 3px; opacity: .8; }
+.idcard__loc { font-size: .8rem; font-weight: 600; margin-top: 3px; opacity: .7; }
+.idcard__links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.idcard__chip {
+  font-family: var(--font-head); font-size: .58rem; letter-spacing: .5px;
+  padding: 8px 12px; background: var(--paper); color: var(--ink) !important;
+  border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink);
+  text-decoration: none !important; transition: transform .12s, box-shadow .12s, background .12s;
+}
+.idcard__chip:hover { transform: translate(-2px,-2px); box-shadow: 4px 4px 0 var(--ink); background: var(--yellow); }
+.idcard__chip--insta { background: linear-gradient(45deg, #feda75, #d62976 70%); color: #fff !important; }
+.idcard__chip--insta:hover { background: linear-gradient(45deg, #feda75, #d62976 70%); }
+html.dark .idcard { background: #171310; }
+html.dark .idcard__chip { background: #1b1712; color: #f2ead8 !important; }
+html.dark .idcard__chip:hover { background: var(--yellow); color: #111 !important; }
+
+/* feature tiles */
+.about__block--naked { background: transparent; border: none; box-shadow: none; padding-left: 0; padding-right: 0; }
+.featgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; margin-top: 16px; }
+.feattile {
+  background: var(--tile, var(--paper)); color: #111;
+  border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
+  padding: 16px; font-size: .82rem; line-height: 1.45;
+  display: flex; flex-direction: column; gap: 4px;
+  transition: transform .14s, box-shadow .14s;
+}
+.feattile:hover { transform: translate(-3px,-3px) rotate(-.5deg); box-shadow: 7px 7px 0 var(--ink); }
+.feattile__emoji { font-size: 1.6rem; line-height: 1; margin-bottom: 4px; }
+.feattile strong { font-family: var(--font-head); font-size: .78rem; text-transform: uppercase; }
+html.dark .feattile { border-color: #000; box-shadow: 4px 4px 0 #000; }
+
+/* rule cards */
+.rulestack { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+.rulecard {
+  display: flex; gap: 14px; align-items: flex-start;
+  background: var(--bg); border: 2px solid var(--ink);
+  padding: 14px 16px; font-size: .95rem; line-height: 1.55;
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform .15s;
+}
+.rulecard:hover { transform: rotate(0deg) translateX(4px); }
+.rulecard__num {
+  font-family: var(--font-head); font-size: 1.1rem; color: var(--yellow);
+  background: var(--ink); padding: 4px 9px; flex-shrink: 0;
+}
+html.dark .rulecard { background: #171310; }
+
+@media (max-width: 560px) {
+  .featgrid { grid-template-columns: repeat(2, 1fr); }
+  .feattile { font-size: .72rem; padding: 12px; }
+  .idcard__avatar { width: 64px; height: 64px; font-size: 2rem; }
+}

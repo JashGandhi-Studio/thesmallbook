@@ -14,9 +14,12 @@
   const statCats = document.getElementById("statCats");
   const statMins = document.getElementById("statMins");
 
+  const NEW_IDS = new Set((window.TSB_CONFIG && TSB_CONFIG.NEW_THIS_WEEK) || []);
+  function isNew(id) { return NEW_IDS.has(id); }
+
   let activeCat = "ALL";
   let query = "";
-  let sortMode = "default";
+  let sortMode = TSB.get("tsb_view", "default") === "shelves" ? "shelves" : "default";
 
   /* ---------- STATS ---------- */
   const totalLessons = BOOKS.reduce((n, b) => n + b.lessons.length, 0);
@@ -59,9 +62,15 @@
     return b;
   }
 
-  /* ---------- SORT ---------- */
+  /* ---------- SORT + VIEW ---------- */
   if (sortSel) {
-    sortSel.addEventListener("change", () => { sortMode = sortSel.value; render(); });
+    sortSel.value = sortMode; // restore saved view choice
+    sortSel.addEventListener("change", () => {
+      sortMode = sortSel.value;
+      // remember the view style (shelves vs classic) across visits
+      TSB.set("tsb_view", sortMode === "shelves" ? "shelves" : "default");
+      render();
+    });
   }
 
   /* ---------- SEARCH (fuzzy) ---------- */
@@ -103,7 +112,17 @@
       if (!inCat) return false;
       if (!query) return true;
       const hay = `${b.title} ${b.author} ${b.category} ${b.tagline}`;
-      return fuzzyMatch(hay, query);
+      if (fuzzyMatch(hay, query)) { b._lessonHit = null; return true; }
+      // deep search: lesson titles (fuzzy) then full lesson text (fast plain match)
+      // "habit stacking" → finds the exact lesson inside Atomic Habits
+      let hitIdx = b.lessons.findIndex((l) => fuzzyMatch(l.title + " " + l.chapter, query));
+      if (hitIdx === -1 && query.length >= 4) {
+        hitIdx = b.lessons.findIndex((l) =>
+          (l.summary + " " + l.example + " " + l.action).toLowerCase().includes(query));
+      }
+      if (hitIdx !== -1) { b._lessonHit = hitIdx; return true; }
+      b._lessonHit = null;
+      return false;
     });
 
     results = sortBooks(results);
@@ -117,16 +136,28 @@
       return;
     }
 
+    /* 📺 SHELVES VIEW — Netflix-style rows, opt-in via the sort dropdown.
+       Default stays the classic grid. Choice is remembered. */
+    if (sortMode === "shelves" && activeCat === "ALL" && !query) {
+      grid.classList.add("grid--shelves");
+      renderShelves(results);
+      bindFavs();
+      return;
+    }
+    grid.classList.remove("grid--shelves");
+
     results.forEach((b, i) => {
       const read = TSB.progress.forBook(b.id).length;
       const pct = Math.round((read / b.lessons.length) * 100);
       const fav = TSB.bookmarks.has(b.id);
       const a = document.createElement("a");
       a.className = "card";
-      a.href = `book.html?id=${b.id}`;
+      const lessonHit = query && b._lessonHit !== null && b._lessonHit !== undefined ? b._lessonHit : null;
+      a.href = `book.html?id=${b.id}` + (lessonHit !== null ? `#lesson-${lessonHit}` : "");
       a.style.animationDelay = `${Math.min(i, 10) * 50}ms`;
       a.innerHTML = `
         <div class="card__top">
+          ${isNew(b.id) ? `<span class="card__new" translate="no">✦ NEW</span>` : ""}
           <span class="card__cat">${b.category}</span>
           <span class="card__time">⏱ ${b.readTime}</span>
           <img class="card__cover" src="${b.cover}" alt="${b.title} cover" loading="lazy">
@@ -137,6 +168,7 @@
           <div class="card__title">${b.title}</div>
           <div class="card__author">by ${b.author} · ${b.year}</div>
           <div class="card__tag">${b.tagline}</div>
+          ${lessonHit !== null ? `<div class="card__hit" translate="no">🔍 FOUND INSIDE: <strong>${b.lessons[lessonHit].title}</strong></div>` : ""}
           <div class="card__footer">
             <span class="card__lessons">${read > 0 ? read + "/" : ""}${b.lessons.length} lessons</span>
             <span class="card__go">READ IT →</span>
@@ -145,7 +177,10 @@
       grid.appendChild(a);
     });
 
-    // fav buttons
+    bindFavs();
+  }
+
+  function bindFavs() {
     grid.querySelectorAll("[data-fav]").forEach((btn) => {
       btn.addEventListener("click", (e) => {
         e.preventDefault(); e.stopPropagation();
@@ -157,6 +192,90 @@
     });
   }
 
+  /* ---------- 📺 SHELVES (category rows) ---------- */
+  const CAT_EMOJI = {
+    "Self-Improvement": "🌱", "Power & Strategy": "👑", "Money & Finance": "💰",
+    "Psychology & People": "🧠", "Business & Startups": "🚀",
+    "Creativity": "🎨", "Productivity": "⚡"
+  };
+
+  function cardHTML(b) {
+    const read = TSB.progress.forBook(b.id).length;
+    const pct = Math.round((read / b.lessons.length) * 100);
+    const fav = TSB.bookmarks.has(b.id);
+    return `
+      <div class="card__top">
+        ${isNew(b.id) ? `<span class="card__new" translate="no">✦ NEW</span>` : ""}
+        <span class="card__cat">${b.category}</span>
+        <span class="card__time">⏱ ${b.readTime}</span>
+        <img class="card__cover" src="${b.cover}" alt="${b.title} cover" loading="lazy">
+        <button class="card__fav ${fav ? "on" : ""}" data-fav="${b.id}" aria-label="Bookmark">${fav ? "❤️" : "🤍"}</button>
+      </div>
+      ${pct > 0 ? `<div class="card__progress"><em>${pct === 100 ? "✓ DONE" : pct + "%"}</em><span style="width:${pct}%"></span></div>` : ""}
+      <div class="card__body">
+        <div class="card__title">${b.title}</div>
+        <div class="card__author">by ${b.author} · ${b.year}</div>
+        <div class="card__tag">${b.tagline}</div>
+        <div class="card__footer">
+          <span class="card__lessons">${read > 0 ? read + "/" : ""}${b.lessons.length} lessons</span>
+          <span class="card__go">READ IT →</span>
+        </div>
+      </div>`;
+  }
+
+  function makeShelfRow(label, emoji, books, catForSeeAll) {
+    const row = document.createElement("section");
+    row.className = "shelfrow";
+    const head = document.createElement("div");
+    head.className = "shelfrow__head";
+    head.innerHTML = `
+      <h3 class="shelfrow__title">${emoji} ${label} <span class="shelfrow__count">${books.length}</span></h3>
+      <div class="shelfrow__tools">
+        <button class="shelfrow__arrow" data-dir="-1" aria-label="Scroll left">←</button>
+        <button class="shelfrow__arrow" data-dir="1" aria-label="Scroll right">→</button>
+        ${catForSeeAll ? `<button class="shelfrow__seeall" data-seeall="${catForSeeAll}">SEE ALL →</button>` : ""}
+      </div>`;
+    const scroll = document.createElement("div");
+    scroll.className = "shelfrow__scroll";
+    books.forEach((b) => {
+      const card = document.createElement("a");
+      card.className = "card card--shelf";
+      card.href = `book.html?id=${b.id}`;
+      card.innerHTML = cardHTML(b);
+      scroll.appendChild(card);
+    });
+    row.appendChild(head);
+    row.appendChild(scroll);
+    head.querySelectorAll(".shelfrow__arrow").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        scroll.scrollBy({ left: btn.dataset.dir * (scroll.clientWidth * 0.85), behavior: "smooth" });
+      });
+    });
+    const seeAll = head.querySelector("[data-seeall]");
+    if (seeAll) seeAll.addEventListener("click", () => {
+      const target = seeAll.dataset.seeall;
+      document.querySelectorAll(".chip").forEach((c) => {
+        c.classList.toggle("active", c.textContent === target);
+      });
+      activeCat = target;
+      render();
+      document.getElementById("library").scrollIntoView({ behavior: "smooth" });
+    });
+    return row;
+  }
+
+  function renderShelves(all) {
+    // ❤️ Your shelf first (if any), then 🆕 new, then every category
+    const favs = all.filter((b) => TSB.bookmarks.has(b.id));
+    if (favs.length) grid.appendChild(makeShelfRow("My Shelf", "❤️", favs, "❤️ MY SHELF"));
+    const fresh = all.filter((b) => isNew(b.id));
+    if (fresh.length) grid.appendChild(makeShelfRow("New This Week", "🆕", fresh, null));
+    cats.forEach((c) => {
+      const books = all.filter((b) => b.category === c);
+      if (books.length) grid.appendChild(makeShelfRow(c, CAT_EMOJI[c] || "📚", books, c));
+    });
+  }
+
   function sortBooks(list) {
     const l = [...list];
     switch (sortMode) {
@@ -164,6 +283,7 @@
       case "shortest": return l.sort((a, b) => parseInt(a.readTime) - parseInt(b.readTime));
       case "lessons": return l.sort((a, b) => b.lessons.length - a.lessons.length);
       case "newest": return l.sort((a, b) => b.year - a.year);
+      case "shelves": return l; // shelves mode renders rows; keep featured order
       case "progress": return l.sort((a, b) =>
         TSB.progress.forBook(b.id).length / b.lessons.length - TSB.progress.forBook(a.id).length / a.lessons.length);
       default: return l;

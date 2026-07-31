@@ -9,7 +9,7 @@
 ## ✨ Features
 
 ### 📚 Library
-- **151 books, 718 lessons** with covers, read time & lesson count
+- **151 books, 741 lessons** with covers, read time & lesson count
 - **Fuzzy search** (typos OK), **category filters**, **sorting** (A-Z, shortest, newest, progress...)
 - **My Shelf** — bookmark books with the ❤️ button
 - **Lesson of the Day** — rotates daily, no backend needed

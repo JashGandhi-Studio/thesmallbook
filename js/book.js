@@ -51,6 +51,7 @@
   bar.innerHTML = `
     <button class="btn ${fav ? "btn--red" : ""}" id="favBtn">${fav ? "❤️ SAVED" : "🤍 SAVE"}</button>
     <button class="btn btn--blue" id="shareBtn">🎴 SHARE CARD</button>
+    <button class="btn btn--green" id="shareLinkBtn" translate="no">🔗 SHARE LINK</button>
     <button class="btn" id="expandBtn">⤵ EXPAND ALL</button>
     <button class="btn" id="fontBtn">🔠 TEXT SIZE</button>`;
 
@@ -199,7 +200,7 @@
     ctx.fillText("📕 THESMALLBOOK", W / 2, H - barH + 92);
     ctx.fillStyle = "#f2ede2";
     ctx.font = "bold 28px 'Space Grotesk', Arial";
-    ctx.fillText("150+ BOOKS · 700+ LESSONS · FREE FOREVER", W / 2, H - barH + 140);
+    ctx.fillText("150+ BOOKS · 740+ LESSONS · FREE FOREVER", W / 2, H - barH + 140);
     ctx.textAlign = "left";
   }
 
@@ -454,6 +455,30 @@
     toast("🎴 Share card downloaded — post it anywhere!");
   }
 
+  /* 🔗 share the page LINK (WhatsApp-friendly — brings traffic, not just brand) */
+  document.getElementById("shareLinkBtn").addEventListener("click", async () => {
+    const url = location.origin + location.pathname + "?id=" + book.id;
+    const text = `📕 ${book.title} — ${book.oneLiner}\n\nFree breakdown (${book.lessons.length} lessons, ${book.readTime}):`;
+    if (navigator.share) {
+      try { await navigator.share({ title: `${book.title} — TheSmallBook`, text, url }); return; }
+      catch (e) { if (e && e.name === "AbortError") return; }
+    }
+    try {
+      await navigator.clipboard.writeText(text + "\n" + url);
+      toast("🔗 Link copied — paste it anywhere!");
+    } catch (e) {
+      // last-resort fallback
+      const ta = document.createElement("textarea");
+      ta.value = text + "\n" + url;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); toast("🔗 Link copied — paste it anywhere!"); }
+      catch (err) { toast("Copy failed — long-press the URL bar instead"); }
+      ta.remove();
+    }
+    if (window.TSB) TSB.achv.award("sharer");
+  });
+
   document.getElementById("shareBtn").addEventListener("click", async () => {
     toast("🎨 Creating your share card...");
     const canvas = await renderBookCard();
@@ -494,6 +519,39 @@
     speechSynthesis.onvoiceschanged = refreshVoices;
   }
 
+  /* Android/Chrome often return an EMPTY voice list at first — poll until ready */
+  function voicesReady(timeoutMs = 2500) {
+    return new Promise((resolve) => {
+      refreshVoices();
+      if (VOICES.length) return resolve(VOICES);
+      const start = Date.now();
+      const t = setInterval(() => {
+        refreshVoices();
+        if (VOICES.length || Date.now() - start > timeoutMs) {
+          clearInterval(t);
+          resolve(VOICES);
+        }
+      }, 150);
+    });
+  }
+
+  /* Android reports "hi_IN", desktop "hi-IN" — normalize both */
+  function normLang(l) { return String(l || "").toLowerCase().replace(/_/g, "-"); }
+  function baseLang(l) { return normLang(l).split("-")[0]; }
+
+  /* full regional tags help the OS engine pick the right voice even
+     when the voices list is empty (Android Google TTS) */
+  const SPEECH_REGION = {
+    hi: "hi-IN", gu: "gu-IN", mr: "mr-IN", ta: "ta-IN", te: "te-IN",
+    kn: "kn-IN", ml: "ml-IN", bn: "bn-IN", pa: "pa-IN", ur: "ur-IN", or: "or-IN",
+    en: "en-IN", es: "es-ES", fr: "fr-FR", de: "de-DE", pt: "pt-BR",
+    ar: "ar-SA", ja: "ja-JP", ko: "ko-KR", ru: "ru-RU", it: "it-IT", "zh-cn": "zh-CN"
+  };
+  function regionTag(lang) {
+    const n = normLang(lang);
+    return SPEECH_REGION[n] || SPEECH_REGION[baseLang(n)] || lang;
+  }
+
   /* current reading language: what's actually on screen */
   function currentSpeechLang() {
     const saved = (window.TSB_LANG && TSB_LANG.get()) || "en";
@@ -504,9 +562,15 @@
   }
 
   function bestVoice(langCode) {
-    const lc = (langCode || "en").toLowerCase().split("-")[0];
-    const forLang = VOICES.filter((v) => v.lang && v.lang.toLowerCase().split("-")[0] === lc);
-    const pool = forLang.length ? forLang : VOICES.filter((v) => v.lang && v.lang.toLowerCase().startsWith("en"));
+    const want = normLang(regionTag(langCode));      // e.g. "hi-in"
+    const wantBase = baseLang(langCode);             // e.g. "hi"
+    // exact region match first (hi-IN / hi_IN), then any dialect of the language
+    let pool = VOICES.filter((v) => normLang(v.lang) === want);
+    if (!pool.length) pool = VOICES.filter((v) => baseLang(v.lang) === wantBase);
+    // IMPORTANT: no cross-language fallback — an English voice reading Hindi
+    // text is what made TTS feel "English-only". Return null instead: the
+    // utterance keeps voice unset + lang="hi-IN", and the OS engine
+    // (Google TTS on Android) speaks it natively even with an empty list.
     if (!pool.length) return null;
     const ranks = [
       (v) => /natural|neural|premium|enhanced|wavenet/i.test(v.name) ? 0 : 99,
@@ -557,11 +621,14 @@
      6. watchdog restarts the queue if the engine silently dies */
   let currentUtterance = null; // MUST stay referenced or Chrome garbage-collects mid-speech
 
-  function speakChunks(chunks, btn) {
+  async function speakChunks(chunks, btn) {
     const lang = currentSpeechLang();
+    await voicesReady();                 // Android: voice list loads late — wait for it
     const voice = bestVoice(lang);
-    if (lang !== "en" && (!voice || voice.lang.toLowerCase().split("-")[0] !== lang.toLowerCase().split("-")[0])) {
-      toast("🔊 No " + lang.toUpperCase() + " voice on this device — using best available");
+    const tag = regionTag(lang);         // "hi" → "hi-IN" etc.
+    if (lang !== "en" && !voice && VOICES.length) {
+      // voices exist but none for this language — engine will still try via lang tag
+      toast("🔊 " + tag + " voice not installed — asking device engine directly");
     }
     speechQueue = [...chunks];
     const isAndroid = /android/i.test(navigator.userAgent);
@@ -575,7 +642,9 @@
       const u = new SpeechSynthesisUtterance(speechQueue.shift());
       currentUtterance = u;                          // hold the reference (fix #1)
       if (voice) u.voice = voice;
-      u.lang = voice ? voice.lang : (lang === "zh-CN" ? "zh-CN" : lang);
+      // Always set the full regional tag ("hi-IN", "gu-IN"): with no matching
+      // voice object, Android/desktop engines still switch language from this.
+      u.lang = voice ? voice.lang : tag;
       u.rate = 0.95;
       u.pitch = 1.0;
       u.volume = 1.0;
@@ -697,6 +766,114 @@
       if (sb) sb.click();
     });
   }
+
+  /* ---------- 📊 READING PROGRESS BAR ---------- */
+  (function () {
+    const bar = document.createElement("div");
+    bar.className = "readbar";
+    bar.innerHTML = `<span class="readbar__fill"></span>`;
+    document.body.appendChild(bar);
+    const fill = bar.querySelector(".readbar__fill");
+    let ticking = false;
+    function update() {
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - window.innerHeight;
+      const pct = max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0;
+      fill.style.width = pct + "%";
+      bar.classList.toggle("show", window.scrollY > 120);
+    }
+    window.addEventListener("scroll", () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { ticking = false; update(); });
+    }, { passive: true });
+    update();
+  })();
+
+  /* ---------- 📑 STICKY LESSON JUMP-NAV ---------- */
+  (function () {
+    if (!book.lessons.length) return;
+    const fab = document.createElement("button");
+    fab.className = "lessonnav__fab";
+    fab.setAttribute("aria-label", "Jump to lesson");
+    fab.setAttribute("translate", "no");
+    fab.innerHTML = `📑 <span class="lessonnav__count">1/${book.lessons.length}</span>`;
+    const panel = document.createElement("div");
+    panel.className = "lessonnav__panel";
+    panel.innerHTML = book.lessons.map((l, i) =>
+      `<a class="lessonnav__item" href="#lesson-${i}" data-jump="${i}">
+        <span class="lessonnav__num">${String(i + 1).padStart(2, "0")}</span>
+        <span class="lessonnav__title">${l.title}</span>
+        <span class="lessonnav__check" data-navcheck="${i}">${TSB.progress.forBook(book.id).includes(i) ? "✓" : ""}</span>
+      </a>`).join("") +
+      `<a class="lessonnav__item lessonnav__item--plan" href="#plan-section" data-jump="plan">
+        <span class="lessonnav__num">⚡</span><span class="lessonnav__title">Action Plan</span><span></span>
+      </a>`;
+    document.body.appendChild(fab);
+    document.body.appendChild(panel);
+
+    fab.addEventListener("click", () => {
+      panel.classList.toggle("open");
+      fab.classList.toggle("open");
+    });
+    panel.addEventListener("click", (e) => {
+      const item = e.target.closest("[data-jump]");
+      if (!item) return;
+      e.preventDefault();
+      panel.classList.remove("open");
+      fab.classList.remove("open");
+      const target = item.dataset.jump === "plan"
+        ? document.getElementById("plan")
+        : document.getElementById("lesson-" + item.dataset.jump);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (item.dataset.jump !== "plan") {
+          const card = document.getElementById("lesson-" + item.dataset.jump);
+          if (card && !card.classList.contains("open")) {
+            const head = card.querySelector(".lesson__head");
+            if (head) head.click();
+          }
+        }
+      }
+    });
+    // close when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!panel.contains(e.target) && !fab.contains(e.target)) {
+        panel.classList.remove("open");
+        fab.classList.remove("open");
+      }
+    });
+    // show fab only after scrolling past the hero; track current lesson
+    const counter = fab.querySelector(".lessonnav__count");
+    let ticking = false;
+    window.addEventListener("scroll", () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const past = window.scrollY > 420;
+        fab.classList.toggle("show", past);
+        if (!past) return;
+        let cur = 0;
+        for (let i = 0; i < book.lessons.length; i++) {
+          const el = document.getElementById("lesson-" + i);
+          if (el && el.getBoundingClientRect().top < window.innerHeight * 0.4) cur = i;
+        }
+        counter.textContent = (cur + 1) + "/" + book.lessons.length;
+      });
+    }, { passive: true });
+
+    // deep-link support: book.html?id=x#lesson-N opens + scrolls to that lesson
+    if (location.hash && location.hash.startsWith("#lesson-")) {
+      const n = parseInt(location.hash.slice(8), 10);
+      const card = document.getElementById("lesson-" + n);
+      if (card) setTimeout(() => {
+        const head = card.querySelector(".lesson__head");
+        if (head && !card.classList.contains("open")) head.click();
+        card.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 300);
+    }
+  })();
 
   /* listen buttons — speak the LIVE (translated) lesson text */
   lessonsWrap.querySelectorAll("[data-listen]").forEach((btn) => {

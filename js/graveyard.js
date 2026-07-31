@@ -40,8 +40,8 @@
     return list[h % list.length];
   }
 
-  /* first 60 entries in failures.js are the freshest wave */
-  const FRESH = new Set(F.slice(0, 60).map((f) => f.id));
+  /* 🆕 fresh badge — driven by config (edit NEW_GRAVES_THIS_WEEK weekly) */
+  const FRESH = new Set((window.TSB_CONFIG && TSB_CONFIG.NEW_GRAVES_THIS_WEEK) || []);
 
   let activeCat = "ALL";
   let query = "";
@@ -169,6 +169,12 @@
             <span class="grave__cat" translate="no">${(CAT_META[f.category] || {}).emoji || "💀"} ${esc(f.category)}</span>
             ${o.medal ? `<span class="grave__medal" translate="no">${o.medal} TOP BURN</span>` : ""}
             ${FRESH.has(f.id) ? `<span class="grave__fresh" translate="no">🩸 FRESH GRAVE</span>` : ""}
+          </div>
+          <p class="grave__tease">${esc(f.story.split(". ")[0])}.</p>
+          <div class="grave__seals" translate="no">
+            <span class="grave__seal">☠️ FATAL MISTAKE</span>
+            <span class="grave__seal">🧠 FREE LESSON</span>
+            ${f.book ? `<span class="grave__seal grave__seal--book">📕 ANTIDOTE</span>` : ""}
           </div>
         </div>
         <div class="grave__dig" aria-hidden="true"></div>
