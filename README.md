@@ -9,7 +9,7 @@
 ## ✨ Features
 
 ### 📚 Library
-- **151 books, 741 lessons** with covers, read time & lesson count
+- **200 books, 986 lessons** with covers, read time & lesson count
 - **Fuzzy search** (typos OK), **category filters**, **sorting** (A-Z, shortest, newest, progress...)
 - **My Shelf** — bookmark books with the ❤️ button
 - **Lesson of the Day** — rotates daily, no backend needed
@@ -127,7 +127,7 @@ The anti-library: **220 legendary real-world failures** — Newton buying the bu
 
 ## 🌐 Universal Language Support
 
-The entire app — all 151 books, every lesson — translates into **26 languages** via the 🌐 button: Hindi, Gujarati, Marathi, Bengali, Tamil, Telugu, Kannada, Malayalam, Punjabi, Urdu, Odia, Spanish, French, German, Chinese, Japanese, Arabic, and more. Plus two **exclusive modes** found nowhere else:
+The entire app — all 200 books, every lesson — translates into **26 languages** via the 🌐 button: Hindi, Gujarati, Marathi, Bengali, Tamil, Telugu, Kannada, Malayalam, Punjabi, Urdu, Odia, Spanish, French, German, Chinese, Japanese, Arabic, and more. Plus two **exclusive modes** found nowhere else:
 - **Hinglish** — Hindi transliterated to English letters ("tum kya kar rahe ho" style) for readers who speak Hindi but read Roman script best
 - **Gujlish** — the same for Gujarati ("tame shu karo cho")
 

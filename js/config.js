@@ -39,8 +39,9 @@ window.TSB_CONFIG = {
      HOW TO UPDATE (weekly, 1 minute): replace these ids with whatever
      you added this week. Empty list [] = no badges shown. */
   NEW_THIS_WEEK: [
-    "supercommunicators", "be-useful", "never-finished",
-    "power-of-regret", "daily-stoic", "comfort-crisis"
+    "on-writing", "daring-greatly", "snowball-buffett",
+    "predictably-irrational", "personal-mba", "nudge-thaler",
+    "positioning", "checklist-manifesto"
   ],
   NEW_GRAVES_THIS_WEEK: [
     "thomas-cook", "red-lobster-shrimp", "koo-app", "bharatpe-grover"
