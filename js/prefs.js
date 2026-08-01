@@ -133,7 +133,8 @@
     "story-published": { icon: "✍️", name: "Storyteller", desc: "Published a community story" },
     "night-owl": { icon: "🌙", name: "Night Owl", desc: "Switched to dark mode" },
     "explorer": { icon: "🎲", name: "Explorer", desc: "Used the Surprise Me button" },
-    "sharer": { icon: "🎴", name: "Card Creator", desc: "Generated a share card" }
+    "sharer": { icon: "🎴", name: "Card Creator", desc: "Generated a share card" },
+    "featured-author": { icon: "🏆", name: "Featured Author", desc: "Your story hit the Story of the Week slot" }
   };
 
   const achv = {
@@ -222,6 +223,30 @@
     });
     // streak tick
     streak.touch();
+  });
+
+  /* ---------- ✍️ STORIES TRANSITION — every stories.html link, site-wide ---------- */
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('a[href$="stories.html"]').forEach((link) => {
+      link.addEventListener("click", (e) => {
+        if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        e.preventDefault();
+        let ov = document.getElementById("storyTransition");
+        if (!ov) {
+          ov = document.createElement("div");
+          ov.id = "storyTransition";
+          ov.className = "story-transition";
+          ov.innerHTML =
+            '<div class="story-transition__pen">✍️</div>' +
+            '<div class="story-transition__line"></div>' +
+            '<div class="story-transition__text">Opening the Story Shelf</div>' +
+            '<div class="story-transition__sub">real readers · real turning points · your name next?</div>';
+          document.body.appendChild(ov);
+        }
+        requestAnimationFrame(() => ov.classList.add("on"));
+        setTimeout(() => { location.href = link.href; }, 950);
+      });
+    });
   });
 
   /* ---------- PWA ---------- */

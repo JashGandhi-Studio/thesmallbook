@@ -40,14 +40,40 @@ async function renderShelf() {
 
   grid.innerHTML = "";
 
+  /* ✍️ GHOST CARD — the fame slot waiting for the reader's name */
+  const ghost = document.createElement("a");
+  ghost.className = "card ghostcard";
+  ghost.href = "#write";
+  ghost.innerHTML = `
+    <div class="ghostcard__frame">
+      <div class="ghostcard__emoji">✍️</div>
+      <div class="ghostcard__title">YOUR STORY HERE</div>
+      <div class="ghostcard__byline">by <span class="ghostcard__you">YOUR NAME</span></div>
+      <div class="ghostcard__cta">CLAIM THIS SPOT →</div>
+    </div>`;
+  ghost.addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("write").scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => { const t = document.getElementById("sTitle"); if (t) t.focus(); }, 600);
+  });
+  grid.appendChild(ghost);
+
   if (!stories.length) {
-    grid.innerHTML = `<div class="empty"><span>✍️</span>No stories yet.<br>Be the first to publish one below!</div>`;
+    grid.appendChild(Object.assign(document.createElement("div"), {
+      className: "empty", innerHTML: `<span>✍️</span>No stories yet.<br>Be the first to publish one!` }));
     return;
   }
 
+  /* 🏆 FEATURED STORY OF THE WEEK — deterministic weekly rotation */
+  const week = Math.floor(Date.now() / (7 * 864e5));
+  const featured = stories[week % stories.length];
+  // 🏆 if the featured story is YOURS, unlock Featured Author
+  if (window.TSB && user.some((s) => s.id === featured.id)) TSB.achv.award("featured-author");
+
   stories.forEach((s) => {
+    const isFeatured = s === featured;
     const a = document.createElement("a");
-    a.className = "card";
+    a.className = "card" + (isFeatured ? " storycard--featured" : "");
     a.href = `story.html?id=${encodeURIComponent(s.id)}`;
     const words = s.text ? s.text.split(/\s+/).length : 0;
     const mins = s.pdf && !s.text ? "PDF" : Math.max(1, Math.round(words / 200)) + " min";
@@ -59,7 +85,7 @@ async function renderShelf() {
         <span class="card__cat">COMMUNITY</span>
         <span class="card__time">⏱ ${mins}</span>
         ${coverHTML}
-        <span class="storycard__badge">READER STORY</span>
+        <span class="storycard__badge">${isFeatured ? "🏆 STORY OF THE WEEK" : "READER STORY"}</span>
       </div>
       <div class="card__body">
         <div class="card__title">${escapeHTML(s.title)}</div>
@@ -70,9 +96,39 @@ async function renderShelf() {
           <span class="card__go">READ IT →</span>
         </div>
       </div>`;
-    grid.appendChild(a);
+    if (isFeatured && grid.children.length > 1) grid.insertBefore(a, grid.children[1]);
+    else grid.appendChild(a);
   });
 }
+
+/* ---------- ✨ STORY PROMPTS (kill the blank page) ---------- */
+(function () {
+  const form = document.getElementById("storyForm");
+  if (!form) return;
+  const PROMPTS = [
+    { e: "📢", t: "Which book called you out?", title: "THE BOOK THAT CALLED ME OUT" },
+    { e: "🌙", t: "Your 3 AM turning point", title: "MY 3 AM TURNING POINT" },
+    { e: "💸", t: "The lesson you ignored — and paid for", title: "THE LESSON I IGNORED (AND PAID FOR)" },
+    { e: "🔁", t: "The habit that finally stuck", title: "THE HABIT THAT FINALLY STUCK" },
+    { e: "🗣️", t: "A conversation one book fixed", title: "THE CONVERSATION ONE BOOK FIXED" },
+    { e: "🚪", t: "The day you quit the wrong thing", title: "THE DAY I QUIT THE WRONG THING" }
+  ];
+  const bar = document.createElement("div");
+  bar.className = "promptbar";
+  bar.innerHTML = `<div class="promptbar__label" translate="no">✨ STUCK? START FROM A PROMPT:</div>
+    <div class="promptbar__chips">` +
+    PROMPTS.map((p, i) => `<button type="button" class="promptchip" data-prompt="${i}">${p.e} ${p.t}</button>`).join("") +
+    `</div>`;
+  form.parentNode.insertBefore(bar, form);
+  bar.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-prompt]");
+    if (!btn) return;
+    const p = PROMPTS[+btn.dataset.prompt];
+    const t = document.getElementById("sTitle");
+    if (t) { t.value = p.title; t.focus(); }
+    bar.querySelectorAll(".promptchip").forEach((c) => c.classList.toggle("active", c === btn));
+  });
+})();
 
 /* ---------- populate book select ---------- */
 const sel = document.getElementById("sBook");

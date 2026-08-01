@@ -322,25 +322,63 @@
       </div>`;
   })();
 
-  /* ---------- LESSON OF THE DAY ---------- */
+  /* ---------- LESSON OF THE DAY (live: real date + midnight flip) ---------- */
   (function () {
     const wrap = document.getElementById("lod");
     if (!wrap) return;
-    // deterministic daily pick
-    const day = Math.floor(Date.now() / 864e5);
     const flat = [];
     BOOKS.forEach((b) => b.lessons.forEach((l, i) => flat.push({ b, l, i })));
-    const pick = flat[day % flat.length];
-    wrap.innerHTML = `
-      <div class="lod__box">
-        <div class="lod__label">💡 Lesson of the Day</div>
-        <img src="${pick.b.cover}" alt="${pick.b.title}">
-        <div>
-          <div class="lod__title">${pick.l.title}</div>
-          <div class="lod__meta">${pick.b.title} · ${pick.b.author}</div>
-        </div>
-        <a class="btn btn--red" href="book.html?id=${pick.b.id}#lesson-${pick.i}">READ IT →</a>
-      </div>`;
+
+    /* LOCAL day number — flips at the user's own midnight, not UTC */
+    function localDayNum() {
+      const n = new Date();
+      return Math.floor((n.getTime() - n.getTimezoneOffset() * 60000) / 864e5);
+    }
+    function ordinal(d) {
+      if (d >= 11 && d <= 13) return d + "th";
+      return d + (["th","st","nd","rd"][d % 10] || "th");
+    }
+    function dateLabel() {
+      const n = new Date();
+      const months = ["January","February","March","April","May","June",
+        "July","August","September","October","November","December"];
+      const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+      return { date: ordinal(n.getDate()) + " " + months[n.getMonth()], day: days[n.getDay()] };
+    }
+    function msToMidnight() {
+      const n = new Date();
+      const mid = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1, 0, 0, 2);
+      return mid - n;
+    }
+
+    let shownDay = -1;
+    function draw() {
+      const dayNum = localDayNum();
+      if (dayNum === shownDay) return;
+      shownDay = dayNum;
+      const pick = flat[dayNum % flat.length];
+      const dl = dateLabel();
+      wrap.innerHTML = `
+        <div class="lod__box">
+          <div class="lod__label">💡 Lesson of the Day</div>
+          <div class="lod__datebadge" translate="no">
+            <span class="lod__dateday">${dl.day}</span>
+            <span class="lod__datenum">${dl.date}</span>
+          </div>
+          <img src="${pick.b.cover}" alt="${pick.b.title}">
+          <div>
+            <div class="lod__title">${pick.l.title}</div>
+            <div class="lod__meta">${pick.b.title} · ${pick.b.author}</div>
+            <div class="lod__fresh" translate="no">⏳ Today only — new lesson at midnight</div>
+          </div>
+          <a class="btn btn--red" href="book.html?id=${pick.b.id}#lesson-${pick.i}">READ IT →</a>
+        </div>`;
+    }
+    draw();
+    /* truly live: if the tab stays open past midnight, swap the lesson */
+    setTimeout(function tick() { draw(); setTimeout(tick, 60000); }, msToMidnight());
+    /* also re-check when user returns to the tab */
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) draw(); });
   })();
 
   /* ---------- GAMEBAR (streak + level + achievements) ---------- */
