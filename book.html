@@ -14,7 +14,9 @@
     try { if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark"); } catch (e) {}
   </script>
   <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📕</text></svg>">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
 
@@ -86,6 +88,7 @@
   </div>
   <section class="quotes" id="quotes" style="margin-top:40px;"></section>
 
+
   <!-- ACTION PLAN -->
   <div class="section-head">
     <h2>⚡ Your 5-Step Plan</h2>
@@ -124,7 +127,11 @@
   <script src="js/prefs.js"></script>
   <script src="js/support.js"></script>
   <script src="js/lang.js"></script>
+  <script src="js/config.js"></script>
   <script src="js/data.js"></script>
   <script src="js/book.js"></script>
+  <script src="js/failures.js"></script>
+  <script src="js/ask-data.js"></script>
+  <script src="js/ask.js"></script>
 </body>
 </html>

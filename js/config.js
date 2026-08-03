@@ -39,12 +39,14 @@ window.TSB_CONFIG = {
      HOW TO UPDATE (weekly, 1 minute): replace these ids with whatever
      you added this week. Empty list [] = no badges shown. */
   NEW_THIS_WEEK: [
-    "on-writing", "daring-greatly", "snowball-buffett",
-    "predictably-irrational", "personal-mba", "nudge-thaler",
-    "positioning", "checklist-manifesto"
+    "body-keeps-score", "anxious-generation", "high-output-management",
+    "built-to-last", "thinking-in-bets", "no-rules-rules",
+    "stolen-focus", "digital-minimalism", "one-up-wall-street",
+    "radical-candor", "homo-deus", "factfulness"
   ],
   NEW_GRAVES_THIS_WEEK: [
-    "thomas-cook", "red-lobster-shrimp", "koo-app", "bharatpe-grover"
+    "evergrande", "dhfl-scam", "future-group", "gofirst-airline",
+    "wish-collapse", "groupon-collapse", "bitconnect", "pmc-bank"
   ],
 
   /* Amazon Associates (India) — book buy links */

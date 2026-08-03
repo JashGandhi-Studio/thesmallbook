@@ -21,6 +21,7 @@ var BOOKS = [
       "You should be far more concerned with your current trajectory than with your current results.",
       "Habits are the compound interest of self-improvement."
     ],
+
     lessons: [
       {
         title: "The Power of 1% — Habits Compound",
@@ -105,6 +106,7 @@ var BOOKS = [
       "Always make those above you feel comfortably superior.",
       "So much depends on reputation — guard it with your life."
     ],
+
     lessons: [
       {
         title: "Never Outshine the Master",
@@ -245,6 +247,7 @@ var BOOKS = [
       "It's not how much money you make. It's how much money you keep.",
       "The single most powerful asset we all have is our mind."
     ],
+
     lessons: [
       {
         title: "The Rich Don't Work for Money",
@@ -413,6 +416,7 @@ var BOOKS = [
       "A person's name is to that person the sweetest sound in any language.",
       "You can't win an argument. If you lose it, you lose it; and if you win it, you lose it."
     ],
+
     lessons: [
       {
         title: "Never Criticize, Condemn, or Complain",
@@ -1142,6 +1146,7 @@ var BOOKS = [
       "Getting money is one thing. Keeping it is another.",
       "The highest form of wealth is the ability to wake up every morning and say, 'I can do whatever I want today.'"
     ],
+
     lessons: [
       {
         title: "No One's Crazy — We All Learned Different Lessons",
@@ -1303,6 +1308,7 @@ var BOOKS = [
       "Let them. Then let me.",
       "Adult friendship isn't about proximity. It's about effort."
     ],
+
     lessons: [
       {
         title: "Stop Managing Other People's Behavior",
@@ -1604,6 +1610,7 @@ var BOOKS = [
       "Clarity about what matters provides clarity about what does not.",
       "Who you are, what you think, feel, and do, what you love — is the sum of what you focus on."
     ],
+
     lessons: [
       {
         title: "The Deep Work Hypothesis",
@@ -1681,6 +1688,7 @@ var BOOKS = [
       "Begin with the end in mind.",
       "Seek first to understand, then to be understood."
     ],
+
     lessons: [
       {
         title: "Habit 1: Be Proactive",
@@ -1758,6 +1766,7 @@ var BOOKS = [
       "The desire for more positive experience is itself a negative experience.",
       "Action isn't just the effect of motivation; it's also the cause of it."
     ],
+
     lessons: [
       {
         title: "The Backwards Law",
@@ -1835,6 +1844,7 @@ var BOOKS = [
       "Hara hachi bu — eat until you are 80 percent full.",
       "The happiest people are not the ones who achieve the most. They are the ones who spend more time in flow."
     ],
+
     lessons: [
       {
         title: "Find Your Ikigai: The Four Circles",
@@ -1968,6 +1978,7 @@ var BOOKS = [
       "When your mind is telling you you're done, you're really only 40 percent done.",
       "Be more than motivated. Be literally obsessed."
     ],
+
     lessons: [
       {
         title: "The Accountability Mirror",
@@ -2108,6 +2119,7 @@ var BOOKS = [
       "The impediment to action advances action. What stands in the way becomes the way.",
       "Waste no more time arguing about what a good man should be. Be one."
     ],
+
     lessons: [
       {
         title: "The Dichotomy of Control",
@@ -2458,6 +2470,7 @@ var BOOKS = [
       "If we do not know who the customer is, we do not know what quality is.",
       "The only way to win is to learn faster than anyone else."
     ],
+
     lessons: [
       {
         title: "Validated Learning: The Real Unit of Progress",
@@ -2654,6 +2667,7 @@ var BOOKS = [
       "Everything can be taken from a man but one thing: the last of the human freedoms — to choose one's attitude in any given set of circumstances.",
       "What is to give light must endure burning."
     ],
+
     lessons: [
       {
         title: "The Last Human Freedom",
@@ -2787,6 +2801,7 @@ var BOOKS = [
       "'No' is the start of the negotiation, not the end of it.",
       "The most powerful word in negotiations is 'Fair.'"
     ],
+
     lessons: [
       {
         title: "Tactical Empathy & Labeling",
@@ -2913,6 +2928,7 @@ var BOOKS = [
       "Small wins are a steady application of a small advantage.",
       "Willpower isn't just a skill. It's a muscle."
     ],
+
     lessons: [
       {
         title: "The Habit Loop: Cue, Routine, Reward, Craving",
@@ -2976,6 +2992,7 @@ var BOOKS = [
       "Action cures fear. Indecision, postponement, on the other hand, fertilize fear.",
       "The thinking that guides your intelligence is much more important than how much intelligence you have."
     ],
+
     lessons: [
       {
         title: "Believe You Can Succeed — and You Will",
@@ -3228,6 +3245,7 @@ var BOOKS = [
       "All change is hard at first, messy in the middle and gorgeous at the end.",
       "The moment when you most feel like giving up is the instant when you must find it in you to press ahead."
     ],
+
     lessons: [
       {
         title: "Why 5 AM: The Science of the Victory Hour",
@@ -3543,6 +3561,7 @@ var BOOKS = [
       "In the short run, the market is a voting machine but in the long run, it is a weighing machine.",
       "The margin of safety is always dependent on the price paid."
     ],
+
     lessons: [
       {
         title: "Investment vs. Speculation: Know Which Game You're Playing",
@@ -3858,6 +3877,7 @@ var BOOKS = [
       "Our potential is one thing. What we do with it is quite another.",
       "Grit is living life like it's a marathon, not a sprint."
     ],
+
     lessons: [
       {
         title: "Effort Counts Twice",
@@ -3921,6 +3941,7 @@ var BOOKS = [
       "Why waste time proving over and over how great you are, when you could be getting better?",
       "The view you adopt for yourself profoundly affects the way you lead your life."
     ],
+
     lessons: [
       {
         title: "The Two Mindsets: Prove vs. Improve",
@@ -4173,6 +4194,7 @@ var BOOKS = [
       "One of the very worst uses of time is to do something very well that need not be done at all.",
       "Every minute spent in planning saves as many as ten minutes in execution."
     ],
+
     lessons: [
       {
         title: "Set the Table: Clarity Is the Master Skill",
@@ -4292,6 +4314,7 @@ var BOOKS = [
       "There is no good or bad without us, there is only perception.",
       "Amor fati — not just to bear what is necessary, but to love it."
     ],
+
     lessons: [
       {
         title: "Perception: Strip the Story From the Event",
@@ -4348,6 +4371,7 @@ var BOOKS = [
       "Impressing people is utterly different from being truly impressive.",
       "Passion is about. Purpose is to and for."
     ],
+
     lessons: [
       {
         title: "Aspire: Talk Less, Be a Student, Beware Passion",
@@ -4404,6 +4428,7 @@ var BOOKS = [
       "Remember that if you don't prioritize your life someone else will.",
       "The word priority came into the English language in the 1400s. It was singular. It meant the very first or prior thing. Only in the 1900s did we pluralize it."
     ],
+
     lessons: [
       {
         title: "The Essentialist Mindset: Choose, Discern, Trade Off",
@@ -4747,6 +4772,7 @@ var BOOKS = [
       "Set your house in perfect order before you criticize the world.",
       "Pursue what is meaningful, not what is expedient."
     ],
+
     lessons: [
       {
         title: "Stand Up Straight: The Lobster's Lesson",
@@ -5048,6 +5074,7 @@ var BOOKS = [
       "Being the best in the world is seriously underrated.",
       "Never quit something with great long-term potential just because you can't deal with the stress of the moment."
     ],
+
     lessons: [
       {
         title: "Best in the World Is Underrated (and 'World' Is Smaller Than You Think)",
@@ -5104,6 +5131,7 @@ var BOOKS = [
       "Ideas are just a multiplier of execution.",
       "Never forget that absolutely everything you do is for your customers."
     ],
+
     lessons: [
       {
         title: "Business Is a Playground You Design",
@@ -5384,6 +5412,7 @@ var BOOKS = [
       "Opinions are worthless. Only the market can tell you the truth.",
       "If they haven't looked for ways of solving it already, they're not going to look for (or buy) yours."
     ],
+
     lessons: [
       {
         title: "The Mom Test: Three Rules That Fix Every Question",
@@ -6399,6 +6428,7 @@ var BOOKS = [
       "The single most important thing you can do to dramatically improve your presentations is to have a story to tell.",
       "If you can't explain your big idea in 140 characters or less, keep working on your message."
     ],
+
     lessons: [
       {
         title: "Passion and Practice: The Emotional Foundation",
@@ -6915,6 +6945,7 @@ var BOOKS = [
       "Discipline equals freedom.",
       "It's not what you preach, it's what you tolerate."
     ],
+
     lessons: [
       {
         title: "Extreme Ownership: The Mirror Is the Only Place to Look",
@@ -7411,6 +7442,7 @@ var BOOKS = [
       "You need to be doing fewer things for more effect instead of doing more things with side effects.",
       "Until my ONE thing is done, everything else is a distraction."
     ],
+
     lessons: [
       {
         title: "The Focusing Question: Find the Lead Domino",
@@ -7576,6 +7608,7 @@ var BOOKS = [
       "The smartphone is the modern-day hypodermic needle, delivering digital dopamine 24/7.",
       "Recovery begins with radical honesty."
     ],
+
     lessons: [
       {
         title: "The Pleasure-Pain Balance: Why More Feels Like Less",
@@ -7631,6 +7664,7 @@ var BOOKS = [
       "Give away the secrets, sell the implementation.",
       "The person who does the most reps wins — advertising is a volume game wearing a creativity costume."
     ],
+
     lessons: [
       {
         title: "Lead Magnets: Give Away the Good Stuff",
@@ -7741,6 +7775,7 @@ var BOOKS = [
       "Your kids' inheritance arrives, on average, when they're 60 — right when they need it least.",
       "We spend our healthiest years accumulating money we'll spend in our sickest."
     ],
+
     lessons: [
       {
         title: "The Memory Dividend: Experiences Pay Compound Interest",
@@ -7796,6 +7831,7 @@ var BOOKS = [
       "If you're the hero of every story in your business, you're the bottleneck of every story in your business.",
       "Procrastination is wisdom: it's your soul telling you the goal needs a who, not a harder try."
     ],
+
     lessons: [
       {
         title: "The How Trap: Your Default Question Is a Cage",
@@ -7851,6 +7887,7 @@ var BOOKS = [
       "People buy emotionally and justify logically.",
       "Your income can grow only to the extent that you grow."
     ],
+
     lessons: [
       {
         title: "The Inner Game: Your Self-Concept Sets Your Income",
@@ -8512,6 +8549,7 @@ var BOOKS = [
       "Hesitation is the kiss of death. You hesitate, you lose.",
       "Courage is just moving before your brain talks you out of it."
     ],
+
     lessons: [
       {
         title: "The Activation Energy Problem: Why You Freeze",
@@ -8677,6 +8715,7 @@ var BOOKS = [
       "The day will never arrive when you finally have everything under control.",
       "Missing out is what makes our choices meaningful in the first place."
     ],
+
     lessons: [
       {
         title: "The Efficiency Trap: Faster Just Fills Faster",
@@ -8732,6 +8771,7 @@ var BOOKS = [
       "In investing, you get what you don't pay for.",
       "The stock market is a giant distraction from the business of investing."
     ],
+
     lessons: [
       {
         title: "The Relentless Arithmetic: Why Average Beats Almost Everyone",
@@ -8787,6 +8827,7 @@ var BOOKS = [
       "The prototype is a facade — and that's the point.",
       "Five customers on Friday beat five months of meetings."
     ],
+
     lessons: [
       {
         title: "Start at the End: Map, Target, and the Decider",
@@ -8897,6 +8938,7 @@ var BOOKS = [
       "The customer is the hero, not your brand.",
       "People don't buy the best products; they buy the products they can understand the fastest."
     ],
+
     lessons: [
       {
         title: "You're Yoda, Not Luke: The Guide Position",
@@ -9007,6 +9049,7 @@ var BOOKS = [
       "We suffer more often in imagination than in reality.",
       "The impediment to action advances action. What stands in the way becomes the way."
     ],
+
     lessons: [
       {
         title: "The Dichotomy of Control: Sort First, Feel Second",
@@ -9117,6 +9160,7 @@ var BOOKS = [
       "The most important sentence in any difficult conversation: 'Did I get that right?'",
       "Deep questions are the shortcut: everyone's favorite subject is what they care about."
     ],
+
     lessons: [
       {
         title: "The Three Conversations: Detect the Layer or Lose the Room",
@@ -9172,6 +9216,7 @@ var BOOKS = [
       "A misogi asks: what am I actually capable of?",
       "Problem creep: when we experience fewer problems, we don't become more satisfied. We just lower our threshold for what counts as a problem."
     ],
+
     lessons: [
       {
         title: "Problem Creep: Why Easy Lives Feel Hard",
@@ -9423,7 +9468,1220 @@ var BOOKS = [
   {"id":"personal-mba","title":"The Personal MBA","author":"Josh Kaufman","year":2010,"category":"Business & Startups","cover":"assets/covers/personal-mba.jpg","readTime":"13 min","tagline":"Master the art of business — everything you need to know, without the two years and ₹50 lakh.","oneLiner":"Business is one skill: creating and capturing value. Master the 10 core concepts and you out-think most MBAs.","bigIdea":"Josh Kaufman spent years distilling what a business education actually teaches into its essential core — and concluded that business comes down to one sentence: 'A business is a repeatable process that creates and delivers value, and captures some of that value as profit.' His book breaks business into five parts (value creation, marketing, sales, value delivery, finance) and 10 core mental models — from the Iron Law of the Market (build something people want) to the 4 Methods of Value Creation and the Profit Margin analysis. No case-study padding, just the operating system.","quotes":["The purpose of a business is to create and deliver value in an efficient enough way that it can profit from doing so.","If you can't explain a business concept simply, you don't understand it well enough.","The Iron Law of the Market: identify a real problem, then solve it."],"lessons":[{"title":"The Iron Law: Solve a Real Problem","chapter":"Value Creation","summary":"Kaufman's first law: the only way to build a lasting business is to solve a real, valuable problem for real people — better than the alternatives. Everything else (marketing, branding, fundraising) is downstream. Businesses fail when they fall in love with their solution while the problem was imaginary. The customer doesn't care about your product; they care about their problem.","example":"Kaufman's framework asks three questions about any business: Who is the customer? What problem do they have? Why is the current solution inadequate? If you can't answer all three sharply, the business doesn't exist yet — no matter how much you've built.","action":"Write your business in three lines: who, what problem, why current solutions fail. If any line is vague, that's today's problem to research."},{"title":"The 4 Methods of Value Creation","chapter":"Value Creation","summary":"There are only four ways to create value: create something new (product), improve something existing (better/faster/cheaper), remove something harmful (cleanup, security, repair), or share something rare (access, exclusivity). Every successful business is one of these four — and most failed ones were doing a fifth thing: assuming value without creating it.","example":"Kaufman maps the landscape: Apple creates (products), Toyota improves (process), pest control removes, consultants share. When you're stuck for a business idea, the four methods are the search space — and the best ideas combine them.","action":"Classify your current project (or idea) into the 4 methods. If it doesn't fit any cleanly, refine it until it does — that's the value test."},{"title":"Marketing: Promise, Match, Message","chapter":"Marketing","summary":"Kaufman's marketing model: marketing is a promise of value delivered to a specific audience. His 3-step loop: Promise (what will you give them?), Match (target only people who care — aiming at everyone is aiming at no one), and Message (the promise expressed in the customer's language). Most marketing fails because the message talks about the product instead of the customer's problem.","example":"The classic frame: people don't buy drills, they buy holes. The message must speak the customer's language ('holes'), not the maker's ('drill bits') — and it must reach the people with holes, not everyone with ears.","action":"Write your promise in one sentence, in the customer's words. List who cares most about it (the smallest precise group). Test the message on one of them this week."},{"title":"Sales: The 5-Step Process","chapter":"Sales","summary":"Kaufman demystifies selling: it's not manipulation, it's a process of 5 steps — (1) establish trust/rapport, (2) identify the problem, (3) propose your solution as the best fit, (4) justify the price by the value, (5) make it easy to say yes (reduce risk: guarantees, trials, installments). Sales fails when steps are skipped — especially step 2, selling a solution before understanding the problem.","example":"The author's rule: 'People don't like to be sold, but they love to buy.' The best salespeople spend most of the conversation in step 2 — asking, listening, and letting the customer articulate the problem their own solution then answers.","action":"In your next 'sales' conversation (even a job interview), spend the first half asking questions. Propose only after they've described the problem in their own words."},{"title":"Finance: The 5 Numbers That Matter","chapter":"Finance","summary":"Kaufman cuts finance to 5 numbers you must know cold: Revenue (money in), Expenses (money out), Profit (revenue − expenses), Cash Flow (when money actually moves), and Assets (what you own that produces value). Most business disasters aren't mysterious — they're a missing understanding of one of these five, especially the difference between profit and cash flow.","example":"The author's warning: profit is not cash — a profitable company can die if customers pay late while bills arrive early (the classic 'profitable but bankrupt' trap). And revenue is vanity, profit is sanity: chasing revenue without margin is a treadmill.","action":"Write your 5 numbers this week (for your business, or your personal finances): revenue, expenses, profit, cash flow timing, assets. Identify the weakest and fix one thing."}],"actionPlan":["Write your business in three lines: who, problem, why current solutions fail.","Classify your value into the 4 methods — refine until it fits.","Write your one-sentence promise in the customer's language.","Spend your next sales conversation mostly asking.","Know your 5 numbers cold — and fix the weakest."]},
   {"id":"100-dollar-startup","title":"The $100 Startup","author":"Chris Guillebeau","year":2012,"category":"Business & Startups","cover":"assets/covers/100-dollar-startup.jpg","readTime":"11 min","tagline":"Reinvent the way you make a living, do what you love, and create a new future — from 1,500 businesses that started with almost nothing.","oneLiner":"You don't need funding, permission or a perfect plan — you need a skill, a customer, and the nerve to start today.","bigIdea":"Chris Guillebeau studied 1,500+ successful micro-businesses started with less than $100 and found a pattern: ordinary people with a skill and a customer need built real incomes without loans, investors or business plans. His formula: find the intersection of what you love + what you're good at + what people will pay for (his 'passion + skill + market' framework), then create a simple offer, price it, and start selling TODAY. The book is a manifesto against the 'someday' — most of these founders launched in weeks, not years.","quotes":["The future belongs to those who take the initiative.","You don't need a business plan. You need a product and a customer.","Start small, start now — but start."],"lessons":[{"title":"The $100 Start: Funding Is an Excuse","chapter":"The Promise","summary":"Guillebeau's data: most of the 1,500+ businesses he studied started with under $100 — because the modern economy (digital tools, freelancing, shipping) makes starting nearly free. The 'I need funding' story is usually fear in disguise. What the founders actually had: a skill, a customer, and the nerve to start — none of which cost money.","example":"The book's examples run from a London tour guide earning $2,000/month with a $30 website to a Texas guitar teacher charging $75/hour with zero overhead. The pattern: useful skill + direct customer + low cost = business.","action":"List your skills and one person who'd pay for one of them. What's the smallest offer you could launch this week for under ₹2,000?"},{"title":"Passion + Skill + Market = The Sweet Spot","chapter":"The Promise","summary":"Guillebeau's core framework: the ideal business sits at the intersection of what you love (passion), what you're good at (skill), and what people will pay for (market). Missing any one and it fails: passion without skill disappoints, skill without passion burns out, both without market starves. His practical note: start with skill + market, and let passion grow.","example":"Guillebeau's own story: he loved travel and writing, had skills in both, and found the market in 'how to travel well' — his site became a six-figure business. His interviewees' common answer to 'how did you start?' was: I just did it — imperfectly, immediately.","action":"Draw the three circles (passion, skill, market) and list what's in each. Where do at least two overlap? That's your starting point — not the perfect plan."},{"title":"An Offer They Can't Refuse: Solve One Problem Well","chapter":"The Offer","summary":"The $100 founders succeeded with simple, specific offers: one service, one product, one clear promise. Guillebeau's formula: identify one painful problem for one specific group, then create an offer that solves it clearly — 'I help X do Y within Z time.' The narrower the offer, the easier to sell; the clearer the promise, the easier to price.","example":"His case studies: a woman who turned 'I'm great at organizing kitchens' into a paid service; a man who offered 'I'll fix your computer while you watch' for nervous seniors. Specific audience + specific outcome beat 'I do marketing/consulting/whatever' every time.","action":"Write your offer in one line: 'I help [specific person] achieve [specific outcome] by [specific method].' Shorten it until a stranger gets it instantly."},{"title":"Price on Value, Not Time","chapter":"The Product","summary":"Guillebeau's pricing rule: charge for the VALUE you deliver, not the hours you spend. A ₹50,000 solution that saves the customer ₹5 lakh is underpriced at ₹50,000 — and a ₹1,000/hour rate punishes you for being efficient. The founders' edge: they priced on outcome and didn't apologize — and their customers happily paid, because the value was real.","example":"The book's math lessons: the guitar teacher charging $75/hour was paid for results, not minutes; the copywriter charging per-project made more than per-word colleagues. Guillebeau's advice: raise your price until customers hesitate — then nudge once more.","action":"Price your next offer by the customer's value, not your hours. If you're unsure, double your current rate for one new customer and see what happens."},{"title":"Ship It: Perfection Is Procrastination's Best Friend","chapter":"The Launch","summary":"The $100 founders' shared trait: they shipped quickly and improved in public. Guillebeau's rule: 'Your first product will be imperfect — ship it anyway.' Feedback from real customers beats months of polish in the garage. The book's launch strategy is gloriously simple: tell 10 people who might care, ask them to tell 10 more, and iterate on what sells.","example":"Nearly every founder in the book launched with a 'good enough' version — the tour guide's first website was one page; the teacher's first ad was a flyer. Each improved with customer feedback, and the businesses grew with them.","action":"Pick one offer and give it a 7-day shipping deadline. Tell 10 specific people this week. Improve based on the first 3 responses."}],"actionPlan":["Find skill + market overlap; design the smallest offer you can launch under ₹2,000.","Draw your passion/skill/market circles and locate your start.","Write your one-line offer — specific person, outcome, method.","Price by value, not hours — and raise it until they hesitate.","Ship a good-enough version within 7 days; improve in public."]},
   {"id":"miracle-morning","title":"The Miracle Morning","author":"Hal Elrod","year":2012,"category":"Self-Improvement","cover":"assets/covers/miracle-morning.jpg","readTime":"10 min","tagline":"The not-so-obvious secret guaranteed to transform your life (before 8 AM) — the routine that changed millions of mornings.","oneLiner":"How you start your day sets your life. One hour, six practices, and your mornings stop being a race you're losing.","bigIdea":"Hal Elrod wrote this after a near-death car accident and a business collapse left him clinically depressed — then he discovered that changing his MORNING changed everything. His system: SAVERS — six practices done before the day starts: Silence (meditation/prayer), Affirmations (your goals, declared), Visualization (see the day going right), Exercise (move the body), Reading (feed the mind), Scribing (journal). One hour a day, and the day — and life — stop running you. 'How you wake up is how you live.'","quotes":["The way you start each day determines how well you live your life.","Your level of success will rarely exceed your level of personal development.","Every day is a miracle — the key is to wake up to it."],"lessons":[{"title":"Mornings Are the Lever","chapter":"The Miracle Morning","summary":"Elrod's core claim: the first hour sets the tone for the next 23 — and for your life. Rushing out of bed, grabbing the phone, and starting reactive guarantees a reactive day. The miracle morning is a deliberate, structured start that puts YOU in charge before the world gets a vote. It's not about waking early for its own sake — it's about waking intentionally.","example":"Elrod's own crash: after his accident, he hit bottom — until he committed to waking at 5 AM and running his SAVERS routine. Within months his depression lifted, his business revived, and the practice became his book and a global movement.","action":"Set your alarm 30 minutes earlier tomorrow. Before touching your phone, do ONE quiet practice (silence, or writing). Repeat for a week and notice the difference in your days."},{"title":"SAVERS: The Six Practices","chapter":"SAVERS","summary":"The system's acronym: Silence (5–10 min of stillness or meditation), Affirmations (statements of your goals and identity, spoken aloud), Visualization (see your day going perfectly), Exercise (any movement, even 5 minutes), Reading (feed your mind with growth books), Scribing (journal — gratitude, goals, lessons). Not all six must be full-length; even 1 minute each compounds.","example":"Elrod's '1-minute each' variation exists for busy days — the point is the sequence, not the duration. His students report that even the mini-version changes the day: calmer starts, clearer goals, more energy.","action":"Print SAVERS and try the mini-version tomorrow: 1 minute each of silence, affirmation, visualization, movement, reading, journaling. Ten minutes total."},{"title":"Affirmations Rewire Your Self-Image","chapter":"Affirmations","summary":"Elrod's affirmation method isn't woo-woo: it's targeted self-instruction. Write affirmations that are specific, personal and in the present tense ('I am the founder of a business that serves 10,000 people,' 'I am disciplined and focused today'), say them with emotion, and they counter the negative autopilot loop your brain runs all day. Your brain believes what you tell it repeatedly.","example":"Elrod's own affirmation practice pulled him from suicidal depression: he repeated daily statements about who he was becoming until his behavior caught up with the words — a process backed by research on self-affirmation and identity change.","action":"Write 3 present-tense affirmations about who you're becoming. Say them aloud every morning for 30 days — with feeling, not mumbling."},{"title":"Visualization: Rehearse the Day","chapter":"Visualization","summary":"Athletes have used visualization for decades: the brain rehearses what you vividly imagine. Elrod's version: each morning, close your eyes and run your day like a movie — see yourself calm in the meeting, focused on the project, patient with your family. When the real day arrives, your brain has already been there; it performs what it rehearsed.","example":"Elrod cites the classic research (mental rehearsal improves physical performance nearly as much as practice) and his own experience: visualizing the perfect sales call made the real calls smoother, because the anxiety had already been rehearsed away.","action":"Tomorrow morning, spend 3 minutes closing your eyes and 'watching' your day succeed — the meeting, the workout, the conversation. Rehearse the hard moment going well."},{"title":"Never Miss Twice","chapter":"Habit Installation","summary":"Elrod's habit law — borrowed from the best habit science: if you miss a morning, never miss TWO in a row. One missed day is an accident; two is the start of a new (bad) habit. The miracle morning's power is compounding — and like all compounding, it works only with consistency. His '30-day life challenge' makes the routine a decision, not a mood.","example":"Elrod's own tracking: he kept the streak alive through travel, illness and bad nights by shrinking the routine on hard days rather than skipping — 1 minute beats 0 minutes, and the identity ('I'm a morning person') survives.","action":"Start a 30-day morning streak today. On bad days, shrink to 1 minute per practice — but never miss twice."}],"actionPlan":["Wake 30 minutes earlier; one quiet practice before phone, for a week.","Run the 1-minute SAVERS mini-version daily.","Write 3 present-tense affirmations; say them aloud for 30 days.","Visualize tomorrow's day going well for 3 minutes each morning.","Start the 30-day streak — never miss twice."]},
-  {"id":"daring-greatly","title":"Daring Greatly","author":"Brené Brown","year":2012,"category":"Self-Improvement","cover":"assets/covers/daring-greatly.jpg","readTime":"12 min","tagline":"How the courage to be vulnerable transforms the way we live, love, parent and lead — the book that changed millions of lives.","oneLiner":"Vulnerability isn't weakness — it's the birthplace of courage, connection and everything worth doing.","bigIdea":"Brené Brown spent 12 years and thousands of interviews studying shame, vulnerability and worthiness — and her TED talk became one of the most-watched of all time. Her finding: we are hardwired for connection, but we armor ourselves with perfectionism, numbing and 'never good enough' — and the armor is what breaks us. The answer is daring greatly: showing up, being seen, and risking vulnerability, because 'vulnerability is not winning or losing; it's having the courage to show up when you can't control the outcome.' The arena quote — from Theodore Roosevelt — is the book's spine.","quotes":["Vulnerability is not winning or losing; it's having the courage to show up and be seen when we have no control over the outcome.","Courage starts with showing up and letting ourselves be seen.","What we know matters, but who we are matters more."],"lessons":[{"title":"Vulnerability Is Not Weakness","chapter":"What It Means to Dare Greatly","summary":"Brown's most fought-against finding: vulnerability — uncertainty, risk and emotional exposure — is not weakness; it is the most accurate measure of courage. The people she calls 'wholehearted' — the ones living fully — share one trait: they allow themselves to be seen, flawed and uncertain. We armoring ourselves against vulnerability also armor ourselves against love, creativity and joy, which all require it.","example":"Brown's research: when she asked leaders 'what does vulnerability mean to you?', they said weakness — 'I don't do vulnerability.' Yet when she asked what makes a leader brave and trustworthy, they described vulnerability: admitting mistakes, asking for help. The contradiction is the point.","action":"This week, do ONE vulnerable thing on purpose: admit a mistake to someone, ask for help, or share an unfinished idea. Notice what happens to the connection."},{"title":"Shame: The Fear of Disconnection","chapter":"The Shame Shield","summary":"Shame is the intensely painful feeling that 'I am bad' (as opposed to guilt: 'I did something bad'). Shame thrives on secrecy, silence and judgment — and it's universal: everyone has it. Brown's research shows shame corrodes the very connection we need, driving us to hide, numb and perform. The antidote: empathy — sharing your story with someone who responds with compassion, not judgment.","example":"Brown's famous line: 'If you put shame in a petri dish and cover it with empathy, it dies.' Her interviews show that people who survive shame's worst moments are the ones who spoke it aloud to someone safe — the secrecy was the poison, not the shame itself.","action":"Name a shame you carry (in writing): 'I feel shame about ___.' Then tell it to ONE safe person this week — empathy is the only known cure."},{"title":"The Armor: Perfectionism, Numbing, and the Gremlin","chapter":"The Armor","summary":"Brown dissects the armor we wear: perfectionism (a shield against judgment — 'if I'm perfect, no one can hurt me'), numbing (food, screens, alcohol, overwork — deadening feeling, which deadens joy too), and the 'gremlin' (the inner critic that rehearses failure). The armor feels protective but suffocates: perfectionism is not the path to excellence, it's the path to paralysis and disconnection.","example":"Brown's data on perfectionism: it's correlated with depression, anxiety and addiction — and notably, parents' perfectionism predicts children's shame-proneness. The 'perfect' image we project is the loneliest place to live.","action":"Identify your primary armor (perfectionism, numbing, people-pleasing). Catch it once this week — and do the imperfect thing anyway, on purpose."},{"title":"Wholehearted Living: The Ten Guideposts","chapter":"Cultivating Wholeheartedness","summary":"From her interviews with 'wholehearted' people, Brown distilled ten guideposts: cultivate authenticity, self-compassion, a resilient spirit, gratitude and joy, intuition, creativity, play and rest, calm and stillness, meaningful work, and laughter. The pattern underneath: worthiness — believing 'I am enough' — which is built by practice, not by achievement.","example":"Brown's guideposts are evidence-based: wholehearted people practice gratitude daily, play without guilt, rest without shame, and do work that matters to them — not work that merely looks impressive. Each guidepost is a daily practice, not a personality trait.","action":"Pick ONE guidepost to practice this week (start with gratitude or play). Schedule it like a meeting — and do it even if it feels silly."},{"title":"Daring Leadership: The Arena","chapter":"Daring Leadership","summary":"Brown's leadership chapter: the 'armored leadership' of certainty, power-over and 'never let them see you sweat' creates disengaged teams — while 'daring leadership' (courage, vulnerability, trust) creates the psychological safety where people do their best work. Her toolkit: rumble with hard conversations, take responsibility without shame-blame, and be the first to show up imperfectly.","example":"Brown's research shows teams with psychological safety outperform — and her rule for leaders: 'You can't give people what you don't have' — leaders who can't be vulnerable can't build trust, and without trust, no feedback, innovation or loyalty survives.","action":"In your next team or family moment, go first: acknowledge your part of the problem out loud. Watch how it frees others to be honest."}],"actionPlan":["Do one vulnerable thing on purpose this week.","Name a shame in writing and tell it to one safe person.","Identify your armor — and do one imperfect thing anyway.","Practice one guidepost daily (gratitude, play, or rest).","Go first in one hard conversation: acknowledge your part."]}
+  {"id":"daring-greatly","title":"Daring Greatly","author":"Brené Brown","year":2012,"category":"Self-Improvement","cover":"assets/covers/daring-greatly.jpg","readTime":"12 min","tagline":"How the courage to be vulnerable transforms the way we live, love, parent and lead — the book that changed millions of lives.","oneLiner":"Vulnerability isn't weakness — it's the birthplace of courage, connection and everything worth doing.","bigIdea":"Brené Brown spent 12 years and thousands of interviews studying shame, vulnerability and worthiness — and her TED talk became one of the most-watched of all time. Her finding: we are hardwired for connection, but we armor ourselves with perfectionism, numbing and 'never good enough' — and the armor is what breaks us. The answer is daring greatly: showing up, being seen, and risking vulnerability, because 'vulnerability is not winning or losing; it's having the courage to show up when you can't control the outcome.' The arena quote — from Theodore Roosevelt — is the book's spine.","quotes":["Vulnerability is not winning or losing; it's having the courage to show up and be seen when we have no control over the outcome.","Courage starts with showing up and letting ourselves be seen.","What we know matters, but who we are matters more."],"lessons":[{"title":"Vulnerability Is Not Weakness","chapter":"What It Means to Dare Greatly","summary":"Brown's most fought-against finding: vulnerability — uncertainty, risk and emotional exposure — is not weakness; it is the most accurate measure of courage. The people she calls 'wholehearted' — the ones living fully — share one trait: they allow themselves to be seen, flawed and uncertain. We armoring ourselves against vulnerability also armor ourselves against love, creativity and joy, which all require it.","example":"Brown's research: when she asked leaders 'what does vulnerability mean to you?', they said weakness — 'I don't do vulnerability.' Yet when she asked what makes a leader brave and trustworthy, they described vulnerability: admitting mistakes, asking for help. The contradiction is the point.","action":"This week, do ONE vulnerable thing on purpose: admit a mistake to someone, ask for help, or share an unfinished idea. Notice what happens to the connection."},{"title":"Shame: The Fear of Disconnection","chapter":"The Shame Shield","summary":"Shame is the intensely painful feeling that 'I am bad' (as opposed to guilt: 'I did something bad'). Shame thrives on secrecy, silence and judgment — and it's universal: everyone has it. Brown's research shows shame corrodes the very connection we need, driving us to hide, numb and perform. The antidote: empathy — sharing your story with someone who responds with compassion, not judgment.","example":"Brown's famous line: 'If you put shame in a petri dish and cover it with empathy, it dies.' Her interviews show that people who survive shame's worst moments are the ones who spoke it aloud to someone safe — the secrecy was the poison, not the shame itself.","action":"Name a shame you carry (in writing): 'I feel shame about ___.' Then tell it to ONE safe person this week — empathy is the only known cure."},{"title":"The Armor: Perfectionism, Numbing, and the Gremlin","chapter":"The Armor","summary":"Brown dissects the armor we wear: perfectionism (a shield against judgment — 'if I'm perfect, no one can hurt me'), numbing (food, screens, alcohol, overwork — deadening feeling, which deadens joy too), and the 'gremlin' (the inner critic that rehearses failure). The armor feels protective but suffocates: perfectionism is not the path to excellence, it's the path to paralysis and disconnection.","example":"Brown's data on perfectionism: it's correlated with depression, anxiety and addiction — and notably, parents' perfectionism predicts children's shame-proneness. The 'perfect' image we project is the loneliest place to live.","action":"Identify your primary armor (perfectionism, numbing, people-pleasing). Catch it once this week — and do the imperfect thing anyway, on purpose."},{"title":"Wholehearted Living: The Ten Guideposts","chapter":"Cultivating Wholeheartedness","summary":"From her interviews with 'wholehearted' people, Brown distilled ten guideposts: cultivate authenticity, self-compassion, a resilient spirit, gratitude and joy, intuition, creativity, play and rest, calm and stillness, meaningful work, and laughter. The pattern underneath: worthiness — believing 'I am enough' — which is built by practice, not by achievement.","example":"Brown's guideposts are evidence-based: wholehearted people practice gratitude daily, play without guilt, rest without shame, and do work that matters to them — not work that merely looks impressive. Each guidepost is a daily practice, not a personality trait.","action":"Pick ONE guidepost to practice this week (start with gratitude or play). Schedule it like a meeting — and do it even if it feels silly."},{"title":"Daring Leadership: The Arena","chapter":"Daring Leadership","summary":"Brown's leadership chapter: the 'armored leadership' of certainty, power-over and 'never let them see you sweat' creates disengaged teams — while 'daring leadership' (courage, vulnerability, trust) creates the psychological safety where people do their best work. Her toolkit: rumble with hard conversations, take responsibility without shame-blame, and be the first to show up imperfectly.","example":"Brown's research shows teams with psychological safety outperform — and her rule for leaders: 'You can't give people what you don't have' — leaders who can't be vulnerable can't build trust, and without trust, no feedback, innovation or loyalty survives.","action":"In your next team or family moment, go first: acknowledge your part of the problem out loud. Watch how it frees others to be honest."}],"actionPlan":["Do one vulnerable thing on purpose this week.","Name a shame in writing and tell it to one safe person.","Identify your armor — and do one imperfect thing anyway.","Practice one guidepost daily (gratitude, play, or rest).","Go first in one hard conversation: acknowledge your part."]},
+  {
+    "id": "body-keeps-score",
+    "title": "The Body Keeps the Score",
+    "author": "Bessel van der Kolk",
+    "year": 2014,
+    "category": "Psychology & People",
+    "cover": "assets/covers/body-keeps-score.jpg",
+    "readTime": "15 min",
+    "tagline": "The #1 book on trauma — how it reshapes the brain and body, and the science-backed ways to heal.",
+    "oneLiner": "Trauma lives in the body, not just the mind. Heal it through the body — movement, breath, connection, and safe re-experiencing.",
+    "bigIdea": "Van der Kolk, one of the world's leading trauma researchers, shows that trauma physically rewires the brain: it hijacks the alarm system, silences the speech center, and stores the experience in the body as chronic tension, panic and shame. Talk therapy alone can't reach what the body remembers. Healing comes through bottom-up approaches — breath, movement, EMDR, yoga, play, and safe human connection — that teach the body it is no longer in danger.",
+    "quotes": [
+      "The body keeps the score.",
+      "Trauma is not the story of something that happened back then — it's the current imprint of that pain, horror, and fear living inside people's bodies.",
+      "Being able to feel safe with other people is probably the single most important aspect of mental health."
+    ],
+    "lessons": [
+      {
+        "title": "Trauma Lives in the Body",
+        "chapter": "The Rediscovery of Trauma",
+        "summary": "Trauma is not only a memory — it's a physical imprint. The brain's alarm system gets stuck in 'on', muscles stay braced, and the body keeps reliving the danger even when the mind has moved on. This is why survivors often can't 'think their way out': the body is still fighting a war the mind believes is over.",
+        "example": "Van der Kolk describes patients whose heart rates and stress hormones stay elevated decades after the event — and how a car accident survivor's body would freeze every time she heard a similar engine sound, years later, without conscious memory of why.",
+        "action": "Notice where stress shows up in YOUR body — jaw, shoulders, stomach. That map is the first step: your body talks; learn to listen before you fix."
+      },
+      {
+        "title": "The Alarm System That Won't Turn Off",
+        "chapter": "The Brain and Body on Trauma",
+        "summary": "Trauma hijacks the brain's smoke detector (amygdala) so it over-fires, while the rational control tower (prefrontal cortex) goes quiet. People become either hyper-aroused (panic, rage) or numbed out (checked out, dissociated) — two sides of the same stuck alarm.",
+        "example": "Veterans in the book re-experience combat as if it's happening now — a car backfire sends them diving for cover. Their brains can't tell past from present because the alarm never got the all-clear signal.",
+        "action": "When you overreact to a small trigger, pause and label it: 'That's my alarm, not the real threat.' Naming the mechanism creates a sliver of choice."
+      },
+      {
+        "title": "Words Fail — That's Why We Need the Body",
+        "chapter": "Language and the Body",
+        "summary": "Trauma silences the speech center (Broca's area) — the brain literally goes non-verbal during terror, which is why memories feel wordless. Talking about it helps, but only after the body feels safe enough. Bottom-up approaches — breath, movement, touch, rhythm — reach the parts words can't.",
+        "example": "Van der Kolk's patients often couldn't describe their trauma; instead their bodies told the story — a tightening chest, a frozen arm, a wince. Yoga and breathwork in his clinic helped many speak for the first time, because the body finally relaxed enough to allow it.",
+        "action": "Try one body-first practice this week — 10 slow breaths, a walk without headphones, or stretching. Notice what your mind does when your body settles."
+      },
+      {
+        "title": "Connection Is the Antidote",
+        "chapter": "Healing From Trauma",
+        "summary": "The single most protective factor in trauma recovery is safe connection: feeling seen, heard and held by another human. Isolation amplifies trauma; community metabolizes it. The research is clear — children and adults who have one safe person recover far better than those who suffer alone.",
+        "example": "Studies of abused children show those with one stable, caring adult grow into far healthier adults. In the clinic, group therapy where patients finally felt 'I am not alone' produced some of the deepest healing.",
+        "action": "Identify your one safe person — and schedule a real conversation this week. Connection is not a luxury; it's medicine."
+      },
+      {
+        "title": "You Can Rewire the Brain — At Any Age",
+        "chapter": "Paths to Recovery",
+        "summary": "Neuroplasticity means the brain can learn safety even after decades of terror. EMDR, internal family systems, theater, movement, EMDR and medication each offer a path — the common thread is helping the body experience 'this is now, and I am safe' until the alarm recalibrates.",
+        "example": "The book follows patients who, after years of flashbacks, completed EMDR or theatre programs and reported the past finally 'feeling like the past'. One veteran who couldn't sleep in a bed for a decade began sleeping normally after body-based treatment.",
+        "action": "If you carry old pain, pick ONE evidence-based path (EMDR, therapy, yoga, structured exercise) and take the first appointment this month. The brain can change — that's the whole promise."
+      }
+    ],
+    "actionPlan": [
+      "Map where stress lives in your body — one minute of noticing, daily.",
+      "Label overreactions as 'alarm, not reality' before responding.",
+      "Do one body-first practice daily: breath, walk, stretch.",
+      "Schedule one real conversation with your safe person this week.",
+      "If you carry old trauma, book one professional session this month."
+    ]
+  },
+  {
+    "id": "thinking-in-bets",
+    "title": "Thinking in Bets",
+    "author": "Annie Duke",
+    "year": 2018,
+    "category": "Psychology & People",
+    "cover": "assets/covers/thinking-in-bets.jpg",
+    "readTime": "11 min",
+    "tagline": "How the world's best poker player makes smarter decisions in a world full of luck — by thinking in probabilities, not certainty.",
+    "oneLiner": "Every decision is a bet. Stop judging decisions by outcomes — judge them by the quality of the process.",
+    "bigIdea": "Annie Duke, a World Series of Poker champion, argues that life is poker, not chess: every decision happens with incomplete information and luck plays a huge role. So judging a decision by its result is a fool's game — great decisions can lead to bad outcomes and vice versa. The fix: think in bets. Frame every choice as a probability ('I'm 70% sure this works'), separate decision quality from outcome quality, and build a group of truth-seekers who help you see your blind spots.",
+    "quotes": [
+      "The quality of your life is the quality of your decisions.",
+      "Results are a lousy way to evaluate decisions.",
+      "If you don't like your outcomes, change your process."
+    ],
+    "lessons": [
+      {
+        "title": "Life Is Poker, Not Chess",
+        "chapter": "Decisions Are Bets",
+        "summary": "Chess has no luck — the better player always wins. Poker has luck, hidden information and incomplete data — exactly like life. When you accept that every decision is a bet on an uncertain future, you stop needing to be 'right' and start wanting to be 'accurate'. That shift is the foundation of better thinking.",
+        "example": "Duke tells of a doctor who chose the right treatment by all available evidence — and the patient still died. Judging the doctor as 'wrong' would be wrong: it was a good bet that lost. The same logic applies to job choices, investments and relationships.",
+        "action": "Before your next decision, write your confidence: 'I'm X% sure this is right.' Just forcing the number reduces overconfidence instantly."
+      },
+      {
+        "title": "Outcomes Are Not Report Cards",
+        "chapter": "Results Are Lousy Feedback",
+        "summary": "We naturally judge decisions by how they turned out — but with luck in the mix, outcomes are noisy. A bad outcome doesn't mean a bad decision; a good outcome doesn't mean a good one. Evaluate the PROCESS: was this a good bet given what you knew at the time?",
+        "example": "Two investors make the same bet: one wins, one loses. If you reward the winner and punish the loser, you've learned nothing — same process, different luck. Duke's rule: review decisions on the quality of the reasoning, not the roll of the dice.",
+        "action": "Keep a decision journal: for one week, log each decision + your confidence % + your reasoning. Review later against the process, not just the result."
+      },
+      {
+        "title": "Widen Your 'Could' — Think in Frequencies",
+        "chapter": "Wanna Bet?",
+        "summary": "When you think in absolutes ('this WILL work'), you close your mind to evidence. When you think in probabilities ('this works 70% of the time'), you stay open to new information. Duke's trick: replace 'could' with numbers — instead of 'this could fail', say 'this fails maybe 25% of the time'.",
+        "example": "In poker, Duke constantly estimates hand probabilities; in life she applies the same: 'the startup has maybe a 15% shot' beats 'it's a sure thing'. The 15% framing lets you prepare for the 85%.",
+        "action": "Catch yourself saying 'will' or 'won't' — reframe as a percentage. Ask: 'If this happened 100 times, how many would succeed?'"
+      },
+      {
+        "title": "The Resulting: Stop Hindsight-Blaming Yourself",
+        "chapter": "The Resulting Trap",
+        "summary": "Hindsight bias makes past outcomes look inevitable — 'I should have known'. This creates shame for bad luck and false confidence from good luck. The cure: imagine the alternative history — what WOULD have happened if the other branch of the bet had played out. That's how you learn the real lesson.",
+        "example": "Duke describes missing a poker hand everyone folded — and realizing she'd have lost more by staying in. The 'good' fold looked bad at first glance; the alternative history showed it was right.",
+        "action": "After any outcome, ask: 'If the other result had happened, what would I have learned?' This kills the 'I knew it' illusion."
+      },
+      {
+        "title": "Build a Truth-Seeking Group",
+        "chapter": "The Group",
+        "summary": "Your brain is wired to defend its own beliefs, not examine them. The antidote is a small group of people who will tell you the truth — and who share your goal of accuracy over winning arguments. Duke's 'truth-seeking' rules: no ego, no saving face, credit for changing your mind.",
+        "example": "Duke built her decision group of sharp friends who bet on each other's predictions and called out each other's blind spots. The group's value: 'they helped me see the world as it is, not as I wanted it to be'.",
+        "action": "Find one or two people who will honestly challenge you. Share a decision with them this week — and genuinely listen to the objection."
+      }
+    ],
+    "actionPlan": [
+      "Attach a confidence % to every significant decision this week.",
+      "Judge decisions by process, not outcome — journal it.",
+      "Reframe 'will/won't' into frequencies.",
+      "Run the alternative-history thought after every result.",
+      "Recruit one truth-teller and run a decision by them."
+    ]
+  },
+  {
+    "id": "art-of-thinking-clearly",
+    "title": "The Art of Thinking Clearly",
+    "author": "Rolf Dobelli",
+    "year": 2011,
+    "category": "Psychology & People",
+    "cover": "assets/covers/art-of-thinking-clearly.jpg",
+    "readTime": "12 min",
+    "tagline": "99 cognitive biases that quietly ruin your decisions — and how to spot them before they ruin you.",
+    "oneLiner": "Your brain cuts corners — 99 ways. Learn the shortcuts, and you'll stop being fooled by your own mind.",
+    "bigIdea": "Dobelli catalogs 99 systematic errors in human thinking — from survivorship bias and confirmation bias to sunk-cost fallacy and social proof. Each chapter is a tiny, sharp lesson: the bias, why it exists, and how to defend against it. The meta-lesson: your brain is a shortcut machine built for a different world; thinking clearly is mostly learning where your automatic judgments lie.",
+    "quotes": [
+      "Thinking clearly is a moral duty — because unclear thinking makes the world worse.",
+      "The sunk cost fallacy: why you keep watching bad movies.",
+      "Never judge a decision purely by its results."
+    ],
+    "lessons": [
+      {
+        "title": "Survivorship Bias: The Graveyard Doesn't Give Interviews",
+        "chapter": "Why You See What Winners Look Like",
+        "summary": "We only see the survivors — successful startups, toppers, rich people — and never the graveyard of equally good attempts that failed. So we overestimate the odds and copy the wrong lessons. The 'how-to' books are written by the lucky survivors; the failures that could teach more are invisible.",
+        "example": "Dobelli's classic: every business book praises risk-taking because the risk-takers who won wrote books. The risk-takers who lost are silent. A famous study showed most startup founders' paths looked similar — the difference was often luck, not skill.",
+        "action": "Whenever you study a success, ask: 'How many tried the same thing and failed?' The base rate is the real number to beat."
+      },
+      {
+        "title": "Swimmer's Body Illusion: Confusing Cause and Effect",
+        "chapter": "The Swimmer's Body",
+        "summary": "Elite swimmers have great bodies — but swimming didn't give them those bodies; their genetics made them good at swimming. We constantly confuse the effect with the cause, copying the behavior instead of the underlying factor.",
+        "example": "Harvard students are disciplined — but Harvard didn't make them disciplined; disciplined people got into Harvard. Companies with great culture attract great people — the culture isn't always the cause of their success.",
+        "action": "For any admired outcome, ask: 'Is this behavior the cause — or just the side effect of something else?'"
+      },
+      {
+        "title": "Sunk Cost: The Money Is Gone — Stop Throwing More",
+        "chapter": "Sunk Costs",
+        "summary": "We keep investing in failing projects, careers and relationships because of what we've already put in. Economically, the past is gone — only the future matters. Letting go feels wasteful, but staying is the real waste.",
+        "example": "Dobelli's examples: watching a bad movie because you paid for it; staying in a dying project because you've poured months in; countries continuing pointless wars because of lives already lost. Each decision should be made on future value alone.",
+        "action": "Ask the killer question on any failing thing: 'If I were starting today with zero invested, would I choose this?' If no — walk."
+      },
+      {
+        "title": "Confirmation Bias: The Mind Finds What It Looks For",
+        "chapter": "Confirmation",
+        "summary": "Your brain seeks evidence that supports what you already believe and ignores the rest. Every opinion you hold is backed by cherry-picked 'proof'. The antidote isn't more information — it's deliberately hunting for disconfirming evidence.",
+        "example": "Studies show doctors, investors and even scientists interpret the same data to confirm their prior view. Dobelli's fix: 'write down your belief, then actively search for what would prove it wrong' — the fastest way to see reality.",
+        "action": "Pick one strong belief and spend 15 minutes finding the best argument AGAINST it. Update your confidence — that's thinking."
+      },
+      {
+        "title": "The Social Proof Fallacy: Everyone's Doing It (So Don't)",
+        "chapter": "Social Proof",
+        "summary": "Humans copy the herd — it was smart on the savanna, disastrous in markets. When everyone is buying, selling, or believing the same thing, that's usually the moment NOT to join. The herd is not a source of information; it's a source of comfort.",
+        "example": "Dobelli traces bubbles — from tulips to dot-com — where social proof fueled the buying until the crowd reversed. The crowd's confidence is inversely proportional to its accuracy at extremes.",
+        "action": "Before joining any 'everyone is doing it' bandwagon, ask: 'Would I do this if I were the only one?' If not, the herd is deciding for you."
+      }
+    ],
+    "actionPlan": [
+      "Check the base rate before copying any success.",
+      "Separate cause from effect in admired outcomes.",
+      "Apply the zero-investment test to one sunk-cost project.",
+      "Hunt disconfirming evidence for one belief, 15 minutes.",
+      "Pause before any herd move and ask the alone-test."
+    ]
+  },
+  {
+    "id": "righteous-mind",
+    "title": "The Righteous Mind",
+    "author": "Jonathan Haidt",
+    "year": 2012,
+    "category": "Psychology & People",
+    "cover": "assets/covers/righteous-mind.jpg",
+    "readTime": "13 min",
+    "tagline": "Why good people are divided by politics and religion — the science of moral intuition and the six moral foundations.",
+    "oneLiner": "Intuitions come first, reasoning second. Understand the six moral taste buds and you'll finally get why people disagree.",
+    "bigIdea": "Haidt's famous metaphor: the mind is an elephant (intuition) with a rider (reason). The rider thinks he's in charge, but he's mostly the elephant's lawyer — justifying gut feelings after the fact. Our moral judgments are quick intuitions shaped by six innate 'taste buds': care, fairness, loyalty, authority, sanctity and liberty. Political differences aren't stupidity — they're different moral taste buds tuned to different weights. Understanding this makes disagreement less maddening and more navigable.",
+    "quotes": [
+      "The mind is divided, like a rider on an elephant, and the rider's job is to serve the elephant.",
+      "Intuitions come first, strategic reasoning second.",
+      "We are 90% chimp and 10% bee — the righteous mind is the bee part."
+    ],
+    "lessons": [
+      {
+        "title": "The Elephant and the Rider",
+        "chapter": "Where Morality Comes From",
+        "summary": "Reason is not the driver of our judgments — intuition is. The elephant (gut feeling) decides first; the rider (reason) constructs justifications after. This is why arguments rarely change minds: you're arguing with the rider while the elephant isn't listening.",
+        "example": "Haidt's experiments: people presented with harmless taboo acts (like a family eating their dog after it died) instantly called it wrong — then struggled to find reasons. The judgment came first; the reasoning followed to serve it.",
+        "action": "Next time you feel 'this is just wrong', notice your gut fired before your brain. That awareness is the first crack in the illusion of pure reason."
+      },
+      {
+        "title": "The Six Moral Taste Buds",
+        "chapter": "The Moral Foundations",
+        "summary": "Haidt identifies six innate moral intuitions: Care (protect the vulnerable), Fairness (proportional justice), Loyalty (tribe), Authority (respect hierarchy), Sanctity (purity/disgust) and Liberty (freedom from oppression). Everyone has all six — but people weight them differently, which explains most political and cultural clashes.",
+        "example": "A classic finding: political progressives in Western countries rely mostly on Care and Fairness, while conservatives use all six more evenly. So each side literally experiences different moral worlds — not one side being 'right'.",
+        "action": "Take your strongest disagreement and map it to the taste buds: which foundations does the other side feel are being violated? Understanding the taste bud is the start of a real conversation."
+      },
+      {
+        "title": "We Are 90% Chimp, 10% Bee",
+        "chapter": "The Hive Hypothesis",
+        "summary": "Humans are selfish (chimp) but also groupish (bee): we can lose ourselves in a collective — religion, nation, team, company — and feel transcendent unity. This 'hive switch' is why groups achieve what individuals can't, and why identity politics is so powerful.",
+        "example": "Haidt describes soldiers who miss the war — not the danger, but the total belonging. Fans losing themselves in a stadium, devotees in prayer, teams in flow: the hive switch makes individuals stronger together.",
+        "action": "Find a healthy hive — a team, community, cause — where you lose yourself weekly. Belonging is a human need, not a luxury."
+      },
+      {
+        "title": "Liberty and Oppression: The Sixth Taste Bud",
+        "chapter": "The Liberty Foundation",
+        "summary": "Beyond the original five foundations, Haidt added Liberty: the sensitivity to domination and bullying. When people feel controlled, they react with anger and rebellion — even against their own self-interest. This explains protests, revolutions, and why being told 'you must' triggers resistance.",
+        "example": "The Tea Party and Occupy movements were both liberty-driven — one against government overreach, one against corporate overreach. Same taste bud, different targets.",
+        "action": "When you feel resistance to an instruction, ask: 'Is this about the task — or about being controlled?' Often the resistance is the liberty bud, not the logic."
+      },
+      {
+        "title": "Can't We All Disagree More Constructively?",
+        "chapter": "The Righteous Mind and Politics",
+        "summary": "Haidt's plea: stop assuming opponents are stupid or evil. They're running on different moral taste buds. Real persuasion requires understanding the other side's foundations and speaking to them — not just repeating your own. And in groups, diversity of moral taste buds makes better decisions.",
+        "example": "The book's 'liberal arts' experiment: when liberals and conservatives were mixed in a room, they solved problems better than homogeneous groups. Disagreement done well is a superpower.",
+        "action": "This week, have one conversation where you ONLY ask questions about the other side's values — no rebuttals. See what the elephant shows you."
+      }
+    ],
+    "actionPlan": [
+      "Catch one intuition-before-reason moment daily.",
+      "Map your biggest disagreement onto the six taste buds.",
+      "Find one healthy 'hive' to belong to.",
+      "Notice when liberty-resistance (not logic) is driving you.",
+      "Run one pure-curiosity conversation with an opponent."
+    ]
+  },
+  {
+    "id": "factfulness",
+    "title": "Factfulness",
+    "author": "Hans Rosling",
+    "year": 2018,
+    "category": "Psychology & People",
+    "cover": "assets/covers/factfulness.jpg",
+    "readTime": "11 min",
+    "tagline": "Ten reasons we're wrong about the world — and why things are better than you think. The global bestseller by the late Hans Rosling.",
+    "oneLiner": "The world is improving far faster than we believe — and our dramatic instincts keep lying to us. Get the facts straight, then act.",
+    "bigIdea": "Rosling, a global health legend, tested thousands of people — including experts — on basic facts about the world (poverty, life expectancy, education) and found almost everyone scores worse than random. We're not stupid; we have dramatic instincts: the gap instinct, negativity instinct, fear instinct — ten cognitive reflexes that make the world look worse and more divided than it is. Factfulness is the habit of questioning those instincts and updating your worldview with data.",
+    "quotes": [
+      "When we have a fact-based worldview, we can see that the world is in a much better state than we think.",
+      "The world cannot be understood without numbers — and it cannot be understood with numbers alone.",
+      "Being always right is not the goal. Being less wrong is."
+    ],
+    "lessons": [
+      {
+        "title": "The Negativity Instinct: Bad News Sells, Good News Doesn't",
+        "chapter": "The Negativity Instinct",
+        "summary": "Our brains are wired to notice threats, and media feeds the wiring: disasters, crises and scandals dominate the news while progress quietly compounds. The result: most people believe poverty, violence and disease are rising when they're falling. Remember: 'things can be bad AND getting better'.",
+        "example": "Rosling's data: extreme poverty has halved in 20 years, child mortality keeps falling, life expectancy keeps rising — yet surveys show most people believe the opposite. The news reported the crises; nobody reported the 200,000 people who escaped poverty daily.",
+        "action": "Next time you feel the world is falling apart, ask: 'Is this a single bad event — or a trend?' And look up one positive global statistic this week."
+      },
+      {
+        "title": "The Gap Instinct: We See Two, Reality Has Four",
+        "chapter": "The Gap Instinct",
+        "summary": "We split the world into 'us and them', rich and poor, developed and developing. Reality is a spectrum: most people live in the middle — not extreme poverty, not luxury. The 'developing world' label hides the billions who already have phones, electricity and education.",
+        "example": "Rosling's famous Dollar Street project photographed homes across income levels: a 'poor' family in Bangladesh and a 'middle class' family in Mexico often live almost identically. The two-group story is a lie; the income ladder is real.",
+        "action": "Replace binary labels with spectrums. When someone says 'those people', ask which rung of the ladder they mean."
+      },
+      {
+        "title": "The Fear Instinct: What We Fear ≠ What's Dangerous",
+        "chapter": "The Fear Instinct",
+        "summary": "We over-fear things that are scary (sharks, plane crashes, terrorism) and under-fear things that are dangerous (driving, sugar, indoor air pollution). Evolution wired us to fear dramatic threats; modernity's real risks are quiet and chronic.",
+        "example": "Rosling notes people fear flying yet drive without worry — flying is dramatically safer per mile. In his own field, media panicked over rare diseases while the biggest killers (heart disease, poor sanitation) got routine coverage.",
+        "action": "Make a list of your top 3 fears and check each against data: how likely is it really, compared to things you don't fear?"
+      },
+      {
+        "title": "The Straight-Line Instinct: The Future Is Not a Line",
+        "chapter": "The Straight-Line Instinct",
+        "summary": "We assume trends continue in straight lines — population will keep exploding, China will keep growing at 10%. But most real trends are S-curves: they rise, then flatten. Thinking in straight lines makes you plan for a future that won't arrive.",
+        "example": "In the 1960s, experts predicted children would drown in horse manure because traffic would keep growing in a straight line — until cars replaced horses. India's population growth, once feared as exponential, has been flattening for decades.",
+        "action": "For any trend you're betting on, ask: 'Is this a straight line or an S-curve? What would make it flatten?'"
+      }
+    ],
+    "actionPlan": [
+      "Question 'the world is falling apart' — check trends, not events.",
+      "Replace us/them with spectrums and ladders.",
+      "Compare your fears to the data before acting on them.",
+      "Before a big claim, ask: 'What would the data say?'",
+      "Be less wrong this week: update one belief with one statistic."
+    ]
+  },
+  {
+    "id": "anxious-generation",
+    "title": "The Anxious Generation",
+    "author": "Jonathan Haidt",
+    "year": 2024,
+    "category": "Self-Improvement",
+    "cover": "assets/covers/anxious-generation.jpg",
+    "readTime": "12 min",
+    "tagline": "The 2024 blockbuster: how the smartphone rewired childhood and caused the teen mental-health collapse — and the 4 rules to fix it.",
+    "oneLiner": "A play-based childhood was replaced by a phone-based one — and anxiety exploded. Restore play, delay phones, and set boundaries.",
+    "bigIdea": "Haidt's data-backed bombshell: around 2010-2015, teen anxiety, depression and self-harm spiked across the English-speaking world — exactly when smartphones and social media saturated childhood. The mechanism: the 'play-based childhood' (free, unsupervised, risk-filled, real-world) was replaced by a 'phone-based childhood' (supervised, algorithmic, comparison-filled, virtual). His fixes: no smartphones before high school, no social media before 16, phone-free schools, and far more unsupervised play.",
+    "quotes": [
+      "The phone-based childhood is the greatest experiment in human history — and we are the guinea pigs.",
+      "A play-based childhood is the training ground for an anxious-free adulthood.",
+      "What children need most is what we've removed: freedom, risk, and unsupervised time with other children."
+    ],
+    "lessons": [
+      {
+        "title": "The Great Rewiring: What Changed in 2010",
+        "chapter": "The Surge",
+        "summary": "Between 2010 and 2015, teen depression and anxiety roughly doubled in the US, UK, Canada and Australia — simultaneously, across genders and regions. The only variable that changed globally at the same moment: smartphones and social media went from 'some teens have them' to 'all teens have them'.",
+        "example": "Haidt charts the data: daily social-media use among teens went from under 50% to over 80% in that window, while unsupervised playtime collapsed. The curves line up almost perfectly with the mental-health collapse.",
+        "action": "If you're a parent or guardian: audit the actual hours your teen spends on screens vs. with friends in person. The gap IS the risk factor."
+      },
+      {
+        "title": "Play-Based vs Phone-Based Childhood",
+        "chapter": "The Two Childhoods",
+        "summary": "Play-based childhood: unsupervised, risky, physical, social — where kids learn conflict resolution, risk assessment and resilience. Phone-based childhood: supervised, sedentary, algorithmic — where kids learn comparison, FOMO and performance anxiety. The first builds the 'antifragile' psyche; the second starves it.",
+        "example": "Haidt compares generations: kids who roamed neighborhoods, climbed trees and resolved their own playground fights grew up with calibrated risk-senses. Kids whose 'social life' is curated feeds grow up anxious about every like and alert.",
+        "action": "Give a child (or yourself) one hour of genuinely unsupervised, physical, outdoors time this week — no screens, no adults hovering."
+      },
+      {
+        "title": "The Four Harms of the Phone-Based Childhood",
+        "chapter": "What Social Media Does",
+        "summary": "Haidt names the four damage channels: 1) Social deprivation (less face-to-face time), 2) Sleep deprivation (screens at night), 3) Attention fragmentation (constant switching), 4) Addiction (variable-reward dopamine loops). Any one would hurt; all four together are a psychiatric storm.",
+        "example": "The data: teens who spend 3+ hours/day on social media have double the risk of depression; those with phones in bedrooms sleep an hour less. The four harms compound — less sleep makes attention worse, worse attention increases escapism.",
+        "action": "Pick ONE of the four harms and fix it this week: phone out of the bedroom at night, or a daily 2-hour phone-free block."
+      },
+      {
+        "title": "The Four New Norms",
+        "chapter": "The Fix",
+        "summary": "Haidt's practical prescription: 1) No smartphones before high school (give basic phones instead), 2) No social media before 16, 3) Phone-free schools, 4) Far more unsupervised play and independence. Norms beat lectures — parents can't fight alone, but villages can.",
+        "example": "Schools that banned phones saw measurably better focus and social interaction within weeks; communities that delayed smartphones reported calmer childhoods. The resistance is collective action, not individual willpower.",
+        "action": "If you influence any young person's life: implement one of the four norms this month — and talk to 2 other families to do it together."
+      },
+      {
+        "title": "It's Not Just Kids — Reclaim Your Own Attention",
+        "chapter": "Adults Too",
+        "summary": "The same forces shaped by the phone apply to adults: attention fragmentation, comparison anxiety and sleep loss. The phone-based life is a design problem, not a personal failing. Adults who model phone-free presence give children (and themselves) the biggest gift.",
+        "example": "Haidt himself describes adopting phone-free Friday dinners and keeping his phone out of the bedroom — small structural choices that restored family attention.",
+        "action": "Model it: one phone-free ritual daily (meals, mornings, walks). Your attention is the most valuable thing you give anyone."
+      }
+    ],
+    "actionPlan": [
+      "Audit real screen time vs real-world time this week.",
+      "Fix one of the four harms: bedroom phone, sleep, focus, addiction.",
+      "Give a child one hour of unsupervised outdoor play.",
+      "Implement one of the four norms in your family/classroom.",
+      "Start one phone-free ritual for yourself daily."
+    ]
+  },
+  {
+    "id": "new-earth",
+    "title": "A New Earth",
+    "author": "Eckhart Tolle",
+    "year": 2005,
+    "category": "Self-Improvement",
+    "cover": "assets/covers/new-earth.jpg",
+    "readTime": "12 min",
+    "tagline": "Awakening to your life's purpose — the follow-up to The Power of Now that sold 5+ million copies.",
+    "oneLiner": "Your ego is a fiction you defend. See it, step out of it, and your real purpose — presence — appears.",
+    "bigIdea": "Tolle's core teaching: most humans are run by the ego — a mental construct of 'me' that needs to be right, special and in control, and is therefore always anxious. The ego is not who you are; it's a story. Awakening means watching the ego without being it — and from that spacious awareness, your life's purpose unfolds naturally.",
+    "quotes": [
+      "You find peace not by rearranging the circumstances of your life, but by realizing who you are at the deepest level.",
+      "The primary cause of unhappiness is never the situation but your thoughts about it.",
+      "Whatever the present moment contains, accept it as if you had chosen it."
+    ],
+    "lessons": [
+      {
+        "title": "The Ego: The Fiction You Defend",
+        "chapter": "The Flowering of Human Consciousness",
+        "summary": "The ego is the self-image your mind builds — 'I am smart, I am right, I am special'. It survives by comparing, complaining and being right. But the ego is not you: it's a thought-construct. The moment you watch your ego without believing it, you step into the real you — awareness itself.",
+        "example": "Tolle describes how the ego turns every conversation into a win/lose game, every compliment into food and every insult into a wound. A simple test: notice how good being 'right' feels — that's the ego feeding.",
+        "action": "Catch yourself needing to be right today — just once. Watch the urge, don't act on it, and notice who is watching."
+      },
+      {
+        "title": "Complaining: The Ego's Favorite Food",
+        "chapter": "The Ego's Many Disguises",
+        "summary": "Complaining makes you feel superior and right — which is why the ego loves it. Every complaint is the ego saying 'reality should be different — I am right, it is wrong'. The fix isn't suppressing complaints; it's catching the pattern and dropping it.",
+        "example": "Tolle suggests a radical experiment: when something goes wrong, say nothing — no internal complaint either. The irritation dissolves faster than you'd expect because the ego loses its meal.",
+        "action": "Try a 'no-complaint hour' today: every time you're about to complain internally or aloud, pause and let it go."
+      },
+      {
+        "title": "The Pain-Body: Old Emotions That Run You",
+        "chapter": "The Pain-Body",
+        "summary": "Unprocessed negative emotions accumulate into a 'pain-body' — an energetic entity that periodically awakens, takes you over, and feeds on drama, anger or self-pity. You know it when you 'become' the anger and later wonder why you exploded. The cure: observe it — 'I am feeling the pain-body' — and it loses its fuel.",
+        "example": "Tolle describes how a small trigger can unleash a storm of rage that feels unstoppable — because the pain-body was already loaded. Watching it without judging it starves it.",
+        "action": "Next time you feel disproportionate anger or sadness, name it internally: 'the pain-body is awake'. That witnessing is the beginning of freedom."
+      },
+      {
+        "title": "Letting Go of the Need to Be Right",
+        "chapter": "Who Do You Think You Are?",
+        "summary": "Being right is the ego's drug — but it costs you relationships and peace. Tolle's practice: when you feel the urge to correct someone, ask 'do I want to be right, or do I want peace?' Often the answer reveals the ego. Surrendering the need to win the argument is a profound power move.",
+        "example": "In a disagreement with his partner, Tolle noticed the compulsion to prove his point — and realized the relationship mattered more than being right. Dropping the compulsion changed the conversation instantly.",
+        "action": "In your next disagreement, let one point go unsaid. Watch how the other person softens when you stop fighting."
+      },
+      {
+        "title": "Purpose: Presence Is the Door",
+        "chapter": "The Purpose of Life",
+        "summary": "Tolle's surprising claim: your primary purpose is not what you DO — it's how present you are while doing it. The future goals matter, but they're secondary. The primary purpose is conscious presence — and from it, the right actions emerge naturally. Purpose found this way never burns out.",
+        "example": "Tolle: 'You are here to enable the divine purpose of the universe to unfold — that is how important you are.' Practically: a janitor fully present serves as much as a CEO lost in ego — presence, not position, is the purpose.",
+        "action": "Do one ordinary task today with total attention — washing dishes, walking, drinking tea. Nothing else. That's purpose practice."
+      }
+    ],
+    "actionPlan": [
+      "Watch one ego-need (to be right, to complain) without acting on it.",
+      "Run one no-complaint hour daily.",
+      "Name the pain-body when it awakens — don't fight it, observe it.",
+      "Let one argument-point go unsaid this week.",
+      "Do one ordinary task with full presence, daily."
+    ]
+  },
+  {
+    "id": "homo-deus",
+    "title": "Homo Deus",
+    "author": "Yuval Noah Harari",
+    "year": 2015,
+    "category": "Self-Improvement",
+    "cover": "assets/covers/homo-deus.jpg",
+    "readTime": "13 min",
+    "tagline": "A brief history of tomorrow — from the Sapiens author: the thrilling and terrifying future of humanity in the age of data and AI.",
+    "oneLiner": "Famine, plague and war are being beaten — next, humans will try to upgrade into gods. The future belongs to whoever understands the data.",
+    "bigIdea": "Harari continues Sapiens: humanity has nearly conquered the old killers (famine, plague, war). The new agenda: immortality, happiness and godlike power. As algorithms learn us better than we know ourselves, the biggest questions become: what happens to human meaning when machines know us better than we do — and who owns the data?",
+    "quotes": [
+      "In the twenty-first century, the second great revolution will be the rise of the dataist worldview.",
+      "The real question is not whether AI is conscious, but whether it matters to us.",
+      "Homo sapiens conquered the world because it can cooperate flexibly in large numbers."
+    ],
+    "lessons": [
+      {
+        "title": "The Old Agenda Is Done — Here Comes the New One",
+        "chapter": "The New Human Agenda",
+        "summary": "For millennia, humanity's agenda was famine, plague and war. In the 21st century these are largely beaten — deaths from starvation and war are at historic lows. The new agenda: conquering death (immortality), finding bliss (happiness) and upgrading humans into gods (augmentation).",
+        "example": "Harari's data: more people now die from obesity than starvation, and from suicide than war. The old demons are fading — the new questions are about enhancement, not survival.",
+        "action": "Notice the shift in your own life: your real problems are probably not survival — they're meaning, health-span and focus. Upgrade your goals accordingly."
+      },
+      {
+        "title": "The Algorithm Knows You Better Than You Do",
+        "chapter": "The Great Decoupling",
+        "summary": "As we hand our data to algorithms — searches, swipes, heartbeats — they begin predicting our desires, moods and choices better than we can. The terrifying endgame: authority shifts from human experience to external data processing. Who are 'you' when an algorithm knows your next mood before you do?",
+        "example": "Harari points to dating apps, health trackers and recommendation engines: every choice feeds the model. The 'free market of ideas' quietly becomes an 'optimization for engagement' — shaping what we think, buy and vote.",
+        "action": "Audit one algorithm in your life: what does your feed optimize for — your growth or your attention? Choose your inputs accordingly."
+      },
+      {
+        "title": "Dataism: The New Religion",
+        "chapter": "The Data Religion",
+        "summary": "Harari forecasts the rise of Dataism: the belief that information flow is the supreme value, and organisms are just biochemical algorithms. In the dataist worldview, human experiences are data-processing events, and the ultimate authority is the network.",
+        "example": "We already outsource memory to Google, direction to GPS, taste to recommendations. Dataism is this trend becoming a philosophy — the flow of information treated as sacred.",
+        "action": "Hold the line on one area: keep one skill, one memory, one decision completely human — no app involved. That's your sovereignty."
+      },
+      {
+        "title": "Meaning Is a Story — So Choose It Wisely",
+        "chapter": "The Human Gap",
+        "summary": "Humans run on stories: religions, nations, money, companies — all shared fictions that coordinate millions. Meaning doesn't come from 'objective reality'; it comes from the stories we believe and enact. The good news: since meaning is a story, YOU can edit yours.",
+        "example": "Money is a story (a note has no value except shared belief); nations are stories; careers are stories. Realizing this doesn't make meaning fake — it makes it chosen.",
+        "action": "Write your current life-story in 3 sentences. Then rewrite one sentence deliberately — you are the author, not the reader."
+      },
+      {
+        "title": "The Knowledge Paradox: Know Thyself Is Getting Harder",
+        "chapter": "The Great Unknown",
+        "summary": "Historically, knowing yourself gave you power. But when algorithms can know you better, self-knowledge may lose its value — unless you keep your data and attention sovereign. The future rewards people who understand HOW their mind works more than those who just accumulate facts.",
+        "example": "Harari's warning: 'In the 21st century, knowing yourself may be more important than ever — precisely because the algorithms are trying to know you.'",
+        "action": "Learn one thing about your own cognitive machinery this week — a bias, a habit loop, an emotional trigger. That's 21st-century self-knowledge."
+      }
+    ],
+    "actionPlan": [
+      "Upgrade your agenda: focus on meaning, health-span, focus.",
+      "Audit what one algorithm is optimizing in your life.",
+      "Keep one fully human skill/memory/decision — no app.",
+      "Rewrite one sentence of your life-story deliberately.",
+      "Learn one bias about your own mind this week."
+    ]
+  },
+  {
+    "id": "stolen-focus",
+    "title": "Stolen Focus",
+    "author": "Johann Hari",
+    "year": 2022,
+    "category": "Productivity",
+    "cover": "assets/covers/stolen-focus.jpg",
+    "readTime": "12 min",
+    "tagline": "Why you can't pay attention — and how to think deeply again. The international bestseller that names the thieves of focus.",
+    "oneLiner": "Your attention isn't broken — it's being stolen. The system (apps, phones, work culture) is designed against you; fight back structurally.",
+    "bigIdea": "After interviewing 200+ experts (including tech insiders), Hari concludes the attention crisis is not a personal failing — it's an environmental one. Twelve thieves steal our focus: switching costs, flow-killing work culture, the collapse of sustained reading, speed-obsessed culture, exhaustion, and the design of social media itself. The fix isn't more willpower — it's structural change.",
+    "quotes": [
+      "Your attention didn't collapse. It was stolen.",
+      "If you want to change your life, you have to change your environment.",
+      "Boredom is where the self regenerates."
+    ],
+    "lessons": [
+      {
+        "title": "The Switching Tax: Every Ping Costs 23 Minutes",
+        "chapter": "The Switching",
+        "summary": "Every time you check your phone, your brain pays a switching cost: studies show it takes around 23 minutes to fully refocus after an interruption. Ten pings an hour = your entire day vanishes into re-entry. The device isn't just distracting — it's a tax on every thought.",
+        "example": "Hari spent months tracking his own attention: he discovered 'checking' averaged every 3 minutes — meaning he was almost never fully in anything. When he removed his phone for a period, his reading and thinking depth visibly returned within days.",
+        "action": "Count your phone checks for one hour today. Then try one 'batch hour': all notifications off, phone in another room, one task."
+      },
+      {
+        "title": "Flow: The Peak of Human Attention",
+        "chapter": "The Flow State",
+        "summary": "Flow — total absorption in meaningful work — is the deepest form of attention and a major source of happiness. But flow takes 15+ minutes of uninterrupted effort to enter, and one ping destroys it. The system is flow-hostile; you must defend entry conditions like a fortress.",
+        "example": "Hari interviewed Csikszentmihalyi's students: flow correlates with life satisfaction more than money. Yet modern work — open offices, instant messaging, meetings — fragments the 20-minute runway flow needs.",
+        "action": "Block one 90-minute flow window this week: no phone, no chat, one meaningful task. Guard the entrance like a meeting with your best client."
+      },
+      {
+        "title": "Reading Deep: The Dying Muscle",
+        "chapter": "The Reading Crisis",
+        "summary": "Sustained reading trains deep attention — the ability to follow a complex argument for an hour. Skimming and scrolling train the opposite: rapid context-switching. If you never read deeply, your brain loses the muscle for it — and deep thinking is built on deep reading.",
+        "example": "Hari's data: sustained-reading time among young people has collapsed while screen-skimming dominates. When he forced himself to read books without interruption, his ability to think in long arcs returned.",
+        "action": "Start with 20 minutes of physical-book reading daily — no skimming, no phone nearby. Rebuild the muscle, one page at a time."
+      },
+      {
+        "title": "Exhaustion Is a Focus Thief",
+        "chapter": "The Exhaustion",
+        "summary": "You can't pay attention when you're exhausted — but modern culture treats sleep as a weakness. The average person sleeps dramatically less than a century ago, and chronic sleep debt mimics ADHD: scattered, impulsive, unable to sustain focus.",
+        "example": "Hari documents how corporate culture brags about 'no sleep', while the science shows sleep-deprived people make more errors, feel more anxious and focus worse. Rest isn't the reward for work — it's the fuel for it.",
+        "action": "Protect 7-8 hours like a hard deadline this week: fixed bedtime, phone out of the bedroom. Measure your focus difference in 5 days."
+      },
+      {
+        "title": "Reclaim Boredom — It's the Incubator",
+        "chapter": "The Boredom",
+        "summary": "Boredom is not an enemy — it's the state where your mind regenerates, daydreams and forms creative connections. The phone exists to eliminate boredom, which means it eliminates the incubation of ideas. Letting yourself be bored is a focus-recovery practice.",
+        "example": "Some of Hari's best ideas in the book came during his phone-free walks — the unstructured minutes where the mind wandered and connected. The great scientists' 'shower moments' all required boredom first.",
+        "action": "Do one screen-free, headphone-free walk this week — 20 minutes of genuine boredom. Keep a note nearby for what surfaces."
+      }
+    ],
+    "actionPlan": [
+      "Count your checks; batch your attention with a phone-free hour.",
+      "Guard one 90-minute flow window weekly.",
+      "Read 20 minutes of a physical book daily.",
+      "Protect 7-8 hours of sleep like a deadline.",
+      "Take one deliberately boring, screen-free walk."
+    ]
+  },
+  {
+    "id": "digital-minimalism",
+    "title": "Digital Minimalism",
+    "author": "Cal Newport",
+    "year": 2019,
+    "category": "Productivity",
+    "cover": "assets/covers/digital-minimalism.jpg",
+    "readTime": "11 min",
+    "tagline": "Choosing a focused life in a noisy world — the philosophy that tech is a tool, not a lifestyle.",
+    "oneLiner": "Stop optimizing your phone — delete, simplify and rediscover: solitude, conversation and leisure that actually recharge.",
+    "bigIdea": "Cal Newport applies minimalism to technology: digital minimalism is the philosophy that technology should serve your values, not the reverse. The method: a 30-day digital declutter — remove all optional tech, rediscover what you actually value, then reintroduce only the tools that genuinely serve those values. The payoff: solitude returns, conversation deepens, and leisure stops being a consumption stream.",
+    "quotes": [
+      "The tyrants we obey are the technologies we use without thinking.",
+      "Solitude is the fuel of the self.",
+      "You are not your apps."
+    ],
+    "lessons": [
+      {
+        "title": "The Digital Declutter: 30 Days That Reset Your Relationship",
+        "chapter": "The Digital Declutter",
+        "summary": "Newport's core practice: take 30 days where you stop all optional technology — social apps, news feeds, games, streaming on demand. During the month, rediscover the activities you genuinely value. At the end, reintroduce only the tools that pass the test: 'Does this serve something I truly value?' Everything else stays gone.",
+        "example": "Newport's students who completed the declutter report dramatic changes: deeper reading, real hobbies revived, better conversations. The 30-day break breaks the habit loop that makes you reach for the phone without thinking.",
+        "action": "Declare your own 30-day declutter starting Monday: keep only essential tools (maps, messages, calendar). Everything optional goes into a folder — not deleted — for a month."
+      },
+      {
+        "title": "Solitude Deprivation: The Silent Epidemic",
+        "chapter": "Solitude",
+        "summary": "Solitude — being alone with your own thoughts, no input from other minds — is essential for identity, creativity and emotional regulation. Smartphones have nearly eliminated it: any idle second gets filled with someone else's thoughts. Without solitude, you don't know what YOU think.",
+        "example": "Newport's examples: the daily commute used to be solitude; now it's a feed. Waiting in line, walking, sitting in a café — all colonized. People who restore even one phone-free walk a day report their own thinking returning.",
+        "action": "Create one daily solitude pocket: a walk, commute or shower with NO input — no music, no podcasts, no scrolling. Just your thoughts."
+      },
+      {
+        "title": "Conversation Is the Killer App",
+        "chapter": "Conversation",
+        "summary": "Deep, real conversation is one of the most reliable happiness sources known — yet it's being replaced by 'connection' through screens, which is shallow by design. Newport's practice: conversation-centric time — calls instead of texts, meetups instead of DMs, phone calls with friends as a deliberate habit.",
+        "example": "Newport tells of people who replaced texting with scheduled phone calls with old friends — and found their loneliness dropping more than any app could fix.",
+        "action": "This week, call ONE person you usually text. Make it a 20-minute real conversation. Notice the difference in how you feel after."
+      },
+      {
+        "title": "Leisure as Craft, Not Consumption",
+        "chapter": "Leisure",
+        "summary": "Passive leisure (watching, scrolling) exhausts and hollows you; active leisure (building, making, playing, moving) restores and builds identity. Newport's rule: leisure should require effort and skill — a hobby you're bad at and improving, a craft, a sport. The phone is the enemy of craft.",
+        "example": "Newport's examples: woodworking, learning an instrument, hiking, photography — activities with 'skill-building' at the core. People who replaced two hours of streaming with two hours of craft report dramatically better weeks.",
+        "action": "Pick one active hobby and schedule it twice this week. It should feel slightly hard — that's the point."
+      },
+      {
+        "title": "Attention as a Muscle: Train It or Lose It",
+        "chapter": "Attention",
+        "summary": "Every notification-free minute you spend on one thing is a rep for your attention muscle. Every swipe is a rep for distraction. Digital minimalism isn't about hating tech — it's about training the attention you need for the life you want.",
+        "example": "Newport's own practice: long writing sessions, books, and no smartphone before noon. His attention — and his output — are the product of those daily reps.",
+        "action": "Start your morning phone-free for the first hour. That one habit trains the muscle before the world's interruptions load it."
+      }
+    ],
+    "actionPlan": [
+      "Start the 30-day digital declutter on Monday.",
+      "Create one daily solitude pocket — no input.",
+      "Replace one text-conversation with a real call this week.",
+      "Schedule two sessions of an active hobby.",
+      "Make the first hour of your day phone-free."
+    ]
+  },
+  {
+    "id": "high-output-management",
+    "title": "High Output Management",
+    "author": "Andy Grove",
+    "year": 1983,
+    "category": "Business & Startups",
+    "cover": "assets/covers/high-output-management.jpg",
+    "readTime": "13 min",
+    "tagline": "The legendary Intel CEO's manual on management — still the bible of Silicon Valley, from a man who led with numbers and heart.",
+    "oneLiner": "A manager's output = the output of their team. Leverage, meetings, and performance reviews done right — the Grove way.",
+    "bigIdea": "Andy Grove — Intel's legendary CEO — defines management brutally simply: a manager's output is the output of the organizations under their command. Everything else follows: maximize leverage (do things that multiply others' work), run meetings that produce decisions, give reviews that are honest and specific, and set 'task-relevant maturity' to know when to manage tightly vs loosely. Written in 1983, it remains the most practical management book ever.",
+    "quotes": [
+      "The output of a manager is the output of the organizational units under his or her command.",
+      "The most important thing a manager does is allocate his or her time — it's the one resource you can't replenish.",
+      "Training is the highest-leverage activity a manager can do."
+    ],
+    "lessons": [
+      {
+        "title": "Your Output = Your Team's Output",
+        "chapter": "The Basics of Management",
+        "summary": "A manager's personal output is not their own work — it's the output of the team plus the output of the neighboring teams they influence. This reframe changes everything: instead of asking 'am I working hard?', ask 'is my team producing more because of me?' If not, you're not managing.",
+        "example": "Grove tells of engineers promoted to management who kept doing engineering and failed — until they understood their new output was the team's delivery, not their code.",
+        "action": "Write your job as: 'My output = the output of ___.' If you can't name the team and the metric, you don't know your job yet."
+      },
+      {
+        "title": "Leverage: The Manager's Force Multiplier",
+        "chapter": "Managerial Leverage",
+        "summary": "Every manager activity has leverage — the ratio of output produced per unit of your time. High-leverage: training, hiring, setting direction, one-on-ones that unblock a whole team. Low-leverage: doing your subordinates' work, over-supervising. The manager's job is to shift time toward high leverage.",
+        "example": "Grove's math: a 1-hour training that improves 10 people's performance by 1% for a year is enormous leverage. A meeting that unblocks 8 people for a week beats 8 hours of solo work.",
+        "action": "Audit your last week in 30-minute blocks. Rank each block by leverage. Move one hour from low to high leverage next week."
+      },
+      {
+        "title": "Meetings Are Where Work Happens — Run Them Right",
+        "chapter": "Meetings",
+        "summary": "Grove divides meetings into process meetings (regular, standing) and mission-oriented meetings (to solve a specific problem). The rules: process meetings need agendas and on-time starts; mission meetings need a clear owner and a decision or action as the output. A meeting without a decision is a waste of everyone's leverage.",
+        "example": "Intel's famous one-on-ones: 30-60 minutes weekly, agenda owned by the subordinate, focused on their problems and feelings — the single highest-leverage meeting in the company.",
+        "action": "Schedule your next 1:1 with a direct report (or your boss) with THEIR agenda, YOUR questions, and a decision-or-action ending."
+      },
+      {
+        "title": "Performance Reviews: The Feedback Engine",
+        "chapter": "Performance Reviews",
+        "summary": "Grove's review doctrine: reviews are the most painful but most important management duty. Rules: deliver in writing first, focus on performance against a few key objectives (not personality), be honest about weaknesses with specific examples, and remember the goal is to improve future output, not justify past pay.",
+        "example": "Grove insisted on writing out reviews and reading them in person — 'it's not an act of criticism, it's an act of teaching'. The best reviews he ever received hurt a little and helped a lot.",
+        "action": "Write a 'mini review' of your own last 30 days: 3 things you did well, 2 things to fix, each with a specific example. Do it monthly."
+      },
+      {
+        "title": "Task-Relevant Maturity: Manage by Situation",
+        "chapter": "Managing the Organization",
+        "summary": "Grove's situational leadership: the right management style depends on the subordinate's task-relevant maturity. Low maturity → structured, directive, 'what to do' supervision. High maturity → delegating, minimal supervision, goals only. Mismanagement = micro-managing experts or abandoning beginners.",
+        "example": "A new hire needs weekly check-ins and explicit instructions; a senior engineer who has shipped ten products needs objectives and space. Grove managed each differently — the common mistake is treating everyone the same.",
+        "action": "For each person you work with (including yourself), ask: what's their maturity on THIS task? Adjust your supervision style to match — today."
+      }
+    ],
+    "actionPlan": [
+      "Write your output statement: 'My output = ___'.",
+      "Do a leverage audit of last week; shift one hour.",
+      "Run one 1:1 with the other person's agenda and a decision ending.",
+      "Write a monthly mini-review with specific examples.",
+      "Match your supervision style to task-relevant maturity."
+    ]
+  },
+  {
+    "id": "no-rules-rules",
+    "title": "No Rules Rules",
+    "author": "Reed Hastings & Erin Meyer",
+    "year": 2020,
+    "category": "Business & Startups",
+    "cover": "assets/covers/no-rules-rules.jpg",
+    "readTime": "12 min",
+    "tagline": "Netflix and the culture of reinvention — how the streaming giant built talent density, candor and freedom with responsibility.",
+    "oneLiner": "Hire the best, tell them the truth, and let them make decisions — the Netflix culture machine, explained by its founder.",
+    "bigIdea": "Netflix CEO Reed Hastings reveals the culture that made Netflix unstoppable: it's a ladder of three pillars. 1) Talent density: hire only 'stunning colleagues' — one exceptional person beats several average ones. 2) Candor: everyone gives honest feedback constantly, in both directions. 3) Freedom with responsibility: remove rules and approvals once people are aligned on context. Each pillar enables the next — and all three create a culture where talent thrives.",
+    "quotes": [
+      "Adequate performance gets a generous severance package.",
+      "The best thing about being a boss at Netflix is that you don't have to be a boss.",
+      "We're a team, not a family — we're like a pro sports team, and the coach decides who plays."
+    ],
+    "lessons": [
+      {
+        "title": "Talent Density: One Star Beats Three Average",
+        "chapter": "Talent Density",
+        "summary": "Netflix's foundation: the best teams are made of 'stunning colleagues' — top performers who raise everyone around them. One A-player outperforms several B-players, and B-players drag A-players down. So Netflix pays top-of-market and removes people who are merely 'adequate' — with generous severance, not shame.",
+        "example": "When Netflix transitioned from DVDs to streaming, Hastings ruthlessly rebuilt the team with world-class engineers and execs. The 'adequate gets severance' policy felt harsh — and produced a team that could out-execute everyone.",
+        "action": "Apply talent density to YOUR projects: who are the two people who make everything better? Spend more time with them; stop letting 'adequate' set the bar."
+      },
+      {
+        "title": "Radical Candor: Feedback Is Love",
+        "chapter": "Candor",
+        "summary": "Netflix's rule: give honest feedback immediately, in person, with positive intent — up, down and sideways. Hiding problems to be polite is treated as disloyalty to the team. The practice: 'feedback is a gift', and giving it is a duty, not an option.",
+        "example": "New Netflix executives describe their shock at being told, directly and calmly, what they were doing wrong — and how quickly they improved. The culture even runs 'feedback sessions' where everyone critiques each other in front of the team.",
+        "action": "Give one piece of honest, specific, kind feedback this week — to a colleague, friend or boss. Start with a positive observation to build trust."
+      },
+      {
+        "title": "Freedom With Responsibility",
+        "chapter": "Freedom & Responsibility",
+        "summary": "Once you have stars and candor, you can remove the rules: no expense-policy police, no approval chains, no vacation tracking. People get context (the strategy, the constraints) and then freedom to decide. The catch: it only works with high talent density — freedom without stars is chaos.",
+        "example": "Netflix has no formal vacation policy and no travel-approval process; employees decide. It works because the culture's context is clear and the people are excellent — the freedom becomes a signal of trust that they repay with responsibility.",
+        "action": "Find one rule you impose on yourself (approval-seeking, over-checking) and replace it with context + trust for a week. See what happens."
+      },
+      {
+        "title": "The Keeper Test: Would You Fight to Keep Them?",
+        "chapter": "The Keeper Test",
+        "summary": "Every manager periodically asks: 'If this person told me they were leaving for a competitor, would I fight hard to keep them?' If the honest answer is no, it's time to let them go — with generosity — because keeping 'adequate' people quietly drains the team. This keeps talent density high without cruelty.",
+        "example": "Managers at Netflix run the Keeper Test on every team member; people who fail get generous severance and honest feedback about why. Those who stay know they're genuinely wanted — which builds commitment.",
+        "action": "Run the Keeper Test on your inner circle: who would you fight to keep? Invest in them visibly this week."
+      },
+      {
+        "title": "Context, Not Control",
+        "chapter": "Context",
+        "summary": "The final pillar: instead of controlling decisions with approvals, spread context — strategy, data, reasoning — so everyone can make aligned decisions themselves. Netflix shares sensitive strategy widely (including with new hires) because informed people make better calls than controlled people.",
+        "example": "At Netflix, even junior staff attend strategy reviews and see company metrics; a customer-service rep once used that context to fix a product issue without asking permission. Control scales badly; context scales.",
+        "action": "Next time someone asks you 'what should I do?', explain the WHY and the constraints — then let them decide. Teach context, not instructions."
+      }
+    ],
+    "actionPlan": [
+      "Identify your stunning colleagues — invest in them.",
+      "Give one piece of honest, kind feedback this week.",
+      "Replace one approval rule with context + trust.",
+      "Run the Keeper Test on your circle and act on it.",
+      "Explain the why before the what, all week."
+    ]
+  },
+  {
+    "id": "five-dysfunctions",
+    "title": "The Five Dysfunctions of a Team",
+    "author": "Patrick Lencioni",
+    "year": 2002,
+    "category": "Business & Startups",
+    "cover": "assets/covers/five-dysfunctions.jpg",
+    "readTime": "11 min",
+    "tagline": "A leadership fable about the team killers: absence of trust, fear of conflict, lack of commitment, avoidance of accountability, and inattention to results.",
+    "oneLiner": "Every team failure traces to one of five dysfunctions — and they cascade. Fix trust first; everything else follows.",
+    "bigIdea": "Lencioni's pyramid: 1) Absence of trust (hiding weaknesses) → 2) Fear of conflict (fake harmony) → 3) Lack of commitment (ambiguity) → 4) Avoidance of accountability (missed standards) → 5) Inattention to results (ego over team). Each layer feeds the next. The fix is to build the pyramid from the bottom: vulnerability-based trust first, then productive conflict, then real commitment, then peer accountability, then shared results.",
+    "quotes": [
+      "Not finance. Not strategy. Not technology. It is teamwork that remains the ultimate competitive advantage.",
+      "If you could get all the people in an organization rowing in the same direction, you could dominate any industry.",
+      "Great teams trust each other enough to have unfiltered conflict."
+    ],
+    "lessons": [
+      {
+        "title": "Dysfunction 1: Absence of Trust",
+        "chapter": "The Pyramid",
+        "summary": "Teams without trust hide their weaknesses, mistakes and needs — because vulnerability feels dangerous. Trust here doesn't mean 'we're friends'; it means 'I can be genuinely vulnerable with you without being punished'. Without it, every other dysfunction follows.",
+        "example": "Lencioni's fable: a new CEO asks her executives to reveal their weaknesses and biggest mistakes in a leadership session — awkward at first, it unlocks the team because everyone sees the human first.",
+        "action": "In your next team meeting, go first: share one real weakness or mistake of yours, specifically. Model the vulnerability you want back."
+      },
+      {
+        "title": "Dysfunction 2: Fear of Conflict",
+        "chapter": "The Pyramid",
+        "summary": "When trust is missing, teams avoid debate — meetings become polite theater and decisions get made in hallways. Great teams have passionate, unfiltered conflict about IDEAS (not people), because they know it produces the best answer. Silence isn't harmony; it's resentment storing up.",
+        "example": "The fable's CEO starts demanding real debate; her executives, used to nodding, initially flounder — then discover that arguing about the plan makes the plan better and the team tighter.",
+        "action": "In your next discussion, deliberately disagree with one idea — with data, not drama. Watch whether the conversation gets better."
+      },
+      {
+        "title": "Dysfunction 3: Lack of Commitment",
+        "chapter": "The Pyramid",
+        "summary": "Without honest debate, people don't commit — they comply silently and then 'wait and see'. Commitment comes from clarity: even people who disagreed must leave the room saying 'I support this'. The test: ambiguity is the enemy; explicit decisions with named owners beat vague agreements.",
+        "example": "Lencioni's teams learn to close every decision with the question: 'So what exactly are we committing to, and who owns what by when?' Without that, the decision evaporates by Monday.",
+        "action": "End your next meeting with: 'What did we decide, who does what, by when?' Write it down and share it."
+      },
+      {
+        "title": "Dysfunction 4: Avoidance of Accountability",
+        "chapter": "The Pyramid",
+        "summary": "When commitment is fuzzy, nobody holds anyone accountable — because 'I didn't agree to that anyway'. Teams with real commitment hold each other to standards, peer-to-peer, without waiting for the boss. Avoiding the hard conversation about a missed standard is an act of disrespect to the team.",
+        "example": "The fable's team starts calling out missed deadlines in meetings — uncomfortable at first, then liberating, because standards become real and mediocrity stops being tolerated.",
+        "action": "Next time a teammate misses a commitment, have the conversation directly and kindly — with the standard, not the person, as the focus."
+      },
+      {
+        "title": "Dysfunction 5: Inattention to Results",
+        "chapter": "The Pyramid",
+        "summary": "The final dysfunction: team members care more about their own ego, status or department than the team's shared outcome. The fix is making the collective result — the one number, the shared goal — so visible and so rewarded that personal agendas shrink. Ego is the last thing a team kills.",
+        "example": "Lencioni's teams adopt a single, public scoreboard for the team's real goal; every meeting starts with it. When everyone can see whether the team is winning, 'my department' complaints fade.",
+        "action": "Write your team's ONE shared result and put it somewhere visible. Start every meeting with it. See what it does to the conversation."
+      }
+    ],
+    "actionPlan": [
+      "Share one real weakness in your next meeting — go first.",
+      "Have one productive disagreement with data, not drama.",
+      "Close every meeting with decisions, owners and dates.",
+      "Have one direct accountability conversation this week.",
+      "Put the team's one result on a public scoreboard."
+    ]
+  },
+  {
+    "id": "radical-candor",
+    "title": "Radical Candor",
+    "author": "Kim Scott",
+    "year": 2017,
+    "category": "Business & Startups",
+    "cover": "assets/covers/radical-candor.jpg",
+    "readTime": "11 min",
+    "tagline": "Be a kick-ass boss without losing your humanity — the feedback framework from a former Apple and Google exec.",
+    "oneLiner": "Care personally + challenge directly. Anything less is ruinous empathy, obnoxious aggression, or manipulative insincerity.",
+    "bigIdea": "Kim Scott's framework is a 2×2: on one axis, care personally (genuinely know and like the humans you manage); on the other, challenge directly (say the hard thing clearly). Radical Candor = both high. The other three quadrants — Ruinous Empathy (care without challenge), Obnoxious Aggression (challenge without care), Manipulative Insincerity (neither) — quietly destroy teams. Her practices: praise in public, criticize in private, and make feedback a daily habit, not an annual event.",
+    "quotes": [
+      "Radical Candor is humble, it's helpful, it's kind — and it's challenging.",
+      "If you don't care personally, you can't challenge directly — you'll just sound like a jerk.",
+      "The most important thing you can do is praise in public, criticize in private."
+    ],
+    "lessons": [
+      {
+        "title": "The 2×2: Four Ways to Be a Boss",
+        "chapter": "The Framework",
+        "summary": "Plot your feedback style: Care personally (vertical) vs Challenge directly (horizontal). Radical Candor = high/high. Ruinous Empathy = high care, low challenge (you spare their feelings and let them fail). Obnoxious Aggression = low care, high challenge (you're right but brutal). Manipulative Insincerity = neither (politics, praise that means nothing).",
+        "example": "Scott's story: her first boss praised her work for a year while quietly fixing her errors — until she asked and discovered her writing was being completely rewritten. That was Ruinous Empathy: kind in the moment, cruel in effect.",
+        "action": "Identify your default quadrant with the people you manage. If you're in Ruinous Empathy (the most common), pick one person and say one hard truth kindly this week."
+      },
+      {
+        "title": "Care Personally: Know the Human",
+        "chapter": "Care Personally",
+        "summary": "You can't challenge someone effectively if you don't know them — their goals, their life, what drains them. 'Care personally' means being a whole person with your team: ask about their life, remember what matters to them, and treat them as people, not resources. It's not therapy; it's the foundation for feedback that lands.",
+        "example": "Scott recommends 'getting to know each person's story' — where they're from, what they dream about. Her own team's '1:1s' covered career goals AND life context, which made every later challenge feel like it came from a friend.",
+        "action": "In your next 1:1, spend the first 10 minutes on the person, not the project: their goals, their energy, their life. Just listen."
+      },
+      {
+        "title": "Challenge Directly: Praise in Public, Criticize in Private",
+        "chapter": "Challenge Directly",
+        "summary": "The mechanics: praise specifically and publicly ('this worked because...'), criticize privately and specifically ('when you did X, here's what happened; here's the fix'). Never let problems fester for the annual review — give feedback in the moment, in both directions, including to your own boss.",
+        "example": "At Google and Apple, Scott's teams used 'it's kind of confusing when...' phrasing to give feedback upward without drama. The rule: the feedback should be helpful, not punitive — aimed at behavior, not identity.",
+        "action": "Give one piece of specific public praise today, and one private, kind correction this week. Write both down before you say them."
+      },
+      {
+        "title": "Get to Know What Motivates Each Person",
+        "chapter": "Motivation",
+        "summary": "Three kinds of motivation: growth (getting better at the craft), impact (making a difference), and connection (working with people they love). Great bosses figure out which fuel drives each person and design work accordingly. Mismatch — putting an impact-driven person on maintenance — is a quiet talent killer.",
+        "example": "Scott's example: a brilliant engineer who wanted impact was assigned bug fixes; he withered. Once given a customer-facing project, he flourished. One conversation about motivation fixed what no bonus could.",
+        "action": "Ask each person you manage (or yourself): 'What makes you love a project — growth, impact, or people?' Match the next assignment to the answer."
+      },
+      {
+        "title": "The Team Culture: Make Feedback a Habit",
+        "chapter": "Culture",
+        "summary": "Radical candor only works as culture: everyone gives and receives feedback daily, mistakes are treated as learning, and 'the boss' also gets challenged. Scott's practice: end-of-meeting 'debrief' rounds where the team critiques the meeting itself. Feedback stops being scary when it's normal.",
+        "example": "Scott's teams ran 'plus/delta' debriefs after every milestone — what went well, what to change — and the honesty spilled into everything else. Culture is just repeated behavior.",
+        "action": "Start a 5-minute 'plus/delta' at the end of your next team meeting: what went well, what to change. Do it every time."
+      }
+    ],
+    "actionPlan": [
+      "Map your default feedback quadrant; escape Ruinous Empathy.",
+      "Spend 10 minutes of your next 1:1 on the person, not the project.",
+      "Give specific public praise + private kind correction this week.",
+      "Discover each teammate's motivation fuel and match work to it.",
+      "Run a plus/delta debrief after every meeting."
+    ]
+  },
+  {
+    "id": "multipliers",
+    "title": "Multipliers",
+    "author": "Liz Wiseman",
+    "year": 2010,
+    "category": "Business & Startups",
+    "cover": "assets/covers/multipliers.jpg",
+    "readTime": "11 min",
+    "tagline": "How the best leaders make everyone smarter — versus the diminishers who drain the room of intelligence.",
+    "oneLiner": "Multipliers amplify the genius around them; Diminishers shut it down. One leader gets 2x from a team; the other gets 50%.",
+    "bigIdea": "Wiseman studied 150+ leaders and found two types: Multipliers, who get more than 100% from their teams (people 'work harder and smarter' around them), and Diminishers, who get less than 50% (people 'wait to be told'). Multipliers ask questions instead of giving answers, build genuine stretch into roles, debate rigorously, and give ownership of the whole problem. Intelligence is a resource — Multipliers harvest it, Diminishers waste it.",
+    "quotes": [
+      "Multipliers get 2x more from their people — not by working them harder, but by making them smarter.",
+      "The best way to multiply is to ask questions you don't know the answer to.",
+      "Diminishers are often the smartest person in the room — which is exactly the problem."
+    ],
+    "lessons": [
+      {
+        "title": "The Multiplier Effect: 2x or 0.5x",
+        "chapter": "The Multiplier Effect",
+        "summary": "The same team performs at radically different levels under different leaders: Multipliers double output, Diminishers halve it — not by changing the people, but by changing how much intelligence gets used. The leader's own intelligence matters less than their ability to harvest the room's.",
+        "example": "Wiseman's study: a factory manager who was 'a genius at operations' left; his replacement asked questions instead of giving orders — and the same workforce hit new records. Same people, different multiplier.",
+        "action": "In your next team discussion, ask ONE question you genuinely don't know the answer to — and let the room answer. Watch the energy shift."
+      },
+      {
+        "title": "The Diminisher's Trap: The Smartest Person in the Room",
+        "chapter": "The Diminisher",
+        "summary": "Diminishers often got promoted for being brilliant — so they answer before others can think, decide before others can contribute, and rescue failing tasks personally. The effect: people stop thinking, stop offering, and wait for instructions. The genius becomes the bottleneck.",
+        "example": "Wiseman describes a CEO who solved every problem himself; his executives stopped bringing problems — they brought nothing. The company's intelligence went unused because it was never needed.",
+        "action": "Catch yourself 'rescuing' a task this week. Instead of solving it, ask the person: 'What would you do?' Then let them do it."
+      },
+      {
+        "title": "Ask Big Questions, Don't Give Big Answers",
+        "chapter": "The Multiplier",
+        "summary": "Multipliers lead with questions: 'What would it take to 10x this?' 'What are we missing?' They set the challenge, then let the team stretch to meet it. People around Multipliers report feeling smarter — because they're the ones doing the thinking.",
+        "example": "A tech CEO Wiseman studied framed a 'stretch goal' as a question and left it with the team; they invented a solution none of them — including the CEO — had imagined. The question, not the answer, was the gift.",
+        "action": "Reframe your next assignment as a big question: 'How could we make this 10x better?' Give the team 48 hours before you share your own idea."
+      },
+      {
+        "title": "Debate: The Heat That Hardens Ideas",
+        "chapter": "The Debate",
+        "summary": "Multipliers create forums where ideas are challenged hard — then commit to the winner. Debate is not conflict; it's the fastest way to find the flaw early. Diminishers avoid debate (or make it personal); Multipliers make it safe and rigorous: 'attack the idea, never the person'.",
+        "example": "Wiseman's examples: teams where the CEO plays devil's advocate deliberately — ideas that survive get 10x stronger, and people stop hiding weak plans.",
+        "action": "Appoint a devil's advocate in your next decision meeting — someone whose job is to attack the plan. Thank them publicly for it."
+      },
+      {
+        "title": "Give the Whole Problem, Not the Chore",
+        "chapter": "The Investor",
+        "summary": "Diminishers hand out tasks; Multipliers hand out whole problems with context and trust — then stay available as a resource. When people own the entire outcome (not a piece), they think like owners, catch problems early, and grow. Ownership is the ultimate multiplier.",
+        "example": "A manager Wiseman studied handed a junior lead the full client account — results, relationship, budget — and told her 'I'm here if you need me'. She ran it like it was hers, and it outperformed every account before it.",
+        "action": "Pick one task you usually delegate in pieces. Hand over the WHOLE thing with context, a deadline and an open door. Don't touch it for two weeks."
+      }
+    ],
+    "actionPlan": [
+      "Ask one question you don't know the answer to, daily.",
+      "Stop rescuing — ask 'what would you do?' first.",
+      "Reframe one goal as a 10x question for the team.",
+      "Run one devil's-advocate debate this week.",
+      "Hand over one whole problem, with trust and context."
+    ]
+  },
+  {
+    "id": "built-to-last",
+    "title": "Built to Last",
+    "author": "Jim Collins & Jerry Porras",
+    "year": 1994,
+    "category": "Business & Startups",
+    "cover": "assets/covers/built-to-last.jpg",
+    "readTime": "12 min",
+    "tagline": "Successful habits of visionary companies — the classic study of what makes companies great for decades, not quarters.",
+    "oneLiner": "Visionary companies are built on core ideology + BHAGs + cult-like culture — and clock-building, not time-telling.",
+    "bigIdea": "Collins and Porras studied 18 'visionary' companies (that outperformed 50+ years) vs their peers. The findings: visionary companies are driven by a core ideology (values + purpose) that never changes, big hairy audacious goals (BHAGs) that stretch the company, cult-like cultures, and leaders who are clock-builders — they build organizations that thrive beyond them. Profit is a means, not the mission.",
+    "quotes": [
+      "It is better to understand the clock than to tell the time.",
+      "Big Hairy Audacious Goals — clear, compelling, and risky — are a powerful mechanism to stimulate progress.",
+      "Visionary companies pursue a cluster of objectives, of which making money is only one — and not necessarily the primary one."
+    ],
+    "lessons": [
+      {
+        "title": "Clock-Building, Not Time-Telling",
+        "chapter": "The Best of the Best",
+        "summary": "Great leaders build organizations that can thrive without them — the clock — rather than being the genius who tells the time. Time-tellers create dependency; clock-builders create institutions. The test: does the company get better or worse when the founder leaves?",
+        "example": "Henry Ford was a time-teller (the company stumbled after him); the early HP founders were clock-builders (the company kept compounding for decades). The clock survives the clockmaker.",
+        "action": "Build one system this week that works without you: a process, a checklist, a documented decision. That's your first clock-gear."
+      },
+      {
+        "title": "Core Ideology: The Untouchable Identity",
+        "chapter": "Core Ideology",
+        "summary": "Visionary companies have a core ideology — values and purpose — that stays fixed for decades while everything else changes. The ideology is the 'why we exist' that survives strategy shifts, CEOs and products. Companies without one drift with every trend.",
+        "example": "3M's 'never kill a new product idea' and HP's 'The HP Way' survived half a century of radical change. The ideology wasn't a slogan on the wall; it shaped hiring, money and decisions.",
+        "action": "Write your core ideology in one line: 'We exist to ___, and we will never compromise ___.' Post it where you work."
+      },
+      {
+        "title": "BHAGs: Big Hairy Audacious Goals",
+        "chapter": "BHAGs",
+        "summary": "Visionary companies set goals so big they're slightly scary — putting a man on the moon, becoming the company 'most known for' something. A BHAG is clear, compelling and risky; it focuses the whole organization for 10-30 years. Small goals produce small companies.",
+        "example": "Boeing's 1950s BHAG: 'Build the first commercial jet airliner' — a decade-long bet that defined the industry. Nike's early BHAG: crush Adidas. Both focused enormous effort on one audacious target.",
+        "action": "Write a 10-year BHAG for yourself or your work: one sentence, big enough that saying it out loud feels slightly uncomfortable."
+      },
+      {
+        "title": "Cult-Like Cultures",
+        "chapter": "Cult-Like Cultures",
+        "summary": "Visionary companies are so clear about who fits that they feel cult-like: intense onboarding, strong values, and a willingness to reject brilliant people who don't fit. This isn't brainwashing — it's alignment. When everyone shares the ideology, trust and speed multiply.",
+        "example": "The authors note IBM's 'IBM-ers' and Nordstrom's rule-book-replacement 'use your good judgment' — cultures so strong they self-select the right people and eject the wrong ones quickly.",
+        "action": "Write your personal 'fit test': 3 values you won't compromise in a team or partner. Start saying no to mismatches — fast."
+      },
+      {
+        "title": "Try a Lot of Stuff, Keep What Works",
+        "chapter": "Home-Grown Evolution",
+        "summary": "Visionary companies don't succeed from one perfect plan — they succeed from rapid experimentation: try lots of things, keep what works, kill what doesn't. The authors call it 'evolutionary progress' — like biological mutation, most attempts fail quietly, and a few become breakthroughs.",
+        "example": "3M's Post-it came from a failed adhesive; Sony's path to the Walkman was a chain of accidental discoveries kept alive by a culture that allowed experiments. The plan was the process, not the product.",
+        "action": "Run one cheap experiment this week: try a new approach, channel or idea for 7 days with no attachment. Keep it if it wins."
+      }
+    ],
+    "actionPlan": [
+      "Build one system that works without you.",
+      "Write your core ideology in one line.",
+      "Set one 10-year BHAG — say it out loud.",
+      "Write your 3-value fit test and enforce it.",
+      "Run one no-attachment experiment this week."
+    ]
+  },
+  {
+    "id": "great-by-choice",
+    "title": "Great by Choice",
+    "author": "Jim Collins & Morten Hansen",
+    "year": 2011,
+    "category": "Business & Startups",
+    "cover": "assets/covers/great-by-choice.jpg",
+    "readTime": "11 min",
+    "tagline": "Uncertainty, chaos and luck — why some thrive despite them all. The 10xers' rules: 20 Mile March, bullets before cannonballs, and the SMaC recipe.",
+    "oneLiner": "Great companies don't predict the future — they prepare for it: consistent marches, cheap bullets, and fanatic discipline.",
+    "bigIdea": "Collins studied companies that outperformed extreme environments (the 10xers) vs comparable companies that didn't. The 10xers shared: 1) Fanatic discipline — the 20 Mile March (consistent progress in good AND bad times), 2) Empirical creativity — bullets first (cheap experiments) then cannonballs (big bets only after evidence), 3) Productive paranoia — prepare for what you can't predict, 4) The SMaC recipe — a simple, specific, stable operating formula. Luck matters; what you do with it is a choice.",
+    "quotes": [
+      "The 20 Mile March: a hallmark of 10xers is progress in good times and bad, year after year.",
+      "First fire bullets, then fire cannonballs.",
+      "We cannot predict the future, but we can prepare for it."
+    ],
+    "lessons": [
+      {
+        "title": "The 20 Mile March: Discipline Beats Talent",
+        "chapter": "The 10xers",
+        "summary": "10xers set a performance floor AND ceiling they hit in every condition — like walking 20 miles a day regardless of weather. They don't sprint in boom times or panic in busts. This consistency builds credibility, momentum and calm. The 'ceiling' matters as much as the floor: don't overreach in good times.",
+        "example": "In the chaotic airline industry post-deregulation, Southwest marched 20 miles: consistent growth and profit every single year, while high-flying competitors crashed. Same storm, different discipline.",
+        "action": "Define YOUR 20-mile march: the minimum you do daily/weekly in bad times, and the maximum you allow yourself in good times."
+      },
+      {
+        "title": "Bullets Before Cannonballs",
+        "chapter": "Bullets & Cannonballs",
+        "summary": "Great companies test the world with cheap, fast 'bullets' — small experiments — and only after a bullet hits the target do they fire a 'cannonball' (big investment). Cannonballs without bullets are gambling; bullets without cannonballs are dabbling.",
+        "example": "Apple's iPod was a bullet from an existing MP3-player experiment; the massive iTunes + iPod cannonball followed the hit. Amazon tested Prime as a small experiment before betting billions.",
+        "action": "Before your next big bet, design the cheapest possible test (one customer, one ad, one prototype). Fire the bullet first."
+      },
+      {
+        "title": "Productive Paranoia: Prepare for the Unpredictable",
+        "chapter": "Productive Paranoia",
+        "summary": "10xers are paranoid in a productive way: they keep cash reserves, build buffers, and run 'what if' drills — not because they can predict crises, but because they know they can't. They prepare for storms they can't name. The calm during chaos is manufactured beforehand.",
+        "example": "Intel prepared for 'the disaster scenario' — and when the memory business crashed overnight, the prepared plans kicked in instantly. Companies without buffers didn't survive the same storm.",
+        "action": "Run a 'what if' drill: what would you do if your main income/plan vanished in 30 days? Write the one-page response now, while calm."
+      },
+      {
+        "title": "The SMaC Recipe: Simple, Concrete, Stable",
+        "chapter": "The SMaC Recipe",
+        "summary": "10xers operate on a SMaC recipe — a short list of simple, concrete rules (e.g., 'no debt, low fares, point-to-point routes') that stays remarkably stable for decades. The recipe is their operating identity: they change it rarely and only with evidence. Complexity is the enemy of consistency.",
+        "example": "Southwest's SMaC recipe stayed almost unchanged for 25 years — every new initiative was filtered through it. When the recipe changed, it changed deliberately, once.",
+        "action": "Write YOUR SMaC recipe: 4-6 simple rules that define how you operate. Filter your next 3 decisions through it. Change it rarely."
+      },
+      {
+        "title": "Return on Luck: Luck Is What You Make of It",
+        "chapter": "Return on Luck",
+        "summary": "Everyone gets lucky and unlucky; the difference is return on luck. 10xers turn good luck into more (investing the windfall) and bad luck into less (containing the damage). Luck is an input; the return is a choice.",
+        "example": "Both Southwest and PSA got the same lucky break (deregulation) — Southwest converted it into a durable advantage; PSA squandered it. Same luck, different return.",
+        "action": "Think of your last piece of good luck: did you invest it or spend it? And your last bad luck: did you contain it or let it compound?"
+      }
+    ],
+    "actionPlan": [
+      "Define your 20-mile march (floor AND ceiling).",
+      "Design one cheap bullet-test before your next big bet.",
+      "Write your one-page disaster-response plan now.",
+      "Write your SMaC recipe and filter decisions through it.",
+      "Compute your return on the last two pieces of luck."
+    ]
+  },
+  {
+    "id": "one-up-wall-street",
+    "title": "One Up on Wall Street",
+    "author": "Peter Lynch",
+    "year": 1989,
+    "category": "Money & Finance",
+    "cover": "assets/covers/one-up-wall-street.jpg",
+    "readTime": "13 min",
+    "tagline": "How to use what you already know to make money in the market — the legendary Fidelity manager's most beloved book.",
+    "oneLiner": "You already know more than the experts about the companies you use daily. Buy what you know — after doing the homework.",
+    "bigIdea": "Peter Lynch ran Fidelity's Magellan Fund to a 29% annual return — the best record of his era — and his secret was ordinary: invest in what you understand. Your edge as an individual is that you encounter products, stores and services before analysts do. His system: classify companies (slow growers, fast growers, stalwarts, cyclicals, turnarounds, asset plays), buy when the story is good AND the price is fair, and check the 'ten-bagger' checklist before you buy.",
+    "quotes": [
+      "Go for a business that any idiot can run — because sooner or later, any idiot probably is going to run it.",
+      "Know what you own, and know why you own it.",
+      "The best stock to buy may be the one you already own."
+    ],
+    "lessons": [
+      {
+        "title": "Buy What You Know",
+        "chapter": "The Individual Investor",
+        "summary": "Lynch's famous edge: you meet potential winners before Wall Street does — at the mall, the clinic, the office. If a product you love is selling everywhere and the company is still unknown to analysts, that's your head start. Expertise beats insider tips.",
+        "example": "Lynch's wife bought Hanes pantyhose because she loved them; the stock multiplied 6x. The Dunkin' Donuts and Home Depot wins came from everyday observation — ordinary knowledge, extraordinary returns.",
+        "action": "Look at what you use and love daily: which brand is winning your wallet? Add it to a watchlist and start researching it — that's your edge."
+      },
+      {
+        "title": "Classify the Company Before You Buy",
+        "chapter": "Classifying Companies",
+        "summary": "Lynch sorts every stock into one of six classes, each with its own rules: slow growers (safe but boring), stalwarts (steady, dividend-paying), fast growers (the 20-25% compounders), cyclicals (boom-bust), turnarounds (damaged goods recovering), and asset plays (worth more than the market thinks). Buy the right class at the right price.",
+        "example": "Ford and the auto stocks are cyclicals — buy near the bottom of the cycle, not when everyone loves them. A drug company growing 22% a year is a fast grower — hold while the growth holds.",
+        "action": "Classify any stock you own or are watching into Lynch's six boxes. Different class = different buy/sell rules. Write the rules down."
+      },
+      {
+        "title": "The Two-Minute Drill and the Earnings Line",
+        "chapter": "The Fundamentals",
+        "summary": "Before buying, can you explain in two minutes why you own it — in a story a child could understand? And check the earnings line: a stock is only as good as its earnings growth over 10 years. The P/E ratio vs growth rate (PEG) tells you if the price is fair.",
+        "example": "Lynch's rule of thumb: a company growing at 20% with a P/E of 20 is fairly priced; growing 20% with a P/E of 40 is overpriced. The story ('Dunkin' sells coffee and doughnuts — everyone buys them') beats jargon.",
+        "action": "Write your two-minute story for any stock you own. If you can't, you don't own it yet — you own a gamble."
+      },
+      {
+        "title": "Avoid the Traps: Hot Stocks, Hot Air, and Your Ego",
+        "chapter": "Avoiding the Traps",
+        "summary": "Lynch's list of classic traps: buying the hot stock everyone's talking about (the attention means it's already priced), falling for 'the next something' (the next Xerox is always overpriced), ignoring ugly balance sheets, and confusing a good company with a good stock — great companies can be terrible buys at the wrong price.",
+        "example": "Lynch warns: 'If you're lucky enough to find a company that's a great business, you still have to check whether you're paying too much.' The 1970s 'nifty fifty' — the best companies on earth — took 25 years to recover for buyers at the top.",
+        "action": "Before buying, ask: 'Am I buying because it's a good company — or a good PRICE?' If you can't answer the price part, wait."
+      },
+      {
+        "title": "Know the Story, Then Know When to Sell",
+        "chapter": "Selling",
+        "summary": "Lynch's selling rule is simple: sell when the STORY changes, not when the price wobbles. The fast grower whose growth rate is slowing, the cyclical at the top of the cycle, the turnaround that finished turning — each has its exit signal. If you knew why you bought, you know when to leave.",
+        "example": "When Dunkin' Donuts' growth story ended, the sell signal was the numbers, not the headlines. Lynch's 'housework' rule: review your stocks as regularly as you'd clean your house — a few hours a week is plenty.",
+        "action": "Write one line for each holding: 'I own X because ___.' If the reason is dead, the position is dead — sell it."
+      }
+    ],
+    "actionPlan": [
+      "Make a list of 3 brands you use daily and research one.",
+      "Classify every holding into Lynch's six boxes.",
+      "Write a two-minute story for each stock you own.",
+      "Check the PEG: is the price fair for the growth?",
+      "Define your sell signal BEFORE you buy."
+    ]
+  },
+  {
+    "id": "money-master-game",
+    "title": "Money: Master the Game",
+    "author": "Tony Robbins",
+    "year": 2014,
+    "category": "Money & Finance",
+    "cover": "assets/covers/money-master-game.jpg",
+    "readTime": "13 min",
+    "tagline": "7 simple steps to financial freedom — distilled from 50 interviews with the world's greatest investors, from Buffett to Dalio.",
+    "oneLiner": "Financial freedom is a game with known rules: save aggressively, cut fees, diversify, and let time compound. Play it, don't guess it.",
+    "bigIdea": "Tony Robbins interviewed 50 financial legends (Buffett, Dalio, Bogle, Munger) and found they agree on remarkably simple truths: asset allocation drives 90%+ of returns; fees are the silent killer; no one can time the market; and the investor's behavior — not intelligence — decides outcomes. His 7-step plan: make the game unwinnable for the industry by cutting costs, automate savings, diversify globally, and compound for decades.",
+    "quotes": [
+      "It's not about how much you make — it's about how much you keep.",
+      "The greatest enemy of wealth creation is the person in the mirror.",
+      "Asset allocation is the only free lunch in investing."
+    ],
+    "lessons": [
+      {
+        "title": "The Financial Game Is Rigged — So Change the Rules",
+        "chapter": "The Game",
+        "summary": "The financial industry profits when you trade, churn and panic. The legends' counter-strategy: make the game unwinnable for the industry — buy low-cost index funds, hold for decades, ignore the noise. You can't beat the professionals at their game; you can stop playing it.",
+        "example": "Robbins' math: the average investor earns far less than the market because of bad timing and high fees. Buffett's famous bet — a simple index fund beat a portfolio of hedge funds over 10 years — proved the point to the world.",
+        "action": "Check every fee you pay on investments: anything above ~0.5% is eating your future. Switch the core of your portfolio to low-cost index funds."
+      },
+      {
+        "title": "The Magic of Compounding: Time Is the Force",
+        "chapter": "Compounding",
+        "summary": "Robbins calls compound interest the most powerful force in finance: small amounts, started early, growing at 8-12% become enormous over decades. The formula for wealth: save early, save often, touch nothing. Every year you delay costs you disproportionately — the first decade is the magic one.",
+        "example": "The book's table: investing ₹10,000/month from age 25 vs 35 can mean lakhs vs crores difference at 60 — purely because of the extra decade of compounding. Time is the multiplier you can't buy later.",
+        "action": "Compute what your current savings rate becomes at 60. If it's not enough, increase it by 1% of income this month — automation makes it painless."
+      },
+      {
+        "title": "The Core Four: Diversify Like the Legends",
+        "chapter": "The Core Four",
+        "summary": "Robbins' 'Core Four' portfolio: split your money across US stocks, international stocks, bonds, and a buffer (cash/gold-like assets) — rebalanced yearly. Diversification is the only free lunch: something always wins, and you never get wiped out.",
+        "example": "The Core Four, rebalanced annually, historically returned ~9% with less pain than any single asset — because the crashes in one bucket were offset by gains in another.",
+        "action": "Write your target allocation across 4 buckets. Set a yearly rebalance date (e.g., every January) and stick to it — that discipline IS the strategy."
+      },
+      {
+        "title": "Behavior Beats IQ: The Investor Is the Enemy",
+        "chapter": "The Investor's Mind",
+        "summary": "Every legend told Robbins the same thing: the biggest risk isn't the market — it's YOU. Selling at the bottom, chasing the top, checking prices daily and acting on fear destroys more wealth than any crash. The fix is structural: automate, diversify, and only look at your portfolio quarterly.",
+        "example": "Studies show investors who checked their portfolios daily earned less and stressed more than those who checked quarterly. The best investors are often the most boring — auto-invest and ignore.",
+        "action": "Set automatic monthly investing. Then limit yourself to ONE portfolio check per quarter — schedule it, don't check on impulse."
+      },
+      {
+        "title": "The 7-Step Plan: Simple Rules, Massive Results",
+        "chapter": "The Plan",
+        "summary": "Robbins' practical steps: 1) Save at least 10% (pay yourself first), 2) Cut every fee, 3) Maximize tax-advantaged accounts, 4) Diversify globally, 5) Use the Core Four, 6) Rebalance yearly, 7) Enjoy life without guilt — money is a means, not a score. Simple, boring, and it beats 95% of professionals.",
+        "example": "The book's retirees who followed the plan report the real prize: freedom — waking up with no boss, no clock, no fear. The money was always the vehicle.",
+        "action": "Pick ONE step you haven't done (start automatic saving? cut a fee? rebalance?) and do it this week. Then next week, the next one."
+      }
+    ],
+    "actionPlan": [
+      "Check and cut every investment fee above 0.5%.",
+      "Automate saving at least 10% of income.",
+      "Set your Core Four allocation and a rebalance date.",
+      "Limit portfolio checks to once per quarter.",
+      "Do one step of the 7-step plan every week."
+    ]
+  },
+  {
+    "id": "science-of-getting-rich",
+    "title": "The Science of Getting Rich",
+    "author": "Wallace Wattles",
+    "year": 1910,
+    "category": "Money & Finance",
+    "cover": "assets/covers/science-of-getting-rich.jpg",
+    "readTime": "9 min",
+    "tagline": "The 1910 classic that inspired The Secret and Rhonda Byrne — the original mental-physics book on wealth creation.",
+    "oneLiner": "Wealth comes from thinking in a Certain Way + acting in a Certain Way — the original 'think and grow rich' blueprint.",
+    "bigIdea": "Written in 1910, Wattles' tiny book argues wealth is not a zero-sum game: there is a thinking stuff from which all things are made, and by thinking in a 'Certain Way' — clear vision, gratitude, and action in the present — anyone can attract the formless substance into their lives. Its practical core: do all you can do today, in your current place, in the most efficient way — and wealth follows as a natural result of a certain habit of mind plus consistent action.",
+    "quotes": [
+      "There is a thinking stuff from which all things are made, and which, in its original state, permeates, penetrates, and fills the interspaces of the universe.",
+      "Get rich without compromise — that is what you must do.",
+      "You must relate to the formless mind of the universe in a way that brings you into harmony with it."
+    ],
+    "lessons": [
+      {
+        "title": "Wealth Is Your Right — and It's Not Zero-Sum",
+        "chapter": "The Right to Be Rich",
+        "summary": "Wattles' opening claim: every person has the right to be rich — not as greed but as fullness of life. Wealth isn't stolen from others; it's created. The universe's 'formless stuff' responds to thought, and there's enough for everyone who learns to think and act in the certain way.",
+        "example": "Wattles distinguishes the 'competitive mind' (there's only so much, I must take it) from the 'creative mind' (I can make more value). The creative mind is where wealth comes from.",
+        "action": "Notice your default: competitive or creative? Reframe one area of scarcity ('not enough clients') as creation ('I can serve more people better')."
+      },
+      {
+        "title": "Thinking in a Certain Way",
+        "chapter": "Thinking in a Certain Way",
+        "summary": "The core practice: form a clear, detailed mental picture of what you want — down to the specifics — and hold it without doubt, while acting on the present. Vague wishing does nothing; clear vision plus gratitude for what you have aligns your mind with receiving more.",
+        "example": "Wattles: 'The man who can sincerely thank God for the things he has is the man who is ready to receive more.' Gratitude is the tuning fork; the mental picture is the blueprint.",
+        "action": "Write a detailed mental picture of your goal (income, house, work) in present tense, as if done. Read it twice daily for a week."
+      },
+      {
+        "title": "Act in the Present, in the Certain Way",
+        "chapter": "Acting in a Certain Way",
+        "summary": "Thinking alone is not enough — you must act, TODAY, where you are, with what you have. The 'certain way' of acting: do everything you do in the most efficient, excellent manner possible, and use every opportunity to advance toward your vision. Don't wait for perfect conditions; create them by motion.",
+        "example": "Wattles' instruction: 'Do not wait for a change of environment. Do not wait for tomorrow. Begin now to do all that you can do where you are.' The farmer doesn't wait for the ideal farm; he improves the one he has.",
+        "action": "Do one concrete action toward your vision TODAY — even tiny. Wattles' rule: every day, advance. No exceptions."
+      },
+      {
+        "title": "Gratitude: The Receiver's Frequency",
+        "chapter": "Gratitude",
+        "summary": "Gratitude is not politeness — it's a mechanism. The mind that is grateful is in harmony with receiving; the mind that constantly wants more without appreciating what it has closes the channel. Wattles makes gratitude a daily, disciplined practice, not a mood.",
+        "example": "The book's instruction is literal: 'When you rise in the morning, thank the One for the opportunity to live; before you sleep, review and thank for the day.' The habit retunes attention from lack to plenty.",
+        "action": "Start a 3-line daily gratitude log — morning and night. Include one thing you ALREADY have that you used to take for granted."
+      },
+      {
+        "title": "The Advancing Life: Grow or Stagnate",
+        "chapter": "The Certain Way of Life",
+        "summary": "Wattles' final law: every living thing must advance or decline. The rich-getting mindset is the advancing life — always improving, creating, giving more value. The person who stops growing starts dying; the person who serves more gets more. Wealth is a byproduct of an expanding life.",
+        "example": "Wattles: 'The advancing man goes forward; he does not stand still nor go backward. He gives every person more in use value than he takes from them in cash value.' Service plus advancement equals wealth.",
+        "action": "Upgrade one skill or offer this week so you give MORE value than you take. That gap is where wealth is created."
+      }
+    ],
+    "actionPlan": [
+      "Shift from competitive to creative mindset daily.",
+      "Write your detailed mental picture in present tense.",
+      "Do one advancing action every single day.",
+      "Keep a 3-line gratitude log, morning and night.",
+      "Add more use-value than you take — this week."
+    ]
+  }
 ];
 
 if (typeof window !== "undefined") window.BOOKS = BOOKS;

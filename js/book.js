@@ -949,6 +949,7 @@
     quotesWrap.appendChild(d);
   });
 
+
   async function renderQuoteCard(quote, qidx) {
     // STORY FORMAT: 1080×1920 — full-bleed quote for status/stories
     const W = 1080, H = 1920;

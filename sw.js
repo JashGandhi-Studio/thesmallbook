@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v40";
+const CACHE_VERSION = "tsb-v50";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -14,6 +14,11 @@ const APP_SHELL = [
   "./404.html",
   "./graveyard.html",
   "./about.html",
+  "./js/ask-data.js",
+  "./js/ask.js",
+  "./favicon.ico",
+  "./favicon.png",
+  "./apple-touch-icon.png",
   "./css/style.css",
   "./js/prefs.js",
   "./js/support.js",
