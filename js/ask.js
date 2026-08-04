@@ -529,7 +529,7 @@
     msgs.scrollTop = msgs.scrollHeight;
     sendFollowUps(q);
     var hist = loadHist();
-    hist.push({ role: "user", text: q }, { role: "bot", text: strip(html).join(" ") });
+    hist.push({ role: "user", text: q }, { role: "bot", html: html });
     saveHist(hist);
   }
 
@@ -661,7 +661,11 @@
         else if (m.role === "bot") {
           var d = document.createElement("div");
           d.className = "aq-msg aq-msg--bot";
-          d.innerHTML = '<span class="aq-av">📕</span><div class="aq-bubble">' + esc(m.text) + "</div>";
+          if (m.html) {
+            d.innerHTML = '<span class="aq-av">📕</span><div class="aq-bubble">' + m.html + "</div>";
+          } else {
+            d.innerHTML = '<span class="aq-av">📕</span><div class="aq-bubble">' + esc(m.text || "") + "</div>";
+          }
           msgs.appendChild(d);
         }
       });
