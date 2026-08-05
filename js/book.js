@@ -17,6 +17,7 @@
   /* ---------- HERO ---------- */
   document.getElementById("cover").src = book.cover;
   document.getElementById("cover").alt = `${book.title} cover`;
+
   document.getElementById("cat").textContent = book.category;
   document.getElementById("title").textContent = book.title;
   document.getElementById("author").textContent = `by ${book.author} · ${book.year}`;
@@ -583,17 +584,43 @@
     return pool.sort((a, b) => score(a) - score(b))[0];
   }
 
-  /* punctuation set covers Devanagari danda + CJK stops */
-  function splitIntoChunks(text, maxLen = 160) {
-    const sentences = text.match(/[^.!?।॥。！？]+[.!?।॥。！？]+["']?|\s*[^.!?।॥。！？]+$/g) || [text];
-    const chunks = [];
-    let cur = "";
-    sentences.forEach((s) => {
-      if ((cur + s).length > maxLen && cur) { chunks.push(cur.trim()); cur = s; }
-      else cur += s;
+  /* TTS v5 — NATURAL READING
+     Chunks are sentence-aware (never cut mid-sentence) and each carries a
+     natural pause: ~480ms after a sentence, ~220ms at comma-breaths,
+     ~700ms between sections (title → summary → example → action). */
+  function naturalChunks(parts) {
+    const SENT = /[^.!?।॥。！？]+[.!?।॥。！？]+["']?|\s*[^.!?।॥。！？]+$/g;
+    const out = [];
+    (parts || []).forEach((part) => {
+      const text = String(part.text || "").trim();
+      if (!text) return;
+      const sentences = text.match(SENT) || [text];
+      let cur = "";
+      sentences.forEach((s) => {
+        const clean = s.trim();
+        if (!clean) return;
+        if ((cur + " " + clean).length > 150 && cur) {
+          out.push({ text: cur.trim(), pause: 480 });
+          cur = clean;
+        } else cur = (cur + " " + clean).trim();
+      });
+      if (cur) out.push({ text: cur.trim(), pause: part.pause != null ? part.pause : 480 });
     });
-    if (cur.trim()) chunks.push(cur.trim());
-    return chunks.filter(Boolean);
+    /* split very long chunks at commas → tiny 220ms breathing pauses */
+    const final = [];
+    out.forEach((c) => {
+      if (c.text.length <= 170) { final.push(c); return; }
+      const pieces = c.text.match(/[^,;:—–]+[,;:—–]?/g) || [c.text];
+      let acc = "";
+      pieces.forEach((p) => {
+        if ((acc + p).trim().length > 150 && acc.trim()) {
+          final.push({ text: acc.trim(), pause: 220 });  // mid-sentence breath
+          acc = p;
+        } else acc += p;
+      });
+      if (acc.trim()) final.push({ text: acc.trim(), pause: c.pause });
+    });
+    return final.filter((c) => c.text.trim());
   }
 
   let speakingBtn = null;
@@ -634,27 +661,40 @@
     const isAndroid = /android/i.test(navigator.userAgent);
     const isDesktopChrome = /chrome/i.test(navigator.userAgent) && !isAndroid && !/edge|edg\//i.test(navigator.userAgent);
     let chunkStarted = 0;
+    let seed = 7; // small deterministic wobble so pitch varies subtly, not robotically
 
     function next() {
       if (speakingBtn !== btn) return;               // user pressed stop / another button
       if (!speechQueue.length) { stopSpeech(); return; } // finished naturally
       try { if (speechSynthesis.paused) speechSynthesis.resume(); } catch (e) {}
-      const u = new SpeechSynthesisUtterance(speechQueue.shift());
+      const chunk = speechQueue.shift();
+      const u = new SpeechSynthesisUtterance(chunk.text);
       currentUtterance = u;                          // hold the reference (fix #1)
       if (voice) u.voice = voice;
       // Always set the full regional tag ("hi-IN", "gu-IN"): with no matching
       // voice object, Android/desktop engines still switch language from this.
       u.lang = voice ? voice.lang : tag;
-      u.rate = 0.95;
-      u.pitch = 1.0;
+      /* HUMAN TOUCH (TTS v5):
+         - short chunks read a touch slower (thinking), long ones a touch
+           faster (momentum) — like a real reader's pace
+         - pitch wobbles ±0.04 per chunk — subtle, never monotone
+         - between chunks, wait the NATURAL pause for that sentence/section */
+      const len = chunk.text.length;
+      u.rate = len < 60 ? 0.92 : len < 130 ? 0.95 : 0.97;
+      seed = (seed * 9301 + 49297) % 233280;
+      u.pitch = 1 + ((seed % 9) - 4) / 100;          // ±0.04
       u.volume = 1.0;
       u.onstart = () => { chunkStarted = Date.now(); };
-      u.onend = () => { currentUtterance = null; setTimeout(next, 60); };  // fix #5
+      u.onend = () => {
+        currentUtterance = null;
+        const wait = Math.min(chunk.pause != null ? chunk.pause : 480, 900);
+        setTimeout(next, wait);                      // fix #5 + natural pause
+      };
       u.onerror = (e) => {                           // fix #2 + #3
         currentUtterance = null;
         const err = e && e.error;
         if (err === "interrupted" || err === "canceled") return; // stop was intentional
-        setTimeout(next, 120);                       // skip bad chunk, keep reading
+        setTimeout(next, 150);                       // skip bad chunk, keep reading
       };
       speechSynthesis.speak(u);
     }
@@ -866,10 +906,14 @@
     // deep-link support: book.html?id=x#lesson-N opens + scrolls to that lesson
     if (location.hash && location.hash.startsWith("#lesson-")) {
       const n = parseInt(location.hash.slice(8), 10);
-      const card = document.getElementById("lesson-" + n);
+      /* elements are 0-based (lesson-0, lesson-1…); try exact, then n-1 for
+         older 1-based links so the SAME chapter always opens */
+      let card = document.getElementById("lesson-" + n);
+      if (!card && n > 0) card = document.getElementById("lesson-" + (n - 1));
       if (card) setTimeout(() => {
-        const head = card.querySelector(".lesson__head");
-        if (head && !card.classList.contains("open")) head.click();
+        /* only the target chapter opens — collapse the default-open first lesson */
+        document.querySelectorAll(".lesson").forEach((l) => l.classList.remove("open"));
+        card.classList.add("open");
         card.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 300);
     }
@@ -884,14 +928,21 @@
       stopSpeech();
       const i = +btn.dataset.listen;
       const l = liveLesson(i); // live = translated when page is translated
-      const text = `${l.title}. ${l.summary} ${l.example} ${l.action}`;
+      /* sections carry their own natural pauses: title → summary → example → action */
+      const parts = [
+        { text: l.title, pause: 600 },
+        { text: l.summary, pause: 750 },
+        { text: l.example, pause: 750 },
+        { text: l.action, pause: 0 }
+      ];
       speakingBtn = btn;
       btn.classList.add("speaking");
       btn.textContent = "⏹ STOP";
-      speakChunks(splitIntoChunks(text), btn);
+      speakChunks(naturalChunks(parts), btn);
     });
   });
   window.addEventListener("beforeunload", () => { if ("speechSynthesis" in window) speechSynthesis.cancel(); });
+
 
   /* share lesson as card */
   lessonsWrap.querySelectorAll("[data-sharelesson]").forEach((btn) => {

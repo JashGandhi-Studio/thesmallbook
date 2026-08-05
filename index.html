@@ -24,6 +24,72 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
+<div id="tsb-loader" class="tsb-loader" aria-hidden="true">
+  <div class="tsb-loader__in">
+    <div class="tsb-loader__logo">
+      <img src="assets/loader-logo.png" alt="TheSmallBook" width="50" height="50">
+    </div>
+    <div class="tsb-loader__word">The<span class="tsb-loader__hl">Small</span>Book</div>
+    <div class="tsb-loader__tag">big books · small reads</div>
+    <div class="tsb-loader__bar"><i></i></div>
+    <div class="tsb-loader__pct"><span id="tsb-loader-pct">0</span>%</div>
+  </div>
+</div>
+<script>
+  (function () {
+    /* 🚀 APP OPENING SPLASH — plays ONLY when the app opens:
+       - fresh visit / refresh  → full 2.5s splash
+       - back from a book, SHELF / LIBRARY buttons  → instant, no splash */
+    var navType = ((window.performance && performance.getEntriesByType &&
+      performance.getEntriesByType("navigation")[0]) || {}).type || "";
+    var isReload = navType === "reload";
+    var seen = false;
+    try { seen = !!sessionStorage.getItem("tsb_loader_seen"); } catch (e) {}
+    var el = document.getElementById("tsb-loader");
+
+    if (seen && !isReload) {
+      /* internal navigation back to the library — skip the splash entirely */
+      if (el && el.parentNode) el.parentNode.removeChild(el);
+      return;
+    }
+    try { sessionStorage.setItem("tsb_loader_seen", "1"); } catch (e) {}
+
+    /* 🔒 lock scroll while the splash is on screen — zero jump, zero flicker */
+    document.documentElement.classList.add("tsb-loading");
+    var MIN = 2500;
+    var started = Date.now();
+    var removed = false;
+    function hide() {
+      if (removed) return;
+      removed = true;
+      if (!el) return;
+      document.documentElement.classList.remove("tsb-loading");
+      el.classList.add("tsb-loader--hide");
+      /* remove from DOM AFTER the fade fully finishes — smooth, never pops */
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 480);
+    }
+    function ready() {
+      var elapsed = Date.now() - started;
+      setTimeout(hide, Math.max(0, MIN - elapsed));
+    }
+    /* rAF keeps the fade silky even if the tab was busy loading */
+    window.addEventListener("load", function () { requestAnimationFrame(ready); });
+    setTimeout(ready, MIN + 600); /* hard safety: never block the app */
+
+    /* smooth 0→100% progress — makes the splash feel alive */
+    var pctEl = document.getElementById("tsb-loader-pct");
+    if (pctEl) {
+      var t0 = (window.performance && performance.now) ? performance.now() : Date.now();
+      (function tick() {
+        var now = (window.performance && performance.now) ? performance.now() : Date.now();
+        var p = Math.min(100, Math.round(((now - t0) / MIN) * 100));
+        pctEl.textContent = p;
+        if (p < 100) requestAnimationFrame(tick);
+      })();
+    }
+  })();
+</script>
+
 
   <!-- TICKER -->
   <div class="ticker">

@@ -147,7 +147,7 @@
     out.sort(function (a, b) { return b.score - a.score; });
     return out.slice(0, limit || 2);
   }
-  function lessonLink(book, idx) { return "book.html?id=" + encodeURIComponent(book.id) + "#lesson-" + (idx + 1); }
+  function lessonLink(book, idx) { return "book.html?id=" + encodeURIComponent(book.id) + "#lesson-" + idx; }
   function graveLink(f) { return "graveyard/" + encodeURIComponent(f.id) + ".html"; }
 
   /* ============ answer builders ============ */

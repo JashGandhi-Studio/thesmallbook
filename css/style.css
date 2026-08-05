@@ -2755,3 +2755,110 @@ html.dark .aq-guided__tag { background: var(--yellow); color: var(--ink); }
 html.dark .aq-think { background: #241f18; }
 html.dark .aq-think__status { color: #c9bfa8; }
 html.dark .aq-think__bar { background: #171310; }
+
+/* 📸 INSTAGRAM SECTION (about page) */
+.about__block--insta { text-align: center; }
+.instabox {
+  max-width: 640px; margin: 20px auto 0;
+  border: 4px solid var(--ink); background: var(--paper);
+  box-shadow: 8px 8px 0 rgba(17,17,17,.9);
+  padding: 28px 24px;
+  background-image: linear-gradient(135deg, #fdf497 0%, #fd5949 18%, #d6249f 40%, #285AEB 90%);
+}
+.instabox__handle {
+  display: inline-block; font-family: "Archivo Black", sans-serif; font-size: 26px;
+  background: #fff; color: var(--ink); border: 4px solid var(--ink);
+  padding: 8px 18px; transform: rotate(-1.5deg); box-shadow: 5px 5px 0 rgba(17,17,17,.85);
+}
+.instabox__tag {
+  display: inline-block; font-family: "Archivo Black", sans-serif; font-size: 11px; letter-spacing: 2px;
+  background: var(--ink); color: var(--yellow); padding: 5px 12px; margin: 10px 0 12px;
+}
+.instabox p { color: #fff; font-size: 14.5px; line-height: 1.6; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+.instabox .btn { margin-top: 16px; box-shadow: 5px 5px 0 rgba(17,17,17,.85); }
+
+/* ============================================================
+   🚀 LAUNCH LOADING SCREEN — neo-brutalist brand splash
+   ============================================================ */
+/* 🚀 MAIN APP LOADING SCREEN — smooth, no lag, brand-perfect */
+html.tsb-loading, html.tsb-loading body { overflow: hidden; } /* no scroll jump while splashing */
+.tsb-loader {
+  position: fixed; inset: 0; z-index: 99999;
+  background-color: var(--bg);
+  background-image: radial-gradient(rgba(17,17,17,.06) 1.5px, transparent 1.5px);
+  background-size: 26px 26px;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 1; visibility: visible;
+  transition: opacity .45s ease, visibility 0s .45s;
+  will-change: opacity;
+}
+.tsb-loader--hide { opacity: 0; pointer-events: none; visibility: hidden; }
+
+/* inner stack pops in with a gentle spring — staggered */
+.tsb-loader__in { animation: loaderIn .55s cubic-bezier(.2,.9,.3,1.25) both; }
+@keyframes loaderIn {
+  from { opacity: 0; transform: translateY(14px) scale(.96); }
+  to   { opacity: 1; transform: none; }
+}
+
+.tsb-loader__logo {
+  width: 88px; height: 88px; border-radius: 18px;
+  background: var(--yellow); border: 4px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  animation: loaderBob .8s cubic-bezier(.45,.05,.35,1) infinite alternate;
+  will-change: transform;
+}
+.tsb-loader__logo svg { display: block; }
+.tsb-loader__logo img {
+  display: block; width: 50px; height: 50px;
+  object-fit: contain; image-rendering: auto;
+}
+@keyframes loaderBob {
+  from { transform: translateY(0) rotate(-5deg); }
+  to   { transform: translateY(-10px) rotate(5deg); }
+}
+
+.tsb-loader__word {
+  font-family: "Archivo Black", sans-serif; font-size: 30px; text-align: center; color: var(--ink);
+  animation: loaderWordIn .5s ease .1s both;
+}
+@keyframes loaderWordIn { from { opacity: 0; letter-spacing: 6px; } to { opacity: 1; letter-spacing: 0; } }
+.tsb-loader__hl { background: var(--yellow); padding: 0 7px; }
+
+.tsb-loader__tag {
+  text-align: center; font-size: 12px; color: #777; margin-top: 8px;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  animation: loaderTagIn .5s ease .2s both;
+}
+@keyframes loaderTagIn { from { opacity: 0; } to { opacity: 1; } }
+
+.tsb-loader__bar {
+  width: 210px; height: 13px; border: 3px solid var(--ink);
+  margin: 20px auto 0; overflow: hidden; background: #fff;
+  animation: loaderBarIn .5s ease .3s both;
+}
+@keyframes loaderBarIn { from { opacity: 0; } to { opacity: 1; } }
+.tsb-loader__bar i {
+  display: block; height: 100%; width: 45%;
+  background: repeating-linear-gradient(90deg, var(--yellow) 0 10px, var(--ink) 10px 13px);
+  animation: loaderSlide 1.1s cubic-bezier(.4,.1,.6,.9) infinite;
+}
+@keyframes loaderSlide { 0% { margin-left: -45%; } 100% { margin-left: 100%; } }
+
+.tsb-loader__pct {
+  text-align: center; font-family: "Archivo Black", sans-serif;
+  font-size: 14px; letter-spacing: 1px; color: var(--ink); margin-top: 12px;
+}
+.tsb-loader__pct span { color: #b37700; }
+html.dark .tsb-loader {
+  background-color: #120404;
+  background-image: radial-gradient(rgba(255,82,82,.08) 1.5px, transparent 1.5px);
+}
+html.dark .tsb-loader__word { color: #f2ead8; }
+html.dark .tsb-loader__tag { color: #b3a98f; }
+html.dark .tsb-loader__bar { background: #171310; }
+html.dark .tsb-loader__pct { color: #f2ead8; }
+html.dark .tsb-loader__pct span { color: var(--yellow); }
+
