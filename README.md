@@ -1,6 +1,6 @@
 # 📕 TheSmallBook
 
-**Live repo:** [https://thesmallbook.in/](https://thesmallbook.in/) — ⭐ star it if the lessons helped you!
+**Live repo:** [github.com/JashGandhi-Studio/thesmallbook](https://github.com/JashGandhi-Studio/thesmallbook) — ⭐ star it if the lessons helped you!
 
 **Big books. Small reads.** Every lesson from the world's greatest books — broken down chapter by chapter with real examples, killer quotes, and action steps. Skim it, understand it, apply it. No 300-page grind.
 
