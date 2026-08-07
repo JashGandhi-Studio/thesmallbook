@@ -39,6 +39,11 @@ window.TTS_ENGINE = (function () {
   let posOffset = 0;
   let artCache = {};             // book.id → square artwork data URL
   let lastMetaKey = "";          // avoid recreating metadata on every chunk
+  let silenceEl = null;          // silent loop → keeps tab alive in background
+  let audioCtx = null;           // Web Audio context (for volume BOOST)
+  let gainNode = null;           // gain > 1.0 → louder than device max
+  let boost = 1.5;               // default boost (1x / 1.5x / 2x)
+  const SILENCE_SRC = "data:audio/wav;base64,UklGRmQfAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YUAfAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==";
 
   const SPK = (typeof speechSynthesis !== "undefined") ? speechSynthesis : null;
 
@@ -72,7 +77,15 @@ window.TTS_ENGINE = (function () {
     return new Promise((resolve) => {
       if (puterReady) return resolve(true);
       if (window.puter && window.puter.ai && window.puter.ai.tts) {
-        puterReady = true; resolve(true); return;
+        puterReady = true;
+        /* fast path (puter already loaded) — still fetch the voice list,
+           otherwise gender/voice matching never gets a list */
+        if (window.puter.ai.listTTSVoices) {
+          try {
+            window.puter.ai.listTTSVoices().then(function (v) { puterVoices = v || []; }).catch(function () {});
+          } catch (e) {}
+        }
+        resolve(true); return;
       }
       if (puterLoading) {
         const iv = setInterval(() => {
@@ -151,7 +164,16 @@ window.TTS_ENGINE = (function () {
           audio.onended = () => end(true);
           audio.onerror = () => end(false);
           if (g !== gen || !playing || paused) { end(false); return; }
+          /* stop any audio still playing from a previous chunk (seekTo,
+             voice/speed change) — otherwise both play at once */
+          if (currentAudio && currentAudio !== audio) {
+            try { currentAudio.pause(); } catch (e) {}
+            currentAudio = null;
+          }
           currentAudio = audio;
+          /* BOOST: route through Web Audio gain → louder than device max */
+          try { audio.volume = 1.0; } catch (e) {}
+          routeBoost(audio);
           /* premium lock-screen: real progress from the audio's own duration */
           const grabDur = () => {
             if (audio.duration && isFinite(audio.duration) && audio.duration > 0) {
@@ -196,23 +218,108 @@ window.TTS_ENGINE = (function () {
     };
     return pool.sort((a, b) => score(a) - score(b))[0];
   }
+  function voicesReady(timeoutMs) {
+    return new Promise(function (resolve) {
+      var vs = voicesList();
+      if (vs.length) return resolve(vs);
+      var t0 = Date.now();
+      var iv = setInterval(function () {
+        var v2 = voicesList();
+        if (v2.length || Date.now() - t0 > (timeoutMs || 2500)) {
+          clearInterval(iv); resolve(v2);
+        }
+      }, 150);
+    });
+  }
+
   function speakWeb(text, lang, speedV, done) {
     if (!SPK) return done(false);
     startPosition(Math.max(5, text.length / (15 * (speedV || 1))));
-    const u = new SpeechSynthesisUtterance(text);
+    var u = new SpeechSynthesisUtterance(text);
     utter = u;
-    const v = bestVoice(lang);
-    if (v) u.voice = v;
-    /* full regional tag (gu-IN, hi-IN…) — Android Google TTS picks the
-       right language even when the voice list is empty for it */
-    u.lang = v ? v.lang : region(lang);
-    u.rate = Math.min(2, Math.max(0.5, speedV));
-    u.pitch = 1;
-    u.volume = 1;
-    let finished = false;
-    u.onend = () => { if (!finished) { finished = true; done(true); } };
-    u.onerror = () => { if (!finished) { finished = true; done(false); } };
-    try { SPK.speak(u); } catch (e) { done(false); }
+    var started = false;
+    function start() {
+      if (started) return;
+      started = true;
+      if (!playing || paused) { done(false); return; }
+      var v = bestVoice(lang);
+      if (v) u.voice = v;
+      u.lang = v ? v.lang : region(lang);
+      u.rate = Math.min(2, Math.max(0.5, speedV));
+      u.pitch = 1;
+      u.volume = 1;
+      var finished = false;
+      u.onend = function () { if (!finished) { finished = true; done(true); } };
+      u.onerror = function () { if (!finished) { finished = true; done(false); } };
+      try { SPK.speak(u); } catch (e) { done(false); }
+    }
+    /* Android returns an empty voice list at first — wait for it, then
+       speak once with the correct regional voice (gu-IN, hi-IN…) */
+    voicesReady(1500).then(start);
+  }
+
+  /* ---------- background keep-alive ----------
+     Chrome/Android suspends a tab when NO media is playing — between chunks
+     there is a gap with zero audio, so the queue dies on lock screen.
+     A looping silent WAV keeps the tab "actively playing media" the whole
+     time, so timers + queue keep running with the screen off. */
+  function startSilence() {
+    try {
+      if (!silenceEl) {
+        silenceEl = new Audio(SILENCE_SRC);
+        silenceEl.loop = true;
+        silenceEl.volume = 0;
+        silenceEl.setAttribute("playsinline", "");
+      }
+      const p = silenceEl.play();
+      if (p && p.catch) p.catch(function () {});
+    } catch (e) {}
+  }
+  function stopSilence() {
+    if (!silenceEl) return;
+    try { silenceEl.pause(); } catch (e) {}
+    silenceEl = null;
+  }
+
+  /* ---------- volume BOOST (louder than max) ----------
+     An <audio> element clamps its volume at 1.0 — on many phones that still
+     sounds soft. Routing the audio through a Web Audio GainNode lets us go
+     to 1.5x/2x — genuinely louder on mobile. */
+  function ensureBoost() {
+    try {
+      if (!audioCtx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return null;
+        audioCtx = new AC();
+        gainNode = audioCtx.createGain();
+        gainNode.gain.value = boost;
+        gainNode.connect(audioCtx.destination);
+      }
+      if (audioCtx.state === "suspended") { try { audioCtx.resume(); } catch (e) {} }
+      gainNode.gain.value = boost;
+      return gainNode;
+    } catch (e) { return null; }
+  }
+  function routeBoost(audio) {
+    if (!audio || !audio.play) return;
+    try {
+      if (!ensureBoost()) return;
+      var src = audioCtx.createMediaElementSource(audio);
+      src.connect(gainNode);
+    } catch (e) {}
+  }
+  function setBoost(v) {
+    boost = v;
+    if (gainNode) { try { gainNode.gain.value = v; } catch (e) {} }
+    if (player) {
+      var b = player.querySelector('[data-act="boost"]');
+      if (b) b.textContent = "🔊 " + v.toFixed(2).replace(/\.?0+$/, "") + "x";
+    }
+  }
+  function cycleBoost() {
+    var boosts = [1, 1.5, 2];
+    var i = boosts.indexOf(boost);
+    setBoost(boosts[(i + 1) % boosts.length]);
   }
 
   /* ---------- speak one item ---------- */
@@ -243,6 +350,7 @@ window.TTS_ENGINE = (function () {
     if (!playing) return;
     if (paused) return;
     clearPosition();
+    updatePlayer();
     if (curIdx >= queue.length) { finish(); return; }
     const item = queue[curIdx];
     // intro first (separate utterance for cleaner podcast feel)
@@ -431,6 +539,7 @@ window.TTS_ENGINE = (function () {
     if (timer) clearTimeout(timer);
     if (SPK) { try { SPK.cancel(); } catch (e) {} }
     if (currentAudio) { try { currentAudio.pause(); } catch (e) {} currentAudio = null; }
+    stopSilence();
     hidePlayer();
     clearMediaSession();
     if (onProgress) onProgress(0, 0, false);
@@ -440,6 +549,7 @@ window.TTS_ENGINE = (function () {
     paused = true;
     if (SPK) { try { SPK.pause(); } catch (e) {} }
     if (currentAudio) { try { currentAudio.pause(); } catch (e) {} }
+    if (silenceEl) { try { silenceEl.pause(); } catch (e) {} }
     freezePosition();
     setMediaPlaybackState("paused");
     updatePlayer();
@@ -449,6 +559,7 @@ window.TTS_ENGINE = (function () {
     paused = false;
     if (SPK) { try { SPK.resume(); } catch (e) {} }
     if (currentAudio) { try { currentAudio.play(); } catch (e) {} }
+    if (silenceEl) { try { silenceEl.play(); } catch (e) {} }
     setMediaPlaybackState("playing");
     if (posDur) { posStart = Date.now(); if (!posTimer) posTimer = setInterval(() => { if (paused || !playing) return; const p = Math.min(posOffset + (Date.now() - posStart) / 1000, posDur); setPos(posDur, p); }, 1000); }
     if (!utter && timer) { clearTimeout(timer); next(); }
@@ -467,6 +578,9 @@ window.TTS_ENGINE = (function () {
   function seekTo(i) {
     if (!queue.length) return;
     curIdx = Math.max(0, Math.min(queue.length - 1, i));
+    /* kill any currently-playing Puter audio — otherwise the old chunk
+       keeps playing over the new one (voice/speed changes sounded broken) */
+    if (currentAudio) { try { currentAudio.pause(); } catch (e) {} currentAudio = null; }
     if (SPK) { try { SPK.cancel(); } catch (e) {} }
     if (timer) clearTimeout(timer);
     if (playing) next();
@@ -523,7 +637,11 @@ window.TTS_ENGINE = (function () {
     paused = false;
     // ensure puter loads in background for quality
     loadPuter();
+    /* start the silent keep-alive loop — keeps the tab alive on the lock
+       screen so the queue never freezes between chunks */
+    startSilence();
     ensurePlayer(book);
+    updatePlayer();   // paint eq/state immediately (no wait for intro)
     next();
   }
 
@@ -539,7 +657,11 @@ window.TTS_ENGINE = (function () {
       player.innerHTML =
         '<div class="tsb-player__prog"><i></i></div>' +
         '<div class="tsb-player__top">' +
-          '<div class="tsb-player__art"><span>📕</span></div>' +
+          '<div class="tsb-player__art"><span>📕</span>' +
+            '<span class="tsb-player__eq">' +
+              '<i></i><i></i><i></i><i></i>' +
+            '</span>' +
+          '</div>' +
           '<div class="tsb-player__info">' +
             '<div class="tsb-player__title"></div>' +
             '<div class="tsb-player__sub"></div>' +
@@ -553,6 +675,7 @@ window.TTS_ENGINE = (function () {
           '<span class="tsb-player__sp"></span>' +
           '<button class="tsb-player__pill" data-act="speed" title="Speed">1x</button>' +
           '<button class="tsb-player__pill" data-act="voice" title="Voice (male/female)">🎙️ Auto</button>' +
+          '<button class="tsb-player__pill" data-act="boost" title="Volume boost">🔊 1.5x</button>' +
         '</div>';
       document.body.appendChild(player);
       player.addEventListener("click", (e) => {
@@ -568,6 +691,8 @@ window.TTS_ENGINE = (function () {
           setSpeed(speeds[(i + 1) % speeds.length]);
         } else if (act === "voice") {
           cycleVoice();
+        } else if (act === "boost") {
+          cycleBoost();
         } else if (act === "close") { stop(); hidePlayer(); }
       });
     }
@@ -576,10 +701,12 @@ window.TTS_ENGINE = (function () {
     const s = player.querySelector(".tsb-player__sub");
     const sp = player.querySelector('[data-act="speed"]');
     const vb = player.querySelector('[data-act="voice"]');
+    const bb = player.querySelector('[data-act="boost"]');
     t.textContent = book ? book.title : "TheSmallBook";
     s.textContent = "Podcast mode";
     if (sp) sp.textContent = speed.toFixed(2).replace(/\.?0+$/, "") + "x";
     if (vb) vb.textContent = voiceLabel();
+    if (bb) bb.textContent = "🔊 " + boost.toFixed(2).replace(/\.?0+$/, "") + "x";
   }
   function voiceLabel() {
     const p = genderPref();
@@ -618,6 +745,9 @@ window.TTS_ENGINE = (function () {
     const bar = player.querySelector(".tsb-player__prog i");
     const main = player.querySelector('[data-act="toggle"]');
     const artEl = player.querySelector(".tsb-player__art");
+    /* live feel: equalizer pulses while playing, stills when paused */
+    const eq = player.querySelector(".tsb-player__eq");
+    if (eq) eq.classList.toggle("tsb-player__eq--on", playing && !paused);
     if (item && item.meta) {
       title.textContent = item.meta.book + " — " + item.meta.lesson;
       const totalLessons = Math.max(...queue.map(q => q.meta ? q.meta.idx : 0)) + 1;

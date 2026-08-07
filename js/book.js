@@ -131,7 +131,6 @@
         stopSpeech(); // stop any single-lesson speech first
         playPodcastLive();
         syncAll(true);
-        toast("🎧 Playing " + book.title + " — " + book.lessons.length + " lessons. Enjoy the ride!");
       });
     });
     // keep the buttons in sync when the player is closed or podcast ends
