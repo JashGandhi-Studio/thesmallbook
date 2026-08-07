@@ -109,7 +109,24 @@ window.TTS_ENGINE = (function () {
         puterLoading = false;
         resolve(puterReady);
       };
-      sc.onerror = () => { puterLoading = false; resolve(false); };
+      var retried = false;
+      sc.onerror = () => {
+        if (!retried) {
+          retried = true;
+          puterLoading = false;
+          /* mobile networks can be flaky — one retry after 1.5s */
+          setTimeout(loadPuter, 1500);
+          return;
+        }
+        puterLoading = false; resolve(false);
+      };
+      /* HARD TIMEOUT: if the script hangs (no load/error event — common on
+         flaky mobile networks), NEVER leave the queue stuck. Resolve now so
+         Web Speech takes over. */
+      setTimeout(function () {
+        puterLoading = false;
+        resolve(puterReady);
+      }, 4000);
       document.head.appendChild(sc);
     });
   }
@@ -126,18 +143,24 @@ window.TTS_ENGINE = (function () {
     return "auto";
   }
   function pickPuterVoice(lang) {
-    const want = baseLang(lang);
+    const wantBase = baseLang(lang);
     const pref = genderPref();
     if (!puterVoices.length) return null;
-    const byLang = puterVoices.filter((v) => (v.lang || "").toLowerCase().indexOf(want) !== -1);
-    /* never force a wrong-language voice — if no voice matches the language,
-       leave voice unset and let Puter's `language` option do the speaking */
-    if (!byLang.length) return null;
+    const norm = (x) => String(x || "").toLowerCase();
+    /* lenient match: "en-IN" vs "en" vs "en-US" all match base "en" */
+    const byLang = puterVoices.filter((v) => {
+      const vl = norm(v.lang || "");
+      return vl === norm(lang) || vl === wantBase || vl.indexOf(wantBase) !== -1;
+    });
+    /* for English, any voice is fine (gender change must be audible);
+       for other languages we MUST have a language match (avoid wrong language) */
+    const pool = byLang.length ? byLang : (lang === "en" ? puterVoices : []);
+    if (!pool.length) return null;
     if (pref !== "auto") {
-      const g = byLang.filter((v) => voiceGenderOf(v.name || v.id || "") === pref);
+      const g = pool.filter((v) => voiceGenderOf(v.name || v.id || "") === pref);
       if (g.length) return g[0];
     }
-    return byLang[0] || null;
+    return pool[0] || null;
   }
   function speakPuter(text, lang, speedV) {
     return new Promise((resolve) => {
@@ -246,7 +269,14 @@ window.TTS_ENGINE = (function () {
       if (v) u.voice = v;
       u.lang = v ? v.lang : region(lang);
       u.rate = Math.min(2, Math.max(0.5, speedV));
-      u.pitch = 1;
+      /* GENDER: if no gender-specific voice exists (most mobile devices have
+         ONE voice per language), simulate male/female with pitch — this
+         guarantees an audible change on every phone */
+      var pref = genderPref();
+      var vGender = v ? voiceGenderOf(v.name) : "auto";
+      if (pref === "male" && vGender !== "male") u.pitch = 0.72;
+      else if (pref === "female" && vGender !== "female") u.pitch = 1.28;
+      else u.pitch = 1;
       u.volume = 1;
       var finished = false;
       u.onend = function () { if (!finished) { finished = true; done(true); } };
@@ -338,10 +368,10 @@ window.TTS_ENGINE = (function () {
     };
     if (puterReady) tryPuter();
     else {
-      loadPuter().then((ok) => {
-        if (g !== gen || !playing || paused) return done(false);
-        if (ok) tryPuter(); else speakWeb(item.text, lang, spd, done);
-      });
+      /* NO WAITING: speak instantly with Web Speech, and let Puter load in
+         the background — later chunks automatically upgrade to Puter */
+      speakWeb(item.text, lang, spd, done);
+      loadPuter();
     }
   }
 
@@ -716,6 +746,12 @@ window.TTS_ENGINE = (function () {
     const cur = genderPref();
     const next = cur === "auto" ? "male" : cur === "male" ? "female" : "auto";
     setGenderPref(next);
+    /* refresh the Puter voice list — on mobile it may load late/empty */
+    if (window.puter && window.puter.ai && window.puter.ai.listTTSVoices) {
+      try {
+        window.puter.ai.listTTSVoices().then(function (v) { puterVoices = v || []; }).catch(function () {});
+      } catch (e) {}
+    }
     if (player) {
       const b = player.querySelector('[data-act="voice"]');
       if (b) b.textContent = voiceLabel();
