@@ -10681,6 +10681,1438 @@ var BOOKS = [
       "Keep a 3-line gratitude log, morning and night.",
       "Add more use-value than you take — this week."
     ]
+  },
+  {
+    "id": "linchpin",
+    "title": "Linchpin",
+    "author": "Seth Godin",
+    "year": 2010,
+    "category": "Creativity",
+    "cover": "assets/covers/linchpin.jpg",
+    "readTime": "12 min",
+    "tagline": "Are you indispensable? The art of being the person the organization can't live without.",
+    "oneLiner": "Stop being a cog. Become the linchpin — the indispensable human who brings art, emotion and connection to work.",
+    "bigIdea": "The industrial age rewarded obedience: follow the manual, do your job, get paid. That era is over — cogs are replaceable and cheap. The new economy pays a premium for linchpins: people who bring gifts no manual can replicate — creativity, emotional labor, connection, art. Godin's challenge: stop trying to be a better cog and start being indispensable. Give gifts, embrace your art, and the market will reward you.",
+    "quotes": [
+      "The only way to get what you're worth is to stand out, to exert emotional labor, to be seen as indispensable.",
+      "Your art is what you do when no one can tell you exactly how to do it.",
+      "Wherever you are, be there."
+    ],
+    "lessons": [
+      {
+        "title": "The Cog Is Dead",
+        "chapter": "The New World of Work",
+        "summary": "Factories needed interchangeable workers — cogs who followed instructions. Every system (school, office, bureaucracy) trained us to be cogs. But globalization and automation made cogs cheap. The market now rewards people who can do what machines and manuals cannot: original thinking, emotional connection, and gifts.",
+        "example": "Call-center workers who follow scripts are outsourced and automated; the representative who genuinely makes a customer feel cared for — improvising, listening, connecting — becomes indispensable and irreplaceable.",
+        "action": "Find the task in your work where you currently follow a manual. Write down one way to do it with your own judgment and heart instead."
+      },
+      {
+        "title": "Emotional Labor Is a Gift",
+        "chapter": "Emotional Labor",
+        "summary": "Most valuable work isn't physical — it's emotional labor: making someone feel safe, understood, delighted. When you choose to smile, listen, empathize and care — not because a manual says so, but because you choose it — you give a gift that can't be automated. That gift is the core of the linchpin's value.",
+        "example": "A hotel housekeeper who leaves a hand-written welcome note, or a flight attendant who remembers a nervous flier's name — these small emotional gifts turn transactions into relationships and create loyalty no system can copy.",
+        "action": "Today, give one unprompted gift of emotional labor: a sincere compliment, a note, a moment of full attention to a customer or colleague."
+      },
+      {
+        "title": "Ship Your Art",
+        "chapter": "The Resistance",
+        "summary": "Art is any act that creates something new — a presentation, a process, a product, a moment. Art is scary because it invites judgment. The linchpin's habit is to ship anyway: put the work out, let it be seen, learn, repeat. Shipping is the only way art becomes valuable.",
+        "example": "Godin's own daily blog — thousands of posts, most imperfect — shipped relentlessly, built an audience, and made him one of the most influential marketers alive. Volume and courage beat occasional perfection.",
+        "action": "Pick one piece of work you've been hiding. Give it a public deadline this week and ship it — imperfect is fine."
+      },
+      {
+        "title": "The Resistance Wants You Safe",
+        "chapter": "Resistance",
+        "summary": "The lizard brain hates change, risk and judgment — it whispers 'wait', 'it's not ready', 'they'll laugh'. That resistance is the surest sign you're doing something that matters. Linchpins feel the same fear as everyone; they just act anyway. Fear is the price of admission to work worth doing.",
+        "example": "Every nervous public speaker, entrepreneur and artist Godin describes feels the same inner voice — and the ones who succeed are those who recognize it as a sign, not a stop sign.",
+        "action": "Name the fear that's holding your current project back. Write it down, then take the first step that makes it real today."
+      },
+      {
+        "title": "Be Remarkable or Be Invisible",
+        "chapter": "The Culture of Work",
+        "summary": "Average is over: doing your job well is now table stakes, not a differentiator. Linchpins make themselves remarkable — someone whose presence changes the outcome. They take on the projects nobody wants, solve the problems nobody owns, and become the person others route work through.",
+        "example": "The engineer who fixes the broken process nobody was assigned to, the assistant who makes the CEO's day flow better — these people become indispensable not because of their title but because of what they make happen.",
+        "action": "Find one invisible problem at work that nobody owns. Claim it this week — even small."
+      },
+      {
+        "title": "Wherever You Are, Be There",
+        "chapter": "The Last Chapter",
+        "summary": "Presence is a gift. When you give someone your full attention — no phone, no hurry, no agenda — you create connection that machines can't fake. The linchpin's final skill is simple: show up fully. Presence builds trust, and trust is the foundation of every indispensable relationship.",
+        "example": "Godin's simple rule for meetings and conversations: put the phone away and actually listen. People remember how you made them feel far more than what you said.",
+        "action": "In your next conversation, put your phone away, make eye contact, and ask one question you genuinely want answered."
+      }
+    ],
+    "actionPlan": [
+      "Identify one place where you're a cog — and one way to add your own judgment there.",
+      "Give one unprompted emotional gift today.",
+      "Ship one piece of hidden work this week.",
+      "Name your fear and take the first real step anyway.",
+      "Be fully present in every conversation today."
+    ]
+  },
+  {
+    "id": "do-the-work",
+    "title": "Do the Work",
+    "author": "Steven Pressfield",
+    "year": 2011,
+    "category": "Creativity",
+    "cover": "assets/covers/do-the-work.jpg",
+    "readTime": "9 min",
+    "tagline": "The 150-page kick in the pants that breaks through resistance and gets your project finished.",
+    "oneLiner": "Resistance is the enemy of every creative act — and the cure is simple: start, continue, and finish. Do the work.",
+    "bigIdea": "Pressfield's follow-up to The War of Art is a battle plan: every meaningful act — writing, starting a business, making art — faces Resistance, the force that keeps you from doing your work. The book is a short, punchy manual for the three phases of any project: starting (begin before you're ready), continuing (steady daily action beats bursts), and finishing (ship, don't polish forever). Resistance never goes away; you just outlast it.",
+    "quotes": [
+      "The most important thing about art is to work. Nothing else matters except sitting down every day and trying.",
+      "Start before you're ready.",
+      "The amateur believes he must first overcome all his fears before he can do his work. The professional knows that fear can never be overcome."
+    ],
+    "lessons": [
+      {
+        "title": "Resistance Is Universal",
+        "chapter": "The Enemy",
+        "summary": "Resistance is the force that acts against every act of creation — it shows up as procrastination, self-doubt, distraction, or the sudden urge to clean your desk. It's strongest when the work matters most. Knowing this makes you calm: the resistance you feel is proof you're on the right track.",
+        "example": "The day you sit down to write your book is the day your house suddenly needs organizing. That's not coincidence — that's resistance, and it appears precisely because the work matters.",
+        "action": "Next time you feel a sudden urge to avoid your project, say out loud: 'That's resistance.' Then stay at your desk."
+      },
+      {
+        "title": "Start Before You're Ready",
+        "chapter": "Starting",
+        "summary": "The biggest mistake amateurs make is waiting to feel ready. You will never feel ready — the work reveals itself only through the doing. Begin with what you have, where you are, even if it's terrible. Starting is a decision, not a feeling.",
+        "example": "Pressfield wrote the first draft of his breakthrough novel badly and slowly — but he started it long before he felt like a 'real writer'. The book taught him what it needed to be.",
+        "action": "Take the next step on your project right now — even a bad one. Readiness is a myth; motion is real."
+      },
+      {
+        "title": "The Professional Shows Up Daily",
+        "chapter": "The Professional",
+        "summary": "Amateurs wait for inspiration; professionals have a schedule. The professional treats creative work like a job: same time, same place, every day, no matter the mood. This daily practice is what separates the finished novel from the good intentions.",
+        "example": "Pressfield's rule: work every day, even when it's garbage. The garbage days are the price of the good days — and you can't have one without the other.",
+        "action": "Set a fixed daily work time for your project — 30 minutes minimum. Guard it like a medical appointment."
+      },
+      {
+        "title": "Finish, Don't Polish Forever",
+        "chapter": "Finishing",
+        "summary": "Finishing is a separate skill from starting. Perfectionism is resistance in disguise — endless revision is just a socially acceptable way to avoid shipping. The professional finishes: declares the work done, sends it out, and starts the next thing.",
+        "example": "Pressfield notes that many writers have 90% of a novel forever — the last 10% is where resistance fights hardest. The ones who finish are the ones who accept 'good enough' and let it go.",
+        "action": "Pick the next milestone of your project and declare it finished by a date. When it hits 'good enough', ship it."
+      },
+      {
+        "title": "Act As If",
+        "chapter": "The Professional's Mind",
+        "summary": "You become a professional by acting like one — before you feel like one. Act as if your work is serious, as if you have all the time in the world, as if nothing can stop you. The identity follows the behavior.",
+        "example": "Pressfield's advice to struggling artists: dress like a professional, keep professional hours, treat your craft with professional respect — and the inner amateur starts to disappear.",
+        "action": "For one week, act as if your creative work is your real job: schedule it first, protect it, and refer to yourself as a professional."
+      },
+      {
+        "title": "The Muse Rewards Motion",
+        "chapter": "The Muse",
+        "summary": "Inspiration doesn't arrive before work; it arrives during it. The muse shows up for the person already at the desk. The first hour is always the hardest — push through it and the work starts to carry you.",
+        "example": "Pressfield describes how ideas that seem to 'come from nowhere' almost always surface in the middle of a work session — not while waiting. Motion attracts the muse.",
+        "action": "Commit to 25 minutes of your project right now. Don't stop to judge — just keep moving until the timer ends."
+      }
+    ],
+    "actionPlan": [
+      "Name your resistance when it appears — don't fight it, outlast it.",
+      "Start your project today, ready or not.",
+      "Set a fixed daily work slot and protect it.",
+      "Declare your next milestone finished — and ship it.",
+      "Act as if: professional hours, professional respect, professional identity."
+    ]
+  },
+  {
+    "id": "talent-code",
+    "title": "The Talent Code",
+    "author": "Daniel Coyle",
+    "year": 2009,
+    "category": "Creativity",
+    "cover": "assets/covers/talent-code.jpg",
+    "readTime": "10 min",
+    "tagline": "Greatness isn't born. It's grown — how deep practice, ignition and master coaching create world-class skill.",
+    "oneLiner": "Talent is a code: deep practice builds myelin, ignition fuels the fire, and master coaching guides the way.",
+    "bigIdea": "Coyle traveled to 'talent hotbeds' — a Brazilian soccer academy, a Russian tennis club, a tiny music school in Texas — and found the same formula: talent isn't genetic magic. It's built through deep practice (repetition with focused error-correcting effort), ignition (a spark that makes you fall in love with the skill), and master coaching (guidance that keeps you on the edge of your ability). The physical mechanism: myelin — the insulation around neural circuits that grows with practice and makes pathways fast and reliable.",
+    "quotes": [
+      "Every skill is built by firing a circuit, and every time we fire a circuit, myelin wraps it a little more.",
+      "Deep practice is not simply about practicing; it's about practicing at the edge of your ability.",
+      "Passion is not something you find — it's something you ignite."
+    ],
+    "lessons": [
+      {
+        "title": "Myelin: The Talent Superhighway",
+        "chapter": "The Deep Practice Cell",
+        "summary": "Skill is physical: every repetition fires a neural circuit, and each firing wraps that circuit in myelin — a fatty insulation that makes signals faster and more precise. The more you practice at the edge of your ability, the more myelin grows. Talent is literally built, cell by cell.",
+        "example": "Coyle's brain scans and tissue studies of expert musicians and athletes show dramatically more myelin in the pathways they use. The 'gifted' child simply practiced deeper — often before anyone noticed.",
+        "action": "Pick a skill you want to improve and reframe practice as building myelin: every focused rep matters, not just talent."
+      },
+      {
+        "title": "Deep Practice: Reach, Repeat, Rest",
+        "chapter": "Deep Practice",
+        "summary": "Deep practice has three rules: reach (try beyond your current ability), repeat (do it again and again, slowly if needed), and rest (skill needs sleep and recovery to consolidate). The sweet spot is the 'zone of struggle' — not too easy, not impossible — where errors happen and get fixed.",
+        "example": "The Brazilian futsal kids Coyle studied played a smaller, heavier ball on a tiny court — forced to practice more touches, tighter control and faster decisions than a regulation game would allow. The struggle built the skill.",
+        "action": "Take your current skill session and deliberately work at the edge: slower, smaller, harder — where you make and fix errors."
+      },
+      {
+        "title": "Ignition: The Spark Before the Grind",
+        "chapter": "Ignition",
+        "summary": "Before deep practice comes ignition: the moment you see a skill and think 'I want that'. Ignition comes from exposure — watching heroes, feeling a glimpse of future identity. It converts the long grind from a chore into a quest. Ignition is what makes someone practice for hours without being told.",
+        "example": "Coyle's hotbeds all share a culture of 'future identity': kids see older students' success, parents' belief, and a clear path — 'that could be me'. The spark precedes the work.",
+        "action": "Give yourself ignition: watch a master perform your skill, imagine your future self, and write one sentence of that identity."
+      },
+      {
+        "title": "Master Coaching: The Guide on the Edge",
+        "chapter": "Master Coaching",
+        "summary": "Great coaches are not cheerleaders — they're error-detectors. They watch for the one thing you're doing wrong, fix it, and push you back to the edge. Their feedback is short, specific, and immediate. A master coach compresses years of trial and error into targeted reps.",
+        "example": "The Russian tennis coach Coyle observed uses a simple method: one correction, one drill, immediate repetition — no lectures. Each session is a series of small, precise fixes.",
+        "action": "Find one person who can give you specific, immediate feedback on your skill — and take one correction to practice today."
+      },
+      {
+        "title": "Slow Is Smooth, Smooth Is Fast",
+        "chapter": "The Deep Practice Cell",
+        "summary": "Deep practice often starts painfully slow: breaking a movement or phrase into parts, rehearsing each slowly, then assembling. Slowing down maximizes error-detection and precision — and the myelin builds correctly from the start. Speed comes later, as a byproduct.",
+        "example": "Coyle describes violin students who practiced a single phrase so slowly that each note was perfect — within weeks they outpaced classmates who played fast but sloppy.",
+        "action": "Take the hardest part of your skill and practice it at half speed, watching for errors. Build precision first."
+      },
+      {
+        "title": "The Talent Hotbed Formula",
+        "chapter": "The Sweet Spot",
+        "summary": "Put it together and you get the hotbed formula: a community that ignites passion, a practice culture that reaches and repeats, and coaches who keep everyone at the edge. You don't need a special school — you can build the formula into your own practice: ignition + deep practice + feedback.",
+        "example": "Coyle's most striking finding: the 'talented' kids weren't born different — they were first in line to practice, surrounded by peers who normalized effort, and coached with precision. The environment made the talent.",
+        "action": "Build your own mini-hotbed: schedule daily edge-practice, find a feedback partner, and surround yourself with people who normalize the work."
+      }
+    ],
+    "actionPlan": [
+      "Reframe practice as myelin-building: every focused rep counts.",
+      "Practice at the edge of your ability — reach, repeat, rest.",
+      "Create ignition: watch a master, imagine your future self.",
+      "Get one specific correction from a coach or peer this week.",
+      "Go slow on the hard parts — precision before speed."
+    ]
+  },
+  {
+    "id": "design-of-everyday-things",
+    "title": "The Design of Everyday Things",
+    "author": "Don Norman",
+    "year": 1988,
+    "category": "Creativity",
+    "cover": "assets/covers/design-of-everyday-things.jpg",
+    "readTime": "11 min",
+    "tagline": "Why doors confuse us and kettles delight us — the classic on how good design makes life obvious.",
+    "oneLiner": "Good design is invisible: when affordances, signifiers and feedback align, you just know what to do.",
+    "bigIdea": "Don Norman's classic explains why so many everyday objects — doors, stoves, remote controls — are hard to use: they violate the principles of good design. The key concepts: affordances (what an object lets you do), signifiers (what tells you how to do it), mapping (controls that match their effects), feedback (clear responses), and constraints (limitations that guide behavior). Design is not decoration — it's how we communicate with objects, and by extension, with products, apps and experiences.",
+    "quotes": [
+      "Good design is actually a lot harder to notice than poor design.",
+      "When we use a poorly designed object, we blame ourselves — it's the design's fault, not ours.",
+      "Design is really an act of communication, which means having a deep understanding of the person with whom the designer is communicating."
+    ],
+    "lessons": [
+      {
+        "title": "Affordances and Signifiers",
+        "chapter": "The Psychopathology of Everyday Things",
+        "summary": "An affordance is what an object can do — a chair affords sitting, a button affords pushing. A signifier is what tells you it can do that — a handle's shape, a button's label, a door's push plate. Confusion happens when affordances exist but signifiers are missing or misleading. Great design makes the right action obvious.",
+        "example": "A glass door with no handle: it only pushes, but without a signifier people pull — and hurt themselves. Adding a vertical push plate on the push side makes the affordance visible.",
+        "action": "Audit one product you use daily: what does it afford, and what signals tell you how? Note one place the signifier is missing."
+      },
+      {
+        "title": "Mapping and Natural Signals",
+        "chapter": "The Psychopathology of Everyday Things",
+        "summary": "Mapping is the relationship between controls and their effects. Natural mapping uses spatial analogies: the left burner's knob on the left, the up arrow for 'increase'. Bad mapping — four identical knobs in a row for four burners in a square — forces users to memorize instead of know.",
+        "example": "Kitchen stoves with burners in a square and four knobs in a line are a classic mapping failure; the ones that arrange knobs in the same layout as the burners need no instruction at all.",
+        "action": "Look at the controls you use most (car, app, appliance). Find one bad mapping and design how you'd fix it with natural arrangement."
+      },
+      {
+        "title": "Feedback and the Gulf of Evaluation",
+        "chapter": "Knowledge in the Head and in the World",
+        "summary": "Every action needs feedback: a click, a beep, a visual change — so users know it worked. The 'gulf of evaluation' is the gap between what you did and what the system tells you. No feedback = uncertainty = frustration. Good feedback is immediate, informative and not annoying.",
+        "example": "Elevator buttons light up; doorbells ring; apps show a spinner. The worst feedback is none: you press 'send' and wait, wondering if anything happened.",
+        "action": "List the last three times you felt uncertain after an action. For each, what feedback would have removed the doubt?"
+      },
+      {
+        "title": "Constraints: Design by Limitation",
+        "chapter": "Knowing What to Do",
+        "summary": "Constraints guide behavior without instructions: physical (a plug only fits one way), logical (you must log in before paying), cultural (red means stop), and semantic (the word 'send' means send). Good design uses constraints so users can't easily do the wrong thing.",
+        "example": "USB-C's reversible connector uses physical constraint to remove the 'which way?' puzzle; wizards use logical constraints to prevent skipping necessary steps.",
+        "action": "Pick one process (signup, checkout, onboarding) and find where adding a constraint would prevent a common mistake."
+      },
+      {
+        "title": "Knowledge in the World vs. in the Head",
+        "chapter": "Knowledge in the Head and in the World",
+        "summary": "Information lives in the world (labels, layouts, defaults) or in the head (memory, learning). Good design puts the necessary knowledge in the world — visible options, sensible defaults, clear paths — so users don't have to memorize. The less users must remember, the fewer errors they make.",
+        "example": "Airport signs place knowledge in the world; a complex TV remote forces knowledge into your head — and you still need the manual.",
+        "action": "For your product or workspace, move one piece of 'must remember' knowledge into the world: a label, a default, a visible checklist."
+      },
+      {
+        "title": "Design for Error: Expect Mistakes",
+        "chapter": "Human Error? No, Bad Design",
+        "summary": "Most 'human error' is really design error: systems that don't anticipate slips and mistakes. Good design assumes users will err and makes recovery easy — undo, confirmations, reversible actions. Design for the edges: what happens when someone clicks twice, enters the wrong number, or changes their mind?",
+        "example": "Email's 'unsend' window and banking apps' confirmation screens turn catastrophic mistakes into recoverable ones. The old 'are you sure?' without an undo just adds friction.",
+        "action": "Find the most destructive error a user could make in your product — and design one safeguard: undo, confirm, or constrain."
+      }
+    ],
+    "actionPlan": [
+      "Audit a daily product for missing signifiers.",
+      "Fix one bad mapping in your life (arrange controls naturally).",
+      "Add clear feedback to one action that currently gives none.",
+      "Use constraints to prevent one common mistake.",
+      "Move one 'must-remember' detail into the visible world."
+    ]
+  },
+  {
+    "id": "21-laws-leadership",
+    "title": "The 21 Irrefutable Laws of Leadership",
+    "author": "John C. Maxwell",
+    "year": 1998,
+    "category": "Power & Strategy",
+    "cover": "assets/covers/21-laws-leadership.jpg",
+    "readTime": "14 min",
+    "tagline": "Follow them and people will follow you — the classic leadership laws that have trained millions.",
+    "oneLiner": "Leadership is influence — nothing more, nothing less. Master the 21 laws and people follow willingly.",
+    "bigIdea": "John Maxwell's foundational claim: leadership is influence, and influence is learnable. The 21 laws — from the Law of the Lid (leadership ability determines your effectiveness) to the Law of the Picture (people do what they see), the Law of Buy-In (people buy into the leader first, then the vision) and the Law of Legacy — form a complete system for growing your ability to lead. Each law is a lever: pull it and your influence grows; ignore it and it quietly limits you.",
+    "quotes": [
+      "Leadership is influence — nothing more, nothing less.",
+      "The Law of the Lid: leadership ability determines a person's level of effectiveness.",
+      "People buy into the leader first, then the vision."
+    ],
+    "lessons": [
+      {
+        "title": "The Law of the Lid: Leadership Sets Your Ceiling",
+        "chapter": "The Law of the Lid",
+        "summary": "Your leadership ability — your 'lid' — determines how far you and your organization can go. A team with a lid of 5 can never outperform a lid of 9 for long, regardless of talent. The fastest way to raise your ceiling is to raise your leadership: the skills are learnable, and the lid moves with them.",
+        "example": "Two identical teams with different leaders produce different results — not because the people changed, but because the leader's ceiling became the team's ceiling.",
+        "action": "Rate your leadership lid 1-10. Pick the one leadership skill that would raise it most, and start studying it this week."
+      },
+      {
+        "title": "The Law of Influence: Title ≠ Leadership",
+        "chapter": "The Law of Influence",
+        "summary": "A title gives you authority, not influence. Real leadership is measured by who follows you voluntarily — and influence comes from trust, competence and care, not from your nameplate. The test: if your title disappeared tomorrow, how many people would still follow you?",
+        "example": "Maxwell describes managers with grand titles that no one actually follows, and informal leaders — the person everyone goes to for advice — who lead without any title at all.",
+        "action": "Ask yourself the title test honestly. Then invest in one relationship where your influence is low but matters."
+      },
+      {
+        "title": "The Law of Process: Leadership Is Daily",
+        "chapter": "The Law of Process",
+        "summary": "Leadership develops daily, not in a day. It's the accumulation of small choices — reading, listening, serving, deciding — compounded over years. There is no shortcut to the process; the 'overnight success' leader has usually been growing quietly for a decade.",
+        "example": "Maxwell himself read a book a week and studied leaders for decades before his influence grew; his growth was visible only in retrospect, as a process, not an event.",
+        "action": "Start a daily leadership habit: 20 minutes of reading or reflection on one leadership topic, every day."
+      },
+      {
+        "title": "The Law of the Picture: People Do What They See",
+        "chapter": "The Law of the Picture",
+        "summary": "People follow examples, not instructions. Your actions are the picture your team copies — your punctuality, your calm under pressure, your honesty. You can't lead where you won't go; the leader is the model. If you want the team to change, change the picture first.",
+        "example": "A CEO who expects 8 AM starts but strolls in at 9:30 is training everyone to be late. The leader's behavior is the strongest message the team receives.",
+        "action": "Identify one behavior you want from your team — and demonstrate it visibly this week. Be the picture."
+      },
+      {
+        "title": "The Law of Buy-In: People Buy the Leader First",
+        "chapter": "The Law of Buy-In",
+        "summary": "People don't buy into a vision until they buy into the leader. They ask: can I trust you? Do you believe in us? Will you take us somewhere good? Vision matters — but only after trust. Spend your effort on being worth following, and the vision gets carried.",
+        "example": "Every major movement Maxwell studies — from business turnarounds to political campaigns — succeeded because followers believed in the person before the plan.",
+        "action": "Before your next big ask, invest in the relationship: listen, serve, and show you're trustworthy. Then share the vision."
+      },
+      {
+        "title": "The Law of Addition: Leaders Add Value",
+        "chapter": "The Law of Addition",
+        "summary": "Leadership is serving people by adding value to their lives — not using them to add value to yours. When you genuinely help your people grow, succeed and feel valued, they give you their best. The self-serving leader gets compliance; the serving leader gets commitment.",
+        "example": "Maxwell's personal law: add value to people every day — a call of encouragement, a skill taught, a door opened. Over time this builds a team that would follow him anywhere.",
+        "action": "Do one unselfish act of addition today: teach something, praise someone specific, or open one door for someone."
+      },
+      {
+        "title": "The Law of Timing: When to Lead Is as Important as What",
+        "chapter": "The Law of Timing",
+        "summary": "Leadership is about the right action at the right moment. Too early, you're ahead of the crowd; too late, the moment is gone. Great leaders sense timing — they know when to push, when to wait, when to strike. The right decision at the wrong time is the wrong decision.",
+        "example": "Many good products failed because they launched too early or too late; many good reforms failed because the leader ignored the moment. Timing turned identical actions into triumph or disaster.",
+        "action": "Before your next major move, ask: is this the right moment? What changes if we wait a month? Decide deliberately."
+      },
+      {
+        "title": "The Law of Legacy: Leave Something That Outlasts You",
+        "chapter": "The Law of Legacy",
+        "summary": "True leadership builds beyond itself. The leader's final test is whether the organization thrives after they're gone. That requires developing other leaders, embedding systems and values, and making yourself replaceable — not indispensable. Legacy is leadership that continues without you.",
+        "example": "Maxwell contrasts founders whose companies collapsed when they left with those who raised successors — the legacy leaders multiplied their influence beyond their lifetime.",
+        "action": "Identify one person you can develop this quarter. Begin transferring a skill, a responsibility or a value to them."
+      }
+    ],
+    "actionPlan": [
+      "Raise your lid: study one leadership skill this week.",
+      "Pass the title test: earn influence where your title doesn't reach.",
+      "Start a daily 20-minute leadership growth habit.",
+      "Be the picture: demonstrate the behavior you want from others.",
+      "Develop one successor — build your legacy."
+    ]
+  },
+  {
+    "id": "skin-in-the-game",
+    "title": "Skin in the Game",
+    "author": "Nassim Nicholas Taleb",
+    "year": 2018,
+    "category": "Power & Strategy",
+    "cover": "assets/covers/skin-in-the-game.jpg",
+    "readTime": "11 min",
+    "tagline": "Hidden asymmetries in daily life — why you should only trust people who risk something.",
+    "oneLiner": "Never trust advice from someone who doesn't share your downside. Risk-sharing is the engine of honest systems.",
+    "bigIdea": "Taleb's core principle: the person who makes a decision must pay for its consequences — good or bad. When advice-givers have no skin in the game, systems rot: bankers risk other people's money, consultants give safe advice, experts make predictions without paying for being wrong. Skin in the game aligns incentives, forces honesty, and is the only reliable filter for trust. If you don't risk anything, you shouldn't get the reward — and you shouldn't be trusted.",
+    "quotes": [
+      "Don't take advice from someone who doesn't have skin in the game.",
+      "The difference between a trader and a professor: the trader's mistakes hurt him.",
+      "If you see fraud and don't shout fraud, you are the fraud."
+    ],
+    "lessons": [
+      {
+        "title": "The Rule: Risk, Reward, and the Same Pot",
+        "chapter": "The Simplest Heuristic",
+        "summary": "The core rule: those who make decisions should share in the outcomes — upside and downside. When risk and reward are separated, the risk-taker becomes reckless and the reward-taker becomes dishonest. Alignment of incentives is not a nice-to-have; it's the structural basis of trust.",
+        "example": "Executives who get bonuses for short-term wins but leave before losses arrive — and bankers who trade with depositors' money — are classic cases where no skin in the game produced disaster.",
+        "action": "For every big decision you make, ask: who shares the downside? If nobody does, the decision's incentives are broken."
+      },
+      {
+        "title": "Never Trust an Advisor Who Doesn't Risk",
+        "chapter": "The Advisors",
+        "summary": "Advice is only valuable when the advisor pays for being wrong. Economists whose predictions don't affect them, consultants who collect fees regardless of outcome, and 'experts' with no exposure — all should be discounted heavily. Trust the practitioner who lives with the result.",
+        "example": "Taleb's contrast: a surgeon who would operate on his own family, versus a regulator whose policies never touch his own life. The first has skin; the second doesn't.",
+        "action": "Filter your advisors: who would lose something if they're wrong? Give their advice more weight; discount the rest."
+      },
+      {
+        "title": "Symmetric, Not Asymmetric",
+        "chapter": "The Symmetry of Ethics",
+        "summary": "A fair system is symmetric: the same rules apply to everyone, and those who create risk also bear it. Asymmetry — 'heads I win, tails you lose' — is the root of most institutional rot. Ethics starts with symmetry: don't do to others what you wouldn't accept yourself.",
+        "example": "The banker who privatizes gains and socializes losses has asymmetric payoffs. The honest entrepreneur who risks his own savings has symmetric ones.",
+        "action": "Audit one decision you make: is the downside symmetric? If not, restructure it so you share the risk you create."
+      },
+      {
+        "title": "Skin in the Game Filters Bullshit",
+        "chapter": "The Emptiness of Words",
+        "summary": "When someone truly risks something, their words change: they become concrete, humble and specific, because being wrong costs them. Talk is cheap — risk is expensive. The fastest way to tell a real commitment from a performance: does the person stand to lose something real?",
+        "example": "A trader who puts his own money where his mouth is speaks differently from a pundit who only gives opinions. The first hedges less and is more honest about uncertainty.",
+        "action": "Before trusting a strong opinion, ask: what does this person lose if they're wrong? Use the answer as your filter."
+      },
+      {
+        "title": "Minorities Rule: The Dynamics of the Few",
+        "chapter": "The Minority Rule",
+        "summary": "Talebi's insight: in many domains, a small minority drives the whole system. If a minority has strong preferences and is willing to pay/act on them, the majority often adapts. This explains halal/kosher food everywhere, one loud customer shaping a product, and niche standards becoming universal.",
+        "example": "Airlines serve only halal/kosher meals on many routes not because most passengers demand them, but because the minority who demand them won't fly otherwise — so the minority sets the menu for everyone.",
+        "action": "Look for the 'active minority' in your market or team — the small group whose preferences could set the standard. Serve them first."
+      },
+      {
+        "title": "Live With Your Own Advice",
+        "chapter": "The Last Chapter",
+        "summary": "The ultimate test: practice what you teach. If your advice would ruin you when followed, it's worthless. The most reliable people are those whose lives embody their principles — the vegetarian dietitian, the frugal finance guru, the disciplined coach. Consistency between words and risk is the highest form of credibility.",
+        "example": "Taleb himself is famous for refusing to fly on airlines that have no skin in their own safety decisions — his life follows his principles, which is precisely why people listen.",
+        "action": "Review your own advice: would you bet your money and reputation on it? Where the answer is no, either change the advice or the behavior."
+      }
+    ],
+    "actionPlan": [
+      "Ask 'who shares the downside?' before every big decision.",
+      "Weight advisors by how much they risk being wrong.",
+      "Make your risk symmetric: don't create risk you don't share.",
+      "Filter bold opinions by the speaker's exposure.",
+      "Live with your own advice — practice what you teach."
+    ]
+  },
+  {
+    "id": "infinite-game",
+    "title": "The Infinite Game",
+    "author": "Simon Sinek",
+    "year": 2019,
+    "category": "Power & Strategy",
+    "cover": "assets/covers/infinite-game.jpg",
+    "readTime": "10 min",
+    "tagline": "Why some players win and some don't — and why the ones who thrive play the infinite game.",
+    "oneLiner": "Business is an infinite game: there are no winners, only players who keep playing. Play with a just cause, not just a score.",
+    "bigIdea": "Sinek adapts James Carse's distinction: finite games (football, chess) have fixed rules, known players and a clear winner. Infinite games (business, politics, life) have no finish line — players come and go, rules shift, and the goal is to keep playing. Companies that play finite (beat the competitor this quarter) eventually die; companies that play infinite (advance a just cause) build trust, resilience and longevity. The infinite player leads with a cause, trusts their team, and doesn't obsess over short-term scores.",
+    "quotes": [
+      "In the infinite game, the goal is not to win — the goal is to keep playing.",
+      "A just cause is a vision of a future that is so attractive that people are willing to make sacrifices to help realize it.",
+      "When we play the infinite game, we play to keep playing, not to finish."
+    ],
+    "lessons": [
+      {
+        "title": "Finite vs. Infinite",
+        "chapter": "The Game",
+        "summary": "Finite games end with a winner; infinite games exist to continue. Business is infinite — there's no final whistle. Companies that think in quarters and 'beating the competition' are playing finite in an infinite game, which leads to short-term wins and long-term death. The first choice of strategy: which game are you playing?",
+        "example": "Sears and Blockbuster obsessed over beating rivals in the short term while Amazon and Netflix played the infinite game of building trust and capabilities — and outlasted them completely.",
+        "action": "Write down: are you playing to win this quarter, or to keep playing for decades? Identify one finite mindset habit to drop."
+      },
+      {
+        "title": "The Just Cause",
+        "chapter": "The Just Cause",
+        "summary": "An infinite player needs a just cause: a concrete, aspirational vision of a better future that people can sacrifice for — not a mission statement, not a profit target. The cause gives direction beyond the scoreboard and attracts people who believe.",
+        "example": "Apple's cause was never 'make computers' — it was empowering individuals against the establishment. That cause attracted believers and guided decades of decisions.",
+        "action": "Write your just cause in one sentence: the better future you're advancing that outlasts any quarter."
+      },
+      {
+        "title": "Trusting Teams vs. The Will to Win",
+        "chapter": "Trusting Teams",
+        "summary": "Finite players use fear: targets, threats, control — which creates teams that hide problems. Infinite players build trusting teams where people feel safe to tell the truth, take risks and act in the company's interest. Trust is a strategic advantage, not a soft value.",
+        "example": "Sinek contrasts companies with stacked performance reviews and constant reorgs (fear-driven, hiding problems) with 'infinitely minded' firms that share information openly — the latter adapt faster because problems surface early.",
+        "action": "Identify one way your team hides problems out of fear. Replace one fear-driven process with an honest, safe alternative."
+      },
+      {
+        "title": "The Worthy Rival",
+        "chapter": "The Worthy Rival",
+        "summary": "Infinite players still have rivals — but they use them as benchmarks, not enemies. A worthy rival shows you your weaknesses and pushes you to improve. You respect them, learn from them, and measure yourself against your own cause — not just against them.",
+        "example": "Sinek's example: Southwest used competitors to benchmark its own service standards while staying true to its cause — rival as a mirror, not an obsession.",
+        "action": "Name your worthy rival. List two things they do better than you — and turn each into a concrete improvement target."
+      },
+      {
+        "title": "Existential Flexibility",
+        "chapter": "Existential Flexibility",
+        "summary": "Infinite players are willing to change course — even abandon what made them successful — when the cause demands it. Rigid attachment to a past model is finite thinking. The cause is fixed; the strategy is flexible.",
+        "example": "Netflix abandoned its DVD model to pursue streaming because its cause ('entertain the world conveniently') outlived the format. Blockbuster's rigidity — protecting the store model — was existential inflexibility.",
+        "action": "Ask: what would we have to give up to better serve our cause? Hold the cause, stay flexible on the how."
+      },
+      {
+        "title": "The Courage to Lead",
+        "chapter": "The Courage to Lead",
+        "summary": "Infinite leadership requires courage: to make decisions that may hurt this quarter but serve the long game, to admit uncertainty, and to be human. Leaders with the courage to lead are trusted because they put the cause and the people before the scoreboard.",
+        "example": "Sinek points to leaders who cut bonuses to avoid layoffs, who admit mistakes publicly, who say 'we don't know' — these acts build the trust that sustains teams through the inevitable storms.",
+        "action": "Take one 'courageous' action this week: admit uncertainty, protect the team over the score, or make a call that only serves the long game."
+      }
+    ],
+    "actionPlan": [
+      "Decide which game you're in — and stop playing finite in an infinite arena.",
+      "Write your just cause in one sentence.",
+      "Replace one fear-driven process with trust.",
+      "Turn your worthy rival into a benchmark, not an enemy.",
+      "Take one courageous, long-game decision this week."
+    ]
+  },
+  {
+    "id": "presence-cuddy",
+    "title": "Presence",
+    "author": "Amy Cuddy",
+    "year": 2015,
+    "category": "Power & Strategy",
+    "cover": "assets/covers/presence-cuddy.jpg",
+    "readTime": "10 min",
+    "tagline": "Bringing your boldest self to your biggest challenges — the science of feeling present and powerful.",
+    "oneLiner": "Presence isn't fake-it-till-you-make-it. It's believing your own story — and your body can help you get there.",
+    "bigIdea": "Social psychologist Amy Cuddy (of TED's 'power poses') reframes confidence: the goal isn't to fake confidence, it's to feel present — in touch with your authentic self — especially under pressure. Presence = the state of being attuned to and able to express your true thoughts, feelings and values. Her tools are body-based: posture, breathing, and 'power poses' that signal — to yourself as much as to others — that you belong. When your body feels powerful, your mind follows.",
+    "quotes": [
+      "Don't fake it till you make it. Fake it till you become it.",
+      "Presence is the state of being attuned to and able to comfortably express our true thoughts, feelings, values and potential.",
+      "Our bodies change our minds, and our minds can change our behavior, and our behavior can change our outcomes."
+    ],
+    "lessons": [
+      {
+        "title": "Presence Is the Goal, Not Confidence",
+        "chapter": "What Is Presence?",
+        "summary": "Confidence is about predicting success; presence is about feeling ready to handle whatever happens — grounded in who you are. Under pressure, we lose presence: we freeze, perform, or dissociate. The goal is to stay attuned to your true self so you can express it even in the hardest moments.",
+        "example": "Cuddy's research: the people who do best in high-stakes moments aren't the most confident — they're the most present. They listen, adapt, and stay connected to themselves.",
+        "action": "Before your next pressure moment, ask not 'will I succeed?' but 'can I stay true to myself here?' — that's the presence question."
+      },
+      {
+        "title": "Your Body Leads Your Mind",
+        "chapter": "The Body",
+        "summary": "The body and mind are a loop: posture, breathing and muscle tension change hormones and thoughts. Expansive, open postures raise feelings of power; hunched, closed postures lower them. You can use your body to shift your state — before the interview, not during.",
+        "example": "Cuddy's famous finding: two minutes of expansive posing increased testosterone and decreased cortisol, changing both feelings and performance. Athletes' victory poses — arms up, chest open — show the same loop working.",
+        "action": "Before your next challenge, spend 2 minutes in an expansive pose: arms wide, chin up, shoulders back — in private."
+      },
+      {
+        "title": "Power Poses: The How",
+        "chapter": "The Body",
+        "summary": "Power poses are big, open, space-taking postures: standing tall with arms spread, leaning back with feet on the desk, hands on hips. Even 2 minutes changes your state. The key is doing them before the stressful moment — in the elevator, the bathroom, the car — not on stage.",
+        "example": "Cuddy recommends a 'posture checklist' before important moments: shoulders back, head up, feet grounded, chest open. Her students reported measurable calm and confidence from the ritual.",
+        "action": "Choose your 2-minute pre-moment ritual — the pose you'll strike in private before the interview, talk or meeting."
+      },
+      {
+        "title": "The 'I Am' Self vs. the 'I Will Be' Self",
+        "chapter": "The Self",
+        "summary": "We shift between the self we are now and the self we're trying to become. Authenticity — speaking from the 'I am' self — builds trust and presence. Trying to perform a future image makes us stiff and inauthentic. The power move is connecting to your core values before you enter.",
+        "example": "Cuddy's studies: people who wrote about their core values before a stressful task performed better and felt more authentic — the values reminder anchored their 'I am' self.",
+        "action": "Before your next big moment, write down one core value of yours. Remind yourself you're bringing who you are, not a performance."
+      },
+      {
+        "title": "Tiny Tweaks, Big Effects",
+        "chapter": "The Small Stuff",
+        "summary": "Presence is built from small physical choices: slow your speech, take one breath before answering, make eye contact, stop fidgeting. These micro-actions compound into a state that others read as calm and credible — and that you feel as power.",
+        "example": "Cuddy's data: people who paused before answering were rated as more thoughtful; those who made steady eye contact as more trustworthy. Small tweaks, outsized impressions.",
+        "action": "Pick one tiny tweak for this week: one breath before every answer, or slower speech. Practice it in every conversation."
+      },
+      {
+        "title": "Personal Power vs. Social Power",
+        "chapter": "The Meaning of Power",
+        "summary": "Cuddy distinguishes personal power (control over your own state and actions) from social power (control over others). Presence is powered by personal power — the ability to stay true to yourself regardless of the room. That's the kind of power nobody can take from you.",
+        "example": "The most commanding speakers aren't the loudest — they're the most self-possessed. Their power comes from within, which is why it reads as authentic.",
+        "action": "Define your own power: what do you stand for, regardless of audience? Write it in one line and reread it before hard moments."
+      }
+    ],
+    "actionPlan": [
+      "Ask the presence question before pressure moments.",
+      "Do 2 minutes of expansive posing before big challenges.",
+      "Create your private pre-moment posture ritual.",
+      "Anchor on one core value before you perform.",
+      "Practice one tiny tweak (breath, eye contact, slow speech) daily."
+    ]
+  },
+  {
+    "id": "ultralearning",
+    "title": "Ultralearning",
+    "author": "Scott H. Young",
+    "year": 2019,
+    "category": "Productivity",
+    "cover": "assets/covers/ultralearning.jpg",
+    "readTime": "12 min",
+    "tagline": "Master hard skills, outsmart the competition, and accelerate your career — with intense self-directed learning.",
+    "oneLiner": "Aggressive, self-directed learning — metalearning, deep practice, and direct application — can outpace formal education.",
+    "bigIdea": "Scott Young famously learned MIT's entire computer science curriculum in 12 months and four languages in a year. His method: ultralearning — intense, self-directed projects with aggressive learning strategies. The nine principles: metalearning (learn how to learn the subject), focus, directness (learn by doing the real thing), drill (attack weak points), retrieval (test yourself), feedback, retention (spaced repetition), intuition (dig deep), and experimentation. Anyone can run an ultralearning project — even 1-2 hours a day — and make dramatic progress in months.",
+    "quotes": [
+      "Ultralearning is a strategy for aggressive, self-directed learning.",
+      "Directness is the act of learning directly in the situation you want to perform in.",
+      "Retrieval practice is the most powerful learning technique known."
+    ],
+    "lessons": [
+      {
+        "title": "Metalearning: Learn How to Learn First",
+        "chapter": "Metalearning",
+        "summary": "Before learning a subject, spend 10% of your time learning how to learn it: why (motivation), what (concepts, facts, procedures), and how (resources, methods, practice). Draw a map of the subject — its structure, key skills, and where people usually struggle. The map prevents wasted effort.",
+        "example": "Young mapped MIT's CS curriculum into a tree of prerequisites before starting — knowing which courses unlocked others saved him months.",
+        "action": "Before your next skill project, spend one hour mapping it: concepts vs. facts vs. procedures, and the best resources."
+      },
+      {
+        "title": "Directness: Learn by Doing the Real Thing",
+        "chapter": "Directness",
+        "summary": "The fastest way to learn is to practice the actual skill you want: speak the language, write real code, make real presentations. Indirect learning (theory, textbooks, apps) transfers poorly. Attach your learning to a real project, real audience or real stakes.",
+        "example": "Young learned Spanish by having conversations and watching content in Spanish rather than studying grammar — direct practice in the target context. Language learners who converse early progress far faster.",
+        "action": "Identify the real activity your skill serves — then do that activity this week, even badly. Theory follows practice."
+      },
+      {
+        "title": "Drill: Attack Your Weak Points",
+        "chapter": "Drill",
+        "summary": "After direct practice, isolate the hardest parts and drill them: slow down, break the skill into components, and repeat the weak link. Drilling converts bottlenecks into automatic competence. The goal is to find the rate-limiting step and hammer it.",
+        "example": "A programmer struggling with recursion drills only recursion problems for a week; a speaker records only their openings. Each attack on the weak point raises the whole skill.",
+        "action": "Identify the one bottleneck in your skill. Design a 15-minute daily drill for exactly that part."
+      },
+      {
+        "title": "Retrieval: Test Yourself, Don't Reread",
+        "chapter": "Retrieval",
+        "summary": "The most powerful learning technique is retrieval: recalling information from memory instead of re-reading it. Every test, quiz or recall session strengthens memory far more than passive review. Close the book, write what you remember, check what you missed.",
+        "example": "Young's MIT method: after every study session he closed the notes and reconstructed the ideas from memory. Research consistently shows retrieval beats re-reading by wide margins.",
+        "action": "After your next study session, close the material and write everything you remember. Then check and fill the gaps."
+      },
+      {
+        "title": "Feedback: Get It Fast, Use It Smart",
+        "chapter": "Feedback",
+        "summary": "Feedback is essential but not all feedback is equal: outcome feedback (you failed) is weakest; information feedback (here's what went wrong) is better; corrective feedback (here's how to fix it) is strongest. Seek the most corrective feedback available and use it immediately.",
+        "example": "A designer who gets specific critique ('the contrast is too low here') improves faster than one who only hears 'this doesn't work'. Young sought public writing feedback that was specific enough to act on.",
+        "action": "For your current skill, find a feedback source that tells you exactly what to fix — a mentor, a rubric, a code reviewer."
+      },
+      {
+        "title": "Retention: Make It Stick",
+        "chapter": "Retention",
+        "summary": "Learned skills decay without reinforcement. Fight forgetting with spaced repetition (review at expanding intervals), overlearning (keep practicing past mastery), and interleaving (mix topics). What you want to remember forever needs to be revisited — deliberately.",
+        "example": "Young used spaced-repetition software for language vocabulary and MIT concepts, reviewing each item at growing intervals — turning short-term cramming into permanent knowledge.",
+        "action": "Set up one spaced-repetition habit: a weekly review of last week's key ideas, or flashcards you revisit at expanding intervals."
+      },
+      {
+        "title": "Intuition: Dig Deep, Don't Skim",
+        "chapter": "Intuition",
+        "summary": "Real understanding requires digging past surface familiarity: ask why, derive the reasoning, and attack the feeling of 'I kind of get it'. Deep understanding (chunking) lets you see problems at a higher level. Fight the illusion of competence by probing for gaps.",
+        "example": "Young's rule for math and CS: never move past a concept he couldn't explain from first principles. The students who dig into the 'why' outperform those who only memorize the 'how'.",
+        "action": "Take one concept you 'kind of get' and force yourself to explain it from scratch, on paper, until it's airtight."
+      },
+      {
+        "title": "Experimentation: Try Wildly Different Approaches",
+        "chapter": "Experimentation",
+        "summary": "Once you have a basic method, experimentation accelerates you: change your resources, your environment, your techniques, your constraints. The experimental mindset turns plateaus into breakthroughs and keeps learning interesting. Variation is not distraction — it's search.",
+        "example": "Young experimented with different language-learning methods — anki, immersion, tutors — until he found the mix that worked. Each experiment taught him something no course could.",
+        "action": "Change one variable in your learning this week: different time of day, different resource, different format — and compare results."
+      }
+    ],
+    "actionPlan": [
+      "Spend 10% of project time on metalearning — map the subject.",
+      "Practice the real skill directly, from week one.",
+      "Drill your single weakest point daily.",
+      "Close the material and recall — test, don't reread.",
+      "Get corrective feedback and act on it immediately.",
+      "Add spaced repetition for anything you want to keep."
+    ]
+  },
+  {
+    "id": "mind-for-numbers",
+    "title": "A Mind for Numbers",
+    "author": "Barbara Oakley",
+    "year": 2014,
+    "category": "Productivity",
+    "cover": "assets/covers/mind-for-numbers.jpg",
+    "readTime": "10 min",
+    "tagline": "How to excel at math and science (even if you flunked algebra) — the learning science of focused vs. diffuse thinking.",
+    "oneLiner": "Math and science aren't about talent — they're about two modes of thinking, chunks, and the courage to be a beginner.",
+    "bigIdea": "Barbara Oakley — an engineer who failed math and rebuilt herself from scratch — explains how anyone can learn technical subjects. The brain has two modes: focused (intense attention) and diffuse (relaxed, creative background processing). Mastery alternates between them: focus hard, then take a walk and let the diffuse mode connect the dots. Skills become 'chunks' — compressed neural patterns — through practice and recall. The book also busts the talent myth: struggling with a subject is normal and often necessary.",
+    "quotes": [
+      "Focused mode is for practicing; diffuse mode is for creating.",
+      "Chunking is the mental leap that helps you unite bits of information through meaning.",
+      "If you find yourself procrastinating, you're avoiding something that makes you feel stupid — the answer is to start small."
+    ],
+    "lessons": [
+      {
+        "title": "Focused vs. Diffuse Mode",
+        "chapter": "Two Modes of Thinking",
+        "summary": "Your brain has two work modes: focused (tight, intense concentration on one thing) and diffuse (relaxed, background wandering that connects distant ideas). Hard problems need both: focus to load the details, then diffuse mode (walking, showering, sleeping) to assemble the big picture. Forcing focus too long without breaks actually blocks insight.",
+        "example": "The 'aha' that arrives in the shower after an hour of struggling is the diffuse mode finishing the work. Great scientists and engineers are famous for walks, not just desks.",
+        "action": "For your next hard problem: 25 minutes of focused work, then a real break away from the problem — no phone, just diffuse time."
+      },
+      {
+        "title": "Chunking: Build the Building Blocks",
+        "chapter": "Chunking",
+        "summary": "Chunking compresses a set of related ideas into one mental unit — like a chord on piano or a formula in physics. Build chunks by: focusing on the concept, practicing with it (not just reading), and connecting it to what you already know. Once chunked, a complex idea becomes a single, easy-to-grasp piece.",
+        "example": "A chess master sees a position as a few familiar patterns (chunks) where a beginner sees 30 separate pieces. The expert's chunks free up mental space.",
+        "action": "Pick one concept you're learning and practice it until you can 'see' it as one unit — then connect it to two related ideas."
+      },
+      {
+        "title": "Recall Beats Rereading",
+        "chapter": "Recall",
+        "summary": "The best way to learn is to look away and recall: close the book and try to remember the idea. Retrieval strengthens memory and reveals what you don't know. Rereading feels productive but builds fluency without understanding — the illusion of competence.",
+        "example": "Oakley's students who tested themselves after reading outperformed those who reread the chapter twice. The effort of recall, even when failing, is what builds the neural trace.",
+        "action": "After every study block, close the material and write down everything you remember. Reopen only to check the gaps."
+      },
+      {
+        "title": "Interleaving: Mix It Up",
+        "chapter": "Interleaving",
+        "summary": "Instead of practicing one type of problem until mastered, mix different types together. Interleaving forces your brain to choose the right approach — which is what real tests and real life demand. It feels harder and slower, which is exactly why it works better.",
+        "example": "Students who studied mixed math problems (interleaved) scored dramatically better on tests than those who drilled one type at a time — despite feeling less confident while learning.",
+        "action": "In your next practice session, mix two or three problem types or topics instead of mastering one at a time."
+      },
+      {
+        "title": "Beat Procrastination With the Pomodoro",
+        "chapter": "Overcoming Procrastination",
+        "summary": "Procrastination is emotional avoidance — and the antidote is a small start. Use the Pomodoro: 25 minutes of focused work with no distractions, then a 5-minute break. The timer makes starting easy, and starting builds momentum. Focus on process (time spent) not product (outcome) to bypass the anxiety.",
+        "example": "Oakley describes students who couldn't start studying until they promised themselves just one 25-minute session — and then found themselves continuing. The small start defeats the avoidance.",
+        "action": "Set a 25-minute timer right now and work on your hardest task with full focus. After it rings, take a 5-minute break."
+      },
+      {
+        "title": "Einstellung: Your Existing Mind Can Trap You",
+        "chapter": "Einstellung",
+        "summary": "Einstellung is the tendency to get stuck in your first approach — your existing neural pattern blocks better solutions. When you're stuck, your initial ideas may literally be blocking the answer. Step back, look at the problem from scratch, or take a break to clear the rut.",
+        "example": "In classic experiments, people kept using the first method they learned even when a simpler one existed right in front of them. The fix: deliberately question your starting approach.",
+        "action": "Next time you're stuck on a problem, write down your approach, then list two completely different ways it could be solved."
+      }
+    ],
+    "actionPlan": [
+      "Alternate focused sprints with diffuse-mode breaks.",
+      "Practice one concept until it becomes a chunk.",
+      "Test yourself after every study session — no rereading.",
+      "Interleave different problem types.",
+      "Use the 25-minute timer to defeat procrastination.",
+      "Question your first approach when stuck."
+    ]
+  },
+  {
+    "id": "bullet-journal-method",
+    "title": "The Bullet Journal Method",
+    "author": "Ryder Carroll",
+    "year": 2018,
+    "category": "Productivity",
+    "cover": "assets/covers/bullet-journal-method.jpg",
+    "readTime": "10 min",
+    "tagline": "Track the past, order the present, design the future — the analog system that organizes your life.",
+    "oneLiner": "One notebook, a rapid-logging system, and mindful reflection — the Bullet Journal helps you focus on what matters.",
+    "bigIdea": "Ryder Carroll designed the Bullet Journal to solve a modern problem: scattered notes, apps and tasks that overwhelm instead of organize. The system is simple: a single notebook, rapid logging (short bullets for tasks, events and notes), collections (lists for projects), and the Index. Its power isn't the method — it's the reflection: monthly migration forces you to ask what matters and what to drop. It's mindfulness disguised as a to-do list.",
+    "quotes": [
+      "The Bullet Journal is a method of mindfulness disguised as a productivity system.",
+      "It's not about being more productive — it's about doing the right things.",
+      "We spend our days swimming in a sea of information, drowning in it. The Bullet Journal is a life raft."
+    ],
+    "lessons": [
+      {
+        "title": "Rapid Logging: Capture Fast, Think Later",
+        "chapter": "The System",
+        "summary": "The core of the Bullet Journal is rapid logging: short, bulleted notes you write in seconds. Tasks get a dot (•), events a circle (○), notes a dash (–). You capture everything in the moment — and sort it later. Rapid logging removes the friction between thought and capture.",
+        "example": "Instead of a full sentence, you write '• call dentist'. A meeting becomes '○ review Tuesday'. The system captures the moment in seconds and keeps the page usable.",
+        "action": "For one day, log everything in short bullets: tasks with dots, events with circles, notes with dashes. See how much lighter it feels."
+      },
+      {
+        "title": "The Index and Collections",
+        "chapter": "The System",
+        "summary": "The Index (a table of contents) and collections (dedicated lists for projects, ideas, books) keep your notebook organized. Any topic becomes a collection: 'Books to Read', 'Trip Planning', 'Monthly Goals'. The Index tells you where everything lives.",
+        "example": "Your daily log pages are numbered; collections get their own pages and are added to the index. Months later, you can find 'that idea from February' in seconds.",
+        "action": "Start your notebook: number the first pages, create an Index, and open one collection for your current main project."
+      },
+      {
+        "title": "The Monthly Log: Zoom Out",
+        "chapter": "The System",
+        "summary": "Each month gets two pages: a calendar (dates and events) and a task page. At month's start, migrate what matters from last month; at month's end, review. The monthly log is the beat of the system — a regular chance to see the whole month, not just today.",
+        "example": "At the end of each month, Carroll's users review what they wrote: what got done, what matters, what should be let go. This pause is where the system creates clarity.",
+        "action": "Set up your monthly log for this month — calendar + task page. In 30 days, do the review honestly."
+      },
+      {
+        "title": "Migration: The Mindful Purge",
+        "chapter": "Migration",
+        "summary": "Migration is the ritual of reviewing old tasks and deciding: do it now, schedule it, or drop it. Unfinished tasks get moved forward — visibly — and the act of moving them forces you to ask 'does this still matter?' Tasks that keep migrating are clues about what you actually value.",
+        "example": "A task that has migrated five months in a row isn't important — it's guilt. Migration surfaces that guilt and lets you cut it consciously.",
+        "action": "At your next monthly review, read every old task. Move what matters, schedule what's real, and deliberately drop the rest."
+      },
+      {
+        "title": "Mindfulness Through a Notebook",
+        "chapter": "The Practice",
+        "summary": "The method's deeper purpose: slow down, reflect, and choose intentionally. The Bullet Journal creates a space between your life and your reaction to it — the page is that pause. Regular reflection turns the notebook into a conversation with yourself.",
+        "example": "Carroll developed the system while struggling with attention issues as a student — the notebook gave him a way to offload and reflect that apps couldn't provide.",
+        "action": "At the end of each day, spend 2 minutes reading today's log. Ask: what mattered, and what would I do differently?"
+      },
+      {
+        "title": "Start Small, Build the Habit",
+        "chapter": "The Practice",
+        "summary": "Don't overhaul your life at once. Start with one notebook, the daily log, and the index. Build the habit for a few weeks before adding collections and migrations. The system is modular — add what serves you, skip what doesn't.",
+        "example": "Carroll advises beginners to keep it minimal for the first month: daily logging only. Once the habit sticks, the structure grows with you.",
+        "action": "Start today with the minimum: one notebook, daily rapid logs, page numbers. Add collections only after two weeks."
+      }
+    ],
+    "actionPlan": [
+      "Set up your notebook: Index, page numbers, daily log.",
+      "Rapid-log everything for one day — tasks, events, notes.",
+      "Create one collection for your main project.",
+      "Do a monthly migration — and drop what doesn't matter.",
+      "End each day with 2 minutes of reflection on today's log."
+    ]
+  },
+  {
+    "id": "finish-acuff",
+    "title": "Finish",
+    "author": "Jon Acuff",
+    "year": 2017,
+    "category": "Productivity",
+    "cover": "assets/covers/finish-acuff.jpg",
+    "readTime": "9 min",
+    "tagline": "Give yourself the gift of done — why perfectionism is the real reason you never finish anything.",
+    "oneLiner": "You don't need more discipline. You need to cut your goal in half, hide perfectionism, and give yourself permission to finish.",
+    "bigIdea": "Jon Acuff's research on 30,000 goals found the same killer: perfectionism. We start with big, perfect goals — then one bad day makes the goal 'ruined' and we quit. The fix is a set of counterintuitive rules: cut your goal in half (smaller goals get finished), choose what to bomb (not everything must be perfect), hide perfectionism from your schedule, and give yourself a 'finish line' that's realistic. Done is a gift you give yourself.",
+    "quotes": [
+      "Perfectionism is a dream killer.",
+      "Cut your goal in half.",
+      "The day you start is the day you finish. No, really."
+    ],
+    "lessons": [
+      {
+        "title": "Perfectionism Is the Real Enemy",
+        "chapter": "The Secret",
+        "summary": "Acuff's surprising finding: most people don't fail from laziness — they fail from perfectionism. They set a perfect plan, miss one day, decide it's 'ruined', and quit. Perfectionism turns small stumbles into full stops. Naming it — and lowering the bar — is the cure.",
+        "example": "Acuff's survey: people who set 'lose 20 pounds in 3 months' often quit after one missed week, while people who set 'walk 3 times a week' were still going months later. The perfect goal was the saboteur.",
+        "action": "Name the perfect goal that's currently haunting you. Write its 'ruined' trigger — the exact miss that makes you want to quit."
+      },
+      {
+        "title": "Cut Your Goal in Half",
+        "chapter": "Cut Your Goal in Half",
+        "summary": "The single most useful rule: whatever your goal, cut it in half. Smaller goals feel achievable, survive bad days, and actually get finished. A finished half-goal beats an abandoned perfect goal every time — and momentum compounds.",
+        "example": "Instead of 'write a book this year', aim for 'write 20 pages a month'. Instead of 'learn Spanish fluently', aim for 'hold a 5-minute conversation'. Finished small goals stack into big results.",
+        "action": "Take your current goal and cut it in half. Rewrite it today with the smaller, finishable version."
+      },
+      {
+        "title": "Choose What to Bomb",
+        "chapter": "Bomb the Right Things",
+        "summary": "You can't do everything perfectly — so choose what to bomb. Decide consciously which parts of a project will be 'good enough' so the rest can shine. Perfectionists refuse to choose and end up abandoning everything; finishers choose their battles.",
+        "example": "Acuff's writer friend decided his first book's grammar would be handled by an editor so he could pour energy into the ideas — bombing the grammar saved the book.",
+        "action": "List the parts of your project. Circle the one that must be excellent, and consciously 'bomb' the rest with good-enough."
+      },
+      {
+        "title": "Hide Your Goal From Perfectionism",
+        "chapter": "The Day Before Perfect",
+        "summary": "Don't tell your perfectionist self the details. If you announce 'I'll exercise every day at 6 AM', one missed morning ruins the story. Instead, keep your goal quiet, flexible, and day-by-day. Perfectionism can't sabotage a goal it doesn't know the shape of.",
+        "example": "Acuff advises not announcing 'perfect streak' plans — the streak becomes the goal and the miss becomes the failure. Flexible, private goals survive reality.",
+        "action": "Take one goal and make it flexible: no streak, no perfect schedule, just 'as often as possible'. See if finishing gets easier."
+      },
+      {
+        "title": "The Day You Start Is the Day You Finish",
+        "chapter": "The Start",
+        "summary": "The energy you have on day one is the energy you'll most likely have for the whole project — so design day one honestly. If day one of your plan is unrealistic, the whole plan is fiction. Make day one the pattern, and the finish becomes inevitable.",
+        "example": "Acuff's insight: people plan 'perfect weeks' they'd never actually live — so they never start. If you design the first day you can actually do, you start — and starting is the hard part.",
+        "action": "Design tomorrow as the honest prototype of your project: the exact amount you'll really do. Then do it."
+      },
+      {
+        "title": "Celebrate the Finish Line",
+        "chapter": "The Finish Line",
+        "summary": "Finishing needs a visible finish line — a clear, honest definition of 'done'. Define what done looks like, write it down, and when you cross it, celebrate. Finishers know the line; perfectionists keep moving it.",
+        "example": "Acuff tells of a client whose 'done' was 'record 20 podcast episodes' — clear and finishable. When he hit 20, he celebrated, and the celebration fueled the next project.",
+        "action": "Write your definition of done for the current project in one sentence. When you hit it, celebrate — out loud, on purpose."
+      }
+    ],
+    "actionPlan": [
+      "Name your perfect goal's 'ruined' trigger.",
+      "Cut your current goal in half — rewrite it smaller.",
+      "Choose what to bomb; protect only what must shine.",
+      "Make one goal private and flexible.",
+      "Design day one honestly, then start. Define 'done' and celebrate it."
+    ]
+  },
+  {
+    "id": "automatic-millionaire",
+    "title": "The Automatic Millionaire",
+    "author": "David Bach",
+    "year": 2003,
+    "category": "Money & Finance",
+    "cover": "assets/covers/automatic-millionaire.jpg",
+    "readTime": "9 min",
+    "tagline": "A powerful one-step plan to live and finish rich — make wealth automatic and outsmart yourself.",
+    "oneLiner": "You don't need willpower — you need automation. Pay yourself first, automatically, and wealth builds itself.",
+    "bigIdea": "David Bach's core discovery: most people never get rich not because they earn too little, but because saving depends on willpower. The Automatic Millionaire system removes willpower entirely: automate your savings (pay yourself first, before bills), automate your bills, and let the system run. His famous example: a modest-income couple who became millionaires by doing almost nothing except automating their finances consistently for decades.",
+    "quotes": [
+      "The secret to getting rich is to pay yourself first — automatically.",
+      "What gets measured gets managed; what gets automated gets done.",
+      "It's not about how much you make — it's about how much you keep and grow."
+    ],
+    "lessons": [
+      {
+        "title": "Pay Yourself First — Automatically",
+        "chapter": "The Richest Couple in America",
+        "summary": "The one-step plan: arrange for a fixed percentage of your income to move to savings/investments automatically — the moment money hits your account, before bills or spending. Paying yourself first means you never 'forget' to save and never spend the savings first. Automation turns saving from a choice into a default.",
+        "example": "Bach's 'richest couple' — a teacher and a janitor — became millionaires by automatically moving a chunk of each paycheck into mutual funds for decades, never trying to time the market.",
+        "action": "Set up an automatic transfer today: move 10% (or any %) of income to savings on payday, before anything else."
+      },
+      {
+        "title": "Automate the Bills Too",
+        "chapter": "The System",
+        "summary": "The full system automates everything: savings, bills, investments, and a separate 'fun' account. With bills on autopilot, there are no late fees, no stress, and no monthly decision fatigue. The system runs itself — you just check in.",
+        "example": "Bach's clients set up separate accounts: bills, savings, everyday spending. Money flows automatically; the couple's financial stress dropped to zero within months.",
+        "action": "Automate your next three recurring bills. Then add one more automatic transfer to investments."
+      },
+      {
+        "title": "The Latte Factor: Small Leaks, Big Wealth",
+        "chapter": "The Latte Factor",
+        "summary": "Small daily spending — lattes, snacks, subscriptions — quietly drains thousands over a year. The Latte Factor isn't about giving up joy; it's about noticing the leaks and redirecting them to your automatic savings. Tiny daily amounts, automated and compounded, become serious money.",
+        "example": "Bach's math: ₹200 a day on extras = ₹6,000 a month that could be invested. Over 30 years at 10%, that 'small' daily leak would grow to crores.",
+        "action": "Track your small daily spends for one week. Pick one leak and redirect its amount to your automatic savings."
+      },
+      {
+        "title": "Make It Rain: The Power of Compound Interest",
+        "chapter": "The Latte Factor",
+        "summary": "Compound interest is the engine: money grows on money, and time multiplies the effect exponentially. Starting early — even with small amounts — beats starting late with large ones. The automatic system's real power is that it lets time do the work without you.",
+        "example": "Bach's tables: ₹5,000 a month starting at 25 grows to far more by 60 than ₹10,000 a month starting at 40. The extra decade of compounding is worth more than double the deposit.",
+        "action": "Run your own compound math: what does your monthly automated saving become in 20, 30, 40 years at 10%?"
+      },
+      {
+        "title": "Protect Yourself: The Emergency Fund",
+        "chapter": "The System",
+        "summary": "Before heavy investing, build an automatic emergency fund of 3-6 months of expenses. This is the money that keeps life's surprises from becoming debt. It's boring, it's essential, and it should be automated too — a fixed amount each month into a separate account.",
+        "example": "The couples Bach studied could survive job loss, car repairs and medical bills without touching investments — because the emergency fund absorbed the shocks.",
+        "action": "Set an automatic monthly transfer to a separate emergency account until it holds 3-6 months of expenses."
+      },
+      {
+        "title": "Live Rich Now: The Fun Account",
+        "chapter": "The System",
+        "summary": "Automation shouldn't mean deprivation. Bach's system includes a 'fun account' — an automatic monthly allowance you can spend guilt-free. Knowing your fun money is safe makes the rest of the system sustainable. A system you hate will fail; a system with room to enjoy life will run for decades.",
+        "example": "Bach's clients who gave themselves a small automatic 'fun' allowance stayed on the plan far longer than those who cut everything — sustainability beats perfection.",
+        "action": "Add a small automatic 'fun' transfer each month. Spend it guilt-free — the system handles the rest."
+      }
+    ],
+    "actionPlan": [
+      "Set up automatic pay-yourself-first today.",
+      "Automate your recurring bills.",
+      "Find your Latte Factor leak and redirect it.",
+      "Compute what your automation becomes with compound interest.",
+      "Build an automated emergency fund and a guilt-free fun account."
+    ]
+  },
+  {
+    "id": "total-money-makeover",
+    "title": "The Total Money Makeover",
+    "author": "Dave Ramsey",
+    "year": 2003,
+    "category": "Money & Finance",
+    "cover": "assets/covers/total-money-makeover.jpg",
+    "readTime": "10 min",
+    "tagline": "A proven plan for financial fitness — the 7 baby steps that get you out of debt and building wealth.",
+    "oneLiner": "Debt is dumb, cash is king. The 7 Baby Steps — from ₹ emergency fund to wealth building — are the plan.",
+    "bigIdea": "Dave Ramsey's battle plan for money: get out of debt (except the house) and stay out, using his 7 Baby Steps: (1) save ₹1,000 starter emergency fund, (2) pay off all debt with the debt snowball, (3) save 3-6 months of expenses, (4) invest 15% for retirement, (5) save for kids' college, (6) pay off the house early, (7) build wealth and give. His philosophy: debt is risky and dumb, cash is freedom, and behavior change beats math — which is why he uses the debt snowball (smallest debt first for motivation, not interest rates).",
+    "quotes": [
+      "A budget is telling your money where to go instead of wondering where it went.",
+      "Debt is dumb. Cash is king.",
+      "If you will live like no one else, later you can live like no one else."
+    ],
+    "lessons": [
+      {
+        "title": "The 7 Baby Steps: The Whole Plan",
+        "chapter": "The Plan",
+        "summary": "The plan is simple and sequential: starter emergency fund, debt snowball, full emergency fund, 15% retirement investing, kids' college, pay off the house, then build wealth and give. Each step is a clear finish line — no ambiguity, no options, just the next step.",
+        "example": "Ramsey's millions of followers use the steps as a checklist: finish step 1 before step 2, never skip steps. The simplicity is the strategy.",
+        "action": "Write down your current Baby Step number. Read the definition of that step and take its first action this week."
+      },
+      {
+        "title": "The Debt Snowball: Smallest First",
+        "chapter": "The Debt Snowball",
+        "summary": "List your debts smallest to largest (excluding the house). Pay minimums on all, then throw every extra rupee at the SMALLEST debt until it's gone — then roll that payment to the next. It ignores interest rates on purpose: quick wins create momentum, and behavior change beats math.",
+        "example": "A ₹5,000 medical bill paid off in two weeks gives a psychological win that fuels the year-long fight on the big loan. People who use the snowball stick with it; people who optimize for interest often quit.",
+        "action": "List all your debts smallest to largest. Send one extra payment to the smallest this month."
+      },
+      {
+        "title": "The Starter Emergency Fund",
+        "chapter": "The Plan",
+        "summary": "Before paying off debt, save a small starter emergency fund (₹1,000 in Ramsey's original US terms — scale to your situation: a month of basic survival). This fund keeps life's surprises from pushing you deeper into debt. It's small on purpose — you can build it fast and move on.",
+        "example": "The starter fund means a flat tire becomes an annoyance, not a credit-card emergency. Ramsey insists the order matters: tiny buffer first, then debt attack.",
+        "action": "If you don't have a starter emergency fund, save it this month — before starting the snowball."
+      },
+      {
+        "title": "The Envelope System: Cash Is Real",
+        "chapter": "The Envelope System",
+        "summary": "For variable spending categories (food, fun, fuel), use cash envelopes: decide the month's amount, put it in an envelope, and when it's empty, you're done. Cash makes spending physical and painful — cards make it invisible. The envelope system trains your budget to be real.",
+        "example": "Ramsey's families who switch to cash envelopes report spending 20-30% less in the first month without feeling deprived — because they see the money leave.",
+        "action": "Choose your most-leaked category (food/fun) and switch it to cash envelopes for one month."
+      },
+      {
+        "title": "The 15% Retirement Rule",
+        "chapter": "The Plan",
+        "summary": "After the emergency fund, invest 15% of your gross income for retirement — automatically, in good mutual funds with long track records. Not 5%, not 30%: 15%, because it's aggressive enough to compound well and sustainable enough to maintain. Automate it so it happens regardless of mood.",
+        "example": "Ramsey's math: 15% invested from age 30 with decent returns creates a comfortable retirement; the automation is what makes it actually happen year after year.",
+        "action": "Set your retirement investing to 15% of gross income, automated monthly — adjust your budget to make it fit."
+      },
+      {
+        "title": "Live Like No One Else",
+        "chapter": "The Payoff",
+        "summary": "The final step is generosity: build wealth and give. The whole journey — the budgets, the snowball, the sacrifice — is so you can live with margin, sleep peacefully, and help others. The discipline is temporary; the freedom is permanent.",
+        "example": "Ramsey's famous line: 'If you will live like no one else, later you can live like no one else.' The years of disciplined cash living buy decades of freedom and generosity.",
+        "action": "Write your 'financial finish line': the life you're building toward. Read it every time a baby step feels hard."
+      }
+    ],
+    "actionPlan": [
+      "Identify your current Baby Step and start it this week.",
+      "Build your starter emergency fund.",
+      "Start the debt snowball — smallest debt first, extra payments.",
+      "Switch one category to cash envelopes.",
+      "Automate 15% toward retirement after debt is gone."
+    ]
+  },
+  {
+    "id": "behavior-gap",
+    "title": "The Behavior Gap",
+    "author": "Carl Richards",
+    "year": 2012,
+    "category": "Money & Finance",
+    "cover": "assets/covers/behavior-gap.jpg",
+    "readTime": "8 min",
+    "tagline": "Simple ways to stop doing dumb things with money — the gap between what we should do and what we do.",
+    "oneLiner": "The biggest risk in your portfolio is you. Simple rules — plan, automate, simplify — close the behavior gap.",
+    "bigIdea": "Financial planner Carl Richards' central insight: the 'behavior gap' is the difference between what's rational with money and what we actually do — buying high, selling low, checking too often, chasing fads. His antidote is simplicity: an honest plan you can actually follow, automation to remove temptation, and a deep understanding that the market's ups and downs are the price of admission, not a reason to react. A boring plan you stick to beats a brilliant plan you abandon.",
+    "quotes": [
+      "The behavior gap is the difference between what's good for you and what feels good to you.",
+      "Risk is what's left over after you think you've thought of everything.",
+      "The market goes up and down. Plan for it. Expect it. Ignore it."
+    ],
+    "lessons": [
+      {
+        "title": "The Behavior Gap: You Are the Risk",
+        "chapter": "The Behavior Gap",
+        "summary": "The gap between smart investing and real behavior is enormous — and it's where most money is lost. Investors systematically buy after prices rise and sell after they fall. The gap isn't a knowledge problem; it's an emotion problem. Recognizing it is the first and most important step.",
+        "example": "Studies consistently show the average investor earns far less than the funds they own — because they trade at the wrong times. The fund was fine; the behavior wasn't.",
+        "action": "Review your last three money decisions. Ask: was each driven by a plan or by a feeling? Log the pattern."
+      },
+      {
+        "title": "Write Down Your Plan",
+        "chapter": "The Plan",
+        "summary": "An unwritten plan is a wish. Richards insists on a one-page written financial plan: your goals, your allocation, your rules ('I will not sell because of news', 'I check quarterly'). The written plan is your anchor when emotions spike — you follow the plan, not the panic.",
+        "example": "Richards asks clients to write their plan by hand — the act of writing it makes it real, and they can reread it during market drops instead of making calls from fear.",
+        "action": "Write your one-page money plan today: goals, allocation, and 3 rules you'll follow when the market scares you."
+      },
+      {
+        "title": "Automate Everything You Can",
+        "chapter": "The Plan",
+        "summary": "Automation is the behavior gap's best enemy: automatic investing, automatic bill pay, automatic saving. When decisions are removed, emotions have nothing to grab. The best investors don't have more willpower — they have fewer decisions.",
+        "example": "Richards notes that people who automate investing never 'forget' to invest and never 'wait for a better time' — the two biggest behavior-gap triggers.",
+        "action": "Automate one more money decision this week: investing, savings, or bill payments."
+      },
+      {
+        "title": "Ignore the Noise",
+        "chapter": "The Market",
+        "summary": "The financial news cycle is designed to make you act — and acting is usually wrong. Market ups and downs are normal, expected and largely unpredictable. The plan already accounts for them. Richards' advice: check your portfolio rarely, read less market news, and treat crashes as weather, not news.",
+        "example": "Investors who checked their portfolio daily earned less and stressed more than those who checked quarterly — same funds, different behavior.",
+        "action": "Set a 'check schedule': one quarterly portfolio review. Move the investing apps off your home screen this week."
+      },
+      {
+        "title": "Know Your Risk: Sleep at Night Test",
+        "chapter": "Risk",
+        "summary": "Risk isn't a number on a chart — it's 'will I still follow my plan when this drops 30%?' Choose an allocation you can actually hold in a crash. If you can't sleep at night with your portfolio, the risk is too high — not mathematically, but behaviorally.",
+        "example": "Richards' clients who dialed their stocks down to a level they could tolerate held through crashes and recovered; those who over-allocated sold at the bottom.",
+        "action": "Ask the sleep test: if your portfolio dropped 30% tomorrow, would you hold? If not, lower the risk today."
+      },
+      {
+        "title": "Boring Is Beautiful",
+        "chapter": "The Long Run",
+        "summary": "The most successful financial plans are boring: index funds, automation, quarterly checks, decades. Boring plans survive because they don't require brilliance — they require endurance. Excitement in investing is usually a warning sign.",
+        "example": "Richards' own practice: simple, diversified, low-cost portfolios held for decades. The clients who did best were the ones who found the whole thing unremarkable — and never stopped.",
+        "action": "Audit your plan for excitement. If a money decision feels thrilling, slow down — boring is a feature, not a bug."
+      }
+    ],
+    "actionPlan": [
+      "Log your last three money decisions — plan or feeling?",
+      "Write your one-page financial plan with rules.",
+      "Automate one more money decision this week.",
+      "Set a quarterly check schedule; ignore the daily noise.",
+      "Pass the sleep test — or lower your risk today."
+    ]
+  },
+  {
+    "id": "happiness-advantage",
+    "title": "The Happiness Advantage",
+    "author": "Shawn Achor",
+    "year": 2010,
+    "category": "Psychology & People",
+    "cover": "assets/covers/happiness-advantage.jpg",
+    "readTime": "10 min",
+    "tagline": "The seven principles of positive psychology that fuel success and performance at work.",
+    "oneLiner": "Happiness doesn't follow success — it fuels it. Train your brain to be positive first, and performance follows.",
+    "bigIdea": "Shawn Achor's Harvard research flips the success formula: we assume success creates happiness, but the data shows happiness creates success. A positive brain is measurably more productive, creative and resilient — the 'happiness advantage'. His seven principles — the happiness advantage, the fulcrum and lever (change your mindset, not just the situation), the tetris effect (train the brain to spot opportunity), falling up (find the upside in failure), the Zorro circle (start small to build control), the 20-second rule (lower the activation energy of good habits), and social investment (your network is your safety net) — are practical habits anyone can build.",
+    "quotes": [
+      "Happiness is the precursor to success, not merely the result.",
+      "The greatest competitive advantage in the modern economy is a positive and engaged brain.",
+      "Your brain at positive is 31% more productive than your brain at negative, neutral or stressed."
+    ],
+    "lessons": [
+      {
+        "title": "The Happiness Advantage",
+        "chapter": "The Happiness Advantage",
+        "summary": "The brain at positive performs better: 31% more productive, better at problem-solving, more creative and resilient. Happiness isn't a reward for success — it's the fuel for it. When you raise your happiness baseline, every metric of performance rises with it.",
+        "example": "Achor's research at companies: salespeople with a positive mindset sold 37% more; doctors with a positive mood made accurate diagnoses 19% faster.",
+        "action": "Do one daily 'happiness workout': write 3 things you're grateful for, journal one positive experience, exercise, and meditate for 2 minutes."
+      },
+      {
+        "title": "The Fulcrum and the Lever",
+        "chapter": "The Fulcrum and the Lever",
+        "summary": "Your mindset is the fulcrum; your power to change reality is the lever. You can't always change your circumstances, but you can change your lens — and the same reality looks completely different through a different lens. The leverage comes from choosing the interpretation that empowers you.",
+        "example": "Two people get the same rejection: one sees failure, the other sees data. Same event, different fulcrum — and wildly different next actions.",
+        "action": "For your current challenge, list three possible interpretations. Pick the one that empowers action — and act from it."
+      },
+      {
+        "title": "The Tetris Effect: Train the Brain to Scan for Good",
+        "chapter": "The Tetris Effect",
+        "summary": "Tetris players' brains get so trained on patterns that they see falling blocks everywhere. The same mechanism can be trained for good: a daily gratitude practice literally retrains your brain to scan the world for positives instead of threats. What you look for, you find more of.",
+        "example": "Achor's gratitude exercise: writing three new gratitudes for 21 days retrains the brain to notice positives — after the period, participants naturally scanned for good without effort.",
+        "action": "Start the 21-day gratitude habit: 3 new things each night. This is the Tetris effect, aimed at opportunity."
+      },
+      {
+        "title": "Falling Up: Turn Failure Into Fuel",
+        "chapter": "Falling Up",
+        "summary": "The path between failure and success runs through the 'counter-factual': what you tell yourself about the failure. Those who find the upward counterfactual ('this taught me X', 'this opened Y') gain motivation and growth; those who spiral ('I'm doomed') lose both. The event is neutral; the story you tell makes it.",
+        "example": "Students who framed an exam failure as a call to study differently performed better than equally-smart students who framed it as 'I'm bad at this'. Same failure, opposite trajectories.",
+        "action": "Take your last failure and write its upward counterfactual: what did it teach you, what does it now make possible?"
+      },
+      {
+        "title": "The Zorro Circle: Start Small to Gain Control",
+        "chapter": "The Zorro Circle",
+        "summary": "When overwhelmed, regain control by shrinking your circle: focus only on what you can control right now, act on it, and expand from there. Small wins restore the belief that you're in control — and perceived control is a core driver of performance and wellbeing.",
+        "example": "Achor's clients facing massive problems start with one tiny controllable action (clean the desk, send one email) — the win re-establishes control and the circle expands to the real problem.",
+        "action": "Name the one thing you fully control right now. Do it. Then take one more step into the larger problem."
+      },
+      {
+        "title": "The 20-Second Rule: Lower the Barrier to Good Habits",
+        "chapter": "The 20-Second Rule",
+        "summary": "Willpower is finite — so design your environment to reduce activation energy for good habits and raise it for bad ones. Make the good habit 20 seconds easier to start (guitar out of the case, gym bag packed, book on the pillow) and the bad habit 20 seconds harder (TV remote in a drawer).",
+        "example": "Achor moved his guitar from the closet to the middle of the room — and his practice time doubled instantly. The barrier, not the motivation, was the problem.",
+        "action": "Choose one good habit and make it 20 seconds easier to start today. Choose one bad habit and make it 20 seconds harder."
+      },
+      {
+        "title": "Social Investment: Your Network Is Your Net Worth",
+        "chapter": "Social Investment",
+        "summary": "In a crisis, the people around you are your greatest resource — the brain performs better with social support, and resilient people invest in relationships before they need them. During stress, the instinct is to isolate; the science says the opposite — reach out.",
+        "example": "Achor's research found that social support was the strongest predictor of happiness and resilience — and that a single supportive conversation measurably improves problem-solving performance.",
+        "action": "Invest in one relationship today: a call, a genuine check-in, or help with something. Build the network before you need it."
+      }
+    ],
+    "actionPlan": [
+      "Do a daily happiness workout: gratitude + one positive journal + movement.",
+      "Reframe your current challenge with an empowering lens.",
+      "Run the 21-day gratitude Tetris effect.",
+      "Find the upward story in your last failure.",
+      "Shrink the circle: one controllable win today. Lower barriers by 20 seconds. Invest in one relationship."
+    ]
+  },
+  {
+    "id": "switch-heath",
+    "title": "Switch",
+    "author": "Chip Heath & Dan Heath",
+    "year": 2010,
+    "category": "Psychology & People",
+    "cover": "assets/covers/switch-heath.jpg",
+    "readTime": "12 min",
+    "tagline": "How to change things when change is hard — the Rider, the Elephant and the Path.",
+    "oneLiner": "Change fails when you only talk to the Rider. Direct the Rider, motivate the Elephant, and shape the Path.",
+    "bigIdea": "The Heath brothers' framework for change: your mind has two systems — the Rider (rational, analytical) and the Elephant (emotional, instinctive). When they disagree, the Elephant wins. Change fails when we only give the Rider a plan (analysis paralysis) or only appeal to the Elephant (short-term motivation). The formula: direct the Rider (give crystal-clear direction), motivate the Elephant (make it feel — find the feeling, shrink the change), and shape the Path (change the environment so change is easier). This works for personal change, team change and organizational change alike.",
+    "quotes": [
+      "What looks like a people problem is often a situation problem.",
+      "To change behavior, you've got to shape the path.",
+      "Big changes start with small steps — shrink the change."
+    ],
+    "lessons": [
+      {
+        "title": "The Rider, the Elephant, and the Path",
+        "chapter": "The Problem",
+        "summary": "The Rider is your rational planner; the Elephant is your emotional engine. The Rider gets exhausted holding the reins — that's 'decision fatigue'. The Elephant needs motivation and gets spooked by big scary goals. And both travel on a Path — the environment. Change any change by working all three.",
+        "example": "Dieting fails when the Rider plans perfectly but the Elephant (craving) wins at 10 PM — and the kitchen is full of chips (the path). Change the path and the Elephant never gets tempted.",
+        "action": "For your current change, diagnose all three: what's unclear (Rider), what feels unmotivating (Elephant), what's in the way (Path)?"
+      },
+      {
+        "title": "Direct the Rider: Find the Bright Spots",
+        "chapter": "Direct the Rider",
+        "summary": "When a problem looks overwhelming, look for what's already working — bright spots — and clone it. The Rider gets paralyzed by big problems; concrete examples of success give it direction. Instead of analyzing the failure, study the exception.",
+        "example": "In the malnutrition study the Heaths describe, researchers found some villages had well-fed kids despite the same poverty — and cloned those mothers' small behaviors, solving a problem big programs had failed at.",
+        "action": "Find your bright spot: where is this change already working, even a little? Study it and clone one behavior."
+      },
+      {
+        "title": "Script the Critical Moves",
+        "chapter": "Direct the Rider",
+        "summary": "Ambiguity is the Rider's kryptonite. Vague goals ('be healthier', 'improve service') invite analysis and paralysis. Script the critical moves in specific behavioral terms: 'switch to whole milk', 'greet every customer within 5 seconds'. Specific is actionable.",
+        "example": "A company that wanted 'great customer service' achieved it only when they scripted one move: every customer is greeted by name within ten feet. Simple, specific, repeatable.",
+        "action": "Rewrite your goal as one specific behavior with a number: '___ within ___ minutes', '___ times per week'."
+      },
+      {
+        "title": "Motivate the Elephant: Find the Feeling",
+        "chapter": "Motivate the Elephant",
+        "summary": "The Elephant moves on feeling, not facts. Knowing something is wrong rarely changes behavior — feeling it does. To spark change, shrink the problem to something emotionally vivid: show one person's story, not a spreadsheet. Knowledge is not enough; make it feel.",
+        "example": "The 'one child's story' in charity appeals outperforms statistics — because a single vivid story moves the Elephant where data can't. The same applies to teams: make the customer real.",
+        "action": "Make your change feel real: find the one person (customer, user, yourself in 5 years) whose story makes the change urgent."
+      },
+      {
+        "title": "Shrink the Change: Make It Tiny",
+        "chapter": "Motivate the Elephant",
+        "summary": "Big goals spook the Elephant. Break the change into steps small enough that the Elephant can't refuse: 'clean one room', 'write 5 minutes', 'make one call'. Small wins create the feeling of progress — and progress is the Elephant's fuel.",
+        "example": "The 'one load of laundry' technique for a depressed person, or 'write one sentence' for a blocked writer — tiny starts that grow because the Elephant feels momentum.",
+        "action": "Shrink your change to a step so small it feels almost silly. Do that step today and celebrate the win."
+      },
+      {
+        "title": "Shape the Path: Change the Environment",
+        "chapter": "Shape the Path",
+        "summary": "The easiest lever is the environment: defaults, distance, design. If the path is easier, behavior follows with less willpower. Change what's visible, what's default, and what's convenient — and you change what people (and you) do.",
+        "example": "Recycling doubled when bins were placed next to desks; fruit sales jumped when fruit moved to eye level; savings increased when enrollment became the default. The path did the changing.",
+        "action": "Redesign one environment today: make the good choice the default, the visible choice, and the convenient choice."
+      },
+      {
+        "title": "Rally the Herd: Build Momentum",
+        "chapter": "Shape the Path",
+        "summary": "Behavior is contagious. People look to others to decide what's normal — so make the new behavior visible and celebrated. Leaders go first, early adopters are showcased, and the 'herd' follows. Social proof turns individual change into movement.",
+        "example": "Hotels' 'most guests reuse their towels' message outperformed generic appeals — because it told people the herd was already doing it. Show the new behavior as the norm.",
+        "action": "Make your change visible to others: announce it, share a win, recruit one ally. Let the herd see the new default."
+      },
+      {
+        "title": "Keep the Switch Going: Instill Habits",
+        "chapter": "Make the Switch",
+        "summary": "Change sticks when it becomes habit — automatic behavior that no longer needs the Rider or the Elephant. Build action triggers ('when X, I do Y'), make the first steps effortless, and celebrate progress to keep the Elephant happy while the habit forms.",
+        "example": "The Heaths describe how 'action triggers' double follow-through: people who wrote 'when I finish lunch, I'll call my mother' actually called — the trigger removed the decision.",
+        "action": "Turn one new behavior into an action trigger: 'When [existing habit], I will [new behavior]'. Write it down and post it."
+      }
+    ],
+    "actionPlan": [
+      "Diagnose Rider, Elephant and Path for your change.",
+      "Find and clone one bright spot.",
+      "Script one specific critical move.",
+      "Make the change feel real with one human story.",
+      "Shrink the change to a tiny step — then shape the environment and rally the herd."
+    ]
+  },
+  {
+    "id": "decisive-heath",
+    "title": "Decisive",
+    "author": "Chip Heath & Dan Heath",
+    "year": 2013,
+    "category": "Psychology & People",
+    "cover": "assets/covers/decisive-heath.jpg",
+    "readTime": "12 min",
+    "tagline": "How to make better choices in life and work — the four villains of decision-making and the cure.",
+    "oneLiner": "Your decisions are sabotaged by four villains — widen your options, reality-test, attain distance, prepare to be wrong.",
+    "bigIdea": "The Heath brothers identify four villains that sabotage every decision: (1) narrow framing (you see only one or two options), (2) confirmation bias (you look for evidence that supports your choice), (3) short-term emotion (feelings hijack the decision), and (4) overconfidence (you're sure you'll be right). The cure — the WRAP process: Widen your options, Reality-test your assumptions, Attain distance before deciding, and Prepare to be wrong. Small process tweaks produce dramatically better choices.",
+    "quotes": [
+      "If you're deciding between two options, the answer is often 'neither'.",
+      "The best way to kill confirmation bias is to actively seek disconfirmation.",
+      "Never make a decision when you're feeling an intense emotion — give it ten minutes, or ten days."
+    ],
+    "lessons": [
+      {
+        "title": "The Four Villains",
+        "chapter": "The Four Villains",
+        "summary": "Every decision is attacked by four villains: narrow framing (one or two options), confirmation bias (seeking supportive evidence), short-term emotion (feeling hijacks thinking), and overconfidence (assuming you'll be right). You can't eliminate them — but you can run a process that neutralizes each one.",
+        "example": "A job offer 'yes or no' is narrow framing — the villain hides the real option: negotiate, wait, create a new role. Every villain quietly narrows your world.",
+        "action": "Name the villain that most affects your current decision. Pick the WRAP step that counters it and use it this week."
+      },
+      {
+        "title": "Widen Your Options: Multitrack",
+        "chapter": "Widen Your Options",
+        "summary": "The cure for narrow framing: consider at least two options simultaneously (multitrack) — and if you're choosing between two, ask 'what about neither?' Even small decisions benefit: the 'vanishing options test' asks what you'd do if your current options disappeared. More options = better choices.",
+        "example": "When choosing between two job candidates, interview both 'for' and ask who you'd hire if both declined — the answer often reveals a hidden third standard.",
+        "action": "Force a third option onto your current decision. If deciding between two, write the 'neither' option and what it implies."
+      },
+      {
+        "title": "Reality-Test: Kill Confirmation Bias",
+        "chapter": "Reality-Test Your Assumptions",
+        "summary": "Once you lean toward an option, your brain hunts for evidence that supports it. The cure: actively seek disconfirmation — ask the question that would prove you wrong. Talk to people who chose differently, run a small experiment, and ask 'what would have to be true for the opposite choice to be right?'",
+        "example": "Before buying a car, read reviews from owners who regret it. Before a hire, call a previous employer and ask about weaknesses. The information you avoid is the information you need.",
+        "action": "Write the question that would prove your current lean wrong — and find the answer this week."
+      },
+      {
+        "title": "Attain Distance: 10/10/10",
+        "chapter": "Attain Distance",
+        "summary": "Short-term emotion distorts decisions — excitement, fear and anger all make you choose differently than you would with distance. The 10/10/10 test: how will you feel about this decision in 10 minutes, 10 months, and 10 years? Distance reveals what the emotion is hiding.",
+        "example": "The couple tempted to quit their jobs in a rage, the buyer dazzled by a 'once-in-a-lifetime' deal — 10/10/10 calms both: the anger fades, the deal wasn't once-in-a-lifetime.",
+        "action": "Run 10/10/10 on your current decision. Write all three answers before deciding."
+      },
+      {
+        "title": "Attain Distance: Your Future Self",
+        "chapter": "Attain Distance",
+        "summary": "Another distance tool: make the decision for someone else. When you advise a friend facing the same choice, you're clear-headed; when it's your own, you're tangled. The 'friend test' — 'what would I tell my best friend to do?' — separates the signal from the emotion.",
+        "example": "The Heath brothers' research: people give wiser career, money and relationship advice to others than they follow themselves — because distance clears the emotion.",
+        "action": "Write your decision as a letter to a friend facing the same choice. What would you advise? Follow that."
+      },
+      {
+        "title": "Prepare to Be Wrong: Bookend the Future",
+        "chapter": "Prepare to Be Wrong",
+        "summary": "Overconfidence is the final villain: we assume our plan will work. The cure: prepare for both success and failure. Set a 'premortem' (imagine the plan failed — why?) and a 'preparade' (imagine it succeeded wildly — what made it work?). Then build tripwires that force a re-check at defined moments.",
+        "example": "Teams that run premortems catch fatal flaws before launch; tripwires ('if we haven't hit X in 30 days, we re-decide') prevent sinking months into a failing plan.",
+        "action": "Run a 5-minute premortem on your plan: imagine it failed in 6 months — list the 3 likely causes. Add one tripwire to your calendar."
+      }
+    ],
+    "actionPlan": [
+      "Name your decision's main villain.",
+      "Force a third option; run the vanishing-options test.",
+      "Seek disconfirming evidence this week.",
+      "Run 10/10/10 and the friend test before deciding.",
+      "Premortem your plan and set one tripwire."
+    ]
+  },
+  {
+    "id": "coaching-habit",
+    "title": "The Coaching Habit",
+    "author": "Michael Bungay Stanier",
+    "year": 2016,
+    "category": "Business & Startups",
+    "cover": "assets/covers/coaching-habit.jpg",
+    "readTime": "10 min",
+    "tagline": "Say less, ask more & change the way you lead forever — seven questions that coach any team.",
+    "oneLiner": "Stop giving answers. Ask seven questions — and watch people solve their own problems.",
+    "bigIdea": "Michael Bungay Stanier's insight: leaders fall into the 'advice monster' — giving answers, fixing problems, creating dependence. The cure is seven questions that turn any conversation into coaching: the Kickstart ('What's on your mind?'), the AWE question ('And what else?'), the Focus ('What's the real challenge here for you?'), the Foundation ('What do you want?'), the Lazy ('How can I help?'), the Strategic ('If you're saying no, what are you saying yes to?'), and the Learning ('What was most useful for you?'). Ask more, tell less, and people grow.",
+    "quotes": [
+      "The advice monster is the leader's default — and it kills learning.",
+      "'And what else?' is the best coaching question in the world.",
+      "Asking questions creates a moment of choice — it's the difference between training and coaching."
+    ],
+    "lessons": [
+      {
+        "title": "Tame the Advice Monster",
+        "chapter": "The Advice Monster",
+        "summary": "Leaders are trained to give answers — tell, fix, rescue. But every answer you give trains your team to depend on you. The advice monster is driven by three voices: tell-it, save-it, control-it. Taming it means staying curious and asking instead of advising.",
+        "example": "When a team member brings a problem, the leader's instinct is 'here's what to do'. The coaching response — 'what do you think?' — builds capability instead of dependency.",
+        "action": "Catch yourself giving an answer before understanding the question. Convert it: 'What do you think?'"
+      },
+      {
+        "title": "The Kickstart: 'What's on your mind?'",
+        "chapter": "The Kickstart Question",
+        "summary": "Every coaching conversation starts with 'What's on your mind?' — it surfaces what actually matters to the other person, not what the agenda says. The question respects that the real issue may differ from the scheduled topic. Start with the person, not the plan.",
+        "example": "A weekly 1:1 that opens with 'What's on your mind?' quickly surfaces the real project crisis, instead of spending 30 minutes on the agenda nobody cared about.",
+        "action": "Open your next 1:1 or team conversation with 'What's on your mind?' and genuinely listen."
+      },
+      {
+        "title": "The AWE Question: 'And what else?'",
+        "chapter": "The AWE Question",
+        "summary": "'And what else?' is the highest-leverage question in coaching: it forces the person past their first answer — which is rarely the real one. Asking it repeatedly (two or three times) uncovers deeper issues, better ideas and hidden concerns. It also stops you from jumping in with solutions.",
+        "example": "An employee says 'I need more time'. 'And what else?' reveals: 'I don't trust the process.' The second answer is the real problem — and the first was just the surface.",
+        "action": "After someone's first answer, ask 'And what else?' at least twice before you respond with anything."
+      },
+      {
+        "title": "The Focus Question: 'What's the real challenge here?'",
+        "chapter": "The Focus Question",
+        "summary": "People often present the surface problem when the real challenge is different — and it's usually a personal one ('for you'). The focus question cuts through: 'What's the real challenge here for you?' It gets to the part the person owns, where change is actually possible.",
+        "example": "A team says 'our tools are outdated'. The real challenge for the manager might be 'I don't know how to argue for budget'. The focus question shifts the conversation to what she can act on.",
+        "action": "When someone presents a problem, ask: 'What's the real challenge here for you?' and wait for the second, deeper answer."
+      },
+      {
+        "title": "The Lazy Question: 'How can I help?'",
+        "chapter": "The Lazy Question",
+        "summary": "'How can I help?' — the lazy question — is actually the efficient one: it stops you from guessing what the person needs and doing the wrong thing. You're not lazy for asking; you're lazy for guessing. The question also surfaces when the other person doesn't need your help at all.",
+        "example": "The employee who wants a sounding board, not a solution: 'How can I help?' reveals 'just listen' — saving you from delivering an unwanted lecture.",
+        "action": "Before jumping in to help, ask: 'How can I help?' — and honor the actual answer, even if it's 'just listen'."
+      },
+      {
+        "title": "The Strategic Question: 'What are you saying yes to?'",
+        "chapter": "The Strategic Question",
+        "summary": "Every 'no' is a 'yes' to something else — and every 'yes' is a 'no' to something else. The strategic question makes the trade-off visible: 'If you're saying no to this, what are you saying yes to?' It forces prioritization and reveals what the person actually values.",
+        "example": "The client who keeps saying no to new work: 'what are you saying yes to?' reveals the answer — 'my family time' — and the leader stops pushing and starts respecting.",
+        "action": "Before accepting or rejecting anything, name the trade-off: what are you saying yes to by saying no to this?"
+      },
+      {
+        "title": "The Learning Question: 'What was most useful?'",
+        "chapter": "The Learning Question",
+        "summary": "End conversations with 'What was most useful for you?' — it locks in the learning, gives you feedback on your coaching, and turns the conversation into growth. The question is small but transforms meetings from events into lessons.",
+        "example": "After a coaching session, the question helps the person articulate what they'll actually take away — and tells you what worked in your approach.",
+        "action": "End your next three conversations with 'What was most useful for you?' — and notice what it changes."
+      }
+    ],
+    "actionPlan": [
+      "Catch the advice monster — ask instead of tell.",
+      "Open with 'What's on your mind?' in your next 1:1.",
+      "Ask 'And what else?' twice before responding.",
+      "Find the real challenge with the focus question.",
+      "Ask 'How can I help?', name your yes/no trade-offs, and close with 'What was most useful?'"
+    ]
+  },
+  {
+    "id": "the-goal",
+    "title": "The Goal",
+    "author": "Eliyahu M. Goldratt",
+    "year": 1984,
+    "category": "Business & Startups",
+    "cover": "assets/covers/the-goal.jpg",
+    "readTime": "13 min",
+    "tagline": "A process of ongoing improvement — the business novel that introduced the Theory of Constraints.",
+    "oneLiner": "The goal of a business is to make money. Find the bottleneck, exploit it, and the whole system flows.",
+    "bigIdea": "The Goal is a business novel: Alex Rogo, a plant manager, must turn around a failing factory in 90 days. Through Socratic conversations with his mentor Jonah, he discovers the Theory of Constraints: every system has a bottleneck — one constraint that limits the whole. Improving anything but the constraint is an illusion of progress. The method: identify the constraint, exploit it fully, subordinate everything to it, elevate it, then find the next constraint. The story teaches that local efficiency is meaningless — what matters is the flow through the whole system.",
+    "quotes": [
+      "The goal of a company is to make money.",
+      "An hour lost at the bottleneck is an hour lost for the entire system.",
+      "Tell me how you measure me, and I will tell you how I will behave."
+    ],
+    "lessons": [
+      {
+        "title": "The Goal: Make Money",
+        "chapter": "The Goal",
+        "summary": "Before improving anything, define the goal. For a business, it's simple: make money now and in the future. Measures like cost per part, machine utilization and local efficiency are seductive — but they're only useful if they serve the goal. Most 'improvements' that look good locally actually hurt the whole.",
+        "example": "The factory's 'efficient' machines produced piles of inventory nobody needed — looking busy while losing money. Local efficiency without system flow is waste.",
+        "action": "Define your team's real goal in one line. For every 'improvement' you're considering, ask: does this serve the goal?"
+      },
+      {
+        "title": "The Bottleneck: The Constraint Rules",
+        "chapter": "The Theory of Constraints",
+        "summary": "Every system has one constraint — the bottleneck that limits the entire output. Time saved at a non-bottleneck is a mirage; time saved at the bottleneck is gold. Find the constraint first, because everything else follows from it.",
+        "example": "The plant's bottleneck machine (the NCX-10) determined the plant's total output — speeding up other machines just built more inventory behind it. The constraint was the whole game.",
+        "action": "Identify your system's bottleneck: the step that limits the whole flow (work, sales, production). Watch it like a hawk."
+      },
+      {
+        "title": "The Five Focusing Steps",
+        "chapter": "The Theory of Constraints",
+        "summary": "The method: (1) Identify the constraint, (2) Exploit it fully (get everything out of it without new investment), (3) Subordinate everything else to it (other steps wait, don't overproduce), (4) Elevate the constraint (invest to increase it), (5) Repeat — find the new constraint. This loop is continuous improvement.",
+        "example": "The plant exploited its bottleneck by stopping production of parts the bottleneck didn't need, freeing its time — output rose without any new machines. Then they elevated it.",
+        "action": "Run the five steps on your main process this quarter. Start by identifying the true constraint — not the loudest problem."
+      },
+      {
+        "title": "Drum-Buffer-Rope: The Rhythm of Flow",
+        "chapter": "The Theory of Constraints",
+        "summary": "The drum is the bottleneck's rhythm; the rope is the signal that paces everything before it; the buffer is the protective inventory in front of the bottleneck. The whole system marches to the bottleneck's drum — no overproduction, no starvation. Flow, not bursts, is the goal.",
+        "example": "The plant changed from 'push' (make everything fast) to 'pull' (make what the bottleneck needs) — and lead times collapsed, quality rose and profits followed.",
+        "action": "Design your process around the bottleneck: what must it receive, and when? Sync everything to its rhythm."
+      },
+      {
+        "title": "Local Efficiency Is the Enemy",
+        "chapter": "The Theory of Constraints",
+        "summary": "A machine running 100% of the time is not necessarily productive — if it's producing what nobody needs, it's waste. The correct measure is system throughput, not local activity. Behavior follows measurement: if you reward local efficiency, you get local optimization and global damage.",
+        "example": "The plant's accountants screamed about 'idle operators' at non-bottlenecks — but those operators were idle because the system didn't need their output. Idle at the right place is efficiency.",
+        "action": "Audit your metrics: which ones reward local busyness over system results? Rebalance one measure this quarter."
+      },
+      {
+        "title": "The Hero's Journey: From 'They' to 'We'",
+        "chapter": "The Goal",
+        "summary": "Alex's transformation isn't technical — it's psychological. He stops blaming 'them' (corporate, workers, unions) and starts owning the system: 'I am the constraint.' Great process improvement begins with the leader seeing their own thinking as part of the problem.",
+        "example": "Alex's breakthrough came when he realized the real constraint wasn't the machines — it was his and his team's assumptions about how the plant should run. The mindset shift unlocked everything.",
+        "action": "Ask: what assumption of mine is the current constraint? Write it down — then test whether it's actually true."
+      },
+      {
+        "title": "Socratic Thinking: The Power of Questions",
+        "chapter": "The Goal",
+        "summary": "Jonah never gives Alex answers — he asks questions until Alex sees the system clearly. The Socratic method is the book's hidden teaching: the best improvements come from asking 'why' until the root assumption surfaces. A question is worth a thousand answers.",
+        "example": "Every chapter's breakthrough comes from Jonah's question: 'What is the goal?', 'What is a bottleneck?', 'Why do you measure that?' — each question dismantles a false assumption.",
+        "action": "For your current problem, ask 'why' five times — each answer leads to the next layer. Stop only when you hit the root cause."
+      },
+      {
+        "title": "Ongoing Improvement: Never Finished",
+        "chapter": "The Goal",
+        "summary": "The process never ends: elevate one constraint and a new one appears. This is the gift and the trap — improvement is continuous, not a destination. The organization that institutionalizes the five steps becomes self-renewing; the one that stops, stalls.",
+        "example": "The plant's turnaround was only the first cycle — the sequel (It's Not Luck) shows the same thinking applied to distribution and sales as new constraints emerged.",
+        "action": "Set a recurring 'constraint review' on your calendar: quarterly, run the five steps and find the new bottleneck."
+      }
+    ],
+    "actionPlan": [
+      "Define your real goal in one line.",
+      "Find your true bottleneck — the flow-limiter.",
+      "Run the five focusing steps this quarter.",
+      "Sync everything to the bottleneck's rhythm (drum-buffer-rope).",
+      "Reward system flow, not local busyness — and schedule a recurring constraint review."
+    ]
   }
 ];
 

@@ -39,10 +39,9 @@ window.TSB_CONFIG = {
      HOW TO UPDATE (weekly, 1 minute): replace these ids with whatever
      you added this week. Empty list [] = no badges shown. */
   NEW_THIS_WEEK: [
-    "body-keeps-score", "anxious-generation", "high-output-management",
-    "built-to-last", "thinking-in-bets", "no-rules-rules",
-    "stolen-focus", "digital-minimalism", "one-up-wall-street",
-    "radical-candor", "homo-deus", "factfulness"
+    "ultralearning", "switch-heath", "decisive-heath", "the-goal",
+    "21-laws-leadership", "linchpin", "talent-code", "happiness-advantage",
+    "coaching-habit", "skin-in-the-game", "infinite-game", "bullet-journal-method"
   ],
   NEW_GRAVES_THIS_WEEK: [
     "evergrande", "dhfl-scam", "future-group", "gofirst-airline",

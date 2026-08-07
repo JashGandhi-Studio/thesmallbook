@@ -2938,6 +2938,28 @@ html.dark .tsb-loader__pct span { color: var(--yellow); }
   font-size: 10.5px; color: #777; margin-top: 2px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+/* LIVE badge — blinks while playing */
+.tsb-player__live {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 3px; font-size: 8.5px; font-weight: 700; letter-spacing: 1px;
+  color: #999; opacity: 0; height: 0; overflow: hidden;
+  transition: opacity .2s, height .2s;
+}
+.tsb-player__live--on { opacity: 1; height: 13px; color: var(--red); }
+.tsb-player__live i {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--red); display: inline-block;
+  animation: liveDot 1s ease-in-out infinite;
+}
+@keyframes liveDot { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: .5; } }
+/* progress shimmer — a soft moving shine over the yellow fill */
+.tsb-player__prog { overflow: hidden; position: relative; }
+.tsb-player__prog i::after {
+  content: ""; position: absolute; top: 0; left: -40%; width: 40%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.55), transparent);
+  animation: progShine 2.2s ease-in-out infinite;
+}
+@keyframes progShine { 0% { left: -40%; } 60%, 100% { left: 110%; } }
 .tsb-player__close {
   flex: none; width: 32px; height: 32px;
   border: 2.5px solid var(--ink); background: #fff; color: var(--ink);

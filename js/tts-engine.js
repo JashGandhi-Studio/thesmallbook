@@ -368,10 +368,20 @@ window.TTS_ENGINE = (function () {
     };
     if (puterReady) tryPuter();
     else {
-      /* NO WAITING: speak instantly with Web Speech, and let Puter load in
-         the background — later chunks automatically upgrade to Puter */
-      speakWeb(item.text, lang, spd, done);
-      loadPuter();
+      /* give Puter a SHORT chance (it was pre-warmed at boot) — this lets
+         background/lock-screen playback start with the media element when
+         available; otherwise speak instantly with Web Speech */
+      var gaveUp = false;
+      var t1 = setTimeout(function () {
+        gaveUp = true;
+        if (g === gen && playing && !paused) speakWeb(item.text, lang, spd, done);
+      }, 900);
+      loadPuter().then(function (ok) {
+        clearTimeout(t1);
+        if (gaveUp) return;
+        if (g !== gen || !playing || paused) return done(false);
+        if (ok) tryPuter(); else speakWeb(item.text, lang, spd, done);
+      });
     }
   }
 
@@ -695,6 +705,7 @@ window.TTS_ENGINE = (function () {
           '<div class="tsb-player__info">' +
             '<div class="tsb-player__title"></div>' +
             '<div class="tsb-player__sub"></div>' +
+            '<div class="tsb-player__live"><i></i> LIVE</div>' +
           '</div>' +
           '<button class="tsb-player__close" data-act="close" title="Stop">✕</button>' +
         '</div>' +
@@ -784,6 +795,8 @@ window.TTS_ENGINE = (function () {
     /* live feel: equalizer pulses while playing, stills when paused */
     const eq = player.querySelector(".tsb-player__eq");
     if (eq) eq.classList.toggle("tsb-player__eq--on", playing && !paused);
+    const live = player.querySelector(".tsb-player__live");
+    if (live) live.classList.toggle("tsb-player__live--on", playing && !paused);
     if (item && item.meta) {
       title.textContent = item.meta.book + " — " + item.meta.lesson;
       const totalLessons = Math.max(...queue.map(q => q.meta ? q.meta.idx : 0)) + 1;
@@ -826,8 +839,13 @@ window.TTS_ENGINE = (function () {
       if (v && v.length) { /* warm */ }
     } catch (e) {}
   }
-  // pre-warm puter in background (only when online)
-  if (navigator.onLine) setTimeout(loadPuter, 3000);
+  // pre-warm puter as EARLY as possible — the sooner it's ready, the sooner
+  // the background-capable audio element takes over (lock screen playback)
+  if (navigator.onLine) {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", function () { setTimeout(loadPuter, 300); });
+    } else setTimeout(loadPuter, 300);
+  }
 
   /* ---------- translation (for intros/templates) ---------- */
   var trCache = {};

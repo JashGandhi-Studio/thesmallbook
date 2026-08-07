@@ -265,22 +265,43 @@
       for (let y = 22; y < H; y += 46) { ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); }
   }
 
+  /* draw a cover image INSIDE a box, preserving its aspect ratio and
+     centering it — no stretching, no misalignment on any card */
+  function drawCoverCentered(ctx, img, x, y, w, h) {
+    if (!img || !img.width || !img.height) {
+      ctx.fillStyle = "#fffdf5";
+      ctx.fillRect(x, y, w, h);
+      ctx.fillStyle = "#111"; ctx.font = Math.round(h * 0.3) + "px Arial"; ctx.textAlign = "center";
+      ctx.fillText("📕", x + w / 2, y + h * 0.65);
+      ctx.textAlign = "left";
+      return;
+    }
+    const iw = img.width, ih = img.height;
+    const scale = Math.min(w / iw, h / ih);
+    const dw = iw * scale, dh = ih * scale;
+    ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+  }
+
   function drawBrandBar(ctx, W, H) {
     // black branding strip — clean, no URL (let them ask for the link 😉)
     const barH = 200;
     ctx.fillStyle = "#111111";
     ctx.fillRect(0, H - barH, W, barH);
-    // yellow top edge accent
     ctx.fillStyle = "#ffc800";
     ctx.fillRect(0, H - barH, W, 8);
-    // centered branding — bigger and bolder now that it owns the space
     ctx.textAlign = "center";
     ctx.fillStyle = "#ffc800";
     ctx.font = "900 60px 'Archivo Black', Arial";
     ctx.fillText("📕 THESMALLBOOK", W / 2, H - barH + 92);
+    /* LIVE totals — always current, never a hardcoded number */
+    const nBooks = (window.BOOKS || []).length;
+    const nLessons = (window.BOOKS || []).reduce((a, b) => a + (b.lessons ? b.lessons.length : 0), 0);
+    const tag = nBooks + "+ BOOKS · " + nLessons + "+ LESSONS · FREE FOREVER";
     ctx.fillStyle = "#f2ede2";
-    ctx.font = "bold 28px 'Space Grotesk', Arial";
-    ctx.fillText("150+ BOOKS · 740+ LESSONS · FREE FOREVER", W / 2, H - barH + 140);
+    let fs = 28;
+    ctx.font = "bold " + fs + "px 'Space Grotesk', Arial";
+    while (ctx.measureText(tag).width > W - 60 && fs > 18) { fs -= 2; ctx.font = "bold " + fs + "px 'Space Grotesk', Arial"; }
+    ctx.fillText(tag, W / 2, H - barH + 140);
     ctx.textAlign = "left";
   }
 
@@ -327,14 +348,7 @@
     ctx.rotate(0.03);
     ctx.fillStyle = "#111";
     ctx.fillRect(-covW / 2 + 12, -covH / 2 + 12, covW, covH);
-    if (img) {
-      ctx.drawImage(img, -covW / 2, -covH / 2, covW, covH);
-    } else {
-      ctx.fillStyle = "#fffdf5";
-      ctx.fillRect(-covW / 2, -covH / 2, covW, covH);
-      ctx.fillStyle = "#111"; ctx.font = "90px Arial"; ctx.textAlign = "center";
-      ctx.fillText("📕", 0, 30);
-    }
+    drawCoverCentered(ctx, img, -covW / 2, -covH / 2, covW, covH);
     ctx.lineWidth = 8; ctx.strokeStyle = "#111";
     ctx.strokeRect(-covW / 2, -covH / 2, covW, covH);
     ctx.restore();
@@ -428,15 +442,7 @@
     const cvW = 104, cvH = 148;
     ctx.fillStyle = "#111";
     ctx.fillRect(-cvW / 2 + 7, -cvH / 2 + 7, cvW, cvH);
-    if (covImg) {
-      ctx.drawImage(covImg, -cvW / 2, -cvH / 2, cvW, cvH);
-    } else {
-      ctx.fillStyle = "#fffdf5";
-      ctx.fillRect(-cvW / 2, -cvH / 2, cvW, cvH);
-      ctx.fillStyle = "#111"; ctx.font = "48px Arial"; ctx.textAlign = "center";
-      ctx.fillText("📕", 0, 16);
-      ctx.textAlign = "left";
-    }
+    drawCoverCentered(ctx, covImg, -cvW / 2, -cvH / 2, cvW, cvH);
     ctx.lineWidth = 6; ctx.strokeStyle = "#111";
     ctx.strokeRect(-cvW / 2, -cvH / 2, cvW, cvH);
     ctx.restore();
