@@ -172,6 +172,7 @@
       <button class="btn btn--icon" data-lang-btn title="Change language" aria-label="Language">🌐</button>
       <button class="btn btn--ink btn--icon" data-theme-toggle title="Dark mode (D)" aria-label="Dark mode">🌙</button>
     </div>
+    <div class="nav__auth" id="tsb-nav-auth" aria-live="polite"></div>
   </nav>
 
   <div class="tsb-marquee" aria-hidden="true">
@@ -295,17 +296,39 @@
         p.textContent = "🔒 We only see your name & email. Kabhi spam nahi, kabhi share nahi.";
         p.className = "logincard__privacy";
       }
+      function esc(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+      function showEditName() {
+        var cur = window.TSB_AUTH.displayName() || "";
+        var p = document.getElementById("loginSub");
+        p.innerHTML = '<div style="text-align:left;margin-bottom:14px"><label for="tsbNameInput" style="font-size:11px;font-weight:700;letter-spacing:1px;display:block;margin-bottom:6px">EDIT DISPLAY NAME</label>' +
+          '<input id="tsbNameInput" maxlength="24" value="' + esc(cur) + '" style="width:100%;border:3px solid #111;padding:10px 12px;font-family:inherit;font-size:14px;box-shadow:3px 3px 0 #111;background:#fff;color:#111;box-sizing:border-box">' +
+          '<div style="display:flex;gap:8px;margin-top:10px">' +
+          '<button id="tsbNameSave" style="flex:1;border:3px solid #111;background:#00c48c;color:#111;font-family:Archivo Black,sans-serif;font-size:12px;letter-spacing:1px;padding:10px 8px;cursor:pointer;box-shadow:3px 3px 0 #111">SAVE NAME</button>' +
+          '<button id="tsbNameCancel" style="flex:1;border:3px solid #111;background:#fffdf5;color:#111;font-family:Archivo Black,sans-serif;font-size:12px;letter-spacing:1px;padding:10px 8px;cursor:pointer;box-shadow:3px 3px 0 #111">CANCEL</button>' +
+          '</div></div>';
+        document.getElementById("tsbNameSave").onclick = function () {
+          var v = document.getElementById("tsbNameInput").value;
+          if (v && v.trim()) window.TSB_AUTH.setDisplayName(v);
+          render();
+        };
+        document.getElementById("tsbNameCancel").onclick = render;
+      }
       function showLoggedIn() {
         var u = window.TSB_AUTH.user();
-        var name = firstName(u);
+        var name = window.TSB_AUTH.displayName ? window.TSB_AUTH.displayName() : firstName(u);
         var first = name.split(" ")[0];
         var visits = window.TSB_AUTH.visits ? window.TSB_AUTH.visits() : 0;
         var hero = document.getElementById("loginHeroTitle");
-        hero.innerHTML = "WELCOME <span class=\"hl\">BACK, " + first.toUpperCase() + "!</span>";
+        hero.innerHTML = "WELCOME <span class=\"hl\">BACK, " + esc(first.toUpperCase()) + "!</span>";
         document.getElementById("loginHeroSub").innerHTML = "Aapka progress sync hai — laptop, phone, sab jagah. Aaj kya padhoge?";
         document.getElementById("loginArt").textContent = "👋";
-        document.getElementById("loginTitle").textContent = visits >= 2 ? "WELCOME BACK!" : "HEY, " + first.toUpperCase() + "!";
-        document.getElementById("loginSub").innerHTML = '<span class="logincard__user">' + name + "<br><span style='font-size:12px;color:#888;'>" + (u.email || "") + "</span></span>";
+        document.getElementById("loginTitle").textContent = visits >= 2 ? "WELCOME BACK!" : "HEY, " + esc(first.toUpperCase()) + "!";
+        document.getElementById("loginSub").innerHTML = '<span class="logincard__user">' + esc(name) + ' <button id="loginEditName" title="Edit name" style="border:2.5px solid #111;background:#ffc800;font-size:11px;padding:2px 8px;cursor:pointer;box-shadow:2px 2px 0 #111;font-family:Archivo Black,sans-serif">✏️ EDIT</button>' + "<br><span style='font-size:12px;color:#888;'>" + esc(u.email || "") + "</span></span>";
+        document.getElementById("loginEditName").onclick = showEditName;
         var btn = document.getElementById("loginGoogleBtn");
         btn.innerHTML = "🚀 START READING →";
         btn.className = "logincard__google logincard__start";
@@ -317,8 +340,9 @@
         p.innerHTML = 'Aur chaho to logout kar do → <button class="logincard__out" id="loginOut">LOGOUT</button>';
         p.className = "logincard__privacy";
         document.getElementById("loginOut").onclick = function () {
-          if (window.TSB_AUTH) window.TSB_AUTH.signOut();
-          setTimeout(render, 150);
+          if (window.TSB_AUTH && window.TSB_AUTH.confirmLogout) window.TSB_AUTH.confirmLogout();
+          else if (window.TSB_AUTH) window.TSB_AUTH.signOut();
+          setTimeout(render, 400);
         };
       }
       function render() {

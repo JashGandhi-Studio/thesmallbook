@@ -344,27 +344,47 @@
   /* track any read/bookmark change for debounced cloud sync */
   function track() { if (ENABLED) queueSync(); }
 
+  /* ---------------- display name (editable override) ---------------- */
+  function displayName() {
+    const u = user();
+    if (!u) return "";
+    const over = lsGet("tsb_display_name", "");
+    if (over) return over;
+    return (u.user_metadata && (u.user_metadata.name || u.user_metadata.full_name || u.user_metadata.user_name)) ||
+           (u.email || "").split("@")[0] || "Reader";
+  }
+  function setDisplayName(nm) {
+    nm = String(nm || "").trim().slice(0, 24);
+    if (nm) lsSet("tsb_display_name", nm);
+    renderNav(); renderChip();
+    return nm;
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
   /* ---------------- navbar login button ---------------- */
   function renderNav() {
-    const links = document.querySelectorAll("[data-nav-auth]");
-    if (!links.length) return;
+    const anchors = document.querySelectorAll("[data-nav-auth]");
+    const chipSlot = document.getElementById("tsb-nav-auth");
+    if (!anchors.length && !chipSlot) return;
     injectStyles();
     const u = user();
-    links.forEach((a) => {
-      if (u) {
-        const n = (u.user_metadata && (u.user_metadata.name || u.user_metadata.full_name)) || u.email || "Reader";
-        const short = n.split(" ")[0].slice(0, 12);
-        a.innerHTML = `👋 ${short}<i class="tsb-navuser__dot" title="Progress synced"></i>`;
-        a.classList.add("tsb-navuser--in");
-        a.classList.remove("tsb-navuser--login");
-        a.setAttribute("title", short + " — tap for account");
-      } else {
-        a.textContent = "🔐 LOGIN";
-        a.classList.add("tsb-navuser--login");
-        a.classList.remove("tsb-navuser--in");
-        a.setAttribute("title", "Save your progress across devices");
-      }
+    /* main-nav LOGIN button: shown when logged OUT, fully hidden when IN */
+    anchors.forEach((a) => {
+      if (u) a.style.display = "none";
+      else { a.style.display = ""; a.textContent = "🔐 LOGIN"; }
     });
+    /* top-right corner chip: only when logged IN */
+    if (chipSlot) {
+      if (u) {
+        const nm = displayName();
+        const first = nm.split(" ")[0].slice(0, 12);
+        chipSlot.innerHTML = '<a class="tsb-navchip" href="login.html" title="' + escapeHtml(nm) + ' — account">👋 ' + escapeHtml(first) + '<i class="tsb-navuser__dot" aria-hidden="true"></i></a>';
+      } else {
+        chipSlot.innerHTML = "";
+      }
+    }
   }
 
   /* remember current page when user clicks a nav LOGIN link */
@@ -378,6 +398,34 @@
     });
   }
 
+  /* ---------------- logout with confirmation ---------------- */
+  function confirmLogout() {
+    injectStyles();
+    const ov = document.createElement("div");
+    ov.className = "tsb-auth-ov";
+    ov.innerHTML = `
+      <div class="tsb-auth-box" role="alertdialog" aria-label="Log out?">
+        <button class="tsb-auth-x" aria-label="Close">✕</button>
+        <div style="font-size:40px">🚪</div>
+        <h3>LOG OUT?</h3>
+        <p>Are you sure you want to log out? Aapka progress <b>safe</b> rahega — bas dobara Google login karna hoga.</p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="tsb-auth-g" id="tsbLogoutYes" style="background:#ff4d4d;color:#fff;margin-bottom:0">YES, LOG OUT</button>
+          <button class="tsb-auth-g" id="tsbLogoutNo" style="background:#fffdf5;color:#111;margin-bottom:0">CANCEL</button>
+        </div>
+      </div>`;
+    document.body.appendChild(ov);
+    const close = () => ov.remove();
+    ov.querySelector(".tsb-auth-x").addEventListener("click", close);
+    ov.querySelector("#tsbLogoutNo").addEventListener("click", close);
+    ov.querySelector("#tsbLogoutYes").addEventListener("click", () => {
+      close();
+      signOut();
+      renderChip();
+      renderNav();
+    });
+  }
+
   /* ---------------- footer chip ---------------- */
   function renderChip() {
     const slot = document.getElementById("tsb-auth-slot");
@@ -385,10 +433,10 @@
     injectStyles();
     const u = user();
     if (u) {
-      const name = (u.user_metadata && (u.user_metadata.name || u.user_metadata.full_name)) || u.email || "reader";
-      slot.innerHTML = `<button class="tsb-auth-chip tsb-auth-chip--in" id="tsbAuthChip" title="Progress synced across devices">👋 ${name.split(" ")[0]} · SYNCED ✅</button>
+      const nm = displayName();
+      slot.innerHTML = `<button class="tsb-auth-chip tsb-auth-chip--in" id="tsbAuthChip" title="Progress synced across devices">👋 ${escapeHtml(nm.split(" ")[0])} · SYNCED ✅</button>
         <button class="tsb-auth-chip" id="tsbAuthOut" style="margin-left:8px;background:#ff4d4d;color:#fff">LOGOUT</button>`;
-      slot.querySelector("#tsbAuthOut").addEventListener("click", () => { signOut(); renderChip(); renderNav(); });
+      slot.querySelector("#tsbAuthOut").addEventListener("click", confirmLogout);
     } else {
       slot.innerHTML = `<a class="tsb-auth-chip tsb-auth-chip--out" href="login.html" id="tsbAuthChip">🔐 LOGIN — SAVE PROGRESS</a>`;
       slot.querySelector("#tsbAuthChip").addEventListener("click", () => {
@@ -411,8 +459,7 @@
     if (!user()) return;
     const n = trackVisit();
     if (n < 2) return; // only returning users (2nd+ distinct day)
-    const u = user();
-    const nm = (u.user_metadata && (u.user_metadata.name || u.user_metadata.full_name)) || u.email || "Reader";
+    const nm = displayName();
     const first = nm.split(" ")[0];
     toast("👋 Welcome back, " + first + "!", "welcome");
   }
@@ -447,6 +494,9 @@
       user,
       signIn,
       signOut,
+      confirmLogout,
+      displayName,
+      setDisplayName,
       syncProgress,
       queueSync,
       track,
