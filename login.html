@@ -24,7 +24,9 @@
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <!-- Google Identity Services — popup sign-in (no secret, shows thesmallbook.in) -->
+  <!-- Google Identity Services — "Sign in with Google" popup.
+       Shows "thesmallbook.in" (no secret needed). auth.js falls back
+       to the hosted flow automatically if this can't load. -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     /* ===== LOGIN PAGE v2 — MUST COOL ===== */

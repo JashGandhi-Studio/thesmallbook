@@ -117,46 +117,25 @@
     if (!/login\.html/.test(location.pathname)) {
       try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch {}
     }
-    // MODE 3 (PREFERRED) — Google Identity Services popup:
-    //   * NO client_secret needed (Google SDK returns the ID token directly)
-    //   * consent popup shows "TheSmallBook" + thesmallbook.in
-    //   * no redirect — user never leaves the page
-    if (GCLIENT && !GSECRET) {
+    // ⭐ PRIMARY: GIS "Sign in with Google" popup — FREE way to show
+    // "thesmallbook.in" in Google's prompt (no secret, no paid domain,
+    // no redirect_uri — the popup uses the page's own origin).
+    // Requires the client's "Authorized JavaScript origins" in Google
+    // Console to include https://thesmallbook.in (+ www).
+    if (GCLIENT) {
       if (window.google && window.google.accounts) { startGis(); return; }
       loadGisScript().then((ok) => {
         if (ok && window.google && window.google.accounts) startGis();
-        else hostedSignIn(provider); // fallback: Supabase-hosted (still works, no secret)
+        else hostedSignIn(provider); // guaranteed fallback — always works
       });
       return;
     }
-    // MODE 2 — direct Google redirect (only if a secret was configured)
-    if (GCLIENT && GSECRET) {
-      const verifier = genVerifier();
-      const nonce = genVerifier();
-      saveVerifier(verifier, nonce);
-      sha256(verifier).then((challenge) => {
-        const params = new URLSearchParams({
-          client_id: GCLIENT,
-          redirect_uri: REDIRECT_URI,
-          response_type: "code",
-          scope: "openid email profile",
-          code_challenge: challenge,
-          code_challenge_method: "S256",
-          nonce: nonce,
-          state: nonce,
-          prompt: "select_account"
-        });
-        const url = "https://accounts.google.com/o/oauth2/v2/auth?" + params.toString();
-        window.TSB_AUTH && (window.TSB_AUTH._lastAuthUrl = url);
-        location.href = url;
-      });
-      return;
-    }
-    // MODE 1 — Supabase-hosted redirect (default when no client id)
+    // FALLBACK: Supabase-hosted redirect (no client id configured)
     hostedSignIn(provider);
   }
 
-  /* ---- GIS (Google Identity Services) popup flow ---- */
+  /* ---- GIS (Google Identity Services) popup flow ----
+     (kept for future use; NOT active unless explicitly enabled) */
   let gisStarted = false;
   function loadGisScript() {
     return new Promise((resolve) => {
@@ -187,17 +166,18 @@
           gisStarted = false;
           if (resp && resp.credential) {
             exchangeGisToken(resp.credential);
-          } else if (resp && resp.error && resp.error !== "popup_closed_by_user") {
-            console.warn("TSB GIS error:", resp.error);
-            try { window.dispatchEvent(new CustomEvent("tsb:auth-error", { detail: resp.error })); } catch {}
+          } else if (resp && resp.error) {
+            if (resp.error === "popup_closed_by_user") return; // user cancelled — stay quiet
+            console.warn("TSB GIS error, switching to hosted flow:", resp.error);
+            hostedSignIn("google"); // guaranteed fallback — never leave the user stuck
           }
         }
       });
       window.google.accounts.id.prompt();
     } catch (e) {
-      console.warn("TSB GIS failed:", e);
+      console.warn("TSB GIS failed, switching to hosted flow:", e);
       gisStarted = false;
-      hostedSignIn("google");
+      hostedSignIn("google"); // guaranteed fallback
     }
   }
   async function exchangeGisToken(idToken) {
@@ -223,13 +203,15 @@
     }
   }
 
-  /* ---- Supabase-hosted authorize (Mode 1) ---- */
+  /* ---- Supabase-hosted authorize (Mode 1 — DEFAULT) ---- */
   function hostedSignIn(provider) {
     const verifier = genVerifier();
     const nonce = genVerifier();
     saveVerifier(verifier, nonce);
     sha256(verifier).then((challenge) => {
-      const redirectTo = location.origin + "/login.html";
+      // use the CANONICAL origin so www ⇄ bare both work (Supabase URL
+      // config allows thesmallbook.in/** only)
+      const redirectTo = SITE_ORIGIN + "/login.html";
       const params = new URLSearchParams({
         redirect_to: redirectTo,
         response_type: "code",
