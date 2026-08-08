@@ -74,16 +74,18 @@
   function signIn(provider) {
     provider = provider || "google";
     if (!ENABLED) return;
+    // remember where to return after login (unless we're ON the login page)
+    if (!/login\.html/.test(location.pathname)) {
+      try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch {}
+    }
     const verifier = genVerifier();
-    try {
-      sessionStorage.setItem("tsb_code_verifier", verifier);
-      // remember where we were so login returns to the SAME page/book
-      sessionStorage.setItem("tsb_auth_return", location.pathname + location.search);
-    } catch {}
+    try { sessionStorage.setItem("tsb_code_verifier", verifier); } catch {}
     sha256(verifier).then((challenge) => {
-      const redirectTo = location.origin + location.pathname + location.search;
+      // callback lands on login.html (beautiful welcome screen), then
+      // routes back to tsb_auth_return. NO client_id param — GoTrue
+      // substitutes the configured Google Client ID automatically.
+      const redirectTo = location.origin + "/login.html";
       const params = new URLSearchParams({
-        client_id: ANON,
         redirect_to: redirectTo,
         response_type: "code",
         provider: provider,
@@ -106,10 +108,10 @@
     try { ret = sessionStorage.getItem("tsb_auth_return") || location.pathname; } catch {}
     try { sessionStorage.removeItem("tsb_code_verifier"); } catch {}
     try {
-      const res = await fetch(URL + "/auth/v1/token?grant_type=authorization_code", {
+      const res = await fetch(URL + "/auth/v1/token?grant_type=pkce", {
         method: "POST",
         headers: { "apikey": ANON, "Content-Type": "application/json" },
-        body: JSON.stringify({ code, code_verifier: verifier || "" })
+        body: JSON.stringify({ auth_code: code, code_verifier: verifier || "" })
       });
       if (!res.ok) throw new Error("exchange " + res.status);
       session = await res.json();
@@ -263,7 +265,17 @@
       .tsb-auth-chip{display:inline-flex;align-items:center;gap:8px;border:3px solid #111;background:#fffdf5;box-shadow:4px 4px 0 #111;padding:8px 16px;font-family:"Archivo Black",sans-serif;font-size:12px;letter-spacing:.5px;cursor:pointer;color:#111;text-decoration:none}
       .tsb-auth-chip:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 #111}
       .tsb-auth-chip--in{background:#00c48c;color:#111}
-      .tsb-auth-chip--out{background:#4d7cff;color:#fff}
+      .tsb-auth-chip--out{background:#4d7cff;color:#111}
+      /* ---- navbar user chip / login button ---- */
+      .tsb-navuser{display:inline-flex;align-items:center;gap:7px;border:3px solid var(--ink);font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:9px 14px;cursor:pointer;text-decoration:none;line-height:1;transition:transform .12s ease, box-shadow .12s ease;color:#111}
+      .tsb-navuser:hover{transform:translate(-1px,-1px)}
+      .tsb-navuser--login{background:var(--blue);box-shadow:3.5px 3.5px 0 var(--ink)}
+      .tsb-navuser--login:hover{box-shadow:5px 5px 0 var(--ink)}
+      .tsb-navuser--in{background:var(--paper);color:var(--ink);text-transform:none;letter-spacing:0;font-size:12px;font-weight:600;padding:7px 12px;box-shadow:3px 3px 0 var(--green)}
+      .tsb-navuser--in:hover{box-shadow:5px 5px 0 var(--green)}
+      .tsb-navuser__dot{width:8px;height:8px;border-radius:50%;background:var(--green);border:2px solid var(--ink);flex:none;animation:tsbDotPulse 2.2s ease-in-out infinite}
+      @keyframes tsbDotPulse{0%,100%{opacity:1}50%{opacity:.35}}
+      .tsb-auth-toast--welcome{background:#ffc800;color:#111;border-color:var(--ink);box-shadow:6px 6px 0 #00c48c}
       .tsb-auth-ov{position:fixed;inset:0;background:rgba(17,17,17,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px;animation:tsbAuthFade .25s ease}
       .tsb-auth-box{background:#fffdf5;border:4px solid #111;box-shadow:10px 10px 0 #ffc800;max-width:400px;width:100%;padding:26px 22px;text-align:center;position:relative;animation:tsbAuthPop .3s cubic-bezier(.2,1.4,.4,1)}
       .tsb-auth-x{position:absolute;top:10px;right:12px;border:2.5px solid #111;background:#fffdf5;width:32px;height:32px;cursor:pointer;font-weight:700}
@@ -273,6 +285,10 @@
       .tsb-auth-g:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 #111}
       .tsb-auth-g img{width:20px;height:20px}
       .tsb-auth-later{background:none;border:none;text-decoration:underline;cursor:pointer;font-size:12.5px;color:#666;padding:6px}
+      .tsb-auth-chips{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+      .tsb-auth-chips span{font-size:10.5px;font-weight:700;letter-spacing:.4px;border:2.5px solid #111;padding:4px 8px;background:#ffc800}
+      .tsb-auth-chips span:nth-child(2){background:#ff90e8}
+      .tsb-auth-chips span:nth-child(3){background:#00c48c}
       .tsb-auth-toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:10000;background:#111;color:#ffc800;border:3px solid #00c48c;box-shadow:6px 6px 0 #00c48c;padding:12px 22px;font-family:"Archivo Black",sans-serif;font-size:13px;letter-spacing:.5px;animation:tsbAuthFade .3s ease}
       @keyframes tsbAuthFade{from{opacity:0}to{opacity:1}}
       @keyframes tsbAuthPop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
@@ -280,12 +296,12 @@
     document.head.appendChild(st);
   }
 
-  function toast(msg) {
+  function toast(msg, variant) {
     const t = document.createElement("div");
-    t.className = "tsb-auth-toast";
+    t.className = "tsb-auth-toast" + (variant === "welcome" ? " tsb-auth-toast--welcome" : "");
     t.textContent = msg;
     document.body.appendChild(t);
-    setTimeout(() => t.remove(), 3200);
+    setTimeout(() => t.remove(), 3600);
   }
 
   function showSaveModal() {
@@ -299,7 +315,8 @@
         <button class="tsb-auth-x" aria-label="Close">✕</button>
         <div style="font-size:44px">🔥</div>
         <h3>2 BOOKS DOWN!</h3>
-        <p>You just finished <b>2 full books</b> — seriously impressive. Laptop pe padha, phone pe khatam? <b>Progress save karo</b> aur har device pe continue karo. Free, 1 tap.</p>
+        <p>Laptop pe padha, phone pe khatam? <b>Progress save karo</b> — bookmarks, lessons, streaks, sab sync. Free, 1 tap.</p>
+        <div class="tsb-auth-chips"><span>📱 DEVICE SYNC</span><span>❤️ BOOKMARKS</span><span>🛡️ SAFE</span></div>
         <button class="tsb-auth-g" id="tsbAuthGoogle">
           <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
           LOG IN WITH GOOGLE
@@ -327,6 +344,40 @@
   /* track any read/bookmark change for debounced cloud sync */
   function track() { if (ENABLED) queueSync(); }
 
+  /* ---------------- navbar login button ---------------- */
+  function renderNav() {
+    const links = document.querySelectorAll("[data-nav-auth]");
+    if (!links.length) return;
+    injectStyles();
+    const u = user();
+    links.forEach((a) => {
+      if (u) {
+        const n = (u.user_metadata && (u.user_metadata.name || u.user_metadata.full_name)) || u.email || "Reader";
+        const short = n.split(" ")[0].slice(0, 12);
+        a.innerHTML = `👋 ${short}<i class="tsb-navuser__dot" title="Progress synced"></i>`;
+        a.classList.add("tsb-navuser--in");
+        a.classList.remove("tsb-navuser--login");
+        a.setAttribute("title", short + " — tap for account");
+      } else {
+        a.textContent = "🔐 LOGIN";
+        a.classList.add("tsb-navuser--login");
+        a.classList.remove("tsb-navuser--in");
+        a.setAttribute("title", "Save your progress across devices");
+      }
+    });
+  }
+
+  /* remember current page when user clicks a nav LOGIN link */
+  function attachNavHandlers() {
+    document.querySelectorAll("[data-nav-auth]").forEach((a) => {
+      a.addEventListener("click", () => {
+        if (!/login\.html/.test(location.pathname)) {
+          try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch {}
+        }
+      });
+    });
+  }
+
   /* ---------------- footer chip ---------------- */
   function renderChip() {
     const slot = document.getElementById("tsb-auth-slot");
@@ -337,11 +388,33 @@
       const name = (u.user_metadata && (u.user_metadata.name || u.user_metadata.full_name)) || u.email || "reader";
       slot.innerHTML = `<button class="tsb-auth-chip tsb-auth-chip--in" id="tsbAuthChip" title="Progress synced across devices">👋 ${name.split(" ")[0]} · SYNCED ✅</button>
         <button class="tsb-auth-chip" id="tsbAuthOut" style="margin-left:8px;background:#ff4d4d;color:#fff">LOGOUT</button>`;
-      slot.querySelector("#tsbAuthOut").addEventListener("click", () => { signOut(); renderChip(); });
+      slot.querySelector("#tsbAuthOut").addEventListener("click", () => { signOut(); renderChip(); renderNav(); });
     } else {
-      slot.innerHTML = `<button class="tsb-auth-chip tsb-auth-chip--out" id="tsbAuthChip">🔐 LOGIN — SAVE PROGRESS</button>`;
-      slot.querySelector("#tsbAuthChip").addEventListener("click", () => signIn("google"));
+      slot.innerHTML = `<a class="tsb-auth-chip tsb-auth-chip--out" href="login.html" id="tsbAuthChip">🔐 LOGIN — SAVE PROGRESS</a>`;
+      slot.querySelector("#tsbAuthChip").addEventListener("click", () => {
+        try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch {}
+      });
     }
+  }
+
+  /* ---------------- returning-user welcome ("Welcome back") ---------------- */
+  function visitDay() { try { return new Date().toISOString().slice(0, 10); } catch (e) { return ""; } }
+  function trackVisit() {
+    if (!user()) return 0;
+    const today = visitDay();
+    if (!today) return 0;
+    let v = lsGet("tsb_auth_visits", { d: "", n: 0 });
+    if (v.d !== today) { v = { d: today, n: (v.n || 0) + 1 }; lsSet("tsb_auth_visits", v); }
+    return v.n;
+  }
+  function welcomeBack() {
+    if (!user()) return;
+    const n = trackVisit();
+    if (n < 2) return; // only returning users (2nd+ distinct day)
+    const u = user();
+    const nm = (u.user_metadata && (u.user_metadata.name || u.user_metadata.full_name)) || u.email || "Reader";
+    const first = nm.split(" ")[0];
+    toast("👋 Welcome back, " + first + "!", "welcome");
   }
 
   /* ---------------- boot ---------------- */
@@ -352,13 +425,23 @@
     }
     const didCallback = await handleCallback();
     if (didCallback && user()) {
+      // update UI IMMEDIATELY — never make the user wait on network sync
+      renderNav();
+      renderChip();
+      try { window.dispatchEvent(new CustomEvent("tsb:loggedin")); } catch {}
+      try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
+      // now sync in the background
       await syncProgress();
       injectStyles();
       toast("PROGRESS SYNCED ✅");
     }
     if (user() && session.expires_at && now() >= session.expires_at - 90) await refreshSession();
+    renderNav();
     renderChip();
-    try { window.addEventListener("tsb:sync", renderChip); } catch {}
+    attachNavHandlers();
+    welcomeBack();
+    try { window.addEventListener("tsb:sync", () => { renderChip(); renderNav(); }); } catch {}
+    try { window.addEventListener("tsb:auth", () => { renderChip(); renderNav(); }); } catch {}
     window.TSB_AUTH = {
       enabled: true,
       user,
@@ -367,8 +450,11 @@
       syncProgress,
       queueSync,
       track,
-      onBookComplete
+      onBookComplete,
+      renderNav,
+      visits: () => (user() ? lsGet("tsb_auth_visits", { d: "", n: 0 }).n : 0)
     };
+    try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
