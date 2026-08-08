@@ -13,6 +13,8 @@
   const URL = (CFG.SUPABASE_URL || "").replace(/\/$/, "");
   const ANON = CFG.SUPABASE_ANON_KEY || "";
   const GCLIENT = CFG.GOOGLE_CLIENT_ID || ""; // direct-Google OAuth client (consent shows thesmallbook.in)
+  const SITE_ORIGIN = CFG.SITE_URL || "https://thesmallbook.in"; // canonical origin (www vs bare doesn't matter)
+  const REDIRECT_URI = SITE_ORIGIN + "/login.html"; // MUST be registered in Google Cloud Console
   const ENABLED = !!(URL && ANON);
 
   const AUTH_KEY = "tsb_auth_session";      // session (tokens + user)
@@ -95,7 +97,7 @@
         // oauth2.googleapis.com/token, then mint the Supabase session.
         const params = new URLSearchParams({
           client_id: GCLIENT,
-          redirect_uri: location.origin + "/login.html",
+          redirect_uri: REDIRECT_URI,
           response_type: "code",
           scope: "openid email profile",
           code_challenge: challenge,
@@ -130,7 +132,7 @@
       body: new URLSearchParams({
         code: code,
         client_id: GCLIENT,
-        redirect_uri: location.origin + "/login.html",
+        redirect_uri: REDIRECT_URI,
         grant_type: "authorization_code",
         code_verifier: verifier
       })
