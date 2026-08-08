@@ -1,35 +1,54 @@
 /* ============================================================
    THESMALLBOOK — CLOUD CONFIG
-   To make community stories visible to EVERYONE (not just each
-   visitor's own browser), plug in a free Supabase project:
+   🔐 SIGN-IN (optional): to let readers save progress across
+   devices with "Log in with Google" (free, no card needed):
 
-   1. Go to https://supabase.com  → New project (free tier)
-   2. In the SQL editor, run:
+   1. https://supabase.com → New project (free tier, region Mumbai)
+   2. Authentication → Providers → Google (creates the OAuth
+      client via console.cloud.google.com — full steps in
+      SIGN-IN-BLUEPRINT.md)
+   3. Authentication → URL Configuration → Site URL:
+      https://thesmallbook.in  +  Redirect: https://thesmallbook.in/**
+   4. SQL Editor → run:
+
+      create table if not exists progress (
+        id uuid primary key default gen_random_uuid(),
+        user_id uuid not null references auth.users(id) on delete cascade,
+        book_id text not null,
+        lessons_done jsonb not null default '[]'::jsonb,
+        bookmarked boolean not null default false,
+        updated_at timestamptz not null default now(),
+        unique (user_id, book_id)
+      );
+      alter table progress enable row level security;
+      create policy "own progress select" on progress
+        for select using (auth.uid() = user_id);
+      create policy "own progress insert" on progress
+        for insert with check (auth.uid() = user_id);
+      create policy "own progress update" on progress
+        for update using (auth.uid() = user_id);
+
+   5. Project Settings → API → copy Project URL + anon public key
+   6. Paste them below and push. Done — progress syncs everywhere.
+
+   (Stories table — same project, if you want community stories
+   visible to everyone, run this in SQL Editor too:
 
       create table stories (
-        id text primary key,
-        title text not null,
-        author text not null,
-        book_id text,
-        cover text,
-        pdf text,
-        text_body text,
-        date text
+        id text primary key, title text not null, author text not null,
+        book_id text, cover text, pdf text, text_body text, date text
       );
       alter table stories enable row level security;
       create policy "public read"  on stories for select using (true);
       create policy "public write" on stories for insert with check (true);
 
-   3. Project Settings → API → copy the URL and the anon public key
-   4. Paste them below and push to GitHub. Done — stories are global.
-
-   Leave both empty ("") and the site still works: stories are then
-   saved in each visitor's own browser (localStorage).
+   Leave both empty ("") and the site works exactly as before:
+   no login shown, progress stays in the browser (localStorage).
    ============================================================ */
 
 window.TSB_CONFIG = {
-  SUPABASE_URL: "",        // e.g. "https://abcdefgh.supabase.co"
-  SUPABASE_ANON_KEY: "",   // e.g. "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
+  SUPABASE_URL: "https://wdmxcewmyofihgrheuas.supabase.co",        // e.g. "https://abcdefgh.supabase.co"
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkbXhjZXdteW9maWhncmhldWFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxOTc3NjQsImV4cCI6MjEwMTc3Mzc2NH0.ZiaeA9eA7uxVeP0qhuoFdoY4CGP0eKI7VD87xsE3tw8",   // e.g. "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
 
   // Email where readers send their story files for the Global Shelf
   // (used by the no-backend submission flow — set this before launch!)

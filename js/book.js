@@ -61,6 +61,7 @@
     const on = TSB.bookmarks.toggle(book.id);
     e.target.textContent = on ? "❤️ SAVED" : "🤍 SAVE";
     e.target.classList.toggle("btn--red", on);
+    if (window.TSB_AUTH && window.TSB_AUTH.enabled) window.TSB_AUTH.track();
   });
 
   /* 🎧 PODCAST MODE — full-book listening via TTS_ENGINE
@@ -841,6 +842,7 @@
     btn.addEventListener("click", () => {
       const i = +btn.dataset.read;
       TSB.progress.markRead(book.id, i);
+      if (window.TSB_AUTH && window.TSB_AUTH.enabled) window.TSB_AUTH.track();
       btn.classList.add("active");
       btn.textContent = "✓ READ";
       document.querySelector(`#lesson-${i} .lesson__num`).textContent = "✓";
@@ -848,6 +850,7 @@
       if (TSB.progress.forBook(book.id).length >= book.lessons.length) {
         TSB.achv.award("book-complete");
         showCompleteCelebration();
+        if (window.TSB_AUTH && window.TSB_AUTH.enabled) window.TSB_AUTH.onBookComplete(book.id);
       }
     });
   });
