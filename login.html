@@ -101,6 +101,11 @@
     .syncbox__rows .syncbox__row { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; border: 2.5px solid var(--ink); padding: 7px 10px; margin-bottom: 8px; background: var(--paper); }
     .syncbox__row b { color: #0a7a45; font-family: "Archivo Black", sans-serif; font-size: 11px; }
     .syncbox__ok { display: inline-flex; align-items: center; gap: 6px; font-family: "Archivo Black", sans-serif; font-size: 11px; letter-spacing: 1.5px; background: var(--green); border: 3px solid var(--ink); color: #111; padding: 6px 14px; box-shadow: 3px 3px 0 var(--ink); animation: tsbPulse 2.4s ease-in-out infinite; }
+    /* logged-in: everything green, continuous sync = always on */
+    .syncbox.all-synced .syncbox__head i { background: var(--green); }
+    .syncbox.all-synced .syncbox__path { background: repeating-linear-gradient(90deg, var(--green) 0 8px, transparent 8px 16px); }
+    .syncbox.all-synced .syncbox__dot { background: var(--green); }
+    .syncbox.all-synced .syncbox__dot--2 { background: var(--green); animation-delay: .4s; }
 
     .benefit { background: var(--paper); border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 15px 16px; display: flex; flex-direction: column; gap: 3px; }
     .benefit b { font-family: "Archivo Black", sans-serif; font-size: 13.5px; letter-spacing: .5px; }
@@ -214,8 +219,8 @@
       </section>
 
       <aside class="loginright">
-        <div class="syncbox">
-          <div class="syncbox__head">🔄 LIVE SYNC <i>ALWAYS ON</i></div>
+        <div class="syncbox" id="syncBox">
+          <div class="syncbox__head">🔄 LIVE SYNC <i id="syncBadge">ALWAYS ON</i></div>
           <div class="syncbox__flow">
             <span class="syncbox__dev">💻</span>
             <span class="syncbox__path"><i class="syncbox__dot"></i></span>
@@ -223,12 +228,12 @@
             <span class="syncbox__path"><i class="syncbox__dot syncbox__dot--2"></i></span>
             <span class="syncbox__dev">📱</span>
           </div>
-          <div class="syncbox__rows">
+          <div class="syncbox__rows" id="syncRows">
             <div class="syncbox__row"><span>📖 Deep Work — 7/9 lessons</span><b>✓ SYNCED</b></div>
             <div class="syncbox__row"><span>❤️ 12 bookmarks</span><b>✓ SYNCED</b></div>
             <div class="syncbox__row"><span>🏆 3-day streak</span><b>✓ SYNCED</b></div>
           </div>
-          <div style="text-align:center;margin-top:12px"><span class="syncbox__ok">SYNCED ✓</span></div>
+          <div style="text-align:center;margin-top:12px"><span class="syncbox__ok" id="syncOk">SYNCED ✓</span></div>
         </div>
         <div class="benefit"><b>📱 LAPTOP → PHONE</b><span>Book #12 ke beech mein the? Phone kholo, wahi se continue.</span></div>
         <div class="benefit"><b>❤️ BOOKMARKS + LESSONS</b><span>Jo bhi save / read kiya — har device pe wahi haal.</span></div>
@@ -279,6 +284,53 @@
                  new URLSearchParams(location.search).get("next") || "index.html";
         } catch (e) { return "index.html"; }
       }
+      function hasReturningCode() {
+        return /[?&]code=/.test(location.search) || /[#&]id_token=/.test(location.hash);
+      }
+      function showVerifying() {
+        document.getElementById("loginTitle").textContent = "VERIFYING...";
+        document.getElementById("loginSub").textContent = "Google sign-in confirm ho raha hai...";
+        var btn = document.getElementById("loginGoogleBtn");
+        btn.innerHTML = "⏳ PLEASE WAIT...";
+        btn.disabled = true;
+        btn.style.opacity = .6;
+      }
+      /* ---------- LIVE SYNC BOX ---------- */
+      function updateSyncBoxLoggedIn() {
+        var prog = {}, marks = [];
+        try { prog = JSON.parse(localStorage.getItem("tsb_progress")) || {}; } catch (e) {}
+        try { marks = JSON.parse(localStorage.getItem("tsb_bookmarks")) || []; } catch (e) {}
+        var lessons = 0;
+        Object.keys(prog).forEach(function (k) { lessons += (prog[k] || []).length; });
+        var rows = document.getElementById("syncRows");
+        if (rows) {
+          rows.innerHTML =
+            '<div class="syncbox__row"><span>📖 ' + lessons + ' lessons read</span><b>✓ SYNCED</b></div>' +
+            '<div class="syncbox__row"><span>❤️ ' + marks.length + ' bookmarks</span><b>✓ SYNCED</b></div>' +
+            '<div class="syncbox__row"><span>📱 This device</span><b>✓ SYNCED</b></div>';
+        }
+        var badge = document.getElementById("syncBadge");
+        if (badge) { badge.textContent = "ALL SYNCED"; badge.style.background = "#00c48c"; }
+        var box = document.getElementById("syncBox");
+        if (box) box.classList.add("all-synced");
+        var ok = document.getElementById("syncOk");
+        if (ok) ok.textContent = "ALL SYNCED · ALWAYS ON ✓";
+      }
+      function resetSyncBox() {
+        var rows = document.getElementById("syncRows");
+        if (rows) {
+          rows.innerHTML =
+            '<div class="syncbox__row"><span>📖 Deep Work — 7/9 lessons</span><b>✓ SYNCED</b></div>' +
+            '<div class="syncbox__row"><span>❤️ 12 bookmarks</span><b>✓ SYNCED</b></div>' +
+            '<div class="syncbox__row"><span>🏆 3-day streak</span><b>✓ SYNCED</b></div>';
+        }
+        var badge = document.getElementById("syncBadge");
+        if (badge) { badge.textContent = "ALWAYS ON"; badge.style.background = ""; }
+        var box = document.getElementById("syncBox");
+        if (box) box.classList.remove("all-synced");
+        var ok = document.getElementById("syncOk");
+        if (ok) ok.textContent = "SYNCED ✓";
+      }
       function showLogin() {
         var hero = document.getElementById("loginHeroTitle");
         hero.innerHTML = "ONE LOGIN.<br><span class=\"hl\">EVERY DEVICE.</span>";
@@ -295,6 +347,7 @@
         var p = document.getElementById("loginPrivacy");
         p.textContent = "🔒 We only see your name & email. Kabhi spam nahi, kabhi share nahi.";
         p.className = "logincard__privacy";
+        resetSyncBox();
       }
       function esc(s) {
         return String(s).replace(/[&<>"']/g, function (c) {
@@ -344,10 +397,13 @@
           else if (window.TSB_AUTH) window.TSB_AUTH.signOut();
           setTimeout(render, 400);
         };
+        updateSyncBoxLoggedIn();
       }
       function render() {
         var a = window.TSB_AUTH;
         if (!a) { setTimeout(render, 120); return; } // auth boot might still be finishing
+        if (a.enabled && a.user()) { showLoggedIn(); return; }
+        if (hasReturningCode()) { showVerifying(); return; }
         if (!a.enabled) {
           document.getElementById("loginTitle").textContent = "SIGN-IN SOON";
           document.getElementById("loginSub").textContent = "Progress abhi isi browser mein safe hai";

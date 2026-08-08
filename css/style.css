@@ -104,6 +104,16 @@ a { color: inherit; }
 
 /* ---------- NAV AUTH (top-right login chip) ---------- */
 .nav__auth { display: flex; align-items: center; }
+/* phones & small tablets: chip ALWAYS floats top-right in the LOGO row,
+   never below the buttons (covers 561–900px which previously wrapped) */
+@media (max-width: 900px) {
+  .nav__auth { position: absolute; top: 12px; right: 14px; z-index: 6; margin-left: 0; }
+  html.tsb-logged-in .nav__links { padding-right: 96px; }
+}
+@media (max-width: 560px) {
+  html.tsb-logged-in .nav__links { padding-right: 0; }
+  html.tsb-logged-in .logo { padding-right: 88px; }
+}
 .tsb-navchip {
   display: inline-flex; align-items: center; gap: 7px;
   border: var(--border); background: var(--paper); color: var(--ink);
@@ -878,14 +888,14 @@ a { color: inherit; }
 }
 
 @media (max-width: 560px) {
-  /* nav: logo row + full-width button row */
-  .nav { padding: 10px 12px; }
-  .logo { font-size: 1.05rem; gap: 8px; }
+  /* nav: logo row + full-width button row; chip floats top-right of logo row */
+  .nav { padding: 10px 12px; position: relative; }
+  .logo { font-size: 1.05rem; gap: 8px; padding-right: 74px; }
   .logo__mark { width: 36px; height: 36px; font-size: 1rem; }
   .nav__links { width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px; }
   .nav__links .btn { justify-content: center; text-align: center; padding: 9px 6px; font-size: .68rem; box-shadow: 3px 3px 0 var(--ink); }
-  .nav__auth { margin-left: auto; }
-  .tsb-navchip { font-size: 11px; padding: 6px 10px; }
+  .nav__auth { position: absolute; top: 10px; right: 12px; margin-left: 0; }
+  .tsb-navchip { font-size: 11px; padding: 6px 10px; box-shadow: 2.5px 2.5px 0 var(--green); }
 
   /* hero */
   .hero { padding: 32px 14px 24px; }

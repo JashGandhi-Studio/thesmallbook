@@ -12,6 +12,7 @@
   const CFG = window.TSB_CONFIG || {};
   const URL = (CFG.SUPABASE_URL || "").replace(/\/$/, "");
   const ANON = CFG.SUPABASE_ANON_KEY || "";
+  const GCLIENT = CFG.GOOGLE_CLIENT_ID || ""; // direct-Google OAuth client (consent shows thesmallbook.in)
   const ENABLED = !!(URL && ANON);
 
   const AUTH_KEY = "tsb_auth_session";      // session (tokens + user)
@@ -79,11 +80,34 @@
       try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch {}
     }
     const verifier = genVerifier();
-    try { sessionStorage.setItem("tsb_code_verifier", verifier); } catch {}
+    const nonce = genVerifier();
+    try {
+      sessionStorage.setItem("tsb_code_verifier", verifier);
+      sessionStorage.setItem("tsb_nonce", nonce);
+    } catch {}
     sha256(verifier).then((challenge) => {
-      // callback lands on login.html (beautiful welcome screen), then
-      // routes back to tsb_auth_return. NO client_id param — GoTrue
-      // substitutes the configured Google Client ID automatically.
+      if (GCLIENT) {
+        // 🟢 DIRECT GOOGLE OAuth (PKCE, public client) — NO Supabase server in
+        // the middle, so Google's consent screen shows:
+        //   "Sign in with Google — continue to thesmallbook.in"
+        // instead of "...wdmxcewmyofihgrheuas.supabase.co".
+        // The code comes back to OUR login.html; we exchange it at
+        // oauth2.googleapis.com/token, then mint the Supabase session.
+        const params = new URLSearchParams({
+          client_id: GCLIENT,
+          redirect_uri: location.origin + "/login.html",
+          response_type: "code",
+          scope: "openid email profile",
+          code_challenge: challenge,
+          code_challenge_method: "S256",
+          nonce: nonce,
+          state: nonce,
+          prompt: "select_account"
+        });
+        location.href = "https://accounts.google.com/o/oauth2/v2/auth?" + params.toString();
+        return;
+      }
+      // fallback: Supabase-hosted authorize (if GOOGLE_CLIENT_ID missing)
       const redirectTo = location.origin + "/login.html";
       const params = new URLSearchParams({
         redirect_to: redirectTo,
@@ -98,6 +122,43 @@
     });
   }
 
+  /* exchange Google's ?code= for an id_token (public client, PKCE, no secret) */
+  async function googleCodeToIdToken(code, verifier) {
+    const res = await fetch("https://oauth2.googleapis.com/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        code: code,
+        client_id: GCLIENT,
+        redirect_uri: location.origin + "/login.html",
+        grant_type: "authorization_code",
+        code_verifier: verifier
+      })
+    });
+    if (!res.ok) throw new Error("google token " + res.status);
+    return await res.json(); // { id_token, access_token, expires_in, ... }
+  }
+
+  /* mint a Supabase session from Google's id_token */
+  async function supabaseIdTokenSession(idToken) {
+    const res = await fetch(URL + "/auth/v1/token?grant_type=id_token", {
+      method: "POST",
+      headers: { "apikey": ANON, "Content-Type": "application/json" },
+      body: JSON.stringify({ provider: "google", id_token: idToken })
+    });
+    if (!res.ok) throw new Error("supabase id_token " + res.status);
+    return await res.json(); // standard session
+  }
+
+  /* soft nonce check on the id_token payload */
+  function nonceOk(idToken) {
+    try {
+      const payload = JSON.parse(atob(idToken.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+      const stored = sessionStorage.getItem("tsb_nonce") || "";
+      return !payload.nonce || !stored || payload.nonce === stored;
+    } catch (e) { return true; }
+  }
+
   /* exchange ?code= for a session right after Google redirects back */
   async function handleCallback() {
     const p = new URLSearchParams(location.search);
@@ -105,8 +166,31 @@
     if (!code) return false;
     const verifier = uid();
     let ret = "";
-    try { ret = sessionStorage.getItem("tsb_auth_return") || location.pathname; } catch {}
-    try { sessionStorage.removeItem("tsb_code_verifier"); } catch {}
+    try { ret = sessionStorage.getItem("tsb_auth_return") || ""; } catch {}
+
+    // 1) DIRECT GOOGLE flow (our main path — consent shows thesmallbook.in)
+    if (GCLIENT && verifier) {
+      try {
+        const gt = await googleCodeToIdToken(code, verifier);
+        if (gt && gt.id_token) {
+          if (nonceOk(gt.id_token)) {
+            const s = await supabaseIdTokenSession(gt.id_token);
+            if (s && s.access_token) {
+              session = s;
+              lsSet(AUTH_KEY, session);
+              history.replaceState({}, "", location.pathname); // clean URL, stay on login page
+              try { sessionStorage.removeItem("tsb_code_verifier"); sessionStorage.removeItem("tsb_nonce"); } catch {}
+              return true;
+            }
+          }
+          console.warn("TSB: google id_token nonce/session failed");
+        }
+      } catch (e) {
+        console.warn("TSB direct google exchange failed:", e);
+      }
+    }
+
+    // 2) FALLBACK: Supabase-hosted authorize (if GOOGLE_CLIENT_ID not set)
     try {
       const res = await fetch(URL + "/auth/v1/token?grant_type=pkce", {
         method: "POST",
@@ -116,12 +200,12 @@
       if (!res.ok) throw new Error("exchange " + res.status);
       session = await res.json();
       lsSet(AUTH_KEY, session);
-      history.replaceState({}, "", ret);
-      try { sessionStorage.removeItem("tsb_auth_return"); } catch {}
+      history.replaceState({}, "", location.pathname);
+      try { sessionStorage.removeItem("tsb_code_verifier"); sessionStorage.removeItem("tsb_nonce"); } catch {}
       return true;
     } catch (e) {
       console.warn("TSB auth callback failed:", e);
-      try { history.replaceState({}, "", ret || location.pathname); } catch {}
+      try { history.replaceState({}, "", location.pathname); } catch {}
       return false;
     }
   }
@@ -297,6 +381,7 @@
   }
 
   function toast(msg, variant) {
+    try { document.querySelectorAll(".tsb-auth-toast").forEach((t) => t.remove()); } catch {}
     const t = document.createElement("div");
     t.className = "tsb-auth-toast" + (variant === "welcome" ? " tsb-auth-toast--welcome" : "");
     t.textContent = msg;
@@ -370,6 +455,8 @@
     if (!anchors.length && !chipSlot) return;
     injectStyles();
     const u = user();
+    /* flag on <html> so CSS can position the chip correctly on mobile */
+    try { document.documentElement.classList.toggle("tsb-logged-in", !!u); } catch (e) {}
     /* main-nav LOGIN button: shown when logged OUT, fully hidden when IN */
     anchors.forEach((a) => {
       if (u) a.style.display = "none";
