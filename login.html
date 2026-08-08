@@ -24,6 +24,8 @@
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <!-- Google Identity Services — popup sign-in (no secret, shows thesmallbook.in) -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     /* ===== LOGIN PAGE v2 — MUST COOL ===== */
     .loginwrap { position: relative; max-width: 1000px; margin: 0 auto; padding: 44px clamp(14px, 4vw, 40px) 56px; }
@@ -219,7 +221,7 @@
       </section>
 
       <aside class="loginright">
-        <div class="syncbox" id="syncBox">
+        <div class="syncbox" id="syncBox" style="display:none">
           <div class="syncbox__head">🔄 LIVE SYNC <i id="syncBadge">ALWAYS ON</i></div>
           <div class="syncbox__flow">
             <span class="syncbox__dev">💻</span>
@@ -297,6 +299,8 @@
       }
       /* ---------- LIVE SYNC BOX ---------- */
       function updateSyncBoxLoggedIn() {
+        var box = document.getElementById("syncBox");
+        if (box) box.style.display = "block"; // only show when logged IN
         var prog = {}, marks = [];
         try { prog = JSON.parse(localStorage.getItem("tsb_progress")) || {}; } catch (e) {}
         try { marks = JSON.parse(localStorage.getItem("tsb_bookmarks")) || []; } catch (e) {}
@@ -317,6 +321,8 @@
         if (ok) ok.textContent = "ALL SYNCED · ALWAYS ON ✓";
       }
       function resetSyncBox() {
+        var box = document.getElementById("syncBox");
+        if (box) box.style.display = "none"; // OFF until logged in
         var rows = document.getElementById("syncRows");
         if (rows) {
           rows.innerHTML =
@@ -399,11 +405,37 @@
         };
         updateSyncBoxLoggedIn();
       }
+      var authFailed = false;
+      function showError() {
+        authFailed = true;
+        document.getElementById("loginTitle").textContent = "LOGIN FAILED 😕";
+        document.getElementById("loginSub").textContent = "Kuch gadbad ho gayi — dobara try karo. (Progress safe hai.)";
+        var btn = document.getElementById("loginGoogleBtn");
+        btn.innerHTML = "🔄 TRY AGAIN";
+        btn.disabled = false;
+        btn.style.opacity = "1";
+        btn.className = "logincard__google";
+        btn.onclick = function () {
+          authFailed = false;
+          if (window.TSB_AUTH) window.TSB_AUTH.signIn("google");
+        };
+        var chips = document.getElementById("loginChips");
+        if (chips) chips.style.display = "flex";
+        if (chips) chips.innerHTML = "<span>🔄 DOBARA TRY KARO</span>";
+      }
       function render() {
         var a = window.TSB_AUTH;
         if (!a) { setTimeout(render, 120); return; } // auth boot might still be finishing
         if (a.enabled && a.user()) { showLoggedIn(); return; }
-        if (hasReturningCode()) { showVerifying(); return; }
+        if (authFailed) { showError(); return; }
+        if (hasReturningCode()) {
+          showVerifying();
+          // safety net: agar 10s mein login na ho → error + retry
+          setTimeout(function () {
+            if (!(window.TSB_AUTH && window.TSB_AUTH.user())) showError();
+          }, 10000);
+          return;
+        }
         if (!a.enabled) {
           document.getElementById("loginTitle").textContent = "SIGN-IN SOON";
           document.getElementById("loginSub").textContent = "Progress abhi isi browser mein safe hai";
@@ -418,6 +450,7 @@
       }
       window.addEventListener("tsb:loggedin", showLoggedIn);
       window.addEventListener("tsb:auth", function () { setTimeout(render, 80); });
+      window.addEventListener("tsb:auth-error", function () { showError(); });
       if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", render);
       else render();
     })();

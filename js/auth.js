@@ -13,9 +13,45 @@
   const URL = (CFG.SUPABASE_URL || "").replace(/\/$/, "");
   const ANON = CFG.SUPABASE_ANON_KEY || "";
   const GCLIENT = CFG.GOOGLE_CLIENT_ID || ""; // direct-Google OAuth client (consent shows thesmallbook.in)
+  const GSECRET = CFG.GOOGLE_CLIENT_SECRET || ""; // REQUIRED by Google for web-app token exchange
   const SITE_ORIGIN = CFG.SITE_URL || "https://thesmallbook.in"; // canonical origin (www vs bare doesn't matter)
   const REDIRECT_URI = SITE_ORIGIN + "/login.html"; // MUST be registered in Google Cloud Console
   const ENABLED = !!(URL && ANON);
+  const COOKIE_DOMAIN = ".thesmallbook.in";
+
+  /* ---------------- cookie helpers (verifier survives www ⇄ bare) ---------------- */
+  function setCookie(name, val, mins) {
+    try {
+      document.cookie = name + "=" + encodeURIComponent(val) +
+        "; domain=" + COOKIE_DOMAIN + "; path=/; max-age=" + (mins * 60) +
+        "; samesite=lax" + (location.protocol === "https:" ? "; secure" : "");
+    } catch (e) {}
+  }
+  function getCookie(name) {
+    try {
+      const m = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+      return m ? decodeURIComponent(m[1]) : "";
+    } catch (e) { return ""; }
+  }
+  function delCookie(name) {
+    try { document.cookie = name + "=; domain=" + COOKIE_DOMAIN + "; path=/; max-age=0; samesite=lax"; } catch (e) {}
+  }
+  function saveVerifier(v, n) {
+    try { sessionStorage.setItem("tsb_code_verifier", v); sessionStorage.setItem("tsb_nonce", n || ""); } catch (e) {}
+    setCookie("tsb_code_verifier", v, 10);
+    setCookie("tsb_nonce", n || "", 10);
+  }
+  function readVerifier() {
+    let v = ""; let n = "";
+    try { v = sessionStorage.getItem("tsb_code_verifier") || ""; n = sessionStorage.getItem("tsb_nonce") || ""; } catch (e) {}
+    if (!v) v = getCookie("tsb_code_verifier");
+    if (!n) n = getCookie("tsb_nonce");
+    return { v, n };
+  }
+  function clearVerifier() {
+    try { sessionStorage.removeItem("tsb_code_verifier"); sessionStorage.removeItem("tsb_nonce"); } catch (e) {}
+    delCookie("tsb_code_verifier"); delCookie("tsb_nonce");
+  }
 
   const AUTH_KEY = "tsb_auth_session";      // session (tokens + user)
   const DONE_KEY = "tsb_auth_done";         // completed books count (pre-login)
@@ -81,20 +117,24 @@
     if (!/login\.html/.test(location.pathname)) {
       try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch {}
     }
-    const verifier = genVerifier();
-    const nonce = genVerifier();
-    try {
-      sessionStorage.setItem("tsb_code_verifier", verifier);
-      sessionStorage.setItem("tsb_nonce", nonce);
-    } catch {}
-    sha256(verifier).then((challenge) => {
-      if (GCLIENT) {
-        // 🟢 DIRECT GOOGLE OAuth (PKCE, public client) — NO Supabase server in
-        // the middle, so Google's consent screen shows:
-        //   "Sign in with Google — continue to thesmallbook.in"
-        // instead of "...wdmxcewmyofihgrheuas.supabase.co".
-        // The code comes back to OUR login.html; we exchange it at
-        // oauth2.googleapis.com/token, then mint the Supabase session.
+    // MODE 3 (PREFERRED) — Google Identity Services popup:
+    //   * NO client_secret needed (Google SDK returns the ID token directly)
+    //   * consent popup shows "TheSmallBook" + thesmallbook.in
+    //   * no redirect — user never leaves the page
+    if (GCLIENT && !GSECRET) {
+      if (window.google && window.google.accounts) { startGis(); return; }
+      loadGisScript().then((ok) => {
+        if (ok && window.google && window.google.accounts) startGis();
+        else hostedSignIn(provider); // fallback: Supabase-hosted (still works, no secret)
+      });
+      return;
+    }
+    // MODE 2 — direct Google redirect (only if a secret was configured)
+    if (GCLIENT && GSECRET) {
+      const verifier = genVerifier();
+      const nonce = genVerifier();
+      saveVerifier(verifier, nonce);
+      sha256(verifier).then((challenge) => {
         const params = new URLSearchParams({
           client_id: GCLIENT,
           redirect_uri: REDIRECT_URI,
@@ -106,10 +146,89 @@
           state: nonce,
           prompt: "select_account"
         });
-        location.href = "https://accounts.google.com/o/oauth2/v2/auth?" + params.toString();
-        return;
+        const url = "https://accounts.google.com/o/oauth2/v2/auth?" + params.toString();
+        window.TSB_AUTH && (window.TSB_AUTH._lastAuthUrl = url);
+        location.href = url;
+      });
+      return;
+    }
+    // MODE 1 — Supabase-hosted redirect (default when no client id)
+    hostedSignIn(provider);
+  }
+
+  /* ---- GIS (Google Identity Services) popup flow ---- */
+  let gisStarted = false;
+  function loadGisScript() {
+    return new Promise((resolve) => {
+      if (window.google && window.google.accounts) return resolve(true);
+      try {
+        const s = document.createElement("script");
+        s.src = "https://accounts.google.com/gsi/client";
+        s.async = true;
+        s.onload = () => resolve(!!(window.google && window.google.accounts));
+        s.onerror = () => resolve(false);
+        document.head.appendChild(s);
+      } catch (e) { return resolve(false); }
+      setTimeout(() => resolve(!!(window.google && window.google.accounts)), 8000);
+    });
+  }
+  function startGis() {
+    if (gisStarted) return;
+    gisStarted = true;
+    try {
+      const nonce = genVerifier();
+      try { sessionStorage.setItem("tsb_nonce", nonce); } catch {}
+      window.google.accounts.id.initialize({
+        client_id: GCLIENT,
+        nonce: nonce,
+        ux_mode: "popup",
+        auto_select: false,
+        callback: (resp) => {
+          gisStarted = false;
+          if (resp && resp.credential) {
+            exchangeGisToken(resp.credential);
+          } else if (resp && resp.error && resp.error !== "popup_closed_by_user") {
+            console.warn("TSB GIS error:", resp.error);
+            try { window.dispatchEvent(new CustomEvent("tsb:auth-error", { detail: resp.error })); } catch {}
+          }
+        }
+      });
+      window.google.accounts.id.prompt();
+    } catch (e) {
+      console.warn("TSB GIS failed:", e);
+      gisStarted = false;
+      hostedSignIn("google");
+    }
+  }
+  async function exchangeGisToken(idToken) {
+    await exchangeIdToken(idToken);
+  }
+
+  /* public: exchange a Google ID token for a Supabase session */
+  async function exchangeIdToken(idToken) {
+    try {
+      const s = await supabaseIdTokenSession(idToken);
+      if (s && s.access_token) {
+        session = s;
+        lsSet(AUTH_KEY, session);
+        clearVerifier();
+        afterLogin(true);
+        return { ok: true };
       }
-      // fallback: Supabase-hosted authorize (if GOOGLE_CLIENT_ID missing)
+      throw new Error("no-session");
+    } catch (e) {
+      console.warn("TSB id_token exchange failed:", e);
+      try { window.dispatchEvent(new CustomEvent("tsb:auth-error", { detail: "exchange" })); } catch {}
+      return { ok: false, error: String((e && e.message) || e) };
+    }
+  }
+
+  /* ---- Supabase-hosted authorize (Mode 1) ---- */
+  function hostedSignIn(provider) {
+    const verifier = genVerifier();
+    const nonce = genVerifier();
+    saveVerifier(verifier, nonce);
+    sha256(verifier).then((challenge) => {
       const redirectTo = location.origin + "/login.html";
       const params = new URLSearchParams({
         redirect_to: redirectTo,
@@ -120,24 +239,31 @@
         code_challenge_method: "S256",
         scope: "openid email profile"
       });
-      location.href = URL + "/auth/v1/authorize?" + params.toString();
+      const url = URL + "/auth/v1/authorize?" + params.toString();
+      window.TSB_AUTH && (window.TSB_AUTH._lastAuthUrl = url);
+      location.href = url;
     });
   }
 
   /* exchange Google's ?code= for an id_token (public client, PKCE, no secret) */
   async function googleCodeToIdToken(code, verifier) {
+    const body = {
+      code: code,
+      client_id: GCLIENT,
+      redirect_uri: REDIRECT_URI,
+      grant_type: "authorization_code",
+      code_verifier: verifier
+    };
+    if (GSECRET) body.client_secret = GSECRET; // REQUIRED for web-app clients (verified live)
     const res = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        code: code,
-        client_id: GCLIENT,
-        redirect_uri: REDIRECT_URI,
-        grant_type: "authorization_code",
-        code_verifier: verifier
-      })
+      body: new URLSearchParams(body)
     });
-    if (!res.ok) throw new Error("google token " + res.status);
+    if (!res.ok) {
+      const txt = await res.text().catch(() => "");
+      throw new Error("google token " + res.status + " " + txt.slice(0, 120));
+    }
     return await res.json(); // { id_token, access_token, expires_in, ... }
   }
 
@@ -148,7 +274,10 @@
       headers: { "apikey": ANON, "Content-Type": "application/json" },
       body: JSON.stringify({ provider: "google", id_token: idToken })
     });
-    if (!res.ok) throw new Error("supabase id_token " + res.status);
+    if (!res.ok) {
+      const txt = await res.text().catch(() => "");
+      throw new Error("supabase id_token " + res.status + " " + txt.slice(0, 120));
+    }
     return await res.json(); // standard session
   }
 
@@ -156,7 +285,7 @@
   function nonceOk(idToken) {
     try {
       const payload = JSON.parse(atob(idToken.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
-      const stored = sessionStorage.getItem("tsb_nonce") || "";
+      const stored = readVerifier().n;
       return !payload.nonce || !stored || payload.nonce === stored;
     } catch (e) { return true; }
   }
@@ -166,12 +295,12 @@
     const p = new URLSearchParams(location.search);
     const code = p.get("code");
     if (!code) return false;
-    const verifier = uid();
+    const { v: verifier } = readVerifier();
     let ret = "";
     try { ret = sessionStorage.getItem("tsb_auth_return") || ""; } catch {}
 
-    // 1) DIRECT GOOGLE flow (our main path — consent shows thesmallbook.in)
-    if (GCLIENT && verifier) {
+    // 1) DIRECT GOOGLE flow — ONLY when a secret is configured (Mode 2)
+    if (GCLIENT && GSECRET && verifier) {
       try {
         const gt = await googleCodeToIdToken(code, verifier);
         if (gt && gt.id_token) {
@@ -181,7 +310,7 @@
               session = s;
               lsSet(AUTH_KEY, session);
               history.replaceState({}, "", location.pathname); // clean URL, stay on login page
-              try { sessionStorage.removeItem("tsb_code_verifier"); sessionStorage.removeItem("tsb_nonce"); } catch {}
+              clearVerifier();
               return true;
             }
           }
@@ -192,7 +321,8 @@
       }
     }
 
-    // 2) FALLBACK: Supabase-hosted authorize (if GOOGLE_CLIENT_ID not set)
+    // 2) SUPABASE-HOSTED flow (Mode 1 — DEFAULT): exchange the auth_code
+    //    GoTrue gave us (it landed us here with ?code=). No secret needed.
     try {
       const res = await fetch(URL + "/auth/v1/token?grant_type=pkce", {
         method: "POST",
@@ -203,11 +333,14 @@
       session = await res.json();
       lsSet(AUTH_KEY, session);
       history.replaceState({}, "", location.pathname);
-      try { sessionStorage.removeItem("tsb_code_verifier"); sessionStorage.removeItem("tsb_nonce"); } catch {}
+      clearVerifier();
       return true;
     } catch (e) {
       console.warn("TSB auth callback failed:", e);
       try { history.replaceState({}, "", location.pathname); } catch {}
+      clearVerifier();
+      // tell the login page: something went wrong, show friendly retry
+      try { window.dispatchEvent(new CustomEvent("tsb:auth-error", { detail: "login-failed" })); } catch {}
       return false;
     }
   }
@@ -554,46 +687,66 @@
   }
 
   /* ---------------- boot ---------------- */
-  async function boot() {
-    if (!ENABLED) {
-      window.TSB_AUTH = { enabled: false };
-      return;
-    }
-    const didCallback = await handleCallback();
-    if (didCallback && user()) {
-      // update UI IMMEDIATELY — never make the user wait on network sync
-      renderNav();
-      renderChip();
-      try { window.dispatchEvent(new CustomEvent("tsb:loggedin")); } catch {}
-      try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
-      // now sync in the background
-      await syncProgress();
-      injectStyles();
-      toast("PROGRESS SYNCED ✅");
-    }
-    if (user() && session.expires_at && now() >= session.expires_at - 90) await refreshSession();
+  /* ---- common post-login steps (GIS popup or redirect callback) ---- */
+  function afterLogin(showToastMsg) {
     renderNav();
     renderChip();
-    attachNavHandlers();
-    welcomeBack();
-    try { window.addEventListener("tsb:sync", () => { renderChip(); renderNav(); }); } catch {}
-    try { window.addEventListener("tsb:auth", () => { renderChip(); renderNav(); }); } catch {}
-    window.TSB_AUTH = {
-      enabled: true,
-      user,
-      signIn,
-      signOut,
-      confirmLogout,
-      displayName,
-      setDisplayName,
-      syncProgress,
-      queueSync,
-      track,
-      onBookComplete,
-      renderNav,
-      visits: () => (user() ? lsGet("tsb_auth_visits", { d: "", n: 0 }).n : 0)
-    };
+    try { window.dispatchEvent(new CustomEvent("tsb:loggedin")); } catch {}
     try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
+    if (showToastMsg) {
+      setTimeout(() => {
+        syncProgress().then(() => {
+          injectStyles();
+          toast("PROGRESS SYNCED ✅");
+        }).catch(() => {});
+      }, 200);
+    } else {
+      syncProgress().catch(() => {});
+    }
+  }
+
+  async function boot() {
+    try {
+      if (!ENABLED) {
+        window.TSB_AUTH = { enabled: false };
+        return;
+      }
+      const didCallback = await handleCallback();
+      if (didCallback && user()) {
+        // update UI IMMEDIATELY — never make the user wait on network sync
+        afterLogin(true);
+      }
+      if (user() && session.expires_at && now() >= session.expires_at - 90) await refreshSession();
+      renderNav();
+      renderChip();
+      attachNavHandlers();
+      welcomeBack();
+      try { window.addEventListener("tsb:sync", () => { renderChip(); renderNav(); }); } catch {}
+      try { window.addEventListener("tsb:auth", () => { renderChip(); renderNav(); }); } catch {}
+      window.TSB_AUTH = {
+        enabled: true,
+        user,
+        signIn,
+        signOut,
+        confirmLogout,
+        displayName,
+        setDisplayName,
+        syncProgress,
+        queueSync,
+        track,
+        onBookComplete,
+        renderNav,
+        clientId: GCLIENT,
+        exchangeIdToken,
+        visits: () => (user() ? lsGet("tsb_auth_visits", { d: "", n: 0 }).n : 0)
+      };
+      try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
+    } catch (e) {
+      console.warn("TSB boot error:", e);
+      // never leave the app without TSB_AUTH — degrade gracefully
+      window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, track, onBookComplete, renderNav, clientId: GCLIENT, exchangeIdToken };
+      try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
+    }
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);

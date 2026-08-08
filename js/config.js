@@ -50,9 +50,12 @@ window.TSB_CONFIG = {
   SUPABASE_URL: "https://wdmxcewmyofihgrheuas.supabase.co",        // e.g. "https://abcdefgh.supabase.co"
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkbXhjZXdteW9maWhncmhldWFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxOTc3NjQsImV4cCI6MjEwMTc3Mzc2NH0.ZiaeA9eA7uxVeP0qhuoFdoY4CGP0eKI7VD87xsE3tw8",   // e.g. "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
 
-  /* 🟢 GOOGLE OAUTH CLIENT — direct login (consent screen shows
-     "continue to thesmallbook.in" instead of the supabase.co URL).
-     Google Cloud Console → Credentials → OAuth client ID. */
+  /* 🟢 GOOGLE OAUTH CLIENT — "Sign in with Google" popup (Google Identity
+     Services). NO secret needed — Google's SDK hands the ID token straight
+     to the browser, so the consent popup shows "TheSmallBook · thesmallbook.in".
+     Google Cloud Console → Credentials → OAuth client ID.
+     ⚠️ Add these to that client's "Authorized JavaScript origins":
+        https://thesmallbook.in  and  https://www.thesmallbook.in */
   GOOGLE_CLIENT_ID: "730711772117-6jqonfh58n6963r12k6ri2g0ov6841eq.apps.googleusercontent.com",
 
   // Email where readers send their story files for the Global Shelf
