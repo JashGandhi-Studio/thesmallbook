@@ -117,93 +117,13 @@
     if (!/login\.html/.test(location.pathname)) {
       try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch {}
     }
-    // ⭐ PRIMARY: GIS "Sign in with Google" popup — FREE way to show
-    // "thesmallbook.in" in Google's prompt (no secret, no paid domain,
-    // no redirect_uri — the popup uses the page's own origin).
-    // Requires the client's "Authorized JavaScript origins" in Google
-    // Console to include https://thesmallbook.in (+ www).
-    if (GCLIENT) {
-      if (window.google && window.google.accounts) { startGis(); return; }
-      loadGisScript().then((ok) => {
-        if (ok && window.google && window.google.accounts) startGis();
-        else hostedSignIn(provider); // guaranteed fallback — always works
-      });
-      return;
-    }
-    // FALLBACK: Supabase-hosted redirect (no client id configured)
+    // ✅ THE PROVEN FLOW — Supabase-hosted redirect (the one that always
+    // worked, no secret, no JS origins, no extra Google config):
+    //   site → supabase.co/auth/v1/authorize → Google consent (GoTrue holds
+    //   the client secret server-side) → back to login.html → session.
     hostedSignIn(provider);
   }
 
-  /* ---- GIS (Google Identity Services) popup flow ----
-     (kept for future use; NOT active unless explicitly enabled) */
-  let gisStarted = false;
-  function loadGisScript() {
-    return new Promise((resolve) => {
-      if (window.google && window.google.accounts) return resolve(true);
-      try {
-        const s = document.createElement("script");
-        s.src = "https://accounts.google.com/gsi/client";
-        s.async = true;
-        s.onload = () => resolve(!!(window.google && window.google.accounts));
-        s.onerror = () => resolve(false);
-        document.head.appendChild(s);
-      } catch (e) { return resolve(false); }
-      setTimeout(() => resolve(!!(window.google && window.google.accounts)), 8000);
-    });
-  }
-  function startGis() {
-    if (gisStarted) return;
-    gisStarted = true;
-    try {
-      const nonce = genVerifier();
-      try { sessionStorage.setItem("tsb_nonce", nonce); } catch {}
-      window.google.accounts.id.initialize({
-        client_id: GCLIENT,
-        nonce: nonce,
-        ux_mode: "popup",
-        auto_select: false,
-        callback: (resp) => {
-          gisStarted = false;
-          if (resp && resp.credential) {
-            exchangeGisToken(resp.credential);
-          } else if (resp && resp.error) {
-            if (resp.error === "popup_closed_by_user") return; // user cancelled — stay quiet
-            console.warn("TSB GIS error, switching to hosted flow:", resp.error);
-            hostedSignIn("google"); // guaranteed fallback — never leave the user stuck
-          }
-        }
-      });
-      window.google.accounts.id.prompt();
-    } catch (e) {
-      console.warn("TSB GIS failed, switching to hosted flow:", e);
-      gisStarted = false;
-      hostedSignIn("google"); // guaranteed fallback
-    }
-  }
-  async function exchangeGisToken(idToken) {
-    await exchangeIdToken(idToken);
-  }
-
-  /* public: exchange a Google ID token for a Supabase session */
-  async function exchangeIdToken(idToken) {
-    try {
-      const s = await supabaseIdTokenSession(idToken);
-      if (s && s.access_token) {
-        session = s;
-        lsSet(AUTH_KEY, session);
-        clearVerifier();
-        afterLogin(true);
-        return { ok: true };
-      }
-      throw new Error("no-session");
-    } catch (e) {
-      console.warn("TSB id_token exchange failed:", e);
-      try { window.dispatchEvent(new CustomEvent("tsb:auth-error", { detail: "exchange" })); } catch {}
-      return { ok: false, error: String((e && e.message) || e) };
-    }
-  }
-
-  /* ---- Supabase-hosted authorize (Mode 1 — DEFAULT) ---- */
   function hostedSignIn(provider) {
     const verifier = genVerifier();
     const nonce = genVerifier();
@@ -719,14 +639,13 @@
         onBookComplete,
         renderNav,
         clientId: GCLIENT,
-        exchangeIdToken,
         visits: () => (user() ? lsGet("tsb_auth_visits", { d: "", n: 0 }).n : 0)
       };
       try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
     } catch (e) {
       console.warn("TSB boot error:", e);
       // never leave the app without TSB_AUTH — degrade gracefully
-      window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, track, onBookComplete, renderNav, clientId: GCLIENT, exchangeIdToken };
+      window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, track, onBookComplete, renderNav, clientId: GCLIENT };
       try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
     }
   }
