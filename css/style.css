@@ -129,6 +129,25 @@ a { color: inherit; }
 }
 @keyframes tsbDotPulse { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
 .nav .btn--blue { color: #111; }
+/* ---------- ⭐ PREMIUM LOGIN BUTTON (Google-style, top-right slot) ---------- */
+.tsb-loginbtn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #fff; color: var(--ink);
+  border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
+  font-family: "Archivo Black", sans-serif; font-size: 11px;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 10px 16px; text-decoration: none; line-height: 1; cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.tsb-loginbtn:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--ink); }
+.tsb-loginbtn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
+.tsb-loginbtn svg { flex: none; }
+.tsb-loginbtn span { white-space: nowrap; }
+html.dark .tsb-loginbtn { background: #fff; color: #111; }
+@media (max-width: 560px) {
+  .tsb-loginbtn { padding: 8px 12px; font-size: 10px; gap: 6px; letter-spacing: 1px; }
+}
+
 
 .btn {
   display: inline-flex; align-items: center; gap: 8px;
@@ -2183,8 +2202,7 @@ html.dark .shelfrow__seeall { border-color: #000; box-shadow: 3px 3px 0 #000; }
 html.dark .readbar { background: rgba(242,234,216,.12); }
 .btn--green { background: var(--green); color: #111; }
 
-/* ============================================================
-   💀 GRAVEYARD v4 — case-file curiosity design
+
    ============================================================ */
 /* story teaser: first line, fading out like a torn page — the itch */
 .grave__tease {

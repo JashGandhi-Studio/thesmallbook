@@ -48,6 +48,12 @@
 
 window.TSB_CONFIG = {
   SUPABASE_URL: "https://wdmxcewmyofihgrheuas.supabase.co",        // e.g. "https://abcdefgh.supabase.co"
+  /* 🔔 PUSH NOTIFICATIONS (optional, free): create a free account at
+     onesignal.com → Add App → Web Push → paste the App ID below.
+     Also add their OneSignalSDKWorker.js to your site root.
+     Empty = bell shows "coming soon" (WhatsApp reminder still works). */
+  ONESIGNAL_APP_ID: "",
+
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkbXhjZXdteW9maWhncmhldWFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxOTc3NjQsImV4cCI6MjEwMTc3Mzc2NH0.ZiaeA9eA7uxVeP0qhuoFdoY4CGP0eKI7VD87xsE3tw8",   // e.g. "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
 
   /* 🟢 GOOGLE OAUTH CLIENT — "Sign in with Google" popup (Google Identity
@@ -66,13 +72,12 @@ window.TSB_CONFIG = {
      HOW TO UPDATE (weekly, 1 minute): replace these ids with whatever
      you added this week. Empty list [] = no badges shown. */
   NEW_THIS_WEEK: [
-    "ultralearning", "switch-heath", "decisive-heath", "the-goal",
-    "21-laws-leadership", "linchpin", "talent-code", "happiness-advantage",
-    "coaching-habit", "skin-in-the-game", "infinite-game", "bullet-journal-method"
+    "unusual-billionaires", "india-grows-at-night", "doglapan",
+    "ocean-of-churn", "inner-engineering", "business-of-mythology"
   ],
   NEW_GRAVES_THIS_WEEK: [
-    "evergrande", "dhfl-scam", "future-group", "gofirst-airline",
-    "wish-collapse", "groupon-collapse", "bitconnect", "pmc-bank"
+    "byjus-edtech", "paytm-ipo", "snapdeal-war", "dunzo-collapse",
+    "gomechanic-fraud", "wework-india"
   ],
 
   /* Amazon Associates (India) — book buy links */

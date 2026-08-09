@@ -197,7 +197,7 @@
     <header class="loginhero">
       <div class="loginhero__badge">🔐 READERS ACCOUNT</div>
       <h1 id="loginHeroTitle">ONE LOGIN.<br><span class="hl">EVERY DEVICE.</span></h1>
-      <p class="loginhero__sub" id="loginHeroSub">Padho laptop pe. Khatam karo phone pe. TheSmallBook yaad rakhega — bookmarks, lessons, streaks — <b>sab sync.</b></p>
+      <p class="loginhero__sub" id="loginHeroSub">Read on your laptop. Finish on your phone. TheSmallBook remembers — bookmarks, lessons, streaks — <b>all synced.</b></p>
     </header>
 
     <div class="loginrow">
@@ -238,7 +238,7 @@
         </div>
         <div class="benefit"><b>📱 LAPTOP → PHONE</b><span>Book #12 ke beech mein the? Phone kholo, wahi se continue.</span></div>
         <div class="benefit"><b>❤️ BOOKMARKS + LESSONS</b><span>Jo bhi save / read kiya — har device pe wahi haal.</span></div>
-        <div class="benefit"><b>🛡️ KABHI LOSE NAHI</b><span>Browser clear karo, phone badlo — progress safe rahega.</span></div>
+        <div class="benefit"><b>🛡️ KABHI LOSE NAHI</b><span>Clear your browser, switch your phone — your progress stays safe.</span></div>
         <div class="benefit"><b>🎧 SAB KUCH SYNC</b><span>Yahan tak ki aapka podcast &amp; language setup — ek hi identity.</span></div>
       </aside>
     </div>
@@ -247,7 +247,7 @@
       <h2>HOW IT WORKS</h2>
       <div class="tsb-steps__row">
         <div class="step"><span class="step__num">STEP 1</span><div class="e">📖</div><b>PADHO</b><span>Koi bhi book kholo — bina login ke, bilkul free.</span><span class="step__arr">→</span></div>
-        <div class="step"><span class="step__num">STEP 2</span><div class="e">🔐</div><b>LOGIN</b><span>2 books complete karo ya navbar se — ek tap, Google se.</span><span class="step__arr">→</span></div>
+        <div class="step"><span class="step__num">STEP 2</span><div class="e">🔐</div><b>LOGIN</b><span>Finish 2 books or tap LOGIN in the navbar — one tap, with Google.</span><span class="step__arr">→</span></div>
         <div class="step"><span class="step__num">STEP 3</span><div class="e">📱</div><b>CONTINUE ANYWHERE</b><span>Phone, laptop, tablet — sab jagah wahi progress.</span><span class="step__arr">→</span></div>
       </div>
     </section>
@@ -290,7 +290,7 @@
       }
       function showVerifying() {
         document.getElementById("loginTitle").textContent = "VERIFYING...";
-        document.getElementById("loginSub").textContent = "Google sign-in confirm ho raha hai...";
+        document.getElementById("loginSub").textContent = "Confirming your Google sign-in...";
         var btn = document.getElementById("loginGoogleBtn");
         btn.innerHTML = "⏳ PLEASE WAIT...";
         btn.disabled = true;
@@ -339,7 +339,7 @@
       function showLogin() {
         var hero = document.getElementById("loginHeroTitle");
         hero.innerHTML = "ONE LOGIN.<br><span class=\"hl\">EVERY DEVICE.</span>";
-        document.getElementById("loginHeroSub").innerHTML = "Padho laptop pe. Khatam karo phone pe. TheSmallBook yaad rakhega — bookmarks, lessons, streaks — <b>sab sync.</b>";
+        document.getElementById("loginHeroSub").innerHTML = "Read on your laptop. Finish on your phone. TheSmallBook remembers — bookmarks, lessons, streaks — <b>all synced.</b>";
         document.getElementById("loginArt").textContent = "📕";
         document.getElementById("loginTitle").textContent = "SAVE YOUR PROGRESS";
         document.getElementById("loginSub").textContent = "Free · 1 tap · No password";
@@ -382,7 +382,7 @@
         var visits = window.TSB_AUTH.visits ? window.TSB_AUTH.visits() : 0;
         var hero = document.getElementById("loginHeroTitle");
         hero.innerHTML = "WELCOME <span class=\"hl\">BACK, " + esc(first.toUpperCase()) + "!</span>";
-        document.getElementById("loginHeroSub").innerHTML = "Aapka progress sync hai — laptop, phone, sab jagah. Aaj kya padhoge?";
+        document.getElementById("loginHeroSub").innerHTML = "Your progress is synced — laptop, phone, everywhere. What will you read today?";
         document.getElementById("loginArt").textContent = "👋";
         document.getElementById("loginTitle").textContent = visits >= 2 ? "WELCOME BACK!" : "HEY, " + esc(first.toUpperCase()) + "!";
         document.getElementById("loginSub").innerHTML = '<span class="logincard__user">' + esc(name) + ' <button id="loginEditName" title="Edit name" style="border:2.5px solid #111;background:#ffc800;font-size:11px;padding:2px 8px;cursor:pointer;box-shadow:2px 2px 0 #111;font-family:Archivo Black,sans-serif">✏️ EDIT</button>' + "<br><span style='font-size:12px;color:#888;'>" + esc(u.email || "") + "</span></span>";
@@ -395,7 +395,7 @@
         chips.style.display = "block";
         chips.innerHTML = '<span class="logincard__synced">✅ PROGRESS SYNCED</span>';
         var p = document.getElementById("loginPrivacy");
-        p.innerHTML = 'Aur chaho to logout kar do → <button class="logincard__out" id="loginOut">LOGOUT</button>';
+        p.innerHTML = 'Want to log out? → <button class="logincard__out" id="loginOut">LOGOUT</button>';
         p.className = "logincard__privacy";
         document.getElementById("loginOut").onclick = function () {
           if (window.TSB_AUTH && window.TSB_AUTH.confirmLogout) window.TSB_AUTH.confirmLogout();
@@ -408,7 +408,7 @@
       function showError() {
         authFailed = true;
         document.getElementById("loginTitle").textContent = "LOGIN FAILED 😕";
-        document.getElementById("loginSub").textContent = "Kuch gadbad ho gayi — dobara try karo. (Progress safe hai.)";
+        document.getElementById("loginSub").textContent = "Something went wrong — please try again. (Your progress is safe.)";
         var btn = document.getElementById("loginGoogleBtn");
         btn.innerHTML = "🔄 TRY AGAIN";
         btn.disabled = false;
@@ -437,7 +437,7 @@
         }
         if (!a.enabled) {
           document.getElementById("loginTitle").textContent = "SIGN-IN SOON";
-          document.getElementById("loginSub").textContent = "Progress abhi isi browser mein safe hai";
+          document.getElementById("loginSub").textContent = "Your progress is safe in this browser for now";
           var btn = document.getElementById("loginGoogleBtn");
           btn.innerHTML = "🔐 COMING SOON";
           btn.disabled = true;
