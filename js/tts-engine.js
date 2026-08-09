@@ -63,6 +63,20 @@ window.TTS_ENGINE = (function () {
     const n = normLang(lang);
     return REGION[n] || REGION[baseLang(n)] || lang;
   }
+
+  /* ⭐ PUTER OFFICIAL TTS LANGUAGES (official list — Puter speaks these
+     natively). Our app uses Puter ONLY for these; every other language
+     goes to Web Speech (device regional voice = guaranteed correct).
+     Official Puter list: ar da es fr it ko nn pl th zh-cn bn de fa hi ig
+     nb ro pt tr zh-tw pt-br en fi hy ja nl ru sv uk ur */
+  const PUTER_LANGS = new Set([
+    "ar","da","es","fr","it","ko","nn","pl","th","zh","zh-cn","zh-tw",
+    "bn","de","fa","hi","ig","nb","ro","pt","pt-br","tr","en",
+    "fi","hy","ja","nl","ru","sv","uk","ur"
+  ]);
+  function puterSpeaks(lang) {
+    return PUTER_LANGS.has(baseLang(lang));
+  }
   function currentLang() {
     try {
       const saved = JSON.parse(localStorage.getItem("tsb_lang")) || "en";
@@ -147,14 +161,16 @@ window.TTS_ENGINE = (function () {
     const pref = genderPref();
     if (!puterVoices.length) return null;
     const norm = (x) => String(x || "").toLowerCase();
-    /* lenient match: "en-IN" vs "en" vs "en-US" all match base "en" */
+    /* STRICT match: voice's base language must equal the requested base.
+       e.g. Hindi text → only voices whose lang starts with "hi".
+       No lenient cross-language fallback (that's what made Puter read
+       Hindi in an English voice). For English, any voice is fine. */
     const byLang = puterVoices.filter((v) => {
       const vl = norm(v.lang || "");
-      return vl === norm(lang) || vl === wantBase || vl.indexOf(wantBase) !== -1;
+      const vBase = vl.split("-")[0] || vl;
+      return vBase === wantBase;
     });
-    /* for English, any voice is fine (gender change must be audible);
-       for other languages we MUST have a language match (avoid wrong language) */
-    const pool = byLang.length ? byLang : (lang === "en" ? puterVoices : []);
+    const pool = byLang.length ? byLang : (wantBase === "en" ? puterVoices : []);
     if (!pool.length) return null;
     if (pref !== "auto") {
       const g = pool.filter((v) => voiceGenderOf(v.name || v.id || "") === pref);
@@ -181,11 +197,30 @@ window.TTS_ENGINE = (function () {
         const audio = window.puter.ai.tts(text, opts);
         if (audio && audio.play) {
           let done = false;
+          let safetyT = null;
           const end = (ok) => {
-            if (!done) { done = true; if (currentAudio === audio) currentAudio = null; clearPosition(); resolve(ok); }
+            if (!done) { done = true; if (safetyT) clearTimeout(safetyT); if (currentAudio === audio) currentAudio = null; clearPosition(); resolve(ok); }
+          };
+          /* robust end detection — onended alone is unreliable (can fire
+             early or not at all), which made the LAST chapter cut off */
+          const tryEndFromTime = () => {
+            try {
+              const d = audio.duration;
+              if (d && isFinite(d) && d > 0 && audio.currentTime >= d - 0.3) { end(true); return true; }
+              if (audio.ended) { end(true); return true; }
+            } catch (e) {}
+            return false;
           };
           audio.onended = () => end(true);
           audio.onerror = () => end(false);
+          try { audio.ontimeupdate = () => { if (!done && tryEndFromTime()) {} }; } catch (e) {}
+          /* safety net: if neither onended nor timeupdate fires, end after
+             estimated duration + buffer so the queue never stalls */
+          safetyT = setTimeout(function () {
+            if (!done) {
+              try { if (!tryEndFromTime()) end(true); } catch (e) { end(true); }
+            }
+          }, Math.max(6000, (text.length / (13 * (speed || 1))) * 1000 + 2500));
           if (g !== gen || !playing || paused) { end(false); return; }
           /* stop any audio still playing from a previous chunk (seekTo,
              voice/speed change) — otherwise both play at once */
@@ -358,6 +393,15 @@ window.TTS_ENGINE = (function () {
     if (!playing || paused) return done(false);
     const lang = item.lang || currentLang();
     const spd = speed;
+    /* ⭐ LANGUAGE ROUTING (official Puter list):
+       - lang ∈ PUTER_LANGS  → Puter premium cloud voice (en, hi, bn, ur,
+         es, fr, de, pt, it, ru, ar, zh-CN, ja, ko, tr, …)
+       - lang ∉ PUTER_LANGS  → Web Speech device voice (gu, mr, ta, te,
+         kn, ml, pa, or, id — Puter doesn't speak these natively) */
+    if (!puterSpeaks(lang)) {
+      speakWeb(item.text, lang, spd, done);
+      return;
+    }
     const tryPuter = () => {
       speakPuter(item.text, lang, spd).then((ok) => {
         if (g !== gen || !playing || paused) return done(false);

@@ -3092,3 +3092,78 @@ html.dark .tsb-player__close:hover { background: var(--red); color: #fff; }
 .podcastbtn--playing .podcastbtn__live { display: inline-block; animation: liveBlink 1.1s ease-in-out infinite; }
 @keyframes liveBlink { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
 html.dark .podcastbtn { box-shadow: 4px 4px 0 #000; }
+
+/* ============================================================
+   💀 GRAVEYARD POLISH (Aug 2026) — light upgrade, structure same
+   ============================================================ */
+
+/* --- CAUSE OF DEATH → chunky red autopsy banner --- */
+.grave__cause {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-size: .68rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--red);
+  border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  padding: 8px 16px;
+  margin-top: 18px;
+  transform: rotate(-1.5deg);
+  animation: graveStampIn .35s cubic-bezier(.2,1.4,.4,1);
+}
+@keyframes graveStampIn { from { transform: rotate(-4deg) scale(.8); opacity: 0; } to { transform: rotate(-1.5deg) scale(1); opacity: 1; } }
+
+/* --- LOSS stamp → stronger, with shadow --- */
+.grave__loss {
+  font-size: .72rem;
+  letter-spacing: 1.2px;
+  padding: 4px 12px;
+  transform: rotate(-2deg);
+  box-shadow: 3px 3px 0 rgba(17,17,17,.85);
+}
+
+/* --- sections → colored left rail + richer tints --- */
+.grave__section {
+  border-left: 6px solid var(--ink);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.grave__section--mistake { border-left-color: var(--red); }
+.grave__section--lesson  { border-left-color: var(--green); }
+.grave__section p { line-height: 1.6; }
+html.dark .grave__section--mistake { border-left-color: var(--red); }
+html.dark .grave__section--lesson { border-left-color: var(--green); }
+
+/* --- card hover → category-colored glow --- */
+.grave:hover {
+  box-shadow: 9px 9px 0 var(--ink), 0 0 0 2px var(--gcat, transparent);
+}
+
+/* --- open state: subtle lift so the body feels "exhumed" --- */
+.grave.open { transform: translateY(-2px); }
+
+/* --- hero badge: slow heartbeat pulse --- */
+.hero__badge--grave { animation: graveBeat 2.6s ease-in-out infinite; }
+@keyframes graveBeat { 0%,100% { box-shadow: 3px 3px 0 var(--ink); } 50% { box-shadow: 3px 3px 0 var(--ink), 0 0 0 6px rgba(255,77,77,.15); } }
+
+/* --- feed bar: red left rail + polish --- */
+.gravefeed { border-left: 6px solid var(--red); }
+.gravefeed__label { letter-spacing: 1.5px; }
+
+/* --- sort active: subtle pulse --- */
+.gravesort__btn.active { animation: graveBeat 3s ease-in-out infinite; }
+
+/* --- antonym book link: yellow accent stays, add left rail --- */
+.grave__book { border-left: 6px solid var(--yellow); }
+
+/* --- share button: keep, but hover translate already there --- */
+
+/* --- tombstone: soft inner engraving feel --- */
+.grave__stone { box-shadow: 3px 3px 0 var(--ink), inset 0 -6px 0 rgba(0,0,0,.18); }
+
+/* --- mobile tweaks for the new stamps --- */
+@media (max-width: 560px) {
+  .grave__cause { font-size: .56rem; padding: 6px 12px; letter-spacing: 1px; }
+  .grave__loss { font-size: .64rem; padding: 3px 9px; }
+}

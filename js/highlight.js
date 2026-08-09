@@ -192,7 +192,6 @@
     // apply visually
     var lessonEl = document.getElementById("lesson-" + lessonIdx);
     if (lessonEl) wrapText(lessonBodyOf(lessonEl), text, lessonIdx);
-    toast("✏️ HIGHLIGHTED ✓");
   }
 
   function removeHighlight(mark) {
@@ -210,7 +209,6 @@
       parent.replaceChild(txt, mark);
       parent.normalize();
     }
-    toast("HIGHLIGHT REMOVED");
   }
 
   /* click a marker → small "REMOVE?" chip; only YES removes (no accidents) */
@@ -245,18 +243,6 @@
       document.addEventListener("mousedown", dismissConfirm, { once: true, capture: true });
     }, 0);
     setTimeout(dismissConfirm, 5000);
-  }
-
-  function toast(msg) {
-    try {
-      document.querySelectorAll(".tsb-hl-toast").forEach(function (t) { t.remove(); });
-      var t = document.createElement("div");
-      t.className = "tsb-hl-toast";
-      t.style.cssText = "position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:10001;background:#111;color:#ffc800;border:3px solid #ffc800;box-shadow:6px 6px 0 #00c48c;padding:12px 22px;font-family:'Archivo Black',sans-serif;font-size:12px;letter-spacing:.5px";
-      t.textContent = msg;
-      document.body.appendChild(t);
-      setTimeout(function () { t.remove(); }, 2200);
-    } catch (e) {}
   }
 
   /* ---------- boot ---------- */

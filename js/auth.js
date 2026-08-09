@@ -588,9 +588,7 @@
     if (!user()) return;
     const n = trackVisit();
     if (n < 2) return; // only returning users (2nd+ distinct day)
-    const nm = displayName();
-    const first = nm.split(" ")[0];
-    toast("👋 Welcome back, " + first + "!", "welcome");
+    // (toast removed — no more black popups)
   }
 
   /* ---------------- boot ---------------- */
@@ -602,10 +600,7 @@
     try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
     if (showToastMsg) {
       setTimeout(() => {
-        syncProgress().then(() => {
-          injectStyles();
-          toast("PROGRESS SYNCED ✅");
-        }).catch(() => {});
+        syncProgress().catch(() => {});
       }, 200);
     } else {
       syncProgress().catch(() => {});
