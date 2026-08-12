@@ -50,17 +50,32 @@
   const bar = document.getElementById("actionbar");
   const fav = TSB.bookmarks.has(book.id);
   bar.innerHTML = `
-    <button class="btn ${fav ? "btn--red" : ""}" id="favBtn">${fav ? "❤️ SAVED" : "🤍 SAVE"}</button>
-    <button class="btn btn--blue" id="shareBtn">🎴 SHARE CARD</button>
-    <button class="btn btn--green" id="shareLinkBtn" translate="no">🔗 SHARE LINK</button>
-    <button class="btn btn--ink" id="podcastBtn" title="Listen to the whole book like a podcast">🎧 PODCAST MODE</button>
-    <button class="btn" id="expandBtn">⤵ EXPAND ALL</button>
-    <button class="btn" id="fontBtn">🔠 TEXT SIZE</button>`;
+    <button class="abtn abtn--save ${fav ? "on" : ""}" id="favBtn" title="Save to your shelf">
+      <i class="abtn__ico">${fav ? "❤️" : "🤍"}</i><span class="abtn__lbl">${fav ? "SAVED" : "SAVE"}</span>
+    </button>
+    <button class="abtn abtn--card" id="shareBtn" title="Download a beautiful share card">
+      <i class="abtn__ico">🎴</i><span class="abtn__lbl">SHARE CARD</span>
+    </button>
+    <button class="abtn abtn--link" id="shareLinkBtn" title="Copy link" translate="no">
+      <i class="abtn__ico">🔗</i><span class="abtn__lbl">SHARE LINK</span>
+    </button>
+    <button class="abtn abtn--pod" id="podcastBtn" title="Listen to the whole book like a podcast">
+      <i class="abtn__ico">🎧</i><span class="abtn__lbl">PODCAST</span>
+    </button>
+    <button class="abtn abtn--expand" id="expandBtn" title="Open every lesson">
+      <i class="abtn__ico">⤵</i><span class="abtn__lbl">EXPAND ALL</span>
+    </button>
+    <button class="abtn abtn--font" id="fontBtn" title="Adjust text size">
+      <i class="abtn__ico">🔠</i><span class="abtn__lbl">TEXT SIZE</span>
+    </button>`;
 
   document.getElementById("favBtn").addEventListener("click", (e) => {
     const on = TSB.bookmarks.toggle(book.id);
-    e.target.textContent = on ? "❤️ SAVED" : "🤍 SAVE";
-    e.target.classList.toggle("btn--red", on);
+    e.currentTarget.classList.toggle("on", on);
+    const ico = e.currentTarget.querySelector(".abtn__ico");
+    const lbl = e.currentTarget.querySelector(".abtn__lbl");
+    if (ico) ico.textContent = on ? "❤️" : "🤍";
+    if (lbl) lbl.textContent = on ? "SAVED" : "SAVE";
     if (window.TSB_AUTH && window.TSB_AUTH.enabled) window.TSB_AUTH.track();
   });
 

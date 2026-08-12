@@ -386,7 +386,9 @@
       .tsb-auth-chip{display:inline-flex;align-items:center;gap:8px;border:3px solid #111;background:#fffdf5;box-shadow:4px 4px 0 #111;padding:8px 16px;font-family:"Archivo Black",sans-serif;font-size:12px;letter-spacing:.5px;cursor:pointer;color:#111;text-decoration:none}
       .tsb-auth-chip:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 #111}
       .tsb-auth-chip--in{background:#00c48c;color:#111}
-      .tsb-auth-chip--out{background:#4d7cff;color:#111}
+      .tsb-auth-chip--out{background:#fff;color:#111;border:3px solid #111;box-shadow:3px 3px 0 #111;gap:8px;padding:10px 18px;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;align-items:center;justify-content:center;text-decoration:none;display:inline-flex}
+      .tsb-auth-chip--out svg{flex:none}
+      .tsb-auth-chip--out:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 #111}
       /* ---- navbar user chip / login button ---- */
       .tsb-navuser{display:inline-flex;align-items:center;gap:7px;border:3px solid var(--ink);font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:9px 14px;cursor:pointer;text-decoration:none;line-height:1;transition:transform .12s ease, box-shadow .12s ease;color:#111}
       .tsb-navuser:hover{transform:translate(-1px,-1px)}
@@ -567,7 +569,7 @@
         <button class="tsb-auth-chip" id="tsbAuthOut" style="margin-left:8px;background:#ff4d4d;color:#fff">LOGOUT</button>`;
       slot.querySelector("#tsbAuthOut").addEventListener("click", confirmLogout);
     } else {
-      slot.innerHTML = `<a class="tsb-auth-chip tsb-auth-chip--out" href="login.html" id="tsbAuthChip">🔐 LOGIN — SAVE PROGRESS</a>`;
+      slot.innerHTML = `<a class="tsb-auth-chip tsb-auth-chip--out" href="login.html" id="tsbAuthChip">${GOOGLE_G} LOG IN — SAVE PROGRESS</a>`;
       slot.querySelector("#tsbAuthChip").addEventListener("click", () => {
         try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch {}
       });

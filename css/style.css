@@ -1237,11 +1237,42 @@ html.dark .deco--sq, html.dark .deco--circ { border-color: var(--ink); }
 /* --- book page action bar --- */
 .actionbar {
   max-width: 1100px;
-  margin: 26px auto 0;
+  margin: 22px auto 0;
   padding: 0 clamp(16px,4vw,48px);
   display: flex; flex-wrap: wrap; gap: 10px;
 }
-.actionbar .btn { font-size: .72rem; padding: 9px 14px; }
+/* colorful free-flowing action buttons — no box, each its own bold color */
+.abtn {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 3px solid var(--ink, #111);
+  box-shadow: 3px 3px 0 var(--ink, #111);
+  padding: 9px 14px 9px 10px; cursor: pointer;
+  font-family: var(--font-body); font-weight: 800;
+  font-size: .7rem; text-transform: uppercase; letter-spacing: 1.1px;
+  color: #111; background: var(--paper);
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s;
+  text-decoration: none; line-height: 1;
+}
+.abtn:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--ink, #111); }
+.abtn:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--ink, #111); }
+.abtn__ico { font-size: 15px; line-height: 1; }
+.abtn__lbl { white-space: nowrap; }
+/* every button gets its own loud color — eye-catching, never colorless */
+.abtn--save { background: #fff; }
+.abtn--save.on { background: var(--red, #ff4d4d); color: #fff; }
+.abtn--card { background: var(--yellow, #ffc800); }
+.abtn--link { background: var(--green, #00c48c); }
+.abtn--pod { background: #ff8a3d; animation: abtnPulse 2.4s ease-in-out infinite; }
+.abtn--expand { background: #3ec9e6; }
+.abtn--font { background: var(--blue, #4d7cff); }
+@keyframes abtnPulse { 0%,100% { box-shadow: 3px 3px 0 var(--ink, #111), 0 0 0 0 rgba(255,138,61,.55); } 50% { box-shadow: 3px 3px 0 var(--ink, #111), 0 0 0 7px rgba(255,138,61,0); } }
+html.dark .abtn { border-color: #000; box-shadow: 3px 3px 0 #000; }
+html.dark .abtn:hover { box-shadow: 5px 5px 0 #000; }
+@media (max-width: 640px) {
+  .actionbar { gap: 8px; padding: 0 12px; }
+  .abtn { padding: 8px 11px 8px 9px; font-size: .64rem; letter-spacing: .8px; gap: 6px; }
+}
+
 
 /* --- lesson extras --- */
 .lesson__tools { display: flex; gap: 8px; margin-top: 14px; }
@@ -3166,4 +3197,38 @@ html.dark .grave__section--lesson { border-left-color: var(--green); }
 @media (max-width: 560px) {
   .grave__cause { font-size: .56rem; padding: 6px 12px; letter-spacing: 1px; }
   .grave__loss { font-size: .64rem; padding: 3px 9px; }
+}
+
+/* ============================================================
+   ✍️ STORIES v2 — premium polish (Aug 2026)
+   ============================================================ */
+.storystats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  max-width: var(--maxw); margin: 0 auto 22px; padding: 0 20px;
+}
+.storystats__cell {
+  background: var(--paper); border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink); padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.storystats__cell:nth-child(2) { box-shadow: 4px 4px 0 var(--yellow); }
+.storystats__cell:nth-child(3) { box-shadow: 4px 4px 0 var(--green); }
+.storystats__label { font-family: var(--font-head); font-size: .5rem; letter-spacing: 1.5px; color: #888; }
+html.dark .storystats__label { color: #9a937f; }
+.storystats__val { font-family: var(--font-head); font-size: 1.05rem; letter-spacing: .5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.storystats__val--y { color: #a97f00; }
+.storystats__val--g { color: var(--green); }
+/* featured story = full-width horizontal banner */
+.storycard--featured {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: 200px 1fr;
+  border-width: 4px;
+}
+.storycard--featured .card__top { border-bottom: none; border-right: var(--border); min-height: 0; }
+.storycard--featured .card__body { display: flex; flex-direction: column; justify-content: center; }
+.storycard--featured .storycard__cover { width: 120px; }
+@media (max-width: 640px) {
+  .storystats { grid-template-columns: 1fr; gap: 8px; }
+  .storycard--featured { grid-template-columns: 1fr; }
+  .storycard--featured .card__top { border-right: none; border-bottom: var(--border); }
 }

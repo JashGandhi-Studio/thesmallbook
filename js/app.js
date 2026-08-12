@@ -47,6 +47,8 @@
   filterWrap.appendChild(allChip);
   const shelfChip = makeChip("❤️ MY SHELF");
   filterWrap.appendChild(shelfChip);
+  const indianChip = makeChip("🇮🇳 INDIAN");
+  filterWrap.appendChild(indianChip);
   cats.forEach((c) => filterWrap.appendChild(makeChip(c)));
 
   function makeChip(label, active) {
@@ -108,6 +110,7 @@
       let inCat;
       if (activeCat === "ALL") inCat = true;
       else if (activeCat === "❤️ MY SHELF") inCat = TSB.bookmarks.has(b.id);
+      else if (activeCat === "🇮🇳 INDIAN") inCat = TSB.isIndianBook(b.id);
       else inCat = b.category === activeCat;
       if (!inCat) return false;
       if (!query) return true;
@@ -131,6 +134,8 @@
     if (!results.length) {
       const msg = activeCat === "❤️ MY SHELF" && !query
         ? `<span>❤️</span>Your shelf is empty.<br>Tap the heart on any book to save it here!`
+        : activeCat === "🇮🇳 INDIAN" && !query
+        ? `<span>🇮🇳</span>Indian books coming soon!<br>Check back next week.`
         : `<span>📚</span>No books found.<br>Try another search — typos are OK!`;
       grid.innerHTML = `<div class="empty">${msg}</div>`;
       return;
@@ -286,7 +291,22 @@
       case "shelves": return l; // shelves mode renders rows; keep featured order
       case "progress": return l.sort((a, b) =>
         TSB.progress.forBook(b.id).length / b.lessons.length - TSB.progress.forBook(a.id).length / a.lessons.length);
-      default: return l;
+      default:
+        /* ✨ NEW books float to the front, interleaved 3 Indian : 1 international
+           so the shelf feels curated, not like an all-Indian wall */
+        {
+          const fresh = l.filter((x) => isNew(x.id));
+          const rest = l.filter((x) => !isNew(x.id));
+          const ind = fresh.filter((x) => TSB.isIndianBook(x.id));
+          const intl = fresh.filter((x) => !TSB.isIndianBook(x.id));
+          const inter = [];
+          while (ind.length || intl.length) {
+            for (let k = 0; k < 3 && ind.length; k++) inter.push(ind.shift());
+            if (intl.length) inter.push(intl.shift());
+            else if (ind.length) inter.push(ind.shift());
+          }
+          return [...inter, ...rest];
+        }
     }
   }
 
@@ -352,15 +372,48 @@
     }
 
     let shownDay = -1;
+    /* 🎯 PERSONALIZED pick: prefs.goal (onboarding Q1) + prefs.time (Q4)
+       Weekdays (Mon–Fri) → lessons from the user's chosen category.
+       Weekends (Sat–Sun) → random discovery (keeps variety). */
+    const GOAL_CAT = {
+      "self": "Self-Improvement", "money": "Money & Finance",
+      "business": "Business & Startups", "people": "Psychology & People",
+      "creativity": "Creativity", "productivity": "Productivity",
+      "power": "Power & Strategy"
+    };
+    function personalPick(dayNum) {
+      let prefs = null;
+      try { prefs = JSON.parse(localStorage.getItem("tsb_prefs")); } catch (e) {}
+      const dayOfWeek = new Date().getDay(); // 0=Sun ... 6=Sat
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+      const goalCat = prefs && GOAL_CAT[prefs.goal] ? GOAL_CAT[prefs.goal] : null;
+      if (goalCat && !isWeekend) {
+        let pool = flat.filter((x) => x.b.category === goalCat);
+        if (!pool.length) pool = flat;
+        // short-time users: prefer concise lessons (summary < 600 chars)
+        if (prefs.time === "5" && pool.length > 3) {
+          const short = pool.filter((x) => x.l.summary && x.l.summary.length < 600);
+          if (short.length >= 3) pool = short;
+        }
+        return { pick: pool[dayNum % pool.length], personalized: true };
+      }
+      return { pick: flat[dayNum % flat.length], personalized: false };
+    }
     function draw() {
       const dayNum = localDayNum();
       if (dayNum === shownDay) return;
       shownDay = dayNum;
-      const pick = flat[dayNum % flat.length];
+      const { pick, personalized } = personalPick(dayNum);
       const dl = dateLabel();
+      const label = personalized
+        ? "🎯 LESSON FOR YOU"
+        : "💡 Lesson of the Day";
+      const note = personalized
+        ? "⏳ Picked from your shelf — new one at midnight"
+        : "⏳ Today only — new lesson at midnight";
       wrap.innerHTML = `
         <div class="lod__box">
-          <div class="lod__label">💡 Lesson of the Day</div>
+          <div class="lod__label">${label}</div>
           <div class="lod__datebadge" translate="no">
             <span class="lod__dateday">${dl.day}</span>
             <span class="lod__datenum">${dl.date}</span>
@@ -369,7 +422,7 @@
           <div>
             <div class="lod__title">${pick.l.title}</div>
             <div class="lod__meta">${pick.b.title} · ${pick.b.author}</div>
-            <div class="lod__fresh" translate="no">⏳ Today only — new lesson at midnight</div>
+            <div class="lod__fresh" translate="no">${note}</div>
           </div>
           <a class="btn btn--red" href="book.html?id=${pick.b.id}#lesson-${pick.i}">READ IT →</a>
         </div>`;

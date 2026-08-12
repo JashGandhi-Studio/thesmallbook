@@ -49,7 +49,13 @@
     { id: "audio", emoji: "🎧", label: "Audio", desc: "Listen to the whole book like a podcast" }
   ];
 
-  var state = { goal: null, style: null };
+  var TIMES = [
+    { id: "5",  emoji: "⚡", label: "5 minutes a day",  desc: "Quick daily lesson — busy schedule" },
+    { id: "15", emoji: "⏰", label: "15 minutes a day", desc: "One full lesson + example" },
+    { id: "30", emoji: "🧘", label: "30+ minutes a day", desc: "Deep dives & full chapters" }
+  ];
+
+  var state = { goal: null, style: null, time: null };
 
   function css() {
     if (document.getElementById("tsb-onboard-style")) return;
@@ -86,7 +92,7 @@
 
   function finish(skipSignIn) {
     set("tsb_onboarded", true);
-    set("tsb_prefs", { goal: state.goal, style: state.style, ts: Date.now() });
+    set("tsb_prefs", { goal: state.goal, style: state.style, time: state.time || "15", ts: Date.now() });
     var ov = document.getElementById("tsb-onboard-ov");
     if (ov) ov.remove();
     // apply the category filter on the library shelf (if chips exist)
@@ -106,21 +112,14 @@
         }
       }
     } catch (e) {}
-    // tiny toast
-    try {
-      var t = document.createElement("div");
-      t.style.cssText = "position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:10000;background:#111;color:#ffc800;border:3px solid #00c48c;box-shadow:6px 6px 0 #00c48c;padding:12px 22px;font-family:'Archivo Black',sans-serif;font-size:12px;letter-spacing:.5px";
-      t.textContent = skipSignIn ? "WELCOME TO THESMALLBOOK 📕" : "WELCOME! PROGRESS SAVED ACROSS DEVICES ✅";
-      document.body.appendChild(t);
-      setTimeout(function () { t.remove(); }, 3200);
-    } catch (e) {}
+    /* (welcome toast removed — no more black boxes) */
   }
 
   function renderSlide(n) {
     var box = document.getElementById("obBox");
     if (!box) return;
     var dots = "";
-    for (var i = 0; i < 3; i++) dots += "<i class='" + (i === n ? "on" : "") + "'></i>";
+    for (var i = 0; i < 4; i++) dots += "<i class='" + (i === n ? "on" : "") + "'></i>";
     if (n === 0) {
       box.innerHTML =
         '<div class="ob-dots">' + dots + '</div>' +
@@ -164,7 +163,29 @@
         });
       });
       document.getElementById("obNext").addEventListener("click", function () { renderSlide(2); });
-      document.getElementById("obSkip").addEventListener("click", function () { state.style = state.style || "quick"; finish(true); });
+      document.getElementById("obSkip").addEventListener("click", function () { state.style = state.style || "quick"; renderSlide(2); });
+    } else if (n === 2) {
+      box.innerHTML =
+        '<div class="ob-dots">' + dots + '</div>' +
+        '<div style="font-size:34px">⏰</div>' +
+        '<h3>HOW MUCH TIME DO YOU HAVE?</h3>' +
+        '<p class="ob-sub">We\'ll match the lesson length to your day.</p>' +
+        '<div class="ob-styles">' + TIMES.map(function (t) {
+          return '<button data-t="' + t.id + '" class="' + (state.time === t.id ? "sel" : "") + '">' + t.emoji + ' ' + t.label + '<small>' + t.desc + '</small></button>';
+        }).join("") + '</div>' +
+        '<button class="ob-next" id="obNext" ' + (state.time ? "" : "disabled") + '>CONTINUE →</button>' +
+        '<button class="ob-skip" id="obSkip">Skip for now</button>';
+      box.querySelectorAll("[data-t]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          state.time = b.dataset.t;
+          box.querySelectorAll("[data-t]").forEach(function (x) { x.classList.remove("sel"); });
+          b.classList.add("sel");
+          var nx = document.getElementById("obNext");
+          if (nx) nx.disabled = false;
+        });
+      });
+      document.getElementById("obNext").addEventListener("click", function () { renderSlide(3); });
+      document.getElementById("obSkip").addEventListener("click", function () { state.time = state.time || "15"; finish(true); });
     } else {
       box.innerHTML =
         '<div class="ob-dots">' + dots + '</div>' +

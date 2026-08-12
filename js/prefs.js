@@ -201,7 +201,27 @@
   };
 
   /* ---------- expose ---------- */
-  window.TSB = { get, set, theme, bookmarks, progress, plans, streak, levelFor, achv, lastRead, backup };
+  /* 🇮🇳 INDIAN BOOKS — filter helper (authors + known Indian-origin books) */
+  const INDIAN_AUTHORS = [
+    "shiv khera", "a.p.j. abdul kalam", "apj abdul kalam", "gaur gopal das",
+    "sadhguru", "devdutt pattanaik", "rashmi bansal", "prakash iyer",
+    "sanjeev sanyal", "gurcharan das", "saurabh mukherjea", "ashneer grover",
+    "amish tripathi", "ankur warikoo", "raj shamani", "radhakrishnan pillai",
+    "raguram rajan", "chetan bhagat", "navi radjou", "amartya sen",
+    "r. gopalakrishnan", "nandan nilekani", "harish bhat", "subhash chandra",
+    "jay shetty", "om swami", "sudha murty", "n. r. narayana murthy",
+    "azim premji", "ravi subramanian", "parag anand", "kiran bedi"
+  ];
+  function isIndianBook(id) {
+    try {
+      const b = (window.BOOKS || []).find((x) => x.id === id);
+      if (!b) return false;
+      const a = String(b.author || "").toLowerCase();
+      return INDIAN_AUTHORS.some((k) => a.includes(k));
+    } catch (e) { return false; }
+  }
+
+  window.TSB = { get, set, theme, bookmarks, progress, plans, streak, levelFor, achv, lastRead, backup, isIndianBook };
 
   /* Amazon affiliate link builder — direct product page when we know the
      ASIN (converts better), search fallback for everything else. */

@@ -40,6 +40,24 @@ async function renderShelf() {
 
   grid.innerHTML = "";
 
+  /* 📊 STATS STRIP — live numbers (README STORIES count + story of the week) */
+  try {
+    const weekNum = Math.floor(Date.now() / (7 * 864e5));
+    const feat = stories.length ? stories[weekNum % stories.length] : null;
+    const t = document.getElementById("stTotal");
+    if (t) t.textContent = stories.length;
+    const fe = document.getElementById("stFeatured");
+    if (fe) fe.textContent = feat ? feat.title.slice(0, 24) + (feat.title.length > 24 ? "…" : "") : "—";
+    const cta = document.getElementById("stCta");
+    if (cta) {
+      cta.textContent = "CLAIM →";
+      cta.style.cursor = "pointer";
+      cta.addEventListener("click", function () {
+        try { document.getElementById("write").scrollIntoView({ behavior: "smooth" }); } catch (e) {}
+      });
+    }
+  } catch (e) {}
+
   /* ✍️ GHOST CARD — the fame slot waiting for the reader's name */
   const ghost = document.createElement("a");
   ghost.className = "card ghostcard";

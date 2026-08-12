@@ -72,12 +72,14 @@ window.TSB_CONFIG = {
      HOW TO UPDATE (weekly, 1 minute): replace these ids with whatever
      you added this week. Empty list [] = no badges shown. */
   NEW_THIS_WEEK: [
-    "unusual-billionaires", "india-grows-at-night", "doglapan",
-    "ocean-of-churn", "inner-engineering", "business-of-mythology"
+    "i-have-a-dream", "ignited-minds", "experiments-with-truth",
+    "3-mistakes-my-life", "white-tiger", "karma-sadhguru",
+    "why-i-am-a-hindu", "era-of-darkness", "chanakyas-chant",
+    "if-truth-be-told", "business-maharajas",
+    "deep-work", "psychology-of-money", "atomic-habits"
   ],
   NEW_GRAVES_THIS_WEEK: [
-    "byjus-edtech", "paytm-ipo", "snapdeal-war", "dunzo-collapse",
-    "gomechanic-fraud", "wework-india"
+    "reliance-communications", "zomato-ipo", "byjus-edtech", "paytm-ipo"
   ],
 
   /* Amazon Associates (India) — book buy links */
