@@ -3232,3 +3232,52 @@ html.dark .storystats__label { color: #9a937f; }
   .storycard--featured { grid-template-columns: 1fr; }
   .storycard--featured .card__top { border-right: none; border-bottom: var(--border); }
 }
+
+/* ============================================================
+   📱 MOBILE PREMIUM POLISH (Aug 2026)
+   - kills the blue tap-flash on every phone
+   - only reading text is selectable (buttons/cards stay clean)
+   - instant button response (no 300ms tap delay)
+   - below-fold sections skip off-screen rendering (smooth scroll)
+   ============================================================ */
+
+/* 1) no more blue/gray flash when tapping anything */
+* { -webkit-tap-highlight-color: transparent; }
+html { -webkit-text-size-adjust: 100%; }
+
+/* 2) interactive elements: not selectable + instant tap */
+button, a, .btn, .abtn, .chip, .card, .card a, .grave, .grave__head,
+.grave__toggle, .tsb-navchip, .tsb-loginbtn, .tsb-auth-chip,
+.tsb-bell, .minibtn, .nav a, .logo, .shelfrow__arrow, .shelfrow__seeall,
+.lod__box a, .storycard, .ghostcard, .continue__box a, .pathcard a,
+.fuel-amt, .tsb-rm-item, select, .search button, .tsb-hl, .tsb-hl-btn,
+[data-nav-auth], [data-lang-btn], [data-theme-toggle], .grave__share,
+.ob-goals button, .ob-styles button, .ob-next, .ob-skip, .tsb-auth-ov button {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
+
+/* 3) reading content stays fully selectable (highlight feature needs it) */
+.lesson__body, .lesson__body p, .lesson__body .callout,
+.grave__body p, .grave__section, .storytext, .lod__title,
+.quote, .bigidea, .actionplan li, article p, .story p, .story__body {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* 4) performance: skip rendering below-fold sections until scrolled to */
+.library, #library, .grid, #grid, #shelves, .shelfrow, .how, #how,
+.footer, .gravegrid, #graveGrid, .storystats, #storyGrid, .pathgrid {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+/* keep the hero & above-fold instantly visible */
+.hero, .nav, #continue, #lod, #gamebar { content-visibility: visible; }
+
+/* 5) smoother taps: press state on touch feels instant, no flash */
+.btn:active, .abtn:active, .chip:active, .minibtn:active,
+.grave__toggle:active, .tsb-navchip:active { transition-duration: .03s; }

@@ -75,10 +75,12 @@
     });
   }
 
-  /* ---------- SEARCH (fuzzy) ---------- */
+  /* ---------- SEARCH (fuzzy) — debounced so mobile stays smooth ---------- */
+  let searchTimer = null;
   searchInput.addEventListener("input", (e) => {
-    query = e.target.value.trim().toLowerCase();
-    render();
+    const v = e.target.value.trim().toLowerCase();
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => { query = v; render(); }, 160);
   });
 
   function fuzzyMatch(text, q) {
