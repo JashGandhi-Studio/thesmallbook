@@ -636,6 +636,9 @@
   /* ---------------- boot ---------------- */
   /* ---- common post-login steps (GIS popup or redirect callback) ---- */
   function afterLogin(showToastMsg) {
+    /* logged-in users are returning users — never re-ask the onboarding */
+    try { localStorage.setItem("tsb_onboarded", JSON.stringify(true)); } catch (e) {}
+    try { sessionStorage.removeItem("tsb_onboarded_pending"); } catch (e2) {}
     renderNav();
     renderChip();
     try { window.dispatchEvent(new CustomEvent("tsb:loggedin")); } catch {}

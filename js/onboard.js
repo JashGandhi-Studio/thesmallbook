@@ -17,16 +17,33 @@
     "power":   { label: "Power & Strategy", emoji: "🏛️" }
   };
 
+  /* storage that never dies: localStorage → sessionStorage → in-memory.
+     (sandboxed previews / private mode block localStorage — without this
+     fallback the onboarding would re-ask on every single page load) */
+  var memStore = {};
   function get(key, def) {
-    try { var v = JSON.parse(localStorage.getItem(key)); return v === null || v === undefined ? def : v; }
-    catch (e) { return def; }
+    try {
+      var v = JSON.parse(localStorage.getItem(key));
+      return v === null || v === undefined ? def : v;
+    } catch (e) {}
+    try {
+      var v2 = JSON.parse(sessionStorage.getItem(key));
+      return v2 === null || v2 === undefined ? def : v2;
+    } catch (e2) {}
+    return key in memStore ? memStore[key] : def;
   }
   function set(key, val) {
+    memStore[key] = val;
     try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
+    try { sessionStorage.setItem(key, JSON.stringify(val)); } catch (e2) {}
   }
 
   function shouldShow() {
+    /* returning from the login CTA inside onboarding → never re-ask */
+    try { if (sessionStorage.getItem("tsb_onboarded_pending")) { set("tsb_onboarded", true); sessionStorage.removeItem("tsb_onboarded_pending"); } } catch (e) {}
     if (get("tsb_onboarded", false)) return false;
+    // logged-in users are returning users — never interrupt them
+    try { if (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) return false; } catch (e) {}
     // only on the main app pages, not 404
     if (/404\.html|login\.html|story\.html/.test(location.pathname)) return false;
     // don't interrupt right after a Google callback
@@ -187,6 +204,10 @@
       document.getElementById("obNext").addEventListener("click", function () { renderSlide(3); });
       document.getElementById("obSkip").addEventListener("click", function () { state.time = state.time || "15"; finish(true); });
     } else {
+      /* the 3 questions are answered — the sign-in slide is just a CTA.
+         Mark done NOW so even leaving via LOG IN never re-triggers it. */
+      set("tsb_onboarded", true);
+      set("tsb_prefs", { goal: state.goal, style: state.style, time: state.time || "15", ts: Date.now() });
       box.innerHTML =
         '<div class="ob-dots">' + dots + '</div>' +
         '<div style="font-size:34px">🔐</div>' +
