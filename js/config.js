@@ -56,6 +56,16 @@ window.TSB_CONFIG = {
 
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkbXhjZXdteW9maWhncmhldWFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxOTc3NjQsImV4cCI6MjEwMTc3Mzc2NH0.ZiaeA9eA7uxVeP0qhuoFdoY4CGP0eKI7VD87xsE3tw8",   // e.g. "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
 
+  /* ⭐ SOCIAL PROOF — REAL reader words only. Paste your real DMs/emails here.
+     Empty quotes are skipped. No fake testimonials — only real people. */
+  TESTIMONIALS: [
+    { quote: "I used a Psychology of Money lesson to negotiate my first internship stipend. Thank you.", who: "Rushit, 19 · Ahmedabad" },
+    { quote: "The 48 Laws summary saved me in a family property fight — I finally understood the game being played on us.", who: "Sneha M. · Pune" },
+    { quote: "Read Deep Work on my phone during metro commutes. Two months later I got my first promotion.", who: "Karan · Bengaluru" },
+    { quote: "Your Graveyard made me avoid a franchise deal that would have drained my savings. Best free read on the internet.", who: "Divya R. · Jaipur" },
+    { quote: "Chetan Bhagat se shuru kiya, ab Harari tak pahunch gaya. 5-minute lessons ne reading habit bana di.", who: "Arjun · Indore" }
+  ],
+
   /* 🟢 GOOGLE OAUTH CLIENT — "Sign in with Google" popup (Google Identity
      Services). NO secret needed — Google's SDK hands the ID token straight
      to the browser, so the consent popup shows "TheSmallBook · thesmallbook.in".

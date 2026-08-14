@@ -1259,13 +1259,17 @@ html.dark .deco--sq, html.dark .deco--circ { border-color: var(--ink); }
 .abtn__lbl { white-space: nowrap; }
 /* every button gets its own loud color — eye-catching, never colorless */
 .abtn--save { background: #fff; }
-.abtn--save.on { background: var(--red, #ff4d4d); color: #fff; }
+.abtn--save.on { background: var(--red, #ff4d4d); color: #fff; border-color: var(--ink); }
 .abtn--card { background: var(--yellow, #ffc800); }
-.abtn--link { background: var(--green, #00c48c); }
-.abtn--pod { background: #ff8a3d; animation: abtnPulse 2.4s ease-in-out infinite; }
-.abtn--expand { background: #3ec9e6; }
-.abtn--font { background: var(--blue, #4d7cff); }
-@keyframes abtnPulse { 0%,100% { box-shadow: 3px 3px 0 var(--ink, #111), 0 0 0 0 rgba(255,138,61,.55); } 50% { box-shadow: 3px 3px 0 var(--ink, #111), 0 0 0 7px rgba(255,138,61,0); } }
+.abtn--link { background: #fff; }
+.abtn--link .abtn__ico { color: #1a3fae; }
+.abtn--pod { background: var(--ink, #111); color: var(--paper, #fffdf5); }
+.abtn--pod .abtn__ico { filter: none; }
+.abtn--expand { background: var(--paper); }
+.abtn--font { background: var(--paper); }
+html.dark .abtn--pod { background: #000; color: #f2ead8; }
+html.dark .abtn--link { background: #1b1712; color: #f2ead8; }
+html.dark .abtn--expand, html.dark .abtn--font { background: #1b1712; color: #f2ead8; }
 html.dark .abtn { border-color: #000; box-shadow: 3px 3px 0 #000; }
 html.dark .abtn:hover { box-shadow: 5px 5px 0 #000; }
 @media (max-width: 640px) {
@@ -3269,8 +3273,10 @@ button, a, .btn, .abtn, .chip, .card, .card a, .grave, .grave__head,
   user-select: text;
 }
 
-/* 4) performance: skip rendering below-fold sections until scrolled to */
-.library, #library, .grid, #grid, #shelves, .shelfrow, .how, #how,
+/* 4) performance: skip rendering below-fold sections until scrolled to
+   (NOTE: .how and .shelfrow are NOT included — content-visibility clips
+   the overflowing step numbers (01/02/03) and card shadows. Crop fix.) */
+.library, #library, .grid, #grid, #shelves,
 .footer, .gravegrid, #graveGrid, .storystats, #storyGrid, .pathgrid {
   content-visibility: auto;
   contain-intrinsic-size: auto 600px;
@@ -3281,3 +3287,112 @@ button, a, .btn, .abtn, .chip, .card, .card a, .grave, .grave__head,
 /* 5) smoother taps: press state on touch feels instant, no flash */
 .btn:active, .abtn:active, .chip:active, .minibtn:active,
 .grave__toggle:active, .tsb-navchip:active { transition-duration: .03s; }
+
+
+/* ============================================================
+   💛 TIP JAR (end of every lesson — optional, dismissible)
+   ============================================================ */
+.tipjar {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-top: 16px; padding: 14px 16px;
+  background: linear-gradient(135deg, #fff9e6 0%, #ffe9c9 100%);
+  border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  position: relative;
+}
+html.dark .tipjar { background: linear-gradient(135deg, #2a2418 0%, #3a2c1a 100%); }
+.tipjar__q { font-size: .85rem; font-weight: 800; color: var(--ink); }
+.tipjar__btns { display: flex; gap: 8px; }
+.tipjar__btns a {
+  font-family: var(--font-head); font-size: .85rem; letter-spacing: 1px;
+  border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
+  background: linear-gradient(135deg, #ffd94d, #ffc800); color: #111;
+  padding: 8px 16px; text-decoration: none;
+  transition: transform .1s, box-shadow .1s, filter .1s;
+}
+.tipjar__btns a:nth-child(2) { background: linear-gradient(135deg, #ffb36b, #ff8a3d); }
+.tipjar__btns a:nth-child(3) { background: linear-gradient(135deg, #ff9d8a, #ff5252); color: #fff; }
+.tipjar__btns a:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--ink); filter: brightness(1.05); }
+.tipjar__btns a:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--ink); }
+.tipjar__x {
+  margin-left: auto; border: 2.5px solid var(--ink); background: var(--paper);
+  font-family: var(--font-head); font-size: .62rem; padding: 5px 10px; cursor: pointer; color: var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.tipjar__x:hover { background: var(--red); color: #fff; transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--ink); }
+@media (max-width: 560px) {
+  .tipjar { padding: 12px 12px; gap: 8px; }
+  .tipjar__btns a { padding: 7px 12px; font-size: .78rem; }
+}
+
+/* ============================================================
+   ⭐ SOCIAL PROOF (home page — real reader words)
+   ============================================================ */
+.socialproof { max-width: 1280px; margin: 30px auto 6px; padding: 0 clamp(16px, 4vw, 48px); }
+.socialproof__head {
+  font-family: var(--font-head); font-size: 11px; letter-spacing: 2.5px;
+  background: var(--ink); color: var(--yellow); border: 3px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--pink); padding: 7px 16px; display: inline-block; margin-bottom: 16px;
+}
+/* ⭐ reader cards: ALWAYS side-by-side (horizontal row, scrolls on tiny screens) */
+.socialproof__row { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 6px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+.socialproof__row::-webkit-scrollbar { height: 6px; }
+.socialproof__row::-webkit-scrollbar-thumb { background: var(--ink); border-radius: 0; }
+.sp-quote { flex: 1 0 240px; scroll-snap-align: start; background: var(--paper); border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 16px 16px 12px; }
+.sp-quote:nth-child(2) { box-shadow: 5px 5px 0 var(--yellow); }
+.sp-quote:nth-child(3) { box-shadow: 5px 5px 0 var(--green); }
+.sp-quote p { font-size: .88rem; font-style: italic; line-height: 1.5; margin: 0 0 10px; }
+.sp-quote cite { font-style: normal; font-family: var(--font-head); font-size: .66rem; letter-spacing: 1px; color: #666; }
+html.dark .sp-quote cite { color: #9a937f; }
+
+/* ============================================================
+   👑 TSB GOLD — page + home banner (premium dark editorial)
+   ============================================================ */
+.btn--gold {
+  background: linear-gradient(135deg, #ffd94d, #ffc800 55%, #e6a800);
+  color: #111 !important;
+  border: 3px solid var(--ink, #111) !important;
+  box-shadow: 3px 3px 0 var(--ink, #111) !important;
+  font-weight: 800;
+  animation: goldGlowNav 2.4s ease-in-out infinite;
+}
+.btn--gold:hover { transform: translate(-2px,-2px) !important; box-shadow: 5px 5px 0 var(--ink, #111) !important; }
+@keyframes goldGlowNav { 0%,100% { box-shadow: 3px 3px 0 var(--ink, #111); } 50% { box-shadow: 3px 3px 0 var(--ink, #111), 0 0 0 6px rgba(255,200,0,.25); } }
+html.dark .btn--gold { border-color: #000 !important; box-shadow: 3px 3px 0 #000 !important; }
+
+.goldbanner { max-width: 1280px; margin: 22px auto 0; padding: 0 clamp(16px, 4vw, 48px); }
+.goldbanner__box {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  background: linear-gradient(120deg, #14100a 0%, #1d160a 55%, #241a0a 100%);
+  border: 3px solid var(--ink); box-shadow: 6px 6px 0 #b8860b;
+  padding: 16px 20px; color: #f2ead8;
+  position: relative; overflow: hidden;
+}
+.goldbanner__box::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, #ffc800, #e6a800, #ffc800, transparent);
+  opacity: .9;
+}
+.goldbanner__icon { font-size: 30px; flex: none; filter: drop-shadow(0 0 6px rgba(255,200,0,.35)); }
+.goldbanner__txt { flex: 1; min-width: 200px; }
+.goldbanner__txt b {
+  font-family: "Archivo Black", sans-serif; font-size: 1.05rem; letter-spacing: .5px;
+  background: linear-gradient(90deg, #ffd94d, #ffc800 60%, #f0b400);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  display: block;
+}
+.goldbanner__txt span { font-size: .85rem; color: #c9c2b2; display: block; margin-top: 2px; }
+.goldbanner__txt span b, .goldbanner__txt span strong { color: #ffc800; -webkit-text-fill-color: currentColor; }
+.goldbanner__cta {
+  font-family: "Archivo Black", sans-serif; font-size: .78rem; letter-spacing: 1.5px;
+  background: linear-gradient(135deg, #ffd94d, #ffc800 55%, #e6a800);
+  color: #111;
+  border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
+  padding: 12px 20px; text-decoration: none; white-space: nowrap;
+  animation: goldGlowNav 2.4s ease-in-out infinite;
+}
+.goldbanner__cta:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--ink); filter: brightness(1.04); }
+@media (max-width: 560px) {
+  .goldbanner__box { padding: 14px 14px; gap: 10px; }
+  .goldbanner__cta { padding: 10px 14px; font-size: .7rem; }
+}

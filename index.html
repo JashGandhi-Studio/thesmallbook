@@ -15,7 +15,7 @@
   <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="TheSmallBook — 280 books · 1643 lessons · 255 autopsies · free forever">
+  <meta property="og:image:alt" content="TheSmallBook — 280 books · 1643 lessons · 257 autopsies · free to read">
   <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
@@ -180,7 +180,7 @@
       <span class="gravebanner__skull">💀</span>
       <span class="gravebanner__text">
         <span class="gravebanner__title">The Graveyard</span>
-        <span class="gravebanner__sub">255 legendary failures — startups, frauds, bankruptcies & ego trips. They paid billions; your lesson is free.</span>
+        <span class="gravebanner__sub">257 legendary failures — startups, frauds, bankruptcies & ego trips. They paid billions; your lesson is free.</span>
       </span>
       <span class="gravebanner__cta">ENTER IF YOU DARE →</span>
     </a>
@@ -188,6 +188,24 @@
 
   <!-- LESSON OF THE DAY -->
   <div class="lod" id="lod"></div>
+
+  <!-- ⭐ SOCIAL PROOF (real reader words — edit in config.js TESTIMONIALS) -->
+  <div class="socialproof" id="socialproof" style="display:none">
+    <span class="socialproof__head">⭐ READERS, IN THEIR OWN WORDS</span>
+    <div class="socialproof__row" id="spRow"></div>
+  </div>
+
+  <!-- 👑 TSB GOLD BANNER — right after the lesson, impossible to miss -->
+  <div class="goldbanner">
+    <div class="goldbanner__box">
+      <span class="goldbanner__icon">👑</span>
+      <div class="goldbanner__txt">
+        <b>TSB GOLD, CLOSING SOON</b>
+        <span>Human Audio, Deep Dives, PDFs, Premium Book Access, First 500 early-birds at ₹999/yr</span>
+      </div>
+      <a class="goldbanner__cta" href="gold.html">CLAIM ₹999 PRICE →</a>
+    </div>
+  </div>
 
   <!-- LIBRARY -->
   <div class="section-head" id="library">
@@ -252,7 +270,7 @@
     <p class="affnote">As an Amazon Associate, TheSmallBook earns from qualifying purchases. It keeps the library free. 💛</p>
     <div id="tsb-auth-slot"></div>
     <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
-    <p class="tiny" style="margin-top:8px;"><a href="about.html" style="color:inherit;">ABOUT · WHO MADE THIS?</a></p>
+    <p class="tiny" style="margin-top:8px;"><a href="about.html" style="color:inherit;">ABOUT</a>, <a href="gold.html" style="color:inherit;">👑 TSB GOLD, WAITLIST OPEN</a>, <a href="graveyard.html" style="color:inherit;">GRAVEYARD</a></p>
     <p class="tiny">BUILT WITH ❤️ · NEW BOOKS ADDED EVERY WEEK · OPEN SOURCE ON GITHUB</p>
   </footer>
 
@@ -264,6 +282,31 @@
   <script src="js/data.js"></script>
   <script src="js/failures.js"></script>
   <script src="js/app.js"></script>
+  <script>
+    /* ⭐ render real reader words (from config.js TESTIMONIALS, no fake) */
+    (function () {
+      var t = (window.TSB_CONFIG && TSB_CONFIG.TESTIMONIALS) || [];
+      var real = t.filter(function (x) { return x && x.quote && x.who; });
+      if (!real.length) return;
+      var row = document.getElementById("spRow");
+      var box = document.getElementById("socialproof");
+      if (!row || !box) return;
+      /* pick 3 random different ones each load, fresh every visit */
+      var pick = real.slice();
+      for (var i = pick.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = pick[i]; pick[i] = pick[j]; pick[j] = tmp;
+      }
+      pick = pick.slice(0, Math.min(3, pick.length));
+      pick.forEach(function (x) {
+        var q = document.createElement("div");
+        q.className = "sp-quote";
+        q.innerHTML = '<p>“' + String(x.quote).replace(/"/g, "&quot;") + '”</p><cite>— ' + String(x.who).replace(/</g, "&lt;") + '</cite>';
+        row.appendChild(q);
+      });
+      box.style.display = "";
+    })();
+  </script>
   <script src="js/onboard.js"></script>
   <script src="js/ask-data.js"></script>
   <script src="js/tts-engine.js"></script>

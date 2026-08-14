@@ -353,8 +353,48 @@
       const r = remoteMap[id];
       if (!r || !r.bookmarked) tasks.push(pushRow(tok, id, (r && Array.isArray(r.lessons_done) ? r.lessons_done : []), true).then(() => pushed++));
     }
+    /* carry the local streak on the first row we push (any book_id) */
+    try {
+      const st = JSON.parse(localStorage.getItem("tsb_streak")) || null;
+      if (st && st.last) {
+        const sid = Object.keys(remoteMap)[0] || "tsb-streak";
+        const r0 = remoteMap[sid];
+        const rStreak = r0 && r0.streak ? r0.streak : null;
+        const localHasNewer = !rStreak || (st.last >= rStreak.last && (st.count || 0) >= (rStreak.count || 0));
+        if (localHasNewer) {
+          tasks.push(fetch(TABLE + "?on_conflict=user_id,book_id", {
+            method: "POST",
+            headers: authHeaders({ "Authorization": "Bearer " + tok, "Prefer": "resolution=merge-duplicates,return=minimal" }),
+            body: JSON.stringify({ user_id: session.user.id, book_id: sid, lessons_done: r0 && r0.lessons_done ? r0.lessons_done : [], bookmarked: !!(r0 && r0.bookmarked), streak: st, updated_at: new Date().toISOString() })
+          }).then(() => pushed++).catch(() => {}));
+        }
+      }
+    } catch (e) {}
     await Promise.all(tasks);
     return pushed > 0;
+  }
+
+  /* streak cross-device merge: latest 'last' date wins, same date → max count */
+  function mergeStreak(remote) {
+    try {
+      const local = JSON.parse(localStorage.getItem("tsb_streak")) || { last: "", count: 0 };
+      const r = (remote && remote.streak) || null;
+      if (!r) return false;
+      const a = local.last || "", b = r.last || "";
+      if (a === b) {
+        if ((r.count || 0) > (local.count || 0)) {
+          local.count = r.count;
+          localStorage.setItem("tsb_streak", JSON.stringify(local));
+          return true;
+        }
+        return false;
+      }
+      if (b > a) {
+        localStorage.setItem("tsb_streak", JSON.stringify({ last: b, count: r.count || 0 }));
+        return true;
+      }
+      return false;
+    } catch (e) { return false; }
   }
 
   /* full sync: pull → merge → push back */

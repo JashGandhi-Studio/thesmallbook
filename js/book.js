@@ -216,7 +216,11 @@
   /* --- live (translated) text helpers --- */
   function liveText(sel, fallback) {
     const el = typeof sel === "string" ? document.querySelector(sel) : sel;
-    const t = el ? (el.innerText || el.textContent || "").replace(/\s+/g, " ").trim() : "";
+    let t = "";
+    if (el) {
+      t = el.innerText !== undefined ? el.innerText : el.textContent;
+      t = (t || "").replace(/\s+/g, " ").trim();
+    }
     return t || fallback || "";
   }
   function liveCallout(lessonIdx, cls) {
@@ -225,7 +229,8 @@
     const clone = el.cloneNode(true);
     const tag = clone.querySelector("strong.tag");
     if (tag) tag.remove();
-    return (clone.innerText || clone.textContent || "").replace(/\s+/g, " ").trim();
+    const t = clone.innerText !== undefined ? clone.innerText : clone.textContent;
+    return (t || "").replace(/\s+/g, " ").trim();
   }
   function liveLesson(i) {
     return {
@@ -360,7 +365,7 @@
     const img = await loadImage(book.cover);
     const covW = 240, covH = 344;
     ctx.save();
-    ctx.translate(W / 2, 420);
+    ctx.translate(W / 2, 408);
     ctx.rotate(0.03);
     ctx.fillStyle = "#111";
     ctx.fillRect(-covW / 2 + 12, -covH / 2 + 12, covW, covH);
@@ -539,7 +544,7 @@
     a.download = filename;
     a.click();
     URL.revokeObjectURL(a.href);
-    toast("🎴 Share card downloaded — post it anywhere!");
+    /* (share toast removed — silent download, no black popup) */
   }
 
   /* 🔗 share the page LINK (WhatsApp-friendly — brings traffic, not just brand) */
@@ -842,6 +847,15 @@
         <p>${l.summary}</p>
         <div class="callout callout--example"><strong class="tag">📖 Example from the book</strong><br>${l.example}</div>
         <div class="callout callout--action"><strong class="tag">⚡ Do this</strong><br>${l.action}</div>
+        <div class="tipjar" translate="no">
+          <span class="tipjar__q">💛 Liked this lesson? Buy the creator a chai — keep the next one free:</span>
+          <span class="tipjar__btns">
+            <a href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=9&cu=INR" data-tip="9">₹9</a>
+            <a href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=49&cu=INR" data-tip="49">₹49</a>
+            <a href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=99&cu=INR" data-tip="99">₹99</a>
+          </span>
+          <button class="tipjar__x" aria-label="Hide tip prompt">✕</button>
+        </div>
         <div class="lesson__tools">
           <button class="minibtn ${readSet.has(i) ? "active" : ""}" data-read="${i}">${readSet.has(i) ? "✓ READ" : "MARK AS READ"}</button>
           <button class="minibtn" data-listen="${i}">🔊 LISTEN</button>
@@ -849,6 +863,8 @@
         </div>
       </div>`;
     d.querySelector(".lesson__head").addEventListener("click", () => d.classList.toggle("open"));
+    const tipX = d.querySelector(".tipjar__x");
+    if (tipX) tipX.addEventListener("click", () => { const tj = d.querySelector(".tipjar"); if (tj) tj.remove(); });
     lessonsWrap.appendChild(d);
   });
 
