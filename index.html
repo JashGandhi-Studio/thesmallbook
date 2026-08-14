@@ -196,16 +196,50 @@
   </div>
 
   <!-- 👑 TSB GOLD BANNER — right after the lesson, impossible to miss -->
-  <div class="goldbanner">
+  <div class="goldbanner" id="goldbanner">
     <div class="goldbanner__box">
-      <span class="goldbanner__icon">👑</span>
-      <div class="goldbanner__txt">
-        <b>TSB GOLD, CLOSING SOON</b>
-        <span>Human Audio, Deep Dives, PDFs, Premium Book Access, First 500 early-birds at ₹999/yr</span>
+      <span class="goldbanner__shine" aria-hidden="true"></span>
+      <div class="goldbanner__main">
+        <div class="goldbanner__head">
+          <span class="goldbanner__icon">👑</span>
+          <b class="goldbanner__title">TSB GOLD</b>
+          <span class="goldbanner__soon">CLOSING SOON</span>
+        </div>
+        <p class="goldbanner__sub">Human Audio, Deep Dives, PDFs and Premium Book Access. <b>First 500 early-birds only.</b></p>
+        <div class="goldbanner__perks">
+          <span>🔊 HUMAN AUDIO</span>
+          <span>📄 PDF CHEAT-SHEETS</span>
+          <span>🎧 DEEP DIVES</span>
+          <span>👑 PREMIUM ACCESS</span>
+        </div>
       </div>
-      <a class="goldbanner__cta" href="gold.html">CLAIM ₹999 PRICE →</a>
+      <div class="goldbanner__offer">
+        <div class="goldbanner__price"><s>₹1,499</s><b>₹999</b><em>/yr</em><span class="goldbanner__off">-33%</span></div>
+        <div class="goldbanner__lock">33% OFF · LOCKED FOR LIFE</div>
+        <span class="goldbanner__spotsbar" id="goldSpotsBar"><i id="goldSpotsFill"></i></span>
+        <small class="goldbanner__spotslbl" id="goldSpotsLabel">FIRST 500 EARLY-BIRDS</small>
+        <a class="goldbanner__cta" href="gold.html">CLAIM MY ₹999 PRICE →</a>
+      </div>
     </div>
   </div>
+  <script>
+    /* 👑 gold spots meter — set GOLD_TAKEN in config.js to your real waitlist count */
+    (function () {
+      var cfg = window.TSB_CONFIG || {};
+      var taken = cfg.GOLD_TAKEN || 0;
+      var total = cfg.GOLD_TOTAL || 500;
+      var fill = document.getElementById("goldSpotsFill");
+      var label = document.getElementById("goldSpotsLabel");
+      var bar = document.getElementById("goldSpotsBar");
+      if (!fill || !label) return;
+      if (taken > 0 && total > 0) {
+        fill.style.width = Math.min(100, Math.round((taken / total) * 100)) + "%";
+        label.textContent = taken + " of " + total + " spots claimed";
+      } else if (bar) {
+        bar.style.display = "none";
+      }
+    })();
+  </script>
 
   <!-- LIBRARY -->
   <div class="section-head" id="library">
@@ -301,7 +335,7 @@
       pick.forEach(function (x) {
         var q = document.createElement("div");
         q.className = "sp-quote";
-        q.innerHTML = '<p>“' + String(x.quote).replace(/"/g, "&quot;") + '”</p><cite>— ' + String(x.who).replace(/</g, "&lt;") + '</cite>';
+        q.innerHTML = '<p>“' + String(x.quote).replace(/"/g, "&quot;") + '”</p><cite>' + String(x.who).replace(/</g, "&lt;") + '</cite>';
         row.appendChild(q);
       });
       box.style.display = "";

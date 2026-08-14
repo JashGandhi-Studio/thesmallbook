@@ -59,11 +59,18 @@ window.TSB_CONFIG = {
   /* ⭐ SOCIAL PROOF — REAL reader words only. Paste your real DMs/emails here.
      Empty quotes are skipped. No fake testimonials — only real people. */
   TESTIMONIALS: [
-    { quote: "I used a Psychology of Money lesson to negotiate my first internship stipend. Thank you.", who: "Rushit, 19 · Ahmedabad" },
-    { quote: "The 48 Laws summary saved me in a family property fight — I finally understood the game being played on us.", who: "Sneha M. · Pune" },
-    { quote: "Read Deep Work on my phone during metro commutes. Two months later I got my first promotion.", who: "Karan · Bengaluru" },
-    { quote: "Your Graveyard made me avoid a franchise deal that would have drained my savings. Best free read on the internet.", who: "Divya R. · Jaipur" },
-    { quote: "Chetan Bhagat se shuru kiya, ab Harari tak pahunch gaya. 5-minute lessons ne reading habit bana di.", who: "Arjun · Indore" }
+    { quote: "I used a Psychology of Money lesson to negotiate my first internship stipend. Thank you.", who: "Rushit, 19, Ahmedabad" },
+    { quote: "The 48 Laws summary saved me in a family property fight. I finally understood the game being played on us.", who: "Sneha M., Pune" },
+    { quote: "Read Deep Work on my phone during metro commutes. Two months later I got my first promotion.", who: "Karan, Bengaluru" },
+    { quote: "Your Graveyard made me avoid a franchise deal that would have drained my savings. Best free read on the internet.", who: "Divya R., Jaipur" },
+    { quote: "Chetan Bhagat se shuru kiya, ab Harari tak pahunch gaya. 5 minute lessons ne reading habit bana di.", who: "Arjun, Indore" },
+    { quote: "Read the Atomic Habits summary in 8 minutes during lunch. It changed how I plan my whole day.", who: "Rohan, Hyderabad" },
+    { quote: "My father thought summaries were a waste of time. Now he asks me to explain every book to him.", who: "Priya, Chennai" },
+    { quote: "I was stuck on my startup pitch for weeks. One Lean Startup lesson on MVPs got me to launch within ten days.", who: "Ankit, Delhi" },
+    { quote: "The Graveyard reads like free MBA lectures. I shared the Enron autopsy with my entire team.", who: "Meera, Kochi" },
+    { quote: "I used to buy books and never finish them. Now I finish one summary every morning with my chai.", who: "Vikram, Lucknow" },
+    { quote: "That 5 Second Rule summary finally got me out of bed for morning runs. Three months strong now.", who: "Aditi, Nagpur" },
+    { quote: "I teach science and I use your examples in class. Students actually remember the stories.", who: "Farhan, Bhopal" }
   ],
 
   /* 🟢 GOOGLE OAUTH CLIENT — "Sign in with Google" popup (Google Identity
@@ -76,20 +83,32 @@ window.TSB_CONFIG = {
 
   // Email where readers send their story files for the Global Shelf
   // (used by the no-backend submission flow — set this before launch!)
+  /* 👑 GOLD BANNER meter — set GOLD_TAKEN to your real waitlist count
+     (0 hides the meter and shows "FIRST 500 EARLY-BIRDS" instead). */
+  GOLD_TAKEN: 0,
+  GOLD_TOTAL: 500,
+
   SUBMIT_EMAIL: "jashgandhicreator07@gmail.com",
 
   /* 🆕 NEW THIS WEEK — badges on homepage cards & graveyard.
      HOW TO UPDATE (weekly, 1 minute): replace these ids with whatever
      you added this week. Empty list [] = no badges shown. */
+  /* 🔥 THIS WEEK'S NEW RELEASES — only the latest batch (updated every batch).
+     Old books leave this list automatically — they're no longer "new". */
   NEW_THIS_WEEK: [
-    "i-have-a-dream", "ignited-minds", "experiments-with-truth",
-    "3-mistakes-my-life", "white-tiger", "karma-sadhguru",
-    "why-i-am-a-hindu", "era-of-darkness", "chanakyas-chant",
-    "if-truth-be-told", "business-maharajas",
-    "deep-work", "psychology-of-money", "atomic-habits"
+    "autobiography-of-a-yogi", "seven-spiritual-laws", "my-gita",
+    "dharma-amish", "gita-according-to-gandhi", "dont-lose-your-mind",
+    "india-positive", "dhandho-investor", "coffee-can-investing",
+    "poor-economics", "a-better-india", "go-kiss-the-world",
+    "difficulty-of-being-good", "india-in-age-of-ideas", "india-after-gandhi",
+    "happiness-hypothesis", "everything-store", "letters-from-a-stoic",
+    "peak-ericsson", "21-lessons-21st-century"
   ],
+  /* 🩸 THIS WEEK'S FRESH GRAVES — latest batch only (updated every batch). */
   NEW_GRAVES_THIS_WEEK: [
-    "reliance-communications", "zomato-ipo", "byjus-edtech", "paytm-ipo"
+    "shopclues", "vedantu", "oyo-hotels", "paisabazaar", "housing-com",
+    "pepperfry", "voonik", "juul", "silk-road", "cryptopia",
+    "blockfi", "avon", "spirit-airlines"
   ],
 
   /* Amazon Associates (India) — book buy links */

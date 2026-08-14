@@ -848,12 +848,15 @@
         <div class="callout callout--example"><strong class="tag">📖 Example from the book</strong><br>${l.example}</div>
         <div class="callout callout--action"><strong class="tag">⚡ Do this</strong><br>${l.action}</div>
         <div class="tipjar" translate="no">
-          <span class="tipjar__q">💛 Liked this lesson? Buy the creator a chai — keep the next one free:</span>
-          <span class="tipjar__btns">
+          <div class="tipjar__row">
+            <span class="tipjar__icon" aria-hidden="true">☕</span>
+            <span class="tipjar__q">Liked it? Drop a chai. Keeps the next lesson free.</span>
+          </div>
+          <div class="tipjar__btns">
             <a href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=9&cu=INR" data-tip="9">₹9</a>
             <a href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=49&cu=INR" data-tip="49">₹49</a>
             <a href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=99&cu=INR" data-tip="99">₹99</a>
-          </span>
+          </div>
           <button class="tipjar__x" aria-label="Hide tip prompt">✕</button>
         </div>
         <div class="lesson__tools">

@@ -210,7 +210,9 @@
     "raguram rajan", "chetan bhagat", "navi radjou", "amartya sen",
     "r. gopalakrishnan", "nandan nilekani", "harish bhat", "subhash chandra",
     "jay shetty", "om swami", "sudha murty", "n. r. narayana murthy",
-    "azim premji", "ravi subramanian", "parag anand", "kiran bedi"
+    "azim premji", "ravi subramanian", "parag anand", "kiran bedi",
+    "paramahansa yogananda", "deepak chopra", "mahatma gandhi", "rujuta diwekar",
+    "mohnish pabrai", "abhijit banerjee", "subroto bagchi"
   ];
   function isIndianBook(id) {
     try {
