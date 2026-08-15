@@ -1226,6 +1226,50 @@
     wrap.parentElement.appendChild(box);
   })();
 
+  /* ---------- 🧠 HONESTY BOX: "when this breaks" caveat + graveyard proof ----------
+     (failures.js loads AFTER book.js on the page, so retry until it's available) */
+  (function () {
+    function renderTruthBox() {
+      if (!book.caveat && !book.graveLink) return;
+      if (book.graveLink && !(window.FAILURES || []).length) {
+        setTimeout(renderTruthBox, 150);
+        return;
+      }
+      const wrap = document.getElementById("plan");
+      if (!wrap || !wrap.parentElement) return;
+      const box = document.createElement("div");
+      box.className = "truthbox";
+      let html = "";
+      if (book.caveat) {
+        html += `<div class="callout callout--caveat"><strong class="tag">⚠️ When this doesn't work</strong><br>${book.caveat}</div>`;
+      }
+      if (book.graveLink) {
+        let g = null;
+        try { g = (window.FAILURES || []).find((f) => f.id === book.graveLink); } catch (e) {}
+        if (g) {
+          html += `<a class="gravecross" href="graveyard/${g.id}.html">
+            <span class="gravecross__head">
+              <span class="gravecross__em">${g.emoji || "💀"}</span>
+              <span class="gravecross__titles">
+                <b>${g.name}</b>
+                <small>${g.title || "This lesson, in real life, gone wrong."}</small>
+              </span>
+            </span>
+            <span class="gravecross__mid">
+              <span class="gravecross__cat">☠️ ${g.category}</span>
+              <span class="gravecross__loss">💸 ${g.loss}</span>
+            </span>
+            <span class="gravecross__go">READ THE CASE STUDY →</span>
+          </a>`;
+        }
+      }
+      if (!html) return;
+      box.innerHTML = html;
+      wrap.parentElement.appendChild(box);
+    }
+    setTimeout(renderTruthBox, 0);
+  })();
+
   /* ---------- RELATED BOOKS ---------- */
   (function () {
     const wrap = document.getElementById("related");

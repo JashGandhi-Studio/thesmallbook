@@ -611,6 +611,75 @@ html.dark .tsb-loginbtn { background: #fff; color: #111; }
 .callout--action { background: #e6fff5; }
 .callout--example strong.tag { background: var(--blue); }
 .callout--action strong.tag { background: var(--green); color: var(--ink); }
+.callout--caveat { background: #ffe9e6; border-color: var(--ink); }
+.callout--caveat strong.tag { background: var(--red); color: #fff; }
+html.dark .callout--caveat { background: #2e1d1a; }
+
+/* 🧠 HONESTY BOX — caveat + graveyard proof, after the action plan */
+.truthbox { margin-top: 14px; display: flex; flex-direction: column; gap: 14px; }
+
+/* 💀 GRAVEYARD PROOF CARD — premium autopsy ticket */
+.gravecross {
+  display: flex; align-items: center; gap: 14px;
+  background:
+    radial-gradient(420px 160px at 100% -20%, rgba(255,82,82,.18), transparent 60%),
+    linear-gradient(135deg, #1c0a0a 0%, #2b1010 55%, #351414 100%);
+  border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink);
+  padding: 14px 16px; text-decoration: none; color: #f2ead8;
+  position: relative; overflow: hidden;
+  transition: transform .12s, box-shadow .12s;
+}
+.gravecross::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, #ff5252 30%, #ff8a7a 55%, #ff5252 80%, transparent);
+}
+.gravecross:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 var(--ink); }
+.gravecross:active { transform: translate(1px,1px); box-shadow: 3px 3px 0 var(--ink); }
+
+.gravecross__head { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.gravecross__em {
+  flex: none; width: 52px; height: 52px; display: grid; place-items: center;
+  font-size: 24px; background: var(--red); border: 2.5px solid var(--ink);
+  box-shadow: 3px 3px 0 #000; transform: rotate(-3deg);
+}
+.gravecross__titles { min-width: 0; }
+.gravecross__titles b {
+  display: block; font-family: "Archivo Black", sans-serif; font-size: .95rem;
+  letter-spacing: 1px; text-transform: uppercase; color: #ffd94d;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.gravecross__titles small {
+  display: block; font-size: .72rem; font-weight: 600; color: #d8b9b9;
+  margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.gravecross__mid {
+  flex: none; display: flex; flex-direction: column; gap: 4px; align-items: flex-end;
+  max-width: 46%;
+}
+.gravecross__cat {
+  font-family: "Space Grotesk", sans-serif; font-size: .58rem; font-weight: 800;
+  letter-spacing: 2px; background: rgba(255,82,82,.15); color: #ff8a7a;
+  border: 1.5px solid rgba(255,82,82,.5); border-radius: 5px; padding: 2px 7px;
+}
+.gravecross__loss {
+  font-size: .68rem; font-weight: 800; color: #ffd94d; text-align: right;
+  line-height: 1.35;
+}
+.gravecross__go {
+  flex: none; font-family: "Archivo Black", sans-serif; font-size: .62rem; letter-spacing: 1px;
+  background: linear-gradient(135deg, #ff5252, #d92b2b); color: #fff;
+  border: 2.5px solid var(--ink); padding: 10px 12px; white-space: nowrap;
+  box-shadow: 3px 3px 0 #000; transition: transform .1s, filter .1s;
+}
+.gravecross:hover .gravecross__go { transform: translate(-1px,-1px); filter: brightness(1.1); }
+
+@media (max-width: 700px) {
+  .gravecross { flex-wrap: wrap; gap: 10px; }
+  .gravecross__head { flex: 1 1 100%; }
+  .gravecross__mid { flex: 1 1 auto; align-items: flex-start; max-width: 100%; }
+  .gravecross__loss { text-align: left; }
+  .gravecross__go { width: 100%; text-align: center; }
+}
 
 /* QUOTES */
 .quotes {
