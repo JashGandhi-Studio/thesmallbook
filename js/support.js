@@ -188,12 +188,11 @@
         navigator.clipboard.writeText(UPI_ID).then(doneMsg).catch(doneMsg);
       } else doneMsg();
     });
-    // desktop fallback: upi:// links only work on phones
+    // 💸 universal UPI engine — native link + fallback sheet on desktop
     payBtn.addEventListener("click", (e) => {
-      const isMobile = /android|iphone|ipad|mobile/i.test(navigator.userAgent);
-      if (!isMobile) {
+      if (window.TSB_UPI) {
         e.preventDefault();
-        toast("📲 UPI links open on phones — copy the ID instead!");
+        window.TSB_UPI.pay(amt, "Fuel the library — thank you!");
       }
     });
   }

@@ -77,10 +77,28 @@
 
   /* ---------- SEARCH (fuzzy) — debounced so mobile stays smooth ---------- */
   let searchTimer = null;
+  /* FIND IT / Enter → smooth glide to the shelf where the filtered results live */
+  function smoothScrollToShelf() {
+    try {
+      const target = document.getElementById("library") || grid;
+      if (target && target.scrollIntoView) target.scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch (e) {}
+  }
+
   searchInput.addEventListener("input", (e) => {
     const v = e.target.value.trim().toLowerCase();
     clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => { query = v; render(); }, 160);
+    searchTimer = setTimeout(() => {
+      query = v;
+      render();
+    }, 160);
+  });
+
+  /* FIND IT button + Enter key → glide down to the filtered shelf */
+  const searchGo = document.getElementById("searchGo");
+  if (searchGo) searchGo.addEventListener("click", smoothScrollToShelf);
+  searchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); smoothScrollToShelf(); }
   });
 
   function fuzzyMatch(text, q) {

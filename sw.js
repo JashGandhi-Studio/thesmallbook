@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v130";
+const CACHE_VERSION = "tsb-v140";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -28,6 +28,7 @@ const APP_SHELL = [
   "./css/style.css",
   "./js/prefs.js",
   "./js/support.js",
+  "./js/upi.js",
   "./js/lang.js",
   "./js/failures.js",
   "./js/graveyard.js",

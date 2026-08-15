@@ -868,6 +868,15 @@
     d.querySelector(".lesson__head").addEventListener("click", () => d.classList.toggle("open"));
     const tipX = d.querySelector(".tipjar__x");
     if (tipX) tipX.addEventListener("click", () => { const tj = d.querySelector(".tipjar"); if (tj) tj.remove(); });
+    /* 💸 tip buttons → universal UPI engine (fallback sheet on desktop) */
+    if (window.TSB_UPI) {
+      d.querySelectorAll(".tipjar__btns a").forEach((a) => {
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          window.TSB_UPI.pay(a.dataset.tip, "Chai for TheSmallBook");
+        });
+      });
+    }
     lessonsWrap.appendChild(d);
   });
 

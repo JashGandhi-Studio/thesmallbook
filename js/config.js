@@ -70,7 +70,17 @@ window.TSB_CONFIG = {
     { quote: "The Graveyard reads like free MBA lectures. I shared the Enron autopsy with my entire team.", who: "Meera, Kochi" },
     { quote: "I used to buy books and never finish them. Now I finish one summary every morning with my chai.", who: "Vikram, Lucknow" },
     { quote: "That 5 Second Rule summary finally got me out of bed for morning runs. Three months strong now.", who: "Aditi, Nagpur" },
-    { quote: "I teach science and I use your examples in class. Students actually remember the stories.", who: "Farhan, Bhopal" }
+    { quote: "I teach science and I use your examples in class. Students actually remember the stories.", who: "Farhan, Bhopal" },
+    { quote: "Heard the Gold human audio sample and immediately joined the waitlist. The narration quality is better than most paid audiobook apps.", who: "Tanvi, Surat" },
+    { quote: "The Graveyard is addictive. I read one failure story every night before sleeping, it is better than any business podcast.", who: "Sameer, Nashik" },
+    { quote: "My Hindi reading habit was zero. Now I read TheSmallBook in Hindi on my phone during lunch, 3 books done this month.", who: "Kavita, Patna" },
+    { quote: "I am 60 and your summaries keep me sharp. Reading Ikigai here reminded me of my father's wisdom.", who: "Mr. Deshpande, Pune" },
+    { quote: "Used the 5-minute Deep Work summary before a client pitch and landed the project. The lessons are practical, not philosophy.", who: "Zoya, Mumbai" },
+    { quote: "The audio feature reads to me while I cook. My daughter thinks I listen to podcasts now, close enough.", who: "Neelam, Delhi" },
+    { quote: "Was skeptical about TSB Gold until I heard the samples. The Let Them Theory one had me nodding the whole minute.", who: "Ishaan, Kolkata" },
+    { quote: "My college friends share summaries in our group chat now. We have a running bet on who reads more books this year.", who: "Sahil, Chandigarh" },
+    { quote: "Came for one book, stayed for the shelf. The way lessons end with an action step makes you actually change something.", who: "Ritika, Indore" },
+    { quote: "I recommended the Graveyard to my father for his startup fears. He now checks the graveyard before every big decision.", who: "Manav, Jaipur" }
   ],
 
   /* 🟢 GOOGLE OAUTH CLIENT — "Sign in with Google" popup (Google Identity

@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TSB GOLD, Human Audio, Deep Dives, PDFs, Coming Soon | TheSmallBook</title>
-  <meta name="description" content="TSB GOLD · human audio, deep dives and PDF cheat-sheets, coming soon. Join the first 500 early-birds at ₹999/yr and lock in 33% off forever. No spam, cancel anytime.">
+  <meta name="description" content="TSB GOLD — 300 books, 1781 lessons, free to read — plus human audio, deep dives and PDF cheat-sheets. Join the first 500 early-birds at ₹999/yr and lock in 33% off forever. No spam, cancel anytime.">
   <meta name="robots" content="noindex,follow">
   <meta name="theme-color" content="#ffc800">
   <meta property="og:title" content="TSB GOLD · Coming Soon | TheSmallBook">
-  <meta property="og:description" content="Human audio · Deep dives · PDFs. First 500 early-birds get ₹999/yr · 33% off locked forever.">
+  <meta property="og:description" content="TSB GOLD — 300 books, 1781 lessons, free to read — plus human audio, deep dives and PDF cheat-sheets. First 500 early-birds get ₹999/yr · 33% off locked forever.">
   <meta property="og:url" content="https://thesmallbook.in/gold.html">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png">
@@ -126,11 +126,82 @@
     </header>
 
     <div class="goldgrid">
-      <div class="goldcard"><div class="e">🎙️</div><h3>HUMAN AUDIO</h3><p>Podcast-grade narration by real voices, not robotic TTS. Every lesson, chapter and deep dive, read to you like a show.</p><span class="soon">COMING SOON</span></div>
+      <div class="goldcard goldcard--audio"><div class="e">🎙️</div><h3>HUMAN AUDIO <span class="live">LIVE SAMPLES</span></h3><p>Podcast-grade narration by real voices, not robotic TTS. Every lesson, chapter and deep dive, read to you like a show.</p><button class="gs-open" id="gsOpenSamples" type="button"><span class="gs-open__ico">▶</span> LISTEN TO SAMPLES</button><span class="soon" style="display:none">COMING SOON</span></div>
       <div class="goldcard"><div class="e">🌊</div><h3>DEEP DIVES</h3><p>Full-length breakdowns beyond the 5-minute read, context, history, counter-arguments and case studies for the obsessed.</p><span class="soon">COMING SOON</span></div>
       <div class="goldcard"><div class="e">📄</div><h3>PDF CHEAT-SHEETS</h3><p>One-page downloadable summaries of every book's lessons and action plans, print them, pin them, share them.</p><span class="soon">COMING SOON</span></div>
       <div class="goldcard"><div class="e">🔑</div><h3>EARLY ACCESS</h3><p>New books and features first, before the free library. Plus priority book requests and the Founding Supporter badge.</p><span class="soon">COMING SOON</span></div>
-      <div class="goldcard"><div class="e">📚</div><h3>PREMIUM BOOK ACCESS</h3><p>Full-length versions of every book, chapter by chapter, every lesson expanded, with offline mode for commutes and flights.</p><span class="soon">COMING SOON</span></div>
+      <div class="goldcard"><div class="e">📚</div><h3>FULL CHAPTER-BY-CHAPTER SUMMARIES</h3><p>Every book distilled chapter by chapter — every single chapter covered, every lesson expanded, in one complete summary you can actually finish. Not the book, the full understanding.</p><span class="soon">COMING SOON</span></div>
+    </div>
+
+    <!-- 🎙️ HUMAN AUDIO · LIVE SAMPLES — same design language as the app's podcast player -->
+    <div class="gs-panel" id="gsPanel" hidden>
+      <div class="gs-panel__card">
+        <div class="gs-panel__prog"><i id="gsProgFill"></i></div>
+        <div class="gs-panel__top">
+          <div class="gs-panel__art"><span>🎧</span><span class="gs-panel__eq"><i></i><i></i><i></i><i></i></span></div>
+          <div class="gs-panel__info">
+            <div class="gs-panel__title">HUMAN AUDIO · LIVE SAMPLES</div>
+            <div class="gs-panel__sub" id="gsNowPlaying">This is the exact TSB Gold sound — press play</div>
+            <div class="gs-panel__live" id="gsLive"><i></i> LIVE</div>
+          </div>
+          <button class="gs-panel__close" id="gsClose" type="button" title="Close samples">✕</button>
+        </div>
+        <div class="gs-panel__list">
+
+          <div class="gs-row">
+            <div class="gs-row__art"><img src="assets/covers/factfulness.jpg" alt="Factfulness cover" loading="lazy"><span class="gs-row__eq"><i></i><i></i><i></i><i></i></span></div>
+            <div class="gs-row__meta">
+              <div class="gs-row__title">Factfulness</div>
+              <div class="gs-row__sub">Hans Rosling · 1:04 <span class="gs-tag">Male</span> <span class="gs-tag">Eng · US</span></div>
+              <div class="gs-row__live"><i></i> LIVE</div>
+            </div>
+            <div class="gs-row__track">
+              <div class="gs-row__bar"><i data-fill="0"></i></div>
+              <span class="gs-row__time" data-time="0">0:00 / 1:04</span>
+            </div>
+            <button class="gs-row__play" data-play="0" aria-label="Play Factfulness sample">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+            </button>
+            <audio preload="none" data-src="assets/audio/factfulness-sample.mp3"></audio>
+          </div>
+
+          <div class="gs-row">
+            <div class="gs-row__art"><img src="assets/covers/psychology-of-money.jpg" alt="The Psychology of Money cover" loading="lazy"><span class="gs-row__eq"><i></i><i></i><i></i><i></i></span></div>
+            <div class="gs-row__meta">
+              <div class="gs-row__title">The Psychology of Money</div>
+              <div class="gs-row__sub">Morgan Housel · 1:22 <span class="gs-tag">Male</span> <span class="gs-tag">Eng · IN</span></div>
+              <div class="gs-row__live"><i></i> LIVE</div>
+            </div>
+            <div class="gs-row__track">
+              <div class="gs-row__bar"><i data-fill="1"></i></div>
+              <span class="gs-row__time" data-time="1">0:00 / 1:22</span>
+            </div>
+            <button class="gs-row__play" data-play="1" aria-label="Play Psychology of Money sample">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+            </button>
+            <audio preload="none" data-src="assets/audio/psychology-of-money-sample.mp3"></audio>
+          </div>
+
+          <div class="gs-row">
+            <div class="gs-row__art"><img src="assets/covers/let-them-theory.jpg" alt="The Let Them Theory cover" loading="lazy"><span class="gs-row__eq"><i></i><i></i><i></i><i></i></span></div>
+            <div class="gs-row__meta">
+              <div class="gs-row__title">The Let Them Theory</div>
+              <div class="gs-row__sub">Mel Robbins · 1:15 <span class="gs-tag">Female</span> <span class="gs-tag">Eng · UK</span></div>
+              <div class="gs-row__live"><i></i> LIVE</div>
+            </div>
+            <div class="gs-row__track">
+              <div class="gs-row__bar"><i data-fill="2"></i></div>
+              <span class="gs-row__time" data-time="2">0:00 / 1:15</span>
+            </div>
+            <button class="gs-row__play" data-play="2" aria-label="Play Let Them Theory sample">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+            </button>
+            <audio preload="none" data-src="assets/audio/let-them-theory-sample.mp3"></audio>
+          </div>
+
+        </div>
+        <div class="gs-panel__foot">🎧 Full human audio for all 300+ books, deep dives &amp; PDFs come with <b>TSB Gold</b> — hear it, then join the first 500.</div>
+      </div>
     </div>
 
     <section class="goldjoin">
@@ -147,7 +218,7 @@
         </div>
         <div class="goldupi">
           <div class="upi">OR PAY &amp; CLAIM THE PRICE</div>
-          <a class="pay" href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=999&cu=INR">📲 PAY ₹999 VIA UPI</a>
+          <a class="pay" id="gPayBtn" href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=999&cu=INR">📲 PAY ₹999 VIA UPI</a>
           <div class="alt">Your UPI app opens with ₹999 pre-filled &nbsp;<button id="gCopy">📋 COPY UPI ID</button></div>
         </div>
       </div>
@@ -155,7 +226,7 @@
 
     <p class="goldnote">💛 The free library stays free. Gold is optional, for readers who want more, and for the readers who keep this whole thing running.</p>
 
-    <p class="goldfoot">✦ MADE BY JASH GANDHI ✦<br><b>— 280 books, 1643 lessons, free to read —</b></p>
+    <p class="goldfoot">✦ MADE BY JASH GANDHI ✦<br><b>— 300 books, 1781 lessons, free to read —</b></p>
   </div>
 
   <footer class="footer">
@@ -168,6 +239,19 @@
   <script src="js/lang.js"></script>
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
+  <script src="js/upi.js"></script>
+  <script>
+    /* 💸 TSB GOLD payment → universal UPI engine */
+    (function () {
+      var btn = document.getElementById("gPayBtn");
+      if (btn && window.TSB_UPI) {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          window.TSB_UPI.pay(999, "TSB GOLD early-bird (₹999/yr, 33% off locked)");
+        });
+      }
+    })();
+  </script>
   <script>
     (function () {
       /* email capture → opens a pre-filled email to Jash (works now);
@@ -189,6 +273,227 @@
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText("9702510680@fam").then(done).catch(done);
         } else done();
+      });
+    })();
+  </script>
+  <script>
+    /* 🎙️ HUMAN AUDIO SAMPLES — expandable pro player (one plays at a time).
+       The samples live INSIDE the Human Audio feature card: tap LISTEN TO
+       SAMPLES to open the panel right below the features grid. */
+    (function () {
+      var openBtn = document.getElementById("gsOpenSamples");
+      var panel = document.getElementById("gsPanel");
+      var closeBtn = document.getElementById("gsClose");
+      var panelOpen = false;
+
+      function setOpen(open) {
+        panelOpen = open;
+        panel.hidden = !open;
+        openBtn.querySelector(".gs-open__ico").textContent = open ? "✕" : "▶";
+        var lbl = openBtn.childNodes[1];
+        if (lbl) lbl.textContent = open ? " CLOSE SAMPLES" : " LISTEN TO SAMPLES";
+      }
+
+      if (openBtn) openBtn.addEventListener("click", function () {
+        setOpen(!panelOpen);
+        if (panelOpen) {
+          try { panel.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch (e) {}
+        }
+      });
+      if (closeBtn) closeBtn.addEventListener("click", function () { setOpen(false); });
+
+      /* ---- players ---- */
+      var PLAY_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
+      var PAUSE_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z" fill="currentColor"/></svg>';
+
+      /* ---- podcast-style players: circular play, LIVE dot + equalizer ---- */
+      var NOW = document.getElementById("gsNowPlaying");
+      var headLive = document.getElementById("gsLive");
+      var headFill = document.getElementById("gsProgFill");
+
+      var players = Array.prototype.map.call(document.querySelectorAll(".gs-row"), function (row, i) {
+        var audio = row.querySelector("audio");
+        var playBtn = row.querySelector(".gs-row__play");
+        var bar = row.querySelector(".gs-row__bar");
+        var fill = row.querySelector("[data-fill]");
+        var time = row.querySelector(".gs-row__time");
+        var live = row.querySelector(".gs-row__live");
+        var eq = row.querySelector(".gs-row__eq");
+        var meta = row.querySelector(".gs-row__meta");
+        audio.src = audio.dataset.src;
+        audio.preload = "none";
+        var dur = 0;
+        var playing = false;
+        var fmt = function (s) { if (!isFinite(s) || s < 0) s = 0; var m = Math.floor(s / 60), sec = Math.floor(s % 60); return m + ":" + (sec < 10 ? "0" : "") + sec; };
+
+        audio.addEventListener("loadedmetadata", function () { dur = audio.duration; });
+        audio.addEventListener("timeupdate", function () {
+          if (dur) {
+            var pct = (audio.currentTime / dur * 100);
+            fill.style.width = pct + "%";
+            if (playing && headFill) headFill.style.width = pct + "%";   // head bar mirrors the ACTIVE track
+          }
+          time.textContent = fmt(audio.currentTime) + " / " + fmt(dur || 0);
+        });
+        audio.addEventListener("ended", function () {
+          playing = false;
+          playBtn.innerHTML = PLAY_ICON;
+          fill.style.width = "0%";
+          time.textContent = "0:00 / " + fmt(dur);
+          row.classList.remove("playing");
+          live.classList.remove("gs-row__live--on");
+          eq.classList.remove("gs-row__eq--on");
+          refreshHead();
+        });
+        playBtn.addEventListener("click", function () { toggle(); });
+        bar.addEventListener("click", function (e) {
+          var r = bar.getBoundingClientRect();
+          var ratio = (e.clientX - r.left) / r.width;
+          if (dur) { audio.currentTime = ratio * dur; fill.style.width = (ratio * 100) + "%"; if (playing) headFill.style.width = (ratio * 100) + "%"; }
+        });
+
+        function toggle() {
+          var wasPlaying = playing;
+          players.forEach(function (p, j) { if (j !== i && p.isPlaying()) p.pause(); });
+          if (wasPlaying) {
+            playing = false;
+            audio.pause();
+            playBtn.innerHTML = PLAY_ICON;
+            row.classList.remove("playing");
+            live.classList.remove("gs-row__live--on");
+            eq.classList.remove("gs-row__eq--on");
+            refreshHead();
+          } else {
+            playing = true;
+            audio.play().then(function () {
+              if (!playing) return;
+              playBtn.innerHTML = PAUSE_ICON;
+              row.classList.add("playing");
+              live.classList.add("gs-row__live--on");
+              eq.classList.add("gs-row__eq--on");
+              if (NOW && meta) NOW.textContent = "▶ Now playing · " + meta.querySelector(".gs-row__title").textContent;
+              refreshHead();
+            }).catch(function () { playing = false; });
+          }
+        }
+
+        return {
+          toggle: toggle,
+          pause: function () {
+            playing = false;
+            audio.pause();
+            playBtn.innerHTML = PLAY_ICON;
+            row.classList.remove("playing");
+            live.classList.remove("gs-row__live--on");
+            eq.classList.remove("gs-row__eq--on");
+            refreshHead();
+          },
+          isPlaying: function () { return playing; }
+        };
+      });
+
+      /* head LIVE badge + now-playing reset when nothing plays */
+      function refreshHead() {
+        var any = players.filter(function (p) { return p.isPlaying(); });
+        headLive.classList.toggle("gs-panel__live--on", any.length > 0);
+        if (!any.length) {
+          headFill.style.width = "0%";
+          if (NOW) NOW.textContent = "This is the exact TSB Gold sound — press play";
+        }
+      }
+
+      /* spacebar toggles play/pause while the samples panel is open */
+      document.addEventListener("keydown", function (e) {
+        var panel = document.getElementById("gsPanel");
+        if (!panel || panel.hidden) return;
+        if (e.key === " " && !/input|textarea|select/i.test((e.target.tagName || ""))) {
+          e.preventDefault();
+          var active = players.filter(function (p) { return p.isPlaying(); })[0] || players[0];
+          if (active) active.toggle();
+        }
+      });
+    })();
+  </script>
+  <script>
+    /* 🎙️ HUMAN AUDIO SAMPLES — expandable pro player (one plays at a time).
+       The samples live INSIDE the Human Audio feature card: tap LISTEN TO
+       SAMPLES to open the panel right below the features grid. */
+    (function () {
+      var openBtn = document.getElementById("gsOpenSamples");
+      var panel = document.getElementById("gsPanel");
+      var closeBtn = document.getElementById("gsClose");
+      var panelOpen = false;
+
+      function setOpen(open) {
+        panelOpen = open;
+        panel.hidden = !open;
+        openBtn.querySelector(".gs-open__ico").textContent = open ? "✕" : "▶";
+        var lbl = openBtn.childNodes[1];
+        if (lbl) lbl.textContent = open ? " CLOSE SAMPLES" : " LISTEN TO SAMPLES";
+      }
+
+      if (openBtn) openBtn.addEventListener("click", function () {
+        setOpen(!panelOpen);
+        if (panelOpen) {
+          try { panel.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch (e) {}
+        }
+      });
+      if (closeBtn) closeBtn.addEventListener("click", function () { setOpen(false); });
+
+      /* ---- players ---- */
+      var PLAY_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
+      var PAUSE_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z" fill="currentColor"/></svg>';
+
+      var players = Array.prototype.map.call(document.querySelectorAll(".gs-row"), function (row, i) {
+        var audio = row.querySelector("audio");
+        var playBtn = row.querySelector(".gs-row__play");
+        var bar = row.querySelector(".gs-row__bar");
+        var fill = row.querySelector("[data-fill]");
+        var time = row.querySelector(".gs-row__time");
+        audio.src = audio.dataset.src;
+        audio.preload = "none";
+        var dur = 0;
+        var playing = false; // self-tracked — never trust audio.paused (stale in some browsers)
+        var fmt = function (s) { if (!isFinite(s) || s < 0) s = 0; var m = Math.floor(s / 60), sec = Math.floor(s % 60); return m + ":" + (sec < 10 ? "0" : "") + sec; };
+
+        audio.addEventListener("loadedmetadata", function () { dur = audio.duration; });
+        audio.addEventListener("timeupdate", function () {
+          if (dur) fill.style.width = (audio.currentTime / dur * 100) + "%";
+          time.textContent = fmt(audio.currentTime) + " / " + fmt(dur || 0);
+        });
+        audio.addEventListener("ended", function () {
+          playing = false;
+          playBtn.innerHTML = PLAY_ICON;
+          fill.style.width = "0%";
+          time.textContent = "0:00 / " + fmt(dur);
+          row.classList.remove("playing");
+        });
+        playBtn.addEventListener("click", function () {
+          var wasPlaying = playing;
+          players.forEach(function (p, j) { if (j !== i && p.isPlaying()) p.pause(); });
+          if (wasPlaying) {
+            playing = false;
+            audio.pause();
+            playBtn.innerHTML = PLAY_ICON;
+            row.classList.remove("playing");
+          } else {
+            playing = true;
+            audio.play().then(function () {
+              if (!playing) return; // was paused while loading
+              playBtn.innerHTML = PAUSE_ICON;
+              row.classList.add("playing");
+            }).catch(function () { playing = false; });
+          }
+        });
+        bar.addEventListener("click", function (e) {
+          var r = bar.getBoundingClientRect();
+          var ratio = (e.clientX - r.left) / r.width;
+          if (dur) { audio.currentTime = ratio * dur; fill.style.width = (ratio * 100) + "%"; }
+        });
+        return {
+          pause: function () { playing = false; audio.pause(); playBtn.innerHTML = PLAY_ICON; row.classList.remove("playing"); },
+          isPlaying: function () { return playing; }
+        };
       });
     })();
   </script>
