@@ -40,11 +40,18 @@
   </nav>
   <main class="seopage">
 
-    <header class="seohero seohero--grave">
-      <p class="seocrumb"><a href="../graveyard.html">💀 The Graveyard</a> › HISTORY</p>
+    <header class="ghero ghero--grave">
+      <div class="ghero__badge">💀 CASE STUDY · HISTORY</div>
+      <div class="ghero__em">☢️</div>
       <h1>Why Did Therac-25 Fail?</h1>
-      <p class="seometa">☢️ The Software Bug That Killed Four Patients — and Taught Medicine About Checklists · 1987 · 💸 4 patients killed, 2 seriously injured, a technology's trust destroyed</p>
+      <p class="ghero__title">The Software Bug That Killed Four Patients — and Taught Medicine About Checklists</p>
+      <div class="ghero__stats">
+        <div class="ghero__stat"><b>1987</b><span>YEAR</span></div>
+        <div class="ghero__stat"><b>☠️ HISTORY</b><span>CAUSE</span></div>
+        <div class="ghero__stat ghero__stat--loss"><b>💸 4 patients killed, 2 seriously injured, a technology's trust destroyed</b><span>THE BURN</span></div>
+      </div>
     </header>
+
     <section class="seoblock">
       <h2>📜 What Happened</h2>
       <p>The Therac-25 was a radiation therapy machine that seemed safer than its predecessors because its safety was implemented in software instead of hardware interlocks. But when the software hit a rare race condition, the machine delivered massive overdoses of radiation — silently, and repeatedly. Over two years, six patients were over-irradiated; four died. The horrifying part: the machine's logs showed 'no malfunction' even as patients screamed — because the software recorded normal operation while the hardware delivered death. The investigation found a system designed by brilliance and tested by assumption, with no independent verification and no checklists.</p>
@@ -57,9 +64,17 @@
       <h2>🧠 The Lesson (Free for You)</h2>
       <p>Complexity exceeds any single expert's memory — even brilliant ones. The aviation industry knew this for decades; medicine learned it the hard way. Critical systems need checklists, verification and the humility to assume you missed something.</p>
     </section>
-    <section class="seoblock">
+    <section class="seoblock gantidote">
       <h2>📕 The Antidote Book</h2>
-      <p>The book that teaches exactly what Therac-25 needed: <a href="../books/checklist-manifesto.html"><strong>The Checklist Manifesto</strong> by Atul Gawande</a> — read the free summary.</p>
+      <div class="gantidote__card">
+        <img class="gantidote__cover" src="../assets/covers/checklist-manifesto.jpg" alt="The Checklist Manifesto cover" loading="lazy" width="120">
+        <div class="gantidote__info">
+          <b>The Checklist Manifesto</b>
+          <small>Atul Gawande · Productivity · 5 lessons</small>
+          <p>Surgeon Atul Gawande asked a strange question: why do experts still fail at complex tasks, from surgery to skyscrapers to airplane crashes? His answer: modern complexity exceeds any single human's memory — the failures…</p>
+          <a class="gantidote__btn" href="../book.html?id=checklist-manifesto">📖 OPEN THE FULL INTERACTIVE BREAKDOWN →</a>
+        </div>
+      </div>
     </section>
     <section class="seoblock seocta">
       <a class="btn btn--red" href="../graveyard.html">💀 EXPLORE ALL 292 FAILURE CASE STUDIES</a>

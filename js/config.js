@@ -80,7 +80,15 @@ window.TSB_CONFIG = {
     { quote: "Was skeptical about TSB Gold until I heard the samples. The Let Them Theory one had me nodding the whole minute.", who: "Ishaan, Kolkata" },
     { quote: "My college friends share summaries in our group chat now. We have a running bet on who reads more books this year.", who: "Sahil, Chandigarh" },
     { quote: "Came for one book, stayed for the shelf. The way lessons end with an action step makes you actually change something.", who: "Ritika, Indore" },
-    { quote: "I recommended the Graveyard to my father for his startup fears. He now checks the graveyard before every big decision.", who: "Manav, Jaipur" }
+    { quote: "I recommended the Graveyard to my father for his startup fears. He now checks the graveyard before every big decision.", who: "Manav, Jaipur" },
+    { quote: "The 'when this doesn't work' note under Atomic Habits hit me hard. No other summary site tells you where the advice breaks.", who: "Dev, Thane" },
+    { quote: "Read the Sapiens summary at 2 AM and texted my brother the whole night about it. TheSmallBook made thinking feel cool.", who: "Aisha, Lucknow" },
+    { quote: "I open the Graveyard before starting anything new now. It is cheaper than an MBA and more honest than most mentors.", who: "Nikhil, Ahmedabad" },
+    { quote: "The voice quality on the Gold samples made me re-listen three times. If full books sound like this, it is a steal at ₹999.", who: "Sara, Goa" },
+    { quote: "My 14-year-old reads a summary every day. He argued with me about money using Rich Dad Poor Dad. I am not mad, I am impressed.", who: "Mr. Kulkarni, Nagpur" },
+    { quote: "Came to read one book before an interview, stayed for the graveyard. The OYO case study alone saved me from a bad franchise deal.", who: "Bharat, Indore" },
+    { quote: "The summaries are short enough to finish on a metro ride and deep enough that I remember them weeks later. That balance is rare.", who: "Tanya, Noida" },
+    { quote: "I used the Graveyard's Enron case study in my college presentation. The professor asked where I found it and the whole class is on the site now.", who: "Rhea, Bengaluru" }
   ],
 
   /* 🟢 GOOGLE OAUTH CLIENT — "Sign in with Google" popup (Google Identity
