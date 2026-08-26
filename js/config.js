@@ -114,13 +114,7 @@ window.TSB_CONFIG = {
   /* 🔥 THIS WEEK'S NEW RELEASES — only the latest batch (updated every batch).
      Old books leave this list automatically — they're no longer "new". */
   NEW_THIS_WEEK: [
-    "autobiography-of-a-yogi", "seven-spiritual-laws", "my-gita",
-    "dharma-amish", "gita-according-to-gandhi", "dont-lose-your-mind",
-    "india-positive", "dhandho-investor", "coffee-can-investing",
-    "poor-economics", "a-better-india", "go-kiss-the-world",
-    "difficulty-of-being-good", "india-in-age-of-ideas", "india-after-gandhi",
-    "happiness-hypothesis", "everything-store", "letters-from-a-stoic",
-    "peak-ericsson", "21-lessons-21st-century"
+    "rudest-book-ever", "turning-points-kalam", "my-journey-kalam", "discovery-of-india", "dream-with-eyes-open", "chanakya-in-you", "art-of-being-alone", "victory-project", "indias-money-heist", "blink-gladwell", "tipping-point", "art-of-happiness", "tidying-up", "intelligence-analysis", "culture-map", "body-bryson", "second-mountain", "gifts-of-imperfection", "five-love-languages", "better-than-before"
   ],
   /* 🩸 THIS WEEK'S FRESH GRAVES — latest batch only (updated every batch). */
   NEW_GRAVES_THIS_WEEK: [

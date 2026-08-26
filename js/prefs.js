@@ -212,7 +212,7 @@
     "jay shetty", "om swami", "sudha murty", "n. r. narayana murthy",
     "azim premji", "ravi subramanian", "parag anand", "kiran bedi",
     "paramahansa yogananda", "deepak chopra", "mahatma gandhi", "rujuta diwekar",
-    "mohnish pabrai", "abhijit banerjee", "subroto bagchi"
+    "mohnish pabrai", "abhijit banerjee", "subroto bagchi", "shwetabh gangwar", "ronnie screwvala", "renuka gavrani"
   ];
   function isIndianBook(id) {
     try {

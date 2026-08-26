@@ -238,7 +238,7 @@
   function t(s) {
     if (!shortLoaded && getLang() !== "en") {
       shortLoaded = true;
-      var keys = ["ASK","THE ANSWER","CLOSEST MATCHES","FROM THE GRAVEYARD","AUTOPSY","READ","TRY NEXT →","COPIED","COPY ANSWER","Ask anything…","Clear chat","Close","Browse all questions","THE PROBLEM LIBRARY","questions · tap ASK · 📋 to copy","Filter questions… (e.g. money, habits, fear)","No questions match","ask it yourself in the chat","tap a source to read the real lesson","tap an autopsy to read the full story","FAILURES LINKED TO THIS BOOK","THE GRAVEYARD SAYS","Real companies that died the exact way this book warns about.","no book lesson matched","Something went wrong — try again!","ask it yourself in the chat","Related failures","Why do companies die?","ALL QUESTIONS","Scanning","Reading","Checking","Compiling your answer","On this book?","related failures are linked to this book — tap below.","Ask anything —","How do I stop procrastinating?","questions in","and 200 books answer. Even the Graveyard warns you."];
+      var keys = ["ASK","THE ANSWER","CLOSEST MATCHES","FROM THE GRAVEYARD","AUTOPSY","READ","TRY NEXT →","COPIED","COPY ANSWER","Ask anything…","Clear chat","Close","Browse all questions","THE PROBLEM LIBRARY","questions · tap ASK · 📋 to copy","Filter questions… (e.g. money, habits, fear)","No questions match","ask it yourself in the chat","tap a source to read the real lesson","tap an autopsy to read the full story","FAILURES LINKED TO THIS BOOK","THE GRAVEYARD SAYS","Real companies that died the exact way this book warns about.","no book lesson matched","Something went wrong — try again!","ask it yourself in the chat","Related failures","Why do companies die?","ALL QUESTIONS","Scanning","Reading","Checking","Compiling your answer","On this book?","related failures are linked to this book — tap below.","Ask anything —","How do I stop procrastinating?","questions in","books answer", "Even the Graveyard warns you", "autopsies"];
       trBatch(keys, getLang()).then(function (arr) {
         keys.forEach(function (k, i) { shortMap[k] = arr[i]; });
       });
@@ -268,7 +268,7 @@
     if (/book\.html/.test(location.pathname)) root.className = "tsb-ask--book";
     root.innerHTML =
       '<button id="tsb-fab" class="aq-fab" title="Ask TheSmallBook" aria-label="Ask TheSmallBook">' +
-        '<span class="aq-fab__txt">' + t("ASK") + '</span><span class="aq-fab__pulse"></span></button>' +
+        '<span class="aq-fab__spark">✦</span><span class="aq-fab__txt">' + t("ASK") + '</span><span class="aq-fab__pulse"></span></button>' +
       '<div id="tsb-panel" class="aq-panel" role="dialog" aria-label="Ask TheSmallBook">' +
         '<div class="aq-head">' +
           '<div class="aq-head__t">📕 ASK THE LIBRARY</div>' +
@@ -681,7 +681,9 @@
       var gs = relatedGraves(b).length;
       addMsg("bot", '<div class="aq-guided">👋 <b>' + esc(b.title) + "</b> — <b>💀 " + gs + " " + t("related failures are linked to this book — tap below.") + "</b></div>");
     } else {
-      addMsg("bot", '<div class="aq-guided">👋 ' + t("Ask anything —") + " <b>\u201C" + t("How do I stop procrastinating?") + "\u201D</b>, <b>\u201Cpaise kaise bachau?\u201D</b> — " + (window.TSB_ASK_DATA || []).length + " " + t("questions in") + " <b>📚</b> " + t("and 200 books answer. Even the Graveyard warns you.") + " 💀</div>");
+      var askBooks = (window.BOOKS && window.BOOKS.length) || 320;
+      var askGraves = (window.FAILURES && window.FAILURES.length) || 300;
+      addMsg("bot", '<div class="aq-guided">👋 ' + t("Ask anything —") + " <b>\u201C" + t("How do I stop procrastinating?") + "\u201D</b>, <b>\u201Cpaise kaise bachau?\u201D</b> — " + (window.TSB_ASK_DATA || []).length + " " + t("questions in") + " <b>📚</b> " + askBooks + " " + t("books answer") + ". " + t("Even the Graveyard warns you") + " 💀 (" + askGraves + " " + t("autopsies") + ")</div>");
     }
   }
 
