@@ -4028,8 +4028,9 @@ html.dark .gs-panel__foot b { color: #ffc800; }
 .searchrow .search { flex: 1 1 auto; min-width: 0; }
 
 /* camera scan button — joined inside the bar, icon only (no text),
-   divider matches FIND IT, transparent so the paper bar shows through */
-.search button.scanbtn {
+   divider matches FIND IT, transparent so the paper bar shows through.
+   It's an <a href="scan.html"> now: standalone scanner page = zero cache risk */
+.search .scanbtn {
   border: none;
   border-left: var(--border);
   background: transparent;
@@ -4039,14 +4040,15 @@ html.dark .gs-panel__foot b { color: #ffc800; }
   justify-content: center;
   color: var(--ink);
   cursor: pointer;
+  text-decoration: none;
   transition: background .15s, color .15s;
 }
-.search button.scanbtn:hover { background: var(--yellow); color: var(--ink); }
-.search button.scanbtn:active { background: var(--red); color: #fff; }
+.search .scanbtn:hover { background: var(--yellow); color: var(--ink); }
+.search .scanbtn:active { background: var(--red); color: #fff; }
 .scanbtn__ico { flex: none; display: block; transition: transform .15s; }
-.search button.scanbtn:hover .scanbtn__ico { transform: rotate(-6deg) scale(1.08); }
-html.dark .search button.scanbtn { color: #e8e2d0; }
-html.dark .search button.scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
+.search .scanbtn:hover .scanbtn__ico { transform: rotate(-6deg) scale(1.08); }
+html.dark .search .scanbtn { color: #e8e2d0; }
+html.dark .search .scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
 
 /* ---------- fullscreen scanner ---------- */
 .scanmodal {

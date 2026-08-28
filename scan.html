@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="robots" content="noindex">
+<title>📷 Book Scanner — TheSmallBook</title>
+<meta name="description" content="Point your camera at any book cover and get its summary instantly — free, no signup.">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ THESMALLBOOK — BOOK SCANNER (self-contained, no cache risk) ============ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body {
+  background: #0a0a0c;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  color: #fff;
+  overflow: hidden;
+  -webkit-user-select: none; user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- camera stage ---------- */
+.stage { position: fixed; inset: 0; background: #000; }
+.stage video, .stage canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+}
+.stage canvas { display: none; }
+
+/* vignette */
+.vin {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 52%, rgba(0,0,0,.6) 100%);
+}
+
+/* ---------- top bar ---------- */
+.top {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 6;
+  display: flex; align-items: center; gap: 12px;
+  padding: calc(12px + env(safe-area-inset-top)) 14px 26px;
+  background: linear-gradient(180deg, rgba(0,0,0,.7), rgba(0,0,0,0));
+  pointer-events: none;
+}
+.top > * { pointer-events: auto; }
+.back {
+  width: 44px; height: 44px; flex: none; border-radius: 14px;
+  border: 3px solid #111; background: rgba(255,255,255,.95); color: #111;
+  font-size: 19px; cursor: pointer; box-shadow: 3px 3px 0 rgba(0,0,0,.55);
+  display: flex; align-items: center; justify-content: center;
+}
+.back:active { transform: scale(.93); }
+.ttl {
+  font-family: 'Archivo Black', sans-serif; font-size: .72rem; letter-spacing: 2.5px;
+  color: #fff; background: rgba(0,0,0,.55); border: 2px solid rgba(255,255,255,.35);
+  padding: 10px 16px; border-radius: 999px; white-space: nowrap;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.live { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; margin-right: 7px; box-shadow: 0 0 8px #22c55e; animation: blink 1.2s infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+
+/* ---------- guide frame ---------- */
+.guide { position: absolute; inset: 0; pointer-events: none; }
+.corner {
+  position: absolute; width: 46px; height: 46px;
+  border: 4px solid #ffc800; filter: drop-shadow(0 0 8px rgba(255,200,0,.55));
+}
+.corner.tl { top: 15%; left: 9%; border-right: none; border-bottom: none; border-radius: 12px 0 0 0; }
+.corner.tr { top: 15%; right: 9%; border-left: none; border-bottom: none; border-radius: 0 12px 0 0; }
+.corner.bl { bottom: 27%; left: 9%; border-right: none; border-top: none; border-radius: 0 0 0 12px; }
+.corner.br { bottom: 27%; right: 9%; border-left: none; border-top: none; border-radius: 0 0 12px 0; }
+.line {
+  position: absolute; left: 11%; right: 11%; top: 32%; height: 3px;
+  background: linear-gradient(90deg, transparent, #ffc800, transparent);
+  box-shadow: 0 0 16px rgba(255,200,0,.75);
+  animation: sweep 2.6s ease-in-out infinite;
+}
+@keyframes sweep { 0% { top: 28%; } 50% { top: 72%; } 100% { top: 28%; } }
+
+/* ---------- status hint ---------- */
+.hint {
+  position: absolute; left: 0; right: 0; bottom: 128px; z-index: 5;
+  text-align: center; padding: 0 20px;
+  text-shadow: 0 2px 8px rgba(0,0,0,.9);
+}
+.hint b { display: block; font-family: 'Archivo Black', sans-serif; font-size: .95rem; letter-spacing: 2px; color: #ffc800; margin-bottom: 5px; }
+.hint span { display: block; font-size: .74rem; font-weight: 600; opacity: .92; }
+.chip {
+  display: inline-block; margin-top: 10px;
+  font-size: .62rem; letter-spacing: 1.5px; font-weight: 700;
+  color: #ddd; background: rgba(0,0,0,.5); border: 1.5px solid rgba(255,255,255,.25);
+  padding: 6px 12px; border-radius: 999px;
+}
+
+/* ---------- error state (camera blocked / no camera) ---------- */
+.err {
+  position: absolute; inset: 0; z-index: 7;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  background: radial-gradient(ellipse at 50% 30%, #1a1a22, #0a0a0c 75%);
+  padding: 28px; text-align: center;
+}
+.err .ico { font-size: 52px; }
+.err b { font-family: 'Archivo Black', sans-serif; font-size: 1rem; letter-spacing: 1.5px; color: #ffc800; }
+.err p { font-size: .84rem; color: #ccc; font-weight: 600; line-height: 1.55; max-width: 340px; }
+.errbtns { display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
+.ebtn {
+  font-family: 'Archivo Black', sans-serif; font-size: .7rem; letter-spacing: 1.2px;
+  border: 3px solid #111; border-radius: 12px; padding: 13px 20px; cursor: pointer;
+  box-shadow: 4px 4px 0 rgba(0,0,0,.5); text-decoration: none; color: #111;
+}
+.ebtn.yel { background: linear-gradient(135deg, #ffd94d, #ffc800 55%, #e6a800); }
+.ebtn.drk { background: #fff; }
+
+/* ---------- bottom bar ---------- */
+.bar {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 6;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  padding: 24px 18px calc(20px + env(safe-area-inset-bottom));
+  background: linear-gradient(0deg, rgba(0,0,0,.78), rgba(0,0,0,0));
+}
+.flip {
+  width: 68px; height: 68px; border-radius: 50%; flex: none;
+  border: 3px solid rgba(255,255,255,.9); background: rgba(255,255,255,.14);
+  color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0,0,0,.5); transition: transform .12s, background .12s;
+}
+.flip .f-ico { font-size: 22px; line-height: 1; }
+.flip .f-txt { font-family: 'Archivo Black', sans-serif; font-size: .5rem; letter-spacing: 1.5px; }
+.flip:active { transform: scale(.92); }
+.find {
+  flex: 1 1 auto; max-width: 340px; height: 62px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  border: 3px solid #111; background: linear-gradient(135deg, #ffd94d, #ffc800 55%, #e6a800);
+  color: #111; font-family: 'Archivo Black', sans-serif; font-size: .8rem; letter-spacing: 1.6px;
+  cursor: pointer; box-shadow: 0 6px 24px rgba(0,0,0,.55);
+  transition: transform .12s, filter .12s;
+}
+.find:active { transform: translateY(2px) scale(.99); }
+.find:disabled { opacity: .55; filter: grayscale(.4); }
+
+/* ---------- analyzing ---------- */
+.ana {
+  position: absolute; inset: 0; z-index: 7;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  background: rgba(5,5,8,.82);
+  animation: fadein .18s ease-out;
+}
+.spin {
+  width: 46px; height: 46px; border: 4px solid #ffc800; border-top-color: transparent;
+  border-radius: 50%; animation: rot .8s linear infinite;
+}
+@keyframes rot { to { transform: rotate(360deg); } }
+.ana span { font-family: 'Archivo Black', sans-serif; font-size: .85rem; letter-spacing: 2.5px; }
+
+/* ---------- results ---------- */
+.res {
+  position: absolute; inset: 0; z-index: 8;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  padding: 26px; text-align: center;
+  background: rgba(5,5,8,.88);
+  animation: slideup .34s cubic-bezier(.2,.7,.3,1);
+}
+@keyframes slideup { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+.badge {
+  font-family: 'Archivo Black', sans-serif; font-size: .9rem; letter-spacing: 2px;
+  padding: 9px 20px; border-radius: 999px;
+}
+.res.found .badge { background: #00c48c; color: #fff; box-shadow: 0 0 22px rgba(0,196,140,.55); }
+.res.nof .badge { background: #ff5252; color: #fff; }
+.btitle {
+  font-family: 'Archivo Black', sans-serif; font-size: 1.45rem; text-transform: uppercase;
+  letter-spacing: .5px; max-width: 92%; line-height: 1.25;
+}
+.rbtn {
+  font-family: 'Archivo Black', sans-serif; font-size: .78rem; letter-spacing: 1.3px;
+  border: 3px solid #111; border-radius: 13px; padding: 15px 24px; cursor: pointer;
+  box-shadow: 4px 4px 0 rgba(0,0,0,.55); text-decoration: none; color: #111; background: #fff;
+}
+.rbtn.yel { background: linear-gradient(135deg, #ffd94d, #ffc800 55%, #e6a800); }
+.rbtn.pur { background: linear-gradient(135deg, #8a6dff, #6a47f0 55%, #5429d8); color: #fff; }
+.rbtn:active { transform: translateY(2px); }
+.ragain {
+  font-family: 'Archivo Black', sans-serif; font-size: .68rem; letter-spacing: 1.2px;
+  background: transparent; color: #ccc; border: 2px solid #555; border-radius: 10px;
+  padding: 10px 18px; cursor: pointer;
+}
+.notxt { font-size: .84rem; color: #ddd; font-weight: 600; line-height: 1.55; max-width: 400px; }
+.type {
+  width: min(370px, 90vw); border: 3px solid #111; border-radius: 11px;
+  background: #fff; color: #111; font-family: inherit; font-weight: 700; font-size: .92rem;
+  padding: 13px 14px; box-shadow: 3px 3px 0 rgba(0,0,0,.5);
+}
+.sugg { display: flex; flex-direction: column; gap: 8px; width: min(370px, 90vw); max-height: 34vh; overflow: auto; }
+.shit {
+  display: flex; flex-direction: column; gap: 2px;
+  border: 2.5px solid #111; border-radius: 10px; background: #fff; color: #111;
+  padding: 10px 14px; cursor: pointer; text-align: left;
+}
+.shit b { font-family: 'Archivo Black', sans-serif; font-size: .7rem; text-transform: uppercase; }
+.shit small { font-size: .62rem; color: #777; }
+.snone { color: #bbb; font-size: .72rem; font-weight: 700; }
+.req {
+  font-family: 'Archivo Black', sans-serif; font-size: .68rem; letter-spacing: 1px;
+  color: #9bd1ff; text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+}
+</style>
+</head>
+<body>
+  <div class="stage" id="stage">
+    <video id="cam" autoplay playsinline muted></video>
+    <canvas id="cap" hidden></canvas>
+  </div>
+  <div class="vin"></div>
+
+  <!-- guide -->
+  <div class="guide" id="guide">
+    <span class="corner tl"></span><span class="corner tr"></span>
+    <span class="corner bl"></span><span class="corner br"></span>
+    <span class="line"></span>
+  </div>
+
+  <!-- status -->
+  <div class="hint" id="hint">
+    <b id="hintB">SCANNING…</b>
+    <span id="hintS">Keep the book cover steady · don't move the camera much</span>
+    <span class="chip">📚 320 BOOKS INDEXED · INSTANT MATCH</span>
+  </div>
+
+  <!-- top bar -->
+  <div class="top">
+    <button class="back" id="backBtn" aria-label="Back to library">←</button>
+    <div class="ttl"><span class="live" id="liveDot"></span>BOOK SCANNER</div>
+  </div>
+
+  <!-- bottom bar -->
+  <div class="bar" id="bar">
+    <button class="flip" id="flipBtn" aria-label="Flip camera">
+      <span class="f-ico">🔄</span><span class="f-txt">FLIP</span>
+    </button>
+    <button class="find" id="findBtn">⚡ FIND BOOK SUMMARY</button>
+  </div>
+
+  <!-- analyzing -->
+  <div class="ana" id="ana" hidden>
+    <span class="spin"></span>
+    <span>ANALYZING COVER…</span>
+  </div>
+
+  <!-- FOUND -->
+  <div class="res found" id="found" hidden>
+    <div class="badge">✅ FOUND</div>
+    <div class="btitle" id="foundT">Atomic Habits</div>
+    <a class="rbtn yel" id="openBtn" href="#">📖 OPEN BOOK SUMMARY →</a>
+    <button class="ragain" id="again1">🔄 SCAN ANOTHER</button>
+  </div>
+
+  <!-- NOT FOUND -->
+  <div class="res nof" id="nof" hidden>
+    <div class="badge">❌ NOT FOUND</div>
+    <p class="notxt">We don't have this book in the library yet. Type the name — or request it and we'll add it:</p>
+    <input class="type" id="typeIn" type="text" placeholder="Type the book title…" autocomplete="off">
+    <div class="sugg" id="sugg"></div>
+    <a class="rbtn pur" id="searchLib" href="#">🔍 SEARCH THE LIBRARY</a>
+    <a class="req" id="reqBook" href="#" target="_blank" rel="noopener">✉️ REQUEST THIS BOOK →</a>
+    <button class="ragain" id="again2">🔄 SCAN AGAIN</button>
+  </div>
+
+  <!-- camera error -->
+  <div class="err" id="err" hidden>
+    <div class="ico">📷</div>
+    <b id="errB">CAMERA NOT AVAILABLE</b>
+    <p id="errP">We couldn't start the camera. Allow camera access in your browser, then try again.</p>
+    <div class="errbtns">
+      <a class="ebtn drk" href="index.html">🏠 GO TO LIBRARY</a>
+      <a class="ebtn yel" id="errReq" href="#" target="_blank" rel="noopener">✉️ REQUEST A BOOK</a>
+    </div>
+  </div>
+
+<script>
+/* ============================================================
+   THESMALLBOOK SCANNER — fully inlined (immune to cache issues)
+   ============================================================ */
+(function () {
+  var cam = document.getElementById("cam");
+  var cap = document.getElementById("cap");
+  var hintB = document.getElementById("hintB");
+  var hintS = document.getElementById("hintS");
+  var liveDot = document.getElementById("liveDot");
+  var errBox = document.getElementById("err");
+  var errB = document.getElementById("errB");
+  var errP = document.getElementById("errP");
+  var errReq = document.getElementById("errReq");
+  var ana = document.getElementById("ana");
+  var found = document.getElementById("found");
+  var foundT = document.getElementById("foundT");
+  var openBtn = document.getElementById("openBtn");
+  var nof = document.getElementById("nof");
+  var typeIn = document.getElementById("typeIn");
+  var sugg = document.getElementById("sugg");
+  var searchLib = document.getElementById("searchLib");
+  var reqBook = document.getElementById("reqBook");
+  var bar = document.getElementById("bar");
+
+  var stream = null, raf = null, busy = false;
+  var steady = 0, lastFrame = null, noTicks = 0, camLive = false;
+  var facing = "environment";
+  var foundId = null;
+
+  /* ---------- camera ---------- */
+  function start() {
+    stop();
+    setHint("ALLOW CAMERA ACCESS", "Tap Allow in the browser popup — then keep the cover steady");
+    var gum = null;
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) gum = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    else if (navigator.webkitGetUserMedia) gum = navigator.webkitGetUserMedia.bind(navigator);
+    if (!gum) { showErr("CAMERA NOT SUPPORTED", "This browser has no camera support. Use Chrome or Safari.", true); return; }
+    gum({ video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 720 } } })
+      .then(function (s) {
+        stream = s;
+        cam.srcObject = s;
+        cam.style.display = "block";
+        var p = cam.play ? cam.play() : null;
+        if (p && p.catch) p.catch(function () {});
+        errBox.hidden = true;
+        loop();
+      })
+      .catch(function () {
+        showErr("CAMERA BLOCKED", "Camera access was blocked. Tap the 🔒 icon in your browser bar, allow camera, then press SCAN AGAIN.", true);
+      });
+  }
+  function stop() {
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; }
+    if (cam) { cam.srcObject = null; }
+    lastFrame = null; steady = 0; busy = false; noTicks = 0;
+  }
+  function setHint(b, s) { hintB.textContent = b; hintS.textContent = s; }
+  function showErr(b, p, showReq) {
+    stop();
+    errB.textContent = b; errP.textContent = p;
+    errReq.href = reqHref("a book I just tried to scan");
+    errBox.hidden = false;
+    if (bar) bar.style.display = "none";
+  }
+  function reqHref(title) {
+    var t = (title && String(title).trim()) ? String(title).trim() : "a book";
+    return "https://wa.me/919702510680?text=" + encodeURIComponent("Hi Jash! Please add this book to TheSmallBook: " + t);
+  }
+
+  /* ---------- live loop: auto-capture ---------- */
+  function downscale(v) {
+    var w = 60, h = 90;
+    var c = document.createElement("canvas"); c.width = w; c.height = h;
+    var cx = c.getContext("2d"); cx.drawImage(v, 0, 0, w, h);
+    return cx.getImageData(0, 0, w, h).data;
+  }
+  function sharpnessOf(d) {
+    var e = 0;
+    for (var y = 0; y < 90; y++) for (var x = 1; x < 60; x++) {
+      var i = (y * 60 + x) * 4, j = (y * 60 + x - 1) * 4;
+      e += Math.abs(d[i] - d[j]) + Math.abs(d[i + 1] - d[j + 1]) + Math.abs(d[i + 2] - d[j + 2]);
+    }
+    return e;
+  }
+  function diffOf(a, b) {
+    var d = 0;
+    for (var i = 0; i < a.length; i += 4)
+      d += Math.abs(a[i] - b[i]) + Math.abs(a[i + 1] - b[i + 1]) + Math.abs(a[i + 2] - b[i + 2]);
+    return d;
+  }
+  function loop() {
+    if (!cam.videoWidth) {
+      noTicks++;
+      if (noTicks === 15) setHint("STARTING CAMERA…", "Keep the book cover in the frame");
+      else if (noTicks === 130) setHint("CAMERA NOT STARTING", "Tap ← and try again — or use SEARCH on the home page");
+      raf = requestAnimationFrame(loop);
+      return;
+    }
+    if (!camLive) {
+      camLive = true; noTicks = 0;
+      liveDot.style.display = "inline-block";
+      setHint("SCANNING…", "Keep the book cover steady · don't move the camera much");
+    }
+    if (!busy) {
+      var data = downscale(cam);
+      var sharp = sharpnessOf(data);
+      var stable = lastFrame ? diffOf(data, lastFrame) < 1400 : false;
+      lastFrame = data;
+      if (sharp > 15000 && stable) {
+        steady++;
+        if (steady >= 2) { steady = 0; capture(); }
+      } else { steady = Math.max(0, steady - 1); }
+    }
+    raf = requestAnimationFrame(loop);
+  }
+
+  /* ---------- capture + match ---------- */
+  function capture() {
+    if (busy) return;
+    if (!cam.videoWidth) { setHint("CAMERA STILL STARTING", "Wait a second, then tap FIND BOOK SUMMARY again"); return; }
+    busy = true;
+    document.getElementById("findBtn").disabled = true;
+    bar.style.display = "none";
+    cap.width = cam.videoWidth; cap.height = cam.videoHeight;
+    cap.getContext("2d").drawImage(cam, 0, 0);
+    cam.style.display = "none"; cap.hidden = false; cap.style.display = "block";
+    document.getElementById("guide").style.display = "none";
+    ana.hidden = false;
+    setTimeout(function () {
+      var lib = window.TSB_SCAN || [];
+      if (!lib.length) {
+        // library still loading (first visit) — wait a moment
+        setTimeout(function () { finishMatch(); }, 1500);
+        return;
+      }
+      finishMatch();
+    }, 700);
+  }
+  function finishMatch() {
+    var result = null;
+    try { result = runMatch(); } catch (e) { result = null; }
+    busy = false;
+    if (ana) ana.hidden = true;
+    if (result) showFound(result);
+    else showNotFound();
+  }
+
+  /* ---------- matching (same engine as the library DB) ---------- */
+  function buildProfile(sctx) {
+    var w = 120, h = 180;
+    var data = sctx.getImageData(0, 0, w, h).data;
+    var grid = [];
+    for (var gy = 0; gy < 3; gy++) for (var gx = 0; gx < 3; gx++) {
+      var r = 0, g = 0, b = 0, n = 0;
+      for (var y = Math.floor(gy * h / 3); y < Math.floor((gy + 1) * h / 3); y++)
+        for (var x = Math.floor(gx * w / 3); x < Math.floor((gx + 1) * w / 3); x++) {
+          var i = (y * w + x) * 4; r += data[i]; g += data[i + 1]; b += data[i + 2]; n++;
+        }
+      grid.push([Math.round(r / n), Math.round(g / n), Math.round(b / n)]);
+    }
+    var gx0 = sctx.createImageData(w, h);
+    var gd = gx0.data;
+    for (var i2 = 0; i2 < data.length; i2++) gd[i2] = data[i2];
+    sctx.putImageData(gx0, 0, 0);
+    var gray = sctx.getImageData(0, 0, w, h).data;
+    var lum = new Float32Array(w * h);
+    for (var y2 = 0; y2 < h; y2++) for (var x2 = 0; x2 < w; x2++) {
+      var idx = (y2 * w + x2) * 4;
+      lum[y2 * w + x2] = 0.299 * gray[idx] + 0.587 * gray[idx + 1] + 0.114 * gray[idx + 2];
+    }
+    var EW = 16, EH = 24, ew = Math.floor(w / EW), eh = Math.floor(h / EH), bits = [];
+    for (var ey = 0; ey < EH; ey++) for (var ex = 0; ex < EW; ex++) {
+      var s = 0, cnt = 0;
+      for (var yy = ey * eh; yy < (ey + 1) * eh; yy++) for (var xx = ex * ew; xx < (ex + 1) * ew; xx++) {
+        var i3 = yy * w + xx;
+        var gxval = xx + 1 < w ? Math.abs(lum[i3] - lum[yy * w + xx + 1]) : 0;
+        var gyval = yy + 1 < h ? Math.abs(lum[i3] - lum[(yy + 1) * w + xx]) : 0;
+        s += gxval + gyval; cnt++;
+      }
+      bits.push(s / cnt > 22 ? 1 : 0);
+    }
+    var bytes = [];
+    for (var k = 0; k < bits.length; k += 8) {
+      var byte = 0;
+      for (var j = 0; j < 8; j++) if (k + j < bits.length && bits[k + j]) byte |= 1 << (7 - j);
+      bytes.push(byte);
+    }
+    var bin = "";
+    for (var b2 = 0; b2 < bytes.length; b2++) bin += String.fromCharCode(bytes[b2]);
+    return { g: grid, e: btoa(bin) };
+  }
+  function profileFromCanvas() {
+    var small = document.createElement("canvas"); small.width = 120; small.height = 180;
+    var sctx = small.getContext("2d");
+    sctx.imageSmoothingEnabled = true;
+    if (sctx.imageSmoothingQuality) sctx.imageSmoothingQuality = "high";
+    sctx.drawImage(cap, 0, 0, 120, 180);
+    return buildProfile(sctx);
+  }
+  function profileFromCrop(frac) {
+    var cw = cap.width, ch = cap.height;
+    var cw2 = Math.round(cw * frac), ch2 = Math.round(ch * frac);
+    var x0 = Math.round((cw - cw2) / 2), y0 = Math.round((ch - ch2) / 2);
+    var small = document.createElement("canvas"); small.width = 120; small.height = 180;
+    var sctx = small.getContext("2d");
+    sctx.imageSmoothingEnabled = true;
+    if (sctx.imageSmoothingQuality) sctx.imageSmoothingQuality = "high";
+    sctx.drawImage(cap, x0, y0, cw2, ch2, 0, 0, 120, 180);
+    return buildProfile(sctx);
+  }
+  function colorDist(c1, c2) {
+    return Math.sqrt(Math.pow(c1[0] - c2[0], 2) + Math.pow(c1[1] - c2[1], 2) + Math.pow(c1[2] - c2[2], 2));
+  }
+  function edgeDist(e1, e2) {
+    var a1, a2;
+    try { a1 = atob(e1); a2 = atob(e2); } catch (e) { return 1; }
+    var diff = 0;
+    for (var i = 0; i < a1.length; i++) {
+      var x = a1.charCodeAt(i) ^ a2.charCodeAt(i);
+      while (x) { diff += x & 1; x >>= 1; }
+    }
+    return diff / 384;
+  }
+  function runMatch() {
+    var profs = [profileFromCanvas(), profileFromCrop(0.85), profileFromCrop(0.7)];
+    var lib = window.TSB_SCAN || [];
+    var best = null, bestScore = 1e9;
+    for (var i = 0; i < lib.length; i++) {
+      var entry = lib[i], score = 1e9;
+      for (var p = 0; p < profs.length; p++) {
+        var cScore = 0;
+        for (var k = 0; k < 9; k++) cScore += colorDist(profs[p].g[k], entry.g[k]);
+        cScore /= 9;
+        var eScore = edgeDist(profs[p].e, entry.e) * 100;
+        var s = cScore * 0.55 + eScore * 0.45;
+        if (s < score) score = s;
+      }
+      if (score < bestScore) { bestScore = score; best = entry; }
+    }
+    return (best && bestScore < 55) ? best : null;
+  }
+
+  /* ---------- results ---------- */
+  function showFound(entry) {
+    foundId = entry.id;
+    foundT.textContent = entry.t;
+    openBtn.href = "book.html?id=" + encodeURIComponent(entry.id);
+    found.hidden = false;
+  }
+  function showNotFound() {
+    typeIn.value = ""; sugg.innerHTML = "";
+    reqBook.href = reqHref("");
+    nof.hidden = false;
+    setTimeout(function () { typeIn.focus(); }, 120);
+  }
+  function backToCam() {
+    found.hidden = true; nof.hidden = true; ana.hidden = true;
+    cap.hidden = true; cap.style.display = "none";
+    cam.style.display = "block";
+    document.getElementById("guide").style.display = "";
+    bar.style.display = "flex";
+    document.getElementById("findBtn").disabled = false;
+    lastFrame = null; steady = 0; busy = false;
+  }
+
+  /* ---------- buttons ---------- */
+  document.getElementById("backBtn").addEventListener("click", function () {
+    if (history.length > 1) history.back(); else location.href = "index.html";
+  });
+  document.getElementById("findBtn").addEventListener("click", capture);
+  document.getElementById("flipBtn").addEventListener("click", function () {
+    if (busy) return;
+    facing = (facing === "environment") ? "user" : "environment";
+    setHint("FLIPPING CAMERA…", "Hold on a second");
+    start();
+  });
+  document.getElementById("again1").addEventListener("click", backToCam);
+  document.getElementById("again2").addEventListener("click", backToCam);
+
+  /* type fallback + request + search library */
+  typeIn.addEventListener("input", function () {
+    var q = typeIn.value.trim().toLowerCase();
+    var lib = window.TSB_SCAN || [];
+    if (!q) { sugg.innerHTML = ""; reqBook.href = reqHref(""); return; }
+    var hits = lib.filter(function (b) { return (b.t || "").toLowerCase().indexOf(q) !== -1; }).slice(0, 5);
+    sugg.innerHTML = hits.length
+      ? hits.map(function (b) {
+          return '<button class="shit" data-id="' + b.id + '"><b>' + b.t + '</b><small>Tap to open</small></button>';
+        }).join("")
+      : '<span class="snone">Not in the library — request it below 👇</span>';
+    reqBook.href = reqHref(typeIn.value);
+  });
+  sugg.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-id]");
+    if (btn) location.href = "book.html?id=" + encodeURIComponent(btn.getAttribute("data-id"));
+  });
+  searchLib.addEventListener("click", function (ev) {
+    ev.preventDefault();
+    location.href = "index.html?q=" + encodeURIComponent(typeIn.value.trim());
+  });
+
+  /* ---------- cleanup ---------- */
+  window.addEventListener("pagehide", stop);
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) stop();
+  });
+
+  start();
+})();
+</script>
+<script src="js/scanner-data.js"></script>
+</body>
+</html>

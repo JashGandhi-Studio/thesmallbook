@@ -152,84 +152,17 @@
       <div class="searchrow">
         <div class="search">
           <input id="searchInput" type="text" placeholder="SEARCH THE SHELF..." autocomplete="off">
-          <button type="button" id="scanBtn" class="scanbtn" title="Scan a book to find its summary" aria-label="Scan a book">
+          <a class="scanbtn" href="scan.html" title="Scan a book to find its summary" aria-label="Scan a book">
             <svg class="scanbtn__ico" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
               <circle cx="12" cy="13" r="4"/>
             </svg>
-          </button>
+          </a>
           <button type="button" id="searchGo">FIND IT</button>
         </div>
       </div>
       <div class="search__hint">⚡ IMPROVED SEARCH — TYPOS OK &nbsp;·&nbsp; 📷 SCAN A BOOK — INSTANT MATCH</div>
     </div>
-
-    <!-- 📷 FULLSCREEN BOOK SCANNER (Google Lens style) -->
-    <div class="scanmodal" id="scanModal" hidden>
-      <div class="scanmodal__stage" id="scanStage">
-        <video id="scanVideo" autoplay playsinline muted></video>
-        <canvas id="scanCanvas" hidden></canvas>
-
-        <!-- top bar -->
-        <div class="scanmodal__top">
-          <span class="scanmodal__title">📷 BOOK SCANNER</span>
-          <button class="scanmodal__close" id="scanClose" aria-label="Close scanner">✕</button>
-        </div>
-
-        <!-- guide overlay -->
-        <div class="scanmodal__overlay" id="scanOverlay">
-          <span class="scanmodal__corner scanmodal__corner--tl"></span>
-          <span class="scanmodal__corner scanmodal__corner--tr"></span>
-          <span class="scanmodal__corner scanmodal__corner--bl"></span>
-          <span class="scanmodal__corner scanmodal__corner--br"></span>
-          <span class="scanmodal__scanline"></span>
-          <div class="scanmodal__hint" id="scanHint">
-            <b>SCANNING…</b>
-            <span>Keep the book cover steady · don't move the camera much</span>
-          </div>
-          <div class="scanmodal__empty" id="scanEmpty">📷 Camera not available — allow camera access and try again</div>
-        </div>
-
-        <!-- analyzing -->
-        <div class="scanmodal__analyzing" id="scanAnalyzing" hidden>
-          <span class="scanmodal__spinner"></span>
-          <span>ANALYZING COVER…</span>
-        </div>
-
-        <!-- FOUND -->
-        <div class="scanmodal__result scanmodal__result--found" id="scanFound" hidden>
-          <div class="scanmodal__rbadge">✅ FOUND</div>
-          <div class="scanmodal__rbook" id="scanFoundTitle">Atomic Habits</div>
-          <button class="scanmodal__rgo" id="scanFoundGo">📖 OPEN BOOK SUMMARY →</button>
-          <button class="scanmodal__ragain" id="scanAgainBtn">🔄 SCAN AGAIN</button>
-        </div>
-
-        <!-- NOT FOUND -->
-        <div class="scanmodal__result scanmodal__result--no" id="scanNo" hidden>
-          <div class="scanmodal__rbadge">❌ NOT FOUND</div>
-          <p class="scanmodal__noTxt" id="scanNoTxt">We couldn't match this cover — we may not have this book yet. Try typing the name, or request it below:</p>
-          <input class="scanmodal__type" id="scanTypeInput" type="text" placeholder="Type the book title…" autocomplete="off">
-          <div class="scanmodal__typeHint" id="scanTypeHint"></div>
-          <button class="scanmodal__rgo scanmodal__rgo--search" id="scanSearchLib">🔍 SEARCH THE LIBRARY</button>
-          <a class="scanmodal__request" id="scanRequest" href="#" target="_blank" rel="noopener">✉️ REQUEST THIS BOOK →</a>
-          <button class="scanmodal__ragain" id="scanAgainBtn2">🔄 SCAN AGAIN</button>
-        </div>
-
-        <!-- bottom bar: flip camera + find -->
-        <div class="scanmodal__bar" id="scanBar">
-          <button class="scanmodal__flip" id="scanFlip" type="button" aria-label="Flip camera">
-            <span class="scanmodal__flipico">🔄</span>
-            <span class="scanmodal__fliptxt">FLIP</span>
-          </button>
-          <button class="scanmodal__find" id="scanFind" type="button">
-            <span class="scanmodal__findico">⚡</span>
-            <span>FIND BOOK SUMMARY</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-
 
     <!-- STATS -->
     <div class="stats">
@@ -378,7 +311,7 @@
     <div class="supportbar" data-supportbar style="margin-bottom:14px;"></div>
     <p class="affnote">As an Amazon Associate, TheSmallBook earns from qualifying purchases. It keeps the library free. 💛</p>
     <div id="tsb-auth-slot"></div>
-    <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
+    <div class="credits">✦ MADE BY JASH GANDHI ✦ <span class="ver" title="app version">· v161</span></div>
     <p class="tiny" style="margin-top:8px;"><a href="about.html" style="color:inherit;">ABOUT</a>, <a href="gold.html" style="color:inherit;">👑 TSB GOLD, WAITLIST OPEN</a>, <a href="graveyard.html" style="color:inherit;">GRAVEYARD</a></p>
     <p class="tiny">BUILT WITH ❤️ · NEW BOOKS ADDED EVERY WEEK · OPEN SOURCE ON GITHUB</p>
   </footer>
@@ -417,11 +350,28 @@
       box.style.display = "";
     })();
   </script>
-  <script src="js/scanner-data.js" defer></script>
-  <script src="js/scanner.js"></script>
   <script src="js/onboard.js"></script>
   <script src="js/ask-data.js"></script>
   <script src="js/tts-engine.js"></script>
   <script src="js/ask.js"></script>
+  <script>
+    /* deep-link search from the scanner: index.html?q=<title> */
+    (function () {
+      try {
+        var q = new URLSearchParams(location.search).get("q");
+        if (q) {
+          var input = document.getElementById("searchInput");
+          if (input) {
+            input.value = q;
+            input.dispatchEvent(new Event("input", { bubbles: true }));
+          }
+          setTimeout(function () {
+            var lib = document.getElementById("library");
+            if (lib && lib.scrollIntoView) lib.scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 250);
+        }
+      } catch (e) {}
+    })();
+  </script>
 </body>
 </html>
