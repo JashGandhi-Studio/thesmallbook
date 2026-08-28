@@ -30,18 +30,27 @@
   var steady = 0;        // consecutive steady frames
   var lastFrame = null;  // downscaled frame for stability check
   var busy = false;
+  var noFrameTicks = 0;  // frames with no video data yet
+  var camLive = false;   // true once the camera is actually delivering frames
 
   /* ---------------- open / close ---------------- */
   function openModal() {
     modal.hidden = false;
+    modal.style.display = "block";   // bulletproof: inline beats any CSS
+    modal.classList.add("scanmodal--open");
     document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
     hideAll();
     startCamera();
   }
   function closeModal() {
+    try { stopCamera(); } catch (e) {}
+    modal.classList.remove("scanmodal--open");
     modal.hidden = true;
+    modal.style.display = "none";
     document.body.style.overflow = "";
-    stopCamera();
+    document.documentElement.style.overflow = "";
+    lastFrame = null; steady = 0; noFrameTicks = 0;
   }
   function hideAll() {
     if (analyzing) analyzing.hidden = true;
@@ -55,17 +64,28 @@
 
   if (scanBtn) scanBtn.addEventListener("click", openModal);
   if (closeBtn) closeBtn.addEventListener("click", closeModal);
-  if (modal) modal.addEventListener("click", function (e) { if (e.target === modal) closeModal(); });
+  if (modal) modal.addEventListener("click", function (e) {
+    // tap the black backdrop / video = close (so the app never gets stuck)
+    if (e.target === modal || e.target === video || e.target.id === "scanStage") closeModal();
+  });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && modal && !modal.hidden) closeModal(); });
 
   /* ---------------- camera + live loop ---------------- */
   function startCamera() {
     stopCamera();
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      if (empty) { empty.style.display = ""; empty.textContent = "📷 Camera not available on this device"; }
+    camLive = false;
+    if (hint) {
+      hint.style.display = "";
+      hint.innerHTML = "<b>ALLOW CAMERA ACCESS</b><span>Tap Allow in the browser popup — then keep the cover steady</span>";
+    }
+    var gum = null;
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) gum = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+    else if (navigator.webkitGetUserMedia) gum = navigator.webkitGetUserMedia.bind(navigator);
+    if (!gum) {
+      if (empty) { empty.style.display = "flex"; empty.textContent = "📷 Camera not available on this device"; }
       return;
     }
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } } })
+    gum({ video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } } })
       .then(function (s) {
         stream = s;
         if (video) {
@@ -73,11 +93,16 @@
           video.style.display = "block";
           video.hidden = false;
           if (empty) empty.style.display = "none";
+          // some Android/iOS browsers need an explicit play() after srcObject
+          var p = video.play ? video.play() : null;
+          if (p && p.catch) p.catch(function () {});
         }
         loop();
       })
       .catch(function () {
-        if (empty) { empty.style.display = ""; empty.textContent = "📷 Camera blocked — allow camera access and tap SCAN again"; }
+        if (empty) { empty.style.display = "flex"; empty.textContent = "📷 Camera blocked — allow camera access and tap SCAN again"; }
+        if (hint) hint.style.display = "none";
+        if (video) video.style.display = "none";
       });
   }
   function stopCamera() {
@@ -85,7 +110,7 @@
     if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; }
     if (video) { video.srcObject = null; video.style.display = "none"; }
     if (overlay) overlay.style.display = "";
-    lastFrame = null; steady = 0;
+    lastFrame = null; steady = 0; noFrameTicks = 0;
   }
 
   /* ---------------- auto-capture: sharpness + stability ---------------- */
@@ -120,7 +145,25 @@
   }
 
   function loop() {
-    if (!video || !video.videoWidth) { raf = requestAnimationFrame(loop); return; }
+    if (!video) return;
+    if (!video.videoWidth) {
+      // camera granted but no frames yet — keep the user informed
+      noFrameTicks++;
+      if (noFrameTicks === 15 && hint) {
+        hint.innerHTML = "<b>STARTING CAMERA…</b><span>Keep the book cover in the frame</span>";
+      } else if (noFrameTicks === 130 && hint) {
+        hint.innerHTML = "<b>CAMERA NOT STARTING</b><span>Tap ✕ and try SCAN again — or type the book name in search</span>";
+      }
+      raf = requestAnimationFrame(loop);
+      return;
+    }
+    if (!camLive) {
+      camLive = true;
+      noFrameTicks = 0;
+      if (hint) {
+        hint.innerHTML = "<b>SCANNING…</b><span>Keep the book cover steady · don't move the camera much</span>";
+      }
+    }
     if (!busy) {
       var data = downscale(video);
       var sharp = sharpnessOf(data);

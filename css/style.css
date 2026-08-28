@@ -25,6 +25,12 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* CRITICAL: the hidden attribute must ALWAYS win. Author CSS like
+   display:flex on .scanmodal__result overrides the browser's default
+   [hidden]{display:none}, which made scanner overlays appear instantly
+   on real devices (fake FOUND card covering the live camera). */
+[hidden] { display: none !important; }
+
 html {
   scroll-behavior: smooth;
   /* stop iOS/Android from auto-inflating text on large-font devices */
@@ -4044,8 +4050,15 @@ html.dark .search button.scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
 
 /* ---------- fullscreen scanner ---------- */
 .scanmodal {
-  position: fixed; inset: 0; z-index: 9996;
+  display: none;
+  position: fixed; inset: 0; z-index: 9999;
   background: #000;
+  animation: scanModalIn .28s ease-out;
+}
+.scanmodal--open { display: block; }
+@keyframes scanModalIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 .scanmodal__stage { position: absolute; inset: 0; overflow: hidden; }
 .scanmodal__stage video, .scanmodal__stage canvas {
@@ -4093,11 +4106,11 @@ html.dark .search button.scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
 
 /* close + shutter */
 .scanmodal__close {
-  position: absolute; top: 16px; right: 16px; z-index: 5;
-  width: 42px; height: 42px;
-  border: 3px solid #111; background: rgba(255,255,255,.92); color: #111;
-  border-radius: 12px; font-family: "Archivo Black", sans-serif; font-size: 15px;
-  cursor: pointer; box-shadow: 3px 3px 0 rgba(0,0,0,.5);
+  position: absolute; top: 16px; right: 16px; z-index: 6;
+  width: 48px; height: 48px;
+  border: 3px solid #111; background: rgba(255,255,255,.95); color: #111;
+  border-radius: 14px; font-family: "Archivo Black", sans-serif; font-size: 17px;
+  cursor: pointer; box-shadow: 3px 3px 0 rgba(0,0,0,.55);
 }
 .scanmodal__close:hover { background: #ff5252; color: #fff; }
 .scanmodal__shutter {
@@ -4117,7 +4130,9 @@ html.dark .search button.scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
   background: rgba(0,0,0,.78);
   color: #fff; font-family: "Archivo Black", sans-serif; font-size: .85rem; letter-spacing: 1.5px;
+  animation: scanFadeIn .2s ease-out;
 }
+@keyframes scanFadeIn { from { opacity: 0; } to { opacity: 1; } }
 .scanmodal__spinner {
   width: 40px; height: 40px; border: 4px solid #ffc800; border-top-color: transparent;
   border-radius: 50%; animation: scanSpin .8s linear infinite;
@@ -4130,6 +4145,11 @@ html.dark .search button.scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
   padding: 24px; text-align: center;
   background: rgba(0,0,0,.82);
+  animation: scanResultIn .32s cubic-bezier(.2,.7,.3,1);
+}
+@keyframes scanResultIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
 }
 .scanmodal__rbadge {
   font-family: "Archivo Black", sans-serif; font-size: .9rem; letter-spacing: 2px;
