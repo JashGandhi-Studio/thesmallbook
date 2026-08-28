@@ -4090,7 +4090,7 @@ html.dark .search button.scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
 @keyframes scanSweep { 0% { top: 26%; } 50% { top: 74%; } 100% { top: 26%; } }
 
 .scanmodal__hint {
-  position: absolute; bottom: 18%; left: 0; right: 0;
+  position: absolute; bottom: 104px; left: 0; right: 0;
   text-align: center; color: #fff;
   text-shadow: 0 2px 6px rgba(0,0,0,.8);
 }
@@ -4104,25 +4104,71 @@ html.dark .search button.scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
   color: #aaa; font-size: .82rem; font-weight: 700; text-align: center; padding: 24px;
 }
 
-/* close + shutter */
+/* top bar — title chip + close */
+.scanmodal__top {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 6;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: calc(10px + env(safe-area-inset-top)) 14px 18px;
+  background: linear-gradient(180deg, rgba(0,0,0,.62), rgba(0,0,0,0));
+  pointer-events: none;
+}
+.scanmodal__top .scanmodal__title,
+.scanmodal__top .scanmodal__close { pointer-events: auto; }
+.scanmodal__title {
+  font-family: "Archivo Black", sans-serif; font-size: .72rem; letter-spacing: 2px;
+  color: #fff; background: rgba(0,0,0,.5); border: 2px solid rgba(255,255,255,.4);
+  padding: 9px 16px; border-radius: 999px; white-space: nowrap;
+}
 .scanmodal__close {
-  position: absolute; top: 16px; right: 16px; z-index: 6;
-  width: 48px; height: 48px;
+  width: 46px; height: 46px;
   border: 3px solid #111; background: rgba(255,255,255,.95); color: #111;
-  border-radius: 14px; font-family: "Archivo Black", sans-serif; font-size: 17px;
-  cursor: pointer; box-shadow: 3px 3px 0 rgba(0,0,0,.55);
+  border-radius: 14px; font-family: "Archivo Black", sans-serif; font-size: 16px;
+  cursor: pointer; box-shadow: 3px 3px 0 rgba(0,0,0,.55); flex: none;
 }
 .scanmodal__close:hover { background: #ff5252; color: #fff; }
-.scanmodal__shutter {
-  position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 5;
-  width: 70px; height: 70px; border-radius: 50%;
-  border: 4px solid #fff; background: rgba(255,255,255,.25);
-  font-size: 26px; cursor: pointer;
-  box-shadow: 0 0 0 5px rgba(0,0,0,.35), 0 4px 18px rgba(0,0,0,.5);
-  transition: transform .12s, background .12s;
+
+/* bottom bar — FLIP CAMERA + FIND BOOK SUMMARY */
+.scanmodal__bar {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 6;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  padding: 22px 18px calc(18px + env(safe-area-inset-bottom));
+  background: linear-gradient(0deg, rgba(0,0,0,.72), rgba(0,0,0,0));
 }
-.scanmodal__shutter:hover { background: rgba(255,255,255,.45); transform: translateX(-50%) scale(1.05); }
-.scanmodal__shutter:active { transform: translateX(-50%) scale(.94); }
+.scanmodal__flip {
+  width: 66px; height: 66px; border-radius: 50%; flex: none;
+  border: 3px solid rgba(255,255,255,.9); background: rgba(255,255,255,.16);
+  color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+  cursor: pointer; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  box-shadow: 0 3px 14px rgba(0,0,0,.45); transition: transform .12s, background .12s;
+}
+.scanmodal__flipico { font-size: 22px; line-height: 1; }
+.scanmodal__fliptxt { font-family: "Archivo Black", sans-serif; font-size: .52rem; letter-spacing: 1.5px; }
+.scanmodal__flip:hover { background: rgba(255,255,255,.3); }
+.scanmodal__flip:active { transform: scale(.93); }
+.scanmodal__find {
+  flex: 1 1 auto; max-width: 330px; height: 60px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  border: 3px solid #111; background: linear-gradient(135deg, #ffd94d, #ffc800 55%, #e6a800);
+  color: #111; font-family: "Archivo Black", sans-serif; font-size: .78rem; letter-spacing: 1.5px;
+  cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,.5);
+  transition: transform .12s, filter .12s;
+}
+.scanmodal__findico { font-size: 15px; }
+.scanmodal__find:hover { filter: brightness(1.07); }
+.scanmodal__find:active { transform: translateY(2px) scale(.99); }
+.scanmodal__find:disabled { opacity: .6; filter: grayscale(.5); cursor: default; }
+
+/* request-a-book + search library (NOT FOUND screen) */
+.scanmodal__rgo--search {
+  background: linear-gradient(135deg, #7c5cff, #5f3df0 55%, #4a2bd6);
+  color: #fff;
+}
+.scanmodal__request {
+  font-family: "Archivo Black", sans-serif; font-size: .68rem; letter-spacing: 1px;
+  color: #9bd1ff; text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+  padding: 4px 6px;
+}
+.scanmodal__request:hover { color: #cdeaff; }
 
 /* analyzing */
 .scanmodal__analyzing {

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>TheSmallBook — Skim Every Great Book in Minutes</title>
   <meta name="description" content="TheSmallBook: every lesson from the world's best books — summarized chapter by chapter with real examples and action steps. Skim, understand, apply.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -164,12 +164,19 @@
       <div class="search__hint">⚡ IMPROVED SEARCH — TYPOS OK &nbsp;·&nbsp; 📷 SCAN A BOOK — INSTANT MATCH</div>
     </div>
 
-    <!-- 📷 FULLSCREEN LIVE SCANNER -->
+    <!-- 📷 FULLSCREEN BOOK SCANNER (Google Lens style) -->
     <div class="scanmodal" id="scanModal" hidden>
       <div class="scanmodal__stage" id="scanStage">
         <video id="scanVideo" autoplay playsinline muted></video>
         <canvas id="scanCanvas" hidden></canvas>
 
+        <!-- top bar -->
+        <div class="scanmodal__top">
+          <span class="scanmodal__title">📷 BOOK SCANNER</span>
+          <button class="scanmodal__close" id="scanClose" aria-label="Close scanner">✕</button>
+        </div>
+
+        <!-- guide overlay -->
         <div class="scanmodal__overlay" id="scanOverlay">
           <span class="scanmodal__corner scanmodal__corner--tl"></span>
           <span class="scanmodal__corner scanmodal__corner--tr"></span>
@@ -183,29 +190,42 @@
           <div class="scanmodal__empty" id="scanEmpty">📷 Camera not available — allow camera access and try again</div>
         </div>
 
-        <button class="scanmodal__close" id="scanClose" aria-label="Close scanner">✕</button>
-
+        <!-- analyzing -->
         <div class="scanmodal__analyzing" id="scanAnalyzing" hidden>
           <span class="scanmodal__spinner"></span>
-          <span>Analyzing cover…</span>
+          <span>ANALYZING COVER…</span>
         </div>
 
+        <!-- FOUND -->
         <div class="scanmodal__result scanmodal__result--found" id="scanFound" hidden>
           <div class="scanmodal__rbadge">✅ FOUND</div>
           <div class="scanmodal__rbook" id="scanFoundTitle">Atomic Habits</div>
-          <button class="scanmodal__rgo" id="scanFoundGo">📚 OPEN IN THE LIBRARY →</button>
+          <button class="scanmodal__rgo" id="scanFoundGo">📖 OPEN BOOK SUMMARY →</button>
           <button class="scanmodal__ragain" id="scanAgainBtn">🔄 SCAN AGAIN</button>
         </div>
 
+        <!-- NOT FOUND -->
         <div class="scanmodal__result scanmodal__result--no" id="scanNo" hidden>
           <div class="scanmodal__rbadge">❌ NOT FOUND</div>
-          <p class="scanmodal__noTxt">We couldn't match this cover. Try again with a clear front photo — or type the book name:</p>
+          <p class="scanmodal__noTxt" id="scanNoTxt">We couldn't match this cover — we may not have this book yet. Try typing the name, or request it below:</p>
           <input class="scanmodal__type" id="scanTypeInput" type="text" placeholder="Type the book title…" autocomplete="off">
           <div class="scanmodal__typeHint" id="scanTypeHint"></div>
+          <button class="scanmodal__rgo scanmodal__rgo--search" id="scanSearchLib">🔍 SEARCH THE LIBRARY</button>
+          <a class="scanmodal__request" id="scanRequest" href="#" target="_blank" rel="noopener">✉️ REQUEST THIS BOOK →</a>
           <button class="scanmodal__ragain" id="scanAgainBtn2">🔄 SCAN AGAIN</button>
         </div>
 
-        <button class="scanmodal__shutter" id="scanShutter" aria-label="Capture">📷</button>
+        <!-- bottom bar: flip camera + find -->
+        <div class="scanmodal__bar" id="scanBar">
+          <button class="scanmodal__flip" id="scanFlip" type="button" aria-label="Flip camera">
+            <span class="scanmodal__flipico">🔄</span>
+            <span class="scanmodal__fliptxt">FLIP</span>
+          </button>
+          <button class="scanmodal__find" id="scanFind" type="button">
+            <span class="scanmodal__findico">⚡</span>
+            <span>FIND BOOK SUMMARY</span>
+          </button>
+        </div>
       </div>
     </div>
 

@@ -21,17 +21,24 @@
   var foundTitle = document.getElementById("scanFoundTitle");
   var foundGo = document.getElementById("scanFoundGo");
   var noBox = document.getElementById("scanNo");
+  var noTxt = document.getElementById("scanNoTxt");
   var typeInput = document.getElementById("scanTypeInput");
   var typeHint = document.getElementById("scanTypeHint");
-  var shutter = document.getElementById("scanShutter");
+  var searchLibBtn = document.getElementById("scanSearchLib");
+  var requestLink = document.getElementById("scanRequest");
+  var flipBtn = document.getElementById("scanFlip");
+  var findBtn = document.getElementById("scanFind");
+  var bar = document.getElementById("scanBar");
 
   var stream = null;
   var raf = null;
   var steady = 0;        // consecutive steady frames
   var lastFrame = null;  // downscaled frame for stability check
   var busy = false;
+  var analyzeTimer = null;   // pending cover-analysis timeout (cancelled on close)
   var noFrameTicks = 0;  // frames with no video data yet
   var camLive = false;   // true once the camera is actually delivering frames
+  var facing = "environment"; // back camera by default (flip toggles)
 
   /* ---------------- open / close ---------------- */
   function openModal() {
@@ -45,6 +52,8 @@
   }
   function closeModal() {
     try { stopCamera(); } catch (e) {}
+    if (analyzeTimer) { clearTimeout(analyzeTimer); analyzeTimer = null; }
+    busy = false;
     modal.classList.remove("scanmodal--open");
     modal.hidden = true;
     modal.style.display = "none";
@@ -60,6 +69,8 @@
     if (video) { video.style.display = "block"; video.hidden = false; }
     if (hint) hint.style.display = "";
     if (empty) empty.style.display = "none";
+    if (bar) bar.style.display = "flex";
+    if (findBtn) findBtn.disabled = false;
   }
 
   if (scanBtn) scanBtn.addEventListener("click", openModal);
@@ -71,10 +82,10 @@
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && modal && !modal.hidden) closeModal(); });
 
   /* ---------------- camera + live loop ---------------- */
-  function startCamera() {
+  function startCamera(showAllow) {
     stopCamera();
     camLive = false;
-    if (hint) {
+    if (showAllow !== false && hint) {
       hint.style.display = "";
       hint.innerHTML = "<b>ALLOW CAMERA ACCESS</b><span>Tap Allow in the browser popup — then keep the cover steady</span>";
     }
@@ -85,7 +96,7 @@
       if (empty) { empty.style.display = "flex"; empty.textContent = "📷 Camera not available on this device"; }
       return;
     }
-    gum({ video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } } })
+    gum({ video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 720 } } })
       .then(function (s) {
         stream = s;
         if (video) {
@@ -184,8 +195,17 @@
 
   /* ---------------- capture + analyze ---------------- */
   function capture() {
-    if (busy || !video || !video.videoWidth) return;
+    if (busy) return;
+    if (!video || !video.videoWidth) {
+      if (empty) {
+        empty.style.display = "flex";
+        empty.textContent = "📷 Camera is still starting — wait a second and tap FIND BOOK SUMMARY again";
+      }
+      return;
+    }
     busy = true;
+    if (findBtn) findBtn.disabled = true;
+    if (bar) bar.style.display = "none";
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     canvas.getContext("2d").drawImage(video, 0, 0);
@@ -195,7 +215,8 @@
     if (hint) hint.style.display = "none";
     if (analyzing) analyzing.hidden = false;
 
-    setTimeout(function () {
+    analyzeTimer = setTimeout(function () {
+      analyzeTimer = null;
       ensureLib(function () {
         var result = runMatch();
         busy = false;
@@ -222,7 +243,17 @@
     setTimeout(function () { ensureLib(cb, tries + 1); }, 250);
   }
 
-  if (shutter) shutter.addEventListener("click", capture);
+  /* bottom bar: FLIP CAMERA + FIND BOOK SUMMARY */
+  if (findBtn) findBtn.addEventListener("click", capture);
+  if (flipBtn) flipBtn.addEventListener("click", function () {
+    if (busy) return;
+    facing = (facing === "environment") ? "user" : "environment";
+    if (hint) {
+      hint.style.display = "";
+      hint.innerHTML = "<b>FLIPPING CAMERA…</b><span>Hold on a second</span>";
+    }
+    startCamera(false);
+  });
   ["scanAgainBtn", "scanAgainBtn2"].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) el.addEventListener("click", function () { hideAll(); lastFrame = null; steady = 0; video.style.display = "block"; });
@@ -372,37 +403,45 @@
     if (noBox) noBox.hidden = false;
     if (typeInput) { typeInput.value = ""; typeInput.focus(); }
     if (typeHint) typeHint.textContent = "";
+    updateRequestLink("");
   }
 
+  /* redirect straight to the book's summary page */
   function openBook(id) {
     closeModal();
+    try { window.__tsbOpenBookId = id; } catch (e) {}
+    window.location.href = "book.html?id=" + encodeURIComponent(id);
+  }
+
+  /* "we don't have it" → search the library instead */
+  if (searchLibBtn) searchLibBtn.addEventListener("click", function () {
+    var q = typeInput ? typeInput.value.trim() : "";
+    closeModal();
     var input = document.getElementById("searchInput");
-    var book = (window.BOOKS || []).find(function (b) { return b.id === id; });
-    if (input && book) {
-      input.value = book.title;
+    if (input) {
+      input.value = q;
       input.dispatchEvent(new Event("input", { bubbles: true }));
     }
     setTimeout(function () {
       try {
         var target = document.getElementById("library");
         if (target && target.scrollIntoView) target.scrollIntoView({ behavior: "smooth", block: "start" });
-        var grid = document.getElementById("grid");
-        if (grid) {
-          var card = grid.querySelector('.card[href*="' + id + '"]');
-          if (card) {
-            card.classList.add("sr-flash");
-            setTimeout(function () { card.classList.remove("sr-flash"); }, 2400);
-          }
-        }
       } catch (e) {}
-    }, 450);
+    }, 120);
+  });
+
+  /* request a missing book → WhatsApp message to the creator */
+  function updateRequestLink(title) {
+    if (!requestLink) return;
+    var text = "Hi Jash! Please add this book to TheSmallBook: " + (title && title.trim() ? title.trim() : "a book I just scanned");
+    requestLink.href = "https://wa.me/919702510680?text=" + encodeURIComponent(text);
   }
 
   /* type-to-find fallback */
   if (typeInput) typeInput.addEventListener("input", function () {
     var q = typeInput.value.trim().toLowerCase();
     var lib = window.BOOKS || [];
-    if (!q) { if (typeHint) typeHint.textContent = ""; return; }
+    if (!q) { if (typeHint) typeHint.textContent = ""; updateRequestLink(""); return; }
     var hits = lib.filter(function (b) {
       return b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q);
     }).slice(0, 5);
@@ -411,8 +450,9 @@
         ? hits.map(function (b) {
             return '<button class="scanmodal__typehit" data-id="' + b.id + '"><b>' + b.title + '</b><small>' + b.author + '</small></button>';
           }).join("")
-        : '<span class="scanmodal__typenone">No book found — check the spelling</span>';
+        : '<span class="scanmodal__typenone">No book found — check the spelling, or request it below 👇</span>';
     }
+    updateRequestLink(typeInput.value.trim());
   });
   if (typeHint) typeHint.addEventListener("click", function (e) {
     var btn = e.target.closest("[data-id]");
