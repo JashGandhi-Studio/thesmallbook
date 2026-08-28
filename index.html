@@ -149,12 +149,67 @@
 
     <!-- SEARCH -->
     <div class="searchwrap" id="searchWrap">
-      <div class="search">
-        <input id="searchInput" type="text" placeholder="SEARCH THE SHELF..." autocomplete="off">
-        <button type="button" id="searchGo">FIND IT</button>
+      <div class="searchrow">
+        <div class="search">
+          <input id="searchInput" type="text" placeholder="SEARCH THE SHELF..." autocomplete="off">
+          <button type="button" id="scanBtn" class="scanbtn" title="Scan a book to find its summary" aria-label="Scan a book">
+            <svg class="scanbtn__ico" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="4"/>
+            </svg>
+          </button>
+          <button type="button" id="searchGo">FIND IT</button>
+        </div>
       </div>
-      <div class="search__hint">⚡ IMPROVED SEARCH — TYPOS OK</div>
+      <div class="search__hint">⚡ IMPROVED SEARCH — TYPOS OK &nbsp;·&nbsp; 📷 SCAN A BOOK — INSTANT MATCH</div>
     </div>
+
+    <!-- 📷 FULLSCREEN LIVE SCANNER -->
+    <div class="scanmodal" id="scanModal" hidden>
+      <div class="scanmodal__stage" id="scanStage">
+        <video id="scanVideo" autoplay playsinline muted></video>
+        <canvas id="scanCanvas" hidden></canvas>
+
+        <div class="scanmodal__overlay" id="scanOverlay">
+          <span class="scanmodal__corner scanmodal__corner--tl"></span>
+          <span class="scanmodal__corner scanmodal__corner--tr"></span>
+          <span class="scanmodal__corner scanmodal__corner--bl"></span>
+          <span class="scanmodal__corner scanmodal__corner--br"></span>
+          <span class="scanmodal__scanline"></span>
+          <div class="scanmodal__hint" id="scanHint">
+            <b>SCANNING…</b>
+            <span>Keep the book cover steady · don't move the camera much</span>
+          </div>
+          <div class="scanmodal__empty" id="scanEmpty">📷 Camera not available — allow camera access and try again</div>
+        </div>
+
+        <button class="scanmodal__close" id="scanClose" aria-label="Close scanner">✕</button>
+
+        <div class="scanmodal__analyzing" id="scanAnalyzing" hidden>
+          <span class="scanmodal__spinner"></span>
+          <span>Analyzing cover…</span>
+        </div>
+
+        <div class="scanmodal__result scanmodal__result--found" id="scanFound" hidden>
+          <div class="scanmodal__rbadge">✅ FOUND</div>
+          <div class="scanmodal__rbook" id="scanFoundTitle">Atomic Habits</div>
+          <button class="scanmodal__rgo" id="scanFoundGo">📚 OPEN IN THE LIBRARY →</button>
+          <button class="scanmodal__ragain" id="scanAgainBtn">🔄 SCAN AGAIN</button>
+        </div>
+
+        <div class="scanmodal__result scanmodal__result--no" id="scanNo" hidden>
+          <div class="scanmodal__rbadge">❌ NOT FOUND</div>
+          <p class="scanmodal__noTxt">We couldn't match this cover. Try again with a clear front photo — or type the book name:</p>
+          <input class="scanmodal__type" id="scanTypeInput" type="text" placeholder="Type the book title…" autocomplete="off">
+          <div class="scanmodal__typeHint" id="scanTypeHint"></div>
+          <button class="scanmodal__ragain" id="scanAgainBtn2">🔄 SCAN AGAIN</button>
+        </div>
+
+        <button class="scanmodal__shutter" id="scanShutter" aria-label="Capture">📷</button>
+      </div>
+    </div>
+
+
 
     <!-- STATS -->
     <div class="stats">
@@ -342,6 +397,8 @@
       box.style.display = "";
     })();
   </script>
+  <script src="js/scanner-data.js" defer></script>
+  <script src="js/scanner.js"></script>
   <script src="js/onboard.js"></script>
   <script src="js/ask-data.js"></script>
   <script src="js/tts-engine.js"></script>
