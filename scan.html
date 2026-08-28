@@ -228,7 +228,7 @@ body {
   <div class="hint" id="hint">
     <b id="hintB">SCANNING…</b>
     <span id="hintS">Keep the book cover steady · don't move the camera much</span>
-    <span class="chip">📚 320 BOOKS INDEXED · INSTANT MATCH</span>
+    <span class="chip">📚 340 BOOKS INDEXED · INSTANT MATCH</span>
   </div>
 
   <!-- top bar -->
@@ -307,7 +307,7 @@ body {
   var bar = document.getElementById("bar");
 
   var stream = null, raf = null, busy = false;
-  var steady = 0, lastFrame = null, noTicks = 0, camLive = false;
+  var steady = 0, lastFrame = null, noTicks = 0, camLive = false, frameN = 0;
   var facing = "environment";
   var foundId = null;
 
@@ -386,6 +386,9 @@ body {
       liveDot.style.display = "inline-block";
       setHint("SCANNING…", "Keep the book cover steady · don't move the camera much");
     }
+    /* lag fix: analyze every 3rd frame (~20fps) — plenty for auto-capture,
+       saves battery and keeps the UI smooth */
+    if (++frameN % 3 !== 0) { raf = requestAnimationFrame(loop); return; }
     if (!busy) {
       var data = downscale(cam);
       var sharp = sharpnessOf(data);
@@ -443,6 +446,14 @@ body {
         }
       grid.push([Math.round(r / n), Math.round(g / n), Math.round(b / n)]);
     }
+    /* cover gate: how varied are the 9 cells? (solid walls/palms/tables ~ 0-3) */
+    var mr = 0, mg = 0, mb = 0;
+    for (var gi = 0; gi < 9; gi++) { mr += grid[gi][0]; mg += grid[gi][1]; mb += grid[gi][2]; }
+    mr /= 9; mg /= 9; mb /= 9;
+    var varScore = 0;
+    for (var gi2 = 0; gi2 < 9; gi2++)
+      varScore += Math.abs(grid[gi2][0] - mr) + Math.abs(grid[gi2][1] - mg) + Math.abs(grid[gi2][2] - mb);
+    varScore /= 9;
     var gx0 = sctx.createImageData(w, h);
     var gd = gx0.data;
     for (var i2 = 0; i2 < data.length; i2++) gd[i2] = data[i2];
@@ -453,7 +464,7 @@ body {
       var idx = (y2 * w + x2) * 4;
       lum[y2 * w + x2] = 0.299 * gray[idx] + 0.587 * gray[idx + 1] + 0.114 * gray[idx + 2];
     }
-    var EW = 16, EH = 24, ew = Math.floor(w / EW), eh = Math.floor(h / EH), bits = [];
+    var EW = 16, EH = 24, ew = Math.floor(w / EW), eh = Math.floor(h / EH), bits = [], edgeCount = 0;
     for (var ey = 0; ey < EH; ey++) for (var ex = 0; ex < EW; ex++) {
       var s = 0, cnt = 0;
       for (var yy = ey * eh; yy < (ey + 1) * eh; yy++) for (var xx = ex * ew; xx < (ex + 1) * ew; xx++) {
@@ -462,7 +473,8 @@ body {
         var gyval = yy + 1 < h ? Math.abs(lum[i3] - lum[(yy + 1) * w + xx]) : 0;
         s += gxval + gyval; cnt++;
       }
-      bits.push(s / cnt > 22 ? 1 : 0);
+      var bit = s / cnt > 22 ? 1 : 0;
+      bits.push(bit); edgeCount += bit;
     }
     var bytes = [];
     for (var k = 0; k < bits.length; k += 8) {
@@ -472,7 +484,7 @@ body {
     }
     var bin = "";
     for (var b2 = 0; b2 < bytes.length; b2++) bin += String.fromCharCode(bytes[b2]);
-    return { g: grid, e: btoa(bin) };
+    return { g: grid, e: btoa(bin), v: varScore, eb: edgeCount };
   }
   function profileFromCanvas() {
     var small = document.createElement("canvas"); small.width = 120; small.height = 180;
@@ -496,33 +508,85 @@ body {
   function colorDist(c1, c2) {
     return Math.sqrt(Math.pow(c1[0] - c2[0], 2) + Math.pow(c1[1] - c2[1], 2) + Math.pow(c1[2] - c2[2], 2));
   }
+  /* ---------- fast library index (built once, per-book) ---------- */
+  var LIB_IDX = null, LIB_LEN = 0;
+  function buildLibIndex() {
+    var lib = window.TSB_SCAN || [];
+    if (!lib.length) { LIB_IDX = null; LIB_LEN = 0; return; }
+    var ids = [], ranges = [], coarse = [], byId = {};
+    for (var i = 0; i < lib.length; i++) {
+      var id = lib[i].id;
+      if (!byId[id]) { byId[id] = { start: i, end: i }; ids.push(id); }
+      else byId[id].end = i;
+    }
+    for (var j = 0; j < ids.length; j++) {
+      var o = byId[ids[j]];
+      ranges.push([o.start, o.end]);
+      var g = lib[o.start].g, r = 0, gg = 0, b = 0;
+      for (var k = 0; k < 9; k++) { r += g[k][0]; gg += g[k][1]; b += g[k][2]; }
+      coarse.push([r / 9, gg / 9, b / 9]);
+    }
+    LIB_IDX = { ids: ids, ranges: ranges, coarse: coarse };
+    LIB_LEN = lib.length;
+  }
+  var POPC = null;
+  function popTable() {
+    if (POPC) return POPC;
+    POPC = new Uint8Array(256);
+    for (var i = 0; i < 256; i++) { var v = i, c = 0; while (v) { c += v & 1; v >>= 1; } POPC[i] = c; }
+    return POPC;
+  }
   function edgeDist(e1, e2) {
     var a1, a2;
     try { a1 = atob(e1); a2 = atob(e2); } catch (e) { return 1; }
-    var diff = 0;
-    for (var i = 0; i < a1.length; i++) {
-      var x = a1.charCodeAt(i) ^ a2.charCodeAt(i);
-      while (x) { diff += x & 1; x >>= 1; }
-    }
+    var pc = popTable(), diff = 0;
+    for (var i = 0; i < a1.length; i++) diff += pc[a1.charCodeAt(i) ^ a2.charCodeAt(i)];
     return diff / 384;
   }
   function runMatch() {
-    var profs = [profileFromCanvas(), profileFromCrop(0.85), profileFromCrop(0.7)];
     var lib = window.TSB_SCAN || [];
-    var best = null, bestScore = 1e9;
-    for (var i = 0; i < lib.length; i++) {
-      var entry = lib[i], score = 1e9;
-      for (var p = 0; p < profs.length; p++) {
-        var cScore = 0;
-        for (var k = 0; k < 9; k++) cScore += colorDist(profs[p].g[k], entry.g[k]);
-        cScore /= 9;
-        var eScore = edgeDist(profs[p].e, entry.e) * 100;
-        var s = cScore * 0.55 + eScore * 0.45;
-        if (s < score) score = s;
-      }
-      if (score < bestScore) { bestScore = score; best = entry; }
+    if (!lib.length) return null;
+    if (!LIB_IDX || LIB_LEN !== lib.length) buildLibIndex();
+    var profs = [profileFromCanvas(), profileFromCrop(0.85), profileFromCrop(0.7)];
+    var full = profs[0];
+    /* GATES: reject frames that are not a book cover
+       (walls, palms, tables, faces, gradients: real covers score v>=5, eb>=12) */
+    if (full.v < 5 || full.eb < 12) return null;
+    /* coarse prefilter: mean color distance -> top 36 books (fast) */
+    var cr = 0, cg = 0, cb = 0;
+    for (var k = 0; k < 9; k++) { cr += full.g[k][0]; cg += full.g[k][1]; cb += full.g[k][2]; }
+    cr /= 9; cg /= 9; cb /= 9;
+    var scored = [];
+    for (var b = 0; b < LIB_IDX.ids.length; b++) {
+      var c = LIB_IDX.coarse[b];
+      scored.push([Math.abs(c[0] - cr) + Math.abs(c[1] - cg) + Math.abs(c[2] - cb), b]);
     }
-    return (best && bestScore < 55) ? best : null;
+    scored.sort(function (a, b2) { return a[0] - b2[0]; });
+    var topN = Math.min(36, scored.length);
+    /* per-book best score (12 variants × 3 scales), then best-book vs 2nd-book margin */
+    var best = null, bestScore = 1e9, secondScore = 1e9;
+    for (var t = 0; t < topN; t++) {
+      var bi = scored[t][1];
+      var start = LIB_IDX.ranges[bi][0], end = LIB_IDX.ranges[bi][1];
+      var bookBest = 1e9;
+      for (var vi = start; vi <= end; vi++) {
+        var entry = lib[vi], sc = 1e9;
+        for (var p = 0; p < profs.length; p++) {
+          var cScore = 0;
+          for (var k2 = 0; k2 < 9; k2++) cScore += colorDist(profs[p].g[k2], entry.g[k2]);
+          cScore /= 9;
+          var eScore = edgeDist(profs[p].e, entry.e) * 100;
+          var s = cScore * 0.55 + eScore * 0.45;
+          if (s < sc) sc = s;
+        }
+        if (sc < bookBest) bookBest = sc;
+      }
+      if (bookBest < bestScore) { secondScore = bestScore; bestScore = bookBest; best = lib[start]; }
+      else if (bookBest < secondScore) { secondScore = bookBest; }
+    }
+    /* confident = score clearly better than every other book */
+    if (best && bestScore < 45 && (secondScore - bestScore) >= 4) return best;
+    return null;
   }
 
   /* ---------- results ---------- */

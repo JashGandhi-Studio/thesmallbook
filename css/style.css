@@ -1946,6 +1946,7 @@ html.dark .grave__book { color: #111; }
 }
 .graveyard-page .hero--grave .hero__sub { animation-delay: .15s; }
 .graveyard-page .hero--grave h1 { animation-delay: .05s; }
+
 @keyframes riseFromDirt {
   from { transform: translateY(46px); opacity: 0; filter: blur(3px); }
   to { transform: none; opacity: 1; filter: none; }
@@ -2092,17 +2093,31 @@ html.dark .buybtn--soft:hover { background: var(--yellow); color: #111; }
 .gravesort {
   max-width: var(--maxw); margin: 18px auto 0; padding: 0 20px;
   display: flex; gap: 10px; flex-wrap: wrap;
+  justify-content: center;           /* centered — always, on every screen */
+  align-items: center;
 }
 .gravesort__btn {
-  font-family: var(--font-head); font-size: .6rem; letter-spacing: .5px;
-  padding: 10px 14px; background: var(--paper); color: var(--ink);
+  font-family: var(--font-head); font-size: .68rem; letter-spacing: .5px;
+  padding: 12px 20px; background: var(--paper); color: var(--ink);
   border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
+  border-radius: 999px;              /* modern pill */
+  min-height: 44px;                  /* comfortable touch target */
+  display: inline-flex; align-items: center; justify-content: center;
   cursor: pointer; transition: transform .12s, box-shadow .12s, background .12s;
 }
 .gravesort__btn:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--ink); }
 .gravesort__btn.active { background: var(--red); color: #fff; }
 html.dark .gravesort__btn { background: #1b1712; color: #f2ead8; border-color: #000; box-shadow: 3px 3px 0 #000; }
 html.dark .gravesort__btn.active { background: var(--red); color: #fff; }
+/* mobile: clean 2×2 centered grid (buttons fill evenly, text centered) */
+@media (max-width: 560px) {
+  .gravesort { gap: 8px; }
+  .gravesort__btn {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 0; padding: 13px 8px; text-align: center;
+    font-size: .62rem; letter-spacing: .3px;
+  }
+}
 
 .gravefeed {
   max-width: var(--maxw); margin: 18px auto 0; padding: 0 20px;

@@ -114,7 +114,7 @@ window.TSB_CONFIG = {
   /* 🔥 THIS WEEK'S NEW RELEASES — only the latest batch (updated every batch).
      Old books leave this list automatically — they're no longer "new". */
   NEW_THIS_WEEK: [
-    "rudest-book-ever", "turning-points-kalam", "my-journey-kalam", "discovery-of-india", "dream-with-eyes-open", "chanakya-in-you", "art-of-being-alone", "victory-project", "indias-money-heist", "blink-gladwell", "tipping-point", "art-of-happiness", "tidying-up", "intelligence-analysis", "culture-map", "body-bryson", "second-mountain", "gifts-of-imperfection", "five-love-languages", "better-than-before"
+    "playing-it-my-way", "india-2020", "the-anarchy", "the-idea-of-india", "wonder-that-was-india", "maximum-city", "annihilation-of-caste", "being-indian", "the-winning-way", "test-of-my-life", "most-important-thing", "crucial-conversations", "ride-of-a-lifetime", "awaken-giant-within", "why-we-sleep", "breath-nestor", "make-it-stick", "sam-walton", "the-element", "stumbling-happiness"
   ],
   /* 🩸 THIS WEEK'S FRESH GRAVES — latest batch only (updated every batch). */
   NEW_GRAVES_THIS_WEEK: [

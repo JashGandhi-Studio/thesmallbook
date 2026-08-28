@@ -3,7 +3,7 @@
    - Full-screen camera takeover (no upload, no card)
    - Auto-capture: waits for a sharp + steady frame (1-2s)
    - Manual shutter as backup
-   - Matches against 320 books × cover variants (color profiles)
+   - Matches against 340 books × cover variants (color profiles)
    - Found → tap to open in library (smooth scroll + flash)
    - Not found → type-the-title fallback right in the scanner
    ============================================================ */

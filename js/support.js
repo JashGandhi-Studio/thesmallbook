@@ -115,7 +115,7 @@
           <p>₹0 forever — no ads, no paywall. Toss a coin to your summarizer 💛</p>
         </div>
         <p style="font-weight:600; margin-bottom:6px; font-size:13px;">
-          Reading 320 books so you don't have to burns a <em>lot</em> of chai. ☕
+          Reading 340 books so you don't have to burns a <em>lot</em> of chai. ☕
           If TheSmallBook saved you from a 300-page grind, pick an amount:
         </p>
         <div class="fuel-amounts">
