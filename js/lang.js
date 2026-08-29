@@ -50,6 +50,9 @@
     try { return JSON.parse(localStorage.getItem(LS_KEY)) || "en"; } catch (e) { return "en"; }
   }
   function setLang(code) {
+    if (code && code !== "en") {
+      try { if (window.TSB) window.TSB.set("tsb_flag_polyglot", "1"); } catch (e) {}
+    }
     try { localStorage.setItem(LS_KEY, JSON.stringify(code)); } catch (e) {}
   }
   function findLang(code) {

@@ -36,6 +36,7 @@
       set("tsb_bookmarks", l);
       if (l.length >= 1) achv.award("bookmark-1");
       if (l.length >= 5) achv.award("bookmark-5");
+      if (l.length >= 10) achv.award("bookmark-10");
       return i < 0;
     }
   };
@@ -56,6 +57,9 @@
         if (total >= 10) achv.award("lessons-10");
         if (total >= 50) achv.award("lessons-50");
         if (total >= 150) achv.award("lessons-150");
+        if (total >= 25) achv.award("lessons-25");
+        if (total >= 100) achv.award("lessons-100");
+        if (total >= 300) achv.award("lessons-300");
       }
       return arr.length;
     },
@@ -93,6 +97,8 @@
       if (s.count >= 3) achv.award("streak-3");
       if (s.count >= 7) achv.award("streak-7");
       if (s.count >= 30) achv.award("streak-30");
+      if (s.count >= 14) achv.award("streak-14");
+      if (s.count >= 60) achv.award("streak-60");
       return s.count;
     },
     count: () => get("tsb_streak", { last: "", count: 0 }).count
@@ -133,6 +139,19 @@
     "story-published": { icon: "✍️", name: "Storyteller", desc: "Published a community story" },
     "night-owl": { icon: "🌙", name: "Night Owl", desc: "Switched to dark mode" },
     "explorer": { icon: "🎲", name: "Explorer", desc: "Used the Surprise Me button" },
+    "lessons-25": { icon: "🧩", name: "Puzzle Solver", desc: "Read 25 lessons" },
+    "lessons-100": { icon: "💎", name: "Diamond Mind", desc: "Read 100 lessons" },
+    "lessons-300": { icon: "🐉", name: "Dragon Reader", desc: "Read 300 lessons" },
+    "book-complete-3": { icon: "📕", name: "Trilogy", desc: "Finished 3 books completely" },
+    "book-complete-10": { icon: "🏅", name: "Shelf Master", desc: "Finished 10 books completely" },
+    "bookmark-10": { icon: "🛋️", name: "Library Owner", desc: "Bookmarked 10 books" },
+    "streak-14": { icon: "⏳", name: "Marathoner", desc: "14-day reading streak" },
+    "streak-60": { icon: "🌋", name: "Unstoppable Force", desc: "60-day reading streak" },
+    "ask-1": { icon: "🤖", name: "Curious Mind", desc: "Asked the library a question" },
+    "listener": { icon: "🎧", name: "Listener", desc: "Listened to a book with audio" },
+    "ghoul": { icon: "👻", name: "Grave Digger", desc: "Visited the Graveyard" },
+    "scanner": { icon: "📷", name: "Cover Scanner", desc: "Scanned a book cover" },
+    "polyglot": { icon: "🌏", name: "Polyglot", desc: "Read in a language other than English" },
     "sharer": { icon: "🎴", name: "Card Creator", desc: "Generated a share card" },
     "featured-author": { icon: "🏆", name: "Featured Author", desc: "Your story hit the Story of the Week slot" }
   };
@@ -213,7 +232,7 @@
     "azim premji", "ravi subramanian", "parag anand", "kiran bedi",
     "paramahansa yogananda", "deepak chopra", "mahatma gandhi", "rujuta diwekar",
     "mohnish pabrai", "abhijit banerjee", "subroto bagchi", "shwetabh gangwar", "ronnie screwvala", "renuka gavrani",
-    "sachin tendulkar", "sunil khilnani", "a.l. basham", "suketu mehta", "b.r. ambedkar", "pavan k. varma", "harsha bhogle", "yuvraj singh"
+    "sachin tendulkar", "sunil khilnani", "a.l. basham", "suketu mehta", "b.r. ambedkar", "pavan k. varma", "harsha bhogle", "yuvraj singh", "j. krishnamurti", "e. sreedharan", "sudha murty", "sanjaya baru"
   ];
   function isIndianBook(id) {
     try {
@@ -224,7 +243,19 @@
     } catch (e) { return false; }
   }
 
-  window.TSB = { get, set, theme, bookmarks, progress, plans, streak, levelFor, achv, lastRead, backup, isIndianBook };
+  /* badges from other pages (scanner, language) via localStorage flags */
+  try {
+    if (get("tsb_flag_scanned", false)) { achv.award("scanner"); set("tsb_flag_scanned", ""); }
+    if (get("tsb_flag_polyglot", false)) { achv.award("polyglot"); set("tsb_flag_polyglot", ""); }
+  } catch (e) {}
+
+  function completedCount() {
+    const all = progress.all();
+    const books = (window.BOOKS || []).filter((b) => all[b.id] && all[b.id].length >= b.lessons.length);
+    return books.length;
+  }
+
+  window.TSB = { get, set, theme, bookmarks, progress, plans, streak, levelFor, achv, lastRead, backup, isIndianBook, completedCount };
 
   /* Amazon affiliate link builder — direct product page when we know the
      ASIN (converts better), search fallback for everything else. */

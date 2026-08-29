@@ -892,6 +892,11 @@
       drawBadges();
       if (TSB.progress.forBook(book.id).length >= book.lessons.length) {
         TSB.achv.award("book-complete");
+        try {
+          const cc = (window.TSB.completedCount) ? window.TSB.completedCount() : 0;
+          if (cc >= 3) TSB.achv.award("book-complete-3");
+          if (cc >= 10) TSB.achv.award("book-complete-10");
+        } catch (e) {}
         showCompleteCelebration();
         if (window.TSB_AUTH && window.TSB_AUTH.enabled) window.TSB_AUTH.onBookComplete(book.id);
       }

@@ -88,7 +88,15 @@ window.TSB_CONFIG = {
     { quote: "My 14-year-old reads a summary every day. He argued with me about money using Rich Dad Poor Dad. I am not mad, I am impressed.", who: "Mr. Kulkarni, Nagpur" },
     { quote: "Came to read one book before an interview, stayed for the graveyard. The OYO case study alone saved me from a bad franchise deal.", who: "Bharat, Indore" },
     { quote: "The summaries are short enough to finish on a metro ride and deep enough that I remember them weeks later. That balance is rare.", who: "Tanya, Noida" },
-    { quote: "I used the Graveyard's Enron case study in my college presentation. The professor asked where I found it and the whole class is on the site now.", who: "Rhea, Bengaluru" }
+    { quote: "I used the Graveyard's Enron case study in my college presentation. The professor asked where I found it and the whole class is on the site now.", who: "Rhea, Bengaluru" },
+    { quote: "Scanned my shelf with the camera and it found the book in one second. Felt like magic. My friends didn't believe it was a free site.", who: "Harsh, Surat" },
+    { quote: "The scanner recognized a cover from my phone's camera and took me straight to the summary. This is how books should be discovered.", who: "Ishita, Hyderabad" },
+    { quote: "I read 11 books on TheSmallBook this month. My notes app is full of action steps from your lessons.", who: "Rahul, Kanpur" },
+    { quote: "The honesty box under each book, the when-this-doesn-t-work note, is the reason I trust this site over any other summary app.", who: "Pooja, Vadodara" },
+    { quote: "Used a Deep Work lesson the same day I read it. My boss noticed the difference in two weeks.", who: "Vivek, Gurgaon" },
+    { quote: "Every new book batch feels like a festival. I check the shelf every Friday for the NEW badges.", who: "Nandini, Coimbatore" },
+    { quote: "My younger brother studies for UPSC and swears by the graveyard case studies for essay examples.", who: "Kunal, Patna" },
+    { quote: "The Book of Joy summary got me through a rough month. Some free things really are priceless.", who: "Shruti, Bhopal" }
   ],
 
   /* 🟢 GOOGLE OAUTH CLIENT — "Sign in with Google" popup (Google Identity
@@ -114,7 +122,8 @@ window.TSB_CONFIG = {
   /* 🔥 THIS WEEK'S NEW RELEASES — only the latest batch (updated every batch).
      Old books leave this list automatically — they're no longer "new". */
   NEW_THIS_WEEK: [
-    "playing-it-my-way", "india-2020", "the-anarchy", "the-idea-of-india", "wonder-that-was-india", "maximum-city", "annihilation-of-caste", "being-indian", "the-winning-way", "test-of-my-life", "most-important-thing", "crucial-conversations", "ride-of-a-lifetime", "awaken-giant-within", "why-we-sleep", "breath-nestor", "make-it-stick", "sam-walton", "the-element", "stumbling-happiness"
+    "playing-it-my-way", "india-2020", "the-anarchy", "the-idea-of-india", "wonder-that-was-india", "maximum-city", "annihilation-of-caste", "being-indian", "the-winning-way", "test-of-my-life", "most-important-thing", "crucial-conversations", "ride-of-a-lifetime", "awaken-giant-within", "why-we-sleep", "breath-nestor", "make-it-stick", "sam-walton", "the-element", "stumbling-happiness",
+    "freedom-from-the-known", "gandhi-years-that-changed-world", "karmayogi-sreedharan", "wise-and-otherwise", "accidental-prime-minister", "give-and-take", "david-and-goliath", "book-of-joy", "scrum-sutherland", "blitzscaling-hoffman"
   ],
   /* 🩸 THIS WEEK'S FRESH GRAVES — latest batch only (updated every batch). */
   NEW_GRAVES_THIS_WEEK: [

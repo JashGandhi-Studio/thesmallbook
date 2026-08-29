@@ -534,6 +534,7 @@
   }
 
   function send(raw) {
+    if (window.TSB) { try { window.TSB.achv.award("ask-1"); } catch (e) {} }
     var q = String(raw || "").trim();
     if (!q) return;
     var b = currentBook();

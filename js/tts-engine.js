@@ -389,6 +389,7 @@ window.TTS_ENGINE = (function () {
 
   /* ---------- speak one item ---------- */
   function speakItem(item, done) {
+    if (window.TSB) { try { window.TSB.achv.award("listener"); } catch (e) {} }
     const g = gen;
     if (!playing || paused) return done(false);
     const lang = item.lang || currentLang();

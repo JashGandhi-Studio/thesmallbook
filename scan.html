@@ -228,7 +228,7 @@ body {
   <div class="hint" id="hint">
     <b id="hintB">SCANNING…</b>
     <span id="hintS">Keep the book cover steady · don't move the camera much</span>
-    <span class="chip">📚 340 BOOKS INDEXED · INSTANT MATCH</span>
+    <span class="chip">📚 350 BOOKS INDEXED · INSTANT MATCH</span>
   </div>
 
   <!-- top bar -->
@@ -307,7 +307,7 @@ body {
   var bar = document.getElementById("bar");
 
   var stream = null, raf = null, busy = false;
-  var steady = 0, lastFrame = null, noTicks = 0, camLive = false, frameN = 0;
+  var steady = 0, lastFrame = null, noTicks = 0, camLive = false, frameN = 0, retrying = false;
   var facing = "environment";
   var foundId = null;
 
@@ -389,7 +389,7 @@ body {
     /* lag fix: analyze every 3rd frame (~20fps) — plenty for auto-capture,
        saves battery and keeps the UI smooth */
     if (++frameN % 3 !== 0) { raf = requestAnimationFrame(loop); return; }
-    if (!busy) {
+    if (!busy && !retrying) {
       var data = downscale(cam);
       var sharp = sharpnessOf(data);
       var stable = lastFrame ? diffOf(data, lastFrame) < 1400 : false;
@@ -427,10 +427,125 @@ body {
   function finishMatch() {
     var result = null;
     try { result = runMatch(); } catch (e) { result = null; }
-    busy = false;
     if (ana) ana.hidden = true;
-    if (result) showFound(result);
-    else showNotFound();
+    if (result) { showFound(result); return; }
+    /* phase 2 — OCR brain: read the title text straight off the cover */
+    if (hint) { hint.style.display = ""; hint.innerHTML = "<b>READING TITLE…</b><span>Using OCR to read the cover text</span>"; }
+    ocrRead(function (text) {
+      var ocrHit = null;
+      try { ocrHit = text ? matchTitleByOcr(text) : null; } catch (e) {}
+      if (ocrHit) { showFound(ocrHit); return; }
+      /* phase 3 — one fresh-frame retry (kills motion-blur misses) */
+      retryCapture();
+    });
+  }
+  /* re-show camera, wait for a new steady frame, capture once more */
+  function retryCapture() {
+    busy = false;
+    retrying = true;
+    cam.style.display = "block"; cap.hidden = true; cap.style.display = "none";
+    document.getElementById("guide").style.display = "";
+    if (hint) { hint.style.display = ""; hint.innerHTML = "<b>TRYING AGAIN…</b><span>Hold the cover steady</span>"; }
+    var tries = 0;
+    var t = setInterval(function () {
+      tries++;
+      if (cam.videoWidth && cam.videoWidth > 0) {
+        clearInterval(t);
+        busy = true;
+        document.getElementById("guide").style.display = "none";
+        cap.width = cam.videoWidth; cap.height = cam.videoHeight;
+        cap.getContext("2d").drawImage(cam, 0, 0);
+        cam.style.display = "none"; cap.hidden = false; cap.style.display = "block";
+        if (ana) ana.hidden = false;
+        setTimeout(function () {
+          var result = null;
+          try { result = runMatch(); } catch (e) {}
+          if (ana) ana.hidden = true;
+          busy = false;
+          retrying = false;
+          if (result) showFound(result); else showNotFound();
+        }, 650);
+      } else if (tries >= 40) { // ~4s without frames → give up gracefully
+        clearInterval(t);
+        busy = false;
+        retrying = false;
+        showNotFound();
+      }
+    }, 100);
+  }
+
+  /* ============ OCR "brain" — reads title text from the captured cover ============ */
+  var tesseractPromise = null;
+  function loadTesseract() {
+    if (window.Tesseract) return Promise.resolve(window.Tesseract);
+    if (tesseractPromise) return tesseractPromise;
+    tesseractPromise = new Promise(function (resolve, reject) {
+      try {
+        if (navigator.onLine === false) { reject(new Error("offline")); return; }
+      } catch (e) {}
+      var s = document.createElement("script");
+      s.src = "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js";
+      s.onload = function () { resolve(window.Tesseract); };
+      s.onerror = function () { reject(new Error("cdn")); };
+      document.head.appendChild(s);
+    });
+    return tesseractPromise;
+  }
+  function ocrRead(cb) {
+    var done = false;
+    var timer = setTimeout(function () { if (!done) { done = true; cb(""); } }, 12000);
+    loadTesseract().then(function (T) {
+      if (done) return;
+      var maxW = 900;
+      var scale = Math.min(1, maxW / cap.width);
+      var w = Math.round(cap.width * scale), h = Math.round(cap.height * scale);
+      var c = document.createElement("canvas"); c.width = w; c.height = h;
+      var cx = c.getContext("2d");
+      cx.imageSmoothingEnabled = true;
+      if (cx.imageSmoothingQuality) cx.imageSmoothingQuality = "high";
+      cx.drawImage(cap, 0, 0, w, h);
+      return T.recognize(c, "eng", { logger: function () {} });
+    }).then(function (res) {
+      if (done) return;
+      done = true; clearTimeout(timer);
+      var text = (res && res.data && res.data.text) || "";
+      cb(text);
+    }).catch(function () {
+      if (!done) { done = true; clearTimeout(timer); cb(""); }
+    });
+  }
+  function normTxt(s) {
+    return String(s).toUpperCase().replace(/[^A-Z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+  }
+  function titleMatchScore(ocrText, title) {
+    var words = normTxt(title).split(" ").filter(function (w) { return w.length >= 3; });
+    if (!words.length) return 0;
+    var ocrWords = normTxt(ocrText).split(" ");
+    var hits = 0;
+    for (var i = 0; i < words.length; i++) {
+      for (var j = 0; j < ocrWords.length; j++) {
+        if (ocrWords[j] === words[i] ||
+            (ocrWords[j].length >= 4 && words[i].length >= 4 &&
+             (ocrWords[j].indexOf(words[i]) === 0 || words[i].indexOf(ocrWords[j]) === 0))) {
+          hits++; break;
+        }
+      }
+    }
+    return hits / words.length;
+  }
+  function matchTitleByOcr(ocrText) {
+    var lib = window.TSB_SCAN || [];
+    var best = null, bestScore = 0, seen = {};
+    for (var i = 0; i < lib.length; i++) {
+      var id = lib[i].id;
+      if (seen[id]) continue;
+      seen[id] = 1;
+      var sc = titleMatchScore(ocrText, lib[i].t);
+      if (sc > bestScore) { bestScore = sc; best = lib[i]; }
+    }
+    var words = normTxt(best ? best.t : "").split(" ").filter(function (w) { return w.length >= 3; });
+    if (bestScore >= 0.6 && words.length >= 2) return best;
+    return null;
   }
 
   /* ---------- matching (same engine as the library DB) ---------- */
@@ -547,11 +662,11 @@ body {
     var lib = window.TSB_SCAN || [];
     if (!lib.length) return null;
     if (!LIB_IDX || LIB_LEN !== lib.length) buildLibIndex();
-    var profs = [profileFromCanvas(), profileFromCrop(0.85), profileFromCrop(0.7)];
+    var profs = [profileFromCanvas(), profileFromCrop(0.9), profileFromCrop(0.8), profileFromCrop(0.7), profileFromCrop(0.6)];
     var full = profs[0];
-    /* GATES: reject frames that are not a book cover
-       (walls, palms, tables, faces, gradients: real covers score v>=5, eb>=12) */
-    if (full.v < 5 || full.eb < 12) return null;
+    /* GATES: reject frames that are clearly not a book cover
+       (walls, palms, tables, gradients: real covers score v>=4, eb>=10) */
+    if (full.v < 4 || full.eb < 10) return null;
     /* coarse prefilter: mean color distance -> top 36 books (fast) */
     var cr = 0, cg = 0, cb = 0;
     for (var k = 0; k < 9; k++) { cr += full.g[k][0]; cg += full.g[k][1]; cb += full.g[k][2]; }
@@ -585,7 +700,7 @@ body {
       else if (bookBest < secondScore) { secondScore = bookBest; }
     }
     /* confident = score clearly better than every other book */
-    if (best && bestScore < 45 && (secondScore - bestScore) >= 4) return best;
+    if (best && bestScore < 46 && (secondScore - bestScore) >= 3) return best;
     return null;
   }
 
@@ -593,6 +708,7 @@ body {
   function showFound(entry) {
     foundId = entry.id;
     foundT.textContent = entry.t;
+    try { localStorage.setItem("tsb_flag_scanned", "1"); } catch (e) {}
     openBtn.href = "book.html?id=" + encodeURIComponent(entry.id);
     found.hidden = false;
   }
