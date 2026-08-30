@@ -22,8 +22,11 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
   <script>
-    // apply saved theme before paint (no flash)
-    try { if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark"); } catch (e) {}
+    // apply saved appearance before paint (no flash)
+    try {
+      if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark");
+      if (localStorage.getItem("tsb_mobile_beta") === "true" && window.matchMedia("(max-width: 760px)").matches) document.documentElement.classList.add("tsb-mobile-beta");
+    } catch (e) {}
   </script>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="favicon.ico" sizes="32x32">
@@ -63,7 +66,10 @@
 
     /* 🔒 lock scroll while the splash is on screen — zero jump, zero flicker */
     document.documentElement.classList.add("tsb-loading");
-    var MIN = 2500;
+    /* A returning Mobile Beta reader already made an intentional mode choice;
+       keep the familiar splash as a quick hand-off instead of a 2.5s pause. */
+    var isMobileBeta = document.documentElement.classList.contains("tsb-mobile-beta");
+    var MIN = isMobileBeta ? 700 : 2500;
     var started = Date.now();
     var removed = false;
     function hide() {
@@ -262,6 +268,7 @@
     <select id="sortSel" title="Sort books">
       <option value="default">SORT: FEATURED</option>
       <option value="shelves">📺 SHELVES VIEW</option>
+      <option value="beta">📱 BETA: MOBILE APP VIEW</option>
       <option value="az">A → Z</option>
       <option value="shortest">SHORTEST READ</option>
       <option value="lessons">MOST LESSONS</option>
@@ -354,6 +361,7 @@
   <script src="js/ask-data.js"></script>
   <script src="js/tts-engine.js"></script>
   <script src="js/ask.js"></script>
+  <script src="js/mobile-beta.js"></script>
   <script>
     /* deep-link search from the scanner: index.html?q=<title> */
     (function () {

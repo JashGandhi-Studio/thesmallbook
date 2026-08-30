@@ -19,7 +19,17 @@
 
   let activeCat = "ALL";
   let query = "";
-  let sortMode = TSB.get("tsb_view", "default") === "shelves" ? "shelves" : "default";
+
+  /* 📱 Mobile Beta is an opt-in app shell, not a new default. It appears in
+     this same view picker so visitors can try it deliberately, then return
+     to the classic site at any time. */
+  const betaMedia = window.matchMedia ? window.matchMedia("(max-width: 760px)") : { matches: false };
+  const canUseMobileBeta = () => !!betaMedia.matches;
+  const storedView = TSB.get("tsb_view", "default");
+  const betaWasChosen = TSB.get("tsb_mobile_beta", false) === true;
+  let sortMode = betaWasChosen && canUseMobileBeta()
+    ? "beta"
+    : (storedView === "shelves" ? "shelves" : "default");
 
   /* ---------- STATS ---------- */
   const totalLessons = BOOKS.reduce((n, b) => n + b.lessons.length, 0);
@@ -65,15 +75,64 @@
   }
 
   /* ---------- SORT + VIEW ---------- */
+  function updateBetaOption() {
+    if (!sortSel) return;
+    const option = sortSel.querySelector('option[value="beta"]');
+    if (!option) return;
+    option.disabled = !canUseMobileBeta();
+    option.textContent = canUseMobileBeta()
+      ? "📱 BETA: MOBILE APP VIEW"
+      : "📱 BETA: MOBILE ONLY";
+  }
+
+  function requestMobileBeta(active, source) {
+    if (window.TSBMobileBeta && typeof window.TSBMobileBeta.set === "function") {
+      window.TSBMobileBeta.set(active, { source: source || "shelf-picker" });
+      return;
+    }
+    /* Safe fallback if this file is ever used without mobile-beta.js. */
+    TSB.set("tsb_mobile_beta", !!active);
+    document.dispatchEvent(new CustomEvent("tsb:mobile-beta-change", {
+      detail: { active: !!active && canUseMobileBeta(), source: source || "shelf-picker" }
+    }));
+  }
+
   if (sortSel) {
+    updateBetaOption();
     sortSel.value = sortMode; // restore saved view choice
     sortSel.addEventListener("change", () => {
-      sortMode = sortSel.value;
+      const nextMode = sortSel.value;
+      if (nextMode === "beta") {
+        if (!canUseMobileBeta()) {
+          sortSel.value = sortMode;
+          return;
+        }
+        requestMobileBeta(true, "shelf-picker");
+        return;
+      }
+
+      /* Selecting any normal sort is also a clear, easy way to leave Beta. */
+      if (sortMode === "beta" || TSB.get("tsb_mobile_beta", false) === true) {
+        requestMobileBeta(false, "shelf-picker");
+      }
+      sortMode = nextMode;
       // remember the view style (shelves vs classic) across visits
       TSB.set("tsb_view", sortMode === "shelves" ? "shelves" : "default");
       render();
     });
   }
+
+  document.addEventListener("tsb:mobile-beta-change", (event) => {
+    const active = !!(event && event.detail && event.detail.active);
+    if (active && !canUseMobileBeta()) return;
+    sortMode = active ? "beta" : (sortMode === "beta" ? "default" : sortMode);
+    TSB.set("tsb_view", active ? "beta" : (sortMode === "shelves" ? "shelves" : "default"));
+    if (sortSel) sortSel.value = sortMode;
+    render();
+  });
+
+  if (betaMedia.addEventListener) betaMedia.addEventListener("change", updateBetaOption);
+  else if (betaMedia.addListener) betaMedia.addListener(updateBetaOption);
 
   /* ---------- SEARCH (fuzzy) — debounced so mobile stays smooth ---------- */
   let searchTimer = null;
@@ -311,6 +370,7 @@
       case "shelves": return l; // shelves mode renders rows; keep featured order
       case "progress": return l.sort((a, b) =>
         TSB.progress.forBook(b.id).length / b.lessons.length - TSB.progress.forBook(a.id).length / a.lessons.length);
+      case "beta":
       default:
         /* ✨ NEW books float to the front, interleaved 3 Indian : 1 international
            so the shelf feels curated, not like an all-Indian wall */
