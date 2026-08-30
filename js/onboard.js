@@ -42,6 +42,9 @@
     /* returning from the login CTA inside onboarding → never re-ask */
     try { if (sessionStorage.getItem("tsb_onboarded_pending")) { set("tsb_onboarded", true); sessionStorage.removeItem("tsb_onboarded_pending"); } } catch (e) {}
     if (get("tsb_onboarded", false)) return false;
+    // Mobile Beta is already an intentional, focused trial. Do not stack the
+    // classic multi-step welcome modal on top of its app screen.
+    if (document.documentElement.classList.contains("tsb-mobile-beta")) return false;
     // logged-in users are returning users — never interrupt them
     try { if (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) return false; } catch (e) {}
     // only on the main app pages, not 404

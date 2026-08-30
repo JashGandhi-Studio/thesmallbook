@@ -565,7 +565,14 @@ body {
           finish();
           return;
         }
-        done(null, bestOcr);
+        /* OCR could not prove one title. A fingerprint is allowed to auto-open
+           only when it is exceptionally distinct; weaker results still go to
+           the evidence-ranked chooser below. */
+        anaTxt.textContent = "CHECKING COVER…";
+        anaSub.textContent = "Comparing cover colours and layout";
+        var visualHit = null;
+        try { visualHit = runMatch(); } catch (e) {}
+        done(visualHit, bestOcr);
       }, ocrPass);
     }
     function done(entry, ocrResult) {
@@ -591,16 +598,22 @@ body {
   }
   /* preprocess: grayscale + contrast stretch (+ optional sharpen on retry).
      Upscales small captures — Tesseract reads bigger text far better. */
-  function preprocessForOcr(src, sharpen) {
-    var targetW = 900;
-    var scale = Math.max(1, Math.min(2, targetW / src.width));
-    var w = Math.max(1, Math.round(src.width * scale));
-    var h = Math.max(1, Math.round(src.height * scale));
+  function preprocessForOcr(src, sharpen, cropFraction) {
+    /* First pass reads the whole frame. The retry crops the centre of the
+       guided scan area, removing desks/backgrounds that confuse OCR. */
+    var fraction = Math.max(.65, Math.min(1, Number(cropFraction) || 1));
+    var sourceW = src.width, sourceH = src.height;
+    var cropW = Math.round(sourceW * fraction), cropH = Math.round(sourceH * fraction);
+    var sx = Math.round((sourceW - cropW) / 2), sy = Math.round((sourceH - cropH) / 2);
+    var targetW = 1100;
+    var scale = Math.max(1, Math.min(2, targetW / cropW));
+    var w = Math.max(1, Math.round(cropW * scale));
+    var h = Math.max(1, Math.round(cropH * scale));
     var c = document.createElement("canvas"); c.width = w; c.height = h;
     var cx = c.getContext("2d");
     cx.imageSmoothingEnabled = true;
     if (cx.imageSmoothingQuality) cx.imageSmoothingQuality = "high";
-    cx.drawImage(src, 0, 0, w, h);
+    cx.drawImage(src, sx, sy, cropW, cropH, 0, 0, w, h);
     var img = cx.getImageData(0, 0, w, h);
     var d = img.data;
     // grayscale
@@ -641,7 +654,7 @@ body {
     var timer = setTimeout(function () { if (!done) { done = true; cb(""); } }, 12000);
     loadTesseract().then(function (T) {
       if (done) return;
-      var prep = preprocessForOcr(cap, pass === 1);
+      var prep = preprocessForOcr(cap, pass === 1, pass === 1 ? .86 : 1);
       return T.recognize(prep, "eng", { logger: function () {} });
     }).then(function (res) {
       if (done) return;
@@ -650,7 +663,9 @@ body {
       /* build BOTH: the biggest text (title) and the full text.
          The title is the largest type on the cover — subtitles, taglines
          and blurbs are smaller and must not drive the match. */
-      var words = (res.data.words || []).filter(function (w) { return w && w.text; });
+      var words = (res.data.words || []).filter(function (w) {
+        return w && w.text && (typeof w.confidence !== "number" || w.confidence >= 24);
+      });
       var fullText = (res.data.text || "").trim();
       var bigText = "";
       if (words.length) {
@@ -693,6 +708,15 @@ body {
     }
     return out;
   }
+  /* OCR often confuses these glyphs on glossy or low-light covers. Original
+     numeric spellings remain supported, so titles such as $100M still work. */
+  function ocrComparable(word) {
+    return String(word || "").toUpperCase()
+      .replace(/[O0]/g, "0")
+      .replace(/[IL1]/g, "1")
+      .replace(/[S5]/g, "5")
+      .replace(/[B8]/g, "8");
+  }
   /* levenshtein distance — handles OCR noise (POWER→POWEF, HABITS→HAB1TS) */
   function levDist(a, b) {
     if (a === b) return 0;
@@ -725,19 +749,21 @@ body {
       for (var j = 0; j < ocrList.length; j++) {
         var ow = ocrList[j];
         if (ow === wc) { exact++; found = true; break; }
+        if (ocrComparable(ow) === ocrComparable(wc)) { fuzzy += .9; found = true; break; }
       }
       if (found) continue;
-      /* fuzzy: allow 1 edit per ~5 chars on words >= 5 chars */
-      if (wc.length >= 5) {
-        var maxEdits = Math.max(1, Math.floor(Math.min(wc.length, 8) / 5));
+      /* Fuzzy comparison catches a real OCR typo after normalising common
+         glyph substitutions; longer words may tolerate one or two edits. */
+      if (wc.length >= 4) {
+        var maxEdits = Math.max(1, Math.floor(Math.min(wc.length, 10) / 5));
         for (var k = 0; k < ocrList.length; k++) {
           var o2 = ocrList[k];
-          if (o2.length >= 5 && Math.abs(o2.length - wc.length) <= maxEdits &&
-              levDist(o2, wc) <= maxEdits) { fuzzy++; break; }
+          if (o2.length >= 4 && Math.abs(o2.length - wc.length) <= maxEdits &&
+              levDist(ocrComparable(o2), ocrComparable(wc)) <= maxEdits) { fuzzy += .64; break; }
         }
       }
     }
-    return (exact + 0.6 * fuzzy) / sig.length;
+    return (exact + fuzzy) / sig.length;
   }
   function matchTitleByOcr(ocrText) {
     var lib = window.TSB_SCAN || [];
@@ -763,7 +789,9 @@ body {
       var exactBig = 0;
       big.split(/\s+/).forEach(function (w) {
         w = w.toUpperCase().replace(/'/g, "");
-        for (var k = 0; k < sig.length; k++) if (sig[k] === w) { exactBig++; break; }
+        for (var k = 0; k < sig.length; k++) {
+          if (sig[k] === w || ocrComparable(sig[k]) === ocrComparable(w)) { exactBig++; break; }
+        }
       });
       if (sBig > bestScore) {
         secondScore = bestScore;

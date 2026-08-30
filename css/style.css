@@ -4311,7 +4311,7 @@ html.dark .search .scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
     background-image: radial-gradient(rgba(255,255,255,.055) 1px, transparent 1px);
     background-size: 18px 18px;
   }
-  html.tsb-mobile-beta.tsb-beta-morphing body > *:not(#tsb-mobile-beta-shell) {
+  html.tsb-mobile-beta.tsb-beta-morphing body > *:not(#tsb-mobile-beta-shell):not(#tsb-beta-transition) {
     animation: tsbBetaIn .42s cubic-bezier(.2,.75,.25,1) both;
   }
   @keyframes tsbBetaIn {
@@ -4651,3 +4651,245 @@ html.dark .search .scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
 
 /* Archive filenames belong to the optional mobile Beta only. */
 .grave__file { display: none; }
+
+/* ============================================================
+   📱 MOBILE BETA v2 — alignment, reachability & reader polish
+   Kept at the end of the stylesheet on purpose: it refines the original
+   Beta without touching the classic site.
+   ============================================================ */
+.tsb-beta-transition {
+  position: fixed; inset: 0; z-index: 11050; display: grid; place-items: center;
+  background: radial-gradient(circle at 50% 42%, rgba(68,112,255,.34), rgba(8,15,28,.96) 64%);
+  opacity: 0; pointer-events: none; transition: opacity .22s ease;
+}
+.tsb-beta-transition.is-on { opacity: 1; }
+.tsb-beta-transition.is-leaving { opacity: 0; transition-duration: .26s; }
+.tsb-beta-transition__card { display: flex; flex-direction: column; align-items: center; gap: 10px; color: #fff; text-align: center; transform: translateY(18px) scale(.94); transition: transform .35s cubic-bezier(.2,.9,.25,1); }
+.tsb-beta-transition.is-card-on .tsb-beta-transition__card { transform: none; }
+.tsb-beta-transition__icon { width: 68px; height: 68px; display: grid; place-items: center; border-radius: 23px; background: #ffd34d; box-shadow: 0 12px 30px rgba(0,0,0,.34); font-size: 2.1rem; }
+.tsb-beta-transition__card b { font: 900 1.12rem/1 var(--font-head); letter-spacing: .3px; }
+.tsb-beta-transition__card small { color: #b8c8e6; font: 800 .58rem/1.35 var(--font-body); letter-spacing: 1.45px; }
+
+@media (max-width: 760px) {
+  /* A stable vertical rhythm makes every Beta page feel like one app. */
+  html.tsb-mobile-beta body { padding-top: calc(68px + env(safe-area-inset-top)); padding-bottom: calc(108px + env(safe-area-inset-bottom)); }
+  html.tsb-mobile-beta .tsb-beta-topbar { min-height: calc(60px + env(safe-area-inset-top)); padding: calc(8px + env(safe-area-inset-top)) 13px 8px; }
+  html.tsb-mobile-beta .tsb-beta-brand { gap: 7px; }
+  html.tsb-mobile-beta .tsb-beta-brand__mark { width: 33px; height: 33px; border-radius: 10px; font-size: 1rem; }
+  html.tsb-mobile-beta .tsb-beta-brand b { font-size: .82rem; }
+  html.tsb-mobile-beta .tsb-beta-brand small { font-size: .43rem; }
+  .tsb-beta-topbar__actions { display: flex; align-items: center; gap: 6px; }
+  .tsb-beta-menu-button, html.tsb-mobile-beta .tsb-beta-classic {
+    min-height: 31px; border: 1px solid rgba(16,24,39,.15); border-radius: 10px; background: var(--beta-paper); color: var(--beta-ink);
+    padding: 5px 7px; font: 800 .5rem/1 var(--font-body); letter-spacing: .65px; cursor: pointer;
+  }
+  .tsb-beta-menu-button { display: inline-flex; align-items: center; gap: 4px; color: var(--beta-blue); font-size: .9rem; }
+  .tsb-beta-menu-button span { font-size: .48rem; }
+  html.dark.tsb-mobile-beta .tsb-beta-menu-button, html.dark.tsb-mobile-beta .tsb-beta-classic { border-color: rgba(255,255,255,.16); }
+
+  /* Five clear destinations fit safely in the dock: Shelf, Scan, Files,
+     Progress and Profile. Everything else is in the visible MENU sheet. */
+  html.tsb-mobile-beta .tsb-beta-dock { grid-template-columns: repeat(5, minmax(0, 1fr)); min-height: 70px; left: 8px; right: 8px; bottom: calc(8px + env(safe-area-inset-bottom)); padding: 5px; border-radius: 21px; }
+  html.tsb-mobile-beta .tsb-beta-tab { min-height: 56px; border-radius: 15px; font-size: .48rem; letter-spacing: .2px; }
+  html.tsb-mobile-beta .tsb-beta-tab__icon { font-size: 1.1rem; }
+  html.tsb-mobile-beta .tsb-beta-tab.is-active, html.tsb-mobile-beta .tsb-beta-tab.is-reader { box-shadow: 0 3px 9px rgba(16,24,39,.18); }
+  html.tsb-mobile-beta .tsb-beta-toast { bottom: calc(91px + env(safe-area-inset-bottom)); z-index: 11060; font-size: .72rem; }
+
+  /* Both sheets share the same geometry; no controls hide under the dock. */
+  html.tsb-mobile-beta .tsb-beta-progress-sheet,
+  html.tsb-mobile-beta .tsb-beta-menu-sheet {
+    left: 10px; right: 10px; bottom: calc(87px + env(safe-area-inset-bottom)); max-width: 520px; margin: auto;
+    border: 1px solid rgba(255,255,255,.13); border-radius: 23px; box-shadow: 0 20px 54px rgba(4,10,20,.36);
+    transform: translateY(calc(100% + 28px)); opacity: .08; pointer-events: none;
+    transition: transform .3s cubic-bezier(.2,.82,.3,1), opacity .2s ease;
+  }
+  html.tsb-mobile-beta .tsb-beta-progress-sheet { padding: 20px 17px 15px; }
+  html.tsb-mobile-beta .tsb-beta-progress-sheet.is-open,
+  html.tsb-mobile-beta .tsb-beta-menu-sheet.is-open { transform: none; opacity: 1; pointer-events: auto; }
+  .tsb-beta-menu-sheet { position: fixed; z-index: 10002; max-height: min(72vh, 600px); overflow: auto; padding: 20px 15px 16px; background: var(--beta-navy); color: #fff; }
+  .tsb-beta-menu-sheet::-webkit-scrollbar { width: 5px; }
+  .tsb-beta-menu-sheet::-webkit-scrollbar-thumb { background: rgba(255,255,255,.23); border-radius: 9px; }
+  .tsb-beta-menu__eyebrow { color: #96dff8; font: 800 .52rem/1.2 var(--font-body); letter-spacing: 1.45px; }
+  .tsb-beta-menu-sheet h2 { margin: 8px 0 6px; font: 900 1.35rem/1.05 var(--font-head); letter-spacing: -.6px; text-transform: none; }
+  .tsb-beta-menu-sheet h2 span { color: var(--yellow); }
+  .tsb-beta-menu__intro { max-width: 330px; margin-bottom: 14px; color: rgba(255,255,255,.62); font-size: .68rem; line-height: 1.5; }
+  .tsb-beta-menu__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+  .tsb-beta-menu__item { min-width: 0; display: grid; grid-template-columns: 24px minmax(0,1fr); grid-template-rows: auto auto; column-gap: 7px; align-items: center; border: 1px solid rgba(255,255,255,.11); border-radius: 14px; background: rgba(255,255,255,.075); color: #fff; padding: 10px 8px; text-align: left; text-decoration: none; cursor: pointer; }
+  .tsb-beta-menu__item:hover, .tsb-beta-menu__item:active { background: rgba(255,255,255,.14); }
+  .tsb-beta-menu__item i { grid-row: 1 / span 2; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 8px; background: rgba(255,209,74,.16); color: #ffd34d; font: 800 .9rem/1 var(--font-body); font-style: normal; }
+  .tsb-beta-menu__item b { display: block; overflow: hidden; font: 800 .64rem/1.15 var(--font-body); letter-spacing: -.05px; text-overflow: ellipsis; white-space: nowrap; }
+  .tsb-beta-menu__item small { display: block; overflow: hidden; margin-top: 3px; color: rgba(255,255,255,.51); font: 600 .5rem/1.15 var(--font-body); text-overflow: ellipsis; white-space: nowrap; }
+  .tsb-beta-menu__item em { display: none; }
+  .tsb-beta-menu__item--classic { background: rgba(255,110,88,.12); }
+  .tsb-beta-menu__item--classic i { background: rgba(255,110,88,.18); color: #ff9d8e; }
+
+  /* ---------- Shelf: no oversized gaps and no cropped book names ---------- */
+  html.tsb-mobile-beta .tsb-beta-home-intro { margin: 7px 13px 0; padding: 18px 16px 13px; min-height: 0; border-radius: 21px; }
+  html.tsb-mobile-beta .tsb-beta-home-intro h1 { margin: 7px 0 4px; font-size: clamp(1.42rem, 7.2vw, 1.85rem); }
+  html.tsb-mobile-beta .tsb-beta-home-intro p { font-size: .7rem; }
+  html.tsb-mobile-beta .tsb-beta-home-intro__stats { margin: 12px 0 9px; }
+  html.tsb-mobile-beta .tsb-beta-home-intro__stats span { padding: 5px 8px; font-size: .52rem; }
+  html.tsb-mobile-beta .tsb-beta-home-intro__continue { min-height: 46px; padding: 8px 10px; }
+  html.tsb-mobile-beta .hero:not(.hero--grave) { padding: 10px 13px 2px; }
+  html.tsb-mobile-beta #library.section-head { margin-top: 15px; padding: 0 13px; }
+  html.tsb-mobile-beta .filters { gap: 7px; padding: 11px 13px 2px; }
+  html.tsb-mobile-beta .toolbar { padding: 8px 13px 0; }
+  html.tsb-mobile-beta .grid { align-items: start; gap: 11px; margin: 12px auto 12px; padding: 0 13px; }
+  html.tsb-mobile-beta .card { border-radius: 18px; }
+  html.tsb-mobile-beta .card__top { height: auto; min-height: 0; aspect-ratio: 2 / 2.72; }
+  html.tsb-mobile-beta .card__cover { object-fit: cover; object-position: center top; }
+  html.tsb-mobile-beta .card__body { min-height: 96px; padding: 10px 10px 9px; }
+  html.tsb-mobile-beta .card__title { font-size: clamp(.76rem, 3.75vw, .94rem); -webkit-line-clamp: 2; }
+  html.tsb-mobile-beta .card__author { font-size: .54rem; }
+  html.tsb-mobile-beta .card__footer { padding-top: 7px; }
+
+  /* ---------- Reader: readable paragraphs, no accidental narrow column ---------- */
+  html.tsb-mobile-beta .tsb-beta-reader-note { margin: 3px 13px 0; }
+  html.tsb-mobile-beta .actionbar { margin-top: 10px; padding: 0 13px; }
+  html.tsb-mobile-beta .bookhero { align-items: start; grid-template-columns: 86px minmax(0,1fr); gap: 12px; margin: 11px 13px 0; padding: 12px; border-radius: 19px; }
+  html.tsb-mobile-beta .bookhero > * { min-width: 0; }
+  html.tsb-mobile-beta .bookhero__coverbox, html.tsb-mobile-beta .bookhero__coverbox img { width: 86px; }
+  html.tsb-mobile-beta .bookhero__coverbox img { height: 128px; }
+  html.tsb-mobile-beta .bookhero h1 { font-size: clamp(1rem, 5.2vw, 1.32rem); }
+  html.tsb-mobile-beta .bookhero__oneliner { -webkit-line-clamp: 3; font-size: .69rem; }
+  html.tsb-mobile-beta .bigidea { margin-top: 14px; padding: 0 13px; }
+  html.tsb-mobile-beta .bigidea__box { padding: 19px 14px 13px; }
+  html.tsb-mobile-beta .bigidea__box p { font-size: .82rem; line-height: 1.6; }
+  html.tsb-mobile-beta .section-head { margin-top: 23px; padding: 0 13px; }
+  html.tsb-mobile-beta .lessons { margin: 11px auto 23px; padding: 0 13px; gap: 10px; }
+  html.tsb-mobile-beta .lesson { border-radius: 16px; }
+  html.tsb-mobile-beta .lesson__head { display: grid; grid-template-columns: 34px minmax(0,1fr) 27px; align-items: center; min-height: 64px; gap: 9px; padding: 11px; }
+  html.tsb-mobile-beta .lesson__titlebox { min-width: 0; }
+  html.tsb-mobile-beta .lesson__title { overflow: visible; font-size: .84rem; line-height: 1.21; }
+  html.tsb-mobile-beta .lesson__chapter { overflow: hidden; margin-top: 4px; text-overflow: ellipsis; white-space: nowrap; }
+  html.tsb-mobile-beta .lesson__body { padding: 3px 13px 14px; }
+  html.tsb-mobile-beta .lesson__body p { margin: 5px 0 13px; font-size: .87rem; line-height: 1.66; }
+  html.tsb-mobile-beta .lesson__body .callout { margin-top: 10px; padding: 11px 10px; font-size: .8rem; line-height: 1.58; }
+  html.tsb-mobile-beta .lesson__body .callout .tag { display: inline-block; margin-bottom: 3px; font-size: .58rem; letter-spacing: .4px; }
+  html.tsb-mobile-beta .lesson__tools { margin-top: 12px; }
+  html.tsb-mobile-beta .minibtn { min-height: 31px; padding: 7px 8px; font-size: .53rem; }
+  html.tsb-mobile-beta .quotes { padding: 0 13px; }
+  html.tsb-mobile-beta .plan { padding: 0 13px; }
+  html.tsb-mobile-beta .related { padding: 0 13px; }
+  html.tsb-mobile-beta .lessonnav__fab { right: 13px; bottom: calc(92px + env(safe-area-inset-bottom)); }
+  html.tsb-mobile-beta .lessonnav__panel { right: 13px; bottom: calc(147px + env(safe-area-inset-bottom)); width: min(calc(100vw - 26px), 365px); }
+
+  /* ---------- Failure Files: compact list with a full-width readable autopsy ---------- */
+  html.tsb-mobile-beta .tsb-beta-grave-intro { min-height: 150px; margin: 7px 13px 0; padding: 18px 16px; border-radius: 21px; }
+  html.tsb-mobile-beta .tsb-beta-grave-intro h1 { margin: 7px 0 4px; font-size: 1.53rem; }
+  html.tsb-mobile-beta .tsb-beta-grave-intro p { font-size: .7rem; }
+  html.tsb-mobile-beta .graveyard-page .section-head { margin-top: 15px; }
+  html.tsb-mobile-beta .graveyard-page .searchwrap { margin-top: 9px; padding: 0 13px; }
+  html.tsb-mobile-beta .graveyard-page .filters { padding-top: 10px; }
+  html.tsb-mobile-beta .gravesort { margin: 10px 13px 0; }
+  html.tsb-mobile-beta .gravefeed { margin: 12px 13px 0; }
+  html.tsb-mobile-beta .gravegrid { gap: 9px; margin: 13px auto 12px; padding: 0 13px; }
+  html.tsb-mobile-beta .grave__head { display: grid; grid-template-columns: minmax(0,1fr) 29px; align-items: center; min-height: 0; gap: 8px; padding: 12px; }
+  html.tsb-mobile-beta .grave__titles { width: 100%; min-width: 0; }
+  html.tsb-mobile-beta .grave__name { font-size: .91rem; }
+  html.tsb-mobile-beta .grave__file { margin-top: 4px; }
+  html.tsb-mobile-beta .grave__epitaph { font-size: .7rem; }
+  html.tsb-mobile-beta .grave__meta { margin-top: 7px; }
+  html.tsb-mobile-beta .grave__tease { margin: 8px 0 0; font-size: .72rem; -webkit-line-clamp: 2; }
+  html.tsb-mobile-beta .grave__body { padding: 0 12px 13px; }
+  html.tsb-mobile-beta .grave__section { padding: 11px; }
+  html.tsb-mobile-beta .grave__section p { font-size: .83rem; line-height: 1.62; }
+  html.tsb-mobile-beta .grave__book { font-size: .62rem; line-height: 1.42; }
+
+  /* Keep every focus target visible above the fixed app chrome. */
+  html.tsb-mobile-beta [id], html.tsb-mobile-beta .lesson, html.tsb-mobile-beta .grave { scroll-margin-top: calc(76px + env(safe-area-inset-top)); }
+}
+
+@media (max-width: 360px) {
+  html.tsb-mobile-beta .tsb-beta-brand b { font-size: .75rem; }
+  html.tsb-mobile-beta .tsb-beta-brand small { font-size: .39rem; }
+  html.tsb-mobile-beta .tsb-beta-menu-button span { display: none; }
+  html.tsb-mobile-beta .tsb-beta-classic { font-size: .45rem; padding: 5px 6px; }
+  html.tsb-mobile-beta .tsb-beta-menu__grid { grid-template-columns: 1fr; }
+  html.tsb-mobile-beta .grid { gap: 9px; padding-left: 10px; padding-right: 10px; }
+  html.tsb-mobile-beta .card__body { min-height: 90px; padding: 8px; }
+  html.tsb-mobile-beta .card__title { font-size: .72rem; }
+  html.tsb-mobile-beta .lesson__body { padding-left: 11px; padding-right: 11px; }
+}
+
+@media (max-width: 760px) {
+  html.tsb-mobile-beta .tsb-beta-progress-sheet { max-height: min(72vh, 590px); overflow: auto; }
+  html.tsb-mobile-beta .tsb-beta-progress-sheet::-webkit-scrollbar { width: 5px; }
+  html.tsb-mobile-beta .tsb-beta-progress-sheet::-webkit-scrollbar-thumb { background: rgba(255,255,255,.25); border-radius: 8px; }
+  .tsb-beta-trophy-grid { display: grid; gap: 7px; margin: 14px 0 3px; }
+  .tsb-beta-trophy { display: grid; grid-template-columns: 30px minmax(0,1fr); gap: 8px; align-items: center; border-radius: 13px; padding: 8px; background: rgba(255,255,255,.09); }
+  .tsb-beta-trophy i { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 10px; background: rgba(255,211,77,.17); font-size: .96rem; font-style: normal; }
+  .tsb-beta-trophy b { display: block; font: 800 .66rem/1.15 var(--font-body); }
+  .tsb-beta-trophy small { display: block; margin-top: 3px; color: rgba(255,255,255,.53); font: 600 .53rem/1.25 var(--font-body); }
+  .tsb-beta-trophy--empty { background: rgba(186,244,210,.12); }
+}
+
+/* Final reader alignment pass — compact, but never cramped. */
+@media (max-width: 760px) {
+  html.tsb-mobile-beta .tsb-beta-home-intro__continue { grid-template-columns: minmax(0, 1fr) 18px; align-items: center; }
+  html.tsb-mobile-beta .tsb-beta-home-intro__continuecopy { min-width: 0; display: block; }
+  html.tsb-mobile-beta .tsb-beta-home-intro__continuecopy small { display: block; color: #68738b; font: 800 .48rem/1 var(--font-body); letter-spacing: 1.15px; }
+  html.tsb-mobile-beta .tsb-beta-home-intro__continuecopy b { display: block; overflow: hidden; margin-top: 4px; font: 800 .73rem/1.15 var(--font-body); white-space: nowrap; text-overflow: ellipsis; }
+  html.tsb-mobile-beta .tsb-beta-home-intro__continue > span:not(.tsb-beta-home-intro__continuecopy) { display: none; }
+
+  /* Reset the classic tilted/padded cover frame completely. Without this reset
+     its 18px padding made a 86px cover overflow into the title column. */
+  html.tsb-mobile-beta .bookhero__coverbox {
+    width: 86px !important; min-width: 86px; max-width: 86px; height: 128px;
+    padding: 0 !important; border: 0 !important; background: transparent !important;
+    box-shadow: none !important; transform: none !important; position: static !important;
+    overflow: visible;
+  }
+  html.tsb-mobile-beta .bookhero__coverbox img {
+    width: 86px !important; height: 128px !important; display: block;
+    border: 0 !important; border-radius: 10px; box-shadow: 0 6px 14px rgba(16,24,39,.22) !important;
+    object-fit: cover;
+  }
+  html.tsb-mobile-beta .bookhero__meta { min-width: 0; }
+  html.tsb-mobile-beta .bookhero .buybtn {
+    display: flex; width: 100%; min-height: 36px; justify-content: center; margin-top: 2px;
+    border: 1px solid rgba(16,24,39,.15); border-radius: 10px; box-shadow: none;
+    background: #f4f6fa; color: #314059; padding: 7px 8px; font: 800 .54rem/1.25 var(--font-body); letter-spacing: .25px;
+  }
+  html.tsb-mobile-beta .bookhero .buybtn__amz { font-size: inherit; }
+  html.tsb-mobile-beta .bookhero .buybtn:hover { background: #eaf0ff; transform: none; box-shadow: none; }
+  html.dark.tsb-mobile-beta .bookhero .buybtn { background: #223149; border-color: rgba(255,255,255,.14); color: #dbe5f5; }
+
+  /* Six reader actions become a deliberate 3×2 tool grid — no clipped buttons
+     and no hidden horizontal scroll. */
+  html.tsb-mobile-beta .actionbar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; gap: 7px; }
+  html.tsb-mobile-beta .abtn { min-width: 0; min-height: 35px; width: 100%; justify-content: center; padding: 7px 4px; font-size: .49rem; letter-spacing: .25px; }
+  html.tsb-mobile-beta .abtn__ico { display: none; }
+  html.tsb-mobile-beta .abtn__lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  html.tsb-mobile-beta .abtn--save .abtn__ico { display: inline; font-size: .62rem; }
+
+  /* Achievements remain visible without covering the dock, text or next card. */
+  html.tsb-mobile-beta .achvpop {
+    top: calc(67px + env(safe-area-inset-top)); right: 12px; bottom: auto; left: 12px;
+    z-index: 10010; max-width: none; gap: 9px; border: 1px solid var(--yellow); border-radius: 13px;
+    box-shadow: 0 8px 22px rgba(0,0,0,.22); padding: 8px 11px; transform: translateY(-130px);
+  }
+  html.tsb-mobile-beta .achvpop.show { transform: none; }
+  html.tsb-mobile-beta .achvpop__icon { font-size: 1.25rem; }
+  html.tsb-mobile-beta .achvpop__title { font-size: .45rem; }
+  html.tsb-mobile-beta .achvpop__name { font-size: .68rem; }
+  html.tsb-mobile-beta .achvpop__desc { font-size: .57rem; }
+}
+
+/* Beta has a dedicated Trophy Room in MENU. Suppress the legacy floating
+   achievement popup here so it never hides reader controls or case files. */
+@media (max-width: 760px) {
+  html.tsb-mobile-beta .achvpop { display: none !important; }
+}
+
+/* New-book badge was inheriting a desktop bottom offset, which stretched it
+   down the entire mobile card. Keep the Beta marker intentionally small. */
+@media (max-width: 760px) {
+  html.tsb-mobile-beta .card__new {
+    top: 8px; right: auto; bottom: auto; left: 8px; width: auto; height: auto;
+    transform: none; border: 0; border-radius: 7px; box-shadow: none;
+    padding: 5px 6px; font-size: .42rem; letter-spacing: .55px;
+  }
+  html.tsb-mobile-beta .card__new::after { display: none; }
+  html.tsb-mobile-beta .card__cat { display: none; }
+}
