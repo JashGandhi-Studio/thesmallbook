@@ -533,17 +533,25 @@ body {
       var lib = window.TSB_SCAN || [];
       if (!lib.length) { setTimeout(finish, 1200); return; }
       finish();
-    }, 400);
+    }, 150); /* near-zero delay — OCR is pre-warmed, so results come fast */
 
+    var ocrPass = 0; /* 0 = standard preprocess, 1 = sharpen retry */
     function finish() {
-      /* OCR only — the scanner never guesses. If the title can't be read
-         confidently, we show NOT FOUND with suggestions instead of a
-         random book name. */
+      /* OCR only — the scanner never guesses. Unreadable covers get an
+         automatic sharpen retry, then an honest NOT FOUND. */
+      anaTxt.textContent = ocrPass === 0 ? "READING TITLE…" : "READING AGAIN…";
       ocrRead(function (text) {
         var ocrHit = null;
         try { ocrHit = text ? matchTitleByOcr(text) : null; } catch (e) {}
-        done(ocrHit);
-      });
+        if (ocrHit) { done(ocrHit); return; }
+        if (ocrPass === 0) {
+          /* second chance: sharpen + re-read (kills blur/motion misses) */
+          ocrPass = 1;
+          finish();
+          return;
+        }
+        done(null);
+      }, ocrPass);
     }
     function done(entry) {
       busy = false;
@@ -566,10 +574,11 @@ body {
     });
     return tesseractPromise;
   }
-  /* preprocess: downscale + grayscale + contrast stretch (better OCR) */
-  function preprocessForOcr(src) {
-    var maxW = 700;
-    var scale = Math.min(1, maxW / src.width);
+  /* preprocess: grayscale + contrast stretch (+ optional sharpen on retry).
+     Upscales small captures — Tesseract reads bigger text far better. */
+  function preprocessForOcr(src, sharpen) {
+    var targetW = 900;
+    var scale = Math.max(1, Math.min(2, targetW / src.width));
     var w = Math.max(1, Math.round(src.width * scale));
     var h = Math.max(1, Math.round(src.height * scale));
     var c = document.createElement("canvas"); c.width = w; c.height = h;
@@ -579,31 +588,46 @@ body {
     cx.drawImage(src, 0, 0, w, h);
     var img = cx.getImageData(0, 0, w, h);
     var d = img.data;
-    // grayscale + find min/max for contrast stretch
-    var mn = 255, mx = 0;
+    // grayscale
     for (var i = 0; i < d.length; i += 4) {
       var g = Math.round(0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]);
       d[i] = d[i + 1] = d[i + 2] = g;
-      if (g < mn) mn = g;
-      if (g > mx) mx = g;
+    }
+    if (sharpen) {
+      // unsharp: emphasize local contrast (kills blur/motion softness)
+      var lum2 = new Float32Array(w * h);
+      for (var yy = 0; yy < h; yy++) for (var xx = 0; xx < w; xx++) lum2[yy * w + xx] = d[(yy * w + xx) * 4];
+      for (var y2 = 1; y2 < h - 1; y2++) for (var x2 = 1; x2 < w - 1; x2++) {
+        var idx = (y2 * w + x2) * 4;
+        var center = lum2[y2 * w + x2];
+        var edges = (lum2[(y2-1)*w+x2] + lum2[(y2+1)*w+x2] + lum2[y2*w+x2-1] + lum2[y2*w+x2+1]) / 4;
+        var sharp = center + (center - edges) * 0.6;
+        d[idx] = d[idx+1] = d[idx+2] = Math.max(0, Math.min(255, sharp));
+      }
+    }
+    // contrast stretch
+    var mn = 255, mx = 0;
+    for (var j = 0; j < d.length; j += 4) {
+      if (d[j] < mn) mn = d[j];
+      if (d[j] > mx) mx = d[j];
     }
     var range = mx - mn;
     if (range > 10) {
-      for (var j = 0; j < d.length; j += 4) {
-        var v = (d[j] - mn) / range * 255;
-        d[j] = d[j + 1] = d[j + 2] = v;
+      for (var k = 0; k < d.length; k += 4) {
+        var v = (d[k] - mn) / range * 255;
+        d[k] = d[k + 1] = d[k + 2] = v;
       }
     }
     cx.putImageData(img, 0, 0);
     return c;
   }
-  function ocrRead(cb) {
+  function ocrRead(cb, pass) {
     var done = false;
-    var timer = setTimeout(function () { if (!done) { done = true; cb(""); } }, 14000);
+    var timer = setTimeout(function () { if (!done) { done = true; cb(""); } }, 12000);
     loadTesseract().then(function (T) {
       if (done) return;
-      var prep = preprocessForOcr(cap);
-      return T.recognize(prep, "eng", { logger: function () {}, tessedit_pageseg_mode: "11" });
+      var prep = preprocessForOcr(cap, pass === 1);
+      return T.recognize(prep, "eng", { logger: function () {} });
     }).then(function (res) {
       if (done) return;
       done = true; clearTimeout(timer);
@@ -623,7 +647,7 @@ body {
         if (maxH > 0) {
           var keep = words.filter(function (w) {
             var h = (w.bbox && (w.bbox.y1 - w.bbox.y0)) || 0;
-            return h >= maxH * 0.5;
+            return h >= maxH * 0.4;
           });
           keep.sort(function (a, b) {
             var ay = (a.bbox && a.bbox.y0) || 0, by = (b.bbox && b.bbox.y0) || 0;
@@ -654,25 +678,51 @@ body {
     }
     return out;
   }
+  /* levenshtein distance — handles OCR noise (POWER→POWEF, HABITS→HAB1TS) */
+  function levDist(a, b) {
+    if (a === b) return 0;
+    var m = a.length, n = b.length;
+    if (!m) return n;
+    if (!n) return m;
+    var prev = new Array(n + 1), cur = new Array(n + 1);
+    for (var j = 0; j <= n; j++) prev[j] = j;
+    for (var i = 1; i <= m; i++) {
+      cur[0] = i;
+      for (var k = 1; k <= n; k++) {
+        var cost = a[i - 1] === b[k - 1] ? 0 : 1;
+        cur[k] = Math.min(prev[k] + 1, cur[k - 1] + 1, prev[k - 1] + cost);
+      }
+      var tmp = prev; prev = cur; cur = tmp;
+    }
+    return prev[n];
+  }
   function ocrScoreBook(sig, ocrText) {
     var ocrNorm = String(ocrText || "").toUpperCase().replace(/[^A-Z0-9' ]/g, " ");
-    var ocrSet = {};
+    var ocrList = [];
     ocrNorm.split(/\s+/).forEach(function (w) {
       w = w.replace(/'/g, "");
-      if (w.length >= 3) ocrSet[w] = 1;
+      if (w.length >= 3) ocrList.push(w);
     });
-    var exact = 0, prefix = 0;
+    var exact = 0, fuzzy = 0;
     for (var i = 0; i < sig.length; i++) {
       var wc = sig[i].replace(/'/g, "");
-      if (ocrSet[wc]) { exact++; continue; }
+      var found = false;
+      for (var j = 0; j < ocrList.length; j++) {
+        var ow = ocrList[j];
+        if (ow === wc) { exact++; found = true; break; }
+      }
+      if (found) continue;
+      /* fuzzy: allow 1 edit per ~5 chars on words >= 5 chars */
       if (wc.length >= 5) {
-        for (var ow in ocrSet) {
-          if (ow.length >= 5 && (ow.indexOf(wc) === 0 || wc.indexOf(ow) === 0) &&
-              Math.min(ow.length, wc.length) >= 0.6 * Math.max(ow.length, wc.length)) { prefix++; break; }
+        var maxEdits = Math.max(1, Math.floor(Math.min(wc.length, 8) / 5));
+        for (var k = 0; k < ocrList.length; k++) {
+          var o2 = ocrList[k];
+          if (o2.length >= 5 && Math.abs(o2.length - wc.length) <= maxEdits &&
+              levDist(o2, wc) <= maxEdits) { fuzzy++; break; }
         }
       }
     }
-    return (exact + 0.5 * prefix) / sig.length;
+    return (exact + 0.6 * fuzzy) / sig.length;
   }
   function matchTitleByOcr(ocrText) {
     var lib = window.TSB_SCAN || [];
@@ -690,7 +740,10 @@ body {
       if (!sig.length) continue;
       var sBig = ocrScoreBook(sig, big);
       var titleNorm = " " + bTitle.toUpperCase().replace(/[^A-Z0-9' ]/g, " ").replace(/\s+/g, " ").trim() + " ";
-      var phrase = bigNorm.indexOf(titleNorm) !== -1 || fullNorm.indexOf(titleNorm) !== -1;
+      /* auto-open phrase must come from the BIG (title) text — full-text
+         phrases are subtitles/blurbs and caused false opens (e.g. "The Dip"
+         appearing in praise text on another cover) */
+      var phrase = bigNorm.indexOf(titleNorm) !== -1;
       /* exact-word count from the biggest text */
       var exactBig = 0;
       big.split(/\s+/).forEach(function (w) {
@@ -708,9 +761,12 @@ body {
     var margin = bestScore - secondScore;
     var ok = false;
     if (bestN >= 2) {
-      ok = (bestScore >= 0.7 && bestExact >= 1 && margin >= 0.03) || bestPhrase;
+      /* strong evidence from the biggest text on the cover — never stray words */
+      ok = (bestScore >= 0.6 && bestExact >= 2 && margin >= 0.04) || (bestPhrase && bestExact >= 2);
     } else {
-      ok = bestPhrase; /* single-word titles (Sapiens, Grit…) open only via exact phrase */
+      /* single-word titles (Sapiens, Grit…) need an exact big-text phrase
+         AND a clear margin — a lone word can appear in any subtitle */
+      ok = bestPhrase && margin >= 0.3;
     }
     if (!ok) return null;
     return { id: best.id, t: best.title || best.t, a: best.author || best.a || "" };
@@ -922,12 +978,20 @@ body {
 
   typeIn.addEventListener("input", function () {
     var q = typeIn.value.trim().toLowerCase();
-    var lib = window.TSB_SCAN || [];
     if (!q) { sugg.innerHTML = ""; reqBook.href = reqHref(""); return; }
-    var hits = lib.filter(function (b) { return (b.t || "").toLowerCase().indexOf(q) !== -1; }).slice(0, 5);
+    /* search the UNIQUE title list (TSB_SCAN has 12 variants per book —
+       querying it shows the same book 5 times). TSB_TITLES is 1 per book. */
+    var lib = window.TSB_TITLES || [];
+    var hits = [];
+    var seen = {};
+    for (var i = 0; i < lib.length && hits.length < 5; i++) {
+      var b = lib[i];
+      var hay = ((b.t || "") + " " + (b.a || "")).toLowerCase();
+      if (hay.indexOf(q) !== -1 && !seen[b.id]) { seen[b.id] = 1; hits.push(b); }
+    }
     sugg.innerHTML = hits.length
       ? hits.map(function (b) {
-          return '<button class="shit" data-id="' + b.id + '"><b>' + b.t + '</b><small>Tap to open</small></button>';
+          return '<button class="shit" data-id="' + b.id + '"><b>' + (b.t || "") + '</b><small>' + (b.a || "") + '</small></button>';
         }).join("")
       : '<div class="snone">Not in the library — request it below</div>';
     reqBook.href = reqHref(typeIn.value);
@@ -951,6 +1015,11 @@ body {
   /* ---------------- cleanup ---------------- */
   window.addEventListener("pagehide", stop);
   document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); });
+
+  /* ⚡ pre-warm OCR in the background so the FIRST scan is fast (Google-fast) */
+  setTimeout(function () {
+    try { loadTesseract().catch(function () {}); } catch (e) {}
+  }, 500);
 
   start();
 })();
