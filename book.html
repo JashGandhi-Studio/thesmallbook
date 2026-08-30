@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Book — TheSmallBook</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,8 +10,11 @@
     <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
   <script>
-    // apply saved theme before paint (no flash)
-    try { if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark"); } catch (e) {}
+    // apply saved appearance before paint (no flash)
+    try {
+      if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark");
+      if (localStorage.getItem("tsb_mobile_beta") === "true" && window.matchMedia("(max-width: 760px)").matches) document.documentElement.classList.add("tsb-mobile-beta");
+    } catch (e) {}
   </script>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="favicon.ico" sizes="32x32">
@@ -154,5 +157,6 @@
   <script src="js/failures.js"></script>
   <script src="js/ask-data.js"></script>
   <script src="js/ask.js"></script>
+  <script src="js/mobile-beta.js"></script>
 </body>
 </html>

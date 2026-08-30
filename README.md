@@ -115,6 +115,7 @@ thesmallbook/
 ├── js/data.js          # 📌 THE LIBRARY — all book content lives here
 ├── js/app.js           # Homepage logic (search, filters, stats)
 ├── js/book.js          # Book detail renderer
+├── js/mobile-beta.js   # Optional phone-first Beta app shell
 ├── js/stories.js       # Story publishing + community shelf
 ├── js/stories-seed.js  # Seed stories shipped with the site
 ├── js/story.js         # Story reader logic

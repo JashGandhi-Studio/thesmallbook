@@ -250,20 +250,24 @@ body {
 }
 .type::placeholder { color: rgba(255,255,255,.35); }
 .type:focus { border-color: rgba(201,162,39,.6); }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
+.chips { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; text-align: left; }
 .chiphead {
-  width: 100%; text-align: center;
-  font-size: .62rem; font-weight: 700; letter-spacing: 1.5px;
-  color: rgba(255,255,255,.4); text-transform: uppercase; margin-bottom: 2px;
+  width: 100%; text-align: left;
+  font-size: .62rem; font-weight: 800; letter-spacing: 1.5px;
+  color: #e3b93c; text-transform: uppercase; margin-bottom: -2px;
 }
+.chipsub { color: rgba(255,255,255,.48); font-size: .67rem; line-height: 1.45; margin-bottom: 3px; }
 .chipbtn {
-  border: 1px solid rgba(255,255,255,.16); border-radius: 999px;
-  background: rgba(255,255,255,.06); color: #fff; padding: 9px 16px;
-  font-family: 'Archivo Black', sans-serif; font-size: .6rem;
-  letter-spacing: .8px; text-transform: uppercase; cursor: pointer;
-  transition: background .12s, border-color .12s;
+  width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 20px; gap: 10px; align-items: center;
+  border: 1px solid rgba(255,255,255,.16); border-radius: 13px;
+  background: rgba(255,255,255,.065); color: #fff; padding: 10px 12px; text-align: left;
+  cursor: pointer; transition: background .12s, border-color .12s, transform .12s;
 }
-.chipbtn:hover { background: rgba(201,162,39,.16); border-color: rgba(201,162,39,.5); }
+.chipbtn:hover { background: rgba(201,162,39,.16); border-color: rgba(201,162,39,.55); transform: translateY(-1px); }
+.chipbtn__copy { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.chipbtn b { overflow: hidden; font-family: 'Archivo Black', sans-serif; font-size: .67rem; letter-spacing: .45px; text-transform: uppercase; text-overflow: ellipsis; white-space: nowrap; }
+.chipbtn small { overflow: hidden; color: rgba(255,255,255,.52); font-size: .61rem; text-overflow: ellipsis; white-space: nowrap; }
+.chipbtn__arrow { color: #e3b93c; font: 900 1rem/1 'Archivo Black', sans-serif; text-align: center; }
 .sugg { display: flex; flex-direction: column; gap: 7px; margin-top: 12px; max-height: 30vh; overflow: auto; }
 .shit {
   display: flex; flex-direction: column; gap: 1px; text-align: left;
@@ -358,8 +362,8 @@ body {
   <!-- NOT FOUND -->
   <div class="res nof" id="nof" hidden>
     <div class="card">
-      <div class="tag">No Match</div>
-      <div class="bdesc" style="margin-top:14px;">We couldn't read this cover. Try again with better light — or search by name:</div>
+      <div class="tag">Not confirmed yet</div>
+      <div class="bdesc" id="noMatchCopy" style="margin-top:14px;">We couldn't confidently identify this cover. We’ll show the most likely matches below — or search by name:</div>
       <input class="type" id="typeIn" type="text" placeholder="Type the book title…" autocomplete="off">
       <div class="chips" id="chips"></div>
       <div class="sugg" id="sugg"></div>
@@ -414,6 +418,7 @@ body {
   var sugg = document.getElementById("sugg");
   var searchLib = document.getElementById("searchLib");
   var reqBook = document.getElementById("reqBook");
+  var noMatchCopy = document.getElementById("noMatchCopy");
   var bar = document.getElementById("bar");
   var frameEl = document.getElementById("frame");
 
@@ -536,27 +541,37 @@ body {
     }, 150); /* near-zero delay — OCR is pre-warmed, so results come fast */
 
     var ocrPass = 0; /* 0 = standard preprocess, 1 = sharpen retry */
+    var bestOcr = null;
+    function keepBestOcr(result) {
+      if (!result || !(result.big || result.full)) return;
+      if (!bestOcr) { bestOcr = { big: result.big || "", full: result.full || "" }; return; }
+      /* Keep the clearest output from either pass. The sharpen retry can read
+         a different part of a cover, so the two passes complement each other. */
+      if (String(result.big || "").length > String(bestOcr.big || "").length) bestOcr.big = result.big || "";
+      if (String(result.full || "").length > String(bestOcr.full || "").length) bestOcr.full = result.full || "";
+    }
     function finish() {
-      /* OCR only — the scanner never guesses. Unreadable covers get an
-         automatic sharpen retry, then an honest NOT FOUND. */
+      /* OCR first. If it cannot prove one exact title, retain every useful
+         clue so the fallback offers ranked possibilities — never random picks. */
       anaTxt.textContent = ocrPass === 0 ? "READING TITLE…" : "READING AGAIN…";
       ocrRead(function (text) {
+        keepBestOcr(text);
         var ocrHit = null;
         try { ocrHit = text ? matchTitleByOcr(text) : null; } catch (e) {}
-        if (ocrHit) { done(ocrHit); return; }
+        if (ocrHit) { done(ocrHit, bestOcr); return; }
         if (ocrPass === 0) {
           /* second chance: sharpen + re-read (kills blur/motion misses) */
           ocrPass = 1;
           finish();
           return;
         }
-        done(null);
+        done(null, bestOcr);
       }, ocrPass);
     }
-    function done(entry) {
+    function done(entry, ocrResult) {
       busy = false;
       if (ana) ana.hidden = true;
-      if (entry) showFound(entry); else showNotFound();
+      if (entry) showFound(entry); else showNotFound(ocrResult);
     }
   }
 
@@ -772,7 +787,59 @@ body {
     return { id: best.id, t: best.title || best.t, a: best.author || best.a || "" };
   }
 
-  /* ---------------- fingerprint fallback (STRICT) ---------------- */
+  /* ---------------- evidence-ranked possibilities ----------------
+     A non-confirmation should still be helpful. We score partial OCR clues
+     first, then use cover colour/layout only as a supporting signal. This
+     deliberately does NOT auto-open a weak match. */
+  function titleRecords() {
+    var raw = window.TSB_TITLES || [];
+    if (!raw.length) raw = window.TSB_SCAN || [];
+    var seen = {}, out = [];
+    for (var i = 0; i < raw.length; i++) {
+      var item = raw[i] || {};
+      if (!item.id || seen[item.id]) continue;
+      seen[item.id] = true;
+      out.push({ id: item.id, t: item.t || item.title || item.id, a: item.a || item.author || "" });
+    }
+    return out;
+  }
+  function escapedText(s) {
+    return String(s || "").replace(/[&<>"']/g, function (ch) {
+      return ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" })[ch];
+    });
+  }
+  function textCandidates(ocrText) {
+    var big = (ocrText && ocrText.big) || "";
+    var full = (ocrText && ocrText.full) || "";
+    var readable = ocrSigWords(big + " " + full);
+    if (!readable.length) return [];
+    var bigNorm = " " + normTxt(big) + " ";
+    var scored = [];
+    titleRecords().forEach(function (book) {
+      var sig = ocrSigWords(book.t);
+      if (!sig.length) return;
+      var bigScore = ocrScoreBook(sig, big);
+      var fullScore = ocrScoreBook(sig, full);
+      var authorSig = ocrSigWords(book.a);
+      var authorScore = authorSig.length ? ocrScoreBook(authorSig, full) : 0;
+      var titleNorm = " " + normTxt(book.t) + " ";
+      var exactPhrase = titleNorm !== "  " && bigNorm.indexOf(titleNorm) !== -1;
+      /* The large text is most trustworthy; smaller full-cover text only
+         supports it because blurbs can contain unrelated book-like words. */
+      var score = bigScore * .74 + fullScore * .18 + authorScore * .08 + (exactPhrase ? .28 : 0);
+      if (score < .10 || (bigScore <= 0 && fullScore <= 0 && authorScore <= 0)) return;
+      scored.push({
+        id: book.id,
+        t: book.t,
+        a: book.a,
+        textScore: Math.min(1, score),
+        reason: exactPhrase || bigScore >= .55 ? "title text matched" : (authorScore >= .34 ? "author text matched" : "some cover text matched")
+      });
+    });
+    return scored.sort(function (a, b) { return b.textScore - a.textScore; }).slice(0, 8);
+  }
+
+  /* ---------------- fingerprint fallback (supporting evidence) ---------------- */
   function buildProfile(sctx) {
     var w = 120, h = 180;
     var data = sctx.getImageData(0, 0, w, h).data;
@@ -900,32 +967,12 @@ body {
     found.hidden = false;
     try { localStorage.setItem("tsb_flag_scanned", "1"); } catch (e) {}
   }
-  function showNotFound() {
-    typeIn.value = ""; sugg.innerHTML = "";
-    reqBook.href = reqHref("");
-    /* best-guess chips: fingerprint candidates as TAPPABLE options,
-       clearly labeled — never auto-opened, so no wrong auto-match */
-    var chips = [];
-    try { chips = fingerprintCandidates() || []; } catch (e) {}
-    var chipBox = document.getElementById("chips");
-    if (chipBox) {
-      if (chips.length) {
-        chipBox.innerHTML = '<div class="chiphead">Closest visual match?</div>' +
-          chips.map(function (c) {
-            return '<button class="chipbtn" data-id="' + c.id + '"><b>' + c.t + '</b></button>';
-          }).join("");
-      } else {
-        chipBox.innerHTML = "";
-      }
-    }
-    nof.hidden = false;
-    setTimeout(function () { typeIn.focus(); }, 150);
-  }
-  function fingerprintCandidates() {
+  function visualCandidates(limit) {
     var lib = window.TSB_SCAN || [];
     if (!lib.length) return [];
-    var profs = [profileFromCanvas(), profileFromCrop(0.9)];
+    var profs = [profileFromCanvas(), profileFromCrop(.9)];
     var full = profs[0];
+    /* A plain wall / camera blur carries no useful visual evidence. */
     if (full.v < 4 || full.eb < 10) return [];
     var bookBest = {};
     for (var i = 0; i < lib.length; i++) {
@@ -933,24 +980,107 @@ body {
       if (!bookBest[id]) bookBest[id] = 1e9;
     }
     for (var e = 0; e < lib.length; e++) {
-      var entry = lib[e], sc = 1e9;
+      var entry = lib[e], score = 1e9;
       for (var p = 0; p < profs.length; p++) {
-        var cScore = 0;
-        for (var k = 0; k < 9; k++) cScore += colorDist(profs[p].g[k], entry.g[k]);
-        cScore /= 9;
-        var eScore = edgeDist(profs[p].e, entry.e) * 100;
-        var s2 = cScore * 0.55 + eScore * 0.45;
-        if (s2 < sc) sc = s2;
+        var colour = 0;
+        for (var k = 0; k < 9; k++) colour += colorDist(profs[p].g[k], entry.g[k]);
+        colour /= 9;
+        var edges = edgeDist(profs[p].e, entry.e) * 100;
+        var visual = colour * .55 + edges * .45;
+        if (visual < score) score = visual;
       }
-      if (sc < bookBest[entry.id]) bookBest[entry.id] = sc;
+      if (score < bookBest[entry.id]) bookBest[entry.id] = score;
     }
-    var ranked = Object.keys(bookBest).map(function (id) { return { id: id, sc: bookBest[id] }; })
-      .sort(function (a, b) { return a.sc - b.sc; });
-    var titles = window.TSB_TITLES || [];
-    return ranked.slice(0, 3).filter(function (r) { return r.sc < 60; }).map(function (r) {
-      var bk = titles.find(function (b) { return b.id === r.id; });
-      return { id: r.id, t: bk ? bk.t : r.id };
+    var byId = {};
+    titleRecords().forEach(function (book) { byId[book.id] = book; });
+    return Object.keys(bookBest).map(function (id) { return { id: id, raw: bookBest[id] }; })
+      .sort(function (a, b) { return a.raw - b.raw; })
+      .slice(0, limit || 8)
+      .map(function (item) {
+        var book = byId[item.id] || { id: item.id, t: item.id, a: "" };
+        /* Scores above the old 60 cut-off are too weak even for a suggestion. */
+        var strength = Math.max(0, Math.min(1, (72 - item.raw) / 54));
+        return { id: book.id, t: book.t, a: book.a, visualScore: strength };
+      })
+      .filter(function (item) { return item.visualScore >= .20; });
+  }
+
+  function bestPossibleCandidates(ocrText) {
+    var text = textCandidates(ocrText);
+    var visual = [];
+    try { visual = visualCandidates(8); } catch (e) {}
+    var byId = {};
+
+    text.forEach(function (candidate) {
+      byId[candidate.id] = {
+        id: candidate.id, t: candidate.t, a: candidate.a || "",
+        textScore: candidate.textScore, visualScore: 0, reason: candidate.reason
+      };
     });
+    visual.forEach(function (candidate) {
+      var item = byId[candidate.id];
+      if (!item) {
+        item = byId[candidate.id] = {
+          id: candidate.id, t: candidate.t, a: candidate.a || "",
+          textScore: 0, visualScore: candidate.visualScore, reason: "cover layout looked similar"
+        };
+      } else {
+        item.visualScore = candidate.visualScore;
+        if (item.textScore >= .26) item.reason = "title text and cover both matched";
+      }
+    });
+
+    var all = Object.keys(byId).map(function (id) {
+      var item = byId[id];
+      /* Text evidence dominates. Cover shape/colour is useful only as a tie-breaker. */
+      item.score = item.textScore ? item.textScore * .87 + item.visualScore * .13 : item.visualScore * .35;
+      return item;
+    }).sort(function (a, b) { return b.score - a.score; });
+
+    var textBest = text.length ? text[0].textScore : 0;
+    if (textBest >= .14) {
+      var floor = Math.max(.10, textBest * .28);
+      return {
+        evidence: "text",
+        items: all.filter(function (item) {
+          return item.textScore >= floor || (item.textScore >= .07 && item.visualScore >= .30);
+        }).slice(0, 5)
+      };
+    }
+    return {
+      evidence: "visual",
+      items: all.filter(function (item) { return item.visualScore >= .24; }).slice(0, 3)
+    };
+  }
+
+  function showNotFound(ocrResult) {
+    typeIn.value = ""; sugg.innerHTML = "";
+    reqBook.href = reqHref("");
+    var guess = bestPossibleCandidates(ocrResult);
+    var chips = guess.items || [];
+    var chipBox = document.getElementById("chips");
+    if (noMatchCopy) {
+      noMatchCopy.textContent = chips.length
+        ? (guess.evidence === "text"
+          ? "We read part of the cover but could not confirm one title. These are the strongest text-and-cover possibilities:"
+          : "We could not read enough title text. These covers are the closest visual possibilities — check before opening:")
+        : "We could not confidently identify this cover. Try better light, scan again, or search by name:";
+    }
+    if (chipBox) {
+      if (chips.length) {
+        chipBox.innerHTML = '<div class="chiphead">Best possible matches</div>' +
+          '<div class="chipsub">Ranked from the title text first, then the cover’s colours and layout. We never open a weak match automatically.</div>' +
+          chips.map(function (candidate) {
+            var author = candidate.a ? '<small>by ' + escapedText(candidate.a) + ' · ' + escapedText(candidate.reason) + '</small>' : '<small>' + escapedText(candidate.reason) + '</small>';
+            return '<button class="chipbtn" data-id="' + escapedText(candidate.id) + '" aria-label="Open possible match ' + escapedText(candidate.t) + '">' +
+              '<span class="chipbtn__copy"><b>' + escapedText(candidate.t) + '</b>' + author + '</span><span class="chipbtn__arrow" aria-hidden="true">→</span></button>';
+          }).join("");
+      } else {
+        chipBox.innerHTML = "";
+      }
+    }
+    nof.hidden = false;
+    setTimeout(function () { typeIn.focus(); }, 150);
   }
   function backToCam() {
     found.hidden = true; nof.hidden = true; ana.hidden = true;

@@ -155,6 +155,7 @@
     d.className = "grave" + (o.open ? " open" : "");
     d.style.setProperty("--gcat", color);
     d.dataset.graveId = f.id;
+    d.dataset.graveCategory = String(f.category || "").toLowerCase();
     d.innerHTML = `
       <div class="grave__head">
         <div class="grave__stone">
@@ -164,6 +165,7 @@
         </div>
         <div class="grave__titles">
           <div class="grave__name">${esc(f.name)}</div>
+          <div class="grave__file" translate="no"><span>CASE FILE</span>${esc(f.id)}.rip</div>
           <div class="grave__epitaph">${esc(f.title)}</div>
           <div class="grave__meta">
             <span class="grave__loss">💸 ${esc(f.loss)}</span>

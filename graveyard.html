@@ -2,13 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>💀 The Graveyard — TheSmallBook</title>
   <meta name="description" content="300 legendary real-world failures — bankruptcies, frauds, ego trips, and empires lost. Learn what NOT to do.">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
   <script>
-    try { if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark"); } catch (e) {}
+    try {
+      if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark");
+      if (localStorage.getItem("tsb_mobile_beta") === "true" && window.matchMedia("(max-width: 760px)").matches) document.documentElement.classList.add("tsb-mobile-beta");
+    } catch (e) {}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -138,5 +141,6 @@
   <script src="js/ask-data.js"></script>
   <script src="js/tts-engine.js"></script>
   <script src="js/ask.js"></script>
+  <script src="js/mobile-beta.js"></script>
 </body>
 </html>
