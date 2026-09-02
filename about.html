@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About TheSmallBook — Created by Jash Gandhi</title>
-  <meta name="description" content="TheSmallBook is a free library of 350 book summaries, 2170+ lessons and 300 failure case studies, plus an Ask-the-Library mode — created by Jash Gandhi from Mumbai, India. Free to read, no ads, no signup.">
+  <meta name="description" content="TheSmallBook is a free library of 350 book summaries, 2176+ lessons and 300 failure case studies, plus an Ask-the-Library mode — created by Jash Gandhi from Mumbai, India. Free to read, no ads, no signup.">
   <meta name="author" content="Jash Gandhi">
   <link rel="canonical" href="https://thesmallbook.in/about.html">
   <meta property="og:title" content="About TheSmallBook — Created by Jash Gandhi">
@@ -14,18 +14,23 @@
   <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="TheSmallBook — 350 books · 2170 lessons · 300 autopsies · free to read">
+  <meta property="og:image:alt" content="TheSmallBook — 350 books · 2176 lessons · 300 autopsies · free to read">
   <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
-  <script>
-    try { if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark"); } catch (e) {}
-  </script>
+  <script>/* pre-paint theme: no flash, supports light|dark|auto */
+try{var m=localStorage.getItem("tsb_theme");m=m?JSON.parse(m):"light";
+var d=m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches);
+if(d)document.documentElement.classList.add("dark");
+if(m==="auto")document.documentElement.classList.add("theme-auto");
+document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/shell.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
@@ -136,7 +141,7 @@
       <strong>No 300-page grind. No paywall. No signup.</strong> Just the lessons.</p>
       <div class="about__stats">
         <div class="stat stat--yellow"><div class="stat__num">350</div><div class="stat__label">Books Distilled</div></div>
-        <div class="stat stat--pink"><div class="stat__num">2170</div><div class="stat__label">Lessons</div></div>
+        <div class="stat stat--pink"><div class="stat__num">2176</div><div class="stat__label">Lessons</div></div>
         <div class="stat stat--red"><div class="stat__num">300</div><div class="stat__label">Failures Autopsied</div></div>
         <div class="stat stat--blue"><div class="stat__num">83</div><div class="stat__label">Life Questions</div></div>
         <div class="stat stat--green"><div class="stat__num">26</div><div class="stat__label">Languages</div></div>
@@ -271,5 +276,7 @@
   <script src="js/ask-data.js"></script>
   <script src="js/tts-engine.js"></script>
   <script src="js/ask.js"></script>
+  <script src="js/theme.js"></script>
+  <script defer src="js/shell.js"></script>
 </body>
 </html>

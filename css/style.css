@@ -1095,16 +1095,13 @@ html.dark .callout--caveat { background: #2e1d1a; }
 /* ============================================================
    DARK MODE
    ============================================================ */
+/* v2: dark surfaces now come from css/tokens.css (--surface-*/--text-*)
+   so the legacy chrome and the new app shell share one palette.
+   Only the accent hues that need a dark-mode lift are set here. */
 html.dark {
-  --bg: #16130e;
-  --paper: #241f17;
-  --ink: #f2ead8;
-  --yellow: #ffc800;
   --red: #ff5252;
   --blue: #5d88ff;
   --green: #00d99b;
-  --pink: #ff90e8;
-  --purple: #b28dff;
 }
 html.dark body {
   background-image: radial-gradient(rgba(242,234,216,.06) 1.5px, transparent 1.5px);

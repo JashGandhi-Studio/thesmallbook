@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v169";
+const CACHE_VERSION = "tsb-v170";  // v2 Phase 1: tokens, shell, data split
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -26,7 +26,13 @@ const APP_SHELL = [
   "./assets/loader-logo.png",
   "./assets/og-image.png",
   "./apple-touch-icon.png",
+  "./css/tokens.css",
+  "./css/shell.css",
   "./css/style.css",
+  "./js/theme.js",
+  "./js/shell.js",
+  "./js/data-loader.js",
+  "./data/books-index.json",
   "./js/prefs.js",
   "./js/support.js",
   "./js/upi.js",
@@ -70,6 +76,22 @@ self.addEventListener("fetch", (e) => {
   // never cache supabase API calls
   if (url.hostname.includes("supabase")) return;
   if (e.request.method !== "GET") return;
+
+  // data shards: serve cached instantly, refresh in the background
+  if (url.pathname.includes("/data/")) {
+    e.respondWith(
+      caches.open(CACHE_VERSION).then((c) =>
+        c.match(e.request).then((cached) => {
+          const net = fetch(e.request).then((res) => {
+            if (res.ok) c.put(e.request, res.clone());
+            return res;
+          }).catch(() => cached);
+          return cached || net;
+        })
+      )
+    );
+    return;
+  }
 
   // network-first for HTML (fresh content), cache-first for assets
   if (e.request.mode === "navigate" || url.pathname.endsWith(".html")) {

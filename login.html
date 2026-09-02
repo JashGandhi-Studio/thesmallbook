@@ -14,12 +14,17 @@
   <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <script>
-    try { if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark"); } catch (e) {}
-  </script>
+  <script>/* pre-paint theme: no flash, supports light|dark|auto */
+try{var m=localStorage.getItem("tsb_theme");m=m?JSON.parse(m):"light";
+var d=m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches);
+if(d)document.documentElement.classList.add("dark");
+if(m==="auto")document.documentElement.classList.add("theme-auto");
+document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/shell.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
@@ -254,12 +259,12 @@
 
     <div class="tsb-stats">
       <div><b>350+</b><span>BOOKS</span></div>
-      <div><b>2170+</b><span>LESSONS</span></div>
+      <div><b>2176+</b><span>LESSONS</span></div>
       <div><b>26</b><span>LANGUAGES</span></div>
       <div><b>₹0</b><span>FREE TO READ</span></div>
     </div>
 
-    <p class="loginfoot">FREE TO READ · NO ADS · NO SPAM<br><b>— 350+ books · 2170+ lessons · 300+ autopsies —</b></p>
+    <p class="loginfoot">FREE TO READ · NO ADS · NO SPAM<br><b>— 350+ books · 2176+ lessons · 300+ autopsies —</b></p>
   </div>
 
   <footer class="footer">
@@ -454,5 +459,7 @@
       else render();
     })();
   </script>
+  <script src="js/theme.js"></script>
+  <script defer src="js/shell.js"></script>
 </body>
 </html>

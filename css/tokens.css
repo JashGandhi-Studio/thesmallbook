@@ -1,0 +1,277 @@
+/* ============================================================
+   THESMALLBOOK — 🎨 DESIGN TOKENS (tokens.css)
+   The v2 visual language: neo-brutalist DNA (loud colour, heavy
+   caps type, confident blocks) evolved to a dark-first, soft-
+   cornered, layered app surface.
+
+   Load BEFORE css/style.css. Legacy variables (--bg, --ink,
+   --yellow, --shadow, --border, --radius) are re-exported at the
+   bottom so every existing rule keeps working unchanged.
+   ============================================================ */
+
+:root {
+  /* ---------- BRAND PALETTE (from the v2 reference) ---------- */
+  --tsb-coral:      #FF5A47;
+  --tsb-coral-dim:  #E14733;
+  --tsb-periwinkle: #6C63FF;
+  --tsb-periwinkle-dim: #574FE0;
+  --tsb-butter:     #FFC94D;
+  --tsb-butter-dim: #E8AF2E;
+  --tsb-mint:       #7FE3C4;
+  --tsb-mint-dim:   #58C9A6;
+  --tsb-sky:        #A8DEF0;
+  --tsb-sage:       #C9D9C4;
+
+  /* legacy brand hues kept so old components stay on-brand */
+  --tsb-yellow:     #FFC800;
+  --tsb-red:        #FF4D4D;
+  --tsb-blue:       #4D7CFF;
+  --tsb-green:      #00C48C;
+  --tsb-pink:       #FF90E8;
+  --tsb-purple:     #B28DFF;
+  --tsb-orange:     #FF8A3D;
+
+  /* ---------- NEUTRAL RAMP ---------- */
+  --tsb-black:      #0E0E10;
+  --tsb-charcoal:   #17171A;
+  --tsb-slate-900:  #1E1E22;
+  --tsb-slate-800:  #2A2A30;
+  --tsb-slate-700:  #3A3A42;
+  --tsb-slate-500:  #6B6B76;
+  --tsb-slate-300:  #A8A8B3;
+  --tsb-slate-100:  #E4E2DC;
+  --tsb-paper:      #FFFDF5;
+  --tsb-cream:      #F2EDE2;
+  --tsb-white:      #FFFFFF;
+
+  /* ---------- SEMANTIC (light theme = default) ---------- */
+  --surface-0:      var(--tsb-cream);      /* page canvas          */
+  --surface-1:      var(--tsb-paper);      /* cards                */
+  --surface-2:      var(--tsb-white);      /* raised / sheets      */
+  --surface-inset:  #E8E2D5;               /* wells, inputs        */
+  --text-1:         var(--tsb-black);      /* primary copy         */
+  --text-2:         #4A4A52;               /* secondary            */
+  --text-3:         var(--tsb-slate-500);  /* muted / meta         */
+  --text-on-color:  var(--tsb-black);      /* copy on brand blocks */
+  --line:           var(--tsb-black);      /* hard borders         */
+  --line-soft:      rgba(14,14,16,.12);    /* hairlines            */
+  --accent:         var(--tsb-coral);
+  --accent-text:    var(--tsb-white);
+
+  --success:        #00A878;
+  --warning:        #E8A020;
+  --danger:         #E03B2F;
+  --info:           var(--tsb-periwinkle);
+
+  /* ---------- RADII (soft-cornered v2) ---------- */
+  --r-xs:   8px;
+  --r-sm:   12px;
+  --r-md:   18px;
+  --r-lg:   24px;   /* the reference card radius */
+  --r-xl:   32px;
+  --r-pill: 999px;
+
+  /* ---------- ELEVATION ---------- */
+  /* hard offset = neo-brutalist heritage (kept for legacy chrome) */
+  --shadow-hard-sm: 4px 4px 0 var(--line);
+  --shadow-hard:    6px 6px 0 var(--line);
+  --shadow-hard-lg: 10px 10px 0 var(--line);
+  /* soft depth = v2 app surfaces */
+  --shadow-1: 0 1px 2px rgba(14,14,16,.06), 0 2px 8px rgba(14,14,16,.06);
+  --shadow-2: 0 2px 6px rgba(14,14,16,.08), 0 8px 24px rgba(14,14,16,.10);
+  --shadow-3: 0 8px 20px rgba(14,14,16,.12), 0 20px 48px rgba(14,14,16,.16);
+  --shadow-bar: 0 -2px 12px rgba(14,14,16,.10);
+
+  /* ---------- BORDERS ---------- */
+  --bw:        3px;
+  --bw-thin:   2px;
+  --border:      var(--bw) solid var(--line);
+  --border-thin: var(--bw-thin) solid var(--line);
+  --border-soft: 1px solid var(--line-soft);
+
+  /* ---------- TYPE ---------- */
+  --font-head: 'Archivo Black', system-ui, sans-serif;
+  --font-body: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* fluid scale — mobile-first, clamps so 360px never overflows */
+  --fs-2xs:  clamp(.66rem, .62rem + .18vw, .72rem);
+  --fs-xs:   clamp(.74rem, .70rem + .20vw, .82rem);
+  --fs-sm:   clamp(.84rem, .80rem + .22vw, .92rem);
+  --fs-md:   clamp(.94rem, .90rem + .25vw, 1.02rem);
+  --fs-lg:   clamp(1.08rem, 1.00rem + .40vw, 1.25rem);
+  --fs-xl:   clamp(1.30rem, 1.15rem + .75vw, 1.70rem);
+  --fs-2xl:  clamp(1.65rem, 1.35rem + 1.50vw, 2.40rem);
+  --fs-3xl:  clamp(2.10rem, 1.60rem + 2.50vw, 3.40rem);
+
+  --lh-tight: 1.12;
+  --lh-snug:  1.30;
+  --lh-body:  1.55;
+
+  --tracking-head: .5px;
+  --tracking-caps: 1.2px;
+
+  /* ---------- SPACING (4px base) ---------- */
+  --s-1:  4px;  --s-2:  8px;  --s-3: 12px; --s-4: 16px;
+  --s-5: 20px;  --s-6: 24px;  --s-8: 32px; --s-10: 40px;
+  --s-12: 48px; --s-16: 64px; --s-20: 80px;
+
+  /* ---------- LAYOUT ---------- */
+  --page-max: 1180px;
+  --gutter: clamp(14px, 4vw, 28px);
+  --bar-h: 64px;                                   /* bottom action bar */
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+  --bar-total: calc(var(--bar-h) + var(--safe-b));
+  --tap: 44px;                                     /* min tap target    */
+
+  /* ---------- MOTION ---------- */
+  --dur-1: 120ms; --dur-2: 200ms; --dur-3: 320ms; --dur-4: 500ms;
+  --ease:      cubic-bezier(.4, 0, .2, 1);
+  --ease-out:  cubic-bezier(.16, 1, .3, 1);
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+
+  /* ---------- Z-INDEX SCALE ---------- */
+  --z-base: 1;     --z-sticky: 40;  --z-bar: 60;
+  --z-overlay: 80; --z-sheet: 90;   --z-toast: 100; --z-max: 120;
+}
+
+/* ============================================================
+   DARK THEME — the v2 default look (reference image)
+   Applied via <html class="dark">, set pre-paint to avoid flash.
+   ============================================================ */
+html.dark {
+  --surface-0:     var(--tsb-black);
+  --surface-1:     var(--tsb-charcoal);
+  --surface-2:     var(--tsb-slate-900);
+  --surface-inset: var(--tsb-slate-800);
+  --text-1:        #F5F3EE;
+  --text-2:        #C5C3BD;
+  --text-3:        var(--tsb-slate-300);
+  --text-on-color: var(--tsb-black);
+  --line:          #000000;
+  --line-soft:     rgba(255,255,255,.12);
+  --accent-text:   var(--tsb-white);
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,.40), 0 2px 8px rgba(0,0,0,.30);
+  --shadow-2: 0 2px 6px rgba(0,0,0,.45), 0 8px 24px rgba(0,0,0,.40);
+  --shadow-3: 0 8px 20px rgba(0,0,0,.50), 0 20px 48px rgba(0,0,0,.55);
+  --shadow-bar: 0 -2px 16px rgba(0,0,0,.55);
+}
+
+/* ---------- AUTO THEME — follows the OS when the user picks "Auto" ---------- */
+@media (prefers-color-scheme: dark) {
+  html.theme-auto {
+    --surface-0:     var(--tsb-black);
+    --surface-1:     var(--tsb-charcoal);
+    --surface-2:     var(--tsb-slate-900);
+    --surface-inset: var(--tsb-slate-800);
+    --text-1:        #F5F3EE;
+    --text-2:        #C5C3BD;
+    --text-3:        var(--tsb-slate-300);
+    --text-on-color: var(--tsb-black);
+    --line:          #000000;
+    --line-soft:     rgba(255,255,255,.12);
+    --accent-text:   var(--tsb-white);
+    --shadow-1: 0 1px 2px rgba(0,0,0,.40), 0 2px 8px rgba(0,0,0,.30);
+    --shadow-2: 0 2px 6px rgba(0,0,0,.45), 0 8px 24px rgba(0,0,0,.40);
+    --shadow-3: 0 8px 20px rgba(0,0,0,.50), 0 20px 48px rgba(0,0,0,.55);
+    --shadow-bar: 0 -2px 16px rgba(0,0,0,.55);
+  }
+}
+
+/* ============================================================
+   READER PREFERENCES — set by Settings, consumed by the reader
+   ============================================================ */
+html[data-font-size="s"]  { --reader-fs: .92rem; }
+html[data-font-size="m"]  { --reader-fs: 1.02rem; }
+html[data-font-size="l"]  { --reader-fs: 1.14rem; }
+html[data-font-size="xl"] { --reader-fs: 1.28rem; }
+html { --reader-fs: 1.02rem; }
+
+/* ============================================================
+   LEGACY BRIDGE — old style.css variable names keep resolving,
+   now driven by the token layer. Nothing in the existing 177 KB
+   stylesheet needs to change.
+   ============================================================ */
+:root,
+html.dark {
+  --bg:     var(--surface-0);
+  --paper:  var(--surface-1);
+  --ink:    var(--text-1);
+  --yellow: var(--tsb-yellow);
+  --red:    var(--tsb-red);
+  --blue:   var(--tsb-blue);
+  --green:  var(--tsb-green);
+  --pink:   var(--tsb-pink);
+  --purple: var(--tsb-purple);
+  --orange: var(--tsb-orange);
+  --shadow:    var(--shadow-hard);
+  --shadow-sm: var(--shadow-hard-sm);
+  --shadow-lg: var(--shadow-hard-lg);
+  --radius: var(--r-sm);
+  /* --maxw was referenced by style.css (.promptbar, reader wrappers)
+     but never defined anywhere — those rules silently fell back to
+     max-width:auto. Defining it here fixes a pre-existing layout bug. */
+  --maxw: var(--page-max);
+}
+
+/* ============================================================
+   GLOBAL BASELINE — mobile-first hard rules
+   ============================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+/* HARD RULE: never allow a horizontal scrollbar at any viewport */
+html, body { max-width: 100%; overflow-x: hidden; }
+
+body {
+  background: var(--surface-0);
+  color: var(--text-1);
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: none;   /* kill iOS rubber-band on the shell */
+}
+
+/* every tap target meets the 44px minimum */
+button, [role="button"], a.btn, .tsb-tap {
+  min-height: var(--tap);
+  min-width: var(--tap);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+img, svg, video, canvas { max-width: 100%; height: auto; display: block; }
+
+:where(button, a, input, select, textarea):focus-visible {
+  outline: 3px solid var(--tsb-periwinkle);
+  outline-offset: 2px;
+  border-radius: var(--r-xs);
+}
+
+::selection { background: var(--tsb-butter); color: var(--tsb-black); }
+
+/* honour reduced-motion everywhere, no exceptions */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* screen-reader-only utility */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0;
+  margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}

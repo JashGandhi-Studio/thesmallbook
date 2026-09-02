@@ -17,10 +17,17 @@
   <meta name="twitter:image" content="https://thesmallbook.in/assets/covers/let-them-theory.jpg">
   <meta name="twitter:card" content="summary">
   <meta name="theme-color" content="#ffc800">
-  <script>try { if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark"); } catch (e) {}</script>
+  <script>/* pre-paint theme: no flash, supports light|dark|auto */
+try{var m=localStorage.getItem("tsb_theme");m=m?JSON.parse(m):"light";
+var d=m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches);
+if(d)document.documentElement.classList.add("dark");
+if(m==="auto")document.documentElement.classList.add("theme-auto");
+document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/shell.css">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="icon" href="../favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="../favicon.png">
@@ -136,5 +143,7 @@
     <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
     <p class="tiny"><a href="../about.html" style="color:inherit;">ABOUT</a>&nbsp;&nbsp;<strong><a href="../gold.html" style="color:inherit;">👑 TSB GOLD</a></strong>&nbsp;&nbsp;MUMBAI, INDIA&nbsp;&nbsp;<strong>FREE TO READ</strong></p>
   </footer>
+  <script src="../js/theme.js"></script>
+  <script defer src="../js/shell.js"></script>
 </body>
 </html>
