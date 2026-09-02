@@ -304,9 +304,24 @@
   });
 
   /* ---------- PWA ---------- */
+  /* Only run the service worker on the real site. On localhost and on
+     preview hosts a cache-first SW serves a stale build and makes edits
+     look like they never landed — so instead we actively tear down any
+     worker/cache that a previous visit left behind. */
+  const IS_PROD = /(^|\.)thesmallbook\.in$/.test(location.hostname);
+
   if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js").catch(() => {});
-    });
+    if (IS_PROD) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch(() => {});
+      });
+    } else {
+      navigator.serviceWorker.getRegistrations()
+        .then((rs) => rs.forEach((r) => r.unregister()))
+        .catch(() => {});
+      if (window.caches && caches.keys) {
+        caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
+      }
+    }
   }
 })();
