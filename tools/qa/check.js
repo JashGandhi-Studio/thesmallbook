@@ -598,6 +598,30 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
         "feed: every card deep-links to real content");
 }
 
+/* The feed must live on the FRONT DOOR. index.html is what "/" serves and
+   what all 651 generated pages link to; a feed only on home.html is a feed
+   nobody sees. */
+{
+  const idxSrc = read(path.join(ROOT, "index.html"));
+  check(/id="tsbFeed"/.test(idxSrc), "feed: mounted on index.html (the real homepage)");
+  check(/js\/feed\.js/.test(idxSrc), "feed: index.html loads feed.js");
+  check(/css\/feed\.css/.test(idxSrc), "feed: index.html loads feed.css");
+
+  const { dom } = await mk(idxSrc, { url: "https://thesmallbook.in/index.html" });
+  const w = dom.window;
+  ["js/data.js", "js/failures.js"].forEach(f => w.eval(read(path.join(ROOT, f))));
+  if (!w.BOOKS && w.window.BOOKS) w.BOOKS = w.window.BOOKS;
+  w.eval(read(path.join(ROOT, "js/feed.js")));
+  await tick(dom);
+  w.TSB_FEED.init();
+  await new Promise(r => setTimeout(r, 200));
+  const d = w.document;
+  check(d.querySelectorAll(".fd-card").length >= 12,
+        "feed: renders on the homepage", String(d.querySelectorAll(".fd-card").length));
+  check(!d.getElementById("feedSection").hidden, "feed: homepage section is revealed");
+  check(d.querySelectorAll("#grid").length === 1, "feed: library grid still present below");
+}
+
 /* ---- Phase 3: onboarding v2 ---- */
 {
   const { dom } = await mk(APP_HTML, { url: "https://thesmallbook.in/index.html" });

@@ -260,3 +260,22 @@
   .fd-card { transition: none; }
   .fd-spin { animation-duration: 2.4s; }
 }
+
+/* ---- homepage: hand-off from the feed down to the full shelf ---- */
+.fd-more { text-align: center; margin: 8px auto 46px; }
+.fd-morebtn {
+  display: inline-block;
+  padding: 13px 26px;
+  border: 2px solid var(--ink, #0E0E10);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink, #0E0E10);
+  font-weight: 700;
+  font-size: .95rem;
+  text-decoration: none;
+  transition: transform .18s ease, background .18s ease, color .18s ease;
+}
+.fd-morebtn:hover { transform: translateY(-2px); background: var(--ink, #0E0E10); color: #fff; }
+html.dark .fd-morebtn { border-color: rgba(255,255,255,.55); color: #f2f2f2; }
+html.dark .fd-morebtn:hover { background: #fff; color: #0E0E10; }
+@media (prefers-reduced-motion: reduce) { .fd-morebtn { transition: none; } }

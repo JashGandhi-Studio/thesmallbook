@@ -303,6 +303,12 @@
     deck = build();
     if (!deck.length) return;
 
+    /* Own the reveal here rather than in page script: if we have cards, the
+       section is shown; if the data never arrives it stays hidden and the
+       page falls back to the shelf. */
+    var sec = mount.closest("#feedSection") || document.getElementById("feedSection");
+    if (sec) sec.hidden = false;
+
     mount.innerHTML = "";
     sentinel = document.createElement("div");
     sentinel.className = "fd-sentinel";

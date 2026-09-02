@@ -29,6 +29,7 @@ if(m==="auto")document.documentElement.classList.add("theme-auto");
 document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/shell.css">
+  <link rel="stylesheet" href="css/feed.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
@@ -260,6 +261,20 @@ document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
     })();
   </script>
 
+  <!-- YOUR FEED (infinite; books + graveyard autopsies) -->
+  <section id="feedSection" hidden>
+    <div class="section-head" id="feed">
+      <h2 id="fdGreet">📰 Your Feed</h2>
+      <div class="line"></div>
+    </div>
+    <div class="fd-wrap">
+      <div id="tsbFeed"></div>
+    </div>
+    <div class="fd-more">
+      <a class="fd-morebtn" href="#library">Browse all 350 books ↓</a>
+    </div>
+  </section>
+
   <!-- LIBRARY -->
   <div class="section-head" id="library">
     <h2>📚 The Shelf</h2>
@@ -385,6 +400,28 @@ document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
     })();
   </script>
   <script src="js/theme.js"></script>
-  <script defer src="js/shell.js"></script>
+  <script src="js/feed.js"></script>
+<script>
+/* Reveal the feed on the homepage. Signed-in / onboarded readers get it
+   first; everyone else still gets it under the hero so the shelf is never
+   the only thing here. TSB_FEED.init() is idempotent. */
+(function () {
+  function go() {
+    var sec = document.getElementById("feedSection");
+    if (!sec || !window.TSB_FEED) return;
+    sec.hidden = false;
+    try { window.TSB_FEED.init(); } catch (e) { sec.hidden = true; }
+
+    var h = new Date().getHours();
+    var g = h < 12 ? "Good morning" : (h < 17 ? "Good afternoon" : "Good evening");
+    var t = document.getElementById("fdGreet");
+    if (t) t.textContent = g;
+  }
+  if (document.readyState === "loading")
+    document.addEventListener("DOMContentLoaded", go);
+  else go();
+})();
+</script>
+<script defer src="js/shell.js"></script>
 </body>
 </html>
