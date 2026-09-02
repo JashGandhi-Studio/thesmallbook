@@ -3158,7 +3158,11 @@ html.dark .aq-think__bar { background: #171310; }
    🚀 LAUNCH LOADING SCREEN — neo-brutalist brand splash
    ============================================================ */
 /* 🚀 MAIN APP LOADING SCREEN — smooth, no lag, brand-perfect */
-html.tsb-loading, html.tsb-loading body { overflow: hidden; } /* no scroll jump while splashing */
+/* Splash scroll-lock. Uses position:fixed on BODY only — never overflow
+   on <html>, which would kill iOS scrolling if the class ever stuck.
+   js also force-clears this on a hard timer, so a failed `load` event
+   can never leave the app unscrollable. */
+html.tsb-loading body { position: fixed; inset: 0; width: 100%; }
 .tsb-loader {
   position: fixed; inset: 0; z-index: 99999;
   background-color: var(--bg);

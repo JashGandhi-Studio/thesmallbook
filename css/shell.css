@@ -11,114 +11,163 @@
 .tsb-bar {
   position: fixed;
   left: 50%;
-  bottom: calc(var(--safe-b) + 10px);
-  transform: translateX(-50%);
+  bottom: calc(var(--safe-b) + 12px);
+  transform: translateX(-50%) translateZ(0);
   z-index: var(--z-bar);
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--s-1);
+  gap: 2px;
 
-  width: min(calc(100vw - 24px), 460px);
+  width: min(calc(100vw - 28px), 430px);
   height: var(--bar-h);
-  padding: var(--s-2);
+  padding: 7px;
 
-  background: var(--surface-1);
-  border: var(--border-thin);
-  border-radius: var(--r-xl);
-  box-shadow: var(--shadow-3);
+  /* frosted glass over a deep base — this is what reads as "premium" */
+  background: color-mix(in srgb, var(--surface-1) 82%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border: 1px solid rgba(255, 255, 255, .10);
+  border-radius: 26px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, .16) inset,
+    0 8px 28px rgba(0, 0, 0, .18),
+    0 2px 8px rgba(0, 0, 0, .10);
 
   transition: transform var(--dur-3) var(--ease-out), opacity var(--dur-2) var(--ease);
   will-change: transform;
+  contain: layout paint;
 }
-html.dark .tsb-bar { background: var(--tsb-slate-900); border-color: rgba(255,255,255,.10); }
+html.dark .tsb-bar {
+  background: color-mix(in srgb, #1A1A1F 78%, transparent);
+  border-color: rgba(255, 255, 255, .09);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, .07) inset,
+    0 10px 34px rgba(0, 0, 0, .55),
+    0 2px 10px rgba(0, 0, 0, .40);
+}
 
 /* hide on scroll-down, return on scroll-up */
 .tsb-bar.is-hidden {
-  transform: translateX(-50%) translateY(calc(100% + var(--safe-b) + 18px));
+  transform: translateX(-50%) translateY(calc(100% + var(--safe-b) + 22px)) translateZ(0);
   opacity: 0;
   pointer-events: none;
 }
 
 .tsb-bar__item {
+  position: relative;
   flex: 1 1 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 3px;
 
-  height: 48px;
+  height: 50px;
   min-width: 0;
-  padding: 0 2px;
+  padding: 0;
 
   background: transparent;
   border: 0;
-  border-radius: var(--r-md);
+  border-radius: 19px;
   color: var(--text-3);
   font-family: var(--font-body);
-  font-size: var(--fs-2xs);
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: .2px;
+  letter-spacing: .1px;
+  text-decoration: none;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 
-  transition: color var(--dur-2) var(--ease), background var(--dur-2) var(--ease);
+  transition: color var(--dur-2) var(--ease);
 }
 .tsb-bar__icon {
+  position: relative;
+  z-index: 1;
   width: 22px; height: 22px;
   display: grid; place-items: center;
   flex: 0 0 auto;
+  transition: transform var(--dur-2) var(--ease-spring);
 }
-.tsb-bar__icon svg { width: 22px; height: 22px; stroke-width: 2; }
+.tsb-bar__icon svg {
+  width: 22px; height: 22px;
+  stroke-width: 1.9;
+  transition: stroke-width var(--dur-2) var(--ease);
+}
 .tsb-bar__label {
+  position: relative;
+  z-index: 1;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: opacity var(--dur-2) var(--ease);
 }
 
-.tsb-bar__item:hover { color: var(--text-1); }
-
-/* ACTIVE — filled rounded square, exactly like the reference */
-.tsb-bar__item.is-active {
+/* the active pill slides behind the icon — one shared element feel */
+.tsb-bar__item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 19px;
   background: var(--tsb-mint);
-  color: var(--tsb-black);
-  box-shadow: var(--shadow-1);
+  opacity: 0;
+  transform: scale(.7);
+  transition: opacity var(--dur-2) var(--ease),
+              transform var(--dur-3) var(--ease-spring);
 }
-html.dark .tsb-bar__item.is-active { background: var(--tsb-mint); color: var(--tsb-black); }
+.tsb-bar__item.is-active::before { opacity: 1; transform: scale(1); }
+.tsb-bar__item.is-active {
+  color: var(--tsb-black);
+  font-weight: 700;
+}
+.tsb-bar__item.is-active .tsb-bar__icon { transform: translateY(-1px); }
+.tsb-bar__item.is-active .tsb-bar__icon svg { stroke-width: 2.3; }
+
+.tsb-bar__item:active .tsb-bar__icon { transform: scale(.86); }
+
+@media (hover: hover) {
+  .tsb-bar__item:hover:not(.is-active) { color: var(--text-1); }
+}
 
 /* ADD — the raised coral FAB in the middle slot */
 .tsb-bar__item--fab {
   flex: 0 0 auto;
-  width: 52px;
-  height: 48px;
+  width: 56px;
+  height: 50px;
 }
+.tsb-bar__item--fab::before { display: none; }
 .tsb-bar__fab {
   display: grid;
   place-items: center;
-  width: 46px; height: 46px;
-  background: var(--tsb-coral);
+  width: 48px; height: 48px;
+  background: linear-gradient(160deg, #FF6E5C 0%, var(--tsb-coral) 55%, #E8422E 100%);
   color: #fff;
   border: 0;
-  border-radius: var(--r-md);
-  box-shadow: 0 4px 14px rgba(255,90,71,.45);
+  border-radius: 17px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, .28) inset,
+    0 6px 16px rgba(255, 90, 71, .42);
   transition: transform var(--dur-2) var(--ease-spring), box-shadow var(--dur-2) var(--ease);
 }
-.tsb-bar__item--fab:active .tsb-bar__fab { transform: scale(.92); }
-.tsb-bar__fab svg { width: 24px; height: 24px; stroke-width: 2.5; }
+.tsb-bar__item--fab:active .tsb-bar__fab {
+  transform: scale(.9);
+  box-shadow: 0 2px 8px rgba(255, 90, 71, .34);
+}
+.tsb-bar__fab svg { width: 23px; height: 23px; stroke-width: 2.6; }
 
-/* unread dot on Chat / You */
+/* unread dot */
 .tsb-bar__dot {
   position: absolute;
-  top: 6px;
-  right: calc(50% - 16px);
-  width: 8px; height: 8px;
+  top: 7px;
+  right: calc(50% - 15px);
+  z-index: 2;
+  width: 7px; height: 7px;
   background: var(--tsb-coral);
   border: 2px solid var(--surface-1);
   border-radius: var(--r-pill);
 }
-.tsb-bar__item { position: relative; }
 
 /* the shell reserves room so content never hides behind the bar */
 body.tsb-has-bar { padding-bottom: calc(var(--bar-total) + 24px); }

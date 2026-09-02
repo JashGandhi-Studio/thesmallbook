@@ -57,7 +57,7 @@ for (const f of pages) {
 
   if (SKIP.has(rel)) continue;
   if (!src.includes("css/tokens.css")) noTokens.push(rel);
-  if (!src.includes("js/shell.js")) noShell.push(rel);
+  if (!src.includes("js/shell.js") && rel !== "signin.html") noShell.push(rel);
   if (!src.includes("pre-paint theme")) noTheme.push(rel);
 
   // tokens.css MUST precede style.css or the legacy bridge loses
@@ -265,7 +265,8 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
   check(labels.join(",") === "Home,Read,Chat,You", "tab labels", labels.join(","));
   check(!!doc.querySelector(".tsb-bar__fab"), "Add renders as the coral FAB");
   check(doc.querySelectorAll(".tsb-bar__item.is-active").length === 1, "exactly one active tab");
-  check(doc.querySelector('[data-tab="home"]').classList.contains("is-active"), "Home active on index");
+  check(doc.querySelector('[data-tab="read"]').classList.contains("is-active"),
+        "Read active on index (index is now the library)");
   check(bar.getAttribute("role") === "navigation" && !!bar.getAttribute("aria-label"), "bar is a11y-labelled");
   check(!!doc.querySelector('[aria-current="page"]'), "active tab has aria-current");
   check([...doc.querySelectorAll(".tsb-bar__item")].every(a => a.getAttribute("href")), "every tab has an href");
@@ -455,9 +456,17 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
   check(!!doc.getElementById("setTheme"), "settings: theme control");
   check(doc.querySelectorAll("#setTheme button").length === 3, "settings: light/dark/auto");
   check(doc.querySelectorAll("#setFont button").length === 4, "settings: 4 text sizes");
-  const langCount = doc.querySelectorAll("#setLang option").length;
-  check(langCount >= 26, "settings: all languages listed", String(langCount));
+  check(!!doc.getElementById("setLangBtn"), "settings: language picker present");
+  check(w.TSB_LANG && w.TSB_LANG.LANGS.length >= 26, "settings: 26 languages available",
+        String(w.TSB_LANG && w.TSB_LANG.LANGS.length));
   check(/Hinglish/.test(doc.body.textContent), "settings: Hinglish offered");
+  check(doc.querySelectorAll("#setSkin button").length === 2, "settings: interface style option");
+  /* the language sheet must actually open and be readable */
+  doc.getElementById("setLangBtn").click();
+  await new Promise(r => setTimeout(r, 60));
+  const sheetItems = doc.querySelectorAll(".langlist__item").length;
+  check(sheetItems >= 26, "settings: language sheet lists every language", String(sheetItems));
+  check(!!doc.querySelector(".langlist__item.is-on"), "settings: current language marked");
   check(!!doc.getElementById("setRemind"), "settings: reminder toggle");
   check(!!doc.getElementById("setExport"), "settings: data export");
   check(!!doc.getElementById("setIn"), "settings: sign-in CTA when signed out");
@@ -482,6 +491,160 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
   dom.window.eval(shellJS); await tick(dom);
   const act = dom.window.document.querySelector(".tsb-bar__item.is-active");
   check(act && act.getAttribute("data-tab") === "you", "shell: You tab active on settings");
+}
+
+/* ============================================================
+   REGRESSION GUARDS — bugs reported from the real device
+   ============================================================ */
+{
+  section("Reported-bug guards");
+  const badEscape = [];
+
+  /* BUG: whole app unscrollable.
+     overflow-x on <html> makes the root a scroll container, which breaks
+     vertical scrolling on iOS Safari and disables position:sticky. */
+  check(!/^\s*html[^{]*\{[^}]*overflow-x/m.test(tokens),
+        "scroll: <html> has NO overflow-x (iOS scroll killer)");
+  check(/body\s*\{[^}]*overflow-x:\s*clip/.test(tokens),
+        "scroll: body clips horizontally instead");
+
+  /* BUG: a stuck splash class froze the page */
+  check(!/html\.tsb-loading[^{]*\{[^}]*overflow:\s*hidden/.test(style),
+        "scroll: splash no longer sets overflow:hidden on <html>");
+  const idx = read(path.join(ROOT, "index.html"));
+  check(/SPLASH FAILSAFE/.test(idx), "scroll: splash has a hard failsafe timer");
+
+  /* BUG: language list invisible in dark mode */
+  const pf = read(path.join(ROOT, "css", "profile.css"));
+  check(/\.set-select option\s*\{[^}]*background:\s*#/.test(pf),
+        "language: <option> gets explicit non-variable colours");
+  check(/\.langlist__item/.test(pf), "language: custom readable picker exists");
+
+  /* BUG: Ask bubble still visible */
+  const askSrc = read(path.join(ROOT, "js", "ask.js"));
+  check(/redirect shim/i.test(askSrc), "ask: popup is a redirect shim");
+
+  /* Question library — the missing feature */
+  check(/function library\(/.test(read(path.join(ROOT, "js", "ask-core.js"))),
+        "chat: question library exists in the engine");
+  check(/qlib/.test(read(path.join(ROOT, "css", "chat.css"))), "chat: library sheet styled");
+
+  /* literal \uXXXX escapes leaking into visible HTML text */
+  pages.filter(f => !path.relative(ROOT, f).startsWith("books" + path.sep) &&
+                    !path.relative(ROOT, f).startsWith("graveyard" + path.sep))
+       .forEach(function (f) {
+    const rel = path.relative(ROOT, f);
+    const src = read(f);
+    const text = src.replace(/<script[\s\S]*?<\/script>/gi, "")
+                    .replace(/<style[\s\S]*?<\/style>/gi, "");
+    if (/\\u[0-9a-fA-F]{4}/.test(text)) badEscape.push(rel);
+  });
+  check(badEscape.length === 0, "copy: no literal \\uXXXX escapes in visible text",
+        badEscape.join(", "));
+
+  /* premium bar: frosted, not flat */
+  check(/backdrop-filter/.test(shell), "bar: frosted glass");
+  check(/inset/.test(shell) && /box-shadow:\s*\n?\s*0 1px 0/.test(shell.replace(/\r/g,"")),
+        "bar: inner highlight for depth");
+
+  /* 60/120fps hygiene: no layout-thrashing transitions on the feed */
+  const feedCss = read(path.join(ROOT, "css", "feed.css"));
+  check(/content-visibility:\s*auto/.test(feedCss), "perf: feed uses content-visibility");
+  check(!/transition:[^;]*\b(width|height|top|left|margin)\b/.test(feedCss),
+        "perf: no layout-animating transitions in the feed");
+  check(/will-change:\s*transform/.test(feedCss), "perf: transform hinted to the GPU");
+}
+
+/* ---- Phase 3: feed ---- */
+{
+  const html = read(path.join(ROOT, "home.html"));
+  const { dom } = await mk(html, { url: "https://thesmallbook.in/home.html" });
+  const w = dom.window;
+  ["js/data.js", "js/failures.js"].forEach(f => w.eval(read(path.join(ROOT, f))));
+  if (!w.BOOKS && w.window.BOOKS) w.BOOKS = w.window.BOOKS;
+  w.eval(read(path.join(ROOT, "js/feed.js")));
+  await tick(dom);
+  await new Promise(r => setTimeout(r, 200));
+
+  const doc = w.document;
+  const cards = doc.querySelectorAll(".fd-card");
+  check(cards.length >= 20, "feed: renders two pages up front", String(cards.length));
+
+  const deck = w.TSB_FEED.build();
+  const graves = deck.filter(d => d.kind === "grave").length;
+  const ratio = graves / deck.length;
+  check(ratio > 0.18 && ratio < 0.32, "feed: graveyard is ~25% of the stream",
+        (ratio * 100).toFixed(0) + "%");
+  check(deck.filter(d => d.kind === "quote").length > 0, "feed: has quote cards");
+  check(deck.filter(d => d.kind === "lesson").length > 0, "feed: has lesson cards");
+  check(deck.filter(d => d.kind === "book").length > 0, "feed: has book cards");
+  check(deck.length > 300, "feed: deck is deep enough to feel infinite", String(deck.length));
+
+  check(!!doc.querySelector(".fd-card--grave"), "feed: graveyard cards rendered");
+  check(!!doc.querySelector("[data-like]"), "feed: like control");
+  check(!!doc.querySelector("[data-save]"), "feed: save control");
+  check(!!doc.querySelector("[data-share]"), "feed: share control");
+
+  /* liking must persist */
+  const likeBtn = doc.querySelector("[data-like]");
+  likeBtn.click();
+  await new Promise(r => setTimeout(r, 30));
+  const stored = JSON.parse(w.localStorage.getItem("tsb_likes") || "[]");
+  check(stored.length === 1, "feed: like persists to storage", String(stored.length));
+
+  /* every card must link somewhere real */
+  const hrefs = [...doc.querySelectorAll(".fd-card")].map(c => c.getAttribute("data-href"));
+  check(hrefs.every(h => h && (h.includes("book.html") || h.includes("graveyard/"))),
+        "feed: every card deep-links to real content");
+}
+
+/* ---- Phase 3: onboarding v2 ---- */
+{
+  const { dom } = await mk(APP_HTML, { url: "https://thesmallbook.in/index.html" });
+  const w = dom.window;
+  w.eval(read(path.join(ROOT, "js/data.js")));
+  if (!w.BOOKS && w.window.BOOKS) w.BOOKS = w.window.BOOKS;
+  w.eval(read(path.join(ROOT, "js/onboard2.js")));
+  await tick(dom);
+  w.TSB_ONBOARD2.force();
+  await new Promise(r => setTimeout(r, 60));
+
+  const doc = w.document;
+  check(!!doc.querySelector(".ob2"), "onboarding: opens for new visitors");
+  check(doc.querySelectorAll(".ob2__bar i").length === 7, "onboarding: 7 steps",
+        String(doc.querySelectorAll(".ob2__bar i").length));
+  check(!!doc.getElementById("ob2Skip"), "onboarding: skippable at every step");
+  check(doc.getElementById("ob2Back").disabled, "onboarding: back disabled on step 1");
+  check(doc.querySelectorAll(".ob2__opt").length >= 5, "onboarding: mood options");
+
+  /* the recommender must be real, not a hardcoded list */
+  const recA = w.TSB_ONBOARD2.recommend({ mood: "building", topics: ["business"], time: "3", depth: "tactical" });
+  const recB = w.TSB_ONBOARD2.recommend({ mood: "healing", topics: ["mind"], time: "25", depth: "philosophical" });
+  check(recA.length === 6, "onboarding: returns 6 recommendations", String(recA.length));
+  check(recA[0].reason && recA[0].reason.length > 3, "onboarding: every pick has a written reason");
+  const overlap = recA.filter(x => recB.some(y => y.b.id === x.b.id)).length;
+  check(overlap < 6, "onboarding: different answers give different books",
+        overlap + "/6 overlap");
+  check(recA.every(r => r.b && r.b.id && r.b.title), "onboarding: recommendations are real books");
+}
+
+/* ---- Phase 3: sign-in page ---- */
+{
+  const html = read(path.join(ROOT, "signin.html"));
+  const { dom } = await mk(html, { url: "https://thesmallbook.in/signin.html?next=profile.html" });
+  await tick(dom);
+  const doc = dom.window.document;
+  check(!!doc.getElementById("siGoogle"), "signin: Google button");
+  check(!!doc.getElementById("siSkip"), "signin: skip path (never a hard wall)");
+  check(doc.querySelectorAll(".si-perk").length === 3, "signin: value props shown");
+  check(/terms/i.test(doc.body.textContent), "signin: legal links present");
+  check(!doc.querySelector(".tsb-bar"), "signin: no app chrome on the auth screen");
+}
+{
+  /* the You tab must route to the NEW sign-in, not the old login page */
+  const pp = read(path.join(ROOT, "js", "profile-page.js"));
+  check(/signin\.html\?next=/.test(pp), "signin: profile routes to the new page");
+  check(!/location\.href = "login\.html"/.test(pp), "signin: old login page no longer used");
 }
 
   report();

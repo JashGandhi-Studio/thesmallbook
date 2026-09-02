@@ -321,3 +321,153 @@ body.chatpage {
 
 /* the chat page owns its own scroll — bar spacing handled by the dock */
 body.chatpage.tsb-has-bar { padding-bottom: 0; }
+
+
+/* ============================================================
+   QUESTION LIBRARY SHEET
+   ============================================================ */
+.qlib {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-sheet);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: qlib-fade var(--dur-2) var(--ease);
+}
+@keyframes qlib-fade { from { opacity: 0 } to { opacity: 1 } }
+
+.qlib__box {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 560px);
+  height: 88dvh;
+  padding: var(--s-4) var(--gutter) calc(var(--safe-b) + var(--s-4));
+  background: var(--surface-1);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  animation: qlib-up var(--dur-3) var(--ease-out);
+}
+@keyframes qlib-up { from { transform: translateY(100%) } to { transform: translateY(0) } }
+
+.qlib__grab {
+  width: 40px; height: 4px;
+  margin: 0 auto var(--s-4);
+  border-radius: var(--r-pill);
+  background: var(--text-3);
+  opacity: .35;
+  flex: 0 0 auto;
+}
+.qlib__head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-bottom: var(--s-3);
+}
+.qlib__head h2 {
+  font-family: var(--font-head);
+  font-size: var(--fs-xl);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-head);
+  color: var(--text-1);
+}
+.qlib__head span { font-size: var(--fs-2xs); font-weight: 700; color: var(--text-3); }
+
+.qlib__search {
+  flex: 0 0 auto;
+  width: 100%;
+  min-height: 46px;
+  margin-bottom: var(--s-3);
+  padding: 0 var(--s-4);
+  background: var(--surface-inset);
+  border: 2px solid transparent;
+  border-radius: var(--r-md);
+  color: var(--text-1);
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  outline: none;
+}
+.qlib__search:focus { border-color: var(--tsb-periwinkle); }
+
+.qlib__tabs {
+  flex: 0 0 auto;
+  display: flex;
+  gap: var(--s-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: var(--s-3);
+}
+.qlib__tabs::-webkit-scrollbar { display: none }
+.qlib__tab {
+  flex: 0 0 auto;
+  height: 34px;
+  padding: 0 var(--s-4);
+  background: var(--surface-inset);
+  border: 0;
+  border-radius: var(--r-pill);
+  color: var(--text-2);
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
+}
+.qlib__tab.is-on { background: var(--tsb-mint); color: var(--tsb-black); }
+
+.qlib__list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding-bottom: var(--s-4);
+}
+.qlib__group {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: var(--s-3) 0 var(--s-2);
+  background: var(--surface-1);
+  font-family: var(--font-head);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  color: var(--text-3);
+}
+.qlib__q {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  min-height: 50px;
+  padding: var(--s-3) var(--s-4);
+  background: var(--surface-2);
+  border: var(--border-soft);
+  border-radius: var(--r-md);
+  color: var(--text-1);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+  transition: transform var(--dur-2) var(--ease-out);
+}
+.qlib__q:active { transform: scale(.985); }
+.qlib__q b { flex: 1 1 auto; font-weight: 600; }
+.qlib__q small {
+  flex: 0 0 auto;
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.qlib__empty { padding: var(--s-8) var(--s-4); text-align: center; color: var(--text-3); font-size: var(--fs-sm); }

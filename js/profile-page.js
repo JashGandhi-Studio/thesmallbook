@@ -54,8 +54,7 @@
     var btn = document.getElementById("pfSignIn");
     if (btn) {
       btn.addEventListener("click", function () {
-        if (A() && A().signIn) A().signIn("google");
-        else location.href = "login.html";
+        location.href = "signin.html?next=profile.html";
       });
     }
   }

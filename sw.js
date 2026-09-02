@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v171";  // v2 Phase 2: chat, profile, settings
+const CACHE_VERSION = "tsb-v172";  // v2 Phase 3: feed, signin, onboarding v2
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -17,6 +17,8 @@ const APP_SHELL = [
   "./gold.html",
   "./about.html",
   "./chat.html",
+  "./home.html",
+  "./signin.html",
   "./profile.html",
   "./settings.html",
   "./scan.html",
@@ -40,6 +42,10 @@ const APP_SHELL = [
   "./js/profile.js",
   "./js/profile-page.js",
   "./js/settings.js",
+  "./js/feed.js",
+  "./js/onboard2.js",
+  "./css/feed.css",
+  "./css/signin.css",
   "./css/chat.css",
   "./css/profile.css",
   "./data/books-index.json",

@@ -51,6 +51,16 @@
   }
   function currentLang() { return lsGet("tsb_lang", "en"); }
 
+  /* interface skin: "classic" (neo-brutalist) | "modern" (soft blocks) */
+  function currentSkin() { return lsGet("tsb_skin", "modern"); }
+  function applySkin(v) {
+    document.documentElement.setAttribute("data-skin", v);
+    lsSet("tsb_skin", v);
+  }
+
+  var CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" ' +
+    'stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+
   /* ---------- render ---------- */
   function render() {
     var theme = (window.TSB_THEME && window.TSB_THEME.get()) || "light";
@@ -60,11 +70,9 @@
     var reminders = lsGet("tsb_reminders", false);
     var reduceData = lsGet("tsb_reduce_data", false);
 
-    var langOpts = langs().map(function (l) {
-      return '<option value="' + esc(l.code) + '"' + (l.code === lang ? " selected" : "") + ">" +
-        esc(l.flag + "  " + l.name + (l.native && l.native !== l.name ? " \u2014 " + l.native.split(" \u2014 ")[0] : "")) +
-        "</option>";
-    }).join("");
+    var curLang = langs().filter(function (l) { return l.code === lang; })[0] ||
+                  { code: "en", name: "English", native: "English", flag: "\uD83C\uDDEC\uD83C\uDDE7" };
+    var skin = currentSkin();
 
     root.innerHTML =
       /* ---- appearance ---- */
@@ -103,10 +111,33 @@
       /* ---- language ---- */
       '<div class="pf-section">Language</div>' +
       '<div class="set-block">' +
-        '<label for="setLang">App language</label>' +
-        '<select class="set-select" id="setLang">' + langOpts + "</select>" +
+        '<span class="set-label">App language</span>' +
+        '<button class="set-picker" id="setLangBtn" aria-haspopup="dialog">' +
+          '<span class="set-picker__flag">' + esc(curLang.flag || "\uD83C\uDF10") + "</span>" +
+          '<span class="set-picker__txt"><b>' + esc(curLang.name || "English") + "</b>" +
+            "<small>" + esc(curLang.native || "") + "</small></span>" +
+          '<span class="set-picker__go">' + CHEV + "</span>" +
+        "</button>" +
         '<p class="set-hint">' + langs().length + " languages, including Hinglish and Gujlish \u2014 " +
           "Hindi and Gujarati written in English letters.</p>" +
+      "</div>" +
+
+      /* ---- interface style ---- */
+      '<div class="pf-section">Interface</div>' +
+      '<div class="set-block">' +
+        '<span class="set-label">Card style</span>' +
+        '<div class="set-seg" id="setSkin" role="group" aria-label="Interface style">' +
+          '<button data-v="classic" class="' + (skin === "classic" ? "is-on" : "") + '">Classic</button>' +
+          '<button data-v="modern"  class="' + (skin === "modern"  ? "is-on" : "") + '">Modern</button>' +
+        "</div>" +
+        '<div class="set-preview" aria-hidden="true">' +
+          '<i style="background:var(--tsb-coral)"></i>' +
+          '<i style="background:var(--tsb-periwinkle)"></i>' +
+          '<i style="background:var(--tsb-butter)"></i>' +
+          '<i style="background:var(--tsb-mint)"></i>' +
+        "</div>" +
+        '<p class="set-hint"><b>Classic</b> keeps the bold outlined look. ' +
+          "<b>Modern</b> uses soft rounded colour blocks and layered depth.</p>" +
       "</div>" +
 
       /* ---- notifications ---- */
@@ -182,18 +213,13 @@
       if (p) p.style.fontSize = "var(--reader-fs)";
     });
 
-    var langSel = document.getElementById("setLang");
-    if (langSel) {
-      langSel.addEventListener("change", function () {
-        var code = langSel.value;
-        lsSet("tsb_lang", code);
-        try {
-          if (window.TSB_LANG && window.TSB_LANG.select) window.TSB_LANG.select(code);
-          else if (window.TSB_LANG && window.TSB_LANG.activate && code !== "en") window.TSB_LANG.activate(code);
-        } catch (e) {}
-        toast("Language updated");
-      });
-    }
+    var langBtn = document.getElementById("setLangBtn");
+    if (langBtn) langBtn.addEventListener("click", openLangSheet);
+
+    segment("setSkin", function (v) {
+      applySkin(v);
+      toast(v === "modern" ? "Modern interface" : "Classic interface");
+    });
 
     toggle("setRemind", "tsb_reminders", "Reminders");
     toggle("setData", "tsb_reduce_data", "Data saver");
@@ -213,8 +239,7 @@
     var inn = document.getElementById("setIn");
     if (inn) {
       inn.addEventListener("click", function () {
-        if (A() && A().signIn) A().signIn("google");
-        else location.href = "login.html";
+        location.href = "signin.html?next=settings.html";
       });
     }
 
@@ -235,6 +260,70 @@
         setTimeout(render, 400);
       });
     }
+  }
+
+  /* ---------- language sheet: searchable, always readable ---------- */
+  function openLangSheet() {
+    var cur = currentLang();
+    var all = langs();
+
+    var sheet = document.createElement("div");
+    sheet.className = "pf-sheet";
+    sheet.innerHTML =
+      '<div class="pf-sheet__box" role="dialog" aria-modal="true" aria-label="Choose language">' +
+        '<div class="pf-sheet__grab"></div>' +
+        "<h2>Language</h2>" +
+        '<input class="langsearch" id="langQ" type="text" placeholder="Search languages\u2026" ' +
+          'autocapitalize="none" autocorrect="off" spellcheck="false">' +
+        '<div class="langlist" id="langList"></div>' +
+      "</div>";
+    document.body.appendChild(sheet);
+
+    var listEl = sheet.querySelector("#langList");
+    var qEl = sheet.querySelector("#langQ");
+
+    function paint(filter) {
+      var f = String(filter || "").toLowerCase().trim();
+      var rows = all.filter(function (l) {
+        if (!f) return true;
+        return (l.name + " " + (l.native || "") + " " + l.code).toLowerCase().indexOf(f) !== -1;
+      });
+      if (!rows.length) {
+        listEl.innerHTML = '<p class="set-hint" style="padding:16px 4px">No language matches that.</p>';
+        return;
+      }
+      listEl.innerHTML = rows.map(function (l) {
+        var on = l.code === cur;
+        return '<button class="langlist__item' + (on ? " is-on" : "") + '" data-code="' + esc(l.code) + '">' +
+          '<span class="f">' + esc(l.flag || "\uD83C\uDF10") + "</span>" +
+          "<div><b>" + esc(l.name) + "</b>" +
+            (l.native && l.native !== l.name ? "<small>" + esc(l.native) + "</small>" : "") + "</div>" +
+          (on ? '<span class="tick">\u2713</span>' : "") +
+        "</button>";
+      }).join("");
+    }
+    paint("");
+
+    qEl.addEventListener("input", function () { paint(qEl.value); });
+
+    listEl.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-code]");
+      if (!b) return;
+      var code = b.getAttribute("data-code");
+      lsSet("tsb_lang", code);
+      try {
+        if (window.TSB_LANG && window.TSB_LANG.select) window.TSB_LANG.select(code);
+        else if (window.TSB_LANG && window.TSB_LANG.activate && code !== "en") window.TSB_LANG.activate(code);
+      } catch (err) {}
+      close();
+      render();
+      toast("Language updated");
+    });
+
+    function close() { sheet.remove(); document.removeEventListener("keydown", onKey); }
+    function onKey(e) { if (e.key === "Escape") close(); }
+    document.addEventListener("keydown", onKey);
+    sheet.addEventListener("click", function (e) { if (e.target === sheet) close(); });
   }
 
   function exportData() {
@@ -268,6 +357,7 @@
 
   function start() {
     applyFont(currentFont());
+    applySkin(currentSkin());
     render();
     window.addEventListener("tsb:auth", render);
   }

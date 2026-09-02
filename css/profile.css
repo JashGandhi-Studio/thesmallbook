@@ -445,10 +445,41 @@ body.settingspage {
   box-shadow: var(--shadow-1);
 }
 
+/* Native <select> is unstyleable in the popup layer: on Android/Windows
+   dark mode the <option> list renders white-on-white and looks invisible.
+   We keep a real <select> for a11y/forms but ALWAYS force explicit colours
+   on the options, and the language picker uses the custom sheet below. */
 .set-select {
   width: 100%;
   min-height: 46px;
-  padding: 0 var(--s-4);
+  padding: 0 var(--s-10) 0 var(--s-4);
+  background-color: var(--surface-inset);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right var(--s-4) center;
+  background-size: 18px 18px;
+  border: var(--border-soft);
+  border-radius: var(--r-md);
+  color: var(--text-1);
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+/* explicit, non-variable colours — the popup layer can't see CSS vars */
+.set-select option { background: #ffffff; color: #111111; }
+html.dark .set-select option { background: #1E1E22; color: #F5F3EE; }
+
+/* ---------- custom language picker (always readable) ---------- */
+.set-picker {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  min-height: 52px;
+  padding: var(--s-2) var(--s-4);
   background: var(--surface-inset);
   border: var(--border-soft);
   border-radius: var(--r-md);
@@ -456,8 +487,82 @@ body.settingspage {
   font-family: var(--font-body);
   font-size: var(--fs-sm);
   font-weight: 600;
+  text-align: left;
   cursor: pointer;
 }
+.set-picker__flag { flex: 0 0 auto; font-size: 22px; line-height: 1; }
+.set-picker__txt  { flex: 1 1 auto; min-width: 0; }
+.set-picker__txt b { display: block; font-size: var(--fs-sm); }
+.set-picker__txt small {
+  display: block;
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  color: var(--text-3);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.set-picker__go { flex: 0 0 auto; color: var(--text-3); }
+.set-picker__go svg { width: 18px; height: 18px; }
+
+.langlist {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 58dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 calc(var(--s-2) * -1);
+  padding: 0 var(--s-2);
+}
+.langlist__item {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  min-height: 54px;
+  padding: var(--s-2) var(--s-3);
+  background: none;
+  border: 0;
+  border-radius: var(--r-md);
+  color: var(--text-1);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+.langlist__item:active { background: var(--surface-inset); }
+.langlist__item.is-on { background: var(--tsb-mint); color: var(--tsb-black); }
+.langlist__item.is-on small { color: rgba(0,0,0,.62); }
+.langlist__item span.f { flex: 0 0 auto; font-size: 21px; line-height: 1; }
+.langlist__item div { flex: 1 1 auto; min-width: 0; }
+.langlist__item small {
+  display: block;
+  font-size: var(--fs-2xs);
+  font-weight: 500;
+  color: var(--text-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.langlist__item .tick { flex: 0 0 auto; font-size: 15px; }
+
+.langsearch {
+  width: 100%;
+  min-height: 46px;
+  margin-bottom: var(--s-3);
+  padding: 0 var(--s-4);
+  background: var(--surface-inset);
+  border: 2px solid transparent;
+  border-radius: var(--r-md);
+  color: var(--text-1);
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  outline: none;
+}
+.langsearch:focus { border-color: var(--tsb-periwinkle); }
 
 .set-block {
   padding: var(--s-5);

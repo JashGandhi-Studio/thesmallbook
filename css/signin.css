@@ -1,0 +1,160 @@
+/* ============================================================
+   THESMALLBOOK — 🔐 SIGN IN (signin.css)
+   A proper, modern auth screen. Dark, centred, premium.
+   ============================================================ */
+
+body.signin {
+  min-height: 100dvh;
+  background: var(--tsb-black);
+  background-image:
+    radial-gradient(900px 460px at 12% -8%,  rgba(108, 99, 255, .30), transparent 62%),
+    radial-gradient(760px 420px at 92% 6%,   rgba(255, 90, 71, .26),  transparent 60%),
+    radial-gradient(680px 520px at 50% 108%, rgba(127, 227, 196, .16), transparent 64%);
+  color: #F5F3EE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--safe-t) + 20px) 18px calc(var(--safe-b) + 20px);
+}
+
+.si-wrap { position: relative; width: 100%; max-width: 420px; }
+
+.si-close {
+  position: absolute;
+  top: -8px; right: 0;
+  display: grid;
+  place-items: center;
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: var(--r-pill);
+  color: #F5F3EE;
+  text-decoration: none;
+  transition: transform var(--dur-2) var(--ease-spring), background var(--dur-2) var(--ease);
+}
+.si-close:hover { background: rgba(255,255,255,.14); }
+.si-close:active { transform: scale(.92); }
+.si-close svg { width: 18px; height: 18px; }
+
+.si-card {
+  margin-top: 44px;
+  padding: 30px 24px 24px;
+  background: rgba(23, 23, 26, .78);
+  backdrop-filter: saturate(170%) blur(22px);
+  -webkit-backdrop-filter: saturate(170%) blur(22px);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 26px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.10) inset,
+    0 24px 60px rgba(0,0,0,.55);
+  animation: si-in var(--dur-4) var(--ease-out) both;
+}
+@keyframes si-in {
+  from { opacity: 0; transform: translateY(16px) scale(.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+.si-mark {
+  width: 66px; height: 66px;
+  margin: 0 auto 20px;
+  display: grid;
+  place-items: center;
+  background: var(--tsb-butter);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(255, 201, 77, .28);
+}
+.si-mark img { width: 46px; height: 46px; object-fit: contain; }
+
+.si-title {
+  font-family: var(--font-head);
+  font-size: clamp(1.6rem, 1.3rem + 1.6vw, 2rem);
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.si-sub {
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  color: #B9B7B1;
+  text-align: center;
+  max-width: 30ch;
+  margin: 0 auto 24px;
+}
+
+.si-perks { display: flex; flex-direction: column; gap: 12px; margin-bottom: 26px; }
+.si-perk {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 16px;
+}
+.si-perk span { flex: 0 0 auto; font-size: 20px; line-height: 1.25; }
+.si-perk div { font-size: var(--fs-2xs); color: #A9A7A1; line-height: 1.45; }
+.si-perk b {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: #F5F3EE;
+  margin-bottom: 1px;
+}
+
+.si-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  width: 100%;
+  min-height: 54px;
+  padding: 0 18px;
+  background: #fff;
+  color: #111;
+  border: 0;
+  border-radius: 16px;
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0,0,0,.28);
+  transition: transform var(--dur-2) var(--ease-spring), box-shadow var(--dur-2) var(--ease);
+}
+.si-google:hover { box-shadow: 0 10px 26px rgba(0,0,0,.36); }
+.si-google:active { transform: scale(.98); }
+.si-google svg { flex: 0 0 auto; }
+
+.si-note {
+  margin-top: 12px;
+  font-size: var(--fs-xs);
+  color: var(--tsb-butter);
+  text-align: center;
+}
+
+.si-skip {
+  display: block;
+  width: 100%;
+  min-height: 46px;
+  margin-top: 12px;
+  background: none;
+  border: 0;
+  color: #A9A7A1;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.si-skip:hover { color: #F5F3EE; }
+
+.si-legal {
+  margin-top: 18px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #7E7C77;
+  text-align: center;
+}
+.si-legal a { color: #A9A7A1; }

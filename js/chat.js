@@ -15,6 +15,7 @@
   var sendBtn = document.getElementById("chatSend");
   var sugWrap = document.getElementById("chatSuggest");
   var newBtn  = document.getElementById("chatNew");
+  var libBtn  = document.getElementById("chatLib");
   var sub     = document.getElementById("chatSub");
   if (!log || !form) return;
 
@@ -109,8 +110,12 @@
       '<div class="chat-hello__mark">\uD83D\uDCD5</div>' +
       "<h2>Ask the library</h2>" +
       "<p>Any question \u2014 money, focus, fear, starting up. Answered from " +
-      nb + " books and " + ng + " real-world autopsies, with the exact lesson to read next.</p>";
+      nb + " books and " + ng + " real-world autopsies, with the exact lesson to read next.</p>" +
+      '<button class="pf-btn pf-btn--ghost" id="chatBrowse" style="max-width:280px;margin:20px auto 0">' +
+      "\uD83D\uDCDA Browse the question library</button>";
     log.appendChild(d);
+    var br = d.querySelector("#chatBrowse");
+    if (br) br.addEventListener("click", openLibrary);
   }
 
   function restore() {
@@ -192,6 +197,88 @@
     });
   }
 
+  /* ---------- question library ---------- */
+  function openLibrary() {
+    var C = window.TSB_ASK_CORE;
+    if (!C || !C.library) return;
+    var groups = C.library();
+    var total = groups.reduce(function (a, g) { return a + g.items.length; }, 0);
+    var active = "all";
+
+    var sheet = document.createElement("div");
+    sheet.className = "qlib";
+    sheet.innerHTML =
+      '<div class="qlib__box" role="dialog" aria-modal="true" aria-label="Question library">' +
+        '<div class="qlib__grab"></div>' +
+        '<div class="qlib__head"><h2>Question library</h2><span>' + total + " QUESTIONS</span></div>" +
+        '<input class="qlib__search" id="qlibQ" type="text" placeholder="Search questions\u2026" ' +
+          'autocapitalize="none" autocorrect="off" spellcheck="false">' +
+        '<div class="qlib__tabs" id="qlibTabs"></div>' +
+        '<div class="qlib__list" id="qlibList"></div>' +
+      "</div>";
+    document.body.appendChild(sheet);
+
+    var tabsEl = sheet.querySelector("#qlibTabs");
+    var listEl = sheet.querySelector("#qlibList");
+    var qEl    = sheet.querySelector("#qlibQ");
+
+    function paintTabs() {
+      tabsEl.innerHTML =
+        '<button class="qlib__tab' + (active === "all" ? " is-on" : "") + '" data-c="all">All ' + total + "</button>" +
+        groups.map(function (g) {
+          return '<button class="qlib__tab' + (active === g.id ? " is-on" : "") + '" data-c="' + g.id + '">' +
+            g.emoji + " " + esc(g.label) + " " + g.items.length + "</button>";
+        }).join("");
+    }
+
+    function rowHtml(it) {
+      return '<button class="qlib__q" data-q="' + esc(it.q) + '">' +
+        "<b>" + esc(it.q) + "</b>" +
+        (it.books ? "<small>" + it.books + " \uD83D\uDCD5</small>" : "") + "</button>";
+    }
+
+    function paintList() {
+      var term = qEl.value.trim();
+      if (term) {
+        var hits = C.searchLibrary(term) || [];
+        listEl.innerHTML = hits.length
+          ? hits.map(rowHtml).join("")
+          : '<p class="qlib__empty">No question matches that.<br>Type it in the chat box \u2014 the library still searches all 350 books.</p>';
+        return;
+      }
+      var show = active === "all" ? groups : groups.filter(function (g) { return g.id === active; });
+      listEl.innerHTML = show.map(function (g) {
+        return '<div class="qlib__group">' + g.emoji + " " + esc(g.label) + "</div>" +
+          g.items.map(rowHtml).join("");
+      }).join("");
+    }
+
+    paintTabs(); paintList();
+
+    tabsEl.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-c]");
+      if (!b) return;
+      active = b.getAttribute("data-c");
+      qEl.value = "";
+      paintTabs(); paintList();
+      listEl.scrollTop = 0;
+    });
+    qEl.addEventListener("input", paintList);
+    listEl.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-q]");
+      if (!b) return;
+      close();
+      ask(b.getAttribute("data-q"));
+    });
+
+    function close() { sheet.remove(); document.removeEventListener("keydown", onKey); }
+    function onKey(e) { if (e.key === "Escape") close(); }
+    document.addEventListener("keydown", onKey);
+    sheet.addEventListener("click", function (e) { if (e.target === sheet) close(); });
+  }
+
+  if (libBtn) libBtn.addEventListener("click", openLibrary);
+
   /* deep link: chat.html?q=how+do+i+stop+procrastinating */
   function boot() {
     if (sub) {
@@ -209,5 +296,5 @@
     document.addEventListener("DOMContentLoaded", boot);
   } else { boot(); }
 
-  window.TSB_CHAT = { ask: ask };
+  window.TSB_CHAT = { ask: ask, openLibrary: openLibrary };
 })();

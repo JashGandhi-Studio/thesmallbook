@@ -194,6 +194,57 @@
     };
   }
 
+  /* ---------- question library (browsable, categorised) ---------- */
+  var CATS = [
+    { id: "money",     label: "Money",      emoji: "\uD83D\uDCB0",
+      kw: ["money","salary","save","saving","invest","rich","debt","paise","budget","spend","income","wealth","price","cost","broke","afford","loan","fund"] },
+    { id: "focus",     label: "Focus",      emoji: "\u26A1",
+      kw: ["procrastinat","focus","distract","habit","productiv","time","routine","discipline","lazy","morning","deep work","attention","goal","plan"] },
+    { id: "mind",      label: "Mind",       emoji: "\uD83E\uDDE0",
+      kw: ["anxiety","anxious","stress","fear","confidence","overthink","angry","anger","sad","depress","happy","calm","mental","emotion","doubt","worry","regret","lonely","heal","mindful","peace"] },
+    { id: "people",    label: "People",     emoji: "\u2764\uFE0F",
+      kw: ["friend","relationship","love","people","talk","conversation","social","charisma","persuade","negotiat","argue","trust","family","parent","partner","network","influence","respect"] },
+    { id: "work",      label: "Work",       emoji: "\uD83D\uDCBC",
+      kw: ["career","job","boss","interview","work","promotion","business","startup","company","team","lead","manage","hire","sell","market","client","product","freelanc"] },
+    { id: "growth",    label: "Growth",     emoji: "\uD83C\uDF31",
+      kw: ["learn","read","study","skill","grow","improve","better","change","start","success","fail","mistake","purpose","meaning","life","decision","think","creativ","write"] }
+  ];
+
+  function categorise(topic) {
+    var hay = ((topic.q || "") + " " + (topic.keywords || []).join(" ")).toLowerCase();
+    var best = null, bestScore = 0;
+    CATS.forEach(function (c) {
+      var score = 0;
+      c.kw.forEach(function (k) { if (hay.indexOf(k) !== -1) score++; });
+      if (score > bestScore) { bestScore = score; best = c; }
+    });
+    return best || CATS[CATS.length - 1];
+  }
+
+  var _lib = null;
+  function library() {
+    if (_lib) return _lib;
+    var data = window.TSB_ASK_DATA || [];
+    var groups = {};
+    CATS.forEach(function (c) { groups[c.id] = { id: c.id, label: c.label, emoji: c.emoji, items: [] }; });
+    data.forEach(function (t) {
+      var c = categorise(t);
+      groups[c.id].items.push({ id: t.id, q: t.q, books: (t.books || []).length });
+    });
+    _lib = CATS.map(function (c) { return groups[c.id]; })
+               .filter(function (g) { return g.items.length; });
+    return _lib;
+  }
+
+  function searchLibrary(q) {
+    var f = String(q || "").toLowerCase().trim();
+    var data = window.TSB_ASK_DATA || [];
+    if (!f) return null;
+    return data.filter(function (t) {
+      return (t.q + " " + (t.keywords || []).join(" ")).toLowerCase().indexOf(f) !== -1;
+    }).map(function (t) { return { id: t.id, q: t.q, books: (t.books || []).length }; });
+  }
+
   /* ---------- suggestion chips ---------- */
   function suggestions(n) {
     var data = window.TSB_ASK_DATA || [];
@@ -232,6 +283,7 @@
     norm: norm, words: words,
     findTopic: findTopic, searchLessons: searchLessons, searchGraves: searchGraves,
     resolve: resolve, suggestions: suggestions, followUps: followUps,
+    library: library, searchLibrary: searchLibrary, CATS: CATS,
     lessonLink: lessonLink, graveLink: graveLink,
     bookIndex: bookIndex, graveIndex: graveIndex
   };

@@ -86,6 +86,13 @@ document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
     /* rAF keeps the fade silky even if the tab was busy loading */
     window.addEventListener("load", function () { requestAnimationFrame(ready); });
     setTimeout(ready, MIN + 600); /* hard safety: never block the app */
+    /* SPLASH FAILSAFE: whatever happens above, scrolling is restored.
+       A stuck .tsb-loading class used to make the whole app unscrollable. */
+    setTimeout(function () {
+      document.documentElement.classList.remove("tsb-loading");
+      var d = document.getElementById("tsb-loader");
+      if (d && d.parentNode) d.parentNode.removeChild(d);
+    }, 4000);
 
     /* smooth 0→100% progress — makes the splash feel alive */
     var pctEl = document.getElementById("tsb-loader-pct");
@@ -354,7 +361,7 @@ document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
       box.style.display = "";
     })();
   </script>
-  <script src="js/onboard.js"></script>
+  <script src="js/onboard2.js"></script>
   <script src="js/ask-data.js"></script>
   <script src="js/tts-engine.js"></script>
   <script src="js/ask.js"></script>

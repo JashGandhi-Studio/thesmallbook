@@ -47,10 +47,10 @@
   };
 
   var TABS = [
-    { id: "home", label: "Home",  icon: "home", href: BASE + "index.html",
-      match: /^$|index\.html|home\.html/ },
-    { id: "read", label: "Read",  icon: "read", href: BASE + "index.html#library",
-      match: /book\.html|library|graveyard/ },
+    { id: "home", label: "Home",  icon: "home", href: BASE + "home.html",
+      match: /^$|home\.html/ },
+    { id: "read", label: "Read",  icon: "read", href: BASE + "index.html",
+      match: /index\.html|book\.html|library|graveyard/ },
     { id: "add",  label: "Add",   icon: "add",  href: BASE + "stories.html",
       match: /stories\.html|story\.html|add\.html/, fab: true },
     { id: "chat", label: "Chat",  icon: "chat", href: BASE + "chat.html",

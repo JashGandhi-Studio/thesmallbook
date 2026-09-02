@@ -228,8 +228,15 @@ html {
   scroll-behavior: smooth;
 }
 
-/* HARD RULE: never allow a horizontal scrollbar at any viewport */
-html, body { max-width: 100%; overflow-x: hidden; }
+/* HARD RULE: never allow a horizontal scrollbar at any viewport.
+   ⚠️ overflow-x MUST NOT be set on <html> — that turns the root into a
+   scroll container and breaks vertical scrolling on iOS Safari (and
+   silently disables `position: sticky` children). Clip on <body> only. */
+html { max-width: 100%; }
+body { max-width: 100%; overflow-x: clip; }
+@supports not (overflow: clip) {
+  body { overflow-x: hidden; }
+}
 
 body {
   background: var(--surface-0);
