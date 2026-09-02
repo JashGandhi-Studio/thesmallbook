@@ -130,9 +130,12 @@ check(/350 books, 2176 lessons/.test(rm) && /300 legendary/.test(rm), "README co
 /* ---------- service worker must ship the new v2 assets ---------- */
 section("Service worker");
 const sw = read(path.join(ROOT, "sw.js"));
-check(/CACHE_VERSION = "tsb-v170"/.test(sw), "cache version bumped (existing users get fresh files)");
+var swv = (sw.match(/CACHE_VERSION = "tsb-v(\d+)"/) || [])[1];
+check(swv && Number(swv) >= 171, "cache version bumped (existing users get fresh files)", "v" + swv);
 for (const a of ["css/tokens.css", "css/shell.css", "js/theme.js", "js/shell.js",
-                 "js/data-loader.js", "data/books-index.json"]) {
+                 "js/data-loader.js", "data/books-index.json",
+                 "chat.html", "profile.html", "settings.html",
+                 "js/ask-core.js", "js/chat.js", "js/profile.js", "js/settings.js"]) {
   check(sw.includes(a), "sw precaches " + a);
 }
 check(/url\.pathname\.includes\("\/data\/"\)/.test(sw), "sw uses stale-while-revalidate for data shards");
@@ -352,6 +355,134 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
   }
 }
 
+
+/* ---- Phase 2: chat page ---- */
+{
+  const html = read(path.join(ROOT, "chat.html"));
+  const { dom } = await mk(html, { url: "https://thesmallbook.in/chat.html" });
+  const w = dom.window;
+  ["js/data.js","js/failures.js","js/ask-data.js","js/ask-core.js"].forEach(f =>
+    w.eval(read(path.join(ROOT, f))));
+  if (!w.BOOKS && w.window.BOOKS) w.BOOKS = w.window.BOOKS;
+  w.eval(read(path.join(ROOT, "js/chat.js")));
+  await tick(dom);
+
+  const doc = w.document;
+  check(!!doc.getElementById("chatLog"), "chat: log element");
+  check(!!doc.getElementById("chatInput"), "chat: composer input");
+  check(!!doc.querySelector(".chat-hello"), "chat: welcome shown on first visit");
+  check(doc.querySelectorAll("#chatSuggest button").length > 0, "chat: suggestion chips render");
+
+  w.TSB_CHAT.ask("How do I stop procrastinating?");
+  await new Promise(r => setTimeout(r, 900));
+  const bubbles = doc.querySelectorAll(".chat-msg");
+  check(bubbles.length >= 2, "chat: question + answer rendered", String(bubbles.length));
+  check(!!doc.querySelector(".chat-msg--me"), "chat: user bubble");
+  check(!!doc.querySelector(".chat-msg--bot .chat-srcs"), "chat: answer includes source cards");
+  const link = doc.querySelector(".chat-src");
+  check(link && /book\.html\?id=/.test(link.getAttribute("href")), "chat: sources deep-link into books");
+  check(!doc.querySelector(".chat-hello"), "chat: welcome clears after asking");
+
+  const hist = JSON.parse(w.localStorage.getItem("tsb_chat_history") || "[]");
+  check(hist.length === 1, "chat: history persisted", String(hist.length));
+  check(w.document.querySelector(".chat-typing") === null, "chat: typing indicator removed after answer");
+}
+
+/* ---- Phase 2: ask popup is now a redirect shim ---- */
+{
+  const { dom } = await mk(APP_HTML, { url: "https://thesmallbook.in/index.html" });
+  dom.window.eval(read(path.join(ROOT, "js/ask.js")));
+  check(!!dom.window.TSB_ASK && typeof dom.window.TSB_ASK.open === "function",
+        "ask: TSB_ASK still exposed (old entry points keep working)");
+  await tick(dom);
+  check(!dom.window.document.querySelector(".aq-fab"),
+        "ask: floating bubble no longer rendered (Chat lives in the bar)");
+}
+
+/* ---- Phase 2: profile page ---- */
+{
+  const html = read(path.join(ROOT, "profile.html"));
+  const { dom } = await mk(html, { url: "https://thesmallbook.in/profile.html" });
+  const w = dom.window;
+  w.eval(read(path.join(ROOT, "js/profile.js")));
+  w.eval(read(path.join(ROOT, "js/profile-page.js")));
+  await new Promise(r => setTimeout(r, 1700));   // waits out the auth timeout
+  check(!!w.document.querySelector(".pf-gate"), "profile: signed-out gate shown");
+  check(/Create your account/.test(w.document.body.textContent), "profile: signup CTA present");
+}
+{
+  /* signed in → real profile */
+  const html = read(path.join(ROOT, "profile.html"));
+  const { dom } = await mk(html, { url: "https://thesmallbook.in/profile.html" });
+  const w = dom.window;
+  w.TSB_AUTH = {
+    user: () => ({ id: "u-1", email: "jash@example.com",
+                   user_metadata: { full_name: "Jash Gandhi" } }),
+    enabled: true
+  };
+  w.eval(read(path.join(ROOT, "js/profile.js")));
+  w.eval(read(path.join(ROOT, "js/profile-page.js")));
+  await new Promise(r => setTimeout(r, 400));
+  const txt = w.document.body.textContent;
+  check(!!w.document.querySelector(".pf-hero"), "profile: signed-in header renders");
+  check(/Jash Gandhi/.test(txt), "profile: display name from session");
+  check(/@jash/.test(txt), "profile: username derived");
+  check(!!w.document.querySelector(".pf-ava"), "profile: avatar control present");
+  check(w.document.querySelectorAll(".pf-stat").length === 4, "profile: 4 stat blocks");
+  check(!!w.document.getElementById("pfOut"), "profile: sign-out available");
+
+  /* username validation is real */
+  const P = w.TSB_PROFILE;
+  check(P.validateUsername("ab").ok === false, "username: rejects <3 chars");
+  check(P.validateUsername("admin").ok === false, "username: rejects reserved");
+  check(P.validateUsername("12345").ok === false, "username: rejects digits-only");
+  check(P.validateUsername("jash_g").ok === true, "username: accepts valid");
+  check(P.normUsername("@Jash G!!").length > 0 && P.normUsername("@Jash G!!") === "jashg",
+        "username: normalises input", P.normUsername("@Jash G!!"));
+  check(P.validateUsername("a".repeat(21)).ok === false, "username: rejects >20 chars");
+}
+
+/* ---- Phase 2: settings page ---- */
+{
+  const html = read(path.join(ROOT, "settings.html"));
+  const { dom } = await mk(html, { url: "https://thesmallbook.in/settings.html" });
+  const w = dom.window;
+  w.eval(read(path.join(ROOT, "js/theme.js")));
+  w.eval(read(path.join(ROOT, "js/lang.js")));
+  w.eval(read(path.join(ROOT, "js/settings.js")));
+  await tick(dom);
+  const doc = w.document;
+  check(!!doc.getElementById("setTheme"), "settings: theme control");
+  check(doc.querySelectorAll("#setTheme button").length === 3, "settings: light/dark/auto");
+  check(doc.querySelectorAll("#setFont button").length === 4, "settings: 4 text sizes");
+  const langCount = doc.querySelectorAll("#setLang option").length;
+  check(langCount >= 26, "settings: all languages listed", String(langCount));
+  check(/Hinglish/.test(doc.body.textContent), "settings: Hinglish offered");
+  check(!!doc.getElementById("setRemind"), "settings: reminder toggle");
+  check(!!doc.getElementById("setExport"), "settings: data export");
+  check(!!doc.getElementById("setIn"), "settings: sign-in CTA when signed out");
+
+  /* theme buttons actually change the theme */
+  doc.querySelector('#setTheme button[data-v="dark"]').click();
+  check(w.TSB_THEME.get() === "dark", "settings: theme button applies", w.TSB_THEME.get());
+  doc.querySelector('#setFont button[data-v="xl"]').click();
+  check(doc.documentElement.getAttribute("data-font-size") === "xl", "settings: font size applies");
+}
+
+/* ---- Phase 2: shell knows the new tabs ---- */
+{
+  const { dom } = await mk(APP_HTML, { url: "https://thesmallbook.in/chat.html" });
+  dom.window.eval(shellJS); await tick(dom);
+  const act = dom.window.document.querySelector(".tsb-bar__item.is-active");
+  check(act && act.getAttribute("data-tab") === "chat", "shell: Chat tab active on chat.html",
+        act && act.getAttribute("data-tab"));
+}
+{
+  const { dom } = await mk(APP_HTML, { url: "https://thesmallbook.in/settings.html" });
+  dom.window.eval(shellJS); await tick(dom);
+  const act = dom.window.document.querySelector(".tsb-bar__item.is-active");
+  check(act && act.getAttribute("data-tab") === "you", "shell: You tab active on settings");
+}
 
   report();
 }

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Settings — TheSmallBook</title>
+  <meta name="description" content="Customise TheSmallBook — theme, language, reading size and reminders.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#ffc800">
+  <script>/* pre-paint theme: no flash, supports light|dark|auto */
+try{var m=localStorage.getItem("tsb_theme");m=m?JSON.parse(m):"light";
+var d=m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches);
+if(d)document.documentElement.classList.add("dark");
+if(m==="auto")document.documentElement.classList.add("theme-auto");
+document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/shell.css">
+  <link rel="stylesheet" href="css/profile.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body class="settingspage">
+
+<header class="pf-top">
+  <a class="pf-top__back" href="profile.html" aria-label="Back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+         stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </a>
+  <h1>SETTINGS</h1>
+</header>
+
+<main class="pf-wrap" id="setMain"><!-- rendered by js/settings.js --></main>
+
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/lang.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/theme.js"></script>
+<script defer src="js/shell.js"></script>
+</body>
+</html>

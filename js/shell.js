@@ -56,7 +56,7 @@
     { id: "chat", label: "Chat",  icon: "chat", href: BASE + "chat.html",
       match: /chat\.html|ask/ },
     { id: "you",  label: "You",   icon: "you",  href: BASE + "profile.html",
-      match: /profile\.html|settings\.html|about\.html/ }
+      match: /profile\.html|settings\.html/ }
   ];
 
   function svg(paths) {
@@ -106,7 +106,31 @@
     document.body.appendChild(nav);
     document.body.classList.add("tsb-has-bar");
 
+    paintYou(nav);
     hideOnScroll(nav);
+    /* auth resolves after the bar paints — refresh the You tab then */
+    window.addEventListener("tsb:auth", function () { paintYou(nav); });
+    window.addEventListener("tsb:profile", function () { paintYou(nav); });
+  }
+
+  /* ---------- You tab reflects the signed-in user ---------- */
+  function paintYou(nav) {
+    var slot = nav.querySelector('[data-tab="you"] .tsb-bar__icon');
+    if (!slot) return;
+    if (!signedIn()) { slot.innerHTML = svg(ICONS.you); return; }
+
+    var p = null;
+    try { p = window.TSB_PROFILE && window.TSB_PROFILE.get(); } catch (e) {}
+    if (p && p.avatar_url) {
+      slot.innerHTML = '<img class="tsb-bar__ava" src="' + p.avatar_url +
+        '" alt="" width="22" height="22" loading="lazy">';
+    } else if (p) {
+      var ini = "R";
+      try { ini = window.TSB_PROFILE.initials(p); } catch (e) {}
+      slot.innerHTML = '<span class="tsb-bar__ava tsb-bar__ava--ini">' + ini + "</span>";
+    } else {
+      slot.innerHTML = svg(ICONS.you);
+    }
   }
 
   /* ---------- hide on scroll-down, show on scroll-up ---------- */

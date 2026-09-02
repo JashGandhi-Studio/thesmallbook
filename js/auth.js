@@ -684,13 +684,18 @@
         onBookComplete,
         renderNav,
         clientId: GCLIENT,
+        /* v2: profile layer needs an authed REST channel */
+        ensureToken,
+        authHeaders,
+        SUPABASE_URL: URL,
+        SUPABASE_ANON: ANON,
         visits: () => (user() ? lsGet("tsb_auth_visits", { d: "", n: 0 }).n : 0)
       };
       try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
     } catch (e) {
       console.warn("TSB boot error:", e);
       // never leave the app without TSB_AUTH — degrade gracefully
-      window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, track, onBookComplete, renderNav, clientId: GCLIENT };
+      window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, track, onBookComplete, renderNav, clientId: GCLIENT, ensureToken, authHeaders, SUPABASE_URL: URL, SUPABASE_ANON: ANON };
       try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
     }
   }

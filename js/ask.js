@@ -12,6 +12,25 @@
 (function () {
   "use strict";
   if (window.TSB_ASK) return;
+
+  /* ── v2: the floating ASK bubble is retired ──────────────────
+     Ask now lives in the bottom action bar as a full-screen Chat
+     page (chat.html), driven by the SAME engine (js/ask-core.js).
+     This widget stays only as a redirect shim so any existing
+     "Ask" entry point keeps working instead of dead-ending.      */
+  var CHAT_URL = (function () {
+    var d = (location.pathname.replace(/\/[^\/]*$/, "/").match(/\//g) || []).length - 1;
+    return (d > 0 ? new Array(d + 1).join("../") : "") + "chat.html";
+  })();
+  if (!/chat\.html/.test(location.pathname)) {
+    window.TSB_ASK = {
+      open: function (q) {
+        location.href = CHAT_URL + (q ? "?q=" + encodeURIComponent(q) : "");
+      },
+      close: function () {}
+    };
+    return;
+  }
   window.TSB_ASK = { open: open, close: close };
 
   var BOOK_MAP = null;

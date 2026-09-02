@@ -333,3 +333,23 @@ body.tsb-has-bar { padding-bottom: calc(var(--bar-total) + 24px); }
 }
 .tsb-rail::-webkit-scrollbar { display: none; }
 .tsb-rail > * { scroll-snap-align: start; flex: 0 0 auto; }
+
+/* ---------- You tab avatar (signed in) ---------- */
+.tsb-bar__ava {
+  width: 22px; height: 22px;
+  border-radius: var(--r-pill);
+  object-fit: cover;
+  display: block;
+}
+.tsb-bar__ava--ini {
+  display: grid;
+  place-items: center;
+  background: var(--tsb-periwinkle);
+  color: #fff;
+  font-family: var(--font-head);
+  font-size: 9.5px;
+  letter-spacing: .3px;
+}
+.tsb-bar__item.is-active .tsb-bar__ava--ini {
+  background: var(--tsb-black);
+}

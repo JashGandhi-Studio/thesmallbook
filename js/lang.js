@@ -312,6 +312,7 @@
   });
 
   window.TSB_LANG = {
+    LANGS: LANGUAGES,      /* v2: settings page renders its own picker */
     open: openLangModal,
     select: selectLang,
     activate: activate,

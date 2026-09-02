@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v170";  // v2 Phase 1: tokens, shell, data split
+const CACHE_VERSION = "tsb-v171";  // v2 Phase 2: chat, profile, settings
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -16,6 +16,9 @@ const APP_SHELL = [
   "./graveyard.html",
   "./gold.html",
   "./about.html",
+  "./chat.html",
+  "./profile.html",
+  "./settings.html",
   "./scan.html",
   "./js/tts-engine.js",
   "./js/ask-data.js",
@@ -32,6 +35,13 @@ const APP_SHELL = [
   "./js/theme.js",
   "./js/shell.js",
   "./js/data-loader.js",
+  "./js/ask-core.js",
+  "./js/chat.js",
+  "./js/profile.js",
+  "./js/profile-page.js",
+  "./js/settings.js",
+  "./css/chat.css",
+  "./css/profile.css",
   "./data/books-index.json",
   "./js/prefs.js",
   "./js/support.js",
