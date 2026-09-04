@@ -247,7 +247,11 @@
       ".ob2__rec b{display:block;font-size:.9rem;line-height:1.25;margin-bottom:2px}",
       ".ob2__rec small{display:block;font-size:.74rem;color:var(--text-3);line-height:1.35}",
       ".ob2__why{color:var(--tsb-coral);font-weight:700}",
-      "@media(prefers-reduced-motion:reduce){.ob2,.ob2__box{animation:none}.ob2__spin{animation-duration:2s}}"
+      ".ob2__body{transition:opacity .13s ease,transform .13s cubic-bezier(.16,1,.3,1);will-change:opacity,transform}",
+      ".ob2__body.is-exit{opacity:0;transform:translateY(-6px)}",
+      ".ob2__body.is-enter{opacity:0;transform:translateY(8px)}",
+      "@media(prefers-reduced-motion:reduce){.ob2,.ob2__box{animation:none}.ob2__spin{animation-duration:2s}",
+      ".ob2__body,.ob2__body.is-exit,.ob2__body.is-enter{transition:none;opacity:1;transform:none}}"
     ].join("");
     document.head.appendChild(st);
   }
@@ -283,6 +287,13 @@
       "</button>";
     }).join("") + "</div>";
   }
+
+  var pendingSwap = null;
+  var REDUCED = false;
+  try {
+    REDUCED = window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch (e) {}
 
   function render() {
     css();
@@ -356,9 +367,49 @@
         '<div class="ob2__loadtxt" id="ob2Load">Reading your answers\u2026</div></div>';
     }
 
-    rootEl.innerHTML = shell(body, cta, ok, foot);
-    wire();
-    if (step === 6) crunch();
+    /* Cross-fade the step instead of swapping innerHTML outright, which
+       pops. Fade the outgoing body, swap, then fade in on the next frame —
+       opacity+transform only, so it never leaves the compositor. */
+    var prev = document.getElementById("ob2Body");
+    var swap = function () {
+      rootEl.innerHTML = shell(body, cta, ok, foot);
+      wire();
+      if (step === 6) crunch();
+
+      var next = document.getElementById("ob2Body");
+      if (next && !REDUCED) {
+        next.classList.add("is-enter");
+        var cleared = false;
+        var clear = function () {
+          if (cleared) return;
+          cleared = true;
+          next.classList.remove("is-enter");
+        };
+        requestAnimationFrame(function () { requestAnimationFrame(clear); });
+        /* rAF is throttled to zero in background tabs and never fires in
+           some headless engines, which would leave the step invisible.
+           A timer guarantees the step always becomes visible. */
+        setTimeout(clear, 80);
+      }
+    };
+
+    /* A step can be re-rendered while the previous fade is still pending
+       (fast taps, auto-advance, back). Cancel the in-flight swap so we never
+       stack two transitions and strand a body in its faded-out state. */
+    if (pendingSwap) {
+      clearTimeout(pendingSwap);
+      pendingSwap = null;
+      /* the cancelled transition left the current body faded out - clear it,
+         otherwise this step renders invisible and the flow looks frozen */
+      if (prev) prev.classList.remove("is-exit");
+    }
+
+    if (prev && !REDUCED) {
+      prev.classList.add("is-exit");
+      pendingSwap = setTimeout(function () { pendingSwap = null; swap(); }, 120);
+    } else {
+      swap();
+    }
   }
 
   function wire() {

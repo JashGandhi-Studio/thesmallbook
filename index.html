@@ -29,7 +29,6 @@ if(m==="auto")document.documentElement.classList.add("theme-auto");
 document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/shell.css">
-  <link rel="stylesheet" href="css/feed.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
@@ -261,20 +260,6 @@ document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
     })();
   </script>
 
-  <!-- YOUR FEED (infinite; books + graveyard autopsies) -->
-  <section id="feedSection" hidden data-beta>
-    <div class="section-head" id="feed">
-      <h2 id="fdGreet">📰 Your Feed</h2>
-      <div class="line"></div>
-    </div>
-    <div class="fd-wrap">
-      <div id="tsbFeed"></div>
-    </div>
-    <div class="fd-more">
-      <a class="fd-morebtn" href="#library">Browse all 350 books ↓</a>
-    </div>
-  </section>
-
   <!-- LIBRARY -->
   <div class="section-head" id="library">
     <h2>📚 The Shelf</h2>
@@ -293,7 +278,6 @@ document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
       <option value="lessons">MOST LESSONS</option>
       <option value="newest">NEWEST BOOKS</option>
       <option value="progress">MY PROGRESS</option>
-      <option value="appview">🧪 MOBILE APP VIEW — BETA</option>
     </select>
   </div>
 
@@ -401,59 +385,7 @@ document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
     })();
   </script>
   <script src="js/theme.js"></script>
-  <script src="js/feed.js"></script>
-<script>
-/* MOBILE APP VIEW (beta) — opt-in only.
-   Default is the classic shelf. The feed is infinite, so it must never sit
-   above the library by default or the shelf becomes unreachable. */
-(function () {
-  var KEY = "tsb_appview";
-  var sel = document.getElementById("sortSel");
-  var sec = document.getElementById("feedSection");
-  if (!sec) return;
-
-  function on()  { return localStorage.getItem(KEY) === "1"; }
-
-  function apply(active) {
-    document.documentElement.classList.toggle("tsb-appview", active);
-    if (active) {
-      sec.hidden = false;
-      try { window.TSB_FEED && window.TSB_FEED.init(); }
-      catch (e) { sec.hidden = true; }
-      var h = new Date().getHours();
-      var t = document.getElementById("fdGreet");
-      if (t) t.textContent = h < 12 ? "Good morning" : (h < 17 ? "Good afternoon" : "Good evening");
-    } else {
-      sec.hidden = true;
-    }
-  }
-
-  apply(on());
-  if (sel && on()) sel.value = "appview";
-
-  if (sel) {
-    sel.addEventListener("change", function () {
-      if (sel.value === "appview") {
-        localStorage.setItem(KEY, "1");
-        apply(true);
-        sec.scrollIntoView({ behavior: "smooth", block: "start" });
-      } else if (on()) {
-        localStorage.removeItem(KEY);
-        apply(false);
-      }
-    });
-  }
-
-  /* Home => top of page. Read => the library. Exposed for the app shell. */
-  window.TSB_HOME = {
-    top: function () { window.scrollTo({ top: 0, behavior: "smooth" }); },
-    library: function () {
-      var el = document.getElementById("library");
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-})();
-</script>
+  
 <script defer src="js/shell.js"></script>
 </body>
 </html>

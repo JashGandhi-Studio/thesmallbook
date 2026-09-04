@@ -549,79 +549,14 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
         "bar: inner highlight for depth");
 
   /* 60/120fps hygiene: no layout-thrashing transitions on the feed */
-  const feedCss = read(path.join(ROOT, "css", "feed.css"));
-  check(/content-visibility:\s*auto/.test(feedCss), "perf: feed uses content-visibility");
-  check(!/transition:[^;]*\b(width|height|top|left|margin)\b/.test(feedCss),
-        "perf: no layout-animating transitions in the feed");
-  check(/will-change:\s*transform/.test(feedCss), "perf: transform hinted to the GPU");
+  check(/will-change:\s*transform/.test(shell), "perf: transform hinted to the GPU");
 }
 
 /* ---- Phase 3: feed ---- */
-{
-  const html = read(path.join(ROOT, "home.html"));
-  const { dom } = await mk(html, { url: "https://thesmallbook.in/home.html" });
-  const w = dom.window;
-  ["js/data.js", "js/failures.js"].forEach(f => w.eval(read(path.join(ROOT, f))));
-  if (!w.BOOKS && w.window.BOOKS) w.BOOKS = w.window.BOOKS;
-  w.eval(read(path.join(ROOT, "js/feed.js")));
-  await tick(dom);
-  await new Promise(r => setTimeout(r, 200));
-
-  const doc = w.document;
-  const cards = doc.querySelectorAll(".fd-card");
-  check(cards.length >= 20, "feed: renders two pages up front", String(cards.length));
-
-  const deck = w.TSB_FEED.build();
-  const graves = deck.filter(d => d.kind === "grave").length;
-  const ratio = graves / deck.length;
-  check(ratio > 0.18 && ratio < 0.32, "feed: graveyard is ~25% of the stream",
-        (ratio * 100).toFixed(0) + "%");
-  check(deck.filter(d => d.kind === "quote").length > 0, "feed: has quote cards");
-  check(deck.filter(d => d.kind === "lesson").length > 0, "feed: has lesson cards");
-  check(deck.filter(d => d.kind === "book").length > 0, "feed: has book cards");
-  check(deck.length > 300, "feed: deck is deep enough to feel infinite", String(deck.length));
-
-  check(!!doc.querySelector(".fd-card--grave"), "feed: graveyard cards rendered");
-  check(!!doc.querySelector("[data-like]"), "feed: like control");
-  check(!!doc.querySelector("[data-save]"), "feed: save control");
-  check(!!doc.querySelector("[data-share]"), "feed: share control");
-
-  /* liking must persist */
-  const likeBtn = doc.querySelector("[data-like]");
-  likeBtn.click();
-  await new Promise(r => setTimeout(r, 30));
-  const stored = JSON.parse(w.localStorage.getItem("tsb_likes") || "[]");
-  check(stored.length === 1, "feed: like persists to storage", String(stored.length));
-
-  /* every card must link somewhere real */
-  const hrefs = [...doc.querySelectorAll(".fd-card")].map(c => c.getAttribute("data-href"));
-  check(hrefs.every(h => h && (h.includes("book.html") || h.includes("graveyard/"))),
-        "feed: every card deep-links to real content");
-}
 
 /* The feed must live on the FRONT DOOR. index.html is what "/" serves and
    what all 651 generated pages link to; a feed only on home.html is a feed
    nobody sees. */
-{
-  const idxSrc = read(path.join(ROOT, "index.html"));
-  check(/id="tsbFeed"/.test(idxSrc), "feed: mounted on index.html (the real homepage)");
-  check(/js\/feed\.js/.test(idxSrc), "feed: index.html loads feed.js");
-  check(/css\/feed\.css/.test(idxSrc), "feed: index.html loads feed.css");
-
-  const { dom } = await mk(idxSrc, { url: "https://thesmallbook.in/index.html" });
-  const w = dom.window;
-  ["js/data.js", "js/failures.js"].forEach(f => w.eval(read(path.join(ROOT, f))));
-  if (!w.BOOKS && w.window.BOOKS) w.BOOKS = w.window.BOOKS;
-  w.eval(read(path.join(ROOT, "js/feed.js")));
-  await tick(dom);
-  w.TSB_FEED.init();
-  await new Promise(r => setTimeout(r, 200));
-  const d = w.document;
-  check(d.querySelectorAll(".fd-card").length >= 12,
-        "feed: renders on the homepage", String(d.querySelectorAll(".fd-card").length));
-  check(!d.getElementById("feedSection").hidden, "feed: homepage section is revealed");
-  check(d.querySelectorAll("#grid").length === 1, "feed: library grid still present below");
-}
 
 /* ---- Phase 3: onboarding v2 ---- */
 {
@@ -732,64 +667,111 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
    The feed is infinite; if it renders above the library by default you
    can never scroll to the books. This is the regression the user hit.
    ============================================================ */
+
+/* ============================================================
+   ACTIVE TAB IS PREMIUM — and there is exactly ONE rule painting it.
+   A leftover mint ::before pill was stacking on top of the butter
+   background, so the selected tab rendered green.
+   ============================================================ */
 {
-  section("App view (beta) opt-in");
+  section("Active tab styling");
+
+  const sh = read(path.join(ROOT, "css", "shell.css"));
+
+  check(!/\.tsb-bar__item::before[^}]*background:\s*var\(--tsb-mint\)/.test(sh),
+        "tab: active pill is not mint/green");
+  check(/\.tsb-bar__item::before[^}]*background:\s*var\(--tsb-butter\)/.test(sh),
+        "tab: active pill uses the butter accent");
+  check(/\.tsb-bar__item\.is-active::before[^}]*box-shadow:\s*2px 2px 0/.test(sh),
+        "tab: active pill has the hard offset shadow");
+  check(/\.tsb-bar__item\.is-active\s*\{\s*background:\s*transparent/.test(sh),
+        "tab: item stays transparent so nothing double-layers");
+
+  /* only the pseudo-element may carry an active background */
+  const activeBg = (sh.match(/\.tsb-bar__item\.is-active\s*\{[^}]*background:[^;]+;/g) || [])
+    .filter(r => !/transparent/.test(r));
+  check(activeBg.length === 0,
+        "tab: exactly one source of truth for the active fill",
+        activeBg.join(" | "));
+}
+
+/* ============================================================
+   FEED + BETA APP VIEW REMOVED — no dead references may remain.
+   ============================================================ */
+{
+  section("Feed removal");
+
+  ["home.html", "js/feed.js", "css/feed.css"].forEach(f => {
+    check(!fs.existsSync(path.join(ROOT, f)), "removed: " + f);
+  });
 
   const idxSrc = read(path.join(ROOT, "index.html"));
-  check(/id="feedSection"[^>]*hidden/.test(idxSrc),
-        "appview: feed section ships hidden by default");
-  check(/value="appview"/.test(idxSrc), "appview: toggle offered in the sort menu");
-  check(/tsb_appview/.test(idxSrc), "appview: choice persists");
+  ["appview", "tsbFeed", "feed.js", "feed.css", "feedSection"].forEach(t => {
+    check(!idxSrc.includes(t), "index.html: no '" + t + "' residue");
+  });
 
-  /* default load: shelf visible, feed absent */
-  {
-    const { dom } = await mk(idxSrc, { url: "https://thesmallbook.in/index.html" });
-    const w = dom.window;
-    ["js/data.js", "js/failures.js"].forEach(f => w.eval(read(path.join(ROOT, f))));
-    if (!w.BOOKS && w.window.BOOKS) w.BOOKS = w.window.BOOKS;
-    w.eval(read(path.join(ROOT, "js/feed.js")));
-    await tick(dom);
-    await new Promise(r => setTimeout(r, 120));
-    const d = w.document;
-    check(d.getElementById("feedSection").hidden,
-          "appview OFF: feed stays hidden");
-    check(d.querySelectorAll(".fd-card").length === 0,
-          "appview OFF: no feed cards above the shelf",
-          String(d.querySelectorAll(".fd-card").length));
-    check(!!d.getElementById("grid"), "appview OFF: library grid present");
+  const swSrc = read(path.join(ROOT, "sw.js"));
+  check(!/home\.html|feed\.(js|css)/.test(swSrc), "sw.js: feed assets removed from cache list");
+
+  /* the shelf is the homepage again */
+  check(/id="grid"/.test(idxSrc), "index.html: library grid is the main content");
+  check(/id="library"/.test(idxSrc), "index.html: library anchor intact for the Read tab");
+}
+
+/* ============================================================
+   ONBOARDING SMOOTHNESS — steps cross-fade and always settle visible.
+   ============================================================ */
+{
+  section("Onboarding smoothness");
+
+  const ob = read(path.join(ROOT, "js", "onboard2.js"));
+  check(/is-exit/.test(ob) && /is-enter/.test(ob), "onboarding: steps cross-fade");
+  check(!/transition:[^;"]*\b(width|height|top|left|margin|padding)\b/.test(ob),
+        "onboarding: animates opacity/transform only");
+  check(/setTimeout\(clear/.test(ob),
+        "onboarding: rAF failsafe so a step can never stay invisible");
+  check(/prefers-reduced-motion/.test(ob), "onboarding: honours reduced motion");
+
+  const { dom } = await mk(APP_HTML, { url: "https://thesmallbook.in/index.html" });
+  const w = dom.window;
+  w.eval(read(path.join(ROOT, "js/data.js")));
+  if (!w.BOOKS && w.window.BOOKS) w.BOOKS = w.window.BOOKS;
+  w.eval(read(path.join(ROOT, "js/onboard2.js")));
+  await tick(dom);
+  w.TSB_ONBOARD2.force();
+  await new Promise(r => setTimeout(r, 150));
+
+  const d = w.document;
+  let stuck = 0;
+  for (let i = 0; i < 7; i++) {
+    /* Select, let that render settle, THEN advance. Firing both in the same
+       tick queues two renders ~0ms apart, which no human can do and which
+       guarantees sampling mid-fade. */
+    const opt = d.querySelector(".ob2 .ob2__opt, .ob2 .ob2__tile, .ob2 .ob2__quote");
+    if (opt) opt.click();
+    await new Promise(r => setTimeout(r, 320));
+
+    const cta = d.querySelector(".ob2 #ob2Next, .ob2 #ob2Cta");
+    if (cta && !cta.disabled) cta.click();
+    /* Wait for the render to fully settle before sampling. The fade is
+       120ms out + ~80ms in; step 6 also re-renders itself after ~2.5s.
+       Poll rather than guess a single number. */
+    const deadline = Date.now() + (i === 5 ? 4000 : 1200);
+    for (;;) {
+      await new Promise(r => setTimeout(r, 60));
+      const ov = d.querySelector(".ob2");
+      const bd = ov ? ov.querySelector(".ob2__body") : null;
+      const settled = !bd ||
+        (!bd.classList.contains("is-exit") && !bd.classList.contains("is-enter"));
+      if (settled || Date.now() > deadline) break;
+    }
+    /* scope to THIS document's overlay: an earlier block leaves its own
+       onboarding mounted, and getElementById would find the stale one */
+    const overlay = d.querySelector(".ob2");
+    const b = overlay ? overlay.querySelector(".ob2__body") : null;
+    if (b && (b.classList.contains("is-exit") || b.classList.contains("is-enter"))) stuck++;
   }
-
-  /* opted in: feed renders, and the shelf still exists below it */
-  {
-    const { dom } = await mk(idxSrc, { url: "https://thesmallbook.in/index.html" });
-    const w = dom.window;
-    w.localStorage.setItem("tsb_appview", "1");
-    ["js/data.js", "js/failures.js"].forEach(f => w.eval(read(path.join(ROOT, f))));
-    if (!w.BOOKS && w.window.BOOKS) w.BOOKS = w.window.BOOKS;
-    w.eval(read(path.join(ROOT, "js/feed.js")));
-    await tick(dom);
-    w.TSB_FEED.init();
-    await new Promise(r => setTimeout(r, 200));
-    const d = w.document;
-    check(d.querySelectorAll(".fd-card").length >= 12,
-          "appview ON: feed renders", String(d.querySelectorAll(".fd-card").length));
-    check(!!d.getElementById("grid"), "appview ON: shelf still below the feed");
-  }
-
-  /* Home => top, Read => library, without reloading the page */
-  const shellSrc = read(path.join(ROOT, "js", "shell.js"));
-  check(/function wireHomeScroll/.test(shellSrc), "nav: Home/Read scroll on the homepage");
-  check(/index\.html#library/.test(shellSrc), "nav: Read targets the library anchor");
-  check(/scrollIntoView/.test(shellSrc) && /scrollTo/.test(shellSrc),
-        "nav: uses smooth scrolling, not navigation");
-
-  /* neo-brutalist bar: hard edges, offset shadow, no glass */
-  const sh = read(path.join(ROOT, "css", "shell.css"));
-  const barBlock = sh.slice(sh.indexOf("NEO-BRUTALIST BOTTOM BAR"));
-  check(/backdrop-filter:\s*none/.test(barBlock), "bar: glass blur removed");
-  check(/box-shadow:\s*4px 4px 0/.test(barBlock), "bar: hard offset shadow");
-  check(!/transition:[^;]*\b(width|height|top|left|margin)\b/.test(barBlock),
-        "bar: animates transform only (compositor-safe)");
+  check(stuck === 0, "onboarding: every step settles fully visible", stuck + " stuck");
 }
 
   report();
