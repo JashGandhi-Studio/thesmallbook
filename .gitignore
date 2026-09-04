@@ -1,3 +1,10 @@
 node_modules/
 .DS_Store
 *.log
+
+# never commit secrets
+.env
+.env.*
+*.pem
+*.key
+.coding-latest.patch

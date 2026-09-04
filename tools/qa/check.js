@@ -671,6 +671,61 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
   check(!/location\.href = "login\.html"/.test(pp), "signin: old login page no longer used");
 }
 
+/* ============================================================
+   SECRET SCANNING — no credential may ever enter the repo.
+   The Supabase anon key is public by design (it is RLS-gated and
+   ships to the browser); everything else here is a hard fail.
+   ============================================================ */
+{
+  section("Secret scanning");
+
+  const SECRET_PATTERNS = [
+    [/\bsk_[a-zA-Z0-9]{4,}_[a-zA-Z0-9]{16,}\b/, "generic sk_ secret key"],
+    [/\bsk-(ant|proj)?-?[a-zA-Z0-9_-]{24,}\b/, "AI provider secret key"],
+    [/\bsk_(live|test)_[a-zA-Z0-9]{16,}\b/,    "Stripe secret key"],
+    [/\brzp_live_[a-zA-Z0-9]{10,}\b/,          "Razorpay LIVE key id"],
+    [/\bAIza[0-9A-Za-z_-]{35}\b/,              "Google API key"],
+    [/\bghp_[A-Za-z0-9]{36}\b/,                "GitHub token"],
+    [/-----BEGIN [A-Z ]*PRIVATE KEY-----/,       "private key block"],
+    [/"?service_role"?\s*[:=]\s*"[^"]{20,}"/,   "Supabase service_role key"],
+    [/RAZORPAY_KEY_SECRET\s*[:=]\s*["'][^"']{8,}["']/, "hardcoded Razorpay secret"]
+  ];
+
+  const SCAN_EXT = new Set([".js", ".html", ".json", ".md", ".css", ".yml", ".yaml"]);
+  const SKIP_DIR = new Set(["node_modules", ".git", "books", "graveyard", "data"]);
+
+  function walkAll(dir, out) {
+    out = out || [];
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (e.name.startsWith(".") && e.name !== ".github") continue;
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) { if (!SKIP_DIR.has(e.name)) walkAll(full, out); }
+      else if (SCAN_EXT.has(path.extname(e.name))) out.push(full);
+    }
+    return out;
+  }
+
+  const hits = [];
+  for (const f of walkAll(ROOT)) {
+    const src = read(f);
+    for (const [re, label] of SECRET_PATTERNS) {
+      const m = src.match(re);
+      if (m) hits.push(path.relative(ROOT, f) + " → " + label);
+    }
+  }
+  check(hits.length === 0, "no credentials committed to the repo", hits.slice(0, 3).join(" | "));
+
+  /* the anon key is public, but the service_role key must never appear */
+  const cfg = read(path.join(ROOT, "js", "config.js"));
+  check(!/service_role/.test(cfg), "config.js: no service_role key");
+  check(/SUPABASE_ANON_KEY/.test(cfg), "config.js: uses the anon key (RLS-gated, safe to ship)");
+
+  /* secrets must be ignored if they ever land in a local env file */
+  const ignore = fs.existsSync(path.join(ROOT, ".gitignore"))
+    ? read(path.join(ROOT, ".gitignore")) : "";
+  check(/\.env/.test(ignore), "gitignore: .env files excluded");
+}
+
   report();
 }
 
