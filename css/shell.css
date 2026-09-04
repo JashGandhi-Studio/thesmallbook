@@ -402,3 +402,57 @@ body.tsb-has-bar { padding-bottom: calc(var(--bar-total) + 24px); }
 .tsb-bar__item.is-active .tsb-bar__ava--ini {
   background: var(--tsb-black);
 }
+
+/* ============================================================
+   NEO-BRUTALIST BOTTOM BAR
+   Hard edges, solid ink border, offset shadow — no blur, no glass.
+   Transform/opacity only so it stays on the compositor at 120Hz.
+   ============================================================ */
+.tsb-bar {
+  background: var(--paper, #FFFDF7);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 2.5px solid var(--ink, #0E0E10);
+  border-radius: 18px;
+  box-shadow: 4px 4px 0 var(--ink, #0E0E10);
+}
+html.dark .tsb-bar {
+  background: #17171A;
+  border-color: #F2F2F2;
+  box-shadow: 4px 4px 0 rgba(255,255,255,.9);
+}
+
+.tsb-bar__item {
+  border-radius: 12px;
+  transition: transform .16s cubic-bezier(.2,.8,.2,1), background-color .16s linear;
+  will-change: transform;
+}
+.tsb-bar__item:active { transform: translateY(2px) scale(.97); }
+
+.tsb-bar__item.is-active {
+  background: var(--tsb-butter, #FFC94D);
+  border: 2px solid var(--ink, #0E0E10);
+  box-shadow: 2px 2px 0 var(--ink, #0E0E10);
+}
+html.dark .tsb-bar__item.is-active {
+  background: var(--tsb-butter, #FFC94D);
+  border-color: #0E0E10;
+  color: #0E0E10;
+  box-shadow: 2px 2px 0 rgba(255,255,255,.65);
+}
+.tsb-bar__item.is-active .tsb-bar__label { font-weight: 800; }
+
+.tsb-bar__fab {
+  border: 2.5px solid var(--ink, #0E0E10);
+  border-radius: 14px;
+  background: var(--tsb-coral, #FF5A47);
+  box-shadow: 3px 3px 0 var(--ink, #0E0E10);
+  transition: transform .16s cubic-bezier(.2,.8,.2,1);
+  will-change: transform;
+}
+.tsb-bar__fab:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink, #0E0E10); }
+html.dark .tsb-bar__fab { border-color: #F2F2F2; box-shadow: 3px 3px 0 rgba(255,255,255,.9); }
+
+@media (prefers-reduced-motion: reduce) {
+  .tsb-bar__item, .tsb-bar__fab { transition: none; }
+}

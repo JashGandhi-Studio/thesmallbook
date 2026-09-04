@@ -334,7 +334,16 @@
 
   window.TSB_FEED = { init: init, build: build, reload: function () { cursor = 0; init(mount); } };
 
+  /* No auto-init. The feed is infinite, so a page that renders it above
+     other content makes that content unreachable — index.html only calls
+     init() when the reader has opted into the app view. Pages that are
+     nothing but feed (home.html) mark the mount with data-feed-auto. */
+  function autoInit() {
+    var el = document.querySelector("[data-feed-auto]");
+    if (el) init(el.id === "tsbFeed" ? el : document.getElementById("tsbFeed"));
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { init(); });
-  } else { init(); }
+    document.addEventListener("DOMContentLoaded", autoInit);
+  } else { autoInit(); }
 })();

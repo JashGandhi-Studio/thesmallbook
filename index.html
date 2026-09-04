@@ -262,7 +262,7 @@ document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
   </script>
 
   <!-- YOUR FEED (infinite; books + graveyard autopsies) -->
-  <section id="feedSection" hidden>
+  <section id="feedSection" hidden data-beta>
     <div class="section-head" id="feed">
       <h2 id="fdGreet">📰 Your Feed</h2>
       <div class="line"></div>
@@ -293,6 +293,7 @@ document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
       <option value="lessons">MOST LESSONS</option>
       <option value="newest">NEWEST BOOKS</option>
       <option value="progress">MY PROGRESS</option>
+      <option value="appview">🧪 MOBILE APP VIEW — BETA</option>
     </select>
   </div>
 
@@ -402,24 +403,55 @@ document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
   <script src="js/theme.js"></script>
   <script src="js/feed.js"></script>
 <script>
-/* Reveal the feed on the homepage. Signed-in / onboarded readers get it
-   first; everyone else still gets it under the hero so the shelf is never
-   the only thing here. TSB_FEED.init() is idempotent. */
+/* MOBILE APP VIEW (beta) — opt-in only.
+   Default is the classic shelf. The feed is infinite, so it must never sit
+   above the library by default or the shelf becomes unreachable. */
 (function () {
-  function go() {
-    var sec = document.getElementById("feedSection");
-    if (!sec || !window.TSB_FEED) return;
-    sec.hidden = false;
-    try { window.TSB_FEED.init(); } catch (e) { sec.hidden = true; }
+  var KEY = "tsb_appview";
+  var sel = document.getElementById("sortSel");
+  var sec = document.getElementById("feedSection");
+  if (!sec) return;
 
-    var h = new Date().getHours();
-    var g = h < 12 ? "Good morning" : (h < 17 ? "Good afternoon" : "Good evening");
-    var t = document.getElementById("fdGreet");
-    if (t) t.textContent = g;
+  function on()  { return localStorage.getItem(KEY) === "1"; }
+
+  function apply(active) {
+    document.documentElement.classList.toggle("tsb-appview", active);
+    if (active) {
+      sec.hidden = false;
+      try { window.TSB_FEED && window.TSB_FEED.init(); }
+      catch (e) { sec.hidden = true; }
+      var h = new Date().getHours();
+      var t = document.getElementById("fdGreet");
+      if (t) t.textContent = h < 12 ? "Good morning" : (h < 17 ? "Good afternoon" : "Good evening");
+    } else {
+      sec.hidden = true;
+    }
   }
-  if (document.readyState === "loading")
-    document.addEventListener("DOMContentLoaded", go);
-  else go();
+
+  apply(on());
+  if (sel && on()) sel.value = "appview";
+
+  if (sel) {
+    sel.addEventListener("change", function () {
+      if (sel.value === "appview") {
+        localStorage.setItem(KEY, "1");
+        apply(true);
+        sec.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (on()) {
+        localStorage.removeItem(KEY);
+        apply(false);
+      }
+    });
+  }
+
+  /* Home => top of page. Read => the library. Exposed for the app shell. */
+  window.TSB_HOME = {
+    top: function () { window.scrollTo({ top: 0, behavior: "smooth" }); },
+    library: function () {
+      var el = document.getElementById("library");
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 })();
 </script>
 <script defer src="js/shell.js"></script>

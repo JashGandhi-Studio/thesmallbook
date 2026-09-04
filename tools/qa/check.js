@@ -265,8 +265,9 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
   check(labels.join(",") === "Home,Read,Chat,You", "tab labels", labels.join(","));
   check(!!doc.querySelector(".tsb-bar__fab"), "Add renders as the coral FAB");
   check(doc.querySelectorAll(".tsb-bar__item.is-active").length === 1, "exactly one active tab");
-  check(doc.querySelector('[data-tab="read"]').classList.contains("is-active"),
-        "Read active on index (index is now the library)");
+  /* index.html is the homepage again: Home owns it, Read scrolls to the shelf */
+  check(doc.querySelector('[data-tab="home"]').classList.contains("is-active"),
+        "Home active on index (index is the homepage)");
   check(bar.getAttribute("role") === "navigation" && !!bar.getAttribute("aria-label"), "bar is a11y-labelled");
   check(!!doc.querySelector('[aria-current="page"]'), "active tab has aria-current");
   check([...doc.querySelectorAll(".tsb-bar__item")].every(a => a.getAttribute("href")), "every tab has an href");
@@ -724,6 +725,71 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
   const ignore = fs.existsSync(path.join(ROOT, ".gitignore"))
     ? read(path.join(ROOT, ".gitignore")) : "";
   check(/\.env/.test(ignore), "gitignore: .env files excluded");
+}
+
+/* ============================================================
+   APP VIEW IS OPT-IN — the shelf must never be unreachable.
+   The feed is infinite; if it renders above the library by default you
+   can never scroll to the books. This is the regression the user hit.
+   ============================================================ */
+{
+  section("App view (beta) opt-in");
+
+  const idxSrc = read(path.join(ROOT, "index.html"));
+  check(/id="feedSection"[^>]*hidden/.test(idxSrc),
+        "appview: feed section ships hidden by default");
+  check(/value="appview"/.test(idxSrc), "appview: toggle offered in the sort menu");
+  check(/tsb_appview/.test(idxSrc), "appview: choice persists");
+
+  /* default load: shelf visible, feed absent */
+  {
+    const { dom } = await mk(idxSrc, { url: "https://thesmallbook.in/index.html" });
+    const w = dom.window;
+    ["js/data.js", "js/failures.js"].forEach(f => w.eval(read(path.join(ROOT, f))));
+    if (!w.BOOKS && w.window.BOOKS) w.BOOKS = w.window.BOOKS;
+    w.eval(read(path.join(ROOT, "js/feed.js")));
+    await tick(dom);
+    await new Promise(r => setTimeout(r, 120));
+    const d = w.document;
+    check(d.getElementById("feedSection").hidden,
+          "appview OFF: feed stays hidden");
+    check(d.querySelectorAll(".fd-card").length === 0,
+          "appview OFF: no feed cards above the shelf",
+          String(d.querySelectorAll(".fd-card").length));
+    check(!!d.getElementById("grid"), "appview OFF: library grid present");
+  }
+
+  /* opted in: feed renders, and the shelf still exists below it */
+  {
+    const { dom } = await mk(idxSrc, { url: "https://thesmallbook.in/index.html" });
+    const w = dom.window;
+    w.localStorage.setItem("tsb_appview", "1");
+    ["js/data.js", "js/failures.js"].forEach(f => w.eval(read(path.join(ROOT, f))));
+    if (!w.BOOKS && w.window.BOOKS) w.BOOKS = w.window.BOOKS;
+    w.eval(read(path.join(ROOT, "js/feed.js")));
+    await tick(dom);
+    w.TSB_FEED.init();
+    await new Promise(r => setTimeout(r, 200));
+    const d = w.document;
+    check(d.querySelectorAll(".fd-card").length >= 12,
+          "appview ON: feed renders", String(d.querySelectorAll(".fd-card").length));
+    check(!!d.getElementById("grid"), "appview ON: shelf still below the feed");
+  }
+
+  /* Home => top, Read => library, without reloading the page */
+  const shellSrc = read(path.join(ROOT, "js", "shell.js"));
+  check(/function wireHomeScroll/.test(shellSrc), "nav: Home/Read scroll on the homepage");
+  check(/index\.html#library/.test(shellSrc), "nav: Read targets the library anchor");
+  check(/scrollIntoView/.test(shellSrc) && /scrollTo/.test(shellSrc),
+        "nav: uses smooth scrolling, not navigation");
+
+  /* neo-brutalist bar: hard edges, offset shadow, no glass */
+  const sh = read(path.join(ROOT, "css", "shell.css"));
+  const barBlock = sh.slice(sh.indexOf("NEO-BRUTALIST BOTTOM BAR"));
+  check(/backdrop-filter:\s*none/.test(barBlock), "bar: glass blur removed");
+  check(/box-shadow:\s*4px 4px 0/.test(barBlock), "bar: hard offset shadow");
+  check(!/transition:[^;]*\b(width|height|top|left|margin)\b/.test(barBlock),
+        "bar: animates transform only (compositor-safe)");
 }
 
   report();

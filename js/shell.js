@@ -47,10 +47,10 @@
   };
 
   var TABS = [
-    { id: "home", label: "Home",  icon: "home", href: BASE + "home.html",
-      match: /^$|home\.html/ },
-    { id: "read", label: "Read",  icon: "read", href: BASE + "index.html",
-      match: /index\.html|book\.html|library|graveyard/ },
+    { id: "home", label: "Home",  icon: "home", href: BASE + "index.html",
+      match: /^$|index\.html|home\.html/ },
+    { id: "read", label: "Read",  icon: "read", href: BASE + "index.html#library",
+      match: /book\.html|library|graveyard/ },
     { id: "add",  label: "Add",   icon: "add",  href: BASE + "stories.html",
       match: /stories\.html|story\.html|add\.html/, fab: true },
     { id: "chat", label: "Chat",  icon: "chat", href: BASE + "chat.html",
@@ -108,9 +108,38 @@
 
     paintYou(nav);
     hideOnScroll(nav);
+    wireHomeScroll(nav);
     /* auth resolves after the bar paints — refresh the You tab then */
     window.addEventListener("tsb:auth", function () { paintYou(nav); });
     window.addEventListener("tsb:profile", function () { paintYou(nav); });
+  }
+
+  /* ---------- Home/Read scroll within the homepage ----------
+     On index.html both tabs point at the same document, so a normal
+     navigation would reload the page and lose your place. Scroll instead:
+     Home => very top, Read => the shelf. */
+  function wireHomeScroll(nav) {
+    var p = location.pathname;
+    var onHome = /(^|\/)$/.test(p) || /(^|\/)index\.html$/.test(p);
+    if (!onHome) return;
+
+    nav.querySelectorAll("[data-tab]").forEach(function (a) {
+      var id = a.getAttribute("data-tab");
+      if (id !== "home" && id !== "read") return;
+
+      a.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        var lib = document.getElementById("library");
+        if (id === "read" && lib) lib.scrollIntoView({ behavior: "smooth", block: "start" });
+        else window.scrollTo({ top: 0, behavior: "smooth" });
+
+        nav.querySelectorAll("[data-tab]").forEach(function (b) {
+          b.classList.toggle("is-active", b === a);
+          if (b === a) b.setAttribute("aria-current", "page");
+          else b.removeAttribute("aria-current");
+        });
+      });
+    });
   }
 
   /* ---------- You tab reflects the signed-in user ---------- */
