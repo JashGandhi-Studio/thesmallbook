@@ -109,6 +109,16 @@
     paintYou(nav);
     hideOnScroll(nav);
     wireHomeScroll(nav);
+
+    var youTab = nav.querySelector('[data-tab="you"]');
+    if (youTab) {
+      youTab.addEventListener("click", function (ev) {
+        /* profile.html is the full page; everywhere else You slides up */
+        if (/profile\.html/.test(location.pathname)) return;
+        ev.preventDefault();
+        openYou();
+      });
+    }
     /* auth resolves after the bar paints — refresh the You tab then */
     window.addEventListener("tsb:auth", function () { paintYou(nav); });
     window.addEventListener("tsb:profile", function () { paintYou(nav); });
@@ -139,6 +149,67 @@
           else b.removeAttribute("aria-current");
         });
       });
+    });
+  }
+
+  /* ---------- You opens as a bottom sheet, not a page ----------
+     The reader stays where they are; the panel slides up over it. Signed
+     out it shows the sign-in pitch; signed in it shows name + shortcuts. */
+  function youHtml() {
+    var p = null;
+    try { p = window.TSB_PROFILE && window.TSB_PROFILE.get(); } catch (e) {}
+
+    if (!signedIn() || !p) {
+      return '<div class="yo-gate">' +
+        '<div class="yo-gate__mark">\uD83D\uDC4B</div>' +
+        "<h3>Your shelf, everywhere</h3>" +
+        "<p>Sign in to keep what you read \u2014 and to start posting.</p>" +
+        '<ul class="yo-perks">' +
+          "<li><span>\uD83D\uDCDA</span><div>Progress and shelf on every device</div></li>" +
+          "<li><span>\uD83D\uDD25</span><div>Streaks and badges that actually save</div></li>" +
+          "<li><span>\u270D\uFE0F</span><div>Post under your own name</div></li>" +
+        "</ul>" +
+        '<button class="yo-cta" id="yoSignIn">Continue with Google</button>' +
+        '<p class="yo-fine">Free forever. No card.</p>' +
+      "</div>";
+    }
+
+    var name = p.display_name || p.username || "Reader";
+    var handle = p.username ? "@" + p.username : "";
+    var ava = p.avatar_url
+      ? '<img src="' + p.avatar_url + '" alt="" width="56" height="56">'
+      : '<span class="yo-ava__ini">' +
+        (window.TSB_PROFILE.initials ? window.TSB_PROFILE.initials(p) : "R") + "</span>";
+
+    return '<div class="yo-id">' +
+        '<div class="yo-ava">' + ava + "</div>" +
+        '<div class="yo-id__txt"><strong>' + name + "</strong>" +
+          (handle ? "<span>" + handle + "</span>" : "") + "</div>" +
+      "</div>" +
+      '<div class="yo-stats">' +
+        '<div><b>' + (p.posts || 0) + "</b><span>Posts</span></div>" +
+        '<div><b>' + (p.followers || 0) + "</b><span>Followers</span></div>" +
+        '<div><b>' + (p.following || 0) + "</b><span>Following</span></div>" +
+      "</div>" +
+      '<nav class="yo-rows">' +
+        '<a class="yo-row" href="' + BASE + 'profile.html"><span>\uD83D\uDC64</span>Full profile</a>' +
+        '<a class="yo-row" href="' + BASE + 'index.html#library"><span>\uD83D\uDCDA</span>My shelf</a>' +
+        '<a class="yo-row" href="' + BASE + 'stories.html"><span>\u270D\uFE0F</span>My posts</a>' +
+        '<a class="yo-row" href="' + BASE + 'settings.html"><span>\u2699\uFE0F</span>Settings</a>' +
+      "</nav>";
+  }
+
+  function openYou() {
+    if (!window.TSB_SHEET) { location.href = BASE + "profile.html"; return; }
+    window.TSB_SHEET.open({
+      title: "You",
+      html: youHtml(),
+      onMount: function (body) {
+        var btn = body.querySelector("#yoSignIn");
+        if (btn) btn.addEventListener("click", function () {
+          location.href = BASE + "signin.html?next=index.html";
+        });
+      }
     });
   }
 

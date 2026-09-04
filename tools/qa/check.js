@@ -774,6 +774,89 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
   check(stuck === 0, "onboarding: every step settles fully visible", stuck + " stuck");
 }
 
+/* ============================================================
+   "YOU" OPENS AS A BOTTOM SHEET — the app never leaves the screen.
+   ============================================================ */
+{
+  section("You sheet");
+
+  check(fs.existsSync(path.join(ROOT, "js", "sheet.js")), "sheet: js/sheet.js exists");
+  const sheet = read(path.join(ROOT, "js", "sheet.js"));
+  check(/translateY\(100%\)/.test(sheet), "sheet: slides up from the bottom");
+  check(!/transition:[^;"]*\b(width|height|top|left|margin)\b/.test(sheet),
+        "sheet: animates transform/opacity only");
+  check(/prefers-reduced-motion/.test(sheet), "sheet: honours reduced motion");
+  check(/setTimeout\(finish/.test(sheet), "sheet: close cannot hang on a missed transitionend");
+
+  const shellSrc = read(path.join(ROOT, "js", "shell.js"));
+  check(/function openYou/.test(shellSrc), "sheet: You tab opens the panel");
+  check(/ev\.preventDefault\(\)[\s\S]{0,80}openYou/.test(shellSrc),
+        "sheet: You tab does not navigate away");
+  check(/profile\\.html/.test(shellSrc), "sheet: full profile page still reachable");
+
+  /* every shell page must load sheet.js, else You silently navigates */
+  const missing = [];
+  for (const f of pages) {
+    const rel = path.relative(ROOT, f);
+    if (rel.includes(path.sep)) continue;
+    if (rel === "scan.html" || rel === "signin.html") continue;
+    const src = read(f);
+    if (src.includes("js/shell.js") && !src.includes("js/sheet.js")) missing.push(rel);
+  }
+  check(missing.length === 0, "sheet: loaded on every shell page", missing.join(", "));
+
+  /* signed out => pitch + Google; signed in => the name is shown */
+  const { dom } = await mk(APP_HTML, { url: "https://thesmallbook.in/index.html" });
+  const w = dom.window;
+  w.eval(read(path.join(ROOT, "js/sheet.js")));
+  w.eval(read(path.join(ROOT, "js/shell.js")));
+  await tick(dom);
+
+  const youTab = w.document.querySelector('[data-tab="you"]');
+  check(!!youTab, "sheet: You tab present in the bar");
+  youTab.click();
+  await new Promise(r => setTimeout(r, 60));
+  const d = w.document;
+  check(!!d.querySelector(".sh-wrap.is-open"), "sheet: opens on tap");
+  const cta = d.querySelector("#yoSignIn");
+  check(!!cta, "sheet: signed out shows the sign-in CTA");
+  check(!!cta && /Google/.test(cta.textContent), "sheet: signed out offers Google");
+
+  /* Esc must close it */
+  d.dispatchEvent(new w.KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+  await new Promise(r => setTimeout(r, 60));
+  check(!d.querySelector(".sh-wrap.is-open"), "sheet: Escape closes it");
+}
+
+/* ============================================================
+   CHAT WEARS THE APP UI — and no rule may target a class that
+   does not exist (dead CSS silently does nothing).
+   ============================================================ */
+{
+  section("Chat in the app UI");
+
+  const cc = read(path.join(ROOT, "css", "chat.css"));
+  const block = cc.slice(cc.indexOf("CHAT IN THE APP UI"));
+  check(/backdrop-filter:\s*none/.test(block), "chat: glass header replaced");
+  check(/box-shadow:\s*2px 2px 0/.test(block), "chat: hard offset shadows");
+  check(/var\(--tsb-butter\)/.test(block), "chat: butter accent matches the bar");
+  check(!/transition:[^;]*\b(width|height|top|left|margin)\b/.test(block),
+        "chat: compositor-safe transitions only");
+
+  /* every class selector in the new block must appear in chat.html or chat.js */
+  const chatHtml = read(path.join(ROOT, "chat.html"));
+  const chatJs = read(path.join(ROOT, "js", "chat.js"));
+  const markup = chatHtml + chatJs;
+  const dead = [];
+  const selectors = block.match(/^[.#][a-zA-Z0-9_-]+/gm) || [];
+  [...new Set(selectors)].forEach(sel => {
+    const bare = sel.slice(1);
+    if (!markup.includes(bare)) dead.push(sel);
+  });
+  check(dead.length === 0, "chat: no CSS rules targeting non-existent elements",
+        dead.join(", "));
+}
+
   report();
 }
 

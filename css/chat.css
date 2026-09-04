@@ -471,3 +471,93 @@ body.chatpage.tsb-has-bar { padding-bottom: 0; }
   white-space: nowrap;
 }
 .qlib__empty { padding: var(--s-8) var(--s-4); text-align: center; color: var(--text-3); font-size: var(--fs-sm); }
+
+/* ============================================================
+   CHAT IN THE APP UI
+   Match the neo-brutalist shell: hard borders, offset shadows, butter
+   accent. Replaces the soft glass header and pill buttons.
+   ============================================================ */
+.chat-top {
+  background: var(--surface-1);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 2.5px solid var(--tsb-black);
+}
+html.dark .chat-top { border-bottom-color: rgba(255,255,255,.5); }
+
+.chat-top__back,
+.chat-top__new {
+  width: 38px; height: 38px;
+  background: var(--surface-2);
+  border: 2px solid var(--tsb-black);
+  border-radius: 12px;
+  box-shadow: 2px 2px 0 var(--tsb-black);
+  transition: transform .16s cubic-bezier(.2,.8,.2,1), box-shadow .16s ease;
+  will-change: transform;
+}
+html.dark .chat-top__back,
+html.dark .chat-top__new {
+  border-color: rgba(255,255,255,.55);
+  box-shadow: 2px 2px 0 rgba(255,255,255,.45);
+}
+.chat-top__back:active,
+.chat-top__new:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--tsb-black);
+}
+
+.chat-top__title h1 {
+  font-family: var(--font-head, inherit);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+/* the composer reads as a solid app dock, not a floating pill */
+.chat-dock {
+  background: var(--surface-1);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-top: 2.5px solid var(--tsb-black);
+}
+html.dark .chat-dock { border-top-color: rgba(255,255,255,.5); }
+
+.chat-dock__in {
+  border: 2.5px solid var(--tsb-black);
+  border-radius: 15px;
+  background: var(--surface-2);
+  box-shadow: 3px 3px 0 var(--tsb-black);
+}
+html.dark .chat-dock__in {
+  border-color: rgba(255,255,255,.55);
+  box-shadow: 3px 3px 0 rgba(255,255,255,.4);
+}
+
+#chatSend {
+  border: 2px solid var(--tsb-black);
+  border-radius: 11px;
+  background: var(--tsb-butter);
+  color: var(--tsb-black);
+  transition: transform .16s cubic-bezier(.2,.8,.2,1);
+  will-change: transform;
+}
+#chatSend:active { transform: scale(.93); }
+
+/* suggestion chips are bare <button>s inside .chat-suggest */
+.chat-suggest button {
+  border: 2px solid var(--tsb-black);
+  border-radius: 12px;
+  background: var(--surface-2);
+  box-shadow: 2px 2px 0 var(--tsb-black);
+  font-weight: 700;
+  transition: transform .16s cubic-bezier(.2,.8,.2,1), box-shadow .16s ease;
+  will-change: transform;
+}
+.chat-suggest button:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--tsb-black); }
+html.dark .chat-suggest button {
+  border-color: rgba(255,255,255,.5);
+  box-shadow: 2px 2px 0 rgba(255,255,255,.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-top__back, .chat-top__new, #chatSend, .chat-suggest button { transition: none; }
+}
