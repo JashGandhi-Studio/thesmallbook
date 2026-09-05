@@ -1113,6 +1113,41 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
         stuck + " hidden");
 }
 
+/* ============================================================
+   CATEGORY PILLS MUST NOT EAT THE SCREEN
+   11 pills, labels up to 19 chars. Wrapping put EIGHT rows (~324px) above
+   the first book on a 320px phone. Must stay one scrollable row.
+   ============================================================ */
+{
+  section("Category pills");
+
+  const sh = read(path.join(ROOT, "css", "shell.css"));
+  const i = sh.indexOf("CATEGORY PILLS");
+  check(i > -1, "pills: mobile rule exists");
+  const blk = i > -1 ? sh.slice(i, i + 2000) : "";
+
+  check(/flex-wrap:\s*nowrap/.test(blk), "pills: single row, never wrapped");
+  check(/overflow-x:\s*auto/.test(blk), "pills: row scrolls horizontally");
+  check(/white-space:\s*nowrap/.test(blk), "pills: labels do not break mid-word");
+  check(/scroll-snap-type/.test(blk), "pills: scroll snapping for a native feel");
+  check(/max-width:\s*60vw/.test(blk), "pills: long labels capped, cannot span the screen");
+  check(/text-overflow:\s*ellipsis/.test(blk), "pills: capped labels ellipsize");
+  check(/::-webkit-scrollbar\s*\{\s*display:\s*none/.test(blk),
+        "pills: no scrollbar chrome on mobile");
+
+  /* the row must be inside a mobile media query, not applied on desktop */
+  const mq = sh.slice(Math.max(0, i - 200), i + 40);
+  check(/@media\s*\(max-width:\s*760px\)/.test(sh.slice(i, i + 400)) ||
+        /@media/.test(mq), "pills: scoped to small screens only");
+
+  /* count what actually renders, so a data change that adds categories
+     cannot silently reintroduce the wall */
+  const idx = JSON.parse(read(path.join(ROOT, "data", "books-index.json")));
+  const cats = [...new Set(idx.map(b => b.category))];
+  check(cats.length <= 12, "pills: category count stays sane",
+        cats.length + " categories");
+}
+
   report();
 }
 
