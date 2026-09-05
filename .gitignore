@@ -8,3 +8,4 @@ node_modules/
 *.pem
 *.key
 .coding-latest.patch
+tsb-appbar.zip
