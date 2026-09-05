@@ -393,7 +393,7 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
 /* ---- Phase 2: ask popup is now a redirect shim ---- */
 {
   const { dom } = await mk(APP_HTML, { url: "https://thesmallbook.in/index.html" });
-  dom.window.eval(read(path.join(ROOT, "js/ask.js")));
+  dom.window.eval(read(path.join(ROOT, "js/ask-shim.js")));
   check(!!dom.window.TSB_ASK && typeof dom.window.TSB_ASK.open === "function",
         "ask: TSB_ASK still exposed (old entry points keep working)");
   await tick(dom);
@@ -522,8 +522,11 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
   check(/\.langlist__item/.test(pf), "language: custom readable picker exists");
 
   /* BUG: Ask bubble still visible */
-  const askSrc = read(path.join(ROOT, "js", "ask.js"));
-  check(/redirect shim/i.test(askSrc), "ask: popup is a redirect shim");
+  const askSrc = read(path.join(ROOT, "js", "ask-shim.js"));
+  check(/ASK SHIM/i.test(askSrc), "ask: only the redirect shim ships");
+  check(!fs.existsSync(path.join(ROOT, "js", "ask.js")),
+        "ask: the 32KB legacy widget is gone");
+  check(askSrc.length < 2000, "ask: shim stays tiny", askSrc.length + " bytes");
 
   /* Question library — the missing feature */
   check(/function library\(/.test(read(path.join(ROOT, "js", "ask-core.js"))),
@@ -855,6 +858,87 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
   });
   check(dead.length === 0, "chat: no CSS rules targeting non-existent elements",
         dead.join(", "));
+}
+
+/* ============================================================
+   MOBILE STATUS BAR + DEAD CODE
+   ============================================================ */
+{
+  section("Mobile status bar");
+
+  /* viewport-fit=cover is required for env(safe-area-inset-*) to resolve.
+     Without it the bar sits under the notch and the home indicator. */
+  const noVF = [], noTC = [], staleTC = [];
+  for (const f of pages) {
+    const rel = path.relative(ROOT, f);
+    if (rel === "scan.html") continue;          // fullscreen camera takeover
+    const src = read(f);
+
+    const vp = src.match(/<meta name="viewport" content="([^"]*)"/);
+    if (vp && !/viewport-fit=cover/.test(vp[1])) noVF.push(rel);
+
+    if (!/name="theme-color"/.test(src)) { noTC.push(rel); continue; }
+
+    /* the status bar must be correct at FIRST PAINT, not after JS runs */
+    if (/pre-paint theme/.test(src)) {
+      const after = src.split("pre-paint theme")[1].slice(0, 900);
+      if (!/theme-color/.test(after)) staleTC.push(rel);
+    }
+  }
+  check(noVF.length === 0, "status bar: viewport-fit=cover everywhere",
+        noVF.length + " missing: " + noVF.slice(0, 3).join(", "));
+  check(noTC.length === 0, "status bar: theme-color on every page",
+        noTC.slice(0, 3).join(", "));
+  check(staleTC.length === 0,
+        "status bar: colour set pre-paint (no yellow flash in dark mode)",
+        staleTC.length + " stale: " + staleTC.slice(0, 3).join(", "));
+
+  /* safe-area tokens must exist and be used by the bar */
+  const tk = read(path.join(ROOT, "css", "tokens.css"));
+  check(/--safe-b:\s*env\(safe-area-inset-bottom/.test(tk), "status bar: safe-area tokens defined");
+  const sh = read(path.join(ROOT, "css", "shell.css"));
+  check(/safe-b|safe-area-inset-bottom/.test(sh), "status bar: bottom bar respects the home indicator");
+
+  section("Dead code");
+
+  ["js/ask.js", "js/scanner.js", "js/onboard.js"].forEach(f => {
+    check(!fs.existsSync(path.join(ROOT, f)), "removed dead file: " + f);
+  });
+
+  /* nothing may reference a script that no longer exists */
+  const broken = [];
+  for (const f of pages) {
+    const rel = path.relative(ROOT, f);
+    const src = read(f);
+    for (const m of src.matchAll(/<script[^>]+src="([^"]+)"/g)) {
+      const ref = m[1];
+      if (/^https?:/.test(ref)) continue;
+      const abs = path.resolve(path.dirname(f), ref);
+      if (!fs.existsSync(abs)) broken.push(rel + " -> " + ref);
+    }
+  }
+  check(broken.length === 0, "no page references a missing script",
+        broken.slice(0, 3).join(" | "));
+
+  /* the old login page must not be a user-facing destination, but it IS the
+     registered Google OAuth redirect URI, so the file has to stay */
+  check(fs.existsSync(path.join(ROOT, "login.html")),
+        "login.html kept (registered OAuth redirect URI)");
+  const authSrc = read(path.join(ROOT, "js", "auth.js"));
+  check(!/href="login\.html"/.test(authSrc),
+        "auth.js: no user-facing links to the old login page");
+  /* BOTH OAuth callbacks must stay on login.html - it is what is registered
+     in Google Cloud Console. Changing either silently breaks sign-in. */
+  const oauthRefs = (authSrc.match(/SITE_ORIGIN \+ "\/login\.html"/g) || []).length;
+  check(oauthRefs === 2,
+        "auth.js: both OAuth callbacks still point at login.html",
+        oauthRefs + " of 2");
+
+  /* heavy engines must not load where they are never used */
+  const ttsPages = pages.filter(f => read(f).includes("tts-engine.js"))
+                        .map(f => path.relative(ROOT, f));
+  check(ttsPages.every(p => p === "book.html" || p.startsWith("books" + path.sep)),
+        "tts-engine only on reading pages", ttsPages.slice(0, 3).join(", "));
 }
 
   report();

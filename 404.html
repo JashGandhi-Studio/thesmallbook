@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>404 — TheSmallBook</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
@@ -11,7 +11,9 @@ try{var m=localStorage.getItem("tsb_theme");m=m?JSON.parse(m):"light";
 var d=m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches);
 if(d)document.documentElement.classList.add("dark");
 if(m==="auto")document.documentElement.classList.add("theme-auto");
-document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
+document.documentElement.setAttribute("data-theme",m);
+var tc=document.querySelector('meta[name="theme-color"]');
+if(tc)tc.setAttribute("content",d?"#0E0E10":"#FFC800");}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -67,15 +69,14 @@ document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
   </footer>
 
   <script src="js/prefs.js"></script>
-  <script src="js/support.js"></script>
-  <script src="js/lang.js"></script>
+  <script defer src="js/support.js"></script>
+  <script defer src="js/lang.js"></script>
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/data.js"></script>
   <script src="js/failures.js"></script>
-  <script src="js/ask-data.js"></script>
-  <script src="js/tts-engine.js"></script>
-  <script src="js/ask.js"></script>
+  <script defer src="js/ask-data.js"></script>
+    <script src="js/ask-shim.js"></script>
   <script src="js/theme.js"></script>
   <script defer src="js/sheet.js"></script>
 <script defer src="js/shell.js"></script>

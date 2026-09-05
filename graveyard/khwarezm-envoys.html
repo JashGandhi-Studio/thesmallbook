@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Why Did Shah of Khwarezm Fail? Case Study &amp;… | TheSmallBook</title>
   <meta name="description" content="Shah of Khwarezm (1219): free case study — no signup, no paywalls. The Man Who Provoked Genghis Khan. Loss: An entire civilization. What happened, the fatal…">
   <meta name="author" content="Jash Gandhi">
@@ -22,7 +22,9 @@ try{var m=localStorage.getItem("tsb_theme");m=m?JSON.parse(m):"light";
 var d=m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches);
 if(d)document.documentElement.classList.add("dark");
 if(m==="auto")document.documentElement.classList.add("theme-auto");
-document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
+document.documentElement.setAttribute("data-theme",m);
+var tc=document.querySelector('meta[name="theme-color"]');
+if(tc)tc.setAttribute("content",d?"#0E0E10":"#FFC800");}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">

@@ -26,7 +26,9 @@ try{var m=localStorage.getItem("tsb_theme");m=m?JSON.parse(m):"light";
 var d=m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches);
 if(d)document.documentElement.classList.add("dark");
 if(m==="auto")document.documentElement.classList.add("theme-auto");
-document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
+document.documentElement.setAttribute("data-theme",m);
+var tc=document.querySelector('meta[name="theme-color"]');
+if(tc)tc.setAttribute("content",d?"#0E0E10":"#FFC800");}catch(e){}</script>
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/shell.css">
   <link rel="stylesheet" href="css/style.css">
@@ -328,9 +330,9 @@ document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
   </footer>
 
   <script src="js/prefs.js"></script>
-  <script src="js/support.js"></script>
-  <script src="js/upi.js"></script>
-  <script src="js/lang.js"></script>
+  <script defer src="js/support.js"></script>
+  <script defer src="js/upi.js"></script>
+  <script defer src="js/lang.js"></script>
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/data.js"></script>
@@ -362,9 +364,8 @@ document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
     })();
   </script>
   <script src="js/onboard2.js"></script>
-  <script src="js/ask-data.js"></script>
-  <script src="js/tts-engine.js"></script>
-  <script src="js/ask.js"></script>
+  <script defer src="js/ask-data.js"></script>
+    <script src="js/ask-shim.js"></script>
   <script>
     /* deep-link search from the scanner: index.html?q=<title> */
     (function () {

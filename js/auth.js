@@ -545,9 +545,9 @@
       if (u) {
         const nm = displayName();
         const first = nm.split(" ")[0].slice(0, 12);
-        chipSlot.innerHTML = '<a class="tsb-navchip" href="login.html" title="' + escapeHtml(nm) + ' — account">👋 ' + escapeHtml(first) + '<i class="tsb-navuser__dot" aria-hidden="true"></i></a>';
+        chipSlot.innerHTML = '<a class="tsb-navchip" href="profile.html" title="' + escapeHtml(nm) + ' — account">👋 ' + escapeHtml(first) + '<i class="tsb-navuser__dot" aria-hidden="true"></i></a>';
       } else if (!/login\.html/.test(location.pathname)) {
-        chipSlot.innerHTML = '<a class="tsb-loginbtn" href="login.html" title="Save your progress across devices">' + GOOGLE_G + '<span>LOG IN</span></a>';
+        chipSlot.innerHTML = '<a class="tsb-loginbtn" href="signin.html" title="Save your progress across devices">' + GOOGLE_G + '<span>LOG IN</span></a>';
         const btn = chipSlot.querySelector(".tsb-loginbtn");
         if (btn) btn.addEventListener("click", function () {
           try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch (e) {}
@@ -609,7 +609,7 @@
         <button class="tsb-auth-chip" id="tsbAuthOut" style="margin-left:8px;background:#ff4d4d;color:#fff">LOGOUT</button>`;
       slot.querySelector("#tsbAuthOut").addEventListener("click", confirmLogout);
     } else {
-      slot.innerHTML = `<a class="tsb-auth-chip tsb-auth-chip--out" href="login.html" id="tsbAuthChip">${GOOGLE_G} LOG IN — SAVE PROGRESS</a>`;
+      slot.innerHTML = `<a class="tsb-auth-chip tsb-auth-chip--out" href="signin.html" id="tsbAuthChip">${GOOGLE_G} LOG IN — SAVE PROGRESS</a>`;
       slot.querySelector("#tsbAuthChip").addEventListener("click", () => {
         try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch {}
       });

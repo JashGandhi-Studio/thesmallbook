@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Story — TheSmallBook</title>
   <meta property="og:title" content="Story — TheSmallBook">
   <meta property="og:url" content="https://thesmallbook.in/story.html">
@@ -24,7 +24,9 @@ try{var m=localStorage.getItem("tsb_theme");m=m?JSON.parse(m):"light";
 var d=m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches);
 if(d)document.documentElement.classList.add("dark");
 if(m==="auto")document.documentElement.classList.add("theme-auto");
-document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
+document.documentElement.setAttribute("data-theme",m);
+var tc=document.querySelector('meta[name="theme-color"]');
+if(tc)tc.setAttribute("content",d?"#0E0E10":"#FFC800");}catch(e){}</script>
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/shell.css">
   <link rel="stylesheet" href="css/style.css">
@@ -68,8 +70,8 @@ document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
   </footer>
 
   <script src="js/prefs.js"></script>
-  <script src="js/support.js"></script>
-  <script src="js/lang.js"></script>
+  <script defer src="js/support.js"></script>
+  <script defer src="js/lang.js"></script>
   <script src="js/config.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/store.js"></script>
@@ -78,9 +80,8 @@ document.documentElement.setAttribute("data-theme",m);}catch(e){}</script>
   <script src="js/stories-community.js"></script>
   <script src="js/story.js"></script>
   <script src="js/failures.js"></script>
-  <script src="js/ask-data.js"></script>
-  <script src="js/tts-engine.js"></script>
-  <script src="js/ask.js"></script>
+  <script defer src="js/ask-data.js"></script>
+    <script src="js/ask-shim.js"></script>
   <script src="js/theme.js"></script>
   <script defer src="js/sheet.js"></script>
 <script defer src="js/shell.js"></script>
