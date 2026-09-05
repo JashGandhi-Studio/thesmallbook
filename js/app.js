@@ -552,11 +552,16 @@
 
   /* ---------- SCROLL REVEAL ---------- */
   const targets = document.querySelectorAll(".how__step, .section-head, .storyform__box, .stat, .lod__box");
-  targets.forEach((t) => t.classList.add("reveal"));
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
-  }, { threshold: 0.15 });
-  targets.forEach((t) => io.observe(t));
+  if (!("IntersectionObserver" in window)) {
+    /* no observer -> never add .reveal, or the content stays invisible */
+    targets.forEach((t) => t.classList.add("in"));
+  } else {
+    targets.forEach((t) => t.classList.add("reveal"));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+    }, { threshold: 0.15 });
+    targets.forEach((t) => io.observe(t));
+  }
 })();
 
 /* ============================================================

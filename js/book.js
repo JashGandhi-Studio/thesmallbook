@@ -1309,9 +1309,13 @@
 
   /* ---------- SCROLL REVEAL ---------- */
   const targets = document.querySelectorAll(".lesson, .quote, .section-head, .plan__box, .bigidea__box, .related a");
-  targets.forEach((t) => t.classList.add("reveal"));
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
-  }, { threshold: 0.1 });
-  targets.forEach((t) => io.observe(t));
+  if (!("IntersectionObserver" in window)) {
+    targets.forEach((t) => t.classList.add("in"));
+  } else {
+    targets.forEach((t) => t.classList.add("reveal"));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+    }, { threshold: 0.1 });
+    targets.forEach((t) => io.observe(t));
+  }
 })();

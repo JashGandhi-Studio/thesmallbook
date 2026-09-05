@@ -433,11 +433,13 @@
 
 
   /* scroll reveal (re-runs after each render) */
-  const io = new IntersectionObserver((entries) => {
+  const HAS_IO = "IntersectionObserver" in window;
+  const io = HAS_IO ? new IntersectionObserver((entries) => {
     entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
-  }, { threshold: 0.08 });
+  }, { threshold: 0.08 }) : null;
   function observeReveals() {
     document.querySelectorAll(".grave:not(.reveal), .stat:not(.reveal), .section-head:not(.reveal)").forEach((t) => {
+      if (!io) { t.classList.add("in"); return; }
       t.classList.add("reveal");
       io.observe(t);
     });

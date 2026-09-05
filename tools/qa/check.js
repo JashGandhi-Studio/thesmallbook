@@ -1012,6 +1012,107 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
         slot ? slot.innerHTML.slice(0, 40) : "");
 }
 
+/* ============================================================
+   NO DUPLICATE AUTH SURFACES — every function that paints account
+   UI must stand down where the app shell exists.
+
+   The previous version of this check only tested renderNav(). A second
+   function, renderChip(), was left unguarded and shipped a legacy chip
+   on 8 pages. Assert on ALL of them.
+   ============================================================ */
+{
+  section("Single auth surface");
+
+  const auth = read(path.join(ROOT, "js", "auth.js"));
+
+  /* every function that writes into an auth slot must consult shellPresent() */
+  check(/function shellPresent\(\)/.test(auth),
+        "auth: one shared shell test, not copies that can drift");
+  const painters = ["renderNav", "renderChip"];
+  painters.forEach(fn => {
+    const i = auth.indexOf("function " + fn + "(");
+    check(i > -1, "auth: " + fn + " exists");
+    if (i < 0) return;
+    /* body = up to the next top-level "  function " */
+    const rest = auth.slice(i + 1);
+    const end = rest.indexOf("\n  function ");
+    const body = end > -1 ? rest.slice(0, end) : rest;
+    check(/shellPresent\(\)/.test(body),
+          "auth: " + fn + " stands down when the shell is present");
+  });
+
+  /* and prove it in a real DOM, on every shell page */
+  const LEGACY = [".tsb-auth-chip", ".tsb-loginbtn", ".tsb-navchip", ".aq-fab"];
+  const offenders = [];
+  for (const rel of ["index.html", "stories.html", "graveyard.html",
+                     "about.html", "book.html", "story.html"]) {
+    const { dom } = await mk(read(path.join(ROOT, rel)),
+                             { url: "https://thesmallbook.in/" + rel });
+    const w = dom.window;
+    w.eval(read(path.join(ROOT, "js/config.js")));
+    w.eval(read(path.join(ROOT, "js/auth.js")));
+    await tick(dom);
+    await new Promise(r => setTimeout(r, 80));
+    const hit = LEGACY.filter(sel => w.document.querySelector(sel));
+    if (hit.length) offenders.push(rel + " -> " + hit.join(","));
+    w.close();
+  }
+  check(offenders.length === 0,
+        "auth: no legacy auth UI renders on shell pages",
+        offenders.slice(0, 3).join(" | "));
+}
+
+/* ============================================================
+   SCROLL REVEAL MUST FAIL OPEN
+   .reveal sets opacity:0 and IntersectionObserver removes it. If the
+   observer is missing or throws, the content stays invisible forever —
+   a blank page. Never add .reveal unless the observer exists.
+   ============================================================ */
+{
+  section("Reveal safety");
+
+  ["js/app.js", "js/book.js", "js/graveyard.js"].forEach(f => {
+    const src = read(path.join(ROOT, f));
+    if (!/new IntersectionObserver/.test(src)) return;
+    check(/"IntersectionObserver" in window/.test(src),
+          f + ": feature-detects IntersectionObserver");
+  });
+
+  /* simulate a browser without IO: content must still be visible */
+  const { dom } = await mk(read(path.join(ROOT, "index.html")),
+                           { url: "https://thesmallbook.in/index.html" });
+  const w = dom.window;
+  delete w.IntersectionObserver;
+  w.eval(read(path.join(ROOT, "js/config.js")));
+  /* Minimal TSB stub: prefs.js starts timers that never settle under jsdom.
+     A Proxy answers any method app.js reaches for, so this test stays about
+     IntersectionObserver rather than tracking the prefs API surface. */
+  w.eval([
+    'function tsbStub(){',
+    '  var f=function(){return false;};',
+    '  return new Proxy(f,{',
+    '    get:function(t,k){',
+    '      if(k==="get")return function(a,d){return d;};',
+    '      if(k===Symbol.toPrimitive||k==="then")return undefined;',
+    '      return tsbStub();',
+    '    },',
+    '    apply:function(){return false;}',
+    '  });',
+    '}',
+    'window.TSB=tsbStub();'
+  ].join(''));
+  w.eval(read(path.join(ROOT, "js/data.js")));
+  if (!w.BOOKS && w.window.BOOKS) w.BOOKS = w.window.BOOKS;
+  let threw = null;
+  try { w.eval(read(path.join(ROOT, "js/app.js"))); }
+  catch (e) { threw = e.message; }
+  await tick(dom);
+  check(!threw, "reveal: app.js survives a missing IntersectionObserver", threw || "");
+  const stuck = w.document.querySelectorAll(".reveal:not(.in)").length;
+  check(stuck === 0, "reveal: nothing left invisible without an observer",
+        stuck + " hidden");
+}
+
   report();
 }
 
@@ -1027,4 +1128,8 @@ function report() {
     fails.forEach(f => console.log("  ✗ " + f));
     process.exitCode = 1;
   }
+  /* jsdom windows keep timers alive, which held the process open for
+     minutes after the results were already printed. Results are final
+     here, so exit deterministically. */
+  process.exit(fails.length ? 1 : 0);
 }
