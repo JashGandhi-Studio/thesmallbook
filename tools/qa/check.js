@@ -854,7 +854,14 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
   const selectors = block.match(/^[.#][a-zA-Z0-9_-]+/gm) || [];
   [...new Set(selectors)].forEach(sel => {
     const bare = sel.slice(1);
-    if (!markup.includes(bare)) dead.push(sel);
+    if (markup.includes(bare)) return;
+    /* classes are often built by concatenation, e.g.
+         d.className = "chat-msg chat-msg--" + who;   // -> chat-msg--me
+       so also accept a BEM prefix that the code demonstrably builds. */
+    const mod = bare.match(/^(.*--)([a-z0-9]+)$/);
+    if (mod && markup.includes(mod[1]) &&
+        new RegExp('["\']' + mod[2] + '["\']').test(markup)) return;
+    dead.push(sel);
   });
   check(dead.length === 0, "chat: no CSS rules targeting non-existent elements",
         dead.join(", "));
@@ -939,6 +946,70 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
                         .map(f => path.relative(ROOT, f));
   check(ttsPages.every(p => p === "book.html" || p.startsWith("books" + path.sep)),
         "tts-engine only on reading pages", ttsPages.slice(0, 3).join(", "));
+}
+
+/* ============================================================
+   SPEED + POST-LOGIN STATE
+   ============================================================ */
+{
+  section("Speed");
+
+  /* The homepage must not ship the 3.4 MB data.js as a blocking script. */
+  const idx = read(path.join(ROOT, "index.html"));
+  check(!/<script src="js\/data\.js">/.test(idx),
+        "speed: index.html does not block on the 3.4MB data.js");
+  check(/data-loader\.js/.test(idx), "speed: index.html uses the lazy data loader");
+
+  function blockingKB(rel) {
+    const src = read(path.join(ROOT, rel));
+    let total = 0;
+    for (const m of src.matchAll(/<script src="([^"]+)"/g)) {
+      const p = path.resolve(path.dirname(path.join(ROOT, rel)), m[1]);
+      if (fs.existsSync(p)) total += fs.statSync(p).size;
+    }
+    return Math.round(total / 1024);
+  }
+  const kb = blockingKB("index.html");
+  check(kb < 800, "speed: homepage blocking JS under 800KB", kb + "KB");
+
+  /* the index must actually contain what the shelf needs */
+  const index = JSON.parse(read(path.join(ROOT, "data", "books-index.json")));
+  check(index.length === 350, "speed: index has all 350 books", String(index.length));
+  const lessons = index.reduce((n, b) => n + (b.lessons ? b.lessons.length : 0), 0);
+  check(lessons === 2176, "speed: index carries all 2176 lessons", String(lessons));
+  ["id","title","author","category","cover","readTime","tagline","lessons"].forEach(f => {
+    check(Object.prototype.hasOwnProperty.call(index[0], f), "speed: index has ." + f);
+  });
+
+  /* app.js must tolerate BOOKS arriving late, or the shelf renders empty */
+  const app = read(path.join(ROOT, "js", "app.js"));
+  check(/tsb:data-ready/.test(app), "speed: app.js waits for async data");
+  check(/function tsbApp/.test(app), "speed: app.js re-entry is strict-mode safe");
+
+  section("Post-login state");
+
+  /* login.html is the OAuth callback only - it must never show its own
+     legacy welcome screen, which is the "old window" users reported. */
+  const lg = read(path.join(ROOT, "login.html"));
+  check(/location\.replace\(back\)/.test(lg),
+        "login: bounces back to the app after OAuth");
+
+  /* exactly ONE auth UI: the shell's You tab, not the legacy top-right chip */
+  const auth = read(path.join(ROOT, "js", "auth.js"));
+  check(/querySelector\("\.tsb-bar"\)/.test(auth),
+        "login: legacy nav chip stands down where the shell exists");
+
+  const { dom } = await mk(read(path.join(ROOT, "index.html")),
+                           { url: "https://thesmallbook.in/index.html" });
+  const w = dom.window;
+  w.eval(read(path.join(ROOT, "js/config.js")));
+  w.eval(read(path.join(ROOT, "js/auth.js")));
+  await tick(dom);
+  await new Promise(r => setTimeout(r, 120));
+  const slot = w.document.getElementById("tsb-nav-auth");
+  check(!slot || slot.innerHTML.trim() === "",
+        "login: no duplicate auth chip on shell pages",
+        slot ? slot.innerHTML.slice(0, 40) : "");
 }
 
   report();

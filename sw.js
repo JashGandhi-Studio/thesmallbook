@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v175";  // v2 Phase 3: feed, signin, onboarding v2
+const CACHE_VERSION = "tsb-v176";  // v2 Phase 3: feed, signin, onboarding v2
 const APP_SHELL = [
   "./",
   "./index.html",

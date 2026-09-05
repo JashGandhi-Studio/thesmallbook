@@ -783,6 +783,9 @@ window.TTS_ENGINE = (function () {
       });
     }
     player.classList.add("tsb-player--show");
+    /* tell the app shell to yield the bottom slot so the player and the
+       bottom bar never overlap */
+    try { document.documentElement.classList.add("tsb-playing"); } catch (e) {}
     const t = player.querySelector(".tsb-player__title");
     const s = player.querySelector(".tsb-player__sub");
     const sp = player.querySelector('[data-act="speed"]');
@@ -820,6 +823,7 @@ window.TTS_ENGINE = (function () {
     if (!player) return;
     const p = player;
     p.classList.remove("tsb-player--show");
+    try { document.documentElement.classList.remove("tsb-playing"); } catch (e) {}
     /* after the slide-down transition, REMOVE the element entirely —
        never leave a dead player lying at the bottom */
     setTimeout(() => {

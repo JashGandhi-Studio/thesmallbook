@@ -561,3 +561,61 @@ html.dark .chat-suggest button {
 @media (prefers-reduced-motion: reduce) {
   .chat-top__back, .chat-top__new, #chatSend, .chat-suggest button { transition: none; }
 }
+
+/* ============================================================
+   CHAT — CLEANER, CALMER, PROPERLY DOCKED
+   Fixes: log now clears the bottom bar, suggestions sit tight above the
+   composer, bubbles read like a real messaging app.
+   ============================================================ */
+
+/* the log must never hide behind the composer OR the app bar */
+.chat-log {
+  padding-bottom: calc(var(--bar-total, 76px) + 96px);
+  scroll-padding-bottom: calc(var(--bar-total, 76px) + 96px);
+}
+
+/* composer sits directly above the bottom bar, not on top of it */
+body.tsb-has-bar .chat-dock {
+  bottom: var(--bar-total, 76px);
+}
+.chat-dock {
+  position: fixed;
+  left: 0; right: 0;
+  padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom, 0px));
+  z-index: 60;
+}
+body.tsb-has-bar .chat-suggest {
+  bottom: calc(var(--bar-total, 76px) + 68px);
+}
+
+/* quieter, more readable bubbles */
+.chat-bubble {
+  border-radius: 16px;
+  line-height: 1.55;
+  font-size: .95rem;
+}
+.chat-msg--me .chat-bubble {
+  background: var(--tsb-butter);
+  color: var(--tsb-black);
+  border: 2px solid var(--tsb-black);
+  border-bottom-right-radius: 5px;
+}
+.chat-msg--bot .chat-bubble {
+  background: var(--surface-2);
+  border: 2px solid var(--tsb-black);
+  border-bottom-left-radius: 5px;
+}
+html.dark .chat-msg--bot .chat-bubble { border-color: rgba(255,255,255,.32); }
+
+/* source cards: tidy, tappable, consistent with the shell */
+.chat-src {
+  border: 2px solid var(--tsb-black);
+  border-radius: 13px;
+  background: var(--surface-1);
+  transition: transform .16s cubic-bezier(.2,.8,.2,1);
+  will-change: transform;
+}
+.chat-src:active { transform: scale(.985); }
+html.dark .chat-src { border-color: rgba(255,255,255,.32); }
+
+@media (prefers-reduced-motion: reduce) { .chat-src { transition: none; } }

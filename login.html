@@ -383,6 +383,17 @@ if(tc)tc.setAttribute("content",d?"#0E0E10":"#FFC800");}catch(e){}</script>
         document.getElementById("tsbNameCancel").onclick = render;
       }
       function showLoggedIn() {
+        /* login.html is ONLY the registered Google OAuth callback now. The
+           reader never chooses to come here, so never show them this legacy
+           screen - bounce straight back to where they started. signin.html
+           is the real sign-in page. */
+        var back = returnPath();
+        if (!/login\.html/.test(back)) {
+          try { sessionStorage.removeItem("tsb_auth_return"); } catch (e) {}
+          location.replace(back);
+          return;
+        }
+
         var u = window.TSB_AUTH.user();
         var name = window.TSB_AUTH.displayName ? window.TSB_AUTH.displayName() : firstName(u);
         var first = name.split(" ")[0];

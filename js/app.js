@@ -4,7 +4,19 @@
    continue-reading, lesson of the day, gamification, shortcuts.
    ============================================================ */
 
-(function () {
+(function tsbApp() {
+  /* Data arrives asynchronously via js/data-loader.js (303 KB index instead
+     of a 3.4 MB blocking script). Everything below reads BOOKS synchronously,
+     so if the index has not landed yet, wait and re-enter this same function
+     once it has. Named IIFE keeps that re-entry strict-mode safe. */
+  if (!window.BOOKS || !window.BOOKS.length) {
+    document.addEventListener("tsb:data-ready", function once() {
+      document.removeEventListener("tsb:data-ready", once);
+      tsbApp();
+    });
+    return;
+  }
+
   const grid = document.getElementById("grid");
   const searchInput = document.getElementById("searchInput");
   const filterWrap = document.getElementById("filters");

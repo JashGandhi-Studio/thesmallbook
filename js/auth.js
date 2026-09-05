@@ -534,6 +534,18 @@
     const anchors = document.querySelectorAll("[data-nav-auth]");
     const chipSlot = document.getElementById("tsb-nav-auth");
     if (!anchors.length && !chipSlot) return;
+
+    /* The app shell's You tab owns account state now. Rendering the legacy
+       top-right chip as well gives two competing auth UIs on the same
+       screen - that is the "old window" that reappears after signing in.
+       Where the shell is present, stand down. */
+    if (document.querySelector(".tsb-bar") ||
+        document.querySelector('script[src*="shell.js"]')) {
+      if (chipSlot) chipSlot.innerHTML = "";
+      anchors.forEach((a) => { a.style.display = ""; });
+      try { document.documentElement.classList.toggle("tsb-logged-in", !!user()); } catch (e) {}
+      return;
+    }
     injectStyles();
     const u = user();
     /* flag on <html> so CSS can position the chip correctly on mobile */
