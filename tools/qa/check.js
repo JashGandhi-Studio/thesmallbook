@@ -1148,6 +1148,33 @@ const APP_HTML = `<!DOCTYPE html><html><head></head><body><main>x</main></body><
         cats.length + " categories");
 }
 
+/* ============================================================
+   BAR TRANSFORM INTEGRITY
+   .tsb-bar is centred with left:50% + translateX(-50%). Any rule that
+   re-declares transform MUST re-state translateX(-50%), or the bar slides
+   sideways instead of straight down.
+   ============================================================ */
+{
+  section("Bar transform");
+
+  const sh = read(path.join(ROOT, "css", "shell.css"));
+  const bad = [];
+  /* every transform declaration inside a .tsb-bar rule */
+  const re = /([^{}]*\.tsb-bar[^{}]*)\{([^}]*)\}/g;
+  let m;
+  while ((m = re.exec(sh))) {
+    const sel = m[1].trim(), body = m[2];
+    if (/\.tsb-bar__/.test(sel)) continue;      // children are not centred
+    const t = body.match(/transform:\s*([^;]+);/);
+    if (!t) continue;
+    if (/none/.test(t[1])) continue;
+    if (!/translateX\(-50%\)/.test(t[1])) bad.push(sel + " -> " + t[1].trim().slice(0, 60));
+  }
+  check(bad.length === 0,
+        "bar: every transform keeps translateX(-50%) centering",
+        bad.slice(0, 3).join(" | "));
+}
+
   report();
 }
 

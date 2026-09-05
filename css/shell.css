@@ -548,7 +548,10 @@ body.tsb-has-bar .tsb-player {
 
 /* while the player is up, the bar slides away — one control surface */
 html.tsb-playing .tsb-bar {
-  transform: translateY(calc(100% + var(--safe-b, 0px) + 16px));
+  /* MUST keep translateX(-50%): the bar is centred with left:50%, so a
+     bare translateY drops the centering and the bar slides right as it
+     exits instead of straight down. */
+  transform: translateX(-50%) translateY(calc(100% + var(--safe-b, 0px) + 16px)) translateZ(0);
   pointer-events: none;
 }
 html.tsb-playing .tsb-player {
