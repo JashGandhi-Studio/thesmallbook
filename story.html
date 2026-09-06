@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=199">
+  <link rel="stylesheet" href="css/style.css?v=202">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,11 +31,11 @@
     </article>
   </main>
 
-  <script src="js/prefs.js?v=199"></script>
-  <script src="js/lang.js?v=199"></script>
-  <script src="js/config.js?v=199"></script>
-  <script src="js/auth.js?v=199"></script>
-  <script src="js/community.js?v=199"></script>
+  <script src="js/prefs.js?v=202"></script>
+  <script src="js/lang.js?v=202"></script>
+  <script src="js/config.js?v=202"></script>
+  <script src="js/auth.js?v=202"></script>
+  <script src="js/community.js?v=202"></script>
   <script>
   (function () {
     "use strict";
@@ -63,7 +63,9 @@
 
       root.innerHTML =
         '<article class="cm-postcard">' +
-          (p.cover_url ? '<img class="cm-postcard__cover" src="' + C.esc(p.cover_url) + '" alt="">' : "") +
+          (p.cover_url ? (C.isVideoUrl(p.cover_url)
+            ? '<video class="cm-postcard__cover" src="' + C.esc(p.cover_url) + '" controls playsinline preload="metadata"></video>'
+            : '<img class="cm-postcard__cover" src="' + C.esc(p.cover_url) + '" alt="">') : "") +
           '<div class="cm-postcard__head">' +
             '<a class="cm-ava cm-ava--lg" href="profile.html?id=' + p.author_id + '">' +
               (prof.avatar_url ? '<img src="' + C.esc(prof.avatar_url) + '" alt="">' : '<span>' + C.esc((p.author_name || "R").charAt(0).toUpperCase()) + "</span>") + "</a>" +
@@ -187,7 +189,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=199" defer></script>
-  <script src="js/gate.js?v=199" defer></script>
+  <script src="js/bar.js?v=202" defer></script>
+  <script src="js/gate.js?v=202" defer></script>
 </body>
 </html>

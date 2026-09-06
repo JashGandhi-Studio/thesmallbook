@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=199">
+  <link rel="stylesheet" href="css/style.css?v=202">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,11 +31,11 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=199"></script>
-  <script src="js/lang.js?v=199"></script>
-  <script src="js/config.js?v=199"></script>
-  <script src="js/auth.js?v=199"></script>
-  <script src="js/community.js?v=199"></script>
+  <script src="js/prefs.js?v=202"></script>
+  <script src="js/lang.js?v=202"></script>
+  <script src="js/config.js?v=202"></script>
+  <script src="js/auth.js?v=202"></script>
+  <script src="js/community.js?v=202"></script>
   <script>
   (function () {
     "use strict";
@@ -158,18 +158,46 @@
       if (view) renderSocial(view);
       async function renderSocial(kind2) {
         var ids = [];
-        try { ids = kind2 === "followers" ? (await C.followerRows(pid)) : (await C.followingIds()); } catch (e) {}
+        try {
+          if (kind2 === "followers") ids = await C.followerRows(pid);
+          else ids = (((await C.api("follows?follower_id=eq." + pid + "&select=author_id", {})) || []).map(function (r) { return r.author_id; }));
+        } catch (e) {}
+        var myFol = {};
+        if (C.signedIn()) { try { (await C.followingIds()).forEach(function (x) { myFol[x] = 1; }); } catch (e) {} }
         var panel = document.createElement("section");
         panel.className = "cm-social";
         panel.innerHTML = "<h2>" + (kind2 === "followers" ? "👤 Followers" : "⭐ Following") + ' · <a class="cm-socback" href="profile.html?id=' + pid + '">back to profile</a></h2>' +
           (ids.length ? '<div class="cm-people">' + ids.map(function (fid) {
-            return '<div class="cm-person" data-pid="' + fid + '"><div class="cm-person__top">' +
-              '<div class="cm-ava cm-ava--lg"><span>' + C.esc(String(fid).charAt(0).toUpperCase()) + "</span></div>" +
-              '<div class="cm-person__meta"><a class="cm-name" href="profile.html?id=' + fid + '">Reader</a></div>' +
-              '<div class="cm-person__acts">' + (fid !== meId ? '<a class="cm-dmbtn" href="dm.html?u=' + fid + '">💬</a>' : "") + "</div>" +
-            "</div></div>";
+            var isMeRow = fid === meId;
+            return '<div class="cm-person" data-pid="' + fid + '">' +
+              '<div class="cm-person__top">' +
+                '<a class="cm-ava cm-ava--lg" href="profile.html?id=' + fid + '"><span>' + C.esc(String(fid).charAt(0).toUpperCase()) + "</span></a>" +
+                '<div class="cm-person__meta">' +
+                  '<a class="cm-name" href="profile.html?id=' + fid + '">Loading…</a>' +
+                  '<span class="cm-time cm-socid">@' + fid.slice(0, 8) + "</span>" +
+                "</div>" +
+              "</div>" +
+              '<div class="cm-person__acts">' +
+                (isMeRow ? '<span class="cm-time">· you</span>' :
+                  '<button class="cm-follow' + (myFol[fid] ? " on" : "") + '" data-socfol="' + fid + '">' + (myFol[fid] ? "Subscribed ✓" : "🔔 Subscribe") + "</button>" +
+                  '<a class="cm-dmbtn" href="dm.html?u=' + fid + '" title="Message">💬</a>') +
+              "</div>" +
+            "</div>";
           }).join("") + "</div>" : '<p class="cm-empty cm-empty--sm">Nobody here yet.</p>');
         root.appendChild(panel);
+        panel.addEventListener("click", async function (e) {
+          var t = e.target.closest("[data-socfol]");
+          if (!t) return;
+          if (!C.signedIn()) { location.href = "login.html"; return; }
+          t.disabled = true;
+          var on2 = !t.classList.contains("on");
+          try {
+            await C.setFollow(t.getAttribute("data-socfol"), on2);
+            t.classList.toggle("on", on2);
+            t.textContent = on2 ? "Subscribed ✓" : "🔔 Subscribe";
+          } catch (err) { alert("Subscribe failed — " + (err && err.message ? err.message : err)); }
+          t.disabled = false;
+        });
         ids.forEach(async function (fid) {
           try {
             var pr = await C.getProfile(fid);
@@ -177,7 +205,8 @@
             var el = panel.querySelector('[data-pid="' + fid + '"]');
             if (!el) return;
             var av = C.avaUrl(pr.name, pr.avatar_url, fid);
-            el.querySelector(".cm-ava").innerHTML = av ? '<img src="' + C.esc(av) + '" alt="">' : "<span>" + C.esc((pr.name || "R").charAt(0).toUpperCase()) + "</span>";
+            var avEl = el.querySelector(".cm-ava");
+            avEl.innerHTML = av ? '<img src="' + C.esc(av) + '" alt="">' : "<span>" + C.esc((pr.name || "R").charAt(0).toUpperCase()) + "</span>";
             var nm = el.querySelector(".cm-name");
             nm.textContent = pr.name || "Reader";
             if (C.isOfficial(fid)) nm.insertAdjacentHTML("afterend", '<span class="cm-vtick">✔</span>');
@@ -303,7 +332,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=199" defer></script>
-  <script src="js/gate.js?v=199" defer></script>
+  <script src="js/bar.js?v=202" defer></script>
+  <script src="js/gate.js?v=202" defer></script>
 </body>
 </html>

@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=199">
+  <link rel="stylesheet" href="css/style.css?v=202">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -34,7 +34,7 @@
       <a class="cm-bell" href="notifications.html" title="Notifications & updates">🔔<span class="nt-dot" data-notifdot hidden></span></a>
     </div>
     <div class="cm-head__acts">
-      <button class="cm-chipbtn" id="reelsBtn" title="Reels — swipe through stories">🎞 Reels</button>
+      <button class="cm-chipbtn" id="reelsBtn" title="Bursts — swipe through stories">🎬 Bursts</button>
       <button class="cm-chipbtn" id="quoteBtn" title="Post a small quote">❝ Quote</button>
       <button class="cm-write" id="writeBtn">✍️ Write a story</button>
     </div>
@@ -50,15 +50,15 @@
   <main class="cm-feed" id="feed" aria-live="polite"></main>
 
   <div id="reels" class="cm-reels" hidden>
-    <button class="cm-reels__x" id="reelsX" aria-label="Close reels">✕</button>
+    <button class="cm-reels__x" id="reelsX" aria-label="Close bursts">✕</button>
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="js/prefs.js?v=199"></script>
-  <script src="js/lang.js?v=199"></script>
-  <script src="js/config.js?v=199"></script>
-  <script src="js/auth.js?v=199"></script>
-  <script src="js/community.js?v=199"></script>
+  <script src="js/prefs.js?v=202"></script>
+  <script src="js/lang.js?v=202"></script>
+  <script src="js/config.js?v=202"></script>
+  <script src="js/auth.js?v=202"></script>
+  <script src="js/community.js?v=202"></script>
   <script>
   (function () {
     "use strict";
@@ -129,12 +129,14 @@
       var prof = { avatar_url: C.avaUrl(p.author_name, p.author_avatar, p.author_id) };
       var hue = parseInt(String(p.id).replace(/-/g, "").slice(0, 4), 16) % 360;
       var cover = p.cover_url
-        ? '<img src="' + C.esc(p.cover_url) + '" alt="" loading="lazy">'
+        ? (C.isVideoUrl(p.cover_url)
+            ? '<video src="' + C.esc(p.cover_url) + '" preload="metadata" muted playsinline></video>'
+            : '<img src="' + C.esc(p.cover_url) + '" alt="" loading="lazy">')
         : '<span class="cm-quote" style="background:linear-gradient(135deg,hsl(' + hue + ',88%,74%),hsl(' + ((hue + 48) % 360) + ',82%,58%));">' + (p.kind === "quote" ? "❝" : C.esc((p.title || "T").charAt(0).toUpperCase())) + "</span>";
       return '<article class="cm-card' + (p.kind === "quote" ? " cm-card--quote" : "") + '" data-post="' + p.id + '">' +
         '<a class="cm-card__cover" href="story.html?id=' + p.id + '">' + cover +
           (p.audio_url ? '<span class="cm-card__aud">🎧</span>' : "") +
-          (p.kind === "quote" ? '<span class="cm-card__kind">QUOTE</span>' : "") +
+          (p.kind === "quote" ? '<span class="cm-card__kind">QUOTE</span>' : (C.isVideoUrl(p.cover_url) ? '<span class="cm-card__kind cm-card__kind--burst">🎬 BURST</span>' : "")) +
         "</a>" +
         '<div class="cm-card__body">' +
           '<div class="cm-card__meta">' +
@@ -217,43 +219,116 @@
         }).join("") + "</div>";
     }
 
-    async function openReels() {
-      var ov = document.getElementById("reels"), track = document.getElementById("reelsTrack");
-      ov.hidden = false;
-      track.innerHTML = '<div class="cm-empty">Loading reels…</div>';
-      var posts = [];
-      try { posts = await C.listPosts({ limit: 30 }); } catch (e) {}
-      track.innerHTML = posts.map(function (p) {
-        var rhue = parseInt(String(p.id).replace(/-/g, "").slice(0, 4), 16) % 360;
-        return '<article class="cm-reel' + (p.cover_url ? " has-cover" : "") + '"' + (p.cover_url ? ' style="background-image:url(\'' + p.cover_url + '\')"' : ' style="background:linear-gradient(150deg,hsl(' + rhue + ',70%,32%),hsl(' + ((rhue + 48) % 360) + ',65%,18%))"') + '>' +
-          '<div class="cm-reel__grad"></div>' +
-          '<div class="cm-reel__body">' +
-            '<a class="cm-reel__who" href="story.html?id=' + p.id + '">' +
-              '<div class="cm-ava">' + (C.avaUrl(p.author_name, p.author_avatar, p.author_id) ? '<img src="' + C.esc(C.avaUrl(p.author_name, p.author_avatar, p.author_id)) + '" alt="">' : "<span>" + C.esc((p.author_name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
-              "<b>" + C.esc(p.author_name) + (C.isOfficial(p.author_id) ? '<span class="cm-vtick">✔</span>' : "") + "</b>" +
-            "</a>" +
-            '<h3 class="cm-reel__t">' + C.esc(p.title) + "</h3>" +
-            (p.subtitle ? '<p class="cm-reel__s">' + C.esc(p.subtitle) + "</p>" : "") +
-            '<div class="cm-reel__acts">' +
-              '<button class="cm-like" data-rlike="' + p.id + '">♥ <b>…</b></button>' +
-              (p.audio_url ? '<button class="cm-listen" data-audio="' + C.esc(p.audio_url) + '" data-title="' + C.esc(p.title) + '">🎧 Listen</button>' : "") +
-              '<a class="cm-cmts" href="story.html?id=' + p.id + '">💬 Open</a>' +
-            "</div>" +
+    /* ---------- Bursts: infinite swipe-through of EVERY story (videos, quotes, covers, text) ---------- */
+    var BURST_BATCH = 12;
+    var burstSeen = {}, burstOffset = 0, burstDone = false, burstBusy = false, burstTimer = null;
+
+    function reelHTML(p) {
+      var rhue = parseInt(String(p.id).replace(/-/g, "").slice(0, 4), 16) % 360;
+      var isVid = p.cover_url && C.isVideoUrl(p.cover_url);
+      var bgStyle = isVid
+        ? ' style="background:linear-gradient(150deg,hsl(' + rhue + ',70%,22%),hsl(' + ((rhue + 48) % 360) + ',65%,12%))"'
+        : (p.cover_url ? ' style="background-image:url(\'' + p.cover_url + '\')"' : ' style="background:linear-gradient(150deg,hsl(' + rhue + ',70%,32%),hsl(' + ((rhue + 48) % 360) + ',65%,18%))"');
+      return '<article class="cm-reel' + (p.cover_url && !isVid ? " has-cover" : "") + '"' + bgStyle + '>' +
+        (isVid ? '<video class="cm-reel__vid" src="' + C.esc(p.cover_url) + '" controls playsinline preload="metadata"></video>' : "") +
+        '<div class="cm-reel__grad"></div>' +
+        '<div class="cm-reel__body">' +
+          (p.kind === "quote" ? '<span class="cm-reel__q">❝</span>' : "") +
+          '<a class="cm-reel__who" href="story.html?id=' + p.id + '">' +
+            '<div class="cm-ava">' + (C.avaUrl(p.author_name, p.author_avatar, p.author_id) ? '<img src="' + C.esc(C.avaUrl(p.author_name, p.author_avatar, p.author_id)) + '" alt="">' : "<span>" + C.esc((p.author_name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
+            "<b>" + C.esc(p.author_name) + (C.isOfficial(p.author_id) ? '<span class="cm-vtick">✔</span>' : "") + "</b>" +
+          "</a>" +
+          '<h3 class="cm-reel__t">' + C.esc(p.title) + "</h3>" +
+          (p.subtitle ? '<p class="cm-reel__s">' + C.esc(p.subtitle) + "</p>" : "") +
+          '<div class="cm-reel__acts">' +
+            '<button class="cm-like" data-rlike="' + p.id + '">♥ <b>…</b></button>' +
+            (p.audio_url ? '<button class="cm-listen" data-audio="' + C.esc(p.audio_url) + '" data-title="' + C.esc(p.title) + '">🎧 Listen</button>' : "") +
+            '<a class="cm-cmts" href="story.html?id=' + p.id + '">💬 Open</a>' +
           "</div>" +
-        "</article>";
-      }).join("") || '<div class="cm-empty">No stories yet.</div>';
-      posts.forEach(async function (p) {
-        try {
-          var info = await C.likeInfo(p.id);
-          track.querySelectorAll('[data-rlike="' + p.id + '"]').forEach(function (b) {
-            b.classList.toggle("on", !!info.mine);
-            b.querySelector("b").textContent = info.count;
-          });
-        } catch (e) {}
-      });
+        "</div>" +
+      "</article>";
     }
-    document.getElementById("reelsBtn").addEventListener("click", openReels);
-    document.getElementById("reelsX").addEventListener("click", function () { document.getElementById("reels").hidden = true; });
+
+    function burstEnd() { return document.getElementById("burstEnd"); }
+    function paintBurstEnd() {
+      var el = burstEnd();
+      if (!el) return;
+      el.innerHTML = burstBusy ? "Loading more bursts…"
+        : (burstDone ? "You're all caught up ✨<br><small>New bursts appear here as readers post.</small>" : "");
+    }
+
+    async function burstLoadMore() {
+      if (burstBusy || burstDone) return;
+      burstBusy = true; paintBurstEnd();
+      var posts = [];
+      try { posts = await C.listPosts({ limit: BURST_BATCH, offset: burstOffset }); } catch (e) {}
+      var fresh = posts.filter(function (p) { return !burstSeen[p.id]; });
+      fresh.forEach(function (p) { burstSeen[p.id] = 1; });
+      var el = burstEnd();
+      if (fresh.length && el) {
+        fresh.forEach(function (p) { el.insertAdjacentHTML("beforebegin", reelHTML(p)); });
+        fresh.forEach(async function (p) {
+          try {
+            var info = await C.likeInfo(p.id);
+            document.querySelectorAll('[data-rlike="' + p.id + '"]').forEach(function (b) {
+              b.classList.toggle("on", !!info.mine);
+              b.querySelector("b").textContent = info.count;
+            });
+          } catch (e) {}
+        });
+      }
+      burstOffset += posts.length;
+      if (posts.length < BURST_BATCH) burstDone = true;
+      burstBusy = false; paintBurstEnd();
+      var empty = document.querySelector("#reelsTrack .cm-empty");
+      if (empty && Object.keys(burstSeen).length) empty.remove();
+    }
+
+    function burstOnScroll() {
+      var tr = document.getElementById("reelsTrack");
+      if (tr.scrollTop + tr.clientHeight >= tr.scrollHeight - window.innerHeight * 1.5) burstLoadMore();
+    }
+
+    async function burstCheckNew() {
+      var ov = document.getElementById("reels");
+      if (ov.hidden || burstBusy) return;
+      var latest = [];
+      try { latest = await C.listPosts({ limit: 5 }); } catch (e) { return; }
+      var fresh = latest.filter(function (p) { return !burstSeen[p.id]; });
+      if (fresh.length && !document.getElementById("burstPill")) {
+        var d = document.createElement("button");
+        d.id = "burstPill"; d.className = "cm-burstpill";
+        d.textContent = "⬆ " + fresh.length + " new burst" + (fresh.length > 1 ? "s" : "") + " — tap to refresh";
+        d.addEventListener("click", function () { d.remove(); openBursts(); });
+        ov.appendChild(d);
+      }
+    }
+
+    function openBursts() {
+      var ov = document.getElementById("reels"), track = document.getElementById("reelsTrack");
+      burstSeen = {}; burstOffset = 0; burstDone = false; burstBusy = false;
+      track.innerHTML = '<div class="cm-empty">Loading bursts…</div><div class="cm-burstend" id="burstEnd"></div>';
+      track.scrollTop = 0;
+      ov.hidden = false;
+      if (!track.getAttribute("data-init")) {
+        track.setAttribute("data-init", "1");
+        track.addEventListener("scroll", burstOnScroll, { passive: true });
+      }
+      burstLoadMore();
+      clearInterval(burstTimer);
+      burstTimer = setInterval(burstCheckNew, 20000);
+    }
+
+    function closeBursts() {
+      document.getElementById("reels").hidden = true;
+      clearInterval(burstTimer);
+      document.querySelectorAll("#reelsTrack video").forEach(function (v) { try { v.pause(); } catch (e) {} });
+      var pill = document.getElementById("burstPill");
+      if (pill) pill.remove();
+    }
+
+    document.getElementById("reelsBtn").addEventListener("click", openBursts);
+    document.getElementById("reelsX").addEventListener("click", closeBursts);
     document.getElementById("quoteBtn").addEventListener("click", function () { location.href = "write.html?mode=quote"; });
 
     async function load() {
@@ -463,7 +538,7 @@
     load();
   })();
   </script>
-  <script src="js/bar.js?v=199" defer></script>
-  <script src="js/gate.js?v=199" defer></script>
+  <script src="js/bar.js?v=202" defer></script>
+  <script src="js/gate.js?v=202" defer></script>
 </body>
 </html>

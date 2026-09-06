@@ -5561,3 +5561,53 @@ html.dark .pk-row { background: #1b1712; color: var(--paper); }
 .dm-book em { font-style: normal; font-size: .64rem; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; margin-top: 3px; }
 .dm-bub { cursor: pointer; }
 #youPopBtn.on { background: #00c48c; }
+
+
+/* ============================================================
+   v22 — anchored popouts · flipping ⋯ · search pill · social lists
+   ============================================================ */
+.dm-pop { position: fixed; z-index: 110; width: 210px; background: var(--paper); border: 2.5px solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); padding: 6px; display: flex; flex-direction: column; gap: 4px; opacity: 0; transform: scale(.85); transform-origin: top right; transition: opacity .16s, transform .16s; }
+.dm-pop.on { opacity: 1; transform: scale(1); }
+.dm-pop button { border: none; background: none; color: var(--ink); font: inherit; font-weight: 700; font-size: .8rem; text-align: left; padding: 10px 10px; border-radius: 9px; cursor: pointer; }
+.dm-pop button:hover, .dm-pop button:active { background: var(--yellow); }
+.dm-pop button small { color: #8f8a80; font-weight: 600; }
+html.dark .dm-pop { background: #241f17; }
+html.dark .dm-pop button { color: var(--paper); }
+/* flipping three-dot */
+.cm-top__act { transition: transform .22s cubic-bezier(.3, 1.4, .5, 1); line-height: 1; }
+.cm-top__act.on { transform: rotate(90deg); background: var(--yellow); }
+/* small search pill */
+.pk-search { display: flex; align-items: center; gap: 8px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--bg); padding: 8px 14px; margin-top: 10px; }
+.pk-search span { font-size: .8rem; }
+.pk-search input { flex: 1; min-width: 0; border: none; background: none; outline: none; font: inherit; font-weight: 600; font-size: .82rem; color: var(--ink); }
+html.dark .pk-search input { color: var(--paper); }
+/* social lists: no overlap, clean rows */
+.cm-social .cm-people { gap: 8px; }
+.cm-social .cm-person { padding: 10px 12px; gap: 10px; border-radius: 15px; }
+.cm-social .cm-person__meta { gap: 1px; }
+.cm-social .cm-name { font-size: .86rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.cm-socid { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .64rem; letter-spacing: .3px; }
+.cm-social .cm-person__acts .cm-follow { font-size: .68rem; padding: 7px 10px; white-space: nowrap; }
+
+
+/* ============================================================
+   v23 — video Bursts (max 2 min)
+   ============================================================ */
+.cm-card__cover video { width: 100%; height: 100%; object-fit: cover; display: block; background: #111; }
+.cm-card__kind--burst { background: var(--ink); color: var(--yellow); }
+html.dark .cm-card__kind--burst { background: var(--yellow); color: var(--ink); }
+.cm-postcard__cover.cm-postcard__cover { max-height: 70dvh; }
+video.cm-postcard__cover { width: 100%; object-fit: contain; background: #111; border: 3px solid var(--ink); border-radius: 16px; }
+.cm-reel__vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; z-index: 1; }
+.cm-reel__vid + .cm-reel__grad { background: linear-gradient(to top, rgba(0,0,0,.75) 0%, transparent 45%); }
+.cm-reel__body { z-index: 2; }
+.cm-prev { max-height: 220px; width: 100%; object-fit: contain; background: #111; border-radius: 12px; }
+
+
+/* ============================================================
+   v24 — infinite Bursts viewer
+   ============================================================ */
+.cm-burstend { min-height: 40px; display: flex; align-items: center; justify-content: center; text-align: center; color: #b9b2a6; font-weight: 700; font-size: .82rem; padding: 24px 20px calc(var(--bar-total) + 24px); }
+.cm-burstend small { color: #847e73; font-weight: 600; }
+.cm-burstpill { position: absolute; top: calc(14px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 63; border: 2.5px solid #fff; background: rgba(20, 16, 10, .78); color: #ffe27a; font: inherit; font-weight: 800; font-size: .78rem; padding: 9px 16px; border-radius: 999px; cursor: pointer; box-shadow: 0 4px 18px rgba(0,0,0,.4); }
+.cm-reel__q { font-family: Georgia, serif; font-size: 3.4rem; line-height: .6; color: var(--yellow); opacity: .95; }

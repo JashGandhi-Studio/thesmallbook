@@ -19,6 +19,7 @@ globalThis.fetch = async (url, o) => {
   const u = String(url); const m = (o && o.method) || "GET";
   const body = (o && typeof o.body === "string") ? JSON.parse(o.body) : null;
   const auth = o.headers.Authorization;
+  globalThis.lastHeaders = (o && o.headers) || {};
   if (u.includes("/storage/v1/object/")) {
     if (auth !== "Bearer jwt-1") return jsonRes({ message: "new row violates row-level security" }, 403);
     const path = u.split("/object/")[1]; storage.push(path); return jsonRes({ Key: path }, 200);
@@ -187,6 +188,27 @@ const C = window.TSB_COMMUNITY;
   store.tsb_progress = JSON.stringify({ "deep-work": { d: 1 }, "sapiens": { d: 2 } });
   await C.syncProgress(true);
   ok("progress pushed to profile", DB.profiles[0].progress === 2, JSON.stringify(DB.profiles[0].progress));
+
+  console.log("== v201 video bursts ==");
+  ok("isVideoUrl detects mp4/webm/mov + query strings", C.isVideoUrl("https://x/a.mp4") && C.isVideoUrl("https://x/a.WEBM") && C.isVideoUrl("https://x/a.mov?t=1"));
+  ok("isVideoUrl ignores images and empties", !C.isVideoUrl("https://x/cover.jpg") && !C.isVideoUrl("") && !C.isVideoUrl(null));
+  ok("MAX_BURST_SEC is 120 (2 minutes)", C.MAX_BURST_SEC === 120);
+  let burstThrew = false;
+  try { await C.checkBurst({ size: 60 * 1024 * 1024, name: "x.mp4", type: "video/mp4" }); }
+  catch (e) { burstThrew = /48 MB/.test(e.message); }
+  ok("checkBurst rejects files over 48 MB", burstThrew);
+  let durThrew = false;
+  try { await C.checkBurst({ size: 1024, name: "x.mp4", type: "video/mp4" }); }
+  catch (e) { durThrew = /Could not read/.test(e.message); }
+  ok("checkBurst fails safely when duration unreadable", durThrew);
+  const burstPost = await C.publish({ title: "My burst", subtitle: "", body: "<p>watch</p>", cover_url: "https://x/b.mp4", audio_url: "", kind: "text", tags: [] });
+  ok("publish stores video cover_url on existing column", burstPost && burstPost.cover_url === "https://x/b.mp4");
+
+  console.log("== v202 infinite bursts pagination ==");
+  await C.listPosts({ limit: 12, offset: 24 });
+  ok("listPosts paginates via Range header", globalThis.lastHeaders.Range === "24-35", String(globalThis.lastHeaders.Range));
+  await C.listPosts({ limit: 12 });
+  ok("listPosts without offset sends no Range header", !globalThis.lastHeaders.Range);
 
   console.log();
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");

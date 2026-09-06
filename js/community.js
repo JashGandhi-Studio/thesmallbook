@@ -110,11 +110,14 @@
   /* ---------- posts ---------- */
   async function listPosts(opt) {
     opt = opt || {};
-    var q = "posts?select=*&order=created_at.desc&limit=" + (opt.limit || 30);
-    if (opt.offset) q += "&offset=" + opt.offset; // NOTE: PostgREST ignores unknown params; kept for compat
+    var n = opt.limit || 30;
+    // v202: real pagination — PostgREST ignores an "offset" param, so page with the Range header
+    var q = "posts?select=*&order=created_at.desc" + (opt.offset ? "" : "&limit=" + n);
+    var hdrs = {};
+    if (opt.offset) hdrs.Range = opt.offset + "-" + (opt.offset + n - 1);
     if (opt.author) q += "&author_id=eq." + opt.author;
     if (opt.ids) q += "&author_id=in.(" + opt.ids.join(",") + ")";
-    return (await api(q, {})) || [];
+    return (await api(q, { headers: hdrs })) || [];
   }
   async function getPost(id) {
     var rows = await api("posts?id=eq." + id + "&select=*", {});
@@ -225,6 +228,33 @@
       throw new Error((res.status === 400 || res.status === 403) ? ("upload blocked by storage rules — run SQL #3 v3 (" + (det || res.status) + ")") : ("upload failed (" + (det || res.status) + ")"));
     }
     return URL + "/storage/v1/object/public/" + bucket + "/" + path;
+  }
+
+  /* ---------- v201: video Bursts (max 2 minutes) ---------- */
+  var MAX_BURST_SEC = 120;
+  var MAX_BURST_BYTES = 48 * 1024 * 1024; /* storage default cap ~50MB */
+  function isVideoUrl(url) {
+    return /\.(mp4|webm|mov|m4v|ogv)(\?|#|$)/i.test(String(url || ""));
+  }
+  function videoDuration(file) {
+    return new Promise(function (resolve, reject) {
+      try {
+        var v = document.createElement("video");
+        var u = window.URL.createObjectURL(file);
+        v.preload = "metadata";
+        v.onloadedmetadata = function () { window.URL.revokeObjectURL(u); resolve(v.duration || 0); };
+        v.onerror = function () { window.URL.revokeObjectURL(u); reject(new Error("Could not read that video file.")); };
+        v.src = u;
+      } catch (e) { reject(new Error("Could not read that video file.")); }
+    });
+  }
+  async function checkBurst(file) {
+    if (!file) throw new Error("No file chosen.");
+    if (file.size > MAX_BURST_BYTES) throw new Error("That video is bigger than 48 MB — trim or compress it first.");
+    var d = await videoDuration(file);
+    if (!isFinite(d) || d <= 0) throw new Error("Could not read that video's length — try an MP4 or WebM file.");
+    if (d > MAX_BURST_SEC + 0.5) throw new Error("Bursts are max 2 minutes — yours is " + Math.round(d) + "s. Trim it and try again.");
+    return d;
   }
 
   /* ---------- rich-text safety: whitelist tags, drop attributes ---------- */
@@ -521,6 +551,7 @@
     syncProgress: syncProgress,
     listComments: listComments, addComment: addComment,
     followInfo: followInfo, setFollow: setFollow, followingIds: followingIds, followerRows: followerRows,
-    upload: upload, sanitize: sanitize, ago: ago, readMins: readMins, esc: esc, playAudio: playAudio
+    upload: upload, sanitize: sanitize, ago: ago, readMins: readMins, esc: esc, playAudio: playAudio,
+    isVideoUrl: isVideoUrl, videoDuration: videoDuration, checkBurst: checkBurst, MAX_BURST_SEC: MAX_BURST_SEC
   };
 })();

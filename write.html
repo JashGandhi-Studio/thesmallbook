@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=199">
+  <link rel="stylesheet" href="css/style.css?v=202">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -59,6 +59,7 @@
 
     <section class="wr-meta">
       <label class="cm-lbl">Cover / quote image<input id="wCover" type="file" accept="image/*"><img id="wCoverPrev" class="cm-prev" hidden alt=""></label>
+      <label class="cm-lbl">🎬 Burst video — max 2 minutes<input id="wBurst" type="file" accept="video/*"><video id="wBurstPrev" class="cm-prev" controls playsinline preload="metadata" hidden></video></label>
       <div class="cm-lbl">Voice version (optional)
         <div class="cm-audiorow">
           <button class="setbtn" id="wRec">🎙 Record</button>
@@ -76,11 +77,11 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=199"></script>
-  <script src="js/lang.js?v=199"></script>
-  <script src="js/config.js?v=199"></script>
-  <script src="js/auth.js?v=199"></script>
-  <script src="js/community.js?v=199"></script>
+  <script src="js/prefs.js?v=202"></script>
+  <script src="js/lang.js?v=202"></script>
+  <script src="js/config.js?v=202"></script>
+  <script src="js/auth.js?v=202"></script>
+  <script src="js/community.js?v=202"></script>
   <script>
   (function () {
     "use strict";
@@ -88,7 +89,7 @@
     var DKEY = "tsb_write_draft";
     var $ = function (id) { return document.getElementById(id); };
     var title = $("wTitle"), sub = $("wSub"), body = $("wBody"), tags = $("wTags");
-    var coverUrl = "", audioUrl = "", kind = "text";
+    var coverUrl = "", audioUrl = "", burstUrl = "", kind = "text";
     var mediaRec = null, chunks = [];
 
     document.getElementById("wrBack").addEventListener("click", function (e) {
@@ -114,7 +115,7 @@
         try {
           localStorage.setItem(DKEY, JSON.stringify({
             t: title.value, s: sub.value, b: body.innerHTML, g: tags.value,
-            c: coverUrl, a: audioUrl, f: $("wFont").value, at: Date.now()
+            c: coverUrl, a: audioUrl, v: burstUrl, f: $("wFont").value, at: Date.now()
           }));
           $("saveState").textContent = "✓ draft saved";
         } catch (e) { $("saveState").textContent = "draft (private)"; }
@@ -125,8 +126,9 @@
         var d = JSON.parse(localStorage.getItem(DKEY));
         if (!d) return;
         title.value = d.t || ""; sub.value = d.s || ""; body.innerHTML = d.b || "";
-        tags.value = d.g || ""; coverUrl = d.c || ""; audioUrl = d.a || "";
-        if (d.c) { $("wCoverPrev").src = d.c; $("wCoverPrev").hidden = false; }
+        tags.value = d.g || ""; coverUrl = d.c || ""; audioUrl = d.a || ""; burstUrl = d.v || "";
+        if (d.c && !d.v) { $("wCoverPrev").src = d.c; $("wCoverPrev").hidden = false; }
+        if (d.v) { $("wBurstPrev").src = d.v; $("wBurstPrev").hidden = false; }
         if (d.a) { $("wAudioPrev").src = d.a; $("wAudioPrev").hidden = false; }
         if (d.f) { $("wFont").value = d.f; setFont(d.f); }
         if (d.t || d.b) $("saveState").textContent = "✓ draft restored";
@@ -170,9 +172,24 @@
       $("saveState").textContent = "… uploading cover";
       try {
         coverUrl = await C.upload(f, "tsb-covers");
+        burstUrl = ""; $("wBurstPrev").hidden = true;
         $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
         saveDraft();
       } catch (e) { alert("Cover upload failed: " + e.message); }
+    });
+    $("wBurst").addEventListener("change", async function () {
+      var f = this.files && this.files[0];
+      if (!f) return;
+      $("saveState").textContent = "… checking burst";
+      try {
+        var d = await C.checkBurst(f);
+        $("saveState").textContent = "… uploading burst (" + Math.round(d) + "s)";
+        burstUrl = await C.upload(f, "tsb-covers");
+        $("wBurstPrev").src = burstUrl; $("wBurstPrev").hidden = false;
+        $("wCoverPrev").hidden = true;
+        $("saveState").textContent = "✓ burst attached";
+        saveDraft();
+      } catch (e) { $("saveState").textContent = ""; alert("Burst not attached — " + e.message); }
     });
     $("wRec").addEventListener("click", async function () {
       var st = $("wRecState");
@@ -218,7 +235,7 @@
       try {
         await C.publish({
           title: t, subtitle: sub.value.trim(), body: b,
-          cover_url: coverUrl, audio_url: audioUrl, kind: kind,
+          cover_url: burstUrl || coverUrl, audio_url: audioUrl, kind: kind,
           tags: tags.value.split(",").map(function (s) { return s.trim(); }).filter(Boolean),
           kind: kind
         });
@@ -245,6 +262,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=199" defer></script>
+  <script src="js/bar.js?v=202" defer></script>
 </body>
 </html>

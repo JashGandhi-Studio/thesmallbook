@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=199">
+  <link rel="stylesheet" href="css/style.css?v=202">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -30,6 +30,19 @@
     <h1 class="cm-top__t" id="dmTitle">💬 Messages</h1>
     <button class="cm-top__act" id="dmMenuBtn" hidden title="Chat options">⋯</button>
   </header>
+
+  <!-- chat options popout (anchored under the ⋯ dot) -->
+  <div class="dm-pop" id="dmPop" hidden>
+    <button id="popProfile">👤 View profile</button>
+    <button id="popClear">🧹 Clear chat <small>(for me)</small></button>
+  </div>
+
+  <!-- message action popout (anchored where you tapped) -->
+  <div class="dm-pop" id="ctxPop" hidden>
+    <button id="actEdit">✏️ Edit</button>
+    <button id="actDelAll">🗑 Delete for everyone</button>
+    <button id="actDelMe">🙈 Delete for me</button>
+  </div>
 
   <main class="cm-wrap" id="dmMain">
     <div id="dmList" class="dm-list"></div>
@@ -43,24 +56,6 @@
     </div>
   </main>
 
-  <!-- message action sheet -->
-  <div class="dm-sheet" id="dmSheet" hidden>
-    <div class="dm-sheet__card">
-      <button id="actEdit">✏️ Edit message</button>
-      <button id="actDelAll">🗑 Delete for everyone</button>
-      <button id="actDelMe">🙈 Delete for me</button>
-      <button class="dm-sheet__x" id="actCancel">Cancel</button>
-    </div>
-  </div>
-
-  <!-- chat options sheet -->
-  <div class="dm-sheet" id="dmOpts" hidden>
-    <div class="dm-sheet__card">
-      <button id="optClear">🧹 Clear chat (for me)</button>
-      <button class="dm-sheet__x" id="optCancel">Cancel</button>
-    </div>
-  </div>
-
   <!-- book picker -->
   <div class="dm-picker" id="dmPicker" hidden>
     <div class="dm-picker__card">
@@ -68,17 +63,17 @@
         <b>📕 Recommend a book</b>
         <button id="pkX" aria-label="Close">✕</button>
       </div>
-      <input id="pkSearch" class="dm-input" placeholder="Search 350 books — title or author…" autocomplete="off">
+      <div class="pk-search"><span>🔍</span><input id="pkSearch" placeholder="Search books…" autocomplete="off"></div>
       <div class="dm-picker__list" id="pkList"></div>
     </div>
   </div>
 
-  <script src="js/prefs.js?v=199"></script>
-  <script src="js/lang.js?v=199"></script>
-  <script src="js/config.js?v=199"></script>
-  <script src="js/data.js?v=199"></script>
-  <script src="js/auth.js?v=199"></script>
-  <script src="js/community.js?v=199"></script>
+  <script src="js/prefs.js?v=202"></script>
+  <script src="js/lang.js?v=202"></script>
+  <script src="js/config.js?v=202"></script>
+  <script src="js/data.js?v=202"></script>
+  <script src="js/auth.js?v=202"></script>
+  <script src="js/community.js?v=202"></script>
   <script>
   (function () {
     "use strict";
@@ -89,6 +84,24 @@
     var msgs = document.getElementById("dmMsgs"), back = document.getElementById("dmBack");
     var meId = "";
     var selectedMsg = null;
+
+    /* ---------- anchored popouts ---------- */
+    function openPop(pop, x, y) {
+      pop.hidden = false;
+      var w = 210, h = pop.offsetHeight || 130;
+      var left = Math.min(Math.max(10, x - w + 20), window.innerWidth - w - 10);
+      var top = Math.min(Math.max(10, y), window.innerHeight - h - 10);
+      pop.style.left = left + "px";
+      pop.style.top = top + "px";
+      requestAnimationFrame(function () { pop.classList.add("on"); });
+    }
+    function closePop(pop) { pop.classList.remove("on"); setTimeout(function () { pop.hidden = true; }, 180); }
+    document.addEventListener("click", function (e) {
+      ["dmPop", "ctxPop"].forEach(function (id) {
+        var pop = document.getElementById(id);
+        if (!pop.hidden && !pop.contains(e.target) && e.target.id !== "dmMenuBtn" && !e.target.closest(".dm-bub")) closePop(pop);
+      });
+    });
 
     C.whenReady(function () {
     if (!C.signedIn()) {
@@ -173,8 +186,8 @@
       catch (err) { alert("Message failed — " + (err && err.message ? err.message : err)); }
     });
 
-    /* ---- message actions ---- */
-    var sheet = document.getElementById("dmSheet");
+    /* ---- message actions: popout right where you tapped ---- */
+    var ctx = document.getElementById("ctxPop");
     msgs.addEventListener("click", function (e) {
       var bub = e.target.closest(".dm-bub");
       if (!bub || e.target.closest(".dm-book")) return;
@@ -182,13 +195,10 @@
       var mineRow = bub.getAttribute("data-mine") === "1";
       document.getElementById("actEdit").hidden = !mineRow;
       document.getElementById("actDelAll").hidden = !mineRow;
-      sheet.hidden = false;
-      requestAnimationFrame(function () { sheet.classList.add("on"); });
+      openPop(ctx, e.clientX, e.clientY + 8);
     });
-    function closeSheet() { sheet.classList.remove("on"); setTimeout(function () { sheet.hidden = true; }, 220); }
-    document.getElementById("actCancel").addEventListener("click", closeSheet);
     document.getElementById("actEdit").addEventListener("click", async function () {
-      closeSheet();
+      closePop(ctx);
       if (!selectedMsg) return;
       var cur = selectedMsg.getAttribute("data-body") || "";
       var next = prompt("Edit your message:", cur);
@@ -197,29 +207,33 @@
       catch (err) { alert("Edit failed — " + (err && err.message ? err.message : err)); }
     });
     document.getElementById("actDelAll").addEventListener("click", async function () {
-      closeSheet();
+      closePop(ctx);
       if (!selectedMsg || !confirm("Delete this message for everyone?")) return;
       try { await C.deleteDM(selectedMsg.getAttribute("data-mid")); await loadThread(); }
       catch (err) { alert("Delete failed — " + (err && err.message ? err.message : err)); }
     });
     document.getElementById("actDelMe").addEventListener("click", async function () {
-      closeSheet();
+      closePop(ctx);
       if (!selectedMsg) return;
       try { await C.hideDM(selectedMsg.getAttribute("data-mid")); await loadThread(); }
       catch (err) { alert("Couldn't hide — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
     });
 
-    /* ---- chat options ---- */
-    var opts = document.getElementById("dmOpts");
-    document.getElementById("dmMenuBtn").addEventListener("click", function () {
-      opts.hidden = false;
-      requestAnimationFrame(function () { opts.classList.add("on"); });
+    /* ---- chat options: flipping ⋯ popout ---- */
+    var pop = document.getElementById("dmPop"), menuBtn = document.getElementById("dmMenuBtn");
+    menuBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (!pop.hidden) { closePop(pop); menuBtn.classList.remove("on"); return; }
+      menuBtn.classList.add("on");
+      var r = menuBtn.getBoundingClientRect();
+      openPop(pop, r.right, r.bottom + 8);
     });
-    document.getElementById("optCancel").addEventListener("click", function () {
-      opts.classList.remove("on"); setTimeout(function () { opts.hidden = true; }, 220);
+    document.getElementById("popProfile").addEventListener("click", function () {
+      closePop(pop); menuBtn.classList.remove("on");
+      location.href = "profile.html?id=" + uid;
     });
-    document.getElementById("optClear").addEventListener("click", async function () {
-      opts.classList.remove("on"); setTimeout(function () { opts.hidden = true; }, 220);
+    document.getElementById("popClear").addEventListener("click", async function () {
+      closePop(pop); menuBtn.classList.remove("on");
       if (!confirm("Clear this chat for yourself? (Messages stay for the other person.)")) return;
       try { await C.clearThread(uid); await loadThread(); }
       catch (err) { alert("Clear failed — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
@@ -277,13 +291,13 @@
     } else {
       list.hidden = true;
       thread.hidden = false;
-      document.getElementById("dmMenuBtn").hidden = false;
+      menuBtn.hidden = false;
       loadThread();
       setInterval(function () { loadThread(true); }, 6000);
     }
     });
   })();
   </script>
-  <script src="js/bar.js?v=199" defer></script>
+  <script src="js/bar.js?v=202" defer></script>
 </body>
 </html>
