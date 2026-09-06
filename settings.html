@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <meta name="viewport" content="width=663, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>Settings — TheSmallBook</title>
   <meta name="description" content="TheSmallBook settings: darkness, text size, accent colour and reading language — saved on this device, synced with your account.">
   <meta name="robots" content="noindex">
@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=185">
+  <link rel="stylesheet" href="css/style.css?v=188">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -64,6 +64,16 @@
         <button class="setopt" data-fontstyle="clean"><span>🔳</span> Clean</button>
       </div>
       <p class="sethint">Changes every reading surface instantly — lessons, chat, cards.</p>
+    </section>
+
+    <section class="setcard">
+      <h2>📐 APP DISPLAY SIZE</h2>
+      <div class="setrow" id="appsizeRow">
+        <button class="setopt" data-appsize="default"><span>📱</span> Default</button>
+        <button class="setopt" data-appsize="big"><span>🔍</span> Big</button>
+        <button class="setopt" data-appsize="bigger"><span>🔎</span> Bigger</button>
+      </div>
+      <p class="sethint">Default = the app's own locked size on every phone — your phone's font size can't zoom it. Big/Bigger are the app's own larger modes.</p>
     </section>
 
     <section class="setcard">
@@ -122,11 +132,11 @@
     <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v175.</p>
   </main>
 
-  <script src="js/prefs.js?v=185"></script>
-  <script src="js/lang.js?v=185"></script>
-  <script src="js/config.js?v=185"></script>
-  <script src="js/auth.js?v=185"></script>
-  <script src="js/bar.js?v=185" defer></script>
+  <script src="js/prefs.js?v=188"></script>
+  <script src="js/lang.js?v=188"></script>
+  <script src="js/config.js?v=188"></script>
+  <script src="js/auth.js?v=188"></script>
+  <script src="js/bar.js?v=188" defer></script>
   <script>
     (function () {
       /* theme */
@@ -246,7 +256,7 @@
   });
 })();
 </script>
-  <script src="js/onboard.js?v=185" defer></script>
+  <script src="js/onboard.js?v=188" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {

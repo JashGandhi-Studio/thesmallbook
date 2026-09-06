@@ -37,6 +37,34 @@
     if (lv === "compact") document.documentElement.classList.add("tsb-libview-compact");
     else if (lv === "list") document.documentElement.classList.add("tsb-libview-list");
   } catch (e) {}
+  /* 📐 app display size: the app's OWN scale, never the phone's font size.
+     default = 663px layout viewport (the locked, proper look);
+     big / bigger narrow the layout viewport so everything reads larger. */
+  function applyAppSize(v) {
+    var w = v === "big" ? 560 : v === "bigger" ? 480 : 663;
+    try {
+      var vm = document.querySelector('meta[name="viewport"]');
+      if (vm) vm.content = "width=" + w + ", initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1";
+    } catch (e) {}
+  }
+  var appSize = "default";
+  try { appSize = JSON.parse(localStorage.getItem("tsb_appsize")) || "default"; } catch (e) {}
+  applyAppSize(appSize);
+  document.addEventListener("click", function (e) {
+    var b = e.target && e.target.closest ? e.target.closest("[data-appsize]") : null;
+    if (!b) return;
+    var v = b.getAttribute("data-appsize");
+    try { localStorage.setItem("tsb_appsize", JSON.stringify(v)); } catch (e2) {}
+    applyAppSize(v);
+    document.querySelectorAll("[data-appsize]").forEach(function (x) { x.classList.toggle("on", x === b); });
+  });
+  document.addEventListener("DOMContentLoaded", function () {
+    try {
+      var cur = JSON.parse(localStorage.getItem("tsb_appsize")) || "default";
+      document.querySelectorAll("[data-appsize]").forEach(function (x) { x.classList.toggle("on", x.getAttribute("data-appsize") === cur); });
+    } catch (e) {}
+  });
+
   /* font style (modern / serif / clean) — pre-paint */
   try {
     var fst = JSON.parse(localStorage.getItem("tsb_fontstyle"));

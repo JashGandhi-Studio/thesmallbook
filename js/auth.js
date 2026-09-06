@@ -745,7 +745,7 @@
     } catch (e) {
       console.warn("TSB boot error:", e);
       // never leave the app without TSB_AUTH — degrade gracefully
-      window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, track, onBookComplete, renderNav, clientId: GCLIENT, openSheet, closeSheet };
+      window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, track, onBookComplete, renderNav, clientId: GCLIENT, openSheet, closeSheet, token: () => ensureToken() };
       try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
     }
   }

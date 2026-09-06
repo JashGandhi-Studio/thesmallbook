@@ -2,20 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
-  <title>Community Stories — TheSmallBook</title>
-  <meta name="description" content="Write and share your own stories inspired by the lessons you learned — with your own cover art.">
+  <meta name="viewport" content="width=663, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <title>Stories — TheSmallBook Community</title>
+  <meta name="description" content="Read, write and listen to real reader stories — rich text, voice stories and quote cards, with likes, comments and follows.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
-  
   <script>
-    /* theme + phone status bar BEFORE first paint (no flash).
-       Rule 1: viewport-fit=cover in the viewport meta makes env(safe-area-inset-*) real.
-       Rule 2: theme-color set here, before any stylesheet, so dark mode
-       never flashes a light status bar. */
     try {
       var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
       if (tsbDark) document.documentElement.classList.add("dark");
@@ -24,167 +19,426 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=185">
+  <link rel="stylesheet" href="css/style.css?v=188">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <meta property="og:url" content="https://thesmallbook.in/stories.html">
-  <meta property="og:title" content="Community Stories — Readers Who Lived the Lessons | TheSmallBook">
-  <meta property="og:description" content="Real readers turned lessons into stories. Write yours, publish it, own it — free.">
-  <meta property="og:site_name" content="TheSmallBook">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="TheSmallBook — 350 books · 2170 lessons · 300 autopsies · free to read">
-  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png">
 </head>
-<body>
-
-
-  <!-- TICKER -->
-  <div class="ticker">
-    <div class="ticker__track">
-      <span>✍️ WRITE YOUR OWN STORY FROM THE LESSONS YOU LEARNED</span>
-      <span>🎨 UPLOAD YOUR OWN AI-GENERATED COVER</span>
-      <span>📄 TYPE IT OR UPLOAD A PDF</span>
-      <span>🌍 EVERYONE CAN READ IT</span>
-      <span>✍️ WRITE YOUR OWN STORY FROM THE LESSONS YOU LEARNED</span>
-      <span>🎨 UPLOAD YOUR OWN AI-GENERATED COVER</span>
-      <span>📄 TYPE IT OR UPLOAD A PDF</span>
-      <span>🌍 EVERYONE CAN READ IT</span>
+<body class="cmpage">
+  <header class="cm-head">
+    <div>
+      <div class="cm-head__t">✍️ STORIES</div>
+      <div class="cm-head__s">real readers · real lessons · your voice</div>
     </div>
-  </div>
-
-  <!-- NAV -->
-  <nav class="nav">
-    <a class="logo" href="index.html">
-      <span class="logo__mark">📕</span>
-      <span>The<span class="logo__small">Small</span>Book</span>
-    </a>
-    <div class="nav__links">
-      <a class="btn" href="index.html#library">📚 LIBRARY</a>
-      <a class="btn btn--yellow" href="#write">✍️ WRITE YOURS</a>
-      <button class="btn btn--icon" data-lang-btn title="Change language" aria-label="Language">🌐</button>
-      <button class="btn btn--ink btn--icon" data-theme-toggle title="Dark mode" aria-label="Dark mode">🌙</button>
-    </div>
-    <div class="nav__auth" id="tsb-nav-auth" aria-live="polite"></div>
-  </nav>
-
-  <!-- HERO -->
-  <header class="hero">
-    <span class="deco deco--sq" style="top:14%; left:7%;"></span>
-    <span class="deco deco--circ" style="top:24%; right:9%;"></span>
-    <span class="deco deco--star" style="bottom:20%; right:14%;">✦</span>
-    <span class="deco deco--tri" style="bottom:16%; left:11%;"></span>
-    <div class="hero__badge">✍️ COMMUNITY SHELF</div>
-    <h1>
-      READ A LESSON.<br>
-      <span class="hl">LIVE IT</span>. THEN <span class="hl hl--red">WRITE IT</span>.
-    </h1>
-    <p class="hero__sub">
-      Did a lesson change something in your life? Turn it into a story.
-      <strong>Type it or upload a PDF</strong>, add your own AI-generated cover, and publish.
-      It saves instantly on your device — then send it to us with one click and it joins the
-      <strong>Global Shelf for everyone</strong> in the next weekly update.
-    </p>
+    <button class="cm-write" id="writeBtn">✍️ Write</button>
   </header>
 
-  <!-- COMMUNITY SHELF -->
-  <div class="section-head" id="shelf">
-    <h2>🌍 The Community Shelf</h2>
-    <div class="line"></div>
+  <nav class="cm-tabs" id="cmTabs" aria-label="Story feeds">
+    <button data-tab="all" class="on">✨ For you</button>
+    <button data-tab="following">👥 Following</button>
+    <button data-tab="mine">📔 My posts</button>
+  </nav>
+
+  <main class="cm-feed" id="feed" aria-live="polite"></main>
+
+  <!-- ============ composer sheet ============ -->
+  <div class="cm-sheetwrap" id="sheet" hidden>
+    <div class="cm-sheet" role="dialog" aria-modal="true" aria-label="Write a story">
+      <div class="cm-sheet__head">
+        <b>✍️ New story</b>
+        <button class="cm-sheet__x" id="sheetX" aria-label="Close">✕</button>
+      </div>
+      <div class="cm-sheet__body">
+        <label class="cm-lbl">Title *<input id="cTitle" class="setinput" maxlength="90" placeholder="The day a book caught me lying…"></label>
+        <label class="cm-lbl">One-line hook<input id="cSub" class="setinput" maxlength="140" placeholder="What's this story really about?"></label>
+        <div class="cm-lbl">Kind
+          <div class="cm-seg" id="cKind">
+            <button data-kind="text" class="on">✍️ Text</button>
+            <button data-kind="audio">🎧 Voice</button>
+            <button data-kind="quote">🖼 Quote card</button>
+          </div>
+        </div>
+        <div class="cm-lbl">Cover / quote image<input id="cCover" type="file" accept="image/*"><img id="cCoverPrev" class="cm-prev" hidden alt=""></div>
+        <div class="cm-lbl">Story *
+          <div class="cm-edbar" id="edBar">
+            <button data-cmd="bold" title="Bold"><b>B</b></button>
+            <button data-cmd="italic" title="Italic"><i>I</i></button>
+            <button data-cmd="underline" title="Underline"><u>U</u></button>
+            <button data-cmd="h2" title="Heading">H</button>
+            <button data-cmd="ul" title="Bullet list">•≡</button>
+            <button data-cmd="ol" title="Numbered list">1≡</button>
+            <button data-cmd="quote" title="Quote block">❝</button>
+          </div>
+          <div id="cBody" class="cm-ed" contenteditable="true" data-ph="Start with the moment everything shifted…"></div>
+        </div>
+        <div class="cm-lbl">Voice (optional — readers can listen)
+          <div class="cm-audiorow">
+            <button class="setbtn" id="cRec">🎙 Record</button>
+            <span id="cRecState" class="cm-recstate"></span>
+            <input id="cAudio" type="file" accept="audio/*">
+          </div>
+          <audio id="cAudioPrev" controls hidden></audio>
+        </div>
+        <label class="cm-lbl">Tags (comma separated)<input id="cTags" class="setinput" maxlength="80" placeholder="habits, failure, atomic-habits"></label>
+        <button class="cm-pub" id="cPub">Publish to the community →</button>
+        <p class="cm-fine">Be kind, be real, be yours. You can delete your posts any time.</p>
+      </div>
+    </div>
   </div>
-  <div class="storystats" id="storyStats">
-    <div class="storystats__cell"><span class="storystats__label">READER STORIES</span><span class="storystats__val" id="stTotal">0</span></div>
-    <div class="storystats__cell"><span class="storystats__label">STORY OF THE WEEK</span><span class="storystats__val storystats__val--y" id="stFeatured">—</span></div>
-    <div class="storystats__cell"><span class="storystats__label">YOUR STORY?</span><span class="storystats__val storystats__val--g" id="stCta">CLAIM →</span></div>
-  </div>
-  <main class="grid" id="storyGrid"></main>
 
-  <!-- WRITE FORM -->
-  <div class="section-head" id="write">
-    <h2>✍️ Publish Your Story</h2>
-    <div class="line"></div>
-  </div>
+  <script src="js/prefs.js?v=188"></script>
+  <script src="js/lang.js?v=188"></script>
+  <script src="js/config.js?v=188"></script>
+  <script src="js/auth.js?v=188"></script>
+  <script src="js/community.js?v=188"></script>
+  <script>
+  (function () {
+    "use strict";
+    var C = window.TSB_COMMUNITY;
+    var feed = document.getElementById("feed");
+    var tab = "all";
+    var meId = (C.me() || {}).id || "";
 
-  <section class="storyform">
-    <form class="storyform__box" id="storyForm">
-      <div class="fieldrow">
-        <div class="field">
-          <label>Story Title *</label>
-          <input type="text" id="sTitle" maxlength="80" placeholder="THE DAY I STOPPED MISSING TWICE" required>
-        </div>
-        <div class="field">
-          <label>Your Name *</label>
-          <input type="text" id="sAuthor" maxlength="40" placeholder="YOUR NAME" required>
-        </div>
-      </div>
+    function skeletons(n) {
+      var out = "";
+      for (var i = 0; i < (n || 4); i++) {
+        out += '<article class="cm-card cm-card--skel"><div class="cm-sk cm-sk--cover"></div>' +
+          '<div class="cm-card__body"><div class="cm-sk cm-sk--line w60"></div>' +
+          '<div class="cm-sk cm-sk--line w90"></div><div class="cm-sk cm-sk--line w40"></div></div></article>';
+      }
+      return out;
+    }
 
-      <div class="fieldrow">
-        <div class="field">
-          <label>Inspired By (book)</label>
-          <select id="sBook"></select>
-        </div>
-        <div class="field">
-          <label>Your Cover (AI-generated image) *</label>
-          <label class="drop" id="coverDrop">
-            🎨 CLICK TO UPLOAD COVER IMAGE
-            <input type="file" id="sCover" accept="image/*">
-            <img class="drop__preview" id="coverPreview" style="display:none" alt="cover preview">
-          </label>
-          <div class="field__hint">JPG / PNG / WEBP — generate it with any AI image tool and upload it here.</div>
-        </div>
-      </div>
+    /* 🎯 personalisation: keywords from the reader's onboarding shelves */
+    function interestKeys() {
+      var keys = [];
+      try {
+        var ints = JSON.parse(localStorage.getItem("tsb_interests")) || [];
+        var lead = JSON.parse(localStorage.getItem("tsb_ob_lead"));
+        if (lead && ints.indexOf(lead) < 0) ints.unshift(lead);
+        ints.forEach(function (c) {
+          String(c).toLowerCase().split(/[^a-z]+/).forEach(function (w) {
+            if (w.length >= 4 && keys.indexOf(w) < 0) keys.push(w);
+          });
+        });
+      } catch (e) {}
+      return keys;
+    }
+    var KEYS = interestKeys();
+    var followSet = {};
+    function score(p) {
+      var sc = 0;
+      if (followSet[p.author_id]) sc += 40;
+      if (KEYS.length) {
+        var txt = ((p.tags || []).join(" ") + " " + p.title + " " + (p.subtitle || "")).toLowerCase();
+        KEYS.forEach(function (k) { if (txt.indexOf(k) >= 0) sc += 15; });
+      }
+      var ageH = (Date.now() - new Date(p.created_at).getTime()) / 36e5;
+      sc += Math.max(0, 20 - ageH / 6);
+      if (p.audio_url) sc += 2;
+      return sc;
+    }
+    function railHtml(posts) {
+      var seen = {}, rail = [];
+      posts.forEach(function (p) {
+        if (!seen[p.author_id]) { seen[p.author_id] = 1; rail.push(p); }
+      });
+      rail = rail.slice(0, 12);
+      if (!rail.length) return "";
+      return '<div class="cm-rail">' + rail.map(function (p) {
+        var av = p.author_avatar
+          ? '<img src="' + C.esc(p.author_avatar) + '" alt="">'
+          : "<span>" + C.esc((p.author_name || "R").charAt(0).toUpperCase()) + "</span>";
+        return '<a class="cm-rail__i' + (followSet[p.author_id] ? " fol" : "") + '" href="profile.html?id=' + p.author_id + '" title="' + C.esc(p.author_name) + '">' +
+          '<span class="cm-rail__ring">' + av + "</span>" +
+          '<span class="cm-rail__n">' + C.esc(String(p.author_name).split(" ")[0]) + "</span></a>";
+      }).join("") + "</div>";
+    }
 
-      <div class="field">
-        <label>Your Story — type it here...</label>
-        <textarea id="sText" maxlength="20000" placeholder="It started when I read the lesson about never missing twice..."></textarea>
-        <div class="field__hint">Up to 20,000 characters.</div>
-      </div>
+    function card(p, extra) {
+      var prof = { avatar_url: p.author_avatar || "" };
+      var cover = p.cover_url
+        ? '<img src="' + C.esc(p.cover_url) + '" alt="" loading="lazy">'
+        : '<span class="cm-quote">❝</span>';
+      return '<article class="cm-card" data-post="' + p.id + '">' +
+        '<a class="cm-card__cover" href="story.html?id=' + p.id + '">' + cover +
+          (p.audio_url ? '<span class="cm-card__aud">🎧</span>' : "") +
+          (p.kind === "quote" ? '<span class="cm-card__kind">QUOTE</span>' : "") +
+        "</a>" +
+        '<div class="cm-card__body">' +
+          '<div class="cm-card__meta">' +
+            '<a class="cm-ava" href="profile.html?id=' + p.author_id + '">' +
+              (prof.avatar_url ? '<img src="' + C.esc(prof.avatar_url) + '" alt="">' : '<span>' + C.esc((p.author_name || "R").charAt(0).toUpperCase()) + "</span>") +
+            "</a>" +
+            '<a class="cm-name" href="profile.html?id=' + p.author_id + '">' + C.esc(p.author_name) + "</a>" +
+            '<span class="cm-time">' + C.ago(p.created_at) + "</span>" +
+            (p.author_id !== meId ? '<button class="cm-follow" data-follow="' + p.author_id + '">+ Follow</button>' : "") +
+          "</div>" +
+          '<a class="cm-card__title" href="story.html?id=' + p.id + '">' + C.esc(p.title) + "</a>" +
+          (p.subtitle ? '<p class="cm-card__sub">' + C.esc(p.subtitle) + "</p>" : "") +
+          (p.tags && p.tags.length ? '<div class="cm-card__tags">' + p.tags.slice(0, 4).map(function (t) { return "<span># " + C.esc(t) + "</span>"; }).join("") + "</div>" : "") +
+          '<div class="cm-card__foot">' +
+            '<button class="cm-like" data-like="' + p.id + '">♥ <b>…</b></button>' +
+            '<a class="cm-cmts" href="story.html?id=' + p.id + '#comments">💬 <b>…</b></a>' +
+            (p.audio_url ? '<button class="cm-listen" data-audio="' + C.esc(p.audio_url) + '" data-title="' + C.esc(p.title) + '">🎧 Listen</button>' : "") +
+            '<span class="cm-read">' + C.readMins(p.body) + " min</span>" +
+            (p.author_id === meId ? '<button class="cm-del" data-del="' + p.id + '" title="Delete my story">🗑</button>' : "") +
+          "</div>" +
+        "</div></article>";
+    }
 
-      <div class="field">
-        <label>...or upload it as a PDF</label>
-        <label class="drop" id="pdfDrop">
-          📄 CLICK TO UPLOAD PDF (MAX 4 MB)
-          <input type="file" id="sPdf" accept="application/pdf">
-        </label>
-        <div class="field__hint">Provide either typed text OR a PDF (or both — text is shown first).</div>
-      </div>
+    async function hydrate(root) {
+      var ids = [];
+      root.querySelectorAll("[data-like]").forEach(function (b) { ids.push(b.getAttribute("data-like")); });
+      await Promise.all(ids.map(async function (id) {
+        try {
+          var info = await C.likeInfo(id);
+          root.querySelectorAll('[data-like="' + id + '"]').forEach(function (b) {
+            b.querySelector("b").textContent = info.count;
+            b.classList.toggle("on", info.mine);
+          });
+          root.querySelectorAll('.cm-cmts[href*="' + id + '"] b').forEach(function (b) {});
+        } catch (e) {}
+      }));
+      await Promise.all(ids.map(async function (id) {
+        try {
+          var cs = await C.listComments(id);
+          root.querySelectorAll('.cm-cmts[href="story.html?id=' + id + '#comments"] b').forEach(function (b) { b.textContent = cs.length; });
+        } catch (e) {}
+      }));
+      root.querySelectorAll("[data-follow]").forEach(async function (b) {
+        try {
+          var f = await C.followInfo(b.getAttribute("data-follow"));
+          b.classList.toggle("on", f.mine);
+          b.textContent = f.mine ? "✓ Following" : "+ Follow";
+        } catch (e) {}
+      });
+    }
 
-      <button class="btn btn--red" type="submit" style="align-self:flex-start; font-size:1rem; padding:14px 30px;">
-        🚀 PUT IT ON THE SHELF
-      </button>
-    </form>
-  </section>
+    async function load() {
+      feed.innerHTML = skeletons();
+      try {
+        if (!C.enabled) {
+          feed.innerHTML = '<div class="cm-empty">☁️ Community cloud is being switched on — check back in a bit.</div>';
+          return;
+        }
+        var posts = [];
+        if (tab === "mine") {
+          if (!meId) { feed.innerHTML = signInCard(); return; }
+          posts = await C.listPosts({ author: meId });
+        } else if (tab === "following") {
+          if (!meId) { feed.innerHTML = signInCard(); return; }
+          var ids = await C.followingIds();
+          posts = ids.length ? await C.listPosts({ ids: ids }) : [];
+          if (!posts.length) { feed.innerHTML = '<div class="cm-empty">👥 Follow writers from the For-you feed and their stories land here.</div>'; return; }
+        } else {
+          posts = await C.listPosts({});
+          try { (await C.followingIds()).forEach(function (id) { followSet[id] = 1; }); } catch (e) {}
+          posts = posts.slice().sort(function (a, b) { return score(b) - score(a); });
+        }
+        if (!posts.length) {
+          feed.innerHTML = '<div class="cm-empty">✍️ No stories yet — yours could be the first.<br><button class="cm-write" id="emptyWrite">Write the first story</button></div>';
+          var ew = document.getElementById("emptyWrite");
+          if (ew) ew.addEventListener("click", openSheet);
+          return;
+        }
+        feed.innerHTML = (tab === "all" ? railHtml(posts) + '<div class="cm-sect">✨ For you — tuned to your shelves</div>' : "") +
+          posts.map(function (p) { return card(p); }).join("");
+        hydrate(feed);
+      } catch (e) {
+        feed.innerHTML = '<div class="cm-empty">⚠️ Couldn’t reach the community cloud. Pull to refresh.</div>';
+      }
+    }
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="head">📕 TheSmallBook</div>
-    <p>Big books. Small reads. Community stories are written by readers, inspired by the lessons — original work, owned by their authors.</p>
-    <div class="supportbar" data-supportbar style="margin-bottom:14px;"></div>
-    <div id="tsb-auth-slot"></div>
-    <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
-    <p class="tiny" style="margin-top:8px;"><a href="about.html" style="color:inherit;">ABOUT · WHO MADE THIS?</a></p>
-    <p class="tiny">NEW BOOKS ADDED EVERY WEEK · © 2026 THESMALLBOOK · ALL RIGHTS RESERVED</p>
-  </footer>
+    function signInCard() {
+      return '<div class="cm-empty">👋 Sign in with Google to write, like and follow.<br>' +
+        '<a class="cm-write" href="login.html">Sign in — it’s free →</a></div>';
+    }
 
-  <div class="toast" id="toast"></div>
+    /* ---------- tabs ---------- */
+    document.getElementById("cmTabs").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-tab]");
+      if (!b) return;
+      tab = b.getAttribute("data-tab");
+      document.querySelectorAll("#cmTabs [data-tab]").forEach(function (x) { x.classList.toggle("on", x === b); });
+      load();
+    });
 
-  <script src="js/prefs.js?v=185"></script>
-  <script src="js/support.js?v=185"></script>
-  <script src="js/lang.js?v=185"></script>
-  <script src="js/config.js?v=185"></script>
-  <script src="js/auth.js?v=185"></script>
-  <script src="js/store.js?v=185"></script>
-  <script src="js/data.js?v=185"></script>
-  <script src="js/stories-seed.js?v=185"></script>
-  <script src="js/stories-community.js?v=185"></script>
-  <script src="js/stories.js?v=185"></script>
-  <script src="js/failures.js?v=185"></script>
-  <script src="js/ask-data.js?v=185"></script>
-  <script src="js/tts-engine.js?v=185"></script>
-  <script src="js/ask.js?v=185"></script>
-  <script src="js/bar.js?v=185" defer></script>
-  <script src="js/gate.js?v=185" defer></script>
+    /* ---------- double-tap a cover = like (heart burst) ---------- */
+    feed.addEventListener("dblclick", async function (e) {
+      var cov = e.target.closest(".cm-card__cover");
+      if (!cov) return;
+      e.preventDefault();
+      if (!C.signedIn()) { location.href = "login.html"; return; }
+      var cardEl = cov.closest("[data-post]");
+      var id = cardEl && cardEl.getAttribute("data-post");
+      if (!id) return;
+      try {
+        await C.setLike(id, true);
+        var info = await C.likeInfo(id);
+        cardEl.querySelectorAll('[data-like="' + id + '"]').forEach(function (b) {
+          b.classList.add("on");
+          b.querySelector("b").textContent = info.count;
+        });
+        var h = document.createElement("span");
+        h.className = "cm-heart";
+        h.textContent = "♥";
+        cov.appendChild(h);
+        setTimeout(function () { h.remove(); }, 900);
+      } catch (err) {}
+    });
+
+    /* ---------- feed actions ---------- */
+    feed.addEventListener("click", async function (e) {
+      var t;
+      if ((t = e.target.closest("[data-like]"))) {
+        e.preventDefault();
+        if (!C.signedIn()) { location.href = "login.html"; return; }
+        var on = !t.classList.contains("on");
+        try {
+          await C.setLike(t.getAttribute("data-like"), on);
+          var info = await C.likeInfo(t.getAttribute("data-like"));
+          t.classList.toggle("on", info.mine);
+          t.querySelector("b").textContent = info.count;
+        } catch (err) {}
+        return;
+      }
+      if ((t = e.target.closest("[data-follow]"))) {
+        if (!C.signedIn()) { location.href = "login.html"; return; }
+        var on2 = !t.classList.contains("on");
+        try {
+          await C.setFollow(t.getAttribute("data-follow"), on2);
+          var f = await C.followInfo(t.getAttribute("data-follow"));
+          t.classList.toggle("on", f.mine);
+          t.textContent = f.mine ? "✓ Following" : "+ Follow";
+        } catch (err) {}
+        return;
+      }
+      if ((t = e.target.closest("[data-audio]"))) {
+        C.playAudio(t.getAttribute("data-audio"), t.getAttribute("data-title"));
+        return;
+      }
+      if ((t = e.target.closest("[data-del]"))) {
+        if (!confirm("Delete this story for everyone?")) return;
+        try { await C.deletePost(t.getAttribute("data-del")); load(); } catch (err) { alert("Couldn't delete — are you signed in as the author?"); }
+        return;
+      }
+    });
+
+    /* ---------- composer ---------- */
+    var sheet = document.getElementById("sheet");
+    var kind = "text", coverUrl = "", audioUrl = "", mediaRec = null, recChunks = [];
+    function openSheet() {
+      if (!C.signedIn()) { location.href = "login.html"; return; }
+      sheet.hidden = false;
+      requestAnimationFrame(function () { sheet.classList.add("on"); });
+    }
+    document.getElementById("writeBtn").addEventListener("click", openSheet);
+    document.getElementById("sheetX").addEventListener("click", function () {
+      sheet.classList.remove("on");
+      setTimeout(function () { sheet.hidden = true; }, 240);
+    });
+    document.getElementById("cKind").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-kind]");
+      if (!b) return;
+      kind = b.getAttribute("data-kind");
+      document.querySelectorAll("#cKind [data-kind]").forEach(function (x) { x.classList.toggle("on", x === b); });
+    });
+    document.getElementById("edBar").addEventListener("mousedown", function (e) {
+      var b = e.target.closest("[data-cmd]");
+      if (!b) return;
+      e.preventDefault();
+      var cmd = b.getAttribute("data-cmd");
+      if (cmd === "h2") document.execCommand("formatBlock", false, "h2");
+      else if (cmd === "quote") document.execCommand("formatBlock", false, "blockquote");
+      else if (cmd === "ul") document.execCommand("insertUnorderedList");
+      else if (cmd === "ol") document.execCommand("insertOrderedList");
+      else document.execCommand(cmd);
+      document.getElementById("cBody").focus();
+    });
+    document.getElementById("cCover").addEventListener("change", async function () {
+      var f = this.files && this.files[0];
+      if (!f) return;
+      try {
+        coverUrl = await C.upload(f, "tsb-covers");
+        var prev = document.getElementById("cCoverPrev");
+        prev.src = coverUrl; prev.hidden = false;
+      } catch (e) { alert("Cover upload failed — check you're signed in."); }
+    });
+    document.getElementById("cRec").addEventListener("click", async function () {
+      var st = document.getElementById("cRecState");
+      if (mediaRec && mediaRec.state === "recording") {
+        mediaRec.stop();
+        this.textContent = " Record";
+        st.textContent = "uploading…";
+        return;
+      }
+      try {
+        var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        recChunks = [];
+        var mime = ["audio/mp4", "audio/webm;codecs=opus", "audio/webm", ""].filter(function (m) {
+          try { return !m || MediaRecorder.isTypeSupported(m); } catch (e) { return false; }
+        })[0] || "";
+        mediaRec = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+        mediaRec.ondataavailable = function (ev) { if (ev.data.size) recChunks.push(ev.data); };
+        mediaRec.onstop = async function () {
+          stream.getTracks().forEach(function (tr) { tr.stop(); });
+          var btype = mediaRec.mimeType || "audio/webm";
+          var blob = new Blob(recChunks, { type: btype });
+          try {
+            var ext = btype.indexOf("mp4") >= 0 ? ".m4a" : ".webm";
+            audioUrl = await C.upload(new File([blob], "voice-" + Date.now() + ext, { type: btype }), "tsb-audio");
+            var ap = document.getElementById("cAudioPrev");
+            ap.src = audioUrl; ap.hidden = false;
+            st.textContent = "✓ voice attached";
+          } catch (e) { st.textContent = "upload failed"; }
+        };
+        mediaRec.start();
+        this.textContent = "⏹ Stop & attach";
+        st.textContent = "● recording…";
+      } catch (e) { st.textContent = "mic blocked"; }
+    });
+    document.getElementById("cAudio").addEventListener("change", async function () {
+      var f = this.files && this.files[0];
+      if (!f) return;
+      try {
+        audioUrl = await C.upload(f, "tsb-audio");
+        var ap = document.getElementById("cAudioPrev");
+        ap.src = audioUrl; ap.hidden = false;
+      } catch (e) { alert("Audio upload failed."); }
+    });
+    document.getElementById("cPub").addEventListener("click", async function () {
+      var title = document.getElementById("cTitle").value.trim();
+      var body = document.getElementById("cBody").innerHTML.trim();
+      if (!title || !body) { alert("Title and story are required."); return; }
+      this.textContent = "Publishing…";
+      try {
+        var tags = document.getElementById("cTags").value.split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+        await C.publish({
+          title: title,
+          subtitle: document.getElementById("cSub").value.trim(),
+          body: body, cover_url: coverUrl, audio_url: audioUrl, tags: tags, kind: kind
+        });
+        sheet.classList.remove("on");
+        setTimeout(function () { sheet.hidden = true; }, 240);
+        document.getElementById("cTitle").value = "";
+        document.getElementById("cSub").value = "";
+        document.getElementById("cBody").innerHTML = "";
+        document.getElementById("cTags").value = "";
+        coverUrl = ""; audioUrl = "";
+        document.getElementById("cCoverPrev").hidden = true;
+        document.getElementById("cAudioPrev").hidden = true;
+        tab = "mine";
+        document.querySelectorAll("#cmTabs [data-tab]").forEach(function (x) { x.classList.toggle("on", x.getAttribute("data-tab") === "mine"); });
+        load();
+      } catch (e) { alert("Publish failed — sign in and try again."); }
+      this.textContent = "Publish to the community →";
+    });
+
+    load();
+  })();
+  </script>
+  <script src="js/bar.js?v=188" defer></script>
+  <script src="js/gate.js?v=188" defer></script>
 </body>
 </html>

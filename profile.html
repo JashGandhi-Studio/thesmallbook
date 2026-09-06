@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=663, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <title>Profile — TheSmallBook Community</title>
+  <meta name="description" content="A TheSmallBook community profile — posts, followers and activity.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    try {
+      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      if (tsbDark) document.documentElement.classList.add("dark");
+      var tsbTC = document.querySelector('meta[name="theme-color"]');
+      if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
+      tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
+    } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="css/style.css?v=188">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body class="cmpage">
+  <main class="cm-profile" id="prof">
+    <div class="cm-card cm-card--skel"><div class="cm-sk cm-sk--cover"></div>
+      <div class="cm-card__body"><div class="cm-sk cm-sk--line w60"></div><div class="cm-sk cm-sk--line w40"></div></div>
+    </div>
+  </main>
+
+  <script src="js/prefs.js?v=188"></script>
+  <script src="js/lang.js?v=188"></script>
+  <script src="js/config.js?v=188"></script>
+  <script src="js/auth.js?v=188"></script>
+  <script src="js/community.js?v=188"></script>
+  <script>
+  (function () {
+    "use strict";
+    var C = window.TSB_COMMUNITY;
+    var root = document.getElementById("prof");
+    var q = (location.search.match(/[?&]id=([^&]+)/) || [])[1] || "";
+    var me = C.me();
+    var meId = (me || {}).id || "";
+    var pid = (!q || q === "me") ? meId : q;
+
+    async function boot() {
+      if (!C.enabled) { root.innerHTML = '<div class="cm-empty">☁️ Community cloud is warming up.</div>'; return; }
+      if (!pid) { root.innerHTML = '<div class="cm-empty">👋 Sign in to see your activity.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>'; return; }
+      var prof = null, posts = [], fol = { count: 0, mine: false };
+      try { prof = await C.getProfile(pid); } catch (e) {}
+      try { posts = await C.listPosts({ author: pid }); } catch (e) {}
+      try { fol = await C.followInfo(pid); } catch (e) {}
+      if (!prof) prof = { id: pid, name: (posts[0] || {}).author_name || "Reader", avatar_url: (posts[0] || {}).author_avatar || "", bio: "" };
+      var mine = pid === meId;
+      var likesGot = 0;
+      if (mine) {
+        try { likesGot = (await C.likesOnMyPosts()).length; } catch (e) {}
+      }
+      document.title = prof.name + " — TheSmallBook";
+
+      root.innerHTML =
+        '<header class="cm-profhead">' +
+          '<div class="cm-ava cm-ava--xl">' + (prof.avatar_url ? '<img src="' + C.esc(prof.avatar_url) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
+          "<h1>" + C.esc(prof.name) + (mine ? " <i>(you)</i>" : "") + "</h1>" +
+          (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
+          '<div class="cm-stats">' +
+            '<span><b>' + posts.length + "</b> posts</span>" +
+            '<span><b>' + fol.count + "</b> followers</span>" +
+            (mine ? '<span><b>' + likesGot + "</b> likes received</span>" : "") +
+          "</div>" +
+          (mine
+            ? '<div class="cm-profedit">' +
+                '<label class="cm-lbl">Profile photo<input id="pAva" type="file" accept="image/*"></label>' +
+                '<label class="cm-lbl">Display name<input id="pName" class="setinput" maxlength="24" value="' + C.esc(prof.name) + '"></label>' +
+                '<label class="cm-lbl">Bio<input id="pBio" class="setinput" maxlength="120" value="' + C.esc(prof.bio || "") + '" placeholder="One line about you"></label>' +
+                '<button class="cm-pub cm-pub--sm" id="pSave">Save profile</button>' +
+              "</div>"
+            : '<button class="cm-follow' + (fol.mine ? " on" : "") + '" data-follow="' + pid + '">' + (fol.mine ? "✓ Following" : "+ Follow") + "</button>") +
+        "</header>" +
+        '<h2 class="cm-sect">' + (mine ? "📔 Your stories" : "✍️ Stories") + "</h2>" +
+        '<div class="cm-feed cm-feed--tight" id="pfeed">' +
+          (posts.length ? posts.map(card).join("") : '<div class="cm-empty cm-empty--sm">No stories yet.</div>') +
+        "</div>";
+
+      function card(p) {
+        return '<article class="cm-card cm-card--row" data-post="' + p.id + '">' +
+          '<a class="cm-card__cover cm-card__cover--sm" href="story.html?id=' + p.id + '">' +
+            (p.cover_url ? '<img src="' + C.esc(p.cover_url) + '" alt="" loading="lazy">' : '<span class="cm-quote">❝</span>') +
+          "</a>" +
+          '<div class="cm-card__body">' +
+            '<a class="cm-card__title" href="story.html?id=' + p.id + '">' + C.esc(p.title) + "</a>" +
+            '<span class="cm-time">' + C.ago(p.created_at) + " · " + C.readMins(p.body) + " min" + (p.audio_url ? " · 🎧" : "") + "</span>" +
+            '<div class="cm-card__foot"><button class="cm-like" data-like="' + p.id + '">♥ <b>…</b></button>' +
+            (mine ? '<button class="cm-del" data-del="' + p.id + '">🗑</button>' : "") + "</div>" +
+          "</div></article>";
+      }
+
+      /* hydrate likes */
+      var pf = document.getElementById("pfeed");
+      pf.querySelectorAll("[data-like]").forEach(async function (b) {
+        try {
+          var info = await C.likeInfo(b.getAttribute("data-like"));
+          b.querySelector("b").textContent = info.count;
+          b.classList.toggle("on", info.mine);
+        } catch (e) {}
+      });
+      pf.addEventListener("click", async function (e) {
+        var t;
+        if ((t = e.target.closest("[data-like]"))) {
+          if (!C.signedIn()) { location.href = "login.html"; return; }
+          var on = !t.classList.contains("on");
+          try {
+            await C.setLike(t.getAttribute("data-like"), on);
+            var info = await C.likeInfo(t.getAttribute("data-like"));
+            t.classList.toggle("on", info.mine);
+            t.querySelector("b").textContent = info.count;
+          } catch (err) {}
+          return;
+        }
+        if ((t = e.target.closest("[data-del]"))) {
+          if (!confirm("Delete this story for everyone?")) return;
+          try { await C.deletePost(t.getAttribute("data-del")); boot(); } catch (err) {}
+          return;
+        }
+      });
+      var fb = root.querySelector("[data-follow]");
+      if (fb) fb.addEventListener("click", async function () {
+        if (!C.signedIn()) { location.href = "login.html"; return; }
+        var on = !this.classList.contains("on");
+        try {
+          await C.setFollow(pid, on);
+          var f = await C.followInfo(pid);
+          this.classList.toggle("on", f.mine);
+          this.textContent = f.mine ? "✓ Following" : "+ Follow";
+        } catch (e) {}
+      });
+      var ava = document.getElementById("pAva");
+      if (ava) ava.addEventListener("change", async function () {
+        var f = this.files && this.files[0];
+        if (!f) return;
+        try {
+          var url = await C.upload(f, "tsb-avatars");
+          await C.api("profiles?id=eq." + meId, { method: "PATCH", body: { avatar_url: url } });
+          boot();
+        } catch (e) { alert("Avatar upload failed."); }
+      });
+      var save = document.getElementById("pSave");
+      if (save) save.addEventListener("click", async function () {
+        try {
+          var nm = document.getElementById("pName").value.trim() || "Reader";
+          await C.api("profiles?id=eq." + meId, { method: "PATCH", body: { name: nm, bio: document.getElementById("pBio").value.trim() } });
+          if (window.TSB_AUTH && TSB_AUTH.setDisplayName) TSB_AUTH.setDisplayName(nm);
+          boot();
+        } catch (e) { alert("Save failed."); }
+      });
+    }
+    boot();
+  })();
+  </script>
+  <script src="js/bar.js?v=188" defer></script>
+  <script src="js/gate.js?v=188" defer></script>
+</body>
+</html>

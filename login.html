@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <meta name="viewport" content="width=663, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>You — TheSmallBook</title>
   <meta name="description" content="Your TheSmallBook window: sign in with Google to sync your shelf, streak and progress — then tune the app: darkness, text size, colour and language.">
   <meta name="robots" content="noindex">
@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=185">
+  <link rel="stylesheet" href="css/style.css?v=188">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -104,6 +104,14 @@
           </div>
         </div>
         <div class="yset__row">
+          <span class="yset__lbl">App size</span>
+          <div class="yset__ctl">
+            <button class="setopt setopt--sm" data-appsize="default" title="Default (locked)">📱</button>
+            <button class="setopt setopt--sm" data-appsize="big" title="Big">🔍</button>
+            <button class="setopt setopt--sm" data-appsize="bigger" title="Bigger">🔎</button>
+          </div>
+        </div>
+        <div class="yset__row">
           <span class="yset__lbl">Font style</span>
           <div class="yset__ctl">
             <button class="setopt setopt--sm" data-fontstyle="modern" title="Modern">🖋️</button>
@@ -126,6 +134,13 @@
             <button data-accent="#ff90e8" style="--sw:#ff90e8" aria-label="Pink"></button>
             <button data-accent="#00c48c" style="--sw:#00c48c" aria-label="Green"></button>
             <button data-accent="#4d7cff" style="--sw:#4d7cff" aria-label="Blue"></button>
+          </div>
+        </div>
+        <div class="yset__row">
+          <span class="yset__lbl">Activity</span>
+          <div class="yset__ctl">
+            <a class="setopt setopt--sm" style="text-decoration:none;display:inline-flex;align-items:center;" href="profile.html?id=me" title="My stories, likes & followers">📔 My stories</a>
+            <span class="cm-time" id="youAct"></span>
           </div>
         </div>
         <div class="yset__row" style="display:block;">
@@ -154,12 +169,12 @@
     </main>
   </div>
 
-  <script src="js/prefs.js?v=185"></script>
-  <script src="js/lang.js?v=185"></script>
-  <script src="js/config.js?v=185"></script>
-  <script src="js/auth.js?v=185"></script>
-  <script src="js/data.js?v=185"></script>
-  <script src="js/bar.js?v=185" defer></script>
+  <script src="js/prefs.js?v=188"></script>
+  <script src="js/lang.js?v=188"></script>
+  <script src="js/config.js?v=188"></script>
+  <script src="js/auth.js?v=188"></script>
+  <script src="js/data.js?v=188"></script>
+  <script src="js/bar.js?v=188" defer></script>
   <script>
     (function () {
       var vIn = document.getElementById("view-signin");
@@ -295,7 +310,8 @@
   });
 })();
 </script>
-  <script src="js/onboard.js?v=185" defer></script>
+  <script src="js/community.js?v=188"></script>
+  <script src="js/onboard.js?v=188" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {
@@ -350,6 +366,22 @@
         if (!e.target.closest("[data-repref]")) return;
         if (window.TSB_ONBOARD && TSB_ONBOARD.start) TSB_ONBOARD.start();
       });
+</script>
+<script>
+(function () {
+  var C = window.TSB_COMMUNITY;
+  if (!C || !C.enabled || !C.signedIn()) return;
+  (async function () {
+    try {
+      var u = C.me();
+      var posts = await C.listPosts({ author: u.id });
+      var likes = await C.likesOnMyPosts();
+      var fol = await C.followerRows(u.id);
+      var el = document.getElementById("youAct");
+      if (el) el.textContent = posts.length + " posts · " + likes.length + " likes · " + fol.length + " followers";
+    } catch (e) {}
+  })();
+})();
 </script>
 </body>
 </html>

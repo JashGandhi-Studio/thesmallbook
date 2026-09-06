@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v185";
+const CACHE_VERSION = "tsb-v188";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -44,6 +44,8 @@ const APP_SHELL = [
   "./js/config.js",
   "./js/onboard.js",
   "./js/gate.js",
+  "./js/community.js",
+  "./profile.html",
   "./js/auth.js",
   "./js/store.js",
   "./js/stories.js",
@@ -53,7 +55,7 @@ const APP_SHELL = [
   "./manifest.json",
   "./assets/icon-192.png",
   "./assets/icon-512.png"
-].map(function (u) { return /\.(js|css)$/.test(u) ? u + "?v=185" : u; });
+].map(function (u) { return /\.(js|css)$/.test(u) ? u + "?v=188" : u; });
 
 self.addEventListener("install", (e) => {
   e.waitUntil(
@@ -70,6 +72,20 @@ self.addEventListener("activate", (e) => {
 });
 
 self.addEventListener("fetch", (e) => {
+  const fu = new URL(e.request.url);
+  /* community media (covers / voice / avatars): cache-first = offline listening */
+  if (fu.pathname.includes("/storage/v1/object/public/")) {
+    e.respondWith(
+      caches.open(CACHE_VERSION + "-media").then(async (c) => {
+        const hit = await c.match(e.request);
+        if (hit) return hit;
+        const res = await fetch(e.request);
+        if (res.ok) c.put(e.request, res.clone());
+        return res;
+      })
+    );
+    return;
+  }
   const url = new URL(e.request.url);
   // never cache supabase API calls
   if (url.hostname.includes("supabase")) return;

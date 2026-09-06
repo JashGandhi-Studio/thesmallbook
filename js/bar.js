@@ -49,7 +49,7 @@
     if (p === "book.html") return "read";
     if (p === "stories.html" || p === "story.html") return "scan";
     if (p === "chat.html") return "chat";
-    if (p === "login.html" || p === "settings.html") return "you";
+    if (p === "login.html" || p === "settings.html" || p === "profile.html") return "you";
     return "";
   }
   var active = currentActive();
