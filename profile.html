@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=197">
+  <link rel="stylesheet" href="css/style.css?v=199">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,11 +31,11 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=197"></script>
-  <script src="js/lang.js?v=197"></script>
-  <script src="js/config.js?v=197"></script>
-  <script src="js/auth.js?v=197"></script>
-  <script src="js/community.js?v=197"></script>
+  <script src="js/prefs.js?v=199"></script>
+  <script src="js/lang.js?v=199"></script>
+  <script src="js/config.js?v=199"></script>
+  <script src="js/auth.js?v=199"></script>
+  <script src="js/community.js?v=199"></script>
   <script>
   (function () {
     "use strict";
@@ -53,6 +53,8 @@
       try { prof = await C.getProfile(pid); } catch (e) {}
       try { posts = await C.listPosts({ author: pid }); } catch (e) {}
       try { fol = await C.followInfo(pid); } catch (e) {}
+      var followingCount = 0;
+      try { followingCount = ((await C.api("follows?follower_id=eq." + pid + "&select=author_id", {})) || []).length; } catch (e) {}
       var mine = pid === meId;
       var md = (me && me.user_metadata) || {};
       var gName = "";
@@ -76,7 +78,8 @@
           (prof.progress ? '<span class="cm-prog">📚 ' + prof.progress + "/2176 lessons read</span>" : "") +
           '<div class="cm-stats">' +
             '<span><b>' + posts.length + "</b> posts</span>" +
-            '<span><b>' + fol.count + "</b> followers</span>" +
+            '<a href="profile.html?id=' + pid + '&view=followers"><b>' + fol.count + "</b> followers</a>" +
+            '<a href="profile.html?id=' + pid + '&view=following"><b>' + followingCount + "</b> following</a>" +
             (mine ? '<span><b>' + likesGot + "</b> likes received</span>" : "") +
           "</div>" +
           '<div class="cm-sharecard">' +
@@ -151,6 +154,37 @@
           return;
         }
       });
+      var view = (location.search.match(/[?&]view=(followers|following)/) || [])[1] || "";
+      if (view) renderSocial(view);
+      async function renderSocial(kind2) {
+        var ids = [];
+        try { ids = kind2 === "followers" ? (await C.followerRows(pid)) : (await C.followingIds()); } catch (e) {}
+        var panel = document.createElement("section");
+        panel.className = "cm-social";
+        panel.innerHTML = "<h2>" + (kind2 === "followers" ? "👤 Followers" : "⭐ Following") + ' · <a class="cm-socback" href="profile.html?id=' + pid + '">back to profile</a></h2>' +
+          (ids.length ? '<div class="cm-people">' + ids.map(function (fid) {
+            return '<div class="cm-person" data-pid="' + fid + '"><div class="cm-person__top">' +
+              '<div class="cm-ava cm-ava--lg"><span>' + C.esc(String(fid).charAt(0).toUpperCase()) + "</span></div>" +
+              '<div class="cm-person__meta"><a class="cm-name" href="profile.html?id=' + fid + '">Reader</a></div>' +
+              '<div class="cm-person__acts">' + (fid !== meId ? '<a class="cm-dmbtn" href="dm.html?u=' + fid + '">💬</a>' : "") + "</div>" +
+            "</div></div>";
+          }).join("") + "</div>" : '<p class="cm-empty cm-empty--sm">Nobody here yet.</p>');
+        root.appendChild(panel);
+        ids.forEach(async function (fid) {
+          try {
+            var pr = await C.getProfile(fid);
+            if (!pr) return;
+            var el = panel.querySelector('[data-pid="' + fid + '"]');
+            if (!el) return;
+            var av = C.avaUrl(pr.name, pr.avatar_url, fid);
+            el.querySelector(".cm-ava").innerHTML = av ? '<img src="' + C.esc(av) + '" alt="">' : "<span>" + C.esc((pr.name || "R").charAt(0).toUpperCase()) + "</span>";
+            var nm = el.querySelector(".cm-name");
+            nm.textContent = pr.name || "Reader";
+            if (C.isOfficial(fid)) nm.insertAdjacentHTML("afterend", '<span class="cm-vtick">✔</span>');
+          } catch (e) {}
+        });
+      }
+
       var fb = root.querySelector("[data-follow]");
       if (fb) fb.addEventListener("click", async function () {
         if (!C.signedIn()) { location.href = "login.html"; return; }
@@ -269,7 +303,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=197" defer></script>
-  <script src="js/gate.js?v=197" defer></script>
+  <script src="js/bar.js?v=199" defer></script>
+  <script src="js/gate.js?v=199" defer></script>
 </body>
 </html>

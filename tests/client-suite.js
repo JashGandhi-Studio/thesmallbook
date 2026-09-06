@@ -141,6 +141,24 @@ const C = window.TSB_COMMUNITY;
   ok("1 conversation, latest first", convs.length === 1 && convs[0].last.body === "thanks!");
   ok("thread has 2", (await C.threadWith("fan-2")).length === 2);
 
+  console.log("== DM superpowers (v199) ==");
+  const bookMsg = await C.sendDM("fan-2", "📕 You should read Atomic Habits", "atomic-habits");
+  ok("book recommendation sent", bookMsg && bookMsg.book_id === "atomic-habits");
+  const mid = (await C.threadWith("fan-2")).find(m => m.body === "thanks!").id;
+  await C.editDM(mid, "thanks a lot!");
+  let th2 = await C.threadWith("fan-2");
+  ok("edit applied + marked", th2.find(m => m.id === mid).body === "thanks a lot!" && th2.find(m => m.id === mid).edited_at);
+  await C.hideDM(mid);
+  let rowHidden = DB.messages.find(m => m.id === mid);
+  ok("hidden_for contains me", rowHidden.hidden_for && rowHidden.hidden_for.includes("user-1"));
+  let th3 = await C.threadWith("fan-2");
+  ok("hidden msg gone from my thread", !th3.some(m => m.id === mid));
+  ok("...but still in DB for the other person", DB.messages.some(m => m.id === mid));
+  await C.clearThread("fan-2");
+  ok("clear chat empties my thread", (await C.threadWith("fan-2")).length === 0);
+  await C.deleteDM(bookMsg.id);
+  ok("delete for everyone removes row", !DB.messages.some(m => m.id === bookMsg.id));
+
   console.log("== notifications ==");
   DB.comments.push({ id: "cc2", post_id: post.id, author_id: "fan-2", body: "inspiring!", created_at: "2026-09-06T09:30:00Z" });
   DB.likes.push({ id: "l2", post_id: post.id, user_id: "fan-2", created_at: "2026-09-06T09:00:00Z" });

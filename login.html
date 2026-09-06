@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=197">
+  <link rel="stylesheet" href="css/style.css?v=199">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -75,12 +75,12 @@
       <section class="acc__act">
         <span class="acc__seclbl">📊 MY ACTIVITY</span>
         <div class="acc__stats acc__stats--3">
-          <div class="accstat"><b id="youActPosts">0</b><span>📔 posts</span></div>
-          <div class="accstat"><b id="youActLikes">0</b><span>❤️ likes</span></div>
-          <div class="accstat"><b id="youActFols">0</b><span>👤 followers</span></div>
+          <a class="accstat" href="profile.html?id=me"><b id="youActPosts">0</b><span>📔 posts</span></a>
+          <a class="accstat" href="profile.html?id=me"><b id="youActLikes">0</b><span>❤️ likes</span></a>
+          <a class="accstat" href="profile.html?id=me&view=followers"><b id="youActFols">0</b><span>👤 followers</span></a>
         </div>
         <div class="acc__quick">
-          <a href="notifications.html">🔔 Notifications <b id="youNotif" class="nt-badge" hidden>0</b></a>
+          <a href="notifications.html">🔔 Notifications <b id="youNotif" class="nt-badge" hidden>0</b><span class="nt-dot nt-dot--inline" data-notifdot hidden></span></a>
           <a href="dm.html">💬 Messages</a>
           <a href="profile.html?id=me">📔 My stories</a>
           <a href="profile.html?id=me">✏️ Edit profile & avatar</a>
@@ -162,6 +162,20 @@
           </div>
         </div>
         <div class="yset__row">
+          <span class="yset__lbl">Pop-up alerts</span>
+          <div class="yset__ctl">
+            <button class="setopt setopt--sm" id="youPopBtn">On ✓</button>
+            <span class="cm-time" id="youPopHint">toast pops at the top</span>
+          </div>
+        </div>
+        <div class="yset__row">
+          <span class="yset__lbl">Outside the app</span>
+          <div class="yset__ctl">
+            <button class="setopt setopt--sm" id="youPushBtn">📲 Enable push</button>
+            <span class="cm-time">works even when app closed</span>
+          </div>
+        </div>
+        <div class="yset__row">
           <span class="yset__lbl">Public account</span>
           <div class="yset__ctl">
             <button class="setopt setopt--sm" id="youPublicBtn">Public ✓</button>
@@ -189,12 +203,12 @@
     </main>
   </div>
 
-  <script src="js/prefs.js?v=197"></script>
-  <script src="js/lang.js?v=197"></script>
-  <script src="js/config.js?v=197"></script>
-  <script src="js/auth.js?v=197"></script>
-  <script src="js/data.js?v=197"></script>
-  <script src="js/bar.js?v=197" defer></script>
+  <script src="js/prefs.js?v=199"></script>
+  <script src="js/lang.js?v=199"></script>
+  <script src="js/config.js?v=199"></script>
+  <script src="js/auth.js?v=199"></script>
+  <script src="js/data.js?v=199"></script>
+  <script src="js/bar.js?v=199" defer></script>
   <script>
     (function () {
       var vIn = document.getElementById("view-signin");
@@ -330,8 +344,8 @@
   });
 })();
 </script>
-  <script src="js/community.js?v=197"></script>
-  <script src="js/onboard.js?v=197" defer></script>
+  <script src="js/community.js?v=199"></script>
+  <script src="js/onboard.js?v=199" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {
@@ -420,6 +434,40 @@
         var nb = document.getElementById("youNotif");
         if (nb && fresh > 0) { nb.hidden = false; nb.textContent = fresh > 99 ? "99+" : fresh; }
       } catch (e) {}
+
+      // pop-up alerts toggle
+      var popBtn = document.getElementById("youPopBtn");
+      var popHint = document.getElementById("youPopHint");
+      function paintPop() {
+        var on = localStorage.getItem("tsb_notif_pop") !== "0";
+        popBtn.textContent = on ? "On ✓" : "Off";
+        popBtn.classList.toggle("on", on);
+        popHint.textContent = on ? "toast pops at the top" : "red dot only — check 🔔 here";
+      }
+      paintPop();
+      popBtn.addEventListener("click", function () {
+        var on = localStorage.getItem("tsb_notif_pop") !== "0";
+        localStorage.setItem("tsb_notif_pop", on ? "0" : "1");
+        paintPop();
+      });
+      // push notifications (OneSignal — see docs/PUSH-NOTIFICATIONS.md)
+      document.getElementById("youPushBtn").addEventListener("click", async function () {
+        var appId = (window.TSB_CONFIG || {}).ONESIGNAL_APP_ID || "";
+        if (!appId) { alert("Push needs a free OneSignal App ID first — 5-minute setup in docs/PUSH-NOTIFICATIONS.md. Paste it in js/config.js and re-deploy."); return; }
+        try {
+          if (!window.OneSignal) {
+            await new Promise(function (res, rej) {
+              var sc = document.createElement("script");
+              sc.src = "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";
+              sc.onload = res; sc.onerror = rej;
+              document.head.appendChild(sc);
+            });
+          }
+          window.OneSignal.init({ appId: appId, allowLocalhostAsSecureOrigin: true });
+          await window.OneSignal.Slidedown.promptPush();
+          this.textContent = "📲 Push on ✓";
+        } catch (e) { alert("Push setup failed — " + (e && e.message ? e.message : e)); }
+      });
 
       // public account toggle
       var pubBtn = document.getElementById("youPublicBtn");

@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=197">
+  <link rel="stylesheet" href="css/style.css?v=199">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -28,7 +28,7 @@
   <header class="cm-top">
     <a class="cm-top__back" id="dmBack" href="stories.html?tab=people" aria-label="Back">←</a>
     <h1 class="cm-top__t" id="dmTitle">💬 Messages</h1>
-    <span></span>
+    <button class="cm-top__act" id="dmMenuBtn" hidden title="Chat options">⋯</button>
   </header>
 
   <main class="cm-wrap" id="dmMain">
@@ -36,31 +36,66 @@
     <div id="dmThread" class="dm-thread" hidden>
       <div class="dm-msgs" id="dmMsgs"></div>
       <form class="dm-send" id="dmSend">
+        <button class="dm-plus" id="dmPlus" type="button" title="Recommend a book">＋</button>
         <input id="dmBody" class="dm-input" maxlength="1000" placeholder="Say something kind…" autocomplete="off">
         <button class="cm-write" type="submit">Send</button>
       </form>
     </div>
   </main>
 
-  <script src="js/prefs.js?v=197"></script>
-  <script src="js/lang.js?v=197"></script>
-  <script src="js/config.js?v=197"></script>
-  <script src="js/auth.js?v=197"></script>
-  <script src="js/community.js?v=197"></script>
+  <!-- message action sheet -->
+  <div class="dm-sheet" id="dmSheet" hidden>
+    <div class="dm-sheet__card">
+      <button id="actEdit">✏️ Edit message</button>
+      <button id="actDelAll">🗑 Delete for everyone</button>
+      <button id="actDelMe">🙈 Delete for me</button>
+      <button class="dm-sheet__x" id="actCancel">Cancel</button>
+    </div>
+  </div>
+
+  <!-- chat options sheet -->
+  <div class="dm-sheet" id="dmOpts" hidden>
+    <div class="dm-sheet__card">
+      <button id="optClear">🧹 Clear chat (for me)</button>
+      <button class="dm-sheet__x" id="optCancel">Cancel</button>
+    </div>
+  </div>
+
+  <!-- book picker -->
+  <div class="dm-picker" id="dmPicker" hidden>
+    <div class="dm-picker__card">
+      <div class="dm-picker__head">
+        <b>📕 Recommend a book</b>
+        <button id="pkX" aria-label="Close">✕</button>
+      </div>
+      <input id="pkSearch" class="dm-input" placeholder="Search 350 books — title or author…" autocomplete="off">
+      <div class="dm-picker__list" id="pkList"></div>
+    </div>
+  </div>
+
+  <script src="js/prefs.js?v=199"></script>
+  <script src="js/lang.js?v=199"></script>
+  <script src="js/config.js?v=199"></script>
+  <script src="js/data.js?v=199"></script>
+  <script src="js/auth.js?v=199"></script>
+  <script src="js/community.js?v=199"></script>
   <script>
   (function () {
     "use strict";
     var C = window.TSB_COMMUNITY;
+    var BOOKS = window.BOOKS || [];
     var uid = (location.search.match(/[?&]u=([a-f0-9-]{36})/) || [])[1] || "";
     var list = document.getElementById("dmList"), thread = document.getElementById("dmThread");
     var msgs = document.getElementById("dmMsgs"), back = document.getElementById("dmBack");
-    var poll = null;
+    var meId = "";
+    var selectedMsg = null;
 
     C.whenReady(function () {
     if (!C.signedIn()) {
       list.innerHTML = '<div class="cm-empty">Sign in to message readers.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>';
       return;
     }
+    meId = (C.me() || {}).id || "";
 
     function ava(prof, id) {
       if (!prof) return '<div class="cm-ava cm-ava--lg"><span>R</span></div>';
@@ -70,10 +105,10 @@
 
     async function loadList() {
       list.innerHTML = '<div class="cm-empty cm-empty--sm">Loading messages…</div>';
-      var me = await TSB_AUTH.me();
       var rows = [];
       try { rows = await C.myMessages(200); } catch (e) {}
-      var convs = C.conversations(rows, me.id);
+      rows = rows.filter(function (m) { return !(m.hidden_for || []).some(function (h) { return h === meId; }); });
+      var convs = C.conversations(rows, meId);
       if (!convs.length) {
         list.innerHTML = '<div class="cm-empty">No messages yet.<br>Find readers in <a href="stories.html?tab=people">👥 People</a> and hit 💬.</div>';
         return;
@@ -83,19 +118,26 @@
         var cv = convs[i];
         var prof = null;
         try { prof = await C.getProfile(cv.user_id); } catch (e) {}
-        var a = document.createElement("a");
+        var a = document.createElement("div");
         a.className = "dm-row";
-        a.href = "dm.html?u=" + cv.user_id;
-        a.innerHTML = ava(prof, cv.user_id) +
-          '<div class="dm-row__meta"><b>' + C.esc(prof ? prof.name : "Reader") + (C.isOfficial(cv.user_id) ? '<span class="cm-vtick">✔</span>' : "") + "</b>" +
-          '<span>' + C.esc(cv.last.body).slice(0, 60) + "</span></div>" +
-          '<span class="cm-time">' + C.ago(cv.last.created_at) + "</span>";
+        var lastTxt = cv.last.book_id ? "📕 recommended a book" : C.esc(cv.last.body).slice(0, 60);
+        a.innerHTML = '<a class="dm-row__ava" href="profile.html?id=' + cv.user_id + '">' + ava(prof, cv.user_id) + "</a>" +
+          '<a class="dm-row__meta" href="dm.html?u=' + cv.user_id + '"><b>' + C.esc(prof ? prof.name : "Reader") + (C.isOfficial(cv.user_id) ? '<span class="cm-vtick">✔</span>' : "") + "</b>" +
+          "<span>" + lastTxt + "</span></a>" +
+          '<a class="dm-row__side" href="dm.html?u=' + cv.user_id + '"><span class="cm-time">' + C.ago(cv.last.created_at) + "</span>💬</a>";
         list.appendChild(a);
       }
     }
 
+    function bookCard(bookId) {
+      var b = BOOKS.filter(function (x) { return x.id === bookId; })[0];
+      if (!b) return "";
+      return '<a class="dm-book" href="book.html?id=' + b.id + '">' +
+        '<img src="' + C.esc(b.cover || "") + '" alt="" onerror="this.style.display=\'none\'">' +
+        "<div><b>" + C.esc(b.title) + "</b><span>" + C.esc(b.author) + "</span><em>Open in library →</em></div></a>";
+    }
+
     async function loadThread(silent) {
-      var me = await TSB_AUTH.me();
       var rows = [];
       try { rows = await C.threadWith(uid); } catch (e) {}
       var prof = null;
@@ -103,18 +145,25 @@
       document.getElementById("dmTitle").textContent = "💬 " + (prof ? prof.name : "Reader");
       back.href = "dm.html";
       var lastId = msgs.getAttribute("data-last") || "";
-      var nowLast = rows.length ? rows[rows.length - 1].id : "";
+      var nowLast = rows.length ? rows[rows.length - 1].id + ":" + rows.length : "";
       if (silent && nowLast && nowLast === lastId) return;
       msgs.setAttribute("data-last", nowLast);
       msgs.innerHTML = rows.map(function (m) {
-        return '<div class="dm-bub' + (m.sender_id === me.id ? " me" : "") + '">' +
-          '<span>' + C.esc(m.body) + "</span>" +
-          "<em>" + C.ago(m.created_at) + "</em>" +
+        var mineRow = m.sender_id === meId;
+        return '<div class="dm-bub' + (mineRow ? " me" : "") + '" data-mid="' + m.id + '" data-mine="' + (mineRow ? 1 : 0) + '" data-body="' + C.esc(m.body) + '">' +
+          (m.book_id ? bookCard(m.book_id) : "") +
+          "<span>" + C.esc(m.body) + "</span>" +
+          "<em>" + C.ago(m.created_at) + (m.edited_at ? " · edited" : "") + "</em>" +
         "</div>";
       }).join("") || '<div class="cm-empty cm-empty--sm">Say hello 👋</div>';
       msgs.scrollTop = msgs.scrollHeight;
+      try {
+        C.toastMark(rows.filter(function (m) { return m.sender_id === uid; })
+          .map(function (m) { return C.toastKey({ type: "dm", who: uid, at: m.created_at }); }));
+      } catch (e) {}
     }
 
+    /* ---- send ---- */
     document.getElementById("dmSend").addEventListener("submit", async function (e) {
       e.preventDefault();
       var body = document.getElementById("dmBody").value.trim();
@@ -124,25 +173,117 @@
       catch (err) { alert("Message failed — " + (err && err.message ? err.message : err)); }
     });
 
-    if (!uid) {
-      back.addEventListener("click", function (e) {
-        try {
-          var ref = document.referrer ? new URL(document.referrer) : null;
-          if (ref && ref.host === location.host && history.length > 1) { e.preventDefault(); history.back(); }
-        } catch (err) {}
-      });
+    /* ---- message actions ---- */
+    var sheet = document.getElementById("dmSheet");
+    msgs.addEventListener("click", function (e) {
+      var bub = e.target.closest(".dm-bub");
+      if (!bub || e.target.closest(".dm-book")) return;
+      selectedMsg = bub;
+      var mineRow = bub.getAttribute("data-mine") === "1";
+      document.getElementById("actEdit").hidden = !mineRow;
+      document.getElementById("actDelAll").hidden = !mineRow;
+      sheet.hidden = false;
+      requestAnimationFrame(function () { sheet.classList.add("on"); });
+    });
+    function closeSheet() { sheet.classList.remove("on"); setTimeout(function () { sheet.hidden = true; }, 220); }
+    document.getElementById("actCancel").addEventListener("click", closeSheet);
+    document.getElementById("actEdit").addEventListener("click", async function () {
+      closeSheet();
+      if (!selectedMsg) return;
+      var cur = selectedMsg.getAttribute("data-body") || "";
+      var next = prompt("Edit your message:", cur);
+      if (next === null || !next.trim() || next === cur) return;
+      try { await C.editDM(selectedMsg.getAttribute("data-mid"), next.trim()); await loadThread(); }
+      catch (err) { alert("Edit failed — " + (err && err.message ? err.message : err)); }
+    });
+    document.getElementById("actDelAll").addEventListener("click", async function () {
+      closeSheet();
+      if (!selectedMsg || !confirm("Delete this message for everyone?")) return;
+      try { await C.deleteDM(selectedMsg.getAttribute("data-mid")); await loadThread(); }
+      catch (err) { alert("Delete failed — " + (err && err.message ? err.message : err)); }
+    });
+    document.getElementById("actDelMe").addEventListener("click", async function () {
+      closeSheet();
+      if (!selectedMsg) return;
+      try { await C.hideDM(selectedMsg.getAttribute("data-mid")); await loadThread(); }
+      catch (err) { alert("Couldn't hide — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
+    });
+
+    /* ---- chat options ---- */
+    var opts = document.getElementById("dmOpts");
+    document.getElementById("dmMenuBtn").addEventListener("click", function () {
+      opts.hidden = false;
+      requestAnimationFrame(function () { opts.classList.add("on"); });
+    });
+    document.getElementById("optCancel").addEventListener("click", function () {
+      opts.classList.remove("on"); setTimeout(function () { opts.hidden = true; }, 220);
+    });
+    document.getElementById("optClear").addEventListener("click", async function () {
+      opts.classList.remove("on"); setTimeout(function () { opts.hidden = true; }, 220);
+      if (!confirm("Clear this chat for yourself? (Messages stay for the other person.)")) return;
+      try { await C.clearThread(uid); await loadThread(); }
+      catch (err) { alert("Clear failed — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
+    });
+
+    /* ---- book picker ---- */
+    var picker = document.getElementById("dmPicker"), pkList = document.getElementById("pkList"), pkSearch = document.getElementById("pkSearch");
+    function renderBooks(q) {
+      q = (q || "").toLowerCase().trim();
+      var hits = BOOKS.filter(function (b) {
+        return !q || (b.title + " " + b.author).toLowerCase().indexOf(q) >= 0;
+      }).slice(0, 40);
+      pkList.innerHTML = hits.map(function (b) {
+        return '<button class="pk-row" data-book="' + b.id + '">' +
+          '<img src="' + C.esc(b.cover || "") + '" alt="" onerror="this.style.visibility=\'hidden\'">' +
+          "<div><b>" + C.esc(b.title) + "</b><span>" + C.esc(b.author) + "</span></div>＋</button>";
+      }).join("") || '<p class="cm-empty cm-empty--sm">No book matched that.</p>';
     }
-    if (uid) {
+    document.getElementById("dmPlus").addEventListener("click", function () {
+      picker.hidden = false;
+      requestAnimationFrame(function () { picker.classList.add("on"); pkSearch.focus(); });
+      renderBooks("");
+    });
+    document.getElementById("pkX").addEventListener("click", function () {
+      picker.classList.remove("on"); setTimeout(function () { picker.hidden = true; }, 220);
+    });
+    pkSearch.addEventListener("input", function () { renderBooks(this.value); });
+    pkList.addEventListener("click", async function (e) {
+      var b = e.target.closest("[data-book]");
+      if (!b) return;
+      var book = BOOKS.filter(function (x) { return x.id === b.getAttribute("data-book"); })[0];
+      if (!book) return;
+      picker.classList.remove("on"); setTimeout(function () { picker.hidden = true; }, 220);
+      try {
+        await C.sendDM(uid, "📕 You should read " + book.title + " — " + (book.tagline || "it's good!"), book.id);
+        await loadThread();
+      } catch (err) { alert("Send failed — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
+    });
+
+    /* ---- routing ---- */
+    if (!uid) {
+      try {
+        var ref0 = document.referrer ? new URL(document.referrer) : null;
+        if (ref0 && ref0.host === location.host && ref0.pathname.indexOf("dm.html") < 0) {
+          sessionStorage.setItem("tsb_dm_return", ref0.pathname + ref0.search);
+        }
+      } catch (e) {}
+      back.addEventListener("click", function (e) {
+        e.preventDefault();
+        var ret = "";
+        try { ret = sessionStorage.getItem("tsb_dm_return") || ""; } catch (err) {}
+        location.href = ret || "stories.html?tab=people";
+      });
+      loadList();
+    } else {
       list.hidden = true;
       thread.hidden = false;
+      document.getElementById("dmMenuBtn").hidden = false;
       loadThread();
-      poll = setInterval(function () { loadThread(true); }, 6000);
-    } else {
-      loadList();
+      setInterval(function () { loadThread(true); }, 6000);
     }
     });
   })();
   </script>
-  <script src="js/bar.js?v=197" defer></script>
+  <script src="js/bar.js?v=199" defer></script>
 </body>
 </html>

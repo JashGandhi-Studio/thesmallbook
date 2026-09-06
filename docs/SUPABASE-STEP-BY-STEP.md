@@ -241,3 +241,23 @@ Adds the `is_public` flag used by the 👥 People tab and the
 ```sql
 alter table public.profiles add column if not exists is_public boolean not null default true;
 ```
+
+
+---
+
+## SQL #6 — DM SUPERPOWERS (run once)
+Adds: delete-for-me (hide), clear chat, edited marker, and book
+recommendations in messages. Additive, idempotent, no drops.
+
+```sql
+alter table public.messages add column if not exists hidden_for uuid[] not null default '{}';
+alter table public.messages add column if not exists book_id text;
+alter table public.messages add column if not exists edited_at timestamptz;
+
+do $$
+begin
+  if not exists (select 1 from pg_policies where policyname = 'manage own dms') then
+    execute 'create policy "manage own dms" on public.messages for update using (auth.uid() = sender_id or auth.uid() = receiver_id) with check (auth.uid() = sender_id or auth.uid() = receiver_id)';
+  end if;
+end $$;
+```

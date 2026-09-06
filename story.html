@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=197">
+  <link rel="stylesheet" href="css/style.css?v=199">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,11 +31,11 @@
     </article>
   </main>
 
-  <script src="js/prefs.js?v=197"></script>
-  <script src="js/lang.js?v=197"></script>
-  <script src="js/config.js?v=197"></script>
-  <script src="js/auth.js?v=197"></script>
-  <script src="js/community.js?v=197"></script>
+  <script src="js/prefs.js?v=199"></script>
+  <script src="js/lang.js?v=199"></script>
+  <script src="js/config.js?v=199"></script>
+  <script src="js/auth.js?v=199"></script>
+  <script src="js/community.js?v=199"></script>
   <script>
   (function () {
     "use strict";
@@ -76,10 +76,11 @@
           (p.audio_url ? '<button class="cm-listenbig" data-audio="' + C.esc(p.audio_url) + '" data-title="' + C.esc(p.title) + '">🎧 Listen to the voice version</button>' : "") +
           '<div class="cm-rich">' + C.sanitize(p.body) + "</div>" +
           (p.tags && p.tags.length ? '<div class="cm-card__tags">' + p.tags.map(function (t) { return "<span># " + C.esc(t) + "</span>"; }).join("") + "</div>" : "") +
-          '<div class="cm-card__foot cm-postcard__foot">' +
-            '<button class="cm-like' + (like.mine ? " on" : "") + '" data-like="' + p.id + '">♥ <b>' + like.count + "</b></button>" +
-            '<button class="cm-share" id="shareBtn">🔗 Share</button>' +
-            (p.author_id === meId ? '<button class="cm-del" data-del="' + p.id + '">🗑 Delete</button>' : "") +
+          '<div class="cm-bigacts">' +
+            '<button class="cm-bigact cm-blike' + (like.mine ? " on" : "") + '" data-like="' + p.id + '"><span class="cm-bigact__ico">♥</span><b>' + like.count + " like" + (like.count === 1 ? "" : "s") + "</b></button>" +
+            '<a class="cm-bigact" href="#comments"><span class="cm-bigact__ico">💬</span><b>' + cmts.length + " comment" + (cmts.length === 1 ? "" : "s") + "</b></a>" +
+            '<button class="cm-bigact" id="shareBtn"><span class="cm-bigact__ico">🔗</span><b>Share</b></button>' +
+            (p.author_id === meId ? '<button class="cm-bigact cm-del" data-del="' + p.id + '"><span class="cm-bigact__ico">🗑</span><b>Delete</b></button>' : "") +
           "</div>" +
         "</article>" +
         '<section class="cm-comments" id="comments">' +
@@ -91,22 +92,54 @@
         "</section>";
 
       function cm(c) {
-        return '<div class="cm-cmt"><b>' + C.esc(c.author_name) + '</b><span class="cm-time">' + C.ago(c.created_at) + "</span><p>" + C.esc(c.body) + "</p></div>";
+        var pid2 = c.author_id || "";
+        var initial = C.esc((c.author_name || "R").charAt(0).toUpperCase());
+        return '<div class="cm-cmt cm-cmt--v2">' +
+          '<a class="cm-ava" href="profile.html?id=' + pid2 + '"><span>' + initial + "</span></a>" +
+          "<div>" +
+            '<b><a class="cm-cmtname" href="profile.html?id=' + pid2 + '">' + C.esc(c.author_name) + "</a></b>" +
+            '<span class="cm-time">' + C.ago(c.created_at) + "</span>" +
+            "<p>" + C.esc(c.body) + "</p>" +
+          "</div>" +
+        "</div>";
       }
 
-      root.querySelector("[data-like]").addEventListener("click", async function () {
+      var likeBtn = root.querySelector("[data-like]");
+      function paintLike(info) {
+        likeBtn.classList.toggle("on", info.mine);
+        likeBtn.querySelector("b").textContent = info.count + " like" + (info.count === 1 ? "" : "s");
+      }
+      function popLike() {
+        likeBtn.classList.remove("pop");
+        void likeBtn.offsetWidth;
+        likeBtn.classList.add("pop");
+      }
+      likeBtn.addEventListener("click", async function () {
         if (!C.signedIn()) { location.href = "login.html"; return; }
-        var btn = this, on = !btn.classList.contains("on");
-        btn.classList.toggle("on", on);
+        var on = !likeBtn.classList.contains("on");
+        likeBtn.classList.toggle("on", on);
+        if (on) popLike();
         try {
           await C.setLike(id, on);
-          var info = await C.likeInfo(id);
-          btn.classList.toggle("on", info.mine);
-          btn.querySelector("b").textContent = info.count;
+          paintLike(await C.likeInfo(id));
         } catch (e) {
-          btn.classList.toggle("on", !on);
+          likeBtn.classList.toggle("on", !on);
           alert("Like failed — " + (e && e.message ? e.message : e));
         }
+      });
+      /* Instagram-style double-tap ♥ anywhere on the story */
+      root.addEventListener("dblclick", async function (e) {
+        if (e.target.closest("a, button, input, .cm-comments")) return;
+        var h = document.createElement("div");
+        h.className = "cm-bigheart"; h.textContent = "♥";
+        root.appendChild(h);
+        setTimeout(function () { h.remove(); }, 950);
+        if (likeBtn.classList.contains("on")) return;
+        likeBtn.classList.add("on"); popLike();
+        try {
+          await C.setLike(id, true);
+          paintLike(await C.likeInfo(id));
+        } catch (err) {}
       });
       var fb = root.querySelector("[data-follow]");
       if (fb) fb.addEventListener("click", async function () {
@@ -154,7 +187,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=197" defer></script>
-  <script src="js/gate.js?v=197" defer></script>
+  <script src="js/bar.js?v=199" defer></script>
+  <script src="js/gate.js?v=199" defer></script>
 </body>
 </html>

@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=197">
+  <link rel="stylesheet" href="css/style.css?v=199">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -37,11 +37,11 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=197"></script>
-  <script src="js/lang.js?v=197"></script>
-  <script src="js/config.js?v=197"></script>
-  <script src="js/auth.js?v=197"></script>
-  <script src="js/community.js?v=197"></script>
+  <script src="js/prefs.js?v=199"></script>
+  <script src="js/lang.js?v=199"></script>
+  <script src="js/config.js?v=199"></script>
+  <script src="js/auth.js?v=199"></script>
+  <script src="js/community.js?v=199"></script>
   <script>
   (function () {
     "use strict";
@@ -77,22 +77,24 @@
         : n.type === "follow" ? "started following you"
         : "sent you a message";
       var cta = n.type === "dm" ? "Reply →" : n.type === "follow" ? "View profile →" : "Open story →";
-      return '<a class="nt-row' + (isNew ? " new" : "") + '" href="' + href + '">' +
-        '<div class="cm-ava cm-ava--lg">' + (n.avatar ? '<img src="' + C.esc(n.avatar) + '" alt="">' : "<span>" + C.esc((n.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
+      var av = C.avaUrl(n.name, n.avatar, n.who);
+      return '<div class="nt-row' + (isNew ? " new" : "") + '">' +
+        '<a href="profile.html?id=' + n.who + '"><span class="cm-ava cm-ava--lg">' + (av ? '<img src="' + C.esc(av) + '" alt="">' : "<span>" + C.esc((n.name || "R").charAt(0).toUpperCase()) + "</span>") + "</span></a>" +
         '<div class="nt-row__meta">' +
-          "<b>" + C.esc(n.name) + (C.isOfficial(n.who) ? '<span class="cm-vtick">✔</span>' : "") + " <span>" + what + "</span></b>" +
+          '<b><a class="nt-name" href="profile.html?id=' + n.who + '">' + C.esc(n.name) + (C.isOfficial(n.who) ? '<span class="cm-vtick">✔</span>' : "") + "</a> <span>" + what + "</span></b>" +
           (n.title ? '<em>“' + C.esc(n.title) + "”</em>" : "") +
           (n.body ? '<em class="nt-body">' + C.esc(String(n.body)).slice(0, 90) + "</em>" : "") +
-          '<span class="nt-cta">' + cta + ' · <span class="cm-time">' + C.ago(n.at) + "</span></span>" +
+          '<a class="nt-cta" href="' + href + '">' + cta + ' · <span class="cm-time">' + C.ago(n.at) + "</span></a>" +
         "</div>" +
-        '<span class="nt-ico">' + (ICON[n.type] || "•") + "</span>" +
-      "</a>";
+        '<a class="nt-ico" href="' + href + '">' + (ICON[n.type] || "•") + "</a>" +
+      "</div>";
     }
 
     (async function () {
       var items = [];
       try { items = await C.notifications(); } catch (e) {}
       localStorage.setItem("tsb_notif_seen", String(Date.now()));
+      try { C.toastMark(items.map(C.toastKey)); } catch (e) {}
       if (!items.length) {
         list.innerHTML = '<div class="cm-empty">Nothing yet — your likes, comments, new followers and messages will land here.<br><a class="cm-write" href="stories.html">← Back to Stories</a></div>';
         return;
@@ -103,6 +105,6 @@
     });
   })();
   </script>
-  <script src="js/bar.js?v=197" defer></script>
+  <script src="js/bar.js?v=199" defer></script>
 </body>
 </html>

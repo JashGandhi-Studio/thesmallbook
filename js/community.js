@@ -316,13 +316,44 @@
     if (!api || !signedIn()) return [];
     var mu = me(); if (!mu) return [];
     var rows = await api("messages?select=*&or=(and(sender_id.eq." + mu.id + ",receiver_id.eq." + uid + "),and(sender_id.eq." + uid + ",receiver_id.eq." + mu.id + "))&order=created_at.asc&limit=300", { method: "GET" });
-    return rows || [];
+    return (rows || []).filter(function (m) { return !(m.hidden_for || []).some(function (h) { return h === mu.id; }); });
   }
-  async function sendDM(uid, body) {
+  async function sendDM(uid, body, bookId) {
     if (!api || !signedIn()) return null;
     var mu = me(); if (!mu) return null;
-    var row = await api("messages?select=*", { method: "POST", body: { sender_id: mu.id, receiver_id: uid, body: String(body).slice(0, 1000) } });
+    var payload = { sender_id: mu.id, receiver_id: uid, body: String(body).slice(0, 1000) };
+    if (bookId) payload.book_id = String(bookId);
+    var row = await api("messages?select=*", { method: "POST", body: payload });
     return (row && row[0]) || row;
+  }
+  async function editDM(msgId, body) {
+    if (!api || !signedIn()) throw new Error("sign-in");
+    await api("messages?id=eq." + msgId, { method: "PATCH", body: { body: String(body).slice(0, 1000), edited_at: new Date().toISOString() } });
+  }
+  async function deleteDM(msgId) {
+    if (!api || !signedIn()) throw new Error("sign-in");
+    await api("messages?id=eq." + msgId, { method: "DELETE" });
+  }
+  async function hideDM(msgId) {
+    if (!api || !signedIn()) throw new Error("sign-in");
+    var mu = me();
+    var rows = await api("messages?id=eq." + msgId + "&select=*", {});
+    var m = (rows || [])[0];
+    if (!m) return;
+    var hidden = (m.hidden_for || []).slice();
+    if (hidden.indexOf(mu.id) < 0) hidden.push(mu.id);
+    await api("messages?id=eq." + msgId, { method: "PATCH", body: { hidden_for: hidden } });
+  }
+  async function clearThread(uid) {
+    if (!api || !signedIn()) throw new Error("sign-in");
+    var mu = me();
+    var rows = await threadWith(uid);
+    await Promise.all(rows.map(function (m) {
+      var hidden = (m.hidden_for || []).slice();
+      if (hidden.indexOf(mu.id) >= 0) return null;
+      hidden.push(mu.id);
+      return api("messages?id=eq." + m.id, { method: "PATCH", body: { hidden_for: hidden } });
+    }));
   }
 
   // ---- v191: public reading progress (auto-sync, throttled hourly) ----
@@ -337,6 +368,60 @@
       await api("profiles?id=eq." + mu3.id, { method: "PATCH", body: { progress: n } });
       localStorage.setItem("tsb_prog_sync", String(Date.now()));
     } catch (e) {}
+  }
+
+  /* ---------- v198: live in-app notification toasts ---------- */
+  var TOAST_SEEN = "tsb_toast_seen";
+  function toastKey(n) { return [n.type, n.who || "", n.post || "", n.at].join(":"); }
+  function toastSeen() { try { return JSON.parse(localStorage.getItem(TOAST_SEEN)) || []; } catch (e) { return []; } }
+  function toastMark(keys) {
+    try { localStorage.setItem(TOAST_SEEN, JSON.stringify(toastSeen().concat(keys).slice(-300))); } catch (e) {}
+  }
+  function toastShow(n) {
+    var wrap = document.getElementById("tsbToasts");
+    if (!wrap) {
+      wrap = document.createElement("div");
+      wrap.id = "tsbToasts";
+      document.body.appendChild(wrap);
+    }
+    var href = n.type === "dm" ? "dm.html?u=" + n.who : n.type === "follow" ? "profile.html?id=" + n.who : "story.html?id=" + n.post;
+    var what = n.type === "like" ? "liked your story" : n.type === "comment" ? "commented on your story" : n.type === "follow" ? "started following you" : "sent you a message";
+    var el = document.createElement("a");
+    el.className = "tsb-ntoast";
+    el.href = href;
+    var av = avaUrl(n.name, n.avatar, n.who);
+    el.innerHTML = '<div class="cm-ava">' + (av ? '<img src="' + esc(av) + '" alt="">' : "<span>" + esc((n.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
+      "<div><b>" + esc(n.name) + (isOfficial(n.who) ? ' <span class="cm-vtick">\u2714</span>' : "") + "</b> " + what + "<em>" + ago(n.at) + " \u00B7 tap to open</em></div>";
+    wrap.appendChild(el);
+    requestAnimationFrame(function () { el.classList.add("in"); });
+    setTimeout(function () { el.classList.remove("in"); el.classList.add("out"); setTimeout(function () { el.remove(); }, 450); }, 5200);
+    toastMark([toastKey(n)]);
+  }
+  function popupsWanted() { return localStorage.getItem("tsb_notif_pop") !== "0"; }
+  async function toastPoll() {
+    try {
+      if (document.hidden || !ENABLED || !signedIn()) return;
+      var items = await notifications();
+      var seen = toastSeen();
+      var freshAll = items.filter(function (n) {
+        return seen.indexOf(toastKey(n)) < 0 && (Date.now() - Date.parse(n.at)) < 864e5;
+      });
+      try {
+        localStorage.setItem("tsb_notif_fresh", String(freshAll.length));
+        window.dispatchEvent(new CustomEvent("tsb:notifcount", { detail: { count: freshAll.length } }));
+        document.querySelectorAll("[data-notifdot]").forEach(function (el) { el.hidden = freshAll.length === 0; });
+      } catch (e) {}
+      if (popupsWanted()) freshAll.slice(0, 2).forEach(toastShow);
+    } catch (e) {}
+  }
+  function toastStart() {
+    setTimeout(toastPoll, 4500);
+    setInterval(toastPoll, 25000);
+    document.addEventListener("visibilitychange", function () { if (!document.hidden) toastPoll(); });
+  }
+  if (typeof document !== "undefined") {
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", toastStart);
+    else toastStart();
   }
 
   var OK_TAGS = { B: 1, STRONG: 1, I: 1, EM: 1, U: 1, H1: 1, H2: 1, H3: 1, P: 1, UL: 1, OL: 1, LI: 1, BLOCKQUOTE: 1, BR: 1, DIV: 1, CODE: 1, PRE: 1 };
@@ -359,12 +444,17 @@
 
   /* ---------- helpers ---------- */
   function ago(iso) {
-    var s = (Date.now() - new Date(iso).getTime()) / 1000;
-    if (s < 60) return "just now";
-    if (s < 3600) return Math.floor(s / 60) + "m ago";
-    if (s < 86400) return Math.floor(s / 3600) + "h ago";
+    var d = new Date(iso);
+    var s = (Date.now() - d.getTime()) / 1000;
+    if (s < 45) return "just now";
+    if (s < 600) return Math.max(1, Math.floor(s / 60)) + "m ago";
+    var hh = String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+    var nowD = new Date();
+    if (d.toDateString() === nowD.toDateString()) return hh;
+    var yst = new Date(nowD.getTime() - 864e5);
+    if (d.toDateString() === yst.toDateString()) return "yesterday " + hh;
     if (s < 604800) return Math.floor(s / 86400) + "d ago";
-    return new Date(iso).toLocaleDateString();
+    return d.toLocaleDateString(undefined, { day: "numeric", month: "short" }) + " · " + hh;
   }
   function readMins(html) {
     var words = (html || "").replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
@@ -425,8 +515,9 @@
     ensureProfile: ensureProfile, getProfile: getProfile,
     listPosts: listPosts, getPost: getPost, publish: publish, deletePost: deletePost,
     likeInfo: likeInfo, setLike: setLike, likesOnMyPosts: likesOnMyPosts,
-    listProfiles: listProfiles, setProfilePublic: setProfilePublic, getPostByShort: getPostByShort, notifications: notifications, whenReady: whenReady, avaUrl: avaUrl, OFFICIAL_AVATAR: OFFICIAL_AVATAR,
+    listProfiles: listProfiles, setProfilePublic: setProfilePublic, getPostByShort: getPostByShort, toastKey: toastKey, toastMark: toastMark, notifications: notifications, whenReady: whenReady, avaUrl: avaUrl, OFFICIAL_AVATAR: OFFICIAL_AVATAR,
     myMessages: myMessages, conversations: conversations, threadWith: threadWith, sendDM: sendDM,
+    editDM: editDM, deleteDM: deleteDM, hideDM: hideDM, clearThread: clearThread,
     syncProgress: syncProgress,
     listComments: listComments, addComment: addComment,
     followInfo: followInfo, setFollow: setFollow, followingIds: followingIds, followerRows: followerRows,
