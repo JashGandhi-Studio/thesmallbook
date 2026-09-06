@@ -5436,3 +5436,9 @@ html.dark .cm-tabs button.on { background: var(--yellow); color: var(--ink); }
 .acc__quick a { display: inline-flex; align-items: center; gap: 6px; border: 2.5px solid var(--ink); background: var(--paper); border-radius: 999px; padding: 9px 14px; font-weight: 800; font-size: .72rem; text-decoration: none; color: var(--ink); box-shadow: 2.5px 2.5px 0 var(--ink); }
 .acc__quick a:active { transform: translate(1.5px, 1.5px); box-shadow: 1px 1px 0 var(--ink); }
 html.dark .acc__quick a { background: #241f17; color: var(--paper); }
+
+
+/* v19c — merged level + reading progress card */
+.acc__levelcard { background: var(--paper); border: 3px solid var(--ink); border-radius: 18px; box-shadow: 4px 4px 0 var(--ink); padding: 14px 16px 12px; margin: 4px 0 2px; }
+.acc__seclbl--in { margin: 14px 0 6px; }
+html.dark .acc__levelcard { background: #241f17; }

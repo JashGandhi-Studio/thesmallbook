@@ -10,7 +10,7 @@
   "use strict";
   if (window.TSB_COMMUNITY) return;
 
-  var CFG = window.CFG || {};
+  var CFG = window.TSB_CONFIG || window.CFG || {};
   var URL = (CFG.SUPABASE_URL || "").replace(/\/$/, "");
   var ANON = CFG.SUPABASE_ANON_KEY || "";
   var ENABLED = !!(URL && ANON);
