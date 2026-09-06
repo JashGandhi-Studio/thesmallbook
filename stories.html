@@ -19,20 +19,25 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=191">
+  <link rel="stylesheet" href="css/style.css?v=192">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body class="cmpage">
-  <header class="cm-head">
-    <div>
-      <div class="cm-head__t">✍️ STORIES</div>
-      <div class="cm-head__s">real readers · real lessons · your voice</div>
+  <header class="cm-head cm-head--v19">
+    <div class="cm-head__row">
+      <div>
+        <div class="cm-head__t">STORIES</div>
+        <div class="cm-head__s">real readers · real lessons · real voices</div>
+      </div>
+      <a class="cm-bell" href="notifications.html" title="Notifications & updates">🔔</a>
     </div>
-    <button class="cm-write cm-write--alt" id="reelsBtn" title="Reels — swipe through stories">🎞</button>
-    <button class="cm-write cm-write--alt" id="quoteBtn" title="Post a small quote">❝</button>
-    <button class="cm-write" id="writeBtn">✍️ Write</button>
+    <div class="cm-head__acts">
+      <button class="cm-chipbtn" id="reelsBtn" title="Reels — swipe through stories">🎞 Reels</button>
+      <button class="cm-chipbtn" id="quoteBtn" title="Post a small quote">❝ Quote</button>
+      <button class="cm-write" id="writeBtn">✍️ Write a story</button>
+    </div>
   </header>
 
   <nav class="cm-tabs" id="cmTabs" aria-label="Story feeds">
@@ -49,11 +54,11 @@
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="js/prefs.js?v=191"></script>
-  <script src="js/lang.js?v=191"></script>
-  <script src="js/config.js?v=191"></script>
-  <script src="js/auth.js?v=191"></script>
-  <script src="js/community.js?v=191"></script>
+  <script src="js/prefs.js?v=192"></script>
+  <script src="js/lang.js?v=192"></script>
+  <script src="js/config.js?v=192"></script>
+  <script src="js/auth.js?v=192"></script>
+  <script src="js/community.js?v=192"></script>
   <script>
   (function () {
     "use strict";
@@ -124,7 +129,7 @@
       var cover = p.cover_url
         ? '<img src="' + C.esc(p.cover_url) + '" alt="" loading="lazy">'
         : '<span class="cm-quote">❝</span>';
-      return '<article class="cm-card" data-post="' + p.id + '">' +
+      return '<article class="cm-card' + (p.kind === "quote" ? " cm-card--quote" : "") + '" data-post="' + p.id + '">' +
         '<a class="cm-card__cover" href="story.html?id=' + p.id + '">' + cover +
           (p.audio_url ? '<span class="cm-card__aud">🎧</span>' : "") +
           (p.kind === "quote" ? '<span class="cm-card__kind">QUOTE</span>' : "") +
@@ -189,18 +194,19 @@
         return;
       }
       var fol = {};
-      if (C.signedIn()) { try { fol = await C.followingIds(); } catch (e) {} }
+      if (C.signedIn()) { try { (await C.followingIds()).forEach(function (id) { fol[id] = 1; }); } catch (e) {} }
       var me = C.signedIn() ? (await TSB_AUTH.me()) : null;
       feed.innerHTML = '<div class="cm-sect">Active readers — follow them, hear their progress, drop a 💬</div>' +
         '<div class="cm-people">' + profs.map(function (p) {
           var isMe = me && p.id === me.id;
           return '<div class="cm-person">' +
+            '<div class="cm-person__top">' +
             '<div class="cm-ava cm-ava--lg">' + (p.avatar_url ? '<img src="' + C.esc(p.avatar_url) + '" alt="">' : "<span>" + C.esc((p.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
             '<div class="cm-person__meta">' +
               '<a class="cm-name" href="profile.html?id=' + p.id + '">' + C.esc(p.name) + (C.isOfficial(p.id) ? '<span class="cm-vtick">✔</span>' : "") + (isMe ? ' <span class="cm-time">· you</span>' : "") + "</a>" +
               (p.progress ? '<span class="cm-time">📚 ' + p.progress + '/2176 lessons read</span>' : "") +
               (p.bio ? '<span class="cm-bio">' + C.esc(p.bio) + "</span>" : "") +
-            "</div>" +
+            "</div></div>" +
             '<div class="cm-person__acts">' +
               (isMe ? "" : '<button class="cm-follow' + (fol[p.id] ? " on" : "") + '" data-pfol="' + p.id + '">' + (fol[p.id] ? "Following ✓" : "+ Follow") + "</button>" +
                '<a class="cm-dmbtn" href="dm.html?u=' + p.id + '" title="Message">💬</a>') +
@@ -237,7 +243,7 @@
         try {
           var info = await C.likeInfo(p.id);
           track.querySelectorAll('[data-rlike="' + p.id + '"]').forEach(function (b) {
-            b.classList.toggle("on", !!info.liked);
+            b.classList.toggle("on", !!info.mine);
             b.querySelector("b").textContent = info.count;
           });
         } catch (e) {}
@@ -356,7 +362,7 @@
           var onR = !t.classList.contains("on");
           await C.setLike(rid, onR);
           var infoR = await C.likeInfo(rid);
-          t.classList.toggle("on", !!infoR.liked);
+          t.classList.toggle("on", !!infoR.mine);
           t.querySelector("b").textContent = infoR.count;
         } catch (err) {}
         t.disabled = false;
@@ -455,7 +461,7 @@
     load();
   })();
   </script>
-  <script src="js/bar.js?v=191" defer></script>
-  <script src="js/gate.js?v=191" defer></script>
+  <script src="js/bar.js?v=192" defer></script>
+  <script src="js/gate.js?v=192" defer></script>
 </body>
 </html>

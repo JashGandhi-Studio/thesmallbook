@@ -230,3 +230,14 @@ begin
   end if;
 end $$;
 ```
+
+
+---
+
+## SQL #5 — PUBLIC ACCOUNTS (run once)
+Adds the `is_public` flag used by the 👥 People tab and the
+"Public account" switch in the You section. Additive, idempotent.
+
+```sql
+alter table public.profiles add column if not exists is_public boolean not null default true;
+```

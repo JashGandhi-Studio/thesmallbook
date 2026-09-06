@@ -31,8 +31,14 @@
       headers: headers,
       body: opts.body ? JSON.stringify(opts.body) : undefined
     });
-    if (!res.ok) throw new Error("api " + res.status);
     var txt = await res.text();
+    if (!res.ok) {
+      var detail = "";
+      try { var j = JSON.parse(txt); detail = (j && (j.message || j.error || j.msg)) || ""; } catch (e) { detail = txt.slice(0, 120); }
+      var err = new Error((res.status === 401 || res.status === 403) ? "session expired — sign in again (" + detail + ")" : (detail || ("request failed (" + res.status + ")")));
+      err.status = res.status;
+      throw err;
+    }
     return txt ? JSON.parse(txt) : null;
   }
 
@@ -68,7 +74,7 @@
   async function listPosts(opt) {
     opt = opt || {};
     var q = "posts?select=*&order=created_at.desc&limit=" + (opt.limit || 30);
-    if (opt.offset) q += "&offset=" + opt.offset;
+    if (opt.offset) q += "&offset=" + opt.offset; // NOTE: PostgREST ignores unknown params; kept for compat
     if (opt.author) q += "&author_id=eq." + opt.author;
     if (opt.ids) q += "&author_id=in.(" + opt.ids.join(",") + ")";
     return (await api(q, {})) || [];
@@ -173,10 +179,63 @@
   }
 
   /* ---------- rich-text safety: whitelist tags, drop attributes ---------- */
-  // ---- v191: people discovery ----
+  // ---- v191: people discovery (v192: public accounts only, with fallback) ----
   async function listProfiles(limit) {
     if (!api) return [];
-    return await api("profiles?select=*&order=created_at.desc&limit=" + (limit || 60), { method: "GET" });
+    try {
+      return await api("profiles?select=*&is_public=eq.true&order=created_at.desc&limit=" + (limit || 60), { method: "GET" });
+    } catch (e) {
+      return await api("profiles?select=*&order=created_at.desc&limit=" + (limit || 60), { method: "GET" });
+    }
+  }
+  async function setProfilePublic(on) {
+    if (!api || !signedIn()) throw new Error("sign-in");
+    var prof = await ensureProfile();
+    if (!prof) throw new Error("sign-in");
+    await api("profiles?id=eq." + prof.id, { method: "PATCH", body: { is_public: !!on } });
+  }
+
+  // ---- v192: notifications (derived — no new tables needed) ----
+  async function notifications() {
+    if (!api || !signedIn()) return [];
+    var u = me();
+    var out = [];
+    var safe = function (p) { return p.catch(function () { return []; }); };
+    var posts = await safe(listPosts({ author: u.id, limit: 100 }));
+    var byId = {};
+    posts.forEach(function (p) { byId[p.id] = p; });
+    if (posts.length) {
+      var inList = posts.map(function (p) { return p.id; }).join(",");
+      var likes = await safe(api("likes?post_id=in.(" + inList + ")&select=*&order=created_at.desc&limit=60", {}));
+      (likes || []).forEach(function (l) {
+        if (l.user_id !== u.id) out.push({ type: "like", who: l.user_id, post: l.post_id, title: (byId[l.post_id] || {}).title || "your story", at: l.created_at });
+      });
+      var cmts = await safe(api("comments?post_id=in.(" + inList + ")&select=*&order=created_at.desc&limit=40", {}));
+      (cmts || []).forEach(function (c) {
+        if (c.author_id !== u.id) out.push({ type: "comment", who: c.author_id, post: c.post_id, title: (byId[c.post_id] || {}).title || "your story", body: c.body, at: c.created_at });
+      });
+    }
+    var fols = await safe(api("follows?author_id=eq." + u.id + "&select=*&order=created_at.desc&limit=40", {}));
+    (fols || []).forEach(function (fl) {
+      if (fl.follower_id !== u.id) out.push({ type: "follow", who: fl.follower_id, at: fl.created_at });
+    });
+    var dms = await safe(api("messages?receiver_id=eq." + u.id + "&select=*&order=created_at.desc&limit=30", {}));
+    (dms || []).forEach(function (m) {
+      out.push({ type: "dm", who: m.sender_id, body: m.body, at: m.created_at });
+    });
+    // resolve names + avatars
+    var seen = {}, uids = [];
+    out.forEach(function (n) { if (!seen[n.who]) { seen[n.who] = 1; uids.push(n.who); } });
+    var profs = uids.length ? await safe(api("profiles?id=in.(" + uids.join(",") + ")&select=*", {})) : [];
+    var pmap = {};
+    (profs || []).forEach(function (p) { pmap[p.id] = p; });
+    out.forEach(function (n) {
+      var p = pmap[n.who];
+      n.name = (p && p.name) || "A reader";
+      n.avatar = (p && p.avatar_url) || "";
+    });
+    out.sort(function (a, b) { return Date.parse(b.at) - Date.parse(a.at); });
+    return out.slice(0, 60);
   }
 
   // ---- v191: direct messages ----
@@ -297,7 +356,7 @@
     ensureProfile: ensureProfile, getProfile: getProfile,
     listPosts: listPosts, getPost: getPost, publish: publish, deletePost: deletePost,
     likeInfo: likeInfo, setLike: setLike, likesOnMyPosts: likesOnMyPosts,
-    listProfiles: listProfiles,
+    listProfiles: listProfiles, setProfilePublic: setProfilePublic, notifications: notifications,
     myMessages: myMessages, conversations: conversations, threadWith: threadWith, sendDM: sendDM,
     syncProgress: syncProgress,
     listComments: listComments, addComment: addComment,

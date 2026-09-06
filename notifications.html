@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <title>Notifications — TheSmallBook</title>
+  <meta name="description" content="Your likes, comments, followers and messages — all in one place.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    try {
+      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      if (tsbDark) document.documentElement.classList.add("dark");
+      var tsbTC = document.querySelector('meta[name="theme-color"]');
+      if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
+      tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
+    } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="css/style.css?v=192">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body class="cmpage notifpage">
+  <header class="cm-top">
+    <a class="cm-top__back" href="stories.html" aria-label="Back">←</a>
+    <h1 class="cm-top__t">🔔 Notifications & updates</h1>
+    <span></span>
+  </header>
+
+  <main class="cm-wrap">
+    <div id="nList" class="nt-list">
+      <div class="cm-empty cm-empty--sm">Loading your updates…</div>
+    </div>
+  </main>
+
+  <script src="js/prefs.js?v=192"></script>
+  <script src="js/lang.js?v=192"></script>
+  <script src="js/config.js?v=192"></script>
+  <script src="js/auth.js?v=192"></script>
+  <script src="js/community.js?v=192"></script>
+  <script>
+  (function () {
+    "use strict";
+    var C = window.TSB_COMMUNITY;
+    var list = document.getElementById("nList");
+    if (!C.signedIn()) {
+      list.innerHTML = '<div class="cm-empty">Sign in to see your notifications.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>';
+      return;
+    }
+    var ICON = { like: "❤️", comment: "💬", follow: "👤", dm: "✉️" };
+    var seen = +(localStorage.getItem("tsb_notif_seen") || 0);
+
+    function row(n) {
+      var isNew = seen && Date.parse(n.at) > seen;
+      var href = n.type === "dm" ? "dm.html?u=" + n.who
+        : n.type === "follow" ? "profile.html?id=" + n.who
+        : "story.html?id=" + n.post;
+      var what = n.type === "like" ? "liked your story"
+        : n.type === "comment" ? "commented on your story"
+        : n.type === "follow" ? "started following you"
+        : "sent you a message";
+      var cta = n.type === "dm" ? "Reply →" : n.type === "follow" ? "View profile →" : "Open story →";
+      return '<a class="nt-row' + (isNew ? " new" : "") + '" href="' + href + '">' +
+        '<div class="cm-ava cm-ava--lg">' + (n.avatar ? '<img src="' + C.esc(n.avatar) + '" alt="">' : "<span>" + C.esc((n.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
+        '<div class="nt-row__meta">' +
+          "<b>" + C.esc(n.name) + (C.isOfficial(n.who) ? '<span class="cm-vtick">✔</span>' : "") + " <span>" + what + "</span></b>" +
+          (n.title ? '<em>“' + C.esc(n.title) + "”</em>" : "") +
+          (n.body ? '<em class="nt-body">' + C.esc(String(n.body)).slice(0, 90) + "</em>" : "") +
+          '<span class="nt-cta">' + cta + ' · <span class="cm-time">' + C.ago(n.at) + "</span></span>" +
+        "</div>" +
+        '<span class="nt-ico">' + (ICON[n.type] || "•") + "</span>" +
+      "</a>";
+    }
+
+    (async function () {
+      var items = [];
+      try { items = await C.notifications(); } catch (e) {}
+      localStorage.setItem("tsb_notif_seen", String(Date.now()));
+      if (!items.length) {
+        list.innerHTML = '<div class="cm-empty">Nothing yet — your likes, comments, new followers and messages will land here.<br><a class="cm-write" href="stories.html">← Back to Stories</a></div>';
+        return;
+      }
+      var newCount = items.filter(function (n) { return seen && Date.parse(n.at) > seen; }).length;
+      list.innerHTML = (newCount ? '<div class="cm-sect">' + newCount + " new since your last visit</div>" : "") + items.map(row).join("");
+    })();
+  })();
+  </script>
+  <script src="js/bar.js?v=192" defer></script>
+</body>
+</html>

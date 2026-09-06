@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=191">
+  <link rel="stylesheet" href="css/style.css?v=192">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -67,6 +67,27 @@
       <section class="acc__level">
         <div class="levelbar__label"><span id="accLevelName">Level</span><span id="accLevelNext"></span></div>
         <div class="levelbar"><i id="accLevelFill"></i></div>
+      </section>
+
+      <section class="acc__prog">
+        <span class="acc__seclbl">📈 READING PROGRESS</span>
+        <div class="progbar" data-progbar><em style="width:1%"></em></div>
+        <p class="progtxt" data-progtxt></p>
+      </section>
+
+      <section class="acc__act">
+        <span class="acc__seclbl">📊 MY ACTIVITY</span>
+        <div class="acc__stats acc__stats--3">
+          <div class="accstat"><b id="youActPosts">0</b><span>📔 posts</span></div>
+          <div class="accstat"><b id="youActLikes">0</b><span>❤️ likes</span></div>
+          <div class="accstat"><b id="youActFols">0</b><span>👤 followers</span></div>
+        </div>
+        <div class="acc__quick">
+          <a href="notifications.html">🔔 Notifications <b id="youNotif" class="nt-badge" hidden>0</b></a>
+          <a href="dm.html">💬 Messages</a>
+          <a href="profile.html?id=me">📔 My stories</a>
+          <a href="profile.html?id=me">✏️ Edit profile & avatar</a>
+        </div>
       </section>
 
       <section class="acc__stats">
@@ -144,16 +165,11 @@
           </div>
         </div>
         <div class="yset__row">
-          <span class="yset__lbl">Activity</span>
+          <span class="yset__lbl">Public account</span>
           <div class="yset__ctl">
-            <a class="setopt setopt--sm" style="text-decoration:none;display:inline-flex;align-items:center;" href="profile.html?id=me" title="My stories, likes & followers">📔 My stories</a>
-            <span class="cm-time" id="youAct"></span>
+            <button class="setopt setopt--sm" id="youPublicBtn">Public ✓</button>
+            <span class="cm-time" id="youPublicHint">shown in 👥 People</span>
           </div>
-        </div>
-        <div class="yset__row" style="display:block;">
-          <span class="yset__lbl">Reading progress</span>
-          <div class="progbar" data-progbar style="margin:8px 0 6px;"><em style="width:1%"></em></div>
-          <p class="progtxt" data-progtxt></p>
         </div>
         <div class="yset__row">
           <button class="setbtn" data-repref style="width:100%;">🎯 Change preferences — re-tune my library</button>
@@ -166,22 +182,22 @@
 
       <section class="acc__menu">
         <a class="accrow" href="index.html#library"><span>📚</span> My shelf &amp; library <i>→</i></a>
-        <a class="accrow" href="stories.html#write"><span>✍️</span> Write a story <i>→</i></a>
+        <a class="accrow" href="write.html"><span>✍️</span> Write a story <i>→</i></a>
         <a class="accrow" href="chat.html"><span>💬</span> Ask the library <i>→</i></a>
         <a class="accrow" href="graveyard.html"><span>💀</span> The Graveyard <i>→</i></a>
       </section>
 
       <button class="acc__out" id="signoutBtn">Sign out</button>
-      <p class="youfine">Build tsb-v174 · Your reading data lives on your device and syncs privately to your account. We never post without asking.</p>
+      <p class="youfine">Build tsb-v192 · Your reading data lives on your device and syncs privately to your account. We never post without asking.</p>
     </main>
   </div>
 
-  <script src="js/prefs.js?v=191"></script>
-  <script src="js/lang.js?v=191"></script>
-  <script src="js/config.js?v=191"></script>
-  <script src="js/auth.js?v=191"></script>
-  <script src="js/data.js?v=191"></script>
-  <script src="js/bar.js?v=191" defer></script>
+  <script src="js/prefs.js?v=192"></script>
+  <script src="js/lang.js?v=192"></script>
+  <script src="js/config.js?v=192"></script>
+  <script src="js/auth.js?v=192"></script>
+  <script src="js/data.js?v=192"></script>
+  <script src="js/bar.js?v=192" defer></script>
   <script>
     (function () {
       var vIn = document.getElementById("view-signin");
@@ -317,8 +333,8 @@
   });
 })();
 </script>
-  <script src="js/community.js?v=191"></script>
-  <script src="js/onboard.js?v=191" defer></script>
+  <script src="js/community.js?v=192"></script>
+  <script src="js/onboard.js?v=192" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {
@@ -384,8 +400,9 @@
       var posts = await C.listPosts({ author: u.id });
       var likes = await C.likesOnMyPosts();
       var fol = await C.followerRows(u.id);
-      var el = document.getElementById("youAct");
-      if (el) el.textContent = posts.length + " posts · " + likes.length + " likes · " + fol.length + " followers";
+      var elP = document.getElementById("youActPosts"); if (elP) elP.textContent = posts.length;
+      var elL = document.getElementById("youActLikes"); if (elL) elL.textContent = likes.length;
+      var elF = document.getElementById("youActFols"); if (elF) elF.textContent = fol.length;
       var idEl = document.getElementById("youId");
       if (idEl) idEl.textContent = u.id.slice(0, 8);
       var cp = document.getElementById("youIdCopy");
@@ -394,6 +411,35 @@
         cp.textContent = "✓";
         setTimeout(function () { cp.textContent = "⧉"; }, 1200);
       });
+
+      // notifications badge (new since last visit)
+      try {
+        var seen = +(localStorage.getItem("tsb_notif_seen") || 0);
+        var items = await C.notifications();
+        var fresh = items.filter(function (n) { return Date.parse(n.at) > seen; }).length;
+        var nb = document.getElementById("youNotif");
+        if (nb && fresh > 0) { nb.hidden = false; nb.textContent = fresh > 99 ? "99+" : fresh; }
+      } catch (e) {}
+
+      // public account toggle
+      var pubBtn = document.getElementById("youPublicBtn");
+      var pubHint = document.getElementById("youPublicHint");
+      try {
+        var myProf = await C.getProfile(u.id);
+        var isPub = !myProf || myProf.is_public !== false;
+        function paintPub() {
+          pubBtn.textContent = isPub ? "Public ✓" : "Private 🔒";
+          pubBtn.classList.toggle("on", isPub);
+          pubHint.textContent = isPub ? "shown in 👥 People" : "hidden from 👥 People";
+        }
+        paintPub();
+        pubBtn.addEventListener("click", async function () {
+          pubBtn.disabled = true;
+          try { isPub = !isPub; await C.setProfilePublic(isPub); paintPub(); }
+          catch (err) { alert("Couldn't change that — " + (err && err.message ? err.message : err)); }
+          pubBtn.disabled = false;
+        });
+      } catch (e) {}
     } catch (e) {}
   })();
 })();
