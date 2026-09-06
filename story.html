@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>Story — TheSmallBook Community</title>
   <meta name="description" content="A reader story from TheSmallBook community — read, listen, like and comment.">
+  <meta property="og:site_name" content="TheSmallBook">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="A reader story — TheSmallBook">
+  <meta property="og:description" content="A reader story from TheSmallBook community — read, listen, like and comment.">
+  <meta property="og:image" content="https://thesmallbook.in/assets/icon-512.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -19,7 +24,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=202">
+  <link rel="stylesheet" href="css/style.css?v=204">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,11 +36,11 @@
     </article>
   </main>
 
-  <script src="js/prefs.js?v=202"></script>
-  <script src="js/lang.js?v=202"></script>
-  <script src="js/config.js?v=202"></script>
-  <script src="js/auth.js?v=202"></script>
-  <script src="js/community.js?v=202"></script>
+  <script src="js/prefs.js?v=204"></script>
+  <script src="js/lang.js?v=204"></script>
+  <script src="js/config.js?v=204"></script>
+  <script src="js/auth.js?v=204"></script>
+  <script src="js/community.js?v=204"></script>
   <script>
   (function () {
     "use strict";
@@ -162,7 +167,7 @@
         try { await C.deletePost(id); location.href = "stories.html"; } catch (e) { alert("Delete failed."); }
       });
       document.getElementById("shareBtn").addEventListener("click", function () {
-        var url = location.origin + location.pathname + "?s=" + String(p.id).slice(0, 8);
+        var url = location.origin + location.pathname + "?s=" + String(p.id).replace(/-/g, "").slice(-8);
         var self = this;
         if (navigator.share) navigator.share({ title: p.title + " — TheSmallBook", url: url }).catch(function () {});
         else if (navigator.clipboard) {
@@ -179,17 +184,25 @@
         try {
           var c = await C.addComment(id, v);
           inp.value = "";
-          var list = document.getElementById("cmtList");
-          var empty = list.querySelector(".cm-empty");
-          if (empty) empty.remove();
-          list.insertAdjacentHTML("beforeend", cm(c));
-        } catch (e) { alert("Comment failed — sign in again."); }
+          try {
+            var list = document.getElementById("cmtList");
+            var empty = list.querySelector(".cm-empty");
+            if (empty) empty.remove();
+            if (c) {
+              list.insertAdjacentHTML("beforeend", cm(c));
+            } else {
+              // row not returned — refetch so the comment still shows; it is NOT a failure
+              var cs2 = await C.listComments(id);
+              list.innerHTML = cs2.map(cm).join("");
+            }
+          } catch (renderErr) {}
+        } catch (e) { alert("Comment failed — " + (e && e.message ? e.message : "sign in again.")); }
       });
     }
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=202" defer></script>
-  <script src="js/gate.js?v=202" defer></script>
+  <script src="js/bar.js?v=204" defer></script>
+  <script src="js/gate.js?v=204" defer></script>
 </body>
 </html>

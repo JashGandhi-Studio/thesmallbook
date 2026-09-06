@@ -118,6 +118,8 @@
         arr.push(idx);
         all[bookId] = arr;
         set("tsb_progress", all);
+        // v203: live-sync to cloud so profile "X/2176 lessons" updates the moment a lesson is read
+        try { if (window.TSB_COMMUNITY && TSB_COMMUNITY.signedIn && TSB_COMMUNITY.signedIn()) TSB_COMMUNITY.syncProgress(true); } catch (e) {}
         const total = progress.totalRead();
         if (total >= 1) achv.award("first-lesson");
         if (total >= 10) achv.award("lessons-10");

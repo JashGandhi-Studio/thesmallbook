@@ -185,9 +185,14 @@ const C = window.TSB_COMMUNITY;
   ok("retried after 401 and succeeded", retried && Array.isArray(rows));
 
   console.log("== progress sync ==");
-  store.tsb_progress = JSON.stringify({ "deep-work": { d: 1 }, "sapiens": { d: 2 } });
+  store.tsb_progress = JSON.stringify({ "deep-work": [0, 1, 2], "sapiens": [4] });
   await C.syncProgress(true);
-  ok("progress pushed to profile", DB.profiles[0].progress === 2, JSON.stringify(DB.profiles[0].progress));
+  ok("progress = lesson count pushed to profile", DB.profiles[0].progress === 4, JSON.stringify(DB.profiles[0].progress));
+  store.tsb_progress = JSON.stringify({ "deep-work": [0, 1, 2, 3, 4], "sapiens": [4] });
+  await C.syncProgress(true);
+  ok("progress updates live as lessons are read", DB.profiles[0].progress === 6, JSON.stringify(DB.profiles[0].progress));
+  const frows = await C.followerRows(DB.profiles[0].id);
+  ok("followerRows returns row objects with follower_id", Array.isArray(frows) && frows.every(function (r) { return typeof r.follower_id === "string"; }));
 
   console.log("== v201 video bursts ==");
   ok("isVideoUrl detects mp4/webm/mov + query strings", C.isVideoUrl("https://x/a.mp4") && C.isVideoUrl("https://x/a.WEBM") && C.isVideoUrl("https://x/a.mov?t=1"));
@@ -209,6 +214,22 @@ const C = window.TSB_COMMUNITY;
   ok("listPosts paginates via Range header", globalThis.lastHeaders.Range === "24-35", String(globalThis.lastHeaders.Range));
   await C.listPosts({ limit: 12 });
   ok("listPosts without offset sends no Range header", !globalThis.lastHeaders.Range);
+
+  console.log("== v204 comment row + unique share codes ==");
+  await C.addComment(DB.posts[0].id, "regression check");
+  ok("POST sends Prefer return=representation (comment row comes back)", globalThis.lastHeaders.Prefer === "return=representation", String(globalThis.lastHeaders.Prefer));
+  const cRow = await C.addComment(DB.posts[0].id, "second check");
+  ok("addComment returns the inserted row (not null)", cRow && typeof cRow === "object" && cRow.body === "second check");
+  // seed-style UUIDs share the first 8 hex chars — suffix codes must stay unique
+  const seed1 = "90000000-0000-4000-8000-00000000aa11";
+  const seed2 = "90000000-0000-4000-8000-00000000bb22";
+  DB.posts.push({ id: seed1, title: "seed one", body: "b", author_id: DB.profiles[0].id, author_name: "A", created_at: new Date().toISOString(), likes: 0, tags: [], cover_url: "", audio_url: "", kind: "text", subtitle: "" });
+  DB.posts.push({ id: seed2, title: "seed two", body: "b", author_id: DB.profiles[0].id, author_name: "A", created_at: new Date().toISOString(), likes: 0, tags: [], cover_url: "", audio_url: "", kind: "text", subtitle: "" });
+  const bySuffix1 = await C.getPostByShort(seed1.replace(/-/g, "").slice(-8));
+  const bySuffix2 = await C.getPostByShort(seed2.replace(/-/g, "").slice(-8));
+  ok("share code (suffix) resolves each seed post separately", bySuffix1 && bySuffix1.id === seed1 && bySuffix2 && bySuffix2.id === seed2);
+  const byPrefix = await C.getPostByShort(String(DB.posts[0].id).replace(/-/g, "").slice(0, 8));
+  ok("old-style prefix share links still resolve", byPrefix && byPrefix.id === DB.posts[0].id);
 
   console.log();
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");

@@ -35,6 +35,9 @@
     if (!ENABLED) throw new Error("cloud-off");
     opts = opts || {};
     var headers = { apikey: ANON, "Content-Type": "application/json" };
+    // v204: always ask PostgREST to return the affected row(s) — without this, POSTs
+    // succeed but reply with an empty body, and callers saw null ("failed" alert on a saved comment)
+    if ((opts.method || "GET") !== "GET") headers.Prefer = "return=representation";
     var tk = await authToken();
     headers.Authorization = "Bearer " + (tk || ANON);
     if (opts.headers) Object.keys(opts.headers).forEach(function (k) { headers[k] = opts.headers[k]; });
@@ -127,8 +130,12 @@
     code = String(code || "").toLowerCase().replace(/[^a-f0-9]/g, "");
     if (!code) return null;
     var rows = await api("posts?select=*&order=created_at.desc&limit=500", {});
-    var hit = (rows || []).filter(function (p) { return String(p.id).toLowerCase().indexOf(code) === 0; })[0];
-    return hit || null;
+    // v204: match prefix OR suffix of the dash-free hex — seed UUIDs share the same
+    // first 8 chars ("90000000"), so suffix codes keep every story's link unique
+    var hexes = (rows || []).map(function (p) { return { p: p, hex: String(p.id).toLowerCase().replace(/-/g, "") }; });
+    var hit = hexes.filter(function (h) { return h.hex.indexOf(code) === 0; })[0] ||
+              hexes.filter(function (h) { return h.hex.slice(-code.length) === code; })[0];
+    return hit ? hit.p : null;
   }
   async function publish(p) {
     var u = me();
@@ -394,7 +401,14 @@
       if (!force && Date.now() - last < 36e5) return;
       var mu3 = me(); if (!mu3) return;
       var prog = JSON.parse(localStorage.getItem("tsb_progress") || "{}");
-      var n = Object.keys(prog).length;
+      // v203: progress column = LESSONS read (sum of per-book lesson arrays), matching the "X/2176 lessons" UI
+      var n = 0;
+      Object.keys(prog).forEach(function (k) {
+        var v = prog[k];
+        if (Array.isArray(v)) n += v.length;
+        else if (v && typeof v === "object") n += Object.keys(v).length;
+        else if (v) n += 1;
+      });
       await api("profiles?id=eq." + mu3.id, { method: "PATCH", body: { progress: n } });
       localStorage.setItem("tsb_prog_sync", String(Date.now()));
     } catch (e) {}

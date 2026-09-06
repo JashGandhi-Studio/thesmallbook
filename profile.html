@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=202">
+  <link rel="stylesheet" href="css/style.css?v=204">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,11 +31,11 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=202"></script>
-  <script src="js/lang.js?v=202"></script>
-  <script src="js/config.js?v=202"></script>
-  <script src="js/auth.js?v=202"></script>
-  <script src="js/community.js?v=202"></script>
+  <script src="js/prefs.js?v=204"></script>
+  <script src="js/lang.js?v=204"></script>
+  <script src="js/config.js?v=204"></script>
+  <script src="js/auth.js?v=204"></script>
+  <script src="js/community.js?v=204"></script>
   <script>
   (function () {
     "use strict";
@@ -69,13 +69,15 @@
         try { likesGot = (await C.likesOnMyPosts()).length; } catch (e) {}
       }
       document.title = prof.name + " — TheSmallBook";
+      var progShown = prof.progress || 0;
+      if (mine) { try { progShown = Math.max(progShown, window.TSB && TSB.progress ? TSB.progress.totalRead() : 0); } catch (e) {} }
 
       root.innerHTML =
         '<header class="cm-profhead">' +
           '<div class="cm-ava cm-ava--xl">' + (C.avaUrl(prof.name, prof.avatar_url, pid) ? '<img src="' + C.esc(C.avaUrl(prof.name, prof.avatar_url, pid)) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
           "<h1>" + C.esc(prof.name) + (mine ? " <i>(you)</i>" : "") + "</h1>" +
           (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
-          (prof.progress ? '<span class="cm-prog">📚 ' + prof.progress + "/2176 lessons read</span>" : "") +
+          (progShown ? '<span class="cm-prog">📚 ' + progShown + "/2176 lessons read</span>" : "") +
           '<div class="cm-stats">' +
             '<span><b>' + posts.length + "</b> posts</span>" +
             '<a href="profile.html?id=' + pid + '&view=followers"><b>' + fol.count + "</b> followers</a>" +
@@ -159,7 +161,7 @@
       async function renderSocial(kind2) {
         var ids = [];
         try {
-          if (kind2 === "followers") ids = await C.followerRows(pid);
+          if (kind2 === "followers") ids = ((await C.followerRows(pid)) || []).map(function (r) { return r.follower_id; });
           else ids = (((await C.api("follows?follower_id=eq." + pid + "&select=author_id", {})) || []).map(function (r) { return r.author_id; }));
         } catch (e) {}
         var myFol = {};
@@ -307,7 +309,7 @@
         }
         setTimeout(function () { self.textContent = "\u{1F517} Share profile"; }, 2200);
       });
-      C.syncProgress();
+      C.syncProgress(mine);
       if (mine) C.ensureProfile();
       var ava = document.getElementById("pAva");
       if (ava) ava.addEventListener("change", async function () {
@@ -332,7 +334,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=202" defer></script>
-  <script src="js/gate.js?v=202" defer></script>
+  <script src="js/bar.js?v=204" defer></script>
+  <script src="js/gate.js?v=204" defer></script>
 </body>
 </html>
