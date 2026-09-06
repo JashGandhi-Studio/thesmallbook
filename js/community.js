@@ -43,9 +43,25 @@
   }
 
   function me() {
-    try { return (window.TSB_AUTH && TSB_AUTH.user) ? TSB_AUTH.user() : null; } catch (e) { return null; }
+    try {
+      if (window.TSB_AUTH && TSB_AUTH.user) { var u0 = TSB_AUTH.user(); if (u0) return u0; }
+    } catch (e) {}
+    // fallback: read the stored session directly (works even before auth.js boots)
+    try {
+      var s = JSON.parse(localStorage.getItem("tsb_auth_session"));
+      return (s && s.user) || null;
+    } catch (e) { return null; }
   }
   function signedIn() { return !!me(); }
+  function whenReady(fn) {
+    function go() { try { fn(); } catch (e) { console.warn("community init:", e); } }
+    if (window.TSB_AUTH && window.TSB_AUTH.user) { go(); return; }
+    var done = false;
+    var once = function () { if (!done) { done = true; go(); } };
+    window.addEventListener("tsb:auth", once);
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", once);
+    else setTimeout(once, 0);
+  }
 
   /* ---------- profiles ---------- */
   async function ensureProfile() {
@@ -356,7 +372,7 @@
     ensureProfile: ensureProfile, getProfile: getProfile,
     listPosts: listPosts, getPost: getPost, publish: publish, deletePost: deletePost,
     likeInfo: likeInfo, setLike: setLike, likesOnMyPosts: likesOnMyPosts,
-    listProfiles: listProfiles, setProfilePublic: setProfilePublic, notifications: notifications,
+    listProfiles: listProfiles, setProfilePublic: setProfilePublic, notifications: notifications, whenReady: whenReady,
     myMessages: myMessages, conversations: conversations, threadWith: threadWith, sendDM: sendDM,
     syncProgress: syncProgress,
     listComments: listComments, addComment: addComment,

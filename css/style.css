@@ -5442,3 +5442,7 @@ html.dark .acc__quick a { background: #241f17; color: var(--paper); }
 .acc__levelcard { background: var(--paper); border: 3px solid var(--ink); border-radius: 18px; box-shadow: 4px 4px 0 var(--ink); padding: 14px 16px 12px; margin: 4px 0 2px; }
 .acc__seclbl--in { margin: 14px 0 6px; }
 html.dark .acc__levelcard { background: #241f17; }
+
+/* v19d — auto default covers */
+.cm-card__cover .cm-quote { font-family: var(--font-head); font-size: 3.4rem; color: var(--ink); opacity: 1; display: grid; place-items: center; }
+.cm-card--quote .cm-card__cover .cm-quote { background: none !important; font-family: Georgia, serif; font-size: 2.6rem; }

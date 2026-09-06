@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=193">
+  <link rel="stylesheet" href="css/style.css?v=194">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -76,11 +76,11 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=193"></script>
-  <script src="js/lang.js?v=193"></script>
-  <script src="js/config.js?v=193"></script>
-  <script src="js/auth.js?v=193"></script>
-  <script src="js/community.js?v=193"></script>
+  <script src="js/prefs.js?v=194"></script>
+  <script src="js/lang.js?v=194"></script>
+  <script src="js/config.js?v=194"></script>
+  <script src="js/auth.js?v=194"></script>
+  <script src="js/community.js?v=194"></script>
   <script>
   (function () {
     "use strict";
@@ -91,6 +91,8 @@
     var coverUrl = "", audioUrl = "", kind = "text";
     var mediaRec = null, chunks = [];
 
+    C.whenReady(function () { init(); });
+    function init() {
     if (!C.signedIn()) {
       document.querySelector(".wr-wrap").innerHTML =
         '<div class="cm-empty">👋 Sign in with Google to write and publish.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>';
@@ -234,8 +236,9 @@
 
     loadDraft();
     body.focus();
+    }
   })();
   </script>
-  <script src="js/bar.js?v=193" defer></script>
+  <script src="js/bar.js?v=194" defer></script>
 </body>
 </html>

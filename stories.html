@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=193">
+  <link rel="stylesheet" href="css/style.css?v=194">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -54,11 +54,11 @@
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="js/prefs.js?v=193"></script>
-  <script src="js/lang.js?v=193"></script>
-  <script src="js/config.js?v=193"></script>
-  <script src="js/auth.js?v=193"></script>
-  <script src="js/community.js?v=193"></script>
+  <script src="js/prefs.js?v=194"></script>
+  <script src="js/lang.js?v=194"></script>
+  <script src="js/config.js?v=194"></script>
+  <script src="js/auth.js?v=194"></script>
+  <script src="js/community.js?v=194"></script>
   <script>
   (function () {
     "use strict";
@@ -126,9 +126,10 @@
 
     function card(p, extra) {
       var prof = { avatar_url: p.author_avatar || "" };
+      var hue = parseInt(String(p.id).replace(/-/g, "").slice(0, 4), 16) % 360;
       var cover = p.cover_url
         ? '<img src="' + C.esc(p.cover_url) + '" alt="" loading="lazy">'
-        : '<span class="cm-quote">❝</span>';
+        : '<span class="cm-quote" style="background:linear-gradient(135deg,hsl(' + hue + ',88%,74%),hsl(' + ((hue + 48) % 360) + ',82%,58%));">' + (p.kind === "quote" ? "❝" : C.esc((p.title || "T").charAt(0).toUpperCase())) + "</span>";
       return '<article class="cm-card' + (p.kind === "quote" ? " cm-card--quote" : "") + '" data-post="' + p.id + '">' +
         '<a class="cm-card__cover" href="story.html?id=' + p.id + '">' + cover +
           (p.audio_url ? '<span class="cm-card__aud">🎧</span>' : "") +
@@ -222,7 +223,8 @@
       var posts = [];
       try { posts = await C.listPosts({ limit: 30 }); } catch (e) {}
       track.innerHTML = posts.map(function (p) {
-        return '<article class="cm-reel' + (p.cover_url ? " has-cover" : "") + '"' + (p.cover_url ? ' style="background-image:url(\'' + p.cover_url + '\')"' : "") + '>' +
+        var rhue = parseInt(String(p.id).replace(/-/g, "").slice(0, 4), 16) % 360;
+        return '<article class="cm-reel' + (p.cover_url ? " has-cover" : "") + '"' + (p.cover_url ? ' style="background-image:url(\'' + p.cover_url + '\')"' : ' style="background:linear-gradient(150deg,hsl(' + rhue + ',70%,32%),hsl(' + ((rhue + 48) % 360) + ',65%,18%))"') + '>' +
           '<div class="cm-reel__grad"></div>' +
           '<div class="cm-reel__body">' +
             '<a class="cm-reel__who" href="story.html?id=' + p.id + '">' +
@@ -457,11 +459,11 @@
       var t = e.target.closest("[data-audio]");
       if (t) C.playAudio(t.getAttribute("data-audio"), t.getAttribute("data-title"));
     });
-    if (C.signedIn()) C.syncProgress();
+    C.whenReady(function () { if (C.signedIn()) { C.ensureProfile(); C.syncProgress(); } });
     load();
   })();
   </script>
-  <script src="js/bar.js?v=193" defer></script>
-  <script src="js/gate.js?v=193" defer></script>
+  <script src="js/bar.js?v=194" defer></script>
+  <script src="js/gate.js?v=194" defer></script>
 </body>
 </html>
