@@ -388,6 +388,26 @@
     });
   }
 
+  /* 🎯 live re-tune from Settings / You window (no reload) */
+  window.TSB_ONBOARD = {
+    start: function () {
+      if (wrap) return;
+      try {
+        var ints = JSON.parse(localStorage.getItem("tsb_interests")) || [];
+        if (ints.length && !draft.shelves.length) { draft.shelves = ints.slice(); draft.why = draft.why || ints[0]; }
+        var lead = JSON.parse(localStorage.getItem("tsb_ob_lead"));
+        if (lead) draft.why = lead;
+        var mm = JSON.parse(localStorage.getItem("tsb_read_minutes")); if (mm) draft.minutes = mm;
+        var st = JSON.parse(localStorage.getItem("tsb_read_style")); if (st) draft.style = st;
+      } catch (e) {}
+      step = 0;
+      wrap = build();
+      body = wrap.querySelector(".ob__body");
+      bind();
+      show(0, "fwd");
+    }
+  };
+
   function boot() {
     if (!shouldShow()) return;
     wrap = build();

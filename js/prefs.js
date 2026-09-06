@@ -18,9 +18,8 @@
   try {
     var acc = JSON.parse(localStorage.getItem("tsb_accent"));
     if (acc && /^#[0-9a-f]{6}$/i.test(acc)) {
-      document.documentElement.style.setProperty("--yellow", acc);
-      var tcm = document.querySelector('meta[name="theme-color"]');
-      if (tcm && !document.documentElement.classList.contains("dark")) tcm.content = acc;
+      /* accent = the action bar's selection pill ONLY — app stays classic */
+      document.documentElement.style.setProperty("--tsb-bar-accent", acc);
     }
   } catch (e) {}
 
@@ -37,6 +36,12 @@
     var lv = JSON.parse(localStorage.getItem("tsb_lib_view"));
     if (lv === "compact") document.documentElement.classList.add("tsb-libview-compact");
     else if (lv === "list") document.documentElement.classList.add("tsb-libview-list");
+  } catch (e) {}
+  /* font style (modern / serif / clean) — pre-paint */
+  try {
+    var fst = JSON.parse(localStorage.getItem("tsb_fontstyle"));
+    if (fst === "serif") document.documentElement.classList.add("tsb-font-serif");
+    else if (fst === "clean") document.documentElement.classList.add("tsb-font-clean");
   } catch (e) {}
 
   /* ---------- theme ---------- */

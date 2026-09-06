@@ -336,7 +336,13 @@
             if (intl.length) inter.push(intl.shift());
             else if (ind.length) inter.push(ind.shift());
           }
-          return [...inter, ...rest];
+          const curated = [...inter, ...rest];
+          /* 🎯 onboarding preferences float their shelves to the front */
+          let prefs = [];
+          try { prefs = JSON.parse(localStorage.getItem("tsb_interests")) || []; } catch (e) {}
+          if (!prefs.length) return curated;
+          return curated.filter((x) => prefs.indexOf(x.category) >= 0)
+            .concat(curated.filter((x) => prefs.indexOf(x.category) < 0));
         }
     }
   }

@@ -4363,9 +4363,10 @@ html.dark .tsb-bar__plus { border-color: #000; box-shadow: 3px 3px 0 #000; }
   html.tsb-hasbar .lessonnav__fab { bottom: calc(var(--bar-total) + 18px); }
   html.tsb-hasbar .lessonnav__panel { bottom: calc(var(--bar-total) + 78px); }
 }
-/* desktop keeps the top nav — bar is mobile-first */
+/* v13 — the action bar lives on EVERY screen now (phone, tablet,
+   laptop, desktop): same centred floating pill, same rules. */
 @media (min-width: 769px) {
-  .tsb-bar { display: none; }
+  .tsb-bar { width: min(470px, calc(100vw - 32px)); }
 }
 @media (prefers-reduced-motion: reduce) {
   .tsb-bar, .tsb-bar__item::before, .tsb-bar__plus { transition: none; }
@@ -5090,3 +5091,33 @@ html.tsb-bar-hidden .lessonnav__fab.show {
 
 /* v12b — composer hugs the bar: only the bar's own slot below ASK */
 .tsb-ask--page .aq-inputrow { padding-bottom: calc(var(--bar-total) + 6px); }
+
+
+/* ============================================================
+   v14 — accent = bar pill only · font styles · progress bar ·
+   name input · library-head contrast · dark-safe
+   ============================================================ */
+.tsb-bar__item::before { background: var(--tsb-bar-accent, var(--yellow)); }
+.tsb-bar__item--plus.is-active .tsb-bar__plus { color: var(--tsb-bar-accent, var(--yellow)); }
+
+html.tsb-font-serif { --font-body: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif; }
+html.tsb-font-clean { --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+
+/* question-library head: ink on yellow, crisp in both themes */
+.aq-lib__head { background: var(--yellow); }
+.aq-lib__t { color: var(--ink); }
+.aq-lib__s { color: #55504a; }
+html.dark .aq-lib__head { background: var(--yellow); }
+html.dark .aq-lib__t { color: var(--ink); }
+html.dark .aq-lib__s { color: #55504a; }
+
+/* reading progress bar */
+.progbar { height: 16px; border: 2.5px solid var(--ink); border-radius: 99px; background: var(--bg); overflow: hidden; box-shadow: 2.5px 2.5px 0 var(--ink); }
+.progbar em { display: block; height: 100%; background: var(--yellow); border-right: 2.5px solid var(--ink); min-width: 6px; transition: width .5s cubic-bezier(.2,.9,.3,1.1); }
+.progtxt { font-size: .78rem; font-weight: 700; color: #8f8a80; margin-top: 8px; }
+html.dark .progtxt { color: #b7b0a5; }
+
+/* name input */
+.setinput { flex: 1; min-width: 0; border: 2.5px solid var(--ink); border-radius: 12px; background: var(--bg); color: var(--ink); padding: 10px 12px; font-family: var(--font-body); font-weight: 600; font-size: .9rem; }
+.setinput:focus { outline: 2px solid var(--yellow); }
+html.dark .setinput { background: #241f17; color: var(--paper); }

@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=183">
+  <link rel="stylesheet" href="css/style.css?v=185">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -57,6 +57,16 @@
     </section>
 
     <section class="setcard">
+      <h2>🔤 FONT STYLE</h2>
+      <div class="setrow" id="fontstyleRow">
+        <button class="setopt" data-fontstyle="modern"><span>🖋️</span> Modern</button>
+        <button class="setopt" data-fontstyle="serif"><span>📜</span> Bookish</button>
+        <button class="setopt" data-fontstyle="clean"><span>🔳</span> Clean</button>
+      </div>
+      <p class="sethint">Changes every reading surface instantly — lessons, chat, cards.</p>
+    </section>
+
+    <section class="setcard">
       <h2>📚 LIBRARY DISPLAY</h2>
       <div class="setrow" id="libviewRow">
         <button class="setopt" data-libview="cozy"><span>🛋️</span> Cozy</button>
@@ -67,7 +77,7 @@
     </section>
 
     <section class="setcard">
-      <h2>🎨 COLOUR</h2>
+      <h2>🎨 ACTION BAR COLOUR</h2>
       <div class="yset__ctl yset__sw" id="accentRow" style="justify-content:flex-start;">
         <button data-accent="#ffc800" style="--sw:#ffc800" aria-label="Yellow"></button>
         <button data-accent="#ff8a3d" style="--sw:#ff8a3d" aria-label="Orange"></button>
@@ -76,6 +86,7 @@
         <button data-accent="#4d7cff" style="--sw:#4d7cff" aria-label="Blue"></button>
       </div>
       <p class="sethint">Re-tints highlights, pills and the status bar on every page.</p>
+    <p class="sethint">Only the bottom bar’s selected-tab pill wears this colour — the rest of the app stays classic.</p>
     </section>
 
     <section class="setcard">
@@ -85,13 +96,25 @@
     </section>
 
     <section class="setcard">
+      <h2>📈 YOUR READING</h2>
+      <div class="progbar" data-progbar><em style="width:1%"></em></div>
+      <p class="progtxt" data-progtxt></p>
+      <p class="sethint">Lessons you've finished across all 350 books — straight from your reader progress.</p>
+    </section>
+
+    <section class="setcard">
       <h2>👤 ACCOUNT</h2>
+      <div class="setrow" style="margin-bottom:12px;">
+        <input id="displayNameInput" class="setinput" type="text" maxlength="24" placeholder="Your display name">
+        <button class="setbtn" id="saveName">Save</button>
+      </div>
       <div id="setAcc"></div>
     </section>
 
     <section class="setcard">
       <h2>🧹 DATA</h2>
-      <button class="setbtn" id="resetOnboard">Replay welcome personalisation</button>
+      <button class="setbtn" id="resetOnboard">🎯 Change preferences — re-tune my library</button>
+      <button class="setbtn" data-repref>✨ Re-tune now (live, stay on this page)</button>
       <button class="setbtn setbtn--red" id="clearChat">Clear chat history</button>
       <p class="sethint">Books, streaks and shelf stay untouched.</p>
     </section>
@@ -99,11 +122,11 @@
     <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v175.</p>
   </main>
 
-  <script src="js/prefs.js?v=183"></script>
-  <script src="js/lang.js?v=183"></script>
-  <script src="js/config.js?v=183"></script>
-  <script src="js/auth.js?v=183"></script>
-  <script src="js/bar.js?v=183" defer></script>
+  <script src="js/prefs.js?v=185"></script>
+  <script src="js/lang.js?v=185"></script>
+  <script src="js/config.js?v=185"></script>
+  <script src="js/auth.js?v=185"></script>
+  <script src="js/bar.js?v=185" defer></script>
   <script>
     (function () {
       /* theme */
@@ -145,11 +168,7 @@
       document.getElementById("accentRow").addEventListener("click", function (e) {
         var b = e.target.closest("button[data-accent]"); if (!b) return;
         TSB.set("tsb_accent", b.dataset.accent);
-        document.documentElement.style.setProperty("--yellow", b.dataset.accent);
-        try {
-          var m = document.querySelector('meta[name="theme-color"]');
-          if (m && !document.documentElement.classList.contains("dark")) m.content = b.dataset.accent;
-        } catch (e2) {}
+        document.documentElement.style.setProperty("--tsb-bar-accent", b.dataset.accent);
         paintAccent();
       });
 
@@ -189,6 +208,7 @@
 
       /* data */
       document.getElementById("resetOnboard").addEventListener("click", function () {
+        if (window.TSB_ONBOARD && TSB_ONBOARD.start) { TSB_ONBOARD.start(); return; }
         try { localStorage.removeItem("tsb_onboarded"); sessionStorage.removeItem("tsb_onboarded"); localStorage.removeItem("tsb_onboard_draft"); } catch (e) {}
         location.href = "index.html";
       });
@@ -225,6 +245,62 @@
     applyLibView(v);
   });
 })();
+</script>
+  <script src="js/onboard.js?v=185" defer></script>
+<script>
+      /* 🔤 font style */
+      function paintFontStyle() {
+        var cur = "modern";
+        try { cur = JSON.parse(localStorage.getItem("tsb_fontstyle")) || "modern"; } catch (e) {}
+        document.documentElement.classList.toggle("tsb-font-serif", cur === "serif");
+        document.documentElement.classList.toggle("tsb-font-clean", cur === "clean");
+        document.querySelectorAll("[data-fontstyle]").forEach(function (b) {
+          b.classList.toggle("on", b.getAttribute("data-fontstyle") === cur);
+        });
+      }
+      document.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-fontstyle]"); if (!b) return;
+        var v = b.getAttribute("data-fontstyle");
+        try { localStorage.setItem("tsb_fontstyle", JSON.stringify(v)); } catch (e2) {}
+        paintFontStyle();
+      });
+      paintFontStyle();
+
+      /* 👤 display name */
+      function wireName(inputId, btnId) {
+        var inp = document.getElementById(inputId), btn = document.getElementById(btnId);
+        if (!inp || !btn) return;
+        try { inp.value = JSON.parse(localStorage.getItem("tsb_display_name")) || ""; } catch (e) {}
+        btn.addEventListener("click", function () {
+          var v = inp.value.trim().slice(0, 24);
+          if (window.TSB_AUTH && TSB_AUTH.setDisplayName) TSB_AUTH.setDisplayName(v);
+          else { try { localStorage.setItem("tsb_display_name", JSON.stringify(v)); } catch (e2) {} }
+          document.querySelectorAll("#displayNameInput, #youNameInput").forEach(function (o) { o.value = v; });
+        });
+      }
+      wireName("displayNameInput", "saveName");
+      wireName("youNameInput", "youNameSave");
+
+      /* 📈 reading progress */
+      function paintProgress() {
+        var all = (window.TSB && TSB.progress && TSB.progress.all) ? TSB.progress.all() : {};
+        var read = 0, books = 0;
+        Object.keys(all).forEach(function (k) { var n = (all[k] || []).length; if (n) { books++; read += n; } });
+        var total = 2176, pct = Math.min(100, Math.round(read / total * 100));
+        document.querySelectorAll("[data-progbar]").forEach(function (b) {
+          if (b.firstElementChild) b.firstElementChild.style.width = Math.max(pct, 1) + "%";
+        });
+        document.querySelectorAll("[data-progtxt]").forEach(function (t) {
+          t.textContent = read + " of 2,176 lessons read · " + books + " book" + (books === 1 ? "" : "s") + " opened · " + (total - read) + " to go — keep stacking ✨";
+        });
+      }
+      paintProgress();
+
+      /* 🎯 live preference re-tune */
+      document.addEventListener("click", function (e) {
+        if (!e.target.closest("[data-repref]")) return;
+        if (window.TSB_ONBOARD && TSB_ONBOARD.start) TSB_ONBOARD.start();
+      });
 </script>
 </body>
 </html>
