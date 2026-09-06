@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=194">
+  <link rel="stylesheet" href="css/style.css?v=197">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -42,11 +42,11 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=194"></script>
-  <script src="js/lang.js?v=194"></script>
-  <script src="js/config.js?v=194"></script>
-  <script src="js/auth.js?v=194"></script>
-  <script src="js/community.js?v=194"></script>
+  <script src="js/prefs.js?v=197"></script>
+  <script src="js/lang.js?v=197"></script>
+  <script src="js/config.js?v=197"></script>
+  <script src="js/auth.js?v=197"></script>
+  <script src="js/community.js?v=197"></script>
   <script>
   (function () {
     "use strict";
@@ -62,9 +62,10 @@
       return;
     }
 
-    function ava(prof) {
+    function ava(prof, id) {
       if (!prof) return '<div class="cm-ava cm-ava--lg"><span>R</span></div>';
-      return '<div class="cm-ava cm-ava--lg">' + (prof.avatar_url ? '<img src="' + C.esc(prof.avatar_url) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>";
+      var u = C.avaUrl(prof.name, prof.avatar_url, id || prof.id);
+      return '<div class="cm-ava cm-ava--lg">' + (u ? '<img src="' + C.esc(u) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>";
     }
 
     async function loadList() {
@@ -85,7 +86,7 @@
         var a = document.createElement("a");
         a.className = "dm-row";
         a.href = "dm.html?u=" + cv.user_id;
-        a.innerHTML = ava(prof) +
+        a.innerHTML = ava(prof, cv.user_id) +
           '<div class="dm-row__meta"><b>' + C.esc(prof ? prof.name : "Reader") + (C.isOfficial(cv.user_id) ? '<span class="cm-vtick">✔</span>' : "") + "</b>" +
           '<span>' + C.esc(cv.last.body).slice(0, 60) + "</span></div>" +
           '<span class="cm-time">' + C.ago(cv.last.created_at) + "</span>";
@@ -123,6 +124,14 @@
       catch (err) { alert("Message failed — " + (err && err.message ? err.message : err)); }
     });
 
+    if (!uid) {
+      back.addEventListener("click", function (e) {
+        try {
+          var ref = document.referrer ? new URL(document.referrer) : null;
+          if (ref && ref.host === location.host && history.length > 1) { e.preventDefault(); history.back(); }
+        } catch (err) {}
+      });
+    }
     if (uid) {
       list.hidden = true;
       thread.hidden = false;
@@ -134,6 +143,6 @@
     });
   })();
   </script>
-  <script src="js/bar.js?v=194" defer></script>
+  <script src="js/bar.js?v=197" defer></script>
 </body>
 </html>

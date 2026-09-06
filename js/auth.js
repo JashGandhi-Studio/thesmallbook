@@ -708,7 +708,7 @@
       if (!ENABLED) {
         /* sheet still works without cloud keys — Google button falls
            through to the sign-in page, which explains the setup */
-        window.TSB_AUTH = { enabled: false, user: () => null, openSheet, closeSheet };
+        window.TSB_AUTH = { enabled: false, user: () => null, openSheet, closeSheet, token: async () => "", displayName: () => "", setDisplayName: () => {} };
         return;
       }
       const didCallback = await handleCallback();
@@ -739,6 +739,10 @@
         clientId: GCLIENT,
         openSheet,
         closeSheet,
+        token: () => ensureToken(),
+        displayName,
+        setDisplayName,
+        me: user,
         visits: () => (user() ? lsGet("tsb_auth_visits", { d: "", n: 0 }).n : 0)
       };
       try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}

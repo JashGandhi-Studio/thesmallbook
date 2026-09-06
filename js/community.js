@@ -15,22 +15,40 @@
   var ANON = CFG.SUPABASE_ANON_KEY || "";
   var ENABLED = !!(URL && ANON);
 
+  /* ---------- token: never crash, always try hard ---------- */
+  async function authToken() {
+    try {
+      if (window.TSB_AUTH && typeof TSB_AUTH.token === "function") {
+        var t = await TSB_AUTH.token();
+        if (t) return t;
+      }
+    } catch (e) {}
+    try {
+      var s = JSON.parse(localStorage.getItem("tsb_auth_session"));
+      if (s && s.access_token) return s.access_token;
+    } catch (e) {}
+    return "";
+  }
+
   /* ---------- tiny REST helper ---------- */
   async function api(path, opts) {
     if (!ENABLED) throw new Error("cloud-off");
     opts = opts || {};
     var headers = { apikey: ANON, "Content-Type": "application/json" };
-    try {
-      var tk = await (window.TSB_AUTH && TSB_AUTH.token ? TSB_AUTH.token() : "");
-      if (tk) headers.Authorization = "Bearer " + tk;
-      else headers.Authorization = "Bearer " + ANON;
-    } catch (e) { headers.Authorization = "Bearer " + ANON; }
+    var tk = await authToken();
+    headers.Authorization = "Bearer " + (tk || ANON);
     if (opts.headers) Object.keys(opts.headers).forEach(function (k) { headers[k] = opts.headers[k]; });
     var res = await fetch(URL + "/rest/v1/" + path, {
       method: opts.method || "GET",
       headers: headers,
       body: opts.body ? JSON.stringify(opts.body) : undefined
     });
+    if ((res.status === 401 || res.status === 403) && !opts._retried && tk) {
+      // token may have expired mid-session — force one refresh, then retry once
+      try { if (window.TSB_AUTH && typeof TSB_AUTH.token === "function") await TSB_AUTH.token(); } catch (e) {}
+      var o2 = {}; for (var k2 in opts) o2[k2] = opts[k2]; o2._retried = 1;
+      return api(path, o2);
+    }
     var txt = await res.text();
     if (!res.ok) {
       var detail = "";
@@ -81,6 +99,9 @@
     var created = await api("profiles?on_conflict=id&select=*", { method: "POST", headers: { Prefer: "resolution=merge-duplicates" }, body: { id: u.id, name: name, avatar_url: avatar } });
     return (created && created[0]) || { id: u.id, name: name, avatar_url: avatar, bio: "" };
   }
+  async function safeProfile() {
+    try { return await ensureProfile(); } catch (e) { return null; }
+  }
   async function getProfile(id) {
     var rows = await api("profiles?id=eq." + id + "&select=*", {});
     return (rows && rows[0]) || null;
@@ -99,10 +120,17 @@
     var rows = await api("posts?id=eq." + id + "&select=*", {});
     return (rows && rows[0]) || null;
   }
+  async function getPostByShort(code) {
+    code = String(code || "").toLowerCase().replace(/[^a-f0-9]/g, "");
+    if (!code) return null;
+    var rows = await api("posts?select=*&order=created_at.desc&limit=500", {});
+    var hit = (rows || []).filter(function (p) { return String(p.id).toLowerCase().indexOf(code) === 0; })[0];
+    return hit || null;
+  }
   async function publish(p) {
     var u = me();
     if (!u) throw new Error("sign-in");
-    var prof = await ensureProfile();
+    var prof = await safeProfile();
     var row = await api("posts?select=*", {
       method: "POST",
       body: {
@@ -149,8 +177,8 @@
   async function addComment(postId, body) {
     var u = me();
     if (!u) throw new Error("sign-in");
-    var prof = await ensureProfile();
-    var row = await api("comments?select=*", { method: "POST", body: { post_id: postId, author_id: u.id, author_name: (prof && prof.name) || "Reader", body: body } });
+    var prof = await safeProfile();
+    var row = await api("comments?select=*", { method: "POST", body: { post_id: postId, author_id: u.id, author_name: (prof && prof.name) || ((u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)) || "Reader"), body: body } });
     return (row && row[0]) || null;
   }
 
@@ -183,14 +211,19 @@
   async function upload(file, bucket) {
     var u = me();
     if (!u) throw new Error("sign-in");
-    var tk = await TSB_AUTH.token();
+    var tk = await authToken();
+    if (!tk) throw new Error("session expired — sign in again");
     var path = u.id + "/" + Date.now() + "-" + (file.name || "f").replace(/[^\w.-]+/g, "_");
     var res = await fetch(URL + "/storage/v1/object/" + bucket + "/" + path, {
       method: "POST",
       headers: { apikey: ANON, Authorization: "Bearer " + tk, "Content-Type": file.type || "application/octet-stream", "x-upsert": "false" },
       body: file
     });
-    if (!res.ok) throw new Error("upload " + res.status);
+    if (!res.ok) {
+      var det = "";
+      try { var j = await res.json(); det = (j && (j.message || j.error)) || ""; } catch (e) {}
+      throw new Error((res.status === 400 || res.status === 403) ? ("upload blocked by storage rules — run SQL #3 v3 (" + (det || res.status) + ")") : ("upload failed (" + (det || res.status) + ")"));
+    }
     return URL + "/storage/v1/object/public/" + bucket + "/" + path;
   }
 
@@ -206,9 +239,18 @@
   }
   async function setProfilePublic(on) {
     if (!api || !signedIn()) throw new Error("sign-in");
-    var prof = await ensureProfile();
-    if (!prof) throw new Error("sign-in");
-    await api("profiles?id=eq." + prof.id, { method: "PATCH", body: { is_public: !!on } });
+    var u = me();
+    var prof = await safeProfile();
+    var name = (prof && prof.name) || ((u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)) || "Reader");
+    var avatar = (prof && prof.avatar_url) || ((u.user_metadata && (u.user_metadata.avatar_url || u.user_metadata.picture)) || "");
+    try {
+      // upsert covers both "row exists" and "row missing" in one request
+      await api("profiles?on_conflict=id&select=*", { method: "POST", headers: { Prefer: "resolution=merge-duplicates" }, body: { id: u.id, name: name, avatar_url: avatar, is_public: !!on } });
+    } catch (e) {
+      var m = String((e && e.message) || e);
+      if (m.indexOf("is_public") >= 0) throw new Error("the is_public column is missing — run SQL #5 (one line, in docs/SUPABASE-STEP-BY-STEP.md)");
+      throw e;
+    }
   }
 
   // ---- v192: notifications (derived — no new tables needed) ----
@@ -247,8 +289,8 @@
     (profs || []).forEach(function (p) { pmap[p.id] = p; });
     out.forEach(function (n) {
       var p = pmap[n.who];
-      n.name = (p && p.name) || "A reader";
-      n.avatar = (p && p.avatar_url) || "";
+      n.name = (p && p.name) || (isOfficial(n.who) ? "TheSmallBook" : "A reader");
+      n.avatar = avaUrl(n.name, (p && p.avatar_url) || "", n.who);
     });
     out.sort(function (a, b) { return Date.parse(b.at) - Date.parse(a.at); });
     return out.slice(0, 60);
@@ -257,8 +299,8 @@
   // ---- v191: direct messages ----
   async function myMessages(limit) {
     if (!api || !signedIn()) return [];
-    var me = (await window.TSB_AUTH.me()); if (!me) return [];
-    var rows = await api("messages?select=*&or=(sender_id.eq." + me.id + ",receiver_id.eq." + me.id + ")&order=created_at.desc&limit=" + (limit || 200), { method: "GET" });
+    var mu = me(); if (!mu) return [];
+    var rows = await api("messages?select=*&or=(sender_id.eq." + mu.id + ",receiver_id.eq." + mu.id + ")&order=created_at.desc&limit=" + (limit || 200), { method: "GET" });
     return rows || [];
   }
   function conversations(msgs, meId) {
@@ -272,14 +314,14 @@
   }
   async function threadWith(uid) {
     if (!api || !signedIn()) return [];
-    var me = (await window.TSB_AUTH.me()); if (!me) return [];
-    var rows = await api("messages?select=*&or=(and(sender_id.eq." + me.id + ",receiver_id.eq." + uid + "),and(sender_id.eq." + uid + ",receiver_id.eq." + me.id + "))&order=created_at.asc&limit=300", { method: "GET" });
+    var mu = me(); if (!mu) return [];
+    var rows = await api("messages?select=*&or=(and(sender_id.eq." + mu.id + ",receiver_id.eq." + uid + "),and(sender_id.eq." + uid + ",receiver_id.eq." + mu.id + "))&order=created_at.asc&limit=300", { method: "GET" });
     return rows || [];
   }
   async function sendDM(uid, body) {
     if (!api || !signedIn()) return null;
-    var me = (await window.TSB_AUTH.me()); if (!me) return null;
-    var row = await api("messages?select=*", { method: "POST", body: { sender_id: me.id, receiver_id: uid, body: String(body).slice(0, 1000) } });
+    var mu = me(); if (!mu) return null;
+    var row = await api("messages?select=*", { method: "POST", body: { sender_id: mu.id, receiver_id: uid, body: String(body).slice(0, 1000) } });
     return (row && row[0]) || row;
   }
 
@@ -289,10 +331,10 @@
     try {
       var last = +(localStorage.getItem("tsb_prog_sync") || 0);
       if (!force && Date.now() - last < 36e5) return;
-      var me = (await window.TSB_AUTH.me()); if (!me) return;
+      var mu3 = me(); if (!mu3) return;
       var prog = JSON.parse(localStorage.getItem("tsb_progress") || "{}");
       var n = Object.keys(prog).length;
-      await api("profiles?id=eq." + me.id, { method: "PATCH", body: { progress: n } });
+      await api("profiles?id=eq." + mu3.id, { method: "PATCH", body: { progress: n } });
       localStorage.setItem("tsb_prog_sync", String(Date.now()));
     } catch (e) {}
   }
@@ -366,13 +408,24 @@
 
   var OFFICIAL_ID = "11111111-1111-1111-1111-111111111111";
   function isOfficial(id) { return id === OFFICIAL_ID; }
+  var OFFICIAL_AVATAR = "data:image/svg+xml," + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">' +
+    '<rect width="96" height="96" rx="20" fill="#ffc800"/>' +
+    '<rect x="4" y="4" width="88" height="88" rx="17" fill="none" stroke="#1c1a17" stroke-width="5"/>' +
+    '<text x="48" y="62" font-size="44" text-anchor="middle">📕</text></svg>'
+  );
+  function avaUrl(name, url, id) {
+    if (url) return url;
+    if (isOfficial(id)) return OFFICIAL_AVATAR;
+    return "";
+  }
 
   window.TSB_COMMUNITY = {
     enabled: ENABLED, OFFICIAL_ID: OFFICIAL_ID, isOfficial: isOfficial, api: api, me: me, signedIn: signedIn,
     ensureProfile: ensureProfile, getProfile: getProfile,
     listPosts: listPosts, getPost: getPost, publish: publish, deletePost: deletePost,
     likeInfo: likeInfo, setLike: setLike, likesOnMyPosts: likesOnMyPosts,
-    listProfiles: listProfiles, setProfilePublic: setProfilePublic, notifications: notifications, whenReady: whenReady,
+    listProfiles: listProfiles, setProfilePublic: setProfilePublic, getPostByShort: getPostByShort, notifications: notifications, whenReady: whenReady, avaUrl: avaUrl, OFFICIAL_AVATAR: OFFICIAL_AVATAR,
     myMessages: myMessages, conversations: conversations, threadWith: threadWith, sendDM: sendDM,
     syncProgress: syncProgress,
     listComments: listComments, addComment: addComment,

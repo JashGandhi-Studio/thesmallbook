@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=194">
+  <link rel="stylesheet" href="css/style.css?v=197">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,28 +31,31 @@
     </article>
   </main>
 
-  <script src="js/prefs.js?v=194"></script>
-  <script src="js/lang.js?v=194"></script>
-  <script src="js/config.js?v=194"></script>
-  <script src="js/auth.js?v=194"></script>
-  <script src="js/community.js?v=194"></script>
+  <script src="js/prefs.js?v=197"></script>
+  <script src="js/lang.js?v=197"></script>
+  <script src="js/config.js?v=197"></script>
+  <script src="js/auth.js?v=197"></script>
+  <script src="js/community.js?v=197"></script>
   <script>
   (function () {
     "use strict";
     var C = window.TSB_COMMUNITY;
     var root = document.getElementById("post");
     var id = (location.search.match(/[?&]id=([^&]+)/) || [])[1] || "";
+    var shortCode = (location.search.match(/[?&]s=([a-zA-Z0-9]+)/) || [])[1] || "";
     var meId = (C.me() || {}).id || "";
 
     async function boot() {
-      if (!id || !C.enabled) { root.innerHTML = '<div class="cm-empty">⚠️ Story not reachable.</div>'; return; }
+      if ((!id && !shortCode) || !C.enabled) { root.innerHTML = '<div class="cm-empty">⚠️ Story not reachable.</div>'; return; }
       var p;
-      try { p = await C.getPost(id); } catch (e) {}
+      try { p = id ? await C.getPost(id) : await C.getPostByShort(shortCode); } catch (e) {}
+      if (p) id = p.id;
       if (!p) { root.innerHTML = '<div class="cm-empty">🕳️ This story doesn’t exist (or was deleted).</div>'; return; }
       document.title = p.title + " — TheSmallBook Stories";
       var prof = null;
       try { prof = await C.getProfile(p.author_id); } catch (e) {}
-      prof = prof || { name: p.author_name, avatar_url: p.author_avatar || "", bio: "" };
+      prof = prof || { name: p.author_name, avatar_url: C.avaUrl(p.author_name, p.author_avatar, p.author_id), bio: "" };
+      if (prof && !prof.avatar_url) prof.avatar_url = C.avaUrl(p.author_name, p.author_avatar, p.author_id);
       var like = { count: 0, mine: false }, fol = { count: 0, mine: false }, cmts = [];
       try { like = await C.likeInfo(id); } catch (e) {}
       try { fol = await C.followInfo(p.author_id); } catch (e) {}
@@ -93,13 +96,17 @@
 
       root.querySelector("[data-like]").addEventListener("click", async function () {
         if (!C.signedIn()) { location.href = "login.html"; return; }
-        var on = !this.classList.contains("on");
+        var btn = this, on = !btn.classList.contains("on");
+        btn.classList.toggle("on", on);
         try {
           await C.setLike(id, on);
           var info = await C.likeInfo(id);
-          this.classList.toggle("on", info.mine);
-          this.querySelector("b").textContent = info.count;
-        } catch (e) {}
+          btn.classList.toggle("on", info.mine);
+          btn.querySelector("b").textContent = info.count;
+        } catch (e) {
+          btn.classList.toggle("on", !on);
+          alert("Like failed — " + (e && e.message ? e.message : e));
+        }
       });
       var fb = root.querySelector("[data-follow]");
       if (fb) fb.addEventListener("click", async function () {
@@ -110,7 +117,7 @@
           var f = await C.followInfo(p.author_id);
           this.classList.toggle("on", f.mine);
           this.textContent = f.mine ? "✓ Following" : "+ Follow";
-        } catch (e) {}
+        } catch (e) { this.classList.toggle("on", !on); alert("Follow failed — " + (e && e.message ? e.message : e)); }
       });
       var lb = root.querySelector("[data-audio]");
       if (lb) lb.addEventListener("click", function () { C.playAudio(lb.getAttribute("data-audio"), lb.getAttribute("data-title")); });
@@ -120,9 +127,14 @@
         try { await C.deletePost(id); location.href = "stories.html"; } catch (e) { alert("Delete failed."); }
       });
       document.getElementById("shareBtn").addEventListener("click", function () {
-        var url = location.href;
-        if (navigator.share) navigator.share({ title: p.title, url: url }).catch(function () {});
-        else if (navigator.clipboard) { navigator.clipboard.writeText(url); this.textContent = "✓ Copied"; }
+        var url = location.origin + location.pathname + "?s=" + String(p.id).slice(0, 8);
+        var self = this;
+        if (navigator.share) navigator.share({ title: p.title + " — TheSmallBook", url: url }).catch(function () {});
+        else if (navigator.clipboard) {
+          navigator.clipboard.writeText(url).catch(function () {});
+          self.textContent = "✓ Link copied";
+          setTimeout(function () { self.textContent = "🔗 Share"; }, 1600);
+        }
       });
       var send = document.getElementById("cmtSend");
       if (send) send.addEventListener("click", async function () {
@@ -142,7 +154,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=194" defer></script>
-  <script src="js/gate.js?v=194" defer></script>
+  <script src="js/bar.js?v=197" defer></script>
+  <script src="js/gate.js?v=197" defer></script>
 </body>
 </html>

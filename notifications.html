@@ -19,14 +19,14 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=194">
+  <link rel="stylesheet" href="css/style.css?v=197">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body class="cmpage notifpage">
   <header class="cm-top">
-    <a class="cm-top__back" href="stories.html" aria-label="Back">←</a>
+    <a class="cm-top__back" id="ntBack" href="stories.html" aria-label="Back">←</a>
     <h1 class="cm-top__t">🔔 Notifications & updates</h1>
     <span></span>
   </header>
@@ -37,16 +37,28 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=194"></script>
-  <script src="js/lang.js?v=194"></script>
-  <script src="js/config.js?v=194"></script>
-  <script src="js/auth.js?v=194"></script>
-  <script src="js/community.js?v=194"></script>
+  <script src="js/prefs.js?v=197"></script>
+  <script src="js/lang.js?v=197"></script>
+  <script src="js/config.js?v=197"></script>
+  <script src="js/auth.js?v=197"></script>
+  <script src="js/community.js?v=197"></script>
   <script>
   (function () {
     "use strict";
     var C = window.TSB_COMMUNITY;
     var list = document.getElementById("nList");
+
+    /* smart back: return to wherever the reader came from (You or Stories) */
+    (function () {
+      var back = document.getElementById("ntBack");
+      if (!back) return;
+      back.addEventListener("click", function (e) {
+        try {
+          var ref = document.referrer ? new URL(document.referrer) : null;
+          if (ref && ref.host === location.host && history.length > 1) { e.preventDefault(); history.back(); }
+        } catch (err) {}
+      });
+    })();
     C.whenReady(function () {
     if (!C.signedIn()) {
       list.innerHTML = '<div class="cm-empty">Sign in to see your notifications.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>';
@@ -91,6 +103,6 @@
     });
   })();
   </script>
-  <script src="js/bar.js?v=194" defer></script>
+  <script src="js/bar.js?v=197" defer></script>
 </body>
 </html>

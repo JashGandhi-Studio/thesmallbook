@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=194">
+  <link rel="stylesheet" href="css/style.css?v=197">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,11 +31,11 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=194"></script>
-  <script src="js/lang.js?v=194"></script>
-  <script src="js/config.js?v=194"></script>
-  <script src="js/auth.js?v=194"></script>
-  <script src="js/community.js?v=194"></script>
+  <script src="js/prefs.js?v=197"></script>
+  <script src="js/lang.js?v=197"></script>
+  <script src="js/config.js?v=197"></script>
+  <script src="js/auth.js?v=197"></script>
+  <script src="js/community.js?v=197"></script>
   <script>
   (function () {
     "use strict";
@@ -53,8 +53,15 @@
       try { prof = await C.getProfile(pid); } catch (e) {}
       try { posts = await C.listPosts({ author: pid }); } catch (e) {}
       try { fol = await C.followInfo(pid); } catch (e) {}
-      if (!prof) prof = { id: pid, name: (posts[0] || {}).author_name || "Reader", avatar_url: (posts[0] || {}).author_avatar || "", bio: "" };
       var mine = pid === meId;
+      var md = (me && me.user_metadata) || {};
+      var gName = "";
+      try { gName = (window.TSB_AUTH && TSB_AUTH.displayName) ? (TSB_AUTH.displayName() || "") : ""; } catch (e) {}
+      gName = gName || md.full_name || md.name || "";
+      var gPic = md.avatar_url || md.picture || "";
+      if (!prof) prof = { id: pid, name: mine ? (gName || "Reader") : ((posts[0] || {}).author_name || "Reader"), avatar_url: mine ? gPic : ((posts[0] || {}).author_avatar || ""), bio: "" };
+      if (mine && !prof.avatar_url && gPic) prof.avatar_url = gPic;
+      if (mine && (!prof.name || prof.name === "Reader") && gName) prof.name = gName;
       var likesGot = 0;
       if (mine) {
         try { likesGot = (await C.likesOnMyPosts()).length; } catch (e) {}
@@ -63,7 +70,7 @@
 
       root.innerHTML =
         '<header class="cm-profhead">' +
-          '<div class="cm-ava cm-ava--xl">' + (prof.avatar_url ? '<img src="' + C.esc(prof.avatar_url) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
+          '<div class="cm-ava cm-ava--xl">' + (C.avaUrl(prof.name, prof.avatar_url, pid) ? '<img src="' + C.esc(C.avaUrl(prof.name, prof.avatar_url, pid)) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
           "<h1>" + C.esc(prof.name) + (mine ? " <i>(you)</i>" : "") + "</h1>" +
           (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
           (prof.progress ? '<span class="cm-prog">📚 ' + prof.progress + "/2176 lessons read</span>" : "") +
@@ -75,12 +82,12 @@
           '<div class="cm-sharecard">' +
             '<div class="cm-sharecard__brand">📕 THESMALLBOOK · COMMUNITY</div>' +
             '<div class="cm-sharecard__who">' +
-              '<div class="cm-ava cm-ava--lg">' + (prof.avatar_url ? '<img src="' + C.esc(prof.avatar_url) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
+              '<div class="cm-ava cm-ava--lg">' + (C.avaUrl(prof.name, prof.avatar_url, pid) ? '<img src="' + C.esc(C.avaUrl(prof.name, prof.avatar_url, pid)) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
               '<div><b>' + C.esc(prof.name) + (C.isOfficial(pid) ? '<span class="cm-vtick">✔</span>' : "") + "</b>" +
               '<span class="cm-time">ID ' + pid.slice(0, 8) + "</span></div>" +
             "</div>" +
             (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
-            '<a class="cm-write" href="profile.html?id=' + pid + '">' + (mine ? "This is you — share this card" : "Subscribe — follow on TheSmallBook") + "</a>" +
+            '<span class="cm-sharecard__cta">' + (mine ? "This is you — share this card 📤" : "🔔 Subscribe — follow on TheSmallBook") + "</span>" +
           "</div>" +
           '<div class="cm-sharerow">' +
             '<button class="setbtn" id="shareId">🆔 Copy ID</button>' +
@@ -96,7 +103,7 @@
                 '<label class="cm-lbl">Bio<input id="pBio" class="setinput" maxlength="120" value="' + C.esc(prof.bio || "") + '" placeholder="One line about you"></label>' +
                 '<button class="cm-pub cm-pub--sm" id="pSave">Save profile</button>' +
               "</div>"
-            : '<button class="cm-follow' + (fol.mine ? " on" : "") + '" data-follow="' + pid + '">' + (fol.mine ? "✓ Following" : "+ Follow") + "</button>") +
+            : '<button class="cm-sub' + (fol.mine ? " on" : "") + '" data-follow="' + pid + '">' + (fol.mine ? "✓ Subscribed" : "🔔 Subscribe") + "</button>") +
         "</header>" +
         '<h2 class="cm-sect">' + (mine ? "📔 Your stories" : "✍️ Stories") + "</h2>" +
         '<div class="cm-feed cm-feed--tight" id="pfeed">' +
@@ -152,19 +159,90 @@
           await C.setFollow(pid, on);
           var f = await C.followInfo(pid);
           this.classList.toggle("on", f.mine);
-          this.textContent = f.mine ? "✓ Following" : "+ Follow";
-        } catch (e) {}
+          this.textContent = f.mine ? "✓ Subscribed" : "🔔 Subscribe";
+          var fc = root.querySelector(".cm-stats b");
+        } catch (e) { alert((on ? "Subscribe" : "Unsubscribe") + " failed — " + (e && e.message ? e.message : e)); }
       });
+      function copyTxt(t) {
+        if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).catch(function () {}); return; }
+        try {
+          var ta = document.createElement("textarea");
+          ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0";
+          document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove();
+        } catch (e) {}
+      }
       document.getElementById("shareId").addEventListener("click", function () {
         var txt = pid.slice(0, 8);
-        if (navigator.clipboard) navigator.clipboard.writeText(txt);
+        copyTxt(txt);
         this.textContent = "✓ Copied " + txt;
+        var self = this; setTimeout(function () { self.textContent = "🆔 Copy ID"; }, 1600);
       });
-      document.getElementById("shareProfile").addEventListener("click", function () {
+      async function makeShareCard() {
+        var W = 1080, H = 640;
+        var cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+        var x = cv.getContext("2d");
+        x.fillStyle = "#fffdf4"; x.fillRect(0, 0, W, H);
+        x.fillStyle = "#ffc800"; x.fillRect(0, 0, W, 120);
+        x.fillStyle = "#1c1a17";
+        x.font = "800 44px 'Space Grotesk', sans-serif";
+        x.fillText("\u{1F4D5} THESMALLBOOK", 44, 78);
+        x.font = "600 26px 'Space Grotesk', sans-serif";
+        x.fillText("COMMUNITY", W - 220, 76);
+        var ax = 170, ay = 330, r = 100;
+        var avaSrc = C.avaUrl(prof.name, prof.avatar_url, pid);
+        var drew = false;
+        if (avaSrc) {
+          try {
+            var img = new Image(); img.crossOrigin = "anonymous";
+            await new Promise(function (res, rej) { img.onload = res; img.onerror = rej; img.src = avaSrc; });
+            x.save(); x.beginPath(); x.arc(ax, ay, r, 0, 7); x.clip();
+            x.drawImage(img, ax - r, ay - r, 2 * r, 2 * r); x.restore();
+            drew = true;
+          } catch (e) {}
+        }
+        if (!drew) {
+          x.fillStyle = "#ffc800"; x.beginPath(); x.arc(ax, ay, r, 0, 7); x.fill();
+          x.fillStyle = "#1c1a17"; x.font = "800 100px sans-serif"; x.textAlign = "center";
+          x.fillText((prof.name || "R").charAt(0).toUpperCase(), ax, ay + 36); x.textAlign = "left";
+        }
+        x.lineWidth = 8; x.strokeStyle = "#1c1a17"; x.beginPath(); x.arc(ax, ay, r + 4, 0, 7); x.stroke();
+        x.fillStyle = "#1c1a17";
+        x.font = "800 62px 'Space Grotesk', sans-serif";
+        x.fillText(String(prof.name).slice(0, 22) + (C.isOfficial(pid) ? "  \u2714" : ""), 320, 300);
+        x.fillStyle = "#55504a"; x.font = "500 32px 'Space Grotesk', sans-serif";
+        x.fillText(String(prof.bio || "Reader on TheSmallBook").slice(0, 48), 320, 356);
+        x.fillStyle = "#1c1a17"; x.font = "700 28px 'Space Grotesk', sans-serif";
+        x.fillText("ID " + pid.slice(0, 8) + (prof.progress ? "   \u00B7   \u{1F4DA} " + prof.progress + "/2176 lessons" : ""), 320, 412);
+        x.fillStyle = "#1c1a17"; x.fillRect(44, H - 150, W - 88, 104);
+        x.fillStyle = "#ffc800"; x.font = "800 44px 'Space Grotesk', sans-serif";
+        x.fillText("\u{1F514} Subscribe on TheSmallBook", 84, H - 84);
+        x.lineWidth = 10; x.strokeStyle = "#1c1a17"; x.strokeRect(5, 5, W - 10, H - 10);
+        return cv;
+      }
+      document.getElementById("shareProfile").addEventListener("click", async function () {
+        var self = this;
         var url = location.origin + "/profile.html?id=" + pid;
-        var msg = "Read " + prof.name + "'s stories on TheSmallBook 📕 " + url;
-        if (navigator.share) navigator.share({ title: prof.name + " — TheSmallBook", text: msg, url: url }).catch(function () {});
-        else if (navigator.clipboard) { navigator.clipboard.writeText(msg); this.textContent = "✓ Link copied"; }
+        self.textContent = "\u2026 making your card";
+        try {
+          var cv = await makeShareCard();
+          var blob = await new Promise(function (r) { cv.toBlob(r, "image/png"); });
+          var file = new File([blob], "thesmallbook-" + String(prof.name).replace(/\W+/g, "-") + ".png", { type: "image/png" });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({ files: [file], title: prof.name + " \u2014 TheSmallBook", text: "Read " + prof.name + "'s stories on TheSmallBook \u{1F4D5}", url: url });
+            self.textContent = "\u2713 Shared";
+          } else if (navigator.share) {
+            await navigator.share({ title: prof.name + " \u2014 TheSmallBook", text: "Read " + prof.name + "'s stories on TheSmallBook \u{1F4D5}", url: url }).catch(function () {});
+            self.textContent = "\u2713 Shared";
+          } else {
+            var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
+            copyTxt(url);
+            self.textContent = "\u2713 Card saved + link copied";
+          }
+        } catch (e) {
+          copyTxt(url);
+          self.textContent = "\u2713 Link copied";
+        }
+        setTimeout(function () { self.textContent = "\u{1F517} Share profile"; }, 2200);
       });
       C.syncProgress();
       if (mine) C.ensureProfile();
@@ -176,7 +254,7 @@
           var url = await C.upload(f, "tsb-avatars");
           await C.api("profiles?id=eq." + meId, { method: "PATCH", body: { avatar_url: url } });
           boot();
-        } catch (e) { alert("Avatar upload failed."); }
+        } catch (e) { alert("Avatar upload failed — " + (e && e.message ? e.message : e)); }
       });
       var save = document.getElementById("pSave");
       if (save) save.addEventListener("click", async function () {
@@ -185,13 +263,13 @@
           await C.api("profiles?id=eq." + meId, { method: "PATCH", body: { name: nm, bio: document.getElementById("pBio").value.trim() } });
           if (window.TSB_AUTH && TSB_AUTH.setDisplayName) TSB_AUTH.setDisplayName(nm);
           boot();
-        } catch (e) { alert("Save failed."); }
+        } catch (e) { alert("Save failed — " + (e && e.message ? e.message : e)); }
       });
     }
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=194" defer></script>
-  <script src="js/gate.js?v=194" defer></script>
+  <script src="js/bar.js?v=197" defer></script>
+  <script src="js/gate.js?v=197" defer></script>
 </body>
 </html>

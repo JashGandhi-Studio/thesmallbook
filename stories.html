@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=194">
+  <link rel="stylesheet" href="css/style.css?v=197">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -54,11 +54,11 @@
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="js/prefs.js?v=194"></script>
-  <script src="js/lang.js?v=194"></script>
-  <script src="js/config.js?v=194"></script>
-  <script src="js/auth.js?v=194"></script>
-  <script src="js/community.js?v=194"></script>
+  <script src="js/prefs.js?v=197"></script>
+  <script src="js/lang.js?v=197"></script>
+  <script src="js/config.js?v=197"></script>
+  <script src="js/auth.js?v=197"></script>
+  <script src="js/community.js?v=197"></script>
   <script>
   (function () {
     "use strict";
@@ -115,8 +115,9 @@
       rail = rail.slice(0, 12);
       if (!rail.length) return "";
       return '<div class="cm-rail">' + rail.map(function (p) {
-        var av = p.author_avatar
-          ? '<img src="' + C.esc(p.author_avatar) + '" alt="">'
+        var avu = C.avaUrl(p.author_name, p.author_avatar, p.author_id);
+        var av = avu
+          ? '<img src="' + C.esc(avu) + '" alt="">'
           : "<span>" + C.esc((p.author_name || "R").charAt(0).toUpperCase()) + "</span>";
         return '<a class="cm-rail__i' + (followSet[p.author_id] ? " fol" : "") + '" href="profile.html?id=' + p.author_id + '" title="' + C.esc(p.author_name) + '">' +
           '<span class="cm-rail__ring">' + av + "</span>" +
@@ -125,7 +126,7 @@
     }
 
     function card(p, extra) {
-      var prof = { avatar_url: p.author_avatar || "" };
+      var prof = { avatar_url: C.avaUrl(p.author_name, p.author_avatar, p.author_id) };
       var hue = parseInt(String(p.id).replace(/-/g, "").slice(0, 4), 16) % 360;
       var cover = p.cover_url
         ? '<img src="' + C.esc(p.cover_url) + '" alt="" loading="lazy">'
@@ -202,7 +203,7 @@
           var isMe = me && p.id === me.id;
           return '<div class="cm-person">' +
             '<div class="cm-person__top">' +
-            '<div class="cm-ava cm-ava--lg">' + (p.avatar_url ? '<img src="' + C.esc(p.avatar_url) + '" alt="">' : "<span>" + C.esc((p.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
+            '<div class="cm-ava cm-ava--lg">' + (C.avaUrl(p.name, p.avatar_url, p.id) ? '<img src="' + C.esc(C.avaUrl(p.name, p.avatar_url, p.id)) + '" alt="">' : "<span>" + C.esc((p.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
             '<div class="cm-person__meta">' +
               '<a class="cm-name" href="profile.html?id=' + p.id + '">' + C.esc(p.name) + (C.isOfficial(p.id) ? '<span class="cm-vtick">✔</span>' : "") + (isMe ? ' <span class="cm-time">· you</span>' : "") + "</a>" +
               (p.progress ? '<span class="cm-time">📚 ' + p.progress + '/2176 lessons read</span>' : "") +
@@ -228,7 +229,7 @@
           '<div class="cm-reel__grad"></div>' +
           '<div class="cm-reel__body">' +
             '<a class="cm-reel__who" href="story.html?id=' + p.id + '">' +
-              '<div class="cm-ava">' + (p.author_avatar ? '<img src="' + C.esc(p.author_avatar) + '" alt="">' : "<span>" + C.esc((p.author_name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
+              '<div class="cm-ava">' + (C.avaUrl(p.author_name, p.author_avatar, p.author_id) ? '<img src="' + C.esc(C.avaUrl(p.author_name, p.author_avatar, p.author_id)) + '" alt="">' : "<span>" + C.esc((p.author_name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
               "<b>" + C.esc(p.author_name) + (C.isOfficial(p.author_id) ? '<span class="cm-vtick">✔</span>' : "") + "</b>" +
             "</a>" +
             '<h3 class="cm-reel__t">' + C.esc(p.title) + "</h3>" +
@@ -329,6 +330,30 @@
       } catch (err) {}
     });
 
+    /* ---------- double-tap a cover = like (heart burst) ---------- */
+    feed.addEventListener("dblclick", async function (e) {
+      var cov = e.target.closest(".cm-card__cover");
+      if (!cov) return;
+      e.preventDefault();
+      if (!C.signedIn()) { location.href = "login.html"; return; }
+      var cardEl = cov.closest("[data-post]");
+      var id = cardEl && cardEl.getAttribute("data-post");
+      if (!id) return;
+      try {
+        await C.setLike(id, true);
+        var info = await C.likeInfo(id);
+        cardEl.querySelectorAll('[data-like="' + id + '"]').forEach(function (b) {
+          b.classList.add("on");
+          b.querySelector("b").textContent = info.count;
+        });
+        var h = document.createElement("span");
+        h.className = "cm-heart";
+        h.textContent = "♥";
+        cov.appendChild(h);
+        setTimeout(function () { h.remove(); }, 900);
+      } catch (err) {}
+    });
+
     /* ---------- feed actions ---------- */
     feed.addEventListener("click", async function (e) {
       var t;
@@ -336,12 +361,16 @@
         e.preventDefault();
         if (!C.signedIn()) { location.href = "login.html"; return; }
         var on = !t.classList.contains("on");
+        t.classList.toggle("on", on);
         try {
           await C.setLike(t.getAttribute("data-like"), on);
           var info = await C.likeInfo(t.getAttribute("data-like"));
           t.classList.toggle("on", info.mine);
           t.querySelector("b").textContent = info.count;
-        } catch (err) {}
+        } catch (err) {
+          t.classList.toggle("on", !on);
+          alert("Like failed — " + (err && err.message ? err.message : err));
+        }
         return;
       }
       if ((t = e.target.closest("[data-pfol]"))) {
@@ -352,7 +381,7 @@
           await C.setFollow(t.getAttribute("data-pfol"), on2);
           t.classList.toggle("on", on2);
           t.textContent = on2 ? "Following ✓" : "+ Follow";
-        } catch (err) {}
+        } catch (err) { alert("Follow failed — " + (err && err.message ? err.message : err)); }
         t.disabled = false;
         return;
       }
@@ -362,23 +391,30 @@
         try {
           var rid = t.getAttribute("data-rlike");
           var onR = !t.classList.contains("on");
+          t.classList.toggle("on", onR);
           await C.setLike(rid, onR);
           var infoR = await C.likeInfo(rid);
           t.classList.toggle("on", !!infoR.mine);
           t.querySelector("b").textContent = infoR.count;
-        } catch (err) {}
+        } catch (err) { t.classList.toggle("on", !onR); alert("Like failed — " + (err && err.message ? err.message : err)); }
         t.disabled = false;
         return;
       }
       if ((t = e.target.closest("[data-follow]"))) {
         if (!C.signedIn()) { location.href = "login.html"; return; }
         var on2 = !t.classList.contains("on");
+        t.classList.toggle("on", on2);
+        t.textContent = on2 ? "✓ Following" : "+ Follow";
         try {
           await C.setFollow(t.getAttribute("data-follow"), on2);
           var f = await C.followInfo(t.getAttribute("data-follow"));
           t.classList.toggle("on", f.mine);
           t.textContent = f.mine ? "✓ Following" : "+ Follow";
-        } catch (err) {}
+        } catch (err) {
+          t.classList.toggle("on", !on2);
+          t.textContent = !on2 ? "✓ Following" : "+ Follow";
+          alert("Follow failed — " + (err && err.message ? err.message : err));
+        }
         return;
       }
       if ((t = e.target.closest("[data-audio]"))) {
@@ -416,42 +452,6 @@
       } catch (err) {}
     });
 
-    /* ---------- feed actions ---------- */
-    feed.addEventListener("click", async function (e) {
-      var t;
-      if ((t = e.target.closest("[data-like]"))) {
-        e.preventDefault();
-        if (!C.signedIn()) { location.href = "login.html"; return; }
-        var on = !t.classList.contains("on");
-        try {
-          await C.setLike(t.getAttribute("data-like"), on);
-          var info = await C.likeInfo(t.getAttribute("data-like"));
-          t.classList.toggle("on", info.mine);
-          t.querySelector("b").textContent = info.count;
-        } catch (err) {}
-        return;
-      }
-      if ((t = e.target.closest("[data-follow]"))) {
-        if (!C.signedIn()) { location.href = "login.html"; return; }
-        var on2 = !t.classList.contains("on");
-        try {
-          await C.setFollow(t.getAttribute("data-follow"), on2);
-          var f = await C.followInfo(t.getAttribute("data-follow"));
-          t.classList.toggle("on", f.mine);
-          t.textContent = f.mine ? "✓ Following" : "+ Follow";
-        } catch (err) {}
-        return;
-      }
-      if ((t = e.target.closest("[data-audio]"))) {
-        C.playAudio(t.getAttribute("data-audio"), t.getAttribute("data-title"));
-        return;
-      }
-      if ((t = e.target.closest("[data-del]"))) {
-        if (!confirm("Delete this story for everyone?")) return;
-        try { await C.deletePost(t.getAttribute("data-del")); load(); } catch (err) { alert("Couldn't delete — are you signed in as the author?"); }
-        return;
-      }
-    });
 
     document.getElementById("writeBtn").addEventListener("click", function () { location.href = "write.html"; });
 
@@ -463,7 +463,7 @@
     load();
   })();
   </script>
-  <script src="js/bar.js?v=194" defer></script>
-  <script src="js/gate.js?v=194" defer></script>
+  <script src="js/bar.js?v=197" defer></script>
+  <script src="js/gate.js?v=197" defer></script>
 </body>
 </html>

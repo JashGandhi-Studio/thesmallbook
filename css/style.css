@@ -5446,3 +5446,18 @@ html.dark .acc__levelcard { background: #241f17; }
 /* v19d — auto default covers */
 .cm-card__cover .cm-quote { font-family: var(--font-head); font-size: 3.4rem; color: var(--ink); opacity: 1; display: grid; place-items: center; }
 .cm-card--quote .cm-card__cover .cm-quote { background: none !important; font-family: Georgia, serif; font-size: 2.6rem; }
+
+
+/* v19e — smooth section transitions */
+@keyframes cmFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.cm-feed > *, .nt-list > *, .dm-list > * { animation: cmFadeIn .22s ease both; }
+.cm-wrap, .wr-wrap { animation: cmFadeIn .25s ease both; }
+@media (prefers-reduced-motion: reduce) { .cm-feed > *, .nt-list > *, .dm-list > *, .cm-wrap, .wr-wrap { animation: none; } }
+
+
+/* v19f — Subscribe (Substack-style) + share card CTA */
+.cm-sub { width: 100%; border: 3px solid var(--ink); background: var(--yellow); color: var(--ink); border-radius: 14px; padding: 13px 18px; font: inherit; font-weight: 800; font-size: .95rem; cursor: pointer; box-shadow: 3.5px 3.5px 0 var(--ink); }
+.cm-sub.on { background: #00c48c; color: #fff; }
+.cm-sub:active { transform: translate(2px, 2px); box-shadow: 1.5px 1.5px 0 var(--ink); }
+.cm-sharecard__cta { font-family: var(--font-head); font-size: .74rem; letter-spacing: 1px; text-transform: uppercase; color: #55504a; text-align: center; }
+html.dark .cm-sharecard__cta { color: #b7b0a5; }
