@@ -4255,3 +4255,838 @@ html.dark .search .scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
 .scanmodal__typehit b { font-family: "Archivo Black", sans-serif; font-size: .72rem; text-transform: uppercase; }
 .scanmodal__typehit small { font-size: .64rem; color: #777; }
 .scanmodal__typenone { color: #bbb; font-size: .72rem; font-weight: 700; }
+
+
+/* ============================================================
+   📱 PREMIUM BOTTOM ACTION BAR — Home · Read · + · Chat · You
+   ------------------------------------------------------------
+   NON-NEGOTIABLE RULES (do not break):
+   1. The bar is centred with left:50% → EVERY rule that
+      re-declares transform on .tsb-bar MUST re-state
+      translateX(-50%), or the bar slides diagonally off-screen.
+   2. Animate transform & opacity ONLY — never bottom/height/width.
+   3. The active state is painted ONLY by .tsb-bar__item::before.
+      No background on the item itself (double-layering).
+   4. `contain: layout paint` stays on the bar (no page reflow).
+   5. Scrolling pages: padding-bottom: calc(var(--bar-total) + 24px)
+      (applied below via html.tsb-hasbar, set by js/bar.js).
+   ============================================================ */
+:root {
+  --tsb-bar-h: 64px;
+  --tsb-bar-gap: 10px;
+  --bar-total: calc(var(--tsb-bar-h) + var(--tsb-bar-gap) + env(safe-area-inset-bottom, 0px));
+}
+.tsb-bar {
+  position: fixed;
+  bottom: calc(var(--tsb-bar-gap) + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  width: min(560px, calc(100vw - 14px));
+  display: flex; align-items: stretch;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 22px;
+  box-shadow: 5px 6px 0 var(--ink);
+  contain: layout paint;
+  z-index: 260;
+  opacity: 1;
+  transition: transform .32s cubic-bezier(.2,.9,.3,1.08), opacity .26s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+/* parked state (enter + scroll-hide): straight down, translateX kept! */
+.tsb-bar--off {
+  transform: translateX(-50%) translateY(calc(100% + var(--bar-total) + 30px));
+  opacity: 0;
+}
+.tsb-bar__item {
+  position: relative;
+  isolation: isolate;
+  flex: 1 1 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px;
+  min-height: var(--tsb-bar-h);
+  padding: 8px 2px;
+  border: 0;
+  background: none;                 /* ::before owns the active state */
+  color: #8f8a80;
+  font-family: var(--font-body);
+  font-size: 11px; font-weight: 600; line-height: 1;
+  letter-spacing: .2px;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .12s ease, color .12s ease;
+}
+.tsb-bar__item:active { transform: scale(.92); }
+.tsb-bar__item svg { width: 22px; height: 22px; display: block; }
+/* ACTIVE PILL — painted ONLY by this ::before (rule 3) */
+.tsb-bar__item::before {
+  content: "";
+  position: absolute;
+  inset: 6px 7px;
+  border-radius: 14px;
+  background: var(--yellow);
+  border: 3px solid var(--ink);
+  opacity: 0;
+  transform: scale(.55);
+  transition: opacity .18s ease, transform .24s cubic-bezier(.2,.9,.3,1.35);
+  z-index: -1;
+}
+.tsb-bar__item.is-active { color: #111111; }
+.tsb-bar__item.is-active::before { opacity: 1; transform: scale(1); }
+/* centre red + (scan) */
+.tsb-bar__item--plus { color: #fff; }
+.tsb-bar__plus {
+  width: 46px; height: 46px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--red);
+  border: 3px solid var(--ink);
+  border-radius: 15px;
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: transform .12s ease;
+}
+.tsb-bar__plus svg { width: 22px; height: 22px; }
+.tsb-bar__item--plus:active .tsb-bar__plus { transform: scale(.92); }
+/* dark mode */
+html.dark .tsb-bar { border-color: #000; box-shadow: 5px 6px 0 #000; }
+html.dark .tsb-bar__item { color: #8d867b; }
+html.dark .tsb-bar__item.is-active { color: #111111; }
+html.dark .tsb-bar__item::before { border-color: #000; }
+html.dark .tsb-bar__plus { border-color: #000; box-shadow: 3px 3px 0 #000; }
+/* rule 5: page padding + lift every bottom-fixed widget above the bar */
+@media (max-width: 768px) {
+  html.tsb-hasbar body { padding-bottom: calc(var(--bar-total) + 24px); }
+  html.tsb-hasbar .toast { bottom: calc(var(--bar-total) + 32px); }
+  html.tsb-hasbar .achvpop { bottom: calc(var(--bar-total) + 16px); }
+  html.tsb-hasbar .aq-panel { bottom: calc(var(--bar-total) + 12px); height: min(70vh, 620px); }
+  html.tsb-hasbar .tsb-player { bottom: calc(var(--bar-total) + 14px); }
+  html.tsb-hasbar .lessonnav__fab { bottom: calc(var(--bar-total) + 18px); }
+  html.tsb-hasbar .lessonnav__panel { bottom: calc(var(--bar-total) + 78px); }
+}
+/* desktop keeps the top nav — bar is mobile-first */
+@media (min-width: 769px) {
+  .tsb-bar { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tsb-bar, .tsb-bar__item::before, .tsb-bar__plus { transition: none; }
+}
+
+
+/* ============================================================
+   📱 v2 UPGRADES — pill trim · sign-in sheet · YOU pages ·
+   full-page chat · settings · 7-step onboarding
+   (bar rules still hold: translateX(-50%) everywhere on .tsb-bar,
+    transform/opacity-only animation, ::before owns active state)
+   ============================================================ */
+
+/* --- active pill: trimmed smaller + premium micro-motion --- */
+.tsb-bar__item svg { transition: transform .18s cubic-bezier(.2,.9,.3,1.3); }
+.tsb-bar__item::before { inset: 8px 10px; border-radius: 12px; border-width: 2.5px; }
+.tsb-bar__item.is-active svg { transform: translateY(-1px) scale(1.05); }
+/* the + (Stories) shows "active" by inverting — no pill behind it */
+.tsb-bar__item--plus::before { display: none; }
+.tsb-bar__item--plus.is-active .tsb-bar__plus { background: var(--ink); color: var(--yellow); }
+
+/* --- 📱 premium sign-in sheet (You tab, signed out) --- */
+.tsb-sheetwrap { position: fixed; inset: 0; z-index: 9995; pointer-events: none; }
+.tsb-sheetveil { position: absolute; inset: 0; background: rgba(10,8,4,.52); opacity: 0; transition: opacity .28s ease; }
+.tsb-sheet {
+  position: absolute; bottom: 0; left: 50%;
+  transform: translateX(-50%) translateY(105%);
+  width: min(560px, 100vw);
+  background: var(--paper); color: var(--ink);
+  border: 3px solid var(--ink); border-bottom: 0;
+  border-radius: 26px 26px 0 0;
+  box-shadow: 0 -10px 44px rgba(0,0,0,.28);
+  padding: 8px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  transition: transform .36s cubic-bezier(.2,.9,.3,1.04);
+}
+.tsb-sheetwrap--on { pointer-events: auto; }
+.tsb-sheetwrap--on .tsb-sheetveil { opacity: 1; }
+.tsb-sheetwrap--on .tsb-sheet { transform: translateX(-50%) translateY(0); }
+.tsb-sheet__grip { width: 46px; height: 5px; border-radius: 99px; background: rgba(127,127,127,.35); margin: 6px auto 10px; }
+.tsb-sheet__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.tsb-sheet__title { font-family: var(--font-head); font-size: 1.05rem; letter-spacing: 1px; }
+.tsb-sheet__x { width: 38px; height: 38px; border: 2.5px solid var(--ink); border-radius: 12px; background: var(--paper); color: var(--ink); font-size: .95rem; font-weight: 700; cursor: pointer; box-shadow: 2.5px 2.5px 0 var(--ink); }
+.tsb-sheet__wave { font-size: 40px; line-height: 1; margin: 4px 0 8px; }
+.tsb-sheet__h { font-family: var(--font-head); font-size: 1.35rem; text-transform: uppercase; margin-bottom: 8px; }
+.tsb-sheet__s { color: #8f8a80; font-size: .88rem; margin-bottom: 16px; }
+.tsb-sheet__perk { display: flex; align-items: center; gap: 12px; text-align: left; border: 2.5px solid var(--ink); border-radius: 14px; background: var(--paper); padding: 13px 14px; margin-bottom: 10px; font-weight: 600; font-size: .9rem; }
+.tsb-sheet__perk span { font-size: 1.25rem; }
+.tsb-sheet__google { width: 100%; margin-top: 8px; background: var(--yellow); color: #111; border: 3px solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); padding: 14px; font-family: var(--font-body); font-weight: 800; font-size: .98rem; cursor: pointer; }
+.tsb-sheet__fine { color: #8f8a80; font-size: .7rem; margin-top: 12px; }
+
+/* --- YOU page: professional sign-in + account (same link) --- */
+.youview { min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: calc(24px + env(safe-area-inset-top, 0px)) 16px calc(110px + env(safe-area-inset-bottom, 0px)); }
+.youpage__x { position: fixed; top: calc(14px + env(safe-area-inset-top, 0px)); right: 14px; z-index: 5; width: 40px; height: 40px; border: 2.5px solid var(--ink); border-radius: 12px; background: var(--paper); color: var(--ink); font-weight: 700; text-decoration: none; display: grid; place-items: center; box-shadow: 2.5px 2.5px 0 var(--ink); }
+.youcard { width: min(560px, 100%); background: var(--paper); color: var(--ink); border: 3px solid var(--ink); border-radius: 26px; box-shadow: 8px 8px 0 var(--ink); padding: 36px 26px 24px; text-align: center; }
+.youcard__icon { width: 76px; height: 76px; margin: 0 auto 16px; display: grid; place-items: center; font-size: 36px; background: var(--yellow); border-radius: 22px; box-shadow: 0 0 44px rgba(255,200,0,.55); }
+.youcard h1 { font-size: 1.55rem; letter-spacing: .5px; margin-bottom: 10px; }
+.youcard__s { color: #8f8a80; font-size: .9rem; margin-bottom: 18px; }
+.youperk { display: flex; align-items: center; gap: 12px; text-align: left; background: var(--bg); border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; }
+.youperk span { font-size: 1.3rem; }
+.youperk b { display: block; font-size: .9rem; }
+.youperk i { font-style: normal; color: #8f8a80; font-size: .76rem; }
+.yougoogle { width: 100%; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--yellow); color: #111; border: 3px solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); padding: 14px; font-family: var(--font-body); font-weight: 800; font-size: 1rem; cursor: pointer; }
+.yougoogle svg { width: 21px; height: 21px; }
+html.dark .yougoogle { background: #fff; color: #111; }
+.youskip { display: inline-block; margin-top: 16px; color: #8f8a80; font-weight: 600; font-size: .85rem; }
+.youfine { color: #8f8a80; font-size: .7rem; line-height: 1.7; margin-top: 14px; }
+.youfine a { color: inherit; }
+
+/* --- account (signed-in state, same URL) --- */
+.accbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; }
+.accbar__acts { display: flex; gap: 8px; }
+.acc { max-width: 640px; margin: 0 auto; padding: 4px 16px calc(120px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 14px; }
+.acc__hero { display: flex; align-items: center; gap: 14px; background: var(--paper); color: var(--ink); border: 3px solid var(--ink); border-radius: 20px; box-shadow: 6px 6px 0 var(--ink); padding: 16px; }
+.acc__ava { flex: none; width: 58px; height: 58px; border-radius: 50%; background: var(--yellow); color: #111; border: 3px solid var(--ink); display: grid; place-items: center; font-family: var(--font-head); font-size: 1.5rem; overflow: hidden; }
+.acc__ava img { width: 100%; height: 100%; object-fit: cover; }
+.acc__who { min-width: 0; }
+.acc__who h1 { font-size: 1.15rem; margin-bottom: 2px; }
+.acc__who p { color: #8f8a80; font-size: .78rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.acc__cloud { margin-left: auto; flex: none; font-size: .58rem; font-weight: 800; letter-spacing: 1px; background: var(--green); color: #06301f; border: 2px solid var(--ink); border-radius: 999px; padding: 6px 10px; }
+.acc__level { background: var(--paper); color: var(--ink); border: 3px solid var(--ink); border-radius: 18px; box-shadow: 5px 5px 0 var(--ink); padding: 14px 16px; }
+.acc__level .levelbar { height: 12px; }
+.acc__level .levelbar i { background: var(--yellow); }
+.acc__stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.accstat { background: var(--paper); color: var(--ink); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 4px 4px 0 var(--ink); padding: 12px 6px; text-align: center; }
+.accstat b { display: block; font-family: var(--font-head); font-size: 1.25rem; margin-bottom: 3px; }
+.accstat span { font-size: .58rem; letter-spacing: .6px; text-transform: uppercase; color: #8f8a80; font-weight: 700; }
+.acc__menu { display: flex; flex-direction: column; gap: 10px; }
+.accrow { display: flex; align-items: center; gap: 12px; background: var(--paper); color: var(--ink); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 4px 4px 0 var(--ink); padding: 14px 16px; text-decoration: none; font-weight: 600; font-size: .88rem; }
+.accrow span { font-size: 1.15rem; }
+.accrow i { margin-left: auto; font-style: normal; color: #8f8a80; }
+.acc__out { background: var(--red); color: #fff; border: 3px solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); padding: 13px; font-family: var(--font-body); font-weight: 800; font-size: .92rem; cursor: pointer; }
+
+/* --- 💬 full-page chat mode (chat.html) --- */
+.tsb-ask--page .aq-panel {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%; max-width: 100%; height: auto;
+  border: 0; border-radius: 0; box-shadow: none;
+  transform: none; opacity: 1; visibility: visible; pointer-events: auto;
+  transition: none;
+}
+@media (max-width: 768px) {
+  .tsb-ask--page .aq-panel { bottom: calc(var(--bar-total) + 10px); }
+}
+.tsb-ask--page .aq-close { display: none; }
+.aq-back { flex: none; width: 36px; height: 36px; margin-right: 6px; border: 2.5px solid var(--ink); border-radius: 11px; background: var(--paper); color: var(--ink); font-size: 1.05rem; font-weight: 800; cursor: pointer; box-shadow: 2.5px 2.5px 0 var(--ink); }
+.aq-search { padding: 10px 12px 0; }
+.aq-search input { width: 100%; border: 2.5px solid var(--ink); border-radius: 13px; background: var(--bg); color: var(--ink); padding: 11px 14px; font-family: var(--font-body); font-size: .9rem; }
+.aq-search input:focus { outline: 2px solid var(--yellow); }
+
+/* --- ⚙️ settings page --- */
+.set { max-width: 640px; margin: 0 auto; padding: 4px 16px calc(120px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 14px; }
+.set__h { font-size: 1.5rem; }
+.setcard { background: var(--paper); color: var(--ink); border: 3px solid var(--ink); border-radius: 20px; box-shadow: 5px 5px 0 var(--ink); padding: 16px; }
+.setcard h2 { font-size: .92rem; margin-bottom: 12px; }
+.setrow { display: flex; gap: 10px; }
+.setopt { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; border: 2.5px solid var(--ink); background: var(--bg); color: var(--ink); border-radius: 14px; padding: 12px; font-family: var(--font-body); font-weight: 700; font-size: .9rem; cursor: pointer; }
+.setopt--md { font-size: 1.15rem; }
+.setopt--lg { font-size: 1.4rem; }
+.setopt.on { background: var(--yellow); color: #111; box-shadow: 3px 3px 0 var(--ink); }
+.sethint { color: #8f8a80; font-size: .72rem; margin-top: 10px; }
+.setlangs { display: grid; grid-template-columns: repeat(auto-fill, minmax(122px, 1fr)); gap: 8px; max-height: 262px; overflow: auto; }
+.setlang { display: flex; align-items: center; gap: 6px; border: 2px solid var(--ink); background: var(--bg); color: var(--ink); border-radius: 12px; padding: 9px 10px; font-family: var(--font-body); font-size: .76rem; font-weight: 600; cursor: pointer; }
+.setlang.on { background: var(--yellow); color: #111; box-shadow: 2.5px 2.5px 0 var(--ink); }
+.setbtn { display: block; width: 100%; margin-top: 10px; border: 2.5px solid var(--ink); background: var(--bg); color: var(--ink); border-radius: 12px; padding: 11px; font-family: var(--font-body); font-weight: 700; font-size: .85rem; cursor: pointer; text-decoration: none; text-align: center; }
+.setbtn--yellow { background: var(--yellow); color: #111; box-shadow: 3px 3px 0 var(--ink); }
+.setbtn--red { background: var(--red); color: #fff; }
+.setacc__in { font-size: .9rem; margin-bottom: 4px; }
+.setacc__in i { color: #8f8a80; }
+
+/* --- 🎯 7-step onboarding --- */
+.ob-lock { overflow: hidden; }
+.obwrap { position: fixed; inset: 0; z-index: 99998; display: flex; align-items: center; justify-content: center; padding: 18px; background: rgba(12,10,6,.55); backdrop-filter: blur(3px); transition: opacity .4s ease; }
+.obwrap--off { opacity: 0; pointer-events: none; }
+.ob { position: relative; width: min(460px, 100%); max-height: min(84dvh, 660px); display: flex; flex-direction: column; background: var(--paper); color: var(--ink); border: 3px solid var(--ink); border-radius: 24px; box-shadow: 10px 10px 0 rgba(0,0,0,.4); padding: 14px 18px calc(18px + env(safe-area-inset-bottom, 0px)); }
+.ob__prog { display: flex; gap: 6px; margin: 6px 0 16px 36px; }
+.ob__prog i { flex: 1; height: 5px; border-radius: 99px; background: rgba(127,127,127,.25); transition: background .25s; }
+.ob__prog i.on { background: var(--yellow); }
+.ob__back { position: absolute; top: 12px; left: 12px; width: 34px; height: 34px; border: 2.5px solid var(--ink); border-radius: 10px; background: var(--paper); color: var(--ink); font-weight: 800; cursor: pointer; box-shadow: 2px 2px 0 var(--ink); }
+.ob__body { position: relative; flex: 1; overflow-y: auto; }
+.ob-step { transition: transform .22s ease, opacity .22s ease; }
+.ob-step--enter { transform: translateX(28px); opacity: 0; }
+.ob-step--enterback { transform: translateX(-28px); }
+.ob-step--out, .ob-step--outback { position: absolute; inset: 0; opacity: 0; }
+.ob-step--out { transform: translateX(-28px); }
+.ob-step--outback { transform: translateX(28px); }
+.ob-step h2 { font-family: var(--font-head); font-size: 1.22rem; text-transform: uppercase; margin: 2px 0 6px; }
+.ob-step__center { text-align: center; padding-top: 6px; }
+.ob-step__center h2 span { color: var(--red); }
+.ob-logo { width: 74px; height: 74px; margin: 6px auto 12px; display: grid; place-items: center; font-size: 34px; background: var(--yellow); border: 3px solid var(--ink); border-radius: 20px; box-shadow: 5px 5px 0 var(--ink); }
+.ob-tag { letter-spacing: 2.4px; font-size: .66rem; text-transform: uppercase; color: #8f8a80; font-weight: 700; margin-bottom: 12px; }
+.ob-sub { color: #8f8a80; font-size: .85rem; margin-bottom: 14px; }
+.ob-input { width: 100%; border: 2.5px solid var(--ink); border-radius: 14px; background: var(--bg); color: var(--ink); padding: 13px 14px; font-family: var(--font-body); font-size: 1rem; margin-bottom: 14px; }
+.ob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 14px; }
+.ob-grid--mins { grid-template-columns: repeat(4, 1fr); }
+.ob-chip { display: flex; align-items: center; gap: 8px; border: 2.5px solid var(--ink); background: var(--bg); color: var(--ink); border-radius: 14px; padding: 11px 12px; font-family: var(--font-body); font-weight: 600; font-size: .8rem; cursor: pointer; text-align: left; }
+.ob-chip span { font-size: 1.05rem; }
+.ob-chip.on { background: var(--yellow); color: #111; box-shadow: 3px 3px 0 var(--ink); }
+.ob-shake { animation: obShake .4s; }
+@keyframes obShake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+.ob-langs { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 8px; max-height: 238px; overflow: auto; margin-bottom: 14px; }
+.ob-lang { display: flex; align-items: center; gap: 6px; border: 2px solid var(--ink); background: var(--bg); color: var(--ink); border-radius: 12px; padding: 9px 10px; font-family: var(--font-body); font-size: .75rem; font-weight: 600; cursor: pointer; }
+.ob-lang.on { background: var(--yellow); color: #111; box-shadow: 2.5px 2.5px 0 var(--ink); }
+.ob-btns { display: flex; gap: 10px; align-items: center; }
+.ob-cta { flex: 1; background: var(--yellow); color: #111; border: 3px solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); padding: 13px; font-family: var(--font-body); font-weight: 800; font-size: .95rem; cursor: pointer; }
+.ob-skip { background: none; border: 0; color: #8f8a80; font-family: var(--font-body); font-weight: 600; cursor: pointer; }
+.ob-step--done { text-align: center; padding-top: 26px; }
+
+/* --- dark-mode ink swaps for the new surfaces --- */
+html.dark .tsb-sheet, html.dark .youcard, html.dark .acc__hero, html.dark .accstat,
+html.dark .accrow, html.dark .setcard, html.dark .ob, html.dark .ob-chip,
+html.dark .setopt, html.dark .setlang, html.dark .ob-lang, html.dark .acc__out,
+html.dark .yougoogle, html.dark .tsb-sheet__google, html.dark .tsb-sheet__x,
+html.dark .ob-cta, html.dark .aq-back, html.dark .setbtn, html.dark .youpage__x { border-color: #000; }
+html.dark .youcard { box-shadow: 8px 8px 0 #000; }
+html.dark .acc__hero, html.dark .ob { box-shadow: 6px 6px 0 #000; }
+html.dark .accstat, html.dark .accrow, html.dark .setcard, html.dark .acc__out,
+html.dark .yougoogle, html.dark .ob-cta, html.dark .tsb-sheet__google { box-shadow: 4px 4px 0 #000; }
+html.dark .tsb-sheet__x, html.dark .aq-back, html.dark .youpage__x { box-shadow: 2.5px 2.5px 0 #000; }
+html.dark .tsb-sheet { border-bottom: 0; }
+
+
+/* ============================================================
+   v3 POLISH — bar side-gap + pill trim · onboarding rows ·
+   premium sign-in glow · ChatGPT-clean chat page
+   ============================================================ */
+
+/* --- bar: ~11px breathing gap from each screen edge --- */
+.tsb-bar { width: min(560px, calc(100vw - 22px)); }
+/* --- active pill: trimmed again (11px side gap inside each tab) --- */
+.tsb-bar__item::before { inset: 9px 11px; border-radius: 12px; }
+
+/* --- onboarding v3: full-width rows (overlap-proof) --- */
+.ob-rows { display: flex; flex-direction: column; gap: 9px; margin-bottom: 14px; }
+.ob-row {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  border: 2.5px solid var(--ink); background: var(--bg); color: var(--ink);
+  border-radius: 16px; padding: 12px 14px;
+  font-family: var(--font-body); font-weight: 700; font-size: .9rem;
+  text-align: left; cursor: pointer;
+  transition: transform .12s ease, background .12s ease;
+}
+.ob-row:active { transform: scale(.985); }
+.ob-row .ic { flex: none; font-size: 1.3rem; line-height: 1; }
+.ob-row small { display: block; font-weight: 500; font-size: .72rem; color: #8f8a80; margin-top: 2px; }
+.ob-row .tick { margin-left: auto; flex: none; font-weight: 800; opacity: 0; transition: opacity .15s; }
+.ob-row.on { background: var(--yellow); color: #111; box-shadow: 3px 3px 0 var(--ink); }
+.ob-row.on small { color: #5a4300; }
+.ob-row.on .tick { opacity: 1; }
+.ob-seg { display: flex; border: 2.5px solid var(--ink); border-radius: 16px; overflow: hidden; background: var(--bg); }
+.ob-seg button {
+  flex: 1; padding: 13px 4px; border: 0; border-right: 2.5px solid var(--ink);
+  background: transparent; color: var(--ink);
+  font-family: var(--font-head); font-size: 1rem; cursor: pointer;
+}
+.ob-seg button:last-child { border-right: 0; }
+.ob-seg button.on { background: var(--yellow); color: #111; }
+.ob-sub--mt { margin-top: 12px; }
+.ob-langs { grid-template-columns: 1fr 1fr; }
+.ob-lang { justify-content: flex-start; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 380px) {
+  .ob-row { font-size: .84rem; padding: 11px 12px; gap: 10px; }
+  .ob-row .ic { font-size: 1.15rem; }
+  .ob-langs { grid-template-columns: 1fr; }
+}
+html.dark .ob-row, html.dark .ob-seg { border-color: #000; }
+html.dark .ob-row.on, html.dark .ob-seg button.on { box-shadow: 3px 3px 0 #000; }
+
+/* --- premium sign-in: soft blue/violet glow page (your screenshot) --- */
+#view-signin {
+  background:
+    radial-gradient(620px 340px at 85% -10%, rgba(77,124,255,.22), transparent 62%),
+    radial-gradient(520px 300px at -10% 32%, rgba(255,77,77,.14), transparent 60%),
+    radial-gradient(720px 420px at 50% 112%, rgba(178,141,255,.18), transparent 66%),
+    var(--bg);
+}
+html.dark #view-signin {
+  background:
+    radial-gradient(660px 360px at 85% -10%, rgba(93,136,255,.30), transparent 62%),
+    radial-gradient(560px 320px at -10% 32%, rgba(255,82,82,.20), transparent 60%),
+    radial-gradient(780px 460px at 50% 112%, rgba(178,141,255,.24), transparent 66%),
+    #141118;
+}
+.youcard__icon { box-shadow: 0 0 60px rgba(255,200,0,.6), 0 0 0 3px rgba(255,200,0,.22); }
+html.dark .youcard {
+  background: rgba(28,25,23,.84);
+  backdrop-filter: blur(12px);
+  border-color: rgba(242,234,216,.16);
+  box-shadow: 0 26px 70px rgba(0,0,0,.55);
+}
+html.dark .youperk { background: rgba(255,255,255,.05); }
+html.dark .youperk i, html.dark .youcard__s, html.dark .youfine, html.dark .youskip { color: #b3a98f; }
+
+/* --- 💬 chat page: ChatGPT/Claude-clean (same engine, calm UI) --- */
+.tsb-ask--page .aq-panel { background: var(--bg); }
+.tsb-ask--page .aq-head {
+  background: transparent; border: 0; box-shadow: none;
+  padding: 10px 14px; border-bottom: 1px solid rgba(127,127,127,.28);
+}
+.tsb-ask--page .aq-head__t { font-family: var(--font-body); font-weight: 700; font-size: 15px; letter-spacing: 0; }
+.tsb-ask--page .aq-head__s { color: #8f8a80; }
+.tsb-ask--page .aq-libbtn, .tsb-ask--page .aq-clear {
+  background: transparent; border: 2px solid rgba(127,127,127,.4);
+  box-shadow: none; border-radius: 10px;
+}
+.tsb-ask--page .aq-search { max-width: 760px; margin: 0 auto; width: 100%; padding: 12px 16px 0; }
+.tsb-ask--page .aq-search input { border: 2px solid rgba(127,127,127,.4); border-radius: 999px; background: var(--paper); }
+.tsb-ask--page .aq-chips { max-width: 760px; margin: 0 auto; width: 100%; padding: 10px 16px 0; }
+.tsb-ask--page .aq-chip {
+  background: var(--paper); border: 2px solid rgba(127,127,127,.35);
+  box-shadow: none; border-radius: 999px; font-weight: 600;
+}
+.tsb-ask--page .aq-msgs { max-width: 760px; margin: 0 auto; width: 100%; padding: 18px 16px; gap: 18px; }
+.tsb-ask--page .aq-bubble {
+  border: 0; box-shadow: none; background: var(--paper);
+  border-radius: 16px; padding: 12px 15px;
+  font-size: .93rem; line-height: 1.68;
+}
+.tsb-ask--page .aq-bubble--user {
+  background: var(--yellow); color: #111;
+  border-radius: 16px 16px 4px 16px;
+  font-family: var(--font-body); font-weight: 600; font-size: .9rem;
+}
+.tsb-ask--page .aq-av { border: 2px solid var(--ink); box-shadow: none; }
+.tsb-ask--page .aq-inputrow {
+  max-width: 760px; margin: 0 auto; width: 100%;
+  padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: transparent; border-top: 1px solid rgba(127,127,127,.28);
+}
+.tsb-ask--page .aq-input {
+  border-radius: 999px; border: 2px solid rgba(127,127,127,.45);
+  background: var(--paper); box-shadow: none;
+}
+.tsb-ask--page .aq-send { border-radius: 999px; box-shadow: none; }
+html.dark .tsb-ask--page .aq-bubble { background: #241f17; }
+html.dark .tsb-ask--page .aq-input { background: #241f17; }
+
+
+/* ============================================================
+   💬 v4 — TRUE MINIMAL CHAT PAGE (ChatGPT/Claude calm)
+   Complete scoped reset: every aq-* element, chat page only.
+   The pop-out on other pages is gone; this is the one chat UI.
+   ============================================================ */
+html { font-size: 16px; }              /* one default size on every phone */
+
+.tsb-ask--page .aq-panel { background: var(--bg); }
+/* header — slim, hairline, no chrome */
+.tsb-ask--page .aq-head {
+  background: transparent; border: 0; border-bottom: 1px solid rgba(127,127,127,.26);
+  padding: 10px 12px; flex-wrap: nowrap;
+}
+.tsb-ask--page .aq-head__t { font-family: var(--font-body); font-weight: 700; font-size: 15px; letter-spacing: 0; }
+.tsb-ask--page .aq-head__s { color: #8f8a80; font-size: 10.5px; }
+.tsb-ask--page .aq-libbtn, .tsb-ask--page .aq-clear {
+  width: 34px; height: 34px; background: transparent;
+  border: 1.5px solid rgba(127,127,127,.45); border-radius: 10px;
+  box-shadow: none; font-size: 13px;
+}
+/* suggestion chips — quiet outline pills */
+.tsb-ask--page .aq-chips {
+  background: transparent; border-bottom: 0;
+  max-width: 760px; margin: 0 auto; width: 100%;
+  padding: 12px 16px 2px; gap: 8px;
+}
+.tsb-ask--page .aq-chip,
+.tsb-ask--page .aq-chip--0, .tsb-ask--page .aq-chip--1, .tsb-ask--page .aq-chip--2,
+.tsb-ask--page .aq-chip--3, .tsb-ask--page .aq-chip--4, .tsb-ask--page .aq-chip--all,
+.tsb-ask--page .aq-chip--mini {
+  background: transparent; color: var(--ink);
+  border: 1.5px solid rgba(127,127,127,.45); border-radius: 999px;
+  box-shadow: none; font-family: var(--font-body); font-weight: 600;
+  font-size: 11.5px; padding: 7px 12px;
+}
+.tsb-ask--page .aq-chip:hover { transform: none; box-shadow: none; }
+/* conversation — centred column, airy */
+.tsb-ask--page .aq-msgs {
+  max-width: 760px; margin: 0 auto; width: 100%;
+  padding: 20px 16px 26px; gap: 24px;
+  scrollbar-width: none;
+}
+.tsb-ask--page .aq-msgs::-webkit-scrollbar { width: 0; }
+.tsb-ask--page .aq-msg { gap: 12px; }
+.tsb-ask--page .aq-av {
+  width: 30px; height: 30px; font-size: 13px;
+  background: transparent; border: 1.5px solid rgba(127,127,127,.5);
+}
+/* assistant = plain text, no box (like ChatGPT) */
+.tsb-ask--page .aq-bubble {
+  border: 0; box-shadow: none; background: transparent;
+  padding: 2px 0; max-width: 100%;
+  font-size: .95rem; line-height: 1.72; color: var(--ink);
+}
+/* user = one soft bubble, right */
+.tsb-ask--page .aq-bubble--user {
+  background: var(--paper); color: var(--ink);
+  border: 1px solid rgba(127,127,127,.38);
+  border-radius: 18px 18px 4px 18px;
+  padding: 10px 15px;
+  font-family: var(--font-body); font-weight: 600; font-size: .92rem;
+  box-shadow: none;
+}
+html.dark .tsb-ask--page .aq-bubble--user { background: #241f17; }
+/* answer internals — typographic, not boxed */
+.tsb-ask--page .aq-q {
+  background: transparent; border: 0; padding: 0; margin: 0 0 10px;
+  font-family: var(--font-body); font-weight: 700; font-size: 1.02rem; line-height: 1.45;
+}
+.tsb-ask--page .aq-guided { font-size: .95rem; line-height: 1.72; }
+.tsb-ask--page .aq-guided__tag {
+  background: rgba(127,127,127,.16); color: var(--ink);
+  border-radius: 6px; padding: 2px 7px;
+  font-family: var(--font-body); font-weight: 700; font-size: 9px;
+}
+.tsb-ask--page .aq-bookbig { border-left: 3px solid var(--yellow); color: #8f8a80; }
+.tsb-ask--page .aq-src {
+  border: 1px solid rgba(127,127,127,.35); border-left: 5px solid var(--yellow);
+  background: var(--paper); border-radius: 14px; box-shadow: none;
+  padding: 12px 14px;
+}
+.tsb-ask--page .aq-src:hover { transform: none; box-shadow: none; border-color: rgba(127,127,127,.6); border-left-color: var(--yellow); }
+html.dark .tsb-ask--page .aq-src { background: #241f17; }
+.tsb-ask--page .aq-plan {
+  border: 1.5px dashed rgba(127,127,127,.5); background: rgba(255,200,0,.08);
+  border-radius: 12px;
+}
+.tsb-ask--page .aq-copy {
+  background: transparent; color: var(--ink);
+  border: 1.5px solid rgba(127,127,127,.5); border-radius: 8px;
+  box-shadow: none; font-family: var(--font-body); font-weight: 600;
+}
+.tsb-ask--page .aq-copy:hover { transform: none; }
+.tsb-ask--page .aq-follow { padding-left: 0; gap: 8px; }
+.tsb-ask--page .aq-follow__l { font-family: var(--font-body); font-weight: 700; color: #8f8a80; }
+/* composer — floating pill bar above the action bar */
+.tsb-ask--page .aq-inputrow {
+  max-width: 760px; margin: 0 auto; width: 100%;
+  background: transparent; border-top: 1px solid rgba(127,127,127,.26);
+  padding: 10px 14px calc(12px + env(safe-area-inset-bottom, 0px));
+  gap: 10px;
+}
+.tsb-ask--page .aq-input {
+  border: 1.5px solid rgba(127,127,127,.45); border-radius: 999px;
+  background: var(--paper); box-shadow: none;
+  padding: 12px 18px; font-size: .95rem;
+}
+.tsb-ask--page .aq-input:focus { outline: 2px solid var(--yellow); box-shadow: none; }
+html.dark .tsb-ask--page .aq-input { background: #241f17; }
+.tsb-ask--page .aq-send {
+  border: 0; border-radius: 999px; box-shadow: none;
+  background: var(--yellow); color: #111;
+  font-family: var(--font-body); font-weight: 800; font-size: .82rem;
+  padding: 12px 20px;
+}
+.tsb-ask--page .aq-send:hover, .tsb-ask--page .aq-send:active { transform: none; box-shadow: none; }
+/* question library — clean bottom sheet */
+.tsb-ask--page .aq-lib {
+  border: 0; border-radius: 26px 26px 0 0;
+  box-shadow: 0 -20px 60px rgba(0,0,0,.28);
+  background: var(--bg);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.tsb-ask--page .aq-lib__head { background: transparent; border: 0; }
+.tsb-ask--page .aq-lib__search { border: 1.5px solid rgba(127,127,127,.45); border-radius: 999px; background: var(--paper); }
+html.dark .tsb-ask--page .aq-lib__search { background: #241f17; }
+
+
+/* ============================================================
+   v5 — THE ONE "YOU" WINDOW (profile + app settings inline)
+   + chat empty-state hero
+   ============================================================ */
+.youwin { width: min(640px, 100%); display: flex; flex-direction: column; gap: 14px; padding: calc(12px + env(safe-area-inset-top, 0px)) 14px calc(120px + env(safe-area-inset-bottom, 0px)); }
+.youwin__top { display: flex; align-items: center; justify-content: space-between; }
+.youwin__title { font-family: var(--font-head); font-size: 1.1rem; letter-spacing: 1.2px; color: var(--ink); }
+.youwin__home { width: 40px; height: 40px; border: 2.5px solid var(--ink); border-radius: 12px; background: var(--paper); display: grid; place-items: center; text-decoration: none; font-size: 1.05rem; box-shadow: 2.5px 2.5px 0 var(--ink); }
+.youwin__hero { display: flex; align-items: center; gap: 14px; background: var(--paper); color: var(--ink); border: 3px solid var(--ink); border-radius: 20px; box-shadow: 6px 6px 0 var(--ink); padding: 16px; }
+.youwin__set { background: var(--paper); color: var(--ink); border: 3px solid var(--ink); border-radius: 20px; box-shadow: 5px 5px 0 var(--ink); padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.youwin__set h2 { font-size: .92rem; letter-spacing: .6px; }
+.yset__row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.yset__lbl { flex: none; width: 84px; font-weight: 700; font-size: .72rem; letter-spacing: .8px; text-transform: uppercase; color: #8f8a80; }
+.yset__ctl { display: flex; gap: 8px; flex: 1; justify-content: flex-end; flex-wrap: wrap; }
+.setopt--sm { flex: 0 0 auto; padding: 9px 13px; font-size: .78rem; border-radius: 12px; }
+.yset__sw button { width: 34px; height: 34px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--sw); cursor: pointer; box-shadow: 2px 2px 0 var(--ink); transition: transform .12s ease; }
+.yset__sw button.on { transform: scale(1.1); box-shadow: 2px 2px 0 var(--ink), 0 0 0 3px var(--paper), 0 0 0 5.5px var(--ink); }
+.setbtn--sm { width: auto; margin: 0; padding: 9px 14px; font-size: .78rem; border-radius: 12px; }
+html.dark .youwin__hero, html.dark .youwin__set, html.dark .youwin__home { border-color: #000; }
+html.dark .youwin__hero { box-shadow: 6px 6px 0 #000; }
+html.dark .youwin__set { box-shadow: 5px 5px 0 #000; }
+html.dark .youwin__home { box-shadow: 2.5px 2.5px 0 #000; }
+
+/* chat empty-state hero */
+.cht-hero { text-align: center; padding: 7vh 10px 12px; transition: opacity .3s ease, transform .3s ease; }
+.cht-hero__logo { width: 64px; height: 64px; margin: 0 auto 14px; display: grid; place-items: center; font-size: 30px; background: var(--yellow); border-radius: 18px; box-shadow: 0 0 44px rgba(255,200,0,.45); }
+.cht-hero h1 { font-family: var(--font-head); font-size: 1.3rem; margin-bottom: 6px; color: var(--ink); text-transform: none; }
+.cht-hero p { color: #8f8a80; font-size: .85rem; }
+.cht-hero--off { opacity: 0; transform: translateY(-8px); }
+
+
+/* ============================================================
+   v6 — chat suggestion scroller moves BELOW the conversation
+   (library stays the 📚 button) + safe centring for tall pages
+   + onboarding skip button
+   ============================================================ */
+/* conversation first, suggestions as a smooth scroller above the composer */
+.tsb-ask--page .aq-head { order: 0; }
+.tsb-ask--page .aq-search { order: 1; }
+.tsb-ask--page .aq-msgs { order: 2; }
+.tsb-ask--page .aq-chips {
+  order: 3;
+  border-top: 1px solid rgba(127,127,127,.2);
+  padding: 9px 16px;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+}
+.tsb-ask--page .aq-chips .aq-chip { scroll-snap-align: start; }
+.tsb-ask--page .aq-inputrow { order: 4; }
+/* tall pages (You window / sign-in) never clip at the top */
+.youview { align-items: flex-start; }
+.youview > * { margin: auto; }
+.youview > .youpage__x { margin: 0; }
+/* onboarding skip */
+.ob__x {
+  position: absolute; top: 12px; right: 12px;
+  width: 34px; height: 34px; border: 2.5px solid var(--ink); border-radius: 10px;
+  background: var(--paper); color: var(--ink); font-weight: 800; cursor: pointer;
+  box-shadow: 2px 2px 0 var(--ink); z-index: 2;
+}
+html.dark .ob__x { border-color: #000; box-shadow: 2px 2px 0 #000; }
+
+
+/* ============================================================
+   v7 — compact smooth bar · perfect pill · aligned onboarding ·
+   proper chat header · source cards with book covers
+   ============================================================ */
+/* bar: shorter width + lower profile + silkier motion */
+:root { --tsb-bar-h: 58px; }
+.tsb-bar {
+  width: min(430px, calc(100vw - 24px));
+  transition: transform .26s cubic-bezier(.22,.9,.28,1), opacity .22s ease;
+}
+.tsb-bar--off { transform: translateX(-50%) translateY(calc(100% + 22px)); }
+/* the active pill — the perfect middle size */
+.tsb-bar__item::before { inset: 7px 9px; border-radius: 13px; border-width: 2.5px; }
+
+/* onboarding: every row aligned, clean edges */
+.ob-row { min-height: 54px; border-radius: 14px; padding: 11px 13px; }
+.ob-row .ic { flex: none; width: 28px; display: grid; place-items: center; font-size: 1.25rem; }
+.ob-row > span:nth-child(2) { flex: 1 1 auto; min-width: 0; }
+.ob-row .tick { flex: none; width: 16px; text-align: center; }
+.ob-row small { margin-top: 1px; }
+.ob-seg { border-radius: 14px; }
+.ob-seg button { padding: 12px 4px; }
+.ob-lang { min-height: 40px; border-radius: 12px; }
+.ob-chip, .ob-row, .ob-seg, .ob-lang { -webkit-tap-highlight-color: transparent; }
+
+/* chat header = a proper app toolbar: back | centred title | actions */
+.tsb-ask--page .aq-head {
+  display: grid; grid-template-columns: auto 1fr auto;
+  align-items: center; column-gap: 8px;
+}
+.tsb-ask--page .aq-head__t {
+  justify-self: center; text-align: center;
+  font-weight: 800; font-size: 15px;
+}
+.tsb-ask--page .aq-head__s { text-align: center; width: auto; margin: 0; }
+.tsb-ask--page .aq-head__btns { margin-left: 0; justify-self: end; }
+
+/* source cards: book cover thumbnail in the mini card */
+.aq-src--img { grid-template-columns: 44px 1fr auto; column-gap: 12px; align-items: start; }
+.aq-src__img {
+  grid-column: 1; grid-row: 1 / span 3;
+  width: 44px; height: 62px; object-fit: cover;
+  border-radius: 8px; border: 2px solid rgba(127,127,127,.4);
+  background: var(--bg);
+}
+.aq-src--img .aq-src__book { grid-column: 2; }
+.aq-src--img .aq-src__lesson { grid-column: 2; }
+.aq-src--img .aq-src__blurb { grid-column: 2 / 4; }
+.aq-src--img .aq-src__go { grid-column: 3; grid-row: 1; }
+
+/* composer stays pinned & opaque above the action bar */
+.tsb-ask--page .aq-inputrow { background: var(--bg); position: relative; z-index: 2; }
+
+
+/* ============================================================
+   v8 — paper toasts (no black boxes) · dead-space killer ·
+   chat full-height column · starter shelf · guest gate
+   ============================================================ */
+/* every toast in the app becomes a clean paper card */
+.toast {
+  background: var(--paper); color: var(--ink);
+  border: 3px solid var(--ink); border-radius: 14px;
+  box-shadow: 5px 5px 0 var(--ink);
+  font-family: var(--font-body); font-weight: 700; font-size: .84rem;
+  text-transform: none; letter-spacing: .2px;
+  padding: 12px 18px; max-width: calc(100vw - 32px); text-align: center;
+}
+html.dark .toast { background: #241f17; color: var(--paper); border-color: var(--paper); box-shadow: 5px 5px 0 var(--yellow); }
+/* achievements: paper card with a yellow icon chip */
+.achvpop { background: var(--paper); color: var(--ink); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 6px 6px 0 var(--yellow); }
+.achvpop__icon { width: 46px; height: 46px; flex: none; display: grid; place-items: center; background: var(--yellow); border: 2px solid var(--ink); border-radius: 12px; font-size: 1.45rem; }
+.achvpop__title { color: #a07800; }
+.achvpop__desc { opacity: .75; }
+html.dark .achvpop { background: #241f17; color: var(--paper); }
+html.dark .achvpop__title { color: var(--yellow); }
+
+/* kill the dead strip under every scrolling page:
+   the bar's clearance moves INSIDE the footer (dark on dark) */
+html.tsb-hasbar body { padding-bottom: 0; }
+html.tsb-hasbar body > footer:last-of-type { padding-bottom: calc(var(--bar-total) + 34px); }
+body.chatpage { padding-bottom: 0 !important; }
+
+/* chat: one full-height column — msgs grow, composer pinned above bar */
+.tsb-ask--page .aq-panel { bottom: 0; height: 100dvh; }
+.tsb-ask--page .aq-msgs { flex: 1 1 auto; min-height: 0; }
+.tsb-ask--page .aq-chips { flex: none; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 10px; }
+.tsb-ask--page .aq-chips::-webkit-scrollbar { display: none; }
+.tsb-ask--page .aq-inputrow { flex: none; padding-bottom: calc(var(--bar-total) + 10px); background: var(--bg); }
+.cht-hero { margin: auto; padding: 28px 18px; text-align: center; }
+.cht-hero h1 { font-size: 21px; margin: 12px 0 6px; }
+.cht-hero p { color: #8f8a80; font-size: .85rem; max-width: 34ch; margin: 0 auto; }
+/* header toolbar: back | centred stack | compact actions */
+.tsb-ask--page .aq-head { display: grid; grid-template-columns: auto 1fr auto; align-items: center; column-gap: 8px; flex-wrap: nowrap; padding: 10px 12px; }
+.tsb-ask--page .aq-head__c { min-width: 0; text-align: center; }
+.tsb-ask--page .aq-head__t { font-size: 14px; line-height: 1.15; }
+.tsb-ask--page .aq-head__s { width: auto; margin: 2px 0 0; text-align: center; font-size: 10px; }
+.tsb-ask--page .aq-head__btns { margin-left: 0; }
+.tsb-ask--page .aq-libbtn, .tsb-ask--page .aq-clear { width: 34px; height: 34px; padding: 0; display: grid; place-items: center; font-size: 15px; border-radius: 10px; }
+.tsb-ask--page .aq-back { margin-right: 0; }
+
+/* onboarding: the starter shelf payoff screen */
+.ob-shelf { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 10px; margin-top: 6px; }
+.ob-book { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 8px 8px 9px; background: var(--paper); color: var(--ink); border: 2.5px solid var(--ink); border-radius: 14px; box-shadow: 3px 3px 0 var(--ink); cursor: pointer; text-align: left; }
+.ob-book:active { transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--ink); }
+.ob-book img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 8px; border: 2px solid rgba(127,127,127,.35); background: var(--bg); }
+.ob-book__t { font-size: .68rem; font-weight: 800; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.ob-book__n { position: absolute; top: -9px; left: -8px; z-index: 2; width: 22px; height: 22px; display: grid; place-items: center; background: var(--yellow); color: var(--ink); border: 2px solid var(--ink); border-radius: 50%; font-family: var(--font-head); font-size: .62rem; }
+.ob-shelfnote { font-size: .72rem; color: #8f8a80; margin-top: 12px; text-align: center; }
+
+/* guest gate: one clean card, on-brand */
+.gatewrap { position: fixed; inset: 0; z-index: 9995; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(20, 16, 10, .55); backdrop-filter: blur(3px); opacity: 0; transition: opacity .24s ease; }
+.gatewrap.on { opacity: 1; }
+.gate { width: min(420px, 100%); background: var(--paper); color: var(--ink); border: 4px solid var(--ink); border-radius: 24px; box-shadow: 10px 10px 0 rgba(0,0,0,.35); padding: 26px 22px 20px; text-align: center; transform: translateY(14px) scale(.97); transition: transform .24s cubic-bezier(.2,1.2,.4,1); }
+.gatewrap.on .gate { transform: none; }
+.gate__icon { width: 74px; height: 74px; margin: 0 auto 14px; display: grid; place-items: center; font-size: 34px; background: var(--yellow); border: 3px solid var(--ink); border-radius: 22px; box-shadow: 0 0 40px rgba(255,200,0,.5); }
+.gate h2 { font-family: var(--font-head); font-size: 1.25rem; margin-bottom: 8px; }
+.gate p { font-size: .88rem; color: #55504a; margin-bottom: 16px; }
+.gate__cta { display: block; background: var(--yellow); color: var(--ink); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 5px 5px 0 var(--ink); padding: 14px; font-family: var(--font-head); font-size: .95rem; text-decoration: none; margin-bottom: 10px; }
+.gate__cta:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+.gate__later { background: none; border: none; color: #8f8a80; font-weight: 700; font-size: .82rem; cursor: pointer; text-decoration: underline; padding: 6px; }
+.gate__tiny { font-size: .68rem; color: #8f8a80; margin: 12px 0 0; }
+html.dark .gate { background: #241f17; color: var(--paper); }
+html.dark .gate p, html.dark .gate__tiny { color: #b7b0a5; }
+
+
+/* ============================================================
+   v9 — invisible hidden toast (kill the peeking pill) ·
+   pages end flush: footer content sits at the true bottom,
+   the floating bar owns its own space (no dead strips)
+   ============================================================ */
+.toast {
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: transform .3s cubic-bezier(.2,1.4,.4,1), opacity .22s ease, visibility 0s .32s;
+}
+.toast.show {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transition: transform .3s cubic-bezier(.2,1.4,.4,1), opacity .18s ease;
+}
+/* footer ends with its own breathing room only — bar floats over it */
+html.tsb-hasbar body > footer:last-of-type {
+  padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+}
+
+
+/* ============================================================
+   v10 — chat column on CSS grid (1fr row = conversation ALWAYS
+   fills, composer glued above the bar) · onboarding progress
+   strips inset clear of ← / ✕ · auth toasts go paper
+   ============================================================ */
+.tsb-ask--page .aq-panel {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+}
+.tsb-ask--page .aq-head { grid-row: 1; }
+.tsb-ask--page .aq-search { grid-row: 2; }
+.tsb-ask--page .aq-msgs { grid-row: 3; min-height: 0; overflow-y: auto; }
+.tsb-ask--page .aq-chips { grid-row: 4; }
+.tsb-ask--page .aq-inputrow { grid-row: 5; }
+
+/* progress strips sit BETWEEN the corner buttons, never under them */
+.ob__prog { margin: 8px 48px 16px; }
+
+/* sign-in / login messages: paper cards like everything else */
+html body .tsb-auth-toast {
+  background: var(--paper); color: var(--ink);
+  border: 3px solid var(--ink); border-radius: 14px;
+  box-shadow: 5px 5px 0 var(--ink);
+  font-family: var(--font-body); font-weight: 700; font-size: .84rem;
+  letter-spacing: .2px; padding: 12px 18px;
+  max-width: calc(100vw - 32px); text-align: center;
+}
+html body .tsb-auth-toast--welcome { background: var(--yellow); color: var(--ink); border-color: var(--ink); box-shadow: 5px 5px 0 var(--ink); }
+html.dark body .tsb-auth-toast { background: #241f17; color: var(--paper); border-color: var(--paper); box-shadow: 5px 5px 0 var(--yellow); }
+html.tsb-hasbar body .tsb-auth-toast { bottom: calc(var(--bar-total) + 20px); }
+
+
+/* ============================================================
+   v11 — chat dock: questions + search + ask ALL at the bottom ·
+   podcast player & lesson fab dance with the bar (transform only)
+   ============================================================ */
+/* bottom cluster: head / conversation / question pills / search / ask */
+.tsb-ask--page .aq-panel { grid-template-rows: auto minmax(0, 1fr) auto auto auto; }
+.tsb-ask--page .aq-head { grid-row: 1; }
+.tsb-ask--page .aq-msgs { grid-row: 2; }
+.tsb-ask--page .aq-chips {
+  grid-row: 3;
+  -webkit-mask-image: linear-gradient(90deg, #000 93%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 93%, transparent 100%);
+}
+.tsb-ask--page .aq-search { grid-row: 4; padding: 8px 12px 0; max-width: 760px; margin: 0 auto; width: 100%; }
+.tsb-ask--page .aq-search input { padding: 9px 14px; font-size: .82rem; }
+.tsb-ask--page .aq-inputrow { grid-row: 5; }
+
+/* bar tucked → player & fab glide into the freed space; bar back → they rise */
+html.tsb-bar-hidden .tsb-player--show {
+  transform: translateX(-50%) translateY(calc(var(--bar-total) + 8px));
+}
+html.tsb-bar-hidden .lessonnav__fab.show {
+  transform: translateY(calc(var(--bar-total) + 8px));
+}
+
+
+/* ============================================================
+   v12 — chat = exactly four rows (head / conversation /
+   personalised pills / ask) · static name chip · library views
+   ============================================================ */
+.tsb-ask--page .aq-panel { grid-template-rows: auto minmax(0, 1fr) auto auto; }
+.tsb-ask--page .aq-head { grid-row: 1; }
+.tsb-ask--page .aq-msgs { grid-row: 2; }
+.tsb-ask--page .aq-chips { grid-row: 3; }
+.tsb-ask--page .aq-inputrow { grid-row: 4; }
+.tsb-ask--page .aq-search { display: none; }
+
+/* signed-in name badge: shows who you are, opens nothing */
+.tsb-navchip--static { cursor: default; }
+.tsb-navchip--static:hover { transform: none; }
+
+/* 📚 library display modes (tsb_lib_view) */
+.tsb-libview-compact .grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; }
+.tsb-libview-compact .card__top { min-height: 170px; padding: 16px; }
+.tsb-libview-compact .card__cover { width: 104px; }
+.tsb-libview-compact .card__body { padding: 12px 14px 14px; gap: 6px; }
+.tsb-libview-compact .card__title { font-size: .98rem; }
+.tsb-libview-compact .card__tag { display: none; }
+.tsb-libview-list .grid { grid-template-columns: 1fr; gap: 12px; max-width: 900px; }
+.tsb-libview-list .card { flex-direction: row; align-items: stretch; }
+.tsb-libview-list .card__top { min-height: 0; border-bottom: 0; border-right: var(--border); padding: 12px; width: 118px; flex: none; }
+.tsb-libview-list .card__cover { width: 86px; transform: none; }
+.tsb-libview-list .card:hover .card__cover { transform: scale(1.04); }
+.tsb-libview-list .card__cat, .tsb-libview-list .card__time { display: none; }
+.tsb-libview-list .card__body { padding: 14px 16px; }
+
+
+/* v12b — composer hugs the bar: only the bar's own slot below ASK */
+.tsb-ask--page .aq-inputrow { padding-bottom: calc(var(--bar-total) + 6px); }

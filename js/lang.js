@@ -316,6 +316,8 @@
     select: selectLang,
     activate: activate,
     get: getLang,
+    set: setLang,
+    list: LANGUAGES,
     toHinglish: toHinglish,
     toGujlish: toGujlish,
     _fire: fireTranslate

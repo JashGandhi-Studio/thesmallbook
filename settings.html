@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <title>Settings — TheSmallBook</title>
+  <meta name="description" content="TheSmallBook settings: darkness, text size, accent colour and reading language — saved on this device, synced with your account.">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://thesmallbook.in/settings.html">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    /* theme + phone status bar BEFORE first paint (no flash). */
+    try {
+      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      if (tsbDark) document.documentElement.classList.add("dark");
+      var tsbTC = document.querySelector('meta[name="theme-color"]');
+      if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
+      tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
+    } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=183">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body class="setpage">
+  <header class="accbar">
+    <a class="logo" href="index.html"><span class="logo__mark">📕</span><span>The<span class="logo__small">Small</span>Book</span></a>
+    <div class="accbar__acts">
+      <a class="btn btn--icon" href="login.html" title="Your You window" aria-label="You">👤</a>
+    </div>
+  </header>
+
+  <main class="set">
+    <h1 class="set__h">SETTINGS</h1>
+
+    <section class="setcard">
+      <h2>🌗 DARKNESS</h2>
+      <div class="setrow" id="themeRow">
+        <button class="setopt" data-theme="light"><span>☀️</span> Light</button>
+        <button class="setopt" data-theme="dark"><span>🌙</span> Dark</button>
+      </div>
+      <p class="sethint">Also flips the phone status bar — no flash on open.</p>
+    </section>
+
+    <section class="setcard">
+      <h2>🔠 TEXT SIZE</h2>
+      <div class="setrow" id="fontRow">
+        <button class="setopt" data-font="0">A</button>
+        <button class="setopt setopt--md" data-font="1">A</button>
+        <button class="setopt setopt--lg" data-font="2">A</button>
+      </div>
+      <p class="sethint" id="fontPreview">The quick brown fox reads at normal size.</p>
+    </section>
+
+    <section class="setcard">
+      <h2>📚 LIBRARY DISPLAY</h2>
+      <div class="setrow" id="libviewRow">
+        <button class="setopt" data-libview="cozy"><span>🛋️</span> Cozy</button>
+        <button class="setopt" data-libview="compact"><span>🗂️</span> Compact</button>
+        <button class="setopt" data-libview="list"><span>📑</span> List</button>
+      </div>
+      <p class="sethint">How book cards look on Home — your choice, applied everywhere.</p>
+    </section>
+
+    <section class="setcard">
+      <h2>🎨 COLOUR</h2>
+      <div class="yset__ctl yset__sw" id="accentRow" style="justify-content:flex-start;">
+        <button data-accent="#ffc800" style="--sw:#ffc800" aria-label="Yellow"></button>
+        <button data-accent="#ff8a3d" style="--sw:#ff8a3d" aria-label="Orange"></button>
+        <button data-accent="#ff90e8" style="--sw:#ff90e8" aria-label="Pink"></button>
+        <button data-accent="#00c48c" style="--sw:#00c48c" aria-label="Green"></button>
+        <button data-accent="#4d7cff" style="--sw:#4d7cff" aria-label="Blue"></button>
+      </div>
+      <p class="sethint">Re-tints highlights, pills and the status bar on every page.</p>
+    </section>
+
+    <section class="setcard">
+      <h2>🌐 READING LANGUAGE</h2>
+      <div class="setlangs" id="langGrid"></div>
+      <p class="sethint">Summaries, chat replies and audio switch instantly.</p>
+    </section>
+
+    <section class="setcard">
+      <h2>👤 ACCOUNT</h2>
+      <div id="setAcc"></div>
+    </section>
+
+    <section class="setcard">
+      <h2>🧹 DATA</h2>
+      <button class="setbtn" id="resetOnboard">Replay welcome personalisation</button>
+      <button class="setbtn setbtn--red" id="clearChat">Clear chat history</button>
+      <p class="sethint">Books, streaks and shelf stay untouched.</p>
+    </section>
+
+    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v175.</p>
+  </main>
+
+  <script src="js/prefs.js?v=183"></script>
+  <script src="js/lang.js?v=183"></script>
+  <script src="js/config.js?v=183"></script>
+  <script src="js/auth.js?v=183"></script>
+  <script src="js/bar.js?v=183" defer></script>
+  <script>
+    (function () {
+      /* theme */
+      function paintTheme() {
+        var dark = document.documentElement.classList.contains("dark");
+        document.querySelectorAll("#themeRow .setopt").forEach(function (b) {
+          b.classList.toggle("on", (b.dataset.theme === "dark") === dark);
+        });
+      }
+      document.getElementById("themeRow").addEventListener("click", function (e) {
+        var b = e.target.closest(".setopt"); if (!b) return;
+        var want = b.dataset.theme === "dark";
+        if (document.documentElement.classList.contains("dark") !== want) TSB.theme.toggle();
+        paintTheme();
+      });
+
+      /* font */
+      var PREV = ["The quick brown fox reads at normal size.", "The quick brown fox reads a little larger.", "The quick brown fox reads extra large."];
+      function paintFont() {
+        var lv = TSB.get("tsb_fontsize", 0) || 0;
+        document.querySelectorAll("#fontRow .setopt").forEach(function (b) {
+          b.classList.toggle("on", Number(b.dataset.font) === lv);
+        });
+        document.getElementById("fontPreview").textContent = PREV[lv] || PREV[0];
+      }
+      document.getElementById("fontRow").addEventListener("click", function (e) {
+        var b = e.target.closest(".setopt"); if (!b) return;
+        TSB.set("tsb_fontsize", Number(b.dataset.font));
+        paintFont();
+      });
+
+      /* accent */
+      function paintAccent() {
+        var cur = TSB.get("tsb_accent", "#ffc800");
+        document.querySelectorAll("#accentRow button").forEach(function (b) {
+          b.classList.toggle("on", b.dataset.accent === cur);
+        });
+      }
+      document.getElementById("accentRow").addEventListener("click", function (e) {
+        var b = e.target.closest("button[data-accent]"); if (!b) return;
+        TSB.set("tsb_accent", b.dataset.accent);
+        document.documentElement.style.setProperty("--yellow", b.dataset.accent);
+        try {
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m && !document.documentElement.classList.contains("dark")) m.content = b.dataset.accent;
+        } catch (e2) {}
+        paintAccent();
+      });
+
+      /* language grid */
+      function paintLangs() {
+        var cur = (window.TSB_LANG && TSB_LANG.get) ? TSB_LANG.get() : "en";
+        var list = [{ code: "en", name: "English", flag: "📕" }].concat((window.TSB_LANG && TSB_LANG.list) || []);
+        document.getElementById("langGrid").innerHTML = list.map(function (l) {
+          return '<button class="setlang' + (l.code === cur ? " on" : "") + '" data-code="' + l.code + '"><span>' + l.flag + "</span>" + l.name + "</button>";
+        }).join("");
+      }
+      document.getElementById("langGrid").addEventListener("click", function (e) {
+        var b = e.target.closest(".setlang"); if (!b) return;
+        if (window.TSB_LANG && TSB_LANG.select) TSB_LANG.select(b.dataset.code);
+        else if (window.TSB_LANG && TSB_LANG.set) TSB_LANG.set(b.dataset.code);
+        paintLangs();
+      });
+
+      /* account */
+      function paintAcc() {
+        var box = document.getElementById("setAcc");
+        var u = (window.TSB_AUTH && TSB_AUTH.user) ? TSB_AUTH.user() : null;
+        if (u) {
+          var nm = (TSB_AUTH.displayName ? TSB_AUTH.displayName() : (u.user_metadata || {}).full_name) || "Reader";
+          box.innerHTML = '<div class="setacc__in">👋 <b>' + nm + "</b><br><i>" + (u.email || "") + "</i></div>" +
+            '<a class="setbtn" href="login.html">Open my You window</a>' +
+            '<button class="setbtn setbtn--red" id="setOut">Sign out</button>';
+          document.getElementById("setOut").addEventListener("click", function () {
+            if (TSB_AUTH.confirmLogout) TSB_AUTH.confirmLogout(); else TSB_AUTH.signOut();
+            setTimeout(paintAcc, 300);
+          });
+        } else {
+          box.innerHTML = '<p class="sethint">Not signed in — your reading lives on this device.</p>' +
+            '<a class="setbtn setbtn--yellow" href="login.html">Sign in with Google</a>';
+        }
+      }
+
+      /* data */
+      document.getElementById("resetOnboard").addEventListener("click", function () {
+        try { localStorage.removeItem("tsb_onboarded"); sessionStorage.removeItem("tsb_onboarded"); localStorage.removeItem("tsb_onboard_draft"); } catch (e) {}
+        location.href = "index.html";
+      });
+      document.getElementById("clearChat").addEventListener("click", function () {
+        if (!confirm("Clear this chat history?")) return;
+        try { localStorage.removeItem("tsb_ask_hist"); } catch (e) {}
+        location.href = "chat.html";
+      });
+
+      paintTheme(); paintFont(); paintAccent(); paintLangs(); paintAcc();
+      window.addEventListener("tsb:auth", paintAcc);
+      setTimeout(paintAcc, 600);
+    })();
+  </script>
+
+<script>
+/* 📚 library display mode — shared by Settings page & You window */
+(function () {
+  function applyLibView(v) {
+    document.documentElement.classList.toggle("tsb-libview-compact", v === "compact");
+    document.documentElement.classList.toggle("tsb-libview-list", v === "list");
+    document.querySelectorAll("[data-libview]").forEach(function (b) {
+      b.classList.toggle("on", b.getAttribute("data-libview") === (v || "cozy"));
+    });
+  }
+  var cur = "cozy";
+  try { cur = JSON.parse(localStorage.getItem("tsb_lib_view")) || "cozy"; } catch (e) {}
+  applyLibView(cur);
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-libview]");
+    if (!b) return;
+    var v = b.getAttribute("data-libview");
+    try { localStorage.setItem("tsb_lib_view", JSON.stringify(v)); } catch (e2) {}
+    applyLibView(v);
+  });
+})();
+</script>
+</body>
+</html>

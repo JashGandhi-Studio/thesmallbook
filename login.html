@@ -2,457 +2,275 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login — Save Your Progress | TheSmallBook</title>
-  <meta name="description" content="Log in with Google — 1 tap. Your bookmarks, lessons and streaks sync across every device. free to read, no password needed.">
-  <meta name="robots" content="noindex,follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <title>You — TheSmallBook</title>
+  <meta name="description" content="Your TheSmallBook window: sign in with Google to sync your shelf, streak and progress — then tune the app: darkness, text size, colour and language.">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://thesmallbook.in/login.html">
   <meta name="theme-color" content="#ffc800">
-  <meta property="og:title" content="TheSmallBook — Save Your Progress">
-  <meta property="og:description" content="One login. Every device. Your bookmarks, lessons and streaks sync free with Google login.">
-  <meta property="og:url" content="https://thesmallbook.in/login.html">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
   <script>
-    try { if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark"); } catch (e) {}
+    /* theme + phone status bar BEFORE first paint (no flash). */
+    try {
+      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      if (tsbDark) document.documentElement.classList.add("dark");
+      var tsbTC = document.querySelector('meta[name="theme-color"]');
+      if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
+      tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
+    } catch (e) {}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=183">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-
-  <style>
-    /* ===== LOGIN PAGE v2 — MUST COOL ===== */
-    .loginwrap { position: relative; max-width: 1000px; margin: 0 auto; padding: 44px clamp(14px, 4vw, 40px) 56px; }
-
-    /* marquee */
-    .tsb-marquee { background: var(--ink); border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); overflow: hidden; padding: 11px 0; }
-    .tsb-marquee__track { display: flex; gap: 30px; width: max-content; animation: tsbMarquee 26s linear infinite; white-space: nowrap; }
-    .tsb-marquee__track span { font-family: "Archivo Black", sans-serif; font-size: 13px; letter-spacing: 2px; color: var(--yellow); }
-    .tsb-marquee__track i { font-style: normal; color: var(--red); font-family: "Archivo Black", sans-serif; }
-    @keyframes tsbMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-    /* hero */
-    .loginhero { position: relative; text-align: center; margin: 40px 0 34px; }
-    .loginhero__badge { display: inline-block; font-family: "Archivo Black", sans-serif; font-size: 12px; letter-spacing: 2.5px; background: var(--ink); color: var(--yellow); border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--red); padding: 7px 16px; margin-bottom: 22px; }
-    .loginhero h1 { font-family: "Archivo Black", sans-serif; font-size: clamp(1.9rem, 6vw, 3rem); line-height: 1.12; letter-spacing: .5px; }
-    .loginhero h1 .hl { background: var(--yellow); border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 2px 12px; display: inline-block; }
-    .loginhero__sub { max-width: 560px; margin: 22px auto 0; font-size: 15.5px; line-height: 1.65; color: #555; }
-    html.dark .loginhero__sub { color: #c9c2b2; }
-    html.dark .loginhero h1 .hl { color: var(--ink); }
-
-    .loginrow { display: grid; grid-template-columns: 1.02fr 1fr; gap: 26px; align-items: start; }
-
-    /* login card */
-    .logincard { background: var(--paper); border: 3px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); padding: 30px 26px 26px; text-align: center; position: relative; transition: opacity .3s ease, transform .3s ease; }
-    .logincard__art { width: 84px; height: 84px; margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; font-size: 44px; background: var(--yellow); border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); transform: rotate(-4deg); animation: tsbBob 5s ease-in-out infinite; }
-    @keyframes tsbBob { 0%,100% { transform: rotate(-4deg) translateY(0); } 50% { transform: rotate(-4deg) translateY(-7px); } }
-    .logincard h2 { font-family: "Archivo Black", sans-serif; font-size: clamp(19px, 3vw, 24px); letter-spacing: .5px; margin: 10px 0 6px; }
-    .logincard__sub { font-size: 13px; color: #666; margin-bottom: 20px; }
-    html.dark .logincard__sub { color: #b8b1a0; }
-
-    .logincard__google { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; border: 3px solid var(--ink); background: #fff; color: var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 14px 16px; font-family: "Archivo Black", sans-serif; font-size: 15px; letter-spacing: .5px; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease; }
-    .logincard__google:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--ink); }
-    .logincard__google:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
-    .logincard__google svg { flex: none; }
-    html.dark .logincard__google { background: #fff; color: #111; }
-
-    .logincard__chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 18px 0 14px; }
-    .logincard__chips span { font-size: 11.5px; font-weight: 700; letter-spacing: .4px; border: 2.5px solid var(--ink); padding: 5px 10px; background: var(--paper); }
-    .logincard__chips span:nth-child(1) { background: var(--yellow); }
-    .logincard__chips span:nth-child(2) { background: var(--pink); }
-    .logincard__chips span:nth-child(3) { background: var(--green); }
-
-    .logincard__privacy { font-size: 11.5px; color: #888; line-height: 1.5; margin: 0; }
-    html.dark .logincard__privacy { color: #9a937f; }
-
-    /* stickers */
-    .sticker { position: absolute; font-family: "Archivo Black", sans-serif; font-size: 11px; letter-spacing: 1px; padding: 8px 14px; border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); z-index: 2; }
-    .sticker--free { background: var(--yellow); color: #111; top: -14px; right: -10px; transform: rotate(5deg); animation: tsbWiggle 5s ease-in-out infinite; }
-    .sticker--pw { background: var(--pink); color: #111; bottom: -12px; left: -8px; transform: rotate(-4deg); animation: tsbWiggle 6s ease-in-out infinite; }
-    @keyframes tsbWiggle { 0%,100% { transform: rotate(5deg); } 50% { transform: rotate(-3deg); } }
-    .sticker--pw { animation-name: tsbWigglePw; }
-    @keyframes tsbWigglePw { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(3deg); } }
-
-    /* logged-in state */
-    .logincard__user { font-size: 15px; font-weight: 700; margin: 4px 0 16px; word-break: break-word; }
-    .logincard__start { background: var(--green); color: var(--ink); }
-    .logincard__out { margin-top: 12px; border: 3px solid var(--ink); background: var(--red); color: #fff; font-family: "Archivo Black", sans-serif; font-size: 12px; letter-spacing: 1px; padding: 10px 22px; cursor: pointer; box-shadow: 4px 4px 0 var(--ink); }
-    .logincard__out:hover { transform: translate(-1px, -1px); box-shadow: 6px 6px 0 var(--ink); }
-    .logincard__synced { display: inline-block; margin-bottom: 14px; background: var(--green); color: var(--ink); border: 3px solid var(--ink); font-family: "Archivo Black", sans-serif; font-size: 11px; letter-spacing: 1.5px; padding: 6px 14px; box-shadow: 3px 3px 0 var(--ink); animation: tsbPulse 2.4s ease-in-out infinite; }
-    @keyframes tsbPulse { 0%,100% { box-shadow: 3px 3px 0 var(--ink); } 50% { box-shadow: 3px 3px 0 var(--ink), 0 0 0 6px rgba(0,196,140,.28); } }
-
-    /* right column */
-    .loginright { display: flex; flex-direction: column; gap: 14px; }
-
-    .syncbox { background: var(--paper); border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--blue); padding: 18px 16px; position: relative; overflow: hidden; }
-    .syncbox__head { font-family: "Archivo Black", sans-serif; font-size: 12px; letter-spacing: 2px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-    .syncbox__head i { font-style: normal; font-size: 10px; letter-spacing: 1px; background: var(--yellow); border: 2.5px solid var(--ink); padding: 3px 8px; }
-    .syncbox__flow { display: flex; align-items: center; gap: 8px; padding: 4px 0 16px; }
-    .syncbox__dev { font-size: 34px; line-height: 1; filter: drop-shadow(2px 2px 0 rgba(0,0,0,.18)); }
-    .syncbox__cloud { font-size: 22px; line-height: 1; }
-    .syncbox__path { flex: 1; height: 5px; background: repeating-linear-gradient(90deg, var(--ink) 0 8px, transparent 8px 16px); position: relative; border-radius: 3px; }
-    .syncbox__dot { position: absolute; top: 50%; left: 0; width: 11px; height: 11px; border-radius: 50%; background: var(--green); border: 2px solid var(--ink); transform: translateY(-50%); animation: tsbDash 1.5s linear infinite; }
-    .syncbox__dot--2 { animation-delay: .75s; background: var(--yellow); }
-    @keyframes tsbDash { from { left: 0; } to { left: calc(100% - 11px); } }
-    .syncbox__rows .syncbox__row { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; border: 2.5px solid var(--ink); padding: 7px 10px; margin-bottom: 8px; background: var(--paper); }
-    .syncbox__row b { color: #0a7a45; font-family: "Archivo Black", sans-serif; font-size: 11px; }
-    .syncbox__ok { display: inline-flex; align-items: center; gap: 6px; font-family: "Archivo Black", sans-serif; font-size: 11px; letter-spacing: 1.5px; background: var(--green); border: 3px solid var(--ink); color: #111; padding: 6px 14px; box-shadow: 3px 3px 0 var(--ink); animation: tsbPulse 2.4s ease-in-out infinite; }
-    /* logged-in: everything green, continuous sync = always on */
-    .syncbox.all-synced .syncbox__head i { background: var(--green); }
-    .syncbox.all-synced .syncbox__path { background: repeating-linear-gradient(90deg, var(--green) 0 8px, transparent 8px 16px); }
-    .syncbox.all-synced .syncbox__dot { background: var(--green); }
-    .syncbox.all-synced .syncbox__dot--2 { background: var(--green); animation-delay: .4s; }
-
-    .benefit { background: var(--paper); border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 15px 16px; display: flex; flex-direction: column; gap: 3px; }
-    .benefit b { font-family: "Archivo Black", sans-serif; font-size: 13.5px; letter-spacing: .5px; }
-    .benefit span { font-size: 13px; color: #555; line-height: 1.5; }
-    html.dark .benefit span { color: #c9c2b2; }
-    .benefit:nth-child(1) { box-shadow: 5px 5px 0 var(--yellow); }
-    .benefit:nth-child(2) { box-shadow: 5px 5px 0 var(--pink); }
-    .benefit:nth-child(3) { box-shadow: 5px 5px 0 var(--blue); }
-    .benefit:nth-child(4) { box-shadow: 5px 5px 0 var(--green); }
-
-    /* how it works */
-    .tsb-steps { margin-top: 42px; }
-    .tsb-steps h2 { font-family: "Archivo Black", sans-serif; font-size: clamp(16px, 3vw, 22px); text-align: center; margin-bottom: 22px; letter-spacing: .5px; }
-    .tsb-steps__row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: stretch; }
-    .step { background: var(--paper); border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 20px 14px 16px; text-align: center; position: relative; }
-    .step__num { position: absolute; top: -13px; left: 12px; background: var(--yellow); border: 3px solid var(--ink); font-family: "Archivo Black", sans-serif; font-size: 13px; padding: 4px 10px; box-shadow: 2px 2px 0 var(--ink); }
-    .step .e { font-size: 30px; }
-    .step b { display: block; font-family: "Archivo Black", sans-serif; font-size: 13.5px; margin: 8px 0 4px; letter-spacing: .5px; }
-    .step span { font-size: 12.5px; color: #555; line-height: 1.55; display: block; }
-    html.dark .step span { color: #c9c2b2; }
-    .step:nth-child(2) { box-shadow: 5px 5px 0 var(--pink); }
-    .step:nth-child(3) { box-shadow: 5px 5px 0 var(--green); }
-    .step__arr { font-size: 20px; position: absolute; right: -15px; top: 50%; transform: translateY(-50%); z-index: 3; background: var(--ink); color: var(--yellow); border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-family: "Archivo Black", sans-serif; }
-    .tsb-steps__row .step:last-child .step__arr { display: none; }
-
-    /* stats */
-    .tsb-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 38px; }
-    .tsb-stats > div { background: var(--paper); border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); text-align: center; padding: 14px 6px; }
-    .tsb-stats b { display: block; font-family: "Archivo Black", sans-serif; font-size: clamp(18px, 3vw, 26px); }
-    .tsb-stats span { font-size: 10.5px; letter-spacing: 1.5px; color: #666; }
-    html.dark .tsb-stats span { color: #9a937f; }
-
-    .loginfoot { text-align: center; margin-top: 36px; font-size: 12.5px; color: #777; line-height: 1.7; }
-    html.dark .loginfoot { color: #9a937f; }
-    .loginfoot b { color: var(--ink); }
-
-    /* decos */
-    .deco { position: absolute; border: 3px solid var(--ink); pointer-events: none; z-index: 0; }
-    .deco--sq { width: 26px; height: 26px; background: var(--yellow); animation: tsbFloat 6s ease-in-out infinite; }
-    .deco--circ { width: 22px; height: 22px; border-radius: 50%; background: var(--pink); animation: tsbFloat 7s ease-in-out infinite; }
-    .deco--tri { width: 0; height: 0; border: 3px solid transparent; border-bottom: 26px solid var(--green); background: transparent; border-left: 14px solid transparent; border-right: 14px solid transparent; animation: tsbFloat 5s ease-in-out infinite; }
-    .deco--star { font-size: 30px; color: var(--purple); border: none; animation: tsbSpin 12s linear infinite; }
-    @keyframes tsbFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-13px); } }
-    @keyframes tsbSpin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
-    .loginwrap > .deco { position: absolute; }
-
-    @media (max-width: 760px) {
-      .loginrow { grid-template-columns: 1fr; }
-      .loginwrap { padding-top: 26px; }
-      .tsb-steps__row { grid-template-columns: 1fr; }
-      .step__arr { display: none; }
-    }
-    @media (max-width: 480px) {
-      .logincard { padding: 22px 16px; box-shadow: 5px 5px 0 var(--ink); }
-      .logincard__google { font-size: 13.5px; padding: 13px 10px; }
-      .tsb-stats { grid-template-columns: repeat(2, 1fr); }
-      .sticker { display: none; }
-    }
-  </style>
 </head>
-<body>
-  <nav class="nav">
-    <a class="logo" href="index.html">
-      <span class="logo__mark">📕</span>
-      <span>The<span class="logo__small">Small</span>Book</span>
-    </a>
-    <div class="nav__links">
-      <a class="btn btn--yellow" href="index.html#library">📚 LIBRARY</a>
-      <button class="btn btn--icon" data-lang-btn title="Change language" aria-label="Language">🌐</button>
-      <button class="btn btn--ink btn--icon" data-theme-toggle title="Dark mode (D)" aria-label="Dark mode">🌙</button>
-    </div>
-    <div class="nav__auth" id="tsb-nav-auth" aria-live="polite"></div>
-  </nav>
+<body class="youpage">
 
-  <div class="tsb-marquee" aria-hidden="true">
-    <div class="tsb-marquee__track">
-      <span>📕 THE SMALL BOOK</span><i>★</i><span>SAVE YOUR PROGRESS</span><i>★</i><span>FREE TO READ</span><i>★</i><span>26 LANGUAGES</span><i>★</i><span>LAPTOP ⇄ PHONE</span><i>★</i>
-      <span>📕 THE SMALL BOOK</span><i>★</i><span>SAVE YOUR PROGRESS</span><i>★</i><span>FREE TO READ</span><i>★</i><span>26 LANGUAGES</span><i>★</i><span>LAPTOP ⇄ PHONE</span><i>★</i>
-    </div>
+  <!-- ============ SIGNED-OUT: PREMIUM SIGN-IN INTERFACE ============ -->
+  <div class="youview" id="view-signin" hidden>
+    <a class="youpage__x" href="index.html" aria-label="Back to the library">✕</a>
+    <main class="youcard">
+      <div class="youcard__icon" aria-hidden="true">📕</div>
+      <h1>SAVE WHAT YOU READ</h1>
+      <p class="youcard__s">One free account. Your shelf, streak and progress follow you to every device.</p>
+      <div class="youperk"><span aria-hidden="true">📚</span><div><b>Your shelf, synced</b><i>Phone, laptop, anywhere</i></div></div>
+      <div class="youperk"><span aria-hidden="true">🔥</span><div><b>Streaks that stick</b><i>Progress that never resets</i></div></div>
+      <div class="youperk"><span aria-hidden="true">✍️</span><div><b>Post your own</b><i>Quotes and lessons, your name on them</i></div></div>
+      <button class="yougoogle" id="signinGoogle">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.3 0-9.7-3.4-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.2 5.2C36.9 39.2 44 34 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg>
+        Continue with Google
+      </button>
+      <a class="youskip" href="index.html">Keep reading without an account</a>
+      <p class="youfine">By continuing you agree to our <a href="about.html">terms</a> and <a href="about.html">privacy policy</a>. Free forever. No card. We never post without asking.</p>
+    </main>
   </div>
 
-  <div class="loginwrap">
-    <span class="deco deco--sq" style="top:6%; left:3%;"></span>
-    <span class="deco deco--circ" style="top:14%; right:5%;"></span>
-    <span class="deco deco--tri" style="bottom:14%; left:6%;"></span>
-    <span class="deco deco--star" style="bottom:8%; right:9%;">✦</span>
+  <!-- ============ SIGNED-IN: THE ONE "YOU" WINDOW (profile + app settings) ============ -->
+  <div class="youview" id="view-account" hidden>
+    <main class="youwin">
+      <header class="youwin__top">
+        <span class="youwin__title">YOU</span>
+        <a class="youwin__home" href="index.html" aria-label="Back to library">🏠</a>
+      </header>
 
-    <header class="loginhero">
-      <div class="loginhero__badge">🔐 READERS ACCOUNT</div>
-      <h1 id="loginHeroTitle">ONE LOGIN.<br><span class="hl">EVERY DEVICE.</span></h1>
-      <p class="loginhero__sub" id="loginHeroSub">Read on your laptop. Finish on your phone. TheSmallBook remembers — bookmarks, lessons, streaks — <b>all synced.</b></p>
-    </header>
-
-    <div class="loginrow">
-      <section class="logincard" id="loginCard">
-        <span class="sticker sticker--free">100% FREE</span>
-        <span class="sticker sticker--pw">NO PASSWORD</span>
-        <div class="logincard__art" id="loginArt">📕</div>
-        <h2 id="loginTitle">SAVE YOUR PROGRESS</h2>
-        <p class="logincard__sub" id="loginSub">Free · 1 tap · No password</p>
-        <button class="logincard__google" id="loginGoogleBtn">
-          <svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-          LOG IN WITH GOOGLE
-        </button>
-        <div class="logincard__chips" id="loginChips">
-          <span>📱 DEVICE SYNC</span>
-          <span>❤️ BOOKMARKS</span>
-          <span>🏆 STREAKS</span>
+      <section class="youwin__hero">
+        <div class="acc__ava" id="accAva">📕</div>
+        <div class="acc__who">
+          <h1 id="accName">Reader</h1>
+          <p id="accMail">signed in</p>
         </div>
-        <p class="logincard__privacy" id="loginPrivacy">🔒 We only see your name &amp; email. Never spam, never shared.</p>
+        <span class="acc__cloud" id="accCloud" title="Progress syncs privately to your account">☁️ SYNCED</span>
       </section>
 
-      <aside class="loginright">
-        <div class="syncbox" id="syncBox" style="display:none">
-          <div class="syncbox__head">🔄 LIVE SYNC <i id="syncBadge">ALWAYS ON</i></div>
-          <div class="syncbox__flow">
-            <span class="syncbox__dev">💻</span>
-            <span class="syncbox__path"><i class="syncbox__dot"></i></span>
-            <span class="syncbox__cloud">☁️</span>
-            <span class="syncbox__path"><i class="syncbox__dot syncbox__dot--2"></i></span>
-            <span class="syncbox__dev">📱</span>
+      <section class="acc__level">
+        <div class="levelbar__label"><span id="accLevelName">Level</span><span id="accLevelNext"></span></div>
+        <div class="levelbar"><i id="accLevelFill"></i></div>
+      </section>
+
+      <section class="acc__stats">
+        <div class="accstat"><b id="stStreak">0</b><span>🔥 day streak</span></div>
+        <div class="accstat"><b id="stLessons">0</b><span>🧠 lessons read</span></div>
+        <div class="accstat"><b id="stBooks">0</b><span>📕 books finished</span></div>
+        <div class="accstat"><b id="stSaved">0</b><span>🤍 on shelf</span></div>
+        <div class="accstat"><b id="stBadges">0</b><span>🏅 badges</span></div>
+        <div class="accstat"><b id="stVisits">0</b><span>📆 visits</span></div>
+      </section>
+
+      <section class="youwin__set">
+        <h2>🎛️ APP SETTINGS</h2>
+        <div class="yset__row">
+          <span class="yset__lbl">Darkness</span>
+          <div class="yset__ctl" id="themeRow">
+            <button class="setopt setopt--sm" data-theme="light">☀️ Light</button>
+            <button class="setopt setopt--sm" data-theme="dark">🌙 Dark</button>
           </div>
-          <div class="syncbox__rows" id="syncRows">
-            <div class="syncbox__row"><span>📖 Deep Work — 7/9 lessons</span><b>✓ SYNCED</b></div>
-            <div class="syncbox__row"><span>❤️ 12 bookmarks</span><b>✓ SYNCED</b></div>
-            <div class="syncbox__row"><span>🏆 3-day streak</span><b>✓ SYNCED</b></div>
-          </div>
-          <div style="text-align:center;margin-top:12px"><span class="syncbox__ok" id="syncOk">SYNCED ✓</span></div>
         </div>
-        <div class="benefit"><b>📱 LAPTOP → PHONE</b><span>Mid-book on your laptop? Pick up right where you left off on your phone.</span></div>
-        <div class="benefit"><b>❤️ BOOKMARKS + LESSONS</b><span>Everything you save or read — the same state on every device.</span></div>
-        <div class="benefit"><b>🛡️ NEVER LOSE PROGRESS</b><span>Clear your browser, switch your phone — your progress stays safe.</span></div>
-        <div class="benefit"><b>🎧 EVERYTHING SYNCED</b><span>Even your podcast &amp; language setup — one identity.</span></div>
-      </aside>
-    </div>
+        <div class="yset__row">
+          <span class="yset__lbl">Library look</span>
+          <div class="yset__ctl" id="libviewRow">
+            <button class="setopt setopt--sm" data-libview="cozy" title="Cozy cards">🛋️</button>
+            <button class="setopt setopt--sm" data-libview="compact" title="Compact grid">🗂️</button>
+            <button class="setopt setopt--sm" data-libview="list" title="List rows">📑</button>
+          </div>
+        </div>
+        <div class="yset__row">
+          <span class="yset__lbl">Text size</span>
+          <div class="yset__ctl" id="fontRow">
+            <button class="setopt setopt--sm" data-font="0">A</button>
+            <button class="setopt setopt--sm setopt--md" data-font="1">A</button>
+            <button class="setopt setopt--sm setopt--lg" data-font="2">A</button>
+          </div>
+        </div>
+        <div class="yset__row">
+          <span class="yset__lbl">Colour</span>
+          <div class="yset__ctl yset__sw" id="accentRow">
+            <button data-accent="#ffc800" style="--sw:#ffc800" aria-label="Yellow"></button>
+            <button data-accent="#ff8a3d" style="--sw:#ff8a3d" aria-label="Orange"></button>
+            <button data-accent="#ff90e8" style="--sw:#ff90e8" aria-label="Pink"></button>
+            <button data-accent="#00c48c" style="--sw:#00c48c" aria-label="Green"></button>
+            <button data-accent="#4d7cff" style="--sw:#4d7cff" aria-label="Blue"></button>
+          </div>
+        </div>
+        <div class="yset__row">
+          <span class="yset__lbl">Language</span>
+          <div class="yset__ctl"><button class="setbtn setbtn--sm" id="langBtn">🌐 English</button></div>
+        </div>
+      </section>
 
-    <section class="tsb-steps">
-      <h2>HOW IT WORKS</h2>
-      <div class="tsb-steps__row">
-        <div class="step"><span class="step__num">STEP 1</span><div class="e">📖</div><b>READ</b><span>Open any book — no login needed, completely free.</span><span class="step__arr">→</span></div>
-        <div class="step"><span class="step__num">STEP 2</span><div class="e">🔐</div><b>LOGIN</b><span>Finish 2 books or tap LOGIN in the navbar — one tap, with Google.</span><span class="step__arr">→</span></div>
-        <div class="step"><span class="step__num">STEP 3</span><div class="e">📱</div><b>CONTINUE ANYWHERE</b><span>Phone, laptop, tablet — the same progress everywhere.</span><span class="step__arr">→</span></div>
-      </div>
-    </section>
+      <section class="acc__menu">
+        <a class="accrow" href="index.html#library"><span>📚</span> My shelf &amp; library <i>→</i></a>
+        <a class="accrow" href="stories.html#write"><span>✍️</span> Write a story <i>→</i></a>
+        <a class="accrow" href="chat.html"><span>💬</span> Ask the library <i>→</i></a>
+        <a class="accrow" href="graveyard.html"><span>💀</span> The Graveyard <i>→</i></a>
+      </section>
 
-    <div class="tsb-stats">
-      <div><b>350+</b><span>BOOKS</span></div>
-      <div><b>2170+</b><span>LESSONS</span></div>
-      <div><b>26</b><span>LANGUAGES</span></div>
-      <div><b>₹0</b><span>FREE TO READ</span></div>
-    </div>
-
-    <p class="loginfoot">FREE TO READ · NO ADS · NO SPAM<br><b>— 350+ books · 2170+ lessons · 300+ autopsies —</b></p>
+      <button class="acc__out" id="signoutBtn">Sign out</button>
+      <p class="youfine">Build tsb-v174 · Your reading data lives on your device and syncs privately to your account. We never post without asking.</p>
+    </main>
   </div>
 
-  <footer class="footer">
-    <div class="head">📕 TheSmallBook</div>
-    <p>Big books. Small reads. All the lessons, examples and takeaways from the world's best books — free to read.</p>
-    <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
-  </footer>
-
-  <script src="js/prefs.js"></script>
-  <script src="js/lang.js"></script>
-  <script src="js/config.js"></script>
-  <script src="js/auth.js"></script>
+  <script src="js/prefs.js?v=183"></script>
+  <script src="js/lang.js?v=183"></script>
+  <script src="js/config.js?v=183"></script>
+  <script src="js/auth.js?v=183"></script>
+  <script src="js/data.js?v=183"></script>
+  <script src="js/bar.js?v=183" defer></script>
   <script>
-    /* ---------- LOGIN PAGE LOGIC v2 ---------- */
     (function () {
-      function firstName(u) {
-        return (u.user_metadata && (u.user_metadata.name || u.user_metadata.full_name || u.user_metadata.user_name)) ||
-               (u.email || "").split("@")[0] || "Reader";
-      }
-      function returnPath() {
-        try {
-          return sessionStorage.getItem("tsb_auth_return") ||
-                 new URLSearchParams(location.search).get("next") || "index.html";
-        } catch (e) { return "index.html"; }
-      }
-      function hasReturningCode() {
-        return /[?&]code=/.test(location.search) || /[#&]id_token=/.test(location.hash);
-      }
-      function showVerifying() {
-        document.getElementById("loginTitle").textContent = "VERIFYING...";
-        document.getElementById("loginSub").textContent = "Confirming your Google sign-in...";
-        var btn = document.getElementById("loginGoogleBtn");
-        btn.innerHTML = "⏳ PLEASE WAIT...";
-        btn.disabled = true;
-        btn.style.opacity = .6;
-      }
-      /* ---------- LIVE SYNC BOX ---------- */
-      function updateSyncBoxLoggedIn() {
-        var box = document.getElementById("syncBox");
-        if (box) box.style.display = "block"; // only show when logged IN
-        var prog = {}, marks = [];
-        try { prog = JSON.parse(localStorage.getItem("tsb_progress")) || {}; } catch (e) {}
-        try { marks = JSON.parse(localStorage.getItem("tsb_bookmarks")) || []; } catch (e) {}
-        var lessons = 0;
-        Object.keys(prog).forEach(function (k) { lessons += (prog[k] || []).length; });
-        var rows = document.getElementById("syncRows");
-        if (rows) {
-          rows.innerHTML =
-            '<div class="syncbox__row"><span>📖 ' + lessons + ' lessons read</span><b>✓ SYNCED</b></div>' +
-            '<div class="syncbox__row"><span>❤️ ' + marks.length + ' bookmarks</span><b>✓ SYNCED</b></div>' +
-            '<div class="syncbox__row"><span>📱 This device</span><b>✓ SYNCED</b></div>';
-        }
-        var badge = document.getElementById("syncBadge");
-        if (badge) { badge.textContent = "ALL SYNCED"; badge.style.background = "#00c48c"; }
-        var box = document.getElementById("syncBox");
-        if (box) box.classList.add("all-synced");
-        var ok = document.getElementById("syncOk");
-        if (ok) ok.textContent = "ALL SYNCED · ALWAYS ON ✓";
-      }
-      function resetSyncBox() {
-        var box = document.getElementById("syncBox");
-        if (box) box.style.display = "none"; // OFF until logged in
-        var rows = document.getElementById("syncRows");
-        if (rows) {
-          rows.innerHTML =
-            '<div class="syncbox__row"><span>📖 Deep Work — 7/9 lessons</span><b>✓ SYNCED</b></div>' +
-            '<div class="syncbox__row"><span>❤️ 12 bookmarks</span><b>✓ SYNCED</b></div>' +
-            '<div class="syncbox__row"><span>🏆 3-day streak</span><b>✓ SYNCED</b></div>';
-        }
-        var badge = document.getElementById("syncBadge");
-        if (badge) { badge.textContent = "ALWAYS ON"; badge.style.background = ""; }
-        var box = document.getElementById("syncBox");
-        if (box) box.classList.remove("all-synced");
-        var ok = document.getElementById("syncOk");
-        if (ok) ok.textContent = "SYNCED ✓";
-      }
-      function showLogin() {
-        var hero = document.getElementById("loginHeroTitle");
-        hero.innerHTML = "ONE LOGIN.<br><span class=\"hl\">EVERY DEVICE.</span>";
-        document.getElementById("loginHeroSub").innerHTML = "Read on your laptop. Finish on your phone. TheSmallBook remembers — bookmarks, lessons, streaks — <b>all synced.</b>";
-        document.getElementById("loginArt").textContent = "📕";
-        document.getElementById("loginTitle").textContent = "SAVE YOUR PROGRESS";
-        document.getElementById("loginSub").textContent = "Free · 1 tap · No password";
-        var btn = document.getElementById("loginGoogleBtn");
-        btn.innerHTML = '<svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> LOG IN WITH GOOGLE';
-        btn.className = "logincard__google";
-        btn.onclick = function () { if (window.TSB_AUTH) window.TSB_AUTH.signIn("google"); };
-        document.getElementById("loginChips").style.display = "flex";
-        document.getElementById("loginChips").innerHTML = "<span>📱 DEVICE SYNC</span><span>❤️ BOOKMARKS</span><span>🏆 STREAKS</span>";
-        var p = document.getElementById("loginPrivacy");
-        p.textContent = "🔒 We only see your name & email. Never spam, never shared.";
-        p.className = "logincard__privacy";
-        resetSyncBox();
-      }
-      function esc(s) {
-        return String(s).replace(/[&<>"']/g, function (c) {
-          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      var vIn = document.getElementById("view-signin");
+      var vAcc = document.getElementById("view-account");
+      function esc(s) { var d = document.createElement("div"); d.textContent = s == null ? "" : String(s); return d.innerHTML; }
+
+      /* ---------- settings controls ---------- */
+      function paintTheme() {
+        var dark = document.documentElement.classList.contains("dark");
+        document.querySelectorAll("#themeRow .setopt").forEach(function (b) {
+          b.classList.toggle("on", (b.dataset.theme === "dark") === dark);
         });
       }
-      function showEditName() {
-        var cur = window.TSB_AUTH.displayName() || "";
-        var p = document.getElementById("loginSub");
-        p.innerHTML = '<div style="text-align:left;margin-bottom:14px"><label for="tsbNameInput" style="font-size:11px;font-weight:700;letter-spacing:1px;display:block;margin-bottom:6px">EDIT DISPLAY NAME</label>' +
-          '<input id="tsbNameInput" maxlength="24" value="' + esc(cur) + '" style="width:100%;border:3px solid #111;padding:10px 12px;font-family:inherit;font-size:14px;box-shadow:3px 3px 0 #111;background:#fff;color:#111;box-sizing:border-box">' +
-          '<div style="display:flex;gap:8px;margin-top:10px">' +
-          '<button id="tsbNameSave" style="flex:1;border:3px solid #111;background:#00c48c;color:#111;font-family:Archivo Black,sans-serif;font-size:12px;letter-spacing:1px;padding:10px 8px;cursor:pointer;box-shadow:3px 3px 0 #111">SAVE NAME</button>' +
-          '<button id="tsbNameCancel" style="flex:1;border:3px solid #111;background:#fffdf5;color:#111;font-family:Archivo Black,sans-serif;font-size:12px;letter-spacing:1px;padding:10px 8px;cursor:pointer;box-shadow:3px 3px 0 #111">CANCEL</button>' +
-          '</div></div>';
-        document.getElementById("tsbNameSave").onclick = function () {
-          var v = document.getElementById("tsbNameInput").value;
-          if (v && v.trim()) window.TSB_AUTH.setDisplayName(v);
-          render();
-        };
-        document.getElementById("tsbNameCancel").onclick = render;
+      function paintFont() {
+        var lv = TSB.get("tsb_fontsize", 0) || 0;
+        document.querySelectorAll("#fontRow .setopt").forEach(function (b) {
+          b.classList.toggle("on", Number(b.dataset.font) === lv);
+        });
+        document.body.classList.remove("fontsize-1", "fontsize-2");
+        if (lv > 0) document.body.classList.add("fontsize-" + lv);
       }
-      function showLoggedIn() {
-        var u = window.TSB_AUTH.user();
-        var name = window.TSB_AUTH.displayName ? window.TSB_AUTH.displayName() : firstName(u);
-        var first = name.split(" ")[0];
-        var visits = window.TSB_AUTH.visits ? window.TSB_AUTH.visits() : 0;
-        var hero = document.getElementById("loginHeroTitle");
-        hero.innerHTML = "WELCOME <span class=\"hl\">BACK, " + esc(first.toUpperCase()) + "!</span>";
-        document.getElementById("loginHeroSub").innerHTML = "Your progress is synced — laptop, phone, everywhere. What will you read today?";
-        document.getElementById("loginArt").textContent = "👋";
-        document.getElementById("loginTitle").textContent = visits >= 2 ? "WELCOME BACK!" : "HEY, " + esc(first.toUpperCase()) + "!";
-        document.getElementById("loginSub").innerHTML = '<span class="logincard__user">' + esc(name) + ' <button id="loginEditName" title="Edit name" style="border:2.5px solid #111;background:#ffc800;font-size:11px;padding:2px 8px;cursor:pointer;box-shadow:2px 2px 0 #111;font-family:Archivo Black,sans-serif">✏️ EDIT</button>' + "<br><span style='font-size:12px;color:#888;'>" + esc(u.email || "") + "</span></span>";
-        document.getElementById("loginEditName").onclick = showEditName;
-        var btn = document.getElementById("loginGoogleBtn");
-        btn.innerHTML = "🚀 START READING →";
-        btn.className = "logincard__google logincard__start";
-        btn.onclick = function () { location.href = returnPath(); };
-        var chips = document.getElementById("loginChips");
-        chips.style.display = "block";
-        chips.innerHTML = '<span class="logincard__synced">✅ PROGRESS SYNCED</span>';
-        var p = document.getElementById("loginPrivacy");
-        p.innerHTML = 'Want to log out? → <button class="logincard__out" id="loginOut">LOGOUT</button>';
-        p.className = "logincard__privacy";
-        document.getElementById("loginOut").onclick = function () {
-          if (window.TSB_AUTH && window.TSB_AUTH.confirmLogout) window.TSB_AUTH.confirmLogout();
-          else if (window.TSB_AUTH) window.TSB_AUTH.signOut();
-          setTimeout(render, 400);
-        };
-        updateSyncBoxLoggedIn();
+      function paintAccent() {
+        var cur = TSB.get("tsb_accent", "#ffc800");
+        document.querySelectorAll("#accentRow button").forEach(function (b) {
+          b.classList.toggle("on", b.dataset.accent === cur);
+        });
       }
-      var authFailed = false;
-      function showError() {
-        authFailed = true;
-        document.getElementById("loginTitle").textContent = "LOGIN FAILED 😕";
-        document.getElementById("loginSub").textContent = "Something went wrong — please try again. (Your progress is safe.)";
-        var btn = document.getElementById("loginGoogleBtn");
-        btn.innerHTML = "🔄 TRY AGAIN";
-        btn.disabled = false;
-        btn.style.opacity = "1";
-        btn.className = "logincard__google";
-        btn.onclick = function () {
-          authFailed = false;
-          if (window.TSB_AUTH) window.TSB_AUTH.signIn("google");
-        };
-        var chips = document.getElementById("loginChips");
-        if (chips) chips.style.display = "flex";
-        if (chips) chips.innerHTML = "<span>🔄 TRY AGAIN</span>";
+      function paintLang() {
+        var code = (window.TSB_LANG && TSB_LANG.get) ? TSB_LANG.get() : "en";
+        var name = "English";
+        try {
+          (TSB_LANG.list || []).forEach(function (l) { if (l.code === code) name = l.name; });
+        } catch (e) {}
+        document.getElementById("langBtn").textContent = "🌐 " + name;
       }
-      function render() {
-        var a = window.TSB_AUTH;
-        if (!a) { setTimeout(render, 120); return; } // auth boot might still be finishing
-        if (a.enabled && a.user()) { showLoggedIn(); return; }
-        if (authFailed) { showError(); return; }
-        if (hasReturningCode()) {
-          showVerifying();
-          // safety net: if login doesn't complete in 10s → show error + retry
-          setTimeout(function () {
-            if (!(window.TSB_AUTH && window.TSB_AUTH.user())) showError();
-          }, 10000);
-          return;
-        }
-        if (!a.enabled) {
-          document.getElementById("loginTitle").textContent = "SIGN-IN SOON";
-          document.getElementById("loginSub").textContent = "Your progress is safe in this browser for now";
-          var btn = document.getElementById("loginGoogleBtn");
-          btn.innerHTML = "🔐 COMING SOON";
-          btn.disabled = true;
-          btn.style.opacity = .5;
-          btn.style.cursor = "not-allowed";
-          return;
-        }
-        if (a.user()) showLoggedIn(); else showLogin();
+      document.getElementById("themeRow").addEventListener("click", function (e) {
+        var b = e.target.closest(".setopt"); if (!b) return;
+        var want = b.dataset.theme === "dark";
+        if (document.documentElement.classList.contains("dark") !== want) TSB.theme.toggle();
+        paintTheme();
+      });
+      document.getElementById("fontRow").addEventListener("click", function (e) {
+        var b = e.target.closest(".setopt"); if (!b) return;
+        TSB.set("tsb_fontsize", Number(b.dataset.font));
+        paintFont();
+      });
+      document.getElementById("accentRow").addEventListener("click", function (e) {
+        var b = e.target.closest("button[data-accent]"); if (!b) return;
+        TSB.set("tsb_accent", b.dataset.accent);
+        document.documentElement.style.setProperty("--yellow", b.dataset.accent);
+        try {
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m && !document.documentElement.classList.contains("dark")) m.content = b.dataset.accent;
+        } catch (e2) {}
+        paintAccent();
+      });
+      document.getElementById("langBtn").addEventListener("click", function () {
+        if (window.TSB_LANG && TSB_LANG.open) TSB_LANG.open();
+        setTimeout(paintLang, 400);
+      });
+
+      /* ---------- account render ---------- */
+      function renderAccount() {
+        var u = (window.TSB_AUTH && TSB_AUTH.user) ? TSB_AUTH.user() : null;
+        if (!u) return;
+        var md = u.user_metadata || {};
+        var name = (window.TSB_AUTH && TSB_AUTH.displayName) ? TSB_AUTH.displayName() : (md.full_name || md.name || "Reader");
+        document.getElementById("accName").textContent = name || "Reader";
+        document.getElementById("accMail").textContent = u.email || "signed in with Google";
+        var ava = document.getElementById("accAva");
+        if (md.avatar_url) ava.innerHTML = '<img src="' + esc(md.avatar_url) + '" alt="">';
+        else ava.textContent = (name || "R").trim().charAt(0).toUpperCase();
+        function num(id, v) { document.getElementById(id).textContent = v; }
+        try { num("stStreak", (TSB.get("tsb_streak", { count: 0 }) || {}).count || 0); } catch (e) {}
+        try { num("stLessons", TSB.progress.totalRead()); } catch (e) {}
+        try { num("stBooks", TSB.completedCount()); } catch (e) {}
+        try { num("stSaved", TSB.bookmarks.list().length); } catch (e) {}
+        try { num("stBadges", TSB.achv.list().length); } catch (e) {}
+        try { num("stVisits", (window.TSB_AUTH && TSB_AUTH.visits) ? TSB_AUTH.visits() : 0); } catch (e) {}
+        try {
+          var read = TSB.progress.totalRead();
+          var lv = TSB.levelFor(read);
+          document.getElementById("accLevelName").textContent = (lv.name || "Reader") + " · " + read + " lessons";
+          document.getElementById("accLevelNext").textContent = lv.next ? (lv.next.at - read) + " to " + lv.next.name : "MAX LEVEL";
+          var pct = lv.next ? Math.min(100, Math.round(((read - lv.at) / (lv.next.at - lv.at)) * 100)) : 100;
+          document.getElementById("accLevelFill").style.width = pct + "%";
+        } catch (e) {}
+        if (!(window.TSB_AUTH && TSB_AUTH.enabled)) document.getElementById("accCloud").style.display = "none";
       }
-      window.addEventListener("tsb:loggedin", showLoggedIn);
-      window.addEventListener("tsb:auth", function () { setTimeout(render, 80); });
-      window.addEventListener("tsb:auth-error", function () { showError(); });
-      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", render);
-      else render();
+
+      function swap() {
+        var u = (window.TSB_AUTH && TSB_AUTH.user) ? TSB_AUTH.user() : null;
+        vIn.hidden = !!u;
+        vAcc.hidden = !u;
+        if (u) renderAccount();
+        paintTheme(); paintFont(); paintAccent(); paintLang();
+      }
+
+      document.getElementById("signinGoogle").addEventListener("click", function () {
+        if (window.TSB_AUTH && TSB_AUTH.enabled && TSB_AUTH.signIn) TSB_AUTH.signIn("google");
+        else this.textContent = "Sign-in is being set up — please enjoy the free library 💛";
+      });
+      document.getElementById("signoutBtn").addEventListener("click", function () {
+        if (window.TSB_AUTH && TSB_AUTH.confirmLogout) TSB_AUTH.confirmLogout();
+        else if (window.TSB_AUTH && TSB_AUTH.signOut) TSB_AUTH.signOut();
+        setTimeout(swap, 300);
+      });
+      window.addEventListener("tsb:auth", swap);
+      window.addEventListener("tsb:sync", swap);
+      swap(); setTimeout(swap, 400); setTimeout(swap, 1500);
     })();
   </script>
+
+<script>
+/* 📚 library display mode — shared by Settings page & You window */
+(function () {
+  function applyLibView(v) {
+    document.documentElement.classList.toggle("tsb-libview-compact", v === "compact");
+    document.documentElement.classList.toggle("tsb-libview-list", v === "list");
+    document.querySelectorAll("[data-libview]").forEach(function (b) {
+      b.classList.toggle("on", b.getAttribute("data-libview") === (v || "cozy"));
+    });
+  }
+  var cur = "cozy";
+  try { cur = JSON.parse(localStorage.getItem("tsb_lib_view")) || "cozy"; } catch (e) {}
+  applyLibView(cur);
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-libview]");
+    if (!b) return;
+    var v = b.getAttribute("data-libview");
+    try { localStorage.setItem("tsb_lib_view", JSON.stringify(v)); } catch (e2) {}
+    applyLibView(v);
+  });
+})();
+</script>
 </body>
 </html>

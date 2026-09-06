@@ -51,12 +51,23 @@
   filterWrap.appendChild(indianChip);
   cats.forEach((c) => filterWrap.appendChild(makeChip(c)));
 
+  /* 🎯 onboarding personalisation — lead with the reader's primary shelf
+     (once per session, until they touch a filter chip themselves) */
+  try {
+    const lead = JSON.parse(localStorage.getItem("tsb_ob_lead") || "null");
+    if (lead && !sessionStorage.getItem("tsb_filter_touched") && cats.includes(lead)) {
+      activeCat = lead;
+      document.querySelectorAll(".chip").forEach((c) => c.classList.toggle("active", c.textContent === lead));
+    }
+  } catch (e) {}
+
   function makeChip(label, active) {
     const b = document.createElement("button");
     b.className = "chip" + (active ? " active" : "");
     b.textContent = label;
     b.addEventListener("click", () => {
       activeCat = label;
+      try { sessionStorage.setItem("tsb_filter_touched", "1"); } catch (e) {}
       document.querySelectorAll(".chip").forEach((c) => c.classList.remove("active"));
       b.classList.add("active");
       render();

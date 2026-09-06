@@ -8,7 +8,7 @@
   const F = window.FAILURES || [];
   const grid = document.getElementById("graveGrid");
   const searchInput = document.getElementById("graveSearch");
-  if (window.TSB) { try { window.TSB.achv.award("ghoul"); } catch (e) {} }
+  if (window.TSB) { try { window.TSB.achv.award("ghoul", true); } catch (e) {} } /* silent — no toast on entry */
   const filterWrap = document.getElementById("graveFilters");
 
   const CAT_META = {

@@ -2,7 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<script>
+    /* theme + phone status bar BEFORE first paint (no flash).
+       Rule 1: viewport-fit=cover in the viewport meta makes env(safe-area-inset-*) real.
+       Rule 2: theme-color set here, before any stylesheet, so dark mode
+       never flashes a light status bar. */
+    try {
+      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      if (tsbDark) document.documentElement.classList.add("dark");
+      var tsbTC = document.querySelector('meta[name="theme-color"]');
+      if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
+      tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
+    } catch (e) {}
+  </script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
 <meta name="robots" content="noindex">
 <title>Scanner — TheSmallBook</title>
 <meta name="description" content="Point your camera at any book cover. TheSmallBook reads the cover and opens the summary instantly.">
@@ -429,7 +442,17 @@ body {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) gum = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
     else if (navigator.webkitGetUserMedia) gum = navigator.webkitGetUserMedia.bind(navigator);
     if (!gum) { showErr("Camera Not Supported", "This browser has no camera support. Try Chrome or Safari."); return; }
-    gum({ video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 720 } } })
+    function tryGum(cs, i) {
+      return gum(cs[i]).catch(function (err) {
+        if (i + 1 < cs.length) return tryGum(cs, i + 1);
+        throw err;
+      });
+    }
+    tryGum([
+      { video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 720 } } },
+      { video: { facingMode: facing } },
+      { video: true }
+    ], 0)
       .then(function (s) {
         stream = s;
         cam.srcObject = s;
@@ -1024,7 +1047,7 @@ body {
   start();
 })();
 </script>
-<script src="js/scan-titles.js"></script>
-<script src="js/scanner-data.js"></script>
+<script src="js/scan-titles.js?v=183"></script>
+<script src="js/scanner-data.js?v=183"></script>
 </body>
 </html>

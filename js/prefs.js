@@ -14,12 +14,42 @@
     try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
   }
 
+  /* ---------- accent colour (picked in the You window) ---------- */
+  try {
+    var acc = JSON.parse(localStorage.getItem("tsb_accent"));
+    if (acc && /^#[0-9a-f]{6}$/i.test(acc)) {
+      document.documentElement.style.setProperty("--yellow", acc);
+      var tcm = document.querySelector('meta[name="theme-color"]');
+      if (tcm && !document.documentElement.classList.contains("dark")) tcm.content = acc;
+    }
+  } catch (e) {}
+
+  /* ---------- keep the service worker honest: re-check on every load,
+     so a deploy can never leave a phone on the previous version ---------- */
+  try {
+    if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) {
+      navigator.serviceWorker.getRegistration().then(function (r) { if (r) r.update(); });
+    }
+  } catch (e) {}
+
+  /* library display mode (cozy / compact / list) — pre-paint, no flash */
+  try {
+    var lv = JSON.parse(localStorage.getItem("tsb_lib_view"));
+    if (lv === "compact") document.documentElement.classList.add("tsb-libview-compact");
+    else if (lv === "list") document.documentElement.classList.add("tsb-libview-list");
+  } catch (e) {}
+
   /* ---------- theme ---------- */
   const theme = {
     isDark: () => document.documentElement.classList.contains("dark"),
     toggle() {
       document.documentElement.classList.toggle("dark");
       set("tsb_theme", theme.isDark() ? "dark" : "light");
+      /* keep the phone status bar in sync instantly (no flash next load) */
+      try {
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.content = theme.isDark() ? "#16130e" : "#ffc800";
+      } catch (e) {}
       document.querySelectorAll("[data-theme-toggle]").forEach((b) => (b.textContent = theme.isDark() ? "☀️" : "🌙"));
       if (theme.isDark()) achv.award("night-owl");
     }
@@ -158,13 +188,13 @@
 
   const achv = {
     list: () => get("tsb_achv", []),
-    award(id) {
+    award(id, silent) {
       if (!ACHV[id]) return;
       const l = achv.list();
       if (l.includes(id)) return;
       l.push(id);
       set("tsb_achv", l);
-      achv.popup(ACHV[id]);
+      if (!silent) achv.popup(ACHV[id]);
     },
     popup(a) {
       const el = document.createElement("div");
@@ -307,6 +337,34 @@
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("sw.js").catch(() => {});
+      /* a deployed update takes over → reload ONCE so signed-in readers
+         never sit on a stale build (accounts live in localStorage/Supabase,
+         untouched by cache purges) */
+      try {
+        navigator.serviceWorker.addEventListener("controllerchange", function () {
+          try {
+            if (sessionStorage.getItem("tsb_sw_reloaded")) return;
+            sessionStorage.setItem("tsb_sw_reloaded", "1");
+            location.reload();
+          } catch (e2) {}
+        });
+        window.setTimeout(function () {
+          try { sessionStorage.removeItem("tsb_sw_reloaded"); } catch (e3) {}
+        }, 8000);
+      } catch (e) {}
     });
   }
 })();
+
+  /* broken cover image → clean branded placeholder (never a torn-img glyph) */
+  document.addEventListener("error", function (e) {
+    var el = e.target;
+    if (!el || el.tagName !== "IMG") return;
+    if (!/aq-src__img|ob-book/.test(el.className || "")) return;
+    if (el.getAttribute("data-fb")) return;
+    el.setAttribute("data-fb", "1");
+    el.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 66 93"><rect width="66" height="93" rx="7" fill="#ffc800"/><rect x="5" y="5" width="56" height="83" rx="5" fill="none" stroke="#14100a" stroke-width="3"/><text x="33" y="60" font-size="34" text-anchor="middle">\u{1F4D5}</text></svg>'
+    );
+  }, true);
+

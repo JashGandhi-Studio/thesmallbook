@@ -96,7 +96,17 @@
       if (empty) { empty.style.display = "flex"; empty.textContent = "📷 Camera not available on this device"; }
       return;
     }
-    gum({ video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 720 } } })
+    function tryGum(cs, i) {
+      return gum(cs[i]).catch(function (err) {
+        if (i + 1 < cs.length) return tryGum(cs, i + 1);
+        throw err;
+      });
+    }
+    tryGum([
+      { video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 720 } } },
+      { video: { facingMode: facing } },
+      { video: true }
+    ], 0)
       .then(function (s) {
         stream = s;
         if (video) {

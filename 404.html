@@ -2,17 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>404 — TheSmallBook</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
   <script>
-    try { if (localStorage.getItem("tsb_theme") === '"dark"') document.documentElement.classList.add("dark"); } catch (e) {}
+    /* theme + phone status bar BEFORE first paint (no flash).
+       Rule 1: viewport-fit=cover in the viewport meta makes env(safe-area-inset-*) real.
+       Rule 2: theme-color set here, before any stylesheet, so dark mode
+       never flashes a light status bar. */
+    try {
+      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      if (tsbDark) document.documentElement.classList.add("dark");
+      var tsbTC = document.querySelector('meta[name="theme-color"]');
+      if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
+      tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
+    } catch (e) {}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=183">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -61,15 +71,16 @@
     <p class="tiny">EVEN OUR 404 TEACHES A BOOK LESSON</p>
   </footer>
 
-  <script src="js/prefs.js"></script>
-  <script src="js/support.js"></script>
-  <script src="js/lang.js"></script>
-  <script src="js/config.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/data.js"></script>
-  <script src="js/failures.js"></script>
-  <script src="js/ask-data.js"></script>
-  <script src="js/tts-engine.js"></script>
-  <script src="js/ask.js"></script>
+  <script src="js/prefs.js?v=183"></script>
+  <script src="js/support.js?v=183"></script>
+  <script src="js/lang.js?v=183"></script>
+  <script src="js/config.js?v=183"></script>
+  <script src="js/auth.js?v=183"></script>
+  <script src="js/data.js?v=183"></script>
+  <script src="js/failures.js?v=183"></script>
+  <script src="js/ask-data.js?v=183"></script>
+  <script src="js/tts-engine.js?v=183"></script>
+  <script src="js/ask.js?v=183"></script>
+  <script src="js/bar.js?v=183" defer></script>
 </body>
 </html>

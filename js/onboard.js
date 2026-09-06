@@ -1,25 +1,20 @@
 /* ============================================================
-   THESMALLBOOK — 🎯 FIRST-VISIT ONBOARDING (onboard.js)
-   3 quick questions (not a paywall):
-     1. Pick what you're here for  → filters the shelf
-     2. Pick how you read          → saved as preference
-     3. Save your progress?        → sign-in CTA (login.html)
-   Runs ONCE (localStorage tsb_onboarded). Skips for returning users.
+   THESMALLBOOK — 🎯 FIRST-VISIT ONBOARDING v3 (onboard.js)
+   Seven genuinely personalising steps — no repeated questions:
+     1 · Welcome            2 · Why you read      3 · Your shelves
+     4 · Daily budget       5 · Reading style     6 · Language
+     7 · Theme + finish
+   The answers ACTUALLY tune the app:
+     • primary shelf  → library opens pre-filtered to it (app.js)
+     • reading style  → deep readers start fully expanded (book.js)
+     • language/theme → applied site-wide on finish
+     • budget/interests → saved to the profile (Supabase-ready)
+   Full-width row choices (never overlap), slide/fade transitions,
+   progress segments, back nav, shake when a required pick is missed.
+   Runs ONCE (localStorage tsb_onboarded). Skips returning users.
    ============================================================ */
 (function () {
-  var GOAL_MAP = {
-    "self":    { label: "Self-Improvement", emoji: "🧠" },
-    "money":   { label: "Money & Finance",  emoji: "💰" },
-    "business":{ label: "Business & Startups", emoji: "🚀" },
-    "people":  { label: "Psychology & People", emoji: "❤️" },
-    "creativity": { label: "Creativity",    emoji: "🎨" },
-    "productivity": { label: "Productivity", emoji: "⚡" },
-    "power":   { label: "Power & Strategy", emoji: "🏛️" }
-  };
-
-  /* storage that never dies: localStorage → sessionStorage → in-memory.
-     (sandboxed previews / private mode block localStorage — without this
-     fallback the onboarding would re-ask on every single page load) */
+  /* storage that never dies: localStorage → sessionStorage → in-memory. */
   var memStore = {};
   function get(key, def) {
     try {
@@ -39,210 +34,372 @@
   }
 
   function shouldShow() {
-    /* returning from the login CTA inside onboarding → never re-ask */
     try { if (sessionStorage.getItem("tsb_onboarded_pending")) { set("tsb_onboarded", true); sessionStorage.removeItem("tsb_onboarded_pending"); } } catch (e) {}
     if (get("tsb_onboarded", false)) return false;
-    // logged-in users are returning users — never interrupt them
     try { if (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) return false; } catch (e) {}
-    // only on the main app pages, not 404
-    if (/404\.html|login\.html|story\.html/.test(location.pathname)) return false;
-    // don't interrupt right after a Google callback
+    /* sync session check — logged-in readers NEVER see onboarding,
+       even if auth.js hasn't finished booting yet (no race) */
+    try {
+      var s = JSON.parse(localStorage.getItem("tsb_auth_session"));
+      if (s && (s.user || s.access_token)) return false;
+    } catch (e) {}
+    if (/404\.html|login\.html|story\.html|chat\.html|settings\.html/.test(location.pathname)) return false;
     if (/[?&]code=/.test(location.search)) return false;
     return true;
   }
 
-  var GOALS = [
-    { id: "self", emoji: "🧠", label: "Self-improvement" },
-    { id: "money", emoji: "💰", label: "Money" },
-    { id: "business", emoji: "🚀", label: "Business" },
-    { id: "people", emoji: "❤️", label: "People" },
-    { id: "creativity", emoji: "🎨", label: "Creativity" },
-    { id: "productivity", emoji: "⚡", label: "Productivity" },
-    { id: "power", emoji: "🏛️", label: "Power" }
+  /* ---------- real personalisation dimensions (v4: unique & fun) ---------- */
+  /* each "mess" maps straight onto a real library shelf */
+  var WHYS = [
+    { id: "Productivity", ic: "🧠", t: "Close my 47 open brain tabs", s: "Focus, deep work, zero chaos" },
+    { id: "Money & Finance", ic: "💸", t: "Make money make sense", s: "Earn it · keep it · grow it" },
+    { id: "Business & Startups", ic: "🏢", t: "Build something of my own", s: "Founder brain, minus the burnout" },
+    { id: "Psychology & People", ic: "🎭", t: "Read people like books", s: "Why everyone does that thing" },
+    { id: "Power & Strategy", ic: "♟️", t: "Win quietly", s: "Chess moves for real life" },
+    { id: "Creativity", ic: "🎨", t: "Make stuff people stare at", s: "Ideas that actually slap" },
+    { id: "Self-Improvement", ic: "🌱", t: "Fix my habits (and my sleep)", s: "Become v2.0 of me" },
+    { id: "History", ic: "🏛️", t: "Steal plays from dead empires", s: "Old games, new wins" }
   ];
+  var SHELF_META = {
+    "Self-Improvement": ["🌱", "habits, sleep, becoming v2.0"],
+    "Business & Startups": ["🏢", "founder brain, real stories"],
+    "Psychology & People": ["🎭", "why people do that"],
+    "Power & Strategy": ["♟️", "chess, not checkers"],
+    "Money & Finance": ["💸", "make it · keep it · grow it"],
+    "Productivity": ["🧠", "deep work, calm schedule"],
+    "Creativity": ["🎨", "ideas that slap"],
+    "History": ["🏛️", "old plays, new games"],
+    "Biography": ["👤", "lives worth borrowing"]
+  };
   var STYLES = [
-    { id: "quick", emoji: "⚡", label: "5-min reads", desc: "Big idea + top lessons, fast" },
-    { id: "full", emoji: "📖", label: "Full lessons", desc: "Every lesson, example & action step" },
-    { id: "audio", emoji: "🎧", label: "Audio", desc: "Listen to the whole book like a podcast" }
+    { id: "skim", ic: "⚡", t: "Just the tactics, coach", s: "Key lessons — in and out" },
+    { id: "steady", ic: "🍿", t: "Story me through it", s: "Case studies & real examples" },
+    { id: "deep", ic: "💀", t: "Autopsies & deep dives", s: "Everything open, graves included" },
+    { id: "listen", ic: "🎧", t: "Read it to me", s: "Audio lessons while I move" }
   ];
+  var MINUTES = [5, 10, 20, 30];
+  var MIN_LABEL = { 5: "🐟 5′", 10: "☕ 10′", 20: "📖 20′", 30: "🐋 30′" };
+  var MIN_SUB = { 5: "reel brain", 10: "one chai", 20: "proper sit-down", 30: "deep sea" };
 
-  var TIMES = [
-    { id: "5",  emoji: "⚡", label: "5 minutes a day",  desc: "Quick daily lesson — busy schedule" },
-    { id: "15", emoji: "⏰", label: "15 minutes a day", desc: "One full lesson + example" },
-    { id: "30", emoji: "🧘", label: "30+ minutes a day", desc: "Deep dives & full chapters" }
-  ];
-
-  var state = { goal: null, style: null, time: null };
-
-  function css() {
-    if (document.getElementById("tsb-onboard-style")) return;
-    var st = document.createElement("style");
-    st.id = "tsb-onboard-style";
-    st.textContent = `
-      .ob-ov{position:fixed;inset:0;background:rgba(17,17,17,.6);z-index:9998;display:flex;align-items:center;justify-content:center;padding:16px;animation:obFade .25s ease}
-      .ob-box{background:#fffdf5;border:4px solid #111;box-shadow:10px 10px 0 #ffc800;max-width:440px;width:100%;padding:26px 22px;position:relative;animation:obPop .3s cubic-bezier(.2,1.4,.4,1);max-height:92vh;overflow:auto}
-      .ob-box h3{font-family:"Archivo Black",sans-serif;font-size:20px;margin:4px 0 4px;letter-spacing:.3px}
-      .ob-box .ob-sub{font-size:13px;color:#666;margin-bottom:16px}
-      .ob-goals{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-      .ob-goals button,.ob-styles button{display:flex;align-items:center;gap:8px;border:3px solid #111;background:#fffdf5;box-shadow:3px 3px 0 #111;font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:13px;padding:11px 10px;cursor:pointer;text-align:left;color:#111;transition:transform .1s,box-shadow .1s}
-      .ob-goals button:hover,.ob-styles button:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 #111}
-      .ob-goals button.sel,.ob-styles button.sel{background:#ffc800;transform:translate(-1px,-1px);box-shadow:5px 5px 0 #111}
-      .ob-styles{display:flex;flex-direction:column;gap:8px}
-      .ob-styles button{width:100%}
-      .ob-styles button small{display:block;font-weight:400;font-size:11px;color:#666}
-      .ob-next{margin-top:16px;width:100%;border:3px solid #111;background:#00c48c;color:#111;font-family:"Archivo Black",sans-serif;font-size:13px;letter-spacing:1.5px;padding:13px 10px;cursor:pointer;box-shadow:4px 4px 0 #111}
-      .ob-next:disabled{opacity:.45;cursor:not-allowed}
-      .ob-next:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:6px 6px 0 #111}
-      .ob-skip{background:none;border:none;text-decoration:underline;font-size:12px;color:#888;cursor:pointer;margin-top:10px;display:block;margin-left:auto;margin-right:auto}
-      .ob-dots{display:flex;gap:6px;justify-content:center;margin-bottom:12px}
-      .ob-dots i{width:10px;height:10px;border:2px solid #111;border-radius:50%;background:#fff}
-      .ob-dots i.on{background:#ffc800}
-      .ob-signin{display:flex;gap:10px;flex-direction:column;margin-top:4px}
-      .ob-signin .g{border:3px solid #111;background:#fff;color:#111;box-shadow:4px 4px 0 #111;font-family:"Archivo Black",sans-serif;font-size:13px;padding:13px 10px;cursor:pointer;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px}
-      .ob-signin .g:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 #111}
-      .ob-signin .skip2{border:3px solid #111;background:#fffdf5;font-family:"Archivo Black",sans-serif;font-size:12px;letter-spacing:1px;padding:12px 10px;cursor:pointer;color:#111;box-shadow:3px 3px 0 #111}
-      @keyframes obFade{from{opacity:0}to{opacity:1}}
-      @keyframes obPop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
-    `;
-    document.head.appendChild(st);
+  /* top shelves straight from the real library */
+  function shelves() {
+    var out = [];
+    try {
+      var counts = {};
+      (window.BOOKS || []).forEach(function (b) { counts[b.category] = (counts[b.category] || 0) + 1; });
+      out = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; }).slice(0, 8);
+    } catch (e) {}
+    if (!out.length) out = ["Self-Improvement", "Money & Finance", "Business & Startups", "Psychology & People", "Creativity", "Productivity", "Power & Strategy", "Biography"];
+    return out;
   }
 
-  function finish(skipSignIn) {
-    set("tsb_onboarded", true);
-    set("tsb_prefs", { goal: state.goal, style: state.style, time: state.time || "15", ts: Date.now() });
-    var ov = document.getElementById("tsb-onboard-ov");
-    if (ov) ov.remove();
-    // apply the category filter on the library shelf (if chips exist)
-    try {
-      var goalInfo = GOAL_MAP[state.goal];
-      if (goalInfo) {
-        var chips = document.querySelectorAll(".chip");
-        var target = null;
-        chips.forEach(function (c) {
-          if (c.textContent.trim() === goalInfo.label) target = c;
-        });
-        if (target) {
-          target.click();
-          setTimeout(function () {
-            try { document.getElementById("library") && document.getElementById("library").scrollIntoView({ behavior: "smooth" }); } catch (e) {}
-          }, 150);
+  var draft = get("tsb_onboard_draft", null) || { why: null, shelves: [], minutes: 10, style: null, lang: null, theme: null };
+  var step = 0;
+  var TOTAL = 8;
+
+  /* ---------- the payoff: a starter shelf built from the answers ---------- */
+  function starterShelf() {
+    var pick = [], seen = {}, order = [];
+    if (draft.why) order.push(draft.why);
+    (draft.shelves || []).forEach(function (c) { if (order.indexOf(c) < 0) order.push(c); });
+    if (!order.length) order = shelves().slice(0, 3);
+    function readMin(b) { var m = parseInt(b.readTime, 10); return isNaN(m) ? 15 : m; }
+    var budget = draft.minutes || 10;
+    var pools = {};
+    (window.BOOKS || []).forEach(function (b) { (pools[b.category] = pools[b.category] || []).push(b); });
+    Object.keys(pools).forEach(function (k) {
+      pools[k].sort(function (a, b) {
+        if (draft.style === "deep") { var d = (b.graveLink ? 1 : 0) - (a.graveLink ? 1 : 0); if (d) return d; }
+        if (budget <= 10) return readMin(a) - readMin(b);
+        return 0; /* stable — library order otherwise */
+      });
+    });
+    var idx = {};
+    var added = true;
+    while (pick.length < 6 && added) {
+      added = false;
+      for (var i = 0; i < order.length && pick.length < 6; i++) {
+        var c = order[i], pool = pools[c] || [];
+        idx[c] = idx[c] || 0;
+        while (idx[c] < pool.length) {
+          var b = pool[idx[c]++];
+          if (!seen[b.id]) { seen[b.id] = 1; pick.push(b); added = true; break; }
         }
       }
-    } catch (e) {}
-    /* (welcome toast removed — no more black boxes) */
+    }
+    (window.BOOKS || []).forEach(function (b) { if (pick.length < 6 && !seen[b.id]) { seen[b.id] = 1; pick.push(b); } });
+    return pick.slice(0, 6);
   }
 
-  function renderSlide(n) {
-    var box = document.getElementById("obBox");
-    if (!box) return;
-    var dots = "";
-    for (var i = 0; i < 4; i++) dots += "<i class='" + (i === n ? "on" : "") + "'></i>";
-    if (n === 0) {
-      box.innerHTML =
-        '<div class="ob-dots">' + dots + '</div>' +
-        '<div style="font-size:34px">🎯</div>' +
-        '<h3>WHAT BRINGS YOU HERE?</h3>' +
-        '<p class="ob-sub">Pick one — we\'ll build your shelf around it.</p>' +
-        '<div class="ob-goals">' + GOALS.map(function (g) {
-          return '<button data-g="' + g.id + '" class="' + (state.goal === g.id ? "sel" : "") + '">' + g.emoji + ' ' + g.label + '</button>';
-        }).join("") + '</div>' +
-        '<button class="ob-next" id="obNext" ' + (state.goal ? "" : "disabled") + '>CONTINUE →</button>' +
-        '<button class="ob-skip" id="obSkip">Skip — show me everything</button>';
-      box.querySelectorAll("[data-g]").forEach(function (b) {
-        b.addEventListener("click", function () {
-          state.goal = b.dataset.g;
-          box.querySelectorAll("[data-g]").forEach(function (x) { x.classList.remove("sel"); });
-          b.classList.add("sel");
-          var nx = document.getElementById("obNext");
-          if (nx) nx.disabled = false;
-        });
-      });
-      document.getElementById("obNext").addEventListener("click", function () { renderSlide(1); });
-      document.getElementById("obSkip").addEventListener("click", function () { finish(true); });
-    } else if (n === 1) {
-      box.innerHTML =
-        '<div class="ob-dots">' + dots + '</div>' +
-        '<div style="font-size:34px">📖</div>' +
-        '<h3>HOW DO YOU READ?</h3>' +
-        '<p class="ob-sub">We\'ll surface the right books first.</p>' +
-        '<div class="ob-styles">' + STYLES.map(function (s) {
-          return '<button data-s="' + s.id + '" class="' + (state.style === s.id ? "sel" : "") + '">' + s.emoji + ' ' + s.label + '<small>' + s.desc + '</small></button>';
-        }).join("") + '</div>' +
-        '<button class="ob-next" id="obNext" ' + (state.style ? "" : "disabled") + '>CONTINUE →</button>' +
-        '<button class="ob-skip" id="obSkip">Skip for now</button>';
-      box.querySelectorAll("[data-s]").forEach(function (b) {
-        b.addEventListener("click", function () {
-          state.style = b.dataset.s;
-          box.querySelectorAll("[data-s]").forEach(function (x) { x.classList.remove("sel"); });
-          b.classList.add("sel");
-          var nx = document.getElementById("obNext");
-          if (nx) nx.disabled = false;
-        });
-      });
-      document.getElementById("obNext").addEventListener("click", function () { renderSlide(2); });
-      document.getElementById("obSkip").addEventListener("click", function () { state.style = state.style || "quick"; renderSlide(2); });
-    } else if (n === 2) {
-      box.innerHTML =
-        '<div class="ob-dots">' + dots + '</div>' +
-        '<div style="font-size:34px">⏰</div>' +
-        '<h3>HOW MUCH TIME DO YOU HAVE?</h3>' +
-        '<p class="ob-sub">We\'ll match the lesson length to your day.</p>' +
-        '<div class="ob-styles">' + TIMES.map(function (t) {
-          return '<button data-t="' + t.id + '" class="' + (state.time === t.id ? "sel" : "") + '">' + t.emoji + ' ' + t.label + '<small>' + t.desc + '</small></button>';
-        }).join("") + '</div>' +
-        '<button class="ob-next" id="obNext" ' + (state.time ? "" : "disabled") + '>CONTINUE →</button>' +
-        '<button class="ob-skip" id="obSkip">Skip for now</button>';
-      box.querySelectorAll("[data-t]").forEach(function (b) {
-        b.addEventListener("click", function () {
-          state.time = b.dataset.t;
-          box.querySelectorAll("[data-t]").forEach(function (x) { x.classList.remove("sel"); });
-          b.classList.add("sel");
-          var nx = document.getElementById("obNext");
-          if (nx) nx.disabled = false;
-        });
-      });
-      document.getElementById("obNext").addEventListener("click", function () { renderSlide(3); });
-      document.getElementById("obSkip").addEventListener("click", function () { state.time = state.time || "15"; finish(true); });
-    } else {
-      /* the 3 questions are answered — the sign-in slide is just a CTA.
-         Mark done NOW so even leaving via LOG IN never re-triggers it. */
-      set("tsb_onboarded", true);
-      set("tsb_prefs", { goal: state.goal, style: state.style, time: state.time || "15", ts: Date.now() });
-      box.innerHTML =
-        '<div class="ob-dots">' + dots + '</div>' +
-        '<div style="font-size:34px">🔐</div>' +
-        '<h3>ONE MORE THING…</h3>' +
-        '<p class="ob-sub">Save your progress so it follows you to every device — free, 1 tap, no password.</p>' +
-        '<div class="ob-signin">' +
-        '<a class="g" href="login.html">🔐 LOG IN WITH GOOGLE — SAVE PROGRESS</a>' +
-        '<button class="skip2" id="obNo">SKIP — START READING</button>' +
-        '</div>';
-      document.getElementById("obNo").addEventListener("click", function () { finish(true); });
-      // if user logs in from here, mark onboarded so it never shows again after return
-      try { sessionStorage.setItem("tsb_onboarded_pending", "1"); } catch (e) {}
+  function langList() {
+    var base = [{ code: "en", name: "English", flag: "📕" }];
+    try { if (window.TSB_LANG && TSB_LANG.list) return base.concat(TSB_LANG.list); } catch (e) {}
+    return base;
+  }
+
+  function rows(list, attr, picked, withSub) {
+    return list.map(function (o) {
+      var on = Array.isArray(picked) ? picked.indexOf(o.id) >= 0 : picked === o.id;
+      return '<button class="ob-row' + (on ? " on" : "") + '" data-' + attr + '="' + o.id + '">' +
+        '<span class="ic">' + o.ic + "</span><span>" + o.t +
+        (withSub ? "<small>" + o.s + "</small>" : "") +
+        '</span><span class="tick">✓</span></button>';
+    }).join("");
+  }
+
+  /* ---------- step templates ---------- */
+  function stepHtml(i) {
+    switch (i) {
+      case 0:
+        return '<div class="ob-step__center">' +
+          '<div class="ob-logo">📕</div>' +
+          '<h2>The<span>Small</span>Book</h2>' +
+          '<p class="ob-tag">big books · small reads</p>' +
+          '<p class="ob-sub">350+ books, distilled into lessons you can use today. A few quick questions — and your starter shelf appears.</p>' +
+          '<button class="ob-cta" data-next>Let’s tune it for me →</button>' +
+          "</div>";
+      case 1:
+        return "<h2>What mess are we fixing?</h2>" +
+          '<p class="ob-sub">Your main battle — the library will lead with it.</p>' +
+          '<div class="ob-rows">' + rows(WHYS, "why", draft.why, true) + "</div>" +
+          '<div class="ob-btns"><button class="ob-cta" data-next data-need="why">Continue →</button></div>';
+      case 2:
+        return "<h2>Pick your shelves</h2>" +
+          '<p class="ob-sub">Tap everything you’d browse at 2am.</p>' +
+          '<div class="ob-rows">' + shelves().map(function (c) {
+            var on = draft.shelves.indexOf(c) >= 0;
+            var m = SHELF_META[c] || ["📚", ""];
+            return '<button class="ob-row' + (on ? " on" : "") + '" data-shelf="' + c.replace(/"/g, "&quot;") + '"><span class="ic">' + m[0] + "</span><span>" + c +
+              (m[1] ? "<small>" + m[1] + "</small>" : "") + '<span class="tick">✓</span></button>';
+          }).join("") + "</div>" +
+          '<div class="ob-btns"><button class="ob-cta" data-next data-need="shelves">Continue →</button></div>';
+      case 3:
+        return "<h2>Real talk — your attention span today?</h2>" +
+          '<p class="ob-sub">We’ll respect it. No 40-minute walls, no guilt.</p>' +
+          '<div class="ob-seg">' + MINUTES.map(function (m) {
+            return '<button class="' + (draft.minutes === m ? "on" : "") + '" data-min="' + m + '">' + (MIN_LABEL[m] || m + "′") + "</button>";
+          }).join("") + "</div>" +
+          '<p class="ob-sub ob-sub--mt">“' + (MIN_SUB[draft.minutes] || "one chai") + '” it is — one lesson fits exactly that.</p>' +
+          '<div class="ob-btns"><button class="ob-cta" data-next>Continue →</button></div>';
+      case 4:
+        return "<h2>How should lessons taste?</h2>" +
+          '<p class="ob-sub">Every book in the app obeys this.</p>' +
+          '<div class="ob-rows">' + rows(STYLES, "style", draft.style, true) + "</div>" +
+          '<div class="ob-btns"><button class="ob-cta" data-next data-need="style">Continue →</button></div>';
+      case 5:
+        return "<h2>Read in which language?</h2>" +
+          '<p class="ob-sub">Summaries, chat and audio all switch.</p>' +
+          '<div class="ob-langs">' + langList().map(function (l) {
+            var cur = draft.lang || ((window.TSB_LANG && TSB_LANG.get) ? TSB_LANG.get() : "en");
+            return '<button class="ob-lang' + (l.code === cur ? " on" : "") + '" data-lang="' + l.code + '"><span>' + l.flag + "</span>" + l.name + "</button>";
+          }).join("") + "</div>" +
+          '<div class="ob-btns"><button class="ob-cta" data-next>Continue →</button></div>';
+      case 6:
+        return "<h2>Light or dark?</h2>" +
+          '<p class="ob-sub">Flip it any time in Settings.</p>' +
+          '<div class="ob-rows">' +
+            '<button class="ob-row' + (draft.theme === "light" ? " on" : "") + '" data-theme-pick="light"><span class="ic">☀️</span><span>Light<small>Paper & ink</small></span><span class="tick">✓</span></button>' +
+            '<button class="ob-row' + (draft.theme === "dark" ? " on" : "") + '" data-theme-pick="dark"><span class="ic">🌙</span><span>Dark<small>Low-light reading</small></span><span class="tick">✓</span></button>' +
+          "</div>" +
+          '<div class="ob-btns"><button class="ob-cta" data-next>See my shelf →</button></div>';
+      case 7:
+        return "<h2>Your starter shelf 🎁</h2>" +
+          '<p class="ob-sub">Hand-picked from your answers. Tap any cover — page one opens instantly.</p>' +
+          '<div class="ob-shelf">' + starterShelf().map(function (b, i) {
+            return '<button class="ob-book" data-book="' + b.id + '"><span class="ob-book__n">' + (i + 1) + "</span>" +
+              '<img src="assets/covers/' + encodeURIComponent(b.id) + '.jpg" alt="" loading="lazy">' +
+              '<span class="ob-book__t">' + b.title + "</span></button>";
+          }).join("") + "</div>" +
+          '<p class="ob-shelfnote">This shelf also waits for you on Home.</p>' +
+          '<div class="ob-btns"><button class="ob-cta" data-finish>Save & explore home →</button></div>';
     }
+    return "";
+  }
+
+  function build() {
+    var wrap = document.createElement("div");
+    wrap.className = "obwrap";
+    wrap.innerHTML =
+      '<div class="ob" role="dialog" aria-modal="true" aria-label="Welcome to TheSmallBook">' +
+        '<div class="ob__prog">' + Array.apply(null, Array(TOTAL)).map(function (_, i) { return '<i data-seg="' + i + '"></i>'; }).join("") + "</div>" +
+        '<button class="ob__back" data-back aria-label="Back">←</button>' +
+        '<button class="ob__x" data-skip aria-label="Skip personalisation">✕</button>' +
+        '<div class="ob__body"></div>' +
+      "</div>";
+    document.body.appendChild(wrap);
+    document.documentElement.classList.add("ob-lock");
+    return wrap;
+  }
+
+  var wrap = null;
+  var body = null;
+  var busy = false;
+
+  function paintProg() {
+    wrap.querySelectorAll("[data-seg]").forEach(function (s, i) {
+      s.classList.toggle("on", i <= step);
+    });
+    wrap.querySelector(".ob__back").style.visibility = step === 0 ? "hidden" : "visible";
+  }
+
+  function show(i, dir) {
+    var old = body.querySelector(".ob-step");
+    function mount() {
+      var el = document.createElement("div");
+      el.className = "ob-step ob-step--enter" + (dir === "back" ? " ob-step--enterback" : "");
+      el.innerHTML = stepHtml(i);
+      body.appendChild(el);
+      body.scrollTop = 0;
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { el.classList.remove("ob-step--enter", "ob-step--enterback"); });
+      });
+      busy = false;
+    }
+    if (old) {
+      busy = true;
+      old.classList.add(dir === "back" ? "ob-step--outback" : "ob-step--out");
+      setTimeout(function () { if (old.parentNode) old.parentNode.removeChild(old); mount(); }, 200);
+    } else mount();
+    paintProg();
+  }
+
+  function goNext() { if (!busy) { step = Math.min(TOTAL - 1, step + 1); show(step, "fwd"); } }
+  function goBack() { if (!busy && step > 0) { step -= 1; show(step, "back"); } }
+
+  /* close for good — never trap the reader */
+  function dismiss(mark) {
+    if (mark) set("tsb_onboarded", true);
+    if (!wrap) return;
+    var w = wrap;
+    wrap = null;
+    w.classList.add("obwrap--off");
+    document.documentElement.classList.remove("ob-lock");
+    setTimeout(function () { if (w.parentNode) w.parentNode.removeChild(w); }, 420);
+  }
+
+  function shakeNeed(sel) {
+    var g = body.querySelector(sel);
+    if (!g) return;
+    g.classList.add("ob-shake");
+    setTimeout(function () { g.classList.remove("ob-shake"); }, 420);
+  }
+
+  function saveProfile() {
+    var order = [];
+    if (draft.why) order.push(draft.why);
+    (draft.shelves || []).forEach(function (c) { if (order.indexOf(c) < 0) order.push(c); });
+    set("tsb_onboard_draft", draft);
+    set("tsb_onboarded", true);
+    set("tsb_interests", order.length ? order : draft.shelves);
+    set("tsb_read_minutes", draft.minutes);
+    set("tsb_read_style", draft.style || "steady");
+    var lead = draft.why || draft.shelves[0];
+    if (lead) set("tsb_ob_lead", lead);
+    try { set("tsb_starter_shelf", starterShelf().map(function (b) { return b.id; })); } catch (e) {}
+  }
+
+  function finish() {
+    saveProfile();
+    try {
+      if (draft.lang && window.TSB_LANG && TSB_LANG.select) TSB_LANG.select(draft.lang);
+      var isDark = document.documentElement.classList.contains("dark");
+      if (draft.theme && ((draft.theme === "dark") !== isDark) && window.TSB && TSB.theme) TSB.theme.toggle();
+    } catch (e) {}
+    var lead = draft.shelves[0] || "";
+    var styleName = (STYLES.filter(function (s) { return s.id === draft.style; })[0] || {}).t || "Steady reader";
+    body.innerHTML = '<div class="ob-step ob-step--done"><div class="ob-logo">🎉</div><h2>Your library is tuned</h2>' +
+      '<p class="ob-sub">' + (lead ? "📚 Leading with " + lead + "<br>" : "") +
+      "⏱ " + draft.minutes + " min a day · " + styleName + "<br>" +
+      "🌐 " + (draft.lang && draft.lang !== "en" ? draft.lang.toUpperCase() : "EN") + " · " +
+      (draft.theme === "dark" ? "🌙 dark" : "☀️ light") + "</p>" +
+      '<p class="ob-sub">Change any of it later in Settings.</p></div>';
+    setTimeout(function () {
+      wrap.classList.add("obwrap--off");
+      document.documentElement.classList.remove("ob-lock");
+      setTimeout(function () {
+        if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
+        /* apply the tuned shelf live — tap the matching filter chip */
+        try {
+          var leadNow = JSON.parse(localStorage.getItem("tsb_ob_lead") || "null");
+          if (leadNow) {
+            var chip = null;
+            document.querySelectorAll(".chip").forEach(function (c) { if (c.textContent === leadNow) chip = c; });
+            if (chip) chip.click();
+          }
+        } catch (e) {}
+      }, 420);
+    }, 1400);
+  }
+
+  function bind() {
+    wrap.addEventListener("click", function (e) {
+      var t;
+      if ((t = e.target.closest("[data-next]"))) {
+        var need = t.getAttribute("data-need");
+        if (need === "why" && !draft.why) return shakeNeed(".ob-rows");
+        if (need === "style" && !draft.style) return shakeNeed(".ob-rows");
+        if (need === "shelves" && !draft.shelves.length) return shakeNeed(".ob-rows");
+        set("tsb_onboard_draft", draft);
+        goNext();
+        return;
+      }
+      if (e.target.closest("[data-finish]")) { finish(); return; }
+      if ((t = e.target.closest("[data-book]"))) {
+        /* tap a cover on the starter shelf → save profile, open page one */
+        saveProfile();
+        dismiss(true);
+        location.href = "book.html?id=" + encodeURIComponent(t.getAttribute("data-book"));
+        return;
+      }
+      if (e.target.closest("[data-skip]")) { dismiss(true); return; }
+      if (e.target.closest("[data-back]")) { goBack(); return; }
+      if ((t = e.target.closest("[data-why]"))) {
+        draft.why = t.getAttribute("data-why");
+        body.querySelectorAll("[data-why]").forEach(function (b) { b.classList.toggle("on", b === t); });
+        return;
+      }
+      if ((t = e.target.closest("[data-shelf]"))) {
+        var c = t.getAttribute("data-shelf");
+        var ix = draft.shelves.indexOf(c);
+        if (ix >= 0) draft.shelves.splice(ix, 1); else draft.shelves.push(c);
+        t.classList.toggle("on", ix < 0);
+        return;
+      }
+      if ((t = e.target.closest("[data-min]"))) {
+        draft.minutes = Number(t.getAttribute("data-min"));
+        body.querySelectorAll("[data-min]").forEach(function (b) { b.classList.toggle("on", b === t); });
+        return;
+      }
+      if ((t = e.target.closest("[data-style]"))) {
+        draft.style = t.getAttribute("data-style");
+        body.querySelectorAll("[data-style]").forEach(function (b) { b.classList.toggle("on", b === t); });
+        return;
+      }
+      if ((t = e.target.closest("[data-lang]"))) {
+        draft.lang = t.getAttribute("data-lang");
+        body.querySelectorAll("[data-lang]").forEach(function (b) { b.classList.toggle("on", b === t); });
+        return;
+      }
+      if ((t = e.target.closest("[data-theme-pick]"))) {
+        draft.theme = t.getAttribute("data-theme-pick");
+        body.querySelectorAll("[data-theme-pick]").forEach(function (b) { b.classList.toggle("on", b === t); });
+        return;
+      }
+    });
   }
 
   function boot() {
     if (!shouldShow()) return;
-    // wait for the page's own UI to settle a little
-    setTimeout(function () {
-      css();
-      var ov = document.createElement("div");
-      ov.className = "ob-ov";
-      ov.id = "tsb-onboard-ov";
-      ov.innerHTML = '<div class="ob-box" id="obBox" role="dialog" aria-label="Welcome"></div>';
-      document.body.appendChild(ov);
-      renderSlide(0);
-    }, 900);
+    wrap = build();
+    body = wrap.querySelector(".ob__body");
+    bind();
+    show(0, "fwd");
+    /* if a login completes while this is open, bow out gracefully */
+    window.addEventListener("tsb:auth", function () {
+      try { if (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) dismiss(true); } catch (e) {}
+    });
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
-
-  window.TSB_ONBOARD = {
-    done: function () { return get("tsb_onboarded", false); },
-    prefs: function () { return get("tsb_prefs", null); },
-    markDone: function () { set("tsb_onboarded", true); }
-  };
 })();

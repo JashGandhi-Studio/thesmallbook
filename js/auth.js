@@ -545,7 +545,7 @@
       if (u) {
         const nm = displayName();
         const first = nm.split(" ")[0].slice(0, 12);
-        chipSlot.innerHTML = '<a class="tsb-navchip" href="login.html" title="' + escapeHtml(nm) + ' — account">👋 ' + escapeHtml(first) + '<i class="tsb-navuser__dot" aria-hidden="true"></i></a>';
+        chipSlot.innerHTML = '<span class="tsb-navchip tsb-navchip--static" title="Signed in as ' + escapeHtml(nm) + '">👋 ' + escapeHtml(first) + '<i class="tsb-navuser__dot" aria-hidden="true"></i></span>';
       } else if (!/login\.html/.test(location.pathname)) {
         chipSlot.innerHTML = '<a class="tsb-loginbtn" href="login.html" title="Save your progress across devices">' + GOOGLE_G + '<span>LOG IN</span></a>';
         const btn = chipSlot.querySelector(".tsb-loginbtn");
@@ -652,10 +652,63 @@
     }
   }
 
+  /* ============================================================
+     📱 PREMIUM SIGN-IN SHEET (v2) — the "YOU" bottom sheet.
+     Opens from the action bar's You tab when signed out.
+     Same Google flow, zero new dependencies.
+     ============================================================ */
+  var sheetRoot = null;
+  function buildSheet() {
+    if (sheetRoot) return sheetRoot;
+    sheetRoot = document.createElement("div");
+    sheetRoot.className = "tsb-sheetwrap";
+    sheetRoot.setAttribute("aria-hidden", "true");
+    sheetRoot.innerHTML =
+      '<div class="tsb-sheetveil" data-sheet-close></div>' +
+      '<div class="tsb-sheet" role="dialog" aria-modal="true" aria-label="Sign in to TheSmallBook">' +
+        '<div class="tsb-sheet__grip" aria-hidden="true"></div>' +
+        '<div class="tsb-sheet__head">' +
+          '<span class="tsb-sheet__title">YOU</span>' +
+          '<button class="tsb-sheet__x" data-sheet-close aria-label="Close">✕</button>' +
+        "</div>" +
+        '<div class="tsb-sheet__wave" aria-hidden="true">👋</div>' +
+        '<h2 class="tsb-sheet__h">YOUR SHELF, EVERYWHERE</h2>' +
+        '<p class="tsb-sheet__s">Sign in to keep what you read — and to start posting.</p>' +
+        '<div class="tsb-sheet__perk"><span>📚</span> Progress and shelf on every device</div>' +
+        '<div class="tsb-sheet__perk"><span>🔥</span> Streaks and badges that actually save</div>' +
+        '<div class="tsb-sheet__perk"><span>✍️</span> Post under your own name</div>' +
+        '<button class="tsb-sheet__google" data-sheet-google>Continue with Google</button>' +
+        '<p class="tsb-sheet__fine">Free forever. No card.</p>' +
+      "</div>";
+    document.body.appendChild(sheetRoot);
+    sheetRoot.addEventListener("click", function (e) {
+      if (e.target.closest("[data-sheet-close]")) closeSheet();
+      if (e.target.closest("[data-sheet-google]")) {
+        if (ENABLED) signIn("google");
+        else location.href = "login.html";
+      }
+    });
+    return sheetRoot;
+  }
+  function openSheet() {
+    buildSheet();
+    sheetRoot.setAttribute("aria-hidden", "false");
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { sheetRoot.classList.add("tsb-sheetwrap--on"); });
+    });
+  }
+  function closeSheet() {
+    if (!sheetRoot) return;
+    sheetRoot.classList.remove("tsb-sheetwrap--on");
+    sheetRoot.setAttribute("aria-hidden", "true");
+  }
+
   async function boot() {
     try {
       if (!ENABLED) {
-        window.TSB_AUTH = { enabled: false };
+        /* sheet still works without cloud keys — Google button falls
+           through to the sign-in page, which explains the setup */
+        window.TSB_AUTH = { enabled: false, user: () => null, openSheet, closeSheet };
         return;
       }
       const didCallback = await handleCallback();
@@ -684,13 +737,15 @@
         onBookComplete,
         renderNav,
         clientId: GCLIENT,
+        openSheet,
+        closeSheet,
         visits: () => (user() ? lsGet("tsb_auth_visits", { d: "", n: 0 }).n : 0)
       };
       try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
     } catch (e) {
       console.warn("TSB boot error:", e);
       // never leave the app without TSB_AUTH — degrade gracefully
-      window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, track, onBookComplete, renderNav, clientId: GCLIENT };
+      window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, track, onBookComplete, renderNav, clientId: GCLIENT, openSheet, closeSheet };
       try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
     }
   }

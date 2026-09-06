@@ -1103,6 +1103,16 @@
     e.target.textContent = expanded ? "⤴ COLLAPSE ALL" : "⤵ EXPAND ALL";
   });
 
+  /* 🎯 onboarding personalisation — deep readers start fully open */
+  try {
+    if (TSB.get("tsb_read_style", "") === "deep") {
+      expanded = true;
+      document.querySelectorAll(".lesson").forEach((l) => l.classList.add("open"));
+      const eb = document.getElementById("expandBtn");
+      if (eb) eb.innerHTML = '<i class="abtn__ico">⤴</i><span class="abtn__lbl">COLLAPSE ALL</span>';
+    }
+  } catch (e) {}
+
   /* deep link */
   if (location.hash.startsWith("#lesson-")) {
     const n = +location.hash.slice(8);

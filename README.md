@@ -2,6 +2,8 @@
 
 **Live repo:** [github.com/JashGandhi-Studio/thesmallbook](https://github.com/JashGandhi-Studio/thesmallbook) — ⭐ star it if the lessons helped you!
 
+**350 books · 2,176 lessons · 300 failure autopsies — free.**
+
 **Big books. Small reads.** Every lesson from the world's greatest books — broken down chapter by chapter with real examples, killer quotes, and action steps. Skim it, understand it, apply it. No 300-page grind.
 
 > 🎨 Design language: **Neo-Brutalism** — thick black borders, hard offset shadows, loud colors, zero subtlety.
@@ -123,7 +125,7 @@ thesmallbook/
 
 ## 💀 The Graveyard
 
-The anti-library: **220 legendary real-world failures** — Newton buying the bubble top, Kodak shelving the digital camera, Madoff, Theranos, Napoleon in Russia, Harshad Mehta, Kingfisher, the Trojan Horse — each with the full story, the fatal mistake, and the free lesson, linked to the book that teaches the antidote. Searchable, filterable by 8 ways-to-die (Startups, Money, Fraud, Ego, Business, Trust, History, Fame), with a daily Grave of the Day, a 🎲 random-corpse button, and shareable R.I.P. cards. Add cases in `js/failures.js`.
+The anti-library: **300 legendary real-world failures** — Newton buying the bubble top, Kodak shelving the digital camera, Madoff, Theranos, Napoleon in Russia, Harshad Mehta, Kingfisher, the Trojan Horse — each with the full story, the fatal mistake, and the free lesson, linked to the book that teaches the antidote. Searchable, filterable by 8 ways-to-die (Startups, Money, Fraud, Ego, Business, Trust, History, Fame), with a daily Grave of the Day, a 🎲 random-corpse button, and shareable R.I.P. cards. Add cases in `js/failures.js`.
 
 ## 🌐 Universal Language Support
 

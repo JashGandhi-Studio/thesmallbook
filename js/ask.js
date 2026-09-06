@@ -161,8 +161,9 @@
     }
     var l = b.lessons[idx] || b.lessons[0];
     var hue = ["aq-b--y", "aq-b--p", "aq-b--g", "aq-b--b", "aq-b--v"][idx % 5];
-    return '<a class="aq-src ' + hue + '" href="' + lessonLink(b, idx) + '">' +
-      '<span class="aq-src__book">📕 ' + esc(b.title) + '</span>' +
+    return '<a class="aq-src aq-src--img ' + hue + '" href="' + lessonLink(b, idx) + '">' +
+      '<img class="aq-src__img" src="assets/covers/' + encodeURIComponent(b.id) + '.jpg" alt="" loading="lazy">' +
+      '<span class="aq-src__book">' + esc(b.title) + '</span>' +
       '<span class="aq-src__lesson">' + esc(l.title) + '</span>' +
       '<span class="aq-src__blurb">' + esc(blurb || l.summary.slice(0, 100) + "…") + '</span>' +
       '<span class="aq-src__go">READ →</span></a>';
@@ -247,7 +248,7 @@
   }
 
   /* ============ widget DOM ============ */
-  var root = null, fab = null, panel = null, msgs = null, input = null;
+  var root = null, panel = null, msgs = null, input = null;
   var open_ = false;
   function headStats() {
     var el = root && root.querySelector("#tsb-headstats");
@@ -261,18 +262,22 @@
   function loadHist() { try { return JSON.parse(localStorage.getItem(STORE_KEY) || "[]"); } catch (e) { return []; } }
   function saveHist(h) { try { localStorage.setItem(STORE_KEY, JSON.stringify(h.slice(-30))); } catch (e) {} }
 
+  /* v4: chat.html hosts the FULL chat interface (no pop-out there) */
+  var PAGE_MODE = /chat\.html$/.test(location.pathname);
+
   function build() {
     if (root) return;
     root = document.createElement("div");
     root.id = "tsb-ask-root";
-    if (/book\.html/.test(location.pathname)) root.className = "tsb-ask--book";
+    if (PAGE_MODE) root.className = "tsb-ask--page";
+    else if (/book\.html/.test(location.pathname)) root.className = "tsb-ask--book";
+    /* v4: the floating ASK button is GONE — the bottom action bar's
+       Chat tab (js/bar.js) owns this panel now, same everything. */
     root.innerHTML =
-      '<button id="tsb-fab" class="aq-fab" title="Ask TheSmallBook" aria-label="Ask TheSmallBook">' +
-        '<span class="aq-fab__spark">✦</span><span class="aq-fab__txt">' + t("ASK") + '</span><span class="aq-fab__pulse"></span></button>' +
       '<div id="tsb-panel" class="aq-panel" role="dialog" aria-label="Ask TheSmallBook">' +
         '<div class="aq-head">' +
-          '<div class="aq-head__t">📕 ASK THE LIBRARY</div>' +
-          '<div class="aq-head__s" id="tsb-headstats"></div>' +
+          '<div class="aq-head__c"><div class="aq-head__t">📕 ASK THE LIBRARY</div>' +
+          '<div class="aq-head__s" id="tsb-headstats"></div></div>' +
           '<div class="aq-head__btns">' +
             '<button class="aq-libbtn" id="tsb-libbtn" title="' + t("Browse all questions") + '">📚</button>' +
             '<button class="aq-clear" title="' + t("Clear chat") + '">🗑</button>' +
@@ -296,7 +301,6 @@
         '<div class="aq-lib__list" id="tsb-liblist"></div>' +
       "</div>";
     document.body.appendChild(root);
-    fab = root.querySelector(".aq-fab");
     panel = root.querySelector(".aq-panel");
     msgs = root.querySelector("#tsb-msgs");
     input = root.querySelector("#tsb-input");
@@ -304,17 +308,88 @@
     var lang = getLang();
     if (lang !== "en") {
       setTimeout(function () {
-        var f = root.querySelector(".aq-fab__txt");
         var h = root.querySelector(".aq-head__t");
         var pl = root.querySelector("#tsb-input");
         var snd = root.querySelector("#tsb-send");
-        tr1("ASK", lang).then(function (v) { if (f) f.textContent = v; if (snd) snd.textContent = v; });
+        tr1("ASK", lang).then(function (v) { if (snd) snd.textContent = v; });
         tr1("ASK THE LIBRARY", lang).then(function (v) { if (h) h.textContent = "📕 " + v; });
         tr1("Ask anything…", lang).then(function (v) { if (pl) pl.placeholder = v; });
       }, 250);
     }
     bind();
     headStats();
+    if (PAGE_MODE) pageExtras();
+  }
+
+  /* ---- full-page chat mode: back button + library search + auto-open ---- */
+  function goBack() {
+    if (history.length > 1) history.back();
+    else location.href = "index.html";
+  }
+  function pageExtras() {
+    var panel = root.querySelector(".aq-panel");
+    var head = root.querySelector(".aq-head");
+    if (head) {
+      var back = document.createElement("button");
+      back.className = "aq-back";
+      back.id = "tsb-back";
+      back.setAttribute("aria-label", "Back");
+      back.textContent = "←";
+      back.addEventListener("click", goBack);
+      head.insertBefore(back, head.firstChild);
+    }
+    /* ---- deterministic full-height column (inline beats any cache) ----
+       head / conversation(1fr) / personalised pills / ask-composer,
+       composer glued just above the action bar. No dead space, ever. */
+    var panel = root.querySelector(".aq-panel");
+    if (panel) {
+      panel.style.position = "fixed";
+      panel.style.top = "0";
+      panel.style.left = "0";
+      panel.style.right = "0";
+      panel.style.bottom = "0";
+      panel.style.width = "100%";
+      panel.style.height = "100%";
+      panel.style.display = "grid";
+      panel.style.gridTemplateRows = "auto minmax(0, 1fr) auto auto";
+      var rowOf = { ".aq-head": 1, ".aq-msgs": 2, ".aq-chips": 3, ".aq-inputrow": 4 };
+      Object.keys(rowOf).forEach(function (sel) {
+        var el = panel.querySelector(sel);
+        if (el) el.style.gridRow = String(rowOf[sel]);
+      });
+      var msgs = panel.querySelector(".aq-msgs");
+      if (msgs) { msgs.style.minHeight = "0"; msgs.style.overflowY = "auto"; }
+      var inp = panel.querySelector(".aq-inputrow");
+      if (inp) inp.style.paddingBottom = "calc(var(--bar-total) + 6px)";
+      /* belt & braces: if anything still short-changes the height, pin it */
+      requestAnimationFrame(function () {
+        try {
+          var h = panel.getBoundingClientRect().height;
+          if (h < window.innerHeight - 2) panel.style.height = window.innerHeight + "px";
+        } catch (e) {}
+      });
+    }
+    /* empty-state hero — the designed "home" of the chat, gone on first message */
+    var msgsEl = root.querySelector("#tsb-msgs");
+    if (msgsEl) {
+      var hero = document.createElement("div");
+      hero.className = "cht-hero";
+      hero.innerHTML = '<div class="cht-hero__logo">📕</div>' +
+        "<h1>Ask the library</h1>" +
+        "<p>350 books · 2,176 lessons · 300 autopsies — one question away.</p>";
+      msgsEl.insertBefore(hero, msgsEl.firstChild);
+      try {
+        var mo = new MutationObserver(function () {
+          if (msgsEl.querySelector(".aq-msg--user") && hero.parentNode) {
+            hero.classList.add("cht-hero--off");
+            setTimeout(function () { if (hero.parentNode) hero.parentNode.removeChild(hero); }, 300);
+            mo.disconnect();
+          }
+        });
+        mo.observe(msgsEl, { childList: true });
+      } catch (e) {}
+    }
+    open();
   }
 
   var QUICK = [
@@ -333,8 +408,32 @@
       chips.push({ label: "💀 " + t("Related failures"), q: "__GRAVES__" });
     }
     if (/graveyard/.test(location.pathname)) chips.push({ label: "💀 " + t("Why do companies die?"), q: "Why do big companies fail?" });
-    QUICK.slice(0, 4).forEach(function (c) { chips.push(c); });
+    /* 🎯 suggestions tuned to the reader's onboarding choices */
+    var pc = personalChips();
+    pc.forEach(function (c) { chips.push(c); });
+    QUICK.slice(0, pc.length ? 2 : 4).forEach(function (c) { chips.push(c); });
     return chips;
+  }
+
+  /* pick library questions whose books sit on the reader's chosen shelves */
+  function personalChips() {
+    var out = [];
+    try {
+      var ints = JSON.parse(localStorage.getItem("tsb_interests") || "null") || [];
+      var lead = JSON.parse(localStorage.getItem("tsb_ob_lead") || "null");
+      if (lead && ints.indexOf(lead) < 0) ints.unshift(lead);
+      if (!ints.length) return out;
+      var bi = bookIndex();
+      (window.TSB_ASK_DATA || []).forEach(function (d) {
+        if (out.length >= 4) return;
+        var hit = (d.books || []).some(function (s) {
+          var bk = bi[s.id];
+          return bk && ints.indexOf(bk.category) >= 0;
+        });
+        if (hit) out.push({ label: "✨ " + d.q, q: d.q });
+      });
+    } catch (e) {}
+    return out;
   }
 
   function renderChips() {
@@ -636,7 +735,7 @@
   }
 
   function bind() {
-    fab.addEventListener("click", function () { open_ ? close() : open(); });
+    /* v4: FAB removed — the bar's Chat tab calls TSB_ASK.open() */
     root.querySelector(".aq-close").addEventListener("click", close);
     root.querySelector("#tsb-libbtn").addEventListener("click", openLib);
     root.querySelector("#tsb-libclose").addEventListener("click", closeLib);
@@ -696,14 +795,15 @@
     if (!root) build();
     open_ = true;
     panel.classList.add("aq-panel--open");
-    fab.classList.add("aq-fab--hidden");
-    setTimeout(function () { if (input) input.focus(); }, 120);
+    try { document.dispatchEvent(new CustomEvent("tsb-ask", { detail: { open: true } })); } catch (e) {}
+    if (!PAGE_MODE) setTimeout(function () { if (input) input.focus(); }, 120);
     renderChips();
   }
   function close() {
+    if (PAGE_MODE) { goBack(); return; }
     open_ = false;
     panel.classList.remove("aq-panel--open");
-    fab.classList.remove("aq-fab--hidden");
+    try { document.dispatchEvent(new CustomEvent("tsb-ask", { detail: { open: false } })); } catch (e) {}
     closeLib();
   }
 
