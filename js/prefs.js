@@ -41,10 +41,13 @@
      default = 663px layout viewport (the locked, proper look);
      big / bigger narrow the layout viewport so everything reads larger. */
   function applyAppSize(v) {
-    var w = v === "big" ? 560 : v === "bigger" ? 480 : 663;
+    /* Default = the app's normal responsive size on every phone (the
+       phone's own font zoom can't distort layouts — text-size-adjust
+       is pinned to 100% in CSS). Big/Bigger scale the app's OWN type. */
     try {
-      var vm = document.querySelector('meta[name="viewport"]');
-      if (vm) vm.content = "width=" + w + ", initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1";
+      if (v === "big") document.documentElement.style.fontSize = "18px";
+      else if (v === "bigger") document.documentElement.style.fontSize = "20px";
+      else document.documentElement.style.fontSize = "";
     } catch (e) {}
   }
   var appSize = "default";
