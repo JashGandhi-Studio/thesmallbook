@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=189">
+  <link rel="stylesheet" href="css/style.css?v=191">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,11 +31,11 @@
     </article>
   </main>
 
-  <script src="js/prefs.js?v=189"></script>
-  <script src="js/lang.js?v=189"></script>
-  <script src="js/config.js?v=189"></script>
-  <script src="js/auth.js?v=189"></script>
-  <script src="js/community.js?v=189"></script>
+  <script src="js/prefs.js?v=191"></script>
+  <script src="js/lang.js?v=191"></script>
+  <script src="js/config.js?v=191"></script>
+  <script src="js/auth.js?v=191"></script>
+  <script src="js/community.js?v=191"></script>
   <script>
   (function () {
     "use strict";
@@ -64,7 +64,7 @@
           '<div class="cm-postcard__head">' +
             '<a class="cm-ava cm-ava--lg" href="profile.html?id=' + p.author_id + '">' +
               (prof.avatar_url ? '<img src="' + C.esc(prof.avatar_url) + '" alt="">' : '<span>' + C.esc((p.author_name || "R").charAt(0).toUpperCase()) + "</span>") + "</a>" +
-            '<div class="cm-postcard__who"><a class="cm-name" href="profile.html?id=' + p.author_id + '">' + C.esc(p.author_name) + "</a>" +
+            '<div class="cm-postcard__who"><a class="cm-name" href="profile.html?id=' + p.author_id + '">' + C.esc(p.author_name) + (C.isOfficial(p.author_id) ? '<span class="cm-vtick" title="Official channel">✔</span>' : "") + "</a>" +
               '<span class="cm-time">' + C.ago(p.created_at) + " · " + C.readMins(p.body) + " min read</span></div>" +
             (p.author_id !== meId ? '<button class="cm-follow' + (fol.mine ? " on" : "") + '" data-follow="' + p.author_id + '">' + (fol.mine ? "✓ Following" : "+ Follow") + "</button>" : "") +
           "</div>" +
@@ -142,7 +142,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=189" defer></script>
-  <script src="js/gate.js?v=189" defer></script>
+  <script src="js/bar.js?v=191" defer></script>
+  <script src="js/gate.js?v=191" defer></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v189";
+const CACHE_VERSION = "tsb-v191";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -46,6 +46,8 @@ const APP_SHELL = [
   "./js/gate.js",
   "./js/community.js",
   "./profile.html",
+  "./write.html",
+  "./dm.html",
   "./js/auth.js",
   "./js/store.js",
   "./js/stories.js",
@@ -55,7 +57,7 @@ const APP_SHELL = [
   "./manifest.json",
   "./assets/icon-192.png",
   "./assets/icon-512.png"
-].map(function (u) { return /\.(js|css)$/.test(u) ? u + "?v=189" : u; });
+].map(function (u) { return /\.(js|css)$/.test(u) ? u + "?v=191" : u; });
 
 self.addEventListener("install", (e) => {
   e.waitUntil(

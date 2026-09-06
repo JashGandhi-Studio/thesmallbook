@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <title>Messages — TheSmallBook</title>
+  <meta name="description" content="Talk to readers in TheSmallBook community.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    try {
+      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      if (tsbDark) document.documentElement.classList.add("dark");
+      var tsbTC = document.querySelector('meta[name="theme-color"]');
+      if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
+      tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
+    } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="css/style.css?v=191">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body class="cmpage dmpage">
+  <header class="cm-top">
+    <a class="cm-top__back" id="dmBack" href="stories.html?tab=people" aria-label="Back">←</a>
+    <h1 class="cm-top__t" id="dmTitle">💬 Messages</h1>
+    <span></span>
+  </header>
+
+  <main class="cm-wrap" id="dmMain">
+    <div id="dmList" class="dm-list"></div>
+    <div id="dmThread" class="dm-thread" hidden>
+      <div class="dm-msgs" id="dmMsgs"></div>
+      <form class="dm-send" id="dmSend">
+        <input id="dmBody" class="dm-input" maxlength="1000" placeholder="Say something kind…" autocomplete="off">
+        <button class="cm-write" type="submit">Send</button>
+      </form>
+    </div>
+  </main>
+
+  <script src="js/prefs.js?v=191"></script>
+  <script src="js/lang.js?v=191"></script>
+  <script src="js/config.js?v=191"></script>
+  <script src="js/auth.js?v=191"></script>
+  <script src="js/community.js?v=191"></script>
+  <script>
+  (function () {
+    "use strict";
+    var C = window.TSB_COMMUNITY;
+    var uid = (location.search.match(/[?&]u=([a-f0-9-]{36})/) || [])[1] || "";
+    var list = document.getElementById("dmList"), thread = document.getElementById("dmThread");
+    var msgs = document.getElementById("dmMsgs"), back = document.getElementById("dmBack");
+    var poll = null;
+
+    if (!C.signedIn()) {
+      list.innerHTML = '<div class="cm-empty">Sign in to message readers.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>';
+      return;
+    }
+
+    function ava(prof) {
+      if (!prof) return '<div class="cm-ava cm-ava--lg"><span>R</span></div>';
+      return '<div class="cm-ava cm-ava--lg">' + (prof.avatar_url ? '<img src="' + C.esc(prof.avatar_url) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>";
+    }
+
+    async function loadList() {
+      list.innerHTML = '<div class="cm-empty cm-empty--sm">Loading messages…</div>';
+      var me = await TSB_AUTH.me();
+      var rows = [];
+      try { rows = await C.myMessages(200); } catch (e) {}
+      var convs = C.conversations(rows, me.id);
+      if (!convs.length) {
+        list.innerHTML = '<div class="cm-empty">No messages yet.<br>Find readers in <a href="stories.html?tab=people">👥 People</a> and hit 💬.</div>';
+        return;
+      }
+      list.innerHTML = "";
+      for (var i = 0; i < convs.length; i++) {
+        var cv = convs[i];
+        var prof = null;
+        try { prof = await C.getProfile(cv.user_id); } catch (e) {}
+        var a = document.createElement("a");
+        a.className = "dm-row";
+        a.href = "dm.html?u=" + cv.user_id;
+        a.innerHTML = ava(prof) +
+          '<div class="dm-row__meta"><b>' + C.esc(prof ? prof.name : "Reader") + (C.isOfficial(cv.user_id) ? '<span class="cm-vtick">✔</span>' : "") + "</b>" +
+          '<span>' + C.esc(cv.last.body).slice(0, 60) + "</span></div>" +
+          '<span class="cm-time">' + C.ago(cv.last.created_at) + "</span>";
+        list.appendChild(a);
+      }
+    }
+
+    async function loadThread(silent) {
+      var me = await TSB_AUTH.me();
+      var rows = [];
+      try { rows = await C.threadWith(uid); } catch (e) {}
+      var prof = null;
+      try { prof = await C.getProfile(uid); } catch (e) {}
+      document.getElementById("dmTitle").textContent = "💬 " + (prof ? prof.name : "Reader");
+      back.href = "dm.html";
+      var lastId = msgs.getAttribute("data-last") || "";
+      var nowLast = rows.length ? rows[rows.length - 1].id : "";
+      if (silent && nowLast && nowLast === lastId) return;
+      msgs.setAttribute("data-last", nowLast);
+      msgs.innerHTML = rows.map(function (m) {
+        return '<div class="dm-bub' + (m.sender_id === me.id ? " me" : "") + '">' +
+          '<span>' + C.esc(m.body) + "</span>" +
+          "<em>" + C.ago(m.created_at) + "</em>" +
+        "</div>";
+      }).join("") || '<div class="cm-empty cm-empty--sm">Say hello 👋</div>';
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    document.getElementById("dmSend").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      var body = document.getElementById("dmBody").value.trim();
+      if (!body) return;
+      document.getElementById("dmBody").value = "";
+      try { await C.sendDM(uid, body); await loadThread(); }
+      catch (err) { alert("Message failed — " + (err && err.message ? err.message : err)); }
+    });
+
+    if (uid) {
+      list.hidden = true;
+      thread.hidden = false;
+      loadThread();
+      poll = setInterval(function () { loadThread(true); }, 6000);
+    } else {
+      loadList();
+    }
+  })();
+  </script>
+  <script src="js/bar.js?v=191" defer></script>
+</body>
+</html>

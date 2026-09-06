@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <title>Write — TheSmallBook Stories</title>
+  <meta name="description" content="Write your story in a full-page editor with rich formatting, voice and autosaved drafts.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    try {
+      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      if (tsbDark) document.documentElement.classList.add("dark");
+      var tsbTC = document.querySelector('meta[name="theme-color"]');
+      if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
+      tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
+    } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="css/style.css?v=191">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body class="wrpage">
+  <header class="wr-top">
+    <a class="wr-back" href="stories.html" aria-label="Back to Stories">←</a>
+    <span class="wr-save" id="saveState">✍️ draft</span>
+    <button class="cm-write" id="pubBtn">Publish →</button>
+  </header>
+
+  <main class="wr-wrap">
+    <input id="wTitle" class="wr-title" maxlength="90" placeholder="Title — the moment everything shifted…">
+    <input id="wSub" class="wr-sub" maxlength="140" placeholder="One-line hook (optional)">
+
+    <div class="wr-bar" id="wBar">
+      <button data-cmd="bold" title="Bold"><b>B</b></button>
+      <button data-cmd="italic" title="Italic"><i>I</i></button>
+      <button data-cmd="underline" title="Underline"><u>U</u></button>
+      <span class="wr-sep"></span>
+      <button data-cmd="h1" title="Big heading">H1</button>
+      <button data-cmd="h2" title="Heading">H2</button>
+      <button data-cmd="quote" title="Quote">❝</button>
+      <span class="wr-sep"></span>
+      <button data-cmd="ul" title="Bullets">•≡</button>
+      <button data-cmd="ol" title="Numbered">1≡</button>
+      <button data-cmd="mono" title="Monospace block">&lt;/&gt;</button>
+      <span class="wr-sep"></span>
+      <select id="wFont" title="Editor font">
+        <option value="grotesk">🖋 Grotesk</option>
+        <option value="serif">📜 Serif</option>
+        <option value="mono">⌨ Mono</option>
+      </select>
+    </div>
+
+    <div id="wBody" class="wr-ed" contenteditable="true" data-ph="Start writing… your draft saves itself on this device, even if the tab closes. Publish whenever you're ready."></div>
+
+    <section class="wr-meta">
+      <label class="cm-lbl">Cover / quote image<input id="wCover" type="file" accept="image/*"><img id="wCoverPrev" class="cm-prev" hidden alt=""></label>
+      <div class="cm-lbl">Voice version (optional)
+        <div class="cm-audiorow">
+          <button class="setbtn" id="wRec">🎙 Record</button>
+          <span id="wRecState" class="cm-recstate"></span>
+          <input id="wAudio" type="file" accept="audio/*">
+        </div>
+        <audio id="wAudioPrev" controls hidden></audio>
+      </div>
+      <label class="cm-lbl">Tags (comma separated)<input id="wTags" class="setinput" maxlength="80" placeholder="habits, money, failure"></label>
+      <div class="wr-actions">
+        <button class="cm-pub" id="pubBtn2">Publish to the community →</button>
+        <button class="setbtn" id="draftDel">🗑 Discard draft</button>
+      </div>
+      <p class="cm-fine">Everything autosaves to this device while you type. Be kind, be real, be yours.</p>
+    </section>
+  </main>
+
+  <script src="js/prefs.js?v=191"></script>
+  <script src="js/lang.js?v=191"></script>
+  <script src="js/config.js?v=191"></script>
+  <script src="js/auth.js?v=191"></script>
+  <script src="js/community.js?v=191"></script>
+  <script>
+  (function () {
+    "use strict";
+    var C = window.TSB_COMMUNITY;
+    var DKEY = "tsb_write_draft";
+    var $ = function (id) { return document.getElementById(id); };
+    var title = $("wTitle"), sub = $("wSub"), body = $("wBody"), tags = $("wTags");
+    var coverUrl = "", audioUrl = "", kind = "text";
+    var mediaRec = null, chunks = [];
+
+    if (!C.signedIn()) {
+      document.querySelector(".wr-wrap").innerHTML =
+        '<div class="cm-empty">👋 Sign in with Google to write and publish.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>';
+      return;
+    }
+
+    /* ---------- draft autosave (survives closed tabs) ---------- */
+    var saveT = null;
+    function saveDraft() {
+      clearTimeout(saveT);
+      $("saveState").textContent = "… saving";
+      saveT = setTimeout(function () {
+        try {
+          localStorage.setItem(DKEY, JSON.stringify({
+            t: title.value, s: sub.value, b: body.innerHTML, g: tags.value,
+            c: coverUrl, a: audioUrl, f: $("wFont").value, at: Date.now()
+          }));
+          $("saveState").textContent = "✓ draft saved";
+        } catch (e) { $("saveState").textContent = "draft (private)"; }
+      }, 500);
+    }
+    function loadDraft() {
+      try {
+        var d = JSON.parse(localStorage.getItem(DKEY));
+        if (!d) return;
+        title.value = d.t || ""; sub.value = d.s || ""; body.innerHTML = d.b || "";
+        tags.value = d.g || ""; coverUrl = d.c || ""; audioUrl = d.a || "";
+        if (d.c) { $("wCoverPrev").src = d.c; $("wCoverPrev").hidden = false; }
+        if (d.a) { $("wAudioPrev").src = d.a; $("wAudioPrev").hidden = false; }
+        if (d.f) { $("wFont").value = d.f; setFont(d.f); }
+        if (d.t || d.b) $("saveState").textContent = "✓ draft restored";
+      } catch (e) {}
+    }
+    if (location.search.indexOf("mode=quote") >= 0) {
+      kind = "quote";
+      title.placeholder = "Small quote, big feeling…";
+      sub.placeholder = "— who said it, or where it came from";
+      document.querySelector("main").classList.add("wr-quote");
+    }
+    [title, sub, tags].forEach(function (el) { el.addEventListener("input", saveDraft); });
+    body.addEventListener("input", saveDraft);
+
+    /* ---------- editor ---------- */
+    function setFont(f) {
+      body.classList.toggle("wr-ed--serif", f === "serif");
+      body.classList.toggle("wr-ed--mono", f === "mono");
+    }
+    $("wFont").addEventListener("change", function () { setFont(this.value); saveDraft(); });
+    $("wBar").addEventListener("mousedown", function (e) {
+      var b = e.target.closest("[data-cmd]");
+      if (!b) return;
+      e.preventDefault();
+      var cmd = b.getAttribute("data-cmd");
+      if (cmd === "h1") document.execCommand("formatBlock", false, "h1");
+      else if (cmd === "h2") document.execCommand("formatBlock", false, "h2");
+      else if (cmd === "quote") document.execCommand("formatBlock", false, "blockquote");
+      else if (cmd === "mono") document.execCommand("formatBlock", false, "pre");
+      else if (cmd === "ul") document.execCommand("insertUnorderedList");
+      else if (cmd === "ol") document.execCommand("insertOrderedList");
+      else document.execCommand(cmd);
+      body.focus();
+      saveDraft();
+    });
+
+    /* ---------- media ---------- */
+    $("wCover").addEventListener("change", async function () {
+      var f = this.files && this.files[0];
+      if (!f) return;
+      $("saveState").textContent = "… uploading cover";
+      try {
+        coverUrl = await C.upload(f, "tsb-covers");
+        $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
+        saveDraft();
+      } catch (e) { alert("Cover upload failed: " + e.message); }
+    });
+    $("wRec").addEventListener("click", async function () {
+      var st = $("wRecState");
+      if (mediaRec && mediaRec.state === "recording") { mediaRec.stop(); this.textContent = "🎙 Record"; st.textContent = "uploading…"; return; }
+      try {
+        var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        chunks = [];
+        var mime = ["audio/mp4", "audio/webm;codecs=opus", "audio/webm", ""].filter(function (m) {
+          try { return !m || MediaRecorder.isTypeSupported(m); } catch (e) { return false; }
+        })[0] || "";
+        mediaRec = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+        mediaRec.ondataavailable = function (ev) { if (ev.data.size) chunks.push(ev.data); };
+        mediaRec.onstop = async function () {
+          stream.getTracks().forEach(function (tr) { tr.stop(); });
+          var bt = mediaRec.mimeType || "audio/webm";
+          try {
+            audioUrl = await C.upload(new File([new Blob(chunks, { type: bt })], "voice-" + Date.now() + (bt.indexOf("mp4") >= 0 ? ".m4a" : ".webm"), { type: bt }), "tsb-audio");
+            $("wAudioPrev").src = audioUrl; $("wAudioPrev").hidden = false;
+            st.textContent = "✓ voice attached";
+            saveDraft();
+          } catch (e) { st.textContent = "upload failed: " + e.message; }
+        };
+        mediaRec.start();
+        this.textContent = "⏹ Stop & attach";
+        st.textContent = "● recording…";
+      } catch (e) { st.textContent = "mic blocked"; }
+    });
+    $("wAudio").addEventListener("change", async function () {
+      var f = this.files && this.files[0];
+      if (!f) return;
+      try {
+        audioUrl = await C.upload(f, "tsb-audio");
+        $("wAudioPrev").src = audioUrl; $("wAudioPrev").hidden = false;
+        saveDraft();
+      } catch (e) { alert("Audio upload failed: " + e.message); }
+    });
+
+    /* ---------- publish ---------- */
+    async function pub() {
+      var t = title.value.trim(), b = body.innerHTML.trim();
+      if (!t || !b) { alert("Add a title and some words first."); return; }
+      $("pubBtn").textContent = "Publishing…";
+      try {
+        await C.publish({
+          title: t, subtitle: sub.value.trim(), body: b,
+          cover_url: coverUrl, audio_url: audioUrl, kind: kind,
+          tags: tags.value.split(",").map(function (s) { return s.trim(); }).filter(Boolean),
+          kind: kind
+        });
+        localStorage.removeItem(DKEY);
+        location.href = "stories.html?tab=mine";
+      } catch (e) {
+        alert("Publish failed — " + (e && e.message ? e.message : e) + ". Stay signed in and try once more.");
+        $("pubBtn").textContent = "Publish →";
+      }
+    }
+    $("pubBtn").addEventListener("click", pub);
+    $("pubBtn2").addEventListener("click", pub);
+    $("draftDel").addEventListener("click", function () {
+      if (!confirm("Discard this draft?")) return;
+      localStorage.removeItem(DKEY);
+      title.value = ""; sub.value = ""; body.innerHTML = ""; tags.value = "";
+      coverUrl = ""; audioUrl = "";
+      $("wCoverPrev").hidden = true; $("wAudioPrev").hidden = true;
+      $("saveState").textContent = "✍️ draft";
+    });
+
+    loadDraft();
+    body.focus();
+  })();
+  </script>
+  <script src="js/bar.js?v=191" defer></script>
+</body>
+</html>

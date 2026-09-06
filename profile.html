@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=189">
+  <link rel="stylesheet" href="css/style.css?v=191">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,11 +31,11 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=189"></script>
-  <script src="js/lang.js?v=189"></script>
-  <script src="js/config.js?v=189"></script>
-  <script src="js/auth.js?v=189"></script>
-  <script src="js/community.js?v=189"></script>
+  <script src="js/prefs.js?v=191"></script>
+  <script src="js/lang.js?v=191"></script>
+  <script src="js/config.js?v=191"></script>
+  <script src="js/auth.js?v=191"></script>
+  <script src="js/community.js?v=191"></script>
   <script>
   (function () {
     "use strict";
@@ -66,11 +66,29 @@
           '<div class="cm-ava cm-ava--xl">' + (prof.avatar_url ? '<img src="' + C.esc(prof.avatar_url) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
           "<h1>" + C.esc(prof.name) + (mine ? " <i>(you)</i>" : "") + "</h1>" +
           (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
+          (prof.progress ? '<span class="cm-prog">📚 ' + prof.progress + "/2176 lessons read</span>" : "") +
           '<div class="cm-stats">' +
             '<span><b>' + posts.length + "</b> posts</span>" +
             '<span><b>' + fol.count + "</b> followers</span>" +
             (mine ? '<span><b>' + likesGot + "</b> likes received</span>" : "") +
           "</div>" +
+          '<div class="cm-sharecard">' +
+            '<div class="cm-sharecard__brand">📕 THESMALLBOOK · COMMUNITY</div>' +
+            '<div class="cm-sharecard__who">' +
+              '<div class="cm-ava cm-ava--lg">' + (prof.avatar_url ? '<img src="' + C.esc(prof.avatar_url) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
+              '<div><b>' + C.esc(prof.name) + (C.isOfficial(pid) ? '<span class="cm-vtick">✔</span>' : "") + "</b>" +
+              '<span class="cm-time">ID ' + pid.slice(0, 8) + "</span></div>" +
+            "</div>" +
+            (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
+            '<a class="cm-write" href="profile.html?id=' + pid + '">' + (mine ? "This is you — share this card" : "Subscribe — follow on TheSmallBook") + "</a>" +
+          "</div>" +
+          '<div class="cm-sharerow">' +
+            '<button class="setbtn" id="shareId">🆔 Copy ID</button>' +
+            '<button class="setbtn" id="shareProfile">🔗 Share profile</button>' +
+          "</div>" +
+          (mine
+            ? '<a class="cm-write" href="dm.html">💬 My messages</a>'
+            : '<a class="cm-write" href="dm.html?u=' + pid + '">💬 Message ' + C.esc(prof.name.split(" ")[0]) + "</a>") +
           (mine
             ? '<div class="cm-profedit">' +
                 '<label class="cm-lbl">Profile photo<input id="pAva" type="file" accept="image/*"></label>' +
@@ -137,6 +155,18 @@
           this.textContent = f.mine ? "✓ Following" : "+ Follow";
         } catch (e) {}
       });
+      document.getElementById("shareId").addEventListener("click", function () {
+        var txt = pid.slice(0, 8);
+        if (navigator.clipboard) navigator.clipboard.writeText(txt);
+        this.textContent = "✓ Copied " + txt;
+      });
+      document.getElementById("shareProfile").addEventListener("click", function () {
+        var url = location.origin + "/profile.html?id=" + pid;
+        var msg = "Read " + prof.name + "'s stories on TheSmallBook 📕 " + url;
+        if (navigator.share) navigator.share({ title: prof.name + " — TheSmallBook", text: msg, url: url }).catch(function () {});
+        else if (navigator.clipboard) { navigator.clipboard.writeText(msg); this.textContent = "✓ Link copied"; }
+      });
+      C.syncProgress();
       var ava = document.getElementById("pAva");
       if (ava) ava.addEventListener("change", async function () {
         var f = this.files && this.files[0];
@@ -160,7 +190,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=189" defer></script>
-  <script src="js/gate.js?v=189" defer></script>
+  <script src="js/bar.js?v=191" defer></script>
+  <script src="js/gate.js?v=191" defer></script>
 </body>
 </html>

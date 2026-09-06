@@ -56,7 +56,7 @@
       }
       return rows[0];
     }
-    var created = await api("profiles?select=*", { method: "POST", body: { id: u.id, name: name, avatar_url: avatar } });
+    var created = await api("profiles?on_conflict=id&select=*", { method: "POST", headers: { Prefer: "resolution=merge-duplicates" }, body: { id: u.id, name: name, avatar_url: avatar } });
     return (created && created[0]) || { id: u.id, name: name, avatar_url: avatar, bio: "" };
   }
   async function getProfile(id) {
@@ -173,7 +173,56 @@
   }
 
   /* ---------- rich-text safety: whitelist tags, drop attributes ---------- */
-  var OK_TAGS = { B: 1, STRONG: 1, I: 1, EM: 1, U: 1, H2: 1, H3: 1, P: 1, UL: 1, OL: 1, LI: 1, BLOCKQUOTE: 1, BR: 1, DIV: 1 };
+  // ---- v191: people discovery ----
+  async function listProfiles(limit) {
+    if (!api) return [];
+    return await api("profiles?select=*&order=created_at.desc&limit=" + (limit || 60), { method: "GET" });
+  }
+
+  // ---- v191: direct messages ----
+  async function myMessages(limit) {
+    if (!api || !signedIn()) return [];
+    var me = (await window.TSB_AUTH.me()); if (!me) return [];
+    var rows = await api("messages?select=*&or=(sender_id.eq." + me.id + ",receiver_id.eq." + me.id + ")&order=created_at.desc&limit=" + (limit || 200), { method: "GET" });
+    return rows || [];
+  }
+  function conversations(msgs, meId) {
+    var byUser = {};
+    (msgs || []).forEach(function (m) {
+      var other = m.sender_id === meId ? m.receiver_id : m.sender_id;
+      if (!byUser[other]) byUser[other] = { user_id: other, last: m };
+    });
+    return Object.keys(byUser).map(function (k) { return byUser[k]; })
+      .sort(function (a, b) { return Date.parse(b.last.created_at) - Date.parse(a.last.created_at); });
+  }
+  async function threadWith(uid) {
+    if (!api || !signedIn()) return [];
+    var me = (await window.TSB_AUTH.me()); if (!me) return [];
+    var rows = await api("messages?select=*&or=(and(sender_id.eq." + me.id + ",receiver_id.eq." + uid + "),and(sender_id.eq." + uid + ",receiver_id.eq." + me.id + "))&order=created_at.asc&limit=300", { method: "GET" });
+    return rows || [];
+  }
+  async function sendDM(uid, body) {
+    if (!api || !signedIn()) return null;
+    var me = (await window.TSB_AUTH.me()); if (!me) return null;
+    var row = await api("messages?select=*", { method: "POST", body: { sender_id: me.id, receiver_id: uid, body: String(body).slice(0, 1000) } });
+    return (row && row[0]) || row;
+  }
+
+  // ---- v191: public reading progress (auto-sync, throttled hourly) ----
+  async function syncProgress(force) {
+    if (!api || !signedIn()) return;
+    try {
+      var last = +(localStorage.getItem("tsb_prog_sync") || 0);
+      if (!force && Date.now() - last < 36e5) return;
+      var me = (await window.TSB_AUTH.me()); if (!me) return;
+      var prog = JSON.parse(localStorage.getItem("tsb_progress") || "{}");
+      var n = Object.keys(prog).length;
+      await api("profiles?id=eq." + me.id, { method: "PATCH", body: { progress: n } });
+      localStorage.setItem("tsb_prog_sync", String(Date.now()));
+    } catch (e) {}
+  }
+
+  var OK_TAGS = { B: 1, STRONG: 1, I: 1, EM: 1, U: 1, H1: 1, H2: 1, H3: 1, P: 1, UL: 1, OL: 1, LI: 1, BLOCKQUOTE: 1, BR: 1, DIV: 1, CODE: 1, PRE: 1 };
   function sanitize(html) {
     var doc = new DOMParser().parseFromString("<div id='r'>" + html + "</div>", "text/html");
     var root = doc.getElementById("r");
@@ -240,11 +289,17 @@
     } catch (e) {}
   }
 
+  var OFFICIAL_ID = "11111111-1111-1111-1111-111111111111";
+  function isOfficial(id) { return id === OFFICIAL_ID; }
+
   window.TSB_COMMUNITY = {
-    enabled: ENABLED, api: api, me: me, signedIn: signedIn,
+    enabled: ENABLED, OFFICIAL_ID: OFFICIAL_ID, isOfficial: isOfficial, api: api, me: me, signedIn: signedIn,
     ensureProfile: ensureProfile, getProfile: getProfile,
     listPosts: listPosts, getPost: getPost, publish: publish, deletePost: deletePost,
     likeInfo: likeInfo, setLike: setLike, likesOnMyPosts: likesOnMyPosts,
+    listProfiles: listProfiles,
+    myMessages: myMessages, conversations: conversations, threadWith: threadWith, sendDM: sendDM,
+    syncProgress: syncProgress,
     listComments: listComments, addComment: addComment,
     followInfo: followInfo, setFollow: setFollow, followingIds: followingIds, followerRows: followerRows,
     upload: upload, sanitize: sanitize, ago: ago, readMins: readMins, esc: esc, playAudio: playAudio
