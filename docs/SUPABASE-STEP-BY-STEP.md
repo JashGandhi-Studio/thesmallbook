@@ -261,3 +261,120 @@ begin
   end if;
 end $$;
 ```
+
+---
+
+## SQL #7 — v205: push-nudge library + daily scheduler (run once, re-runnable)
+
+What it does: creates a small `push_nudges` table (the "Stuck on something? Read this
+chapter…" messages), seeds it with 12 nudges, and schedules a **daily 6:30 pm IST**
+job that calls your `push-notify` Edge Function, which broadcasts one nudge to every
+subscribed phone — **even with the app closed**.
+
+⚠️ About the dashboard's red "destructive operations" warning: it fires on ANY script
+that touches table/extension definitions. This script is **additive only** — it creates
+two extensions and one new table, seeds rows only if the table is empty, and (re)creates
+one cron job. **Nothing is deleted, no existing table is altered, no data is touched.**
+If a run fails halfway, just fix and re-run — no cleanup needed.
+
+Before running: replace `https://YOUR-PROJECT.supabase.co` with your project URL (same
+one that's in js/config.js), and `tsb-cron-2026` with the same CRON_SECRET you set in
+the Edge Function's secrets (or leave both as-is if you kept the default).
+
+```sql
+-- ===== SQL #7 (v205) — additive only, re-runnable =====
+create extension if not exists pg_cron;
+create extension if not exists pg_net;
+
+create table if not exists public.push_nudges (
+  id         bigint primary key generated always as identity,
+  heading    text not null,
+  body       text not null,
+  url        text not null default 'stories.html',
+  created_at timestamptz not null default now()
+);
+alter table public.push_nudges enable row level security;
+do $$ begin
+  if not exists (select 1 from pg_policies where policyname = 'read nudges' and tablename = 'push_nudges') then
+    create policy "read nudges" on public.push_nudges for select using (true);
+  end if;
+end $$;
+
+insert into public.push_nudges (heading, body, url)
+select h, b, u from (values
+  ('Stuck on something? 📚', 'Atomic Habits · The 2-Minute Rule — shrink the habit till starting is easy.', 'book.html?id=atomic-habits'),
+  ('Procrastinating? ⏳', 'Eat That Frog · Do the worst task first, 2 minutes in.', 'book.html?id=eat-that-frog'),
+  ('Money feeling tight? 💸', 'Psychology of Money · Room for error is the quiet superpower.', 'book.html?id=psychology-of-money'),
+  ('Can''t focus? 🎯', 'Deep Work · Rule 1: work like a pro, schedule every hour.', 'book.html?id=deep-work'),
+  ('Feeling behind in life? 🌱', 'The Subtle Art · Choose better problems, not fewer.', 'book.html?id=subtle-art'),
+  ('Overthinking a decision? 🤔', 'Sapiens · We study history not to predict the future, but to widen our choices.', 'book.html?id=sapiens'),
+  ('Tired of saying yes? 🙅', 'Essentialism · If it isn''t a clear yes, it''s a no.', 'book.html?id=essentialism'),
+  ('Argument brewing? 🗣', 'How to Win Friends · Begin friendly, let them say yes yes yes.', 'book.html?id=how-to-win-friends'),
+  ('Sleep messed up? 😴', 'Why We Sleep · Keep the same wake time seven days a week.', 'book.html?id=why-we-sleep'),
+  ('Need a reset? 🧘', 'The Power of Now · Watch one breath, fully.', 'book.html?id=power-of-now'),
+  ('Big goal, no plan? 🗺', '12 Rules · Rule 1: stand up straight — then set one tiny rule for today.', 'book.html?id=12-rules'),
+  ('Sunday scaries? ☕', 'Four Thousand Weeks · Pick three things for today. Only three.', 'book.html?id=four-thousand-weeks')
+) as v(h, b, u)
+where not exists (select 1 from public.push_nudges);
+
+do $$ begin
+  perform cron.unschedule('tsb-daily-nudge');
+exception when others then null;
+end $$;
+select cron.schedule(
+  'tsb-daily-nudge',
+  '30 13 * * *',  -- 13:30 UTC = 6:30 pm IST, daily
+  $cron$
+    select net.http_post(
+      url: 'https://YOUR-PROJECT.supabase.co/functions/v1/push-notify',
+      body: '{"type":"nudge"}',
+      headers: jsonb_build_object('Content-Type', 'application/json', 'x-cron-secret', 'tsb-cron-2026')
+    );
+  $cron$
+);
+```
+
+---
+
+## SQL #8 — v207: interest-aware pushes (run once, re-runnable)
+
+Adds an `interests` list to profiles (the app fills it from what each reader actually
+reads — book categories, story tags, onboarding shelves) and tags each push nudge with
+keywords, so the daily push picks a chapter **matching that reader's taste** instead of
+a random one.
+
+⚠️ Same note as before: the red "destructive operations" banner appears for ANY script
+with ALTER statements. This one is **additive only** — two new columns with safe
+defaults, plus UPDATEs that only fill the new tag column. No data is deleted or
+rewritten. Failed run? Just re-run.
+
+```sql
+-- ===== SQL #8 (v207) — additive only, re-runnable =====
+alter table public.profiles
+  add column if not exists interests text[] not null default '{}';
+
+alter table public.push_nudges
+  add column if not exists tag text not null default '';
+
+update public.push_nudges set tag = v.tag
+from (values
+  (1, 'habits,self-improvement,discipline'),
+  (2, 'productivity,self-improvement,focus'),
+  (3, 'money,finance,business'),
+  (4, 'focus,work,self-improvement'),
+  (5, 'mindset,philosophy,self-improvement'),
+  (6, 'history,curiosity,science'),
+  (7, 'minimalism,focus,self-improvement'),
+  (8, 'people,communication,business'),
+  (9, 'sleep,health,science'),
+  (10, 'mindfulness,philosophy,presence'),
+  (11, 'discipline,mindset,self-improvement'),
+  (12, 'time,philosophy,productivity')
+) as v(idx, tag)
+where push_nudges.id = v.idx and push_nudges.tag = '';
+```
+
+How matching works: the app silently keeps each reader's top interests (never uploaded
+raw — only the top-4 category words, and only while signed in). At push time the Edge
+Function compares them with nudge tags and sends each person the chapter that fits
+their reading. Readers with no signals yet get a random nudge, same as before.

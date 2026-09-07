@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=204">
+  <link rel="stylesheet" href="css/style.css?v=209">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -30,7 +30,7 @@
   <header class="accbar">
     <a class="logo" href="index.html"><span class="logo__mark">📕</span><span>The<span class="logo__small">Small</span>Book</span></a>
     <div class="accbar__acts">
-      <a class="btn btn--icon" href="login.html" title="Your You window" aria-label="You">👤</a>
+      <a class="btn btn--icon" href="login.html" title="Your You window" aria-label="You"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
     </div>
   </header>
 
@@ -69,11 +69,12 @@
     <section class="setcard">
       <h2>📐 APP DISPLAY SIZE</h2>
       <div class="setrow" id="appsizeRow">
+        <button class="setopt" data-appsize="small"><span>🤏</span> Smaller</button>
         <button class="setopt" data-appsize="default"><span>📱</span> Default</button>
         <button class="setopt" data-appsize="big"><span>🔍</span> Big</button>
         <button class="setopt" data-appsize="bigger"><span>🔎</span> Bigger</button>
       </div>
-      <p class="sethint">Default = the normal app view on every phone, exactly as designed. Big/Bigger scale the app’s own type up — nothing else changes.</p>
+      <p class="sethint">Default = the normal app view on every phone, exactly as designed. Smaller tightens the app’s own type down; Big/Bigger scale it up — nothing else changes.</p>
     </section>
 
     <section class="setcard">
@@ -132,12 +133,12 @@
     <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v175.</p>
   </main>
 
-  <script src="js/prefs.js?v=204"></script>
-  <script src="js/lang.js?v=204"></script>
-  <script src="js/config.js?v=204"></script>
-  <script src="js/auth.js?v=204"></script>
-  <script src="js/community.js?v=204"></script>
-  <script src="js/bar.js?v=204" defer></script>
+  <script src="js/prefs.js?v=209"></script>
+  <script src="js/lang.js?v=209"></script>
+  <script src="js/config.js?v=209"></script>
+  <script src="js/auth.js?v=209"></script>
+  <script src="js/community.js?v=209"></script>
+  <script src="js/bar.js?v=209" defer></script>
   <script>
     (function () {
       /* theme */
@@ -257,7 +258,7 @@
   });
 })();
 </script>
-  <script src="js/onboard.js?v=204" defer></script>
+  <script src="js/onboard.js?v=209" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {

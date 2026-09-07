@@ -45,7 +45,8 @@
        phone's own font zoom can't distort layouts — text-size-adjust
        is pinned to 100% in CSS). Big/Bigger scale the app's OWN type. */
     try {
-      if (v === "big") document.documentElement.style.fontSize = "18px";
+      if (v === "small") document.documentElement.style.fontSize = "14px";
+      else if (v === "big") document.documentElement.style.fontSize = "18px";
       else if (v === "bigger") document.documentElement.style.fontSize = "20px";
       else document.documentElement.style.fontSize = "";
     } catch (e) {}
@@ -323,7 +324,31 @@
     return books.length;
   }
 
-  window.TSB = { get, set, theme, bookmarks, progress, plans, streak, levelFor, achv, lastRead, backup, isIndianBook, completedCount };
+  /* ---------- v207: interest signals (what you read → smarter pushes) ---------- */
+  const interest = {
+    ping(cat) {
+      if (!cat) return;
+      try {
+        const all = get("tsb_interests", []);
+        all.push(String(cat).toLowerCase().trim());
+        set("tsb_interests", all.slice(-80));
+      } catch (e) {}
+    },
+    top(n) {
+      const counts = {};
+      (get("tsb_interests", [])).forEach(function (c) { counts[c] = (counts[c] || 0) + 1; });
+      try {
+        const d = get("tsb_onboard_draft", null);
+        if (d && Array.isArray(d.shelves)) d.shelves.forEach(function (c) {
+          const k = String(c).toLowerCase().trim();
+          if (k) counts[k] = (counts[k] || 0) + 2;
+        });
+      } catch (e) {}
+      return Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; }).slice(0, n || 4);
+    }
+  };
+
+  window.TSB = { get, set, theme, bookmarks, progress, plans, streak, levelFor, achv, lastRead, backup, isIndianBook, completedCount, interest };
 
   /* Amazon affiliate link builder — direct product page when we know the
      ASIN (converts better), search fallback for everything else. */

@@ -231,6 +231,30 @@ const C = window.TSB_COMMUNITY;
   const byPrefix = await C.getPostByShort(String(DB.posts[0].id).replace(/-/g, "").slice(0, 8));
   ok("old-style prefix share links still resolve", byPrefix && byPrefix.id === DB.posts[0].id);
 
+  console.log("== v207 interest sync ==");
+  globalThis.TSB = { interest: { top: function () { return ["money", "habits", "focus", "science"]; } } };
+  globalThis.window.TSB = globalThis.TSB;
+  await C.syncInterests(true);
+  ok("syncInterests pushes top interests to profile", JSON.stringify(DB.profiles[0].interests) === JSON.stringify(["money", "habits", "focus", "science"]), JSON.stringify(DB.profiles[0].interests));
+
+  console.log("== v208 SVG icon system ==");
+  ok("icon(bell) returns an <svg>", String(C.icon("bell")).startsWith("<svg") && String(C.icon("bell")).includes("tsb-ic"));
+  ok("icon(star) + icon(people) + icon(heart) all present", C.icon("star").includes("polygon") && C.icon("people").includes("circle") && C.icon("heart").includes("M20.84"));
+  ok("profile markups reference icons not emojis", !(/🔔|💬|👤/.test(require("fs").readFileSync((require("path").join(__dirname, "../profile.html")), "utf8"))));
+  ok("stories markups reference icons not emojis", !(/🔔|💬/.test(require("fs").readFileSync((require("path").join(__dirname, "../stories.html")), "utf8"))));
+  ok("dm markups reference icons not emojis", !(/🔔|💬|👤|🧹|✏️|🗑|🙈|📕/.test(require("fs").readFileSync((require("path").join(__dirname, "../dm.html")), "utf8"))));
+
+  console.log("== v209 brand emojis restored + icon replicas ==");
+  const fsp = require("fs"), pp = require("path");
+  const idxH = fsp.readFileSync(pp.join(__dirname, "../index.html"), "utf8");
+  const abtH = fsp.readFileSync(pp.join(__dirname, "../about.html"), "utf8");
+  const dmH = fsp.readFileSync(pp.join(__dirname, "../dm.html"), "utf8");
+  ok("main logo mark is the 📕 emoji again", idxH.includes('logo__mark">📕'));
+  ok("hero badge + Shelf header use their original emojis", idxH.includes('hero__badge">📚') && idxH.includes("📚 The Shelf"));
+  ok("about page mark is the 📕 emoji again", abtH.includes('ahero__mark">📕'));
+  ok("icon replicas: heart/mail/share/brush/phone all present", C.icon("heart").includes("M20.84") && C.icon("mail").includes("<rect") && C.icon("share").includes("polyline") && C.icon("brush").includes("m9.06") && C.icon("phone").includes("M3 18v-6"));
+  ok("dm keeps clean icons (no broken tone emojis)", !/[🧹🙈]/u.test(dmH));
+
   console.log();
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");
   process.exit(FAIL ? 1 : 0);

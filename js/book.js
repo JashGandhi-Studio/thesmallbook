@@ -885,6 +885,7 @@
     btn.addEventListener("click", () => {
       const i = +btn.dataset.read;
       TSB.progress.markRead(book.id, i);
+      try { TSB.interest.ping(book.category); } catch (e) {}
       if (window.TSB_AUTH && window.TSB_AUTH.enabled) window.TSB_AUTH.track();
       btn.classList.add("active");
       btn.textContent = "✓ READ";

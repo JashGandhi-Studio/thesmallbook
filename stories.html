@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=204">
+  <link rel="stylesheet" href="css/style.css?v=209">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,10 +31,11 @@
         <div class="cm-head__t">STORIES</div>
         <div class="cm-head__s">real readers · real lessons · real voices</div>
       </div>
-      <a class="cm-bell" href="notifications.html" title="Notifications & updates">🔔<span class="nt-dot" data-notifdot hidden></span></a>
+      <a class="cm-bell" href="notifications.html" title="Notifications & updates"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="nt-dot" data-notifdot hidden></span></a>
     </div>
     <div class="cm-head__acts">
       <button class="cm-chipbtn" id="reelsBtn" title="Bursts — swipe through stories">🎬 Bursts</button>
+      <button class="cm-chipbtn" id="finderBtn" title="Find readers to follow"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Find readers</button>
       <button class="cm-chipbtn" id="quoteBtn" title="Post a small quote">❝ Quote</button>
       <button class="cm-write" id="writeBtn">✍️ Write a story</button>
     </div>
@@ -42,23 +43,32 @@
 
   <nav class="cm-tabs" id="cmTabs" aria-label="Story feeds">
     <button data-tab="all" class="on">✨ For you</button>
-    <button data-tab="following">👥 Following</button>
-    <button data-tab="people">👥 People</button>
+    <button data-tab="following"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Following</button>
+    <button data-tab="people"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> People</button>
     <button data-tab="mine">📔 My posts</button>
   </nav>
 
   <main class="cm-feed" id="feed" aria-live="polite"></main>
+
+  <div id="finder" class="cm-finder" hidden>
+    <div class="cm-finder__card">
+      <div class="dm-picker__head"><b><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Find readers</b><button id="finderX" aria-label="Close finder">✕</button></div>
+      <div class="pk-search"><span><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><input id="finderQ" placeholder="Search name or id…" autocomplete="off"></div>
+      <div class="cm-finder__count" id="finderCount"></div>
+      <div class="cm-finder__list" id="finderList"></div>
+    </div>
+  </div>
 
   <div id="reels" class="cm-reels" hidden>
     <button class="cm-reels__x" id="reelsX" aria-label="Close bursts">✕</button>
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="js/prefs.js?v=204"></script>
-  <script src="js/lang.js?v=204"></script>
-  <script src="js/config.js?v=204"></script>
-  <script src="js/auth.js?v=204"></script>
-  <script src="js/community.js?v=204"></script>
+  <script src="js/prefs.js?v=209"></script>
+  <script src="js/lang.js?v=209"></script>
+  <script src="js/config.js?v=209"></script>
+  <script src="js/auth.js?v=209"></script>
+  <script src="js/community.js?v=209"></script>
   <script>
   (function () {
     "use strict";
@@ -152,10 +162,10 @@
           (p.tags && p.tags.length ? '<div class="cm-card__tags">' + p.tags.slice(0, 4).map(function (t) { return "<span># " + C.esc(t) + "</span>"; }).join("") + "</div>" : "") +
           '<div class="cm-card__foot">' +
             '<button class="cm-like" data-like="' + p.id + '">♥ <b>…</b></button>' +
-            '<a class="cm-cmts" href="story.html?id=' + p.id + '#comments">💬 <b>…</b></a>' +
+            '<a class="cm-cmts" href="story.html?id=' + p.id + '#comments">' + C.icon('chat') + " <b>…</b></a>" +
             (p.audio_url ? '<button class="cm-listen" data-audio="' + C.esc(p.audio_url) + '" data-title="' + C.esc(p.title) + '">🎧 Listen</button>' : "") +
             '<span class="cm-read">' + C.readMins(p.body) + " min</span>" +
-            (p.author_id === meId ? '<button class="cm-del" data-del="' + p.id + '" title="Delete my story">🗑</button>' : "") +
+            (p.author_id === meId ? '<button class="cm-del" data-del="' + p.id + '" title="Delete my story">' + C.icon('trash') + "</button>" : "") +
           "</div>" +
         "</div></article>";
     }
@@ -200,7 +210,7 @@
       var fol = {};
       if (C.signedIn()) { try { (await C.followingIds()).forEach(function (id) { fol[id] = 1; }); } catch (e) {} }
       var me = C.signedIn() ? (await TSB_AUTH.me()) : null;
-      feed.innerHTML = '<div class="cm-sect">Active readers — follow them, hear their progress, drop a 💬</div>' +
+      feed.innerHTML = '<div class="cm-sect">Active readers — follow them, hear their progress, drop a ' + C.icon('chat') + '</div>' +
         '<div class="cm-people">' + profs.map(function (p) {
           var isMe = me && p.id === me.id;
           return '<div class="cm-person">' +
@@ -208,12 +218,12 @@
             '<div class="cm-ava cm-ava--lg">' + (C.avaUrl(p.name, p.avatar_url, p.id) ? '<img src="' + C.esc(C.avaUrl(p.name, p.avatar_url, p.id)) + '" alt="">' : "<span>" + C.esc((p.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
             '<div class="cm-person__meta">' +
               '<a class="cm-name" href="profile.html?id=' + p.id + '">' + C.esc(p.name) + (C.isOfficial(p.id) ? '<span class="cm-vtick">✔</span>' : "") + (isMe ? ' <span class="cm-time">· you</span>' : "") + "</a>" +
-              (p.progress ? '<span class="cm-time">📚 ' + p.progress + '/2176 lessons read</span>' : "") +
+              (p.progress ? '<span class="cm-time">' + C.icon('book') + ' ' + p.progress + '/2176 lessons read</span>' : "") +
               (p.bio ? '<span class="cm-bio">' + C.esc(p.bio) + "</span>" : "") +
             "</div></div>" +
             '<div class="cm-person__acts">' +
               (isMe ? "" : '<button class="cm-follow' + (fol[p.id] ? " on" : "") + '" data-pfol="' + p.id + '">' + (fol[p.id] ? "Following ✓" : "+ Follow") + "</button>" +
-               '<a class="cm-dmbtn" href="dm.html?u=' + p.id + '" title="Message">💬</a>') +
+               '<a class="cm-dmbtn" href="dm.html?u=' + p.id + '" title="Message">' + C.icon('chat') + "</a>") +
             "</div>" +
           "</div>";
         }).join("") + "</div>";
@@ -243,7 +253,7 @@
           '<div class="cm-reel__acts">' +
             '<button class="cm-like" data-rlike="' + p.id + '">♥ <b>…</b></button>' +
             (p.audio_url ? '<button class="cm-listen" data-audio="' + C.esc(p.audio_url) + '" data-title="' + C.esc(p.title) + '">🎧 Listen</button>' : "") +
-            '<a class="cm-cmts" href="story.html?id=' + p.id + '">💬 Open</a>' +
+            '<a class="cm-cmts" href="story.html?id=' + p.id + '">' + C.icon('chat') + " Open</a>" +
           "</div>" +
         "</div>" +
       "</article>";
@@ -347,7 +357,7 @@
           if (!meId) { feed.innerHTML = signInCard(); return; }
           var ids = await C.followingIds();
           posts = ids.length ? await C.listPosts({ ids: ids }) : [];
-          if (!posts.length) { feed.innerHTML = '<div class="cm-empty">👥 Follow writers from the For-you feed and their stories land here.</div>'; return; }
+          if (!posts.length) { feed.innerHTML = '<div class="cm-empty">' + C.icon('user') + " Follow writers from the For-you feed and their stories land here.</div>"; return; }
         } else {
           posts = await C.listPosts({});
           try { (await C.followingIds()).forEach(function (id) { followSet[id] = 1; }); } catch (e) {}
@@ -534,11 +544,73 @@
       var t = e.target.closest("[data-audio]");
       if (t) C.playAudio(t.getAttribute("data-audio"), t.getAttribute("data-title"));
     });
-    C.whenReady(function () { if (C.signedIn()) { C.ensureProfile(); C.syncProgress(); } });
+    /* ---------- v205: Find readers (public accounts you can follow) ---------- */
+    var finderAll = [];
+    function finderRender(q) {
+      q = (q || "").toLowerCase().trim();
+      var list = document.getElementById("finderList");
+      var meNow = "";
+      try { meNow = (C.me() || {}).id || ""; } catch (e) {}
+      var rows = finderAll.filter(function (p) {
+        return !q || String(p.name || "").toLowerCase().indexOf(q) >= 0 || String(p.id).indexOf(q) >= 0;
+      });
+      var cntEl = document.getElementById("finderCount");
+      if (cntEl) cntEl.textContent = rows.length + " public reader" + (rows.length === 1 ? "" : "s") + (q ? " (of " + finderAll.length + ")" : "");
+      list.innerHTML = rows.length ? rows.map(function (p) {
+        var av = C.avaUrl(p.name, p.avatar_url, p.id);
+        return '<div class="cm-person" data-fpid="' + p.id + '">' +
+          '<div class="cm-person__top">' +
+            '<a class="cm-ava cm-ava--lg" href="profile.html?id=' + p.id + '">' + (av ? '<img src="' + C.esc(av) + '" alt="">' : "<span>" + C.esc((p.name || "R").charAt(0).toUpperCase()) + "</span>") + "</a>" +
+            '<div class="cm-person__meta">' +
+              '<a class="cm-name" href="profile.html?id=' + p.id + '">' + C.esc(p.name || "Reader") + (C.isOfficial(p.id) ? '<span class="cm-vtick">✔</span>' : "") + "</a>" +
+              '<span class="cm-time cm-socid">@' + String(p.id).slice(0, 8) + (p.progress ? " · " + C.icon('book') + " " + p.progress + " lessons" : "") + "</span>" +
+            "</div>" +
+          "</div>" +
+          '<div class="cm-person__acts">' +
+            (p.id === meNow ? '<span class="cm-time">· you</span>' :
+              '<button class="cm-follow" data-ffol="' + p.id + '">' + C.icon('bell') + " Subscribe</button>" +
+              '<a class="cm-dmbtn" href="dm.html?u=' + p.id + '" title="Message">' + C.icon('chat') + "</a>") +
+          "</div>" +
+        "</div>";
+      }).join("") : '<p class="cm-empty cm-empty--sm">No public readers match that yet.</p>';
+      if (C.signedIn()) {
+        C.followingIds().then(function (ids) {
+          ids.forEach(function (i) {
+            var b = list.querySelector('[data-ffol="' + i + '"]');
+            if (b) { b.classList.add("on"); b.textContent = "Subscribed ✓"; }
+          });
+        }).catch(function () {});
+      }
+    }
+    document.getElementById("finderBtn").addEventListener("click", async function () {
+      var ov = document.getElementById("finder");
+      ov.hidden = false;
+      var list = document.getElementById("finderList");
+      list.innerHTML = '<p class="cm-empty cm-empty--sm">Loading readers…</p>';
+      try { finderAll = (await C.listProfiles(120)) || []; } catch (e) { finderAll = []; }
+      finderRender(document.getElementById("finderQ").value);
+    });
+    document.getElementById("finderX").addEventListener("click", function () { document.getElementById("finder").hidden = true; });
+    document.getElementById("finderQ").addEventListener("input", function () { finderRender(this.value); });
+    document.getElementById("finderList").addEventListener("click", async function (e) {
+      var t = e.target.closest("[data-ffol]");
+      if (!t) return;
+      if (!C.signedIn()) { location.href = "login.html"; return; }
+      t.disabled = true;
+      var on = !t.classList.contains("on");
+      try {
+        await C.setFollow(t.getAttribute("data-ffol"), on);
+        t.classList.toggle("on", on);
+        t.innerHTML = on ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
+      } catch (err) { alert("Subscribe failed — " + (err && err.message ? err.message : err)); }
+      t.disabled = false;
+    });
+
+    C.whenReady(function () { if (C.signedIn()) { C.ensureProfile(); C.syncProgress(); C.syncInterests(); } });
     load();
   })();
   </script>
-  <script src="js/bar.js?v=204" defer></script>
-  <script src="js/gate.js?v=204" defer></script>
+  <script src="js/bar.js?v=209" defer></script>
+  <script src="js/gate.js?v=209" defer></script>
 </body>
 </html>

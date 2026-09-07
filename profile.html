@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=204">
+  <link rel="stylesheet" href="css/style.css?v=209">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,11 +31,11 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=204"></script>
-  <script src="js/lang.js?v=204"></script>
-  <script src="js/config.js?v=204"></script>
-  <script src="js/auth.js?v=204"></script>
-  <script src="js/community.js?v=204"></script>
+  <script src="js/prefs.js?v=209"></script>
+  <script src="js/lang.js?v=209"></script>
+  <script src="js/config.js?v=209"></script>
+  <script src="js/auth.js?v=209"></script>
+  <script src="js/community.js?v=209"></script>
   <script>
   (function () {
     "use strict";
@@ -72,35 +72,51 @@
       var progShown = prof.progress || 0;
       if (mine) { try { progShown = Math.max(progShown, window.TSB && TSB.progress ? TSB.progress.totalRead() : 0); } catch (e) {} }
 
+      var hue = parseInt(String(pid).replace(/-/g, "").slice(0, 4), 16) % 360;
+      var avaHtml = '<div class="cm-ava cm-ava--xl cm-ava--ring">' + (C.avaUrl(prof.name, prof.avatar_url, pid) ? '<img src="' + C.esc(C.avaUrl(prof.name, prof.avatar_url, pid)) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>";
       root.innerHTML =
-        '<header class="cm-profhead">' +
-          '<div class="cm-ava cm-ava--xl">' + (C.avaUrl(prof.name, prof.avatar_url, pid) ? '<img src="' + C.esc(C.avaUrl(prof.name, prof.avatar_url, pid)) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
-          "<h1>" + C.esc(prof.name) + (mine ? " <i>(you)</i>" : "") + "</h1>" +
-          (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
-          (progShown ? '<span class="cm-prog">📚 ' + progShown + "/2176 lessons read</span>" : "") +
-          '<div class="cm-stats">' +
-            '<span><b>' + posts.length + "</b> posts</span>" +
-            '<a href="profile.html?id=' + pid + '&view=followers"><b>' + fol.count + "</b> followers</a>" +
-            '<a href="profile.html?id=' + pid + '&view=following"><b>' + followingCount + "</b> following</a>" +
-            (mine ? '<span><b>' + likesGot + "</b> likes received</span>" : "") +
+        '<header class="cm-profhead cm-profhead--v2">' +
+          '<div class="cm-banner" style="background:linear-gradient(135deg,hsl(' + hue + ',78%,62%),hsl(' + ((hue + 42) % 360) + ',70%,40%))"></div>' +
+          '<div class="cm-profcard">' +
+            '<div class="cm-profcard__top">' +
+              avaHtml +
+              '<div class="cm-profmain">' +
+                "<h1>" + C.esc(prof.name) + (C.isOfficial(pid) ? '<span class="cm-vtick">✔</span>' : "") + (mine ? " <i>(you)</i>" : "") + "</h1>" +
+                '<span class="cm-idchip">@' + pid.slice(0, 8) + "</span>" +
+              "</div>" +
+            "</div>" +
+            (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
+            '<div class="cm-statcards">' +
+              '<div class="cm-statcard"><b>' + posts.length + "</b><span>posts</span></div>" +
+              '<a class="cm-statcard" href="profile.html?id=' + pid + '&view=followers"><b>' + fol.count + "</b><span>followers</span></a>" +
+              '<a class="cm-statcard" href="profile.html?id=' + pid + '&view=following"><b>' + followingCount + "</b><span>following</span></a>" +
+              (mine ? '<div class="cm-statcard"><b>' + likesGot + "</b><span>likes got</span></div>" : "") +
+            "</div>" +
+            (progShown ? '<div class="cm-progpill">' + C.icon('book') + ' ' + progShown + " / 2176 lessons read</div>" : "") +
+            '<div class="cm-profacts">' +
+              (mine
+                ? '<span class="cm-time">' + C.icon('share') + ' This is your public card — share it below</span>'
+                : '<button class="cm-follow' + (fol.mine ? " on" : "") + '" data-pfol="' + pid + '">' + (fol.mine ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe") + "</button>" +
+                  '<a class="cm-dmbtn cm-dmbtn--big" href="dm.html?u=' + pid + '">' + C.icon('chat') + " Message</a>") +
+            "</div>" +
           "</div>" +
           '<div class="cm-sharecard">' +
-            '<div class="cm-sharecard__brand">📕 THESMALLBOOK · COMMUNITY</div>' +
+            '<div class="cm-sharecard__brand">' + C.icon('book') + ' THESMALLBOOK · COMMUNITY</div>' +
             '<div class="cm-sharecard__who">' +
               '<div class="cm-ava cm-ava--lg">' + (C.avaUrl(prof.name, prof.avatar_url, pid) ? '<img src="' + C.esc(C.avaUrl(prof.name, prof.avatar_url, pid)) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
               '<div><b>' + C.esc(prof.name) + (C.isOfficial(pid) ? '<span class="cm-vtick">✔</span>' : "") + "</b>" +
               '<span class="cm-time">ID ' + pid.slice(0, 8) + "</span></div>" +
             "</div>" +
             (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
-            '<span class="cm-sharecard__cta">' + (mine ? "This is you — share this card 📤" : "🔔 Subscribe — follow on TheSmallBook") + "</span>" +
+            '<span class="cm-sharecard__cta">' + (mine ? C.icon('share') + " This is you — share this card" : C.icon('bell') + " Subscribe — follow on TheSmallBook") + "</span>" +
           "</div>" +
           '<div class="cm-sharerow">' +
             '<button class="setbtn" id="shareId">🆔 Copy ID</button>' +
             '<button class="setbtn" id="shareProfile">🔗 Share profile</button>' +
           "</div>" +
           (mine
-            ? '<a class="cm-write" href="dm.html">💬 My messages</a>'
-            : '<a class="cm-write" href="dm.html?u=' + pid + '">💬 Message ' + C.esc(prof.name.split(" ")[0]) + "</a>") +
+            ? '<a class="cm-write" href="dm.html">' + C.icon('chat') + " My messages</a>"
+            : '<a class="cm-write" href="dm.html?u=' + pid + '">' + C.icon('chat') + " Message " + C.esc(prof.name.split(" ")[0]) + "</a>") +
           (mine
             ? '<div class="cm-profedit">' +
                 '<label class="cm-lbl">Profile photo<input id="pAva" type="file" accept="image/*"></label>' +
@@ -108,7 +124,7 @@
                 '<label class="cm-lbl">Bio<input id="pBio" class="setinput" maxlength="120" value="' + C.esc(prof.bio || "") + '" placeholder="One line about you"></label>' +
                 '<button class="cm-pub cm-pub--sm" id="pSave">Save profile</button>' +
               "</div>"
-            : '<button class="cm-sub' + (fol.mine ? " on" : "") + '" data-follow="' + pid + '">' + (fol.mine ? "✓ Subscribed" : "🔔 Subscribe") + "</button>") +
+            : '<button class="cm-sub' + (fol.mine ? " on" : "") + '" data-follow="' + pid + '">' + (fol.mine ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe") + "</button>") +
         "</header>" +
         '<h2 class="cm-sect">' + (mine ? "📔 Your stories" : "✍️ Stories") + "</h2>" +
         '<div class="cm-feed cm-feed--tight" id="pfeed">' +
@@ -124,7 +140,7 @@
             '<a class="cm-card__title" href="story.html?id=' + p.id + '">' + C.esc(p.title) + "</a>" +
             '<span class="cm-time">' + C.ago(p.created_at) + " · " + C.readMins(p.body) + " min" + (p.audio_url ? " · 🎧" : "") + "</span>" +
             '<div class="cm-card__foot"><button class="cm-like" data-like="' + p.id + '">♥ <b>…</b></button>' +
-            (mine ? '<button class="cm-del" data-del="' + p.id + '">🗑</button>' : "") + "</div>" +
+            (mine ? '<button class="cm-del" data-del="' + p.id + '" title="Delete">' + C.icon('trash') + "</button>" : "") + "</div>" +
           "</div></article>";
       }
 
@@ -156,6 +172,19 @@
           return;
         }
       });
+      root.addEventListener("click", async function (e) {
+        var t = e.target.closest("[data-pfol]");
+        if (!t) return;
+        if (!C.signedIn()) { location.href = "login.html"; return; }
+        t.disabled = true;
+        var on = !t.classList.contains("on");
+        try {
+          await C.setFollow(t.getAttribute("data-pfol"), on);
+          t.classList.toggle("on", on);
+          t.innerHTML = on ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
+        } catch (err) { alert("Subscribe failed — " + (err && err.message ? err.message : err)); }
+        t.disabled = false;
+      });
       var view = (location.search.match(/[?&]view=(followers|following)/) || [])[1] || "";
       if (view) renderSocial(view);
       async function renderSocial(kind2) {
@@ -168,7 +197,7 @@
         if (C.signedIn()) { try { (await C.followingIds()).forEach(function (x) { myFol[x] = 1; }); } catch (e) {} }
         var panel = document.createElement("section");
         panel.className = "cm-social";
-        panel.innerHTML = "<h2>" + (kind2 === "followers" ? "👤 Followers" : "⭐ Following") + ' · <a class="cm-socback" href="profile.html?id=' + pid + '">back to profile</a></h2>' +
+        panel.innerHTML = "<h2>" + (kind2 === "followers" ? C.icon('user') + " Followers" : C.icon('star') + " Following") + ' · <a class="cm-socback" href="profile.html?id=' + pid + '">back to profile</a></h2>' +
           (ids.length ? '<div class="cm-people">' + ids.map(function (fid) {
             var isMeRow = fid === meId;
             return '<div class="cm-person" data-pid="' + fid + '">' +
@@ -181,8 +210,8 @@
               "</div>" +
               '<div class="cm-person__acts">' +
                 (isMeRow ? '<span class="cm-time">· you</span>' :
-                  '<button class="cm-follow' + (myFol[fid] ? " on" : "") + '" data-socfol="' + fid + '">' + (myFol[fid] ? "Subscribed ✓" : "🔔 Subscribe") + "</button>" +
-                  '<a class="cm-dmbtn" href="dm.html?u=' + fid + '" title="Message">💬</a>') +
+                  '<button class="cm-follow' + (myFol[fid] ? " on" : "") + '" data-socfol="' + fid + '">' + (myFol[fid] ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe") + "</button>" +
+                  '<a class="cm-dmbtn" href="dm.html?u=' + fid + '" title="Message">' + C.icon('chat') + "</a>") +
               "</div>" +
             "</div>";
           }).join("") + "</div>" : '<p class="cm-empty cm-empty--sm">Nobody here yet.</p>');
@@ -196,7 +225,7 @@
           try {
             await C.setFollow(t.getAttribute("data-socfol"), on2);
             t.classList.toggle("on", on2);
-            t.textContent = on2 ? "Subscribed ✓" : "🔔 Subscribe";
+            t.innerHTML = on2 ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
           } catch (err) { alert("Subscribe failed — " + (err && err.message ? err.message : err)); }
           t.disabled = false;
         });
@@ -224,7 +253,7 @@
           await C.setFollow(pid, on);
           var f = await C.followInfo(pid);
           this.classList.toggle("on", f.mine);
-          this.textContent = f.mine ? "✓ Subscribed" : "🔔 Subscribe";
+          this.innerHTML = f.mine ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
           var fc = root.querySelector(".cm-stats b");
         } catch (e) { alert((on ? "Subscribe" : "Unsubscribe") + " failed — " + (e && e.message ? e.message : e)); }
       });
@@ -334,7 +363,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=204" defer></script>
-  <script src="js/gate.js?v=204" defer></script>
+  <script src="js/bar.js?v=209" defer></script>
+  <script src="js/gate.js?v=209" defer></script>
 </body>
 </html>

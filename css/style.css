@@ -5611,3 +5611,56 @@ video.cm-postcard__cover { width: 100%; object-fit: contain; background: #111; b
 .cm-burstend small { color: #847e73; font-weight: 600; }
 .cm-burstpill { position: absolute; top: calc(14px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); z-index: 63; border: 2.5px solid #fff; background: rgba(20, 16, 10, .78); color: #ffe27a; font: inherit; font-weight: 800; font-size: .78rem; padding: 9px 16px; border-radius: 999px; cursor: pointer; box-shadow: 0 4px 18px rgba(0,0,0,.4); }
 .cm-reel__q { font-family: Georgia, serif; font-size: 3.4rem; line-height: .6; color: var(--yellow); opacity: .95; }
+
+
+/* ============================================================
+   v25 — Find readers overlay · profile glow-up
+   ============================================================ */
+.cm-finder { position: fixed; inset: 0; z-index: 105; background: rgba(20, 16, 10, .55); display: flex; align-items: center; justify-content: center; padding: 16px; }
+.cm-finder__card { width: min(520px, 100%); height: min(78dvh, 640px); background: var(--paper); border: 3px solid var(--ink); border-radius: 22px; box-shadow: 6px 6px 0 var(--ink); padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+html.dark .cm-finder__card { background: #241f17; color: var(--paper); }
+.cm-finder__list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+.cm-finder__list .cm-person { border: 2.5px solid var(--ink); border-radius: 15px; padding: 10px 12px; background: var(--bg); }
+html.dark .cm-finder__list .cm-person { background: #1b1712; }
+/* profile v2 */
+.cm-profhead--v2 { padding-top: 0; }
+.cm-banner { height: 118px; border-radius: 0 0 22px 22px; border-bottom: 3px solid var(--ink); }
+.cm-profcard { position: relative; margin: -58px 14px 0; background: var(--paper); border: 3px solid var(--ink); border-radius: 20px; box-shadow: 5px 5px 0 var(--ink); padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+html.dark .cm-profcard { background: #241f17; color: var(--paper); }
+.cm-profcard__top { display: flex; align-items: flex-end; gap: 12px; }
+.cm-ava--ring { border: 4px solid var(--paper); box-shadow: 3px 3px 0 var(--ink); margin-top: -46px; background: var(--paper); }
+html.dark .cm-ava--ring { border-color: #241f17; background: #241f17; }
+.cm-profmain { flex: 1; min-width: 0; padding-bottom: 2px; }
+.cm-profmain h1 { font-family: var(--font-head); font-size: 1.35rem; line-height: 1.1; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cm-profmain h1 i { font-style: normal; color: #8f8a80; font-size: .8rem; }
+.cm-idchip { display: inline-block; margin-top: 4px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .66rem; font-weight: 700; background: var(--bg); border: 2px solid var(--ink); border-radius: 999px; padding: 3px 9px; }
+html.dark .cm-idchip { background: #1b1712; }
+.cm-profcard .cm-bio { margin: 0; font-weight: 600; font-size: .84rem; }
+.cm-statcards { display: grid; grid-template-columns: repeat(auto-fit, minmax(78px, 1fr)); gap: 8px; }
+.cm-statcard { display: block; text-align: center; text-decoration: none; color: var(--ink); background: var(--bg); border: 2.5px solid var(--ink); border-radius: 14px; padding: 9px 6px; }
+html.dark .cm-statcard { background: #1b1712; color: var(--paper); }
+.cm-statcard b { display: block; font-family: var(--font-head); font-size: 1.15rem; line-height: 1; }
+.cm-statcard span { display: block; margin-top: 4px; font-size: .6rem; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; color: #8f8a80; }
+.cm-progpill { align-self: flex-start; background: var(--yellow); border: 2.5px solid var(--ink); border-radius: 999px; padding: 6px 12px; font-weight: 800; font-size: .74rem; box-shadow: 2.5px 2.5px 0 var(--ink); }
+.cm-profacts { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.cm-dmbtn--big { font-size: .8rem; padding: 9px 14px; border-radius: 12px; }
+
+
+/* ============================================================
+   v26 — SVG icon system (replaces fragile emojis)
+   ============================================================ */
+.tsb-ic { width: 1.05em; height: 1.05em; vertical-align: -0.18em; flex: none; }
+.dm-pop button .tsb-ic { margin-right: 7px; }
+.cm-chipbtn .tsb-ic { margin-right: 5px; }
+.cm-dmbtn .tsb-ic, .cm-follow .tsb-ic, .cm-sub .tsb-ic { margin-right: 4px; }
+.cm-bigact__ico .tsb-ic { width: 1.2em; height: 1.2em; vertical-align: -0.25em; }
+
+/* v26 — SVG icon spacing */
+.tsb-ic { width: 1.05em; height: 1.05em; vertical-align: -0.18em; flex: none; }
+.dm-pop button .tsb-ic { margin-right: 7px; }
+.cm-chipbtn .tsb-ic, .cm-sect .tsb-ic, .cm-empty .tsb-ic { margin-right: 5px; }
+.cm-dmbtn .tsb-ic, .cm-follow .tsb-ic, .cm-sub .tsb-ic, .cm-write .tsb-ic { margin-right: 4px; }
+.cm-time .tsb-ic, .cm-progpill .tsb-ic, h2 .tsb-ic, .cm-top__t .tsb-ic,
+.cm-sharecard__cta .tsb-ic, .cm-sharecard__brand .tsb-ic { margin-right: 5px; }
+.cm-del .tsb-ic { width: 1em; height: 1em; }
+.cm-bell .tsb-ic { width: 1.2em; height: 1.2em; }

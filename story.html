@@ -24,7 +24,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=204">
+  <link rel="stylesheet" href="css/style.css?v=209">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -36,11 +36,11 @@
     </article>
   </main>
 
-  <script src="js/prefs.js?v=204"></script>
-  <script src="js/lang.js?v=204"></script>
-  <script src="js/config.js?v=204"></script>
-  <script src="js/auth.js?v=204"></script>
-  <script src="js/community.js?v=204"></script>
+  <script src="js/prefs.js?v=209"></script>
+  <script src="js/lang.js?v=209"></script>
+  <script src="js/config.js?v=209"></script>
+  <script src="js/auth.js?v=209"></script>
+  <script src="js/community.js?v=209"></script>
   <script>
   (function () {
     "use strict";
@@ -61,6 +61,11 @@
       try { prof = await C.getProfile(p.author_id); } catch (e) {}
       prof = prof || { name: p.author_name, avatar_url: C.avaUrl(p.author_name, p.author_avatar, p.author_id), bio: "" };
       if (prof && !prof.avatar_url) prof.avatar_url = C.avaUrl(p.author_name, p.author_avatar, p.author_id);
+      try {
+        if (window.TSB && TSB.interest) {
+          (p.tags || []).forEach(function (t) { TSB.interest.ping(t); });
+        }
+      } catch (e) {}
       var like = { count: 0, mine: false }, fol = { count: 0, mine: false }, cmts = [];
       try { like = await C.likeInfo(id); } catch (e) {}
       try { fol = await C.followInfo(p.author_id); } catch (e) {}
@@ -80,18 +85,18 @@
           "</div>" +
           "<h1>" + C.esc(p.title) + "</h1>" +
           (p.subtitle ? '<p class="cm-postcard__sub">' + C.esc(p.subtitle) + "</p>" : "") +
-          (p.audio_url ? '<button class="cm-listenbig" data-audio="' + C.esc(p.audio_url) + '" data-title="' + C.esc(p.title) + '">🎧 Listen to the voice version</button>' : "") +
+          (p.audio_url ? '<button class="cm-listenbig" data-audio="' + C.esc(p.audio_url) + '" data-title="' + C.esc(p.title) + '">+ C.icon('phone') + " Listen to the voice version"</button>' : "") +
           '<div class="cm-rich">' + C.sanitize(p.body) + "</div>" +
           (p.tags && p.tags.length ? '<div class="cm-card__tags">' + p.tags.map(function (t) { return "<span># " + C.esc(t) + "</span>"; }).join("") + "</div>" : "") +
           '<div class="cm-bigacts">' +
             '<button class="cm-bigact cm-blike' + (like.mine ? " on" : "") + '" data-like="' + p.id + '"><span class="cm-bigact__ico">♥</span><b>' + like.count + " like" + (like.count === 1 ? "" : "s") + "</b></button>" +
-            '<a class="cm-bigact" href="#comments"><span class="cm-bigact__ico">💬</span><b>' + cmts.length + " comment" + (cmts.length === 1 ? "" : "s") + "</b></a>" +
+            '<a class="cm-bigact" href="#comments"><span class="cm-bigact__ico">' + C.icon('chat') + '</span><b>' + cmts.length + " comment" + (cmts.length === 1 ? "" : "s") + "</b></a>" +
             '<button class="cm-bigact" id="shareBtn"><span class="cm-bigact__ico">🔗</span><b>Share</b></button>' +
-            (p.author_id === meId ? '<button class="cm-bigact cm-del" data-del="' + p.id + '"><span class="cm-bigact__ico">🗑</span><b>Delete</b></button>' : "") +
+            (p.author_id === meId ? '<button class="cm-bigact cm-del" data-del="' + p.id + '"><span class="cm-bigact__ico">' + C.icon('trash') + '</span><b>Delete</b></button>' : "") +
           "</div>" +
         "</article>" +
         '<section class="cm-comments" id="comments">' +
-          "<h2>💬 " + cmts.length + " comment" + (cmts.length === 1 ? "" : "s") + "</h2>" +
+          "<h2>" + C.icon('chat') + " " + cmts.length + " comment" + (cmts.length === 1 ? "" : "s") + "</h2>" +
           '<div id="cmtList">' + (cmts.length ? cmts.map(cm).join("") : '<p class="cm-empty cm-empty--sm">Be the first to say something kind.</p>') + "</div>" +
           (meId
             ? '<div class="cm-cmtrow"><input id="cmtInput" class="setinput" maxlength="280" placeholder="Add a comment…"><button class="cm-pub cm-pub--sm" id="cmtSend">Send</button></div>'
@@ -202,7 +207,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=204" defer></script>
-  <script src="js/gate.js?v=204" defer></script>
+  <script src="js/bar.js?v=209" defer></script>
+  <script src="js/gate.js?v=209" defer></script>
 </body>
 </html>

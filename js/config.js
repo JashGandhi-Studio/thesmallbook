@@ -52,7 +52,7 @@ window.TSB_CONFIG = {
      onesignal.com → Add App → Web Push → paste the App ID below.
      Also add their OneSignalSDKWorker.js to your site root.
      Empty = bell shows "coming soon" (WhatsApp reminder still works). */
-  ONESIGNAL_APP_ID: "",
+  ONESIGNAL_APP_ID: "9339bcb4-3e50-4b94-a70b-6bd1fc1bb018",
 
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkbXhjZXdteW9maWhncmhldWFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxOTc3NjQsImV4cCI6MjEwMTc3Mzc2NH0.ZiaeA9eA7uxVeP0qhuoFdoY4CGP0eKI7VD87xsE3tw8",   // e.g. "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
 
