@@ -5664,3 +5664,13 @@ html.dark .cm-statcard { background: #1b1712; color: var(--paper); }
 .cm-sharecard__cta .tsb-ic, .cm-sharecard__brand .tsb-ic { margin-right: 5px; }
 .cm-del .tsb-ic { width: 1em; height: 1em; }
 .cm-bell .tsb-ic { width: 1.2em; height: 1.2em; }
+
+/* v27 — visitor profile: card centred, one clean action area */
+.cm-sharecard { gap: 12px; }
+.cm-sharecard__who { justify-content: center; width: 100%; }
+.cm-sharecard .cm-bio { max-width: 34em; }
+.cm-sharerow { justify-content: center; flex-wrap: wrap; width: 100%; }
+.cm-sharerow--main { margin-top: 2px; }
+.cm-sharerow--main .cm-follow { flex: 1 1 150px; display: inline-flex; align-items: center; justify-content: center; text-align: center; }
+.cm-sharerow--main .cm-dmbtn { flex: 1 1 150px; display: inline-flex; align-items: center; justify-content: center; text-align: center; }
+.cm-sharerow--sub .setbtn { display: inline-flex; align-items: center; gap: 6px; justify-content: center; }

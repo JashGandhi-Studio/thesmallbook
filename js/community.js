@@ -99,7 +99,7 @@
       }
       return rows[0];
     }
-    var created = await api("profiles?on_conflict=id&select=*", { method: "POST", headers: { Prefer: "resolution=merge-duplicates" }, body: { id: u.id, name: name, avatar_url: avatar } });
+    var created = await api("profiles?on_conflict=id&select=*", { method: "POST", headers: { Prefer: "resolution=merge-duplicates" }, body: { id: u.id, name: name, avatar_url: avatar, is_public: true } });
     return (created && created[0]) || { id: u.id, name: name, avatar_url: avatar, bio: "" };
   }
   async function safeProfile() {
@@ -269,7 +269,7 @@
   async function listProfiles(limit) {
     if (!api) return [];
     try {
-      return await api("profiles?select=*&is_public=eq.true&order=created_at.desc&limit=" + (limit || 60), { method: "GET" });
+      return await api("profiles?select=*&order=created_at.desc&limit=" + (limit || 60), { method: "GET" });
     } catch (e) {
       return await api("profiles?select=*&order=created_at.desc&limit=" + (limit || 60), { method: "GET" });
     }

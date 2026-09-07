@@ -20,6 +20,7 @@ globalThis.fetch = async (url, o) => {
   const body = (o && typeof o.body === "string") ? JSON.parse(o.body) : null;
   const auth = o.headers.Authorization;
   globalThis.lastHeaders = (o && o.headers) || {};
+  globalThis.lastUrl = u;
   if (u.includes("/storage/v1/object/")) {
     if (auth !== "Bearer jwt-1") return jsonRes({ message: "new row violates row-level security" }, 403);
     const path = u.split("/object/")[1]; storage.push(path); return jsonRes({ Key: path }, 200);
@@ -127,7 +128,7 @@ const C = window.TSB_COMMUNITY;
   console.log("== public profile switch ==");
   await C.setProfilePublic(false);
   ok("is_public=false stored", DB.profiles[0].is_public === false);
-  ok("hidden from People when private", (await C.listProfiles(10)).length === 0);
+  ok("signed-in reader shown even without the public toggle", (await C.listProfiles(10)).length === 1);
   await C.setProfilePublic(true);
   const pl = await C.listProfiles(10);
   ok("visible again when public", pl.length === 1 && pl[0].name === "Jash G");
@@ -254,6 +255,33 @@ const C = window.TSB_COMMUNITY;
   ok("about page mark is the 📕 emoji again", abtH.includes('ahero__mark">📕'));
   ok("icon replicas: heart/mail/share/brush/phone all present", C.icon("heart").includes("M20.84") && C.icon("mail").includes("<rect") && C.icon("share").includes("polyline") && C.icon("brush").includes("m9.06") && C.icon("phone").includes("M3 18v-6"));
   ok("dm keeps clean icons (no broken tone emojis)", !/[🧹🙈]/u.test(dmH));
+
+  console.log("== v210 inline-script syntax guard (no broken pages can ship) ==");
+  const PAGE_FILES = ["index.html", "stories.html", "story.html", "notifications.html", "dm.html", "profile.html", "write.html", "login.html", "settings.html", "book.html"];
+  let pageBugs = 0;
+  for (const pf of PAGE_FILES) {
+    const raw = fsp.readFileSync(pp.join(__dirname, "../" + pf), "utf8");
+    const blocks = raw.match(/<script(?![^>]*src=)[^>]*>([\s\S]*?)<\/script>/gi) || [];
+    for (const b of blocks) {
+      if (/application\/ld\+json/i.test(b)) continue;
+      const code = b.replace(/^<script[^>]*>/i, "").replace(/<\/script>$/i, "");
+      if (!code.trim()) continue;
+      try { new Function(code); } catch (e) { pageBugs++; console.log("   INLINE SCRIPT ERROR in " + pf + ": " + e.message); }
+    }
+  }
+  ok("every inline script on the 10 key pages parses", pageBugs === 0, pageBugs + " broken script(s)");
+  const stRaw = fsp.readFileSync(pp.join(__dirname, "../story.html"), "utf8");
+  ok("story listen button is proper concatenation", stRaw.includes(">\' + C.icon(\'phone\') + \" Listen to the voice version</button>\""));
+  const ntRaw = fsp.readFileSync(pp.join(__dirname, "../notifications.html"), "utf8");
+  ok("notifications icon map uses runtime C.icon", ntRaw.includes("like: C.icon('heart')"));
+
+  console.log("== v211 finder shows all signed-in readers + visitor card ==");
+  await C.listProfiles(9);
+  ok("listProfiles has NO is_public gate (every signed-in reader is visible)", !String(globalThis.lastUrl).includes("is_public"), String(globalThis.lastUrl));
+  const prfSrc = fsp.readFileSync(pp.join(__dirname, "../profile.html"), "utf8");
+  ok("visitor card has ONE action row: Subscribe + Message under the card", prfSrc.includes("cm-sharerow--main") && prfSrc.includes("data-pfol"));
+  ok("Copy ID + Share profile use clean icons, no emojis", prfSrc.includes("C.icon('user') + \" Copy ID") && prfSrc.includes("C.icon('share') + \" Share profile"));
+  ok("no duplicate Message/Subscribe below the card", !prfSrc.includes('class="cm-sub') && !prfSrc.includes('Message " + C.esc(prof.name.split'));
 
   console.log();
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");

@@ -24,7 +24,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=209">
+  <link rel="stylesheet" href="css/style.css?v=211">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -36,11 +36,11 @@
     </article>
   </main>
 
-  <script src="js/prefs.js?v=209"></script>
-  <script src="js/lang.js?v=209"></script>
-  <script src="js/config.js?v=209"></script>
-  <script src="js/auth.js?v=209"></script>
-  <script src="js/community.js?v=209"></script>
+  <script src="js/prefs.js?v=211"></script>
+  <script src="js/lang.js?v=211"></script>
+  <script src="js/config.js?v=211"></script>
+  <script src="js/auth.js?v=211"></script>
+  <script src="js/community.js?v=211"></script>
   <script>
   (function () {
     "use strict";
@@ -85,7 +85,7 @@
           "</div>" +
           "<h1>" + C.esc(p.title) + "</h1>" +
           (p.subtitle ? '<p class="cm-postcard__sub">' + C.esc(p.subtitle) + "</p>" : "") +
-          (p.audio_url ? '<button class="cm-listenbig" data-audio="' + C.esc(p.audio_url) + '" data-title="' + C.esc(p.title) + '">+ C.icon('phone') + " Listen to the voice version"</button>' : "") +
+          (p.audio_url ? '<button class="cm-listenbig" data-audio="' + C.esc(p.audio_url) + '" data-title="' + C.esc(p.title) + '">' + C.icon('phone') + " Listen to the voice version</button>" : "") +
           '<div class="cm-rich">' + C.sanitize(p.body) + "</div>" +
           (p.tags && p.tags.length ? '<div class="cm-card__tags">' + p.tags.map(function (t) { return "<span># " + C.esc(t) + "</span>"; }).join("") + "</div>" : "") +
           '<div class="cm-bigacts">' +
@@ -207,7 +207,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=209" defer></script>
-  <script src="js/gate.js?v=209" defer></script>
+  <script src="js/bar.js?v=211" defer></script>
+  <script src="js/gate.js?v=211" defer></script>
 </body>
 </html>

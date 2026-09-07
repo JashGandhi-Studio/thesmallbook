@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=209">
+  <link rel="stylesheet" href="css/style.css?v=211">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,11 +31,11 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=209"></script>
-  <script src="js/lang.js?v=209"></script>
-  <script src="js/config.js?v=209"></script>
-  <script src="js/auth.js?v=209"></script>
-  <script src="js/community.js?v=209"></script>
+  <script src="js/prefs.js?v=211"></script>
+  <script src="js/lang.js?v=211"></script>
+  <script src="js/config.js?v=211"></script>
+  <script src="js/auth.js?v=211"></script>
+  <script src="js/community.js?v=211"></script>
   <script>
   (function () {
     "use strict";
@@ -93,12 +93,9 @@
               (mine ? '<div class="cm-statcard"><b>' + likesGot + "</b><span>likes got</span></div>" : "") +
             "</div>" +
             (progShown ? '<div class="cm-progpill">' + C.icon('book') + ' ' + progShown + " / 2176 lessons read</div>" : "") +
-            '<div class="cm-profacts">' +
-              (mine
-                ? '<span class="cm-time">' + C.icon('share') + ' This is your public card — share it below</span>'
-                : '<button class="cm-follow' + (fol.mine ? " on" : "") + '" data-pfol="' + pid + '">' + (fol.mine ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe") + "</button>" +
-                  '<a class="cm-dmbtn cm-dmbtn--big" href="dm.html?u=' + pid + '">' + C.icon('chat') + " Message</a>") +
-            "</div>" +
+            (mine
+              ? '<div class="cm-profacts"><span class="cm-time">' + C.icon('share') + ' This is your public card — share it below</span></div>'
+              : "") +
           "</div>" +
           '<div class="cm-sharecard">' +
             '<div class="cm-sharecard__brand">' + C.icon('book') + ' THESMALLBOOK · COMMUNITY</div>' +
@@ -110,13 +107,19 @@
             (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
             '<span class="cm-sharecard__cta">' + (mine ? C.icon('share') + " This is you — share this card" : C.icon('bell') + " Subscribe — follow on TheSmallBook") + "</span>" +
           "</div>" +
-          '<div class="cm-sharerow">' +
-            '<button class="setbtn" id="shareId">🆔 Copy ID</button>' +
-            '<button class="setbtn" id="shareProfile">🔗 Share profile</button>' +
+          (!mine
+            ? '<div class="cm-sharerow cm-sharerow--main">' +
+                '<button class="cm-follow' + (fol.mine ? " on" : "") + '" data-pfol="' + pid + '">' + (fol.mine ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe") + "</button>" +
+                '<a class="cm-dmbtn cm-dmbtn--big" href="dm.html?u=' + pid + '">' + C.icon('chat') + " Message</a>" +
+              "</div>"
+            : "") +
+          '<div class="cm-sharerow cm-sharerow--sub">' +
+            '<button class="setbtn" id="shareId">' + C.icon('user') + " Copy ID</button>" +
+            '<button class="setbtn" id="shareProfile">' + C.icon('share') + " Share profile</button>" +
           "</div>" +
           (mine
             ? '<a class="cm-write" href="dm.html">' + C.icon('chat') + " My messages</a>"
-            : '<a class="cm-write" href="dm.html?u=' + pid + '">' + C.icon('chat') + " Message " + C.esc(prof.name.split(" ")[0]) + "</a>") +
+            : "") +
           (mine
             ? '<div class="cm-profedit">' +
                 '<label class="cm-lbl">Profile photo<input id="pAva" type="file" accept="image/*"></label>' +
@@ -124,7 +127,7 @@
                 '<label class="cm-lbl">Bio<input id="pBio" class="setinput" maxlength="120" value="' + C.esc(prof.bio || "") + '" placeholder="One line about you"></label>' +
                 '<button class="cm-pub cm-pub--sm" id="pSave">Save profile</button>' +
               "</div>"
-            : '<button class="cm-sub' + (fol.mine ? " on" : "") + '" data-follow="' + pid + '">' + (fol.mine ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe") + "</button>") +
+            : "") +
         "</header>" +
         '<h2 class="cm-sect">' + (mine ? "📔 Your stories" : "✍️ Stories") + "</h2>" +
         '<div class="cm-feed cm-feed--tight" id="pfeed">' +
@@ -363,7 +366,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=209" defer></script>
-  <script src="js/gate.js?v=209" defer></script>
+  <script src="js/bar.js?v=211" defer></script>
+  <script src="js/gate.js?v=211" defer></script>
 </body>
 </html>
