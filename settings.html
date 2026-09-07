@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=211">
+  <link rel="stylesheet" href="css/style.css?v=213">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -67,6 +67,16 @@
     </section>
 
     <section class="setcard">
+      <h2>🔔 NOTIFICATION SOUND</h2>
+      <div class="setrow" id="soundRow">
+        <button class="setopt" data-sound="ding"><span>🔔</span> Soft ding</button>
+        <button class="setopt" data-sound="chime"><span>🎐</span> Bright chime</button>
+        <button class="setopt" data-sound="pop"><span>🔊</span> Pop</button>
+        <button class="setopt" data-sound="off"><span>🔇</span> Off</button>
+      </div>
+      <div class="setrow">
+        <button class="setbtn" id="soundTest">▶ Play test sound</button>
+      </div>
       <h2>📐 APP DISPLAY SIZE</h2>
       <div class="setrow" id="appsizeRow">
         <button class="setopt" data-appsize="small"><span>🤏</span> Smaller</button>
@@ -133,12 +143,13 @@
     <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v175.</p>
   </main>
 
-  <script src="js/prefs.js?v=211"></script>
-  <script src="js/lang.js?v=211"></script>
-  <script src="js/config.js?v=211"></script>
-  <script src="js/auth.js?v=211"></script>
-  <script src="js/community.js?v=211"></script>
-  <script src="js/bar.js?v=211" defer></script>
+  <script src="js/prefs.js?v=213"></script>
+  <script src="js/lang.js?v=213"></script>
+  <script src="js/config.js?v=213"></script>
+  <script src="js/auth.js?v=213"></script>
+  <script src="js/sounds.js?v=213"></script>
+  <script src="js/community.js?v=213"></script>
+  <script src="js/bar.js?v=213" defer></script>
   <script>
     (function () {
       /* theme */
@@ -258,7 +269,7 @@
   });
 })();
 </script>
-  <script src="js/onboard.js?v=211" defer></script>
+  <script src="js/onboard.js?v=213" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {
@@ -268,6 +279,19 @@
         document.documentElement.classList.toggle("tsb-font-clean", cur === "clean");
         document.querySelectorAll("[data-fontstyle]").forEach(function (b) {
           b.classList.toggle("on", b.getAttribute("data-fontstyle") === cur);
+      document.querySelectorAll("[data-sound]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var v = b.getAttribute("data-sound");
+          if (window.TSB && TSB.sound) TSB.sound.set(v);
+          document.querySelectorAll("[data-sound]").forEach(function (x) { x.classList.toggle("on", x.getAttribute("data-sound") === v); });
+        });
+      });
+      (function paintSound() {
+        var cur = (window.TSB && TSB.sound && TSB.sound.get()) || "ding";
+        document.querySelectorAll("[data-sound]").forEach(function (x) { x.classList.toggle("on", x.getAttribute("data-sound") === cur); });
+      })();
+      var sndTest = document.getElementById("soundTest");
+      if (sndTest) sndTest.addEventListener("click", function () { if (window.TSB && TSB.sound) TSB.sound.play(); });
         });
       }
       document.addEventListener("click", function (e) {

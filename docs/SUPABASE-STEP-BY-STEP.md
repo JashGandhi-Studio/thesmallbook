@@ -378,3 +378,15 @@ How matching works: the app silently keeps each reader's top interests (never up
 raw — only the top-4 category words, and only while signed in). At push time the Edge
 Function compares them with nudge tags and sends each person the chapter that fits
 their reading. Readers with no signals yet get a random nudge, same as before.
+
+---
+
+## SQL #9 — profile links (website chips on profiles)  *(additive, re-runnable)*
+
+Adds a `links` column to `profiles` so readers can show websites under their bio.
+Runs with a destructive-warning banner (any ALTER TABLE triggers it) — this statement is
+**additive-only**: it adds one column and never touches existing rows. Safe to re-run.
+
+```sql
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS links text[] DEFAULT '{}';
+```

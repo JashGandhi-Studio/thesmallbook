@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=211">
+  <link rel="stylesheet" href="css/style.css?v=213">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -64,11 +64,12 @@
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="js/prefs.js?v=211"></script>
-  <script src="js/lang.js?v=211"></script>
-  <script src="js/config.js?v=211"></script>
-  <script src="js/auth.js?v=211"></script>
-  <script src="js/community.js?v=211"></script>
+  <script src="js/prefs.js?v=213"></script>
+  <script src="js/lang.js?v=213"></script>
+  <script src="js/config.js?v=213"></script>
+  <script src="js/auth.js?v=213"></script>
+  <script src="js/sounds.js?v=213"></script>
+  <script src="js/community.js?v=213"></script>
   <script>
   (function () {
     "use strict";
@@ -202,6 +203,8 @@
       feed.innerHTML = skeletons();
       var profs = [];
       try { profs = await C.listProfiles(60); } catch (e) {}
+      var pcP = {};
+      try { pcP = await C.postCounts(400); } catch (e) {}
       if (!profs.length) {
         feed.innerHTML = '<div class="cm-empty">No readers yet — be the first face here.<br><button class="cm-write" id="ew">✍️ Write your first story</button></div>';
         var ew2 = document.getElementById("ew"); if (ew2) ew2.addEventListener("click", function () { location.href = "write.html"; });
@@ -218,6 +221,7 @@
             '<div class="cm-ava cm-ava--lg">' + (C.avaUrl(p.name, p.avatar_url, p.id) ? '<img src="' + C.esc(C.avaUrl(p.name, p.avatar_url, p.id)) + '" alt="">' : "<span>" + C.esc((p.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
             '<div class="cm-person__meta">' +
               '<a class="cm-name" href="profile.html?id=' + p.id + '">' + C.esc(p.name) + (C.isOfficial(p.id) ? '<span class="cm-vtick">✔</span>' : "") + (isMe ? ' <span class="cm-time">· you</span>' : "") + "</a>" +
+              (pcP[p.id] ? '<span class="cm-time">' + C.icon('pencil') + ' ' + pcP[p.id] + ' post' + (pcP[p.id] === 1 ? "" : "s") + '</span>' : "") +
               (p.progress ? '<span class="cm-time">' + C.icon('book') + ' ' + p.progress + '/2176 lessons read</span>' : "") +
               (p.bio ? '<span class="cm-bio">' + C.esc(p.bio) + "</span>" : "") +
             "</div></div>" +
@@ -563,7 +567,7 @@
             '<a class="cm-ava cm-ava--lg" href="profile.html?id=' + p.id + '">' + (av ? '<img src="' + C.esc(av) + '" alt="">' : "<span>" + C.esc((p.name || "R").charAt(0).toUpperCase()) + "</span>") + "</a>" +
             '<div class="cm-person__meta">' +
               '<a class="cm-name" href="profile.html?id=' + p.id + '">' + C.esc(p.name || "Reader") + (C.isOfficial(p.id) ? '<span class="cm-vtick">✔</span>' : "") + "</a>" +
-              '<span class="cm-time cm-socid">@' + String(p.id).slice(0, 8) + (p.progress ? " · " + C.icon('book') + " " + p.progress + " lessons" : "") + "</span>" +
+              '<span class="cm-time cm-socid">@' + String(p.id).slice(0, 8) + (p._posts ? " · " + C.icon('pencil') + " " + p._posts + " post" + (p._posts === 1 ? "" : "s") : "") + (p.progress ? " · " + C.icon('book') + " " + p.progress + " lessons" : "") + "</span>" +
             "</div>" +
           "</div>" +
           '<div class="cm-person__acts">' +
@@ -588,6 +592,7 @@
       var list = document.getElementById("finderList");
       list.innerHTML = '<p class="cm-empty cm-empty--sm">Loading readers…</p>';
       try { finderAll = (await C.listProfiles(120)) || []; } catch (e) { finderAll = []; }
+      try { var pcA = await C.postCounts(400); finderAll.forEach(function (p) { p._posts = pcA[p.id] || 0; }); } catch (e) {}
       finderRender(document.getElementById("finderQ").value);
     });
     document.getElementById("finderX").addEventListener("click", function () { document.getElementById("finder").hidden = true; });
@@ -610,7 +615,7 @@
     load();
   })();
   </script>
-  <script src="js/bar.js?v=211" defer></script>
-  <script src="js/gate.js?v=211" defer></script>
+  <script src="js/bar.js?v=213" defer></script>
+  <script src="js/gate.js?v=213" defer></script>
 </body>
 </html>

@@ -280,8 +280,25 @@ const C = window.TSB_COMMUNITY;
   ok("listProfiles has NO is_public gate (every signed-in reader is visible)", !String(globalThis.lastUrl).includes("is_public"), String(globalThis.lastUrl));
   const prfSrc = fsp.readFileSync(pp.join(__dirname, "../profile.html"), "utf8");
   ok("visitor card has ONE action row: Subscribe + Message under the card", prfSrc.includes("cm-sharerow--main") && prfSrc.includes("data-pfol"));
-  ok("Copy ID + Share profile use clean icons, no emojis", prfSrc.includes("C.icon('user') + \" Copy ID") && prfSrc.includes("C.icon('share') + \" Share profile"));
+  ok("Copy profile + Share profile use clean icons, no emojis", prfSrc.includes("C.icon('user') + \" Copy profile") && prfSrc.includes("C.icon('share') + \" Share profile"));
   ok("no duplicate Message/Subscribe below the card", !prfSrc.includes('class="cm-sub') && !prfSrc.includes('Message " + C.esc(prof.name.split'));
+
+  console.log("== v212 profile redesign + sounds + people visibility ==");
+  const cmSrc2 = fsp.readFileSync(pp.join(__dirname, "../js/community.js"), "utf8");
+  const stSrc2 = fsp.readFileSync(pp.join(__dirname, "../stories.html"), "utf8");
+  const seSrc2 = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
+  ok("profile header is Instagram-style (stat row + avatar + plus)", prfSrc.includes("cm-statrow") && prfSrc.includes("cm-avaplus") && prfSrc.includes('id="avaPlus"'));
+  ok("owner row = Edit profile + Share profile", prfSrc.includes('id="editProfileBtn"') && prfSrc.includes("Edit profile"));
+  ok("followers/following open the sheet (tabs + back)", prfSrc.includes("cm-socsheet") && prfSrc.includes("data-lsoc") && prfSrc.includes("socBack"));
+  ok("links chips + links editor present", prfSrc.includes("cm-linkchip") && prfSrc.includes('id="pLinks"'));
+  const pcRes = await C.postCounts(50);
+  ok("postCounts groups posts per author", typeof pcRes === "object" && pcRes[DB.posts[0].author_id] >= 1, JSON.stringify(pcRes));
+  ok("People + finder show posts-per-reader", stSrc2.includes("postCounts") && stSrc2.includes("_posts"));
+  ok("settings has sound chooser + test button", seSrc2.includes('data-sound="ding"') && seSrc2.includes("soundTest"));
+  ok("community plays the chosen sound on live toasts", cmSrc2.includes("window.TSB.sound.play()"));
+  ok("pages ship the sound library", prfSrc.includes("js/sounds.js") && stSrc2.includes("js/sounds.js"));
+  ok("visitor gets ONE clean card, share card is owner-only", prfSrc.includes("(mine ? '<div") && prfSrc.includes("cm-sharecard\">"));
+  ok("visitor avatar has no edit plus", prfSrc.includes("(mine ? '<button class=") && prfSrc.includes("cm-avaplus"));
 
   console.log();
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");

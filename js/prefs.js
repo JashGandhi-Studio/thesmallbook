@@ -348,7 +348,30 @@
     }
   };
 
-  window.TSB = { get, set, theme, bookmarks, progress, plans, streak, levelFor, achv, lastRead, backup, isIndianBook, completedCount, interest };
+  /* ---------- v212: notification sounds (choosable in Settings; de). Played on live toasts ---------- */
+  var SOUND_KEY = "tsb_sound";
+  var SOUND_NAMES = { ding: "Soft ding", chime: "Bright chime", pop: "Pop", off: "Off" };
+  var _sndAudio = {};
+  function soundGet() {
+    try { var v = localStorage.getItem(SOUND_KEY); return SOUND_NAMES[v] ? v : "ding"; } catch (e) { return "ding"; }
+  }
+  function soundSet(v) { try { localStorage.setItem(SOUND_KEY, SOUND_NAMES[v] ? v : "ding"); } catch (e) {} }
+  function soundPlay() {
+    try {
+      if (typeof Audio === "undefined") return;
+      var pick = soundGet();
+      if (pick === "off") return;
+      var lib = window.TSB_SOUNDS || {};
+      var src = lib[pick];
+      if (!src) return;
+      var a = _sndAudio[pick];
+      if (!a) { a = new Audio("data:audio/wav;base64," + src); _sndAudio[pick] = a; }
+      a.currentTime = 0;
+      var pr = a.play();
+      if (pr && pr.catch) pr.catch(function () {});
+    } catch (e) {}
+  }
+  window.TSB = { get, set, theme, bookmarks, progress, plans, streak, levelFor, achv, lastRead, backup, isIndianBook, completedCount, interest, sound: { get: soundGet, set: soundSet, play: soundPlay } };
 
   /* Amazon affiliate link builder — direct product page when we know the
      ASIN (converts better), search fallback for everything else. */

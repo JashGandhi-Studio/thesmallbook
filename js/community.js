@@ -451,6 +451,16 @@
     } catch (e) {}
   }
 
+  // ---- v212: posts per author (lets People/finder rows show who's posting) ----
+  async function postCounts(limit) {
+    try {
+      var rows = await api("posts?select=author_id&limit=" + (limit || 400), { method: "GET" });
+      var out = {};
+      (rows || []).forEach(function (r) { if (r.author_id) out[r.author_id] = (out[r.author_id] || 0) + 1; });
+      return out;
+    } catch (e) { return {}; }
+  }
+
   /* ---------- v198: live in-app notification toasts ---------- */
   var TOAST_SEEN = "tsb_toast_seen";
   function toastKey(n) { return [n.type, n.who || "", n.post || "", n.at].join(":"); }
@@ -477,6 +487,7 @@
     requestAnimationFrame(function () { el.classList.add("in"); });
     setTimeout(function () { el.classList.remove("in"); el.classList.add("out"); setTimeout(function () { el.remove(); }, 450); }, 5200);
     toastMark([toastKey(n)]);
+    try { if (window.TSB && window.TSB.sound) window.TSB.sound.play(); } catch (e2) {}
   }
   function popupsWanted() { return localStorage.getItem("tsb_notif_pop") !== "0"; }
   async function toastPoll() {
@@ -596,7 +607,7 @@
     ensureProfile: ensureProfile, getProfile: getProfile,
     listPosts: listPosts, getPost: getPost, publish: publish, deletePost: deletePost,
     likeInfo: likeInfo, setLike: setLike, likesOnMyPosts: likesOnMyPosts,
-    listProfiles: listProfiles, setProfilePublic: setProfilePublic, getPostByShort: getPostByShort, toastKey: toastKey, toastMark: toastMark, notifications: notifications, whenReady: whenReady, avaUrl: avaUrl, OFFICIAL_AVATAR: OFFICIAL_AVATAR,
+    listProfiles: listProfiles, setProfilePublic: setProfilePublic, postCounts: postCounts, getPostByShort: getPostByShort, toastKey: toastKey, toastMark: toastMark, notifications: notifications, whenReady: whenReady, avaUrl: avaUrl, OFFICIAL_AVATAR: OFFICIAL_AVATAR,
     myMessages: myMessages, conversations: conversations, threadWith: threadWith, sendDM: sendDM,
     editDM: editDM, deleteDM: deleteDM, hideDM: hideDM, clearThread: clearThread,
     syncProgress: syncProgress, syncInterests: syncInterests, icon: icon,

@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=211">
+  <link rel="stylesheet" href="css/style.css?v=213">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -77,11 +77,12 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=211"></script>
-  <script src="js/lang.js?v=211"></script>
-  <script src="js/config.js?v=211"></script>
-  <script src="js/auth.js?v=211"></script>
-  <script src="js/community.js?v=211"></script>
+  <script src="js/prefs.js?v=213"></script>
+  <script src="js/lang.js?v=213"></script>
+  <script src="js/config.js?v=213"></script>
+  <script src="js/auth.js?v=213"></script>
+  <script src="js/sounds.js?v=213"></script>
+  <script src="js/community.js?v=213"></script>
   <script>
   (function () {
     "use strict";
@@ -240,6 +241,7 @@
           kind: kind
         });
         localStorage.removeItem(DKEY);
+        try { C.setProfilePublic(true); } catch (e) {}
         location.href = "stories.html?tab=mine";
       } catch (e) {
         alert("Publish failed — " + (e && e.message ? e.message : e) + ". Stay signed in and try once more.");
@@ -262,6 +264,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=211" defer></script>
+  <script src="js/bar.js?v=213" defer></script>
 </body>
 </html>

@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=211">
+  <link rel="stylesheet" href="css/style.css?v=213">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,11 +31,12 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=211"></script>
-  <script src="js/lang.js?v=211"></script>
-  <script src="js/config.js?v=211"></script>
-  <script src="js/auth.js?v=211"></script>
-  <script src="js/community.js?v=211"></script>
+  <script src="js/prefs.js?v=213"></script>
+  <script src="js/lang.js?v=213"></script>
+  <script src="js/config.js?v=213"></script>
+  <script src="js/auth.js?v=213"></script>
+  <script src="js/sounds.js?v=213"></script>
+  <script src="js/community.js?v=213"></script>
   <script>
   (function () {
     "use strict";
@@ -70,10 +71,14 @@
       }
       document.title = prof.name + " — TheSmallBook";
       var progShown = prof.progress || 0;
+      var lkArr = (Array.isArray(prof.links) ? prof.links : []).filter(Boolean).slice(0, 3);
       if (mine) { try { progShown = Math.max(progShown, window.TSB && TSB.progress ? TSB.progress.totalRead() : 0); } catch (e) {} }
 
       var hue = parseInt(String(pid).replace(/-/g, "").slice(0, 4), 16) % 360;
-      var avaHtml = '<div class="cm-ava cm-ava--xl cm-ava--ring">' + (C.avaUrl(prof.name, prof.avatar_url, pid) ? '<img src="' + C.esc(C.avaUrl(prof.name, prof.avatar_url, pid)) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>";
+      var avaHtml = '<div class="cm-avawrap">' +
+        '<div class="cm-ava cm-ava--xl cm-ava--ring">' + (C.avaUrl(prof.name, prof.avatar_url, pid) ? '<img src="' + C.esc(C.avaUrl(prof.name, prof.avatar_url, pid)) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
+        (mine ? '<button class="cm-avaplus" id="avaPlus" title="Change profile picture" aria-label="Change profile picture">+</button>' : "") +
+      "</div>";
       root.innerHTML =
         '<header class="cm-profhead cm-profhead--v2">' +
           '<div class="cm-banner" style="background:linear-gradient(135deg,hsl(' + hue + ',78%,62%),hsl(' + ((hue + 42) % 360) + ',70%,40%))"></div>' +
@@ -86,18 +91,19 @@
               "</div>" +
             "</div>" +
             (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
-            '<div class="cm-statcards">' +
-              '<div class="cm-statcard"><b>' + posts.length + "</b><span>posts</span></div>" +
-              '<a class="cm-statcard" href="profile.html?id=' + pid + '&view=followers"><b>' + fol.count + "</b><span>followers</span></a>" +
-              '<a class="cm-statcard" href="profile.html?id=' + pid + '&view=following"><b>' + followingCount + "</b><span>following</span></a>" +
-              (mine ? '<div class="cm-statcard"><b>' + likesGot + "</b><span>likes got</span></div>" : "") +
+            (lkArr.length ? '<div class="cm-linksrow">' + lkArr.map(function (l) { return '<a class="cm-linkchip" href="' + C.esc(/^https?:\/\//i.test(l) ? l : "https://" + l) + '" target="_blank" rel="noopener">' + C.icon('link') + " " + C.esc(String(l).replace(/^https?:\/\//i, "").slice(0, 42)) + "</a>"; }).join("") + "</div>" : "") +
+            '<div class="cm-statrow">' +
+              '<span class="cm-statrow__n"><b>' + posts.length + "</b><span>posts</span></span>" +
+              '<a class="cm-statrow__n" href="profile.html?id=' + pid + '&view=followers" data-lsoc="followers"><b>' + fol.count + "</b><span>followers</span></a>" +
+              '<a class="cm-statrow__n" href="profile.html?id=' + pid + '&view=following" data-lsoc="following"><b>' + followingCount + "</b><span>following</span></a>" +
+              (mine ? '<span class="cm-statrow__n"><b>' + likesGot + "</b><span>likes</span></span>" : "") +
             "</div>" +
             (progShown ? '<div class="cm-progpill">' + C.icon('book') + ' ' + progShown + " / 2176 lessons read</div>" : "") +
             (mine
               ? '<div class="cm-profacts"><span class="cm-time">' + C.icon('share') + ' This is your public card — share it below</span></div>'
               : "") +
           "</div>" +
-          '<div class="cm-sharecard">' +
+          (mine ? '<div class="cm-sharecard">' +
             '<div class="cm-sharecard__brand">' + C.icon('book') + ' THESMALLBOOK · COMMUNITY</div>' +
             '<div class="cm-sharecard__who">' +
               '<div class="cm-ava cm-ava--lg">' + (C.avaUrl(prof.name, prof.avatar_url, pid) ? '<img src="' + C.esc(C.avaUrl(prof.name, prof.avatar_url, pid)) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
@@ -106,25 +112,27 @@
             "</div>" +
             (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
             '<span class="cm-sharecard__cta">' + (mine ? C.icon('share') + " This is you — share this card" : C.icon('bell') + " Subscribe — follow on TheSmallBook") + "</span>" +
+          "</div>" : "") +
+          '<div class="cm-sharerow cm-sharerow--main">' +
+            (mine
+              ? '<button class="cm-follow" id="editProfileBtn">' + C.icon('pencil') + " Edit profile</button>" +
+                '<button class="cm-dmbtn cm-dmbtn--big" id="shareProfile">' + C.icon('share') + " Share profile</button>"
+              : '<button class="cm-follow' + (fol.mine ? " on" : "") + '" data-pfol="' + pid + '">' + (fol.mine ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe") + "</button>" +
+                '<a class="cm-dmbtn cm-dmbtn--big" href="dm.html?u=' + pid + '">' + C.icon('chat') + " Message</a>") +
           "</div>" +
-          (!mine
-            ? '<div class="cm-sharerow cm-sharerow--main">' +
-                '<button class="cm-follow' + (fol.mine ? " on" : "") + '" data-pfol="' + pid + '">' + (fol.mine ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe") + "</button>" +
-                '<a class="cm-dmbtn cm-dmbtn--big" href="dm.html?u=' + pid + '">' + C.icon('chat') + " Message</a>" +
-              "</div>"
-            : "") +
           '<div class="cm-sharerow cm-sharerow--sub">' +
-            '<button class="setbtn" id="shareId">' + C.icon('user') + " Copy ID</button>" +
-            '<button class="setbtn" id="shareProfile">' + C.icon('share') + " Share profile</button>" +
+            (!mine ? '<button class="setbtn" id="shareProfile">' + C.icon('share') + " Share profile</button>" : "") +
+            '<button class="setbtn" id="shareId">' + C.icon('user') + " Copy profile</button>" +
           "</div>" +
           (mine
             ? '<a class="cm-write" href="dm.html">' + C.icon('chat') + " My messages</a>"
             : "") +
           (mine
-            ? '<div class="cm-profedit">' +
+            ? '<div class="cm-profedit" id="profEdit">' +
                 '<label class="cm-lbl">Profile photo<input id="pAva" type="file" accept="image/*"></label>' +
                 '<label class="cm-lbl">Display name<input id="pName" class="setinput" maxlength="24" value="' + C.esc(prof.name) + '"></label>' +
                 '<label class="cm-lbl">Bio<input id="pBio" class="setinput" maxlength="120" value="' + C.esc(prof.bio || "") + '" placeholder="One line about you"></label>' +
+                '<label class="cm-lbl">Links (comma-separated)<input id="pLinks" class="setinput" maxlength="200" value="' + C.esc((Array.isArray(prof.links) ? prof.links : []).join(", ")) + '" placeholder="https://yoursite.com, https://instagram.com/you"></label>' +
                 '<button class="cm-pub cm-pub--sm" id="pSave">Save profile</button>' +
               "</div>"
             : "") +
@@ -188,20 +196,52 @@
         } catch (err) { alert("Subscribe failed — " + (err && err.message ? err.message : err)); }
         t.disabled = false;
       });
-      var view = (location.search.match(/[?&]view=(followers|following)/) || [])[1] || "";
-      if (view) renderSocial(view);
-      async function renderSocial(kind2) {
-        var ids = [];
-        try {
-          if (kind2 === "followers") ids = ((await C.followerRows(pid)) || []).map(function (r) { return r.follower_id; });
-          else ids = (((await C.api("follows?follower_id=eq." + pid + "&select=author_id", {})) || []).map(function (r) { return r.author_id; }));
-        } catch (e) {}
-        var myFol = {};
-        if (C.signedIn()) { try { (await C.followingIds()).forEach(function (x) { myFol[x] = 1; }); } catch (e) {} }
-        var panel = document.createElement("section");
-        panel.className = "cm-social";
-        panel.innerHTML = "<h2>" + (kind2 === "followers" ? C.icon('user') + " Followers" : C.icon('star') + " Following") + ' · <a class="cm-socback" href="profile.html?id=' + pid + '">back to profile</a></h2>' +
-          (ids.length ? '<div class="cm-people">' + ids.map(function (fid) {
+      var sheetEl = null;
+      function closeSocial() {
+        if (sheetEl) { sheetEl.remove(); sheetEl = null; document.body.classList.remove("cm-soc-open"); }
+      }
+      function openSocial(kind) {
+        closeSocial();
+        sheetEl = document.createElement("div");
+        sheetEl.className = "cm-socsheet";
+        sheetEl.innerHTML =
+          '<div class="cm-socsheet__card">' +
+            '<header class="cm-socsheet__head">' +
+              '<button class="cm-socsheet__back" id="socBack" aria-label="Back to profile">\u2190</button>' +
+              '<div class="cm-socsheet__tabs">' +
+                '<button class="on" data-stab="followers">Followers</button>' +
+                '<button data-stab="following">Following</button>' +
+              '</div>' +
+              '<span class="cm-socsheet__count" id="socCount"></span>' +
+            '</header>' +
+            '<div class="cm-socsheet__list" id="socList"><p class="cm-empty cm-empty--sm">Loading…</p></div>' +
+          '</div>';
+        document.body.appendChild(sheetEl);
+        document.body.classList.add("cm-soc-open");
+        sheetEl.addEventListener("click", function (e) { if (e.target === sheetEl) closeSocial(); });
+        sheetEl.querySelector("#socBack").addEventListener("click", closeSocial);
+        sheetEl.querySelectorAll("[data-stab]").forEach(function (b) {
+          b.addEventListener("click", function () {
+            sheetEl.querySelectorAll("[data-stab]").forEach(function (x) { x.classList.toggle("on", x === b); });
+            loadSocial(b.getAttribute("data-stab"));
+          });
+        });
+        loadSocial(kind);
+      }
+      function loadSocial(kind) {
+        var listEl = sheetEl.querySelector("#socList");
+        listEl.innerHTML = '<p class="cm-empty cm-empty--sm">Loading…</p>';
+        (async function () {
+          var ids = [];
+          try {
+            if (kind === "followers") ids = ((await C.followerRows(pid)) || []).map(function (r) { return r.follower_id; });
+            else ids = (((await C.api("follows?follower_id=eq." + pid + "&select=author_id", {})) || []).map(function (r) { return r.author_id; }));
+          } catch (e) {}
+          var myFol = {};
+          if (C.signedIn()) { try { (await C.followingIds()).forEach(function (x) { myFol[x] = 1; }); } catch (e) {} }
+          var cnt = sheetEl.querySelector("#socCount");
+          if (cnt) cnt.textContent = ids.length;
+          listEl.innerHTML = ids.length ? '<div class="cm-people">' + ids.map(function (fid) {
             var isMeRow = fid === meId;
             return '<div class="cm-person" data-pid="' + fid + '">' +
               '<div class="cm-person__top">' +
@@ -217,37 +257,50 @@
                   '<a class="cm-dmbtn" href="dm.html?u=' + fid + '" title="Message">' + C.icon('chat') + "</a>") +
               "</div>" +
             "</div>";
-          }).join("") + "</div>" : '<p class="cm-empty cm-empty--sm">Nobody here yet.</p>');
-        root.appendChild(panel);
-        panel.addEventListener("click", async function (e) {
-          var t = e.target.closest("[data-socfol]");
-          if (!t) return;
-          if (!C.signedIn()) { location.href = "login.html"; return; }
-          t.disabled = true;
-          var on2 = !t.classList.contains("on");
-          try {
-            await C.setFollow(t.getAttribute("data-socfol"), on2);
-            t.classList.toggle("on", on2);
-            t.innerHTML = on2 ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
-          } catch (err) { alert("Subscribe failed — " + (err && err.message ? err.message : err)); }
-          t.disabled = false;
-        });
-        ids.forEach(async function (fid) {
-          try {
-            var pr = await C.getProfile(fid);
-            if (!pr) return;
-            var el = panel.querySelector('[data-pid="' + fid + '"]');
-            if (!el) return;
-            var av = C.avaUrl(pr.name, pr.avatar_url, fid);
-            var avEl = el.querySelector(".cm-ava");
-            avEl.innerHTML = av ? '<img src="' + C.esc(av) + '" alt="">' : "<span>" + C.esc((pr.name || "R").charAt(0).toUpperCase()) + "</span>";
-            var nm = el.querySelector(".cm-name");
-            nm.textContent = pr.name || "Reader";
-            if (C.isOfficial(fid)) nm.insertAdjacentHTML("afterend", '<span class="cm-vtick">✔</span>');
-          } catch (e) {}
-        });
+          }).join("") + "</div>" : '<p class="cm-empty cm-empty--sm">Nobody here yet.</p>';
+          listEl.addEventListener("click", async function (e) {
+            var t = e.target.closest("[data-socfol]");
+            if (!t) return;
+            if (!C.signedIn()) { location.href = "login.html"; return; }
+            t.disabled = true;
+            var on2 = !t.classList.contains("on");
+            try {
+              await C.setFollow(t.getAttribute("data-socfol"), on2);
+              t.classList.toggle("on", on2);
+              t.innerHTML = on2 ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
+            } catch (err) { alert("Subscribe failed — " + (err && err.message ? err.message : err)); }
+            t.disabled = false;
+          });
+          ids.forEach(async function (fid) {
+            try {
+              var pr = await C.getProfile(fid);
+              if (!pr) return;
+              var el = listEl.querySelector('[data-pid="' + fid + '"]');
+              if (!el) return;
+              var av = C.avaUrl(pr.name, pr.avatar_url, fid);
+              var avEl = el.querySelector(".cm-ava");
+              avEl.innerHTML = av ? '<img src="' + C.esc(av) + '" alt="">' : "<span>" + C.esc((pr.name || "R").charAt(0).toUpperCase()) + "</span>";
+              var nm2 = el.querySelector(".cm-name");
+              nm2.textContent = pr.name || "Reader";
+              if (C.isOfficial(fid)) nm2.insertAdjacentHTML("afterend", '<span class="cm-vtick">✔</span>');
+            } catch (e) {}
+          });
+        })();
       }
-
+      var view = (location.search.match(/[?&]view=(followers|following)/) || [])[1] || "";
+      if (view) setTimeout(function () { openSocial(view); }, 60);
+      document.addEventListener("click", function (e) {
+        var st = e.target.closest("[data-lsoc]");
+        if (!st) return;
+        e.preventDefault();
+        if (!C.signedIn()) { location.href = "login.html"; return; }
+        openSocial(st.getAttribute("data-lsoc"));
+      });
+      var eb = document.getElementById("editProfileBtn");
+      if (eb) eb.addEventListener("click", function () {
+        var ed = document.getElementById("profEdit");
+        if (ed) { ed.scrollIntoView({ behavior: "smooth", block: "center" }); var n2 = document.getElementById("pName"); if (n2) n2.focus(); }
+      });
       var fb = root.querySelector("[data-follow]");
       if (fb) fb.addEventListener("click", async function () {
         if (!C.signedIn()) { location.href = "login.html"; return; }
@@ -269,10 +322,10 @@
         } catch (e) {}
       }
       document.getElementById("shareId").addEventListener("click", function () {
-        var txt = pid.slice(0, 8);
+        var txt = pid;
         copyTxt(txt);
-        this.textContent = "✓ Copied " + txt;
-        var self = this; setTimeout(function () { self.textContent = "🆔 Copy ID"; }, 1600);
+        this.textContent = "✓ Copied " + pid.slice(0, 8);
+        var self = this; setTimeout(function () { self.innerHTML = C.icon('user') + " Copy profile"; }, 1600);
       });
       async function makeShareCard() {
         var W = 1080, H = 640;
@@ -339,10 +392,12 @@
           copyTxt(url);
           self.textContent = "\u2713 Link copied";
         }
-        setTimeout(function () { self.textContent = "\u{1F517} Share profile"; }, 2200);
+        setTimeout(function () { self.innerHTML = C.icon('share') + " Share profile"; }, 2200);
       });
       C.syncProgress(mine);
       if (mine) C.ensureProfile();
+      var plusBtn = document.getElementById("avaPlus");
+      if (plusBtn) plusBtn.addEventListener("click", function () { var fi = document.getElementById("pAva"); if (fi) fi.click(); });
       var ava = document.getElementById("pAva");
       if (ava) ava.addEventListener("change", async function () {
         var f = this.files && this.files[0];
@@ -357,7 +412,9 @@
       if (save) save.addEventListener("click", async function () {
         try {
           var nm = document.getElementById("pName").value.trim() || "Reader";
-          await C.api("profiles?id=eq." + meId, { method: "PATCH", body: { name: nm, bio: document.getElementById("pBio").value.trim() } });
+          var lnkEl = document.getElementById("pLinks");
+          var lks2 = lnkEl ? lnkEl.value.split(",").map(function (x) { return x.trim(); }).filter(Boolean).slice(0, 3) : [];
+          await C.api("profiles?id=eq." + meId, { method: "PATCH", body: { name: nm, bio: document.getElementById("pBio").value.trim(), links: lks2 } });
           if (window.TSB_AUTH && TSB_AUTH.setDisplayName) TSB_AUTH.setDisplayName(nm);
           boot();
         } catch (e) { alert("Save failed — " + (e && e.message ? e.message : e)); }
@@ -366,7 +423,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=211" defer></script>
-  <script src="js/gate.js?v=211" defer></script>
+  <script src="js/bar.js?v=213" defer></script>
+  <script src="js/gate.js?v=213" defer></script>
 </body>
 </html>
