@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=219">
+  <link rel="stylesheet" href="css/style.css?v=221">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -68,13 +68,13 @@
     </div>
   </div>
 
-  <script src="js/prefs.js?v=219"></script>
-  <script src="js/lang.js?v=219"></script>
-  <script src="js/config.js?v=219"></script>
-  <script src="js/data.js?v=219"></script>
-  <script src="js/auth.js?v=219"></script>
-  <script src="js/sounds.js?v=219"></script>
-  <script src="js/community.js?v=219"></script>
+  <script src="js/prefs.js?v=221"></script>
+  <script src="js/lang.js?v=221"></script>
+  <script src="js/config.js?v=221"></script>
+  <script src="js/data.js?v=221"></script>
+  <script src="js/auth.js?v=221"></script>
+  <script src="js/sounds.js?v=221"></script>
+  <script src="js/community.js?v=221"></script>
   <script>
   (function () {
     "use strict";
@@ -135,9 +135,13 @@
         var a = document.createElement("div");
         a.className = "dm-row";
         var lastTxt = cv.last.book_id ? C.icon('book') + " recommended a book" : C.esc(cv.last.body).slice(0, 60);
+        var unread = rows.filter(function (m) { return m.sender_id === cv.user_id && m.read === false; }).length;
+        var lastTick = (cv.last.sender_id === meId)
+          ? '<span class="dm-tick dm-tick--mini' + (cv.last.read ? " read" : "") + '">✓✓</span>' : "";
+        a.className = "dm-row" + (unread ? " dm-row--unread" : "");
         a.innerHTML = '<a class="dm-row__ava" href="profile.html?id=' + cv.user_id + '">' + ava(prof, cv.user_id) + "</a>" +
-          '<a class="dm-row__meta" href="dm.html?u=' + cv.user_id + '"><b>' + C.esc(prof ? prof.name : "Reader") + (C.isOfficial(cv.user_id) ? '<span class="cm-vtick">✔</span>' : "") + "</b>" +
-          "<span>" + lastTxt + "</span></a>" +
+          '<a class="dm-row__meta" href="dm.html?u=' + cv.user_id + '"><b>' + C.esc(prof ? prof.name : "Reader") + (C.isOfficial(cv.user_id) ? '<span class="cm-vtick">✔</span>' : "") + (unread ? '<b class="dm-unread">' + unread + "</b>" : "") + "</b>" +
+          "<span>" + lastTxt + " " + lastTick + "</span></a>" +
           '<a class="dm-row__side" href="dm.html?u=' + cv.user_id + '"><span class="cm-time">' + C.ago(cv.last.created_at) + "</span>" + C.icon('chat') + "</a>";
         list.appendChild(a);
       }
@@ -168,9 +172,16 @@
           (m.book_id ? bookCard(m.book_id) : "") +
           "<span>" + C.esc(m.body) + "</span>" +
           "<em>" + C.ago(m.created_at) + (m.edited_at ? " · edited" : "") + "</em>" +
+          (mineRow ? '<span class="dm-tick' + (m.read ? " read" : "") + '" title="' + (m.read ? "Read" : "Sent") + '">' + (m.read ? "✓✓" : "✓✓") + "</span>" : "") +
         "</div>";
       }).join("") || '<div class="cm-empty cm-empty--sm">Say hello 👋</div>';
       msgs.scrollTop = msgs.scrollHeight;
+      try {
+        /* v221 read receipts: opening the thread marks their messages read + my ticks turn blue */
+        C.markThreadRead(uid).then(function () {
+          document.querySelectorAll(".dm-thread .dm-tick").forEach(function (t) { t.classList.add("read"); });
+        }).catch(function () {});
+      } catch (e) {}
       try {
         C.toastMark(rows.filter(function (m) { return m.sender_id === uid; })
           .map(function (m) { return C.toastKey({ type: "dm", who: uid, at: m.created_at }); }));
@@ -183,9 +194,28 @@
       var body = document.getElementById("dmBody").value.trim();
       if (!body) return;
       document.getElementById("dmBody").value = "";
+      /* optimistic bubble: ✓ = just sent, then ✓✓ once the server confirms */
+      var pend = document.createElement("div");
+      pend.className = "dm-bub me dm-bub--pend";
+      pend.innerHTML = "<span>" + C.esc(body) + '</span><em>just now</em><span class="dm-tick pending">✓</span>';
+      msgs.appendChild(pend); msgs.scrollTop = msgs.scrollHeight;
       try { await C.sendDM(uid, body); await loadThread(); }
-      catch (err) { alert("Message failed — " + (err && err.message ? err.message : err)); }
+      catch (err) {
+        pend.classList.add("dm-bub--fail");
+        setTimeout(function () { pend.remove(); }, 4000);
+        alert("Message failed — " + (err && err.message ? err.message : err));
+      }
     });
+
+    /* live read receipts: while the thread is open, poll lightly; blue ✓✓ when they read */
+    var tPoll = setInterval(async function () {
+      if (document.getElementById("dmThread").hidden) return;
+      try {
+        var fresh = await C.threadWith(uid, 60);
+        var anyRead = fresh.some(function (m) { return m.sender_id === meId && m.read; });
+        if (anyRead) document.querySelectorAll(".dm-thread .dm-tick:not(.pending)").forEach(function (t) { t.classList.add("read"); });
+      } catch (e) {}
+    }, 10000);
 
     /* ---- message actions: popout right where you tapped ---- */
     var ctx = document.getElementById("ctxPop");
@@ -299,6 +329,6 @@
     });
   })();
   </script>
-  <script src="js/bar.js?v=219" defer></script>
+  <script src="js/bar.js?v=221" defer></script>
 </body>
 </html>

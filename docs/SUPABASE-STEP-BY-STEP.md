@@ -390,3 +390,52 @@ Runs with a destructive-warning banner (any ALTER TABLE triggers it) — this st
 ```sql
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS links text[] DEFAULT '{}';
 ```
+
+## SQL #10 — v221: REAL DELETE, READ RECEIPTS, VIEW-ONLY MEDIA  *(additive, re-runnable)*
+
+Three small upgrades, all safe to re-run:
+
+**What was broken:** (1) deleting a post "worked" but deleted 0 rows — `posts` had no
+DELETE policy, so the post stayed visible to everyone and likes/notifications still
+pointed at it. (2) Changing your profile photo didn't update the photo on your old
+stories (`posts` had no UPDATE policy either, so the avatar snapshot never refreshed).
+(3) DMs had no read state for ✓ / ✓✓ / blue ✓✓ ticks. (4) Posts have a `no_download`
+flag for Instagram-style view-only media.
+
+```sql
+-- 1) let authors UPDATE their own posts (avatar/name snapshots stay fresh)
+drop policy if exists "update own posts" on public.posts;
+create policy "update own posts" on public.posts
+  for update using (auth.uid() = author_id);
+
+-- 2) let authors DELETE their own posts — the missing piece that broke delete
+drop policy if exists "delete own posts" on public.posts;
+create policy "delete own posts" on public.posts
+  for delete using (auth.uid() = author_id);
+
+-- 3) when a post dies, its likes + comments die with it (server-side, RLS-proof)
+create or replace function public.tsb_cascade_post_delete() returns trigger
+language plpgsql security definer set search_path = public as $$
+begin
+  delete from public.likes where post_id = old.id;
+  delete from public.comments where post_id = old.id;
+  return old;
+end $$;
+drop trigger if exists tsb_cascade_post_delete on public.posts;
+create trigger tsb_cascade_post_delete
+  after delete on public.posts
+  for each row execute function public.tsb_cascade_post_delete();
+
+-- 4) DM read receipts (single ✓ = sent, double ✓✓ = delivered, blue ✓✓ = read)
+alter table public.messages add column if not exists "read" boolean not null default false;
+
+-- 5) view-only media flag: ON by default (readers can watch/listen but not save)
+alter table public.posts add column if not exists no_download boolean not null default true;
+
+-- 6) keep the official channel's read/delete powers (if the seeded author is used)
+--    not needed — official posts are simply never deleted.
+```
+
+After running: the Delete button really removes the post for everyone (likes, comments
+and notifications cleared too), changing your photo updates it on every story you've
+published, DMs show read ticks, and uploaded media is view-only by default.

@@ -119,7 +119,7 @@
         arr.push(idx);
         all[bookId] = arr;
         set("tsb_progress", all);
-        // v203: live-sync to cloud so profile "X/2490 lessons" updates the moment a lesson is read
+        // v203: live-sync to cloud so profile "X/2637 lessons" updates the moment a lesson is read
         try { if (window.TSB_COMMUNITY && TSB_COMMUNITY.signedIn && TSB_COMMUNITY.signedIn()) TSB_COMMUNITY.syncProgress(true); } catch (e) {}
         const total = progress.totalRead();
         if (total >= 1) achv.award("first-lesson");
@@ -344,7 +344,14 @@
           if (k) counts[k] = (counts[k] || 0) + 2;
         });
       } catch (e) {}
-      return Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; }).slice(0, n || 4);
+      /* only real library categories count (tag pings like 'habits' are ignored),
+         case-insensitive so onboard 'Productivity' == interest 'productivity' */
+      const cats = new Set();
+      try { (window.BOOKS || []).forEach(function (b) { cats.add(String(b.category).toLowerCase()); }); } catch (e) {}
+      const out = [];
+      Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; })
+        .forEach(function (k) { if (cats.has(k.toLowerCase())) out.push(k); });
+      return out.slice(0, n || 4);
     }
   };
 

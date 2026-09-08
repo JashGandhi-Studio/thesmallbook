@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=219">
+  <link rel="stylesheet" href="css/style.css?v=221">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -58,16 +58,26 @@
     <div id="wBody" class="wr-ed" contenteditable="true" data-ph="Start writing… your draft saves itself on this device, even if the tab closes. Publish whenever you're ready."></div>
 
     <section class="wr-meta">
-      <label class="cm-lbl">Cover / quote image<input id="wCover" type="file" accept="image/*"><img id="wCoverPrev" class="cm-prev" hidden alt=""></label>
-      <label class="cm-lbl">🎬 Burst video — max 2 minutes<input id="wBurst" type="file" accept="video/*"><video id="wBurstPrev" class="cm-prev" controls playsinline preload="metadata" hidden></video></label>
+      <label class="cm-lbl cm-lbl--file" for="wCover">Cover / quote image
+        <span class="upbtn">📷 Choose image</span><span class="upname" id="wCoverName">No file chosen</span>
+        <input id="wCover" type="file" accept="image/*" hidden><img id="wCoverPrev" class="cm-prev" hidden alt=""></label>
+      <label class="cm-lbl cm-lbl--file" for="wBurst">🎬 Burst video — max 2 minutes
+        <span class="upbtn">🎬 Choose video</span><span class="upname" id="wBurstName">No file chosen</span>
+        <input id="wBurst" type="file" accept="video/*" hidden><video id="wBurstPrev" class="cm-prev" controls playsinline preload="metadata" hidden></video></label>
       <div class="cm-lbl">Voice version (optional)
         <div class="cm-audiorow">
           <button class="setbtn" id="wRec">🎙 Record</button>
           <span id="wRecState" class="cm-recstate"></span>
-          <input id="wAudio" type="file" accept="audio/*">
+          <label class="cm-filelbl" for="wAudio"><span class="upbtn">🎧 Choose audio</span><span class="upname" id="wAudioName">No file chosen</span></label>
+          <input id="wAudio" type="file" accept="audio/*" hidden>
         </div>
         <audio id="wAudioPrev" controls hidden></audio>
       </div>
+      <label class="cm-lbl cm-lbl--chk">
+        <input type="checkbox" id="wNoDl" checked>
+        <b>🔒 View-only media</b>
+        <span>Readers can watch / listen — but not save, copy or download your cover, burst or voice. (Instagram-style; hold an edge of a video for 2× speed)</span>
+      </label>
       <label class="cm-lbl">Tags (comma separated)<input id="wTags" class="setinput" maxlength="80" placeholder="habits, money, failure"></label>
       <div class="wr-actions">
         <button class="cm-pub" id="pubBtn2">Publish to the community →</button>
@@ -77,12 +87,12 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=219"></script>
-  <script src="js/lang.js?v=219"></script>
-  <script src="js/config.js?v=219"></script>
-  <script src="js/auth.js?v=219"></script>
-  <script src="js/sounds.js?v=219"></script>
-  <script src="js/community.js?v=219"></script>
+  <script src="js/prefs.js?v=221"></script>
+  <script src="js/lang.js?v=221"></script>
+  <script src="js/config.js?v=221"></script>
+  <script src="js/auth.js?v=221"></script>
+  <script src="js/sounds.js?v=221"></script>
+  <script src="js/community.js?v=221"></script>
   <script>
   (function () {
     "use strict";
@@ -169,6 +179,7 @@
     /* ---------- media ---------- */
     $("wCover").addEventListener("change", async function () {
       var f = this.files && this.files[0];
+      fname("wCover", "wCoverName", f);
       if (!f) return;
       $("saveState").textContent = "… uploading cover";
       try {
@@ -180,6 +191,7 @@
     });
     $("wBurst").addEventListener("change", async function () {
       var f = this.files && this.files[0];
+      fname("wBurst", "wBurstName", f);
       if (!f) return;
       $("saveState").textContent = "… checking burst";
       try {
@@ -220,6 +232,7 @@
     });
     $("wAudio").addEventListener("change", async function () {
       var f = this.files && this.files[0];
+      fname("wAudio", "wAudioName", f);
       if (!f) return;
       try {
         audioUrl = await C.upload(f, "tsb-audio");
@@ -238,7 +251,7 @@
           title: t, subtitle: sub.value.trim(), body: b,
           cover_url: burstUrl || coverUrl, audio_url: audioUrl, kind: kind,
           tags: tags.value.split(",").map(function (s) { return s.trim(); }).filter(Boolean),
-          kind: kind
+          kind: kind, no_download: $("wNoDl").checked
         });
         localStorage.removeItem(DKEY);
         try { C.setProfilePublic(true); } catch (e) {}
@@ -264,6 +277,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=219" defer></script>
+  <script src="js/bar.js?v=221" defer></script>
 </body>
 </html>

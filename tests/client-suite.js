@@ -53,10 +53,26 @@ globalThis.fetch = async (url, o) => {
   }
   if (m === "PATCH") {
     if (auth !== "Bearer jwt-1") return jsonRes({ message: "violates RLS" }, 403);
-    const v = q.match(/id=eq\.([^&]+)/)[1]; const t = DB[table].find(r => r.id === v);
-    if (t) Object.assign(t, body); return jsonRes(t ? [t] : [], 200);
+    const getv = (key) => { const m = q.match(new RegExp("(?:^|&)" + key + "=eq\\.([^&]+)")); return m ? m[1] : null; };
+    const hits = (DB[table] || []).filter(r => {
+      let hit = true;
+      const idv = getv("id");
+      if (idv !== null) hit = hit && r.id === idv;
+      const av = getv("author_id");
+      if (av !== null) hit = hit && r.author_id === av;
+      const sv = getv("sender_id");
+      if (sv !== null) hit = hit && r.sender_id === sv;
+      const rv = getv("receiver_id");
+      if (rv !== null) hit = hit && r.receiver_id === rv;
+      if (q.includes("read=eq.false")) hit = hit && r.read !== true;
+      return hit;
+    });
+    hits.forEach(r => Object.assign(r, body));
+    return jsonRes(hits, 200);
   }
   if (m === "DELETE") {
+    if (globalThis.blockDelete && table === "posts") return jsonRes([], 200); // RLS-blocked: 0 rows deleted
+    const gone = [];
     DB[table] = DB[table].filter(r => {
       let hit = true;
       if (/(?:^&)id=eq\./.test("&" + q)) hit = hit && r.id === q.match(/(?:^|&)id=eq\.([^&]+)/)[1];
@@ -64,9 +80,10 @@ globalThis.fetch = async (url, o) => {
       if (q.includes("user_id=eq.")) hit = hit && r.user_id === q.match(/user_id=eq\.([^&]+)/)[1];
       if (q.includes("follower_id=eq.")) hit = hit && r.follower_id === q.match(/follower_id=eq\.([^&]+)/)[1];
       if (q.includes("author_id=eq.")) hit = hit && r.author_id === q.match(/author_id=eq\.([^&]+)/)[1];
-      return !hit; // delete the row that matches the query
+      if (hit) gone.push(r); // return=representation: PostgREST responds with the deleted rows
+      return !hit;
     });
-    return jsonRes([], 200);
+    return jsonRes(gone, 200);
   }
   return jsonRes([], 200);
 };
@@ -305,7 +322,7 @@ const C = window.TSB_COMMUNITY;
   const djArr = JSON.parse(djSrc.slice(djSrc.indexOf("["), djSrc.indexOf("];\nif (typeof window") + 1));
   const ntitle = t => t.trim().toLowerCase().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ");
   ok("data.js parses: library grew to 400 books", djArr.length === 400, djArr.length + " books");
-  ok("2,490 lessons across the library", djArr.reduce((x, b) => x + b.lessons.length, 0) === 2490, "sum mismatch");
+  ok("2,637 lessons across the library", djArr.reduce((x, b) => x + b.lessons.length, 0) === 2637, "sum mismatch");
   ok("all 400 book ids unique", new Set(djArr.map(b => b.id)).size === 400);
   ok("all 400 titles unique (punctuation-normalized)", new Set(djArr.map(b => ntitle(b.title))).size === 400);
   ok("every book complete (5+ lessons, 3+ quotes, 5-step plan, caveat, bigIdea)", djArr.every(b => b.lessons.length >= 5 && b.quotes.length >= 3 && b.actionPlan.length >= 5 && b.caveat && b.bigIdea && b.oneLiner));
@@ -317,13 +334,13 @@ const C = window.TSB_COMMUNITY;
   ok("You-window has Notif sound row + Sound test", lgSrc2.includes('id="soundRowY"') && lgSrc2.includes('id="youSoundTest"') && lgSrc2.includes("paintYSound"));
   const bkSrc2 = fsp.readFileSync(pp.join(__dirname, "../js/book.js"), "utf8");
   ok("share card: title baseline lowered + one-liner capped when title wraps", bkSrc2.includes("let y = 678;") && bkSrc2.includes("titleLines.length > 1 ? 2 : 3"));
-  ok("og image + alt refreshed (400 books · 2,490 lessons)", idxH.includes("400 books · 2,490 lessons") && idxH.includes("assets/og-image.png"));
+  ok("og image + alt refreshed (400 books · 2,637 lessons)", idxH.includes("400 books · 2,637 lessons") && idxH.includes("assets/og-image.png"));
   ok("no stale counts on key files (350 books / 2,176 / 2176 / 2170)", !/350 books|2,176|2176|2170/.test(djSrc + idxH + cssSrc + lgSrc2 + bkSrc2));
   const swSrc = fsp.readFileSync(pp.join(__dirname, "../sw.js"), "utf8");
-  ok("service worker cache bumped to tsb-v219", swSrc.includes('tsb-v219'));
-  ok("key files ship ?v=219", idxH.includes("css/style.css?v=219") && lgSrc2.includes("v=219"));
+  ok("service worker cache bumped to tsb-v221", swSrc.includes('tsb-v221'));
+  ok("key files ship ?v=221", idxH.includes("css/style.css?v=221") && lgSrc2.includes("v=221"));
 
-  console.log("== v219: content depth, 400 everywhere, 8 new autopsies, graves on all books ==");
+  console.log("== v221: content depth, 400 everywhere, 8 new autopsies, graves on all books ==");
   // repo-wide stale scan (every html/js/md)
   let stale = [];
   const walk = (dir) => {
@@ -338,6 +355,12 @@ const C = window.TSB_COMMUNITY;
   };
   walk(".");
   ok("no stale counts anywhere in the repo (350/2426/2176/300)", stale.length === 0, stale.slice(0, 6).join(", "));
+  function allRepoText() {
+    let t = "";
+    const w2 = (dir) => { for (const e of fsp.readdirSync(dir, { withFileTypes: true })) { if (e.name === ".git" || e.name === "node_modules" || e.name === "tests") continue; const p = pp.join(dir, e.name); if (e.isDirectory()) w2(p); else if (/\.(html|js|md)$/.test(e.name)) t += fsp.readFileSync(p, "utf8"); } };
+    w2(pp.join(__dirname, ".."));
+    return t;
+  }
   const onbSrc = fsp.readFileSync(pp.join(__dirname, "../js/onboard.js"), "utf8");
   const scnSrc = fsp.readFileSync(pp.join(__dirname, "../scan.html"), "utf8");
   ok("onboarding + scanner + about all say 400", onbSrc.includes("400+ books") && scnSrc.includes("all 400 book titles") && abtH.includes("400 book summaries") && abtH.includes("ASK 400+ BOOKS"));
@@ -353,9 +376,9 @@ const C = window.TSB_COMMUNITY;
   const newGraves = ["facebook-beacon","bikram-yoga","toyota-recalls","ratings-fail","valeant-pharma","purdue-opioids","tobacco-denial","sugar-industry"];
   ok("8 brand-new autopsies written (pages + data + antidote book)", newGraves.every(g0 => fsp.existsSync(pp.join(__dirname, "../graveyard/" + g0 + ".html")) && flArr.some(f => f.id === g0 && f.book) && fsp.readFileSync(pp.join(__dirname, "../graveyard/" + g0 + ".html"), "utf8").includes("gantidote")));
   const ogPng = fsp.readFileSync(pp.join(__dirname, "../assets/og-image.png"));
-  ok("og image exists (1200x630 fresh)", ogPng.length > 15000 && idxH.includes("og:image:alt") && idxH.includes("2,490 lessons"));
+  ok("og image exists (1200x630 fresh)", ogPng.length > 15000 && idxH.includes("og:image:alt") && idxH.includes("2,637 lessons"));
 
-  console.log("== v219: NEW tags on latest batch, install-to-home-screen, build markers ==");
+  console.log("== v221: NEW tags on latest batch, install-to-home-screen, build markers ==");
   const cfgSrc = fsp.readFileSync(pp.join(__dirname, "../js/config.js"), "utf8");
   const newThisWeek = JSON.parse("[" + cfgSrc.match(/NEW_THIS_WEEK: \[([\s\S]*?)\n  \],/)[1] + "]");
   ok("NEW badge moved to the latest 50 books (old batch removed)", newThisWeek.length === 50 && newThisWeek.every(b => djArr.some(x => x.id === b)), newThisWeek.length + " items");
@@ -367,22 +390,23 @@ const C = window.TSB_COMMUNITY;
   const setH = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
   const youH = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
   const instSrc = fsp.readFileSync(pp.join(__dirname, "../js/install.js"), "utf8");
-  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=219"));
-  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=219"));
+  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=221"));
+  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=221"));
   ok("service worker precaches install.js (works offline)", swSrc.includes("./js/install.js"));
   ok("install popup + standalone-hide styles shipped", cssSrc.includes(".instmodal") && cssSrc.includes("@media (display-mode: standalone)"));
   ok("install.js parses and handles beforeinstallprompt/appinstalled", (() => { try { new Function(instSrc); return true; } catch (e) { return false; } })() && instSrc.includes("beforeinstallprompt") && instSrc.includes("appinstalled"));
-  ok("Build markers say tsb-v219 (settings + You window)", setH.includes("Build tsb-v219") && youH.includes("Build tsb-v219"));
+  ok("Build markers say tsb-v221 (settings + You window)", setH.includes("Build tsb-v221") && youH.includes("Build tsb-v221"));
   let staleBuilds = [];
   for (const f of ["settings.html","login.html","index.html","about.html","scan.html","book.html","graveyard.html"]) {
     const t = fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
     const m = t.match(/Build tsb-v(\d+)/g) || [];
-    m.forEach(x => { if (!x.includes("219")) staleBuilds.push(f + ":" + x); });
+    const wantVer = (swSrc.match(/CACHE_VERSION = "(tsb-v\d+)"/) || [])[1] || "tsb-v221";
+    m.forEach(x => { if (!x.includes(wantVer.slice(3))) staleBuilds.push(f + ":" + x); });
   }
   ok("no stale Build markers anywhere", staleBuilds.length === 0, staleBuilds.join(", "));
 
   const appSrc = fsp.readFileSync(pp.join(__dirname, "../js/app.js"), "utf8");
-  console.log("== v219: shorter sharper onboarding, dark-mode fixes, real covers ==");
+  console.log("== v221: shorter sharper onboarding, dark-mode fixes, real covers ==");
   const onb = fsp.readFileSync(pp.join(__dirname, "../js/onboard.js"), "utf8");
   ok("onboarding is now ONE PAGE SHORTER (7 pages)", onb.includes("var TOTAL = 7;"));
   ok("language + look merged into one page (no lonely theme page)", onb.includes("<h2>Language & look</h2>") && onb.includes("data-theme-pick=\"dark\"") && !onb.includes("<h2>Light or dark?</h2>"));
@@ -405,22 +429,108 @@ const C = window.TSB_COMMUNITY;
   }
   ok("all JS files parse", jsAll);
 
+  console.log("== v221: real depth — no-compromise lesson expansion ==");
+  const EXPANDED = new Set(["chanakya-neeti","arthashastra","thirukkural","karma-yoga","jnana-yoga","raja-yoga","upanishads","essence-bhagavad-gita","dhammapada","analects","enchiridion","guide-good-life","three-thousand-stitches","kalam-effect","leader-no-title","my-experiments-with-truth","heartfulness-way","celebrating-silence","mystics-musings","think-on-these-things","practicing-stoic","shortness-of-life","nudge","undoing-project","noise","selfish-gene","little-book-beats-market","kaizen","richer-wiser-happier","essays-buffett","seeking-wisdom","discipline-equals-freedom","when-breath-becomes-air","being-mortal","lifespan","outlive","five-am-club","inner-game-tennis","peaceful-warrior","when-pink","what-i-talk-about-running","franklin-autobiography","uncertain-glory","short-history-nearly-everything","emperor-maladies"]);
+  const expBooks = djArr.filter(b => EXPANDED.has(b.id));
+  ok("all 45 thin books expanded to 9+ lessons (no compromise)", expBooks.length === 45 && expBooks.every(b => b.lessons.length >= 9), expBooks.filter(b => b.lessons.length < 9).map(b => b.id + "=" + b.lessons.length).join(","));
+  ok("all 50 new books carry 8+ lessons", newIds.size === 50 && [...newIds].every(id => (djArr.find(b => b.id === id) || { lessons: [] }).lessons.length >= 8));
+  ok("every lesson is complete (title/chapter/summary/example/action)", djArr.every(b => b.lessons.every(l => l.title && l.chapter && l.summary && l.example && l.action)), "missing fields found");
+  ok("no stale lesson-count string anywhere (2,490 / 2490)", !/2,490|2490/.test(allRepoText()));
+  const logH = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
+  const profH = fsp.readFileSync(pp.join(__dirname, "../profile.html"), "utf8");
+  ok("progress % is computed from BOOKS, not a hard-coded total", logH.includes("window.BOOKS || []).reduce") && logH.includes("toLocaleString") && profH.includes("window.BOOKS || []).reduce"));
+  ok("SEO pages for the 50 show the REAL lesson counts", [...newIds].every(id => { const h = fsp.readFileSync(pp.join(__dirname, "../books/" + id + ".html"), "utf8"); const b = djArr.find(x => x.id === id); return h.includes(b.lessons.length + " lessons"); }), "count mismatch on a page");
+
   /* RUNTIME REGRESSION GUARD — the v217 home-page crash:
      sortBooks assigned to a `const curated` when tsb_interests existed,
      which threw "Assignment to constant variable" and blanked Home
      (no books, no ✦ NEW, no streak bar). Must never come back. */
-  ok("sortBooks NEVER reassigns the const curated list", !appSrc.includes("curated = curated") && appSrc.includes("let ordered = curated"));
+  ok("sortBooks NEVER reassigns a const list (v221 ranking is const-safe)", !appSrc.includes("curated = curated") && !/const\s+\w+\s*=\s*[^;]+;\s*\w+\s*=/.test(appSrc) && appSrc.includes("const ordered = mix3to1(") || appSrc.includes("let ordered = curated"));
   ok("starter picks lead via `ordered` (no const-clobber)", appSrc.includes("const sb = ordered.filter") && appSrc.includes("return ordered;"));
   ok("home still builds the streak/level/badge bar", appSrc.includes("gamebar__chip") && appSrc.includes("day streak") && appSrc.includes("badges"));
   ok("home renders NEW badges via isNew + card__new", appSrc.includes("isNew(b.id)") && appSrc.includes("card__new"));
 
-  console.log("== v219: guest gate verified (10 min / 6 books), gate dark-mode readable ==");
+  console.log("== v221: guest gate verified (10 min / 6 books), gate dark-mode readable ==");
   const gateSrc = fsp.readFileSync(pp.join(__dirname, "../js/gate.js"), "utf8");
   ok("gate: guests get a grace period (~10 min) then one card", gateSrc.includes("GRACE_MS = 10 * 60 * 1000") && gateSrc.includes("READ_LIMIT = 6"));
   ok("gate: offers a 5-more-minutes snooze and never on auth pages", gateSrc.includes("data-later") && /login\.html|settings\.html|scan\.html|404\.html/.test(gateSrc));
   ok("gate: signed-in readers never see it", gateSrc.includes("if (signedIn()) return false;") && gateSrc.includes("tsb_auth_session"));
   ok("gate message = the friendly free-forever stack card", gateSrc.includes("You’ve read a whole stack!") && gateSrc.includes("free forever") && gateSrc.includes("Sign in (10 seconds with Google)"));
   ok("gate card readable in dark (headline was invisible: color == bg)", css.includes("html.dark .gate { background: #241f17; color: #f2ead8; }") && css.includes("html.dark .gate__cta { color: #111; }"));
+
+
+  /* ================= v221 bug-fix batch ================= */
+  console.log("== v221: real delete, finder, avatar sync, DM ticks, media, uploads, install, recs ==");
+  const storiesH = fsp.readFileSync(pp.join(__dirname, "../stories.html"), "utf8");
+  const storyH = fsp.readFileSync(pp.join(__dirname, "../story.html"), "utf8");
+  const writeH = fsp.readFileSync(pp.join(__dirname, "../write.html"), "utf8");
+  const profH2 = fsp.readFileSync(pp.join(__dirname, "../profile.html"), "utf8");
+  const dmH2 = fsp.readFileSync(pp.join(__dirname, "../dm.html"), "utf8");
+  const instSrc2 = fsp.readFileSync(pp.join(__dirname, "../js/install.js"), "utf8");
+  const commSrc2 = fsp.readFileSync(pp.join(__dirname, "../js/community.js"), "utf8");
+
+  /* 1) DELETE: post + likes + comments really gone; RLS-blocked path throws with SQL #10 */
+  const p2 = await C.publish({ title: "Doomed Story", body: "<p>x</p>", kind: "text", no_download: true });
+  await C.setLike(p2.id, true);
+  await C.addComment(p2.id, "nice");
+  ok("delete: pre-state has like+comment", DB.likes.some(x => x.post_id === p2.id) && DB.comments.some(x => x.post_id === p2.id));
+  await C.deletePost(p2.id);
+  ok("delete: post row gone", !DB.posts.some(x => x.id === p2.id));
+  ok("delete: likes cascade-gone", !DB.likes.some(x => x.post_id === p2.id));
+  ok("delete: comments cascade-gone", !DB.comments.some(x => x.post_id === p2.id));
+  const p3 = await C.publish({ title: "RLS Test", body: "<p>x</p>", kind: "text" });
+  globalThis.blockDelete = true;
+  let delErr = "";
+  try { await C.deletePost(p3.id); } catch (e) { delErr = String(e && e.message || e); }
+  globalThis.blockDelete = false;
+  ok("delete: silent 0-row delete is DETECTED + hints SQL #10", delErr.includes("SQL #10"), delErr);
+  ok("delete: blocked post still there (no false positive)", DB.posts.some(x => x.id === p3.id));
+
+  /* 2) FIND READERS: profiles ordered by updated_at (created_at does not exist) */
+  DB.profiles.push({ id: "reader-9", name: "Anjali", avatar_url: "", bio: "", updated_at: new Date().toISOString() });
+  const ppl = await C.listProfiles(120);
+  ok("finder: profiles return rows", ppl.some(x => x.id === "reader-9"));
+  ok("finder: query orders by updated_at.desc (no created_at on profiles)", globalThis.lastUrl.includes("order=updated_at.desc"), globalThis.lastUrl);
+
+  /* 3) AVATAR PROPAGATION: snapshot PATCH on ALL own posts after profile change */
+  await C.syncAvatarPosts("https://x/storage/tsb-avatars/user-1/new.jpg", null);
+  ok("avatar: posts PATCH carries the new author_avatar URL", globalThis.lastUrl.includes("posts?author_id=eq.") && globalThis.lastHeaders.Prefer === "return=representation");
+  ok("avatar: every own post row now has the new URL", DB.posts.filter(x => x.author_id === "user-1").length > 0 && DB.posts.filter(x => x.author_id === "user-1").every(x => x.author_avatar === "https://x/storage/tsb-avatars/user-1/new.jpg"));
+
+  /* 4) DM READ RECEIPTS: mark-read PATCH + read flag stored */
+  DB.messages.push({ id: "mm-in-1", sender_id: "reader-9", receiver_id: "user-1", read: false, body: "hello from anjali", created_at: new Date().toISOString() });
+  const before = DB.messages.filter(m => m.sender_id === "reader-9" && m.receiver_id === "user-1").length;
+  await C.markThreadRead("reader-9");
+  const unread = DB.messages.filter(m => m.sender_id === "reader-9" && m.receiver_id === "user-1" && m.read === false).length;
+  ok("dm: incoming messages marked read via PATCH", before >= 1 && unread === 0, "unread=" + unread);
+  ok("dm: read flag exists on messages rows", DB.messages.some(m => m.read === true));
+
+  /* 5) NO-DOWNLOAD MEDIA: flag saved by default, custom controls, no native video controls in app */
+  const p4 = await C.publish({ title: "View Only", body: "<p>x</p>", kind: "text" });
+  ok("media: publish stores no_download=true by default", p4.no_download === true || DB.posts.find(x => x.id === p4.id).no_download === true);
+  globalThis.failNext = { body: JSON.stringify({ message: "column no_download does not exist" }), status: 400 };
+  const p5 = await C.publish({ title: "Old DB", body: "<p>x</p>", kind: "text" });
+  ok("media: old-DB fallback publishes without the flag", !!p5 && p5.title === "Old DB");
+  ok("media: protectMedia adds nodownload + no PiP + edge-2x + autopause", commSrc2.includes("controlslist") && commSrc2.includes("nodownload") && commSrc2.includes("disablepictureinpicture") && commSrc2.includes("playbackRate = 2") && commSrc2.includes("IntersectionObserver"));
+  ok("media: pauseAllMedia exported (switching posts stops sound)", commSrc2.includes("pauseAllMedia: pauseAllMedia"));
+  ok("media: reels have NO native controls attribute", !storiesH.includes("cm-reel__vid\" src=") || !/cm-reel__vid[^>]*controls/.test(storiesH));
+  ok("media: story page video stripped of native controls", !/cm-postcard__cover[^>]*controls/.test(storyH));
+
+  /* 6) STYLED UPLOADS: no raw file inputs left on write/profile */
+  ok("uploads: write.html uses hidden inputs + styled buttons", writeH.includes('id="wCover" type="file" accept="image/*" hidden') && writeH.includes('id="wBurst" type="file" accept="video/*" hidden') && writeH.includes('id="wAudio" type="file" accept="audio/*" hidden') && writeH.includes("Choose image") && writeH.includes("Choose video") && writeH.includes("Choose audio"));
+  ok("uploads: profile photo picker is styled too", profH2.includes("cm-lbl--file") && profH2.includes("Choose photo"));
+  ok("uploads: view-only toggle present + wired into publish", writeH.includes("wNoDl") && writeH.includes("no_download: $("));
+
+  /* 7) INSTALL POPUP: one-tap install, not steps */
+  ok("install: popup with a single install action", instSrc.includes("Install the app") && instSrc.includes("beforeinstallprompt") && !instSrc.includes("Step 1") && !instSrc.includes("step 1"));
+
+  /* 8) RECOMMENDATIONS: case-insensitive prefs (alignment fix) + 3:1 Indian/intl mix of the whole list */
+  ok("recs: pref matching is case-insensitive (Productivity == productivity)", appSrc.includes("toLowerCase()"));
+  ok("recs: Indian+international interleaved across the WHOLE list (not just new)", appSrc.includes("mix3to1") && appSrc.includes("isIndianBook"));
+  ok("recs: best-first scoring (lessons + autopsies), new books still float", appSrc.includes("const score = (b)") && appSrc.includes("graveLink"));
+  const pjsSrc2 = fsp.readFileSync(pp.join(__dirname, "../js/prefs.js"), "utf8");
+  ok("recs: interest.top only returns real categories (tag junk ignored)", pjsSrc2.includes("cats.add(String(b.category).toLowerCase())"));
+  ok("bugs: no 'No file chosen' native strings left in write/profile (except styled labels)", !writeH.includes("input id=\"wCover\" type=\"file\">") && !profH2.includes("input id=\"pAva\" type=\"file\">"));
 
   console.log();
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");

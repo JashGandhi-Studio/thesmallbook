@@ -24,7 +24,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=219">
+  <link rel="stylesheet" href="css/style.css?v=221">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -36,12 +36,12 @@
     </article>
   </main>
 
-  <script src="js/prefs.js?v=219"></script>
-  <script src="js/lang.js?v=219"></script>
-  <script src="js/config.js?v=219"></script>
-  <script src="js/auth.js?v=219"></script>
-  <script src="js/sounds.js?v=219"></script>
-  <script src="js/community.js?v=219"></script>
+  <script src="js/prefs.js?v=221"></script>
+  <script src="js/lang.js?v=221"></script>
+  <script src="js/config.js?v=221"></script>
+  <script src="js/auth.js?v=221"></script>
+  <script src="js/sounds.js?v=221"></script>
+  <script src="js/community.js?v=221"></script>
   <script>
   (function () {
     "use strict";
@@ -56,7 +56,13 @@
       var p;
       try { p = id ? await C.getPost(id) : await C.getPostByShort(shortCode); } catch (e) {}
       if (p) id = p.id;
-      if (!p) { root.innerHTML = '<div class="cm-empty">🕳️ This story doesn’t exist (or was deleted).</div>'; return; }
+      if (!p) {
+        root.innerHTML = '<div class="cm-empty" style="padding:48px 20px;text-align:center;">🕳️ This story is gone.<br><br>' +
+          '<small>It was deleted by its author — likes, comments and notifications for it are cleared too.</small><br><br>' +
+          '<a class="cm-write" href="stories.html">← Back to the stories feed</a></div>';
+        setTimeout(function () { try { location.href = "stories.html"; } catch (e) {} }, 4000);
+        return;
+      }
       document.title = p.title + " — TheSmallBook Stories";
       var prof = null;
       try { prof = await C.getProfile(p.author_id); } catch (e) {}
@@ -73,9 +79,9 @@
       try { cmts = await C.listComments(id); } catch (e) {}
 
       root.innerHTML =
-        '<article class="cm-postcard">' +
+        '<article class="cm-postcard"' + (p.no_download === false ? ' data-free="1"' : "") + ">" +
           (p.cover_url ? (C.isVideoUrl(p.cover_url)
-            ? '<video class="cm-postcard__cover" src="' + C.esc(p.cover_url) + '" controls playsinline preload="metadata"></video>'
+            ? '<video class="cm-postcard__cover" src="' + C.esc(p.cover_url) + '" playsinline preload="metadata"></video>'
             : '<img class="cm-postcard__cover" src="' + C.esc(p.cover_url) + '" alt="">') : "") +
           '<div class="cm-postcard__head">' +
             '<a class="cm-ava cm-ava--lg" href="profile.html?id=' + p.author_id + '">' +
@@ -103,6 +109,7 @@
             ? '<div class="cm-cmtrow"><input id="cmtInput" class="setinput" maxlength="280" placeholder="Add a comment…"><button class="cm-pub cm-pub--sm" id="cmtSend">Send</button></div>'
             : '<a class="cm-write" href="login.html">Sign in to comment →</a>') +
         "</section>";
+      try { C.protectMedia(root); } catch (e) {}
 
       function cm(c) {
         var pid2 = c.author_id || "";
@@ -170,7 +177,8 @@
       var db = root.querySelector("[data-del]");
       if (db) db.addEventListener("click", async function () {
         if (!confirm("Delete this story for everyone?")) return;
-        try { await C.deletePost(id); location.href = "stories.html"; } catch (e) { alert("Delete failed."); }
+        try { await C.deletePost(id); location.href = "stories.html"; }
+        catch (e) { alert(e && e.message ? ("Delete failed — " + e.message) : "Delete failed — are you the author?"); }
       });
       document.getElementById("shareBtn").addEventListener("click", function () {
         var url = location.origin + location.pathname + "?s=" + String(p.id).replace(/-/g, "").slice(-8);
@@ -208,7 +216,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=219" defer></script>
-  <script src="js/gate.js?v=219" defer></script>
+  <script src="js/bar.js?v=221" defer></script>
+  <script src="js/gate.js?v=221" defer></script>
 </body>
 </html>

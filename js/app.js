@@ -330,26 +330,39 @@
       case "progress": return l.sort((a, b) =>
         TSB.progress.forBook(b.id).length / b.lessons.length - TSB.progress.forBook(a.id).length / a.lessons.length);
       default:
-        /* ✨ NEW books float to the front, interleaved 3 Indian : 1 international
-           so the shelf feels curated, not like an all-Indian wall */
+        /* ✨ v221 recommendation ranking:
+           1) your preferences (onboarding "why" + shelves + what you read) LEAD the library,
+              matched case-insensitively — fixes the 'Productivity' vs 'productivity' misalignment
+           2) inside each group the BEST books come first (deepest: most lessons + autopsies)
+           3) new books still float
+           4) the WHOLE result is interleaved 3 Indian : 1 international, so your shelf is
+              never an all-international wall and never an all-Indian wall */
         {
-          const fresh = l.filter((x) => isNew(x.id));
-          const rest = l.filter((x) => !isNew(x.id));
-          const ind = fresh.filter((x) => TSB.isIndianBook(x.id));
-          const intl = fresh.filter((x) => !TSB.isIndianBook(x.id));
-          const inter = [];
-          while (ind.length || intl.length) {
-            for (let k = 0; k < 3 && ind.length; k++) inter.push(ind.shift());
-            if (intl.length) inter.push(intl.shift());
-            else if (ind.length) inter.push(ind.shift());
-          }
-          const curated = [...inter, ...rest];
-          /* 🎯 onboarding preferences float their shelves to the front */
-          let ordered = curated;
           let prefs = [];
           try { prefs = JSON.parse(localStorage.getItem("tsb_interests")) || []; } catch (e) {}
-          if (prefs.length) ordered = curated.filter((x) => prefs.indexOf(x.category) >= 0)
-            .concat(curated.filter((x) => prefs.indexOf(x.category) < 0));
+          prefs = prefs.map((x) => String(x).toLowerCase()).filter(Boolean);
+          const score = (b) => (b.graveLink ? 3 : 0) + (b.lessons ? b.lessons.length : 0) * 2 - (parseInt(b.readTime) || 15) / 20;
+          const prefBlock = [], restBlock = [];
+          l.forEach((b) => { (prefs.indexOf(String(b.category || "").toLowerCase()) >= 0 ? prefBlock : restBlock).push(b); });
+          const q = (arr) => [...arr].sort((a, b) => score(b) - score(a));
+          const mix3to1 = (arr) => {
+            const ind = arr.filter((x) => TSB.isIndianBook(x.id));
+            const intl = arr.filter((x) => !TSB.isIndianBook(x.id));
+            const out = [];
+            while (ind.length || intl.length) {
+              for (let k = 0; k < 3 && ind.length; k++) out.push(ind.shift());
+              if (intl.length) out.push(intl.shift());
+              else if (ind.length) out.push(ind.shift());
+            }
+            return out;
+          };
+          const prefQ = q(prefBlock), restQ = q(restBlock);
+          const ordered = mix3to1([
+            ...prefQ.filter((x) => isNew(x.id)),
+            ...restQ.filter((x) => isNew(x.id)),
+            ...prefQ.filter((x) => !isNew(x.id)),
+            ...restQ.filter((x) => !isNew(x.id))
+          ]);
           /* 🎁 starter shelf picks lead the library in every view */
           let starterIds = [];
           try { starterIds = JSON.parse(localStorage.getItem("tsb_starter_shelf")) || []; } catch (e) {}

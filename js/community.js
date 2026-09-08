@@ -141,22 +141,46 @@
     var u = me();
     if (!u) throw new Error("sign-in");
     var prof = await safeProfile();
-    var row = await api("posts?select=*", {
-      method: "POST",
-      body: {
+    var mk = function (withFlag) {
+      var body = {
         author_id: u.id,
         author_name: (prof && prof.name) || "Reader",
         author_avatar: (prof && prof.avatar_url) || "",
         title: p.title, subtitle: p.subtitle || "", cover_url: p.cover_url || "",
         body: p.body || "", tags: p.tags || [], audio_url: p.audio_url || "", kind: p.kind || "text"
-      }
-    });
+      };
+      if (withFlag) body.no_download = p.no_download !== false; /* default ON: view-only media */
+      return body;
+    };
+    var row;
+    try { row = await api("posts?select=*", { method: "POST", body: mk(true) }); }
+    catch (e) {
+      /* older DB without the no_download column (SQL #12 pending): retry without it */
+      row = await api("posts?select=*", { method: "POST", body: mk(false) });
+    }
     return (row && row[0]) || null;
   }
   async function deletePost(id) {
     var u = me();
     if (!u) throw new Error("sign-in");
-    await api("posts?id=eq." + id + "&author_id=eq." + u.id, { method: "DELETE" });
+    var uq = encodeURIComponent(u.id);
+    /* cascade first: every like/comment on this post (notifications are derived from these,
+       so this is what makes the post disappear from everyone's likes + notifications too) */
+    await api("likes?post_id=eq." + encodeURIComponent(id), { method: "DELETE" });
+    await api("comments?post_id=eq." + encodeURIComponent(id), { method: "DELETE" });
+    var gone = await api("posts?id=eq." + encodeURIComponent(id) + "&author_id=eq." + uq,
+      { method: "DELETE", headers: { Prefer: "return=representation" } });
+    /* PostgREST returns the rows it actually deleted; [] means RLS blocked it (silent). */
+    if (!gone || !gone.length) {
+      throw new Error("The post is still there — the database is missing the 'delete own posts' policy. Run SQL #10 in docs/SUPABASE-STEP-BY-STEP.md (one line fixes it).");
+    }
+    /* verify with a fresh read: even a silent 0-row delete (older DBs) cannot pass */
+    var check;
+    try { check = await api("posts?id=eq." + encodeURIComponent(id), { method: "GET" }); } catch (e) { check = []; }
+    if (check && check.length) {
+      throw new Error("The post is still there — the database is missing the 'delete own posts' policy. Run SQL #10 in docs/SUPABASE-STEP-BY-STEP.md (one line fixes it).");
+    }
+    return true;
   }
 
   /* ---------- likes ---------- */
@@ -269,9 +293,9 @@
   async function listProfiles(limit) {
     if (!api) return [];
     try {
-      return await api("profiles?select=*&order=created_at.desc&limit=" + (limit || 60), { method: "GET" });
+      return await api("profiles?select=*&order=updated_at.desc&limit=" + (limit || 60), { method: "GET" });
     } catch (e) {
-      return await api("profiles?select=*&order=created_at.desc&limit=" + (limit || 60), { method: "GET" });
+      return await api("profiles?select=*&order=updated_at.desc&limit=" + (limit || 60), { method: "GET" });
     }
   }
   async function setProfilePublic(on) {
@@ -401,7 +425,7 @@
       if (!force && Date.now() - last < 36e5) return;
       var mu3 = me(); if (!mu3) return;
       var prog = JSON.parse(localStorage.getItem("tsb_progress") || "{}");
-      // v203: progress column = LESSONS read (sum of per-book lesson arrays), matching the "X/2490 lessons" UI
+      // v203: progress column = LESSONS read (sum of per-book lesson arrays), matching the "X/2637 lessons" UI
       var n = 0;
       Object.keys(prog).forEach(function (k) {
         var v = prog[k];
@@ -560,6 +584,184 @@
 
   /* ---------- global mini audio player (survives across pages) ---------- */
   var playerEl = null, audioEl = null;
+  /* ---------- v221: avatar propagation ----------
+     posts snapshot author_avatar / author_name at publish time, so when the profile
+     photo (or name) changes we PATCH the snapshot on ALL of the user's posts —
+     that's what makes the new photo show on the stories feed, the story page and
+     after deleting a story, not the old one. */
+  async function syncAvatarPosts(url, name) {
+    var u = me();
+    if (!u) return;
+    var body = {};
+    if (url) body.author_avatar = url;
+    if (name) body.author_name = name;
+    if (!Object.keys(body).length) return;
+    try { await api("posts?author_id=eq." + encodeURIComponent(u.id) + "&select=id", { method: "PATCH", body: body }); }
+    catch (e) { console.warn("Avatar snapshot not synced — run SQL #10 (update own posts policy)."); }
+  }
+
+  /* ---------- v221: pretty upload pickers (no ugly native "Choose file / No file chosen") ---------- */
+  function fancyFileInputs(root) {
+    var scope = root || document;
+    scope.querySelectorAll("input[type=file]").forEach(function (inp) {
+      if (inp.__tsbFancy) return; inp.__tsbFancy = true;
+      var acc = inp.accept || "";
+      var icon = acc.indexOf("video") >= 0 ? "🎬" : (acc.indexOf("audio") >= 0 ? "🎧" : "📷");
+      var label = acc.indexOf("video") >= 0 ? "Choose video" : (acc.indexOf("audio") >= 0 ? "Choose audio" : "Choose image");
+      var wrap = document.createElement("span");
+      wrap.className = "upwrap";
+      wrap.innerHTML = '<button type="button" class="upbtn">' + icon + " " + label + '</button><span class="upname">No file chosen</span>';
+      inp.parentNode.insertBefore(wrap, inp);
+      inp.style.display = "none";
+      var btn = wrap.querySelector(".upbtn"), nm = wrap.querySelector(".upname");
+      btn.addEventListener("click", function (ev) { ev.preventDefault(); ev.stopPropagation(); inp.click(); });
+      inp.addEventListener("change", function () {
+        var f = inp.files && inp.files[0];
+        nm.textContent = f ? ("✓ " + (f.name.length > 24 ? f.name.slice(0, 22) + "…" : f.name) + " · " + Math.max(1, Math.round(f.size / 1024)) + " KB") : "No file chosen";
+        nm.classList.toggle("has", !!f);
+      });
+      /* label wrappers would double-open the picker */
+      var lbl = inp.closest("label");
+      if (lbl) lbl.addEventListener("click", function (ev) { if (ev.target === lbl) { ev.preventDefault(); inp.click(); } });
+    });
+  }
+
+  /* ---------- v221: media protection ----------
+     Posts are view-only: no download button, no right-click save, no PiP/remote,
+     long-hold the LEFT/RIGHT edge of a video = 2x speed (release = 1x),
+     and every video/audio pauses when it leaves the screen or the tab hides. */
+  var _io = null;
+  function protectMedia(root) {
+    var scope = root || document;
+    scope.querySelectorAll("video, audio").forEach(function (m) {
+      if (m.__tsbProtected) return;
+      m.__tsbProtected = true;
+      var inPost = m.closest("[data-post], .cm-reel, .cm-postcard, #postBody, [data-kind]");
+      var free = inPost && inPost.getAttribute("data-free") === "1"; /* author opted out of view-only */
+      if (m.tagName === "VIDEO") {
+        /* feed-card previews are just peeks: tap = open the story, no player hijack */
+        var justPeek = !!m.closest(".cm-card__cover");
+        /* Instagram-style: NO native controls, no download/PiP, tap = play/pause,
+           drag the bar = seek, hold LEFT/RIGHT edge = 2x */
+        m.removeAttribute("controls");
+        if (justPeek && !m.closest(".cm-reel")) { m.__tsbPeek = true; }
+        if (justPeek) {
+          m.addEventListener("contextmenu", function (ev) { ev.preventDefault(); return false; });
+        }
+        m.setAttribute("controlslist", "nodownload noplaybackrate noremoteplayback");
+        m.setAttribute("disablepictureinpicture", "");
+        m.setAttribute("playsinline", "");
+        m.draggable = false;
+        /* seek bar + play button live beside the video (siblings, absolutely placed) */
+        if (m.__tsbPeek) { /* previews: no inline player */ }
+        else {
+        var pw = m.parentNode;
+        if (pw && getComputedStyle(pw).position === "static") pw.style.position = "relative";
+        m.insertAdjacentHTML("afterend", '<div class="tsb-vctrl">' +
+          '<button class="tsb-vplay" type="button" aria-label="Play">▶</button>' +
+          '<div class="tsb-vseek"><i></i></div></div>');
+        var ctrl = m.nextElementSibling;
+        var vp = ctrl.querySelector(".tsb-vplay"), bar = ctrl.querySelector(".tsb-vseek"), fill = bar.querySelector("i");
+        var hideT = null;
+        var showC = function () {
+          ctrl.classList.add("on");
+          if (hideT) clearTimeout(hideT);
+          hideT = setTimeout(function () { if (!m.paused) ctrl.classList.remove("on"); }, 2600);
+        };
+        var syncUI = function () {
+          vp.textContent = m.paused ? "\u25B6" : "\u23F8";
+          ctrl.classList.toggle("on", m.paused);
+          if (m.duration) fill.style.width = (m.currentTime / m.duration * 100) + "%";
+        };
+        m.addEventListener("play", function () { ctrl.classList.remove("on"); setTimeout(syncUI, 120); });
+        m.addEventListener("pause", syncUI);
+        m.addEventListener("timeupdate", function () { if (m.duration) fill.style.width = (m.currentTime / m.duration * 100) + "%"; });
+        var toggle = function (ev) {
+          if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+          if (m.paused) { m.play().catch(function () {}); } else { m.pause(); }
+        };
+        vp.addEventListener("click", toggle);
+        m.addEventListener("click", toggle);
+        m.addEventListener("pointermove", showC);
+        /* scrub */
+        var seekTo = function (ev) {
+          if (!m.duration) return;
+          var r = bar.getBoundingClientRect();
+          var x = (ev.touches ? ev.touches[0].clientX : ev.clientX) - r.left;
+          m.currentTime = Math.max(0, Math.min(1, x / r.width)) * m.duration;
+        };
+        var seekMove = false;
+        bar.addEventListener("pointerdown", function (ev) { seekMove = true; ev.preventDefault(); seekTo(ev); });
+        document.addEventListener("pointermove", function (ev) { if (seekMove) seekTo(ev); });
+        document.addEventListener("pointerup", function () { seekMove = false; });
+        /* long-hold LEFT/RIGHT edge = 2x (Instagram) */
+        var timer = null, fast = false;
+        var edge = function (clientX) {
+          var r = m.getBoundingClientRect();
+          return clientX <= r.left + r.width * 0.22 || clientX >= r.right - r.width * 0.22;
+        };
+        var start = function (cx) {
+          if (!edge(cx)) return;
+          timer = setTimeout(function () {
+            if (m.paused) { m.play().catch(function () {}); }
+            m.playbackRate = 2; fast = true;
+          }, 240);
+        };
+        var stop = function () {
+          if (timer) { clearTimeout(timer); timer = null; }
+          if (fast) { m.playbackRate = 1; fast = false; }
+        };
+        m.addEventListener("touchstart", function (e) { start(e.touches[0].clientX); }, { passive: true });
+        m.addEventListener("mousedown", function (e) { start(e.clientX); });
+        ["touchend", "touchcancel", "mouseup", "mouseleave"].forEach(function (ev) {
+          m.addEventListener(ev, stop, { passive: true });
+        });
+        m.addEventListener("touchmove", stop, { passive: true });
+        } /* end of non-peek custom controls */
+      } else {
+        m.draggable = false;
+      }
+      /* no saving / copying */
+      if (!free) {
+        m.addEventListener("contextmenu", function (ev) { ev.preventDefault(); return false; });
+        m.addEventListener("dragstart", function (ev) { ev.preventDefault(); return false; });
+        m.setAttribute("oncontextmenu", "return false");
+      }
+      /* pause when it leaves the screen — switching posts stops the sound/video */
+      if (!_io) {
+        try { _io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) { if (!en.isIntersecting) { try { en.target.pause(); en.target.playbackRate = 1; } catch (e) {} } });
+        }, { threshold: 0.12 }); } catch (e) { _io = null; }
+      }
+      if (_io) _io.observe(m);
+    });
+    /* images in posts: no long-press save / right-click copy unless author allows */
+    scope.querySelectorAll("img").forEach(function (im) {
+      if (im.__tsbImgProt || !im.closest("[data-post], .cm-reel, .cm-postcard, #postBody, [data-kind]")) return;
+      im.__tsbImgProt = true;
+      var free = im.closest('[data-free="1"]');
+      if (free) return;
+      im.draggable = false;
+      im.addEventListener("contextmenu", function (ev) { ev.preventDefault(); return false; });
+      im.addEventListener("dragstart", function (ev) { ev.preventDefault(); return false; });
+    });
+  }
+  function pauseAllMedia() {
+    document.querySelectorAll("video, audio").forEach(function (m) { try { m.pause(); m.playbackRate = 1; } catch (e) {} });
+    try { if (audioEl && !audioEl.paused) { audioEl.pause(); if (playerEl) playerEl.classList.remove("on"); } } catch (e) {}
+  }
+  /* ---------- v221: DM read receipts ---------- */
+  async function markThreadRead(peerId) {
+    if (!api || !signedIn()) return;
+    var mu = me(); if (!mu) return;
+    try {
+      await api("messages?sender_id=eq." + encodeURIComponent(peerId) + "&receiver_id=eq." + encodeURIComponent(mu.id) + "&read=eq.false", { method: "PATCH", body: { read: true } });
+    } catch (e) {
+      /* read column may not exist yet on old DBs — surface the one-line SQL, don't crash the chat */
+      if (String((e && e.message) || e).indexOf("read") >= 0) console.warn("Run SQL #10 (add messages.read) for read receipts.");
+    }
+  }
+
   function playAudio(url, title) {
     try {
       if (!playerEl) {
@@ -597,7 +799,7 @@
     '<text x="48" y="62" font-size="44" text-anchor="middle">📕</text></svg>'
   );
   function avaUrl(name, url, id) {
-    if (url) return url;
+    if (url) return url; /* uploads use unique Date.now() paths, so a new photo = new URL = no cache problem */
     if (isOfficial(id)) return OFFICIAL_AVATAR;
     return "";
   }
@@ -607,8 +809,8 @@
     ensureProfile: ensureProfile, getProfile: getProfile,
     listPosts: listPosts, getPost: getPost, publish: publish, deletePost: deletePost,
     likeInfo: likeInfo, setLike: setLike, likesOnMyPosts: likesOnMyPosts,
-    listProfiles: listProfiles, setProfilePublic: setProfilePublic, postCounts: postCounts, getPostByShort: getPostByShort, toastKey: toastKey, toastMark: toastMark, notifications: notifications, whenReady: whenReady, avaUrl: avaUrl, OFFICIAL_AVATAR: OFFICIAL_AVATAR,
-    myMessages: myMessages, conversations: conversations, threadWith: threadWith, sendDM: sendDM,
+    listProfiles: listProfiles, setProfilePublic: setProfilePublic, postCounts: postCounts, getPostByShort: getPostByShort, toastKey: toastKey, toastMark: toastMark, notifications: notifications, whenReady: whenReady, avaUrl: avaUrl, OFFICIAL_AVATAR: OFFICIAL_AVATAR, protectMedia: protectMedia, pauseAllMedia: pauseAllMedia, fancyFileInputs: fancyFileInputs, syncAvatarPosts: syncAvatarPosts,
+    myMessages: myMessages, conversations: conversations, threadWith: threadWith, sendDM: sendDM, markThreadRead: markThreadRead,
     editDM: editDM, deleteDM: deleteDM, hideDM: hideDM, clearThread: clearThread,
     syncProgress: syncProgress, syncInterests: syncInterests, icon: icon,
     listComments: listComments, addComment: addComment,

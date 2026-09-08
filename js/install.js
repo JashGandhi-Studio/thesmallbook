@@ -1,19 +1,20 @@
 /* ============================================================
-   TheSmallBook — 📲 INSTALL TO HOME SCREEN (v219)
-   Shared by settings.html + the You window.
-   - Captures the browser's beforeinstallprompt and shows a
-     smooth popup with one-tap Install (Android / Chrome / Edge).
-   - iOS never fires beforeinstallprompt → the popup shows the
-     Share → Add to Home Screen steps instead.
-   - Once installed (standalone / appinstalled), every
-     [data-install] trigger disappears — also hidden by CSS via
-     @media (display-mode: standalone).
+   TheSmallBook — 📲 INSTALL APP POPUP (v221)
+   ONE-TAP install, no steps:
+   • Android / Chrome / Edge  → the browser's native install sheet
+     (beforeinstallprompt) fires straight from the button.
+   • iPhone / iPad            → one tap opens the Share sheet,
+     where "Add to Home Screen" lives (Safari doesn't allow more).
+   • Anywhere else            → one tap + one-line hint, never a
+     list of steps.
+   Once installed, the button disappears everywhere
+   (appinstalled event + display-mode:standalone CSS).
    ============================================================ */
 (function () {
   "use strict";
 
-  var deferred = null;          /* the captured install prompt */
-  var promptUsed = false;       /* shown once, Chrome may withhold it forever after */
+  var deferred = null;
+  var promptUsed = false;
 
   function isStandalone() {
     return (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
@@ -24,12 +25,22 @@
   }
   function hideTriggers() {
     document.querySelectorAll("[data-install]").forEach(function (el) {
-      el.closest("[data-installwrap]") ? el.closest("[data-installwrap]").style.display = "none"
-                                       : (el.style.display = "none");
+      var w = el.closest("[data-installwrap]");
+      if (w) w.style.display = "none"; else el.style.display = "none";
     });
   }
 
-  /* ---------------- the popup ---------------- */
+  /* wait a moment for a late beforeinstallprompt (it fires a few ms after load) */
+  function waitPrompt(ms) {
+    return new Promise(function (resolve) {
+      if (deferred) return resolve(deferred);
+      var t = setTimeout(function () { resolve(deferred); }, ms || 2200);
+      var chk = setInterval(function () {
+        if (deferred) { clearTimeout(t); clearInterval(chk); resolve(deferred); }
+      }, 120);
+    });
+  }
+
   function openModal() {
     var old = document.getElementById("tsbInstallModal");
     if (old) old.remove();
@@ -38,74 +49,66 @@
     m.className = "modal";
     m.id = "tsbInstallModal";
 
-    var icon = (document.querySelector('link[rel="apple-touch-icon"]') || {}).href ||
-               "apple-touch-icon.png";
-
-    function step(html) {
-      return '<div class="inststep"><b>' + html + "</b></div>";
-    }
+    var icon = (document.querySelector('link[rel="apple-touch-icon"]') || {}).href || "apple-touch-icon.png";
+    var canInstall = !!deferred || /android|chrome|edg\//i.test(navigator.userAgent);
 
     var body;
     if (isStandalone()) {
       body = '<div class="instbody"><div class="insthero"><img src="' + icon + '" alt=""><span>✅</span></div>' +
-             '<p class="instp">TheSmallBook is already on your home screen — open it any time, even offline.</p>' +
+             '<h3 class="modal__title" style="margin:14px 0 6px;">Already on your home screen</h3>' +
+             '<p class="instp">TheSmallBook is installed — open it any time, even offline.</p>' +
              '<button class="setbtn" data-instclose>Awesome</button></div>';
-    } else if (deferred && !promptUsed) {
-      body = '<div class="instbody"><div class="insthero"><img src="' + icon + '" alt=""><span>📲</span></div>' +
-             '<h3 class="modal__title" style="margin:14px 0 6px;">Install this app to your home screen</h3>' +
-             '<p class="instp">Add TheSmallBook to your home screen — opens full-screen like a real app, works offline, 1-tap launch.</p>' +
-             '<button class="setbtn setbtn--big" data-instgo>⬇️&nbsp; Install now</button>' +
-             '<p class="instfine">Free forever · No ads · Lightspeed updates</p></div>';
-    } else if (isIOS()) {
-      body = '<div class="instbody"><div class="insthero"><img src="' + icon + '" alt=""><span>🍎</span></div>' +
-             '<h3 class="modal__title" style="margin:14px 0 6px;">Install this app to your home screen</h3>' +
-             '<div class="inststeps">' +
-             step('1️⃣ Tap the <b>Share</b> button <span class="instshare">⎋</span> in Safari') +
-             step('2️⃣ Scroll down and tap <b>Add to Home Screen</b>') +
-             step('3️⃣ Tap <b>Add</b> — done! TheSmallBook appears on your home screen 🎉') +
-             "</div></div>";
     } else {
-      body = '<div class="instbody"><div class="insthero"><img src="' + icon + '" alt=""><span>🌐</span></div>' +
-             '<h3 class="modal__title" style="margin:14px 0 6px;">Install this app to your home screen</h3>' +
-             '<div class="inststeps">' +
-             step("1️⃣ Tap the browser <b>menu</b> ⋮ (top right)") +
-             step("2️⃣ Tap <b>Install app</b> <span class=\"instshare\">⌄</span> or <b>Add to Home screen</b>") +
-             step("3️⃣ Confirm — done! TheSmallBook opens like a real app, even offline 🎉") +
-             "</div></div>";
+      body = '<div class="instbody"><div class="insthero"><img src="' + icon + '" alt=""><span>📲</span></div>' +
+             '<h3 class="modal__title" style="margin:14px 0 6px;">Install TheSmallBook</h3>' +
+             '<p class="instp">One tap — it lands on your home screen like a real app.<br>Full-screen, works offline, opens in 1 tap.</p>' +
+             '<button class="setbtn setbtn--big" data-instgo>⬇️&nbsp; Install the app</button>' +
+             '<p class="instfine" data-instfine hidden>Open this page in <b>Chrome</b> (or Edge), tap the browser <b>menu&nbsp;⋮</b> → <b>Install app</b>. One tap, done.</p>' +
+             '<p class="instfine">Free forever · No ads · No sign-up needed</p></div>';
     }
 
-    m.innerHTML =
-      '<div class="modal__box instmodal">' +
-      '<button class="modal__close" data-instclose aria-label="Close">✕</button>' + body +
-      "</div>";
+    m.innerHTML = '<div class="modal__box instmodal">' +
+      '<button class="modal__close" data-instclose aria-label="Close">✕</button>' + body + "</div>";
     document.body.appendChild(m);
     requestAnimationFrame(function () { m.classList.add("open"); });
 
-    m.addEventListener("click", function (ev) {
-      if (ev.target === m) closeModal();
-    });
+    m.addEventListener("click", function (ev) { if (ev.target === m) closeModal(); });
     m.querySelector("[data-instclose]").addEventListener("click", closeModal);
 
     var go = m.querySelector("[data-instgo]");
-    if (go) go.addEventListener("click", function () {
-      if (!deferred) return;
-      promptUsed = true;
-      deferred.prompt();
-      deferred.userChoice.then(function (choice) {
-        if (choice && choice.outcome === "accepted") {
-          /* appinstalled usually fires too; hide immediately for instant feedback */
-          hideTriggers();
-          m.querySelector(".instbody").innerHTML =
-            '<div class="insthero"><img src="' + icon + '" alt=""><span>🎉</span></div>' +
-            '<h3 class="modal__title" style="margin:14px 0 6px;text-align:center;">Installed!</h3>' +
-            '<p class="instp" style="text-align:center;">TheSmallBook is now on your home screen.<br>Open it any time — it even works offline.</p>' +
-            '<div style="text-align:center;"><button class="setbtn" data-instclose>Done</button></div>';
-          m.querySelector("[data-instclose]").addEventListener("click", closeModal);
-        } else {
-          /* dismissed — keep the trigger, no nagging popup again this session */
-        }
-        deferred = null;
-      });
+    if (go) go.addEventListener("click", async function () {
+      var pr = await waitPrompt();
+      if (pr) {
+        promptUsed = true;
+        pr.prompt();
+        pr.userChoice.then(function (choice) {
+          if (choice && choice.outcome === "accepted") {
+            hideTriggers();
+            m.querySelector(".instbody").innerHTML =
+              '<div class="insthero"><img src="' + icon + '" alt=""><span>🎉</span></div>' +
+              '<h3 class="modal__title" style="margin:14px 0 6px;text-align:center;">Installed!</h3>' +
+              '<p class="instp" style="text-align:center;">TheSmallBook is now on your home screen.<br>Open it any time — even offline.</p>' +
+              '<div style="text-align:center;"><button class="setbtn" data-instclose>Done</button></div>';
+            m.querySelector("[data-instclose]").addEventListener("click", closeModal);
+          }
+          deferred = null;
+        });
+      } else if (isIOS()) {
+        /* iPhone: the only real way — one tap opens the native Share sheet (Add to Home Screen lives there) */
+        try {
+          if (navigator.share) {
+            navigator.share({ title: "TheSmallBook", text: "Big books. Small reads. Free forever.", url: location.href })
+              .then(function () { closeModal(); }).catch(function () {});
+          } else {
+            var f = m.querySelector("[data-instfine]");
+            if (f) { f.hidden = false; go.textContent = "⬆️ Open Safari, then this button"; }
+          }
+        } catch (e) {}
+      } else {
+        var f2 = m.querySelector("[data-instfine]");
+        if (f2) f2.hidden = false;
+        go.textContent = "⬇️ Open the browser menu to install";
+      }
     });
   }
   function closeModal() {
@@ -115,12 +118,10 @@
     setTimeout(function () { m.remove(); }, 180);
   }
 
-  /* ---------------- listeners ---------------- */
   window.addEventListener("beforeinstallprompt", function (ev) {
-    ev.preventDefault();          /* we show our own popup */
+    ev.preventDefault();
     deferred = ev;
-    promptUsed = false;           /* a fresh prompt may be granted again */
-    /* if the popup happens to be open in instructions-mode, refresh it to the one-tap version */
+    promptUsed = false;
     if (document.getElementById("tsbInstallModal")) openModal();
   });
   window.addEventListener("appinstalled", function () {
@@ -129,18 +130,13 @@
     closeModal();
   });
 
-  /* auto-hide triggers when already installed, even before CSS kicks in */
   if (isStandalone()) hideTriggers();
 
-  /* wire every [data-install] trigger on the page */
   function wire() {
     document.querySelectorAll("[data-install]").forEach(function (el) {
       if (el.__tsbInstallWired) return;
       el.__tsbInstallWired = true;
-      el.addEventListener("click", function (ev) {
-        ev.preventDefault();
-        openModal();
-      });
+      el.addEventListener("click", function (ev) { ev.preventDefault(); openModal(); });
     });
   }
   wire();

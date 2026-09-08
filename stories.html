@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=219">
+  <link rel="stylesheet" href="css/style.css?v=221">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -64,12 +64,12 @@
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="js/prefs.js?v=219"></script>
-  <script src="js/lang.js?v=219"></script>
-  <script src="js/config.js?v=219"></script>
-  <script src="js/auth.js?v=219"></script>
-  <script src="js/sounds.js?v=219"></script>
-  <script src="js/community.js?v=219"></script>
+  <script src="js/prefs.js?v=221"></script>
+  <script src="js/lang.js?v=221"></script>
+  <script src="js/config.js?v=221"></script>
+  <script src="js/auth.js?v=221"></script>
+  <script src="js/sounds.js?v=221"></script>
+  <script src="js/community.js?v=221"></script>
   <script>
   (function () {
     "use strict";
@@ -144,7 +144,7 @@
             ? '<video src="' + C.esc(p.cover_url) + '" preload="metadata" muted playsinline></video>'
             : '<img src="' + C.esc(p.cover_url) + '" alt="" loading="lazy">')
         : '<span class="cm-quote" style="background:linear-gradient(135deg,hsl(' + hue + ',88%,74%),hsl(' + ((hue + 48) % 360) + ',82%,58%));">' + (p.kind === "quote" ? "❝" : C.esc((p.title || "T").charAt(0).toUpperCase())) + "</span>";
-      return '<article class="cm-card' + (p.kind === "quote" ? " cm-card--quote" : "") + '" data-post="' + p.id + '">' +
+      return '<article class="cm-card' + (p.kind === "quote" ? " cm-card--quote" : "") + '" data-post="' + p.id + '"' + (p.no_download === false ? ' data-free="1"' : "") + ">" +
         '<a class="cm-card__cover" href="story.html?id=' + p.id + '">' + cover +
           (p.audio_url ? '<span class="cm-card__aud">🎧</span>' : "") +
           (p.kind === "quote" ? '<span class="cm-card__kind">QUOTE</span>' : (C.isVideoUrl(p.cover_url) ? '<span class="cm-card__kind cm-card__kind--burst">🎬 BURST</span>' : "")) +
@@ -222,7 +222,7 @@
             '<div class="cm-person__meta">' +
               '<a class="cm-name" href="profile.html?id=' + p.id + '">' + C.esc(p.name) + (C.isOfficial(p.id) ? '<span class="cm-vtick">✔</span>' : "") + (isMe ? ' <span class="cm-time">· you</span>' : "") + "</a>" +
               (pcP[p.id] ? '<span class="cm-time">' + C.icon('pencil') + ' ' + pcP[p.id] + ' post' + (pcP[p.id] === 1 ? "" : "s") + '</span>' : "") +
-              (p.progress ? '<span class="cm-time">' + C.icon('book') + ' ' + p.progress + '/2490 lessons read</span>' : "") +
+              (p.progress ? '<span class="cm-time">' + C.icon('book') + ' ' + p.progress + '/2637 lessons read</span>' : "") +
               (p.bio ? '<span class="cm-bio">' + C.esc(p.bio) + "</span>" : "") +
             "</div></div>" +
             '<div class="cm-person__acts">' +
@@ -243,8 +243,8 @@
       var bgStyle = isVid
         ? ' style="background:linear-gradient(150deg,hsl(' + rhue + ',70%,22%),hsl(' + ((rhue + 48) % 360) + ',65%,12%))"'
         : (p.cover_url ? ' style="background-image:url(\'' + p.cover_url + '\')"' : ' style="background:linear-gradient(150deg,hsl(' + rhue + ',70%,32%),hsl(' + ((rhue + 48) % 360) + ',65%,18%))"');
-      return '<article class="cm-reel' + (p.cover_url && !isVid ? " has-cover" : "") + '"' + bgStyle + '>' +
-        (isVid ? '<video class="cm-reel__vid" src="' + C.esc(p.cover_url) + '" controls playsinline preload="metadata"></video>' : "") +
+      return '<article class="cm-reel' + (p.cover_url && !isVid ? " has-cover" : "") + '"' + (p.no_download === false ? ' data-free="1"' : "") + bgStyle + '>' +
+        (isVid ? '<video class="cm-reel__vid" src="' + C.esc(p.cover_url) + '" preload="metadata" playsinline></video>' : "") +
         '<div class="cm-reel__grad"></div>' +
         '<div class="cm-reel__body">' +
           (p.kind === "quote" ? '<span class="cm-reel__q">❝</span>' : "") +
@@ -281,6 +281,7 @@
       var el = burstEnd();
       if (fresh.length && el) {
         fresh.forEach(function (p) { el.insertAdjacentHTML("beforebegin", reelHTML(p)); });
+        try { C.protectMedia(document.getElementById("reelsTrack")); } catch (e) {}
         fresh.forEach(async function (p) {
           try {
             var info = await C.likeInfo(p.id);
@@ -337,6 +338,7 @@
       document.getElementById("reels").hidden = true;
       clearInterval(burstTimer);
       document.querySelectorAll("#reelsTrack video").forEach(function (v) { try { v.pause(); } catch (e) {} });
+      try { C.pauseAllMedia(); } catch (e) {}
       var pill = document.getElementById("burstPill");
       if (pill) pill.remove();
     }
@@ -375,6 +377,7 @@
         }
         feed.innerHTML = (tab === "all" ? railHtml(posts) + '<div class="cm-sect">✨ For you — tuned to your shelves</div>' : "") +
           posts.map(function (p) { return card(p); }).join("");
+        try { C.protectMedia(feed); } catch (e) {}
         hydrate(feed);
       } catch (e) {
         feed.innerHTML = '<div class="cm-empty">⚠️ Couldn’t reach the community cloud. Pull to refresh.</div>';
@@ -512,7 +515,8 @@
       }
       if ((t = e.target.closest("[data-del]"))) {
         if (!confirm("Delete this story for everyone?")) return;
-        try { await C.deletePost(t.getAttribute("data-del")); load(); } catch (err) { alert("Couldn't delete — are you signed in as the author?"); }
+        try { await C.deletePost(t.getAttribute("data-del")); load(); }
+        catch (err) { alert(err && err.message && err.message.indexOf("policy") >= 0 ? ("Delete failed — " + err.message) : "Couldn't delete — are you signed in as the author?"); }
         return;
       }
     });
@@ -615,7 +619,7 @@
     load();
   })();
   </script>
-  <script src="js/bar.js?v=219" defer></script>
-  <script src="js/gate.js?v=219" defer></script>
+  <script src="js/bar.js?v=221" defer></script>
+  <script src="js/gate.js?v=221" defer></script>
 </body>
 </html>
