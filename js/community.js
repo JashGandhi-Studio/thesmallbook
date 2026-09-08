@@ -248,17 +248,94 @@
     var tk = await authToken();
     if (!tk) throw new Error("session expired — sign in again");
     var path = u.id + "/" + Date.now() + "-" + (file.name || "f").replace(/[^\w.-]+/g, "_");
-    var res = await fetch(URL + "/storage/v1/object/" + bucket + "/" + path, {
-      method: "POST",
-      headers: { apikey: ANON, Authorization: "Bearer " + tk, "Content-Type": file.type || "application/octet-stream", "x-upsert": "false" },
-      body: file
-    });
+    var url = URL + "/storage/v1/object/" + bucket + "/" + path;
+    var hdrs = { apikey: ANON, Authorization: "Bearer " + tk, "Content-Type": file.type || "application/octet-stream", "x-upsert": "false" };
+    var res = await fetch(url, { method: "POST", headers: hdrs, body: file });
+    var tk2 = "";
+    if ((res.status === 401 || res.status === 403) && tk) {
+      /* token may have expired mid-session — force one refresh, then retry once */
+      try { if (window.TSB_AUTH && typeof TSB_AUTH.token === "function") await TSB_AUTH.token(); } catch (e) {}
+      tk2 = await authToken();
+      if (tk2 && tk2 !== tk) {
+        hdrs.Authorization = "Bearer " + tk2;
+        res = await fetch(url, { method: "POST", headers: hdrs, body: file });
+      }
+    }
     if (!res.ok) {
       var det = "";
       try { var j = await res.json(); det = (j && (j.message || j.error)) || ""; } catch (e) {}
-      throw new Error((res.status === 400 || res.status === 403) ? ("upload blocked by storage rules — run SQL #3 v3 (" + (det || res.status) + ")") : ("upload failed (" + (det || res.status) + ")"));
+      var msg = uploadFailMsg(res.status, det, bucket);
+      /* auto-diagnose: name the exact missing piece so the fix is one copy-paste */
+      if (res.status === 403 || res.status === 404) {
+        try {
+          var p = await probeStorage(bucket);
+          if (p && p.reason) {
+            if (p.reason === "bucket-missing") msg = "📦 Bucket \"" + bucket + "\" doesn't exist on your Supabase project — run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md (creates all three buckets, safe to re-run).";
+            else if (p.reason === "bucket-private") msg = "🔒 Bucket \"" + bucket + "\" exists but is private — run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md (it sets public=true).";
+            else if (p.reason === "policy-missing") msg = "🚫 Storage upload rule missing (" + (p.detail || det || res.status) + ") — run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md (one safe, re-runnable script; defines read/write/update/delete for tsb-covers, tsb-audio, tsb-avatars).";
+            else if (p.reason === "network") msg = "Network problem talking to storage (" + (p.detail || "") + ") — check your connection and try again.";
+            else msg = msg + " (storage check: " + p.reason + ")";
+          }
+        } catch (e) {}
+      }
+      throw new Error(msg);
     }
     return URL + "/storage/v1/object/public/" + bucket + "/" + path;
+  }
+
+  /* ---------- v222: self-diagnose a failed upload (names the exact fix) ---------- */
+  async function probeStorage(bucket) {
+    var out = { ok: false, bucket: bucket || "tsb-covers", reason: "", detail: "", signedIn: !!me() };
+    try {
+      var tk = await authToken();
+      if (!tk) { out.reason = "signin"; return out; }
+      var hdrs = { apikey: ANON, Authorization: "Bearer " + tk, "Content-Type": "application/json" };
+
+      /* 1) bucket existence — list works on public buckets (the /bucket list
+            endpoint is invisible under storage.buckets RLS, so don't trust it) */
+      var list = await fetch(URL + "/storage/v1/object/list/" + bucket, {
+        method: "POST", headers: hdrs, body: JSON.stringify({ prefix: "", limit: 1 })
+      });
+      if (list.status === 404) { out.reason = "bucket-missing"; return out; }
+      if (list.status === 403 || list.status === 401) { out.reason = "policy-missing"; out.detail = "read"; return out; }
+      out.found = true;
+
+      /* 2) public badge — the public read URL must not 400 */
+      var pub = await fetch(URL + "/storage/v1/object/public/" + bucket + "/_tsbdiag/.probe", { headers: { apikey: ANON, Authorization: "Bearer " + tk } });
+      if (pub.status === 400 || pub.status === 403) { out.reason = "bucket-private"; return out; }
+
+      /* 3) the real question — a tiny write+delete round trip */
+      var probePath = bucket + "/_tsbdiag/" + Date.now() + ".txt";
+      var up = await fetch(URL + "/storage/v1/object/" + probePath, {
+        method: "POST",
+        headers: { apikey: ANON, Authorization: "Bearer " + tk, "Content-Type": "text/plain", "x-upsert": "false" },
+        body: new Blob(["ok"], { type: "text/plain" })
+      });
+      if (up.ok) {
+        out.ok = true; out.reason = "";
+        try { await fetch(URL + "/storage/v1/object/" + probePath, { method: "DELETE", headers: { apikey: ANON, Authorization: "Bearer " + tk } }); } catch (e) {}
+        return out;
+      }
+      var det = "";
+      try { var j = await up.json(); det = (j && (j.message || j.error)) || ""; } catch (e) {}
+      out.reason = (up.status === 403 || up.status === 401) ? "policy-missing" : "other-" + up.status;
+      out.detail = det || up.status;
+    } catch (e) { out.reason = "network"; out.detail = String(e && e.message || e); }
+    return out;
+  }
+
+  function uploadFailMsg(status, det, bucket) {
+    det = det || "";
+    if (status === 404 || /not found/i.test(det) || /bucket/i.test(det)) {
+      return "📦 Storage bucket \"" + bucket + "\" is missing on your Supabase project — run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md. It creates tsb-covers / tsb-audio / tsb-avatars (safe to re-run). (" + (det || status) + ")";
+    }
+    if (status === 413 || /too large|PayloadTooLarge/i.test(det)) {
+      return "That file is too big for storage (max ~50 MB). Trim/compress it and try again.";
+    }
+    if (status === 403 || status === 401) {
+      return "🚫 Upload blocked (" + (det || status) + "). Your storage is missing the upload rule — run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md (one safe re-runnable script, ~30 seconds). If you just ran it, reload this page and try again.";
+    }
+    return "Upload failed (" + (det || status) + "). Check your internet, then try again.";
   }
 
   /* ---------- v201: video Bursts (max 2 minutes) ---------- */
@@ -815,7 +892,7 @@
     syncProgress: syncProgress, syncInterests: syncInterests, icon: icon,
     listComments: listComments, addComment: addComment,
     followInfo: followInfo, setFollow: setFollow, followingIds: followingIds, followerRows: followerRows,
-    upload: upload, sanitize: sanitize, ago: ago, readMins: readMins, esc: esc, playAudio: playAudio,
+    upload: upload, probeStorage: probeStorage, sanitize: sanitize, ago: ago, readMins: readMins, esc: esc, playAudio: playAudio,
     isVideoUrl: isVideoUrl, videoDuration: videoDuration, checkBurst: checkBurst, MAX_BURST_SEC: MAX_BURST_SEC
   };
 })();

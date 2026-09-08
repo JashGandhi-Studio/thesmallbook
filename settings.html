@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=221">
+  <link rel="stylesheet" href="css/style.css?v=222">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -148,17 +148,23 @@
       <p class="sethint">Books, streaks and shelf stay untouched.</p>
     </section>
 
-    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v221.</p>
+    <section class="setcard">
+      <h2>📤 UPLOADS</h2>
+      <button class="setbtn" id="upDiag">🔎 Test upload right now</button>
+      <p class="sethint" id="upDiagHint">Cover / quote images, burst videos, voice notes and profile photos live in your own Supabase storage. If any of them fail, this test names the exact missing piece — and the 30-second SQL fix for it.</p>
+    </section>
+
+    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v222.</p>
   </main>
 
-  <script src="js/prefs.js?v=221"></script>
-  <script src="js/lang.js?v=221"></script>
-  <script src="js/config.js?v=221"></script>
-  <script src="js/install.js?v=221"></script>
-  <script src="js/auth.js?v=221"></script>
-  <script src="js/sounds.js?v=221"></script>
-  <script src="js/community.js?v=221"></script>
-  <script src="js/bar.js?v=221" defer></script>
+  <script src="js/prefs.js?v=222"></script>
+  <script src="js/lang.js?v=222"></script>
+  <script src="js/config.js?v=222"></script>
+  <script src="js/install.js?v=222"></script>
+  <script src="js/auth.js?v=222"></script>
+  <script src="js/sounds.js?v=222"></script>
+  <script src="js/community.js?v=222"></script>
+  <script src="js/bar.js?v=222" defer></script>
   <script>
     (function () {
       /* theme */
@@ -278,7 +284,7 @@
   });
 })();
 </script>
-  <script src="js/onboard.js?v=221" defer></script>
+  <script src="js/onboard.js?v=222" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {
@@ -325,6 +331,32 @@
       }
       wireName("displayNameInput", "saveName");
       wireName("youNameInput", "youNameSave");
+
+      /* 📤 upload self-test (v222) */
+      var upDiag = document.getElementById("upDiag"), upHint = document.getElementById("upDiagHint");
+      if (upDiag) upDiag.addEventListener("click", async function () {
+        if (!(window.TSB_COMMUNITY && TSB_COMMUNITY.probeStorage)) { upHint.textContent = "Community layer not loaded — reload and try again."; return; }
+        upDiag.disabled = true; upDiag.textContent = "⏳ Testing…";
+        var out = "Test finished. Open Settings → Uploads and check the result.";
+        try {
+          var p = await TSB_COMMUNITY.probeStorage("tsb-covers");
+          if (p.ok) {
+            out = "✅ Uploads work! Test file uploaded and removed. All three buckets are public and writable. If a story still shows no image, reload the page.";
+          } else if (p.reason === "bucket-missing") {
+            out = "❌ Bucket tsb-covers doesn't exist on this Supabase project. Fix: run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md (creates tsb-covers / tsb-audio / tsb-avatars — safe to re-run).";
+          } else if (p.reason === "bucket-private") {
+            out = "❌ Bucket exists but is private. Fix: run SQL #3 v4 (it sets public=true). Then reload.";
+          } else if (p.reason === "policy-missing") {
+            out = "❌ Storage rules are missing (" + (p.detail || "RLS denied") + "). Fix: run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md (one safe re-runnable script). Then reload this page and test again.";
+          } else if (p.reason === "network") {
+            out = "⚠️ Couldn't reach storage (" + (p.detail || "network error") + "). Check internet, then test again.";
+          } else {
+            out = "⚠️ Storage check: " + p.reason + (p.detail ? " — " + p.detail : "") + ". If you already ran SQL #3 v4, reload and test again.";
+          }
+        } catch (e) { out = "⚠️ Test errored: " + (e && e.message ? e.message : e); }
+        upHint.textContent = out;
+        upDiag.disabled = false; upDiag.textContent = "🔎 Test upload right now";
+      });
 
       /* 📈 reading progress */
       function paintProgress() {

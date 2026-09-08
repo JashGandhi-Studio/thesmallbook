@@ -99,6 +99,10 @@ begin
     create policy "upsert own p" on public.profiles for insert with check (auth.uid() = id); end if;
   if not exists (select 1 from pg_policies where policyname = 'update own p') then
     create policy "update own p" on public.profiles for update using (auth.uid() = id); end if;
+  -- storage policies: schema-adaptive (works on OLD and NEW Supabase).
+  -- NEW Supabase removed the `owner` column (only owner_id exists), so we
+  -- detect the columns first — otherwise the policy creation errors out and
+  -- uploads stay blocked. (SQL #3 below installs the strict owner-scoped ones.)
   if not exists (select 1 from pg_policies where policyname = 'public read storage') then
     create policy "public read storage" on storage.objects for select
       using (bucket_id in ('tsb-covers','tsb-audio','tsb-avatars')); end if;
@@ -106,11 +110,9 @@ begin
     create policy "auth write storage" on storage.objects for insert
       with check (bucket_id in ('tsb-covers','tsb-audio','tsb-avatars') and auth.role() = 'authenticated'); end if;
   if not exists (select 1 from pg_policies where policyname = 'auth update own storage') then
-    create policy "auth update own storage" on storage.objects for update
-      using (bucket_id in ('tsb-covers','tsb-audio','tsb-avatars') and owner = auth.uid()); end if;
+    execute 'create policy "auth update own storage" on storage.objects for update using (bucket_id in (''tsb-covers'',''tsb-audio'',''tsb-avatars'') and auth.role() = ''authenticated'')'; end if;
   if not exists (select 1 from pg_policies where policyname = 'auth delete own storage') then
-    create policy "auth delete own storage" on storage.objects for delete
-      using (bucket_id in ('tsb-covers','tsb-audio','tsb-avatars') and owner = auth.uid()); end if;
+    execute 'create policy "auth delete own storage" on storage.objects for delete using (bucket_id in (''tsb-covers'',''tsb-audio'',''tsb-avatars'') and auth.role() = ''authenticated'')'; end if;
 end $$;
 
 -- 5) SELF-CHECK
@@ -131,42 +133,82 @@ select
 | "policy already exists" | impossible with this script — you ran an old one; use this |
 | destructive-ops warning | impossible here (no DROPs) |
 | feed can't reach cloud | script not run on THIS project (check top-left project name) |
-| upload fails | bucket missing/public off → re-run script |
+| upload fails | run SQL #3 **v4** (storage-fix script) — its self-check must print `3 | 4`. If it prints 0s, you ran it on a different project (check the project name at the top-left). |
 
 
 ---
 
 ## SQL #3 — FIX UPLOADS + SEED THE OFFICIAL CHANNEL (run once)
-1) Permissive storage policies working on BOTH old and new Supabase schemas
-   (casts owner_id/owner to text — works on every schema version). Additive — deletes nothing.
+1) **Storage fix (v4 — schema-adaptive).** Newer Supabase projects removed the
+   `owner` column from `storage.objects` (only `owner_id` exists). Older SQL
+   versions reference `owner`, fail with *undefined_column*, and silently leave
+   uploads blocked — that is why cover/quote images, bursts and avatars show
+   *"upload blocked"*. This version detects your actual columns first, is 100%
+   re-runnable, and drops only the old storage policies it replaces.
 2) Seeds five archive stories under the verified **TheSmallBook ✔** official
    channel (id 11111111-1111-1111-1111-111111111111).
 
 ```sql
 do $$
+declare
+  has_owner_id boolean;
+  has_owner boolean;
+  owner_expr text;
 begin
-  if not exists (select 1 from pg_policies where policyname = 'auth write storage v2') then
-    begin
-      execute 'create policy "auth write storage v2" on storage.objects for insert with check (bucket_id in (''tsb-covers'',''tsb-audio'',''tsb-avatars'') and (owner_id::text = auth.uid()::text or owner::text = auth.uid()::text))';
-    exception when undefined_column then
-      execute 'create policy "auth write storage v2" on storage.objects for insert with check (bucket_id in (''tsb-covers'',''tsb-audio'',''tsb-avatars'') and owner::text = auth.uid()::text)';
-    end;
+  select exists(select 1 from information_schema.columns
+                 where table_schema = 'storage' and table_name = 'objects'
+                   and column_name = 'owner_id') into has_owner_id;
+  select exists(select 1 from information_schema.columns
+                 where table_schema = 'storage' and table_name = 'objects'
+                   and column_name = 'owner') into has_owner;
+
+  if has_owner_id and has_owner then
+    owner_expr := '(owner_id::text = auth.uid()::text or owner::text = auth.uid()::text)';
+  elsif has_owner_id then
+    owner_expr := 'owner_id::text = auth.uid()::text';
+  else
+    owner_expr := 'owner::text = auth.uid()::text';
   end if;
-  if not exists (select 1 from pg_policies where policyname = 'auth update storage v2') then
-    begin
-      execute 'create policy "auth update storage v2" on storage.objects for update using (bucket_id in (''tsb-covers'',''tsb-audio'',''tsb-avatars'') and (owner_id::text = auth.uid()::text or owner::text = auth.uid()::text))';
-    exception when undefined_column then
-      execute 'create policy "auth update storage v2" on storage.objects for update using (bucket_id in (''tsb-covers'',''tsb-audio'',''tsb-avatars'') and owner::text = auth.uid()::text)';
-    end;
+
+  -- buckets must exist AND be public (old versions missed one of the two)
+  insert into storage.buckets (id, name, public)
+    values ('tsb-covers','tsb-covers',true) on conflict (id) do update set public = true;
+  insert into storage.buckets (id, name, public)
+    values ('tsb-audio','tsb-audio',true) on conflict (id) do update set public = true;
+  insert into storage.buckets (id, name, public)
+    values ('tsb-avatars','tsb-avatars',true) on conflict (id) do update set public = true;
+
+  -- replace the old buggy storage policies with one clean, working set
+  drop policy if exists "auth write storage"      on storage.objects;
+  drop policy if exists "auth update own storage" on storage.objects;
+  drop policy if exists "auth delete own storage" on storage.objects;
+  drop policy if exists "auth write storage v2"   on storage.objects;
+  drop policy if exists "auth update storage v2"  on storage.objects;
+  drop policy if exists "auth delete storage v2"  on storage.objects;
+
+  if not exists (select 1 from pg_policies where policyname = 'tsb read storage') then
+    execute 'create policy "tsb read storage" on storage.objects for select
+      using (bucket_id in (''tsb-covers'',''tsb-audio'',''tsb-avatars''))';
   end if;
-  if not exists (select 1 from pg_policies where policyname = 'auth delete storage v2') then
-    begin
-      execute 'create policy "auth delete storage v2" on storage.objects for delete using (bucket_id in (''tsb-covers'',''tsb-audio'',''tsb-avatars'') and (owner_id::text = auth.uid()::text or owner::text = auth.uid()::text))';
-    exception when undefined_column then
-      execute 'create policy "auth delete storage v2" on storage.objects for delete using (bucket_id in (''tsb-covers'',''tsb-audio'',''tsb-avatars'') and owner::text = auth.uid()::text)';
-    end;
+  if not exists (select 1 from pg_policies where policyname = 'tsb write storage') then
+    execute 'create policy "tsb write storage" on storage.objects for insert
+      with check (bucket_id in (''tsb-covers'',''tsb-audio'',''tsb-avatars'') and ' || owner_expr || ')';
+  end if;
+  if not exists (select 1 from pg_policies where policyname = 'tsb update storage') then
+    execute 'create policy "tsb update storage" on storage.objects for update
+      using (bucket_id in (''tsb-covers'',''tsb-audio'',''tsb-avatars'') and ' || owner_expr || ')';
+  end if;
+  if not exists (select 1 from pg_policies where policyname = 'tsb delete storage') then
+    execute 'create policy "tsb delete storage" on storage.objects for delete
+      using (bucket_id in (''tsb-covers'',''tsb-audio'',''tsb-avatars'') and ' || owner_expr || ')';
   end if;
 end $$;
+
+-- self-check: 3 buckets + 4 storage policies = the fix is live
+select
+  (select count(*) from storage.buckets where id in ('tsb-covers','tsb-audio','tsb-avatars') and public) as buckets_ok,
+  (select count(*) from pg_policies where policyname in
+     ('tsb read storage','tsb write storage','tsb update storage','tsb delete storage')) as storage_policies_ok;
 
 -- SQL #3.5 — bring the posts table up to date (safe & idempotent)
 alter table public.posts add column if not exists author_name text not null default 'Reader';

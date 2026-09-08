@@ -337,8 +337,8 @@ const C = window.TSB_COMMUNITY;
   ok("og image + alt refreshed (400 books · 2,637 lessons)", idxH.includes("400 books · 2,637 lessons") && idxH.includes("assets/og-image.png"));
   ok("no stale counts on key files (350 books / 2,176 / 2176 / 2170)", !/350 books|2,176|2176|2170/.test(djSrc + idxH + cssSrc + lgSrc2 + bkSrc2));
   const swSrc = fsp.readFileSync(pp.join(__dirname, "../sw.js"), "utf8");
-  ok("service worker cache bumped to tsb-v221", swSrc.includes('tsb-v221'));
-  ok("key files ship ?v=221", idxH.includes("css/style.css?v=221") && lgSrc2.includes("v=221"));
+  ok("service worker cache bumped to tsb-v222", swSrc.includes('tsb-v222'));
+  ok("key files ship ?v=222", idxH.includes("css/style.css?v=222") && lgSrc2.includes("v=222"));
 
   console.log("== v221: content depth, 400 everywhere, 8 new autopsies, graves on all books ==");
   // repo-wide stale scan (every html/js/md)
@@ -390,17 +390,17 @@ const C = window.TSB_COMMUNITY;
   const setH = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
   const youH = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
   const instSrc = fsp.readFileSync(pp.join(__dirname, "../js/install.js"), "utf8");
-  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=221"));
-  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=221"));
+  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=222"));
+  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=222"));
   ok("service worker precaches install.js (works offline)", swSrc.includes("./js/install.js"));
   ok("install popup + standalone-hide styles shipped", cssSrc.includes(".instmodal") && cssSrc.includes("@media (display-mode: standalone)"));
   ok("install.js parses and handles beforeinstallprompt/appinstalled", (() => { try { new Function(instSrc); return true; } catch (e) { return false; } })() && instSrc.includes("beforeinstallprompt") && instSrc.includes("appinstalled"));
-  ok("Build markers say tsb-v221 (settings + You window)", setH.includes("Build tsb-v221") && youH.includes("Build tsb-v221"));
+  ok("Build markers say tsb-v222 (settings + You window)", setH.includes("Build tsb-v222") && youH.includes("Build tsb-v222"));
   let staleBuilds = [];
   for (const f of ["settings.html","login.html","index.html","about.html","scan.html","book.html","graveyard.html"]) {
     const t = fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
     const m = t.match(/Build tsb-v(\d+)/g) || [];
-    const wantVer = (swSrc.match(/CACHE_VERSION = "(tsb-v\d+)"/) || [])[1] || "tsb-v221";
+    const wantVer = (swSrc.match(/CACHE_VERSION = "(tsb-v\d+)"/) || [])[1] || "tsb-v222";
     m.forEach(x => { if (!x.includes(wantVer.slice(3))) staleBuilds.push(f + ":" + x); });
   }
   ok("no stale Build markers anywhere", staleBuilds.length === 0, staleBuilds.join(", "));
@@ -531,6 +531,48 @@ const C = window.TSB_COMMUNITY;
   const pjsSrc2 = fsp.readFileSync(pp.join(__dirname, "../js/prefs.js"), "utf8");
   ok("recs: interest.top only returns real categories (tag junk ignored)", pjsSrc2.includes("cats.add(String(b.category).toLowerCase())"));
   ok("bugs: no 'No file chosen' native strings left in write/profile (except styled labels)", !writeH.includes("input id=\"wCover\" type=\"file\">") && !profH2.includes("input id=\"pAva\" type=\"file\">"));
+
+  /* ================= v222: NATURAL HINGLISH/GUJLISH + UPLOAD FIXES ================= */
+  console.log("== v222: natural language engine (kurated dict + live translit) ==");
+  const langSrc = fsp.readFileSync(pp.join(__dirname, "../js/lang.js"), "utf8");
+  ok("v222: engine exposes naturalRoman + per-language dictionaries", langSrc.includes("HINGLISH_DICT") && langSrc.includes("GUJLISH_DICT") && langSrc.includes("naturalRoman") && langSrc.includes("transliteration_hi_en"));
+  const _docOld = globalThis.document;
+  globalThis.document = {
+    addEventListener() {}, createElement: () => ({ setAttribute() {}, appendChild() {}, addEventListener() {} }),
+    head: { appendChild() {} }, body: { appendChild() {}, nodeType: 1 },
+    createTreeWalker: () => ({ nextNode: () => null }), querySelector: () => null, querySelectorAll: () => [],
+    getElementById: () => null, documentElement: { classList: { contains: () => false } }
+  };
+  globalThis.NodeFilter = { SHOW_TEXT: 4 };
+  eval(langSrc);
+  const L = globalThis.window.TSB_LANG;
+  ok("v222 hinglish: everyday sentence is exactly how people text", L.toHinglish("मैं यह काम कल शुरू करूँगा।") === "main yeh kaam kal shuru karunga.", L.toHinglish("मैं यह काम कल शुरू करूँगा।"));
+  ok("v222 hinglish: polite form + questions natural", L.toHinglish("क्या आप मुझे यह किताब देंगे?") === "kya aap mujhe yeh kitaab denge?");
+  ok("v222 hinglish: book words become plain words (कृपया/धन्यवाद/स्वतंत्रता)", L.toHinglish("कृपया स्वतंत्रता") === "please aazaadi");
+  ok("v222 hinglish: no machine aa/ee doubling (जिंदगी → zindagi)", L.toHinglish("जिंदगी") === "zindagi" && L.toHinglish("महीना") === "mahina");
+  ok("v222 gujlish: everyday sentence natural", L.toGujlish("તમે મને આ કિતાબ આપશો?") === "tame mane aa kitaab aapsho?");
+  ok("v222 gujlish: fused postpositions split (જીવનમાં → jeevan ma)", L.toGujlish("જીવનમાં") === "jeevan ma" && L.toGujlish("ઘરમાં") === "ghar ma");
+  ok("v222 gujlish: future tense short (કરશો → karsho)", L.toGujlish("તમે પછી કરશો") === "tame pachhi karsho", L.toGujlish("તમે પછી કરશો"));
+  ok("v222 gujlish: own-word correct (પોતાના → potana, not pota na)", L.toGujlish("પોતાના સપના") === "potana sapna");
+  if (_docOld !== undefined) globalThis.document = _docOld; else delete globalThis.document;
+
+  console.log("== v222: upload hardening + self-diagnosis ==");
+  const commSrc2b = fsp.readFileSync(pp.join(__dirname, "../js/community.js"), "utf8");
+  ok("v222: upload retries once with a freshly refreshed token", commSrc2b.includes("tk2 !== tk"));
+  ok("v222: probeStorage exported (settings self-test)", commSrc2b.includes("probeStorage: probeStorage") && commSrc2b.includes("bucket-missing") && commSrc2b.includes("policy-missing"));
+  const pr1 = await C.probeStorage("tsb-covers");
+  ok("v222: probe says storage OK under mock (list+public+write round trip)", pr1.ok === true && pr1.signedIn === true, JSON.stringify(pr1));
+  const tokOld = globalThis.TSB_AUTH.token, sessOld = store.tsb_auth_session;
+  globalThis.TSB_AUTH.token = async () => "";
+  store.tsb_auth_session = JSON.stringify({ user: { id: "user-1" } });
+  const pr2 = await C.probeStorage("tsb-covers");
+  ok("v222: probe reports 'sign in first' when no session", pr2.reason === "signin", pr2.reason);
+  globalThis.TSB_AUTH.token = tokOld; store.tsb_auth_session = sessOld;
+  const setH3 = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
+  ok("v222: Settings has the one-tap upload test", setH3.includes('id="upDiag"') && setH3.includes("Test upload right now") && setH3.includes("Build tsb-v222"));
+  const docSrc2 = fsp.readFileSync(pp.join(__dirname, "../docs/SUPABASE-STEP-BY-STEP.md"), "utf8");
+  ok("v222: docs SQL #3 v4 is schema-adaptive (detects owner_id vs owner)", docSrc2.includes("information_schema.columns") && docSrc2.includes("has_owner_id") && docSrc2.includes("tsb write storage") && docSrc2.includes("drop policy if exists \"auth write storage v2\""));
+  ok("v222: docs no longer reference the vanished owner column in policies", !/and owner = auth\.uid\(\)/.test(docSrc2));
 
   console.log();
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");
