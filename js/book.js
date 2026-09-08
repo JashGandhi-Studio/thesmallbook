@@ -385,7 +385,7 @@
       ctx.font = `900 ${titleSize}px 'Archivo Black', Arial`;
       titleLines = wrapText(ctx, tTitle.toUpperCase(), W - 260).slice(0, 2);
     }
-    let y = 640;
+    let y = 678;
     titleLines.forEach((ln) => { ctx.fillText(ln, W / 2, y); y += titleSize + 10; });
 
     // author
@@ -400,8 +400,9 @@
     // one-liner — up to 3 lines, inside safe zone
     ctx.font = "600 34px 'Space Grotesk', Arial";
     const olLines = wrapText(ctx, "\u201C" + tOneliner + "\u201D", W - 320);
-    olLines.slice(0, 3).forEach((ln, i) => {
-      const isLast = i === 2 && olLines.length > 3;
+    const olMax = titleLines.length > 1 ? 2 : 3;
+    olLines.slice(0, olMax).forEach((ln, i) => {
+      const isLast = i === olMax - 1 && olLines.length > olMax;
       ctx.fillText(isLast ? ln + "..." : ln, W / 2, y);
       y += 46;
     });

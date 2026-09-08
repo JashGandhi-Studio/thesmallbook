@@ -401,7 +401,7 @@
       if (!force && Date.now() - last < 36e5) return;
       var mu3 = me(); if (!mu3) return;
       var prog = JSON.parse(localStorage.getItem("tsb_progress") || "{}");
-      // v203: progress column = LESSONS read (sum of per-book lesson arrays), matching the "X/2176 lessons" UI
+      // v203: progress column = LESSONS read (sum of per-book lesson arrays), matching the "X/2490 lessons" UI
       var n = 0;
       Object.keys(prog).forEach(function (k) {
         var v = prog[k];

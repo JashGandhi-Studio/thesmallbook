@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=213">
+  <link rel="stylesheet" href="css/style.css?v=217">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,12 +31,12 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=213"></script>
-  <script src="js/lang.js?v=213"></script>
-  <script src="js/config.js?v=213"></script>
-  <script src="js/auth.js?v=213"></script>
-  <script src="js/sounds.js?v=213"></script>
-  <script src="js/community.js?v=213"></script>
+  <script src="js/prefs.js?v=217"></script>
+  <script src="js/lang.js?v=217"></script>
+  <script src="js/config.js?v=217"></script>
+  <script src="js/auth.js?v=217"></script>
+  <script src="js/sounds.js?v=217"></script>
+  <script src="js/community.js?v=217"></script>
   <script>
   (function () {
     "use strict";
@@ -98,7 +98,7 @@
               '<a class="cm-statrow__n" href="profile.html?id=' + pid + '&view=following" data-lsoc="following"><b>' + followingCount + "</b><span>following</span></a>" +
               (mine ? '<span class="cm-statrow__n"><b>' + likesGot + "</b><span>likes</span></span>" : "") +
             "</div>" +
-            (progShown ? '<div class="cm-progpill">' + C.icon('book') + ' ' + progShown + " / 2176 lessons read</div>" : "") +
+            (progShown ? '<div class="cm-progpill">' + C.icon('book') + ' ' + progShown + " / 2490 lessons read</div>" : "") +
             (mine
               ? '<div class="cm-profacts"><span class="cm-time">' + C.icon('share') + ' This is your public card — share it below</span></div>'
               : "") +
@@ -362,7 +362,7 @@
         x.fillStyle = "#55504a"; x.font = "500 32px 'Space Grotesk', sans-serif";
         x.fillText(String(prof.bio || "Reader on TheSmallBook").slice(0, 48), 320, 356);
         x.fillStyle = "#1c1a17"; x.font = "700 28px 'Space Grotesk', sans-serif";
-        x.fillText("ID " + pid.slice(0, 8) + (prof.progress ? "   \u00B7   \u{1F4DA} " + prof.progress + "/2176 lessons" : ""), 320, 412);
+        x.fillText("ID " + pid.slice(0, 8) + (prof.progress ? "   \u00B7   \u{1F4DA} " + prof.progress + "/2490 lessons" : ""), 320, 412);
         x.fillStyle = "#1c1a17"; x.fillRect(44, H - 150, W - 88, 104);
         x.fillStyle = "#ffc800"; x.font = "800 44px 'Space Grotesk', sans-serif";
         x.fillText("\u{1F514} Subscribe on TheSmallBook", 84, H - 84);
@@ -423,7 +423,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=213" defer></script>
-  <script src="js/gate.js?v=213" defer></script>
+  <script src="js/bar.js?v=217" defer></script>
+  <script src="js/gate.js?v=217" defer></script>
 </body>
 </html>

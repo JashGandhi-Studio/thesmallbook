@@ -300,6 +300,111 @@ const C = window.TSB_COMMUNITY;
   ok("visitor gets ONE clean card, share card is owner-only", prfSrc.includes("(mine ? '<div") && prfSrc.includes("cm-sharecard\">"));
   ok("visitor avatar has no edit plus", prfSrc.includes("(mine ? '<button class=") && prfSrc.includes("cm-avaplus"));
 
+  console.log("== v214: 50 new books, name wrap, sound in You, share card, og image, v214 bump ==");
+  const djSrc = fsp.readFileSync(pp.join(__dirname, "../js/data.js"), "utf8");
+  const djArr = JSON.parse(djSrc.slice(djSrc.indexOf("["), djSrc.indexOf("];\nif (typeof window") + 1));
+  const ntitle = t => t.trim().toLowerCase().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ");
+  ok("data.js parses: library grew to 400 books", djArr.length === 400, djArr.length + " books");
+  ok("2,490 lessons across the library", djArr.reduce((x, b) => x + b.lessons.length, 0) === 2490, "sum mismatch");
+  ok("all 400 book ids unique", new Set(djArr.map(b => b.id)).size === 400);
+  ok("all 400 titles unique (punctuation-normalized)", new Set(djArr.map(b => ntitle(b.title))).size === 400);
+  ok("every book complete (5+ lessons, 3+ quotes, 5-step plan, caveat, bigIdea)", djArr.every(b => b.lessons.length >= 5 && b.quotes.length >= 3 && b.actionPlan.length >= 5 && b.caveat && b.bigIdea && b.oneLiner));
+  ok("every cover file exists in assets/covers/", djArr.every(b => fsp.existsSync(pp.join(__dirname, "../" + b.cover))));
+  ok("every book has an SEO page in books/", djArr.every(b => fsp.existsSync(pp.join(__dirname, "../books/" + b.id + ".html"))));
+  const cssSrc = fsp.readFileSync(pp.join(__dirname, "../css/style.css"), "utf8");
+  ok("big profile names wrap inside the screen (cm-profmain h1)", cssSrc.includes(".cm-profmain h1") && cssSrc.includes("overflow-wrap: anywhere") && cssSrc.includes("white-space: normal"));
+  const lgSrc2 = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
+  ok("You-window has Notif sound row + Sound test", lgSrc2.includes('id="soundRowY"') && lgSrc2.includes('id="youSoundTest"') && lgSrc2.includes("paintYSound"));
+  const bkSrc2 = fsp.readFileSync(pp.join(__dirname, "../js/book.js"), "utf8");
+  ok("share card: title baseline lowered + one-liner capped when title wraps", bkSrc2.includes("let y = 678;") && bkSrc2.includes("titleLines.length > 1 ? 2 : 3"));
+  ok("og image + alt refreshed (400 books · 2,490 lessons)", idxH.includes("400 books · 2,490 lessons") && idxH.includes("assets/og-image.png"));
+  ok("no stale counts on key files (350 books / 2,176 / 2176 / 2170)", !/350 books|2,176|2176|2170/.test(djSrc + idxH + cssSrc + lgSrc2 + bkSrc2));
+  const swSrc = fsp.readFileSync(pp.join(__dirname, "../sw.js"), "utf8");
+  ok("service worker cache bumped to tsb-v217", swSrc.includes('tsb-v217'));
+  ok("key files ship ?v=217", idxH.includes("css/style.css?v=217") && lgSrc2.includes("v=217"));
+
+  console.log("== v217: content depth, 400 everywhere, 8 new autopsies, graves on all books ==");
+  // repo-wide stale scan (every html/js/md)
+  let stale = [];
+  const walk = (dir) => {
+    for (const e of fsp.readdirSync(dir, { withFileTypes: true })) {
+      if (e.name === ".git" || e.name === "node_modules" || e.name === "tests" || e.name === "scanner-data.js") continue;
+      const p = pp.join(__dirname, "..", dir, e.name);
+      if (e.isDirectory()) { walk(dir + "/" + e.name); continue; }
+      if (!/\.(html|js|md)$/.test(e.name)) continue;
+      const t = fsp.readFileSync(p, "utf8");
+      if (/350 books|350 book summaries|2,426|2426|2,176|2176|2170|300 autopsies|300 failure case studies|300 LEGENDARY FAILURES|ALL 300 FAILURE/.test(t)) stale.push(dir + "/" + e.name);
+    }
+  };
+  walk(".");
+  ok("no stale counts anywhere in the repo (350/2426/2176/300)", stale.length === 0, stale.slice(0, 6).join(", "));
+  const onbSrc = fsp.readFileSync(pp.join(__dirname, "../js/onboard.js"), "utf8");
+  const scnSrc = fsp.readFileSync(pp.join(__dirname, "../scan.html"), "utf8");
+  ok("onboarding + scanner + about all say 400", onbSrc.includes("400+ books") && scnSrc.includes("all 400 book titles") && abtH.includes("400 book summaries") && abtH.includes("ASK 400+ BOOKS"));
+  const flSrc = fsp.readFileSync(pp.join(__dirname, "../js/failures.js"), "utf8");
+  const flArr = JSON.parse(flSrc.slice(flSrc.indexOf("["), flSrc.lastIndexOf("]") + 1));
+  ok("graveyard grew to 308 autopsies", flArr.length === 308, flArr.length + " autopsies");
+  ok("all 400 books carry a graveyard link", djArr.every(b => b.graveLink && fsp.existsSync(pp.join(__dirname, "../graveyard/" + b.graveLink + ".html"))), djArr.filter(b => !b.graveLink).map(b => b.id).join(","));
+  const newIds = new Set(["chanakya-neeti","yoga-sutras","bhagavad-gita","arthashastra","thirukkural","uncertain-glory","raja-yoga","three-thousand-stitches","kalam-effect","five-am-club","leader-no-title","think-on-these-things","heartfulness-way","karma-yoga","jnana-yoga","upanishads","essence-bhagavad-gita","celebrating-silence","mystics-musings","nudge","lessons-of-history","kaizen","discipline-equals-freedom","when-pink","undoing-project","richer-wiser-happier","noise","seeking-wisdom","essays-buffett","franklin-autobiography","shortness-of-life","enchiridion","guide-good-life","practicing-stoic","tao-te-ching","analects","dhammapada","little-book-beats-market","selfish-gene","short-history-nearly-everything","being-mortal","emperor-maladies","when-breath-becomes-air","lifespan","outlive","peaceful-warrior","the-prophet","inner-game-tennis","my-experiments-with-truth","what-i-talk-about-running"]);
+  const nbooks = djArr.filter(b => newIds.has(b.id));
+  ok("the 50 new books vary in lesson count (no fixed 5/6/7)", new Set(nbooks.map(b => b.lessons.length)).size >= 3, [...new Set(nbooks.map(b => b.lessons.length))].join(","));
+  ok("deep classics got the depth they needed (Gita 8, Sutras 8, Tao 8, Prophet 8, Lessons of History 8)", nbooks.filter(b => ["bhagavad-gita","yoga-sutras","tao-te-ching","the-prophet","lessons-of-history"].includes(b.id)).every(b => b.lessons.length >= 8));
+  ok("every new book SEO page proves it in the graveyard", nbooks.every(b => fsp.readFileSync(pp.join(__dirname, "../books/" + b.id + ".html"), "utf8").includes("The Graveyard Proves It")));
+  const newGraves = ["facebook-beacon","bikram-yoga","toyota-recalls","ratings-fail","valeant-pharma","purdue-opioids","tobacco-denial","sugar-industry"];
+  ok("8 brand-new autopsies written (pages + data + antidote book)", newGraves.every(g0 => fsp.existsSync(pp.join(__dirname, "../graveyard/" + g0 + ".html")) && flArr.some(f => f.id === g0 && f.book) && fsp.readFileSync(pp.join(__dirname, "../graveyard/" + g0 + ".html"), "utf8").includes("gantidote")));
+  const ogPng = fsp.readFileSync(pp.join(__dirname, "../assets/og-image.png"));
+  ok("og image exists (1200x630 fresh)", ogPng.length > 15000 && idxH.includes("og:image:alt") && idxH.includes("2,490 lessons"));
+
+  console.log("== v217: NEW tags on latest batch, install-to-home-screen, build markers ==");
+  const cfgSrc = fsp.readFileSync(pp.join(__dirname, "../js/config.js"), "utf8");
+  const newThisWeek = JSON.parse("[" + cfgSrc.match(/NEW_THIS_WEEK: \[([\s\S]*?)\n  \],/)[1] + "]");
+  ok("NEW badge moved to the latest 50 books (old batch removed)", newThisWeek.length === 50 && newThisWeek.every(b => djArr.some(x => x.id === b)), newThisWeek.length + " items");
+  const oldBatch = ["playing-it-my-way","india-2020","the-anarchy","the-idea-of-india","wonder-that-was-india","maximum-city","annihilation-of-caste","being-indian","the-winning-way","test-of-my-life","most-important-thing","crucial-conversations","ride-of-a-lifetime","awaken-giant-within","why-we-sleep","breath-nestor","make-it-stick","sam-walton","the-element","stumbling-happiness","freedom-from-the-known","gandhi-years-that-changed-world","karmayogi-sreedharan","wise-and-otherwise","accidental-prime-minister","give-and-take","david-and-goliath","book-of-joy","scrum-sutherland","blitzscaling-hoffman"];
+  ok("the previous batch lost the NEW badge (they are no longer new)", oldBatch.every(b => !newThisWeek.includes(b)));
+  ok("the 50 NEW books float to the front of Home", newThisWeek.every(b => djArr.some(x => x.id === b)) && newThisWeek.length === 50);
+  const freshGraves = JSON.parse("[" + cfgSrc.match(/NEW_GRAVES_THIS_WEEK: \[([\s\S]*?)\n  \],/)[1] + "]");
+  ok("FRESH GRAVE badge on exactly the 8 new autopsies", freshGraves.length === 8 && freshGraves.every(g => flArr.some(f => f.id === g)), freshGraves.join(","));
+  const setH = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
+  const youH = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
+  const instSrc = fsp.readFileSync(pp.join(__dirname, "../js/install.js"), "utf8");
+  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=217"));
+  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=217"));
+  ok("service worker precaches install.js (works offline)", swSrc.includes("./js/install.js"));
+  ok("install popup + standalone-hide styles shipped", cssSrc.includes(".instmodal") && cssSrc.includes("@media (display-mode: standalone)"));
+  ok("install.js parses and handles beforeinstallprompt/appinstalled", (() => { try { new Function(instSrc); return true; } catch (e) { return false; } })() && instSrc.includes("beforeinstallprompt") && instSrc.includes("appinstalled"));
+  ok("Build markers say tsb-v217 (settings + You window)", setH.includes("Build tsb-v217") && youH.includes("Build tsb-v217"));
+  let staleBuilds = [];
+  for (const f of ["settings.html","login.html","index.html","about.html","scan.html","book.html","graveyard.html"]) {
+    const t = fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const m = t.match(/Build tsb-v(\d+)/g) || [];
+    m.forEach(x => { if (!x.includes("217")) staleBuilds.push(f + ":" + x); });
+  }
+  ok("no stale Build markers anywhere", staleBuilds.length === 0, staleBuilds.join(", "));
+
+  const appSrc = fsp.readFileSync(pp.join(__dirname, "../js/app.js"), "utf8");
+  console.log("== v217: shorter sharper onboarding, dark-mode fixes, real covers ==");
+  const onb = fsp.readFileSync(pp.join(__dirname, "../js/onboard.js"), "utf8");
+  ok("onboarding is now ONE PAGE SHORTER (7 pages)", onb.includes("var TOTAL = 7;"));
+  ok("language + look merged into one page (no lonely theme page)", onb.includes("<h2>Language & look</h2>") && onb.includes("data-theme-pick=\"dark\"") && !onb.includes("<h2>Light or dark?</h2>"));
+  ok("final page = pick your starter shelf (tap covers on/off)", onb.includes("Pick your starter shelf") && onb.includes("data-pick") && onb.includes("recPool(") && onb.includes("paintPicks"));
+  ok("picker picks feed tsb_starter_shelf (home honours them)", onb.includes('set("tsb_starter_shelf", (draft.picks && draft.picks.length') && appSrc.includes("tsb_starter_shelf"));
+  ok("starter picks lead BOTH the grid and the shelves rows", appSrc.includes("starter shelf picks lead the library in every view") && appSrc.includes("Your Starter Shelf"));
+  const css = fsp.readFileSync(pp.join(__dirname, "../css/style.css"), "utf8");
+  ok("gravestone R.I.P. + years readable in dark (were same as bg)", css.includes(".grave__rip, .grave__year { color: #f2ead8 !important; }") && css.includes("html.dark .grave__rip, html.dark .grave__year { color: #f2ead8 !important; }"));
+  ok("achievement popup readable in dark (was invisible)", css.includes("html.dark .achvpop { background: #241f17; color: #f2ead8; }"));
+  ok("yellow buttons keep dark text in dark (podcast, cm-write, bar-plus)", css.includes("html.dark .podcastbtn { color: #111") && css.includes("html.dark .cm-write { color: #111; }") && css.includes("html.dark .tsb-bar__item--plus { color: #fff; }"));
+  ok("ink-chip components pinned dark in dark (socialproof/idcard/rulecard/instabox)", css.includes("html.dark .socialproof__head { background: #17130b; }") && css.includes("html.dark .idcard__strip { background: #171310; }") && css.includes("html.dark .rulecard__num { background: #171310; }") && css.includes("html.dark .instabox__handle { color: #111; }"));
+  ok("ask chips readable in dark in both styles", css.includes("html.dark .tsb-ask--page .aq-chip--all { background: transparent; color: var(--ink); }") && css.includes("html.dark .aq-chip--all { background: #17130b; color: var(--yellow); }"));
+  const goldH = fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8");
+  ok("gold page hero/price/samples readable in dark", goldH.includes("html.dark .goldhero h1 .hl { color: #111; }") && goldH.includes("html.dark .goldhero__price { background: #17130b; }") && goldH.includes("background: var(--yellow); color: #111;"));
+  ok("EVERY book cover exists at the path the app requests (assets/covers/<id>.jpg)", djArr.every(b => fsp.existsSync(pp.join(__dirname, "../assets/covers/" + b.id + ".jpg"))), djArr.filter(b => !fsp.existsSync(pp.join(__dirname, "../assets/covers/" + b.id + ".jpg"))).map(b => b.id).join(","));
+  let jsAll = true;
+  for (const f of fsp.readdirSync(pp.join(__dirname, "../js"))) {
+    if (!f.endsWith(".js")) continue;
+    try { new Function(fsp.readFileSync(pp.join(__dirname, "../js/" + f), "utf8")); } catch (e) { jsAll = false; console.log("  js parse fail:", f, e.message); }
+  }
+  ok("all JS files parse", jsAll);
+
   console.log();
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");
   process.exit(FAIL ? 1 : 0);

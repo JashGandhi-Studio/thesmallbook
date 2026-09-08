@@ -1,9 +1,9 @@
 /* ============================================================
    THESMALLBOOK — 🎯 FIRST-VISIT ONBOARDING v3 (onboard.js)
-   Seven genuinely personalising steps — no repeated questions:
+   Six quick steps + a picker — one less page, sharper questions:
      1 · Welcome            2 · Why you read      3 · Your shelves
-     4 · Daily budget       5 · Reading style     6 · Language
-     7 · Theme + finish
+     4 · Daily budget       5 · Reading style     6 · Language & look
+     7 · Pick your starter shelf (tap covers on/off)
    The answers ACTUALLY tune the app:
      • primary shelf  → library opens pre-filtered to it (app.js)
      • reading style  → deep readers start fully expanded (book.js)
@@ -95,10 +95,10 @@
 
   var draft = get("tsb_onboard_draft", null) || { why: null, shelves: [], minutes: 10, style: null, lang: null, theme: null };
   var step = 0;
-  var TOTAL = 8;
+  var TOTAL = 7;
 
   /* ---------- the payoff: a starter shelf built from the answers ---------- */
-  function starterShelf() {
+  function starterShelf(maxPicks) {
     var pick = [], seen = {}, order = [];
     if (draft.why) order.push(draft.why);
     (draft.shelves || []).forEach(function (c) { if (order.indexOf(c) < 0) order.push(c); });
@@ -116,7 +116,8 @@
     });
     var idx = {};
     var added = true;
-    while (pick.length < 6 && added) {
+    var want = maxPicks || 6;
+    while (pick.length < want && added) {
       added = false;
       for (var i = 0; i < order.length && pick.length < 6; i++) {
         var c = order[i], pool = pools[c] || [];
@@ -127,8 +128,8 @@
         }
       }
     }
-    (window.BOOKS || []).forEach(function (b) { if (pick.length < 6 && !seen[b.id]) { seen[b.id] = 1; pick.push(b); } });
-    return pick.slice(0, 6);
+    (window.BOOKS || []).forEach(function (b) { if (pick.length < want && !seen[b.id]) { seen[b.id] = 1; pick.push(b); } });
+    return pick.slice(0, want);
   }
 
   function langList() {
@@ -148,6 +149,31 @@
   }
 
   /* ---------- step templates ---------- */
+  /* ---------- starter-shelf picker (v217) ---------- */
+  var recPoolCache = null;
+  function recPool() {
+    if (!recPoolCache) recPoolCache = starterShelf(12);
+    return recPoolCache;
+  }
+  function ensurePicks() {
+    var pool = recPool();
+    if (!draft.picks) {
+      draft.picks = [];
+      pool.slice(0, 6).forEach(function (b) { draft.picks.push(b.id); });
+    }
+    var valid = {};
+    (window.BOOKS || []).forEach(function (b) { valid[b.id] = 1; });
+    draft.picks = draft.picks.filter(function (id) { return valid[id]; });
+  }
+  function paintPicks() {
+    var c = body && body.querySelector("#obPickCtr");
+    if (c) c.textContent = "✓ " + (draft.picks || []).length + " on your shelf · tap covers to add or remove";
+    if (!body) return;
+    body.querySelectorAll("[data-pick]").forEach(function (b) {
+      b.classList.toggle("is-off", (draft.picks || []).indexOf(b.dataset.pick) < 0);
+    });
+  }
+
   function stepHtml(i) {
     switch (i) {
       case 0:
@@ -155,7 +181,7 @@
           '<div class="ob-logo">📕</div>' +
           '<h2>The<span>Small</span>Book</h2>' +
           '<p class="ob-tag">big books · small reads</p>' +
-          '<p class="ob-sub">350+ books, distilled into lessons you can use today. A few quick questions — and your starter shelf appears.</p>' +
+          '<p class="ob-sub">400+ books, distilled into lessons you can use today. A few quick questions — and your starter shelf appears.</p>' +
           '<button class="ob-cta" data-next>Let’s tune it for me →</button>' +
           "</div>";
       case 1:
@@ -187,31 +213,34 @@
           '<div class="ob-rows">' + rows(STYLES, "style", draft.style, true) + "</div>" +
           '<div class="ob-btns"><button class="ob-cta" data-next data-need="style">Continue →</button></div>';
       case 5:
-        return "<h2>Read in which language?</h2>" +
-          '<p class="ob-sub">Summaries, chat and audio all switch.</p>' +
+        return "<h2>Language & look</h2>" +
+          '<p class="ob-sub">Reading language — summaries, chat and audio switch instantly.</p>' +
           '<div class="ob-langs">' + langList().map(function (l) {
             var cur = draft.lang || ((window.TSB_LANG && TSB_LANG.get) ? TSB_LANG.get() : "en");
             return '<button class="ob-lang' + (l.code === cur ? " on" : "") + '" data-lang="' + l.code + '"><span>' + l.flag + "</span>" + l.name + "</button>";
           }).join("") + "</div>" +
-          '<div class="ob-btns"><button class="ob-cta" data-next>Continue →</button></div>';
-      case 6:
-        return "<h2>Light or dark?</h2>" +
-          '<p class="ob-sub">Flip it any time in Settings.</p>' +
+          '<p class="ob-sub ob-sub--mt" style="margin-top:14px;">And your vibe — flip any time in Settings:</p>' +
           '<div class="ob-rows">' +
             '<button class="ob-row' + (draft.theme === "light" ? " on" : "") + '" data-theme-pick="light"><span class="ic">☀️</span><span>Light<small>Paper & ink</small></span><span class="tick">✓</span></button>' +
             '<button class="ob-row' + (draft.theme === "dark" ? " on" : "") + '" data-theme-pick="dark"><span class="ic">🌙</span><span>Dark<small>Low-light reading</small></span><span class="tick">✓</span></button>' +
           "</div>" +
-          '<div class="ob-btns"><button class="ob-cta" data-next>See my shelf →</button></div>';
-      case 7:
-        return "<h2>Your starter shelf 🎁</h2>" +
-          '<p class="ob-sub">Hand-picked from your answers. Tap any cover — page one opens instantly.</p>' +
-          '<div class="ob-shelf">' + starterShelf().map(function (b, i) {
-            return '<button class="ob-book" data-book="' + b.id + '"><span class="ob-book__n">' + (i + 1) + "</span>" +
+          '<div class="ob-btns"><button class="ob-cta" data-next>Pick my books →</button></div>';
+      case 6:
+        ensurePicks(body);
+        return "<h2>Pick your starter shelf 🎁</h2>" +
+          '<p class="ob-sub">Chosen from your answers — tap a cover to keep it or drop it. These lead your Home.</p>' +
+          '<p class="ob-pickctr" id="obPickCtr">✓ ' + (draft.picks || []).length + " on your shelf · tap covers to add or remove</p>" +
+          '<div class="ob-shelf">' + recPool().map(function (b, i) {
+            var on = (draft.picks || []).indexOf(b.id) >= 0;
+            return '<button class="ob-book' + (on ? "" : " is-off") + '" data-pick="' + b.id + '">' +
+              '<span class="ob-book__n">' + (i + 1) + "</span>" +
+              '<span class="ob-book__pick">✓</span>' +
               '<img src="assets/covers/' + encodeURIComponent(b.id) + '.jpg" alt="" loading="lazy">' +
               '<span class="ob-book__t">' + b.title + "</span></button>";
           }).join("") + "</div>" +
-          '<p class="ob-shelfnote">This shelf also waits for you on Home.</p>' +
+          '<p class="ob-shelfnote">They wait for you on Home — tap any time to start reading.</p>' +
           '<div class="ob-btns"><button class="ob-cta" data-finish>Save & explore home →</button></div>';
+
     }
     return "";
   }
@@ -295,7 +324,7 @@
     set("tsb_read_style", draft.style || "steady");
     var lead = draft.why || draft.shelves[0];
     if (lead) set("tsb_ob_lead", lead);
-    try { set("tsb_starter_shelf", starterShelf().map(function (b) { return b.id; })); } catch (e) {}
+    try { set("tsb_starter_shelf", (draft.picks && draft.picks.length ? draft.picks : starterShelf().map(function (b) { return b.id; }))); } catch (e) {}
   }
 
   function finish() {
@@ -344,21 +373,24 @@
         return;
       }
       if (e.target.closest("[data-finish]")) { finish(); return; }
-      if ((t = e.target.closest("[data-book]"))) {
-        /* tap a cover on the starter shelf → save profile, open page one */
-        saveProfile();
-        dismiss(true);
-        location.href = "book.html?id=" + encodeURIComponent(t.getAttribute("data-book"));
+      if ((t = e.target.closest("[data-pick]"))) {
+        /* tap a cover → keep it on the starter shelf or drop it */
+        ensurePicks();
+        var id = t.getAttribute("data-pick");
+        var at = draft.picks.indexOf(id);
+        if (at >= 0) draft.picks.splice(at, 1); else draft.picks.push(id);
+        set("tsb_onboard_draft", draft);
+        paintPicks();
         return;
       }
       if (e.target.closest("[data-skip]")) { dismiss(true); return; }
       if (e.target.closest("[data-back]")) { goBack(); return; }
-      if ((t = e.target.closest("[data-why]"))) {
+      if ((t = e.target.closest("[data-why]"))) { recPoolCache = null;
         draft.why = t.getAttribute("data-why");
         body.querySelectorAll("[data-why]").forEach(function (b) { b.classList.toggle("on", b === t); });
         return;
       }
-      if ((t = e.target.closest("[data-shelf]"))) {
+      if ((t = e.target.closest("[data-shelf]"))) { recPoolCache = null;
         var c = t.getAttribute("data-shelf");
         var ix = draft.shelves.indexOf(c);
         if (ix >= 0) draft.shelves.splice(ix, 1); else draft.shelves.push(c);

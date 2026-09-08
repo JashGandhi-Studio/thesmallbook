@@ -2,7 +2,7 @@
 
 **Live repo:** [github.com/JashGandhi-Studio/thesmallbook](https://github.com/JashGandhi-Studio/thesmallbook) — ⭐ star it if the lessons helped you!
 
-**350 books · 2,176 lessons · 300 failure autopsies — free.**
+**400 books · 2,490 lessons · 308 failure autopsies — free.**
 
 **Big books. Small reads.** Every lesson from the world's greatest books — broken down chapter by chapter with real examples, killer quotes, and action steps. Skim it, understand it, apply it. No 300-page grind.
 

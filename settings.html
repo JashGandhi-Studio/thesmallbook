@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=213">
+  <link rel="stylesheet" href="css/style.css?v=217">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -120,7 +120,7 @@
       <h2>📈 YOUR READING</h2>
       <div class="progbar" data-progbar><em style="width:1%"></em></div>
       <p class="progtxt" data-progtxt></p>
-      <p class="sethint">Lessons you've finished across all 350 books — straight from your reader progress.</p>
+      <p class="sethint">Lessons you've finished across all 400 books — straight from your reader progress.</p>
     </section>
 
     <section class="setcard">
@@ -133,6 +133,14 @@
     </section>
 
     <section class="setcard">
+      <h2>📲 APP</h2>
+      <div class="setrow" data-installwrap>
+        <button class="setbtn" data-install>📲 Install this app to your home screen</button>
+      </div>
+      <p class="sethint">One tap and TheSmallBook opens like a real app — full screen, works offline, no browser bar.</p>
+    </section>
+
+    <section class="setcard">
       <h2>🧹 DATA</h2>
       <button class="setbtn" id="resetOnboard">🎯 Change preferences — re-tune my library</button>
       <button class="setbtn" data-repref>✨ Re-tune now (live, stay on this page)</button>
@@ -140,16 +148,17 @@
       <p class="sethint">Books, streaks and shelf stay untouched.</p>
     </section>
 
-    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v175.</p>
+    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v217.</p>
   </main>
 
-  <script src="js/prefs.js?v=213"></script>
-  <script src="js/lang.js?v=213"></script>
-  <script src="js/config.js?v=213"></script>
-  <script src="js/auth.js?v=213"></script>
-  <script src="js/sounds.js?v=213"></script>
-  <script src="js/community.js?v=213"></script>
-  <script src="js/bar.js?v=213" defer></script>
+  <script src="js/prefs.js?v=217"></script>
+  <script src="js/lang.js?v=217"></script>
+  <script src="js/config.js?v=217"></script>
+  <script src="js/install.js?v=217"></script>
+  <script src="js/auth.js?v=217"></script>
+  <script src="js/sounds.js?v=217"></script>
+  <script src="js/community.js?v=217"></script>
+  <script src="js/bar.js?v=217" defer></script>
   <script>
     (function () {
       /* theme */
@@ -269,7 +278,7 @@
   });
 })();
 </script>
-  <script src="js/onboard.js?v=213" defer></script>
+  <script src="js/onboard.js?v=217" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {
@@ -322,12 +331,12 @@
         var all = (window.TSB && TSB.progress && TSB.progress.all) ? TSB.progress.all() : {};
         var read = 0, books = 0;
         Object.keys(all).forEach(function (k) { var n = (all[k] || []).length; if (n) { books++; read += n; } });
-        var total = 2176, pct = Math.min(100, Math.round(read / total * 100));
+        var total = 2490, pct = Math.min(100, Math.round(read / total * 100));
         document.querySelectorAll("[data-progbar]").forEach(function (b) {
           if (b.firstElementChild) b.firstElementChild.style.width = Math.max(pct, 1) + "%";
         });
         document.querySelectorAll("[data-progtxt]").forEach(function (t) {
-          t.textContent = read + " of 2,176 lessons read · " + books + " book" + (books === 1 ? "" : "s") + " opened · " + (total - read) + " to go — keep stacking ✨";
+          t.textContent = read + " of 2,490 lessons read · " + books + " book" + (books === 1 ? "" : "s") + " opened · " + (total - read) + " to go — keep stacking ✨";
         });
       }
       paintProgress();

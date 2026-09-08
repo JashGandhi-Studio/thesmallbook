@@ -302,6 +302,13 @@
 
   function renderShelves(all) {
     // ❤️ Your shelf first (if any), then 🆕 new, then every category
+    /* 🎁 starter shelf picked during onboarding — leads Home */
+    let starter = [];
+    try { starter = JSON.parse(localStorage.getItem("tsb_starter_shelf")) || []; } catch (e) {}
+    if (starter.length) {
+      const sb = starter.map((id) => all.find((b) => b.id === id)).filter(Boolean);
+      if (sb.length) grid.appendChild(makeShelfRow("Your Starter Shelf", "🎁", sb, null));
+    }
     const favs = all.filter((b) => TSB.bookmarks.has(b.id));
     if (favs.length) grid.appendChild(makeShelfRow("My Shelf", "❤️", favs, "❤️ MY SHELF"));
     const fresh = all.filter((b) => isNew(b.id));
@@ -340,9 +347,18 @@
           /* 🎯 onboarding preferences float their shelves to the front */
           let prefs = [];
           try { prefs = JSON.parse(localStorage.getItem("tsb_interests")) || []; } catch (e) {}
-          if (!prefs.length) return curated;
-          return curated.filter((x) => prefs.indexOf(x.category) >= 0)
+          if (prefs.length) curated = curated.filter((x) => prefs.indexOf(x.category) >= 0)
             .concat(curated.filter((x) => prefs.indexOf(x.category) < 0));
+          /* 🎁 starter shelf picks lead the library in every view */
+          let starterIds = [];
+          try { starterIds = JSON.parse(localStorage.getItem("tsb_starter_shelf")) || []; } catch (e) {}
+          if (starterIds.length) {
+            const st = new Set(starterIds);
+            const sb = curated.filter((x) => st.has(x.id));
+            const rest = curated.filter((x) => !st.has(x.id));
+            if (sb.length) return sb.concat(rest);
+          }
+          return curated;
         }
     }
   }
