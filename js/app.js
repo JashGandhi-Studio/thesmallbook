@@ -345,20 +345,21 @@
           }
           const curated = [...inter, ...rest];
           /* 🎯 onboarding preferences float their shelves to the front */
+          let ordered = curated;
           let prefs = [];
           try { prefs = JSON.parse(localStorage.getItem("tsb_interests")) || []; } catch (e) {}
-          if (prefs.length) curated = curated.filter((x) => prefs.indexOf(x.category) >= 0)
+          if (prefs.length) ordered = curated.filter((x) => prefs.indexOf(x.category) >= 0)
             .concat(curated.filter((x) => prefs.indexOf(x.category) < 0));
           /* 🎁 starter shelf picks lead the library in every view */
           let starterIds = [];
           try { starterIds = JSON.parse(localStorage.getItem("tsb_starter_shelf")) || []; } catch (e) {}
           if (starterIds.length) {
             const st = new Set(starterIds);
-            const sb = curated.filter((x) => st.has(x.id));
-            const rest = curated.filter((x) => !st.has(x.id));
-            if (sb.length) return sb.concat(rest);
+            const sb = ordered.filter((x) => st.has(x.id));
+            const tail = ordered.filter((x) => !st.has(x.id));
+            if (sb.length) return sb.concat(tail);
           }
-          return curated;
+          return ordered;
         }
     }
   }

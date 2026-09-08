@@ -1,5 +1,5 @@
 /* ============================================================
-   TheSmallBook — 📲 INSTALL TO HOME SCREEN (v217)
+   TheSmallBook — 📲 INSTALL TO HOME SCREEN (v219)
    Shared by settings.html + the You window.
    - Captures the browser's beforeinstallprompt and shows a
      smooth popup with one-tap Install (Android / Chrome / Edge).

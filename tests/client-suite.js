@@ -320,10 +320,10 @@ const C = window.TSB_COMMUNITY;
   ok("og image + alt refreshed (400 books · 2,490 lessons)", idxH.includes("400 books · 2,490 lessons") && idxH.includes("assets/og-image.png"));
   ok("no stale counts on key files (350 books / 2,176 / 2176 / 2170)", !/350 books|2,176|2176|2170/.test(djSrc + idxH + cssSrc + lgSrc2 + bkSrc2));
   const swSrc = fsp.readFileSync(pp.join(__dirname, "../sw.js"), "utf8");
-  ok("service worker cache bumped to tsb-v217", swSrc.includes('tsb-v217'));
-  ok("key files ship ?v=217", idxH.includes("css/style.css?v=217") && lgSrc2.includes("v=217"));
+  ok("service worker cache bumped to tsb-v219", swSrc.includes('tsb-v219'));
+  ok("key files ship ?v=219", idxH.includes("css/style.css?v=219") && lgSrc2.includes("v=219"));
 
-  console.log("== v217: content depth, 400 everywhere, 8 new autopsies, graves on all books ==");
+  console.log("== v219: content depth, 400 everywhere, 8 new autopsies, graves on all books ==");
   // repo-wide stale scan (every html/js/md)
   let stale = [];
   const walk = (dir) => {
@@ -355,7 +355,7 @@ const C = window.TSB_COMMUNITY;
   const ogPng = fsp.readFileSync(pp.join(__dirname, "../assets/og-image.png"));
   ok("og image exists (1200x630 fresh)", ogPng.length > 15000 && idxH.includes("og:image:alt") && idxH.includes("2,490 lessons"));
 
-  console.log("== v217: NEW tags on latest batch, install-to-home-screen, build markers ==");
+  console.log("== v219: NEW tags on latest batch, install-to-home-screen, build markers ==");
   const cfgSrc = fsp.readFileSync(pp.join(__dirname, "../js/config.js"), "utf8");
   const newThisWeek = JSON.parse("[" + cfgSrc.match(/NEW_THIS_WEEK: \[([\s\S]*?)\n  \],/)[1] + "]");
   ok("NEW badge moved to the latest 50 books (old batch removed)", newThisWeek.length === 50 && newThisWeek.every(b => djArr.some(x => x.id === b)), newThisWeek.length + " items");
@@ -367,22 +367,22 @@ const C = window.TSB_COMMUNITY;
   const setH = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
   const youH = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
   const instSrc = fsp.readFileSync(pp.join(__dirname, "../js/install.js"), "utf8");
-  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=217"));
-  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=217"));
+  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=219"));
+  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=219"));
   ok("service worker precaches install.js (works offline)", swSrc.includes("./js/install.js"));
   ok("install popup + standalone-hide styles shipped", cssSrc.includes(".instmodal") && cssSrc.includes("@media (display-mode: standalone)"));
   ok("install.js parses and handles beforeinstallprompt/appinstalled", (() => { try { new Function(instSrc); return true; } catch (e) { return false; } })() && instSrc.includes("beforeinstallprompt") && instSrc.includes("appinstalled"));
-  ok("Build markers say tsb-v217 (settings + You window)", setH.includes("Build tsb-v217") && youH.includes("Build tsb-v217"));
+  ok("Build markers say tsb-v219 (settings + You window)", setH.includes("Build tsb-v219") && youH.includes("Build tsb-v219"));
   let staleBuilds = [];
   for (const f of ["settings.html","login.html","index.html","about.html","scan.html","book.html","graveyard.html"]) {
     const t = fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
     const m = t.match(/Build tsb-v(\d+)/g) || [];
-    m.forEach(x => { if (!x.includes("217")) staleBuilds.push(f + ":" + x); });
+    m.forEach(x => { if (!x.includes("219")) staleBuilds.push(f + ":" + x); });
   }
   ok("no stale Build markers anywhere", staleBuilds.length === 0, staleBuilds.join(", "));
 
   const appSrc = fsp.readFileSync(pp.join(__dirname, "../js/app.js"), "utf8");
-  console.log("== v217: shorter sharper onboarding, dark-mode fixes, real covers ==");
+  console.log("== v219: shorter sharper onboarding, dark-mode fixes, real covers ==");
   const onb = fsp.readFileSync(pp.join(__dirname, "../js/onboard.js"), "utf8");
   ok("onboarding is now ONE PAGE SHORTER (7 pages)", onb.includes("var TOTAL = 7;"));
   ok("language + look merged into one page (no lonely theme page)", onb.includes("<h2>Language & look</h2>") && onb.includes("data-theme-pick=\"dark\"") && !onb.includes("<h2>Light or dark?</h2>"));
@@ -404,6 +404,23 @@ const C = window.TSB_COMMUNITY;
     try { new Function(fsp.readFileSync(pp.join(__dirname, "../js/" + f), "utf8")); } catch (e) { jsAll = false; console.log("  js parse fail:", f, e.message); }
   }
   ok("all JS files parse", jsAll);
+
+  /* RUNTIME REGRESSION GUARD — the v217 home-page crash:
+     sortBooks assigned to a `const curated` when tsb_interests existed,
+     which threw "Assignment to constant variable" and blanked Home
+     (no books, no ✦ NEW, no streak bar). Must never come back. */
+  ok("sortBooks NEVER reassigns the const curated list", !appSrc.includes("curated = curated") && appSrc.includes("let ordered = curated"));
+  ok("starter picks lead via `ordered` (no const-clobber)", appSrc.includes("const sb = ordered.filter") && appSrc.includes("return ordered;"));
+  ok("home still builds the streak/level/badge bar", appSrc.includes("gamebar__chip") && appSrc.includes("day streak") && appSrc.includes("badges"));
+  ok("home renders NEW badges via isNew + card__new", appSrc.includes("isNew(b.id)") && appSrc.includes("card__new"));
+
+  console.log("== v219: guest gate verified (10 min / 6 books), gate dark-mode readable ==");
+  const gateSrc = fsp.readFileSync(pp.join(__dirname, "../js/gate.js"), "utf8");
+  ok("gate: guests get a grace period (~10 min) then one card", gateSrc.includes("GRACE_MS = 10 * 60 * 1000") && gateSrc.includes("READ_LIMIT = 6"));
+  ok("gate: offers a 5-more-minutes snooze and never on auth pages", gateSrc.includes("data-later") && /login\.html|settings\.html|scan\.html|404\.html/.test(gateSrc));
+  ok("gate: signed-in readers never see it", gateSrc.includes("if (signedIn()) return false;") && gateSrc.includes("tsb_auth_session"));
+  ok("gate message = the friendly free-forever stack card", gateSrc.includes("You’ve read a whole stack!") && gateSrc.includes("free forever") && gateSrc.includes("Sign in (10 seconds with Google)"));
+  ok("gate card readable in dark (headline was invisible: color == bg)", css.includes("html.dark .gate { background: #241f17; color: #f2ead8; }") && css.includes("html.dark .gate__cta { color: #111; }"));
 
   console.log();
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");

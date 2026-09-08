@@ -149,7 +149,7 @@
   }
 
   /* ---------- step templates ---------- */
-  /* ---------- starter-shelf picker (v217) ---------- */
+  /* ---------- starter-shelf picker (v219) ---------- */
   var recPoolCache = null;
   function recPool() {
     if (!recPoolCache) recPoolCache = starterShelf(12);

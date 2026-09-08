@@ -4994,8 +4994,9 @@ body.chatpage { padding-bottom: 0 !important; }
 .gate__cta:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
 .gate__later { background: none; border: none; color: #8f8a80; font-weight: 700; font-size: .82rem; cursor: pointer; text-decoration: underline; padding: 6px; }
 .gate__tiny { font-size: .68rem; color: #8f8a80; margin: 12px 0 0; }
-html.dark .gate { background: #241f17; color: var(--paper); }
+html.dark .gate { background: #241f17; color: #f2ead8; }
 html.dark .gate p, html.dark .gate__tiny { color: #b7b0a5; }
+html.dark .gate__cta { color: #111; }
 
 
 /* ============================================================
