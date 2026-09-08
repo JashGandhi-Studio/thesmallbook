@@ -466,7 +466,7 @@ const C = window.TSB_COMMUNITY;
   const writeH = fsp.readFileSync(pp.join(__dirname, "../write.html"), "utf8");
   const profH2 = fsp.readFileSync(pp.join(__dirname, "../profile.html"), "utf8");
   const dmH2 = fsp.readFileSync(pp.join(__dirname, "../dm.html"), "utf8");
-  const instSrc2 = fsp.readFileSync(pp.join(__dirname, "../js/install.js"), "utf8");
+  const installSrcV2 = fsp.readFileSync(pp.join(__dirname, "../js/install.js"), "utf8");
   const commSrc2 = fsp.readFileSync(pp.join(__dirname, "../js/community.js"), "utf8");
 
   /* 1) DELETE: post + likes + comments really gone; RLS-blocked path throws with SQL #10 */
@@ -570,6 +570,16 @@ const C = window.TSB_COMMUNITY;
   globalThis.TSB_AUTH.token = tokOld; store.tsb_auth_session = sessOld;
   const setH3 = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
   ok("v222: Settings has the one-tap upload test", setH3.includes('id="upDiag"') && setH3.includes("Test upload right now") && setH3.includes("Build tsb-v222"));
+  /* the WRITE page uploads died silently: fname() was called by every handler but
+     defined nowhere — cover/quote/video/audio upload never started. Regression-guard it: */
+  const writeH3 = fsp.readFileSync(pp.join(__dirname, "../write.html"), "utf8");
+  const fnameCalls = (writeH3.match(/\bfname\(/g) || []).length;
+  ok("v222: write.html defines fname (no more silent upload death)", writeH3.includes("function fname(inputId, labelId, f)") && fnameCalls >= 4, "calls=" + fnameCalls);
+  ok("v222: fname is defined BEFORE its first call on the page", (function () { var d = writeH3.indexOf("function fname("); var c = writeH3.indexOf("fname(\"wCover\""); return d >= 0 && c > d; })());
+  const installSrcV3 = fsp.readFileSync(pp.join(__dirname, "../js/install.js"), "utf8");
+  ok("v222: install popup self-heals with one reload when the native prompt is late", installSrcV3.includes("tsb_inst_reload") && installSrcV3.includes("location.reload()") && installSrcV3.includes("Add to Home Screen"));
+  const swSrcV3 = fsp.readFileSync(pp.join(__dirname, "../sw.js"), "utf8");
+  ok("v222: media cache never eats byte-range video requests",  swSrcV3.includes('e.request.headers.get("range")') &&  swSrcV3.includes("res.status === 200"));
   const docSrc2 = fsp.readFileSync(pp.join(__dirname, "../docs/SUPABASE-STEP-BY-STEP.md"), "utf8");
   ok("v222: docs SQL #3 v4 is schema-adaptive (detects owner_id vs owner)", docSrc2.includes("information_schema.columns") && docSrc2.includes("has_owner_id") && docSrc2.includes("tsb write storage") && docSrc2.includes("drop policy if exists \"auth write storage v2\""));
   ok("v222: docs no longer reference the vanished owner column in policies", !/and owner = auth\.uid\(\)/.test(docSrc2));

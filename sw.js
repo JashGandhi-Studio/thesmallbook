@@ -77,14 +77,18 @@ self.addEventListener("activate", (e) => {
 
 self.addEventListener("fetch", (e) => {
   const fu = new URL(e.request.url);
-  /* community media (covers / voice / avatars): cache-first = offline listening */
+  /* community media (covers / voice / avatars): cache-first = offline listening.
+     Byte-range requests (video seeking) always go to the network untouched —
+     caching partial 206 responses breaks playback (range headers are ignored
+     by Cache API matching). Only full 200 responses are cached. */
   if (fu.pathname.includes("/storage/v1/object/public/")) {
+    if (e.request.headers.get("range")) return;
     e.respondWith(
       caches.open(CACHE_VERSION + "-media").then(async (c) => {
         const hit = await c.match(e.request);
         if (hit) return hit;
         const res = await fetch(e.request);
-        if (res.ok) c.put(e.request, res.clone());
+        if (res.ok && res.status === 200) c.put(e.request, res.clone());
         return res;
       })
     );

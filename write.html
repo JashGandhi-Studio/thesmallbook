@@ -177,6 +177,16 @@
     });
 
     /* ---------- media ---------- */
+    /* v222: this helper was called by every upload handler but had been lost —
+       so cover/quote/video/audio uploads died before starting (no alert, no
+       upload). Now defined here, next to its callers. */
+    function fname(inputId, labelId, f) {
+      var lab = document.getElementById(labelId);
+      if (!lab) return;
+      if (!f) { lab.textContent = "No file chosen"; return; }
+      var nm = f.name || "file";
+      lab.textContent = "✓ " + (nm.length > 24 ? nm.slice(0, 22) + "…" : nm) + " · " + Math.max(1, Math.round(f.size / 1024)) + " KB";
+    }
     $("wCover").addEventListener("change", async function () {
       var f = this.files && this.files[0];
       fname("wCover", "wCoverName", f);

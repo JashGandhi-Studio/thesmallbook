@@ -104,10 +104,31 @@
             if (f) { f.hidden = false; go.textContent = "⬆️ Open Safari, then this button"; }
           }
         } catch (e) {}
+      } else if (isStandalone()) {
+        var fs2 = m.querySelector("[data-instfine]");
+        if (fs2) { fs2.hidden = false; go.textContent = "✅ Already installed — you're on it"; }
       } else {
-        var f2 = m.querySelector("[data-instfine]");
-        if (f2) f2.hidden = false;
-        go.textContent = "⬇️ Open the browser menu to install";
+        /* no native prompt yet. v222: if we haven't already, reload ONCE — Chrome only
+           offers beforeinstallprompt after the service worker controls the page, and
+           this page has just been saved/previewed. The reload makes it appear, and the
+           flag below auto-reopens this popup the moment the prompt arrives. */
+        var tried = false;
+        try { tried = !!sessionStorage.getItem("tsb_inst_reload"); } catch (e) {}
+        if (!tried) {
+          try { sessionStorage.setItem("tsb_inst_reload", "1"); } catch (e) {}
+          var h = m.querySelector("[data-instfine]");
+          if (h) { h.hidden = false; h.textContent = "Preparing the install sheet — reloading once…"; }
+          go.textContent = "⏳ One moment…";
+          setTimeout(function () { try { location.reload(); } catch (e) {} }, 500);
+        } else {
+          try { sessionStorage.removeItem("tsb_inst_reload"); } catch (e) {}
+          var f2 = m.querySelector("[data-instfine]");
+          if (f2) {
+            f2.hidden = false;
+            f2.textContent = "Your browser blocked the one-tap install (this happens in WhatsApp/Instagram/Telegram's built-in browser, private mode, or on http). Open this page in Chrome or Edge in a normal tab, then tap Install here. Chrome: menu ⋮ → Install app · Edge: menu ⋯ → Install app · iPhone: Share ⬆️ → Add to Home Screen.";
+          }
+          go.textContent = "📲 How to install (1 tap)";
+        }
       }
     });
   }
@@ -122,6 +143,14 @@
     ev.preventDefault();
     deferred = ev;
     promptUsed = false;
+    try {
+      /* v222: we reloaded to surface the prompt — reopen the popup automatically */
+      if (sessionStorage.getItem("tsb_inst_reload")) {
+        sessionStorage.removeItem("tsb_inst_reload");
+        openModal();
+        return;
+      }
+    } catch (e) {}
     if (document.getElementById("tsbInstallModal")) openModal();
   });
   window.addEventListener("appinstalled", function () {
