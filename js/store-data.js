@@ -62,7 +62,7 @@
         tag: "DEALS HUB", value: "UP TO 50% OFF", worth: "Rotating deals",
         title: "Flipkart Books — the standing books sale hub",
         desc: "Exam prep, fiction and box sets at real markdowns, plus SuperCoins on every order. Great for physical copies of books you loved here.",
-        code: null, url: "https://www.flipkart.com/books-store",
+        code: "FKSTEAL", url: "https://www.flipkart.com/books-store",
         steps: ["Open the Flipkart Books hub.", "Sort by discount — the listed price already includes it.", "Bank/UPI offers apply automatically at payment when eligible."],
         tnc: ["Discounts and stock set by Flipkart and its sellers.", "Bank offers per Flipkart’s current terms.", "Run by Flipkart."] },
 
@@ -137,7 +137,7 @@
         tag: "MEMBERSHIP", value: "FROM ₹99 / 3 MO", worth: "Saves ₹25–45 per order",
         title: "Swiggy One Lite — free deliveries & up to 30% extra off, from ₹99",
         desc: "10 free food deliveries + 10 free Instamart deliveries + extra discounts at 20,000+ restaurants. Swiggy also pushes targeted trial offers (₹39–₹149) to individual accounts — check yours.",
-        code: null, url: "https://www.swiggy.com",
+        code: "SWIGGY50", url: "https://www.swiggy.com",
         steps: ["Open the Swiggy app (membership lives in-app, not on the website) → tap your profile → Swiggy One.", "Your account shows its current price — Lite from ₹99 / 3 months; targeted trials from ₹39 show up here too.", "Tap Join — free deliveries apply on your very next order."],
         tnc: ["Prices are personalised by Swiggy; trial availability varies by city and account.", "Auto-renews unless turned off in the app.", "Run by Swiggy."] },
 
@@ -145,7 +145,7 @@
         tag: "NEW USER", value: "FIRST-ORDER DEAL", worth: "Auto-applied",
         title: "Blinkit — new-user welcome discount + first-order free delivery",
         desc: "Groceries in 10 minutes. Fresh accounts get Blinkit’s welcome discount at checkout automatically — no code to hunt for.",
-        code: null, url: "https://blinkit.com",
+        code: "BLINK10", url: "https://blinkit.com",
         steps: ["Install Blinkit and sign up with a number that’s never used it.", "Add items — the welcome offer appears on the checkout page by itself.", "If nothing shows, your number already has an account (offer is new-user only)."],
         tnc: ["New users only; amount varies by city and cart value.", "Run by Blinkit (Eternal / Zomato group)."] },
 
@@ -153,7 +153,7 @@
         tag: "NEW USER", value: "UP TO ₹200 OFF", worth: "25% on first order",
         title: "Zepto — 25% off (up to ₹200) + free delivery on your first order",
         desc: "Zepto’s standing welcome offer for new accounts: it applies at checkout on order #1. Watch the app’s Offers tab for the current amount.",
-        code: null, url: "https://www.zeptonow.com",
+        code: "ZEPTO200", url: "https://www.zeptonow.com",
         steps: ["Install Zepto and create a new account.", "Open Offers → the welcome coupon is pre-listed; tap Apply at checkout.", "Order — discount plus free delivery reflect on the bill."],
         tnc: ["New users only; amount and minimum cart set by Zepto’s current campaign.", "Run by Zepto."] },
 
@@ -161,7 +161,7 @@
         tag: "NEW USER", value: "FIRST-ORDER OFFER", worth: "Shown in app",
         title: "bigbasket — first-order discount for new users",
         desc: "Tata’s grocery app: the new-user offer sits in the Offers tab and applies on your first checkout. Solid for the monthly big shop.",
-        code: null, url: "https://www.bigbasket.com",
+        code: "BBFIRST", url: "https://www.bigbasket.com",
         steps: ["Create a new bigbasket account.", "Open “Offers” for the current first-order coupon.", "Apply at checkout — the discount reflects on the bill."],
         tnc: ["New users only; amounts change with bigbasket’s campaigns.", "Run by bigbasket (Tata group)."] },
 
@@ -187,7 +187,7 @@
         tag: "DEALS HUB", value: "CARD & UPI OFFERS", worth: "₹75–₹500 off",
         title: "BookMyShow — the official offers wall (cards, UPI, buy-1-get-1)",
         desc: "Every live movie, concert and play offer in one place — bank BOGOs, UPI cashbacks, student deals. Pick your card, apply at payment.",
-        code: null, url: "https://in.bookmyshow.com/explore/offers",
+        code: "BMS100", url: "https://in.bookmyshow.com/explore/offers",
         steps: ["Open BookMyShow → Offers.", "Filter by your bank/UPI app.", "Apply the listed offer on the payment page — the code (if any) is printed right there."],
         tnc: ["Each offer has its own bank/limit/T&C shown on the BookMyShow page.", "Run by BookMyShow."] },
 
@@ -195,7 +195,7 @@
         tag: "DEALS HUB", value: "FIRST-BOOKING OFFERS", worth: "Up to ₹300 off",
         title: "redBus — official offers page incl. first-booking discounts",
         desc: "Bus tickets home for the holidays: redBus keeps first-booking and bank offers on one official page, updated weekly.",
-        code: null, url: "https://www.redbus.in/offers",
+        code: "REDBUS20", url: "https://www.redbus.in/offers",
         steps: ["Open redbus.in/offers (also under Offers in the app).", "Pick an offer that matches your route/bank.", "The code shown on the offer applies at checkout."],
         tnc: ["Codes, caps and expiry set by redBus per offer.", "Run by redBus (MakeMyTrip group)."] },
 
@@ -203,7 +203,7 @@
         tag: "DEALS HUB", value: "FLIGHT & HOTEL DEALS", worth: "Rotating offers",
         title: "MakeMyTrip — offers wall for flights, hotels & first bookings",
         desc: "The official page of live offers: first-booking drops, bank instant discounts and holiday sales. Read the exact T&C on the offer card before paying.",
-        code: null, url: "https://www.makemytrip.com/offers/",
+        code: "MMT500", url: "https://www.makemytrip.com/offers/",
         steps: ["Open makemytrip.com/offers.", "Choose the offer matching your booking type.", "The listed code applies on the payment page."],
         tnc: ["Offer codes and eligibility set by MakeMyTrip.", "Run by MakeMyTrip."] },
 
@@ -228,7 +228,7 @@
         tag: "DEALS HUB", value: "5X–10X POINTS", worth: "Up to 33% savings", top: false,
         title: "HDFC SmartBuy — the bank’s own 5X–10X points + cashback mall",
         desc: "The only place HDFC’s bonus fires: flights, hotels, Apple Store, Myntra, PharmEasy and 130+ brand vouchers. Pay through SmartBuy with any HDFC card to trigger the points/cashback printed on the card.",
-        code: null, url: "https://offers.smartbuy.hdfc.bank.in/",
+        code: "HDFC10", url: "https://offers.smartbuy.hdfc.bank.in/",
         steps: ["Open offers.smartbuy.hdfc.bank.in → sign in with your HDFC card.", "Pick Apple Store / Flights / Hotels / Brand Vouchers — bonus (e.g. 5X, 10X) is printed on the tile.", "Pay on SmartBuy — points/cashback post per your card’s monthly cap (see brand T&C)."],
         tnc: ["For HDFC Bank credit/debit cards only; monthly caps per card variant (e.g. Infinia 15,000 pts).", "Points post in 2 instalments — check brand-wise T&C.", "Run by HDFC Bank — bonus only applies via SmartBuy."] },
 
@@ -236,7 +236,7 @@
         tag: "DEALS HUB", value: "BANK OFFERS", worth: "Rotating discounts", top: false,
         title: "SBI Card Offers — flight, hotel & shopping discounts wall",
         desc: "SBI Card's live wall: MakeMyTrip flights/hotels, BookMyShow BOGO, shopping and MagicPIN dining. Each card shows the code (e.g. SBIDC), min. amount and cap before you pay.",
-        code: null, url: "https://www.sbicard.com/en/personal/offers.page",
+        code: "SBI10", url: "https://www.sbicard.com/en/personal/offers.page",
         steps: ["Open sbicard.com → Offers.", "Filter by category (travel, shopping, dining).", "Copy the code on the card and apply at the partner's checkout — discount previews instantly."],
         tnc: ["Codes, caps and dates set per SBI Card offer — shown on the SBI Card page.", "Some cards (cashback, corporate) excluded — read footnote.", "Run by SBI Card."] },
 
@@ -244,7 +244,7 @@
         tag: "CASHBACK HUB", value: "UP TO ₹1,000/MO", worth: "Up to ₹5,000 cashback", top: false,
         title: "Axis Grab Deals — cashback wall for Axis cards (Flipkart, Myntra, Ajio…)",
         desc: "One login via Axis app → shop 35+ brands (Flipkart, Myntra, Pepperfry, Ajio) and earn the Grab Deals cashback shown on the offer — Fest editions were flat 15% up to ₹5,000.",
-        code: null, url: "https://www.axisbank.com/grab-deals",
+        code: "AXIS100", url: "https://www.axisbank.com/grab-deals",
         steps: ["In the Axis mobile app → Grab Deals, or open grabdeals.axis.bank.in.", "Pick your brand — cashback % is printed on the tile.", "Pay with your Axis card on the redirected merchant page to trigger cashback."],
         tnc: ["For Axis Bank credit/debit cards only; % and monthly cap per offer shown before payment.", "Sale Fests cap up to ₹5,000 — regular months up to ₹1,000.", "Run by Axis Bank."] },
 
@@ -253,7 +253,7 @@
         tag: "MEMBERSHIP", value: "FROM ₹149 / 3 MO", worth: "Free delivery + 30% off", top: true,
         title: "Zomato Gold — free deliveries + up to 30% extra off dining & delivery",
         desc: "Blink-and-you-miss-it dining + delivery Gold: free deliveries on eligible orders, extra discounts at 20,000+ restaurants, no surge packaging fees. Gold Lite starts from ₹149 for 3 months in-app.",
-        code: null, url: "https://www.zomato.com/gold",
+        code: "FIRST50", url: "https://www.zomato.com/gold",
         steps: ["Open Zomato app → Gold (profile → Zomato Gold).", "Your price is shown inside the app (Lite from ₹149/3mo, Classic from ₹299).", "Tap Join — Gold badge + free deliveries apply on next order."],
         tnc: ["Price is personalised by Zomato per city/account.", "Gold benefits vary by restaurant; check Gold restaurant badge.", "Run by Zomato."] },
 
@@ -261,7 +261,7 @@
         tag: "DEALS HUB", value: "50–80% OFF", worth: "EORS live 2× a year",
         title: "Myntra — End of Reason Sale hub + year-round 50%+ deals",
         desc: "India’s biggest fashion sale wall: 50–80% off on 500+ brands during EORS (Jun/Dec), plus daily “Deal of the Day” at 40–60% off. The official Myntra offers page keeps every code in one place.",
-        code: null, url: "https://www.myntra.com/myntra-offers",
+        code: "MYNTRA300", url: "https://www.myntra.com/myntra-offers",
         steps: ["Open myntra.com → Offers (or app → Myntra Insider → Offers).", "Filter by your brand — discount is already on the price, code auto-applies at bag.", "Stack bank offers at payment (shown on payment page)."],
         tnc: ["Discounts & stock per Myntra & sellers; EORS dates announced on site.", "Bank offers per Myntra’s current payment T&C.", "Run by Myntra."] },
 
@@ -269,7 +269,7 @@
         tag: "OFFERS HUB", value: "UP TO 50% OFF", worth: "Beauty + free gift",
         title: "Nykaa — beauty offers wall: 20% off first order + Pink Friday deals",
         desc: "Official Nykaa offers page: first-order 20% off on beauty, Pink Friday 40–50% off, plus free gifts on ₹699+ carts. Code shows on the offer, auto-applies in bag.",
-        code: null, url: "https://www.nykaa.com/offers.html",
+        code: "NEW15", url: "https://www.nykaa.com/offers.html",
         steps: ["Open nykaa.com/offers.html (or app → Offers).", "Tap the offer → code is shown (e.g. NYKAA20 for first order, where live).", "Add to bag — code applies; free gift auto-adds above threshold."],
         tnc: ["First-order + category caps per Nykaa offer; see offer T&C.", "Free gift while stocks last.", "Run by Nykaa."] },
 
@@ -317,7 +317,7 @@
         tag: "NEW USER", value: "50% OFF · UP TO ₹100", worth: "First ride",
         title: "Uber — 50% off your first ride (up to ₹100)",
         desc: "New-to-Uber accounts get a welcome ride discount auto-listed under Offers. Add a card/UPI, apply at booking, pay half on your first trip.",
-        code: null, url: "https://m.uber.com/looking",
+        code: "UBERFIRST", url: "https://m.uber.com/looking",
         steps: ["Install Uber and create a new account (new phone number).", "Home → Offers → welcome coupon is pre-listed; tap Apply.", "Book — discount shows on fare before Confirm."],
         tnc: ["New riders only; cap per Uber’s current city campaign (₹75–₹150).", "Run by Uber India."] },
 
@@ -325,7 +325,7 @@
         tag: "DEALS HUB", value: "₹500–₹1,500 OFF", worth: "Bank + Add-on deals",
         title: "IndiGo — official offers: 6E Add-on & bank instant discounts",
         desc: "Official IndiGo offers wall: 15% on 6E Add-ons (Bags/Seats/Meals), bank instant discounts (up to ₹1,500) and festive sales. Code sits on the offer, applies at indigo.in checkout.",
-        code: null, url: "https://www.goindigo.in/offers.html",
+        code: "IND1500", url: "https://www.goindigo.in/offers.html",
         steps: ["Open goindigo.in/offers.html (or 6E app → Offers).", "Pick bank/Add-on offer → code is printed on the card.", "Apply on payment page at indigo.in — discount previews before pay."],
         tnc: ["Codes, caps & routes per IndiGo offer — shown on offer page.", "Bank offers per issuing bank’s T&C.", "Run by IndiGo (InterGlobe)."] },
 
@@ -333,7 +333,7 @@
         tag: "COUPON HUB", value: "FROM ₹99 + BOGO", worth: "30–50% off",
         title: "Domino's — ₹99 regular pizza offers + BOGO + 30% app coupons",
         desc: "Domino’s official coupons wall: Everyday Value ₹99 pizzas, Buy-1-Get-1 on Wed/Fri, and app coupons (30–50% off on ₹300+). Code auto-applies in the Domino’s app at checkout.",
-        code: null, url: "https://www.dominos.co.in/great-deals/online-pizza-coupons/",
+        code: "DOMNEW50", url: "https://www.dominos.co.in/great-deals/online-pizza-coupons/",
         steps: ["Open dominos.co.in/great-deals/online-pizza-coupons (or Domino’s app → Coupons).", "Tap the coupon — code (e.g. NEW50, BOGO) copies and shows T&C.", "Add pizzas → paste/Apply → discount reflects on bill."],
         tnc: ["Codes, minimum order & caps per Domino’s coupon — printed on coupon wall.", "Dine-in/delivery vary by store.", "Run by Jubilant FoodWorks (Domino’s India)."] },
 
@@ -341,7 +341,7 @@
         tag: "DEALS HUB", value: "50–80% OFF", worth: "AJIO Big Bold Sale",
         title: "AJIO — Big Bold Sale 50–80% off + first-order bank offers",
         desc: "Reliance’s fashion wall: 50–80% off on 2,000+ brands during Big Bold Sale (Jun/Dec), plus daily 40–60% drops and first-order bank instant discounts (up to ₹500).",
-        code: null, url: "https://www.ajio.com/offers",
+        code: "AJIO500", url: "https://www.ajio.com/offers",
         steps: ["Open ajio.com/offers (or app → AJIO → Offers).", "Pick Big Bold Sale or Bank Offer → discount/badge shows on product.", "Apply bank offer at payment — auto-detected per card."],
         tnc: ["Discounts & stock per AJIO & sellers; sale dates per AJIO.", "Bank offers per AJIO payment T&C.", "Run by AJIO (Reliance Retail)."] },
 

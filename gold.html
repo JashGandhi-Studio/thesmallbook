@@ -11,7 +11,7 @@
   <meta property="og:description" content="400 books, 2637 lessons — human audio, deep dives & PDFs roll out to Gold first. ₹999/yr locks 33% off.">
   <meta property="og:url" content="https://thesmallbook.in/gold.html">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=227">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=230">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <script>
@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=227">
+  <link rel="stylesheet" href="css/style.css?v=230">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -114,15 +114,33 @@
     .goldmore{display:flex;justify-content:center;margin:-8px 0 28px}
     .goldmore button{border:3px solid var(--ink);background:var(--paper);font-family:"Archivo Black",sans-serif;font-size:12px;letter-spacing:.5px;padding:12px 18px;box-shadow:3px 3px 0 var(--ink);cursor:pointer}
     .goldmore button:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
-    /* sticky bottom pay bar — mobile only, premium black+gold */
-    .gold-sticky{position:fixed;left:0;right:0;bottom:0;z-index:90;background:#111;color:#fff;border-top:3px solid #ffc800;box-shadow:0 -6px 0 rgba(0,0,0,.25);padding:10px 14px calc(12px + env(safe-area-inset-bottom));display:none;align-items:center;justify-content:space-between;gap:12px}
+    /* sticky — floating pill, perfect on mobile notch */
+    .gold-sticky{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(560px,calc(100% - 24px));z-index:90;background:#111;color:#fff;border:3px solid #111;border-radius:18px;box-shadow:0 10px 28px rgba(0,0,0,.35), 6px 6px 0 #ffc800;padding:12px 14px;display:none;align-items:center;justify-content:space-between;gap:14px}
     .gold-sticky__price{font-family:"Archivo Black",sans-serif;font-size:15px;line-height:1;color:#ffc800}
     .gold-sticky__price s{font-size:11px;color:#888;margin-left:6px}
     .gold-sticky__price small{display:block;font-family:"Space Grotesk",sans-serif;font-size:10px;color:#c9c2b2;letter-spacing:.3px}
     .gold-sticky__urg{font-family:"Space Grotesk",sans-serif;font-size:10px;color:#ff8a3d;font-weight:700;margin-top:2px}
-    .gold-sticky__go{white-space:nowrap;border:3px solid #111;background:linear-gradient(135deg,#ffc800,#ff8a3d);color:#111;font-family:"Archivo Black",sans-serif;font-size:13px;padding:12px 18px;box-shadow:3px 3px 0 #fff;text-decoration:none;animation:goldPulse 1.8s infinite}
+    .gold-sticky__go{white-space:nowrap;border:3px solid #111;background:linear-gradient(135deg,#ffc800,#ff8a3d);color:#111;font-family:"Archivo Black",sans-serif;font-size:13px;padding:12px 18px;box-shadow:3px 3px 0 #fff;text-decoration:none;border-radius:12px;animation:goldPulse 1.8s infinite}
     @keyframes goldPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
     @media(max-width:680px){.gold-sticky{display:flex} html{scroll-behavior:smooth}}
+    /* gold member — calm, professional */
+    .gold-member{border-color:#111;box-shadow:8px 8px 0 #111;background:#fffdf5}
+    .gold-member h2{letter-spacing:.3px}
+    /* gold celebrate — professional, quiet, no confetti */
+    .gold-celebrate{position:fixed;inset:0;z-index:9999;background:rgba(17,17,17,.68);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:goldCeleIn .28s ease}
+    @keyframes goldCeleIn{from{opacity:0}to{opacity:1}}
+    .gold-celebrate__card{position:relative;background:#fffdf5;border:3.5px solid #111;box-shadow:8px 8px 0 #111;border-radius:20px;padding:28px 24px 22px;max-width:420px;width:90%;text-align:left;overflow:hidden}
+    .gold-celebrate__card::before{content:"";position:absolute;left:0;top:0;right:0;height:6px;background:linear-gradient(90deg,#ffc800,#ff8a3d,#ffc800)}
+    .gold-celebrate__check{width:44px;height:44px;border-radius:999px;background:#111;color:#ffc800;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;border:2.5px solid #111;box-shadow:3px 3px 0 #ffc800;margin-bottom:14px}
+    .gold-celebrate__card h2{font-family:"Archivo Black",sans-serif;font-size:20px;line-height:1.15;color:#111;margin:0 0 6px}
+    .gold-celebrate__card p{font-family:"Space Grotesk",sans-serif;font-size:13.5px;line-height:1.55;color:#333;margin:0}
+    .gold-celebrate__card .tiny{font-size:11.5px;color:#666;margin-top:8px;line-height:1.5}
+    .gold-celebrate__actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+    .gold-celebrate__actions a,.gold-celebrate__actions button{flex:1;min-width:140px;border:3px solid #111;font-family:"Archivo Black",sans-serif;font-size:12.5px;padding:12px 14px;cursor:pointer;box-shadow:3px 3px 0 #111;border-radius:12px;text-decoration:none;text-align:center;transition:transform .12s,box-shadow .12s}
+    .gold-celebrate__actions a{background:linear-gradient(135deg,#ffc800,#ff8a3d);color:#111}
+    .gold-celebrate__actions button{background:#111;color:#ffc800}
+    .gold-celebrate__actions a:active,.gold-celebrate__actions button:active{transform:translate(1.5px,1.5px);box-shadow:1.5px 1.5px 0 #111}
+    .gold-confetti{display:none !important}
     /* gold perks: horizontal swipe on mobile to avoid vertical scroll wall */
     @media(max-width:680px){.goldgrid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:14px;padding:4px 2px 14px;scrollbar-width:none}.goldgrid::-webkit-scrollbar{display:none}.goldgrid .goldcard{flex:0 0 82%;scroll-snap-align:center;min-height:210px}.goldmore{display:none}.goldgrid--collapsed .goldcard:nth-child(n+5){display:block;flex:0 0 82%}}
     .goldfoot { text-align: center; font-size: 12.5px; color: #777; line-height: 1.8; margin-top: 26px; }
@@ -244,6 +262,28 @@
       </div>
     </div>
 
+    <!-- Gold member — professional, quiet -->
+    <section class="goldjoin gold-member" id="goldMember" hidden>
+      <div style="display:flex;gap:14px;align-items:flex-start">
+        <div style="width:46px;height:46px;min-width:46px;border-radius:999px;background:#111;color:#ffc800;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;border:2.5px solid #111;box-shadow:3px 3px 0 #ffc800">✓</div>
+        <div>
+          <h2 style="color:#111;margin:0">You're Gold — welcome.</h2>
+          <p style="color:#333;margin:6px 0 0;font-size:14px;line-height:1.6">Your early-bird is locked at <b>₹999/yr</b>. Watermark off, Pro filters on, Store unlocked. New audio & PDFs come to you first as each ships.</p>
+        </div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+        <a href="store.html" style="background:linear-gradient(135deg,#ffc800,#ff8a3d);border:3px solid #111;box-shadow:3px 3px 0 #111;padding:12px 16px;font-family:Archivo Black;color:#111;text-decoration:none;border-radius:12px;flex:1;min-width:180px;text-align:center">OPEN STORE →</a>
+        <a href="write.html" style="background:#111;color:#ffc800;border:3px solid #111;box-shadow:3px 3px 0 #ffc800;padding:12px 16px;font-family:Archivo Black;text-decoration:none;border-radius:12px;flex:1;min-width:140px;text-align:center">WRITE WITH PRO →</a>
+      </div>
+      <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;font:700 11.5px Space Grotesk,sans-serif">
+        <span style="background:#fff;border:2px solid #111;padding:9px;border-radius:10px">✓ Watermark off</span>
+        <span style="background:#fff;border:2px solid #111;padding:9px;border-radius:10px">✓ Pro filters</span>
+        <span style="background:#fff;border:2px solid #111;padding:9px;border-radius:10px">✓ 40 perks live</span>
+        <span style="background:#111;color:#ffc800;border:2px solid #111;padding:9px;border-radius:10px">✓ Early audio & PDFs</span>
+      </div>
+      <p class="tiny" style="margin-top:10px;color:#666">Price stays ₹999 as long as Gold is active. Glad you're here.</p>
+    </section>
+    <div class="gold-confetti" id="goldConfetti" hidden></div>
     <section class="goldjoin" id="goldJoin">
       <h2>JOIN THE FIRST 500</h2>
       <p>Reserve your early-bird spot now. ₹999/yr, <b>33% off locked forever</b>, for as long as you keep Gold. No spam, cancel anytime.</p>
@@ -314,31 +354,65 @@
     <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
   </footer>
 
-  <script src="js/prefs.js?v=227"></script>
-  <script src="js/lang.js?v=227"></script>
-  <script src="js/config.js?v=227"></script>
-  <script src="js/auth.js?v=227"></script>
-  <script src="js/upi.js?v=227"></script>
-  <script src="js/gold.js?v=227"></script>
+  <script src="js/prefs.js?v=230"></script>
+  <script src="js/lang.js?v=230"></script>
+  <script src="js/config.js?v=230"></script>
+  <script src="js/auth.js?v=230"></script>
+  <script src="js/upi.js?v=230"></script>
+  <script src="js/gold.js?v=230"></script>
   <script>
     /* v225 — checksummed activation + founder forge */
     (function () {
       var msg = document.getElementById("gActMsg");
+      var member = document.getElementById("goldMember");
+      var join = document.getElementById("goldJoin");
+      var activateSec = document.querySelector('section.goldjoin[style*="var(--pink)"]');
+      var sticky = document.getElementById("goldSticky");
       function show() {
         if (!window.TSB_GOLD) return;
         var s = TSB_GOLD.state();
-        if (s.active) {
-          msg.innerHTML = "💛 <b>Gold is ON</b> on this device" + (s.until ? " until " + new Date(s.until).toLocaleDateString() : "") + " — watermark off, Pro filters on.";
+        var isOn = !!(s && s.active);
+        if (member) member.hidden = !isOn;
+        if (join) join.hidden = isOn;
+        if (activateSec) activateSec.hidden = isOn;
+        if (sticky) sticky.style.display = isOn ? "none" : "";
+        if (s && s.active) {
+          msg.innerHTML = "Gold is ON — you\u2019re all set" + (s.until ? " until " + new Date(s.until).toLocaleDateString() : "") + " — watermark off, Pro filters on.";
+          // also update hero trust line if needed
         }
+        return isOn;
+      }
+      // professional welcome — calm, no confetti
+      function celebrate() {
+        var overlay = document.createElement("div");
+        overlay.className = "gold-celebrate";
+        overlay.innerHTML = '<div class="gold-celebrate__card"><div class="gold-celebrate__check">✓</div><h2>Welcome to Gold.</h2><p>You\u2019re in — early-bird locked at \u20B999/yr. Watermark off, Pro filters on, Store unlocked. New audio & PDFs come to you first.</p><p class="tiny">Your price stays \u20B999 as long as Gold is active. Glad you\u2019re here.</p><div class="gold-celebrate__actions"><a href="store.html">OPEN STORE</a><button id="goldCeleClose" type="button">CONTINUE</button></div></div>';
+        document.body.appendChild(overlay);
+        // focus for keyboard
+        setTimeout(function(){
+          var btn = document.getElementById("goldCeleClose");
+          function closeCele(){ try{ overlay.style.opacity="0"; overlay.style.transition="opacity .22s"; setTimeout(function(){ overlay.remove(); }, 220);}catch(e){ overlay.remove(); } if(member) setTimeout(function(){ member.scrollIntoView({behavior:"smooth",block:"start"}); }, 260); }
+          if(btn) { btn.addEventListener("click", closeCele); btn.focus(); }
+          overlay.addEventListener("click", function(e){ if(e.target===overlay) closeCele(); });
+          document.addEventListener("keydown", function esc(e){ if(e.key==="Escape"){ closeCele(); document.removeEventListener("keydown", esc); }});
+          setTimeout(closeCele, 4200);
+        }, 60);
+        try{ if(navigator.vibrate) navigator.vibrate(12); }catch(e){}
       }
       show();
       var b = document.getElementById("gAct");
       if (b) b.addEventListener("click", function () {
         var r = TSB_GOLD.activate(document.getElementById("gCode").value);
-        msg.innerHTML = r.ok
-          ? "💛 <b>Welcome to Gold!</b> Watermark off, Pro filters on — thank you for keeping the library running."
-          : "⚠️ " + r.why;
-        if (r.ok) show();
+        if (r.ok) {
+          msg.innerHTML = "Gold active — you\u2019re all set. Early-bird locked at \u20B999/yr, Pro on, Store unlocked.";
+          show();
+          celebrate();
+        } else {
+          msg.innerHTML = "⚠️ " + r.why;
+          // shake
+          var inp = document.getElementById("gCode");
+          if(inp){ inp.style.transform="translateX(-6px)"; setTimeout(function(){ inp.style.transform=""; }, 180); }
+        }
       });
       /* founder forge — only visible when founder email signed in */
       var forgeSec = document.getElementById("gForge");
@@ -652,6 +726,6 @@
     // sticky: hide when join section is in view (already there)
     var sticky=document.getElementById("goldSticky");var join=document.getElementById("goldJoin");if(sticky&&join&&"IntersectionObserver"in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){sticky.style.transform=e.isIntersecting?"translateY(110%)":"translateY(0)";})},{threshold:.15});io.observe(join);}})();
   </script>
-  <script src="js/gate.js?v=227" defer></script>
+  <script src="js/gate.js?v=230" defer></script>
 </body>
 </html>

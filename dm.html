@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=227">
+  <link rel="stylesheet" href="css/style.css?v=230">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -68,14 +68,14 @@
     </div>
   </div>
 
-  <script src="js/prefs.js?v=227"></script>
-  <script src="js/lang.js?v=227"></script>
-  <script src="js/config.js?v=227"></script>
-  <script src="js/data.js?v=227"></script>
-  <script src="js/auth.js?v=227"></script>
-  <script src="js/sounds.js?v=227"></script>
-  <script src="js/founder.js?v=227"></script>
-  <script src="js/community.js?v=227"></script>
+  <script src="js/prefs.js?v=230"></script>
+  <script src="js/lang.js?v=230"></script>
+  <script src="js/config.js?v=230"></script>
+  <script src="js/data.js?v=230"></script>
+  <script src="js/auth.js?v=230"></script>
+  <script src="js/sounds.js?v=230"></script>
+  <script src="js/founder.js?v=230"></script>
+  <script src="js/community.js?v=230"></script>
   <script>
   (function () {
     "use strict";
@@ -167,13 +167,27 @@
       var nowLast = rows.length ? rows[rows.length - 1].id + ":" + rows.length : "";
       if (silent && nowLast && nowLast === lastId) return;
       msgs.setAttribute("data-last", nowLast);
+      // WhatsApp-style: a tick is blue if peer has read it OR has replied after it
+      function waRead(m, all) {
+        if (m.read) return true;
+        // if peer sent any message after this mine message, they must have seen it
+        try {
+          var mt = Date.parse(m.created_at);
+          for (var i = 0; i < all.length; i++) {
+            var n = all[i];
+            if (n.sender_id === uid && Date.parse(n.created_at) > mt) return true;
+          }
+        } catch (e) {}
+        return false;
+      }
       msgs.innerHTML = rows.map(function (m) {
         var mineRow = m.sender_id === meId;
+        var isRead = mineRow ? waRead(m, rows) : false;
         return '<div class="dm-bub' + (mineRow ? " me" : "") + '" data-mid="' + m.id + '" data-mine="' + (mineRow ? 1 : 0) + '" data-body="' + C.esc(m.body) + '">' +
           (m.book_id ? bookCard(m.book_id) : "") +
           "<span>" + C.esc(m.body) + "</span>" +
           "<em>" + C.ago(m.created_at) + (m.edited_at ? " · edited" : "") + "</em>" +
-          (mineRow ? '<span class="dm-tick' + (m.read ? " read" : "") + '" title="' + (m.read ? "Read" : "Sent") + '">' + (m.read ? "✓✓" : "✓✓") + "</span>" : "") +
+          (mineRow ? '<span class="dm-tick' + (isRead ? " read" : "") + '" title="' + (isRead ? "Read" : "Sent") + '">' + "✓✓" + "</span>" : "") +
         "</div>";
       }).join("") || '<div class="cm-empty cm-empty--sm">Say hello 👋</div>';
       msgs.scrollTop = msgs.scrollHeight;
@@ -215,8 +229,20 @@
         var fresh = await C.threadWith(uid, 60);
         /* v223: per-message receipts — a tick turns blue only when ITS
            message was actually read by the other person. */
+        // WhatsApp-style poll: blue if read OR peer replied after
         fresh.forEach(function (m) {
-          if (m.sender_id !== meId || !m.read) return;
+          if (m.sender_id !== meId) return;
+          var alreadyRead = !!m.read;
+          if (!alreadyRead) {
+            try {
+              var mt = Date.parse(m.created_at);
+              for (var i = 0; i < fresh.length; i++) {
+                var n = fresh[i];
+                if (n.sender_id === uid && Date.parse(n.created_at) > mt) { alreadyRead = true; break; }
+              }
+            } catch (e) {}
+          }
+          if (!alreadyRead) return;
           var t = msgs.querySelector('.dm-bub[data-mid="' + m.id + '"] .dm-tick');
           if (t) { t.classList.add("read"); t.title = "Read"; }
         });
@@ -335,6 +361,6 @@
     });
   })();
   </script>
-  <script src="js/bar.js?v=227" defer></script>
+  <script src="js/bar.js?v=230" defer></script>
 </body>
 </html>

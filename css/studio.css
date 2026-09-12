@@ -58,3 +58,8 @@
 .cm-prev{cursor:pointer;border-radius:12px;transition:transform .15s,box-shadow .15s}
 .cm-prev:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #111}
 .stu-toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:99999;background:#111;color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;padding:12px 18px;border:3px solid #fff;box-shadow:5px 5px 0 #ffc800;max-width:88vw;text-align:center;border-radius:12px}
+
+/* v228 — FREE ratio + fonts + 12 bgs */
+.stu-quote--font-impact .q span{letter-spacing:.3px}
+.stu-quote--font-hand .q span{font-weight:700}
+.stu-bgchip{position:relative}
