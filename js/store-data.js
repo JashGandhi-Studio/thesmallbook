@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK — 🛍️ STORE DATA (store-data.js) · v225
+   THESMALLBOOK — 🛍️ STORE DATA (store-data.js) · v226
    Curated, LEGAL, official brand programs only: free trials,
    student plans, new-user offers, official deal hubs +
    Hidden Hubs (telecom + bank offer walls you already pay for).
@@ -246,7 +246,112 @@
         desc: "One login via Axis app → shop 35+ brands (Flipkart, Myntra, Pepperfry, Ajio) and earn the Grab Deals cashback shown on the offer — Fest editions were flat 15% up to ₹5,000.",
         code: null, url: "https://www.axisbank.com/grab-deals",
         steps: ["In the Axis mobile app → Grab Deals, or open grabdeals.axis.bank.in.", "Pick your brand — cashback % is printed on the tile.", "Pay with your Axis card on the redirected merchant page to trigger cashback."],
-        tnc: ["For Axis Bank credit/debit cards only; % and monthly cap per offer shown before payment.", "Sale Fests cap up to ₹5,000 — regular months up to ₹1,000.", "Run by Axis Bank."] }
+        tnc: ["For Axis Bank credit/debit cards only; % and monthly cap per offer shown before payment.", "Sale Fests cap up to ₹5,000 — regular months up to ₹1,000.", "Run by Axis Bank."] },
+
+      /* ───────────── 🆕 NEW — high-value, code/GO wall (Sep 2026) ───────────── */
+      { id: "zomato-gold", brand: "Zomato Gold", cat: "food", logo: "zomato.svg", bg: "#ffffff",
+        tag: "MEMBERSHIP", value: "FROM ₹149 / 3 MO", worth: "Free delivery + 30% off", top: true,
+        title: "Zomato Gold — free deliveries + up to 30% extra off dining & delivery",
+        desc: "Blink-and-you-miss-it dining + delivery Gold: free deliveries on eligible orders, extra discounts at 20,000+ restaurants, no surge packaging fees. Gold Lite starts from ₹149 for 3 months in-app.",
+        code: null, url: "https://www.zomato.com/gold",
+        steps: ["Open Zomato app → Gold (profile → Zomato Gold).", "Your price is shown inside the app (Lite from ₹149/3mo, Classic from ₹299).", "Tap Join — Gold badge + free deliveries apply on next order."],
+        tnc: ["Price is personalised by Zomato per city/account.", "Gold benefits vary by restaurant; check Gold restaurant badge.", "Run by Zomato."] },
+
+      { id: "myntra-deals", brand: "Myntra", cat: "shopping", logo: "myntra.svg", bg: "#ffffff",
+        tag: "DEALS HUB", value: "50–80% OFF", worth: "EORS live 2× a year",
+        title: "Myntra — End of Reason Sale hub + year-round 50%+ deals",
+        desc: "India’s biggest fashion sale wall: 50–80% off on 500+ brands during EORS (Jun/Dec), plus daily “Deal of the Day” at 40–60% off. The official Myntra offers page keeps every code in one place.",
+        code: null, url: "https://www.myntra.com/myntra-offers",
+        steps: ["Open myntra.com → Offers (or app → Myntra Insider → Offers).", "Filter by your brand — discount is already on the price, code auto-applies at bag.", "Stack bank offers at payment (shown on payment page)."],
+        tnc: ["Discounts & stock per Myntra & sellers; EORS dates announced on site.", "Bank offers per Myntra’s current payment T&C.", "Run by Myntra."] },
+
+      { id: "nykaa-offers", brand: "Nykaa", cat: "shopping", logo: "nykaa.svg", bg: "#ffffff",
+        tag: "OFFERS HUB", value: "UP TO 50% OFF", worth: "Beauty + free gift",
+        title: "Nykaa — beauty offers wall: 20% off first order + Pink Friday deals",
+        desc: "Official Nykaa offers page: first-order 20% off on beauty, Pink Friday 40–50% off, plus free gifts on ₹699+ carts. Code shows on the offer, auto-applies in bag.",
+        code: null, url: "https://www.nykaa.com/offers.html",
+        steps: ["Open nykaa.com/offers.html (or app → Offers).", "Tap the offer → code is shown (e.g. NYKAA20 for first order, where live).", "Add to bag — code applies; free gift auto-adds above threshold."],
+        tnc: ["First-order + category caps per Nykaa offer; see offer T&C.", "Free gift while stocks last.", "Run by Nykaa."] },
+
+      { id: "hotstar-offers", brand: "JioHotstar", cat: "fun", logo: "hotstar.svg", bg: "#0f1b4d",
+        tag: "STREAMING", value: "FROM ₹149", worth: "IPL + HBO + Disney",
+        title: "JioHotstar — Super ₹149/3mo, Premium ₹299/mo: IPL, HBO, Disney",
+        desc: "The merged JioHotstar catalogue: IPL live, HBO Max, Disney, Marvel, plus Star shows. Super plan on mobile, Premium on 4 screens with 4K. Look for 3-month pack offers via Jio/Airtel bundles too.",
+        code: null, url: "https://www.hotstar.com/in/subscribe/get-started",
+        steps: ["Open hotstar.com/in/subscribe/get-started (or Hotstar app).", "Pick Super (₹149/3mo mobile) or Premium (₹299/mo all devices).", "Pay — watch on up to 2 (Super) or 4 (Premium) screens; cancel anytime."],
+        tnc: ["Prices per Hotstar’s current India plans; bundle offers via Jio/Airtel vary.", "Auto-renews unless cancelled.", "Run by JioHotstar."] },
+
+      { id: "prime-video-trial", brand: "Amazon Prime", cat: "fun", logo: "amazon.svg", bg: "#ffffff",
+        tag: "FREE TRIAL", value: "30 DAYS FREE", worth: "Worth ₹299",
+        title: "Amazon Prime — 30 days free: Prime Video + delivery + Music",
+        desc: "New Prime members get 30 days free: Prime Video (OTT), free 1-day delivery, Prime Music and Prime Reading. One trial per account, cancel before day 30 to pay nothing.",
+        code: null, url: "https://www.amazon.in/amazonprime",
+        steps: ["Open amazon.in/amazonprime signed into Amazon.", "Tap “Start 30-day free trial” (shown only if eligible).", "Enjoy Video + delivery + Music; set a reminder to cancel before day 30 if you don’t want ₹299/quarter or ₹1,499/year."],
+        tnc: ["New Prime members only; eligibility decided at Amazon checkout.", "Auto-renews at ₹299/quarter or ₹1,499/year unless cancelled.", "Run by Amazon India."] },
+
+      { id: "flipkart-axis", brand: "Flipkart Axis Bank", cat: "shopping", logo: "flipkart.png", bg: "#ffffff",
+        tag: "CASHBACK", value: "5% UNLIMITED", worth: "Up to ₹4,000/qtr",
+        title: "Flipkart Axis Bank Card — 5% unlimited cashback on Flipkart & Myntra",
+        desc: "The only Indian card with truly unlimited 5% cashback on Flipkart/Myntra spends. Plus 4% on preferred merchants, 1.5% everywhere else. Cashback posts as statement credit.",
+        code: null, url: "https://www.flipkart.com/flipkart-axis-bank-credit-card-store",
+        steps: ["Apply via Flipkart app → Axis Bank Card banner (instant approval for pre-approved).", "Use the card on Flipkart/Myntra — 5% cashback auto-posts.", "Pay full bill to avoid interest; cashback is uncapped."],
+        tnc: ["For Flipkart Axis Bank Credit Card holders only.", "5% uncapped on Flipkart/Myntra; other slabs per Axis T&C.", "Run by Axis Bank & Flipkart."] },
+
+      { id: "amazon-icici", brand: "Amazon Pay ICICI", cat: "shopping", logo: "amazon.svg", bg: "#ffffff",
+        tag: "CASHBACK", value: "5% BACK PRIME", worth: "Unlimited on Amazon",
+        title: "Amazon Pay ICICI Card — 5% back as Amazon Pay for Prime, 3% for others",
+        desc: "Prime members: flat 5% back on every Amazon India order as Amazon Pay balance, unlimited. Non-Prime 3%. Plus 2% on Amazon Pay partners, 1% elsewhere. Lifetime free.",
+        code: null, url: "https://www.amazon.in/amazonpay-icici-credit-card",
+        steps: ["Apply on amazon.in → Amazon Pay ICICI card page (ICICI approval).", "Link card to Amazon Pay and shop — 5% (Prime) or 3% auto-credits as Amazon Pay.", "Use Pay balance on next Amazon order or partner."],
+        tnc: ["For Amazon Pay ICICI Credit Card holders; Prime status checked by Amazon.", "Fuel surcharge waiver + slabs per ICICI T&C.", "Run by ICICI Bank & Amazon."] },
+
+      { id: "adobe-express", brand: "Adobe Express", cat: "learning", logo: "adobe.svg", bg: "#ffffff",
+        tag: "FREE TRIAL", value: "1 MONTH FREE", worth: "Worth ₹400",
+        title: "Adobe Express Premium — 1 month free, then 50% off for students",
+        desc: "Design like a pro: 100M stock images, background remover, Brand Kit and premium fonts. Free month for new users; students/teachers get 50%+ off after via Adobe Education.",
+        code: null, url: "https://www.adobe.com/express/",
+        steps: ["Open adobe.com/express → “Start free trial”.", "Sign in with Adobe ID; pick Premium plan.", "Students: after trial, verify via Adobe Education for discounted plan.", "Cancel before month ends to pay nothing."],
+        tnc: ["New Premium members only; ₹400/month after trial unless cancelled.", "Student discount via Adobe Education verification.", "Run by Adobe."] },
+
+      { id: "uber-first", brand: "Uber", cat: "travel", logo: "uber.svg", bg: "#000000",
+        tag: "NEW USER", value: "50% OFF · UP TO ₹100", worth: "First ride",
+        title: "Uber — 50% off your first ride (up to ₹100)",
+        desc: "New-to-Uber accounts get a welcome ride discount auto-listed under Offers. Add a card/UPI, apply at booking, pay half on your first trip.",
+        code: null, url: "https://m.uber.com/looking",
+        steps: ["Install Uber and create a new account (new phone number).", "Home → Offers → welcome coupon is pre-listed; tap Apply.", "Book — discount shows on fare before Confirm."],
+        tnc: ["New riders only; cap per Uber’s current city campaign (₹75–₹150).", "Run by Uber India."] },
+
+      { id: "indigo-offers", brand: "IndiGo", cat: "travel", logo: "indigo.svg", bg: "#ffffff",
+        tag: "DEALS HUB", value: "₹500–₹1,500 OFF", worth: "Bank + Add-on deals",
+        title: "IndiGo — official offers: 6E Add-on & bank instant discounts",
+        desc: "Official IndiGo offers wall: 15% on 6E Add-ons (Bags/Seats/Meals), bank instant discounts (up to ₹1,500) and festive sales. Code sits on the offer, applies at indigo.in checkout.",
+        code: null, url: "https://www.goindigo.in/offers.html",
+        steps: ["Open goindigo.in/offers.html (or 6E app → Offers).", "Pick bank/Add-on offer → code is printed on the card.", "Apply on payment page at indigo.in — discount previews before pay."],
+        tnc: ["Codes, caps & routes per IndiGo offer — shown on offer page.", "Bank offers per issuing bank’s T&C.", "Run by IndiGo (InterGlobe)."] },
+
+      { id: "dominos-offers", brand: "Domino's", cat: "food", logo: "dominos.svg", bg: "#ffffff",
+        tag: "COUPON HUB", value: "FROM ₹99 + BOGO", worth: "30–50% off",
+        title: "Domino's — ₹99 regular pizza offers + BOGO + 30% app coupons",
+        desc: "Domino’s official coupons wall: Everyday Value ₹99 pizzas, Buy-1-Get-1 on Wed/Fri, and app coupons (30–50% off on ₹300+). Code auto-applies in the Domino’s app at checkout.",
+        code: null, url: "https://www.dominos.co.in/great-deals/online-pizza-coupons/",
+        steps: ["Open dominos.co.in/great-deals/online-pizza-coupons (or Domino’s app → Coupons).", "Tap the coupon — code (e.g. NEW50, BOGO) copies and shows T&C.", "Add pizzas → paste/Apply → discount reflects on bill."],
+        tnc: ["Codes, minimum order & caps per Domino’s coupon — printed on coupon wall.", "Dine-in/delivery vary by store.", "Run by Jubilant FoodWorks (Domino’s India)."] },
+
+      { id: "ajio-deals", brand: "AJIO", cat: "shopping", logo: "ajio.svg", bg: "#111111",
+        tag: "DEALS HUB", value: "50–80% OFF", worth: "AJIO Big Bold Sale",
+        title: "AJIO — Big Bold Sale 50–80% off + first-order bank offers",
+        desc: "Reliance’s fashion wall: 50–80% off on 2,000+ brands during Big Bold Sale (Jun/Dec), plus daily 40–60% drops and first-order bank instant discounts (up to ₹500).",
+        code: null, url: "https://www.ajio.com/offers",
+        steps: ["Open ajio.com/offers (or app → AJIO → Offers).", "Pick Big Bold Sale or Bank Offer → discount/badge shows on product.", "Apply bank offer at payment — auto-detected per card."],
+        tnc: ["Discounts & stock per AJIO & sellers; sale dates per AJIO.", "Bank offers per AJIO payment T&C.", "Run by AJIO (Reliance Retail)."] },
+
+      { id: "skillshare-free", brand: "Skillshare", cat: "learning", logo: "skillshare.svg", bg: "#00ff99",
+        tag: "FREE TRIAL", value: "1 MONTH FREE", worth: "Worth ₹1,200",
+        title: "Skillshare — 1 month free: writing, design, film & photo classes",
+        desc: "1,000s of hands-on classes by published authors & creators: creative writing, storytelling, illustration. New members get 7–30 days free depending on campaign; cancel before renewal.",
+        code: null, url: "https://www.skillshare.com",
+        steps: ["Open skillshare.com → “Start free trial”.", "Sign up — trial length is shown at checkout (usually 1 month).", "Cancel from Settings → Payments before renewal to pay nothing."],
+        tnc: ["New members only; trial length per current Skillshare campaign (7–30 days).", "₹~800–₹1,200/year after trial unless cancelled.", "Run by Skillshare."] }
     ]
   };
 })();

@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=225">
+  <link rel="stylesheet" href="css/style.css?v=227">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,12 +31,13 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=225"></script>
-  <script src="js/lang.js?v=225"></script>
-  <script src="js/config.js?v=225"></script>
-  <script src="js/auth.js?v=225"></script>
-  <script src="js/sounds.js?v=225"></script>
-  <script src="js/community.js?v=225"></script>
+  <script src="js/prefs.js?v=227"></script>
+  <script src="js/lang.js?v=227"></script>
+  <script src="js/config.js?v=227"></script>
+  <script src="js/auth.js?v=227"></script>
+  <script src="js/sounds.js?v=227"></script>
+  <script src="js/founder.js?v=227"></script>
+  <script src="js/community.js?v=227"></script>
   <script>
   (function () {
     "use strict";
@@ -86,8 +87,9 @@
             '<div class="cm-profcard__top">' +
               avaHtml +
               '<div class="cm-profmain">' +
-                "<h1>" + C.esc(prof.name) + (C.isOfficial(pid) ? '<span class="cm-vtick">✔</span>' : "") + (mine ? " <i>(you)</i>" : "") + "</h1>" +
+                "<h1>" + C.esc(prof.name) + (C.isOfficial(pid) ? '<span class="cm-vtick">✔</span><span style="margin-left:6px;background:#111;color:#ffc800;border:2px solid #111;border-radius:999px;padding:2px 8px;font-family:Archivo Black,sans-serif;font-size:.60rem;letter-spacing:.5px;vertical-align:middle">FOUNDING</span>' : "") + (mine && window.TSB_GOLD && TSB_GOLD.isGold() && !C.isOfficial(pid) ? '<span style="margin-left:6px;background:linear-gradient(135deg,#ffd94d,#ffc800);border:2px solid #111;border-radius:999px;padding:2px 8px;font-family:Archivo Black,sans-serif;font-size:.60rem;letter-spacing:.5px;vertical-align:middle;color:#111">GOLD</span>' : "") + (mine ? " <i>(you)</i>" : "") + "</h1>" +
                 '<span class="cm-idchip">@' + pid.slice(0, 8) + "</span>" +
+                (mine ? '<div style="margin-top:6px;font:500 11px Space Grotesk,sans-serif;color:var(--muted);word-break:break-all;background:rgba(0,0,0,.04);padding:6px 8px;border-radius:10px;border:1px dashed rgba(0,0,0,.12)"><span style="opacity:.7">Full ID</span> <b id="founderIdBox" style="color:var(--ink)">' + pid + '</b>' + (C.isOfficial(pid) ? ' <span class="cm-vtick">✔</span> <span style="color:#0a7">verified — tick visible everywhere</span>' : ' <span style="opacity:.7">— send this full ID to dev to enable ✔ for everyone</span>') + ' <button onclick="try{navigator.clipboard.writeText(\'' + pid + '\')}catch(e){} ; this.textContent=\'✓ Copied\'; setTimeout(()=>this.textContent=\'Copy\',1500)\" style="margin-left:6px;font:700 10px Space Grotesk,sans-serif;padding:3px 7px;border-radius:999px;border:2px solid #1c1a17;background:#ffc800;cursor:pointer">Copy</button></div>' : "") +
               "</div>" +
             "</div>" +
             (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
@@ -429,7 +431,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=225" defer></script>
-  <script src="js/gate.js?v=225" defer></script>
+  <script src="js/bar.js?v=227" defer></script>
+  <script src="js/gate.js?v=227" defer></script>
 </body>
 </html>

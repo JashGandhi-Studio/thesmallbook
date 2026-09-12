@@ -868,7 +868,32 @@
   }
 
   var OFFICIAL_ID = "11111111-1111-1111-1111-111111111111";
-  function isOfficial(id) { return id === OFFICIAL_ID; }
+  var FOUNDER_EMAILS = ["acimotreyothy@gmail.com"];
+  var FOUNDER_IDS_KEY = "tsb_founder_ids";
+  function loadFounderIds(){ try{ return JSON.parse(localStorage.getItem(FOUNDER_IDS_KEY)||"[]"); }catch(e){ return []; } }
+  var FOUNDER_IDS = loadFounderIds();
+  function saveFounderId(id){ try{ if(!id||FOUNDER_IDS.indexOf(id)>=0) return; FOUNDER_IDS.push(id); localStorage.setItem(FOUNDER_IDS_KEY, JSON.stringify(FOUNDER_IDS)); try{ var ej=document.getElementById("founderIdBox"); if(ej) ej.textContent=id; }catch(e){} }catch(e){} }
+  // capture founder id the moment they sign in (works even before profiles table)
+  try{
+    var _mu = null; try{ _mu = (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) || JSON.parse(localStorage.getItem("tsb_auth_session")||"null")?.user || null; }catch(e){}
+    if(_mu && _mu.email && FOUNDER_EMAILS.indexOf(String(_mu.email).toLowerCase())>=0) saveFounderId(_mu.id);
+  }catch(e){}
+  // also watch for future sign-ins
+  try{ window.addEventListener("tsb:auth", function(){ try{ var u2=me(); if(u2&&FOUNDER_EMAILS.indexOf(String(u2.email||"").toLowerCase())>=0) saveFounderId(u2.id); }catch(e){} }); }catch(e){}
+  function isOfficial(id){
+    if(id===OFFICIAL_ID) return true;
+    try{ if(FOUNDER_IDS.indexOf(id)>=0) return true; }catch(e){}
+    try{
+      var u=me();
+      if(u && FOUNDER_EMAILS.indexOf(String(u.email||"").toLowerCase())>=0 && u.id===id){
+        saveFounderId(id);
+        return true;
+      }
+      // also check static window list (set by founder.js if you hardcode the id later)
+      if(window.TSB_FOUNDER_IDS && window.TSB_FOUNDER_IDS.indexOf(id)>=0) return true;
+    }catch(e){}
+    return false;
+  }
   var OFFICIAL_AVATAR = "data:image/svg+xml," + encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">' +
     '<rect width="96" height="96" rx="20" fill="#ffc800"/>' +

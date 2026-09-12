@@ -349,7 +349,7 @@
     root.className = "stu-wrap";
     root.innerHTML =
       '<div class="stu-sheet">' +
-        '<div class="stu-top"><b>🎨 CARD STUDIO</b><button class="stu-x" id="stuX">✕</button></div>' +
+        '<div class="stu-top"><b>🎨 CARD STUDIO<small>PRO-GRADE • 4 ratios • 6 filters • drag to reframe</small></b><button class="stu-x" id="stuX">✕</button></div>' +
         '<div class="stu-prevwrap"><div class="stu-prev" id="stuPrev">' +
           '<img id="stuImg" alt="">' +
           '<div class="stu-scrim" id="stuScrim"></div>' +
@@ -401,15 +401,35 @@
     $("stuQuoteTa").value = S.quote;
     $("stuBy").value = S.byline;
 
-    img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = function () {
-      /* vertical photo? default to the story ratio it was made for */
-      if (img.naturalHeight > img.naturalWidth * 1.2) S.ratio = "9:16";
-      buildControls(); bindDrag(); layoutPreview();
-    };
-    img.onerror = function () { toast("❌ Couldn't load that image"); close(); };
-    img.src = cfg.src;
+    var _corsFailed = false;
+    function _load(src, useCors){
+      img = new Image();
+      if(useCors) img.crossOrigin = "anonymous";
+      img.onload = function () {
+        if (img.naturalHeight > img.naturalWidth * 1.2) S.ratio = "9:16";
+        buildControls(); bindDrag(); layoutPreview();
+        if(_corsFailed) toast("⚠️ Preview only — re-upload the photo on this page for a clean export (original link blocked).");
+      };
+      img.onerror = function(){
+        if(useCors && /^https?:/.test(src)){
+          _corsFailed = true;
+          _load(src, false);
+          return;
+        }
+        toast("❌ Couldn't load that image");
+        close();
+      };
+      img.src = src;
+    }
+    // Prefer fetch→blob for remote URLs to avoid canvas taint when Supabase CORS allows it
+    if(/^https?:\/\//.test(cfg.src) && !/^blob:/.test(cfg.src) && !/^data:/.test(cfg.src)){
+      fetch(cfg.src, {mode:"cors", credentials:"omit"}).then(function(r){ if(!r.ok) throw new Error("bad"); return r.blob(); }).then(function(b){
+        var u = URL.createObjectURL(b);
+        _load(u, false);
+      }).catch(function(){ _load(cfg.src, true); });
+    } else {
+      _load(cfg.src, true);
+    }
     window.addEventListener("resize", layoutPreview);
   }
 

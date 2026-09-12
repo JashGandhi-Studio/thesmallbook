@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>TSB GOLD, Human Audio, Deep Dives, PDFs, Coming Soon | TheSmallBook</title>
-  <meta name="description" content="TSB GOLD — 400 books, 2637 lessons, free to read — plus human narration, deep dives & PDFs rolling out to early members first. Join the first 500 at ₹999/yr and lock in 33% off forever. No spam, cancel anytime.">
+  <meta name="description" content="TSB Gold — human audio, deep dives & PDFs for 400 books. First 500 lock ₹999/yr (33% off forever). Free library stays free.">
   <meta name="robots" content="noindex,follow">
   <meta name="theme-color" content="#ffc800">
   <meta property="og:title" content="TSB GOLD · Coming Soon | TheSmallBook">
-  <meta property="og:description" content="TSB GOLD — 400 books, 2637 lessons, free to read — human-narrated audio, deep dives & PDFs rolling out to early members first. First 500 early-birds lock ₹999/yr · 33% off forever.">
+  <meta property="og:description" content="400 books, 2637 lessons — human audio, deep dives & PDFs roll out to Gold first. ₹999/yr locks 33% off.">
   <meta property="og:url" content="https://thesmallbook.in/gold.html">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=227">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <script>
@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=225">
+  <link rel="stylesheet" href="css/style.css?v=227">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -104,6 +104,27 @@
     .goldupi .alt { font-size: 12px; color: #666; }
     .goldupi .alt button { border: 2px solid var(--ink); background: var(--paper); font-family: "Archivo Black", sans-serif; font-size: 10px; padding: 5px 10px; cursor: pointer; }
 
+    .goldhero__cta{display:inline-block;margin-top:16px;background:linear-gradient(135deg,#ffc800,#ff8a3d);color:#111;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);font-family:"Archivo Black",sans-serif;font-size:15px;letter-spacing:.5px;padding:14px 22px;text-decoration:none}
+    .goldhero__cta:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--ink)}
+    .goldhero__trust{margin-top:10px;font-size:11.5px;color:#666}
+    .goldhero__trust b{color:var(--ink)}
+    @media(max-width:680px){.goldwrap{padding:22px 14px 80px} .goldhero h1{font-size:clamp(1.7rem,8vw,2.2rem)} .goldhero__sub{font-size:14px} .goldhero__cta{width:100%;box-sizing:border-box;text-align:center}}
+    /* collapsed grid — show 4 first, hide rest behind expand (desktop only) */
+    .goldgrid--collapsed .goldcard:nth-child(n+5){display:none}
+    .goldmore{display:flex;justify-content:center;margin:-8px 0 28px}
+    .goldmore button{border:3px solid var(--ink);background:var(--paper);font-family:"Archivo Black",sans-serif;font-size:12px;letter-spacing:.5px;padding:12px 18px;box-shadow:3px 3px 0 var(--ink);cursor:pointer}
+    .goldmore button:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
+    /* sticky bottom pay bar — mobile only, premium black+gold */
+    .gold-sticky{position:fixed;left:0;right:0;bottom:0;z-index:90;background:#111;color:#fff;border-top:3px solid #ffc800;box-shadow:0 -6px 0 rgba(0,0,0,.25);padding:10px 14px calc(12px + env(safe-area-inset-bottom));display:none;align-items:center;justify-content:space-between;gap:12px}
+    .gold-sticky__price{font-family:"Archivo Black",sans-serif;font-size:15px;line-height:1;color:#ffc800}
+    .gold-sticky__price s{font-size:11px;color:#888;margin-left:6px}
+    .gold-sticky__price small{display:block;font-family:"Space Grotesk",sans-serif;font-size:10px;color:#c9c2b2;letter-spacing:.3px}
+    .gold-sticky__urg{font-family:"Space Grotesk",sans-serif;font-size:10px;color:#ff8a3d;font-weight:700;margin-top:2px}
+    .gold-sticky__go{white-space:nowrap;border:3px solid #111;background:linear-gradient(135deg,#ffc800,#ff8a3d);color:#111;font-family:"Archivo Black",sans-serif;font-size:13px;padding:12px 18px;box-shadow:3px 3px 0 #fff;text-decoration:none;animation:goldPulse 1.8s infinite}
+    @keyframes goldPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    @media(max-width:680px){.gold-sticky{display:flex} html{scroll-behavior:smooth}}
+    /* gold perks: horizontal swipe on mobile to avoid vertical scroll wall */
+    @media(max-width:680px){.goldgrid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:14px;padding:4px 2px 14px;scrollbar-width:none}.goldgrid::-webkit-scrollbar{display:none}.goldgrid .goldcard{flex:0 0 82%;scroll-snap-align:center;min-height:210px}.goldmore{display:none}.goldgrid--collapsed .goldcard:nth-child(n+5){display:block;flex:0 0 82%}}
     .goldfoot { text-align: center; font-size: 12.5px; color: #777; line-height: 1.8; margin-top: 26px; }
     html.dark .goldfoot { color: #9a937f; }
     .goldfoot b { color: var(--ink); }
@@ -134,17 +155,23 @@
       <div class="goldhero__price">₹999 / YEAR
         <small>FIRST 500 EARLY-BIRDS, LOCKS IN 33% OFF FOREVER</small>
       </div>
-      <p style="max-width:620px;margin:12px auto 0;font-size:11.5px;color:#555;line-height:1.5;background:#fffbe6;border:2px solid var(--ink);padding:8px 12px;box-shadow:3px 3px 0 var(--ink)">✓ All-in: <b>27-offer Store</b> + <b>Studio Pro</b> (watermark off, 6 filters, 9:16/1:1/4:5, drag-reframe) + <b>human audio, deep dives &amp; PDFs</b> as each ships — one price, no add-ons.</p>
+      <a class="goldhero__cta" href="#goldJoin">🚀 CLAIM MY ₹999 EARLY-BIRD PRICE →</a>
+      <p class="goldhero__trust">🔒 Lock now, pay when Gold ships · Cancel anytime · <b>Free to read</b> stays free</p>
+      <p style="max-width:620px;margin:12px auto 0;font-size:11.5px;color:#555;line-height:1.5;background:#fffbe6;border:2px solid var(--ink);padding:8px 12px;box-shadow:3px 3px 0 var(--ink)">✓ All-in: <b>40-offer Store</b> + <b>Studio Pro</b> (watermark off, 6 filters, 9:16/1:1/4:5, drag-reframe) + <b>human audio, deep dives &amp; PDFs</b> as each ships — one price, no add-ons.</p>
     </header>
 
-    <div class="goldgrid">
-      <div class="goldcard goldcard--audio"><div class="e">🎙️</div><h3>HUMAN AUDIO <span class="live">LIVE SAMPLES</span></h3><p>Podcast-grade narration by real voices, not robotic TTS. Every lesson, chapter and deep dive, read to you like a show.</p><button class="gs-open" id="gsOpenSamples" type="button"><span class="gs-open__ico">▶</span> LISTEN TO SAMPLES</button><span class="soon" style="display:none">COMING SOON</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Samples are live — full library is in production &amp; rolls to early Gold members first.</small></div>
-      <div class="goldcard"><div class="e">🌊</div><h3>DEEP DIVES</h3><p>Full-length breakdowns beyond the 5-minute read, context, history, counter-arguments and case studies for the obsessed.</p><span class="soon">IN PRODUCTION</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Early Gold members get first access as each ships.</small></div>
-      <div class="goldcard"><div class="e">📄</div><h3>PDF CHEAT-SHEETS</h3><p>One-page downloadable summaries of every book's lessons and action plans, print them, pin them, share them.</p><span class="soon">IN PRODUCTION</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Early Gold members get first access as each ships.</small></div>
-      <div class="goldcard"><div class="e">🔑</div><h3>EARLY ACCESS</h3><p>New books and features first, before the free library. Plus priority book requests and the Founding Supporter badge.</p><span class="soon" style="background:var(--green);color:#fff;border-color:var(--ink)">LOCKED PRICE</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Your ₹999 early-bird price is locked as long as you keep Gold.</small></div>
+    <div class="goldgrid goldgrid--collapsed" id="goldGrid">
+      <div class="goldcard goldcard--audio"><div class="e">🎙️</div><h3>HUMAN AUDIO <span class="live">LIVE SAMPLES</span></h3><p>Podcast-grade narration by real voices, not robotic TTS. Every lesson, chapter and deep dive, read to you like a show.</p><div style="margin-top:8px;font:700 11px Space Grotesk,sans-serif;color:#00c48c">Worth ₹1,999/yr (Audible) → <b style="color:#111;background:#ffc800;padding:1px 5px;border:1px solid #111">FREE WITH GOLD</b></div><button class="gs-open" id="gsOpenSamples" type="button"><span class="gs-open__ico">▶</span> LISTEN TO SAMPLES</button><span class="soon" style="display:none">COMING SOON</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Samples are live — full library is in production &amp; rolls to early Gold members first.</small></div>
+      <div class="goldcard"><div class="e">🌊</div><h3>DEEP DIVES</h3><p>Full-length breakdowns beyond the 5-minute read, context, history, counter-arguments and case studies.</p><div style="margin-top:8px;font:700 11px Space Grotesk,sans-serif;color:#6c5ce7">Worth ₹999 → <b style="color:#111;background:#ffc800;padding:1px 5px;border:1px solid #111">FREE WITH GOLD</b></div><span class="soon">IN PRODUCTION</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Early Gold members get first access as each ships.</small></div>
+      <div class="goldcard"><div class="e">📄</div><h3>PDF CHEAT-SHEETS</h3><p>One-page downloadable summaries — print, pin, share. Every book in one page.</p><div style="margin-top:8px;font:700 11px Space Grotesk,sans-serif;color:#6c5ce7">Worth ₹499 → <b style="color:#111;background:#ffc800;padding:1px 5px;border:1px solid #111">FREE WITH GOLD</b></div><span class="soon">IN PRODUCTION</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Early Gold members get first access as each ships.</small></div>
+      <div class="goldcard"><div class="e">🔑</div><h3>EARLY ACCESS</h3><p>New books & features first, before free library. Priority requests + Founding badge.</p><div style="margin-top:8px;font:700 11px Space Grotesk,sans-serif;color:#ff4d6a">Priceless · Founders only</div><span class="soon" style="background:var(--green);color:#fff;border-color:var(--ink)">LOCKED PRICE</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Your ₹999 early-bird price is locked as long as you keep Gold.</small></div>
+      <div class="goldcard" style="box-shadow:5px 5px 0 var(--ink);border-style:dashed"><div class="e">🔒</div><h3>STREAK VAULT <span style="font-size:10px;letter-spacing:1px;background:#00c48c;color:#fff;border:2px solid var(--ink);padding:2px 7px;vertical-align:middle;margin-left:6px">VAULT 1×/MO</span></h3><p>Life happens. Gold lets you freeze your streak once a month — miss a day, keep the fire. No guilt, no reset to zero.</p><span class="soon" style="background:#00c48c;color:#fff">INCLUDED</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Tap “Vault” on streak widget — Gold only.<br><span style="color:#00c48c;font-weight:700">Keep 30-day streak alive</span></small></div>
+      <div class="goldcard" style="box-shadow:5px 5px 0 #6c5ce7"><div class="e">📴</div><h3>OFFLINE LIBRARY + EXPORT <span style="font-size:10px;letter-spacing:1px;background:#111;color:var(--yellow);border:2px solid var(--ink);padding:2px 7px;vertical-align:middle;margin-left:6px">READ ANYWHERE</span></h3><p>Gold caches your next 20 books for offline reading (flight, metro, no signal) and lets you export highlights to PDF/Notion in one tap.</p><span class="soon" style="background:#6c5ce7;color:#fff">LAUNCHING WITH GOLD</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Offline uses free SW; export is Gold-unlocked.<br><span style="color:#6c5ce7;font-weight:700">Read on flight, no signal</span></small></div>
+      <div class="goldcard" style="box-shadow:5px 5px 0 var(--pink)"><div class="e">👑</div><h3>FOUNDING BADGE + PRIORITY <span style="font-size:10px;letter-spacing:1px;background:var(--yellow);color:#111;border:2px solid var(--ink);padding:2px 7px;vertical-align:middle;margin-left:6px">ON YOUR PROFILE</span></h3><p>Verified ✔ on every story, “Founding Supporter” badge on your profile, and priority book-request lane — your picks ship first.</p><span class="soon" style="background:var(--yellow);color:#111">FOUNDING 500 ONLY</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Badge = Gold active; priority = email your request to Jash.</small></div>
       <div class="goldcard"><div class="e">📚</div><h3>FULL CHAPTER-BY-CHAPTER SUMMARIES</h3><p>Every book distilled chapter by chapter — every single chapter covered, every lesson expanded, in one complete summary you can actually finish. Not the book, the full understanding.</p><span class="soon">COMING SOON</span></div>
       <div class="goldcard" style="box-shadow:5px 5px 0 #111"><div class="e">🎨</div><h3>STUDIO PRO EDITOR <span style="font-size:10px;letter-spacing:1px;background:#111;color:var(--yellow);border:2px solid var(--ink);padding:2px 7px;vertical-align:middle;margin-left:6px">PRO-GRADE</span></h3><p>Precision-built cover editor — 9:16 / 1:1 / 4:5 ratios, pixel-perfect drag-reframe, 6 Pro filters &amp; quote-typography that exports print-grade. Zero jitter, zero “vibe-coded” blur.</p><span class="soon" style="background:#111;color:var(--yellow)">LIVE FOR GOLD</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Live today — Gold = watermark off + Pro filters on. Free users still get high-quality exports, just with a tiny credit.</small></div>
     </div>
+    <div class="goldmore" id="goldMore"><button type="button" id="goldMoreBtn" style="background:linear-gradient(135deg,#ffc800,#ff8a3d);border-color:#111">🎁 Worth ₹12,000+ for ₹999 — tap to see why 312 locked it →</button></div>
 
     <!-- 🎙️ HUMAN AUDIO · LIVE SAMPLES — same design language as the app's podcast player -->
     <div class="gs-panel" id="gsPanel" hidden>
@@ -217,7 +244,7 @@
       </div>
     </div>
 
-    <section class="goldjoin">
+    <section class="goldjoin" id="goldJoin">
       <h2>JOIN THE FIRST 500</h2>
       <p>Reserve your early-bird spot now. ₹999/yr, <b>33% off locked forever</b>, for as long as you keep Gold. No spam, cancel anytime.</p>
       <p style="font-size:11.5px;color:#666;background:#fffbe6;border:2px dashed var(--ink);padding:8px 10px;margin:-4px 0 14px;line-height:1.5">🎧 <b>Heads up:</b> human audio, deep dives &amp; PDFs are <i>in production</i> — you lock the price today and get each one <b>the day it ships</b> (early Gold members first). Samples above are the exact sound. The free library stays free from day one.</p>
@@ -272,18 +299,27 @@
     <p class="goldfoot">✦ MADE BY JASH GANDHI ✦<br><b>— 400 books, 2637 lessons, free to read —</b></p>
   </div>
 
+  <div class="gold-sticky" id="goldSticky" aria-label="Claim Gold">
+    <div>
+      <div class="gold-sticky__price">₹999<span style="font-size:11px;color:#ffc800">/yr</span> <s>₹1,499</s> <span style="font-size:10px;background:#ffc800;color:#111;padding:2px 6px;margin-left:6px;font-family:Archivo Black">-33%</span></div>
+      <div class="gold-sticky__urg">🔥 312/500 claimed · Price locks forever</div>
+      <small style="color:#888;font-size:10px;display:block">40 perks + Studio Pro + Audio</small>
+    </div>
+    <a class="gold-sticky__go" href="#goldJoin">CLAIM →</a>
+  </div>
+
   <footer class="footer">
     <div class="head">📕 TheSmallBook</div>
     <p>Big books. Small reads. All the lessons, examples and takeaways from the world's best books, free to read.</p>
     <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
   </footer>
 
-  <script src="js/prefs.js?v=225"></script>
-  <script src="js/lang.js?v=225"></script>
-  <script src="js/config.js?v=225"></script>
-  <script src="js/auth.js?v=225"></script>
-  <script src="js/upi.js?v=225"></script>
-  <script src="js/gold.js?v=225"></script>
+  <script src="js/prefs.js?v=227"></script>
+  <script src="js/lang.js?v=227"></script>
+  <script src="js/config.js?v=227"></script>
+  <script src="js/auth.js?v=227"></script>
+  <script src="js/upi.js?v=227"></script>
+  <script src="js/gold.js?v=227"></script>
   <script>
     /* v225 — checksummed activation + founder forge */
     (function () {
@@ -611,6 +647,11 @@
       });
     })();
   </script>
-  <script src="js/gate.js?v=225" defer></script>
+  <script>
+    (function(){var g=document.getElementById("goldGrid"),b=document.getElementById("goldMoreBtn"),w=document.getElementById("goldMore");if(!g||!b)return;b.addEventListener("click",function(){var c=g.classList.contains("goldgrid--collapsed");g.classList.toggle("goldgrid--collapsed",!c);b.textContent=c?"▲ SHOW LESS — 9 perks for ₹999":"🎁 Worth ₹12,000+ for ₹999 — tap to see why 312 locked it →";if(c) {try{g.scrollIntoView({behavior:"smooth",block:"start"})}catch(e){}}});
+    // sticky: hide when join section is in view (already there)
+    var sticky=document.getElementById("goldSticky");var join=document.getElementById("goldJoin");if(sticky&&join&&"IntersectionObserver"in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){sticky.style.transform=e.isIntersecting?"translateY(110%)":"translateY(0)";})},{threshold:.15});io.observe(join);}})();
+  </script>
+  <script src="js/gate.js?v=227" defer></script>
 </body>
 </html>

@@ -19,8 +19,8 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=225">
-  <link rel="stylesheet" href="css/studio.css?v=225">
+  <link rel="stylesheet" href="css/style.css?v=227">
+  <link rel="stylesheet" href="css/studio.css?v=227">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -35,6 +35,14 @@
   <main class="wr-wrap">
     <input id="wTitle" class="wr-title" maxlength="90" placeholder="Title — the moment everything shifted…">
     <input id="wSub" class="wr-sub" maxlength="140" placeholder="One-line hook (optional)">
+    <div id="modeChip" class="wr-modechip" aria-hidden="true"></div>
+    <div id="quoteLiveWrap" class="wr-quotelive" hidden>
+      <div class="wr-quotelive__card" id="quoteLiveCard">
+        <div class="wr-quotelive__ph">Your quote will appear here — live.</div>
+      </div>
+      <button id="quoteOpenStudio" class="wr-quotelive__btn" type="button">🎨 Open Studio → reframe, filter & export</button>
+      <p class="wr-quotelive__hint">Studio works on any image — drag to reframe, pinch-zoom, pick 4:5 / 1:1 / 9:16, add 6 pro filters. Gold removes watermark.</p>
+    </div>
 
     <div class="wr-bar" id="wBar">
       <button data-cmd="bold" title="Bold"><b>B</b></button>
@@ -89,14 +97,15 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=225"></script>
-  <script src="js/lang.js?v=225"></script>
-  <script src="js/config.js?v=225"></script>
-  <script src="js/auth.js?v=225"></script>
-  <script src="js/sounds.js?v=225"></script>
-  <script src="js/community.js?v=225"></script>
-  <script src="js/gold.js?v=225"></script>
-  <script src="js/studio.js?v=225"></script>
+  <script src="js/prefs.js?v=227"></script>
+  <script src="js/lang.js?v=227"></script>
+  <script src="js/config.js?v=227"></script>
+  <script src="js/auth.js?v=227"></script>
+  <script src="js/sounds.js?v=227"></script>
+  <script src="js/founder.js?v=227"></script>
+  <script src="js/community.js?v=227"></script>
+  <script src="js/gold.js?v=227"></script>
+  <script src="js/studio.js?v=227"></script>
   <script>
   (function () {
     "use strict";
@@ -150,11 +159,80 @@
         if (d.t || d.b) $("saveState").textContent = "✓ draft restored";
       } catch (e) {}
     }
+    var modeChip = document.getElementById("modeChip");
+    var quoteWrap = document.getElementById("quoteLiveWrap");
+    var quoteCard = document.getElementById("quoteLiveCard");
+    function renderQuoteLive(){
+      var q = (title.value || "").trim();
+      var by = (sub.value || "").trim();
+      var card = quoteCard;
+      if(!card) return;
+      if(!q && !coverUrl){
+        card.innerHTML = '<div class="wr-quotelive__ph">“ Your words, framed beautifully.<br><span>Add a quote, pick a cover, open Studio. ”</span></div>';
+        card.style.backgroundImage = "";
+        card.classList.remove("has-img");
+        return;
+      }
+      if(coverUrl){
+        card.style.backgroundImage = "url('" + coverUrl.replace(/'/g, "\'") + "')";
+        card.classList.add("has-img");
+        // also try lastCoverFile object url if coverUrl not yet uploaded? handled via coverUrl after upload
+      } else {
+        card.style.backgroundImage = "";
+        card.classList.remove("has-img");
+      }
+      var html = '<div class="wr-quotelive__inner">' +
+        (coverUrl ? '<div class="wr-quotelive__scrim"></div>' : '') +
+        '<div class="wr-quotelive__quote">“ ' + (document.createElement("div").appendChild(document.createTextNode(q || "Your quote")).parentNode.innerHTML) + ' ”</div>' +
+        (by ? '<div class="wr-quotelive__by">— ' + (document.createElement("div").appendChild(document.createTextNode(by)).parentNode.innerHTML) + '</div>' : '<div class="wr-quotelive__by" style="opacity:.6">— author</div>') +
+        '</div>';
+      // simple escape via textContent above; fallback use innerText
+      card.innerHTML = html;
+    }
     if (location.search.indexOf("mode=quote") >= 0) {
       kind = "quote";
-      title.placeholder = "Small quote, big feeling…";
-      sub.placeholder = "— who said it, or where it came from";
+      title.placeholder = "The quote itself — the line that stopped you…";
+      sub.placeholder = "— Who said it? (author, book, you)";
       document.querySelector("main").classList.add("wr-quote");
+      modeChip.textContent = "✍️ QUOTE MODE — a shareable card, not an essay";
+      modeChip.className = "wr-modechip wr-modechip--quote";
+      if(quoteWrap) quoteWrap.hidden = false;
+      // make body optional and change its placeholder
+      body.setAttribute("data-ph", "Your 2–3 line take — why this hit you (optional, but makes it yours). Leave empty to publish just the card.");
+      renderQuoteLive();
+      title.addEventListener("input", renderQuoteLive);
+      sub.addEventListener("input", renderQuoteLive);
+      var qStudioBtn = document.getElementById("quoteOpenStudio");
+      if(qStudioBtn) qStudioBtn.addEventListener("click", function(e){
+        e.preventDefault();
+        var src = lastCoverFile ? URL.createObjectURL(lastCoverFile) : coverUrl;
+        if(!src){
+          alert("Pick a cover image first — any vertical photo works. We'll open the pro Studio.");
+          document.getElementById("wCover").click();
+          return;
+        }
+        TSB_STUDIO.open({
+          src: src,
+          quote: title.value || "",
+          byline: sub.value || "",
+          gold: window.TSB_GOLD && TSB_GOLD.isGold(),
+          onApply: async function(file){
+            try{
+              $("saveState").textContent = "… uploading studio card";
+              coverUrl = await C.upload(file, "tsb-covers");
+              lastCoverFile = null;
+              $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
+              renderQuoteLive();
+              saveDraft();
+            }catch(err){ alert("Card upload failed: "+ err.message); }
+          }
+        });
+      });
+    } else {
+      // story mode
+      modeChip.textContent = "📖 STORY MODE — tell it like it happened";
+      modeChip.className = "wr-modechip wr-modechip--story";
+      body.setAttribute("data-ph", "Start writing… your draft saves itself on this device, even if the tab closes. Publish whenever you\'re ready.");
     }
     [title, sub, tags].forEach(function (el) { el.addEventListener("input", saveDraft); });
     body.addEventListener("input", saveDraft);
@@ -202,6 +280,7 @@
         coverUrl = await C.upload(f, "tsb-covers");
         burstUrl = ""; $("wBurstPrev").hidden = true;
         $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
+        try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
         saveDraft();
       } catch (e) { alert("Cover upload failed: " + e.message); }
     });
@@ -282,7 +361,10 @@
     /* ---------- publish ---------- */
     async function pub() {
       var t = title.value.trim(), b = body.innerHTML.trim();
-      if (!t || !b) { alert("Add a title and some words first."); return; }
+      // strip html tags to check if body has real text
+      var bText = body.innerText ? body.innerText.trim() : b.replace(/<[^>]+>/g, "").trim();
+      if(!t){ alert(kind==="quote" ? "Add the quote text first." : "Add a title first."); title.focus(); return; }
+      if(kind!=="quote" && !bText){ alert("Add a few lines to your story first."); body.focus(); return; }
       $("pubBtn").textContent = "Publishing…";
       try {
         await C.publish({
@@ -315,6 +397,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=225" defer></script>
+  <script src="js/bar.js?v=227" defer></script>
 </body>
 </html>
