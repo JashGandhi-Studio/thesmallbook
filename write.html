@@ -19,7 +19,8 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=222">
+  <link rel="stylesheet" href="css/style.css?v=225">
+  <link rel="stylesheet" href="css/studio.css?v=225">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -60,7 +61,8 @@
     <section class="wr-meta">
       <label class="cm-lbl cm-lbl--file" for="wCover">Cover / quote image
         <span class="upbtn">📷 Choose image</span><span class="upname" id="wCoverName">No file chosen</span>
-        <input id="wCover" type="file" accept="image/*" hidden><img id="wCoverPrev" class="cm-prev" hidden alt=""></label>
+        <input id="wCover" type="file" accept="image/*" hidden><img id="wCoverPrev" class="cm-prev" hidden alt="">
+        <span class="st-hint">🎨 Vertical photo? Tap the preview after upload to reframe it, place the quote, add mini filters & pick the ratio.</span></label>
       <label class="cm-lbl cm-lbl--file" for="wBurst">🎬 Burst video — max 2 minutes
         <span class="upbtn">🎬 Choose video</span><span class="upname" id="wBurstName">No file chosen</span>
         <input id="wBurst" type="file" accept="video/*" hidden><video id="wBurstPrev" class="cm-prev" controls playsinline preload="metadata" hidden></video></label>
@@ -87,12 +89,14 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=222"></script>
-  <script src="js/lang.js?v=222"></script>
-  <script src="js/config.js?v=222"></script>
-  <script src="js/auth.js?v=222"></script>
-  <script src="js/sounds.js?v=222"></script>
-  <script src="js/community.js?v=222"></script>
+  <script src="js/prefs.js?v=225"></script>
+  <script src="js/lang.js?v=225"></script>
+  <script src="js/config.js?v=225"></script>
+  <script src="js/auth.js?v=225"></script>
+  <script src="js/sounds.js?v=225"></script>
+  <script src="js/community.js?v=225"></script>
+  <script src="js/gold.js?v=225"></script>
+  <script src="js/studio.js?v=225"></script>
   <script>
   (function () {
     "use strict";
@@ -101,6 +105,7 @@
     var $ = function (id) { return document.getElementById(id); };
     var title = $("wTitle"), sub = $("wSub"), body = $("wBody"), tags = $("wTags");
     var coverUrl = "", audioUrl = "", burstUrl = "", kind = "text";
+    var lastCoverFile = null; /* kept in memory so the Studio can reframe the ORIGINAL pixels */
     var mediaRec = null, chunks = [];
 
     document.getElementById("wrBack").addEventListener("click", function (e) {
@@ -191,6 +196,7 @@
       var f = this.files && this.files[0];
       fname("wCover", "wCoverName", f);
       if (!f) return;
+      lastCoverFile = f;
       $("saveState").textContent = "… uploading cover";
       try {
         coverUrl = await C.upload(f, "tsb-covers");
@@ -199,6 +205,28 @@
         saveDraft();
       } catch (e) { alert("Cover upload failed: " + e.message); }
     });
+    /* v223 STORY CARD STUDIO — tap the cover preview to edit layout, filters & ratio */
+    $("wCoverPrev").addEventListener("click", function (e) {
+      e.preventDefault(); /* stop the wrapping <label> from opening the file picker too */
+      var src = lastCoverFile ? URL.createObjectURL(lastCoverFile) : coverUrl;
+      if (!src) return;
+      TSB_STUDIO.open({
+        src: src,
+        quote: title.value || sub.value || "",
+        byline: "",
+        gold: window.TSB_GOLD && TSB_GOLD.isGold(),
+        onApply: async function (file) {
+          try {
+            $("saveState").textContent = "… uploading studio card";
+            coverUrl = await C.upload(file, "tsb-covers");
+            lastCoverFile = null;
+            $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
+            saveDraft();
+          } catch (e) { alert("Card upload failed: " + e.message); }
+        }
+      });
+    });
+
     $("wBurst").addEventListener("change", async function () {
       var f = this.files && this.files[0];
       fname("wBurst", "wBurstName", f);
@@ -287,6 +315,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=222" defer></script>
+  <script src="js/bar.js?v=225" defer></script>
 </body>
 </html>

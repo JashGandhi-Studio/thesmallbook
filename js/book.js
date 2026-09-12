@@ -313,11 +313,11 @@
     ctx.textAlign = "center";
     ctx.fillStyle = "#ffc800";
     ctx.font = "900 60px 'Archivo Black', Arial";
-    ctx.fillText("📕 THESMALLBOOK", W / 2, H - barH + 92);
+    ctx.fillText("📕 THESMALLBOOK.IN", W / 2, H - barH + 92);
     /* LIVE totals — always current, never a hardcoded number */
     const nBooks = (window.BOOKS || []).length;
     const nLessons = (window.BOOKS || []).reduce((a, b) => a + (b.lessons ? b.lessons.length : 0), 0);
-    const tag = nBooks + "+ BOOKS · " + nLessons + "+ LESSONS · FREE FOREVER";
+    const tag = nBooks + "+ BOOKS · " + nLessons + "+ LESSONS · FREE TO READ";
     ctx.fillStyle = "#f2ede2";
     let fs = 28;
     ctx.font = "bold " + fs + "px 'Space Grotesk', Arial";
@@ -325,6 +325,21 @@
     ctx.fillText(tag, W / 2, H - barH + 140);
     ctx.textAlign = "left";
   }
+
+  /* v223 watermark: free exports carry the site chip — Gold removes it.
+     Every shared card becomes a signpost back to thesmallbook.in. */
+  function drawWatermark(ctx, W, H, y) {
+    var label = "📕 thesmallbook.in";
+    ctx.font = "700 26px 'Space Grotesk', Arial";
+    var w = ctx.measureText(label).width + 56, h = 56;
+    var x = W - w - 36; y = y || 96;
+    ctx.fillStyle = "rgba(17,17,17,.92)"; ctx.fillRect(x, y, w, h);
+    ctx.lineWidth = 4; ctx.strokeStyle = "#ffc800"; ctx.strokeRect(x, y, w, h);
+    ctx.fillStyle = "#ffc800"; ctx.textAlign = "center";
+    ctx.fillText(label, x + w / 2, y + 37);
+    ctx.textAlign = "left";
+  }
+  function isGoldNow() { return !!(window.TSB_GOLD && window.TSB_GOLD.isGold()); }
 
   async function renderBookCard() {
     // CAROUSEL FORMAT: 1080×1350 (4:5) — Instagram carousel max vertical, ZERO crop
@@ -431,6 +446,7 @@
     ctx.fillText("📖 READ THE FULL BREAKDOWN — FREE", W / 2, 1116);
 
     drawBrandBar(ctx, W, H);
+    if (!isGoldNow()) drawWatermark(ctx, W, H);
     return canvas;
   }
 
@@ -524,6 +540,7 @@
     });
 
     drawBrandBar(ctx, W, H);
+    if (!isGoldNow()) drawWatermark(ctx, W, H, H - 226);
     return canvas;
   }
 

@@ -2,7 +2,7 @@
    THESMALLBOOK — 🎁 FRIENDLY GUEST GATE (gate.js)
    Guests browse the whole library freely at first.
    After ~10 minutes of browsing OR ~6 opened books, ONE clean
-   card appears: everything is free forever — sign in to keep
+   card appears: everything is free to read — sign in to keep
    reading. Never blocks the very first session instantly,
    never nags signed-in readers, snoozes for 3 minutes.
    ============================================================ */
@@ -54,7 +54,7 @@
       '<div class="gate" role="dialog" aria-modal="true" aria-label="Sign in to keep reading">' +
         '<div class="gate__icon">📚</div>' +
         "<h2>You’ve read a whole stack!</h2>" +
-        "<p>Every book here is <b>free forever</b> — no card, no catch, no ads. " +
+        "<p>Every book here is <b>free to read</b> — no card, no catch, no ads. " +
         "Sign in (10 seconds with Google) and the library stays open, with your progress saved.</p>" +
         '<a class="gate__cta" href="login.html">Sign in — it’s free →</a>' +
         '<button class="gate__later" data-later>5 more minutes</button>' +

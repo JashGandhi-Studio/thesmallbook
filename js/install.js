@@ -64,7 +64,7 @@
              '<p class="instp">One tap — it lands on your home screen like a real app.<br>Full-screen, works offline, opens in 1 tap.</p>' +
              '<button class="setbtn setbtn--big" data-instgo>⬇️&nbsp; Install the app</button>' +
              '<p class="instfine" data-instfine hidden>Open this page in <b>Chrome</b> (or Edge), tap the browser <b>menu&nbsp;⋮</b> → <b>Install app</b>. One tap, done.</p>' +
-             '<p class="instfine">Free forever · No ads · No sign-up needed</p></div>';
+             '<p class="instfine">Free to read · No ads · No sign-up needed</p></div>';
     }
 
     m.innerHTML = '<div class="modal__box instmodal">' +
@@ -97,7 +97,7 @@
         /* iPhone: the only real way — one tap opens the native Share sheet (Add to Home Screen lives there) */
         try {
           if (navigator.share) {
-            navigator.share({ title: "TheSmallBook", text: "Big books. Small reads. Free forever.", url: location.href })
+            navigator.share({ title: "TheSmallBook", text: "Big books. Small reads. Free to read.", url: location.href })
               .then(function () { closeModal(); }).catch(function () {});
           } else {
             var f = m.querySelector("[data-instfine]");

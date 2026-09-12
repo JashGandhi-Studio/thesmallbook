@@ -678,7 +678,7 @@
         '<div class="tsb-sheet__perk"><span>🔥</span> Streaks and badges that actually save</div>' +
         '<div class="tsb-sheet__perk"><span>✍️</span> Post under your own name</div>' +
         '<button class="tsb-sheet__google" data-sheet-google>Continue with Google</button>' +
-        '<p class="tsb-sheet__fine">Free forever. No card.</p>' +
+        '<p class="tsb-sheet__fine">Free to read. No card.</p>' +
       "</div>";
     document.body.appendChild(sheetRoot);
     sheetRoot.addEventListener("click", function (e) {

@@ -337,8 +337,8 @@ const C = window.TSB_COMMUNITY;
   ok("og image + alt refreshed (400 books · 2,637 lessons)", idxH.includes("400 books · 2,637 lessons") && idxH.includes("assets/og-image.png"));
   ok("no stale counts on key files (350 books / 2,176 / 2176 / 2170)", !/350 books|2,176|2176|2170/.test(djSrc + idxH + cssSrc + lgSrc2 + bkSrc2));
   const swSrc = fsp.readFileSync(pp.join(__dirname, "../sw.js"), "utf8");
-  ok("service worker cache bumped to tsb-v222", swSrc.includes('tsb-v222'));
-  ok("key files ship ?v=222", idxH.includes("css/style.css?v=222") && lgSrc2.includes("v=222"));
+  ok("service worker cache bumped to tsb-v225", swSrc.includes('tsb-v225'));
+  ok("key files ship ?v=225", idxH.includes("css/style.css?v=225") && lgSrc2.includes("v=225"));
 
   console.log("== v221: content depth, 400 everywhere, 8 new autopsies, graves on all books ==");
   // repo-wide stale scan (every html/js/md)
@@ -390,17 +390,17 @@ const C = window.TSB_COMMUNITY;
   const setH = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
   const youH = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
   const instSrc = fsp.readFileSync(pp.join(__dirname, "../js/install.js"), "utf8");
-  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=222"));
-  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=222"));
+  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=225"));
+  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=225"));
   ok("service worker precaches install.js (works offline)", swSrc.includes("./js/install.js"));
   ok("install popup + standalone-hide styles shipped", cssSrc.includes(".instmodal") && cssSrc.includes("@media (display-mode: standalone)"));
   ok("install.js parses and handles beforeinstallprompt/appinstalled", (() => { try { new Function(instSrc); return true; } catch (e) { return false; } })() && instSrc.includes("beforeinstallprompt") && instSrc.includes("appinstalled"));
-  ok("Build markers say tsb-v222 (settings + You window)", setH.includes("Build tsb-v222") && youH.includes("Build tsb-v222"));
+  ok("Build markers say tsb-v225 (settings + You window)", setH.includes("Build tsb-v225") && youH.includes("Build tsb-v225"));
   let staleBuilds = [];
   for (const f of ["settings.html","login.html","index.html","about.html","scan.html","book.html","graveyard.html"]) {
     const t = fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
     const m = t.match(/Build tsb-v(\d+)/g) || [];
-    const wantVer = (swSrc.match(/CACHE_VERSION = "(tsb-v\d+)"/) || [])[1] || "tsb-v222";
+    const wantVer = (swSrc.match(/CACHE_VERSION = "(tsb-v\d+)"/) || [])[1] || "tsb-v225";
     m.forEach(x => { if (!x.includes(wantVer.slice(3))) staleBuilds.push(f + ":" + x); });
   }
   ok("no stale Build markers anywhere", staleBuilds.length === 0, staleBuilds.join(", "));
@@ -455,7 +455,7 @@ const C = window.TSB_COMMUNITY;
   ok("gate: guests get a grace period (~10 min) then one card", gateSrc.includes("GRACE_MS = 10 * 60 * 1000") && gateSrc.includes("READ_LIMIT = 6"));
   ok("gate: offers a 5-more-minutes snooze and never on auth pages", gateSrc.includes("data-later") && /login\.html|settings\.html|scan\.html|404\.html/.test(gateSrc));
   ok("gate: signed-in readers never see it", gateSrc.includes("if (signedIn()) return false;") && gateSrc.includes("tsb_auth_session"));
-  ok("gate message = the friendly free-forever stack card", gateSrc.includes("You’ve read a whole stack!") && gateSrc.includes("free forever") && gateSrc.includes("Sign in (10 seconds with Google)"));
+  ok("gate message = the friendly free-forever stack card", gateSrc.includes("You’ve read a whole stack!") && gateSrc.includes("free to read") && gateSrc.includes("Sign in (10 seconds with Google)"));
   ok("gate card readable in dark (headline was invisible: color == bg)", css.includes("html.dark .gate { background: #241f17; color: #f2ead8; }") && css.includes("html.dark .gate__cta { color: #111; }"));
 
 
@@ -569,7 +569,7 @@ const C = window.TSB_COMMUNITY;
   ok("v222: probe reports 'sign in first' when no session", pr2.reason === "signin", pr2.reason);
   globalThis.TSB_AUTH.token = tokOld; store.tsb_auth_session = sessOld;
   const setH3 = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
-  ok("v222: Settings has the one-tap upload test", setH3.includes('id="upDiag"') && setH3.includes("Test upload right now") && setH3.includes("Build tsb-v222"));
+  ok("v222: Settings has the one-tap upload test", setH3.includes('id="upDiag"') && setH3.includes("Test upload right now") && setH3.includes("Build tsb-v225"));
   /* the WRITE page uploads died silently: fname() was called by every handler but
      defined nowhere — cover/quote/video/audio upload never started. Regression-guard it: */
   const writeH3 = fsp.readFileSync(pp.join(__dirname, "../write.html"), "utf8");
@@ -584,7 +584,72 @@ const C = window.TSB_COMMUNITY;
   ok("v222: docs SQL #3 v4 is schema-adaptive (detects owner_id vs owner)", docSrc2.includes("information_schema.columns") && docSrc2.includes("has_owner_id") && docSrc2.includes("tsb write storage") && docSrc2.includes("drop policy if exists \"auth write storage v2\""));
   ok("v222: docs no longer reference the vanished owner column in policies", !/and owner = auth\.uid\(\)/.test(docSrc2));
 
+  console.log("== v223: studio, gold, tick fix, watermark, OG, paywall plan ==");
+  const dmV3 = fsp.readFileSync(pp.join(__dirname, "../dm.html"), "utf8");
+  ok("v223: opening a thread no longer sweeps my ticks blue", !dmV3.includes("anyRead") && !dmV3.includes('.dm-thread .dm-tick").forEach'));
+  ok("v223: ticks turn blue per message actually read", dmV3.includes("per-message receipts") && dmV3.includes('.dm-bub[data-mid="'));
+  const studioV3 = fsp.readFileSync(pp.join(__dirname, "../js/studio.js"), "utf8");
+  ok("v223: studio ships ratios, drag-reframe, filters, quote layout", studioV3.includes("9:16") && studioV3.includes("pointerdown") && studioV3.includes("MINI FILTERS") && studioV3.includes("stuPos"));
+  ok("v223: studio export watermarks free readers only", studioV3.includes("S.gold") && studioV3.includes("thesmallbook.in"));
+  const goldV3 = fsp.readFileSync(pp.join(__dirname, "../js/gold.js"), "utf8");
+  ok("v223: gold state + TSB-XXXX-XXXX activation", goldV3.includes("TSB-") && goldV3.includes("isGold") && goldV3.includes("setFromServer"));
+  ok("v223: book/lesson cards watermark for free readers", bkSrc2.includes("drawWatermark") && bkSrc2.includes("isGoldNow"));
+  const writeV3 = fsp.readFileSync(pp.join(__dirname, "../write.html"), "utf8");
+  ok("v223: write page wires studio to the cover preview", writeV3.includes("TSB_STUDIO.open") && writeV3.includes("css/studio.css") && writeV3.includes("lastCoverFile"));
+  const goldHV3 = fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8");
+  ok("v223: gold.html has the activation box", goldHV3.includes("gAct") && goldHV3.includes("ACTIVATE GOLD"));
+  ok("v223: OG image + paywall plan shipped", fsp.existsSync(pp.join(__dirname, "../assets/og-image.png")) && fsp.existsSync(pp.join(__dirname, "../docs/PAYWALL-PLAN.md")));
+
+  console.log("== v223: TSB STORE ==");
+  const storePageV3 = fsp.existsSync(pp.join(__dirname, "../store.html")) ? fsp.readFileSync(pp.join(__dirname, "../store.html"), "utf8") : "";
+  ok("v223: store page ships css+data+disclaimer", storePageV3.includes("css/store.css") && storePageV3.includes("js/store-data.js") && storePageV3.includes("not affiliated"));
+  const storeV3 = fsp.readFileSync(pp.join(__dirname, "../js/store.js"), "utf8");
+  ok("v223: store gating = gold + insider + founder", storeV3.includes("TSB_GOLD.isGold") && storeV3.includes("INSIDER_POSTS") && storeV3.includes("FOUNDER_EMAILS") && storeV3.includes("isOfficial"));
+  const sdV3 = fsp.readFileSync(pp.join(__dirname, "../js/store-data.js"), "utf8");
+  const sdWinV3 = {}; new Function("window", sdV3)(sdWinV3);
+  const offersV3 = (sdWinV3.TSB_STORE_DATA || {}).offers || [];
+  ok("v223: store data loads with 10+ curated offers", offersV3.length >= 10, "count=" + offersV3.length);
+  ok("v223: every offer is legal-clean (https url + steps + tnc + title + desc)", offersV3.length > 0 && offersV3.every(o => /^https:\/\//.test(o.url) && (o.steps || []).length >= 2 && (o.tnc || []).length >= 2 && o.title && o.desc));
+  const loginV3 = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
+  ok("v223: You window has the store banner + live chip", loginV3.includes("st-banner") && loginV3.includes("store.html") && loginV3.includes("stBanChip"));
+  ok("v223: service worker precaches the store", swSrc.includes("./store.html") && swSrc.includes("./js/store-data.js"));
+
+  console.log("== v225: store redesign — real logos, editor's picks, quality offers ==");
+  const logoDirV4 = pp.join(__dirname, "../assets/logos");
+  const logosV4 = fsp.existsSync(logoDirV4) ? fsp.readdirSync(logoDirV4) : [];
+  ok("v225: real brand logos shipped locally (20+ files, svg/png only)", logosV4.length >= 20 && logosV4.every(f => /\.(svg|png)$/.test(f)), "files=" + logosV4.length);
+  ok("v225: every offer points at a logo file that exists + has bg/worth/tag", offersV3.length > 0 && offersV3.every(o => o.logo && logosV4.includes(o.logo) && o.bg && o.worth && o.tag));
+  ok("v225: 25+ offers, 5+ editor's picks, every category populated", offersV3.length >= 25 && offersV3.filter(o => o.top).length >= 5 && ["books","fun","learning","food","shopping","travel"].every(c => offersV3.some(o => o.cat === c)));
+  ok("v225: no grey referral codes in data (code null unless brand-published)", offersV3.every(o => o.code === null || /^[A-Z0-9]{4,}$/.test(o.code)));
+  ok("v225: logos are small (whole folder < 400KB) and svg files carry no scripts/external refs", (() => {
+    let total = 0, clean = true;
+    for (const f of logosV4) { const b = fsp.readFileSync(pp.join(logoDirV4, f)); total += b.length; if (f.endsWith(".svg")) { const t = b.toString("utf8"); if (/<script|href="https?:|url\(https?:/i.test(t)) clean = false; } }
+    return total < 400 * 1024 && clean;
+  })());
+  const storeV4 = fsp.readFileSync(pp.join(__dirname, "../js/store.js"), "utf8");
+  ok("v225: store engine renders logo tiles, picks rail, nudge sheet, deep links", storeV4.includes("assets/logos/") && storeV4.includes("renderPicks") && storeV4.includes("openNudge") && storeV4.includes("offer="));
+  const storeCssV4 = fsp.readFileSync(pp.join(__dirname, "../css/store.css"), "utf8");
+  ok("v225: store css ships motion + reduced-motion guard + sheet + ticker", storeCssV4.includes("@keyframes st-rise") && storeCssV4.includes("prefers-reduced-motion") && storeCssV4.includes(".st-modal__grab") && storeCssV4.includes(".st-ticker__track"));
+  const storePageV4 = fsp.readFileSync(pp.join(__dirname, "../store.html"), "utf8");
+  ok("v225: store page has hero stats, ticker, picks rail, logo attribution line", storePageV4.includes('id="stStats"') && storePageV4.includes('id="stTicker"') && storePageV4.includes('id="stPicks"') && storePageV4.includes("logos belong to their owners"));
+  const loginV4 = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
+  ok("v225: You-window banner shows real logo stack + loads store.css", loginV4.includes("st-banner__logos") && loginV4.includes("assets/logos/amazon.svg") && loginV4.includes("css/store.css?v=225"));
+  ok("v225: service worker precaches the logo folder", swSrc.includes("./assets/logos/amazon.svg") && swSrc.includes("./assets/logos/spotify.svg"));
+  ok("v225: store copy never says 'free forever' about the app (only the writer-unlock perk)", !/free forever/i.test(storePageV4.replace(/store unlocked free, forever/g, "")) && !/free forever/i.test(fsp.readFileSync(pp.join(__dirname, "../js/store-data.js"), "utf8")));
+
+
+  console.log("== v225: hidden hubs, affiliate-ready, checksummed gold, founder forge ==");
+  ok("v225: hidden hubs shipped (jio, airtel, hdfc, sbi, axis)", offersV3.some(o => o.id === "jio-bundles") && offersV3.some(o => o.id === "hdfc-smartbuy") && offersV3.some(o => o.id === "axis-grab") && logosV4.includes("jio.png") && logosV4.includes("airtel.png") && logosV4.includes("hdfc.png"));
+  ok("v225: 27+ offers after hubs added", offersV3.length >= 27, "count="+offersV3.length);
+  ok("v225: founder email set to acimotreyothy@gmail.com", storeV4.includes("acimotreyothy@gmail.com") && storeV4.includes("FOUNDER_EMAILS"));
+  ok("v225: store supports affiliate links", storeV4.includes("TSB_AFFILIATE") && storeV4.includes("finalUrl"));
+  ok("v225: gold codes are checksummed + forge exists", goldV3.includes("CODE_SECRET") && goldV3.includes("function checksum") && goldV3.includes("function forge") && goldV3.includes("validCode"));
+  ok("v225: gold forge panel + honest in-production copy", fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes('id="gForge"') && fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes("IN PRODUCTION") && fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes("rolling out to early members first"));
+  ok("v225: You banner shows 27 perks + affiliate.js precached", loginV4.includes("27 real perks") && swSrc.includes("./js/affiliate.js") && swSrc.includes("./assets/logos/jio.png"));
+  ok("v225: service worker precaches hidden-hub logos", swSrc.includes("./assets/logos/airtel.png") && swSrc.includes("./assets/logos/hdfc.png") && swSrc.includes("./assets/logos/sbi.png") && swSrc.includes("./assets/logos/axis.png"));
+
   console.log();
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");
+
   process.exit(FAIL ? 1 : 0);
 })();

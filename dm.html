@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=222">
+  <link rel="stylesheet" href="css/style.css?v=225">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -68,13 +68,13 @@
     </div>
   </div>
 
-  <script src="js/prefs.js?v=222"></script>
-  <script src="js/lang.js?v=222"></script>
-  <script src="js/config.js?v=222"></script>
-  <script src="js/data.js?v=222"></script>
-  <script src="js/auth.js?v=222"></script>
-  <script src="js/sounds.js?v=222"></script>
-  <script src="js/community.js?v=222"></script>
+  <script src="js/prefs.js?v=225"></script>
+  <script src="js/lang.js?v=225"></script>
+  <script src="js/config.js?v=225"></script>
+  <script src="js/data.js?v=225"></script>
+  <script src="js/auth.js?v=225"></script>
+  <script src="js/sounds.js?v=225"></script>
+  <script src="js/community.js?v=225"></script>
   <script>
   (function () {
     "use strict";
@@ -177,10 +177,10 @@
       }).join("") || '<div class="cm-empty cm-empty--sm">Say hello 👋</div>';
       msgs.scrollTop = msgs.scrollHeight;
       try {
-        /* v221 read receipts: opening the thread marks their messages read + my ticks turn blue */
-        C.markThreadRead(uid).then(function () {
-          document.querySelectorAll(".dm-thread .dm-tick").forEach(function (t) { t.classList.add("read"); });
-        }).catch(function () {});
+        /* v223 read receipts: opening the thread marks THEIR messages read.
+           My own ticks are NOT swept blue here — each tick follows its own
+           message's m.read flag, so blue only ever means "they read it". */
+        C.markThreadRead(uid).catch(function () {});
       } catch (e) {}
       try {
         C.toastMark(rows.filter(function (m) { return m.sender_id === uid; })
@@ -212,8 +212,13 @@
       if (document.getElementById("dmThread").hidden) return;
       try {
         var fresh = await C.threadWith(uid, 60);
-        var anyRead = fresh.some(function (m) { return m.sender_id === meId && m.read; });
-        if (anyRead) document.querySelectorAll(".dm-thread .dm-tick:not(.pending)").forEach(function (t) { t.classList.add("read"); });
+        /* v223: per-message receipts — a tick turns blue only when ITS
+           message was actually read by the other person. */
+        fresh.forEach(function (m) {
+          if (m.sender_id !== meId || !m.read) return;
+          var t = msgs.querySelector('.dm-bub[data-mid="' + m.id + '"] .dm-tick');
+          if (t) { t.classList.add("read"); t.title = "Read"; }
+        });
       } catch (e) {}
     }, 10000);
 
@@ -329,6 +334,6 @@
     });
   })();
   </script>
-  <script src="js/bar.js?v=222" defer></script>
+  <script src="js/bar.js?v=225" defer></script>
 </body>
 </html>

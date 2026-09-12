@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <title>Store — TheSmallBook</title>
+  <meta name="description" content="Real offers for readers: free trials, student plans, book deals and new-user drops — official programs only, verified monthly.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    try {
+      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      if (tsbDark) document.documentElement.classList.add("dark");
+      var tsbTC = document.querySelector('meta[name="theme-color"]');
+      if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
+      tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
+    } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="css/style.css?v=225">
+  <link rel="stylesheet" href="css/store.css?v=225">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body class="stpage">
+  <header class="st-top">
+    <a class="back" href="login.html" aria-label="Back to You">←</a>
+    <h1>🛍️ TSB STORE</h1>
+    <span class="st-top__ver"><i></i>LIVE</span>
+  </header>
+
+  <section class="st-hero" id="stHero">
+    <div class="st-hero__kicker">FOR READERS · OFFICIAL PROGRAMS ONLY</div>
+    <h2>Real perks. <em>Zero junk codes.</em></h2>
+    <p>Free trials, student plans, book deals and new-user drops — every one an official brand program, hand-checked monthly. No scraped coupons that die by Tuesday.</p>
+    <div class="st-stats" id="stStats"></div>
+  </section>
+
+  <div class="st-ticker" id="stTicker" aria-hidden="true"></div>
+
+  <section class="st-unlock" id="stUnlock" hidden>
+    <h2>UNLOCK THE FULL SHELF</h2>
+    <p>3 editor’s picks are open for everyone. The rest unlock two ways — pay once, or write:</p>
+    <div class="st-unlock__paths">
+      <div class="st-path st-path--gold">
+        <b>💛 TSB GOLD</b>
+        <p>₹999/yr — full store plus no watermark, Pro filters, audio &amp; PDFs.</p>
+        <button id="stGoldBtn" type="button">GET GOLD →</button>
+      </div>
+      <div class="st-path st-path--writer">
+        <b>✍️ THE INSIDER PATH</b>
+        <p>Publish 3 stories to the community → store unlocked free, forever.</p>
+        <button id="stWriteBtn" type="button">WRITE A STORY →</button>
+        <span class="st-prog" id="stProg"></span>
+      </div>
+    </div>
+  </section>
+
+  <div class="st-sec"><h3>✦ EDITOR’S PICKS</h3><span>the ones actually worth your time</span></div>
+  <div class="st-rail" id="stPicks"></div>
+
+  <div class="st-sec"><h3>ALL SHELVES</h3><span>tap a card to reveal</span></div>
+  <div class="st-cats" id="stCats"></div>
+  <div class="st-grid" id="stGrid">
+    <div class="st-skel"></div><div class="st-skel"></div><div class="st-skel"></div><div class="st-skel"></div>
+  </div>
+
+  <p class="st-fine">All offers are official programs of their respective brands; brand names and logos belong to their owners and are shown only to identify the offer. TheSmallBook is not affiliated with or endorsed by any brand listed. Eligibility is decided by the partner at checkout. Verified monthly — dead offers get pulled. If a code exists, it is shown on the partner page after you tap through.</p>
+
+  <script src="js/prefs.js?v=225"></script>
+  <script src="js/config.js?v=225"></script>
+  <script src="js/auth.js?v=225"></script>
+  <script src="js/sounds.js?v=225"></script>
+  <script src="js/community.js?v=225"></script>
+  <script src="js/gold.js?v=225"></script>
+  <script src="js/affiliate.js?v=225"></script>
+  <script src="js/store-data.js?v=225"></script>
+  <script src="js/store.js?v=225"></script>
+  <script>
+    window.TSB_COMMUNITY.whenReady(function () { window.TSB_STORE.init(); });
+  </script>
+  <script src="js/bar.js?v=225" defer></script>
+</body>
+</html>
