@@ -19,8 +19,8 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=230">
-  <link rel="stylesheet" href="css/studio.css?v=230">
+  <link rel="stylesheet" href="css/style.css?v=235">
+  <link rel="stylesheet" href="css/studio.css?v=235">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -70,7 +70,8 @@
       <label class="cm-lbl cm-lbl--file" for="wCover">Cover / quote image
         <span class="upbtn">📷 Choose image</span><span class="upname" id="wCoverName">No file chosen</span>
         <input id="wCover" type="file" accept="image/*" hidden><img id="wCoverPrev" class="cm-prev" hidden alt="">
-        <span class="st-hint">🎨 Vertical photo? Tap the preview after upload to reframe it, place the quote, add mini filters & pick the ratio.</span></label>
+        <span class="st-hint">🎨 Vertical photo? Tap the preview after upload to reframe it, place the quote, add mini filters & pick the ratio.</span>
+        <span class="st-hint" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button type="button" id="inspireDeskBtn" style="border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:8px 14px;font:800 12px Space Grotesk,sans-serif;letter-spacing:.5px;box-shadow:3px 3px 0 #111;cursor:pointer">✨ Inspire Desk — quotes · images · research</button><span style="font:600 11px Space Grotesk,sans-serif;color:#64748b;line-height:1.3">Library to create faster — not a verifier. Tap to browse quotes you can post, images you can set as cover, research you can build on.</span></span></label>
       <label class="cm-lbl cm-lbl--file" for="wBurst">🎬 Burst video — max 2 minutes
         <span class="upbtn">🎬 Choose video</span><span class="upname" id="wBurstName">No file chosen</span>
         <input id="wBurst" type="file" accept="video/*" hidden><video id="wBurstPrev" class="cm-prev" controls playsinline preload="metadata" hidden></video></label>
@@ -97,16 +98,17 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=230"></script>
-  <script src="js/lang.js?v=230"></script>
-  <script src="js/config.js?v=230"></script>
-  <script src="js/auth.js?v=230"></script>
-  <script src="js/sounds.js?v=230"></script>
-  <script src="js/founder.js?v=230"></script>
-  <script src="js/community.js?v=230"></script>
-  <script src="js/gold.js?v=230"></script>
-  <script src="js/studio.js?v=230"></script>
-  <script src="js/dictate.js?v=230"></script>
+  <script src="js/prefs.js?v=235"></script>
+  <script src="js/lang.js?v=235"></script>
+  <script src="js/config.js?v=235"></script>
+  <script src="js/auth.js?v=235"></script>
+  <script src="js/sounds.js?v=235"></script>
+  <script src="js/founder.js?v=235"></script>
+  <script src="js/community.js?v=235"></script>
+  <script src="js/gold.js?v=235"></script>
+  <script src="js/studio.js?v=235"></script>
+  <script src="js/dictate.js?v=235"></script>
+  <script src="js/osint.js?v=235"></script>
   <script>
   (function () {
     "use strict";
@@ -286,6 +288,54 @@
       } catch (e) { alert("Cover upload failed: " + e.message); }
     });
     /* v223 STORY CARD STUDIO — tap the cover preview to edit layout, filters & ratio */
+    // ✨ INSPIRE DESK — productive OSINT library (quotes/images/research) — replaces old verifier
+    (function(){
+      function openInspire(tab, seed){
+        var api = window.TSB_OSINT||window.TSB_INSPIRE;
+        if(api && api.openInspire){
+          api.openInspire(tab||"quotes", seed||"", {
+            onUseQuote: function(o){
+              var txt=o.text||"", auth=o.author||"";
+              title.value = txt;
+              if(sub && !sub.value.trim() && auth) sub.value = "— " + auth;
+              try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
+              title.dispatchEvent(new Event("input",{bubbles:true}));
+              if(sub) sub.dispatchEvent(new Event("input",{bubbles:true}));
+              // gentle hint to make it theirs
+              setTimeout(function(){ body.focus(); var hint="\n\nWhy this line hit you? (2-3 lines in your voice)"; if(!body.innerText.trim()) document.execCommand("insertText", false, hint.trim()); }, 120);
+            },
+            onUseImage: async function(url){
+              try{
+                var blob = await fetch(url, {mode:"cors"}).then(function(r){ return r.blob(); });
+                var file = new File([blob], "inspire-"+Date.now()+".jpg", {type: blob.type||"image/jpeg"});
+                var upUrl = await C.upload(file, "tsb-covers");
+                coverUrl = upUrl;
+                lastCoverFile = null;
+                var prev=document.getElementById("wCoverPrev"); if(prev){ prev.src=upUrl; prev.hidden=false; }
+                try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
+                var ss=document.getElementById("saveState"); if(ss) ss.textContent="✓ cover from Inspire";
+                try{ saveDraft(); }catch(e){}
+              }catch(e){ window.open(url,"_blank"); }
+            },
+            onUseResearch: function(snippet){
+              body.focus();
+              try{ document.execCommand("insertText", false, "\n\n"+snippet+"\n"); body.dispatchEvent(new Event("input",{bubbles:true})); }catch(e){ body.innerText += "\n\n"+snippet; }
+            }
+          });
+        } else {
+          window.open("https://en.wikipedia.org/wiki/Special:Search?search="+encodeURIComponent(seed||""),"_blank");
+        }
+      }
+      var desk=document.getElementById("inspireDeskBtn");
+      if(desk) desk.addEventListener("click", function(e){ e.preventDefault(); openInspire("quotes", (title.value||"").trim()); });
+      // compat: if old buttons somehow still in DOM (cached), wire them to productive tabs too
+      var b1=document.getElementById("osintImgBtn");
+      var b2=document.getElementById("osintQuoteBtn2");
+      if(b1) b1.addEventListener("click", function(e){ e.preventDefault(); openInspire("images", ""); });
+      if(b2) b2.addEventListener("click", function(e){ e.preventDefault(); openInspire("quotes", (title.value||"").trim()); });
+      // expose globally for other callers
+      window.__openInspireDesk = openInspire;
+    })();
     $("wCoverPrev").addEventListener("click", function (e) {
       e.preventDefault(); /* stop the wrapping <label> from opening the file picker too */
       var src = lastCoverFile ? URL.createObjectURL(lastCoverFile) : coverUrl;
@@ -394,10 +444,47 @@
     });
 
     loadDraft();
+    // ✨ Inspire Desk prefill from Stories/Library (so the feature is discoverable everywhere)
+    try{
+      var pre = null; try{ pre = JSON.parse(localStorage.getItem("tsb_inspire_prefill")||"null"); }catch(e){}
+      if(pre && pre.q){
+        title.value = pre.q;
+        if(sub && pre.a) sub.value = "— " + pre.a;
+        try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
+        title.dispatchEvent(new Event("input",{bubbles:true}));
+        if(sub) sub.dispatchEvent(new Event("input",{bubbles:true}));
+        localStorage.removeItem("tsb_inspire_prefill");
+        saveDraft();
+      }
+      var preR = null; try{ preR = localStorage.getItem("tsb_inspire_research"); }catch(e){}
+      if(preR){
+        body.focus();
+        try{ document.execCommand("insertText", false, "\n\n"+preR+"\n"); body.dispatchEvent(new Event("input",{bubbles:true})); }catch(e){ body.innerText += "\n\n"+preR; }
+        localStorage.removeItem("tsb_inspire_research");
+        saveDraft();
+      }
+      var preImg = null; try{ preImg = sessionStorage.getItem("tsb_inspire_img"); }catch(e){}
+      if(preImg){
+        // fetch and set as cover automatically (live, not preloaded)
+        (async function(u){
+          try{
+            var blob = await fetch(u, {mode:"cors"}).then(function(r){ return r.blob(); });
+            var file = new File([blob], "inspire-"+Date.now()+".jpg", {type: blob.type||"image/jpeg"});
+            var upUrl = await C.upload(file, "tsb-covers");
+            coverUrl = upUrl; lastCoverFile=null;
+            var prev=document.getElementById("wCoverPrev"); if(prev){ prev.src=upUrl; prev.hidden=false; }
+            try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
+            var ss=document.getElementById("saveState"); if(ss) ss.textContent="✓ cover from Inspire";
+            saveDraft();
+          }catch(e){ console.warn("inspire img prefill failed", e); }
+          try{ sessionStorage.removeItem("tsb_inspire_img"); }catch(e){}
+        })(preImg);
+      }
+    }catch(e){}
     body.focus();
     }
   })();
   </script>
-  <script src="js/bar.js?v=230" defer></script>
+  <script src="js/bar.js?v=235" defer></script>
 </body>
 </html>

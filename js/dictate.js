@@ -367,24 +367,43 @@
     ensureInterimEl().hidden = false;
     showInterim("", false);
     startTimer();
-    var finalSeen = "";
+    // Mobile-safe dedup: Android Chrome often fires the same final 2-4x
+    var lastFinalText = "";
+    var lastFinalAt = 0;
+    var lastFinalNorm = "";
     rec.onresult = function(ev){
       var interim = "", finalChunk = "";
       for (var i=ev.resultIndex; i<ev.results.length; i++){
-        var res = ev.results[i];
-        var txt = res[0].transcript;
-        if (res.isFinal) finalChunk += txt + " ";
+        var r = ev.results[i];
+        var txt = r[0].transcript;
+        if (r.isFinal) finalChunk += txt + " ";
         else interim += txt + " ";
       }
       if (interim) showInterim(interim, false);
       if (finalChunk) {
-        finalChunk = finalChunk.trim();
-        if (finalChunk && finalChunk !== finalSeen) {
-          finalSeen = finalChunk;
-          // small debounce to avoid duplicate inserts from overlapping finals
-          insertTextSmart(finalChunk);
+        var norm = finalChunk.replace(/\s+/g," ").trim();
+        if (!norm) { showInterim("", true); return; }
+        var now = Date.now();
+        // normalized for comparison: lowercase, strip punctuation, collapse spaces
+        var a = norm.toLowerCase().replace(/[.,!?;:\"'“”\u2018\u2019]/g,"").replace(/\s+/g," ").trim();
+        var b = lastFinalNorm;
+        // Duplicate if same or one contains the other within 1.8s (Android re-fire)
+        if (b && now - lastFinalAt < 1800 && (a === b || b.indexOf(a) !== -1 || a.indexOf(b) !== -1)) {
           showInterim("", true);
+          return;
         }
+        // Near-duplicate within 1.2s: same prefix/same length -> ignore
+        if (b && now - lastFinalAt < 1200 && Math.abs(a.length - b.length) < 8) {
+          if (a.slice(0,14) === b.slice(0,14)) {
+            showInterim("", true);
+            return;
+          }
+        }
+        lastFinalText = norm;
+        lastFinalNorm = a;
+        lastFinalAt = now;
+        insertTextSmart(norm);
+        showInterim("", true);
       }
     };
     rec.onerror = function(ev){

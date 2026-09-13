@@ -63,3 +63,28 @@
 .stu-quote--font-impact .q span{letter-spacing:.3px}
 .stu-quote--font-hand .q span{font-weight:700}
 .stu-bgchip{position:relative}
+
+/* v231 — Instagram-grade: 12 image backgrounds as tappable thumbs + clean controls */
+.stu-bggrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:420px){.stu-bggrid{grid-template-columns:repeat(3,1fr)}}
+.stu-bgthumb{
+  position:relative; aspect-ratio:3/4; border:2.5px solid #111; border-radius:14px;
+  background-size:cover; background-position:center; background-color:#fffdf5;
+  cursor:pointer; overflow:hidden; box-shadow:2.5px 2.5px 0 #111;
+  transition:transform .12s, box-shadow .12s, border-color .12s;
+}
+.stu-bgthumb:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #111}
+.stu-bgthumb:active{transform:translate(1px,1px);box-shadow:1.5px 1.5px 0 #111}
+.stu-bgthumb.on{border-color:#ffc800; border-width:3px; box-shadow:4px 4px 0 #111, 0 0 0 3px #ffc800}
+.stu-bgthumb__lab{
+  position:absolute; left:6px; right:6px; bottom:6px;
+  background:rgba(17,17,17,.86); color:#ffc800; font-family:'Space Grotesk',sans-serif;
+  font-weight:800; font-size:9px; letter-spacing:.6px; text-transform:uppercase;
+  padding:4px 6px; border-radius:8px; text-align:center; line-height:1;
+  border:1.5px solid #ffc800;
+}
+.stu-bgthumb.on .stu-bgthumb__lab{background:#ffc800;color:#111;border-color:#111}
+/* make other chips more Instagram-like: pill + icon feel */
+.stu-chip{letter-spacing:.2px}
+#stuVerify:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #111}
+#stuVerify:active{transform:translate(1px,1px);box-shadow:1.5px 1.5px 0 #111}

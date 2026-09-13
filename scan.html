@@ -337,6 +337,7 @@ body {
       <button class="flipbtn" id="flipBtn" aria-label="Flip camera" title="Flip camera">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
       </button>
+      <button class="findbtn" id="osintScanBtn" style="flex:0.7 1 auto;background:linear-gradient(135deg,#ffc800 0%,#ffb700 100%);color:#111;border:1.5px solid #111;">✨ Inspire Desk</button>
       <button class="findbtn" id="findBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
         Find Book Summary
@@ -990,6 +991,30 @@ body {
     if (history.length > 1) history.back(); else location.href = "index.html";
   });
   document.getElementById("findBtn").addEventListener("click", capture);
+  // ✨ INSPIRE DESK — productive library for bursts/stories (not a verifier)
+  (function(){
+    var ob=document.getElementById("osintScanBtn");
+    if(ob) ob.addEventListener("click", function(){
+      var api=window.TSB_OSINT||window.TSB_INSPIRE;
+      if(api && api.openInspire){
+        api.openInspire("quotes","",{
+          onUseQuote:function(o){
+            var txt=o.text||"", auth=o.author||"";
+            // prefill the manual search box with the quote to find book / create burst caption
+            var inp=document.getElementById("typeIn");
+            if(inp){ inp.value = txt; inp.dispatchEvent(new Event("input",{bubbles:true})); if(inp.focus) inp.focus(); }
+            // toast hint
+            var msg=document.createElement("div"); msg.textContent="✨ Quote picked — now burst it or search the library"; msg.style.cssText="position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#111;color:#ffc800;padding:10px 14px;border-radius:999px;font:700 12px Space Grotesk,sans-serif;border:2px solid #ffc800;z-index:99999;"; document.body.appendChild(msg); setTimeout(function(){msg.remove();},2600);
+          },
+          onUseImage:function(url){ window.open(url,"_blank"); return Promise.resolve(); },
+          onUseResearch:function(s){ var inp=document.getElementById("typeIn"); if(inp){ inp.value=s.slice(0,60); inp.dispatchEvent(new Event("input",{bubbles:true})); } }
+        });
+      } else {
+        var q=prompt("What vibe do you want? (love, motivation, healing, success)","");
+        if(q && q.trim()) window.open("https://api.quotable.io/search/quotes?query="+encodeURIComponent(q.trim()),"_blank");
+      }
+    });
+  })();
   document.getElementById("flipBtn").addEventListener("click", function () {
     if (busy) return;
     facing = (facing === "environment") ? "user" : "environment";
@@ -1047,7 +1072,8 @@ body {
   start();
 })();
 </script>
-<script src="js/scan-titles.js?v=230"></script>
-<script src="js/scanner-data.js?v=230"></script>
+<script src="js/osint.js?v=235"></script>
+<script src="js/scan-titles.js?v=235"></script>
+<script src="js/scanner-data.js?v=235"></script>
 </body>
 </html>

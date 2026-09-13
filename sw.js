@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v230";
+const CACHE_VERSION = "tsb-v235";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -31,6 +31,31 @@ const APP_SHELL = [
   "./css/studio.css",
   "./js/studio.js",
   "./js/dictate.js",
+  "./js/osint.js",
+  "./assets/quote-bgs/bg01-paper.jpg",
+  "./assets/quote-bgs/bg02-dark.jpg",
+  "./assets/quote-bgs/bg03-sunset.jpg",
+  "./assets/quote-bgs/bg04-ocean.jpg",
+  "./assets/quote-bgs/bg05-forest.jpg",
+  "./assets/quote-bgs/bg06-blush.jpg",
+  "./assets/quote-bgs/bg07-lilac.jpg",
+  "./assets/quote-bgs/bg08-gold.jpg",
+  "./assets/quote-bgs/bg09-cream.jpg",
+  "./assets/quote-bgs/bg10-terracotta.jpg",
+  "./assets/quote-bgs/bg11-midnight.jpg",
+  "./assets/quote-bgs/bg12-marble.jpg",
+  "./assets/quote-bgs/bg13-pastel-dream.jpg",
+  "./assets/quote-bgs/bg14-minimal-plant.jpg",
+  "./assets/quote-bgs/bg15-sunset-ocean.jpg",
+  "./assets/quote-bgs/bg16-forest-mist.jpg",
+  "./assets/quote-bgs/bg17-beige-dunes.jpg",
+  "./assets/quote-bgs/bg18-white-shadow.jpg",
+  "./assets/quote-bgs/bg19-lavender-sky.jpg",
+  "./assets/quote-bgs/bg20-peach-watercolor.jpg",
+  "./assets/quote-bgs/bg21-night-forest.jpg",
+  "./assets/quote-bgs/bg22-cream-linen.jpg",
+  "./assets/quote-bgs/bg23-teal-horizon.jpg",
+  "./assets/quote-bgs/bg24-blossom-sky.jpg",
   "./js/gold.js",
   "./store.html",
   "./js/store.js",

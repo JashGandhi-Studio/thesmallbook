@@ -51,6 +51,7 @@
   ];
   var BGS = [
     { id: "none", label: "NONE", css: "transparent", dark: false },
+    // --- solid / gradient classics ---
     { id: "paper", label: "📄 Paper", css: "#fffdf5", dark: false },
     { id: "aged", label: "📜 Kraft", css: "#e8d9b8", dark: false },
     { id: "black", label: "⬛ Ink", css: "#111111", dark: true },
@@ -62,7 +63,33 @@
     { id: "blush", label: "🌸 Blush", css: "linear-gradient(135deg,#ffd1dc 0%,#ffc8a8 100%)", dark: false },
     { id: "lilac", label: "💜 Lilac", css: "linear-gradient(135deg,#e9d5ff 0%,#c4b5fd 50%,#a78bfa 100%)", dark: false },
     { id: "goldbg", label: "✨ Gold", css: "linear-gradient(135deg,#fff7cc 0%,#ffc800 55%,#ffb700 100%)", dark: false },
-    { id: "chalk", label: "🖍️ Chalk", css: "#2b2b2b", dark: true }
+    { id: "chalk", label: "🖍️ Chalk", css: "#2b2b2b", dark: true },
+    // --- 12 aesthetic image backgrounds (Instagram-ready, clean centre) ---
+    { id: "img-paper", label: "Paper", css: "url('assets/quote-bgs/bg01-paper.jpg')", dark: false, img: "assets/quote-bgs/bg01-paper.jpg", thumb: "assets/quote-bgs/bg01-paper-thumb.jpg" },
+    { id: "img-dark", label: "Dark", css: "url('assets/quote-bgs/bg02-dark.jpg')", dark: true, img: "assets/quote-bgs/bg02-dark.jpg", thumb: "assets/quote-bgs/bg02-dark-thumb.jpg" },
+    { id: "img-sunset", label: "Sunset", css: "url('assets/quote-bgs/bg03-sunset.jpg')", dark: false, img: "assets/quote-bgs/bg03-sunset.jpg", thumb: "assets/quote-bgs/bg03-sunset-thumb.jpg" },
+    { id: "img-ocean", label: "Ocean", css: "url('assets/quote-bgs/bg04-ocean.jpg')", dark: true, img: "assets/quote-bgs/bg04-ocean.jpg", thumb: "assets/quote-bgs/bg04-ocean-thumb.jpg" },
+    { id: "img-forest", label: "Forest", css: "url('assets/quote-bgs/bg05-forest.jpg')", dark: true, img: "assets/quote-bgs/bg05-forest.jpg", thumb: "assets/quote-bgs/bg05-forest-thumb.jpg" },
+    { id: "img-blush", label: "Blush", css: "url('assets/quote-bgs/bg06-blush.jpg')", dark: false, img: "assets/quote-bgs/bg06-blush.jpg", thumb: "assets/quote-bgs/bg06-blush-thumb.jpg" },
+    { id: "img-lilac", label: "Lilac", css: "url('assets/quote-bgs/bg07-lilac.jpg')", dark: false, img: "assets/quote-bgs/bg07-lilac.jpg", thumb: "assets/quote-bgs/bg07-lilac-thumb.jpg" },
+    { id: "img-gold", label: "Gold", css: "url('assets/quote-bgs/bg08-gold.jpg')", dark: false, img: "assets/quote-bgs/bg08-gold.jpg", thumb: "assets/quote-bgs/bg08-gold-thumb.jpg" },
+    { id: "img-cream", label: "Cream", css: "url('assets/quote-bgs/bg09-cream.jpg')", dark: false, img: "assets/quote-bgs/bg09-cream.jpg", thumb: "assets/quote-bgs/bg09-cream-thumb.jpg" },
+    { id: "img-terra", label: "Terra", css: "url('assets/quote-bgs/bg10-terracotta.jpg')", dark: true, img: "assets/quote-bgs/bg10-terracotta.jpg", thumb: "assets/quote-bgs/bg10-terracotta-thumb.jpg" },
+    { id: "img-midnight", label: "Night", css: "url('assets/quote-bgs/bg11-midnight.jpg')", dark: true, img: "assets/quote-bgs/bg11-midnight.jpg", thumb: "assets/quote-bgs/bg11-midnight-thumb.jpg" },
+    { id: "img-marble", label: "Marble", css: "url('assets/quote-bgs/bg12-marble.jpg')", dark: false, img: "assets/quote-bgs/bg12-marble.jpg", thumb: "assets/quote-bgs/bg12-marble-thumb.jpg" },
+    // --- 12 new aesthetic photo backgrounds — huge empty top for text (your 4 + 8 fresh) ---
+    { id: "img-pastel", label: "Pastel", css: "url('assets/quote-bgs/bg13-pastel-dream.jpg')", dark: false, img: "assets/quote-bgs/bg13-pastel-dream.jpg", thumb: "assets/quote-bgs/bg13-pastel-dream-thumb.jpg" },
+    { id: "img-plant", label: "Plant", css: "url('assets/quote-bgs/bg14-minimal-plant.jpg')", dark: false, img: "assets/quote-bgs/bg14-minimal-plant.jpg", thumb: "assets/quote-bgs/bg14-minimal-plant-thumb.jpg" },
+    { id: "img-sunset2", label: "Sunset 2", css: "url('assets/quote-bgs/bg15-sunset-ocean.jpg')", dark: false, img: "assets/quote-bgs/bg15-sunset-ocean.jpg", thumb: "assets/quote-bgs/bg15-sunset-ocean-thumb.jpg" },
+    { id: "img-forest2", label: "Fog", css: "url('assets/quote-bgs/bg16-forest-mist.jpg')", dark: false, img: "assets/quote-bgs/bg16-forest-mist.jpg", thumb: "assets/quote-bgs/bg16-forest-mist-thumb.jpg" },
+    { id: "img-dunes", label: "Dunes", css: "url('assets/quote-bgs/bg17-beige-dunes.jpg')", dark: false, img: "assets/quote-bgs/bg17-beige-dunes.jpg", thumb: "assets/quote-bgs/bg17-beige-dunes-thumb.jpg" },
+    { id: "img-white", label: "Light", css: "url('assets/quote-bgs/bg18-white-shadow.jpg')", dark: false, img: "assets/quote-bgs/bg18-white-shadow.jpg", thumb: "assets/quote-bgs/bg18-white-shadow-thumb.jpg" },
+    { id: "img-lav2", label: "Lavender", css: "url('assets/quote-bgs/bg19-lavender-sky.jpg')", dark: false, img: "assets/quote-bgs/bg19-lavender-sky.jpg", thumb: "assets/quote-bgs/bg19-lavender-sky-thumb.jpg" },
+    { id: "img-peach", label: "Peach", css: "url('assets/quote-bgs/bg20-peach-watercolor.jpg')", dark: false, img: "assets/quote-bgs/bg20-peach-watercolor.jpg", thumb: "assets/quote-bgs/bg20-peach-watercolor-thumb.jpg" },
+    { id: "img-night", label: "Night", css: "url('assets/quote-bgs/bg21-night-forest.jpg')", dark: true, img: "assets/quote-bgs/bg21-night-forest.jpg", thumb: "assets/quote-bgs/bg21-night-forest-thumb.jpg" },
+    { id: "img-linen", label: "Linen", css: "url('assets/quote-bgs/bg22-cream-linen.jpg')", dark: false, img: "assets/quote-bgs/bg22-cream-linen.jpg", thumb: "assets/quote-bgs/bg22-cream-linen-thumb.jpg" },
+    { id: "img-teal", label: "Teal", css: "url('assets/quote-bgs/bg23-teal-horizon.jpg')", dark: false, img: "assets/quote-bgs/bg23-teal-horizon.jpg", thumb: "assets/quote-bgs/bg23-teal-horizon-thumb.jpg" },
+    { id: "img-blossom", label: "Blossom", css: "url('assets/quote-bgs/bg24-blossom-sky.jpg')", dark: false, img: "assets/quote-bgs/bg24-blossom-sky.jpg", thumb: "assets/quote-bgs/bg24-blossom-sky-thumb.jpg" }
   ];
 
   var S = null, img = null, cfg = null, root = null;
@@ -190,13 +217,43 @@
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
   }
 
+  // cache for bg images (avoid reload each render)
+  var bgImgCache = {};
+  function loadBgImage(src){
+    return new Promise(function(res, rej){
+      if (bgImgCache[src] && bgImgCache[src].complete) return res(bgImgCache[src]);
+      var im = new Image();
+      im.onload = function(){ bgImgCache[src]=im; res(im); };
+      im.onerror = rej;
+      im.src = src;
+    });
+  }
   function drawBackground(ctx, W, H) {
-    if (img) return; // image will be drawn
+    if (img) return; // user photo will be drawn
     var bg = bgObj();
+    if (bg.img) {
+      // image background — draw cover (center-crop)
+      var im = bgImgCache[bg.img];
+      if (im && im.complete && im.naturalWidth) {
+        // cover math
+        var iw = im.naturalWidth, ih = im.naturalHeight;
+        var scale = Math.max(W/iw, H/ih);
+        var dw = iw*scale, dh = ih*scale;
+        var dx = (W-dw)/2, dy = (H-dh)/2;
+        ctx.drawImage(im, dx, dy, dw, dh);
+        // subtle darken for readability if dark bg
+        if (bg.dark) { ctx.fillStyle="rgba(0,0,0,0.18)"; ctx.fillRect(0,0,W,H); }
+        return;
+      } else {
+        // fallback while loading — show css colour then async will re-render
+        ctx.fillStyle = bg.dark ? "#1a1a1a" : "#fffdf5"; ctx.fillRect(0,0,W,H);
+        // trigger load for next render
+        loadBgImage(bg.img).then(function(){ /* next render will have it */ });
+        return;
+      }
+    }
     if (bg.id === "none") { ctx.fillStyle = "#111"; ctx.fillRect(0,0,W,H); return; }
     if (bg.css.indexOf("gradient") === 0) {
-      // simple two-stop parse: use fill with solid fallback + gradient draw
-      // For canvas, create gradient manually
       var grad;
       if (bg.id === "midnight") { grad = ctx.createLinearGradient(0,0,W,H); grad.addColorStop(0,"#0f172a"); grad.addColorStop(0.55,"#1e293b"); grad.addColorStop(1,"#334155"); }
       else if (bg.id === "sunset") { grad = ctx.createLinearGradient(0,0,W,H); grad.addColorStop(0,"#ff8a3d"); grad.addColorStop(0.55,"#ffc800"); grad.addColorStop(1,"#ff6b9d"); }
@@ -210,7 +267,6 @@
     } else {
       ctx.fillStyle = bg.css; ctx.fillRect(0,0,W,H);
     }
-    // subtle paper texture overlay for paper/kraft/cream
     if (bg.id === "paper" || bg.id === "aged" || bg.id === "cream" || bg.id === "goldbg") {
       ctx.save(); ctx.globalAlpha = 0.07; ctx.fillStyle = "#111";
       for (var i=0;i<W*H/3800;i++){ var x=Math.random()*W, y=Math.random()*H, r=Math.random()*1.2; ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill(); }
@@ -280,15 +336,29 @@
   }
 
   function drawMark(ctx, W, H) {
-    var label = "📕 thesmallbook.in";
-    ctx.font = "700 26px 'Space Grotesk', Arial";
-    var w = ctx.measureText(label).width + 56, h = 56;
-    var x = W - w - 28, y = H - h - 28;
-    ctx.fillStyle = "rgba(17,17,17,.92)"; ctx.fillRect(x, y, w, h);
-    ctx.lineWidth = 4; ctx.strokeStyle = "#ffc800"; ctx.strokeRect(x, y, w, h);
-    ctx.fillStyle = "#ffc800"; ctx.textAlign = "center";
-    ctx.fillText(label, x + w / 2, y + 37);
-    ctx.textAlign = "left";
+    // subtle small watermark for FREE — elegant, not loud. Gold has no watermark.
+    var label = "thesmallbook.in";
+    ctx.save();
+    ctx.font = "600 20px 'Space Grotesk', Arial";
+    var w = ctx.measureText(label).width + 28, h = 28;
+    var x = (W - w)/2, y = H - h - 18;
+    // soft pill, semi-transparent so quote stays hero
+    ctx.globalAlpha = 0.72;
+    ctx.fillStyle = "rgba(17,17,17,0.82)";
+    // rounded pill
+    var r = h/2;
+    ctx.beginPath();
+    ctx.moveTo(x+r, y); ctx.lineTo(x+w-r, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+    ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+    ctx.lineTo(x+r, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+    ctx.lineTo(x, y+r); ctx.quadraticCurveTo(x, y, x+r, y);
+    ctx.closePath(); ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "#ffc800";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(label, x + w/2, y + h/2 + 1);
+    ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+    ctx.restore();
   }
 
   /* ---------- the export ---------- */
@@ -303,7 +373,16 @@
       ctx.drawImage(img, g.dx, g.dy, g.dw, g.dh);
       applyFilterCanvas(ctx, r.w, r.h, S.filter);
     } else {
-      drawBackground(ctx, r.w, r.h);
+      var bg = bgObj();
+      if (bg.img) {
+        try { var bIm = await loadBgImage(bg.img); var iw=bIm.naturalWidth, ih=bIm.naturalHeight;
+          var sc=Math.max(r.w/iw, r.h/ih); var dw=iw*sc, dh=ih*sc; var dx=(r.w-dw)/2, dy= dh > r.h ? 0 : (r.h-dh)/2; // preserve empty-top sky for aesthetic cards
+          ctx.drawImage(bIm, dx, dy, dw, dh);
+          if (bg.dark){ ctx.fillStyle="rgba(0,0,0,0.18)"; ctx.fillRect(0,0,r.w,r.h); }
+        } catch(e){ drawBackground(ctx, r.w, r.h); }
+      } else {
+        drawBackground(ctx, r.w, r.h);
+      }
     }
     drawScrim(ctx, r.w, r.h, S);
     drawQuote(ctx, r.w, r.h, S);
@@ -351,11 +430,21 @@
     var k = Math.min(wrapW / r.w, maxH / r.h);
     var bw = Math.floor(r.w * k), bh = Math.floor(r.h * k);
     box.style.width = bw + "px"; box.style.height = bh + "px";
-    // aesthetic background for preview when no image
+    // aesthetic background for preview when no image — supports image BGs
     if (!img || !img.naturalWidth) {
-      box.style.background = bgObj().css;
-      if (bgObj().id === "chalk") box.style.background = "#2b2b2b";
+      var bg = bgObj();
+      if (bg.img) {
+        box.style.backgroundImage = "url('" + bg.img + "')";
+        box.style.backgroundSize = "cover";
+        box.style.backgroundPosition = "center top"; // keep large empty sky visible for quote
+        box.style.backgroundColor = bg.dark ? "#111" : "#fffdf5";
+      } else {
+        box.style.backgroundImage = "";
+        box.style.background = bg.css;
+        if (bg.id === "chalk") box.style.background = "#2b2b2b";
+      }
     } else {
+      box.style.backgroundImage = "";
       box.style.background = "#222";
     }
     var im = $("stuImg");
@@ -433,17 +522,34 @@
   /* ---------- controls ---------- */
   function chips(containerId, list, current, onPick, renderLabel) {
     var el = $(containerId); if (!el) return; el.innerHTML = "";
+    var isBg = containerId === "stuBg";
+    if (isBg) el.classList.add("stu-bggrid"); else el.classList.remove("stu-bggrid");
     list.forEach(function (it) {
       var b = document.createElement("button");
       b.type = "button";
-      b.className = "stu-chip" + (it.id === current ? " on" : "");
-      var lab = renderLabel ? renderLabel(it) : esc(it.label);
-      b.innerHTML = lab + (it.pro ? '<span class="pro">PRO</span>' : "");
+      if (isBg && it.thumb) {
+        b.className = "stu-bgthumb" + (it.id === current ? " on" : "");
+        b.style.backgroundImage = "url('" + it.thumb + "')";
+        b.title = it.label;
+        b.innerHTML = '<span class="stu-bgthumb__lab">' + esc(it.label) + '</span>';
+      } else if (isBg && it.img) {
+        b.className = "stu-bgthumb" + (it.id === current ? " on" : "");
+        b.style.backgroundImage = "url('" + it.img + "')";
+        b.style.backgroundSize = "cover";
+        b.title = it.label;
+        b.innerHTML = '<span class="stu-bgthumb__lab">' + esc(it.label) + '</span>';
+      } else {
+        b.className = "stu-chip" + (it.id === current ? " on" : "");
+        var lab = renderLabel ? renderLabel(it) : esc(it.label);
+        b.innerHTML = lab + (it.pro ? '<span class="pro">PRO</span>' : "");
+      }
       b.addEventListener("click", function () {
         if (it.pro && !S.gold) { toast("💛 " + it.label + " is a Pro filter — comes with TSB Gold"); return; }
         onPick(it.id);
         chips(containerId, list, it.id, onPick, renderLabel);
         layoutPreview();
+        // preload bg image for instant canvas
+        if (isBg && it.img) loadBgImage(it.img).catch(function(){});
       });
       el.appendChild(b);
     });
@@ -468,7 +574,7 @@
     cfg = o || {};
     S = {
       ratio: (cfg.ratio || "4:5"), zoom: 1, fx: .5, fy: .5, filter: "orig",
-      quote: cfg.quote || "", font: cfg.font || "arch", bg: cfg.bg || "paper",
+      quote: cfg.quote || "", font: cfg.font || "arch", bg: cfg.bg || "img-pastel",
       pos: "bottom", align: "center", size: "m", theme: "ink", scrim: .55,
       gold: !!(cfg.gold || (window.TSB_GOLD && TSB_GOLD.isGold()))
     };
@@ -478,7 +584,7 @@
     root.className = "stu-wrap";
     root.innerHTML =
       '<div class="stu-sheet">' +
-        '<div class="stu-top"><b>🎨 CARD STUDIO<small>PRO-GRADE · FREE ratio · 6 fonts · 12 bgs · drag to reframe</small></b><button class="stu-x" id="stuX">✕</button></div>' +
+        '<div class="stu-top"><b>🎨 CARD STUDIO<small>Instagram-ready · FREE ratio · 6 fonts · 24 aesthetic bgs · drag to reframe</small></b><button class="stu-x" id="stuX">✕</button></div>' +
         '<div class="stu-prevwrap"><div class="stu-prev" id="stuPrev">' +
           '<img id="stuImg" alt="" hidden>' +
           '<div class="stu-scrim" id="stuScrim"></div>' +
@@ -489,12 +595,14 @@
         '<div class="stu-sec"><div class="stu-lbl">PHOTO <small>zoom slider · drag the preview to reframe · no photo? pick a bg below</small></div>' +
           '<input class="stu-range" id="stuZoom" type="range" min="100" max="300" value="100"><div style="height:8px"></div><button type="button" id="stuPick" style="width:100%;border:2.5px solid #111;background:#fff;font:700 12px Space Grotesk,sans-serif;padding:10px;border-radius:999px;box-shadow:2.5px 2.5px 0 #111;cursor:pointer">📷 CHOOSE / CHANGE PHOTO</button>' +
           '<input id="stuFile" type="file" accept="image/*" hidden></div>' +
-        '<div class="stu-sec"><div class="stu-lbl">BACKGROUNDS <small>12 aesthetic options — works without a photo</small></div><div class="stu-chips" id="stuBg"></div></div>' +
+        '<div class="stu-sec"><div class="stu-lbl">BACKGROUNDS <small>Tap a photo — 24 aesthetic images + 12 colours · works without a cover · FREE exports carry a tiny watermark</small></div><div class="stu-chips" id="stuBg"></div></div>' +
         '<div class="stu-sec"><div class="stu-lbl">MINI FILTERS <small>PRO pack 💛 with Gold</small></div><div class="stu-chips" id="stuFilter"></div></div>' +
-        '<div class="stu-sec"><div class="stu-lbl">ADD TEXT <small>type anything — quote, meme, announcement</small></div>' +
+        '<div class="stu-sec"><div class="stu-lbl">ADD TEXT <small>type anything — the text looks great ON the image itself · drag, resize, align like Instagram</small></div>' +
           '<textarea class="stu-ta" id="stuQuoteTa" rows="2" maxlength="220" placeholder="Type your text…"></textarea>' +
           '<div style="height:10px"></div>' +
-          '<div class="stu-lbl">FONT <small>meme & famous faces</small></div><div class="stu-chips" id="stuFont"></div>' +
+          '<div class="stu-lbl">FONT <small>meme & famous faces — tap to see live preview</small></div><div class="stu-chips" id="stuFont"></div>' +
+          '<div style="height:10px"></div>' +
+          '<button type="button" id="stuInspire" style="width:100%;border:2.5px solid #111;background:#ffc800;font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;padding:11px;border-radius:999px;box-shadow:3px 3px 0 #111;cursor:pointer">✨ Inspire Desk — get quote ideas, images & research</button><div style="font:600 10px Space Grotesk,sans-serif;color:#64748b;text-align:center;margin-top:6px;letter-spacing:.3px">Library of captions you can post · tap to fill — not a verifier</div>' +
           '<div style="height:10px"></div>' +
           '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><div class="stu-lbl">SHADE <small>readability</small></div><input class="stu-range" id="stuScrimR" type="range" min="0" max="85" value="55"></div><div><div class="stu-lbl">SIZE</div><div class="stu-chips" id="stuSize"></div></div></div>' +
           '<div style="height:10px"></div>' +
@@ -503,8 +611,8 @@
           '<div class="stu-chips" id="stuAlign"></div><div style="height:8px"></div>' +
           '<div class="stu-chips" id="stuTheme"></div>' +
         "</div>" +
-        (S.gold ? '<div class="stu-gold">💛 GOLD — watermark off, Pro filters on. Thank you for keeping the library running.</div>'
-                : '<div class="stu-gold">Free exports carry the 📕 watermark · <a href="gold.html">TSB Gold removes it + unlocks Pro filters →</a></div>') +
+        (S.gold ? '<div class="stu-gold">💛 GOLD — no watermark, Pro filters on. Thank you for keeping the library free.</div>'
+                : '<div class="stu-gold">Free = tiny <span style="background:#111;color:#ffc800;padding:2px 6px;border-radius:999px;font-size:10px;">thesmallbook.in</span> at the bottom — subtle, not loud · <a href="gold.html">Gold removes it →</a></div>') +
         '<div class="stu-foot"><button class="stu-dl" id="stuDl">⬇ DOWNLOAD / SHARE</button><button class="stu-apply" id="stuApply">✔ USE AS COVER</button></div>' +
       "</div>";
     document.body.appendChild(root);
@@ -528,6 +636,43 @@
     });
 
     $("stuQuoteTa").value = S.quote;
+    var vBtn = $("stuInspire");
+    if (vBtn) vBtn.addEventListener("click", function(){
+      var q = ($("stuQuoteTa").value||"").trim() || S.quote || "";
+      var api = window.TSB_OSINT||window.TSB_INSPIRE;
+      if(api && api.openInspire){
+        api.openInspire("quotes", q, {
+          onUseQuote: function(o){
+            var txt=o.text||"", auth=o.author||"";
+            S.quote = txt + (auth ? " — " + auth : "");
+            var ta=$("stuQuoteTa"); if(ta) ta.value=S.quote;
+            layoutPreview();
+            toast("✨ Quote loaded — tweak it to make it yours");
+          },
+          onUseImage: function(url){
+            toast("✨ Image picked — use Inspire → Images to set as cover on Write page");
+            window.open(url,"_blank");
+            return Promise.resolve();
+          },
+          onUseResearch: function(snippet){
+            S.quote = (S.quote ? S.quote + " " : "") + snippet.slice(0,120);
+            var ta2=$("stuQuoteTa"); if(ta2) ta2.value=S.quote;
+            layoutPreview();
+            toast("✨ Research added to text");
+          }
+        });
+      } else {
+        toast("✨ Inspire Desk loading…");
+        window.open("https://api.quotable.io/quotes?limit=8","_blank");
+      }
+    });
+    // compat: keep old id if cached sheet is open
+    var vOld = $("stuVerify");
+    if (vOld) vOld.addEventListener("click", function(){
+      var qq = ($("stuQuoteTa").value||"").trim() || S.quote || "";
+      var api2 = window.TSB_OSINT||window.TSB_INSPIRE;
+      if(api2 && api2.openInspire) api2.openInspire("quotes", qq, { onUseQuote: function(o){ S.quote=o.text; var tt=$("stuQuoteTa"); if(tt) tt.value=S.quote; layoutPreview(); }});
+    });
     // inline photo picker inside studio
     var fileIn = $("stuFile");
     var pickBtn = $("stuPick");

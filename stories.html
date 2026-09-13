@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=230">
+  <link rel="stylesheet" href="css/style.css?v=235">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -37,6 +37,7 @@
       <button class="cm-chipbtn" id="reelsBtn" title="Bursts — swipe through stories">🎬 Bursts</button>
       <button class="cm-chipbtn" id="finderBtn" title="Find readers to follow"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Find readers</button>
       <button class="cm-chipbtn" id="quoteBtn" title="Post a small quote">❝ Quote</button>
+      <button class="cm-chipbtn" id="inspireDeskStories" title="Inspire Desk — live quotes, aesthetic images & research to create faster" style="background:#ffc800;border:2.5px solid #111;box-shadow:2px 2px 0 #111;font-weight:800;">✨ Inspire</button>
       <button class="cm-write" id="writeBtn">✍️ Write a story</button>
     </div>
   </header>
@@ -64,13 +65,13 @@
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="js/prefs.js?v=230"></script>
-  <script src="js/lang.js?v=230"></script>
-  <script src="js/config.js?v=230"></script>
-  <script src="js/auth.js?v=230"></script>
-  <script src="js/sounds.js?v=230"></script>
-  <script src="js/founder.js?v=230"></script>
-  <script src="js/community.js?v=230"></script>
+  <script src="js/prefs.js?v=235"></script>
+  <script src="js/lang.js?v=235"></script>
+  <script src="js/config.js?v=235"></script>
+  <script src="js/auth.js?v=235"></script>
+  <script src="js/sounds.js?v=235"></script>
+  <script src="js/founder.js?v=235"></script>
+  <script src="js/community.js?v=235"></script>
   <script>
   (function () {
     "use strict";
@@ -548,6 +549,34 @@
 
 
     document.getElementById("writeBtn").addEventListener("click", function () { location.href = "write.html"; });
+    // ✨ Inspire Desk — embedded in Stories so no one misses it (live, intelligent, one-tap to Write/Studio)
+    (function(){
+      var b=document.getElementById("inspireDeskStories");
+      if(!b) return;
+      b.addEventListener("click", function(){
+        var api=window.TSB_OSINT||window.TSB_INSPIRE;
+        if(api && api.openInspire){
+          api.openInspire("quotes","",{
+            onUseQuote:function(o){
+              var txt=o.text||"", auth=o.author||"";
+              // go to Write with prefilled quote
+              try{ localStorage.setItem("tsb_inspire_prefill", JSON.stringify({q:txt, a:auth})); }catch(e){}
+              location.href="write.html?mode=quote";
+            },
+            onUseImage:function(url){
+              // for Stories, image pick -> go to Write with cover
+              try{ sessionStorage.setItem("tsb_inspire_img", url); }catch(e){}
+              location.href="write.html";
+              return Promise.resolve();
+            },
+            onUseResearch:function(s){
+              try{ localStorage.setItem("tsb_inspire_research", s.slice(0,600)); }catch(e){}
+              location.href="write.html";
+            }
+          });
+        }
+      });
+    })();
 
     document.getElementById("reelsTrack").addEventListener("click", function (e) {
       var t = e.target.closest("[data-audio]");
@@ -620,7 +649,8 @@
     load();
   })();
   </script>
-  <script src="js/bar.js?v=230" defer></script>
-  <script src="js/gate.js?v=230" defer></script>
+  <script src="js/osint.js?v=235"></script>
+  <script src="js/bar.js?v=235" defer></script>
+  <script src="js/gate.js?v=235" defer></script>
 </body>
 </html>
