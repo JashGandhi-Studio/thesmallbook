@@ -85,21 +85,13 @@
     return p;
   }
 
-  // LIVE quotes: try Quotable (if DNS works), then DummyJSON live filter — never preloaded.
-  var quoteCache = null; // cache last live fetch for 60s to avoid hammering
-  var quoteCacheAt = 0;
+  // LIVE quotes: truly live — no stale cache. Each search fetches fresh 100 from DummyJSON + curates only as last resort.
   function fetchDummyQuotesLive(){
-    // fetch 40 live quotes each time (fresh), filter intelligently
-    var now=Date.now();
-    if(quoteCache && (now-quoteCacheAt)<60000){
-      return Promise.resolve(quoteCache);
-    }
-    // random skip for variety but still live
-    var skip = Math.floor(Math.random()*120)*10 % 1400;
-    var url = "https://dummyjson.com/quotes?limit=50&skip="+skip;
+    // fetch 100 live quotes fresh every time — so healing/lonely always shows new content, not 5-6 preloaded
+    var skip = Math.floor(Math.random()*14)*100 % 1350; // 0,100,200... to vary
+    var url = "https://dummyjson.com/quotes?limit=100&skip="+skip;
     return jfetch(url, 6500).then(function(j){
       var arr=(j.quotes||[]).map(function(x){ return {c:x.quote, a:x.author, tags:[]}; });
-      quoteCache=arr; quoteCacheAt=now;
       return arr;
     }).catch(function(){ return []; });
   }
@@ -119,25 +111,30 @@
       }).catch(function(){ return []; });
     };
     return tryQuotable().then(function(list){
-      if(list.length) return list;
-      // fallback live DummyJSON + intelligent ranking
+      if(list.length) return list.slice(0,12);
+      // fallback live DummyJSON + intelligent ranking — up to 12, always fresh
       return fetchDummyQuotesLive().then(function(live){
         if(!live.length) return [];
         if(!toks.length){
-          // no query: return diverse live slice
-          return live.slice(0,8);
+          // no query: diverse live slice 12
+          return live.slice(0,12);
         }
-        // rank by relevance to what they typed
+        // rank by relevance to what they typed — show only relevant, but up to 12
         var ranked = live.map(function(x){ return {x:x, sc: relevance(x.c+" "+x.a, toks)}; });
         ranked.sort(function(a,b){ return b.sc - a.sc; });
-        var top = ranked.filter(function(r){ return r.sc>0; }).slice(0,8).map(function(r){ return r.x; });
-        if(top.length>=3) return top;
-        // if not enough relevant, pad with curated filtered intelligently
+        var top = ranked.filter(function(r){ return r.sc>0; }).slice(0,12).map(function(r){ return r.x; });
+        if(top.length>=6) return top;
+        // if not enough relevant, pad with curated filtered intelligently to reach 12
         var curated = CURATED.filter(function(c){
           var txt=(c.c+" "+c.a+" "+c.tags.join(" ")).toLowerCase();
           return toks.some(function(t){ return txt.indexOf(t)>=0; });
-        }).slice(0,8-top.length);
-        return top.concat(curated);
+        });
+        // also if still short, add top irrelevant to fill to 12 so you always see new content
+        var filler = [];
+        if(top.length + curated.length < 12){
+          filler = ranked.filter(function(r){ return r.sc===0; }).slice(0, 12 - top.length - curated.length).map(function(r){ return r.x; });
+        }
+        return top.concat(curated).concat(filler).slice(0,12);
       });
     });
   }
@@ -189,10 +186,107 @@
     }).catch(function(){return [];});
   }
   function openLibSearch(q){
-    var url="https://openlibrary.org/search.json?q="+encodeURIComponent(q)+"&limit=6";
+    var url="https://openlibrary.org/search.json?q="+encodeURIComponent(q)+"&limit=4";
     return jfetch(url, 7000).then(function(j){
-      return (j.docs||[]).slice(0,6).map(function(d){ return {title:d.title, author:(d.author_name&&d.author_name[0])||"", year:d.first_publish_year, cover:d.cover_i}; });
+      return (j.docs||[]).slice(0,4).map(function(d){ return {title:d.title, author:(d.author_name&&d.author_name[0])||"", year:d.first_publish_year, cover:d.cover_i}; });
     }).catch(function(){return [];});
+  }
+  // ensure 400-book library is available even if data.js not loaded on this page
+  var __localBooksLoaded = false;
+  function ensureLocalBooks(){
+    if(window.BOOKS && window.BOOKS.length) return Promise.resolve(window.BOOKS);
+    if(__localBooksLoaded) return Promise.resolve(window.BOOKS||[]);
+    __localBooksLoaded = true;
+    return fetch("js/data.js", {cache:"force-cache"}).then(function(r){ return r.text(); }).then(function(txt){
+      try{
+        // js/data.js is `const BOOKS = [...]` ; evaluate safely to extract
+        var m = txt.match(/const BOOKS\s*=\s*(\[[\s\S]*?\]);/);
+        if(m && m[1]){
+          try{ var arr = JSON.parse(m[1]); window.BOOKS = arr; return arr; }catch(e){}
+        }
+        // fallback eval
+        eval(txt);
+        return window.BOOKS||[];
+      }catch(e){ return window.BOOKS||[]; }
+    }).catch(function(){ return window.BOOKS||[]; });
+  }
+  function localBookSearch(q){
+    try{
+      var books = [];
+      if(window.BOOKS && Array.isArray(window.BOOKS)) books = window.BOOKS;
+      else if(window.TSB_BOOKS && Array.isArray(window.TSB_BOOKS)) books = window.TSB_BOOKS;
+      else if(window.__BOOKS__ && Array.isArray(window.__BOOKS__)) books = window.__BOOKS__;
+      // fallback: try to read from data.js global if not yet loaded
+      if(!books.length) return [];
+      var toks = tokens(q);
+      if(!toks.length) return books.slice(0,6);
+      var scored = books.map(function(b){
+        // comprehensive text: title, author, category, oneLiner, bigIdea, lessons titles + summaries + examples
+        var txt = (b.title||"")+" "+(b.author||"")+" "+(b.category||"")+" "+(b.oneLiner||"")+" "+(b.t||"")+" "+(b.bigIdea||"")+" "
+          + ((b.lessons||[]).map(function(l){ return l.title+" "+(l.chapter||"")+" "+(l.summary||"")+" "+(l.example||""); }).join(" "));
+        txt = txt.toLowerCase();
+        var sc = 0;
+        toks.forEach(function(w){ if(txt.indexOf(w)>=0) sc+=2; });
+        // bonus for title exact and healing/love etc in title
+        if(toks.some(function(w){ return (b.title||"").toLowerCase().indexOf(w)>=0; })) sc+=3;
+        if(toks.some(function(w){ return (b.category||"").toLowerCase().indexOf(w)>=0; })) sc+=1;
+        return {b:b, sc:sc};
+      }).sort(function(a,b){ return b.sc - a.sc; });
+      var top = scored.filter(function(x){ return x.sc>0; }).slice(0,4).map(function(x){ return x.b; });
+      // if fewer than 2 relevant, pad with next best so you always get 2-4 suggestions (compact on mobile)
+      if(top.length<4){
+        var filler = scored.filter(function(x){ return x.sc===0; }).slice(0, 4 - top.length).map(function(x){ return x.b; });
+        top = top.concat(filler);
+      }
+      return top.slice(0,4);
+    }catch(e){ return []; }
+  }
+  function cardLocalBook(b){
+    var cover = b.cover ? b.cover : (b.id ? "assets/covers/"+b.id+".jpg" : "");
+    var lessons = (b.lessons||[]).length;
+    return '<div style="background:#fff;border:2.5px solid #111;border-radius:14px;padding:10px;display:flex;gap:10px;align-items:center;">' +
+      (cover ? '<img src="'+esc(cover)+'" alt="" style="width:56px;height:78px;object-fit:cover;border-radius:8px;border:2px solid #111;flex:none;" loading="lazy" onerror="this.style.display=\'none\'">' : '<div style="width:56px;height:78px;border-radius:8px;border:2px solid #111;background:#fffdf5;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;">📕</div>') +
+      '<div style="flex:1 1 auto;min-width:0;">' +
+        '<div style="font:800 12px Space Grotesk,sans-serif;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(b.title||b.t||"")+'</div>' +
+        '<div style="font:600 11px Space Grotesk,sans-serif;color:#64748b;margin-top:2px;">'+esc(b.author||b.a||"")+(b.category?" · "+esc(b.category):"")+ (lessons ? " · "+lessons+" lessons":"")+'</div>' +
+        '<div style="font:600 10px Space Grotesk,sans-serif;color:#16a34a;letter-spacing:.5px;text-transform:uppercase;margin-top:4px;">📚 TheSmallBook · tap to use</div>' +
+      '</div>' +
+      '<button type="button" data-use-local="'+esc(b.id||b.title)+'" style="flex:none;border:2px solid #111;background:#ffc800;border-radius:999px;padding:7px 10px;font:700 10px Space Grotesk,sans-serif;cursor:pointer;white-space:nowrap">+ Use</button>' +
+    '</div>';
+  }
+  function essayStarter(query, wikiExtract, book){
+    // Build a concise 3-4 line essay starter that blends Wiki + book ideology — ready to insert & rewrite
+    var q = String(query||"").trim() || "this";
+    var wiki = String(wikiExtract||"").trim().replace(/\s+/g," ").slice(0, 240);
+    // fallback wiki if empty: use generic
+    if(!wiki) wiki = "Every story needs a clear idea — start with what happened, then what it meant.";
+    var title = book ? (book.title||"") : "";
+    var author = book ? (book.author||"") : "";
+    var oneLiner = book ? (book.oneLiner||book.bigIdea||"") : "";
+    // pick first lesson title for angle
+    var lesson = "";
+    try{ if(book && book.lessons && book.lessons[0]) lesson = book.lessons[0].title; }catch(e){}
+    // craft 3-part starter: hook (book) + context (wiki) + prompt (your voice)
+    var hook = "";
+    if(title){
+      hook = 'As ' + (author? author+" shows in \u201C"+title+"\u201D — ": "In \u201C"+title+"\u201D — ") + (oneLiner ? oneLiner.split(".")[0].slice(0, 110) + "." : "a lens for "+q+".");
+    } else {
+      hook = "A good story about \u201C"+q+"\u201D starts with one honest moment.";
+    }
+    var context = wiki ? ("Context: " + wiki + (wiki.length>=240?"\u2026":"")) : "";
+    var prompt = "Your turn — rewrite these 3 lines in your voice: (1) What happened with "+q+"? (2) What did it teach you? (3) What would you tell someone feeling this now" + (lesson? " — hint: "+lesson+"." : ".");
+    var full = hook + " " + context + " " + prompt;
+    // card html — compact, not bombarded, easy on mobile
+    var html = '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;">' +
+      '<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#111;margin-bottom:8px;">\u270D\uFE0F Story starter for &ldquo;'+esc(q)+'&rdquo;'+(title?' &middot; inspired by '+esc(title):'')+'</div>' +
+      '<div style="font:500 12.5px Space Grotesk,sans-serif;color:#1f2937;line-height:1.55;background:#fffdf5;border:2px solid #111;border-radius:12px;padding:10px;">'+esc(hook)+'<br><span style="color:#334155">'+esc(context)+'</span><br><span style="font:700 11.5px Space Grotesk,sans-serif;color:#0f172a">'+esc(prompt)+'</span></div>' +
+      '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">' +
+        '<button type="button" data-use-essay="'+esc(full).replace(/"/g,"&quot;")+'" style="flex:1 1 140px;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:9px 12px;font:800 11px Space Grotesk,sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;">\u2728 Insert story starter</button>' +
+        '<button type="button" data-copy-essay style="border:2.5px solid #111;background:#fff;border-radius:999px;padding:9px 12px;font:700 11px Space Grotesk,sans-serif;cursor:pointer;">\uD83D\uDCCB Copy</button>' +
+      '</div>' +
+      '<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;text-align:center;margin-top:6px;">Tap Insert — it drops in your editor. Rewrite in your voice before publishing.</div>' +
+    '</div>';
+    return {html:html, text:full};
   }
 
   function sheetShell(inner){
@@ -351,15 +445,15 @@
       '</div>';
     }
     function cardImage(im){
-      return '<div style="background:#fff;border:3px solid #111;border-radius:16px;overflow:hidden;box-shadow:4px 4px 0 #111;display:flex;gap:0;">' +
-        '<img src="'+esc(im.thumb)+'" alt="" style="width:112px;height:112px;object-fit:cover;flex:none;border-right:3px solid #111;" loading="lazy">' +
-        '<div style="flex:1 1 auto;padding:10px 12px;display:flex;flex-direction:column;gap:6px;">' +
-          '<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:#111;line-height:1.3;">'+esc(im.title.slice(0,54))+'</div>' +
-          '<div style="font:500 11px Space Grotesk,sans-serif;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">LIVE · aesthetic photo</div>' +
-          '<div style="display:flex;gap:6px;margin-top:auto;">' +
-            '<button type="button" data-use-image="'+esc(im.full)+'" style="flex:1 1 auto;border:2px solid #111;background:#ffc800;border-radius:999px;padding:7px 10px;font:800 11px Space Grotesk,sans-serif;cursor:pointer;">✨ Use as cover</button>' +
-            '<a href="'+esc(im.full)+'" target="_blank" rel="noopener" style="border:2px solid #111;background:#fff;border-radius:999px;padding:7px 10px;font:700 11px Space Grotesk,sans-serif;text-decoration:none;color:#111;text-align:center;">Open</a>' +
-          '</div>' +
+      // Grid card: image on top full-width square, title, then full-width Use button — 2 columns on mobile, buttons never cut
+      return '<div style="background:#fff;border:2.5px solid #111;border-radius:16px;overflow:hidden;box-shadow:3px 3px 0 #111;display:flex;flex-direction:column;">' +
+        '<div style="position:relative;aspect-ratio:1/1;background:#fffdf5;overflow:hidden;border-bottom:2.5px solid #111;">' +
+          '<img src="'+esc(im.thumb)+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">' +
+        '</div>' +
+        '<div style="padding:8px 10px;display:flex;flex-direction:column;gap:6px;flex:1;">' +
+          '<div style="font:700 11px Space Grotesk,sans-serif;color:#111;line-height:1.25;min-height:28px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">'+esc(im.title.slice(0,48))+'</div>' +
+          '<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;letter-spacing:.4px;text-transform:uppercase;">LIVE · aesthetic</div>' +
+          '<button type="button" data-use-image="'+esc(im.full)+'" style="width:100%;border:2px solid #111;background:#ffc800;border-radius:999px;padding:8px 10px;font:800 11px Space Grotesk,sans-serif;letter-spacing:.3px;cursor:pointer;box-shadow:2px 2px 0 #111;">✨ Use as cover</button>' +
         '</div>' +
       '</div>';
     }
@@ -439,6 +533,35 @@
           else { var bd=document.getElementById("wBody"); if(bd){ bd.focus(); document.execCommand("insertText", false, "Reference: "+txt+"\n"); bd.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Reference added"); } else if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ toast("📋 Copied"); }); }
         });
       });
+      $res.querySelectorAll("[data-use-essay]").forEach(function(b){
+        b.addEventListener("click", function(){
+          var txt=b.getAttribute("data-use-essay")||"";
+          if(callbacks.onUseResearch) callbacks.onUseResearch(txt);
+          else { var bdE=document.getElementById("wBody"); if(bdE){ bdE.focus(); document.execCommand("insertText", false, "\n\n"+txt+"\n"); bdE.dispatchEvent(new Event("input",{bubbles:true})); toast("\u2728 Story starter inserted — rewrite in your voice before publishing"); } else if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ toast("\uD83D\uDCCB Copied"); }); }
+          b.textContent="\u2713 Inserted"; setTimeout(function(){ b.textContent="\u2728 Insert story starter"; },1400);
+        });
+      });
+      $res.querySelectorAll("[data-copy-essay]").forEach(function(b){
+        b.addEventListener("click", function(){
+          var txtEl=$res.querySelector("[data-use-essay]"); var txt= txtEl ? txtEl.getAttribute("data-use-essay") : ($res._lastWikiExtract||"");
+          if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ toast("\uD83D\uDCCB Copied"); });
+          b.textContent="\u2713 Copied"; setTimeout(function(){ b.textContent="\uD83D\uDCCB Copy"; },1400);
+        });
+      });
+      $res.querySelectorAll("[data-use-local]").forEach(function(b){
+        b.addEventListener("click", function(){
+          var id=b.getAttribute("data-use-local");
+          var qLocal = ($q.value||"").trim() || activeTag || "habits";
+          var allLocal = localBookSearch(qLocal);
+          var found = allLocal.find(function(x){ return (x.id||x.title)==id; });
+          var title = found ? (found.title||found.t) : id;
+          var author = found ? (found.author||found.a||"") : "";
+          var snippet = title + (author?" — "+author:"") + (found && found.oneLiner ? "\n“"+found.oneLiner+"”" : "") + (found && found.lessons && found.lessons[0] ? "\nLesson: "+found.lessons[0].title : "");
+          if(callbacks.onUseResearch) callbacks.onUseResearch(snippet);
+          else { var bd2=document.getElementById("wBody"); if(bd2){ bd2.focus(); document.execCommand("insertText", false, "\n\n"+snippet+"\n"); bd2.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Book content added — rewrite in your voice"); } else if(navigator.clipboard) navigator.clipboard.writeText(snippet).then(function(){ toast("📋 Copied"); }); }
+          b.textContent="✓ Added"; setTimeout(function(){ b.textContent="+ Use"; },1400);
+        });
+      });
     }
 
     function run(force){
@@ -451,6 +574,17 @@
       pending=true;
       $res.innerHTML = '<div style="text-align:center;padding:22px 10px;color:#64748b;font:600 13px Space Grotesk,sans-serif;"><span style="display:inline-block;width:18px;height:18px;border:2.5px solid #111;border-top-color:#ffc800;border-radius:50%;animation:rot .7s linear infinite;margin-right:8px;vertical-align:-4px;"></span> Searching live…</div><style>@keyframes rot{to{transform:rotate(360deg)}}</style>';
 
+      // reset grid vs flex per tab — images is grid, others flex
+      if(activeTab==="images"){
+        $res.style.display = "grid";
+        $res.style.gridTemplateColumns = "repeat(2,1fr)";
+        $res.style.gap = "10px";
+      } else {
+        $res.style.display = "flex";
+        $res.style.flexDirection = "column";
+        $res.style.gap = "10px";
+        $res.style.gridTemplateColumns = "";
+      }
       if(activeTab==="quotes"){
         var qFor = ($q.value||"").trim();
         var tagFor = !qFor ? activeTag : "";
@@ -484,26 +618,41 @@
           if(/aesthetic|minimal|beige|pastel/i.test(iq)){
             list = pics.slice(0,4).concat(list.slice(0,4));
           }
-          $res.innerHTML = list.map(cardImage).join("") + '<div style="text-align:center;font:600 11px Space Grotesk,sans-serif;color:#94a3b8;margin-top:4px;">LIVE · Wikimedia Commons + Picsum aesthetic · tap “Use as cover” — works everywhere.</div>';
+          // Grid 2-2 on mobile: proper preview size, buttons never cut — images as 1:1 cards
+          $res.style.display = "grid";
+          $res.style.gridTemplateColumns = "repeat(2,1fr)";
+          $res.style.gap = "10px";
+          $res.innerHTML = list.map(cardImage).join("") ;
+          // footnote below grid
+          var foot = document.createElement("div");
+          foot.style.cssText="grid-column:1/-1;text-align:center;font:600 11px Space Grotesk,sans-serif;color:#94a3b8;margin-top:2px;";
+          foot.textContent="LIVE · Wikimedia + Picsum aesthetic · tap “Use as cover”";
+          $res.appendChild(foot);
           if($q.value.trim()){
             var n2=document.createElement("div");
-            n2.style.cssText="text-align:center;font:600 11px Space Grotesk,sans-serif;color:#16a34a;";
+            n2.style.cssText="grid-column:1/-1;text-align:center;font:600 11px Space Grotesk,sans-serif;color:#16a34a;";
             n2.textContent="LIVE · images for “"+($q.value.trim().slice(0,30))+"”";
             $res.prepend(n2);
           }
+          // reset for other tabs will be flex
           wireResultActions();
           pending=false;
         }).catch(function(){ $res.innerHTML = picsumAesthetic(iq,6).map(cardImage).join(""); wireResultActions(); pending=false; });
       } else {
         var rq = ($q.value||"").trim() || activeTag || "habits";
-        Promise.all([fetchWikiSummary(rq), wikiSearch(rq), openLibSearch(rq)]).then(function(res){
+        Promise.all([fetchWikiSummary(rq), wikiSearch(rq), openLibSearch(rq), ensureLocalBooks()]).then(function(res){
           var sum=res[0], hits=res[1], books=res[2];
           if(!sum && hits.length) return fetchWikiSummary(hits[0].title).then(function(s2){ return [s2, hits, books]; });
           return [sum, hits, books];
         }).then(function(arr){
           var sum2=arr[0], hits2=arr[1], books2=arr[2];
+          var localBooks = localBookSearch(rq);
           $res._lastWikiExtract = sum2 ? sum2.extract : (hits2[0]?hits2[0].snippet:"");
+          var essayObj = null;
+          try{ essayObj = essayStarter(rq, $res._lastWikiExtract, (localBooks && localBooks[0]) ? localBooks[0] : null); }catch(e){ essayObj=null; }
           var html="";
+          // Story starter first — what stories mean: a ready essay you rewrite in your voice (not bombarded, compact)
+          if(essayObj && essayObj.html) html += essayObj.html;
           if(sum2) html+=cardResearchWiki(sum2);
           else if(hits2.length){
             html+='<div style="background:#fff;border:2.5px solid #111;border-radius:14px;padding:12px;"><div style="font:700 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;">Related on Wikipedia (live)</div>' +
@@ -514,6 +663,9 @@
           }
           if(books2.length){
             html+='<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin-bottom:8px;">📚 Books that explore this — LIVE OpenLibrary</div>'+books2.map(cardBook).join('<div style="height:8px"></div>')+'</div>';
+          }
+          if(localBooks.length){
+            html+='<div style="background:#ffc800;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#111;margin-bottom:8px;">📕 From TheSmallBook — your 400 books (tap to use)</div>'+localBooks.map(cardLocalBook).join('<div style="height:8px"></div>')+'<div style="font:600 10px Space Grotesk,sans-serif;color:#111;margin-top:8px;text-align:center;opacity:.7">Suggestions from our library matching “'+esc(rq)+'”</div></div>';
           }
           $res.innerHTML = html;
           if(rq){

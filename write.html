@@ -19,8 +19,8 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=237">
-  <link rel="stylesheet" href="css/studio.css?v=237">
+  <link rel="stylesheet" href="css/style.css?v=240">
+  <link rel="stylesheet" href="css/studio.css?v=240">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -67,22 +67,58 @@
     <div id="wBody" class="wr-ed" contenteditable="true" data-ph="Start writing… your draft saves itself on this device, even if the tab closes. Publish whenever you're ready."></div>
 
     <section class="wr-meta">
-      <label class="cm-lbl cm-lbl--file" for="wCover">Cover / quote image
-        <span class="upbtn">📷 Choose image</span><span class="upname" id="wCoverName">No file chosen</span>
-        <input id="wCover" type="file" accept="image/*" hidden><img id="wCoverPrev" class="cm-prev" hidden alt="">
-        <span class="st-hint">🎨 Vertical photo? Tap the preview after upload to reframe it, place the quote, add mini filters & pick the ratio.</span>
-        <span class="st-hint" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button type="button" id="inspireDeskBtn" style="border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:8px 14px;font:800 12px Space Grotesk,sans-serif;letter-spacing:.5px;box-shadow:3px 3px 0 #111;cursor:pointer">✨ Inspire Desk — quotes · images · research</button><span style="font:600 11px Space Grotesk,sans-serif;color:#64748b;line-height:1.3">Library to create faster — not a verifier. Tap to browse quotes you can post, images you can set as cover, research you can build on.</span></span></label>
-      <label class="cm-lbl cm-lbl--file" for="wBurst">🎬 Burst video — max 2 minutes
-        <span class="upbtn">🎬 Choose video</span><span class="upname" id="wBurstName">No file chosen</span>
-        <input id="wBurst" type="file" accept="video/*" hidden><video id="wBurstPrev" class="cm-prev" controls playsinline preload="metadata" hidden></video></label>
-      <div class="cm-lbl">Voice version (optional)
-        <div class="cm-audiorow">
+      <!-- COVER — properly aligned card -->
+      <div class="wr-card">
+        <div class="wr-card__head">
+          <span class="wr-card__title">📷 Cover / quote image</span>
+          <span class="wr-card__sub">Tap preview to reframe in Studio</span>
+        </div>
+        <label class="wr-uprow" for="wCover">
+          <span class="upbtn">📷 Choose image</span>
+          <span class="upname" id="wCoverName">No file chosen</span>
+          <input id="wCover" type="file" accept="image/*" hidden>
+        </label>
+        <img id="wCoverPrev" class="cm-prev" hidden alt="" style="margin-top:10px;width:100%;max-height:220px;object-fit:cover;">
+        <p class="wr-hint">🎨 Vertical photo? Tap the preview to open Studio — reframe, filter & pick ratio. No photo? Open Studio from the Quote card above — 24 aesthetic backgrounds are ready.</p>
+      </div>
+
+      <!-- INSPIRE DESK — separate, properly aligned, not inside cover label -->
+      <div class="wr-card wr-card--inspire">
+        <div class="wr-card__head">
+          <span class="wr-card__title">✨ Inspire Desk</span>
+          <span class="wr-card__sub" id="inspireDeskHint">Live library</span>
+        </div>
+        <button type="button" id="inspireDeskBtn" class="wr-inspirebtn">✨ Inspire Desk — quotes & images</button>
+        <p class="wr-hint" id="inspireDeskSub" style="margin-top:8px;">Library to create faster — not a verifier. Tap to browse quotes you can post & aesthetic images you can set as card background — live, not preloaded.</p>
+      </div>
+
+      <!-- BURST -->
+      <div class="wr-card">
+        <div class="wr-card__head">
+          <span class="wr-card__title">🎬 Burst video — max 2 min</span>
+          <span class="wr-card__sub">Vertical video shines</span>
+        </div>
+        <label class="wr-uprow" for="wBurst">
+          <span class="upbtn">🎬 Choose video</span>
+          <span class="upname" id="wBurstName">No file chosen</span>
+          <input id="wBurst" type="file" accept="video/*" hidden>
+        </label>
+        <video id="wBurstPrev" class="cm-prev" controls playsinline preload="metadata" hidden style="margin-top:10px;width:100%;"></video>
+      </div>
+
+      <!-- VOICE -->
+      <div class="wr-card">
+        <div class="wr-card__head">
+          <span class="wr-card__title">🎙️ Voice version (optional)</span>
+          <span class="wr-card__sub">Record or upload</span>
+        </div>
+        <div class="cm-audiorow" style="margin-top:4px;">
           <button class="setbtn" id="wRec">🎙 Record</button>
           <span id="wRecState" class="cm-recstate"></span>
           <label class="cm-filelbl" for="wAudio"><span class="upbtn">🎧 Choose audio</span><span class="upname" id="wAudioName">No file chosen</span></label>
           <input id="wAudio" type="file" accept="audio/*" hidden>
         </div>
-        <audio id="wAudioPrev" controls hidden></audio>
+        <audio id="wAudioPrev" controls hidden style="margin-top:10px;width:100%"></audio>
       </div>
       <label class="cm-lbl cm-lbl--chk">
         <input type="checkbox" id="wNoDl" checked>
@@ -98,22 +134,26 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=237"></script>
-  <script src="js/lang.js?v=237"></script>
-  <script src="js/config.js?v=237"></script>
-  <script src="js/auth.js?v=237"></script>
-  <script src="js/sounds.js?v=237"></script>
-  <script src="js/founder.js?v=237"></script>
-  <script src="js/community.js?v=237"></script>
-  <script src="js/gold.js?v=237"></script>
-  <script src="js/studio.js?v=237"></script>
-  <script src="js/dictate.js?v=237"></script>
-  <script src="js/osint.js?v=237"></script>
+  <script src="js/prefs.js?v=240"></script>
+  <script src="js/lang.js?v=240"></script>
+  <script src="js/config.js?v=240"></script>
+  <script src="js/auth.js?v=240"></script>
+  <script src="js/sounds.js?v=240"></script>
+  <script src="js/founder.js?v=240"></script>
+  <script src="js/community.js?v=240"></script>
+  <script src="js/gold.js?v=240"></script>
+  <script src="js/studio.js?v=240"></script>
+  <script src="https://js.puter.com/v2/"></script>
+  <script src="js/dictate.js?v=240"></script>
+  <script src="js/data.js?v=240"></script>
+  <script src="js/osint.js?v=240"></script>
   <script>
   (function () {
     "use strict";
     var C = window.TSB_COMMUNITY;
-    var DKEY = "tsb_write_draft";
+    // Separate drafts so QUOTE and STORY never collide — perfect, as you said
+    function dkey(){ return kind==="quote" ? "tsb_write_draft_quote" : "tsb_write_draft_story"; }
+    var DKEY = "tsb_write_draft"; // legacy fallback, but saveDraft/loadDraft now use dkey()
     var $ = function (id) { return document.getElementById(id); };
     var title = $("wTitle"), sub = $("wSub"), body = $("wBody"), tags = $("wTags");
     var coverUrl = "", audioUrl = "", burstUrl = "", kind = "text";
@@ -141,7 +181,7 @@
       $("saveState").textContent = "… saving";
       saveT = setTimeout(function () {
         try {
-          localStorage.setItem(DKEY, JSON.stringify({
+          localStorage.setItem(dkey(), JSON.stringify({
             t: title.value, s: sub.value, b: body.innerHTML, g: tags.value,
             c: coverUrl, a: audioUrl, v: burstUrl, f: $("wFont").value, at: Date.now()
           }));
@@ -151,7 +191,7 @@
     }
     function loadDraft() {
       try {
-        var d = JSON.parse(localStorage.getItem(DKEY));
+        var d = JSON.parse(localStorage.getItem(dkey()));
         if (!d) return;
         title.value = d.t || ""; sub.value = d.s || ""; body.innerHTML = d.b || "";
         tags.value = d.g || ""; coverUrl = d.c || ""; audioUrl = d.a || ""; burstUrl = d.v || "";
@@ -201,7 +241,7 @@
       modeChip.className = "wr-modechip wr-modechip--quote";
       if(quoteWrap) quoteWrap.hidden = false;
       // make body optional and change its placeholder
-      body.setAttribute("data-ph", "Your 2–3 line take — why this hit you (optional, but makes it yours). Leave empty to publish just the card.");
+      body.setAttribute("data-ph", "Your take — why this line hit you (optional, 2–3 lines in your voice). Leave empty to publish just the card. Your QUOTE draft is separate from your STORY draft.");
       renderQuoteLive();
       title.addEventListener("input", renderQuoteLive);
       sub.addEventListener("input", renderQuoteLive);
@@ -209,11 +249,7 @@
       if(qStudioBtn) qStudioBtn.addEventListener("click", function(e){
         e.preventDefault();
         var src = lastCoverFile ? URL.createObjectURL(lastCoverFile) : coverUrl;
-        if(!src){
-          alert("Pick a cover image first — any vertical photo works. We'll open the pro Studio.");
-          document.getElementById("wCover").click();
-          return;
-        }
+        // allow Studio without a cover — the 24 aesthetic backgrounds are there for you
         TSB_STUDIO.open({
           src: src,
           quote: title.value || "",
@@ -233,9 +269,9 @@
       });
     } else {
       // story mode
-      modeChip.textContent = "📖 STORY MODE — tell it like it happened";
+      modeChip.textContent = "📖 STORY MODE — your story, your voice";
       modeChip.className = "wr-modechip wr-modechip--story";
-      body.setAttribute("data-ph", "Start writing… your draft saves itself on this device, even if the tab closes. Publish whenever you\'re ready.");
+      body.setAttribute("data-ph", "Enter your story — what happened, what you felt, what you learned…\n\nYour draft saves itself here. Publish when you\'re ready.");
     }
     [title, sub, tags].forEach(function (el) { el.addEventListener("input", saveDraft); });
     body.addEventListener("input", saveDraft);
@@ -335,13 +371,17 @@
       // update button label per mode for professional clarity (Quote only Image+Quote, Stories only Cover+Research)
       try{
         var btn=document.getElementById("inspireDeskBtn");
+        var hint=document.getElementById("inspireDeskHint");
+        var sub=document.getElementById("inspireDeskSub");
         if(btn){
           if(kind==="quote"){
             btn.textContent="✨ Inspire Desk — quotes & images";
-            btn.nextElementSibling.textContent="Tap to browse quotes you can post & aesthetic images you can set as card background — live, not preloaded.";
+            if(hint) hint.textContent="Live library — quotes & images";
+            if(sub) sub.textContent="Tap to browse quotes you can post & aesthetic images you can set as card background — live, not preloaded.";
           } else {
             btn.textContent="✨ Inspire Desk — cover images & research";
-            btn.nextElementSibling.textContent="Live library for stories — cover images (aesthetic) & research snippets you can build on.";
+            if(hint) hint.textContent="Live library — images & research";
+            if(sub) sub.textContent="Live library for stories — cover images (aesthetic) & research snippets you can build on.";
           }
         }
       }catch(e){}
@@ -441,7 +481,7 @@
           tags: tags.value.split(",").map(function (s) { return s.trim(); }).filter(Boolean),
           kind: kind, no_download: $("wNoDl").checked
         });
-        localStorage.removeItem(DKEY);
+        localStorage.removeItem(dkey());
         try { C.setProfilePublic(true); } catch (e) {}
         location.href = "stories.html?tab=mine";
       } catch (e) {
@@ -453,7 +493,8 @@
     $("pubBtn2").addEventListener("click", pub);
     $("draftDel").addEventListener("click", function () {
       if (!confirm("Discard this draft?")) return;
-      localStorage.removeItem(DKEY);
+      localStorage.removeItem(dkey());
+      try{ localStorage.removeItem(DKEY); }catch(e){}
       title.value = ""; sub.value = ""; body.innerHTML = ""; tags.value = "";
       coverUrl = ""; audioUrl = "";
       $("wCoverPrev").hidden = true; $("wAudioPrev").hidden = true;
@@ -502,6 +543,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=237" defer></script>
+  <script src="js/bar.js?v=240" defer></script>
 </body>
 </html>
