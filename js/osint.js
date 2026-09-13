@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK — ✨ INSPIRE DESK (osint.js) · v235
+   THESMALLBOOK — ✨ INSPIRE DESK (osint.js) · v237
    LIVE, INTELLIGENT, SIMPLE — not preloaded.
 
    OSINT tech, productive: a live library you tap to create.
@@ -231,7 +231,9 @@
 
   function openDesk(initialTab, seedQuery, callbacks){
     callbacks=callbacks||{};
-    initialTab=initialTab||"quotes";
+    // OPTIMISED: allow caller to limit tabs — Quote wants [quotes,images], Stories wants [images,research]
+    var allowed = callbacks.tabs || ["quotes","images","research"];
+    if(allowed.indexOf(initialTab)===-1) initialTab = allowed[0];
     seedQuery=seedQuery||"";
 
     var QUOTE_TAGS = [
@@ -266,26 +268,25 @@
       {id:"loneliness", label:" Loneliness"}
     ];
 
+    // Build tabs HTML only for allowed set — keeps Quote=2 tabs, Stories=2 tabs, not 3 everywhere (professional, not everywhere)
+    var tabHtml = '<div style="display:flex;gap:6px;flex-wrap:wrap;">';
+    if(allowed.indexOf("quotes")>=0) tabHtml += '<button type="button" id="tabQuotes" style="flex:1 1 90px;border:2.5px solid #111;border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;">💬 Quotes</button>';
+    if(allowed.indexOf("images")>=0) tabHtml += '<button type="button" id="tabImages" style="flex:1 1 90px;border:2.5px solid #111;border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;">🖼️ Images</button>';
+    if(allowed.indexOf("research")>=0) tabHtml += '<button type="button" id="tabResearch" style="flex:1 1 100px;border:2.5px solid #111;border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;">📖 Research</button>';
+    tabHtml += '</div>';
     var html =
-      '<div style=\"display:flex;gap:6px;flex-wrap:wrap;\">' +
-        '<button type=\"button\" id=\"tabQuotes\" style=\"flex:1 1 90px;border:2.5px solid #111;border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;\">💬 Quotes</button>' +
-        '<button type=\"button\" id=\"tabImages\" style=\"flex:1 1 90px;border:2.5px solid #111;border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;\">🖼️ Images</button>' +
-        '<button type=\"button\" id=\"tabResearch\" style=\"flex:1 1 100px;border:2.5px solid #111;border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;\">📖 Research</button>' +
-      '</div>' +
-      '<div style=\"background:#fff;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;\">' +
-        '<div style=\"display:flex;gap:8px;align-items:center;\">' +
-          '<input id=\"inspQ\" type=\"text\" placeholder=\"Type anything — e.g. lonely after breakup, startup failure, love…\" value=\"'+esc(seedQuery)+'\" style=\"flex:1 1 auto;border:2.5px solid #111;border-radius:999px;padding:11px 14px;font:600 13px Space Grotesk,sans-serif;outline:none;\">' +
-          '<button id=\"inspClear\" type=\"button\" title=\"Clear\" style=\"flex:none;width:36px;height:36px;border:2px solid #111;border-radius:999px;background:#fff;font:800 13px Space Grotesk,sans-serif;cursor:pointer;\">✕</button>' +
-          '<button id=\"inspGo\" type=\"button\" style=\"flex:none;border:2.5px solid #111;border-radius:999px;padding:10px 14px;font:800 12px Space Grotesk,sans-serif;background:#ffc800;box-shadow:2px 2px 0 #111;cursor:pointer;white-space:nowrap\">Search →</button>' +
+      tabHtml +
+      '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;">' +
+        '<div style="display:flex;gap:8px;align-items:center;">' +
+          '<input id="inspQ" type="text" placeholder="Type anything — e.g. lonely after breakup, startup failure, love…" value="'+esc(seedQuery)+'" style="flex:1 1 auto;border:2.5px solid #111;border-radius:999px;padding:11px 14px;font:600 13px Space Grotesk,sans-serif;outline:none;">' +
+          '<button id="inspClear" type="button" title="Clear" style="flex:none;width:36px;height:36px;border:2px solid #111;border-radius:999px;background:#fff;font:800 13px Space Grotesk,sans-serif;cursor:pointer;">✕</button>' +
+          '<button id="inspGo" type="button" style="flex:none;border:2.5px solid #111;border-radius:999px;padding:10px 14px;font:800 12px Space Grotesk,sans-serif;background:#ffc800;box-shadow:2px 2px 0 #111;cursor:pointer;white-space:nowrap">Search →</button>' +
         '</div>' +
-        '<div id=\"inspChips\"></div>' +
-        '<div style=\"font-size:11px;color:#8f8a80;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-top:6px;\">LIVE · as you type it filters · tap <span style=\"background:#ffc800;padding:1px 6px;border-radius:999px;border:1.5px solid #111;color:#111\">Use this</span> to drop instantly</div>' +
+        '<div id="inspChips"></div>' +
+        '<div style="font-size:11px;color:#8f8a80;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-top:6px;">LIVE · as you type it filters · tap <span style="background:#ffc800;padding:1px 6px;border-radius:999px;border:1.5px solid #111;color:#111">Use this</span> to drop instantly</div>' +
       '</div>' +
-      '<div id=\"inspResults\" style=\"display:flex;flex-direction:column;gap:10px;min-height:120px;\">' +
-        '<div style=\"text-align:center;padding:18px 10px;color:#8f8a80;font:600 13px Space Grotesk,sans-serif;\">Loading live library…</div>' +
-      '</div>' +
-      '<div style=\"background:#0f172a;color:#e2e8f0;border-radius:14px;padding:12px;font-size:12px;line-height:1.5;\">' +
-        '<b style=\"color:#ffc800\">Smart:</b> type normal sentences — “lonely after breakup”, “money habits” — we find only that topic. Images are always aesthetic photos (Wikimedia live + Picsum aesthetic). One tap to use, simple and professional.' +
+      '<div id="inspResults" style="display:flex;flex-direction:column;gap:10px;min-height:120px;">' +
+        '<div style="text-align:center;padding:18px 10px;color:#8f8a80;font:600 13px Space Grotesk,sans-serif;">Loading live library…</div>' +
       '</div>';
 
     var wrap = sheetShell(html);
@@ -304,7 +305,12 @@
     var lastQuery = "";
 
     function paintTabs(){
-      [$tQ,$tI,$tR].forEach(function(b){
+      // only style tabs that exist (filtered set)
+      var tabs = [];
+      if($tQ) tabs.push($tQ);
+      if($tI) tabs.push($tI);
+      if($tR) tabs.push($tR);
+      tabs.forEach(function(b){
         b.style.border="2.5px solid #111";
         b.style.borderRadius="999px";
         b.style.padding="9px 10px";
@@ -316,9 +322,9 @@
         b.style.background="#fff";
         b.style.color="#111";
       });
-      if(activeTab==="quotes"){ $tQ.style.background="#111"; $tQ.style.color="#ffc800"; }
-      if(activeTab==="images"){ $tI.style.background="#111"; $tI.style.color="#ffc800"; }
-      if(activeTab==="research"){ $tR.style.background="#111"; $tR.style.color="#ffc800"; }
+      if($tQ && activeTab==="quotes"){ $tQ.style.background="#111"; $tQ.style.color="#ffc800"; }
+      if($tI && activeTab==="images"){ $tI.style.background="#111"; $tI.style.color="#ffc800"; }
+      if($tR && activeTab==="research"){ $tR.style.background="#111"; $tR.style.color="#ffc800"; }
       if(activeTab==="quotes") $chips.innerHTML = chipRow(QUOTE_TAGS, activeTag);
       else if(activeTab==="images") $chips.innerHTML = chipRow(IMAGE_TAGS, activeTag);
       else $chips.innerHTML = chipRow(RESEARCH_TAGS, activeTag);
@@ -523,9 +529,9 @@
     }
 
     paintTabs();
-    $tQ.addEventListener("click", function(){ activeTab="quotes"; activeTag=""; paintTabs(); run(true); });
-    $tI.addEventListener("click", function(){ activeTab="images"; activeTag=""; paintTabs(); run(true); });
-    $tR.addEventListener("click", function(){ activeTab="research"; activeTag=""; paintTabs(); run(true); });
+    if($tQ) $tQ.addEventListener("click", function(){ activeTab="quotes"; activeTag=""; paintTabs(); run(true); });
+    if($tI) $tI.addEventListener("click", function(){ activeTab="images"; activeTag=""; paintTabs(); run(true); });
+    if($tR) $tR.addEventListener("click", function(){ activeTab="research"; activeTag=""; paintTabs(); run(true); });
     $go.addEventListener("click", function(){ activeTag=""; run(true); });
     $clr.addEventListener("click", function(){ $q.value=""; activeTag=""; $q.focus(); run(true); });
     $q.addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); activeTag=""; run(true); }});

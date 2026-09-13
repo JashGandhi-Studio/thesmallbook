@@ -12,11 +12,11 @@
   <meta property="og:description" content="400 book summaries · 2,637 lessons · 308 autopsies — free to read, in 27 languages, with audio.">
     <meta property="og:url" content="https://thesmallbook.in/">
   <meta property="og:site_name" content="TheSmallBook">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=235">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=237">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="TheSmallBook — 400 books · 2,637 lessons · 308 autopsies · free to read">
-  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=235">
+  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=237">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="manifest" href="manifest.json">
@@ -35,7 +35,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=235">
+  <link rel="stylesheet" href="css/style.css?v=237">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -264,11 +264,7 @@
     <h2>📚 The Shelf</h2>
     <div class="line"></div>
   </div>
-  <!-- ✨ INSPIRE DESK — embedded in Library so no one misses it (live, intelligent, one-tap to create) -->
-  <div style="max-width:1100px;margin:0 auto 14px;padding:0 16px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;">
-    <span style="font:700 11px Space Grotesk,sans-serif;letter-spacing:.8px;text-transform:uppercase;color:#8f8a80;">Need a spark? <span style="color:#111">Quotes · aesthetic images · research — live</span></span>
-    <button id="inspireDeskShelf" title="Inspire Desk — live quotes, aesthetic images & research to create faster" style="border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:8px 14px;font:800 12px Space Grotesk,sans-serif;letter-spacing:.4px;box-shadow:2px 2px 0 #111;cursor:pointer;white-space:nowrap">✨ Inspire Desk — live library</button>
-  </div>
+
 
   <div class="filters" id="filters"></div>
 
@@ -331,17 +327,17 @@
     <p class="tiny">NEW BOOKS ADDED EVERY WEEK · © 2026 THESMALLBOOK · ALL RIGHTS RESERVED</p>
   </footer>
 
-  <script src="js/prefs.js?v=235"></script>
-  <script src="js/support.js?v=235"></script>
-  <script src="js/upi.js?v=235"></script>
-  <script src="js/lang.js?v=235"></script>
-  <script src="js/config.js?v=235"></script>
-  <script src="js/auth.js?v=235"></script>
-  <script src="js/sounds.js?v=235"></script>
-  <script src="js/community.js?v=235"></script>
-  <script src="js/data.js?v=235"></script>
-  <script src="js/failures.js?v=235"></script>
-  <script src="js/app.js?v=235"></script>
+  <script src="js/prefs.js?v=237"></script>
+  <script src="js/support.js?v=237"></script>
+  <script src="js/upi.js?v=237"></script>
+  <script src="js/lang.js?v=237"></script>
+  <script src="js/config.js?v=237"></script>
+  <script src="js/auth.js?v=237"></script>
+  <script src="js/sounds.js?v=237"></script>
+  <script src="js/community.js?v=237"></script>
+  <script src="js/data.js?v=237"></script>
+  <script src="js/failures.js?v=237"></script>
+  <script src="js/app.js?v=237"></script>
   <script>
     /* ⭐ render real reader words (from config.js TESTIMONIALS, no fake) */
     (function () {
@@ -367,10 +363,10 @@
       box.style.display = "";
     })();
   </script>
-  <script src="js/onboard.js?v=235"></script>
-  <script src="js/ask-data.js?v=235"></script>
-  <script src="js/tts-engine.js?v=235"></script>
-  <script src="js/ask.js?v=235"></script>
+  <script src="js/onboard.js?v=237"></script>
+  <script src="js/ask-data.js?v=237"></script>
+  <script src="js/tts-engine.js?v=237"></script>
+  <script src="js/ask.js?v=237"></script>
   <script>
     /* deep-link search from the scanner: index.html?q=<title> */
     (function () {
@@ -390,36 +386,8 @@
       } catch (e) {}
     })();
   </script>
-  <script src="js/osint.js?v=235"></script>
-  <script src="js/bar.js?v=235" defer></script>
-  <script src="js/gate.js?v=235" defer></script>
+  <script src="js/bar.js?v=237" defer></script>
+  <script src="js/gate.js?v=237" defer></script>
 
-  <script>
-  // ✨ Inspire Desk — Library embedding (stories + everything)
-  (function(){
-    var b=document.getElementById("inspireDeskShelf");
-    if(!b) return;
-    b.addEventListener("click", function(){
-      var api=window.TSB_OSINT||window.TSB_INSPIRE;
-      if(api && api.openInspire){
-        api.openInspire("quotes","",{
-          onUseQuote:function(o){
-            try{ localStorage.setItem("tsb_inspire_prefill", JSON.stringify({q:o.text, a:o.author})); }catch(e){}
-            location.href="write.html?mode=quote";
-          },
-          onUseImage:function(url){
-            try{ sessionStorage.setItem("tsb_inspire_img", url); }catch(e){}
-            location.href="write.html";
-            return Promise.resolve();
-          },
-          onUseResearch:function(s){
-            try{ localStorage.setItem("tsb_inspire_research", s.slice(0,600)); }catch(e){}
-            location.href="write.html";
-          }
-        });
-      }
-    });
-  })();
-  </script>
 </body>
 </html>

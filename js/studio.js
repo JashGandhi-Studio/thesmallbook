@@ -602,7 +602,7 @@
           '<div style="height:10px"></div>' +
           '<div class="stu-lbl">FONT <small>meme & famous faces — tap to see live preview</small></div><div class="stu-chips" id="stuFont"></div>' +
           '<div style="height:10px"></div>' +
-          '<button type="button" id="stuInspire" style="width:100%;border:2.5px solid #111;background:#ffc800;font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;padding:11px;border-radius:999px;box-shadow:3px 3px 0 #111;cursor:pointer">✨ Inspire Desk — get quote ideas, images & research</button><div style="font:600 10px Space Grotesk,sans-serif;color:#64748b;text-align:center;margin-top:6px;letter-spacing:.3px">Library of captions you can post · tap to fill — not a verifier</div>' +
+          '<button type="button" id="stuInspire" style="width:100%;border:2.5px solid #111;background:#ffc800;font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;padding:11px;border-radius:999px;box-shadow:3px 3px 0 #111;cursor:pointer">✨ Inspire Desk — quotes & aesthetic images</button><div style="font:600 10px Space Grotesk,sans-serif;color:#64748b;text-align:center;margin-top:6px;letter-spacing:.3px">Live library for quotes — tap to fill, not a verifier</div>' +
           '<div style="height:10px"></div>' +
           '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><div class="stu-lbl">SHADE <small>readability</small></div><input class="stu-range" id="stuScrimR" type="range" min="0" max="85" value="55"></div><div><div class="stu-lbl">SIZE</div><div class="stu-chips" id="stuSize"></div></div></div>' +
           '<div style="height:10px"></div>' +
@@ -641,7 +641,7 @@
       var q = ($("stuQuoteTa").value||"").trim() || S.quote || "";
       var api = window.TSB_OSINT||window.TSB_INSPIRE;
       if(api && api.openInspire){
-        api.openInspire("quotes", q, {
+        api.openInspire("quotes", q, { tabs:["quotes","images"],
           onUseQuote: function(o){
             var txt=o.text||"", auth=o.author||"";
             S.quote = txt + (auth ? " — " + auth : "");
@@ -650,8 +650,17 @@
             toast("✨ Quote loaded — tweak it to make it yours");
           },
           onUseImage: function(url){
-            toast("✨ Image picked — use Inspire → Images to set as cover on Write page");
-            window.open(url,"_blank");
+            // Smooth: load picked aesthetic image directly into the card preview (no extra window)
+            try{
+              var isPic = /picsum|wikimedia|upload\.wikimedia/i.test(url);
+              // For live aesthetic, load as photo (so user can reframe) — feels instant
+              if(typeof _load === "function"){
+                _load(url, false);
+                toast("✨ Aesthetic image loaded — drag to reframe, pick ratio");
+              } else {
+                window.open(url,"_blank");
+              }
+            }catch(e){ window.open(url,"_blank"); }
             return Promise.resolve();
           },
           onUseResearch: function(snippet){
@@ -671,7 +680,7 @@
     if (vOld) vOld.addEventListener("click", function(){
       var qq = ($("stuQuoteTa").value||"").trim() || S.quote || "";
       var api2 = window.TSB_OSINT||window.TSB_INSPIRE;
-      if(api2 && api2.openInspire) api2.openInspire("quotes", qq, { onUseQuote: function(o){ S.quote=o.text; var tt=$("stuQuoteTa"); if(tt) tt.value=S.quote; layoutPreview(); }});
+      if(api2 && api2.openInspire) api2.openInspire("quotes", qq, { tabs:["quotes","images"], onUseQuote: function(o){ S.quote=o.text; var tt=$("stuQuoteTa"); if(tt) tt.value=S.quote; layoutPreview(); }});
     });
     // inline photo picker inside studio
     var fileIn = $("stuFile");

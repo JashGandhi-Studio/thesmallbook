@@ -19,8 +19,8 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=235">
-  <link rel="stylesheet" href="css/studio.css?v=235">
+  <link rel="stylesheet" href="css/style.css?v=237">
+  <link rel="stylesheet" href="css/studio.css?v=237">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -98,17 +98,17 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=235"></script>
-  <script src="js/lang.js?v=235"></script>
-  <script src="js/config.js?v=235"></script>
-  <script src="js/auth.js?v=235"></script>
-  <script src="js/sounds.js?v=235"></script>
-  <script src="js/founder.js?v=235"></script>
-  <script src="js/community.js?v=235"></script>
-  <script src="js/gold.js?v=235"></script>
-  <script src="js/studio.js?v=235"></script>
-  <script src="js/dictate.js?v=235"></script>
-  <script src="js/osint.js?v=235"></script>
+  <script src="js/prefs.js?v=237"></script>
+  <script src="js/lang.js?v=237"></script>
+  <script src="js/config.js?v=237"></script>
+  <script src="js/auth.js?v=237"></script>
+  <script src="js/sounds.js?v=237"></script>
+  <script src="js/founder.js?v=237"></script>
+  <script src="js/community.js?v=237"></script>
+  <script src="js/gold.js?v=237"></script>
+  <script src="js/studio.js?v=237"></script>
+  <script src="js/dictate.js?v=237"></script>
+  <script src="js/osint.js?v=237"></script>
   <script>
   (function () {
     "use strict";
@@ -288,12 +288,16 @@
       } catch (e) { alert("Cover upload failed: " + e.message); }
     });
     /* v223 STORY CARD STUDIO — tap the cover preview to edit layout, filters & ratio */
-    // ✨ INSPIRE DESK — productive OSINT library (quotes/images/research) — replaces old verifier
+    // ✨ INSPIRE DESK — properly optimised: Quote → [quotes,images], Stories → [images,research] (not everywhere)
     (function(){
       function openInspire(tab, seed){
         var api = window.TSB_OSINT||window.TSB_INSPIRE;
         if(api && api.openInspire){
-          api.openInspire(tab||"quotes", seed||"", {
+          var wantTabs = (kind==="quote") ? ["quotes","images"] : ["images","research"];
+          var startTab = tab;
+          if(wantTabs.indexOf(startTab)===-1) startTab = wantTabs[0];
+          api.openInspire(startTab, seed||"", {
+            tabs: wantTabs,
             onUseQuote: function(o){
               var txt=o.text||"", auth=o.author||"";
               title.value = txt;
@@ -327,7 +331,20 @@
         }
       }
       var desk=document.getElementById("inspireDeskBtn");
-      if(desk) desk.addEventListener("click", function(e){ e.preventDefault(); openInspire("quotes", (title.value||"").trim()); });
+      if(desk) desk.addEventListener("click", function(e){ e.preventDefault(); var defTab = (kind==="quote") ? "quotes" : "images"; openInspire(defTab, (title.value||"").trim()); });
+      // update button label per mode for professional clarity (Quote only Image+Quote, Stories only Cover+Research)
+      try{
+        var btn=document.getElementById("inspireDeskBtn");
+        if(btn){
+          if(kind==="quote"){
+            btn.textContent="✨ Inspire Desk — quotes & images";
+            btn.nextElementSibling.textContent="Tap to browse quotes you can post & aesthetic images you can set as card background — live, not preloaded.";
+          } else {
+            btn.textContent="✨ Inspire Desk — cover images & research";
+            btn.nextElementSibling.textContent="Live library for stories — cover images (aesthetic) & research snippets you can build on.";
+          }
+        }
+      }catch(e){}
       // compat: if old buttons somehow still in DOM (cached), wire them to productive tabs too
       var b1=document.getElementById("osintImgBtn");
       var b2=document.getElementById("osintQuoteBtn2");
@@ -485,6 +502,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=235" defer></script>
+  <script src="js/bar.js?v=237" defer></script>
 </body>
 </html>
