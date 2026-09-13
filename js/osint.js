@@ -496,14 +496,14 @@
       '</div>';
     }
     function cardImage(im){
-      // Grid card: image on top full-width square, title, then full-width Use button — 2 columns on mobile, buttons never cut
+      // v245: FULL photo preview — natural shape, nothing cropped; what you tap is the WHOLE photo (no more 20% slices)
       return '<div style="background:#fff;border:2.5px solid #111;border-radius:16px;overflow:hidden;box-shadow:3px 3px 0 #111;display:flex;flex-direction:column;">' +
-        '<div style="position:relative;aspect-ratio:1/1;background:#fffdf5;overflow:hidden;border-bottom:2.5px solid #111;">' +
-          '<img src="'+esc(im.thumb)+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">' +
+        '<div style="background:#0e0c0a;border-bottom:2.5px solid #111;min-height:110px;display:flex;align-items:center;justify-content:center;">' +
+          '<img src="'+esc(im.thumb)+'" alt="" style="width:100%;height:auto;max-height:250px;object-fit:contain;display:block;" loading="lazy">' +
         '</div>' +
         '<div style="padding:8px 10px;display:flex;flex-direction:column;gap:6px;flex:1;">' +
           '<div style="font:700 11px Space Grotesk,sans-serif;color:#111;line-height:1.25;min-height:28px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">'+esc(im.title.slice(0,48))+'</div>' +
-          '<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;letter-spacing:.4px;text-transform:uppercase;">LIVE · aesthetic</div>' +
+          '<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;letter-spacing:.4px;text-transform:uppercase;">LIVE · full photo preview</div>' +
           '<button type="button" data-use-image="'+esc(im.full)+'" style="width:100%;border:2px solid #111;background:#ffc800;border-radius:999px;padding:8px 10px;font:800 11px Space Grotesk,sans-serif;letter-spacing:.3px;cursor:pointer;box-shadow:2px 2px 0 #111;">✨ Use as cover</button>' +
         '</div>' +
       '</div>';

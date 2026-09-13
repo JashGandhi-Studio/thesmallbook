@@ -45,8 +45,10 @@
   var FONTS = [
     { id: "arch", label: "Archivo", css: "'Archivo Black', system-ui, sans-serif", caps: true },
     { id: "impact", label: "Impact", css: "Impact, 'Archivo Black', system-ui, sans-serif", caps: true },
+    { id: "anton", label: "Anton", css: "'Anton', Impact, 'Archivo Black', sans-serif", caps: true, w: 400 },
     { id: "bebas", label: "Bebas", css: "'Bebas Neue', Impact, 'Archivo Black', sans-serif", caps: true, w: 400 },
     { id: "space", label: "Grotesk", css: "'Space Grotesk', system-ui, sans-serif", caps: false },
+    { id: "mont", label: "Montserrat", css: "'Montserrat', system-ui, sans-serif", caps: false, w: 900 },
     { id: "serif", label: "Playfair", css: "'Playfair Display', Georgia, serif", caps: false },
     { id: "mono", label: "Space Mono", css: "'Space Mono', ui-monospace, monospace", caps: false },
     { id: "hand", label: "Caveat", css: "'Caveat', cursive", caps: false, w: 700 },
@@ -54,20 +56,6 @@
   ];
   var BGS = [
     { id: "none", label: "NONE", css: "transparent", dark: false },
-    // --- solid / gradient classics ---
-    { id: "paper", label: "📄 Paper", css: "#fffdf5", dark: false },
-    { id: "aged", label: "📜 Kraft", css: "#e8d9b8", dark: false },
-    { id: "black", label: "⬛ Ink", css: "#111111", dark: true },
-    { id: "cream", label: "☁️ Cream", css: "#fdf6e3", dark: false },
-    { id: "midnight", label: "🌌 Midnight", css: "linear-gradient(135deg,#0f172a 0%,#1e293b 55%,#334155 100%)", dark: true },
-    { id: "sunset", label: "🌅 Sunset", css: "linear-gradient(135deg,#ff8a3d 0%,#ffc800 55%,#ff6b9d 100%)", dark: false },
-    { id: "ocean", label: "🌊 Ocean", css: "linear-gradient(135deg,#0ea5e9 0%,#06b6d4 50%,#0f172a 100%)", dark: true },
-    { id: "forest", label: "🌲 Forest", css: "linear-gradient(135deg,#14532d 0%,#15803d 55%,#22c55e 100%)", dark: true },
-    { id: "blush", label: "🌸 Blush", css: "linear-gradient(135deg,#ffd1dc 0%,#ffc8a8 100%)", dark: false },
-    { id: "lilac", label: "💜 Lilac", css: "linear-gradient(135deg,#e9d5ff 0%,#c4b5fd 50%,#a78bfa 100%)", dark: false },
-    { id: "goldbg", label: "✨ Gold", css: "linear-gradient(135deg,#fff7cc 0%,#ffc800 55%,#ffb700 100%)", dark: false },
-    { id: "chalk", label: "🖍️ Chalk", css: "#2b2b2b", dark: true },
-    // --- 12 aesthetic image backgrounds (Instagram-ready, clean centre) ---
     { id: "img-paper", label: "Paper", css: "url('assets/quote-bgs/bg01-paper.jpg')", dark: false, img: "assets/quote-bgs/bg01-paper.jpg", thumb: "assets/quote-bgs/bg01-paper-thumb.jpg" },
     { id: "img-dark", label: "Dark", css: "url('assets/quote-bgs/bg02-dark.jpg')", dark: true, img: "assets/quote-bgs/bg02-dark.jpg", thumb: "assets/quote-bgs/bg02-dark-thumb.jpg" },
     { id: "img-sunset", label: "Sunset", css: "url('assets/quote-bgs/bg03-sunset.jpg')", dark: false, img: "assets/quote-bgs/bg03-sunset.jpg", thumb: "assets/quote-bgs/bg03-sunset-thumb.jpg" },
@@ -80,7 +68,6 @@
     { id: "img-terra", label: "Terra", css: "url('assets/quote-bgs/bg10-terracotta.jpg')", dark: true, img: "assets/quote-bgs/bg10-terracotta.jpg", thumb: "assets/quote-bgs/bg10-terracotta-thumb.jpg" },
     { id: "img-midnight", label: "Night", css: "url('assets/quote-bgs/bg11-midnight.jpg')", dark: true, img: "assets/quote-bgs/bg11-midnight.jpg", thumb: "assets/quote-bgs/bg11-midnight-thumb.jpg" },
     { id: "img-marble", label: "Marble", css: "url('assets/quote-bgs/bg12-marble.jpg')", dark: false, img: "assets/quote-bgs/bg12-marble.jpg", thumb: "assets/quote-bgs/bg12-marble-thumb.jpg" },
-    // --- 12 new aesthetic photo backgrounds — huge empty top for text (your 4 + 8 fresh) ---
     { id: "img-pastel", label: "Pastel", css: "url('assets/quote-bgs/bg13-pastel-dream.jpg')", dark: false, img: "assets/quote-bgs/bg13-pastel-dream.jpg", thumb: "assets/quote-bgs/bg13-pastel-dream-thumb.jpg" },
     { id: "img-plant", label: "Plant", css: "url('assets/quote-bgs/bg14-minimal-plant.jpg')", dark: false, img: "assets/quote-bgs/bg14-minimal-plant.jpg", thumb: "assets/quote-bgs/bg14-minimal-plant-thumb.jpg" },
     { id: "img-sunset2", label: "Sunset 2", css: "url('assets/quote-bgs/bg15-sunset-ocean.jpg')", dark: false, img: "assets/quote-bgs/bg15-sunset-ocean.jpg", thumb: "assets/quote-bgs/bg15-sunset-ocean-thumb.jpg" },
@@ -89,7 +76,7 @@
     { id: "img-white", label: "Light", css: "url('assets/quote-bgs/bg18-white-shadow.jpg')", dark: false, img: "assets/quote-bgs/bg18-white-shadow.jpg", thumb: "assets/quote-bgs/bg18-white-shadow-thumb.jpg" },
     { id: "img-lav2", label: "Lavender", css: "url('assets/quote-bgs/bg19-lavender-sky.jpg')", dark: false, img: "assets/quote-bgs/bg19-lavender-sky.jpg", thumb: "assets/quote-bgs/bg19-lavender-sky-thumb.jpg" },
     { id: "img-peach", label: "Peach", css: "url('assets/quote-bgs/bg20-peach-watercolor.jpg')", dark: false, img: "assets/quote-bgs/bg20-peach-watercolor.jpg", thumb: "assets/quote-bgs/bg20-peach-watercolor-thumb.jpg" },
-    { id: "img-night", label: "Night", css: "url('assets/quote-bgs/bg21-night-forest.jpg')", dark: true, img: "assets/quote-bgs/bg21-night-forest.jpg", thumb: "assets/quote-bgs/bg21-night-forest-thumb.jpg" },
+    { id: "img-night", label: "Night 2", css: "url('assets/quote-bgs/bg21-night-forest.jpg')", dark: true, img: "assets/quote-bgs/bg21-night-forest.jpg", thumb: "assets/quote-bgs/bg21-night-forest-thumb.jpg" },
     { id: "img-linen", label: "Linen", css: "url('assets/quote-bgs/bg22-cream-linen.jpg')", dark: false, img: "assets/quote-bgs/bg22-cream-linen.jpg", thumb: "assets/quote-bgs/bg22-cream-linen-thumb.jpg" },
     { id: "img-teal", label: "Teal", css: "url('assets/quote-bgs/bg23-teal-horizon.jpg')", dark: false, img: "assets/quote-bgs/bg23-teal-horizon.jpg", thumb: "assets/quote-bgs/bg23-teal-horizon-thumb.jpg" },
     { id: "img-blossom", label: "Blossom", css: "url('assets/quote-bgs/bg24-blossom-sky.jpg')", dark: false, img: "assets/quote-bgs/bg24-blossom-sky.jpg", thumb: "assets/quote-bgs/bg24-blossom-sky-thumb.jpg" }
@@ -619,7 +606,7 @@
     chips("stuFilter", FILTERS, S.filter, function (id) { S.filter = id; });
     // v244: each font's NAME rendered in its OWN face — judge the look before you tap
     chips("stuFont", FONTS, S.font, function (id) { S.font = id; }, function (it) {
-      return '<span style="font-family:' + it.css + ';font-size:15px;line-height:1;text-transform:none;letter-spacing:0;font-weight:' + (it.w || 900) + '">' + esc(it.label) + '</span>';
+      return '<span style="font-family:' + it.css + ';font-size:17px;line-height:1;text-transform:none;letter-spacing:0;font-weight:' + (it.w || 900) + '">' + esc(it.label) + '</span>';
     });
     chips("stuBg", BGS, S.bg, function (id) { S.bg = id; });
     chips("stuPos", POS, S.pos, function (id) { S.pos = id; });
@@ -651,7 +638,7 @@
     root.className = "stu-wrap";
     root.innerHTML =
       '<div class="stu-sheet">' +
-        '<div class="stu-top"><b>🎨 CARD STUDIO<small>Instagram-ready · 8 famous fonts · 36 backgrounds · what you see is the file</small></b><button class="stu-x" id="stuX">✕</button></div>' +
+        '<div class="stu-top"><b>🎨 CARD STUDIO<small>Instagram-ready · 10 famous fonts · 24 photo backgrounds · what you see is the file</small></b><button class="stu-x" id="stuX">✕</button></div>' +
         '<div class="stu-prevwrap"><div class="stu-prev" id="stuPrev">' +
           '<img id="stuImg" alt="" hidden>' +
           '<div class="stu-scrim" id="stuScrim"></div>' +
@@ -663,12 +650,12 @@
         '<div class="stu-sec"><div class="stu-lbl">PHOTO <small>zoom slider · drag the preview to reframe · no photo? pick a bg below</small></div>' +
           '<input class="stu-range" id="stuZoom" type="range" min="100" max="300" value="100"><div style="height:8px"></div><button type="button" id="stuPick" style="width:100%;border:2.5px solid #111;background:#fff;font:700 12px Space Grotesk,sans-serif;padding:10px;border-radius:999px;box-shadow:2.5px 2.5px 0 #111;cursor:pointer">📷 CHOOSE / CHANGE PHOTO</button>' +
           '<input id="stuFile" type="file" accept="image/*" hidden></div>' +
-        '<div class="stu-sec"><div class="stu-lbl">BACKGROUNDS <small>Tap a photo — 24 aesthetic images + 12 colours · works without a cover · FREE exports carry a tiny watermark</small></div><div class="stu-chips" id="stuBg"></div></div>' +
+        '<div class="stu-sec"><div class="stu-lbl">BACKGROUNDS <small>24 aesthetic photos — the proven set, nothing extra · works without any cover photo · FREE exports carry a tiny watermark</small></div><div class="stu-chips" id="stuBg"></div></div>' +
         '<div class="stu-sec"><div class="stu-lbl">MINI FILTERS <small>PRO pack 💛 with Gold</small></div><div class="stu-chips" id="stuFilter"></div></div>' +
         '<div class="stu-sec"><div class="stu-lbl">ADD TEXT <small>type anything — the text looks great ON the image itself · drag, resize, align like Instagram</small></div>' +
           '<textarea class="stu-ta" id="stuQuoteTa" rows="2" maxlength="220" placeholder="Type your text…"></textarea>' +
           '<div style="height:10px"></div>' +
-          '<div class="stu-lbl">FONT <small>8 famous faces · each name shown in its own style</small></div><div class="stu-chips" id="stuFont"></div>' +
+          '<div class="stu-lbl">FONT <small>10 famous faces · each name shown in its own style</small></div><div class="stu-chips" id="stuFont"></div>' +
           '<div style="height:10px"></div>' +
           '<button type="button" id="stuInspire" style="width:100%;border:2.5px solid #111;background:#ffc800;font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;padding:11px;border-radius:999px;box-shadow:3px 3px 0 #111;cursor:pointer">✨ Inspire Desk — quotes & aesthetic images</button><div style="font:600 10px Space Grotesk,sans-serif;color:#64748b;text-align:center;margin-top:6px;letter-spacing:.3px">Live library for quotes — tap to fill, not a verifier</div>' +
           '<div style="height:10px"></div>' +
@@ -776,8 +763,9 @@
 
     var _corsFailed = false;
     function _finalizeLoad() {
-      // auto-select FREE if tall image, else keep chosen
+      // v245: auto-FREE for tall AND wide photos — the whole picture is the card, never a cropped 20% slice
       if (img && img.naturalHeight > img.naturalWidth * 1.35) S.ratio = "free";
+      else if (img && img.naturalWidth > img.naturalHeight * 1.15) S.ratio = "free";
       buildControls(); bindDrag(); layoutPreview();
       if(_corsFailed) toast("⚠️ Preview only — re-upload the photo on this page for a clean export (original link blocked).");
     }

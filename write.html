@@ -7,7 +7,7 @@
   <meta name="description" content="Write your story in a full-page editor with rich formatting, voice and autosaved drafts.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Bebas+Neue&family=Lobster&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Space+Mono:wght@400;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Anton&family=Bebas+Neue&family=Lobster&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Space+Mono:wght@400;700&family=Caveat:wght@600;700&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
   <script>
@@ -19,8 +19,8 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=242">
-  <link rel="stylesheet" href="css/studio.css?v=242">
+  <link rel="stylesheet" href="css/style.css?v=245">
+  <link rel="stylesheet" href="css/studio.css?v=245">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -136,15 +136,15 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=242"></script>
-  <script src="js/lang.js?v=242"></script>
-  <script src="js/config.js?v=242"></script>
-  <script src="js/auth.js?v=242"></script>
-  <script src="js/sounds.js?v=242"></script>
-  <script src="js/founder.js?v=242"></script>
-  <script src="js/community.js?v=242"></script>
-  <script src="js/gold.js?v=242"></script>
-  <script src="js/studio.js?v=242"></script>
+  <script src="js/prefs.js?v=245"></script>
+  <script src="js/lang.js?v=245"></script>
+  <script src="js/config.js?v=245"></script>
+  <script src="js/auth.js?v=245"></script>
+  <script src="js/sounds.js?v=245"></script>
+  <script src="js/founder.js?v=245"></script>
+  <script src="js/community.js?v=245"></script>
+  <script src="js/gold.js?v=245"></script>
+  <script src="js/studio.js?v=245"></script>
   <style>/* hide Puter branding — keep AI silent */ .puter-modal,.puter-dialog,.puter-auth{ display:none !important }</style>
   <script>
   // silent Puter loader — don't block rendering, hide GUI
@@ -156,9 +156,9 @@
     document.head.appendChild(s);
   })();
   </script>
-  <script src="js/dictate.js?v=242"></script>
-  <script src="js/data.js?v=242"></script>
-  <script src="js/osint.js?v=242"></script>
+  <script src="js/dictate.js?v=245"></script>
+  <script src="js/data.js?v=245"></script>
+  <script src="js/osint.js?v=245"></script>
   <script>
   (function () {
     "use strict";
@@ -257,7 +257,11 @@
         var covTitle=document.querySelector(".wr-card .wr-card__title");
         if(covTitle) covTitle.innerHTML="📷 Quote image — <u>this is your cover</u>";
         var covSub=document.querySelector(".wr-card .wr-card__sub");
-        if(covSub) covSub.textContent="Opens Studio with your quote on it";
+        if(covSub) covSub.textContent="Optional — Studio opens with your quote on it";
+      }catch(e){}
+      try{
+        var wrCards=document.querySelectorAll(".wr-card");
+        if(wrCards[1]) wrCards[1].style.display="none"; // v245: burst is story material — keep the quote flow simple
       }catch(e){}
       // make body optional and change its placeholder
       body.setAttribute("data-ph", "Your take — why this line hit you (optional, 2–3 lines in your voice). Leave empty to publish just the card. Your QUOTE draft is separate from your STORY draft.");
@@ -696,6 +700,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=242" defer></script>
+  <script src="js/bar.js?v=245" defer></script>
 </body>
 </html>
