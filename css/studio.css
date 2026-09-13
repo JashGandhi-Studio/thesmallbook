@@ -16,7 +16,7 @@
 .stu-x:active{transform:translate(1.5px,1.5px);box-shadow:1px 1px 0 #111}
 /* ---- live preview — perfectly centered, image-sized, Instagram polish ---- */
 .stu-prevwrap{display:flex;justify-content:center;align-items:center;padding:20px 16px;background:#0e0c0a;position:relative;min-height:220px}
-.stu-prev{position:relative;overflow:hidden;border:4px solid #fffdf5;box-shadow:8px 8px 0 #ffc800;cursor:grab;touch-action:none;background:#222;box-sizing:content-box;border-radius:14px;flex:none}
+.stu-prev{position:relative;overflow:hidden;border:4px solid #fffdf5;box-shadow:8px 8px 0 #ffc800;cursor:grab;touch-action:none;background:#222;box-sizing:content-box;border-radius:0;flex:none}
 .stu-prev:active{cursor:grabbing}
 .stu-prev img{position:absolute;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
 .stu-scrim{position:absolute;inset:0;pointer-events:none}
@@ -51,6 +51,7 @@
 @media(max-width:420px){.stu-row2{grid-template-columns:1fr}}
 /* ---- footer actions — equal & aligned, publish proper ---- */
 .stu-foot{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px;position:sticky;bottom:0;background:var(--paper,#fffdf5);border-top:3.5px solid #111;z-index:3}
+.stu-foot__main{grid-column:1/-1}
 .stu-dl,.stu-apply{width:100%;border:3px solid #111;font-family:'Archivo Black',sans-serif;font-size:12px;line-height:1.2;padding:13px 8px;cursor:pointer;box-shadow:4px 4px 0 #111;border-radius:14px;transition:transform .12s,box-shadow .12s;min-height:48px;display:flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap}
 .stu-dl{background:#00c48c;color:#111}
 .stu-apply{background:#ffc800;color:#111}
@@ -100,7 +101,7 @@
   .stu-top{padding:12px 14px}
   .stu-top b{font-size:12px}
   .stu-prevwrap{padding:12px 12px}
-  .stu-prev{border-width:3px; box-shadow:4px 4px 0 #ffc800; border-radius:12px}
+  .stu-prev{border-width:3px; box-shadow:4px 4px 0 #ffc800; border-radius:0}
   .stu-sec{padding:14px 12px}
   .stu-foot{grid-template-columns:1fr; gap:8px; padding:12px}
   .stu-dl,.stu-apply{white-space:normal; line-height:1.3; min-height:44px; padding:12px 10px; font-size:11px}

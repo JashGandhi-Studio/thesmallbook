@@ -37,17 +37,20 @@
     { id: "gold", label: "Gold", css: "sepia(.4) saturate(1.5) contrast(1.05) brightness(1.02)", pro: true },
     { id: "film", label: "Film", css: "contrast(1.18) saturate(.85) sepia(.15)", pro: true }
   ];
-  var THEMES = [ { id: "ink", label: "INK" }, { id: "paper", label: "PAPER" }, { id: "yellow", label: "LOUD" } ];
+  var THEMES = [ { id: "ink", label: "INK", swatch: "#111111" }, { id: "paper", label: "PAPER", swatch: "#fffdf5" }, { id: "yellow", label: "LOUD", swatch: "#ffc800" } ];
   var POS = [ { id: "top", label: "TOP" }, { id: "mid", label: "MIDDLE" }, { id: "bottom", label: "BOTTOM" } ];
   var ALIGNS = [ { id: "left", label: "LEFT" }, { id: "center", label: "CENTER" }, { id: "right", label: "RIGHT" } ];
   var SIZES = [ { id: "s", px: 46, label: "S" }, { id: "m", px: 60, label: "M" }, { id: "l", px: 76, label: "L" } ];
+  // v244: every font shows its REAL NAME in its OWN face — people judge at a glance. + Bebas Neue & Lobster (famous).
   var FONTS = [
-    { id: "arch", label: "BOLD", css: "'Archivo Black', system-ui, sans-serif" },
-    { id: "impact", label: "MEME", css: "Impact, 'Archivo Black', system-ui, sans-serif" },
-    { id: "space", label: "GROTESK", css: "'Space Grotesk', system-ui, sans-serif", caps: false },
-    { id: "serif", label: "SERIF", css: "'Playfair Display', Georgia, serif", caps: false },
-    { id: "mono", label: "TYPE", css: "'Space Mono', ui-monospace, monospace", caps: false },
-    { id: "hand", label: "HAND", css: "'Caveat', cursive", caps: false }
+    { id: "arch", label: "Archivo", css: "'Archivo Black', system-ui, sans-serif", caps: true },
+    { id: "impact", label: "Impact", css: "Impact, 'Archivo Black', system-ui, sans-serif", caps: true },
+    { id: "bebas", label: "Bebas", css: "'Bebas Neue', Impact, 'Archivo Black', sans-serif", caps: true, w: 400 },
+    { id: "space", label: "Grotesk", css: "'Space Grotesk', system-ui, sans-serif", caps: false },
+    { id: "serif", label: "Playfair", css: "'Playfair Display', Georgia, serif", caps: false },
+    { id: "mono", label: "Space Mono", css: "'Space Mono', ui-monospace, monospace", caps: false },
+    { id: "hand", label: "Caveat", css: "'Caveat', cursive", caps: false, w: 700 },
+    { id: "lobster", label: "Lobster", css: "'Lobster', 'Caveat', cursive", caps: false, w: 400 }
   ];
   var BGS = [
     { id: "none", label: "NONE", css: "transparent", dark: false },
@@ -275,17 +278,20 @@
   }
 
   function drawQuote(ctx, W, H, st) {
-    var q = (st.quote || "").trim(); if (!q) return;
+    var q = (st.quote || "").trim();
+    var by = String(st.byline || "").trim();
+    if (!q && !by) return;
     var px = sizePx().px;
     var pad = 60, maxW = W - pad * 2;
     ctx.textBaseline = "alphabetic";
     var fo = fontObj();
     var ucase = fo.caps !== false;
     var text = ucase ? q.toUpperCase() : q;
-    ctx.font = "900 " + px + "px " + fo.css;
-    var lines = wrap(ctx, text, st.theme === "ink" ? maxW : maxW - 40);
+    ctx.font = (fo.w || 900) + " " + px + "px " + fo.css;
+    var lines = q ? wrap(ctx, text, st.theme === "ink" ? maxW : maxW - 40) : [];
     var lineH = Math.round(px * 1.34);
-    var blockH = lines.length * lineH;
+    var byH = by ? Math.round(px * 1.02) : 0;
+    var blockH = lines.length * lineH + byH;
     var y;
     if (st.pos === "top") y = 90 + px;
     else if (st.pos === "mid") y = Math.round((H - blockH) / 2) + px;
@@ -333,6 +339,23 @@
       }
       y += lineH;
     }
+    // v244: byline — the "— author" line, drawn on the export exactly like the preview
+    if (by) {
+      var byTxt = "— " + by;
+      var byPx = Math.max(22, Math.round(px * 0.38));
+      ctx.font = "700 " + byPx + "px 'Space Grotesk', system-ui, sans-serif";
+      var bw2 = ctx.measureText(byTxt).width;
+      var bx = (st.align === "left") ? pad : (st.align === "right") ? W - pad - bw2 : (W - bw2) / 2;
+      var byy = y - (lines.length ? lineH : 0) + byPx + Math.round(px * 0.18);
+      if (st.theme === "ink") {
+        ctx.fillStyle = "rgba(0,0,0,.55)"; ctx.fillText(byTxt, bx + 3, byy + 3);
+        ctx.fillStyle = "#ffc800"; ctx.fillText(byTxt, bx, byy);
+      } else {
+        ctx.fillStyle = "rgba(0,0,0,.5)"; ctx.fillText(byTxt, bx + 2, byy + 2);
+        ctx.fillStyle = st.theme === "yellow" ? "#111" : "#fffdf5";
+        ctx.fillText(byTxt, bx, byy);
+      }
+    }
   }
 
   function drawMark(ctx, W, H) {
@@ -362,7 +385,13 @@
   }
 
   /* ---------- the export ---------- */
-  async function render() {
+  function ensureFonts() {
+    // v244: webfonts (Bebas, Lobster, Playfair…) must be READY before canvas draws them
+    try { if (document.fonts && document.fonts.ready) return document.fonts.ready; } catch (e) {}
+    return Promise.resolve();
+  }
+  async function render(noText) {
+    await ensureFonts();
     var r = ratio();
     var canvas = document.createElement("canvas");
     canvas.width = r.w; canvas.height = r.h;
@@ -385,8 +414,8 @@
       }
     }
     drawScrim(ctx, r.w, r.h, S);
-    drawQuote(ctx, r.w, r.h, S);
-    if (!S.gold) drawMark(ctx, r.w, r.h);
+    if (!noText) drawQuote(ctx, r.w, r.h, S);
+    if (!noText && !S.gold) drawMark(ctx, r.w, r.h);
     return canvas;
   }
 
@@ -401,16 +430,17 @@
     });
   }
 
-  async function shareOrDownload(canvas) {
+  async function shareOrDownload(canvas, name) {
+    name = name || "thesmallbook-card.png";
     var file;
-    try { file = await canvasToFile(canvas, "thesmallbook-card.png"); }
+    try { file = await canvasToFile(canvas, name); }
     catch (e) { toast("❌ Export blocked by the browser — re-pick the photo on this page and try again."); return; }
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       try { await navigator.share({ files: [file], title: "TheSmallBook", text: "Made with 📕 TheSmallBook" }); return; } catch (e) { return; }
     }
     var a = document.createElement("a");
     a.href = URL.createObjectURL(file);
-    a.download = "thesmallbook-card.png";
+    a.download = name;
     a.click();
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
     toast("✅ Card saved — post it anywhere");
@@ -438,12 +468,12 @@
       }
     }catch(e){ wrapW = 320; }
     if (!wrapW || wrapW < 160) wrapW = 320;
-    // responsive maxH: 38% viewport on mobile to keep controls visible, 46% on desktop
+    // v244: BIG true preview — you see the FILE you'll get, not a thumbnail. 52% of viewport on mobile, 60% on desktop.
     var isMobile = window.innerWidth < 560;
-    var maxH = Math.min(window.innerHeight * (isMobile ? 0.38 : 0.46), isMobile ? 420 : 560);
+    var maxH = Math.min(window.innerHeight * (isMobile ? 0.52 : 0.60), isMobile ? 560 : 700);
     var k = Math.min(wrapW / r.w, maxH / r.h);
     // never upscale beyond natural for sharpness, but allow slight
-    if(k>1) k = Math.min(k, 1.1);
+    if(k>1) k = Math.min(k, 1.15);
     var bw = Math.floor(r.w * k), bh = Math.floor(r.h * k);
     // ensure box never exceeds wrap (minus shadow)
     if(bw > wrapW) { var sc = wrapW / bw; bw = wrapW; bh = Math.floor(bh * sc); }
@@ -500,10 +530,14 @@
       var isMemePrev = fo.id === "impact";
       q.style.fontFamily = fo.css;
       var extra = isMemePrev ? 'text-shadow:3px 3px 0 #111, -1px -1px 0 #111; letter-spacing:.5px;' : '';
-      q.innerHTML = '<div class="q" style="font-size:' + px + 'px; font-family:' + fo.css + ';' + extra + '"><span>' + esc((S.quote || "").trim() ? (fo.caps!==false ? esc(S.quote) .toUpperCase() : esc(S.quote)) : "YOUR TEXT HERE") + "</span></div>";
+      q.innerHTML = '<div class="q" style="font-size:' + px + 'px; font-family:' + fo.css + '; font-weight:' + (fo.w || 900) + ';' + extra + '"><span>' + esc((S.quote || "").trim() ? (fo.caps!==false ? esc(S.quote) .toUpperCase() : esc(S.quote)) : "YOUR TEXT HERE") + "</span></div>" +
+        ((S.byline || "").trim() ? '<div class="b" style="font-size:' + Math.max(10, Math.round(px * 0.4)) + 'px;margin-top:8px">— ' + esc(S.byline.trim()) + '</div>' : '');
       // hint for empty quote
       if (!(S.quote || "").trim()) q.style.opacity = ".55"; else q.style.opacity = "1";
     }
+    // v244: say exactly what file you'll get — size + ratio, professional and honest
+    var dims = $("stuDims");
+    if (dims) dims.textContent = "EXPORTS AT " + r.w + " × " + r.h + " PX · " + r.label;
   }
 
   function esc(s) { return String(s).replace(/[&<>\"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -556,6 +590,13 @@
         b.style.backgroundSize = "cover";
         b.title = it.label;
         b.innerHTML = '<span class="stu-bgthumb__lab">' + esc(it.label) + '</span>';
+      } else if (isBg) {
+        // v244: colour & gradient backgrounds are REAL swatch tiles now — same clean grid as the photo thumbs
+        b.className = "stu-bgthumb" + (it.id === current ? " on" : "");
+        if (it.id === "none") b.style.background = "repeating-linear-gradient(45deg,#ffffff 0 7px,#dbe2ea 7px 14px)";
+        else { b.style.background = it.css; b.style.backgroundSize = "cover"; }
+        b.title = it.label;
+        b.innerHTML = '<span class="stu-bgthumb__lab">' + esc(it.label) + '</span>';
       } else {
         b.className = "stu-chip" + (it.id === current ? " on" : "");
         var lab = renderLabel ? renderLabel(it) : esc(it.label);
@@ -576,12 +617,20 @@
   function buildControls() {
     chips("stuRatio", RATIOS, S.ratio, function (id) { S.ratio = id; layoutPreview(); });
     chips("stuFilter", FILTERS, S.filter, function (id) { S.filter = id; });
-    chips("stuFont", FONTS, S.font, function (id) { S.font = id; });
+    // v244: each font's NAME rendered in its OWN face — judge the look before you tap
+    chips("stuFont", FONTS, S.font, function (id) { S.font = id; }, function (it) {
+      return '<span style="font-family:' + it.css + ';font-size:15px;line-height:1;text-transform:none;letter-spacing:0;font-weight:' + (it.w || 900) + '">' + esc(it.label) + '</span>';
+    });
     chips("stuBg", BGS, S.bg, function (id) { S.bg = id; });
     chips("stuPos", POS, S.pos, function (id) { S.pos = id; });
     chips("stuAlign", ALIGNS, S.align, function (id) { S.align = id; });
     chips("stuSize", SIZES, S.size, function (id) { S.size = id; });
-    chips("stuTheme", THEMES, S.theme, function (id) { S.theme = id; });
+    // v244: theme buttons carry a real colour swatch — INK/PAPER/LOUD at a glance
+    chips("stuTheme", THEMES, S.theme, function (id) { S.theme = id; }, function (it) {
+      var on = it.id === S.theme;
+      var dot = '<span style="display:inline-block;width:11px;height:11px;border:2px solid ' + (on ? "#111" : "#9a938a") + ';border-radius:4px;background:' + it.swatch + ';vertical-align:-1px;margin-right:5px"></span>';
+      return dot + esc(it.label);
+    });
     var z = $("stuZoom"); if (z) z.addEventListener("input", function () { S.zoom = this.value / 100; layoutPreview(); });
     var sc = $("stuScrimR"); if (sc) sc.addEventListener("input", function () { S.scrim = this.value / 100; layoutPreview(); });
     var ta = $("stuQuoteTa"); if (ta) ta.addEventListener("input", function () { S.quote = this.value; layoutPreview(); });
@@ -592,7 +641,7 @@
     cfg = o || {};
     S = {
       ratio: (cfg.ratio || "4:5"), zoom: 1, fx: .5, fy: .5, filter: "orig",
-      quote: cfg.quote || "", font: cfg.font || "arch", bg: cfg.bg || "img-pastel",
+      quote: cfg.quote || "", byline: cfg.byline || "", font: cfg.font || "arch", bg: cfg.bg || "img-pastel",
       pos: "bottom", align: "center", size: "m", theme: "ink", scrim: .55,
       gold: !!(cfg.gold || (window.TSB_GOLD && TSB_GOLD.isGold()))
     };
@@ -602,13 +651,14 @@
     root.className = "stu-wrap";
     root.innerHTML =
       '<div class="stu-sheet">' +
-        '<div class="stu-top"><b>🎨 CARD STUDIO<small>Instagram-ready · FREE ratio · 6 fonts · 24 aesthetic bgs · drag to reframe</small></b><button class="stu-x" id="stuX">✕</button></div>' +
+        '<div class="stu-top"><b>🎨 CARD STUDIO<small>Instagram-ready · 8 famous fonts · 36 backgrounds · what you see is the file</small></b><button class="stu-x" id="stuX">✕</button></div>' +
         '<div class="stu-prevwrap"><div class="stu-prev" id="stuPrev">' +
           '<img id="stuImg" alt="" hidden>' +
           '<div class="stu-scrim" id="stuScrim"></div>' +
           '<div class="stu-quote" id="stuQuote"></div>' +
           '<div class="stu-draghint" id="stuHint">DRAG TO REFRAME · DOUBLE-TAP RESETS</div>' +
         "</div></div>" +
+        '<div id="stuDims" style="flex:none;text-align:center;font:800 10px \'Space Grotesk\',sans-serif;letter-spacing:1.2px;color:#b3ab97;text-transform:uppercase;padding:9px 0 3px;background:#0e0c0a"></div>' +
         '<div class="stu-sec"><div class="stu-lbl">RATIO <small>where will you post it? FREE = original</small></div><div class="stu-chips" id="stuRatio"></div></div>' +
         '<div class="stu-sec"><div class="stu-lbl">PHOTO <small>zoom slider · drag the preview to reframe · no photo? pick a bg below</small></div>' +
           '<input class="stu-range" id="stuZoom" type="range" min="100" max="300" value="100"><div style="height:8px"></div><button type="button" id="stuPick" style="width:100%;border:2.5px solid #111;background:#fff;font:700 12px Space Grotesk,sans-serif;padding:10px;border-radius:999px;box-shadow:2.5px 2.5px 0 #111;cursor:pointer">📷 CHOOSE / CHANGE PHOTO</button>' +
@@ -618,7 +668,7 @@
         '<div class="stu-sec"><div class="stu-lbl">ADD TEXT <small>type anything — the text looks great ON the image itself · drag, resize, align like Instagram</small></div>' +
           '<textarea class="stu-ta" id="stuQuoteTa" rows="2" maxlength="220" placeholder="Type your text…"></textarea>' +
           '<div style="height:10px"></div>' +
-          '<div class="stu-lbl">FONT <small>meme & famous faces — tap to see live preview</small></div><div class="stu-chips" id="stuFont"></div>' +
+          '<div class="stu-lbl">FONT <small>8 famous faces · each name shown in its own style</small></div><div class="stu-chips" id="stuFont"></div>' +
           '<div style="height:10px"></div>' +
           '<button type="button" id="stuInspire" style="width:100%;border:2.5px solid #111;background:#ffc800;font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;padding:11px;border-radius:999px;box-shadow:3px 3px 0 #111;cursor:pointer">✨ Inspire Desk — quotes & aesthetic images</button><div style="font:600 10px Space Grotesk,sans-serif;color:#64748b;text-align:center;margin-top:6px;letter-spacing:.3px">Live library for quotes — tap to fill, not a verifier</div>' +
           '<div style="height:10px"></div>' +
@@ -631,7 +681,11 @@
         "</div>" +
         (S.gold ? '<div class="stu-gold">💛 GOLD — no watermark, Pro filters on. Thank you for keeping the library free.</div>'
                 : '<div class="stu-gold">Free = tiny <span style="background:#111;color:#ffc800;padding:2px 6px;border-radius:999px;font-size:10px;">thesmallbook.in</span> at the bottom — subtle, not loud · <a href="gold.html">Gold removes it →</a></div>') +
-        '<div class="stu-foot"><button class="stu-dl" id="stuDl">⬇ DOWNLOAD / SHARE</button><button class="stu-apply" id="stuApply">✔ USE AS COVER</button></div>' +
+        '<div class="stu-foot">' +
+          '<button class="stu-apply stu-foot__main" id="stuApply">✔ USE AS COVER</button>' +
+          '<button class="stu-dl" id="stuDl">⬇ CARD · TEXT INSIDE</button>' +
+          '<button class="stu-dl" id="stuDlPhoto" style="background:#fff">⬇ PHOTO ONLY</button>' +
+        '</div>' +
       "</div>";
     document.body.appendChild(root);
 
@@ -639,7 +693,12 @@
     root.addEventListener("click", function (e) { if (e.target === root) close(); });
     $("stuDl").addEventListener("click", async function () {
       this.textContent = "… rendering";
-      try { await shareOrDownload(await render()); } finally { this.textContent = "⬇ DOWNLOAD / SHARE"; }
+      try { await shareOrDownload(await render(), "thesmallbook-card.png"); } finally { this.textContent = "⬇ CARD · TEXT INSIDE"; }
+    });
+    // v244: export the picture ALONE — clean image, no text, no watermark (your "image & text separately" choice)
+    $("stuDlPhoto").addEventListener("click", async function () {
+      this.textContent = "… rendering";
+      try { await shareOrDownload(await render(true), "thesmallbook-photo.png"); } finally { this.textContent = "⬇ PHOTO ONLY"; }
     });
     $("stuApply").addEventListener("click", async function () {
       this.textContent = "… rendering";
@@ -771,5 +830,44 @@
     window.removeEventListener("resize", layoutPreview);
   }
 
-  window.TSB_STUDIO = { open: open, close: close };
+  /* ---------- v244: headless compose — the publish flow bakes the quote INTO the image without opening the sheet ---------- */
+  async function compose(o) {
+    o = o || {};
+    await ensureFonts();
+    var keepImg = img, keepS = S, keepCfg = cfg;
+    try {
+      var src = o.src || "";
+      var local = null;
+      if (src) {
+        var u = src;
+        if (/^https?:\/\//.test(src) && !/^blob:/.test(src)) {
+          try {
+            var bb = await fetch(src, { mode: "cors", credentials: "omit" }).then(function (r) { if (!r.ok) throw new Error("bad"); return r.blob(); });
+            u = URL.createObjectURL(bb);
+          } catch (e) { u = src; }
+        }
+        local = await new Promise(function (res) {
+          var im = new Image();
+          im.onload = function () { res(im); };
+          im.onerror = function () { res(null); };
+          im.src = u;
+        });
+      }
+      img = local;
+      S = {
+        ratio: o.ratio || "4:5", zoom: 1, fx: .5, fy: .5,
+        filter: o.filter || "orig", quote: o.quote || "", byline: o.byline || "",
+        font: o.font || "arch", bg: o.bg || "img-pastel",
+        pos: o.pos || "bottom", align: o.align || "center", size: o.size || "m",
+        theme: o.theme || "ink", scrim: .55,
+        gold: !!(o.gold || (window.TSB_GOLD && TSB_GOLD.isGold()))
+      };
+      var canvas = await render();
+      return await canvasToFile(canvas, "thesmallbook-card.png");
+    } finally {
+      img = keepImg; S = keepS; cfg = keepCfg;
+    }
+  }
+
+  window.TSB_STUDIO = { open: open, close: close, compose: compose };
 })();

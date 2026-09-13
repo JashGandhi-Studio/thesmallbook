@@ -1,12 +1,13 @@
 /* ============================================================
-   THESMALLBOOK — 🎙️ VOICE TO TEXT (dictate.js) · v230
-   PUTER-POWERED · Hinglish + 7 Indian languages · smart punctuation
-   - PUTER ONLY (your choice): record → AI (GPT-4o-transcribe / Whisper)
-     → accurate, no repetition, auto full-stops, Hinglish Roman handled
-     → free, no API keys, no backend (puter.js)
-   - Fallback gracefully to Web Speech API if Puter offline/blocked
-   - Auto punctuation: GPT-4o already punctuates; smartPunctuate extra
-   - Lang memory: EN-IN · Hinglish · HI · TA · BN · MR · GU · KN · TE · EN-US
+   THESMALLBOOK — 🎙️ VOICE TO TEXT (dictate.js) · v244
+   FREE & ANONYMOUS-FIRST — NO SIGN-IN, EVER (like our read-aloud)
+   - v244: WEB SPEECH API FIRST — the browser's own speech-to-text.
+     No account, no popup, no Puter sign-in. Works on Chrome / Edge /
+     Android / Safari 14.5+, on-device or browser service, instantly.
+   - Puter AI (GPT-4o-transcribe / Whisper) is only a transparent
+     FALLBACK for browsers without Web Speech (e.g. Firefox desktop).
+   - Hinglish + 7 Indian languages · smart punctuation retained
+   - Auto punctuation + lang memory: EN-IN · Hinglish · HI · TA · BN · MR · GU · KN · TE · EN-US
    - Inserts at cursor in title / hook / story body; editable after
    - Interim recording bar + timer, no cheap popup
    ============================================================ */
@@ -550,7 +551,7 @@
         var b=document.getElementById("wBody");
         if (b){ b.focus(); placeCaretAtEnd(b); }
       }
-      toast("Listening — speak naturally, we’ll punctuate.");
+      toast("Listening — speak naturally (free · no sign-in), we’ll punctuate.");
     }catch(e){ listening=false; updateBtnState(); toast("Couldn’t start — tap Dictate again."); }
   }
   function stopWebSpeech(){
@@ -564,37 +565,20 @@
     if (el) el.hidden=true;
   }
 
-  // Unified start/stop that respects your Puter-only choice
+  // Unified start/stop — v244: Web Speech FIRST (free, anonymous, no sign-in). Puter only for browsers without it.
   function start(){
     lang = getLang();
-    // Always try Puter first (your choice); fallback to Web Speech if Puter unavailable/offline
-    if (isPuterReady()){
-      startPuter();
-    } else {
-      // Try load Puter in background, but start recording immediately for low latency?
-      // We choose to attempt Puter load (1–2s) then record
-      loadPuter().then(function(ok){
-        if (ok && !listening) startPuter();
-        else if (!ok) startWebSpeech();
-        // if already listening via puter, ignore
-      });
-      // If load takes >1s, we still want quick feedback — show loading
-      listening = true; // temp
-      updateBtnState();
-      ensureInterimEl().hidden=false;
-      var inter=document.getElementById("dictateInterim");
-      if (inter) inter.textContent = "Loading AI…";
-      // The real start will happen after load; reset temp state
-      setTimeout(function(){
-        if (window._puterRecording !== true && listening && !mediaRec){
-          // still not started, fallback
-          listening=false; updateBtnState();
-        }
-      }, 2500);
-      // Actually delegate to startPuter after load resolves; cancel temp
-      listening=false; updateBtnState();
-      startPuter();
+    if (HAS_WEB_SPEECH){
+      // the people's path: browser speech-to-text — no account, no popup, starts instantly
+      startWebSpeech();
+      return;
     }
+    // rare fallback (Firefox desktop etc.): load the AI engine transparently
+    toast("Starting voice engine…");
+    loadPuter().then(function(ok){
+      if (ok && !listening) startPuter();
+      else if (!ok) toast("Voice typing needs Chrome, Edge or Safari — or allow the microphone.");
+    });
   }
   function stop(){
     if (window._puterRecording) {
@@ -615,7 +599,8 @@
       btn.type = "button";
       btn.id = "wrDictate";
       btn.className = "wr-dictate";
-      btn.setAttribute("aria-label","Voice to text — AI");
+      btn.setAttribute("aria-label","Voice to text — free, no sign-in");
+      btn.title = "Voice to text — free & anonymous, no sign-in";
       btn.innerHTML = '<span class="wr-dictate__dot"></span> Dictate';
       btn.addEventListener("click", function(e){
         e.preventDefault();
@@ -635,14 +620,14 @@
       langSel = document.createElement("select");
       langSel.id = "dictateLang";
       langSel.className = "wr-dictate__lang";
-      langSel.title = "Dictation language — AI supports Hinglish & 7 Indian languages";
+      langSel.title = "Dictation language — free voice typing, Hinglish & 7 Indian languages, no sign-in";
       LANGS.forEach(function(l){
         var o = document.createElement("option");
         o.value = l.id; o.textContent = l.label;
         langSel.appendChild(o);
       });
       langSel.value = getLang();
-      langSel.addEventListener("change", function(){ setLang(this.value); toast("Language: " + this.options[this.selectedIndex].textContent + " • AI"); if (listening||window._puterRecording) { stop(); setTimeout(start, 300); } });
+      langSel.addEventListener("change", function(){ setLang(this.value); toast("Language: " + this.options[this.selectedIndex].textContent + " • free voice typing"); if (listening||window._puterRecording) { stop(); setTimeout(start, 300); } });
       if (btn && btn.parentNode) {
         btn.parentNode.insertBefore(langSel, btn.nextSibling);
       }
@@ -664,8 +649,7 @@
         stop();
       }
     });
-    // Preload Puter in background (no user impact)
-    setTimeout(function(){ loadPuter(); }, 900);
+    // v244: no background Puter preload — Web Speech needs nothing, sign-in popups must never appear
   }
 
   function init(){

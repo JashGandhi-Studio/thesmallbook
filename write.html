@@ -7,7 +7,7 @@
   <meta name="description" content="Write your story in a full-page editor with rich formatting, voice and autosaved drafts.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Bebas+Neue&family=Lobster&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Space+Mono:wght@400;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
   <script>
@@ -252,6 +252,13 @@
       modeChip.textContent = "✍️ QUOTE MODE — a shareable card, not an essay";
       modeChip.className = "wr-modechip wr-modechip--quote";
       if(quoteWrap) quoteWrap.hidden = false;
+      // v244: in QUOTE mode the uploaded image IS the cover — no separate cover needed. Say it, and mean it.
+      try{
+        var covTitle=document.querySelector(".wr-card .wr-card__title");
+        if(covTitle) covTitle.innerHTML="📷 Quote image — <u>this is your cover</u>";
+        var covSub=document.querySelector(".wr-card .wr-card__sub");
+        if(covSub) covSub.textContent="Opens Studio with your quote on it";
+      }catch(e){}
       // make body optional and change its placeholder
       body.setAttribute("data-ph", "Your take — why this line hit you (optional, 2–3 lines in your voice). Leave empty to publish just the card. Your QUOTE draft is separate from your STORY draft.");
       renderQuoteLive();
@@ -333,11 +340,44 @@
         $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
         try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
         saveDraft();
+        // v244 QUOTE MODE: the image you upload IS the card — open Studio right away with your quote on it,
+        // so what you publish carries the quote inside the image (not text floating separately).
+        if(kind==="quote" && window.TSB_STUDIO){
+          setTimeout(function(){
+            try{
+              TSB_STUDIO.open({
+                src: coverUrl,
+                quote: title.value || "",
+                byline: (sub.value || "").replace(/^—\s*/, "").replace(/^-\s*/, ""),
+                gold: window.TSB_GOLD && TSB_GOLD.isGold(),
+                onApply: async function(file){
+                  try{
+                    $("saveState").textContent = "… uploading your card";
+                    coverUrl = await C.upload(file, "tsb-covers");
+                    lastCoverFile = null;
+                    $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
+                    renderQuoteLive(); saveDraft();
+                  }catch(err){ alert("Card upload failed: " + err.message); }
+                }
+              });
+            }catch(e){}
+          }, 350);
+        }
       } catch (e) { alert("Cover upload failed: " + e.message); }
     });
     /* v223 STORY CARD STUDIO — tap the cover preview to edit layout, filters & ratio */
     // ✨ INSPIRE DESK — properly optimised: Quote → [quotes,images], Stories → [images,research] (not everywhere)
     (function(){
+      // v244: seed Inspire from what you ACTUALLY wrote — quote text, or the story's own words (title + body distilled)
+      function storySeed(){
+        if(kind==="quote") return (title.value||"").trim();
+        var t=(title.value||"").trim();
+        var b=(body.innerText||"").replace(/\s+/g," ").trim();
+        var words=(t+" "+b).toLowerCase().replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(function(w){ return w.length>=4; });
+        var seen={}, out=[];
+        words.forEach(function(w){ if(!seen[w] && out.length<6){ seen[w]=1; out.push(w); } });
+        return (out.join(" ") || t).slice(0,90);
+      }
       function openInspire(tab, seed){
         var api = window.TSB_OSINT||window.TSB_INSPIRE;
         if(api && api.openInspire){
@@ -367,6 +407,25 @@
                 try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
                 var ss=document.getElementById("saveState"); if(ss) ss.textContent="✓ cover from Inspire";
                 try{ saveDraft(); }catch(e){}
+                // v244: in QUOTE mode the Inspire image IS the card — open Studio with the quote on it
+                if(kind==="quote" && window.TSB_STUDIO){
+                  TSB_STUDIO.open({
+                    src: upUrl,
+                    quote: title.value || "",
+                    byline: (sub.value || "").replace(/^—\s*/, "").replace(/^-\s*/, ""),
+                    gold: window.TSB_GOLD && TSB_GOLD.isGold(),
+                    onApply: async function(file){
+                      try{
+                        $("saveState").textContent = "… uploading your card";
+                        coverUrl = await C.upload(file, "tsb-covers");
+                        lastCoverFile = null;
+                        var pv2=document.getElementById("wCoverPrev"); if(pv2){ pv2.src = coverUrl; pv2.hidden = false; }
+                        try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
+                        saveDraft();
+                      }catch(err){ alert("Card upload failed: " + err.message); }
+                    }
+                  });
+                }
               }catch(e){ window.open(url,"_blank"); }
             },
             onUseResearch: function(snippet){
@@ -394,14 +453,14 @@
           } else {
             subEl.textContent="live — images & research · tap to build your story";
             b1.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg> Images'; b1.title="Browse aesthetic cover images";
-            b2.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Research'; b2.title="Research — Wiki + your 400 books + essay starter";
+            b2.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Research'; b2.title="Research YOUR story — Wiki · Wikiquote · Dictionary · readable books · essay starter";
             b1.style.background="#ffc800"; b2.style.background="#fff";
           }
           if(embed) embed.style.display="flex";
         }
         paintEmbed();
-        if(b1) b1.addEventListener("click", function(e){ e.preventDefault(); var tab=(kind==="quote")?"quotes":"images"; openInspire(tab, (title.value||"").trim()); });
-        if(b2) b2.addEventListener("click", function(e){ e.preventDefault(); var tab=(kind==="quote")?"images":"research"; openInspire(tab, (title.value||"").trim()); });
+        if(b1) b1.addEventListener("click", function(e){ e.preventDefault(); var tab=(kind==="quote")?"quotes":"images"; openInspire(tab, storySeed()); });
+        if(b2) b2.addEventListener("click", function(e){ e.preventDefault(); var tab=(kind==="quote")?"images":"research"; openInspire(tab, storySeed()); });
         // also expose for hint switching if needed
         try{ window.__paintInspireEmbed = paintEmbed; }catch(e){}
       })();
@@ -409,8 +468,8 @@
       try{
         var h=document.getElementById("inspireInlineHint");
         if(h){
-          if(kind==="quote") h.innerHTML='Tip: Tap <b>✨ Inspire</b> above to browse live quotes & aesthetic images → tap to insert.';
-          else h.innerHTML='Tip: Tap <b>✨ Inspire</b> above to browse live images & research → tap to insert.';
+          if(kind==="quote") h.innerHTML='Tip: Use the <b>✨ Inspire Desk</b> strip at the top — live quotes & aesthetic images, tap to insert.';
+          else h.innerHTML='Tip: Use the <b>✨ Inspire Desk</b> strip at the top — live images & research from your own story.';
         }
         // legacy ids for cached browsers
         var hint=document.getElementById("inspireDeskHint");
@@ -418,18 +477,7 @@
         if(hint) hint.textContent = (kind==="quote" ? "Live library — quotes & images" : "Live library — images & research");
         if(sub) sub.textContent = (kind==="quote" ? "Tap to browse quotes you can post & aesthetic images you can set as card background — live, not preloaded." : "Live library for stories — cover images (aesthetic) & research snippets you can build on.");
       }catch(e){}
-      // v242: hide Dictate in QUOTE mode (short quote card doesn't need voice typing there — keep UI clean)
-      if(kind==="quote"){
-        try{
-          var hideDict = function(){
-            var db=document.getElementById("wrDictate"), dl=document.getElementById("dictateLang"), lv=document.getElementById("dictateLive");
-            if(db) db.style.display="none";
-            if(dl) dl.style.display="none";
-            if(lv) lv.style.display="none";
-          };
-          hideDict(); setTimeout(hideDict, 600); setTimeout(hideDict, 1600);
-        }catch(e){}
-      }
+      // v244: Dictate stays visible in QUOTE mode too — free browser voice typing (no sign-in) fills the quote or your take
       // compat: if old buttons somehow still in DOM (cached), wire them to productive tabs too
       var b1=document.getElementById("osintImgBtn");
       var b2=document.getElementById("osintQuoteBtn2");
@@ -512,14 +560,74 @@
     });
 
     /* ---------- publish ---------- */
+    // v244: QUOTE + image → ask HOW to publish: aesthetic card (quote baked INSIDE the image)
+    // or image & text separate. No image → publish the text quote directly.
+    function askQuoteExport(){
+      return new Promise(function(resolve){
+        var ov=document.createElement("div");
+        ov.style.cssText="position:fixed;inset:0;z-index:99995;background:rgba(10,8,6,.74);display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(3px)";
+        var btnBase="width:100%;text-align:left;border:3px solid #111;border-radius:16px;padding:13px 14px;cursor:pointer;box-shadow:4px 4px 0 #111;display:flex;gap:12px;align-items:flex-start;background:#fff";
+        var F="font-family:'Space Grotesk',sans-serif", FA="font-family:'Archivo Black',sans-serif";
+        ov.innerHTML='<div style="background:#fffdf5;border:3.5px solid #111;border-radius:18px;box-shadow:8px 8px 0 #ffc800;max-width:430px;width:100%;overflow:hidden">'+
+          '<div style="padding:14px 16px;background:linear-gradient(135deg,#ffd94d,#ffc800 55%,#f0b400);border-bottom:3px solid #111">'+
+            '<b style="font:800 13px '+FA+';letter-spacing:.6px;color:#111">📤 HOW DO YOU WANT TO PUBLISH?</b>'+
+            '<div style="font:700 10.5px '+F+';color:#111;opacity:.72;margin-top:3px;letter-spacing:.4px">your quote \u00b7 your image \u00b7 two beautiful ways</div>'+
+          '</div>'+
+          '<div style="padding:14px;display:flex;flex-direction:column;gap:10px">'+
+            '<button type="button" id="qeCard" style="'+btnBase+';background:#ffc800">'+
+              '<span style="font-size:22px;line-height:1;flex:none">\u2728</span>'+
+              '<span style="flex:1;min-width:0"><b style="font:800 13px '+F+';display:block">Aesthetic card \u2014 quote INSIDE the image</b>'+
+              '<span style="font:600 11px '+F+';color:#444;display:block;margin-top:3px;line-height:1.45">Exactly like your Studio preview: the words are baked into the picture. One shareable image.</span></span>'+
+            '</button>'+
+            '<button type="button" id="qeSep" style="'+btnBase+'">'+
+              '<span style="font-size:22px;line-height:1;flex:none">📝</span>'+
+              '<span style="flex:1;min-width:0"><b style="font:800 13px '+F+';display:block">Image & text separately</b>'+
+              '<span style="font:600 11px '+F+';color:#444;display:block;margin-top:3px;line-height:1.45">Clean photo as the cover, your quote as text below it.</span></span>'+
+            '</button>'+
+            '<div style="font:600 10px '+F+';color:#8f8a80;text-align:center;line-height:1.5">Your take (\u201cwhy this line hit you\u201d) always travels below the card \u2014 write it in the box, it stays yours.</div>'+
+          '</div>'+
+        '</div>';
+        document.body.appendChild(ov);
+        function done(v){ try{ ov.remove(); }catch(e){} resolve(v); }
+        ov.querySelector("#qeCard").addEventListener("click", function(){ done("card"); });
+        ov.querySelector("#qeSep").addEventListener("click", function(){ done("sep"); });
+        ov.addEventListener("click", function(e){ if(e.target===ov) done(null); });
+        document.addEventListener("keydown", function eschandler(e){ if(e.key==="Escape"){ document.removeEventListener("keydown", eschandler); done(null); } });
+      });
+    }
+    var pubBusy = false;
     async function pub() {
+      if (pubBusy) return;
       var t = title.value.trim(), b = body.innerHTML.trim();
       // strip html tags to check if body has real text
       var bText = body.innerText ? body.innerText.trim() : b.replace(/<[^>]+>/g, "").trim();
       if(!t){ alert(kind==="quote" ? "Add the quote text first." : "Add a title first."); title.focus(); return; }
       if(kind!=="quote" && !bText){ alert("Add a few lines to your story first."); body.focus(); return; }
+      pubBusy = true;
       $("pubBtn").textContent = "Publishing…";
       try {
+        // v244: quote with an image → let the writer pick the export style
+        if(kind==="quote" && coverUrl && !burstUrl){
+          var how = await askQuoteExport();
+          if(!how){ pubBusy=false; $("pubBtn").textContent="Publish →"; return; }
+          if(how==="card" && window.TSB_STUDIO && TSB_STUDIO.compose){
+            try{
+              $("saveState").textContent = "… composing your card";
+              var cardFile = await TSB_STUDIO.compose({
+                src: coverUrl,
+                quote: t,
+                byline: (sub.value || "").replace(/^—\s*/, "").replace(/^-\s*/, ""),
+                gold: window.TSB_GOLD && TSB_GOLD.isGold()
+              });
+              if(cardFile){
+                coverUrl = await C.upload(cardFile, "tsb-covers");
+                var pv=document.getElementById("wCoverPrev"); if(pv){ pv.src = coverUrl; pv.hidden = false; }
+                try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
+                $("saveState").textContent = "✓ card ready";
+              }
+            }catch(ce){ console.warn("card compose failed — publishing image as-is", ce); }
+          }
+        }
         await C.publish({
           title: t, subtitle: sub.value.trim(), body: b,
           cover_url: burstUrl || coverUrl, audio_url: audioUrl, kind: kind,
@@ -532,7 +640,7 @@
       } catch (e) {
         alert("Publish failed — " + (e && e.message ? e.message : e) + ". Stay signed in and try once more.");
         $("pubBtn").textContent = "Publish →";
-      }
+      } finally { pubBusy = false; }
     }
     $("pubBtn").addEventListener("click", pub);
     $("pubBtn2").addEventListener("click", pub);

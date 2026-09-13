@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK — ✨ INSPIRE DESK (osint.js) · v237
+   THESMALLBOOK — ✨ INSPIRE DESK (osint.js) · v244
    LIVE, INTELLIGENT, SIMPLE — not preloaded.
 
    OSINT tech, productive: a live library you tap to create.
@@ -10,7 +10,15 @@
    - Images: LIVE Wikimedia Commons search + live Picsum
      aesthetic seeds — every result is a real photo you can
      "Use as cover" instantly. Not preloaded.
-   - Research: LIVE Wikipedia summary + OpenLibrary.
+   - Research (v244 — supercharged, multi-source, topic-aware):
+     · reads YOUR story — findings for what you actually typed
+     · LIVE Wikipedia (summary + related) — facts to build on
+     · LIVE Wikiquote — voices & lines you can insert
+     · LIVE Dictionary (single words) — meaning + example
+     · NO default topic: empty search = a rotating live Explore
+       board (psychology, philosophy, stoicism…) — not just "habits"
+     · Open Library: READABLE full books only (Archive.org reader
+       in one tap) and never duplicated with TheSmallBook library
    UX: debounced live-search as you type, smart chips,
    clean professional sheet, one-tap insert anywhere.
    Embedded: Write, Studio, Scan, Stories, Library.
@@ -181,17 +189,58 @@
     }).catch(function(){ return null; });
   }
   function wikiSearch(q){
+    if(!String(q||"").trim()) return Promise.resolve([]);
     var url="https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(q)+"&srlimit=5&format=json&origin=*";
     return jfetch(url, 6000).then(function(j){
       var hits=(j.query&&j.query.search)||[];
       return hits.map(function(h){ return {title:h.title, snippet:h.snippet.replace(/<\/?[^>]+>/g,"")}; });
     }).catch(function(){return [];});
   }
-  function openLibSearch(q){
-    var url="https://openlibrary.org/search.json?q="+encodeURIComponent(q)+"&limit=4";
-    return jfetch(url, 7000).then(function(j){
-      return (j.docs||[]).slice(0,4).map(function(d){ return {title:d.title, author:(d.author_name&&d.author_name[0])||"", year:d.first_publish_year, cover:d.cover_i}; });
+  // v244: LIVE Wikiquote — voices & lines related to your topic, insertable facts
+  function wikiQuoteSearch(q){
+    if(!String(q||"").trim()) return Promise.resolve([]);
+    var url="https://en.wikiquote.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(q)+"&srlimit=4&format=json&origin=*";
+    return jfetch(url, 6000).then(function(j){
+      return ((j.query&&j.query.search)||[]).map(function(h){
+        return { title:h.title, snippet:String(h.snippet||"").replace(/<[^>]+>/g,"").replace(/\s+/g," ").trim() };
+      }).filter(function(h){ return h.snippet && h.snippet.length>24; });
     }).catch(function(){return [];});
+  }
+  // v244: LIVE dictionary — word power (only when the search is a single word)
+  function dictLookup(w){
+    if(!String(w||"").trim()) return Promise.resolve(null);
+    var url="https://api.dictionaryapi.dev/api/v2/entries/en/"+encodeURIComponent(String(w).trim().toLowerCase());
+    return jfetch(url, 6000).then(function(j){
+      var e=j&&j[0]; if(!e) return null;
+      var m=e.meanings&&e.meanings[0]; var d=m&&m.definitions&&m.definitions[0];
+      if(!d||!d.definition) return null;
+      return { word:e.word, ph:(e.phonetic||(e.phonetics&&e.phonetics[0]&&e.phonetics[0].text))||"", pos:(m&&m.partOfSpeech)||"", def:d.definition, ex:d.example||"" };
+    }).catch(function(){ return null; });
+  }
+  function normTitle(t){ return String(t||"").toLowerCase().replace(/[^a-z0-9]/g,""); }
+  // v244: readable books ONLY — every result opens in the Archive.org reader.
+  // Never contradicts TheSmallBook's own library: titles we already publish are filtered out.
+  function openLibSearch(q){
+    if(!String(q||"").trim()) return Promise.resolve([]);
+    var url="https://openlibrary.org/search.json?q="+encodeURIComponent(q)+"&limit=8&has_fulltext=true&fields=title,author_name,first_publish_year,cover_i,ia";
+    return jfetch(url, 7000).then(function(j){
+      return (j.docs||[])
+      .filter(function(d){ return d.ia && d.ia.length; })
+      .map(function(d){ return { title:d.title, author:(d.author_name&&d.author_name[0])||"", year:d.first_publish_year, cover:d.cover_i, ia:(d.ia&&d.ia[0])||"" }; })
+      .filter(function(d){ return d.ia; });
+    }).catch(function(){return [];});
+  }
+  // v244: in-app reader — actually READ the book right here (Archive.org embed)
+  function openReader(ia, title){
+    var ov=document.createElement("div");
+    ov.style.cssText="position:fixed;inset:0;z-index:99999;background:#0e0c0a;display:flex;flex-direction:column";
+    ov.innerHTML='<div style="flex:none;display:flex;align-items:center;gap:10px;padding:10px 12px;background:#111;border-bottom:2.5px solid #ffc800">'+
+      '<b style="font:800 12px Space Grotesk,sans-serif;color:#ffc800;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">📖 '+esc(title||"Read free")+'</b>'+
+      '<a href="https://archive.org/details/'+esc(ia)+'" target="_blank" rel="noopener" style="flex:none;color:#ffc800;font:700 11px Space Grotesk,sans-serif;text-decoration:none">Archive.org ↗</a>'+
+      '<button type="button" id="iaRdX" style="flex:none;border:2px solid #ffc800;background:#111;color:#ffc800;border-radius:999px;padding:6px 12px;font:800 11px Space Grotesk,sans-serif;cursor:pointer">✕ Close</button></div>'+
+      '<iframe src="https://archive.org/embed/'+esc(ia)+'" style="flex:1 1 auto;width:100%;border:0;background:#000" allow="fullscreen;autoplay" allowfullscreen referrerpolicy="no-referrer"></iframe>';
+    document.body.appendChild(ov);
+    ov.querySelector("#iaRdX").addEventListener("click",function(){ ov.remove(); });
   }
   // ensure 400-book library is available even if data.js not loaded on this page
   var __localBooksLoaded = false;
@@ -432,7 +481,7 @@
           paintTabs();
         });
       });
-      $q.placeholder = activeTab==="quotes" ? "Type anything — e.g. lonely after breakup, healing, Rumi…" : activeTab==="images" ? "Search aesthetic images — minimal, ocean, beige, nature…" : "Search research — habits, money, loneliness…";
+      $q.placeholder = activeTab==="quotes" ? "Type anything — e.g. lonely after breakup, healing, Rumi…" : activeTab==="images" ? "Search aesthetic images — minimal, ocean, beige, nature…" : "Research YOUR topic — from your story, or anything…";
     }
 
     function cardQuote(q){
@@ -473,15 +522,58 @@
     }
     function cardBook(b){
       var cover = b.cover ? "https://covers.openlibrary.org/b/id/"+b.cover+"-M.jpg" : "";
+      // v244: READABLE — one tap opens the full book in the Archive.org reader. Different from TheSmallBook's own library by design.
       return '<div style="background:#fff;border:2.5px solid #111;border-radius:14px;padding:10px;display:flex;gap:10px;align-items:center;">' +
-        (cover ? '<img src="'+esc(cover)+'" alt="" style="width:56px;height:78px;object-fit:cover;border-radius:8px;border:2px solid #111;flex:none;" loading="lazy">' : '<div style="width:56px;height:78px;border-radius:8px;border:2px solid #111;background:#fffdf5;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;">📚</div>') +
+        (cover ? '<img src="'+esc(cover)+'" alt="" style="width:56px;height:78px;object-fit:cover;border-radius:8px;border:2px solid #111;flex:none;" loading="lazy" onerror="this.style.opacity=.25">' : '<div style="width:56px;height:78px;border-radius:8px;border:2px solid #111;background:#fffdf5;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;">📖</div>') +
         '<div style="flex:1 1 auto;min-width:0;">' +
           '<div style="font:800 12px Space Grotesk,sans-serif;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(b.title)+'</div>' +
           '<div style="font:600 11px Space Grotesk,sans-serif;color:#64748b;margin-top:2px;">'+esc(b.author||"")+(b.year?" · "+b.year:"")+'</div>' +
-          '<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;letter-spacing:.5px;text-transform:uppercase;margin-top:4px;">LIVE OpenLibrary</div>' +
+          '<div style="font:600 10px Space Grotesk,sans-serif;color:#16a34a;letter-spacing:.5px;text-transform:uppercase;margin-top:4px;">Read free · full book · Open Library</div>' +
         '</div>' +
-        '<button type="button" data-use-book="'+esc(b.title)+'" data-book-author="'+esc(b.author||"")+'" style="flex:none;border:2px solid #111;background:#fff;border-radius:999px;padding:7px 10px;font:700 10px Space Grotesk,sans-serif;cursor:pointer;white-space:nowrap">+ Use</button>' +
+        (b.ia ? '<button type="button" data-read-ia="'+esc(b.ia)+'" data-read-title="'+esc(b.title)+'" style="flex:none;border:2px solid #111;background:#ffc800;border-radius:999px;padding:8px 11px;font:800 10px Space Grotesk,sans-serif;cursor:pointer;white-space:nowrap;box-shadow:2px 2px 0 #111">📖 Read</button>' : '') +
+        '<button type="button" data-use-book="'+esc(b.title)+'" data-book-author="'+esc(b.author||"")+'" title="Add as reference in your story" style="flex:none;border:2px solid #111;background:#fff;border-radius:999px;padding:7px 10px;font:700 10px Space Grotesk,sans-serif;cursor:pointer;white-space:nowrap">+ Use</button>' +
       '</div>';
+    }
+    // v244: LIVE Wikiquote card — voices & lines you can drop into your story
+    function cardVoices(list, q){
+      if(!list || !list.length) return "";
+      return '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:14px;box-shadow:4px 4px 0 #111;">' +
+        '<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin-bottom:8px;">💬 Voices & lines — LIVE Wikiquote <span style="font:700 9px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;">facts you can add</span></div>' +
+        list.map(function(h){
+          return '<div style="border:2px solid #e2e8f0;border-radius:12px;padding:9px 11px;margin-top:8px;background:#fffdf5;">' +
+            '<b style="font:800 12px Space Grotesk,sans-serif;color:#111">'+esc(h.title)+'</b>' +
+            '<div style="font:500 11.5px Space Grotesk,sans-serif;color:#475569;line-height:1.5;margin-top:3px;">'+esc(h.snippet.slice(0,150))+(h.snippet.length>150?"…":"")+'</div>' +
+            '<div style="display:flex;gap:8px;margin-top:7px;flex-wrap:wrap;">' +
+              '<button type="button" data-use-voice="'+esc((h.title+" — "+h.snippet.slice(0,180)).replace(/"/g,"&quot;"))+'" style="border:2px solid #111;background:#ffc800;border-radius:999px;padding:6px 11px;font:800 10px Space Grotesk,sans-serif;cursor:pointer;">✨ Insert</button>' +
+              '<a href="https://en.wikiquote.org/wiki/'+encodeURIComponent(h.title.replace(/\s+/g,"_"))+'" target="_blank" rel="noopener" style="border:2px solid #111;background:#fff;border-radius:999px;padding:6px 11px;font:700 10px Space Grotesk,sans-serif;text-decoration:none;color:#111;">Wikiquote →</a>' +
+            '</div></div>';
+        }).join("") +
+      '</div>';
+    }
+    // v244: LIVE dictionary card — word power with meaning + example
+    function cardDict(d){
+      if(!d) return "";
+      return '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:14px;box-shadow:4px 4px 0 #111;">' +
+        '<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin-bottom:6px;">🔤 Word power — LIVE Dictionary</div>' +
+        '<div style="font:800 16px Space Grotesk,sans-serif;color:#111;">'+esc(d.word)+' <span style="font:600 11px Space Grotesk,sans-serif;color:#94a3b8;">'+esc(d.ph||"")+(d.pos?" · "+esc(d.pos):"")+'</span></div>' +
+        '<div style="font:500 12.5px Space Grotesk,sans-serif;color:#334155;line-height:1.55;margin-top:5px;">'+esc(d.def)+'</div>' +
+        (d.ex ? '<div style="font:500 12px Space Grotesk,sans-serif;color:#64748b;font-style:italic;margin-top:4px;">“'+esc(d.ex)+'”</div>' : '') +
+        '<button type="button" data-use-dict="'+esc(("“"+d.word+"”"+(d.pos?" ("+d.pos+")":"")+" — "+d.def).replace(/"/g,"&quot;"))+'" style="margin-top:9px;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:8px 12px;font:800 11px Space Grotesk,sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;">✨ Insert meaning</button>' +
+      '</div>';
+    }
+    // v244: Explore board — no default topic ever again; rotating live topics with real summaries
+    function cardExplore(sum){
+      if(!sum) return "";
+      return '<div style="background:#fff;border:2.5px solid #111;border-radius:14px;overflow:hidden;box-shadow:3px 3px 0 #111;display:flex;flex-direction:column;">' +
+        (sum.thumb ? '<img src="'+esc(sum.thumb)+'" alt="" style="width:100%;height:92px;object-fit:cover;border-bottom:2px solid #111;" loading="lazy">' : '') +
+        '<div style="padding:9px 11px;display:flex;flex-direction:column;gap:5px;flex:1;">' +
+          '<div style="font:800 12px Space Grotesk,sans-serif;color:#111;">'+esc(sum.title)+'</div>' +
+          '<div style="font:500 11px Space Grotesk,sans-serif;color:#475569;line-height:1.45;">'+esc(sum.extract.slice(0,110))+(sum.extract.length>110?"…":"")+'</div>' +
+          '<div style="display:flex;gap:6px;margin-top:auto;padding-top:4px;flex-wrap:wrap;">' +
+            '<button type="button" data-use-research-sum="'+esc(sum.extract.slice(0,400).replace(/"/g,"&quot;"))+'" style="flex:1 1 auto;border:2px solid #111;background:#ffc800;border-radius:999px;padding:6px 9px;font:800 10px Space Grotesk,sans-serif;cursor:pointer;">✨ Insert</button>' +
+            (sum.url ? '<a href="'+esc(sum.url)+'" target="_blank" rel="noopener" style="border:2px solid #111;background:#fff;border-radius:999px;padding:6px 9px;font:700 10px Space Grotesk,sans-serif;text-decoration:none;color:#111;">Open →</a>' : '') +
+          '</div>' +
+        '</div></div>';
     }
 
     function wireResultActions(){
@@ -548,6 +640,39 @@
           var txtEl=$res.querySelector("[data-use-essay]"); var txt= txtEl ? txtEl.getAttribute("data-use-essay") : ($res._lastWikiExtract||"");
           if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ toast("\uD83D\uDCCB Copied"); });
           b.textContent="\u2713 Copied"; setTimeout(function(){ b.textContent="\uD83D\uDCCB Copy"; },1400);
+        });
+      });
+      // v244: READ a real book right here — Archive.org reader overlay
+      $res.querySelectorAll("[data-read-ia]").forEach(function(b){
+        b.addEventListener("click", function(){
+          openReader(b.getAttribute("data-read-ia"), b.getAttribute("data-read-title")||"Book");
+        });
+      });
+      // v244: insert a Wikiquote voice/line
+      $res.querySelectorAll("[data-use-voice]").forEach(function(b){
+        b.addEventListener("click", function(){
+          var txt=b.getAttribute("data-use-voice")||"";
+          if(callbacks.onUseResearch) callbacks.onUseResearch(txt);
+          else { var bv=document.getElementById("wBody"); if(bv){ bv.focus(); document.execCommand("insertText", false, "\n\n"+txt+"\n"); bv.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Voice added — rewrite in your voice"); } else if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ toast("📋 Copied"); }); }
+          b.textContent="✓ Added"; setTimeout(function(){ b.textContent="✨ Insert"; },1400);
+        });
+      });
+      // v244: insert a dictionary meaning
+      $res.querySelectorAll("[data-use-dict]").forEach(function(b){
+        b.addEventListener("click", function(){
+          var txt=b.getAttribute("data-use-dict")||"";
+          if(callbacks.onUseResearch) callbacks.onUseResearch(txt);
+          else { var bd3=document.getElementById("wBody"); if(bd3){ bd3.focus(); document.execCommand("insertText", false, "\n\n"+txt+"\n"); bd3.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Meaning added"); } else if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ toast("📋 Copied"); }); }
+          b.textContent="✓ Added"; setTimeout(function(){ b.textContent="✨ Insert meaning"; },1400);
+        });
+      });
+      // v244: insert an Explore board fact
+      $res.querySelectorAll("[data-use-research-sum]").forEach(function(b){
+        b.addEventListener("click", function(){
+          var txt=b.getAttribute("data-use-research-sum")||"";
+          if(callbacks.onUseResearch) callbacks.onUseResearch(txt);
+          else { var bd4=document.getElementById("wBody"); if(bd4){ bd4.focus(); document.execCommand("insertText", false, "\n\n"+txt+"\n"); bd4.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Facts added — rewrite in your voice"); } else if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ toast("📋 Copied"); }); }
+          b.textContent="✓ Added"; setTimeout(function(){ b.textContent="✨ Insert"; },1400);
         });
       });
       $res.querySelectorAll("[data-use-local]").forEach(function(b){
@@ -649,41 +774,69 @@
           pending=false;
         }).catch(function(){ $res.innerHTML = picsumAesthetic(iq,6).map(cardImage).join(""); wireResultActions(); pending=false; });
       } else {
-        var rq = ($q.value||"").trim() || activeTag || "habits";
-        Promise.all([fetchWikiSummary(rq), wikiSearch(rq), openLibSearch(rq), ensureLocalBooks()]).then(function(res){
-          var sum=res[0], hits=res[1], books=res[2];
-          if(!sum && hits.length) return fetchWikiSummary(hits[0].title).then(function(s2){ return [s2, hits, books]; });
-          return [sum, hits, books];
+        // ── v244 RESEARCH: topic-aware + multi-source + NO hardcoded default ──
+        // What you typed (or what your story is about) drives everything. Empty search
+        // opens a rotating Explore board — never again one lonely default topic.
+        var hasQ = ($q.value||"").trim();
+        var activeRq = hasQ || activeTag || "";
+        var explore = !activeRq;
+        var EXPLORE = ["psychology","philosophy","habits","loneliness","money","love","stoicism","discipline","focus","courage","creativity","success"];
+        var topics;
+        if(explore){
+          var si = Math.floor(Math.random()*EXPLORE.length);
+          topics = [EXPLORE[si%12], EXPLORE[(si+5)%12], EXPLORE[(si+7)%12]];
+        } else topics = [activeRq];
+        var rq = explore ? topics[0] : activeRq;
+        var toksR = tokens(activeRq);
+        var pSums = explore
+          ? Promise.all(topics.map(function(t){ return fetchWikiSummary(t); })).then(function(ls){ return ls.filter(Boolean); })
+          : fetchWikiSummary(activeRq).then(function(s){ return s ? [s] : []; });
+        Promise.all([pSums, wikiSearch(activeRq), wikiQuoteSearch(rq), dictLookup(toksR.length===1?toksR[0]:""), openLibSearch(rq), ensureLocalBooks()]).then(function(res){
+          var sums=res[0], hits=res[1], voices=res[2], dict=res[3], books=res[4], localAll=res[5]||[];
+          if(!explore && !sums.length && hits.length) return fetchWikiSummary(hits[0].title).then(function(s2){ return [s2?[s2]:[], hits, voices, dict, books, localAll]; });
+          return [sums, hits, voices, dict, books, localAll];
         }).then(function(arr){
-          var sum2=arr[0], hits2=arr[1], books2=arr[2];
-          var localBooks = localBookSearch(rq);
-          $res._lastWikiExtract = sum2 ? sum2.extract : (hits2[0]?hits2[0].snippet:"");
+          var sums=arr[0], hits2=arr[1], voices=arr[2], dict=arr[3], books2=arr[4], localAll=arr[5];
+          // books from the live web must NEVER duplicate TheSmallBook's own library — different shelf, always
+          var own = {};
+          (localAll||[]).forEach(function(b){ own[normTitle(b.title||b.t||"")]=1; });
+          books2 = (books2||[]).filter(function(b){ return b.title && !own[normTitle(b.title)]; });
+          var localBooks = localBookSearch(activeRq || rq);
+          $res._lastWikiExtract = (sums[0] && sums[0].extract) || (hits2[0]?hits2[0].snippet:"");
           var essayObj = null;
           try{ essayObj = essayStarter(rq, $res._lastWikiExtract, (localBooks && localBooks[0]) ? localBooks[0] : null); }catch(e){ essayObj=null; }
           var html="";
-          // Story starter first — what stories mean: a ready essay you rewrite in your voice (not bombarded, compact)
+          // Story starter first — a ready essay you rewrite in your voice (compact, not bombarding)
           if(essayObj && essayObj.html) html += essayObj.html;
-          if(sum2) html+=cardResearchWiki(sum2);
-          else if(hits2.length){
-            html+='<div style="background:#fff;border:2.5px solid #111;border-radius:14px;padding:12px;"><div style="font:700 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;">Related on Wikipedia (live)</div>' +
-              hits2.map(function(h){ return '<div style="border:2px solid #e2e8f0;border-radius:10px;padding:8px 10px;margin-top:8px;background:#f8fafc"><b style="font:800 12px Space Grotesk,sans-serif">'+esc(h.title)+'</b><br><span style="font:500 11px Space Grotesk,sans-serif;color:#475569">'+esc(h.snippet.slice(0,140))+'</span></div>'; }).join("") +
-              '</div>';
-          } else {
-            html+='<div style="text-align:center;padding:14px;color:#94a3b8;font:600 12px Space Grotesk,sans-serif;">No live wiki page — try broader: habits, loneliness, startup.</div>';
+          if(explore && sums.length){
+            html+='<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;">🔎 Explore — LIVE <span style="font:700 9px Space Grotesk,sans-serif;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;text-transform:uppercase;">fresh every visit</span></div>' +
+              '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">' + sums.map(cardExplore).join("") + '</div>';
           }
+          if(!explore){
+            if(sums.length) html+=cardResearchWiki(sums[0]);
+            else if(hits2.length){
+              html+='<div style="background:#fff;border:2.5px solid #111;border-radius:14px;padding:12px;"><div style="font:700 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;">Related on Wikipedia (live)</div>' +
+                hits2.map(function(h){ return '<div style="border:2px solid #e2e8f0;border-radius:10px;padding:8px 10px;margin-top:8px;background:#f8fafc"><b style="font:800 12px Space Grotesk,sans-serif">'+esc(h.title)+'</b><br><span style="font:500 11px Space Grotesk,sans-serif;color:#475569">'+esc(h.snippet.slice(0,140))+'</span></div>'; }).join("") +
+                '</div>';
+            } else {
+              html+='<div style="text-align:center;padding:14px;color:#94a3b8;font:600 12px Space Grotesk,sans-serif;">No live wiki page for that — try broader: habits, loneliness, startup.</div>';
+            }
+          }
+          if(dict) html+=cardDict(dict);
+          if(voices.length) html+=cardVoices(voices, rq);
           if(books2.length){
-            html+='<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin-bottom:8px;">📚 Books that explore this — LIVE OpenLibrary</div>'+books2.map(cardBook).join('<div style="height:8px"></div>')+'</div>';
+            html+='<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin-bottom:8px;">📖 Read free — full books · LIVE Open Library <span style="font:700 9px Space Grotesk,sans-serif;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;text-transform:uppercase;">readable now</span></div>'+books2.map(cardBook).join('<div style="height:8px"></div>')+'<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;margin-top:8px;text-align:center;">Readable classics &amp; public-domain finds — never duplicates TheSmallBook\'s own shelf below.</div></div>';
+          } else if(!explore && hasQ){
+            html+='<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;text-align:center;margin-top:2px;">No readable full book matched “'+esc(rq)+'” — TheSmallBook\'s own library below covers your topic.</div>';
           }
           if(localBooks.length){
             html+='<div style="background:#ffc800;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#111;margin-bottom:8px;">📕 From TheSmallBook — your 400 books (tap to use)</div>'+localBooks.map(cardLocalBook).join('<div style="height:8px"></div>')+'<div style="font:600 10px Space Grotesk,sans-serif;color:#111;margin-top:8px;text-align:center;opacity:.7">Suggestions from our library matching “'+esc(rq)+'”</div></div>';
           }
           $res.innerHTML = html;
-          if(rq){
-            var n3=document.createElement("div");
-            n3.style.cssText="text-align:center;font:600 11px Space Grotesk,sans-serif;color:#16a34a;margin-bottom:4px;";
-            n3.textContent="LIVE · research for “"+rq.slice(0,36)+"”";
-            $res.prepend(n3);
-          }
+          var n3=document.createElement("div");
+          n3.style.cssText="text-align:center;font:600 11px Space Grotesk,sans-serif;color:#16a34a;margin-bottom:4px;";
+          n3.textContent = explore ? "LIVE · explore board — type above to research YOUR topic (wiki · voices · words · books)" : "LIVE · research for “"+rq.slice(0,36)+"” — Wikipedia · Wikiquote · Dictionary · books";
+          $res.prepend(n3);
           wireResultActions();
           pending=false;
         }).catch(function(){ pending=false; $res.innerHTML='<div style="text-align:center;color:#94a3b8;">Couldn\'t load — try again.</div>'; });
