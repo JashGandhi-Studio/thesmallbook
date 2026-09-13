@@ -455,12 +455,12 @@
       }
     }catch(e){ wrapW = 320; }
     if (!wrapW || wrapW < 160) wrapW = 320;
-    // v244: BIG true preview — you see the FILE you'll get, not a thumbnail. 52% of viewport on mobile, 60% on desktop.
+    // v246: MAXIMUM true preview — 62% of the viewport on mobile, 72% on desktop; you see the FILE you'll get
     var isMobile = window.innerWidth < 560;
-    var maxH = Math.min(window.innerHeight * (isMobile ? 0.52 : 0.60), isMobile ? 560 : 700);
+    var maxH = Math.min(window.innerHeight * (isMobile ? 0.62 : 0.72), isMobile ? 640 : 880);
     var k = Math.min(wrapW / r.w, maxH / r.h);
     // never upscale beyond natural for sharpness, but allow slight
-    if(k>1) k = Math.min(k, 1.15);
+    if(k>1) k = Math.min(k, 1.25);
     var bw = Math.floor(r.w * k), bh = Math.floor(r.h * k);
     // ensure box never exceeds wrap (minus shadow)
     if(bw > wrapW) { var sc = wrapW / bw; bw = wrapW; bh = Math.floor(bh * sc); }

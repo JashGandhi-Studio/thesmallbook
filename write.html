@@ -19,8 +19,19 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=245">
-  <link rel="stylesheet" href="css/studio.css?v=245">
+  <link rel="stylesheet" href="css/style.css?v=246">
+  <link rel="stylesheet" href="css/studio.css?v=246">
+  <style>
+  /* v246 — compact attach bar: professional one-row adding */
+  .wr-addrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+  .wr-addbtn{display:flex;flex-direction:column;align-items:center;gap:3px;border:2.5px solid #111;background:#fff;border-radius:14px;padding:10px 6px 8px;cursor:pointer;box-shadow:2.5px 2.5px 0 #111;font-family:'Space Grotesk',sans-serif;min-width:0;transition:transform .12s,box-shadow .12s}
+  .wr-addbtn:active{transform:translate(1.5px,1.5px);box-shadow:1px 1px 0 #111}
+  .wr-addbtn__ic{font-size:19px;line-height:1}
+  .wr-addbtn__t{font:800 11px 'Space Grotesk',sans-serif;color:#111;letter-spacing:.2px;white-space:nowrap}
+  .wr-addbtn__s{font:600 9px 'Space Grotesk',sans-serif;color:#16a34a;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:11px}
+  .wr-addprev{margin-top:2px}
+  @media(max-width:560px){.wr-addrow{grid-template-columns:repeat(2,1fr)}}
+  </style>
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -77,51 +88,31 @@
     <div id="wBody" class="wr-ed" contenteditable="true" data-ph="Start writing… your draft saves itself on this device, even if the tab closes. Publish whenever you're ready."></div>
 
     <section class="wr-meta">
-      <!-- COVER — properly aligned card -->
-      <div class="wr-card">
+      <!-- v246: ONE compact attach bar — photo · video · voice in a single clean row. No stacked cards, no scrolling to add. -->
+      <div class="wr-card" id="addCard">
         <div class="wr-card__head">
-          <span class="wr-card__title">📷 Cover / quote image</span>
-          <span class="wr-card__sub">Tap preview to reframe in Studio</span>
+          <span class="wr-card__title" id="addCardTitle">➕ Add to your story</span>
+          <span class="wr-card__sub" id="addCardSub">one tap — attach what you need</span>
         </div>
-        <label class="wr-uprow" for="wCover">
-          <span class="upbtn">📷 Choose image</span>
-          <span class="upname" id="wCoverName">No file chosen</span>
-          <input id="wCover" type="file" accept="image/*" hidden>
-        </label>
-        <img id="wCoverPrev" class="cm-prev" hidden alt="" style="margin-top:10px;width:100%;max-height:220px;object-fit:cover;">
-        <p class="wr-hint">🎨 Vertical photo? Tap the preview to open Studio — reframe, filter & pick ratio. No photo? Open Studio from the Quote card above — 24 aesthetic backgrounds are ready.</p>
+        <div class="wr-addrow" id="wAddRow">
+          <button type="button" class="wr-addbtn" id="addPhotoBtn"><span class="wr-addbtn__ic">📷</span><span class="wr-addbtn__t">Choose image</span><span class="wr-addbtn__s" id="wCoverName">No file chosen</span></button>
+          <button type="button" class="wr-addbtn" id="addVideoBtn"><span class="wr-addbtn__ic">🎬</span><span class="wr-addbtn__t">Choose video</span><span class="wr-addbtn__s" id="wBurstName">No file chosen</span></button>
+          <button type="button" class="wr-addbtn" id="wRec"><span class="wr-addbtn__ic">🎙</span><span class="wr-addbtn__t">Record</span><span class="wr-addbtn__s" id="wRecState"></span></button>
+          <button type="button" class="wr-addbtn" id="addAudioBtn"><span class="wr-addbtn__ic">🎧</span><span class="wr-addbtn__t">Choose audio</span><span class="wr-addbtn__s" id="wAudioName">No file chosen</span></button>
+        </div>
+        <input id="wCover" type="file" accept="image/*" hidden>
+        <input id="wBurst" type="file" accept="video/*" hidden>
+        <input id="wAudio" type="file" accept="audio/*" hidden>
+        <div class="wr-addprev">
+          <img id="wCoverPrev" class="cm-prev" hidden alt="" style="display:block;margin:10px auto 0;max-height:160px;width:auto;max-width:100%;border-radius:12px;border:2.5px solid #111;">
+          <video id="wBurstPrev" class="cm-prev" controls playsinline preload="metadata" hidden style="margin-top:10px;width:100%;max-height:180px;border-radius:12px;border:2.5px solid #111;"></video>
+          <audio id="wAudioPrev" controls hidden style="width:100%;margin-top:10px;"></audio>
+        </div>
+        <p class="wr-hint" id="addHint">📷 becomes your cover & card — tap the preview to reframe in Studio · 🎬 video up to 2 min · 🎙 record or 🎧 attach voice</p>
       </div>
 
-      <div id="inspireInlineHint" class="wr-hint" style="text-align:center; margin:0 0 8px; font:500 11px 'Space Grotesk',sans-serif; color:#8f8a80; display:none;">Tip: Tap a pill above → live library opens → tap “Use” to drop in. Rewrite in your voice before publishing.</div>
+      <div id="inspireInlineHint" class="wr-hint" style="text-align:center; margin:0 0 8px; font:500 11px 'Space Grotesk',sans-serif; color:#8f8a80; display:none;">Tip: Tap a pill above → live library opens → tap “Use” to drop in.</div>
 
-      <!-- BURST -->
-      <div class="wr-card">
-        <div class="wr-card__head">
-          <span class="wr-card__title">🎬 Burst video — max 2 min</span>
-          <span class="wr-card__sub">Vertical video shines</span>
-        </div>
-        <label class="wr-uprow" for="wBurst">
-          <span class="upbtn">🎬 Choose video</span>
-          <span class="upname" id="wBurstName">No file chosen</span>
-          <input id="wBurst" type="file" accept="video/*" hidden>
-        </label>
-        <video id="wBurstPrev" class="cm-prev" controls playsinline preload="metadata" hidden style="margin-top:10px;width:100%;"></video>
-      </div>
-
-      <!-- VOICE -->
-      <div class="wr-card">
-        <div class="wr-card__head">
-          <span class="wr-card__title">🎙️ Voice version (optional)</span>
-          <span class="wr-card__sub">Record or upload</span>
-        </div>
-        <div class="cm-audiorow" style="margin-top:4px;">
-          <button class="setbtn" id="wRec">🎙 Record</button>
-          <span id="wRecState" class="cm-recstate"></span>
-          <label class="cm-filelbl" for="wAudio"><span class="upbtn">🎧 Choose audio</span><span class="upname" id="wAudioName">No file chosen</span></label>
-          <input id="wAudio" type="file" accept="audio/*" hidden>
-        </div>
-        <audio id="wAudioPrev" controls hidden style="margin-top:10px;width:100%"></audio>
-      </div>
       <label class="cm-lbl cm-lbl--chk">
         <input type="checkbox" id="wNoDl" checked>
         <b>🔒 View-only media</b>
@@ -136,15 +127,15 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=245"></script>
-  <script src="js/lang.js?v=245"></script>
-  <script src="js/config.js?v=245"></script>
-  <script src="js/auth.js?v=245"></script>
-  <script src="js/sounds.js?v=245"></script>
-  <script src="js/founder.js?v=245"></script>
-  <script src="js/community.js?v=245"></script>
-  <script src="js/gold.js?v=245"></script>
-  <script src="js/studio.js?v=245"></script>
+  <script src="js/prefs.js?v=246"></script>
+  <script src="js/lang.js?v=246"></script>
+  <script src="js/config.js?v=246"></script>
+  <script src="js/auth.js?v=246"></script>
+  <script src="js/sounds.js?v=246"></script>
+  <script src="js/founder.js?v=246"></script>
+  <script src="js/community.js?v=246"></script>
+  <script src="js/gold.js?v=246"></script>
+  <script src="js/studio.js?v=246"></script>
   <style>/* hide Puter branding — keep AI silent */ .puter-modal,.puter-dialog,.puter-auth{ display:none !important }</style>
   <script>
   // silent Puter loader — don't block rendering, hide GUI
@@ -156,9 +147,9 @@
     document.head.appendChild(s);
   })();
   </script>
-  <script src="js/dictate.js?v=245"></script>
-  <script src="js/data.js?v=245"></script>
-  <script src="js/osint.js?v=245"></script>
+  <script src="js/dictate.js?v=246"></script>
+  <script src="js/data.js?v=246"></script>
+  <script src="js/osint.js?v=246"></script>
   <script>
   (function () {
     "use strict";
@@ -252,16 +243,16 @@
       modeChip.textContent = "✍️ QUOTE MODE — a shareable card, not an essay";
       modeChip.className = "wr-modechip wr-modechip--quote";
       if(quoteWrap) quoteWrap.hidden = false;
-      // v244: in QUOTE mode the uploaded image IS the cover — no separate cover needed. Say it, and mean it.
+      // v246: QUOTE mode — the add bar retitles itself: the image IS the cover, video hidden, one clean row
       try{
-        var covTitle=document.querySelector(".wr-card .wr-card__title");
-        if(covTitle) covTitle.innerHTML="📷 Quote image — <u>this is your cover</u>";
-        var covSub=document.querySelector(".wr-card .wr-card__sub");
-        if(covSub) covSub.textContent="Optional — Studio opens with your quote on it";
-      }catch(e){}
-      try{
-        var wrCards=document.querySelectorAll(".wr-card");
-        if(wrCards[1]) wrCards[1].style.display="none"; // v245: burst is story material — keep the quote flow simple
+        var addT=document.getElementById("addCardTitle");
+        if(addT) addT.innerHTML="📷 Quote image — <u>this is your cover</u>";
+        var addS=document.getElementById("addCardSub");
+        if(addS) addS.textContent="Optional — Studio opens with your quote on it";
+        var avBtn=document.getElementById("addVideoBtn");
+        if(avBtn) avBtn.style.display="none";
+        var ah=document.getElementById("addHint");
+        if(ah) ah.textContent="No photo? Open Studio from the Quote card above — 24 aesthetic backgrounds are ready.";
       }catch(e){}
       // make body optional and change its placeholder
       body.setAttribute("data-ph", "Your take — why this line hit you (optional, 2–3 lines in your voice). Leave empty to publish just the card. Your QUOTE draft is separate from your STORY draft.");
@@ -332,6 +323,10 @@
       var nm = f.name || "file";
       lab.textContent = "✓ " + (nm.length > 24 ? nm.slice(0, 22) + "…" : nm) + " · " + Math.max(1, Math.round(f.size / 1024)) + " KB";
     }
+    // v246: compact attach bar — one tap opens the picker
+    $("addPhotoBtn").addEventListener("click", function(){ $("wCover").click(); });
+    $("addVideoBtn").addEventListener("click", function(){ $("wBurst").click(); });
+    $("addAudioBtn").addEventListener("click", function(){ $("wAudio").click(); });
     $("wCover").addEventListener("change", async function () {
       var f = this.files && this.files[0];
       fname("wCover", "wCoverName", f);
@@ -700,6 +695,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=245" defer></script>
+  <script src="js/bar.js?v=246" defer></script>
 </body>
 </html>

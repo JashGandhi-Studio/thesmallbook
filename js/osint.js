@@ -496,15 +496,16 @@
       '</div>';
     }
     function cardImage(im){
-      // v245: FULL photo preview — natural shape, nothing cropped; what you tap is the WHOLE photo (no more 20% slices)
-      return '<div style="background:#fff;border:2.5px solid #111;border-radius:16px;overflow:hidden;box-shadow:3px 3px 0 #111;display:flex;flex-direction:column;">' +
-        '<div style="background:#0e0c0a;border-bottom:2.5px solid #111;min-height:110px;display:flex;align-items:center;justify-content:center;">' +
-          '<img src="'+esc(im.thumb)+'" alt="" style="width:100%;height:auto;max-height:250px;object-fit:contain;display:block;" loading="lazy">' +
+      // v246: FULL photo + "Use as cover" OVERLAY button — the whole photo is visible AND
+      // the button is glued on the picture itself (can never collapse, one tap, Instagram-style)
+      return '<div style="background:#fff;border:2.5px solid #111;border-radius:16px;overflow:hidden;box-shadow:3px 3px 0 #111;">' +
+        '<div style="position:relative;background:#0e0c0a;min-height:150px;max-height:260px;display:flex;align-items:center;justify-content:center;">' +
+          '<img src="'+esc(im.thumb)+'" alt="" style="width:100%;height:auto;max-height:260px;object-fit:contain;display:block;" loading="lazy">' +
+          '<button type="button" data-use-image="'+esc(im.full)+'" style="position:absolute;left:8px;right:8px;bottom:8px;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:9px 10px;font:800 11.5px Space Grotesk,sans-serif;letter-spacing:.3px;cursor:pointer;box-shadow:2px 2px 0 #111;text-shadow:none;">\u2728 Use as cover</button>' +
         '</div>' +
-        '<div style="padding:8px 10px;display:flex;flex-direction:column;gap:6px;flex:1;">' +
-          '<div style="font:700 11px Space Grotesk,sans-serif;color:#111;line-height:1.25;min-height:28px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">'+esc(im.title.slice(0,48))+'</div>' +
-          '<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;letter-spacing:.4px;text-transform:uppercase;">LIVE · full photo preview</div>' +
-          '<button type="button" data-use-image="'+esc(im.full)+'" style="width:100%;border:2px solid #111;background:#ffc800;border-radius:999px;padding:8px 10px;font:800 11px Space Grotesk,sans-serif;letter-spacing:.3px;cursor:pointer;box-shadow:2px 2px 0 #111;">✨ Use as cover</button>' +
+        '<div style="padding:6px 9px 7px;display:flex;align-items:center;gap:6px;">' +
+          '<div style="flex:1 1 auto;min-width:0;font:700 10.5px Space Grotesk,sans-serif;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(im.title.slice(0,52))+'</div>' +
+          '<div style="flex:none;font:700 8.5px Space Grotesk,sans-serif;color:#16a34a;letter-spacing:.5px;text-transform:uppercase;background:#dcfce7;border:1px solid #16a34a;padding:2px 6px;border-radius:999px;">LIVE</div>' +
         '</div>' +
       '</div>';
     }
@@ -757,6 +758,7 @@
           $res.style.display = "grid";
           $res.style.gridTemplateColumns = "repeat(2,1fr)";
           $res.style.gap = "10px";
+          $res.style.alignItems = "start";
           $res.innerHTML = list.map(cardImage).join("") ;
           // footnote below grid
           var foot = document.createElement("div");
