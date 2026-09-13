@@ -19,8 +19,8 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=246">
-  <link rel="stylesheet" href="css/studio.css?v=246">
+  <link rel="stylesheet" href="css/style.css?v=247">
+  <link rel="stylesheet" href="css/studio.css?v=247">
   <style>
   /* v246 — compact attach bar: professional one-row adding */
   .wr-addrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
@@ -127,15 +127,15 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=246"></script>
-  <script src="js/lang.js?v=246"></script>
-  <script src="js/config.js?v=246"></script>
-  <script src="js/auth.js?v=246"></script>
-  <script src="js/sounds.js?v=246"></script>
-  <script src="js/founder.js?v=246"></script>
-  <script src="js/community.js?v=246"></script>
-  <script src="js/gold.js?v=246"></script>
-  <script src="js/studio.js?v=246"></script>
+  <script src="js/prefs.js?v=247"></script>
+  <script src="js/lang.js?v=247"></script>
+  <script src="js/config.js?v=247"></script>
+  <script src="js/auth.js?v=247"></script>
+  <script src="js/sounds.js?v=247"></script>
+  <script src="js/founder.js?v=247"></script>
+  <script src="js/community.js?v=247"></script>
+  <script src="js/gold.js?v=247"></script>
+  <script src="js/studio.js?v=247"></script>
   <style>/* hide Puter branding — keep AI silent */ .puter-modal,.puter-dialog,.puter-auth{ display:none !important }</style>
   <script>
   // silent Puter loader — don't block rendering, hide GUI
@@ -147,9 +147,9 @@
     document.head.appendChild(s);
   })();
   </script>
-  <script src="js/dictate.js?v=246"></script>
-  <script src="js/data.js?v=246"></script>
-  <script src="js/osint.js?v=246"></script>
+  <script src="js/dictate.js?v=247"></script>
+  <script src="js/data.js?v=247"></script>
+  <script src="js/osint.js?v=247"></script>
   <script>
   (function () {
     "use strict";
@@ -251,6 +251,10 @@
         if(addS) addS.textContent="Optional — Studio opens with your quote on it";
         var avBtn=document.getElementById("addVideoBtn");
         if(avBtn) avBtn.style.display="none";
+        var addRow=document.getElementById("wAddRow");
+        if(addRow) addRow.style.gridTemplateColumns="repeat(2,1fr)";
+        var auBtn=document.getElementById("addAudioBtn");
+        if(auBtn) auBtn.style.gridColumn="1/-1"; // v247: audio chip full-width when video is hidden — no awkward gap
         var ah=document.getElementById("addHint");
         if(ah) ah.textContent="No photo? Open Studio from the Quote card above — 24 aesthetic backgrounds are ready.";
       }catch(e){}
@@ -695,6 +699,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=246" defer></script>
+  <script src="js/bar.js?v=247" defer></script>
 </body>
 </html>

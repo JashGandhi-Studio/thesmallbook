@@ -414,14 +414,14 @@
     ];
 
     // Build tabs HTML only for allowed set — keeps Quote=2 tabs, Stories=2 tabs, not 3 everywhere (professional, not everywhere)
-    var tabHtml = '<div style="display:flex;gap:6px;flex-wrap:wrap;">';
+    var tabHtml = '<div style="display:flex;gap:6px;flex-wrap:wrap;flex:none;">';
     if(allowed.indexOf("quotes")>=0) tabHtml += '<button type="button" id="tabQuotes" style="flex:1 1 90px;border:2.5px solid #111;border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;">💬 Quotes</button>';
     if(allowed.indexOf("images")>=0) tabHtml += '<button type="button" id="tabImages" style="flex:1 1 90px;border:2.5px solid #111;border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;">🖼️ Images</button>';
     if(allowed.indexOf("research")>=0) tabHtml += '<button type="button" id="tabResearch" style="flex:1 1 100px;border:2.5px solid #111;border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;">📖 Research</button>';
     tabHtml += '</div>';
     var html =
       tabHtml +
-      '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;">' +
+      '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;flex:none;">' +
         '<div style="display:flex;gap:8px;align-items:center;">' +
           '<input id="inspQ" type="text" placeholder="Type anything — e.g. lonely after breakup, startup failure, love…" value="'+esc(seedQuery)+'" style="flex:1 1 auto;border:2.5px solid #111;border-radius:999px;padding:11px 14px;font:600 13px Space Grotesk,sans-serif;outline:none;">' +
           '<button id="inspClear" type="button" title="Clear" style="flex:none;width:36px;height:36px;border:2px solid #111;border-radius:999px;background:#fff;font:800 13px Space Grotesk,sans-serif;cursor:pointer;">✕</button>' +
@@ -430,7 +430,7 @@
         '<div id="inspChips"></div>' +
         '<div style="font-size:11px;color:#8f8a80;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-top:6px;">LIVE · as you type it filters · tap <span style="background:#ffc800;padding:1px 6px;border-radius:999px;border:1.5px solid #111;color:#111">Use this</span> to drop instantly</div>' +
       '</div>' +
-      '<div id="inspResults" style="display:flex;flex-direction:column;gap:10px;min-height:120px;">' +
+      '<div id="inspResults" style="display:flex;flex-direction:column;gap:10px;min-height:120px;flex:none;">' +
         '<div style="text-align:center;padding:18px 10px;color:#8f8a80;font:600 13px Space Grotesk,sans-serif;">Loading live library…</div>' +
       '</div>';
 
@@ -496,12 +496,12 @@
       '</div>';
     }
     function cardImage(im){
-      // v246: FULL photo + "Use as cover" OVERLAY button — the whole photo is visible AND
-      // the button is glued on the picture itself (can never collapse, one tap, Instagram-style)
+      // v247: definite-height photo band (190px) — grid rows can NEVER collapse or overlap again;
+      // full photo shown via contain, "Use as cover" glued ON the photo (z-index 2 = untouchable)
       return '<div style="background:#fff;border:2.5px solid #111;border-radius:16px;overflow:hidden;box-shadow:3px 3px 0 #111;">' +
-        '<div style="position:relative;background:#0e0c0a;min-height:150px;max-height:260px;display:flex;align-items:center;justify-content:center;">' +
-          '<img src="'+esc(im.thumb)+'" alt="" style="width:100%;height:auto;max-height:260px;object-fit:contain;display:block;" loading="lazy">' +
-          '<button type="button" data-use-image="'+esc(im.full)+'" style="position:absolute;left:8px;right:8px;bottom:8px;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:9px 10px;font:800 11.5px Space Grotesk,sans-serif;letter-spacing:.3px;cursor:pointer;box-shadow:2px 2px 0 #111;text-shadow:none;">\u2728 Use as cover</button>' +
+        '<div style="position:relative;height:190px;background:#0e0c0a;border-bottom:2.5px solid #111;">' +
+          '<img src="'+esc(im.thumb)+'" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;display:block;" loading="lazy">' +
+          '<button type="button" data-use-image="'+esc(im.full)+'" style="position:absolute;left:8px;right:8px;bottom:8px;z-index:2;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:9px 10px;font:800 11.5px Space Grotesk,sans-serif;letter-spacing:.3px;cursor:pointer;box-shadow:2px 2px 0 #111;text-shadow:none;">\u2728 Use as cover</button>' +
         '</div>' +
         '<div style="padding:6px 9px 7px;display:flex;align-items:center;gap:6px;">' +
           '<div style="flex:1 1 auto;min-width:0;font:700 10.5px Space Grotesk,sans-serif;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(im.title.slice(0,52))+'</div>' +
@@ -704,10 +704,13 @@
 
       // reset grid vs flex per tab — images is grid, others flex
       if(activeTab==="images"){
+        $res.style.flex = "0 0 auto";   // v247: NEVER let flex-shrink crush the grid (that hid the Use buttons)
         $res.style.display = "grid";
         $res.style.gridTemplateColumns = "repeat(2,1fr)";
+        $res.style.gridAutoRows = "auto";
         $res.style.gap = "10px";
       } else {
+        $res.style.flex = "0 0 auto";   // v247
         $res.style.display = "flex";
         $res.style.flexDirection = "column";
         $res.style.gap = "10px";

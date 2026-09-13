@@ -15,7 +15,7 @@
 .stu-x{border:3px solid #111;background:#fff;font-family:'Archivo Black',sans-serif;font-size:12px;padding:6px 12px;cursor:pointer;box-shadow:2.5px 2.5px 0 #111;border-radius:10px;transition:transform .12s}
 .stu-x:active{transform:translate(1.5px,1.5px);box-shadow:1px 1px 0 #111}
 /* ---- live preview — perfectly centered, image-sized, Instagram polish ---- */
-.stu-prevwrap{display:flex;justify-content:center;align-items:center;padding:12px 10px 8px;background:#0e0c0a;position:relative;min-height:200px}
+.stu-prevwrap{display:flex;justify-content:center;align-items:center;padding:12px 10px 8px;background:#0e0c0a;position:relative;min-height:200px;flex:none}
 .stu-prev{position:relative;overflow:hidden;border:4px solid #fffdf5;box-shadow:8px 8px 0 #ffc800;cursor:grab;touch-action:none;background:#222;box-sizing:content-box;border-radius:0;flex:none}
 .stu-prev:active{cursor:grabbing}
 .stu-prev img{position:absolute;max-width:none;user-select:none;-webkit-user-drag:none;pointer-events:none}
