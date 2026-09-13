@@ -19,8 +19,8 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=240">
-  <link rel="stylesheet" href="css/studio.css?v=240">
+  <link rel="stylesheet" href="css/style.css?v=242">
+  <link rel="stylesheet" href="css/studio.css?v=242">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -44,6 +44,15 @@
       <p class="wr-quotelive__hint">Studio works on any image — drag to reframe, pinch-zoom, pick 4:5 / 1:1 / 9:16, add 6 pro filters. Gold removes watermark.</p>
     </div>
 
+      <!-- INSPIRE DESK — perfectly embedded with Quote & Story (lives with the title, not as a separate card after quote) -->
+      <div id="inspireEmbed" class="wr-inspire-embed" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fff;border:2.5px solid #111;border-radius:14px;box-shadow:3px 3px 0 #111;padding:8px 10px;margin:8px 0 10px;">
+        <span style="display:inline-flex;align-items:center;gap:6px;flex:none;background:#111;color:#ffc800;border-radius:999px;padding:5px 9px;font:800 10px 'Space Grotesk',sans-serif;letter-spacing:.5px;text-transform:uppercase;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 1 4 12.7V16a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-1.3A7 7 0 0 1 12 2z"/></svg> Inspire Desk</span>
+        <span id="inspireEmbedSub" style="flex:1 1 120px;font:600 11px 'Space Grotesk',sans-serif;color:#6b7280;min-width:0;">live — quotes & images</span>
+        <span style="display:inline-flex;gap:6px;flex-wrap:wrap;flex:none;">
+          <button type="button" id="inspEmbedBtn1" style="border:2px solid #111;background:#ffc800;border-radius:999px;padding:7px 11px;font:800 11px 'Space Grotesk',sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Quotes</button>
+          <button type="button" id="inspEmbedBtn2" style="border:2px solid #111;background:#fff;border-radius:999px;padding:7px 11px;font:800 11px 'Space Grotesk',sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg> Images</button>
+        </span>
+      </div>
     <div class="wr-bar" id="wBar">
       <button data-cmd="bold" title="Bold"><b>B</b></button>
       <button data-cmd="italic" title="Italic"><i>I</i></button>
@@ -62,6 +71,7 @@
         <option value="serif">📜 Serif</option>
         <option value="mono">⌨ Mono</option>
       </select>
+      <span class="wr-sep wr-sep--inspire" style="display:none"></span>
     </div>
 
     <div id="wBody" class="wr-ed" contenteditable="true" data-ph="Start writing… your draft saves itself on this device, even if the tab closes. Publish whenever you're ready."></div>
@@ -82,15 +92,7 @@
         <p class="wr-hint">🎨 Vertical photo? Tap the preview to open Studio — reframe, filter & pick ratio. No photo? Open Studio from the Quote card above — 24 aesthetic backgrounds are ready.</p>
       </div>
 
-      <!-- INSPIRE DESK — separate, properly aligned, not inside cover label -->
-      <div class="wr-card wr-card--inspire">
-        <div class="wr-card__head">
-          <span class="wr-card__title">✨ Inspire Desk</span>
-          <span class="wr-card__sub" id="inspireDeskHint">Live library</span>
-        </div>
-        <button type="button" id="inspireDeskBtn" class="wr-inspirebtn">✨ Inspire Desk — quotes & images</button>
-        <p class="wr-hint" id="inspireDeskSub" style="margin-top:8px;">Library to create faster — not a verifier. Tap to browse quotes you can post & aesthetic images you can set as card background — live, not preloaded.</p>
-      </div>
+      <div id="inspireInlineHint" class="wr-hint" style="text-align:center; margin:0 0 8px; font:500 11px 'Space Grotesk',sans-serif; color:#8f8a80; display:none;">Tip: Tap a pill above → live library opens → tap “Use” to drop in. Rewrite in your voice before publishing.</div>
 
       <!-- BURST -->
       <div class="wr-card">
@@ -134,19 +136,29 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=240"></script>
-  <script src="js/lang.js?v=240"></script>
-  <script src="js/config.js?v=240"></script>
-  <script src="js/auth.js?v=240"></script>
-  <script src="js/sounds.js?v=240"></script>
-  <script src="js/founder.js?v=240"></script>
-  <script src="js/community.js?v=240"></script>
-  <script src="js/gold.js?v=240"></script>
-  <script src="js/studio.js?v=240"></script>
-  <script src="https://js.puter.com/v2/"></script>
-  <script src="js/dictate.js?v=240"></script>
-  <script src="js/data.js?v=240"></script>
-  <script src="js/osint.js?v=240"></script>
+  <script src="js/prefs.js?v=242"></script>
+  <script src="js/lang.js?v=242"></script>
+  <script src="js/config.js?v=242"></script>
+  <script src="js/auth.js?v=242"></script>
+  <script src="js/sounds.js?v=242"></script>
+  <script src="js/founder.js?v=242"></script>
+  <script src="js/community.js?v=242"></script>
+  <script src="js/gold.js?v=242"></script>
+  <script src="js/studio.js?v=242"></script>
+  <style>/* hide Puter branding — keep AI silent */ .puter-modal,.puter-dialog,.puter-auth{ display:none !important }</style>
+  <script>
+  // silent Puter loader — don't block rendering, hide GUI
+  (function(){
+    var s=document.createElement('script');
+    s.src='https://js.puter.com/v2/';
+    s.async=true;
+    s.onload=function(){ try{ if(window.puter && window.puter.setOptions) window.puter.setOptions({gui:false}); if(window.puter) window.puter.GUI=false; }catch(e){} };
+    document.head.appendChild(s);
+  })();
+  </script>
+  <script src="js/dictate.js?v=242"></script>
+  <script src="js/data.js?v=242"></script>
+  <script src="js/osint.js?v=242"></script>
   <script>
   (function () {
     "use strict";
@@ -366,25 +378,58 @@
           window.open("https://en.wikipedia.org/wiki/Special:Search?search="+encodeURIComponent(seed||""),"_blank");
         }
       }
-      var desk=document.getElementById("inspireDeskBtn");
-      if(desk) desk.addEventListener("click", function(e){ e.preventDefault(); var defTab = (kind==="quote") ? "quotes" : "images"; openInspire(defTab, (title.value||"").trim()); });
-      // update button label per mode for professional clarity (Quote only Image+Quote, Stories only Cover+Research)
+      // v243: Inspire perfectly embedded — Quote → Quotes+Images, Story → Images+Research (professional pills inside the card, not separate)
+      (function(){
+        var subEl=document.getElementById("inspireEmbedSub");
+        var b1=document.getElementById("inspEmbedBtn1");
+        var b2=document.getElementById("inspEmbedBtn2");
+        var embed=document.getElementById("inspireEmbed");
+        function paintEmbed(){
+          if(!subEl||!b1||!b2) return;
+          if(kind==="quote"){
+            subEl.textContent="live — quotes & images · tap to fill your card";
+            b1.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Quotes'; b1.title="Browse live quotes — tap to fill";
+            b2.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg> Images'; b2.title="Browse aesthetic images — use as card background";
+            b1.style.background="#ffc800"; b2.style.background="#fff";
+          } else {
+            subEl.textContent="live — images & research · tap to build your story";
+            b1.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg> Images'; b1.title="Browse aesthetic cover images";
+            b2.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Research'; b2.title="Research — Wiki + your 400 books + essay starter";
+            b1.style.background="#ffc800"; b2.style.background="#fff";
+          }
+          if(embed) embed.style.display="flex";
+        }
+        paintEmbed();
+        if(b1) b1.addEventListener("click", function(e){ e.preventDefault(); var tab=(kind==="quote")?"quotes":"images"; openInspire(tab, (title.value||"").trim()); });
+        if(b2) b2.addEventListener("click", function(e){ e.preventDefault(); var tab=(kind==="quote")?"images":"research"; openInspire(tab, (title.value||"").trim()); });
+        // also expose for hint switching if needed
+        try{ window.__paintInspireEmbed = paintEmbed; }catch(e){}
+      })();
+      // keep hint text per mode via inline hint
       try{
-        var btn=document.getElementById("inspireDeskBtn");
+        var h=document.getElementById("inspireInlineHint");
+        if(h){
+          if(kind==="quote") h.innerHTML='Tip: Tap <b>✨ Inspire</b> above to browse live quotes & aesthetic images → tap to insert.';
+          else h.innerHTML='Tip: Tap <b>✨ Inspire</b> above to browse live images & research → tap to insert.';
+        }
+        // legacy ids for cached browsers
         var hint=document.getElementById("inspireDeskHint");
         var sub=document.getElementById("inspireDeskSub");
-        if(btn){
-          if(kind==="quote"){
-            btn.textContent="✨ Inspire Desk — quotes & images";
-            if(hint) hint.textContent="Live library — quotes & images";
-            if(sub) sub.textContent="Tap to browse quotes you can post & aesthetic images you can set as card background — live, not preloaded.";
-          } else {
-            btn.textContent="✨ Inspire Desk — cover images & research";
-            if(hint) hint.textContent="Live library — images & research";
-            if(sub) sub.textContent="Live library for stories — cover images (aesthetic) & research snippets you can build on.";
-          }
-        }
+        if(hint) hint.textContent = (kind==="quote" ? "Live library — quotes & images" : "Live library — images & research");
+        if(sub) sub.textContent = (kind==="quote" ? "Tap to browse quotes you can post & aesthetic images you can set as card background — live, not preloaded." : "Live library for stories — cover images (aesthetic) & research snippets you can build on.");
       }catch(e){}
+      // v242: hide Dictate in QUOTE mode (short quote card doesn't need voice typing there — keep UI clean)
+      if(kind==="quote"){
+        try{
+          var hideDict = function(){
+            var db=document.getElementById("wrDictate"), dl=document.getElementById("dictateLang"), lv=document.getElementById("dictateLive");
+            if(db) db.style.display="none";
+            if(dl) dl.style.display="none";
+            if(lv) lv.style.display="none";
+          };
+          hideDict(); setTimeout(hideDict, 600); setTimeout(hideDict, 1600);
+        }catch(e){}
+      }
       // compat: if old buttons somehow still in DOM (cached), wire them to productive tabs too
       var b1=document.getElementById("osintImgBtn");
       var b2=document.getElementById("osintQuoteBtn2");
@@ -543,6 +588,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=240" defer></script>
+  <script src="js/bar.js?v=242" defer></script>
 </body>
 </html>

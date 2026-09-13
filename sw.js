@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v240";
+const CACHE_VERSION = "tsb-v242";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -86,6 +86,18 @@ const APP_SHELL = [
   "./assets/logos/hdfc.png",
   "./assets/logos/sbi.png",
   "./assets/logos/axis.png",
+  "./assets/logos/adobe.svg",
+  "./assets/logos/ajio.svg",
+  "./assets/logos/dominos.svg",
+  "./assets/logos/indigo.svg",
+  "./assets/logos/myntra.svg",
+  "./assets/logos/nykaa.svg",
+  "./assets/logos/hotstar.svg",
+  "./assets/logos/uber.svg",
+  "./assets/logos/zomato.svg",
+  "./assets/logos/irctc.svg",
+  "./assets/logos/mcdonalds.svg",
+  "./assets/logos/zee5.svg",
   "./js/affiliate.js",
   "./apple-touch-icon.png",
   "./css/style.css",
@@ -110,7 +122,6 @@ const APP_SHELL = [
   "./dm.html",
   "./notifications.html",
   "./js/auth.js",
-  "./js/store.js",
   "./js/stories.js",
   "./js/stories-seed.js",
   "./js/stories-community.js",

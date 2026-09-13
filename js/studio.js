@@ -421,14 +421,32 @@
     if (!root) return;
     var box = $("stuPrev");
     if (!box) return;
-    // handle free ratio after image load
     var r = ratio();
     var wrapEl = box.parentNode;
-    var wrapW = wrapEl ? (wrapEl.clientWidth - 28) : 320;
+    // v242: accurate wrap width accounting for padding (16*2) + shadow (8) + border (4*2) = ~48
+    var wrapW = 320;
+    try{
+      if(wrapEl){
+        var rect = wrapEl.getBoundingClientRect();
+        var pad = 32; // 16*2 padding
+        var shadow = 16; // shadow + border reserve
+        wrapW = Math.floor(rect.width - pad - shadow);
+        if(!wrapW || wrapW < 160) wrapW = Math.floor(window.innerWidth - 32 - shadow);
+        // clamp to viewport: mobile is narrow, never exceed 92vw
+        var vwCap = Math.floor(window.innerWidth * 0.92);
+        if(wrapW > vwCap) wrapW = vwCap;
+      }
+    }catch(e){ wrapW = 320; }
     if (!wrapW || wrapW < 160) wrapW = 320;
-    var maxH = Math.min(window.innerHeight * .46, 560);
+    // responsive maxH: 38% viewport on mobile to keep controls visible, 46% on desktop
+    var isMobile = window.innerWidth < 560;
+    var maxH = Math.min(window.innerHeight * (isMobile ? 0.38 : 0.46), isMobile ? 420 : 560);
     var k = Math.min(wrapW / r.w, maxH / r.h);
+    // never upscale beyond natural for sharpness, but allow slight
+    if(k>1) k = Math.min(k, 1.1);
     var bw = Math.floor(r.w * k), bh = Math.floor(r.h * k);
+    // ensure box never exceeds wrap (minus shadow)
+    if(bw > wrapW) { var sc = wrapW / bw; bw = wrapW; bh = Math.floor(bh * sc); }
     box.style.width = bw + "px"; box.style.height = bh + "px";
     // aesthetic background for preview when no image — supports image BGs
     if (!img || !img.naturalWidth) {

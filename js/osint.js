@@ -162,10 +162,12 @@
   function picsumAesthetic(q, n){
     n=n||6;
     var base = String(q||"aesthetic").trim().replace(/\s+/g,"-").toLowerCase() || "aesthetic";
+    // v242: unique seeds per card — random + timestamp to avoid duplicates when called twice quickly
+    var rnd = Math.floor(Math.random()*1e6);
     return Array.from({length:n}, function(_,i){
-      var seed = encodeURIComponent(base+"-"+i+"-"+(Date.now()%1000));
+      var seed = encodeURIComponent(base+"-"+i+"-"+rnd+"-"+Math.floor(Math.random()*900));
       var url = "https://picsum.photos/seed/"+seed+"/640/640";
-      return {thumb:url, full:url, title: base+" · aesthetic #"+(i+1)};
+      return {thumb:url, full:url, title: esc(base)+" · aesthetic #"+(i+1)};
     });
   }
 
@@ -604,19 +606,27 @@
         }).catch(function(){ $res.innerHTML = CURATED.slice(0,4).map(cardQuote).join(""); wireResultActions(); pending=false; });
       } else if(activeTab==="images"){
         var iq = ($q.value||"").trim() || activeTag || "aesthetic";
-        fetchWikimediaImages(iq).then(function(list){
-          // supplement with live Picsum aesthetic to guarantee aesthetic choice
-          var pics = picsumAesthetic(iq, 4);
-          if(list.length < 4){
-            // intermix picsum for aesthetic guarantee
-            list = list.concat(pics).slice(0,8);
+        fetchWikimediaImages(iq).then(function(wiki){
+          var pics = picsumAesthetic(iq, 8);
+          var list = [];
+          var isAesthetic = /aesthetic|minimal|beige|pastel|ocean|nature|city|vintage|night/i.test(iq);
+          if(isAesthetic){
+            // aesthetic query: pics first, then live wiki for accuracy
+            list = pics.slice(0,4).concat(wiki.slice(0,4));
+          } else if(wiki.length >=6){
+            list = wiki.slice(0,6).concat(pics.slice(0,2));
+          } else if(wiki.length >=4){
+            list = wiki.slice(0,4).concat(pics.slice(0,4));
           } else {
-            // even when we have wikimedia results, inject 2 aesthetic Picsum for variety
-            list = list.slice(0,6).concat(pics.slice(0,2));
+            list = wiki.concat(pics).slice(0,8);
           }
-          // if user asked for any aesthetic, prioritize Picsum first
-          if(/aesthetic|minimal|beige|pastel/i.test(iq)){
-            list = pics.slice(0,4).concat(list.slice(0,4));
+          // dedupe by thumb
+          var seen={}, uniq=[];
+          list.forEach(function(it){ if(it && it.thumb && !seen[it.thumb]){ seen[it.thumb]=1; uniq.push(it);} });
+          list = uniq.slice(0,8);
+          if(list.length <8){
+            var extra = picsumAesthetic(iq+"-x"+Date.now(), 8 - list.length);
+            list = list.concat(extra);
           }
           // Grid 2-2 on mobile: proper preview size, buttons never cut — images as 1:1 cards
           $res.style.display = "grid";

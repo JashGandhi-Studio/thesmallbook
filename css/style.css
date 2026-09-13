@@ -5466,7 +5466,9 @@ html.dark .wr-modechip--story{ background:#1b1712; color:#b7b0a5; }
 .wr-quotelive__btn{ width:100%; background:var(--yellow); color:#111; border:3px solid var(--ink); border-radius:14px; box-shadow:3px 3px 0 var(--ink); padding:12px; font-family:var(--font-head); font-size:.8rem; cursor:pointer; }
 .wr-quotelive__btn:active{ transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink); }
 .wr-quotelive__hint{ font-size:.68rem; color:#8f8a80; font-weight:600; line-height:1.4; text-align:center; }
-.wr-quote .wr-bar{ display:none !important; }
+.wr-quote .wr-bar{ display:flex !important; flex-wrap:wrap; gap:6px; }
+.wr-quote .wr-bar [data-cmd], .wr-quote .wr-bar select, .wr-quote .wr-bar .wr-sep{ display:none !important; }
+.wr-quote .wr-bar #wInspireBtn{ display:inline-flex !important; }
 .wr-quote .wr-ed{ min-height:22vh; font-size:1rem; }
 .wr-quote .wr-title{ font-size:2rem; text-align:center; border:2.5px dashed rgba(127,127,127,.25); border-radius:14px; padding:14px 12px; background:var(--paper); }
 html.dark .wr-quote .wr-title{ background:#241f17; }

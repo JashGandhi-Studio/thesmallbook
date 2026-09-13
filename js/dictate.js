@@ -1,7 +1,7 @@
 /* ============================================================
    THESMALLBOOK — 🎙️ VOICE TO TEXT (dictate.js) · v230
    PUTER-POWERED · Hinglish + 7 Indian languages · smart punctuation
-   - PUTER ONLY (your choice): record → Puter AI (GPT-4o-transcribe / Whisper)
+   - PUTER ONLY (your choice): record → AI (GPT-4o-transcribe / Whisper)
      → accurate, no repetition, auto full-stops, Hinglish Roman handled
      → free, no API keys, no backend (puter.js)
    - Fallback gracefully to Web Speech API if Puter offline/blocked
@@ -261,7 +261,7 @@
     } else {
       btn.classList.remove("on");
       btn.setAttribute("aria-pressed","false");
-      btn.title = "Dictate — Puter AI: just speak Hinglish/English naturally, we add full stops";
+      btn.title = "Dictate — AI: just speak Hinglish/English naturally, we add full stops";
       btn.innerHTML = '<span class="wr-dictate__dot"></span> Dictate';
     }
   }
@@ -292,7 +292,7 @@
       var f = LANGS.find(function(l){ return l.id===id; });
       return f ? f.label : id;
     })(cur);
-    if (lab) lab.textContent = labTxt + " • Puter AI • you can edit after";
+    if (lab) lab.textContent = labTxt + " • AI • you can edit after";
     if (title) title.textContent = listening ? (window._puterRecording ? "● Recording — speak Hinglish/English" : "Listening") : "Ready";
     var inter = document.getElementById("dictateInterim");
     if (!text && !listening) {
@@ -381,7 +381,7 @@
     // ensure puter loaded
     var ok = isPuterReady() ? true : await loadPuter();
     if (!ok) {
-      toast("Puter AI not ready — using browser dictation");
+      toast("AI not ready — using browser dictation");
       return startWebSpeech();
     }
     // check mic
@@ -426,7 +426,7 @@
       var el = ensureInterimEl();
       el.hidden = false;
       var inter = document.getElementById("dictateInterim");
-      if (inter) inter.textContent = "✨ Transcribing with Puter AI (GPT-4o) — " + (lang==="hinglish" ? "Hinglish + English" : (LANGS.find(function(l){return l.id===lang;})||{}).label||lang) + " — adding full stops…";
+      if (inter) inter.textContent = "✨ Transcribing with AI (GPT-4o) — " + (lang==="hinglish" ? "Hinglish + English" : (LANGS.find(function(l){return l.id===lang;})||{}).label||lang) + " — adding full stops…";
       var liveTitle = document.getElementById("dictateLiveTitle");
       if (liveTitle) liveTitle.textContent = "Transcribing…";
       listening = false; updateBtnState(); stopTimer();
@@ -445,7 +445,7 @@
         toast("✓ Added — " + txt.slice(0, 42) + (txt.length>42?"…":""));
       }catch(e){
         console.warn("puter transcribe failed", e);
-        toast("Puter AI busy — trying browser fallback");
+        toast("AI busy — trying browser fallback");
         // fallback to web speech interim text if any? For now just show error and fallback
         el.hidden = true;
         // Try web speech as fallback for next utterance
@@ -465,7 +465,7 @@
       var body = document.getElementById("wBody");
       if (body) { body.focus(); placeCaretAtEnd(body); }
     }
-    toast("● Recording — speak Hinglish/English naturally, tap Stop when done. Puter AI will add full stops.");
+    toast("● Recording — speak Hinglish/English naturally, tap Stop when done. AI will add full stops.");
   }
 
   function stopPuter(){
@@ -550,7 +550,7 @@
         var b=document.getElementById("wBody");
         if (b){ b.focus(); placeCaretAtEnd(b); }
       }
-      toast("Listening (browser) — speak naturally, we’ll punctuate.");
+      toast("Listening — speak naturally, we’ll punctuate.");
     }catch(e){ listening=false; updateBtnState(); toast("Couldn’t start — tap Dictate again."); }
   }
   function stopWebSpeech(){
@@ -583,7 +583,7 @@
       updateBtnState();
       ensureInterimEl().hidden=false;
       var inter=document.getElementById("dictateInterim");
-      if (inter) inter.textContent = "Loading Puter AI…";
+      if (inter) inter.textContent = "Loading AI…";
       // The real start will happen after load; reset temp state
       setTimeout(function(){
         if (window._puterRecording !== true && listening && !mediaRec){
@@ -615,7 +615,7 @@
       btn.type = "button";
       btn.id = "wrDictate";
       btn.className = "wr-dictate";
-      btn.setAttribute("aria-label","Voice to text — Puter AI");
+      btn.setAttribute("aria-label","Voice to text — AI");
       btn.innerHTML = '<span class="wr-dictate__dot"></span> Dictate';
       btn.addEventListener("click", function(e){
         e.preventDefault();
@@ -635,14 +635,14 @@
       langSel = document.createElement("select");
       langSel.id = "dictateLang";
       langSel.className = "wr-dictate__lang";
-      langSel.title = "Dictation language — Puter AI supports Hinglish & 7 Indian languages";
+      langSel.title = "Dictation language — AI supports Hinglish & 7 Indian languages";
       LANGS.forEach(function(l){
         var o = document.createElement("option");
         o.value = l.id; o.textContent = l.label;
         langSel.appendChild(o);
       });
       langSel.value = getLang();
-      langSel.addEventListener("change", function(){ setLang(this.value); toast("Language: " + this.options[this.selectedIndex].textContent + " • Puter AI"); if (listening||window._puterRecording) { stop(); setTimeout(start, 300); } });
+      langSel.addEventListener("change", function(){ setLang(this.value); toast("Language: " + this.options[this.selectedIndex].textContent + " • AI"); if (listening||window._puterRecording) { stop(); setTimeout(start, 300); } });
       if (btn && btn.parentNode) {
         btn.parentNode.insertBefore(langSel, btn.nextSibling);
       }

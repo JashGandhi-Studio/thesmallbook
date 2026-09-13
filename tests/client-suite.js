@@ -337,8 +337,8 @@ const C = window.TSB_COMMUNITY;
   ok("og image + alt refreshed (400 books · 2,637 lessons)", idxH.includes("400 books · 2,637 lessons") && idxH.includes("assets/og-image.png"));
   ok("no stale counts on key files (350 books / 2,176 / 2176 / 2170)", !/350 books|2,176|2176|2170/.test(djSrc + idxH + cssSrc + lgSrc2 + bkSrc2));
   const swSrc = fsp.readFileSync(pp.join(__dirname, "../sw.js"), "utf8");
-  ok("service worker cache bumped to tsb-v240", swSrc.includes('tsb-v240'));
-  ok("key files ship ?v=240", idxH.includes("css/style.css?v=240") && lgSrc2.includes("v=240"));
+  ok("service worker cache bumped to tsb-v242", swSrc.includes('tsb-v242'));
+  ok("key files ship ?v=242", idxH.includes("css/style.css?v=242") && lgSrc2.includes("v=242"));
 
   console.log("== v221: content depth, 400 everywhere, 8 new autopsies, graves on all books ==");
   // repo-wide stale scan (every html/js/md)
@@ -390,17 +390,17 @@ const C = window.TSB_COMMUNITY;
   const setH = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
   const youH = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
   const instSrc = fsp.readFileSync(pp.join(__dirname, "../js/install.js"), "utf8");
-  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=240"));
-  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=240"));
+  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=242"));
+  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=242"));
   ok("service worker precaches install.js (works offline)", swSrc.includes("./js/install.js"));
   ok("install popup + standalone-hide styles shipped", cssSrc.includes(".instmodal") && cssSrc.includes("@media (display-mode: standalone)"));
   ok("install.js parses and handles beforeinstallprompt/appinstalled", (() => { try { new Function(instSrc); return true; } catch (e) { return false; } })() && instSrc.includes("beforeinstallprompt") && instSrc.includes("appinstalled"));
-  ok("Build markers say tsb-v240 (settings + You window)", setH.includes("Build tsb-v240") && youH.includes("Build tsb-v240"));
+  ok("Build markers say tsb-v242 (settings + You window)", setH.includes("Build tsb-v242") && youH.includes("Build tsb-v242"));
   let staleBuilds = [];
   for (const f of ["settings.html","login.html","index.html","about.html","scan.html","book.html","graveyard.html"]) {
     const t = fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
     const m = t.match(/Build tsb-v(\d+)/g) || [];
-    const wantVer = (swSrc.match(/CACHE_VERSION = "(tsb-v\d+)"/) || [])[1] || "tsb-v240";
+    const wantVer = (swSrc.match(/CACHE_VERSION = "(tsb-v\d+)"/) || [])[1] || "tsb-v242";
     m.forEach(x => { if (!x.includes(wantVer.slice(3))) staleBuilds.push(f + ":" + x); });
   }
   ok("no stale Build markers anywhere", staleBuilds.length === 0, staleBuilds.join(", "));
@@ -569,7 +569,7 @@ const C = window.TSB_COMMUNITY;
   ok("v222: probe reports 'sign in first' when no session", pr2.reason === "signin", pr2.reason);
   globalThis.TSB_AUTH.token = tokOld; store.tsb_auth_session = sessOld;
   const setH3 = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
-  ok("v222: Settings has the one-tap upload test", setH3.includes('id="upDiag"') && setH3.includes("Test upload right now") && setH3.includes("Build tsb-v240"));
+  ok("v222: Settings has the one-tap upload test", setH3.includes('id="upDiag"') && setH3.includes("Test upload right now") && setH3.includes("Build tsb-v242"));
   /* the WRITE page uploads died silently: fname() was called by every handler but
      defined nowhere — cover/quote/video/audio upload never started. Regression-guard it: */
   const writeH3 = fsp.readFileSync(pp.join(__dirname, "../write.html"), "utf8");
@@ -633,7 +633,7 @@ const C = window.TSB_COMMUNITY;
   const storePageV4 = fsp.readFileSync(pp.join(__dirname, "../store.html"), "utf8");
   ok("v225: store page has hero stats, ticker, picks rail, logo attribution line", storePageV4.includes('id="stStats"') && storePageV4.includes('id="stTicker"') && storePageV4.includes('id="stPicks"') && storePageV4.includes("logos belong to their owners"));
   const loginV4 = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
-  ok("v225: You-window banner shows real logo stack + loads store.css", loginV4.includes("st-banner__logos") && loginV4.includes("assets/logos/amazon.svg") && loginV4.includes("css/store.css?v=240"));
+  ok("v225: You-window banner shows real logo stack + loads store.css", loginV4.includes("st-banner__logos") && loginV4.includes("assets/logos/amazon.svg") && loginV4.includes("css/store.css?v=242"));
   ok("v225: service worker precaches the logo folder", swSrc.includes("./assets/logos/amazon.svg") && swSrc.includes("./assets/logos/spotify.svg"));
   ok("v225: store copy never says 'free forever' about the app (only the writer-unlock perk)", !/free forever/i.test(storePageV4.replace(/store unlocked free, forever/g, "")) && !/free forever/i.test(fsp.readFileSync(pp.join(__dirname, "../js/store-data.js"), "utf8")));
 
