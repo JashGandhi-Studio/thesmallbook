@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=247">
+  <link rel="stylesheet" href="css/style.css?v=248">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -47,11 +47,13 @@
   <main class="cm-wrap" id="dmMain">
     <div id="dmList" class="dm-list"></div>
     <div id="dmThread" class="dm-thread" hidden>
+      <div id="dmThreadBanner" class="dm-threadbanner" hidden></div>
       <div class="dm-msgs" id="dmMsgs"></div>
       <form class="dm-send" id="dmSend">
         <button class="dm-plus" id="dmPlus" type="button" title="Recommend a book">＋</button>
         <input id="dmBody" class="dm-input" maxlength="1000" placeholder="Say something kind…" autocomplete="off">
-        <button class="cm-write" type="submit">Send</button>
+        <button class="dm-mic" id="dmMic" type="button" title="Voice message">🎤</button>
+  <button class="cm-write" type="submit">Send</button>
       </form>
     </div>
   </main>
@@ -68,14 +70,14 @@
     </div>
   </div>
 
-  <script src="js/prefs.js?v=247"></script>
-  <script src="js/lang.js?v=247"></script>
-  <script src="js/config.js?v=247"></script>
-  <script src="js/data.js?v=247"></script>
-  <script src="js/auth.js?v=247"></script>
-  <script src="js/sounds.js?v=247"></script>
-  <script src="js/founder.js?v=247"></script>
-  <script src="js/community.js?v=247"></script>
+  <script src="js/prefs.js?v=248"></script>
+  <script src="js/lang.js?v=248"></script>
+  <script src="js/config.js?v=248"></script>
+  <script src="js/data.js?v=248"></script>
+  <script src="js/auth.js?v=248"></script>
+  <script src="js/sounds.js?v=248"></script>
+  <script src="js/founder.js?v=248"></script>
+  <script src="js/community.js?v=248"></script>
   <script>
   (function () {
     "use strict";
@@ -185,12 +187,24 @@
         var isRead = mineRow ? waRead(m, rows) : false;
         return '<div class="dm-bub' + (mineRow ? " me" : "") + '" data-mid="' + m.id + '" data-mine="' + (mineRow ? 1 : 0) + '" data-body="' + C.esc(m.body) + '">' +
           (m.book_id ? bookCard(m.book_id) : "") +
+          (m.audio_url ? '<audio class="dm-audio" controls preload="none" src="' + C.esc(m.audio_url) + '"></audio>' : "") +
           "<span>" + C.esc(m.body) + "</span>" +
           "<em>" + C.ago(m.created_at) + (m.edited_at ? " · edited" : "") + "</em>" +
           (mineRow ? '<span class="dm-tick' + (isRead ? " read" : "") + '" title="' + (isRead ? "Read" : "Sent") + '">' + "✓✓" + "</span>" : "") +
         "</div>";
       }).join("") || '<div class="cm-empty cm-empty--sm">Say hello 👋</div>';
       msgs.scrollTop = msgs.scrollHeight;
+      (function () {
+        var banner = document.getElementById("dmThreadBanner"); if (!banner) return;
+        var meta = getThreadMeta(uid);
+        if (!meta) { for (var i = 0; i < rows.length; i++) { if (rows[i].book_id && rows[i].expires_at && Date.parse(rows[i].expires_at) > Date.now()) { meta = { bookId: rows[i].book_id, expiresAt: Date.parse(rows[i].expires_at) }; break; } } }
+        if (meta && meta.expiresAt > Date.now()) {
+          var bk = (window.BOOKS || []).filter(function (x) { return x.id === meta.bookId; })[0];
+          var days = Math.ceil((meta.expiresAt - Date.now()) / 864e5);
+          banner.hidden = false;
+          banner.innerHTML = '📖 7-day reading thread' + (bk ? ' · <b>' + C.esc(bk.title) + '</b>' : '') + ' · <b>' + days + 'd left</b>';
+        } else { banner.hidden = true; }
+      })();
       try {
         /* v223 read receipts: opening the thread marks THEIR messages read.
            My own ticks are NOT swept blue here — each tick follows its own
@@ -223,6 +237,30 @@
     });
 
     /* live read receipts: while the thread is open, poll lightly; blue ✓✓ when they read */
+    /* ---- voice messages + reading-thread meta ---- */
+    function saveThreadMeta(peer, bookId, expires) { try { var a = JSON.parse(localStorage.getItem("tsb_threads") || "{}"); a[peer] = { bookId: bookId, expiresAt: expires }; localStorage.setItem("tsb_threads", JSON.stringify(a)); } catch (e) {} }
+    function getThreadMeta(peer) { try { return (JSON.parse(localStorage.getItem("tsb_threads") || "{}"))[peer] || null; } catch (e) { return null; } }
+    var dmMic = document.getElementById("dmMic");
+    var rec = null, recChunks = [];
+    if (dmMic) dmMic.addEventListener("click", async function () {
+      if (rec) { try { rec.stop(); } catch (e) {} return; }
+      if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) { alert("Voice messages are not supported on this browser."); return; }
+      if (!(window.TSB_CONFIG && TSB_CONFIG.DM_AUDIO)) { alert("Voice needs Supabase storage - run SQL #3 v4, then set DM_AUDIO:true in config.js."); return; }
+      try {
+        var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        rec = new MediaRecorder(stream); recChunks = [];
+        rec.ondataavailable = function (e) { if (e.data && e.data.size) recChunks.push(e.data); };
+        rec.onstop = async function () {
+          dmMic.classList.remove("on"); try { stream.getTracks().forEach(function (t) { t.stop(); }); } catch (e) {}
+          var blob = new Blob(recChunks, { type: "audio/webm" });
+          try { var url = await C.upload(blob, "tsb-audio"); await C.sendDM(uid, "", null, { audio_url: url }); await loadThread(); }
+          catch (err) { alert("Voice send failed - " + (err && err.message ? err.message : err) + " (run SQL #3 v4)"); }
+          rec = null;
+        };
+        rec.start(); dmMic.classList.add("on");
+      } catch (e) { alert("Mic permission denied."); }
+    });
+
     var tPoll = setInterval(async function () {
       if (document.getElementById("dmThread").hidden) return;
       try {
@@ -310,9 +348,11 @@
         return !q || (b.title + " " + b.author).toLowerCase().indexOf(q) >= 0;
       }).slice(0, 40);
       pkList.innerHTML = hits.map(function (b) {
-        return '<button class="pk-row" data-book="' + b.id + '">' +
+        return '<div class="pk-row" data-book="' + b.id + '">' +
           '<img src="' + C.esc(b.cover || "") + '" alt="" onerror="this.style.visibility=\'hidden\'">' +
-          "<div><b>" + C.esc(b.title) + "</b><span>" + C.esc(b.author) + "</span></div>＋</button>";
+          "<div><b>" + C.esc(b.title) + "</b><span>" + C.esc(b.author) + "</span></div>" +
+          '<span class="pk-acts"><button class="pk-rec" type="button" data-book="' + b.id + '">＋ Recommend</button><button class="pk-read" type="button" data-book="' + b.id + '">📖 Read together</button></span>' +
+          "</div>";
       }).join("") || '<p class="cm-empty cm-empty--sm">No book matched that.</p>';
     }
     document.getElementById("dmPlus").addEventListener("click", function () {
@@ -325,15 +365,28 @@
     });
     pkSearch.addEventListener("input", function () { renderBooks(this.value); });
     pkList.addEventListener("click", async function (e) {
-      var b = e.target.closest("[data-book]");
-      if (!b) return;
-      var book = BOOKS.filter(function (x) { return x.id === b.getAttribute("data-book"); })[0];
+      var row = e.target.closest("[data-book]");
+      if (!row) return;
+      var book = BOOKS.filter(function (x) { return x.id === row.getAttribute("data-book"); })[0];
       if (!book) return;
-      picker.classList.remove("on"); setTimeout(function () { picker.hidden = true; }, 220);
-      try {
-        await C.sendDM(uid, "You should read " + book.title + " — " + (book.tagline || "it's good!"), book.id);
-        await loadThread();
-      } catch (err) { alert("Send failed — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
+      if (e.target.closest(".pk-read")) {
+        picker.classList.remove("on"); setTimeout(function () { picker.hidden = true; }, 220);
+        try {
+          var exp = Date.now() + 7 * 864e5;
+          saveThreadMeta(uid, book.id, exp);
+          await C.sendDM(uid, "📖 Let's read " + book.title + " together — 7-day thread! " + (book.tagline || "tap the book above"), book.id,
+            (window.TSB_CONFIG && TSB_CONFIG.DM_THREADS) ? { expires_at: new Date(exp).toISOString() } : null);
+          await loadThread();
+        } catch (err) { alert("Couldn't start thread — " + (err && err.message ? err.message : err)); }
+        return;
+      }
+      if (e.target.closest(".pk-rec")) {
+        picker.classList.remove("on"); setTimeout(function () { picker.hidden = true; }, 220);
+        try {
+          await C.sendDM(uid, "You should read " + book.title + " — " + (book.tagline || "it's good!"), book.id);
+          await loadThread();
+        } catch (err) { alert("Send failed — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
+      }
     });
 
     /* ---- routing ---- */
@@ -361,6 +414,6 @@
     });
   })();
   </script>
-  <script src="js/bar.js?v=247" defer></script>
+  <script src="js/bar.js?v=248" defer></script>
 </body>
 </html>

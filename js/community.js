@@ -456,11 +456,15 @@
     var rows = await api("messages?select=*&or=(and(sender_id.eq." + mu.id + ",receiver_id.eq." + uid + "),and(sender_id.eq." + uid + ",receiver_id.eq." + mu.id + "))&order=created_at.asc&limit=300", { method: "GET" });
     return (rows || []).filter(function (m) { return !(m.hidden_for || []).some(function (h) { return h === mu.id; }); });
   }
-  async function sendDM(uid, body, bookId) {
+  async function sendDM(uid, body, bookId, opts) {
     if (!api || !signedIn()) return null;
     var mu = me(); if (!mu) return null;
-    var payload = { sender_id: mu.id, receiver_id: uid, body: String(body).slice(0, 1000) };
+    var payload = { sender_id: mu.id, receiver_id: uid, body: String(body || "").slice(0, 1000) };
     if (bookId) payload.book_id = String(bookId);
+    if (opts) {
+      if (opts.expires_at) payload.expires_at = opts.expires_at;   /* reading-thread expiry (needs messages.expires_at column) */
+      if (opts.audio_url) payload.audio_url = opts.audio_url;       /* voice note (needs messages.audio_url column) */
+    }
     var row = await api("messages?select=*", { method: "POST", body: payload });
     return (row && row[0]) || row;
   }

@@ -185,6 +185,39 @@ window.TSB_CONFIG = {
     "sugar-industry"
   ],
 
+  /* 💛 PAYWALL / TSB GOLD — CENTRAL SWITCH (v248).
+     The paywall already exists (gold.js + gold.html + store gating).
+     This block is the ONE place to turn it on and decide what hides
+     behind it. Gold members (activated on gold.html) are NEVER locked.
+     HOW TO ENABLE — see docs/PAYWALL-SETUP.md:
+       1) set ENABLED: true
+       2) set UPI_ID to your handle (already matches gold.html)
+       3) (optional) paste a Razorpay Payment Link into RAZORPAY_LINK
+       4) list the feature keys you want locked in GATED
+     Tell me what should hide behind the wall and I'll wire those exact
+     screens to call TSB_PAYWALL.gate(feature, onLocked). */
+  PAYWALL: {
+    ENABLED: false,                    // flip to true to turn the wall on
+    PRICE_INR: 999,                    // price shown / charged
+    UPI_ID: "9702510680@fam",          // your UPI handle (matches gold.html)
+    RAZORPAY_LINK: "",                 // optional: Razorpay Payment Link for auto-receipts
+    GATED: [                          // feature keys to lock once ENABLED:
+      // "store-full",                //  full store shelf (3 editor's picks stay free)
+      // "audio-gold",                //  human-narration audio
+      // "pdf-cheatsheets",           //  PDF cheat-sheets
+      // "pro-filters",               //  Studio Pro filters
+      // "offline"                    //  offline library + export
+    ]
+  },
+
+  /* 🎤 DM VOICE + 📖 READING THREADS (Supabase). Off by default — flip on
+     AFTER running SQL #3 v4 (docs/SUPABASE-STEP-BY-STEP.md), which adds the
+     tsb-audio bucket + the messages.audio_url and messages.expires_at columns.
+     Voice notes upload to Supabase storage; reading-thread expiry syncs across
+     both devices only once messages.expires_at exists (DM_THREADS:true). */
+  DM_AUDIO: true,
+  DM_THREADS: true,
+
   /* Amazon Associates (India) — book buy links */
   AMAZON_TAG: "thesmallbook-21",
 

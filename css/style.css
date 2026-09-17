@@ -5958,3 +5958,106 @@ html.dark .wr-dictate__interim{background:#1b1712;color:var(--paper);border-colo
   .wr-top{gap:8px}
   .wr-top .wr-dictate,.wr-top .wr-dictate__lang{flex:none}
 }
+
+/* ============================================================
+   DARK MODE — READABILITY HARDENING (v248)
+   Safety net for text-entry controls + message bubbles where
+   default text was unreadable on dark surfaces.
+   ============================================================ */
+html.dark input[type="text"],
+html.dark input[type="email"],
+html.dark input[type="search"],
+html.dark input[type="password"],
+html.dark input[type="url"],
+html.dark input[type="tel"],
+html.dark input:not([type]),
+html.dark textarea,
+html.dark select {
+  background:#1b1712; color:var(--paper); border-color:#000;
+}
+html.dark input::placeholder,
+html.dark textarea::placeholder { color:#8a8170; }
+/* own-message bubble: yellow background needs dark text even in dark mode */
+html.dark .dm-bub.me { color:#111; }
+html.dark .dm-bub.me em { color:#6a5a2a; }
+/* generic dialogs/sheets that forgot a dark surface */
+html.dark .dm-picker__card, html.dark .dm-sheet__card { color:var(--paper); }
+
+/* ============================================================
+
+/* ============================================================
+   v248 — BOOK TOOLS: cheat-sheet, sponsor line, fuel modal
+   (neo-brutalist: ink borders, hard offset shadows, Archivo Black)
+   ============================================================ */
+.booktools { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:26px 0 4px; }
+.booktools .btn { font-family:"Archivo Black",sans-serif; }
+.pdfbar__q { font-size:.72rem; font-weight:800; letter-spacing:.4px; color:#8f8a80; margin-left:2px; }
+.pdfbar__q--gold { color:var(--green); }
+.sponsorline { margin:0 0 22px; padding:12px 16px; border:3px solid var(--ink); border-radius:14px; background:var(--yellow); color:var(--ink); font-weight:800; box-shadow:4px 4px 0 var(--ink); }
+html.dark .sponsorline { background:#1b1712; color:var(--paper); border-color:#000; box-shadow:4px 4px 0 #000; }
+
+.fuelmodal { position:fixed; inset:0; z-index:9995; background:rgba(20,16,10,.62); display:flex; align-items:center; justify-content:center; padding:18px; backdrop-filter:blur(3px); }
+.fuelmodal[hidden] { display:none; }
+.fuelmodal__card { width:min(460px,100%); background:var(--paper,#fffdf5); border:4px solid var(--ink); border-radius:22px; box-shadow:9px 9px 0 var(--yellow); padding:22px 22px 24px; position:relative; }
+.fuelmodal__x { position:absolute; top:10px; right:10px; border:3px solid var(--ink); background:#fff; border-radius:10px; width:36px; height:36px; font-weight:900; cursor:pointer; box-shadow:2px 2px 0 var(--ink); }
+.fuelmodal__badge { display:inline-block; font-family:"Archivo Black",sans-serif; font-size:11px; letter-spacing:2px; background:linear-gradient(135deg,#ffd94d,#ffc800); border:2.5px solid var(--ink); padding:6px 12px; border-radius:999px; }
+.fuelmodal h2 { font-family:"Archivo Black",sans-serif; font-size:1.35rem; margin:12px 0 6px; line-height:1.1; }
+.fuelmodal__sub { font-size:.9rem; line-height:1.5; color:#555; }
+.fuelmodal__pay { display:block; text-align:center; margin:16px 0 6px; background:var(--yellow); color:var(--ink); border:3px solid var(--ink); border-radius:14px; box-shadow:4px 4px 0 var(--ink); padding:14px; font-family:"Archivo Black",sans-serif; text-decoration:none; }
+.fuelmodal__pay:active { transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink); }
+.fuelmodal__alt { font-size:.78rem; color:#777; text-align:center; }
+.linkbtn { background:none; border:0; color:var(--blue); text-decoration:underline; cursor:pointer; font:inherit; padding:0; }
+.fuelmodal__wa { display:block; text-align:center; margin:10px 0; color:var(--ink); font-weight:800; text-decoration:underline; }
+.fuelmodal__note { font-size:.74rem; color:#888; line-height:1.45; margin:8px 0 0; }
+
+/* cheat-sheet: always rendered as a WHITE "paper" (it is printed / saved as PDF) */
+.tsb-cheat { display:none; }
+body.tsb-printing .tsb-cheat { display:block; }
+.tsb-cheat { font-family:"Space Grotesk",Arial,sans-serif; color:#111; background:#fff; max-width:820px; margin:0 auto; padding:18px 14px; }
+.cs-head { display:flex; gap:14px; align-items:flex-start; border-bottom:4px solid #111; padding-bottom:14px; }
+.cs-mark { flex:none; width:46px; height:46px; border:3px solid #111; border-radius:10px; background:#ffc800; display:grid; place-items:center; font-size:24px; box-shadow:3px 3px 0 #111; }
+.cs-head h1 { font-family:"Archivo Black",sans-serif; font-size:1.7rem; margin:0; line-height:1.05; }
+.cs-by { font-weight:800; font-size:.92rem; margin-top:2px; }
+.cs-one { font-size:.86rem; color:#333; margin-top:5px; }
+.cs-big { font-size:.86rem; background:#fff6cc; border:2px solid #111; padding:7px 9px; border-radius:9px; margin-top:8px; display:inline-block; font-weight:700; }
+.cs-flag { margin-left:auto; align-self:flex-start; font-family:"Archivo Black",sans-serif; font-size:.66rem; letter-spacing:1px; background:#111; color:#ffc800; padding:6px 9px; border-radius:9px; white-space:nowrap; }
+.tsb-cheat--gold .cs-flag { background:#ffc800; color:#111; }
+.cs-body { margin-top:16px; display:flex; flex-direction:column; gap:12px; }
+.cs-les { display:flex; gap:12px; border:3px solid #111; border-radius:12px; padding:12px; box-shadow:4px 4px 0 #111; page-break-inside:avoid; }
+.cs-les__n { flex:none; width:30px; height:30px; border-radius:50%; background:#111; color:#fff; display:grid; place-items:center; font-family:"Archivo Black",sans-serif; font-size:.85rem; }
+.cs-les__b { flex:1; min-width:0; }
+.cs-les__b h3 { margin:0 0 5px; font-family:"Archivo Black",sans-serif; font-size:1rem; }
+.cs-les__b p { margin:3px 0; font-size:.84rem; line-height:1.45; }
+.cs-ex { color:#444; } .cs-act { background:#eafff3; border:2px solid #111; padding:4px 8px; border-radius:7px; font-weight:600; }
+.cs-plan { margin-top:16px; border-top:3px dashed #111; padding-top:12px; }
+.cs-plan h2 { font-family:"Archivo Black",sans-serif; font-size:1.05rem; margin:0 0 8px; }
+.cs-plan ol { margin:0; padding-left:22px; } .cs-plan li { font-size:.86rem; margin:4px 0; }
+.cs-foot { margin-top:14px; font-size:.72rem; color:#666; text-align:center; border-top:2px solid #111; padding-top:8px; }
+@media print {
+  body.tsb-printing * { visibility:hidden !important; }
+  body.tsb-printing #tsbCheat, body.tsb-printing #tsbCheat * { visibility:visible !important; }
+  body.tsb-printing #tsbCheat { position:absolute; left:0; top:0; width:100%; background:#fff !important; }
+  @page { margin:12mm; }
+  * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+}
+
+/* ============================================================
+   v248 — DM: voice mic, read-together picker, audio, thread banner
+   ============================================================ */
+.dm-mic { flex:none; width:46px; height:46px; border:2.5px solid var(--ink); border-radius:14px; background:#fff; color:var(--ink); font-size:1.2rem; cursor:pointer; box-shadow:3px 3px 0 var(--ink); }
+.dm-mic.on { background:var(--red); color:#fff; animation:pulse 1s infinite; }
+@keyframes pulse { 0%,100%{box-shadow:3px 3px 0 var(--ink);} 50%{box-shadow:3px 3px 0 var(--red);} }
+.pk-row { display:flex; align-items:center; gap:10px; width:100%; text-align:left; background:var(--paper,#fffdf5); border:2.5px solid var(--ink); border-radius:14px; box-shadow:3px 3px 0 var(--ink); padding:8px 10px; cursor:pointer; }
+.pk-row img { width:42px; height:60px; object-fit:cover; border:2px solid var(--ink); border-radius:6px; flex:none; }
+.pk-row > div { flex:1; min-width:0; }
+.pk-row b { display:block; font-size:.9rem; } .pk-row span { font-size:.74rem; color:#777; }
+.pk-acts { display:flex; flex-direction:column; gap:5px; flex:none; }
+.pk-rec, .pk-read { border:2.5px solid var(--ink); border-radius:10px; padding:6px 10px; font-family:"Archivo Black",sans-serif; font-size:.7rem; letter-spacing:.3px; cursor:pointer; box-shadow:2px 2px 0 var(--ink); }
+.pk-rec { background:var(--yellow); color:var(--ink); }
+.pk-read { background:#fff; color:var(--ink); }
+.dm-audio { width:240px; max-width:72vw; margin:4px 0; display:block; border:2px solid var(--ink); border-radius:10px; box-shadow:2px 2px 0 var(--ink); }
+.dm-threadbanner { margin:0 0 10px; padding:10px 14px; border:3px solid var(--ink); border-radius:12px; background:linear-gradient(135deg,#ffd94d,#ffc800); color:#111; font-weight:800; font-family:"Archivo Black",sans-serif; font-size:.82rem; box-shadow:4px 4px 0 var(--ink); }
+.dm-threadbanner[hidden] { display:none; }
+
+/* cheat-sheet cover thumbnail (premium touch) */
+.tsb-cheat .cs-cover { flex:none; width:54px; height:78px; object-fit:cover; border:3px solid #111; border-radius:8px; box-shadow:3px 3px 0 #111; }

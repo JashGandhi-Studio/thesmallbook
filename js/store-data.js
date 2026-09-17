@@ -346,7 +346,7 @@
         tnc: ["Discounts & stock per AJIO & sellers; sale dates per AJIO.", "Bank offers per AJIO payment T&C.", "Run by AJIO (Reliance Retail)."] },
 
       
-      { id: "perplexity-pro", brand: "Perplexity Pro", cat: "learning", logo: "notion.svg", bg: "#1a1a2e",
+      { id: "perplexity-pro", brand: "Perplexity Pro", cat: "learning", logo: "perplexity.svg", bg: "#ffffff",
         tag: "FREE", value: "1 YEAR FREE* ", worth: "Worth \u20b916,000",
         title: "Perplexity Pro \u2014 1 year free via select Airtel & referral packs",
         desc: "Airtel Thanks + Perplexity\u2019s India push: students & Airtel postpaid/fiber users are seeing 12-month Pro grants (GPT-4o + Sonar + files). Check Airtel Thanks \u2192 Rewards \u2192 Perplexity \u2014 if you see it, claim in one tap.",
@@ -354,7 +354,7 @@
         steps: ["Open the Perplexity app or perplexity.ai/pro.", "If you\u2019re Airtel eligible: Airtel Thanks \u2192 Rewards \u2192 Perplexity Pro \u2192 Claim (auto-links).", "Else use a .edu email \u2014 Pro trial often shows \u201C1 month free\u201D for students, then ask campus rep for annual extension."],
         tnc: ["Annual grant is campaign-based \u2014 shown only if your Airtel/campus account is selected.", "After free year, Pro renews at \u20b91,399/month unless cancelled.", "Run by Perplexity AI."] },
 
-      { id: "grammarly-premium", brand: "Grammarly", cat: "learning", logo: "notion.svg", bg: "#15c39a",
+      { id: "grammarly-premium", brand: "Grammarly", cat: "learning", logo: "grammarly.svg", bg: "#ffffff",
         tag: "STUDENT", value: "PREMIUM \u2014 50% OFF", worth: "Saves \u20b97,000/yr",
         title: "Grammarly Premium \u2014 student 50% off + campus free trials",
         desc: "Write stories & essays that read clean: Premium checks tone, clarity, plagiarism and AI-tweaks. Students get half-off via UNiDAYS/Student Beans; many campuses give 3-month free Premium.",
@@ -362,7 +362,7 @@
         steps: ["Open grammarly.com/edu \u2192 \u201CGet Premium\u201D \u2192 pick Student.", "Verify via UNiDAYS/Student Beans with your college email/ID.", "Discount auto-applies at checkout; renew yearly while enrolled."],
         tnc: ["For enrolled students with UNiDAYS/Student Beans verification.", "50% off yearly Premium; monthly still full price.", "Run by Grammarly."] },
 
-      { id: "duolingo-plus", brand: "Duolingo Plus", cat: "learning", logo: "spotify.svg", bg: "#58cc02",
+      { id: "duolingo-plus", brand: "Duolingo Plus", cat: "learning", logo: "duolingo.svg", bg: "#ffffff",
         tag: "FREE TRIAL", value: "2 WEEKS FREE", worth: "Worth \u20b9600",
         title: "Duolingo Super \u2014 2 weeks free, no ads + offline lessons",
         desc: "Learn any of 40 languages with streaks that match TheSmallBook\u2019s. Super gives no ads, unlimited hearts, offline and AI role-play. Family plan splits to \u20b930/month per person.",
@@ -370,7 +370,7 @@
         steps: ["Open the Duolingo app \u2192 Shop \u2192 Try Super.", "Pick Individual or Family \u2014 trial shows at payment.", "Cancel before 14 days from App Store / Play Store subscriptions to pay nothing."],
         tnc: ["New Super members only; trial length varies (7\u201314 days).", "Family = \u20b9599/month for 6, auto-renews.", "Run by Duolingo."] },
 
-      { id: "headspace", brand: "Headspace", cat: "fun", logo: "spotify.svg", bg: "#ff9a00",
+      { id: "headspace", brand: "Headspace", cat: "fun", logo: "headspace.svg", bg: "#ffffff",
         tag: "FREE TRIAL", value: "30 DAYS FREE", worth: "Worth \u20b9850",
         title: "Headspace \u2014 30 days free: meditations, sleep & focus music",
         desc: "The calm companion to reading sprints: guided meditations, sleep casts, breathing and focus playlists. Student plan then \u20b9500/year after trial.",
@@ -378,7 +378,7 @@
         steps: ["Open headspace.com \u2192 \u201CTry free\u201D.", "Sign up \u2014 trial applies to monthly/yearly.", "Students: pick Student plan and verify via SheerID."],
         tnc: ["New members only; auto-renews at \u20b9899/year unless cancelled.", "Student price \u20b9500/year with verification.", "Run by Headspace."] },
 
-      { id: "lenskart-gold", brand: "Lenskart Gold", cat: "shopping", logo: "amazon.svg", bg: "#0e76bc",
+      { id: "lenskart-gold", brand: "Lenskart Gold", cat: "shopping", logo: "lenskart.svg", bg: "#ffffff",
         tag: "MEMBERSHIP", value: "BUY 1 GET 1 + \u20b9500 OFF", worth: "Saves \u20b93,000+",
         title: "Lenskart Gold \u2014 Buy 1 Get 1 + \u20b9500 off + free eye test at home",
         desc: "Gold membership on the Lenskart app: BOGO on eyeglasses, free eye test, WhatsApp tracking. Gold Max adds sunglasses free. Official member price shows at checkout.",
@@ -386,7 +386,7 @@
         steps: ["Open Lenskart app \u2192 Gold.", "Pick Gold (\u20b9600/yr) or Gold Max (\u20b91,000/yr).", "Add frames \u2014 BOGO + \u20b9500 discount appear automatically at cart."],
         tnc: ["For Lenskart Gold members; T\u0026C on Lenskart Gold page.", "Eye test free in serviced pincodes only.", "Run by Lenskart."] },
 
-      { id: "meesho-deals", brand: "Meesho", cat: "shopping", logo: "amazon.svg", bg: "#f43397",
+      { id: "meesho-deals", brand: "Meesho", cat: "shopping", logo: "meesho.svg", bg: "#ffffff",
         tag: "DEALS HUB", value: "UP TO 80% OFF", worth: "Free delivery \u20b9199+",
         title: "Meesho \u2014 factory prices + 80% off + free delivery over \u20b9199",
         desc: "India\u2019s value fashion & home wall: daily 80% off, no minimum for some, free delivery above \u20b9199. \u201CLowest Price\u201D badge is the deal \u2014 no code needed.",
@@ -394,7 +394,7 @@
         steps: ["Open Meesho app \u2192 Shop \u2192 filter by \u201CLowest Price\u201D or \u201COffers\u201D.", "Badge price is the offer \u2014 add to cart.", "Free delivery auto-applies above \u20b9199."],
         tnc: ["Prices & stock per sellers on Meesho.", "Free delivery threshold per Meesho \u2014 check at checkout.", "Run by Meesho."] },
 
-      { id: "firstcry-offers", brand: "FirstCry", cat: "shopping", logo: "amazon.svg", bg: "#ff6f00",
+      { id: "firstcry-offers", brand: "FirstCry", cat: "shopping", logo: "firstcry.svg", bg: "#ffffff",
         tag: "NEW USER", value: "\u20b9500 OFF \u00b7 CLUB", worth: "Club from \u20b9149",
         title: "FirstCry Club \u2014 \u20b9500 off + extra 5% + free shipping on every order",
         desc: "Baby & kids mega wall: Club membership stacks extra discount + free shipping; new-user \u20b9500 off appears on first checkout. Official offers tab keeps every code.",
@@ -410,7 +410,7 @@
         steps: ["Open mcdelivery.co.in \u2192 Offers (or McDonald\u2019s India app \u2192 Offers).", "Tap a coupon \u2014 code + T\u0026C show (e.g. MCD40 on \u20b9399+).", "Add to cart in the same app \u2014 code applies; collect from counter or delivery."],
         tnc: ["Codes, caps & min. order per McDonald\u2019s coupon \u2014 printed on wall.", "West & South (Hardcastle) vs North & East (Connaught Plaza) menus differ.", "Run by McDonald\u2019s India."] },
 
-      { id: "kfc-offers", brand: "KFC", cat: "food", logo: "amazon.svg", bg: "#e4002b",
+      { id: "kfc-offers", brand: "KFC", cat: "food", logo: "kfc.svg", bg: "#ffffff",
         tag: "COUPON HUB", value: "FROM \u20b999 + 40% OFF", worth: "Bucket \u20b9399",
         title: "KFC \u2014 \u20b999 4-pc Hot Wings + Bucket \u20b9399 + 40% on app",
         desc: "KFC India\u2019s official deals wall: 4 Hot Wings \u20b999, Classic Bucket at \u20b9399, app-exclusive 40% off on \u20b9499+. Official KFC app coupon copies at tap.",
@@ -418,7 +418,7 @@
         steps: ["Open online.kfc.co.in \u2192 Deals & Offers (or KFC India app \u2192 Deals).", "Tap the deal \u2014 code (e.g. KFC40) copies and shows T\u0026C.", "Add items in same app \u2014 discount reflects on bill."],
         tnc: ["T\u0026C per KFC coupon \u2014 min. order & city vary.", "Dine-in/ delivery differ by outlet.", "Run by KFC India (Sapphire/Devyani)."] },
 
-      { id: "pizzahut-offers", brand: "Pizza Hut", cat: "food", logo: "dominos.svg", bg: "#e60012",
+      { id: "pizzahut-offers", brand: "Pizza Hut", cat: "food", logo: "pizzahut.svg", bg: "#ffffff",
         tag: "COUPON HUB", value: "2 MEDIUM @ \u20b9199 EA + 40% OFF", worth: "Melts \u20b999",
         title: "Pizza Hut \u2014 2 Medium at \u20b9199 each + Melts \u20b999 + 40% on app",
         desc: "Official Pizza Hut deals: Meal combos from \u20b9199/ person, Melts at \u20b999, app code PH40 gives 40% off on \u20b9599+. Code lives on hut\u2019s offers wall.",
@@ -426,7 +426,7 @@
         steps: ["Open pizzahut.co.in \u2192 Deals and Offers (or Pizza Hut India app).", "Tap PH40 / Melt offer \u2014 code + T\u0026C show.", "Checkout in same app \u2014 code applies."],
         tnc: ["Codes & min. order per Pizza Hut offer.", "Run by Pizza Hut India."] },
 
-      { id: "eatclub", brand: "EatClub (BOX8)", cat: "food", logo: "swiggy.png", bg: "#111111",
+      { id: "eatclub", brand: "EatClub (BOX8)", cat: "food", logo: "eatclub.svg", bg: "#ffffff",
         tag: "MEMBERSHIP", value: "50% OFF ON 10 ORDERS", worth: "EatClub Gold",
         title: "EatClub Gold \u2014 50% off (up to \u20b9120) on next 10 orders \u2014 BOX8, MOJO, Oven Story",
         desc: "One Gold covers 9 brands: BOX8, MOJO Pizza, Oven Story, Faasos etc. 50% off (capped) on next 10 orders + free delivery. Gold shows in the EatClub app per city.",
@@ -434,7 +434,7 @@
         steps: ["Open EatClub (formerly BOX8) app \u2192 Gold.", "Pick Gold (from \u20b9149) \u2014 benefit is 10 orders \u00d7 50% off.", "Order any BOX8/MOJO/Oven Story \u2014 discount auto-applies."],
         tnc: ["Gold validity per city & plan \u2014 shown before payment.", "Cap \u20b9120/order (50%) \u2014 check app.", "Run by EatClub Brands (Rebel Foods)."] },
 
-      { id: "ola-select", brand: "Ola", cat: "travel", logo: "uber.svg", bg: "#000000",
+      { id: "ola-select", brand: "Ola", cat: "travel", logo: "ola.svg", bg: "#ffffff",
         tag: "NEW USER", value: "\u20b9100 OFF FIRST 2 RIDES", worth: "Select benefits",
         title: "Ola \u2014 \u20b9100 off \u00d7 2 on first rides + Select free rides",
         desc: "New Ola users get welcome discount in Offers \u2192 new-user coupon. Select members get free airport pickup + no surge on Prime. Code lives in Ola app Offers.",
@@ -450,7 +450,7 @@
         steps: ["Open IRCTC app \u2192 Offers (or irctc.co.in \u2192 Offers).", "Pick rail/Air/Lounge offer matching your card/wallet.", "Apply code on partner checkout \u2014 IRCTC shows eligibility before pay."],
         tnc: ["Per-offer T\u0026C on the IRCTC offers portal.", "Run by IRCTC."] },
 
-      { id: "netflix-mobile", brand: "Netflix", cat: "fun", logo: "amazon.svg", bg: "#e50914",
+      { id: "netflix-mobile", brand: "Netflix", cat: "fun", logo: "netflix.svg", bg: "#ffffff",
         tag: "STREAMING", value: "MOBILE \u20b9149/MO", worth: "Premium \u20b9649",
         title: "Netflix \u2014 Mobile \u20b9149, Basic \u20b9199, Standard \u20b9499, Premium \u20b9649 \u2014 + Jio/Airtel bundles",
         desc: "India plans: Mobile (1 phone, 480p), Basic (1 TV), Standard (2 screens), Premium (4K + 4). Look for Jio \u20b9749 & Airtel \u20b9999 postpaid \u2014 they bundle Basic free.",
@@ -458,7 +458,7 @@
         steps: ["Open netflix.com \u2192 pick Mobile/Basic/Standard/Premium.", "Pay \u2014 watch on listed screens; cancel anytime.", "Have Jio \u20b9749 or Airtel postpaid? Link Netflix in MyJio/Airtel Thanks instead of paying separately."],
         tnc: ["Plans per Netflix India \u2014 prices update via Netflix.", "Bundles via Jio/Airtel postpaid where included.", "Run by Netflix."] },
 
-      { id: "sonyliv", brand: "SonyLIV", cat: "fun", logo: "youtube.png", bg: "#000000",
+      { id: "sonyliv", brand: "SonyLIV", cat: "fun", logo: "sonyliv.svg", bg: "#ffffff",
         tag: "FREE TRIAL", value: "7 DAYS FREE", worth: "Worth \u20b9299",
         title: "SonyLIV \u2014 7 days free + WWE + Sony + Kapil Sharma + live sports",
         desc: "Premium at \u20b9299/6mo or \u20b9999/yr: Shark Tank, Kapil, Scam, football. New users get 7 days free on sonyliv.com; student/Jio bundle adds 6 months at \u20b999.",
@@ -474,7 +474,7 @@
         steps: ["Open zee5.com/my-subscription (or ZEE5 app).", "Pick Premium HD (\u20b9399/year) for best value.", "SuperCoins users: Flipkart \u2192 SuperCoins \u2192 redeem ZEE5 1 month free."],
         tnc: ["Prices per ZEE5 India \u2014 auto-renews unless cancelled.", "Run by ZEE5 (Zee Entertainment)."] },
 
-      { id: "cultfit", brand: "cult.fit", cat: "fun", logo: "spotify.svg", bg: "#000000",
+      { id: "cultfit", brand: "cult.fit", cat: "fun", logo: "cultfit.svg", bg: "#ffffff",
         tag: "FREE TRIAL", value: "7 DAYS FREE", worth: "CULTPASS ELITE",
         title: "cult.fit \u2014 7 days free: gym + group workouts + online live classes",
         desc: "CULTPASS ELITE bundles gyms near you + unlimited group classes (yoga, HRX, Zumba) + LIVE at-home. New phones get 7 days free in-app; then from \u20b9999/month.",
@@ -488,7 +488,40 @@
         desc: "1,000s of hands-on classes by published authors & creators: creative writing, storytelling, illustration. New members get 7–30 days free depending on campaign; cancel before renewal.",
         code: null, url: "https://www.skillshare.com",
         steps: ["Open skillshare.com → “Start free trial”.", "Sign up — trial length is shown at checkout (usually 1 month).", "Cancel from Settings → Payments before renewal to pay nothing."],
-        tnc: ["New members only; trial length per current Skillshare campaign (7–30 days).", "₹~800–₹1,200/year after trial unless cancelled.", "Run by Skillshare."] }
+        tnc: ["New members only; trial length per current Skillshare campaign (7–30 days).", "₹~800–₹1,200/year after trial unless cancelled.", "Run by Skillshare."] },
+
+      /* ───────────── 📕 THESMALLBOOK'S OWN PRODUCTS (always visible) ───────────── */
+      { id: "tsb-gold", brand: "TheSmallBook GOLD", cat: "thesmallbook", logo: "thesmallbook.svg", bg: "#ffc800", own: true,
+        tag: "MEMBERSHIP", value: "₹999 / YEAR", worth: "Unlocks everything",
+        title: "TSB GOLD — the thank-you layer",
+        desc: "Go Gold to remove the share-card watermark, unlock Pro filters, human-narration audio, PDF cheat-sheets and offline reading. The library stays free to read — Gold is the thank-you.",
+        code: null, url: "gold.html",
+        steps: ["Open gold.html.", "Tap “Claim my ₹999 early-bird price”.", "Pay via UPI / WhatsApp → we send your activation code.", "Paste the code → Gold is on, instantly."],
+        tnc: ["Free to read never changes.", "₹999/yr, locked price while active.", "Run by TheSmallBook."] },
+
+      { id: "tsb-sponsor", brand: "Sponsor a Book", cat: "thesmallbook", logo: "thesmallbook.svg", bg: "#ffc800", own: true,
+        tag: "FUEL THE LIBRARY", value: "FROM ₹199", worth: "Your name on the book",
+        title: "Fuel a breakdown — your name, forever",
+        desc: "Pay what you can (from ₹199) to fuel curation of a book. Your name appears on that book page: “This breakdown was fuelled by {you}.” Fans love being named; it funds the next summary.",
+        code: null, url: "book.html",
+        steps: ["Open any book → tap “💛 Fuel this breakdown”.", "Pay via UPI / WhatsApp.", "Message us the book + your name.", "We add your name on the next update."],
+        tnc: ["Name shown on the book page (or stay “A reader”).", "Run by TheSmallBook."] },
+
+      { id: "tsb-cheatsheet", brand: "Cheat-Sheet Pack", cat: "thesmallbook", logo: "thesmallbook.svg", bg: "#ffc800", own: true,
+        tag: "GOLD PERK", value: "PRINTABLE", worth: "One page / book",
+        title: "PDF cheat-sheets — every book, one page",
+        desc: "Generate a clean, printable one-page cheat-sheet of any book's lessons + action steps. First 3 are free; after that it's a Gold perk. Gold members get the premium, watermark-free version.",
+        code: null, url: "book.html",
+        steps: ["Open any book → tap “📄 Get cheat-sheet”.", "First 3 are free; Gold unlocks unlimited.", "Print or save as PDF."],
+        tnc: ["Free for first 3 generations, then Gold.", "Gold = premium, watermark-free sheets.", "Run by TheSmallBook."] },
+
+      { id: "tsb-founding", brand: "Founding Supporter", cat: "thesmallbook", logo: "thesmallbook.svg", bg: "#ffc800", own: true,
+        tag: "500 ONLY", value: "NAME FOREVER", worth: "Founding badge",
+        title: "Founding Supporter — your name, forever",
+        desc: "The first 500 backers get a Founding Supporter badge across the site and their name on the Founding wall. The thank-you that lasts.",
+        code: null, url: "gold.html",
+        steps: ["Join GOLD in the first 500.", "Your Founding badge + name appear everywhere."],
+        tnc: ["First 500 only.", "Run by TheSmallBook."] }
     ]
   };
 })();

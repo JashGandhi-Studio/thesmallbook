@@ -56,6 +56,7 @@
   function tagClass(tag) { return TAG_CLASS[tag] ? " st-card__tag--" + TAG_CLASS[tag] : ""; }
   function byId(id) { return DATA.offers.filter(function (x) { return x.id === id; })[0]; }
   function isOpen(o, a) {
+    if (o.own) return true;            /* TheSmallBook's own products are always visible */
     if (a.ok) return true;
     var idx = DATA.offers.indexOf(o);
     return idx > -1 && idx < FREE_TEASERS;
