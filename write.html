@@ -19,8 +19,8 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=248">
-  <link rel="stylesheet" href="css/studio.css?v=248">
+  <link rel="stylesheet" href="css/style.css?v=249">
+  <link rel="stylesheet" href="css/studio.css?v=249">
   <style>
   /* v246 — compact attach bar: professional one-row adding */
   .wr-addrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
@@ -127,16 +127,16 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=248"></script>
-  <script src="js/lang.js?v=248"></script>
-  <script src="js/config.js?v=248"></script>
-  <script src="js/auth.js?v=248"></script>
-  <script src="js/sounds.js?v=248"></script>
-  <script src="js/founder.js?v=248"></script>
-  <script src="js/community.js?v=248"></script>
-  <script src="js/gold.js?v=248"></script>
-  <script src="js/paywall.js?v=248"></script>
-  <script src="js/studio.js?v=248"></script>
+  <script src="js/prefs.js?v=249"></script>
+  <script src="js/lang.js?v=249"></script>
+  <script src="js/config.js?v=249"></script>
+  <script src="js/auth.js?v=249"></script>
+  <script src="js/sounds.js?v=249"></script>
+  <script src="js/founder.js?v=249"></script>
+  <script src="js/community.js?v=249"></script>
+  <script src="js/gold.js?v=249"></script>
+  <script src="js/paywall.js?v=249"></script>
+  <script src="js/studio.js?v=249"></script>
   <style>/* hide Puter branding — keep AI silent */ .puter-modal,.puter-dialog,.puter-auth{ display:none !important }</style>
   <script>
   // silent Puter loader — don't block rendering, hide GUI
@@ -148,9 +148,9 @@
     document.head.appendChild(s);
   })();
   </script>
-  <script src="js/dictate.js?v=248"></script>
-  <script src="js/data.js?v=248"></script>
-  <script src="js/osint.js?v=248"></script>
+  <script src="js/dictate.js?v=249"></script>
+  <script src="js/data.js?v=249"></script>
+  <script src="js/osint.js?v=249"></script>
   <script>
   (function () {
     "use strict";
@@ -282,7 +282,7 @@
               $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
               renderQuoteLive();
               saveDraft();
-            }catch(err){ alert("Card upload failed: "+ err.message); }
+            }catch(err){ C.say("Card upload failed: "+ err.message); }
           }
         });
       });
@@ -361,13 +361,13 @@
                     lastCoverFile = null;
                     $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
                     renderQuoteLive(); saveDraft();
-                  }catch(err){ alert("Card upload failed: " + err.message); }
+                  }catch(err){ C.say("Card upload failed: " + err.message); }
                 }
               });
             }catch(e){}
           }, 350);
         }
-      } catch (e) { alert("Cover upload failed: " + e.message); }
+      } catch (e) { C.say("Cover upload failed: " + e.message); }
     });
     /* v223 STORY CARD STUDIO — tap the cover preview to edit layout, filters & ratio */
     // ✨ INSPIRE DESK — properly optimised: Quote → [quotes,images], Stories → [images,research] (not everywhere)
@@ -426,7 +426,7 @@
                         var pv2=document.getElementById("wCoverPrev"); if(pv2){ pv2.src = coverUrl; pv2.hidden = false; }
                         try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
                         saveDraft();
-                      }catch(err){ alert("Card upload failed: " + err.message); }
+                      }catch(err){ C.say("Card upload failed: " + err.message); }
                     }
                   });
                 }
@@ -506,7 +506,7 @@
             lastCoverFile = null;
             $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
             saveDraft();
-          } catch (e) { alert("Card upload failed: " + e.message); }
+          } catch (e) { C.say("Card upload failed: " + e.message); }
         }
       });
     });
@@ -524,7 +524,7 @@
         $("wCoverPrev").hidden = true;
         $("saveState").textContent = "✓ burst attached";
         saveDraft();
-      } catch (e) { $("saveState").textContent = ""; alert("Burst not attached — " + e.message); }
+      } catch (e) { $("saveState").textContent = ""; C.say("Burst not attached — " + e.message); }
     });
     $("wRec").addEventListener("click", async function () {
       var st = $("wRecState");
@@ -560,7 +560,7 @@
         audioUrl = await C.upload(f, "tsb-audio");
         $("wAudioPrev").src = audioUrl; $("wAudioPrev").hidden = false;
         saveDraft();
-      } catch (e) { alert("Audio upload failed: " + e.message); }
+      } catch (e) { C.say("Audio upload failed: " + e.message); }
     });
 
     /* ---------- publish ---------- */
@@ -605,8 +605,8 @@
       var t = title.value.trim(), b = body.innerHTML.trim();
       // strip html tags to check if body has real text
       var bText = body.innerText ? body.innerText.trim() : b.replace(/<[^>]+>/g, "").trim();
-      if(!t){ alert(kind==="quote" ? "Add the quote text first." : "Add a title first."); title.focus(); return; }
-      if(kind!=="quote" && !bText){ alert("Add a few lines to your story first."); body.focus(); return; }
+      if(!t){ C.say(kind==="quote" ? "Add the quote text first." : "Add a title first."); title.focus(); return; }
+      if(kind!=="quote" && !bText){ C.say("Add a few lines to your story first."); body.focus(); return; }
       pubBusy = true;
       $("pubBtn").textContent = "Publishing…";
       try {
@@ -642,7 +642,7 @@
         try { C.setProfilePublic(true); } catch (e) {}
         location.href = "stories.html?tab=mine";
       } catch (e) {
-        alert("Publish failed — " + (e && e.message ? e.message : e) + ". Stay signed in and try once more.");
+        C.say("Publish failed — " + (e && e.message ? e.message : e) + ". Stay signed in and try once more.");
         $("pubBtn").textContent = "Publish →";
       } finally { pubBusy = false; }
     }
@@ -700,6 +700,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=248" defer></script>
+  <script src="js/bar.js?v=249" defer></script>
 </body>
 </html>

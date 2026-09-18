@@ -366,14 +366,134 @@
   }
 
   /* ---------- rich-text safety: whitelist tags, drop attributes ---------- */
-  // ---- v191: people discovery (v192: public accounts only, with fallback) ----
+  /* ---- v249: people discovery ----------------------------------------
+     BEFORE: one `limit=60` page ordered by updated_at. Anyone who had not
+     touched the app recently fell off the end and never appeared in People
+     at all — the "15 signed in but only 12 show" bug.
+     AFTER: walk every page with the Range header until PostgREST runs out,
+     so the list is complete no matter how many readers join. */
+  async function fetchAll(path, pageSize, hardCap) {
+    pageSize = pageSize || 200;
+    hardCap = hardCap || 3000;
+    var out = [], from = 0;
+    for (var guard = 0; guard < 40; guard++) {
+      var rows = await api(path, {
+        headers: { Range: from + "-" + (from + pageSize - 1), "Range-Unit": "items" }
+      });
+      rows = rows || [];
+      out = out.concat(rows);
+      if (rows.length < pageSize || out.length >= hardCap) break;
+      from += pageSize;
+    }
+    return out.slice(0, hardCap);
+  }
   async function listProfiles(limit) {
     if (!api) return [];
     try {
-      return await api("profiles?select=*&order=updated_at.desc&limit=" + (limit || 60), { method: "GET" });
+      var rows = await fetchAll("profiles?select=*&order=updated_at.desc", 200, limit || 3000);
+      return limit ? rows.slice(0, limit) : rows;
     } catch (e) {
-      return await api("profiles?select=*&order=updated_at.desc&limit=" + (limit || 60), { method: "GET" });
+      /* Range paging needs a stable ORDER BY; if a locked-down project
+         rejects it, fall back to a single wide page rather than to []. */
+      try {
+        return (await api("profiles?select=*&order=updated_at.desc&limit=" + (limit || 1000), { method: "GET" })) || [];
+      } catch (e2) { return []; }
     }
+  }
+
+  /* ---- v249: EVERY reader, never a short list -------------------------
+     A profiles row is only written when a reader opens a community page,
+     so a signed-in reader who only ever read books had no row and was
+     invisible everywhere. allPeople() unions the profiles table with every
+     actor id that appears in posts / likes / comments / follows / messages,
+     synthesises a row for the ones that are missing, and always includes the
+     official account. Nobody can fall through. */
+  async function allPeople() {
+    if (!api || !ENABLED) return [];
+    var safe = function (p) { return p.catch(function () { return []; }); };
+    var res = await Promise.all([
+      safe(listProfiles(0)),
+      safe(fetchAll("posts?select=id,author_id,author_name,author_avatar,created_at&order=created_at.desc", 300, 3000)),
+      safe(fetchAll("likes?select=post_id,user_id&order=created_at.desc", 500, 3000)),
+      safe(fetchAll("comments?select=post_id,author_id&order=created_at.desc", 500, 3000)),
+      safe(fetchAll("follows?select=follower_id,author_id&order=created_at.desc", 500, 3000)),
+      safe(api("messages?select=sender_id,receiver_id&order=created_at.desc&limit=1000", {}))
+    ]);
+    var profiles = res[0] || [], posts = res[1] || [], likes = res[2] || [],
+        comments = res[3] || [], follows = res[4] || [], msgs = res[5] || [];
+
+    var map = {}, order = [];
+    function touch(id) {
+      if (!id || typeof id !== "string" || id.length < 30) return null;
+      if (!map[id]) {
+        map[id] = {
+          id: id, name: "", avatar_url: "", bio: "", progress: 0, links: [],
+          is_public: true, updated_at: "", _synth: true,
+          posts: 0, likesGot: 0, likesGiven: 0, comments: 0,
+          followers: 0, following: 0, lastActive: 0
+        };
+        order.push(id);
+      }
+      return map[id];
+    }
+
+    profiles.forEach(function (p) {
+      var o = touch(p.id); if (!o) return;
+      o.name = p.name || o.name;
+      o.avatar_url = p.avatar_url || o.avatar_url;
+      o.bio = p.bio || "";
+      o.progress = p.progress || 0;
+      o.links = p.links || [];
+      o.is_public = p.is_public !== false;
+      o.updated_at = p.updated_at || "";
+      o._synth = false;
+      try { o.lastActive = Math.max(o.lastActive, Date.parse(p.updated_at) || 0); } catch (e) {}
+    });
+
+    var postAuthor = {};
+    posts.forEach(function (r) {
+      var o = touch(r.author_id); if (!o) return;
+      postAuthor[r.id] = r.author_id;
+      o.posts++;
+      if (r.author_name && !o.name) o.name = r.author_name;
+      if (r.author_avatar && !o.avatar_url) o.avatar_url = r.author_avatar;
+      try { o.lastActive = Math.max(o.lastActive, Date.parse(r.created_at) || 0); } catch (e) {}
+    });
+    likes.forEach(function (r) {
+      var giver = touch(r.user_id); if (giver) giver.likesGiven++;
+      var a = postAuthor[r.post_id];
+      if (a && map[a]) map[a].likesGot++;
+    });
+    comments.forEach(function (r) {
+      var o = touch(r.author_id); if (!o) return;
+      o.comments++;
+      var a = postAuthor[r.post_id];
+      if (a && map[a]) map[a].likesGot++;
+    });
+    follows.forEach(function (r) {
+      var f = touch(r.follower_id), a = touch(r.author_id);
+      if (f) f.following++;
+      if (a) a.followers++;
+    });
+    msgs.forEach(function (r) { touch(r.sender_id); touch(r.receiver_id); });
+
+    /* the official account has no profiles row by design — never let it vanish */
+    var off = touch(OFFICIAL_ID);
+    if (off) {
+      off.name = off.name || "TheSmallBook";
+      off.avatar_url = off.avatar_url || OFFICIAL_AVATAR;
+      off._official = true;
+    }
+
+    var out = order.map(function (id) { return map[id]; });
+    out.forEach(function (p) {
+      if (!p.name) p.name = isOfficial(p.id) ? "TheSmallBook" : "A reader";
+      /* activity score: keeps the list feeling alive without ever hiding anyone */
+      p._score = (p.posts * 12) + (p.likesGot * 4) + (p.followers * 6) + (p.comments * 3) +
+                 (p.progress / 40) + (p.lastActive ? Math.max(0, 30 - (Date.now() - p.lastActive) / 864e5) : 0);
+    });
+    out.sort(function (a, b) { return (b._score - a._score) || String(a.name).localeCompare(String(b.name)); });
+    return out;
   }
   async function setProfilePublic(on) {
     if (!api || !signedIn()) throw new Error("sign-in");
@@ -417,7 +537,9 @@
     });
     var dms = await safe(api("messages?receiver_id=eq." + u.id + "&select=*&order=created_at.desc&limit=30", {}));
     (dms || []).forEach(function (m) {
-      out.push({ type: "dm", who: m.sender_id, body: m.body, at: m.created_at });
+      /* v249: carry audio_url + read flag so the bell can say "voice message"
+         and so opening a thread can mark exactly these notifications read */
+      out.push({ type: "dm", who: m.sender_id, body: m.body, at: m.created_at, audio: !!m.audio_url, msg: m.id });
     });
     // resolve names + avatars
     var seen = {}, uids = [];
@@ -498,28 +620,105 @@
     }));
   }
 
-  // ---- v191: public reading progress (auto-sync, throttled hourly) ----
+  /* ---- v191 → v249: public reading progress --------------------------
+     Two problems fixed:
+       1. It only ran on the Stories page, and js/community.js was not even
+          loaded on book.html — so the lessons people actually read while
+          reading a book never reached the cloud. Ten of twelve live profiles
+          still said "0 lessons" because of this.
+       2. `force` fired one PATCH per lesson tap. Now forced syncs are
+          debounced (3 s) so a reading burst collapses into one write.
+     It also stamps updated_at, which is what People sorts on, so the list
+     visibly reacts the moment someone reads something. */
+  var progTimer = null, progInFlight = false, progQueued = false;
+  function countLessons() {
+    var prog = {};
+    try { prog = JSON.parse(localStorage.getItem("tsb_progress") || "{}"); } catch (e) { prog = {}; }
+    var n = 0;
+    Object.keys(prog).forEach(function (k) {
+      var v = prog[k];
+      if (Array.isArray(v)) n += v.length;
+      else if (v && typeof v === "object") n += Object.keys(v).length;
+      else if (v) n += 1;
+    });
+    return n;
+  }
   async function syncProgress(force) {
     if (!api || !signedIn()) return;
+    if (force) {                                   /* debounce rapid taps */
+      if (progInFlight) { progQueued = true; return; }
+      if (progTimer) clearTimeout(progTimer);
+      return new Promise(function (res) {
+        progTimer = setTimeout(function () { progTimer = null; res(syncProgress(false)); }, 3000);
+      });
+    }
     try {
       var last = +(localStorage.getItem("tsb_prog_sync") || 0);
-      if (!force && Date.now() - last < 36e5) return;
+      var n = countLessons();
+      var lastN = +(localStorage.getItem("tsb_prog_last_n") || -1);
+      /* nothing changed and we synced under an hour ago -> stay quiet */
+      if (n === lastN && Date.now() - last < 36e5) return;
       var mu3 = me(); if (!mu3) return;
-      var prog = JSON.parse(localStorage.getItem("tsb_progress") || "{}");
-      // v203: progress column = LESSONS read (sum of per-book lesson arrays), matching the "X/2637 lessons" UI
-      var n = 0;
-      Object.keys(prog).forEach(function (k) {
-        var v = prog[k];
-        if (Array.isArray(v)) n += v.length;
-        else if (v && typeof v === "object") n += Object.keys(v).length;
-        else if (v) n += 1;
-      });
-      await api("profiles?id=eq." + mu3.id, { method: "PATCH", body: { progress: n } });
+      progInFlight = true;
+      var body = { progress: n, updated_at: new Date().toISOString() };
+      try {
+        await api("profiles?id=eq." + mu3.id, { method: "PATCH", body: body });
+      } catch (e) {
+        /* older schemas have no updated_at write permission — retry without it */
+        await api("profiles?id=eq." + mu3.id, { method: "PATCH", body: { progress: n } });
+      }
       localStorage.setItem("tsb_prog_sync", String(Date.now()));
-    } catch (e) {}
+      localStorage.setItem("tsb_prog_last_n", String(n));
+    } catch (e) {
+    } finally {
+      progInFlight = false;
+      if (progQueued) { progQueued = false; setTimeout(function () { syncProgress(false); }, 400); }
+    }
+  }
+
+  /* ---- v249: app-wide boot -------------------------------------------
+     community.js ships on every app page, so this is the single place that
+     guarantees a signed-in reader has a profiles row, fresh progress and a
+     truthful bell — no matter which page they landed on. Without it a
+     reader who signed in and only ever read books never appeared in People. */
+  var bootDone = false;
+  function boot() {
+    if (!ENABLED || bootDone) return;
+    if (!signedIn()) return;
+    bootDone = true;
+    try { ensureProfile().catch(function () {}); } catch (e) {}
+    try { syncProgress(false); } catch (e) {}
+    try { syncInterests(false); } catch (e) {}
+    try { notifRefresh(); } catch (e) {}
+  }
+  function bootStart() {
+    function go() { try { boot(); } catch (e) {} }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", go);
+    else setTimeout(go, 0);
+    /* catch a sign-in that happens after this page loaded */
+    window.addEventListener("tsb:auth", function () { bootDone = false; go(); });
+    window.addEventListener("tsb:loggedin", function () { bootDone = false; go(); });
+    /* a reader who closes the tab mid-book should not lose the sync */
+    window.addEventListener("pagehide", function () {
+      try {
+        var n = countLessons();
+        if (n !== +(localStorage.getItem("tsb_prog_last_n") || -1)) {
+          localStorage.removeItem("tsb_prog_sync");      /* force it on next load */
+        }
+      } catch (e) {}
+    });
+    /* slow safety net: if a page writes progress without going through
+       prefs.js we still pick it up within 30 s */
+    setInterval(function () {
+      try {
+        if (!signedIn()) return;
+        if (countLessons() !== +(localStorage.getItem("tsb_prog_last_n") || -1)) syncProgress(false);
+      } catch (e) {}
+    }, 30000);
   }
 
   var ICONS = {
+    warn: '<svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.6 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
     bell: '<svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
     chat: '<svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>',
     check: '<svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>',
@@ -556,22 +755,203 @@
     } catch (e) {}
   }
 
-  // ---- v212: posts per author (lets People/finder rows show who's posting) ----
+  // ---- v212: posts per author (v249: every page, not just the first 400) ----
   async function postCounts(limit) {
     try {
-      var rows = await api("posts?select=author_id&limit=" + (limit || 400), { method: "GET" });
+      var rows = limit
+        ? await api("posts?select=author_id&limit=" + limit, { method: "GET" })
+        : await fetchAll("posts?select=author_id&order=created_at.desc", 500, 5000);
       var out = {};
       (rows || []).forEach(function (r) { if (r.author_id) out[r.author_id] = (out[r.author_id] || 0) + 1; });
       return out;
-    } catch (e) { return {}; }
+    } catch (e) {
+      try {
+        var rows2 = await api("posts?select=author_id&limit=" + (limit || 400), { method: "GET" });
+        var out2 = {};
+        (rows2 || []).forEach(function (r) { if (r.author_id) out2[r.author_id] = (out2[r.author_id] || 0) + 1; });
+        return out2;
+      } catch (e2) { return {}; }
+    }
   }
 
-  /* ---------- v198: live in-app notification toasts ---------- */
-  var TOAST_SEEN = "tsb_toast_seen";
-  function toastKey(n) { return [n.type, n.who || "", n.post || "", n.at].join(":"); }
-  function toastSeen() { try { return JSON.parse(localStorage.getItem(TOAST_SEEN)) || []; } catch (e) { return []; } }
-  function toastMark(keys) {
-    try { localStorage.setItem(TOAST_SEEN, JSON.stringify(toastSeen().concat(keys).slice(-300))); } catch (e) {}
+  /* ============================================================
+     v249 — ONE NOTIFICATION LEDGER
+     ------------------------------------------------------------
+     There used to be two half-systems that never agreed:
+       * tsb_toast_seen — keys marked when a toast popped or a DM
+         thread was opened;
+       * tsb_notif_seen — a single "last time the bell page was
+         opened" timestamp.
+     The bell page and the You-page badge read ONLY the timestamp,
+     so a notification you had already opened (tapped a toast,
+     replied in the thread, viewed the profile) came back wearing a
+     NEW badge on your next visit — forever.
+
+     Now there is one ledger of things you have actually OPENED, and
+     a separate one of things already POPPED as a toast. A toast
+     popping no longer counts as reading it. A notification is new
+     exactly once, and after that it stays in the history rendered
+     as read instead of being flagged again.
+     ============================================================ */
+  var NOTIF_READ = "tsb_notif_read";       // { key: openedAtMs } — what YOU opened
+  var NOTIF_POPPED = "tsb_notif_popped";   // { key: poppedAtMs } — what already toasted
+  var LEGACY_TOAST = "tsb_toast_seen";     // pre-v249 stores, migrated once below
+  var LEGACY_SEEN = "tsb_notif_seen";
+  var LEDGER_CAP = 600;
+
+  function notifKey(n) { return [n.type, n.who || "", n.post || "", n.at].join(":"); }
+  function toastKey(n) { return notifKey(n); }          /* back-compat alias */
+
+  function readStore(key, legacyArrayKey) {
+    var out = {};
+    try {
+      out = JSON.parse(localStorage.getItem(key)) || {};
+    } catch (e) { out = {}; }
+    if (Array.isArray(out)) {                            /* very old shape */
+      var o = {}; out.forEach(function (k) { o[k] = Date.now(); }); out = o;
+    }
+    /* one-time migration so upgrading never re-flags your whole history */
+    if (legacyArrayKey) {
+      try {
+        var legacy = JSON.parse(localStorage.getItem(legacyArrayKey));
+        if (Array.isArray(legacy) && legacy.length) {
+          legacy.forEach(function (k) { if (!out[k]) out[k] = Date.now(); });
+          localStorage.setItem(key, JSON.stringify(out));
+          localStorage.removeItem(legacyArrayKey);
+        }
+      } catch (e) {}
+    }
+    return out;
+  }
+  function writeStore(key, store) {
+    try {
+      var ks = Object.keys(store);
+      if (ks.length > LEDGER_CAP) {
+        ks.sort(function (a, b) { return store[a] - store[b]; });
+        ks.slice(0, ks.length - LEDGER_CAP).forEach(function (k) { delete store[k]; });
+      }
+      localStorage.setItem(key, JSON.stringify(store));
+    } catch (e) {}
+  }
+  function markIn(key, keys, legacy) {
+    keys = (keys || []).filter(Boolean);
+    if (!keys.length) return;
+    var store = readStore(key, legacy), now = Date.now(), dirty = false;
+    keys.forEach(function (k) { if (!store[k]) { store[k] = now; dirty = true; } });
+    if (dirty) writeStore(key, store);
+  }
+
+  /* ---- public read API ---- */
+  function notifMarkRead(keys) { markIn(NOTIF_READ, keys, LEGACY_TOAST); }
+  function toastMark(keys) { notifMarkRead(keys); }                 /* back-compat */
+  function toastSeen() { return Object.keys(readStore(NOTIF_READ, LEGACY_TOAST)); }
+  function notifPopped(keys) { markIn(NOTIF_POPPED, keys, null); }
+  function notifIsRead(n) { return !!readStore(NOTIF_READ, LEGACY_TOAST)[notifKey(n)]; }
+  function notifUnread(items) {
+    var read = readStore(NOTIF_READ, LEGACY_TOAST);
+    var legacyTs = 0;
+    try { legacyTs = +(localStorage.getItem(LEGACY_SEEN) || 0); } catch (e) {}
+    return (items || []).filter(function (n) {
+      if (read[notifKey(n)]) return false;
+      /* items older than the last pre-v249 bell visit were already seen */
+      if (legacyTs && Date.parse(n.at) <= legacyTs) return false;
+      return true;
+    });
+  }
+  /* Mark read by context: opening the thing a notification points at
+     is what "reading" it means. */
+  async function notifMarkContext(filter) {
+    try {
+      var items = await notifications();
+      notifMarkRead(items.filter(filter).map(notifKey));
+      paintNotifUI(items);
+      return items;
+    } catch (e) { return []; }
+  }
+  function notifMarkPeer(peerId) { return notifMarkContext(function (n) { return n.type === "dm" && n.who === peerId; }); }
+  function notifMarkPost(postId) { return notifMarkContext(function (n) { return !!postId && n.post === postId; }); }
+  function notifMarkUser(userId) { return notifMarkContext(function (n) { return n.who === userId; }); }
+  function notifMarkAll() { return notifMarkContext(function () { return true; }); }
+
+  /* ---- v249: one inline voice for every "something went wrong" ----
+     Native alert() on a phone is a full-screen slap: it blocks the page,
+     hides what you were doing and reads like a crash. Every failure in the
+     community pages now says it in a paper note that slides in at the top,
+     stays long enough to read, and taps away. */
+  var sayQueue = [];
+  function sayHost() {
+    var wrap = document.getElementById("tsbToasts");
+    if (!wrap) {
+      wrap = document.createElement("div");
+      wrap.id = "tsbToasts";
+      if (document.body) document.body.appendChild(wrap);
+    }
+    return wrap;
+  }
+  function say(msg, kind, ms) {
+    var text = String(msg == null ? "" : msg).trim();
+    if (!text) return null;
+    /* no kind given? the wording decides the tone, so every call site can
+       stay a one-liner */
+    if (!kind) kind = /fail|error|couldn|could not|can\u2019t|cannot|not attached|denied|blocked|missing|expired|wrong|invalid|unauthor|try again|try once more|first\.|sign in/i.test(text) ? "bad" : "";
+    /* called before <body> exists -> replay it once the DOM is ready */
+    if (typeof document === "undefined" || !document.body) {
+      sayQueue.push([text, kind, ms]);
+      if (sayQueue.length === 1 && typeof document !== "undefined") {
+        document.addEventListener("DOMContentLoaded", function () {
+          var q = sayQueue.slice(); sayQueue = [];
+          q.forEach(function (x) { say(x[0], x[1], x[2]); });
+        });
+      }
+      return null;
+    }
+    var wrap = sayHost();
+    /* never stack more than three — the oldest goes first */
+    while (wrap.querySelectorAll(".tsb-say").length >= 3) {
+      var first = wrap.querySelector(".tsb-say");
+      if (!first) break;
+      first.remove();
+    }
+    var el = document.createElement("div");
+    el.className = "tsb-say" + (kind ? " tsb-say--" + kind : "");
+    el.setAttribute("role", kind === "bad" ? "alert" : "status");
+    el.setAttribute("aria-live", kind === "bad" ? "assertive" : "polite");
+    var ico = kind === "bad" ? ICONS.warn || ICONS.bell : kind === "good" ? ICONS.check : ICONS.bell;
+    el.innerHTML = '<span class="tsb-say__ico">' + ico + "</span><span>" + esc(text) + "</span>";
+    wrap.appendChild(el);
+    requestAnimationFrame(function () { el.classList.add("in"); });
+    var life = ms || Math.min(9000, 3200 + text.length * 22);
+    var gone = false;
+    function away() {
+      if (gone) return; gone = true;
+      el.classList.remove("in"); el.classList.add("out");
+      setTimeout(function () { try { el.remove(); } catch (e) {} }, 340);
+    }
+    el.addEventListener("click", away);
+    setTimeout(away, life);
+    return el;
+  }
+
+  /* ---- one painter for every bell / badge / dot in the app ---- */
+  function paintNotifUI(items) {
+    var unread = notifUnread(items || []);
+    var n = unread.length;
+    try { localStorage.setItem("tsb_notif_fresh", String(n)); } catch (e) {}
+    try {
+      document.querySelectorAll("[data-notifdot]").forEach(function (el) { el.hidden = n === 0; });
+      document.querySelectorAll("[data-notifcount]").forEach(function (el) {
+        el.hidden = n === 0;
+        el.textContent = n > 99 ? "99+" : String(n);
+      });
+      var you = document.getElementById("youNotif");
+      if (you) { you.hidden = n === 0; you.textContent = n > 99 ? "99+" : String(n); }
+    } catch (e) {}
+    try { window.dispatchEvent(new CustomEvent("tsb:notifcount", { detail: { count: n, items: unread } })); } catch (e) {}
+    return n;
+  }
+  async function notifRefresh() {
+    if (!ENABLED || !signedIn()) return paintNotifUI([]);
+    try { return paintNotifUI(await notifications()); } catch (e) { return 0; }
   }
   function toastShow(n) {
     var wrap = document.getElementById("tsbToasts");
@@ -591,23 +971,31 @@
     wrap.appendChild(el);
     requestAnimationFrame(function () { el.classList.add("in"); });
     setTimeout(function () { el.classList.remove("in"); el.classList.add("out"); setTimeout(function () { el.remove(); }, 450); }, 5200);
-    toastMark([toastKey(n)]);
+    /* v249: a toast POPPING is not the reader READING it. Record it in the
+       popped ledger so it never re-pops, but leave it unread so the bell
+       still counts it until they actually open it. */
+    notifPopped([notifKey(n)]);
     try { if (window.TSB && window.TSB.sound) window.TSB.sound.play(); } catch (e2) {}
   }
-  function popupsWanted() { return localStorage.getItem("tsb_notif_pop") !== "0"; }
+  /* v249: never pop a toast over the page you are actually reading. The
+     badge still updates here; the popup simply waits until you leave the
+     book, because nothing is added to the "already popped" ledger. */
+  function onReadingPage() {
+    try { return /(^|\/)book\.html/i.test(String(location.pathname || "")); } catch (e) { return false; }
+  }
+  function popupsWanted() {
+    if (onReadingPage()) return false;
+    return localStorage.getItem("tsb_notif_pop") !== "0";
+  }
   async function toastPoll() {
     try {
       if (document.hidden || !ENABLED || !signedIn()) return;
       var items = await notifications();
-      var seen = toastSeen();
+      paintNotifUI(items);                       /* every badge stays truthful */
+      var popped = readStore(NOTIF_POPPED, null);
       var freshAll = items.filter(function (n) {
-        return seen.indexOf(toastKey(n)) < 0 && (Date.now() - Date.parse(n.at)) < 864e5;
+        return !popped[notifKey(n)] && (Date.now() - Date.parse(n.at)) < 864e5;
       });
-      try {
-        localStorage.setItem("tsb_notif_fresh", String(freshAll.length));
-        window.dispatchEvent(new CustomEvent("tsb:notifcount", { detail: { count: freshAll.length } }));
-        document.querySelectorAll("[data-notifdot]").forEach(function (el) { el.hidden = freshAll.length === 0; });
-      } catch (e) {}
       if (popupsWanted()) freshAll.slice(0, 2).forEach(toastShow);
     } catch (e) {}
   }
@@ -615,10 +1003,14 @@
     setTimeout(toastPoll, 4500);
     setInterval(toastPoll, 25000);
     document.addEventListener("visibilitychange", function () { if (!document.hidden) toastPoll(); });
+    /* v249: paint the badges immediately on load too, not only after the
+       first 4.5 s poll — the bell used to look empty for a moment. */
+    if (ENABLED && signedIn()) { try { notifRefresh(); } catch (e) {} }
+    window.addEventListener("tsb:auth", function () { try { notifRefresh(); boot(); } catch (e) {} });
   }
   if (typeof document !== "undefined") {
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", toastStart);
-    else toastStart();
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { toastStart(); bootStart(); });
+    else { toastStart(); bootStart(); }
   }
 
   var OK_TAGS = { B: 1, STRONG: 1, I: 1, EM: 1, U: 1, H1: 1, H2: 1, H3: 1, P: 1, UL: 1, OL: 1, LI: 1, BLOCKQUOTE: 1, BR: 1, DIV: 1, CODE: 1, PRE: 1 };
@@ -915,7 +1307,13 @@
     ensureProfile: ensureProfile, getProfile: getProfile,
     listPosts: listPosts, getPost: getPost, publish: publish, deletePost: deletePost,
     likeInfo: likeInfo, setLike: setLike, likesOnMyPosts: likesOnMyPosts,
-    listProfiles: listProfiles, setProfilePublic: setProfilePublic, postCounts: postCounts, getPostByShort: getPostByShort, toastKey: toastKey, toastMark: toastMark, notifications: notifications, whenReady: whenReady, avaUrl: avaUrl, OFFICIAL_AVATAR: OFFICIAL_AVATAR, protectMedia: protectMedia, pauseAllMedia: pauseAllMedia, fancyFileInputs: fancyFileInputs, syncAvatarPosts: syncAvatarPosts,
+    listProfiles: listProfiles, allPeople: allPeople, setProfilePublic: setProfilePublic, postCounts: postCounts, getPostByShort: getPostByShort, toastKey: toastKey, toastMark: toastMark, notifications: notifications, whenReady: whenReady, avaUrl: avaUrl, OFFICIAL_AVATAR: OFFICIAL_AVATAR, protectMedia: protectMedia, pauseAllMedia: pauseAllMedia, fancyFileInputs: fancyFileInputs, syncAvatarPosts: syncAvatarPosts,
+    /* v249 — notifications: one read ledger, one badge painter */
+    notifKey: notifKey, notifMarkRead: notifMarkRead, notifIsRead: notifIsRead, notifUnread: notifUnread,
+    notifMarkAll: notifMarkAll, notifMarkPeer: notifMarkPeer, notifMarkPost: notifMarkPost,
+    notifMarkContext: notifMarkContext,
+    notifMarkUser: notifMarkUser, notifRefresh: notifRefresh, paintNotifUI: paintNotifUI,
+    boot: boot, countLessons: countLessons, say: say,
     myMessages: myMessages, conversations: conversations, threadWith: threadWith, sendDM: sendDM, markThreadRead: markThreadRead,
     editDM: editDM, deleteDM: deleteDM, hideDM: hideDM, clearThread: clearThread,
     syncProgress: syncProgress, syncInterests: syncInterests, icon: icon,

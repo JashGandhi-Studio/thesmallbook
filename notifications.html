@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=248">
+  <link rel="stylesheet" href="css/style.css?v=249">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -32,23 +32,38 @@
   </header>
 
   <main class="cm-wrap">
+    <!-- v249: a real notification centre. Unread items are flagged once;
+         opening anything marks it read and it stays here as history. -->
+    <div class="nt-tools" id="nTools" hidden>
+      <div class="nt-filters" role="tablist" aria-label="Filter notifications">
+        <button class="on" data-nfilter="all" role="tab" aria-selected="true">All <b id="nCountAll">0</b></button>
+        <button data-nfilter="unread" role="tab" aria-selected="false">Unread <b id="nCountNew">0</b></button>
+      </div>
+      <button class="nt-markall" id="nMarkAll" type="button">
+        <svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        Mark all read
+      </button>
+    </div>
     <div id="nList" class="nt-list">
       <div class="cm-empty cm-empty--sm">Loading your updates…</div>
     </div>
   </main>
 
-  <script src="js/prefs.js?v=248"></script>
-  <script src="js/lang.js?v=248"></script>
-  <script src="js/config.js?v=248"></script>
-  <script src="js/auth.js?v=248"></script>
-  <script src="js/sounds.js?v=248"></script>
-  <script src="js/founder.js?v=248"></script>
-  <script src="js/community.js?v=248"></script>
+  <script src="js/prefs.js?v=249"></script>
+  <script src="js/lang.js?v=249"></script>
+  <script src="js/config.js?v=249"></script>
+  <script src="js/auth.js?v=249"></script>
+  <script src="js/sounds.js?v=249"></script>
+  <script src="js/founder.js?v=249"></script>
+  <script src="js/community.js?v=249"></script>
   <script>
   (function () {
     "use strict";
     var C = window.TSB_COMMUNITY;
     var list = document.getElementById("nList");
+    var tools = document.getElementById("nTools");
+    var ITEMS = [];
+    var filter = "all";
 
     /* smart back: return to wherever the reader came from (You or Stories) */
     (function () {
@@ -61,52 +76,126 @@
         } catch (err) {}
       });
     })();
-    C.whenReady(function () {
-    if (!C.signedIn()) {
-      list.innerHTML = '<div class="cm-empty">Sign in to see your notifications.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>';
-      return;
-    }
+
     var ICON = { like: C.icon('heart'), comment: C.icon('chat'), follow: C.icon('user'), dm: C.icon('mail') };
-    var seen = +(localStorage.getItem("tsb_notif_seen") || 0);
+
+    function skeleton(n) {
+      var out = "";
+      for (var i = 0; i < (n || 4); i++) {
+        out += '<div class="nt-row nt-row--skel"><div class="cm-sk cm-sk--ava"></div>' +
+               '<div class="nt-row__meta"><div class="cm-sk cm-sk--line w60"></div>' +
+               '<div class="cm-sk cm-sk--line w90"></div></div></div>';
+      }
+      return out;
+    }
 
     function row(n) {
-      var isNew = seen && Date.parse(n.at) > seen;
+      /* v249: "unread" now comes from the ONE read ledger, so a notification
+         you already opened (tapped a toast, replied in the thread, viewed the
+         profile) never comes back wearing a NEW badge. It stays here as history. */
+      var unread = !C.notifIsRead(n);
       var href = n.type === "dm" ? "dm.html?u=" + n.who
         : n.type === "follow" ? "profile.html?id=" + n.who
         : "story.html?id=" + n.post;
       var what = n.type === "like" ? "liked your story"
         : n.type === "comment" ? "commented on your story"
         : n.type === "follow" ? "started following you"
+        : n.audio ? "sent you a voice message"
         : "sent you a message";
       var cta = n.type === "dm" ? "Reply →" : n.type === "follow" ? "View profile →" : "Open story →";
       var av = C.avaUrl(n.name, n.avatar, n.who);
-      return '<div class="nt-row' + (isNew ? " new" : "") + '">' +
-        '<a href="profile.html?id=' + n.who + '"><span class="cm-ava cm-ava--lg">' + (av ? '<img src="' + C.esc(av) + '" alt="">' : "<span>" + C.esc((n.name || "R").charAt(0).toUpperCase()) + "</span>") + "</span></a>" +
+      return '<div class="nt-row' + (unread ? " new" : " read") + '" data-nkey="' + C.esc(C.notifKey(n)) + '">' +
+        '<a href="profile.html?id=' + n.who + '" aria-label="' + C.esc(n.name) + '"><span class="cm-ava cm-ava--lg">' + (av ? '<img src="' + C.esc(av) + '" alt="" loading="lazy">' : "<span>" + C.esc((n.name || "R").charAt(0).toUpperCase()) + "</span>") + '</span></a>' +
         '<div class="nt-row__meta">' +
-          '<b><a class="nt-name" href="profile.html?id=' + n.who + '">' + C.esc(n.name) + (C.isOfficial(n.who) ? '<span class="cm-vtick">✔</span>' : "") + "</a> <span>" + what + "</span></b>" +
-          (n.title ? '<em>“' + C.esc(n.title) + "”</em>" : "") +
-          (n.body ? '<em class="nt-body">' + C.esc(String(n.body)).slice(0, 90) + "</em>" : "") +
-          '<a class="nt-cta" href="' + href + '">' + cta + ' · <span class="cm-time">' + C.ago(n.at) + "</span></a>" +
-        "</div>" +
-        '<a class="nt-ico" href="' + href + '">' + (ICON[n.type] || "•") + "</a>" +
-      "</div>";
+          '<b><a class="nt-name" href="profile.html?id=' + n.who + '">' + C.esc(n.name) + (C.isOfficial(n.who) ? '<span class="cm-vtick">✔</span>' : "") + '</a> <span>' + what + '</span></b>' +
+          (n.title ? '<em>“' + C.esc(n.title) + '”</em>' : "") +
+          (n.body ? '<em class="nt-body">' + C.esc(String(n.body)).slice(0, 90) + '</em>' : "") +
+          '<a class="nt-cta" href="' + href + '">' + cta + ' · <span class="cm-time">' + C.ago(n.at) + '</span></a>' +
+        '</div>' +
+        '<a class="nt-ico" href="' + href + '" aria-label="' + cta + '">' + (ICON[n.type] || "•") + '</a>' +
+      '</div>';
     }
 
-    (async function () {
-      var items = [];
-      try { items = await C.notifications(); } catch (e) {}
-      localStorage.setItem("tsb_notif_seen", String(Date.now()));
-      try { C.toastMark(items.map(C.toastKey)); } catch (e) {}
-      if (!items.length) {
+    function paint() {
+      var unread = C.notifUnread(ITEMS);
+      var shown = filter === "unread" ? unread : ITEMS;
+      var cAll = document.getElementById("nCountAll");
+      var cNew = document.getElementById("nCountNew");
+      if (cAll) cAll.textContent = ITEMS.length;
+      if (cNew) cNew.textContent = unread.length;
+      var markAll = document.getElementById("nMarkAll");
+      if (markAll) markAll.hidden = unread.length === 0;
+      if (!ITEMS.length) {
         list.innerHTML = '<div class="cm-empty">Nothing yet — your likes, comments, new followers and messages will land here.<br><a class="cm-write" href="stories.html">← Back to Stories</a></div>';
         return;
       }
-      var newCount = items.filter(function (n) { return seen && Date.parse(n.at) > seen; }).length;
-      list.innerHTML = (newCount ? '<div class="cm-sect">' + newCount + " new since your last visit</div>" : "") + items.map(row).join("");
-    })();
+      if (!shown.length) {
+        list.innerHTML = '<div class="cm-empty cm-empty--sm">No unread notifications — you are all caught up ✨</div>';
+        return;
+      }
+      list.innerHTML = (filter === "all" && unread.length
+        ? '<div class="cm-sect">' + unread.length + ' unread · everything stays here as history</div>'
+        : '') + shown.map(row).join("");
+    }
+
+    /* opening anything from this list marks THAT notification read at once,
+       so a back-button return never shows it as new again */
+    list.addEventListener("click", function (e) {
+      var r = e.target.closest ? e.target.closest(".nt-row") : null;
+      if (!r) return;
+      var k = r.getAttribute("data-nkey");
+      if (k) { try { C.notifMarkRead([k]); } catch (err) {} }
+      r.classList.remove("new"); r.classList.add("read");
+      try { C.paintNotifUI(ITEMS); } catch (err) {}
+      var cNew = document.getElementById("nCountNew");
+      if (cNew) cNew.textContent = C.notifUnread(ITEMS).length;
+    });
+
+    document.querySelectorAll("[data-nfilter]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        filter = b.getAttribute("data-nfilter");
+        document.querySelectorAll("[data-nfilter]").forEach(function (x) {
+          var on = x === b;
+          x.classList.toggle("on", on);
+          x.setAttribute("aria-selected", on ? "true" : "false");
+        });
+        paint();
+      });
+    });
+
+    document.getElementById("nMarkAll").addEventListener("click", function () {
+      try { C.notifMarkRead(ITEMS.map(C.notifKey)); } catch (e) {}
+      try { C.paintNotifUI(ITEMS); } catch (e) {}
+      paint();
+    });
+
+    C.whenReady(function () {
+      if (!C.signedIn()) {
+        list.innerHTML = '<div class="cm-empty">Sign in to see your notifications.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>';
+        return;
+      }
+      list.innerHTML = skeleton(4);
+      (async function () {
+        try { ITEMS = await C.notifications(); } catch (e) { ITEMS = []; }
+        if (tools) tools.hidden = false;
+        /* Paint FIRST with the true unread state so the reader can see what
+           arrived, then fold everything into the read ledger: the badges and
+           the red dot clear, and the items remain as history. */
+        paint();
+        try { C.paintNotifUI(ITEMS); } catch (e) {}
+        try { localStorage.setItem("tsb_notif_seen", String(Date.now())); } catch (e) {}
+        setTimeout(function () {
+          try { C.notifMarkRead(ITEMS.map(C.notifKey)); } catch (e) {}
+          try { C.paintNotifUI(ITEMS); } catch (e) {}
+          var cNew = document.getElementById("nCountNew");
+          if (cNew) cNew.textContent = "0";
+          var markAll = document.getElementById("nMarkAll");
+          if (markAll) markAll.hidden = true;
+        }, 1600);
+      })();
     });
   })();
   </script>
-  <script src="js/bar.js?v=248" defer></script>
+  <script src="js/bar.js?v=249" defer></script>
 </body>
 </html>

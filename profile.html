@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=248">
+  <link rel="stylesheet" href="css/style.css?v=249">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,13 +31,13 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=248"></script>
-  <script src="js/lang.js?v=248"></script>
-  <script src="js/config.js?v=248"></script>
-  <script src="js/auth.js?v=248"></script>
-  <script src="js/sounds.js?v=248"></script>
-  <script src="js/founder.js?v=248"></script>
-  <script src="js/community.js?v=248"></script>
+  <script src="js/prefs.js?v=249"></script>
+  <script src="js/lang.js?v=249"></script>
+  <script src="js/config.js?v=249"></script>
+  <script src="js/auth.js?v=249"></script>
+  <script src="js/sounds.js?v=249"></script>
+  <script src="js/founder.js?v=249"></script>
+  <script src="js/community.js?v=249"></script>
   <script>
   (function () {
     "use strict";
@@ -51,6 +51,12 @@
     async function boot() {
       if (!C.enabled) { root.innerHTML = '<div class="cm-empty">☁️ Community cloud is warming up.</div>'; return; }
       if (!pid) { root.innerHTML = '<div class="cm-empty">👋 Sign in to see your activity.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>'; return; }
+      /* v249: arriving on someone's profile from a "started following you"
+         (or like/comment) notification counts as reading it. DMs are left
+         alone on purpose — those become read when you open the thread. */
+      if (pid !== meId) {          /* never on your own profile */
+        try { C.notifMarkContext(function (n) { return n.who === pid && n.type !== "dm"; }); } catch (e) {}
+      }
       var prof = null, posts = [], fol = { count: 0, mine: false };
       try { prof = await C.getProfile(pid); } catch (e) {}
       try { posts = await C.listPosts({ author: pid }); } catch (e) {}
@@ -197,7 +203,7 @@
           await C.setFollow(t.getAttribute("data-pfol"), on);
           t.classList.toggle("on", on);
           t.innerHTML = on ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
-        } catch (err) { alert("Subscribe failed — " + (err && err.message ? err.message : err)); }
+        } catch (err) { C.say("Subscribe failed — " + (err && err.message ? err.message : err)); }
         t.disabled = false;
       });
       var sheetEl = null;
@@ -272,7 +278,7 @@
               await C.setFollow(t.getAttribute("data-socfol"), on2);
               t.classList.toggle("on", on2);
               t.innerHTML = on2 ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
-            } catch (err) { alert("Subscribe failed — " + (err && err.message ? err.message : err)); }
+            } catch (err) { C.say("Subscribe failed — " + (err && err.message ? err.message : err)); }
             t.disabled = false;
           });
           ids.forEach(async function (fid) {
@@ -315,7 +321,7 @@
           this.classList.toggle("on", f.mine);
           this.innerHTML = f.mine ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
           var fc = root.querySelector(".cm-stats b");
-        } catch (e) { alert((on ? "Subscribe" : "Unsubscribe") + " failed — " + (e && e.message ? e.message : e)); }
+        } catch (e) { C.say((on ? "Subscribe" : "Unsubscribe") + " failed — " + (e && e.message ? e.message : e)); }
       });
       function copyTxt(t) {
         if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).catch(function () {}); return; }
@@ -413,7 +419,7 @@
           await C.api("profiles?id=eq." + meId, { method: "PATCH", body: { avatar_url: url } });
           try { await C.syncAvatarPosts(url, null); } catch (e) {}   /* new photo now on every story */
           boot();
-        } catch (e) { alert("Avatar upload failed — " + (e && e.message ? e.message : e)); }
+        } catch (e) { C.say("Avatar upload failed — " + (e && e.message ? e.message : e)); }
       });
       var save = document.getElementById("pSave");
       if (save) save.addEventListener("click", async function () {
@@ -425,13 +431,13 @@
           try { await C.syncAvatarPosts(null, nm); } catch (e) {}   /* name on every story too */
           if (window.TSB_AUTH && TSB_AUTH.setDisplayName) TSB_AUTH.setDisplayName(nm);
           boot();
-        } catch (e) { alert("Save failed — " + (e && e.message ? e.message : e)); }
+        } catch (e) { C.say("Save failed — " + (e && e.message ? e.message : e)); }
       });
     }
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=248" defer></script>
-  <script src="js/gate.js?v=248" defer></script>
+  <script src="js/bar.js?v=249" defer></script>
+  <script src="js/gate.js?v=249" defer></script>
 </body>
 </html>

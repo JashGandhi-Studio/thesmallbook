@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=248">
+  <link rel="stylesheet" href="css/style.css?v=249">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -64,13 +64,13 @@
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="js/prefs.js?v=248"></script>
-  <script src="js/lang.js?v=248"></script>
-  <script src="js/config.js?v=248"></script>
-  <script src="js/auth.js?v=248"></script>
-  <script src="js/sounds.js?v=248"></script>
-  <script src="js/founder.js?v=248"></script>
-  <script src="js/community.js?v=248"></script>
+  <script src="js/prefs.js?v=249"></script>
+  <script src="js/lang.js?v=249"></script>
+  <script src="js/config.js?v=249"></script>
+  <script src="js/auth.js?v=249"></script>
+  <script src="js/sounds.js?v=249"></script>
+  <script src="js/founder.js?v=249"></script>
+  <script src="js/community.js?v=249"></script>
   <script>
   (function () {
     "use strict";
@@ -200,38 +200,90 @@
       });
     }
 
-    async function renderPeople() {
-      feed.innerHTML = skeletons();
-      var profs = [];
-      try { profs = await C.listProfiles(60); } catch (e) {}
-      var pcP = {};
-      try { pcP = await C.postCounts(400); } catch (e) {}
-      if (!profs.length) {
-        feed.innerHTML = '<div class="cm-empty">No readers yet — be the first face here.<br><button class="cm-write" id="ew">✍️ Write your first story</button></div>';
+    /* ---------- People: EVERY reader, always, and kept live ----------
+       v248 capped this at listProfiles(60) — so anyone who had posted,
+       liked, followed or messaged but never triggered ensureProfile()
+       simply did not exist here. v249 unions profiles + posts + likes +
+       comments + follows + message participants (C.allPeople), so nobody
+       can go missing, and repaints only when the data actually changed. */
+    var peopleTimer = 0, peopleSig = "", peopleStamp = 0;
+
+    function personCard(p, me, fol) {
+      var isMe = me && p.id === me.id;
+      var ava = C.avaUrl(p.name, p.avatar_url, p.id);
+      var stats = [];
+      if (p.posts)     stats.push(C.icon("pencil") + " " + p.posts + (p.posts === 1 ? " post" : " posts"));
+      if (p.likesGot)  stats.push(C.icon("heart") + " " + p.likesGot);
+      if (p.followers) stats.push(C.icon("user") + " " + p.followers + (p.followers === 1 ? " follower" : " followers"));
+      if (p.progress)  stats.push(C.icon("book") + " " + p.progress + "/2637 read");
+      var active = "";
+      try { if (p.lastActive) active = '<span class="cm-time cm-time--live">' + C.ago(new Date(p.lastActive).toISOString()) + "</span>"; } catch (e) {}
+      return '<div class="cm-person' + (p._synth ? " cm-person--ghost" : "") + '" data-person="' + p.id + '">' +
+        '<div class="cm-person__top">' +
+        /* the letter is always there; the photo sits on top and hides itself
+           if it 404s, so no avatar ever renders as an empty circle */
+        '<div class="cm-ava cm-ava--lg"><span>' + C.esc(String(p.name || "R").charAt(0).toUpperCase()) + "</span>" +
+          (ava ? '<img src="' + C.esc(ava) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' : "") + "</div>" +
+        '<div class="cm-person__meta">' +
+          '<a class="cm-name" href="profile.html?id=' + p.id + '">' + C.esc(p.name || "A reader") +
+            (C.isOfficial(p.id) ? '<span class="cm-vtick">\u2714</span>' : "") +
+            (isMe ? ' <span class="cm-time">\u00b7 you</span>' : "") +
+            (p.is_public === false ? ' <span class="cm-lock" title="Private account">\ud83d\udd12</span>' : "") + "</a>" +
+          (stats.length ? '<span class="cm-time">' + stats.join(" \u00b7 ") + "</span>" : "") +
+          (p.bio ? '<span class="cm-bio">' + C.esc(p.bio) + "</span>" : "") +
+          active +
+        "</div></div>" +
+        '<div class="cm-person__acts">' +
+          (isMe ? "" : '<button class="cm-follow' + (fol[p.id] ? " on" : "") + '" data-pfol="' + p.id + '">' + (fol[p.id] ? "Following \u2713" : "+ Follow") + "</button>" +
+           '<a class="cm-dmbtn" href="dm.html?u=' + p.id + '" title="Message" aria-label="Message ' + C.esc(p.name || "reader") + '">' + C.icon("chat") + "</a>") +
+        "</div>" +
+      "</div>";
+    }
+
+    function peopleHeader(n) {
+      return '<div class="cm-sect cm-sect--people">' +
+        '<span class="cm-live" title="Updates while you watch"><i></i> live</span>' +
+        "All " + n + (n === 1 ? " reader" : " readers") + " \u2014 follow them, hear their progress, drop a " + C.icon("chat") +
+      "</div>";
+    }
+
+    async function renderPeople(quiet) {
+      if (!quiet) { feed.innerHTML = skeletons(); peopleSig = ""; }
+      var people = [];
+      try { people = await C.allPeople(); } catch (e) {}
+
+      if (!people.length) {
+        clearInterval(peopleTimer); peopleTimer = 0;
+        feed.innerHTML = '<div class="cm-empty">No readers yet \u2014 be the first face here.<br><button class="cm-write" id="ew">\u270d\ufe0f Write your first story</button></div>';
         var ew2 = document.getElementById("ew"); if (ew2) ew2.addEventListener("click", function () { location.href = "write.html"; });
         return;
       }
+
+      /* signature: repaint only when something really moved, so the live
+         refresh never flickers or steals your scroll position */
+      var sig = people.map(function (p) {
+        return [p.id, p.name, p.posts, p.likesGot, p.followers, p.comments, p.progress, p.is_public === false ? 1 : 0, p.lastActive || 0].join(",");
+      }).join("|");
+      if (quiet && sig === peopleSig) { peopleStamp = Date.now(); return; }
+      var firstPaint = !peopleSig;
+      peopleSig = sig; peopleStamp = Date.now();
+
       var fol = {};
       if (C.signedIn()) { try { (await C.followingIds()).forEach(function (id) { fol[id] = 1; }); } catch (e) {} }
-      var me = C.signedIn() ? (await TSB_AUTH.me()) : null;
-      feed.innerHTML = '<div class="cm-sect">Active readers — follow them, hear their progress, drop a ' + C.icon('chat') + '</div>' +
-        '<div class="cm-people">' + profs.map(function (p) {
-          var isMe = me && p.id === me.id;
-          return '<div class="cm-person">' +
-            '<div class="cm-person__top">' +
-            '<div class="cm-ava cm-ava--lg">' + (C.avaUrl(p.name, p.avatar_url, p.id) ? '<img src="' + C.esc(C.avaUrl(p.name, p.avatar_url, p.id)) + '" alt="">' : "<span>" + C.esc((p.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
-            '<div class="cm-person__meta">' +
-              '<a class="cm-name" href="profile.html?id=' + p.id + '">' + C.esc(p.name) + (C.isOfficial(p.id) ? '<span class="cm-vtick">✔</span>' : "") + (isMe ? ' <span class="cm-time">· you</span>' : "") + "</a>" +
-              (pcP[p.id] ? '<span class="cm-time">' + C.icon('pencil') + ' ' + pcP[p.id] + ' post' + (pcP[p.id] === 1 ? "" : "s") + '</span>' : "") +
-              (p.progress ? '<span class="cm-time">' + C.icon('book') + ' ' + p.progress + '/2637 lessons read</span>' : "") +
-              (p.bio ? '<span class="cm-bio">' + C.esc(p.bio) + "</span>" : "") +
-            "</div></div>" +
-            '<div class="cm-person__acts">' +
-              (isMe ? "" : '<button class="cm-follow' + (fol[p.id] ? " on" : "") + '" data-pfol="' + p.id + '">' + (fol[p.id] ? "Following ✓" : "+ Follow") + "</button>" +
-               '<a class="cm-dmbtn" href="dm.html?u=' + p.id + '" title="Message">' + C.icon('chat') + "</a>") +
-            "</div>" +
-          "</div>";
-        }).join("") + "</div>";
+      var me = null;
+      if (C.signedIn()) { try { me = await TSB_AUTH.me(); } catch (e) {} }
+
+      feed.innerHTML = peopleHeader(people.length) +
+        '<div class="cm-people">' + people.map(function (p) { return personCard(p, me, fol); }).join("") + "</div>";
+
+      /* keep it alive: 25 s poll while this tab is on screen */
+      clearInterval(peopleTimer);
+      peopleTimer = setInterval(function () {
+        if (document.hidden) return;
+        if (tab !== "people") { clearInterval(peopleTimer); peopleTimer = 0; return; }
+        renderPeople(true);
+      }, 25000);
+      if (!firstPaint && !quiet) feed.scrollTop = 0;
     }
 
     /* ---------- Bursts: infinite swipe-through of EVERY story (videos, quotes, covers, text) ---------- */
@@ -350,6 +402,7 @@
 
     async function load() {
       if (tab === "people") return renderPeople();
+      clearInterval(peopleTimer); peopleTimer = 0;      /* not on People: stop polling */
       feed.innerHTML = skeletons();
       try {
         if (!C.enabled) {
@@ -462,7 +515,7 @@
           t.querySelector("b").textContent = info.count;
         } catch (err) {
           t.classList.toggle("on", !on);
-          alert("Like failed — " + (err && err.message ? err.message : err));
+          C.say("Like failed — " + (err && err.message ? err.message : err));
         }
         return;
       }
@@ -474,7 +527,7 @@
           await C.setFollow(t.getAttribute("data-pfol"), on2);
           t.classList.toggle("on", on2);
           t.textContent = on2 ? "Following ✓" : "+ Follow";
-        } catch (err) { alert("Follow failed — " + (err && err.message ? err.message : err)); }
+        } catch (err) { C.say("Follow failed — " + (err && err.message ? err.message : err)); }
         t.disabled = false;
         return;
       }
@@ -489,7 +542,7 @@
           var infoR = await C.likeInfo(rid);
           t.classList.toggle("on", !!infoR.mine);
           t.querySelector("b").textContent = infoR.count;
-        } catch (err) { t.classList.toggle("on", !onR); alert("Like failed — " + (err && err.message ? err.message : err)); }
+        } catch (err) { t.classList.toggle("on", !onR); C.say("Like failed — " + (err && err.message ? err.message : err)); }
         t.disabled = false;
         return;
       }
@@ -506,7 +559,7 @@
         } catch (err) {
           t.classList.toggle("on", !on2);
           t.textContent = !on2 ? "✓ Following" : "+ Follow";
-          alert("Follow failed — " + (err && err.message ? err.message : err));
+          C.say("Follow failed — " + (err && err.message ? err.message : err));
         }
         return;
       }
@@ -517,7 +570,7 @@
       if ((t = e.target.closest("[data-del]"))) {
         if (!confirm("Delete this story for everyone?")) return;
         try { await C.deletePost(t.getAttribute("data-del")); load(); }
-        catch (err) { alert(err && err.message && err.message.indexOf("policy") >= 0 ? ("Delete failed — " + err.message) : "Couldn't delete — are you signed in as the author?"); }
+        catch (err) { C.say(err && err.message && err.message.indexOf("policy") >= 0 ? ("Delete failed — " + err.message) : "Couldn't delete — are you signed in as the author?"); }
         return;
       }
     });
@@ -613,17 +666,22 @@
         await C.setFollow(t.getAttribute("data-ffol"), on);
         t.classList.toggle("on", on);
         t.innerHTML = on ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
-      } catch (err) { alert("Subscribe failed — " + (err && err.message ? err.message : err)); }
+      } catch (err) { C.say("Subscribe failed — " + (err && err.message ? err.message : err)); }
       t.disabled = false;
+    });
+
+    /* coming back to the tab from another app/screen -> refresh People now */
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden && tab === "people" && Date.now() - peopleStamp > 12000) renderPeople(true);
     });
 
     C.whenReady(function () { if (C.signedIn()) { C.ensureProfile(); C.syncProgress(); C.syncInterests(); } });
     load();
   })();
   </script>
-  <script src="js/data.js?v=248"></script>
-  <script src="js/osint.js?v=248"></script>
-  <script src="js/bar.js?v=248" defer></script>
-  <script src="js/gate.js?v=248" defer></script>
+  <script src="js/data.js?v=249"></script>
+  <script src="js/osint.js?v=249"></script>
+  <script src="js/bar.js?v=249" defer></script>
+  <script src="js/gate.js?v=249" defer></script>
 </body>
 </html>

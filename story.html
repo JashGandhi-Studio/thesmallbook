@@ -24,7 +24,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=248">
+  <link rel="stylesheet" href="css/style.css?v=249">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -36,13 +36,13 @@
     </article>
   </main>
 
-  <script src="js/prefs.js?v=248"></script>
-  <script src="js/lang.js?v=248"></script>
-  <script src="js/config.js?v=248"></script>
-  <script src="js/auth.js?v=248"></script>
-  <script src="js/sounds.js?v=248"></script>
-  <script src="js/founder.js?v=248"></script>
-  <script src="js/community.js?v=248"></script>
+  <script src="js/prefs.js?v=249"></script>
+  <script src="js/lang.js?v=249"></script>
+  <script src="js/config.js?v=249"></script>
+  <script src="js/auth.js?v=249"></script>
+  <script src="js/sounds.js?v=249"></script>
+  <script src="js/founder.js?v=249"></script>
+  <script src="js/community.js?v=249"></script>
   <script>
   (function () {
     "use strict";
@@ -57,6 +57,10 @@
       var p;
       try { p = id ? await C.getPost(id) : await C.getPostByShort(shortCode); } catch (e) {}
       if (p) id = p.id;
+      /* v249: opening the story IS reading the notification. "Someone liked /
+         commented on your story" is written into the shared read ledger here,
+         so it can never come back as new in the bell or the history list. */
+      if (id) { try { C.notifMarkPost(id); } catch (e) {} }
       if (!p) {
         root.innerHTML = '<div class="cm-empty" style="padding:48px 20px;text-align:center;">🕳️ This story is gone.<br><br>' +
           '<small>It was deleted by its author — likes, comments and notifications for it are cleared too.</small><br><br>' +
@@ -145,7 +149,7 @@
           paintLike(await C.likeInfo(id));
         } catch (e) {
           likeBtn.classList.toggle("on", !on);
-          alert("Like failed — " + (e && e.message ? e.message : e));
+          C.say("Like failed — " + (e && e.message ? e.message : e));
         }
       });
       /* Instagram-style double-tap ♥ anywhere on the story */
@@ -171,7 +175,7 @@
           var f = await C.followInfo(p.author_id);
           this.classList.toggle("on", f.mine);
           this.textContent = f.mine ? "✓ Following" : "+ Follow";
-        } catch (e) { this.classList.toggle("on", !on); alert("Follow failed — " + (e && e.message ? e.message : e)); }
+        } catch (e) { this.classList.toggle("on", !on); C.say("Follow failed — " + (e && e.message ? e.message : e)); }
       });
       var lb = root.querySelector("[data-audio]");
       if (lb) lb.addEventListener("click", function () { C.playAudio(lb.getAttribute("data-audio"), lb.getAttribute("data-title")); });
@@ -179,7 +183,7 @@
       if (db) db.addEventListener("click", async function () {
         if (!confirm("Delete this story for everyone?")) return;
         try { await C.deletePost(id); location.href = "stories.html"; }
-        catch (e) { alert(e && e.message ? ("Delete failed — " + e.message) : "Delete failed — are you the author?"); }
+        catch (e) { C.say(e && e.message ? ("Delete failed — " + e.message) : "Delete failed — are you the author?"); }
       });
       document.getElementById("shareBtn").addEventListener("click", function () {
         var url = location.origin + location.pathname + "?s=" + String(p.id).replace(/-/g, "").slice(-8);
@@ -211,13 +215,13 @@
               list.innerHTML = cs2.map(cm).join("");
             }
           } catch (renderErr) {}
-        } catch (e) { alert("Comment failed — " + (e && e.message ? e.message : "sign in again.")); }
+        } catch (e) { C.say("Comment failed — " + (e && e.message ? e.message : "sign in again.")); }
       });
     }
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=248" defer></script>
-  <script src="js/gate.js?v=248" defer></script>
+  <script src="js/bar.js?v=249" defer></script>
+  <script src="js/gate.js?v=249" defer></script>
 </body>
 </html>

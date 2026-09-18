@@ -125,10 +125,10 @@
    The story composer (write.html) used white (#fff) inputs/buttons
    that became invisible on the dark sheet. Flip them to dark.
    ============================================================ */
-html.dark .stu-ta { background:#1b1712; color:var(--paper); border-color:#000; }
+html.dark .stu-ta { background:#1b1712; color:var(--ink); border-color:#000; }
 html.dark .stu-ta::placeholder { color:#8a8170; }
-html.dark .stu-x { background:#1b1712; color:var(--paper); border-color:#000; }
-html.dark .stu-chip { background:#1b1712; color:var(--paper); border-color:#000; }
+html.dark .stu-x { background:#1b1712; color:var(--ink); border-color:#000; }
+html.dark .stu-chip { background:#1b1712; color:var(--ink); border-color:#000; }
 html.dark .stu-chip.on { background:var(--yellow); color:#111; border-color:#000; }
 html.dark .stu-sec { border-color:rgba(242,234,216,.15); }
 html.dark .stu-lbl small, html.dark .st-hint { color:#b7b0a5; }

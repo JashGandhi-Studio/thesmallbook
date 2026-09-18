@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=248">
+  <link rel="stylesheet" href="css/style.css?v=249">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -49,11 +49,24 @@
     <div id="dmThread" class="dm-thread" hidden>
       <div id="dmThreadBanner" class="dm-threadbanner" hidden></div>
       <div class="dm-msgs" id="dmMsgs"></div>
+      <!-- v249: one capsule. The mic is a real SVG docked inside the field and
+           morphs into Send the moment there is text — no emoji, no orphan button. -->
+      <!-- v249: inline paper note. Voice problems are explained here, in the
+           thread, instead of a blocking alert() that hides the whole screen. -->
+      <div class="dm-note" id="dmNote" role="status" aria-live="polite" hidden></div>
+
       <form class="dm-send" id="dmSend">
-        <button class="dm-plus" id="dmPlus" type="button" title="Recommend a book">＋</button>
-        <input id="dmBody" class="dm-input" maxlength="1000" placeholder="Say something kind…" autocomplete="off">
-        <button class="dm-mic" id="dmMic" type="button" title="Voice message">🎤</button>
-  <button class="cm-write" type="submit">Send</button>
+        <button class="dm-plus" id="dmPlus" type="button" title="Recommend a book" aria-label="Recommend a book">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5.6v12.8M5.6 12h12.8"/></svg>
+        </button>
+        <div class="dm-field">
+          <input id="dmBody" class="dm-input" maxlength="1000" placeholder="Say something kind…" autocomplete="off" aria-label="Message">
+          <button class="dm-micbtn" id="dmMic" type="button"
+                  title="Hold to record a voice message" aria-label="Hold to record a voice message">
+            <span class="vsrc__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11.5" rx="3"/><path d="M5.5 11.2v.9a6.5 6.5 0 0 0 13 0v-.9"/><path d="M12 18.6V22"/><path d="M8.6 22h6.8"/></svg></span>
+            <span class="vsrc__send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.2 11.6 19.4 5a.7.7 0 0 1 .94.94l-6.6 15.2a.7.7 0 0 1-1.3-.06l-2.2-6.1-6.1-2.2a.7.7 0 0 1-.06-1.3z"/><path d="m10.1 13.9 4.6-4.6"/></svg></span>
+          </button>
+        </div>
       </form>
     </div>
   </main>
@@ -70,18 +83,20 @@
     </div>
   </div>
 
-  <script src="js/prefs.js?v=248"></script>
-  <script src="js/lang.js?v=248"></script>
-  <script src="js/config.js?v=248"></script>
-  <script src="js/data.js?v=248"></script>
-  <script src="js/auth.js?v=248"></script>
-  <script src="js/sounds.js?v=248"></script>
-  <script src="js/founder.js?v=248"></script>
-  <script src="js/community.js?v=248"></script>
+  <script src="js/prefs.js?v=249"></script>
+  <script src="js/lang.js?v=249"></script>
+  <script src="js/config.js?v=249"></script>
+  <script src="js/data.js?v=249"></script>
+  <script src="js/auth.js?v=249"></script>
+  <script src="js/sounds.js?v=249"></script>
+  <script src="js/founder.js?v=249"></script>
+  <script src="js/community.js?v=249"></script>
+  <script src="js/voice.js?v=249"></script>
   <script>
   (function () {
     "use strict";
     var C = window.TSB_COMMUNITY;
+    var V = window.TSB_VOICE;
     var BOOKS = window.BOOKS || [];
     var uid = (location.search.match(/[?&]u=([a-f0-9-]{36})/) || [])[1] || "";
     var list = document.getElementById("dmList"), thread = document.getElementById("dmThread");
@@ -150,6 +165,21 @@
       }
     }
 
+    /* inline paper note — voice problems are explained in the thread,
+       never with a blocking alert() on a phone */
+    var noteEl = document.getElementById("dmNote"), noteTimer = 0;
+    function note(msg, kind) {
+      if (!noteEl) return;
+      clearTimeout(noteTimer);
+      noteEl.textContent = msg;
+      noteEl.className = "dm-note on" + (kind ? " dm-note--" + kind : "");
+      noteEl.hidden = false;
+      noteTimer = setTimeout(function () {
+        noteEl.className = "dm-note";
+        setTimeout(function () { noteEl.hidden = true; }, 260);
+      }, 5200);
+    }
+
     function bookCard(bookId) {
       var b = BOOKS.filter(function (x) { return x.id === bookId; })[0];
       if (!b) return "";
@@ -168,6 +198,9 @@
       var lastId = msgs.getAttribute("data-last") || "";
       var nowLast = rows.length ? rows[rows.length - 1].id + ":" + rows.length : "";
       if (silent && nowLast && nowLast === lastId) return;
+      /* never repaint the thread while a voice note is playing — the old
+         6 s poll used to cut people off mid-sentence */
+      if (silent && msgs.querySelector(".vp.is-playing")) return;
       msgs.setAttribute("data-last", nowLast);
       // WhatsApp-style: a tick is blue if peer has read it OR has replied after it
       function waRead(m, all) {
@@ -185,14 +218,19 @@
       msgs.innerHTML = rows.map(function (m) {
         var mineRow = m.sender_id === meId;
         var isRead = mineRow ? waRead(m, rows) : false;
-        return '<div class="dm-bub' + (mineRow ? " me" : "") + '" data-mid="' + m.id + '" data-mine="' + (mineRow ? 1 : 0) + '" data-body="' + C.esc(m.body) + '">' +
+        var body = String(m.body || "");
+        return '<div class="dm-bub' + (mineRow ? " me" : "") + (m.audio_url ? " dm-bub--voice" : "") + '" data-mid="' + m.id + '" data-mine="' + (mineRow ? 1 : 0) + '" data-body="' + C.esc(body) + '">' +
           (m.book_id ? bookCard(m.book_id) : "") +
-          (m.audio_url ? '<audio class="dm-audio" controls preload="none" src="' + C.esc(m.audio_url) + '"></audio>' : "") +
-          "<span>" + C.esc(m.body) + "</span>" +
+          /* v249: the real player — ring progress, scrubbable waveform,
+             elapsed/total and 1× 1.5× 2×. The bare <audio controls> is gone. */
+          (m.audio_url && V ? V.playerHTML(m.audio_url, { mine: mineRow, label: "Voice message" }) : "") +
+          (m.audio_url && !V ? '<audio class="dm-audio" controls preload="none" src="' + C.esc(m.audio_url) + '"></audio>' : "") +
+          (body.trim() ? "<span>" + C.esc(body) + "</span>" : "") +
           "<em>" + C.ago(m.created_at) + (m.edited_at ? " · edited" : "") + "</em>" +
           (mineRow ? '<span class="dm-tick' + (isRead ? " read" : "") + '" title="' + (isRead ? "Read" : "Sent") + '">' + "✓✓" + "</span>" : "") +
         "</div>";
       }).join("") || '<div class="cm-empty cm-empty--sm">Say hello 👋</div>';
+      if (V) V.mountPlayers(msgs);
       msgs.scrollTop = msgs.scrollHeight;
       (function () {
         var banner = document.getElementById("dmThreadBanner"); if (!banner) return;
@@ -212,8 +250,12 @@
         C.markThreadRead(uid).catch(function () {});
       } catch (e) {}
       try {
-        C.toastMark(rows.filter(function (m) { return m.sender_id === uid; })
-          .map(function (m) { return C.toastKey({ type: "dm", who: uid, at: m.created_at }); }));
+        /* v249: talking to someone IS reading their notifications. These keys
+           go into the one shared ledger, so the bell and the You-page badge
+           stop flagging them — and they still stay in the notification list. */
+        C.notifMarkRead(rows.filter(function (m) { return m.sender_id === uid; })
+          .map(function (m) { return C.notifKey({ type: "dm", who: uid, at: m.created_at }); }));
+        C.paintNotifUI([]);
       } catch (e) {}
     }
 
@@ -223,6 +265,7 @@
       var body = document.getElementById("dmBody").value.trim();
       if (!body) return;
       document.getElementById("dmBody").value = "";
+      syncMicMode();
       /* optimistic bubble: ✓ = just sent, then ✓✓ once the server confirms */
       var pend = document.createElement("div");
       pend.className = "dm-bub me dm-bub--pend";
@@ -232,7 +275,7 @@
       catch (err) {
         pend.classList.add("dm-bub--fail");
         setTimeout(function () { pend.remove(); }, 4000);
-        alert("Message failed — " + (err && err.message ? err.message : err));
+        C.say("Message failed — " + (err && err.message ? err.message : err));
       }
     });
 
@@ -240,26 +283,85 @@
     /* ---- voice messages + reading-thread meta ---- */
     function saveThreadMeta(peer, bookId, expires) { try { var a = JSON.parse(localStorage.getItem("tsb_threads") || "{}"); a[peer] = { bookId: bookId, expiresAt: expires }; localStorage.setItem("tsb_threads", JSON.stringify(a)); } catch (e) {} }
     function getThreadMeta(peer) { try { return (JSON.parse(localStorage.getItem("tsb_threads") || "{}"))[peer] || null; } catch (e) { return null; } }
+    /* ---- 🎙️ voice notes (v249) ------------------------------------
+       Hold to record · release to send · slide up to review (Delete/Send)
+       · quick tap for hands-free. Live waveform, mm:ss timer, 2:00 cap,
+       correct mime per browser, inline errors instead of alert(). */
     var dmMic = document.getElementById("dmMic");
-    var rec = null, recChunks = [];
-    if (dmMic) dmMic.addEventListener("click", async function () {
-      if (rec) { try { rec.stop(); } catch (e) {} return; }
-      if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) { alert("Voice messages are not supported on this browser."); return; }
-      if (!(window.TSB_CONFIG && TSB_CONFIG.DM_AUDIO)) { alert("Voice needs Supabase storage - run SQL #3 v4, then set DM_AUDIO:true in config.js."); return; }
-      try {
-        var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        rec = new MediaRecorder(stream); recChunks = [];
-        rec.ondataavailable = function (e) { if (e.data && e.data.size) recChunks.push(e.data); };
-        rec.onstop = async function () {
-          dmMic.classList.remove("on"); try { stream.getTracks().forEach(function (t) { t.stop(); }); } catch (e) {}
-          var blob = new Blob(recChunks, { type: "audio/webm" });
-          try { var url = await C.upload(blob, "tsb-audio"); await C.sendDM(uid, "", null, { audio_url: url }); await loadThread(); }
-          catch (err) { alert("Voice send failed - " + (err && err.message ? err.message : err) + " (run SQL #3 v4)"); }
-          rec = null;
-        };
-        rec.start(); dmMic.classList.add("on");
-      } catch (e) { alert("Mic permission denied."); }
-    });
+    var dmBody = document.getElementById("dmBody");
+    var voiceCtl = null;
+
+    /* the mic pill doubles as Send once there is text */
+    function micIsSend() {
+      var hasText = !!(dmBody && dmBody.value.trim());
+      var busy = voiceCtl && voiceCtl.state && voiceCtl.state() !== "idle";
+      return hasText && !busy;
+    }
+    function syncMicMode() {
+      if (!dmMic) return;
+      var send = micIsSend();
+      dmMic.classList.toggle("is-send", send);
+      /* type=submit while there is text: the browser does the work, so the
+         pill sends even if a gesture handler ever swallows the click */
+      dmMic.type = send ? "submit" : "button";
+      dmMic.setAttribute("aria-label", send ? "Send message" : "Hold to record a voice message");
+      dmMic.setAttribute("title", send ? "Send" : "Hold to record \u00b7 slide up to review");
+    }
+    if (dmBody) {
+      dmBody.addEventListener("input", syncMicMode);
+      dmBody.addEventListener("focus", syncMicMode);
+    }
+
+    /* optimistic "uploading" bubble so the send never feels dead */
+    function uploadingBubble(sec) {
+      var b = document.createElement("div");
+      b.className = "dm-bub me dm-bub--pend dm-bub--voice";
+      var bars = "";
+      for (var i = 0; i < 26; i++) bars += "<i></i>";
+      b.innerHTML = '<div class="dm-vup"><span class="dm-vup__spin"></span>' +
+        '<span class="dm-vup__wave">' + bars + '</span>' +
+        '<b>Uploading voice note' + (sec ? " · " + V.mmss(sec) : "") + '…</b></div>' +
+        '<em>just now</em><span class="dm-tick pending">✓</span>';
+      msgs.appendChild(b);
+      msgs.scrollTop = msgs.scrollHeight;
+      return b;
+    }
+
+    if (V) {
+      voiceCtl = V.attach({
+        micBtn: dmMic,
+        /* while there is text the pill is Send, not a recorder */
+        isEnabled: function () { return !(dmBody && dmBody.value.trim()); },
+        onState: function (st) {
+          if (!dmMic) return;
+          dmMic.classList.toggle("is-live", st === "recording" || st === "review");
+          dmMic.classList.toggle("is-send", false);
+          if (st === "idle") syncMicMode();
+        },
+        onError: function (msg) { note(msg, "bad"); },
+        onUnsupported: function () {
+          note("Voice notes need a browser with microphone recording. You can still type.", "bad");
+        },
+        onSend: async function (file, meta) {
+          if (!(window.TSB_CONFIG && TSB_CONFIG.DM_AUDIO)) {
+            throw new Error("Voice needs Supabase storage — run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md, then set DM_AUDIO:true in config.js.");
+          }
+          var pend = uploadingBubble(meta && meta.duration);
+          try {
+            var url = await C.upload(file, "tsb-audio");
+            await C.sendDM(uid, "", null, { audio_url: url });
+            pend.remove();
+            await loadThread();
+            note("Voice note sent · " + V.mmss(meta.duration), "good");
+          } catch (err) {
+            pend.classList.add("dm-bub--fail");
+            setTimeout(function () { try { pend.remove(); } catch (e) {} }, 2600);
+            throw err;                       /* the recorder stage shows Retry / Discard */
+          }
+        }
+      });
+    }
+    syncMicMode();
 
     var tPoll = setInterval(async function () {
       if (document.getElementById("dmThread").hidden) return;
@@ -305,19 +407,19 @@
       var next = prompt("Edit your message:", cur);
       if (next === null || !next.trim() || next === cur) return;
       try { await C.editDM(selectedMsg.getAttribute("data-mid"), next.trim()); await loadThread(); }
-      catch (err) { alert("Edit failed — " + (err && err.message ? err.message : err)); }
+      catch (err) { C.say("Edit failed — " + (err && err.message ? err.message : err)); }
     });
     document.getElementById("actDelAll").addEventListener("click", async function () {
       closePop(ctx);
       if (!selectedMsg || !confirm("Delete this message for everyone?")) return;
       try { await C.deleteDM(selectedMsg.getAttribute("data-mid")); await loadThread(); }
-      catch (err) { alert("Delete failed — " + (err && err.message ? err.message : err)); }
+      catch (err) { C.say("Delete failed — " + (err && err.message ? err.message : err)); }
     });
     document.getElementById("actDelMe").addEventListener("click", async function () {
       closePop(ctx);
       if (!selectedMsg) return;
       try { await C.hideDM(selectedMsg.getAttribute("data-mid")); await loadThread(); }
-      catch (err) { alert("Couldn't hide — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
+      catch (err) { C.say("Couldn't hide — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
     });
 
     /* ---- chat options: flipping ⋯ popout ---- */
@@ -337,7 +439,7 @@
       closePop(pop); menuBtn.classList.remove("on");
       if (!confirm("Clear this chat for yourself? (Messages stay for the other person.)")) return;
       try { await C.clearThread(uid); await loadThread(); }
-      catch (err) { alert("Clear failed — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
+      catch (err) { C.say("Clear failed — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
     });
 
     /* ---- book picker ---- */
@@ -377,7 +479,7 @@
           await C.sendDM(uid, "📖 Let's read " + book.title + " together — 7-day thread! " + (book.tagline || "tap the book above"), book.id,
             (window.TSB_CONFIG && TSB_CONFIG.DM_THREADS) ? { expires_at: new Date(exp).toISOString() } : null);
           await loadThread();
-        } catch (err) { alert("Couldn't start thread — " + (err && err.message ? err.message : err)); }
+        } catch (err) { C.say("Couldn't start thread — " + (err && err.message ? err.message : err)); }
         return;
       }
       if (e.target.closest(".pk-rec")) {
@@ -385,7 +487,7 @@
         try {
           await C.sendDM(uid, "You should read " + book.title + " — " + (book.tagline || "it's good!"), book.id);
           await loadThread();
-        } catch (err) { alert("Send failed — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
+        } catch (err) { C.say("Send failed — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
       }
     });
 
@@ -414,6 +516,6 @@
     });
   })();
   </script>
-  <script src="js/bar.js?v=248" defer></script>
+  <script src="js/bar.js?v=249" defer></script>
 </body>
 </html>

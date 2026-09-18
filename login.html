@@ -21,8 +21,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=248">
-  <link rel="stylesheet" href="css/store.css?v=248">
+  <link rel="stylesheet" href="css/style.css?v=249">
+  <link rel="stylesheet" href="css/store.css?v=249">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -81,7 +81,7 @@
           <a class="accstat" href="profile.html?id=me&view=followers"><b id="youActFols">0</b><span><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> followers</span></a>
         </div>
         <div class="acc__quick">
-          <a href="notifications.html"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg> Notifications <b id="youNotif" class="nt-badge" hidden>0</b><span class="nt-dot nt-dot--inline" data-notifdot hidden></span></a>
+          <a href="notifications.html"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg> Notifications <b id="youNotif" class="nt-badge" hidden>0</b><span id="youNotifUnread" class="nt-hint" hidden></span><span class="nt-dot nt-dot--inline" data-notifdot hidden></span></a>
           <a href="dm.html"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> Messages</a>
           <a href="profile.html?id=me">📔 My stories</a>
           <a href="profile.html?id=me"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Edit profile &amp; avatar</a>
@@ -243,7 +243,7 @@
         <a class="accrow" href="write.html"><span>✍️</span> Write a story <i>→</i></a>
         <a class="accrow" href="chat.html"><span>💬</span> Ask the library <i>→</i></a>
         <a class="accrow" href="graveyard.html"><span>💀</span> The Graveyard <i>→</i></a>
-        <a class="accrow" href="about.html" style="background:linear-gradient(135deg,#fffdf5 0%,#fff6d9 100%);border-style:solid"><span>ⓘ</span> About & feature guide <i>→</i></a>
+        <a class="accrow accrow--about" href="about.html"><span>ⓘ</span> About & feature guide <i>→</i></a>
         <a class="accrow" href="store.html"><span>🛍️</span> TSB Store — perks & coupons <i>→</i></a>
       </section>
 
@@ -263,16 +263,16 @@
       </section>
 
       <button class="acc__out" id="signoutBtn">Sign out</button>
-      <p class="youfine">Build tsb-v248 · Your reading data lives on your device and syncs privately to your account. We never post without asking. · <a href="about.html" style="color:inherit;text-decoration:underline;font-weight:800">ⓘ About & feature guide</a></p>
+      <p class="youfine">Build tsb-v249 · Your reading data lives on your device and syncs privately to your account. We never post without asking. · <a href="about.html" style="color:inherit;text-decoration:underline;font-weight:800">ⓘ About & feature guide</a></p>
     </main>
   </div>
 
-  <script src="js/prefs.js?v=248"></script>
-  <script src="js/lang.js?v=248"></script>
-  <script src="js/config.js?v=248"></script>
-  <script src="js/install.js?v=248"></script>
-  <script src="js/auth.js?v=248"></script>
-  <script src="js/data.js?v=248"></script>
+  <script src="js/prefs.js?v=249"></script>
+  <script src="js/lang.js?v=249"></script>
+  <script src="js/config.js?v=249"></script>
+  <script src="js/install.js?v=249"></script>
+  <script src="js/auth.js?v=249"></script>
+  <script src="js/data.js?v=249"></script>
   <script>
     /* v223 — store banner live status chip */
     (function () {
@@ -296,7 +296,7 @@
       });
     })();
   </script>
-  <script src="js/bar.js?v=248" defer></script>
+  <script src="js/bar.js?v=249" defer></script>
   <script>
     (function () {
       var vIn = document.getElementById("view-signin");
@@ -432,11 +432,11 @@
   });
 })();
 </script>
-  <script src="js/sounds.js?v=248"></script>
-  <script src="js/community.js?v=248"></script>
-  <script src="js/gold.js?v=248"></script>
-  <script src="js/paywall.js?v=248"></script>
-  <script src="js/onboard.js?v=248" defer></script>
+  <script src="js/sounds.js?v=249"></script>
+  <script src="js/community.js?v=249"></script>
+  <script src="js/gold.js?v=249"></script>
+  <script src="js/paywall.js?v=249"></script>
+  <script src="js/onboard.js?v=249" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {
@@ -520,13 +520,23 @@
         setTimeout(function () { cp.textContent = "⧉"; }, 1200);
       });
 
-      // notifications badge (new since last visit)
+      /* v249 notifications badge — UNREAD, not "newer than my last visit".
+         The old code compared against the tsb_notif_seen timestamp, so a
+         story you had already opened and read still counted as new here.
+         Now the You window, the bell and the toast all read the same
+         ledger: once you have opened it, it is read everywhere. */
       try {
-        var seen = +(localStorage.getItem("tsb_notif_seen") || 0);
         var items = await C.notifications();
-        var fresh = items.filter(function (n) { return Date.parse(n.at) > seen; }).length;
-        var nb = document.getElementById("youNotif");
-        if (nb && fresh > 0) { nb.hidden = false; nb.textContent = fresh > 99 ? "99+" : fresh; }
+        C.paintNotifUI(items);
+        var unEl = document.getElementById("youNotifUnread");
+        function paintUnread(n) {
+          if (!unEl) return;
+          unEl.textContent = n ? n + " unread" : "";
+          unEl.hidden = !n;
+        }
+        paintUnread(C.notifUnread(items).length);
+        /* keep it honest while this window stays open */
+        window.addEventListener("tsb:notifcount", function (e) { paintUnread((e.detail && e.detail.count) || 0); });
       } catch (e) {}
 
       // pop-up alerts toggle
@@ -562,7 +572,7 @@
       // push notifications (OneSignal — see docs/PUSH-NOTIFICATIONS.md)
       document.getElementById("youPushBtn").addEventListener("click", async function () {
         var appId = (window.TSB_CONFIG || {}).ONESIGNAL_APP_ID || "";
-        if (!appId) { alert("Push needs a free OneSignal App ID first — 5-minute setup in docs/PUSH-NOTIFICATIONS.md. Paste it in js/config.js and re-deploy."); return; }
+        if (!appId) { C.say("Push needs a free OneSignal App ID first — 5-minute setup in docs/PUSH-NOTIFICATIONS.md. Paste it in js/config.js and re-deploy."); return; }
         try {
           if (!window.OneSignal) {
             await new Promise(function (res, rej) {
@@ -581,7 +591,7 @@
           } catch (e2) {}
           await window.OneSignal.Slidedown.promptPush();
           this.textContent = "📲 Push on ✓";
-        } catch (e) { alert("Push setup failed — " + (e && e.message ? e.message : e)); }
+        } catch (e) { C.say("Push setup failed — " + (e && e.message ? e.message : e)); }
       });
 
       // public account toggle
@@ -599,7 +609,7 @@
         pubBtn.addEventListener("click", async function () {
           pubBtn.disabled = true;
           try { isPub = !isPub; await C.setProfilePublic(isPub); paintPub(); }
-          catch (err) { alert("Couldn't change that — " + (err && err.message ? err.message : err)); }
+          catch (err) { C.say("Couldn't change that — " + (err && err.message ? err.message : err)); }
           pubBtn.disabled = false;
         });
       } catch (e) {}

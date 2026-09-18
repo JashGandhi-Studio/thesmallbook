@@ -11,11 +11,11 @@
   <meta property="og:description" content="The story behind the free library: 400 books distilled, 308 failures autopsied, 83 life questions answered, 26 languages. Built by Jash Gandhi, Mumbai.">
     <meta property="og:url" content="https://thesmallbook.in/about.html">
   <meta property="og:site_name" content="TheSmallBook">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=248">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=249">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="TheSmallBook — 400 books · 2637 lessons · 308 autopsies · free to read">
-  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=248">
+  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=249">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary">
   <link rel="manifest" href="manifest.json">
@@ -32,7 +32,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=248">
+  <link rel="stylesheet" href="css/style.css?v=249">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -368,6 +368,10 @@
       <p style="font:600 11px 'Space Grotesk',sans-serif;color:#8f8a80">We ship every week. New books, new graves, and small polish. This page is the living changelog.</p>
       <div class="log-grid">
         <div class="log-item">
+          <span class="log-item__ver">v249</span>
+          <div class="log-item__body"><b>🎙️ Voice notes · read-once notifications · every reader listed · dark mode finished</b><p><b>Voice notes:</b> hold the mic to record and release to send, slide up to review with Delete or Send, or tap for hands-free. Live waveform, running timer, a hard 2:00 cap, and a real player — scrub the waveform, see elapsed and total, and switch 1× / 1.5× / 2×. The recording is never lost: a failed upload keeps the note and offers Try again. Safari records mp4, Android webm — the browser is asked, never guessed. <b>Notifications:</b> one read ledger for the whole app. Open a story, a profile or a DM thread and those notifications are read everywhere — bell, badge and You window agree, and the item stays in your history instead of coming back as NEW. The page now has Unread / All filters and Mark all read. <b>People:</b> the tab unions profiles, posts, likes, comments, follows and message participants, so nobody can be missing, it says how many readers there are, and it quietly refreshes while you watch. <b>Reading:</b> lessons read now sync to your public profile from the book page itself. <b>Dark mode:</b> audited every rule — no dark text on dark surfaces anywhere, and pale text on the red, blue and green cards was lifted from 2.5:1 to 5–8:1. <b>Everywhere:</b> blocking alert() popups replaced with inline notes you can tap away.</p></div>
+        </div>
+        <div class="log-item">
           <span class="log-item__ver">v247</span>
           <div class="log-item__body"><b>Mobile-verified: the strip-preview and hidden-buttons bugs are dead</b><p>This release was audited in a real mobile browser (390px &amp; 360px) with screenshots of every screen. Two real flex-layout bugs were found and fixed: the Card Studio preview being <b>crushed into a 200px strip</b> (it now never shrinks — full card, full quote, byline and export size always visible), and the Inspire image grid <b>rows overlapping</b>, which painted photos over the "Use as cover" buttons (grid can no longer be crushed; rows are true height). Image cards got a definite 190px photo band with the Use button glued on the photo. Quote add-bar layout polished (video hidden → audio spans cleanly). Research tab visually verified: story starter, Wiki, voices, dictionary, readable books.</p></div>
         </div>
@@ -458,18 +462,18 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="js/prefs.js?v=248"></script>
-  <script src="js/support.js?v=248"></script>
-  <script src="js/lang.js?v=248"></script>
-  <script src="js/config.js?v=248"></script>
-  <script src="js/auth.js?v=248"></script>
-  <script src="js/data.js?v=248"></script>
-  <script src="js/failures.js?v=248"></script>
-  <script src="js/ask-data.js?v=248"></script>
-  <script src="js/tts-engine.js?v=248"></script>
-  <script src="js/ask.js?v=248"></script>
-  <script src="js/bar.js?v=248" defer></script>
-  <script src="js/gate.js?v=248" defer></script>
+  <script src="js/prefs.js?v=249"></script>
+  <script src="js/support.js?v=249"></script>
+  <script src="js/lang.js?v=249"></script>
+  <script src="js/config.js?v=249"></script>
+  <script src="js/auth.js?v=249"></script>
+  <script src="js/data.js?v=249"></script>
+  <script src="js/failures.js?v=249"></script>
+  <script src="js/ask-data.js?v=249"></script>
+  <script src="js/tts-engine.js?v=249"></script>
+  <script src="js/ask.js?v=249"></script>
+  <script src="js/bar.js?v=249" defer></script>
+  <script src="js/gate.js?v=249" defer></script>
   <script>
   // 🧪 Lab — one professional playground that explains every tricky feature
   (function(){

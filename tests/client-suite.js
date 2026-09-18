@@ -337,8 +337,8 @@ const C = window.TSB_COMMUNITY;
   ok("og image + alt refreshed (400 books · 2,637 lessons)", idxH.includes("400 books · 2,637 lessons") && idxH.includes("assets/og-image.png"));
   ok("no stale counts on key files (350 books / 2,176 / 2176 / 2170)", !/350 books|2,176|2176|2170/.test(djSrc + idxH + cssSrc + lgSrc2 + bkSrc2));
   const swSrc = fsp.readFileSync(pp.join(__dirname, "../sw.js"), "utf8");
-  ok("service worker cache bumped to tsb-v247", swSrc.includes('tsb-v247'));
-  ok("key files ship ?v=247", idxH.includes("css/style.css?v=247") && lgSrc2.includes("v=247"));
+  ok("service worker cache bumped to tsb-v249", swSrc.includes('tsb-v249'));
+  ok("key files ship ?v=249", idxH.includes("css/style.css?v=249") && lgSrc2.includes("v=249"));
 
   console.log("== v221: content depth, 400 everywhere, 8 new autopsies, graves on all books ==");
   // repo-wide stale scan (every html/js/md)
@@ -390,17 +390,17 @@ const C = window.TSB_COMMUNITY;
   const setH = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
   const youH = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
   const instSrc = fsp.readFileSync(pp.join(__dirname, "../js/install.js"), "utf8");
-  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=247"));
-  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=247"));
+  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=249"));
+  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=249"));
   ok("service worker precaches install.js (works offline)", swSrc.includes("./js/install.js"));
   ok("install popup + standalone-hide styles shipped", cssSrc.includes(".instmodal") && cssSrc.includes("@media (display-mode: standalone)"));
   ok("install.js parses and handles beforeinstallprompt/appinstalled", (() => { try { new Function(instSrc); return true; } catch (e) { return false; } })() && instSrc.includes("beforeinstallprompt") && instSrc.includes("appinstalled"));
-  ok("Build markers say tsb-v247 (settings + You window)", setH.includes("Build tsb-v247") && youH.includes("Build tsb-v247"));
+  ok("Build markers say tsb-v249 (settings + You window)", setH.includes("Build tsb-v249") && youH.includes("Build tsb-v249"));
   let staleBuilds = [];
   for (const f of ["settings.html","login.html","index.html","about.html","scan.html","book.html","graveyard.html"]) {
     const t = fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
     const m = t.match(/Build tsb-v(\d+)/g) || [];
-    const wantVer = (swSrc.match(/CACHE_VERSION = "(tsb-v\d+)"/) || [])[1] || "tsb-v247";
+    const wantVer = (swSrc.match(/CACHE_VERSION = "(tsb-v\d+)"/) || [])[1] || "tsb-v249";
     m.forEach(x => { if (!x.includes(wantVer.slice(3))) staleBuilds.push(f + ":" + x); });
   }
   ok("no stale Build markers anywhere", staleBuilds.length === 0, staleBuilds.join(", "));
@@ -569,7 +569,7 @@ const C = window.TSB_COMMUNITY;
   ok("v222: probe reports 'sign in first' when no session", pr2.reason === "signin", pr2.reason);
   globalThis.TSB_AUTH.token = tokOld; store.tsb_auth_session = sessOld;
   const setH3 = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
-  ok("v222: Settings has the one-tap upload test", setH3.includes('id="upDiag"') && setH3.includes("Test upload right now") && setH3.includes("Build tsb-v247"));
+  ok("v222: Settings has the one-tap upload test", setH3.includes('id="upDiag"') && setH3.includes("Test upload right now") && setH3.includes("Build tsb-v249"));
   /* the WRITE page uploads died silently: fname() was called by every handler but
      defined nowhere — cover/quote/video/audio upload never started. Regression-guard it: */
   const writeH3 = fsp.readFileSync(pp.join(__dirname, "../write.html"), "utf8");
@@ -609,7 +609,12 @@ const C = window.TSB_COMMUNITY;
   const sdWinV3 = {}; new Function("window", sdV3)(sdWinV3);
   const offersV3 = (sdWinV3.TSB_STORE_DATA || {}).offers || [];
   ok("v223: store data loads with 10+ curated offers", offersV3.length >= 10, "count=" + offersV3.length);
-  ok("v223: every offer is legal-clean (https url + steps + tnc + title + desc)", offersV3.length > 0 && offersV3.every(o => /^https:\/\//.test(o.url) && (o.steps || []).length >= 2 && (o.tnc || []).length >= 2 && o.title && o.desc));
+  /* v249: an offer may link OUT (absolute https) or to a page of this app
+     (relative path). What it may never do is point at nothing, http://, or a
+     javascript: URL — and every offer still needs steps + T&C + copy. */
+  const offerUrlOk = u => /^https:\/\//.test(u || "") || /^\.?\/?[\w./-]+\.html(\?[\w=&%-]*)?$/.test(u || "");
+  ok("v223: every offer is legal-clean (https-or-in-app url + steps + tnc + title + desc)", offersV3.length > 0 && offersV3.every(o => offerUrlOk(o.url) && (o.steps || []).length >= 2 && (o.tnc || []).length >= 2 && o.title && o.desc),
+     "bad=" + JSON.stringify(offersV3.filter(o => !(offerUrlOk(o.url) && (o.steps || []).length >= 2 && (o.tnc || []).length >= 2 && o.title && o.desc)).map(o => o.id || o.title)));
   const loginV3 = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
   ok("v223: You window has the store banner + live chip", loginV3.includes("st-banner") && loginV3.includes("store.html") && loginV3.includes("stBanChip"));
   ok("v223: service worker precaches the store", swSrc.includes("./store.html") && swSrc.includes("./js/store-data.js"));
@@ -633,7 +638,7 @@ const C = window.TSB_COMMUNITY;
   const storePageV4 = fsp.readFileSync(pp.join(__dirname, "../store.html"), "utf8");
   ok("v225: store page has hero stats, ticker, picks rail, logo attribution line", storePageV4.includes('id="stStats"') && storePageV4.includes('id="stTicker"') && storePageV4.includes('id="stPicks"') && storePageV4.includes("logos belong to their owners"));
   const loginV4 = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
-  ok("v225: You-window banner shows real logo stack + loads store.css", loginV4.includes("st-banner__logos") && loginV4.includes("assets/logos/amazon.svg") && loginV4.includes("css/store.css?v=247"));
+  ok("v225: You-window banner shows real logo stack + loads store.css", loginV4.includes("st-banner__logos") && loginV4.includes("assets/logos/amazon.svg") && loginV4.includes("css/store.css?v=249"));
   ok("v225: service worker precaches the logo folder", swSrc.includes("./assets/logos/amazon.svg") && swSrc.includes("./assets/logos/spotify.svg"));
   ok("v225: store copy never says 'free forever' about the app (only the writer-unlock perk)", !/free forever/i.test(storePageV4.replace(/store unlocked free, forever/g, "")) && !/free forever/i.test(fsp.readFileSync(pp.join(__dirname, "../js/store-data.js"), "utf8")));
 
@@ -647,6 +652,135 @@ const C = window.TSB_COMMUNITY;
   ok("v225: gold forge panel + honest in-production copy", fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes('id="gForge"') && fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes("IN PRODUCTION") && fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes("rolling out to early members first"));
   ok("v226: You banner shows 40 perks + affiliate.js precached", loginV4.includes("40 real perks") && swSrc.includes("./js/affiliate.js") && swSrc.includes("./assets/logos/jio.png"));
   ok("v225: service worker precaches hidden-hub logos", swSrc.includes("./assets/logos/airtel.png") && swSrc.includes("./assets/logos/hdfc.png") && swSrc.includes("./assets/logos/sbi.png") && swSrc.includes("./assets/logos/axis.png"));
+
+
+  console.log("== v249: read-once notifications, every reader, voice notes, dark-mode text ==");
+  const commV249 = fsp.readFileSync(pp.join(__dirname, "../js/community.js"), "utf8");
+  const dmV249 = fsp.readFileSync(pp.join(__dirname, "../dm.html"), "utf8");
+  const voiceV249 = fsp.readFileSync(pp.join(__dirname, "../js/voice.js"), "utf8");
+  const ntV249 = fsp.readFileSync(pp.join(__dirname, "../notifications.html"), "utf8");
+  const stV249 = fsp.readFileSync(pp.join(__dirname, "../stories.html"), "utf8");
+  const cssV249 = fsp.readFileSync(pp.join(__dirname, "../css/style.css"), "utf8");
+  const bookV249 = fsp.readFileSync(pp.join(__dirname, "../book.html"), "utf8");
+
+  /* -- 1. notifications: ONE read ledger, and reading is what marks it read -- */
+  ok("v249: one read ledger + one popped ledger (they are not the same thing)",
+     commV249.includes('tsb_notif_read') && commV249.includes('tsb_notif_popped'));
+  ok("v249: the ledger is capped so localStorage cannot grow forever",
+     /LEDGER_CAP\s*=\s*\d+/.test(commV249));
+  ok("v249: pre-v249 stores are migrated, not ignored",
+     commV249.includes('tsb_toast_seen') && commV249.includes('tsb_notif_seen'));
+  /* toastShow() writes the POPPED ledger and must never touch the READ one */
+  const toastShowBody = (commV249.match(/function toastShow\(n\) \{[\s\S]*?\n  \}/) || [""])[0];
+  ok("v249: a popping toast is NOT the same as reading it",
+     toastShowBody.length > 200 && toastShowBody.includes("notifPopped(") && !toastShowBody.includes("notifMarkRead("),
+     "body=" + toastShowBody.length);
+  ok("v249: opening a DM thread marks that person's notifications read",
+     /markThreadRead[\s\S]{0,900}?notifMarkRead/.test(dmV249));
+  ok("v249: opening a story marks its like/comment notifications read",
+     fsp.readFileSync(pp.join(__dirname, "../story.html"), "utf8").includes("C.notifMarkPost("));
+  ok("v249: opening a profile marks follow notifications read (DMs left for the thread)",
+     /notifMarkContext\(function \(n\) \{ return n\.who === pid && n\.type !== "dm"; \}\)/.test(fsp.readFileSync(pp.join(__dirname, "../profile.html"), "utf8")));
+  ok("v249: notifications page paints first, then folds to read (nothing flashes away)",
+     /paint\(\);[\s\S]{0,600}?setTimeout\([\s\S]{0,400}?notifMarkRead/.test(ntV249));
+  ok("v249: notifications page has Unread filter + Mark all read",
+     ntV249.includes('nt-filters') && ntV249.includes('nMarkAll') && ntV249.includes('C.notifIsRead'));
+  ok("v249: read items STAY in history (nothing is deleted)",
+     !/ITEMS\s*=\s*ITEMS\.filter\([^)]*notifIsRead/.test(ntV249));
+  ok("v249: the You-window badge counts UNREAD, not 'newer than last visit'",
+     !/Date\.parse\(n\.at\) > seen/.test(loginV3) && loginV3.includes("C.notifUnread(") && loginV3.includes("C.paintNotifUI("));
+  ok("v249: one painter feeds every bell/badge/dot in the app",
+     /data-notifdot/.test(commV249) && /data-notifcount/.test(commV249) && /tsb:notifcount/.test(commV249));
+
+  /* -- 2. People: nobody can be missing, and the list keeps breathing -- */
+  ok("v249: People tab unions EVERY source, not just profiles",
+     /allPeople[\s\S]{0,2000}?posts\?select=[\s\S]{0,2000}?likes\?select=[\s\S]{0,2000}?comments\?select=[\s\S]{0,2000}?follows\?select=[\s\S]{0,2000}?messages\?select=/.test(commV249));
+  ok("v249: profile/message queries paginate (a Range without ORDER BY can 400)",
+     !/\?select=[^"&]*&limit=/.test(commV249) || /order=created_at\.desc/.test(commV249));
+  ok("v249: the official account can never vanish from People",
+     /touch\(OFFICIAL_ID\)/.test(commV249));
+  ok("v249: People renders all of them and says how many",
+     stV249.includes("C.allPeople()") && /All " \+ n \+ \(n === 1 \? " reader"/.test(stV249));
+  ok("v249: the old 60-profile cap is gone from the People tab",
+     !/profs = await C\.listProfiles\(60\)/.test(stV249));
+  ok("v249: People refreshes while you watch, and only repaints on real change",
+     /peopleTimer = setInterval/.test(stV249) && /if \(quiet && sig === peopleSig\)/.test(stV249));
+  ok("v249: leaving the People tab stops its poll (no battery drain)",
+     /if \(tab !== "people"\) \{ clearInterval\(peopleTimer\)/.test(stV249) && /clearInterval\(peopleTimer\); peopleTimer = 0;\s*\/\* not on People/.test(stV249));
+
+  /* -- 3. progress actually reaches the profile while you read -- */
+  ok("v249: the reading page loads the community core",
+     bookV249.includes("js/community.js?v=249"));
+  ok("v249: syncProgress is debounced and only writes on a real change",
+     /function countLessons/.test(commV249) && /tsb_prog_last_n/.test(commV249));
+  ok("v249: boot() runs on every page, not just stories.html",
+     /function bootStart\(\)/.test(commV249) && /toastStart\(\); bootStart\(\)/.test(commV249));
+  ok("v249: nothing pops over the page you are reading",
+     /function onReadingPage/.test(commV249) && /if \(onReadingPage\(\)\) return false;/.test(commV249));
+
+  /* -- 4. voice notes: real recorder, real player, no emoji, no alert() -- */
+  ok("v249: dm.html loads the voice module",
+     dmV249.includes('js/voice.js?v=249') && dmV249.includes("TSB_VOICE"));
+  ok("v249: the emoji mic is gone, replaced by an SVG in a docked pill",
+     !dmV249.includes("\ud83c\udfa4") && dmV249.includes('dm-micbtn') && dmV249.includes('vsrc__ico') && dmV249.includes('dm-field'));
+  ok("v249: hold=send, slide-up=review, tap=hands-free",
+     /LONG_PRESS_MS/.test(voiceV249) && /LIFT_PX/.test(voiceV249) && /begin\("tap"\)/.test(voiceV249) && /begin\("hold"\)/.test(voiceV249));
+  ok("v249: live waveform + elapsed timer + 2:00 cap",
+     /AnalyserNode|createAnalyser/.test(voiceV249) && /MAX_SEC = 120/.test(voiceV249) && /function mmss/.test(voiceV249) && /vstage__time/.test(voiceV249));
+  ok("v249: review offers Delete or Send and never auto-sends",
+     /vstage__del/.test(voiceV249) && /vstage__send/.test(voiceV249) && /if \(state === "review"\) return;/.test(voiceV249));
+  ok("v249: mime is asked for, never guessed (iOS records mp4, Android webm)",
+     /isTypeSupported/.test(voiceV249) && /audio\/mp4/.test(voiceV249) && /audio\/webm/.test(voiceV249));
+  ok("v249: an accidental tap cannot upload an empty note",
+     /blob\.size < 900 \|\| duration < 0\.45/.test(voiceV249));
+  ok("v249: a failed upload keeps the note and offers Try again",
+     /function retrySend/.test(voiceV249) && /vstage__retry/.test(voiceV249));
+  ok("v249: sent notes render in the premium player, not <audio controls>",
+     dmV249.includes("V.playerHTML(") && /class="vp"/.test(voiceV249) && /vp__ring-fg/.test(voiceV249) && /vp__rate/.test(voiceV249) && /RATES = \[1, 1\.5, 2\]/.test(voiceV249));
+  ok("v249: the player is scrubbable and keyboard reachable",
+     /role="slider"/.test(voiceV249) && /tabindex="0"/.test(voiceV249));
+  ok("v249: only one note plays at a time",
+     /function pauseAll/.test(voiceV249) && /pauseAll\(\)/.test(voiceV249));
+  ok("v249: a playing note is never cut off by the 6 s thread poll",
+     /if \(silent && msgs\.querySelector\("\.vp\.is-playing"\)\) return;/.test(dmV249));
+  ok("v249: voice markup escapes src and label",
+     /data-vsrc="' \+ esc\(src\)/.test(voiceV249) && /esc\(label\)/.test(voiceV249));
+  ok("v249: the voice module ships CSS for stage + player + dark theme",
+     cssV249.includes(".vstage__card") && cssV249.includes(".vp__wave") && cssV249.includes("html.dark .vp__wave i") && cssV249.includes("html.dark .vstage__card"));
+  ok("v249: the recorder sheet respects reduced motion and small phones",
+     /@media \(prefers-reduced-motion: reduce\)[\s\S]{0,900}?\.dm-micbtn::before/.test(cssV249) && /@media \(max-width: 420px\)[\s\S]{0,400}?\.vstage__wave/.test(cssV249));
+  ok("v249: the service worker precaches the voice module",
+     swSrc.includes("./js/voice.js"));
+
+  /* -- 5. no native alert() left in the community pages -- */
+  const alertFree = ["dm.html", "stories.html", "story.html", "profile.html", "write.html", "login.html"];
+  ok("v249: failures speak inline (C.say) instead of blocking with alert()", (() => {
+    const bad = [];
+    for (const f of alertFree) {
+      const src = fsp.readFileSync(pp.join(__dirname, "..", f), "utf8");
+      const real = (src.match(/(?<![\w.$])alert\((?!\))/g) || []).length;
+      if (real) bad.push(f + ":" + real);
+    }
+    return bad.length === 0;
+  })());
+  ok("v249: C.say exists, queues before <body>, caps the stack and infers its tone",
+     /function say\(msg, kind, ms\)/.test(commV249) && /sayQueue/.test(commV249) && /\.tsb-say"\)\.length >= 3/.test(commV249) && /if \(!kind\) kind =/.test(commV249));
+  ok("v249: C.say has styling in both themes",
+     cssV249.includes(".tsb-say") && cssV249.includes("html.dark .tsb-say--bad"));
+
+  /* -- 6. dark mode: text is text, surfaces are surfaces -- */
+  ok("v249: dark theme defines real text tokens (--ink/--muted/--muted-2)",
+     /html\.dark\s*\{[\s\S]{0,900}?--ink:\s*#f2ead8/.test(cssV249) && /--muted-2:/.test(cssV249));
+  ok("v249: --paper is never used as a text colour in the dark theme",
+     !/html\.dark[^{}]*\{[^}]*color:\s*var\(--paper\)/.test(cssV249));
+  ok("v249: DM thread text is readable in dark mode",
+     /html\.dark \.dm-bub em \{ color: var\(--muted-2\); \}/.test(cssV249) && /html\.dark \.dm-field \.dm-input \{ color: var\(--ink\)/.test(cssV249));
+  ok("v249: notification rows + tools are themed for dark",
+     /html\.dark \.nt-row/.test(cssV249) || /html\.dark \.nt-/.test(cssV249));
+  ok("v249: an inline guard re-applies the theme before first paint (no white flash)",
+     /tsb_theme/.test(fsp.readFileSync(pp.join(__dirname, "../index.html"), "utf8")));
+  ok("v249: stylesheet braces are balanced (a stray } would kill everything after it)",
+     (cssV249.match(/\{/g) || []).length === (cssV249.match(/\}/g) || []).length);
 
   console.log();
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");
