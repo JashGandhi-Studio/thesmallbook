@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=249">
+  <link rel="stylesheet" href="css/style.css?v=250">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -32,30 +32,32 @@
   </header>
 
   <main class="cm-wrap">
-    <!-- v249: a real notification centre. Unread items are flagged once;
+    <!-- v250: a real notification centre. Unread items are flagged once;
          opening anything marks it read and it stays here as history. -->
     <div class="nt-tools" id="nTools" hidden>
       <div class="nt-filters" role="tablist" aria-label="Filter notifications">
         <button class="on" data-nfilter="all" role="tab" aria-selected="true">All <b id="nCountAll">0</b></button>
         <button data-nfilter="unread" role="tab" aria-selected="false">Unread <b id="nCountNew">0</b></button>
       </div>
-      <button class="nt-markall" id="nMarkAll" type="button">
+      <button class="nt-markall" id="nMarkAll" type="button" aria-pressed="false">
         <svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
         Mark all read
       </button>
     </div>
+    <!-- v250 · follow requests from private accounts waiting on YOU -->
+    <div id="nReqs" hidden></div>
     <div id="nList" class="nt-list">
       <div class="cm-empty cm-empty--sm">Loading your updates…</div>
     </div>
   </main>
 
-  <script src="js/prefs.js?v=249"></script>
-  <script src="js/lang.js?v=249"></script>
-  <script src="js/config.js?v=249"></script>
-  <script src="js/auth.js?v=249"></script>
-  <script src="js/sounds.js?v=249"></script>
-  <script src="js/founder.js?v=249"></script>
-  <script src="js/community.js?v=249"></script>
+  <script src="js/prefs.js?v=250"></script>
+  <script src="js/lang.js?v=250"></script>
+  <script src="js/config.js?v=250"></script>
+  <script src="js/auth.js?v=250"></script>
+  <script src="js/sounds.js?v=250"></script>
+  <script src="js/founder.js?v=250"></script>
+  <script src="js/community.js?v=250"></script>
   <script>
   (function () {
     "use strict";
@@ -90,7 +92,7 @@
     }
 
     function row(n) {
-      /* v249: "unread" now comes from the ONE read ledger, so a notification
+      /* v250: "unread" now comes from the ONE read ledger, so a notification
          you already opened (tapped a toast, replied in the thread, viewed the
          profile) never comes back wearing a NEW badge. It stays here as history. */
       var unread = !C.notifIsRead(n);
@@ -124,7 +126,10 @@
       if (cAll) cAll.textContent = ITEMS.length;
       if (cNew) cNew.textContent = unread.length;
       var markAll = document.getElementById("nMarkAll");
-      if (markAll) markAll.hidden = unread.length === 0;
+      if (markAll) {
+        markAll.hidden = unread.length === 0;
+        markAll.setAttribute("aria-pressed", unread.length === 0 ? "true" : "false");
+      }
       if (!ITEMS.length) {
         list.innerHTML = '<div class="cm-empty">Nothing yet — your likes, comments, new followers and messages will land here.<br><a class="cm-write" href="stories.html">← Back to Stories</a></div>';
         return;
@@ -169,12 +174,68 @@
       paint();
     });
 
-    C.whenReady(function () {
+    C.whenReady(async function () {
       if (!C.signedIn()) {
         list.innerHTML = '<div class="cm-empty">Sign in to see your notifications.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>';
         return;
       }
       list.innerHTML = skeleton(4);
+
+      /* ---- v250 · PRIVATE-ACCOUNT FOLLOW REQUESTS ----------------------
+         A request IS a notification: it appears here, with the two buttons
+         that decide it, so nobody has to go hunting. Accepting writes your
+         own profile row only — the other phone then completes the follow. */
+      var reqBox = document.getElementById("nReqs");
+      function paintReqs(waits) {
+        if (!reqBox) return;
+        if (!waits || !waits.length) { reqBox.hidden = true; reqBox.innerHTML = ""; return; }
+        reqBox.hidden = false;
+        reqBox.innerHTML = '<div class="cm-req"><div class="cm-req__t">\ud83d\udd10 Follow requests <span class="cm-req__n">' +
+          waits.length + '</span><span class="cm-time" style="margin-left:auto">nobody sees your stories until you accept</span></div>' +
+          waits.map(function (p) {
+            return '<div class="cm-req__row" data-nreqrow="' + p.id + '">' +
+                '<div class="cm-ava cm-ava--sm"><span>' + C.esc(String(p.name || "R").charAt(0).toUpperCase()) + "</span></div>" +
+                '<div class="cm-req__meta"><a class="cm-name" href="profile.html?id=' + p.id + '">' + C.esc(p.name || "A reader") + "</a>" +
+                  '<span class="cm-time">' + (p.posts ? p.posts + " stories \u00b7 " : "") + "private account</span></div>" +
+                '<div class="cm-req__btns">' +
+                  '<button class="cm-reqbtn cm-reqbtn--ok" data-nreqok="' + p.id + '">Accept</button>' +
+                  '<button class="cm-reqbtn cm-reqbtn--no" data-nreqno="' + p.id + '">Decline</button>' +
+                "</div></div>";
+          }).join("") + "</div>";
+      }
+      async function refreshReqs() {
+        try {
+          var people = await C.allPeople();
+          try { await C.settleRequests(people); } catch (e3) {}
+          var me = C.me();
+          paintReqs(C.pendingTo(people, me && me.id));
+        } catch (e) { paintReqs([]); }
+      }
+      if (reqBox) {
+        reqBox.addEventListener("click", async function (e) {
+          var okB = e.target.closest ? e.target.closest("[data-nreqok]") : null;
+          var noB = e.target.closest ? e.target.closest("[data-nreqno]") : null;
+          if (!okB && !noB) return;
+          var btn = okB || noB, id2 = btn.getAttribute(okB ? "data-nreqok" : "data-nreqno");
+          btn.disabled = true;
+          try {
+            var all = [];
+            try { all = await C.allPeople(); } catch (e2) {}
+            var person = all.filter(function (x) { return x && x.id === id2; })[0] || { id: id2 };
+            if (okB) {
+              await C.acceptFollowRequest(person);
+              C.say("\u2705 Accepted \u2014 they now follow you.");
+            } else {
+              await C.declineFollowRequest(person);
+              C.say("Declined \u2014 your stories stay private.");
+            }
+            await refreshReqs();
+          } catch (err) { C.say("Couldn't do that \u2014 " + (err && err.message ? err.message : err)); }
+          btn.disabled = false;
+        });
+      }
+      try { await refreshReqs(); } catch (e) {}
+
       (async function () {
         try { ITEMS = await C.notifications(); } catch (e) { ITEMS = []; }
         if (tools) tools.hidden = false;
@@ -190,12 +251,12 @@
           var cNew = document.getElementById("nCountNew");
           if (cNew) cNew.textContent = "0";
           var markAll = document.getElementById("nMarkAll");
-          if (markAll) markAll.hidden = true;
+          if (markAll) { markAll.hidden = true; markAll.setAttribute("aria-pressed", "true"); }
         }, 1600);
       })();
     });
   })();
   </script>
-  <script src="js/bar.js?v=249" defer></script>
+  <script src="js/bar.js?v=250" defer></script>
 </body>
 </html>

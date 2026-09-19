@@ -874,6 +874,8 @@
     openDesk: openDesk,
     open: openDesk,
     quotes: function(q, cb){ return openDesk("quotes", q, cb?{onUseQuote:cb}:{}); },
+    /* v250: the Quote Desk renders its own live list — same fetchers, no duplicate code */
+    quotesLive: function(q, tag){ return fetchQuotesLiveSmart(q, tag); },
     images: function(q, cb){ return openDesk("images", q, cb?{onUseImage:cb}:{}); },
     research: function(q, cb){ return openDesk("research", q, cb?{onUseResearch:cb}:{}); },
     verifyQuote: verifyQuoteRedirect,

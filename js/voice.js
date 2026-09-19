@@ -1,11 +1,12 @@
 /* ============================================================
-   THESMALLBOOK — 🎙️ VOICE (voice.js)  v249
+   THESMALLBOOK — 🎙️ VOICE (voice.js)  v250
    ------------------------------------------------------------
    Two things live here, both built to feel like a native app:
 
    1. RECORDER — a push-to-talk mic with a live waveform.
         · press & hold  → records; release → uploads and sends
         · slide up      → "review": Delete or Send, release does
+     · release w/o travel → LOCKED: keeps recording until you tap ✓
                           NOT auto-send (nothing is lost by accident)
         · quick tap     → hands-free recording (desktop / mouse /
                           accessibility, and long notes on mobile)
@@ -31,11 +32,13 @@
   var MAX_SEC = 120;           /* hard cap on a voice note            */
   var LONG_PRESS_MS = 220;     /* shorter than this = a tap, not hold */
   var LIFT_PX = 62;            /* slide this far up to reach review   */
+  var MOVE_SLOP = 14;          /* press-down wobble we must ignore    */
   var BARS = 44;               /* waveform bars                       */
   var BAR_MS = 60;             /* one bar per 60 ms of audio          */
   var RATES = [1, 1.5, 2];
 
   var ICO = {
+    lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.4"/><path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7"/></svg>',
     play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.52.85l11.14-6.86a1 1 0 0 0 0-1.7L9.52 4.29A1 1 0 0 0 8 5.14z"/></svg>',
     pause: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6.5" y="4.5" width="4" height="15" rx="1.4"/><rect x="13.5" y="4.5" width="4" height="15" rx="1.4"/></svg>',
     mic: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="11.5" rx="3"/><path d="M5.5 11.2v.9a6.5 6.5 0 0 0 13 0v-.9"/><path d="M12 18.6V22"/><path d="M8.6 22h6.8"/></svg>',
@@ -92,6 +95,9 @@
      ============================================================ */
   var stage = null, els = {};
   var state = "idle";                 /* idle | recording | review | sending | error */
+  var locked = false;                 /* LOCKED: the note keeps recording after you let go */
+  var pendingLock = false;            /* tapped while the mic was still waking up */
+  var moved = false;                  /* did the finger really travel, or just wobble? */
   var mode = "hold";                  /* hold = release sends · tap = hands-free   */
   var rec = null, stream = null, chunks = [], ctx = null, analyser = null, rafId = 0;
   var startedAt = 0, timerId = 0, levels = [], lastBarAt = 0, duration = 0;
@@ -115,6 +121,7 @@
           '<span class="vstage__rec"><i></i>REC</span>' +
           '<span class="vstage__time">0:00</span>' +
           '<span class="vstage__max">/ ' + mmss(MAX_SEC) + '</span>' +
+          '<span class="vstage__lock" hidden>' + ICO.lock + '<b>LOCKED</b></span>' +
         '</div>' +
         '<div class="vstage__wave">' + bars + '</div>' +
         '<div class="vstage__hint">hold to record · release to send · slide up to review</div>' +
@@ -142,7 +149,8 @@
       errText: stage.querySelector(".vstage__err b"),
       retry: stage.querySelector(".vstage__retry"),
       drop: stage.querySelector(".vstage__drop"),
-      rec: stage.querySelector(".vstage__rec")
+      rec: stage.querySelector(".vstage__rec"),
+      lock: stage.querySelector(".vstage__lock")
     };
     els.del.addEventListener("click", function (e) { e.stopPropagation(); cancel(); });
     els.send.addEventListener("click", function (e) { e.stopPropagation(); stopAndSend(); });
@@ -157,11 +165,14 @@
     stage.classList.toggle("is-review", state === "review");
     stage.classList.toggle("is-busy", state === "sending");
     stage.classList.toggle("is-error", state === "error");
-    els.acts.hidden = !(state === "review" || state === "error");
+    stage.classList.toggle("is-locked", !!locked && (state === "recording" || state === "review"));
+    /* while locked the note is already safe, so Delete / Send are live too */
+    els.acts.hidden = !(state === "review" || state === "error" || (state === "recording" && locked));
     els.busy.hidden = state !== "sending";
     els.err.hidden = state !== "error";
     els.hint.hidden = state === "review" || state === "sending" || state === "error";
     if (els.rec) els.rec.hidden = state !== "recording";
+    if (els.lock) els.lock.hidden = !locked;
   }
 
   /* ---- live waveform: real samples from an AnalyserNode ---- */
@@ -202,7 +213,8 @@
       if (els.time) els.time.textContent = mmss(duration);
       if (stage) stage.style.setProperty("--vp", Math.min(1, duration / MAX_SEC));
       if (duration >= MAX_SEC) {
-        /* hit the cap: stop, then let the reader choose (never auto-send a cut note) */
+        if (locked) { stopAndSend(); return; }        /* locked = "don't lose it", so it flies */
+        /* un-locked: stop, then let the reader choose (never auto-send a cut note) */
         freezeRecorder();
         setReview(true, "2:00 reached — send it or delete it");
       }
@@ -257,13 +269,16 @@
     try { rec.start(120); } catch (e) { showHostError("Recording would not start."); releaseStream(); reset(); return; }
     startedAt = Date.now();
     state = "recording";
+    if (pendingLock) { pendingLock = false; locked = true; mode = "lock"; }
     stage.hidden = false;
     requestAnimationFrame(function () { stage.classList.add("on"); });
     document.documentElement.classList.add("vstage-open");
     if (els.time) els.time.textContent = "0:00";
-    if (els.hint) els.hint.textContent = mode === "hold"
-      ? "release to send · slide up to review"
-      : "tap the mic again to stop · Delete or Send below";
+    if (els.hint) els.hint.textContent = locked
+      ? "LOCKED — tap the mic to send · Delete to bin it"
+      : mode === "hold"
+        ? "release to LOCK · slide up to review"
+        : "tap the mic again to stop · Delete or Send below";
     paint(); startTimer(); tickWave(); buzz(18);
     try { if (opts.onState) opts.onState("recording"); } catch (e) {}
   }
@@ -284,6 +299,7 @@
 
   function reset() {
     state = "idle"; mode = "hold"; rec = null; chunks = []; levels = []; duration = 0;
+    locked = false; pendingLock = false; moved = false;
     try { if (opts.onState) opts.onState("idle"); } catch (e) {}
   }
   function closeStage() {
@@ -295,13 +311,29 @@
 
   function setReview(on, note) {
     if (state === "sending" || state === "error") return;
-    if (on && state === "recording") { freezeRecorder(); state = "review"; buzz(12); }
+    if (on && state === "recording") { locked = false; freezeRecorder(); state = "review"; buzz(12); }
     else if (!on && state === "review") { state = "review"; }   /* one-way: nothing is lost by sliding back */
     if (els.hint) els.hint.hidden = false;
     if (note && els.del) els.del.setAttribute("title", note);
     paint();
     try { if (opts.onState) opts.onState(state); } catch (e) {}
   }
+
+  /* ---- LOCK: let go and it keeps recording (WhatsApp's padlock) --------
+     This is what "press the mic, let go, keep talking" needs. Releasing a
+     hold now always leaves the note ALIVE: either it locks (you release
+     without travelling) or you slid up to review. Nothing is ever lost. */
+  function setLock(on) {
+    if (state === "sending" || state === "error") return;
+    if (!on) { locked = false; mode = "tap"; paint(); return; }
+    if (state === "idle") { pendingLock = true; return; }        /* mic still waking up */
+    locked = true; mode = "lock";
+    if (els.hint && state === "recording") els.hint.textContent = "LOCKED — tap the mic to send · Delete to bin it";
+    buzz(14);
+    paint();
+    try { if (opts.onState) opts.onState(state); } catch (e) {}
+  }
+  function isLocked() { return !!locked; }
 
   function cancel() {
     if (state === "sending") return;
@@ -378,8 +410,10 @@
     btn.addEventListener("pointerdown", function (e) {
       if (e.button != null && e.button !== 0) return;
       if (state !== "idle") {
-        /* already recording hands-free -> a tap on the mic stops it */
-        if (state === "recording" && mode === "tap") { e.preventDefault(); stopAndSend(); }
+        /* a tap on a live note always finishes it: hands-free recording,
+           locked recording, or a note sitting in review -> send it. */
+        if (state === "recording") { e.preventDefault(); stopAndSend(); }
+        else if (state === "review") { e.preventDefault(); stopAndSend(); }
         return;
       }
       /* vetoed (the pill is Send right now): do NOT preventDefault —
@@ -389,12 +423,20 @@
       e.preventDefault();
       try { btn.setPointerCapture(e.pointerId); } catch (err) {}
       start = { x: e.clientX, y: e.clientY, id: e.pointerId };
+      moved = false;
       holdTimer = setTimeout(function () { holdTimer = 0; begin("hold"); }, LONG_PRESS_MS);
     });
 
     btn.addEventListener("pointermove", function (e) {
       if (!start) return;
+      var dx = Math.abs(e.clientX - start.x);
       var dy = start.y - e.clientY;
+      /* Android fires a 1-2 px move the instant you touch down. Treating that
+         as "the user slid" is what made every press jump straight to review. */
+      if (!moved) {
+        if (dx < MOVE_SLOP && Math.abs(dy) < MOVE_SLOP) return;
+        moved = true;
+      }
       if (state === "recording" && mode === "hold" && dy > LIFT_PX) setReview(true);
     });
 
@@ -406,10 +448,16 @@
       try { btn.releasePointerCapture(e.pointerId); } catch (err) {}
       /* slid up (or hit the 2:00 cap) -> the reader chooses; never auto-send */
       if (state === "review") return;
-      /* normal hold-and-release -> upload and send */
-      if (state === "recording" && mode === "hold") { stopAndSend(); return; }
+      /* v250: a release that did NOT travel now LOCKS the note and keeps
+         recording — it no longer fires a 0.2 s "too short" error, which is
+         exactly what felt like "locking is broken". */
+      if (state === "recording" && mode === "hold") {
+        if (moved) stopAndSend();          /* held and travelled = the old hold-to-send */
+        else setLock(true);                /* plain press & let go = locked recording   */
+        return;
+      }
       /* released before the long-press threshold -> hands-free recording */
-      if (state === "idle" && wasHold) begin("tap");
+      if (state === "idle" && wasHold) { pendingLock = true; begin("tap"); }
     }
     btn.addEventListener("pointerup", endPress);
     btn.addEventListener("pointercancel", function (e) {
@@ -427,11 +475,12 @@
     /* never leave a recorder running when the page goes away */
     window.addEventListener("pagehide", function () { if (state === "recording") hardStop(); });
     document.addEventListener("visibilitychange", function () {
-      if (document.hidden && state === "recording" && mode === "hold") setReview(true);
+      /* switching apps must never kill a live note — lock it instead */
+      if (document.hidden && state === "recording" && !locked) setLock(true);
     });
     return {
-      begin: begin, cancel: cancel, send: stopAndSend,
-      state: function () { return state; }, supported: supported,
+      begin: begin, cancel: cancel, send: stopAndSend, setLock: setLock,
+      state: function () { return state; }, locked: isLocked, supported: supported,
       setEnabled: function (fn) { if (typeof fn === "function") enabled = fn; },
       mmss: mmss
     };

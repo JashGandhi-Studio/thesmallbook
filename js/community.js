@@ -366,7 +366,7 @@
   }
 
   /* ---------- rich-text safety: whitelist tags, drop attributes ---------- */
-  /* ---- v249: people discovery ----------------------------------------
+  /* ---- v250: people discovery ----------------------------------------
      BEFORE: one `limit=60` page ordered by updated_at. Anyone who had not
      touched the app recently fell off the end and never appeared in People
      at all — the "15 signed in but only 12 show" bug.
@@ -401,7 +401,7 @@
     }
   }
 
-  /* ---- v249: EVERY reader, never a short list -------------------------
+  /* ---- v250: EVERY reader, never a short list -------------------------
      A profiles row is only written when a reader opens a community page,
      so a signed-in reader who only ever read books had no row and was
      invisible everywhere. allPeople() unions the profiles table with every
@@ -537,7 +537,7 @@
     });
     var dms = await safe(api("messages?receiver_id=eq." + u.id + "&select=*&order=created_at.desc&limit=30", {}));
     (dms || []).forEach(function (m) {
-      /* v249: carry audio_url + read flag so the bell can say "voice message"
+      /* v250: carry audio_url + read flag so the bell can say "voice message"
          and so opening a thread can mark exactly these notifications read */
       out.push({ type: "dm", who: m.sender_id, body: m.body, at: m.created_at, audio: !!m.audio_url, msg: m.id });
     });
@@ -620,7 +620,7 @@
     }));
   }
 
-  /* ---- v191 → v249: public reading progress --------------------------
+  /* ---- v191 → v250: public reading progress --------------------------
      Two problems fixed:
        1. It only ran on the Stories page, and js/community.js was not even
           loaded on book.html — so the lessons people actually read while
@@ -676,7 +676,7 @@
     }
   }
 
-  /* ---- v249: app-wide boot -------------------------------------------
+  /* ---- v250: app-wide boot -------------------------------------------
      community.js ships on every app page, so this is the single place that
      guarantees a signed-in reader has a profiles row, fresh progress and a
      truthful bell — no matter which page they landed on. Without it a
@@ -688,6 +688,8 @@
     bootDone = true;
     try { ensureProfile().catch(function () {}); } catch (e) {}
     try { syncProgress(false); } catch (e) {}
+    /* v250: "when did you last visit" — one throttled write per 30 min */
+    try { touchPresence(false).catch(function () {}); } catch (e) {}
     try { syncInterests(false); } catch (e) {}
     try { notifRefresh(); } catch (e) {}
   }
@@ -755,7 +757,7 @@
     } catch (e) {}
   }
 
-  // ---- v212: posts per author (v249: every page, not just the first 400) ----
+  // ---- v212: posts per author (v250: every page, not just the first 400) ----
   async function postCounts(limit) {
     try {
       var rows = limit
@@ -775,7 +777,7 @@
   }
 
   /* ============================================================
-     v249 — ONE NOTIFICATION LEDGER
+     v250 — ONE NOTIFICATION LEDGER
      ------------------------------------------------------------
      There used to be two half-systems that never agreed:
        * tsb_toast_seen — keys marked when a toast popped or a DM
@@ -795,7 +797,7 @@
      ============================================================ */
   var NOTIF_READ = "tsb_notif_read";       // { key: openedAtMs } — what YOU opened
   var NOTIF_POPPED = "tsb_notif_popped";   // { key: poppedAtMs } — what already toasted
-  var LEGACY_TOAST = "tsb_toast_seen";     // pre-v249 stores, migrated once below
+  var LEGACY_TOAST = "tsb_toast_seen";     // pre-v250 stores, migrated once below
   var LEGACY_SEEN = "tsb_notif_seen";
   var LEDGER_CAP = 600;
 
@@ -853,7 +855,7 @@
     try { legacyTs = +(localStorage.getItem(LEGACY_SEEN) || 0); } catch (e) {}
     return (items || []).filter(function (n) {
       if (read[notifKey(n)]) return false;
-      /* items older than the last pre-v249 bell visit were already seen */
+      /* items older than the last pre-v250 bell visit were already seen */
       if (legacyTs && Date.parse(n.at) <= legacyTs) return false;
       return true;
     });
@@ -870,10 +872,13 @@
   }
   function notifMarkPeer(peerId) { return notifMarkContext(function (n) { return n.type === "dm" && n.who === peerId; }); }
   function notifMarkPost(postId) { return notifMarkContext(function (n) { return !!postId && n.post === postId; }); }
+  /* v250: mark one exact key read (a voice reply you just sent is "handled",
+     even though no toast was ever shown for it) */
+  function notifMarkKey(key) { if (key) notifMarkRead([key]); }
   function notifMarkUser(userId) { return notifMarkContext(function (n) { return n.who === userId; }); }
   function notifMarkAll() { return notifMarkContext(function () { return true; }); }
 
-  /* ---- v249: one inline voice for every "something went wrong" ----
+  /* ---- v250: one inline voice for every "something went wrong" ----
      Native alert() on a phone is a full-screen slap: it blocks the page,
      hides what you were doing and reads like a crash. Every failure in the
      community pages now says it in a paper note that slides in at the top,
@@ -971,13 +976,13 @@
     wrap.appendChild(el);
     requestAnimationFrame(function () { el.classList.add("in"); });
     setTimeout(function () { el.classList.remove("in"); el.classList.add("out"); setTimeout(function () { el.remove(); }, 450); }, 5200);
-    /* v249: a toast POPPING is not the reader READING it. Record it in the
+    /* v250: a toast POPPING is not the reader READING it. Record it in the
        popped ledger so it never re-pops, but leave it unread so the bell
        still counts it until they actually open it. */
     notifPopped([notifKey(n)]);
     try { if (window.TSB && window.TSB.sound) window.TSB.sound.play(); } catch (e2) {}
   }
-  /* v249: never pop a toast over the page you are actually reading. The
+  /* v250: never pop a toast over the page you are actually reading. The
      badge still updates here; the popup simply waits until you leave the
      book, because nothing is added to the "already popped" ledger. */
   function onReadingPage() {
@@ -1003,7 +1008,7 @@
     setTimeout(toastPoll, 4500);
     setInterval(toastPoll, 25000);
     document.addEventListener("visibilitychange", function () { if (!document.hidden) toastPoll(); });
-    /* v249: paint the badges immediately on load too, not only after the
+    /* v250: paint the badges immediately on load too, not only after the
        first 4.5 s poll — the bell used to look empty for a moment. */
     if (ENABLED && signedIn()) { try { notifRefresh(); } catch (e) {} }
     window.addEventListener("tsb:auth", function () { try { notifRefresh(); boot(); } catch (e) {} });
@@ -1302,13 +1307,333 @@
     return "";
   }
 
+
+  /* ====================================================================
+     v250 · PRESENCE, READ RECEIPTS & FOLLOW REQUESTS
+     --------------------------------------------------------------------
+     All three ride the `profiles.links` JSON column you already have, and
+     every write targets the writer's OWN row — so your existing RLS is
+     enough and NOTHING has to be run in Supabase for this to work.
+
+       peek  — the last time YOU opened the app        (last seen / online)
+       hear  — the last time you OPENED a story        (read receipts)
+       out   — follow requests you have sent
+       in    — follow requests you have accepted
+       no    — follow requests you declined
+       pub   — your privacy switches (show last seen, show read receipts)
+
+     The accept handshake never lets one reader write another's row:
+       A asks   -> A writes A.out
+       B (sees A.out) accepts -> B writes B.in
+       A's next launch sees B.in and writes the actual `follows` row
+       (RLS-safe: follower_id is still A, which is what the policy wants)
+     ==================================================================== */
+  var VIEWS_KEY = "tsb_views";
+  var PEEK_MS = 30 * 60 * 1000;          /* presence write: at most every 30 min */
+
+  function viewsLocal() {
+    try { var o = JSON.parse(localStorage.getItem(VIEWS_KEY) || "{}"); return (o && typeof o === "object") ? o : {}; }
+    catch (e) { return {}; }
+  }
+  function viewsSeen() { return viewsLocal(); }
+  function viewsSetSeen(patch) {
+    var o = viewsLocal();
+    Object.keys(patch || {}).forEach(function (k) { o[k] = patch[k]; });
+    try { localStorage.setItem(VIEWS_KEY, JSON.stringify(o)); } catch (e) {}
+    return o;
+  }
+  /* read a bucket out of somebody's links array (tolerates junk + strings) */
+  function linkBucket(links, key, fallback) {
+    if (typeof links === "string") { try { links = JSON.parse(links); } catch (e) { links = []; } }
+    if (!Array.isArray(links)) return fallback;
+    for (var i = 0; i < links.length; i++) {
+      var l = links[i];
+      if (l && typeof l === "object" && l.k === key) return l.v;
+    }
+    return fallback;
+  }
+  function withBucket(links, key, value) {
+    if (typeof links === "string") { try { links = JSON.parse(links); } catch (e) { links = []; } }
+    if (!Array.isArray(links)) links = [];
+    var out = links.filter(function (l) { return !(l && typeof l === "object" && l.k === key); });
+    out.push({ k: key, v: value });
+    return out;
+  }
+  /* merge a set of buckets into MY profile row, keeping the reader's own links */
+  async function saveViews(patchBuckets) {
+    if (!api || !signedIn()) return null;
+    var mu = me(); if (!mu) return null;
+    try {
+      var prof = await safeProfile();
+      var links = (prof && Array.isArray(prof.links)) ? prof.links.slice() : [];
+      Object.keys(patchBuckets || {}).forEach(function (k) {
+        links = withBucket(links, k, patchBuckets[k]);
+      });
+      await api("profiles?id=eq." + mu.id, { method: "PATCH", body: { links: links } });
+      return links;
+    } catch (e) { return null; }
+  }
+
+  /* ---- presence: stamp on every page, pushed occasionally -------------- */
+  async function touchPresence(force) {
+    if (!api || !signedIn()) return null;
+    var local = viewsLocal();
+    var now = Date.now();
+    if (!force && local.peek && now - local.peek < PEEK_MS) return local.peek;   /* cached */
+    viewsSetSeen({ peek: now });
+    try {
+      local = viewsLocal();
+      await saveViews({ peek: now, pub: local.pub || {} });
+    } catch (e) {}
+    return now;
+  }
+  /* ---- read receipt: "I opened this story" ----------------------------- */
+  async function markHeard(postId) {
+    if (!api || !signedIn() || !postId) return;
+    var local = viewsLocal();
+    var heard = Array.isArray(local.hear) ? local.hear.slice() : [];
+    if (heard.indexOf(postId) >= 0) return;                     /* already logged */
+    heard.push(postId);
+    if (heard.length > 400) heard = heard.slice(-400);
+    viewsSetSeen({ hear: heard });
+    /* privacy: the writer's switch decides whether receipts travel */
+    if (local.pub && local.pub.show_hear === false) return;
+    try { await saveViews({ hear: heard }); } catch (e) {}
+  }
+  function heardPosts() {
+    var l = viewsLocal();
+    return Array.isArray(l.hear) ? l.hear : [];
+  }
+  function readsPost(personLinks, postId) {
+    var heard = linkBucket(personLinks, "hear", []);
+    return Array.isArray(heard) && heard.indexOf(postId) >= 0;
+  }
+  /* how many people have read a given story (adds up across their profiles) */
+  function readersOf(people, postId) {
+    var out = [];
+    (people || []).forEach(function (p) {
+      if (p && p.id && readsPost(p.links, postId)) out.push(p);
+    });
+    return out;
+  }
+  /* ---- last seen text -------------------------------------------------- */
+  function lastSeenOf(person) {
+    if (!person) return null;
+    var pub = linkBucket(person.links, "pub", {}) || {};
+    if (pub.show_last === false) return null;                   /* they keep it private */
+    var peek = linkBucket(person.links, "peek", null);
+    var n = typeof peek === "number" ? peek : (peek && peek.at) || 0;
+    return n || null;
+  }
+  function lastSeenText(ms) {
+    if (!ms) return "";
+    var d = Date.now() - ms;
+    if (d < 90 * 1000) return "online now";
+    if (d < 3600 * 1000) return "last seen " + Math.max(1, Math.round(d / 60000)) + "m ago";
+    if (d < 24 * 3600 * 1000) return "last seen " + Math.round(d / 3600000) + "h ago";
+    if (d < 7 * 24 * 3600 * 1000) return "last seen " + Math.round(d / 86400000) + "d ago";
+    return "last seen " + ago(new Date(ms).toISOString());
+  }
+  function privacyOf(person) {
+    var pub = linkBucket(person && person.links, "pub", {}) || {};
+    return { show_last: pub.show_last !== false, show_hear: pub.show_hear !== false };
+  }
+  async function setPrivacy(patch) {
+    if (!api || !signedIn()) throw new Error("sign-in");
+    var local = viewsLocal();
+    var pub = local.pub || {};
+    Object.keys(patch || {}).forEach(function (k) { pub[k] = !!patch[k]; });
+    viewsSetSeen({ pub: pub });
+    await saveViews({ pub: pub, peek: local.peek || Date.now() });
+    return pub;
+  }
+  function myPrivacy() { return viewsLocal().pub || {}; }
+
+  /* ---- follow requests (accept handshake, RLS-safe) -------------------- */
+  /* ------------------------------------------------------------------ v250
+     SERVER-BACKED FOLLOW REQUESTS.
+
+     The links-bucket handshake below is the offline fallback: it works with
+     zero SQL, because each side writes only into its OWN profile row. But it
+     cannot stop two people requesting each other twice, it cannot be read
+     from another device until that device loads your profile, and a declined
+     request only disappears when the other phone cooperates.
+
+     So when supabase/sql/follow-requests.sql has been applied, we use the
+     real table instead (public.follow_requests + three SECURITY DEFINER
+     functions). The client keeps the same API and the same local buckets —
+     syncRequests() rebuilds them from the server — so no screen needs to
+     know which mode is running.
+     ------------------------------------------------------------------ */
+  var FR = null, FR_PROMISE = null;
+
+  async function frReady() {
+    if (FR !== null) return FR;
+    if (!FR_PROMISE) {
+      FR_PROMISE = (async function () {
+        try { var r = await api("follow_requests?select=id&limit=1"); FR = Array.isArray(r); }
+        catch (e) { FR = false; }                       /* 404 -> table not created yet */
+        return FR;
+      })();
+    }
+    return FR_PROMISE;
+  }
+  function frRpc(name, body) { return api("rpc/" + name, { method: "POST", body: body || {} }); }
+
+  /* rebuild the local buckets from the server: out = what I asked for,
+     no = what was declined, in = who is waiting on me */
+  async function syncRequests() {
+    if (!(await frReady())) return false;
+    var mu = me(); if (!mu) return false;
+    var out = [], inn = [], no = [];
+    try {
+      var mine = await api("follow_requests?select=target_id,status&requester_id=eq." + mu.id);
+      (mine || []).forEach(function (r) {
+        if (r.status === "pending") out.push({ to: r.target_id, at: Date.now(), from: mu.id });
+        else if (r.status === "declined") no.push({ from: r.target_id, at: Date.now() });
+      });
+    } catch (e) {}
+    try {
+      var waiting = await api("follow_requests?select=requester_id&target_id=eq." + mu.id + "&status=eq.pending");
+      (waiting || []).forEach(function (r) { inn.push({ from: r.requester_id, at: Date.now() }); });
+    } catch (e) {}
+    viewsSetSeen({ out: out, in: inn, no: no });
+    return true;
+  }
+  function requestsBackend() { return FR ? "server" : "links"; }
+
+  async function requestFollow(authorId) {
+    if (!api || !signedIn() || !authorId) throw new Error("sign-in");
+    if (await frReady()) {
+      try { await frRpc("request_follow", { target: authorId }); } catch (e) {}
+      try { await syncRequests(); } catch (e) {}
+      return myRequestsOut();
+    }
+    var mu = me();
+    var local = viewsLocal();
+    var out = Array.isArray(local.out) ? local.out.slice() : [];
+    out = out.filter(function (r) { return !r || r.to !== authorId; });
+    out.push({ to: authorId, at: Date.now(), from: mu.id });
+    viewsSetSeen({ out: out });
+    await saveViews({ out: out });
+    return out;
+  }
+  async function cancelFollowRequest(authorId) {
+    if (!api || !signedIn()) throw new Error("sign-in");
+    if (await frReady()) {
+      try { await frRpc("cancel_follow_request", { target: authorId }); } catch (e) {}
+      try { await syncRequests(); } catch (e) {}
+      return [];
+    }
+    var local = viewsLocal();
+    var out = (Array.isArray(local.out) ? local.out : []).filter(function (r) { return !r || r.to !== authorId; });
+    viewsSetSeen({ out: out });
+    await saveViews({ out: out });
+    return out;
+  }
+  function myRequestsOut() { return Array.isArray(viewsLocal().out) ? viewsLocal().out : []; }
+  function iRequested(person) {
+    if (!person) return false;
+    var out = myRequestsOut();
+    return out.some(function (r) { return r && r.to === person.id; });
+  }
+  /* requests waiting for ME to accept: anybody whose `out` names me */
+  function pendingTo(people, meId) {
+    var list = [];
+    var mine = Array.isArray(viewsLocal().in) ? viewsLocal().in : [];   /* v250 */
+    (people || []).forEach(function (p) {
+      if (!p || !p.id || p.id === meId) return;
+      var out = linkBucket(p.links, "out", []);
+      var asksMe = (Array.isArray(out) && out.some(function (r) { return r && r.to === meId; })) ||
+                   mine.some(function (r) { return r && r.from === p.id; });
+      if (asksMe) list.push(p);
+    });
+    return list;
+  }
+  async function acceptFollowRequest(person) {
+    if (!api || !signedIn() || !person) throw new Error("sign-in");
+    if (await frReady()) {
+      try { await frRpc("respond_follow_request", { target: person.id, accept: true }); } catch (e) {}
+      try { await syncRequests(); } catch (e) {}
+      return true;
+    }
+    var local = viewsLocal();
+    var inn = Array.isArray(local.in) ? local.in.slice() : [];
+    inn = inn.filter(function (r) { return !r || r.from !== person.id; });
+    inn.push({ from: person.id, at: Date.now() });
+    var no = (Array.isArray(local.no) ? local.no : []).filter(function (r) { return !r || r.from !== person.id; });
+    viewsSetSeen({ in: inn, no: no });
+    await saveViews({ in: inn, no: no });
+    return true;
+  }
+  async function declineFollowRequest(person) {
+    if (!api || !signedIn() || !person) throw new Error("sign-in");
+    if (await frReady()) {
+      try { await frRpc("respond_follow_request", { target: person.id, accept: false }); } catch (e) {}
+      try { await syncRequests(); } catch (e) {}
+      return true;
+    }
+    var local = viewsLocal();
+    var no = Array.isArray(local.no) ? local.no.slice() : [];
+    no = no.filter(function (r) { return !r || r.from !== person.id; });
+    no.push({ from: person.id, at: Date.now() });
+    var inn = (Array.isArray(local.in) ? local.in : []).filter(function (r) { return !r || r.from !== person.id; });
+    viewsSetSeen({ no: no, in: inn });
+    await saveViews({ no: no, in: inn });
+    return true;
+  }
+  /* my app settles every handshake the other side has already decided:
+     · accepted -> write the real `follows` row (follower_id is still ME)
+     · declined -> drop my request so the button goes back to Follow      */
+  async function settleRequests(people) {
+    if (!api || !signedIn()) return { accepted: [], declined: [] };
+    var mu = me(); if (!mu) return { accepted: [], declined: [] };
+    if (await frReady()) {                       /* the server already settled it */
+      try { await syncRequests(); } catch (e) {}
+      return { accepted: [], declined: [], server: true };
+    }
+    var local = viewsLocal();
+    var out = Array.isArray(local.out) ? local.out : [];
+    if (!out.length) return { accepted: [], declined: [] };
+    var byId = {};
+    (people || []).forEach(function (p) { if (p && p.id) byId[p.id] = p; });
+    var accepted = [], declined = [], keep = [];
+    for (var i = 0; i < out.length; i++) {
+      var r = out[i]; if (!r || !r.to) continue;
+      var them = byId[r.to];
+      if (!them) { keep.push(r); continue; }                       /* not loaded yet */
+      var inn = linkBucket(them.links, "in", []);
+      var no = linkBucket(them.links, "no", []);
+      var isIn = Array.isArray(inn) && inn.some(function (x) { return x && x.from === mu.id; });
+      var isNo = Array.isArray(no) && no.some(function (x) { return x && x.from === mu.id; });
+      if (isIn) { accepted.push(r.to); continue; }                 /* handled below */
+      if (isNo) { declined.push(r.to); continue; }
+      keep.push(r);
+    }
+    if (accepted.length) {
+      try {
+        var mine = {}; (await followingIds()).forEach(function (id) { mine[id] = 1; });
+        for (var j = 0; j < accepted.length; j++) {
+          var id2 = accepted[j];
+          if (mine[id2]) continue;
+          try { await api("follows", { method: "POST", body: { follower_id: mu.id, author_id: id2 } }); } catch (e) {}
+        }
+      } catch (e) {}
+    }
+    if (accepted.length || declined.length) {
+      viewsSetSeen({ out: keep });
+      await saveViews({ out: keep });
+    }
+    return { accepted: accepted, declined: declined };
+  }
+
   window.TSB_COMMUNITY = {
     enabled: ENABLED, OFFICIAL_ID: OFFICIAL_ID, isOfficial: isOfficial, api: api, me: me, signedIn: signedIn,
     ensureProfile: ensureProfile, getProfile: getProfile,
     listPosts: listPosts, getPost: getPost, publish: publish, deletePost: deletePost,
     likeInfo: likeInfo, setLike: setLike, likesOnMyPosts: likesOnMyPosts,
     listProfiles: listProfiles, allPeople: allPeople, setProfilePublic: setProfilePublic, postCounts: postCounts, getPostByShort: getPostByShort, toastKey: toastKey, toastMark: toastMark, notifications: notifications, whenReady: whenReady, avaUrl: avaUrl, OFFICIAL_AVATAR: OFFICIAL_AVATAR, protectMedia: protectMedia, pauseAllMedia: pauseAllMedia, fancyFileInputs: fancyFileInputs, syncAvatarPosts: syncAvatarPosts,
-    /* v249 — notifications: one read ledger, one badge painter */
+    /* v250 — notifications: one read ledger, one badge painter */
     notifKey: notifKey, notifMarkRead: notifMarkRead, notifIsRead: notifIsRead, notifUnread: notifUnread,
     notifMarkAll: notifMarkAll, notifMarkPeer: notifMarkPeer, notifMarkPost: notifMarkPost,
     notifMarkContext: notifMarkContext,
@@ -1319,6 +1644,13 @@
     syncProgress: syncProgress, syncInterests: syncInterests, icon: icon,
     listComments: listComments, addComment: addComment,
     followInfo: followInfo, setFollow: setFollow, followingIds: followingIds, followerRows: followerRows,
+    /* v250 — presence, read receipts, follow requests */
+    touchPresence: touchPresence, viewsSeen: viewsSeen, viewsSetSeen: viewsSetSeen,
+    markHeard: markHeard, heardPosts: heardPosts, readsPost: readsPost, readersOf: readersOf,
+    lastSeenOf: lastSeenOf, lastSeenText: lastSeenText, privacyOf: privacyOf, setPrivacy: setPrivacy, myPrivacy: myPrivacy,
+    requestFollow: requestFollow, requestsBackend: requestsBackend, syncRequests: syncRequests, followRequestsReady: frReady, cancelFollowRequest: cancelFollowRequest, iRequested: iRequested,
+    pendingTo: pendingTo, acceptFollowRequest: acceptFollowRequest, declineFollowRequest: declineFollowRequest,
+    settleRequests: settleRequests, linkBucket: linkBucket, notifMarkKey: notifMarkKey,
     upload: upload, probeStorage: probeStorage, sanitize: sanitize, ago: ago, readMins: readMins, esc: esc, playAudio: playAudio,
     isVideoUrl: isVideoUrl, videoDuration: videoDuration, checkBurst: checkBurst, MAX_BURST_SEC: MAX_BURST_SEC
   };

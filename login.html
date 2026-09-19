@@ -21,8 +21,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=249">
-  <link rel="stylesheet" href="css/store.css?v=249">
+  <link rel="stylesheet" href="css/style.css?v=250">
+  <link rel="stylesheet" href="css/store.css?v=250">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -217,6 +217,30 @@
             <span class="cm-time" id="youPublicHint">shown in 👥 People</span>
           </div>
         </div>
+        <!-- v250 · PRESENCE — you decide what people can see about you -->
+        <div class="yset__row">
+          <span class="yset__lbl">Last seen</span>
+          <div class="yset__ctl ysw">
+            <button class="ysw__sw on" id="youLastBtn" type="button" role="switch" aria-checked="true" aria-label="Show my last seen"><i></i></button>
+            <span class="ysw__lbl" id="youLastLbl">Visible</span>
+            <span class="cm-time" id="youLastHint">readers see “last seen 12m ago”</span>
+          </div>
+        </div>
+        <div class="yset__row">
+          <span class="yset__lbl">Read receipts</span>
+          <div class="yset__ctl ysw">
+            <button class="ysw__sw on" id="youHearBtn" type="button" role="switch" aria-checked="true" aria-label="Show that I read a story"><i></i></button>
+            <span class="ysw__lbl" id="youHearLbl">On</span>
+            <span class="cm-time" id="youHearHint">writers see “read by N”</span>
+          </div>
+        </div>
+        <div class="yset__row" id="youReqRow" hidden>
+          <span class="yset__lbl">Follow requests</span>
+          <div class="yset__ctl">
+            <a class="setopt setopt--sm" id="youReqLink" href="stories.html?tab=people">0 waiting →</a>
+            <span class="cm-time">your private account: accept them in 👥 People</span>
+          </div>
+        </div>
         <div class="yset__row">
           <button class="setbtn" data-repref style="width:100%;">🎯 Change preferences — re-tune my library</button>
         </div>
@@ -263,16 +287,16 @@
       </section>
 
       <button class="acc__out" id="signoutBtn">Sign out</button>
-      <p class="youfine">Build tsb-v249 · Your reading data lives on your device and syncs privately to your account. We never post without asking. · <a href="about.html" style="color:inherit;text-decoration:underline;font-weight:800">ⓘ About & feature guide</a></p>
+      <p class="youfine">Build tsb-v250 · Your reading data lives on your device and syncs privately to your account. We never post without asking. · <a href="about.html" style="color:inherit;text-decoration:underline;font-weight:800">ⓘ About & feature guide</a></p>
     </main>
   </div>
 
-  <script src="js/prefs.js?v=249"></script>
-  <script src="js/lang.js?v=249"></script>
-  <script src="js/config.js?v=249"></script>
-  <script src="js/install.js?v=249"></script>
-  <script src="js/auth.js?v=249"></script>
-  <script src="js/data.js?v=249"></script>
+  <script src="js/prefs.js?v=250"></script>
+  <script src="js/lang.js?v=250"></script>
+  <script src="js/config.js?v=250"></script>
+  <script src="js/install.js?v=250"></script>
+  <script src="js/auth.js?v=250"></script>
+  <script src="js/data.js?v=250"></script>
   <script>
     /* v223 — store banner live status chip */
     (function () {
@@ -296,7 +320,7 @@
       });
     })();
   </script>
-  <script src="js/bar.js?v=249" defer></script>
+  <script src="js/bar.js?v=250" defer></script>
   <script>
     (function () {
       var vIn = document.getElementById("view-signin");
@@ -432,11 +456,11 @@
   });
 })();
 </script>
-  <script src="js/sounds.js?v=249"></script>
-  <script src="js/community.js?v=249"></script>
-  <script src="js/gold.js?v=249"></script>
-  <script src="js/paywall.js?v=249"></script>
-  <script src="js/onboard.js?v=249" defer></script>
+  <script src="js/sounds.js?v=250"></script>
+  <script src="js/community.js?v=250"></script>
+  <script src="js/gold.js?v=250"></script>
+  <script src="js/paywall.js?v=250"></script>
+  <script src="js/onboard.js?v=250" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {
@@ -520,7 +544,7 @@
         setTimeout(function () { cp.textContent = "⧉"; }, 1200);
       });
 
-      /* v249 notifications badge — UNREAD, not "newer than my last visit".
+      /* v250 notifications badge — UNREAD, not "newer than my last visit".
          The old code compared against the tsb_notif_seen timestamp, so a
          story you had already opened and read still counted as new here.
          Now the You window, the bell and the toast all read the same
@@ -612,6 +636,75 @@
           catch (err) { C.say("Couldn't change that — " + (err && err.message ? err.message : err)); }
           pubBtn.disabled = false;
         });
+      } catch (e) {}
+
+      /* ---- v250 · presence switches + private-account handshake ----------
+         Two honest switches, both off-by-choice and both instant:
+           · Last seen — paused means NOTHING about my visits is published,
+             so there is nothing for anyone to read.
+           · Read receipts — off means the stories I open are not recorded
+             against my name. Writers keep the count of people who share.
+         The handshake below also settles any request the other phone has
+         already accepted, so a private follow becomes real from here. */
+      try {
+        var lastBtn = document.getElementById("youLastBtn");
+        var lastLbl = document.getElementById("youLastLbl");
+        var lastHint = document.getElementById("youLastHint");
+        var hearBtn = document.getElementById("youHearBtn");
+        var hearLbl = document.getElementById("youHearLbl");
+        var hearHint = document.getElementById("youHearHint");
+        function paintPriv() {
+          var pv = (C.myPrivacy && C.myPrivacy()) || {};
+          var showLast = pv.show_last !== false;
+          var showHear = pv.show_hear !== false;
+          if (lastBtn) { lastBtn.classList.toggle("on", showLast); lastBtn.setAttribute("aria-checked", showLast ? "true" : "false"); }
+          if (lastLbl) lastLbl.textContent = showLast ? "Visible" : "Hidden";
+          if (lastHint) lastHint.textContent = showLast
+            ? "readers see \u201clast seen 12m ago\u201d"
+            : "nobody sees when you were here \u2014 you stay invisible";
+          if (hearBtn) { hearBtn.classList.toggle("on", showHear); hearBtn.setAttribute("aria-checked", showHear ? "true" : "false"); }
+          if (hearLbl) hearLbl.textContent = showHear ? "On" : "Off";
+          if (hearHint) hearHint.textContent = showHear
+            ? "writers see \u201cread by N\u201d"
+            : "the stories you open are not counted";
+        }
+        paintPriv();
+        if (lastBtn) lastBtn.addEventListener("click", async function () {
+          lastBtn.disabled = true;
+          try {
+            var nv = lastBtn.classList.contains("on");
+            await C.setPrivacy({ show_last: !nv });
+            paintPriv();
+            C.say(!nv ? "\ud83d\udc40 Last seen is visible again." : "\ud83d\udd12 Hidden \u2014 nobody sees when you were here.");
+          } catch (err) { C.say("Couldn't change that \u2014 " + (err && err.message ? err.message : err)); }
+          lastBtn.disabled = false;
+        });
+        if (hearBtn) hearBtn.addEventListener("click", async function () {
+          hearBtn.disabled = true;
+          try {
+            var nv2 = hearBtn.classList.contains("on");
+            await C.setPrivacy({ show_hear: !nv2 });
+            paintPriv();
+            C.say(!nv2 ? "\u2713 Writers will see your reads." : "\u2713 Reads stay private.");
+          } catch (err) { C.say("Couldn't change that \u2014 " + (err && err.message ? err.message : err)); }
+          hearBtn.disabled = false;
+        });
+        /* my own bell must be truthful the moment this page opens */
+        try { if (C.touchPresence) C.touchPresence(true); } catch (e5) {}
+        (async function () {
+          try {
+            var ppl = await C.allPeople();
+            try { await C.settleRequests(ppl); } catch (e6) {}
+            var waits = C.pendingTo(ppl, u.id) || [];
+            if (waits.length) {
+              var row = document.getElementById("youReqRow");
+              var link = document.getElementById("youReqLink");
+              if (row) row.hidden = false;
+              if (link) { link.textContent = waits.length + " waiting →"; }
+              C.say("\ud83d\udd10 " + waits.length + (waits.length === 1 ? " person wants" : " people want") + " to follow you \u2014 accept in People.");
+            }
+          } catch (e7) {}
+        })();
       } catch (e) {}
     } catch (e) {}
   })();

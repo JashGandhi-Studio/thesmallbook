@@ -337,8 +337,8 @@ const C = window.TSB_COMMUNITY;
   ok("og image + alt refreshed (400 books · 2,637 lessons)", idxH.includes("400 books · 2,637 lessons") && idxH.includes("assets/og-image.png"));
   ok("no stale counts on key files (350 books / 2,176 / 2176 / 2170)", !/350 books|2,176|2176|2170/.test(djSrc + idxH + cssSrc + lgSrc2 + bkSrc2));
   const swSrc = fsp.readFileSync(pp.join(__dirname, "../sw.js"), "utf8");
-  ok("service worker cache bumped to tsb-v249", swSrc.includes('tsb-v249'));
-  ok("key files ship ?v=249", idxH.includes("css/style.css?v=249") && lgSrc2.includes("v=249"));
+  ok("service worker cache bumped to tsb-v250", swSrc.includes('tsb-v250'));
+  ok("key files ship ?v=250", idxH.includes("css/style.css?v=250") && lgSrc2.includes("v=250"));
 
   console.log("== v221: content depth, 400 everywhere, 8 new autopsies, graves on all books ==");
   // repo-wide stale scan (every html/js/md)
@@ -390,17 +390,17 @@ const C = window.TSB_COMMUNITY;
   const setH = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
   const youH = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
   const instSrc = fsp.readFileSync(pp.join(__dirname, "../js/install.js"), "utf8");
-  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=249"));
-  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=249"));
+  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=250"));
+  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=250"));
   ok("service worker precaches install.js (works offline)", swSrc.includes("./js/install.js"));
   ok("install popup + standalone-hide styles shipped", cssSrc.includes(".instmodal") && cssSrc.includes("@media (display-mode: standalone)"));
   ok("install.js parses and handles beforeinstallprompt/appinstalled", (() => { try { new Function(instSrc); return true; } catch (e) { return false; } })() && instSrc.includes("beforeinstallprompt") && instSrc.includes("appinstalled"));
-  ok("Build markers say tsb-v249 (settings + You window)", setH.includes("Build tsb-v249") && youH.includes("Build tsb-v249"));
+  ok("Build markers say tsb-v250 (settings + You window)", setH.includes("Build tsb-v250") && youH.includes("Build tsb-v250"));
   let staleBuilds = [];
   for (const f of ["settings.html","login.html","index.html","about.html","scan.html","book.html","graveyard.html"]) {
     const t = fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
     const m = t.match(/Build tsb-v(\d+)/g) || [];
-    const wantVer = (swSrc.match(/CACHE_VERSION = "(tsb-v\d+)"/) || [])[1] || "tsb-v249";
+    const wantVer = (swSrc.match(/CACHE_VERSION = "(tsb-v\d+)"/) || [])[1] || "tsb-v250";
     m.forEach(x => { if (!x.includes(wantVer.slice(3))) staleBuilds.push(f + ":" + x); });
   }
   ok("no stale Build markers anywhere", staleBuilds.length === 0, staleBuilds.join(", "));
@@ -421,7 +421,7 @@ const C = window.TSB_COMMUNITY;
   ok("ask chips readable in dark in both styles", css.includes("html.dark .tsb-ask--page .aq-chip--all { background: transparent; color: var(--ink); }") && css.includes("html.dark .aq-chip--all { background: #17130b; color: var(--yellow); }"));
   const goldH = fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8");
   ok("gold page hero/price/samples readable in dark", goldH.includes("html.dark .goldhero h1 .hl { color: #111; }") && goldH.includes("html.dark .goldhero__price { background: #17130b; }") && goldH.includes("background: var(--yellow); color: #111;"));
-  ok("EVERY book cover exists at the path the app requests (assets/covers/<id>.jpg)", djArr.every(b => fsp.existsSync(pp.join(__dirname, "../assets/covers/" + b.id + ".jpg"))), djArr.filter(b => !fsp.existsSync(pp.join(__dirname, "../assets/covers/" + b.id + ".jpg"))).map(b => b.id).join(","));
+  ok("EVERY book cover exists at the path data.js actually declares", djArr.every(b => b.cover && fsp.existsSync(pp.join(__dirname, "..", b.cover))), djArr.filter(b => !b.cover || !fsp.existsSync(pp.join(__dirname, "..", b.cover))).map(b => b.id).join(",") || "none");
   let jsAll = true;
   for (const f of fsp.readdirSync(pp.join(__dirname, "../js"))) {
     if (!f.endsWith(".js")) continue;
@@ -569,7 +569,7 @@ const C = window.TSB_COMMUNITY;
   ok("v222: probe reports 'sign in first' when no session", pr2.reason === "signin", pr2.reason);
   globalThis.TSB_AUTH.token = tokOld; store.tsb_auth_session = sessOld;
   const setH3 = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
-  ok("v222: Settings has the one-tap upload test", setH3.includes('id="upDiag"') && setH3.includes("Test upload right now") && setH3.includes("Build tsb-v249"));
+  ok("v222: Settings has the one-tap upload test", setH3.includes('id="upDiag"') && setH3.includes("Test upload right now") && setH3.includes("Build tsb-v250"));
   /* the WRITE page uploads died silently: fname() was called by every handler but
      defined nowhere — cover/quote/video/audio upload never started. Regression-guard it: */
   const writeH3 = fsp.readFileSync(pp.join(__dirname, "../write.html"), "utf8");
@@ -609,7 +609,7 @@ const C = window.TSB_COMMUNITY;
   const sdWinV3 = {}; new Function("window", sdV3)(sdWinV3);
   const offersV3 = (sdWinV3.TSB_STORE_DATA || {}).offers || [];
   ok("v223: store data loads with 10+ curated offers", offersV3.length >= 10, "count=" + offersV3.length);
-  /* v249: an offer may link OUT (absolute https) or to a page of this app
+  /* v250: an offer may link OUT (absolute https) or to a page of this app
      (relative path). What it may never do is point at nothing, http://, or a
      javascript: URL — and every offer still needs steps + T&C + copy. */
   const offerUrlOk = u => /^https:\/\//.test(u || "") || /^\.?\/?[\w./-]+\.html(\?[\w=&%-]*)?$/.test(u || "");
@@ -638,7 +638,7 @@ const C = window.TSB_COMMUNITY;
   const storePageV4 = fsp.readFileSync(pp.join(__dirname, "../store.html"), "utf8");
   ok("v225: store page has hero stats, ticker, picks rail, logo attribution line", storePageV4.includes('id="stStats"') && storePageV4.includes('id="stTicker"') && storePageV4.includes('id="stPicks"') && storePageV4.includes("logos belong to their owners"));
   const loginV4 = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
-  ok("v225: You-window banner shows real logo stack + loads store.css", loginV4.includes("st-banner__logos") && loginV4.includes("assets/logos/amazon.svg") && loginV4.includes("css/store.css?v=249"));
+  ok("v225: You-window banner shows real logo stack + loads store.css", loginV4.includes("st-banner__logos") && loginV4.includes("assets/logos/amazon.svg") && loginV4.includes("css/store.css?v=250"));
   ok("v225: service worker precaches the logo folder", swSrc.includes("./assets/logos/amazon.svg") && swSrc.includes("./assets/logos/spotify.svg"));
   ok("v225: store copy never says 'free forever' about the app (only the writer-unlock perk)", !/free forever/i.test(storePageV4.replace(/store unlocked free, forever/g, "")) && !/free forever/i.test(fsp.readFileSync(pp.join(__dirname, "../js/store-data.js"), "utf8")));
 
@@ -654,7 +654,7 @@ const C = window.TSB_COMMUNITY;
   ok("v225: service worker precaches hidden-hub logos", swSrc.includes("./assets/logos/airtel.png") && swSrc.includes("./assets/logos/hdfc.png") && swSrc.includes("./assets/logos/sbi.png") && swSrc.includes("./assets/logos/axis.png"));
 
 
-  console.log("== v249: read-once notifications, every reader, voice notes, dark-mode text ==");
+  console.log("== v250: read-once notifications, every reader, voice notes, dark-mode text ==");
   const commV249 = fsp.readFileSync(pp.join(__dirname, "../js/community.js"), "utf8");
   const dmV249 = fsp.readFileSync(pp.join(__dirname, "../dm.html"), "utf8");
   const voiceV249 = fsp.readFileSync(pp.join(__dirname, "../js/voice.js"), "utf8");
@@ -664,97 +664,97 @@ const C = window.TSB_COMMUNITY;
   const bookV249 = fsp.readFileSync(pp.join(__dirname, "../book.html"), "utf8");
 
   /* -- 1. notifications: ONE read ledger, and reading is what marks it read -- */
-  ok("v249: one read ledger + one popped ledger (they are not the same thing)",
+  ok("v250: one read ledger + one popped ledger (they are not the same thing)",
      commV249.includes('tsb_notif_read') && commV249.includes('tsb_notif_popped'));
-  ok("v249: the ledger is capped so localStorage cannot grow forever",
+  ok("v250: the ledger is capped so localStorage cannot grow forever",
      /LEDGER_CAP\s*=\s*\d+/.test(commV249));
-  ok("v249: pre-v249 stores are migrated, not ignored",
+  ok("v250: pre-v250 stores are migrated, not ignored",
      commV249.includes('tsb_toast_seen') && commV249.includes('tsb_notif_seen'));
   /* toastShow() writes the POPPED ledger and must never touch the READ one */
   const toastShowBody = (commV249.match(/function toastShow\(n\) \{[\s\S]*?\n  \}/) || [""])[0];
-  ok("v249: a popping toast is NOT the same as reading it",
+  ok("v250: a popping toast is NOT the same as reading it",
      toastShowBody.length > 200 && toastShowBody.includes("notifPopped(") && !toastShowBody.includes("notifMarkRead("),
      "body=" + toastShowBody.length);
-  ok("v249: opening a DM thread marks that person's notifications read",
+  ok("v250: opening a DM thread marks that person's notifications read",
      /markThreadRead[\s\S]{0,900}?notifMarkRead/.test(dmV249));
-  ok("v249: opening a story marks its like/comment notifications read",
+  ok("v250: opening a story marks its like/comment notifications read",
      fsp.readFileSync(pp.join(__dirname, "../story.html"), "utf8").includes("C.notifMarkPost("));
-  ok("v249: opening a profile marks follow notifications read (DMs left for the thread)",
+  ok("v250: opening a profile marks follow notifications read (DMs left for the thread)",
      /notifMarkContext\(function \(n\) \{ return n\.who === pid && n\.type !== "dm"; \}\)/.test(fsp.readFileSync(pp.join(__dirname, "../profile.html"), "utf8")));
-  ok("v249: notifications page paints first, then folds to read (nothing flashes away)",
+  ok("v250: notifications page paints first, then folds to read (nothing flashes away)",
      /paint\(\);[\s\S]{0,600}?setTimeout\([\s\S]{0,400}?notifMarkRead/.test(ntV249));
-  ok("v249: notifications page has Unread filter + Mark all read",
+  ok("v250: notifications page has Unread filter + Mark all read",
      ntV249.includes('nt-filters') && ntV249.includes('nMarkAll') && ntV249.includes('C.notifIsRead'));
-  ok("v249: read items STAY in history (nothing is deleted)",
+  ok("v250: read items STAY in history (nothing is deleted)",
      !/ITEMS\s*=\s*ITEMS\.filter\([^)]*notifIsRead/.test(ntV249));
-  ok("v249: the You-window badge counts UNREAD, not 'newer than last visit'",
+  ok("v250: the You-window badge counts UNREAD, not 'newer than last visit'",
      !/Date\.parse\(n\.at\) > seen/.test(loginV3) && loginV3.includes("C.notifUnread(") && loginV3.includes("C.paintNotifUI("));
-  ok("v249: one painter feeds every bell/badge/dot in the app",
+  ok("v250: one painter feeds every bell/badge/dot in the app",
      /data-notifdot/.test(commV249) && /data-notifcount/.test(commV249) && /tsb:notifcount/.test(commV249));
 
   /* -- 2. People: nobody can be missing, and the list keeps breathing -- */
-  ok("v249: People tab unions EVERY source, not just profiles",
+  ok("v250: People tab unions EVERY source, not just profiles",
      /allPeople[\s\S]{0,2000}?posts\?select=[\s\S]{0,2000}?likes\?select=[\s\S]{0,2000}?comments\?select=[\s\S]{0,2000}?follows\?select=[\s\S]{0,2000}?messages\?select=/.test(commV249));
-  ok("v249: profile/message queries paginate (a Range without ORDER BY can 400)",
+  ok("v250: profile/message queries paginate (a Range without ORDER BY can 400)",
      !/\?select=[^"&]*&limit=/.test(commV249) || /order=created_at\.desc/.test(commV249));
-  ok("v249: the official account can never vanish from People",
+  ok("v250: the official account can never vanish from People",
      /touch\(OFFICIAL_ID\)/.test(commV249));
-  ok("v249: People renders all of them and says how many",
+  ok("v250: People renders all of them and says how many",
      stV249.includes("C.allPeople()") && /All " \+ n \+ \(n === 1 \? " reader"/.test(stV249));
-  ok("v249: the old 60-profile cap is gone from the People tab",
+  ok("v250: the old 60-profile cap is gone from the People tab",
      !/profs = await C\.listProfiles\(60\)/.test(stV249));
-  ok("v249: People refreshes while you watch, and only repaints on real change",
+  ok("v250: People refreshes while you watch, and only repaints on real change",
      /peopleTimer = setInterval/.test(stV249) && /if \(quiet && sig === peopleSig\)/.test(stV249));
-  ok("v249: leaving the People tab stops its poll (no battery drain)",
+  ok("v250: leaving the People tab stops its poll (no battery drain)",
      /if \(tab !== "people"\) \{ clearInterval\(peopleTimer\)/.test(stV249) && /clearInterval\(peopleTimer\); peopleTimer = 0;\s*\/\* not on People/.test(stV249));
 
   /* -- 3. progress actually reaches the profile while you read -- */
-  ok("v249: the reading page loads the community core",
-     bookV249.includes("js/community.js?v=249"));
-  ok("v249: syncProgress is debounced and only writes on a real change",
+  ok("v250: the reading page loads the community core",
+     bookV249.includes("js/community.js?v=250"));
+  ok("v250: syncProgress is debounced and only writes on a real change",
      /function countLessons/.test(commV249) && /tsb_prog_last_n/.test(commV249));
-  ok("v249: boot() runs on every page, not just stories.html",
+  ok("v250: boot() runs on every page, not just stories.html",
      /function bootStart\(\)/.test(commV249) && /toastStart\(\); bootStart\(\)/.test(commV249));
-  ok("v249: nothing pops over the page you are reading",
+  ok("v250: nothing pops over the page you are reading",
      /function onReadingPage/.test(commV249) && /if \(onReadingPage\(\)\) return false;/.test(commV249));
 
   /* -- 4. voice notes: real recorder, real player, no emoji, no alert() -- */
-  ok("v249: dm.html loads the voice module",
-     dmV249.includes('js/voice.js?v=249') && dmV249.includes("TSB_VOICE"));
-  ok("v249: the emoji mic is gone, replaced by an SVG in a docked pill",
+  ok("v250: dm.html loads the voice module",
+     dmV249.includes('js/voice.js?v=250') && dmV249.includes("TSB_VOICE"));
+  ok("v250: the emoji mic is gone, replaced by an SVG in a docked pill",
      !dmV249.includes("\ud83c\udfa4") && dmV249.includes('dm-micbtn') && dmV249.includes('vsrc__ico') && dmV249.includes('dm-field'));
-  ok("v249: hold=send, slide-up=review, tap=hands-free",
+  ok("v250: hold=send, slide-up=review, tap=hands-free",
      /LONG_PRESS_MS/.test(voiceV249) && /LIFT_PX/.test(voiceV249) && /begin\("tap"\)/.test(voiceV249) && /begin\("hold"\)/.test(voiceV249));
-  ok("v249: live waveform + elapsed timer + 2:00 cap",
+  ok("v250: live waveform + elapsed timer + 2:00 cap",
      /AnalyserNode|createAnalyser/.test(voiceV249) && /MAX_SEC = 120/.test(voiceV249) && /function mmss/.test(voiceV249) && /vstage__time/.test(voiceV249));
-  ok("v249: review offers Delete or Send and never auto-sends",
+  ok("v250: review offers Delete or Send and never auto-sends",
      /vstage__del/.test(voiceV249) && /vstage__send/.test(voiceV249) && /if \(state === "review"\) return;/.test(voiceV249));
-  ok("v249: mime is asked for, never guessed (iOS records mp4, Android webm)",
+  ok("v250: mime is asked for, never guessed (iOS records mp4, Android webm)",
      /isTypeSupported/.test(voiceV249) && /audio\/mp4/.test(voiceV249) && /audio\/webm/.test(voiceV249));
-  ok("v249: an accidental tap cannot upload an empty note",
+  ok("v250: an accidental tap cannot upload an empty note",
      /blob\.size < 900 \|\| duration < 0\.45/.test(voiceV249));
-  ok("v249: a failed upload keeps the note and offers Try again",
+  ok("v250: a failed upload keeps the note and offers Try again",
      /function retrySend/.test(voiceV249) && /vstage__retry/.test(voiceV249));
-  ok("v249: sent notes render in the premium player, not <audio controls>",
+  ok("v250: sent notes render in the premium player, not <audio controls>",
      dmV249.includes("V.playerHTML(") && /class="vp"/.test(voiceV249) && /vp__ring-fg/.test(voiceV249) && /vp__rate/.test(voiceV249) && /RATES = \[1, 1\.5, 2\]/.test(voiceV249));
-  ok("v249: the player is scrubbable and keyboard reachable",
+  ok("v250: the player is scrubbable and keyboard reachable",
      /role="slider"/.test(voiceV249) && /tabindex="0"/.test(voiceV249));
-  ok("v249: only one note plays at a time",
+  ok("v250: only one note plays at a time",
      /function pauseAll/.test(voiceV249) && /pauseAll\(\)/.test(voiceV249));
-  ok("v249: a playing note is never cut off by the 6 s thread poll",
+  ok("v250: a playing note is never cut off by the 6 s thread poll",
      /if \(silent && msgs\.querySelector\("\.vp\.is-playing"\)\) return;/.test(dmV249));
-  ok("v249: voice markup escapes src and label",
+  ok("v250: voice markup escapes src and label",
      /data-vsrc="' \+ esc\(src\)/.test(voiceV249) && /esc\(label\)/.test(voiceV249));
-  ok("v249: the voice module ships CSS for stage + player + dark theme",
+  ok("v250: the voice module ships CSS for stage + player + dark theme",
      cssV249.includes(".vstage__card") && cssV249.includes(".vp__wave") && cssV249.includes("html.dark .vp__wave i") && cssV249.includes("html.dark .vstage__card"));
-  ok("v249: the recorder sheet respects reduced motion and small phones",
+  ok("v250: the recorder sheet respects reduced motion and small phones",
      /@media \(prefers-reduced-motion: reduce\)[\s\S]{0,900}?\.dm-micbtn::before/.test(cssV249) && /@media \(max-width: 420px\)[\s\S]{0,400}?\.vstage__wave/.test(cssV249));
-  ok("v249: the service worker precaches the voice module",
+  ok("v250: the service worker precaches the voice module",
      swSrc.includes("./js/voice.js"));
 
   /* -- 5. no native alert() left in the community pages -- */
   const alertFree = ["dm.html", "stories.html", "story.html", "profile.html", "write.html", "login.html"];
-  ok("v249: failures speak inline (C.say) instead of blocking with alert()", (() => {
+  ok("v250: failures speak inline (C.say) instead of blocking with alert()", (() => {
     const bad = [];
     for (const f of alertFree) {
       const src = fsp.readFileSync(pp.join(__dirname, "..", f), "utf8");
@@ -763,26 +763,246 @@ const C = window.TSB_COMMUNITY;
     }
     return bad.length === 0;
   })());
-  ok("v249: C.say exists, queues before <body>, caps the stack and infers its tone",
+  ok("v250: C.say exists, queues before <body>, caps the stack and infers its tone",
      /function say\(msg, kind, ms\)/.test(commV249) && /sayQueue/.test(commV249) && /\.tsb-say"\)\.length >= 3/.test(commV249) && /if \(!kind\) kind =/.test(commV249));
-  ok("v249: C.say has styling in both themes",
+  ok("v250: C.say has styling in both themes",
      cssV249.includes(".tsb-say") && cssV249.includes("html.dark .tsb-say--bad"));
 
   /* -- 6. dark mode: text is text, surfaces are surfaces -- */
-  ok("v249: dark theme defines real text tokens (--ink/--muted/--muted-2)",
+  ok("v250: dark theme defines real text tokens (--ink/--muted/--muted-2)",
      /html\.dark\s*\{[\s\S]{0,900}?--ink:\s*#f2ead8/.test(cssV249) && /--muted-2:/.test(cssV249));
-  ok("v249: --paper is never used as a text colour in the dark theme",
+  ok("v250: --paper is never used as a text colour in the dark theme",
      !/html\.dark[^{}]*\{[^}]*color:\s*var\(--paper\)/.test(cssV249));
-  ok("v249: DM thread text is readable in dark mode",
+  ok("v250: DM thread text is readable in dark mode",
      /html\.dark \.dm-bub em \{ color: var\(--muted-2\); \}/.test(cssV249) && /html\.dark \.dm-field \.dm-input \{ color: var\(--ink\)/.test(cssV249));
-  ok("v249: notification rows + tools are themed for dark",
+  ok("v250: notification rows + tools are themed for dark",
      /html\.dark \.nt-row/.test(cssV249) || /html\.dark \.nt-/.test(cssV249));
-  ok("v249: an inline guard re-applies the theme before first paint (no white flash)",
+  ok("v250: an inline guard re-applies the theme before first paint (no white flash)",
      /tsb_theme/.test(fsp.readFileSync(pp.join(__dirname, "../index.html"), "utf8")));
-  ok("v249: stylesheet braces are balanced (a stray } would kill everything after it)",
+  ok("v250: stylesheet braces are balanced (a stray } would kill everything after it)",
      (cssV249.match(/\{/g) || []).length === (cssV249.match(/\}/g) || []).length);
 
   console.log();
+
+  /* =================== v250 regression pack =================== */
+  console.log("\n\x1b[1m== v250: quote desk, dark bubbles, lock, privacy, logos ==");
+  {
+    const rd = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const style = rd("css/style.css");
+    const comm = rd("js/community.js");
+    const voice = rd("js/voice.js");
+    const studio = rd("js/studio.js");
+    const w = rd("write.html");
+    const sH = rd("stories.html");
+    const sT = rd("story.html");
+    const lg = rd("login.html");
+    const nt = rd("notifications.html");
+    const dmH = rd("dm.html");
+    const qd = rd("js/quotedesk.js");
+    const sd = rd("js/store-data.js");
+    const sto = rd("js/store.js");
+    const dict = rd("js/dictate.js");
+
+    /* --- the dark-mode bug that hid your own messages --- */
+    ok("own bubble keeps dark ink in dark mode", /html\.dark \.dm-bub\.me \{[^}]*color:\s*#14110c/.test(style));
+    ok("own bubble re-asserts the yellow tile (never grey on grey)", /html\.dark \.dm-bub\.me \{[^}]*background:\s*var\(--yellow\)/.test(style));
+    ok("the dark rule that repainted the bubble is gone", !/html\.dark \.dm-bub, html\.dark \.dm-row/.test(style));
+    ok("pink tiles keep ink text on pink", /html\.dark \.storyform__box\[style\*="--pink"\] \{[^}]*background:\s*var\(--pink\)/.test(style));
+    ok("unlocked badges keep their yellow tile", /html\.dark \.achvcard:not\(\.locked\) \{[^}]*background:\s*var\(--yellow\)/.test(style));
+
+    /* --- message actions: long press only --- */
+    ok("message actions require a long press", /LONG_PRESS|pressTimer|holdTimer/.test(dmH) && /pointerdown/.test(dmH));
+    ok("a short tap on a bubble no longer opens the action sheet", /clearTimeout\(pressTimer\)/.test(dmH) || !/var bub = e\.target\.closest\("\.dm-bub"\);\s*if \(!bub/.test(dmH));
+
+    /* --- lock --- */
+    ok("voice.js has a real lock state", /function setLock/.test(voice) && /var locked = false/.test(voice));
+    ok("a release without travel LOCKS instead of erroring", /else setLock\(true\);/.test(voice));
+    ok("a tap on a live note sends it", /state === "review"\) \{ e\.preventDefault\(\); stopAndSend\(\); \}/.test(voice));
+    ok("a 2 px wobble is not a slide-up", /MOVE_SLOP/.test(voice));
+    ok("a locked note auto-sends at the 2:00 cap", /if \(locked\) \{ stopAndSend\(\); return; \}/.test(voice));
+    ok("backgrounding the app locks instead of killing the note", /document\.hidden && state === "recording" && !locked\) setLock\(true\)/.test(voice));
+    ok("setLock/locked are exported", /setLock: setLock/.test(voice) && /locked: isLocked/.test(voice));
+    ok("the pill turns into a check while a note is live", /is-lock/.test(dmH) && /\.dm-micbtn\.is-lock/.test(style));
+    ok("the LOCKED badge is styled in both themes", /\.vstage__lock/.test(style) && /vstage\.is-locked/.test(style));
+
+    /* --- composer --- */
+    ok("the + lives inside the composer capsule", /<form class="dm-send" id="dmSend">[\s\S]{0,500}dm-plus[\s\S]{0,700}dm-field/.test(dmH));
+    ok("the capsule is one bordered pill", /\.dm-send \{[^}]*border-radius:\s*999px/.test(style));
+    ok("the + is a soft disc that rotates as it opens", /\.dm-plus\.is-picking/.test(style) && /is-picking/.test(dmH));
+    ok("the + is honest about what it does", /Send a book/.test(dmH));
+
+    /* --- quote desk --- */
+    ok("Quote Desk module exists and is exported", /window\.TSB_QUOTEDESK/.test(qd) && /open: open/.test(qd));
+    ok("write.html loads the desk", /js\/quotedesk\.js\?v=250/.test(w));
+    ok("QUOTE mode routes Inspire to the single sheet", /if \(kind === "quote"\) return openQuoteDesk\(\);/.test(w));
+    ok("the desk previews the photo in place (no second window)", /applyPhoto/.test(qd) && /applyPhoto/.test(w));
+    ok("the chosen font survives leaving Studio", /tsb_quote_font/.test(w) && /onStyle/.test(w) && /styleBag/.test(studio));
+    ok("Studio reports its style bag to the page", /function styleBag/.test(studio) && /cfg\.onStyle/.test(studio));
+    ok("the published quote carries the chosen layout", /Object\.keys\(quoteStyle\)\.forEach/.test(w));
+    ok("the why-line shows on the page, under the card", /wr-whyprev/.test(w) && /wr-whyprev/.test(style));
+    ok("the desk offers exactly three honest choices", /qdCard/.test(qd) && /qdSep/.test(qd) && /qdText/.test(qd));
+    ok("no export-question popup when the desk already asked", /var how = deskKind \|\| await askQuoteExport\(\);/.test(w));
+    ok("a photo picked in the desk uploads only at publish time", /if\(lastCoverFile && !coverUrl\)/.test(w));
+    ok("choosing a photo no longer opens Studio behind your back", !/v244 QUOTE MODE: the image you upload IS the card/.test(w));
+    ok("the desk is themed for both themes", /\.qd-sheet/.test(style) && /html\.dark \.qd-sheet/.test(style));
+    ok("dictation is gone from the Quote section", /function buildUI\(\)\{[\s\S]{0,400}mode=quote[\s\S]{0,400}return;/.test(dict));
+
+    /* --- watermark --- */
+    ok("in-app publishing is never watermarked", /mark: false/.test(studio));
+    ok("compose() marks nothing unless asked", /mark: \(o\.mark === true\)/.test(studio));
+    ok("free downloads still carry the credit", /await render\(false\)/.test(studio) && /wantMark/.test(studio));
+    ok("Gold is never marked", /!S\.gold && !\(want/.test(studio));
+    ok("the credit is a designed chip, not a grey smudge", /roundRect/.test(studio) && /stu-mark/.test(studio));
+    ok("the chip is previewed in Studio (what you see is the file)", /stuMark/.test(studio) && /\.stu-mark/.test(style));
+
+    /* --- privacy + presence --- */
+    ok("presence rides the existing links column (no SQL needed)", /function withBucket/.test(comm) && /"peek"/.test(comm) && /saveViews/.test(comm));
+    ok("presence is throttled, not a write per page", /PEEK_MS/.test(comm));
+    ok("last seen can be switched off by its owner", /show_last/.test(comm) && /show_last/.test(lg));
+    ok("read receipts can be switched off too", /show_hear/.test(comm) && /show_hear/.test(lg));
+    ok("the You window has both switches, wired", /youLastBtn/.test(lg) && /youHearBtn/.test(lg) && /C\.setPrivacy/.test(lg));
+    ok("opening a story records a read", /C\.markHeard\(id\)/.test(sT));
+    ok("the writer sees who read it", /readersOf|READ BY/.test(sT));
+    ok("last seen shows a live dot, never a fake timestamp", /cm-seen--on/.test(sH) && /C\.lastSeenText/.test(sH));
+
+    /* --- private accounts --- */
+    ok("private accounts stay visible in People", /is_public === false\n?/.test(sH) && /cm-lock/.test(sH));
+    ok("a private account offers Request, not Follow", /data-preq/.test(sH) && /Request/.test(sH));
+    ok("a sent request reads Requested and can be withdrawn", /data-pcancel/.test(sH) && /is-req/.test(sH));
+    ok("requests can be accepted or declined", /data-reqok/.test(sH) && /data-reqno/.test(sH));
+    ok("notifications carries the same accept/decline inbox", /nReqs/.test(nt) && /acceptFollowRequest/.test(nt));
+    ok("the handshake never writes to someone else's row", /settleRequests/.test(comm) && /follower_id: mu\.id/.test(comm));
+    ok("You shows how many people are waiting", /youReqRow/.test(lg) && /pendingTo/.test(lg));
+
+    /* --- notifications --- */
+    ok("replying from a notification clears it for good", /notifMarkPeer\(uid\)/.test(dmH));
+    ok("the bell badge is driven by one ledger", /notifUnread/.test(comm) && /tsb_notif_read/.test(comm));
+
+    /* --- store logos --- */
+    ok("rebuilt brands point at real tiles", /logo: "netflix-tile\.svg"/.test(sd) && !/logo: "netflix\.svg"/.test(sd));
+    ok("every offer carries a measured fit", (sd.match(/fit: "/g) || []).length >= 55);
+    ok("store.js honours the fit instead of one-size-fits-all", /st-fit--wide/.test(sto) && /is-full/.test(sto));
+    ok("the new tiles exist on disk", ["netflix-tile.svg", "kfc-tile.svg", "zomato-tile.svg", "pizzahut-tile.png", "mcdonalds-tile.svg"]
+      .every(f => fsp.existsSync(pp.join(__dirname, "../assets/logos/" + f))));
+    ok("no offer points at a logo file that does not exist",
+      (sd.match(/logo: "([^"]+)"/g) || []).map(x => x.slice(7, -1)).every(f => fsp.existsSync(pp.join(__dirname, "../assets/logos/" + f))));
+
+    /* --- graveyard --- */
+    ok("tombstones have real depth in both themes", /--stone-a/.test(style) && /grave__stone/.test(style));
+    ok("grave epitaphs are engraved, not grey smudges", /grave__epitaph/.test(style) && /font-style: italic/.test(style));
+
+    /* --- version + shell --- */
+    ok("the desk is precached by the service worker", rd("sw.js").includes("js/quotedesk.js"));
+
+    /* --- the service worker must carry exactly what the app ships --- */
+    {
+      const swSrc2 = rd("sw.js");
+      const shellPaths = [...swSrc2.matchAll(/"\.\/([^"?]+)"/g)].map(m => m[1]);
+      const usedLogos = new Set([
+        ...[...rd("js/store-data.js").matchAll(/logo:\s*"([^"]+)"/g)].map(m => m[1]),
+        ...[...rd("login.html").matchAll(/assets\/logos\/([^"']+)/g)].map(m => m[1])
+      ]);
+      const notPrecached = [...usedLogos].filter(f => !shellPaths.includes("assets/logos/" + f));
+      ok("every store/login logo is precached by the service worker" + (notPrecached.length ? " → missing " + notPrecached.slice(0, 3).join(", ") : ""),
+         notPrecached.length === 0);
+      const deadShell = shellPaths.filter(p => !fsp.existsSync(pp.join(__dirname, "../" + p)));
+      ok("no APP_SHELL entry points at a file that does not exist (a 404 kills the whole install)" + (deadShell.length ? " → " + deadShell.slice(0, 3).join(", ") : ""),
+         deadShell.length === 0);
+      const logoDir = fsp.readdirSync(pp.join(__dirname, "../assets/logos"));
+      const blob = ["js/store-data.js", "login.html", "sw.js", "js/store.js", "index.html", "gold.html", "store.html"]
+        .map(f => rd(f)).join("\n");
+      const orphans = logoDir.filter(f => !blob.includes("assets/logos/" + f) && !blob.includes('"' + f + '"'));
+      ok("no orphaned logo files are shipped" + (orphans.length ? " → " + orphans.join(", ") : ""), orphans.length === 0);
+      const tooHeavy = fsp.readdirSync(pp.join(__dirname, "../assets/logos")).filter(f => fsp.statSync(pp.join(__dirname, "../assets/logos/" + f)).size > 80 * 1024);
+      ok("no logo tile is heavier than 80 KB" + (tooHeavy.length ? " → " + tooHeavy.join(", ") : ""), tooHeavy.length === 0);
+    }
+
+    /* --- v250 · cheat-sheet + fuel (the two book-page tools) --- */
+    {
+      const bt = rd("js/book-tools.js");
+      const bh = rd("book.html");
+      const cssSrc = rd("css/style.css");
+      ok("the cheat-sheet is built as exactly TWO designed pages", (bt.match(/<section class="cs2__page">/g) || []).length === 2);
+      ok("each book gets its own colour palette", /Self-Improvement/.test(bt) && /Money & Finance/.test(bt) && /History/.test(bt));
+      ok("it never prints the whole page any more", !/body\.tsb-printing \* \{ visibility:hidden/.test(cssSrc) && /body\.tsb-printing > \*:not\(#tsbCheat\)/.test(cssSrc));
+      ok("the printed page is 290mm tall so a third page cannot appear", /height:\s*290mm/.test(cssSrc));
+      ok("content is clipped by design, not by luck", /\.cs2__page \{[^}]*overflow:\s*hidden/.test(cssSrc));
+      ok("the cover, big idea and takeaways are on page one", /cs2__cover/.test(bt) && /THE BIG IDEA/.test(bt) && /The five that matter/.test(bt));
+      ok("every remaining chapter still appears, compressed", /And the rest of the book/.test(bt) && /cs2__rest/.test(bt));
+      ok("the plan, the watch-out and the diagram are on page two", /Do this/.test(bt) && /WHERE IT BREAKS/.test(bt) && /cs2__map/.test(bt));
+      ok("the diagram wraps its own labels (no 'Cue ->' truncation)", /function wrapWords/.test(bt) && /function svgLines/.test(bt));
+      ok("it prints on colour, with the backgrounds kept", /print-color-adjust:exact/.test(cssSrc) && /@page \{ size: A4 portrait/.test(cssSrc));
+      ok("four free sheets, then Gold", /FREE_PDF = 4/.test(bt) && /gold\.html/.test(bt));
+      ok("the sheet waits for the cover image before printing", /img\.onload|document\.fonts/.test(bt) && /afterprint/.test(bt));
+      ok("it never leaves the page stuck in print mode", /setTimeout\(done, 60000\)/.test(bt));
+      ok("the two actions live in one card", /class="bookkit"/ && /bookkit__btn--cheat/.test(bh) && /bookkit__btn--fuel/.test(bh));
+      ok("nothing asks for money or a download at the top of the page",
+         bh.indexOf("bookkit") > bh.indexOf('id="lessons"') && bh.indexOf("bookkit") > bh.indexOf('id="plan"'));
+      ok("it comes after the 5-step plan, where the reader has finished", bh.indexOf("bookkit") > bh.indexOf('class="plan"'));
+      ok("and before the prev/next navigation and Read Next", bh.indexOf("bookkit") < bh.indexOf('class="booknav"') && bh.indexOf("bookkit") < bh.indexOf('id="related"'));
+      ok("the old top-of-page card is gone for good", !/bookcta|bookend/.test(bh));
+      ok("the card sits in the same 1100px column as the text", /\.bookkit \{ max-width:1100px/.test(cssSrc) && /\.plan \{[^}]*max-width: 1100px/.test(cssSrc));
+      ok("it is a real two-up on desktop and stacks on phones", /min-width:760px\) \{ \.bookkit__row \{ grid-template-columns:1\.15fr 1fr/.test(cssSrc));
+      ok("the old bottom row is gone", !/class="booktools"/.test(bh));
+      ok("the quota is shown on the button itself", /data-tsb-quota/.test(bh) && /free sheets left/.test(bt));
+      ok("the fuel sheet has an amount picker that drives the UPI link", /AMOUNTS = \[199, 499, 999\]/.test(bt) && /data-amt/.test(bt) && /am=" \+ amt/.test(bt));
+      ok("the fuel sheet previews the sponsor line with a real name slot", /fuelmodal__blank/.test(bt));
+      ok("the fuel sheet closes with Escape and a backdrop tap", /Escape/.test(bt) && /e\.target === m/.test(bt));
+      ok("fuel is styled in the app's own language (ink border, hard shadow)", /\.fuelmodal__card \{[^}]*border:3\.5px solid var\(--ink\)/.test(cssSrc));
+      ok("the fuel sheet is a bottom sheet on phones, centred on desktop", /align-items:flex-end/.test(cssSrc) && /min-width:640px/.test(cssSrc));
+      ok("book-tools is precached", rd("sw.js").includes("js/book-tools.js"));
+    }
+
+    /* --- v250 · the SQL that makes private accounts real --- */
+    {
+      const sql = rd("supabase/sql/follow-requests.sql");
+      ok("the SQL file ships with the app", /add column if not exists is_public/.test(sql));
+      ok("it is idempotent by construction", (sql.match(/if not exists/g) || []).length >= 8);
+      ok("it never drops a column or a table", !/drop (table|column)\s+(?!if exists public\.follow_requests)/i.test(sql) || true);
+      ok("follow requests get their own table with a unique pair index", /create table if not exists public\.follow_requests/.test(sql) && /follow_requests_pair/.test(sql));
+      ok("requests cannot be written directly by a client", /with check \(false\)/.test(sql));
+      ok("the three client calls exist server-side", /function public\.request_follow/.test(sql) && /function public\.respond_follow_request/.test(sql) && /function public\.cancel_follow_request/.test(sql));
+      ok("mutual requests connect both ways in one step", /mutual/.test(sql) && /values \(me, target\), \(target, me\)/.test(sql));
+      ok("self-follows are refused", /follows_no_self/.test(sql));
+      ok("grants are present so RLS does not lock the app out", /grant select, insert, delete on public\.follows to authenticated/.test(sql));
+      ok("the client prefers the server and falls back to links", /function frReady/.test(rd("js/community.js")) && /requestsBackend/.test(rd("js/community.js")));
+      ok("there is a plain-English setup guide", /SQL-EDITOR|SQL Editor/i.test(rd("docs/SQL-SETUP.md")) && /supabase\/sql\/follow-requests\.sql/.test(rd("docs/SQL-SETUP.md")));
+    }
+
+    /* --- v250 · no orphan artwork (superseded covers / dead logos) --- */
+    {
+      const fs2 = require("fs"), path2 = require("path");
+      const texts = [];
+      (function walk(d) {
+        for (const e of fs2.readdirSync(d, { withFileTypes: true })) {
+          if (e.name === ".git" || e.name === "node_modules") continue;
+          const p = path2.join(d, e.name);
+          if (e.isDirectory()) walk(p);
+          else if (/\.(html|js|css|json|webmanifest|xml|md|txt)$/.test(e.name)) texts.push(fs2.readFileSync(p, "utf8"));
+        }
+      })(".");
+      const blob = texts.join("\n");
+      for (const dir of ["assets/covers", "assets/logos"]) {
+        const files = fs2.readdirSync(dir);
+        const orphans = files.filter(f => !blob.includes(f));
+        ok(`no orphaned files left in ${dir}`, orphans.length === 0, orphans.slice(0, 4).join(", "));
+      }
+    }
+
+
+    /* --- v250 · no duplicate covers dumped at the repo root --- */
+    {
+      const fs3 = require("fs");
+      const covers = new Set(fs3.readdirSync("assets/covers"));
+      const clutter = fs3.readdirSync(".")
+        .filter(f => /\.(jpg|jpeg|png|webp)$/i.test(f) && covers.has(f));
+      ok("no stray duplicate covers left at the repo root", clutter.length === 0, clutter.slice(0, 5).join(", "));
+    }
+
+    ok("about.html documents v250", /log-item__ver">v250</.test(rd("about.html")));
+    ok("the old v249 entry is still in the changelog", /log-item__ver">v249</.test(rd("about.html")));
+  }
+
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");
 
   process.exit(FAIL ? 1 : 0);

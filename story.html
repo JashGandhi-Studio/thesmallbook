@@ -24,7 +24,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=249">
+  <link rel="stylesheet" href="css/style.css?v=250">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -36,13 +36,13 @@
     </article>
   </main>
 
-  <script src="js/prefs.js?v=249"></script>
-  <script src="js/lang.js?v=249"></script>
-  <script src="js/config.js?v=249"></script>
-  <script src="js/auth.js?v=249"></script>
-  <script src="js/sounds.js?v=249"></script>
-  <script src="js/founder.js?v=249"></script>
-  <script src="js/community.js?v=249"></script>
+  <script src="js/prefs.js?v=250"></script>
+  <script src="js/lang.js?v=250"></script>
+  <script src="js/config.js?v=250"></script>
+  <script src="js/auth.js?v=250"></script>
+  <script src="js/sounds.js?v=250"></script>
+  <script src="js/founder.js?v=250"></script>
+  <script src="js/community.js?v=250"></script>
   <script>
   (function () {
     "use strict";
@@ -57,7 +57,7 @@
       var p;
       try { p = id ? await C.getPost(id) : await C.getPostByShort(shortCode); } catch (e) {}
       if (p) id = p.id;
-      /* v249: opening the story IS reading the notification. "Someone liked /
+      /* v250: opening the story IS reading the notification. "Someone liked /
          commented on your story" is written into the shared read ledger here,
          so it can never come back as new in the bell or the history list. */
       if (id) { try { C.notifMarkPost(id); } catch (e) {} }
@@ -100,6 +100,8 @@
           (p.audio_url ? '<button class="cm-listenbig" data-audio="' + C.esc(p.audio_url) + '" data-title="' + C.esc(p.title) + '">' + C.icon('phone') + " Listen to the voice version</button>" : "") +
           '<div class="cm-rich">' + C.sanitize(p.body) + "</div>" +
           (p.tags && p.tags.length ? '<div class="cm-card__tags">' + p.tags.map(function (t) { return "<span># " + C.esc(t) + "</span>"; }).join("") + "</div>" : "") +
+          /* v250 · read receipts — the writer finally sees who read it */
+          '<div class="rr" id="readBy" hidden></div>' +
           '<div class="cm-bigacts">' +
             '<button class="cm-bigact cm-blike' + (like.mine ? " on" : "") + '" data-like="' + p.id + '"><span class="cm-bigact__ico">♥</span><b>' + like.count + " like" + (like.count === 1 ? "" : "s") + "</b></button>" +
             '<a class="cm-bigact" href="#comments"><span class="cm-bigact__ico">' + C.icon('chat') + '</span><b>' + cmts.length + " comment" + (cmts.length === 1 ? "" : "s") + "</b></a>" +
@@ -115,6 +117,48 @@
             : '<a class="cm-write" href="login.html">Sign in to comment →</a>') +
         "</section>";
       try { C.protectMedia(root); } catch (e) {}
+
+      /* ---- v250 · READ RECEIPTS ----------------------------------------
+         Opening a story is the reading. It is logged once, on this device,
+         straight into my own profile — and only if I left the receipt switch
+         on in You. The writer sees a quiet pile of initials, never a list of
+         strangers who get notified. */
+      (function readStrip() {
+        if (!C.signedIn() || !meId) return;
+        try { C.markHeard(id); } catch (e) {}
+        var box = root.querySelector("#readBy");
+        if (!box) return;
+        (async function () {
+          try {
+            var isMine = p.author_id === meId;
+            var people = [];
+            try { people = await C.allPeople(); } catch (e) {}
+            var readers = (C.readersOf ? C.readersOf(people, id) : []) || [];
+            var mine = false;
+            try { mine = (C.heardPosts() || []).indexOf(id) >= 0; } catch (e) {}
+            if (isMine) {
+              box.hidden = false;
+              if (!readers.length) {
+                box.innerHTML = '<span class="rr__t">\ud83d\udc40 READ BY</span>' +
+                  '<span class="rr--mine">nobody yet — it was just published. Share it once and watch this fill up.</span>';
+                return;
+              }
+              var pile = readers.slice(0, 8).map(function (r) {
+                return '<span title="' + C.esc(r.name || "A reader") + '">' +
+                  C.esc(String(r.name || "R").charAt(0).toUpperCase()) + "</span>";
+              }).join("");
+              var names = readers.slice(0, 4).map(function (r) { return C.esc((r.name || "A reader").split(" ")[0]); }).join(", ");
+              box.innerHTML = '<span class="rr__t">\ud83d\udc40 READ BY</span>' +
+                '<span class="rr__pile">' + pile + "<b>" + readers.length + (readers.length === 1 ? " reader" : " readers") + "</b></span>" +
+                '<span class="rr--mine">' + names + (readers.length > 4 ? " and " + (readers.length - 4) + " more" : "") + "</span>";
+            } else {
+              box.hidden = false;
+              box.innerHTML = '<span class="rr__t">' + (mine ? "\u2713 YOU READ THIS" : "\ud83d\udc40 READ THIS") + "</span>" +
+                (readers.length ? '<span class="rr__pile"><b>' + readers.length + (readers.length === 1 ? " reader" : " readers") + "</b></span>" : "");
+            }
+          } catch (e) { box.hidden = true; }
+        })();
+      })();
 
       function cm(c) {
         var pid2 = c.author_id || "";
@@ -221,7 +265,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=249" defer></script>
-  <script src="js/gate.js?v=249" defer></script>
+  <script src="js/bar.js?v=250" defer></script>
+  <script src="js/gate.js?v=250" defer></script>
 </body>
 </html>

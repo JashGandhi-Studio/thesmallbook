@@ -591,6 +591,15 @@
   }
 
   function buildUI(){
+    /* v250: the Quote section is deliberately small — no dictation button,
+       and any button left over from an older cached build is removed here. */
+    try {
+      if (location.search.indexOf("mode=quote") >= 0) {
+        var stale = document.getElementById("wrDictate"); if (stale && stale.parentNode) stale.parentNode.removeChild(stale);
+        var staleL = document.getElementById("dictateLang"); if (staleL && staleL.parentNode) staleL.parentNode.removeChild(staleL);
+        return;
+      }
+    } catch (e) {}
     var top = document.querySelector(".wr-top");
     var bar = document.getElementById("wBar");
     if (!top && !bar) return;

@@ -345,39 +345,66 @@
     }
   }
 
-  function drawMark(ctx, W, H) {
-    // subtle small watermark for FREE — elegant, not loud. Gold has no watermark.
-    var label = "thesmallbook.in";
-    ctx.save();
-    ctx.font = "600 20px 'Space Grotesk', Arial";
-    var w = ctx.measureText(label).width + 28, h = 28;
-    var x = (W - w)/2, y = H - h - 18;
-    // soft pill, semi-transparent so quote stays hero
-    ctx.globalAlpha = 0.72;
-    ctx.fillStyle = "rgba(17,17,17,0.82)";
-    // rounded pill
-    var r = h/2;
+  /* ------------------------------------------------------------------
+     v250 · THE CREDIT CHIP
+     Only DOWNLOADS carry it, and it is designed to be liked: a small,
+     dark, soft-shadowed sticker with the brand dot, set in the card's own
+     type scale. Nothing is drawn on a card that stays inside the app, and
+     Gold never sees it at all.
+     ------------------------------------------------------------------ */
+  function roundRect(ctx, x, y, w, h, r) {
     ctx.beginPath();
-    ctx.moveTo(x+r, y); ctx.lineTo(x+w-r, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r);
-    ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
-    ctx.lineTo(x+r, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r);
-    ctx.lineTo(x, y+r); ctx.quadraticCurveTo(x, y, x+r, y);
-    ctx.closePath(); ctx.fill();
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = "#ffc800";
-    ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText(label, x + w/2, y + h/2 + 1);
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+  function drawMark(ctx, W, H, st) {
+    var k = Math.max(0.62, Math.min(2.4, W / 1080));      /* draw at any export size */
+    var label = "thesmallbook.in";
+    var fs = Math.round(22 * k);
+    var padX = Math.round(15 * k), padY = Math.round(10 * k);
+    var dot = Math.round(10 * k), gap = Math.round(10 * k);
+    ctx.save();
+    ctx.font = "700 " + fs + "px 'Space Grotesk', Arial, sans-serif";
+    var tw = 0; try { tw = ctx.measureText(label).width; } catch (e) { tw = fs * 8; }
+    var w = tw + padX * 2 + dot + gap;
+    var h = fs + padY * 2;
+    var r = h / 2;
+    /* tuck it in the corner opposite the words so the quote is never covered */
+    var x = (st && st.pos === "bottom") ? (W - w - Math.round(24 * k)) : Math.round(24 * k);
+    var y = H - h - Math.round(22 * k);
+
+    ctx.shadowColor = "rgba(0,0,0,.34)";
+    ctx.shadowBlur = 14 * k; ctx.shadowOffsetY = 3 * k;
+    roundRect(ctx, x, y, w, h, r);
+    ctx.fillStyle = "rgba(18,15,11,.60)";
+    ctx.fill();
+    ctx.shadowColor = "transparent"; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+
+    ctx.lineWidth = Math.max(1, 1.3 * k);
+    ctx.strokeStyle = "rgba(255,248,230,.42)";
+    roundRect(ctx, x, y, w, h, r); ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(x + padX + dot / 2, y + h / 2, dot / 2, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffc800"; ctx.fill();
+
+    ctx.fillStyle = "rgba(255,252,244,.97)";
+    ctx.textAlign = "left"; ctx.textBaseline = "middle";
+    ctx.fillText(label, x + padX + dot + gap, y + h / 2 + Math.max(1, k));
     ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
     ctx.restore();
   }
 
-  /* ---------- the export ---------- */
   function ensureFonts() {
     // v244: webfonts (Bebas, Lobster, Playfair…) must be READY before canvas draws them
     try { if (document.fonts && document.fonts.ready) return document.fonts.ready; } catch (e) {}
     return Promise.resolve();
   }
-  async function render(noText) {
+  async function render(noText, want) {
     await ensureFonts();
     var r = ratio();
     var canvas = document.createElement("canvas");
@@ -402,7 +429,10 @@
     }
     drawScrim(ctx, r.w, r.h, S);
     if (!noText) drawQuote(ctx, r.w, r.h, S);
-    if (!noText && !S.gold) drawMark(ctx, r.w, r.h);
+    /* want.mark === false  -> in-app use (cover / publish): NEVER marked
+       want.mark !== false  -> a download, so the free plan signs its work */
+    var wantMark = !S.gold && !(want && want.mark === false);
+    if (!noText && wantMark) drawMark(ctx, r.w, r.h, S);
     return canvas;
   }
 
@@ -434,6 +464,21 @@
   }
 
   /* ---------- preview (DOM mirror of the canvas math) ---------- */
+  /* v250: tell the host page what the card looks like RIGHT NOW, so the page
+     preview (and the published quote) uses the same font, ratio and theme the
+     writer picked here — instead of snapping back to the old defaults. */
+  var styleTimer = 0;
+  function styleBag() {
+    return { font: S.font, quote: S.quote, byline: S.byline, ratio: S.ratio, bg: S.bg,
+             theme: S.theme, pos: S.pos, align: S.align, size: S.size,
+             filter: S.filter, scrim: S.scrim, gold: !!S.gold };
+  }
+  function touchStyle() {
+    if (!cfg || typeof cfg.onStyle !== "function") return;
+    clearTimeout(styleTimer);
+    styleTimer = setTimeout(function () { try { cfg.onStyle(styleBag()); } catch (e) {} }, 120);
+  }
+
   function layoutPreview() {
     if (!root) return;
     var box = $("stuPrev");
@@ -509,6 +554,7 @@
           : "linear-gradient(to top, rgba(0,0,0," + a + "), rgba(0,0,0,0) 50%), linear-gradient(to bottom, rgba(0,0,0," + a + "), rgba(0,0,0,0) 50%)";
       }
     }
+    touchStyle();
     var q = $("stuQuote");
     if (q) {
       q.className = "stu-quote stu-quote--" + S.pos + " stu-quote--" + S.align + " stu-quote--" + S.theme + " stu-quote--font-" + S.font;
@@ -644,6 +690,7 @@
           '<div class="stu-scrim" id="stuScrim"></div>' +
           '<div class="stu-quote" id="stuQuote"></div>' +
           '<div class="stu-draghint" id="stuHint">DRAG TO REFRAME · DOUBLE-TAP RESETS</div>' +
+          '<div class="stu-mark" id="stuMark"' + (S.gold ? ' hidden' : '') + '><i></i>thesmallbook.in</div>' +
         "</div></div>" +
         '<div id="stuDims" style="flex:none;text-align:center;font:800 10px \'Space Grotesk\',sans-serif;letter-spacing:1.2px;color:#b3ab97;text-transform:uppercase;padding:9px 0 3px;background:#0e0c0a"></div>' +
         '<div class="stu-sec"><div class="stu-lbl">RATIO <small>where will you post it? FREE = original</small></div><div class="stu-chips" id="stuRatio"></div></div>' +
@@ -666,11 +713,11 @@
           '<div class="stu-chips" id="stuAlign"></div><div style="height:8px"></div>' +
           '<div class="stu-chips" id="stuTheme"></div>' +
         "</div>" +
-        (S.gold ? '<div class="stu-gold">💛 GOLD — no watermark, Pro filters on. Thank you for keeping the library free.</div>'
-                : '<div class="stu-gold">Free = tiny <span style="background:#111;color:#ffc800;padding:2px 6px;border-radius:999px;font-size:10px;">thesmallbook.in</span> at the bottom — subtle, not loud · <a href="gold.html">Gold removes it →</a></div>') +
+        (S.gold ? '<div class="stu-gold">💛 GOLD — Pro filters, no credit chip on downloads, ever.</div>'
+                : '<div class="stu-gold">Posting in the app = <b>clean, no mark</b>. Downloading the file adds one small <span style="background:#111;color:#ffc800;padding:2px 6px;border-radius:999px;font-size:10px;">thesmallbook.in</span> chip · <a href="gold.html">Gold removes it →</a></div>') +
         '<div class="stu-foot">' +
           '<button class="stu-apply stu-foot__main" id="stuApply">✔ USE AS COVER</button>' +
-          '<button class="stu-dl" id="stuDl">⬇ CARD · TEXT INSIDE</button>' +
+          '<button class="stu-dl" id="stuDl">⬇ DOWNLOAD CARD</button>' +
           '<button class="stu-dl" id="stuDlPhoto" style="background:#fff">⬇ PHOTO ONLY</button>' +
         '</div>' +
       "</div>";
@@ -680,7 +727,7 @@
     root.addEventListener("click", function (e) { if (e.target === root) close(); });
     $("stuDl").addEventListener("click", async function () {
       this.textContent = "… rendering";
-      try { await shareOrDownload(await render(), "thesmallbook-card.png"); } finally { this.textContent = "⬇ CARD · TEXT INSIDE"; }
+      try { await shareOrDownload(await render(false), "thesmallbook-card.png"); } finally { this.textContent = "⬇ DOWNLOAD CARD"; }
     });
     // v244: export the picture ALONE — clean image, no text, no watermark (your "image & text separately" choice)
     $("stuDlPhoto").addEventListener("click", async function () {
@@ -690,8 +737,9 @@
     $("stuApply").addEventListener("click", async function () {
       this.textContent = "… rendering";
       try {
-        var file = await canvasToFile(await render(), "studio-card.png");
-        if (cfg.onApply) await cfg.onApply(file);
+        /* in-app cover: no credit chip — the free mark only rides downloads */
+        var file = await canvasToFile(await render(false, { mark: false }), "studio-card.png");
+        if (cfg.onApply) await cfg.onApply(file, styleBag());
         toast("✅ Studio card set as your cover");
         close();
       } catch (e) {
@@ -699,6 +747,9 @@
       } finally { this.textContent = "✔ USE AS COVER"; }
     });
 
+    /* the chip in the preview = the chip in the DOWNLOAD (never in-app) */
+    var mEl = $("stuMark");
+    if (mEl) mEl.hidden = !!S.gold;
     $("stuQuoteTa").value = S.quote;
     var vBtn = $("stuInspire");
     if (vBtn) vBtn.addEventListener("click", function(){
@@ -850,7 +901,7 @@
         theme: o.theme || "ink", scrim: .55,
         gold: !!(o.gold || (window.TSB_GOLD && TSB_GOLD.isGold()))
       };
-      var canvas = await render();
+      var canvas = await render(false, { mark: (o.mark === true) });
       return await canvasToFile(canvas, "thesmallbook-card.png");
     } finally {
       img = keepImg; S = keepS; cfg = keepCfg;

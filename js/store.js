@@ -46,10 +46,26 @@
   }
   function haptic() { try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) {} }
   function initials(b) { return (b || "?").replace(/[^A-Za-z0-9]/g, "").slice(0, 1).toUpperCase() || "?"; }
+  /* v250 · a logo is only useful if you can SEE it. `fit` comes from
+     js/store-data.js and is measured from the file itself:
+       full — the artwork already IS a tile, so it fills the square edge to edge
+       wide — a long wordmark: reduce the padding so the words stay readable
+       mid  — a wide-ish mark
+       logo — a compact mark, keep the generous padding                 */
+  function logoFitClass(o) {
+    var fit = o.fit || "logo";
+    if (fit === "full") return " is-full";
+    if (fit === "wide") return " st-fit--wide";
+    if (fit === "mid") return " st-fit--mid";
+    return "";
+  }
   function logoHTML(o, cls) {
     /* real brand mark; if the file ever 404s we fall back to a monogram tile */
-    return '<div class="st-logo ' + (cls || "") + '" style="background:' + esc(o.bg || "#fff") + '">' +
+    var fit = o.fit || "logo";
+    var host = "st-logo" + (fit === "wide" ? " st-logo--wide" : fit === "mid" ? " st-logo--mid" : "");
+    return '<div class="' + host + " " + (cls || "") + '" style="background:' + esc(o.bg || "#fff") + '">' +
       '<img src="' + LOGO_DIR + esc(o.logo) + '" alt="' + esc(o.brand) + ' logo" loading="lazy" decoding="async" ' +
+      'class="' + logoFitClass(o).trim() + '" ' +
       'onerror="this.outerHTML=\'<span class=&quot;st-logo__mono&quot;>' + esc(initials(o.brand)) + '</span>\'">' +
       "</div>";
   }
@@ -120,7 +136,7 @@
       var seen = {}, items = [];
       DATA.offers.forEach(function (o) {
         if (seen[o.logo]) return; seen[o.logo] = 1;
-        items.push('<span class="st-ticker__item"><img src="' + LOGO_DIR + esc(o.logo) + '" alt="" style="background:' + esc(o.bg || "#fff") + '">' + esc(o.brand) + "</span>");
+        items.push('<span class="st-ticker__item"><img class="' + logoFitClass(o).trim() + '" src="' + LOGO_DIR + esc(o.logo) + '" alt="" style="background:' + esc(o.bg || "#fff") + '">' + esc(o.brand) + "</span>");
       });
       tk.innerHTML = '<div class="st-ticker__track">' + items.join("") + items.join("") + "</div>";
     }
@@ -215,7 +231,7 @@
           (aff ? '<p class="st-disc" style="margin-top:8px;opacity:.75">🔗 Affiliate link — if you buy through this, we may earn a small commission at no extra cost to you. Keeps the library running 💛</p>' : "") +
         "</div>" +
         '<div class="st-modal__foot">' +
-          '<a class="st-cta" href="' + esc(href) + '" target="_blank" rel="noopener nofollow"><img src="' + LOGO_DIR + esc(o.logo) + '" alt="">OPEN ' + esc(o.brand.toUpperCase()) + " →</a>" +
+          '<a class="st-cta" href="' + esc(href) + '" target="_blank" rel="noopener nofollow"><img class="' + logoFitClass(o).trim() + '" src="' + LOGO_DIR + esc(o.logo) + '" alt="">OPEN ' + esc(o.brand.toUpperCase()) + " →</a>" +
           '<a class="st-dead" href="https://wa.me/919702510680?text=' + encodeURIComponent("Hi! The store offer “" + o.title + "” seems dead — please refresh it.") + '" target="_blank" rel="noopener">Offer not working? Report it — we refresh monthly</a>' +
         "</div>" +
       "</div>";

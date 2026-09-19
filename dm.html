@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=249">
+  <link rel="stylesheet" href="css/style.css?v=250">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -49,14 +49,14 @@
     <div id="dmThread" class="dm-thread" hidden>
       <div id="dmThreadBanner" class="dm-threadbanner" hidden></div>
       <div class="dm-msgs" id="dmMsgs"></div>
-      <!-- v249: one capsule. The mic is a real SVG docked inside the field and
+      <!-- v250: one capsule. The mic is a real SVG docked inside the field and
            morphs into Send the moment there is text — no emoji, no orphan button. -->
-      <!-- v249: inline paper note. Voice problems are explained here, in the
+      <!-- v250: inline paper note. Voice problems are explained here, in the
            thread, instead of a blocking alert() that hides the whole screen. -->
       <div class="dm-note" id="dmNote" role="status" aria-live="polite" hidden></div>
 
       <form class="dm-send" id="dmSend">
-        <button class="dm-plus" id="dmPlus" type="button" title="Recommend a book" aria-label="Recommend a book">
+        <button class="dm-plus" id="dmPlus" type="button" title="Send a book" aria-label="Send a book" aria-expanded="false" aria-haspopup="dialog">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5.6v12.8M5.6 12h12.8"/></svg>
         </button>
         <div class="dm-field">
@@ -83,15 +83,15 @@
     </div>
   </div>
 
-  <script src="js/prefs.js?v=249"></script>
-  <script src="js/lang.js?v=249"></script>
-  <script src="js/config.js?v=249"></script>
-  <script src="js/data.js?v=249"></script>
-  <script src="js/auth.js?v=249"></script>
-  <script src="js/sounds.js?v=249"></script>
-  <script src="js/founder.js?v=249"></script>
-  <script src="js/community.js?v=249"></script>
-  <script src="js/voice.js?v=249"></script>
+  <script src="js/prefs.js?v=250"></script>
+  <script src="js/lang.js?v=250"></script>
+  <script src="js/config.js?v=250"></script>
+  <script src="js/data.js?v=250"></script>
+  <script src="js/auth.js?v=250"></script>
+  <script src="js/sounds.js?v=250"></script>
+  <script src="js/founder.js?v=250"></script>
+  <script src="js/community.js?v=250"></script>
+  <script src="js/voice.js?v=250"></script>
   <script>
   (function () {
     "use strict";
@@ -221,7 +221,7 @@
         var body = String(m.body || "");
         return '<div class="dm-bub' + (mineRow ? " me" : "") + (m.audio_url ? " dm-bub--voice" : "") + '" data-mid="' + m.id + '" data-mine="' + (mineRow ? 1 : 0) + '" data-body="' + C.esc(body) + '">' +
           (m.book_id ? bookCard(m.book_id) : "") +
-          /* v249: the real player — ring progress, scrubbable waveform,
+          /* v250: the real player — ring progress, scrubbable waveform,
              elapsed/total and 1× 1.5× 2×. The bare <audio controls> is gone. */
           (m.audio_url && V ? V.playerHTML(m.audio_url, { mine: mineRow, label: "Voice message" }) : "") +
           (m.audio_url && !V ? '<audio class="dm-audio" controls preload="none" src="' + C.esc(m.audio_url) + '"></audio>' : "") +
@@ -250,7 +250,7 @@
         C.markThreadRead(uid).catch(function () {});
       } catch (e) {}
       try {
-        /* v249: talking to someone IS reading their notifications. These keys
+        /* v250: talking to someone IS reading their notifications. These keys
            go into the one shared ledger, so the bell and the You-page badge
            stop flagging them — and they still stay in the notification list. */
         C.notifMarkRead(rows.filter(function (m) { return m.sender_id === uid; })
@@ -271,7 +271,12 @@
       pend.className = "dm-bub me dm-bub--pend";
       pend.innerHTML = "<span>" + C.esc(body) + '</span><em>just now</em><span class="dm-tick pending">✓</span>';
       msgs.appendChild(pend); msgs.scrollTop = msgs.scrollHeight;
-      try { await C.sendDM(uid, body); await loadThread(); }
+      try {
+        await C.sendDM(uid, body);
+        await loadThread();
+        /* v250: replying IS reading — the "new message" note never comes back */
+        try { C.notifMarkPeer(uid).catch(function () {}); } catch (e2) {}
+      }
       catch (err) {
         pend.classList.add("dm-bub--fail");
         setTimeout(function () { pend.remove(); }, 4000);
@@ -283,7 +288,7 @@
     /* ---- voice messages + reading-thread meta ---- */
     function saveThreadMeta(peer, bookId, expires) { try { var a = JSON.parse(localStorage.getItem("tsb_threads") || "{}"); a[peer] = { bookId: bookId, expiresAt: expires }; localStorage.setItem("tsb_threads", JSON.stringify(a)); } catch (e) {} }
     function getThreadMeta(peer) { try { return (JSON.parse(localStorage.getItem("tsb_threads") || "{}"))[peer] || null; } catch (e) { return null; } }
-    /* ---- 🎙️ voice notes (v249) ------------------------------------
+    /* ---- 🎙️ voice notes (v250) ------------------------------------
        Hold to record · release to send · slide up to review (Delete/Send)
        · quick tap for hands-free. Live waveform, mm:ss timer, 2:00 cap,
        correct mime per browser, inline errors instead of alert(). */
@@ -334,7 +339,11 @@
         isEnabled: function () { return !(dmBody && dmBody.value.trim()); },
         onState: function (st) {
           if (!dmMic) return;
-          dmMic.classList.toggle("is-live", st === "recording" || st === "review");
+          var live = (st === "recording" || st === "review");
+          dmMic.classList.toggle("is-live", live);
+          /* v250: a live note shows the ✓ (tap = send) — and while it is LOCKED
+             the note keeps recording after you let go, exactly like WhatsApp */
+          dmMic.classList.toggle("is-lock", live);
           dmMic.classList.toggle("is-send", false);
           if (st === "idle") syncMicMode();
         },
@@ -352,6 +361,8 @@
             await C.sendDM(uid, "", null, { audio_url: url });
             pend.remove();
             await loadThread();
+            /* v250: a voice reply clears the peer's unread note too */
+            try { C.notifMarkPeer(uid).catch(function () {}); } catch (e2) {}
             note("Voice note sent · " + V.mmss(meta.duration), "good");
           } catch (err) {
             pend.classList.add("dm-bub--fail");
@@ -389,16 +400,61 @@
       } catch (e) {}
     }, 10000);
 
-    /* ---- message actions: popout right where you tapped ---- */
+    /* ---- message actions: LONG PRESS, exactly as you asked -------------
+       A tap is for listening, reading and following a link. The three
+       destructive verbs (edit · delete for me · delete for everyone) only
+       appear when you deliberately hold the bubble — so tapping a voice note
+       to play it can never pop a menu over it. */
     var ctx = document.getElementById("ctxPop");
-    msgs.addEventListener("click", function (e) {
-      var bub = e.target.closest(".dm-bub");
-      if (!bub || e.target.closest(".dm-book")) return;
+    var HOLD_MS = 430, pressTimer = 0, pressStart = null, pressBub = null;
+
+    function openActions(bub, x, y) {
       selectedMsg = bub;
       var mineRow = bub.getAttribute("data-mine") === "1";
       document.getElementById("actEdit").hidden = !mineRow;
       document.getElementById("actDelAll").hidden = !mineRow;
-      openPop(ctx, e.clientX, e.clientY + 8);
+      try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) {}
+      openPop(ctx, x, y + 8);
+    }
+    function cancelPress() {
+      if (pressTimer) { clearTimeout(pressTimer); pressTimer = 0; }
+      pressBub = null; pressStart = null;
+      if (ctx && !ctx.hidden) return;
+    }
+    /* never hijack the player, book cards or links inside a bubble */
+    function pressable(el) {
+      if (!el) return null;
+      if (el.closest(".dm-book") || el.closest(".vp") || el.closest("a")) return null;
+      return el.closest(".dm-bub");
+    }
+    msgs.addEventListener("pointerdown", function (e) {
+      var bub = pressable(e.target);
+      if (!bub) return;
+      pressBub = bub;
+      pressStart = { x: e.clientX, y: e.clientY };
+      if (pressTimer) clearTimeout(pressTimer);
+      pressTimer = setTimeout(function () {
+        pressTimer = 0;
+        if (!pressBub) return;
+        var b = pressBub, st = pressStart;
+        pressBub = null;
+        openActions(b, st.x, st.y);
+      }, HOLD_MS);
+    });
+    msgs.addEventListener("pointermove", function (e) {
+      if (!pressStart) return;
+      if (Math.abs(e.clientX - pressStart.x) > 12 || Math.abs(e.clientY - pressStart.y) > 12) cancelPress();
+    });
+    msgs.addEventListener("pointerup", cancelPress);
+    msgs.addEventListener("pointercancel", cancelPress);
+    msgs.addEventListener("pointerleave", cancelPress);
+    /* desktop right-click should feel the same as a long press */
+    msgs.addEventListener("contextmenu", function (e) {
+      var bub = pressable(e.target);
+      if (!bub) return;
+      e.preventDefault();
+      cancelPress();
+      openActions(bub, e.clientX, e.clientY);
     });
     document.getElementById("actEdit").addEventListener("click", async function () {
       closePop(ctx);
@@ -459,8 +515,14 @@
     }
     document.getElementById("dmPlus").addEventListener("click", function () {
       picker.hidden = false;
-      requestAnimationFrame(function () { picker.classList.add("on"); pkSearch.focus(); });
+      requestAnimationFrame(function () { picker.classList.add("on"); pkSearch.focus();       var pb = document.getElementById("dmPlus");
+      if (pb) pb.setAttribute("aria-expanded", picker && !picker.hidden ? "true" : "false");
+      if (pb) pb.classList.toggle("is-picking", !!(picker && !picker.hidden));
+    });
       renderBooks("");
+          var pb = document.getElementById("dmPlus");
+      if (pb) pb.setAttribute("aria-expanded", picker && !picker.hidden ? "true" : "false");
+      if (pb) pb.classList.toggle("is-picking", !!(picker && !picker.hidden));
     });
     document.getElementById("pkX").addEventListener("click", function () {
       picker.classList.remove("on"); setTimeout(function () { picker.hidden = true; }, 220);
@@ -516,6 +578,6 @@
     });
   })();
   </script>
-  <script src="js/bar.js?v=249" defer></script>
+  <script src="js/bar.js?v=250" defer></script>
 </body>
 </html>

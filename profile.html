@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=249">
+  <link rel="stylesheet" href="css/style.css?v=250">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,13 +31,13 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=249"></script>
-  <script src="js/lang.js?v=249"></script>
-  <script src="js/config.js?v=249"></script>
-  <script src="js/auth.js?v=249"></script>
-  <script src="js/sounds.js?v=249"></script>
-  <script src="js/founder.js?v=249"></script>
-  <script src="js/community.js?v=249"></script>
+  <script src="js/prefs.js?v=250"></script>
+  <script src="js/lang.js?v=250"></script>
+  <script src="js/config.js?v=250"></script>
+  <script src="js/auth.js?v=250"></script>
+  <script src="js/sounds.js?v=250"></script>
+  <script src="js/founder.js?v=250"></script>
+  <script src="js/community.js?v=250"></script>
   <script>
   (function () {
     "use strict";
@@ -51,7 +51,7 @@
     async function boot() {
       if (!C.enabled) { root.innerHTML = '<div class="cm-empty">☁️ Community cloud is warming up.</div>'; return; }
       if (!pid) { root.innerHTML = '<div class="cm-empty">👋 Sign in to see your activity.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>'; return; }
-      /* v249: arriving on someone's profile from a "started following you"
+      /* v250: arriving on someone's profile from a "started following you"
          (or like/comment) notification counts as reading it. DMs are left
          alone on purpose — those become read when you open the thread. */
       if (pid !== meId) {          /* never on your own profile */
@@ -437,7 +437,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=249" defer></script>
-  <script src="js/gate.js?v=249" defer></script>
+  <script src="js/bar.js?v=250" defer></script>
+  <script src="js/gate.js?v=250" defer></script>
 </body>
 </html>

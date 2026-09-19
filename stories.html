@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=249">
+  <link rel="stylesheet" href="css/style.css?v=250">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -64,13 +64,13 @@
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="js/prefs.js?v=249"></script>
-  <script src="js/lang.js?v=249"></script>
-  <script src="js/config.js?v=249"></script>
-  <script src="js/auth.js?v=249"></script>
-  <script src="js/sounds.js?v=249"></script>
-  <script src="js/founder.js?v=249"></script>
-  <script src="js/community.js?v=249"></script>
+  <script src="js/prefs.js?v=250"></script>
+  <script src="js/lang.js?v=250"></script>
+  <script src="js/config.js?v=250"></script>
+  <script src="js/auth.js?v=250"></script>
+  <script src="js/sounds.js?v=250"></script>
+  <script src="js/founder.js?v=250"></script>
+  <script src="js/community.js?v=250"></script>
   <script>
   (function () {
     "use strict";
@@ -203,21 +203,37 @@
     /* ---------- People: EVERY reader, always, and kept live ----------
        v248 capped this at listProfiles(60) — so anyone who had posted,
        liked, followed or messaged but never triggered ensureProfile()
-       simply did not exist here. v249 unions profiles + posts + likes +
+       simply did not exist here. v250 unions profiles + posts + likes +
        comments + follows + message participants (C.allPeople), so nobody
        can go missing, and repaints only when the data actually changed. */
-    var peopleTimer = 0, peopleSig = "", peopleStamp = 0;
+    var peopleTimer = 0, peopleSig = "", peopleStamp = 0, peopleCache = [];
 
-    function personCard(p, me, fol) {
+    function personCard(p, me, fol, req) {
       var isMe = me && p.id === me.id;
+      var priv = p.is_public === false;
+      var asked = !!(req && req[ p.id ]);
+      var following = !!fol[p.id];
       var ava = C.avaUrl(p.name, p.avatar_url, p.id);
       var stats = [];
       if (p.posts)     stats.push(C.icon("pencil") + " " + p.posts + (p.posts === 1 ? " post" : " posts"));
       if (p.likesGot)  stats.push(C.icon("heart") + " " + p.likesGot);
       if (p.followers) stats.push(C.icon("user") + " " + p.followers + (p.followers === 1 ? " follower" : " followers"));
       if (p.progress)  stats.push(C.icon("book") + " " + p.progress + "/2637 read");
+      /* v250 · LAST SEEN — real, private by choice. A reader who switched
+         "show my last seen" off publishes nothing, so this line simply
+         disappears for them and nobody can infer anything. */
       var active = "";
-      try { if (p.lastActive) active = '<span class="cm-time cm-time--live">' + C.ago(new Date(p.lastActive).toISOString()) + "</span>"; } catch (e) {}
+      try {
+        var seenAt = C.lastSeenOf ? C.lastSeenOf(p) : 0;
+        if (seenAt) {
+          var txt = C.lastSeenText(seenAt);
+          var online = /online now/.test(txt);
+          active = '<span class="cm-seen' + (online ? " cm-seen--on" : "") + '">' +
+                     (online ? '<i class="cm-seen__dot"></i>' : "") + C.esc(txt) + "</span>";
+        } else if (p.lastActive) {
+          active = '<span class="cm-time cm-time--live">' + C.ago(new Date(p.lastActive).toISOString()) + "</span>";
+        }
+      } catch (e) {}
       return '<div class="cm-person' + (p._synth ? " cm-person--ghost" : "") + '" data-person="' + p.id + '">' +
         '<div class="cm-person__top">' +
         /* the letter is always there; the photo sits on top and hides itself
@@ -234,23 +250,52 @@
           active +
         "</div></div>" +
         '<div class="cm-person__acts">' +
-          (isMe ? "" : '<button class="cm-follow' + (fol[p.id] ? " on" : "") + '" data-pfol="' + p.id + '">' + (fol[p.id] ? "Following \u2713" : "+ Follow") + "</button>" +
+          (isMe ? "" :
+            (priv
+              ? (following
+                  ? '<button class="cm-follow on" data-pfol="' + p.id + '">Following \u2713</button>'
+                  : (asked
+                      ? '<button class="cm-follow is-req" data-pcancel="' + p.id + '" title="Tap to cancel your request">Requested \u23f3</button>'
+                      : '<button class="cm-follow" data-preq="' + p.id + '" title="Private account — they must accept">\ud83d\udd12 Request</button>'))
+              : '<button class="cm-follow' + (following ? " on" : "") + '" data-pfol="' + p.id + '">' + (following ? "Following \u2713" : "+ Follow") + "</button>") +
            '<a class="cm-dmbtn" href="dm.html?u=' + p.id + '" title="Message" aria-label="Message ' + C.esc(p.name || "reader") + '">' + C.icon("chat") + "</a>") +
         "</div>" +
       "</div>";
     }
 
-    function peopleHeader(n) {
-      return '<div class="cm-sect cm-sect--people">' +
+    /* the identity, whichever source is ready first */
+    function whoAmI() {
+      try { if (window.TSB_AUTH && TSB_AUTH.me) { var a = TSB_AUTH.me(); if (a && a.id) return a; } } catch (e) {}
+      try { if (C.me) { var c = C.me(); if (c && c.id) return c; } } catch (e) {}
+      return null;
+    }
+
+    function peopleHeader(n, waits) {
+      var head = '<div class="cm-sect cm-sect--people">' +
         '<span class="cm-live" title="Updates while you watch"><i></i> live</span>' +
-        "All " + n + (n === 1 ? " reader" : " readers") + " \u2014 follow them, hear their progress, drop a " + C.icon("chat") +
+        "All " + n + (n === 1 ? " reader" : " readers") + " \u2014 last seen, progress, one tap to follow" +
       "</div>";
+      if (!waits || !waits.length) return head;
+      var rows = waits.map(function (p) {
+        return '<div class="cm-req__row" data-reqrow="' + p.id + '">' +
+            '<div class="cm-ava cm-ava--sm"><span>' + C.esc(String(p.name || "R").charAt(0).toUpperCase()) + "</span></div>" +
+            '<div class="cm-req__meta"><a class="cm-name" href="profile.html?id=' + p.id + '">' + C.esc(p.name || "A reader") + "</a>" +
+              '<span class="cm-time">wants to follow you \u00b7 private account</span></div>' +
+            '<div class="cm-req__btns">' +
+              '<button class="cm-reqbtn cm-reqbtn--ok" data-reqok="' + p.id + '">Accept</button>' +
+              '<button class="cm-reqbtn cm-reqbtn--no" data-reqno="' + p.id + '">Decline</button>' +
+            "</div></div>";
+      }).join("");
+      return head +
+        '<div class="cm-req"><div class="cm-req__t">\ud83d\udd10 Follow requests <span class="cm-req__n">' + waits.length + "</span>" +
+        '<span class="cm-time" style="margin-left:auto">they cannot see your stories until you accept</span></div>' + rows + "</div>";
     }
 
     async function renderPeople(quiet) {
       if (!quiet) { feed.innerHTML = skeletons(); peopleSig = ""; }
       var people = [];
       try { people = await C.allPeople(); } catch (e) {}
+      peopleCache = people;
 
       if (!people.length) {
         clearInterval(peopleTimer); peopleTimer = 0;
@@ -262,19 +307,52 @@
       /* signature: repaint only when something really moved, so the live
          refresh never flickers or steals your scroll position */
       var sig = people.map(function (p) {
-        return [p.id, p.name, p.posts, p.likesGot, p.followers, p.comments, p.progress, p.is_public === false ? 1 : 0, p.lastActive || 0].join(",");
+        return [p.id, p.name, p.posts, p.likesGot, p.followers, p.comments, p.progress,
+                p.is_public === false ? 1 : 0, p.lastActive || 0,
+                (C.lastSeenOf ? (C.lastSeenOf(p) || 0) : 0)              /* v250: last seen */
+                , (C.iRequested && C.iRequested(p) ? 1 : 0)              /* v250: my pending request */
+               ].join(",");
       }).join("|");
+      /* identity is part of the picture: the requests inbox can only be
+         drawn once we know who we are */
+      var ident = whoAmI();
+      sig = (ident && ident.id ? ident.id : "anon") + "#" + sig;
       if (quiet && sig === peopleSig) { peopleStamp = Date.now(); return; }
       var firstPaint = !peopleSig;
       peopleSig = sig; peopleStamp = Date.now();
 
       var fol = {};
       if (C.signedIn()) { try { (await C.followingIds()).forEach(function (id) { fol[id] = 1; }); } catch (e) {} }
+      /* v250 fix · window.TSB_AUTH only appears AFTER auth.js finishes its
+         async boot, so a bare TSB_AUTH reference at first paint is undefined
+         and any identity work silently vanished. C.me() reads the session
+         straight from storage, so it is there immediately — and we re-render
+         when auth finally announces itself (see the tsb:auth listener). */
       var me = null;
-      if (C.signedIn()) { try { me = await TSB_AUTH.me(); } catch (e) {} }
+      if (C.signedIn()) me = whoAmI();
 
-      feed.innerHTML = peopleHeader(people.length) +
-        '<div class="cm-people">' + people.map(function (p) { return personCard(p, me, fol); }).join("") + "</div>";
+      /* v250 · private accounts. Nobody is hidden any more, but a private
+         reader only gains a follower once THEY say yes. Settling here means
+         an accept made on the other phone becomes a real follow on this one. */
+      var waits = [];
+      if (me && me.id) {
+        try {
+          var settled = await C.settleRequests(people);
+          if (settled && settled.accepted && settled.accepted.length) {
+            settled.accepted.forEach(function (id) { fol[id] = 1; });
+            C.say("\ud83c\udf89 Follow request accepted \u2014 you're connected.");
+          }
+          if (settled && settled.declined && settled.declined.length) {
+            C.say("A follow request was declined.");
+          }
+        } catch (e) {}
+        try { waits = C.pendingTo(people, me.id); } catch (e) { waits = []; }
+      }
+      var reqMap = {};
+      if (me && me.id) people.forEach(function (p) { if (C.iRequested(p)) reqMap[p.id] = 1; });
+
+      feed.innerHTML = peopleHeader(people.length, waits) +
+        '<div class="cm-people">' + people.map(function (p) { return personCard(p, me, fol, reqMap); }).join("") + "</div>";
 
       /* keep it alive: 25 s poll while this tab is on screen */
       clearInterval(peopleTimer);
@@ -285,6 +363,14 @@
       }, 25000);
       if (!firstPaint && !quiet) feed.scrollTop = 0;
     }
+
+    /* auth.js announces itself when it is ready; if we painted before that,
+       repaint so the requests inbox appears without a reload */
+    try {
+      window.addEventListener("tsb:auth", function () {
+        if (tab === "people") renderPeople(true);
+      });
+    } catch (e) {}
 
     /* ---------- Bursts: infinite swipe-through of EVERY story (videos, quotes, covers, text) ---------- */
     var BURST_BATCH = 12;
@@ -531,6 +617,55 @@
         t.disabled = false;
         return;
       }
+      /* ---- v250 · private accounts ---- */
+      if ((t = e.target.closest("[data-preq]"))) {
+        if (!C.signedIn()) { location.href = "login.html"; return; }
+        t.disabled = true;
+        try {
+          var pidReq = t.getAttribute("data-preq");
+          await C.requestFollow(pidReq);
+          t.classList.add("is-req");
+          t.removeAttribute("data-preq");
+          t.setAttribute("data-pcancel", pidReq);
+          t.textContent = "Requested ⏳";
+          C.say("🔒 Request sent — they'll see it the moment they open the app.");
+          renderPeople(true);
+        } catch (err) { C.say("Couldn't send that request — " + (err && err.message ? err.message : err)); }
+        t.disabled = false;
+        return;
+      }
+      if ((t = e.target.closest("[data-pcancel]"))) {
+        t.disabled = true;
+        try {
+          await C.cancelFollowRequest(t.getAttribute("data-pcancel"));
+          C.say("Request withdrawn.");
+          renderPeople(true);
+        } catch (err) { C.say("Couldn't withdraw it — " + (err && err.message ? err.message : err)); }
+        t.disabled = false;
+        return;
+      }
+      if ((t = e.target.closest("[data-reqok]"))) {
+        t.disabled = true;
+        try {
+          var rp = peopleCache.filter(function (x) { return x.id === t.getAttribute("data-reqok"); })[0];
+          await C.acceptFollowRequest(rp || { id: t.getAttribute("data-reqok"), name: "" });
+          C.say("✅ Accepted — they now follow you.");
+          renderPeople(true);
+        } catch (err) { C.say("Couldn't accept — " + (err && err.message ? err.message : err)); }
+        t.disabled = false;
+        return;
+      }
+      if ((t = e.target.closest("[data-reqno]"))) {
+        t.disabled = true;
+        try {
+          var rp2 = peopleCache.filter(function (x) { return x.id === t.getAttribute("data-reqno"); })[0];
+          await C.declineFollowRequest(rp2 || { id: t.getAttribute("data-reqno"), name: "" });
+          var row = t.closest("[data-reqrow]"); if (row) row.remove();
+          C.say("Declined — they won't be notified loudly, and nothing is shared.");
+        } catch (err) { C.say("Couldn't decline — " + (err && err.message ? err.message : err)); }
+        t.disabled = false;
+        return;
+      }
       if ((t = e.target.closest("[data-rlike]"))) {
         if (!C.signedIn()) { location.href = "login.html"; return; }
         t.disabled = true;
@@ -679,9 +814,9 @@
     load();
   })();
   </script>
-  <script src="js/data.js?v=249"></script>
-  <script src="js/osint.js?v=249"></script>
-  <script src="js/bar.js?v=249" defer></script>
-  <script src="js/gate.js?v=249" defer></script>
+  <script src="js/data.js?v=250"></script>
+  <script src="js/osint.js?v=250"></script>
+  <script src="js/bar.js?v=250" defer></script>
+  <script src="js/gate.js?v=250" defer></script>
 </body>
 </html>

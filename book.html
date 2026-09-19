@@ -23,7 +23,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=249">
+  <link rel="stylesheet" href="css/style.css?v=250">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,11 +31,11 @@
   <meta property="og:title" content="TheSmallBook — Every Great Book, Skimmed in Minutes">
   <meta property="og:description" content="Free book summaries with lessons, examples and action steps — no signup, no paywalls.">
   <meta property="og:site_name" content="TheSmallBook">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=249">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=250">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="TheSmallBook — 400 books · 2637 lessons · 308 autopsies · free to read">
-  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=249">
+  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=250">
 </head>
 <body>
 
@@ -92,6 +92,8 @@
     </div>
   </section>
 
+  <!-- BOOK ACTIONS — the cheat-sheet and the sponsor sheet, above the fold -->
+
   <!-- BIG IDEA -->
   <section class="bigidea">
     <div class="bigidea__box">
@@ -126,12 +128,26 @@
     </div>
   </section>
 
-  <!-- PREV / NEXT -->
-  <div class="booktools" id="booktools">
-    <button id="genPdf" class="btn btn--yellow" type="button">📄 Get cheat-sheet</button>
-    <button id="fuelBook" class="btn btn--ink" type="button">💛 Fuel this breakdown</button>
-    <span id="pdfQuota" class="pdfbar__q"></span>
-  </div>
+  <!-- AFTER THE PLAN: the reader has just finished the book. This is the
+       moment they want to keep it (cheat-sheet) or put their name on it (fuel).
+       Same 1100px container as every other section, so it never hugs the edges. -->
+  <section class="bookkit" aria-labelledby="bookkitH">
+    <div class="bookkit__card">
+      <h3 class="bookkit__h" id="bookkitH">You just finished the book. <span>Don't let it evaporate.</span></h3>
+      <p class="bookkit__sub">Everything above, compressed into two pages you can actually carry — or put your own name on this breakdown.</p>
+      <div class="bookkit__row">
+        <button class="bookkit__btn bookkit__btn--cheat" data-tsb="cheat" type="button">
+          <span class="bookkit__ic" aria-hidden="true">📄</span>
+          <span class="bookkit__tx"><b>Get the 2-page cheat-sheet</b><i>Colour PDF · cover, big idea, 5 ideas, the plan</i></span>
+        </button>
+        <button class="bookkit__btn bookkit__btn--fuel" data-tsb="fuel" type="button">
+          <span class="bookkit__ic" aria-hidden="true">💛</span>
+          <span class="bookkit__tx"><b>Fuel this breakdown</b><i>Put your name on the book — from ₹199</i></span>
+        </button>
+      </div>
+      <div class="bookkit__q"><span data-tsb-quota></span> · the library stays free, always</div>
+    </div>
+  </section>
   <div id="sponsorLine" class="sponsorline" hidden></div>
 
   <div class="booknav">
@@ -158,29 +174,29 @@
     <p class="tiny">NEW BOOKS ADDED EVERY WEEK · © 2026 THESMALLBOOK · ALL RIGHTS RESERVED</p>
   </footer>
 
-  <script src="js/prefs.js?v=249"></script>
-  <script src="js/support.js?v=249"></script>
-  <script src="js/upi.js?v=249"></script>
-  <script src="js/lang.js?v=249"></script>
-  <script src="js/config.js?v=249"></script>
-  <script src="js/auth.js?v=249"></script>
-  <!-- v249: the reading page is where progress is actually made, so the
+  <script src="js/prefs.js?v=250"></script>
+  <script src="js/support.js?v=250"></script>
+  <script src="js/upi.js?v=250"></script>
+  <script src="js/lang.js?v=250"></script>
+  <script src="js/config.js?v=250"></script>
+  <script src="js/auth.js?v=250"></script>
+  <!-- v250: the reading page is where progress is actually made, so the
        community core has to be here — it syncs lessons-read to your public
        profile (debounced) and keeps the bell badge truthful while you read.
        Toasts are suppressed on this page on purpose: nothing should pop over
        the page you are on. -->
-  <script src="js/community.js?v=249"></script>
-  <script src="js/data.js?v=249"></script>
-  <script src="js/tts-engine.js?v=249"></script>
-  <script src="js/gold.js?v=249"></script>
-  <script src="js/paywall.js?v=249"></script>
-  <script src="js/book.js?v=249"></script>
-  <script src="js/highlight.js?v=249"></script>
-  <script src="js/failures.js?v=249"></script>
-  <script src="js/ask-data.js?v=249"></script>
-  <script src="js/ask.js?v=249"></script>
-  <script src="js/book-tools.js?v=249"></script>
-  <script src="js/bar.js?v=249" defer></script>
-  <script src="js/gate.js?v=249" defer></script>
+  <script src="js/community.js?v=250"></script>
+  <script src="js/data.js?v=250"></script>
+  <script src="js/tts-engine.js?v=250"></script>
+  <script src="js/gold.js?v=250"></script>
+  <script src="js/paywall.js?v=250"></script>
+  <script src="js/book.js?v=250"></script>
+  <script src="js/highlight.js?v=250"></script>
+  <script src="js/failures.js?v=250"></script>
+  <script src="js/ask-data.js?v=250"></script>
+  <script src="js/ask.js?v=250"></script>
+  <script src="js/book-tools.js?v=250"></script>
+  <script src="js/bar.js?v=250" defer></script>
+  <script src="js/gate.js?v=250" defer></script>
 </body>
 </html>
