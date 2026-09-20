@@ -149,5 +149,141 @@ window.SEED_STORIES = [
     emoji: "🤝",
     text: "I was the guy who won every argument in the office and somehow kept losing every promotion.\n\nMy manager once told me, 'You're usually right, Rehan. That's not the problem.' I genuinely didn't understand what he meant for two more years.\n\nThen I read Carnegie's line: you can't win an argument. If you lose it, you lose it; if you win it — you still lose it, because you've made someone feel small, and people never forgive that.\n\nI decided to run a 30-day experiment. Rules: no correcting people publicly, ask five questions before making one statement, and when I was wrong, admit it fast and loud.\n\nWeek one was physically painful. A colleague presented numbers I knew were off by a mile. Old me would have performed the execution in front of everyone. Instead I asked, 'Could we walk through how you got these? I might be missing something.' He found his own error at step three, fixed it, and — this is the part that shocked me — thanked me in front of the team.\n\nSame outcome. Opposite result. The numbers got fixed AND I made an ally instead of an enemy.\n\nBy week four, meetings had changed shape around me. People brought me problems earlier, disagreed with me more honestly, and my manager noticed 'a new maturity.' Nothing about my knowledge changed. I just stopped charging rent for it.\n\nThe promotion came in March. I never won another argument. I stopped entering them.",
     date: "2026-04-18"
+  },
+  /* ------------------------------------------------------------------
+     v251 · THIRTEEN MORE LIBRARY STORIES
+     Each one is tied to a book that is actually in the 400-book library,
+     and eight of them carry a real quote card as their cover, so the shelf
+     looks alive at a glance instead of being fifteen identical placeholders.
+     ------------------------------------------------------------------ */
+  {
+    id: "seed-16",
+    title: "The Chemist Who Learned to Draw",
+    author: "Library Stories ✦",
+    bookId: "flow",
+    cover: "assets/stories/flow-chemist.jpg",
+    emoji: "🧪",
+    text: "I was a good chemistry student and a miserable human being, and it took me until third year to notice those were related.\n\nI studied the way you're supposed to: pomodoro timers, rewards, a productivity app that shamed me with a wilting plant. I'd finish four hours and feel like I'd been audited. The work was done. I was still tired in a way sleep didn't touch.\n\nThen a professor caught me in the lab at 9 PM, three hours past my scheduled stop, redrawing an NMR structure for no reason anyone asked for. 'You look happy,' she said, suspiciously. I looked at the clock and felt genuinely startled. I'd lost three hours and gained energy. That's backwards, I said. No, she said. That's Flow.\n\nCsikszentmihalyi's book explained my whole life in one diagram. Flow has three doors: high challenge, high skill, and feedback you can feel. My study sessions had exactly one of them — feedback — and it was delayed, brutal, and delivered by an app. That's not flow. That's a treadmill with notifications.\n\nSo I redesigned the work instead of my willpower. I made problems slightly harder than comfortable but never impossible. I switched from re-reading to solving blind, then checking — instant feedback, like a game, like the lab. I stopped tracking hours entirely, because hours were never the unit. Absorption was.\n\nThe strange outcome: my marks went up, and I became the person who stays back in the lab for fun. The plant in my productivity app died. It deserved to.\n\nSix years later I'm a formulation chemist. People ask how I survive the grind. I don't survive it. Most days I don't notice it passing.",
+    date: "2026-09-12"
+  },
+  {
+    id: "seed-17",
+    title: "My Father's Shop Had No Growth Plan. It Had a Life.",
+    author: "Library Stories ✦",
+    bookId: "company-of-one",
+    cover: "assets/stories/company-of-one-shop.jpg",
+    emoji: "🏪",
+    text: "My father runs a hardware shop in Kalbadevi that has been the same size for twenty-six years. Two galas, three employees, one Ganesh idol above the register. Growing up, I was embarrassed by this in the way only a nineteen-year-old can be. Everyone's father had a 'vision.' Mine had a shutter and a prayer.\n\nI went to Bengaluru to build start-ups and spent seven years learning that most growth is a costume. We raised money to grow, hired to grow, moved offices to grow, and in the third company I finally asked the question nobody asks: growth towards WHAT? We had thirty people, no profit, and a CEO who slept at the office. We called it ambition.\n\nI read Company of One on a flight back home and by the last page I was quietly furious — not at the book, at myself. Paul Jarvis had described my father's shop with more respect than I ever had. Growth is a choice, not a virtue. A business can be a vehicle for a life instead of a substitute for one.\n\nMy father closed at 8:30 every night. Ate dinner with us. Knew the names of his customers' children. Took three weeks off for Diwali every year, and the shop simply waited for him. In twenty-six years he never once took a loan he couldn't sleep through.\n\nI quit the start-up. I now run a one-person consulting practice out of that same Kalbadevi building, upstairs, near him. I earn less than my Bengaluru salary and keep more of it, because I stopped funding appearances. My father doesn't fully approve — 'itni padhai, phir bhi ek aadmi?' — but he asked me to update the shop's billing software, and when I finished he showed me how to close the shutter.\n\nThat felt like a corner office.",
+    date: "2026-09-05"
+  },
+  {
+    id: "seed-18",
+    title: "Nobody Read My Blog for Four Years. That Was the Point.",
+    author: "Library Stories ✦",
+    bookId: "show-your-work",
+    cover: "assets/stories/show-your-work-blog.jpg",
+    emoji: "📝",
+    text: "In 2022 I started writing about SQL optimisation on a blog that averaged nine visitors a month, four of whom were me refreshing.\n\nI kept it up for a reason I'd never admit at a networking event: I was learning publicly because learning privately was leaking. Every time I solved something hard at work, it evaporated — no record, no proof, no compounding. So I wrote it down, badly at first, then less badly.\n\nAustin Kleon's Show Your Work! gave me the permission structure. Don't wait to be an expert. Share the work in progress, the small wins, the 'I fixed this stupid thing today.' Nobody's watching? Good — that's your practice years, free of an audience.\n\nThe turning point wasn't a viral post. It was a message in month fourteen from a data engineer in Pune: 'Your post on window functions saved my deadline.' Single message. I printed it, which sounds pathetic, and I don't care.\n\nBy the third year my posts were being used in an internal team wiki at a company I'd never heard of. By the fourth, recruiters started arriving already convinced — they'd read six posts and knew exactly what I could do. That's the real mechanism, and nobody tells you: you're not building an audience, you're building a body of evidence.\n\nI switched jobs last March with no résumé panic, no interview gambling. The team had read four years of my thinking before we met.\n\nNine visitors a month, times forty-eight months, equals a career I didn't have to beg for. The dumbest, most unglamorous thing I've ever done consistently.",
+    date: "2026-08-28"
+  },
+  {
+    id: "seed-19",
+    title: "The Answer My Brain Gave Before I Could Think",
+    author: "Library Stories ✦",
+    bookId: "thinking-fast-slow",
+    cover: "assets/stories/thinking-fast-slow-brain.jpg",
+    emoji: "🧠",
+    text: "I lost ₹4.2 lakh in eleven minutes and I know the exact reason: my brain answered before I could think.\n\nA 'senior' in a Telegram group posted a small-cap that was 'definitely going to triple.' I did the research — for six minutes. I found profits, a reasonable chart, and a management interview where the founder used the word 'discipline' nine times. That was enough. System 1 had already decided; the six minutes were a press conference, not an investigation.\n\nKahneman names the trick cleanly. Thinking Fast and Slow: your fast brain answers an easier question than the one you asked. I didn't ask, 'Is this a sound business with a moat?' I asked, 'Do I like this story?' — and it answered instantly.\n\nThe stock fell 61% in five months. I held because selling meant admitting the six minutes were theatre. That's loss aversion, chapter four, doing laps around me.\n\nThe fix that actually worked was annoyingly simple. I gave my slow brain a fixed, boring trigger: any trade above ₹25,000 gets a written note in a spreadsheet BEFORE I buy — four lines: what I'm buying, why now, what has to be true for me to be right, and what would make me wrong. Not a stop-loss. A sentence.\n\nSounding dumb in a spreadsheet for twenty minutes is much cheaper than being smart for six. In eighteen months I've written twenty-two of those notes, and killed fourteen purchases before they happened.\n\nI still feel the tug — the deal is always obvious, the group is always excited. I just don't let the answer arrive before the question anymore.",
+    date: "2026-08-19"
+  },
+  {
+    id: "seed-20",
+    title: "My Boss's Boss Was a Wall, So I Went Around It",
+    author: "Library Stories ✦",
+    bookId: "obstacle-is-way",
+    cover: "assets/stories/obstacle-is-way-wall.jpg",
+    emoji: "🧱",
+    text: "I had a plan for my second year in product: ship a feature, get noticed, get promoted. The plan died in April when my manager's manager — call her Meera — decided I was not ready for anything visible.\n\nShe was polite about it and immovable. Every proposal came back with 'let's revisit next quarter,' which in corporate Hindi means: never. I spent six weeks being furious, drafting complaint emails to earlier senior managers I had in my corner, and — mostly — I became avoidant. I stopped sending proposals because who needs the rejection.\n\nMy manager, who was decent and trapped, gave me a paperback: The Obstacle Is the Way. 'Read it before you send that email,' she said.\n\nRyan Holiday's whole argument: the impediment to action advances action. What blocks the way becomes the way. I read it twice and recognised myself as the man in the book who stands and curses the road instead of walking around it.\n\nSo I stopped trying to be visible and started trying to be load-bearing. I took over the boring reporting that everyone hated, and quietly rebuilt it — 14 hours a week of manual work became 40 minutes. Within two months, three senior teams were using the thing I made, and they asked Meera who built it, because her name was on the org chart above it.\n\nMy promotion came in the next cycle, unopposed. Meera personally presented it.\n\nI still don't know if she was an obstacle or a gift, and I no longer need the answer. I've stopped looking for fights I can't win, and started looking for walls I can't remove but can absolutely walk around.",
+    date: "2026-08-11"
+  },
+  {
+    id: "seed-21",
+    title: "I Quit the Job Everyone Was Proud of Me For",
+    author: "Library Stories ✦",
+    bookId: "so-good",
+    cover: "assets/stories/so-good-quit.jpg",
+    emoji: "🚪",
+    text: "The day I resigned from my consulting job, my mother called to ask, carefully, whether I was depressed.\n\nI wasn't. I was finally not depressed. That's the part the family WhatsApp group never understood. I'd spent four years being proudly introduced as 'our son in consulting,' doing work I could do at 60% attention while the interesting part of my brain slowly rusted shut.\n\nFor two years I'd been following the standard advice: follow your passion. It's terrible advice, and it nearly ruined me. My 'passion' had no anchor. I wanted to be someone who writes, someone who teaches, someone in a room where decisions are made. None of those are jobs. They're weather.\n\nCal Newport's So Good They Can't Ignore You reframed it: don't chase passion — build career capital, become rare and valuable, and then use that capital to buy autonomy. Passion is a side effect of competence, not a cause of it.\n\nSo I did the unromantic thing. I stayed another eighteen months and picked one thing to get genuinely excellent at: financial models for consumer businesses. I went from 'good enough' to the person people went to. My leverage grew quietly, and with it, so did the space to say no.\n\nThen I left and built a two-person practice advising small manufacturers on the exact thing I'd mastered. Not a dream business. A competent one, with a waiting list.\n\nMy mother now tells relatives I do 'finance consulting.' Last week she asked me to explain what I actually do, and listened for eleven minutes without interrupting. From her, that's a TED talk.",
+    date: "2026-08-02"
+  },
+  {
+    id: "seed-22",
+    title: "Two Graders and a Second Life",
+    author: "Library Stories ✦",
+    bookId: "slight-edge",
+    cover: "assets/stories/slight-edge-graders.jpg",
+    emoji: "📐",
+    text: "I failed a competitive exam by two grades. Not two marks — two grades, in the descriptive section, because my handwriting collapses when I'm panicking and I was panicking the entire three hours.\n\nThe failure didn't break me. The year after did. I was 'preparing' — which meant waking at 4:30, studying fourteen hours, drinking tea like a profession, and getting worse each month. My self-worth became a number on a weekly mock test, and it was going down.\n\nA cousin who had cleared the same exam two years earlier sat with me and did not offer motivation. He offered arithmetic. 'A 1% improvement a day,' he said, 'is a 37x improvement in a year. Stop trying to jump. Just get 1% better at the boring things.'\n\nJeff Olson's The Slight Edge makes the case I needed: success is a curve, not a leap, and the daily disciplines are easy to do — which is exactly why they're easy not to do. Two hours of honest, checked practice beats fourteen hours of anxious motion, and it doesn't destroy the person doing it.\n\nSo I cut my study hours in half and made a list of tiny, verifiable improvements. Handwriting drills for fifteen minutes, every day, on a timer like an athlete. Error log for every mock — one page, three patterns maximum. Sleep at 11, no exceptions, because my panic was a sleep debt wearing a mask.\n\nEleven months later I cleared it, with margin. But the marks aren't the story. The story is the list. I still keep the list, now for work: one small verifiable improvement a day, reviewed on Sundays.\n\nNobody claps for that. It just quietly works, which is the only kind of working I now trust.",
+    date: "2026-07-25"
+  },
+  {
+    id: "seed-23",
+    title: "My Sister Stopped Speaking to Me Over a Wedding Card",
+    author: "Library Stories ✦",
+    bookId: "crucial-conversations",
+    cover: "assets/stories/crucial-conversations-sister.jpg",
+    emoji: "💬",
+    text: "The fight was about a wedding card list. It was never about the wedding card list.\n\nMy sister and I have a history of arguing about logistics instead of feelings, and this time the logistics came with a printed guest list at 11 PM, two weeks before her wedding. She wanted 40 more relatives. I said budgets exist. She said I never show up for family. I said I'm literally funding this wedding. She said something about our father that I will not repeat. I said something worse.\n\nSix days of silence. In our family, six days is a divorce.\n\nI'd been reading Crucial Conversations for work — for the meetings where nobody says what they mean — and the book quietly ambushed my personal life. The core idea: high-stakes conversations go wrong not because people disagree, but because it stops feeling SAFE, and the moment safety goes, people stop arguing about the topic and start defending their identity.\n\nI'd called my sister irresponsible with money. To her, that meant: you're the one who gets to be the responsible sibling, and I'm the child.\n\nI went to her house uninvited. I opened with the one line from the book — the mutual purpose: 'I want you to have the wedding you actually want. I think we've been fighting about something else.'\n\nShe cried for ten minutes and then told me the real thing: she was scared no one would come. That the 40 extra guests were a count of how much she mattered. We talked until 2 AM and spent the next week sending invites to people she'd stopped calling years ago, and the wedding was full, and it was loud, and it was hers.\n\nOne conversation, between two people who both wanted the same thing and had been arguing about the invoice for it.",
+    date: "2026-07-16"
+  },
+  {
+    id: "seed-24",
+    title: "The Trainer Told Me to Do Less and I Nearly Fired Him",
+    author: "Library Stories ✦",
+    bookId: "atomic-habits",
+    cover: "assets/stories/atomic-habits-trainer.jpg",
+    emoji: "🍪",
+    text: "My first month with a trainer cost me ₹9,000 and my dignity. I was 34, could not climb three floors without pausing, and I had decided to fix it before it became a health scare.\n\nI showed up with a plan: an hour a day, six days a week, weights plus cardio, meal prep on Sundays. He looked at it and said, 'For month one, we do twenty minutes. Three times a week. That's all.'\n\nI argued. He let me argue, and then he made a deal I couldn't refuse: 'Do twenty minutes that you can't skip, or do an hour you'll quit in eleven days. Your call.'\n\nAtomic Habits had already told me he was right, and I resented the book for it. The identity shift, the 1% argument — all of it applies beautifully to people who want to become someone who trains, and terribly to people who are trying to sprint at a transformation. He was designing for the streak, not for today.\n\nThree times a week, twenty minutes, and one rule: never miss twice. For the first two months it felt like an insult to my ambition. In month three he added ten minutes. In month five we added a fourth day. I never had a single heroic workout, and I went 27 straight weeks without missing twice in a row.\n\nFourteen months in: 12 kilos lighter, 22 push-ups, stairs are boring now. My annual check-up moved from 'concerning' to 'unremarkable,' which is the highest compliment a doctor can pay you.\n\nMy ambition wanted eleven days of glory. Discipline turned out to want twenty minutes, forever. Discipline won because it was smaller.",
+    date: "2026-07-04"
+  },
+  {
+    id: "seed-25",
+    title: "The ₹18,000 I Didn't Spend Taught Me More Than My Salary",
+    author: "Library Stories ✦",
+    bookId: "psychology-of-money",
+    cover: "assets/stories/psychology-of-money-18000.jpg",
+    emoji: "⌚",
+    text: "In 2023 I almost bought a watch that cost ₹18,000. I had the money. I'd wanted it for a year. I walked out of the store twice and finally went home, and that single boring non-decision did more for my finances than any salary hike I've ever received.\n\nWhy I didn't buy it is thanks to a chapter I'd read the week before — Housel's chapter about the man who was rich enough to buy the watch but had no intention of proving it. I remember sitting in the store working through the actual question: who is this for? The answer, embarrassingly, was a colleague who had one. I was about to spend three weeks of savings on a sentence in a conversation.\n\nThat same week I automated a monthly transfer of the would-be EMI amount into an index fund. Not an act of virtue — an act of avoidance. I made it automatic precisely so that I would never again have to win this argument in a store at 8 PM when I'm tired and the salesperson is good.\n\nThree years on, that account holds about ₹2.1 lakh. The watch would be worth ₹9,000 on a resale market, and I'd be bored of it.\n\nThe real lesson isn't frugality — frugality is a personality and it makes people miserable and cheap. The lesson is that wealth is mostly invisible by design. Every visible upgrade you skip gets to stay in the room making you money while you sleep.\n\nI own a nice watch now. Bought it in cash, two years later, ₹6,500, and I like it more than I have ever liked anything I bought to prove something.",
+    date: "2026-06-24"
+  },
+  {
+    id: "seed-26",
+    title: "How I Stopped Being the Bottleneck in My Own Team",
+    author: "Library Stories ✦",
+    bookId: "multipliers",
+    cover: "",
+    emoji: "🧩",
+    text: "I was a good engineer and a terrible team lead, and both facts had the same cause: I could not stand watching things be done badly.\n\nBy month four, every decision in my team of six passed across my desk, and I was flattered by it. Then a teammate resigned and told me the truth on his last day: 'Nothing here is ever really mine.'\n\nI'd assumed the problem was delegation — so I delegated, then quietly re-did the work. Classic. I read Multipliers looking for a tool and found a diagnosis instead: I was a Diminisher. Not a screaming one. The subtler kind — the person who keeps grabbing the pen and then wonders why the room stopped writing.\n\nThe tools were almost humiliatingly small. Instead of answering, ask 'What would you do?' — then actually wait, which is the hard part. Instead of editing the document, reply with two questions and no answers. Give someone the whole decision and then hold your tongue until they ask.\n\nThe first month felt like watching people drive my car badly. It also produced a change I didn't expect: the team started having arguments without me, which turned out to be the entire goal.\n\nSix months later my own calendar had halved. Two of my juniors got promoted to lead their own areas — roles I hadn't created, they had. And a project I'd been the bottleneck on shipped three weeks early because a decision that used to wait for me got made in four days without me.\n\nMy job is no longer to be the smartest person in the room. It's to make the room smarter. I still don't have a great answer for what to do with my hands.",
+    date: "2026-06-15"
+  },
+  {
+    id: "seed-27",
+    title: "I Took a ₹40,000 Pay Cut and Got My Sundays Back",
+    author: "Library Stories ✦",
+    bookId: "four-thousand-weeks",
+    cover: "",
+    emoji: "🗓️",
+    text: "I moved from a 9-to-9 to a 10-to-7 for ₹40,000 less a year. My uncle called it a downgrade. My cardiologist would call it an upgrade, if I had a cardiologist.\n\nEveryone I knew was optimising for the same thing — more hours of output, sold at a higher rate — and nobody I knew had actually done the arithmetic on their remaining time. I hadn't either. Burkeman's Four Thousand Weeks does the arithmetic for you and it is a genuinely unpleasant experience: if you live to 80, that's about 4,000 weeks, and I'd spent 1,700 of them.\n\nHis argument is not about productivity. It's that the whole productivity project is a way of avoiding a decision about what actually matters, because a finite life forces you to choose, and choosing means the not-chosen stays unchosen forever.\n\nI made three choices, and they cost money. I stopped taking on the freelance work that paid best and ate Saturdays. I started saying an unqualified 'no' in the weekly staffing meeting instead of 'let me see.' And I took the pay cut for a job that ends at 7.\n\nThe first six Sundays were physically uncomfortable. I didn't know what I liked. I sat on the terrace with chai and felt genuinely guilty, like I was stealing something.\n\nBy month three, Sundays had become the load-bearing wall of my entire week — the day I read, the day I call my parents, the day I sit with my own head. My income is 12% lower and my sleep is one full hour better. I measure my week in what I remember from it now, and I remember them.\n\nYou cannot save time. You can only choose what to spend it on. I'd been spending it on being seen to spend it well.",
+    date: "2026-06-06"
+  },
+  {
+    id: "seed-28",
+    title: "The Best Conversation of My Life Was With a Stranger at a Bus Stop",
+    author: "Library Stories ✦",
+    bookId: "how-to-talk",
+    cover: "",
+    emoji: "🚌",
+    text: "It started raining in Dadar, and a man in his sixties shared his umbrella with me and then, without invitation, told me that his daughter had moved to Canada and that he was learning to cook so he wouldn't eat Maggi every night.\n\nI have never met him again. It was forty minutes and it changed me. Not because of what he said — because of what I did, which was nothing clever. I asked questions and got out of the way.\n\nFor years I'd approached conversations as performances. I collected good questions, prepared stories, tried to be interesting. Leil Lowndes' How to Talk to Anyone — the smiliest self-help book I own — is full of theatre tricks, and I'd used them exactly as written, which is how you become the man who makes eye contact by rule and nobody enjoys.\n\nThe trick that finally worked was the one I resisted: caring about the answer. Not 'so what do you do?' but 'what does a normal Tuesday look like for you?' No one's been asked that before, and everyone has a good answer.\n\nThree months later I ran the same experiment on my own grandmother. I put my phone in the other room and asked her about 1971. I got two hours, an arranged marriage, a flood, and a family story my father didn't know. I recorded ten minutes of it. She died in February. That recording is now the most valuable thing my family owns, and it exists because I asked a better question for once.\n\nBeing interesting is a cheap, exhausting craft. Being interested is nearly free, and it leaves you with things.",
+    date: "2026-05-28"
   }
 ];

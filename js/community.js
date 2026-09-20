@@ -690,6 +690,9 @@
     try { syncProgress(false); } catch (e) {}
     /* v250: "when did you last visit" — one throttled write per 30 min */
     try { touchPresence(false).catch(function () {}); } catch (e) {}
+    /* one-time heal: a profile whose links column collected presence junk
+       (duplicated or stringified buckets) cleans itself on the next visit */
+    try { repairLinks().catch(function () {}); } catch (e) {}
     try { syncInterests(false); } catch (e) {}
     try { notifRefresh(); } catch (e) {}
   }
@@ -1342,22 +1345,135 @@
     try { localStorage.setItem(VIEWS_KEY, JSON.stringify(o)); } catch (e) {}
     return o;
   }
+  /* ==================================================================== v250-b
+     ONE ARRAY, TWO JOBS — and that was the bug.
+
+     `profiles.links` holds the reader's real links AND this app's internal
+     buckets (peek/pub = presence + privacy, out/in/no = the follow handshake,
+     hear = read receipts). The profile page printed the array raw, so people
+     saw {"k":"peek","v":...} sitting in their links like an error message.
+
+     Worse: saving the profile wrote back only what the text input held, which
+     threw the buckets away — and because a *stringified* bucket no longer looks
+     like a bucket, every later presence write appended another copy. That is
+     where the repeats came from.
+
+     normLinks() understands every shape the data has ever been in, so reads are
+     clean, writes keep the buckets, and the junk heals itself on next save.
+     ====================================================================== */
+  function parseMaybeJSON(s) {
+    if (typeof s !== "string") return null;
+    var t = s.trim();
+    if (t.charAt(0) !== "{" && t.charAt(0) !== "[") return null;
+    try { return JSON.parse(t); } catch (e) { return null; }
+  }
+  /* "https://x.com", {"k":"peek","v":123} and '{"k":"peek","v":123}' all in one array */
+  function normLinks(links) {
+    var arr = links;
+    if (typeof arr === "string") { var whole = parseMaybeJSON(arr); arr = Array.isArray(whole) ? whole : []; }
+    if (!Array.isArray(arr)) return { links: [], buckets: {} };
+
+    var outLinks = [], buckets = {};
+    function takeBucket(k, v) {
+      var had = Object.prototype.hasOwnProperty.call(buckets, k);
+      if (!had) { buckets[k] = v; return; }
+      /* duplicates: union the handshake lists, otherwise the newest write wins */
+      if (Array.isArray(buckets[k]) && Array.isArray(v)) {
+        var seen = {};
+        buckets[k].concat(v).forEach(function (x) { seen[String(x)] = x; });
+        buckets[k] = Object.keys(seen).map(function (x) { return seen[x]; });
+      } else {
+        buckets[k] = v;
+      }
+    }
+
+    for (var i = 0; i < arr.length; i++) {
+      var el = arr[i];
+      if (el == null) continue;
+
+      if (typeof el === "object" && !Array.isArray(el)) {
+        if (typeof el.k === "string" && el.k) takeBucket(el.k, el.v);
+        continue;                                   /* links are never objects */
+      }
+      if (typeof el !== "string") continue;
+
+      var t = el.trim();
+      if (!t) continue;
+      if (t === "undefined" || t === "null") continue;
+      if (/^\[object /i.test(t)) continue;            /* "[object Object]" leftovers */
+
+      var parsed = parseMaybeJSON(t);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed) && typeof parsed.k === "string") {
+        takeBucket(parsed.k, parsed.v);             /* a bucket that got stringified */
+        continue;
+      }
+      if (Array.isArray(parsed)) {                  /* a whole array nested in a string */
+        parsed.forEach(function (x) {
+          var n = normLinks([x]);
+          n.links.forEach(function (l) { outLinks.push(l); });
+          Object.keys(n.buckets).forEach(function (k) { takeBucket(k, n.buckets[k]); });
+        });
+        continue;
+      }
+      outLinks.push(t);
+    }
+    return { links: outLinks, buckets: buckets };
+  }
+  /* the links a human should ever see */
+  function realLinks(links) { return normLinks(links).links; }
+  /* the buckets this app needs to keep, whatever happens to the links */
+  function linkBuckets(links) { return normLinks(links).buckets; }
+  /* rebuild the stored array: real links first, then the app's own buckets */
+  function buildLinks(urls, buckets) {
+    var out = (Array.isArray(urls) ? urls : []).slice();
+    var bk = buckets || {};
+    Object.keys(bk).forEach(function (k) { out.push({ k: k, v: bk[k] }); });
+    return out;
+  }
+  /* is this row carrying junk from before the fix? (duplicates, stringified
+     buckets, "[object Object]" leftovers, or a whole array stored as a string) */
+  function linksAreDirty(links) {
+    if (links == null) return false;
+    if (typeof links === "string") return /^\s*\[/.test(links);
+    if (!Array.isArray(links)) return false;
+    var seen = {};
+    for (var i = 0; i < links.length; i++) {
+      var el = links[i];
+      if (typeof el === "string") {
+        if (/^\s*[{[]/.test(el) || /^\[object /i.test(el)) return true;   /* junk saved as a link */
+        continue;
+      }
+      if (el && typeof el === "object" && typeof el.k === "string") {
+        if (seen[el.k]) return true;                                      /* a duplicate bucket */
+        seen[el.k] = 1;
+      }
+    }
+    return false;
+  }
+  /* heal one row, once: rewrite the array in the clean shape. Silent, and it
+     never touches a row that is already fine. */
+  async function repairLinks() {
+    if (!api || !signedIn()) return null;
+    var mu = me(); if (!mu) return null;
+    try {
+      var prof = await safeProfile();
+      var raw = prof && prof.links;
+      if (!linksAreDirty(raw)) return null;
+      var n = normLinks(raw);
+      var clean = buildLinks(n.links, n.buckets);
+      await api("profiles?id=eq." + mu.id, { method: "PATCH", body: { links: clean } });
+      return clean;
+    } catch (e) { return null; }
+  }
   /* read a bucket out of somebody's links array (tolerates junk + strings) */
   function linkBucket(links, key, fallback) {
-    if (typeof links === "string") { try { links = JSON.parse(links); } catch (e) { links = []; } }
-    if (!Array.isArray(links)) return fallback;
-    for (var i = 0; i < links.length; i++) {
-      var l = links[i];
-      if (l && typeof l === "object" && l.k === key) return l.v;
-    }
-    return fallback;
+    var b = normLinks(links).buckets;
+    return Object.prototype.hasOwnProperty.call(b, key) ? b[key] : fallback;
   }
   function withBucket(links, key, value) {
-    if (typeof links === "string") { try { links = JSON.parse(links); } catch (e) { links = []; } }
-    if (!Array.isArray(links)) links = [];
-    var out = links.filter(function (l) { return !(l && typeof l === "object" && l.k === key); });
-    out.push({ k: key, v: value });
-    return out;
+    var n = normLinks(links);
+    n.buckets[key] = value;
+    return buildLinks(n.links, n.buckets);
   }
   /* merge a set of buckets into MY profile row, keeping the reader's own links */
   async function saveViews(patchBuckets) {
@@ -1365,10 +1481,11 @@
     var mu = me(); if (!mu) return null;
     try {
       var prof = await safeProfile();
-      var links = (prof && Array.isArray(prof.links)) ? prof.links.slice() : [];
-      Object.keys(patchBuckets || {}).forEach(function (k) {
-        links = withBucket(links, k, patchBuckets[k]);
-      });
+      var n = normLinks(prof && prof.links);
+      Object.keys(patchBuckets || {}).forEach(function (k) { n.buckets[k] = patchBuckets[k]; });
+      /* writing the normalised form is also the repair: any duplicated or
+         stringified bucket from before is collapsed here, once, for good */
+      var links = buildLinks(n.links, n.buckets);
       await api("profiles?id=eq." + mu.id, { method: "PATCH", body: { links: links } });
       return links;
     } catch (e) { return null; }
@@ -1651,6 +1768,9 @@
     requestFollow: requestFollow, requestsBackend: requestsBackend, syncRequests: syncRequests, followRequestsReady: frReady, cancelFollowRequest: cancelFollowRequest, iRequested: iRequested,
     pendingTo: pendingTo, acceptFollowRequest: acceptFollowRequest, declineFollowRequest: declineFollowRequest,
     settleRequests: settleRequests, linkBucket: linkBucket, notifMarkKey: notifMarkKey,
+    /* the links array, decoded: real links out, app buckets kept */
+    normLinks: normLinks, realLinks: realLinks, linkBuckets: linkBuckets, buildLinks: buildLinks,
+    repairLinks: repairLinks, linksAreDirty: linksAreDirty,
     upload: upload, probeStorage: probeStorage, sanitize: sanitize, ago: ago, readMins: readMins, esc: esc, playAudio: playAudio,
     isVideoUrl: isVideoUrl, videoDuration: videoDuration, checkBurst: checkBurst, MAX_BURST_SEC: MAX_BURST_SEC
   };

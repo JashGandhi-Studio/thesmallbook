@@ -521,6 +521,95 @@
         '</div>' +
       '</div>';
     }
+    /* v251 — READY TO USE.
+       The complaint about research was fair: it handed back *sources* — wiki
+       links, dictionary entries, book covers — and you still had to write the
+       thing yourself. This card hands back the writing itself, taken from
+       things the app already owns: the actual lesson summaries of the 400
+       library books, the citable facts inside the Wikipedia extract, and the
+       lines from the voices. Every row has one button: Insert. */
+    function sentences(text, min){
+      var t = String(text || "").replace(/\s+/g, " ").trim();
+      if (!t) return [];
+      // split on sentence enders (no lookbehind — old iOS Safari rejects it)
+      return t.replace(/([.!?])\s+/g, "$1|").split("|").map(function(x){ return x.trim(); })
+        .filter(function(x){ return x.length >= (min || 55) && x.length <= 300; });
+    }
+    function cardUsable(q, sum, localBooks, voices){
+      var topic = String(q || "").trim();
+      var rows = [];
+
+      /* 1 · what the books actually say — real lesson summaries, the strongest
+             material the app has, and it works offline */
+      var lessons = [];
+      (localBooks || []).slice(0, 4).forEach(function(b){
+        var ls = (b && b.lessons) || [];
+        for (var i = 0; i < ls.length && lessons.length < 5; i++){
+          var l = ls[i] || {};
+          var body = String(l.summary || l.text || l.body || "").replace(/\s+/g, " ").trim();
+          if (body.length < 60) continue;
+          // keep only lessons that actually engage the topic
+          var hay = (b.title + " " + l.title + " " + body).toLowerCase();
+          if (topic && hay.indexOf(topic.toLowerCase().slice(0, 6)) < 0 && lessons.length >= 2) continue;
+          lessons.push({ book: b.title || b.t || "", lesson: l.title || "", body: body });
+        }
+      });
+
+      if (lessons.length){
+        rows.push('<div style="font:800 10.5px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#166534;margin:12px 0 6px;">📚 What the library says — real lessons, ready to rewrite</div>' +
+          lessons.map(function(x){
+            var paste = x.book + " — " + x.lesson + ": " + x.body;
+            return '<div style="border:2px solid #111;border-radius:12px;padding:10px;background:#f0fdf4;margin-bottom:8px;">' +
+              '<div style="font:800 11px Space Grotesk,sans-serif;color:#111;">' + esc(x.lesson) + '</div>' +
+              '<div style="font:700 9.5px Space Grotesk,sans-serif;letter-spacing:.4px;text-transform:uppercase;color:#64748b;margin-top:3px;">' + esc(x.book) + '</div>' +
+              '<div style="font:500 12px Space Grotesk,sans-serif;color:#1f2937;line-height:1.55;margin-top:6px;">' + esc(x.body.slice(0, 260)) + (x.body.length > 260 ? "…" : "") + '</div>' +
+              '<button type="button" data-use-research-sum="' + esc(paste).replace(/"/g, "&quot;") + '" style="margin-top:8px;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:8px 12px;font:800 10.5px Space Grotesk,sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;">✨ Use this in my story</button>' +
+            '</div>';
+          }).join(""));
+      }
+
+      /* 2 · citable facts — the wiki extract, split so you can lift one line
+             instead of a paragraph that reads like an encyclopedia */
+      var facts = sentences((sum && sum.extract) || "", 60).slice(0, 3);
+      if (facts.length){
+        rows.push('<div style="font:800 10.5px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin:12px 0 6px;">🧠 Facts you can cite' + (sum && sum.title ? " — " + esc(sum.title) : "") + '</div>' +
+          facts.map(function(f, i){
+            return '<div style="display:flex;gap:9px;align-items:flex-start;border-bottom:1.5px dashed #cbd5e1;padding:7px 0;">' +
+              '<span style="flex:none;width:17px;height:17px;border-radius:999px;background:#111;color:#ffc800;font:800 9.5px/17px Space Grotesk,sans-serif;text-align:center;margin-top:1px;">' + (i + 1) + '</span>' +
+              '<span style="flex:1;font:500 12px Space Grotesk,sans-serif;color:#1f2937;line-height:1.55;">' + esc(f) + '</span>' +
+              '<button type="button" data-use-research-sum="' + esc(f).replace(/"/g, "&quot;") + '" title="Insert this fact" style="flex:none;border:2px solid #111;background:#fff;border-radius:999px;padding:5px 9px;font:800 9.5px Space Grotesk,sans-serif;cursor:pointer;">+</button>' +
+            '</div>';
+          }).join(""));
+      }
+
+      /* 3 · openers — one line to start from, so the blank page is never the
+             first thing you face */
+      if (topic){
+        var hookBook = lessons.length ? lessons[0].book : ((localBooks && localBooks[0] && (localBooks[0].title || localBooks[0].t)) || "");
+        var openers = [
+          hookBook ? "I used to think " + topic + " was simple — then " + hookBook + " showed me why it isn't." : "I used to think " + topic + " was simple. I don't any more.",
+          "Nobody talks honestly about " + topic + ". So here is the one thing I know for sure.",
+          voices && voices.length ? "Somebody once asked about " + topic + ". The answer surprised me." : "What " + topic + " taught me came from failing at it first."
+        ];
+        rows.push('<div style="font:800 10.5px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin:12px 0 6px;">✍️ Openers — start here, then make it yours</div>' +
+          openers.map(function(o){
+            return '<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">' +
+              '<span style="flex:1;font:600 12px Space Grotesk,sans-serif;color:#334155;line-height:1.5;">' + esc(o) + '</span>' +
+              '<button type="button" data-use-research-sum="' + esc(o).replace(/"/g, "&quot;") + '" style="flex:none;border:2.5px solid #111;background:#fff;border-radius:999px;padding:6px 10px;font:800 10px Space Grotesk,sans-serif;cursor:pointer;">Insert</button>' +
+            '</div>';
+          }).join(""));
+      }
+
+      if (!rows.length) return "";
+      return '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:14px;box-shadow:4px 4px 0 #111;">' +
+        '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
+          '<span style="font:800 12px Archivo Black,sans-serif;color:#111;">✍️ READY TO USE</span>' +
+          '<span style="font:700 9px Space Grotesk,sans-serif;letter-spacing:.5px;text-transform:uppercase;background:#111;color:#ffc800;padding:3px 7px;border-radius:999px;">content, not links</span>' +
+          '<span style="flex:1 1 100%;font:600 10.5px Space Grotesk,sans-serif;color:#64748b;">Every row below is finished writing for “' + esc(topic) + '” — tap Insert and rewrite it in your voice.</span>' +
+        '</div>' +
+        rows.join("") +
+      '</div>';
+    }
     function cardBook(b){
       var cover = b.cover ? "https://covers.openlibrary.org/b/id/"+b.cover+"-M.jpg" : "";
       // v244: READABLE — one tap opens the full book in the Archive.org reader. Different from TheSmallBook's own library by design.
@@ -813,6 +902,9 @@
           var html="";
           // Story starter first — a ready essay you rewrite in your voice (compact, not bombarding)
           if(essayObj && essayObj.html) html += essayObj.html;
+          // v251: then the material itself — lessons, citable facts, openers.
+          // Research used to hand back sources; it now hands back the writing.
+          try{ html += cardUsable(rq, sums[0], localBooks, voices); }catch(e){}
           if(explore && sums.length){
             html+='<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;">🔎 Explore — LIVE <span style="font:700 9px Space Grotesk,sans-serif;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;text-transform:uppercase;">fresh every visit</span></div>' +
               '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">' + sums.map(cardExplore).join("") + '</div>';
@@ -840,7 +932,7 @@
           $res.innerHTML = html;
           var n3=document.createElement("div");
           n3.style.cssText="text-align:center;font:600 11px Space Grotesk,sans-serif;color:#16a34a;margin-bottom:4px;";
-          n3.textContent = explore ? "LIVE · explore board — type above to research YOUR topic (wiki · voices · words · books)" : "LIVE · research for “"+rq.slice(0,36)+"” — Wikipedia · Wikiquote · Dictionary · books";
+          n3.textContent = explore ? "LIVE · explore board — type above to research YOUR topic (wiki · voices · words · books)" : "LIVE · research for “"+rq.slice(0,36)+"” — lessons · facts · openers · voices · full books";
           $res.prepend(n3);
           wireResultActions();
           pending=false;

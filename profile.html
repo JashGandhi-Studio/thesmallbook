@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=250">
+  <link rel="stylesheet" href="css/style.css?v=252">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -31,13 +31,13 @@
     </div>
   </main>
 
-  <script src="js/prefs.js?v=250"></script>
-  <script src="js/lang.js?v=250"></script>
-  <script src="js/config.js?v=250"></script>
-  <script src="js/auth.js?v=250"></script>
-  <script src="js/sounds.js?v=250"></script>
-  <script src="js/founder.js?v=250"></script>
-  <script src="js/community.js?v=250"></script>
+  <script src="js/prefs.js?v=252"></script>
+  <script src="js/lang.js?v=252"></script>
+  <script src="js/config.js?v=252"></script>
+  <script src="js/auth.js?v=252"></script>
+  <script src="js/sounds.js?v=252"></script>
+  <script src="js/founder.js?v=252"></script>
+  <script src="js/community.js?v=252"></script>
   <script>
   (function () {
     "use strict";
@@ -78,7 +78,10 @@
       }
       document.title = prof.name + " — TheSmallBook";
       var progShown = prof.progress || 0;
-      var lkArr = (Array.isArray(prof.links) ? prof.links : []).filter(Boolean).slice(0, 3);
+      /* prof.links also carries this app's own buckets (presence, privacy,
+         follow handshake). Only real links may reach the page. */
+      var lkAll = (C.realLinks ? C.realLinks(prof.links) : []);
+      var lkArr = lkAll.filter(Boolean).slice(0, 3);
       if (mine) { try { progShown = Math.max(progShown, window.TSB && TSB.progress ? TSB.progress.totalRead() : 0); } catch (e) {} }
 
       var hue = parseInt(String(pid).replace(/-/g, "").slice(0, 4), 16) % 360;
@@ -99,7 +102,11 @@
               "</div>" +
             "</div>" +
             (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
-            (lkArr.length ? '<div class="cm-linksrow">' + lkArr.map(function (l) { return '<a class="cm-linkchip" href="' + C.esc(/^https?:\/\//i.test(l) ? l : "https://" + l) + '" target="_blank" rel="noopener">' + C.icon('link') + " " + C.esc(String(l).replace(/^https?:\/\//i, "").slice(0, 42)) + "</a>"; }).join("") + "</div>" : "") +
+            (lkArr.length ? '<div class="cm-linksrow">' + lkArr.map(function (l) {
+              var url = C.esc(/^https?:\/\//i.test(l) ? l : "https://" + l);
+              return '<a class="cm-linkchip" href="' + url + '" target="_blank" rel="noopener">' + C.icon('link') + " " +
+                C.esc(String(l).replace(/^https?:\/\//i, "").slice(0, 42)) + "</a>";
+            }).join("") + "</div>" : "") +
             '<div class="cm-statrow">' +
               '<span class="cm-statrow__n"><b>' + posts.length + "</b><span>posts</span></span>" +
               '<a class="cm-statrow__n" href="profile.html?id=' + pid + '&view=followers" data-lsoc="followers"><b>' + fol.count + "</b><span>followers</span></a>" +
@@ -142,7 +149,7 @@
                 '<input id="pAva" type="file" accept="image/*" hidden></label>' +
                 '<label class="cm-lbl">Display name<input id="pName" class="setinput" maxlength="24" value="' + C.esc(prof.name) + '"></label>' +
                 '<label class="cm-lbl">Bio<input id="pBio" class="setinput" maxlength="120" value="' + C.esc(prof.bio || "") + '" placeholder="One line about you"></label>' +
-                '<label class="cm-lbl">Links (comma-separated)<input id="pLinks" class="setinput" maxlength="200" value="' + C.esc((Array.isArray(prof.links) ? prof.links : []).join(", ")) + '" placeholder="https://yoursite.com, https://instagram.com/you"></label>' +
+                '<label class="cm-lbl">Links (comma-separated)<input id="pLinks" class="setinput" maxlength="200" value="' + C.esc(lkAll.slice(0, 3).join(", ")) + '" placeholder="https://yoursite.com, https://instagram.com/you"></label>' +
                 '<button class="cm-pub cm-pub--sm" id="pSave">Save profile</button>' +
               "</div>"
             : "") +
@@ -426,8 +433,18 @@
         try {
           var nm = document.getElementById("pName").value.trim() || "Reader";
           var lnkEl = document.getElementById("pLinks");
-          var lks2 = lnkEl ? lnkEl.value.split(",").map(function (x) { return x.trim(); }).filter(Boolean).slice(0, 3) : [];
-          await C.api("profiles?id=eq." + meId, { method: "PATCH", body: { name: nm, bio: document.getElementById("pBio").value.trim(), links: lks2 } });
+          var typed = lnkEl ? lnkEl.value.split(",").map(function (x) { return x.trim(); }) : [];
+          /* a human might paste back junk with the links: keep it out */
+          var lks2 = typed.filter(function (x) {
+            return x && !/^[{\[]/.test(x) && !/^\[object /i.test(x) && x !== "undefined" && x !== "null";
+          }).slice(0, 3);
+          /* the app's buckets travel through untouched: presence, privacy,
+             the follow handshake and read receipts all live in this same array */
+          var keep = C.linkBuckets ? C.linkBuckets(prof.links) : {};
+          await C.api("profiles?id=eq." + meId, { method: "PATCH", body: {
+            name: nm, bio: document.getElementById("pBio").value.trim(),
+            links: C.buildLinks ? C.buildLinks(lks2, keep) : lks2
+          } });
           try { await C.syncAvatarPosts(null, nm); } catch (e) {}   /* name on every story too */
           if (window.TSB_AUTH && TSB_AUTH.setDisplayName) TSB_AUTH.setDisplayName(nm);
           boot();
@@ -437,7 +454,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=250" defer></script>
-  <script src="js/gate.js?v=250" defer></script>
+  <script src="js/bar.js?v=252" defer></script>
+  <script src="js/gate.js?v=252" defer></script>
 </body>
 </html>

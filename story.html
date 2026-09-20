@@ -24,7 +24,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=250">
+  <link rel="stylesheet" href="css/style.css?v=252">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -36,13 +36,14 @@
     </article>
   </main>
 
-  <script src="js/prefs.js?v=250"></script>
-  <script src="js/lang.js?v=250"></script>
-  <script src="js/config.js?v=250"></script>
-  <script src="js/auth.js?v=250"></script>
-  <script src="js/sounds.js?v=250"></script>
-  <script src="js/founder.js?v=250"></script>
-  <script src="js/community.js?v=250"></script>
+  <script src="js/prefs.js?v=252"></script>
+  <script src="js/lang.js?v=252"></script>
+  <script src="js/config.js?v=252"></script>
+  <script src="js/auth.js?v=252"></script>
+  <script src="js/sounds.js?v=252"></script>
+  <script src="js/founder.js?v=252"></script>
+  <script src="js/community.js?v=252"></script>
+  <script src="js/stories-seed.js?v=252"></script>
   <script>
   (function () {
     "use strict";
@@ -52,10 +53,44 @@
     var shortCode = (location.search.match(/[?&]s=([a-zA-Z0-9]+)/) || [])[1] || "";
     var meId = (C.me() || {}).id || "";
 
+    /* a seed story, dressed as a post so every renderer below just works */
+    function shelfPost(s) {
+      var book = "";
+      try { var b = (window.BOOKS || []).filter(function (x) { return x.id === s.bookId; })[0]; if (b) book = b.title; } catch (e) {}
+      return {
+        id: s.id,
+        title: s.title,
+        author_id: "tsb-library",
+        author_name: s.author || "Library Stories",
+        author_avatar: "",
+        body: s.text || "",
+        subtitle: book ? "From the library · inspired by " + book : "From the library",
+        cover_url: s.cover || "",
+        audio_url: "",
+        kind: "story",
+        no_download: true,
+        created_at: s.date ? new Date(s.date + "T09:00:00Z").toISOString() : new Date().toISOString(),
+        tags: book ? [book] : [],
+        _lib: true
+      };
+    }
+    var LIB = { id: "tsb-library", name: "Library Stories", avatar_url: "", bio: "" };
+
     async function boot() {
       if ((!id && !shortCode) || !C.enabled) { root.innerHTML = '<div class="cm-empty">⚠️ Story not reachable.</div>'; return; }
       var p;
       try { p = id ? await C.getPost(id) : await C.getPostByShort(shortCode); } catch (e) {}
+      /* v252: library stories ship with the app, so they are not rows in the
+         database — a link like story.html?id=seed-16 has to find them in the
+         shelf itself, or the link the Stories page just offered you dead-ends. */
+      if (!p) {
+        try {
+          var shelf = (window.COMMUNITY_STORIES || []).concat(window.SEED_STORIES || []);
+          for (var si = 0; si < shelf.length; si++) {
+            if (shelf[si].id === id) { p = shelfPost(shelf[si]); break; }
+          }
+        } catch (e) {}
+      }
       if (p) id = p.id;
       /* v250: opening the story IS reading the notification. "Someone liked /
          commented on your story" is written into the shared read ledger here,
@@ -70,8 +105,8 @@
       }
       document.title = p.title + " — TheSmallBook Stories";
       var prof = null;
-      try { prof = await C.getProfile(p.author_id); } catch (e) {}
-      prof = prof || { name: p.author_name, avatar_url: C.avaUrl(p.author_name, p.author_avatar, p.author_id), bio: "" };
+      if (!p._lib) { try { prof = await C.getProfile(p.author_id); } catch (e) {} }
+      prof = prof || (p._lib ? LIB : { name: p.author_name, avatar_url: C.avaUrl(p.author_name, p.author_avatar, p.author_id), bio: "" });
       if (prof && !prof.avatar_url) prof.avatar_url = C.avaUrl(p.author_name, p.author_avatar, p.author_id);
       try {
         if (window.TSB && TSB.interest) {
@@ -89,11 +124,13 @@
             ? '<video class="cm-postcard__cover" src="' + C.esc(p.cover_url) + '" playsinline preload="metadata"></video>'
             : '<img class="cm-postcard__cover" src="' + C.esc(p.cover_url) + '" alt="">') : "") +
           '<div class="cm-postcard__head">' +
-            '<a class="cm-ava cm-ava--lg" href="profile.html?id=' + p.author_id + '">' +
+            '<a class="cm-ava cm-ava--lg' + (p._lib ? " cm-ava--lib" : "") + '"' + (p._lib ? "" : ' href="profile.html?id=' + p.author_id + '"') + ">" +
               (prof.avatar_url ? '<img src="' + C.esc(prof.avatar_url) + '" alt="">' : '<span>' + C.esc((p.author_name || "R").charAt(0).toUpperCase()) + "</span>") + "</a>" +
-            '<div class="cm-postcard__who"><a class="cm-name" href="profile.html?id=' + p.author_id + '">' + C.esc(p.author_name) + (C.isOfficial(p.author_id) ? '<span class="cm-vtick" title="Official channel">✔</span>' : "") + "</a>" +
+            '<div class="cm-postcard__who">' + (p._lib
+              ? '<span class="cm-name cm-name--lib">' + C.esc(p.author_name) + ' <span class="cm-vtick" title="Written by the library">✔</span></span>'
+              : '<a class="cm-name" href="profile.html?id=' + p.author_id + '">' + C.esc(p.author_name) + (C.isOfficial(p.author_id) ? '<span class="cm-vtick" title="Official channel">✔</span>' : "") + "</a>") +
               '<span class="cm-time">' + C.ago(p.created_at) + " · " + C.readMins(p.body) + " min read</span></div>" +
-            (p.author_id !== meId ? '<button class="cm-follow' + (fol.mine ? " on" : "") + '" data-follow="' + p.author_id + '">' + (fol.mine ? "✓ Following" : "+ Follow") + "</button>" : "") +
+            (p._lib ? '<span class="cm-libchip">📚 LIBRARY STORY</span>' : (p.author_id !== meId ? '<button class="cm-follow' + (fol.mine ? " on" : "") + '" data-follow="' + p.author_id + '">' + (fol.mine ? "✓ Following" : "+ Follow") + "</button>" : "")) +
           "</div>" +
           "<h1>" + C.esc(p.title) + "</h1>" +
           (p.subtitle ? '<p class="cm-postcard__sub">' + C.esc(p.subtitle) + "</p>" : "") +
@@ -103,19 +140,22 @@
           /* v250 · read receipts — the writer finally sees who read it */
           '<div class="rr" id="readBy" hidden></div>' +
           '<div class="cm-bigacts">' +
-            '<button class="cm-bigact cm-blike' + (like.mine ? " on" : "") + '" data-like="' + p.id + '"><span class="cm-bigact__ico">♥</span><b>' + like.count + " like" + (like.count === 1 ? "" : "s") + "</b></button>" +
-            '<a class="cm-bigact" href="#comments"><span class="cm-bigact__ico">' + C.icon('chat') + '</span><b>' + cmts.length + " comment" + (cmts.length === 1 ? "" : "s") + "</b></a>" +
+            (p._lib ? "" : '<button class="cm-bigact cm-blike' + (like.mine ? " on" : "") + '" data-like="' + p.id + '"><span class="cm-bigact__ico">♥</span><b>' + like.count + " like" + (like.count === 1 ? "" : "s") + "</b></button>") +
+            (p._lib ? "" : '<a class="cm-bigact" href="#comments"><span class="cm-bigact__ico">' + C.icon('chat') + '</span><b>' + cmts.length + " comment" + (cmts.length === 1 ? "" : "s") + "</b></a>") +
             '<button class="cm-bigact" id="shareBtn"><span class="cm-bigact__ico">🔗</span><b>Share</b></button>' +
             (p.author_id === meId ? '<button class="cm-bigact cm-del" data-del="' + p.id + '"><span class="cm-bigact__ico">' + C.icon('trash') + '</span><b>Delete</b></button>' : "") +
           "</div>" +
         "</article>" +
-        '<section class="cm-comments" id="comments">' +
+        (p._lib
+          ? '<section class="cm-comments" id="comments"><h2>' + C.icon('chat') + ' From the library</h2>' +
+            '<p class="cm-empty cm-empty--sm">Nobody wrote this one — it comes with the app. There is nothing to like or reply to here, but the book behind it is on your shelf.</p></section>'
+          : '<section class="cm-comments" id="comments">' +
           "<h2>" + C.icon('chat') + " " + cmts.length + " comment" + (cmts.length === 1 ? "" : "s") + "</h2>" +
           '<div id="cmtList">' + (cmts.length ? cmts.map(cm).join("") : '<p class="cm-empty cm-empty--sm">Be the first to say something kind.</p>') + "</div>" +
           (meId
             ? '<div class="cm-cmtrow"><input id="cmtInput" class="setinput" maxlength="280" placeholder="Add a comment…"><button class="cm-pub cm-pub--sm" id="cmtSend">Send</button></div>'
             : '<a class="cm-write" href="login.html">Sign in to comment →</a>') +
-        "</section>";
+        "</section>");
       try { C.protectMedia(root); } catch (e) {}
 
       /* ---- v250 · READ RECEIPTS ----------------------------------------
@@ -175,15 +215,19 @@
 
       var likeBtn = root.querySelector("[data-like]");
       function paintLike(info) {
+        if (!likeBtn) return;
         likeBtn.classList.toggle("on", info.mine);
         likeBtn.querySelector("b").textContent = info.count + " like" + (info.count === 1 ? "" : "s");
       }
       function popLike() {
+        if (!likeBtn) return;
         likeBtn.classList.remove("pop");
         void likeBtn.offsetWidth;
         likeBtn.classList.add("pop");
       }
-      likeBtn.addEventListener("click", async function () {
+      /* a library story has no like button, no comment box and no delete —
+         guard each wiring so the page never assumes otherwise */
+      if (likeBtn) likeBtn.addEventListener("click", async function () {
         if (!C.signedIn()) { location.href = "login.html"; return; }
         var on = !likeBtn.classList.contains("on");
         likeBtn.classList.toggle("on", on);
@@ -198,6 +242,7 @@
       });
       /* Instagram-style double-tap ♥ anywhere on the story */
       root.addEventListener("dblclick", async function (e) {
+        if (p._lib) return;
         if (e.target.closest("a, button, input, .cm-comments")) return;
         var h = document.createElement("div");
         h.className = "cm-bigheart"; h.textContent = "♥";
@@ -229,7 +274,8 @@
         try { await C.deletePost(id); location.href = "stories.html"; }
         catch (e) { C.say(e && e.message ? ("Delete failed — " + e.message) : "Delete failed — are you the author?"); }
       });
-      document.getElementById("shareBtn").addEventListener("click", function () {
+      var shareB = document.getElementById("shareBtn");
+      if (shareB) shareB.addEventListener("click", function () {
         var url = location.origin + location.pathname + "?s=" + String(p.id).replace(/-/g, "").slice(-8);
         var self = this;
         if (navigator.share) navigator.share({ title: p.title + " — TheSmallBook", url: url }).catch(function () {});
@@ -265,7 +311,7 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=250" defer></script>
-  <script src="js/gate.js?v=250" defer></script>
+  <script src="js/bar.js?v=252" defer></script>
+  <script src="js/gate.js?v=252" defer></script>
 </body>
 </html>

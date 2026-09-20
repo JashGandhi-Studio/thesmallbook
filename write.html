@@ -19,8 +19,8 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=250">
-  <link rel="stylesheet" href="css/studio.css?v=250">
+  <link rel="stylesheet" href="css/style.css?v=252">
+  <link rel="stylesheet" href="css/studio.css?v=252">
   <style>
   /* v246 — compact attach bar: professional one-row adding */
   .wr-addrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
@@ -128,16 +128,16 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=250"></script>
-  <script src="js/lang.js?v=250"></script>
-  <script src="js/config.js?v=250"></script>
-  <script src="js/auth.js?v=250"></script>
-  <script src="js/sounds.js?v=250"></script>
-  <script src="js/founder.js?v=250"></script>
-  <script src="js/community.js?v=250"></script>
-  <script src="js/gold.js?v=250"></script>
-  <script src="js/paywall.js?v=250"></script>
-  <script src="js/studio.js?v=250"></script>
+  <script src="js/prefs.js?v=252"></script>
+  <script src="js/lang.js?v=252"></script>
+  <script src="js/config.js?v=252"></script>
+  <script src="js/auth.js?v=252"></script>
+  <script src="js/sounds.js?v=252"></script>
+  <script src="js/founder.js?v=252"></script>
+  <script src="js/community.js?v=252"></script>
+  <script src="js/gold.js?v=252"></script>
+  <script src="js/paywall.js?v=252"></script>
+  <script src="js/studio.js?v=252"></script>
   <style>/* hide Puter branding — keep AI silent */ .puter-modal,.puter-dialog,.puter-auth{ display:none !important }</style>
   <script>
   // silent Puter loader — don't block rendering, hide GUI
@@ -149,10 +149,10 @@
     document.head.appendChild(s);
   })();
   </script>
-  <script src="js/dictate.js?v=250"></script>
-  <script src="js/data.js?v=250"></script>
-  <script src="js/osint.js?v=250"></script>
-  <script src="js/quotedesk.js?v=250"></script>
+  <script src="js/dictate.js?v=252"></script>
+  <script src="js/data.js?v=252"></script>
+  <script src="js/osint.js?v=252"></script>
+  <script src="js/quotedesk.js?v=252"></script>
   <script>
   (function () {
     "use strict";
@@ -350,7 +350,6 @@
         photo: localSrc || coverUrl || "",
         photoName: (localSrc || coverUrl) ? "photo ready" : "",
         gold: !!(window.TSB_GOLD && TSB_GOLD.isGold()),
-        onWantPhoto: function (topic) { pickInspirePhoto(topic); },
         onPick: applyDeskPick
       });
     }
@@ -392,45 +391,9 @@
       }
     }
 
-    /* photos no longer hijack the page: the image lands in the preview and the
-       library closes itself. No second window, nothing to go "back" from. */
-    function pickInspirePhoto(topic) {
-      var api = window.TSB_OSINT || window.TSB_INSPIRE;
-      if (!api || !api.openInspire) { $("wCover").click(); return; }
-      var wrap = null;
-      try {
-        wrap = api.openInspire("images", topic || title.value || "", {
-          tabs: ["images", "quotes"],
-          onUseImage: async function (url) {
-            try { if (wrap && wrap.remove) wrap.remove(); } catch (e) {}
-            var obj = url;
-            try {
-              var blob = await fetch(url, { mode: "cors" }).then(function (r) { return r.blob(); });
-              var file = new File([blob], "inspire-" + Date.now() + ".jpg", { type: blob.type || "image/jpeg" });
-              lastCoverFile = file;
-              obj = URL.createObjectURL(file);
-            } catch (e) { lastCoverFile = null; }
-            $("wCoverPrev").src = obj; $("wCoverPrev").hidden = false;
-            if (window.TSB_QUOTEDESK && TSB_QUOTEDESK.isOpen && TSB_QUOTEDESK.isOpen()) {
-              TSB_QUOTEDESK.applyPhoto(obj, "Inspire photo", "");
-            }
-            renderQuoteLive();
-            $("saveState").textContent = "\u2713 photo ready";
-            /* keep the draft honest: park a real URL behind the local preview */
-            var pending = lastCoverFile;
-            if (pending) {
-              (async function (f) {
-                try {
-                  coverUrl = await C.upload(f, "tsb-covers");
-                  if (lastCoverFile === f) lastCoverFile = null;
-                  renderQuoteLive(); saveDraft();
-                } catch (e) {}
-              })(pending);
-            }
-          }
-        });
-      } catch (e) {}
-    }
+    /* v251: photos are searched inside the Quote Desk and Studio now — this
+       second image sheet (and the callback that opened it) is gone for good. */
+
 
     if (location.search.indexOf("mode=quote") >= 0) {
       kind = "quote";
@@ -677,11 +640,9 @@
         if(sub) sub.textContent = (kind==="quote" ? "Tap to browse quotes you can post & aesthetic images you can set as card background — live, not preloaded." : "Live library for stories — cover images (aesthetic) & research snippets you can build on.");
       }catch(e){}
       // v244: Dictate stays visible in QUOTE mode too — free browser voice typing (no sign-in) fills the quote or your take
-      // compat: if old buttons somehow still in DOM (cached), wire them to productive tabs too
-      var b1=document.getElementById("osintImgBtn");
-      var b2=document.getElementById("osintQuoteBtn2");
-      if(b1) b1.addEventListener("click", function(e){ e.preventDefault(); openInspire("images", ""); });
-      if(b2) b2.addEventListener("click", function(e){ e.preventDefault(); openInspire("quotes", (title.value||"").trim()); });
+      /* v251: the cached-browser compat shim for #osintImgBtn / #osintQuoteBtn2 is
+         gone — those ids exist in no page any more, and the buttons above are the
+         only entry points. Fewer ways in means fewer ways to get lost. */
       // expose globally for other callers
       window.__openInspireDesk = openInspire;
     })();
@@ -907,6 +868,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=250" defer></script>
+  <script src="js/bar.js?v=252" defer></script>
 </body>
 </html>

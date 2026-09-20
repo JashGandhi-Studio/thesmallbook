@@ -151,21 +151,35 @@
   function graveLink(f) { return "graveyard/" + encodeURIComponent(f.id) + ".html"; }
 
   /* ============ answer builders ============ */
+  /* the cover the book actually declares — it is not always a .jpg (7 books
+     are .webp or .png), and a hardcoded path showed a broken image on those */
+  function coverOf(b) {
+    if (b && b.cover) return b.cover;
+    return "assets/covers/" + encodeURIComponent(b.id) + ".jpg";
+  }
   function srcCard(bid, frag, blurb) {
     var b = bookIndex()[bid];
     if (!b) return "";
     var idx = 0;
     if (frag) {
-      var fi = b.lessons.findIndex(function (l) { return l.title.toLowerCase().indexOf(String(frag).toLowerCase()) !== -1; });
-      if (fi !== -1) idx = fi;
+      var want = String(frag).toLowerCase();
+      for (var i = 0; i < b.lessons.length; i++) {
+        if (String(b.lessons[i].title || "").toLowerCase().indexOf(want) !== -1) { idx = i; break; }
+      }
     }
-    var l = b.lessons[idx] || b.lessons[0];
+    var l = b.lessons[idx] || b.lessons[0] || { title: "", summary: "" };
     var hue = ["aq-b--y", "aq-b--p", "aq-b--g", "aq-b--b", "aq-b--v"][idx % 5];
+    var rt = b.readTime ? String(b.readTime).replace(/\s*read$/i, "").trim() : "";
+    var mins = rt ? (/min/i.test(rt) ? rt : rt + " min") : "";
     return '<a class="aq-src aq-src--img ' + hue + '" href="' + lessonLink(b, idx) + '">' +
-      '<img class="aq-src__img" src="assets/covers/' + encodeURIComponent(b.id) + '.jpg" alt="" loading="lazy">' +
+      '<img class="aq-src__img" src="' + esc(coverOf(b)) + '" alt="' + esc(b.title) + ' cover" loading="lazy">' +
       '<span class="aq-src__book">' + esc(b.title) + '</span>' +
       '<span class="aq-src__lesson">' + esc(l.title) + '</span>' +
-      '<span class="aq-src__blurb">' + esc(blurb || l.summary.slice(0, 100) + "…") + '</span>' +
+      '<span class="aq-src__blurb">' + esc(blurb || String(l.summary || "").slice(0, 100) + "…") + '</span>' +
+      '<span class="aq-src__meta">' +
+        (b.category ? '<span class="aq-src__tag">' + esc(b.category) + '</span>' : "") +
+        (mins ? '<span class="aq-src__time">⏱ ' + esc(mins) + '</span>' : "") +
+      '</span>' +
       '<span class="aq-src__go">READ →</span></a>';
   }
   function graveCard(fid, blurb) {
@@ -177,6 +191,20 @@
       '<span class="aq-src__go">AUTOPSY →</span></a>';
   }
 
+  /* the answer, as a designed block: the headline thought, the reasoning,
+     then the sources as real cards with covers you can actually see */
+  function answerBlock(tag, text, qT) {
+    return '<div class="aq-ans">' +
+        (qT ? '<div class="aq-ans__q">' + esc(qT) + '</div>' : "") +
+        '<div class="aq-ans__body">' +
+          '<span class="aq-ans__tag">' + esc(tag) + '</span>' +
+          '<p>' + esc(text) + '</p>' +
+        '</div>' +
+      '</div>';
+  }
+  function sourceHead(n, label) {
+    return '<div class="aq-head2"><span>' + esc(label) + '</span><i>' + n + '</i></div>';
+  }
   function topicHtml(topic, qT, ansT, blurbsT, gBlurbsT) {
     var books = (topic.books || []).map(function (s, i) {
       return srcCard(s.id, s.lesson, blurbsT[i] || s.blurb);
@@ -184,9 +212,9 @@
     var graves = (topic.graves || []).map(function (s, i) {
       return graveCard(s.id, gBlurbsT[i] || s.blurb);
     }).join("");
-    return '<div class="aq-q">\u201C' + esc(qT) + '\u201D</div>' +
-      '<div class="aq-guided"><span class="aq-guided__tag">' + esc(t("THE ANSWER")) + "</span>" + esc(ansT) + "</div>" +
-      '<div class="aq-srcs">' + books + graves + "</div>" +
+    return answerBlock(t("THE ANSWER"), ansT, "\u201C" + qT + "\u201D") +
+      (books ? sourceHead((topic.books || []).length, t("FROM THE LIBRARY")) + '<div class="aq-srcs">' + books + "</div>" : "") +
+      (graves ? sourceHead((topic.graves || []).length, t("FROM THE GRAVEYARD")) + '<div class="aq-srcs">' + graves + "</div>" : "") +
       '<div class="aq-foot">✦ ' + esc(t("tap a source to read the real lesson")) + " ✦</div>";
   }
 
@@ -198,13 +226,12 @@
       return graveCard(r.f.id, gBlurbsT[i] || (r.f.lesson || r.f.mistake || "").slice(0, 110) + "…");
     }).join("");
     if (!hits && !gHits) {
-      return '<div class="aq-q">\u201C' + esc(qT) + '\u201D</div>' +
-        '<div class="aq-guided">' + esc(headT) + "</div>";
+      return answerBlock(t("CLOSEST MATCHES"), headT, "\u201C" + qT + "\u201D") +
+        '<div class="aq-none">📖 ' + esc(t("no book lesson matched")) + "</div>";
     }
-    return '<div class="aq-q">\u201C' + esc(qT) + '\u201D</div>' +
-      '<div class="aq-guided"><span class="aq-guided__tag">' + esc(t("CLOSEST MATCHES")) + "</span>" + esc(headT) + "</div>" +
-      (hits || "<div class='aq-none'>📖 " + esc(t("no book lesson matched")) + "</div>") +
-      (gHits ? '<div class="aq-gravehead">💀 ' + esc(t("FROM THE GRAVEYARD")) + "</div>" + gHits : "");
+    return answerBlock(t("CLOSEST MATCHES"), headT, "\u201C" + qT + "\u201D") +
+      (hits ? sourceHead(lRes.length, t("FROM THE LIBRARY")) + hits : "<div class='aq-none'>📖 " + esc(t("no book lesson matched")) + "</div>") +
+      (gHits ? sourceHead(gRes.length, t("FROM THE GRAVEYARD")) + gHits : "");
   }
 
   /* related failures for a book: its antidote graves + same-category famous ones */
@@ -226,9 +253,8 @@
         '<span class="aq-src__blurb">' + esc(lossesT[i] || f.loss || (f.lesson || "").slice(0, 90)) + "</span>" +
         '<span class="aq-src__go">' + esc(t("AUTOPSY")) + " →</span></a>";
     }).join("");
-    return '<div class="aq-q">💀 ' + esc(t("THE GRAVEYARD SAYS")) + "</div>" +
-      '<div class="aq-guided"><span class="aq-guided__tag">' + esc(t("FAILURES LINKED TO THIS BOOK")) + "</span>" +
-      esc(t("Real companies that died the exact way this book warns about.")) + "</div>" +
+    return answerBlock("💀 " + t("THE GRAVEYARD SAYS"), t("Real companies that died the exact way this book warns about."), "") +
+      sourceHead(gs.length, t("FAILURES LINKED TO THIS BOOK")) +
       '<div class="aq-srcs">' + cards + "</div>" +
       '<div class="aq-foot">✦ ' + esc(t("tap an autopsy to read the full story")) + " ✦</div>";
   }

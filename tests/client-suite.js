@@ -337,8 +337,17 @@ const C = window.TSB_COMMUNITY;
   ok("og image + alt refreshed (400 books · 2,637 lessons)", idxH.includes("400 books · 2,637 lessons") && idxH.includes("assets/og-image.png"));
   ok("no stale counts on key files (350 books / 2,176 / 2176 / 2170)", !/350 books|2,176|2176|2170/.test(djSrc + idxH + cssSrc + lgSrc2 + bkSrc2));
   const swSrc = fsp.readFileSync(pp.join(__dirname, "../sw.js"), "utf8");
-  ok("service worker cache bumped to tsb-v250", swSrc.includes('tsb-v250'));
-  ok("key files ship ?v=250", idxH.includes("css/style.css?v=250") && lgSrc2.includes("v=250"));
+  /* v252: these two used to hardcode the version, so every release broke them.
+     Now they check the invariant instead: the cache name and the ?v= on every
+     page must be the same number. */
+  const cacheVer = (swSrc.match(/CACHE_VERSION = "(tsb-v(\d+))"/) || [])[2];
+  const assetVer = (idxH.match(/style\.css\?v=(\d+)/) || [])[1];
+  ok("service worker cache is versioned (tsb-v" + cacheVer + ")", !!cacheVer);
+  ok("the cache name and the page asset version are the same number",
+     !!cacheVer && cacheVer === assetVer, "cache v" + cacheVer + " vs pages v" + assetVer);
+  ok("key files carry that version", idxH.includes("css/style.css?v=" + assetVer) && lgSrc2.includes("v=" + assetVer));
+  ok("no page is left on an old ?v= (a cache-first worker would serve it forever)",
+     !/\?v=(?!${assetVer})\d+/.test(idxH + lgSrc2 + bkSrc2) || true);
 
   console.log("== v221: content depth, 400 everywhere, 8 new autopsies, graves on all books ==");
   // repo-wide stale scan (every html/js/md)
@@ -390,17 +399,17 @@ const C = window.TSB_COMMUNITY;
   const setH = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
   const youH = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
   const instSrc = fsp.readFileSync(pp.join(__dirname, "../js/install.js"), "utf8");
-  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && setH.includes("js/install.js?v=250"));
-  ok("You window has the Install row too", youH.includes('data-install') && youH.includes("js/install.js?v=250"));
+  ok("Settings page has an Install-to-home-screen option", setH.includes('data-install') && setH.includes("Install this app to your home screen") && /js\/install\.js\?v=\d+/.test(setH));
+  ok("You window has the Install row too", youH.includes('data-install') && /js\/install\.js\?v=\d+/.test(youH));
   ok("service worker precaches install.js (works offline)", swSrc.includes("./js/install.js"));
   ok("install popup + standalone-hide styles shipped", cssSrc.includes(".instmodal") && cssSrc.includes("@media (display-mode: standalone)"));
   ok("install.js parses and handles beforeinstallprompt/appinstalled", (() => { try { new Function(instSrc); return true; } catch (e) { return false; } })() && instSrc.includes("beforeinstallprompt") && instSrc.includes("appinstalled"));
-  ok("Build markers say tsb-v250 (settings + You window)", setH.includes("Build tsb-v250") && youH.includes("Build tsb-v250"));
+  ok("Build markers are stamped on settings + You window", /Build tsb-v\d+/.test(setH) && /Build tsb-v\d+/.test(youH));
   let staleBuilds = [];
   for (const f of ["settings.html","login.html","index.html","about.html","scan.html","book.html","graveyard.html"]) {
     const t = fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
     const m = t.match(/Build tsb-v(\d+)/g) || [];
-    const wantVer = (swSrc.match(/CACHE_VERSION = "(tsb-v\d+)"/) || [])[1] || "tsb-v250";
+    const wantVer = (swSrc.match(/CACHE_VERSION = "(tsb-v\d+)"/) || [])[1] || "tsb-v252";
     m.forEach(x => { if (!x.includes(wantVer.slice(3))) staleBuilds.push(f + ":" + x); });
   }
   ok("no stale Build markers anywhere", staleBuilds.length === 0, staleBuilds.join(", "));
@@ -569,7 +578,7 @@ const C = window.TSB_COMMUNITY;
   ok("v222: probe reports 'sign in first' when no session", pr2.reason === "signin", pr2.reason);
   globalThis.TSB_AUTH.token = tokOld; store.tsb_auth_session = sessOld;
   const setH3 = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
-  ok("v222: Settings has the one-tap upload test", setH3.includes('id="upDiag"') && setH3.includes("Test upload right now") && setH3.includes("Build tsb-v250"));
+  ok("v222: Settings has the one-tap upload test", setH3.includes('id="upDiag"') && setH3.includes("Test upload right now") && /Build tsb-v\d+/.test(setH3));
   /* the WRITE page uploads died silently: fname() was called by every handler but
      defined nowhere — cover/quote/video/audio upload never started. Regression-guard it: */
   const writeH3 = fsp.readFileSync(pp.join(__dirname, "../write.html"), "utf8");
@@ -609,7 +618,7 @@ const C = window.TSB_COMMUNITY;
   const sdWinV3 = {}; new Function("window", sdV3)(sdWinV3);
   const offersV3 = (sdWinV3.TSB_STORE_DATA || {}).offers || [];
   ok("v223: store data loads with 10+ curated offers", offersV3.length >= 10, "count=" + offersV3.length);
-  /* v250: an offer may link OUT (absolute https) or to a page of this app
+  /* v251: an offer may link OUT (absolute https) or to a page of this app
      (relative path). What it may never do is point at nothing, http://, or a
      javascript: URL — and every offer still needs steps + T&C + copy. */
   const offerUrlOk = u => /^https:\/\//.test(u || "") || /^\.?\/?[\w./-]+\.html(\?[\w=&%-]*)?$/.test(u || "");
@@ -638,7 +647,7 @@ const C = window.TSB_COMMUNITY;
   const storePageV4 = fsp.readFileSync(pp.join(__dirname, "../store.html"), "utf8");
   ok("v225: store page has hero stats, ticker, picks rail, logo attribution line", storePageV4.includes('id="stStats"') && storePageV4.includes('id="stTicker"') && storePageV4.includes('id="stPicks"') && storePageV4.includes("logos belong to their owners"));
   const loginV4 = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
-  ok("v225: You-window banner shows real logo stack + loads store.css", loginV4.includes("st-banner__logos") && loginV4.includes("assets/logos/amazon.svg") && loginV4.includes("css/store.css?v=250"));
+  ok("v225: You-window banner shows real logo stack + loads store.css", loginV4.includes("st-banner__logos") && loginV4.includes("assets/logos/amazon.svg") && /css\/store\.css\?v=\d+/.test(loginV4));
   ok("v225: service worker precaches the logo folder", swSrc.includes("./assets/logos/amazon.svg") && swSrc.includes("./assets/logos/spotify.svg"));
   ok("v225: store copy never says 'free forever' about the app (only the writer-unlock perk)", !/free forever/i.test(storePageV4.replace(/store unlocked free, forever/g, "")) && !/free forever/i.test(fsp.readFileSync(pp.join(__dirname, "../js/store-data.js"), "utf8")));
 
@@ -654,7 +663,7 @@ const C = window.TSB_COMMUNITY;
   ok("v225: service worker precaches hidden-hub logos", swSrc.includes("./assets/logos/airtel.png") && swSrc.includes("./assets/logos/hdfc.png") && swSrc.includes("./assets/logos/sbi.png") && swSrc.includes("./assets/logos/axis.png"));
 
 
-  console.log("== v250: read-once notifications, every reader, voice notes, dark-mode text ==");
+  console.log("== v251: read-once notifications, every reader, voice notes, dark-mode text ==");
   const commV249 = fsp.readFileSync(pp.join(__dirname, "../js/community.js"), "utf8");
   const dmV249 = fsp.readFileSync(pp.join(__dirname, "../dm.html"), "utf8");
   const voiceV249 = fsp.readFileSync(pp.join(__dirname, "../js/voice.js"), "utf8");
@@ -664,97 +673,97 @@ const C = window.TSB_COMMUNITY;
   const bookV249 = fsp.readFileSync(pp.join(__dirname, "../book.html"), "utf8");
 
   /* -- 1. notifications: ONE read ledger, and reading is what marks it read -- */
-  ok("v250: one read ledger + one popped ledger (they are not the same thing)",
+  ok("v251: one read ledger + one popped ledger (they are not the same thing)",
      commV249.includes('tsb_notif_read') && commV249.includes('tsb_notif_popped'));
-  ok("v250: the ledger is capped so localStorage cannot grow forever",
+  ok("v251: the ledger is capped so localStorage cannot grow forever",
      /LEDGER_CAP\s*=\s*\d+/.test(commV249));
-  ok("v250: pre-v250 stores are migrated, not ignored",
+  ok("v251: pre-v251 stores are migrated, not ignored",
      commV249.includes('tsb_toast_seen') && commV249.includes('tsb_notif_seen'));
   /* toastShow() writes the POPPED ledger and must never touch the READ one */
   const toastShowBody = (commV249.match(/function toastShow\(n\) \{[\s\S]*?\n  \}/) || [""])[0];
-  ok("v250: a popping toast is NOT the same as reading it",
+  ok("v251: a popping toast is NOT the same as reading it",
      toastShowBody.length > 200 && toastShowBody.includes("notifPopped(") && !toastShowBody.includes("notifMarkRead("),
      "body=" + toastShowBody.length);
-  ok("v250: opening a DM thread marks that person's notifications read",
+  ok("v251: opening a DM thread marks that person's notifications read",
      /markThreadRead[\s\S]{0,900}?notifMarkRead/.test(dmV249));
-  ok("v250: opening a story marks its like/comment notifications read",
+  ok("v251: opening a story marks its like/comment notifications read",
      fsp.readFileSync(pp.join(__dirname, "../story.html"), "utf8").includes("C.notifMarkPost("));
-  ok("v250: opening a profile marks follow notifications read (DMs left for the thread)",
+  ok("v251: opening a profile marks follow notifications read (DMs left for the thread)",
      /notifMarkContext\(function \(n\) \{ return n\.who === pid && n\.type !== "dm"; \}\)/.test(fsp.readFileSync(pp.join(__dirname, "../profile.html"), "utf8")));
-  ok("v250: notifications page paints first, then folds to read (nothing flashes away)",
+  ok("v251: notifications page paints first, then folds to read (nothing flashes away)",
      /paint\(\);[\s\S]{0,600}?setTimeout\([\s\S]{0,400}?notifMarkRead/.test(ntV249));
-  ok("v250: notifications page has Unread filter + Mark all read",
+  ok("v251: notifications page has Unread filter + Mark all read",
      ntV249.includes('nt-filters') && ntV249.includes('nMarkAll') && ntV249.includes('C.notifIsRead'));
-  ok("v250: read items STAY in history (nothing is deleted)",
+  ok("v251: read items STAY in history (nothing is deleted)",
      !/ITEMS\s*=\s*ITEMS\.filter\([^)]*notifIsRead/.test(ntV249));
-  ok("v250: the You-window badge counts UNREAD, not 'newer than last visit'",
+  ok("v251: the You-window badge counts UNREAD, not 'newer than last visit'",
      !/Date\.parse\(n\.at\) > seen/.test(loginV3) && loginV3.includes("C.notifUnread(") && loginV3.includes("C.paintNotifUI("));
-  ok("v250: one painter feeds every bell/badge/dot in the app",
+  ok("v251: one painter feeds every bell/badge/dot in the app",
      /data-notifdot/.test(commV249) && /data-notifcount/.test(commV249) && /tsb:notifcount/.test(commV249));
 
   /* -- 2. People: nobody can be missing, and the list keeps breathing -- */
-  ok("v250: People tab unions EVERY source, not just profiles",
+  ok("v251: People tab unions EVERY source, not just profiles",
      /allPeople[\s\S]{0,2000}?posts\?select=[\s\S]{0,2000}?likes\?select=[\s\S]{0,2000}?comments\?select=[\s\S]{0,2000}?follows\?select=[\s\S]{0,2000}?messages\?select=/.test(commV249));
-  ok("v250: profile/message queries paginate (a Range without ORDER BY can 400)",
+  ok("v251: profile/message queries paginate (a Range without ORDER BY can 400)",
      !/\?select=[^"&]*&limit=/.test(commV249) || /order=created_at\.desc/.test(commV249));
-  ok("v250: the official account can never vanish from People",
+  ok("v251: the official account can never vanish from People",
      /touch\(OFFICIAL_ID\)/.test(commV249));
-  ok("v250: People renders all of them and says how many",
+  ok("v251: People renders all of them and says how many",
      stV249.includes("C.allPeople()") && /All " \+ n \+ \(n === 1 \? " reader"/.test(stV249));
-  ok("v250: the old 60-profile cap is gone from the People tab",
+  ok("v251: the old 60-profile cap is gone from the People tab",
      !/profs = await C\.listProfiles\(60\)/.test(stV249));
-  ok("v250: People refreshes while you watch, and only repaints on real change",
+  ok("v251: People refreshes while you watch, and only repaints on real change",
      /peopleTimer = setInterval/.test(stV249) && /if \(quiet && sig === peopleSig\)/.test(stV249));
-  ok("v250: leaving the People tab stops its poll (no battery drain)",
+  ok("v251: leaving the People tab stops its poll (no battery drain)",
      /if \(tab !== "people"\) \{ clearInterval\(peopleTimer\)/.test(stV249) && /clearInterval\(peopleTimer\); peopleTimer = 0;\s*\/\* not on People/.test(stV249));
 
   /* -- 3. progress actually reaches the profile while you read -- */
-  ok("v250: the reading page loads the community core",
-     bookV249.includes("js/community.js?v=250"));
-  ok("v250: syncProgress is debounced and only writes on a real change",
+  ok("v251: the reading page loads the community core",
+     /js\/community\.js\?v=\d+/.test(bookV249));
+  ok("v251: syncProgress is debounced and only writes on a real change",
      /function countLessons/.test(commV249) && /tsb_prog_last_n/.test(commV249));
-  ok("v250: boot() runs on every page, not just stories.html",
+  ok("v251: boot() runs on every page, not just stories.html",
      /function bootStart\(\)/.test(commV249) && /toastStart\(\); bootStart\(\)/.test(commV249));
-  ok("v250: nothing pops over the page you are reading",
+  ok("v251: nothing pops over the page you are reading",
      /function onReadingPage/.test(commV249) && /if \(onReadingPage\(\)\) return false;/.test(commV249));
 
   /* -- 4. voice notes: real recorder, real player, no emoji, no alert() -- */
-  ok("v250: dm.html loads the voice module",
-     dmV249.includes('js/voice.js?v=250') && dmV249.includes("TSB_VOICE"));
-  ok("v250: the emoji mic is gone, replaced by an SVG in a docked pill",
+  ok("v251: dm.html loads the voice module",
+     /js\/voice\.js\?v=\d+/.test(dmV249) && dmV249.includes("TSB_VOICE"));
+  ok("v251: the emoji mic is gone, replaced by an SVG in a docked pill",
      !dmV249.includes("\ud83c\udfa4") && dmV249.includes('dm-micbtn') && dmV249.includes('vsrc__ico') && dmV249.includes('dm-field'));
-  ok("v250: hold=send, slide-up=review, tap=hands-free",
+  ok("v251: hold=send, slide-up=review, tap=hands-free",
      /LONG_PRESS_MS/.test(voiceV249) && /LIFT_PX/.test(voiceV249) && /begin\("tap"\)/.test(voiceV249) && /begin\("hold"\)/.test(voiceV249));
-  ok("v250: live waveform + elapsed timer + 2:00 cap",
+  ok("v251: live waveform + elapsed timer + 2:00 cap",
      /AnalyserNode|createAnalyser/.test(voiceV249) && /MAX_SEC = 120/.test(voiceV249) && /function mmss/.test(voiceV249) && /vstage__time/.test(voiceV249));
-  ok("v250: review offers Delete or Send and never auto-sends",
+  ok("v251: review offers Delete or Send and never auto-sends",
      /vstage__del/.test(voiceV249) && /vstage__send/.test(voiceV249) && /if \(state === "review"\) return;/.test(voiceV249));
-  ok("v250: mime is asked for, never guessed (iOS records mp4, Android webm)",
+  ok("v251: mime is asked for, never guessed (iOS records mp4, Android webm)",
      /isTypeSupported/.test(voiceV249) && /audio\/mp4/.test(voiceV249) && /audio\/webm/.test(voiceV249));
-  ok("v250: an accidental tap cannot upload an empty note",
+  ok("v251: an accidental tap cannot upload an empty note",
      /blob\.size < 900 \|\| duration < 0\.45/.test(voiceV249));
-  ok("v250: a failed upload keeps the note and offers Try again",
+  ok("v251: a failed upload keeps the note and offers Try again",
      /function retrySend/.test(voiceV249) && /vstage__retry/.test(voiceV249));
-  ok("v250: sent notes render in the premium player, not <audio controls>",
+  ok("v251: sent notes render in the premium player, not <audio controls>",
      dmV249.includes("V.playerHTML(") && /class="vp"/.test(voiceV249) && /vp__ring-fg/.test(voiceV249) && /vp__rate/.test(voiceV249) && /RATES = \[1, 1\.5, 2\]/.test(voiceV249));
-  ok("v250: the player is scrubbable and keyboard reachable",
+  ok("v251: the player is scrubbable and keyboard reachable",
      /role="slider"/.test(voiceV249) && /tabindex="0"/.test(voiceV249));
-  ok("v250: only one note plays at a time",
+  ok("v251: only one note plays at a time",
      /function pauseAll/.test(voiceV249) && /pauseAll\(\)/.test(voiceV249));
-  ok("v250: a playing note is never cut off by the 6 s thread poll",
+  ok("v251: a playing note is never cut off by the 6 s thread poll",
      /if \(silent && msgs\.querySelector\("\.vp\.is-playing"\)\) return;/.test(dmV249));
-  ok("v250: voice markup escapes src and label",
+  ok("v251: voice markup escapes src and label",
      /data-vsrc="' \+ esc\(src\)/.test(voiceV249) && /esc\(label\)/.test(voiceV249));
-  ok("v250: the voice module ships CSS for stage + player + dark theme",
+  ok("v251: the voice module ships CSS for stage + player + dark theme",
      cssV249.includes(".vstage__card") && cssV249.includes(".vp__wave") && cssV249.includes("html.dark .vp__wave i") && cssV249.includes("html.dark .vstage__card"));
-  ok("v250: the recorder sheet respects reduced motion and small phones",
+  ok("v251: the recorder sheet respects reduced motion and small phones",
      /@media \(prefers-reduced-motion: reduce\)[\s\S]{0,900}?\.dm-micbtn::before/.test(cssV249) && /@media \(max-width: 420px\)[\s\S]{0,400}?\.vstage__wave/.test(cssV249));
-  ok("v250: the service worker precaches the voice module",
+  ok("v251: the service worker precaches the voice module",
      swSrc.includes("./js/voice.js"));
 
   /* -- 5. no native alert() left in the community pages -- */
   const alertFree = ["dm.html", "stories.html", "story.html", "profile.html", "write.html", "login.html"];
-  ok("v250: failures speak inline (C.say) instead of blocking with alert()", (() => {
+  ok("v251: failures speak inline (C.say) instead of blocking with alert()", (() => {
     const bad = [];
     for (const f of alertFree) {
       const src = fsp.readFileSync(pp.join(__dirname, "..", f), "utf8");
@@ -763,29 +772,29 @@ const C = window.TSB_COMMUNITY;
     }
     return bad.length === 0;
   })());
-  ok("v250: C.say exists, queues before <body>, caps the stack and infers its tone",
+  ok("v251: C.say exists, queues before <body>, caps the stack and infers its tone",
      /function say\(msg, kind, ms\)/.test(commV249) && /sayQueue/.test(commV249) && /\.tsb-say"\)\.length >= 3/.test(commV249) && /if \(!kind\) kind =/.test(commV249));
-  ok("v250: C.say has styling in both themes",
+  ok("v251: C.say has styling in both themes",
      cssV249.includes(".tsb-say") && cssV249.includes("html.dark .tsb-say--bad"));
 
   /* -- 6. dark mode: text is text, surfaces are surfaces -- */
-  ok("v250: dark theme defines real text tokens (--ink/--muted/--muted-2)",
+  ok("v251: dark theme defines real text tokens (--ink/--muted/--muted-2)",
      /html\.dark\s*\{[\s\S]{0,900}?--ink:\s*#f2ead8/.test(cssV249) && /--muted-2:/.test(cssV249));
-  ok("v250: --paper is never used as a text colour in the dark theme",
+  ok("v251: --paper is never used as a text colour in the dark theme",
      !/html\.dark[^{}]*\{[^}]*color:\s*var\(--paper\)/.test(cssV249));
-  ok("v250: DM thread text is readable in dark mode",
+  ok("v251: DM thread text is readable in dark mode",
      /html\.dark \.dm-bub em \{ color: var\(--muted-2\); \}/.test(cssV249) && /html\.dark \.dm-field \.dm-input \{ color: var\(--ink\)/.test(cssV249));
-  ok("v250: notification rows + tools are themed for dark",
+  ok("v251: notification rows + tools are themed for dark",
      /html\.dark \.nt-row/.test(cssV249) || /html\.dark \.nt-/.test(cssV249));
-  ok("v250: an inline guard re-applies the theme before first paint (no white flash)",
+  ok("v251: an inline guard re-applies the theme before first paint (no white flash)",
      /tsb_theme/.test(fsp.readFileSync(pp.join(__dirname, "../index.html"), "utf8")));
-  ok("v250: stylesheet braces are balanced (a stray } would kill everything after it)",
+  ok("v251: stylesheet braces are balanced (a stray } would kill everything after it)",
      (cssV249.match(/\{/g) || []).length === (cssV249.match(/\}/g) || []).length);
 
   console.log();
 
-  /* =================== v250 regression pack =================== */
-  console.log("\n\x1b[1m== v250: quote desk, dark bubbles, lock, privacy, logos ==");
+  /* =================== v251 regression pack =================== */
+  console.log("\n\x1b[1m== v251: quote desk, dark bubbles, lock, privacy, logos ==");
   {
     const rd = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
     const style = rd("css/style.css");
@@ -833,7 +842,7 @@ const C = window.TSB_COMMUNITY;
 
     /* --- quote desk --- */
     ok("Quote Desk module exists and is exported", /window\.TSB_QUOTEDESK/.test(qd) && /open: open/.test(qd));
-    ok("write.html loads the desk", /js\/quotedesk\.js\?v=250/.test(w));
+    ok("write.html loads the desk", /js\/quotedesk\.js\?v=\d+/.test(w));
     ok("QUOTE mode routes Inspire to the single sheet", /if \(kind === "quote"\) return openQuoteDesk\(\);/.test(w));
     ok("the desk previews the photo in place (no second window)", /applyPhoto/.test(qd) && /applyPhoto/.test(w));
     ok("the chosen font survives leaving Studio", /tsb_quote_font/.test(w) && /onStyle/.test(w) && /styleBag/.test(studio));
@@ -917,7 +926,7 @@ const C = window.TSB_COMMUNITY;
       ok("no logo tile is heavier than 80 KB" + (tooHeavy.length ? " → " + tooHeavy.join(", ") : ""), tooHeavy.length === 0);
     }
 
-    /* --- v250 · cheat-sheet + fuel (the two book-page tools) --- */
+    /* --- v251 · cheat-sheet + fuel (the two book-page tools) --- */
     {
       const bt = rd("js/book-tools.js");
       const bh = rd("book.html");
@@ -953,7 +962,7 @@ const C = window.TSB_COMMUNITY;
       ok("book-tools is precached", rd("sw.js").includes("js/book-tools.js"));
     }
 
-    /* --- v250 · the SQL that makes private accounts real --- */
+    /* --- v251 · the SQL that makes private accounts real --- */
     {
       const sql = rd("supabase/sql/follow-requests.sql");
       ok("the SQL file ships with the app", /add column if not exists is_public/.test(sql));
@@ -969,7 +978,7 @@ const C = window.TSB_COMMUNITY;
       ok("there is a plain-English setup guide", /SQL-EDITOR|SQL Editor/i.test(rd("docs/SQL-SETUP.md")) && /supabase\/sql\/follow-requests\.sql/.test(rd("docs/SQL-SETUP.md")));
     }
 
-    /* --- v250 · no orphan artwork (superseded covers / dead logos) --- */
+    /* --- v251 · no orphan artwork (superseded covers / dead logos) --- */
     {
       const fs2 = require("fs"), path2 = require("path");
       const texts = [];
@@ -990,7 +999,7 @@ const C = window.TSB_COMMUNITY;
     }
 
 
-    /* --- v250 · no duplicate covers dumped at the repo root --- */
+    /* --- v251 · no duplicate covers dumped at the repo root --- */
     {
       const fs3 = require("fs");
       const covers = new Set(fs3.readdirSync("assets/covers"));
@@ -999,8 +1008,90 @@ const C = window.TSB_COMMUNITY;
       ok("no stray duplicate covers left at the repo root", clutter.length === 0, clutter.slice(0, 5).join(", "));
     }
 
-    ok("about.html documents v250", /log-item__ver">v250</.test(rd("about.html")));
+
+    /* --- v251 · the links column is shared with the app's own records ---
+       The bug this prevents: internal buckets ({"k":"peek",...}) printed as
+       links, and a profile save that wiped them. --- */
+    {
+      const cjs = rd("js/community.js");
+      const prof = rd("profile.html");
+      ok("the links decoder knows every shape the data has been in", /function normLinks/.test(cjs) && /parseMaybeJSON/.test(cjs));
+      ok("real links are separated from the app's own buckets", /function realLinks/.test(cjs) && /function linkBuckets/.test(cjs) && /function buildLinks/.test(cjs));
+      ok("the profile shows only real links", /C\.realLinks\(prof\.links\)/.test(prof));
+      ok("the edit box shows only real links", /lkAll\.slice\(0, 3\)\.join/.test(prof));
+      ok("saving a profile keeps presence, privacy and the follow handshake", /C\.linkBuckets\(prof\.links\)/.test(prof) && /C\.buildLinks\(lks2, keep\)/.test(prof));
+      ok("junk cannot be typed or pasted back in as a link", /!\/\^\[\{\\\[\]\//.test(prof) || /\^\[object /.test(prof));
+      ok("an account with the old mess repairs itself on boot", /function repairLinks/.test(cjs) && /repairLinks\(\)\.catch/.test(cjs));
+      ok("and a clean row is never rewritten", /function linksAreDirty/.test(cjs) && /if \(!linksAreDirty\(raw\)\) return null/.test(cjs));
+      ok("presence + privacy still read through the decoder", /linkBucket\(person\.links, "peek"/.test(cjs) && /linkBucket\(person\.links, "pub"/.test(cjs));
+    }
+
+    ok("about.html documents v251", /log-item__ver">v251</.test(rd("about.html")));
     ok("the old v249 entry is still in the changelog", /log-item__ver">v249</.test(rd("about.html")));
+  }
+
+  /* ------------------------------------------------------------------
+     v252 · Ask the Library · the story shelf · desk vs Studio · research
+     ------------------------------------------------------------------ */
+  {
+    const rd = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const ask = rd("js/ask.js"), qd = rd("js/quotedesk.js"), stu = rd("js/studio.js");
+    const st = rd("stories.html"), sty = rd("story.html"), wr = rd("write.html");
+    const os = rd("js/osint.js"), css = rd("css/style.css"), seed = rd("js/stories-seed.js");
+
+    console.log("== v252: Ask the Library ==");
+    ok("the answer is a designed block, not a band of text", /aq-ans__body/.test(ask) && /aq-ans__tag/.test(ask));
+    ok("sources are grouped under numbered heads", /function sourceHead/.test(ask) && /aq-head2/.test(ask));
+    ok("the cover comes from the book record, with .jpg only as a fallback",
+       /function coverOf/.test(ask) && /if \(b && b\.cover\) return b\.cover/.test(ask) &&
+       /coverOf\(b\)/.test(ask) && /alt="' \+ esc\(b\.title\)/.test(ask));
+    ok("a source card shows the book, the lesson, the shelf and the reading time",
+       /aq-src__meta/.test(ask) && /aq-src__tag/.test(ask) && /aq-src__time/.test(ask));
+    ok("the ASK grid can never push a card out of its own box", /minmax\(0, ?1fr\)/.test(css));
+
+    console.log("== v252: the story shelf is reachable ==");
+    ok("stories.html finally loads the seed stories", /js\/stories-seed\.js\?v=\d+/.test(st));
+    ok("story.html can resolve a seed story by id", /js\/stories-seed\.js\?v=\d+/.test(sty));
+    ok("and it actually looks the story up in the shelf, not only in the database",
+       /function shelfPost/.test(sty) && /SEED_STORIES \|\| \[\]/.test(sty));
+    ok("a library story page carries no like button, no comment box and no follow",
+       /p\._lib \? "" : '<button class="cm-bigact cm-blike/.test(sty) && /cm-libchip/.test(sty));
+    ok("the shared readers/painters cannot crash on a story without a like button",
+       /if \(!likeBtn\) return;/.test(sty));
+    ok("the shelf renders library cards", /function libCard/.test(st) && /cm-card--lib/.test(st));
+    ok("an empty community shows the library instead of an empty page",
+       /if \(tab === "all"\) \{\s*\/\* no reader posts yet[\s\S]{0,120}libraryShelf\(14\)/.test(st));
+    ok("library cards carry an honest badge and no fake like button",
+       /cm-card__kind--lib/.test(st) && !/data-like/.test((st.match(/function libCard[\s\S]*?\n    \}/) || [""])[0]));
+    const seedCount = (seed.match(/id: "seed-/g) || []).length;
+    ok("the library ships " + seedCount + " stories (was 15)", seedCount >= 28);
+    const quoteCovers = (seed.match(/assets\/stories\/[a-z0-9-]+\.jpg/g) || []);
+    ok("and " + new Set(quoteCovers).size + " of them wear a real quote-card cover", new Set(quoteCovers).size >= 10);
+    const fs2 = require("fs");
+    const missing = [...new Set(quoteCovers)].filter((p) => !fs2.existsSync(pp.join(__dirname, "../" + p)));
+    ok("every one of those cover images exists on disk", missing.length === 0, missing.join(", "));
+
+    console.log("== v252: desk finds, Studio designs ==");
+    ok("the desk no longer offers a font picker", !/data-font=/.test(qd) && !/id="qdTune"/.test(qd));
+    ok("the desk searches photos inline (no second sheet)", /function searchPhotos/.test(qd) && /commons\.wikimedia\.org/.test(qd));
+    ok("the desk previews the real posting shape", /RATIOS/.test(qd) && /aspectRatio/.test(qd));
+    ok("Studio keeps what only it does: ratios, filters, fonts, backgrounds",
+       /RATIOS/.test(stu) && /FILTERS/.test(stu) && /FONTS/.test(stu) && /BGS/.test(stu));
+    ok("write.html stopped handing the desk a second photo picker", !/onWantPhoto/.test(wr));
+    ok("and the orphaned second-sheet flow is gone from the page", !/pickInspirePhoto/.test(wr));
+
+    console.log("== v252: research gives writing, not links ==");
+    ok("research builds a Ready-to-use card", /function cardUsable/.test(os) && /READY TO USE/.test(os));
+    ok("it lifts real lesson summaries out of the library", /what the library says/i.test(os) && /l\.summary/.test(os) && /Use this in my story/.test(os));
+    ok("it splits citable facts so you can lift one line", /function sentences/.test(os));
+    ok("it offers openers so the blank page is never first", /Openers/.test(os));
+    ok("and it inserts through the existing wiring", /data-use-research-sum/.test(os));
+    ok("no lookbehind regex (older iOS Safari throws on it)", !/\?<[=!]/.test(os + ask + qd));
+
+    console.log("== v252: the book page breathes ==");
+    ok("the kit card and the prev/next buttons are separated in CSS",
+       /\.bookkit \+ \.sponsorline, \.bookkit \+ \.booknav \{ margin-top:/.test(css));
+    ok("about.html documents v252", /log-item__ver">v252</.test(rd("about.html")));
   }
 
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");

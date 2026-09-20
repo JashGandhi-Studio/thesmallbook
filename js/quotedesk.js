@@ -37,6 +37,18 @@
   "use strict";
   if (window.TSB_QUOTEDESK) return;
 
+  /* v251 — THE DESK FINDS, STUDIO DESIGNS.
+     The desk used to duplicate Studio: it had its own font picker, and
+     "find a photo" opened a second sheet on top. Now the desk does the two
+     things only it can do — find a line and find a photo, both inline — and
+     previews the result in the ratio you will actually publish in. Fonts,
+     frames and filters live in Studio, once. */
+  var RATIOS = [
+    { id: "4:5",  label: "4:5",   w: 4,  h: 5 },
+    { id: "1:1",  label: "1:1",   w: 1,  h: 1 },
+    { id: "9:16", label: "9:16",  w: 9,  h: 16 },
+    { id: "16:9", label: "16:9",  w: 16, h: 9 }
+  ];
   var FONT_KEY = "tsb_quote_font";
   var FONTS = {
     arch:    { label: "Archivo",    css: "'Archivo Black', system-ui, sans-serif",        w: 900 },
@@ -64,6 +76,10 @@
   ];
 
   var root = null, opts = null, S = {};
+  function ratioOf() {
+    for (var i = 0; i < RATIOS.length; i++) if (RATIOS[i].id === S.ratio) return RATIOS[i];
+    return RATIOS[0];
+  }
 
   function fontId() {
     try { return localStorage.getItem(FONT_KEY) || "arch"; } catch (e) { return "arch"; }
@@ -141,6 +157,10 @@
     var grow = function () { this.style.height = "auto"; this.style.height = Math.min(220, this.scrollHeight + 2) + "px"; };
     ta.addEventListener("input", grow);
     wy.addEventListener("input", grow);
+    /* a shape is always chosen, so the preview is honest from the first paint */
+    if (!S.ratio) S.ratio = "4:5";
+    paintChosen();
+    paintPreview();
     setTimeout(function () { try { ta.focus(); } catch (e) {} }, 260);
 
     $("#qdSearch").addEventListener("click", function () { fetchTopic(true); });
@@ -158,7 +178,22 @@
       })(TOPICS[i]);
     }
 
-    $("#qdPhoto").addEventListener("click", function () { pickPhoto(S.topic); });
+    /* shape: switching ratio re-crops the preview immediately */
+    Array.prototype.slice.call($("#qdTuneRatio").querySelectorAll("[data-ratio]")).forEach(function (b) {
+      b.addEventListener("click", function () {
+        S.ratio = b.getAttribute("data-ratio");
+        Array.prototype.slice.call($("#qdTuneRatio").querySelectorAll("[data-ratio]")).forEach(function (x) { x.classList.remove("on"); });
+        b.classList.add("on");
+        paintPreview(); buzz(6);
+      });
+    });
+    /* photo: searched on this sheet — no second window, nothing uploads */
+    var goPhoto = function () {
+      var el = $("#qdPhotoIn");
+      searchPhotos((el && el.value.trim()) || S.topic || S.text || "minimal");
+    };
+    var pgo = $("#qdPhotoGo"); if (pgo) pgo.addEventListener("click", goPhoto);
+    var pin = $("#qdPhotoIn"); if (pin) pin.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); goPhoto(); } });
     $("#qdCard").addEventListener("click", function () { finish("card"); });
     $("#qdSep").addEventListener("click", function () { finish("sep"); });
     $("#qdText").addEventListener("click", function () { finish("text"); });
@@ -173,7 +208,7 @@
       });
     }
     paintPreview();
-    paintPhoto();
+    paintChosen();
     return root;
   }
   function escClose(e) { if (e.key === "Escape") { document.removeEventListener("keydown", escClose); close(); } }
@@ -184,15 +219,15 @@
     for (var i = 0; i < TOPICS.length; i++) {
       chips += '<button type="button" data-topic="' + TOPICS[i].id + '">' + TOPICS[i].label + "</button>";
     }
-    var fs = "";
-    Object.keys(FONTS).forEach(function (id) {
-      fs += '<button type="button" data-font="' + id + '" class="' + (id === S.font ? "on" : "") +
-            '" style="font-family:' + FONTS[id].css + ';font-weight:' + (FONTS[id].w || 800) + '">' + FONTS[id].label + "</button>";
-    });
+    var rs = "";
+    for (var r = 0; r < RATIOS.length; r++) {
+      rs += '<button type="button" data-ratio="' + RATIOS[r].id + '" class="' + (RATIOS[r].id === S.ratio ? "on" : "") + '">' +
+            RATIOS[r].label + "</button>";
+    }
     return '' +
       '<div class="qd-sheet">' +
         '<div class="qd-top">' +
-          '<b>❝ QUOTE DESK<small>one sheet — find it or write it, photo optional, why-line always below</small></b>' +
+          '<b>❝ QUOTE DESK<small>find the line, find the photo, see the real crop — then Studio designs it</small></b>' +
           '<button class="qd-x" id="qdX" type="button" aria-label="Close">✕</button>' +
         '</div>' +
 
@@ -220,21 +255,24 @@
           '<input class="qd-in" id="qdAuthor" type="text" maxlength="60" placeholder="— who said it (optional)">' +
         '</div>' +
 
-        /* ---- photo ------------------------------------------------- */
-        '<div class="qd-lbl">🖼️ Photo behind it <span style="opacity:.7">(optional)</span></div>' +
-        '<button class="qd-kind" id="qdPhoto" type="button">' +
-          '<span class="qd-kind__ic" id="qdPhotoIc">🎨</span>' +
-          '<span class="qd-kind__t"><b>Find a photo for this quote</b>' +
-            '<span id="qdPhotoNote">aesthetic images by topic or search — lands right here, no extra window</span></span>' +
-        '</button>' +
+        /* ---- photo: searched right here, never a second sheet -------- */
+        '<div class="qd-lbl">🖼️ Photo behind it <span style="opacity:.7">(optional — search and tap, it lands here)</span></div>' +
+        '<div class="qd-photo">' +
+          '<div class="qd-search qd-search--photo">' +
+            '<input id="qdPhotoIn" type="text" placeholder="sunset, ocean, minimal, night, coffee…" autocomplete="off">' +
+            '<button type="button" id="qdPhotoGo">SEARCH</button>' +
+          '</div>' +
+          '<div class="qd-strip" id="qdStrip"></div>' +
+          '<div class="qd-chosen" id="qdChosen"></div>' +
+        '</div>' +
 
         /* ---- why this line hit you --------------------------------- */
         '<div class="qd-lbl">💬 Why this line hit you <span style="opacity:.7">(goes below your card — this is the part people reply to)</span></div>' +
         '<div class="qd-why"><textarea class="qd-ta" id="qdWhy" rows="3" maxlength="600" placeholder="Two or three lines in your own voice — what it changed, where you read it, who it reminds you of…"></textarea></div>' +
 
-        /* ---- font (mirrors Studio so the page and the card agree) --- */
-        '<div class="qd-lbl">🔤 Font — the card and this page always match</div>' +
-        '<div class="qd-tune" id="qdTune">' + fs + '</div>' +
+        /* ---- shape: what you are posting, previewed honestly ---------- */
+        '<div class="qd-lbl">📐 Shape — you see the real crop before Studio</div>' +
+        '<div class="qd-tune qd-tune--ratio" id="qdTuneRatio">' + rs + '</div>' +
 
         /* ---- actions ----------------------------------------------- */
         '<button class="qd-go" id="qdCard" type="button">🎨 Open Studio — quote inside the image</button>' +
@@ -252,7 +290,14 @@
     if (!box) return;
     var t = (S.text || "").trim(), a = (S.author || "").trim();
     var fo = fontOf(S.font);
+    var R = ratioOf();
     var px = t.length > 150 ? 15 : t.length > 90 ? 17 : t.length > 40 ? 19 : 22;
+    /* a tall 9:16 crop needs the type a notch smaller or it overflows the frame */
+    if (R.h / R.w > 1.4) px = Math.round(px * 0.86);
+    box.style.aspectRatio = R.w + " / " + R.h;
+    box.style.maxHeight = R.h / R.w > 1.4 ? "300px" : "240px";
+    var tag = $("#qdShape");
+    if (tag) tag.textContent = R.label;
     box.classList.toggle("has-img", !!S.photo);
     box.style.backgroundImage = S.photo ? 'url("' + String(S.photo).replace(/"/g, '\\"') + '")' : "";
     box.style.backgroundSize = "cover";
@@ -268,21 +313,10 @@
       hint.textContent = S.photo
         ? "Studio opens with this photo and your quote already on it — reframe, filter, export. Nothing uploads until you publish."
         : "No photo? Studio still gives you 24 aesthetic backgrounds, so the card always looks finished.";
+      if (S.ratio && S.ratio !== "4:5") hint.textContent += " Previewing " + ratioOf().label + ".";
     }
   }
-  function paintPhoto() {
-    var ic = $("#qdPhotoIc"), note = $("#qdPhotoNote"), b = $("#qdPhoto");
-    if (!b) return;
-    if (S.photo) {
-      if (ic) ic.textContent = "✓";
-      if (note) note.textContent = (S.photoName ? S.photoName : "Photo chosen") + " — tap to change it";
-      b.classList.add("qd-kind--on");
-    } else {
-      if (ic) ic.textContent = "🎨";
-      if (note) note.textContent = "aesthetic images by topic or search — lands right here, no extra window";
-      b.classList.remove("qd-kind--on");
-    }
-  }
+  /* (the old #qdPhoto button is gone — photos are searched inline) */
 
   /* ---- live quotes (real network, nothing preloaded) ---------------- */
   function paintResults(busy) {
@@ -342,22 +376,68 @@
   }
 
   /* ---- photo: hand straight back to the host page ------------------- */
-  function pickPhoto(topic) {
-    if (typeof opts.onWantPhoto === "function") {
-      try { opts.onWantPhoto(topic || ""); return; } catch (e) {}
-    }
-    var api = window.TSB_OSINT || window.TSB_INSPIRE;
-    if (api && api.openInspire) {
-      api.openInspire("images", topic || S.text || "", {
-        tabs: ["images", "quotes"],
-        onUseImage: function (url) { applyPhoto(url, "Inspire Desk"); }
+  /* live photos, fetched HERE. The old version opened the Inspire sheet on top
+     of this one, which is exactly the "extra window" nobody wants. */
+  function searchPhotos(q) {
+    var box = $("#qdStrip");
+    if (!box) return;
+    box.innerHTML = '<div class="qd-empty">… searching photos</div>';
+    var term = String(q || "minimal").trim() || "minimal";
+    var url = "https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=" +
+      encodeURIComponent(term) + "&gsrnamespace=6&gsrlimit=10&prop=imageinfo&iiprop=url&iiurlwidth=360&format=json&origin=*";
+    fetch(url, { mode: "cors" }).then(function (r) { return r.json(); }).then(function (j) {
+      var pages = (j.query && j.query.pages) || {};
+      var out = [];
+      Object.keys(pages).forEach(function (k) {
+        var p = pages[k], info = p.imageinfo && p.imageinfo[0];
+        if (!info) return;
+        var t = String(p.title || "").replace(/^File:/, "");
+        if (/\.(svg|gif|tif|tiff|pdf|webm|ogv)$/i.test(t)) return;
+        if (/logo|icon|chart|graph|diagram|map|flag|coat of arms/i.test(t)) return;
+        out.push({ thumb: info.thumburl || info.url, full: info.url, title: t.replace(/\.[a-z0-9]+$/i, "").replace(/_/g, " ") });
       });
+      paintPhotos(out);
+    }).catch(function () { paintPhotos([]); });
+  }
+  function paintPhotos(list) {
+    var box = $("#qdStrip");
+    if (!box) return;
+    if (!list.length) {
+      box.innerHTML = '<div class="qd-empty">Nothing for that word — try "ocean", "night", "minimal", "books".</div>';
+      return;
     }
+    box.innerHTML = list.slice(0, 8).map(function (p, i) {
+      return '<button type="button" class="qd-ph" data-ph="' + i + '" title="' + esc(p.title) + '">' +
+        '<img src="' + esc(p.thumb) + '" alt="" loading="lazy"></button>';
+    }).join("");
+    S.photoList = list;
+    Array.prototype.slice.call(box.querySelectorAll("[data-ph]")).forEach(function (b) {
+      b.addEventListener("click", function () {
+        var p = list[+b.getAttribute("data-ph")];
+        if (!p) return;
+        S.photo = p.full; S.photoRemote = p.full; S.photoName = p.title;
+        Array.prototype.slice.call(box.querySelectorAll("[data-ph]")).forEach(function (x) { x.classList.remove("on"); });
+        b.classList.add("on");
+        paintChosen(); paintPreview(); buzz(8);
+      });
+    });
+  }
+  function paintChosen() {
+    var box = $("#qdChosen");
+    if (!box) return;
+    if (!S.photo) { box.innerHTML = ""; return; }
+    box.innerHTML = '<span class="qd-chosen__t">✓ ' + esc(S.photoName || "Photo") + '</span>' +
+      '<button type="button" class="qd-chosen__x" id="qdPhotoX">Remove</button>';
+    var x = $("#qdPhotoX");
+    if (x) x.addEventListener("click", function () {
+      S.photo = ""; S.photoRemote = ""; S.photoName = "";
+      paintChosen(); paintPreview();
+    });
   }
   /* the host page can call this after it has fetched/uploaded an image */
   function applyPhoto(src, name, remote) {
     S.photo = src || ""; S.photoName = name || ""; S.photoRemote = remote || "";
-    if (root) { paintPhoto(); paintPreview(); }
+    if (root) { paintChosen(); paintPreview(); }
     try { if (!root) return; } catch (e) {}
   }
 

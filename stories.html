@@ -19,7 +19,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=250">
+  <link rel="stylesheet" href="css/style.css?v=252">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -64,13 +64,16 @@
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="js/prefs.js?v=250"></script>
-  <script src="js/lang.js?v=250"></script>
-  <script src="js/config.js?v=250"></script>
-  <script src="js/auth.js?v=250"></script>
-  <script src="js/sounds.js?v=250"></script>
-  <script src="js/founder.js?v=250"></script>
-  <script src="js/community.js?v=250"></script>
+  <script src="js/prefs.js?v=252"></script>
+  <script src="js/lang.js?v=252"></script>
+  <script src="js/config.js?v=252"></script>
+  <script src="js/auth.js?v=252"></script>
+  <script src="js/sounds.js?v=252"></script>
+  <script src="js/founder.js?v=252"></script>
+  <script src="js/community.js?v=252"></script>
+  <!-- v252: the library story shelf (js/stories-seed.js) was never loaded here,
+       so none of those stories could ever appear. It is loaded now. -->
+  <script src="js/stories-seed.js?v=252"></script>
   <script>
   (function () {
     "use strict";
@@ -170,6 +173,56 @@
             (p.author_id === meId ? '<button class="cm-del" data-del="' + p.id + '" title="Delete my story">' + C.icon('trash') + "</button>" : "") +
           "</div>" +
         "</div></article>";
+    }
+
+    /* ---------- 📚 LIBRARY STORIES ----------
+       The shelf used to be reader posts only, and with a young community that
+       means an almost-empty page. Every library story ships with the app, needs
+       no network, and reads exactly like a reader post — so the shelf is alive
+       on the first visit. Marked clearly, because it is not a person's post. */
+    function libraryStories() {
+      var all = (window.COMMUNITY_STORIES || []).concat(window.SEED_STORIES || []);
+      var seen = {};
+      return all.filter(function (s) {
+        if (!s || !s.id || !s.title || seen[s.id]) return false;
+        seen[s.id] = 1; return true;
+      }).sort(function (a, b) { return String(b.date || "").localeCompare(String(a.date || "")); });
+    }
+    function libCard(s) {
+      var words = String(s.text || "").split(/\s+/).length;
+      var mins = Math.max(1, Math.round(words / 200));
+      var cover = s.cover
+        ? '<img src="' + C.esc(s.cover) + '" alt="" loading="lazy">'
+        : '<span class="cm-quote" style="background:var(--yellow);font-size:3rem;">' + (s.emoji || "\ud83d\udcd6") + "</span>";
+      var book = "";
+      try { book = bookTitle(s.bookId); } catch (e) { book = ""; }
+      return '<article class="cm-card cm-card--lib" data-lib="' + C.esc(s.id) + '">' +
+        '<a class="cm-card__cover" href="story.html?id=' + encodeURIComponent(s.id) + '">' + cover +
+          '<span class="cm-card__kind cm-card__kind--lib">\ud83d\udcd6 LIBRARY STORY</span>' +
+        "</a>" +
+        '<div class="cm-card__body">' +
+          '<div class="cm-card__meta">' +
+            '<span class="cm-ava cm-ava--lib">\ud83d\udcd5</span>' +
+            '<span class="cm-name cm-name--lib">Library Stories <span class="cm-vtick" title="Written by the library">\u2714</span></span>' +
+            '<span class="cm-time">' + C.esc(s.date || "") + "</span>" +
+          "</div>" +
+          '<a class="cm-card__title" href="story.html?id=' + encodeURIComponent(s.id) + '">' + C.esc(s.title) + "</a>" +
+          (book ? '<p class="cm-card__sub">Inspired by <b>' + C.esc(book) + "</b></p>" : "") +
+          '<div class="cm-card__foot">' +
+            '<span class="cm-read">' + mins + " min read</span>" +
+            '<a class="cm-cmts cm-cmts--lib" href="story.html?id=' + encodeURIComponent(s.id) + '">READ IT →</a>' +
+          "</div>" +
+        "</div></article>";
+    }
+    function libraryShelf(limit) {
+      var rows = libraryStories();
+      if (!rows.length) return "";
+      var shown = rows.slice(0, limit || 12);
+      var more = rows.length - shown.length;
+      return '<div class="cm-sect">\ud83d\udcd6 From the library \u2014 ' + rows.length + ' stories you can read right now' +
+        (more > 0 ? " \u00b7 showing " + shown.length : "") + "</div>" +
+        shown.map(libCard).join("") +
+        (more > 0 ? '<div class="cm-more">' + more + " more on the shelf \u2014 they rotate with every reader post.</div>" : "");
     }
 
     async function hydrate(root) {
@@ -510,13 +563,19 @@
           posts = posts.slice().sort(function (a, b) { return score(b) - score(a); });
         }
         if (!posts.length) {
+          if (tab === "all") {
+            /* no reader posts yet? the shelf is still a shelf — show the library */
+            feed.innerHTML = libraryShelf(14);
+            return;
+          }
           feed.innerHTML = '<div class="cm-empty">✍️ No stories yet — yours could be the first.<br><button class="cm-write" id="emptyWrite">Write the first story</button></div>';
           var ew = document.getElementById("emptyWrite");
           if (ew) ew.addEventListener("click", function () { location.href = "write.html"; });
           return;
         }
         feed.innerHTML = (tab === "all" ? railHtml(posts) + '<div class="cm-sect">✨ For you — tuned to your shelves</div>' : "") +
-          posts.map(function (p) { return card(p); }).join("");
+          posts.map(function (p) { return card(p); }).join("") +
+          (tab === "all" ? libraryShelf(10) : "");
         try { C.protectMedia(feed); } catch (e) {}
         hydrate(feed);
       } catch (e) {
@@ -814,9 +873,9 @@
     load();
   })();
   </script>
-  <script src="js/data.js?v=250"></script>
-  <script src="js/osint.js?v=250"></script>
-  <script src="js/bar.js?v=250" defer></script>
-  <script src="js/gate.js?v=250" defer></script>
+  <script src="js/data.js?v=252"></script>
+  <script src="js/osint.js?v=252"></script>
+  <script src="js/bar.js?v=252" defer></script>
+  <script src="js/gate.js?v=252" defer></script>
 </body>
 </html>
