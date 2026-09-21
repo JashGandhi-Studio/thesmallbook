@@ -191,6 +191,14 @@
     return d;
   }
 
+  function shuffleGraves(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
   function render() {
     let results = F.filter((f) => {
       if (activeCat !== "ALL" && f.category !== activeCat) return false;
@@ -202,6 +210,7 @@
     if (sortMode === "burned") results.sort((a, b) => lossUSD(b) - lossUSD(a));
     else if (sortMode === "newest") results.sort((a, b) => yearNum(b) - yearNum(a));
     else if (sortMode === "oldest") results.sort((a, b) => yearNum(a) - yearNum(b));
+    else shuffleGraves(results); /* v267: classic mode reshuffles every visit — it always feels freshly turned */
 
     updateFeed(results);
     grid.innerHTML = "";
@@ -692,9 +701,9 @@
     var m = String(text || "").replace(/\s+/g, " ").match(/[^.!?]+[.!?]+/g) || [];
     return m.slice(0, n || 2).join(" ").trim();
   }
-  function buildWireData() {
+  function buildWireData(force) {
     var KEY = "tsb_wire_cache", TTL = 6 * 3600 * 1000;
-    try { var c = JSON.parse(localStorage.getItem(KEY)); if (c && Date.now() - c.t < TTL) return Promise.resolve(c.data); } catch (e) {}
+    try { if (!force) { var c = JSON.parse(localStorage.getItem(KEY)); if (c && Date.now() - c.t < TTL) return Promise.resolve(c.data); } } catch (e) {}
     var year = new Date().getFullYear();
     return Promise.all([wikiBankrupt(year), wikiBankrupt(year - 1), hnStories("startup shut down", 21), hnStories("bankruptcy", 21)])
       .then(function (r) {
@@ -713,11 +722,13 @@
         return data;
       });
   }
-  function freshBlock(data) {
+  var freshOffset = 0; /* every refresh turns the next batch — the pool never runs dry */
+  function freshBlock(data, opts) {
     var wrap = document.createElement("div");
     wrap.id = "freshWrap";
-    var h = '<div class="section-head freshhead"><h2 translate="no">🩸 Fresh Graves — fetched live</h2><div class="line"></div></div>' +
-      '<p class="freshtxt" translate="no">The graveyard is never finished. Newly bankrupt companies from the public registers + failure post-mortems filed by founders who watched it happen. <b>History is still writing these; read them while they\u2019re fresh.</b></p>';
+    var h = '<div class="section-head freshhead"><h2 translate="no">🩸 Fresh Graves — fetched live</h2><div class="line"></div>' +
+      '<button class="freshhead__btn" id="freshMore" type="button" translate="no">↻ TURN UP NEW ONES</button></div>' +
+      '<p class="freshtxt" translate="no">The graveyard is never finished. Newly bankrupt companies from the public registers + failure post-mortems filed by founders who watched it happen. <b>Tap the button — a fresh batch every time, for as long as the world keeps failing.</b></p>';
     var cards = (data.companies || []).map(function (c) {
       return '<div class="fgrave"><div class="fgrave__top"><span class="fgrave__rip" translate="no">R.I.P.</span><span class="fgrave__yr">2025–' + new Date().getFullYear() + '</span></div>' +
         "<b>" + esc(c.name) + "</b>" +
@@ -736,11 +747,23 @@
       (reports ? '<div class="frepgrid">' + reports + "</div>" : "");
     return wrap;
   }
-  setTimeout(function () {
+  function sliceFresh(w) {
+    /* rotate the pool: each tap serves the NEXT six, wrapping around forever */
+    var pool = (w.graves || []);
+    var out = [];
+    if (pool.length) {
+      for (var i = 0; i < pool.length && out.length < 6; i++) {
+        out.push(pool[(freshOffset + i) % pool.length]);
+      }
+      freshOffset = (freshOffset + 6) % pool.length;
+    }
+    return out;
+  }
+  function mountFresh(force) {
     var grid = document.getElementById("graveGrid");
     if (!grid) return;
-    buildWireData().then(function (w) {
-      var companies = (w.graves || []).slice(0, 6);
+    buildWireData(force).then(function (w) {
+      var companies = sliceFresh(w);
       var extracts = companies.map(function (c) {
         return wikiExtract(c).then(function (r) {
           return { name: c, story: r && r.text ? firstSentences(r.text, 2) : "", title: r && r.title ? r.title : c };
@@ -749,10 +772,19 @@
       return Promise.all(extracts).then(function (rows) {
         var data = { companies: rows.filter(function (r) { return r.story; }), stories: (w.stories || []).slice(0, 6) };
         if (!data.companies.length && !data.stories.length) return;
-        grid.parentNode.insertBefore(freshBlock(data), grid.nextSibling);
+        var old = document.getElementById("freshWrap");
+        var block = freshBlock(data);
+        if (old) { old.parentNode.replaceChild(block, old); }
+        else grid.parentNode.insertBefore(block, grid.nextSibling);
+        var more = block.querySelector("#freshMore");
+        if (more) more.addEventListener("click", function () {
+          more.disabled = true; more.textContent = "… turning the earth";
+          mountFresh(true);
+        });
       });
     }).catch(function () {});
-  }, 2600);
+  }
+  setTimeout(function () { mountFresh(false); }, 2600);
 
   /* the free-record reader — same UI as the autopsy, in-app */
   document.addEventListener("click", function (e) {

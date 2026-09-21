@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
     <meta property="og:title" content="Stories — TheSmallBook">
   <meta property="og:description" content="True reader stories and the library's own channel — lessons people actually lived.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=266">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=267">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/stories.html">
@@ -27,7 +27,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=266">
+  <link rel="stylesheet" href="css/style.css?v=267">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -73,16 +73,16 @@
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="js/prefs.js?v=266"></script>
-  <script src="js/lang.js?v=266"></script>
-  <script src="js/config.js?v=266"></script>
-  <script src="js/auth.js?v=266"></script>
-  <script src="js/sounds.js?v=266"></script>
-  <script src="js/founder.js?v=266"></script>
-  <script src="js/community.js?v=266"></script>
+  <script src="js/prefs.js?v=267"></script>
+  <script src="js/lang.js?v=267"></script>
+  <script src="js/config.js?v=267"></script>
+  <script src="js/auth.js?v=267"></script>
+  <script src="js/sounds.js?v=267"></script>
+  <script src="js/founder.js?v=267"></script>
+  <script src="js/community.js?v=267"></script>
   <!-- v252: the library story shelf (js/stories-seed.js) was never loaded here,
        so none of those stories could ever appear. It is loaded now. -->
-  <script src="js/stories-seed.js?v=266"></script>
+  <script src="js/stories-seed.js?v=267"></script>
   <script>
   (function () {
     "use strict";
@@ -171,7 +171,8 @@
             '<span class="cm-time">' + C.ago(p.created_at) + "</span>" +
             (p.author_id !== meId ? '<button class="cm-follow" data-follow="' + p.author_id + '">+ Follow</button>' : "") +
           "</div>" +
-          '<a class="cm-card__title" href="story.html?id=' + p.id + '">' + C.esc(p.title) + "</a>" +
+          ((p.kind === "quote" && p.tags && p.tags.indexOf("qcard") >= 0) ? "" :
+            '<a class="cm-card__title" href="story.html?id=' + p.id + '">' + C.esc(p.title) + "</a>") +
           (p.subtitle ? '<p class="cm-card__sub">' + C.esc(p.subtitle) + "</p>" : "") +
           (p.tags && p.tags.length ? '<div class="cm-card__tags">' + p.tags.slice(0, 4).map(function (t) { return "<span># " + C.esc(t) + "</span>"; }).join("") + "</div>" : "") +
           '<div class="cm-card__foot">' +
@@ -957,10 +958,10 @@
     load();
   })();
   </script>
-  <script src="js/data.js?v=266"></script>
-  <script src="js/osint.js?v=266"></script>
-  <script src="js/bar.js?v=266" defer></script>
-  <script src="js/gate.js?v=266" defer></script>
-  <script src="js/trial.js?v=266" defer></script>
+  <script src="js/data.js?v=267"></script>
+  <script src="js/osint.js?v=267"></script>
+  <script src="js/bar.js?v=267" defer></script>
+  <script src="js/gate.js?v=267" defer></script>
+  <script src="js/trial.js?v=267" defer></script>
 </body>
 </html>

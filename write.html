@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
     <meta property="og:title" content="Write — TheSmallBook">
   <meta property="og:description" content="Publish your story, your quote card or your voice — right from the phone.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=266">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=267">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/write.html">
@@ -27,8 +27,8 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=266">
-  <link rel="stylesheet" href="css/studio.css?v=266">
+  <link rel="stylesheet" href="css/style.css?v=267">
+  <link rel="stylesheet" href="css/studio.css?v=267">
   <style>
   /* v246 — compact attach bar: professional one-row adding */
   .wr-addrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
@@ -61,8 +61,11 @@
         <div class="wr-quotelive__ph">Your quote will appear here — live.</div>
       </div>
       <div class="wr-whyprev" id="quoteWhyPrev" hidden></div>
-      <button id="quoteOpenStudio" class="wr-quotelive__btn" type="button">🎨 Open Studio → reframe, filter & export</button>
-      <p class="wr-quotelive__hint">Studio works on any image — drag to reframe, pinch-zoom, pick 4:5 / 1:1 / 9:16. Posting inside the app stays clean; Gold keeps downloaded files clean too.</p>
+      <div class="wr-quotelive__chips">
+        <button id="quoteFrameChip" class="wr-qchip wr-qchip--main" type="button">🎨 FRAME IT IN STUDIO</button>
+        <button id="quoteCleanChip" class="wr-qchip" type="button">▢ CLEAN COVER — quote as text</button>
+      </div>
+      <p class="wr-quotelive__hint">Tap the card (or FRAME IT) — Studio frames everything: photo, fonts, ratio. The feed shows your finished image only — the quote lives in it. Choose CLEAN COVER only if you want the words below the photo instead.</p>
     </div>
 
       <!-- INSPIRE DESK — perfectly embedded with Quote & Story (lives with the title, not as a separate card after quote) -->
@@ -137,16 +140,16 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=266"></script>
-  <script src="js/lang.js?v=266"></script>
-  <script src="js/config.js?v=266"></script>
-  <script src="js/auth.js?v=266"></script>
-  <script src="js/sounds.js?v=266"></script>
-  <script src="js/founder.js?v=266"></script>
-  <script src="js/community.js?v=266"></script>
-  <script src="js/gold.js?v=266"></script>
-  <script src="js/paywall.js?v=266"></script>
-  <script src="js/studio.js?v=266"></script>
+  <script src="js/prefs.js?v=267"></script>
+  <script src="js/lang.js?v=267"></script>
+  <script src="js/config.js?v=267"></script>
+  <script src="js/auth.js?v=267"></script>
+  <script src="js/sounds.js?v=267"></script>
+  <script src="js/founder.js?v=267"></script>
+  <script src="js/community.js?v=267"></script>
+  <script src="js/gold.js?v=267"></script>
+  <script src="js/paywall.js?v=267"></script>
+  <script src="js/studio.js?v=267"></script>
   <style>/* hide Puter branding — keep AI silent */ .puter-modal,.puter-dialog,.puter-auth{ display:none !important }</style>
   <script>
   // silent Puter loader — don't block rendering, hide GUI
@@ -158,10 +161,10 @@
     document.head.appendChild(s);
   })();
   </script>
-  <script src="js/dictate.js?v=266"></script>
-  <script src="js/data.js?v=266"></script>
-  <script src="js/osint.js?v=266"></script>
-  <script src="js/quotedesk.js?v=266"></script>
+  <script src="js/dictate.js?v=267"></script>
+  <script src="js/data.js?v=267"></script>
+  <script src="js/osint.js?v=267"></script>
+  <script src="js/quotedesk.js?v=267"></script>
   <script>
   (function () {
     "use strict";
@@ -456,11 +459,9 @@
         if(eb){
           eb.classList.add("wr-inspire-embed--quote");
           eb.innerHTML =
-            '<span style="display:inline-flex;align-items:center;gap:6px;flex:none;background:#111;color:#ffc800;border-radius:999px;padding:5px 9px;font:800 10px \'Space Grotesk\',sans-serif;letter-spacing:.5px;text-transform:uppercase;">\u275d QUOTE DESK</span>' +
-            '<span style="flex:1 1 130px;font:600 11px \'Space Grotesk\',sans-serif;color:#6b7280;min-width:0;">find a live line, or write yours \u00b7 photo optional</span>' +
-            '<button type="button" id="qdOpen" style="border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:8px 13px;font:800 11px \'Space Grotesk\',sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;white-space:nowrap;">Open Quote Desk \u203a</button>';
-          var qb = document.getElementById("qdOpen");
-          if(qb) qb.addEventListener("click", function(e){ e.preventDefault(); openQuoteDesk(); });
+            '<span style="display:inline-flex;align-items:center;gap:6px;flex:none;background:#111;color:#ffc800;border-radius:999px;padding:5px 9px;font:800 10px \'Space Grotesk\',sans-serif;letter-spacing:.5px;text-transform:uppercase;">\u275d STUDIO FRAMES IT ALL</span>' +
+            '<span style="flex:1 1 130px;font:600 11px \'Space Grotesk\',sans-serif;color:#6b7280;min-width:0;">tap the card to frame it \u00b7 find lines & photos inside Studio</span>';
+          void 0;
         }
         var addT=document.getElementById("addCardTitle");
         if(addT) addT.innerHTML="📷 A photo behind the words — <u>optional</u>";
@@ -480,27 +481,56 @@
       renderQuoteLive();
       title.addEventListener("input", renderQuoteLive);
       sub.addEventListener("input", renderQuoteLive);
-      var qStudioBtn = document.getElementById("quoteOpenStudio");
-      if(qStudioBtn) qStudioBtn.addEventListener("click", function(e){
+      /* v267 · ONE door: the card itself (or the chip) is Studio.
+         What leaves Studio is a finished card — the feed shows it image-only
+         (tag qcard). CLEAN COVER is the explicit "words outside the image" path. */
+      var qCardReady = false, cleanCover = false;
+      window.__tsbQFlags = function(){ return { ready: qCardReady, clean: cleanCover }; };
+      function frameInStudio(){
+        try {
+          var src = lastCoverFile ? URL.createObjectURL(lastCoverFile) : coverUrl;
+          openStudio({
+            src: src,
+            quote: title.value || "",
+            byline: sub.value || "",
+            gold: window.TSB_GOLD && TSB_GOLD.isGold(),
+            onApply: async function(file){
+              try{
+                $("saveState").textContent = "… uploading studio card";
+                coverUrl = await C.upload(file, "tsb-covers");
+                lastCoverFile = null;
+                qCardReady = true; cleanCover = false;
+                paintCleanChip();
+                $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
+                renderQuoteLive();
+                saveDraft();
+              }catch(err){
+                lastCoverFile = file; qCardReady = true;
+                C.say("Your card is ready but couldn\'t upload ("+ err.message +") — it will go up with your post.");
+                $("wCoverPrev").src = URL.createObjectURL(file); $("wCoverPrev").hidden = false;
+                renderQuoteLive(); saveDraft();
+              }
+            }
+          });
+        } catch (se) { C.say("Studio couldn\'t open — try once more. (" + (se && se.message ? se.message : se) + ")"); }
+      }
+      function paintCleanChip(){
+        var c = document.getElementById("quoteCleanChip");
+        if (!c) return;
+        c.classList.toggle("on", cleanCover);
+        c.innerHTML = cleanCover ? "✓ CLEAN COVER — the quote travels as text" : "▢ CLEAN COVER — quote as text";
+      }
+      var qCard = document.getElementById("quoteLiveCard");
+      if(qCard) qCard.addEventListener("click", function(e){ e.preventDefault(); frameInStudio(); });
+      var qFrameChip = document.getElementById("quoteFrameChip");
+      if(qFrameChip) qFrameChip.addEventListener("click", function(e){ e.preventDefault(); frameInStudio(); });
+      var qCleanChip = document.getElementById("quoteCleanChip");
+      if(qCleanChip) qCleanChip.addEventListener("click", function(e){
         e.preventDefault();
-        var src = lastCoverFile ? URL.createObjectURL(lastCoverFile) : coverUrl;
-        // allow Studio without a cover — the 24 aesthetic backgrounds are there for you
-        openStudio({
-          src: src,
-          quote: title.value || "",
-          byline: sub.value || "",
-          gold: window.TSB_GOLD && TSB_GOLD.isGold(),
-          onApply: async function(file){
-            try{
-              $("saveState").textContent = "… uploading studio card";
-              coverUrl = await C.upload(file, "tsb-covers");
-              lastCoverFile = null;
-              $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
-              renderQuoteLive();
-              saveDraft();
-            }catch(err){ C.say("Card upload failed: "+ err.message); }
-          }
-        });
+        cleanCover = !cleanCover;
+        if (cleanCover) qCardReady = false;
+        paintCleanChip();
+        C.say(cleanCover ? "Clean cover: the photo goes up as-is, the quote travels as text below it." : "Card mode: the quote gets framed into the image.");
       });
     } else {
       // story mode
@@ -769,38 +799,16 @@
     /* ---------- publish ---------- */
     // v244: QUOTE + image → ask HOW to publish: aesthetic card (quote baked INSIDE the image)
     // or image & text separate. No image → publish the text quote directly.
-    function askQuoteExport(){
-      return new Promise(function(resolve){
-        var ov=document.createElement("div");
-        ov.style.cssText="position:fixed;inset:0;z-index:99995;background:rgba(10,8,6,.74);display:flex;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(3px)";
-        var btnBase="width:100%;text-align:left;border:3px solid #111;border-radius:16px;padding:13px 14px;cursor:pointer;box-shadow:4px 4px 0 #111;display:flex;gap:12px;align-items:flex-start;background:#fff";
-        var F="font-family:'Space Grotesk',sans-serif", FA="font-family:'Archivo Black',sans-serif";
-        ov.innerHTML='<div style="background:#fffdf5;border:3.5px solid #111;border-radius:18px;box-shadow:8px 8px 0 #ffc800;max-width:430px;width:100%;overflow:hidden">'+
-          '<div style="padding:14px 16px;background:linear-gradient(135deg,#ffd94d,#ffc800 55%,#f0b400);border-bottom:3px solid #111">'+
-            '<b style="font:800 13px '+FA+';letter-spacing:.6px;color:#111">📤 HOW DO YOU WANT TO PUBLISH?</b>'+
-            '<div style="font:700 10.5px '+F+';color:#111;opacity:.72;margin-top:3px;letter-spacing:.4px">your quote \u00b7 your image \u00b7 two beautiful ways</div>'+
-          '</div>'+
-          '<div style="padding:14px;display:flex;flex-direction:column;gap:10px">'+
-            '<button type="button" id="qeCard" style="'+btnBase+';background:#ffc800">'+
-              '<span style="font-size:22px;line-height:1;flex:none">\u2728</span>'+
-              '<span style="flex:1;min-width:0"><b style="font:800 13px '+F+';display:block">Aesthetic card \u2014 quote INSIDE the image</b>'+
-              '<span style="font:600 11px '+F+';color:#444;display:block;margin-top:3px;line-height:1.45">Exactly like your Studio preview: the words are baked into the picture. One shareable image.</span></span>'+
-            '</button>'+
-            '<button type="button" id="qeSep" style="'+btnBase+'">'+
-              '<span style="font-size:22px;line-height:1;flex:none">📝</span>'+
-              '<span style="flex:1;min-width:0"><b style="font:800 13px '+F+';display:block">Image & text separately</b>'+
-              '<span style="font:600 11px '+F+';color:#444;display:block;margin-top:3px;line-height:1.45">Clean photo as the cover, your quote as text below it.</span></span>'+
-            '</button>'+
-            '<div style="font:600 10px '+F+';color:#8f8a80;text-align:center;line-height:1.5">Your take (\u201cwhy this line hit you\u201d) always travels below the card \u2014 write it in the box, it stays yours.</div>'+
-          '</div>'+
-        '</div>';
-        document.body.appendChild(ov);
-        function done(v){ try{ ov.remove(); }catch(e){} resolve(v); }
-        ov.querySelector("#qeCard").addEventListener("click", function(){ done("card"); });
-        ov.querySelector("#qeSep").addEventListener("click", function(){ done("sep"); });
-        ov.addEventListener("click", function(e){ if(e.target===ov) done(null); });
-        document.addEventListener("keydown", function eschandler(e){ if(e.key==="Escape"){ document.removeEventListener("keydown", eschandler); done(null); } });
-      });
+    /* the DB keeps titles at 90 characters (posts_title_len) — clamp on our
+       side at whole words, and if an older, stricter DB still says no,
+       retry once with a shorter cut instead of failing the writer */
+    function qclamp(t, max) {
+      t = String(t || "").trim();
+      var m = max || 90;
+      if (t.length <= m) return t;
+      var cut = t.slice(0, m);
+      var sp = cut.lastIndexOf(" ");
+      return (sp > m * 0.6 ? cut.slice(0, sp) : cut).replace(/[,;:\s]+$/, "") + "…";
     }
     var pubBusy = false;
     async function pub() {
@@ -834,37 +842,58 @@
         /* v250: the writer already answered this in the desk ("Open Studio",
            "photo + text below", "just the quote") — so we never ask twice.
            Anyone who skipped the desk still gets the choice. */
-        if(kind==="quote" && coverUrl && !burstUrl){
-          var how = deskKind || await askQuoteExport();
-          if(!how){ pubBusy=false; $("pubBtn").textContent="Publish →"; return; }
-          if(how==="text"){ coverUrl = ""; }
-          if(how==="card" && window.TSB_STUDIO && TSB_STUDIO.compose){
-            try{
-              $("saveState").textContent = "… composing your card";
-              var bag = { src: coverUrl, quote: t, byline: (sub.value || "").replace(/^—\s*/, "").replace(/^-\s*/, ""),
-                          gold: window.TSB_GOLD && TSB_GOLD.isGold() };
-              Object.keys(quoteStyle).forEach(function (k) { if (bag[k] === undefined) bag[k] = quoteStyle[k]; });
-              var cardFile = await TSB_STUDIO.compose(bag);
-              if(cardFile){
-                coverUrl = await C.upload(cardFile, "tsb-covers");
-                deskKind = "sep";   /* it is a composed image now — never compose twice */
-                var pv=document.getElementById("wCoverPrev"); if(pv){ pv.src = coverUrl; pv.hidden = false; }
-                try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
-                $("saveState").textContent = "✓ card ready";
-              }
-            }catch(ce){ console.warn("card compose failed — publishing image as-is", ce); }
-          }
+        /* v267 · NO desk at publish — Studio already framed everything.
+           Studio card → the feed shows the image alone (tag qcard; the quote
+           lives IN it). Clean cover → the quote travels as text. An unframed
+           photo is composed exactly like the Studio preview — the default,
+           never a question. */
+        var qTags = tags.value.split(",").map(function (x) { return x.trim(); }).filter(Boolean);
+        var qFlags = (typeof window.__tsbQFlags === "function") ? window.__tsbQFlags() : { ready: false, clean: false };
+        if (qFlags.clean) qCardReady = false; else if (qFlags.ready) qCardReady = true;
+        if(kind==="quote" && coverUrl && !burstUrl && !qCardReady && !cleanCover){
+          try{
+            $("saveState").textContent = "… framing your card";
+            var bag = { src: coverUrl, quote: t, byline: (sub.value || "").replace(/^—\s*/, "").replace(/^-\s*/, ""),
+                        gold: window.TSB_GOLD && TSB_GOLD.isGold() };
+            Object.keys(quoteStyle).forEach(function (k) { if (bag[k] === undefined) bag[k] = quoteStyle[k]; });
+            var cardFile = await TSB_STUDIO.compose(bag);
+            if(cardFile){
+              coverUrl = await C.upload(cardFile, "tsb-covers");
+              qCardReady = true;
+              var pv=document.getElementById("wCoverPrev"); if(pv){ pv.src = coverUrl; pv.hidden = false; }
+              try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
+              $("saveState").textContent = "✓ card framed";
+            }
+          }catch(ce){ console.warn("card compose failed — publishing image as-is", ce); }
         }
+        if(kind==="quote" && (burstUrl || coverUrl)) qTags.push(qCardReady ? "qcard" : "cleancover");
+        var pubTitle = qclamp(t);
         await C.publish({
-          title: t, subtitle: sub.value.trim(), body: b,
+          title: pubTitle, subtitle: sub.value.trim(), body: b,
           cover_url: burstUrl || coverUrl, audio_url: audioUrl, kind: kind,
-          tags: tags.value.split(",").map(function (s) { return s.trim(); }).filter(Boolean),
+          tags: qTags,
           no_download: $("wNoDl").checked
         });
         localStorage.removeItem(dkey());
         try { C.setProfilePublic(true); } catch (e) {}
         location.href = "stories.html?tab=mine";
       } catch (e) {
+        var em = String((e && e.message) || e || "");
+        if (/posts_title_len|title_len/i.test(em) && pubTitle && pubTitle.length > 55) {
+          /* an older, stricter register — cut deeper once and try again */
+          try {
+            await C.publish({
+              title: qclamp(t, 55), subtitle: sub.value.trim(), body: b,
+              cover_url: burstUrl || coverUrl, audio_url: audioUrl, kind: kind,
+              tags: qTags,
+              no_download: $("wNoDl").checked
+            });
+            localStorage.removeItem(dkey());
+            try { C.setProfilePublic(true); } catch (e2) {}
+            location.href = "stories.html?tab=mine";
+            return;
+          } catch (e3) { e = e3; }
+        }
         C.say("Publish failed — " + (e && e.message ? e.message : e) + ". Stay signed in and try once more.");
         $("pubBtn").textContent = "Publish →";
       } finally { pubBusy = false; }
@@ -923,6 +952,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=266" defer></script>
+  <script src="js/bar.js?v=267" defer></script>
 </body>
 </html>

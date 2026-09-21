@@ -41,8 +41,14 @@
       try {
         if (typeof fetch !== "function") return out(null);
         var t = setTimeout(function () { out(null); }, ms || 9000);
-        fetch(url).then(function (r) { return r.json(); }).then(function (j) { clearTimeout(t); out(j); })
-          .catch(function () { clearTimeout(t); out(null); });
+        /* text-first with a JSON guess — the free AI answers in plain text,
+           the registers answer in JSON; both come home through one door */
+        fetch(url).then(function (r) { return r.text(); }).then(function (tx) {
+          clearTimeout(t);
+          var j = null;
+          try { j = JSON.parse(tx); } catch (e) { j = tx; }
+          out(j);
+        }).catch(function () { clearTimeout(t); out(null); });
       } catch (e) { out(null); }
     });
   }
@@ -170,7 +176,9 @@
   }
 
   /* ---------------- the audit itself ---------------- */
-  function analyze(input) {
+  /* signals: {wiki:[{title,snippet}], hn:[{title,...}]} — the audit blends the
+     public record into the meters so the score is EVIDENCE, not a guess */
+  function analyze(input, signals) {
     var c = {
       text: [input.name, input.problem, input.solution, input.audience].join(" . ").toLowerCase(),
       problem: input.problem || "",
@@ -216,10 +224,48 @@
     var steps = planSteps(c, weak);
     var graves = matchGraves(c);
 
+    /* ---- the public record gets a vote ---- */
+    var signals = [], sig = signalsOf(input, signals);
+    if (sig.wikiKnown) { timing = Math.max(6, timing - 5); overall -= 2;
+      signals.push({ ic: "🔍", t: "The space is ON the public record", d: "Wikipedia already documents " + sig.wikiTitle + " — the wound is real and proven, and the room is crowded. Timing gets trimmed." }); }
+    if (sig.wikiQuiet) { timing = Math.min(96, timing + 4); overall += 2;
+      signals.push({ ic: "🌙", t: "Quiet on the public record", d: "Nothing prominent documents this exact idea — you\u2019re either early, or the wound is quieter than it sounds. Both are worth knowing before you build." }); }
+    if (sig.hnLoud) { trust = Math.max(8, trust - 5); overall -= 1;
+      signals.push({ ic: "📰", t: "The failure press is loud here", d: sig.hnCount + " recent field reports tell failure stories in this space in the last year. The graveyard is fresh — read them before you spend." }); }
+    if (sig.hnSilent) { timing = Math.min(96, timing + 3);
+      signals.push({ ic: "🕊️", t: "No fresh post-mortems matched", d: "A quiet year in your space\u2019s failure press. Either survivors, or a field too small to autopsy." }); }
+    overall = Math.max(6, Math.min(94, overall));
+
     return {
       score: overall, meters: { survival: survival, scale: scale, timing: timing, trust: trust },
-      verdict: verdict, weak: weak, strong: strong, steps: steps, graves: graves
+      verdict: verdict, weak: weak, strong: strong, steps: steps, graves: graves, signals: signals
     };
+  }
+
+  function tokens(str) {
+    return stopwords(String(str || "")).slice(0, 6);
+  }
+  function signalsOf(input, out) {
+    var wiki = input && input._wiki, hn = input && input._hn;
+    var r = { wikiKnown: false, wikiQuiet: false, hnLoud: false, hnSilent: false, wikiTitle: "", hnCount: 0 };
+    var kt = tokens(input.name && (input.name + " " + input.problem));
+    if (wiki && wiki.length) {
+      var best = null, bestScore = 0;
+      wiki.forEach(function (wd) {
+        var wt = tokens(wd.title + " " + (wd.snippet || ""));
+        var hit = 0;
+        kt.forEach(function (k) { if (wt.indexOf(k) >= 0) hit++; });
+        if (hit > bestScore) { bestScore = hit; best = wd; }
+      });
+      if (best && bestScore >= Math.max(1, Math.ceil(kt.length / 3))) { r.wikiKnown = true; r.wikiTitle = best.title; }
+      else r.wikiQuiet = true;
+    } else r.wikiQuiet = !!(wiki);
+    if (hn) {
+      r.hnCount = (hn || []).length;
+      if (r.hnCount >= 3) r.hnLoud = true;
+      else if (r.hnCount === 0) r.hnSilent = true;
+    }
+    return r;
   }
 
   function planSteps(c, weak) {
@@ -296,11 +342,31 @@
   }
   function unlockWithPurchaseFlag() { set("tsb_iaudit_unlock", true); }
 
+  /* ---------------- the free AI read (keyless, optional, honest) ----------------
+     Pollinations text API: no key, no signup, plain GET. It NEVER decides the
+     score — the deterministic engine does. If it is unreachable, the section
+     simply never appears. */
+  function aiRead(draft, weakTitles) {
+    var prompt = "You are a brutal, experienced startup auditor. Idea: " +
+      String(draft.name || "").slice(0, 140) + ". Problem: " + String(draft.problem || "").slice(0, 220) +
+      ". Solution: " + String(draft.solution || "").slice(0, 200) +
+      ". Weak reads found: " + (weakTitles || []).slice(0, 3).join("; ") +
+      ". In under 55 words, give: one sharp observation about this specific idea, then one brutal question the founder must answer. Plain text, no lists, no greetings.";
+    var url = "https://text.pollinations.ai/" + encodeURIComponent(prompt);
+    return fetchJSON(url, 8000).then(function (j) {
+      var t = "";
+      try { t = String(typeof j === "string" ? j : (j && j.text) || "").trim(); } catch (e) {}
+      if (!t || t.length < 12) return null;
+      return t.slice(0, 400);
+    }).catch(function () { return null; });
+  }
+
   /* ---------------- exports ---------------- */
   window.TSB_IDEAAUDIT = {
     analyze: analyze,
     wikiExists: wikiExists,
     hnFailed: hnFailed,
+    aiRead: aiRead,
     isUnlocked: isUnlocked,
     batchLeft: batchLeft,
     claimBatch: claimBatch,
@@ -321,6 +387,8 @@
 
   function $(id) { return document.getElementById(id); }
   function esc(s) { return A.esc(s); }
+  function hget(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); if (v !== null && v !== undefined) return v; } catch (e) {} return d; }
+  function hset(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 
   var CATS = [
     ["STARTUP", "🚀"], ["HEALTH", "🏥"], ["FINANCE", "💸"], ["EDUCATION", "🎓"],
@@ -352,7 +420,7 @@
           '<input class="iaudit__in" id="iaName" maxlength="140" autocomplete="off" placeholder="One honest line — e.g. \u201810-minute medicine delivery for tier-2 towns\u2019" value="' + esc(draft.name) + '">' +
           '<label class="iaudit__lbl">THE WOUND — who hurts, how much, how often?</label>' +
           '<span class="iaudit__tw"><textarea class="iaudit__in" id="iaProb" rows="3" maxlength="800" placeholder="e.g. tier-2 families can\u2019t get chronic medicines reliably; pharmacies stock out; refills are manual\u2026">' + esc(draft.problem) + "</textarea>" +
-          '<button type="button" class="iaudit__mic" id="iaMic" hidden>\U0001F399\uFE0F SPEAK</button></span>'
+          '<button type="button" class="iaudit__mic" id="iaMic">\U0001F399\uFE0F SPEAK</button></span>'
         : step === 2
           ? '<label class="iaudit__lbl">YOUR SOLUTION — what you build, what\u2019s different</label>' +
             '<textarea class="iaudit__in" id="iaSol" rows="3" maxlength="800" placeholder="e.g. an app tied to partner pharmacies with 90-min runners, subscription refills, UPI\u2026">' + esc(draft.solution) + "</textarea>" +
@@ -372,8 +440,10 @@
               return '<button type="button" class="iaudit__chip' + (draft.stage === m[0] ? " on" : "") + '" data-stage="' + m[0] + '">' + m[1] + "</button>";
             }).join("") + "</div>") +
       '<button class="iaudit__run" id="iaNext">' + (step === 3 ? "⛏️ RUN THE AUTOPSY" : "NEXT →") + "</button>" +
-      (step > 1 ? '<button class="iaudit__back" id="iaBack">← Back</button>' : "");
+      (step > 1 ? '<button class="iaudit__back" id="iaBack">← Back</button>' : "") +
+      '<div id="iaHist"></div>';
     bindDraft();
+    paintHistory();
   }
 
   function bindDraft() {
@@ -426,30 +496,67 @@
     });
     var bk = $("iaBack");
     if (bk) bk.addEventListener("click", function () { if (step > 1) { step -= 1; paint(); } });
+    var hist = $("iaHist");
+    if (hist) hist.addEventListener("click", function (e) {
+      var x = e.target.closest("[data-iax]");
+      if (x) {
+        e.stopPropagation();
+        try {
+          var h = hget("tsb_iaudits", []) || [];
+          h.splice(Number(x.getAttribute("data-iax")), 1);
+          hset("tsb_iaudits", h);
+        } catch (e2) {}
+        paintHistory();
+        return;
+      }
+      var row = e.target.closest("[data-iahis]");
+      if (row) {
+        try {
+          var hh = hget("tsb_iaudits", []) || [];
+          var saved = hh[Number(row.getAttribute("data-iahis"))];
+          if (saved && saved.draft) {
+            draft = Object.assign({ name: "", problem: "", solution: "", audience: "", category: "STARTUP", money: "", stage: "idea" }, saved.draft);
+            step = 1;
+            last = A.analyze(draft);
+            report(last);
+            paintHistory();
+          }
+        } catch (e3) {}
+      }
+    });
   }
 
   /* ---- dictation: speak the wound instead of typing it (guarded) ---- */
   function setupMic(btn, onText) {
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    /* no speech engine on this browser — the button never shows at all */
     if (!SR) { if (btn.parentNode) btn.parentNode.removeChild(btn); return; }
-    var rec = null, on = false;
-    btn.hidden = false;
-    btn.addEventListener("click", function () {
+    var rec = null, on = false, retried = false;
+    function say(t) { btn.textContent = t; }
+    function stop() { on = false; btn.classList.remove("on"); say("\uD83C\uDFA4\uFE0F SPEAK"); }
+    function begin() {
       try {
-        if (on) { rec.stop(); return; }
         rec = new SR();
         rec.lang = "en-IN"; rec.interimResults = false; rec.continuous = false;
-        rec.onstart = function () { on = true; btn.classList.add("on"); btn.textContent = "\uD83D\uDD34 LISTENING"; };
-        rec.onend = function () { on = false; btn.classList.remove("on"); btn.textContent = "\uD83C\uDFA4\uFE0F SPEAK"; };
-        rec.onerror = rec.onend;
+        rec.onstart = function () { on = true; retried = false; btn.classList.add("on"); say("\uD83D\uDD34 LISTENING\u2026"); };
+        rec.onend = stop;
         rec.onresult = function (e) {
           var t = "";
           for (var i = 0; i < e.results.length; i++) t += e.results[i][0].transcript;
-          if (t.trim()) onText(t.trim());
+          if (t.trim()) { stop(); onText(t.trim()); }
+        };
+        /* first tap on many phones only wakes the engine — wake it again, once */
+        rec.onerror = function (ev) {
+          var why = (ev && ev.error) || "";
+          stop();
+          if ((why === "no-speech" || why === "aborted") && !retried) { retried = true; setTimeout(begin, 120); return; }
+          if (why === "not-allowed" || why === "service-not-allowed") say("\u26D4 ALLOW MIC");
+          else if (why === "network") say("\uD83D\uDD0C OFFLINE");
         };
         rec.start();
-      } catch (e) { on = false; btn.hidden = true; }
-    });
+      } catch (e) { stop(); }
+    }
+    btn.addEventListener("click", function () { if (on) { try { rec.stop(); } catch (e) {} return; } retried = false; begin(); });
   }
 
   function shake(scope) {
@@ -506,6 +613,12 @@
           meter("s", "TIMING", r.meters.timing, "#ffc800") +
           meter("s", "TRUST LOAD", 100 - r.meters.trust, "#ff90e8") +
         "</div>" +
+        (r.signals && r.signals.length
+          ? '<div class="iaudit__sigwrap"><span class="iaudit__sigwrap__lbl">THE PUBLIC RECORD GOT A VOTE</span>' +
+            r.signals.map(function (x) {
+              return '<div class="iaudit__sig"><b>' + x.ic + " " + esc(x.t) + "</b><p>" + esc(x.d) + "</p></div>";
+            }).join("") + "</div>"
+          : "") +
         (r.strong.length ? '<h3 class="iaudit__h">💪 WHAT\u2019S ALREADY WORKING</h3>' + strengths : "") +
         '<h3 class="iaudit__h">🔧 THE FIX — WHERE IT GOES WRONG</h3>' + fixes +
         '<div class="iaudit__lockedwrap' + (open ? "" : " iaudit__locked") + '">' +
@@ -519,6 +632,7 @@
           (open ? '<div class="iaudit__ggrid">' + gravesSec + "</div>" : "") +
           '<h3 class="iaudit__h">🔍 THE PROOF — OSINT ON YOUR IDEA</h3>' +
           (open ? osintSec : "") +
+          (open ? '<div class="iaudit__ai" id="iaAi"><div class="askel" style="height:12px;width:40%"></div><div class="askel"></div></div>' : "") +
           (!open ? '<div class="iaudit__lockcard">' +
             '<span class="iaudit__lockcard__eyebrow">THE FULL AUTOPSY</span>' +
             "<b>You\u2019ve seen the vitals. The treatment plan is locked.</b>" +
@@ -564,10 +678,26 @@
           }).join("") + "</div>"
         : "<b>📰 FAILED-LIKE-YOURS</b><p class='iaudit__osint-line'>No fresh post-mortems matched your keywords this year. Quiet field.</p>";
       box.innerHTML = w + h;
+      var ai = $("iaAi");
+      if (ai) {
+        A.aiRead(draft, (last && last.weak || []).map(function (x) { return x.t; })).then(function (txt) {
+          if (!txt) { if (ai.parentNode) ai.parentNode.removeChild(ai); return; }
+          ai.innerHTML = '<span class="iaudit__ai__lbl">🤖 SECOND OPINION — A FREE AI READS IT TOO</span><p>' + esc(txt) + "</p>" +
+            '<span class="iaudit__ai__fine">One machine\u2019s opinion, not gospel — the meters above come from 308 real case files.</span>';
+        });
+      }
     }).catch(function () {
       box.innerHTML = "<p class='iaudit__osint-line'>The public record is unreachable right now — the audit above stands on its own.</p>";
     });
   }
+  function agoSafe(at) {
+    var m = Math.max(1, Math.round((Date.now() - (at || 0)) / 60000));
+    if (m < 60) return m + " min ago";
+    var h = Math.round(m / 60);
+    if (h < 24) return h + " hr ago";
+    return Math.round(h / 24) + "d ago";
+  }
+
   function stopwordsLite(s) {
     var w = String(s || "").toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(function (x) { return x.length > 3; });
     return w.slice(0, 6).join(" ") || "startup failed";
@@ -579,7 +709,7 @@
     return new Promise(function (res) {
       if (window.FAILURES && window.FAILURES.length) return res();
       var sc = document.createElement("script");
-      sc.src = "js/failures.js?v=266";
+      sc.src = "js/failures.js?v=267";
       sc.onload = function () { res(); };
       sc.onerror = function () { res(); };
       document.head.appendChild(sc);
@@ -594,25 +724,59 @@
       '<p>308 case files · the public record · zero mercy</p>' +
       '<div class="iaudit__workbar"><i></i></div></div>';
     ensureFailures().then(function () {
-      setTimeout(function () {
+      /* the public record gets its say BEFORE the meters are painted */
+      var probe = Promise.all([
+        A.wikiExists(draft.name || draft.problem || ""),
+        A.hnFailed(stopwordsLite(draft.problem + " " + draft.solution))
+      ]).then(function (r) { return { wiki: r[0] || [], hn: r[1] || [] }; })
+        .catch(function () { return null; });
+      var floor = new Promise(function (res) { setTimeout(res, 950); });
+      Promise.all([probe, floor]).then(function (r) {
         busy = false;
+        var probeData = r[0];
+        if (probeData) { draft._wiki = probeData.wiki; draft._hn = probeData.hn; }
         try { last = A.analyze(draft); } catch (e) { body.innerHTML = "<p class='iaudit__osint-line'>Something broke in the engine — try once more.</p>"; return; }
+        saveHistory(last);
         report(last);
-      try {
-        var hist = get("tsb_iaudits", []);
-        hist.unshift({ at: Date.now(), name: draft.name, score: last.score });
-        set("tsb_iaudits", hist.slice(0, 5));
-      } catch (e) {}
       var rep = body.querySelector(".iaudit__report");
       if (rep) rep.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 900);
+      });
     });
+  }
+
+  /* ---- every audit is saved — reopen any of them below the wizard ---- */
+  function saveHistory(rep) {
+    try {
+      var h = hget("tsb_iaudits", []) || [];
+      h.unshift({
+        at: Date.now(), name: draft.name, score: rep.score, label: rep.verdict.label,
+        draft: { name: draft.name, problem: draft.problem, solution: draft.solution,
+                 audience: draft.audience, category: draft.category, money: draft.money,
+                 stage: draft.stage, catCustom: draft.catCustom || "" }
+      });
+      hset("tsb_iaudits", h.slice(0, 8));
+    } catch (e) {}
+  }
+  function paintHistory() {
+    var h = [];
+    try { h = hget("tsb_iaudits", []) || []; } catch (e) {}
+    var host = $("iaHist");
+    if (!host) return;
+    if (!h.length) { host.innerHTML = ""; return; }
+    host.innerHTML = '<h3 class="iaudit__h">🕘 YOUR PAST AUTOPSIES — TAP TO REOPEN</h3>' +
+      '<div class="iaudit__hist">' + h.map(function (x, i) {
+        return '<button type="button" class="iaudit__hist__row" data-iahis="' + i + '">' +
+          "<b>" + esc(String(x.name || "Untitled idea").slice(0, 44)) + "</b>" +
+          "<i>scored " + x.score + " · " + esc(String(x.label || "").toLowerCase()) + " · " + agoSafe(x.at) + "</i>" +
+          '<span class="iaudit__hist__x" data-iax="' + i + '" title="Forget this one">✕</span></button>';
+      }).join("") + "</div>";
   }
 
   /* ---------------- boot ---------------- */
   function init() {
     if (!$("iauditBody")) return;
     step = 1;
+    draft = { name: "", problem: "", solution: "", audience: "", category: "STARTUP", money: "", stage: "idea" };
     paint();
   }
   document.addEventListener("click", function (e) {

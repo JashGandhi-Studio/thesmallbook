@@ -852,11 +852,62 @@ const C = window.TSB_COMMUNITY;
     ok("the published quote carries the chosen layout", /Object\.keys\(quoteStyle\)\.forEach/.test(w));
     ok("the why-line shows on the page, under the card", /wr-whyprev/.test(w) && /wr-whyprev/.test(style));
     ok("the desk offers exactly three honest choices", /qdCard/.test(qd) && /qdSep/.test(qd) && /qdText/.test(qd));
-    ok("no export-question popup when the desk already asked", /var how = deskKind \|\| await askQuoteExport\(\);/.test(w));
+    ok("no export-question popup at publish, ever — Studio already framed it", !/askQuoteExport/.test(w) && /NO desk at publish/.test(w));
     ok("a photo picked in the desk uploads only at publish time", /if\(lastCoverFile && !coverUrl\)/.test(w));
     ok("choosing a photo no longer opens Studio behind your back", !/v244 QUOTE MODE: the image you upload IS the card/.test(w));
     ok("the desk is themed for both themes", /\.qd-sheet/.test(style) && /html\.dark \.qd-sheet/.test(style));
     ok("dictation is gone from the Quote section", /function buildUI\(\)\{[\s\S]{0,400}mode=quote[\s\S]{0,400}return;/.test(dict));
+
+    const ia = rd("js/ideaaudit.js"), gy = rd("js/graveyard.js"), gy_html = rd("graveyard.html"),
+          covs = rd("js/stories-seed.js");
+
+    /* --- v267: the mic answers on the FIRST tap --- */
+    ok("the speak button is baked into the intake, never hidden", /id="iaMic"|(?:iaudit__mic" id="iaMic)/.test(ia) === false ? /iaudit__mic/.test(ia) : true);
+    ok("no-speech gets one silent retry, not a dead button", /why === "no-speech" \|\| why === "aborted"/.test(ia) && /!retried/.test(ia) && /retried = true/.test(ia));
+    ok("denied mic says ALLOW MIC, offline says OFFLINE — never a blank", /ALLOW MIC/.test(ia) && /OFFLINE/.test(ia));
+
+    /* --- v267: OSINT + the free AI read, keyless --- */
+    ok("the public record votes on the meters", /signalsOf/.test(ia) && /signals:/.test(ia));
+    ok("the proof section names wiki + hn", /wikiExists/.test(ia) && /hnFailed/.test(ia));
+    ok("the free AI second opinion is keyless pollinations, wrapped in a timeout", /text\.pollinations\.ai/.test(ia) && /8000/.test(ia));
+    ok("the AI read is framed as an opinion, the engine stays the judge", /not gospel|real case files/.test(ia));
+    ok("any AI failure silently degrades to engine-only", /catch/.test(ia));
+    ok("not one key anywhere in the audit", !/(?:apikey|api_key|Bearer )/i.test(ia));
+
+    /* --- v267: the audit history shelf --- */
+    ok("every autopsy is saved under tsb_iaudits", /tsb_iaudits/.test(ia));
+    ok("the history shelf paints below the wizard and reopens a full report", /paintHistory/.test(ia) && /iaHist/.test(ia) && /data-iahis/.test(ia));
+    ok("past audits can be forgotten with one tap", /data-iax/.test(ia));
+
+    /* --- v267: settings rooms --- */
+    ok("the setup-password row is gone from Account & Keys", (() => { const i = lg.indexOf("Account &amp; keys</span>"); if (i < 0) return false; const room = lg.slice(i, lg.indexOf("</section>", i)); return room.length > 100 && !/youPass/.test(room) && /youNameInput/.test(room); })());
+    ok("the password binding survives as guarded code, not a dead wire", /if \(passSave\)/.test(lg) || /passSave &&/.test(lg) || /if\(passSave\)/.test(lg));
+    ok("rooms leave the way they arrive (smooth close)", /accsub--out/.test(lg) && /subout/.test(style));
+    ok("keeping your own @name is a success, never an error", /is already yours/.test(lg));
+
+    /* --- v267: look & feel explains itself --- */
+    ok("every look-and-feel option carries a plain-word label", /<small>Day<\/small>/.test(lg) && /<small>Night<\/small>/.test(lg) && /<small>Cozy<\/small>/.test(lg));
+
+    /* --- v267: the avatar plus sits on the photo again --- */
+    ok("the profile avatar wrap hugs the photo, so the plus lands on it", /cm-avawrap \{ display: block; position: relative; width: fit-content; margin: -52px auto 0/.test(style));
+
+    /* --- v267: the quote flow — one door, no double quote, publish survives 90 chars --- */
+    ok("the desk button is retired from the quote bar", !/qdOpen/.test(w));
+    ok("the card itself is the door to Studio", /frameInStudio/.test(w) && /quoteLiveCard/.test(w));
+    ok("clean cover is an explicit opt-in chip, never the default", /quoteCleanChip/.test(w) && /cleanCover = !cleanCover/.test(w));
+    ok("unframed photos are composed at publish, exactly like the preview", /framing your card/.test(w));
+    ok("framed cards publish tagged qcard — the feed shows the image alone", /qcard/.test(w) && /qcard/.test(sH));
+    ok("the feed never repeats the quote under a framed card", /indexOf\("qcard"\) >= 0/.test(sH));
+    ok("publish clamps titles to the 90-char register, at whole words", /function qclamp/.test(w) && /posts_title_len|title_len/i.test(w));
+    ok("a stricter register gets one deeper retry, not a failed writer", /qclamp\(t, 55\)/.test(w));
+
+    /* --- v267: the graveyard always feels freshly turned --- */
+    ok("classic order reshuffles on every visit", /shuffleGraves\(results\)/.test(gy));
+    ok("fresh graves turn up new ones on demand, cache bypassed", /freshMore/.test(gy) && /buildWireData\(force\)/.test(gy) && /freshOffset/.test(gy));
+    ok("the fresh anchor waits quietly in the Open Graves head", /freshAnchor/.test(gy_html || ""));
+
+    /* --- v267: the channel grows in the official voice, with covers --- */
+    ok("the flagship seeds carry covers now", (String(covs).match(/assets\/stories\//g) || []).length >= 16);
 
     /* --- watermark --- */
     ok("in-app publishing is never watermarked", /mark: false/.test(studio));

@@ -115,6 +115,11 @@
       }
       if (!a.ok && window.TSB_GOLD && TSB_GOLD.isGold()) { a.ok = true; a.via = "gold"; }
     } catch (e) {}
+    /* v267 · the store is the toll booth — anyone the store admits carries a
+       paid ticket into the full autopsy too */
+    if (a.ok && window.TSB_IDEAAUDIT && TSB_IDEAAUDIT.unlockWithPurchaseFlag) {
+      try { TSB_IDEAAUDIT.unlockWithPurchaseFlag(); } catch (e2) {}
+    }
     accessCache = a;
     return a;
   }

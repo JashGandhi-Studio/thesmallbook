@@ -24,7 +24,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=266">
+  <link rel="stylesheet" href="css/style.css?v=267">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -32,11 +32,11 @@
   <meta property="og:title" content="The Graveyard — 300 Failures, Autopsied | TheSmallBook">
   <meta property="og:description" content="Why startups, empires and legends failed — free case studies with the lesson, no signup.">
   <meta property="og:site_name" content="TheSmallBook">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=266">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=267">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="TheSmallBook — 400 books · 2637 lessons · 308 autopsies · free to read">
-  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=266">
+  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=267">
 </head>
 <body class="graveyard-page">
 
@@ -96,6 +96,7 @@
   <div class="section-head" id="graves">
     <h2>⚰️ Open Graves</h2>
     <div class="line"></div>
+    <button class="freshanchor" id="freshAnchor" type="button" title="Freshly dead, fetched live — below the graves">🩸 FRESH ONES ↓</button>
   </div>
   <div class="searchwrap" id="graveSearchWrap" style="margin-top:26px;">
     <div class="search">
@@ -137,20 +138,37 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="js/prefs.js?v=266"></script>
-  <script src="js/support.js?v=266"></script>
-  <script src="js/lang.js?v=266"></script>
-  <script src="js/config.js?v=266"></script>
-  <script src="js/auth.js?v=266"></script>
-  <script src="js/data.js?v=266"></script>
-  <script src="js/failures.js?v=266"></script>
-  <script src="js/graveyard-content.js?v=266"></script>
-  <script src="js/graveyard.js?v=266"></script>
-    <script src="js/ask-data.js?v=266"></script>
-  <script src="js/tts-engine.js?v=266"></script>
-  <script src="js/ask.js?v=266"></script>
-  <script src="js/bar.js?v=266" defer></script>
-  <script src="js/gate.js?v=266" defer></script>
-  <script src="js/trial.js?v=266" defer></script>
+  <script src="js/prefs.js?v=267"></script>
+  <script src="js/support.js?v=267"></script>
+  <script src="js/lang.js?v=267"></script>
+  <script src="js/config.js?v=267"></script>
+  <script src="js/auth.js?v=267"></script>
+  <script src="js/data.js?v=267"></script>
+  <script src="js/failures.js?v=267"></script>
+  <script src="js/graveyard-content.js?v=267"></script>
+  <script src="js/graveyard.js?v=267"></script>
+    <script src="js/ask-data.js?v=267"></script>
+  <script src="js/tts-engine.js?v=267"></script>
+  <script src="js/ask.js?v=267"></script>
+  <script src="js/bar.js?v=267" defer></script>
+  <script>
+    /* v267 · the fresh anchor — a quiet way down, never an interruption */
+    (function () {
+      var b = document.getElementById("freshAnchor");
+      if (!b) return;
+      b.addEventListener("click", function () {
+        function go() {
+          var t = document.getElementById("freshWrap");
+          if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+          else document.getElementById("graveGrid").scrollIntoView({ behavior: "smooth", block: "end" });
+        }
+        /* the fresh section mounts ~2.6s after load — give it a chance */
+        if (!document.getElementById("freshWrap")) setTimeout(go, 1400);
+        else go();
+      });
+    })();
+  </script>
+  <script src="js/gate.js?v=267" defer></script>
+  <script src="js/trial.js?v=267" defer></script>
 </body>
 </html>
