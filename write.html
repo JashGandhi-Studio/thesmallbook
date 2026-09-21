@@ -2,6 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+    <meta property="og:title" content="Write — TheSmallBook">
+  <meta property="og:description" content="Publish your story, your quote card or your voice — right from the phone.">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=266">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://thesmallbook.in/write.html">
+  <meta property="og:type" content="website">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>Write — TheSmallBook Stories</title>
   <meta name="description" content="Write your story in a full-page editor with rich formatting, voice and autosaved drafts.">
@@ -19,8 +27,8 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=252">
-  <link rel="stylesheet" href="css/studio.css?v=252">
+  <link rel="stylesheet" href="css/style.css?v=266">
+  <link rel="stylesheet" href="css/studio.css?v=266">
   <style>
   /* v246 — compact attach bar: professional one-row adding */
   .wr-addrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
@@ -37,6 +45,7 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body class="wrpage">
+  <h1 class="sr-only">Write — TheSmallBook</h1>
   <header class="wr-top">
     <a class="wr-back" id="wrBack" href="stories.html" aria-label="Back to Stories">←</a>
     <span class="wr-save" id="saveState">✍️ draft</span>
@@ -101,9 +110,9 @@
           <button type="button" class="wr-addbtn" id="wRec"><span class="wr-addbtn__ic">🎙</span><span class="wr-addbtn__t">Record</span><span class="wr-addbtn__s" id="wRecState"></span></button>
           <button type="button" class="wr-addbtn" id="addAudioBtn"><span class="wr-addbtn__ic">🎧</span><span class="wr-addbtn__t">Choose audio</span><span class="wr-addbtn__s" id="wAudioName">No file chosen</span></button>
         </div>
-        <input id="wCover" type="file" accept="image/*" hidden>
-        <input id="wBurst" type="file" accept="video/*" hidden>
-        <input id="wAudio" type="file" accept="audio/*" hidden>
+        <input id="wCover" type="file" accept="image/*" hidden aria-label="Choose a cover image">
+        <input id="wBurst" type="file" accept="video/*" hidden aria-label="Choose a burst video">
+        <input id="wAudio" type="file" accept="audio/*" hidden aria-label="Choose a voice note">
         <div class="wr-addprev">
           <img id="wCoverPrev" class="cm-prev" hidden alt="" style="display:block;margin:10px auto 0;max-height:160px;width:auto;max-width:100%;border-radius:12px;border:2.5px solid #111;">
           <video id="wBurstPrev" class="cm-prev" controls playsinline preload="metadata" hidden style="margin-top:10px;width:100%;max-height:180px;border-radius:12px;border:2.5px solid #111;"></video>
@@ -128,16 +137,16 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=252"></script>
-  <script src="js/lang.js?v=252"></script>
-  <script src="js/config.js?v=252"></script>
-  <script src="js/auth.js?v=252"></script>
-  <script src="js/sounds.js?v=252"></script>
-  <script src="js/founder.js?v=252"></script>
-  <script src="js/community.js?v=252"></script>
-  <script src="js/gold.js?v=252"></script>
-  <script src="js/paywall.js?v=252"></script>
-  <script src="js/studio.js?v=252"></script>
+  <script src="js/prefs.js?v=266"></script>
+  <script src="js/lang.js?v=266"></script>
+  <script src="js/config.js?v=266"></script>
+  <script src="js/auth.js?v=266"></script>
+  <script src="js/sounds.js?v=266"></script>
+  <script src="js/founder.js?v=266"></script>
+  <script src="js/community.js?v=266"></script>
+  <script src="js/gold.js?v=266"></script>
+  <script src="js/paywall.js?v=266"></script>
+  <script src="js/studio.js?v=266"></script>
   <style>/* hide Puter branding — keep AI silent */ .puter-modal,.puter-dialog,.puter-auth{ display:none !important }</style>
   <script>
   // silent Puter loader — don't block rendering, hide GUI
@@ -149,10 +158,10 @@
     document.head.appendChild(s);
   })();
   </script>
-  <script src="js/dictate.js?v=252"></script>
-  <script src="js/data.js?v=252"></script>
-  <script src="js/osint.js?v=252"></script>
-  <script src="js/quotedesk.js?v=252"></script>
+  <script src="js/dictate.js?v=266"></script>
+  <script src="js/data.js?v=266"></script>
+  <script src="js/osint.js?v=266"></script>
+  <script src="js/quotedesk.js?v=266"></script>
   <script>
   (function () {
     "use strict";
@@ -356,7 +365,31 @@
 
     /* the desk hands the whole quote back in one object — the page stays exactly
        where it was, and Studio opens only if the writer asked for a card */
-    function applyDeskPick(v) {
+    /* v252 · THE MISSING LINK.
+       The desk finds the line and the photo; Studio designs it. But the photo
+       you chose on the desk was never carried across — Studio opened with
+       whatever cover the page happened to have, so searching for a photo on
+       the desk was decorative. It now lands on the page first, then travels
+       into Studio with the quote. */
+    async function adoptDeskPhoto(url, name) {
+      if (!url) return;
+      $("wCoverPrev").src = url;
+      $("wCoverPrev").hidden = false;
+      coverUrl = /^https?:/i.test(url) ? url : coverUrl;
+      lastCoverFile = null;
+      if (!/^https?:/i.test(url)) return;          /* blob:/data: — already local */
+      try {
+        var blob = await fetch(url, { mode: "cors" }).then(function (r) { return r.blob(); });
+        if (blob && blob.size) {
+          lastCoverFile = new File([blob], "tsb-quote-photo-" + Date.now() + ".jpg", { type: blob.type || "image/jpeg" });
+          coverUrl = "";                            /* the file wins; the URL is the fallback */
+        }
+      } catch (e) { /* hotlink stands — the preview and the post still work */ }
+      $("saveState").textContent = "\u2713 photo from the desk: " + (name || "chosen");
+    }
+
+    async function applyDeskPick(v) {
+      if (v.photo) await adoptDeskPhoto(v.photo, v.photoName);
       title.value = v.text || "";
       if (sub) sub.value = v.author ? "\u2014 " + v.author : "";
       edSet(body, v.why || "");
@@ -368,7 +401,7 @@
       saveDraft();
       if (v.kind === "card") {
         openStudio({
-          src: lastCoverFile ? URL.createObjectURL(lastCoverFile) : (coverUrl || null),
+          src: lastCoverFile ? URL.createObjectURL(lastCoverFile) : (coverUrl || v.photo || null),
           quote: title.value,
           byline: (sub.value || "").replace(/^\u2014\s*/, ""),
           onApply: async function (file) {
@@ -376,18 +409,32 @@
               $("saveState").textContent = "… uploading your card";
               coverUrl = await C.upload(file, "tsb-covers");
               lastCoverFile = null;
+              /* v254: what leaves Studio is a FINISHED image. If deskKind stayed
+                 "card", Publish ran compose a second time on the finished card
+                 and produced a card of a card — the tiny-text bug. */
+              deskKind = "sep";
               $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
               renderQuoteLive(); saveDraft();
-            } catch (err) { C.say("Card upload failed: " + err.message); }
+            } catch (err) {
+              /* the compose worked; only the upload failed — keep the file on
+                 the page and say so, instead of losing the whole design */
+              lastCoverFile = file;
+              C.say("Your card is ready but couldn't upload (" + err.message + ") — it will go up with your post.");
+              $("wCoverPrev").src = URL.createObjectURL(file); $("wCoverPrev").hidden = false;
+              renderQuoteLive(); saveDraft();
+            }
           }
         });
       } else if (v.kind === "text") {
+        /* "just the quote" means no image at all, even if one was picked */
+        coverUrl = ""; lastCoverFile = null;
+        $("wCoverPrev").hidden = true;
         coverUrl = ""; lastCoverFile = null;
         $("wCoverPrev").hidden = true;
         renderQuoteLive(); saveDraft();
         C.say("Text quote ready — tap Publish →");
       } else {
-        C.say("Ready — photo + your words below it.");
+        C.say(v.photo ? "Ready — the photo you chose is your cover, with your words below it." : "Ready — photo + your words below it.");
       }
     }
 
@@ -774,7 +821,15 @@
             coverUrl = await C.upload(lastCoverFile, "tsb-covers");
             lastCoverFile = null;
             $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
-          }catch(ue){ console.warn("cover upload failed", ue); }
+          }catch(ue){
+            /* v254: the photo never vanishes in silence. Stop the publish,
+               say exactly what happened, and keep the file so the next tap
+               retries. The old code warned the console and posted text-only. */
+            pubBusy = false;
+            $("pubBtn").textContent = "Publish →";
+            C.say("Your photo couldn't upload (" + (ue && ue.message ? ue.message : "connection") + "). Nothing was posted — check your connection and tap Publish again, or remove the photo to post text-only.");
+            return;
+          }
         }
         /* v250: the writer already answered this in the desk ("Open Studio",
            "photo + text below", "just the quote") — so we never ask twice.
@@ -804,7 +859,7 @@
           title: t, subtitle: sub.value.trim(), body: b,
           cover_url: burstUrl || coverUrl, audio_url: audioUrl, kind: kind,
           tags: tags.value.split(",").map(function (s) { return s.trim(); }).filter(Boolean),
-          kind: kind, no_download: $("wNoDl").checked
+          no_download: $("wNoDl").checked
         });
         localStorage.removeItem(dkey());
         try { C.setProfilePublic(true); } catch (e) {}
@@ -868,6 +923,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=252" defer></script>
+  <script src="js/bar.js?v=266" defer></script>
 </body>
 </html>

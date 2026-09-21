@@ -275,7 +275,8 @@
         '<div class="qd-tune qd-tune--ratio" id="qdTuneRatio">' + rs + '</div>' +
 
         /* ---- actions ----------------------------------------------- */
-        '<button class="qd-go" id="qdCard" type="button">🎨 Open Studio — quote inside the image</button>' +
+        '<button class="qd-go" id="qdCard" type="button">CONTINUE — STUDIO MAKES THE CARD →</button>' +
+        '<p class="qd-hint" style="margin:2px 0 8px;text-align:center">fonts, frames and filters live in Studio — one tap, done</p>' +
         '<div class="qd-foot">' +
           '<button type="button" id="qdSep">🖼️ Photo + text below</button>' +
           '<button type="button" id="qdText">📝 Just the quote</button>' +
@@ -446,7 +447,7 @@
     var t = (S.text || "").trim();
     if (kind !== "text" && !t) {
       var hint = $("#qdHint");
-      if (hint) { hint.textContent = "Add the line first — even one sentence is a quote."; }
+      if (hint) { hint.textContent = "Add the line first — even one sentence is a quote. Tap CONTINUE after."; }
       var ta = $("#qdQuote"); if (ta) { try { ta.focus(); } catch (e) {} }
       return;
     }
@@ -457,15 +458,25 @@
     buzz(14);
     var view = {
       text: t, author: (S.author || "").trim(), why: (S.why || "").trim(),
-      photo: S.photo || "", photoRemote: S.photoRemote || "", kind: kind, font: S.font
+      photo: S.photo || "", photoRemote: S.photoRemote || "", photoName: S.photoName || "",
+      kind: kind, font: S.font
     };
-    try { if (typeof opts.onPick === "function") opts.onPick(view); } catch (e) {}
+    /* the host may need to fetch the chosen photo before the sheet closes, so a
+       promise from onPick is honoured instead of being fired and forgotten */
+    try {
+      if (typeof opts.onPick === "function") {
+        var back = opts.onPick(view);
+        if (back && typeof back.then === "function") {
+          back.then(null, function (e) { try { console.warn("desk handover failed", e); } catch (_) {} });
+        }
+      }
+    } catch (e) {}
     close();
   }
 
   window.TSB_QUOTEDESK = {
     open: open, close: close, font: fontId, setFont: setFont,
     applyPhoto: applyPhoto, isOpen: function () { return !!root; },
-    VERSION: "v250"
+    VERSION: "v254"
   };
 })();

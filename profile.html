@@ -2,6 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+    <meta property="og:title" content="Reader profile — TheSmallBook">
+  <meta property="og:description" content="Stories, followers and the shelf of a TheSmallBook reader.">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=266">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://thesmallbook.in/profile.html">
+  <meta property="og:type" content="website">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>Profile — TheSmallBook Community</title>
   <meta name="description" content="A TheSmallBook community profile — posts, followers and activity.">
@@ -19,25 +27,27 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=252">
+  <link rel="stylesheet" href="css/style.css?v=266">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body class="cmpage">
+  <h1 class="sr-only">Reader profile — TheSmallBook</h1>
   <main class="cm-profile" id="prof">
     <div class="cm-card cm-card--skel"><div class="cm-sk cm-sk--cover"></div>
       <div class="cm-card__body"><div class="cm-sk cm-sk--line w60"></div><div class="cm-sk cm-sk--line w40"></div></div>
     </div>
   </main>
 
-  <script src="js/prefs.js?v=252"></script>
-  <script src="js/lang.js?v=252"></script>
-  <script src="js/config.js?v=252"></script>
-  <script src="js/auth.js?v=252"></script>
-  <script src="js/sounds.js?v=252"></script>
-  <script src="js/founder.js?v=252"></script>
-  <script src="js/community.js?v=252"></script>
+  <script src="js/prefs.js?v=266"></script>
+  <script src="js/lang.js?v=266"></script>
+  <script src="js/config.js?v=266"></script>
+  <script src="js/auth.js?v=266"></script>
+  <script src="js/sounds.js?v=266"></script>
+  <script src="js/founder.js?v=266"></script>
+  <script src="js/community.js?v=266"></script>
+  <script src="js/stories-seed.js?v=266"></script>
   <script>
   (function () {
     "use strict";
@@ -89,75 +99,105 @@
         '<div class="cm-ava cm-ava--xl cm-ava--ring">' + (C.avaUrl(prof.name, prof.avatar_url, pid) ? '<img src="' + C.esc(C.avaUrl(prof.name, prof.avatar_url, pid)) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
         (mine ? '<button class="cm-avaplus" id="avaPlus" title="Change profile picture" aria-label="Change profile picture">+</button>' : "") +
       "</div>";
+      var priv = !mine && prof.is_public === false;
+      var reqd = priv && C.iRequested && C.iRequested(pid);
+      var handle = prof.username ? C.esc(prof.username) : pid.slice(0, 8);
+      var hue = parseInt(String(pid).replace(/-/g, "").slice(0, 4), 16) % 360;
+      var avaHtml = '<div class="cm-avawrap">' +
+        '<div class="cm-ava cm-ava--xl cm-ava--ring">' + (C.avaUrl(prof.name, prof.avatar_url, pid) ? '<img src="' + C.esc(C.avaUrl(prof.name, prof.avatar_url, pid)) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
+        (mine ? '<button class="cm-avaplus" id="avaPlus" title="Change profile picture" aria-label="Change profile picture">+</button>' : "") +
+      "</div>";
       root.innerHTML =
-        '<header class="cm-profhead cm-profhead--v2">' +
-          '<div class="cm-banner" style="background:linear-gradient(135deg,hsl(' + hue + ',78%,62%),hsl(' + ((hue + 42) % 360) + ',70%,40%))"></div>' +
+        '<header class="cm-profhead cm-profhead--v3">' +
+          '<div class="cm-banner" style="background:linear-gradient(135deg,hsl(' + hue + ',78%,62%),hsl(' + ((hue + 42) % 360) + ',70%,40%))">' +
+            '<span class="cm-banner__deco cm-banner__deco--ring" aria-hidden="true"></span>' +
+            '<span class="cm-banner__deco cm-banner__deco--dot" aria-hidden="true"></span>' +
+            '<span class="cm-banner__deco cm-banner__deco--tri" aria-hidden="true"></span>' +
+          '</div>' +
+          '<div class="cm-topbtns">' +
+            (!mine ? '<a class="cm-topbtn" href="dm.html?u=' + pid + '" aria-label="Message">' + C.icon('chat') + "</a>" : "") +
+            '<button class="cm-topbtn" id="shareProfile" aria-label="Share profile">' + C.icon('share') + "</button>" +
+            '<button class="cm-topbtn" id="shareId" aria-label="Copy profile">' + C.icon('user') + "</button>" +
+          '</div>' +
           '<div class="cm-profcard">' +
-            '<div class="cm-profcard__top">' +
-              avaHtml +
-              '<div class="cm-profmain">' +
-                "<h1>" + C.esc(prof.name) + (C.isOfficial(pid) ? '<span class="cm-vtick">✔</span><span style="margin-left:6px;background:#111;color:#ffc800;border:2px solid #111;border-radius:999px;padding:2px 8px;font-family:Archivo Black,sans-serif;font-size:.60rem;letter-spacing:.5px;vertical-align:middle">FOUNDING</span>' : "") + (mine && window.TSB_GOLD && TSB_GOLD.isGold() && !C.isOfficial(pid) ? '<span style="margin-left:6px;background:linear-gradient(135deg,#ffd94d,#ffc800);border:2px solid #111;border-radius:999px;padding:2px 8px;font-family:Archivo Black,sans-serif;font-size:.60rem;letter-spacing:.5px;vertical-align:middle;color:#111">GOLD</span>' : "") + (mine ? " <i>(you)</i>" : "") + "</h1>" +
-                '<span class="cm-idchip">@' + pid.slice(0, 8) + "</span>" +
-                (mine ? '<div style="margin-top:6px;font:500 11px Space Grotesk,sans-serif;color:var(--muted);word-break:break-all;background:rgba(0,0,0,.04);padding:6px 8px;border-radius:10px;border:1px dashed rgba(0,0,0,.12)"><span style="opacity:.7">Full ID</span> <b id="founderIdBox" style="color:var(--ink)">' + pid + '</b>' + (C.isOfficial(pid) ? ' <span class="cm-vtick">✔</span> <span style="color:#0a7">verified — tick visible everywhere</span>' : ' <span style="opacity:.7">— send this full ID to dev to enable ✔ for everyone</span>') + ' <button onclick="try{navigator.clipboard.writeText(\'' + pid + '\')}catch(e){} ; this.textContent=\'✓ Copied\'; setTimeout(()=>this.textContent=\'Copy\',1500)\" style="margin-left:6px;font:700 10px Space Grotesk,sans-serif;padding:3px 7px;border-radius:999px;border:2px solid #1c1a17;background:#ffc800;cursor:pointer">Copy</button></div>' : "") +
-              "</div>" +
-            "</div>" +
-            (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
-            (lkArr.length ? '<div class="cm-linksrow">' + lkArr.map(function (l) {
-              var url = C.esc(/^https?:\/\//i.test(l) ? l : "https://" + l);
-              return '<a class="cm-linkchip" href="' + url + '" target="_blank" rel="noopener">' + C.icon('link') + " " +
-                C.esc(String(l).replace(/^https?:\/\//i, "").slice(0, 42)) + "</a>";
-            }).join("") + "</div>" : "") +
-            '<div class="cm-statrow">' +
-              '<span class="cm-statrow__n"><b>' + posts.length + "</b><span>posts</span></span>" +
-              '<a class="cm-statrow__n" href="profile.html?id=' + pid + '&view=followers" data-lsoc="followers"><b>' + fol.count + "</b><span>followers</span></a>" +
-              '<a class="cm-statrow__n" href="profile.html?id=' + pid + '&view=following" data-lsoc="following"><b>' + followingCount + "</b><span>following</span></a>" +
-              (mine ? '<span class="cm-statrow__n"><b>' + likesGot + "</b><span>likes</span></span>" : "") +
-            "</div>" +
-            (progShown ? '<div class="cm-progpill">' + C.icon('book') + ' ' + progShown + " / " + ((window.BOOKS || []).reduce(function (a, b) { return a + (b.lessons ? b.lessons.length : 0); }, 0) || 2637).toLocaleString("en-IN") + " lessons read</div>" : "") +
+            avaHtml +
+            '<div class="cm-profmain">' +
+              "<h1>" + C.esc(prof.name) + (C.isOfficial(pid) ? '<span class="cm-vtick">✔</span><span class="cm-founding">FOUNDING</span>' : "") + (mine && window.TSB_GOLD && TSB_GOLD.isGold() && !C.isOfficial(pid) ? '<span class="cm-goldtag">GOLD</span>' : "") + (mine ? " <i>(you)</i>" : "") + "</h1>" +
+              '<span class="cm-idchip">@' + handle + "</span>" +
+              (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
+              (lkArr.length ? '<div class="cm-linksrow">' + lkArr.map(function (l) {
+                var url = C.esc(/^https?:\/\//i.test(l) ? l : "https://" + l);
+                return '<a class="cm-linkchip" href="' + url + '" target="_blank" rel="noopener">' + C.icon('link') + " " +
+                  C.esc(String(l).replace(/^https?:\/\//i, "").slice(0, 42)) + "</a>";
+              }).join("") + "</div>" : "") +
+              (priv ? '<span class="cm-lockpill">🔒 Private account — they approve followers</span>' : "") +
+              '<div class="cm-statrow cm-statrow--pills">' +
+                '<span class="cm-pill"><b>' + posts.length + "</b> posts</span>" +
+                '<a class="cm-pill" href="profile.html?id=' + pid + '&view=followers" data-lsoc="followers"><b>' + fol.count + "</b> Followers</a>" +
+                '<a class="cm-pill" href="profile.html?id=' + pid + '&view=following" data-lsoc="following"><b>' + followingCount + "</b> Following</a>" +
+                (mine ? '<span class="cm-pill"><b>' + likesGot + "</b> likes</span>" : "") +
+              '</div>' +
+              (progShown ? '<div class="cm-progpill">' + C.icon('book') + ' ' + progShown + " / " + ((window.BOOKS || []).reduce(function (a, b) { return a + (b.lessons ? b.lessons.length : 0); }, 0) || 2637).toLocaleString("en-IN") + " lessons read</div>" : "") +
+              (mine ? '<div class="cm-idbox"><span style="opacity:.7">Full ID</span> <b id="founderIdBox">' + pid + '</b>' + (C.isOfficial(pid) ? ' <span class="cm-vtick">✔</span> <span style="color:#0a7">verified</span>' : "") + ' <button class="cm-idcopy" onclick="try{navigator.clipboard.writeText(\'' + pid + '\')}catch(e){} ; this.textContent=\'✓\'; setTimeout(()=>this.textContent=\'Copy\',1500)">Copy</button></div>' : "") +
+            '</div>' +
+            '<div class="cm-sharerow cm-sharerow--main">' +
+              (mine
+                ? '<button class="cm-follow" id="editProfileBtn">' + C.icon('pencil') + " Edit profile</button>" +
+                  '<a class="cm-dmbtn cm-dmbtn--big" href="dm.html">' + C.icon('chat') + " Messages</a>"
+                : priv
+                ? (reqd
+                    ? '<button class="cm-follow cm-follow--big is-req" data-pcancel="' + pid + '">' + C.icon('check') + " Requested ⏳</button>"
+                    : '<button class="cm-follow cm-follow--big" data-preq="' + pid + '">🔒 Request to follow</button>')
+                : '<button class="cm-follow cm-follow--big' + (fol.mine ? " on" : "") + '" data-pfol="' + pid + '">' + (fol.mine ? C.icon('check') + " Subscribed" : C.icon('bell') + " SUBSCRIBE") + "</button>" +
+                  '<a class="cm-dmbtn cm-dmbtn--big" href="dm.html?u=' + pid + '">' + C.icon('chat') + " Message</a>") +
+            '</div>' +
             (mine
-              ? '<div class="cm-profacts"><span class="cm-time">' + C.icon('share') + ' This is your public card — share it below</span></div>'
+              ? '<div class="cm-sharenote">' + C.icon('share') + ' This is your public card — share it from the ⬆ buttons</div>'
               : "") +
-          "</div>" +
-          (mine ? '<div class="cm-sharecard">' +
-            '<div class="cm-sharecard__brand">' + C.icon('book') + ' THESMALLBOOK · COMMUNITY</div>' +
-            '<div class="cm-sharecard__who">' +
-              '<div class="cm-ava cm-ava--lg">' + (C.avaUrl(prof.name, prof.avatar_url, pid) ? '<img src="' + C.esc(C.avaUrl(prof.name, prof.avatar_url, pid)) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
-              '<div><b>' + C.esc(prof.name) + (C.isOfficial(pid) ? '<span class="cm-vtick">✔</span>' : "") + "</b>" +
-              '<span class="cm-time">ID ' + pid.slice(0, 8) + "</span></div>" +
-            "</div>" +
-            (prof.bio ? '<p class="cm-bio">' + C.esc(prof.bio) + "</p>" : "") +
-            '<span class="cm-sharecard__cta">' + (mine ? C.icon('share') + " This is you — share this card" : C.icon('bell') + " Subscribe — follow on TheSmallBook") + "</span>" +
-          "</div>" : "") +
-          '<div class="cm-sharerow cm-sharerow--main">' +
             (mine
-              ? '<button class="cm-follow" id="editProfileBtn">' + C.icon('pencil') + " Edit profile</button>" +
-                '<button class="cm-dmbtn cm-dmbtn--big" id="shareProfile">' + C.icon('share') + " Share profile</button>"
-              : '<button class="cm-follow' + (fol.mine ? " on" : "") + '" data-pfol="' + pid + '">' + (fol.mine ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe") + "</button>" +
-                '<a class="cm-dmbtn cm-dmbtn--big" href="dm.html?u=' + pid + '">' + C.icon('chat') + " Message</a>") +
-          "</div>" +
-          '<div class="cm-sharerow cm-sharerow--sub">' +
-            (!mine ? '<button class="setbtn" id="shareProfile">' + C.icon('share') + " Share profile</button>" : "") +
-            '<button class="setbtn" id="shareId">' + C.icon('user') + " Copy profile</button>" +
-          "</div>" +
-          (mine
-            ? '<a class="cm-write" href="dm.html">' + C.icon('chat') + " My messages</a>"
-            : "") +
-          (mine
-            ? '<div class="cm-profedit" id="profEdit">' +
-                '<label class="cm-lbl cm-lbl--file" for="pAva">Profile photo' +
-                '<span class="upbtn">📷&nbsp; Choose photo</span><span class="upname" id="pAvaName">No file chosen</span>' +
-                '<input id="pAva" type="file" accept="image/*" hidden></label>' +
-                '<label class="cm-lbl">Display name<input id="pName" class="setinput" maxlength="24" value="' + C.esc(prof.name) + '"></label>' +
-                '<label class="cm-lbl">Bio<input id="pBio" class="setinput" maxlength="120" value="' + C.esc(prof.bio || "") + '" placeholder="One line about you"></label>' +
-                '<label class="cm-lbl">Links (comma-separated)<input id="pLinks" class="setinput" maxlength="200" value="' + C.esc(lkAll.slice(0, 3).join(", ")) + '" placeholder="https://yoursite.com, https://instagram.com/you"></label>' +
-                '<button class="cm-pub cm-pub--sm" id="pSave">Save profile</button>' +
-              "</div>"
-            : "") +
+              ? '<div class="cm-profedit" id="profEdit">' +
+                  '<label class="cm-lbl cm-lbl--file" for="pAva">Profile photo' +
+                  '<span class="upbtn">📷&nbsp; Choose photo</span><span class="upname" id="pAvaName">No file chosen</span>' +
+                  '<input id="pAva" type="file" accept="image/*" hidden></label>' +
+                  '<label class="cm-lbl">Display name<input id="pName" class="setinput" maxlength="24" value="' + C.esc(prof.name) + '"></label>' +
+                  '<label class="cm-lbl">Bio<input id="pBio" class="setinput" maxlength="120" value="' + C.esc(prof.bio || "") + '" placeholder="One line about you"></label>' +
+                  '<label class="cm-lbl">Links (comma-separated)<input id="pLinks" class="setinput" maxlength="200" value="' + C.esc(lkAll.slice(0, 3).join(", ")) + '" placeholder="https://yoursite.com, https://instagram.com/you"></label>' +
+                  '<button class="cm-pub cm-pub--sm" id="pSave">Save profile</button>' +
+                "</div>"
+              : "") +
         "</header>" +
-        '<h2 class="cm-sect">' + (mine ? "📔 Your stories" : "✍️ Stories") + "</h2>" +
+        '<div class="cm-sect cm-sect--bar"><h2>' + (mine ? "📔 Your posts" : "✍️ Their posts") + '</h2><span class="cm-sect__n">' + posts.length + '</span></div>' +
         '<div class="cm-feed cm-feed--tight" id="pfeed">' +
           (posts.length ? posts.map(card).join("") : '<div class="cm-empty cm-empty--sm">No stories yet.</div>') +
+          libShelf() +
         "</div>";
+
+      /* v255 · the channel's complete shelf: on TheSmallBook's own profile,
+         the library stories appear under the same name — minus the ones the
+         channel has already published as real posts (those are listed above). */
+      function libShelf() {
+        if (!C.isOfficial || !C.isOfficial(pid) || !(window.SEED_STORIES || []).length) return "";
+        var posted = {};
+        posts.forEach(function (p) { posted[String(p.title || "").toLowerCase().trim()] = 1; });
+        var rows = (window.SEED_STORIES || []).filter(function (sx) {
+          return sx && sx.title && !posted[String(sx.title).toLowerCase().trim()];
+        });
+        if (!rows.length) return "";
+        return '<div class="cm-sect">📚 From the library — ' + rows.length + ' more from this channel</div>' +
+          rows.map(function (sx) {
+            var words = String(sx.text || "").split(/\s+/).length;
+            var cov = sx.cover
+              ? '<img src="' + C.esc(sx.cover) + '" alt="" loading="lazy" style="width:100%;height:100%;object-fit:contain;background:#f4efe4">'
+              : '<span class="cm-quote" style="background:var(--yellow);font-size:2.2rem">' + (sx.emoji || "\ud83d\udcd6") + "</span>";
+            return '<article class="cm-card cm-card--row">' +
+              '<a class="cm-card__cover cm-card__cover--sm" href="story.html?id=' + encodeURIComponent(sx.id) + '">' + cov + "</a>" +
+              '<div class="cm-card__body">' +
+                '<a class="cm-card__title" href="story.html?id=' + encodeURIComponent(sx.id) + '">' + C.esc(sx.title) + "</a>" +
+                (sx.hook ? '<span class="cm-card__hook">' + C.esc(sx.hook) + "</span><br>" : "") +
+                '<span class="cm-time">' + C.esc(sx.date || "") + " · " + Math.max(1, Math.round(words / 200)) + " min</span>" +
+              "</div></article>";
+          }).join("");
+      }
 
       function card(p) {
         return '<article class="cm-card cm-card--row" data-post="' + p.id + '">' +
@@ -201,6 +241,35 @@
         }
       });
       root.addEventListener("click", async function (e) {
+        /* v264 · private accounts: request / cancel from the profile itself */
+        var rq = e.target.closest("[data-preq]");
+        if (rq) {
+          if (!C.signedIn()) { location.href = "login.html"; return; }
+          rq.disabled = true;
+          try {
+            await C.requestFollow(rq.getAttribute("data-preq"));
+            rq.classList.add("is-req");
+            rq.removeAttribute("data-preq");
+            rq.setAttribute("data-pcancel", pid);
+            rq.textContent = "Requested ⏳";
+            C.say("🔒 Request sent — they approve you from People.");
+          } catch (err) { C.say("Request failed — " + (err && err.message ? err.message : err)); }
+          rq.disabled = false;
+          return;
+        }
+        var rc = e.target.closest("[data-pcancel]");
+        if (rc) {
+          rc.disabled = true;
+          try {
+            await C.cancelFollowRequest(rc.getAttribute("data-pcancel"));
+            rc.classList.remove("is-req");
+            rc.removeAttribute("data-pcancel");
+            rc.setAttribute("data-preq", pid);
+            rc.textContent = "🔒 Request to follow";
+          } catch (err) {}
+          rc.disabled = false;
+          return;
+        }
         var t = e.target.closest("[data-pfol]");
         if (!t) return;
         if (!C.signedIn()) { location.href = "login.html"; return; }
@@ -454,7 +523,8 @@
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=252" defer></script>
-  <script src="js/gate.js?v=252" defer></script>
+  <script src="js/bar.js?v=266" defer></script>
+  <script src="js/gate.js?v=266" defer></script>
+  <script src="js/trial.js?v=266" defer></script>
 </body>
 </html>

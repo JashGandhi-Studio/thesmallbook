@@ -148,59 +148,46 @@
       ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
 
+  function firstSent(text, n) {
+    var m = String(text || "").replace(/\s+/g, " ").match(/[^.!?]+[.!?]+/g) || [];
+    return m.slice(0, n || 1).join(" ").trim();
+  }
+  function graveExcerpt(f) {
+    var deep = (window.GRAVE_DEEP || {})[f.id] || {};
+    var parts = [];
+    if (deep.origin) parts.push(firstSent(deep.origin, 1));
+    if (deep.fall) parts.push(firstSent(deep.fall, 1));
+    if (!parts.length) parts.push(firstSent(f.story, 2));
+    var out = parts.join(" ");
+    return out.length > 260 ? out.slice(0, 257).replace(/[,;:\s]+$/, "") + "…" : out;
+  }
   function buildGrave(f, opts) {
     const o = opts || {};
     const color = (CAT_META[f.category] || {}).color || "#9aa2ad";
     const d = document.createElement("div");
-    d.className = "grave" + (o.open ? " open" : "");
+    d.className = "grave";
     d.style.setProperty("--gcat", color);
     d.dataset.graveId = f.id;
     d.innerHTML = `
-      <div class="grave__head">
-        <div class="grave__stone">
-          <span class="grave__rip">R.I.P.</span>
-          <span class="grave__emoji">${f.emoji}</span>
-          <span class="grave__year">${esc(f.year)}</span>
-        </div>
-        <div class="grave__titles">
-          <div class="grave__name">${esc(f.name)}</div>
-          <div class="grave__epitaph">${esc(f.title)}</div>
-          <div class="grave__meta">
-            <span class="grave__loss">💸 ${esc(f.loss)}</span>
-            <span class="grave__cat" translate="no">${(CAT_META[f.category] || {}).emoji || "💀"} ${esc(f.category)}</span>
-            ${o.medal ? `<span class="grave__medal" translate="no">${o.medal} TOP BURN</span>` : ""}
-            ${FRESH.has(f.id) ? `<span class="grave__fresh" translate="no">🩸 FRESH GRAVE</span>` : ""}
-          </div>
-          <p class="grave__tease">${esc(f.story.split(". ")[0])}.</p>
-          <div class="grave__seals" translate="no">
-            <span class="grave__seal">☠️ FATAL MISTAKE</span>
-            <span class="grave__seal">🧠 FREE LESSON</span>
-            ${f.book ? `<span class="grave__seal grave__seal--book">📕 ANTIDOTE</span>` : ""}
-          </div>
-        </div>
-        <div class="grave__dig" aria-hidden="true"></div>
+      <div class="grave__stone">
+        <span class="grave__rip">R.I.P.</span>
+        <span class="grave__emoji">${f.emoji}</span>
+        <span class="grave__year">${esc(f.year)}</span>
       </div>
-      <div class="grave__body">
-        <div class="grave__cause" translate="no">${causeOf(f)}</div>
-        <div class="grave__section">
-          <div class="grave__label grave__label--story">📜 WHAT HAPPENED</div>
-          <p>${esc(f.story)}</p>
+      <div class="grave__main">
+        <div class="grave__name">${esc(f.name)}</div>
+        <div class="grave__epitaph">${esc(f.title)}</div>
+        <div class="grave__meta">
+          <span class="grave__loss">💸 ${esc(f.loss)}</span>
+          <span class="grave__cat" translate="no">${(CAT_META[f.category] || {}).emoji || "💀"} ${esc(f.category)}</span>
+          <span class="grave__cause" translate="no">${causeOf(f)}</span>
+          ${o.medal ? `<span class="grave__medal" translate="no">${o.medal} TOP BURN</span>` : ""}
+          ${FRESH.has(f.id) ? `<span class="grave__fresh" translate="no">🩸 FRESH GRAVE</span>` : ""}
         </div>
-        <div class="grave__section grave__section--mistake">
-          <div class="grave__label grave__label--mistake">☠️ THE FATAL MISTAKE</div>
-          <p>${esc(f.mistake)}</p>
-        </div>
-        <div class="grave__section grave__section--lesson">
-          <div class="grave__label grave__label--lesson">🧠 THE LESSON (FREE FOR YOU)</div>
-          <p>${esc(f.lesson)}</p>
-        </div>
-        ${f.book ? `
-        <a class="grave__book" href="book.html?id=${f.book}">
-          📕 THE ANTIDOTE — READ: <strong>${esc(f.bookTitle)}</strong> →
-        </a>` : ""}
-        <button class="grave__share" data-shareGrave="${f.id}" translate="no">🎴 SHARE THIS GRAVE</button>
+        <p class="grave__excerpt">${esc(graveExcerpt(f))}</p>
+        <span class="grave__hint" translate="no">📖 TAP FOR THE FULL AUTOPSY — HOW IT STARTED → THE FALL → THE LESSON</span>
       </div>`;
-    d.querySelector(".grave__head").addEventListener("click", () => d.classList.toggle("open"));
+    d.addEventListener("click", function () { openAutopsy(f); });
     return d;
   }
 
@@ -223,11 +210,10 @@
       return;
     }
 
-    const defaultView = !query && activeCat === "ALL" && sortMode === "default";
     const MEDALS = ["🥇", "🥈", "🥉"];
     results.forEach((f, i) => {
       const medal = sortMode === "burned" && i < 3 ? MEDALS[i] : "";
-      const g = buildGrave(f, { open: defaultView && i === 0, medal });
+      const g = buildGrave(f, { medal });
       g.style.setProperty("--i", i % 12);
       grid.appendChild(g);
     });
@@ -445,4 +431,368 @@
 
   render();
   observeReveals();
+
+  /* ============================================================
+     ⛏️ THE AUTOPSY — full-screen reading view (v260).
+     The grave card is the headstone; this is the story beneath it:
+     how it started → the fall → the fatal mistake → the lesson.
+     Opens like a page, reads like a case file, closes with ✕ / back.
+     ============================================================ */
+  var autopsyEl = null, autopsyLastFocus = null;
+
+  function closeAutopsy(fromHistory) {
+    if (!autopsyEl) return;
+    autopsyEl.classList.remove("autopsy--on");
+    document.documentElement.classList.remove("autopsy-lock");
+    var el = autopsyEl;
+    autopsyEl = null;
+    setTimeout(function () { el.remove(); }, 280);
+    if (!fromHistory && location.hash === "#grave=" + el.dataset.graveId) {
+      try { history.pushState("", document.title, location.pathname + location.search); } catch (e) {}
+    }
+    if (autopsyLastFocus && autopsyLastFocus.focus) { try { autopsyLastFocus.focus(); } catch (e) {} }
+  }
+
+  /* ============================================================
+     v264 · THE FACE OF THE GRAVE — every grave shows its photo,
+     fetched live from the free record (Wikipedia, keyless, CORS).
+     Display only — credited and linked back, never rehosted.
+     ============================================================ */
+  var graveImgCache = {};
+  function gFetch(url, ms) {
+    return new Promise(function (res) {
+      var done = false;
+      function out(v) { if (!done) { done = true; res(v); } }
+      try {
+        if (typeof fetch !== "function") return out(null);
+        var t = setTimeout(function () { out(null); }, ms || 9000);
+        fetch(url).then(function (r) { return r.json(); }).then(function (j) { clearTimeout(t); out(j); })
+          .catch(function () { clearTimeout(t); out(null); });
+      } catch (e) { out(null); }
+    });
+  }
+  function graveWikiImages(f) {
+    if (graveImgCache[f.id] !== undefined) return Promise.resolve(graveImgCache[f.id]);
+    var gen = "https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=" +
+      encodeURIComponent(f.name) + "&gsrlimit=1&prop=pageimages%7Cimages&piprop=thumbnail&pithumbsize=760" +
+      "&imlimit=50&format=json&origin=*";
+    return gFetch(gen).then(function (j) {
+      try {
+        var pages = j.query.pages, k = Object.keys(pages)[0], p = pages[k];
+        if (!p || p.missing !== undefined) { graveImgCache[f.id] = null; return null; }
+        var title = p.title;
+        var hero = p.thumbnail && p.thumbnail.source ? { url: p.thumbnail.source, title: title } : null;
+        var skip = /(icon|logo|edit|question|commons|wiki|ambox|arrow|symbol|stub|padlock|disambig|text_document|replace|translation|blank|flagmap|blank)/i;
+        var files = [];
+        try { (p.images || []).forEach(function (im) {
+          var t = im.title || "";
+          if (/\.(jpe?g|png|gif)$/i.test(t) && !skip.test(t) && files.length < 6) files.push(t.replace(/ /g, "_"));
+        }); } catch (e2) {}
+        if (!files.length) { graveImgCache[f.id] = { hero: hero, gallery: [], title: title }; return graveImgCache[f.id]; }
+        var info = "https://en.wikipedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=640&format=json&origin=*&titles=" +
+          encodeURIComponent(files.join("|"));
+        return gFetch(info).then(function (j2) {
+          var gallery = [];
+          try {
+            var pg = j2.query.pages;
+            Object.keys(pg).forEach(function (pk) {
+              var ii = pg[pk].imageinfo && pg[pk].imageinfo[0];
+              if (ii && ii.thumburl) gallery.push({ url: ii.thumburl, file: pg[pk].title.replace("File:", "") });
+            });
+          } catch (e3) {}
+          graveImgCache[f.id] = { hero: hero, gallery: gallery.slice(0, 4), title: title };
+          return graveImgCache[f.id];
+        });
+      } catch (e) { graveImgCache[f.id] = null; return null; }
+    });
+  }
+  function wikiLink(title) {
+    return "https://en.wikipedia.org/wiki/" + encodeURIComponent(String(title).replace(/ /g, "_"));
+  }
+  function mountGraveImages(f) {
+    var scroll = autopsyEl.querySelector(".autopsy__scroll");
+    var hero = autopsyEl.querySelector(".autopsy__hero");
+    if (!scroll || !hero) return;
+    var fig = document.createElement("figure");
+    fig.className = "autopsy__pic autopsy__pic--wait";
+    hero.after(fig);
+    graveWikiImages(f).then(function (r) {
+      if (!autopsyEl || !fig.parentNode) return;
+      if (!r || !r.hero) { fig.parentNode.removeChild(fig); return; }
+      fig.className = "autopsy__pic";
+      fig.innerHTML = '<img src="' + esc(r.hero.url) + '" alt="' + esc(f.name) + '" loading="lazy">' +
+        '<figcaption translate="no">📷 THE FACE OF THE GRAVE</figcaption>';
+      if (r.gallery && r.gallery.length > 1) {
+        var gal = document.createElement("div");
+        gal.className = "autopsy__gal";
+        gal.innerHTML = r.gallery.map(function (g) {
+          return '<figure><img src="' + esc(g.url) + '" alt="" loading="lazy"></figure>';
+        }).join("");
+        var bk = autopsyEl.querySelector(".autopsy__book") || autopsyEl.querySelector(".autopsy__more");
+        if (bk) bk.before(gal);
+      }
+    }).catch(function () { if (fig.parentNode) fig.parentNode.removeChild(fig); });
+  }
+
+  function openAutopsy(f) {
+    closeAutopsy(true);
+    autopsyLastFocus = document.activeElement;
+    var deep = (window.GRAVE_DEEP || {})[f.id] || {};
+    var origin = deep.origin || f.story;
+    var fall = deep.fall || "";
+    var color = (CAT_META[f.category] || {}).color || "#9aa2ad";
+    var idx = F.indexOf(f) + 1;
+    autopsyEl = document.createElement("div");
+    autopsyEl.className = "autopsy";
+    autopsyEl.dataset.graveId = f.id;
+    autopsyEl.setAttribute("role", "dialog");
+    autopsyEl.setAttribute("aria-label", f.name + " — the full story");
+    autopsyEl.innerHTML = `
+      <div class="autopsy__veil" data-autopsy-close></div>
+      <article class="autopsy__page">
+        <header class="autopsy__top">
+          <span class="autopsy__case" translate="no">CASE FILE #${idx} · ${esc(f.category)}</span>
+          <button class="autopsy__x" data-autopsy-close aria-label="Close the story">✕</button>
+        </header>
+        <div class="autopsy__progress" aria-hidden="true"><i></i></div>
+        <div class="autopsy__scroll">
+          <div class="autopsy__hero" style="--gcat:${color}">
+            <div class="autopsy__stone" aria-hidden="true">
+              <span class="autopsy__rip" translate="no">R.I.P.</span>
+              <span class="autopsy__emoji">${f.emoji}</span>
+              <span class="autopsy__year">${esc(f.year)}</span>
+            </div>
+            <h1 class="autopsy__name">${esc(f.name)}</h1>
+            <p class="autopsy__epitaph">${esc(f.title)}</p>
+            <div class="autopsy__stamps" translate="no">
+              <span class="autopsy__stamp autopsy__stamp--loss">💸 ${esc(f.loss)}</span>
+              <span class="autopsy__stamp">${causeOf(f)}</span>
+            </div>
+          </div>
+
+          <section class="autopsy__sec">
+            <h2 class="autopsy__h" translate="no">🌱 HOW IT STARTED</h2>
+            <p>${esc(origin)}</p>
+          </section>
+
+          ${fall ? `
+          <section class="autopsy__sec">
+            <h2 class="autopsy__h" translate="no">📉 THE FALL</h2>
+            <p>${esc(fall)}</p>
+          </section>` : ""}
+
+          <section class="autopsy__sec autopsy__sec--mistake">
+            <h2 class="autopsy__h autopsy__h--mistake" translate="no">☠️ THE FATAL MISTAKE</h2>
+            <p>${esc(f.mistake)}</p>
+          </section>
+
+          <section class="autopsy__sec autopsy__sec--lesson">
+            <h2 class="autopsy__h autopsy__h--lesson" translate="no">🧠 THE LESSON — FREE FOR YOU</h2>
+            <p>${esc(f.lesson)}</p>
+          </section>
+
+          ${f.book ? `
+          <a class="autopsy__book" href="book.html?id=${f.book}">
+            <span translate="no">📕 THE ANTIDOTE</span>
+            <strong>${esc(f.bookTitle || "")} →</strong>
+          </a>` : ""}
+
+          <button class="grave__share" data-shareGrave="${f.id}" translate="no">🎴 SHARE THIS GRAVE</button>
+          <p class="autopsy__fine" translate="no">They paid the tuition. Your lesson is free. 💛</p>
+        </div>
+      </article>`;
+    document.body.appendChild(autopsyEl);
+    document.documentElement.classList.add("autopsy-lock");
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { autopsyEl.classList.add("autopsy--on"); });
+    });
+    var scroller = autopsyEl.querySelector(".autopsy__scroll");
+    var bar = autopsyEl.querySelector(".autopsy__progress i");
+    scroller.addEventListener("scroll", function () {
+      var max = scroller.scrollHeight - scroller.clientHeight;
+      bar.style.transform = "scaleX(" + (max > 0 ? Math.min(1, scroller.scrollTop / max) : 1) + ")";
+    }, { passive: true });
+    try { history.pushState("", document.title, "#grave=" + f.id); } catch (e) {}
+    setTimeout(function () { autopsyEl && autopsyEl.querySelector(".autopsy__x").focus(); }, 350);
+    /* v264 · the face of the grave — fetched quietly, hidden offline */
+    try { mountGraveImages(f); } catch (e) {}
+  }
+
+  document.addEventListener("click", function (e) {
+    if (e.target.closest("[data-autopsy]")) {
+      var id = e.target.closest("[data-autopsy]").getAttribute("data-autopsy");
+      var f = F.find(function (x) { return x.id === id; });
+      if (f) openAutopsy(f);
+      return;
+    }
+    if (e.target.closest("[data-autopsy-close]")) closeAutopsy();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && autopsyEl) closeAutopsy();
+  });
+  window.addEventListener("popstate", function () {
+    if (autopsyEl) closeAutopsy(true);
+  });
+
+  /* v261 · export */
+  window.TSB_GRAVE = { openAutopsy: openAutopsy, CAT_META: CAT_META };
+
+  /* ============================================================
+     v266 · FRESH GRAVES — the grid refills itself, silently.
+     Keyless public data (Wikipedia bankruptcy registers + Hacker
+     News post-mortems), cached six hours, hidden when offline.
+     ============================================================ */
+  function gFetchJSON(url, ms) {
+    return new Promise(function (res) {
+      var done = false;
+      function out(v) { if (!done) { done = true; res(v); } }
+      try {
+        if (typeof fetch !== "function") return out(null);
+        var t = setTimeout(function () { out(null); }, ms || 9000);
+        fetch(url).then(function (r) { return r.json(); }).then(function (j) { clearTimeout(t); out(j); })
+          .catch(function () { clearTimeout(t); out(null); });
+      } catch (e) { out(null); }
+    });
+  }
+  function wikiBankrupt(year) {
+    var cats = ["Category:Companies that filed for Chapter 11 bankruptcy in " + year, "Category:" + year + " bankruptcies"];
+    function tryCat(i) {
+      if (i >= cats.length) return Promise.resolve([]);
+      var url = "https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=" +
+        encodeURIComponent(cats[i]) + "&cmlimit=25&cmtype=page&format=json&origin=*";
+      return gFetchJSON(url).then(function (j) {
+        var ms = [];
+        try { ms = (j.query.categorymembers || []).map(function (m) { return m.title; })
+          .filter(function (t) { return !/^(List|Category|Outline|Template)/i.test(t); }); } catch (e) {}
+        return ms.length ? ms : tryCat(i + 1);
+      });
+    }
+    return tryCat(0);
+  }
+  function wikiExtract(title) {
+    var url = "https://en.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=1&exintro=1&format=json&origin=*&titles=" +
+      encodeURIComponent(title);
+    return gFetchJSON(url).then(function (j) {
+      try { var pages = j.query.pages, k = Object.keys(pages)[0];
+        return { title: pages[k].title, text: pages[k].extract || "" }; } catch (e) { return null; }
+    });
+  }
+  function hnStories(q, days) {
+    var since = Math.floor(Date.now() / 1000) - (days || 21) * 86400;
+    var url = "https://hn.algolia.com/api/v1/search_by_date?query=" + encodeURIComponent(q) +
+      "&tags=story&numericFilters=created_at_i>" + since + "&hitsPerPage=8";
+    return gFetchJSON(url).then(function (j) {
+      try { return (j.hits || []).filter(function (h) { return h.title; }).map(function (h) {
+        return { title: h.title, url: h.url || ("https://news.ycombinator.com/item?id=" + h.objectID),
+          points: h.points || 0, comments: h.num_comments || 0 };
+      }); } catch (e) { return []; }
+    });
+  }
+  function firstSentences(text, n) {
+    var m = String(text || "").replace(/\s+/g, " ").match(/[^.!?]+[.!?]+/g) || [];
+    return m.slice(0, n || 2).join(" ").trim();
+  }
+  function buildWireData() {
+    var KEY = "tsb_wire_cache", TTL = 6 * 3600 * 1000;
+    try { var c = JSON.parse(localStorage.getItem(KEY)); if (c && Date.now() - c.t < TTL) return Promise.resolve(c.data); } catch (e) {}
+    var year = new Date().getFullYear();
+    return Promise.all([wikiBankrupt(year), wikiBankrupt(year - 1), hnStories("startup shut down", 21), hnStories("bankruptcy", 21)])
+      .then(function (r) {
+        var graves = (r[0] || []).concat(r[1] || []).slice(0, 16);
+        var seen = {}, stories = [];
+        (r[2] || []).concat(r[3] || []).forEach(function (s) {
+          var k = s.title.toLowerCase();
+          if (seen[k]) return; seen[k] = 1;
+          if (/ask hn|show hn|tell hn/i.test(s.title)) return;
+          stories.push(s);
+        });
+        stories.sort(function (a, b) { return b.points - a.points; });
+        stories = stories.slice(0, 10);
+        var data = { graves: graves, stories: stories, year: year };
+        try { localStorage.setItem(KEY, JSON.stringify({ t: Date.now(), data: data })); } catch (e) {}
+        return data;
+      });
+  }
+  function freshBlock(data) {
+    var wrap = document.createElement("div");
+    wrap.id = "freshWrap";
+    var h = '<div class="section-head freshhead"><h2 translate="no">🩸 Fresh Graves — fetched live</h2><div class="line"></div></div>' +
+      '<p class="freshtxt" translate="no">The graveyard is never finished. Newly bankrupt companies from the public registers + failure post-mortems filed by founders who watched it happen. <b>History is still writing these; read them while they\u2019re fresh.</b></p>';
+    var cards = (data.companies || []).map(function (c) {
+      return '<div class="fgrave"><div class="fgrave__top"><span class="fgrave__rip" translate="no">R.I.P.</span><span class="fgrave__yr">2025–' + new Date().getFullYear() + '</span></div>' +
+        "<b>" + esc(c.name) + "</b>" +
+        "<p>" + esc(c.story) + "</p>" +
+        '<button class="agrave agrave--sm" type="button" data-wiki="' + esc(c.title) + '" translate="no">📄 READ THE FREE RECORD \\u2192</button></div>';
+    }).join("");
+    var reports = (data.stories || []).map(function (s) {
+      var dom = ""; try { dom = s.url ? new URL(s.url).hostname.replace(/^www\./, "") : "—"; } catch (e) { dom = "—"; }
+      return '<a class="freport" href="' + esc(s.url) + '" target="_blank" rel="noopener">' +
+        '<span class="freport__tag" translate="no">FIELD REPORT</span>' +
+        "<b>" + esc(s.title) + "</b>" +
+        "<i>" + esc(dom) + " · ▲ " + s.points + " · 💬 " + s.comments + "</i></a>";
+    }).join("");
+    wrap.innerHTML = h +
+      (cards ? '<div class="fgravegrid">' + cards + "</div>" : "") +
+      (reports ? '<div class="frepgrid">' + reports + "</div>" : "");
+    return wrap;
+  }
+  setTimeout(function () {
+    var grid = document.getElementById("graveGrid");
+    if (!grid) return;
+    buildWireData().then(function (w) {
+      var companies = (w.graves || []).slice(0, 6);
+      var extracts = companies.map(function (c) {
+        return wikiExtract(c).then(function (r) {
+          return { name: c, story: r && r.text ? firstSentences(r.text, 2) : "", title: r && r.title ? r.title : c };
+        });
+      });
+      return Promise.all(extracts).then(function (rows) {
+        var data = { companies: rows.filter(function (r) { return r.story; }), stories: (w.stories || []).slice(0, 6) };
+        if (!data.companies.length && !data.stories.length) return;
+        grid.parentNode.insertBefore(freshBlock(data), grid.nextSibling);
+      });
+    }).catch(function () {});
+  }, 2600);
+
+  /* the free-record reader — same UI as the autopsy, in-app */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-wiki]");
+    if (!b) return;
+    var title = b.getAttribute("data-wiki");
+    var ov = document.createElement("div");
+    ov.className = "autopsy autopsy--doc autopsy--on";
+    ov.id = "tsbDoc";
+    ov.innerHTML = '<div class="autopsy__veil" data-doc-close></div>' +
+      '<article class="autopsy__page">' +
+      '<header class="autopsy__top"><span class="autopsy__case" translate="no">THE FREE RECORD · WIKIPEDIA</span>' +
+      '<button class="autopsy__x" data-doc-close aria-label="Close">✕</button></header>' +
+      '<div class="autopsy__progress"><i style="transform:scaleX(1)"></i></div>' +
+      '<div class="autopsy__scroll" id="tsbDocBody"><div class="askel" style="height:22px;width:60%"></div><div class="askel"></div><div class="askel"></div><div class="askel" style="width:80%"></div></div>' +
+      "</article>";
+    document.body.appendChild(ov);
+    document.documentElement.classList.add("autopsy-lock");
+    wikiExtract(title).then(function (r) {
+      var body = document.getElementById("tsbDocBody");
+      if (!body) return;
+      var paras = r && r.text ? r.text.split(/\n+/).filter(function (p) { return p.length > 60; }).slice(0, 8) : [];
+      body.innerHTML = paras.length
+        ? paras.map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") +
+          '<a class="autopsy__doclink" target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/' + encodeURIComponent(String(title).replace(/ /g, "_")) + '" translate="no">READ THE FULL RECORD \u2192</a>'
+        : '<p class="freshtxt">The record is quiet on this one.</p>';
+    });
+  });
+  document.addEventListener("click", function (e) {
+    if (e.target.closest("[data-doc-close]")) {
+      var el = document.getElementById("tsbDoc");
+      if (el) { el.classList.remove("autopsy--on"); setTimeout(function () { if (el.parentNode) el.remove(); }, 260); }
+      document.documentElement.classList.remove("autopsy-lock");
+    }
+  });
+
+  /* deep-link: graveyard.html#grave=thomas-cook opens the reader */
+  if (/^#grave=/.test(location.hash)) {
+    var deepId = decodeURIComponent(location.hash.replace("#grave=", ""));
+    var deepF = F.find(function (x) { return x.id === deepId; });
+    if (deepF) setTimeout(function () { openAutopsy(deepF); }, 600);
+  }
 })();

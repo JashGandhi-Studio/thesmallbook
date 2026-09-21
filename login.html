@@ -2,6 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+    <meta property="og:title" content="Sign in — TheSmallBook">
+  <meta property="og:description" content="Create a free account or sign in — your shelf, streak and progress follow you to every device. 13+ with an honest age check.">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=266">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://thesmallbook.in/login.html">
+  <meta property="og:type" content="website">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>You — TheSmallBook</title>
   <meta name="description" content="Your TheSmallBook window: sign in with Google to sync your shelf, streak and progress — then tune the app: darkness, text size, colour and language.">
@@ -21,30 +29,171 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=252">
-  <link rel="stylesheet" href="css/store.css?v=252">
+  <link rel="stylesheet" href="css/style.css?v=266">
+  <link rel="stylesheet" href="css/store.css?v=266">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <!-- v263 · the login skin lives in css/style.css (the .lg layer) -->
 </head>
 <body class="youpage">
 
   <!-- ============ SIGNED-OUT: PREMIUM SIGN-IN INTERFACE ============ -->
   <div class="youview" id="view-signin" hidden>
     <a class="youpage__x" href="index.html" aria-label="Back to the library">✕</a>
-    <main class="youcard">
-      <div class="youcard__icon" aria-hidden="true">📕</div>
-      <h1>SAVE WHAT YOU READ</h1>
-      <p class="youcard__s">One free account. Your shelf, streak and progress follow you to every device.</p>
-      <div class="youperk"><span aria-hidden="true"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span><div><b>Your shelf, synced</b><i>Phone, laptop, anywhere</i></div></div>
-      <div class="youperk"><span aria-hidden="true">🔥</span><div><b>Streaks that stick</b><i>Progress that never resets</i></div></div>
-      <div class="youperk"><span aria-hidden="true">✍️</span><div><b>Post your own</b><i>Quotes and lessons, your name on them</i></div></div>
+    <main class="youcard lgcard">
+      <header class="lghero">
+        <span class="lghero__shape lghero__shape--ring" aria-hidden="true"></span>
+        <span class="lghero__shape lghero__shape--diamond" aria-hidden="true"></span>
+        <span class="lghero__chip" aria-hidden="true">📕</span>
+        <span class="lghero__eyebrow">ACCOUNT ACCESS</span>
+        <h1 class="lghero__title" id="lgTitle">CREATE ACCOUNT</h1>
+        <p class="lghero__sub" id="lgSub">Your shelf, streak and progress follow you to every device.</p>
+        <div class="lghero__perks">
+          <span>📚 Shelf synced</span><span>🔥 Streaks stick</span><span>✍️ Post your own</span>
+        </div>
+      </header>
+      <div class="lgsheet">
+      <div class="yotabs" role="tablist">
+        <button class="yotab on" id="tabCreate" type="button" role="tab" aria-selected="true">CREATE ACCOUNT</button>
+        <button class="yotab" id="tabSignin" type="button" role="tab" aria-selected="false">SIGN IN</button>
+      </div>
+
+      <!-- v257 · the Google banner leads BOTH tabs — first time it ends at a
+           short "claim your @name + set a password" menu, never a silent drop-in -->
       <button class="yougoogle" id="signinGoogle">
         <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.3 0-9.7-3.4-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.2 5.2C36.9 39.2 44 34 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg>
         Continue with Google
       </button>
+      <div class="yodiv"><span>or continue with email</span></div>
+
+      <form class="yoform" id="paneCreate" novalidate>
+        <p class="lgsec">WHO YOU ARE</p>
+        <div class="yorow">
+          <input class="yoin" id="suFirst" type="text" maxlength="20" autocomplete="given-name" placeholder="First name">
+          <input class="yoin" id="suLast" type="text" maxlength="20" autocomplete="family-name" placeholder="Last name">
+        </div>
+        <div class="youser">
+          <span class="youser__at">@</span>
+          <input class="yoin" id="suUser" type="text" maxlength="20" autocomplete="username" spellcheck="false" placeholder="username — small letters, numbers, _">
+          <span class="youser__state" id="suUserState" aria-live="polite"></span>
+        </div>
+        <input class="yoin" id="suName" type="text" maxlength="24" autocomplete="nickname" placeholder="Reader name — what people see (defaults to your first name)">
+        <p class="lgsec">YOUR LOGIN</p>
+        <div class="lgi">
+          <input class="yoin" id="suMail" type="email" autocomplete="email" placeholder="Email — you sign in with this">
+          <span class="lgi__ic" aria-hidden="true">✉️</span>
+        </div>
+        <div class="yopass lgi">
+          <input class="yoin" id="suPass" type="password" autocomplete="new-password" minlength="8" placeholder="Password — at least 8 characters">
+          <span class="lgi__ic" aria-hidden="true">🔒</span>
+          <button class="yoeye" type="button" data-eye="suPass" aria-label="Show password">👁</button>
+        </div>
+        <p class="lgsec">VERIFY YOUR AGE</p>
+        <div class="yoage">
+          <span class="yoage__t">🎂 Your birth <b>month &amp; year</b> — only the year is kept, never the full date</span>
+          <div class="yoage__row">
+            <select class="yoin yoage__m" id="suMonth" aria-label="Birth month">
+              <option value="">Month</option>
+              <option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option>
+              <option>May</option><option>Jun</option><option>Jul</option><option>Aug</option>
+              <option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option>
+            </select>
+            <select class="yoin yoage__y" id="suYear" aria-label="Birth year"></select>
+          </div>
+        </div>
+        <label class="yotick">
+          <input type="checkbox" id="suAdult">
+          <span class="yotick__box" aria-hidden="true">✓</span>
+          <span class="yotick__t">I confirm I am <b>13 or older</b>, and I accept the <a href="about.html#terms">terms</a> &amp; <a href="about.html#privacy">privacy policy</a>. Only my birth year is kept — never my full birthday.</span>
+        </label>
+        <button class="yogo" id="btnCreate" type="submit">CREATE MY ACCOUNT →</button>
+      </form>
+
+      <form class="yoform" id="paneSignin" hidden novalidate>
+        <div class="lgi">
+          <input class="yoin" id="siMail" type="text" autocomplete="username" spellcheck="false" placeholder="Email or @username — both work">
+          <span class="lgi__ic" aria-hidden="true">✉️</span>
+        </div>
+        <div class="yopass lgi">
+          <input class="yoin" id="siPass" type="password" autocomplete="current-password" placeholder="Password">
+          <span class="lgi__ic" aria-hidden="true">🔒</span>
+          <button class="yoeye" type="button" data-eye="siPass" aria-label="Show password">👁</button>
+        </div>
+        <button class="yogo" id="btnSignin" type="submit">SIGN IN →</button>
+        <button class="yoforgot" id="btnForgot" type="button">Forgot password? Email me a reset code</button>
+        <button class="yoforgot" id="btnCodeLogin" type="button" style="margin-top:2px;">✉️ Or sign in with a code I'll get by email</button>
+        <p class="yohint">Joined with Google before? The Google button above still works — or send yourself a code and choose a password for the same account.</p>
+      </form>
+
+      <!-- v258 · THE CODE — one pane, three jobs: confirm a new account,
+           sign in by email code, or unlock a new password after "forgot" -->
+      <form class="yoform" id="paneCode" hidden novalidate>
+        <p class="yocode__t" id="codeTitle">📧 Check your inbox — enter the 6-digit code</p>
+        <input class="yoin yocode__in" id="codeIn" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••" aria-label="The 6-digit code from your email">
+        <div class="yopass lgi" id="codePwWrap" hidden>
+          <input class="yoin" id="codePw" type="password" autocomplete="new-password" minlength="8" placeholder="Choose a new password — at least 8 characters">
+          <span class="lgi__ic" aria-hidden="true">🔒</span>
+          <button class="yoeye" type="button" data-eye="codePw" aria-label="Show password">👁</button>
+        </div>
+        <button class="yogo" id="btnCode" type="submit">VERIFY & CONTINUE →</button>
+        <button class="yoforgot" id="btnCodeResend" type="button">Resend the code</button>
+        <button class="yoforgot" id="btnCodeBack" type="button">← Back to sign in</button>
+        <p class="yocode__hint">The code arrives by email and works once. Nothing is posted from your email account.</p>
+      </form>
+
+      <div class="yostrip" id="yoStrip" hidden></div>
+      </div>
+
       <a class="youskip" href="index.html">Keep reading without an account</a>
       <p class="youfine">By continuing you agree to our <a href="about.html#terms">terms</a> and <a href="about.html#privacy">privacy policy</a>. Free to read. No card. We never post without asking.</p>
+    </main>
+  </div>
+
+  <!-- ============ v257 · FIRST GOOGLE VISIT: THE FINISH-LINE ============
+       Google's own screen already asked "allow TheSmallBook to see your
+       name, email and photo?" — this menu shows exactly that, then asks
+       for the two things Google can't give: an @username and a password.
+       From now on those two alone sign the reader in, Google or not. -->
+  <div class="youview" id="view-finish" hidden>
+    <a class="youpage__x" href="index.html" aria-label="Back to the library">✕</a>
+    <main class="youcard lgcard">
+      <header class="lghero lghero--fin">
+        <span class="lghero__shape lghero__shape--ring" aria-hidden="true"></span>
+        <span class="lghero__chip" aria-hidden="true">🔑</span>
+        <span class="lghero__eyebrow">ONE LAST STEP</span>
+        <p class="lghero__sub">You approved Google sharing these with TheSmallBook — they stay private and we never post anywhere.</p>
+      </header>
+      <div class="lgsheet">
+      <div class="yofinish__who" id="finWho">
+        <span class="acc__ava" id="finAva" aria-hidden="true">📕</span>
+        <span class="yofinish__whot">
+          <b id="finName">Reader</b>
+          <i id="finMail">—</i>
+        </span>
+        <span class="yofinish__ok">✓ approved by you on Google</span>
+      </div>
+      <form class="yoform" id="paneFinish" novalidate>
+        <div class="youser">
+          <span class="youser__at">@</span>
+          <input class="yoin" id="finUser" type="text" maxlength="20" autocomplete="username" spellcheck="false" placeholder="pick your username — small letters, numbers, _">
+          <span class="youser__state" id="finUserState" aria-live="polite"></span>
+        </div>
+        <div class="yopass">
+          <input class="yoin" id="finPass" type="password" autocomplete="new-password" minlength="8" placeholder="Set a password — at least 8 characters">
+          <button class="yoeye" type="button" data-eye="finPass" aria-label="Show password">👁</button>
+        </div>
+        <p class="yohint">From tomorrow, <b>@username + this password</b> signs you in on any phone — with or without Google. Your username and password are the forever keys.</p>
+        <label class="yotick">
+          <input type="checkbox" id="finAdult">
+          <span class="yotick__box" aria-hidden="true">✓</span>
+          <span class="yotick__t">I confirm I am <b>13 or older</b>, and I accept the <a href="about.html#terms">terms</a> &amp; <a href="about.html#privacy">privacy policy</a>.</span>
+        </label>
+        <button class="yogo" id="btnFinish" type="submit">CLAIM MY @NAME →</button>
+        <button class="yoforgot" id="btnFinSkip" type="button">Skip for now — just keep using Google</button>
+      </form>
+      <div class="yostrip" id="finStrip" hidden></div>
+      </div>
     </main>
   </div>
 
@@ -112,142 +261,36 @@
       </section>
 
       <section class="youwin__set">
-        <h2>🎛️ APP SETTINGS</h2>
-        <div class="yset__row">
-          <span class="yset__lbl">Darkness</span>
-          <div class="yset__ctl" id="themeRow">
-            <button class="setopt setopt--sm" data-theme="light">☀️ Light</button>
-            <button class="setopt setopt--sm" data-theme="dark">🌙 Dark</button>
-          </div>
+        <h2>🎛️ SETTINGS</h2>
+        <p class="yset__sub">Every setting has its own room. Open a department, change what you need, back in one tap.</p>
+        <div class="ydept">
+          <button class="ydept__row" data-sub="subActivity"><span class="ydept__ic">📊</span><span class="ydept__t">My activity<b>Your reading ring, streak & life in the app</b></span><i>→</i></button>
+          <button class="ydept__row" data-sub="subLook"><span class="ydept__ic">🎨</span><span class="ydept__t">Look &amp; feel<b>Dark mode · library view · text &amp; app size · fonts · bar colour</b></span><i>→</i></button>
+          <button class="ydept__row" data-sub="subNotif"><span class="ydept__ic">🔔</span><span class="ydept__t">Notifications &amp; sound<b>Pop-ups · ding · push when the app is closed</b></span><i>→</i></button>
+          <button class="ydept__row" data-sub="subPrivacy"><span class="ydept__ic">🔒</span><span class="ydept__t">Privacy<b>Public account · last seen · read receipts · requests</b></span><i>→</i></button>
+          <button class="ydept__row" data-sub="subAccount"><span class="ydept__ic">👤</span><span class="ydept__t">Account &amp; keys<b>Name · @name · password · my ID</b></span><i>→</i></button>
         </div>
-        <div class="yset__row">
-          <span class="yset__lbl">Library look</span>
-          <div class="yset__ctl" id="libviewRow">
-            <button class="setopt setopt--sm" data-libview="cozy" title="Cozy cards">🛋️</button>
-            <button class="setopt setopt--sm" data-libview="compact" title="Compact grid">🗂️</button>
-            <button class="setopt setopt--sm" data-libview="list" title="List rows">📑</button>
-          </div>
+        <div class="yquick">
+          <button class="setbtn" id="langBtn">🌐 English</button>
+          <button class="setbtn" data-repref>🎯 Re-tune my library</button>
+          <button class="setbtn" data-install>📲 Install on home screen</button>
         </div>
-        <div class="yset__row">
-          <span class="yset__lbl">Text size</span>
-          <div class="yset__ctl" id="fontRow">
-            <button class="setopt setopt--sm" data-font="0">A</button>
-            <button class="setopt setopt--sm setopt--md" data-font="1">A</button>
-            <button class="setopt setopt--sm setopt--lg" data-font="2">A</button>
-          </div>
-        </div>
-        <div class="yset__row">
-          <span class="yset__lbl">App size</span>
-          <div class="yset__ctl">
-            <button class="setopt setopt--sm" data-appsize="small" title="Smaller">🤏</button>
-            <button class="setopt setopt--sm" data-appsize="default" title="Default (locked)">📱</button>
-            <button class="setopt setopt--sm" data-appsize="big" title="Big">🔍</button>
-            <button class="setopt setopt--sm" data-appsize="bigger" title="Bigger">🔎</button>
-          </div>
-        </div>
-        <div class="yset__row">
-          <span class="yset__lbl">Font style</span>
-          <div class="yset__ctl">
-            <button class="setopt setopt--sm" data-fontstyle="modern" title="Modern">🖋️</button>
-            <button class="setopt setopt--sm" data-fontstyle="serif" title="Bookish serif">📜</button>
-            <button class="setopt setopt--sm" data-fontstyle="clean" title="Clean sans">🔳</button>
-          </div>
-        </div>
-        <div class="yset__row" data-installwrap>
-          <span class="yset__lbl">Install app</span>
-          <div class="yset__ctl">
-            <button class="setopt setopt--sm" data-install title="Install on home screen">📲 Home screen</button>
-          </div>
-        </div>
-        <div class="yset__row">
-          <span class="yset__lbl">Your name</span>
-          <div class="yset__ctl" style="gap:6px;">
-            <input id="youNameInput" class="setinput" type="text" maxlength="24" placeholder="Display name">
-            <button class="setopt setopt--sm" id="youNameSave" title="Save name">✓</button>
-          </div>
-        </div>
-        <div class="yset__row">
-          <span class="yset__lbl">Bar colour</span>
-          <div class="yset__ctl yset__sw" id="accentRow">
-            <button data-accent="#ffc800" style="--sw:#ffc800" aria-label="Yellow"></button>
-            <button data-accent="#ff8a3d" style="--sw:#ff8a3d" aria-label="Orange"></button>
-            <button data-accent="#ff90e8" style="--sw:#ff90e8" aria-label="Pink"></button>
-            <button data-accent="#00c48c" style="--sw:#00c48c" aria-label="Green"></button>
-            <button data-accent="#4d7cff" style="--sw:#4d7cff" aria-label="Blue"></button>
-          </div>
-        </div>
-        <div class="yset__row">
-          <span class="yset__lbl">My ID</span>
-          <div class="yset__ctl">
-            <code id="youId" class="cm-idcode">—</code>
-            <button class="setopt setopt--sm" id="youIdCopy" title="Copy my ID">⧉</button>
-          </div>
-        </div>
-        <div class="yset__row">
-          <span class="yset__lbl">Pop-up alerts</span>
-          <div class="yset__ctl">
-            <button class="setopt setopt--sm" id="youPopBtn">On ✓</button>
-            <span class="cm-time" id="youPopHint">toast pops at the top</span>
-          </div>
-        </div>
-        <div class="yset__row">
-          <span class="yset__lbl">Notif sound</span>
-          <div class="yset__ctl" id="soundRowY">
-            <button class="setopt setopt--sm" data-sound="ding" title="Soft ding">🔔</button>
-            <button class="setopt setopt--sm" data-sound="chime" title="Bright chime">🎐</button>
-            <button class="setopt setopt--sm" data-sound="pop" title="Pop">🔊</button>
-            <button class="setopt setopt--sm" data-sound="off" title="Off">🔇</button>
-          </div>
-        </div>
-        <div class="yset__row">
-          <span class="yset__lbl">Sound test</span>
-          <div class="yset__ctl"><button class="setopt setopt--sm" id="youSoundTest" title="Play a test sound">▶ Play</button></div>
-        </div>
-        <div class="yset__row">
-          <span class="yset__lbl">Outside the app</span>
-          <div class="yset__ctl">
-            <button class="setopt setopt--sm" id="youPushBtn">📲 Enable push</button>
-            <span class="cm-time">works even when app closed</span>
-          </div>
-        </div>
-        <div class="yset__row">
-          <span class="yset__lbl">Public account</span>
-          <div class="yset__ctl">
-            <button class="setopt setopt--sm" id="youPublicBtn">Public ✓</button>
-            <span class="cm-time" id="youPublicHint">shown in 👥 People</span>
-          </div>
-        </div>
-        <!-- v250 · PRESENCE — you decide what people can see about you -->
-        <div class="yset__row">
-          <span class="yset__lbl">Last seen</span>
-          <div class="yset__ctl ysw">
-            <button class="ysw__sw on" id="youLastBtn" type="button" role="switch" aria-checked="true" aria-label="Show my last seen"><i></i></button>
-            <span class="ysw__lbl" id="youLastLbl">Visible</span>
-            <span class="cm-time" id="youLastHint">readers see “last seen 12m ago”</span>
-          </div>
-        </div>
-        <div class="yset__row">
-          <span class="yset__lbl">Read receipts</span>
-          <div class="yset__ctl ysw">
-            <button class="ysw__sw on" id="youHearBtn" type="button" role="switch" aria-checked="true" aria-label="Show that I read a story"><i></i></button>
-            <span class="ysw__lbl" id="youHearLbl">On</span>
-            <span class="cm-time" id="youHearHint">writers see “read by N”</span>
-          </div>
-        </div>
-        <div class="yset__row" id="youReqRow" hidden>
-          <span class="yset__lbl">Follow requests</span>
-          <div class="yset__ctl">
-            <a class="setopt setopt--sm" id="youReqLink" href="stories.html?tab=people">0 waiting →</a>
-            <span class="cm-time">your private account: accept them in 👥 People</span>
-          </div>
-        </div>
-        <div class="yset__row">
-          <button class="setbtn" data-repref style="width:100%;">🎯 Change preferences — re-tune my library</button>
-        </div>
-        <div class="yset__row">
-          <span class="yset__lbl">Language</span>
-          <div class="yset__ctl"><button class="setbtn setbtn--sm" id="langBtn">🌐 English</button></div>
-        </div>
+      </section>
+
+      <!-- v266 · THE IDEA AUTOPSY — the graveyard cross-examines your startup -->
+      <section class="iaudban-wrap">
+        <button class="iaudban" data-sub="subAudit" type="button">
+          <span class="iaudban__deco iaudban__deco--ring" aria-hidden="true"></span>
+          <span class="iaudban__deco iaudban__deco--sq" aria-hidden="true"></span>
+          <span class="iaudban__deco iaudban__deco--tri" aria-hidden="true"></span>
+          <span class="iaudban__chip" aria-hidden="true">⚰️</span>
+          <span class="iaudban__main">
+            <span class="iaudban__eyebrow">FROM THE GRAVEYARD · 308 CASE FILES</span>
+            <span class="iaudban__t">THE IDEA AUTOPSY</span>
+            <span class="iaudit__sub">About to build something? The graveyard cross-examines it — four honest meters, an ordered plan, and the companies that already died trying.</span>
+          </span>
+          <span class="iaudban__go">CROSS-EXAMINE MY IDEA ⚡</span>
+        </button>
       </section>
 
       <!-- About — professional placement, not hidden at the very bottom. You → guide in one tap -->
@@ -286,17 +329,109 @@
         <p style="margin:8px 0 0;font:500 10px 'Space Grotesk',sans-serif;color:#8f8a80;line-height:1.4;text-align:center;">By using TheSmallBook you agree to our Terms & Privacy. Your data stays on your device and syncs only if you sign in with Google. No ads, no trackers, no selling your reading history.</p>
       </section>
 
+      <!-- v264 · THE SETTINGS ROOMS — each department opens as its own window -->
+      <section class="accsub" id="subActivity" hidden>
+        <header class="accsub__top"><button class="accsub__back" data-subback aria-label="Back to settings">←</button><span class="accsub__t">📊 My activity</span><span class="accsub__tag" id="actLvl">—</span></header>
+        <div class="accsub__body">
+          <div class="actlevel">
+            <div class="actlevel__row"><span class="actlevel__name" id="actLevelName">Level</span><span class="actlevel__next" id="actLevelNext"></span></div>
+            <div class="levelbar"><i id="actLevelFill"></i></div>
+          </div>
+          <div class="actdonut">
+            <div class="actdonut__ring">
+              <svg viewBox="0 0 140 140" aria-hidden="true">
+                <circle class="actdonut__bg" cx="70" cy="70" r="56"></circle>
+                <circle class="actdonut__fg" id="actArc" cx="70" cy="70" r="56"></circle>
+              </svg>
+              <div class="actdonut__mid"><b id="actPct">0%</b><span>library read</span></div>
+            </div>
+            <div class="actdonut__side">
+              <div class="actk"><b id="actLessons">0</b><span>🧠 lessons read</span></div>
+              <div class="actk"><b id="actBooks">0</b><span>📕 books finished</span></div>
+              <div class="actk"><b id="actBadges">0</b><span>🏅 badges earned</span></div>
+            </div>
+          </div>
+          <div class="actcards">
+            <div class="actcard actcard--a"><span>🔥 FREQUENCY</span><b id="actStreak">0</b><small>day streak</small></div>
+            <div class="actcard actcard--b"><span>📆 VISITS</span><b id="actVisits">0</b><small>times here</small></div>
+            <div class="actcard actcard--c"><span>🤍 ON SHELF</span><b id="actSaved">0</b><small>saved to read</small></div>
+          </div>
+          <div class="actpills">
+            <a class="actpill" href="profile.html?id=me"><b id="actPosts">0</b> posts</a>
+            <a class="actpill" href="profile.html?id=me"><b id="actLikes">0</b> likes</a>
+            <a class="actpill" href="profile.html?id=me&view=followers"><b id="actFols">0</b> followers</a>
+          </div>
+          <p class="actfine">Lessons, books and badges live on this device and sync when you sign in.</p>
+        </div>
+      </section>
+
+      <section class="accsub" id="subLook" hidden>
+        <header class="accsub__top"><button class="accsub__back" data-subback aria-label="Back to settings">←</button><span class="accsub__t">🎨 Look &amp; feel</span></header>
+        <div class="accsub__body">
+          <div class="yset__row"><span class="yset__lbl">Darkness</span><div class="yset__ctl" id="themeRow"><button class="setopt setopt--sm" data-theme="light">☀️ Light</button><button class="setopt setopt--sm" data-theme="dark">🌙 Dark</button></div></div>
+          <div class="yset__row"><span class="yset__lbl">Library look</span><div class="yset__ctl" id="libviewRow"><button class="setopt setopt--sm" data-libview="cozy" title="Cozy cards">🛋️</button><button class="setopt setopt--sm" data-libview="compact" title="Compact grid">🗂️</button><button class="setopt setopt--sm" data-libview="list" title="List rows">📑</button></div></div>
+          <div class="yset__row"><span class="yset__lbl">Text size</span><div class="yset__ctl" id="fontRow"><button class="setopt setopt--sm" data-font="0">A</button><button class="setopt setopt--sm setopt--md" data-font="1">A</button><button class="setopt setopt--sm setopt--lg" data-font="2">A</button></div></div>
+          <div class="yset__row"><span class="yset__lbl">App size</span><div class="yset__ctl"><button class="setopt setopt--sm" data-appsize="small" title="Smaller">🤏</button><button class="setopt setopt--sm" data-appsize="default" title="Default (locked)">📱</button><button class="setopt setopt--sm" data-appsize="big" title="Big">🔍</button><button class="setopt setopt--sm" data-appsize="bigger" title="Bigger">🔎</button></div></div>
+          <div class="yset__row"><span class="yset__lbl">Font style</span><div class="yset__ctl"><button class="setopt setopt--sm" data-fontstyle="modern" title="Modern">🖋️</button><button class="setopt setopt--sm" data-fontstyle="serif" title="Bookish serif">📜</button><button class="setopt setopt--sm" data-fontstyle="clean" title="Clean sans">🔳</button></div></div>
+          <div class="yset__row"><span class="yset__lbl">Bar colour</span><div class="yset__ctl yset__sw" id="accentRow"><button data-accent="#ffc800" style="--sw:#ffc800" aria-label="Yellow"></button><button data-accent="#ff8a3d" style="--sw:#ff8a3d" aria-label="Orange"></button><button data-accent="#ff90e8" style="--sw:#ff90e8" aria-label="Pink"></button><button data-accent="#00c48c" style="--sw:#00c48c" aria-label="Green"></button><button data-accent="#4d7cff" style="--sw:#4d7cff" aria-label="Blue"></button></div></div>
+          <div class="yset__row" data-installwrap><span class="yset__lbl">Install app</span><div class="yset__ctl"><button class="setopt setopt--sm" data-install title="Install on home screen">📲 Home screen</button></div></div>
+        </div>
+      </section>
+
+      <section class="accsub" id="subNotif" hidden>
+        <header class="accsub__top"><button class="accsub__back" data-subback aria-label="Back to settings">←</button><span class="accsub__t">🔔 Notifications &amp; sound</span></header>
+        <div class="accsub__body">
+          <div class="yset__row"><span class="yset__lbl">Pop-up alerts</span><div class="yset__ctl"><button class="setopt setopt--sm" id="youPopBtn">On ✓</button><span class="cm-time" id="youPopHint">toast pops at the top</span></div></div>
+          <div class="yset__row"><span class="yset__lbl">Notif sound</span><div class="yset__ctl" id="soundRowY"><button class="setopt setopt--sm" data-sound="ding" title="Soft ding">🔔</button><button class="setopt setopt--sm" data-sound="chime" title="Bright chime">🎐</button><button class="setopt setopt--sm" data-sound="pop" title="Pop">🔊</button><button class="setopt setopt--sm" data-sound="off" title="Off">🔇</button></div></div>
+          <div class="yset__row"><span class="yset__lbl">Sound test</span><div class="yset__ctl"><button class="setopt setopt--sm" id="youSoundTest" title="Play a test sound">▶ Play</button></div></div>
+          <div class="yset__row"><span class="yset__lbl">Outside the app</span><div class="yset__ctl"><button class="setopt setopt--sm" id="youPushBtn">📲 Enable push</button><span class="cm-time">works even when app closed</span></div></div>
+          <div class="yset__row"><span class="yset__lbl">The ledger</span><div class="yset__ctl"><a class="setopt setopt--sm" href="notifications.html">🔔 Open notifications</a></div></div>
+        </div>
+      </section>
+
+      <section class="accsub" id="subPrivacy" hidden>
+        <header class="accsub__top"><button class="accsub__back" data-subback aria-label="Back to settings">←</button><span class="accsub__t">🔒 Privacy</span></header>
+        <div class="accsub__body">
+          <div class="yset__row"><span class="yset__lbl">Public account</span><div class="yset__ctl"><button class="setopt setopt--sm" id="youPublicBtn">Public ✓</button><span class="cm-time" id="youPublicHint">shown in 👥 People</span></div></div>
+          <div class="yset__row"><span class="yset__lbl">Last seen</span><div class="yset__ctl ysw"><button class="ysw__sw on" id="youLastBtn" type="button" role="switch" aria-checked="true" aria-label="Show my last seen"><i></i></button><span class="ysw__lbl" id="youLastLbl">Visible</span><span class="cm-time" id="youLastHint">readers see “last seen 12m ago”</span></div></div>
+          <div class="yset__row"><span class="yset__lbl">Read receipts</span><div class="yset__ctl ysw"><button class="ysw__sw on" id="youHearBtn" type="button" role="switch" aria-checked="true" aria-label="Show that I read a story"><i></i></button><span class="ysw__lbl" id="youHearLbl">On</span><span class="cm-time" id="youHearHint">writers see “read by N”</span></div></div>
+          <div class="yset__row" id="youReqRow" hidden><span class="yset__lbl">Follow requests</span><div class="yset__ctl"><a class="setopt setopt--sm" id="youReqLink" href="stories.html?tab=people">0 waiting →</a><span class="cm-time">your private account: accept them in 👥 People</span></div></div>
+        </div>
+      </section>
+
+      <section class="accsub" id="subAudit" hidden>
+        <header class="accsub__top"><button class="accsub__back" data-subback aria-label="Back to settings">←</button><span class="accsub__t">⚡ The Idea Autopsy</span><span class="accsub__tag" translate="no">308 GRAVES</span></header>
+        <div class="accsub__body">
+          <div class="iaudit">
+            <p class="iaudit__intro">Tell it what you’re building. The audit reads it like an investor who buried <b>308 companies</b> — then answers with <b>four meters</b>, <b>an ordered plan</b>, <b>who already built it</b> and <b>who already died trying</b>.</p>
+            <div id="iauditBody"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="accsub" id="subAccount" hidden>
+        <header class="accsub__top"><button class="accsub__back" data-subback aria-label="Back to settings">←</button><span class="accsub__t">👤 Account &amp; keys</span></header>
+        <div class="accsub__body">
+          <div class="yset__row"><span class="yset__lbl">Your name</span><div class="yset__ctl" style="gap:6px;"><input id="youNameInput" class="setinput" type="text" maxlength="24" placeholder="Display name"><button class="setopt setopt--sm" id="youNameSave" title="Save name">✓</button></div>
+            <div class="yset__ctl"><input id="youPassInput" class="setinput" type="password" autocomplete="new-password" minlength="8" placeholder="Set a password (8+ characters)"><button class="setopt setopt--sm" id="youPassSave" title="Save password">✓</button><span class="cm-time" id="youPassHint">so email + password works even without Google</span></div>
+          </div>
+          <div class="yset__row" id="youUserRow" hidden><span class="yset__lbl">Your @name</span><div class="yset__ctl" style="gap:6px;flex-wrap:wrap;"><input id="youUserName" class="setinput" type="text" maxlength="20" spellcheck="false" autocomplete="username" placeholder="claim your @name" style="min-width:130px;"><button class="setopt setopt--sm" id="youUserSave" title="Save @name">✓</button><span class="cm-time" id="youUserHint">small letters, numbers, _ — how people find you</span></div></div>
+          <div class="yset__row"><span class="yset__lbl">My ID</span><div class="yset__ctl"><code id="youId" class="cm-idcode">—</code><button class="setopt setopt--sm" id="youIdCopy" title="Copy my ID">⧉</button></div></div>
+          <div class="yset__row"><span class="yset__lbl">The finish line</span><div class="yset__ctl"><a class="setopt setopt--sm" href="profile.html?id=me">📔 Open my public profile</a></div></div>
+        </div>
+      </section>
+
       <button class="acc__out" id="signoutBtn">Sign out</button>
-      <p class="youfine">Build tsb-v252 · Your reading data lives on your device and syncs privately to your account. We never post without asking. · <a href="about.html" style="color:inherit;text-decoration:underline;font-weight:800">ⓘ About & feature guide</a></p>
+      <p class="youfine">Build tsb-v266 · Your reading data lives on your device and syncs privately to your account. We never post without asking. · <a href="about.html" style="color:inherit;text-decoration:underline;font-weight:800">ⓘ About & feature guide</a></p>
     </main>
   </div>
 
-  <script src="js/prefs.js?v=252"></script>
-  <script src="js/lang.js?v=252"></script>
-  <script src="js/config.js?v=252"></script>
-  <script src="js/install.js?v=252"></script>
-  <script src="js/auth.js?v=252"></script>
-  <script src="js/data.js?v=252"></script>
+  <script src="js/prefs.js?v=266"></script>
+  <script src="js/lang.js?v=266"></script>
+  <script src="js/config.js?v=266"></script>
+  <script src="js/install.js?v=266"></script>
+  <script src="js/auth.js?v=266"></script>
+  <script src="js/data.js?v=266"></script>
   <script>
     /* v223 — store banner live status chip */
     (function () {
@@ -320,11 +455,12 @@
       });
     })();
   </script>
-  <script src="js/bar.js?v=252" defer></script>
+  <script src="js/bar.js?v=266" defer></script>
   <script>
     (function () {
       var vIn = document.getElementById("view-signin");
       var vAcc = document.getElementById("view-account");
+      var vFin = document.getElementById("view-finish");
       function esc(s) { var d = document.createElement("div"); d.textContent = s == null ? "" : String(s); return d.innerHTML; }
 
       /* ---------- settings controls ---------- */
@@ -411,17 +547,483 @@
         if (!(window.TSB_AUTH && TSB_AUTH.enabled)) document.getElementById("accCloud").style.display = "none";
       }
 
+      /* ---- v264 · THE SETTINGS ROOMS — departments open as full windows,
+              starting with MY ACTIVITY: the reading ring, streak and life ---- */
+      function paintActivity() {
+        function g(id) { return document.getElementById(id); }
+        function put(id, v) { var e = g(id); if (e) e.textContent = v; }
+        var read = 0, total = 0, pct = 0;
+        try { read = TSB.progress.totalRead(); } catch (e) {}
+        try { total = (window.BOOKS || []).reduce(function (a, b) { return a + (b.lessons ? b.lessons.length : 0); }, 0) || 2637; } catch (e) {}
+        pct = total ? Math.min(100, Math.round((read / total) * 100)) : 0;
+        put("actPct", pct + "%");
+        put("actLessons", read);
+        try { put("actBooks", TSB.completedCount()); } catch (e) {}
+        try { put("actBadges", TSB.achv.list().length); } catch (e) {}
+        try { put("actStreak", (TSB.get("tsb_streak", { count: 0 }) || {}).count || 0); } catch (e) {}
+        try { put("actVisits", (window.TSB_AUTH && TSB_AUTH.visits) ? TSB_AUTH.visits() : 0); } catch (e) {}
+        try { put("actSaved", TSB.bookmarks.list().length); } catch (e) {}
+        ["Posts", "Likes", "Fols"].forEach(function (k) {
+          var src = g("youAct" + k), dst = g("act" + k);
+          if (src && dst) dst.textContent = src.textContent;
+        });
+        try {
+          var lv = TSB.levelFor(read);
+          put("actLevelName", lv.name || "Reader");
+          put("actLevelNext", lv.next ? (lv.next.at - read) + " lessons to " + lv.next.name : "MAX LEVEL");
+          put("actLvl", "LVL · " + (lv.name || "Reader"));
+          var lp = lv.next ? Math.min(100, Math.round(((read - lv.at) / (lv.next.at - lv.at)) * 100)) : 100;
+          var fill = g("actLevelFill"); if (fill) fill.style.width = lp + "%";
+        } catch (e) {}
+        var arc = g("actArc");
+        if (arc) {
+          var CIRC = 2 * Math.PI * 56;
+          arc.style.strokeDasharray = CIRC;
+          arc.style.strokeDashoffset = CIRC * (1 - pct / 100);
+        }
+      }
+      function openSub(id) {
+        var rooms = document.querySelectorAll(".accsub");
+        for (var i = 0; i < rooms.length; i++) rooms[i].hidden = rooms[i].id !== id;
+        var v = document.getElementById("view-account");
+        if (v) v.classList.add("youview--sub");
+        if (id === "subActivity") paintActivity();
+        try { window.scrollTo(0, 0); } catch (e) {}
+      }
+      function closeSub() {
+        var rooms = document.querySelectorAll(".accsub");
+        for (var i = 0; i < rooms.length; i++) rooms[i].hidden = true;
+        var v = document.getElementById("view-account");
+        if (v) v.classList.remove("youview--sub");
+      }
+      document.getElementById("view-account").addEventListener("click", function (e) {
+        var t;
+        if ((t = e.target.closest("[data-sub]"))) { openSub(t.getAttribute("data-sub")); return; }
+        if (e.target.closest("[data-subback]")) { closeSub(); return; }
+      });
+
       function swap() {
         var u = (window.TSB_AUTH && TSB_AUTH.user) ? TSB_AUTH.user() : null;
+        /* v257 · first Google visit must NOT drop straight into the app —
+           it stops at the finish-line: what Google shared + @name + password + 13+ */
+        if (u && TSB_AUTH.needsFinish && TSB_AUTH.needsFinish()) {
+          vIn.hidden = true; vAcc.hidden = true; vFin.hidden = false;
+          paintFinish(u);
+          return;
+        }
+        vFin.hidden = true;
         vIn.hidden = !!u;
         vAcc.hidden = !u;
-        if (u) renderAccount();
+        if (u) { renderAccount(); paintUserDesk(u); }
         paintTheme(); paintFont(); paintAccent(); paintLang();
       }
+
+      /* ---- v258 · the @name desk — old accounts and new ones claim or
+         change their handle any time. "Taken" is decided by the DATABASE
+         (set_my_username runs on the server); this phone only shows it. ---- */
+      var userDeskBusy = false;
+      function paintUserDesk(u) {
+        var row = document.getElementById("youUserRow");
+        if (!row) return;
+        row.hidden = !u;
+        if (!u) return;
+        var cur = (u.user_metadata || {}).username || "";
+        var inp = document.getElementById("youUserName");
+        if (inp && document.activeElement !== inp) inp.value = cur;
+        var hint = document.getElementById("youUserHint");
+        if (hint && !userDeskBusy) hint.textContent = cur ? "@" + cur + " — change any time" : "claim it — small letters, numbers, _";
+      }
+      document.getElementById("youUserSave").addEventListener("click", async function () {
+        if (userDeskBusy) return;
+        var inp = document.getElementById("youUserName"),
+            hint = document.getElementById("youUserHint"),
+            btn = this;
+        var v = inp.value.trim().toLowerCase().replace(/^@+/, "");
+        if (!/^[a-z0-9_]{3,20}$/.test(v)) { hint.textContent = "3–20 characters — small letters, numbers, _"; inp.focus(); return; }
+        userDeskBusy = true; btn.textContent = "…";
+        hint.textContent = "checking the register…";
+        try {
+          var r = await TSB_AUTH.setMyUsername(v);
+          if (r && r.ok) { hint.textContent = "✓ @" + v + " is yours — change any time"; inp.value = v; renderAccount(); }
+          else if (r && r.code === "taken") hint.textContent = "This name is already taken — try another spelling.";
+          else if (r && r.code === "bad") hint.textContent = "3–20 characters — small letters, numbers, _";
+          else hint.textContent = "couldn't save — try once more";
+        } catch (e) { hint.textContent = "couldn't save — try once more"; }
+        userDeskBusy = false; btn.textContent = "✓";
+      });
+
+      /* ---- v257 · the finish-line menu ---- */
+      var FIN_HANDLE = /^[a-z0-9_]{3,20}$/, finFree = false, finLast = "", finTimer = null;
+      function finGo() {
+        var ret = "";
+        try { ret = sessionStorage.getItem("tsb_auth_return") || ""; } catch (e) {}
+        location.href = ret || "index.html";
+      }
+      function paintFinish(u) {
+        var md = u.user_metadata || {};
+        var nm = md.full_name || md.name || (u.email || "").split("@")[0] || "Reader";
+        document.getElementById("finName").textContent = nm;
+        document.getElementById("finMail").textContent = u.email || "";
+        var ava = document.getElementById("finAva");
+        if (md.avatar_url) ava.innerHTML = '<img src="' + esc(md.avatar_url) + '" alt="">';
+        else ava.textContent = (nm || "R").trim().charAt(0).toUpperCase();
+        if (!document.getElementById("finUser").value) document.getElementById("finUser").value = "";
+        setTimeout(function () { document.getElementById("finUser").focus(); }, 250);
+      }
+      document.getElementById("finUser").addEventListener("input", function () {
+        var el = this, st = document.getElementById("finUserState");
+        el.value = el.value.toLowerCase().replace(/[^a-z0-9_]/g, "");
+        finFree = false; finLast = "";
+        st.textContent = ""; st.className = "youser__state";
+        clearTimeout(finTimer);
+        var u = el.value;
+        if (!u) return;
+        if (!FIN_HANDLE.test(u)) { st.textContent = "3–20: a-z, 0–9, _"; st.className = "youser__state is-bad"; return; }
+        finTimer = setTimeout(async function () {
+          var free = (window.TSB_AUTH && TSB_AUTH.usernameFree) ? await TSB_AUTH.usernameFree(u) : true;
+          if (el.value !== u) return;
+          finFree = free; finLast = u;
+          st.textContent = free ? "✓ free" : "taken";
+          st.className = "youser__state " + (free ? "is-ok" : "is-bad");
+        }, 420);
+      });
+      document.getElementById("paneFinish").addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!(window.TSB_AUTH && TSB_AUTH.enabled)) return;
+        var strip2 = document.getElementById("finStrip");
+        function show2(msg, kind) {
+          strip2.hidden = false;
+          strip2.className = "yostrip " + (kind === "ok" ? "yostrip--ok" : "yostrip--err");
+          strip2.textContent = msg;
+        }
+        var handle = document.getElementById("finUser").value,
+            pass = document.getElementById("finPass").value;
+        if (!FIN_HANDLE.test(handle)) { show2("Usernames are 3–20 characters: small letters, numbers, underscore."); document.getElementById("finUser").focus(); return; }
+        if (handle !== finLast) { show2("Checking that username… one second, then submit again."); document.getElementById("finUser").focus(); return; }
+        if (!finFree) { show2("That username is taken — try another spelling."); document.getElementById("finUser").focus(); return; }
+        if (pass.length < 8) { show2("Passwords need at least 8 characters."); document.getElementById("finPass").focus(); return; }
+        if (!document.getElementById("finAdult").checked) { show2("One tick left: confirm you're 13 or older."); document.getElementById("finAdult").focus();
+          var tk2 = document.getElementById("finAdult").closest(".yotick"); if (tk2) { tk2.classList.remove("yotick--nudge"); void tk2.offsetWidth; tk2.classList.add("yotick--nudge"); }
+          return; }
+        var btn = document.getElementById("btnFinish");
+        btn.disabled = true; btn.textContent = "One moment…";
+        TSB_AUTH.finishGoogleAccount({ username: handle, password: pass }).then(function (r) {
+          btn.disabled = false; btn.textContent = "CLAIM MY @NAME →";
+          if (r && r.ok) {
+            show2("✓ @" + handle + " is yours — welcome to TheSmallBook!", "ok");
+            setTimeout(finGo, 900);
+          } else if (r && r.code === "taken") {
+            show2("That username was claimed a second ago — try another spelling.");
+          } else if (r && r.code === "weak") {
+            show2("Passwords need at least 8 characters.");
+          } else {
+            show2("Couldn't save it right now — try again in a moment.");
+          }
+        });
+      });
+      document.getElementById("btnFinSkip").addEventListener("click", function () {
+        if (window.TSB_AUTH && TSB_AUTH.skipFinish) TSB_AUTH.skipFinish();
+        finGo();
+      });
+
+
+      /* ================= v253 · EMAIL + PASSWORD ================= */
+      (function () {
+        var $ = function (id) { return document.getElementById(id); };
+        var strip = $("yoStrip"), stripTimer = null;
+        function show(msg, kind) {
+          strip.hidden = false;
+          strip.className = "yostrip " + (kind === "ok" ? "yostrip--ok" : "yostrip--err");
+          strip.textContent = msg;
+          clearTimeout(stripTimer);
+          stripTimer = setTimeout(function () { strip.hidden = true; }, kind === "ok" ? 9000 : 6000);
+        }
+        var MONTHS = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+        (function fillYears() {
+          var y = $("suYear"), nowY = new Date().getFullYear(), out = '<option value="">Year</option>';
+          for (var i = nowY; i >= nowY - 100; i--) out += '<option value="' + i + '">' + i + "</option>";
+          y.innerHTML = out;
+        })();
+        /* the 13+ gate, checked in the browser — nothing is sent, nothing stored */
+        function ageOf(mName, yr) {
+          var m = MONTHS[mName]; if (m === undefined || !yr) return -1;
+          var b = new Date(+yr, m, 1), t = new Date();
+          var age = t.getFullYear() - b.getFullYear();
+          if (t.getMonth() < b.getMonth()) age--;      // birthday not reached yet
+          return age;
+        }
+        function mailOk(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+
+        /* tabs */
+        var tc = $("tabCreate"), ts = $("tabSignin"), pc = $("paneCreate"), ps = $("paneSignin");
+        function tab(create) {
+          tc.classList.toggle("on", create); ts.classList.toggle("on", !create);
+          tc.setAttribute("aria-selected", create); ts.setAttribute("aria-selected", !create);
+          pc.hidden = !create; ps.hidden = create;
+          qx("paneCode").hidden = true;   /* v258 · the code step is its own pane */
+          strip.hidden = true;
+          /* the hero headline follows the tab, like the big apps */
+          var t = qx("lgTitle"), sub = qx("lgSub");
+          if (t) t.textContent = create ? "CREATE ACCOUNT" : "LOG IN";
+          if (sub) sub.textContent = create
+            ? "Your shelf, streak and progress follow you to every device."
+            : "Enter your details to keep your shelf, streak and progress.";
+        }
+        function qx(id) { return document.getElementById(id); }
+        /* pre-open the right pane: #signin → sign in, #code from the You sheet */
+        if (location.hash === "#signin" || location.hash === "#code") tab(false);
+        tc.addEventListener("click", function () { tab(true); });
+        ts.addEventListener("click", function () { tab(false); });
+        /* (v258 · hash pre-open moved above) */
+
+        /* show/hide password eyes */
+        document.querySelectorAll(".yoeye").forEach(function (b) {
+          b.addEventListener("click", function () {
+            var f = $(b.getAttribute("data-eye"));
+            f.type = f.type === "password" ? "text" : "password";
+            b.textContent = f.type === "password" ? "👁" : "🙈";
+          });
+        });
+
+        function busy(btn, on, label) {
+          btn.disabled = on;
+          btn.textContent = on ? "One moment…" : label;
+        }
+
+        /* ---- CREATE ACCOUNT — the full card ------------------------ */
+        var HANDLE = /^[a-z0-9_]{3,20}$/;
+        var userTimer = null, userFree = true, lastChecked = "";
+        $("suUser").addEventListener("input", function () {
+          var el = this, st = $("suUserState");
+          el.value = el.value.toLowerCase().replace(/[^a-z0-9_]/g, "");
+          userFree = false; lastChecked = "";
+          st.textContent = ""; st.className = "youser__state";
+          clearTimeout(userTimer);
+          var u = el.value;
+          if (!u) return;
+          if (!HANDLE.test(u)) { st.textContent = "3–20: a-z, 0–9, _"; st.className = "youser__state is-bad"; return; }
+          userTimer = setTimeout(async function () {
+            var free = (window.TSB_AUTH && TSB_AUTH.usernameFree) ? await TSB_AUTH.usernameFree(u) : true;
+            if (el.value !== u) return;                    // kept typing
+            userFree = free; lastChecked = u;
+            st.textContent = free ? "✓ free" : "taken";
+            st.className = "youser__state " + (free ? "is-ok" : "is-bad");
+          }, 420);
+        });
+        /* reader name defaults to the first name until they type their own */
+        var nameTouched = false;
+        $("suFirst").addEventListener("input", function () {
+          if (!nameTouched) $("suName").value = this.value.trim();
+        });
+        $("suName").addEventListener("input", function () { nameTouched = true; });
+
+        $("paneCreate").addEventListener("submit", function (e) {
+          e.preventDefault();
+          if (!(window.TSB_AUTH && TSB_AUTH.enabled)) { show("Sign-in is being set up — please enjoy the free library 💛"); return; }
+          var first = $("suFirst").value.trim(), last = $("suLast").value.trim(),
+              handle = $("suUser").value, name = $("suName").value.trim() || first,
+              mail = $("suMail").value.trim(), pass = $("suPass").value,
+              mo = $("suMonth").value, yr = +$("suYear").value;
+          if (!first) { show("Add your first name."); $("suFirst").focus(); return; }
+          if (!HANDLE.test(handle)) { show("Usernames are 3–20 characters: small letters, numbers, underscore."); $("suUser").focus(); return; }
+          if (handle !== lastChecked) { show("Checking that username… one second, then submit again."); $("suUser").focus(); return; }
+          if (!userFree) { show("That username is taken — try another spelling."); $("suUser").focus(); return; }
+          if (!mailOk(mail)) { show("That email doesn't look right — check the spelling."); $("suMail").focus(); return; }
+          if (pass.length < 8) { show("Passwords need at least 8 characters."); $("suPass").focus(); return; }
+          var age = ageOf(mo, yr);
+          if (age < 0) { show("Tell us your birth month and year — it keeps the library safe for everyone."); $("suMonth").focus(); return; }
+          if (age < 13) {
+            show("TheSmallBook is for readers 13 and over. The library will still be here when you're 13 💛");
+            return;
+          }
+          if (!$("suAdult").checked) { show("One tick left: confirm you're 13 or older."); $("suAdult").focus();
+            var tk = $("suAdult").closest(".yotick"); if (tk) { tk.classList.remove("yotick--nudge"); void tk.offsetWidth; tk.classList.add("yotick--nudge"); }
+            return; }
+          var btn = $("btnCreate"); busy(btn, true, "CREATE MY ACCOUNT →");
+          TSB_AUTH.signUpEmail({ first: first, last: last, username: handle, display: name }, mail, pass, yr).then(function (r) {
+            busy(btn, false, "CREATE MY ACCOUNT →");
+            if (r && r.ok && r.confirmed) {
+              show("Account created — welcome to TheSmallBook, " + first + "!", "ok");
+              setTimeout(gojump, 600);
+            } else if (r && r.ok && r.needsConfirm) {
+              openCode("signup", mail);
+              show("📧 Code sent to " + mail + " — enter it to finish. Your @" + handle + " stays reserved.", "ok");
+            } else if (r && r.code === "exists") {
+              tab(false);
+              show("That email already has an account — sign in below (or reset the password).");
+            } else if (r && r.code === "weak") {
+              show("That password is too weak — try 8+ characters with a number in it.");
+            } else {
+              show("Couldn't create the account right now — try again in a moment.");
+            }
+          });
+        });
+
+        /* ---- SIGN IN ---- */
+        $("paneSignin").addEventListener("submit", function (e) {
+          e.preventDefault();
+          if (!(window.TSB_AUTH && TSB_AUTH.enabled)) { show("Sign-in is being set up — please enjoy the free library 💛"); return; }
+          var cool = TSB_AUTH.authCooldown ? TSB_AUTH.authCooldown() : 0;
+          if (cool > 0) {
+            var cm0 = Math.ceil(cool / 60);
+            show("Too many wrong tries — sign-in is locked for " + (cm0 > 1 ? cm0 + " minutes" : cool + " seconds") + ". Your shelf is safe; try again after.");
+            return;
+          }
+          var id = $("siMail").value.trim(), pass = $("siPass").value;
+          var isMail = id.indexOf("@") !== -1;
+          if (!id) { show("Enter your email or @username."); $("siMail").focus(); return; }
+          if (isMail ? !mailOk(id) : !/^@?[a-z0-9_]{3,20}$/.test(id.toLowerCase())) {
+            show("That doesn't look like an email or an @username — check the spelling."); $("siMail").focus(); return;
+          }
+          if (!pass) { show("Enter your password."); $("siPass").focus(); return; }
+          var btn = $("btnSignin"); busy(btn, true, "SIGN IN →");
+          TSB_AUTH.signInId(id, pass).then(function (r) {
+            busy(btn, false, "SIGN IN →");
+            if (r && r.ok) { show("Welcome back 💛", "ok"); setTimeout(gojump, 500); return; }
+            if (r && r.code === "locked") {
+              var mins = Math.ceil((r.wait || 600) / 60);
+              show("Too many wrong tries — sign-in is locked for " + mins + " minutes. Your shelf is safe; try again after.");
+              return;
+            }
+            if (r && r.code === "cooldown") {
+              var cm = Math.ceil((r.wait || 60) / 60);
+              show("Too many wrong tries — wait " + (cm > 1 ? cm + " minutes" : r.wait + " seconds") + ", then go again.");
+              return;
+            }
+            if (r && r.code === "confirm") { show("Confirm your email first — open the newest email, or tap 'Forgot password' for a fresh code."); return; }
+            if (r && (r.code === "nohandle")) { show("No account with that @username — check the spelling, or sign in with your email."); return; }
+            if (r && (r.code === "bad" || r.code === "badmail" || r.code === "badhandle")) {
+              show("Wrong email/@username or password. Check both and try again — or tap 'Forgot password' and we'll email you a code.");
+              return;
+            }
+            show("Couldn't sign in right now — check your connection and try again.");
+          });
+        });
+
+        /* ---- v258 · THE CODE PANE — confirm · sign-in codes · new password ----
+           One pane, three jobs. The code is created and checked on Supabase's
+           server; this page only types it through. */
+        var codeMode = "login", codeEmail = "", codePwArmed = false;
+        function openCode(mode, email) {
+          codeMode = mode; codeEmail = (email || "").trim(); codePwArmed = false;
+          qx("paneCreate").hidden = true; qx("paneSignin").hidden = true; qx("paneCode").hidden = false;
+          qx("codePwWrap").hidden = true;
+          qx("codeIn").disabled = false; qx("codeIn").value = ""; qx("codePw").value = "";
+          qx("btnCode").textContent = mode === "reset" ? "VERIFY CODE →" : "VERIFY & CONTINUE →";
+          qx("codeTitle").innerHTML = mode === "signup"
+            ? '📧 Almost there! Enter the 6-digit code we emailed to <b></b> — your @name stays reserved while you do.'
+            : mode === "reset"
+            ? '📧 To choose a new password, enter the 6-digit code we emailed to <b></b>'
+            : '📧 We emailed a 6-digit sign-in code to <b></b>';
+          qx("codeTitle").querySelector("b").textContent = codeEmail;
+          strip.hidden = true;
+          setTimeout(function () { qx("codeIn").focus(); }, 200);
+        }
+        function codeBusy(on) {
+          var b = qx("btnCode"); b.disabled = on;
+          b.textContent = on ? "One moment…"
+            : codePwArmed ? "SAVE NEW PASSWORD →"
+            : codeMode === "reset" ? "VERIFY CODE →" : "VERIFY & CONTINUE →";
+        }
+        $("btnCodeLogin").addEventListener("click", async function () {
+          var id = $("siMail").value.trim();
+          if (!id) { show("Type your email or @username above first — then tap this."); $("siMail").focus(); return; }
+          if (id.indexOf("@") !== -1) {
+            if (!mailOk(id)) { show("That email doesn't look right — check the spelling."); $("siMail").focus(); return; }
+            TSB_AUTH.requestLoginCode(id.toLowerCase()).then(function () { openCode("login", id.toLowerCase()); });
+            return;
+          }
+          var handle = id.replace(/^@+/, "").toLowerCase();
+          if (!/^[a-z0-9_]{3,20}$/.test(handle)) { show("That doesn't look like an email or an @username."); $("siMail").focus(); return; }
+          var mail = (TSB_AUTH.emailForUsername) ? await TSB_AUTH.emailForUsername(handle) : "";
+          if (!mail) { show("No account with that @username — check the spelling, or use your email."); return; }
+          TSB_AUTH.requestLoginCode(mail).then(function () { openCode("login", mail); });
+        });
+        $("btnForgot").addEventListener("click", async function () {
+          var id = $("siMail").value.trim();
+          var mail = id;
+          if (id && id.indexOf("@") === -1) {
+            var handle = id.replace(/^@+/, "").toLowerCase();
+            mail = (TSB_AUTH.emailForUsername) ? await TSB_AUTH.emailForUsername(handle) : "";
+            if (!mail) { show("No account with that @username — check the spelling, or use your email."); return; }
+          }
+          if (!mailOk(mail)) { show("Type your email (or @username) above first, then tap this."); $("siMail").focus(); return; }
+          TSB_AUTH.sendReset(mail).then(function () { openCode("reset", mail); });
+        });
+        $("btnCodeBack").addEventListener("click", function () {
+          qx("paneCode").hidden = true; qx("paneSignin").hidden = false; strip.hidden = true;
+        });
+        $("btnCodeResend").addEventListener("click", function () {
+          if (codeMode === "login") TSB_AUTH.requestLoginCode(codeEmail);
+          else if (codeMode === "reset") TSB_AUTH.sendReset(codeEmail);
+          else TSB_AUTH.resendSignupCode(codeEmail);
+          show("📧 Fresh code sent — give it ~30 seconds, then check the newest email.", "ok");
+        });
+        $("paneCode").addEventListener("submit", function (e) {
+          e.preventDefault();
+          if (!(window.TSB_AUTH && TSB_AUTH.enabled)) return;
+          var code = qx("codeIn").value.replace(/\D/g, "");
+          if (code.length < 4) { show("Enter the 6 digits from the email."); qx("codeIn").focus(); return; }
+          if (codePwArmed) {                    /* reset step 2 — save the new password */
+            var pw = qx("codePw").value;
+            if (pw.length < 8) { show("Passwords need at least 8 characters."); qx("codePw").focus(); return; }
+            codeBusy(true);
+            TSB_AUTH.setPassword(pw).then(function (r) {
+              codeBusy(false);
+              if (r && r.ok) { show("✓ New password saved — welcome back!", "ok"); setTimeout(gojump, 800); }
+              else show("Couldn't save it — try once more.");
+            });
+            return;
+          }
+          codeBusy(true);
+          var verify = codeMode === "signup" ? TSB_AUTH.verifySignupCode
+                     : codeMode === "reset" ? TSB_AUTH.verifyRecoveryCode
+                     : TSB_AUTH.verifyLoginCode;
+          verify(codeEmail, code).then(function (r) {
+            codeBusy(false);
+            if (r && r.ok) {
+              if (codeMode === "reset") {
+                codePwArmed = true;
+                qx("codePwWrap").hidden = false;
+                qx("codeIn").disabled = true;
+                qx("btnCode").textContent = "SAVE NEW PASSWORD →";
+                show("✓ Code confirmed — now choose your new password.", "ok");
+                setTimeout(function () { qx("codePw").focus(); }, 150);
+                return;
+              }
+              show(codeMode === "signup" ? "✓ Email confirmed — welcome to TheSmallBook!" : "Welcome back 💛", "ok");
+              setTimeout(gojump, 700);
+            } else if (r && r.code === "code") {
+              show("That code didn't match — open the NEWEST email and enter its 6 digits.");
+            } else {
+              show("Couldn't check the code right now — try again in a moment.");
+            }
+          });
+        });
+
+        function gojump() {
+          var ret = "";
+          try { ret = sessionStorage.getItem("tsb_auth_return") || ""; } catch (e) {}
+          location.href = ret || "index.html";
+        }
+      })();
 
       document.getElementById("signinGoogle").addEventListener("click", function () {
         if (window.TSB_AUTH && TSB_AUTH.enabled && TSB_AUTH.signIn) TSB_AUTH.signIn("google");
         else this.textContent = "Sign-in is being set up — please enjoy the free library 💛";
+      });
+      document.getElementById("youPassSave").addEventListener("click", async function () {
+        var b = this, inp = document.getElementById("youPassInput"), hint = document.getElementById("youPassHint");
+        var pw = inp.value;
+        if (!pw || pw.length < 8) { hint.textContent = "8+ characters, then ✓"; return; }
+        b.textContent = "…";
+        try {
+          var r = await TSB_AUTH.setPassword(pw);
+          b.textContent = "✓";
+          hint.textContent = r && r.ok ? "✓ password set — email + password now works" : "couldn't set it — try once more";
+          if (r && r.ok) inp.value = "";
+        } catch (e) { b.textContent = "✓"; hint.textContent = "couldn't set it — try once more"; }
+        setTimeout(function () { b.textContent = "✓"; }, 1500);
       });
       document.getElementById("signoutBtn").addEventListener("click", function () {
         if (window.TSB_AUTH && TSB_AUTH.confirmLogout) TSB_AUTH.confirmLogout();
@@ -456,11 +1058,12 @@
   });
 })();
 </script>
-  <script src="js/sounds.js?v=252"></script>
-  <script src="js/community.js?v=252"></script>
-  <script src="js/gold.js?v=252"></script>
-  <script src="js/paywall.js?v=252"></script>
-  <script src="js/onboard.js?v=252" defer></script>
+  <script src="js/sounds.js?v=266"></script>
+  <script src="js/community.js?v=266"></script>
+  <script src="js/gold.js?v=266"></script>
+  <script src="js/ideaaudit.js?v=266"></script>
+  <script src="js/paywall.js?v=266"></script>
+  <script src="js/onboard.js?v=266" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {

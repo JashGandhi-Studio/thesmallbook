@@ -1,3 +1,12 @@
+<!-- ⚡ THE SHORT VERSION =====================================================
+     Everything this guide asks you to run — SQL #1 through #12 — is now merged
+     into ONE file:  supabase/sql/ALL-IN-ONE.sql
+     Paste it into Supabase → SQL Editor → Run → the grid at the bottom is your
+     receipt. It is re-runnable, works on the current project AND a fresh one.
+     The step-by-step below stays for reading; you do not need to run #1–#12
+     separately any more.
+     ========================================================================= -->
+
 # 🧭 Supabase — ONE-SCRIPT SETUP (current dashboard, 2026)
 Project: `wdmxcewmyofihgrheuas.supabase.co` (keys already in js/config.js ✅).
 

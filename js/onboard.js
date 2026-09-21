@@ -177,13 +177,20 @@
   function stepHtml(i) {
     switch (i) {
       case 0:
-        return '<div class="ob-step__center">' +
+        return '<div class="ob-step__center ob-hero">' +
+          '<span class="ob-hero__deco ob-hero__deco--sq" aria-hidden="true"></span>' +
+          '<span class="ob-hero__deco ob-hero__deco--circ" aria-hidden="true"></span>' +
+          '<span class="ob-hero__deco ob-hero__deco--ring" aria-hidden="true"></span>' +
           '<div class="ob-logo">📕</div>' +
-          '<h2>The<span>Small</span>Book</h2>' +
+          '<span class="ob-eyebrow">WELCOME TO</span>' +
+          '<h2 class="ob-hero__t">The<span>Small</span>Book</h2>' +
           '<p class="ob-tag">big books · small reads</p>' +
-          '<p class="ob-sub">400+ books, distilled into lessons you can use today. A few quick questions — and your starter shelf appears.</p>' +
-          '<button class="ob-cta" data-next>Let’s tune it for me →</button>' +
-          "</div>";
+          '<p class="ob-sub">400+ books, distilled into lessons you can use today. Six quick questions tune the whole library to you — or skip the line and read right now.</p>' +
+          '<div class="ob-btns ob-btns--col">' +
+            '<button class="ob-cta" data-next>🚀 GET STARTED</button>' +
+          '</div>' +
+          '<p class="ob-fine">2 minutes · nothing is posted anywhere · your 15-minute free taster starts after this</p>' +
+          '</div>';
       case 1:
         return "<h2>What mess are we fixing?</h2>" +
           '<p class="ob-sub">Your main battle — the library will lead with it.</p>' +
@@ -249,10 +256,14 @@
     var wrap = document.createElement("div");
     wrap.className = "obwrap";
     wrap.innerHTML =
-      '<div class="ob" role="dialog" aria-modal="true" aria-label="Welcome to TheSmallBook">' +
-        '<div class="ob__prog">' + Array.apply(null, Array(TOTAL)).map(function (_, i) { return '<i data-seg="' + i + '"></i>'; }).join("") + "</div>" +
-        '<button class="ob__back" data-back aria-label="Back">←</button>' +
-        '<button class="ob__x" data-skip aria-label="Skip personalisation">✕</button>' +
+      '<div class="ob ob--page" role="dialog" aria-modal="true" aria-label="Welcome to TheSmallBook">' +
+        '<span class="ob__bg ob__bg--sq" aria-hidden="true"></span>' +
+        '<span class="ob__bg ob__bg--circ" aria-hidden="true"></span>' +
+        '<header class="ob__bar">' +
+          '<button class="ob__back" data-back aria-label="Back">←</button>' +
+          '<div class="ob__prog">' + Array.apply(null, Array(TOTAL)).map(function (_, i) { return '<i data-seg="' + i + '"><b>' + (i + 1) + "</b></i>"; }).join("") + "</div>" +
+        "</header>" +
+        '<span class="ob__count" id="obCount"></span>' +
         '<div class="ob__body"></div>' +
       "</div>";
     document.body.appendChild(wrap);
@@ -264,11 +275,16 @@
   var body = null;
   var busy = false;
 
+  var STEP_NAMES = ["Welcome", "Your battle", "Shelves", "Daily time", "Taste", "Look", "Your books"];
   function paintProg() {
     wrap.querySelectorAll("[data-seg]").forEach(function (s, i) {
       s.classList.toggle("on", i <= step);
+      s.classList.toggle("now", i === step);
     });
     wrap.querySelector(".ob__back").style.visibility = step === 0 ? "hidden" : "visible";
+    var c = wrap.querySelector(".ob__count");
+    if (c) c.textContent = step === 0 ? "THE TUNE-UP" : "STEP " + step + " / " + (TOTAL - 1) + " · " + (STEP_NAMES[step] || "").toUpperCase();
+    wrap.classList.toggle("obwrap--welcome", step === 0);
   }
 
   function show(i, dir) {
@@ -276,7 +292,11 @@
     function mount() {
       var el = document.createElement("div");
       el.className = "ob-step ob-step--enter" + (dir === "back" ? " ob-step--enterback" : "");
-      el.innerHTML = stepHtml(i);
+      var nn = (i + 1 < 10 ? "0" : "") + (i + 1);
+      var chrome = i === 0
+        ? '<div class="ob-chrome"><span class="ob-chrome__l">THE TUNE-UP · A WORD BEFORE WE BEGIN</span></div>'
+        : '<div class="ob-chrome"><b class="ob-chrome__n">' + nn + '</b><span class="ob-chrome__l">CHAPTER ' + nn + ' · ' + (STEP_NAMES[i] || "").toUpperCase() + "</span></div>";
+      el.innerHTML = chrome + stepHtml(i);
       body.appendChild(el);
       body.scrollTop = 0;
       requestAnimationFrame(function () {
@@ -336,12 +356,13 @@
     } catch (e) {}
     var lead = draft.shelves[0] || "";
     var styleName = (STYLES.filter(function (s) { return s.id === draft.style; })[0] || {}).t || "Steady reader";
-    body.innerHTML = '<div class="ob-step ob-step--done"><div class="ob-logo">🎉</div><h2>Your library is tuned</h2>' +
+    try { set("tsb_trial_start", Date.now()); } catch (e) {}
+    body.innerHTML = '<div class="ob-step ob-step--done"><div class="ob-logo">🎉</div><h2>Okay — you\u2019re in</h2>' +
       '<p class="ob-sub">' + (lead ? "📚 Leading with " + lead + "<br>" : "") +
       "⏱ " + draft.minutes + " min a day · " + styleName + "<br>" +
       "🌐 " + (draft.lang && draft.lang !== "en" ? draft.lang.toUpperCase() : "EN") + " · " +
       (draft.theme === "dark" ? "🌙 dark" : "☀️ light") + "</p>" +
-      '<p class="ob-sub">Change any of it later in Settings.</p></div>';
+      '<p class="ob-sub">Your shelf is ready — and you have a <b>15-minute free taster</b> on the house. Sign in any time to keep it forever.</p></div>';
     setTimeout(function () {
       wrap.classList.add("obwrap--off");
       document.documentElement.classList.remove("ob-lock");
@@ -383,7 +404,6 @@
         paintPicks();
         return;
       }
-      if (e.target.closest("[data-skip]")) { dismiss(true); return; }
       if (e.target.closest("[data-back]")) { goBack(); return; }
       if ((t = e.target.closest("[data-why]"))) { recPoolCache = null;
         draft.why = t.getAttribute("data-why");

@@ -1,6 +1,13 @@
 /* ============================================================
    THESMALLBOOK — 🔐 SIGN-IN ENGINE (auth.js)
    - "Log in with Google" via Supabase Auth (PKCE, no CDN — SW friendly)
+   - v253: EMAIL + PASSWORD — create account (13+ age gate), sign in again
+     on any device, reset by email. Still zero secrets in the browser.
+   - v258: SERVER login gate (5 wrong → 10-min lock), 6-digit email-code
+           sign-up confirm / sign-in / reset, @name claim-or-change from You
+   - v257: sign in with @USERNAME OR EMAIL; first Google visit lands on a
+     finish-line menu (what Google shared + claim @username + set password
+     + 13+) instead of dropping straight into the app.
    - Anonymous progress (bookmarks + lessons) auto-migrates on login
    - Two-way sync: every device keeps the merged best of both
    - "Save your progress?" modal after 2nd completed book
@@ -13,7 +20,10 @@
   const URL = (CFG.SUPABASE_URL || "").replace(/\/$/, "");
   const ANON = CFG.SUPABASE_ANON_KEY || "";
   const GCLIENT = CFG.GOOGLE_CLIENT_ID || ""; // direct-Google OAuth client (consent shows thesmallbook.in)
-  const GSECRET = CFG.GOOGLE_CLIENT_SECRET || ""; // REQUIRED by Google for web-app token exchange
+  /* v253 SECURITY: there is deliberately NO client-secret slot here. A secret
+     in a static file ships to every visitor — the old code would happily POST
+     it from the browser if someone pasted one into config.js. That path is
+     gone for good; GoTrue (Supabase) holds the secret server-side. */
   const SITE_ORIGIN = CFG.SITE_URL || "https://thesmallbook.in"; // canonical origin (www vs bare doesn't matter)
   const REDIRECT_URI = SITE_ORIGIN + "/login.html"; // MUST be registered in Google Cloud Console
   const ENABLED = !!(URL && ANON);
@@ -57,6 +67,7 @@
   const DONE_KEY = "tsb_auth_done";         // completed books count (pre-login)
   const OFFER_KEY = "tsb_auth_offer";       // has the modal been shown once?
   const TABLE = URL ? URL + "/rest/v1/progress" : "";
+  const TABLE_PROFILES = URL ? URL + "/rest/v1/profiles" : "";
 
   const PROGRESS_KEY = "tsb_progress";      // { bookId: [lesson indexes] }
   const MARKS_KEY = "tsb_bookmarks";        // [bookId, ...]
@@ -156,7 +167,6 @@
       grant_type: "authorization_code",
       code_verifier: verifier
     };
-    if (GSECRET) body.client_secret = GSECRET; // REQUIRED for web-app clients (verified live)
     const res = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -201,29 +211,7 @@
     let ret = "";
     try { ret = sessionStorage.getItem("tsb_auth_return") || ""; } catch {}
 
-    // 1) DIRECT GOOGLE flow — ONLY when a secret is configured (Mode 2)
-    if (GCLIENT && GSECRET && verifier) {
-      try {
-        const gt = await googleCodeToIdToken(code, verifier);
-        if (gt && gt.id_token) {
-          if (nonceOk(gt.id_token)) {
-            const s = await supabaseIdTokenSession(gt.id_token);
-            if (s && s.access_token) {
-              session = s;
-              lsSet(AUTH_KEY, session);
-              history.replaceState({}, "", location.pathname); // clean URL, stay on login page
-              clearVerifier();
-              return true;
-            }
-          }
-          console.warn("TSB: google id_token nonce/session failed");
-        }
-      } catch (e) {
-        console.warn("TSB direct google exchange failed:", e);
-      }
-    }
-
-    // 2) SUPABASE-HOSTED flow (Mode 1 — DEFAULT): exchange the auth_code
+    // SUPABASE-HOSTED flow (the ONLY flow): exchange the auth_code
     //    GoTrue gave us (it landed us here with ?code=). No secret needed.
     try {
       const res = await fetch(URL + "/auth/v1/token?grant_type=pkce", {
@@ -245,6 +233,414 @@
       try { window.dispatchEvent(new CustomEvent("tsb:auth-error", { detail: "login-failed" })); } catch {}
       return false;
     }
+  }
+
+  /* ============ v259 · THE LINK FALLBACK ============
+     While a project runs Supabase's default email templates (before
+     custom SMTP is set), the auth emails carry a LINK instead of a
+     6-digit code. Clicking it lands on this app with the session in
+     the URL fragment — catch it, hydrate the reader, store the
+     session, clean the address bar. Nothing dead-ends in the interim;
+     the code flow takes over the moment custom templates go live. */
+  async function handleFragmentSession() {
+    let h = "";
+    try { h = location.hash || ""; } catch (e) { return false; }
+    if (!h || h.indexOf("access_token=") === -1) return false;
+    const p = new URLSearchParams(h.replace(/^#/, ""));
+    const at = p.get("access_token"), rt = p.get("refresh_token"),
+          exp = Number(p.get("expires_in") || 3600);
+    try { history.replaceState({}, "", location.pathname + location.search); } catch (e1) {}
+    if (!at || !rt) {
+      try { window.dispatchEvent(new CustomEvent("tsb:auth-error", { detail: p.get("error") || "login-failed" })); } catch (e2) {}
+      return false;
+    }
+    session = {
+      access_token: at, refresh_token: rt,
+      token_type: p.get("token_type") || "bearer",
+      expires_in: exp, expires_at: now() + exp, user: null
+    };
+    try {
+      const res = await fetch(URL + "/auth/v1/user", {
+        headers: authHeaders({ "Authorization": "Bearer " + at })
+      });
+      if (res.ok) session.user = await res.json();
+    } catch (e3) {}
+    lsSet(AUTH_KEY, session);
+    clearVerifier();
+    return true;
+  }
+
+  /* ================= v253 · EMAIL + PASSWORD =================
+     Create account → sign in again on any device → reset by mail.
+     Same session plumbing as Google (AUTH_KEY + refresh), so progress
+     sync, the You page and the composer all work unchanged. */
+
+  /* polite client-side rate limit (checklist #17): after 5 failed tries the
+     form cools down, doubling to a 15-minute ceiling. Supabase adds its own
+     server-side limits on top — this just keeps honest people from
+     thumb-bashing a wrong password into a lockout. */
+  const FAILS_KEY = "tsb_auth_fails";
+  function failState() { try { return JSON.parse(localStorage.getItem(FAILS_KEY)) || { n: 0, until: 0 }; } catch (e) { return { n: 0, until: 0 }; } }
+  function authCooldown() {
+    const f = failState();
+    return f.until > now() ? f.until - now() : 0;
+  }
+  function noteFail() {
+    const f = failState();
+    f.n += 1;
+    if (f.n >= 5) f.until = now() + 600;   /* 5 strikes → 10 minutes, flat — mirrors the server gate */
+    try { localStorage.setItem(FAILS_KEY, JSON.stringify(f)); } catch (e) {}
+  }
+  function noteSuccess() { try { localStorage.removeItem(FAILS_KEY); } catch (e) {} }
+
+  function authErr(res, txt) {
+    txt = (txt || "").toLowerCase();
+    if (res.status === 422 && /already|registered|exists/.test(txt)) return "exists";
+    if (/email not confirmed|not confirmed/.test(txt)) return "confirm";
+    if (res.status === 400 && /invalid|credentials|password/.test(txt)) return "bad";
+    if (res.status === 429) return "slow";
+    if (/password.*short|weak|at least/.test(txt)) return "weak";
+    return "net";
+  }
+
+  /* ============ v258 · THE LOGIN GATE (server-side) ============
+     The database counts the strikes — a tampered browser changes
+     nothing. 5 wrong passwords on one account → 10-minute lock. */
+  async function gateCall(fn, ident) {
+    try {
+      const res = await fetch(URL + "/rest/v1/rpc/" + fn, {
+        method: "POST",
+        headers: { "apikey": ANON, "Content-Type": "application/json" },
+        body: JSON.stringify({ p_ident: ident })
+      });
+      if (!res.ok) return null;
+      const j = await res.json();
+      return (j && typeof j === "object") ? j : { locked: false, wait: 0 };
+    } catch (e) { return null; }        // gate down ≠ login down
+  }
+  function gateStatus(ident) { return gateCall("tsb_login_status", ident); }
+  function gateFail(ident)   { return gateCall("tsb_login_fail", ident); }
+  function gateReset(ident)  { return gateCall("tsb_login_reset", ident); }
+
+
+  /* fields: { display, first, last, username } — the full account card.
+     Everything travels as user metadata; SQL #12 turns username into a real,
+     unique, lowercase handle inside profiles. */
+  async function signUpEmail(fields, email, password, birthYear) {
+    if (!ENABLED) return { ok: false, code: "off" };
+    var f = fields || {};
+    var display = (f.display || f.first || "").trim();
+    try {
+      const res = await fetch(URL + "/auth/v1/signup", {
+        method: "POST",
+        headers: { "apikey": ANON, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email, password: password,
+          data: {
+            full_name: display,
+            first_name: (f.first || "").trim(),
+            last_name: (f.last || "").trim(),
+            username: (f.username || "").trim(),
+            birth_year: birthYear || null,
+            provider: "email"
+          }
+        })
+      });
+      const txt = await res.text().catch(() => "");
+      if (!res.ok) return { ok: false, code: authErr(res, txt) };
+      const j = JSON.parse(txt || "{}");
+      if (j && j.access_token) {           // email-confirm OFF → straight in
+        session = j; lsSet(AUTH_KEY, session); noteSuccess();
+        return { ok: true, confirmed: true };
+      }
+      return { ok: true, needsConfirm: true }; // email-confirm ON → verify mail
+    } catch (e) { return { ok: false, code: "net" }; }
+  }
+
+  /* is that handle free? public profiles are readable, so the form can check
+     while the reader types — no account exists yet to reserve it. */
+  async function usernameFree(u) {
+    if (!ENABLED) return true;
+    try {
+      const res = await fetch(TABLE_PROFILES + "?username=eq." + encodeURIComponent(u) + "&select=id",
+        { headers: { "apikey": ANON } });
+      if (!res.ok) return true;            // never block the form on a lookup
+      const rows = await res.json();
+      return !Array.isArray(rows) || rows.length === 0;
+    } catch (e) { return true; }
+  }
+
+  /* for readers who joined with Google: set a password on the SAME account, so
+     email + password works from then on. Closes the "signed out and Google
+     feels heavy" gap without a single new account. */
+  async function setPassword(pw) {
+    if (!ENABLED || !session) return { ok: false, code: "sign-in" };
+    try {
+      const tok = await ensureToken();
+      const res = await fetch(URL + "/auth/v1/user", {
+        method: "PUT",
+        headers: { "apikey": ANON, "Content-Type": "application/json", "Authorization": "Bearer " + tok },
+        body: JSON.stringify({ password: pw })
+      });
+      if (!res.ok) return { ok: false, code: "net" };
+      return { ok: true };
+    } catch (e) { return { ok: false, code: "net" }; }
+  }
+
+  async function signInEmail(email, password) {
+    if (!ENABLED) return { ok: false, code: "off" };
+    const wait = authCooldown();
+    if (wait > 0) return { ok: false, code: "cooldown", wait: wait };
+    try {
+      const res = await fetch(URL + "/auth/v1/token?grant_type=password", {
+        method: "POST",
+        headers: { "apikey": ANON, "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email, password: password })
+      });
+      const txt = await res.text().catch(() => "");
+      if (!res.ok) { noteFail(); return { ok: false, code: authErr(res, txt) }; }
+      session = JSON.parse(txt);
+      lsSet(AUTH_KEY, session);
+      noteSuccess();
+      return { ok: true };
+    } catch (e) { return { ok: false, code: "net" }; }
+  }
+
+  /* ================= v257 · SIGN IN WITH @USERNAME OR EMAIL =================
+     The forever login: the reader picked @asha_writes once — from then on
+     "@asha_writes + password" signs them in on every phone, with or without
+     Google. The handle → email step runs through a tiny server function
+     (tsb_email_for_username, added by the SQL file) so the browser never
+     needs a table dump; the password itself is still checked by GoTrue. */
+  function mailOk(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+  const HANDLE_RE = /^[a-z0-9_]{3,20}$/;
+
+  async function emailForUsername(handle) {
+    try {
+      const res = await fetch(URL + "/rest/v1/rpc/tsb_email_for_username", {
+        method: "POST",
+        headers: { "apikey": ANON, "Content-Type": "application/json" },
+        body: JSON.stringify({ p_username: handle })
+      });
+      if (!res.ok) return "";
+      const txt = (await res.text() || "").trim();
+      let out = txt;
+      try { out = JSON.parse(txt); } catch (e) {}   // PostgREST quotes plain text
+      return typeof out === "string" ? out.trim().toLowerCase() : "";
+    } catch (e) { return ""; }
+  }
+
+  async function signInId(identifier, password) {
+    if (!ENABLED) return { ok: false, code: "off" };
+    const raw = String(identifier || "").trim();
+    if (!raw) return { ok: false, code: "empty" };
+    if (raw.indexOf("@") !== -1) {                    // an email — straight in
+      if (!mailOk(raw)) return { ok: false, code: "badmail" };
+      return signInGated(raw.toLowerCase(), password);
+    }
+    const handle = raw.replace(/^@+/, "").toLowerCase();
+    if (!HANDLE_RE.test(handle)) return { ok: false, code: "badhandle" };
+    const email = await emailForUsername(handle);
+    if (!email) { noteFail(); await gateFail(handle); return { ok: false, code: "nohandle" }; }
+    return signInGated(email, password);
+  }
+
+  /* the password attempt, wrapped in the SERVER gate:
+     locked accounts are refused before GoTrue is even asked, failures are
+     counted in the database, success clears the ledger. */
+  async function signInGated(email, password) {
+    const g = await gateStatus(email);
+    if (g && g.locked) return { ok: false, code: "locked", wait: g.wait || 600 };
+    const r = await signInEmail(email, password);
+    if (r.ok) { gateReset(email); return r; }
+    if (r.code === "bad") {
+      const gf = await gateFail(email);
+      if (gf && gf.locked) return { ok: false, code: "locked", wait: gf.wait || 600 };
+    }
+    return r;
+  }
+
+  /* ============ v258 · THE CODE — verification by email ============
+     · sign-up confirmation: enter the 6 digits, no inbox-link hunting
+     · sign-in: "email me a code" — no password at all
+     · forgot password: the code unlocks a new-password field
+     The code itself is created and checked by Supabase's server; the
+     browser only types it through. */
+  async function requestLoginCode(email) {
+    if (!ENABLED) return { ok: false, code: "off" };
+    try {
+      await fetch(URL + "/auth/v1/otp", {
+        method: "POST",
+        headers: { "apikey": ANON, "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email, create_user: false })
+      });
+    } catch (e) {}
+    return { ok: true };   /* always — never reveals who has an account */
+  }
+
+  async function resendSignupCode(email) {
+    if (!ENABLED) return { ok: false, code: "off" };
+    try {
+      await fetch(URL + "/auth/v1/resend", {
+        method: "POST",
+        headers: { "apikey": ANON, "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "signup", email: email })
+      });
+    } catch (e) {}
+    return { ok: true };
+  }
+
+  async function verifyCode(email, token, types) {
+    if (!ENABLED) return { ok: false, code: "off" };
+    const tok = String(token || "").replace(/\D/g, "");
+    if (tok.length < 4) return { ok: false, code: "code" };
+    for (const t of types) {
+      try {
+        const res = await fetch(URL + "/auth/v1/verify", {
+          method: "POST",
+          headers: { "apikey": ANON, "Content-Type": "application/json" },
+          body: JSON.stringify({ type: t, email: email, token: tok })
+        });
+        if (res.ok) {
+          const j = await res.json().catch(() => null);
+          if (j && j.access_token) {
+            session = j; lsSet(AUTH_KEY, session); noteSuccess();
+            return { ok: true };
+          }
+        }
+      } catch (e) {}
+    }
+    return { ok: false, code: "code" };
+  }
+  const verifyLoginCode  = (email, token) => verifyCode(email, token, ["email", "magiclink"]);
+  const verifySignupCode = (email, token) => verifyCode(email, token, ["signup"]);
+  const verifyRecoveryCode = (email, token) => verifyCode(email, token, ["recovery"]);
+
+  /* ============ v258 · CLAIM / CHANGE MY @NAME (server-checked) ============
+     Old accounts — legacy names, random-era ids — claim or change their
+     handle any time, from the You window. The DATABASE decides "taken":
+     a tampered browser cannot claim a second @name, a bad format, or
+     somebody else's handle. */
+  async function setMyUsername(handle) {
+    const u = String(handle || "").trim().toLowerCase().replace(/^@+/, "");
+    if (!HANDLE_RE.test(u)) return { ok: false, code: "bad" };
+    if (!ENABLED || !session) return { ok: false, code: "sign-in" };
+    try {
+      const tok = await ensureToken();
+      const res = await fetch(URL + "/rest/v1/rpc/set_my_username", {
+        method: "POST",
+        headers: authHeaders({ "Authorization": "Bearer " + tok }),
+        body: JSON.stringify({ p_username: u })
+      });
+      if (!res.ok) return { ok: false, code: "net" };
+      const verdict = ((await res.text()) || "").replace(/"/g, "").trim();
+      if (verdict !== "ok") return { ok: false, code: verdict === "taken" ? "taken" : "bad" };
+      session.user = session.user || {};
+      session.user.user_metadata = Object.assign({}, session.user.user_metadata || {}, { username: u });
+      lsSet(AUTH_KEY, session);
+      return { ok: true, username: u };
+    } catch (e) { return { ok: false, code: "net" }; }
+  }
+
+  /* the finish-line can be skipped — "just keep using Google" — and the
+     gate remembers, so it never nags twice. The You window still offers
+     the @name any time. */
+  async function skipFinish() {
+    if (!ENABLED || !session) return { ok: false };
+    try {
+      const tok = await ensureToken();
+      await fetch(URL + "/auth/v1/user", {
+        method: "PUT",
+        headers: { "apikey": ANON, "Content-Type": "application/json", "Authorization": "Bearer " + tok },
+        body: JSON.stringify({ data: { google_finished: true } })
+      });
+      session.user = session.user || {};
+      session.user.user_metadata = Object.assign({}, session.user.user_metadata || {}, { google_finished: true });
+      lsSet(AUTH_KEY, session);
+      return { ok: true };
+    } catch (e) { return { ok: false }; }
+  }
+
+  /* ================= v257 · THE GOOGLE FINISH-LINE =================
+     First Google visit does NOT land you in the app. Google shows its own
+     "approve & continue" consent first; when the reader comes back, the
+     login page holds them at one short menu: what Google shared (which they
+     just approved), a username to claim, a password to set, and the 13+
+     tick. From that moment @username + password opens the same account
+     forever — Google stays just one of two doors. */
+  function needsFinish() {
+    const u = user();
+    if (!u || !u.app_metadata) return false;
+    const prov = u.app_metadata.provider || (u.app_metadata.providers || [])[0];
+    if (prov !== "google") return false;              // email accounts are born finished
+    const md = u.user_metadata || {};
+    if (md.username || md.google_finished) return false;   // claimed, or honestly skipped
+    return true;
+  }
+
+  async function finishGoogleAccount(fields) {
+    const f = fields || {};
+    if (!ENABLED || !session) return { ok: false, code: "sign-in" };
+    const handle = String(f.username || "").trim().toLowerCase();
+    const pw = String(f.password || "");
+    if (!HANDLE_RE.test(handle)) return { ok: false, code: "badhandle" };
+    if (pw.length < 8) return { ok: false, code: "weak" };
+    const free = await usernameFree(handle);
+    if (!free) return { ok: false, code: "taken" };
+    const u = user() || {};
+    const md = u.user_metadata || {};
+    const display = String(f.display || md.full_name || md.name || handle).trim().slice(0, 24) || handle;
+    try {
+      const tok = await ensureToken();
+      const res = await fetch(URL + "/auth/v1/user", {
+        method: "PUT",
+        headers: { "apikey": ANON, "Content-Type": "application/json", "Authorization": "Bearer " + tok },
+        body: JSON.stringify({
+          password: pw,
+          data: {
+            username: handle,
+            full_name: display,
+            name: display,
+            first_name: md.first_name || md.given_name || "",
+            last_name: md.last_name || md.family_name || "",
+            provider: "google",
+            google_finished: true
+          }
+        })
+      });
+      if (!res.ok) return { ok: false, code: "net" };
+      /* mirror the handle into profiles — insert if the row is missing */
+      const patch = await fetch(TABLE_PROFILES + "?id=eq." + encodeURIComponent(u.id), {
+        method: "PATCH",
+        headers: authHeaders({ "Authorization": "Bearer " + tok, "Prefer": "return=minimal" }),
+        body: JSON.stringify({ username: handle, name: display, avatar_url: md.avatar_url || null })
+      });
+      if (!patch.ok) {
+        await fetch(TABLE_PROFILES, {
+          method: "POST",
+          headers: authHeaders({ "Authorization": "Bearer " + tok, "Prefer": "return=minimal" }),
+          body: JSON.stringify({ id: u.id, username: handle, name: display, avatar_url: md.avatar_url || null })
+        });
+      }
+      /* keep the local session honest — the gate never fires again */
+      session.user = session.user || {};
+      session.user.user_metadata = Object.assign({}, md, { username: handle, full_name: display, name: display });
+      lsSet(AUTH_KEY, session);
+      return { ok: true };
+    } catch (e) { return { ok: false, code: "net" }; }
+  }
+
+  /* always answers ok — never reveals whether the address has an account */
+  async function sendReset(email) {
+    if (!ENABLED) return { ok: false, code: "off" };
+    try {
+      await fetch(URL + "/auth/v1/recover", {
+        method: "POST",
+        headers: { "apikey": ANON, "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email })
+      });
+    } catch (e) {}
+    return { ok: true };
   }
 
   function signOut() {
@@ -678,6 +1074,7 @@
         '<div class="tsb-sheet__perk"><span>🔥</span> Streaks and badges that actually save</div>' +
         '<div class="tsb-sheet__perk"><span>✍️</span> Post under your own name</div>' +
         '<button class="tsb-sheet__google" data-sheet-google>Continue with Google</button>' +
+        '<a class="tsb-sheet__mail" href="login.html#signin">✉️&nbsp; Sign in with email, @name or a code</a>' +
         '<p class="tsb-sheet__fine">Free to read. No card.</p>' +
       "</div>";
     document.body.appendChild(sheetRoot);
@@ -712,7 +1109,8 @@
         return;
       }
       const didCallback = await handleCallback();
-      if (didCallback && user()) {
+      const didFragment = didCallback ? false : await handleFragmentSession();
+      if ((didCallback || didFragment) && user()) {
         // update UI IMMEDIATELY — never make the user wait on network sync
         afterLogin(true);
       }
@@ -740,6 +1138,10 @@
         openSheet,
         closeSheet,
         token: () => ensureToken(),
+        signUpEmail, signInEmail, signInId, sendReset, authCooldown, usernameFree, setPassword,
+        needsFinish, finishGoogleAccount, skipFinish,
+        requestLoginCode, resendSignupCode, verifyLoginCode, verifySignupCode, verifyRecoveryCode,
+        setMyUsername, gateStatus, emailForUsername,
         displayName,
         setDisplayName,
         me: user,
@@ -749,7 +1151,7 @@
     } catch (e) {
       console.warn("TSB boot error:", e);
       // never leave the app without TSB_AUTH — degrade gracefully
-      window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, track, onBookComplete, renderNav, clientId: GCLIENT, openSheet, closeSheet, token: () => ensureToken() };
+      window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, track, onBookComplete, renderNav, clientId: GCLIENT, openSheet, closeSheet, token: () => ensureToken(), signUpEmail, signInEmail, signInId, sendReset, authCooldown, usernameFree, setPassword, needsFinish, finishGoogleAccount, skipFinish, requestLoginCode, resendSignupCode, verifyLoginCode, verifySignupCode, verifyRecoveryCode, setMyUsername, gateStatus };
       try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
     }
   }

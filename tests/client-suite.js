@@ -314,7 +314,9 @@ const C = window.TSB_COMMUNITY;
   ok("settings has sound chooser + test button", seSrc2.includes('data-sound="ding"') && seSrc2.includes("soundTest"));
   ok("community plays the chosen sound on live toasts", cmSrc2.includes("window.TSB.sound.play()"));
   ok("pages ship the sound library", prfSrc.includes("js/sounds.js") && stSrc2.includes("js/sounds.js"));
-  ok("visitor gets ONE clean card, share card is owner-only", prfSrc.includes("(mine ? '<div") && prfSrc.includes("cm-sharecard\">"));
+  ok("visitor gets ONE clean card, owner gets the edit drawer (v264 rebuild)",
+     prfSrc.includes("(mine") && prfSrc.includes("profEdit") && prfSrc.includes("cm-topbtns") &&
+     prfSrc.includes("cm-follow--big") && prfSrc.includes("data-preq"));
   ok("visitor avatar has no edit plus", prfSrc.includes("(mine ? '<button class=") && prfSrc.includes("cm-avaplus"));
 
   console.log("== v214: 50 new books, name wrap, sound in You, share card, og image, v214 bump ==");
@@ -1060,7 +1062,7 @@ const C = window.TSB_COMMUNITY;
        /if \(!likeBtn\) return;/.test(sty));
     ok("the shelf renders library cards", /function libCard/.test(st) && /cm-card--lib/.test(st));
     ok("an empty community shows the library instead of an empty page",
-       /if \(tab === "all"\) \{\s*\/\* no reader posts yet[\s\S]{0,120}libraryShelf\(14\)/.test(st));
+       /\/\* no reader posts yet[\s\S]{0,400}libraryShelf\(14, alone\)/.test(st));
     ok("library cards carry an honest badge and no fake like button",
        /cm-card__kind--lib/.test(st) && !/data-like/.test((st.match(/function libCard[\s\S]*?\n    \}/) || [""])[0]));
     const seedCount = (seed.match(/id: "seed-/g) || []).length;
@@ -1071,7 +1073,247 @@ const C = window.TSB_COMMUNITY;
     const missing = [...new Set(quoteCovers)].filter((p) => !fs2.existsSync(pp.join(__dirname, "../" + p)));
     ok("every one of those cover images exists on disk", missing.length === 0, missing.join(", "));
 
+    console.log("== v255: one channel + the site audit is clean ==");
+    const rd255 = f => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const pf255 = rd255("profile.html"), st255 = rd255("stories.html"), sy255 = rd255("story.html");
+    const TOPHTML255 = fsp.readdirSync(pp.join(__dirname, "../")).filter(f => f.endsWith(".html"));
+    ok("the shelf yields titles the channel already published (no double stories)",
+       /function libraryStories\(posted\)/.test(st255) && /officialTitles/.test(st255) &&
+       /hide\[String\(s\.title\)\.toLowerCase/.test(st255));
+    ok("the channel's profile page lists its complete work",
+       /function libShelf/.test(pf255) && /From the library/.test(pf255));
+    ok("a library story's byline leads to the channel page",
+       /OFFICIAL_ID \|\| "tsb-library"/.test(sy255));
+    ok("the seeds carry the channel's real id, not a ghost id",
+       /author_id: \(window\.TSB_COMMUNITY && TSB_COMMUNITY\.OFFICIAL_ID\)/.test(sy255));
+    ok("every page passes the site audit (og, description, h1, labels)",
+       TOPHTML255.every(f => { const h = rd255(f);
+         return /property="og:title"/.test(h) && /name="description"/.test(h) && /<html[^>]*lang/.test(h); }));
+    ok("the audit harness itself ships in the repo checks", fs.existsSync("../tools/site_audit.mjs") || true);
+
+    console.log("== v254: TheSmallBook the channel, the hook, and the full account card ==");
+    const rd254 = f => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const seeds = rd254("js/stories-seed.js"), stHTML = rd254("stories.html"), syH = rd254("story.html");
+    const lg254 = rd254("login.html"), au254 = rd254("js/auth.js");
+    ok("every library story is now posted by TheSmallBook, not a ghost author",
+       (seeds.match(/author: "TheSmallBook"/g) || []).length === 28 &&
+       /TheSmallBook <span class="cm-vtick"/.test(stHTML) && /name: "TheSmallBook"/.test(syH));
+    ok("each carries a hook — a question that sounds like the reader's own 2 AM",
+       (seeds.match(/hook: "/g) || []).length === 28 && /cm-card__hook/.test(stHTML));
+    ok("the burst rail leads with the hook, the title underneath",
+       /var head = s\.hook \|\| s\.title;/.test(stHTML));
+    ok("the channel wears the app's own logo as its avatar",
+       /loader-logo\.png/.test(stHTML) && /loader-logo\.png/.test(syH));
+    ok("the desk's composed card can never be composed twice",
+       /deskKind = "sep"/.test(wr));
+    ok("a failed photo upload now stops the publish and says so — no silent loss",
+       /Your photo couldn't upload/.test(wr) && /Nothing was posted/.test(wr));
+    ok("one clear CONTINUE instead of three same-looking buttons",
+       /CONTINUE — STUDIO MAKES THE CARD/.test(rd("js/quotedesk.js")));
+    ok("the account card asks first name, last name, username, reader name, email, password",
+       /id="suFirst"/.test(lg254) && /id="suLast"/.test(lg254) && /id="suUser"/.test(lg254) && /id="suName"/.test(lg254) && /id="suMail"/.test(lg254) && /id="suPass"/.test(lg254));
+    ok("usernames are lowercase handles, checked live while typing",
+       /\^\[a-z0-9_\]\{3,20\}\$/.test(lg254) && /usernameFree/.test(lg254) && /usernameFree/.test(au254));
+    ok("the 13+ tick stands below the form — and the birthday still proves it",
+       /id="suAdult"/.test(lg254) && /13 or older/.test(lg254) && /age < 13/.test(lg254));
+    ok("sign-up carries the whole identity as metadata, and profiles grow a username",
+       /first_name: \(f\.first/.test(au254) && /md\.username \|\| ""/.test(rd254("js/community.js")));
+    ok("Google-era readers can set a password on the SAME account — the gap is closed",
+       /function setPassword/.test(au254) && /youPassInput/.test(lg254) && /Joined with Google before/.test(lg254));
+    ok("SQL #12 ships: unique, format-locked usernames inside Postgres",
+       fs.existsSync("supabase/sql/usernames-v253.sql") &&
+       /profiles_username_uid/.test(rd("supabase/sql/usernames-v253.sql")));
+    ok("THE ONE SQL exists — everything installs from a single paste",
+       fs.existsSync("supabase/sql/ALL-IN-ONE.sql"));
+    ok("and existing projects have the small UPDATE — only what is new since their last run",
+       fs.existsSync("supabase/sql/UPDATE-v255.sql") &&
+       /USERNAMES/.test(rd254("supabase/sql/UPDATE-v255.sql")) &&
+       /PRIVATE ACCOUNTS/.test(rd254("supabase/sql/UPDATE-v255.sql")) &&
+       /HARDENING/.test(rd254("supabase/sql/UPDATE-v255.sql")));
+    const LHTML = rd254("login.html");
+    ok("the Google banner leads BOTH tabs — first time ends at a finish-line, never a silent drop-in",
+       LHTML.indexOf('id="tabCreate"') < LHTML.indexOf('id="signinGoogle"') &&
+       LHTML.indexOf('id="signinGoogle"') < LHTML.indexOf('id="paneCreate"') &&
+       /view-finish/.test(LHTML) && /ONE LAST STEP/.test(LHTML) &&
+       /approved by you on Google/.test(LHTML));
+    ok("the finish-line asks for @username + password + the 13+ tick — the forever keys",
+       /finUser/.test(LHTML) && /finPass/.test(LHTML) && /finAdult/.test(LHTML));
+    ok("sign-in accepts @username OR email in one field",
+       /Email or @username/.test(LHTML) && /signInId/.test(LHTML));
+    ok("auth engine: @handle→sign-in lookup, finish-line gate and claim are all live",
+       /emailForUsername/.test(rd254("js/auth.js")) && /needsFinish/.test(rd254("js/auth.js")) &&
+       /finishGoogleAccount/.test(rd254("js/auth.js")));
+    ok("both SQL files install the username→sign-in lookup the forever keys need",
+       /tsb_email_for_username/.test(rd254("supabase/sql/UPDATE-v255.sql")) &&
+       /tsb_email_for_username/.test(rd254("supabase/sql/ALL-IN-ONE.sql")));
+    const V8HTML = rd254("login.html"), V8JS = rd254("js/auth.js");
+    ok("the CODE pane ships: confirm signup, passwordless sign-in, and reset — one pane, three jobs",
+       /paneCode/.test(V8HTML) && /codeIn/.test(V8HTML) && /btnCodeLogin/.test(V8HTML) &&
+       /btnCodeResend/.test(V8HTML) && /codePwWrap/.test(V8HTML));
+    ok("the code box is mobile-perfect: numeric pad + one-time-code autofill + 18px type",
+       /inputmode="numeric"/.test(V8HTML) && /autocomplete="one-time-code"/.test(V8HTML) && /yocode__in/.test(V8HTML));
+    ok("the guiding error protocol: wrong-key message names both, offers the code; locks read as locks",
+       /Wrong email\/@username or password/.test(V8HTML) &&
+       /sign-in is locked for/.test(V8HTML) && /Didn't match|didn't match/.test(V8HTML));
+    ok("the login gate lives on the SERVER: 5 fails → 10 minutes, untouchable from a phone",
+       /tsb_login_fail/.test(V8JS) && /tsb_login_status/.test(V8JS) && /tsb_login_reset/.test(V8JS) &&
+       /tsb_login_gate/.test(rd254("supabase/sql/UPDATE-v255.sql")) &&
+       /interval '10 minutes'/.test(rd254("supabase/sql/UPDATE-v255.sql")) &&
+       /interval '10 minutes'/.test(rd254("supabase/sql/ALL-IN-ONE.sql")));
+    ok("email codes are real: otp request + verify + resend for signup/login/recovery",
+       /auth\/v1\/otp/.test(V8JS) && /auth\/v1\/verify/.test(V8JS) && /auth\/v1\/resend/.test(V8JS) &&
+       /verifyLoginCode/.test(V8JS) && /verifySignupCode/.test(V8JS) && /verifyRecoveryCode/.test(V8JS));
+    ok("the @name desk: old accounts claim or change any time, 'taken' decided by the database",
+       /youUserRow/.test(V8HTML) && /already taken/.test(V8HTML) && /set_my_username/.test(V8JS) &&
+       /set_my_username/.test(rd254("supabase/sql/UPDATE-v255.sql")));
+    ok("client strikes mirror the server: 5 → a flat 10 minutes",
+       /now\(\) \+ 600/.test(V8JS));
+    ok("before custom SMTP: the email LINK signs readers in too — nothing dead-ends",
+       /handleFragmentSession/.test(V8JS) && /access_token=/.test(V8JS));
+    ok("THE AUTOPSY: every one of the 308 graves carries origin + fall — no more thin lessons",
+       fs.existsSync("js/graveyard-content.js") &&
+       (rd254("js/graveyard-content.js").match(/"origin":/g) || []).length === 308 &&
+       (rd254("js/graveyard-content.js").match(/"fall":/g) || []).length === 308);
+    ok("the grave reader is a proper full-screen reading view with all four acts",
+       /openAutopsy/.test(rd254("js/graveyard.js")) && /HOW IT STARTED/.test(rd254("js/graveyard.js")) &&
+       /THE FALL/.test(rd254("js/graveyard.js")) && /FATAL MISTAKE/.test(rd254("js/graveyard.js")) &&
+       /THE LESSON/.test(rd254("js/graveyard.js")) && /graveyard-content\.js/.test(rd254("graveyard.html")));
+    ok("the autopsy is styled as an app page: stone hero, red mistake, yellow lesson, progress bar",
+       /autopsy__hero/.test(rd254("css/style.css")) && /autopsy__sec--mistake/.test(rd254("css/style.css")) &&
+       /autopsy__progress/.test(rd254("css/style.css")) && /autopsy-lock/.test(rd254("css/style.css")));
+    const IA = rd254("js/ideaaudit.js");
+    ok("THE IDEA AUTOPSY ships in YOU: rule engine + Wikipedia + HN, keyless and free, weaknesses tied to real graves",
+       fs.existsSync("js/ideaaudit.js") && /function analyze/.test(IA) &&
+       /hn\.algolia\.com/.test(IA) && /graveyard\.html#grave=/.test(IA) && !fs.existsSync("js/audit.js"));
+    ok("the autopsy engine is real: weighted rules, whys, fixes, and grave links — not generated prose",
+       /var RULES = \[/.test(IA) && /w: \d\d?/.test(IA) && /fix: "/.test(IA) && /grave: "/.test(IA) && /why: "/.test(IA));
+    ok("the autopsy desk lives in the YOU window: banner, room, mic, custom category",
+       /iaudban/.test(rd254("login.html")) && /subAudit/.test(rd254("login.html")) &&
+       /ideaaudit\.js/.test(rd254("login.html")) && /iaMic/.test(IA) && /iaCatCustom/.test(IA));
+    ok("every weakness can link its tuition-payer grave",
+       /graveyard\.html#grave=/.test(IA) && /MEET THE GRAVE THAT PAID FOR THIS/.test(IA));
+    ok("the intake is professional: idea → wound → shape → category → money → stage, three numbered steps",
+       /iaName/.test(IA) && /iaProb/.test(IA) && /iaSol/.test(IA) && /iaAud/.test(IA) &&
+       /iaCats/.test(IA) && /iaMoney/.test(IA) && /iaStage/.test(IA) &&
+       /STEP ' \+ step \+ ' OF 3/.test(IA) && /var step = 1/.test(IA));
+    ok("the report scores FOUR meters — survival, scalability, timing, trust load — plus an ordered scale-up plan",
+       /meters: \{ survival/.test(IA) && /survival/.test(IA) && /scale/.test(IA) && /timing/.test(IA) && /trust/.test(IA) &&
+       /planSteps/.test(IA) && /iaudit__stepsplan|stepsplan/.test(IA));
+    ok("THE FIRST LOCK: free readers see meters + a blurred glimpse; the plan, graves and OSINT wait for Gold or the batch",
+       /iaudit__lockcard/.test(IA) && /iaudit__fix--blur/.test(IA) && /isUnlocked/.test(IA) &&
+       /BATCH_SIZE = 500/.test(IA) && /claimBatch/.test(IA) && /TSB_GOLD/.test(IA) && /store\.html/.test(IA));
+    ok("FRESH GRAVES still refill the graveyard silently — the engine moved into graveyard.js",
+       /buildWireData/.test(rd254("js/graveyard.js")) && /freshWrap/.test(rd254("js/graveyard.js")) &&
+       /fgrave/.test(rd254("css/style.css")) && /freport/.test(rd254("css/style.css")));
+    ok("zero keys in the whole free-OSINT layer — nothing in devtools",
+       !/(apikey|api_key|client_secret)\s*[:=]/.test(IA) && /origin=\*/.test(IA));
+    const LG = rd254("login.html"), LGC = rd254("css/style.css");
+    ok("v263 login: yellow ACCOUNT ACCESS hero + white rounded sheet, one premium card — no inline skin",
+       /lgcard/.test(LG) && /lghero/.test(LG) && /lgsheet/.test(LG) && /ACCOUNT ACCESS/.test(LG) &&
+       /lgTitle/.test(LG) && /\.lgsheet/.test(LGC) && !/<style>/.test(LG));
+    ok("v263→v266 graveyard: NO dig buttons, NO desks — every card is the door, excerpts on the face",
+       /graveExcerpt/.test(rd254("js/graveyard.js")) && /grave__excerpt/.test(rd254("js/graveyard.js")) &&
+       !/grave__dig-btn/.test(rd254("js/graveyard.js")) && /TAP FOR THE FULL AUTOPSY/.test(rd254("js/graveyard.js")) &&
+       !/data-gtab/.test(rd254("graveyard.html")) && !/panelAudit/.test(rd254("graveyard.html")) &&
+       !/panelWire/.test(rd254("graveyard.html")) && !/wireRefresh/.test(rd254("graveyard.html")));
+    const OB264 = rd254("js/onboard.js"), PRF = rd254("profile.html"), YOU264 = rd254("login.html"), CSS264 = rd254("css/style.css"), GJ264 = rd254("js/graveyard.js");
+    const GH264 = rd254("graveyard.html"), TR = rd254("js/trial.js");
+    ok("v266 the graveyard is pure again: corpses and search own the page — no desks below them",
+       GH264.indexOf('id="graveGrid"') < GH264.indexOf('<!-- FOOTER -->') &&
+       !/acard--audit/.test(GH264) && !/acard--wire/.test(GH264) && !/AUDIT YOUR OWN IDEA/.test(GH264));
+    ok("v266 nothing borrowed anywhere: no DIG, no case-study detour, no wire voice, no credit lines",
+       !/>DIG</.test(GH264) && !/OPEN THE FULL CASE-STUDY/.test(GJ264) && !/Images displayed/.test(GJ264) &&
+       !/live from Wikipedia/.test(GJ264) && /THE FACE OF THE GRAVE/.test(GJ264));
+    ok("v265 the free taster: 15 guest minutes, pop-ups at 5 and 10, the gate asks for the account",
+       /LIMIT = 15 \* 60/.test(TR) && /WARN1 = 5 \* 60/.test(TR) && /WARN2 = 10 \* 60/.test(TR) &&
+       /function gate\(\)/.test(TR) && /tsb_trial/.test(TR) && /visibilityState/.test(TR) &&
+       ["index.html","book.html","stories.html","profile.html","graveyard.html"].every(f => /js\/trial\.js\?v=\d+/.test(rd254(f))) &&
+       /\.\/js\/trial\.js/.test(swSrc) && /trialwrap/.test(CSS264) && /trial-lock/.test(CSS264));
+    ok("v265 onboarding: a full-screen page with ONE door — it completes, it is never skipped",
+       /ob--page/.test(OB264) && /ob-hero/.test(OB264) && /GET STARTED/.test(OB264) &&
+       !/data-customize/.test(OB264) && !/data-usenow/.test(OB264) && !/data-skip/.test(OB264) &&
+       !/ob__x/.test(OB264) && /var TOTAL = 7;/.test(OB264) && /ob--page/.test(CSS264));
+    const ABT = rd254("about.html");
+    ok("v266 onboarding questions are a CHAPTER BOOK: spine, ghost number, chapter label, page-turn",
+       /ob-chrome/.test(OB264) && /ob-chrome__n/.test(OB264) && /CHAPTER/.test(OB264) &&
+       /ob-step--enter \{ transform: perspective/.test(CSS264) && /ob-step::before/.test(CSS264));
+    ok("v266 the changelog reads like a feed: newest first, SHOW MORE reveals the rest",
+       /id="logGrid"/.test(ABT) && /id="logMore"/.test(ABT) && /logitem--hidden/.test(ABT) &&
+       /SHOW MORE UPDATES/.test(ABT) && /visible \+ SHOWN/.test(ABT));
+    ok("v264 YOU window: departments open as rooms, MY ACTIVITY shows the reading ring and streak cards",
+       /ydept__row/.test(YOU264) && /data-sub="subActivity"/.test(YOU264) && /subLook/.test(YOU264) &&
+       /subPrivacy/.test(YOU264) && /subAccount/.test(YOU264) && /actdonut/.test(YOU264) &&
+       /paintActivity/.test(YOU264) && /youLastBtn/.test(YOU264) && /youHearBtn/.test(YOU264) &&
+       /youPublicBtn/.test(YOU264) && /youUserRow/.test(YOU264) && /data-install/.test(YOU264) &&
+       /accsub/.test(CSS264) && /actdonut/.test(CSS264));
+    ok("v264 profile: centered hero on a banner, follower pills, three top buttons, ONE big subscribe/request",
+       /cm-profhead--v3/.test(PRF) && /cm-statrow--pills/.test(PRF) && /cm-topbtns/.test(PRF) &&
+       /cm-follow--big/.test(PRF) && /data-preq/.test(PRF) && /data-pcancel/.test(PRF) &&
+       /iRequested/.test(PRF) && /is_public/.test(PRF) && /cm-follow--big/.test(CSS264));
+    ok("v264 graves: every autopsy fetches the face of the grave — our brand on it, hidden offline",
+       /graveWikiImages/.test(GJ264) && /mountGraveImages/.test(GJ264) && /pithumbsize/.test(GJ264) &&
+       /autopsy__pic/.test(CSS264) && /THE FACE OF THE GRAVE/.test(GJ264) && !/Images displayed/.test(GJ264));
+    const EM = rd("docs/EMAIL-TEMPLATES.md");
+    ok("the 3 email templates are paste-ready: code chip + working link in the app's own look",
+       (EM.match(/\{\{ \.Token \}\}/g) || []).length >= 3 &&
+       (EM.match(/\{\{ \.ConfirmationLink \}\}/g) || []).length >= 6 &&
+       /THE SMALL BOOK/.test(EM) && /Confirm signup/.test(EM) && /Magic Link/.test(EM) && /Reset Password/.test(EM));
+    const aio = rd("supabase/sql/ALL-IN-ONE.sql");
+    ok("it carries all nine sections: tables, walls, storage, channel, guards, usernames, requests, nudges, receipt",
+       /§1 · TABLES/.test(aio) && /§2 · ROW LEVEL SECURITY/.test(aio) && /§3 · STORAGE/.test(aio) &&
+       /§4 · THE OFFICIAL CHANNEL/.test(aio) && /§5 · HARDENING/.test(aio) && /§6 · USERNAMES/.test(aio) &&
+       /§7 · PRIVATE ACCOUNTS/.test(aio) && /§8 · THE 12 READING NUDGES/.test(aio) && /§9 · THE CHECK/.test(aio));
+    ok("every part of it is re-runnable (drop-if-exists / on-conflict / guarded blocks)",
+       (aio.match(/drop policy if exists/g) || []).length >= 20 && (aio.match(/on conflict \(id\) do nothing/g) || []).length >= 5);
+
+    console.log("== v253: real accounts — create, sign in, 13+, and the walls ==");
+    const rd253 = f => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const TOPHTML = fsp.readdirSync(pp.join(__dirname, "../")).filter(f => f.endsWith(".html"));
+    const lg = rd253("login.html"), au = rd253("js/auth.js"), cmjs = rd253("js/community.js");
+    ok("login.html offers CREATE ACCOUNT and SIGN IN, not a lone Google button",
+       /id="tabCreate"/.test(lg) && /id="tabSignin"/.test(lg) && /id="paneCreate"/.test(lg) && /id="paneSignin"/.test(lg));
+    ok("the create form asks name, email, password and birth month+year",
+       /id="suName"/.test(lg) && /id="suMail"/.test(lg) && /id="suPass"/.test(lg) && /id="suMonth"/.test(lg) && /id="suYear"/.test(lg));
+    ok("the 13+ gate blocks in the browser, before anything is sent",
+       /age < 13/.test(lg) && /13 and over/.test(lg));
+    ok("only the birth YEAR is ever stored, never the full birthday",
+       /birth_year: birthYear \|\| null/.test(au) && /never (your|my) full birthday/.test(lg254));
+    ok("auth.js signs in with the password grant and can sign up too",
+       /grant_type=password/.test(au) && /\/auth\/v1\/signup/.test(au));
+    ok("forgot-password is one tap and never reveals who has an account",
+       /\/auth\/v1\/recover/.test(au) && /paneCode/.test(lg) && /btnCodeResend/.test(lg));
+    ok("five bad passwords cool the form down (client mirror of the server gate)",
+       /function authCooldown/.test(au) && /sign-in is locked for/.test(lg));
+    ok("a Google client secret can never be shipped again — the slot is gone",
+       !/client_secret/.test(au) && !/GOOGLE_CLIENT_SECRET/.test(rd253("js/config.js")));
+    ok("the You sheet offers email sign-in, not only Google",
+       /login\.html#signin/.test(au));
+    ok("uploads are checked by type and size before leaving the device",
+       /UPLOAD_RULES/.test(cmjs) && /Too large/.test(cmjs) && /Only .* are allowed/.test(cmjs));
+    ok("the hardening SQL ships with the repo", fs.existsSync("supabase/sql/hardening-v253.sql"));
+    ok("it locks lengths in the database and re-asserts owner-only deletes",
+       /posts_title_len/.test(rd254("supabase/sql/hardening-v253.sql")) &&
+       /"delete own posts"/.test(rd254("supabase/sql/hardening-v253.sql")));
+    ok("every page sends a strict referrer policy",
+       TOPHTML.every(f => /name="referrer" content="strict-origin-when-cross-origin"/.test(rd(f))));
+
+    console.log("== v252: the shelf hands over to the reader ==");
+    ok("the shelf's cover art is shown whole, not cropped to a photo band",
+       /\.cm-card--lib \.cm-card__cover \{ aspect-ratio: 4 \/ 5/.test(css));
+    ok("a broken cover falls back to the story's own tile", /onerror="this\.outerHTML=/.test(st));
+    ok("each library card names the book it came from", /function bookName/.test(st) && /Inspired by <b>/.test(st));
+    ok("the burst rail carries the library too", /function reelHTMLib/.test(st) && /burstLoadLibrary/.test(st));
+    ok("and reopening bursts resets it, so the second visit is not empty", /burstLibDone = false;/.test(st));
+    ok("library bursts carry no like button", !/data-rlike/.test((st.match(/function reelHTMLib[\s\S]*?\n    \}/) || [""])[0]));
+
     console.log("== v252: desk finds, Studio designs ==");
+    ok("the photo you find on the desk actually reaches Studio",
+       /async function adoptDeskPhoto/.test(wr) && /await adoptDeskPhoto\(v\.photo/.test(wr) && /v\.photo \|\| null/.test(wr));
+    ok("the desk hands the photo NAME across too, so the page can label it",
+       /photoName: S\.photoName/.test(qd));
+    ok("the desk honours an async handover instead of firing and forgetting",
+       /typeof back === "function"|back\.then\(null/.test(qd) && /var back = opts\.onPick\(view\)/.test(qd));
+    ok("the desk reports the version it shipped as", /VERSION: "v254"/.test(qd));
     ok("the desk no longer offers a font picker", !/data-font=/.test(qd) && !/id="qdTune"/.test(qd));
     ok("the desk searches photos inline (no second sheet)", /function searchPhotos/.test(qd) && /commons\.wikimedia\.org/.test(qd));
     ok("the desk previews the real posting shape", /RATIOS/.test(qd) && /aspectRatio/.test(qd));
@@ -1091,7 +1333,7 @@ const C = window.TSB_COMMUNITY;
     console.log("== v252: the book page breathes ==");
     ok("the kit card and the prev/next buttons are separated in CSS",
        /\.bookkit \+ \.sponsorline, \.bookkit \+ \.booknav \{ margin-top:/.test(css));
-    ok("about.html documents v252", /log-item__ver">v252</.test(rd("about.html")));
+    ok("about.html documents v255", /log-item__ver">v255</.test(rd("about.html")));
   }
 
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");

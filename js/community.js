@@ -91,16 +91,22 @@
     var md = u.user_metadata || {};
     var name = (window.TSB_AUTH && TSB_AUTH.displayName) ? TSB_AUTH.displayName() : (md.full_name || md.name || "Reader");
     var avatar = md.avatar_url || md.picture || "";
+    var uname = (md.username || "").toLowerCase();
     var rows = await api("profiles?id=eq." + u.id, {});
     if (rows && rows.length) {
-      if (!rows[0].avatar_url && avatar) {
-        await api("profiles?id=eq." + u.id, { method: "PATCH", body: { avatar_url: avatar, name: name } });
-        rows[0].avatar_url = avatar;
+      /* v254: carry the handle onto the profile the first time we see it */
+      if ((!rows[0].avatar_url && avatar) || (uname && !rows[0].username)) {
+        var patch = {};
+        if (!rows[0].avatar_url && avatar) patch.avatar_url = avatar;
+        if (uname && !rows[0].username) patch.username = uname;
+        await api("profiles?id=eq." + u.id, { method: "PATCH", body: patch });
+        rows[0].avatar_url = patch.avatar_url || rows[0].avatar_url;
+        rows[0].username = patch.username || rows[0].username;
       }
       return rows[0];
     }
-    var created = await api("profiles?on_conflict=id&select=*", { method: "POST", headers: { Prefer: "resolution=merge-duplicates" }, body: { id: u.id, name: name, avatar_url: avatar, is_public: true } });
-    return (created && created[0]) || { id: u.id, name: name, avatar_url: avatar, bio: "" };
+    var created = await api("profiles?on_conflict=id&select=*", { method: "POST", headers: { Prefer: "resolution=merge-duplicates" }, body: { id: u.id, name: name, username: uname || null, avatar_url: avatar, is_public: true } });
+    return (created && created[0]) || { id: u.id, name: name, username: uname, avatar_url: avatar, bio: "" };
   }
   async function safeProfile() {
     try { return await ensureProfile(); } catch (e) { return null; }
@@ -242,11 +248,28 @@
   }
 
   /* ---------- uploads (covers / audio / avatars) ---------- */
+  /* v253 · uploads are validated BEFORE anything leaves the device —
+     type by MIME, size by bucket. Checklist #15. */
+  var UPLOAD_RULES = {
+    "tsb-covers": { mimes: ["image/jpeg", "image/png", "image/webp", "image/gif"], max: 8 },
+    "tsb-avatars": { mimes: ["image/jpeg", "image/png", "image/webp"], max: 4 },
+    "tsb-audio": { mimes: ["audio/webm", "audio/m4a", "audio/mp4", "audio/mpeg", "audio/mp3", "audio/ogg", "audio/wav"], max: 20 }
+  };
   async function upload(file, bucket) {
     var u = me();
     if (!u) throw new Error("sign-in");
     var tk = await authToken();
     if (!tk) throw new Error("session expired — sign in again");
+    var rule = UPLOAD_RULES[bucket];
+    if (rule) {
+      if (!file || rule.mimes.indexOf(file.type) < 0) {
+        var kinds = rule.mimes.some(function (m) { return m.indexOf("image/") === 0; }) ? "JPG, PNG, WEBP or GIF" : "voice notes (webm, m4a, mp3, ogg or wav)";
+        throw new Error("Only " + kinds + " are allowed here.");
+      }
+      if (file.size > rule.max * 1024 * 1024) {
+        throw new Error("Too large — keep it under " + rule.max + " MB.");
+      }
+    }
     var path = u.id + "/" + Date.now() + "-" + (file.name || "f").replace(/[^\w.-]+/g, "_");
     var url = URL + "/storage/v1/object/" + bucket + "/" + path;
     var hdrs = { apikey: ANON, Authorization: "Bearer " + tk, "Content-Type": file.type || "application/octet-stream", "x-upsert": "false" };

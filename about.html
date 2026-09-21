@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>About TheSmallBook — Created by Jash Gandhi</title>
   <meta name="description" content="TheSmallBook is a free library of 400 book summaries, 2,637+ lessons and 308 failure case studies, plus an Ask-the-Library mode — created by Jash Gandhi from Mumbai, India. Free to read, no ads, no signup.">
@@ -11,11 +12,11 @@
   <meta property="og:description" content="The story behind the free library: 400 books distilled, 308 failures autopsied, 83 life questions answered, 26 languages. Built by Jash Gandhi, Mumbai.">
     <meta property="og:url" content="https://thesmallbook.in/about.html">
   <meta property="og:site_name" content="TheSmallBook">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=252">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=266">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="TheSmallBook — 400 books · 2637 lessons · 308 autopsies · free to read">
-  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=252">
+  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=266">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary">
   <link rel="manifest" href="manifest.json">
@@ -32,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=252">
+  <link rel="stylesheet" href="css/style.css?v=266">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -105,6 +106,11 @@
     html.dark .lab-cta{border-color:#000;box-shadow:2px 2px 0 #000}
     /* changelog */
     .log-grid{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+    .log-item.logitem--hidden{display:none}
+    .logmore{display:block;width:100%;margin:14px 0 4px;background:#ffc800;color:#111;border:3px solid #111;border-radius:999px;box-shadow:4px 4px 0 #111;padding:14px;font:900 12px 'Archivo Black',sans-serif;letter-spacing:1.2px;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease}
+    .logmore:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 #111}
+    html.dark .logmore{border-color:#000;box-shadow:4px 4px 0 #000}
+    @media (prefers-reduced-motion: reduce){.logmore{transition:none}}
     .log-item{border:2.5px solid #111;border-radius:14px;padding:12px 14px;background:#fff;box-shadow:3px 3px 0 #111;display:flex;gap:12px;align-items:flex-start}
     .log-item__ver{flex:none;font:800 11px 'Space Grotesk',sans-serif;background:#111;color:#ffc800;border-radius:999px;padding:5px 9px;letter-spacing:.4px}
     .log-item__body b{font:800 12.5px 'Space Grotesk',sans-serif}
@@ -366,7 +372,53 @@
     <section class="about__block">
       <h2 class="about__head">🆕 What's new — changelog</h2>
       <p style="font:600 11px 'Space Grotesk',sans-serif;color:#8f8a80">We ship every week. New books, new graves, and small polish. This page is the living changelog.</p>
-      <div class="log-grid">
+      <div class="log-grid" id="logGrid">
+        <div class="log-item">
+          <span class="log-item__ver">v266</span>
+          <div class="log-item__body"><b>⚡ The Idea Autopsy moves into YOU — with the app&rsquo;s first lock &middot; the wire retires &middot; onboarding becomes a chapter book</b>
+          <p><b>The Idea Autopsy lives in YOU now, rebuilt from zero.</b> A banner that glows like the graveyard door: cross-examine your startup idea against 308 case files — four meters, a verdict in plain words, fixes that name the grave that paid for the mistake, an ordered scale-up plan, and live proof from the public record. The old audit and the wire are gone from the graveyard page; the corpses lead there now, alone.</p>
+          <p><b>The first lock.</b> Free readers see the meters, the verdict and a blurred glimpse of the fixes. The full treatment — every fix, the plan, the family history of failures like yours, the OSINT proof — unlocks with Gold or the launch batch (the first 500 claims are free).</p>
+          <p><b>Onboarding questions became a chapter book.</b> Every question is now a page — spine, ghost chapter number, the question underlined in yellow — and the pages turn in 3D as you answer.</p>
+          <p><b>This changelog learned manners.</b> You see the newest updates first; the rest arrive when you tap SHOW MORE — no endless wall on your phone.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v265</span>
+          <div class="log-item__body"><b>⏳ The 15-minute free taster — and the final clean-up</b>
+          <p><b>Onboarding completes; it is never skipped.</b> The extra doors and the cross are gone — one GET STARTED carries you through all seven questions, and finishing opens the app with a clear <b>15-minute free taster</b>. The clock only runs while you&rsquo;re actually looking at the app, and a refresh doesn&rsquo;t refill it.</p>
+          <p><b>At 5 minutes a polite pop-up: 10 left. At 10: five left. At 15 the gate</b> — sign in (30 seconds, free) and your shelf, streak, @name and everything you read today stay yours forever.</p>
+          <p><b>The graveyard leads again.</b> The 308 corpses and the search open the page; AUDIT YOUR IDEA and THE WIRE now sit below the graves on dark case-file boards that belong to the graveyard. Search has no DIG button — typing is the search.</p>
+          <p><b>Nothing borrowed, nothing extra.</b> The reader is the full story — the case-study-page detour and the &ldquo;images displayed from&hellip;&rdquo; credit line are gone; grave photos simply carry our stamp, THE FACE OF THE GRAVE. The wire speaks in our voice (&ldquo;tuning the wire&hellip; THE WIRE IS LIVE&rdquo;), sources stay linked on the items themselves. Login inputs: the show-password eye sits dead-centre, tabs never clip, the 13+ tick is bigger and nudges you if it&rsquo;s the one thing missing. Profiles centre on one axis. Motion everywhere it earns its place — floating shapes, breathing onboarding, card entrances — all silenced by reduced-motion.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v264</span>
+          <div class="log-item__body"><b>🎨 The premium pass — onboarding becomes a full-screen tune-up, YOU gets rooms, profiles get the reference card, graves get faces</b>
+          <p><b>Onboarding is now a page, not a pop-up.</b> First visit opens a full-screen tune-up with a numbered timeline, one question per screen, and three doors: GET STARTED, CUSTOMISE MY SHELF, or &ldquo;Use the app right now&rdquo; — nobody is trapped by a quiz. The same full-screen experience reopens from You &rarr; Re-tune.</p>
+          <p><b>The YOU window has rooms.</b> Settings are five departments — My activity, Look &amp; feel, Notifications &amp; sound, Privacy, Account &amp; keys — each opening its own aligned window with a back button. MY ACTIVITY shows the reading ring (how much of the library you&rsquo;ve read), lessons/books/badges counters, and the bold streak cards.</p>
+          <p><b>Profiles rebuilt to the reference card.</b> Colour banner with shapes, centered photo and name, @handle, bio and links, follower pills, three round buttons up top (message / share / copy) and ONE big black SUBSCRIBE button — or 🔒 Request to follow on private accounts, with Requested ⏳ state and cancel.</p>
+          <p><b>Every grave shows its face.</b> Opening any of the 308 autopsies quietly fetches the company&rsquo;s photograph from the free public record (Wikipedia, keyless), plus a small gallery when the article carries more — display only, credited, linked back, and hidden gracefully offline. v263&rsquo;s premium circular login card and the button-less Graveyard — cards that read like stories, audit and Wire in one flow — are all part of this ship.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v255</span>
+          <div class="log-item__body"><b>🕵️ The audit round — one channel, and every page cleaned up</b>
+          <p><b>One TheSmallBook channel.</b> The shelf no longer repeats the five stories the official account already published &mdash; they appear once, under the channel&rsquo;s name, in the feed and on its profile page. The channel&rsquo;s profile now shows its complete work: the published posts plus the 23 library stories still coming. Every library story&rsquo;s byline links to that channel page.</p>
+          <p><b>The full site audit ran &mdash; 46 findings, all fixed.</b> Like the paid scanners do: share previews (og:title / description / image) were missing on thirteen pages &mdash; chat shares and story links showed blank cards; nine pages had no proper heading for search engines; three hidden form fields had no accessible name; the internal OG builder shipped with no title, language or viewport; and two book covers weighed 670&nbsp;KB where 150 now does the same job. Every page now passes the audit &mdash; and the audit tool itself ships with the app so it can never quietly rot again.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v254</span>
+          <div class="log-item__body"><b>📣 TheSmallBook becomes a channel &middot; hooks that feel like you &middot; a proper account card &middot; the quote-mode bugs, found and fixed</b>
+          <p><b>The library now posts as TheSmallBook.</b> Every library story carries the app&rsquo;s own name, tick and logo &mdash; one channel, always posting, exactly like a real author page.</p>
+          <p><b>Hooks.</b> All 28 stories lead with a question that sounds like the reader&rsquo;s own 2 AM &mdash; &ldquo;Would you keep posting if nobody clapped for four years?&rdquo; &mdash; on the shelf cards and as the headline of every burst. The title and the book sit underneath.</p>
+          <p><b>The account card is complete.</b> First name, last name, a real <b>@username</b> (checked live while you type &mdash; lowercase, unique, held by the database, SQL&nbsp;#12), a reader name people see, email, password &mdash; and below it, the required <b>13+ tick</b> with the terms. The birthday stays: the tick is the promise, the birthday is the proof.</p>
+          <p><b>The sign-out gap is closed.</b> Readers who joined with Google can set a password on the <i>same</i> account (You &rarr; set a password), and the sign-in page says exactly that. Nobody has to lose their shelf.</p>
+          <p><b>Quote mode, honest about everything.</b> Three real bugs: a card could be composed twice (tiny text inside a big frame), a photo that failed to upload vanished silently into a text-only post, and a duplicated field in the publish payload. All fixed &mdash; failed uploads now stop the publish with a clear message and keep your photo. And one clear <b>CONTINUE</b> button instead of three same-looking choices.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v253</span>
+          <div class="log-item__body"><b>🔐 Real accounts — and a 21-point security pass</b>
+          <p><b>Create an account, sign in again anywhere.</b> Until now the only way in was Google. Now the sign-in page has <b>CREATE ACCOUNT</b> and <b>SIGN IN</b> tabs: your name, email and a password (8+ characters) — and you can log back in on any phone or laptop, no Google needed. Forgot the password? One tap emails you a reset link. Five wrong tries cool the form down instead of letting it be bashed. The You sheet now offers email sign-in too. Everything else — progress sync, streaks, posting, DMs — works exactly as before.</p>
+          <p><b>The 13+ gate.</b> Creating an account asks your birth month and year; under 13 is stopped in the browser, before anything is sent anywhere. Only the birth <i>year</i> is kept — never the full birthday.</p>
+          <p><b>The security pass.</b> A 21-point shipping checklist was audited line by line. Fixed: a leftover code path that could have shipped a Google <i>client secret</i> to every visitor (removed — the slot no longer exists), uploads that were never checked for type or size (now validated before they leave your device), and a like button that could be double-tapped into fake counts (a one-like-per-reader index in the database). Story titles, comments and profile names are now length-locked <i>inside the database</i>, not just in the form, and every page sends a strict referrer policy. Supabase owners run the new <b>SQL #11</b> (supabase/sql/hardening-v253.sql) once — it is re-runnable and proven against real PostgreSQL.</p></div>
+        </div>
         <div class="log-item">
           <span class="log-item__ver">v252</span>
           <div class="log-item__body"><b>📚 Ask the Library, rebuilt &middot; the story shelf is finally alive &middot; the Quote Desk stops repeating Studio</b>
@@ -376,7 +428,6 @@
           <p><b>Research hands you writing, not links.</b> Searching a topic used to return sources &mdash; a Wikipedia link, a dictionary entry, some book covers &mdash; and you still had the blank page in front of you. Now the research tab leads with <b>Ready to use</b>: what the library&rsquo;s own lessons actually say about your topic (real summaries, insertable in one tap), the citable facts pulled out of the Wikipedia extract one line at a time, and three openers so the first sentence is never the hardest part. Then the voices, the full readable books and the links, below, for going deeper.</p>
           <p><b>And the small thing that was annoying you:</b> the reader&rsquo;s card on a book page &mdash; the cheat-sheet and Fuel buttons &mdash; no longer touches the pair of coloured buttons below it. There is 56&nbsp;px of clear space at every width, and the alignment harness now fails the build if that gap ever collapses again.</p></div>
         </div>
-        <div class="log-item">
         <div class="log-item">
           <span class="log-item__ver">v251</span>
           <div class="log-item__body"><b>🔒 Locked voice notes &middot; the Quote Desk &middot; last seen &amp; read receipts &middot; private accounts &middot; real brand logos</b><p><b>Own messages are readable in dark mode again.</b> A dark-mode pass had painted the yellow &ldquo;you&rdquo; bubble the same near-black as the page while the text stayed dark &mdash; your own words were invisible. Fixed, along with two sibling bugs the same audit found (pink tiles and unlocked badges).</p><p><b>Voice notes:</b> press the mic and <b>let go &mdash; it keeps recording (locked)</b>, with a green LOCKED badge, a live timer and the audio bars still dancing. Tap the mic to send it while locked, or Delete. Slide up to review instead, or hold-and-travel for the old send-on-release. Switching apps no longer kills a live note &mdash; it locks it. A 2:00 locked note sends itself rather than throwing a &ldquo;too short&rdquo; error.</p><p><b>Messages:</b> the edit / delete-for-me / delete-for-everyone buttons now appear <b>only on a long press</b>, so tapping a voice note to listen never pops them up by accident. The <b>+</b> lives inside the composer capsule now (one soft disc that rotates as it opens) instead of floating next to it, and it is labelled &ldquo;Send a book&rdquo;, because that is what it does.</p><p><b>Quote section, much simpler:</b> one sheet does everything. <b>Open Quote Desk</b> &rarr; type your line, or tap a topic for live quotes, or search. Pick a photo and it lands <b>in the preview right there</b> &mdash; no second window, nothing to go &ldquo;back&rdquo; from. &ldquo;Why this line hit you&rdquo; now sits <b>under the card</b>, on the page, where readers meet it. Studio opens only if you choose a baked-in card.</p><p><b>The font you pick is the font you keep.</b> The page preview used to snap back to the old default the moment you left Studio; now the card and the page always agree, and the published quote carries the same layout.</p><p><b>No watermark inside the app.</b> Framing, composing and publishing are clean for everyone. Only a <b>download</b> on the free plan carries the credit &mdash; redesigned as a small dark sticker with the brand dot, sized to the export. Gold has no chip anywhere. Dictation is gone from the Quote section, on purpose.</p><p><b>Last seen &amp; read receipts (You):</b> two switches. Show &ldquo;last seen&rdquo; or stay invisible; show that you read a story or keep it to yourself. The online dot lights up when someone was here in the last 90 seconds, and a writer finally sees <b>&ldquo;read by N&rdquo;</b> on their own story.</p><p><b>Private accounts, handled properly:</b> nobody disappears from &hearts; People any more. A private reader shows a lock; following them sends a <b>request</b>, they accept or decline from People or Notifications, and only then does the follow become real &mdash; no row is ever written into someone else&rsquo;s account.</p><p><b>Store logos:</b> the fake text-labels are gone, and the tiles are the real thing now. Sixteen brands wear their own app icon &mdash; Netflix, KFC, Duolingo, Zomato, Perplexity, Amazon, Uber, Adobe, Myntra, Nykaa, Meesho, Ola, ZEE5, SonyLIV, JioHotstar, Domino&rsquo;s, Pizza&nbsp;Hut, Blinkit, Zepto, Lenskart, EatClub. Where a mark is a long wordmark nobody could read at 52&nbsp;px, you get a bold brand-colour monogram instead of a smudge. Every tile is measured against its own square, so nothing floats. Two that were simply broken are fixed: the Uber mark was black on a black tile, and the Amazon file was a white rectangle on a white tile. The old placeholder files were deleted, and the service worker now precaches exactly the tiles the store links to &mdash; so the offline store shows logos, not holes.</p><p><b>Fixed: the odd text in the links on a profile.</b> Small lines like <code>{"k":"peek","v":1789830203108}</code> were showing up under people's links. They were never links — they are this app's own presence, privacy and follow-request records, which share the same column as your links. The profile page was printing the whole column, so the machinery was on show. Now only real links are shown, in the profile header and in the edit box. Saving your profile also keeps those records instead of wiping them — before this, editing your links quietly reset your last-seen, your privacy switches and any follow request waiting on you. Any account that already collected the mess cleans itself up on the next visit.</p><p><b>Cheat-sheets, rebuilt from scratch.</b> The old button printed the whole page — that is where eleven pages with blanks came from. Now it builds a designed, full-colour <b>two-page A4 PDF</b>. Page one: the real cover, the big idea, the five ideas that matter, a diagram of how they hold each other up, and every remaining chapter compressed to one line each. Page two: your 5-step plan, where it breaks, two lines worth keeping, and three books to read next. Backgrounds are per-category, so a money book does not look like a psychology book. It is measured to fit — <b>two pages every time</b>, for all 400 books, with nothing clipped and never a blank third page. Free for your first four books; Gold is unlimited and carries no credit line.</p><p><b>The buttons moved to where you have actually finished.</b> &ldquo;Get the 2-page cheat-sheet&rdquo; and &ldquo;Fuel this breakdown&rdquo; used to sit at the top, before you had read a word — that is not when anybody wants either. They now sit in one card <b>after the lessons, the quotes and your 5-step plan</b>: the moment the book is behind you. The card is in the same 1100px column as the rest of the page and its own margins are balanced at every screen width, so it lines up with the text instead of hugging the edges.</p><p><b>The Fuel sheet looks like it belongs here now.</b> Amount picker (₹199 / ₹499 / ₹999), a UPI button that fills in the amount you chose, a one-tap copy of the UPI id, a WhatsApp button, and a preview of the line your name will appear on: &ldquo;This breakdown was fuelled by <u>your name</u>&rdquo;. <span class="ch-kbd">esc</span> or a tap outside closes it.</p><p><b>Private accounts are server-backed now.</b> A new SQL file (<code>supabase/sql/follow-requests.sql</code>) turns follow requests into a real feature: the Accept works instantly from any device, you cannot follow yourself, you cannot ask twice, and nobody can forge a request in someone else's name. The app checks for the table and falls back to the old handshake by itself if you have not run it — so nothing breaks either way. Setup guide: <code>docs/SQL-SETUP.md</code>.</p><p><b>Graveyard:</b> tombstones have real depth (highlight, inner shadow, engraved epitaph in the category colour), cards press under your thumb, and the category strip is clipped like a ripped marker.</p></div>
@@ -421,6 +472,24 @@
           <div class="log-item__body"><b>Community & writer tools</b><p>Instagram-grade profile header, double-tap hearts, real-time toasts, DMs with book sharing, mini audio player, drafts split per mode, background uploads, Graveyard cross-links from lessons.</p></div>
         </div>
       </div>
+      <button class="logmore" id="logMore" type="button">SHOW MORE UPDATES</button>
+      <script>
+      /* v266 · the changelog reads like a feed: newest first, more on demand */
+      (function () {
+        var grid = document.getElementById("logGrid");
+        var btn = document.getElementById("logMore");
+        if (!grid || !btn) return;
+        var items = Array.prototype.slice.call(grid.querySelectorAll(".log-item"));
+        var SHOWN = 4, visible = SHOWN;
+        function paint() {
+          items.forEach(function (el, i) { el.classList.toggle("logitem--hidden", i >= visible); });
+          if (visible >= items.length) { btn.textContent = "THAT\u2019S THE WHOLE STORY ✦"; btn.disabled = true; }
+          else btn.textContent = "SHOW MORE UPDATES (+" + Math.min(SHOWN, items.length - visible) + ")";
+        }
+        btn.addEventListener("click", function () { visible = Math.min(items.length, visible + SHOWN); paint(); });
+        paint();
+      })();
+      </script>
       <div style="text-align:center;margin-top:14px">
         <a href="https://instagram.com/thesmallbook.in" target="_blank" rel="noopener" class="lab-cta" style="background:#111;color:#ffc800">📸 Follow @thesmallbook.in for weekly drops →</a>
       </div>
@@ -475,18 +544,18 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="js/prefs.js?v=252"></script>
-  <script src="js/support.js?v=252"></script>
-  <script src="js/lang.js?v=252"></script>
-  <script src="js/config.js?v=252"></script>
-  <script src="js/auth.js?v=252"></script>
-  <script src="js/data.js?v=252"></script>
-  <script src="js/failures.js?v=252"></script>
-  <script src="js/ask-data.js?v=252"></script>
-  <script src="js/tts-engine.js?v=252"></script>
-  <script src="js/ask.js?v=252"></script>
-  <script src="js/bar.js?v=252" defer></script>
-  <script src="js/gate.js?v=252" defer></script>
+  <script src="js/prefs.js?v=266"></script>
+  <script src="js/support.js?v=266"></script>
+  <script src="js/lang.js?v=266"></script>
+  <script src="js/config.js?v=266"></script>
+  <script src="js/auth.js?v=266"></script>
+  <script src="js/data.js?v=266"></script>
+  <script src="js/failures.js?v=266"></script>
+  <script src="js/ask-data.js?v=266"></script>
+  <script src="js/tts-engine.js?v=266"></script>
+  <script src="js/ask.js?v=266"></script>
+  <script src="js/bar.js?v=266" defer></script>
+  <script src="js/gate.js?v=266" defer></script>
   <script>
   // 🧪 Lab — one professional playground that explains every tricky feature
   (function(){

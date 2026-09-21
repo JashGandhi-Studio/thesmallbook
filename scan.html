@@ -15,7 +15,15 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <meta property="og:title" content="Scan — TheSmallBook">
+  <meta property="og:description" content="Point at a book, get the lessons — TheSmallBook's scanner.">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=266">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://thesmallbook.in/scan.html">
+  <meta property="og:type" content="website">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
 <meta name="robots" content="noindex">
 <title>Scanner — TheSmallBook</title>
 <meta name="description" content="Point your camera at any book cover. TheSmallBook reads the cover and opens the summary instantly.">
@@ -303,6 +311,7 @@ body {
 </style>
 </head>
 <body>
+  <h1 class="sr-only">Scan a book — TheSmallBook</h1>
   <div class="stage" id="stage">
     <video id="cam" autoplay playsinline muted></video>
     <canvas id="cap" hidden></canvas>
@@ -1049,8 +1058,8 @@ body {
   start();
 })();
 </script>
-<script src="js/osint.js?v=252"></script>
-<script src="js/scan-titles.js?v=252"></script>
-<script src="js/scanner-data.js?v=252"></script>
+<script src="js/osint.js?v=266"></script>
+<script src="js/scan-titles.js?v=266"></script>
+<script src="js/scanner-data.js?v=266"></script>
 </body>
 </html>

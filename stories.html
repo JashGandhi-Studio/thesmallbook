@@ -2,6 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+    <meta property="og:title" content="Stories — TheSmallBook">
+  <meta property="og:description" content="True reader stories and the library's own channel — lessons people actually lived.">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=266">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://thesmallbook.in/stories.html">
+  <meta property="og:type" content="website">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>Stories — TheSmallBook Community</title>
   <meta name="description" content="Read, write and listen to real reader stories — rich text, voice stories and quote cards, with likes, comments and follows.">
@@ -19,12 +27,13 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=252">
+  <link rel="stylesheet" href="css/style.css?v=266">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body class="cmpage">
+  <h1 class="sr-only">Stories — TheSmallBook</h1>
   <header class="cm-head cm-head--v19">
     <div class="cm-head__row">
       <div>
@@ -64,16 +73,16 @@
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="js/prefs.js?v=252"></script>
-  <script src="js/lang.js?v=252"></script>
-  <script src="js/config.js?v=252"></script>
-  <script src="js/auth.js?v=252"></script>
-  <script src="js/sounds.js?v=252"></script>
-  <script src="js/founder.js?v=252"></script>
-  <script src="js/community.js?v=252"></script>
+  <script src="js/prefs.js?v=266"></script>
+  <script src="js/lang.js?v=266"></script>
+  <script src="js/config.js?v=266"></script>
+  <script src="js/auth.js?v=266"></script>
+  <script src="js/sounds.js?v=266"></script>
+  <script src="js/founder.js?v=266"></script>
+  <script src="js/community.js?v=266"></script>
   <!-- v252: the library story shelf (js/stories-seed.js) was never loaded here,
        so none of those stories could ever appear. It is loaded now. -->
-  <script src="js/stories-seed.js?v=252"></script>
+  <script src="js/stories-seed.js?v=266"></script>
   <script>
   (function () {
     "use strict";
@@ -180,33 +189,64 @@
        means an almost-empty page. Every library story ships with the app, needs
        no network, and reads exactly like a reader post — so the shelf is alive
        on the first visit. Marked clearly, because it is not a person's post. */
-    function libraryStories() {
+    function libraryStories(posted) {
       var all = (window.COMMUNITY_STORIES || []).concat(window.SEED_STORIES || []);
-      var seen = {};
+      var seen = {}, hide = posted || {};
       return all.filter(function (s) {
         if (!s || !s.id || !s.title || seen[s.id]) return false;
-        seen[s.id] = 1; return true;
+        seen[s.id] = 1;
+        /* v255 · ONE CHANNEL: a story the official account already published
+           as a real post yields to that post — never the same story twice */
+        return !hide[String(s.title).toLowerCase().trim()];
       }).sort(function (a, b) { return String(b.date || "").localeCompare(String(a.date || "")); });
+    }
+    /* what the TheSmallBook channel has already published (5 archive stories
+       live in the database under its name) */
+    var officialTitlesP = null;
+    function officialTitles() {
+      if (!officialTitlesP) {
+        officialTitlesP = (C.enabled && C.api)
+          ? C.api("posts?author_id=eq." + C.OFFICIAL_ID + "&select=title&limit=100", {})
+              .then(function (rows) {
+                return (rows || []).map(function (r) { return String(r.title || "").toLowerCase().trim(); });
+              })
+              .catch(function () { return []; })
+          : Promise.resolve([]);
+      }
+      return officialTitlesP;
+    }
+    /* the book a library story came from — read straight out of data.js */
+    function bookName(id) {
+      try {
+        var all = window.BOOKS || (typeof BOOKS !== "undefined" ? BOOKS : []) || [];
+        for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i].title || "";
+      } catch (e) {}
+      return "";
     }
     function libCard(s) {
       var words = String(s.text || "").split(/\s+/).length;
       var mins = Math.max(1, Math.round(words / 200));
+      /* an image that will not load (offline, or a cover pulled from the shelf)
+         falls back to the story's own tile instead of a broken picture icon */
+      var fallbackTile = '<span class="cm-quote" style="background:var(--yellow);font-size:3rem;">' + (s.emoji || "\ud83d\udcd6") + "</span>";
       var cover = s.cover
-        ? '<img src="' + C.esc(s.cover) + '" alt="" loading="lazy">'
-        : '<span class="cm-quote" style="background:var(--yellow);font-size:3rem;">' + (s.emoji || "\ud83d\udcd6") + "</span>";
-      var book = "";
-      try { book = bookTitle(s.bookId); } catch (e) { book = ""; }
+        ? '<img src="' + C.esc(s.cover) + '" alt="" loading="lazy" onerror="this.outerHTML=' +
+          JSON.stringify(fallbackTile).replace(/"/g, "&quot;") + '">'
+        : fallbackTile;
+      var book = bookName(s.bookId);
       return '<article class="cm-card cm-card--lib" data-lib="' + C.esc(s.id) + '">' +
         '<a class="cm-card__cover" href="story.html?id=' + encodeURIComponent(s.id) + '">' + cover +
-          '<span class="cm-card__kind cm-card__kind--lib">\ud83d\udcd6 LIBRARY STORY</span>' +
+          '<span class="cm-card__kind cm-card__kind--lib">\ud83d\udcd6 FROM THE LIBRARY</span>' +
         "</a>" +
         '<div class="cm-card__body">' +
           '<div class="cm-card__meta">' +
-            '<span class="cm-ava cm-ava--lib">\ud83d\udcd5</span>' +
-            '<span class="cm-name cm-name--lib">Library Stories <span class="cm-vtick" title="Written by the library">\u2714</span></span>' +
+            '<span class="cm-ava cm-ava--lib"><img src="assets/loader-logo.png" alt="" onerror="this.parentNode.textContent=\'\ud83d\udcd5\'"></span>' +
+            '<span class="cm-name cm-name--lib">TheSmallBook <span class="cm-vtick" title="Official channel of TheSmallBook">\u2714</span></span>' +
             '<span class="cm-time">' + C.esc(s.date || "") + "</span>" +
           "</div>" +
           '<a class="cm-card__title" href="story.html?id=' + encodeURIComponent(s.id) + '">' + C.esc(s.title) + "</a>" +
+          /* v254: the hook — a question that sounds like the reader's own 2 AM */
+          (s.hook ? '<p class="cm-card__hook">\u201c' + C.esc(s.hook) + '\u201d</p>' : "") +
           (book ? '<p class="cm-card__sub">Inspired by <b>' + C.esc(book) + "</b></p>" : "") +
           '<div class="cm-card__foot">' +
             '<span class="cm-read">' + mins + " min read</span>" +
@@ -214,8 +254,8 @@
           "</div>" +
         "</div></article>";
     }
-    function libraryShelf(limit) {
-      var rows = libraryStories();
+    function libraryShelf(limit, posted) {
+      var rows = libraryStories(posted);
       if (!rows.length) return "";
       var shown = rows.slice(0, limit || 12);
       var more = rows.length - shown.length;
@@ -455,12 +495,52 @@
       "</article>";
     }
 
+    /* v252 — the library, in the burst rail too. Swiping through "nothing to
+       see" is what made a young community feel dead; these ship with the app
+       and are endless. Framed identically, so the rail never looks broken. */
+    function reelHTMLib(s) {
+      var words = String(s.text || "").split(/\s+/).length;
+      var cover = s.cover || "";
+      var bg = cover
+        ? ' style="background-image:url(\'' + C.esc(cover) + '\')"'
+        : ' style="background:linear-gradient(150deg,#1c1a17,#3a352b)"';
+      var book = bookName(s.bookId);
+      var head = s.hook || s.title;
+      var under = s.hook ? s.title : (book ? "Inspired by " + book : "");
+      return '<article class="cm-reel cm-reel--lib' + (cover ? " has-cover" : "") + '"' + bg + '>' +
+        '<div class="cm-reel__grad"></div>' +
+        '<div class="cm-reel__body">' +
+          '<span class="cm-reel__q">\ud83d\udcd6</span>' +
+          '<div class="cm-reel__who cm-reel__who--lib"><div class="cm-ava cm-ava--lib"><img src="assets/loader-logo.png" alt="" onerror="this.parentNode.textContent=\'\ud83d\udcd5\'"></div><b>TheSmallBook<span class="cm-vtick">\u2714</span></b></div>' +
+          '<h3 class="cm-reel__t">' + C.esc(head) + '</h3>' +
+          (under ? '<p class="cm-reel__s">' + C.esc(under) + '</p>' : "") +
+          '<div class="cm-reel__acts">' +
+            '<span class="cm-reel__metaline">' + Math.max(1, Math.round(words / 200)) + " min read</span>" +
+            '<a class="cm-cmts" href="story.html?id=' + encodeURIComponent(s.id) + '">' + C.icon('chat') + " Read it →</a>" +
+          "</div>" +
+        "</div></article>";
+    }
+    var burstLibDone = false;
+    async function burstLoadLibrary() {
+      if (burstLibDone) return;
+      burstLibDone = true;
+      var rows = libraryStories();
+      if (!rows.length) return;
+      var el = burstEnd();
+      if (!el) return;
+      var posted = {};
+      try { (await officialTitles()).forEach(function (t) { posted[t] = 1; }); } catch (e) {}
+      rows = libraryStories(posted);
+      var show = rows.filter(function (x) { return x.cover; }).concat(rows.filter(function (x) { return !x.cover; })).slice(0, 14);
+      show.forEach(function (x) { el.insertAdjacentHTML("beforebegin", reelHTMLib(x)); });
+    }
+
     function burstEnd() { return document.getElementById("burstEnd"); }
     function paintBurstEnd() {
       var el = burstEnd();
       if (!el) return;
       el.innerHTML = burstBusy ? "Loading more bursts…"
-        : (burstDone ? "You're all caught up ✨<br><small>New bursts appear here as readers post.</small>" : "");
+        : (burstDone ? "You're all caught up ✨<br><small>Reader bursts come from the community — the library ones above never run out.</small>" : "");
     }
 
     async function burstLoadMore() {
@@ -485,7 +565,7 @@
         });
       }
       burstOffset += posts.length;
-      if (posts.length < BURST_BATCH) burstDone = true;
+      if (posts.length < BURST_BATCH) { burstDone = true; burstLoadLibrary(); }
       burstBusy = false; paintBurstEnd();
       var empty = document.querySelector("#reelsTrack .cm-empty");
       if (empty && Object.keys(burstSeen).length) empty.remove();
@@ -513,7 +593,7 @@
 
     function openBursts() {
       var ov = document.getElementById("reels"), track = document.getElementById("reelsTrack");
-      burstSeen = {}; burstOffset = 0; burstDone = false; burstBusy = false;
+      burstSeen = {}; burstOffset = 0; burstDone = false; burstBusy = false; burstLibDone = false;
       track.innerHTML = '<div class="cm-empty">Loading bursts…</div><div class="cm-burstend" id="burstEnd"></div>';
       track.scrollTop = 0;
       ov.hidden = false;
@@ -562,10 +642,14 @@
           try { (await C.followingIds()).forEach(function (id) { followSet[id] = 1; }); } catch (e) {}
           posts = posts.slice().sort(function (a, b) { return score(b) - score(a); });
         }
+        var libPosted = {};
+        try { if (tab === "all") (await officialTitles()).forEach(function (t) { libPosted[t] = 1; }); } catch (e) {}
         if (!posts.length) {
           if (tab === "all") {
             /* no reader posts yet? the shelf is still a shelf — show the library */
-            feed.innerHTML = libraryShelf(14);
+            var alone = {};
+            try { (await officialTitles()).forEach(function (t) { alone[t] = 1; }); } catch (e) {}
+            feed.innerHTML = libraryShelf(14, alone);
             return;
           }
           feed.innerHTML = '<div class="cm-empty">✍️ No stories yet — yours could be the first.<br><button class="cm-write" id="emptyWrite">Write the first story</button></div>';
@@ -575,7 +659,7 @@
         }
         feed.innerHTML = (tab === "all" ? railHtml(posts) + '<div class="cm-sect">✨ For you — tuned to your shelves</div>' : "") +
           posts.map(function (p) { return card(p); }).join("") +
-          (tab === "all" ? libraryShelf(10) : "");
+          (tab === "all" ? libraryShelf(10, libPosted) : "");
         try { C.protectMedia(feed); } catch (e) {}
         hydrate(feed);
       } catch (e) {
@@ -873,9 +957,10 @@
     load();
   })();
   </script>
-  <script src="js/data.js?v=252"></script>
-  <script src="js/osint.js?v=252"></script>
-  <script src="js/bar.js?v=252" defer></script>
-  <script src="js/gate.js?v=252" defer></script>
+  <script src="js/data.js?v=266"></script>
+  <script src="js/osint.js?v=266"></script>
+  <script src="js/bar.js?v=266" defer></script>
+  <script src="js/gate.js?v=266" defer></script>
+  <script src="js/trial.js?v=266" defer></script>
 </body>
 </html>

@@ -3,7 +3,8 @@ window.SEED_STORIES = [
   {
     id: "seed-4",
     title: "Four Hours That Saved My CA Final",
-    author: "Library Stories ✦",
+    hook: "Still calling your 10-hour study day 'focus'?",
+    author: "TheSmallBook",
     bookId: "deep-work",
     cover: "",
     emoji: "📵",
@@ -13,7 +14,8 @@ window.SEED_STORIES = [
   {
     id: "seed-5",
     title: "The Month My Startup Almost Died",
-    author: "Library Stories ✦",
+    hook: "Would you tell your team the truth about the bank balance?",
+    author: "TheSmallBook",
     bookId: "hard-things",
     cover: "",
     emoji: "🔥",
@@ -23,7 +25,8 @@ window.SEED_STORIES = [
   {
     id: "seed-6",
     title: "I Finally Talked to My Father",
-    author: "Library Stories ✦",
+    hook: "Four years without really talking to your father — who fixes it first?",
+    author: "TheSmallBook",
     bookId: "nonviolent-communication",
     cover: "",
     emoji: "🕊️",
@@ -33,7 +36,8 @@ window.SEED_STORIES = [
   {
     id: "seed-7",
     title: "₹500 a Month Felt Like a Joke. It Wasn't.",
-    author: "Library Stories ✦",
+    hook: "What does ₹500 a month actually become?",
+    author: "TheSmallBook",
     bookId: "psychology-of-money",
     cover: "",
     emoji: "🌱",
@@ -43,7 +47,8 @@ window.SEED_STORIES = [
   {
     id: "seed-8",
     title: "The 5 AM I Actually Kept",
-    author: "Library Stories ✦",
+    hook: "Could you keep one 5 AM — just one?",
+    author: "TheSmallBook",
     bookId: "5am-club",
     cover: "",
     emoji: "🌅",
@@ -53,7 +58,8 @@ window.SEED_STORIES = [
   {
     id: "seed-9",
     title: "My Manager Weaponized My Own Ego Against Me",
-    author: "Library Stories ✦",
+    hook: "Is your ego doing your job, or eating it?",
+    author: "TheSmallBook",
     bookId: "ego-is-enemy",
     cover: "",
     emoji: "🪞",
@@ -63,7 +69,8 @@ window.SEED_STORIES = [
   {
     id: "seed-10",
     title: "I Quit. It Was the Best Business Decision I Ever Made.",
-    author: "Library Stories ✦",
+    hook: "How do you know it's The Dip — and not a dead end?",
+    author: "TheSmallBook",
     bookId: "the-dip",
     cover: "",
     emoji: "🚪",
@@ -73,7 +80,8 @@ window.SEED_STORIES = [
   {
     id: "seed-11",
     title: "The Interview I Almost Didn't Attend",
-    author: "Library Stories ✦",
+    hook: "What did you almost do this week?",
+    author: "TheSmallBook",
     bookId: "5-second-rule",
     cover: "",
     emoji: "⚡",
@@ -83,7 +91,8 @@ window.SEED_STORIES = [
   {
     id: "seed-12",
     title: "Two Lakhs, Gone. Cheapest Education I Ever Bought.",
-    author: "Library Stories ✦",
+    hook: "What did the market teach you the expensive way?",
+    author: "TheSmallBook",
     bookId: "intelligent-investor",
     cover: "",
     emoji: "📉",
@@ -93,7 +102,8 @@ window.SEED_STORIES = [
   {
     id: "seed-13",
     title: "How a Dead Airline Saved My Franchise Dream",
-    author: "Library Stories ✦",
+    hook: "Can a dead company teach a living one?",
+    author: "TheSmallBook",
     bookId: "mighty-fall",
     cover: "",
     emoji: "✈️",
@@ -103,7 +113,8 @@ window.SEED_STORIES = [
   {
     id: "seed-14",
     title: "The Speech That Un-Ruined My Career",
-    author: "Library Stories ✦",
+    hook: "One talk away — or one talk too scared to give?",
+    author: "TheSmallBook",
     bookId: "talk-like-ted",
     cover: "",
     emoji: "🎤",
@@ -113,7 +124,8 @@ window.SEED_STORIES = [
   {
     id: "seed-15",
     title: "Atomic Habits Didn't Work for Me — Until I Read It Again",
-    author: "Library Stories ✦",
+    hook: "Read it, loved it, dropped it? Same.",
+    author: "TheSmallBook",
     bookId: "atomic-habits",
     cover: "",
     emoji: "🔁",
@@ -123,7 +135,8 @@ window.SEED_STORIES = [
   {
     id: "seed-1",
     title: "The Day I Stopped Missing Twice",
-    author: "Library Stories ✦",
+    hook: "You missed today. The question is tomorrow.",
+    author: "TheSmallBook",
     bookId: "atomic-habits",
     cover: "",
     emoji: "🏃",
@@ -133,7 +146,8 @@ window.SEED_STORIES = [
   {
     id: "seed-2",
     title: "My Salary Was a Liability",
-    author: "Library Stories ✦",
+    hook: "Is your salary building you — or billing you?",
+    author: "TheSmallBook",
     bookId: "rich-dad-poor-dad",
     cover: "",
     emoji: "💸",
@@ -143,7 +157,8 @@ window.SEED_STORIES = [
   {
     id: "seed-3",
     title: "I Argued Less and Won More",
-    author: "Library Stories ✦",
+    hook: "Ever won the argument and lost the room?",
+    author: "TheSmallBook",
     bookId: "how-to-win-friends",
     cover: "",
     emoji: "🤝",
@@ -159,7 +174,8 @@ window.SEED_STORIES = [
   {
     id: "seed-16",
     title: "The Chemist Who Learned to Draw",
-    author: "Library Stories ✦",
+    hook: "When did you last lose track of time?",
+    author: "TheSmallBook",
     bookId: "flow",
     cover: "assets/stories/flow-chemist.jpg",
     emoji: "🧪",
@@ -169,7 +185,8 @@ window.SEED_STORIES = [
   {
     id: "seed-17",
     title: "My Father's Shop Had No Growth Plan. It Had a Life.",
-    author: "Library Stories ✦",
+    hook: "Does your work need to grow — or to live?",
+    author: "TheSmallBook",
     bookId: "company-of-one",
     cover: "assets/stories/company-of-one-shop.jpg",
     emoji: "🏪",
@@ -179,7 +196,8 @@ window.SEED_STORIES = [
   {
     id: "seed-18",
     title: "Nobody Read My Blog for Four Years. That Was the Point.",
-    author: "Library Stories ✦",
+    hook: "Would you keep posting if nobody clapped for four years?",
+    author: "TheSmallBook",
     bookId: "show-your-work",
     cover: "assets/stories/show-your-work-blog.jpg",
     emoji: "📝",
@@ -189,7 +207,8 @@ window.SEED_STORIES = [
   {
     id: "seed-19",
     title: "The Answer My Brain Gave Before I Could Think",
-    author: "Library Stories ✦",
+    hook: "Who answered just now — you, or your fast brain?",
+    author: "TheSmallBook",
     bookId: "thinking-fast-slow",
     cover: "assets/stories/thinking-fast-slow-brain.jpg",
     emoji: "🧠",
@@ -199,7 +218,8 @@ window.SEED_STORIES = [
   {
     id: "seed-20",
     title: "My Boss's Boss Was a Wall, So I Went Around It",
-    author: "Library Stories ✦",
+    hook: "Stuck behind a 'no'? Who gave it that power?",
+    author: "TheSmallBook",
     bookId: "obstacle-is-way",
     cover: "assets/stories/obstacle-is-way-wall.jpg",
     emoji: "🧱",
@@ -209,7 +229,8 @@ window.SEED_STORIES = [
   {
     id: "seed-21",
     title: "I Quit the Job Everyone Was Proud of Me For",
-    author: "Library Stories ✦",
+    hook: "Whose pride is your career running on?",
+    author: "TheSmallBook",
     bookId: "so-good",
     cover: "assets/stories/so-good-quit.jpg",
     emoji: "🚪",
@@ -219,7 +240,8 @@ window.SEED_STORIES = [
   {
     id: "seed-22",
     title: "Two Graders and a Second Life",
-    author: "Library Stories ✦",
+    hook: "What tiny thing are you doing daily that compounds?",
+    author: "TheSmallBook",
     bookId: "slight-edge",
     cover: "assets/stories/slight-edge-graders.jpg",
     emoji: "📐",
@@ -229,7 +251,8 @@ window.SEED_STORIES = [
   {
     id: "seed-23",
     title: "My Sister Stopped Speaking to Me Over a Wedding Card",
-    author: "Library Stories ✦",
+    hook: "A wedding card. Worth a sister?",
+    author: "TheSmallBook",
     bookId: "crucial-conversations",
     cover: "assets/stories/crucial-conversations-sister.jpg",
     emoji: "💬",
@@ -239,7 +262,8 @@ window.SEED_STORIES = [
   {
     id: "seed-24",
     title: "The Trainer Told Me to Do Less and I Nearly Fired Him",
-    author: "Library Stories ✦",
+    hook: "What if doing less was the fix?",
+    author: "TheSmallBook",
     bookId: "atomic-habits",
     cover: "assets/stories/atomic-habits-trainer.jpg",
     emoji: "🍪",
@@ -249,7 +273,8 @@ window.SEED_STORIES = [
   {
     id: "seed-25",
     title: "The ₹18,000 I Didn't Spend Taught Me More Than My Salary",
-    author: "Library Stories ✦",
+    hook: "What did NOT spending ever teach you?",
+    author: "TheSmallBook",
     bookId: "psychology-of-money",
     cover: "assets/stories/psychology-of-money-18000.jpg",
     emoji: "⌚",
@@ -259,7 +284,8 @@ window.SEED_STORIES = [
   {
     id: "seed-26",
     title: "How I Stopped Being the Bottleneck in My Own Team",
-    author: "Library Stories ✦",
+    hook: "Is your team stuck waiting for you?",
+    author: "TheSmallBook",
     bookId: "multipliers",
     cover: "",
     emoji: "🧩",
@@ -269,7 +295,8 @@ window.SEED_STORIES = [
   {
     id: "seed-27",
     title: "I Took a ₹40,000 Pay Cut and Got My Sundays Back",
-    author: "Library Stories ✦",
+    hook: "What is your Sunday actually worth?",
+    author: "TheSmallBook",
     bookId: "four-thousand-weeks",
     cover: "",
     emoji: "🗓️",
@@ -279,7 +306,8 @@ window.SEED_STORIES = [
   {
     id: "seed-28",
     title: "The Best Conversation of My Life Was With a Stranger at a Bus Stop",
-    author: "Library Stories ✦",
+    hook: "When did a stranger last become a story?",
+    author: "TheSmallBook",
     bookId: "how-to-talk",
     cover: "",
     emoji: "🚌",
