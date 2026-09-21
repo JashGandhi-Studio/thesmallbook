@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK — COMMUNITY STORIES (GLOBAL, NO BACKEND NEEDED)
+   THESMALLBOOK, COMMUNITY STORIES (GLOBAL, NO BACKEND NEEDED)
 
    HOW THIS WORKS (for the site owner):
    When readers publish a story, the site saves it on THEIR
@@ -11,7 +11,7 @@
    2. Copy the object inside (from { to })
    3. Paste it into the COMMUNITY_STORIES array below, add a comma
    4. Re-upload this file to GitHub (weekly update)
-   That's it — the story now appears on the shelf for every visitor.
+   That's it, the story now appears on the shelf for every visitor.
 
    You are the moderator: only stories YOU paste here go global.
    ============================================================ */

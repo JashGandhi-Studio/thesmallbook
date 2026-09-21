@@ -1,11 +1,11 @@
 /* ============================================================
-   THESMALLBOOK — CLOUD CONFIG
+   THESMALLBOOK, CLOUD CONFIG
    🔐 SIGN-IN (optional): to let readers save progress across
    devices with "Log in with Google" (free, no card needed):
 
    1. https://supabase.com → New project (free tier, region Mumbai)
    2. Authentication → Providers → Google (creates the OAuth
-      client via console.cloud.google.com — full steps in
+      client via console.cloud.google.com, full steps in
       SIGN-IN-BLUEPRINT.md)
    3. Authentication → URL Configuration → Site URL:
       https://thesmallbook.in  +  Redirect: https://thesmallbook.in/**
@@ -29,9 +29,9 @@
         for update using (auth.uid() = user_id);
 
    5. Project Settings → API → copy Project URL + anon public key
-   6. Paste them below and push. Done — progress syncs everywhere.
+   6. Paste them below and push. Done, progress syncs everywhere.
 
-   (Stories table — same project, if you want community stories
+   (Stories table, same project, if you want community stories
    visible to everyone, run this in SQL Editor too:
 
       create table stories (
@@ -56,8 +56,8 @@ window.TSB_CONFIG = {
 
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkbXhjZXdteW9maWhncmhldWFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxOTc3NjQsImV4cCI6MjEwMTc3Mzc2NH0.ZiaeA9eA7uxVeP0qhuoFdoY4CGP0eKI7VD87xsE3tw8",   // e.g. "eyJhbGciOiJIUzI1NiIsInR5cCI6..."
 
-  /* ⭐ SOCIAL PROOF — REAL reader words only. Paste your real DMs/emails here.
-     Empty quotes are skipped. No fake testimonials — only real people. */
+  /* ⭐ SOCIAL PROOF, REAL reader words only. Paste your real DMs/emails here.
+     Empty quotes are skipped. No fake testimonials, only real people. */
   TESTIMONIALS: [
     { quote: "I used a Psychology of Money lesson to negotiate my first internship stipend. Thank you.", who: "Rushit, 19, Ahmedabad" },
     { quote: "The 48 Laws summary saved me in a family property fight. I finally understood the game being played on us.", who: "Sneha M., Pune" },
@@ -99,8 +99,8 @@ window.TSB_CONFIG = {
     { quote: "The Book of Joy summary got me through a rough month. Some free things really are priceless.", who: "Shruti, Bhopal" }
   ],
 
-  /* 🟢 GOOGLE OAUTH CLIENT — "Sign in with Google" popup (Google Identity
-     Services). NO secret needed — Google's SDK hands the ID token straight
+  /* 🟢 GOOGLE OAUTH CLIENT, "Sign in with Google" popup (Google Identity
+     Services). NO secret needed, Google's SDK hands the ID token straight
      to the browser, so the consent popup shows "TheSmallBook · thesmallbook.in".
      Google Cloud Console → Credentials → OAuth client ID.
      ⚠️ Add these to that client's "Authorized JavaScript origins":
@@ -108,19 +108,19 @@ window.TSB_CONFIG = {
   GOOGLE_CLIENT_ID: "730711772117-6jqonfh58n6963r12k6ri2g0ov6841eq.apps.googleusercontent.com",
 
   // Email where readers send their story files for the Global Shelf
-  // (used by the no-backend submission flow — set this before launch!)
-  /* 👑 GOLD BANNER meter — set GOLD_TAKEN to your real waitlist count
+  // (used by the no-backend submission flow, set this before launch!)
+  /* 👑 GOLD BANNER meter, set GOLD_TAKEN to your real waitlist count
      (0 hides the meter and shows "FIRST 500 EARLY-BIRDS" instead). */
   GOLD_TAKEN: 0,
   GOLD_TOTAL: 500,
 
   SUBMIT_EMAIL: "jashgandhicreator07@gmail.com",
 
-  /* 🆕 NEW THIS WEEK — badges on homepage cards & graveyard.
+  /* 🆕 NEW THIS WEEK, badges on homepage cards & graveyard.
      HOW TO UPDATE (weekly, 1 minute): replace these ids with whatever
      you added this week. Empty list [] = no badges shown. */
-  /* 🔥 THIS WEEK'S NEW RELEASES — only the latest batch (updated every batch).
-     Old books leave this list automatically — they're no longer "new". */
+  /* 🔥 THIS WEEK'S NEW RELEASES, only the latest batch (updated every batch).
+     Old books leave this list automatically, they're no longer "new". */
   NEW_THIS_WEEK: [
     "chanakya-neeti",
     "yoga-sutras",
@@ -173,7 +173,7 @@ window.TSB_CONFIG = {
     "my-experiments-with-truth",
     "what-i-talk-about-running"
   ],
-  /* 🩸 THIS WEEK'S FRESH GRAVES — latest batch only (updated every batch). */
+  /* 🩸 THIS WEEK'S FRESH GRAVES, latest batch only (updated every batch). */
   NEW_GRAVES_THIS_WEEK: [
     "facebook-beacon",
     "bikram-yoga",
@@ -185,11 +185,11 @@ window.TSB_CONFIG = {
     "sugar-industry"
   ],
 
-  /* 💛 PAYWALL / TSB GOLD — CENTRAL SWITCH (v248).
+  /* 💛 PAYWALL / TSB GOLD, CENTRAL SWITCH (v248).
      The paywall already exists (gold.js + gold.html + store gating).
      This block is the ONE place to turn it on and decide what hides
      behind it. Gold members (activated on gold.html) are NEVER locked.
-     HOW TO ENABLE — see docs/PAYWALL-SETUP.md:
+     HOW TO ENABLE, see docs/PAYWALL-SETUP.md:
        1) set ENABLED: true
        2) set UPI_ID to your handle (already matches gold.html)
        3) (optional) paste a Razorpay Payment Link into RAZORPAY_LINK
@@ -210,7 +210,7 @@ window.TSB_CONFIG = {
     ]
   },
 
-  /* 🎤 DM VOICE + 📖 READING THREADS (Supabase). Off by default — flip on
+  /* 🎤 DM VOICE + 📖 READING THREADS (Supabase). Off by default, flip on
      AFTER running SQL #3 v4 (docs/SUPABASE-STEP-BY-STEP.md), which adds the
      tsb-audio bucket + the messages.audio_url and messages.expires_at columns.
      Voice notes upload to Supabase storage; reading-thread expiry syncs across
@@ -218,14 +218,14 @@ window.TSB_CONFIG = {
   DM_AUDIO: true,
   DM_THREADS: true,
 
-  /* Amazon Associates (India) — book buy links */
+  /* Amazon Associates (India), book buy links */
   AMAZON_TAG: "thesmallbook-21",
 
   /* Direct product links (higher conversion than search).
      Key = book id from data.js, value = Amazon ASIN / ISBN-10.
      HOW TO ADD MORE: open the book on amazon.in → the URL contains
      /dp/XXXXXXXXXX → copy that 10-character code here.
-     Books not listed automatically use a search link — nothing breaks. */
+     Books not listed automatically use a search link, nothing breaks. */
   AMAZON_ASINS: {
     "atomic-habits":        "1847941834",
     "psychology-of-money":  "9390166268",

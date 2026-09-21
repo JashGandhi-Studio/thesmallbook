@@ -1,11 +1,11 @@
 /* ============================================================
-   THESMALLBOOK — SERVICE WORKER
+   THESMALLBOOK, SERVICE WORKER
    Cache-first for app shell & covers = installable + offline.
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v267";
-/* NOTE: the assets/logos/* entries below mirror js/store-data.js exactly —
+const CACHE_VERSION = "tsb-v273";
+/* NOTE: the assets/logos/* entries below mirror js/store-data.js exactly.
    every tile the store links to must be precached, or the offline store
    shows broken images. tests/client-suite.js asserts they never drift. */
 const APP_SHELL = [
@@ -172,7 +172,7 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const fu = new URL(e.request.url);
   /* community media (covers / voice / avatars): cache-first = offline listening.
-     Byte-range requests (video seeking) always go to the network untouched —
+     Byte-range requests (video seeking) always go to the network untouched.
      caching partial 206 responses breaks playback (range headers are ignored
      by Cache API matching). Only full 200 responses are cached. */
   if (fu.pathname.includes("/storage/v1/object/public/")) {

@@ -2,22 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-    <meta property="og:title" content="Messages — TheSmallBook">
+    <meta property="og:title" content="Messages, TheSmallBook">
   <meta property="og:description" content="Your private conversations on TheSmallBook.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=267">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=273">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/dm.html">
   <meta property="og:type" content="website">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
-  <title>Messages — TheSmallBook</title>
+  <title>Messages, TheSmallBook</title>
   <meta name="description" content="Talk to readers in TheSmallBook community.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
+  <script src="js/vault.js?v=273"></script>
   <script>
     try {
       var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
@@ -27,7 +28,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=267">
+  <link rel="stylesheet" href="css/style.css?v=273">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -58,7 +59,7 @@
       <div id="dmThreadBanner" class="dm-threadbanner" hidden></div>
       <div class="dm-msgs" id="dmMsgs"></div>
       <!-- v250: one capsule. The mic is a real SVG docked inside the field and
-           morphs into Send the moment there is text — no emoji, no orphan button. -->
+           morphs into Send the moment there is text, no emoji, no orphan button. -->
       <!-- v250: inline paper note. Voice problems are explained here, in the
            thread, instead of a blocking alert() that hides the whole screen. -->
       <div class="dm-note" id="dmNote" role="status" aria-live="polite" hidden></div>
@@ -91,15 +92,15 @@
     </div>
   </div>
 
-  <script src="js/prefs.js?v=267"></script>
-  <script src="js/lang.js?v=267"></script>
-  <script src="js/config.js?v=267"></script>
-  <script src="js/data.js?v=267"></script>
-  <script src="js/auth.js?v=267"></script>
-  <script src="js/sounds.js?v=267"></script>
-  <script src="js/founder.js?v=267"></script>
-  <script src="js/community.js?v=267"></script>
-  <script src="js/voice.js?v=267"></script>
+  <script src="js/prefs.js?v=273"></script>
+  <script src="js/lang.js?v=273"></script>
+  <script src="js/config.js?v=273"></script>
+  <script src="js/data.js?v=273"></script>
+  <script src="js/auth.js?v=273"></script>
+  <script src="js/sounds.js?v=273"></script>
+  <script src="js/founder.js?v=273"></script>
+  <script src="js/community.js?v=273"></script>
+  <script src="js/voice.js?v=273"></script>
   <script>
   (function () {
     "use strict";
@@ -132,7 +133,7 @@
 
     C.whenReady(function () {
     if (!C.signedIn()) {
-      list.innerHTML = '<div class="cm-empty">Sign in to message readers.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>';
+      list.innerHTML = '<div class="cm-empty">Sign in to message readers.<br><a class="cm-write" href="login.html">Sign in, it’s free →</a></div>';
       return;
     }
     meId = (C.me() || {}).id || "";
@@ -173,7 +174,7 @@
       }
     }
 
-    /* inline paper note — voice problems are explained in the thread,
+    /* inline paper note, voice problems are explained in the thread,
        never with a blocking alert() on a phone */
     var noteEl = document.getElementById("dmNote"), noteTimer = 0;
     function note(msg, kind) {
@@ -206,7 +207,7 @@
       var lastId = msgs.getAttribute("data-last") || "";
       var nowLast = rows.length ? rows[rows.length - 1].id + ":" + rows.length : "";
       if (silent && nowLast && nowLast === lastId) return;
-      /* never repaint the thread while a voice note is playing — the old
+      /* never repaint the thread while a voice note is playing, the old
          6 s poll used to cut people off mid-sentence */
       if (silent && msgs.querySelector(".vp.is-playing")) return;
       msgs.setAttribute("data-last", nowLast);
@@ -229,7 +230,7 @@
         var body = String(m.body || "");
         return '<div class="dm-bub' + (mineRow ? " me" : "") + (m.audio_url ? " dm-bub--voice" : "") + '" data-mid="' + m.id + '" data-mine="' + (mineRow ? 1 : 0) + '" data-body="' + C.esc(body) + '">' +
           (m.book_id ? bookCard(m.book_id) : "") +
-          /* v250: the real player — ring progress, scrubbable waveform,
+          /* v250: the real player, ring progress, scrubbable waveform,
              elapsed/total and 1× 1.5× 2×. The bare <audio controls> is gone. */
           (m.audio_url && V ? V.playerHTML(m.audio_url, { mine: mineRow, label: "Voice message" }) : "") +
           (m.audio_url && !V ? '<audio class="dm-audio" controls preload="none" src="' + C.esc(m.audio_url) + '"></audio>' : "") +
@@ -253,14 +254,14 @@
       })();
       try {
         /* v223 read receipts: opening the thread marks THEIR messages read.
-           My own ticks are NOT swept blue here — each tick follows its own
+           My own ticks are NOT swept blue here, each tick follows its own
            message's m.read flag, so blue only ever means "they read it". */
         C.markThreadRead(uid).catch(function () {});
       } catch (e) {}
       try {
         /* v250: talking to someone IS reading their notifications. These keys
            go into the one shared ledger, so the bell and the You-page badge
-           stop flagging them — and they still stay in the notification list. */
+           stop flagging them, and they still stay in the notification list. */
         C.notifMarkRead(rows.filter(function (m) { return m.sender_id === uid; })
           .map(function (m) { return C.notifKey({ type: "dm", who: uid, at: m.created_at }); }));
         C.paintNotifUI([]);
@@ -282,13 +283,13 @@
       try {
         await C.sendDM(uid, body);
         await loadThread();
-        /* v250: replying IS reading — the "new message" note never comes back */
+        /* v250: replying IS reading, the "new message" note never comes back */
         try { C.notifMarkPeer(uid).catch(function () {}); } catch (e2) {}
       }
       catch (err) {
         pend.classList.add("dm-bub--fail");
         setTimeout(function () { pend.remove(); }, 4000);
-        C.say("Message failed — " + (err && err.message ? err.message : err));
+        C.say("Message failed, " + (err && err.message ? err.message : err));
       }
     });
 
@@ -349,7 +350,7 @@
           if (!dmMic) return;
           var live = (st === "recording" || st === "review");
           dmMic.classList.toggle("is-live", live);
-          /* v250: a live note shows the ✓ (tap = send) — and while it is LOCKED
+          /* v250: a live note shows the ✓ (tap = send), and while it is LOCKED
              the note keeps recording after you let go, exactly like WhatsApp */
           dmMic.classList.toggle("is-lock", live);
           dmMic.classList.toggle("is-send", false);
@@ -361,7 +362,7 @@
         },
         onSend: async function (file, meta) {
           if (!(window.TSB_CONFIG && TSB_CONFIG.DM_AUDIO)) {
-            throw new Error("Voice needs Supabase storage — run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md, then set DM_AUDIO:true in config.js.");
+            throw new Error("Voice needs Supabase storage, run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md, then set DM_AUDIO:true in config.js.");
           }
           var pend = uploadingBubble(meta && meta.duration);
           try {
@@ -386,7 +387,7 @@
       if (document.getElementById("dmThread").hidden) return;
       try {
         var fresh = await C.threadWith(uid, 60);
-        /* v223: per-message receipts — a tick turns blue only when ITS
+        /* v223: per-message receipts, a tick turns blue only when ITS
            message was actually read by the other person. */
         // WhatsApp-style poll: blue if read OR peer replied after
         fresh.forEach(function (m) {
@@ -411,7 +412,7 @@
     /* ---- message actions: LONG PRESS, exactly as you asked -------------
        A tap is for listening, reading and following a link. The three
        destructive verbs (edit · delete for me · delete for everyone) only
-       appear when you deliberately hold the bubble — so tapping a voice note
+       appear when you deliberately hold the bubble, so tapping a voice note
        to play it can never pop a menu over it. */
     var ctx = document.getElementById("ctxPop");
     var HOLD_MS = 430, pressTimer = 0, pressStart = null, pressBub = null;
@@ -471,19 +472,19 @@
       var next = prompt("Edit your message:", cur);
       if (next === null || !next.trim() || next === cur) return;
       try { await C.editDM(selectedMsg.getAttribute("data-mid"), next.trim()); await loadThread(); }
-      catch (err) { C.say("Edit failed — " + (err && err.message ? err.message : err)); }
+      catch (err) { C.say("Edit failed, " + (err && err.message ? err.message : err)); }
     });
     document.getElementById("actDelAll").addEventListener("click", async function () {
       closePop(ctx);
       if (!selectedMsg || !confirm("Delete this message for everyone?")) return;
       try { await C.deleteDM(selectedMsg.getAttribute("data-mid")); await loadThread(); }
-      catch (err) { C.say("Delete failed — " + (err && err.message ? err.message : err)); }
+      catch (err) { C.say("Delete failed, " + (err && err.message ? err.message : err)); }
     });
     document.getElementById("actDelMe").addEventListener("click", async function () {
       closePop(ctx);
       if (!selectedMsg) return;
       try { await C.hideDM(selectedMsg.getAttribute("data-mid")); await loadThread(); }
-      catch (err) { C.say("Couldn't hide — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
+      catch (err) { C.say("Couldn't hide, " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
     });
 
     /* ---- chat options: flipping ⋯ popout ---- */
@@ -503,7 +504,7 @@
       closePop(pop); menuBtn.classList.remove("on");
       if (!confirm("Clear this chat for yourself? (Messages stay for the other person.)")) return;
       try { await C.clearThread(uid); await loadThread(); }
-      catch (err) { C.say("Clear failed — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
+      catch (err) { C.say("Clear failed, " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
     });
 
     /* ---- book picker ---- */
@@ -546,18 +547,18 @@
         try {
           var exp = Date.now() + 7 * 864e5;
           saveThreadMeta(uid, book.id, exp);
-          await C.sendDM(uid, "📖 Let's read " + book.title + " together — 7-day thread! " + (book.tagline || "tap the book above"), book.id,
+          await C.sendDM(uid, "📖 Let's read " + book.title + " together, 7-day thread! " + (book.tagline || "tap the book above"), book.id,
             (window.TSB_CONFIG && TSB_CONFIG.DM_THREADS) ? { expires_at: new Date(exp).toISOString() } : null);
           await loadThread();
-        } catch (err) { C.say("Couldn't start thread — " + (err && err.message ? err.message : err)); }
+        } catch (err) { C.say("Couldn't start thread, " + (err && err.message ? err.message : err)); }
         return;
       }
       if (e.target.closest(".pk-rec")) {
         picker.classList.remove("on"); setTimeout(function () { picker.hidden = true; }, 220);
         try {
-          await C.sendDM(uid, "You should read " + book.title + " — " + (book.tagline || "it's good!"), book.id);
+          await C.sendDM(uid, "You should read " + book.title + ", " + (book.tagline || "it's good!"), book.id);
           await loadThread();
-        } catch (err) { C.say("Send failed — " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
+        } catch (err) { C.say("Send failed, " + (err && err.message ? err.message : err) + " (run SQL #6)"); }
       }
     });
 
@@ -586,6 +587,6 @@
     });
   })();
   </script>
-  <script src="js/bar.js?v=267" defer></script>
+  <script src="js/bar.js?v=273" defer></script>
 </body>
 </html>

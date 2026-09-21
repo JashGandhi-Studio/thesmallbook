@@ -1,15 +1,15 @@
 /* ============================================================
-   THESMALLBOOK — BOOK TOOLS (book-tools.js) · v250
+   THESMALLBOOK, BOOK TOOLS (book-tools.js) · v250
    Two things live on the book page, and both were rebuilt this release:
 
-   • 📄 GET CHEAT-SHEET — a real deliverable, not a print of the page.
+   • 📄 GET CHEAT-SHEET, a real deliverable, not a print of the page.
      EXACTLY TWO A4 pages, in colour, with a designed background per
      category, the real cover, the big idea, five distilled takeaways
      and a diagram. The old version printed the whole document, which is
      where the eleven pages with blanks came from. Now: two pages, always,
      clipped by design so nothing can spill onto a third.
 
-   • 💛 FUEL THIS BREAKDOWN — the sponsor sheet, rebuilt in the app's own
+   • 💛 FUEL THIS BREAKDOWN, the sponsor sheet, rebuilt in the app's own
      visual language (thick ink borders, hard shadows, amount picker).
 
    Free for the first FOUR cheat-sheets; Gold is unlimited.
@@ -54,7 +54,7 @@
     try { return (window.TSB_CONFIG && TSB_CONFIG.PAYWALL && TSB_CONFIG.PAYWALL.UPI_ID) || "9702510680@fam"; }
     catch (e) { return "9702510680@fam"; }
   }
-  /* one clean line out of a paragraph — the cheat-sheet never copies a
+  /* one clean line out of a paragraph, the cheat-sheet never copies a
      chapter, it compresses it */
   function firstSentence(txt, cap) {
     var t = String(txt || "").replace(/\s+/g, " ").trim();
@@ -65,9 +65,9 @@
       var cut = out.lastIndexOf(" ");
       out = cut > cap * 0.6 ? out.slice(0, cut) : out;
       /* land on a clause boundary, not halfway through a parenthesis */
-      var brk = Math.max(out.lastIndexOf(", "), out.lastIndexOf("; "), out.lastIndexOf(" — "));
+      var brk = Math.max(out.lastIndexOf(", "), out.lastIndexOf("; "), out.lastIndexOf(", "));
       if (brk > cap * 0.55) out = out.slice(0, brk);
-      out = out.replace(/[,;:\-–—]$/, "") + "…";
+      out = out.replace(/[,;:\-–-]$/, "") + "…";
     }
     return out;
   }
@@ -76,7 +76,7 @@
     if (t.length <= cap) return t;
     var out = t.slice(0, cap);
     var cut = out.lastIndexOf(" ");
-    return (cut > cap * 0.6 ? out.slice(0, cut) : out).replace(/[,;:\-–—]$/, "") + "…";
+    return (cut > cap * 0.6 ? out.slice(0, cut) : out).replace(/[,;:\-–-]$/, "") + "…";
   }
 
   /* SVG <text> cannot wrap, so the diagram's boxes wrap their own labels */
@@ -122,9 +122,9 @@
   }
 
   /* ============================================================
-     THE CHEAT SHEET — two pages, built to fit, never three
+     THE CHEAT SHEET, two pages, built to fit, never three
      ============================================================ */
-  /* a heading with its colour chip as real markup — a ::before pseudo-element
+  /* a heading with its colour chip as real markup, a ::before pseudo-element
      gets positioned unpredictably by print engines, and an orphaned chip in
      the margin is exactly the kind of thing that makes a sheet look sloppy */
   function h2(label, tight, tail) {
@@ -153,7 +153,7 @@
     var nodes = takes.map(function (l, i) {
       var cx = x0 + i * colW + colW / 2;
       var short = String(l.title || ("Idea " + (i + 1)))
-        .split(/\s+[—–]\s+/)[0]                 /* keep the headline, drop the subtitle */
+        .split(/\s+[-–]\s+/)[0]                 /* keep the headline, drop the subtitle */
         .replace(/^(The|A|An)\s+/i, "")
         .replace(/[:.]+$/, "");
       /* "Cue → Craving → Response → Reward" must not wrap to a dangling arrow */
@@ -173,12 +173,12 @@
         svgLines(lines, cx, 72, 8.8, pal.ink, "Space Grotesk, Arial, sans-serif", 700, 10.6) +
       "</g>";
     }).join("");
-    /* the viewBox is 512x92 — close to 186mm wide by 33mm tall, the box the page
+    /* the viewBox is 512x92, close to 186mm wide by 33mm tall, the box the page
        gives it, so the art fills the column instead of letterboxing */
     return '<svg class="cs2__map" viewBox="0 0 512 92" role="img" aria-label="The five ideas in order">' +
       '<rect x="14" y="2" width="484" height="21" rx="10.5" fill="' + pal.a + '" stroke="' + pal.ink + '" stroke-width="2.6"/>' +
       '<text x="256" y="16.4" text-anchor="middle" font-size="10" font-weight="800" fill="' + pal.ink +
-        '" font-family="Archivo Black, Arial Black, sans-serif">ALL FIVE SIT UNDER THE BIG IDEA \u2014 THE 5-STEP PLAN IS ON PAGE 2</text>' +
+        '" font-family="Archivo Black, Arial Black, sans-serif">ALL FIVE SIT UNDER THE BIG IDEA, THE 5-STEP PLAN IS ON PAGE 2</text>' +
       nodes +
       "</svg>";
   }
@@ -282,7 +282,7 @@
             "<figcaption>\u2014 " + esc(b.author || "") + "</figcaption></figure>"
           : "") +
 
-        h2("Do this \u2014 this week") +
+        h2("Do this, this week") +
         '<ol class="cs2__dos">' + flow + "</ol>" +
 
         '<div class="cs2__watch"><b>WHERE IT BREAKS</b><p>' +
@@ -331,7 +331,7 @@
     }
     window.addEventListener("afterprint", done);
 
-    /* the cover is the only network/disk hit — wait for it, or the sheet
+    /* the cover is the only network/disk hit, wait for it, or the sheet
        prints with an empty frame */
     var img = host.querySelector(".cs2__cover");
     var fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
@@ -346,7 +346,7 @@
 
   function genPdf() {
     var b = book();
-    if (!b) { say("Open a book first — the cheat-sheet is built per book."); return; }
+    if (!b) { say("Open a book first, the cheat-sheet is built per book."); return; }
     var gold = isGold();
     if (!gold && pdfCount() >= FREE_PDF) {
       if (!window.confirm("Your " + FREE_PDF + " free cheat-sheets are used. Gold gives you unlimited, credit-free sheets. Open Gold?")) return;
@@ -355,7 +355,7 @@
     }
     if (!gold) { try { localStorage.setItem(STORE_KEY, String(pdfCount() + 1)); } catch (e) {} }
     updateQuota();
-    say(gold ? "Building your Gold cheat-sheet…" : "Building your cheat-sheet — choose “Save as PDF” in the print sheet.");
+    say(gold ? "Building your Gold cheat-sheet…" : "Building your cheat-sheet, choose “Save as PDF” in the print sheet.");
     printSheet(buildSheet(b, gold));
   }
 
@@ -381,7 +381,7 @@
   }
 
   /* ============================================================
-     FUEL THIS BREAKDOWN — same design language as the rest of the app
+     FUEL THIS BREAKDOWN, same design language as the rest of the app
      ============================================================ */
   function fuelFlow() {
     var b = book();

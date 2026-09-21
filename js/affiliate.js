@@ -1,9 +1,9 @@
 /* ============================================================
-   THESMALLBOOK — 🔗 AFFILIATE LINKS (affiliate.js) · v225
+   THESMALLBOOK, 🔗 AFFILIATE LINKS (affiliate.js) · v225
    Optional: map any offer id → your tracked url.
 
    Live: Flipkart Books is already earning via your EarnKaro.
-   Paste your 2nd link (Amazon) here when you make it — one line,
+   Paste your 2nd link (Amazon) here when you make it, one line,
    no other code change needed. The store CTA switches automatically
    and adds the “affiliate link” disclosure.
 

@@ -18,13 +18,13 @@
 --    • adds columns with IF NOT EXISTS  → the ones the app already uses are no-ops
 --    • never renames or drops an existing column
 --    • keeps `follows(follower_id, author_id)` exactly as the client writes it
---    • does NOT require the app to write `last_seen` — presence keeps riding the
+--    • does NOT require the app to write `last_seen`, presence keeps riding the
 --      existing `links` column, and last_seen is here only if you want it later
 --
 --  THE APP WORKS EITHER WAY
 --  ---------------------------------------------------------------------------
 --  Without this SQL the app uses its offline handshake (each side writes only
---  into its own profile row — safe, but slow to settle and easy to double up).
+--  into its own profile row, safe, but slow to settle and easy to double up).
 --  With this SQL, js/community.js detects `follow_requests` on first use and
 --  switches to the server automatically. Nothing in the UI changes.
 -- ============================================================================
@@ -104,7 +104,7 @@ comment on table public.follow_requests is
 -- drop later without touching yours.
 
 -- ---------------------------------------------------------------------------
--- 4 · row level security — strictest thing that still lets the app work
+-- 4 · row level security, strictest thing that still lets the app work
 -- ---------------------------------------------------------------------------
 alter table public.follow_requests enable row level security;
 
@@ -201,7 +201,7 @@ begin
     return 'following';
   end if;
 
-  -- they already asked me? then this is a mutual yes — connect both ways
+  -- they already asked me? then this is a mutual yes, connect both ways
   select exists (
     select 1 from public.follow_requests
     where requester_id = target and target_id = me and status = 'pending'

@@ -1,5 +1,5 @@
 -- ============================================================================
---  THESMALLBOOK · THE UPDATE — v255  (only what is NEW since your last SQL run)
+--  THESMALLBOOK · THE UPDATE, v255  (only what is NEW since your last SQL run)
 --  supabase/sql/UPDATE-v255.sql
 --
 --  HOW TO RUN (once, ~5 seconds):
@@ -7,28 +7,28 @@
 --    The grid at the bottom is your receipt.
 --
 --  This file adds ONLY the three things your project does not have yet:
---    §1  USERNAMES        — the @handle for the new sign-in (unique, lowercase)
---    §2  HARDENING        — length locks inside the database, one-like-per-reader,
+--    §1  USERNAMES       , the @handle for the new sign-in (unique, lowercase)
+--    §2  HARDENING       , length locks inside the database, one-like-per-reader,
 --                           deleting a post clears its likes/comments, owners-only
 --                           edit/delete of posts (in case SQL #10 was never run)
---    §3  PRIVATE ACCOUNTS — the 🔒 request-and-accept follow system your app
+--    §3  PRIVATE ACCOUNTS, the 🔒 request-and-accept follow system your app
 --                           already knows how to use (your live project returns
---                           404 on follow_requests — this installs it)
---    §4  USERNAME SIGN-IN — sign in with "@handle + password" on any device,
+--                           404 on follow_requests, this installs it)
+--    §4  USERNAME SIGN-IN, sign in with "@handle + password" on any device,
 --                           with or without Google (the forever keys)
---    §5  LOGIN GATE       — 5 wrong passwords → 10-minute lock, on the SERVER
---    §6  SET MY @NAME     — old accounts claim or change their @handle any time;
+--    §5  LOGIN GATE      , 5 wrong passwords → 10-minute lock, on the SERVER
+--    §6  SET MY @NAME    , old accounts claim or change their @handle any time;
 --                           "taken" is decided by the database, not the browser
 --
 --  Everything is additive and guarded: it does NOT touch your existing rows,
 --  your 5 channel posts, or your readers' data. Safe to re-run any time.
---  (The full ALL-IN-ONE.sql also exists for a brand-new project — you do not
+--  (The full ALL-IN-ONE.sql also exists for a brand-new project, you do not
 --   need it; this update is enough.)
 -- ============================================================================
 
 
 -- ════════════════════════════════════════════════════════════
--- §1 · USERNAMES — the sign-in update. New accounts choose an
+-- §1 · USERNAMES, the sign-in update. New accounts choose an
 --      @handle (small letters, numbers, _; 3–20 chars). The app
 --      checks availability live while typing; the database makes
 --      the promise real: one handle, one reader, forever.
@@ -50,7 +50,7 @@ create unique index if not exists profiles_username_uid
 
 
 -- ════════════════════════════════════════════════════════════
--- §2 · HARDENING — the database defends itself.
+-- §2 · HARDENING, the database defends itself.
 -- ════════════════════════════════════════════════════════════
 
 -- owners can edit and delete their own posts (no-op if SQL #10 already ran)
@@ -59,13 +59,13 @@ create policy "update own posts" on public.posts for update using (auth.uid() = 
 drop policy if exists "delete own posts" on public.posts;
 create policy "delete own posts" on public.posts for delete using (auth.uid() = author_id);
 
--- length locks (mirrors what the forms already limit — a hand-built request
+-- length locks (mirrors what the forms already limit, a hand-built request
 -- cannot stuff a novel into a title). If an OLD row is over a limit, that one
 -- guard is skipped with a notice instead of failing the whole run.
 do $$ begin
   alter table public.posts drop constraint if exists posts_title_len;
   alter table public.posts add constraint posts_title_len check (char_length(title) <= 90);
-exception when others then raise notice 'title lock skipped — an old title is longer than 90 characters.';
+exception when others then raise notice 'title lock skipped, an old title is longer than 90 characters.';
 end $$;
 do $$ begin
   alter table public.posts drop constraint if exists posts_body_len;
@@ -79,7 +79,7 @@ exception when others then raise notice 'comment lock skipped (%).', sqlerrm;
 end $$;
 -- the name rule allows up to 40 on purpose: the form caps new names at 24,
 -- but real accounts that signed in with Google (a school on the live project
--- has 27 letters) keep longer legacy names — they must stay valid AND editable
+-- has 27 letters) keep longer legacy names, they must stay valid AND editable
 do $$ begin
   alter table public.profiles drop constraint if exists profiles_name_len;
   alter table public.profiles add constraint profiles_name_len check (char_length(name) between 1 and 40);
@@ -100,7 +100,7 @@ delete from public.likes l
    and l.post_id is not distinct from g.post_id;
 create unique index if not exists likes_user_post_uid on public.likes (user_id, post_id);
 
--- when a post dies, its likes and comments die with it — server-side
+-- when a post dies, its likes and comments die with it, server-side
 create or replace function public.tsb_cascade_post_delete() returns trigger
 language plpgsql security definer set search_path = public as $$
 begin
@@ -115,10 +115,10 @@ create trigger tsb_cascade_post_delete
 
 
 -- ════════════════════════════════════════════════════════════
--- §3 · PRIVATE ACCOUNTS + FOLLOW REQUESTS — the 🔒 system.
+-- §3 · PRIVATE ACCOUNTS + FOLLOW REQUESTS, the 🔒 system.
 --      A private profile gains a follower only when its owner
 --      accepts. The app detects this table on first use and
---      switches automatically — nothing changes in the UI.
+--      switches automatically, nothing changes in the UI.
 -- ════════════════════════════════════════════════════════════
 
 -- tidy the duplicates the old link-era handshake may have left, then lock it
@@ -155,7 +155,7 @@ alter table public.follow_requests enable row level security;
 drop policy if exists tsb_requests_read on public.follow_requests;
 create policy tsb_requests_read on public.follow_requests
   for select using (auth.uid() = requester_id or auth.uid() = target_id);
--- nobody writes this table directly — all writes go through the functions
+-- nobody writes this table directly, all writes go through the functions
 -- below, which take the identity from auth.uid() on the server
 drop policy if exists tsb_requests_write on public.follow_requests;
 create policy tsb_requests_write on public.follow_requests for all using (false) with check (false);
@@ -265,7 +265,7 @@ create trigger profiles_touch before update on public.profiles
 
 
 -- ════════════════════════════════════════════════════════════
--- §4 · USERNAME SIGN-IN — the forever keys. Readers sign in with
+-- §4 · USERNAME SIGN-IN, the forever keys. Readers sign in with
 --      "@handle + password" on any device. This tiny server-side
 --      lookup turns the handle into the sign-in email; the password
 --      itself is still checked by Supabase Auth, never by us.
@@ -296,7 +296,7 @@ end $$;
 
 
 -- ════════════════════════════════════════════════════════════
--- §5 · THE LOGIN GATE — rate limiting that lives on the SERVER.
+-- §5 · THE LOGIN GATE, rate limiting that lives on the SERVER.
 --      A phone can be tampered with; this table cannot. 5 wrong
 --      passwords on one account → the account locks for 10
 --      minutes, no matter what the browser claims. Success clears it.
@@ -309,7 +309,7 @@ create table if not exists public.tsb_login_gate (
   locked_until timestamptz,
   updated_at   timestamptz not null default now()
 );
--- no table grants — the ONLY doors are the three functions below
+-- no table grants, the ONLY doors are the three functions below
 
 create or replace function public.tsb_login_gate_norm(p text)
 returns text language sql immutable as $$
@@ -380,10 +380,10 @@ end $$;
 
 
 -- ════════════════════════════════════════════════════════════
--- §6 · SET MY @NAME — the claim/change desk, checked on the SERVER.
+-- §6 · SET MY @NAME, the claim/change desk, checked on the SERVER.
 --      Old accounts (random or legacy names) can claim or change
 --      their @handle any time. Format and uniqueness are decided
---      here in the database — a tampered browser changes nothing.
+--      here in the database, a tampered browser changes nothing.
 --      Answers: 'ok' | 'sign-in' | 'bad' | 'taken'.
 -- ════════════════════════════════════════════════════════════
 
@@ -424,7 +424,7 @@ exception when others then raise notice 'setter grant skipped (%).', sqlerrm;
 end $$;
 
 -- ════════════════════════════════════════════════════════════
--- THE CHECK — your receipt. Every number must match its "want".
+-- THE CHECK, your receipt. Every number must match its "want".
 -- ════════════════════════════════════════════════════════════
 
 select

@@ -1,7 +1,7 @@
 /* ============================================================
-   THESMALLBOOK — 🎙️ VOICE TO TEXT (dictate.js) · v244
-   FREE & ANONYMOUS-FIRST — NO SIGN-IN, EVER (like our read-aloud)
-   - v244: WEB SPEECH API FIRST — the browser's own speech-to-text.
+   THESMALLBOOK, 🎙️ VOICE TO TEXT (dictate.js) · v244
+   FREE & ANONYMOUS-FIRST, NO SIGN-IN, EVER (like our read-aloud)
+   - v244: WEB SPEECH API FIRST, the browser's own speech-to-text.
      No account, no popup, no Puter sign-in. Works on Chrome / Edge /
      Android / Safari 14.5+, on-device or browser service, instantly.
    - Puter AI (GPT-4o-transcribe / Whisper) is only a transparent
@@ -257,12 +257,12 @@
     if (listening) {
       btn.classList.add("on");
       btn.setAttribute("aria-pressed","true");
-      btn.title = "Stop — tap again or press Esc";
+      btn.title = "Stop, tap again or press Esc";
       btn.innerHTML = '<span class="wr-dictate__dot on"></span> Stop <small id="dictateTimer">00:00</small>';
     } else {
       btn.classList.remove("on");
       btn.setAttribute("aria-pressed","false");
-      btn.title = "Dictate — AI: just speak Hinglish/English naturally, we add full stops";
+      btn.title = "Dictate, AI: just speak Hinglish/English naturally, we add full stops";
       btn.innerHTML = '<span class="wr-dictate__dot"></span> Dictate';
     }
   }
@@ -277,7 +277,7 @@
       interimEl.id = "dictateLive";
       interimEl.className = "wr-dictate__live";
       interimEl.hidden = true;
-      interimEl.innerHTML = '<div class="wr-dictate__livehead"><span class="wr-dictate__pulse"></span> <span id="dictateLiveTitle">Listening — just speak</span> • <span id="dictateLangLabel"></span></div><div class="wr-dictate__interim" id="dictateInterim"></div>';
+      interimEl.innerHTML = '<div class="wr-dictate__livehead"><span class="wr-dictate__pulse"></span> <span id="dictateLiveTitle">Listening, just speak</span> • <span id="dictateLangLabel"></span></div><div class="wr-dictate__interim" id="dictateInterim"></div>';
       if (bar && bar.parentNode) bar.parentNode.insertBefore(interimEl, bar.nextSibling);
       else if (wrap) wrap.insertBefore(interimEl, wrap.firstChild);
     }
@@ -294,7 +294,7 @@
       return f ? f.label : id;
     })(cur);
     if (lab) lab.textContent = labTxt + " • AI • you can edit after";
-    if (title) title.textContent = listening ? (window._puterRecording ? "● Recording — speak Hinglish/English" : "Listening") : "Ready";
+    if (title) title.textContent = listening ? (window._puterRecording ? "● Recording, speak Hinglish/English" : "Listening") : "Ready";
     var inter = document.getElementById("dictateInterim");
     if (!text && !listening) {
       el.hidden = true;
@@ -306,7 +306,7 @@
     }
     if (!text) {
       el.hidden = !listening;
-      if (inter) inter.textContent = listening ? (window._puterRecording ? "Speak now — Hinglish works, pauses become full stops…" : "Speak now — pauses become full stops…") : "";
+      if (inter) inter.textContent = listening ? (window._puterRecording ? "Speak now, Hinglish works, pauses become full stops…" : "Speak now, pauses become full stops…") : "";
       return;
     }
     el.hidden = false;
@@ -324,7 +324,7 @@
       el.textContent = (m<10?"0":"")+m + ":" + (sec<10?"0":"")+sec;
       // auto-stop at 90s (Puter free limit)
       if (s>=88) {
-        showInterim("⏱️ 90s limit — stopping, transcribing…", false);
+        showInterim("⏱️ 90s limit, stopping, transcribing…", false);
         stop();
       }
     }, 500);
@@ -382,18 +382,18 @@
     // ensure puter loaded
     var ok = isPuterReady() ? true : await loadPuter();
     if (!ok) {
-      toast("AI not ready — using browser dictation");
+      toast("AI not ready, using browser dictation");
       return startWebSpeech();
     }
     // check mic
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      toast("Mic not supported on this browser — try Chrome");
+      toast("Mic not supported on this browser, try Chrome");
       return;
     }
     try {
       var stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation:true, noiseSuppression:true, autoGainControl:true } });
     } catch(e){
-      var msg = (e && e.name==="NotAllowedError") ? "Mic blocked — allow microphone, then try again." : "Could not access mic: " + (e.message||e.name);
+      var msg = (e && e.name==="NotAllowedError") ? "Mic blocked, allow microphone, then try again." : "Could not access mic: " + (e.message||e.name);
       toast(msg);
       return;
     }
@@ -418,7 +418,7 @@
       var blob = new Blob(chunks, {type: mediaRec.mimeType || "audio/webm"});
       chunks = [];
       if (!blob.size) {
-        toast("No audio captured — speak louder and try again");
+        toast("No audio captured, speak louder and try again");
         showInterim("", true);
         listening = false; updateBtnState(); stopTimer(); if (interimEl) interimEl.hidden=true;
         return;
@@ -427,14 +427,14 @@
       var el = ensureInterimEl();
       el.hidden = false;
       var inter = document.getElementById("dictateInterim");
-      if (inter) inter.textContent = "✨ Transcribing with AI (GPT-4o) — " + (lang==="hinglish" ? "Hinglish + English" : (LANGS.find(function(l){return l.id===lang;})||{}).label||lang) + " — adding full stops…";
+      if (inter) inter.textContent = "✨ Transcribing with AI (GPT-4o), " + (lang==="hinglish" ? "Hinglish + English" : (LANGS.find(function(l){return l.id===lang;})||{}).label||lang) + ", adding full stops…";
       var liveTitle = document.getElementById("dictateLiveTitle");
       if (liveTitle) liveTitle.textContent = "Transcribing…";
       listening = false; updateBtnState(); stopTimer();
       try{
         var txt = await transcribeWithPuter(blob, lang||getLang());
         if (!txt) {
-          toast("Could not transcribe — try again, speak clearer");
+          toast("Could not transcribe, try again, speak clearer");
           if (inter) inter.textContent = "";
           el.hidden = true;
           return;
@@ -443,10 +443,10 @@
         insertTextSmart(txt);
         if (inter) inter.textContent = "";
         el.hidden = true;
-        toast("✓ Added — " + txt.slice(0, 42) + (txt.length>42?"…":""));
+        toast("✓ Added, " + txt.slice(0, 42) + (txt.length>42?"…":""));
       }catch(e){
         console.warn("puter transcribe failed", e);
-        toast("AI busy — trying browser fallback");
+        toast("AI busy, trying browser fallback");
         // fallback to web speech interim text if any? For now just show error and fallback
         el.hidden = true;
         // Try web speech as fallback for next utterance
@@ -466,7 +466,7 @@
       var body = document.getElementById("wBody");
       if (body) { body.focus(); placeCaretAtEnd(body); }
     }
-    toast("● Recording — speak Hinglish/English naturally, tap Stop when done. AI will add full stops.");
+    toast("● Recording, speak Hinglish/English naturally, tap Stop when done. AI will add full stops.");
   }
 
   function stopPuter(){
@@ -496,7 +496,7 @@
       rec.maxAlternatives = 1;
       rec.lang = (lang==="hinglish" ? "en-IN" : lang);
     }catch(e){
-      toast("Couldn’t start voice typing — try again.");
+      toast("Couldn’t start voice typing, try again.");
       return;
     }
     listening = true;
@@ -532,7 +532,7 @@
     };
     rec.onerror = function(ev){
       var err=(ev&&ev.error)||"";
-      if (err==="not-allowed"||err==="service-not-allowed"){ toast("Mic blocked — allow microphone"); stopWebSpeech(); }
+      if (err==="not-allowed"||err==="service-not-allowed"){ toast("Mic blocked, allow microphone"); stopWebSpeech(); }
       else if (err==="no-speech"){ showInterim("",false); }
       else if (err==="audio-capture"){ toast("No microphone found."); stopWebSpeech(); }
       else if (err==="aborted"){}
@@ -551,8 +551,8 @@
         var b=document.getElementById("wBody");
         if (b){ b.focus(); placeCaretAtEnd(b); }
       }
-      toast("Listening — speak naturally (free · no sign-in), we’ll punctuate.");
-    }catch(e){ listening=false; updateBtnState(); toast("Couldn’t start — tap Dictate again."); }
+      toast("Listening, speak naturally (free · no sign-in), we’ll punctuate.");
+    }catch(e){ listening=false; updateBtnState(); toast("Couldn’t start, tap Dictate again."); }
   }
   function stopWebSpeech(){
     listening=false;
@@ -565,11 +565,11 @@
     if (el) el.hidden=true;
   }
 
-  // Unified start/stop — v244: Web Speech FIRST (free, anonymous, no sign-in). Puter only for browsers without it.
+  // Unified start/stop, v244: Web Speech FIRST (free, anonymous, no sign-in). Puter only for browsers without it.
   function start(){
     lang = getLang();
     if (HAS_WEB_SPEECH){
-      // the people's path: browser speech-to-text — no account, no popup, starts instantly
+      // the people's path: browser speech-to-text, no account, no popup, starts instantly
       startWebSpeech();
       return;
     }
@@ -577,7 +577,7 @@
     toast("Starting voice engine…");
     loadPuter().then(function(ok){
       if (ok && !listening) startPuter();
-      else if (!ok) toast("Voice typing needs Chrome, Edge or Safari — or allow the microphone.");
+      else if (!ok) toast("Voice typing needs Chrome, Edge or Safari, or allow the microphone.");
     });
   }
   function stop(){
@@ -591,7 +591,7 @@
   }
 
   function buildUI(){
-    /* v250: the Quote section is deliberately small — no dictation button,
+    /* v250: the Quote section is deliberately small, no dictation button,
        and any button left over from an older cached build is removed here. */
     try {
       if (location.search.indexOf("mode=quote") >= 0) {
@@ -608,8 +608,8 @@
       btn.type = "button";
       btn.id = "wrDictate";
       btn.className = "wr-dictate";
-      btn.setAttribute("aria-label","Voice to text — free, no sign-in");
-      btn.title = "Voice to text — free & anonymous, no sign-in";
+      btn.setAttribute("aria-label","Voice to text, free, no sign-in");
+      btn.title = "Voice to text, free & anonymous, no sign-in";
       btn.innerHTML = '<span class="wr-dictate__dot"></span> Dictate';
       btn.addEventListener("click", function(e){
         e.preventDefault();
@@ -629,7 +629,7 @@
       langSel = document.createElement("select");
       langSel.id = "dictateLang";
       langSel.className = "wr-dictate__lang";
-      langSel.title = "Dictation language — free voice typing, Hinglish & 7 Indian languages, no sign-in";
+      langSel.title = "Dictation language, free voice typing, Hinglish & 7 Indian languages, no sign-in";
       LANGS.forEach(function(l){
         var o = document.createElement("option");
         o.value = l.id; o.textContent = l.label;
@@ -658,7 +658,7 @@
         stop();
       }
     });
-    // v244: no background Puter preload — Web Speech needs nothing, sign-in popups must never appear
+    // v244: no background Puter preload, Web Speech needs nothing, sign-in popups must never appear
   }
 
   function init(){
