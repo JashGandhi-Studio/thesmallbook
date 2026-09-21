@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK, 📷 FULLSCREEN LIVE BOOK SCANNER (scanner.js)
+   THESMALLBOOK — 📷 FULLSCREEN LIVE BOOK SCANNER (scanner.js)
    - Full-screen camera takeover (no upload, no card)
    - Auto-capture: waits for a sharp + steady frame (1-2s)
    - Manual shutter as backup
@@ -87,7 +87,7 @@
     camLive = false;
     if (showAllow !== false && hint) {
       hint.style.display = "";
-      hint.innerHTML = "<b>ALLOW CAMERA ACCESS</b><span>Tap Allow in the browser popup, then keep the cover steady</span>";
+      hint.innerHTML = "<b>ALLOW CAMERA ACCESS</b><span>Tap Allow in the browser popup — then keep the cover steady</span>";
     }
     var gum = null;
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) gum = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
@@ -121,7 +121,7 @@
         loop();
       })
       .catch(function () {
-        if (empty) { empty.style.display = "flex"; empty.textContent = "📷 Camera blocked, allow camera access and tap SCAN again"; }
+        if (empty) { empty.style.display = "flex"; empty.textContent = "📷 Camera blocked — allow camera access and tap SCAN again"; }
         if (hint) hint.style.display = "none";
         if (video) video.style.display = "none";
       });
@@ -168,12 +168,12 @@
   function loop() {
     if (!video) return;
     if (!video.videoWidth) {
-      // camera granted but no frames yet, keep the user informed
+      // camera granted but no frames yet — keep the user informed
       noFrameTicks++;
       if (noFrameTicks === 15 && hint) {
         hint.innerHTML = "<b>STARTING CAMERA…</b><span>Keep the book cover in the frame</span>";
       } else if (noFrameTicks === 130 && hint) {
-        hint.innerHTML = "<b>CAMERA NOT STARTING</b><span>Tap ✕ and try SCAN again, or type the book name in search</span>";
+        hint.innerHTML = "<b>CAMERA NOT STARTING</b><span>Tap ✕ and try SCAN again — or type the book name in search</span>";
       }
       raf = requestAnimationFrame(loop);
       return;
@@ -209,7 +209,7 @@
     if (!video || !video.videoWidth) {
       if (empty) {
         empty.style.display = "flex";
-        empty.textContent = "📷 Camera is still starting, wait a second and tap FIND BOOK SUMMARY again";
+        empty.textContent = "📷 Camera is still starting — wait a second and tap FIND BOOK SUMMARY again";
       }
       return;
     }
@@ -237,14 +237,14 @@
     }, 700);
   }
 
-  /* scanner-data.js loads deferred (it's ~900KB), wait for it before
+  /* scanner-data.js loads deferred (it's ~900KB) — wait for it before
      matching; fall back to type-the-title if it never arrives */
   function ensureLib(cb, tries) {
     tries = tries || 0;
     if (window.TSB_SCAN && window.TSB_SCAN.length) return cb();
     if (tries === 0 && hint) {
       hint.style.display = "";
-      hint.innerHTML = "<b>LOADING BOOK LIBRARY…</b><span>One second, scanning starts automatically</span>";
+      hint.innerHTML = "<b>LOADING BOOK LIBRARY…</b><span>One second — scanning starts automatically</span>";
     }
     if (tries >= 20) { // ~5s timeout → type fallback still works
       if (hint) hint.style.display = "none";
@@ -334,7 +334,7 @@
   }
 
   /* full-frame profile + crop-invariant variants (real camera shots are
-     never perfectly zoomed, try 100% / 85% / 70% center crops) */
+     never perfectly zoomed — try 100% / 85% / 70% center crops) */
   function profileFromCanvas() {
     var ctx = canvas.getContext("2d");
     var small = document.createElement("canvas");
@@ -460,7 +460,7 @@
         ? hits.map(function (b) {
             return '<button class="scanmodal__typehit" data-id="' + b.id + '"><b>' + b.title + '</b><small>' + b.author + '</small></button>';
           }).join("")
-        : '<span class="scanmodal__typenone">No book found, check the spelling, or request it below 👇</span>';
+        : '<span class="scanmodal__typenone">No book found — check the spelling, or request it below 👇</span>';
     }
     updateRequestLink(typeInput.value.trim());
   });

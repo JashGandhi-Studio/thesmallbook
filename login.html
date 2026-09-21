@@ -2,21 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-    <meta property="og:title" content="Sign in, TheSmallBook">
-  <meta property="og:description" content="Create a free account or sign in, your shelf, streak and progress follow you to every device. 13+ with an honest age check.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=273">
+    <meta property="og:title" content="Sign in — TheSmallBook">
+  <meta property="og:description" content="Create a free account or sign in — your shelf, streak and progress follow you to every device. 13+ with an honest age check.">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=267">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/login.html">
   <meta property="og:type" content="website">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
-  <title>You, TheSmallBook</title>
-  <meta name="description" content="Your TheSmallBook window: sign in with Google to sync your shelf, streak and progress, then tune the app: darkness, text size, colour and language.">
+  <title>You — TheSmallBook</title>
+  <meta name="description" content="Your TheSmallBook window: sign in with Google to sync your shelf, streak and progress — then tune the app: darkness, text size, colour and language.">
   <meta name="robots" content="noindex">
   <link rel="canonical" href="https://thesmallbook.in/login.html">
   <meta name="theme-color" content="#ffc800">
-  <script src="js/vault.js?v=273"></script>
   <script>
     /* theme + phone status bar BEFORE first paint (no flash). */
     try {
@@ -30,8 +29,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=273">
-  <link rel="stylesheet" href="css/store.css?v=273">
+  <link rel="stylesheet" href="css/style.css?v=267">
+  <link rel="stylesheet" href="css/store.css?v=267">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -60,7 +59,7 @@
         <button class="yotab" id="tabSignin" type="button" role="tab" aria-selected="false">SIGN IN</button>
       </div>
 
-      <!-- v257 · the Google banner leads BOTH tabs, first time it ends at a
+      <!-- v257 · the Google banner leads BOTH tabs — first time it ends at a
            short "claim your @name + set a password" menu, never a silent drop-in -->
       <button class="yougoogle" id="signinGoogle">
         <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.3 0-9.7-3.4-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.2 5.2C36.9 39.2 44 34 44 24c0-1.2-.1-2.3-.4-3.5z"/></svg>
@@ -76,23 +75,23 @@
         </div>
         <div class="youser">
           <span class="youser__at">@</span>
-          <input class="yoin" id="suUser" type="text" maxlength="20" autocomplete="username" spellcheck="false" placeholder="username, small letters, numbers, _">
+          <input class="yoin" id="suUser" type="text" maxlength="20" autocomplete="username" spellcheck="false" placeholder="username — small letters, numbers, _">
           <span class="youser__state" id="suUserState" aria-live="polite"></span>
         </div>
-        <input class="yoin" id="suName" type="text" maxlength="24" autocomplete="nickname" placeholder="Reader name, what people see (defaults to your first name)">
+        <input class="yoin" id="suName" type="text" maxlength="24" autocomplete="nickname" placeholder="Reader name — what people see (defaults to your first name)">
         <p class="lgsec">YOUR LOGIN</p>
         <div class="lgi">
-          <input class="yoin" id="suMail" type="email" autocomplete="email" placeholder="Email, you sign in with this">
+          <input class="yoin" id="suMail" type="email" autocomplete="email" placeholder="Email — you sign in with this">
           <span class="lgi__ic" aria-hidden="true">✉️</span>
         </div>
         <div class="yopass lgi">
-          <input class="yoin" id="suPass" type="password" autocomplete="new-password" minlength="8" placeholder="Password, at least 8 characters">
+          <input class="yoin" id="suPass" type="password" autocomplete="new-password" minlength="8" placeholder="Password — at least 8 characters">
           <span class="lgi__ic" aria-hidden="true">🔒</span>
           <button class="yoeye" type="button" data-eye="suPass" aria-label="Show password">👁</button>
         </div>
         <p class="lgsec">VERIFY YOUR AGE</p>
         <div class="yoage">
-          <span class="yoage__t">🎂 Your birth <b>month &amp; year</b>, only the year is kept, never the full date</span>
+          <span class="yoage__t">🎂 Your birth <b>month &amp; year</b> — only the year is kept, never the full date</span>
           <div class="yoage__row">
             <select class="yoin yoage__m" id="suMonth" aria-label="Birth month">
               <option value="">Month</option>
@@ -106,14 +105,14 @@
         <label class="yotick">
           <input type="checkbox" id="suAdult">
           <span class="yotick__box" aria-hidden="true">✓</span>
-          <span class="yotick__t">I confirm I am <b>13 or older</b>, and I accept the <a href="about.html#terms">terms</a> &amp; <a href="about.html#privacy">privacy policy</a>. Only my birth year is kept, never my full birthday.</span>
+          <span class="yotick__t">I confirm I am <b>13 or older</b>, and I accept the <a href="about.html#terms">terms</a> &amp; <a href="about.html#privacy">privacy policy</a>. Only my birth year is kept — never my full birthday.</span>
         </label>
         <button class="yogo" id="btnCreate" type="submit">CREATE MY ACCOUNT →</button>
       </form>
 
       <form class="yoform" id="paneSignin" hidden novalidate>
         <div class="lgi">
-          <input class="yoin" id="siMail" type="text" autocomplete="username" spellcheck="false" placeholder="Email or @username, both work">
+          <input class="yoin" id="siMail" type="text" autocomplete="username" spellcheck="false" placeholder="Email or @username — both work">
           <span class="lgi__ic" aria-hidden="true">✉️</span>
         </div>
         <div class="yopass lgi">
@@ -124,16 +123,16 @@
         <button class="yogo" id="btnSignin" type="submit">SIGN IN →</button>
         <button class="yoforgot" id="btnForgot" type="button">Forgot password? Email me a reset code</button>
         <button class="yoforgot" id="btnCodeLogin" type="button" style="margin-top:2px;">✉️ Or sign in with a code I'll get by email</button>
-        <p class="yohint">Joined with Google before? The Google button above still works, or send yourself a code and choose a password for the same account.</p>
+        <p class="yohint">Joined with Google before? The Google button above still works — or send yourself a code and choose a password for the same account.</p>
       </form>
 
-      <!-- v258 · THE CODE, one pane, three jobs: confirm a new account,
+      <!-- v258 · THE CODE — one pane, three jobs: confirm a new account,
            sign in by email code, or unlock a new password after "forgot" -->
       <form class="yoform" id="paneCode" hidden novalidate>
-        <p class="yocode__t" id="codeTitle">📧 Check your inbox, enter the 6-digit code</p>
+        <p class="yocode__t" id="codeTitle">📧 Check your inbox — enter the 6-digit code</p>
         <input class="yoin yocode__in" id="codeIn" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••" aria-label="The 6-digit code from your email">
         <div class="yopass lgi" id="codePwWrap" hidden>
-          <input class="yoin" id="codePw" type="password" autocomplete="new-password" minlength="8" placeholder="Choose a new password, at least 8 characters">
+          <input class="yoin" id="codePw" type="password" autocomplete="new-password" minlength="8" placeholder="Choose a new password — at least 8 characters">
           <span class="lgi__ic" aria-hidden="true">🔒</span>
           <button class="yoeye" type="button" data-eye="codePw" aria-label="Show password">👁</button>
         </div>
@@ -153,7 +152,7 @@
 
   <!-- ============ v257 · FIRST GOOGLE VISIT: THE FINISH-LINE ============
        Google's own screen already asked "allow TheSmallBook to see your
-       name, email and photo?", this menu shows exactly that, then asks
+       name, email and photo?" — this menu shows exactly that, then asks
        for the two things Google can't give: an @username and a password.
        From now on those two alone sign the reader in, Google or not. -->
   <div class="youview" id="view-finish" hidden>
@@ -163,35 +162,35 @@
         <span class="lghero__shape lghero__shape--ring" aria-hidden="true"></span>
         <span class="lghero__chip" aria-hidden="true">🔑</span>
         <span class="lghero__eyebrow">ONE LAST STEP</span>
-        <p class="lghero__sub">You approved Google sharing these with TheSmallBook, they stay private and we never post anywhere.</p>
+        <p class="lghero__sub">You approved Google sharing these with TheSmallBook — they stay private and we never post anywhere.</p>
       </header>
       <div class="lgsheet">
       <div class="yofinish__who" id="finWho">
         <span class="acc__ava" id="finAva" aria-hidden="true">📕</span>
         <span class="yofinish__whot">
           <b id="finName">Reader</b>
-          <i id="finMail">-</i>
+          <i id="finMail">—</i>
         </span>
         <span class="yofinish__ok">✓ approved by you on Google</span>
       </div>
       <form class="yoform" id="paneFinish" novalidate>
         <div class="youser">
           <span class="youser__at">@</span>
-          <input class="yoin" id="finUser" type="text" maxlength="20" autocomplete="username" spellcheck="false" placeholder="pick your username, small letters, numbers, _">
+          <input class="yoin" id="finUser" type="text" maxlength="20" autocomplete="username" spellcheck="false" placeholder="pick your username — small letters, numbers, _">
           <span class="youser__state" id="finUserState" aria-live="polite"></span>
         </div>
         <div class="yopass">
-          <input class="yoin" id="finPass" type="password" autocomplete="new-password" minlength="8" placeholder="Set a password, at least 8 characters">
+          <input class="yoin" id="finPass" type="password" autocomplete="new-password" minlength="8" placeholder="Set a password — at least 8 characters">
           <button class="yoeye" type="button" data-eye="finPass" aria-label="Show password">👁</button>
         </div>
-        <p class="yohint">From tomorrow, <b>@username + this password</b> signs you in on any phone, with or without Google. Your username and password are the forever keys.</p>
+        <p class="yohint">From tomorrow, <b>@username + this password</b> signs you in on any phone — with or without Google. Your username and password are the forever keys.</p>
         <label class="yotick">
           <input type="checkbox" id="finAdult">
           <span class="yotick__box" aria-hidden="true">✓</span>
           <span class="yotick__t">I confirm I am <b>13 or older</b>, and I accept the <a href="about.html#terms">terms</a> &amp; <a href="about.html#privacy">privacy policy</a>.</span>
         </label>
         <button class="yogo" id="btnFinish" type="submit">CLAIM MY @NAME →</button>
-        <button class="yoforgot" id="btnFinSkip" type="button">Skip for now, just keep using Google</button>
+        <button class="yoforgot" id="btnFinSkip" type="button">Skip for now — just keep using Google</button>
       </form>
       <div class="yostrip" id="finStrip" hidden></div>
       </div>
@@ -247,7 +246,7 @@
             <span class="st-banner__chip" id="stBanChip">GOLD OR 3 STORIES</span>
           </span>
           <b>🛍️ TSB STORE</b>
-          <small>Kindle · Audible · Spotify · GitHub, 40 real perks, verified monthly</small>
+          <small>Kindle · Audible · Spotify · GitHub — 40 real perks, verified monthly</small>
           <span class="st-banner__go">OPEN THE STORE →</span>
         </a>
       </section>
@@ -278,7 +277,7 @@
         </div>
       </section>
 
-      <!-- v266 · THE IDEA AUTOPSY, the graveyard cross-examines your startup -->
+      <!-- v266 · THE IDEA AUTOPSY — the graveyard cross-examines your startup -->
       <section class="iaudban-wrap">
         <button class="iaudban" data-sub="subAudit" type="button">
           <span class="iaudban__deco iaudban__deco--ring" aria-hidden="true"></span>
@@ -288,19 +287,19 @@
           <span class="iaudban__main">
             <span class="iaudban__eyebrow">FROM THE GRAVEYARD · 308 CASE FILES</span>
             <span class="iaudban__t">THE IDEA AUTOPSY</span>
-            <span class="iaudit__sub">About to build something? The graveyard cross-examines it, four honest meters, an ordered plan, and the companies that already died trying.</span>
+            <span class="iaudit__sub">About to build something? The graveyard cross-examines it — four honest meters, an ordered plan, and the companies that already died trying.</span>
           </span>
           <span class="iaudban__go">CROSS-EXAMINE MY IDEA ⚡</span>
         </button>
       </section>
 
-      <!-- About, professional placement, not hidden at the very bottom. You → guide in one tap -->
+      <!-- About — professional placement, not hidden at the very bottom. You → guide in one tap -->
       <section class="acc__about" style="margin:2px 0">
         <a href="about.html" style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#fffdf5 0%,#fff6d9 55%,#fff3c4 100%);border:3px solid #111;border-radius:16px;box-shadow:4px 4px 0 #111;padding:12px 14px;text-decoration:none;color:#111">
           <span style="flex:none;width:38px;height:38px;display:grid;place-items:center;background:#111;color:#ffc800;border-radius:12px;font-size:18px">ⓘ</span>
           <span style="flex:1;min-width:0">
             <b style="display:block;font:800 12.5px 'Space Grotesk',sans-serif;letter-spacing:.3px">About & feature guide</b>
-            <span style="display:block;font:600 11px 'Space Grotesk',sans-serif;color:#6b7280;margin-top:2px">How the app works, 30-sec demos for every feature · what's new</span>
+            <span style="display:block;font:600 11px 'Space Grotesk',sans-serif;color:#6b7280;margin-top:2px">How the app works — 30-sec demos for every feature · what's new</span>
           </span>
           <span style="flex:none;font:800 11px 'Space Grotesk',sans-serif;background:#ffc800;border:2px solid #111;border-radius:999px;padding:6px 10px;box-shadow:2px 2px 0 #111">OPEN →</span>
         </a>
@@ -312,10 +311,10 @@
         <a class="accrow" href="chat.html"><span>💬</span> Ask the library <i>→</i></a>
         <a class="accrow" href="graveyard.html"><span>💀</span> The Graveyard <i>→</i></a>
         <a class="accrow accrow--about" href="about.html"><span>ⓘ</span> About & feature guide <i>→</i></a>
-        <a class="accrow" href="store.html"><span>🛍️</span> TSB Store, perks & coupons <i>→</i></a>
+        <a class="accrow" href="store.html"><span>🛍️</span> TSB Store — perks & coupons <i>→</i></a>
       </section>
 
-      <!-- Legal, About, Terms & Privacy embedded in You (no hunting) -->
+      <!-- Legal — About, Terms & Privacy embedded in You (no hunting) -->
       <section class="acc__legal" style="margin:10px 0 8px;background:#fff;border:2.5px solid #111;border-radius:14px;padding:10px 12px;box-shadow:3px 3px 0 #111;">
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:space-between;">
           <span style="display:inline-flex;align-items:center;gap:6px;font:800 10px 'Space Grotesk',sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#111;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> About & legal</span>
@@ -330,9 +329,9 @@
         <p style="margin:8px 0 0;font:500 10px 'Space Grotesk',sans-serif;color:#8f8a80;line-height:1.4;text-align:center;">By using TheSmallBook you agree to our Terms & Privacy. Your data stays on your device and syncs only if you sign in with Google. No ads, no trackers, no selling your reading history.</p>
       </section>
 
-      <!-- v264 · THE SETTINGS ROOMS, each department opens as its own window -->
+      <!-- v264 · THE SETTINGS ROOMS — each department opens as its own window -->
       <section class="accsub" id="subActivity" hidden>
-        <header class="accsub__top"><button class="accsub__back" data-subback aria-label="Back to settings">←</button><span class="accsub__t">📊 My activity</span><span class="accsub__tag" id="actLvl">-</span></header>
+        <header class="accsub__top"><button class="accsub__back" data-subback aria-label="Back to settings">←</button><span class="accsub__t">📊 My activity</span><span class="accsub__tag" id="actLvl">—</span></header>
         <div class="accsub__body">
           <div class="actlevel">
             <div class="actlevel__row"><span class="actlevel__name" id="actLevelName">Level</span><span class="actlevel__next" id="actLevelNext"></span></div>
@@ -404,7 +403,7 @@
         <header class="accsub__top"><button class="accsub__back" data-subback aria-label="Back to settings">←</button><span class="accsub__t">⚡ The Idea Autopsy</span><span class="accsub__tag" translate="no">308 GRAVES</span></header>
         <div class="accsub__body">
           <div class="iaudit">
-            <p class="iaudit__intro">Tell it what you’re building. The audit reads it like an investor who buried <b>308 companies</b>, then answers with <b>four meters</b>, <b>an ordered plan</b>, <b>who already built it</b> and <b>who already died trying</b>.</p>
+            <p class="iaudit__intro">Tell it what you’re building. The audit reads it like an investor who buried <b>308 companies</b> — then answers with <b>four meters</b>, <b>an ordered plan</b>, <b>who already built it</b> and <b>who already died trying</b>.</p>
             <div id="iauditBody"></div>
           </div>
         </div>
@@ -414,25 +413,25 @@
         <header class="accsub__top"><button class="accsub__back" data-subback aria-label="Back to settings">←</button><span class="accsub__t">👤 Account &amp; keys</span></header>
         <div class="accsub__body">
           <div class="yset__row"><span class="yset__lbl">Your name</span><div class="yset__ctl" style="gap:6px;"><input id="youNameInput" class="setinput" type="text" maxlength="24" placeholder="Display name"><button class="setopt setopt--sm" id="youNameSave" title="Save name">✓</button></div></div>
-          <div class="yset__row" id="youUserRow" hidden><span class="yset__lbl">Your @name</span><div class="yset__ctl" style="gap:6px;flex-wrap:wrap;"><input id="youUserName" class="setinput" type="text" maxlength="20" spellcheck="false" autocomplete="username" placeholder="claim your @name" style="min-width:130px;"><button class="setopt setopt--sm" id="youUserSave" title="Save @name">✓</button><span class="cm-time" id="youUserHint">small letters, numbers, _, how people find you</span></div></div>
-          <div class="yset__row"><span class="yset__lbl">My ID</span><div class="yset__ctl"><code id="youId" class="cm-idcode">-</code><button class="setopt setopt--sm" id="youIdCopy" title="Copy my ID">⧉</button></div></div>
+          <div class="yset__row" id="youUserRow" hidden><span class="yset__lbl">Your @name</span><div class="yset__ctl" style="gap:6px;flex-wrap:wrap;"><input id="youUserName" class="setinput" type="text" maxlength="20" spellcheck="false" autocomplete="username" placeholder="claim your @name" style="min-width:130px;"><button class="setopt setopt--sm" id="youUserSave" title="Save @name">✓</button><span class="cm-time" id="youUserHint">small letters, numbers, _ — how people find you</span></div></div>
+          <div class="yset__row"><span class="yset__lbl">My ID</span><div class="yset__ctl"><code id="youId" class="cm-idcode">—</code><button class="setopt setopt--sm" id="youIdCopy" title="Copy my ID">⧉</button></div></div>
           <div class="yset__row"><span class="yset__lbl">The finish line</span><div class="yset__ctl"><a class="setopt setopt--sm" href="profile.html?id=me">📔 Open my public profile</a></div></div>
         </div>
       </section>
 
       <button class="acc__out" id="signoutBtn">Sign out</button>
-      <p class="youfine">Build tsb-v273 · Your reading data lives on your device and syncs privately to your account. We never post without asking. · <a href="about.html" style="color:inherit;text-decoration:underline;font-weight:800">ⓘ About & feature guide</a></p>
+      <p class="youfine">Build tsb-v267 · Your reading data lives on your device and syncs privately to your account. We never post without asking. · <a href="about.html" style="color:inherit;text-decoration:underline;font-weight:800">ⓘ About & feature guide</a></p>
     </main>
   </div>
 
-  <script src="js/prefs.js?v=273"></script>
-  <script src="js/lang.js?v=273"></script>
-  <script src="js/config.js?v=273"></script>
-  <script src="js/install.js?v=273"></script>
-  <script src="js/auth.js?v=273"></script>
-  <script src="js/data.js?v=273"></script>
+  <script src="js/prefs.js?v=267"></script>
+  <script src="js/lang.js?v=267"></script>
+  <script src="js/config.js?v=267"></script>
+  <script src="js/install.js?v=267"></script>
+  <script src="js/auth.js?v=267"></script>
+  <script src="js/data.js?v=267"></script>
   <script>
-    /* v223, store banner live status chip */
+    /* v223 — store banner live status chip */
     (function () {
       var chip = document.getElementById("stBanChip");
       if (!chip || !window.TSB_COMMUNITY) return;
@@ -454,7 +453,7 @@
       });
     })();
   </script>
-  <script src="js/bar.js?v=273" defer></script>
+  <script src="js/bar.js?v=267" defer></script>
   <script>
     (function () {
       var vIn = document.getElementById("view-signin");
@@ -546,7 +545,7 @@
         if (!(window.TSB_AUTH && TSB_AUTH.enabled)) document.getElementById("accCloud").style.display = "none";
       }
 
-      /* ---- v264 · THE SETTINGS ROOMS, departments open as full windows,
+      /* ---- v264 · THE SETTINGS ROOMS — departments open as full windows,
               starting with MY ACTIVITY: the reading ring, streak and life ---- */
       function paintActivity() {
         function g(id) { return document.getElementById(id); }
@@ -590,7 +589,7 @@
         try { window.scrollTo(0, 0); } catch (e) {}
       }
       function closeSub() {
-        /* v267: rooms slide out the way they slide in, no snapping */
+        /* v267: rooms slide out the way they slide in — no snapping */
         var open = document.querySelector(".accsub:not([hidden])");
         var v = document.getElementById("view-account");
         function fin() {
@@ -611,7 +610,7 @@
 
       function swap() {
         var u = (window.TSB_AUTH && TSB_AUTH.user) ? TSB_AUTH.user() : null;
-        /* v257 · first Google visit must NOT drop straight into the app.
+        /* v257 · first Google visit must NOT drop straight into the app —
            it stops at the finish-line: what Google shared + @name + password + 13+ */
         if (u && TSB_AUTH.needsFinish && TSB_AUTH.needsFinish()) {
           vIn.hidden = true; vAcc.hidden = true; vFin.hidden = false;
@@ -625,7 +624,7 @@
         paintTheme(); paintFont(); paintAccent(); paintLang();
       }
 
-      /* ---- v258 · the @name desk, old accounts and new ones claim or
+      /* ---- v258 · the @name desk — old accounts and new ones claim or
          change their handle any time. "Taken" is decided by the DATABASE
          (set_my_username runs on the server); this phone only shows it. ---- */
       var userDeskBusy = false;
@@ -638,7 +637,7 @@
         var inp = document.getElementById("youUserName");
         if (inp && document.activeElement !== inp) inp.value = cur;
         var hint = document.getElementById("youUserHint");
-        if (hint && !userDeskBusy) hint.textContent = cur ? "@" + cur + ", change any time" : "claim it, small letters, numbers, _";
+        if (hint && !userDeskBusy) hint.textContent = cur ? "@" + cur + " — change any time" : "claim it — small letters, numbers, _";
       }
       document.getElementById("youUserSave").addEventListener("click", async function () {
         if (userDeskBusy) return;
@@ -646,19 +645,19 @@
             hint = document.getElementById("youUserHint"),
             btn = this;
         var v = inp.value.trim().toLowerCase().replace(/^@+/, "");
-        if (!/^[a-z0-9_]{3,20}$/.test(v)) { hint.textContent = "3–20 characters, small letters, numbers, _"; inp.focus(); return; }
+        if (!/^[a-z0-9_]{3,20}$/.test(v)) { hint.textContent = "3–20 characters — small letters, numbers, _"; inp.focus(); return; }
         /* keeping the @name you already are is a success, never a trip to the register */
         var curNow = ((window.TSB_AUTH && TSB_AUTH.user ? (TSB_AUTH.user().user_metadata || {}).username : "") || "").toLowerCase();
-        if (curNow && v === curNow) { hint.textContent = "✓ @" + v + " is already yours, all set."; return; }
+        if (curNow && v === curNow) { hint.textContent = "✓ @" + v + " is already yours — all set."; return; }
         userDeskBusy = true; btn.textContent = "…";
         hint.textContent = "checking the register…";
         try {
           var r = await TSB_AUTH.setMyUsername(v);
-          if (r && r.ok) { hint.textContent = "✓ @" + v + " is yours, change any time"; inp.value = v; renderAccount(); }
-          else if (r && r.code === "taken") hint.textContent = "This name is already taken, try another spelling.";
-          else if (r && r.code === "bad") hint.textContent = "3–20 characters, small letters, numbers, _";
-          else hint.textContent = "couldn't save, try once more";
-        } catch (e) { hint.textContent = "couldn't save, try once more"; }
+          if (r && r.ok) { hint.textContent = "✓ @" + v + " is yours — change any time"; inp.value = v; renderAccount(); }
+          else if (r && r.code === "taken") hint.textContent = "This name is already taken — try another spelling.";
+          else if (r && r.code === "bad") hint.textContent = "3–20 characters — small letters, numbers, _";
+          else hint.textContent = "couldn't save — try once more";
+        } catch (e) { hint.textContent = "couldn't save — try once more"; }
         userDeskBusy = false; btn.textContent = "✓";
       });
 
@@ -710,7 +709,7 @@
             pass = document.getElementById("finPass").value;
         if (!FIN_HANDLE.test(handle)) { show2("Usernames are 3–20 characters: small letters, numbers, underscore."); document.getElementById("finUser").focus(); return; }
         if (handle !== finLast) { show2("Checking that username… one second, then submit again."); document.getElementById("finUser").focus(); return; }
-        if (!finFree) { show2("That username is taken, try another spelling."); document.getElementById("finUser").focus(); return; }
+        if (!finFree) { show2("That username is taken — try another spelling."); document.getElementById("finUser").focus(); return; }
         if (pass.length < 8) { show2("Passwords need at least 8 characters."); document.getElementById("finPass").focus(); return; }
         if (!document.getElementById("finAdult").checked) { show2("One tick left: confirm you're 13 or older."); document.getElementById("finAdult").focus();
           var tk2 = document.getElementById("finAdult").closest(".yotick"); if (tk2) { tk2.classList.remove("yotick--nudge"); void tk2.offsetWidth; tk2.classList.add("yotick--nudge"); }
@@ -720,14 +719,14 @@
         TSB_AUTH.finishGoogleAccount({ username: handle, password: pass }).then(function (r) {
           btn.disabled = false; btn.textContent = "CLAIM MY @NAME →";
           if (r && r.ok) {
-            show2("✓ @" + handle + " is yours, welcome to TheSmallBook!", "ok");
+            show2("✓ @" + handle + " is yours — welcome to TheSmallBook!", "ok");
             setTimeout(finGo, 900);
           } else if (r && r.code === "taken") {
-            show2("That username was claimed a second ago, try another spelling.");
+            show2("That username was claimed a second ago — try another spelling.");
           } else if (r && r.code === "weak") {
             show2("Passwords need at least 8 characters.");
           } else {
-            show2("Couldn't save it right now, try again in a moment.");
+            show2("Couldn't save it right now — try again in a moment.");
           }
         });
       });
@@ -754,7 +753,7 @@
           for (var i = nowY; i >= nowY - 100; i--) out += '<option value="' + i + '">' + i + "</option>";
           y.innerHTML = out;
         })();
-        /* the 13+ gate, checked in the browser, nothing is sent, nothing stored */
+        /* the 13+ gate, checked in the browser — nothing is sent, nothing stored */
         function ageOf(mName, yr) {
           var m = MONTHS[mName]; if (m === undefined || !yr) return -1;
           var b = new Date(+yr, m, 1), t = new Date();
@@ -800,7 +799,7 @@
           btn.textContent = on ? "One moment…" : label;
         }
 
-        /* ---- CREATE ACCOUNT, the full card ------------------------ */
+        /* ---- CREATE ACCOUNT — the full card ------------------------ */
         var HANDLE = /^[a-z0-9_]{3,20}$/;
         var userTimer = null, userFree = true, lastChecked = "";
         $("suUser").addEventListener("input", function () {
@@ -829,7 +828,7 @@
 
         $("paneCreate").addEventListener("submit", function (e) {
           e.preventDefault();
-          if (!(window.TSB_AUTH && TSB_AUTH.enabled)) { show("Sign-in is being set up, please enjoy the free library 💛"); return; }
+          if (!(window.TSB_AUTH && TSB_AUTH.enabled)) { show("Sign-in is being set up — please enjoy the free library 💛"); return; }
           var first = $("suFirst").value.trim(), last = $("suLast").value.trim(),
               handle = $("suUser").value, name = $("suName").value.trim() || first,
               mail = $("suMail").value.trim(), pass = $("suPass").value,
@@ -837,11 +836,11 @@
           if (!first) { show("Add your first name."); $("suFirst").focus(); return; }
           if (!HANDLE.test(handle)) { show("Usernames are 3–20 characters: small letters, numbers, underscore."); $("suUser").focus(); return; }
           if (handle !== lastChecked) { show("Checking that username… one second, then submit again."); $("suUser").focus(); return; }
-          if (!userFree) { show("That username is taken, try another spelling."); $("suUser").focus(); return; }
-          if (!mailOk(mail)) { show("That email doesn't look right, check the spelling."); $("suMail").focus(); return; }
+          if (!userFree) { show("That username is taken — try another spelling."); $("suUser").focus(); return; }
+          if (!mailOk(mail)) { show("That email doesn't look right — check the spelling."); $("suMail").focus(); return; }
           if (pass.length < 8) { show("Passwords need at least 8 characters."); $("suPass").focus(); return; }
           var age = ageOf(mo, yr);
-          if (age < 0) { show("Tell us your birth month and year, it keeps the library safe for everyone."); $("suMonth").focus(); return; }
+          if (age < 0) { show("Tell us your birth month and year — it keeps the library safe for everyone."); $("suMonth").focus(); return; }
           if (age < 13) {
             show("TheSmallBook is for readers 13 and over. The library will still be here when you're 13 💛");
             return;
@@ -853,18 +852,18 @@
           TSB_AUTH.signUpEmail({ first: first, last: last, username: handle, display: name }, mail, pass, yr).then(function (r) {
             busy(btn, false, "CREATE MY ACCOUNT →");
             if (r && r.ok && r.confirmed) {
-              show("Account created, welcome to TheSmallBook, " + first + "!", "ok");
+              show("Account created — welcome to TheSmallBook, " + first + "!", "ok");
               setTimeout(gojump, 600);
             } else if (r && r.ok && r.needsConfirm) {
               openCode("signup", mail);
-              show("📧 Code sent to " + mail + ", enter it to finish. Your @" + handle + " stays reserved.", "ok");
+              show("📧 Code sent to " + mail + " — enter it to finish. Your @" + handle + " stays reserved.", "ok");
             } else if (r && r.code === "exists") {
               tab(false);
-              show("That email already has an account, sign in below (or reset the password).");
+              show("That email already has an account — sign in below (or reset the password).");
             } else if (r && r.code === "weak") {
-              show("That password is too weak, try 8+ characters with a number in it.");
+              show("That password is too weak — try 8+ characters with a number in it.");
             } else {
-              show("Couldn't create the account right now, try again in a moment.");
+              show("Couldn't create the account right now — try again in a moment.");
             }
           });
         });
@@ -872,18 +871,18 @@
         /* ---- SIGN IN ---- */
         $("paneSignin").addEventListener("submit", function (e) {
           e.preventDefault();
-          if (!(window.TSB_AUTH && TSB_AUTH.enabled)) { show("Sign-in is being set up, please enjoy the free library 💛"); return; }
+          if (!(window.TSB_AUTH && TSB_AUTH.enabled)) { show("Sign-in is being set up — please enjoy the free library 💛"); return; }
           var cool = TSB_AUTH.authCooldown ? TSB_AUTH.authCooldown() : 0;
           if (cool > 0) {
             var cm0 = Math.ceil(cool / 60);
-            show("Too many wrong tries, sign-in is locked for " + (cm0 > 1 ? cm0 + " minutes" : cool + " seconds") + ". Your shelf is safe; try again after.");
+            show("Too many wrong tries — sign-in is locked for " + (cm0 > 1 ? cm0 + " minutes" : cool + " seconds") + ". Your shelf is safe; try again after.");
             return;
           }
           var id = $("siMail").value.trim(), pass = $("siPass").value;
           var isMail = id.indexOf("@") !== -1;
           if (!id) { show("Enter your email or @username."); $("siMail").focus(); return; }
           if (isMail ? !mailOk(id) : !/^@?[a-z0-9_]{3,20}$/.test(id.toLowerCase())) {
-            show("That doesn't look like an email or an @username, check the spelling."); $("siMail").focus(); return;
+            show("That doesn't look like an email or an @username — check the spelling."); $("siMail").focus(); return;
           }
           if (!pass) { show("Enter your password."); $("siPass").focus(); return; }
           var btn = $("btnSignin"); busy(btn, true, "SIGN IN →");
@@ -892,25 +891,25 @@
             if (r && r.ok) { show("Welcome back 💛", "ok"); setTimeout(gojump, 500); return; }
             if (r && r.code === "locked") {
               var mins = Math.ceil((r.wait || 600) / 60);
-              show("Too many wrong tries, sign-in is locked for " + mins + " minutes. Your shelf is safe; try again after.");
+              show("Too many wrong tries — sign-in is locked for " + mins + " minutes. Your shelf is safe; try again after.");
               return;
             }
             if (r && r.code === "cooldown") {
               var cm = Math.ceil((r.wait || 60) / 60);
-              show("Too many wrong tries, wait " + (cm > 1 ? cm + " minutes" : r.wait + " seconds") + ", then go again.");
+              show("Too many wrong tries — wait " + (cm > 1 ? cm + " minutes" : r.wait + " seconds") + ", then go again.");
               return;
             }
-            if (r && r.code === "confirm") { show("Confirm your email first, open the newest email, or tap 'Forgot password' for a fresh code."); return; }
-            if (r && (r.code === "nohandle")) { show("No account with that @username, check the spelling, or sign in with your email."); return; }
+            if (r && r.code === "confirm") { show("Confirm your email first — open the newest email, or tap 'Forgot password' for a fresh code."); return; }
+            if (r && (r.code === "nohandle")) { show("No account with that @username — check the spelling, or sign in with your email."); return; }
             if (r && (r.code === "bad" || r.code === "badmail" || r.code === "badhandle")) {
-              show("Wrong email/@username or password. Check both and try again, or tap 'Forgot password' and we'll email you a code.");
+              show("Wrong email/@username or password. Check both and try again — or tap 'Forgot password' and we'll email you a code.");
               return;
             }
-            show("Couldn't sign in right now, check your connection and try again.");
+            show("Couldn't sign in right now — check your connection and try again.");
           });
         });
 
-        /* ---- v258 · THE CODE PANE, confirm · sign-in codes · new password ----
+        /* ---- v258 · THE CODE PANE — confirm · sign-in codes · new password ----
            One pane, three jobs. The code is created and checked on Supabase's
            server; this page only types it through. */
         var codeMode = "login", codeEmail = "", codePwArmed = false;
@@ -921,7 +920,7 @@
           qx("codeIn").disabled = false; qx("codeIn").value = ""; qx("codePw").value = "";
           qx("btnCode").textContent = mode === "reset" ? "VERIFY CODE →" : "VERIFY & CONTINUE →";
           qx("codeTitle").innerHTML = mode === "signup"
-            ? '📧 Almost there! Enter the 6-digit code we emailed to <b></b>, your @name stays reserved while you do.'
+            ? '📧 Almost there! Enter the 6-digit code we emailed to <b></b> — your @name stays reserved while you do.'
             : mode === "reset"
             ? '📧 To choose a new password, enter the 6-digit code we emailed to <b></b>'
             : '📧 We emailed a 6-digit sign-in code to <b></b>';
@@ -937,16 +936,16 @@
         }
         $("btnCodeLogin").addEventListener("click", async function () {
           var id = $("siMail").value.trim();
-          if (!id) { show("Type your email or @username above first, then tap this."); $("siMail").focus(); return; }
+          if (!id) { show("Type your email or @username above first — then tap this."); $("siMail").focus(); return; }
           if (id.indexOf("@") !== -1) {
-            if (!mailOk(id)) { show("That email doesn't look right, check the spelling."); $("siMail").focus(); return; }
+            if (!mailOk(id)) { show("That email doesn't look right — check the spelling."); $("siMail").focus(); return; }
             TSB_AUTH.requestLoginCode(id.toLowerCase()).then(function () { openCode("login", id.toLowerCase()); });
             return;
           }
           var handle = id.replace(/^@+/, "").toLowerCase();
           if (!/^[a-z0-9_]{3,20}$/.test(handle)) { show("That doesn't look like an email or an @username."); $("siMail").focus(); return; }
           var mail = (TSB_AUTH.emailForUsername) ? await TSB_AUTH.emailForUsername(handle) : "";
-          if (!mail) { show("No account with that @username, check the spelling, or use your email."); return; }
+          if (!mail) { show("No account with that @username — check the spelling, or use your email."); return; }
           TSB_AUTH.requestLoginCode(mail).then(function () { openCode("login", mail); });
         });
         $("btnForgot").addEventListener("click", async function () {
@@ -955,7 +954,7 @@
           if (id && id.indexOf("@") === -1) {
             var handle = id.replace(/^@+/, "").toLowerCase();
             mail = (TSB_AUTH.emailForUsername) ? await TSB_AUTH.emailForUsername(handle) : "";
-            if (!mail) { show("No account with that @username, check the spelling, or use your email."); return; }
+            if (!mail) { show("No account with that @username — check the spelling, or use your email."); return; }
           }
           if (!mailOk(mail)) { show("Type your email (or @username) above first, then tap this."); $("siMail").focus(); return; }
           TSB_AUTH.sendReset(mail).then(function () { openCode("reset", mail); });
@@ -967,21 +966,21 @@
           if (codeMode === "login") TSB_AUTH.requestLoginCode(codeEmail);
           else if (codeMode === "reset") TSB_AUTH.sendReset(codeEmail);
           else TSB_AUTH.resendSignupCode(codeEmail);
-          show("📧 Fresh code sent, give it ~30 seconds, then check the newest email.", "ok");
+          show("📧 Fresh code sent — give it ~30 seconds, then check the newest email.", "ok");
         });
         $("paneCode").addEventListener("submit", function (e) {
           e.preventDefault();
           if (!(window.TSB_AUTH && TSB_AUTH.enabled)) return;
           var code = qx("codeIn").value.replace(/\D/g, "");
           if (code.length < 4) { show("Enter the 6 digits from the email."); qx("codeIn").focus(); return; }
-          if (codePwArmed) {                    /* reset step 2, save the new password */
+          if (codePwArmed) {                    /* reset step 2 — save the new password */
             var pw = qx("codePw").value;
             if (pw.length < 8) { show("Passwords need at least 8 characters."); qx("codePw").focus(); return; }
             codeBusy(true);
             TSB_AUTH.setPassword(pw).then(function (r) {
               codeBusy(false);
-              if (r && r.ok) { show("✓ New password saved, welcome back!", "ok"); setTimeout(gojump, 800); }
-              else show("Couldn't save it, try once more.");
+              if (r && r.ok) { show("✓ New password saved — welcome back!", "ok"); setTimeout(gojump, 800); }
+              else show("Couldn't save it — try once more.");
             });
             return;
           }
@@ -997,16 +996,16 @@
                 qx("codePwWrap").hidden = false;
                 qx("codeIn").disabled = true;
                 qx("btnCode").textContent = "SAVE NEW PASSWORD →";
-                show("✓ Code confirmed, now choose your new password.", "ok");
+                show("✓ Code confirmed — now choose your new password.", "ok");
                 setTimeout(function () { qx("codePw").focus(); }, 150);
                 return;
               }
-              show(codeMode === "signup" ? "✓ Email confirmed, welcome to TheSmallBook!" : "Welcome back 💛", "ok");
+              show(codeMode === "signup" ? "✓ Email confirmed — welcome to TheSmallBook!" : "Welcome back 💛", "ok");
               setTimeout(gojump, 700);
             } else if (r && r.code === "code") {
-              show("That code didn't match, open the NEWEST email and enter its 6 digits.");
+              show("That code didn't match — open the NEWEST email and enter its 6 digits.");
             } else {
-              show("Couldn't check the code right now, try again in a moment.");
+              show("Couldn't check the code right now — try again in a moment.");
             }
           });
         });
@@ -1020,9 +1019,9 @@
 
       document.getElementById("signinGoogle").addEventListener("click", function () {
         if (window.TSB_AUTH && TSB_AUTH.enabled && TSB_AUTH.signIn) TSB_AUTH.signIn("google");
-        else this.textContent = "Sign-in is being set up, please enjoy the free library 💛";
+        else this.textContent = "Sign-in is being set up — please enjoy the free library 💛";
       });
-      /* v267: the password-setup row retired from the room, the flow lives
+      /* v267: the password-setup row retired from the room — the flow lives
          at signup and at the finish line, where it belongs. Binding is
          guarded so the room never dead-ends if it ever returns. */
       var passSave = document.getElementById("youPassSave");
@@ -1035,9 +1034,9 @@
         try {
           var r = await TSB_AUTH.setPassword(pw);
           b.textContent = "✓";
-          if (hint) hint.textContent = r && r.ok ? "✓ password set, email + password now works" : "couldn't set it, try once more";
+          if (hint) hint.textContent = r && r.ok ? "✓ password set — email + password now works" : "couldn't set it — try once more";
           if (r && r.ok) inp.value = "";
-        } catch (e) { b.textContent = "✓"; if (hint) hint.textContent = "couldn't set it, try once more"; }
+        } catch (e) { b.textContent = "✓"; if (hint) hint.textContent = "couldn't set it — try once more"; }
         setTimeout(function () { b.textContent = "✓"; }, 1500);
       });
       document.getElementById("signoutBtn").addEventListener("click", function () {
@@ -1052,7 +1051,7 @@
   </script>
 
 <script>
-/* 📚 library display mode, shared by Settings page & You window */
+/* 📚 library display mode — shared by Settings page & You window */
 (function () {
   function applyLibView(v) {
     document.documentElement.classList.toggle("tsb-libview-compact", v === "compact");
@@ -1073,12 +1072,12 @@
   });
 })();
 </script>
-  <script src="js/sounds.js?v=273"></script>
-  <script src="js/community.js?v=273"></script>
-  <script src="js/gold.js?v=273"></script>
-  <script src="js/ideaaudit.js?v=273"></script>
-  <script src="js/paywall.js?v=273"></script>
-  <script src="js/onboard.js?v=273" defer></script>
+  <script src="js/sounds.js?v=267"></script>
+  <script src="js/community.js?v=267"></script>
+  <script src="js/gold.js?v=267"></script>
+  <script src="js/ideaaudit.js?v=267"></script>
+  <script src="js/paywall.js?v=267"></script>
+  <script src="js/onboard.js?v=267" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {
@@ -1125,7 +1124,7 @@
           if (b.firstElementChild) b.firstElementChild.style.width = Math.max(pct, 1) + "%";
         });
         document.querySelectorAll("[data-progtxt]").forEach(function (t) {
-          t.textContent = read.toLocaleString("en-IN") + " of " + totalS + " lessons read · " + books + " book" + (books === 1 ? "" : "s") + " opened · " + (total - read) + " to go, keep stacking ✨";
+          t.textContent = read.toLocaleString("en-IN") + " of " + totalS + " lessons read · " + books + " book" + (books === 1 ? "" : "s") + " opened · " + (total - read) + " to go — keep stacking ✨";
         });
       }
       paintProgress();
@@ -1162,7 +1161,7 @@
         setTimeout(function () { cp.textContent = "⧉"; }, 1200);
       });
 
-      /* v250 notifications badge, UNREAD, not "newer than my last visit".
+      /* v250 notifications badge — UNREAD, not "newer than my last visit".
          The old code compared against the tsb_notif_seen timestamp, so a
          story you had already opened and read still counted as new here.
          Now the You window, the bell and the toast all read the same
@@ -1203,7 +1202,7 @@
         var on = localStorage.getItem("tsb_notif_pop") !== "0";
         popBtn.textContent = on ? "On ✓" : "Off";
         popBtn.classList.toggle("on", on);
-        popHint.textContent = on ? "toast pops at the top" : "red dot only, check 🔔 here";
+        popHint.textContent = on ? "toast pops at the top" : "red dot only — check 🔔 here";
       }
       paintPop();
       popBtn.addEventListener("click", function () {
@@ -1211,10 +1210,10 @@
         localStorage.setItem("tsb_notif_pop", on ? "0" : "1");
         paintPop();
       });
-      // push notifications (OneSignal, see docs/PUSH-NOTIFICATIONS.md)
+      // push notifications (OneSignal — see docs/PUSH-NOTIFICATIONS.md)
       document.getElementById("youPushBtn").addEventListener("click", async function () {
         var appId = (window.TSB_CONFIG || {}).ONESIGNAL_APP_ID || "";
-        if (!appId) { C.say("Push needs a free OneSignal App ID first, 5-minute setup in docs/PUSH-NOTIFICATIONS.md. Paste it in js/config.js and re-deploy."); return; }
+        if (!appId) { C.say("Push needs a free OneSignal App ID first — 5-minute setup in docs/PUSH-NOTIFICATIONS.md. Paste it in js/config.js and re-deploy."); return; }
         try {
           if (!window.OneSignal) {
             await new Promise(function (res, rej) {
@@ -1233,7 +1232,7 @@
           } catch (e2) {}
           await window.OneSignal.Slidedown.promptPush();
           this.textContent = "📲 Push on ✓";
-        } catch (e) { C.say("Push setup failed, " + (e && e.message ? e.message : e)); }
+        } catch (e) { C.say("Push setup failed — " + (e && e.message ? e.message : e)); }
       });
 
       // public account toggle
@@ -1251,16 +1250,16 @@
         pubBtn.addEventListener("click", async function () {
           pubBtn.disabled = true;
           try { isPub = !isPub; await C.setProfilePublic(isPub); paintPub(); }
-          catch (err) { C.say("Couldn't change that, " + (err && err.message ? err.message : err)); }
+          catch (err) { C.say("Couldn't change that — " + (err && err.message ? err.message : err)); }
           pubBtn.disabled = false;
         });
       } catch (e) {}
 
       /* ---- v250 · presence switches + private-account handshake ----------
          Two honest switches, both off-by-choice and both instant:
-           · Last seen, paused means NOTHING about my visits is published,
+           · Last seen — paused means NOTHING about my visits is published,
              so there is nothing for anyone to read.
-           · Read receipts, off means the stories I open are not recorded
+           · Read receipts — off means the stories I open are not recorded
              against my name. Writers keep the count of people who share.
          The handshake below also settles any request the other phone has
          already accepted, so a private follow becomes real from here. */
@@ -1279,7 +1278,7 @@
           if (lastLbl) lastLbl.textContent = showLast ? "Visible" : "Hidden";
           if (lastHint) lastHint.textContent = showLast
             ? "readers see \u201clast seen 12m ago\u201d"
-            : "nobody sees when you were here, you stay invisible";
+            : "nobody sees when you were here \u2014 you stay invisible";
           if (hearBtn) { hearBtn.classList.toggle("on", showHear); hearBtn.setAttribute("aria-checked", showHear ? "true" : "false"); }
           if (hearLbl) hearLbl.textContent = showHear ? "On" : "Off";
           if (hearHint) hearHint.textContent = showHear
@@ -1293,8 +1292,8 @@
             var nv = lastBtn.classList.contains("on");
             await C.setPrivacy({ show_last: !nv });
             paintPriv();
-            C.say(!nv ? "\ud83d\udc40 Last seen is visible again." : "\ud83d\udd12 Hidden, nobody sees when you were here.");
-          } catch (err) { C.say("Couldn't change that, " + (err && err.message ? err.message : err)); }
+            C.say(!nv ? "\ud83d\udc40 Last seen is visible again." : "\ud83d\udd12 Hidden \u2014 nobody sees when you were here.");
+          } catch (err) { C.say("Couldn't change that \u2014 " + (err && err.message ? err.message : err)); }
           lastBtn.disabled = false;
         });
         if (hearBtn) hearBtn.addEventListener("click", async function () {
@@ -1304,7 +1303,7 @@
             await C.setPrivacy({ show_hear: !nv2 });
             paintPriv();
             C.say(!nv2 ? "\u2713 Writers will see your reads." : "\u2713 Reads stay private.");
-          } catch (err) { C.say("Couldn't change that, " + (err && err.message ? err.message : err)); }
+          } catch (err) { C.say("Couldn't change that \u2014 " + (err && err.message ? err.message : err)); }
           hearBtn.disabled = false;
         });
         /* my own bell must be truthful the moment this page opens */
@@ -1319,7 +1318,7 @@
               var link = document.getElementById("youReqLink");
               if (row) row.hidden = false;
               if (link) { link.textContent = waits.length + " waiting →"; }
-              C.say("\ud83d\udd10 " + waits.length + (waits.length === 1 ? " person wants" : " people want") + " to follow you, accept in People.");
+              C.say("\ud83d\udd10 " + waits.length + (waits.length === 1 ? " person wants" : " people want") + " to follow you \u2014 accept in People.");
             }
           } catch (e7) {}
         })();

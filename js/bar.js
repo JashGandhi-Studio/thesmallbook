@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK, PREMIUM BOTTOM ACTION BAR v2 (mobile-first)
+   THESMALLBOOK — PREMIUM BOTTOM ACTION BAR v2 (mobile-first)
    Home · Read · + (Stories) · Chat · You
    ------------------------------------------------------------
    v2 changes:
@@ -10,16 +10,16 @@
    - YOU   → sign-in sheet first (auth.js openSheet); if already
      signed in → the account page (login.html, signed-in state).
    - Active pill trimmed smaller + premium micro-motion.
-   NON-NEGOTIABLE RULES (design spec, do not break):
+   NON-NEGOTIABLE RULES (design spec — do not break):
    1. The bar is centred with left:50% → EVERY rule that
       re-declares transform on .tsb-bar must re-state
       translateX(-50%), or the bar slides diagonally off-screen.
-   2. Animate transform & opacity ONLY, never bottom/height/width.
+   2. Animate transform & opacity ONLY — never bottom/height/width.
    3. The active state is painted ONLY by .tsb-bar__item::before.
       Never set a background on the item itself (double-layering).
    4. `contain: layout paint` stays on the bar (see CSS).
    5. Scrolling pages get padding-bottom:
-      calc(var(--bar-total) + 24px), via html.tsb-hasbar (CSS).
+      calc(var(--bar-total) + 24px) — via html.tsb-hasbar (CSS).
    ============================================================ */
 (function () {
   "use strict";
@@ -76,7 +76,7 @@
   document.body.appendChild(bar);
   document.documentElement.classList.add("tsb-hasbar");
 
-  /* the highlight follows what you actually selected, live */
+  /* the highlight follows what you actually selected — live */
   function setActive(id) {
     bar.querySelectorAll(".tsb-bar__item").forEach(function (it) {
       var on = it.getAttribute("data-tab") === id;
@@ -144,7 +144,7 @@
     if (dbl) cleanToast("You’re already on " + (NAMES[id] || "this page") + " ✨");
   }
 
-  /* clean paper toast, matches the app, never a black box */
+  /* clean paper toast — matches the app, never a black box */
   var NAMES = { home: "Home", read: "Read", scan: "Stories", chat: "Chat", you: "You" };
   function cleanToast(msg) {
     try {
@@ -170,7 +170,7 @@
     } catch (e) { return false; }
   }
   /* pages that never scroll (chat, short pages): the bar is ALWAYS
-     visible there, tucking it would leave a dead empty strip */
+     visible there — tucking it would leave a dead empty strip */
   function pageScrolls() {
     try { return document.documentElement.scrollHeight > window.innerHeight + 8; } catch (e) { return true; }
   }
@@ -211,7 +211,7 @@
           return;
         }
         if (y + window.innerHeight >= document.documentElement.scrollHeight - 6 && Math.abs(dy) < 40) {
-          /* settled at the page end, tuck again */
+          /* settled at the page end — tuck again */
           if (!hidden) setBarOff(true);
           return;
         }

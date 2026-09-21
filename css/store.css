@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK, 🛍️ TSB STORE (store.css) · v224
+   THESMALLBOOK — 🛍️ TSB STORE (store.css) · v224
    Premium deal store. Real brand logos, editor's-picks rail,
    sticky shelves, Paytm/Blinkit-style reveal sheet.
    Neo-brutalist bones (ink borders, hard shadows) with soft
@@ -214,7 +214,7 @@ html.dark .st-path--writer { background: linear-gradient(160deg, #0d3328, #0a261
 .st-card__go { flex: 0 0 auto; width: 26px; height: 26px; border: 2.5px solid var(--st-ink); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 13px; background: var(--st-paper); color: var(--st-ink); transition: background .15s, color .15s; }
 .st-card:hover .st-card__go { background: var(--st-ink); color: var(--yellow, #ffc800); }
 
-/* locked cards, content stays readable enough to tempt, details blurred */
+/* locked cards — content stays readable enough to tempt, details blurred */
 .st-card--lock { cursor: pointer; }
 .st-card--lock .st-card__t, .st-card--lock .st-card__val, .st-card--lock .st-card__worth,
 .st-pick.st-card--lock .st-pick__t, .st-pick.st-card--lock .st-pick__val, .st-pick.st-card--lock .st-pick__worth { filter: blur(4px); user-select: none; }
@@ -313,7 +313,7 @@ html.tsb-hasbar .st-toast { bottom: calc(var(--bar-total, 70px) + 30px); }
 
 
 /* ---------------------------------------------------------------------
-   8 · store: the "fit" system, no logo is ever a smudge again
+   8 · store: the "fit" system — no logo is ever a smudge again
    --------------------------------------------------------------------- */
 .st-logo img.st-fit--wide { padding: 5px 7px; }
 .st-logo img.st-fit--mid  { padding: 7px 9px; }
@@ -321,6 +321,6 @@ html.tsb-hasbar .st-toast { bottom: calc(var(--bar-total, 70px) + 30px); }
 .st-ticker__item img.st-fit--wide { padding: 1px 2px; }
 .st-cta img.st-fit--wide { padding: 0 1px; }
 .st-logo img.is-full { border-radius: 12px; }
-/* a full-bleed artwork inside a white tile would show its own white box.
+/* a full-bleed artwork inside a white tile would show its own white box —
    give those tiles the artwork's own colour instead of a grey halo */
 .st-logo img.is-full { background: transparent; }

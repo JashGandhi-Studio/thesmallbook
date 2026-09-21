@@ -1,24 +1,24 @@
 /* ============================================================
-   THESMALLBOOK, UNIVERSAL LANGUAGE ENGINE 🌐  (v3, natural v222)
+   THESMALLBOOK — UNIVERSAL LANGUAGE ENGINE 🌐  (v3 — natural v222)
    Translates the ENTIRE app into 24+ languages using the Google
    Translate page engine (driven directly, retries included).
-   Plus two EXCLUSIVE modes, now NATURAL, the way people actually
+   Plus two EXCLUSIVE modes, now NATURAL — the way people actually
    text, not letter-by-letter machine romanisation:
 
-   • HINGLISH, Hindi → Roman, live & natural: "main yeh kaam kal
+   • HINGLISH — Hindi → Roman, live & natural: "main yeh kaam kal
      shuru karunga" (not "maaIn yaha kaama kala shuru karungaa").
-   • GUJLISH , Gujarati → Roman, natural: "tame aa kaam kal shuru
+   • GUJLISH  — Gujarati → Roman, natural: "tame aa kaam kal shuru
      karsho" (not "tame aa kaama kala shuru karasho").
 
    How it works (3 layers, in order):
-     1. CURATED VOCABULARY, a hand-built dictionary of the words
+     1. CURATED VOCABULARY — a hand-built dictionary of the words
         people actually type (hai, nahi, chahiye, samajh, paisa,
         koshish, zindagi…) + plain-word swaps for stiff book words
         (आवश्यक → zaroori, धन्यवाद → shukriya, यदि → agar). Offline.
-     2. LIVE TRANSLITERATION, Google Input Tools (JSONP, no key)
+     2. LIVE TRANSLITERATION — Google Input Tools (JSONP, no key)
         finishes every word the dictionary doesn't know, e.g. book
         names & hard vocabulary. Cached locally, silent fallback.
-     3. RULES ENGINE, word-aware Devanagari→Roman that keeps
+     3. RULES ENGINE — word-aware Devanagari→Roman that keeps
         natural spelling (short "a", no "aa/ee" verb endings).
    ============================================================ */
 
@@ -28,9 +28,9 @@
   var LANGUAGES = [
     { code: "en",  name: "English",    native: "English",   flag: "🇬🇧" },
     { code: "hi",  name: "Hindi",      native: "हिन्दी",      flag: "🇮🇳" },
-    { code: "hi-Latn", name: "Hinglish", native: "Jab aap padhte ho, Hindi in English letters", flag: "🇮🇳", special: true, base: "hi" },
+    { code: "hi-Latn", name: "Hinglish", native: "Jab aap padhte ho — Hindi in English letters", flag: "🇮🇳", special: true, base: "hi" },
     { code: "gu",  name: "Gujarati",   native: "ગુજરાતી",     flag: "🇮🇳" },
-    { code: "gu-Latn", name: "Gujlish", native: "Jya tame vaancho cho, Gujarati in English letters", flag: "🇮🇳", special: true, base: "gu" },
+    { code: "gu-Latn", name: "Gujlish", native: "Jya tame vaancho cho — Gujarati in English letters", flag: "🇮🇳", special: true, base: "gu" },
     { code: "mr",  name: "Marathi",    native: "मराठी",       flag: "🇮🇳" },
     { code: "bn",  name: "Bengali",    native: "বাংলা",       flag: "🇮🇳" },
     { code: "ta",  name: "Tamil",      native: "தமிழ்",       flag: "🇮🇳" },
@@ -58,7 +58,7 @@
   var GOOGLE_CODES = "hi,gu,mr,bn,ta,te,kn,ml,pa,ur,or,es,fr,de,pt,it,ru,ar,zh-CN,ja,ko,id,tr";
 
   /* ============================================================
-     v222: NATURAL VOCABULARY, the words people actually type
+     v222: NATURAL VOCABULARY — the words people actually type
      ============================================================ */
   var HINGLISH_DICT = {
     /* pronouns & the little words */
@@ -70,7 +70,7 @@
     "वे": "woh", "उन्होंने": "unhone", "उन्हें": "unhe", "उनका": "unka", "उनकी": "unki", "उनके": "unke",
     "यह": "yeh", "ये": "yeh", "इसने": "isne", "इसे": "ise", "इसका": "iska", "इसकी": "iski", "इसके": "iske",
     "इन्होंने": "inhone", "इन्हें": "inhe", "अपना": "apna", "अपनी": "apni", "अपने": "apne", "खुद": "khud",
-    /* the glue, hai/tha/karna & friends */
+    /* the glue — hai/tha/karna & friends */
     "है": "hai", "हैं": "hain", "हूँ": "hoon", "हो": "ho", "होना": "hona", "होता": "hota", "होती": "hoti", "होते": "hote", "हुआ": "hua", "हुई": "hui", "हुए": "hue",
     "था": "tha", "थी": "thi", "थे": "the", "रहा": "raha", "रही": "rahi", "रहे": "rahe", "रहना": "rahna",
     "करना": "karna", "करता": "karta", "करती": "karti", "करते": "karte", "किया": "kiya", "की": "ki", "का": "ka", "के": "ke", "को": "ko",
@@ -131,7 +131,7 @@
     "बाकी": "baaki", "साफ": "saaf", "साफ़": "saaf", "गहरा": "gehra", "गहरी": "gehri", "गहरे": "gehre",
     "आगे": "aage", "पीछे": "peeche", "ऊपर": "upar", "नीचे": "neeche", "अंदर": "andar", "बाहर": "bahar",
     "सुबह": "subah", "शाम": "shaam", "रोज़": "roz", "हफ्ता": "hafta", "हफ्ते": "hafte", "महीना": "mahina", "महीने": "mahine", "सरकार": "sarkar", "नेता": "neta", "विदेश": "videsh",
-    /* formality swaps, plain words for book words */
+    /* formality swaps — plain words for book words */
     "कृपया": "please", "धन्यवाद": "shukriya", "आभार": "shukriya", "नमस्ते": "namaste", "नमस्कार": "namaste", "स्वागत है": "swagat hai", "स्वागत": "swagat",
     "उदाहरण": "example", "उदाहरण के लिए": "example ke liye", "जैसे कि": "jaise ki", "अर्थात्": "yaani", "यानी": "yaani", "मतलब": "matlab", "वास्तव में": "sach mein", "सच में": "sach mein", "वैसे": "waise", "वैसे भी": "waise bhi",
     "बहुत बड़ा": "bahut bada", "सबसे अच्छा": "sabse achha", "सबसे बड़ा": "sabse bada", "एक दूसरे": "ek dusre", "एक-दूसरे": "ek-dusre", "एक साथ": "ek saath", "आपस में": "aapas mein",
@@ -245,7 +245,7 @@
   }
 
   /* ============================================================
-     RULES ENGINE, word-aware transliteration
+     RULES ENGINE — word-aware transliteration
      (keeps natural short vowels; no "kiyaa / baat / zindagiii")
      ============================================================ */
   var DEV_CONS = { "क":"k","ख":"kh","ग":"g","घ":"gh","ङ":"n","च":"ch","छ":"chh","ज":"j","झ":"jh","ञ":"n","ट":"t","ठ":"th","ड":"d","ढ":"dh","ण":"n","त":"t","थ":"th","द":"d","ध":"dh","न":"n","प":"p","फ":"ph","ब":"b","भ":"bh","म":"m","य":"y","र":"r","ल":"l","व":"v","श":"sh","ष":"sh","स":"s","ह":"h","क़":"q","ख़":"kh","ग़":"g","ज़":"z","ड़":"r","ढ़":"rh","फ़":"f" };
@@ -300,7 +300,7 @@
   function toGujlish(text) { return naturalRoman(text, "gu-Latn"); }
 
   /* ============================================================
-     LIVE TRANSLITERATION (Google Input Tools via JSONP, no key)
+     LIVE TRANSLITERATION (Google Input Tools via JSONP — no key)
      Cyrillic-free, per-word, cached. Gujarati is mapped onto
      Devanagari first (the two scripts are phonetically aligned)
      because Google only exposes the reverse hi→en IME.
@@ -380,7 +380,7 @@
         if (!ok && attemptsLeft > 1) {
           pendingWords[word] = attemptsLeft - 1;
         } else if (!ok) {
-          delete pendingWords[word]; /* give up quietly, rule engine stands in */
+          delete pendingWords[word]; /* give up quietly — rule engine stands in */
         }
       } catch (e) { delete pendingWords[word]; }
       pumpWords(mode);
@@ -449,7 +449,7 @@
       for (var w = 0; w < words.length; w++) {
         var wd = words[w];
         if (!range.test(wd)) { romanParts.push(wd); continue; }
-        var wClean = wd.replace(/[.,!?…।॥;:'"()«»“”‘’–—-]/g, "");
+        var wClean = wd.replace(/[.,!?…।॥;:'"()«»“”‘’—–-]/g, "");
         if (cache[wClean]) { romanParts.push(cache[wClean]); continue; }
         if (dict[wClean]) { romanParts.push(dict[wClean]); continue; }
         /* fused postpositions (ઘરમાં → ghar ma) */
@@ -507,7 +507,7 @@
     s.id = "gt-script";
     s.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
     s.onerror = function () {
-      toast("🌐 Translation needs internet, please check your connection");
+      toast("🌐 Translation needs internet — please check your connection");
     };
     document.head.appendChild(s);
   }
@@ -566,7 +566,7 @@
           var orig = origText.get(node);
           if (orig) {
             if (cur === orig) { node.nodeValue = naturalRoman(orig, mode); continue; }
-            /* already romanized, apply improved cache entries when they arrive */
+            /* already romanized — apply improved cache entries when they arrive */
             if (improve) {
               var fresh = naturalRoman(orig, mode);
               if (fresh !== cur) node.nodeValue = fresh;
@@ -594,7 +594,7 @@
     setGoogCookie(target);
     loadGoogleWidget();
     fireTranslate(target, 40, function () {
-      toast("🌐 Couldn't reach the translator, check internet & reload");
+      toast("🌐 Couldn't reach the translator — check internet & reload");
     });
     if (entry.special) {
       startScanner(entry.code);
@@ -663,8 +663,8 @@
       '<div class="modal__box modal__box--wide">' +
       '<button class="modal__close">✕</button>' +
       '<div class="modal__title" translate="no">🌐 Read in YOUR Language</div>' +
-      '<p style="font-weight:600; font-size:.85rem; margin-bottom:14px;">All 400 books, 2,600+ lessons, translated instantly. ' +
-      '<strong>Hinglish &amp; Gujlish</strong> are our special modes: Hindi/Gujarati in the way you actually text, ' +
+      '<p style="font-weight:600; font-size:.85rem; margin-bottom:14px;">All 400 books, 2,600+ lessons — translated instantly. ' +
+      '<strong>Hinglish &amp; Gujlish</strong> are our special modes: Hindi/Gujarati in the way you actually text — ' +
       '"main yeh kaam kal shuru karunga", not machine-roman. 🔥</p>' +
       '<div class="langsection" translate="no">🇮🇳 INDIA</div>' +
       '<div class="langgrid">' + indian.map(card).join("") + "</div>" +
