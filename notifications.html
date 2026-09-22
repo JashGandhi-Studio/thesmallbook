@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-    <meta property="og:title" content="Notifications, TheSmallBook">
-  <meta property="og:description" content="Likes, comments, follows and messages, all in one quiet list.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=275">
+    <meta property="og:title" content="Notifications — TheSmallBook">
+  <meta property="og:description" content="Likes, comments, follows and messages — all in one quiet list.">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=267">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/notifications.html">
   <meta property="og:type" content="website">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
-  <title>Notifications, TheSmallBook</title>
-  <meta name="description" content="Your likes, comments, followers and messages, all in one place.">
+  <title>Notifications — TheSmallBook</title>
+  <meta name="description" content="Your likes, comments, followers and messages — all in one place.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -27,7 +27,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=275">
+  <link rel="stylesheet" href="css/style.css?v=267">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -59,15 +59,13 @@
     </div>
   </main>
 
-  <script src="./js/bootguard.js?v=275"></script>
-  <script src="js/vault.js?v=275"></script>
-  <script src="js/prefs.js?v=275"></script>
-  <script src="js/lang.js?v=275"></script>
-  <script src="js/config.js?v=275"></script>
-  <script src="js/auth.js?v=275"></script>
-  <script src="js/sounds.js?v=275"></script>
-  <script src="js/founder.js?v=275"></script>
-  <script src="js/community.js?v=275"></script>
+  <script src="js/prefs.js?v=267"></script>
+  <script src="js/lang.js?v=267"></script>
+  <script src="js/config.js?v=267"></script>
+  <script src="js/auth.js?v=267"></script>
+  <script src="js/sounds.js?v=267"></script>
+  <script src="js/founder.js?v=267"></script>
+  <script src="js/community.js?v=267"></script>
   <script>
   (function () {
     "use strict";
@@ -141,11 +139,11 @@
         markAll.setAttribute("aria-pressed", unread.length === 0 ? "true" : "false");
       }
       if (!ITEMS.length) {
-        list.innerHTML = '<div class="cm-empty">Nothing yet, your likes, comments, new followers and messages will land here.<br><a class="cm-write" href="stories.html">← Back to Stories</a></div>';
+        list.innerHTML = '<div class="cm-empty">Nothing yet — your likes, comments, new followers and messages will land here.<br><a class="cm-write" href="stories.html">← Back to Stories</a></div>';
         return;
       }
       if (!shown.length) {
-        list.innerHTML = '<div class="cm-empty cm-empty--sm">No unread notifications, you are all caught up ✨</div>';
+        list.innerHTML = '<div class="cm-empty cm-empty--sm">No unread notifications — you are all caught up ✨</div>';
         return;
       }
       list.innerHTML = (filter === "all" && unread.length
@@ -186,7 +184,7 @@
 
     C.whenReady(async function () {
       if (!C.signedIn()) {
-        list.innerHTML = '<div class="cm-empty">Sign in to see your notifications.<br><a class="cm-write" href="login.html">Sign in, it’s free →</a></div>';
+        list.innerHTML = '<div class="cm-empty">Sign in to see your notifications.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>';
         return;
       }
       list.innerHTML = skeleton(4);
@@ -194,7 +192,7 @@
       /* ---- v250 · PRIVATE-ACCOUNT FOLLOW REQUESTS ----------------------
          A request IS a notification: it appears here, with the two buttons
          that decide it, so nobody has to go hunting. Accepting writes your
-         own profile row only, the other phone then completes the follow. */
+         own profile row only — the other phone then completes the follow. */
       var reqBox = document.getElementById("nReqs");
       function paintReqs(waits) {
         if (!reqBox) return;
@@ -234,13 +232,13 @@
             var person = all.filter(function (x) { return x && x.id === id2; })[0] || { id: id2 };
             if (okB) {
               await C.acceptFollowRequest(person);
-              C.say("\u2705 Accepted, they now follow you.");
+              C.say("\u2705 Accepted \u2014 they now follow you.");
             } else {
               await C.declineFollowRequest(person);
-              C.say("Declined, your stories stay private.");
+              C.say("Declined \u2014 your stories stay private.");
             }
             await refreshReqs();
-          } catch (err) { C.say("Couldn't do that, " + (err && err.message ? err.message : err)); }
+          } catch (err) { C.say("Couldn't do that \u2014 " + (err && err.message ? err.message : err)); }
           btn.disabled = false;
         });
       }
@@ -267,6 +265,6 @@
     });
   })();
   </script>
-  <script src="js/bar.js?v=275" defer></script>
+  <script src="js/bar.js?v=267" defer></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK, 💛 TSB GOLD STATE (gold.js) · v248 (hardened)
+   THESMALLBOOK — 💛 TSB GOLD STATE (gold.js) · v248 (hardened)
    One source of truth for "is this reader Gold?" used by the share-card
    watermark, Pro studio filters, store gating and gold.html.
 
@@ -7,15 +7,15 @@
      • reader pays via UPI / WhatsApp (see upi.js, gold.html)
      • we send them an activation code  TSB-XXXX-XXXX
      • they type it in gold.html → Gold switches on this device
-     • codes are CHECKSUMMED, random TSB-XXXX-XXXX guesses fail
+     • codes are CHECKSUMMED — random TSB-XXXX-XXXX guesses fail
 
-   v248 HARDENING, tamper resistance:
+   v248 HARDENING — tamper resistance:
      • the saved state carries a signature over (code|until|plan)
      • isGold() re-checks the signature on EVERY read
      • editing localStorage (set active:true, push `until` to 2099,
        flip plan) breaks the signature → state is dropped, not faked
      • this blocks the obvious "open DevTools → edit localStorage"
-       hack. (True security still needs the server, Phase 2 webhook;
+       hack. (True security still needs the server — Phase 2 webhook;
        client-side can never be 100% unbreakable, and we don't pretend
        it is. The signature just makes casual cheating fail loudly.)
    ============================================================ */
@@ -25,7 +25,7 @@
 
   var KEY = "tsb_gold";
   var YEAR_MS = 365 * 24 * 3600 * 1000;
-  /* secret used only to checksum/sign, visible client-side, but stops
+  /* secret used only to checksum/sign — visible client-side, but stops
      random guessing AND stops hand-editing the saved object. */
   var CODE_SECRET = "tsb25gld";
 
@@ -49,7 +49,7 @@
     if (!m) return false;
     return m[2] === checksum(m[1]);
   }
-  /* only the founder's device should mint codes, but the math is here so
+  /* only the founder's device should mint codes — but the math is here so
      you can issue codes from any device you control. */
   function forge() {
     var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -66,7 +66,7 @@
     var expect = sign(s.code, s.until, s.plan);
     if (s.sig === expect) return s;                                 /* current valid state */
     /* Legacy activation minted before v248 had NO signature. Migrate it
-       (re-sign) so old users aren't logged out, but ONLY when the
+       (re-sign) so old users aren't logged out — but ONLY when the
        signature is genuinely absent, never when it's merely wrong. */
     if (s.sig === undefined && s.code && validCode(s.code)) { s.sig = expect; writeRaw(s); return s; }
     /* Any present-but-wrong signature (e.g. someone edited `until` in
@@ -88,27 +88,26 @@
     return s;
   }
 
-  /* manual activation, codes we issue after verifying a UPI payment.
+  /* manual activation — codes we issue after verifying a UPI payment.
      Format: TSB-XXXX-XXXX (checksummed). Robust: validates, saves,
      reads back to confirm, and reports a clear error if storage is blocked. */
   function activate(code) {
     code = (code || "").trim().toUpperCase().replace(/\s+/g, "");
     if (!/^TSB-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) {
-      return { ok: false, why: "That code doesn't look right, it's TSB-XXXX-XXXX, sent after your payment is verified." };
+      return { ok: false, why: "That code doesn't look right — it's TSB-XXXX-XXXX, sent after your payment is verified." };
     }
     if (!validCode(code)) {
-      return { ok: false, why: "That code isn't valid, double-check the WhatsApp message we sent (codes are case-insensitive). Need help? Message us on WhatsApp and we'll resend it." };
+      return { ok: false, why: "That code isn't valid — double-check the WhatsApp message we sent (codes are case-insensitive). Need help? Message us on WhatsApp and we'll resend it." };
     }
     var until = Date.now() + YEAR_MS;
     var s = { active: true, plan: "gold-yearly", code: code, since: Date.now(), until: until, sig: sign(code, until, "gold-yearly") };
     if (!writeRaw(s)) {
-      return { ok: false, why: "Saved, but this device blocked site storage, enable cookies/site data for thesmallbook.in and try again." };
+      return { ok: false, why: "Saved, but this device blocked site storage — enable cookies/site data for thesmallbook.in and try again." };
     }
     var chk = readState();
     if (!chk || !chk.active) {
-      return { ok: false, why: "Saved, but couldn't confirm, reopen gold.html; if it still shows locked, message us with your payment screenshot." };
+      return { ok: false, why: "Saved, but couldn't confirm — reopen gold.html; if it still shows locked, message us with your payment screenshot." };
     }
-    pushToServer(s);   /* v268 · the ACCOUNT now owns this gold, any device, this account only */
     return { ok: true };
   }
 
@@ -117,24 +116,11 @@
     if (plan === "gold") {
       var until = untilIso ? Date.parse(untilIso) : Date.now() + YEAR_MS;
       var code = "SRV-" + checksum(String(until));
-      var st = { active: true, plan: "gold-yearly", via: "server", code: code, since: Date.now(), until: until, sig: sign(code, until, "gold-yearly") };
-      writeRaw(st);
-      pushToServer(st);
-      return true;
+      writeRaw({ active: true, plan: "gold-yearly", via: "server", code: code, since: Date.now(), until: until, sig: sign(code, until, "gold-yearly") });
     }
   }
 
-  /* v268 · gold lives in the ACCOUNT (server metadata), not the phone:
-     sign in on any device and it is yours; a different account on this
-     phone never sees it. */
-  function pushToServer(state) {
-    try {
-      if (window.TSB_AUTH && TSB_AUTH.updateUserMeta) {
-        TSB_AUTH.updateUserMeta({ tsb_gold: state ? { active: true, until: new Date(state.until || (Date.now() + YEAR_MS)).toISOString(), plan: state.plan || "gold-yearly" } : null });
-      }
-    } catch (e) {}
-  }
-  function deactivate() { clear(); pushToServer(null); }
+  function deactivate() { clear(); }
 
   window.TSB_GOLD = {
     isGold: isGold, state: state, activate: activate, validCode: validCode,

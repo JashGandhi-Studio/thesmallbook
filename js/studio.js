@@ -1,8 +1,8 @@
 /* ============================================================
-   THESMALLBOOK, 🎨 STORY CARD STUDIO (studio.js) · v228
+   THESMALLBOOK — 🎨 STORY CARD STUDIO (studio.js) · v228
    Tap your uploaded photo preview → edit how the image sits
    (drag to reframe, zoom, ratio), how the quote sits (position,
-   align, size, theme), apply mini filters, then export a
+   align, size, theme), apply mini filters — then export a
    post-ready card (Instagram / WhatsApp-status ratios) or set
    the composed card as your story cover.
 
@@ -41,7 +41,7 @@
   var POS = [ { id: "top", label: "TOP" }, { id: "mid", label: "MIDDLE" }, { id: "bottom", label: "BOTTOM" } ];
   var ALIGNS = [ { id: "left", label: "LEFT" }, { id: "center", label: "CENTER" }, { id: "right", label: "RIGHT" } ];
   var SIZES = [ { id: "s", px: 46, label: "S" }, { id: "m", px: 60, label: "M" }, { id: "l", px: 76, label: "L" } ];
-  // v244: every font shows its REAL NAME in its OWN face, people judge at a glance. + Bebas Neue & Lobster (famous).
+  // v244: every font shows its REAL NAME in its OWN face — people judge at a glance. + Bebas Neue & Lobster (famous).
   var FONTS = [
     { id: "arch", label: "Archivo", css: "'Archivo Black', system-ui, sans-serif", caps: true },
     { id: "impact", label: "Impact", css: "Impact, 'Archivo Black', system-ui, sans-serif", caps: true },
@@ -222,7 +222,7 @@
     if (img) return; // user photo will be drawn
     var bg = bgObj();
     if (bg.img) {
-      // image background, draw cover (center-crop)
+      // image background — draw cover (center-crop)
       var im = bgImgCache[bg.img];
       if (im && im.complete && im.naturalWidth) {
         // cover math
@@ -235,7 +235,7 @@
         if (bg.dark) { ctx.fillStyle="rgba(0,0,0,0.18)"; ctx.fillRect(0,0,W,H); }
         return;
       } else {
-        // fallback while loading, show css colour then async will re-render
+        // fallback while loading — show css colour then async will re-render
         ctx.fillStyle = bg.dark ? "#1a1a1a" : "#fffdf5"; ctx.fillRect(0,0,W,H);
         // trigger load for next render
         loadBgImage(bg.img).then(function(){ /* next render will have it */ });
@@ -326,9 +326,9 @@
       }
       y += lineH;
     }
-    // v244: byline, the "author" line, drawn on the export exactly like the preview
+    // v244: byline — the "— author" line, drawn on the export exactly like the preview
     if (by) {
-      var byTxt = "" + by;
+      var byTxt = "— " + by;
       var byPx = Math.max(22, Math.round(px * 0.38));
       ctx.font = "700 " + byPx + "px 'Space Grotesk', system-ui, sans-serif";
       var bw2 = ctx.measureText(byTxt).width;
@@ -451,7 +451,7 @@
     name = name || "thesmallbook-card.png";
     var file;
     try { file = await canvasToFile(canvas, name); }
-    catch (e) { toast("❌ Export blocked by the browser, re-pick the photo on this page and try again."); return; }
+    catch (e) { toast("❌ Export blocked by the browser — re-pick the photo on this page and try again."); return; }
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       try { await navigator.share({ files: [file], title: "TheSmallBook", text: "Made with 📕 TheSmallBook" }); return; } catch (e) { return; }
     }
@@ -460,13 +460,13 @@
     a.download = name;
     a.click();
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
-    toast("✅ Card saved, post it anywhere");
+    toast("✅ Card saved — post it anywhere");
   }
 
   /* ---------- preview (DOM mirror of the canvas math) ---------- */
   /* v250: tell the host page what the card looks like RIGHT NOW, so the page
      preview (and the published quote) uses the same font, ratio and theme the
-     writer picked here, instead of snapping back to the old defaults. */
+     writer picked here — instead of snapping back to the old defaults. */
   var styleTimer = 0;
   function styleBag() {
     return { font: S.font, quote: S.quote, byline: S.byline, ratio: S.ratio, bg: S.bg,
@@ -500,7 +500,7 @@
       }
     }catch(e){ wrapW = 320; }
     if (!wrapW || wrapW < 160) wrapW = 320;
-    // v246: MAXIMUM true preview, 62% of the viewport on mobile, 72% on desktop; you see the FILE you'll get
+    // v246: MAXIMUM true preview — 62% of the viewport on mobile, 72% on desktop; you see the FILE you'll get
     var isMobile = window.innerWidth < 560;
     var maxH = Math.min(window.innerHeight * (isMobile ? 0.62 : 0.72), isMobile ? 640 : 880);
     var k = Math.min(wrapW / r.w, maxH / r.h);
@@ -510,7 +510,7 @@
     // ensure box never exceeds wrap (minus shadow)
     if(bw > wrapW) { var sc = wrapW / bw; bw = wrapW; bh = Math.floor(bh * sc); }
     box.style.width = bw + "px"; box.style.height = bh + "px";
-    // aesthetic background for preview when no image, supports image BGs
+    // aesthetic background for preview when no image — supports image BGs
     if (!img || !img.naturalWidth) {
       var bg = bgObj();
       if (bg.img) {
@@ -531,7 +531,7 @@
     var scrim = $("stuScrim");
     if (img && img.naturalWidth && im) {
       im.hidden = false;
-      // FIX: ensure DOM img actually shows, was missing src sync
+      // FIX: ensure DOM img actually shows — was missing src sync
       if (im.src !== img.src) im.src = img.src;
       var g = geom(img.naturalWidth, img.naturalHeight, bw, bh, S);
       im.style.width = g.dw + "px"; im.style.height = g.dh + "px";
@@ -564,11 +564,11 @@
       q.style.fontFamily = fo.css;
       var extra = isMemePrev ? 'text-shadow:3px 3px 0 #111, -1px -1px 0 #111; letter-spacing:.5px;' : '';
       q.innerHTML = '<div class="q" style="font-size:' + px + 'px; font-family:' + fo.css + '; font-weight:' + (fo.w || 900) + ';' + extra + '"><span>' + esc((S.quote || "").trim() ? (fo.caps!==false ? esc(S.quote) .toUpperCase() : esc(S.quote)) : "YOUR TEXT HERE") + "</span></div>" +
-        ((S.byline || "").trim() ? '<div class="b" style="font-size:' + Math.max(10, Math.round(px * 0.4)) + 'px;margin-top:8px">' + esc(S.byline.trim()) + '</div>' : '');
+        ((S.byline || "").trim() ? '<div class="b" style="font-size:' + Math.max(10, Math.round(px * 0.4)) + 'px;margin-top:8px">— ' + esc(S.byline.trim()) + '</div>' : '');
       // hint for empty quote
       if (!(S.quote || "").trim()) q.style.opacity = ".55"; else q.style.opacity = "1";
     }
-    // v244: say exactly what file you'll get, size + ratio, professional and honest
+    // v244: say exactly what file you'll get — size + ratio, professional and honest
     var dims = $("stuDims");
     if (dims) dims.textContent = "EXPORTS AT " + r.w + " × " + r.h + " PX · " + r.label;
   }
@@ -624,7 +624,7 @@
         b.title = it.label;
         b.innerHTML = '<span class="stu-bgthumb__lab">' + esc(it.label) + '</span>';
       } else if (isBg) {
-        // v244: colour & gradient backgrounds are REAL swatch tiles now, same clean grid as the photo thumbs
+        // v244: colour & gradient backgrounds are REAL swatch tiles now — same clean grid as the photo thumbs
         b.className = "stu-bgthumb" + (it.id === current ? " on" : "");
         if (it.id === "none") b.style.background = "repeating-linear-gradient(45deg,#ffffff 0 7px,#dbe2ea 7px 14px)";
         else { b.style.background = it.css; b.style.backgroundSize = "cover"; }
@@ -636,7 +636,7 @@
         b.innerHTML = lab + (it.pro ? '<span class="pro">PRO</span>' : "");
       }
       b.addEventListener("click", function () {
-        if (it.pro && !S.gold) { toast("💛 " + it.label + " is a Pro filter, comes with TSB Gold"); return; }
+        if (it.pro && !S.gold) { toast("💛 " + it.label + " is a Pro filter — comes with TSB Gold"); return; }
         onPick(it.id);
         chips(containerId, list, it.id, onPick, renderLabel);
         layoutPreview();
@@ -650,7 +650,7 @@
   function buildControls() {
     chips("stuRatio", RATIOS, S.ratio, function (id) { S.ratio = id; layoutPreview(); });
     chips("stuFilter", FILTERS, S.filter, function (id) { S.filter = id; });
-    // v244: each font's NAME rendered in its OWN face, judge the look before you tap
+    // v244: each font's NAME rendered in its OWN face — judge the look before you tap
     chips("stuFont", FONTS, S.font, function (id) { S.font = id; }, function (it) {
       return '<span style="font-family:' + it.css + ';font-size:17px;line-height:1;text-transform:none;letter-spacing:0;font-weight:' + (it.w || 900) + '">' + esc(it.label) + '</span>';
     });
@@ -658,7 +658,7 @@
     chips("stuPos", POS, S.pos, function (id) { S.pos = id; });
     chips("stuAlign", ALIGNS, S.align, function (id) { S.align = id; });
     chips("stuSize", SIZES, S.size, function (id) { S.size = id; });
-    // v244: theme buttons carry a real colour swatch, INK/PAPER/LOUD at a glance
+    // v244: theme buttons carry a real colour swatch — INK/PAPER/LOUD at a glance
     chips("stuTheme", THEMES, S.theme, function (id) { S.theme = id; }, function (it) {
       var on = it.id === S.theme;
       var dot = '<span style="display:inline-block;width:11px;height:11px;border:2px solid ' + (on ? "#111" : "#9a938a") + ';border-radius:4px;background:' + it.swatch + ';vertical-align:-1px;margin-right:5px"></span>';
@@ -697,14 +697,14 @@
         '<div class="stu-sec"><div class="stu-lbl">PHOTO <small>zoom slider · drag the preview to reframe · no photo? pick a bg below</small></div>' +
           '<input class="stu-range" id="stuZoom" type="range" min="100" max="300" value="100"><div style="height:8px"></div><button type="button" id="stuPick" style="width:100%;border:2.5px solid #111;background:#fff;font:700 12px Space Grotesk,sans-serif;padding:10px;border-radius:999px;box-shadow:2.5px 2.5px 0 #111;cursor:pointer">📷 CHOOSE / CHANGE PHOTO</button>' +
           '<input id="stuFile" type="file" accept="image/*" hidden></div>' +
-        '<div class="stu-sec"><div class="stu-lbl">BACKGROUNDS <small>24 aesthetic photos, the proven set, nothing extra · works without any cover photo · FREE exports carry a tiny watermark</small></div><div class="stu-chips" id="stuBg"></div></div>' +
+        '<div class="stu-sec"><div class="stu-lbl">BACKGROUNDS <small>24 aesthetic photos — the proven set, nothing extra · works without any cover photo · FREE exports carry a tiny watermark</small></div><div class="stu-chips" id="stuBg"></div></div>' +
         '<div class="stu-sec"><div class="stu-lbl">MINI FILTERS <small>PRO pack 💛 with Gold</small></div><div class="stu-chips" id="stuFilter"></div></div>' +
-        '<div class="stu-sec"><div class="stu-lbl">ADD TEXT <small>type anything, the text looks great ON the image itself · drag, resize, align like Instagram</small></div>' +
+        '<div class="stu-sec"><div class="stu-lbl">ADD TEXT <small>type anything — the text looks great ON the image itself · drag, resize, align like Instagram</small></div>' +
           '<textarea class="stu-ta" id="stuQuoteTa" rows="2" maxlength="220" placeholder="Type your text…"></textarea>' +
           '<div style="height:10px"></div>' +
           '<div class="stu-lbl">FONT <small>10 famous faces · each name shown in its own style</small></div><div class="stu-chips" id="stuFont"></div>' +
           '<div style="height:10px"></div>' +
-          '<button type="button" id="stuInspire" style="width:100%;border:2.5px solid #111;background:#ffc800;font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;padding:11px;border-radius:999px;box-shadow:3px 3px 0 #111;cursor:pointer">✨ Inspire Desk, quotes & aesthetic images</button><div style="font:600 10px Space Grotesk,sans-serif;color:#64748b;text-align:center;margin-top:6px;letter-spacing:.3px">Live library for quotes, tap to fill, not a verifier</div>' +
+          '<button type="button" id="stuInspire" style="width:100%;border:2.5px solid #111;background:#ffc800;font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;padding:11px;border-radius:999px;box-shadow:3px 3px 0 #111;cursor:pointer">✨ Inspire Desk — quotes & aesthetic images</button><div style="font:600 10px Space Grotesk,sans-serif;color:#64748b;text-align:center;margin-top:6px;letter-spacing:.3px">Live library for quotes — tap to fill, not a verifier</div>' +
           '<div style="height:10px"></div>' +
           '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><div class="stu-lbl">SHADE <small>readability</small></div><input class="stu-range" id="stuScrimR" type="range" min="0" max="85" value="55"></div><div><div class="stu-lbl">SIZE</div><div class="stu-chips" id="stuSize"></div></div></div>' +
           '<div style="height:10px"></div>' +
@@ -713,7 +713,7 @@
           '<div class="stu-chips" id="stuAlign"></div><div style="height:8px"></div>' +
           '<div class="stu-chips" id="stuTheme"></div>' +
         "</div>" +
-        (S.gold ? '<div class="stu-gold">💛 GOLD, Pro filters, no credit chip on downloads, ever.</div>'
+        (S.gold ? '<div class="stu-gold">💛 GOLD — Pro filters, no credit chip on downloads, ever.</div>'
                 : '<div class="stu-gold">Posting in the app = <b>clean, no mark</b>. Downloading the file adds one small <span style="background:#111;color:#ffc800;padding:2px 6px;border-radius:999px;font-size:10px;">thesmallbook.in</span> chip · <a href="gold.html">Gold removes it →</a></div>') +
         '<div class="stu-foot">' +
           '<button class="stu-apply stu-foot__main" id="stuApply">✔ USE AS COVER</button>' +
@@ -729,7 +729,7 @@
       this.textContent = "… rendering";
       try { await shareOrDownload(await render(false), "thesmallbook-card.png"); } finally { this.textContent = "⬇ DOWNLOAD CARD"; }
     });
-    // v244: export the picture ALONE, clean image, no text, no watermark (your "image & text separately" choice)
+    // v244: export the picture ALONE — clean image, no text, no watermark (your "image & text separately" choice)
     $("stuDlPhoto").addEventListener("click", async function () {
       this.textContent = "… rendering";
       try { await shareOrDownload(await render(true), "thesmallbook-photo.png"); } finally { this.textContent = "⬇ PHOTO ONLY"; }
@@ -737,13 +737,13 @@
     $("stuApply").addEventListener("click", async function () {
       this.textContent = "… rendering";
       try {
-        /* in-app cover: no credit chip, the free mark only rides downloads */
+        /* in-app cover: no credit chip — the free mark only rides downloads */
         var file = await canvasToFile(await render(false, { mark: false }), "studio-card.png");
         if (cfg.onApply) await cfg.onApply(file, styleBag());
         toast("✅ Studio card set as your cover");
         close();
       } catch (e) {
-        toast("❌ Couldn't compose, re-pick the photo on this page, then try again.");
+        toast("❌ Couldn't compose — re-pick the photo on this page, then try again.");
       } finally { this.textContent = "✔ USE AS COVER"; }
     });
 
@@ -759,19 +759,19 @@
         api.openInspire("quotes", q, { tabs:["quotes","images"],
           onUseQuote: function(o){
             var txt=o.text||"", auth=o.author||"";
-            S.quote = txt + (auth ? ", " + auth : "");
+            S.quote = txt + (auth ? " — " + auth : "");
             var ta=$("stuQuoteTa"); if(ta) ta.value=S.quote;
             layoutPreview();
-            toast("✨ Quote loaded, tweak it to make it yours");
+            toast("✨ Quote loaded — tweak it to make it yours");
           },
           onUseImage: function(url){
             // Smooth: load picked aesthetic image directly into the card preview (no extra window)
             try{
               var isPic = /picsum|wikimedia|upload\.wikimedia/i.test(url);
-              // For live aesthetic, load as photo (so user can reframe), feels instant
+              // For live aesthetic, load as photo (so user can reframe) — feels instant
               if(typeof _load === "function"){
                 _load(url, false);
-                toast("✨ Aesthetic image loaded, drag to reframe, pick ratio");
+                toast("✨ Aesthetic image loaded — drag to reframe, pick ratio");
               } else {
                 window.open(url,"_blank");
               }
@@ -808,17 +808,17 @@
         // reuse load path
         _load(url, false);
         if (cfg.onPick) try{ cfg.onPick(f); }catch(e){}
-        toast("📷 Photo loaded, drag to reframe");
+        toast("📷 Photo loaded — drag to reframe");
       });
     }
 
     var _corsFailed = false;
     function _finalizeLoad() {
-      // v245: auto-FREE for tall AND wide photos, the whole picture is the card, never a cropped 20% slice
+      // v245: auto-FREE for tall AND wide photos — the whole picture is the card, never a cropped 20% slice
       if (img && img.naturalHeight > img.naturalWidth * 1.35) S.ratio = "free";
       else if (img && img.naturalWidth > img.naturalHeight * 1.15) S.ratio = "free";
       buildControls(); bindDrag(); layoutPreview();
-      if(_corsFailed) toast("⚠️ Preview only, re-upload the photo on this page for a clean export (original link blocked).");
+      if(_corsFailed) toast("⚠️ Preview only — re-upload the photo on this page for a clean export (original link blocked).");
     }
     function _load(src, useCors){
       if (!src) {
@@ -840,7 +840,7 @@
           _load(src, false);
           return;
         }
-        toast("❌ Couldn't load that image, try another");
+        toast("❌ Couldn't load that image — try another");
         img = null;
         buildControls(); bindDrag(); layoutPreview();
       };
@@ -856,7 +856,7 @@
       _load(cfg.src || "", !!(cfg.src && /^https?:/.test(cfg.src)));
     }
     if (!cfg.src) {
-      // no image, still show UI with backgrounds
+      // no image — still show UI with backgrounds
       // _load already handled null case via else branch when cfg.src falsy, but ensure controls
       if (!img) { buildControls(); bindDrag(); layoutPreview(); }
     }
@@ -869,7 +869,7 @@
     window.removeEventListener("resize", layoutPreview);
   }
 
-  /* ---------- v244: headless compose, the publish flow bakes the quote INTO the image without opening the sheet ---------- */
+  /* ---------- v244: headless compose — the publish flow bakes the quote INTO the image without opening the sheet ---------- */
   async function compose(o) {
     o = o || {};
     await ensureFonts();

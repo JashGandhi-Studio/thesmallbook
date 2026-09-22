@@ -1,15 +1,15 @@
 /* ============================================================
-   THESMALLBOOK, ⚡ IDEA AUTOPSY v1 (js/ideaaudit.js) v266
+   THESMALLBOOK — ⚡ IDEA AUTOPSY v1 (js/ideaaudit.js) v266
    Rebuilt from scratch for the YOU section. The graveyard's
    308 corpses cross-examine your startup idea.
 
-   THE ENGINE (deterministic, same answers, same verdict):
+   THE ENGINE (deterministic — same answers, same verdict):
      · ~20 weighted rules, each with a real why, a real fix and
        a real grave that already paid for the mistake
      · four meters: SURVIVAL / SCALABILITY / TIMING / TRUST LOAD
      · an ordered scale-up plan (the weakest reads come first)
      · free OSINT, keyless: Wikipedia (does it already exist?)
-       + Hacker News (who already died trying, field reports)
+       + Hacker News (who already died trying — field reports)
 
    THE LOCK (first paywall of the app):
      · FREE  → the four meters, the verdict, and a blurred glimpse
@@ -41,7 +41,7 @@
       try {
         if (typeof fetch !== "function") return out(null);
         var t = setTimeout(function () { out(null); }, ms || 9000);
-        /* text-first with a JSON guess, the free AI answers in plain text,
+        /* text-first with a JSON guess — the free AI answers in plain text,
            the registers answer in JSON; both come home through one door */
         fetch(url).then(function (r) { return r.text(); }).then(function (tx) {
           clearTimeout(t);
@@ -53,73 +53,73 @@
     });
   }
 
-  /* ---------------- the rules, every one a real grave ---------------- */
+  /* ---------------- the rules — every one a real grave ---------------- */
   var RULES = [
     { id: "one-time", w: 16, cat: ["STARTUP"],
       test: function (c) { return c.money === "one-time" || has(c.text, ["one-time", "one time", "single purchase", "buy once", "one-off"]); },
       t: "One-and-done revenue", grave: "23andme-dna",
-      why: "A product people buy once, priced like a business that needs them back every month. Growth can mask it for years, then the well runs dry.",
-      fix: "Answer the brutal question before you scale: what does the customer buy the SECOND time? A refill, an upgrade, a service, a consumable, or accept it's a campaign, not a company." },
+      why: "A product people buy once, priced like a business that needs them back every month. Growth can mask it for years — then the well runs dry.",
+      fix: "Answer the brutal question before you scale: what does the customer buy the SECOND time? A refill, an upgrade, a service, a consumable — or accept it's a campaign, not a company." },
     { id: "free-no-engine", w: 15,
       test: function (c) { return has(c.text, ["free", "ad-supported", "ads", "ad revenue", "monetise later", "monetize later", "audience first"]); },
       t: "Free until \u2018someday\u2019", grave: "irl-app",
       why: "\u2018We\u2019ll figure out money later\u2019 is a loan against your own burn. Audience-first apps die in the gap between downloads and a business model.",
-      fix: "Pick the money engine NOW, even if you switch later: subscription, take-rate, or a paid tier from day 30. If you can't name who pays and for what, you don't have a business, you have a hobby with servers." },
+      fix: "Pick the money engine NOW, even if you switch later: subscription, take-rate, or a paid tier from day 30. If you can't name who pays and for what, you don't have a business — you have a hobby with servers." },
     { id: "logistics", w: 14,
       test: function (c) { return has(c.text, ["delivery", "deliver", "dispatch", "warehouse", "inventory", "stock", "runners", "fleet", "fulfilment", "fulfillment", "shipping"]); },
       t: "You've become a logistics company", grave: "kozmo-delivery",
-      why: "Every delivery adds a cost that grows WITH you. The more customers love you, the faster you bleed, margins never catch up with volume.",
-      fix: "Model the cost of order #10,000, not #10. If each new customer costs more than they pay you back in under 90 days, redesign before you scale, partner, aggregate, or drop the legs." },
+      why: "Every delivery adds a cost that grows WITH you. The more customers love you, the faster you bleed — margins never catch up with volume.",
+      fix: "Model the cost of order #10,000, not #10. If each new customer costs more than they pay you back in under 90 days, redesign before you scale — partner, aggregate, or drop the legs." },
     { id: "network-empty", w: 14,
       test: function (c) { return has(c.text, ["marketplace", "connect", "platform where", "match", "two-sided", "buyers and sellers", "creators"]); },
       t: "The empty-room problem", grave: "gowalla-foursquare",
-      why: "A two-sided platform is an empty hall until both sides show up, and neither will stay in an empty hall. Most marketplaces die of silence, not competition.",
-      fix: "Pick ONE side and serve them so well they'd pay alone (the supply side usually). Fake the other side by hand, concierge, curated, single city. Density before breadth, always." },
+      why: "A two-sided platform is an empty hall until both sides show up — and neither will stay in an empty hall. Most marketplaces die of silence, not competition.",
+      fix: "Pick ONE side and serve them so well they'd pay alone (the supply side usually). Fake the other side by hand — concierge, curated, single city. Density before breadth, always." },
     { id: "giant-war", w: 12,
       test: function (c) { return has(c.text, ["like amazon", "like google", "better than", "cheaper than", "vs", "versus", "replacement for", "kill"]); } ,
       t: "Declared war on a giant", grave: "borders-amazon",
-      why: "Being cheaper or \u2018better\u2019 than an incumbent means they can crush you with one pricing change, or buy the upgrade you spent years building.",
+      why: "Being cheaper or \u2018better\u2019 than an incumbent means they can crush you with one pricing change — or buy the upgrade you spent years building.",
       fix: "Fight where the giant CAN'T follow: a niche too small for their P&L, a workflow they'd never service, a community they can't authentically join. Be the specialist, not the cheaper generalist." },
     { id: "capital-heavy", w: 12,
       test: function (c) { return has(c.text, ["hardware", "satellite", "manufacture", "factory", "device", "chip", "network build", "spectrum"]); },
       t: "Capital-intensive by design", grave: "iridium-sat",
-      why: "Businesses that must build the expensive thing BEFORE the first customer can pay run on other people's patience, and patience runs out on a schedule you don't control.",
+      why: "Businesses that must build the expensive thing BEFORE the first customer can pay run on other people's patience — and patience runs out on a schedule you don't control.",
       fix: "Stage the capital: prove demand with the cheapest possible version (pre-orders, letters of intent, a rented capability) before you commit to owning the expensive part." },
     { id: "trust-heavy", w: 13,
       test: function (c) { return c.category === "HEALTH" || c.category === "FINANCE" || has(c.text, ["medical", "medicine", "medicines", "pharmacy", "prescription", "health records", "diagnosis", "patient", "loan", "insurance", "investment advice", "banking"]); },
       t: "You hold people's health, money or secrets", grave: "theranos-board",
-      why: "Trust businesses are graded on their worst day, not their best. One breach, one wrong diagnosis, one regulatory letter, and the brand is unfixable.",
+      why: "Trust businesses are graded on their worst day, not their best. One breach, one wrong diagnosis, one regulatory letter — and the brand is unfixable.",
       fix: "Design for auditability from day one: licenses in place, data minimal, an expert on the cap table or the board, and a claims policy stricter than the law requires. Trust is the product." },
     { id: "regulated", w: 12,
       test: function (c) { return has(c.text, ["license", "licence", "regulation", "rbi", "fda", "sebi", "compliance", " KYC", "gaming", "betting", "crypto", "telecom", "spectrum", "edtech certificate"]); },
       t: "The rulebook owns your road", grave: "aircel",
-      why: "If a licence, a court or a ministry can pause your business, then your real founder is the regulator, and they don't answer your emails.",
+      why: "If a licence, a court or a ministry can pause your business, then your real founder is the regulator — and they don't answer your emails.",
       fix: "Map the permission ladder BEFORE writing code: what needs approval, from whom, in how many months, and what's plan B if the answer is no. Regulatory risk is a timeline, not a footnote." },
     { id: "too-early", w: 10,
       test: function (c) { return has(c.text, ["vr", "ar ", "metaverse", "web3", "blockchain", "brain", "neural", "autonomous", "flying", "quantum"]); },
       t: "Right idea, wrong decade", grave: "gowork-gm",
-      why: "Being early is statistically the same as being wrong, the graveyard is full of beautiful products whose customers hadn't been born yet.",
+      why: "Being early is statistically the same as being wrong — the graveyard is full of beautiful products whose customers hadn't been born yet.",
       fix: "Ask what must already be true for this to work (hardware, behaviour, regulation, cost curves). If two or more aren't true today, shrink to the wedge that works NOW or wait with intent." },
     { id: "founder-plays-everything", w: 11,
       test: function (c) { return c.stage === "idea" && has(c.text, ["and also", "everything", "all-in-one", "super app", "multiple", "also a marketplace", "plus a"]); },
       t: "The company is you", grave: "wework-neumann",
       why: "An all-in-one everything app is five companies wearing one logo. None of them gets the depth to survive, and no hire can de-risk the founder.",
-      fix: "Cut to the ONE job that hurts most and do it embarrassingly well. The roadmap can keep the rest, the first version can't." },
+      fix: "Cut to the ONE job that hurts most and do it embarrassingly well. The roadmap can keep the rest — the first version can't." },
     { id: "hype-over-product", w: 10,
       test: function (c) { return has(c.text, ["influencer", "viral", "hype", "buzz", "go viral", "marketing budget", "celebrity"]); },
       t: "Marketing ahead of the product", grave: "fyre-festival",
-      why: "You can buy attention; you can't buy retention. Hype fills the funnel once, the second cohort arrives only if the product keeps promises.",
+      why: "You can buy attention; you can't buy retention. Hype fills the funnel once — the second cohort arrives only if the product keeps promises.",
       fix: "Flip the order: get 50 users to a result they'd pay for AGAIN, then amplify. Spend on marketing when the product has a repeatable proof, not before." },
     { id: "below-cost", w: 13,
       test: function (c) { return has(c.text, ["cheapest", "undercut", "discount", "cashback", "burn to grow", "lose money", "loss leader", "₹1", "1 rupee", "free delivery"]); },
       t: "Priced below your own costs", grave: "movie-pass",
       why: "Discounts buy customers who leave when discounts do. If price < cost + a real margin, every growth sprint is a race to a bigger hole.",
-      fix: "Raise the price until you flinch, then find the customers who don't. If nobody pays a workable price, the cost structure is the bug, not the marketing." },
+      fix: "Raise the price until you flinch, then find the customers who don't. If nobody pays a workable price, the cost structure is the bug — not the marketing." },
     { id: "speculation", w: 11,
       test: function (c) { return c.category === "FINANCE" && has(c.text, ["trading", "crypto", "tokens", "yield", "returns", "arbitrage", " leverage"]); },
       t: "Surfing someone else's wave", grave: "three-arrows-cap",
       why: "Businesses built on a market cycle inherit the cycle. When the tide turns, leverage turns a bad quarter into the last quarter.",
-      fix: "Make your revenue from serving the market (fees, tools, infrastructure), not from being exposed to it. If your income statement IS the trade, you're one bad month from zero." },
+      fix: "Make your revenue from serving the market (fees, tools, infrastructure) — not from being exposed to it. If your income statement IS the trade, you're one bad month from zero." },
     { id: "scale-before-unit", w: 12,
       test: function (c) { return c.stage === "launched" || c.stage === "growing"; },
       t: "Scaling before the unit works", grave: "tinyowl-food",
@@ -128,8 +128,8 @@
     { id: "no-wound", w: 12,
       test: function (c) { return has(c.text, ["cool", "interesting", "nobody has done", "unique idea", "no one is doing", "first ever"]) || c.problem.length < 40; },
       t: "A solution looking for a wound", grave: "segway-hype",
-      why: "\u2018Nobody has done this\u2019 is usually a warning, not a moat. Products without a bleeding wound get attention, and no repeat purchase.",
-      fix: "Write the wound in the customer's own words, who hurts, how much, how often, what they use today. If your only answer is \u2018it's cooler\u2019, keep digging for the wound." },
+      why: "\u2018Nobody has done this\u2019 is usually a warning, not a moat. Products without a bleeding wound get attention — and no repeat purchase.",
+      fix: "Write the wound in the customer's own words — who hurts, how much, how often, what they use today. If your only answer is \u2018it's cooler\u2019, keep digging for the wound." },
     { id: "rented-land", w: 10,
       test: function (c) { return has(c.text, ["instagram", "whatsapp", "on top of", "api of", "extension of", "plugin", "channel only"]); },
       t: "Building on rented land", grave: "borders-amazon",
@@ -143,7 +143,7 @@
     { id: "ops-heavy-service", w: 9,
       test: function (c) { return has(c.text, ["agency", "consulting", "custom", "bespoke", "service for each", "managed"]); },
       t: "A product that is secretly a job", grave: "daewoo-empire",
-      why: "If every new customer needs fresh human hours, you haven't built a product, you've bought yourself a job that scales linearly with your exhaustion.",
+      why: "If every new customer needs fresh human hours, you haven't built a product — you've bought yourself a job that scales linearly with your exhaustion.",
       fix: "Productise: fix the scope, fix the price, and let the same asset serve the next customer. Hire for quality control, not for every new account." },
     { id: "fraud-exposed", w: 9,
       test: function (c) { return has(c.text, ["cash on delivery", "cod", "referral bonus", "cash reward", "wallet cash", "coupons unlimited"]); },
@@ -154,14 +154,14 @@
       test: function (c) { return has(c.text, ["ads", "advertising", "ad revenue", "sponsored"]) && has(c.text, ["app", "feed", "content", "videos", "news"]); },
       t: "Renting your income from an algorithm", grave: "vice-media",
       why: "Ad-dependent media lives at the mercy of platforms and cycles: one ranking change and a newsroom's rent is unpaid.",
-      fix: "Layer revenue: subscriptions or products FIRST, ads as the bonus, never the floor. Own at least one channel (email, app) the algorithm can't touch." }
+      fix: "Layer revenue: subscriptions or products FIRST, ads as the bonus — never the floor. Own at least one channel (email, app) the algorithm can't touch." }
   ];
   var STRENGTHS = [
-    { test: function (c) { return has(c.text, ["subscription", "recurring", "retainer", "members"]); }, t: "Recurring revenue from day one, the graveyard's most common absence is your default." },
-    { test: function (c) { return has(c.text, ["niche", "small town", "tier-2", "tier 2", "tier-3", "specific for", "only for"]); }, t: "A niche the giants ignore, density beats breadth, and specialists keep margins." },
-    { test: function (c) { return c.money === "subscription" || c.money === "commission"; }, t: "A money engine named up front, not \u2018we'll figure it out later\u2019." },
-    { test: function (c) { return c.problem.length >= 60; }, t: "The wound is written in the customer's words, that's rare, and it shows." },
-    { test: function (c) { return c.stage === "launched" || c.stage === "growing"; }, t: "You're already in the arena, the audit grades evidence, not intentions." }
+    { test: function (c) { return has(c.text, ["subscription", "recurring", "retainer", "members"]); }, t: "Recurring revenue from day one — the graveyard's most common absence is your default." },
+    { test: function (c) { return has(c.text, ["niche", "small town", "tier-2", "tier 2", "tier-3", "specific for", "only for"]); }, t: "A niche the giants ignore — density beats breadth, and specialists keep margins." },
+    { test: function (c) { return c.money === "subscription" || c.money === "commission"; }, t: "A money engine named up front — not \u2018we'll figure it out later\u2019." },
+    { test: function (c) { return c.problem.length >= 60; }, t: "The wound is written in the customer's words — that's rare, and it shows." },
+    { test: function (c) { return c.stage === "launched" || c.stage === "growing"; }, t: "You're already in the arena — the audit grades evidence, not intentions." }
   ];
 
   function has(text, words) {
@@ -176,7 +176,7 @@
   }
 
   /* ---------------- the audit itself ---------------- */
-  /* signals: {wiki:[{title,snippet}], hn:[{title,...}]}, the audit blends the
+  /* signals: {wiki:[{title,snippet}], hn:[{title,...}]} — the audit blends the
      public record into the meters so the score is EVIDENCE, not a guess */
   function analyze(input, signals) {
     var c = {
@@ -213,13 +213,13 @@
     var overall = Math.round(survival * 0.34 + scale * 0.26 + timing * 0.2 + (100 - trust) * 0.1 + Math.max(0, 10 - weak.length) );
     overall = Math.max(6, Math.min(94, overall));
     var verdict = overall >= 72
-      ? { label: "SERIOUS, BUILD IT PROPERLY", color: "#00c48c",
+      ? { label: "SERIOUS — BUILD IT PROPERLY", color: "#00c48c",
           line: "The bones are good. The audit found real risks, but nothing fatal and unfixable. Your job is sequencing: fix the weakest read first, then press growth." }
       : overall >= 52
-        ? { label: "PROMISING, WITH LANDMINES", color: "#ffc800",
-            line: "There is a real business hiding in here, and a real funeral. Fix the landmines below BEFORE spending on growth, the graveyard is full of \u2018almosts\u2019 that scaled their flaws." }
-        : { label: "DANGER, REDRAW THE PLAN", color: "#ff4d4d",
-            line: "The audit found patterns that buried companies your size. That is not a verdict against you, it is the map. Rework the weak reads below before writing another line of code." };
+        ? { label: "PROMISING — WITH LANDMINES", color: "#ffc800",
+            line: "There is a real business hiding in here, and a real funeral. Fix the landmines below BEFORE spending on growth — the graveyard is full of \u2018almosts\u2019 that scaled their flaws." }
+        : { label: "DANGER — REDRAW THE PLAN", color: "#ff4d4d",
+            line: "The audit found patterns that buried companies your size. That is not a verdict against you — it is the map. Rework the weak reads below before writing another line of code." };
 
     var steps = planSteps(c, weak);
     var graves = matchGraves(c);
@@ -227,11 +227,11 @@
     /* ---- the public record gets a vote ---- */
     var signals = [], sig = signalsOf(input, signals);
     if (sig.wikiKnown) { timing = Math.max(6, timing - 5); overall -= 2;
-      signals.push({ ic: "🔍", t: "The space is ON the public record", d: "Wikipedia already documents " + sig.wikiTitle + ", the wound is real and proven, and the room is crowded. Timing gets trimmed." }); }
+      signals.push({ ic: "🔍", t: "The space is ON the public record", d: "Wikipedia already documents " + sig.wikiTitle + " — the wound is real and proven, and the room is crowded. Timing gets trimmed." }); }
     if (sig.wikiQuiet) { timing = Math.min(96, timing + 4); overall += 2;
-      signals.push({ ic: "🌙", t: "Quiet on the public record", d: "Nothing prominent documents this exact idea, you\u2019re either early, or the wound is quieter than it sounds. Both are worth knowing before you build." }); }
+      signals.push({ ic: "🌙", t: "Quiet on the public record", d: "Nothing prominent documents this exact idea — you\u2019re either early, or the wound is quieter than it sounds. Both are worth knowing before you build." }); }
     if (sig.hnLoud) { trust = Math.max(8, trust - 5); overall -= 1;
-      signals.push({ ic: "📰", t: "The failure press is loud here", d: sig.hnCount + " recent field reports tell failure stories in this space in the last year. The graveyard is fresh, read them before you spend." }); }
+      signals.push({ ic: "📰", t: "The failure press is loud here", d: sig.hnCount + " recent field reports tell failure stories in this space in the last year. The graveyard is fresh — read them before you spend." }); }
     if (sig.hnSilent) { timing = Math.min(96, timing + 3);
       signals.push({ ic: "🕊️", t: "No fresh post-mortems matched", d: "A quiet year in your space\u2019s failure press. Either survivors, or a field too small to autopsy." }); }
     overall = Math.max(6, Math.min(94, overall));
@@ -270,10 +270,10 @@
 
   function planSteps(c, weak) {
     var steps = [
-      { t: "Write the wound in the customer's words, who hurts, how much, how often. One sentence you could say out loud at a dinner table.", grave: "segway-hype" },
-      { t: "Price the smallest payable version now. \u2018Free for now\u2019 is a loan against your own burn, and lenders ask questions at the worst time.", grave: "movie-pass" },
+      { t: "Write the wound in the customer's words — who hurts, how much, how often. One sentence you could say out loud at a dinner table.", grave: "segway-hype" },
+      { t: "Price the smallest payable version now. \u2018Free for now\u2019 is a loan against your own burn — and lenders ask questions at the worst time.", grave: "movie-pass" },
       { t: "Find 30 customers who already bleed this wound and watch them try today's workaround. Their workaround is your real competitor.", grave: "gowalla-foursquare" },
-      { t: "Ship the ONE feature that removes the wound, cut everything else from v1. Roadmaps are where focus goes to die.", grave: "general-magic" },
+      { t: "Ship the ONE feature that removes the wound — cut everything else from v1. Roadmaps are where focus goes to die.", grave: "general-magic" },
       { t: "Get 10 of them to pay before you spend a rupee on growth. Payment is the only focus group that doesn't lie.", grave: "fyre-festival" },
       { t: "Know your second purchase before your first sale: the refill, the renewal, the upgrade. One-and-done is a campaign, not a company.", grave: "23andme-dna" }
     ];
@@ -284,7 +284,7 @@
       steps.splice(2, 1, { t: "Audit one cohort end-to-end this week: acquisition cost, payback days, repeat rate. Growth hides in these three numbers.", grave: "tinyowl-food" });
     }
     if (weak.some(function (x) { return x.id === "trust-heavy" || x.id === "regulated"; })) {
-      steps.splice(1, 0, { t: "Clear the permission ladder before the code: licences, registrations, data policies, with dates and a plan B for every \u2018no\u2019.", grave: "theranos-board" });
+      steps.splice(1, 0, { t: "Clear the permission ladder before the code: licences, registrations, data policies — with dates and a plan B for every \u2018no\u2019.", grave: "theranos-board" });
     }
     return steps.slice(0, 6);
   }
@@ -340,113 +340,25 @@
     set("tsb_iaudit_unlock", true);
     return true;
   }
-  function unlockWithPurchaseFlag() {
-    set("tsb_iaudit_unlock", true);   /* vault-scoped: this account only */
-    try {
-      if (window.TSB_AUTH && TSB_AUTH.updateUserMeta && !window.__tsbIaMetaPing) {
-        window.__tsbIaMetaPing = 1;
-        TSB_AUTH.updateUserMeta({ tsb_iaudit: 1 });
-      }
-    } catch (e) {}
-  }
+  function unlockWithPurchaseFlag() { set("tsb_iaudit_unlock", true); }
 
-  /* ---------------- the free AI read (keyless, engineered to survive) ----------------
-     Pollinations answers for free with NO key, but its anonymous tier is
-     paced (~1 request / 6s per IP) and can 429 or nap. So the read is armoured
-     four deep: (1) a saved read for this exact idea replays instantly,
-     (2) route A, plain GET, (3) route B, the OpenAI-style POST, a separate
-     door on the same free service, (4) one paced retry, and only then an
-     honest "napping" note. The read NEVER decides the score, the
-     deterministic engine does. Not one key anywhere. */
-  var AI_REFERRER = "thesmallbook.in";
-  function aiPrompt(draft, weakTitles) {
-    return "You are a brutal, experienced startup auditor. Idea: " +
+  /* ---------------- the free AI read (keyless, optional, honest) ----------------
+     Pollinations text API: no key, no signup, plain GET. It NEVER decides the
+     score — the deterministic engine does. If it is unreachable, the section
+     simply never appears. */
+  function aiRead(draft, weakTitles) {
+    var prompt = "You are a brutal, experienced startup auditor. Idea: " +
       String(draft.name || "").slice(0, 140) + ". Problem: " + String(draft.problem || "").slice(0, 220) +
       ". Solution: " + String(draft.solution || "").slice(0, 200) +
       ". Weak reads found: " + (weakTitles || []).slice(0, 3).join("; ") +
       ". In under 55 words, give: one sharp observation about this specific idea, then one brutal question the founder must answer. Plain text, no lists, no greetings.";
-  }
-  function aiCacheKey(draft) {
-    var raw = String((draft && draft.name) || "") + "|" + String((draft && draft.problem) || "") + "|" + String((draft && draft.solution) || "");
-    raw = raw.toLowerCase().replace(/\s+/g, " ").trim().slice(0, 200);
-    var h = 0;
-    for (var i = 0; i < raw.length; i++) { h = (h * 31 + raw.charCodeAt(i)) | 0; }
-    return "ai" + (h >>> 0).toString(36);
-  }
-  function aiCacheGet(key) {
-    try {
-      var c = JSON.parse(localStorage.getItem("tsb_ia_ai") || "{}");
-      var e = c[key];
-      if (e && e.text && Date.now() - e.t < 30 * 24 * 3600 * 1000) return String(e.text).slice(0, 400);
-    } catch (e2) {}
-    return null;
-  }
-  function aiCacheSet(key, text) {
-    try {
-      var c = JSON.parse(localStorage.getItem("tsb_ia_ai") || "{}");
-      var ks = Object.keys(c);
-      if (ks.length >= 12) { ks.sort(function (a, b) { return (c[a].t || 0) - (c[b].t || 0); }); delete c[ks[0]]; }
-      c[key] = { t: Date.now(), text: String(text).slice(0, 400) };
-      localStorage.setItem("tsb_ia_ai", JSON.stringify(c));
-    } catch (e) {}
-  }
-  /* the free door is paced, never knock twice inside ~6.5s (the anonymous
-     tier allows ~1 request / 6s per IP; honking harder only earns 429s) */
-  var AI_T = (window.TSB_IA_AI_TIMING || {});
-  var AI_PACE = AI_T.pace || 6500, AI_REST = AI_T.rest || 6500;
-  var aiLastKnock = 0;
-  function aiPace() {
-    var waitMs = Math.max(0, AI_PACE - (Date.now() - aiLastKnock));
-    return new Promise(function (res) { setTimeout(res, waitMs); }).then(function () { aiLastKnock = Date.now(); });
-  }
-  function aiRouteGET(prompt, ms) {
-    var url = "https://text.pollinations.ai/" + encodeURIComponent(prompt) + "?model=openai-fast&referrer=" + AI_REFERRER;
-    return fetchJSON(url, ms || 9000).then(function (j) {
-      var t = typeof j === "string" ? j : (j && (j.text || (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content))) || "";
-      return String(t || "").trim();
-    });
-  }
-  function aiRoutePOST(prompt, ms) {
-    if (typeof fetch !== "function") return Promise.resolve("");
-    return new Promise(function (res) {
-      var done = false;
-      function out(v) { if (!done) { done = true; res(v); } }
-      var t = setTimeout(function () { out(""); }, ms || 9000);
-      try {
-        fetch("https://text.pollinations.ai/openai", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ model: "openai-fast", referrer: AI_REFERRER, messages: [{ role: "user", content: prompt }] })
-        }).then(function (r) { return r.text(); }).then(function (tx) {
-          clearTimeout(t);
-          var c = "";
-          try { c = JSON.parse(tx).choices[0].message.content || ""; } catch (e) { c = String(tx || ""); }
-          res(String(c || "").trim());
-        }).catch(function () { clearTimeout(t); out(""); });
-      } catch (e) { clearTimeout(t); out(""); }
-    });
-  }
-  function aiClean(t) { return (t || "").replace(/^[\s"']+/g, "").replace(/[\s"']+$/g, "").slice(0, 400); }
-  function aiRead(draft, weakTitles) {
-    var key = aiCacheKey(draft);
-    var saved = aiCacheGet(key);
-    if (saved) return Promise.resolve(saved);
-    var prompt = aiPrompt(draft, weakTitles);
-    return aiPace()
-      .then(function () { return aiRouteGET(prompt); })
-      .then(function (t) {
-        if (t && t.length >= 12) return aiClean(t);
-        return aiRoutePOST(prompt).then(function (t2) {
-          if (t2 && t2.length >= 12) return aiClean(t2);
-          /* both doors knocked, rest, then one last paced try */
-          return new Promise(function (res) { setTimeout(res, AI_REST); })
-            .then(function () { return aiPace(); })
-            .then(function () { return aiRouteGET(prompt); })
-            .then(function (t3) { return (t3 && t3.length >= 12) ? aiClean(t3) : null; });
-        });
-      })
-      .then(function (t) { if (t) aiCacheSet(key, t); return t; })
-      .catch(function () { return null; });
+    var url = "https://text.pollinations.ai/" + encodeURIComponent(prompt);
+    return fetchJSON(url, 8000).then(function (j) {
+      var t = "";
+      try { t = String(typeof j === "string" ? j : (j && j.text) || "").trim(); } catch (e) {}
+      if (!t || t.length < 12) return null;
+      return t.slice(0, 400);
+    }).catch(function () { return null; });
   }
 
   /* ---------------- exports ---------------- */
@@ -464,7 +376,7 @@
 })();
 
 /* ============================================================
-   UI, THE IDEA AUTOPSY ROOM (inside the YOU window)
+   UI — THE IDEA AUTOPSY ROOM (inside the YOU window)
    Three quick steps → the report → free users see the meters and
    a blurred glimpse; unlocked readers see everything.
    ============================================================ */
@@ -502,23 +414,23 @@
     for (var i = 1; i <= 3; i++) dots += '<i class="iaudit__dot' + (i <= step ? " on" : "") + (i === step ? " now" : "") + '">' + i + "</i>";
     var labels = { 1: "THE IDEA", 2: "THE SHAPE", 3: "THE MONEY" };
     body.innerHTML =
-      '<div class="iaudit__steps">' + dots + '<span class="iaudit__slbl">STEP ' + step + ' OF 3, ' + labels[step] + "</span></div>" +
+      '<div class="iaudit__steps">' + dots + '<span class="iaudit__slbl">STEP ' + step + ' OF 3 — ' + labels[step] + "</span></div>" +
       (step === 1
         ? '<label class="iaudit__lbl">WHAT DO YOU WANT TO BUILD?</label>' +
-          '<input class="iaudit__in" id="iaName" maxlength="140" autocomplete="off" placeholder="One honest line, e.g. \u201810-minute medicine delivery for tier-2 towns\u2019" value="' + esc(draft.name) + '">' +
-          '<label class="iaudit__lbl">THE WOUND, who hurts, how much, how often?</label>' +
+          '<input class="iaudit__in" id="iaName" maxlength="140" autocomplete="off" placeholder="One honest line — e.g. \u201810-minute medicine delivery for tier-2 towns\u2019" value="' + esc(draft.name) + '">' +
+          '<label class="iaudit__lbl">THE WOUND — who hurts, how much, how often?</label>' +
           '<span class="iaudit__tw"><textarea class="iaudit__in" id="iaProb" rows="3" maxlength="800" placeholder="e.g. tier-2 families can\u2019t get chronic medicines reliably; pharmacies stock out; refills are manual\u2026">' + esc(draft.problem) + "</textarea>" +
           '<button type="button" class="iaudit__mic" id="iaMic">\U0001F399\uFE0F SPEAK</button></span>'
         : step === 2
-          ? '<label class="iaudit__lbl">YOUR SOLUTION, what you build, what\u2019s different</label>' +
+          ? '<label class="iaudit__lbl">YOUR SOLUTION — what you build, what\u2019s different</label>' +
             '<textarea class="iaudit__in" id="iaSol" rows="3" maxlength="800" placeholder="e.g. an app tied to partner pharmacies with 90-min runners, subscription refills, UPI\u2026">' + esc(draft.solution) + "</textarea>" +
-            '<label class="iaudit__lbl">WHO IS IT FOR? <em>(optional, sharpens the audit)</em></label>' +
+            '<label class="iaudit__lbl">WHO IS IT FOR? <em>(optional — sharpens the audit)</em></label>' +
             '<input class="iaudit__in" id="iaAud" maxlength="120" placeholder="e.g. chronic patients\u2019 families in tier-2 Gujarat\u2026" value="' + esc(draft.audience) + '">'
           : '<label class="iaudit__lbl" style="margin-top:16px">THE CATEGORY</label>' +
             '<div class="iaudit__chips" id="iaCats">' + CATS.map(function (m) {
               return '<button type="button" class="iaudit__chip' + (draft.category === m[0] ? " on" : "") + '" data-cat="' + m[0] + '">' + m[1] + " " + m[0] + "</button>";
             }).join("") + '<button type="button" class="iaudit__chip' + (draft.catCustom ? " on" : "") + '" data-cat="CUSTOM">\u2733\uFE0F CUSTOM</button></div>' +
-            '<input class="iaudit__in" id="iaCatCustom" maxlength="40" placeholder="your own category, e.g. pet tech, wedding planning\u2026" value="' + esc(draft.catCustom || "") + '"' + (draft.catCustom ? "" : " hidden") + ' style="margin-top:8px">' +
+            '<input class="iaudit__in" id="iaCatCustom" maxlength="40" placeholder="your own category \u2014 e.g. pet tech, wedding planning\u2026" value="' + esc(draft.catCustom || "") + '"' + (draft.catCustom ? "" : " hidden") + ' style="margin-top:8px">' +
             '<label class="iaudit__lbl">HOW WILL IT EARN?</label>' +
             '<div class="iaudit__chips" id="iaMoney">' + MONEYS.map(function (m) {
               return '<button type="button" class="iaudit__chip' + (draft.money === m[0] ? " on" : "") + '" data-money="' + m[0] + '">' + m[1] + "</button>";
@@ -617,7 +529,7 @@
   /* ---- dictation: speak the wound instead of typing it (guarded) ---- */
   function setupMic(btn, onText) {
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    /* no speech engine on this browser, the button never shows at all */
+    /* no speech engine on this browser — the button never shows at all */
     if (!SR) { if (btn.parentNode) btn.parentNode.removeChild(btn); return; }
     var rec = null, on = false, retried = false;
     function say(t) { btn.textContent = t; }
@@ -633,7 +545,7 @@
           for (var i = 0; i < e.results.length; i++) t += e.results[i][0].transcript;
           if (t.trim()) { stop(); onText(t.trim()); }
         };
-        /* first tap on many phones only wakes the engine, wake it again, once */
+        /* first tap on many phones only wakes the engine — wake it again, once */
         rec.onerror = function (ev) {
           var why = (ev && ev.error) || "";
           stop();
@@ -679,7 +591,7 @@
     }
     var strengths = r.strong.length
       ? r.strong.map(function (s) { return '<div class="iaudit__str">✓ ' + esc(s) + "</div>"; }).join("")
-      : '<div class="iaudit__str iaudit__str--none">No built-in strengths detected yet, that\u2019s fixable, and the plan below is where.</div>';
+      : '<div class="iaudit__str iaudit__str--none">No built-in strengths detected yet — that\u2019s fixable, and the plan below is where.</div>';
 
     var gravesSec = r.graves.length
       ? r.graves.map(function (f) {
@@ -687,7 +599,7 @@
             "<b>" + esc(f.name) + "</b><i>" + esc(f.title) + "</i>" +
             '<span class="iaudit__gcard__loss">💸 ' + esc(f.loss) + "</span></a>";
         }).join("")
-      : '<p class="iaudit__osint-line">No close corpses matched, a rare sign. The classics below still apply.</p>';
+      : '<p class="iaudit__osint-line">No close corpses matched — a rare sign. The classics below still apply.</p>';
 
     var osintSec = '<div class="iaudit__osint" id="iaOsint"><div class="askel" style="height:14px;width:52%"></div><div class="askel"></div><div class="askel" style="width:78%"></div></div>';
 
@@ -708,17 +620,17 @@
             }).join("") + "</div>"
           : "") +
         (r.strong.length ? '<h3 class="iaudit__h">💪 WHAT\u2019S ALREADY WORKING</h3>' + strengths : "") +
-        '<h3 class="iaudit__h">🔧 THE FIX, WHERE IT GOES WRONG</h3>' + fixes +
+        '<h3 class="iaudit__h">🔧 THE FIX — WHERE IT GOES WRONG</h3>' + fixes +
         '<div class="iaudit__lockedwrap' + (open ? "" : " iaudit__locked") + '">' +
-          '<h3 class="iaudit__h">🪜 YOUR SCALE-UP STEPS, IN ORDER</h3>' +
+          '<h3 class="iaudit__h">🪜 YOUR SCALE-UP STEPS — IN ORDER</h3>' +
           (open
             ? '<div class="iaudit__stepsplan">' + r.steps.map(function (s, i) {
                 return '<div class="iaudit__stepn"><b>' + (i + 1) + "</b><p>" + esc(s.t) + '</p><a href="graveyard.html#grave=' + esc(s.grave) + '" class="iaudit__stepn__g">tuition paid by: ' + esc((s.grave || "").replace(/-/g, " ")) + "</a></div>";
               }).join("") + "</div>"
             : "") +
-          '<h3 class="iaudit__h">⚰️ RELATED FAILURES, YOUR IDEA\u2019S FAMILY HISTORY</h3>' +
+          '<h3 class="iaudit__h">⚰️ RELATED FAILURES — YOUR IDEA\u2019S FAMILY HISTORY</h3>' +
           (open ? '<div class="iaudit__ggrid">' + gravesSec + "</div>" : "") +
-          '<h3 class="iaudit__h">🔍 THE PROOF, OSINT ON YOUR IDEA</h3>' +
+          '<h3 class="iaudit__h">🔍 THE PROOF — OSINT ON YOUR IDEA</h3>' +
           (open ? osintSec : "") +
           (open ? '<div class="iaudit__ai" id="iaAi"><div class="askel" style="height:12px;width:40%"></div><div class="askel"></div></div>' : "") +
           (!open ? '<div class="iaudit__lockcard">' +
@@ -726,7 +638,7 @@
             "<b>You\u2019ve seen the vitals. The treatment plan is locked.</b>" +
             "<p>All " + Math.max(fixCount, r.weak.length) + " fixes in plain words, the ordered scale-up plan, the family history of failures like yours, and live proof from the public record.</p>" +
             (A.batchLeft() > 0
-              ? '<button class="iaudit__unlock" id="iaClaim">🎁 LAUNCH BATCH, FIRST ' + A.batchLeft() + " CLAIMS ARE FREE, UNLOCK NOW</button>"
+              ? '<button class="iaudit__unlock" id="iaClaim">🎁 LAUNCH BATCH — FIRST ' + A.batchLeft() + " CLAIMS ARE FREE — UNLOCK NOW</button>"
               : "") +
             '<a class="iaudit__unlock iaudit__unlock--buy" href="store.html">🛍️ UNLOCK WITH A STORE PASS →</a>' +
             "<p class='iaudit__fine'>Gold members read everything, always.</p>" +
@@ -738,14 +650,7 @@
     var body = $("iauditBody");
     body.innerHTML = html;
     var again = $("iaAgain");
-    if (again) again.addEventListener("click", function () {
-      /* a NEW autopsy starts clean, no ghost of the last idea */
-      last = null; step = 1;
-      draft = { name: "", problem: "", solution: "", audience: "", category: "STARTUP", money: "", stage: "idea" };
-      paint();
-      var wiz = document.querySelector(".iaudit");
-      if (wiz && wiz.scrollIntoView) try { wiz.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {}
-    });
+    if (again) again.addEventListener("click", function () { last = null; step = 1; paint(); });
     var claim = $("iaClaim");
     if (claim) claim.addEventListener("click", function () {
       if (A.claimBatch() && last) { last = A.analyze(draft); report(last); }
@@ -766,9 +671,9 @@
         ? '<b>🔍 ALREADY EXISTS?</b><div class="iaudit__wiki">' + wiki.map(function (x) {
             return '<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/' + encodeURIComponent(String(x.title).replace(/ /g, "_")) + '"><b>' + esc(x.title) + "</b><i>" + esc(x.snippet.slice(0, 110)) + "…</i></a>";
           }).join("") + "</div>"
-        : "<b>🔍 ALREADY EXISTS?</b><p class='iaudit__osint-line'>Nothing prominent on the public record, either you\u2019re early or the wound is quieter than it looks. Both are worth knowing.</p>";
+        : "<b>🔍 ALREADY EXISTS?</b><p class='iaudit__osint-line'>Nothing prominent on the public record — either you\u2019re early or the wound is quieter than it looks. Both are worth knowing.</p>";
       var h = hn.length
-        ? "<b>📰 FAILED-LIKE-YOURS, FIELD REPORTS (365 DAYS)</b><div class='iaudit__hns'>" + hn.map(function (x) {
+        ? "<b>📰 FAILED-LIKE-YOURS — FIELD REPORTS (365 DAYS)</b><div class='iaudit__hns'>" + hn.map(function (x) {
             return '<a target="_blank" rel="noopener" href="' + esc(x.url) + '"><b>' + esc(x.title) + "</b><i>▲ " + x.points + " · 💬 " + x.comments + "</i></a>";
           }).join("") + "</div>"
         : "<b>📰 FAILED-LIKE-YOURS</b><p class='iaudit__osint-line'>No fresh post-mortems matched your keywords this year. Quiet field.</p>";
@@ -776,18 +681,13 @@
       var ai = $("iaAi");
       if (ai) {
         A.aiRead(draft, (last && last.weak || []).map(function (x) { return x.t; })).then(function (txt) {
-          if (!txt) {
-            ai.classList.add("iaudit__ai--nap");
-            ai.innerHTML = '<span class="iaudit__ai__lbl">😴 THE FREE AI IS NAPPING</span>' +
-              '<p>Its door is crowded right now, the read usually arrives on your next look. Nothing is lost: the meters above already stand on 308 case files and the live public record.</p>';
-            return;
-          }
-          ai.innerHTML = '<span class="iaudit__ai__lbl">🤖 SECOND OPINION, A FREE AI READS IT TOO</span><p>' + esc(txt) + "</p>" +
-            '<span class="iaudit__ai__fine">One machine\u2019s opinion, not gospel, the meters above come from 308 real case files.</span>';
+          if (!txt) { if (ai.parentNode) ai.parentNode.removeChild(ai); return; }
+          ai.innerHTML = '<span class="iaudit__ai__lbl">🤖 SECOND OPINION — A FREE AI READS IT TOO</span><p>' + esc(txt) + "</p>" +
+            '<span class="iaudit__ai__fine">One machine\u2019s opinion, not gospel — the meters above come from 308 real case files.</span>';
         });
       }
     }).catch(function () {
-      box.innerHTML = "<p class='iaudit__osint-line'>The public record is unreachable right now, the audit above stands on its own.</p>";
+      box.innerHTML = "<p class='iaudit__osint-line'>The public record is unreachable right now — the audit above stands on its own.</p>";
     });
   }
   function agoSafe(at) {
@@ -803,13 +703,13 @@
     return w.slice(0, 6).join(" ") || "startup failed";
   }
 
-  /* the 308 case files arrive only when the autopsy needs them.
+  /* the 308 case files arrive only when the autopsy needs them —
      the login page never carries 358KB it doesn't use */
   function ensureFailures() {
     return new Promise(function (res) {
       if (window.FAILURES && window.FAILURES.length) return res();
       var sc = document.createElement("script");
-      sc.src = "js/failures.js?v=273";
+      sc.src = "js/failures.js?v=267";
       sc.onload = function () { res(); };
       sc.onerror = function () { res(); };
       document.head.appendChild(sc);
@@ -835,7 +735,7 @@
         busy = false;
         var probeData = r[0];
         if (probeData) { draft._wiki = probeData.wiki; draft._hn = probeData.hn; }
-        try { last = A.analyze(draft); } catch (e) { body.innerHTML = "<p class='iaudit__osint-line'>Something broke in the engine, try once more.</p>"; return; }
+        try { last = A.analyze(draft); } catch (e) { body.innerHTML = "<p class='iaudit__osint-line'>Something broke in the engine — try once more.</p>"; return; }
         saveHistory(last);
         report(last);
       var rep = body.querySelector(".iaudit__report");
@@ -844,7 +744,7 @@
     });
   }
 
-  /* ---- every audit is saved, reopen any of them below the wizard ---- */
+  /* ---- every audit is saved — reopen any of them below the wizard ---- */
   function saveHistory(rep) {
     try {
       var h = hget("tsb_iaudits", []) || [];
@@ -863,7 +763,7 @@
     var host = $("iaHist");
     if (!host) return;
     if (!h.length) { host.innerHTML = ""; return; }
-    host.innerHTML = '<h3 class="iaudit__h">🕘 YOUR PAST AUTOPSIES, TAP TO REOPEN</h3>' +
+    host.innerHTML = '<h3 class="iaudit__h">🕘 YOUR PAST AUTOPSIES — TAP TO REOPEN</h3>' +
       '<div class="iaudit__hist">' + h.map(function (x, i) {
         return '<button type="button" class="iaudit__hist__row" data-iahis="' + i + '">' +
           "<b>" + esc(String(x.name || "Untitled idea").slice(0, 44)) + "</b>" +

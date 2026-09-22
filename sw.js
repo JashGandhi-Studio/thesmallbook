@@ -1,11 +1,11 @@
 /* ============================================================
-   THESMALLBOOK, SERVICE WORKER
+   THESMALLBOOK — SERVICE WORKER
    Cache-first for app shell & covers = installable + offline.
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v275";
-/* NOTE: the assets/logos/* entries below mirror js/store-data.js exactly.
+const CACHE_VERSION = "tsb-v267";
+/* NOTE: the assets/logos/* entries below mirror js/store-data.js exactly —
    every tile the store links to must be precached, or the offline store
    shows broken images. tests/client-suite.js asserts they never drift. */
 const APP_SHELL = [
@@ -23,14 +23,12 @@ const APP_SHELL = [
   "./about.html",
   "./scan.html",
   "./js/tts-engine.js",
-  "./js/bootguard.js",
-  "./js/vault.js",
-  "./js/weekly.js",
   "./js/ask-data.js",
   "./js/ask.js",
   "./js/highlight.js",
   "./js/install.js",
   "./favicon.ico",
+  "./favicon.png",
   "./assets/loader-logo.png",
   "./assets/og-image.png",
   "./css/studio.css",
@@ -121,6 +119,7 @@ const APP_SHELL = [
   "./assets/logos/zepto-tile.png",
   "./assets/logos/zomato-tile.svg",
   "./js/affiliate.js",
+  "./apple-touch-icon.png",
   "./css/style.css",
   "./js/prefs.js",
   "./js/support.js",
@@ -173,7 +172,7 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const fu = new URL(e.request.url);
   /* community media (covers / voice / avatars): cache-first = offline listening.
-     Byte-range requests (video seeking) always go to the network untouched.
+     Byte-range requests (video seeking) always go to the network untouched —
      caching partial 206 responses breaks playback (range headers are ignored
      by Cache API matching). Only full 200 responses are cached. */
   if (fu.pathname.includes("/storage/v1/object/public/")) {
@@ -194,7 +193,7 @@ self.addEventListener("fetch", (e) => {
   if (url.hostname.includes("supabase")) return;
   if (e.request.method !== "GET") return;
 
-  // v275: network-first for HTML and code (fresh first), cache = offline fallback
+  // network-first for HTML (fresh content), cache-first for assets
   if (e.request.mode === "navigate" || url.pathname.endsWith(".html")) {
     e.respondWith(
       fetch(e.request)
@@ -206,20 +205,17 @@ self.addEventListener("fetch", (e) => {
         .catch(() => caches.match(e.request, { ignoreSearch: true }).then((r) => r || caches.match("./index.html")))
     );
   } else {
-    /* v275: network-first for EVERYTHING, cache is only the offline fallback.
-       New HTML can never meet stale saved code again. */
     e.respondWith(
-      fetch(e.request)
-        .then((res) => {
+      caches.match(e.request).then((cached) => {
+        if (cached) return cached;
+        return fetch(e.request).then((res) => {
           if (res.ok && (url.origin === location.origin || url.hostname.includes("fonts"))) {
             const copy = res.clone();
             caches.open(CACHE_VERSION).then((c) => c.put(e.request, copy));
           }
           return res;
-        })
-        .catch(() =>
-          caches.match(e.request).then((r) => r || caches.match(e.request, { ignoreSearch: true }))
-        )
+        });
+      })
     );
   }
 });

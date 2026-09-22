@@ -827,10 +827,10 @@ const C = window.TSB_COMMUNITY;
 
     /* --- lock --- */
     ok("voice.js has a real lock state", /function setLock/.test(voice) && /var locked = false/.test(voice));
-    ok("release after a real hold SENDS; a quick tap locks hands-free", /220/.test(voice) && /62/.test(voice) && /setLock/.test(voice));
+    ok("a release without travel LOCKS instead of erroring", /else setLock\(true\);/.test(voice));
     ok("a tap on a live note sends it", /state === "review"\) \{ e\.preventDefault\(\); stopAndSend\(\); \}/.test(voice));
     ok("a 2 px wobble is not a slide-up", /MOVE_SLOP/.test(voice));
-    ok("the 2:00 cap drops the note into review, it never auto-sends", !/stopAndSend\(\); return; \}/.test(voice) && /review/.test(voice));
+    ok("a locked note auto-sends at the 2:00 cap", /if \(locked\) \{ stopAndSend\(\); return; \}/.test(voice));
     ok("backgrounding the app locks instead of killing the note", /document\.hidden && state === "recording" && !locked\) setLock\(true\)/.test(voice));
     ok("setLock/locked are exported", /setLock: setLock/.test(voice) && /locked: isLocked/.test(voice));
     ok("the pill turns into a check while a note is live", /is-lock/.test(dmH) && /\.dm-micbtn\.is-lock/.test(style));
@@ -869,7 +869,7 @@ const C = window.TSB_COMMUNITY;
     /* --- v267: OSINT + the free AI read, keyless --- */
     ok("the public record votes on the meters", /signalsOf/.test(ia) && /signals:/.test(ia));
     ok("the proof section names wiki + hn", /wikiExists/.test(ia) && /hnFailed/.test(ia));
-    ok("the free AI second opinion is keyless pollinations, wrapped in a timeout", /text\.pollinations\.ai/.test(ia) && /6500/.test(ia));
+    ok("the free AI second opinion is keyless pollinations, wrapped in a timeout", /text\.pollinations\.ai/.test(ia) && /8000/.test(ia));
     ok("the AI read is framed as an opinion, the engine stays the judge", /not gospel|real case files/.test(ia));
     ok("any AI failure silently degrades to engine-only", /catch/.test(ia));
     ok("not one key anywhere in the audit", !/(?:apikey|api_key|Bearer )/i.test(ia));
@@ -908,13 +908,6 @@ const C = window.TSB_COMMUNITY;
 
     /* --- v267: the channel grows in the official voice, with covers --- */
     ok("the flagship seeds carry covers now", (String(covs).match(/assets\/stories\//g) || []).length >= 16);
-
-    /* --- v275: the never-stuck guarantee --- */
-    const bg275 = rd("js/bootguard.js"), prefs275 = rd("js/prefs.js"), sw275 = rd("sw.js");
-    ok("the watchdog rides first on every app page", bg275.includes("TSB_BOOT_OK") && bg275.includes("tsb_purge_a") && rd("index.html").indexOf("js/bootguard.js") < rd("index.html").indexOf("js/vault.js"));
-    ok("a worker handover can never reload the page again", !prefs275.includes("controllerchange") && prefs275.includes("window.TSB_BOOT_OK = true"));
-    ok("no worker = no purge reload; a true hang self-heals once, then an honest banner", bg275.includes("done(had)") && bg275.includes("Load trouble detected."));
-    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v275"'));
 
     /* --- watermark --- */
     ok("in-app publishing is never watermarked", /mark: false/.test(studio));
@@ -1154,10 +1147,10 @@ const C = window.TSB_COMMUNITY;
     const seeds = rd254("js/stories-seed.js"), stHTML = rd254("stories.html"), syH = rd254("story.html");
     const lg254 = rd254("login.html"), au254 = rd254("js/auth.js");
     ok("every library story is now posted by TheSmallBook, not a ghost author",
-       (seeds.match(/author: "TheSmallBook"/g) || []).length === 31 &&
+       (seeds.match(/author: "TheSmallBook"/g) || []).length === 28 &&
        /TheSmallBook <span class="cm-vtick"/.test(stHTML) && /name: "TheSmallBook"/.test(syH));
     ok("each carries a hook — a question that sounds like the reader's own 2 AM",
-       (seeds.match(/hook: "/g) || []).length === 31 && /cm-card__hook/.test(stHTML));
+       (seeds.match(/hook: "/g) || []).length === 28 && /cm-card__hook/.test(stHTML));
     ok("the burst rail leads with the hook, the title underneath",
        /var head = s\.hook \|\| s\.title;/.test(stHTML));
     ok("the channel wears the app's own logo as its avatar",
@@ -1167,7 +1160,7 @@ const C = window.TSB_COMMUNITY;
     ok("a failed photo upload now stops the publish and says so — no silent loss",
        /Your photo couldn't upload/.test(wr) && /Nothing was posted/.test(wr));
     ok("one clear CONTINUE instead of three same-looking buttons",
-       /CONTINUE, STUDIO MAKES THE CARD/.test(rd("js/quotedesk.js")));
+       /CONTINUE — STUDIO MAKES THE CARD/.test(rd("js/quotedesk.js")));
     ok("the account card asks first name, last name, username, reader name, email, password",
        /id="suFirst"/.test(lg254) && /id="suLast"/.test(lg254) && /id="suUser"/.test(lg254) && /id="suName"/.test(lg254) && /id="suMail"/.test(lg254) && /id="suPass"/.test(lg254));
     ok("usernames are lowercase handles, checked live while typing",

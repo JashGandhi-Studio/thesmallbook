@@ -1,4 +1,4 @@
-/* TheSmallBook, founder ids that earn the blue ✔ on every device.
+/* TheSmallBook — founder ids that earn the blue ✔ on every device.
    Everyone sees the tick; the founder's own device gets it immediately via localStorage,
    other devices see it once this list contains the founder's Supabase id.
    To hardcode: sign in as founder → Profile shows "Your ID: xxx" → paste it here. */
