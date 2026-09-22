@@ -1,7 +1,7 @@
 /* ============================================================
-   THESMALLBOOK, 🔐 SIGN-IN ENGINE (auth.js)
-   - "Log in with Google" via Supabase Auth (PKCE, no CDN, SW friendly)
-   - v253: EMAIL + PASSWORD, create account (13+ age gate), sign in again
+   THESMALLBOOK — 🔐 SIGN-IN ENGINE (auth.js)
+   - "Log in with Google" via Supabase Auth (PKCE, no CDN — SW friendly)
+   - v253: EMAIL + PASSWORD — create account (13+ age gate), sign in again
      on any device, reset by email. Still zero secrets in the browser.
    - v258: SERVER login gate (5 wrong → 10-min lock), 6-digit email-code
            sign-up confirm / sign-in / reset, @name claim-or-change from You
@@ -21,7 +21,7 @@
   const ANON = CFG.SUPABASE_ANON_KEY || "";
   const GCLIENT = CFG.GOOGLE_CLIENT_ID || ""; // direct-Google OAuth client (consent shows thesmallbook.in)
   /* v253 SECURITY: there is deliberately NO client-secret slot here. A secret
-     in a static file ships to every visitor, the old code would happily POST
+     in a static file ships to every visitor — the old code would happily POST
      it from the browser if someone pasted one into config.js. That path is
      gone for good; GoTrue (Supabase) holds the secret server-side. */
   const SITE_ORIGIN = CFG.SITE_URL || "https://thesmallbook.in"; // canonical origin (www vs bare doesn't matter)
@@ -107,7 +107,6 @@
       if (!res.ok) throw new Error("refresh " + res.status);
       session = await res.json();
       lsSet(AUTH_KEY, session);
-      applyServerFlags();
       return true;
     } catch (e) { console.warn("TSB auth refresh failed:", e); }
     return false;
@@ -129,7 +128,7 @@
     if (!/login\.html/.test(location.pathname)) {
       try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch {}
     }
-    // ✅ THE PROVEN FLOW, Supabase-hosted redirect (the one that always
+    // ✅ THE PROVEN FLOW — Supabase-hosted redirect (the one that always
     // worked, no secret, no JS origins, no extra Google config):
     //   site → supabase.co/auth/v1/authorize → Google consent (GoTrue holds
     //   the client secret server-side) → back to login.html → session.
@@ -223,7 +222,6 @@
       if (!res.ok) throw new Error("exchange " + res.status);
       session = await res.json();
       lsSet(AUTH_KEY, session);
-      applyServerFlags();
       history.replaceState({}, "", location.pathname);
       clearVerifier();
       return true;
@@ -241,7 +239,7 @@
      While a project runs Supabase's default email templates (before
      custom SMTP is set), the auth emails carry a LINK instead of a
      6-digit code. Clicking it lands on this app with the session in
-     the URL fragment, catch it, hydrate the reader, store the
+     the URL fragment — catch it, hydrate the reader, store the
      session, clean the address bar. Nothing dead-ends in the interim;
      the code flow takes over the moment custom templates go live. */
   async function handleFragmentSession() {
@@ -279,7 +277,7 @@
 
   /* polite client-side rate limit (checklist #17): after 5 failed tries the
      form cools down, doubling to a 15-minute ceiling. Supabase adds its own
-     server-side limits on top, this just keeps honest people from
+     server-side limits on top — this just keeps honest people from
      thumb-bashing a wrong password into a lockout. */
   const FAILS_KEY = "tsb_auth_fails";
   function failState() { try { return JSON.parse(localStorage.getItem(FAILS_KEY)) || { n: 0, until: 0 }; } catch (e) { return { n: 0, until: 0 }; } }
@@ -290,7 +288,7 @@
   function noteFail() {
     const f = failState();
     f.n += 1;
-    if (f.n >= 5) f.until = now() + 600;   /* 5 strikes → 10 minutes, flat, mirrors the server gate */
+    if (f.n >= 5) f.until = now() + 600;   /* 5 strikes → 10 minutes, flat — mirrors the server gate */
     try { localStorage.setItem(FAILS_KEY, JSON.stringify(f)); } catch (e) {}
   }
   function noteSuccess() { try { localStorage.removeItem(FAILS_KEY); } catch (e) {} }
@@ -306,7 +304,7 @@
   }
 
   /* ============ v258 · THE LOGIN GATE (server-side) ============
-     The database counts the strikes, a tampered browser changes
+     The database counts the strikes — a tampered browser changes
      nothing. 5 wrong passwords on one account → 10-minute lock. */
   async function gateCall(fn, ident) {
     try {
@@ -325,7 +323,7 @@
   function gateReset(ident)  { return gateCall("tsb_login_reset", ident); }
 
 
-  /* fields: { display, first, last, username }, the full account card.
+  /* fields: { display, first, last, username } — the full account card.
      Everything travels as user metadata; SQL #12 turns username into a real,
      unique, lowercase handle inside profiles. */
   async function signUpEmail(fields, email, password, birthYear) {
@@ -360,7 +358,7 @@
   }
 
   /* is that handle free? public profiles are readable, so the form can check
-     while the reader types, no account exists yet to reserve it. */
+     while the reader types — no account exists yet to reserve it. */
   async function usernameFree(u) {
     if (!ENABLED) return true;
     try {
@@ -409,7 +407,7 @@
   }
 
   /* ================= v257 · SIGN IN WITH @USERNAME OR EMAIL =================
-     The forever login: the reader picked @asha_writes once, from then on
+     The forever login: the reader picked @asha_writes once — from then on
      "@asha_writes + password" signs them in on every phone, with or without
      Google. The handle → email step runs through a tiny server function
      (tsb_email_for_username, added by the SQL file) so the browser never
@@ -436,7 +434,7 @@
     if (!ENABLED) return { ok: false, code: "off" };
     const raw = String(identifier || "").trim();
     if (!raw) return { ok: false, code: "empty" };
-    if (raw.indexOf("@") !== -1) {                    // an email, straight in
+    if (raw.indexOf("@") !== -1) {                    // an email — straight in
       if (!mailOk(raw)) return { ok: false, code: "badmail" };
       return signInGated(raw.toLowerCase(), password);
     }
@@ -462,9 +460,9 @@
     return r;
   }
 
-  /* ============ v258 · THE CODE, verification by email ============
+  /* ============ v258 · THE CODE — verification by email ============
      · sign-up confirmation: enter the 6 digits, no inbox-link hunting
-     · sign-in: "email me a code", no password at all
+     · sign-in: "email me a code" — no password at all
      · forgot password: the code unlocks a new-password field
      The code itself is created and checked by Supabase's server; the
      browser only types it through. */
@@ -477,7 +475,7 @@
         body: JSON.stringify({ email: email, create_user: false })
       });
     } catch (e) {}
-    return { ok: true };   /* always, never reveals who has an account */
+    return { ok: true };   /* always — never reveals who has an account */
   }
 
   async function resendSignupCode(email) {
@@ -519,7 +517,7 @@
   const verifyRecoveryCode = (email, token) => verifyCode(email, token, ["recovery"]);
 
   /* ============ v258 · CLAIM / CHANGE MY @NAME (server-checked) ============
-     Old accounts, legacy names, random-era ids, claim or change their
+     Old accounts — legacy names, random-era ids — claim or change their
      handle any time, from the You window. The DATABASE decides "taken":
      a tampered browser cannot claim a second @name, a bad format, or
      somebody else's handle. */
@@ -544,7 +542,7 @@
     } catch (e) { return { ok: false, code: "net" }; }
   }
 
-  /* the finish-line can be skipped, "just keep using Google", and the
+  /* the finish-line can be skipped — "just keep using Google" — and the
      gate remembers, so it never nags twice. The You window still offers
      the @name any time. */
   async function skipFinish() {
@@ -569,7 +567,7 @@
      login page holds them at one short menu: what Google shared (which they
      just approved), a username to claim, a password to set, and the 13+
      tick. From that moment @username + password opens the same account
-     forever, Google stays just one of two doors. */
+     forever — Google stays just one of two doors. */
   function needsFinish() {
     const u = user();
     if (!u || !u.app_metadata) return false;
@@ -611,7 +609,7 @@
         })
       });
       if (!res.ok) return { ok: false, code: "net" };
-      /* mirror the handle into profiles, insert if the row is missing */
+      /* mirror the handle into profiles — insert if the row is missing */
       const patch = await fetch(TABLE_PROFILES + "?id=eq." + encodeURIComponent(u.id), {
         method: "PATCH",
         headers: authHeaders({ "Authorization": "Bearer " + tok, "Prefer": "return=minimal" }),
@@ -624,7 +622,7 @@
           body: JSON.stringify({ id: u.id, username: handle, name: display, avatar_url: md.avatar_url || null })
         });
       }
-      /* keep the local session honest, the gate never fires again */
+      /* keep the local session honest — the gate never fires again */
       session.user = session.user || {};
       session.user.user_metadata = Object.assign({}, md, { username: handle, full_name: display, name: display });
       lsSet(AUTH_KEY, session);
@@ -632,7 +630,7 @@
     } catch (e) { return { ok: false, code: "net" }; }
   }
 
-  /* always answers ok, never reveals whether the address has an account */
+  /* always answers ok — never reveals whether the address has an account */
   async function sendReset(email) {
     if (!ENABLED) return { ok: false, code: "off" };
     try {
@@ -648,44 +646,10 @@
   function signOut() {
     session = null;
     try { localStorage.removeItem(AUTH_KEY); } catch {}
-    /* v268 · the identity wall: this device forgets the account's local
-       shelf and any guest work, the next account starts with its own life */
-    try { if (window.TSB_VAULT) TSB_VAULT.signOutWipe(); } catch {}
     try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
   }
 
   function user() { return (session && session.user) || null; }
-
-  /* ---------------- v268 · the account is the vault of truth ----------------
-     Purchases and unlocks live in THIS account's server metadata, so they
-     follow the person, never the phone. A second account on the same device
-     starts with nothing it did not earn. */
-  function applyServerFlags() {
-    try {
-      const md = (session && session.user && session.user.user_metadata) || {};
-      if (md.tsb_gold && window.TSB_GOLD && TSB_GOLD.setFromServer) {
-        TSB_GOLD.setFromServer("gold", md.tsb_gold && md.tsb_gold.until ? String(md.tsb_gold.until) : "");
-      }
-      if (md.tsb_iaudit && window.TSB_IDEAAUDIT && TSB_IDEAAUDIT.unlockWithPurchaseFlag) {
-        TSB_IDEAAUDIT.unlockWithPurchaseFlag();
-      }
-    } catch {}
-  }
-  async function updateUserMeta(patch) {
-    const tok = await ensureToken();
-    if (!tok || !session || !session.user) return false;
-    try {
-      const res = await fetch(URL + "/auth/v1/user", {
-        method: "PUT",
-        headers: authHeaders({ "Authorization": "Bearer " + tok }),
-        body: JSON.stringify({ data: Object.assign({}, session.user.user_metadata || {}, patch) })
-      });
-      if (!res.ok) return false;
-      const j = await res.json().catch(() => null);
-      if (j && j.id) { session.user = j; lsSet(AUTH_KEY, session); }
-      return true;
-    } catch { return false; }
-  }
 
   /* ---------------- progress sync ---------------- */
   function authHeaders(extra) {
@@ -911,7 +875,7 @@
         <button class="tsb-auth-x" aria-label="Close">✕</button>
         <div style="font-size:44px">🔥</div>
         <h3>2 BOOKS DOWN!</h3>
-        <p>Read on one device, finish on another? <b>Save your progress</b>, bookmarks, lessons and streaks, all synced. Free, 1 tap.</p>
+        <p>Read on one device, finish on another? <b>Save your progress</b> — bookmarks, lessons and streaks, all synced. Free, 1 tap.</p>
         <div class="tsb-auth-chips"><span>📱 DEVICE SYNC</span><span>❤️ BOOKMARKS</span><span>🛡️ SAFE</span></div>
         <button class="tsb-auth-g" id="tsbAuthGoogle">
           <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
@@ -970,7 +934,7 @@
     const u = user();
     /* flag on <html> so CSS can position the chip correctly on mobile */
     try { document.documentElement.classList.toggle("tsb-logged-in", !!u); } catch (e) {}
-    /* legacy anchors (if any) are always hidden, login lives in the slot now */
+    /* legacy anchors (if any) are always hidden — login lives in the slot now */
     anchors.forEach((a) => { a.style.display = "none"; });
     /* top-right account slot: LOG IN button (out) or 👋 chip (in) */
     if (chipSlot) {
@@ -1011,7 +975,7 @@
         <button class="tsb-auth-x" aria-label="Close">✕</button>
         <div style="font-size:40px">🚪</div>
         <h3>LOG OUT?</h3>
-        <p>Are you sure you want to log out? Your progress stays <b>safe</b>, just log back in with Google anytime.</p>
+        <p>Are you sure you want to log out? Your progress stays <b>safe</b> — just log back in with Google anytime.</p>
         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
           <button class="tsb-auth-g" id="tsbLogoutYes" style="background:#ff4d4d;color:#fff;margin-bottom:0">YES, LOG OUT</button>
           <button class="tsb-auth-g" id="tsbLogoutNo" style="background:#fffdf5;color:#111;margin-bottom:0">CANCEL</button>
@@ -1041,7 +1005,7 @@
         <button class="tsb-auth-chip" id="tsbAuthOut" style="margin-left:8px;background:#ff4d4d;color:#fff">LOGOUT</button>`;
       slot.querySelector("#tsbAuthOut").addEventListener("click", confirmLogout);
     } else {
-      slot.innerHTML = `<a class="tsb-auth-chip tsb-auth-chip--out" href="login.html" id="tsbAuthChip">${GOOGLE_G} LOG IN, SAVE PROGRESS</a>`;
+      slot.innerHTML = `<a class="tsb-auth-chip tsb-auth-chip--out" href="login.html" id="tsbAuthChip">${GOOGLE_G} LOG IN — SAVE PROGRESS</a>`;
       slot.querySelector("#tsbAuthChip").addEventListener("click", () => {
         try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch {}
       });
@@ -1062,13 +1026,13 @@
     if (!user()) return;
     const n = trackVisit();
     if (n < 2) return; // only returning users (2nd+ distinct day)
-    // (toast removed, no more black popups)
+    // (toast removed — no more black popups)
   }
 
   /* ---------------- boot ---------------- */
   /* ---- common post-login steps (GIS popup or redirect callback) ---- */
   function afterLogin(showToastMsg) {
-    /* logged-in users are returning users, never re-ask the onboarding */
+    /* logged-in users are returning users — never re-ask the onboarding */
     try { localStorage.setItem("tsb_onboarded", JSON.stringify(true)); } catch (e) {}
     try { sessionStorage.removeItem("tsb_onboarded_pending"); } catch (e2) {}
     renderNav();
@@ -1085,7 +1049,7 @@
   }
 
   /* ============================================================
-     📱 PREMIUM SIGN-IN SHEET (v2), the "YOU" bottom sheet.
+     📱 PREMIUM SIGN-IN SHEET (v2) — the "YOU" bottom sheet.
      Opens from the action bar's You tab when signed out.
      Same Google flow, zero new dependencies.
      ============================================================ */
@@ -1105,7 +1069,7 @@
         "</div>" +
         '<div class="tsb-sheet__wave" aria-hidden="true">👋</div>' +
         '<h2 class="tsb-sheet__h">YOUR SHELF, EVERYWHERE</h2>' +
-        '<p class="tsb-sheet__s">Sign in to keep what you read, and to start posting.</p>' +
+        '<p class="tsb-sheet__s">Sign in to keep what you read — and to start posting.</p>' +
         '<div class="tsb-sheet__perk"><span>📚</span> Progress and shelf on every device</div>' +
         '<div class="tsb-sheet__perk"><span>🔥</span> Streaks and badges that actually save</div>' +
         '<div class="tsb-sheet__perk"><span>✍️</span> Post under your own name</div>' +
@@ -1139,7 +1103,7 @@
   async function boot() {
     try {
       if (!ENABLED) {
-        /* sheet still works without cloud keys, Google button falls
+        /* sheet still works without cloud keys — Google button falls
            through to the sign-in page, which explains the setup */
         window.TSB_AUTH = { enabled: false, user: () => null, openSheet, closeSheet, token: async () => "", displayName: () => "", setDisplayName: () => {} };
         return;
@@ -1147,7 +1111,7 @@
       const didCallback = await handleCallback();
       const didFragment = didCallback ? false : await handleFragmentSession();
       if ((didCallback || didFragment) && user()) {
-        // update UI IMMEDIATELY, never make the user wait on network sync
+        // update UI IMMEDIATELY — never make the user wait on network sync
         afterLogin(true);
       }
       if (user() && session.expires_at && now() >= session.expires_at - 90) await refreshSession();
@@ -1177,20 +1141,16 @@
         signUpEmail, signInEmail, signInId, sendReset, authCooldown, usernameFree, setPassword,
         needsFinish, finishGoogleAccount, skipFinish,
         requestLoginCode, resendSignupCode, verifyLoginCode, verifySignupCode, verifyRecoveryCode,
-        setMyUsername, gateStatus, emailForUsername, updateUserMeta,
+        setMyUsername, gateStatus, emailForUsername,
         displayName,
         setDisplayName,
         me: user,
         visits: () => (user() ? lsGet("tsb_auth_visits", { d: "", n: 0 }).n : 0)
       };
       try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
-      /* the signed-in account's purchases apply to THIS account only */
-      try { applyServerFlags(); } catch {}
-      try { setTimeout(applyServerFlags, 2500); } catch {}
-      try { window.addEventListener("tsb:vault", function () { try { applyServerFlags(); } catch {} }); } catch {}
     } catch (e) {
       console.warn("TSB boot error:", e);
-      // never leave the app without TSB_AUTH, degrade gracefully
+      // never leave the app without TSB_AUTH — degrade gracefully
       window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, track, onBookComplete, renderNav, clientId: GCLIENT, openSheet, closeSheet, token: () => ensureToken(), signUpEmail, signInEmail, signInId, sendReset, authCooldown, usernameFree, setPassword, needsFinish, finishGoogleAccount, skipFinish, requestLoginCode, resendSignupCode, verifyLoginCode, verifySignupCode, verifyRecoveryCode, setMyUsername, gateStatus };
       try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
     }

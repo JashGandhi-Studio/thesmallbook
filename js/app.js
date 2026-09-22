@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK, HOMEPAGE APP
+   THESMALLBOOK — HOMEPAGE APP
    Grid, fuzzy search, filters, sorting, bookmarks, progress,
    continue-reading, lesson of the day, gamification, shortcuts.
    ============================================================ */
@@ -51,7 +51,7 @@
   filterWrap.appendChild(indianChip);
   cats.forEach((c) => filterWrap.appendChild(makeChip(c)));
 
-  /* 🎯 onboarding personalisation, lead with the reader's primary shelf
+  /* 🎯 onboarding personalisation — lead with the reader's primary shelf
      (once per session, until they touch a filter chip themselves) */
   try {
     const lead = JSON.parse(localStorage.getItem("tsb_ob_lead") || "null");
@@ -86,7 +86,7 @@
     });
   }
 
-  /* ---------- SEARCH (fuzzy), debounced so mobile stays smooth ---------- */
+  /* ---------- SEARCH (fuzzy) — debounced so mobile stays smooth ---------- */
   let searchTimer = null;
   /* FIND IT / Enter → smooth glide to the shelf where the filtered results live */
   function smoothScrollToShelf() {
@@ -167,12 +167,12 @@
         ? `<span>❤️</span>Your shelf is empty.<br>Tap the heart on any book to save it here!`
         : activeCat === "🇮🇳 INDIAN" && !query
         ? `<span>🇮🇳</span>Indian books coming soon!<br>Check back next week.`
-        : `<span>📚</span>No books found.<br>Try another search, typos are OK!`;
+        : `<span>📚</span>No books found.<br>Try another search — typos are OK!`;
       grid.innerHTML = `<div class="empty">${msg}</div>`;
       return;
     }
 
-    /* 📺 SHELVES VIEW, Netflix-style rows, opt-in via the sort dropdown.
+    /* 📺 SHELVES VIEW — Netflix-style rows, opt-in via the sort dropdown.
        Default stays the classic grid. Choice is remembered. */
     if (sortMode === "shelves" && activeCat === "ALL" && !query) {
       grid.classList.add("grid--shelves");
@@ -302,7 +302,7 @@
 
   function renderShelves(all) {
     // ❤️ Your shelf first (if any), then 🆕 new, then every category
-    /* 🎁 starter shelf picked during onboarding, leads Home */
+    /* 🎁 starter shelf picked during onboarding — leads Home */
     let starter = [];
     try { starter = JSON.parse(localStorage.getItem("tsb_starter_shelf")) || []; } catch (e) {}
     if (starter.length) {
@@ -332,7 +332,7 @@
       default:
         /* ✨ v221 recommendation ranking:
            1) your preferences (onboarding "why" + shelves + what you read) LEAD the library,
-              matched case-insensitively, fixes the 'Productivity' vs 'productivity' misalignment
+              matched case-insensitively — fixes the 'Productivity' vs 'productivity' misalignment
            2) inside each group the BEST books come first (deepest: most lessons + autopsies)
            3) new books still float
            4) the WHOLE result is interleaved 3 Indian : 1 international, so your shelf is
@@ -403,7 +403,7 @@
         <span style="font-size:1.6rem;">📖</span>
         <div>
           <div class="head">Continue Reading</div>
-          <div style="font-size:.8rem; font-weight:600;">${b.title}, ${read}/${b.lessons.length} lessons done</div>
+          <div style="font-size:.8rem; font-weight:600;">${b.title} — ${read}/${b.lessons.length} lessons done</div>
         </div>
         <a class="btn btn--yellow" href="book.html?id=${b.id}">PICK UP WHERE I LEFT OFF →</a>
       </div>`;
@@ -416,7 +416,7 @@
     const flat = [];
     BOOKS.forEach((b) => b.lessons.forEach((l, i) => flat.push({ b, l, i })));
 
-    /* LOCAL day number, flips at the user's own midnight, not UTC */
+    /* LOCAL day number — flips at the user's own midnight, not UTC */
     function localDayNum() {
       const n = new Date();
       return Math.floor((n.getTime() - n.getTimezoneOffset() * 60000) / 864e5);
@@ -476,8 +476,8 @@
         ? "🎯 LESSON FOR YOU"
         : "💡 Lesson of the Day";
       const note = personalized
-        ? "⏳ Picked from your shelf, new one at midnight"
-        : "⏳ Today only, new lesson at midnight";
+        ? "⏳ Picked from your shelf — new one at midnight"
+        : "⏳ Today only — new lesson at midnight";
       wrap.innerHTML = `
         <div class="lod__box">
           <div class="lod__label">${label}</div>
@@ -595,7 +595,7 @@
 })();
 
 /* ============================================================
-   💀 GRAVEYARD TRANSITION, click the banner, descend in style
+   💀 GRAVEYARD TRANSITION — click the banner, descend in style
    ============================================================ */
 (function () {
   const banner = document.querySelector(".gravebanner__box");

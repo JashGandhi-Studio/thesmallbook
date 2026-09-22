@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK, ASK THE LIBRARY (floating widget v3)
+   THESMALLBOOK — ASK THE LIBRARY (floating widget v3)
    Bottom-right chat on EVERY page. No AI server.
 
    v3:
@@ -151,7 +151,7 @@
   function graveLink(f) { return "graveyard/" + encodeURIComponent(f.id) + ".html"; }
 
   /* ============ answer builders ============ */
-  /* the cover the book actually declares, it is not always a .jpg (7 books
+  /* the cover the book actually declares — it is not always a .jpg (7 books
      are .webp or .png), and a hardcoded path showed a broken image on those */
   function coverOf(b) {
     if (b && b.cover) return b.cover;
@@ -265,7 +265,7 @@
   function t(s) {
     if (!shortLoaded && getLang() !== "en") {
       shortLoaded = true;
-      var keys = ["ASK","THE ANSWER","CLOSEST MATCHES","FROM THE GRAVEYARD","AUTOPSY","READ","TRY NEXT →","COPIED","COPY ANSWER","Ask anything…","Clear chat","Close","Browse all questions","THE PROBLEM LIBRARY","questions · tap ASK · 📋 to copy","Filter questions… (e.g. money, habits, fear)","No questions match","ask it yourself in the chat","tap a source to read the real lesson","tap an autopsy to read the full story","FAILURES LINKED TO THIS BOOK","THE GRAVEYARD SAYS","Real companies that died the exact way this book warns about.","no book lesson matched","Something went wrong, try again!","ask it yourself in the chat","Related failures","Why do companies die?","ALL QUESTIONS","Scanning","Reading","Checking","Compiling your answer","On this book?","related failures are linked to this book, tap below.","Ask anything.","How do I stop procrastinating?","questions in","books answer", "Even the Graveyard warns you", "autopsies"];
+      var keys = ["ASK","THE ANSWER","CLOSEST MATCHES","FROM THE GRAVEYARD","AUTOPSY","READ","TRY NEXT →","COPIED","COPY ANSWER","Ask anything…","Clear chat","Close","Browse all questions","THE PROBLEM LIBRARY","questions · tap ASK · 📋 to copy","Filter questions… (e.g. money, habits, fear)","No questions match","ask it yourself in the chat","tap a source to read the real lesson","tap an autopsy to read the full story","FAILURES LINKED TO THIS BOOK","THE GRAVEYARD SAYS","Real companies that died the exact way this book warns about.","no book lesson matched","Something went wrong — try again!","ask it yourself in the chat","Related failures","Why do companies die?","ALL QUESTIONS","Scanning","Reading","Checking","Compiling your answer","On this book?","related failures are linked to this book — tap below.","Ask anything —","How do I stop procrastinating?","questions in","books answer", "Even the Graveyard warns you", "autopsies"];
       trBatch(keys, getLang()).then(function (arr) {
         keys.forEach(function (k, i) { shortMap[k] = arr[i]; });
       });
@@ -297,7 +297,7 @@
     root.id = "tsb-ask-root";
     if (PAGE_MODE) root.className = "tsb-ask--page";
     else if (/book\.html/.test(location.pathname)) root.className = "tsb-ask--book";
-    /* v4: the floating ASK button is GONE, the bottom action bar's
+    /* v4: the floating ASK button is GONE — the bottom action bar's
        Chat tab (js/bar.js) owns this panel now, same everything. */
     root.innerHTML =
       '<div id="tsb-panel" class="aq-panel" role="dialog" aria-label="Ask TheSmallBook">' +
@@ -395,14 +395,14 @@
         } catch (e) {}
       });
     }
-    /* empty-state hero, the designed "home" of the chat, gone on first message */
+    /* empty-state hero — the designed "home" of the chat, gone on first message */
     var msgsEl = root.querySelector("#tsb-msgs");
     if (msgsEl) {
       var hero = document.createElement("div");
       hero.className = "cht-hero";
       hero.innerHTML = '<div class="cht-hero__logo">📕</div>' +
         "<h1>Ask the library</h1>" +
-        "<p>400 books · 2,637 lessons · 308 autopsies, one question away.</p>";
+        "<p>400 books · 2,637 lessons · 308 autopsies — one question away.</p>";
       msgsEl.insertBefore(hero, msgsEl.firstChild);
       try {
         var mo = new MutationObserver(function () {
@@ -623,14 +623,14 @@
         var blurbsT2 = [], gBlurbsT2 = [];
         lRes.forEach(function () { blurbsT2.push(trs[qi2++]); });
         gRes.forEach(function () { gBlurbsT2.push(trs[qi2++]); });
-        var head = "The library searched all " + (window.BOOKS || []).length + " books and " + (window.FAILURES || []).length + " autopsies, no direct match. Try rephrasing, or tap a suggestion below.";
+        var head = "The library searched all " + (window.BOOKS || []).length + " books and " + (window.FAILURES || []).length + " autopsies — no direct match. Try rephrasing, or tap a suggestion below.";
         if (lRes.length || gRes.length) head = "Closest matches from all " + (window.BOOKS || []).length + " books + " + (window.FAILURES || []).length + " autopsies:";
         html = fallbackHtml(qT2, head, lRes, gRes, blurbsT2, gBlurbsT2);
       }
       renderBotAnswer(q, html);
     }).catch(function () {
       stopT();
-      renderBotAnswer(q, "<div class='aq-guided'>" + t("Something went wrong, try again!") + "</div>");
+      renderBotAnswer(q, "<div class='aq-guided'>" + t("Something went wrong — try again!") + "</div>");
     });
   }
 
@@ -664,7 +664,7 @@
     if (!q) return;
     var b = currentBook();
     if (q === "Show related failures" && b) {
-      addMsg("user", "💀 " + b.title + ", " + t("related failures"));
+      addMsg("user", "💀 " + b.title + " — " + t("related failures"));
       input.value = "";
       var stopT = thinking();
       var gs = relatedGraves(b);
@@ -677,7 +677,7 @@
         var n = trs.slice(0, names.length);
         var lo = trs.slice(names.length);
         renderBotAnswer(q, relatedFailuresHtml(b, n, lo));
-      }).catch(function () { stopT(); renderBotAnswer(q, "<div class='aq-guided'>" + t("Something went wrong, try again!") + "</div>"); });
+      }).catch(function () { stopT(); renderBotAnswer(q, "<div class='aq-guided'>" + t("Something went wrong — try again!") + "</div>"); });
       return;
     }
     addMsg("user", q);
@@ -730,7 +730,7 @@
         return !f || it.q.toLowerCase().indexOf(f) !== -1 || it.tq.toLowerCase().indexOf(f) !== -1;
       });
       if (!filtered.length) {
-        list.innerHTML = '<div class="aq-lib__empty">' + esc(t("No questions match") + " \u201C" + filter + "\u201D, " + t("ask it yourself in the chat")) + " 📕</div>";
+        list.innerHTML = '<div class="aq-lib__empty">' + esc(t("No questions match") + " \u201C" + filter + "\u201D — " + t("ask it yourself in the chat")) + " 📕</div>";
         return;
       }
       list.innerHTML = "";
@@ -761,7 +761,7 @@
   }
 
   function bind() {
-    /* v4: FAB removed, the bar's Chat tab calls TSB_ASK.open() */
+    /* v4: FAB removed — the bar's Chat tab calls TSB_ASK.open() */
     root.querySelector(".aq-close").addEventListener("click", close);
     root.querySelector("#tsb-libbtn").addEventListener("click", openLib);
     root.querySelector("#tsb-libclose").addEventListener("click", closeLib);
@@ -805,11 +805,11 @@
     var b = currentBook();
     if (b) {
       var gs = relatedGraves(b).length;
-      addMsg("bot", '<div class="aq-guided">👋 <b>' + esc(b.title) + "</b>, <b>💀 " + gs + " " + t("related failures are linked to this book, tap below.") + "</b></div>");
+      addMsg("bot", '<div class="aq-guided">👋 <b>' + esc(b.title) + "</b> — <b>💀 " + gs + " " + t("related failures are linked to this book — tap below.") + "</b></div>");
     } else {
       var askBooks = (window.BOOKS && window.BOOKS.length) || 320;
       var askGraves = (window.FAILURES && window.FAILURES.length) || 300;
-      addMsg("bot", '<div class="aq-guided">👋 ' + t("Ask anything.") + " <b>\u201C" + t("How do I stop procrastinating?") + "\u201D</b>, <b>\u201Cpaise kaise bachau?\u201D</b>, " + (window.TSB_ASK_DATA || []).length + " " + t("questions in") + " <b>📚</b> " + askBooks + " " + t("books answer") + ". " + t("Even the Graveyard warns you") + " 💀 (" + askGraves + " " + t("autopsies") + ")</div>");
+      addMsg("bot", '<div class="aq-guided">👋 ' + t("Ask anything —") + " <b>\u201C" + t("How do I stop procrastinating?") + "\u201D</b>, <b>\u201Cpaise kaise bachau?\u201D</b> — " + (window.TSB_ASK_DATA || []).length + " " + t("questions in") + " <b>📚</b> " + askBooks + " " + t("books answer") + ". " + t("Even the Graveyard warns you") + " 💀 (" + askGraves + " " + t("autopsies") + ")</div>");
     }
   }
 

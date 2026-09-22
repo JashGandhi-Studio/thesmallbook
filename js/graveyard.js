@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK, 💀 THE GRAVEYARD PAGE
+   THESMALLBOOK — 💀 THE GRAVEYARD PAGE
    Renders failure cases as gravestone cards with expandable
    autopsies: story → fatal mistake → lesson → related book.
    ============================================================ */
@@ -8,7 +8,7 @@
   const F = window.FAILURES || [];
   const grid = document.getElementById("graveGrid");
   const searchInput = document.getElementById("graveSearch");
-  if (window.TSB) { try { window.TSB.achv.award("ghoul", true); } catch (e) {} } /* silent, no toast on entry */
+  if (window.TSB) { try { window.TSB.achv.award("ghoul", true); } catch (e) {} } /* silent — no toast on entry */
   const filterWrap = document.getElementById("graveFilters");
 
   const CAT_META = {
@@ -41,7 +41,7 @@
     return list[h % list.length];
   }
 
-  /* 🆕 fresh badge, driven by config (edit NEW_GRAVES_THIS_WEEK weekly) */
+  /* 🆕 fresh badge — driven by config (edit NEW_GRAVES_THIS_WEEK weekly) */
   const FRESH = new Set((window.TSB_CONFIG && TSB_CONFIG.NEW_GRAVES_THIS_WEEK) || []);
 
   let activeCat = "ALL";
@@ -136,11 +136,11 @@
     const catCount = {};
     results.forEach((f) => { catCount[f.category] = (catCount[f.category] || 0) + 1; });
     const top = Object.entries(catCount).sort((a, b) => b[1] - a[1])[0];
-    el2("gfCause").textContent = top ? ((CAT_META[top[0]] || {}).emoji || "") + " " + top[0] : "-";
+    el2("gfCause").textContent = top ? ((CAT_META[top[0]] || {}).emoji || "") + " " + top[0] : "—";
     const eraCount = {};
     results.forEach((f) => { const y = yearNum(f); if (y) { const era = Math.floor(y / 10) * 10; eraCount[era] = (eraCount[era] || 0) + 1; } });
     const topEra = Object.entries(eraCount).sort((a, b) => b[1] - a[1])[0];
-    el2("gfEra").textContent = topEra ? topEra[0] + "s" : "-";
+    el2("gfEra").textContent = topEra ? topEra[0] + "s" : "—";
   }
 
   function esc(s) {
@@ -185,7 +185,7 @@
           ${FRESH.has(f.id) ? `<span class="grave__fresh" translate="no">🩸 FRESH GRAVE</span>` : ""}
         </div>
         <p class="grave__excerpt">${esc(graveExcerpt(f))}</p>
-        <span class="grave__hint" translate="no">📖 TAP FOR THE FULL AUTOPSY, HOW IT STARTED → THE FALL → THE LESSON</span>
+        <span class="grave__hint" translate="no">📖 TAP FOR THE FULL AUTOPSY — HOW IT STARTED → THE FALL → THE LESSON</span>
       </div>`;
     d.addEventListener("click", function () { openAutopsy(f); });
     return d;
@@ -210,12 +210,12 @@
     if (sortMode === "burned") results.sort((a, b) => lossUSD(b) - lossUSD(a));
     else if (sortMode === "newest") results.sort((a, b) => yearNum(b) - yearNum(a));
     else if (sortMode === "oldest") results.sort((a, b) => yearNum(a) - yearNum(b));
-    else shuffleGraves(results); /* v267: classic mode reshuffles every visit, it always feels freshly turned */
+    else shuffleGraves(results); /* v267: classic mode reshuffles every visit — it always feels freshly turned */
 
     updateFeed(results);
     grid.innerHTML = "";
     if (!results.length) {
-      grid.innerHTML = `<div class="empty"><span>🪦</span>No corpses match.<br>The graveyard is big, try another word.</div>`;
+      grid.innerHTML = `<div class="empty"><span>🪦</span>No corpses match.<br>The graveyard is big — try another word.</div>`;
       return;
     }
 
@@ -233,8 +233,8 @@
 
 
   /* ============================================================
-     💀 GRAVE SHARE CARDS, R.I.P. story format (1080×1920)
-     Dark theme, tombstone, loss tag, lesson, status-ready.
+     💀 GRAVE SHARE CARDS — R.I.P. story format (1080×1920)
+     Dark theme, tombstone, loss tag, lesson — status-ready.
      ============================================================ */
   function toast(msg) {
     let t = document.getElementById("toast");
@@ -405,14 +405,14 @@
     if (window.TSB) TSB.achv.award("sharer");
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       try { await navigator.share({ files: [file], title: "TheSmallBook", text }); return; }
-      catch (e) { /* cancelled, fall through */ }
+      catch (e) { /* cancelled — fall through */ }
     }
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = filename;
     a.click();
     URL.revokeObjectURL(a.href);
-    toast("🎴 Grave card downloaded, post it anywhere!");
+    toast("🎴 Grave card downloaded — post it anywhere!");
   }
 
   grid.addEventListener("click", async (e) => {
@@ -423,7 +423,7 @@
     if (!f) return;
     toast("🎨 Digging up your grave card...");
     const canvas = await renderGraveCard(f);
-    shareGraveCanvas(canvas, `graveyard-${f.id}.png`, `💀 ${f.name}, ${f.loss}. The lesson is free on TheSmallBook.`);
+    shareGraveCanvas(canvas, `graveyard-${f.id}.png`, `💀 ${f.name} — ${f.loss}. The lesson is free on TheSmallBook.`);
   });
 
 
@@ -442,7 +442,7 @@
   observeReveals();
 
   /* ============================================================
-     ⛏️ THE AUTOPSY, full-screen reading view (v260).
+     ⛏️ THE AUTOPSY — full-screen reading view (v260).
      The grave card is the headstone; this is the story beneath it:
      how it started → the fall → the fatal mistake → the lesson.
      Opens like a page, reads like a case file, closes with ✕ / back.
@@ -463,9 +463,9 @@
   }
 
   /* ============================================================
-     v264 · THE FACE OF THE GRAVE, every grave shows its photo,
+     v264 · THE FACE OF THE GRAVE — every grave shows its photo,
      fetched live from the free record (Wikipedia, keyless, CORS).
-     Display only, credited and linked back, never rehosted.
+     Display only — credited and linked back, never rehosted.
      ============================================================ */
   var graveImgCache = {};
   function gFetch(url, ms) {
@@ -555,7 +555,7 @@
     autopsyEl.className = "autopsy";
     autopsyEl.dataset.graveId = f.id;
     autopsyEl.setAttribute("role", "dialog");
-    autopsyEl.setAttribute("aria-label", f.name + ", the full story");
+    autopsyEl.setAttribute("aria-label", f.name + " — the full story");
     autopsyEl.innerHTML = `
       <div class="autopsy__veil" data-autopsy-close></div>
       <article class="autopsy__page">
@@ -596,7 +596,7 @@
           </section>
 
           <section class="autopsy__sec autopsy__sec--lesson">
-            <h2 class="autopsy__h autopsy__h--lesson" translate="no">🧠 THE LESSON, FREE FOR YOU</h2>
+            <h2 class="autopsy__h autopsy__h--lesson" translate="no">🧠 THE LESSON — FREE FOR YOU</h2>
             <p>${esc(f.lesson)}</p>
           </section>
 
@@ -623,7 +623,7 @@
     }, { passive: true });
     try { history.pushState("", document.title, "#grave=" + f.id); } catch (e) {}
     setTimeout(function () { autopsyEl && autopsyEl.querySelector(".autopsy__x").focus(); }, 350);
-    /* v264 · the face of the grave, fetched quietly, hidden offline */
+    /* v264 · the face of the grave — fetched quietly, hidden offline */
     try { mountGraveImages(f); } catch (e) {}
   }
 
@@ -647,7 +647,7 @@
   window.TSB_GRAVE = { openAutopsy: openAutopsy, CAT_META: CAT_META };
 
   /* ============================================================
-     v266 · FRESH GRAVES, the grid refills itself, silently.
+     v266 · FRESH GRAVES — the grid refills itself, silently.
      Keyless public data (Wikipedia bankruptcy registers + Hacker
      News post-mortems), cached six hours, hidden when offline.
      ============================================================ */
@@ -722,13 +722,13 @@
         return data;
       });
   }
-  var freshOffset = 0; /* every refresh turns the next batch, the pool never runs dry */
+  var freshOffset = 0; /* every refresh turns the next batch — the pool never runs dry */
   function freshBlock(data, opts) {
     var wrap = document.createElement("div");
     wrap.id = "freshWrap";
-    var h = '<div class="section-head freshhead"><h2 translate="no">🩸 Fresh Graves, fetched live</h2><div class="line"></div>' +
+    var h = '<div class="section-head freshhead"><h2 translate="no">🩸 Fresh Graves — fetched live</h2><div class="line"></div>' +
       '<button class="freshhead__btn" id="freshMore" type="button" translate="no">↻ TURN UP NEW ONES</button></div>' +
-      '<p class="freshtxt" translate="no">The graveyard is never finished. Newly bankrupt companies from the public registers + failure post-mortems filed by founders who watched it happen. <b>Tap the button, a fresh batch every time, for as long as the world keeps failing.</b></p>';
+      '<p class="freshtxt" translate="no">The graveyard is never finished. Newly bankrupt companies from the public registers + failure post-mortems filed by founders who watched it happen. <b>Tap the button — a fresh batch every time, for as long as the world keeps failing.</b></p>';
     var cards = (data.companies || []).map(function (c) {
       return '<div class="fgrave"><div class="fgrave__top"><span class="fgrave__rip" translate="no">R.I.P.</span><span class="fgrave__yr">2025–' + new Date().getFullYear() + '</span></div>' +
         "<b>" + esc(c.name) + "</b>" +
@@ -736,7 +736,7 @@
         '<button class="agrave agrave--sm" type="button" data-wiki="' + esc(c.title) + '" translate="no">📄 READ THE FREE RECORD \\u2192</button></div>';
     }).join("");
     var reports = (data.stories || []).map(function (s) {
-      var dom = ""; try { dom = s.url ? new URL(s.url).hostname.replace(/^www\./, "") : "-"; } catch (e) { dom = "-"; }
+      var dom = ""; try { dom = s.url ? new URL(s.url).hostname.replace(/^www\./, "") : "—"; } catch (e) { dom = "—"; }
       return '<a class="freport" href="' + esc(s.url) + '" target="_blank" rel="noopener">' +
         '<span class="freport__tag" translate="no">FIELD REPORT</span>' +
         "<b>" + esc(s.title) + "</b>" +
@@ -786,7 +786,7 @@
   }
   setTimeout(function () { mountFresh(false); }, 2600);
 
-  /* the free-record reader, same UI as the autopsy, in-app */
+  /* the free-record reader — same UI as the autopsy, in-app */
   document.addEventListener("click", function (e) {
     var b = e.target.closest("[data-wiki]");
     if (!b) return;

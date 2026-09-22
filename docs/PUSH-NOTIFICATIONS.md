@@ -1,4 +1,4 @@
-# Push notifications that work with the app CLOSED, full setup (v205)
+# Push notifications that work with the app CLOSED — full setup (v205)
 
 Real-time pushes for: **new follower · new message · new like · new comment · new story
 from someone you follow**, plus a **daily 6:30 pm IST study nudge** ("Stuck on something?
@@ -15,7 +15,7 @@ Order matters. Do steps 1 → 6 exactly.
 4. Go to **Settings → Keys & IDs**. Copy:
    - **App ID**
    - **REST API Key**
-5. Keep the tab open, you need both.
+5. Keep the tab open — you need both.
 
 ## 2) Put the App ID in the app (1 min)
 Open `js/config.js`, set:
@@ -32,7 +32,7 @@ Commit/deploy with the rest of v205.
 4. Edge Functions → push-notify → **Settings → Secrets** → add:
    - `ONESIGNAL_APP_ID` = (from step 1)
    - `ONESIGNAL_REST_KEY` = (REST key from step 1)
-   - `CRON_SECRET` = `tsb-cron-2026` (or your own string, keep it matching SQL #7)
+   - `CRON_SECRET` = `tsb-cron-2026` (or your own string — keep it matching SQL #7)
 5. Redeploy once after adding secrets (Deploy button).
 
 ## 4) Point Database Webhooks at it (4 min)
@@ -47,15 +47,15 @@ Supabase Dashboard → **Database → Webhooks** → **New hook**, five times:
 | posts    | INSERT | same                                                  |
 
 Method POST, and add ONE header row on each hook: name `x-tsb-hook`, value `tsb-cron-2026`
-(the same string as CRON_SECRET, it's the function's bouncer now that Verify JWT is off).
-(Dashboard → Database → Webhooks lists them; you can delete/re-add any time, webhooks
+(the same string as CRON_SECRET — it's the function's bouncer now that Verify JWT is off).
+(Dashboard → Database → Webhooks lists them; you can delete/re-add any time — webhooks
 never touch your data.)
 
 Also: create/keep the function with **Verify JWT OFF** (Settings tab toggle, or untick it
 in the deploy dialog). Webhooks and pg_cron cannot send Supabase JWTs; the `x-tsb-hook`
 header + CRON_SECRET are the auth instead.
 
-## 5) Run SQL #7 + SQL #8, nudge library, scheduler, smart matching (3 min)
+## 5) Run SQL #7 + SQL #8 — nudge library, scheduler, smart matching (3 min)
 SQL Editor → New query → paste **SQL #7** from `SUPABASE-STEP-BY-STEP.md` (bottom of the
 file), run it; then new query → paste **SQL #8**, run it. Replace the project URL inside
 the cron line if needed.
@@ -63,7 +63,7 @@ the cron line if needed.
 - SQL #8 = `interests` column + nudge tags → makes every push **match what that reader
   actually reads** (book categories, story tags, onboarding shelves).
 - The red "destructive operations" banner appears because the script creates
-  extensions/a table, it is **additive only**: nothing deleted, nothing altered.
+  extensions/a table — it is **additive only**: nothing deleted, nothing altered.
 - Re-runnable: seeds only if empty, reschedules the job cleanly.
 
 ## 6) Turn pushes on, on your phone (1 min)
@@ -75,7 +75,7 @@ which is what lets the server push *your* events to *your* phone.
 
 ## Test it (prove it works)
 1. **Follower push:** from a second account (or a friend's phone), open your profile →
-   🔔 Subscribe. Your phone should buzz within ~5 s: "🔔 New follower, X started
+   🔔 Subscribe. Your phone should buzz within ~5 s: "🔔 New follower — X started
    following you." App can be fully closed.
 2. **Message push:** second account sends you a DM → "💬 X: …" opens straight into the
    thread.
@@ -88,11 +88,11 @@ which is what lets the server push *your* events to *your* phone.
   adds that book's category; each story you open adds its tags; your onboarding shelves
   count double.
 - Signed-in devices sync only the **top-4 category words** to `profiles.interests`
-  (throttled to every 6 h), never your raw history.
+  (throttled to every 6 h) — never your raw history.
 - At 6:30 pm IST the cron wakes the Edge Function; it compares each reader's interests
   with the nudge tags and sends **that person's** chapter: a money reader gets
   Psychology of Money, a focus reader gets Deep Work. No signals yet → random nudge.
-- Event pushes (follow/DM/like/comment/new story) are always personal, they go only
+- Event pushes (follow/DM/like/comment/new story) are always personal — they go only
   to the one affected phone, via the external-id alias set by the Enable-push button.
 
 ## In-app notifications (already live, no setup)

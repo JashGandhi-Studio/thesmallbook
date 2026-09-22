@@ -1,10 +1,10 @@
 /* ============================================================
-   THESMALLBOOK, 💛 PAYWALL GATE (paywall.js) · v248
+   THESMALLBOOK — 💛 PAYWALL GATE (paywall.js) · v248
    Thin, config-driven gate built ON TOP of the existing TSB_GOLD.
    • Reads the single switch from TSB_CONFIG.PAYWALL
    • Gold members (activated on gold.html) are NEVER locked
    • Feature keys listed in PAYWALL.GATED are locked when ENABLED
-   The WHAT behind the wall is decided later, just list keys in
+   The WHAT behind the wall is decided later — just list keys in
    config.js and call TSB_PAYWALL.gate(feature, onLocked) where needed.
    ============================================================ */
 (function () {

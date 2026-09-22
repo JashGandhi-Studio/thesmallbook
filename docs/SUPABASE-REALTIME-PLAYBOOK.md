@@ -1,7 +1,7 @@
 # 🚀 TheSmallBook → Real-Time with Supabase (Playbook)
 
-Goal: turn the static PWA into a live community app, **real-time stories, reactions,
-chat, uploads and "who's reading now" presence**, without losing the instant,
+Goal: turn the static PWA into a live community app — **real-time stories, reactions,
+chat, uploads and "who's reading now" presence** — without losing the instant,
 installable, offline-friendly shell we have today.
 
 Your project already has half the bridge built: `js/config.js` holds
@@ -40,7 +40,7 @@ Rules we keep from the current app:
 4. Database → Replication → enable Realtime on the new tables (or the
    `alter publication` statements in section 4).
 5. Storage → create buckets `avatars` and `story-media` (section 6).
-6. Copy nothing new into `config.js`, URL + anon key are already there.
+6. Copy nothing new into `config.js` — URL + anon key are already there.
 
 ---
 
@@ -172,25 +172,25 @@ begin
       select 1 from public.stories
       where author_id = auth.uid()
         and created_at > now() - make_interval(secs => window_sec))
-  then raise exception 'slow down, one story per % seconds', window_sec; end if;
+  then raise exception 'slow down — one story per % seconds', window_sec; end if;
   if kind = 'message' and (
       select count(*) from public.chat_messages
       where user_id = auth.uid()
         and created_at > now() - make_interval(secs => window_sec)) >= lim
-  then raise exception 'slow down, message limit reached'; end if;
+  then raise exception 'slow down — message limit reached'; end if;
 end; $$;
 ```
 Call it from the client before insert (or wrap inserts in an RPC for hard limits).
 
 ---
 
-## 3) Auth bridge, reuse the session you already have
+## 3) Auth bridge — reuse the session you already have
 
 `js/auth.js` stores `{ access_token, refresh_token }` in `tsb_auth_session`.
 Hand it to supabase-js once per page and every helper below just works:
 
 ```js
-// js/realtime.js  (new file, include after config.js + auth.js)
+// js/realtime.js  (new file — include after config.js + auth.js)
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const CFG = window.TSB_CONFIG || {};
@@ -211,12 +211,12 @@ export async function adoptSession() {
 }
 ```
 (If you prefer zero modules: the same works with plain `fetch` +
-`Authorization: Bearer <access_token>` against `/rest/v1/...`, exactly how
+`Authorization: Bearer <access_token>` against `/rest/v1/...` — exactly how
 `auth.js` syncs progress today. Realtime channels, however, need supabase-js.)
 
 ---
 
-## 4) Realtime, the three channel types you'll use
+## 4) Realtime — the three channel types you'll use
 
 ```sql
 -- turn on WAL publication for the live tables
@@ -252,7 +252,7 @@ export function liveChat(room, onMessage) {
         { event: "INSERT", schema: "public", table: "chat_messages",
           filter: "room=eq." + room },
         (msg) => onMessage(msg.new))
-    // "3 readers here right now", presence, free on the same channel
+    // "3 readers here right now" — presence, free on the same channel
     .on("presence", { event: "sync" }, (e) => {
       const n = Object.keys(sb.channel("chat-" + room).presenceState() || {}).length;
       document.dispatchEvent(new CustomEvent("tsb-presence", { detail: { room, count: n } }));
@@ -262,7 +262,7 @@ export function liveChat(room, onMessage) {
     });
 }
 
-// ---------- TYPING INDICATOR (broadcast, never touches the DB) ----------
+// ---------- TYPING INDICATOR (broadcast — never touches the DB) ----------
 export function typing(room, name) {
   sb.channel("chat-" + room).send({ type: "broadcast", event: "typing", payload: { name } });
 }
@@ -273,7 +273,7 @@ export function typing(room, name) {
 1. User taps ❤️ → update the DOM **immediately**, remember a temp id.
 2. `await sb.from("story_reactions").upsert({...})`.
 3. The realtime echo arrives → reconcile by `(story_id, user_id, emoji)`,
-   drop the temp row. On error → roll the DOM back + toast "offline, queued".
+   drop the temp row. On error → roll the DOM back + toast "offline — queued".
 4. Offline? Push the mutation into the existing `queueSync` pattern from
    `auth.js` and replay on `window.online`.
 
@@ -294,7 +294,7 @@ export function typing(room, name) {
 
 ---
 
-## 6) Uploads (Storage), avatars & story media
+## 6) Uploads (Storage) — avatars & story media
 
 Buckets: `avatars` (public read, 1 MB max), `story-media` (public read, 5 MB max).
 
@@ -332,33 +332,33 @@ a local `objectURL` until the server URL resolves.
   set `status='hidden'` on toxicity > threshold. Trigger on insert.
 - Storage: 5 MB cap, image/pdf MIME allow-list in bucket settings.
 - Keep `chat_messages` at 600 chars; render with `textContent`, never `innerHTML`
-  (your `ask.js` already escapes, copy that habit).
+  (your `ask.js` already escapes — copy that habit).
 
 ---
 
 ## 8) Offline, service worker & costs
 
-- `sw.js` stays cache-first for shell/covers. Realtime data is **never cached**.
+- `sw.js` stays cache-first for shell/covers. Realtime data is **never cached** —
   it's either live or shows the bundled seed with a "reconnecting…" chip.
 - Supabase Realtime reconnects automatically; on `REALTIME_DISCONNECTED` show the
   chip, on reconnect re-fetch the last page of each list (idempotent).
-- Free tier headroom: ~500 MB DB, 1 GB storage, 200 concurrent realtime clients.
+- Free tier headroom: ~500 MB DB, 1 GB storage, 200 concurrent realtime clients —
   plenty until you're past a few thousand daily readers; then Pro ($25) lifts it.
 
 ---
 
 ## 9) Rollout plan (ship in this order)
 
-1. **Week 1, Profiles:** schema + `adoptSession()`; account page shows cloud
+1. **Week 1 — Profiles:** schema + `adoptSession()`; account page shows cloud
    streak/lessons from `profiles`. Zero UI risk.
-2. **Week 2, Stories live:** post box + live feed + reports. Keep seed stories
+2. **Week 2 — Stories live:** post box + live feed + reports. Keep seed stories
    as the offline fallback.
-3. **Week 3, Reactions + presence:** hearts on stories, "reading now" badges.
-4. **Week 4, Chat rooms:** lobby in `chat.html`, per-book rooms from the reader.
-5. **Week 5, Uploads:** avatars + story covers; then PDFs behind TSB GOLD.
+3. **Week 3 — Reactions + presence:** hearts on stories, "reading now" badges.
+4. **Week 4 — Chat rooms:** lobby in `chat.html`, per-book rooms from the reader.
+5. **Week 5 — Uploads:** avatars + story covers; then PDFs behind TSB GOLD.
 
 Each phase is a separate `CACHE_VERSION` bump in `sw.js` and a separate zip
-replace, same workflow as always. Rollback = previous zip + RLS keeps data safe.
+replace — same workflow as always. Rollback = previous zip + RLS keeps data safe.
 
 ---
 
@@ -377,5 +377,5 @@ then flip back to prod keys in the same file when shipping.
 **TL;DR:** schema + RLS (section 2) → publication on (section 4) →
 `js/realtime.js` with `adoptSession()` (section 3) → wire feed/reactions/chat per
 the table in section 5 → uploads (6) → moderation (7) → ship weekly (9).
-Your Google sign-in, action bar and chat UI are already the front door, this
+Your Google sign-in, action bar and chat UI are already the front door — this
 playbook only adds the live wires behind them.

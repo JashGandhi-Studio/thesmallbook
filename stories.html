@@ -2,24 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-    <meta property="og:title" content="Stories, TheSmallBook">
-  <meta property="og:description" content="True reader stories and the library's own channel, lessons people actually lived.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=274">
+    <meta property="og:title" content="Stories — TheSmallBook">
+  <meta property="og:description" content="True reader stories and the library's own channel — lessons people actually lived.">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=267">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/stories.html">
   <meta property="og:type" content="website">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
-  <title>Stories, TheSmallBook Community</title>
-  <meta name="description" content="Read, write and listen to real reader stories, rich text, voice stories and quote cards, with likes, comments and follows.">
+  <title>Stories — TheSmallBook Community</title>
+  <meta name="description" content="Read, write and listen to real reader stories — rich text, voice stories and quote cards, with likes, comments and follows.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
-  <script src="js/bootguard.js?v=274"></script>
-  <script src="js/vault.js?v=274"></script>
   <script>
     try {
       var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
@@ -29,13 +27,13 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=274">
+  <link rel="stylesheet" href="css/style.css?v=267">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body class="cmpage">
-  <h1 class="sr-only">Stories, TheSmallBook</h1>
+  <h1 class="sr-only">Stories — TheSmallBook</h1>
   <header class="cm-head cm-head--v19">
     <div class="cm-head__row">
       <div>
@@ -45,7 +43,7 @@
       <a class="cm-bell" href="notifications.html" title="Notifications & updates"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="nt-dot" data-notifdot hidden></span></a>
     </div>
     <div class="cm-head__acts">
-      <button class="cm-chipbtn" id="reelsBtn" title="Bursts, swipe through stories">🎬 Bursts</button>
+      <button class="cm-chipbtn" id="reelsBtn" title="Bursts — swipe through stories">🎬 Bursts</button>
       <button class="cm-chipbtn" id="finderBtn" title="Find readers to follow"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Find readers</button>
       <button class="cm-chipbtn" id="quoteBtn" title="Post a small quote">❝ Quote</button>
       <button class="cm-write" id="writeBtn">✍️ Write a story</button>
@@ -75,17 +73,16 @@
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="js/prefs.js?v=274"></script>
-  <script src="js/lang.js?v=274"></script>
-  <script src="js/config.js?v=274"></script>
-  <script src="js/auth.js?v=274"></script>
-  <script src="js/sounds.js?v=274"></script>
-  <script src="js/founder.js?v=274"></script>
-  <script src="js/community.js?v=274"></script>
-  <script src="js/weekly.js?v=274"></script>
+  <script src="js/prefs.js?v=267"></script>
+  <script src="js/lang.js?v=267"></script>
+  <script src="js/config.js?v=267"></script>
+  <script src="js/auth.js?v=267"></script>
+  <script src="js/sounds.js?v=267"></script>
+  <script src="js/founder.js?v=267"></script>
+  <script src="js/community.js?v=267"></script>
   <!-- v252: the library story shelf (js/stories-seed.js) was never loaded here,
        so none of those stories could ever appear. It is loaded now. -->
-  <script src="js/stories-seed.js?v=274"></script>
+  <script src="js/stories-seed.js?v=267"></script>
   <script>
   (function () {
     "use strict";
@@ -188,42 +185,10 @@
         "</div></article>";
     }
 
-    /* ---------- THE WEEKLY PROMPT (v271) ----------
-       Cold start killor: one official question every week, computed from
-       the calendar, same for every reader. The shelf is never silent. */
-    var EMPTY_NUDGES = [
-      "Say something honest, even one line",
-      "What would you add to this?",
-      "Which book speaks to this?",
-      "Encourage the writer, one line helps",
-      "What did this make you remember?",
-      "Be the first voice here"
-    ];
-    function nudgeFor(id) {
-      var h = 0, i;
-      for (i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
-      return EMPTY_NUDGES[h % EMPTY_NUDGES.length];
-    }
-    function weeklyCard() {
-      if (!window.TSB_WEEKLY) return "";
-      var wk = TSB_WEEKLY.current();
-      var answered = TSB_WEEKLY.done(wk);
-      return '<section class="cm-weekly" data-weekly="' + wk.id + '">' +
-        '<div class="cm-weekly__top"><span class="cm-weekly__badge">THE LIBRARY ASKS</span>' +
-        '<span class="cm-weekly__wk">Week ' + wk.week + ' of ' + wk.year + '</span></div>' +
-        '<h2 class="cm-weekly__q">' + C.esc(wk.q) + '</h2>' +
-        '<p class="cm-weekly__s">One official question every week, same for every reader. Answer it and your story joins the shelf.</p>' +
-        '<div class="cm-weekly__row">' +
-        (answered
-          ? '<span class="cm-weekly__done">✓ You replied this week</span>' +
-            '<a class="cm-weekly__cta cm-weekly__cta--ghost" href="' + TSB_WEEKLY.replyHref(wk) + '">Write one more →</a>'
-          : '<a class="cm-weekly__cta" href="' + TSB_WEEKLY.replyHref(wk) + '">Answer this week\u2019s prompt →</a>') +
-        '</div></section>';
-    }
     /* ---------- 📚 LIBRARY STORIES ----------
        The shelf used to be reader posts only, and with a young community that
        means an almost-empty page. Every library story ships with the app, needs
-       no network, and reads exactly like a reader post, so the shelf is alive
+       no network, and reads exactly like a reader post — so the shelf is alive
        on the first visit. Marked clearly, because it is not a person's post. */
     function libraryStories(posted) {
       var all = (window.COMMUNITY_STORIES || []).concat(window.SEED_STORIES || []);
@@ -232,7 +197,7 @@
         if (!s || !s.id || !s.title || seen[s.id]) return false;
         seen[s.id] = 1;
         /* v255 · ONE CHANNEL: a story the official account already published
-           as a real post yields to that post, never the same story twice */
+           as a real post yields to that post — never the same story twice */
         return !hide[String(s.title).toLowerCase().trim()];
       }).sort(function (a, b) { return String(b.date || "").localeCompare(String(a.date || "")); });
     }
@@ -251,7 +216,7 @@
       }
       return officialTitlesP;
     }
-    /* the book a library story came from, read straight out of data.js */
+    /* the book a library story came from — read straight out of data.js */
     function bookName(id) {
       try {
         var all = window.BOOKS || (typeof BOOKS !== "undefined" ? BOOKS : []) || [];
@@ -281,7 +246,7 @@
             '<span class="cm-time">' + C.esc(s.date || "") + "</span>" +
           "</div>" +
           '<a class="cm-card__title" href="story.html?id=' + encodeURIComponent(s.id) + '">' + C.esc(s.title) + "</a>" +
-          /* v254: the hook, a question that sounds like the reader's own 2 AM */
+          /* v254: the hook — a question that sounds like the reader's own 2 AM */
           (s.hook ? '<p class="cm-card__hook">\u201c' + C.esc(s.hook) + '\u201d</p>' : "") +
           (book ? '<p class="cm-card__sub">Inspired by <b>' + C.esc(book) + "</b></p>" : "") +
           '<div class="cm-card__foot">' +
@@ -295,10 +260,10 @@
       if (!rows.length) return "";
       var shown = rows.slice(0, limit || 12);
       var more = rows.length - shown.length;
-      return '<div class="cm-sect">\ud83d\udcd6 From the library, ' + rows.length + ' stories you can read right now' +
+      return '<div class="cm-sect">\ud83d\udcd6 From the library \u2014 ' + rows.length + ' stories you can read right now' +
         (more > 0 ? " \u00b7 showing " + shown.length : "") + "</div>" +
         shown.map(libCard).join("") +
-        (more > 0 ? '<div class="cm-more">' + more + " more on the shelf, they rotate with every reader post.</div>" : "");
+        (more > 0 ? '<div class="cm-more">' + more + " more on the shelf \u2014 they rotate with every reader post.</div>" : "");
     }
 
     async function hydrate(root) {
@@ -317,23 +282,7 @@
       await Promise.all(ids.map(async function (id) {
         try {
           var cs = await C.listComments(id);
-          root.querySelectorAll('.cm-cmts[href="story.html?id=' + id + '#comments"] b').forEach(function (b) {
-            b.textContent = cs.length;
-            /* v271: a quiet story gets a reply prompt, right under the foot */
-            if (!cs.length && b.closest) {
-              var cardEl = b.closest(".cm-card");
-              if (cardEl && !cardEl.querySelector(".cm-nudge")) {
-                var foot = cardEl.querySelector(".cm-card__foot");
-                if (foot) {
-                  var a = document.createElement("a");
-                  a.className = "cm-nudge";
-                  a.href = "story.html?id=" + id + "#comments";
-                  a.innerHTML = C.icon("chat") + " No replies yet, be the first: " + C.esc(nudgeFor(id));
-                  foot.parentNode.insertBefore(a, foot.nextSibling);
-                }
-              }
-            }
-          });
+          root.querySelectorAll('.cm-cmts[href="story.html?id=' + id + '#comments"] b').forEach(function (b) { b.textContent = cs.length; });
         } catch (e) {}
       }));
       root.querySelectorAll("[data-follow]").forEach(async function (b) {
@@ -346,7 +295,7 @@
     }
 
     /* ---------- People: EVERY reader, always, and kept live ----------
-       v248 capped this at listProfiles(60), so anyone who had posted,
+       v248 capped this at listProfiles(60) — so anyone who had posted,
        liked, followed or messaged but never triggered ensureProfile()
        simply did not exist here. v250 unions profiles + posts + likes +
        comments + follows + message participants (C.allPeople), so nobody
@@ -364,7 +313,7 @@
       if (p.likesGot)  stats.push(C.icon("heart") + " " + p.likesGot);
       if (p.followers) stats.push(C.icon("user") + " " + p.followers + (p.followers === 1 ? " follower" : " followers"));
       if (p.progress)  stats.push(C.icon("book") + " " + p.progress + "/2637 read");
-      /* v250 · LAST SEEN, real, private by choice. A reader who switched
+      /* v250 · LAST SEEN — real, private by choice. A reader who switched
          "show my last seen" off publishes nothing, so this line simply
          disappears for them and nobody can infer anything. */
       var active = "";
@@ -401,7 +350,7 @@
                   ? '<button class="cm-follow on" data-pfol="' + p.id + '">Following \u2713</button>'
                   : (asked
                       ? '<button class="cm-follow is-req" data-pcancel="' + p.id + '" title="Tap to cancel your request">Requested \u23f3</button>'
-                      : '<button class="cm-follow" data-preq="' + p.id + '" title="Private account, they must accept">\ud83d\udd12 Request</button>'))
+                      : '<button class="cm-follow" data-preq="' + p.id + '" title="Private account — they must accept">\ud83d\udd12 Request</button>'))
               : '<button class="cm-follow' + (following ? " on" : "") + '" data-pfol="' + p.id + '">' + (following ? "Following \u2713" : "+ Follow") + "</button>") +
            '<a class="cm-dmbtn" href="dm.html?u=' + p.id + '" title="Message" aria-label="Message ' + C.esc(p.name || "reader") + '">' + C.icon("chat") + "</a>") +
         "</div>" +
@@ -418,7 +367,7 @@
     function peopleHeader(n, waits) {
       var head = '<div class="cm-sect cm-sect--people">' +
         '<span class="cm-live" title="Updates while you watch"><i></i> live</span>' +
-        "All " + n + (n === 1 ? " reader" : " readers") + ", last seen, progress, one tap to follow" +
+        "All " + n + (n === 1 ? " reader" : " readers") + " \u2014 last seen, progress, one tap to follow" +
       "</div>";
       if (!waits || !waits.length) return head;
       var rows = waits.map(function (p) {
@@ -444,7 +393,7 @@
 
       if (!people.length) {
         clearInterval(peopleTimer); peopleTimer = 0;
-        feed.innerHTML = '<div class="cm-empty">No readers yet, be the first face here.<br><button class="cm-write" id="ew">\u270d\ufe0f Write your first story</button></div>';
+        feed.innerHTML = '<div class="cm-empty">No readers yet \u2014 be the first face here.<br><button class="cm-write" id="ew">\u270d\ufe0f Write your first story</button></div>';
         var ew2 = document.getElementById("ew"); if (ew2) ew2.addEventListener("click", function () { location.href = "write.html"; });
         return;
       }
@@ -471,7 +420,7 @@
       /* v250 fix · window.TSB_AUTH only appears AFTER auth.js finishes its
          async boot, so a bare TSB_AUTH reference at first paint is undefined
          and any identity work silently vanished. C.me() reads the session
-         straight from storage, so it is there immediately, and we re-render
+         straight from storage, so it is there immediately — and we re-render
          when auth finally announces itself (see the tsb:auth listener). */
       var me = null;
       if (C.signedIn()) me = whoAmI();
@@ -485,7 +434,7 @@
           var settled = await C.settleRequests(people);
           if (settled && settled.accepted && settled.accepted.length) {
             settled.accepted.forEach(function (id) { fol[id] = 1; });
-            C.say("\ud83c\udf89 Follow request accepted, you're connected.");
+            C.say("\ud83c\udf89 Follow request accepted \u2014 you're connected.");
           }
           if (settled && settled.declined && settled.declined.length) {
             C.say("A follow request was declined.");
@@ -547,7 +496,7 @@
       "</article>";
     }
 
-    /* v252, the library, in the burst rail too. Swiping through "nothing to
+    /* v252 — the library, in the burst rail too. Swiping through "nothing to
        see" is what made a young community feel dead; these ship with the app
        and are endless. Framed identically, so the rail never looks broken. */
     function reelHTMLib(s) {
@@ -583,9 +532,7 @@
       var posted = {};
       try { (await officialTitles()).forEach(function (t) { posted[t] = 1; }); } catch (e) {}
       rows = libraryStories(posted);
-      /* v268 · the whole library rides the burst, covered first, the rest after,
-         so every new story gets its readers */
-      var show = rows.filter(function (x) { return x.cover; }).concat(rows.filter(function (x) { return !x.cover; })).slice(0, 40);
+      var show = rows.filter(function (x) { return x.cover; }).concat(rows.filter(function (x) { return !x.cover; })).slice(0, 14);
       show.forEach(function (x) { el.insertAdjacentHTML("beforebegin", reelHTMLib(x)); });
     }
 
@@ -594,7 +541,7 @@
       var el = burstEnd();
       if (!el) return;
       el.innerHTML = burstBusy ? "Loading more bursts…"
-        : (burstDone ? "You're all caught up ✨<br><small>Reader bursts come from the community, the library ones above never run out.</small>" : "");
+        : (burstDone ? "You're all caught up ✨<br><small>Reader bursts come from the community — the library ones above never run out.</small>" : "");
     }
 
     async function burstLoadMore() {
@@ -639,7 +586,7 @@
       if (fresh.length && !document.getElementById("burstPill")) {
         var d = document.createElement("button");
         d.id = "burstPill"; d.className = "cm-burstpill";
-        d.textContent = "⬆ " + fresh.length + " new burst" + (fresh.length > 1 ? "s" : "") + ", tap to refresh";
+        d.textContent = "⬆ " + fresh.length + " new burst" + (fresh.length > 1 ? "s" : "") + " — tap to refresh";
         d.addEventListener("click", function () { d.remove(); openBursts(); });
         ov.appendChild(d);
       }
@@ -679,7 +626,7 @@
       feed.innerHTML = skeletons();
       try {
         if (!C.enabled) {
-          feed.innerHTML = '<div class="cm-empty">☁️ Community cloud is being switched on, check back in a bit.</div>';
+          feed.innerHTML = '<div class="cm-empty">☁️ Community cloud is being switched on — check back in a bit.</div>';
           return;
         }
         var posts = [];
@@ -700,18 +647,18 @@
         try { if (tab === "all") (await officialTitles()).forEach(function (t) { libPosted[t] = 1; }); } catch (e) {}
         if (!posts.length) {
           if (tab === "all") {
-            /* no reader posts yet? the shelf is still a shelf, show the library */
+            /* no reader posts yet? the shelf is still a shelf — show the library */
             var alone = {};
             try { (await officialTitles()).forEach(function (t) { alone[t] = 1; }); } catch (e) {}
             feed.innerHTML = libraryShelf(14, alone);
             return;
           }
-          feed.innerHTML = '<div class="cm-empty">✍️ No stories yet, yours could be the first.<br><button class="cm-write" id="emptyWrite">Write the first story</button></div>';
+          feed.innerHTML = '<div class="cm-empty">✍️ No stories yet — yours could be the first.<br><button class="cm-write" id="emptyWrite">Write the first story</button></div>';
           var ew = document.getElementById("emptyWrite");
           if (ew) ew.addEventListener("click", function () { location.href = "write.html"; });
           return;
         }
-        feed.innerHTML = (tab === "all" ? weeklyCard() + railHtml(posts) + '<div class="cm-sect">✨ For you, tuned to your shelves</div>' : "") +
+        feed.innerHTML = (tab === "all" ? railHtml(posts) + '<div class="cm-sect">✨ For you — tuned to your shelves</div>' : "") +
           posts.map(function (p) { return card(p); }).join("") +
           (tab === "all" ? libraryShelf(10, libPosted) : "");
         try { C.protectMedia(feed); } catch (e) {}
@@ -723,7 +670,7 @@
 
     function signInCard() {
       return '<div class="cm-empty">👋 Sign in with Google to write, like and follow.<br>' +
-        '<a class="cm-write" href="login.html">Sign in, it’s free →</a></div>';
+        '<a class="cm-write" href="login.html">Sign in — it’s free →</a></div>';
     }
 
     /* ---------- tabs ---------- */
@@ -798,7 +745,7 @@
           t.querySelector("b").textContent = info.count;
         } catch (err) {
           t.classList.toggle("on", !on);
-          C.say("Like failed, " + (err && err.message ? err.message : err));
+          C.say("Like failed — " + (err && err.message ? err.message : err));
         }
         return;
       }
@@ -810,7 +757,7 @@
           await C.setFollow(t.getAttribute("data-pfol"), on2);
           t.classList.toggle("on", on2);
           t.textContent = on2 ? "Following ✓" : "+ Follow";
-        } catch (err) { C.say("Follow failed, " + (err && err.message ? err.message : err)); }
+        } catch (err) { C.say("Follow failed — " + (err && err.message ? err.message : err)); }
         t.disabled = false;
         return;
       }
@@ -825,9 +772,9 @@
           t.removeAttribute("data-preq");
           t.setAttribute("data-pcancel", pidReq);
           t.textContent = "Requested ⏳";
-          C.say("🔒 Request sent, they'll see it the moment they open the app.");
+          C.say("🔒 Request sent — they'll see it the moment they open the app.");
           renderPeople(true);
-        } catch (err) { C.say("Couldn't send that request, " + (err && err.message ? err.message : err)); }
+        } catch (err) { C.say("Couldn't send that request — " + (err && err.message ? err.message : err)); }
         t.disabled = false;
         return;
       }
@@ -837,7 +784,7 @@
           await C.cancelFollowRequest(t.getAttribute("data-pcancel"));
           C.say("Request withdrawn.");
           renderPeople(true);
-        } catch (err) { C.say("Couldn't withdraw it, " + (err && err.message ? err.message : err)); }
+        } catch (err) { C.say("Couldn't withdraw it — " + (err && err.message ? err.message : err)); }
         t.disabled = false;
         return;
       }
@@ -846,9 +793,9 @@
         try {
           var rp = peopleCache.filter(function (x) { return x.id === t.getAttribute("data-reqok"); })[0];
           await C.acceptFollowRequest(rp || { id: t.getAttribute("data-reqok"), name: "" });
-          C.say("✅ Accepted, they now follow you.");
+          C.say("✅ Accepted — they now follow you.");
           renderPeople(true);
-        } catch (err) { C.say("Couldn't accept, " + (err && err.message ? err.message : err)); }
+        } catch (err) { C.say("Couldn't accept — " + (err && err.message ? err.message : err)); }
         t.disabled = false;
         return;
       }
@@ -858,8 +805,8 @@
           var rp2 = peopleCache.filter(function (x) { return x.id === t.getAttribute("data-reqno"); })[0];
           await C.declineFollowRequest(rp2 || { id: t.getAttribute("data-reqno"), name: "" });
           var row = t.closest("[data-reqrow]"); if (row) row.remove();
-          C.say("Declined, they won't be notified loudly, and nothing is shared.");
-        } catch (err) { C.say("Couldn't decline, " + (err && err.message ? err.message : err)); }
+          C.say("Declined — they won't be notified loudly, and nothing is shared.");
+        } catch (err) { C.say("Couldn't decline — " + (err && err.message ? err.message : err)); }
         t.disabled = false;
         return;
       }
@@ -874,7 +821,7 @@
           var infoR = await C.likeInfo(rid);
           t.classList.toggle("on", !!infoR.mine);
           t.querySelector("b").textContent = infoR.count;
-        } catch (err) { t.classList.toggle("on", !onR); C.say("Like failed, " + (err && err.message ? err.message : err)); }
+        } catch (err) { t.classList.toggle("on", !onR); C.say("Like failed — " + (err && err.message ? err.message : err)); }
         t.disabled = false;
         return;
       }
@@ -891,7 +838,7 @@
         } catch (err) {
           t.classList.toggle("on", !on2);
           t.textContent = !on2 ? "✓ Following" : "+ Follow";
-          C.say("Follow failed, " + (err && err.message ? err.message : err));
+          C.say("Follow failed — " + (err && err.message ? err.message : err));
         }
         return;
       }
@@ -902,7 +849,7 @@
       if ((t = e.target.closest("[data-del]"))) {
         if (!confirm("Delete this story for everyone?")) return;
         try { await C.deletePost(t.getAttribute("data-del")); load(); }
-        catch (err) { C.say(err && err.message && err.message.indexOf("policy") >= 0 ? ("Delete failed, " + err.message) : "Couldn't delete, are you signed in as the author?"); }
+        catch (err) { C.say(err && err.message && err.message.indexOf("policy") >= 0 ? ("Delete failed — " + err.message) : "Couldn't delete — are you signed in as the author?"); }
         return;
       }
     });
@@ -933,7 +880,7 @@
 
 
     document.getElementById("writeBtn").addEventListener("click", function () { location.href = "write.html"; });
-    // v244: no separate Inspire button on Stories, Inspire Desk lives INSIDE the quote & story card in Write (perfectly embedded, as decided)
+    // v244: no separate Inspire button on Stories — Inspire Desk lives INSIDE the quote & story card in Write (perfectly embedded, as decided)
 
     document.getElementById("reelsTrack").addEventListener("click", function (e) {
       var t = e.target.closest("[data-audio]");
@@ -998,7 +945,7 @@
         await C.setFollow(t.getAttribute("data-ffol"), on);
         t.classList.toggle("on", on);
         t.innerHTML = on ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
-      } catch (err) { C.say("Subscribe failed, " + (err && err.message ? err.message : err)); }
+      } catch (err) { C.say("Subscribe failed — " + (err && err.message ? err.message : err)); }
       t.disabled = false;
     });
 
@@ -1011,10 +958,10 @@
     load();
   })();
   </script>
-  <script src="js/data.js?v=274"></script>
-  <script src="js/osint.js?v=274"></script>
-  <script src="js/bar.js?v=274" defer></script>
-  <script src="js/gate.js?v=274" defer></script>
-  <script src="js/trial.js?v=274" defer></script>
+  <script src="js/data.js?v=267"></script>
+  <script src="js/osint.js?v=267"></script>
+  <script src="js/bar.js?v=267" defer></script>
+  <script src="js/gate.js?v=267" defer></script>
+  <script src="js/trial.js?v=267" defer></script>
 </body>
 </html>

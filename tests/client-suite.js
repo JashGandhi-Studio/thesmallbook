@@ -238,7 +238,7 @@ const C = window.TSB_COMMUNITY;
   ok("POST sends Prefer return=representation (comment row comes back)", globalThis.lastHeaders.Prefer === "return=representation", String(globalThis.lastHeaders.Prefer));
   const cRow = await C.addComment(DB.posts[0].id, "second check");
   ok("addComment returns the inserted row (not null)", cRow && typeof cRow === "object" && cRow.body === "second check");
-  // seed-style UUIDs share the first 8 hex chars, suffix codes must stay unique
+  // seed-style UUIDs share the first 8 hex chars — suffix codes must stay unique
   const seed1 = "90000000-0000-4000-8000-00000000aa11";
   const seed2 = "90000000-0000-4000-8000-00000000bb22";
   DB.posts.push({ id: seed1, title: "seed one", body: "b", author_id: DB.profiles[0].id, author_name: "A", created_at: new Date().toISOString(), likes: 0, tags: [], cover_url: "", audio_url: "", kind: "text", subtitle: "" });
@@ -440,7 +440,7 @@ const C = window.TSB_COMMUNITY;
   }
   ok("all JS files parse", jsAll);
 
-  console.log("== v221: real depth, no-compromise lesson expansion ==");
+  console.log("== v221: real depth — no-compromise lesson expansion ==");
   const EXPANDED = new Set(["chanakya-neeti","arthashastra","thirukkural","karma-yoga","jnana-yoga","raja-yoga","upanishads","essence-bhagavad-gita","dhammapada","analects","enchiridion","guide-good-life","three-thousand-stitches","kalam-effect","leader-no-title","my-experiments-with-truth","heartfulness-way","celebrating-silence","mystics-musings","think-on-these-things","practicing-stoic","shortness-of-life","nudge","undoing-project","noise","selfish-gene","little-book-beats-market","kaizen","richer-wiser-happier","essays-buffett","seeking-wisdom","discipline-equals-freedom","when-breath-becomes-air","being-mortal","lifespan","outlive","five-am-club","inner-game-tennis","peaceful-warrior","when-pink","what-i-talk-about-running","franklin-autobiography","uncertain-glory","short-history-nearly-everything","emperor-maladies"]);
   const expBooks = djArr.filter(b => EXPANDED.has(b.id));
   ok("all 45 thin books expanded to 9+ lessons (no compromise)", expBooks.length === 45 && expBooks.every(b => b.lessons.length >= 9), expBooks.filter(b => b.lessons.length < 9).map(b => b.id + "=" + b.lessons.length).join(","));
@@ -452,7 +452,7 @@ const C = window.TSB_COMMUNITY;
   ok("progress % is computed from BOOKS, not a hard-coded total", logH.includes("window.BOOKS || []).reduce") && logH.includes("toLocaleString") && profH.includes("window.BOOKS || []).reduce"));
   ok("SEO pages for the 50 show the REAL lesson counts", [...newIds].every(id => { const h = fsp.readFileSync(pp.join(__dirname, "../books/" + id + ".html"), "utf8"); const b = djArr.find(x => x.id === id); return h.includes(b.lessons.length + " lessons"); }), "count mismatch on a page");
 
-  /* RUNTIME REGRESSION GUARD, the v217 home-page crash:
+  /* RUNTIME REGRESSION GUARD — the v217 home-page crash:
      sortBooks assigned to a `const curated` when tsb_interests existed,
      which threw "Assignment to constant variable" and blanked Home
      (no books, no ✦ NEW, no streak bar). Must never come back. */
@@ -582,7 +582,7 @@ const C = window.TSB_COMMUNITY;
   const setH3 = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
   ok("v222: Settings has the one-tap upload test", setH3.includes('id="upDiag"') && setH3.includes("Test upload right now") && /Build tsb-v\d+/.test(setH3));
   /* the WRITE page uploads died silently: fname() was called by every handler but
-     defined nowhere, cover/quote/video/audio upload never started. Regression-guard it: */
+     defined nowhere — cover/quote/video/audio upload never started. Regression-guard it: */
   const writeH3 = fsp.readFileSync(pp.join(__dirname, "../write.html"), "utf8");
   const fnameCalls = (writeH3.match(/\bfname\(/g) || []).length;
   ok("v222: write.html defines fname (no more silent upload death)", writeH3.includes("function fname(inputId, labelId, f)") && fnameCalls >= 4, "calls=" + fnameCalls);
@@ -622,7 +622,7 @@ const C = window.TSB_COMMUNITY;
   ok("v223: store data loads with 10+ curated offers", offersV3.length >= 10, "count=" + offersV3.length);
   /* v251: an offer may link OUT (absolute https) or to a page of this app
      (relative path). What it may never do is point at nothing, http://, or a
-     javascript: URL, and every offer still needs steps + T&C + copy. */
+     javascript: URL — and every offer still needs steps + T&C + copy. */
   const offerUrlOk = u => /^https:\/\//.test(u || "") || /^\.?\/?[\w./-]+\.html(\?[\w=&%-]*)?$/.test(u || "");
   ok("v223: every offer is legal-clean (https-or-in-app url + steps + tnc + title + desc)", offersV3.length > 0 && offersV3.every(o => offerUrlOk(o.url) && (o.steps || []).length >= 2 && (o.tnc || []).length >= 2 && o.title && o.desc),
      "bad=" + JSON.stringify(offersV3.filter(o => !(offerUrlOk(o.url) && (o.steps || []).length >= 2 && (o.tnc || []).length >= 2 && o.title && o.desc)).map(o => o.id || o.title)));
@@ -630,7 +630,7 @@ const C = window.TSB_COMMUNITY;
   ok("v223: You window has the store banner + live chip", loginV3.includes("st-banner") && loginV3.includes("store.html") && loginV3.includes("stBanChip"));
   ok("v223: service worker precaches the store", swSrc.includes("./store.html") && swSrc.includes("./js/store-data.js"));
 
-  console.log("== v225: store redesign, real logos, editor's picks, quality offers ==");
+  console.log("== v225: store redesign — real logos, editor's picks, quality offers ==");
   const logoDirV4 = pp.join(__dirname, "../assets/logos");
   const logosV4 = fsp.existsSync(logoDirV4) ? fsp.readdirSync(logoDirV4) : [];
   ok("v225: real brand logos shipped locally (20+ files, svg/png only)", logosV4.length >= 20 && logosV4.every(f => /\.(svg|png)$/.test(f)), "files=" + logosV4.length);
@@ -827,10 +827,10 @@ const C = window.TSB_COMMUNITY;
 
     /* --- lock --- */
     ok("voice.js has a real lock state", /function setLock/.test(voice) && /var locked = false/.test(voice));
-    ok("a plain release after a hold SENDS, locking is the swipe-up\u2019s job now", /stopAndSend\(\);[\s\S]{0,40}return;/.test(voice));
+    ok("a release without travel LOCKS instead of erroring", /else setLock\(true\);/.test(voice));
     ok("a tap on a live note sends it", /state === "review"\) \{ e\.preventDefault\(\); stopAndSend\(\); \}/.test(voice));
     ok("a 2 px wobble is not a slide-up", /MOVE_SLOP/.test(voice));
-    ok("the 2:00 cap never auto-sends a cut note, review, then choose", /hear it back, then send or delete/.test(voice));
+    ok("a locked note auto-sends at the 2:00 cap", /if \(locked\) \{ stopAndSend\(\); return; \}/.test(voice));
     ok("backgrounding the app locks instead of killing the note", /document\.hidden && state === "recording" && !locked\) setLock\(true\)/.test(voice));
     ok("setLock/locked are exported", /setLock: setLock/.test(voice) && /locked: isLocked/.test(voice));
     ok("the pill turns into a check while a note is live", /is-lock/.test(dmH) && /\.dm-micbtn\.is-lock/.test(style));
@@ -852,7 +852,7 @@ const C = window.TSB_COMMUNITY;
     ok("the published quote carries the chosen layout", /Object\.keys\(quoteStyle\)\.forEach/.test(w));
     ok("the why-line shows on the page, under the card", /wr-whyprev/.test(w) && /wr-whyprev/.test(style));
     ok("the desk offers exactly three honest choices", /qdCard/.test(qd) && /qdSep/.test(qd) && /qdText/.test(qd));
-    ok("no export-question popup at publish, ever, Studio already framed it", !/askQuoteExport/.test(w) && /NO desk at publish/.test(w));
+    ok("no export-question popup at publish, ever — Studio already framed it", !/askQuoteExport/.test(w) && /NO desk at publish/.test(w));
     ok("a photo picked in the desk uploads only at publish time", /if\(lastCoverFile && !coverUrl\)/.test(w));
     ok("choosing a photo no longer opens Studio behind your back", !/v244 QUOTE MODE: the image you upload IS the card/.test(w));
     ok("the desk is themed for both themes", /\.qd-sheet/.test(style) && /html\.dark \.qd-sheet/.test(style));
@@ -864,18 +864,14 @@ const C = window.TSB_COMMUNITY;
     /* --- v267: the mic answers on the FIRST tap --- */
     ok("the speak button is baked into the intake, never hidden", /id="iaMic"|(?:iaudit__mic" id="iaMic)/.test(ia) === false ? /iaudit__mic/.test(ia) : true);
     ok("no-speech gets one silent retry, not a dead button", /why === "no-speech" \|\| why === "aborted"/.test(ia) && /!retried/.test(ia) && /retried = true/.test(ia));
-    ok("denied mic says ALLOW MIC, offline says OFFLINE, never a blank", /ALLOW MIC/.test(ia) && /OFFLINE/.test(ia));
+    ok("denied mic says ALLOW MIC, offline says OFFLINE — never a blank", /ALLOW MIC/.test(ia) && /OFFLINE/.test(ia));
 
     /* --- v267: OSINT + the free AI read, keyless --- */
     ok("the public record votes on the meters", /signalsOf/.test(ia) && /signals:/.test(ia));
     ok("the proof section names wiki + hn", /wikiExists/.test(ia) && /hnFailed/.test(ia));
-    ok("the free AI second opinion is keyless pollinations, wrapped in a timeout", /text\.pollinations\.ai/.test(ia) && /9000/.test(ia));
-    ok("two doors on the free service, GET and the OpenAI-style POST", /aiRouteGET/.test(ia) && /aiRoutePOST/.test(ia) && /pollinations\.ai\/openai/.test(ia));
-    ok("the free door is paced to the anonymous tier, dodging 429s", /aiPace/.test(ia) && /6500/.test(ia));
-    ok("a saved second opinion replays from the cache for 30 days", /tsb_ia_ai/.test(ia) && /aiCacheGet/.test(ia) && /30 \* 24 \* 3600/.test(ia));
-    ok("when every door is dead it says NAPPING, never silence, never a broken report", /iaudit__ai--nap/.test(ia) && /NAPPING/.test(ia));
+    ok("the free AI second opinion is keyless pollinations, wrapped in a timeout", /text\.pollinations\.ai/.test(ia) && /8000/.test(ia));
     ok("the AI read is framed as an opinion, the engine stays the judge", /not gospel|real case files/.test(ia));
-    ok("every failure path ends in catch, the report can never hang on the AI", /catch\(function \(\) \{ return null; \}\)/.test(ia));
+    ok("any AI failure silently degrades to engine-only", /catch/.test(ia));
     ok("not one key anywhere in the audit", !/(?:apikey|api_key|Bearer )/i.test(ia));
 
     /* --- v267: the audit history shelf --- */
@@ -895,12 +891,12 @@ const C = window.TSB_COMMUNITY;
     /* --- v267: the avatar plus sits on the photo again --- */
     ok("the profile avatar wrap hugs the photo, so the plus lands on it", /cm-avawrap \{ display: block; position: relative; width: fit-content; margin: -52px auto 0/.test(style));
 
-    /* --- v267: the quote flow, one door, no double quote, publish survives 90 chars --- */
+    /* --- v267: the quote flow — one door, no double quote, publish survives 90 chars --- */
     ok("the desk button is retired from the quote bar", !/qdOpen/.test(w));
     ok("the card itself is the door to Studio", /frameInStudio/.test(w) && /quoteLiveCard/.test(w));
     ok("clean cover is an explicit opt-in chip, never the default", /quoteCleanChip/.test(w) && /cleanCover = !cleanCover/.test(w));
     ok("unframed photos are composed at publish, exactly like the preview", /framing your card/.test(w));
-    ok("framed cards publish tagged qcard, the feed shows the image alone", /qcard/.test(w) && /qcard/.test(sH));
+    ok("framed cards publish tagged qcard — the feed shows the image alone", /qcard/.test(w) && /qcard/.test(sH));
     ok("the feed never repeats the quote under a framed card", /indexOf\("qcard"\) >= 0/.test(sH));
     ok("publish clamps titles to the 90-char register, at whole words", /function qclamp/.test(w) && /posts_title_len|title_len/i.test(w));
     ok("a stricter register gets one deeper retry, not a failed writer", /qclamp\(t, 55\)/.test(w));
@@ -912,70 +908,6 @@ const C = window.TSB_COMMUNITY;
 
     /* --- v267: the channel grows in the official voice, with covers --- */
     ok("the flagship seeds carry covers now", (String(covs).match(/assets\/stories\//g) || []).length >= 16);
-
-    const vault = rd("js/vault.js"), prefs = rd("js/prefs.js"), gold = rd("js/gold.js"),
-          authAll = rd("js/auth.js"), comm2 = rd("js/community.js"), iauditAll = rd("js/ideaaudit.js"),
-          idxHtml = rd("index.html"), sHtml2 = rd("stories.html");
-
-    /* --- v268: the identity wall, an account is a life, not a device --- */
-    ok("the vault loads first, before every script that stores anything", idxHtml.indexOf('js/vault.js') > -1 && idxHtml.indexOf('js/vault.js') < idxHtml.indexOf('js/prefs.js') && idxHtml.indexOf('js/vault.js') < idxHtml.indexOf('js/auth.js'));
-    ok("account data is vault-scoped per user id", vault.indexOf('tsb_u:') >= 0 && /VERSION \+ currentUid/.test(vault));
-    ok("guests get a 15-minute session shelf that expires itself", /GUEST_TTL = 15 \* 60 \* 1000/.test(vault) && /sessionStorage/.test(vault));
-    ok("legacy flat device data is parked where no account reaches it", /orphanFlat/.test(vault) && /tsb_orphan_v268/.test(vault));
-    ok("signing in discards guest work, sign in to keep what you read", /guestWipe\(\);/.test(vault) && /orphanFlat\(\);[\s\S]{0,40}guestWipe\(\);/.test(vault));
-    ok("sign-out wipes the device down to a clean guest", /signOutWipe/.test(authAll) && /guestWipe/.test(vault));
-    ok("enumeration shows only the current identity\u2019s world", /visibleNames/.test(vault));
-    ok("backup export walks the vault\u2019s view, one account per backup", /visibleNames/.test(prefs));
-    ok("gold is written to the ACCOUNT\u2019s server metadata, not the phone", /pushToServer/.test(gold) && /updateUserMeta/.test(authAll));
-    ok("an account\u2019s purchases re-apply from the server on every sign-in", /applyServerFlags/.test(authAll) && /tsb_gold/.test(authAll) && /tsb_iaudit/.test(authAll));
-    ok("the idea-audit unlock follows the account too", /updateUserMeta\(\{ tsb_iaudit: 1 \}\)/.test(iauditAll));
-
-    /* --- v268: voice, the order the founder asked for --- */
-    ok("long-press hold → release SENDS automatically", /mode === "hold"\) \{[\s\S]{0,60}stopAndSend\(\);/.test(voice));
-    ok("slide up while holding LOCKS with the pop animation", /dy > LIFT_PX && !locked\) setLock\(true\)/.test(voice) && /lockpop/.test(style));
-    ok("a STOP button rides the locked card, then hear-it-back review", /vstage__stop/.test(voice) && /vstage__prev/.test(voice) && /buildPreview/.test(voice));
-    ok("the 2:00 cap lands in review too, never an auto-sent cut note", /hear it back, then send or delete/.test(voice));
-
-    /* --- v268: the DM mic’s “not supported file” is dead --- */
-    ok("codec-suffixed recordings compare on the base mime", /split\(";"/.test(comm2) && /audio\/opus/.test(comm2));
-    ok("uploads stamp the normalized type so storage accepts voice notes", /rule \? ftype :/.test(comm2));
-
-    /* --- v268: compose can no longer die quietly --- */
-    ok("a blocked photo composes the same card on the house background", /composing on the house background/.test(studio));
-    ok("huge phone photos are downscaled before the canvas", /MW = 2200/.test(studio));
-
-    /* --- v268: the burst carries the whole library --- */
-    ok("the burst rail opens to every library story", /slice\(0, 40\)/.test(sHtml2));
-
-    /* --- v273: the selected updates on the v268 base --- */
-    const askData = rd("js/ask-data.js"), askJs = rd("js/ask.js"), cssV273 = rd("css/style.css");
-    const askN = (askData.match(/"q": "/g) || []).length;
-    ok("the question bank holds exactly 100 real answers", askN === 100);
-    ok("no em dashes anywhere in the bank", askData.indexOf(String.fromCharCode(8212)) === -1);
-    ok("every bank answer points at real books (0 broken refs)", !/[a-z0-9-]+", "lesson"?/.test("") && (askData.match(/million-dollar-fastlane/) || []).length === 0);
-    ok("the chat keeps the v268 house look: emoji head, Problem Library sheet", askJs.includes("ASK THE LIBRARY") && askJs.includes("THE PROBLEM LIBRARY") && askJs.includes("\uD83D\uDCD5"));
-    ok("no imported chat redesign anywhere", !cssV273.includes("#tsb-ask-root") && !askJs.includes("tsb-libcount"));
-    ok("the weekly prompt ships as a module", rd("js/weekly.js").includes("TSB_WEEKLY") && (rd("js/weekly.js").match(/"[^"]*\?"/g) || []).length >= 52);
-    ok("the feed pins the weekly card; quiet stories invite the first reply", rd("stories.html").includes("weeklyCard()") && rd("stories.html").includes("cm-nudge"));
-    ok("the composer receives the prompt and tags the reply", rd("write.html").includes("wrWeekly") && rd("write.html").includes("TSB_WEEKLY.markDone"));
-    ok("the weekly card wears the house style", /\.cm-weekly \{[^}]*border: 3px solid var\(--ink\)/.test(cssV273));
-    {
-      const EM = String.fromCharCode(8212);
-      let escaped = 0;
-      for (const f of ["js/book-tools.js", "js/ideaaudit.js", "js/store-data.js", "js/stories-seed.js", "login.html", "notifications.html", "profile.html", "stories.html", "write.html", "js/weekly.js", "js/ask.js", "manifest.json"]) {
-        escaped += (rd(f).match(/\\u2014/g) || []).length;
-      }
-      ok("no hidden em-dash escapes in shipped copy (the byline alone survives)", escaped === 1);
-      ok("no raw em dashes in the shipped chat", askJs.indexOf(EM) === -1 && cssV273.indexOf(EM) === -1);
-    }
-
-    /* --- v274: the self-healing deploy --- */
-    const swV274 = rd("sw.js"), guard = rd("js/bootguard.js"), prefsBoot = rd("js/prefs.js");
-    ok("the service worker is network-first for code now", /network-first for EVERYTHING/.test(swV274) && swV274.includes('CACHE_VERSION = "tsb-v274"'));
-    ok("bootguard rides first on every page, two-phase, never overlapping", guard.includes("tsb_build_seen") && guard.includes("TSB_BOOT_OK") && guard.includes("tsb_purge_a") && guard.includes("Phase B"));
-    ok("a worker handover can never reload the page again", !prefsBoot.includes("controllerchange") && !prefsBoot.includes("tsb_sw_reloaded"));
-    ok("the app signals a healthy boot to the watchdog", prefsBoot.includes("window.TSB_BOOT_OK = true"));
-    ok("every page loads the guard before the vault", rd("index.html").indexOf("js/bootguard.js") < rd("index.html").indexOf("js/vault.js") && rd("book.html").indexOf("js/bootguard.js") < rd("book.html").indexOf("js/vault.js"));
 
     /* --- watermark --- */
     ok("in-app publishing is never watermarked", /mark: false/.test(studio));
@@ -1214,49 +1146,48 @@ const C = window.TSB_COMMUNITY;
     const rd254 = f => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
     const seeds = rd254("js/stories-seed.js"), stHTML = rd254("stories.html"), syH = rd254("story.html");
     const lg254 = rd254("login.html"), au254 = rd254("js/auth.js");
-    const seedN = (seeds.match(/id: "seed-/g) || []).length;
     ok("every library story is now posted by TheSmallBook, not a ghost author",
-       (seeds.match(/author: "TheSmallBook"/g) || []).length === seedN && seedN >= 31 &&
+       (seeds.match(/author: "TheSmallBook"/g) || []).length === 28 &&
        /TheSmallBook <span class="cm-vtick"/.test(stHTML) && /name: "TheSmallBook"/.test(syH));
-    ok("each carries a hook, a question that sounds like the reader's own 2 AM",
-       (seeds.match(/hook: "/g) || []).length === seedN && /cm-card__hook/.test(stHTML));
+    ok("each carries a hook — a question that sounds like the reader's own 2 AM",
+       (seeds.match(/hook: "/g) || []).length === 28 && /cm-card__hook/.test(stHTML));
     ok("the burst rail leads with the hook, the title underneath",
        /var head = s\.hook \|\| s\.title;/.test(stHTML));
     ok("the channel wears the app's own logo as its avatar",
        /loader-logo\.png/.test(stHTML) && /loader-logo\.png/.test(syH));
     ok("the desk's composed card can never be composed twice",
        /deskKind = "sep"/.test(wr));
-    ok("a failed photo upload now stops the publish and says so, no silent loss",
+    ok("a failed photo upload now stops the publish and says so — no silent loss",
        /Your photo couldn't upload/.test(wr) && /Nothing was posted/.test(wr));
     ok("one clear CONTINUE instead of three same-looking buttons",
-       /CONTINUE, STUDIO MAKES THE CARD/.test(rd("js/quotedesk.js")));
+       /CONTINUE — STUDIO MAKES THE CARD/.test(rd("js/quotedesk.js")));
     ok("the account card asks first name, last name, username, reader name, email, password",
        /id="suFirst"/.test(lg254) && /id="suLast"/.test(lg254) && /id="suUser"/.test(lg254) && /id="suName"/.test(lg254) && /id="suMail"/.test(lg254) && /id="suPass"/.test(lg254));
     ok("usernames are lowercase handles, checked live while typing",
        /\^\[a-z0-9_\]\{3,20\}\$/.test(lg254) && /usernameFree/.test(lg254) && /usernameFree/.test(au254));
-    ok("the 13+ tick stands below the form, and the birthday still proves it",
+    ok("the 13+ tick stands below the form — and the birthday still proves it",
        /id="suAdult"/.test(lg254) && /13 or older/.test(lg254) && /age < 13/.test(lg254));
     ok("sign-up carries the whole identity as metadata, and profiles grow a username",
        /first_name: \(f\.first/.test(au254) && /md\.username \|\| ""/.test(rd254("js/community.js")));
-    ok("Google-era readers can set a password on the SAME account, the gap is closed",
+    ok("Google-era readers can set a password on the SAME account — the gap is closed",
        /function setPassword/.test(au254) && /youPassInput/.test(lg254) && /Joined with Google before/.test(lg254));
     ok("SQL #12 ships: unique, format-locked usernames inside Postgres",
        fs.existsSync("supabase/sql/usernames-v253.sql") &&
        /profiles_username_uid/.test(rd("supabase/sql/usernames-v253.sql")));
-    ok("THE ONE SQL exists, everything installs from a single paste",
+    ok("THE ONE SQL exists — everything installs from a single paste",
        fs.existsSync("supabase/sql/ALL-IN-ONE.sql"));
-    ok("and existing projects have the small UPDATE, only what is new since their last run",
+    ok("and existing projects have the small UPDATE — only what is new since their last run",
        fs.existsSync("supabase/sql/UPDATE-v255.sql") &&
        /USERNAMES/.test(rd254("supabase/sql/UPDATE-v255.sql")) &&
        /PRIVATE ACCOUNTS/.test(rd254("supabase/sql/UPDATE-v255.sql")) &&
        /HARDENING/.test(rd254("supabase/sql/UPDATE-v255.sql")));
     const LHTML = rd254("login.html");
-    ok("the Google banner leads BOTH tabs, first time ends at a finish-line, never a silent drop-in",
+    ok("the Google banner leads BOTH tabs — first time ends at a finish-line, never a silent drop-in",
        LHTML.indexOf('id="tabCreate"') < LHTML.indexOf('id="signinGoogle"') &&
        LHTML.indexOf('id="signinGoogle"') < LHTML.indexOf('id="paneCreate"') &&
        /view-finish/.test(LHTML) && /ONE LAST STEP/.test(LHTML) &&
        /approved by you on Google/.test(LHTML));
-    ok("the finish-line asks for @username + password + the 13+ tick, the forever keys",
+    ok("the finish-line asks for @username + password + the 13+ tick — the forever keys",
        /finUser/.test(LHTML) && /finPass/.test(LHTML) && /finAdult/.test(LHTML));
     ok("sign-in accepts @username OR email in one field",
        /Email or @username/.test(LHTML) && /signInId/.test(LHTML));
@@ -1267,7 +1198,7 @@ const C = window.TSB_COMMUNITY;
        /tsb_email_for_username/.test(rd254("supabase/sql/UPDATE-v255.sql")) &&
        /tsb_email_for_username/.test(rd254("supabase/sql/ALL-IN-ONE.sql")));
     const V8HTML = rd254("login.html"), V8JS = rd254("js/auth.js");
-    ok("the CODE pane ships: confirm signup, passwordless sign-in, and reset, one pane, three jobs",
+    ok("the CODE pane ships: confirm signup, passwordless sign-in, and reset — one pane, three jobs",
        /paneCode/.test(V8HTML) && /codeIn/.test(V8HTML) && /btnCodeLogin/.test(V8HTML) &&
        /btnCodeResend/.test(V8HTML) && /codePwWrap/.test(V8HTML));
     ok("the code box is mobile-perfect: numeric pad + one-time-code autofill + 18px type",
@@ -1288,9 +1219,9 @@ const C = window.TSB_COMMUNITY;
        /set_my_username/.test(rd254("supabase/sql/UPDATE-v255.sql")));
     ok("client strikes mirror the server: 5 → a flat 10 minutes",
        /now\(\) \+ 600/.test(V8JS));
-    ok("before custom SMTP: the email LINK signs readers in too, nothing dead-ends",
+    ok("before custom SMTP: the email LINK signs readers in too — nothing dead-ends",
        /handleFragmentSession/.test(V8JS) && /access_token=/.test(V8JS));
-    ok("THE AUTOPSY: every one of the 308 graves carries origin + fall, no more thin lessons",
+    ok("THE AUTOPSY: every one of the 308 graves carries origin + fall — no more thin lessons",
        fs.existsSync("js/graveyard-content.js") &&
        (rd254("js/graveyard-content.js").match(/"origin":/g) || []).length === 308 &&
        (rd254("js/graveyard-content.js").match(/"fall":/g) || []).length === 308);
@@ -1305,7 +1236,7 @@ const C = window.TSB_COMMUNITY;
     ok("THE IDEA AUTOPSY ships in YOU: rule engine + Wikipedia + HN, keyless and free, weaknesses tied to real graves",
        fs.existsSync("js/ideaaudit.js") && /function analyze/.test(IA) &&
        /hn\.algolia\.com/.test(IA) && /graveyard\.html#grave=/.test(IA) && !fs.existsSync("js/audit.js"));
-    ok("the autopsy engine is real: weighted rules, whys, fixes, and grave links, not generated prose",
+    ok("the autopsy engine is real: weighted rules, whys, fixes, and grave links — not generated prose",
        /var RULES = \[/.test(IA) && /w: \d\d?/.test(IA) && /fix: "/.test(IA) && /grave: "/.test(IA) && /why: "/.test(IA));
     ok("the autopsy desk lives in the YOU window: banner, room, mic, custom category",
        /iaudban/.test(rd254("login.html")) && /subAudit/.test(rd254("login.html")) &&
@@ -1316,29 +1247,29 @@ const C = window.TSB_COMMUNITY;
        /iaName/.test(IA) && /iaProb/.test(IA) && /iaSol/.test(IA) && /iaAud/.test(IA) &&
        /iaCats/.test(IA) && /iaMoney/.test(IA) && /iaStage/.test(IA) &&
        /STEP ' \+ step \+ ' OF 3/.test(IA) && /var step = 1/.test(IA));
-    ok("the report scores FOUR meters, survival, scalability, timing, trust load, plus an ordered scale-up plan",
+    ok("the report scores FOUR meters — survival, scalability, timing, trust load — plus an ordered scale-up plan",
        /meters: \{ survival/.test(IA) && /survival/.test(IA) && /scale/.test(IA) && /timing/.test(IA) && /trust/.test(IA) &&
        /planSteps/.test(IA) && /iaudit__stepsplan|stepsplan/.test(IA));
     ok("THE FIRST LOCK: free readers see meters + a blurred glimpse; the plan, graves and OSINT wait for Gold or the batch",
        /iaudit__lockcard/.test(IA) && /iaudit__fix--blur/.test(IA) && /isUnlocked/.test(IA) &&
        /BATCH_SIZE = 500/.test(IA) && /claimBatch/.test(IA) && /TSB_GOLD/.test(IA) && /store\.html/.test(IA));
-    ok("FRESH GRAVES still refill the graveyard silently, the engine moved into graveyard.js",
+    ok("FRESH GRAVES still refill the graveyard silently — the engine moved into graveyard.js",
        /buildWireData/.test(rd254("js/graveyard.js")) && /freshWrap/.test(rd254("js/graveyard.js")) &&
        /fgrave/.test(rd254("css/style.css")) && /freport/.test(rd254("css/style.css")));
-    ok("zero keys in the whole free-OSINT layer, nothing in devtools",
+    ok("zero keys in the whole free-OSINT layer — nothing in devtools",
        !/(apikey|api_key|client_secret)\s*[:=]/.test(IA) && /origin=\*/.test(IA));
     const LG = rd254("login.html"), LGC = rd254("css/style.css");
-    ok("v263 login: yellow ACCOUNT ACCESS hero + white rounded sheet, one premium card, no inline skin",
+    ok("v263 login: yellow ACCOUNT ACCESS hero + white rounded sheet, one premium card — no inline skin",
        /lgcard/.test(LG) && /lghero/.test(LG) && /lgsheet/.test(LG) && /ACCOUNT ACCESS/.test(LG) &&
        /lgTitle/.test(LG) && /\.lgsheet/.test(LGC) && !/<style>/.test(LG));
-    ok("v263→v266 graveyard: NO dig buttons, NO desks, every card is the door, excerpts on the face",
+    ok("v263→v266 graveyard: NO dig buttons, NO desks — every card is the door, excerpts on the face",
        /graveExcerpt/.test(rd254("js/graveyard.js")) && /grave__excerpt/.test(rd254("js/graveyard.js")) &&
        !/grave__dig-btn/.test(rd254("js/graveyard.js")) && /TAP FOR THE FULL AUTOPSY/.test(rd254("js/graveyard.js")) &&
        !/data-gtab/.test(rd254("graveyard.html")) && !/panelAudit/.test(rd254("graveyard.html")) &&
        !/panelWire/.test(rd254("graveyard.html")) && !/wireRefresh/.test(rd254("graveyard.html")));
     const OB264 = rd254("js/onboard.js"), PRF = rd254("profile.html"), YOU264 = rd254("login.html"), CSS264 = rd254("css/style.css"), GJ264 = rd254("js/graveyard.js");
     const GH264 = rd254("graveyard.html"), TR = rd254("js/trial.js");
-    ok("v266 the graveyard is pure again: corpses and search own the page, no desks below them",
+    ok("v266 the graveyard is pure again: corpses and search own the page — no desks below them",
        GH264.indexOf('id="graveGrid"') < GH264.indexOf('<!-- FOOTER -->') &&
        !/acard--audit/.test(GH264) && !/acard--wire/.test(GH264) && !/AUDIT YOUR OWN IDEA/.test(GH264));
     ok("v266 nothing borrowed anywhere: no DIG, no case-study detour, no wire voice, no credit lines",
@@ -1349,7 +1280,7 @@ const C = window.TSB_COMMUNITY;
        /function gate\(\)/.test(TR) && /tsb_trial/.test(TR) && /visibilityState/.test(TR) &&
        ["index.html","book.html","stories.html","profile.html","graveyard.html"].every(f => /js\/trial\.js\?v=\d+/.test(rd254(f))) &&
        /\.\/js\/trial\.js/.test(swSrc) && /trialwrap/.test(CSS264) && /trial-lock/.test(CSS264));
-    ok("v265 onboarding: a full-screen page with ONE door, it completes, it is never skipped",
+    ok("v265 onboarding: a full-screen page with ONE door — it completes, it is never skipped",
        /ob--page/.test(OB264) && /ob-hero/.test(OB264) && /GET STARTED/.test(OB264) &&
        !/data-customize/.test(OB264) && !/data-usenow/.test(OB264) && !/data-skip/.test(OB264) &&
        !/ob__x/.test(OB264) && /var TOTAL = 7;/.test(OB264) && /ob--page/.test(CSS264));
@@ -1370,7 +1301,7 @@ const C = window.TSB_COMMUNITY;
        /cm-profhead--v3/.test(PRF) && /cm-statrow--pills/.test(PRF) && /cm-topbtns/.test(PRF) &&
        /cm-follow--big/.test(PRF) && /data-preq/.test(PRF) && /data-pcancel/.test(PRF) &&
        /iRequested/.test(PRF) && /is_public/.test(PRF) && /cm-follow--big/.test(CSS264));
-    ok("v264 graves: every autopsy fetches the face of the grave, our brand on it, hidden offline",
+    ok("v264 graves: every autopsy fetches the face of the grave — our brand on it, hidden offline",
        /graveWikiImages/.test(GJ264) && /mountGraveImages/.test(GJ264) && /pithumbsize/.test(GJ264) &&
        /autopsy__pic/.test(CSS264) && /THE FACE OF THE GRAVE/.test(GJ264) && !/Images displayed/.test(GJ264));
     const EM = rd("docs/EMAIL-TEMPLATES.md");
@@ -1386,7 +1317,7 @@ const C = window.TSB_COMMUNITY;
     ok("every part of it is re-runnable (drop-if-exists / on-conflict / guarded blocks)",
        (aio.match(/drop policy if exists/g) || []).length >= 20 && (aio.match(/on conflict \(id\) do nothing/g) || []).length >= 5);
 
-    console.log("== v253: real accounts, create, sign in, 13+, and the walls ==");
+    console.log("== v253: real accounts — create, sign in, 13+, and the walls ==");
     const rd253 = f => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
     const TOPHTML = fsp.readdirSync(pp.join(__dirname, "../")).filter(f => f.endsWith(".html"));
     const lg = rd253("login.html"), au = rd253("js/auth.js"), cmjs = rd253("js/community.js");
@@ -1404,7 +1335,7 @@ const C = window.TSB_COMMUNITY;
        /\/auth\/v1\/recover/.test(au) && /paneCode/.test(lg) && /btnCodeResend/.test(lg));
     ok("five bad passwords cool the form down (client mirror of the server gate)",
        /function authCooldown/.test(au) && /sign-in is locked for/.test(lg));
-    ok("a Google client secret can never be shipped again, the slot is gone",
+    ok("a Google client secret can never be shipped again — the slot is gone",
        !/client_secret/.test(au) && !/GOOGLE_CLIENT_SECRET/.test(rd253("js/config.js")));
     ok("the You sheet offers email sign-in, not only Google",
        /login\.html#signin/.test(au));

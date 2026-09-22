@@ -19,7 +19,7 @@ select tablename, policyname, cmd from pg_policies
 ```
 
 Nothing surprising there? Go to step 2. If you *do* see policies you wrote yourself, read the
-"HEADS-UP ON EXISTING POLICIES" note at the top of the SQL file, PostgreSQL adds permissive
+"HEADS-UP ON EXISTING POLICIES" note at the top of the SQL file — PostgreSQL adds permissive
 policies together, so an old policy stays in force next to the new ones. The file's own policies
 are all named `tsb_*` so they are easy to find and remove later.
 
@@ -27,7 +27,7 @@ are all named `tsb_*` so they are easy to find and remove later.
 
 Paste the whole file and press **Run**. You should see `Success. No rows returned`.
 
-Run it a second time if you like, it is written to be idempotent. Nothing is dropped, nothing is
+Run it a second time if you like — it is written to be idempotent. Nothing is dropped, nothing is
 renamed, and no existing column changes type.
 
 ## 3. Check it worked
@@ -70,9 +70,9 @@ TSB_COMMUNITY.requestsBackend()     // "server" or "links"
 
 | Object | What happens | Risk |
 |---|---|---|
-| `public.profiles.is_public` | `add column if not exists`, already exists, so no-op | none |
-| `public.profiles.prefs` | `add column if not exists`, new, unused by the UI today | none |
-| `public.profiles.last_seen` | `add column if not exists`, optional, the app uses `links` for presence | none |
+| `public.profiles.is_public` | `add column if not exists` — already exists, so no-op | none |
+| `public.profiles.prefs` | `add column if not exists` — new, unused by the UI today | none |
+| `public.profiles.last_seen` | `add column if not exists` — optional, the app uses `links` for presence | none |
 | `public.follows` | de-duplicates identical rows once, then adds a unique index + a no-self-follow check | one-time cleanup |
 | `public.follow_requests` | new table + RLS + unique index | new object |
 | 4 functions + 1 view | `create or replace`, all `SECURITY DEFINER` | new objects |
@@ -84,12 +84,12 @@ except duplicate `follows` rows that were already identical.
 
 ## 6. If something goes wrong
 
-- **`permission denied for table follows`**, the grants at section 4b of the file did not run.
+- **`permission denied for table follows`** — the grants at section 4b of the file did not run.
   Re-run the file; that section is guarded and idempotent.
-- **A request never arrives**, check `select * from public.follow_requests;` as a signed-in user
+- **A request never arrives** — check `select * from public.follow_requests;` as a signed-in user
   (you will only see rows you are part of, that is the RLS working), and confirm the person you
   asked has `is_public = false` in `profiles`.
-- **You want to undo it**, every object is named, so:
+- **You want to undo it** — every object is named, so:
   ```sql
   drop table if exists public.follow_requests cascade;
   drop view  if exists public.my_follow_requests;
@@ -102,6 +102,6 @@ except duplicate `follows` rows that were already identical.
 
 ---
 
-*Verified against PostgreSQL 18 (the same engine Supabase runs), 41 checks covering public
+*Verified against PostgreSQL 18 (the same engine Supabase runs) — 41 checks covering public
 follows, private requests, accept, decline, mutual requests, self-follow, forged writes, RLS
 visibility and idempotency. Test: `node tools/test_sql.mjs`.*

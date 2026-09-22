@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK, NEO-BRUTALIST STYLESHEET
+   THESMALLBOOK — NEO-BRUTALIST STYLESHEET
    Inspired by loot-drop.io aesthetics
    ============================================================ */
 
@@ -205,7 +205,7 @@
 }
 
 /* ============================================================
-   v263 · THE LOGIN SKIN, premium .lg layer (login.html)
+   v263 · THE LOGIN SKIN — premium .lg layer (login.html)
    Yellow hero → rounded white sheet → segmented tabs → icon
    fields → ink primary button. Circular edges, zero blur, lean.
    ============================================================ */
@@ -315,7 +315,7 @@
 }
 
 /* ============================================================
-   v263 · THE GRAVEYARD SKIN, no tabs, no dig buttons.
+   v263 · THE GRAVEYARD SKIN — no tabs, no dig buttons.
    Audit + Wire live in the page flow; every grave card is a
    readable story teaser; the whole card opens the autopsy.
    ============================================================ */
@@ -329,7 +329,7 @@
   font: 800 10.5px 'Space Grotesk', sans-serif; letter-spacing: .8px; color: #111; box-shadow: 3px 3px 0 #ffc800; }
 .gpanel .acard { max-width: 860px; margin: 0 auto; }
 
-/* the grave card, one readable surface */
+/* the grave card — one readable surface */
 .grave { display: flex; align-items: flex-start; gap: 16px; cursor: pointer; margin-bottom: 14px;
   padding: 16px 18px 15px 20px; }
 .grave__main { flex: 1; min-width: 0; text-align: left; }
@@ -352,7 +352,7 @@ html.dark .grave__cause { border-color: rgba(242,234,216,.35); color: #b8b2a2; }
 
 
 /* ============================================================
-   v260 · THE AUTOPSY, full-screen grave reader (graveyard.html)
+   v260 · THE AUTOPSY — full-screen grave reader (graveyard.html)
    The card is the headstone; this is the story beneath it.
    ============================================================ */
 html.autopsy-lock { overflow: hidden; }
@@ -685,7 +685,7 @@ html.dark .tsb-loginbtn { background: #fff; color: #111; }
 .stat__label { font-size: .7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #666; margin-top: 4px; }
 .stat--yellow { background: var(--yellow); }
 /* v250: the label is small uppercase text, so it gets a dark ink on the
-   saturated card, pale-on-red/blue measured 2.7:1 and 3.0:1 in BOTH themes. */
+   saturated card — pale-on-red/blue measured 2.7:1 and 3.0:1 in BOTH themes. */
 .stat--red { background: var(--red); color:#fff; } .stat--red .stat__label{ color:#2a0503; }   /* 5.7:1 */
 .stat--blue { background: var(--blue); color:#fff; } .stat--blue .stat__label{ color:#08122e; }   /* 5.0:1 */
 .stat--green { background: var(--green); }
@@ -1021,10 +1021,10 @@ html.dark .tsb-loginbtn { background: #fff; color: #111; }
 .callout--caveat strong.tag { background: var(--red); color: #fff; }
 html.dark .callout--caveat { background: #2e1d1a; }
 
-/* 🧠 HONESTY BOX, caveat + graveyard proof, after the action plan */
+/* 🧠 HONESTY BOX — caveat + graveyard proof, after the action plan */
 .truthbox { margin-top: 14px; display: flex; flex-direction: column; gap: 14px; }
 
-/* 💀 GRAVEYARD PROOF CARD, premium autopsy ticket */
+/* 💀 GRAVEYARD PROOF CARD — premium autopsy ticket */
 .gravecross {
   display: flex; align-items: center; gap: 14px;
   background:
@@ -1217,7 +1217,7 @@ html.dark .callout--caveat { background: #2e1d1a; }
 .drop__preview { max-width: 120px; border: var(--border); margin: 12px auto 0; display: block; }
 
 /* story cards */
-/* 📚 library stories on the community shelf, same card language as a reader
+/* 📚 library stories on the community shelf — same card language as a reader
    post, different chrome: no like button, no follow, clearly the library */
 .cm-card__kind--lib {
   position: absolute; left: 10px; top: 10px; z-index: 2;
@@ -1234,7 +1234,7 @@ html.dark .callout--caveat { background: #2e1d1a; }
   padding: 6px 12px; font: 800 10.5px "Space Grotesk", system-ui, sans-serif;
   text-decoration: none; letter-spacing: .3px; box-shadow: 2px 2px 0 var(--ink);
 }
-/* the hook, the question that makes a stranger think "that's me" */
+/* the hook — the question that makes a stranger think "that's me" */
 .cm-card__hook {
   margin: 4px 0 0; font-family: var(--font-body); font-weight: 600;
   font-size: .86rem; line-height: 1.55; color: #6b6355;
@@ -1242,7 +1242,7 @@ html.dark .callout--caveat { background: #2e1d1a; }
 html.dark .cm-card__hook { color: #b7ae9c; }
 .cm-reel--lib .cm-reel__t { font-size: 1.28rem; line-height: 1.3; }
 .cm-reel--lib .cm-reel__s { font-weight: 700; opacity: .95; }
-/* a library cover is a 4:5 quote card, not a 16:9 photo band, cropping it to
+/* a library cover is a 4:5 quote card, not a 16:9 photo band — cropping it to
    the reader-post shape cut the quote in half. Library cards show the card whole. */
 .cm-card--lib .cm-card__cover { aspect-ratio: 4 / 5; }
 .cm-card--lib .cm-card__cover img { object-fit: contain; background: #f4efe4; }
@@ -1253,7 +1253,7 @@ html.dark .cm-card__hook { color: #b7ae9c; }
   font: 800 9.5px/1.4 "Archivo Black", system-ui, sans-serif; letter-spacing: .6px; white-space: nowrap;
 }
 html.dark .cm-libchip { background: var(--yellow); color: #14110c; }
-/* the library's own burst, same frame, different furniture (no like button) */
+/* the library's own burst — same frame, different furniture (no like button) */
 .cm-reel--lib .cm-reel__q { font-size: 2.4rem; }
 .cm-reel__who--lib { cursor: default; }
 .cm-reel__metaline {
@@ -1580,7 +1580,7 @@ html.dark .search input::placeholder { color: #8a8170; }
 html.dark .callout--example { background: #1c2637; }
 html.dark .callout--action { background: #14322a; }
 html.dark .quote, html.dark .quote:nth-child(2n), html.dark .quote:nth-child(3n) { color: #111; }
-/* v250: ink text needs the pink tile behind it, dark paper made this 1.1:1 */
+/* v250: ink text needs the pink tile behind it — dark paper made this 1.1:1 */
 html.dark .storyform__box[style*="--pink"] { color: #14110c; background: var(--pink); }
 html.dark .hero__sub strong { color: #111; }
 html.dark .card__lessons { color: #111; }
@@ -1778,7 +1778,7 @@ html.dark .deco--sq, html.dark .deco--circ { border-color: var(--ink); }
   padding: 0 clamp(16px,4vw,48px);
   display: flex; flex-wrap: wrap; gap: 10px;
 }
-/* colorful free-flowing action buttons, no box, each its own bold color */
+/* colorful free-flowing action buttons — no box, each its own bold color */
 .abtn {
   display: inline-flex; align-items: center; gap: 8px;
   border: 3px solid var(--ink, #111);
@@ -1794,7 +1794,7 @@ html.dark .deco--sq, html.dark .deco--circ { border-color: var(--ink); }
 .abtn:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--ink, #111); }
 .abtn__ico { font-size: 15px; line-height: 1; }
 .abtn__lbl { white-space: nowrap; }
-/* every button gets its own loud color, eye-catching, never colorless */
+/* every button gets its own loud color — eye-catching, never colorless */
 .abtn--save { background: #fff; }
 .abtn--save.on { background: var(--red, #ff4d4d); color: #fff; border-color: var(--ink); }
 .abtn--card { background: var(--yellow, #ffc800); }
@@ -1900,7 +1900,7 @@ html.dark .abtn:hover { box-shadow: 5px 5px 0 #000; }
 @keyframes pulse { 50% { opacity: .6; } }
 
 /* ============================================================
-   DARK MODE, CONTRAST FIXES
+   DARK MODE — CONTRAST FIXES
    Any element sitting on a bright background must use dark text.
    ============================================================ */
 html.dark .hl { color: #111; }
@@ -1931,7 +1931,7 @@ html.dark .continue__box .btn--yellow { color: #111; }
 html.dark ::selection { background: var(--yellow); color: #111; }
 
 /* ============================================================
-   DARK MODE, FULL CONTRAST AUDIT (v2)
+   DARK MODE — FULL CONTRAST AUDIT (v2)
    In dark mode --ink becomes LIGHT, so anything that used
    "ink background + yellow/light text" turned invisible.
    All such components now get a true-dark background instead.
@@ -2062,7 +2062,7 @@ font[style*="background-color"], font[style*="box-shadow"] { background: none !i
 }
 
 /* ============================================================
-   NAV POLISH v2, compact icon buttons, clean at any width
+   NAV POLISH v2 — compact icon buttons, clean at any width
    ============================================================ */
 .btn--icon {
   padding: 10px 12px;
@@ -2070,7 +2070,7 @@ font[style*="background-color"], font[style*="box-shadow"] { background: none !i
   justify-content: center;
   flex: 0 0 auto;
 }
-/* language button may show a label (e.g. "🌐 Hindi"), keep it tidy */
+/* language button may show a label (e.g. "🌐 Hindi") — keep it tidy */
 [data-lang-btn] { white-space: nowrap; max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
 
 /* desktop: keep everything on one balanced row */
@@ -2083,7 +2083,7 @@ font[style*="background-color"], font[style*="box-shadow"] { background: none !i
   .nav__links .btn--icon { min-width: 40px; padding: 9px 8px; }
 }
 
-/* phones: single tidy row, text buttons share space, icons stay square */
+/* phones: single tidy row — text buttons share space, icons stay square */
 @media (max-width: 560px) {
   .nav__links {
     display: flex !important;
@@ -2106,7 +2106,7 @@ font[style*="background-color"], font[style*="box-shadow"] { background: none !i
     padding: 10px 0;
   }
   [data-lang-btn] { max-width: 42px; }
-  /* hide the language label on phones, icon only, stays square */
+  /* hide the language label on phones — icon only, stays square */
 }
 
 /* very small phones */
@@ -2117,7 +2117,7 @@ font[style*="background-color"], font[style*="box-shadow"] { background: none !i
 }
 
 /* ============================================================
-   DARK MODE, CONTRAST SWEEP v3 (category pills & label chips)
+   DARK MODE — CONTRAST SWEEP v3 (category pills & label chips)
    Rule: every label pill gets an EXPLICIT bg + text pair in dark.
    ============================================================ */
 /* the big one: book page category pill (was yellow-on-cream) */
@@ -2141,8 +2141,8 @@ html.dark .field__hint,
 html.dark .reader__by { color: #b3a98f; }
 
 /* stat labels on colored stat tiles need their own values */
-html.dark .stat--red .stat__label { color: #2a0503; }   /* 5.9:1, #ffd9d9 was 2.5:1 */
-html.dark .stat--blue .stat__label { color: #08122e; }   /* 5.2:1, #d6e2ff was 2.5:1 */
+html.dark .stat--red .stat__label { color: #2a0503; }   /* 5.9:1 — #ffd9d9 was 2.5:1 */
+html.dark .stat--blue .stat__label { color: #08122e; }   /* 5.2:1 — #d6e2ff was 2.5:1 */
 html.dark .stat--yellow .stat__label, html.dark .stat--green .stat__label { color: #333; }
 
 /* section heads & toolbar chips */
@@ -2177,7 +2177,7 @@ html.dark font { color: inherit !important; }
   .langbtn__label { display: none; }
 }
 
-/* the ink button itself (dark-mode toggle), black bg flips to light in dark mode */
+/* the ink button itself (dark-mode toggle) — black bg flips to light in dark mode */
 html.dark .btn--ink { background: #000; color: #f2ead8; }
 
 /* ============================================================
@@ -2365,7 +2365,7 @@ html.dark .grave__book { color: #111; }
 .grave__share:hover { transform: translate(-2px,-2px); background: var(--red); color: #fff; }
 
 /* ============================================================
-   💀 GRAVEYARD TRANSITION, the descent
+   💀 GRAVEYARD TRANSITION — the descent
    ============================================================ */
 .grave-transition {
   position: fixed; inset: 0; z-index: 9999;
@@ -2419,11 +2419,11 @@ html.dark .grave__book { color: #111; }
 }
 
 /* ============================================================
-   💀 GRAVEYARD v2, juicy, clickable corpses
+   💀 GRAVEYARD v2 — juicy, clickable corpses
    ============================================================ */
 .grave__head { cursor: pointer; user-select: none; position: relative; }
 
-/* colored tombstone, category tint on the gradient */
+/* colored tombstone — category tint on the gradient */
 .grave__stone {
   background: linear-gradient(160deg, var(--gcat, #8a93a5), #4a5058) !important;
   border: 3px solid var(--ink);
@@ -2551,12 +2551,12 @@ html.dark .buybtn--soft:hover { background: var(--yellow); color: #111; }
 
 
 /* ============================================================
-   💀 GRAVEYARD v3, sort modes, live data feed, top-burn medals
+   💀 GRAVEYARD v3 — sort modes, live data feed, top-burn medals
    ============================================================ */
 .gravesort {
   max-width: var(--maxw); margin: 18px auto 0; padding: 0 20px;
   display: flex; gap: 10px; flex-wrap: wrap;
-  justify-content: center;           /* centered, always, on every screen */
+  justify-content: center;           /* centered — always, on every screen */
   align-items: center;
 }
 .gravesort__btn {
@@ -2675,7 +2675,7 @@ html.dark .lessonnav__item--plan:hover { background: var(--yellow); }
 /* ============================================================
    🆕 NEW BADGE + 🔍 FOUND-INSIDE CHIP (home cards)
    ============================================================ */
-/* gold bookmark-tab hanging from the card's top edge, premium, no overlap */
+/* gold bookmark-tab hanging from the card's top edge — premium, no overlap */
 .card__new {
   position: absolute; top: -3px; left: 50%; transform: translateX(-50%); z-index: 3;
   font-family: var(--font-head); font-size: .55rem; letter-spacing: 1.5px;
@@ -2711,7 +2711,7 @@ html.dark .card__hit strong { color: #f2ead8; }
    ============================================================ */
 
 /* ============================================================
-   👋 ABOUT HERO, premium rounded intro (v2)
+   👋 ABOUT HERO — premium rounded intro (v2)
    ============================================================ */
 .ahero { max-width: 960px; margin: 30px auto 0; padding: 0 clamp(16px, 4vw, 48px); }
 .ahero__inner {
@@ -2770,7 +2770,7 @@ html.dark .card__hit strong { color: #f2ead8; }
 }
 html.dark .ahero__inner { border-color: #000; box-shadow: 8px 8px 0 #000; }
 
-/* intro block, rounded premium */
+/* intro block — rounded premium */
 .about__block--intro {
   border-radius: 20px !important;
   padding: 26px 26px 22px !important;
@@ -2884,7 +2884,7 @@ html.dark .readbar { background: rgba(242,234,216,.12); }
 
 
    ============================================================ */
-/* story teaser: first line, fading out like a torn page, the itch */
+/* story teaser: first line, fading out like a torn page — the itch */
 .grave__tease {
   margin-top: 10px; font-size: .88rem; font-style: italic; line-height: 1.45;
   color: var(--ink); opacity: .75; max-width: 640px;
@@ -2951,7 +2951,7 @@ html.dark .grave:hover .grave__dig { animation-name: digGlowDark; }
 }
 
 /* ============================================================
-   📄 ABOUT PAGE v2, glow-up
+   📄 ABOUT PAGE v2 — glow-up
    ============================================================ */
 .about__block { position: relative; }
 .about__block--intro { border-left: 10px solid var(--yellow); border-radius: 20px; }
@@ -3061,7 +3061,7 @@ html.dark .rulecard__num { background: #171310; }
   .idcard__avatar { width: 64px; height: 64px; font-size: 2rem; }
 }
 
-/* 💡 Lesson of the Day, live date badge */
+/* 💡 Lesson of the Day — live date badge */
 .lod__datebadge {
   position: absolute; top: -14px; right: 16px;
   display: flex; flex-direction: column; align-items: center;
@@ -3118,7 +3118,7 @@ html.dark .seoblock--lesson { background: #10291f; }
 html.dark .seohero--grave { background: #120404; }
 
 /* ============================================================
-   💀 GRAVEYARD CASE-STUDY PAGE, premium autopsy layout
+   💀 GRAVEYARD CASE-STUDY PAGE — premium autopsy layout
    (opened from the book's "When this doesn't work" card)
    ============================================================ */
 .ghero {
@@ -3170,7 +3170,7 @@ html.dark .seohero--grave { background: #120404; }
 .ghero__stat--loss b { color: #ff8a7a; }
 html.dark .ghero { border-color: #000; box-shadow: 8px 8px 0 #000; }
 
-/* 📕 antidote book card, cover + interactive link */
+/* 📕 antidote book card — cover + interactive link */
 .gantidote__card {
   display: flex; gap: 18px; align-items: flex-start;
   background: linear-gradient(135deg, #f7ead1, #f2e2c0);
@@ -3213,7 +3213,7 @@ html.dark .gantidote__info p { color: #c9c2b2; }
 
 
 /* ============================================================
-   ✍️ STORIES v2, ghost card, featured, prompts
+   ✍️ STORIES v2 — ghost card, featured, prompts
    ============================================================ */
 .ghostcard { text-decoration: none; }
 .ghostcard__frame {
@@ -3255,7 +3255,7 @@ html.dark .promptchip { background: #1b1712; color: #f2ead8; border-color: #000;
 html.dark .promptchip.active { background: var(--pink); color: #111; }
 
 /* ============================================================
-   ✍️ STORIES TRANSITION, pen writes you onto the shelf
+   ✍️ STORIES TRANSITION — pen writes you onto the shelf
    ============================================================ */
 .story-transition {
   position: fixed; inset: 0; z-index: 999;
@@ -3308,9 +3308,9 @@ html.dark .story-transition__text, html.dark .story-transition__sub { color: #f2
 }
 
 /* ============================================================
-   📕 ASK THE LIBRARY, floating widget v2 (every page)
+   📕 ASK THE LIBRARY — floating widget v2 (every page)
    ============================================================ */
-/* FAB, "ASK" text, no robot */
+/* FAB — "ASK" text, no robot */
 .aq-fab {
   position: fixed; right: 16px; bottom: 16px; z-index: 9990;
   width: 60px; height: 60px; border-radius: 50%;
@@ -3376,7 +3376,7 @@ html.dark .story-transition__text, html.dark .story-transition__sub { color: #f2
 .aq-clear:hover { background: var(--red); }
 .aq-close:hover { background: var(--red); color: #fff; }
 
-/* CHIPS, colored, emoji-safe (fixes blank boxes) */
+/* CHIPS — colored, emoji-safe (fixes blank boxes) */
 .aq-chips {
   display: flex; gap: 7px; padding: 9px 10px; overflow-x: auto;
   border-bottom: 3px solid var(--ink); background: #f5f1e6; flex: none;
@@ -3457,7 +3457,7 @@ html.dark .story-transition__text, html.dark .story-transition__sub { color: #f2
 }
 .aq-head2::after { content:""; flex:1; height:1.5px; background:currentColor; opacity:.22; border-radius:2px; }
 
-/* the old full-width question strip, kept only for stored history and graves */
+/* the old full-width question strip — kept only for stored history and graves */
 .aq-q {
   font-family: "Archivo Black", sans-serif; font-size: 14.5px; line-height: 1.5;
   background: #f5f1e6; border: 2.5px solid var(--ink); padding: 8px 10px; margin-bottom: 8px;
@@ -3673,9 +3673,9 @@ html.dark .instabox__tag { background: #17130b; }
 .instabox .btn { margin-top: 16px; box-shadow: 5px 5px 0 rgba(17,17,17,.85); }
 
 /* ============================================================
-   🚀 LAUNCH LOADING SCREEN, neo-brutalist brand splash
+   🚀 LAUNCH LOADING SCREEN — neo-brutalist brand splash
    ============================================================ */
-/* 🚀 MAIN APP LOADING SCREEN, smooth, no lag, brand-perfect */
+/* 🚀 MAIN APP LOADING SCREEN — smooth, no lag, brand-perfect */
 html.tsb-loading, html.tsb-loading body { overflow: hidden; } /* no scroll jump while splashing */
 .tsb-loader {
   position: fixed; inset: 0; z-index: 99999;
@@ -3689,7 +3689,7 @@ html.tsb-loading, html.tsb-loading body { overflow: hidden; } /* no scroll jump 
 }
 .tsb-loader--hide { opacity: 0; pointer-events: none; visibility: hidden; }
 
-/* inner stack pops in with a gentle spring, staggered */
+/* inner stack pops in with a gentle spring — staggered */
 .tsb-loader__in { animation: loaderIn .55s cubic-bezier(.2,.9,.3,1.25) both; }
 @keyframes loaderIn {
   from { opacity: 0; transform: translateY(14px) scale(.96); }
@@ -3758,7 +3758,7 @@ html.dark .tsb-loader__pct { color: #f2ead8; }
 html.dark .tsb-loader__pct span { color: var(--yellow); }
 
 
-/* 🎧 PODCAST PLAYER, professional, mobile-first, any ratio */
+/* 🎧 PODCAST PLAYER — professional, mobile-first, any ratio */
 .tsb-player {
   position: fixed; left: 50%; bottom: 16px;
   transform: translateX(-50%) translateY(150%);
@@ -3776,7 +3776,7 @@ html.dark .tsb-loader__pct span { color: var(--yellow); }
   visibility: visible;
   transition: transform .28s cubic-bezier(.2,.9,.3,1.2);
 }
-/* progress track, sleek dark bar on top */
+/* progress track — sleek dark bar on top */
 .tsb-player__prog { height: 8px; background: #111; }
 .tsb-player__prog i {
   display: block; height: 100%; width: 0;
@@ -3795,7 +3795,7 @@ html.dark .tsb-loader__pct span { color: var(--yellow); }
   font-size: 20px; overflow: hidden;
 }
 .tsb-player__art img { width: 100%; height: 100%; object-fit: cover; display: block; }
-/* live equalizer bars overlay, pulses while playing */
+/* live equalizer bars overlay — pulses while playing */
 .tsb-player__eq {
   position: absolute; right: -6px; bottom: -6px;
   display: flex; align-items: flex-end; gap: 2px;
@@ -3833,7 +3833,7 @@ html.dark .tsb-loader__pct span { color: var(--yellow); }
   font-size: 10.5px; color: #777; margin-top: 2px;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-/* LIVE badge, blinks while playing */
+/* LIVE badge — blinks while playing */
 .tsb-player__live {
   display: inline-flex; align-items: center; gap: 4px;
   margin-top: 3px; font-size: 8.5px; font-weight: 700; letter-spacing: 1px;
@@ -3847,7 +3847,7 @@ html.dark .tsb-loader__pct span { color: var(--yellow); }
   animation: liveDot 1s ease-in-out infinite;
 }
 @keyframes liveDot { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: .5; } }
-/* progress shimmer, a soft moving shine over the yellow fill */
+/* progress shimmer — a soft moving shine over the yellow fill */
 .tsb-player__prog { overflow: hidden; position: relative; }
 .tsb-player__prog i::after {
   content: ""; position: absolute; top: 0; left: -40%; width: 40%; height: 100%;
@@ -3895,7 +3895,7 @@ html.dark .tsb-player__sub { color: #b3a98f; }
 html.dark .tsb-player__btn, html.dark .tsb-player__pill, html.dark .tsb-player__close { background: #241f18; color: #f2ead8; }
 html.dark .tsb-player__btn--main { background: var(--yellow); color: var(--on-accent); }
 html.dark .tsb-player__close:hover { background: var(--red); color: #fff; }
-/* mobile: any width, above the ASK FAB, safe-area aware */
+/* mobile: any width — above the ASK FAB, safe-area aware */
 @media (max-width: 640px) {
   .tsb-player {
     width: min(400px, calc(100vw - 16px));
@@ -3913,7 +3913,7 @@ html.dark .tsb-player__close:hover { background: var(--red); color: #fff; }
   .tsb-player__pill { font-size: 9.5px; padding: 4px 6px; }
 }
 
-/* 🎧 PODCAST BUTTON, sleek, not chunky */
+/* 🎧 PODCAST BUTTON — sleek, not chunky */
 .podcastbtn {
   display: inline-flex; align-items: center; gap: 9px;
   margin-top: 14px;
@@ -3941,7 +3941,7 @@ html.dark .tsb-player__close:hover { background: var(--red); color: #fff; }
 html.dark .podcastbtn { color: #111; box-shadow: 4px 4px 0 #000; }
 
 /* ============================================================
-   💀 GRAVEYARD POLISH (Aug 2026), light upgrade, structure same
+   💀 GRAVEYARD POLISH (Aug 2026) — light upgrade, structure same
    ============================================================ */
 
 /* --- CAUSE OF DEATH → chunky red autopsy banner --- */
@@ -4016,7 +4016,7 @@ html.dark .grave__section--lesson { border-left-color: var(--green); }
 }
 
 /* ============================================================
-   ✍️ STORIES v2, premium polish (Aug 2026)
+   ✍️ STORIES v2 — premium polish (Aug 2026)
    ============================================================ */
 .storystats {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
@@ -4086,7 +4086,7 @@ button, a, .btn, .abtn, .chip, .card, .card a, .grave, .grave__head,
 }
 
 /* 4) performance: skip rendering below-fold sections until scrolled to
-   (NOTE: .how and .shelfrow are NOT included, content-visibility clips
+   (NOTE: .how and .shelfrow are NOT included — content-visibility clips
    the overflowing step numbers (01/02/03) and card shadows. Crop fix.) */
 .library, #library, .grid, #grid, #shelves,
 .footer, .gravegrid, #graveGrid, .storystats, #storyGrid, .pathgrid {
@@ -4102,7 +4102,7 @@ button, a, .btn, .abtn, .chip, .card, .card a, .grave, .grave__head,
 
 
 /* ============================================================
-   💛 TIP JAR (end of every lesson, optional, dismissible)
+   💛 TIP JAR (end of every lesson — optional, dismissible)
    ============================================================ */
 .tipjar {
   position: relative;
@@ -4153,7 +4153,7 @@ html.dark .tipjar__x { background: #1d1914; color: #f2ead8; }
 }
 
 /* ============================================================
-   ⭐ SOCIAL PROOF (home page, real reader words)
+   ⭐ SOCIAL PROOF (home page — real reader words)
    ============================================================ */
 .socialproof { max-width: 1280px; margin: 30px auto 6px; padding: 0 clamp(16px, 4vw, 48px); }
 .socialproof__head {
@@ -4174,7 +4174,7 @@ html.dark .socialproof__head { background: #17130b; }
 html.dark .sp-quote cite { color: #9a937f; }
 
 /* ============================================================
-   👑 TSB GOLD, page + home banner (premium dark editorial)
+   👑 TSB GOLD — page + home banner (premium dark editorial)
    ============================================================ */
 .btn--gold {
   background: linear-gradient(135deg, #ffd94d, #ffc800 55%, #e6a800);
@@ -4272,7 +4272,7 @@ html.dark .btn--gold { border-color: #000 !important; box-shadow: 3px 3px 0 #000
 }
 .goldbanner__cta:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--ink); filter: brightness(1.05); }
 
-/* 💬 GOLD, WhatsApp QR offer (number hidden, preloaded message) */
+/* 💬 GOLD — WhatsApp QR offer (number hidden, preloaded message) */
 .wadeal {
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
   margin-top: 12px; padding: 11px 14px;
@@ -4311,11 +4311,11 @@ html.dark .wadeal b { color: #4ade80; }
 }
 
 /* ============================================================
-   🎙️ HUMAN AUDIO · LIVE SAMPLES, matches the app's podcast
+   🎙️ HUMAN AUDIO · LIVE SAMPLES — matches the app's podcast
    mini-player design language (rounded card, art box, circular
    play, LIVE dot + equalizer, shimmer progress)
    ============================================================ */
-/* LISTEN button inside the HUMAN AUDIO card, same shape as the
+/* LISTEN button inside the HUMAN AUDIO card — same shape as the
    podcast button on book pages (rounded 10px, yellow, ink border) */
 .gs-open {
   display: inline-flex; align-items: center; gap: 8px;
@@ -4346,7 +4346,7 @@ html.dark .gs-open__ico { background: #000; }
 }
 @keyframes liveBlink { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
 
-/* the expandable panel, identical DNA to .tsb-player */
+/* the expandable panel — identical DNA to .tsb-player */
 .gs-panel { max-width: 1180px; margin: 6px auto 0; padding: 0 clamp(16px, 4vw, 48px); }
 .gs-panel__card {
   background: var(--paper);
@@ -4357,7 +4357,7 @@ html.dark .gs-open__ico { background: #000; }
 }
 html.dark .gs-panel__card { background: #1b1712; box-shadow: 6px 6px 0 #000; }
 
-/* top progress track, sleek dark bar with yellow fill + shimmer */
+/* top progress track — sleek dark bar with yellow fill + shimmer */
 .gs-panel__prog { height: 8px; background: #111; position: relative; overflow: hidden; }
 .gs-panel__prog i {
   display: block; height: 100%; width: 0%;
@@ -4372,7 +4372,7 @@ html.dark .gs-panel__card { background: #1b1712; box-shadow: 6px 6px 0 #000; }
 }
 @keyframes progShine { 0% { left: -40%; } 60%, 100% { left: 110%; } }
 
-/* top row: art + titles + close, same as tsb-player__top */
+/* top row: art + titles + close — same as tsb-player__top */
 .gs-panel__top {
   display: flex; align-items: center; gap: 10px;
   padding: 12px 12px 8px;
@@ -4435,7 +4435,7 @@ html.dark .gs-panel__sub { color: #b3a98f; }
 html.dark .gs-panel__close { background: #241f18; color: #f2ead8; }
 html.dark .gs-panel__close:hover { background: var(--red); color: #fff; }
 
-/* rows, playlist style, same buttons as the mini-player */
+/* rows — playlist style, same buttons as the mini-player */
 .gs-panel__list { padding: 2px 12px 6px; }
 .gs-row {
   display: flex; align-items: center; gap: 10px;
@@ -4501,7 +4501,7 @@ html.dark .gs-tag { background: #3a2c1a; color: #ffd94d; border-color: #000; box
   animation: liveDot 1s ease-in-out infinite;
 }
 
-/* track + circular play, same shapes as the mini-player */
+/* track + circular play — same shapes as the mini-player */
 .gs-row__track { width: 150px; flex: none; }
 .gs-row__bar {
   height: 8px; background: #111; cursor: pointer;
@@ -4552,13 +4552,13 @@ html.dark .gs-panel__foot b { color: #ffc800; }
 
 
 /* ============================================================
-   📷 BOOK SCANNER, minimal button + fullscreen live scanner
+   📷 BOOK SCANNER — minimal button + fullscreen live scanner
    ============================================================ */
-/* SEARCH row: one joined professional bar, input + camera icon + FIND IT */
+/* SEARCH row: one joined professional bar — input + camera icon + FIND IT */
 .searchrow { display: flex; gap: 0; align-items: stretch; }
 .searchrow .search { flex: 1 1 auto; min-width: 0; }
 
-/* camera scan button, joined inside the bar, icon only (no text),
+/* camera scan button — joined inside the bar, icon only (no text),
    divider matches FIND IT, transparent so the paper bar shows through.
    It's an <a href="scan.html"> now: standalone scanner page = zero cache risk */
 .search .scanbtn {
@@ -4637,7 +4637,7 @@ html.dark .search .scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
   color: #aaa; font-size: .82rem; font-weight: 700; text-align: center; padding: 24px;
 }
 
-/* top bar, title chip + close */
+/* top bar — title chip + close */
 .scanmodal__top {
   position: absolute; top: 0; left: 0; right: 0; z-index: 6;
   display: flex; align-items: center; justify-content: space-between;
@@ -4660,7 +4660,7 @@ html.dark .search .scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
 }
 .scanmodal__close:hover { background: #ff5252; color: #fff; }
 
-/* bottom bar, FLIP CAMERA + FIND BOOK SUMMARY */
+/* bottom bar — FLIP CAMERA + FIND BOOK SUMMARY */
 .scanmodal__bar {
   position: absolute; left: 0; right: 0; bottom: 0; z-index: 6;
   display: flex; align-items: center; justify-content: center; gap: 14px;
@@ -4774,13 +4774,13 @@ html.dark .search .scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
 
 
 /* ============================================================
-   📱 PREMIUM BOTTOM ACTION BAR, Home · Read · + · Chat · You
+   📱 PREMIUM BOTTOM ACTION BAR — Home · Read · + · Chat · You
    ------------------------------------------------------------
    NON-NEGOTIABLE RULES (do not break):
    1. The bar is centred with left:50% → EVERY rule that
       re-declares transform on .tsb-bar MUST re-state
       translateX(-50%), or the bar slides diagonally off-screen.
-   2. Animate transform & opacity ONLY, never bottom/height/width.
+   2. Animate transform & opacity ONLY — never bottom/height/width.
    3. The active state is painted ONLY by .tsb-bar__item::before.
       No background on the item itself (double-layering).
    4. `contain: layout paint` stays on the bar (no page reflow).
@@ -4835,7 +4835,7 @@ html.dark .search .scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
 }
 .tsb-bar__item:active { transform: scale(.92); }
 .tsb-bar__item svg { width: 22px; height: 22px; display: block; }
-/* ACTIVE PILL, painted ONLY by this ::before (rule 3) */
+/* ACTIVE PILL — painted ONLY by this ::before (rule 3) */
 .tsb-bar__item::before {
   content: "";
   position: absolute;
@@ -4880,7 +4880,7 @@ html.dark .tsb-bar__plus { border-color: #000; box-shadow: 3px 3px 0 #000; }
   html.tsb-hasbar .lessonnav__fab { bottom: calc(var(--bar-total) + 18px); }
   html.tsb-hasbar .lessonnav__panel { bottom: calc(var(--bar-total) + 78px); }
 }
-/* v13, the action bar lives on EVERY screen now (phone, tablet,
+/* v13 — the action bar lives on EVERY screen now (phone, tablet,
    laptop, desktop): same centred floating pill, same rules. */
 @media (min-width: 769px) {
   .tsb-bar { width: min(470px, calc(100vw - 32px)); }
@@ -4891,7 +4891,7 @@ html.dark .tsb-bar__plus { border-color: #000; box-shadow: 3px 3px 0 #000; }
 
 
 /* ============================================================
-   📱 v2 UPGRADES, pill trim · sign-in sheet · YOU pages ·
+   📱 v2 UPGRADES — pill trim · sign-in sheet · YOU pages ·
    full-page chat · settings · 7-step onboarding
    (bar rules still hold: translateX(-50%) everywhere on .tsb-bar,
     transform/opacity-only animation, ::before owns active state)
@@ -4901,7 +4901,7 @@ html.dark .tsb-bar__plus { border-color: #000; box-shadow: 3px 3px 0 #000; }
 .tsb-bar__item svg { transition: transform .18s cubic-bezier(.2,.9,.3,1.3); }
 .tsb-bar__item::before { inset: 8px 10px; border-radius: 12px; border-width: 2.5px; }
 .tsb-bar__item.is-active svg { transform: translateY(-1px) scale(1.05); }
-/* the + (Stories) shows "active" by inverting, no pill behind it */
+/* the + (Stories) shows "active" by inverting — no pill behind it */
 .tsb-bar__item--plus::before { display: none; }
 .tsb-bar__item--plus.is-active .tsb-bar__plus { background: var(--chip); color: var(--yellow); }
 
@@ -5116,7 +5116,7 @@ html.dark .tsb-sheet { border-bottom: 0; }
 
 
 /* ============================================================
-   v3 POLISH, bar side-gap + pill trim · onboarding rows ·
+   v3 POLISH — bar side-gap + pill trim · onboarding rows ·
    premium sign-in glow · ChatGPT-clean chat page
    ============================================================ */
 
@@ -5232,14 +5232,14 @@ html.dark .tsb-ask--page .aq-input { background: #241f17; }
 
 
 /* ============================================================
-   💬 v4, TRUE MINIMAL CHAT PAGE (ChatGPT/Claude calm)
+   💬 v4 — TRUE MINIMAL CHAT PAGE (ChatGPT/Claude calm)
    Complete scoped reset: every aq-* element, chat page only.
    The pop-out on other pages is gone; this is the one chat UI.
    ============================================================ */
 html { font-size: 16px; }              /* one default size on every phone */
 
 .tsb-ask--page .aq-panel { background: var(--bg); }
-/* header, slim, hairline, no chrome */
+/* header — slim, hairline, no chrome */
 .tsb-ask--page .aq-head {
   background: transparent; border: 0; border-bottom: 1px solid rgba(127,127,127,.26);
   padding: 10px 12px; flex-wrap: nowrap;
@@ -5251,7 +5251,7 @@ html { font-size: 16px; }              /* one default size on every phone */
   border: 1.5px solid rgba(127,127,127,.45); border-radius: 10px;
   box-shadow: none; font-size: 13px;
 }
-/* suggestion chips, quiet outline pills */
+/* suggestion chips — quiet outline pills */
 .tsb-ask--page .aq-chips {
   background: transparent; border-bottom: 0;
   max-width: 760px; margin: 0 auto; width: 100%;
@@ -5267,7 +5267,7 @@ html { font-size: 16px; }              /* one default size on every phone */
   font-size: 11.5px; padding: 7px 12px;
 }
 .tsb-ask--page .aq-chip:hover { transform: none; box-shadow: none; }
-/* conversation, centred column, airy */
+/* conversation — centred column, airy */
 .tsb-ask--page .aq-msgs {
   max-width: 760px; margin: 0 auto; width: 100%;
   padding: 20px 16px 26px; gap: 24px;
@@ -5295,7 +5295,7 @@ html { font-size: 16px; }              /* one default size on every phone */
   box-shadow: none;
 }
 html.dark .tsb-ask--page .aq-bubble--user { background: #241f17; }
-/* answer internals, typographic, not boxed */
+/* answer internals — typographic, not boxed */
 .tsb-ask--page .aq-q {
   background: transparent; border: 0; padding: 0; margin: 0 0 12px;
   font-family: var(--font-body); font-weight: 700; font-size: 1.02rem; line-height: 1.45;
@@ -5333,7 +5333,7 @@ html.dark .tsb-ask--page .aq-src { background: #241f17; }
 .tsb-ask--page .aq-copy:hover { transform: none; }
 .tsb-ask--page .aq-follow { padding-left: 0; gap: 8px; }
 .tsb-ask--page .aq-follow__l { font-family: var(--font-body); font-weight: 700; color: #8f8a80; }
-/* composer, floating pill bar above the action bar */
+/* composer — floating pill bar above the action bar */
 .tsb-ask--page .aq-inputrow {
   max-width: 760px; margin: 0 auto; width: 100%;
   background: transparent; border-top: 1px solid rgba(127,127,127,.26);
@@ -5354,7 +5354,7 @@ html.dark .tsb-ask--page .aq-input { background: #241f17; }
   padding: 12px 20px;
 }
 .tsb-ask--page .aq-send:hover, .tsb-ask--page .aq-send:active { transform: none; box-shadow: none; }
-/* question library, clean bottom sheet */
+/* question library — clean bottom sheet */
 .tsb-ask--page .aq-lib {
   border: 0; border-radius: 26px 26px 0 0;
   box-shadow: 0 -20px 60px rgba(0,0,0,.28);
@@ -5367,7 +5367,7 @@ html.dark .tsb-ask--page .aq-lib__search { background: #241f17; }
 
 
 /* ============================================================
-   v5, THE ONE "YOU" WINDOW (profile + app settings inline)
+   v5 — THE ONE "YOU" WINDOW (profile + app settings inline)
    + chat empty-state hero
    ============================================================ */
 .youwin { width: min(640px, 100%); display: flex; flex-direction: column; gap: 14px; padding: calc(12px + env(safe-area-inset-top, 0px)) 14px calc(120px + env(safe-area-inset-bottom, 0px)); }
@@ -5398,7 +5398,7 @@ html.dark .youwin__home { box-shadow: 2.5px 2.5px 0 #000; }
 
 
 /* ============================================================
-   v6, chat suggestion scroller moves BELOW the conversation
+   v6 — chat suggestion scroller moves BELOW the conversation
    (library stays the 📚 button) + safe centring for tall pages
    + onboarding skip button
    ============================================================ */
@@ -5430,7 +5430,7 @@ html.dark .ob__x { border-color: #000; box-shadow: 2px 2px 0 #000; }
 
 
 /* ============================================================
-   v7, compact smooth bar · perfect pill · aligned onboarding ·
+   v7 — compact smooth bar · perfect pill · aligned onboarding ·
    proper chat header · source cards with book covers
    ============================================================ */
 /* bar: shorter width + lower profile + silkier motion */
@@ -5440,7 +5440,7 @@ html.dark .ob__x { border-color: #000; box-shadow: 2px 2px 0 #000; }
   transition: transform .26s cubic-bezier(.22,.9,.28,1), opacity .22s ease;
 }
 .tsb-bar--off { transform: translateX(-50%) translateY(calc(100% + 22px)); }
-/* the active pill, the perfect middle size */
+/* the active pill — the perfect middle size */
 .tsb-bar__item::before { inset: 7px 9px; border-radius: 13px; border-width: 2.5px; }
 
 /* onboarding: every row aligned, clean edges */
@@ -5497,7 +5497,7 @@ html.dark .ob__x { border-color: #000; box-shadow: 2px 2px 0 #000; }
 
 
 /* ============================================================
-   v8, paper toasts (no black boxes) · dead-space killer ·
+   v8 — paper toasts (no black boxes) · dead-space killer ·
    chat full-height column · starter shelf · guest gate
    ============================================================ */
 /* every toast in the app becomes a clean paper card */
@@ -5524,7 +5524,7 @@ html.tsb-hasbar body { padding-bottom: 0; }
 html.tsb-hasbar body > footer:last-of-type { padding-bottom: calc(var(--bar-total) + 34px); }
 body.chatpage { padding-bottom: 0 !important; }
 
-/* chat: one full-height column, msgs grow, composer pinned above bar */
+/* chat: one full-height column — msgs grow, composer pinned above bar */
 .tsb-ask--page .aq-panel { bottom: 0; height: 100dvh; }
 .tsb-ask--page .aq-msgs { flex: 1 1 auto; min-height: 0; }
 .tsb-ask--page .aq-chips { flex: none; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 10px; }
@@ -5577,7 +5577,7 @@ html.dark .gate__cta { color: #111; }
 
 
 /* ============================================================
-   v9, invisible hidden toast (kill the peeking pill) ·
+   v9 — invisible hidden toast (kill the peeking pill) ·
    pages end flush: footer content sits at the true bottom,
    the floating bar owns its own space (no dead strips)
    ============================================================ */
@@ -5589,14 +5589,14 @@ html.dark .gate__cta { color: #111; }
   opacity: 1; visibility: visible; pointer-events: auto;
   transition: transform .3s cubic-bezier(.2,1.4,.4,1), opacity .18s ease;
 }
-/* footer ends with its own breathing room only, bar floats over it */
+/* footer ends with its own breathing room only — bar floats over it */
 html.tsb-hasbar body > footer:last-of-type {
   padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
 }
 
 
 /* ============================================================
-   v10, chat column on CSS grid (1fr row = conversation ALWAYS
+   v10 — chat column on CSS grid (1fr row = conversation ALWAYS
    fills, composer glued above the bar) · onboarding progress
    strips inset clear of ← / ✕ · auth toasts go paper
    ============================================================ */
@@ -5628,7 +5628,7 @@ html.tsb-hasbar body .tsb-auth-toast { bottom: calc(var(--bar-total) + 20px); }
 
 
 /* ============================================================
-   v11, chat dock: questions + search + ask ALL at the bottom ·
+   v11 — chat dock: questions + search + ask ALL at the bottom ·
    podcast player & lesson fab dance with the bar (transform only)
    ============================================================ */
 /* bottom cluster: head / conversation / question pills / search / ask */
@@ -5654,7 +5654,7 @@ html.tsb-bar-hidden .lessonnav__fab.show {
 
 
 /* ============================================================
-   v12, chat = exactly four rows (head / conversation /
+   v12 — chat = exactly four rows (head / conversation /
    personalised pills / ask) · static name chip · library views
    ============================================================ */
 .tsb-ask--page .aq-panel { grid-template-rows: auto minmax(0, 1fr) auto auto; }
@@ -5684,12 +5684,12 @@ html.tsb-bar-hidden .lessonnav__fab.show {
 .tsb-libview-list .card__body { padding: 14px 16px; }
 
 
-/* v12b, composer hugs the bar: only the bar's own slot below ASK */
+/* v12b — composer hugs the bar: only the bar's own slot below ASK */
 .tsb-ask--page .aq-inputrow { padding-bottom: calc(var(--bar-total) + 6px); }
 
 
 /* ============================================================
-   v14, accent = bar pill only · font styles · progress bar ·
+   v14 — accent = bar pill only · font styles · progress bar ·
    name input · library-head contrast · dark-safe
    ============================================================ */
 .tsb-bar__item::before { background: var(--tsb-bar-accent, var(--yellow)); }
@@ -5719,7 +5719,7 @@ html.dark .setinput { background: #241f17; color: var(--ink); }
 
 
 /* ============================================================
-   v15, 🌍 COMMUNITY: feed · skeletons · composer · rich post ·
+   v15 — 🌍 COMMUNITY: feed · skeletons · composer · rich post ·
    comments · profiles · mini audio player (dark-safe)
    ============================================================ */
 .cm-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 10px; max-width: 760px; margin: 0 auto; }
@@ -5845,7 +5845,7 @@ html.dark .cm-card__tags span { background: #1b1712; }
 
 
 /* ============================================================
-   v16, Instagram-grade feed: author rail with rings,
+   v16 — Instagram-grade feed: author rail with rings,
    double-tap heart burst, section headers
    ============================================================ */
 .cm-rail { display: flex; gap: 14px; overflow-x: auto; padding: 6px 2px 12px; scrollbar-width: none; -ms-overflow-style: none; }
@@ -5862,7 +5862,7 @@ html.dark .cm-rail__n { color: #b7b0a5; }
 
 
 /* ============================================================
-   v17, full-page writer (Notes/Substack grade) · verified ✔ ·
+   v17 — full-page writer (Notes/Substack grade) · verified ✔ ·
    share cards · public IDs · mono/serif editor faces
    ============================================================ */
 .wr-top { position: sticky; top: 0; z-index: 8; display: flex; align-items: center; gap: 10px; padding: calc(10px + env(safe-area-inset-top, 0px)) 14px 10px; background: var(--bg); border-bottom: 2px dashed rgba(127,127,127,.3); }
@@ -5978,7 +5978,7 @@ html.dark .cm-idcode { background: #1b1712; color: var(--ink); }
 
 
 /* ============================================================
-   v18, People · Reels · DMs · progress · quote mode
+   v18 — People · Reels · DMs · progress · quote mode
    ============================================================ */
 .cm-write--alt { background: var(--bg); padding: 10px 12px; }
 html.dark .cm-write { color: #111; }
@@ -5987,7 +5987,7 @@ html.dark .cm-write--alt { color: var(--ink); }
 .cm-people { display: flex; flex-direction: column; gap: 10px; }
 .cm-person { display: flex; align-items: center; gap: 12px; background: var(--paper); border: 2.5px solid var(--ink); border-radius: 16px; box-shadow: 3.5px 3.5px 0 var(--ink); padding: 12px 14px; }
 .cm-person__meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.cm-person__meta .cm-bio { font-size: .74rem; color: #6b655c;   /* 5.7:1, was 3.4:1 */ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cm-person__meta .cm-bio { font-size: .74rem; color: #6b655c;   /* 5.7:1 — was 3.4:1 */ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cm-person__acts { display: flex; align-items: center; gap: 8px; }
 .cm-dmbtn { display: grid; place-items: center; width: 38px; height: 38px; border: 2.5px solid var(--ink); border-radius: 12px; background: var(--bg); text-decoration: none; font-size: 1rem; box-shadow: 2.5px 2.5px 0 var(--ink); }
 .cm-prog { font-size: .78rem; font-weight: 800; color: #55504a; }
@@ -6022,7 +6022,7 @@ html.dark .cm-person { background: #241f17; }
 .dm-send { position: sticky; bottom: calc(var(--bar-total) + 8px); display: flex; gap: 8px; margin-top: 14px; }
 .dm-input { flex: 1; min-width: 0; border: 2.5px solid var(--ink); border-radius: 14px; background: var(--paper); color: var(--ink); font: inherit; font-weight: 600; padding: 12px 14px; outline: none; box-shadow: 3px 3px 0 var(--ink); }
 /* v250 · FIX: the dark rename pass wrote this AFTER the own-bubble rule, so MY OWN
-   messages rendered #111 on near-black, invisible in dark mode. Own bubbles are
+   messages rendered #111 on near-black — invisible in dark mode. Own bubbles are
    always the yellow accent: they keep dark ink and re-assert their own background. */
 html.dark .dm-row { background: var(--paper); }   /* the row keeps its card tile */
 html.dark .dm-bub { background: var(--paper); color: var(--ink); }
@@ -6034,7 +6034,7 @@ html.dark .dm-input { background: #1b1712; color: var(--ink); }
 /* quote mode writer */
 .wr-quote .wr-title { text-transform: none; font-family: Georgia, serif; font-size: 1.9rem; }
 .wr-quote .wr-ed { min-height: 30vh; font-family: Georgia, "Iowan Old Style", serif; font-style: italic; font-size: 1.2rem; }
-/* --- QUOTE vs STORY, visibly different editors (v226) --- */
+/* --- QUOTE vs STORY — visibly different editors (v226) --- */
 .wr-modechip{ display:inline-block; font-family:var(--font-head); font-size:.62rem; letter-spacing:1.5px; text-transform:uppercase; border:2px solid var(--ink); border-radius:999px; padding:6px 12px; margin:4px 0 6px; box-shadow:2px 2px 0 var(--ink); }
 .wr-modechip--quote{ background:var(--yellow); color:#111; }
 .wr-modechip--story{ background:var(--paper); color:#555; border-style:dashed; }
@@ -6073,7 +6073,7 @@ html.dark .wr-quotelive__ph{ color:#b7b0a5; }
 
 
 /* ============================================================
-   v19, STORIES REDESIGN: masthead · pill tabs · cover-first
+   v19 — STORIES REDESIGN: masthead · pill tabs · cover-first
    cards · quote cards · people grid · notifications · badges
    ============================================================ */
 .cm-head--v19 { display: block; padding: calc(18px + env(safe-area-inset-top, 0px)) 16px 6px; }
@@ -6101,7 +6101,7 @@ html.dark .wr-quotelive__ph{ color:#b7b0a5; }
 .cm-card__kind { position: absolute; top: 10px; left: 10px; background: var(--chip); color: var(--yellow); font-family: var(--font-head); font-size: .58rem; letter-spacing: 2px; padding: 5px 9px; border-radius: 8px; }
 .cm-card__aud { position: absolute; top: 10px; right: 10px; background: var(--paper); border: 2px solid var(--ink); border-radius: 999px; padding: 3px 9px; font-size: .72rem; font-weight: 800; }
 .cm-card__title { font-family: var(--font-head); font-size: 1.22rem; line-height: 1.2; text-transform: uppercase; letter-spacing: -.2px; }
-/* quote cards, the yellow paper look */
+/* quote cards — the yellow paper look */
 .cm-card--quote { background: linear-gradient(160deg, #fff3c4 0%, var(--paper) 70%); }
 .cm-card--quote .cm-card__cover { aspect-ratio: auto; padding: 26px 20px 6px; background: none; }
 .cm-card--quote .cm-card__cover .cm-quote { position: static; font-size: 2.6rem; display: block; text-align: left; line-height: .6; }
@@ -6122,11 +6122,11 @@ html.dark .cm-card--quote { background: linear-gradient(160deg, #33290f 0%, #241
 .nt-row__meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .nt-row__meta b { font-size: .84rem; }
 .nt-row__meta b span { font-weight: 600; color: #55504a; }
-.nt-row__meta em { font-style: normal; font-size: .76rem; color: #6b655c;   /* 5.7:1, was 3.4:1 */ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nt-row__meta em { font-style: normal; font-size: .76rem; color: #6b655c;   /* 5.7:1 — was 3.4:1 */ overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .nt-row__meta .nt-body { font-style: italic; }
 .nt-cta { font-size: .68rem; font-weight: 800; color: var(--ink); letter-spacing: .4px; }
 .nt-ico { font-size: 1.15rem; flex: none; }
-.nt-badge { background: #e5484d; color: #1a0000;   /* 5.1:1, white was 3.9:1 */ border-radius: 999px; font-size: .6rem; font-weight: 900; padding: 2px 7px; }
+.nt-badge { background: #e5484d; color: #1a0000;   /* 5.1:1 — white was 3.9:1 */ border-radius: 999px; font-size: .6rem; font-weight: 900; padding: 2px 7px; }
 html.dark .nt-row { background: #241f17; color: var(--ink); }
 html.dark .nt-row.new { background: #33290f; }
 html.dark .nt-row__meta b span, html.dark .nt-row__meta em { color: #b7b0a5; }
@@ -6136,7 +6136,7 @@ html.dark .cm-tabs button.on { background: var(--yellow); color: var(--on-accent
 /* public toggle */
 #youPublicBtn.on { background: #00c48c; }
 
-/* v19b, You window: progress + activity sections */
+/* v19b — You window: progress + activity sections */
 .acc__prog { padding: 2px 2px 4px; }
 .acc__act { padding: 6px 2px 12px; }
 .acc__seclbl { display: block; font-family: var(--font-head); font-size: .62rem; letter-spacing: 1.8px; color: #8f8a80; margin: 12px 0 8px; text-transform: uppercase; }
@@ -6147,24 +6147,24 @@ html.dark .cm-tabs button.on { background: var(--yellow); color: var(--on-accent
 html.dark .acc__quick a { background: #241f17; color: var(--ink); }
 
 
-/* v19c, merged level + reading progress card */
+/* v19c — merged level + reading progress card */
 .acc__levelcard { background: var(--paper); border: 3px solid var(--ink); border-radius: 18px; box-shadow: 4px 4px 0 var(--ink); padding: 14px 16px 12px; margin: 4px 0 2px; }
 .acc__seclbl--in { margin: 14px 0 6px; }
 html.dark .acc__levelcard { background: #241f17; }
 
-/* v19d, auto default covers */
+/* v19d — auto default covers */
 .cm-card__cover .cm-quote { font-family: var(--font-head); font-size: 3.4rem; color: var(--ink); opacity: 1; display: grid; place-items: center; }
 .cm-card--quote .cm-card__cover .cm-quote { background: none !important; font-family: Georgia, serif; font-size: 2.6rem; }
 
 
-/* v19e, smooth section transitions */
+/* v19e — smooth section transitions */
 @keyframes cmFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .cm-feed > *, .nt-list > *, .dm-list > * { animation: cmFadeIn .22s ease both; }
 .cm-wrap, .wr-wrap { animation: cmFadeIn .25s ease both; }
 @media (prefers-reduced-motion: reduce) { .cm-feed > *, .nt-list > *, .dm-list > *, .cm-wrap, .wr-wrap { animation: none; } }
 
 
-/* v19f, Subscribe (Substack-style) + share card CTA */
+/* v19f — Subscribe (Substack-style) + share card CTA */
 .cm-sub { width: 100%; border: 3px solid var(--ink); background: var(--yellow); color: var(--on-accent); border-radius: 14px; padding: 13px 18px; font: inherit; font-weight: 800; font-size: .95rem; cursor: pointer; box-shadow: 3.5px 3.5px 0 var(--ink); }
 .cm-sub.on { background: #00c48c; color: #04301f; }   /* 6.4:1 */
 .cm-sub:active { transform: translate(2px, 2px); box-shadow: 1.5px 1.5px 0 var(--ink); }
@@ -6173,7 +6173,7 @@ html.dark .cm-sharecard__cta { color: #b7b0a5; }
 
 
 /* ============================================================
-   v20, Instagram-grade story actions · live toasts · social lists
+   v20 — Instagram-grade story actions · live toasts · social lists
    ============================================================ */
 /* big action row on story page */
 .cm-bigacts { display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0 6px; padding-top: 14px; border-top: 2.5px dashed rgba(127,127,127,.35); }
@@ -6221,7 +6221,7 @@ a.accstat { text-decoration: none; }
 
 
 /* ============================================================
-   v21, compact mobile toasts · DM sheets · book picker · dots
+   v21 — compact mobile toasts · DM sheets · book picker · dots
    ============================================================ */
 /* toasts: properly sized for phones */
 #tsbToasts { top: calc(8px + env(safe-area-inset-top, 0px)); width: min(360px, calc(100vw - 20px)); gap: 6px; }
@@ -6273,7 +6273,7 @@ html.dark .pk-row { background: #1b1712; color: var(--ink); }
 
 
 /* ============================================================
-   v22, anchored popouts · flipping ⋯ · search pill · social lists
+   v22 — anchored popouts · flipping ⋯ · search pill · social lists
    ============================================================ */
 .dm-pop { position: fixed; z-index: 110; width: 210px; background: var(--paper); border: 2.5px solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); padding: 6px; display: flex; flex-direction: column; gap: 4px; opacity: 0; transform: scale(.85); transform-origin: top right; transition: opacity .16s, transform .16s; }
 .dm-pop.on { opacity: 1; transform: scale(1); }
@@ -6300,7 +6300,7 @@ html.dark .pk-search input { color: var(--ink); }
 
 
 /* ============================================================
-   v23, video Bursts (max 2 min)
+   v23 — video Bursts (max 2 min)
    ============================================================ */
 .cm-card__cover video { width: 100%; height: 100%; object-fit: cover; display: block; background: #111; }
 .cm-card__kind--burst { background: var(--chip); color: var(--yellow); }
@@ -6314,7 +6314,7 @@ video.cm-postcard__cover { width: 100%; object-fit: contain; background: #111; b
 
 
 /* ============================================================
-   v24, infinite Bursts viewer
+   v24 — infinite Bursts viewer
    ============================================================ */
 .cm-burstend { min-height: 40px; display: flex; align-items: center; justify-content: center; text-align: center; color: #b9b2a6; font-weight: 700; font-size: .82rem; padding: 24px 20px calc(var(--bar-total) + 24px); }
 .cm-burstend small { color: #847e73; font-weight: 600; }
@@ -6323,7 +6323,7 @@ video.cm-postcard__cover { width: 100%; object-fit: contain; background: #111; b
 
 
 /* ============================================================
-   v25, Find readers overlay · profile glow-up
+   v25 — Find readers overlay · profile glow-up
    ============================================================ */
 .cm-finder { position: fixed; inset: 0; z-index: 105; background: rgba(20, 16, 10, .55); display: flex; align-items: center; justify-content: center; padding: 16px; }
 .cm-finder__card { width: min(520px, 100%); height: min(78dvh, 640px); background: var(--paper); border: 3px solid var(--ink); border-radius: 22px; box-shadow: 6px 6px 0 var(--ink); padding: 14px; display: flex; flex-direction: column; gap: 8px; }
@@ -6356,7 +6356,7 @@ html.dark .cm-statcard { background: #1b1712; color: var(--ink); }
 
 
 /* ============================================================
-   v26, SVG icon system (replaces fragile emojis)
+   v26 — SVG icon system (replaces fragile emojis)
    ============================================================ */
 .tsb-ic { width: 1.05em; height: 1.05em; vertical-align: -0.18em; flex: none; }
 .dm-pop button .tsb-ic { margin-right: 7px; }
@@ -6364,7 +6364,7 @@ html.dark .cm-statcard { background: #1b1712; color: var(--ink); }
 .cm-dmbtn .tsb-ic, .cm-follow .tsb-ic, .cm-sub .tsb-ic { margin-right: 4px; }
 .cm-bigact__ico .tsb-ic { width: 1.2em; height: 1.2em; vertical-align: -0.25em; }
 
-/* v26, SVG icon spacing */
+/* v26 — SVG icon spacing */
 .tsb-ic { width: 1.05em; height: 1.05em; vertical-align: -0.18em; flex: none; }
 .dm-pop button .tsb-ic { margin-right: 7px; }
 .cm-chipbtn .tsb-ic, .cm-sect .tsb-ic, .cm-empty .tsb-ic { margin-right: 5px; }
@@ -6374,7 +6374,7 @@ html.dark .cm-statcard { background: #1b1712; color: var(--ink); }
 .cm-del .tsb-ic { width: 1em; height: 1em; }
 .cm-bell .tsb-ic { width: 1.2em; height: 1.2em; }
 
-/* v27, visitor profile: card centred, one clean action area */
+/* v27 — visitor profile: card centred, one clean action area */
 .cm-sharecard { gap: 12px; }
 .cm-sharecard__who { justify-content: center; width: 100%; }
 .cm-sharecard .cm-bio { max-width: 34em; }
@@ -6386,7 +6386,7 @@ html.dark .cm-statcard { background: #1b1712; color: var(--ink); }
 .cm-sharerow--sub .setbtn { display: inline-flex; align-items: center; gap: 6px; justify-content: center; }
 
 /* ============================================================
-   v28, Instagram-style profile header + social sheet
+   v28 — Instagram-style profile header + social sheet
    ============================================================ */
 .cm-avawrap { position: relative; flex: none; }
 .cm-avaplus {
@@ -6433,7 +6433,7 @@ body.cm-soc-open { overflow: hidden; }
 .cm-socsheet__list { overflow-y: auto; padding: 10px 12px 16px; min-height: 120px; }
 .cm-socsheet__list .cm-people { display: flex; flex-direction: column; gap: 8px; }
 
-/* v29, big names wrap cleanly beside the avatar (never off-screen) */
+/* v29 — big names wrap cleanly beside the avatar (never off-screen) */
 .cm-profcard__top { align-items: flex-start; }
 .cm-profmain h1 { white-space: normal; overflow: visible; text-overflow: clip; max-width: 100%; overflow-wrap: anywhere; word-break: break-word; }
 
@@ -6497,8 +6497,8 @@ html.dark .instp, html.dark .instfine { color: #a8a195; }
 html.dark .insthero img { border-color: #000; box-shadow: 4px 4px 0 var(--paper); }
 
 /* ============================================================
-   🎙️ VOICE TO TEXT, dictate (v229, professional)
-   Top bar pill + live interim bar, no cheap popup
+   🎙️ VOICE TO TEXT — dictate (v229, professional)
+   Top bar pill + live interim bar — no cheap popup
    ============================================================ */
 .wr-dictate{
   display:inline-flex;align-items:center;gap:8px;
@@ -6549,7 +6549,7 @@ html.dark .wr-dictate__interim{background:#1b1712;color:var(--ink);border-color:
 }
 
 /* ============================================================
-   DARK MODE, READABILITY HARDENING (v248)
+   DARK MODE — READABILITY HARDENING (v248)
    Safety net for text-entry controls + message bubbles where
    default text was unreadable on dark surfaces.
    ============================================================ */
@@ -6575,11 +6575,11 @@ html.dark .dm-picker__card, html.dark .dm-sheet__card { color:var(--ink); }
 /* ============================================================
 
 /* ============================================================
-   v248, BOOK TOOLS: cheat-sheet, sponsor line, fuel modal
+   v248 — BOOK TOOLS: cheat-sheet, sponsor line, fuel modal
    (neo-brutalist: ink borders, hard offset shadows, Archivo Black)
    ============================================================ */
 /* ============================================================
-   v250, BOOK PAGE: the cheat-sheet you can actually see,
+   v250 — BOOK PAGE: the cheat-sheet you can actually see,
    the sponsor sheet rebuilt, and a two-page PDF that stays two pages
    ============================================================ */
 
@@ -6685,7 +6685,7 @@ html.dark .fuelmodal__upirow { border-color:#3a352b; }
 html.dark .fuelmodal__amts button.on { background:var(--yellow); color:var(--on-accent); border-color:var(--yellow); }
 
 /* ============================================================
-   THE CHEAT SHEET, colour, designed, and exactly two pages.
+   THE CHEAT SHEET — colour, designed, and exactly two pages.
    Print-only: it never flashes on screen. Every page clips its
    own content, so a third page is structurally impossible.
    ============================================================ */
@@ -6818,7 +6818,7 @@ html.dark .fuelmodal__amts button.on { background:var(--yellow); color:var(--on-
 }
 
 /* ============================================================
-   v248, DM: voice mic, read-together picker, audio, thread banner
+   v248 — DM: voice mic, read-together picker, audio, thread banner
    ============================================================ */
 .dm-mic { flex:none; width:46px; height:46px; border:2.5px solid var(--ink); border-radius:14px; background:#fff; color:var(--ink); font-size:1.2rem; cursor:pointer; box-shadow:3px 3px 0 var(--ink); }
 .dm-mic.on { background:var(--red); color:#fff; animation:pulse 1s infinite; }
@@ -6839,18 +6839,18 @@ html.dark .fuelmodal__amts button.on { background:var(--yellow); color:var(--on-
 .tsb-cheat .cs-cover { flex:none; width:54px; height:78px; object-fit:cover; border:3px solid #111; border-radius:8px; box-shadow:3px 3px 0 #111; }
 
 /* ============================================================
-   v250, DARK MODE CONTRAST AUDIT (authoritative, loaded last)
+   v250 — DARK MODE CONTRAST AUDIT (authoritative, loaded last)
    ------------------------------------------------------------
    Every rule below was produced by measuring the resolved
    foreground/background pair of each selector under the dark
    palette and keeping only those that fell under WCAG AA.
 
    Three root causes, all now closed:
-     1. `color: var(--paper)` inside an html.dark rule, --paper IS
+     1. `color: var(--paper)` inside an html.dark rule — --paper IS
         the dark surface (#241f17), so the text was 1.00:1: literally
         invisible. Fixed at source (38 rules) + re-asserted here.
      2. Bright accent surfaces (yellow/green/pink) paired with
-        `color: var(--ink)`, --ink flips to cream in dark mode, so
+        `color: var(--ink)` — --ink flips to cream in dark mode, so
         cream-on-yellow gave 1.30:1. Now routed through --on-accent.
      3. Hardcoded greys (#333/#444/#555/#666/#777/#6b6b6b/#55504a)
         and dark blues written for a light page and never overridden.
@@ -6891,8 +6891,8 @@ html.dark .cm-sub.on { background: #00d99b; color: #04301f; }   /* 7.9:1 */
 html.dark .scanmodal__result--found .scanmodal__rbadge { background: #00916b; color: #fff; }
 html.dark .tipjar__btns a:nth-child(3) { background: linear-gradient(135deg, #ff7a63, #e8342f); color: #fff; }
 html.dark .dm-bub.me em { color: #4a3a00; }
-html.dark .stat--red .stat__label { color: #2a0503; }   /* 5.9:1, #ffe9e9 was 2.8:1 */
-html.dark .stat--blue .stat__label { color: #08122e; }   /* 5.7:1, #eaf1ff was 2.9:1 */
+html.dark .stat--red .stat__label { color: #2a0503; }   /* 5.9:1 — #ffe9e9 was 2.8:1 */
+html.dark .stat--blue .stat__label { color: #08122e; }   /* 5.7:1 — #eaf1ff was 2.9:1 */
 
 /* --- 6 · Ask / library copy written with light-page greys ------------- */
 html.dark .aq-head__s { color: var(--muted); }
@@ -6935,7 +6935,7 @@ html.dark .search input::placeholder { color: #9a917d; }
 /* --- 11 · notification rows: the "new" tint must not swallow the text - */
 html.dark .nt-row.new { background: #33290f; }
 html.dark .nt-row.new::before { background: #ff5252; color: #1a0000; }   /* 6.3:1 */
-html.dark .nt-badge { background: #ff5252; color: #1a0000; }   /* 6.3:1, white was 3.2:1 */
+html.dark .nt-badge { background: #ff5252; color: #1a0000; }   /* 6.3:1 — white was 3.2:1 */
 html.dark .nt-row__meta b span { color: #cfc7b8; }
 html.dark .nt-row__meta em { color: var(--muted); }
 
@@ -6948,10 +6948,10 @@ html.dark .dm-plus { background: var(--yellow); color: var(--on-accent); border-
 /* Graveyard seal chips: the :hover rule out-specificifies the base one,
    so it needs its own dark override (cream text on a cream chip = 1.03:1). */
 html.dark .grave:hover .grave__seal { color: #14110c; border-color: #000; }
-html.dark .grave:hover .grave__seal--book { color: var(--yellow); border-color: var(--yellow); }   /* 10.5:1, #7a4a00 was 2.2:1 */
+html.dark .grave:hover .grave__seal--book { color: var(--yellow); border-color: var(--yellow); }   /* 10.5:1 — #7a4a00 was 2.2:1 */
 
 /* ============================================================
-   v250, INLINE-STYLE DARK GUARD
+   v250 — INLINE-STYLE DARK GUARD
    ------------------------------------------------------------
    241 places in the HTML (and in JS-built markup) paint a light
    or bright surface with an inline style="background:#fff" and let
@@ -6959,7 +6959,7 @@ html.dark .grave:hover .grave__seal--book { color: var(--yellow); border-color: 
    var(--ink) = cream #f2ead8, so the label disappeared:
    cream text on a white card.
 
-   An inline style beats any selector, but it does NOT beat
+   An inline style beats any selector — but it does NOT beat
    !important. So we match the inline declaration itself and pin
    the text to a dark ink. The background is deliberately left
    alone: children that hardcode their own colour (#111, #6b7280 …)
@@ -6985,7 +6985,7 @@ html.dark [style*="background:linear-gradient(135deg,#ffc800"],
 html.dark [style*="background:conic-gradient(#ffc800"] {
   color: #14110c !important;
 }
-/* the pure-white cards are the harshest glare in a dark room, warm them
+/* the pure-white cards are the harshest glare in a dark room — warm them
    to paper. Safe because the rule above already pinned their text dark. */
 html.dark [style*="background:#fff;"],
 html.dark [style*="background:#fff\""],
@@ -7007,7 +7007,7 @@ html.dark .accrow--about { background: linear-gradient(135deg, #33290f 0%, #241f
 html.dark .accrow--about i { color: var(--muted); }
 
 /* ============================================================
-   v250, NOTIFICATION CENTRE
+   v250 — NOTIFICATION CENTRE
    Unread is flagged once, opening folds it into history, and the
    badges everywhere are painted from the same single count.
    ============================================================ */
@@ -7066,7 +7066,7 @@ html.dark .nt-markall { background: #00d99b; color: #04301f; border-color: #000;
 html.dark .nt-row.read { opacity: .78; }
 
 /* ============================================================
-   v250, 🎙️ VOICE: composer · recorder stage · player
+   v250 — 🎙️ VOICE: composer · recorder stage · player
    ============================================================ */
 
 /* ---------- composer: one capsule, mic docked inside it ---------- */
@@ -7083,7 +7083,7 @@ html.dark .nt-row.read { opacity: .78; }
 .dm-field .dm-input::placeholder { color: var(--muted); }   /* 5.7:1 */
 
 /* the mic: a real SVG in a solid pill, with an idle halo that says
-   "hold me", no emoji, no lonely floating square */
+   "hold me" — no emoji, no lonely floating square */
 .dm-micbtn {
   position: relative; flex: none; width: 42px; height: 42px; padding: 0;
   display: grid; place-items: center; cursor: pointer;
@@ -7385,7 +7385,7 @@ html.dark .cm-live i { background: #d9fff2; }
 html.dark .nt-hint { color: var(--muted); }
 
 /* ============================================================
-   v250, 💬 C.say(): the app's one inline voice (no more alert())
+   v250 — 💬 C.say(): the app's one inline voice (no more alert())
    ============================================================ */
 .tsb-say {
   pointer-events: auto; display: flex; align-items: flex-start; gap: 10px;
@@ -7431,7 +7431,7 @@ html.dark .cm-person__meta .cm-bio { color: var(--muted); }   /* 7.6:1 */
    ===================================================================== */
 
 /* ---------------------------------------------------------------------
-   1 · LOCKED recording, the note stays alive after you let go
+   1 · LOCKED recording — the note stays alive after you let go
    --------------------------------------------------------------------- */
 .vstage.is-locked .vstage__card {
   box-shadow: 6px 6px 0 var(--green), 0 0 0 3px var(--ink), 0 0 30px rgba(0,217,155,.28);
@@ -7465,7 +7465,7 @@ html.dark .dm-micbtn.is-lock { background: #00d99b; color: #04301f; border-color
 .dm-micbtn.is-lock::before { animation: none; opacity: 0; }
 
 /* ---------------------------------------------------------------------
-   2 · ONE composer capsule, the + lives inside it, not beside it
+   2 · ONE composer capsule — the + lives inside it, not beside it
    --------------------------------------------------------------------- */
 .dm-send {
   align-items: center; gap: 6px;
@@ -7474,7 +7474,7 @@ html.dark .dm-micbtn.is-lock { background: #00d99b; color: #04301f; border-color
   box-shadow: 3px 3px 0 var(--ink);
 }
 html.dark .dm-send { background: #1b1712; border-color: #000; box-shadow: 3px 3px 0 #000; }
-/* the field is no longer its own capsule, it lives inside the big one */
+/* the field is no longer its own capsule — it lives inside the big one */
 .dm-field, html.dark .dm-field {
   background: none; border: 0; box-shadow: none; border-radius: 0;
   padding: 0 2px 0 8px; gap: 4px;
@@ -7496,7 +7496,7 @@ html.dark .dm-plus { background: #241f17; color: var(--ink); border-color: #000;
 html.dark .dm-plus:hover, html.dark .dm-plus.is-picking { background: var(--yellow); color: var(--on-accent); }
 
 /* ---------------------------------------------------------------------
-   3 · QUOTE DESK, choose · paste · search, why-line, preview
+   3 · QUOTE DESK — choose · paste · search, why-line, preview
    --------------------------------------------------------------------- */
 .qd-ov {
   position: fixed; inset: 0; z-index: 99990; display: flex; align-items: flex-end; justify-content: center;
@@ -7538,7 +7538,7 @@ html.dark .qd-sheet { background: #1b1712; box-shadow: 0 -6px 0 #000; }
 .qd-kinds { display: grid; gap: 9px; }
 /* v251 · the desk finds, Studio designs.
    The photo is searched and chosen ON this sheet, and the preview shows the
-   true crop for the shape you picked, no second window anywhere. */
+   true crop for the shape you picked — no second window anywhere. */
 .qd-photo { display: grid; gap: 9px; }
 .qd-search { display: flex; gap: 8px; align-items: stretch; }
 .qd-search input {
@@ -7578,7 +7578,7 @@ html.dark .qd-sheet { background: #1b1712; box-shadow: 0 -6px 0 #000; }
   padding: 4px 10px; font: 800 10px "Space Grotesk", sans-serif; cursor: pointer; color: var(--ink);
 }
 /* the shape row wraps into a tidy grid instead of the scrolling font strip it
-   replaced, .qd-tune--ratio needs to out-rank the generic .qd-tune rules */
+   replaced — .qd-tune--ratio needs to out-rank the generic .qd-tune rules */
 .qd-tune.qd-tune--ratio { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; overflow: visible; padding: 3px 0 2px; }
 @media (min-width: 420px) { .qd-tune.qd-tune--ratio { grid-template-columns: repeat(4, 1fr); } }
 .qd-tune.qd-tune--ratio button {
@@ -7732,7 +7732,7 @@ html.dark .ysw__sw.on { background: #00d99b; }
 .ysw__lbl { font-size: .72rem; font-weight: 800; }
 
 /* ---------------------------------------------------------------------
-   5 · STORE logo tiles, real marks, honestly sized
+   5 · STORE logo tiles — real marks, honestly sized
    --------------------------------------------------------------------- */
 .st-logo { border-radius: 16px; overflow: hidden; }
 .st-logo img { padding: 9px; }
@@ -7743,7 +7743,7 @@ html.dark .ysw__sw.on { background: #00d99b; }
 .st-card__top .st-logo { width: 56px; height: 56px; }
 
 /* ---------------------------------------------------------------------
-   6 · GRAVEYARD, depth, not decoration
+   6 · GRAVEYARD — depth, not decoration
    --------------------------------------------------------------------- */
 :root { --stone-a: #9aa3b4; --stone-b: #565e6c; }
 html.dark { --stone-a: #7c8494; --stone-b: #40474f; }
@@ -7848,7 +7848,7 @@ html.dark .ob-btns { background: linear-gradient(transparent, #171410 38%); }
 }
 
 /* ============================================================
-   v264 · THE YOU WINDOW, departments + rooms + MY ACTIVITY
+   v264 · THE YOU WINDOW — departments + rooms + MY ACTIVITY
    ============================================================ */
 .yset__sub { font: 600 11.5px 'Space Grotesk', sans-serif; color: #8f8a80; margin: 2px 0 12px; }
 .ydept { display: flex; flex-direction: column; gap: 10px; }
@@ -7891,7 +7891,7 @@ html.dark .accsub__back { background: #241f17; border-color: #000; box-shadow: 2
 html.dark .accsub .yset__row { background: #241f17; border-color: #000; box-shadow: 3px 3px 0 #000; }
 .accsub .yset__row > .yset__ctl:last-child { flex-basis: 100%; }
 
-/* MY ACTIVITY, the ring, the counters, the bold cards */
+/* MY ACTIVITY — the ring, the counters, the bold cards */
 .actlevel { background: #fff; border: 3px solid var(--ink); border-radius: 18px; box-shadow: 4px 4px 0 var(--ink);
   padding: 14px; margin-bottom: 14px; }
 html.dark .actlevel { background: #241f17; border-color: #000; box-shadow: 4px 4px 0 #000; }
@@ -7937,7 +7937,7 @@ html.dark .actpill { background: #241f17; border-color: #000; box-shadow: 3px 3p
 .actfine { font: 600 10.5px 'Space Grotesk', sans-serif; color: #8f8a80; text-align: center; margin-top: 14px; }
 
 /* ============================================================
-   v264 · PROFILE v3, the reference card: banner, centered hero,
+   v264 · PROFILE v3 — the reference card: banner, centered hero,
    follower pills, three top buttons, ONE big subscribe
    ============================================================ */
 .cm-profhead--v3 { position: relative; text-align: center; padding-bottom: 6px; }
@@ -7988,7 +7988,7 @@ html.dark .cm-statrow--pills .cm-pill { border-color: #000; box-shadow: 2.5px 2.
   font: 800 11px 'Archivo Black', 'Space Grotesk', sans-serif; padding: 4px 10px; box-shadow: 2px 2px 0 var(--ink); }
 
 /* ============================================================
-   v264 · GRAVE IMAGES, every grave shows its face (free record)
+   v264 · GRAVE IMAGES — every grave shows its face (free record)
    ============================================================ */
 .autopsy__pic { position: relative; margin: 14px 0 0; border: 3px solid var(--ink); border-radius: 16px;
   overflow: hidden; background: #efe9dc; box-shadow: 4px 4px 0 rgba(0,0,0,.25); }
@@ -8011,7 +8011,7 @@ html.dark .cm-statrow--pills .cm-pill { border-color: #000; box-shadow: 2.5px 2.
 @media (prefers-reduced-motion: reduce) { .autopsy__pic--wait::before { animation: none; } }
 
 /* ============================================================
-   v265 · THE FREE TASTER, 15 minutes, two polite pop-ups, a gate
+   v265 · THE FREE TASTER — 15 minutes, two polite pop-ups, a gate
    ============================================================ */
 .trialwrap { position: fixed; inset: 0; z-index: 99990; display: grid; place-items: center; padding: 20px;
   background: rgba(12,10,6,.62); backdrop-filter: blur(4px); opacity: 0; transition: opacity .28s ease; }
@@ -8044,7 +8044,7 @@ html.trial-lock { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) { .trialwrap, .trial { transition: none; } }
 
 /* ============================================================
-   v265 · THE GRAVEYARD DESKS, audit + wire wear the graveyard:
+   v265 · THE GRAVEYARD DESKS — audit + wire wear the graveyard:
    dark case-file boards, yellow evidence labels, zero office look
    ============================================================ */
 .graveyard-page .acard--audit, .graveyard-page .acard--wire {
@@ -8074,7 +8074,7 @@ html.trial-lock { overflow: hidden; }
 .graveyard-page .acard--audit .areport, .graveyard-page .acard--wire .areport { color: #111; }
 
 /* ============================================================
-   v265 · LOGIN POLISH, nothing cut, nothing floating, motion in
+   v265 · LOGIN POLISH — nothing cut, nothing floating, motion in
    ============================================================ */
 .youpage .yotab { white-space: nowrap; letter-spacing: .6px; padding: 12px 4px; }
 .youpage .lgi .yoin { padding-right: 48px; }
@@ -8103,7 +8103,7 @@ html.dark .youpage .yoin:-webkit-autofill { -webkit-text-fill-color: #f2ead8; -w
 }
 
 /* ============================================================
-   v265 · ONBOARDING MOTION, the page breathes between questions
+   v265 · ONBOARDING MOTION — the page breathes between questions
    ============================================================ */
 .ob-hero__deco, .ob__bg { animation: obdrift 9s ease-in-out infinite; }
 .ob-hero__deco--circ, .ob__bg--circ { animation-duration: 7s; animation-delay: .6s; }
@@ -8121,7 +8121,7 @@ html.dark .youpage .yoin:-webkit-autofill { -webkit-text-fill-color: #f2ead8; -w
 }
 
 /* ============================================================
-   v265 · PROFILE ALIGNMENT, one axis: everything centers
+   v265 · PROFILE ALIGNMENT — one axis: everything centers
    ============================================================ */
 .cm-profhead--v3 .cm-profcard { background: transparent; border: 0; box-shadow: none; padding: 0; margin: 0; max-width: none; }
 .cm-profhead--v3 .cm-profmain { text-align: center; }
@@ -8137,7 +8137,7 @@ html.dark .youpage .yoin:-webkit-autofill { -webkit-text-fill-color: #f2ead8; -w
 .cm-profhead--v3 .cm-sharecard { display: none; }
 
 /* ============================================================
-   v266 · THE IDEA AUTOPSY, banner + room, built for the YOU
+   v266 · THE IDEA AUTOPSY — banner + room, built for the YOU
    window from scratch. The graveyard's own interrogation room.
    ============================================================ */
 .iaudban-wrap { max-width: 1080px; margin: 6px auto 4px; padding: 0 14px; }
@@ -8302,7 +8302,7 @@ html.dark .youpage .yoin:-webkit-autofill { -webkit-text-fill-color: #f2ead8; -w
 }
 
 /* ============================================================
-   v266 · ONBOARDING, THE CHAPTER BOOK (out-of-the-box question UI)
+   v266 · ONBOARDING — THE CHAPTER BOOK (out-of-the-box question UI)
    ============================================================ */
 .ob--page .ob__body { perspective: 1400px; }
 .ob-step { position: relative; background: #fff; border: 3px solid var(--ink); border-radius: 22px;
@@ -8347,7 +8347,7 @@ html.dark .ob-step { background: #241f17; border-color: #000; box-shadow: 8px 8p
 .iaudit__mic.on { background: #ff4d4d; color: #fff; animation: micPulse 1.1s ease-in-out infinite; }
 
 /* ============================================================
-   v267 · IDEA AUTOPSY, evidence meters, AI read, history shelf
+   v267 · IDEA AUTOPSY — evidence meters, AI read, history shelf
    ============================================================ */
 .iaudit__sigwrap { background: #fffdf5; border: 3px dashed #b9b19c; border-radius: 16px; padding: 12px 13px; margin-bottom: 12px; }
 .iaudit__sigwrap__lbl { display: block; font: 800 9px 'Space Grotesk', sans-serif; letter-spacing: 2px; color: #8f8a80; margin-bottom: 8px; }
@@ -8375,14 +8375,14 @@ html.dark .ob-step { background: #241f17; border-color: #000; box-shadow: 8px 8p
 @keyframes subout { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(26px); } }
 @media (prefers-reduced-motion: reduce) { .accsub--out { animation: none; } }
 
-/* v267 · Look & feel, every option says what it is */
+/* v267 · Look & feel — every option says what it is */
 .yset__ctl .setopt { position: relative; }
 .yset__ctl .setopt small { display: block; font: 700 8.5px 'Space Grotesk', sans-serif; letter-spacing: .4px;
   color: #6b6656; margin-top: 3px; text-transform: uppercase; }
 .setopt--sm { min-width: 58px; text-align: center; }
 html.dark .yset__ctl .setopt small { color: #b8b2a2; }
 
-/* v267 · quote flow, one card, one door, one honest toggle */
+/* v267 · quote flow — one card, one door, one honest toggle */
 .wr-quotelive__card { cursor: pointer; }
 .wr-quotelive__chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 .wr-qchip { flex: 1 1 46%; border: 2.5px solid #111; background: #fff; border-radius: 999px; padding: 11px 12px;
@@ -8408,53 +8408,3 @@ html.dark .freshanchor { border-color: #000; box-shadow: 3px 3px 0 #000; }
 .freshhead__btn:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 #111; }
 .freshhead__btn:disabled { opacity: .6; }
 html.dark .freshhead__btn { border-color: #000; box-shadow: 3px 3px 0 #000; }
-
-/* v267 · the free AI, napping honestly instead of vanishing */
-.iaudit__ai--nap { opacity: .82; box-shadow: 4px 4px 0 rgba(0,0,0,.18); }
-.iaudit__ai--nap .iaudit__ai__lbl { color: #b8b2a2; }
-
-/* ============================================================
-   v268 · VOICE, the lock pop, the STOP button, the hear-it-back
-   ============================================================ */
-.vstage__stop { display: inline-flex; align-items: center; gap: 7px; border: 2.5px solid #111; background: #ff4d4d;
-  color: #fff; border-radius: 999px; padding: 10px 16px; font: 800 12px 'Space Grotesk', sans-serif; letter-spacing: .5px;
-  cursor: pointer; box-shadow: 3px 3px 0 #111; }
-.vstage__stop svg { width: 15px; height: 15px; }
-.vstage__stop:active { transform: scale(.96); }
-.vstage__prev { padding: 10px 12px 2px; }
-.vstage__prev .vp { background: rgba(255,255,255,.07); }
-.vstage__prev .vp__tag, .vstage__prev .vp__meta { color: #f2ead8; }
-.vstage.lockpop .vstage__lock { animation: vlockpop .68s cubic-bezier(.2,.9,.25,1.2); }
-.vstage.lockpop .vstage__wave { animation: vshake .4s ease; }
-@keyframes vlockpop {
-  0% { transform: translateY(14px) scale(.5); opacity: 0; }
-  45% { transform: translateY(-4px) scale(1.18); opacity: 1; }
-  70% { transform: translateY(0) scale(.96); }
-  100% { transform: none; opacity: 1; }
-}
-@keyframes vshake { 0%,100% { transform: none; } 25% { transform: translateX(-4px); } 60% { transform: translateX(4px); } }
-@media (prefers-reduced-motion: reduce) { .vstage.lockpop .vstage__lock, .vstage.lockpop .vstage__wave { animation: none; } }
-/* ============================================================
-   v272 · THE WEEKLY PROMPT, in house clothes.
-   The feature stays, the imported design layer does not: the
-   card wears the trusted house style, same as every shelf card
-   (3px ink border, hard shadow, yellow accent, Archivo voice).
-   ============================================================ */
-.cm-weekly { position: relative; overflow: hidden; background: var(--paper); border: 3px solid var(--ink); border-radius: 18px; box-shadow: 5px 5px 0 var(--ink); padding: 18px 18px 16px 22px; margin: 2px 2px 16px; }
-.cm-weekly::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--yellow); border-right: 3px solid var(--ink); }
-.cm-weekly__top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; }
-.cm-weekly__badge { font: 800 10px/1 var(--font-head); letter-spacing: 1.6px; background: var(--yellow); color: var(--on-accent); border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); padding: 6px 9px; border-radius: 7px; display: inline-block; }
-.cm-weekly__wk { font: 700 10.5px var(--font-body); letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
-.cm-weekly__q { font-family: var(--font-head); font-size: clamp(15px, 4vw, 20px); line-height: 1.25; letter-spacing: .2px; text-transform: uppercase; margin: 0 0 8px; color: var(--ink); }
-.cm-weekly__s { font: 500 12.5px/1.6 var(--font-body); color: var(--muted); margin: 0 0 14px; }
-.cm-weekly__row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.cm-weekly__cta { display: inline-block; text-decoration: none; font: 800 11px/1 var(--font-head); letter-spacing: 1px; text-transform: uppercase; background: var(--yellow); color: var(--on-accent); border: 2.5px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); padding: 12px 14px; border-radius: 10px; transition: transform .12s ease, box-shadow .12s ease; }
-.cm-weekly__cta:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--ink); }
-.cm-weekly__cta--ghost { background: var(--paper); color: var(--ink); }
-.cm-weekly__done { font: 800 10px/1 var(--font-head); letter-spacing: 1px; text-transform: uppercase; color: var(--on-accent); background: var(--green); border: 2px solid var(--ink); padding: 6px 9px; border-radius: 7px; display: inline-block; }
-.cm-nudge { display: flex; gap: 8px; align-items: center; margin: 10px 14px 14px; padding: 10px 12px; background: var(--surface-2); border: 2px dashed var(--muted-2); border-radius: 12px; font: 600 12px/1.45 var(--font-body); color: var(--muted); text-decoration: none; transition: border-color .15s ease, color .15s ease; }
-.cm-nudge:hover { border-color: var(--ink); color: var(--ink); }
-.cm-nudge svg { width: 14px; height: 14px; flex: none; }
-.wr-weekly { background: var(--yellow); color: var(--on-accent); border: 2.5px solid var(--ink); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); padding: 11px 14px; margin-bottom: 12px; font: 500 13px/1.5 var(--font-body); }
-.wr-weekly b { font: 800 10px/1 var(--font-head); letter-spacing: 1.5px; display: block; margin-bottom: 4px; }
-@media (prefers-reduced-motion: reduce) { .cm-weekly__cta:hover { transform: none; } }

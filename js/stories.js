@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK, COMMUNITY STORIES (stories.html)
+   THESMALLBOOK — COMMUNITY STORIES (stories.html)
    Uses TSB_STORE (js/store.js): Supabase cloud when configured,
    localStorage fallback otherwise. Seed stories always shown.
    ============================================================ */
@@ -40,14 +40,14 @@ async function renderShelf() {
 
   grid.innerHTML = "";
 
-  /* 📊 STATS STRIP, live numbers (README STORIES count + story of the week) */
+  /* 📊 STATS STRIP — live numbers (README STORIES count + story of the week) */
   try {
     const weekNum = Math.floor(Date.now() / (7 * 864e5));
     const feat = stories.length ? stories[weekNum % stories.length] : null;
     const t = document.getElementById("stTotal");
     if (t) t.textContent = stories.length;
     const fe = document.getElementById("stFeatured");
-    if (fe) fe.textContent = feat ? feat.title.slice(0, 24) + (feat.title.length > 24 ? "…" : "") : "-";
+    if (fe) fe.textContent = feat ? feat.title.slice(0, 24) + (feat.title.length > 24 ? "…" : "") : "—";
     const cta = document.getElementById("stCta");
     if (cta) {
       cta.textContent = "CLAIM →";
@@ -58,7 +58,7 @@ async function renderShelf() {
     }
   } catch (e) {}
 
-  /* ✍️ GHOST CARD, the fame slot waiting for the reader's name */
+  /* ✍️ GHOST CARD — the fame slot waiting for the reader's name */
   const ghost = document.createElement("a");
   ghost.className = "card ghostcard";
   ghost.href = "#write";
@@ -82,7 +82,7 @@ async function renderShelf() {
     return;
   }
 
-  /* 🏆 FEATURED STORY OF THE WEEK, deterministic weekly rotation */
+  /* 🏆 FEATURED STORY OF THE WEEK — deterministic weekly rotation */
   const week = Math.floor(Date.now() / (7 * 864e5));
   const featured = stories[week % stories.length];
   // 🏆 if the featured story is YOURS, unlock Featured Author
@@ -126,7 +126,7 @@ async function renderShelf() {
   const PROMPTS = [
     { e: "📢", t: "Which book called you out?", title: "THE BOOK THAT CALLED ME OUT" },
     { e: "🌙", t: "Your 3 AM turning point", title: "MY 3 AM TURNING POINT" },
-    { e: "💸", t: "The lesson you ignored, and paid for", title: "THE LESSON I IGNORED (AND PAID FOR)" },
+    { e: "💸", t: "The lesson you ignored — and paid for", title: "THE LESSON I IGNORED (AND PAID FOR)" },
     { e: "🔁", t: "The habit that finally stuck", title: "THE HABIT THAT FINALLY STUCK" },
     { e: "🗣️", t: "A conversation one book fixed", title: "THE CONVERSATION ONE BOOK FIXED" },
     { e: "🚪", t: "The day you quit the wrong thing", title: "THE DAY I QUIT THE WRONG THING" }
@@ -151,7 +151,7 @@ async function renderShelf() {
 /* ---------- populate book select ---------- */
 const sel = document.getElementById("sBook");
 sel.innerHTML =
-  `<option value="">Life in general.</option>` +
+  `<option value="">— Life in general —</option>` +
   BOOKS.map((b) => `<option value="${b.id}">${b.title}</option>`).join("");
 
 /* ---------- cover upload (resized to keep payload small) ---------- */
@@ -174,7 +174,7 @@ coverInput.addEventListener("change", () => {
     coverPreview.src = coverData;
     coverPreview.style.display = "block";
     coverDrop.classList.add("has-file");
-    coverDrop.childNodes[0].textContent = "✅ COVER READY, CLICK TO CHANGE ";
+    coverDrop.childNodes[0].textContent = "✅ COVER READY — CLICK TO CHANGE ";
   };
   img.src = URL.createObjectURL(f);
 });
@@ -188,7 +188,7 @@ pdfInput.addEventListener("change", () => {
   const f = pdfInput.files[0];
   if (!f) return;
   if (f.size > 4 * 1024 * 1024) {
-    toast("⚠️ PDF too big, max 4 MB");
+    toast("⚠️ PDF too big — max 4 MB");
     pdfInput.value = "";
     return;
   }
@@ -224,7 +224,7 @@ document.getElementById("storyForm").addEventListener("submit", async (e) => {
   toast("⏳ Publishing...");
   const result = await TSB_STORE.save(story);
 
-  if (!result.ok) { toast("❌ Couldn't save, storage full"); return; }
+  if (!result.ok) { toast("❌ Couldn't save — storage full"); return; }
 
   e.target.reset();
   coverData = ""; pdfData = "";
@@ -237,7 +237,7 @@ document.getElementById("storyForm").addEventListener("submit", async (e) => {
   if (window.TSB) TSB.achv.award("story-published");
   await renderShelf();
   if (result.cloud) toast("🎉 Published globally! Everyone can read it now");
-  else if (result.error === "pdf-dropped") toast("⚠️ Saved (locally) without PDF, storage limit");
+  else if (result.error === "pdf-dropped") toast("⚠️ Saved (locally) without PDF — storage limit");
   else {
     toast("🎉 Published! Saved on this device");
     // offer the no-backend global submission path
@@ -250,7 +250,7 @@ document.getElementById("storyForm").addEventListener("submit", async (e) => {
    GLOBAL SUBMISSION WITHOUT A BACKEND
    Downloads the story as a small .json file and shows the reader
    how to send it to the site owner, who pastes it into
-   js/stories-community.js, making it visible to everyone.
+   js/stories-community.js — making it visible to everyone.
    ============================================================ */
 function offerGlobalSubmit(story) {
   let modal = document.getElementById("submitModal");
@@ -266,12 +266,12 @@ function offerGlobalSubmit(story) {
       <div class="modal__title">🌍 Want everyone to read it?</div>
       <p style="font-weight:600; margin-bottom:14px;">
         Your story is saved <strong>on this device</strong>. To get it on the
-        <strong>Global Shelf</strong> (visible to every visitor), send it to us.
+        <strong>Global Shelf</strong> (visible to every visitor), send it to us —
         it gets added in the next weekly update:
       </p>
       <ol style="font-weight:600; font-size:.92rem; display:flex; flex-direction:column; gap:10px; margin:0 0 18px 20px;">
         <li><strong>Download</strong> your story file below (a tiny .json)</li>
-        <li><strong>Send it</strong> to us by email, attach the file</li>
+        <li><strong>Send it</strong> to us by email — attach the file</li>
         <li>It appears on the shelf for <strong>everyone</strong> within a week ✨</li>
       </ol>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -279,7 +279,7 @@ function offerGlobalSubmit(story) {
         <a class="btn btn--blue" id="mailStoryBtn" href="#">📧 OPEN EMAIL</a>
       </div>
       <p style="font-size:.7rem; font-weight:600; margin-top:12px; opacity:.7;">
-        Stories are reviewed before going global, keep it original and kind.
+        Stories are reviewed before going global — keep it original and kind.
       </p>
     </div>`;
   modal.classList.add("open");
@@ -296,11 +296,11 @@ function offerGlobalSubmit(story) {
     a.download = `story-${story.id}.json`;
     a.click();
     URL.revokeObjectURL(a.href);
-    toast("⬇ Story file downloaded, now email it to us!");
+    toast("⬇ Story file downloaded — now email it to us!");
   });
 
   const mail = modal.querySelector("#mailStoryBtn");
-  const subject = encodeURIComponent(`[TheSmallBook Story] ${story.title}, by ${story.author}`);
+  const subject = encodeURIComponent(`[TheSmallBook Story] ${story.title} — by ${story.author}`);
   const body = encodeURIComponent(
     `Hi Jash!\n\nI just wrote a story on TheSmallBook and I'd love it on the Global Shelf.\n\n` +
     `Title: ${story.title}\nAuthor: ${story.author}\n\n` +

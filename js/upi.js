@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK, 💸 UPI PAYMENT ENGINE (upi.js)
+   THESMALLBOOK — 💸 UPI PAYMENT ENGINE (upi.js)
    One payment helper for the whole app: tip jar, TSB Gold,
    Fuel the Library.
    - Native UPI deep link first (opens GPay/PhonePe/Paytm)
@@ -33,7 +33,7 @@
   }
 
   function copyId() {
-    var done = function () { toast("📋 UPI ID copied, open any UPI app and pay"); };
+    var done = function () { toast("📋 UPI ID copied — open any UPI app and pay"); };
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(UPI_ID).then(done).catch(done);
@@ -82,7 +82,7 @@
       '<button data-app="phonepe" style="border:3px solid #111;background:#fff;font-family:Archivo Black,sans-serif;font-size:11px;padding:10px 4px;cursor:pointer;box-shadow:3px 3px 0 #111">📱 PhonePe</button>' +
       '<button data-app="paytm" style="border:3px solid #111;background:#fff;font-family:Archivo Black,sans-serif;font-size:11px;padding:10px 4px;cursor:pointer;box-shadow:3px 3px 0 #111">📱 Paytm</button>' +
       '</div>' +
-      '<p style="font-size:11px;color:#888;font-weight:600;margin:0;text-align:center">Tap an app to open payment, or copy the ID above</p>' +
+      '<p style="font-size:11px;color:#888;font-weight:600;margin:0;text-align:center">Tap an app to open payment — or copy the ID above</p>' +
       '</div>';
     document.body.appendChild(ov);
     ov.addEventListener("click", function (e) { if (e.target === ov) ov.remove(); });
@@ -93,7 +93,7 @@
     });
   }
 
-  /* main entry, MOBILE-FIRST:
+  /* main entry — MOBILE-FIRST:
      1) phone → fire the native UPI deep link straight to the UPI app
         (GPay/PhonePe/Paytm open on their own). The sheet appears ONLY
         if the app genuinely did not open (page still visible + focused).

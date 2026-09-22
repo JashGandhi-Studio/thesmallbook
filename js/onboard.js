@@ -1,6 +1,6 @@
 /* ============================================================
-   THESMALLBOOK, 🎯 FIRST-VISIT ONBOARDING v3 (onboard.js)
-   Six quick steps + a picker, one less page, sharper questions:
+   THESMALLBOOK — 🎯 FIRST-VISIT ONBOARDING v3 (onboard.js)
+   Six quick steps + a picker — one less page, sharper questions:
      1 · Welcome            2 · Why you read      3 · Your shelves
      4 · Daily budget       5 · Reading style     6 · Language & look
      7 · Pick your starter shelf (tap covers on/off)
@@ -37,7 +37,7 @@
     try { if (sessionStorage.getItem("tsb_onboarded_pending")) { set("tsb_onboarded", true); sessionStorage.removeItem("tsb_onboarded_pending"); } } catch (e) {}
     if (get("tsb_onboarded", false)) return false;
     try { if (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) return false; } catch (e) {}
-    /* sync session check, logged-in readers NEVER see onboarding,
+    /* sync session check — logged-in readers NEVER see onboarding,
        even if auth.js hasn't finished booting yet (no race) */
     try {
       var s = JSON.parse(localStorage.getItem("tsb_auth_session"));
@@ -72,7 +72,7 @@
     "Biography": ["👤", "lives worth borrowing"]
   };
   var STYLES = [
-    { id: "skim", ic: "⚡", t: "Just the tactics, coach", s: "Key lessons, in and out" },
+    { id: "skim", ic: "⚡", t: "Just the tactics, coach", s: "Key lessons — in and out" },
     { id: "steady", ic: "🍿", t: "Story me through it", s: "Case studies & real examples" },
     { id: "deep", ic: "💀", t: "Autopsies & deep dives", s: "Everything open, graves included" },
     { id: "listen", ic: "🎧", t: "Read it to me", s: "Audio lessons while I move" }
@@ -111,7 +111,7 @@
       pools[k].sort(function (a, b) {
         if (draft.style === "deep") { var d = (b.graveLink ? 1 : 0) - (a.graveLink ? 1 : 0); if (d) return d; }
         if (budget <= 10) return readMin(a) - readMin(b);
-        return 0; /* stable, library order otherwise */
+        return 0; /* stable — library order otherwise */
       });
     });
     var idx = {};
@@ -185,7 +185,7 @@
           '<span class="ob-eyebrow">WELCOME TO</span>' +
           '<h2 class="ob-hero__t">The<span>Small</span>Book</h2>' +
           '<p class="ob-tag">big books · small reads</p>' +
-          '<p class="ob-sub">400+ books, distilled into lessons you can use today. Six quick questions tune the whole library to you, or skip the line and read right now.</p>' +
+          '<p class="ob-sub">400+ books, distilled into lessons you can use today. Six quick questions tune the whole library to you — or skip the line and read right now.</p>' +
           '<div class="ob-btns ob-btns--col">' +
             '<button class="ob-cta" data-next>🚀 GET STARTED</button>' +
           '</div>' +
@@ -193,7 +193,7 @@
           '</div>';
       case 1:
         return "<h2>What mess are we fixing?</h2>" +
-          '<p class="ob-sub">Your main battle, the library will lead with it.</p>' +
+          '<p class="ob-sub">Your main battle — the library will lead with it.</p>' +
           '<div class="ob-rows">' + rows(WHYS, "why", draft.why, true) + "</div>" +
           '<div class="ob-btns"><button class="ob-cta" data-next data-need="why">Continue →</button></div>';
       case 2:
@@ -207,12 +207,12 @@
           }).join("") + "</div>" +
           '<div class="ob-btns"><button class="ob-cta" data-next data-need="shelves">Continue →</button></div>';
       case 3:
-        return "<h2>Real talk, your attention span today?</h2>" +
+        return "<h2>Real talk — your attention span today?</h2>" +
           '<p class="ob-sub">We’ll respect it. No 40-minute walls, no guilt.</p>' +
           '<div class="ob-seg">' + MINUTES.map(function (m) {
             return '<button class="' + (draft.minutes === m ? "on" : "") + '" data-min="' + m + '">' + (MIN_LABEL[m] || m + "′") + "</button>";
           }).join("") + "</div>" +
-          '<p class="ob-sub ob-sub--mt">“' + (MIN_SUB[draft.minutes] || "one chai") + '” it is, one lesson fits exactly that.</p>' +
+          '<p class="ob-sub ob-sub--mt">“' + (MIN_SUB[draft.minutes] || "one chai") + '” it is — one lesson fits exactly that.</p>' +
           '<div class="ob-btns"><button class="ob-cta" data-next>Continue →</button></div>';
       case 4:
         return "<h2>How should lessons taste?</h2>" +
@@ -221,12 +221,12 @@
           '<div class="ob-btns"><button class="ob-cta" data-next data-need="style">Continue →</button></div>';
       case 5:
         return "<h2>Language & look</h2>" +
-          '<p class="ob-sub">Reading language, summaries, chat and audio switch instantly.</p>' +
+          '<p class="ob-sub">Reading language — summaries, chat and audio switch instantly.</p>' +
           '<div class="ob-langs">' + langList().map(function (l) {
             var cur = draft.lang || ((window.TSB_LANG && TSB_LANG.get) ? TSB_LANG.get() : "en");
             return '<button class="ob-lang' + (l.code === cur ? " on" : "") + '" data-lang="' + l.code + '"><span>' + l.flag + "</span>" + l.name + "</button>";
           }).join("") + "</div>" +
-          '<p class="ob-sub ob-sub--mt" style="margin-top:14px;">And your vibe, flip any time in Settings:</p>' +
+          '<p class="ob-sub ob-sub--mt" style="margin-top:14px;">And your vibe — flip any time in Settings:</p>' +
           '<div class="ob-rows">' +
             '<button class="ob-row' + (draft.theme === "light" ? " on" : "") + '" data-theme-pick="light"><span class="ic">☀️</span><span>Light<small>Paper & ink</small></span><span class="tick">✓</span></button>' +
             '<button class="ob-row' + (draft.theme === "dark" ? " on" : "") + '" data-theme-pick="dark"><span class="ic">🌙</span><span>Dark<small>Low-light reading</small></span><span class="tick">✓</span></button>' +
@@ -235,7 +235,7 @@
       case 6:
         ensurePicks(body);
         return "<h2>Pick your starter shelf 🎁</h2>" +
-          '<p class="ob-sub">Chosen from your answers, tap a cover to keep it or drop it. These lead your Home.</p>' +
+          '<p class="ob-sub">Chosen from your answers — tap a cover to keep it or drop it. These lead your Home.</p>' +
           '<p class="ob-pickctr" id="obPickCtr">✓ ' + (draft.picks || []).length + " on your shelf · tap covers to add or remove</p>" +
           '<div class="ob-shelf">' + recPool().map(function (b, i) {
             var on = (draft.picks || []).indexOf(b.id) >= 0;
@@ -245,7 +245,7 @@
               '<img src="assets/covers/' + encodeURIComponent(b.id) + '.jpg" alt="" loading="lazy">' +
               '<span class="ob-book__t">' + b.title + "</span></button>";
           }).join("") + "</div>" +
-          '<p class="ob-shelfnote">They wait for you on Home, tap any time to start reading.</p>' +
+          '<p class="ob-shelfnote">They wait for you on Home — tap any time to start reading.</p>' +
           '<div class="ob-btns"><button class="ob-cta" data-finish>Save & explore home →</button></div>';
 
     }
@@ -315,7 +315,7 @@
   function goNext() { if (!busy) { step = Math.min(TOTAL - 1, step + 1); show(step, "fwd"); } }
   function goBack() { if (!busy && step > 0) { step -= 1; show(step, "back"); } }
 
-  /* close for good, never trap the reader */
+  /* close for good — never trap the reader */
   function dismiss(mark) {
     if (mark) set("tsb_onboarded", true);
     if (!wrap) return;
@@ -357,18 +357,18 @@
     var lead = draft.shelves[0] || "";
     var styleName = (STYLES.filter(function (s) { return s.id === draft.style; })[0] || {}).t || "Steady reader";
     try { set("tsb_trial_start", Date.now()); } catch (e) {}
-    body.innerHTML = '<div class="ob-step ob-step--done"><div class="ob-logo">🎉</div><h2>Okay, you\u2019re in</h2>' +
+    body.innerHTML = '<div class="ob-step ob-step--done"><div class="ob-logo">🎉</div><h2>Okay — you\u2019re in</h2>' +
       '<p class="ob-sub">' + (lead ? "📚 Leading with " + lead + "<br>" : "") +
       "⏱ " + draft.minutes + " min a day · " + styleName + "<br>" +
       "🌐 " + (draft.lang && draft.lang !== "en" ? draft.lang.toUpperCase() : "EN") + " · " +
       (draft.theme === "dark" ? "🌙 dark" : "☀️ light") + "</p>" +
-      '<p class="ob-sub">Your shelf is ready, and you have a <b>15-minute free taster</b> on the house. Sign in any time to keep it forever.</p></div>';
+      '<p class="ob-sub">Your shelf is ready — and you have a <b>15-minute free taster</b> on the house. Sign in any time to keep it forever.</p></div>';
     setTimeout(function () {
       wrap.classList.add("obwrap--off");
       document.documentElement.classList.remove("ob-lock");
       setTimeout(function () {
         if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
-        /* apply the tuned shelf live, tap the matching filter chip */
+        /* apply the tuned shelf live — tap the matching filter chip */
         try {
           var leadNow = JSON.parse(localStorage.getItem("tsb_ob_lead") || "null");
           if (leadNow) {
