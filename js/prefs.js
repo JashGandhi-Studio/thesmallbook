@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK — PREFS & GAMIFICATION ENGINE
+   THESMALLBOOK, PREFS & GAMIFICATION ENGINE
    Theme, bookmarks, progress, streaks, achievements, levels.
    Include on every page BEFORE other scripts.
    ============================================================ */
@@ -18,7 +18,7 @@
   try {
     var acc = JSON.parse(localStorage.getItem("tsb_accent"));
     if (acc && /^#[0-9a-f]{6}$/i.test(acc)) {
-      /* accent = the action bar's selection pill ONLY — app stays classic */
+      /* accent = the action bar's selection pill ONLY, app stays classic */
       document.documentElement.style.setProperty("--tsb-bar-accent", acc);
     }
   } catch (e) {}
@@ -31,7 +31,7 @@
     }
   } catch (e) {}
 
-  /* library display mode (cozy / compact / list) — pre-paint, no flash */
+  /* library display mode (cozy / compact / list), pre-paint, no flash */
   try {
     var lv = JSON.parse(localStorage.getItem("tsb_lib_view"));
     if (lv === "compact") document.documentElement.classList.add("tsb-libview-compact");
@@ -42,7 +42,7 @@
      big / bigger narrow the layout viewport so everything reads larger. */
   function applyAppSize(v) {
     /* Default = the app's normal responsive size on every phone (the
-       phone's own font zoom can't distort layouts — text-size-adjust
+       phone's own font zoom can't distort layouts, text-size-adjust
        is pinned to 100% in CSS). Big/Bigger scale the app's OWN type. */
     try {
       if (v === "small") document.documentElement.style.fontSize = "14px";
@@ -69,7 +69,7 @@
     } catch (e) {}
   });
 
-  /* font style (modern / serif / clean) — pre-paint */
+  /* font style (modern / serif / clean), pre-paint */
   try {
     var fst = JSON.parse(localStorage.getItem("tsb_fontstyle"));
     if (fst === "serif") document.documentElement.classList.add("tsb-font-serif");
@@ -259,10 +259,11 @@
   const backup = {
     export() {
       const data = {};
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i);
-        if (k && k.indexOf("tsb_") === 0) data[k] = localStorage.getItem(k);
-      }
+      /* the identity wall: a backup carries THIS account's data,
+         never a sibling account's shelf that happens to live on this phone */
+      const vis = (window.TSB_VAULT && TSB_VAULT.visibleNames) ? TSB_VAULT.visibleNames() : null;
+      const keys = vis ? vis.filter((k) => k.indexOf("tsb_") === 0) : (() => { const out = []; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.indexOf("tsb_") === 0) out.push(k); } return out; })();
+      keys.forEach((k) => { data[k] = localStorage.getItem(k); });
       const payload = { app: "thesmallbook", version: 1, saved: new Date().toISOString(), data };
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
       const a = document.createElement("a");
@@ -289,7 +290,7 @@
   };
 
   /* ---------- expose ---------- */
-  /* 🇮🇳 INDIAN BOOKS — filter helper (authors + known Indian-origin books) */
+  /* 🇮🇳 INDIAN BOOKS, filter helper (authors + known Indian-origin books) */
   const INDIAN_AUTHORS = [
     "shiv khera", "a.p.j. abdul kalam", "apj abdul kalam", "gaur gopal das",
     "sadhguru", "devdutt pattanaik", "rashmi bansal", "prakash iyer",
@@ -380,7 +381,7 @@
   }
   window.TSB = { get, set, theme, bookmarks, progress, plans, streak, levelFor, achv, lastRead, backup, isIndianBook, completedCount, interest, sound: { get: soundGet, set: soundSet, play: soundPlay } };
 
-  /* Amazon affiliate link builder — direct product page when we know the
+  /* Amazon affiliate link builder, direct product page when we know the
      ASIN (converts better), search fallback for everything else. */
   window.TSB.amazonLink = function (title, author, bookId) {
     const cfg = window.TSB_CONFIG || {};
@@ -402,7 +403,7 @@
     streak.touch();
   });
 
-  /* ---------- ✍️ STORIES TRANSITION — every stories.html link, site-wide ---------- */
+  /* ---------- ✍️ STORIES TRANSITION, every stories.html link, site-wide ---------- */
   document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('a[href$="stories.html"]').forEach((link) => {
       link.addEventListener("click", (e) => {
@@ -433,18 +434,11 @@
       /* a deployed update takes over → reload ONCE so signed-in readers
          never sit on a stale build (accounts live in localStorage/Supabase,
          untouched by cache purges) */
-      try {
-        navigator.serviceWorker.addEventListener("controllerchange", function () {
-          try {
-            if (sessionStorage.getItem("tsb_sw_reloaded")) return;
-            sessionStorage.setItem("tsb_sw_reloaded", "1");
-            location.reload();
-          } catch (e2) {}
-        });
-        window.setTimeout(function () {
-          try { sessionStorage.removeItem("tsb_sw_reloaded"); } catch (e3) {}
-        }, 8000);
-      } catch (e) {}
+      /* a worker handover must NEVER reload the page: the old auto-reload
+         raced the new worker's activation and the old cache deletion, and
+         phones wedged in an endless loading state. Version freshness is
+         handled by the ?v= refs and the cache version bump alone. */
+      void 0;
     });
   }
 })();
@@ -461,3 +455,5 @@
     );
   }, true);
 
+/* v275: the page booted, tell the watchdog it can stand down */
+window.TSB_BOOT_OK = true;

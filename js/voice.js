@@ -1,9 +1,9 @@
 /* ============================================================
-   THESMALLBOOK — 🎙️ VOICE (voice.js)  v250
+   THESMALLBOOK, 🎙️ VOICE (voice.js)  v250
    ------------------------------------------------------------
    Two things live here, both built to feel like a native app:
 
-   1. RECORDER — a push-to-talk mic with a live waveform.
+   1. RECORDER, a push-to-talk mic with a live waveform.
         · press & hold  → records; release → uploads and sends
         · slide up      → "review": Delete or Send, release does
      · release w/o travel → LOCKED: keeps recording until you tap ✓
@@ -13,10 +13,10 @@
         · 2:00 cap, live mm:ss timer, bars driven by a real
           AnalyserNode (not a CSS loop), inline errors instead of
           alert(), correct mime type per browser (Safari records
-          mp4, Chrome/Android record webm — the old code stamped
+          mp4, Chrome/Android record webm, the old code stamped
           everything as webm, which broke iOS playback).
 
-   2. PLAYER — replaces the browser's bare <audio controls>.
+   2. PLAYER, replaces the browser's bare <audio controls>.
         circular play button with a progress ring, 44-bar waveform
         you can scrub, elapsed / total time, 1× 1.5× 2× speed.
         Real peaks are decoded lazily in the background; a seeded
@@ -64,7 +64,7 @@
   function buzz(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} }
 
   /* Safari records mp4, Chrome/Android record webm. Ask the browser
-     instead of guessing — the wrong stamp is why iOS notes would not play. */
+     instead of guessing, the wrong stamp is why iOS notes would not play. */
   function pickMime() {
     var cands = ["audio/webm;codecs=opus", "audio/webm", "audio/ogg;codecs=opus",
                  "audio/mp4;codecs=mp4a.40.2", "audio/mp4", "audio/mpeg"];
@@ -103,7 +103,7 @@
   var startedAt = 0, timerId = 0, levels = [], lastBarAt = 0, duration = 0;
   var opts = {};
   /* host veto: while the composer has text the mic pill is Send, not a
-     recorder. Declared at module scope on purpose — begin() must see it. */
+     recorder. Declared at module scope on purpose, begin() must see it. */
   var enabled = function () { return true; };
 
   function buildStage() {
@@ -127,8 +127,10 @@
         '<div class="vstage__hint">hold to record · release to send · slide up to review</div>' +
         '<div class="vstage__acts" hidden>' +
           '<button class="vstage__del" type="button">' + ICO.trash + '<span>Delete</span></button>' +
+          '<button class="vstage__stop" type="button" hidden>' + ICO.stop + '<span>Stop</span></button>' +
           '<button class="vstage__send" type="button"><span>Send</span>' + ICO.send + '</button>' +
         '</div>' +
+        '<div class="vstage__prev" hidden></div>' +
         '<div class="vstage__busy" hidden><span class="vstage__spin"></span><b>Sending your voice note…</b></div>' +
         '<div class="vstage__err" hidden><b></b><div class="vstage__erracts">' +
           '<button class="vstage__retry" type="button">Try again</button>' +
@@ -143,7 +145,9 @@
       hint: stage.querySelector(".vstage__hint"),
       acts: stage.querySelector(".vstage__acts"),
       del: stage.querySelector(".vstage__del"),
+      stop: stage.querySelector(".vstage__stop"),
       send: stage.querySelector(".vstage__send"),
+      prev: stage.querySelector(".vstage__prev"),
       busy: stage.querySelector(".vstage__busy"),
       err: stage.querySelector(".vstage__err"),
       errText: stage.querySelector(".vstage__err b"),
@@ -153,6 +157,7 @@
       lock: stage.querySelector(".vstage__lock")
     };
     els.del.addEventListener("click", function (e) { e.stopPropagation(); cancel(); });
+    if (els.stop) els.stop.addEventListener("click", function (e) { e.stopPropagation(); setReview(true, "Hear it back, then send"); });
     els.send.addEventListener("click", function (e) { e.stopPropagation(); stopAndSend(); });
     els.retry.addEventListener("click", function (e) { e.stopPropagation(); retrySend(); });
     els.drop.addEventListener("click", function (e) { e.stopPropagation(); cancel(); });
@@ -166,8 +171,12 @@
     stage.classList.toggle("is-busy", state === "sending");
     stage.classList.toggle("is-error", state === "error");
     stage.classList.toggle("is-locked", !!locked && (state === "recording" || state === "review"));
-    /* while locked the note is already safe, so Delete / Send are live too */
+    /* locked + recording → Delete / STOP · review → Delete / Send */
     els.acts.hidden = !(state === "review" || state === "error" || (state === "recording" && locked));
+    if (els.stop) els.stop.hidden = !(state === "recording" && locked);
+    els.send.hidden = state !== "review";
+    els.del.hidden = state === "sending";
+    if (els.prev) els.prev.hidden = state !== "review";
     els.busy.hidden = state !== "sending";
     els.err.hidden = state !== "error";
     els.hint.hidden = state === "review" || state === "sending" || state === "error";
@@ -213,10 +222,10 @@
       if (els.time) els.time.textContent = mmss(duration);
       if (stage) stage.style.setProperty("--vp", Math.min(1, duration / MAX_SEC));
       if (duration >= MAX_SEC) {
-        if (locked) { stopAndSend(); return; }        /* locked = "don't lose it", so it flies */
-        /* un-locked: stop, then let the reader choose (never auto-send a cut note) */
+        /* v268 · capped: always stop into review, hear it back, then choose.
+           Never auto-send a cut note. */
         freezeRecorder();
-        setReview(true, "2:00 reached — send it or delete it");
+        setReview(true, "2:00 reached, hear it back, then send or delete");
       }
     }, 100);
   }
@@ -253,7 +262,7 @@
     rec.onerror = function () { showHostError("Recording was interrupted."); hardStop(); };
     rec.onstop = function () { /* handled by the caller: stopAndSend / cancel */ };
 
-    /* analyser for the live bars (optional — recording works without it) */
+    /* analyser for the live bars (optional, recording works without it) */
     try {
       var AC = window.AudioContext || window.webkitAudioContext;
       if (AC) {
@@ -275,10 +284,10 @@
     document.documentElement.classList.add("vstage-open");
     if (els.time) els.time.textContent = "0:00";
     if (els.hint) els.hint.textContent = locked
-      ? "LOCKED — tap the mic to send · Delete to bin it"
+      ? "LOCKED, recording · tap STOP when done"
       : mode === "hold"
-        ? "release to LOCK · slide up to review"
-        : "tap the mic again to stop · Delete or Send below";
+        ? "release to send · slide up to LOCK"
+        : "tap STOP when done · Delete or Send below";
     paint(); startTimer(); tickWave(); buzz(18);
     try { if (opts.onState) opts.onState("recording"); } catch (e) {}
   }
@@ -309,9 +318,25 @@
     setTimeout(function () { if (stage) stage.hidden = true; }, 220);
   }
 
+  var prevURL = "";
+  function buildPreview() {
+    if (!els.prev) return;
+    try {
+      if (prevURL) { try { URL.revokeObjectURL(prevURL); } catch (e) {} prevURL = ""; }
+      var blob = blobOf();
+      if (!blob || !blob.size) return;
+      prevURL = URL.createObjectURL(blob);
+      els.prev.innerHTML = playerHTML(prevURL, { label: "Your note" });
+      mount(els.prev);
+    } catch (e) {}
+  }
+  function dropPreview() {
+    if (prevURL) { try { URL.revokeObjectURL(prevURL); } catch (e) {} prevURL = ""; }
+    if (els.prev) { els.prev.innerHTML = ""; els.prev.hidden = true; }
+  }
   function setReview(on, note) {
     if (state === "sending" || state === "error") return;
-    if (on && state === "recording") { locked = false; freezeRecorder(); state = "review"; buzz(12); }
+    if (on && state === "recording") { locked = false; freezeRecorder(); state = "review"; buzz(12); buildPreview(); }
     else if (!on && state === "review") { state = "review"; }   /* one-way: nothing is lost by sliding back */
     if (els.hint) els.hint.hidden = false;
     if (note && els.del) els.del.setAttribute("title", note);
@@ -328,8 +353,9 @@
     if (!on) { locked = false; mode = "tap"; paint(); return; }
     if (state === "idle") { pendingLock = true; return; }        /* mic still waking up */
     locked = true; mode = "lock";
-    if (els.hint && state === "recording") els.hint.textContent = "LOCKED — tap the mic to send · Delete to bin it";
-    buzz(14);
+    if (els.hint && state === "recording") els.hint.textContent = "LOCKED, recording · tap STOP when done";
+    if (stage) { stage.classList.remove("lockpop"); void stage.offsetWidth; stage.classList.add("lockpop"); setTimeout(function () { try { if (stage) stage.classList.remove("lockpop"); } catch (e) {} }, 720); }
+    buzz(26);
     paint();
     try { if (opts.onState) opts.onState(state); } catch (e) {}
   }
@@ -338,6 +364,7 @@
   function cancel() {
     if (state === "sending") return;
     freezeRecorder();
+    dropPreview();
     closeStage();
     reset();
     paint();
@@ -353,7 +380,7 @@
     if (state === "recording") freezeRecorder();
     var blob = blobOf();
     if (!blob || blob.size < 900 || duration < 0.45) {
-      showStageError("That was too short — hold a little longer.");
+      showStageError("That was too short, hold a little longer.");
       state = "error"; paint(); return;
     }
     state = "sending"; paint();
@@ -361,6 +388,7 @@
     pending = { blob: blob, mime: blob.type, duration: duration };
     try {
       await opts.onSend(toFile(blob, blob.type, duration), { duration: duration, mime: blob.type });
+      dropPreview();
       closeStage(); reset(); paint();
     } catch (err) {
       showStageError((err && err.message) ? err.message : String(err));
@@ -410,13 +438,14 @@
     btn.addEventListener("pointerdown", function (e) {
       if (e.button != null && e.button !== 0) return;
       if (state !== "idle") {
-        /* a tap on a live note always finishes it: hands-free recording,
-           locked recording, or a note sitting in review -> send it. */
-        if (state === "recording") { e.preventDefault(); stopAndSend(); }
+        /* v268 · a tap on a LIVE note = STOP: it freezes and drops into
+           review, where you hear it back and choose Send or Delete.
+           A note sitting in review: the mic sends it. */
+        if (state === "recording") { e.preventDefault(); setReview(true, "Hear it back, then send"); }
         else if (state === "review") { e.preventDefault(); stopAndSend(); }
         return;
       }
-      /* vetoed (the pill is Send right now): do NOT preventDefault —
+      /* vetoed (the pill is Send right now): do NOT preventDefault.
          that would swallow the button's own click and the form submit.
          Behave like an ordinary button and let the page handle it. */
       try { if (!enabled()) return; } catch (e2) {}
@@ -437,7 +466,9 @@
         if (dx < MOVE_SLOP && Math.abs(dy) < MOVE_SLOP) return;
         moved = true;
       }
-      if (state === "recording" && mode === "hold" && dy > LIFT_PX) setReview(true);
+      /* v268 · slide UP while holding = LOCK (WhatsApp's padlock): the note
+         keeps recording after you let go, until you press STOP */
+      if (state === "recording" && mode === "hold" && dy > LIFT_PX && !locked) setLock(true);
     });
 
     function endPress(e) {
@@ -446,14 +477,12 @@
       if (holdTimer) { clearTimeout(holdTimer); holdTimer = 0; }
       start = null;
       try { btn.releasePointerCapture(e.pointerId); } catch (err) {}
-      /* slid up (or hit the 2:00 cap) -> the reader chooses; never auto-send */
+      /* slid up (locked) or hit the 2:00 cap -> STOP/preview flow owns it */
       if (state === "review") return;
-      /* v250: a release that did NOT travel now LOCKS the note and keeps
-         recording — it no longer fires a 0.2 s "too short" error, which is
-         exactly what felt like "locking is broken". */
+      /* v268 · long-press hold: release = SEND, exactly like the user asked.
+         Locking is the swipe-up's job now, not the plain release's. */
       if (state === "recording" && mode === "hold") {
-        if (moved) stopAndSend();          /* held and travelled = the old hold-to-send */
-        else setLock(true);                /* plain press & let go = locked recording   */
+        stopAndSend();
         return;
       }
       /* released before the long-press threshold -> hands-free recording */
@@ -470,12 +499,13 @@
       if (e.key !== " " && e.key !== "Enter") return;
       e.preventDefault();
       if (state === "idle") begin("tap");
-      else if (state === "recording" || state === "review") stopAndSend();
+      else if (state === "recording") setReview(true, "Hear it back, then send");
+      else if (state === "review") stopAndSend();
     });
     /* never leave a recorder running when the page goes away */
     window.addEventListener("pagehide", function () { if (state === "recording") hardStop(); });
     document.addEventListener("visibilitychange", function () {
-      /* switching apps must never kill a live note — lock it instead */
+      /* switching apps must never kill a live note, lock it instead */
       if (document.hidden && state === "recording" && !locked) setLock(true);
     });
     return {
@@ -587,7 +617,7 @@
       el.classList.toggle("is-playing", !audio.paused && !audio.ended);
     }
 
-    /* real peaks, decoded lazily and only once — never blocks first paint */
+    /* real peaks, decoded lazily and only once, never blocks first paint */
     function decodePeaks() {
       if (decoded) return;
       decoded = true;

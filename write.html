@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-    <meta property="og:title" content="Write — TheSmallBook">
-  <meta property="og:description" content="Publish your story, your quote card or your voice — right from the phone.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=267">
+    <meta property="og:title" content="Write, TheSmallBook">
+  <meta property="og:description" content="Publish your story, your quote card or your voice, right from the phone.">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=275">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/write.html">
   <meta property="og:type" content="website">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
-  <title>Write — TheSmallBook Stories</title>
+  <title>Write, TheSmallBook Stories</title>
   <meta name="description" content="Write your story in a full-page editor with rich formatting, voice and autosaved drafts.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,10 +27,10 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=267">
-  <link rel="stylesheet" href="css/studio.css?v=267">
+  <link rel="stylesheet" href="css/style.css?v=275">
+  <link rel="stylesheet" href="css/studio.css?v=275">
   <style>
-  /* v246 — compact attach bar: professional one-row adding */
+  /* v246, compact attach bar: professional one-row adding */
   .wr-addrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
   .wr-addbtn{display:flex;flex-direction:column;align-items:center;gap:3px;border:2.5px solid #111;background:#fff;border-radius:14px;padding:10px 6px 8px;cursor:pointer;box-shadow:2.5px 2.5px 0 #111;font-family:'Space Grotesk',sans-serif;min-width:0;transition:transform .12s,box-shadow .12s}
   .wr-addbtn:active{transform:translate(1.5px,1.5px);box-shadow:1px 1px 0 #111}
@@ -45,7 +45,7 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body class="wrpage">
-  <h1 class="sr-only">Write — TheSmallBook</h1>
+  <h1 class="sr-only">Write, TheSmallBook</h1>
   <header class="wr-top">
     <a class="wr-back" id="wrBack" href="stories.html" aria-label="Back to Stories">←</a>
     <span class="wr-save" id="saveState">✍️ draft</span>
@@ -53,25 +53,25 @@
   </header>
 
   <main class="wr-wrap">
-    <input id="wTitle" class="wr-title" maxlength="90" placeholder="Title — the moment everything shifted…">
+    <input id="wTitle" class="wr-title" maxlength="90" placeholder="Title, the moment everything shifted…">
     <input id="wSub" class="wr-sub" maxlength="140" placeholder="One-line hook (optional)">
     <div id="modeChip" class="wr-modechip" aria-hidden="true"></div>
     <div id="quoteLiveWrap" class="wr-quotelive" hidden>
       <div class="wr-quotelive__card" id="quoteLiveCard">
-        <div class="wr-quotelive__ph">Your quote will appear here — live.</div>
+        <div class="wr-quotelive__ph">Your quote will appear here, live.</div>
       </div>
       <div class="wr-whyprev" id="quoteWhyPrev" hidden></div>
       <div class="wr-quotelive__chips">
         <button id="quoteFrameChip" class="wr-qchip wr-qchip--main" type="button">🎨 FRAME IT IN STUDIO</button>
-        <button id="quoteCleanChip" class="wr-qchip" type="button">▢ CLEAN COVER — quote as text</button>
+        <button id="quoteCleanChip" class="wr-qchip" type="button">▢ CLEAN COVER, quote as text</button>
       </div>
-      <p class="wr-quotelive__hint">Tap the card (or FRAME IT) — Studio frames everything: photo, fonts, ratio. The feed shows your finished image only — the quote lives in it. Choose CLEAN COVER only if you want the words below the photo instead.</p>
+      <p class="wr-quotelive__hint">Tap the card (or FRAME IT), Studio frames everything: photo, fonts, ratio. The feed shows your finished image only, the quote lives in it. Choose CLEAN COVER only if you want the words below the photo instead.</p>
     </div>
 
-      <!-- INSPIRE DESK — perfectly embedded with Quote & Story (lives with the title, not as a separate card after quote) -->
+      <!-- INSPIRE DESK, perfectly embedded with Quote & Story (lives with the title, not as a separate card after quote) -->
       <div id="inspireEmbed" class="wr-inspire-embed" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fff;border:2.5px solid #111;border-radius:14px;box-shadow:3px 3px 0 #111;padding:8px 10px;margin:8px 0 10px;">
         <span style="display:inline-flex;align-items:center;gap:6px;flex:none;background:#111;color:#ffc800;border-radius:999px;padding:5px 9px;font:800 10px 'Space Grotesk',sans-serif;letter-spacing:.5px;text-transform:uppercase;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 1 4 12.7V16a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-1.3A7 7 0 0 1 12 2z"/></svg> Inspire Desk</span>
-        <span id="inspireEmbedSub" style="flex:1 1 120px;font:600 11px 'Space Grotesk',sans-serif;color:#6b7280;min-width:0;">live — quotes & images</span>
+        <span id="inspireEmbedSub" style="flex:1 1 120px;font:600 11px 'Space Grotesk',sans-serif;color:#6b7280;min-width:0;">live, quotes & images</span>
         <span style="display:inline-flex;gap:6px;flex-wrap:wrap;flex:none;">
           <button type="button" id="inspEmbedBtn1" style="border:2px solid #111;background:#ffc800;border-radius:999px;padding:7px 11px;font:800 11px 'Space Grotesk',sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Quotes</button>
           <button type="button" id="inspEmbedBtn2" style="border:2px solid #111;background:#fff;border-radius:999px;padding:7px 11px;font:800 11px 'Space Grotesk',sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg> Images</button>
@@ -101,11 +101,11 @@
     <div id="wBody" class="wr-ed" contenteditable="true" data-ph="Start writing… your draft saves itself on this device, even if the tab closes. Publish whenever you're ready."></div>
 
     <section class="wr-meta">
-      <!-- v246: ONE compact attach bar — photo · video · voice in a single clean row. No stacked cards, no scrolling to add. -->
+      <!-- v246: ONE compact attach bar, photo · video · voice in a single clean row. No stacked cards, no scrolling to add. -->
       <div class="wr-card" id="addCard">
         <div class="wr-card__head">
           <span class="wr-card__title" id="addCardTitle">➕ Add to your story</span>
-          <span class="wr-card__sub" id="addCardSub">one tap — attach what you need</span>
+          <span class="wr-card__sub" id="addCardSub">one tap, attach what you need</span>
         </div>
         <div class="wr-addrow" id="wAddRow">
           <button type="button" class="wr-addbtn" id="addPhotoBtn"><span class="wr-addbtn__ic">📷</span><span class="wr-addbtn__t">Choose image</span><span class="wr-addbtn__s" id="wCoverName">No file chosen</span></button>
@@ -121,7 +121,7 @@
           <video id="wBurstPrev" class="cm-prev" controls playsinline preload="metadata" hidden style="margin-top:10px;width:100%;max-height:180px;border-radius:12px;border:2.5px solid #111;"></video>
           <audio id="wAudioPrev" controls hidden style="width:100%;margin-top:10px;"></audio>
         </div>
-        <p class="wr-hint" id="addHint">📷 becomes your cover & card — tap the preview to reframe in Studio · 🎬 video up to 2 min · 🎙 record or 🎧 attach voice</p>
+        <p class="wr-hint" id="addHint">📷 becomes your cover & card, tap the preview to reframe in Studio · 🎬 video up to 2 min · 🎙 record or 🎧 attach voice</p>
       </div>
 
       <div id="inspireInlineHint" class="wr-hint" style="text-align:center; margin:0 0 8px; font:500 11px 'Space Grotesk',sans-serif; color:#8f8a80; display:none;">Tip: Tap a pill above → live library opens → tap “Use” to drop in.</div>
@@ -129,7 +129,7 @@
       <label class="cm-lbl cm-lbl--chk">
         <input type="checkbox" id="wNoDl" checked>
         <b>🔒 View-only media</b>
-        <span>Readers can watch / listen — but not save, copy or download your cover, burst or voice. (Instagram-style; hold an edge of a video for 2× speed)</span>
+        <span>Readers can watch / listen, but not save, copy or download your cover, burst or voice. (Instagram-style; hold an edge of a video for 2× speed)</span>
       </label>
       <label class="cm-lbl">Tags (comma separated)<input id="wTags" class="setinput" maxlength="80" placeholder="habits, money, failure"></label>
       <div class="wr-actions">
@@ -140,19 +140,22 @@
     </section>
   </main>
 
-  <script src="js/prefs.js?v=267"></script>
-  <script src="js/lang.js?v=267"></script>
-  <script src="js/config.js?v=267"></script>
-  <script src="js/auth.js?v=267"></script>
-  <script src="js/sounds.js?v=267"></script>
-  <script src="js/founder.js?v=267"></script>
-  <script src="js/community.js?v=267"></script>
-  <script src="js/gold.js?v=267"></script>
-  <script src="js/paywall.js?v=267"></script>
-  <script src="js/studio.js?v=267"></script>
-  <style>/* hide Puter branding — keep AI silent */ .puter-modal,.puter-dialog,.puter-auth{ display:none !important }</style>
+  <script src="./js/bootguard.js?v=275"></script>
+  <script src="js/vault.js?v=275"></script>
+  <script src="js/prefs.js?v=275"></script>
+  <script src="js/lang.js?v=275"></script>
+  <script src="js/config.js?v=275"></script>
+  <script src="js/auth.js?v=275"></script>
+  <script src="js/sounds.js?v=275"></script>
+  <script src="js/founder.js?v=275"></script>
+  <script src="js/community.js?v=275"></script>
+  <script src="js/weekly.js?v=275"></script>
+  <script src="js/gold.js?v=275"></script>
+  <script src="js/paywall.js?v=275"></script>
+  <script src="js/studio.js?v=275"></script>
+  <style>/* hide Puter branding, keep AI silent */ .puter-modal,.puter-dialog,.puter-auth{ display:none !important }</style>
   <script>
-  // silent Puter loader — don't block rendering, hide GUI
+  // silent Puter loader, don't block rendering, hide GUI
   (function(){
     var s=document.createElement('script');
     s.src='https://js.puter.com/v2/';
@@ -161,15 +164,15 @@
     document.head.appendChild(s);
   })();
   </script>
-  <script src="js/dictate.js?v=267"></script>
-  <script src="js/data.js?v=267"></script>
-  <script src="js/osint.js?v=267"></script>
-  <script src="js/quotedesk.js?v=267"></script>
+  <script src="js/dictate.js?v=275"></script>
+  <script src="js/data.js?v=275"></script>
+  <script src="js/osint.js?v=275"></script>
+  <script src="js/quotedesk.js?v=275"></script>
   <script>
   (function () {
     "use strict";
     var C = window.TSB_COMMUNITY;
-    // Separate drafts so QUOTE and STORY never collide — perfect, as you said
+    // Separate drafts so QUOTE and STORY never collide, perfect, as you said
     function dkey(){ return kind==="quote" ? "tsb_write_draft_quote" : "tsb_write_draft_story"; }
     var DKEY = "tsb_write_draft"; // legacy fallback, but saveDraft/loadDraft now use dkey()
     var $ = function (id) { return document.getElementById(id); };
@@ -193,7 +196,7 @@
     var coverUrl = "", audioUrl = "", burstUrl = "", kind = "text";
     var lastCoverFile = null; /* kept in memory so the Studio can reframe the ORIGINAL pixels */
     var mediaRec = null, chunks = [];
-    var deskKind = "";   /* card | sep | text — what the writer chose in the Quote Desk */
+    var deskKind = "";   /* card | sep | text, what the writer chose in the Quote Desk */
 
     document.getElementById("wrBack").addEventListener("click", function (e) {
       try {
@@ -205,7 +208,7 @@
     function init() {
     if (!C.signedIn()) {
       document.querySelector(".wr-wrap").innerHTML =
-        '<div class="cm-empty">👋 Sign in with Google to write and publish.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>';
+        '<div class="cm-empty">👋 Sign in with Google to write and publish.<br><a class="cm-write" href="login.html">Sign in, it’s free →</a></div>';
       return;
     }
 
@@ -244,7 +247,7 @@
     var quoteWrap = document.getElementById("quoteLiveWrap");
     var quoteCard = document.getElementById("quoteLiveCard");
     /* ================================================================
-       v250 · THE QUOTE PREVIEW — a true mirror of the card
+       v250 · THE QUOTE PREVIEW, a true mirror of the card
        The font, ratio, theme and text position you pick in Studio are kept
        here, so leaving the Studio no longer snaps the layout back to the old
        default. The "why this line hit you" text travels UNDER the card, on
@@ -274,7 +277,7 @@
     }
     function renderQuoteLive(){
       var q = (title.value || "").trim();
-      var by = (sub.value || "").replace(/^\u2014\s*/, "").trim();
+      var by = (sub.value || "").replace(/^-\s*/, "").trim();
       var why = whyNow();
       var card = quoteCard;
       if (!card) return;
@@ -321,14 +324,14 @@
           '<div class="wr-quotelive__quote" style="font-family:' + fo.css + ";font-weight:" + (fo.w || 800) +
             ";font-size:" + px + ";text-shadow:" + inkShadow + chipCss + '">' +
             "\u201c " + escHTML(q || "Your quote") + " \u201d</div>" +
-          (by ? '<div class="wr-quotelive__by">\u2014 ' + escHTML(by) + "</div>"
-              : (q ? '<div class="wr-quotelive__by" style="opacity:.6">\u2014 author</div>' : "")) +
+          (by ? '<div class="wr-quotelive__by">' + escHTML(by) + "</div>"
+              : (q ? '<div class="wr-quotelive__by" style="opacity:.6">author</div>' : "")) +
         "</div>";
     }
 
     /* ---------- v250 · the Quote Desk (one sheet, no detours) ---------- */
     function openStudio(cfg) {
-      if (!window.TSB_STUDIO) { C.say("Studio is still loading — try again in a second."); return; }
+      if (!window.TSB_STUDIO) { C.say("Studio is still loading, try again in a second."); return; }
       cfg = cfg || {};
       cfg.font = cfg.font || quoteFont();
       cfg.ratio = cfg.ratio || quoteStyle.ratio;
@@ -366,11 +369,11 @@
       });
     }
 
-    /* the desk hands the whole quote back in one object — the page stays exactly
+    /* the desk hands the whole quote back in one object, the page stays exactly
        where it was, and Studio opens only if the writer asked for a card */
     /* v252 · THE MISSING LINK.
        The desk finds the line and the photo; Studio designs it. But the photo
-       you chose on the desk was never carried across — Studio opened with
+       you chose on the desk was never carried across, Studio opened with
        whatever cover the page happened to have, so searching for a photo on
        the desk was decorative. It now lands on the page first, then travels
        into Studio with the quote. */
@@ -380,21 +383,21 @@
       $("wCoverPrev").hidden = false;
       coverUrl = /^https?:/i.test(url) ? url : coverUrl;
       lastCoverFile = null;
-      if (!/^https?:/i.test(url)) return;          /* blob:/data: — already local */
+      if (!/^https?:/i.test(url)) return;          /* blob:/data:, already local */
       try {
         var blob = await fetch(url, { mode: "cors" }).then(function (r) { return r.blob(); });
         if (blob && blob.size) {
           lastCoverFile = new File([blob], "tsb-quote-photo-" + Date.now() + ".jpg", { type: blob.type || "image/jpeg" });
           coverUrl = "";                            /* the file wins; the URL is the fallback */
         }
-      } catch (e) { /* hotlink stands — the preview and the post still work */ }
+      } catch (e) { /* hotlink stands, the preview and the post still work */ }
       $("saveState").textContent = "\u2713 photo from the desk: " + (name || "chosen");
     }
 
     async function applyDeskPick(v) {
       if (v.photo) await adoptDeskPhoto(v.photo, v.photoName);
       title.value = v.text || "";
-      if (sub) sub.value = v.author ? "\u2014 " + v.author : "";
+      if (sub) sub.value = v.author ? "" + v.author : "";
       edSet(body, v.why || "");
       deskKind = v.kind || "";
       if (v.font) { quoteStyle.font = v.font; try { localStorage.setItem("tsb_quote_font", v.font); } catch (e) {} }
@@ -406,7 +409,7 @@
         openStudio({
           src: lastCoverFile ? URL.createObjectURL(lastCoverFile) : (coverUrl || v.photo || null),
           quote: title.value,
-          byline: (sub.value || "").replace(/^\u2014\s*/, ""),
+          byline: (sub.value || "").replace(/^-\s*/, ""),
           onApply: async function (file) {
             try {
               $("saveState").textContent = "… uploading your card";
@@ -414,15 +417,15 @@
               lastCoverFile = null;
               /* v254: what leaves Studio is a FINISHED image. If deskKind stayed
                  "card", Publish ran compose a second time on the finished card
-                 and produced a card of a card — the tiny-text bug. */
+                 and produced a card of a card, the tiny-text bug. */
               deskKind = "sep";
               $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
               renderQuoteLive(); saveDraft();
             } catch (err) {
-              /* the compose worked; only the upload failed — keep the file on
+              /* the compose worked; only the upload failed, keep the file on
                  the page and say so, instead of losing the whole design */
               lastCoverFile = file;
-              C.say("Your card is ready but couldn't upload (" + err.message + ") — it will go up with your post.");
+              C.say("Your card is ready but couldn't upload (" + err.message + "), it will go up with your post.");
               $("wCoverPrev").src = URL.createObjectURL(file); $("wCoverPrev").hidden = false;
               renderQuoteLive(); saveDraft();
             }
@@ -435,25 +438,25 @@
         coverUrl = ""; lastCoverFile = null;
         $("wCoverPrev").hidden = true;
         renderQuoteLive(); saveDraft();
-        C.say("Text quote ready — tap Publish →");
+        C.say("Text quote ready, tap Publish →");
       } else {
-        C.say(v.photo ? "Ready — the photo you chose is your cover, with your words below it." : "Ready — photo + your words below it.");
+        C.say(v.photo ? "Ready, the photo you chose is your cover, with your words below it." : "Ready, photo + your words below it.");
       }
     }
 
-    /* v251: photos are searched inside the Quote Desk and Studio now — this
+    /* v251: photos are searched inside the Quote Desk and Studio now, this
        second image sheet (and the callback that opened it) is gone for good. */
 
 
     if (location.search.indexOf("mode=quote") >= 0) {
       kind = "quote";
-      title.placeholder = "The quote itself — the line that stopped you…";
-      sub.placeholder = "— Who said it? (author, book, you)";
+      title.placeholder = "The quote itself, the line that stopped you…";
+      sub.placeholder = "Who said it? (author, book, you)";
       document.querySelector("main").classList.add("wr-quote");
-      modeChip.textContent = "✍️ QUOTE MODE — a shareable card, not an essay";
+      modeChip.textContent = "✍️ QUOTE MODE, a shareable card, not an essay";
       modeChip.className = "wr-modechip wr-modechip--quote";
       if(quoteWrap) quoteWrap.hidden = false;
-      // v250: the quote flow is one sheet now — desk entry, honest labels
+      // v250: the quote flow is one sheet now, desk entry, honest labels
       try{
         var eb = document.getElementById("inspireEmbed");
         if(eb){
@@ -464,7 +467,7 @@
           void 0;
         }
         var addT=document.getElementById("addCardTitle");
-        if(addT) addT.innerHTML="📷 A photo behind the words — <u>optional</u>";
+        if(addT) addT.innerHTML="📷 A photo behind the words, <u>optional</u>";
         var addS=document.getElementById("addCardSub");
         if(addS) addS.textContent="tap the preview any time to reframe it in Studio";
         var avBtn=document.getElementById("addVideoBtn");
@@ -472,17 +475,17 @@
         var addRow=document.getElementById("wAddRow");
         if(addRow) addRow.style.gridTemplateColumns="repeat(2,1fr)";
         var auBtn=document.getElementById("addAudioBtn");
-        if(auBtn) auBtn.style.gridColumn="1/-1"; // v247: audio chip full-width when video is hidden — no awkward gap
+        if(auBtn) auBtn.style.gridColumn="1/-1"; // v247: audio chip full-width when video is hidden, no awkward gap
         var ah=document.getElementById("addHint");
-        if(ah) ah.textContent="No photo? Open Studio from the Quote card above — 24 aesthetic backgrounds are ready.";
+        if(ah) ah.textContent="No photo? Open Studio from the Quote card above, 24 aesthetic backgrounds are ready.";
       }catch(e){}
       // make body optional and change its placeholder
-      body.setAttribute("data-ph", "Your take — why this line hit you (optional, 2–3 lines in your voice). Leave empty to publish just the card. Your QUOTE draft is separate from your STORY draft.");
+      body.setAttribute("data-ph", "Your take, why this line hit you (optional, 2–3 lines in your voice). Leave empty to publish just the card. Your QUOTE draft is separate from your STORY draft.");
       renderQuoteLive();
       title.addEventListener("input", renderQuoteLive);
       sub.addEventListener("input", renderQuoteLive);
       /* v267 · ONE door: the card itself (or the chip) is Studio.
-         What leaves Studio is a finished card — the feed shows it image-only
+         What leaves Studio is a finished card, the feed shows it image-only
          (tag qcard). CLEAN COVER is the explicit "words outside the image" path. */
       var qCardReady = false, cleanCover = false;
       window.__tsbQFlags = function(){ return { ready: qCardReady, clean: cleanCover }; };
@@ -506,19 +509,19 @@
                 saveDraft();
               }catch(err){
                 lastCoverFile = file; qCardReady = true;
-                C.say("Your card is ready but couldn\'t upload ("+ err.message +") — it will go up with your post.");
+                C.say("Your card is ready but couldn\'t upload ("+ err.message +"), it will go up with your post.");
                 $("wCoverPrev").src = URL.createObjectURL(file); $("wCoverPrev").hidden = false;
                 renderQuoteLive(); saveDraft();
               }
             }
           });
-        } catch (se) { C.say("Studio couldn\'t open — try once more. (" + (se && se.message ? se.message : se) + ")"); }
+        } catch (se) { C.say("Studio couldn\'t open, try once more. (" + (se && se.message ? se.message : se) + ")"); }
       }
       function paintCleanChip(){
         var c = document.getElementById("quoteCleanChip");
         if (!c) return;
         c.classList.toggle("on", cleanCover);
-        c.innerHTML = cleanCover ? "✓ CLEAN COVER — the quote travels as text" : "▢ CLEAN COVER — quote as text";
+        c.innerHTML = cleanCover ? "✓ CLEAN COVER, the quote travels as text" : "▢ CLEAN COVER, quote as text";
       }
       var qCard = document.getElementById("quoteLiveCard");
       if(qCard) qCard.addEventListener("click", function(e){ e.preventDefault(); frameInStudio(); });
@@ -534,9 +537,9 @@
       });
     } else {
       // story mode
-      modeChip.textContent = "📖 STORY MODE — your story, your voice";
+      modeChip.textContent = "📖 STORY MODE, your story, your voice";
       modeChip.className = "wr-modechip wr-modechip--story";
-      body.setAttribute("data-ph", "Enter your story — what happened, what you felt, what you learned…\n\nYour draft saves itself here. Publish when you\'re ready.");
+      body.setAttribute("data-ph", "Enter your story, what happened, what you felt, what you learned…\n\nYour draft saves itself here. Publish when you\'re ready.");
     }
     [title, sub, tags].forEach(function (el) { el.addEventListener("input", saveDraft); });
     body.addEventListener("input", saveDraft);
@@ -564,7 +567,7 @@
     });
 
     /* ---------- media ---------- */
-    /* v222: this helper was called by every upload handler but had been lost —
+    /* v222: this helper was called by every upload handler but had been lost.
        so cover/quote/video/audio uploads died before starting (no alert, no
        upload). Now defined here, next to its callers. */
     function fname(inputId, labelId, f) {
@@ -574,7 +577,7 @@
       var nm = f.name || "file";
       lab.textContent = "✓ " + (nm.length > 24 ? nm.slice(0, 22) + "…" : nm) + " · " + Math.max(1, Math.round(f.size / 1024)) + " KB";
     }
-    // v246: compact attach bar — one tap opens the picker
+    // v246: compact attach bar, one tap opens the picker
     $("addPhotoBtn").addEventListener("click", function(){ $("wCover").click(); });
     $("addVideoBtn").addEventListener("click", function(){ $("wBurst").click(); });
     $("addAudioBtn").addEventListener("click", function(){ $("wAudio").click(); });
@@ -598,10 +601,10 @@
         $("saveState").textContent = "\u2713 photo ready";
       } catch (e) { C.say("Cover upload failed: " + e.message); }
     });
-    /* v223 STORY CARD STUDIO — tap the cover preview to edit layout, filters & ratio */
-    // ✨ INSPIRE DESK — properly optimised: Quote → [quotes,images], Stories → [images,research] (not everywhere)
+    /* v223 STORY CARD STUDIO, tap the cover preview to edit layout, filters & ratio */
+    // ✨ INSPIRE DESK, properly optimised: Quote → [quotes,images], Stories → [images,research] (not everywhere)
     (function(){
-      // v244: seed Inspire from what you ACTUALLY wrote — quote text, or the story's own words (title + body distilled)
+      // v244: seed Inspire from what you ACTUALLY wrote, quote text, or the story's own words (title + body distilled)
       function storySeed(){
         if(kind==="quote") return (title.value||"").trim();
         var t=(title.value||"").trim();
@@ -628,7 +631,7 @@
             onUseQuote: function(o){
               var txt=o.text||"", auth=o.author||"";
               title.value = txt;
-              if(sub && !sub.value.trim() && auth) sub.value = "— " + auth;
+              if(sub && !sub.value.trim() && auth) sub.value = "" + auth;
               try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
               title.dispatchEvent(new Event("input",{bubbles:true}));
               if(sub) sub.dispatchEvent(new Event("input",{bubbles:true}));
@@ -646,12 +649,12 @@
                 try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
                 var ss=document.getElementById("saveState"); if(ss) ss.textContent="✓ cover from Inspire";
                 try{ saveDraft(); }catch(e){}
-                // v244: in QUOTE mode the Inspire image IS the card — open Studio with the quote on it
+                // v244: in QUOTE mode the Inspire image IS the card, open Studio with the quote on it
                 if(kind==="quote" && window.TSB_STUDIO){
                   TSB_STUDIO.open({
                     src: upUrl,
                     quote: title.value || "",
-                    byline: (sub.value || "").replace(/^—\s*/, "").replace(/^-\s*/, ""),
+                    byline: (sub.value || "").replace(/^-\s*/, "").replace(/^-\s*/, ""),
                     gold: window.TSB_GOLD && TSB_GOLD.isGold(),
                     onApply: async function(file){
                       try{
@@ -676,7 +679,7 @@
           window.open("https://en.wikipedia.org/wiki/Special:Search?search="+encodeURIComponent(seed||""),"_blank");
         }
       }
-      // v243: Inspire perfectly embedded — Quote → Quotes+Images, Story → Images+Research (professional pills inside the card, not separate)
+      // v243: Inspire perfectly embedded, Quote → Quotes+Images, Story → Images+Research (professional pills inside the card, not separate)
       (function(){
         var subEl=document.getElementById("inspireEmbedSub");
         var b1=document.getElementById("inspEmbedBtn1");
@@ -685,14 +688,14 @@
         function paintEmbed(){
           if(!subEl||!b1||!b2) return;
           if(kind==="quote"){
-            subEl.textContent="live — quotes & images · tap to fill your card";
-            b1.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Quotes'; b1.title="Browse live quotes — tap to fill";
-            b2.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg> Images'; b2.title="Browse aesthetic images — use as card background";
+            subEl.textContent="live, quotes & images · tap to fill your card";
+            b1.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Quotes'; b1.title="Browse live quotes, tap to fill";
+            b2.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg> Images'; b2.title="Browse aesthetic images, use as card background";
             b1.style.background="#ffc800"; b2.style.background="#fff";
           } else {
-            subEl.textContent="live — images & research · tap to build your story";
+            subEl.textContent="live, images & research · tap to build your story";
             b1.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg> Images'; b1.title="Browse aesthetic cover images";
-            b2.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Research'; b2.title="Research YOUR story — Wiki · Wikiquote · Dictionary · readable books · essay starter";
+            b2.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Research'; b2.title="Research YOUR story, Wiki · Wikiquote · Dictionary · readable books · essay starter";
             b1.style.background="#ffc800"; b2.style.background="#fff";
           }
           if(embed) embed.style.display="flex";
@@ -707,18 +710,18 @@
       try{
         var h=document.getElementById("inspireInlineHint");
         if(h){
-          if(kind==="quote") h.innerHTML='Tip: Use the <b>✨ Inspire Desk</b> strip at the top — live quotes & aesthetic images, tap to insert.';
-          else h.innerHTML='Tip: Use the <b>✨ Inspire Desk</b> strip at the top — live images & research from your own story.';
+          if(kind==="quote") h.innerHTML='Tip: Use the <b>✨ Inspire Desk</b> strip at the top, live quotes & aesthetic images, tap to insert.';
+          else h.innerHTML='Tip: Use the <b>✨ Inspire Desk</b> strip at the top, live images & research from your own story.';
         }
         // legacy ids for cached browsers
         var hint=document.getElementById("inspireDeskHint");
         var sub=document.getElementById("inspireDeskSub");
-        if(hint) hint.textContent = (kind==="quote" ? "Live library — quotes & images" : "Live library — images & research");
-        if(sub) sub.textContent = (kind==="quote" ? "Tap to browse quotes you can post & aesthetic images you can set as card background — live, not preloaded." : "Live library for stories — cover images (aesthetic) & research snippets you can build on.");
+        if(hint) hint.textContent = (kind==="quote" ? "Live library, quotes & images" : "Live library, images & research");
+        if(sub) sub.textContent = (kind==="quote" ? "Tap to browse quotes you can post & aesthetic images you can set as card background, live, not preloaded." : "Live library for stories, cover images (aesthetic) & research snippets you can build on.");
       }catch(e){}
-      // v244: Dictate stays visible in QUOTE mode too — free browser voice typing (no sign-in) fills the quote or your take
+      // v244: Dictate stays visible in QUOTE mode too, free browser voice typing (no sign-in) fills the quote or your take
       /* v251: the cached-browser compat shim for #osintImgBtn / #osintQuoteBtn2 is
-         gone — those ids exist in no page any more, and the buttons above are the
+         gone, those ids exist in no page any more, and the buttons above are the
          only entry points. Fewer ways in means fewer ways to get lost. */
       // expose globally for other callers
       window.__openInspireDesk = openInspire;
@@ -757,7 +760,7 @@
         $("wCoverPrev").hidden = true;
         $("saveState").textContent = "✓ burst attached";
         saveDraft();
-      } catch (e) { $("saveState").textContent = ""; C.say("Burst not attached — " + e.message); }
+      } catch (e) { $("saveState").textContent = ""; C.say("Burst not attached, " + e.message); }
     });
     $("wRec").addEventListener("click", async function () {
       var st = $("wRecState");
@@ -799,7 +802,7 @@
     /* ---------- publish ---------- */
     // v244: QUOTE + image → ask HOW to publish: aesthetic card (quote baked INSIDE the image)
     // or image & text separate. No image → publish the text quote directly.
-    /* the DB keeps titles at 90 characters (posts_title_len) — clamp on our
+    /* the DB keeps titles at 90 characters (posts_title_len), clamp on our
        side at whole words, and if an older, stricter DB still says no,
        retry once with a shorter cut instead of failing the writer */
     function qclamp(t, max) {
@@ -821,7 +824,7 @@
       pubBusy = true;
       $("pubBtn").textContent = "Publishing…";
       try {
-        /* v250: a photo picked in the Quote Desk waits locally until now —
+        /* v250: a photo picked in the Quote Desk waits locally until now.
            nothing is uploaded for a draft the writer never publishes */
         if(lastCoverFile && !coverUrl){
           try{
@@ -835,17 +838,17 @@
                retries. The old code warned the console and posted text-only. */
             pubBusy = false;
             $("pubBtn").textContent = "Publish →";
-            C.say("Your photo couldn't upload (" + (ue && ue.message ? ue.message : "connection") + "). Nothing was posted — check your connection and tap Publish again, or remove the photo to post text-only.");
+            C.say("Your photo couldn't upload (" + (ue && ue.message ? ue.message : "connection") + "). Nothing was posted, check your connection and tap Publish again, or remove the photo to post text-only.");
             return;
           }
         }
         /* v250: the writer already answered this in the desk ("Open Studio",
-           "photo + text below", "just the quote") — so we never ask twice.
+           "photo + text below", "just the quote"), so we never ask twice.
            Anyone who skipped the desk still gets the choice. */
-        /* v267 · NO desk at publish — Studio already framed everything.
+        /* v267 · NO desk at publish, Studio already framed everything.
            Studio card → the feed shows the image alone (tag qcard; the quote
            lives IN it). Clean cover → the quote travels as text. An unframed
-           photo is composed exactly like the Studio preview — the default,
+           photo is composed exactly like the Studio preview, the default,
            never a question. */
         var qTags = tags.value.split(",").map(function (x) { return x.trim(); }).filter(Boolean);
         var qFlags = (typeof window.__tsbQFlags === "function") ? window.__tsbQFlags() : { ready: false, clean: false };
@@ -853,7 +856,7 @@
         if(kind==="quote" && coverUrl && !burstUrl && !qCardReady && !cleanCover){
           try{
             $("saveState").textContent = "… framing your card";
-            var bag = { src: coverUrl, quote: t, byline: (sub.value || "").replace(/^—\s*/, "").replace(/^-\s*/, ""),
+            var bag = { src: coverUrl, quote: t, byline: (sub.value || "").replace(/^-\s*/, "").replace(/^-\s*/, ""),
                         gold: window.TSB_GOLD && TSB_GOLD.isGold() };
             Object.keys(quoteStyle).forEach(function (k) { if (bag[k] === undefined) bag[k] = quoteStyle[k]; });
             var cardFile = await TSB_STUDIO.compose(bag);
@@ -864,7 +867,7 @@
               try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
               $("saveState").textContent = "✓ card framed";
             }
-          }catch(ce){ console.warn("card compose failed — publishing image as-is", ce); }
+          }catch(ce){ console.warn("card compose failed, publishing image as-is", ce); }
         }
         if(kind==="quote" && (burstUrl || coverUrl)) qTags.push(qCardReady ? "qcard" : "cleancover");
         var pubTitle = qclamp(t);
@@ -876,11 +879,12 @@
         });
         localStorage.removeItem(dkey());
         try { C.setProfilePublic(true); } catch (e) {}
+        try { if (window.TSB_WEEKLY && String(tags.value || "").toLowerCase().indexOf("weekly") >= 0) TSB_WEEKLY.markDone(); } catch (we) {}
         location.href = "stories.html?tab=mine";
       } catch (e) {
         var em = String((e && e.message) || e || "");
         if (/posts_title_len|title_len/i.test(em) && pubTitle && pubTitle.length > 55) {
-          /* an older, stricter register — cut deeper once and try again */
+          /* an older, stricter register, cut deeper once and try again */
           try {
             await C.publish({
               title: qclamp(t, 55), subtitle: sub.value.trim(), body: b,
@@ -890,11 +894,12 @@
             });
             localStorage.removeItem(dkey());
             try { C.setProfilePublic(true); } catch (e2) {}
-            location.href = "stories.html?tab=mine";
+            try { if (window.TSB_WEEKLY && String(tags.value || "").toLowerCase().indexOf("weekly") >= 0) TSB_WEEKLY.markDone(); } catch (we) {}
+        location.href = "stories.html?tab=mine";
             return;
           } catch (e3) { e = e3; }
         }
-        C.say("Publish failed — " + (e && e.message ? e.message : e) + ". Stay signed in and try once more.");
+        C.say("Publish failed, " + (e && e.message ? e.message : e) + ". Stay signed in and try once more.");
         $("pubBtn").textContent = "Publish →";
       } finally { pubBusy = false; }
     }
@@ -911,12 +916,29 @@
     });
 
     loadDraft();
+    /* the weekly prompt lands here straight from the feed card */
+    try {
+      var pm = location.search.match(/[?&]prompt=(pw-\d{4}w\d{2})/);
+      if (pm && window.TSB_WEEKLY) {
+        var wkq = TSB_WEEKLY.byId(pm[1]);
+        if (wkq) {
+          if (!title.value) title.value = wkq.q;
+          var tg0 = tags.value.trim();
+          var has = tg0.toLowerCase().split(",").map(function (x) { return x.trim(); }).indexOf("weekly") >= 0;
+          if (!has) tags.value = tg0 ? tg0 + ", weekly" : "weekly";
+          title.insertAdjacentHTML("beforebegin", '<div class="wr-weekly" id="wrWeekly"><b>THE WEEKLY PROMPT</b> ' + C.esc(wkq.q) + '</div>');
+          title.dispatchEvent(new Event("input", { bubbles: true }));
+          tags.dispatchEvent(new Event("input", { bubbles: true }));
+          saveDraft();
+        }
+      }
+    } catch (e) {}
     // ✨ Inspire Desk prefill from Stories/Library (so the feature is discoverable everywhere)
     try{
       var pre = null; try{ pre = JSON.parse(localStorage.getItem("tsb_inspire_prefill")||"null"); }catch(e){}
       if(pre && pre.q){
         title.value = pre.q;
-        if(sub && pre.a) sub.value = "— " + pre.a;
+        if(sub && pre.a) sub.value = "" + pre.a;
         try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
         title.dispatchEvent(new Event("input",{bubbles:true}));
         if(sub) sub.dispatchEvent(new Event("input",{bubbles:true}));
@@ -952,6 +974,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=267" defer></script>
+  <script src="js/bar.js?v=275" defer></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK — 🌍 COMMUNITY LAYER (community.js)
+   THESMALLBOOK, 🌍 COMMUNITY LAYER (community.js)
    Supabase REST client for the Stories social platform:
    profiles · posts (rich text + cover + audio) · likes ·
    comments · follows · uploads (covers / audio / avatars).
@@ -35,7 +35,7 @@
     if (!ENABLED) throw new Error("cloud-off");
     opts = opts || {};
     var headers = { apikey: ANON, "Content-Type": "application/json" };
-    // v204: always ask PostgREST to return the affected row(s) — without this, POSTs
+    // v204: always ask PostgREST to return the affected row(s), without this, POSTs
     // succeed but reply with an empty body, and callers saw null ("failed" alert on a saved comment)
     if ((opts.method || "GET") !== "GET") headers.Prefer = "return=representation";
     var tk = await authToken();
@@ -47,7 +47,7 @@
       body: opts.body ? JSON.stringify(opts.body) : undefined
     });
     if ((res.status === 401 || res.status === 403) && !opts._retried && tk) {
-      // token may have expired mid-session — force one refresh, then retry once
+      // token may have expired mid-session, force one refresh, then retry once
       try { if (window.TSB_AUTH && typeof TSB_AUTH.token === "function") await TSB_AUTH.token(); } catch (e) {}
       var o2 = {}; for (var k2 in opts) o2[k2] = opts[k2]; o2._retried = 1;
       return api(path, o2);
@@ -56,7 +56,7 @@
     if (!res.ok) {
       var detail = "";
       try { var j = JSON.parse(txt); detail = (j && (j.message || j.error || j.msg)) || ""; } catch (e) { detail = txt.slice(0, 120); }
-      var err = new Error((res.status === 401 || res.status === 403) ? "session expired — sign in again (" + detail + ")" : (detail || ("request failed (" + res.status + ")")));
+      var err = new Error((res.status === 401 || res.status === 403) ? "session expired, sign in again (" + detail + ")" : (detail || ("request failed (" + res.status + ")")));
       err.status = res.status;
       throw err;
     }
@@ -120,7 +120,7 @@
   async function listPosts(opt) {
     opt = opt || {};
     var n = opt.limit || 30;
-    // v202: real pagination — PostgREST ignores an "offset" param, so page with the Range header
+    // v202: real pagination, PostgREST ignores an "offset" param, so page with the Range header
     var q = "posts?select=*&order=created_at.desc" + (opt.offset ? "" : "&limit=" + n);
     var hdrs = {};
     if (opt.offset) hdrs.Range = opt.offset + "-" + (opt.offset + n - 1);
@@ -136,7 +136,7 @@
     code = String(code || "").toLowerCase().replace(/[^a-f0-9]/g, "");
     if (!code) return null;
     var rows = await api("posts?select=*&order=created_at.desc&limit=500", {});
-    // v204: match prefix OR suffix of the dash-free hex — seed UUIDs share the same
+    // v204: match prefix OR suffix of the dash-free hex, seed UUIDs share the same
     // first 8 chars ("90000000"), so suffix codes keep every story's link unique
     var hexes = (rows || []).map(function (p) { return { p: p, hex: String(p.id).toLowerCase().replace(/-/g, "") }; });
     var hit = hexes.filter(function (h) { return h.hex.indexOf(code) === 0; })[0] ||
@@ -178,13 +178,13 @@
       { method: "DELETE", headers: { Prefer: "return=representation" } });
     /* PostgREST returns the rows it actually deleted; [] means RLS blocked it (silent). */
     if (!gone || !gone.length) {
-      throw new Error("The post is still there — the database is missing the 'delete own posts' policy. Run SQL #10 in docs/SUPABASE-STEP-BY-STEP.md (one line fixes it).");
+      throw new Error("The post is still there, the database is missing the 'delete own posts' policy. Run SQL #10 in docs/SUPABASE-STEP-BY-STEP.md (one line fixes it).");
     }
     /* verify with a fresh read: even a silent 0-row delete (older DBs) cannot pass */
     var check;
     try { check = await api("posts?id=eq." + encodeURIComponent(id), { method: "GET" }); } catch (e) { check = []; }
     if (check && check.length) {
-      throw new Error("The post is still there — the database is missing the 'delete own posts' policy. Run SQL #10 in docs/SUPABASE-STEP-BY-STEP.md (one line fixes it).");
+      throw new Error("The post is still there, the database is missing the 'delete own posts' policy. Run SQL #10 in docs/SUPABASE-STEP-BY-STEP.md (one line fixes it).");
     }
     return true;
   }
@@ -248,35 +248,39 @@
   }
 
   /* ---------- uploads (covers / audio / avatars) ---------- */
-  /* v253 · uploads are validated BEFORE anything leaves the device —
+  /* v253 · uploads are validated BEFORE anything leaves the device.
      type by MIME, size by bucket. Checklist #15. */
   var UPLOAD_RULES = {
     "tsb-covers": { mimes: ["image/jpeg", "image/png", "image/webp", "image/gif"], max: 8 },
     "tsb-avatars": { mimes: ["image/jpeg", "image/png", "image/webp"], max: 4 },
-    "tsb-audio": { mimes: ["audio/webm", "audio/m4a", "audio/mp4", "audio/mpeg", "audio/mp3", "audio/ogg", "audio/wav"], max: 20 }
+    "tsb-audio": { mimes: ["audio/webm", "audio/m4a", "audio/mp4", "audio/x-m4a", "audio/mpeg", "audio/mp3", "audio/ogg", "audio/opus", "audio/wav", "audio/aac"], max: 20 }
   };
   async function upload(file, bucket) {
     var u = me();
     if (!u) throw new Error("sign-in");
     var tk = await authToken();
-    if (!tk) throw new Error("session expired — sign in again");
+    if (!tk) throw new Error("session expired, sign in again");
     var rule = UPLOAD_RULES[bucket];
+    /* phones stamp recordings like "audio/webm;codecs=opus", compare on the
+       base type, and upload with it too, or every voice note dies as
+       "not supported" (this was the DM mic bug). */
+    var ftype = String((file && file.type) || "").split(";")[0].trim().toLowerCase();
     if (rule) {
-      if (!file || rule.mimes.indexOf(file.type) < 0) {
+      if (!file || !ftype || rule.mimes.indexOf(ftype) < 0) {
         var kinds = rule.mimes.some(function (m) { return m.indexOf("image/") === 0; }) ? "JPG, PNG, WEBP or GIF" : "voice notes (webm, m4a, mp3, ogg or wav)";
-        throw new Error("Only " + kinds + " are allowed here.");
+        throw new Error("Only " + kinds + " are allowed here (got " + (ftype || "unknown") + ").");
       }
       if (file.size > rule.max * 1024 * 1024) {
-        throw new Error("Too large — keep it under " + rule.max + " MB.");
+        throw new Error("Too large, keep it under " + rule.max + " MB.");
       }
     }
     var path = u.id + "/" + Date.now() + "-" + (file.name || "f").replace(/[^\w.-]+/g, "_");
     var url = URL + "/storage/v1/object/" + bucket + "/" + path;
-    var hdrs = { apikey: ANON, Authorization: "Bearer " + tk, "Content-Type": file.type || "application/octet-stream", "x-upsert": "false" };
+    var hdrs = { apikey: ANON, Authorization: "Bearer " + tk, "Content-Type": (rule ? ftype : (file.type || "application/octet-stream")), "x-upsert": "false" };
     var res = await fetch(url, { method: "POST", headers: hdrs, body: file });
     var tk2 = "";
     if ((res.status === 401 || res.status === 403) && tk) {
-      /* token may have expired mid-session — force one refresh, then retry once */
+      /* token may have expired mid-session, force one refresh, then retry once */
       try { if (window.TSB_AUTH && typeof TSB_AUTH.token === "function") await TSB_AUTH.token(); } catch (e) {}
       tk2 = await authToken();
       if (tk2 && tk2 !== tk) {
@@ -293,10 +297,10 @@
         try {
           var p = await probeStorage(bucket);
           if (p && p.reason) {
-            if (p.reason === "bucket-missing") msg = "📦 Bucket \"" + bucket + "\" doesn't exist on your Supabase project — run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md (creates all three buckets, safe to re-run).";
-            else if (p.reason === "bucket-private") msg = "🔒 Bucket \"" + bucket + "\" exists but is private — run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md (it sets public=true).";
-            else if (p.reason === "policy-missing") msg = "🚫 Storage upload rule missing (" + (p.detail || det || res.status) + ") — run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md (one safe, re-runnable script; defines read/write/update/delete for tsb-covers, tsb-audio, tsb-avatars).";
-            else if (p.reason === "network") msg = "Network problem talking to storage (" + (p.detail || "") + ") — check your connection and try again.";
+            if (p.reason === "bucket-missing") msg = "📦 Bucket \"" + bucket + "\" doesn't exist on your Supabase project, run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md (creates all three buckets, safe to re-run).";
+            else if (p.reason === "bucket-private") msg = "🔒 Bucket \"" + bucket + "\" exists but is private, run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md (it sets public=true).";
+            else if (p.reason === "policy-missing") msg = "🚫 Storage upload rule missing (" + (p.detail || det || res.status) + "), run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md (one safe, re-runnable script; defines read/write/update/delete for tsb-covers, tsb-audio, tsb-avatars).";
+            else if (p.reason === "network") msg = "Network problem talking to storage (" + (p.detail || "") + "), check your connection and try again.";
             else msg = msg + " (storage check: " + p.reason + ")";
           }
         } catch (e) {}
@@ -314,7 +318,7 @@
       if (!tk) { out.reason = "signin"; return out; }
       var hdrs = { apikey: ANON, Authorization: "Bearer " + tk, "Content-Type": "application/json" };
 
-      /* 1) bucket existence — list works on public buckets (the /bucket list
+      /* 1) bucket existence, list works on public buckets (the /bucket list
             endpoint is invisible under storage.buckets RLS, so don't trust it) */
       var list = await fetch(URL + "/storage/v1/object/list/" + bucket, {
         method: "POST", headers: hdrs, body: JSON.stringify({ prefix: "", limit: 1 })
@@ -323,11 +327,11 @@
       if (list.status === 403 || list.status === 401) { out.reason = "policy-missing"; out.detail = "read"; return out; }
       out.found = true;
 
-      /* 2) public badge — the public read URL must not 400 */
+      /* 2) public badge, the public read URL must not 400 */
       var pub = await fetch(URL + "/storage/v1/object/public/" + bucket + "/_tsbdiag/.probe", { headers: { apikey: ANON, Authorization: "Bearer " + tk } });
       if (pub.status === 400 || pub.status === 403) { out.reason = "bucket-private"; return out; }
 
-      /* 3) the real question — a tiny write+delete round trip */
+      /* 3) the real question, a tiny write+delete round trip */
       var probePath = bucket + "/_tsbdiag/" + Date.now() + ".txt";
       var up = await fetch(URL + "/storage/v1/object/" + probePath, {
         method: "POST",
@@ -350,13 +354,13 @@
   function uploadFailMsg(status, det, bucket) {
     det = det || "";
     if (status === 404 || /not found/i.test(det) || /bucket/i.test(det)) {
-      return "📦 Storage bucket \"" + bucket + "\" is missing on your Supabase project — run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md. It creates tsb-covers / tsb-audio / tsb-avatars (safe to re-run). (" + (det || status) + ")";
+      return "📦 Storage bucket \"" + bucket + "\" is missing on your Supabase project, run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md. It creates tsb-covers / tsb-audio / tsb-avatars (safe to re-run). (" + (det || status) + ")";
     }
     if (status === 413 || /too large|PayloadTooLarge/i.test(det)) {
       return "That file is too big for storage (max ~50 MB). Trim/compress it and try again.";
     }
     if (status === 403 || status === 401) {
-      return "🚫 Upload blocked (" + (det || status) + "). Your storage is missing the upload rule — run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md (one safe re-runnable script, ~30 seconds). If you just ran it, reload this page and try again.";
+      return "🚫 Upload blocked (" + (det || status) + "). Your storage is missing the upload rule, run SQL #3 v4 in docs/SUPABASE-STEP-BY-STEP.md (one safe re-runnable script, ~30 seconds). If you just ran it, reload this page and try again.";
     }
     return "Upload failed (" + (det || status) + "). Check your internet, then try again.";
   }
@@ -381,10 +385,10 @@
   }
   async function checkBurst(file) {
     if (!file) throw new Error("No file chosen.");
-    if (file.size > MAX_BURST_BYTES) throw new Error("That video is bigger than 48 MB — trim or compress it first.");
+    if (file.size > MAX_BURST_BYTES) throw new Error("That video is bigger than 48 MB, trim or compress it first.");
     var d = await videoDuration(file);
-    if (!isFinite(d) || d <= 0) throw new Error("Could not read that video's length — try an MP4 or WebM file.");
-    if (d > MAX_BURST_SEC + 0.5) throw new Error("Bursts are max 2 minutes — yours is " + Math.round(d) + "s. Trim it and try again.");
+    if (!isFinite(d) || d <= 0) throw new Error("Could not read that video's length, try an MP4 or WebM file.");
+    if (d > MAX_BURST_SEC + 0.5) throw new Error("Bursts are max 2 minutes, yours is " + Math.round(d) + "s. Trim it and try again.");
     return d;
   }
 
@@ -392,7 +396,7 @@
   /* ---- v250: people discovery ----------------------------------------
      BEFORE: one `limit=60` page ordered by updated_at. Anyone who had not
      touched the app recently fell off the end and never appeared in People
-     at all — the "15 signed in but only 12 show" bug.
+     at all, the "15 signed in but only 12 show" bug.
      AFTER: walk every page with the Range header until PostgREST runs out,
      so the list is complete no matter how many readers join. */
   async function fetchAll(path, pageSize, hardCap) {
@@ -500,7 +504,7 @@
     });
     msgs.forEach(function (r) { touch(r.sender_id); touch(r.receiver_id); });
 
-    /* the official account has no profiles row by design — never let it vanish */
+    /* the official account has no profiles row by design, never let it vanish */
     var off = touch(OFFICIAL_ID);
     if (off) {
       off.name = off.name || "TheSmallBook";
@@ -529,12 +533,12 @@
       await api("profiles?on_conflict=id&select=*", { method: "POST", headers: { Prefer: "resolution=merge-duplicates" }, body: { id: u.id, name: name, avatar_url: avatar, is_public: !!on } });
     } catch (e) {
       var m = String((e && e.message) || e);
-      if (m.indexOf("is_public") >= 0) throw new Error("the is_public column is missing — run SQL #5 (one line, in docs/SUPABASE-STEP-BY-STEP.md)");
+      if (m.indexOf("is_public") >= 0) throw new Error("the is_public column is missing, run SQL #5 (one line, in docs/SUPABASE-STEP-BY-STEP.md)");
       throw e;
     }
   }
 
-  // ---- v192: notifications (derived — no new tables needed) ----
+  // ---- v192: notifications (derived, no new tables needed) ----
   async function notifications() {
     if (!api || !signedIn()) return [];
     var u = me();
@@ -646,7 +650,7 @@
   /* ---- v191 → v250: public reading progress --------------------------
      Two problems fixed:
        1. It only ran on the Stories page, and js/community.js was not even
-          loaded on book.html — so the lessons people actually read while
+          loaded on book.html, so the lessons people actually read while
           reading a book never reached the cloud. Ten of twelve live profiles
           still said "0 lessons" because of this.
        2. `force` fired one PATCH per lesson tap. Now forced syncs are
@@ -687,7 +691,7 @@
       try {
         await api("profiles?id=eq." + mu3.id, { method: "PATCH", body: body });
       } catch (e) {
-        /* older schemas have no updated_at write permission — retry without it */
+        /* older schemas have no updated_at write permission, retry without it */
         await api("profiles?id=eq." + mu3.id, { method: "PATCH", body: { progress: n } });
       }
       localStorage.setItem("tsb_prog_sync", String(Date.now()));
@@ -702,7 +706,7 @@
   /* ---- v250: app-wide boot -------------------------------------------
      community.js ships on every app page, so this is the single place that
      guarantees a signed-in reader has a profiles row, fresh progress and a
-     truthful bell — no matter which page they landed on. Without it a
+     truthful bell, no matter which page they landed on. Without it a
      reader who signed in and only ever read books never appeared in People. */
   var bootDone = false;
   function boot() {
@@ -711,7 +715,7 @@
     bootDone = true;
     try { ensureProfile().catch(function () {}); } catch (e) {}
     try { syncProgress(false); } catch (e) {}
-    /* v250: "when did you last visit" — one throttled write per 30 min */
+    /* v250: "when did you last visit", one throttled write per 30 min */
     try { touchPresence(false).catch(function () {}); } catch (e) {}
     /* one-time heal: a profile whose links column collected presence junk
        (duplicated or stringified buckets) cleans itself on the next visit */
@@ -803,17 +807,17 @@
   }
 
   /* ============================================================
-     v250 — ONE NOTIFICATION LEDGER
+     v250, ONE NOTIFICATION LEDGER
      ------------------------------------------------------------
      There used to be two half-systems that never agreed:
-       * tsb_toast_seen — keys marked when a toast popped or a DM
+       * tsb_toast_seen, keys marked when a toast popped or a DM
          thread was opened;
-       * tsb_notif_seen — a single "last time the bell page was
+       * tsb_notif_seen, a single "last time the bell page was
          opened" timestamp.
      The bell page and the You-page badge read ONLY the timestamp,
      so a notification you had already opened (tapped a toast,
      replied in the thread, viewed the profile) came back wearing a
-     NEW badge on your next visit — forever.
+     NEW badge on your next visit, forever.
 
      Now there is one ledger of things you have actually OPENED, and
      a separate one of things already POPPED as a toast. A toast
@@ -821,8 +825,8 @@
      exactly once, and after that it stays in the history rendered
      as read instead of being flagged again.
      ============================================================ */
-  var NOTIF_READ = "tsb_notif_read";       // { key: openedAtMs } — what YOU opened
-  var NOTIF_POPPED = "tsb_notif_popped";   // { key: poppedAtMs } — what already toasted
+  var NOTIF_READ = "tsb_notif_read";       // { key: openedAtMs }, what YOU opened
+  var NOTIF_POPPED = "tsb_notif_popped";   // { key: poppedAtMs }, what already toasted
   var LEGACY_TOAST = "tsb_toast_seen";     // pre-v250 stores, migrated once below
   var LEGACY_SEEN = "tsb_notif_seen";
   var LEDGER_CAP = 600;
@@ -937,7 +941,7 @@
       return null;
     }
     var wrap = sayHost();
-    /* never stack more than three — the oldest goes first */
+    /* never stack more than three, the oldest goes first */
     while (wrap.querySelectorAll(".tsb-say").length >= 3) {
       var first = wrap.querySelector(".tsb-say");
       if (!first) break;
@@ -1035,7 +1039,7 @@
     setInterval(toastPoll, 25000);
     document.addEventListener("visibilitychange", function () { if (!document.hidden) toastPoll(); });
     /* v250: paint the badges immediately on load too, not only after the
-       first 4.5 s poll — the bell used to look empty for a moment. */
+       first 4.5 s poll, the bell used to look empty for a moment. */
     if (ENABLED && signedIn()) { try { notifRefresh(); } catch (e) {} }
     window.addEventListener("tsb:auth", function () { try { notifRefresh(); boot(); } catch (e) {} });
   }
@@ -1090,7 +1094,7 @@
   var playerEl = null, audioEl = null;
   /* ---------- v221: avatar propagation ----------
      posts snapshot author_avatar / author_name at publish time, so when the profile
-     photo (or name) changes we PATCH the snapshot on ALL of the user's posts —
+     photo (or name) changes we PATCH the snapshot on ALL of the user's posts.
      that's what makes the new photo show on the stories feed, the story page and
      after deleting a story, not the old one. */
   async function syncAvatarPosts(url, name) {
@@ -1101,7 +1105,7 @@
     if (name) body.author_name = name;
     if (!Object.keys(body).length) return;
     try { await api("posts?author_id=eq." + encodeURIComponent(u.id) + "&select=id", { method: "PATCH", body: body }); }
-    catch (e) { console.warn("Avatar snapshot not synced — run SQL #10 (update own posts policy)."); }
+    catch (e) { console.warn("Avatar snapshot not synced, run SQL #10 (update own posts policy)."); }
   }
 
   /* ---------- v221: pretty upload pickers (no ugly native "Choose file / No file chosen") ---------- */
@@ -1231,7 +1235,7 @@
         m.addEventListener("dragstart", function (ev) { ev.preventDefault(); return false; });
         m.setAttribute("oncontextmenu", "return false");
       }
-      /* pause when it leaves the screen — switching posts stops the sound/video */
+      /* pause when it leaves the screen, switching posts stops the sound/video */
       if (!_io) {
         try { _io = new IntersectionObserver(function (entries) {
           entries.forEach(function (en) { if (!en.isIntersecting) { try { en.target.pause(); en.target.playbackRate = 1; } catch (e) {} } });
@@ -1261,7 +1265,7 @@
     try {
       await api("messages?sender_id=eq." + encodeURIComponent(peerId) + "&receiver_id=eq." + encodeURIComponent(mu.id) + "&read=eq.false", { method: "PATCH", body: { read: true } });
     } catch (e) {
-      /* read column may not exist yet on old DBs — surface the one-line SQL, don't crash the chat */
+      /* read column may not exist yet on old DBs, surface the one-line SQL, don't crash the chat */
       if (String((e && e.message) || e).indexOf("read") >= 0) console.warn("Run SQL #10 (add messages.read) for read receipts.");
     }
   }
@@ -1338,15 +1342,15 @@
      v250 · PRESENCE, READ RECEIPTS & FOLLOW REQUESTS
      --------------------------------------------------------------------
      All three ride the `profiles.links` JSON column you already have, and
-     every write targets the writer's OWN row — so your existing RLS is
+     every write targets the writer's OWN row, so your existing RLS is
      enough and NOTHING has to be run in Supabase for this to work.
 
-       peek  — the last time YOU opened the app        (last seen / online)
-       hear  — the last time you OPENED a story        (read receipts)
-       out   — follow requests you have sent
-       in    — follow requests you have accepted
-       no    — follow requests you declined
-       pub   — your privacy switches (show last seen, show read receipts)
+       peek , the last time YOU opened the app        (last seen / online)
+       hear , the last time you OPENED a story        (read receipts)
+       out  , follow requests you have sent
+       in   , follow requests you have accepted
+       no   , follow requests you declined
+       pub  , your privacy switches (show last seen, show read receipts)
 
      The accept handshake never lets one reader write another's row:
        A asks   -> A writes A.out
@@ -1369,7 +1373,7 @@
     return o;
   }
   /* ==================================================================== v250-b
-     ONE ARRAY, TWO JOBS — and that was the bug.
+     ONE ARRAY, TWO JOBS, and that was the bug.
 
      `profiles.links` holds the reader's real links AND this app's internal
      buckets (peek/pub = presence + privacy, out/in/no = the follow handshake,
@@ -1377,7 +1381,7 @@
      saw {"k":"peek","v":...} sitting in their links like an error message.
 
      Worse: saving the profile wrote back only what the text input held, which
-     threw the buckets away — and because a *stringified* bucket no longer looks
+     threw the buckets away, and because a *stringified* bucket no longer looks
      like a bucket, every later presence write appended another copy. That is
      where the repeats came from.
 
@@ -1601,8 +1605,8 @@
 
      So when supabase/sql/follow-requests.sql has been applied, we use the
      real table instead (public.follow_requests + three SECURITY DEFINER
-     functions). The client keeps the same API and the same local buckets —
-     syncRequests() rebuilds them from the server — so no screen needs to
+     functions). The client keeps the same API and the same local buckets.
+     syncRequests() rebuilds them from the server, so no screen needs to
      know which mode is running.
      ------------------------------------------------------------------ */
   var FR = null, FR_PROMISE = null;
@@ -1773,7 +1777,7 @@
     listPosts: listPosts, getPost: getPost, publish: publish, deletePost: deletePost,
     likeInfo: likeInfo, setLike: setLike, likesOnMyPosts: likesOnMyPosts,
     listProfiles: listProfiles, allPeople: allPeople, setProfilePublic: setProfilePublic, postCounts: postCounts, getPostByShort: getPostByShort, toastKey: toastKey, toastMark: toastMark, notifications: notifications, whenReady: whenReady, avaUrl: avaUrl, OFFICIAL_AVATAR: OFFICIAL_AVATAR, protectMedia: protectMedia, pauseAllMedia: pauseAllMedia, fancyFileInputs: fancyFileInputs, syncAvatarPosts: syncAvatarPosts,
-    /* v250 — notifications: one read ledger, one badge painter */
+    /* v250, notifications: one read ledger, one badge painter */
     notifKey: notifKey, notifMarkRead: notifMarkRead, notifIsRead: notifIsRead, notifUnread: notifUnread,
     notifMarkAll: notifMarkAll, notifMarkPeer: notifMarkPeer, notifMarkPost: notifMarkPost,
     notifMarkContext: notifMarkContext,
@@ -1784,7 +1788,7 @@
     syncProgress: syncProgress, syncInterests: syncInterests, icon: icon,
     listComments: listComments, addComment: addComment,
     followInfo: followInfo, setFollow: setFollow, followingIds: followingIds, followerRows: followerRows,
-    /* v250 — presence, read receipts, follow requests */
+    /* v250, presence, read receipts, follow requests */
     touchPresence: touchPresence, viewsSeen: viewsSeen, viewsSetSeen: viewsSetSeen,
     markHeard: markHeard, heardPosts: heardPosts, readsPost: readsPost, readersOf: readersOf,
     lastSeenOf: lastSeenOf, lastSeenText: lastSeenText, privacyOf: privacyOf, setPrivacy: setPrivacy, myPrivacy: myPrivacy,

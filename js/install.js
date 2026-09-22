@@ -1,5 +1,5 @@
 /* ============================================================
-   TheSmallBook — 📲 INSTALL APP POPUP (v221)
+   TheSmallBook, 📲 INSTALL APP POPUP (v221)
    ONE-TAP install, no steps:
    • Android / Chrome / Edge  → the browser's native install sheet
      (beforeinstallprompt) fires straight from the button.
@@ -56,12 +56,12 @@
     if (isStandalone()) {
       body = '<div class="instbody"><div class="insthero"><img src="' + icon + '" alt=""><span>✅</span></div>' +
              '<h3 class="modal__title" style="margin:14px 0 6px;">Already on your home screen</h3>' +
-             '<p class="instp">TheSmallBook is installed — open it any time, even offline.</p>' +
+             '<p class="instp">TheSmallBook is installed, open it any time, even offline.</p>' +
              '<button class="setbtn" data-instclose>Awesome</button></div>';
     } else {
       body = '<div class="instbody"><div class="insthero"><img src="' + icon + '" alt=""><span>📲</span></div>' +
              '<h3 class="modal__title" style="margin:14px 0 6px;">Install TheSmallBook</h3>' +
-             '<p class="instp">One tap — it lands on your home screen like a real app.<br>Full-screen, works offline, opens in 1 tap.</p>' +
+             '<p class="instp">One tap, it lands on your home screen like a real app.<br>Full-screen, works offline, opens in 1 tap.</p>' +
              '<button class="setbtn setbtn--big" data-instgo>⬇️&nbsp; Install the app</button>' +
              '<p class="instfine" data-instfine hidden>Open this page in <b>Chrome</b> (or Edge), tap the browser <b>menu&nbsp;⋮</b> → <b>Install app</b>. One tap, done.</p>' +
              '<p class="instfine">Free to read · No ads · No sign-up needed</p></div>';
@@ -87,14 +87,14 @@
             m.querySelector(".instbody").innerHTML =
               '<div class="insthero"><img src="' + icon + '" alt=""><span>🎉</span></div>' +
               '<h3 class="modal__title" style="margin:14px 0 6px;text-align:center;">Installed!</h3>' +
-              '<p class="instp" style="text-align:center;">TheSmallBook is now on your home screen.<br>Open it any time — even offline.</p>' +
+              '<p class="instp" style="text-align:center;">TheSmallBook is now on your home screen.<br>Open it any time, even offline.</p>' +
               '<div style="text-align:center;"><button class="setbtn" data-instclose>Done</button></div>';
             m.querySelector("[data-instclose]").addEventListener("click", closeModal);
           }
           deferred = null;
         });
       } else if (isIOS()) {
-        /* iPhone: the only real way — one tap opens the native Share sheet (Add to Home Screen lives there) */
+        /* iPhone: the only real way, one tap opens the native Share sheet (Add to Home Screen lives there) */
         try {
           if (navigator.share) {
             navigator.share({ title: "TheSmallBook", text: "Big books. Small reads. Free to read.", url: location.href })
@@ -106,9 +106,9 @@
         } catch (e) {}
       } else if (isStandalone()) {
         var fs2 = m.querySelector("[data-instfine]");
-        if (fs2) { fs2.hidden = false; go.textContent = "✅ Already installed — you're on it"; }
+        if (fs2) { fs2.hidden = false; go.textContent = "✅ Already installed, you're on it"; }
       } else {
-        /* no native prompt yet. v222: if we haven't already, reload ONCE — Chrome only
+        /* no native prompt yet. v222: if we haven't already, reload ONCE, Chrome only
            offers beforeinstallprompt after the service worker controls the page, and
            this page has just been saved/previewed. The reload makes it appear, and the
            flag below auto-reopens this popup the moment the prompt arrives. */
@@ -117,7 +117,7 @@
         if (!tried) {
           try { sessionStorage.setItem("tsb_inst_reload", "1"); } catch (e) {}
           var h = m.querySelector("[data-instfine]");
-          if (h) { h.hidden = false; h.textContent = "Preparing the install sheet — reloading once…"; }
+          if (h) { h.hidden = false; h.textContent = "Preparing the install sheet, reloading once…"; }
           go.textContent = "⏳ One moment…";
           setTimeout(function () { try { location.reload(); } catch (e) {} }, 500);
         } else {
@@ -144,7 +144,7 @@
     deferred = ev;
     promptUsed = false;
     try {
-      /* v222: we reloaded to surface the prompt — reopen the popup automatically */
+      /* v222: we reloaded to surface the prompt, reopen the popup automatically */
       if (sessionStorage.getItem("tsb_inst_reload")) {
         sessionStorage.removeItem("tsb_inst_reload");
         openModal();
