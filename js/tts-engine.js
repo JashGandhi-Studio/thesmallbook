@@ -1,17 +1,17 @@
 /* ============================================================
-   THESMALLBOOK — TTS ENGINE v6 🎧 PODCAST-GRADE LISTENING
+   THESMALLBOOK, TTS ENGINE v6 🎧 PODCAST-GRADE LISTENING
    ------------------------------------------------------------
    Providers (auto, in order):
-     1. Puter.js  — free cloud TTS (no API key), high-quality
+     1. Puter.js , free cloud TTS (no API key), high-quality
         neural voices, 100+ languages. Loaded lazily.
-     2. Web Speech API — fallback (device voices, works offline).
+     2. Web Speech API, fallback (device voices, works offline).
 
    Features:
      • natural sentence-aware pauses (480ms / 220ms / 750ms)
      • subtle rate + pitch variation (human feel)
      • FULL-BOOK PODCAST MODE: queues every lesson, auto-advances,
        floating mini-player with play/pause/next/prev/speed/progress
-     • section intros ("Lesson 3 of 8 — The Power of 1%")
+     • section intros ("Lesson 3 of 8, The Power of 1%")
    ============================================================ */
 window.TTS_ENGINE = (function () {
   "use strict";
@@ -64,7 +64,7 @@ window.TTS_ENGINE = (function () {
     return REGION[n] || REGION[baseLang(n)] || lang;
   }
 
-  /* ⭐ PUTER OFFICIAL TTS LANGUAGES (official list — Puter speaks these
+  /* ⭐ PUTER OFFICIAL TTS LANGUAGES (official list, Puter speaks these
      natively). Our app uses Puter ONLY for these; every other language
      goes to Web Speech (device regional voice = guaranteed correct).
      Official Puter list: ar da es fr it ko nn pl th zh-cn bn de fa hi ig
@@ -92,7 +92,7 @@ window.TTS_ENGINE = (function () {
       if (puterReady) return resolve(true);
       if (window.puter && window.puter.ai && window.puter.ai.tts) {
         puterReady = true;
-        /* fast path (puter already loaded) — still fetch the voice list,
+        /* fast path (puter already loaded), still fetch the voice list,
            otherwise gender/voice matching never gets a list */
         if (window.puter.ai.listTTSVoices) {
           try {
@@ -128,13 +128,13 @@ window.TTS_ENGINE = (function () {
         if (!retried) {
           retried = true;
           puterLoading = false;
-          /* mobile networks can be flaky — one retry after 1.5s */
+          /* mobile networks can be flaky, one retry after 1.5s */
           setTimeout(loadPuter, 1500);
           return;
         }
         puterLoading = false; resolve(false);
       };
-      /* HARD TIMEOUT: if the script hangs (no load/error event — common on
+      /* HARD TIMEOUT: if the script hangs (no load/error event, common on
          flaky mobile networks), NEVER leave the queue stuck. Resolve now so
          Web Speech takes over. */
       setTimeout(function () {
@@ -187,7 +187,7 @@ window.TTS_ENGINE = (function () {
         if (v) opts.voice = v.name || v.id || v;
         /* CRITICAL: for non-English text we ONLY trust Puter when its voice
            list actually has a matching voice. If the list is empty (couldn't
-           load) or has no match, Puter may read in a WRONG language — so we
+           load) or has no match, Puter may read in a WRONG language, so we
            hand it to Web Speech, which can pick a correct regional voice
            (e.g. Android Google TTS has ગુજરાતી, हिन्दी…). */
         if (lang && lang !== "en" && !v) {
@@ -201,7 +201,7 @@ window.TTS_ENGINE = (function () {
           const end = (ok) => {
             if (!done) { done = true; if (safetyT) clearTimeout(safetyT); if (currentAudio === audio) currentAudio = null; clearPosition(); resolve(ok); }
           };
-          /* robust end detection — onended alone is unreliable (can fire
+          /* robust end detection, onended alone is unreliable (can fire
              early or not at all), which made the LAST chapter cut off */
           const tryEndFromTime = () => {
             try {
@@ -223,7 +223,7 @@ window.TTS_ENGINE = (function () {
           }, Math.max(6000, (text.length / (13 * (speed || 1))) * 1000 + 2500));
           if (g !== gen || !playing || paused) { end(false); return; }
           /* stop any audio still playing from a previous chunk (seekTo,
-             voice/speed change) — otherwise both play at once */
+             voice/speed change), otherwise both play at once */
           if (currentAudio && currentAudio !== audio) {
             try { currentAudio.pause(); } catch (e) {}
             currentAudio = null;
@@ -305,7 +305,7 @@ window.TTS_ENGINE = (function () {
       u.lang = v ? v.lang : region(lang);
       u.rate = Math.min(2, Math.max(0.5, speedV));
       /* GENDER: if no gender-specific voice exists (most mobile devices have
-         ONE voice per language), simulate male/female with pitch — this
+         ONE voice per language), simulate male/female with pitch, this
          guarantees an audible change on every phone */
       var pref = genderPref();
       var vGender = v ? voiceGenderOf(v.name) : "auto";
@@ -318,13 +318,13 @@ window.TTS_ENGINE = (function () {
       u.onerror = function () { if (!finished) { finished = true; done(false); } };
       try { SPK.speak(u); } catch (e) { done(false); }
     }
-    /* Android returns an empty voice list at first — wait for it, then
+    /* Android returns an empty voice list at first, wait for it, then
        speak once with the correct regional voice (gu-IN, hi-IN…) */
     voicesReady(1500).then(start);
   }
 
   /* ---------- background keep-alive ----------
-     Chrome/Android suspends a tab when NO media is playing — between chunks
+     Chrome/Android suspends a tab when NO media is playing, between chunks
      there is a gap with zero audio, so the queue dies on lock screen.
      A looping silent WAV keeps the tab "actively playing media" the whole
      time, so timers + queue keep running with the screen off. */
@@ -347,9 +347,9 @@ window.TTS_ENGINE = (function () {
   }
 
   /* ---------- volume BOOST (louder than max) ----------
-     An <audio> element clamps its volume at 1.0 — on many phones that still
+     An <audio> element clamps its volume at 1.0, on many phones that still
      sounds soft. Routing the audio through a Web Audio GainNode lets us go
-     to 1.5x/2x — genuinely louder on mobile. */
+     to 1.5x/2x, genuinely louder on mobile. */
   function ensureBoost() {
     try {
       if (!audioCtx) {
@@ -398,7 +398,7 @@ window.TTS_ENGINE = (function () {
        - lang ∈ PUTER_LANGS  → Puter premium cloud voice (en, hi, bn, ur,
          es, fr, de, pt, it, ru, ar, zh-CN, ja, ko, tr, …)
        - lang ∉ PUTER_LANGS  → Web Speech device voice (gu, mr, ta, te,
-         kn, ml, pa, or, id — Puter doesn't speak these natively) */
+         kn, ml, pa, or, id, Puter doesn't speak these natively) */
     if (!puterSpeaks(lang)) {
       speakWeb(item.text, lang, spd, done);
       return;
@@ -413,7 +413,7 @@ window.TTS_ENGINE = (function () {
     };
     if (puterReady) tryPuter();
     else {
-      /* give Puter a SHORT chance (it was pre-warmed at boot) — this lets
+      /* give Puter a SHORT chance (it was pre-warmed at boot), this lets
          background/lock-screen playback start with the media element when
          available; otherwise speak instantly with Web Speech */
       var gaveUp = false;
@@ -474,13 +474,13 @@ window.TTS_ENGINE = (function () {
   }
 
   /* ============================================================
-     MEDIA SESSION — lock-screen / notification controls (like songs)
+     MEDIA SESSION, lock-screen / notification controls (like songs)
      + background-play handling
      ============================================================ */
   function mediaSessionSupported() {
     return !!(navigator.mediaSession && "mediaSession" in navigator);
   }
-  /* square branded album-art per book (cache once) — makes the lock screen
+  /* square branded album-art per book (cache once), makes the lock screen
      look like a real music app instead of a cropped portrait cover */
   function squareArt(book) {
     return new Promise((resolve) => {
@@ -519,7 +519,7 @@ window.TTS_ENGINE = (function () {
     });
   }
 
-  /* lock-screen progress bar (like Spotify) — real, moving */
+  /* lock-screen progress bar (like Spotify), real, moving */
   function setPos(d, p) {
     if (mediaSessionSupported() && navigator.mediaSession.setPositionState) {
       try { navigator.mediaSession.setPositionState({ duration: d, position: Math.min(p, d), playbackRate: speed }); } catch (e) {}
@@ -560,7 +560,7 @@ window.TTS_ENGINE = (function () {
       const artist = author ? author + " · TheSmallBook" : "TheSmallBook";
       const artSrc = (book && book.id && artCache[book.id]) ? artCache[book.id] : "favicon.png";
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: (lessonTitle || "Podcast Mode") + (book ? " — " + book.title : ""),
+        title: (lessonTitle || "Podcast Mode") + (book ? ", " + book.title : ""),
         artist: artist,
         album: book ? book.title : "TheSmallBook",
         artwork: [{ src: artSrc, sizes: "512x512", type: "image/jpeg" }]
@@ -603,7 +603,7 @@ window.TTS_ENGINE = (function () {
      web-speech is best-effort resumed when the tab comes back */
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
-      /* keep playing in background — but never force-unpause user's pause */
+      /* keep playing in background, but never force-unpause user's pause */
       if (playing && !paused && currentAudio && currentAudio.paused) {
         try { currentAudio.play(); } catch (e) {}
       }
@@ -663,7 +663,7 @@ window.TTS_ENGINE = (function () {
   function seekTo(i) {
     if (!queue.length) return;
     curIdx = Math.max(0, Math.min(queue.length - 1, i));
-    /* kill any currently-playing Puter audio — otherwise the old chunk
+    /* kill any currently-playing Puter audio, otherwise the old chunk
        keeps playing over the new one (voice/speed changes sounded broken) */
     if (currentAudio) { try { currentAudio.pause(); } catch (e) {} currentAudio = null; }
     if (SPK) { try { SPK.cancel(); } catch (e) {} }
@@ -677,22 +677,22 @@ window.TTS_ENGINE = (function () {
       const el = player.querySelector('[data-act="speed"]');
       if (el) el.textContent = v.toFixed(2).replace(/\.?0+$/, "") + "x";
     }
-    /* apply the new speed RIGHT AWAY — restart the current chunk */
+    /* apply the new speed RIGHT AWAY, restart the current chunk */
     if (playing && !paused) seekTo(curIdx);
   }
   function queueBook(book, lang) {
     const parts = [];
     const lessons = book.lessons || [];
     const bookMeta = { book: book.title, lesson: book.title, idx: 0, cover: book.cover, author: book.author };
-    /* 1) podcast intro — "You are listening to X by Y." (no duplication) */
+    /* 1) podcast intro, "You are listening to X by Y." (no duplication) */
     parts.push({
       text: book.oneLiner || book.title,
       intro: "You are listening to " + book.title + (book.author ? " by " + book.author : "") + ".",
       lang: lang, pause: 700, meta: bookMeta
     });
-    /* 2) the FULL Big Idea — read properly before any lesson */
+    /* 2) the FULL Big Idea, read properly before any lesson */
     if (book.bigIdea) parts.push({ text: book.bigIdea, lang: lang, pause: 1100, meta: bookMeta });
-    /* 3) lessons — intro says only "Lesson X of Y." then the title chunk
+    /* 3) lessons, intro says only "Lesson X of Y." then the title chunk
           speaks the title once (no double title) */
     lessons.forEach((l, i) => {
       const meta = { book: book.title, lesson: l.title, idx: i, cover: book.cover, author: book.author };
@@ -722,7 +722,7 @@ window.TTS_ENGINE = (function () {
     paused = false;
     // ensure puter loads in background for quality
     loadPuter();
-    /* start the silent keep-alive loop — keeps the tab alive on the lock
+    /* start the silent keep-alive loop, keeps the tab alive on the lock
        screen so the queue never freezes between chunks */
     startSilence();
     ensurePlayer(book);
@@ -732,7 +732,7 @@ window.TTS_ENGINE = (function () {
 
   /* ---------- mini player ---------- */
   function ensurePlayer(book) {
-    /* the floating mini-player lives ONLY on book pages —
+    /* the floating mini-player lives ONLY on book pages.
        on the shelf/library it would just be noise */
     if (!/book\.html/.test(location.pathname)) return;
     if (!player) {
@@ -802,7 +802,7 @@ window.TTS_ENGINE = (function () {
     const cur = genderPref();
     const next = cur === "auto" ? "male" : cur === "male" ? "female" : "auto";
     setGenderPref(next);
-    /* refresh the Puter voice list — on mobile it may load late/empty */
+    /* refresh the Puter voice list, on mobile it may load late/empty */
     if (window.puter && window.puter.ai && window.puter.ai.listTTSVoices) {
       try {
         window.puter.ai.listTTSVoices().then(function (v) { puterVoices = v || []; }).catch(function () {});
@@ -812,7 +812,7 @@ window.TTS_ENGINE = (function () {
       const b = player.querySelector('[data-act="voice"]');
       if (b) b.textContent = voiceLabel();
     }
-    /* restart the current chunk so the new voice applies right away —
+    /* restart the current chunk so the new voice applies right away.
        but ONLY if still playing (never resurrect after stop) */
     if (playing && !paused) seekTo(curIdx);
   }
@@ -820,7 +820,7 @@ window.TTS_ENGINE = (function () {
     if (!player) return;
     const p = player;
     p.classList.remove("tsb-player--show");
-    /* after the slide-down transition, REMOVE the element entirely —
+    /* after the slide-down transition, REMOVE the element entirely.
        never leave a dead player lying at the bottom */
     setTimeout(() => {
       if (p && p.parentNode && !p.classList.contains("tsb-player--show")) {
@@ -843,10 +843,10 @@ window.TTS_ENGINE = (function () {
     const live = player.querySelector(".tsb-player__live");
     if (live) live.classList.toggle("tsb-player__live--on", playing && !paused);
     if (item && item.meta) {
-      title.textContent = item.meta.book + " — " + item.meta.lesson;
+      title.textContent = item.meta.book + ", " + item.meta.lesson;
       const totalLessons = Math.max(...queue.map(q => q.meta ? q.meta.idx : 0)) + 1;
       sub.textContent = "Lesson " + (item.meta.idx + 1) + " of " + totalLessons + " · " + (playing && !paused ? "playing" : "paused");
-      /* cover art — real book cover in the art tile (fallback 📕) */
+      /* cover art, real book cover in the art tile (fallback 📕) */
       if (artEl && item.meta.cover) {
         if (!artEl.dataset.src || artEl.dataset.src !== item.meta.cover) {
           artEl.dataset.src = item.meta.cover;
@@ -884,7 +884,7 @@ window.TTS_ENGINE = (function () {
       if (v && v.length) { /* warm */ }
     } catch (e) {}
   }
-  // pre-warm puter as EARLY as possible — the sooner it's ready, the sooner
+  // pre-warm puter as EARLY as possible, the sooner it's ready, the sooner
   // the background-capable audio element takes over (lock screen playback)
   if (navigator.onLine) {
     if (document.readyState === "loading") {

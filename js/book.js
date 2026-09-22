@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK — BOOK DETAIL PAGE
+   THESMALLBOOK, BOOK DETAIL PAGE
    Lessons, mark-as-read, HQ text-to-speech, share-card image
    generator, quote images, checkable plans, related books.
    ============================================================ */
@@ -10,7 +10,7 @@
   const book = BOOKS.find((b) => b.id === id) || BOOKS[0];
   const idx = BOOKS.indexOf(book);
 
-  document.title = `${book.title} — TheSmallBook`;
+  document.title = `${book.title}, TheSmallBook`;
   TSB.achv.award("first-open");
   TSB.lastRead.set(book.id);
 
@@ -79,7 +79,7 @@
     if (window.TSB_AUTH && window.TSB_AUTH.enabled) window.TSB_AUTH.track();
   });
 
-  /* 🎧 PODCAST MODE — full-book listening via TTS_ENGINE
+  /* 🎧 PODCAST MODE, full-book listening via TTS_ENGINE
      Uses the LIVE translated text from the DOM (like the 🔊 LISTEN button),
      so it reads in whatever language the page is currently showing. */
   function playPodcastLive() {
@@ -116,7 +116,7 @@
     } else finalize(intros);
   }
 
-  /* 🎧 PODCAST MODE — full-book listening via TTS_ENGINE */
+  /* 🎧 PODCAST MODE, full-book listening via TTS_ENGINE */
   (function () {
     const actionBtn = document.getElementById("podcastBtn");
     const heroBtn = document.getElementById("heroPodcastBtn");
@@ -170,8 +170,8 @@
   }
 
   /* ============================================================
-     SHARE CARD GENERATOR v2 — STORY FORMAT (1080×1920)
-     • Uses the LIVE on-screen text — so cards come out in
+     SHARE CARD GENERATOR v2, STORY FORMAT (1080×1920)
+     • Uses the LIVE on-screen text, so cards come out in
        whatever language the reader is using (Hindi, Hinglish...)
      • WhatsApp-status / Instagram-story ready with full branding
      ============================================================ */
@@ -254,7 +254,7 @@
     });
   }
 
-  /* wrapText v2 — handles long words + scripts without spaces (中文, 日本語) */
+  /* wrapText v2, handles long words + scripts without spaces (中文, 日本語) */
   function wrapText(ctx, text, maxWidth) {
     const lines = [];
     let line = "";
@@ -287,7 +287,7 @@
   }
 
   /* draw a cover image INSIDE a box, preserving its aspect ratio and
-     centering it — no stretching, no misalignment on any card */
+     centering it, no stretching, no misalignment on any card */
   function drawCoverCentered(ctx, img, x, y, w, h) {
     if (!img || !img.width || !img.height) {
       ctx.fillStyle = "#fffdf5";
@@ -304,7 +304,7 @@
   }
 
   function drawBrandBar(ctx, W, H) {
-    // black branding strip — clean, no URL (let them ask for the link 😉)
+    // black branding strip, clean, no URL (let them ask for the link 😉)
     const barH = 200;
     ctx.fillStyle = "#111111";
     ctx.fillRect(0, H - barH, W, barH);
@@ -314,7 +314,7 @@
     ctx.fillStyle = "#ffc800";
     ctx.font = "900 60px 'Archivo Black', Arial";
     ctx.fillText("📕 THESMALLBOOK.IN", W / 2, H - barH + 92);
-    /* LIVE totals — always current, never a hardcoded number */
+    /* LIVE totals, always current, never a hardcoded number */
     const nBooks = (window.BOOKS || []).length;
     const nLessons = (window.BOOKS || []).reduce((a, b) => a + (b.lessons ? b.lessons.length : 0), 0);
     const tag = nBooks + "+ BOOKS · " + nLessons + "+ LESSONS · FREE TO READ";
@@ -326,7 +326,7 @@
     ctx.textAlign = "left";
   }
 
-  /* v223 watermark: free exports carry the site chip — Gold removes it.
+  /* v223 watermark: free exports carry the site chip, Gold removes it.
      Every shared card becomes a signpost back to thesmallbook.in. */
   function drawWatermark(ctx, W, H, y) {
     var label = "📕 thesmallbook.in";
@@ -342,7 +342,7 @@
   function isGoldNow() { return !!(window.TSB_GOLD && window.TSB_GOLD.isGold()); }
 
   async function renderBookCard() {
-    // CAROUSEL FORMAT: 1080×1350 (4:5) — Instagram carousel max vertical, ZERO crop
+    // CAROUSEL FORMAT: 1080×1350 (4:5), Instagram carousel max vertical, ZERO crop
     const W = 1080, H = 1350;
     const canvas = document.createElement("canvas");
     canvas.width = W; canvas.height = H;
@@ -376,7 +376,7 @@
     ctx.fillStyle = "#f2ede2";
     ctx.fillText(tCategory.toUpperCase(), W / 2, 129);
 
-    // cover — tilted, centered, safe-sized
+    // cover, tilted, centered, safe-sized
     const img = await loadImage(book.cover);
     const covW = 240, covH = 344;
     ctx.save();
@@ -412,7 +412,7 @@
     ctx.fillRect(W / 2 - 80, y - 16, 160, 5);
     y += 30;
 
-    // one-liner — up to 3 lines, inside safe zone
+    // one-liner, up to 3 lines, inside safe zone
     ctx.font = "600 34px 'Space Grotesk', Arial";
     const olLines = wrapText(ctx, "\u201C" + tOneliner + "\u201D", W - 320);
     const olMax = titleLines.length > 1 ? 2 : 3;
@@ -443,7 +443,7 @@
     // call to action
     ctx.fillStyle = "#111";
     ctx.font = "bold 28px 'Space Grotesk', Arial";
-    ctx.fillText("📖 READ THE FULL BREAKDOWN — FREE", W / 2, 1116);
+    ctx.fillText("📖 READ THE FULL BREAKDOWN, FREE", W / 2, 1116);
 
     drawBrandBar(ctx, W, H);
     if (!isGoldNow()) drawWatermark(ctx, W, H);
@@ -451,7 +451,7 @@
   }
 
   async function renderLessonCard(lessonIdx) {
-    // CAROUSEL FORMAT: 1080×1350 (4:5) — live translated lesson content
+    // CAROUSEL FORMAT: 1080×1350 (4:5), live translated lesson content
     const l = liveLesson(lessonIdx);
     const W = 1080, H = 1350;
     const canvas = document.createElement("canvas");
@@ -511,7 +511,7 @@
     ctx.fillRect(pad + 60, y, inner, 5);
     y += 48;
 
-    // summary — fits ~7 lines in safe zone
+    // summary, fits ~7 lines in safe zone
     ctx.font = "600 32px 'Space Grotesk', Arial";
     const actionZone = 230;
     const sumLines = wrapText(ctx, l.summary, inner);
@@ -554,7 +554,7 @@
       try {
         await navigator.share({ files: [file], title: "TheSmallBook", text });
         return;
-      } catch (e) { /* user cancelled or unsupported — fall through */ }
+      } catch (e) { /* user cancelled or unsupported, fall through */ }
     }
     // fallback: download the card
     const a = document.createElement("a");
@@ -562,28 +562,28 @@
     a.download = filename;
     a.click();
     URL.revokeObjectURL(a.href);
-    /* (share toast removed — silent download, no black popup) */
+    /* (share toast removed, silent download, no black popup) */
   }
 
-  /* 🔗 share the page LINK (WhatsApp-friendly — brings traffic, not just brand) */
+  /* 🔗 share the page LINK (WhatsApp-friendly, brings traffic, not just brand) */
   document.getElementById("shareLinkBtn").addEventListener("click", async () => {
     const url = location.origin + location.pathname + "?id=" + book.id;
-    const text = `📕 ${book.title} — ${book.oneLiner}\n\nFree breakdown (${book.lessons.length} lessons, ${book.readTime}):`;
+    const text = `📕 ${book.title}, ${book.oneLiner}\n\nFree breakdown (${book.lessons.length} lessons, ${book.readTime}):`;
     if (navigator.share) {
-      try { await navigator.share({ title: `${book.title} — TheSmallBook`, text, url }); return; }
+      try { await navigator.share({ title: `${book.title}, TheSmallBook`, text, url }); return; }
       catch (e) { if (e && e.name === "AbortError") return; }
     }
     try {
       await navigator.clipboard.writeText(text + "\n" + url);
-      toast("🔗 Link copied — paste it anywhere!");
+      toast("🔗 Link copied, paste it anywhere!");
     } catch (e) {
       // last-resort fallback
       const ta = document.createElement("textarea");
       ta.value = text + "\n" + url;
       document.body.appendChild(ta);
       ta.select();
-      try { document.execCommand("copy"); toast("🔗 Link copied — paste it anywhere!"); }
-      catch (err) { toast("Copy failed — long-press the URL bar instead"); }
+      try { document.execCommand("copy"); toast("🔗 Link copied, paste it anywhere!"); }
+      catch (err) { toast("Copy failed, long-press the URL bar instead"); }
       ta.remove();
     }
     if (window.TSB) TSB.achv.award("sharer");
@@ -593,7 +593,7 @@
     toast("🎨 Creating your share card...");
     const canvas = await renderBookCard();
     shareCanvas(canvas, `thesmallbook-${book.id}.png`,
-      `📕 ${book.title} — every lesson summarized on TheSmallBook`);
+      `📕 ${book.title}, every lesson summarized on TheSmallBook`);
   });
 
   /* ---------- FONT SIZE ---------- */
@@ -614,11 +614,11 @@
   document.getElementById("bigidea").textContent = book.bigIdea;
 
   /* ============================================================
-     HIGH-QUALITY TEXT-TO-SPEECH v2 — LANGUAGE AWARE
+     HIGH-QUALITY TEXT-TO-SPEECH v2, LANGUAGE AWARE
      • Speaks the LIVE on-screen text (translated if translated)
      • Picks the best voice FOR THAT LANGUAGE (Hindi voice for
        Hindi, Gujarati for Gujarati, etc.)
-     • Hinglish/Gujlish are Roman script — but they're Hindi/
+     • Hinglish/Gujlish are Roman script, but they're Hindi/
        Gujarati WORDS, so we speak the original script via the
        matching Indian voice for natural pronunciation.
      ============================================================ */
@@ -629,7 +629,7 @@
     speechSynthesis.onvoiceschanged = refreshVoices;
   }
 
-  /* Android/Chrome often return an EMPTY voice list at first — poll until ready */
+  /* Android/Chrome often return an EMPTY voice list at first, poll until ready */
   function voicesReady(timeoutMs = 2500) {
     return new Promise((resolve) => {
       refreshVoices();
@@ -645,7 +645,7 @@
     });
   }
 
-  /* Android reports "hi_IN", desktop "hi-IN" — normalize both */
+  /* Android reports "hi_IN", desktop "hi-IN", normalize both */
   function normLang(l) { return String(l || "").toLowerCase().replace(/_/g, "-"); }
   function baseLang(l) { return normLang(l).split("-")[0]; }
 
@@ -666,7 +666,7 @@
   function currentSpeechLang() {
     let saved = (window.TSB_LANG && TSB_LANG.get()) || "en";
     /* the Google Translate widget may have switched the page language
-       without our picker — detect it from <html lang> and googtrans cookie */
+       without our picker, detect it from <html lang> and googtrans cookie */
     if (saved === "en") {
       try {
         const de = document.documentElement.lang;
@@ -693,7 +693,7 @@
     // exact region match first (hi-IN / hi_IN), then any dialect of the language
     let pool = VOICES.filter((v) => normLang(v.lang) === want);
     if (!pool.length) pool = VOICES.filter((v) => baseLang(v.lang) === wantBase);
-    // IMPORTANT: no cross-language fallback — an English voice reading Hindi
+    // IMPORTANT: no cross-language fallback, an English voice reading Hindi
     // text is what made TTS feel "English-only". Return null instead: the
     // utterance keeps voice unset + lang="hi-IN", and the OS engine
     // (Google TTS on Android) speaks it natively even with an empty list.
@@ -709,7 +709,7 @@
     return pool.sort((a, b) => score(a) - score(b))[0];
   }
 
-  /* TTS v5 — NATURAL READING
+  /* TTS v5, NATURAL READING
      Chunks are sentence-aware (never cut mid-sentence) and each carries a
      natural pause: ~480ms after a sentence, ~220ms at comma-breaths,
      ~700ms between sections (title → summary → example → action). */
@@ -735,7 +735,7 @@
     const final = [];
     out.forEach((c) => {
       if (c.text.length <= 170) { final.push(c); return; }
-      const pieces = c.text.match(/[^,;:—–]+[,;:—–]?/g) || [c.text];
+      const pieces = c.text.match(/[^,;:-–]+[,;:-–]?/g) || [c.text];
       let acc = "";
       pieces.forEach((p) => {
         if ((acc + p).trim().length > 150 && acc.trim()) {
@@ -764,7 +764,7 @@
     }
   }
 
-  /* TTS v3 — fixes abrupt stops:
+  /* TTS v3, fixes abrupt stops:
      1. utterance kept in a live reference (Chrome GC used to kill speech mid-sentence)
      2. spurious "interrupted/canceled" errors no longer kill the queue
      3. real errors SKIP to the next chunk instead of stopping everything
@@ -775,12 +775,12 @@
 
   async function speakChunks(chunks, btn) {
     const lang = currentSpeechLang();
-    await voicesReady();                 // Android: voice list loads late — wait for it
+    await voicesReady();                 // Android: voice list loads late, wait for it
     const voice = bestVoice(lang);
     const tag = regionTag(lang);         // "hi" → "hi-IN" etc.
     if (lang !== "en" && !voice && VOICES.length) {
-      // voices exist but none for this language — engine will still try via lang tag
-      toast("🔊 " + tag + " voice not installed — asking device engine directly");
+      // voices exist but none for this language, engine will still try via lang tag
+      toast("🔊 " + tag + " voice not installed, asking device engine directly");
     }
     speechQueue = [...chunks];
     const isAndroid = /android/i.test(navigator.userAgent);
@@ -817,7 +817,7 @@
       u.onerror = (e) => {
         const err = e && e.error;
         if ((err === "interrupted" || err === "canceled") && speakingBtn !== btn) {
-          // spurious interrupt mid-queue (not a user stop) — recover, don't die
+          // spurious interrupt mid-queue (not a user stop), recover, don't die
           busy = false;
           setTimeout(next, 200);
           return;
@@ -835,7 +835,7 @@
         speechSynthesis.pause();
         speechSynthesis.resume();
       }
-      /* fix #6: watchdog — restart ONLY if nothing is in flight for 4s+ */
+      /* fix #6: watchdog, restart ONLY if nothing is in flight for 4s+ */
       if (!busy && !currentUtterance && !speechSynthesis.speaking && !speechSynthesis.pending &&
           speechQueue.length && Date.now() - chunkStarted > 4000) {
         next();
@@ -933,7 +933,7 @@
         <div class="celebmodal__emoji">🏆</div>
         <h3>BOOK COMPLETE!</h3>
         <p class="celebmodal__sub">You just absorbed <strong>${book.lessons.length} lessons</strong> from
-        <strong>${book.title}</strong> — most people never finish the book. You finished the wisdom.</p>
+        <strong>${book.title}</strong>, most people never finish the book. You finished the wisdom.</p>
         <a class="buybtn celebmodal__buy" href="${TSB.amazonLink(book.title, book.author, book.id)}" target="_blank" rel="noopener sponsored" translate="no">
           📖 OWN THE FULL BOOK <span class="buybtn__amz">it goes 10x deeper →</span>
         </a>
@@ -1070,7 +1070,7 @@
       let card = document.getElementById("lesson-" + n);
       if (!card && n > 0) card = document.getElementById("lesson-" + (n - 1));
       if (card) setTimeout(() => {
-        /* only the target chapter opens — collapse the default-open first lesson */
+        /* only the target chapter opens, collapse the default-open first lesson */
         document.querySelectorAll(".lesson").forEach((l) => l.classList.remove("open"));
         card.classList.add("open");
         card.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1078,7 +1078,7 @@
     }
   })();
 
-  /* listen buttons — speak the LIVE (translated) lesson text */
+  /* listen buttons, speak the LIVE (translated) lesson text */
   lessonsWrap.querySelectorAll("[data-listen]").forEach((btn) => {
     btn.setAttribute("translate", "no");
     btn.addEventListener("click", () => {
@@ -1110,7 +1110,7 @@
       toast("🎨 Creating your share card...");
       const canvas = await renderLessonCard(i);
       shareCanvas(canvas, `thesmallbook-${book.id}-lesson-${i + 1}.png`,
-        `🧠 "${book.lessons[i].title}" — from ${book.title}, on TheSmallBook`);
+        `🧠 "${book.lessons[i].title}", from ${book.title}, on TheSmallBook`);
     });
   });
 
@@ -1122,7 +1122,7 @@
     e.target.textContent = expanded ? "⤴ COLLAPSE ALL" : "⤵ EXPAND ALL";
   });
 
-  /* 🎯 onboarding personalisation — deep readers start fully open */
+  /* 🎯 onboarding personalisation, deep readers start fully open */
   try {
     if (TSB.get("tsb_read_style", "") === "deep") {
       expanded = true;
@@ -1156,14 +1156,14 @@
     btn.setAttribute("translate", "no");
     btn.addEventListener("click", async () => {
       toast("🎨 Creating your quote card...");
-      // LIVE text — translated if the page is translated
+      // LIVE text, translated if the page is translated
       const liveQ = liveText(d, q).replace(/🎴/g, "").trim();
       // fresh palette each tap: same quote cycles through all 20 looks
       const spin = (quoteSpins[qidx] = (quoteSpins[qidx] || 0) + 1);
       const palIdx = (qidx + spin * 7) % PALETTES.length;
       const canvas = await renderQuoteCard(liveQ, palIdx);
       shareCanvas(canvas, `thesmallbook-${book.id}-quote-${qidx + 1}.png`,
-        `💬 From ${liveText("#title", book.title)} — on TheSmallBook`);
+        `💬 From ${liveText("#title", book.title)}, on TheSmallBook`);
     });
     d.appendChild(btn);
     quotesWrap.appendChild(d);
@@ -1171,7 +1171,7 @@
 
 
   async function renderQuoteCard(quote, qidx) {
-    // CAROUSEL FORMAT: 1080×1350 (4:5) — full-bleed quote, zero crop
+    // CAROUSEL FORMAT: 1080×1350 (4:5), full-bleed quote, zero crop
     const W = 1080, H = 1350;
     const canvas = document.createElement("canvas");
     canvas.width = W; canvas.height = H;
@@ -1201,7 +1201,7 @@
     ctx.font = "900 220px Georgia";
     ctx.fillText("\u201C", 80, 340);
 
-    // quote text — auto-size, fits safe zone
+    // quote text, auto-size, fits safe zone
     let qSize = quote.length < 90 ? 66 : quote.length < 180 ? 54 : 44;
     ctx.font = `bold ${qSize}px 'Space Grotesk', Arial`;
     let lines = wrapText(ctx, quote, W - 220);
@@ -1227,7 +1227,7 @@
     const attr = wrapText(ctx, tTitle.toUpperCase(), W - 300)[0] || "";
     ctx.fillText(attr, 126, y + 18);
     ctx.font = "bold 24px 'Space Grotesk', Arial";
-    ctx.fillText("— " + book.author.toUpperCase(), 126, y + 54);
+    ctx.fillText("" + book.author.toUpperCase(), 126, y + 54);
 
     drawBrandBar(ctx, W, H);
     return canvas;
@@ -1256,7 +1256,7 @@
     box.href = TSB.amazonLink(book.title, book.author, book.id);
     box.target = "_blank";
     box.rel = "noopener sponsored";
-    box.innerHTML = `<strong>Loved the lessons?</strong> The full book goes 10x deeper — <span>own it on Amazon 📖</span>`;
+    box.innerHTML = `<strong>Loved the lessons?</strong> The full book goes 10x deeper, <span>own it on Amazon 📖</span>`;
     wrap.parentElement.appendChild(box);
   })();
 

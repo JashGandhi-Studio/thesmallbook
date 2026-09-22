@@ -1,22 +1,22 @@
 /* ============================================================
-   THESMALLBOOK — ✨ INSPIRE DESK (osint.js) · v244
-   LIVE, INTELLIGENT, SIMPLE — not preloaded.
+   THESMALLBOOK, ✨ INSPIRE DESK (osint.js) · v244
+   LIVE, INTELLIGENT, SIMPLE, not preloaded.
 
    OSINT tech, productive: a live library you tap to create.
    - Quotes: LIVE from DummyJSON (1454) + ZenQuotes, filtered
      intelligently by what you actually typed, ranked by
-     relevance — not a static list. Offline fallback is only
+     relevance, not a static list. Offline fallback is only
      when network fails.
    - Images: LIVE Wikimedia Commons search + live Picsum
-     aesthetic seeds — every result is a real photo you can
+     aesthetic seeds, every result is a real photo you can
      "Use as cover" instantly. Not preloaded.
-   - Research (v244 — supercharged, multi-source, topic-aware):
-     · reads YOUR story — findings for what you actually typed
-     · LIVE Wikipedia (summary + related) — facts to build on
-     · LIVE Wikiquote — voices & lines you can insert
-     · LIVE Dictionary (single words) — meaning + example
+   - Research (v244, supercharged, multi-source, topic-aware):
+     · reads YOUR story, findings for what you actually typed
+     · LIVE Wikipedia (summary + related), facts to build on
+     · LIVE Wikiquote, voices & lines you can insert
+     · LIVE Dictionary (single words), meaning + example
      · NO default topic: empty search = a rotating live Explore
-       board (psychology, philosophy, stoicism…) — not just "habits"
+       board (psychology, philosophy, stoicism…), not just "habits"
      · Open Library: READABLE full books only (Archive.org reader
        in one tap) and never duplicated with TheSmallBook library
    UX: debounced live-search as you type, smart chips,
@@ -93,9 +93,9 @@
     return p;
   }
 
-  // LIVE quotes: truly live — no stale cache. Each search fetches fresh 100 from DummyJSON + curates only as last resort.
+  // LIVE quotes: truly live, no stale cache. Each search fetches fresh 100 from DummyJSON + curates only as last resort.
   function fetchDummyQuotesLive(){
-    // fetch 100 live quotes fresh every time — so healing/lonely always shows new content, not 5-6 preloaded
+    // fetch 100 live quotes fresh every time, so healing/lonely always shows new content, not 5-6 preloaded
     var skip = Math.floor(Math.random()*14)*100 % 1350; // 0,100,200... to vary
     var url = "https://dummyjson.com/quotes?limit=100&skip="+skip;
     return jfetch(url, 6500).then(function(j){
@@ -120,14 +120,14 @@
     };
     return tryQuotable().then(function(list){
       if(list.length) return list.slice(0,12);
-      // fallback live DummyJSON + intelligent ranking — up to 12, always fresh
+      // fallback live DummyJSON + intelligent ranking, up to 12, always fresh
       return fetchDummyQuotesLive().then(function(live){
         if(!live.length) return [];
         if(!toks.length){
           // no query: diverse live slice 12
           return live.slice(0,12);
         }
-        // rank by relevance to what they typed — show only relevant, but up to 12
+        // rank by relevance to what they typed, show only relevant, but up to 12
         var ranked = live.map(function(x){ return {x:x, sc: relevance(x.c+" "+x.a, toks)}; });
         ranked.sort(function(a,b){ return b.sc - a.sc; });
         var top = ranked.filter(function(r){ return r.sc>0; }).slice(0,12).map(function(r){ return r.x; });
@@ -170,7 +170,7 @@
   function picsumAesthetic(q, n){
     n=n||6;
     var base = String(q||"aesthetic").trim().replace(/\s+/g,"-").toLowerCase() || "aesthetic";
-    // v242: unique seeds per card — random + timestamp to avoid duplicates when called twice quickly
+    // v242: unique seeds per card, random + timestamp to avoid duplicates when called twice quickly
     var rnd = Math.floor(Math.random()*1e6);
     return Array.from({length:n}, function(_,i){
       var seed = encodeURIComponent(base+"-"+i+"-"+rnd+"-"+Math.floor(Math.random()*900));
@@ -196,7 +196,7 @@
       return hits.map(function(h){ return {title:h.title, snippet:h.snippet.replace(/<\/?[^>]+>/g,"")}; });
     }).catch(function(){return [];});
   }
-  // v244: LIVE Wikiquote — voices & lines related to your topic, insertable facts
+  // v244: LIVE Wikiquote, voices & lines related to your topic, insertable facts
   function wikiQuoteSearch(q){
     if(!String(q||"").trim()) return Promise.resolve([]);
     var url="https://en.wikiquote.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(q)+"&srlimit=4&format=json&origin=*";
@@ -206,7 +206,7 @@
       }).filter(function(h){ return h.snippet && h.snippet.length>24; });
     }).catch(function(){return [];});
   }
-  // v244: LIVE dictionary — word power (only when the search is a single word)
+  // v244: LIVE dictionary, word power (only when the search is a single word)
   function dictLookup(w){
     if(!String(w||"").trim()) return Promise.resolve(null);
     var url="https://api.dictionaryapi.dev/api/v2/entries/en/"+encodeURIComponent(String(w).trim().toLowerCase());
@@ -218,7 +218,7 @@
     }).catch(function(){ return null; });
   }
   function normTitle(t){ return String(t||"").toLowerCase().replace(/[^a-z0-9]/g,""); }
-  // v244: readable books ONLY — every result opens in the Archive.org reader.
+  // v244: readable books ONLY, every result opens in the Archive.org reader.
   // Never contradicts TheSmallBook's own library: titles we already publish are filtered out.
   function openLibSearch(q){
     if(!String(q||"").trim()) return Promise.resolve([]);
@@ -230,7 +230,7 @@
       .filter(function(d){ return d.ia; });
     }).catch(function(){return [];});
   }
-  // v244: in-app reader — actually READ the book right here (Archive.org embed)
+  // v244: in-app reader, actually READ the book right here (Archive.org embed)
   function openReader(ia, title){
     var ov=document.createElement("div");
     ov.style.cssText="position:fixed;inset:0;z-index:99999;background:#0e0c0a;display:flex;flex-direction:column";
@@ -306,11 +306,11 @@
     '</div>';
   }
   function essayStarter(query, wikiExtract, book){
-    // Build a concise 3-4 line essay starter that blends Wiki + book ideology — ready to insert & rewrite
+    // Build a concise 3-4 line essay starter that blends Wiki + book ideology, ready to insert & rewrite
     var q = String(query||"").trim() || "this";
     var wiki = String(wikiExtract||"").trim().replace(/\s+/g," ").slice(0, 240);
     // fallback wiki if empty: use generic
-    if(!wiki) wiki = "Every story needs a clear idea — start with what happened, then what it meant.";
+    if(!wiki) wiki = "Every story needs a clear idea, start with what happened, then what it meant.";
     var title = book ? (book.title||"") : "";
     var author = book ? (book.author||"") : "";
     var oneLiner = book ? (book.oneLiner||book.bigIdea||"") : "";
@@ -320,14 +320,14 @@
     // craft 3-part starter: hook (book) + context (wiki) + prompt (your voice)
     var hook = "";
     if(title){
-      hook = 'As ' + (author? author+" shows in \u201C"+title+"\u201D — ": "In \u201C"+title+"\u201D — ") + (oneLiner ? oneLiner.split(".")[0].slice(0, 110) + "." : "a lens for "+q+".");
+      hook = 'As ' + (author? author+" shows in \u201C"+title+"\u201D, ": "In \u201C"+title+"\u201D, ") + (oneLiner ? oneLiner.split(".")[0].slice(0, 110) + "." : "a lens for "+q+".");
     } else {
       hook = "A good story about \u201C"+q+"\u201D starts with one honest moment.";
     }
     var context = wiki ? ("Context: " + wiki + (wiki.length>=240?"\u2026":"")) : "";
-    var prompt = "Your turn — rewrite these 3 lines in your voice: (1) What happened with "+q+"? (2) What did it teach you? (3) What would you tell someone feeling this now" + (lesson? " — hint: "+lesson+"." : ".");
+    var prompt = "Your turn, rewrite these 3 lines in your voice: (1) What happened with "+q+"? (2) What did it teach you? (3) What would you tell someone feeling this now" + (lesson? ", hint: "+lesson+"." : ".");
     var full = hook + " " + context + " " + prompt;
-    // card html — compact, not bombarded, easy on mobile
+    // card html, compact, not bombarded, easy on mobile
     var html = '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;">' +
       '<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#111;margin-bottom:8px;">\u270D\uFE0F Story starter for &ldquo;'+esc(q)+'&rdquo;'+(title?' &middot; inspired by '+esc(title):'')+'</div>' +
       '<div style="font:500 12.5px Space Grotesk,sans-serif;color:#1f2937;line-height:1.55;background:#fffdf5;border:2px solid #111;border-radius:12px;padding:10px;">'+esc(hook)+'<br><span style="color:#334155">'+esc(context)+'</span><br><span style="font:700 11.5px Space Grotesk,sans-serif;color:#0f172a">'+esc(prompt)+'</span></div>' +
@@ -335,7 +335,7 @@
         '<button type="button" data-use-essay="'+esc(full).replace(/"/g,"&quot;")+'" style="flex:1 1 140px;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:9px 12px;font:800 11px Space Grotesk,sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;">\u2728 Insert story starter</button>' +
         '<button type="button" data-copy-essay style="border:2.5px solid #111;background:#fff;border-radius:999px;padding:9px 12px;font:700 11px Space Grotesk,sans-serif;cursor:pointer;">\uD83D\uDCCB Copy</button>' +
       '</div>' +
-      '<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;text-align:center;margin-top:6px;">Tap Insert — it drops in your editor. Rewrite in your voice before publishing.</div>' +
+      '<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;text-align:center;margin-top:6px;">Tap Insert, it drops in your editor. Rewrite in your voice before publishing.</div>' +
     '</div>';
     return {html:html, text:full};
   }
@@ -346,7 +346,7 @@
     wrap.style.zIndex="99992";
     wrap.innerHTML =
       '<div class=\"stu-sheet\" style=\"max-width:640px;max-height:94vh;display:flex;flex-direction:column;\">' +
-        '<div class=\"stu-top\" style=\"background:linear-gradient(135deg,#0f172a 0%,#1e293b 55%,#ffb700 100%);color:#fff;border-bottom-color:#000;flex:none\"><b>✨ INSPIRE DESK<small style=\"color:#fde68a;opacity:1\">live library — quotes · images · research · tap to use</small></b><button class=\"stu-x\" id=\"inspX\">✕</button></div>' +
+        '<div class=\"stu-top\" style=\"background:linear-gradient(135deg,#0f172a 0%,#1e293b 55%,#ffb700 100%);color:#fff;border-bottom-color:#000;flex:none\"><b>✨ INSPIRE DESK<small style=\"color:#fde68a;opacity:1\">live library, quotes · images · research · tap to use</small></b><button class=\"stu-x\" id=\"inspX\">✕</button></div>' +
         '<div style=\"flex:1 1 auto;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:12px;background:#fffdf5;\">' + inner + '</div>' +
         '<div class=\"stu-foot\" style=\"flex:none;gap:8px;background:#fff;border-top:2.5px solid #111\">' +
           '<button id=\"inspClose2\" class=\"stu-dl\" style=\"background:#fff\">Close</button>' +
@@ -358,9 +358,9 @@
     wrap.querySelector("#inspX").addEventListener("click",function(){wrap.remove();});
     var c2=wrap.querySelector("#inspClose2"); if(c2) c2.addEventListener("click",function(){wrap.remove();});
     wrap.querySelector("#inspShare").addEventListener("click", function(){
-      var txt="✨ Inspire Desk — TheSmallBook live library of quotes, images & research to create faster. Try it in Write → Inspire Desk.";
-      if(navigator.share) navigator.share({title:"Inspire Desk — TheSmallBook", text:txt}).catch(function(){});
-      else if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){toast("📋 Copied — paste anywhere");});
+      var txt="✨ Inspire Desk, TheSmallBook live library of quotes, images & research to create faster. Try it in Write → Inspire Desk.";
+      if(navigator.share) navigator.share({title:"Inspire Desk, TheSmallBook", text:txt}).catch(function(){});
+      else if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){toast("📋 Copied, paste anywhere");});
     });
     return wrap;
   }
@@ -376,7 +376,7 @@
 
   function openDesk(initialTab, seedQuery, callbacks){
     callbacks=callbacks||{};
-    // OPTIMISED: allow caller to limit tabs — Quote wants [quotes,images], Stories wants [images,research]
+    // OPTIMISED: allow caller to limit tabs, Quote wants [quotes,images], Stories wants [images,research]
     var allowed = callbacks.tabs || ["quotes","images","research"];
     if(allowed.indexOf(initialTab)===-1) initialTab = allowed[0];
     seedQuery=seedQuery||"";
@@ -413,7 +413,7 @@
       {id:"loneliness", label:" Loneliness"}
     ];
 
-    // Build tabs HTML only for allowed set — keeps Quote=2 tabs, Stories=2 tabs, not 3 everywhere (professional, not everywhere)
+    // Build tabs HTML only for allowed set, keeps Quote=2 tabs, Stories=2 tabs, not 3 everywhere (professional, not everywhere)
     var tabHtml = '<div style="display:flex;gap:6px;flex-wrap:wrap;flex:none;">';
     if(allowed.indexOf("quotes")>=0) tabHtml += '<button type="button" id="tabQuotes" style="flex:1 1 90px;border:2.5px solid #111;border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;">💬 Quotes</button>';
     if(allowed.indexOf("images")>=0) tabHtml += '<button type="button" id="tabImages" style="flex:1 1 90px;border:2.5px solid #111;border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;">🖼️ Images</button>';
@@ -423,7 +423,7 @@
       tabHtml +
       '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;flex:none;">' +
         '<div style="display:flex;gap:8px;align-items:center;">' +
-          '<input id="inspQ" type="text" placeholder="Type anything — e.g. lonely after breakup, startup failure, love…" value="'+esc(seedQuery)+'" style="flex:1 1 auto;border:2.5px solid #111;border-radius:999px;padding:11px 14px;font:600 13px Space Grotesk,sans-serif;outline:none;">' +
+          '<input id="inspQ" type="text" placeholder="Type anything, e.g. lonely after breakup, startup failure, love…" value="'+esc(seedQuery)+'" style="flex:1 1 auto;border:2.5px solid #111;border-radius:999px;padding:11px 14px;font:600 13px Space Grotesk,sans-serif;outline:none;">' +
           '<button id="inspClear" type="button" title="Clear" style="flex:none;width:36px;height:36px;border:2px solid #111;border-radius:999px;background:#fff;font:800 13px Space Grotesk,sans-serif;cursor:pointer;">✕</button>' +
           '<button id="inspGo" type="button" style="flex:none;border:2.5px solid #111;border-radius:999px;padding:10px 14px;font:800 12px Space Grotesk,sans-serif;background:#ffc800;box-shadow:2px 2px 0 #111;cursor:pointer;white-space:nowrap">Search →</button>' +
         '</div>' +
@@ -481,14 +481,14 @@
           paintTabs();
         });
       });
-      $q.placeholder = activeTab==="quotes" ? "Type anything — e.g. lonely after breakup, healing, Rumi…" : activeTab==="images" ? "Search aesthetic images — minimal, ocean, beige, nature…" : "Research YOUR topic — from your story, or anything…";
+      $q.placeholder = activeTab==="quotes" ? "Type anything, e.g. lonely after breakup, healing, Rumi…" : activeTab==="images" ? "Search aesthetic images, minimal, ocean, beige, nature…" : "Research YOUR topic, from your story, or anything…";
     }
 
     function cardQuote(q){
       var srcLive = q._live ? '<span style="font:700 9px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;margin-left:6px;">LIVE</span>' : '';
       return '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:14px;box-shadow:4px 4px 0 #111;">' +
         '<div style="font-family:Georgia,serif;font-size:1.08rem;font-style:italic;line-height:1.45;color:#111">“ '+esc(q.c)+' ”'+srcLive+'</div>' +
-        '<div style="font:700 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#64748b;margin-top:8px;">— '+esc(q.a)+' '+(q.tags&&q.tags.length?'<span style="font-weight:400;text-transform:none;letter-spacing:0;color:#94a3b8">· '+esc(q.tags.slice(0,2).join(", "))+'</span>':"")+'</div>' +
+        '<div style="font:700 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#64748b;margin-top:8px;">'+esc(q.a)+' '+(q.tags&&q.tags.length?'<span style="font-weight:400;text-transform:none;letter-spacing:0;color:#94a3b8">· '+esc(q.tags.slice(0,2).join(", "))+'</span>':"")+'</div>' +
         '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">' +
           '<button type="button" data-use-quote="'+esc(q.c).replace(/\"/g,"&quot;")+'" data-author="'+esc(q.a)+'" style="flex:1 1 120px;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:9px 12px;font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;cursor:pointer;box-shadow:2px 2px 0 #111;">✨ Use this quote</button>' +
           '<button type="button" data-copy-quote style="border:2.5px solid #111;background:#fff;border-radius:999px;padding:9px 12px;font:700 11px Space Grotesk,sans-serif;cursor:pointer;">📋 Copy</button>' +
@@ -496,7 +496,7 @@
       '</div>';
     }
     function cardImage(im){
-      // v247: definite-height photo band (190px) — grid rows can NEVER collapse or overlap again;
+      // v247: definite-height photo band (190px), grid rows can NEVER collapse or overlap again;
       // full photo shown via contain, "Use as cover" glued ON the photo (z-index 2 = untouchable)
       return '<div style="background:#fff;border:2.5px solid #111;border-radius:16px;overflow:hidden;box-shadow:3px 3px 0 #111;">' +
         '<div style="position:relative;height:190px;background:#0e0c0a;border-bottom:2.5px solid #111;">' +
@@ -521,9 +521,9 @@
         '</div>' +
       '</div>';
     }
-    /* v251 — READY TO USE.
-       The complaint about research was fair: it handed back *sources* — wiki
-       links, dictionary entries, book covers — and you still had to write the
+    /* v251, READY TO USE.
+       The complaint about research was fair: it handed back *sources*, wiki
+       links, dictionary entries, book covers, and you still had to write the
        thing yourself. This card hands back the writing itself, taken from
        things the app already owns: the actual lesson summaries of the 400
        library books, the citable facts inside the Wikipedia extract, and the
@@ -531,7 +531,7 @@
     function sentences(text, min){
       var t = String(text || "").replace(/\s+/g, " ").trim();
       if (!t) return [];
-      // split on sentence enders (no lookbehind — old iOS Safari rejects it)
+      // split on sentence enders (no lookbehind, old iOS Safari rejects it)
       return t.replace(/([.!?])\s+/g, "$1|").split("|").map(function(x){ return x.trim(); })
         .filter(function(x){ return x.length >= (min || 55) && x.length <= 300; });
     }
@@ -539,7 +539,7 @@
       var topic = String(q || "").trim();
       var rows = [];
 
-      /* 1 · what the books actually say — real lesson summaries, the strongest
+      /* 1 · what the books actually say, real lesson summaries, the strongest
              material the app has, and it works offline */
       var lessons = [];
       (localBooks || []).slice(0, 4).forEach(function(b){
@@ -556,9 +556,9 @@
       });
 
       if (lessons.length){
-        rows.push('<div style="font:800 10.5px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#166534;margin:12px 0 6px;">📚 What the library says — real lessons, ready to rewrite</div>' +
+        rows.push('<div style="font:800 10.5px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#166534;margin:12px 0 6px;">📚 What the library says, real lessons, ready to rewrite</div>' +
           lessons.map(function(x){
-            var paste = x.book + " — " + x.lesson + ": " + x.body;
+            var paste = x.book + ", " + x.lesson + ": " + x.body;
             return '<div style="border:2px solid #111;border-radius:12px;padding:10px;background:#f0fdf4;margin-bottom:8px;">' +
               '<div style="font:800 11px Space Grotesk,sans-serif;color:#111;">' + esc(x.lesson) + '</div>' +
               '<div style="font:700 9.5px Space Grotesk,sans-serif;letter-spacing:.4px;text-transform:uppercase;color:#64748b;margin-top:3px;">' + esc(x.book) + '</div>' +
@@ -568,11 +568,11 @@
           }).join(""));
       }
 
-      /* 2 · citable facts — the wiki extract, split so you can lift one line
+      /* 2 · citable facts, the wiki extract, split so you can lift one line
              instead of a paragraph that reads like an encyclopedia */
       var facts = sentences((sum && sum.extract) || "", 60).slice(0, 3);
       if (facts.length){
-        rows.push('<div style="font:800 10.5px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin:12px 0 6px;">🧠 Facts you can cite' + (sum && sum.title ? " — " + esc(sum.title) : "") + '</div>' +
+        rows.push('<div style="font:800 10.5px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin:12px 0 6px;">🧠 Facts you can cite' + (sum && sum.title ? ", " + esc(sum.title) : "") + '</div>' +
           facts.map(function(f, i){
             return '<div style="display:flex;gap:9px;align-items:flex-start;border-bottom:1.5px dashed #cbd5e1;padding:7px 0;">' +
               '<span style="flex:none;width:17px;height:17px;border-radius:999px;background:#111;color:#ffc800;font:800 9.5px/17px Space Grotesk,sans-serif;text-align:center;margin-top:1px;">' + (i + 1) + '</span>' +
@@ -582,16 +582,16 @@
           }).join(""));
       }
 
-      /* 3 · openers — one line to start from, so the blank page is never the
+      /* 3 · openers, one line to start from, so the blank page is never the
              first thing you face */
       if (topic){
         var hookBook = lessons.length ? lessons[0].book : ((localBooks && localBooks[0] && (localBooks[0].title || localBooks[0].t)) || "");
         var openers = [
-          hookBook ? "I used to think " + topic + " was simple — then " + hookBook + " showed me why it isn't." : "I used to think " + topic + " was simple. I don't any more.",
+          hookBook ? "I used to think " + topic + " was simple, then " + hookBook + " showed me why it isn't." : "I used to think " + topic + " was simple. I don't any more.",
           "Nobody talks honestly about " + topic + ". So here is the one thing I know for sure.",
           voices && voices.length ? "Somebody once asked about " + topic + ". The answer surprised me." : "What " + topic + " taught me came from failing at it first."
         ];
-        rows.push('<div style="font:800 10.5px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin:12px 0 6px;">✍️ Openers — start here, then make it yours</div>' +
+        rows.push('<div style="font:800 10.5px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin:12px 0 6px;">✍️ Openers, start here, then make it yours</div>' +
           openers.map(function(o){
             return '<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">' +
               '<span style="flex:1;font:600 12px Space Grotesk,sans-serif;color:#334155;line-height:1.5;">' + esc(o) + '</span>' +
@@ -605,14 +605,14 @@
         '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
           '<span style="font:800 12px Archivo Black,sans-serif;color:#111;">✍️ READY TO USE</span>' +
           '<span style="font:700 9px Space Grotesk,sans-serif;letter-spacing:.5px;text-transform:uppercase;background:#111;color:#ffc800;padding:3px 7px;border-radius:999px;">content, not links</span>' +
-          '<span style="flex:1 1 100%;font:600 10.5px Space Grotesk,sans-serif;color:#64748b;">Every row below is finished writing for “' + esc(topic) + '” — tap Insert and rewrite it in your voice.</span>' +
+          '<span style="flex:1 1 100%;font:600 10.5px Space Grotesk,sans-serif;color:#64748b;">Every row below is finished writing for “' + esc(topic) + '”, tap Insert and rewrite it in your voice.</span>' +
         '</div>' +
         rows.join("") +
       '</div>';
     }
     function cardBook(b){
       var cover = b.cover ? "https://covers.openlibrary.org/b/id/"+b.cover+"-M.jpg" : "";
-      // v244: READABLE — one tap opens the full book in the Archive.org reader. Different from TheSmallBook's own library by design.
+      // v244: READABLE, one tap opens the full book in the Archive.org reader. Different from TheSmallBook's own library by design.
       return '<div style="background:#fff;border:2.5px solid #111;border-radius:14px;padding:10px;display:flex;gap:10px;align-items:center;">' +
         (cover ? '<img src="'+esc(cover)+'" alt="" style="width:56px;height:78px;object-fit:cover;border-radius:8px;border:2px solid #111;flex:none;" loading="lazy" onerror="this.style.opacity=.25">' : '<div style="width:56px;height:78px;border-radius:8px;border:2px solid #111;background:#fffdf5;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;">📖</div>') +
         '<div style="flex:1 1 auto;min-width:0;">' +
@@ -624,34 +624,34 @@
         '<button type="button" data-use-book="'+esc(b.title)+'" data-book-author="'+esc(b.author||"")+'" title="Add as reference in your story" style="flex:none;border:2px solid #111;background:#fff;border-radius:999px;padding:7px 10px;font:700 10px Space Grotesk,sans-serif;cursor:pointer;white-space:nowrap">+ Use</button>' +
       '</div>';
     }
-    // v244: LIVE Wikiquote card — voices & lines you can drop into your story
+    // v244: LIVE Wikiquote card, voices & lines you can drop into your story
     function cardVoices(list, q){
       if(!list || !list.length) return "";
       return '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:14px;box-shadow:4px 4px 0 #111;">' +
-        '<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin-bottom:8px;">💬 Voices & lines — LIVE Wikiquote <span style="font:700 9px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;">facts you can add</span></div>' +
+        '<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin-bottom:8px;">💬 Voices & lines, LIVE Wikiquote <span style="font:700 9px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;">facts you can add</span></div>' +
         list.map(function(h){
           return '<div style="border:2px solid #e2e8f0;border-radius:12px;padding:9px 11px;margin-top:8px;background:#fffdf5;">' +
             '<b style="font:800 12px Space Grotesk,sans-serif;color:#111">'+esc(h.title)+'</b>' +
             '<div style="font:500 11.5px Space Grotesk,sans-serif;color:#475569;line-height:1.5;margin-top:3px;">'+esc(h.snippet.slice(0,150))+(h.snippet.length>150?"…":"")+'</div>' +
             '<div style="display:flex;gap:8px;margin-top:7px;flex-wrap:wrap;">' +
-              '<button type="button" data-use-voice="'+esc((h.title+" — "+h.snippet.slice(0,180)).replace(/"/g,"&quot;"))+'" style="border:2px solid #111;background:#ffc800;border-radius:999px;padding:6px 11px;font:800 10px Space Grotesk,sans-serif;cursor:pointer;">✨ Insert</button>' +
+              '<button type="button" data-use-voice="'+esc((h.title+", "+h.snippet.slice(0,180)).replace(/"/g,"&quot;"))+'" style="border:2px solid #111;background:#ffc800;border-radius:999px;padding:6px 11px;font:800 10px Space Grotesk,sans-serif;cursor:pointer;">✨ Insert</button>' +
               '<a href="https://en.wikiquote.org/wiki/'+encodeURIComponent(h.title.replace(/\s+/g,"_"))+'" target="_blank" rel="noopener" style="border:2px solid #111;background:#fff;border-radius:999px;padding:6px 11px;font:700 10px Space Grotesk,sans-serif;text-decoration:none;color:#111;">Wikiquote →</a>' +
             '</div></div>';
         }).join("") +
       '</div>';
     }
-    // v244: LIVE dictionary card — word power with meaning + example
+    // v244: LIVE dictionary card, word power with meaning + example
     function cardDict(d){
       if(!d) return "";
       return '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:14px;box-shadow:4px 4px 0 #111;">' +
-        '<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin-bottom:6px;">🔤 Word power — LIVE Dictionary</div>' +
+        '<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin-bottom:6px;">🔤 Word power, LIVE Dictionary</div>' +
         '<div style="font:800 16px Space Grotesk,sans-serif;color:#111;">'+esc(d.word)+' <span style="font:600 11px Space Grotesk,sans-serif;color:#94a3b8;">'+esc(d.ph||"")+(d.pos?" · "+esc(d.pos):"")+'</span></div>' +
         '<div style="font:500 12.5px Space Grotesk,sans-serif;color:#334155;line-height:1.55;margin-top:5px;">'+esc(d.def)+'</div>' +
         (d.ex ? '<div style="font:500 12px Space Grotesk,sans-serif;color:#64748b;font-style:italic;margin-top:4px;">“'+esc(d.ex)+'”</div>' : '') +
-        '<button type="button" data-use-dict="'+esc(("“"+d.word+"”"+(d.pos?" ("+d.pos+")":"")+" — "+d.def).replace(/"/g,"&quot;"))+'" style="margin-top:9px;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:8px 12px;font:800 11px Space Grotesk,sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;">✨ Insert meaning</button>' +
+        '<button type="button" data-use-dict="'+esc(("“"+d.word+"”"+(d.pos?" ("+d.pos+")":"")+", "+d.def).replace(/"/g,"&quot;"))+'" style="margin-top:9px;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:8px 12px;font:800 11px Space Grotesk,sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;">✨ Insert meaning</button>' +
       '</div>';
     }
-    // v244: Explore board — no default topic ever again; rotating live topics with real summaries
+    // v244: Explore board, no default topic ever again; rotating live topics with real summaries
     function cardExplore(sum){
       if(!sum) return "";
       return '<div style="background:#fff;border:2.5px solid #111;border-radius:14px;overflow:hidden;box-shadow:3px 3px 0 #111;display:flex;flex-direction:column;">' +
@@ -671,13 +671,13 @@
         b.addEventListener("click", function(){
           var txt=b.getAttribute("data-use-quote"); var auth=b.getAttribute("data-author")||"";
           if(callbacks.onUseQuote) callbacks.onUseQuote({text:txt, author:auth});
-          else { var t=document.getElementById("wTitle")||document.getElementById("stuQuoteTa"); if(t){ t.value=txt; t.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Quote dropped in — edit to make it yours"); } else if(navigator.clipboard) navigator.clipboard.writeText("“ "+txt+" ” — "+auth).then(function(){ toast("📋 Copied"); }); }
+          else { var t=document.getElementById("wTitle")||document.getElementById("stuQuoteTa"); if(t){ t.value=txt; t.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Quote dropped in, edit to make it yours"); } else if(navigator.clipboard) navigator.clipboard.writeText("“ "+txt+" ”, "+auth).then(function(){ toast("📋 Copied"); }); }
           b.textContent="✓ Added"; b.style.background="#22c55e"; b.style.color="#fff"; setTimeout(function(){ b.textContent="✨ Use this quote"; b.style.background="#ffc800"; b.style.color="#111"; },1600);
         });
       });
       $res.querySelectorAll("[data-copy-quote]").forEach(function(b){
         b.addEventListener("click", function(){
-          var card=b.closest("div").parentNode; var txt=card.querySelector("[data-use-quote]")?card.querySelector("[data-use-quote]").getAttribute("data-use-quote"):""; var auth=card.querySelector("[data-use-quote]")?card.querySelector("[data-use-quote]").getAttribute("data-author"):""; var full="“ "+txt+" ” — "+auth; if(navigator.clipboard) navigator.clipboard.writeText(full).then(function(){ toast("📋 Copied"); });
+          var card=b.closest("div").parentNode; var txt=card.querySelector("[data-use-quote]")?card.querySelector("[data-use-quote]").getAttribute("data-use-quote"):""; var auth=card.querySelector("[data-use-quote]")?card.querySelector("[data-use-quote]").getAttribute("data-author"):""; var full="“ "+txt+" ”, "+auth; if(navigator.clipboard) navigator.clipboard.writeText(full).then(function(){ toast("📋 Copied"); });
         });
       });
       $res.querySelectorAll("[data-use-image]").forEach(function(b){
@@ -698,7 +698,7 @@
                 } else window.open(url,"_blank");
               } else window.open(url,"_blank");
             }
-          }catch(e){ toast("Couldn't use image — opened it"); window.open(url,"_blank"); }
+          }catch(e){ toast("Couldn't use image, opened it"); window.open(url,"_blank"); }
           b.textContent="✨ Use as cover";
         });
       });
@@ -706,13 +706,13 @@
         b.addEventListener("click", function(){
           var snippet=$res._lastWikiExtract||"";
           if(callbacks.onUseResearch) callbacks.onUseResearch(snippet);
-          else { var body=document.getElementById("wBody"); if(body){ body.focus(); document.execCommand("insertText", false, "\n\n"+snippet+"\n"); body.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Snippet inserted — rewrite in your voice"); } else if(navigator.clipboard) navigator.clipboard.writeText(snippet).then(function(){ toast("📋 Copied"); }); }
+          else { var body=document.getElementById("wBody"); if(body){ body.focus(); document.execCommand("insertText", false, "\n\n"+snippet+"\n"); body.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Snippet inserted, rewrite in your voice"); } else if(navigator.clipboard) navigator.clipboard.writeText(snippet).then(function(){ toast("📋 Copied"); }); }
           b.textContent="✓ Inserted"; setTimeout(function(){ b.textContent="✨ Insert snippet"; },1500);
         });
       });
       $res.querySelectorAll("[data-use-book]").forEach(function(b){
         b.addEventListener("click", function(){
-          var t=b.getAttribute("data-use-book"); var a=b.getAttribute("data-book-author"); var txt=t+(a?" — "+a:"");
+          var t=b.getAttribute("data-use-book"); var a=b.getAttribute("data-book-author"); var txt=t+(a?", "+a:"");
           if(callbacks.onUseResearch) callbacks.onUseResearch(txt);
           else { var bd=document.getElementById("wBody"); if(bd){ bd.focus(); document.execCommand("insertText", false, "Reference: "+txt+"\n"); bd.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Reference added"); } else if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ toast("📋 Copied"); }); }
         });
@@ -721,7 +721,7 @@
         b.addEventListener("click", function(){
           var txt=b.getAttribute("data-use-essay")||"";
           if(callbacks.onUseResearch) callbacks.onUseResearch(txt);
-          else { var bdE=document.getElementById("wBody"); if(bdE){ bdE.focus(); document.execCommand("insertText", false, "\n\n"+txt+"\n"); bdE.dispatchEvent(new Event("input",{bubbles:true})); toast("\u2728 Story starter inserted — rewrite in your voice before publishing"); } else if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ toast("\uD83D\uDCCB Copied"); }); }
+          else { var bdE=document.getElementById("wBody"); if(bdE){ bdE.focus(); document.execCommand("insertText", false, "\n\n"+txt+"\n"); bdE.dispatchEvent(new Event("input",{bubbles:true})); toast("\u2728 Story starter inserted, rewrite in your voice before publishing"); } else if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ toast("\uD83D\uDCCB Copied"); }); }
           b.textContent="\u2713 Inserted"; setTimeout(function(){ b.textContent="\u2728 Insert story starter"; },1400);
         });
       });
@@ -732,7 +732,7 @@
           b.textContent="\u2713 Copied"; setTimeout(function(){ b.textContent="\uD83D\uDCCB Copy"; },1400);
         });
       });
-      // v244: READ a real book right here — Archive.org reader overlay
+      // v244: READ a real book right here, Archive.org reader overlay
       $res.querySelectorAll("[data-read-ia]").forEach(function(b){
         b.addEventListener("click", function(){
           openReader(b.getAttribute("data-read-ia"), b.getAttribute("data-read-title")||"Book");
@@ -743,7 +743,7 @@
         b.addEventListener("click", function(){
           var txt=b.getAttribute("data-use-voice")||"";
           if(callbacks.onUseResearch) callbacks.onUseResearch(txt);
-          else { var bv=document.getElementById("wBody"); if(bv){ bv.focus(); document.execCommand("insertText", false, "\n\n"+txt+"\n"); bv.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Voice added — rewrite in your voice"); } else if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ toast("📋 Copied"); }); }
+          else { var bv=document.getElementById("wBody"); if(bv){ bv.focus(); document.execCommand("insertText", false, "\n\n"+txt+"\n"); bv.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Voice added, rewrite in your voice"); } else if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ toast("📋 Copied"); }); }
           b.textContent="✓ Added"; setTimeout(function(){ b.textContent="✨ Insert"; },1400);
         });
       });
@@ -761,7 +761,7 @@
         b.addEventListener("click", function(){
           var txt=b.getAttribute("data-use-research-sum")||"";
           if(callbacks.onUseResearch) callbacks.onUseResearch(txt);
-          else { var bd4=document.getElementById("wBody"); if(bd4){ bd4.focus(); document.execCommand("insertText", false, "\n\n"+txt+"\n"); bd4.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Facts added — rewrite in your voice"); } else if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ toast("📋 Copied"); }); }
+          else { var bd4=document.getElementById("wBody"); if(bd4){ bd4.focus(); document.execCommand("insertText", false, "\n\n"+txt+"\n"); bd4.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Facts added, rewrite in your voice"); } else if(navigator.clipboard) navigator.clipboard.writeText(txt).then(function(){ toast("📋 Copied"); }); }
           b.textContent="✓ Added"; setTimeout(function(){ b.textContent="✨ Insert"; },1400);
         });
       });
@@ -773,9 +773,9 @@
           var found = allLocal.find(function(x){ return (x.id||x.title)==id; });
           var title = found ? (found.title||found.t) : id;
           var author = found ? (found.author||found.a||"") : "";
-          var snippet = title + (author?" — "+author:"") + (found && found.oneLiner ? "\n“"+found.oneLiner+"”" : "") + (found && found.lessons && found.lessons[0] ? "\nLesson: "+found.lessons[0].title : "");
+          var snippet = title + (author?", "+author:"") + (found && found.oneLiner ? "\n“"+found.oneLiner+"”" : "") + (found && found.lessons && found.lessons[0] ? "\nLesson: "+found.lessons[0].title : "");
           if(callbacks.onUseResearch) callbacks.onUseResearch(snippet);
-          else { var bd2=document.getElementById("wBody"); if(bd2){ bd2.focus(); document.execCommand("insertText", false, "\n\n"+snippet+"\n"); bd2.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Book content added — rewrite in your voice"); } else if(navigator.clipboard) navigator.clipboard.writeText(snippet).then(function(){ toast("📋 Copied"); }); }
+          else { var bd2=document.getElementById("wBody"); if(bd2){ bd2.focus(); document.execCommand("insertText", false, "\n\n"+snippet+"\n"); bd2.dispatchEvent(new Event("input",{bubbles:true})); toast("✨ Book content added, rewrite in your voice"); } else if(navigator.clipboard) navigator.clipboard.writeText(snippet).then(function(){ toast("📋 Copied"); }); }
           b.textContent="✓ Added"; setTimeout(function(){ b.textContent="+ Use"; },1400);
         });
       });
@@ -791,7 +791,7 @@
       pending=true;
       $res.innerHTML = '<div style="text-align:center;padding:22px 10px;color:#64748b;font:600 13px Space Grotesk,sans-serif;"><span style="display:inline-block;width:18px;height:18px;border:2.5px solid #111;border-top-color:#ffc800;border-radius:50%;animation:rot .7s linear infinite;margin-right:8px;vertical-align:-4px;"></span> Searching live…</div><style>@keyframes rot{to{transform:rotate(360deg)}}</style>';
 
-      // reset grid vs flex per tab — images is grid, others flex
+      // reset grid vs flex per tab, images is grid, others flex
       if(activeTab==="images"){
         $res.style.flex = "0 0 auto";   // v247: NEVER let flex-shrink crush the grid (that hid the Use buttons)
         $res.style.display = "grid";
@@ -811,12 +811,12 @@
         fetchQuotesLiveSmart(qFor, tagFor).then(function(list){
           if(!list.length) list = CURATED.slice(0,4).map(function(x){ return Object.assign({ _live:false }, x); });
           else list = list.map(function(x){ return Object.assign({ _live:true }, x); });
-          $res.innerHTML = list.length ? list.map(cardQuote).join("") : '<div style="text-align:center;padding:18px;color:#94a3b8;font:600 13px Space Grotesk,sans-serif;">No quotes for that — try: lonely, healing, Rumi.</div>';
+          $res.innerHTML = list.length ? list.map(cardQuote).join("") : '<div style="text-align:center;padding:18px;color:#94a3b8;font:600 13px Space Grotesk,sans-serif;">No quotes for that, try: lonely, healing, Rumi.</div>';
           // show intelligence note
           if(qFor && list.length){
             var note = document.createElement("div");
             note.style.cssText="text-align:center;font:600 11px Space Grotesk,sans-serif;color:#16a34a;margin-top:4px;";
-            note.textContent="LIVE · showing only results for “"+qFor.slice(0,40)+"” — "+list.length+" found";
+            note.textContent="LIVE · showing only results for “"+qFor.slice(0,40)+"”, "+list.length+" found";
             $res.prepend(note);
           }
           wireResultActions();
@@ -846,7 +846,7 @@
             var extra = picsumAesthetic(iq+"-x"+Date.now(), 8 - list.length);
             list = list.concat(extra);
           }
-          // Grid 2-2 on mobile: proper preview size, buttons never cut — images as 1:1 cards
+          // Grid 2-2 on mobile: proper preview size, buttons never cut, images as 1:1 cards
           $res.style.display = "grid";
           $res.style.gridTemplateColumns = "repeat(2,1fr)";
           $res.style.gap = "10px";
@@ -870,7 +870,7 @@
       } else {
         // ── v244 RESEARCH: topic-aware + multi-source + NO hardcoded default ──
         // What you typed (or what your story is about) drives everything. Empty search
-        // opens a rotating Explore board — never again one lonely default topic.
+        // opens a rotating Explore board, never again one lonely default topic.
         var hasQ = ($q.value||"").trim();
         var activeRq = hasQ || activeTag || "";
         var explore = !activeRq;
@@ -891,7 +891,7 @@
           return [sums, hits, voices, dict, books, localAll];
         }).then(function(arr){
           var sums=arr[0], hits2=arr[1], voices=arr[2], dict=arr[3], books2=arr[4], localAll=arr[5];
-          // books from the live web must NEVER duplicate TheSmallBook's own library — different shelf, always
+          // books from the live web must NEVER duplicate TheSmallBook's own library, different shelf, always
           var own = {};
           (localAll||[]).forEach(function(b){ own[normTitle(b.title||b.t||"")]=1; });
           books2 = (books2||[]).filter(function(b){ return b.title && !own[normTitle(b.title)]; });
@@ -900,13 +900,13 @@
           var essayObj = null;
           try{ essayObj = essayStarter(rq, $res._lastWikiExtract, (localBooks && localBooks[0]) ? localBooks[0] : null); }catch(e){ essayObj=null; }
           var html="";
-          // Story starter first — a ready essay you rewrite in your voice (compact, not bombarding)
+          // Story starter first, a ready essay you rewrite in your voice (compact, not bombarding)
           if(essayObj && essayObj.html) html += essayObj.html;
-          // v251: then the material itself — lessons, citable facts, openers.
+          // v251: then the material itself, lessons, citable facts, openers.
           // Research used to hand back sources; it now hands back the writing.
           try{ html += cardUsable(rq, sums[0], localBooks, voices); }catch(e){}
           if(explore && sums.length){
-            html+='<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;">🔎 Explore — LIVE <span style="font:700 9px Space Grotesk,sans-serif;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;text-transform:uppercase;">fresh every visit</span></div>' +
+            html+='<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;">🔎 Explore, LIVE <span style="font:700 9px Space Grotesk,sans-serif;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;text-transform:uppercase;">fresh every visit</span></div>' +
               '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">' + sums.map(cardExplore).join("") + '</div>';
           }
           if(!explore){
@@ -916,27 +916,27 @@
                 hits2.map(function(h){ return '<div style="border:2px solid #e2e8f0;border-radius:10px;padding:8px 10px;margin-top:8px;background:#f8fafc"><b style="font:800 12px Space Grotesk,sans-serif">'+esc(h.title)+'</b><br><span style="font:500 11px Space Grotesk,sans-serif;color:#475569">'+esc(h.snippet.slice(0,140))+'</span></div>'; }).join("") +
                 '</div>';
             } else {
-              html+='<div style="text-align:center;padding:14px;color:#94a3b8;font:600 12px Space Grotesk,sans-serif;">No live wiki page for that — try broader: habits, loneliness, startup.</div>';
+              html+='<div style="text-align:center;padding:14px;color:#94a3b8;font:600 12px Space Grotesk,sans-serif;">No live wiki page for that, try broader: habits, loneliness, startup.</div>';
             }
           }
           if(dict) html+=cardDict(dict);
           if(voices.length) html+=cardVoices(voices, rq);
           if(books2.length){
-            html+='<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin-bottom:8px;">📖 Read free — full books · LIVE Open Library <span style="font:700 9px Space Grotesk,sans-serif;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;text-transform:uppercase;">readable now</span></div>'+books2.map(cardBook).join('<div style="height:8px"></div>')+'<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;margin-top:8px;text-align:center;">Readable classics &amp; public-domain finds — never duplicates TheSmallBook\'s own shelf below.</div></div>';
+            html+='<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin-bottom:8px;">📖 Read free, full books · LIVE Open Library <span style="font:700 9px Space Grotesk,sans-serif;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;text-transform:uppercase;">readable now</span></div>'+books2.map(cardBook).join('<div style="height:8px"></div>')+'<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;margin-top:8px;text-align:center;">Readable classics &amp; public-domain finds, never duplicates TheSmallBook\'s own shelf below.</div></div>';
           } else if(!explore && hasQ){
-            html+='<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;text-align:center;margin-top:2px;">No readable full book matched “'+esc(rq)+'” — TheSmallBook\'s own library below covers your topic.</div>';
+            html+='<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;text-align:center;margin-top:2px;">No readable full book matched “'+esc(rq)+'”, TheSmallBook\'s own library below covers your topic.</div>';
           }
           if(localBooks.length){
-            html+='<div style="background:#ffc800;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#111;margin-bottom:8px;">📕 From TheSmallBook — your 400 books (tap to use)</div>'+localBooks.map(cardLocalBook).join('<div style="height:8px"></div>')+'<div style="font:600 10px Space Grotesk,sans-serif;color:#111;margin-top:8px;text-align:center;opacity:.7">Suggestions from our library matching “'+esc(rq)+'”</div></div>';
+            html+='<div style="background:#ffc800;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#111;margin-bottom:8px;">📕 From TheSmallBook, your 400 books (tap to use)</div>'+localBooks.map(cardLocalBook).join('<div style="height:8px"></div>')+'<div style="font:600 10px Space Grotesk,sans-serif;color:#111;margin-top:8px;text-align:center;opacity:.7">Suggestions from our library matching “'+esc(rq)+'”</div></div>';
           }
           $res.innerHTML = html;
           var n3=document.createElement("div");
           n3.style.cssText="text-align:center;font:600 11px Space Grotesk,sans-serif;color:#16a34a;margin-bottom:4px;";
-          n3.textContent = explore ? "LIVE · explore board — type above to research YOUR topic (wiki · voices · words · books)" : "LIVE · research for “"+rq.slice(0,36)+"” — lessons · facts · openers · voices · full books";
+          n3.textContent = explore ? "LIVE · explore board, type above to research YOUR topic (wiki · voices · words · books)" : "LIVE · research for “"+rq.slice(0,36)+"”, lessons · facts · openers · voices · full books";
           $res.prepend(n3);
           wireResultActions();
           pending=false;
-        }).catch(function(){ pending=false; $res.innerHTML='<div style="text-align:center;color:#94a3b8;">Couldn\'t load — try again.</div>'; });
+        }).catch(function(){ pending=false; $res.innerHTML='<div style="text-align:center;color:#94a3b8;">Couldn\'t load, try again.</div>'; });
       }
     }
 
@@ -966,7 +966,7 @@
     openDesk: openDesk,
     open: openDesk,
     quotes: function(q, cb){ return openDesk("quotes", q, cb?{onUseQuote:cb}:{}); },
-    /* v250: the Quote Desk renders its own live list — same fetchers, no duplicate code */
+    /* v250: the Quote Desk renders its own live list, same fetchers, no duplicate code */
     quotesLive: function(q, tag){ return fetchQuotesLiveSmart(q, tag); },
     images: function(q, cb){ return openDesk("images", q, cb?{onUseImage:cb}:{}); },
     research: function(q, cb){ return openDesk("research", q, cb?{onUseResearch:cb}:{}); },

@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK — ✏️ HIGHLIGHTER (highlight.js)
+   THESMALLBOOK, ✏️ HIGHLIGHTER (highlight.js)
    Users select any text in a lesson → floating pencil button →
    saved to localStorage → yellow marker style on reload.
    Click a marker to remove it. Works offline. No backend.

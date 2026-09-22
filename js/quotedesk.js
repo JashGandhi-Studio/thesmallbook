@@ -1,14 +1,14 @@
 /* =====================================================================
    TheSmallBook · js/quotedesk.js · v250
    ---------------------------------------------------------------------
-   THE QUOTE DESK — the whole quote flow on ONE sheet.
+   THE QUOTE DESK, the whole quote flow on ONE sheet.
 
    Why it exists: the Inspire Desk was built for stories (images, research,
    quotes). For a quote you want three things and nothing else:
 
        1 · a line (you type it, or you tap a topic and I fetch live ones)
        2 · an optional photo behind it
-       3 · "why this line hit you" — written on the page, UNDER the card
+       3 · "why this line hit you", written on the page, UNDER the card
 
    It also settles the old bug where picking an aesthetic photo as your
    cover took you away to another window and made you press back. Here the
@@ -25,11 +25,11 @@
      TSB_QUOTEDESK.font()          current card font id
      TSB_QUOTEDESK.setFont(id)
    opts (quote mode):
-     seed     — prefill text (e.g. the title you already typed)
-     why      — prefill "why this line hit you"
-     photo    — object URL / remote URL already chosen (shows as preview)
-     photoName— label for the chosen photo
-     gold     — hides "watermark" wording for Gold readers
+     seed    , prefill text (e.g. the title you already typed)
+     why     , prefill "why this line hit you"
+     photo   , object URL / remote URL already chosen (shows as preview)
+     photoNamelabel for the chosen photo
+     gold    , hides "watermark" wording for Gold readers
      onPick(view)  view = { text, author, why, photo, photoRemote, kind:"card"|"sep"|"text" }
      onWantPhoto(topic)  -> the host opens its own picker (optional)
    ===================================================================== */
@@ -37,10 +37,10 @@
   "use strict";
   if (window.TSB_QUOTEDESK) return;
 
-  /* v251 — THE DESK FINDS, STUDIO DESIGNS.
+  /* v251, THE DESK FINDS, STUDIO DESIGNS.
      The desk used to duplicate Studio: it had its own font picker, and
      "find a photo" opened a second sheet on top. Now the desk does the two
-     things only it can do — find a line and find a photo, both inline — and
+     things only it can do, find a line and find a photo, both inline, and
      previews the result in the ratio you will actually publish in. Fonts,
      frames and filters live in Studio, once. */
   var RATIOS = [
@@ -108,7 +108,7 @@
     opts = o || {};
     mode = mode === "story" ? "story" : "quote";
 
-    /* stories keep the full library — images, research, quotes */
+    /* stories keep the full library, images, research, quotes */
     if (mode === "story") {
       var api = window.TSB_OSINT || window.TSB_INSPIRE;
       if (api && api.openInspire) {
@@ -187,7 +187,7 @@
         paintPreview(); buzz(6);
       });
     });
-    /* photo: searched on this sheet — no second window, nothing uploads */
+    /* photo: searched on this sheet, no second window, nothing uploads */
     var goPhoto = function () {
       var el = $("#qdPhotoIn");
       searchPhotos((el && el.value.trim()) || S.topic || S.text || "minimal");
@@ -227,7 +227,7 @@
     return '' +
       '<div class="qd-sheet">' +
         '<div class="qd-top">' +
-          '<b>❝ QUOTE DESK<small>find the line, find the photo, see the real crop — then Studio designs it</small></b>' +
+          '<b>❝ QUOTE DESK<small>find the line, find the photo, see the real crop, then Studio designs it</small></b>' +
           '<button class="qd-x" id="qdX" type="button" aria-label="Close">✕</button>' +
         '</div>' +
 
@@ -240,7 +240,7 @@
         '</div>' +
 
         /* ---- topics: live quotes, no typing needed ----------------- */
-        '<div class="qd-lbl">✨ Or tap a topic — live quotes, fetched right now</div>' +
+        '<div class="qd-lbl">✨ Or tap a topic, live quotes, fetched right now</div>' +
         '<div class="qd-tune" id="qdTuneTopics">' + chips + '</div>' +
         '<div class="qd-search">' +
           '<input id="qdSearchIn" type="text" placeholder="…or search any topic, word or author" autocomplete="off">' +
@@ -249,14 +249,14 @@
         '<div class="qd-live" id="qdLive"></div>' +
 
         /* ---- the quote itself -------------------------------------- */
-        '<div class="qd-lbl">✍️ Your line <span style="opacity:.7">(edit it — make it yours)</span></div>' +
+        '<div class="qd-lbl">✍️ Your line <span style="opacity:.7">(edit it, make it yours)</span></div>' +
         '<textarea class="qd-ta" id="qdQuote" rows="2" maxlength="220" placeholder="The line that stopped you…"></textarea>' +
         '<div class="qd-row">' +
-          '<input class="qd-in" id="qdAuthor" type="text" maxlength="60" placeholder="— who said it (optional)">' +
+          '<input class="qd-in" id="qdAuthor" type="text" maxlength="60" placeholder="who said it (optional)">' +
         '</div>' +
 
         /* ---- photo: searched right here, never a second sheet -------- */
-        '<div class="qd-lbl">🖼️ Photo behind it <span style="opacity:.7">(optional — search and tap, it lands here)</span></div>' +
+        '<div class="qd-lbl">🖼️ Photo behind it <span style="opacity:.7">(optional, search and tap, it lands here)</span></div>' +
         '<div class="qd-photo">' +
           '<div class="qd-search qd-search--photo">' +
             '<input id="qdPhotoIn" type="text" placeholder="sunset, ocean, minimal, night, coffee…" autocomplete="off">' +
@@ -267,16 +267,16 @@
         '</div>' +
 
         /* ---- why this line hit you --------------------------------- */
-        '<div class="qd-lbl">💬 Why this line hit you <span style="opacity:.7">(goes below your card — this is the part people reply to)</span></div>' +
-        '<div class="qd-why"><textarea class="qd-ta" id="qdWhy" rows="3" maxlength="600" placeholder="Two or three lines in your own voice — what it changed, where you read it, who it reminds you of…"></textarea></div>' +
+        '<div class="qd-lbl">💬 Why this line hit you <span style="opacity:.7">(goes below your card, this is the part people reply to)</span></div>' +
+        '<div class="qd-why"><textarea class="qd-ta" id="qdWhy" rows="3" maxlength="600" placeholder="Two or three lines in your own voice, what it changed, where you read it, who it reminds you of…"></textarea></div>' +
 
         /* ---- shape: what you are posting, previewed honestly ---------- */
-        '<div class="qd-lbl">📐 Shape — you see the real crop before Studio</div>' +
+        '<div class="qd-lbl">📐 Shape, you see the real crop before Studio</div>' +
         '<div class="qd-tune qd-tune--ratio" id="qdTuneRatio">' + rs + '</div>' +
 
         /* ---- actions ----------------------------------------------- */
-        '<button class="qd-go" id="qdCard" type="button">CONTINUE — STUDIO MAKES THE CARD →</button>' +
-        '<p class="qd-hint" style="margin:2px 0 8px;text-align:center">fonts, frames and filters live in Studio — one tap, done</p>' +
+        '<button class="qd-go" id="qdCard" type="button">CONTINUE, STUDIO MAKES THE CARD →</button>' +
+        '<p class="qd-hint" style="margin:2px 0 8px;text-align:center">fonts, frames and filters live in Studio, one tap, done</p>' +
         '<div class="qd-foot">' +
           '<button type="button" id="qdSep">🖼️ Photo + text below</button>' +
           '<button type="button" id="qdText">📝 Just the quote</button>' +
@@ -308,16 +308,16 @@
     q.style.fontSize = px + "px";
     q.textContent = t ? "“ " + t + " ”" : "“ Your words, framed beautifully. ”";
     q.style.opacity = t ? 1 : .55;
-    by.textContent = a ? "— " + a : "";
+    by.textContent = a ? "" + a : "";
     var hint = $("#qdHint");
     if (hint) {
       hint.textContent = S.photo
-        ? "Studio opens with this photo and your quote already on it — reframe, filter, export. Nothing uploads until you publish."
+        ? "Studio opens with this photo and your quote already on it, reframe, filter, export. Nothing uploads until you publish."
         : "No photo? Studio still gives you 24 aesthetic backgrounds, so the card always looks finished.";
       if (S.ratio && S.ratio !== "4:5") hint.textContent += " Previewing " + ratioOf().label + ".";
     }
   }
-  /* (the old #qdPhoto button is gone — photos are searched inline) */
+  /* (the old #qdPhoto button is gone, photos are searched inline) */
 
   /* ---- live quotes (real network, nothing preloaded) ---------------- */
   function paintResults(busy) {
@@ -329,7 +329,7 @@
       var r = S.results[i];
       html += '<button type="button" class="qd-live__c" data-i="' + i + '">' +
                 "<p>" + esc(r.c) + "</p>" +
-                (r.a ? "<em>— " + esc(r.a) + "</em>" : "") +
+                (r.a ? "<em>" + esc(r.a) + "</em>" : "") +
               "</button>";
     }
     box.innerHTML = html;
@@ -368,7 +368,7 @@
     } catch (e) {
       S.results = [];
       var box = $("#qdLive");
-      if (box) box.innerHTML = '<div class="qd-empty">Couldn\'t reach the live quote library — type your own line below, it works offline.</div>';
+      if (box) box.innerHTML = '<div class="qd-empty">Couldn\'t reach the live quote library, type your own line below, it works offline.</div>';
       S.busy = false;
       return;
     }
@@ -404,7 +404,7 @@
     var box = $("#qdStrip");
     if (!box) return;
     if (!list.length) {
-      box.innerHTML = '<div class="qd-empty">Nothing for that word — try "ocean", "night", "minimal", "books".</div>';
+      box.innerHTML = '<div class="qd-empty">Nothing for that word, try "ocean", "night", "minimal", "books".</div>';
       return;
     }
     box.innerHTML = list.slice(0, 8).map(function (p, i) {
@@ -447,7 +447,7 @@
     var t = (S.text || "").trim();
     if (kind !== "text" && !t) {
       var hint = $("#qdHint");
-      if (hint) { hint.textContent = "Add the line first — even one sentence is a quote. Tap CONTINUE after."; }
+      if (hint) { hint.textContent = "Add the line first, even one sentence is a quote. Tap CONTINUE after."; }
       var ta = $("#qdQuote"); if (ta) { try { ta.focus(); } catch (e) {} }
       return;
     }

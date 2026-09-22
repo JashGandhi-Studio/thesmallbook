@@ -1,20 +1,20 @@
 /* ============================================================
-   THESMALLBOOK — 🛍️ TSB STORE (store.js) · v225
+   THESMALLBOOK, 🛍️ TSB STORE (store.js) · v225
    The reader deals store. Access unlocks three ways:
      1. 💛 TSB Gold            (paid plan)
-     2. ✍️ 3 published stories  (the Insider path — grows community)
+     2. ✍️ 3 published stories  (the Insider path, grows community)
      3. 👑 Founder             (FOUNDER_EMAILS below, or the
         official ✔ account id in js/community.js OFFICIAL_ID)
-   Offers come from js/store-data.js — curated official brand
+   Offers come from js/store-data.js, curated official brand
    programs with real, locally-shipped logos (assets/logos/).
    Paying links can be affiliate-tagged via js/affiliate.js
-   (window.TSB_AFFILIATE) — see docs/STORE-OPS.md § affiliate.
+   (window.TSB_AFFILIATE), see docs/STORE-OPS.md § affiliate.
    ============================================================ */
 (function () {
   "use strict";
   if (window.TSB_STORE) return;
 
-  /* 👑 FOUNDER: your Gmail — you get the whole store free on login. */
+  /* 👑 FOUNDER: your Gmail, you get the whole store free on login. */
   var FOUNDER_EMAILS = ["acimotreyothy@gmail.com"];
   var INSIDER_POSTS = 3;   /* stories a writer must publish to unlock free */
   var FREE_TEASERS = 3;    /* offers everyone can open without unlocking */
@@ -48,10 +48,10 @@
   function initials(b) { return (b || "?").replace(/[^A-Za-z0-9]/g, "").slice(0, 1).toUpperCase() || "?"; }
   /* v250 · a logo is only useful if you can SEE it. `fit` comes from
      js/store-data.js and is measured from the file itself:
-       full — the artwork already IS a tile, so it fills the square edge to edge
-       wide — a long wordmark: reduce the padding so the words stay readable
-       mid  — a wide-ish mark
-       logo — a compact mark, keep the generous padding                 */
+       full, the artwork already IS a tile, so it fills the square edge to edge
+       wide, a long wordmark: reduce the padding so the words stay readable
+       mid , a wide-ish mark
+       logo, a compact mark, keep the generous padding                 */
   function logoFitClass(o) {
     var fit = o.fit || "logo";
     if (fit === "full") return " is-full";
@@ -77,7 +77,7 @@
     var idx = DATA.offers.indexOf(o);
     return idx > -1 && idx < FREE_TEASERS;
   }
-  /* affiliate link resolver — window.TSB_AFFILIATE maps offer id → your tracked url (EarnKaro/Cuelinks/Amazon).
+  /* affiliate link resolver, window.TSB_AFFILIATE maps offer id → your tracked url (EarnKaro/Cuelinks/Amazon).
      If empty, we fall back to the clean official url. See docs/STORE-OPS.md. */
   function finalUrl(o) {
     try {
@@ -115,7 +115,7 @@
       }
       if (!a.ok && window.TSB_GOLD && TSB_GOLD.isGold()) { a.ok = true; a.via = "gold"; }
     } catch (e) {}
-    /* v267 · the store is the toll booth — anyone the store admits carries a
+    /* v267 · the store is the toll booth, anyone the store admits carries a
        paid ticket into the full autopsy too */
     if (a.ok && window.TSB_IDEAAUDIT && TSB_IDEAAUDIT.unlockWithPurchaseFlag) {
       try { TSB_IDEAAUDIT.unlockWithPurchaseFlag(); } catch (e2) {}
@@ -179,7 +179,7 @@
   function renderGrid(a) {
     var grid = $("stGrid");
     var list = DATA.offers.filter(function (o) { return cat === "all" || o.cat === cat; });
-    if (!list.length) { grid.innerHTML = '<div class="st-empty">Nothing on this shelf yet — new drops land monthly.</div>'; return; }
+    if (!list.length) { grid.innerHTML = '<div class="st-empty">Nothing on this shelf yet, new drops land monthly.</div>'; return; }
     grid.innerHTML = list.map(function (o, i) { return cardHTML(o, isOpen(o, a), i); }).join("");
   }
 
@@ -199,7 +199,7 @@
     var pct = Math.min(100, Math.round((a.posts / INSIDER_POSTS) * 100));
     $("stProg").innerHTML =
       (a.signed
-        ? "✍️ You’ve published " + a.posts + " of " + INSIDER_POSTS + " stories — " + (left ? left + " to go." : "unlocked!")
+        ? "✍️ You’ve published " + a.posts + " of " + INSIDER_POSTS + " stories, " + (left ? left + " to go." : "unlocked!")
         : "Sign in first, then publish " + INSIDER_POSTS + " stories to unlock free.") +
       '<span class="st-prog__bar"><i id="stProgBar"></i></span>';
     setTimeout(function () { var b = $("stProgBar"); if (b) b.style.width = pct + "%"; }, 60);
@@ -226,18 +226,18 @@
           (o.worth ? '<div class="st-worth">💸 ' + esc(o.worth) + "<span>" + esc(o.tag) + "</span></div>" : "") +
           (o.code
             ? '<div class="st-codebox"><code>' + esc(o.code) + '</code><button id="stCopy" type="button">COPY</button></div>'
-            : '<div class="st-nocode"><em>NO CODE NEEDED</em>Applied automatically on the ' + esc(o.brand) + " page — just follow the steps.</div>") +
+            : '<div class="st-nocode"><em>NO CODE NEEDED</em>Applied automatically on the ' + esc(o.brand) + " page, just follow the steps.</div>") +
           '<div class="st-lbl">HOW TO CLAIM</div>' +
           '<ol class="st-steps">' + o.steps.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ol>" +
           '<details class="st-tnc-wrap"><summary>TERMS &amp; CONDITIONS</summary>' +
             '<ul class="st-tnc">' + o.tnc.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ul>" +
           "</details>" +
-          '<p class="st-disc">This is an official program run by ' + esc(o.brand) + ". TheSmallBook is not affiliated with or endorsed by " + esc(o.brand) + "; brand names and logos belong to their owners. Eligibility (new user, student, city, account) is decided by the partner at checkout. " + esc(DATA.verified) + " — always confirm the offer in the partner app before paying anything.</p>" +
-          (aff ? '<p class="st-disc" style="margin-top:8px;opacity:.75">🔗 Affiliate link — if you buy through this, we may earn a small commission at no extra cost to you. Keeps the library running 💛</p>' : "") +
+          '<p class="st-disc">This is an official program run by ' + esc(o.brand) + ". TheSmallBook is not affiliated with or endorsed by " + esc(o.brand) + "; brand names and logos belong to their owners. Eligibility (new user, student, city, account) is decided by the partner at checkout. " + esc(DATA.verified) + ", always confirm the offer in the partner app before paying anything.</p>" +
+          (aff ? '<p class="st-disc" style="margin-top:8px;opacity:.75">🔗 Affiliate link, if you buy through this, we may earn a small commission at no extra cost to you. Keeps the library running 💛</p>' : "") +
         "</div>" +
         '<div class="st-modal__foot">' +
           '<a class="st-cta" href="' + esc(href) + '" target="_blank" rel="noopener nofollow"><img class="' + logoFitClass(o).trim() + '" src="' + LOGO_DIR + esc(o.logo) + '" alt="">OPEN ' + esc(o.brand.toUpperCase()) + " →</a>" +
-          '<a class="st-dead" href="https://wa.me/919702510680?text=' + encodeURIComponent("Hi! The store offer “" + o.title + "” seems dead — please refresh it.") + '" target="_blank" rel="noopener">Offer not working? Report it — we refresh monthly</a>' +
+          '<a class="st-dead" href="https://wa.me/919702510680?text=' + encodeURIComponent("Hi! The store offer “" + o.title + "” seems dead, please refresh it.") + '" target="_blank" rel="noopener">Offer not working? Report it, we refresh monthly</a>' +
         "</div>" +
       "</div>";
     mountSheet(ov);
@@ -255,7 +255,7 @@
         '<div class="st-modal__grab"></div>' +
         '<div class="st-nudge">' + logoHTML(o) +
           "<h2>" + esc(o.brand) + " is behind the shelf</h2>" +
-          "<p>" + esc(o.value) + " — unlock the full store two ways: go Gold, or publish " + (a && a.signed ? left + " more " + (left === 1 ? "story" : "stories") : INSIDER_POSTS + " stories") + " and it’s free forever.</p>" +
+          "<p>" + esc(o.value) + ", unlock the full store two ways: go Gold, or publish " + (a && a.signed ? left + " more " + (left === 1 ? "story" : "stories") : INSIDER_POSTS + " stories") + " and it’s free forever.</p>" +
           '<div class="st-nudge__btns"><a href="gold.html">💛 GET GOLD</a><a href="write.html">✍️ WRITE A STORY</a></div>' +
           '<button class="st-dead" id="stX" type="button" style="background:none;border:0;cursor:pointer;width:100%;margin-top:14px">Not now</button>' +
         "</div>" +
@@ -290,7 +290,7 @@
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeOffer(); });
 
   function copyText(t) {
-    var done = function () { toast("📋 Code copied — paste it at checkout"); haptic(); };
+    var done = function () { toast("📋 Code copied, paste it at checkout"); haptic(); };
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(done).catch(done); return; }
     } catch (e) {}
@@ -298,7 +298,7 @@
       var ta = document.createElement("textarea");
       ta.value = t; document.body.appendChild(ta); ta.select();
       document.execCommand("copy"); ta.remove(); done();
-    } catch (e) { toast("Copy failed — long-press the code instead"); }
+    } catch (e) { toast("Copy failed, long-press the code instead"); }
   }
 
   /* ---------- page ---------- */
@@ -319,7 +319,7 @@
     if (a.via === "founder") {
       var rib = document.createElement("div");
       rib.className = "st-founder";
-      rib.textContent = "👑 FOUNDER MODE — everything unlocked, forever free. Thank you for building this.";
+      rib.textContent = "👑 FOUNDER MODE, everything unlocked, forever free. Thank you for building this.";
       $("stHero").after(rib);
     }
 

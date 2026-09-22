@@ -1,4 +1,4 @@
-# 🚢 DEPLOY GUIDE — getting updates LIVE on thesmallbook.in
+# 🚢 DEPLOY GUIDE, getting updates LIVE on thesmallbook.in
 
 ## Why the last updates never appeared (read this once)
 
@@ -15,24 +15,24 @@ Use any option below. All of them end the same way: a commit on `main`
 
 ---
 
-## Option A — GitHub website (no installs, ~4 minutes)
+## Option A, GitHub website (no installs, ~4 minutes)
 
 1. Unzip `thesmallbook-update.zip` on your computer → folder `update/`.
 2. Open github.com/**JashGandhi-Studio/thesmallbook** (branch `main`).
 3. Click **Add file → Upload files**.
-4. Drag the **contents** of `update/` into the drop zone — the folders
+4. Drag the **contents** of `update/` into the drop zone, the folders
    (`assets/ books/ css/ graveyard/ js/ docs/`) **and** every root file
    (`index.html`, `sw.js`, `chat.html`, …). Dragging folders keeps their
    structure intact.
 5. Wait until every file finishes uploading, then **Commit changes**
    (message: `tsb-v175`).
 6. Repo **Settings → Pages**: Source = *Deploy from a branch*,
-   Branch = `main`, folder = `/ (root)`. (Already set — just verify once.)
+   Branch = `main`, folder = `/ (root)`. (Already set, just verify once.)
 
 > GitHub overwrites same-named files and adds new ones. Files we deleted
 > (old duplicate covers) stay behind harmlessly; nothing links to them.
 
-## Option B — git command line (recommended, ~2 minutes, exact)
+## Option B, git command line (recommended, ~2 minutes, exact)
 
 ```bash
 git clone https://github.com/JashGandhi-Studio/thesmallbook.git tsb
@@ -42,11 +42,11 @@ rsync -a --delete update/ tsb/ --exclude .git
 robocopy update tsb /MIR /XD .git
 cd tsb
 git add -A
-git commit -m "tsb-v175 — you window, minimal chat, deploy-safe assets"
+git commit -m "tsb-v175, you window, minimal chat, deploy-safe assets"
 git push
 ```
 
-## Option C — GitHub Desktop
+## Option C, GitHub Desktop
 
 File → Add local repository → pick the unzipped `update/` folder →
 it shows all changes → Commit to main → Publish/ Push.
@@ -58,7 +58,7 @@ it shows all changes → Commit to main → Publish/ Push.
 1. `thesmallbook.in/sw.js` → must contain **`tsb-v175`**
 2. `thesmallbook.in/chat.html` → loads the minimal chat (not a 404)
 3. `thesmallbook.in/login.html` → the premium "SAVE WHAT YOU READ" page
-4. Phone: open the site once, swipe the tab fully away, reopen — done.
+4. Phone: open the site once, swipe the tab fully away, reopen, done.
    (The app now self-heals old caches; this one reopen finishes the job.)
 
 If #1 shows an older number → the commit didn't include the root files
@@ -75,7 +75,7 @@ different branch/folder (Settings → Pages).
   (add the `www.` variant only if you ever share www links)
 - **Supabase → Authentication → URL Configuration**:
   Site URL `https://thesmallbook.in` · Redirect URLs `https://thesmallbook.in/**`
-- Nothing else — CNAME, canonicals, manifest and sitemap already point at
+- Nothing else, CNAME, canonicals, manifest and sitemap already point at
   thesmallbook.in.
 
 ## 🔍 One-time Google Search refresh (old "220 books" snippet)
@@ -91,7 +91,7 @@ page → **Request indexing**. The snippet updates after recrawl (2–7 days).
 | Symptom | Fix |
 |---|---|
 | Site still old after commit | Settings → Pages shows *main / root*; wait for the Pages Action to finish; then reopen tab once |
-| `chat.html` 404 | Upload included the zip, not its contents — redo Option A step 4 |
-| Login returns to Google with an error | Redirect URI mismatch — copy the URI character-for-character from the checklist |
+| `chat.html` 404 | Upload included the zip, not its contents, redo Option A step 4 |
+| Login returns to Google with an error | Redirect URI mismatch, copy the URI character-for-character from the checklist |
 | Onboarding shows for a logged-in user | Impossible in v175+ (session check is synchronous); if seen, the deploy is older than v175 |
 | Phone shows old UI once after deploy | Swipe tab away + reopen (last old shell dies); never needed again |

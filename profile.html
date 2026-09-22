@@ -2,22 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-    <meta property="og:title" content="Reader profile — TheSmallBook">
+    <meta property="og:title" content="Reader profile, TheSmallBook">
   <meta property="og:description" content="Stories, followers and the shelf of a TheSmallBook reader.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=267">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=274">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/profile.html">
   <meta property="og:type" content="website">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
-  <title>Profile — TheSmallBook Community</title>
-  <meta name="description" content="A TheSmallBook community profile — posts, followers and activity.">
+  <title>Profile, TheSmallBook Community</title>
+  <meta name="description" content="A TheSmallBook community profile, posts, followers and activity.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
+  <script src="js/bootguard.js?v=274"></script>
+  <script src="js/vault.js?v=274"></script>
   <script>
     try {
       var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
@@ -27,27 +29,27 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=267">
+  <link rel="stylesheet" href="css/style.css?v=274">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body class="cmpage">
-  <h1 class="sr-only">Reader profile — TheSmallBook</h1>
+  <h1 class="sr-only">Reader profile, TheSmallBook</h1>
   <main class="cm-profile" id="prof">
     <div class="cm-card cm-card--skel"><div class="cm-sk cm-sk--cover"></div>
       <div class="cm-card__body"><div class="cm-sk cm-sk--line w60"></div><div class="cm-sk cm-sk--line w40"></div></div>
     </div>
   </main>
 
-  <script src="js/prefs.js?v=267"></script>
-  <script src="js/lang.js?v=267"></script>
-  <script src="js/config.js?v=267"></script>
-  <script src="js/auth.js?v=267"></script>
-  <script src="js/sounds.js?v=267"></script>
-  <script src="js/founder.js?v=267"></script>
-  <script src="js/community.js?v=267"></script>
-  <script src="js/stories-seed.js?v=267"></script>
+  <script src="js/prefs.js?v=274"></script>
+  <script src="js/lang.js?v=274"></script>
+  <script src="js/config.js?v=274"></script>
+  <script src="js/auth.js?v=274"></script>
+  <script src="js/sounds.js?v=274"></script>
+  <script src="js/founder.js?v=274"></script>
+  <script src="js/community.js?v=274"></script>
+  <script src="js/stories-seed.js?v=274"></script>
   <script>
   (function () {
     "use strict";
@@ -60,10 +62,10 @@
 
     async function boot() {
       if (!C.enabled) { root.innerHTML = '<div class="cm-empty">☁️ Community cloud is warming up.</div>'; return; }
-      if (!pid) { root.innerHTML = '<div class="cm-empty">👋 Sign in to see your activity.<br><a class="cm-write" href="login.html">Sign in — it’s free →</a></div>'; return; }
+      if (!pid) { root.innerHTML = '<div class="cm-empty">👋 Sign in to see your activity.<br><a class="cm-write" href="login.html">Sign in, it’s free →</a></div>'; return; }
       /* v250: arriving on someone's profile from a "started following you"
          (or like/comment) notification counts as reading it. DMs are left
-         alone on purpose — those become read when you open the thread. */
+         alone on purpose, those become read when you open the thread. */
       if (pid !== meId) {          /* never on your own profile */
         try { C.notifMarkContext(function (n) { return n.who === pid && n.type !== "dm"; }); } catch (e) {}
       }
@@ -86,7 +88,7 @@
       if (mine) {
         try { likesGot = (await C.likesOnMyPosts()).length; } catch (e) {}
       }
-      document.title = prof.name + " — TheSmallBook";
+      document.title = prof.name + ", TheSmallBook";
       var progShown = prof.progress || 0;
       /* prof.links also carries this app's own buckets (presence, privacy,
          follow handshake). Only real links may reach the page. */
@@ -130,7 +132,7 @@
                 return '<a class="cm-linkchip" href="' + url + '" target="_blank" rel="noopener">' + C.icon('link') + " " +
                   C.esc(String(l).replace(/^https?:\/\//i, "").slice(0, 42)) + "</a>";
               }).join("") + "</div>" : "") +
-              (priv ? '<span class="cm-lockpill">🔒 Private account — they approve followers</span>' : "") +
+              (priv ? '<span class="cm-lockpill">🔒 Private account, they approve followers</span>' : "") +
               '<div class="cm-statrow cm-statrow--pills">' +
                 '<span class="cm-pill"><b>' + posts.length + "</b> posts</span>" +
                 '<a class="cm-pill" href="profile.html?id=' + pid + '&view=followers" data-lsoc="followers"><b>' + fol.count + "</b> Followers</a>" +
@@ -152,7 +154,7 @@
                   '<a class="cm-dmbtn cm-dmbtn--big" href="dm.html?u=' + pid + '">' + C.icon('chat') + " Message</a>") +
             '</div>' +
             (mine
-              ? '<div class="cm-sharenote">' + C.icon('share') + ' This is your public card — share it from the ⬆ buttons</div>'
+              ? '<div class="cm-sharenote">' + C.icon('share') + ' This is your public card, share it from the ⬆ buttons</div>'
               : "") +
             (mine
               ? '<div class="cm-profedit" id="profEdit">' +
@@ -173,7 +175,7 @@
         "</div>";
 
       /* v255 · the channel's complete shelf: on TheSmallBook's own profile,
-         the library stories appear under the same name — minus the ones the
+         the library stories appear under the same name, minus the ones the
          channel has already published as real posts (those are listed above). */
       function libShelf() {
         if (!C.isOfficial || !C.isOfficial(pid) || !(window.SEED_STORIES || []).length) return "";
@@ -183,7 +185,7 @@
           return sx && sx.title && !posted[String(sx.title).toLowerCase().trim()];
         });
         if (!rows.length) return "";
-        return '<div class="cm-sect">📚 From the library — ' + rows.length + ' more from this channel</div>' +
+        return '<div class="cm-sect">📚 From the library, ' + rows.length + ' more from this channel</div>' +
           rows.map(function (sx) {
             var words = String(sx.text || "").split(/\s+/).length;
             var cov = sx.cover
@@ -252,8 +254,8 @@
             rq.removeAttribute("data-preq");
             rq.setAttribute("data-pcancel", pid);
             rq.textContent = "Requested ⏳";
-            C.say("🔒 Request sent — they approve you from People.");
-          } catch (err) { C.say("Request failed — " + (err && err.message ? err.message : err)); }
+            C.say("🔒 Request sent, they approve you from People.");
+          } catch (err) { C.say("Request failed, " + (err && err.message ? err.message : err)); }
           rq.disabled = false;
           return;
         }
@@ -279,7 +281,7 @@
           await C.setFollow(t.getAttribute("data-pfol"), on);
           t.classList.toggle("on", on);
           t.innerHTML = on ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
-        } catch (err) { C.say("Subscribe failed — " + (err && err.message ? err.message : err)); }
+        } catch (err) { C.say("Subscribe failed, " + (err && err.message ? err.message : err)); }
         t.disabled = false;
       });
       var sheetEl = null;
@@ -354,7 +356,7 @@
               await C.setFollow(t.getAttribute("data-socfol"), on2);
               t.classList.toggle("on", on2);
               t.innerHTML = on2 ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
-            } catch (err) { C.say("Subscribe failed — " + (err && err.message ? err.message : err)); }
+            } catch (err) { C.say("Subscribe failed, " + (err && err.message ? err.message : err)); }
             t.disabled = false;
           });
           ids.forEach(async function (fid) {
@@ -397,7 +399,7 @@
           this.classList.toggle("on", f.mine);
           this.innerHTML = f.mine ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
           var fc = root.querySelector(".cm-stats b");
-        } catch (e) { C.say((on ? "Subscribe" : "Unsubscribe") + " failed — " + (e && e.message ? e.message : e)); }
+        } catch (e) { C.say((on ? "Subscribe" : "Unsubscribe") + " failed, " + (e && e.message ? e.message : e)); }
       });
       function copyTxt(t) {
         if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).catch(function () {}); return; }
@@ -464,10 +466,10 @@
           var blob = await new Promise(function (r) { cv.toBlob(r, "image/png"); });
           var file = new File([blob], "thesmallbook-" + String(prof.name).replace(/\W+/g, "-") + ".png", { type: "image/png" });
           if (navigator.canShare && navigator.canShare({ files: [file] })) {
-            await navigator.share({ files: [file], title: prof.name + " \u2014 TheSmallBook", text: "Read " + prof.name + "'s stories on TheSmallBook \u{1F4D5}", url: url });
+            await navigator.share({ files: [file], title: prof.name + ", TheSmallBook", text: "Read " + prof.name + "'s stories on TheSmallBook \u{1F4D5}", url: url });
             self.textContent = "\u2713 Shared";
           } else if (navigator.share) {
-            await navigator.share({ title: prof.name + " \u2014 TheSmallBook", text: "Read " + prof.name + "'s stories on TheSmallBook \u{1F4D5}", url: url }).catch(function () {});
+            await navigator.share({ title: prof.name + ", TheSmallBook", text: "Read " + prof.name + "'s stories on TheSmallBook \u{1F4D5}", url: url }).catch(function () {});
             self.textContent = "\u2713 Shared";
           } else {
             var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
@@ -495,7 +497,7 @@
           await C.api("profiles?id=eq." + meId, { method: "PATCH", body: { avatar_url: url } });
           try { await C.syncAvatarPosts(url, null); } catch (e) {}   /* new photo now on every story */
           boot();
-        } catch (e) { C.say("Avatar upload failed — " + (e && e.message ? e.message : e)); }
+        } catch (e) { C.say("Avatar upload failed, " + (e && e.message ? e.message : e)); }
       });
       var save = document.getElementById("pSave");
       if (save) save.addEventListener("click", async function () {
@@ -517,14 +519,14 @@
           try { await C.syncAvatarPosts(null, nm); } catch (e) {}   /* name on every story too */
           if (window.TSB_AUTH && TSB_AUTH.setDisplayName) TSB_AUTH.setDisplayName(nm);
           boot();
-        } catch (e) { C.say("Save failed — " + (e && e.message ? e.message : e)); }
+        } catch (e) { C.say("Save failed, " + (e && e.message ? e.message : e)); }
       });
     }
     boot();
   })();
   </script>
-  <script src="js/bar.js?v=267" defer></script>
-  <script src="js/gate.js?v=267" defer></script>
-  <script src="js/trial.js?v=267" defer></script>
+  <script src="js/bar.js?v=274" defer></script>
+  <script src="js/gate.js?v=274" defer></script>
+  <script src="js/trial.js?v=274" defer></script>
 </body>
 </html>

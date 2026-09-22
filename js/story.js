@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK — STORY READER (story.html)
+   THESMALLBOOK, STORY READER (story.html)
    Loads a story via TSB_STORE (cloud/local) or from seeds.
    ============================================================ */
 
@@ -35,7 +35,7 @@
       return;
     }
 
-    document.title = `${s.title} — TheSmallBook`;
+    document.title = `${s.title}, TheSmallBook`;
 
     const coverHTML = s.cover
       ? `<img class="reader__cover" src="${s.cover}" alt="cover">`

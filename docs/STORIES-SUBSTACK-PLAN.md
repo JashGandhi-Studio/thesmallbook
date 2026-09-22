@@ -1,8 +1,8 @@
 # 📬 Making STORIES a real publishing community (Substack-class)
-_TheSmallBook — live plan. Read top to bottom, follow the route you pick._
+_TheSmallBook, live plan. Read top to bottom, follow the route you pick._
 
 Today: Stories = community posts saved on-device + optional cloud blob.
-Goal: people **post, follow, comment, like, get notified** — like Substack.
+Goal: people **post, follow, comment, like, get notified**, like Substack.
 
 There are two good routes. Route A keeps everything inside thesmallbook.in
 (recommended). Route B uses Substack itself as the social layer.
@@ -10,11 +10,11 @@ Route C = hybrid of both.
 
 ---
 
-## ROUTE A — "Substack features, our home" (recommended)
+## ROUTE A, "Substack features, our home" (recommended)
 We already have Supabase (Google login + cloud sync). We add 4 tables and
 I build the feed UI. You own everything, no monthly fee, no platform risk.
 
-### Step 1 — You, in Supabase Console (~10 min)
+### Step 1, You, in Supabase Console (~10 min)
 1. Open https://supabase.com/dashboard → your project → **SQL Editor**.
 2. Paste & RUN this exact script (creates tables + row-level security):
 
@@ -87,18 +87,18 @@ create policy "del own f"  on public.follows for delete using (auth.uid() = foll
    - **Notifications bell** (new comment / like / follow) via Supabase Realtime
    - Author profiles (`you` window gains "My posts / My followers")
 
-### Step 2 — Moderation & safety (same console)
+### Step 2, Moderation & safety (same console)
 - Authentication → Providers: keep Google on.
 - Add a `reports` table later if needed; for now delete abuse directly in
   Table Editor (you are the moderator).
 
-### Step 3 — Email newsletter (the Substack magic) — optional
+### Step 3, Email newsletter (the Substack magic), optional
 - Supabase → Edge Functions, or free Brevo/Mailchimp tier: on new post,
   email followers. I wire the trigger once you pick a mail provider.
 
 ---
 
-## ROUTE B — Substack as the community layer
+## ROUTE B, Substack as the community layer
 Use Substack's built-in comments/likes/newsletter; the app drives traffic to it.
 
 ### Your steps (click-by-click, ~30 min)
@@ -120,12 +120,12 @@ Use Substack's built-in comments/likes/newsletter; the app drives traffic to it.
 ### Limits to know
 - Substack has **no public write API** → app posts can't auto-publish there
   (except "post by email": Settings → Emails → enable, then the app's
-  publish flow emails your post address — I can wire that).
+  publish flow emails your post address, I can wire that).
 - Comments live only on Substack; in-app stories stay read-only previews.
 
 ---
 
-## ROUTE C — Hybrid (best of both, most work)
+## ROUTE C, Hybrid (best of both, most work)
 Feed + comments in-app (Route A) **and** a Substack mirror for email reach:
 publish in-app → auto-email to your Substack post address → newsletter goes
 out; readers comment either place. Do Route A first, add the mirror later.
@@ -148,16 +148,16 @@ out; readers comment either place. Do Route A first, add the mirror later.
 
 ## Make today's build live first (5 min)
 1. Extract `thesmallbook-update.zip` (v186).
-2. Upload CONTENTS to the repo (never the zip) — see DEPLOY-GUIDE.md.
+2. Upload CONTENTS to the repo (never the zip), see DEPLOY-GUIDE.md.
 3. Verify `thesmallbook.in/sw.js` = `tsb-v186`; reopen tab on phone.
 4. Test: Settings → APP DISPLAY SIZE (Default/Big/Bigger), phone with huge
    system font now shows the app at the app's own proper scale.
-5. Then pick a route above and say the word — tables SQL is ready to paste.
+5. Then pick a route above and say the word, tables SQL is ready to paste.
 
 ---
 
-## SQL #2 — COMMUNITY ROUND (run AFTER SQL #1, before deploying v187)
-Idempotent — safe to re-run. Adds profiles, voice stories and file storage.
+## SQL #2, COMMUNITY ROUND (run AFTER SQL #1, before deploying v187)
+Idempotent, safe to re-run. Adds profiles, voice stories and file storage.
 
 ```sql
 -- profiles (name / avatar / bio)

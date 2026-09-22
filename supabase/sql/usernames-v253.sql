@@ -1,9 +1,9 @@
 -- ============================================================
--- THESMALLBOOK — SQL #12 (v254) · USERNAMES
+-- THESMALLBOOK, SQL #12 (v254) · USERNAMES
 -- Additive, re-runnable. Run once in Supabase → SQL Editor.
 -- Gives every reader a real handle: @username, lowercase, unique,
 -- 3–20 chars of a-z / 0–9 / underscore. Profiles keep working even
--- when username is still empty (older accounts) — the app fills it
+-- when username is still empty (older accounts), the app fills it
 -- from sign-up metadata the next time the profile is saved.
 -- ============================================================
 
@@ -22,4 +22,4 @@ create unique index if not exists profiles_username_uid
 -- null until each reader's app writes it once).
 
 -- ⚡ NOTE (v255): this whole file is INCLUDED in supabase/sql/ALL-IN-ONE.sql (section §6).
---    You do NOT need to run it separately — run ALL-IN-ONE.sql once and you are done.
+--    You do NOT need to run it separately, run ALL-IN-ONE.sql once and you are done.

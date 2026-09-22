@@ -3,19 +3,19 @@
 --  supabase/sql/ALL-IN-ONE.sql
 --
 --  ⚡ ALREADY RUNNING THESMALLBOOK? Your project only needs the NEW parts:
---     run supabase/sql/UPDATE-v255.sql instead — same result, one small paste.
+--     run supabase/sql/UPDATE-v255.sql instead, same result, one small paste.
 --  HOW TO RUN (once, ~10 seconds):
 --    1. Supabase Dashboard → SQL Editor → New query
 --    2. Paste this WHOLE file
 --    3. Run
---    4. Scroll to the bottom — a green "ALL OK" grid is your receipt.
+--    4. Scroll to the bottom, a green "ALL OK" grid is your receipt.
 --  Safe to re-run any time: every statement is guarded and idempotent.
 --  It works on the project you have today AND on a brand-new empty one.
 --
 --  WHAT IT INSTALLS (everything sign-in + the community need):
 --    §1  the tables (profiles, posts, comments, likes, follows, messages,
 --        progress, push_nudges) with the exact columns the app writes
---    §2  Row Level Security on every table — nobody writes as somebody else
+--    §2  Row Level Security on every table, nobody writes as somebody else
 --    §3  storage buckets (covers / audio / avatars) + owner-only upload rules
 --    §4  the official TheSmallBook ✔ channel + its 5 archive stories
 --    §5  hardening: length locks inside the database, one-like-per-reader,
@@ -24,7 +24,7 @@
 --    §7  private accounts + follow requests (accept / decline; follow counts
 --        only after accept) + the request_follow / respond / cancel functions
 --    §8  the 12 reading nudges + interest tags (push cron stays optional)
---    §9  THE CHECK — the receipt grid
+--    §9  THE CHECK, the receipt grid
 --
 --  NOT SQL (two 20-second dashboard toggles, do them after this runs):
 --    • Authentication → Providers → Email → turn ON "Confirm email"
@@ -33,7 +33,7 @@
 
 
 -- ════════════════════════════════════════════════════════════
--- §1 · TABLES — create what is missing, add what columns are missing.
+-- §1 · TABLES, create what is missing, add what columns are missing.
 --      Never renames, never drops, never touches existing rows.
 -- ════════════════════════════════════════════════════════════
 
@@ -128,7 +128,7 @@ create index if not exists messages_inbox    on public.messages (receiver_id, cr
 
 
 -- ════════════════════════════════════════════════════════════
--- §2 · ROW LEVEL SECURITY — the walls. Readers write only as
+-- §2 · ROW LEVEL SECURITY, the walls. Readers write only as
 --      themselves, delete only their own, read what is public.
 -- ════════════════════════════════════════════════════════════
 
@@ -233,7 +233,7 @@ end $$;
 
 
 -- ════════════════════════════════════════════════════════════
--- §3 · STORAGE — the three buckets, public to read, owner-only
+-- §3 · STORAGE, the three buckets, public to read, owner-only
 --      to write. Schema-adaptive: works on new and old projects.
 -- ════════════════════════════════════════════════════════════
 
@@ -295,46 +295,46 @@ end $$;
 
 
 -- ════════════════════════════════════════════════════════════
--- §4 · THE OFFICIAL CHANNEL — TheSmallBook ✔ + its 5 archive
+-- §4 · THE OFFICIAL CHANNEL, TheSmallBook ✔ + its 5 archive
 --      stories. Already-live rows are untouched (on conflict do nothing).
 -- ════════════════════════════════════════════════════════════
 
 insert into public.posts (id, author_id, author_name, author_avatar, title, subtitle, body, tags, kind)
-values ('90000000-0000-4000-8000-000000000001', '11111111-1111-1111-1111-111111111111', 'TheSmallBook', '', 'Four Hours That Saved My CA Final', 'From the library archives — now on the official channel.', '<p>Three months before my CA Final attempt, I did the math and wanted to cry: 14 subjects'' worth of revision, a coaching batch, and a phone that ate four hours of my day without asking.</p><p>I wasn''t lazy. I studied 10 hours daily — or so I told everyone. Then I actually tracked it. Of those 10 hours, maybe 3 were real. The rest was study-flavored scrolling: reels between chapters, ''important'' group chats, checking rank predictions of people I''d never met.</p><p>Deep Work gave me a sentence that hurt: ''The ability to concentrate is becoming rarer at exactly the moment it''s becoming more valuable.'' Everyone in my batch had the same books, same classes, same syllabus. Focus was the only exam nobody else was preparing for.</p><p>So I built my own rules. Phone in the hostel locker from 6 AM to 10 AM — physically, in a locker, because willpower is a myth at 6 AM. Four hours, one subject, no music, no breaks longer than five minutes. That''s it. Everything else — coaching, revision, even scrolling — was allowed after.</p><p>The first week was withdrawal. My hand kept reaching for a phone that wasn''t there. By week three, something shifted: costing problems that used to take 40 minutes started falling in 15. I wasn''t smarter. I was just... present.</p><p>Four focused hours turned out to be worth more than ten distracted ones. I cleared both groups in one attempt. My rank? Doesn''t matter. The real prize is that I now know the difference between being busy and being there.</p><p>The locker is still in use. Some habits you don''t retire.</p>', ARRAY['deep-work']::text[], 'text')
+values ('90000000-0000-4000-8000-000000000001', '11111111-1111-1111-1111-111111111111', 'TheSmallBook', '', 'Four Hours That Saved My CA Final', 'From the library archives, now on the official channel.', '<p>Three months before my CA Final attempt, I did the math and wanted to cry: 14 subjects'' worth of revision, a coaching batch, and a phone that ate four hours of my day without asking.</p><p>I wasn''t lazy. I studied 10 hours daily, or so I told everyone. Then I actually tracked it. Of those 10 hours, maybe 3 were real. The rest was study-flavored scrolling: reels between chapters, ''important'' group chats, checking rank predictions of people I''d never met.</p><p>Deep Work gave me a sentence that hurt: ''The ability to concentrate is becoming rarer at exactly the moment it''s becoming more valuable.'' Everyone in my batch had the same books, same classes, same syllabus. Focus was the only exam nobody else was preparing for.</p><p>So I built my own rules. Phone in the hostel locker from 6 AM to 10 AM, physically, in a locker, because willpower is a myth at 6 AM. Four hours, one subject, no music, no breaks longer than five minutes. That''s it. Everything else, coaching, revision, even scrolling, was allowed after.</p><p>The first week was withdrawal. My hand kept reaching for a phone that wasn''t there. By week three, something shifted: costing problems that used to take 40 minutes started falling in 15. I wasn''t smarter. I was just... present.</p><p>Four focused hours turned out to be worth more than ten distracted ones. I cleared both groups in one attempt. My rank? Doesn''t matter. The real prize is that I now know the difference between being busy and being there.</p><p>The locker is still in use. Some habits you don''t retire.</p>', ARRAY['deep-work']::text[], 'text')
 on conflict (id) do nothing;
 
 insert into public.posts (id, author_id, author_name, author_avatar, title, subtitle, body, tags, kind)
-values ('90000000-0000-4000-8000-000000000002', '11111111-1111-1111-1111-111111111111', 'TheSmallBook', '', 'The Month My Startup Almost Died', 'From the library archives — now on the official channel.', '<p>In March, we had 11 employees, 6 weeks of runway, and a lead investor who stopped picking up the phone.</p><p>I didn''t sleep more than four hours that whole month. I''d lie down and my brain would play the same film: telling my team, telling my wife, telling my parents who had proudly told the whole building their son is a ''CEO.''</p><p>A friend sent me The Hard Thing About Hard Things with one line: ''This will not fix anything. It will make you feel less alone.'' He was right on both counts.</p><p>Ben Horowitz''s whole point is that there is no formula for the hard things. The struggle — his word for it — is not a sign you''re failing. It IS the job. Every founder you admire has lain awake doing the same 3 AM math.</p><p>Two lines changed my month. First: ''Spend zero time on what you could have done, and all of your time on what you might do.'' I stopped replaying the funding round we botched in January. Second: tell the truth to your people — they can handle bad news better than they can handle being lied to.</p><p>So I did the thing I was most afraid of. I called an all-hands and showed them the actual runway. No spin. I told them who should probably interview elsewhere for family reasons, and what my plan was for everyone who stayed.</p><p>Nobody quit that week. Two people found cost cuts I''d never have seen. One quietly intro''d me to her ex-boss — who became our bridge investor.</p><p>We survived. Barely, ugly, with scars. Eleven months later we''re 19 people and profitable. Not a success story yet. Just alive — which, I''ve learned, is the only prerequisite for one.</p>', ARRAY['hard-things']::text[], 'text')
+values ('90000000-0000-4000-8000-000000000002', '11111111-1111-1111-1111-111111111111', 'TheSmallBook', '', 'The Month My Startup Almost Died', 'From the library archives, now on the official channel.', '<p>In March, we had 11 employees, 6 weeks of runway, and a lead investor who stopped picking up the phone.</p><p>I didn''t sleep more than four hours that whole month. I''d lie down and my brain would play the same film: telling my team, telling my wife, telling my parents who had proudly told the whole building their son is a ''CEO.''</p><p>A friend sent me The Hard Thing About Hard Things with one line: ''This will not fix anything. It will make you feel less alone.'' He was right on both counts.</p><p>Ben Horowitz''s whole point is that there is no formula for the hard things. The struggle, his word for it, is not a sign you''re failing. It IS the job. Every founder you admire has lain awake doing the same 3 AM math.</p><p>Two lines changed my month. First: ''Spend zero time on what you could have done, and all of your time on what you might do.'' I stopped replaying the funding round we botched in January. Second: tell the truth to your people, they can handle bad news better than they can handle being lied to.</p><p>So I did the thing I was most afraid of. I called an all-hands and showed them the actual runway. No spin. I told them who should probably interview elsewhere for family reasons, and what my plan was for everyone who stayed.</p><p>Nobody quit that week. Two people found cost cuts I''d never have seen. One quietly intro''d me to her ex-boss, who became our bridge investor.</p><p>We survived. Barely, ugly, with scars. Eleven months later we''re 19 people and profitable. Not a success story yet. Just alive, which, I''ve learned, is the only prerequisite for one.</p>', ARRAY['hard-things']::text[], 'text')
 on conflict (id) do nothing;
 
 insert into public.posts (id, author_id, author_name, author_avatar, title, subtitle, body, tags, kind)
-values ('90000000-0000-4000-8000-000000000003', '11111111-1111-1111-1111-111111111111', 'TheSmallBook', '', 'I Finally Talked to My Father', 'From the library archives — now on the official channel.', '<p>My father and I hadn''t really spoken in four years. We exchanged information — ''beta, insurance renew kara lena'' — but not words. Every real conversation ended the same way: him saying I''d wasted my potential, me saying he never listened, doors closing.</p><p>I found Nonviolent Communication looking for office advice, honestly. I wanted to handle a difficult colleague. I did not expect a book to hand me back my family.</p><p>Rosenberg''s idea sounds too simple to work: behind every criticism is an unmet need trying to speak. When my father said ''you''ve wasted your potential,'' I always heard an attack. NVC taught me to hear it again: an old man, scared for his son, whose only vocabulary for fear is criticism. ''You''ve wasted your potential'' was his broken way of saying ''I need to know you''ll be okay.''</p><p>Diwali came. Same living room, same silence. He said something about my job, the usual opening move of our usual war. And instead of defending, I tried the formula — feeling, then need: ''Papa, when you say that, I feel like I''ve disappointed you. And I really need you to trust that I''ve thought about my life. Are you... are you worried about me?''</p><p>My father looked at me like I''d spoken French. Then he said, quietly, ''Of course I''m worried. You never tell me anything.''</p><p>That was it. That was the whole wall — four years of it — and it came down with one honest sentence from each side.</p><p>We talk every Sunday now. He still doesn''t fully understand what I do. But last month he told my uncle, ''He''s doing well. He explained the whole business to me.'' I heard the pride from the next room.</p><p>Some books improve your career. One or two give you back people.</p>', ARRAY['nonviolent-communication']::text[], 'text')
+values ('90000000-0000-4000-8000-000000000003', '11111111-1111-1111-1111-111111111111', 'TheSmallBook', '', 'I Finally Talked to My Father', 'From the library archives, now on the official channel.', '<p>My father and I hadn''t really spoken in four years. We exchanged information, ''beta, insurance renew kara lena'', but not words. Every real conversation ended the same way: him saying I''d wasted my potential, me saying he never listened, doors closing.</p><p>I found Nonviolent Communication looking for office advice, honestly. I wanted to handle a difficult colleague. I did not expect a book to hand me back my family.</p><p>Rosenberg''s idea sounds too simple to work: behind every criticism is an unmet need trying to speak. When my father said ''you''ve wasted your potential,'' I always heard an attack. NVC taught me to hear it again: an old man, scared for his son, whose only vocabulary for fear is criticism. ''You''ve wasted your potential'' was his broken way of saying ''I need to know you''ll be okay.''</p><p>Diwali came. Same living room, same silence. He said something about my job, the usual opening move of our usual war. And instead of defending, I tried the formula, feeling, then need: ''Papa, when you say that, I feel like I''ve disappointed you. And I really need you to trust that I''ve thought about my life. Are you... are you worried about me?''</p><p>My father looked at me like I''d spoken French. Then he said, quietly, ''Of course I''m worried. You never tell me anything.''</p><p>That was it. That was the whole wall, four years of it, and it came down with one honest sentence from each side.</p><p>We talk every Sunday now. He still doesn''t fully understand what I do. But last month he told my uncle, ''He''s doing well. He explained the whole business to me.'' I heard the pride from the next room.</p><p>Some books improve your career. One or two give you back people.</p>', ARRAY['nonviolent-communication']::text[], 'text')
 on conflict (id) do nothing;
 
 insert into public.posts (id, author_id, author_name, author_avatar, title, subtitle, body, tags, kind)
-values ('90000000-0000-4000-8000-000000000004', '11111111-1111-1111-1111-111111111111', 'TheSmallBook', '', '₹500 a Month Felt Like a Joke. It Wasn''t.', 'From the library archives — now on the official channel.', '<p>I started my first SIP at 23 with ₹500 a month, mostly to stop a persistent bank relationship manager from calling me. It felt like a joke. What is ₹500? One pizza night.</p><p>Then I read The Psychology of Money and one idea rewired me: nobody''s crazy — everyone''s money decisions make sense to them based on what they''ve seen. My parents kept everything in FDs because they''d watched their neighbors lose money in the ''92 scam. I was about to repeat their fear with extra steps.</p><p>Housel''s real lesson isn''t about returns. It''s that wealth is what you DON''T see — the cars not bought, the upgrades not taken. And that time, not timing, does the heavy lifting. His line about Warren Buffett stuck with me: the majority of Buffett''s fortune came after his 65th birthday. The skill isn''t picking stocks. It''s not interrupting compounding.</p><p>So I made one promise: the SIP increases every appraisal, and I never pause it. Not for the wedding season, not for the iPhone, not for the market ''looking high'' (it always looks high or scary — I''ve now seen both, several times).</p><p>₹500 became ₹2,000, then ₹8,000, then more. Six years in, the folio crossed a number I used to think required either inheritance or crime. My colleagues with double my salary ask me how. They expect a stock tip. The answer is so boring they refuse to believe it: I just never stopped.</p><p>The best investment advice I ever got fit in one line I''d have scrolled past at 23: be reasonably greedy, be permanently patient, and let boring do its magic.</p>', ARRAY['psychology-of-money']::text[], 'text')
+values ('90000000-0000-4000-8000-000000000004', '11111111-1111-1111-1111-111111111111', 'TheSmallBook', '', '₹500 a Month Felt Like a Joke. It Wasn''t.', 'From the library archives, now on the official channel.', '<p>I started my first SIP at 23 with ₹500 a month, mostly to stop a persistent bank relationship manager from calling me. It felt like a joke. What is ₹500? One pizza night.</p><p>Then I read The Psychology of Money and one idea rewired me: nobody''s crazy, everyone''s money decisions make sense to them based on what they''ve seen. My parents kept everything in FDs because they''d watched their neighbors lose money in the ''92 scam. I was about to repeat their fear with extra steps.</p><p>Housel''s real lesson isn''t about returns. It''s that wealth is what you DON''T see, the cars not bought, the upgrades not taken. And that time, not timing, does the heavy lifting. His line about Warren Buffett stuck with me: the majority of Buffett''s fortune came after his 65th birthday. The skill isn''t picking stocks. It''s not interrupting compounding.</p><p>So I made one promise: the SIP increases every appraisal, and I never pause it. Not for the wedding season, not for the iPhone, not for the market ''looking high'' (it always looks high or scary, I''ve now seen both, several times).</p><p>₹500 became ₹2,000, then ₹8,000, then more. Six years in, the folio crossed a number I used to think required either inheritance or crime. My colleagues with double my salary ask me how. They expect a stock tip. The answer is so boring they refuse to believe it: I just never stopped.</p><p>The best investment advice I ever got fit in one line I''d have scrolled past at 23: be reasonably greedy, be permanently patient, and let boring do its magic.</p>', ARRAY['psychology-of-money']::text[], 'text')
 on conflict (id) do nothing;
 
 insert into public.posts (id, author_id, author_name, author_avatar, title, subtitle, body, tags, kind)
-values ('90000000-0000-4000-8000-000000000005', '11111111-1111-1111-1111-111111111111', 'TheSmallBook', '', 'The 5 AM I Actually Kept', 'From the library archives — now on the official channel.', '<p>I have joined the 5 AM club six times in my life. The memberships lasted: 4 days, 2 days, 9 days, 1 day, 6 days, and — this current one — two years and counting.</p><p>The difference wasn''t discipline. It was that the first five times, I woke up at 5 AM to do MORE work. Same laptop, same emails, just darker outside. My brain correctly identified this as a scam and cancelled the subscription within a week.</p><p>The book''s actual formula — which I''d skimmed past in my hurry — is the 20/20/20: move for 20 minutes, reflect for 20, learn for 20. Not one minute of it is ''work.'' That hour belongs to you, not your inbox.</p><p>So attempt number six looked different. 5:00-5:20: skipping rope on the terrace, badly. 5:20-5:40: journaling — mostly complaints at first, then gradually, actual thoughts. 5:40-6:00: reading (this site, most mornings — one lesson with chai is exactly 20 minutes).</p><p>Here''s what nobody tells you: the hour itself is nice, but the real product is who you are at 9 AM. I arrive at work having already won three small battles. Meetings that used to rattle me just... don''t. My boss once asked if I''d started meditating. Sort of, I said. I''d started owning one hour.</p><p>Two years now. I''ve missed mornings — travel, weddings, one memorable food poisoning. The difference is I stopped treating a missed morning as a cancelled membership. It''s just a missed morning. The club takes you back.</p><p>Victory hour is a grand name for skipping rope and chai. But I understand now why Sharma calls it that. The war for your day is won before anyone else is awake to fight you for it.</p>', ARRAY['5am-club']::text[], 'text')
+values ('90000000-0000-4000-8000-000000000005', '11111111-1111-1111-1111-111111111111', 'TheSmallBook', '', 'The 5 AM I Actually Kept', 'From the library archives, now on the official channel.', '<p>I have joined the 5 AM club six times in my life. The memberships lasted: 4 days, 2 days, 9 days, 1 day, 6 days, and, this current one, two years and counting.</p><p>The difference wasn''t discipline. It was that the first five times, I woke up at 5 AM to do MORE work. Same laptop, same emails, just darker outside. My brain correctly identified this as a scam and cancelled the subscription within a week.</p><p>The book''s actual formula, which I''d skimmed past in my hurry, is the 20/20/20: move for 20 minutes, reflect for 20, learn for 20. Not one minute of it is ''work.'' That hour belongs to you, not your inbox.</p><p>So attempt number six looked different. 5:00-5:20: skipping rope on the terrace, badly. 5:20-5:40: journaling, mostly complaints at first, then gradually, actual thoughts. 5:40-6:00: reading (this site, most mornings, one lesson with chai is exactly 20 minutes).</p><p>Here''s what nobody tells you: the hour itself is nice, but the real product is who you are at 9 AM. I arrive at work having already won three small battles. Meetings that used to rattle me just... don''t. My boss once asked if I''d started meditating. Sort of, I said. I''d started owning one hour.</p><p>Two years now. I''ve missed mornings, travel, weddings, one memorable food poisoning. The difference is I stopped treating a missed morning as a cancelled membership. It''s just a missed morning. The club takes you back.</p><p>Victory hour is a grand name for skipping rope and chai. But I understand now why Sharma calls it that. The war for your day is won before anyone else is awake to fight you for it.</p>', ARRAY['5am-club']::text[], 'text')
 on conflict (id) do nothing;
 
 insert into public.profiles (id, name, avatar_url, bio, is_public)
-values ('11111111-1111-1111-1111-111111111111', 'TheSmallBook', '', 'The library''s own channel — one true story from a book on your shelf, most weeks.', true)
+values ('11111111-1111-1111-1111-111111111111', 'TheSmallBook', '', 'The library''s own channel, one true story from a book on your shelf, most weeks.', true)
 on conflict (id) do nothing;
 
 
 -- ════════════════════════════════════════════════════════════
--- §5 · HARDENING — the database defends itself.
+-- §5 · HARDENING, the database defends itself.
 -- ════════════════════════════════════════════════════════════
 
--- length locks (mirrors what the app's forms already limit — a hand-built
+-- length locks (mirrors what the app's forms already limit, a hand-built
 -- request cannot stuff a novel into a title). If OLD rows violate a limit,
 -- that one guard is skipped with a notice instead of failing the run.
 do $$ begin
   alter table public.posts drop constraint if exists posts_title_len;
   alter table public.posts add constraint posts_title_len check (char_length(title) <= 90);
-exception when others then raise notice 'posts_title_len skipped — an existing title is longer than 90 characters (%).', sqlerrm;
+exception when others then raise notice 'posts_title_len skipped, an existing title is longer than 90 characters (%).', sqlerrm;
 end $$;
 do $$ begin
   alter table public.posts drop constraint if exists posts_body_len;
@@ -381,7 +381,7 @@ create trigger tsb_cascade_post_delete
 
 
 -- ════════════════════════════════════════════════════════════
--- §6 · USERNAMES — @handle, lowercase, unique, 3-20 chars.
+-- §6 · USERNAMES, @handle, lowercase, unique, 3-20 chars.
 --      The app fills it from sign-up the first time the profile saves.
 -- ════════════════════════════════════════════════════════════
 
@@ -397,7 +397,7 @@ create unique index if not exists profiles_username_uid
 
 
 -- ════════════════════════════════════════════════════════════
--- §7 · PRIVATE ACCOUNTS + FOLLOW REQUESTS — a private profile
+-- §7 · PRIVATE ACCOUNTS + FOLLOW REQUESTS, a private profile
 --      gains a follower only when its owner accepts. The app
 --      detects this automatically; nothing in the UI changes.
 -- ════════════════════════════════════════════════════════════
@@ -436,7 +436,7 @@ alter table public.follow_requests enable row level security;
 drop policy if exists tsb_requests_read on public.follow_requests;
 create policy tsb_requests_read on public.follow_requests
   for select using (auth.uid() = requester_id or auth.uid() = target_id);
--- nobody writes this table directly — all writes go through the functions below,
+-- nobody writes this table directly, all writes go through the functions below,
 -- which take the identity from auth.uid() server-side
 drop policy if exists tsb_requests_write on public.follow_requests;
 create policy tsb_requests_write on public.follow_requests for all using (false) with check (false);
@@ -537,7 +537,7 @@ end $$;
 
 
 -- ════════════════════════════════════════════════════════════
--- §7.5 · USERNAME SIGN-IN — the forever keys. Readers sign in with
+-- §7.5 · USERNAME SIGN-IN, the forever keys. Readers sign in with
 --      "@handle + password" on any device. This tiny server-side
 --      lookup turns the handle into the sign-in email; the password
 --      itself is still checked by Supabase Auth, never by us.
@@ -555,7 +555,7 @@ language sql stable security definer set search_path = public as $$
 $$;
 
 -- ════════════════════════════════════════════════════════════
--- §5 · THE LOGIN GATE — rate limiting that lives on the SERVER.
+-- §5 · THE LOGIN GATE, rate limiting that lives on the SERVER.
 --      A phone can be tampered with; this table cannot. 5 wrong
 --      passwords on one account → the account locks for 10
 --      minutes, no matter what the browser claims. Success clears it.
@@ -568,7 +568,7 @@ create table if not exists public.tsb_login_gate (
   locked_until timestamptz,
   updated_at   timestamptz not null default now()
 );
--- no table grants — the ONLY doors are the three functions below
+-- no table grants, the ONLY doors are the three functions below
 
 create or replace function public.tsb_login_gate_norm(p text)
 returns text language sql immutable as $$
@@ -639,10 +639,10 @@ end $$;
 
 
 -- ════════════════════════════════════════════════════════════
--- §6 · SET MY @NAME — the claim/change desk, checked on the SERVER.
+-- §6 · SET MY @NAME, the claim/change desk, checked on the SERVER.
 --      Old accounts (random or legacy names) can claim or change
 --      their @handle any time. Format and uniqueness are decided
---      here in the database — a tampered browser changes nothing.
+--      here in the database, a tampered browser changes nothing.
 --      Answers: 'ok' | 'sign-in' | 'bad' | 'taken'.
 -- ════════════════════════════════════════════════════════════
 
@@ -702,13 +702,13 @@ create trigger profiles_touch before update on public.profiles
 
 -- ════════════════════════════════════════════════════════════
 -- §8 · THE 12 READING NUDGES + interest tags. The daily 6:30 pm
---      IST push cron is optional — it is scheduled only if your
+--      IST push cron is optional, it is scheduled only if your
 --      project has pg_cron, and it never fails the run.
 -- ════════════════════════════════════════════════════════════
 
 insert into public.push_nudges (heading, body, url, tag)
 select h, b, u, t from (values
-  ('Stuck on something? 📚', 'Atomic Habits · The 2-Minute Rule — shrink the habit till starting is easy.', 'book.html?id=atomic-habits', 'habits,self-improvement,discipline'),
+  ('Stuck on something? 📚', 'Atomic Habits · The 2-Minute Rule, shrink the habit till starting is easy.', 'book.html?id=atomic-habits', 'habits,self-improvement,discipline'),
   ('Procrastinating? ⏳', 'Eat That Frog · Do the worst task first, 2 minutes in.', 'book.html?id=eat-that-frog', 'productivity,self-improvement,focus'),
   ('Money feeling tight? 💸', 'Psychology of Money · Room for error is the quiet superpower.', 'book.html?id=psychology-of-money', 'money,finance,business'),
   ('Can''t focus? 🎯', 'Deep Work · Rule 1: work like a pro, schedule every hour.', 'book.html?id=deep-work', 'focus,work,self-improvement'),
@@ -718,14 +718,14 @@ select h, b, u, t from (values
   ('Argument brewing? 🗣', 'How to Win Friends · Begin friendly, let them say yes yes yes.', 'book.html?id=how-to-win-friends', 'people,communication,relationships'),
   ('Sleep messed up? 😴', 'Why We Sleep · Keep the same wake time seven days a week.', 'book.html?id=why-we-sleep', 'health,sleep,science'),
   ('Need a reset? 🧘', 'The Power of Now · Watch one breath, fully.', 'book.html?id=power-of-now', 'mindset,philosophy,mindfulness'),
-  ('Big goal, no plan? 🗺', '12 Rules · Rule 1: stand up straight — then set one tiny rule for today.', 'book.html?id=12-rules', 'discipline,habits,self-improvement'),
+  ('Big goal, no plan? 🗺', '12 Rules · Rule 1: stand up straight, then set one tiny rule for today.', 'book.html?id=12-rules', 'discipline,habits,self-improvement'),
   ('Sunday scaries? ☕', 'Four Thousand Weeks · Pick three things for today. Only three.', 'book.html?id=four-thousand-weeks', 'time,philosophy,focus')
 ) as v(h, b, u, t)
 where not exists (select 1 from public.push_nudges);
 
 do $$ begin
   create extension if not exists pg_cron;
-exception when others then raise notice 'pg_cron not available — the optional daily push cron is skipped. Everything else is live.';
+exception when others then raise notice 'pg_cron not available, the optional daily push cron is skipped. Everything else is live.';
 end $$;
 do $$ begin
   create extension if not exists pg_net;
@@ -740,13 +740,13 @@ do $$ begin
       headers: jsonb_build_object('Content-Type', 'application/json', 'x-cron-secret', 'tsb-cron-2026')
     );
   $cron$);
-  raise notice 'Push cron scheduled — replace YOUR-PROJECT in the cron job with your project ref when you get a chance.';
+  raise notice 'Push cron scheduled, replace YOUR-PROJECT in the cron job with your project ref when you get a chance.';
 exception when others then raise notice 'Push cron skipped (%). The app works fully without it.', sqlerrm;
 end $$;
 
 
 -- ════════════════════════════════════════════════════════════
--- §9 · THE CHECK — your receipt. Run shows this grid at the end.
+-- §9 · THE CHECK, your receipt. Run shows this grid at the end.
 --      Every number must match the "want" column.
 -- ════════════════════════════════════════════════════════════
 

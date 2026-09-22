@@ -1,11 +1,11 @@
 /* ============================================================
-   THESMALLBOOK — SERVICE WORKER
-   Cache-first for app shell & covers = installable + offline.
+   THESMALLBOOK, SERVICE WORKER
+   Network-first for code (v274), cache-first only for media. Installable + offline.
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v267";
-/* NOTE: the assets/logos/* entries below mirror js/store-data.js exactly —
+const CACHE_VERSION = "tsb-v274";
+/* NOTE: the assets/logos/* entries below mirror js/store-data.js exactly.
    every tile the store links to must be precached, or the offline store
    shows broken images. tests/client-suite.js asserts they never drift. */
 const APP_SHELL = [
@@ -172,7 +172,7 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const fu = new URL(e.request.url);
   /* community media (covers / voice / avatars): cache-first = offline listening.
-     Byte-range requests (video seeking) always go to the network untouched —
+     Byte-range requests (video seeking) always go to the network untouched.
      caching partial 206 responses breaks playback (range headers are ignored
      by Cache API matching). Only full 200 responses are cached. */
   if (fu.pathname.includes("/storage/v1/object/public/")) {
@@ -205,17 +205,20 @@ self.addEventListener("fetch", (e) => {
         .catch(() => caches.match(e.request, { ignoreSearch: true }).then((r) => r || caches.match("./index.html")))
     );
   } else {
+    /* v274: network-first for EVERYTHING, cache is only the offline fallback.
+       A deploy can never half-serve old code under new HTML again. */
     e.respondWith(
-      caches.match(e.request).then((cached) => {
-        if (cached) return cached;
-        return fetch(e.request).then((res) => {
+      fetch(e.request)
+        .then((res) => {
           if (res.ok && (url.origin === location.origin || url.hostname.includes("fonts"))) {
             const copy = res.clone();
             caches.open(CACHE_VERSION).then((c) => c.put(e.request, copy));
           }
           return res;
-        });
-      })
+        })
+        .catch(() =>
+          caches.match(e.request).then((r) => r || caches.match(e.request, { ignoreSearch: true }))
+        )
     );
   }
 });

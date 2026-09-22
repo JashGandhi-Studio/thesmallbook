@@ -72,14 +72,14 @@ Deno.serve(async (req: Request) => {
   if (!APP || !REST) return json(500, { error: "set ONESIGNAL_APP_ID + ONESIGNAL_REST_KEY secrets" });
   const body: any = await req.json().catch(() => ({}));
 
-  // ---- daily nudge from pg_cron (SQL #7) — v207: personalised per reader ----
+  // ---- daily nudge from pg_cron (SQL #7), v207: personalised per reader ----
   if (body.type === "nudge") {
     if (CRON_SECRET && req.headers.get("x-cron-secret") !== CRON_SECRET) return json(401, { error: "bad cron secret" });
     const [nudges, profiles] = await Promise.all([
       sb("push_nudges?select=*&order=id.asc&limit=100"),
       sb("profiles?select=id,interests&limit=10000"),
     ]);
-    if (!nudges.length) return json(200, { sent: 0, note: "push_nudges empty — run SQL #7" });
+    if (!nudges.length) return json(200, { sent: 0, note: "push_nudges empty, run SQL #7" });
     // bucket readers by the nudge that matches THEIR interests (SQL #8 tags)
     const groups = new Map<number, string[]>();
     for (const pr of profiles || []) {
@@ -110,7 +110,7 @@ Deno.serve(async (req: Request) => {
   }
 
   // ---- Supabase Database Webhook payload: { type: "INSERT", table, record } ----
-  // webhooks must carry our shared secret header (x-tsb-hook), set on each hook —
+  // webhooks must carry our shared secret header (x-tsb-hook), set on each hook.
   // this replaces the Supabase JWT gate we switched off, so strangers can't spam pushes
   if (req.headers.get("x-tsb-hook") !== CRON_SECRET) return json(401, { error: "bad hook secret" });
   const table = String(body.table || "");

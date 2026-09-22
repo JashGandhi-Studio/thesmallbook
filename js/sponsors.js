@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK — SPONSORS (sponsors.js) · v248
+   THESMALLBOOK, SPONSORS (sponsors.js) · v248
    bookId -> array of sponsor display names shown on that book page
    as "This breakdown was fuelled by {name}".
    No backend: you (founder) add names here during your weekly
