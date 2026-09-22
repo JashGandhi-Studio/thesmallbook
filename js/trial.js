@@ -1,15 +1,15 @@
 /* ============================================================
-   THESMALLBOOK — ⏳ THE FREE TASTER (js/trial.js) v265
+   THESMALLBOOK, ⏳ THE FREE TASTER (js/trial.js) v265
    After onboarding, every guest reads free for 15 minutes.
      · 0–5 min   → nothing, just reading
      · 5 min     → a polite pop-up: 10 minutes left
      · 10 min    → another pop-up: 5 minutes left
-     · 15 min    → THE GATE — sign in to keep going
+     · 15 min    → THE GATE, sign in to keep going
    Rules:
      · the clock only runs while the tab is VISIBLE (no cheating
        the timer by hiding the tab, no punishment for switching)
      · the used time is SAVED, so a refresh does not refill it
-     · signed-in readers never see any of this — signing in
+     · signed-in readers never see any of this, signing in
        stops the clock and dismantles the gate instantly
      · the gate is a real page-level card, never an alert()
    ============================================================ */
@@ -38,7 +38,7 @@
   if (/login\.html|settings\.html|404\.html|chat\.html/.test(location.pathname)) return;
 
   var st = get("tsb_trial", null) || { used: 0, w1: false, w2: false };
-  var dead = false;             /* gate built — stop counting */
+  var dead = false;             /* gate built, stop counting */
   var box = null;
 
   /* ---------- the card ---------- */
@@ -77,9 +77,9 @@
     var left = minutesLeft();
     var head = which === 1 ? "⏳ 5 minutes flown" : "⏳ 10 minutes flown";
     var line = which === 1
-      ? "You are reading on the house. <b>" + left + " minutes</b> of the free taster are left — your shelf, streak and progress wait behind one sign-in."
+      ? "You are reading on the house. <b>" + left + " minutes</b> of the free taster are left, your shelf, streak and progress wait behind one sign-in."
       : "<b>" + left + " minutes</b> left on the house. Sign in now and everything you\u2019ve read today stays yours forever.";
-    var btn = which === 1 ? "KEEP READING — " + left + " MIN LEFT" : "USE MY LAST " + left + " MINUTES";
+    var btn = which === 1 ? "KEEP READING, " + left + " MIN LEFT" : "USE MY LAST " + left + " MINUTES";
     card(
       '<h2 class="trial__t">' + head + "</h2>" +
       '<p class="trial__s">' + line + "</p>",
@@ -94,14 +94,14 @@
     card(
       '<span class="trial__eyebrow">THE FREE TASTER IS OVER</span>' +
       '<h2 class="trial__t">You\u2019ve had 15 good minutes.</h2>' +
-      '<p class="trial__s">The library stays open — but your <b>shelf</b>, your <b>streak</b>, your <b>@name</b> and everything you read today need one thing: an account. It takes 30 seconds and it is free.</p>' +
+      '<p class="trial__s">The library stays open, but your <b>shelf</b>, your <b>streak</b>, your <b>@name</b> and everything you read today need one thing: an account. It takes 30 seconds and it is free.</p>' +
       '<ul class="trial__list">' +
         "<li>📚 Your shelf and streak, saved</li>" +
         "<li>✍️ Post stories, follow writers</li>" +
-        "<li>🔒 No spam — we never post for you</li>" +
+        "<li>🔒 No spam, we never post for you</li>" +
       "</ul>",
       '<a class="trial__go" href="login.html">CREATE MY FREE ACCOUNT →</a>' +
-      '<a class="trial__ghost" href="login.html">I already have one — sign in</a>'
+      '<a class="trial__ghost" href="login.html">I already have one, sign in</a>'
     );
   }
 

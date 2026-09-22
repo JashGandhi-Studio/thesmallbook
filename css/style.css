@@ -8408,3 +8408,26 @@ html.dark .freshanchor { border-color: #000; box-shadow: 3px 3px 0 #000; }
 .freshhead__btn:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 #111; }
 .freshhead__btn:disabled { opacity: .6; }
 html.dark .freshhead__btn { border-color: #000; box-shadow: 3px 3px 0 #000; }
+
+/* ============================================================
+   THE WEEKLY PROMPT (house style)
+   One official question every week, pinned on the shelf.
+   ============================================================ */
+.cm-weekly { position: relative; overflow: hidden; background: var(--paper); border: 3px solid var(--ink); border-radius: 18px; box-shadow: 5px 5px 0 var(--ink); padding: 18px 18px 16px 22px; margin: 2px 2px 16px; }
+.cm-weekly::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--yellow); border-right: 3px solid var(--ink); }
+.cm-weekly__top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; }
+.cm-weekly__badge { font: 800 10px/1 var(--font-head); letter-spacing: 1.6px; background: var(--yellow); color: var(--on-accent); border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); padding: 6px 9px; border-radius: 7px; display: inline-block; }
+.cm-weekly__wk { font: 700 10.5px var(--font-body); letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
+.cm-weekly__q { font-family: var(--font-head); font-size: clamp(15px, 4vw, 20px); line-height: 1.25; letter-spacing: .2px; text-transform: uppercase; margin: 0 0 8px; color: var(--ink); }
+.cm-weekly__s { font: 500 12.5px/1.6 var(--font-body); color: var(--muted); margin: 0 0 14px; }
+.cm-weekly__row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.cm-weekly__cta { display: inline-block; text-decoration: none; font: 800 11px/1 var(--font-head); letter-spacing: 1px; text-transform: uppercase; background: var(--yellow); color: var(--on-accent); border: 2.5px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); padding: 12px 14px; border-radius: 10px; transition: transform .12s ease, box-shadow .12s ease; }
+.cm-weekly__cta:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--ink); }
+.cm-weekly__cta--ghost { background: var(--paper); color: var(--ink); }
+.cm-weekly__done { font: 800 10px/1 var(--font-head); letter-spacing: 1px; text-transform: uppercase; color: var(--on-accent); background: var(--green); border: 2px solid var(--ink); padding: 6px 9px; border-radius: 7px; display: inline-block; }
+.cm-nudge { display: flex; gap: 8px; align-items: center; margin: 10px 14px 14px; padding: 10px 12px; background: var(--surface-2); border: 2px dashed var(--muted-2); border-radius: 12px; font: 600 12px/1.45 var(--font-body); color: var(--muted); text-decoration: none; transition: border-color .15s ease, color .15s ease; }
+.cm-nudge:hover { border-color: var(--ink); color: var(--ink); }
+.cm-nudge svg { width: 14px; height: 14px; flex: none; }
+.wr-weekly { background: var(--yellow); color: var(--on-accent); border: 2.5px solid var(--ink); border-radius: 12px; box-shadow: 3px 3px 0 var(--ink); padding: 11px 14px; margin-bottom: 12px; font: 500 13px/1.5 var(--font-body); }
+.wr-weekly b { font: 800 10px/1 var(--font-head); letter-spacing: 1.5px; display: block; margin-bottom: 4px; }
+@media (prefers-reduced-motion: reduce) { .cm-weekly__cta:hover { transform: none; } }

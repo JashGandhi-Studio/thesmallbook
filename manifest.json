@@ -1,7 +1,7 @@
 {
-  "name": "TheSmallBook \u2014 Skim Every Great Book",
+  "name": "TheSmallBook, Skim Every Great Book",
   "short_name": "TheSmallBook",
-  "description": "Every lesson from the world's best books \u2014 summarized with examples and action steps.",
+  "description": "Every lesson from the world's best books, summarized with examples and action steps.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f2ede2",

@@ -18,12 +18,12 @@ window.TSB_ASK_DATA = [
    "avoid work",
    "daldal"
   ],
-  "answer": "Procrastination is rarely laziness — it's usually fear (of failure or judgment) plus a reward that's too far away. The library's fix is mechanical: shrink the task, raise the reward, and start before your brain can argue.",
+  "answer": "Procrastination is rarely laziness, it's usually fear (of failure or judgment) plus a reward that's too far away. The library's fix is mechanical: shrink the task, raise the reward, and start before your brain can argue.",
   "books": [
    {
     "id": "eat-that-frog",
     "lesson": "Slice the Frog",
-    "blurb": "Slice the frog: when a task feels huge, cut it into a first step so small it's embarrassing — then do only that."
+    "blurb": "Slice the frog: when a task feels huge, cut it into a first step so small it's embarrassing, then do only that."
    },
    {
     "id": "5-second-rule",
@@ -38,13 +38,13 @@ window.TSB_ASK_DATA = [
    {
     "id": "now-habit",
     "lesson": "The Five-Minute Start",
-    "blurb": "Commit to five minutes of the dreaded task. Starting is the actual skill — the anxiety evaporates once you move."
+    "blurb": "Commit to five minutes of the dreaded task. Starting is the actual skill, the anxiety evaporates once you move."
    }
   ],
   "graves": [
    {
     "id": "kodak-digital",
-    "blurb": "Kodak invented digital photography in 1975 — then waited decades to act. Procrastination at company scale killed a 130-year empire."
+    "blurb": "Kodak invented digital photography in 1975, then waited decades to act. Procrastination at company scale killed a 130-year empire."
    }
   ]
  },
@@ -63,7 +63,7 @@ window.TSB_ASK_DATA = [
    "sticking",
    "build habit"
   ],
-  "answer": "Habits don't need motivation — they need design. Make the behavior tiny, attach it to something you already do, and celebrate the win so your brain wires it in.",
+  "answer": "Habits don't need motivation, they need design. Make the behavior tiny, attach it to something you already do, and celebrate the win so your brain wires it in.",
   "books": [
    {
     "id": "atomic-habits",
@@ -73,12 +73,12 @@ window.TSB_ASK_DATA = [
    {
     "id": "tiny-habits",
     "lesson": "Start Absurdly Small",
-    "blurb": "Two push-ups, one page, one minute. Tiny needs almost no motivation — so it survives your worst days."
+    "blurb": "Two push-ups, one page, one minute. Tiny needs almost no motivation, so it survives your worst days."
    },
    {
     "id": "power-of-habit",
     "lesson": "The Golden Rule",
-    "blurb": "You can't erase a bad habit — but you can keep the cue and reward, and swap the routine in the middle."
+    "blurb": "You can't erase a bad habit, but you can keep the cue and reward, and swap the routine in the middle."
    },
    {
     "id": "compound-effect",
@@ -107,12 +107,12 @@ window.TSB_ASK_DATA = [
    "phone distraction",
    "focusing"
   ],
-  "answer": "Focus is not a talent — it's an environment you design. Remove the triggers, protect long blocks, and train your attention like a muscle.",
+  "answer": "Focus is not a talent, it's an environment you design. Remove the triggers, protect long blocks, and train your attention like a muscle.",
   "books": [
    {
     "id": "deep-work",
     "lesson": "The Deep Work Hypothesis",
-    "blurb": "Deep work is a superpower in an economy of shallow work — and it's trainable, not inborn."
+    "blurb": "Deep work is a superpower in an economy of shallow work, and it's trainable, not inborn."
    },
    {
     "id": "hyperfocus",
@@ -153,7 +153,7 @@ window.TSB_ASK_DATA = [
    "increment",
    "salary hike"
   ],
-  "answer": "Negotiation is not battle — it's discovery. Ask calibrated questions, name their fears, and let silence do the heavy lifting.",
+  "answer": "Negotiation is not battle, it's discovery. Ask calibrated questions, name their fears, and let silence do the heavy lifting.",
   "books": [
    {
     "id": "never-split",
@@ -163,7 +163,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "getting-to-yes",
     "lesson": "Invent Options for Mutual Gain: Grow the Pie Before Cutting It",
-    "blurb": "Don't argue positions — dig for the interest underneath. There's always a deal that serves both sides."
+    "blurb": "Don't argue positions, dig for the interest underneath. There's always a deal that serves both sides."
    },
    {
     "id": "influence",
@@ -173,13 +173,13 @@ window.TSB_ASK_DATA = [
    {
     "id": "48-laws-of-power",
     "lesson": "Never Outshine the Master",
-    "blurb": "In salary talks, make the other side feel like the winner — people pay more when they feel powerful."
+    "blurb": "In salary talks, make the other side feel like the winner, people pay more when they feel powerful."
    }
   ],
   "graves": [
    {
     "id": "fouquet-party",
-    "blurb": "Nicolas Fouquet threw the most spectacular party in France to impress the king — and got jailed for life. Read the room before you flex."
+    "blurb": "Nicolas Fouquet threw the most spectacular party in France to impress the king, and got jailed for life. Read the room before you flex."
    }
   ]
  },
@@ -199,7 +199,7 @@ window.TSB_ASK_DATA = [
    "doubt myself",
    "imposter"
   ],
-  "answer": "Confidence is not a feeling you wait for — it's a track record you build. Small wins, rehearsed success, and a self-image you consciously update.",
+  "answer": "Confidence is not a feeling you wait for, it's a track record you build. Small wins, rehearsed success, and a self-image you consciously update.",
   "books": [
    {
     "id": "psycho-cybernetics",
@@ -225,7 +225,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "newcoke-formula",
-    "blurb": "Coca-Cola was so insecure about Pepsi it changed its 99-year-old formula. Confidence isn't copying the rival — it's knowing who you are."
+    "blurb": "Coca-Cola was so insecure about Pepsi it changed its 99-year-old formula. Confidence isn't copying the rival, it's knowing who you are."
    }
   ]
  },
@@ -244,12 +244,12 @@ window.TSB_ASK_DATA = [
    "stage fear",
    "nervous speaking"
   ],
-  "answer": "Great talks are not born on stage — they're built before it. Open inside the story, cut to one idea, and rehearse the first 30 seconds until they're automatic.",
+  "answer": "Great talks are not born on stage, they're built before it. Open inside the story, cut to one idea, and rehearse the first 30 seconds until they're automatic.",
   "books": [
    {
     "id": "talk-like-ted",
     "lesson": "Story Is the Operating System",
-    "blurb": "Never open with 'Today I'll talk about…'. Start inside a moment — the audience leans in instantly."
+    "blurb": "Never open with 'Today I'll talk about…'. Start inside a moment, the audience leans in instantly."
    },
    {
     "id": "charisma-myth",
@@ -259,7 +259,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "how-to-talk",
     "lesson": "The First Ten Seconds",
-    "blurb": "Smile, eyes, posture — the first ten seconds decide how people hear everything after."
+    "blurb": "Smile, eyes, posture, the first ten seconds decide how people hear everything after."
    },
    {
     "id": "48-laws-of-power",
@@ -299,23 +299,23 @@ window.TSB_ASK_DATA = [
    {
     "id": "so-good",
     "lesson": "Career Capital",
-    "blurb": "The best interview strategy is being rare and valuable — build skills until they can't say no."
+    "blurb": "The best interview strategy is being rare and valuable, build skills until they can't say no."
    },
    {
     "id": "5-second-rule",
     "lesson": "Everyday Courage",
-    "blurb": "Walk in with the 5-4-3-2-1 countdown already done — the hardest part is the first five seconds."
+    "blurb": "Walk in with the 5-4-3-2-1 countdown already done, the hardest part is the first five seconds."
    },
    {
     "id": "48-laws-of-power",
     "lesson": "Never Outshine the Master",
-    "blurb": "Confident, not cocky: let them feel like the expert who made the smart choice — you."
+    "blurb": "Confident, not cocky: let them feel like the expert who made the smart choice, you."
    }
   ],
   "graves": [
    {
     "id": "edsel-ford",
-    "blurb": "Ford hyped the Edsel for a decade — then reality hit. Under-promise in the interview, over-deliver in the job."
+    "blurb": "Ford hyped the Edsel for a decade, then reality hit. Under-promise in the interview, over-deliver in the job."
    }
   ]
  },
@@ -339,12 +339,12 @@ window.TSB_ASK_DATA = [
    "bache",
    "save"
   ],
-  "answer": "Wealth isn't made by income — it's made by the gap between what you earn and what you spend. Automate the gap and let time compound it.",
+  "answer": "Wealth isn't made by income, it's made by the gap between what you earn and what you spend. Automate the gap and let time compound it.",
   "books": [
    {
     "id": "simple-path-wealth",
     "lesson": "The Gap",
-    "blurb": "Spend less than you earn and invest the difference. That's the whole secret — the rest is patience."
+    "blurb": "Spend less than you earn and invest the difference. That's the whole secret, the rest is patience."
    },
    {
     "id": "your-money-or-your-life",
@@ -388,7 +388,7 @@ window.TSB_ASK_DATA = [
    "equity",
    "portfolio"
   ],
-  "answer": "You can't beat the market — so join it. Buy the whole market through low-cost index funds, hold for decades, and ignore the noise.",
+  "answer": "You can't beat the market, so join it. Buy the whole market through low-cost index funds, hold for decades, and ignore the noise.",
   "books": [
    {
     "id": "random-walk-wall-street",
@@ -403,7 +403,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "simple-path-wealth",
     "lesson": "Invest in the Whole Market",
-    "blurb": "Own a sliver of every company — then you can't lose to the market because you ARE the market."
+    "blurb": "Own a sliver of every company, then you can't lose to the market because you ARE the market."
    },
    {
     "id": "common-sense-investing",
@@ -414,7 +414,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "bunker-hunt",
-    "blurb": "The Hunt brothers cornered silver and lost a billion dollars. No position is too big to fail — diversify."
+    "blurb": "The Hunt brothers cornered silver and lost a billion dollars. No position is too big to fail, diversify."
    },
    {
     "id": "madoff-ponzi",
@@ -439,17 +439,17 @@ window.TSB_ASK_DATA = [
    "rejected",
    "flop"
   ],
-  "answer": "Failure is not the opposite of success — it's tuition. Extract the lesson, own your part, and use the loss as data instead of identity.",
+  "answer": "Failure is not the opposite of success, it's tuition. Extract the lesson, own your part, and use the loss as data instead of identity.",
   "books": [
    {
     "id": "obstacle-is-way",
     "lesson": "The Flip: Every Obstacle Inverts",
-    "blurb": "The obstacle is not in the way — it IS the way. What is this failure asking you to become?"
+    "blurb": "The obstacle is not in the way, it IS the way. What is this failure asking you to become?"
    },
    {
     "id": "fail-at-everything",
     "lesson": "Energy, Luck Surface, and Failing Forward",
-    "blurb": "Problems don't go away when you win — they change. Failure is just a problem to solve."
+    "blurb": "Problems don't go away when you win, they change. Failure is just a problem to solve."
    },
    {
     "id": "mans-search",
@@ -465,11 +465,11 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "newcoke-formula",
-    "blurb": "New Coke failed in 79 days — and Coca-Cola used the lesson to come back stronger than ever."
+    "blurb": "New Coke failed in 79 days, and Coca-Cola used the lesson to come back stronger than ever."
    },
    {
     "id": "kodak-digital",
-    "blurb": "Kodak's real failure wasn't the mistake — it was refusing to learn from it in time."
+    "blurb": "Kodak's real failure wasn't the mistake, it was refusing to learn from it in time."
    }
   ]
  },
@@ -492,7 +492,7 @@ window.TSB_ASK_DATA = [
    "depressed",
    "overthinking anxiety"
   ],
-  "answer": "Most stress lives in the past and future — not the present. Shrink your world to today, accept the worst case, and sort what's actually in your control.",
+  "answer": "Most stress lives in the past and future, not the present. Shrink your world to today, accept the worst case, and sort what's actually in your control.",
   "books": [
    {
     "id": "stop-worrying",
@@ -512,13 +512,13 @@ window.TSB_ASK_DATA = [
    {
     "id": "subtle-art",
     "lesson": "Choose Better Values",
-    "blurb": "Every life has pain — you get to choose which one. Pick a struggle worth having."
+    "blurb": "Every life has pain, you get to choose which one. Pick a struggle worth having."
    }
   ],
   "graves": [
    {
     "id": "titanic-hubris",
-    "blurb": "The Titanic's real mistake was certainty — it carried too few lifeboats because it 'couldn't sink'. Never let comfort erase preparation."
+    "blurb": "The Titanic's real mistake was certainty, it carried too few lifeboats because it 'couldn't sink'. Never let comfort erase preparation."
    }
   ]
  },
@@ -541,11 +541,11 @@ window.TSB_ASK_DATA = [
    {
     "id": "5-second-rule",
     "lesson": "The Activation Energy Problem",
-    "blurb": "Your brain stalls to protect you. Count down and launch — action breaks the loop."
+    "blurb": "Your brain stalls to protect you. Count down and launch, action breaks the loop."
    },
    {
     "id": "subtle-art",
-    "lesson": "Be Wrong Often — Certainty Is the Enemy",
+    "lesson": "Be Wrong Often, Certainty Is the Enemy",
     "blurb": "Certainty is a fantasy. Choose a direction with good-enough info and correct as you go."
    },
    {
@@ -562,7 +562,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "digg-v4",
-    "blurb": "Digg deliberated for years, then shipped a redesign that destroyed it in a weekend. Decide, ship, learn — in that order."
+    "blurb": "Digg deliberated for years, then shipped a redesign that destroyed it in a weekend. Decide, ship, learn, in that order."
    }
   ]
  },
@@ -609,7 +609,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "boeing-mcdonnell",
-    "blurb": "Boeing's engineers stopped being able to speak truth to managers — and two planes fell. Silence is the most expensive communication failure."
+    "blurb": "Boeing's engineers stopped being able to speak truth to managers, and two planes fell. Silence is the most expensive communication failure."
    }
   ]
  },
@@ -627,7 +627,7 @@ window.TSB_ASK_DATA = [
    "neta",
    "leading people"
   ],
-  "answer": "Leadership is not a title — it's ownership plus safety. Own every outcome, protect your people first, and build a culture where truth travels upward.",
+  "answer": "Leadership is not a title, it's ownership plus safety. Own every outcome, protect your people first, and build a culture where truth travels upward.",
   "books": [
    {
     "id": "extreme-ownership",
@@ -647,7 +647,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "effective-executive",
     "lesson": "Focus on Contribution",
-    "blurb": "Ask 'what results are required of me?' — not 'how hard am I working?'. Results lead."
+    "blurb": "Ask 'what results are required of me?', not 'how hard am I working?'. Results lead."
    }
   ],
   "graves": [
@@ -657,7 +657,7 @@ window.TSB_ASK_DATA = [
    },
    {
     "id": "ge-immelt",
-    "blurb": "GE was the world's most valuable company — then managed itself into a shadow. Leaders who stop leading the core, lose the crown."
+    "blurb": "GE was the world's most valuable company, then managed itself into a shadow. Leaders who stop leading the core, lose the crown."
    }
   ]
  },
@@ -677,7 +677,7 @@ window.TSB_ASK_DATA = [
    "side hustle",
    "start business"
   ],
-  "answer": "You don't need funding, permission, or a perfect plan — you need a skill, a customer, and the nerve to start today. Solve one painful problem for one specific person.",
+  "answer": "You don't need funding, permission, or a perfect plan, you need a skill, a customer, and the nerve to start today. Solve one painful problem for one specific person.",
   "books": [
    {
     "id": "100-dollar-startup",
@@ -687,7 +687,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "lean-startup",
     "lesson": "Validated Learning: The Real Unit of Progress",
-    "blurb": "Ship the smallest test, measure one metric, learn from real customers — before building anything big."
+    "blurb": "Ship the smallest test, measure one metric, learn from real customers, before building anything big."
    },
    {
     "id": "personal-mba",
@@ -697,13 +697,13 @@ window.TSB_ASK_DATA = [
    {
     "id": "mom-test",
     "lesson": "The Mom Test: Three Rules That Fix Every Question",
-    "blurb": "Never ask 'would you use this?' — people lie to be nice. Ask what they did last time."
+    "blurb": "Never ask 'would you use this?', people lie to be nice. Ask what they did last time."
    }
   ],
   "graves": [
    {
     "id": "pets-com",
-    "blurb": "Pets.com raised $300 million to sell dog food online — before customers were ready. Timing is a feature."
+    "blurb": "Pets.com raised $300 million to sell dog food online, before customers were ready. Timing is a feature."
    },
    {
     "id": "juicero-squeeze",
@@ -728,7 +728,7 @@ window.TSB_ASK_DATA = [
    "lead generation",
    "outreach"
   ],
-  "answer": "People buy feelings and justify with logic. Sell the outcome, not the features — and always give value before asking for anything.",
+  "answer": "People buy feelings and justify with logic. Sell the outcome, not the features, and always give value before asking for anything.",
   "books": [
    {
     "id": "psychology-of-selling",
@@ -758,7 +758,7 @@ window.TSB_ASK_DATA = [
    },
    {
     "id": "red-lobster-shrimp",
-    "blurb": "Red Lobster made its loss-leader permanent — and lost $11 million in one quarter. Check who profits from every deal."
+    "blurb": "Red Lobster made its loss-leader permanent, and lost $11 million in one quarter. Check who profits from every deal."
    }
   ]
  },
@@ -776,12 +776,12 @@ window.TSB_ASK_DATA = [
    "invent",
    "create something"
   ],
-  "answer": "Creativity is not a lightning bolt — it's a habit. Show up daily, steal like an artist, and generate volume: quantity is the road to quality.",
+  "answer": "Creativity is not a lightning bolt, it's a habit. Show up daily, steal like an artist, and generate volume: quantity is the road to quality.",
   "books": [
    {
     "id": "steal-like-artist",
     "lesson": "Nothing Is Original",
-    "blurb": "Every artist steals — the trick is stealing from many, then combining until it's yours."
+    "blurb": "Every artist steals, the trick is stealing from many, then combining until it's yours."
    },
    {
     "id": "big-magic",
@@ -796,13 +796,13 @@ window.TSB_ASK_DATA = [
    {
     "id": "war-of-art",
     "lesson": "Resistance",
-    "blurb": "The enemy is not lack of talent — it's the resistance that shows up every time you sit down to work."
+    "blurb": "The enemy is not lack of talent, it's the resistance that shows up every time you sit down to work."
    }
   ],
   "graves": [
    {
     "id": "xerox-parc",
-    "blurb": "Xerox invented the future (GUI, mouse, ethernet) — then failed to recognize it. Creativity without execution is just a museum."
+    "blurb": "Xerox invented the future (GUI, mouse, ethernet), then failed to recognize it. Creativity without execution is just a museum."
    }
   ]
  },
@@ -820,7 +820,7 @@ window.TSB_ASK_DATA = [
    "stick to",
    "follow through"
   ],
-  "answer": "Motivation is a wave; discipline is a dam. You don't rise to your goals — you fall to your systems. Design the system so discipline is the default.",
+  "answer": "Motivation is a wave; discipline is a dam. You don't rise to your goals, you fall to your systems. Design the system so discipline is the default.",
   "books": [
    {
     "id": "atomic-habits",
@@ -830,7 +830,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "cant-hurt-me",
     "lesson": "The 40% Rule",
-    "blurb": "Discipline is deciding who you are and proving it daily — even at 40% energy."
+    "blurb": "Discipline is deciding who you are and proving it daily, even at 40% energy."
    },
    {
     "id": "dopamine-nation",
@@ -840,7 +840,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "5am-club",
     "lesson": "The 20/20/20 Formula",
-    "blurb": "Win the morning and the day follows: move, reflect, grow — before the world wakes up."
+    "blurb": "Win the morning and the day follows: move, reflect, grow, before the world wakes up."
    }
   ],
   "graves": [
@@ -867,7 +867,7 @@ window.TSB_ASK_DATA = [
    "todo",
    "organize"
   ],
-  "answer": "You can't manage time — you can only design it. Pick one Highlight a day, protect it with a laser, and say no to everything that isn't essential.",
+  "answer": "You can't manage time, you can only design it. Pick one Highlight a day, protect it with a laser, and say no to everything that isn't essential.",
   "books": [
    {
     "id": "make-time",
@@ -887,13 +887,13 @@ window.TSB_ASK_DATA = [
    {
     "id": "effective-executive",
     "lesson": "Know Thy Time",
-    "blurb": "Log where time actually goes for three days. The truth will shock you — then you can fix it."
+    "blurb": "Log where time actually goes for three days. The truth will shock you, then you can fix it."
    }
   ],
   "graves": [
    {
     "id": "blockbuster-netflix",
-    "blurb": "Blockbuster had years of time to buy Netflix for $50 million — and wasted it. Time isn't managed; it's spent."
+    "blurb": "Blockbuster had years of time to buy Netflix for $50 million, and wasted it. Time isn't managed; it's spent."
    }
   ]
  },
@@ -911,7 +911,7 @@ window.TSB_ASK_DATA = [
    "humility",
    "humble"
   ],
-  "answer": "Ego is the enemy of learning: it makes you defend instead of improve. Talk less, listen more, and compare yourself to yesterday — not to the room.",
+  "answer": "Ego is the enemy of learning: it makes you defend instead of improve. Talk less, listen more, and compare yourself to yesterday, not to the room.",
   "books": [
    {
     "id": "ego-is-enemy",
@@ -921,7 +921,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "48-laws-of-power",
     "lesson": "Never Outshine the Master",
-    "blurb": "Shine — but never brighter than the person who controls your fate. Ego blinds you to the room."
+    "blurb": "Shine, but never brighter than the person who controls your fate. Ego blinds you to the room."
    },
    {
     "id": "daily-stoic",
@@ -941,7 +941,7 @@ window.TSB_ASK_DATA = [
    },
    {
     "id": "wework-neumann",
-    "blurb": "WeWork's founder built a $47 billion valuation on ego — and lost control of it in weeks."
+    "blurb": "WeWork's founder built a $47 billion valuation on ego, and lost control of it in weeks."
    }
   ]
  },
@@ -961,7 +961,7 @@ window.TSB_ASK_DATA = [
    "hesitate",
    "hesitation"
   ],
-  "answer": "Fear never leaves — you just decide what it gets to drive. Feel the fear, name it, and act anyway. Courage is fear taking the back seat.",
+  "answer": "Fear never leaves, you just decide what it gets to drive. Feel the fear, name it, and act anyway. Courage is fear taking the back seat.",
   "books": [
    {
     "id": "daring-greatly",
@@ -987,7 +987,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "caesar-ides",
-    "blurb": "Caesar ignored every warning sign — and got stabbed. Fear is information; use it, don't just feel it."
+    "blurb": "Caesar ignored every warning sign, and got stabbed. Fear is information; use it, don't just feel it."
    }
   ]
  },
@@ -1005,12 +1005,12 @@ window.TSB_ASK_DATA = [
    "meaningful",
    "content"
   ],
-  "answer": "Happiness isn't found — it's built from the inside: gratitude, meaningful work, and accepting that you choose your struggle.",
+  "answer": "Happiness isn't found, it's built from the inside: gratitude, meaningful work, and accepting that you choose your struggle.",
   "books": [
    {
     "id": "mans-search",
     "lesson": "The Last Human Freedom",
-    "blurb": "Happiness isn't what happens to you — it's what you do with what happens."
+    "blurb": "Happiness isn't what happens to you, it's what you do with what happens."
    },
    {
     "id": "subtle-art",
@@ -1025,13 +1025,13 @@ window.TSB_ASK_DATA = [
    {
     "id": "psychology-of-money",
     "lesson": "Freedom: The Highest Dividend Money Pays",
-    "blurb": "Money buys control over your time — and time control is the strongest happiness predictor."
+    "blurb": "Money buys control over your time, and time control is the strongest happiness predictor."
    }
   ],
   "graves": [
    {
     "id": "hughes-isolation",
-    "blurb": "Howard Hughes had everything money could buy — and died miserable and alone. Wealth without connection is empty."
+    "blurb": "Howard Hughes had everything money could buy, and died miserable and alone. Wealth without connection is empty."
    }
   ]
  },
@@ -1050,7 +1050,7 @@ window.TSB_ASK_DATA = [
    "kadmi",
    "growth career"
   ],
-  "answer": "Don't follow passion — follow skill. Build rare, valuable career capital, and the control, autonomy and opportunities follow.",
+  "answer": "Don't follow passion, follow skill. Build rare, valuable career capital, and the control, autonomy and opportunities follow.",
   "books": [
    {
     "id": "so-good",
@@ -1076,7 +1076,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "blackberry-crackberry",
-    "blurb": "BlackBerry owned the smartphone market — then ignored the shift to touchscreens. Careers die the same way: refusing to reskill."
+    "blurb": "BlackBerry owned the smartphone market, then ignored the shift to touchscreens. Careers die the same way: refusing to reskill."
    }
   ]
  },
@@ -1145,7 +1145,7 @@ window.TSB_ASK_DATA = [
    "fitness",
    "mood"
   ],
-  "answer": "Energy is the currency of performance — and it's physical before it's mental. Sleep, move, eat real food, and sprint with recovery, not marathons.",
+  "answer": "Energy is the currency of performance, and it's physical before it's mental. Sleep, move, eat real food, and sprint with recovery, not marathons.",
   "books": [
    {
     "id": "power-of-full-engagement",
@@ -1160,7 +1160,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "comfort-crisis",
     "lesson": "The Misogi: One Epic, Doubtful Challenge a Year",
-    "blurb": "Comfort is the disease. A little hardship — cold water, hard walks — is the medicine."
+    "blurb": "Comfort is the disease. A little hardship, cold water, hard walks, is the medicine."
    },
    {
     "id": "5am-club",
@@ -1189,7 +1189,7 @@ window.TSB_ASK_DATA = [
    "convince people",
    "lobby"
   ],
-  "answer": "Influence is not pressure — it's preparation. Set the frame before you speak, give before you ask, and let people feel they decided.",
+  "answer": "Influence is not pressure, it's preparation. Set the frame before you speak, give before you ask, and let people feel they decided.",
   "books": [
    {
     "id": "pre-suasion",
@@ -1199,7 +1199,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "influence",
     "lesson": "Reciprocity: The Debt You Didn't Ask For",
-    "blurb": "Reciprocity, commitment, social proof, liking, authority, scarcity — use them honestly or they backfire."
+    "blurb": "Reciprocity, commitment, social proof, liking, authority, scarcity, use them honestly or they backfire."
    },
    {
     "id": "never-split",
@@ -1215,7 +1215,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "cambridge-analytica",
-    "blurb": "Cambridge Analytica influenced an election with lies — and got destroyed. Influence without integrity is a time bomb."
+    "blurb": "Cambridge Analytica influenced an election with lies, and got destroyed. Influence without integrity is a time bomb."
    }
   ]
  },
@@ -1236,7 +1236,7 @@ window.TSB_ASK_DATA = [
    "great team",
    "good team"
   ],
-  "answer": "Hire for character and train for skill. Build psychological safety first, and the talent follows — culture is the strategy.",
+  "answer": "Hire for character and train for skill. Build psychological safety first, and the talent follows, culture is the strategy.",
   "books": [
    {
     "id": "good-to-great",
@@ -1251,7 +1251,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "who-not-how",
     "lesson": "The How Trap: Your Default Question Is a Cage",
-    "blurb": "Stop asking 'how do I do this?' — ask 'WHO can do this?' and delegate with trust."
+    "blurb": "Stop asking 'how do I do this?', ask 'WHO can do this?' and delegate with trust."
    },
    {
     "id": "leaders-eat-last",
@@ -1262,7 +1262,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "hp-autonomy",
-    "blurb": "HP paid $11 billion for Autonomy without due diligence — and wrote off $8.8 billion. Vet the team before you buy the story."
+    "blurb": "HP paid $11 billion for Autonomy without due diligence, and wrote off $8.8 billion. Vet the team before you buy the story."
    }
   ]
  },
@@ -1281,7 +1281,7 @@ window.TSB_ASK_DATA = [
    "passion find",
    "direction life"
   ],
-  "answer": "Purpose isn't found by thinking — it's found by doing. Explore the overlap of what you love, what you're good at, what the world needs, and what you can be paid for.",
+  "answer": "Purpose isn't found by thinking, it's found by doing. Explore the overlap of what you love, what you're good at, what the world needs, and what you can be paid for.",
   "books": [
    {
     "id": "ikigai",
@@ -1291,7 +1291,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "start-with-why",
     "lesson": "The Golden Circle",
-    "blurb": "People don't buy what you do — they buy why you do it. Start with the why."
+    "blurb": "People don't buy what you do, they buy why you do it. Start with the why."
    },
    {
     "id": "mans-search",
@@ -1301,13 +1301,13 @@ window.TSB_ASK_DATA = [
    {
     "id": "alchemist",
     "lesson": "Personal Legend",
-    "blurb": "When you want something, the whole universe conspires to help you achieve it — but only if you start walking."
+    "blurb": "When you want something, the whole universe conspires to help you achieve it, but only if you start walking."
    }
   ],
   "graves": [
    {
     "id": "ratner-crap",
-    "blurb": "The CEO who called his own products 'crap' forgot the why behind his brand — and lost £500 million in a day."
+    "blurb": "The CEO who called his own products 'crap' forgot the why behind his brand, and lost £500 million in a day."
    }
   ]
  },
@@ -1325,7 +1325,7 @@ window.TSB_ASK_DATA = [
    "new people",
    "meet people"
   ],
-  "answer": "Networking is not collecting contacts — it's being genuinely interested. Give before you ask, and the connections follow naturally.",
+  "answer": "Networking is not collecting contacts, it's being genuinely interested. Give before you ask, and the connections follow naturally.",
   "books": [
    {
     "id": "how-to-win-friends",
@@ -1345,7 +1345,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "supercommunicators",
     "lesson": "The Three Conversations",
-    "blurb": "Ask what kind of conversation they want — then match it. Depth beats volume."
+    "blurb": "Ask what kind of conversation they want, then match it. Depth beats volume."
    }
   ],
   "graves": [
@@ -1370,12 +1370,12 @@ window.TSB_ASK_DATA = [
    "switch job",
    "job change"
   ],
-  "answer": "Quitting is fine — quitting at the wrong time is the sin. Know the difference between a dip you can win and a dead end you can't.",
+  "answer": "Quitting is fine, quitting at the wrong time is the sin. Know the difference between a dip you can win and a dead end you can't.",
   "books": [
    {
     "id": "the-dip",
     "lesson": "The Three Curves: Dip, Cul-de-Sac, Cliff",
-    "blurb": "If the market is growing and you can be best-in-niche, you're in a dip — outlast it. If not, quit smart."
+    "blurb": "If the market is growing and you can be best-in-niche, you're in a dip, outlast it. If not, quit smart."
    },
    {
     "id": "so-good",
@@ -1390,13 +1390,13 @@ window.TSB_ASK_DATA = [
    {
     "id": "company-of-one",
     "lesson": "Question Growth: Bigger Is a Choice, Not a Law",
-    "blurb": "You can build a company of one — if you design work that serves your life, not the reverse."
+    "blurb": "You can build a company of one, if you design work that serves your life, not the reverse."
    }
   ],
   "graves": [
    {
     "id": "newton-southsea",
-    "blurb": "Isaac Newton gambled his life savings on South Sea stock — and lost it all. Quitting a bad bet is wisdom, not weakness."
+    "blurb": "Isaac Newton gambled his life savings on South Sea stock, and lost it all. Quitting a bad bet is wisdom, not weakness."
    }
   ]
  },
@@ -1415,7 +1415,7 @@ window.TSB_ASK_DATA = [
    "skill learn",
    "new skill"
   ],
-  "answer": "Learning is not reading — it's recalling and doing. Active recall, spaced repetition, and teaching others beat re-reading every time.",
+  "answer": "Learning is not reading, it's recalling and doing. Active recall, spaced repetition, and teaching others beat re-reading every time.",
   "books": [
    {
     "id": "limitless",
@@ -1435,13 +1435,13 @@ window.TSB_ASK_DATA = [
    {
     "id": "range",
     "lesson": "Deliberate Amateurs: Keep a Foot Outside Your Field",
-    "blurb": "Exploration beats early specialization. Sample widely — the connections come later."
+    "blurb": "Exploration beats early specialization. Sample widely, the connections come later."
    }
   ],
   "graves": [
    {
     "id": "hubble-mirror",
-    "blurb": "NASA launched the Hubble telescope with a mirror ground to the wrong spec — because nobody double-checked the test. Verify what you think you know."
+    "blurb": "NASA launched the Hubble telescope with a mirror ground to the wrong spec, because nobody double-checked the test. Verify what you think you know."
    }
   ]
  },
@@ -1459,17 +1459,17 @@ window.TSB_ASK_DATA = [
    "frustration",
    "aggressive"
   ],
-  "answer": "Anger is usually fear or hurt wearing armor. Pause before you react, name what you're actually feeling, and respond — don't explode.",
+  "answer": "Anger is usually fear or hurt wearing armor. Pause before you react, name what you're actually feeling, and respond, don't explode.",
   "books": [
    {
     "id": "meditations",
     "lesson": "The Inner Citadel: Retreat Into Yourself",
-    "blurb": "You have power over your mind — not outside events. Realize this, and you will find strength."
+    "blurb": "You have power over your mind, not outside events. Realize this, and you will find strength."
    },
    {
     "id": "daily-stoic",
     "lesson": "The Inner Citadel",
-    "blurb": "Between stimulus and response is a space. In that space is your power — use the pause."
+    "blurb": "Between stimulus and response is a space. In that space is your power, use the pause."
    },
    {
     "id": "power-of-now",
@@ -1507,12 +1507,12 @@ window.TSB_ASK_DATA = [
    "love life",
    "patch up"
   ],
-  "answer": "Every fight is really two fights: the topic and the fear underneath. Separate observation from judgment, make it safe for the other person to tell the truth, and remember — you can't win an argument with someone you love.",
+  "answer": "Every fight is really two fights: the topic and the fear underneath. Separate observation from judgment, make it safe for the other person to tell the truth, and remember, you can't win an argument with someone you love.",
   "books": [
    {
     "id": "nonviolent-communication",
-    "lesson": "Requests, Not Demands — and Empathy as First Aid",
-    "blurb": "Say what you observe, what you feel, what you need — then make a request, not a demand."
+    "lesson": "Requests, Not Demands, and Empathy as First Aid",
+    "blurb": "Say what you observe, what you feel, what you need, then make a request, not a demand."
    },
    {
     "id": "let-them-theory",
@@ -1522,7 +1522,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "supercommunicators",
     "lesson": "Hard Conversations: Safety, Identity, and the Why Beneath the Want",
-    "blurb": "Make the conversation safe first — when people feel safe, they tell the truth instead of defending."
+    "blurb": "Make the conversation safe first, when people feel safe, they tell the truth instead of defending."
    },
    {
     "id": "how-to-win-friends",
@@ -1533,7 +1533,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "elvis-parker",
-    "blurb": "Elvis handed one man total control of his life — and it ended in isolation and ruin. In love and business, never surrender your whole self."
+    "blurb": "Elvis handed one man total control of his life, and it ended in isolation and ruin. In love and business, never surrender your whole self."
    }
   ]
  },
@@ -1552,7 +1552,7 @@ window.TSB_ASK_DATA = [
    "move on",
    "pagal ho raha"
   ],
-  "answer": "Heartbreak is a pain-body — it wants to survive by feeding on your replaying of the story. Stop feeding it: choose your response, let the pain be curriculum, and remember you are not your feelings.",
+  "answer": "Heartbreak is a pain-body, it wants to survive by feeding on your replaying of the story. Stop feeding it: choose your response, let the pain be curriculum, and remember you are not your feelings.",
   "books": [
    {
     "id": "power-of-now",
@@ -1562,12 +1562,12 @@ window.TSB_ASK_DATA = [
    {
     "id": "courage-disliked",
     "lesson": "Teleology: You Choose Your Emotions",
-    "blurb": "You are not caused by your past — you choose your emotions now. That sounds harsh; it's actually freedom."
+    "blurb": "You are not caused by your past, you choose your emotions now. That sounds harsh; it's actually freedom."
    },
    {
     "id": "daily-stoic",
     "lesson": "Amor Fati: The Obstacle Is Curriculum",
-    "blurb": "Love what happened — not because it's pleasant, but because it's the material you have to build with."
+    "blurb": "Love what happened, not because it's pleasant, but because it's the material you have to build with."
    },
    {
     "id": "mans-search",
@@ -1578,7 +1578,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "hughes-isolation",
-    "blurb": "Howard Hughes had everything and ended up alone. The lesson of heartbreak: connection is the point — don't isolate."
+    "blurb": "Howard Hughes had everything and ended up alone. The lesson of heartbreak: connection is the point, don't isolate."
    }
   ]
  },
@@ -1601,7 +1601,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "5am-club",
     "lesson": "Deep Work Needs Deep Rest: The Twin Cycles",
-    "blurb": "Deep work and deep rest are twin cycles — you can't have one without the other."
+    "blurb": "Deep work and deep rest are twin cycles, you can't have one without the other."
    },
    {
     "id": "power-of-full-engagement",
@@ -1611,7 +1611,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "make-time",
     "lesson": "Energize",
-    "blurb": "Sleep is the ultimate performance tool — a tired brain can't focus, decide, or create."
+    "blurb": "Sleep is the ultimate performance tool, a tired brain can't focus, decide, or create."
    },
    {
     "id": "miracle-morning",
@@ -1648,28 +1648,28 @@ window.TSB_ASK_DATA = [
    {
     "id": "cant-hurt-me",
     "lesson": "Callous Your Mind: Do Something That Sucks Daily",
-    "blurb": "Pick one hard physical thing and do it daily — the mind follows the body."
+    "blurb": "Pick one hard physical thing and do it daily, the mind follows the body."
    },
    {
     "id": "comfort-crisis",
     "lesson": "The Daily Doses",
-    "blurb": "Boredom, hunger, carrying, nature, a little cold — daily discomfort is the medicine for a soft life."
+    "blurb": "Boredom, hunger, carrying, nature, a little cold, daily discomfort is the medicine for a soft life."
    },
    {
     "id": "power-of-full-engagement",
     "lesson": "The Four Energies",
-    "blurb": "Physical energy is the foundation — training, sleep and food power your emotions, focus and purpose."
+    "blurb": "Physical energy is the foundation, training, sleep and food power your emotions, focus and purpose."
    },
    {
     "id": "atomic-habits",
-    "lesson": "Make It Easy — The 2-Minute Rule",
+    "lesson": "Make It Easy, The 2-Minute Rule",
     "blurb": "Shrink the workout until it's embarrassing: one push-up, one minute. Standardize before you optimize."
    }
   ],
   "graves": [
    {
     "id": "jobs-surgery",
-    "blurb": "Steve Jobs delayed surgery for months and died young. Health delayed is health denied — book the appointment."
+    "blurb": "Steve Jobs delayed surgery for months and died young. Health delayed is health denied, book the appointment."
    }
   ]
  },
@@ -1689,12 +1689,12 @@ window.TSB_ASK_DATA = [
    "doom scrolling",
    "phone addiction"
   ],
-  "answer": "The feed is engineered by the smartest minds on earth — you can't win with willpower. Win with design: bind future you, reset your dopamine baseline, and make the pool boring.",
+  "answer": "The feed is engineered by the smartest minds on earth, you can't win with willpower. Win with design: bind future you, reset your dopamine baseline, and make the pool boring.",
   "books": [
    {
     "id": "indistractable",
     "lesson": "Pacts: Bind Future You",
-    "blurb": "Delete the app, put the charger across the room, announce your rule — bind future you before the urge arrives."
+    "blurb": "Delete the app, put the charger across the room, announce your rule, bind future you before the urge arrives."
    },
    {
     "id": "dopamine-nation",
@@ -1709,13 +1709,13 @@ window.TSB_ASK_DATA = [
    {
     "id": "deep-work",
     "lesson": "Drain the Shallows",
-    "blurb": "Batch shallow tasks — checking the feed is shallow work that steals deep hours."
+    "blurb": "Batch shallow tasks, checking the feed is shallow work that steals deep hours."
    }
   ],
   "graves": [
    {
     "id": "clubhouse-fade",
-    "blurb": "Clubhouse burned hot on hype, then vanished when attention moved. Your attention is worth more than a feed — spend it like a company."
+    "blurb": "Clubhouse burned hot on hype, then vanished when attention moved. Your attention is worth more than a feed, spend it like a company."
    }
   ]
  },
@@ -1733,12 +1733,12 @@ window.TSB_ASK_DATA = [
    "can't say no",
    "overcommitted"
   ],
-  "answer": "Every yes to others is a no to yourself. The graceful no is a skill, not rudeness — and the people worth keeping respect it.",
+  "answer": "Every yes to others is a no to yourself. The graceful no is a skill, not rudeness, and the people worth keeping respect it.",
   "books": [
    {
     "id": "essentialism",
     "lesson": "Eliminate: The Courage of the Graceful No",
-    "blurb": "The no is graceful when it's clear: 'I can't do this — but here's who can.' Clarity is kindness."
+    "blurb": "The no is graceful when it's clear: 'I can't do this, but here's who can.' Clarity is kindness."
    },
    {
     "id": "courage-disliked",
@@ -1747,19 +1747,19 @@ window.TSB_ASK_DATA = [
    },
    {
     "id": "subtle-art",
-    "lesson": "The Importance of Saying No — and Memento Mori",
+    "lesson": "The Importance of Saying No, and Memento Mori",
     "blurb": "You have a limited number of weeks. Every yes you can't refuse is a week you didn't choose."
    },
    {
     "id": "four-thousand-weeks",
     "lesson": "Cosmic Insignificance Therapy: The Liberation of Not Mattering",
-    "blurb": "Your weeks are numbered. Saying no is not rejection — it's choosing what your weeks contain."
+    "blurb": "Your weeks are numbered. Saying no is not rejection, it's choosing what your weeks contain."
    }
   ],
   "graves": [
    {
     "id": "mc-hammer-broke",
-    "blurb": "MC Hammer couldn't say no to a 200-person entourage — and went from $33M to broke. The cost of every yes compounds."
+    "blurb": "MC Hammer couldn't say no to a 200-person entourage, and went from $33M to broke. The cost of every yes compounds."
    }
   ]
  },
@@ -1777,7 +1777,7 @@ window.TSB_ASK_DATA = [
    "break down",
    "depleted"
   ],
-  "answer": "Burnout isn't working too hard — it's recovery that never comes. Work in sprints, rest like an athlete, and protect the oscillation between push and recover.",
+  "answer": "Burnout isn't working too hard, it's recovery that never comes. Work in sprints, rest like an athlete, and protect the oscillation between push and recover.",
   "books": [
    {
     "id": "power-of-full-engagement",
@@ -1787,12 +1787,12 @@ window.TSB_ASK_DATA = [
    {
     "id": "essentialism",
     "lesson": "Execute: Buffers, Routines, and the Power of Small Wins",
-    "blurb": "Build buffers into your schedule — the unplanned gap is what saves you when everything hits at once."
+    "blurb": "Build buffers into your schedule, the unplanned gap is what saves you when everything hits at once."
    },
    {
     "id": "4-hour-workweek",
     "lesson": "Eliminate: 80/20 Plus Parkinson's Law",
-    "blurb": "Cut the 80% that produces 20%. Parkinson's Law: work expands to fill the time you give it — give it less."
+    "blurb": "Cut the 80% that produces 20%. Parkinson's Law: work expands to fill the time you give it, give it less."
    },
    {
     "id": "dopamine-nation",
@@ -1803,7 +1803,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "wecrashed-others",
-    "blurb": "WeWork sprinted at full speed for years with no recovery — and the whole machine collapsed. Momentum without rest is a crash waiting."
+    "blurb": "WeWork sprinted at full speed for years with no recovery, and the whole machine collapsed. Momentum without rest is a crash waiting."
    }
   ]
  },
@@ -1821,7 +1821,7 @@ window.TSB_ASK_DATA = [
    "friend nahi",
    "connection"
   ],
-  "answer": "Loneliness is a signal, not a sentence — it points at connection you need to build. Meaning, belonging and small regular contact are the medicine, not a big event.",
+  "answer": "Loneliness is a signal, not a sentence, it points at connection you need to build. Meaning, belonging and small regular contact are the medicine, not a big event.",
   "books": [
    {
     "id": "mans-search",
@@ -1831,7 +1831,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "leaders-eat-last",
     "lesson": "The Circle of Safety",
-    "blurb": "Humans need belonging like food. Find your circle — a group where you're safe — and show up regularly."
+    "blurb": "Humans need belonging like food. Find your circle, a group where you're safe, and show up regularly."
    },
    {
     "id": "let-them-theory",
@@ -1841,13 +1841,13 @@ window.TSB_ASK_DATA = [
    {
     "id": "courage-disliked",
     "lesson": "Community Feeling: From Self-Interest to Contribution",
-    "blurb": "The cure for isolation is contribution — feeling useful to others is the fastest bridge."
+    "blurb": "The cure for isolation is contribution, feeling useful to others is the fastest bridge."
    }
   ],
   "graves": [
    {
     "id": "hughes-isolation",
-    "blurb": "Howard Hughes had billions and zero connection. Loneliness can't be bought off — it has to be built."
+    "blurb": "Howard Hughes had billions and zero connection. Loneliness can't be bought off, it has to be built."
    }
   ]
  },
@@ -1867,7 +1867,7 @@ window.TSB_ASK_DATA = [
    "fomo",
    "compar"
   ],
-  "answer": "Comparison is a compass — it tells you what you actually want, then you put it down. Compare yourself to yesterday, and audit the story your feed is feeding you.",
+  "answer": "Comparison is a compass, it tells you what you actually want, then you put it down. Compare yourself to yesterday, and audit the story your feed is feeding you.",
   "books": [
    {
     "id": "let-them-theory",
@@ -1882,12 +1882,12 @@ window.TSB_ASK_DATA = [
    {
     "id": "psycho-cybernetics",
     "lesson": "The Self-Image: Your Life's Thermostat",
-    "blurb": "You steer toward the self-image you hold. Comparing breaks the thermostat — reset it to your own standard."
+    "blurb": "You steer toward the self-image you hold. Comparing breaks the thermostat, reset it to your own standard."
    },
    {
     "id": "subtle-art",
     "lesson": "Choose Better Values",
-    "blurb": "If your values are external (status, applause), comparison is eternal. Choose process values — they're never stolen."
+    "blurb": "If your values are external (status, applause), comparison is eternal. Choose process values, they're never stolen."
    }
   ],
   "graves": []
@@ -1913,17 +1913,17 @@ window.TSB_ASK_DATA = [
    {
     "id": "your-money-or-your-life",
     "lesson": "Track Every Rupee",
-    "blurb": "You can't fix money you refuse to look at. Track every rupee for 30 days — the leaks become visible."
+    "blurb": "You can't fix money you refuse to look at. Track every rupee for 30 days, the leaks become visible."
    },
    {
     "id": "rich-dad-poor-dad",
     "lesson": "Know the Difference: Assets vs. Liabilities",
-    "blurb": "The EMI car is a liability — it takes money out every month. Debt is buying liabilities with future income."
+    "blurb": "The EMI car is a liability, it takes money out every month. Debt is buying liabilities with future income."
    },
    {
     "id": "your-money-or-your-life",
     "lesson": "Frugality Is Elegant, Not Miserly",
-    "blurb": "Cut with joy, not misery — every expense you drop buys back hours of your life."
+    "blurb": "Cut with joy, not misery, every expense you drop buys back hours of your life."
    },
    {
     "id": "psychology-of-money",
@@ -1934,7 +1934,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "kingfisher-vijay",
-    "blurb": "Kingfisher borrowed to fly higher and higher until the debt itself grounded the airline. Leverage is a loan on your future — respect it."
+    "blurb": "Kingfisher borrowed to fly higher and higher until the debt itself grounded the airline. Leverage is a loan on your future, respect it."
    }
   ]
  },
@@ -1952,22 +1952,22 @@ window.TSB_ASK_DATA = [
    "first client",
    "freelancing"
   ],
-  "answer": "Clients come from a clear offer and direct outreach — not from waiting. Solve one painful problem for one specific person, then go talk to ten of them this week.",
+  "answer": "Clients come from a clear offer and direct outreach, not from waiting. Solve one painful problem for one specific person, then go talk to ten of them this week.",
   "books": [
    {
     "id": "100-dollar-startup",
     "lesson": "The $100 Start",
-    "blurb": "Start with the smallest offer you can sell this week — a skill + one customer beats a perfect plan."
+    "blurb": "Start with the smallest offer you can sell this week, a skill + one customer beats a perfect plan."
    },
    {
     "id": "100m-leads",
     "lesson": "Lead Magnets: Give Away the Good Stuff",
-    "blurb": "Give away the good stuff first — leads follow value, not pitches."
+    "blurb": "Give away the good stuff first, leads follow value, not pitches."
    },
    {
     "id": "personal-mba",
     "lesson": "The 4 Methods of Value Creation",
-    "blurb": "Create, improve, remove, or share — classify your service and sharpen the value you actually add."
+    "blurb": "Create, improve, remove, or share, classify your service and sharpen the value you actually add."
    },
    {
     "id": "psychology-of-selling",
@@ -1990,17 +1990,17 @@ window.TSB_ASK_DATA = [
    "morning habits",
    "jaldi utna"
   ],
-  "answer": "How you start the day sets how you live it. Win the first hour with movement, reflection and growth — before the world gets a vote.",
+  "answer": "How you start the day sets how you live it. Win the first hour with movement, reflection and growth, before the world gets a vote.",
   "books": [
    {
     "id": "miracle-morning",
     "lesson": "SAVERS: The Six Practices",
-    "blurb": "Silence, Affirmations, Visualization, Exercise, Reading, Scribing — even one minute each changes the day."
+    "blurb": "Silence, Affirmations, Visualization, Exercise, Reading, Scribing, even one minute each changes the day."
    },
    {
     "id": "5am-club",
     "lesson": "The 20/20/20 Formula",
-    "blurb": "20 minutes move, 20 minutes reflect, 20 minutes grow — the victory hour that decides the day."
+    "blurb": "20 minutes move, 20 minutes reflect, 20 minutes grow, the victory hour that decides the day."
    },
    {
     "id": "atomic-habits",
@@ -2010,7 +2010,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "make-time",
     "lesson": "Energize",
-    "blurb": "Your morning energy is a choice — protect sleep, move your body, and your whole day compounds."
+    "blurb": "Your morning energy is a choice, protect sleep, move your body, and your whole day compounds."
    }
   ],
   "graves": []
@@ -2030,7 +2030,7 @@ window.TSB_ASK_DATA = [
    "jiu jitna",
    "risk lena"
   ],
-  "answer": "Smart risk is a barbell: extreme safety on one side, wild bets on the other, nothing in the middle. Never bet the farm — bet a slice you can lose.",
+  "answer": "Smart risk is a barbell: extreme safety on one side, wild bets on the other, nothing in the middle. Never bet the farm, bet a slice you can lose.",
   "books": [
    {
     "id": "antifragile",
@@ -2045,12 +2045,12 @@ window.TSB_ASK_DATA = [
    {
     "id": "thinking-big",
     "lesson": "Action Cures Fear",
-    "blurb": "Confidence is built by doing. The first risky step is the hardest — and the most valuable."
+    "blurb": "Confidence is built by doing. The first risky step is the hardest, and the most valuable."
    },
    {
     "id": "fail-at-everything",
     "lesson": "Energy, Luck Surface, and Failing Forward",
-    "blurb": "Risk more, fail faster, learn louder — every failure is tuition for the next bet."
+    "blurb": "Risk more, fail faster, learn louder, every failure is tuition for the next bet."
    }
   ],
   "graves": [
@@ -2078,7 +2078,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "compound-effect",
     "lesson": "Big Mo: Routines, Rhythm, and Consistency",
-    "blurb": "Momentum is built by rhythm — same action, same time, every day."
+    "blurb": "Momentum is built by rhythm, same action, same time, every day."
    },
    {
     "id": "slight-edge",
@@ -2087,8 +2087,8 @@ window.TSB_ASK_DATA = [
    },
    {
     "id": "atomic-habits",
-    "lesson": "Make It Satisfying — Never Miss Twice",
-    "blurb": "One miss is an accident; two is a new habit. The streak is the reward — protect it."
+    "lesson": "Make It Satisfying, Never Miss Twice",
+    "blurb": "One miss is an accident; two is a new habit. The streak is the reward, protect it."
    },
    {
     "id": "psychology-of-money",
@@ -2112,7 +2112,7 @@ window.TSB_ASK_DATA = [
    "creative block",
    "blank page"
   ],
-  "answer": "Writer's block is resistance, not a shortage of talent. Write a shitty first draft with the door closed, and ship it — the muse rewards motion, not waiting.",
+  "answer": "Writer's block is resistance, not a shortage of talent. Write a shitty first draft with the door closed, and ship it, the muse rewards motion, not waiting.",
   "books": [
    {
     "id": "war-of-art",
@@ -2122,7 +2122,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "bird-by-bird",
     "lesson": "Shitty First Drafts",
-    "blurb": "Nobody writes well first time. Get the terrible version out — you can't fix what doesn't exist."
+    "blurb": "Nobody writes well first time. Get the terrible version out, you can't fix what doesn't exist."
    },
    {
     "id": "on-writing",
@@ -2155,12 +2155,12 @@ window.TSB_ASK_DATA = [
    "help chahiye",
    "support"
   ],
-  "answer": "Asking for help isn't weakness — it's how the strongest people scale. The question isn't 'how do I do this?' — it's 'WHO can do this?'",
+  "answer": "Asking for help isn't weakness, it's how the strongest people scale. The question isn't 'how do I do this?', it's 'WHO can do this?'",
   "books": [
    {
     "id": "who-not-how",
     "lesson": "The How Trap: Your Default Question Is a Cage",
-    "blurb": "Swap 'how do I?' for 'who can?' — the question that unlocks leverage."
+    "blurb": "Swap 'how do I?' for 'who can?', the question that unlocks leverage."
    },
    {
     "id": "daring-greatly",
@@ -2181,7 +2181,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "boeing-mcdonnell",
-    "blurb": "Boeing engineers stopped speaking up — and planes fell. The failure to ask for help costs more than the help ever would."
+    "blurb": "Boeing engineers stopped speaking up, and planes fell. The failure to ask for help costs more than the help ever would."
    }
   ]
  },
@@ -2201,12 +2201,12 @@ window.TSB_ASK_DATA = [
    "mental health",
    "therapy"
   ],
-  "answer": "Trauma lives in the body, not just the mind — so healing must include the body: safety, connection, breath and movement. Your brain can rewire at any age; the alarm can learn the danger is over.",
+  "answer": "Trauma lives in the body, not just the mind, so healing must include the body: safety, connection, breath and movement. Your brain can rewire at any age; the alarm can learn the danger is over.",
   "books": [
    {
     "id": "body-keeps-score",
     "lesson": "Trauma Lives in the Body",
-    "blurb": "Trauma is a physical imprint — the body keeps reliving danger the mind believes is over."
+    "blurb": "Trauma is a physical imprint, the body keeps reliving danger the mind believes is over."
    },
    {
     "id": "body-keeps-score",
@@ -2215,19 +2215,19 @@ window.TSB_ASK_DATA = [
    },
    {
     "id": "body-keeps-score",
-    "lesson": "You Can Rewire the Brain — At Any Age",
+    "lesson": "You Can Rewire the Brain, At Any Age",
     "blurb": "Neuroplasticity means the brain can learn safety even after decades of terror."
    },
    {
     "id": "mans-search",
     "lesson": "The Last Human Freedom",
-    "blurb": "You can't always choose what happened — you can always choose your response to it."
+    "blurb": "You can't always choose what happened, you can always choose your response to it."
    }
   ],
   "graves": [
    {
     "id": "hughes-isolation",
-    "blurb": "Howard Hughes had everything and healed nothing — isolation amplifies every wound. Connection is the antidote."
+    "blurb": "Howard Hughes had everything and healed nothing, isolation amplifies every wound. Connection is the antidote."
    }
   ]
  },
@@ -2243,12 +2243,12 @@ window.TSB_ASK_DATA = [
    "guess",
    "confident decision"
   ],
-  "answer": "Life is poker, not chess — luck is always in the mix. Judge decisions by the process, not the outcome: attach a probability, widen your 'could', and update when new evidence arrives.",
+  "answer": "Life is poker, not chess, luck is always in the mix. Judge decisions by the process, not the outcome: attach a probability, widen your 'could', and update when new evidence arrives.",
   "books": [
    {
     "id": "thinking-in-bets",
     "lesson": "Life Is Poker, Not Chess",
-    "blurb": "Every decision is a bet on an uncertain future — stop needing to be right, start wanting to be accurate."
+    "blurb": "Every decision is a bet on an uncertain future, stop needing to be right, start wanting to be accurate."
    },
    {
     "id": "thinking-in-bets",
@@ -2257,13 +2257,13 @@ window.TSB_ASK_DATA = [
    },
    {
     "id": "thinking-in-bets",
-    "lesson": "Widen Your 'Could' — Think in Frequencies",
-    "blurb": "Replace 'this WILL work' with 'this works 70% of the time' — probabilities keep you open to evidence."
+    "lesson": "Widen Your 'Could', Think in Frequencies",
+    "blurb": "Replace 'this WILL work' with 'this works 70% of the time', probabilities keep you open to evidence."
    },
    {
     "id": "art-of-strategy",
     "lesson": "Think Two Moves Ahead: Backward Induction",
-    "blurb": "Start from the end you want and reason backward — the person who thinks ahead beats the reactor."
+    "blurb": "Start from the end you want and reason backward, the person who thinks ahead beats the reactor."
    }
   ],
   "graves": [
@@ -2285,17 +2285,17 @@ window.TSB_ASK_DATA = [
    "overconfident",
    "irrational"
   ],
-  "answer": "Your brain cuts corners — survivorship, sunk cost, confirmation, social proof. The fix is mechanical: check base rates, kill sunk costs, hunt disconfirming evidence, and never follow the herd.",
+  "answer": "Your brain cuts corners, survivorship, sunk cost, confirmation, social proof. The fix is mechanical: check base rates, kill sunk costs, hunt disconfirming evidence, and never follow the herd.",
   "books": [
    {
     "id": "art-of-thinking-clearly",
     "lesson": "Survivorship Bias: The Graveyard Doesn't Give Interviews",
-    "blurb": "You only see the winners — the graveyard of equal attempts is invisible. Check the base rate."
+    "blurb": "You only see the winners, the graveyard of equal attempts is invisible. Check the base rate."
    },
    {
     "id": "art-of-thinking-clearly",
-    "lesson": "Sunk Cost: The Money Is Gone — Stop Throwing More",
-    "blurb": "Past investment is gone. Only the future matters — walk away from failing things you'd never start today."
+    "lesson": "Sunk Cost: The Money Is Gone, Stop Throwing More",
+    "blurb": "Past investment is gone. Only the future matters, walk away from failing things you'd never start today."
    },
    {
     "id": "art-of-thinking-clearly",
@@ -2311,7 +2311,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "madoff-ponzi",
-    "blurb": "Madoff fooled the smartest investors for decades — because nobody checked the math. Your own mind is the first Madoff."
+    "blurb": "Madoff fooled the smartest investors for decades, because nobody checked the math. Your own mind is the first Madoff."
    }
   ]
  },
@@ -2327,7 +2327,7 @@ window.TSB_ASK_DATA = [
    "moral",
    "understand people"
   ],
-  "answer": "People aren't stupid — they run on different moral taste buds. Intuitions come first, reasoning second. Understand the other side's foundations and disagreement stops being war.",
+  "answer": "People aren't stupid, they run on different moral taste buds. Intuitions come first, reasoning second. Understand the other side's foundations and disagreement stops being war.",
   "books": [
    {
     "id": "righteous-mind",
@@ -2337,23 +2337,23 @@ window.TSB_ASK_DATA = [
    {
     "id": "righteous-mind",
     "lesson": "The Six Moral Taste Buds",
-    "blurb": "Care, fairness, loyalty, authority, sanctity, liberty — different people weight them differently. That's the whole disagreement."
+    "blurb": "Care, fairness, loyalty, authority, sanctity, liberty, different people weight them differently. That's the whole disagreement."
    },
    {
     "id": "righteous-mind",
     "lesson": "Can't We All Disagree More Constructively?",
-    "blurb": "Mixed groups solve problems better — disagreement done well is a superpower."
+    "blurb": "Mixed groups solve problems better, disagreement done well is a superpower."
    },
    {
     "id": "surrounded-by-idiots",
     "lesson": "",
-    "blurb": "Learn the four behavior types — red, yellow, green, blue — and you'll stop calling people idiots."
+    "blurb": "Learn the four behavior types, red, yellow, green, blue, and you'll stop calling people idiots."
    }
   ],
   "graves": [
    {
     "id": "boeing-mcdonnell",
-    "blurb": "Boeing's engineers stopped disagreeing with management — and two planes fell. Silence is the most expensive agreement."
+    "blurb": "Boeing's engineers stopped disagreeing with management, and two planes fell. Silence is the most expensive agreement."
    }
   ]
  },
@@ -2371,7 +2371,7 @@ window.TSB_ASK_DATA = [
    "teenager",
    "bachcha"
   ],
-  "answer": "The phone-based childhood is the greatest uncontrolled experiment in history — and the data is bad. Delay smartphones, make schools phone-free, and restore unsupervised play.",
+  "answer": "The phone-based childhood is the greatest uncontrolled experiment in history, and the data is bad. Delay smartphones, make schools phone-free, and restore unsupervised play.",
   "books": [
    {
     "id": "anxious-generation",
@@ -2434,14 +2434,14 @@ window.TSB_ASK_DATA = [
    },
    {
     "id": "stolen-focus",
-    "lesson": "Reclaim Boredom — It's the Incubator",
+    "lesson": "Reclaim Boredom, It's the Incubator",
     "blurb": "Boredom is where ideas incubate. The phone kills boredom and therefore kills incubation."
    }
   ],
   "graves": [
    {
     "id": "myspace-fall",
-    "blurb": "MySpace died when it stopped caring about users. Your feed doesn't care about you either — quit it like you'd quit a sinking platform."
+    "blurb": "MySpace died when it stopped caring about users. Your feed doesn't care about you either, quit it like you'd quit a sinking platform."
    }
   ]
  },
@@ -2476,7 +2476,7 @@ window.TSB_ASK_DATA = [
    },
    {
     "id": "high-output-management",
-    "lesson": "Meetings Are Where Work Happens — Run Them Right",
+    "lesson": "Meetings Are Where Work Happens, Run Them Right",
     "blurb": "A meeting without a decision is a waste of everyone's leverage."
    },
    {
@@ -2488,7 +2488,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "enron-culture",
-    "blurb": "Enron hired the smartest people and rewarded the worst behavior. Culture eats strategy — manage the culture."
+    "blurb": "Enron hired the smartest people and rewarded the worst behavior. Culture eats strategy, manage the culture."
    }
   ]
  },
@@ -2504,7 +2504,7 @@ window.TSB_ASK_DATA = [
    "tell someone",
    "correct someone"
   ],
-  "answer": "Praise in public, criticize in private — specifically, kindly, immediately. Radical candor means caring personally AND challenging directly; anything less is ruinous empathy.",
+  "answer": "Praise in public, criticize in private, specifically, kindly, immediately. Radical candor means caring personally AND challenging directly; anything less is ruinous empathy.",
   "books": [
    {
     "id": "radical-candor",
@@ -2519,18 +2519,18 @@ window.TSB_ASK_DATA = [
    {
     "id": "no-rules-rules",
     "lesson": "Radical Candor: Feedback Is Love",
-    "blurb": "At Netflix, hiding problems to be polite is treated as disloyalty. Feedback is a gift — give it daily."
+    "blurb": "At Netflix, hiding problems to be polite is treated as disloyalty. Feedback is a gift, give it daily."
    },
    {
     "id": "radical-candor",
     "lesson": "The Team Culture: Make Feedback a Habit",
-    "blurb": "Run plus/delta debriefs after every meeting — feedback stops being scary when it's normal."
+    "blurb": "Run plus/delta debriefs after every meeting, feedback stops being scary when it's normal."
    }
   ],
   "graves": [
    {
     "id": "boeing-mcdonnell",
-    "blurb": "Boeing's culture made honest feedback impossible — and planes fell. The feedback you avoid is the cost you pay."
+    "blurb": "Boeing's culture made honest feedback impossible, and planes fell. The feedback you avoid is the cost you pay."
    }
   ]
  },
@@ -2545,7 +2545,7 @@ window.TSB_ASK_DATA = [
    "empower team",
    "unlock team"
   ],
-  "answer": "The same team performs at 2x or 0.5x depending on the leader. Ask questions instead of giving answers, debate ideas hard, and hand over whole problems — not chores.",
+  "answer": "The same team performs at 2x or 0.5x depending on the leader. Ask questions instead of giving answers, debate ideas hard, and hand over whole problems, not chores.",
   "books": [
    {
     "id": "multipliers",
@@ -2555,7 +2555,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "multipliers",
     "lesson": "Ask Big Questions, Don't Give Big Answers",
-    "blurb": "People feel smarter around leaders who ask — because they're the ones doing the thinking."
+    "blurb": "People feel smarter around leaders who ask, because they're the ones doing the thinking."
    },
    {
     "id": "multipliers",
@@ -2571,7 +2571,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "ge-immelt",
-    "blurb": "GE was the world's most valuable company — then financial engineering replaced real leadership and the empire decayed."
+    "blurb": "GE was the world's most valuable company, then financial engineering replaced real leadership and the empire decayed."
    }
   ]
  },
@@ -2586,12 +2586,12 @@ window.TSB_ASK_DATA = [
    "business survive",
    "company built"
   ],
-  "answer": "Visionary companies are clock-builders: core ideology that never changes, BHAGs that stretch them, cult-like cultures, and evolution through experiments — profit is a means, not the mission.",
+  "answer": "Visionary companies are clock-builders: core ideology that never changes, BHAGs that stretch them, cult-like cultures, and evolution through experiments, profit is a means, not the mission.",
   "books": [
    {
     "id": "built-to-last",
     "lesson": "Clock-Building, Not Time-Telling",
-    "blurb": "Build an organization that thrives without you — the clock, not the time-teller."
+    "blurb": "Build an organization that thrives without you, the clock, not the time-teller."
    },
    {
     "id": "built-to-last",
@@ -2601,22 +2601,22 @@ window.TSB_ASK_DATA = [
    {
     "id": "built-to-last",
     "lesson": "BHAGs: Big Hairy Audacious Goals",
-    "blurb": "Set goals so big they're slightly scary — they focus the whole organization for a decade."
+    "blurb": "Set goals so big they're slightly scary, they focus the whole organization for a decade."
    },
    {
     "id": "great-by-choice",
     "lesson": "The 20 Mile March: Discipline Beats Talent",
-    "blurb": "Consistent progress in good times AND bad — the hallmark of companies that survive chaos."
+    "blurb": "Consistent progress in good times AND bad, the hallmark of companies that survive chaos."
    }
   ],
   "graves": [
    {
     "id": "kodak-digital",
-    "blurb": "Kodak lasted 130 years and died in a decade — it had the ideology but lost the evolution. Never stop experimenting."
+    "blurb": "Kodak lasted 130 years and died in a decade, it had the ideology but lost the evolution. Never stop experimenting."
    },
    {
     "id": "blockbuster-netflix",
-    "blurb": "Blockbuster had years and $50 million to buy Netflix — and wasted both. Clock-builders keep building."
+    "blurb": "Blockbuster had years and $50 million to buy Netflix, and wasted both. Clock-builders keep building."
    }
   ]
  },
@@ -2633,12 +2633,12 @@ window.TSB_ASK_DATA = [
    "market crash",
    "tough times"
   ],
-  "answer": "You can't predict chaos — you can prepare for it. March 20 miles in every weather, fire cheap bullets before big cannonballs, keep buffers, and hold a simple recipe that never changes.",
+  "answer": "You can't predict chaos, you can prepare for it. March 20 miles in every weather, fire cheap bullets before big cannonballs, keep buffers, and hold a simple recipe that never changes.",
   "books": [
    {
     "id": "great-by-choice",
     "lesson": "The 20 Mile March: Discipline Beats Talent",
-    "blurb": "A performance floor AND ceiling in good times and bad — consistency beats sprinting."
+    "blurb": "A performance floor AND ceiling in good times and bad, consistency beats sprinting."
    },
    {
     "id": "great-by-choice",
@@ -2648,12 +2648,12 @@ window.TSB_ASK_DATA = [
    {
     "id": "great-by-choice",
     "lesson": "Productive Paranoia: Prepare for the Unpredictable",
-    "blurb": "Keep reserves and run what-if drills — the calm in chaos is manufactured beforehand."
+    "blurb": "Keep reserves and run what-if drills, the calm in chaos is manufactured beforehand."
    },
    {
     "id": "antifragile",
     "lesson": "The Barbell",
-    "blurb": "Extreme safety + wild bets, nothing in the middle — you can't lose everything and might win big."
+    "blurb": "Extreme safety + wild bets, nothing in the middle, you can't lose everything and might win big."
    }
   ],
   "graves": [
@@ -2675,12 +2675,12 @@ window.TSB_ASK_DATA = [
    "which stock",
    "equity picks"
   ],
-  "answer": "Start from what you know — the brands you use daily. Classify the company, write a two-minute story, check price vs growth, and know your sell signal BEFORE you buy.",
+  "answer": "Start from what you know, the brands you use daily. Classify the company, write a two-minute story, check price vs growth, and know your sell signal BEFORE you buy.",
   "books": [
    {
     "id": "one-up-wall-street",
     "lesson": "Buy What You Know",
-    "blurb": "You meet winners before Wall Street does — at the mall, the clinic, your own kitchen."
+    "blurb": "You meet winners before Wall Street does, at the mall, the clinic, your own kitchen."
    },
    {
     "id": "one-up-wall-street",
@@ -2690,7 +2690,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "one-up-wall-street",
     "lesson": "The Two-Minute Drill and the Earnings Line",
-    "blurb": "If you can't explain why you own it in two minutes, you don't own it — you gamble on it."
+    "blurb": "If you can't explain why you own it in two minutes, you don't own it, you gamble on it."
    },
    {
     "id": "one-up-wall-street",
@@ -2717,33 +2717,33 @@ window.TSB_ASK_DATA = [
    "money plan",
    "become wealthy"
   ],
-  "answer": "The legends agree: allocation drives returns, fees are the killer, behavior beats IQ. Save aggressively, cut every fee, diversify into a simple portfolio, automate, and check quarterly — not daily.",
+  "answer": "The legends agree: allocation drives returns, fees are the killer, behavior beats IQ. Save aggressively, cut every fee, diversify into a simple portfolio, automate, and check quarterly, not daily.",
   "books": [
    {
     "id": "money-master-game",
-    "lesson": "The Financial Game Is Rigged — So Change the Rules",
+    "lesson": "The Financial Game Is Rigged, So Change the Rules",
     "blurb": "Index funds + long holding beats the professionals at their own game by not playing it."
    },
    {
     "id": "money-master-game",
     "lesson": "The Magic of Compounding: Time Is the Force",
-    "blurb": "Start early, save monthly, touch nothing — the first decade is the magic one."
+    "blurb": "Start early, save monthly, touch nothing, the first decade is the magic one."
    },
    {
     "id": "money-master-game",
     "lesson": "The Core Four: Diversify Like the Legends",
-    "blurb": "Stocks, international, bonds, buffer — rebalanced yearly. The only free lunch."
+    "blurb": "Stocks, international, bonds, buffer, rebalanced yearly. The only free lunch."
    },
    {
     "id": "money-master-game",
     "lesson": "The 7-Step Plan: Simple Rules, Massive Results",
-    "blurb": "Save 10%, cut fees, diversify, rebalance, automate — boring beats brilliant."
+    "blurb": "Save 10%, cut fees, diversify, rebalance, automate, boring beats brilliant."
    }
   ],
   "graves": [
    {
     "id": "mc-hammer-broke",
-    "blurb": "MC Hammer earned $33M and kept nothing. The plan isn't how much you make — it's how much you keep."
+    "blurb": "MC Hammer earned $33M and kept nothing. The plan isn't how much you make, it's how much you keep."
    }
   ]
  },
@@ -2774,18 +2774,18 @@ window.TSB_ASK_DATA = [
    {
     "id": "science-of-getting-rich",
     "lesson": "The Advancing Life: Grow or Stagnate",
-    "blurb": "Give more use-value than you take — wealth is the byproduct of an expanding life."
+    "blurb": "Give more use-value than you take, wealth is the byproduct of an expanding life."
    },
    {
     "id": "think-and-grow-rich",
     "lesson": "",
-    "blurb": "Desire, faith, and a definite plan — the original formula for turning thoughts into riches."
+    "blurb": "Desire, faith, and a definite plan, the original formula for turning thoughts into riches."
    }
   ],
   "graves": [
    {
     "id": "mc-hammer-broke",
-    "blurb": "Hammer had the money and lost the mindset — income without a wealth system is just a higher burn rate."
+    "blurb": "Hammer had the money and lost the mindset, income without a wealth system is just a higher burn rate."
    }
   ]
  },
@@ -2801,21 +2801,21 @@ window.TSB_ASK_DATA = [
    "technology future",
    "machine learning"
   ],
-  "answer": "The old agenda — famine, plague, war — is mostly won. The new frontier is data and algorithms that may know you better than you know yourself. Your edge: understand your own mind, keep your data sovereign, and hold one fully human skill.",
+  "answer": "The old agenda, famine, plague, war, is mostly won. The new frontier is data and algorithms that may know you better than you know yourself. Your edge: understand your own mind, keep your data sovereign, and hold one fully human skill.",
   "books": [
    {
     "id": "homo-deus",
     "lesson": "The Algorithm Knows You Better Than You Do",
-    "blurb": "Authority is shifting from human experience to data processing. Know thyself — before the algorithm does."
+    "blurb": "Authority is shifting from human experience to data processing. Know thyself, before the algorithm does."
    },
    {
     "id": "homo-deus",
     "lesson": "Dataism: The New Religion",
-    "blurb": "Information flow becomes the supreme value — and your data becomes your contribution."
+    "blurb": "Information flow becomes the supreme value, and your data becomes your contribution."
    },
    {
     "id": "homo-deus",
-    "lesson": "Meaning Is a Story — So Choose It Wisely",
+    "lesson": "Meaning Is a Story, So Choose It Wisely",
     "blurb": "Humans run on shared stories. Since meaning is a story, you can edit yours."
    },
    {
@@ -2827,7 +2827,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "blockbuster-netflix",
-    "blurb": "Blockbuster ignored the future until the future ignored it. The question isn't whether AI changes things — it's whether you prepare."
+    "blurb": "Blockbuster ignored the future until the future ignored it. The question isn't whether AI changes things, it's whether you prepare."
    }
   ]
  },
@@ -2842,7 +2842,7 @@ window.TSB_ASK_DATA = [
    "defensive",
    "control freak"
   ],
-  "answer": "The ego is a fiction you defend — it needs to be right, special and in control. Watch it without believing it: catch the complaint, drop the need to win, and let presence replace performance.",
+  "answer": "The ego is a fiction you defend, it needs to be right, special and in control. Watch it without believing it: catch the complaint, drop the need to win, and let presence replace performance.",
   "books": [
    {
     "id": "new-earth",
@@ -2852,7 +2852,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "new-earth",
     "lesson": "Complaining: The Ego's Favorite Food",
-    "blurb": "Every complaint says 'reality should be different'. Try a no-complaint hour — the ego loses its meal."
+    "blurb": "Every complaint says 'reality should be different'. Try a no-complaint hour, the ego loses its meal."
    },
    {
     "id": "new-earth",
@@ -2868,7 +2868,7 @@ window.TSB_ASK_DATA = [
   "graves": [
    {
     "id": "wework-neumann",
-    "blurb": "WeWork's founder built a $47B valuation on ego — and lost control in weeks. Ego inflates the balloon; reality pops it."
+    "blurb": "WeWork's founder built a $47B valuation on ego, and lost control in weeks. Ego inflates the balloon; reality pops it."
    }
   ]
  },
@@ -2887,17 +2887,17 @@ window.TSB_ASK_DATA = [
    "daily habit",
    "habit loop"
   ],
-  "answer": "Habits stick when you shrink the start, attach them to an existing anchor, and make the reward immediate. Identity beats willpower: every rep is a vote for who you are becoming. Never miss twice — one miss is an accident, two is a new habit.",
+  "answer": "Habits stick when you shrink the start, attach them to an existing anchor, and make the reward immediate. Identity beats willpower: every rep is a vote for who you are becoming. Never miss twice, one miss is an accident, two is a new habit.",
   "books": [
    {
     "id": "atomic-habits",
-    "lesson": "The Power of 1% — Habits Compound",
-    "blurb": "1% better daily compounds into 37x in a year — the system, not the goal, is the engine."
+    "lesson": "The Power of 1%, Habits Compound",
+    "blurb": "1% better daily compounds into 37x in a year, the system, not the goal, is the engine."
    },
    {
     "id": "tiny-habits",
     "lesson": "Start Absurdly Small",
-    "blurb": "Shrink the habit until it takes under 2 minutes — momentum does the rest."
+    "blurb": "Shrink the habit until it takes under 2 minutes, momentum does the rest."
    },
    {
     "id": "power-of-habit",
@@ -2919,17 +2919,17 @@ window.TSB_ASK_DATA = [
    "read daily",
    "finish books"
   ],
-  "answer": "Start with 5 pages a day, not 50 — the streak matters more than the session. Keep a book where you usually scroll. And summaries count: finishing one small read builds the identity of a reader faster than abandoning a big one.",
+  "answer": "Start with 5 pages a day, not 50, the streak matters more than the session. Keep a book where you usually scroll. And summaries count: finishing one small read builds the identity of a reader faster than abandoning a big one.",
   "books": [
    {
     "id": "atomic-habits",
-    "lesson": "Make It Easy — The 2-Minute Rule",
-    "blurb": "Read one page to start — the one page always becomes ten."
+    "lesson": "Make It Easy, The 2-Minute Rule",
+    "blurb": "Read one page to start, the one page always becomes ten."
    },
    {
     "id": "deep-work",
     "lesson": "Embrace Boredom",
-    "blurb": "Train your attention like a muscle — 15 minutes of focused reading daily."
+    "blurb": "Train your attention like a muscle, 15 minutes of focused reading daily."
    },
    {
     "id": "slight-edge",
@@ -2956,7 +2956,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "how-to-win-friends",
     "lesson": "Give Honest, Sincere Appreciation",
-    "blurb": "Make the interviewer feel seen — people hire people they like."
+    "blurb": "Make the interviewer feel seen, people hire people they like."
    },
    {
     "id": "presence-cuddy",
@@ -2983,7 +2983,7 @@ window.TSB_ASK_DATA = [
    "zero budget",
    "business kya karu"
   ],
-  "answer": "Start with a service, not a product — your skill is the only inventory you already own. Find one paying customer before building anything. Revenue is validation; funding is optional. The $100 startup is a real category, not a slogan.",
+  "answer": "Start with a service, not a product, your skill is the only inventory you already own. Find one paying customer before building anything. Revenue is validation; funding is optional. The $100 startup is a real category, not a slogan.",
   "books": [
    {
     "id": "100-dollar-startup",
@@ -2993,7 +2993,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "lean-startup",
     "lesson": "The MVP",
-    "blurb": "Ship the smallest thing someone will pay for — learn from real use, not theory."
+    "blurb": "Ship the smallest thing someone will pay for, learn from real use, not theory."
    },
    {
     "id": "rework",
@@ -3015,7 +3015,7 @@ window.TSB_ASK_DATA = [
    "rejection pain",
    "deal rejection"
   ],
-  "answer": "Rejection is data about fit, not a verdict on your worth. Separate the two: your effort was real, their 'no' was a match problem. Process the sting for a day, extract one lesson, and re-enter with a better pitch — persistence plus adjustment beats talent plus pride.",
+  "answer": "Rejection is data about fit, not a verdict on your worth. Separate the two: your effort was real, their 'no' was a match problem. Process the sting for a day, extract one lesson, and re-enter with a better pitch, persistence plus adjustment beats talent plus pride.",
   "books": [
    {
     "id": "subtle-art",
@@ -3046,22 +3046,22 @@ window.TSB_ASK_DATA = [
    "self belief",
    "low confidence"
   ],
-  "answer": "Confidence is built from evidence, not affirmations. Keep small promises to yourself, stack visible wins, and rehearse the uncomfortable thing until it's boring. The person who has done the thing 50 times doesn't need to feel confident — they know.",
+  "answer": "Confidence is built from evidence, not affirmations. Keep small promises to yourself, stack visible wins, and rehearse the uncomfortable thing until it's boring. The person who has done the thing 50 times doesn't need to feel confident, they know.",
   "books": [
    {
     "id": "psycho-cybernetics",
     "lesson": "Self-Image Psychology",
-    "blurb": "Your brain steers toward the image it holds — update the image with evidence."
+    "blurb": "Your brain steers toward the image it holds, update the image with evidence."
    },
    {
     "id": "5-second-rule",
     "lesson": "Countdown to Action",
-    "blurb": "Move before the fear finishes its argument — action is the confidence machine."
+    "blurb": "Move before the fear finishes its argument, action is the confidence machine."
    },
    {
     "id": "presence-cuddy",
     "lesson": "Fake It Till You Become It",
-    "blurb": "Posture and small wins rewire how you're perceived — and how you perceive yourself."
+    "blurb": "Posture and small wins rewire how you're perceived, and how you perceive yourself."
    }
   ]
  },
@@ -3078,7 +3078,7 @@ window.TSB_ASK_DATA = [
    "dhyan",
    "attention span"
   ],
-  "answer": "Focus is environmental before it's mental. Phone in another room, one tab open, 45-minute blocks with a visible timer. Distraction is a cue problem, not a willpower problem — remove the cue and the craving dies. Train the muscle daily; it grows like any other.",
+  "answer": "Focus is environmental before it's mental. Phone in another room, one tab open, 45-minute blocks with a visible timer. Distraction is a cue problem, not a willpower problem, remove the cue and the craving dies. Train the muscle daily; it grows like any other.",
   "books": [
    {
     "id": "deep-work",
@@ -3088,7 +3088,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "indistractable",
     "lesson": "Master Internal Triggers",
-    "blurb": "Distraction is usually escape from discomfort — name the feeling, not the app."
+    "blurb": "Distraction is usually escape from discomfort, name the feeling, not the app."
    },
    {
     "id": "hyperfocus",
@@ -3110,17 +3110,17 @@ window.TSB_ASK_DATA = [
    "saving salary",
    "finances"
   ],
-  "answer": "Pay yourself first — automate a fixed percentage out of every income before spending. Track where money goes for a month; awareness alone cuts waste. Build a 3-6 month emergency fund before any investing. Boring beats brilliant.",
+  "answer": "Pay yourself first, automate a fixed percentage out of every income before spending. Track where money goes for a month; awareness alone cuts waste. Build a 3-6 month emergency fund before any investing. Boring beats brilliant.",
   "books": [
    {
     "id": "iwt-rich",
     "lesson": "Automate Your Finances",
-    "blurb": "Set the system once — decisions made in advance beat decisions made in the moment."
+    "blurb": "Set the system once, decisions made in advance beat decisions made in the moment."
    },
    {
     "id": "richest-man-babylon",
     "lesson": "Pay Yourself First",
-    "blurb": "Save at least 10% before you pay anyone else — including yourself."
+    "blurb": "Save at least 10% before you pay anyone else, including yourself."
    },
    {
     "id": "psychology-of-money",
@@ -3142,17 +3142,17 @@ window.TSB_ASK_DATA = [
    "english seekhna",
    "angrezi"
   ],
-  "answer": "English improves with input and reps, not rules. Read something you enjoy daily, listen to content with subtitles, and speak out loud — even to yourself. Recording yourself weekly shows progress nobody else can see. Consistency beats intensity: 15 minutes daily beats 3 hours on Sunday.",
+  "answer": "English improves with input and reps, not rules. Read something you enjoy daily, listen to content with subtitles, and speak out loud, even to yourself. Recording yourself weekly shows progress nobody else can see. Consistency beats intensity: 15 minutes daily beats 3 hours on Sunday.",
   "books": [
    {
     "id": "talk-like-ted",
     "lesson": "Speak in Stories",
-    "blurb": "Stories are how humans remember — structure your speech like a narrative."
+    "blurb": "Stories are how humans remember, structure your speech like a narrative."
    },
    {
     "id": "show-your-work",
     "lesson": "Share Your Process",
-    "blurb": "Write daily, even badly — the volume builds the voice."
+    "blurb": "Write daily, even badly, the volume builds the voice."
    },
    {
     "id": "how-to-talk",
@@ -3179,17 +3179,17 @@ window.TSB_ASK_DATA = [
    {
     "id": "leaders-eat-last",
     "lesson": "Leaders Sacrifice First",
-    "blurb": "The leader's job is the team's safety — eat last, literally and figuratively."
+    "blurb": "The leader's job is the team's safety, eat last, literally and figuratively."
    },
    {
     "id": "extreme-ownership",
     "lesson": "Own Everything",
-    "blurb": "Every failure is yours to own — blame is a tax on trust."
+    "blurb": "Every failure is yours to own, blame is a tax on trust."
    },
    {
     "id": "high-output-management",
     "lesson": "Output Is the Metric",
-    "blurb": "Manage by results, not activity — the output of your org is your output."
+    "blurb": "Manage by results, not activity, the output of your org is your output."
    }
   ]
  },
@@ -3206,12 +3206,12 @@ window.TSB_ASK_DATA = [
    "criticism se",
    "criticise"
   ],
-  "answer": "Sort criticism into two buckets: information and noise. Information — even harsh — is a gift that shows you a blind spot. Noise is the critic's problem, not your data. Ask one question to every critic: 'What would you do differently?' The useful ones will tell you; the rest will silence themselves.",
+  "answer": "Sort criticism into two buckets: information and noise. Information, even harsh, is a gift that shows you a blind spot. Noise is the critic's problem, not your data. Ask one question to every critic: 'What would you do differently?' The useful ones will tell you; the rest will silence themselves.",
   "books": [
    {
     "id": "radical-candor",
     "lesson": "Care Personally, Challenge Directly",
-    "blurb": "Feedback is a relationship act — the care makes the challenge bearable."
+    "blurb": "Feedback is a relationship act, the care makes the challenge bearable."
    },
    {
     "id": "ego-is-enemy",
@@ -3221,7 +3221,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "thinking-in-bets",
     "lesson": "Separate Outcome From Decision",
-    "blurb": "Criticism of results is not criticism of judgment — grade the process, not just the score."
+    "blurb": "Criticism of results is not criticism of judgment, grade the process, not just the score."
    }
   ]
  },
@@ -3238,7 +3238,7 @@ window.TSB_ASK_DATA = [
    "kab tak kaam",
    "me time"
   ],
-  "answer": "Balance is not equal hours — it's deliberate allocation. Protect non-negotiables (sleep, family, movement) like meetings, and batch work into deep blocks so it doesn't leak into everything. The goal isn't perfect balance; it's being fully present where you are. Boundaries are the only real tool.",
+  "answer": "Balance is not equal hours, it's deliberate allocation. Protect non-negotiables (sleep, family, movement) like meetings, and batch work into deep blocks so it doesn't leak into everything. The goal isn't perfect balance; it's being fully present where you are. Boundaries are the only real tool.",
   "books": [
    {
     "id": "essentialism",
@@ -3248,12 +3248,12 @@ window.TSB_ASK_DATA = [
    {
     "id": "four-thousand-weeks",
     "lesson": "Accept Your Finitude",
-    "blurb": "You can't do it all — choosing what to neglect is the real skill."
+    "blurb": "You can't do it all, choosing what to neglect is the real skill."
    },
    {
     "id": "power-of-full-engagement",
     "lesson": "Manage Energy, Not Time",
-    "blurb": "Sprint and recover — oscillation is the secret, not extension."
+    "blurb": "Sprint and recover, oscillation is the secret, not extension."
    }
   ]
  },
@@ -3270,22 +3270,22 @@ window.TSB_ASK_DATA = [
    "analysis paralysis",
    "sochta rehta"
   ],
-  "answer": "Overthinking is avoidance disguised as analysis — you're 'thinking' to avoid deciding. Set a decision deadline, write the options with their trade-offs, choose, and refuse to revisit until the evidence changes. A good decision made now beats a perfect one made never.",
+  "answer": "Overthinking is avoidance disguised as analysis, you're 'thinking' to avoid deciding. Set a decision deadline, write the options with their trade-offs, choose, and refuse to revisit until the evidence changes. A good decision made now beats a perfect one made never.",
   "books": [
    {
     "id": "thinking-fast-slow",
     "lesson": "System 1 and System 2",
-    "blurb": "Know when to trust the fast gut and when to slow down — most loops are the slow system spinning."
+    "blurb": "Know when to trust the fast gut and when to slow down, most loops are the slow system spinning."
    },
    {
     "id": "decisive-heath",
     "lesson": "Prepare to Be Wrong",
-    "blurb": "Make the decision reversible in your mind — options shrink, choices clarify."
+    "blurb": "Make the decision reversible in your mind, options shrink, choices clarify."
    },
    {
     "id": "subtle-art",
     "lesson": "The Backwards Law",
-    "blurb": "The more you chase certainty, the more it runs — accept the risk, decide anyway."
+    "blurb": "The more you chase certainty, the more it runs, accept the risk, decide anyway."
    }
   ]
  },
@@ -3303,12 +3303,12 @@ window.TSB_ASK_DATA = [
    "social circle",
    "meet people"
   ],
-  "answer": "Friendship is frequency plus vulnerability: repeated low-stakes contact, then a moment where you show something real. Join a recurring group — sport, book club, volunteer — where you'll see the same people weekly. Then be the one who invites first. Adult friendship is a practice, not a luck event.",
+  "answer": "Friendship is frequency plus vulnerability: repeated low-stakes contact, then a moment where you show something real. Join a recurring group, sport, book club, volunteer, where you'll see the same people weekly. Then be the one who invites first. Adult friendship is a practice, not a luck event.",
   "books": [
    {
     "id": "how-to-win-friends",
     "lesson": "Six Ways to Make People Like You",
-    "blurb": "Become genuinely interested — the interested person is unforgettable."
+    "blurb": "Become genuinely interested, the interested person is unforgettable."
    },
    {
     "id": "happiness-hypothesis",
@@ -3318,7 +3318,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "supercommunicators",
     "lesson": "Match, Don't Lead",
-    "blurb": "Mirror the other's energy and questions — rapport is built in the first minutes."
+    "blurb": "Mirror the other's energy and questions, rapport is built in the first minutes."
    }
   ]
  },
@@ -3336,22 +3336,22 @@ window.TSB_ASK_DATA = [
    "fear kaise",
    "courage"
   ],
-  "answer": "Fear shrinks when you name it, plan it, and do it in small doses. Write the worst case, the probability, and your plan B — concrete plans dissolve imagined terrors. Courage is not the absence of fear; it's fear that has been given a schedule.",
+  "answer": "Fear shrinks when you name it, plan it, and do it in small doses. Write the worst case, the probability, and your plan B, concrete plans dissolve imagined terrors. Courage is not the absence of fear; it's fear that has been given a schedule.",
   "books": [
    {
     "id": "letters-from-a-stoic",
     "lesson": "We Suffer More in Imagination",
-    "blurb": "Most fears never arrive — the rehearsal is the real torture."
+    "blurb": "Most fears never arrive, the rehearsal is the real torture."
    },
    {
     "id": "5-second-rule",
     "lesson": "Countdown to Action",
-    "blurb": "Move before the fear finishes talking — courage is a countdown, not a feeling."
+    "blurb": "Move before the fear finishes talking, courage is a countdown, not a feeling."
    },
    {
     "id": "war-of-art",
     "lesson": "Resistance Is the Enemy",
-    "blurb": "Fear is resistance in costume — the professional does it afraid."
+    "blurb": "Fear is resistance in costume, the professional does it afraid."
    }
   ]
  },
@@ -3369,7 +3369,7 @@ window.TSB_ASK_DATA = [
    "life ka matlab",
    "ikigai"
   ],
-  "answer": "Purpose is not found in a vision quest — it's detected in patterns. Notice what you do for free, what makes time vanish, and what problems you can't stop noticing. Then test it in small service: purpose is a hypothesis you confirm by helping one person.",
+  "answer": "Purpose is not found in a vision quest, it's detected in patterns. Notice what you do for free, what makes time vanish, and what problems you can't stop noticing. Then test it in small service: purpose is a hypothesis you confirm by helping one person.",
   "books": [
    {
     "id": "ikigai",
@@ -3384,7 +3384,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "second-mountain",
     "lesson": "The Life of Commitment",
-    "blurb": "Purpose is built from commitments — find what you'd suffer for."
+    "blurb": "Purpose is built from commitments, find what you'd suffer for."
    }
   ]
  },
@@ -3402,7 +3402,7 @@ window.TSB_ASK_DATA = [
    "likhna",
    "writing skills"
   ],
-  "answer": "Write daily, read weekly, publish monthly. Volume builds the voice; reading builds the range; publishing builds the audience and the feedback loop. First drafts are allowed to be terrible — the editing is where the writing happens. Nobody reads your first draft but you.",
+  "answer": "Write daily, read weekly, publish monthly. Volume builds the voice; reading builds the range; publishing builds the audience and the feedback loop. First drafts are allowed to be terrible, the editing is where the writing happens. Nobody reads your first draft but you.",
   "books": [
    {
     "id": "on-writing",
@@ -3412,7 +3412,7 @@ window.TSB_ASK_DATA = [
    {
     "id": "bird-by-bird",
     "lesson": "Shitty First Drafts",
-    "blurb": "Give yourself permission to write badly — revision is the real craft."
+    "blurb": "Give yourself permission to write badly, revision is the real craft."
    },
    {
     "id": "show-your-work",
@@ -3435,22 +3435,22 @@ window.TSB_ASK_DATA = [
    "late night",
    "sleep schedule"
   ],
-  "answer": "Sleep is built in the daytime: morning light, evening screens off, a fixed wake time that never moves. The bed is for sleeping — if you're awake past 20 minutes, get up and do something boring. Consistency beats every supplement on the shelf.",
+  "answer": "Sleep is built in the daytime: morning light, evening screens off, a fixed wake time that never moves. The bed is for sleeping, if you're awake past 20 minutes, get up and do something boring. Consistency beats every supplement on the shelf.",
   "books": [
    {
     "id": "body-bryson",
     "lesson": "The Brain Is the Last Frontier",
-    "blurb": "Sleep is when the brain maintains itself — protect the maintenance window."
+    "blurb": "Sleep is when the brain maintains itself, protect the maintenance window."
    },
    {
     "id": "dopamine-nation",
     "lesson": "Reset Your Reward System",
-    "blurb": "Evening screens spike dopamine and delay sleep — the hour before bed is sacred."
+    "blurb": "Evening screens spike dopamine and delay sleep, the hour before bed is sacred."
    },
    {
     "id": "miracle-morning",
     "lesson": "The SAVERS Routine",
-    "blurb": "A fixed morning starts a fixed night — the day shapes the sleep."
+    "blurb": "A fixed morning starts a fixed night, the day shapes the sleep."
    }
   ]
  },
@@ -3467,22 +3467,22 @@ window.TSB_ASK_DATA = [
    "learn new skill",
    "study smart"
   ],
-  "answer": "Learn by doing, not by consuming: after every input, close the material and recall it. Test yourself instead of rereading. Work at the edge of your ability — comfortable practice is maintenance, not growth. Feedback is the fuel; without it, practice just repeats.",
+  "answer": "Learn by doing, not by consuming: after every input, close the material and recall it. Test yourself instead of rereading. Work at the edge of your ability, comfortable practice is maintenance, not growth. Feedback is the fuel; without it, practice just repeats.",
   "books": [
    {
     "id": "ultralearning",
     "lesson": "Metalearning First",
-    "blurb": "Map the skill before you start — 10% planning saves 50% time."
+    "blurb": "Map the skill before you start, 10% planning saves 50% time."
    },
    {
     "id": "peak-ericsson",
     "lesson": "Deliberate Practice",
-    "blurb": "Practice at the edge of failure with feedback — that's where skill is built."
+    "blurb": "Practice at the edge of failure with feedback, that's where skill is built."
    },
    {
     "id": "mind-for-numbers",
     "lesson": "Focused vs Diffuse Mode",
-    "blurb": "Alternate intense focus with rest — the diffuse mode does the pattern-matching."
+    "blurb": "Alternate intense focus with rest, the diffuse mode does the pattern-matching."
    }
   ]
  }

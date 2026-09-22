@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK — SUPPORT WIDGET v2 (PREMIUM)
+   THESMALLBOOK, SUPPORT WIDGET v2 (PREMIUM)
    ⭐ GitHub star button + 🍕 Fuel-the-Library donate modal
    - Pulsing gradient button (attention-grabbing)
    - ₹ amount presets with UPI deep-link amount pre-fill
@@ -112,7 +112,7 @@
         <div class="fuel-hero">
           <div class="pizza">🍕</div>
           <h3>FUEL THE LIBRARY</h3>
-          <p>₹0 forever — no ads, no paywall. Toss a coin to your summarizer 💛</p>
+          <p>₹0 forever, no ads, no paywall. Toss a coin to your summarizer 💛</p>
         </div>
         <p style="font-weight:600; margin-bottom:6px; font-size:13px;">
           Reading 400 books so you don't have to burns a <em>lot</em> of chai. ☕
@@ -183,16 +183,16 @@
     });
 
     modal.querySelector("#copyUpi").addEventListener("click", () => {
-      const doneMsg = () => toast("📋 UPI ID copied — thank you, legend!");
+      const doneMsg = () => toast("📋 UPI ID copied, thank you, legend!");
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(UPI_ID).then(doneMsg).catch(doneMsg);
       } else doneMsg();
     });
-    // 💸 universal UPI engine — native link + fallback sheet on desktop
+    // 💸 universal UPI engine, native link + fallback sheet on desktop
     payBtn.addEventListener("click", (e) => {
       if (window.TSB_UPI) {
         e.preventDefault();
-        window.TSB_UPI.pay(amt, "Fuel the library — thank you!");
+        window.TSB_UPI.pay(amt, "Fuel the library, thank you!");
       }
     });
   }
