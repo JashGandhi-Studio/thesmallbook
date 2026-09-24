@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta property="og:title" content="Your Year in Books · TheSmallBook">
+  <title>YOUR YEAR IN BOOKS · TheSmallBook</title>
+  <meta name="description" content="One page, once a year: everything you read, finished, wrote and solved. Unlocks after your first full year.">
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="css/style.css?v=284">
+  <style>
+    .yr-wrap { max-width: 720px; margin: 0 auto; padding: 20px 16px calc(80px + env(safe-area-inset-bottom)); text-align: center; }
+    .yr-wait { margin-top: 12vh; }
+    .yr-wait h1 { font: 800 16px var(--font-head); letter-spacing: 2.5px; margin: 0 0 10px; }
+    .yr-wait p { font: 500 14px/1.7 var(--font-body); color: var(--muted); max-width: 380px; margin: 0 auto 18px; }
+    .yr-date { display: inline-block; font: 800 12px var(--font-head); letter-spacing: 1.5px; background: var(--yellow); border: 2.5px solid var(--ink); border-radius: 10px; box-shadow: 3px 3px 0 var(--ink); padding: 10px 14px; }
+    .yr-top { display: flex; justify-content: flex-start; margin-bottom: 16px; }
+    .yr-back { display: inline-flex; align-items: center; gap: 7px; background: var(--paper); border: 3px solid var(--ink); border-radius: 11px; box-shadow: 3px 3px 0 var(--ink); padding: 9px 13px; font: 800 11px var(--font-head); letter-spacing: 1px; text-decoration: none; color: var(--ink); }
+    .yr-canvas { width: 100%; max-width: 460px; border: 3px solid var(--ink); border-radius: 16px; box-shadow: 7px 7px 0 var(--ink); display: block; margin: 0 auto; }
+    .yr-rows { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+    .yr-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--yellow); color: #111; border: 2.5px solid var(--ink); border-radius: 10px; box-shadow: 3px 3px 0 var(--ink); padding: 12px 16px; font: 800 11px var(--font-head); letter-spacing: 1px; cursor: pointer; text-decoration: none; }
+    .yr-btn--ghost { background: var(--paper); color: var(--ink); }
+    .yr-btn:active { transform: translate(1.5px,1.5px); box-shadow: 1.5px 1.5px 0 var(--ink); }
+    .yr-note { font: 500 11.5px/1.6 var(--font-body); color: var(--muted); margin-top: 14px; }
+  </style>
+</head>
+<body>
+  <main class="yr-wrap">
+    <div class="yr-top"><a class="yr-back" href="login.html#view-account">← YOU</a></div>
+    <div id="yrMain"></div>
+  </main>
+
+  <script src="js/bootguard.js?v=284"></script>
+  <script src="js/prefs.js?v=284"></script>
+  <script src="js/lang.js?v=284"></script>
+  <script src="js/config.js?v=284"></script>
+  <script src="js/auth.js?v=284"></script>
+  <script src="js/sounds.js?v=284"></script>
+  <script src="js/data.js?v=284"></script>
+  <script src="js/bar.js?v=284" defer></script>
+  <script>
+  (function () {
+    "use strict";
+    function get(k, d) { try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }
+    function uid() { try { return (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user() && TSB_AUTH.user().id) || "guest"; } catch (e) { return "guest"; } }
+    function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]; }); }
+
+    /* the reading birthday: first evidence we have of this reader */
+    function birthday() {
+      var best = get("tsb_birthday", "");
+      try {
+        var notes = JSON.parse(localStorage.getItem("tsb_notes_v1_" + uid()) || "[]");
+        notes.forEach(function (n) {
+          if (n.created && (!best || n.created < best)) best = n.created;
+        });
+      } catch (e) {}
+      if (!best) return null;
+      return typeof best === "number" ? best : Date.parse(best);
+    }
+
+    var bd = birthday();
+    var main = document.getElementById("yrMain");
+    if (!bd || (Date.now() - bd) < 365 * 864e5) {
+      /* before the first full year, this page simply does not exist yet */
+      var when = bd ? new Date(bd + 365 * 864e5).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" }) : null;
+      main.innerHTML = '<div class="yr-wait"><h1>NOT YET</h1>' +
+        "<p>Your year page arrives after one full year of reading. No teasers, no countdown in the way. It will simply be there.</p>" +
+        (when ? '<span class="yr-date">OPENS ' + esc(String(when).toUpperCase()) + "</span>" : "") +
+        "</div>";
+      return;
+    }
+
+    /* ---------- the year, in real numbers ---------- */
+    var days = get("tsb_days", []);
+    var prog = get("tsb_progress", {});
+    var BOOKS = window.BOOKS || [];
+    var lessons = 0, opened = 0, finished = 0, mins = 0;
+    Object.keys(prog).forEach(function (id) {
+      var b = BOOKS.filter(function (x) { return x.id === id; })[0];
+      if (!b) return;
+      var n = (prog[id] || []).length;
+      if (n > 0) { opened++; lessons += Math.min(n, b.lessons ? b.lessons.length : n); }
+      if (b.lessons && n >= b.lessons.length) { finished++; mins += parseInt(b.readTime) || 0; }
+    });
+    var noteCount = 0;
+    try { noteCount = (JSON.parse(localStorage.getItem("tsb_notes_v1_" + uid()) || "[]")).length; } catch (e) {}
+    var cases = (get("tsb_cases_seen", []) || []).length;
+    var badges = (get("tsb_achv", []) || []).length;
+    /* longest run of reading days */
+    var set = {}; days.forEach(function (d) { set[d] = 1; });
+    var best = 0, run = 0, cur = new Date();
+    for (var i = 0; i < 400; i++) {
+      var key = cur.toISOString().slice(0, 10);
+      if (set[key]) { run++; if (run > best) best = run; } else run = 0;
+      cur = new Date(cur.getTime() - 864e5);
+    }
+    var stats = [
+      { n: String(lessons), l: "LESSONS READ" },
+      { n: String(finished), l: "BOOKS FINISHED" },
+      { n: String(days.length), l: "DAYS READ" },
+      { n: String(best || get("tsb_streak", { count: 0 }).count), l: "LONGEST STREAK" },
+      { n: String(opened), l: "BOOKS OPENED" },
+      { n: String(Math.round(mins / 60)), l: "HOURS IN FINISHED BOOKS" },
+      { n: String(noteCount), l: "NOTES WRITTEN" },
+      { n: String(cases), l: "CASES ATTEMPTED" },
+      { n: String(badges), l: "BADGES EARNED" }
+    ];
+    var since = new Date(bd), until = new Date();
+    var period = since.toLocaleDateString(undefined, { month: "short", year: "numeric" }) + "  to  " + until.toLocaleDateString(undefined, { month: "short", year: "numeric" });
+
+    /* ---------- draw the card ---------- */
+    function drawCard() {
+      var W = 1080, H = 1350, c = document.createElement("canvas");
+      c.width = W; c.height = H;
+      var x = c.getContext("2d");
+      x.fillStyle = "#14110c"; x.fillRect(0, 0, W, H);
+      x.fillStyle = "#1b160e"; x.fillRect(28, 28, W - 56, H - 56);
+      x.strokeStyle = "#ffc800"; x.lineWidth = 6; x.strokeRect(28, 28, W - 56, H - 56);
+      x.textAlign = "center";
+      x.fillStyle = "#8f8570"; x.font = "800 30px 'Trebuchet MS',Arial,sans-serif";
+      x.fillText("T H E S M A L L B O O K", W / 2, 130);
+      x.fillStyle = "#fdf6e3"; x.font = "800 88px 'Arial Black',Arial,sans-serif";
+      x.fillText("YOUR YEAR IN BOOKS", W / 2, 260);
+      x.fillStyle = "#b3a88e"; x.font = "600 34px 'Trebuchet MS',Arial,sans-serif";
+      x.fillText(period, W / 2, 330);
+      var gx = 110, gy = 420, gw = (W - 220 - 100) / 3, gh = 170, gapy = 26, gapx = 50;
+      stats.forEach(function (s, i) {
+        var cx = gx + (i % 3) * (gw + gapx), cy = gy + Math.floor(i / 3) * (gh + gapy);
+        x.fillStyle = "#14110c"; x.fillRect(cx, cy, gw, gh);
+        x.strokeStyle = "#3a3222"; x.lineWidth = 3; x.strokeRect(cx, cy, gw, gh);
+        x.fillStyle = "#ffc800"; x.font = "800 64px 'Arial Black',Arial,sans-serif";
+        x.fillText(s.n, cx + gw / 2, cy + 84);
+        x.fillStyle = "#b3a88e"; x.font = "800 17px 'Trebuchet MS',Arial,sans-serif";
+        x.fillText(s.l, cx + gw / 2, cy + 132);
+      });
+      x.fillStyle = "#8f8570"; x.font = "600 26px 'Trebuchet MS',Arial,sans-serif";
+      x.fillText("Read the small books. They change the big things.", W / 2, H - 150);
+      x.fillStyle = "#ffc800"; x.font = "800 24px 'Trebuchet MS',Arial,sans-serif";
+      x.fillText("thesmallbook.in", W / 2, H - 100);
+      return c;
+    }
+
+    main.innerHTML = '<h1 style="font:800 15px var(--font-head);letter-spacing:2.5px;margin:0 0 16px">YOUR YEAR IN BOOKS</h1>' +
+      '<canvas class="yr-canvas" id="yrCv"></canvas>' +
+      '<div class="yr-rows">' +
+        '<button class="yr-btn" id="yrDl">DOWNLOAD THE CARD</button>' +
+        '<button class="yr-btn yr-btn--ghost" id="yrSh">SHARE</button>' +
+      "</div>" +
+      '<p class="yr-note">It appears once a year, from your own reading. Nothing to fill in.</p>';
+    var card = drawCard();
+    card.className = "yr-canvas";
+    document.getElementById("yrCv").replaceWith(card);
+    document.getElementById("yrDl").addEventListener("click", function () {
+      var a = document.createElement("a");
+      a.href = card.toDataURL("image/png");
+      a.download = "my-year-in-books.png";
+      a.click();
+    });
+    document.getElementById("yrSh").addEventListener("click", async function () {
+      try {
+        var blob = await new Promise(function (res) { card.toBlob(res, "image/png"); });
+        var file = new File([blob], "my-year-in-books.png", { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], title: "My year in books" });
+        else { var a = document.createElement("a"); a.href = card.toDataURL("image/png"); a.download = "my-year-in-books.png"; a.click(); }
+      } catch (e) {}
+    });
+  })();
+  </script>
+</body>
+</html>

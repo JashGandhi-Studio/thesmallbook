@@ -349,6 +349,7 @@
      hold now always leaves the note ALIVE: either it locks (you release
      without travelling) or you slid up to review. Nothing is ever lost. */
   function setLock(on) {
+  try { if (stage && locked && state === "recording") { paint(); window.setTimeout(paint, 250); } } catch (e0) {}
     if (state === "sending" || state === "error") return;
     if (!on) { locked = false; mode = "tap"; paint(); return; }
     if (state === "idle") { pendingLock = true; return; }        /* mic still waking up */
@@ -478,6 +479,7 @@
       start = null;
       try { btn.releasePointerCapture(e.pointerId); } catch (err) {}
       /* slid up (locked) or hit the 2:00 cap -> STOP/preview flow owns it */
+      /* safety: repaint once more so STOP can never be caught hidden */
       if (state === "review") return;
       /* v268 · long-press hold: release = SEND, exactly like the user asked.
          Locking is the swipe-up's job now, not the plain release's. */

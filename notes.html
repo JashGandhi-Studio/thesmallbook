@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta property="og:title" content="Your Notebook · TheSmallBook">
+  <title>YOUR NOTEBOOK · TheSmallBook</title>
+  <meta name="description" content="Your private reading notebook: real paper, real pages, photos, voice notes and drawings. It saves itself as you write.">
+  <link rel="icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=284">
+  <style>
+    .nt-wrap { max-width: 780px; margin: 0 auto; padding: 18px 16px calc(90px + env(safe-area-inset-bottom)); }
+    .nt-top { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .nt-back { display: inline-flex; align-items: center; gap: 7px; background: var(--paper); border: 3px solid var(--ink); border-radius: 11px; box-shadow: 3px 3px 0 var(--ink); padding: 9px 13px; font: 800 11px var(--font-head); letter-spacing: 1px; text-decoration: none; color: var(--ink); }
+    .nt-h { font: 800 13px var(--font-head); letter-spacing: 2.5px; }
+    .nt-new { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; background: var(--ink); color: #fff; border: 3px solid var(--ink); border-radius: 11px; box-shadow: 3px 3px 0 rgba(17,17,17,.35); padding: 10px 14px; font: 800 11px var(--font-head); letter-spacing: 1.2px; cursor: pointer; }
+    .nt-new:active { transform: translate(1.5px,1.5px); box-shadow: 1px 1px 0 rgba(17,17,17,.35); }
+    .nt-guest { background: var(--surface-2); border: 2.5px dashed var(--ink); border-radius: 12px; padding: 10px 13px; font: 500 12.5px/1.6 var(--font-body); margin-bottom: 14px; }
+
+    /* ================= the cover: one material, one accent ================= */
+    .nt-cover {
+      position: relative; overflow: hidden;
+      background: linear-gradient(165deg, #23231f 0%, #1b1b18 60%, #161614 100%);
+      border: 3px solid var(--ink); border-radius: 18px;
+      box-shadow: 8px 8px 0 var(--ink), inset 0 1px 0 rgba(255,255,255,.05);
+      padding: 34px 26px 26px 56px; color: #e9dcb8;
+    }
+    /* the spine: darker band, two stitched seams */
+    .nt-cover::before {
+      content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 34px;
+      background: linear-gradient(90deg, #101010, #191917 70%, rgba(255,255,255,.05));
+      border-right: 1.5px solid rgba(255,255,255,.12);
+    }
+    .nt-cover::after {
+      content: ""; position: absolute; top: 0; bottom: 0; left: 34px; width: 0;
+      border-left: 5px dotted rgba(255,255,255,.16);
+    }
+    .nt-cover__word { text-align: center; }
+    .nt-cover__word b {
+      display: block; font: 800 14px var(--font-head); letter-spacing: 5px; color: #cfcabe;
+      text-shadow: 0 1px 0 #000;
+    }
+    .nt-cover__word i {
+      display: block; font: 500 11px var(--font-body); letter-spacing: 2.5px; color: #8a8a80;
+      margin-top: 6px; font-style: normal;
+    }
+    .nt-cover__rule { width: 54px; height: 1.5px; background: #6f6f66; margin: 15px auto 0; }
+    .nt-toc { margin-top: 24px; }
+    .nt-toc__h { text-align: center; font: 800 10px var(--font-head); letter-spacing: 3.5px; color: #8a8a80; margin-bottom: 8px; }
+    .nt-entry { display: flex; align-items: baseline; gap: 10px; padding: 11px 4px; cursor: pointer; border-radius: 8px; transition: background .14s ease, transform .14s ease; }
+    .nt-entry:hover { background: rgba(255,255,255,.05); transform: translateX(2px); }
+    .nt-entry__t { font-family: 'Caveat', Georgia, serif; font-size: 21px; font-weight: 600; color: #f4f1e8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 55%; }
+    .nt-entry__dots { flex: 1; border-bottom: 2px dotted rgba(255,255,255,.22); transform: translateY(-4px); }
+    .nt-entry__m { font: 500 10.5px var(--font-body); color: #8a8a80; flex: none; }
+    .nt-entry__x { flex: none; background: none; border: 0; color: #77776e; font-size: 14px; cursor: pointer; padding: 2px 6px; }
+    .nt-entry__x:hover { color: #ff8a80; }
+    .nt-empty { text-align: center; font: 500 13.5px/1.8 var(--font-body); color: #9a8f76; padding: 30px 12px 18px; }
+    .nt-empty b { display: block; font-family: 'Caveat', Georgia, serif; font-size: 26px; font-weight: 600; color: #d6d2c6; margin-bottom: 6px; }
+
+    /* ================= the writing desk ================= */
+    .nt-titlein {
+      width: 100%; background: transparent; border: 0; border-bottom: 2.5px solid rgba(17,17,17,.85);
+      font: 700 20px/1.3 var(--font-body); padding: 4px 2px 6px; color: var(--ink); box-sizing: border-box;
+    }
+    .nt-titlein:focus { outline: none; }
+    .nt-titlein::placeholder { color: #c9c2b0; }
+    .nt-bar {
+      display: flex; gap: 2px; align-items: center; flex-wrap: wrap;
+      background: transparent; border: 0; border-bottom: 2.5px solid var(--ink);
+      padding: 4px 2px 7px; margin: 10px 0 14px;
+    }
+    .nt-bar button {
+      background: transparent; border: 0; border-radius: 7px; min-width: 34px; min-height: 32px;
+      padding: 4px 9px; font: 700 13px var(--font-body); color: var(--ink); cursor: pointer; opacity: .78;
+    }
+    .nt-bar button:hover { opacity: 1; background: var(--surface-2); }
+    .nt-bar button:active { transform: translateY(1px); }
+    .nt-bar .nt-sep { flex: none; width: 1.5px; height: 20px; background: rgba(17,17,17,.25); margin: 0 7px; }
+    .nt-desk { perspective: 1600px; }
+    .nt-paperwrap { position: relative; filter: drop-shadow(6px 7px 0 rgba(17,17,17,.9)); }
+    .nt-paperwrap::before, .nt-paperwrap::after { content: ""; position: absolute; inset: 0; background: #f6f0e0; border: 2.5px solid var(--ink); border-radius: 14px; z-index: 0; }
+    .nt-paperwrap::before { transform: rotate(1deg) translate(3px,3px); }
+    .nt-paperwrap::after { transform: rotate(-.9deg) translate(-3px,4px); }
+    .nt-paper {
+      position: relative; z-index: 1;
+      background:
+        linear-gradient(90deg, transparent 0 44px, rgba(214,69,69,.45) 44px 45.5px, transparent 45.5px),
+        repeating-linear-gradient(180deg, transparent 0 33px, #cfdae6 33px 34.5px),
+        #fffdf6;
+      background-position: 14px 0, 0 33px, 0 0;
+      border: 3px solid var(--ink); border-radius: 14px 14px 14px 14px;
+      padding: 18px 20px 24px 64px; min-height: 440px;
+    }
+    .nt-rings { position: absolute; top: -12px; left: 24px; right: 24px; height: 20px; display: flex; justify-content: space-between; z-index: 2; }
+    .nt-rings i { width: 22px; height: 20px; border-radius: 10px/12px; background: linear-gradient(180deg, #f0ede4, #b9b4a4); border: 3px solid var(--ink); box-shadow: inset 0 -3px 0 rgba(0,0,0,.22); }
+    .nt-body { font: 500 15.5px/34px 'Special Elite', Georgia, serif; color: #26221a; min-height: 440px; outline: none; caret-color: #d64545; }
+    .nt-body:empty::before { content: attr(data-ph); color: #b9b2a2; font-family: var(--font-body); font-size: 14px; pointer-events: none; }
+    .nt-body img { max-width: 100%; border: 2.5px solid var(--ink); border-radius: 10px; margin: 4px 0; }
+    .nt-body blockquote { border-left: 5px solid #3a3a36; margin: 4px 0; padding-left: 12px; }
+    .nt-body ul, .nt-body ol { padding-left: 22px; }
+    .nt-body h2 { font: 700 22px/34px var(--font-body); }
+    .nt-turn-l { transform-origin: left center; animation: ntTurnL .24s ease; }
+    .nt-turn-r { transform-origin: right center; animation: ntTurnR .24s ease; }
+    @keyframes ntTurnL { 0% { transform: rotateY(-12deg); opacity: .4; } 100% { transform: none; opacity: 1; } }
+    @keyframes ntTurnR { 0% { transform: rotateY(12deg); opacity: .4; } 100% { transform: none; opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { .nt-turn-l, .nt-turn-r { animation: none; } }
+
+    .nt-pager { display: flex; align-items: center; gap: 10px; margin: 16px 2px 0; }
+    .nt-pbtn { background: var(--paper); border: 2.5px solid var(--ink); border-radius: 10px; box-shadow: 3px 3px 0 var(--ink); padding: 10px 13px; font: 800 10.5px var(--font-head); letter-spacing: 1px; cursor: pointer; }
+    .nt-pbtn:active { transform: translate(1.5px,1.5px); box-shadow: 1px 1px 0 var(--ink); }
+    .nt-pbtn[disabled] { opacity: .45; }
+    .nt-pn { font: 800 10px var(--font-head); letter-spacing: 1.5px; color: var(--muted); margin: 0 auto; }
+    .nt-addpage { background: var(--ink); color: #fff; }
+    .nt-foot { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; align-items: center; }
+    .nt-fbtn { background: var(--paper); border: 2.5px solid var(--ink); border-radius: 10px; box-shadow: 3px 3px 0 var(--ink); padding: 10px 12px; font: 800 10px var(--font-head); letter-spacing: 1px; cursor: pointer; }
+    .nt-fbtn:active { transform: translate(1.5px,1.5px); box-shadow: 1px 1px 0 var(--ink); }
+    .nt-fbtn--brand { background: var(--ink); color: #fff; }
+    .nt-fbtn--del { color: #c22b2b; }
+    .nt-saved { font: 500 11px var(--font-body); color: var(--muted); margin-left: auto; }
+
+    .nt-draw { position: fixed; inset: 0; z-index: 99995; background: rgba(17,14,9,.72); display: grid; place-items: center; padding: 14px; }
+    .nt-draw__card { background: var(--paper); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 8px 8px 0 var(--ink); padding: 14px; max-width: 94vw; }
+    .nt-draw canvas { background: #fffdf6; border: 2.5px solid var(--ink); border-radius: 10px; touch-action: none; max-width: 100%; display: block; }
+    .nt-draw__row { display: flex; gap: 7px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
+    .nt-sw { width: 30px; height: 30px; border: 2.5px solid var(--ink); border-radius: 9px; cursor: pointer; }
+    html.dark .nt-paperwrap::before, html.dark .nt-paperwrap::after { background: #efe9da; }
+    html.dark .nt-entry__t { color: #fdf6e3; }
+  </style>
+</head>
+<body>
+  <main class="nt-wrap">
+    <div class="nt-top">
+      <a class="nt-back" href="login.html#view-account">← YOU</a>
+      <span class="nt-h">📓 MY NOTEBOOK</span>
+      <button class="nt-new" id="ntNew">+ NEW NOTE</button>
+    </div>
+    <div id="ntBanner"></div>
+    <div id="ntMain"></div>
+  </main>
+
+  <script src="js/bootguard.js?v=284"></script>
+  <script src="js/prefs.js?v=284"></script>
+  <script src="js/lang.js?v=284"></script>
+  <script src="js/config.js?v=284"></script>
+  <script src="js/auth.js?v=284"></script>
+  <script src="js/sounds.js?v=284"></script>
+  <script src="js/founder.js?v=284"></script>
+  <script src="js/community.js?v=284"></script>
+  <script src="js/bar.js?v=284" defer></script>
+  <script>
+  (function () {
+    "use strict";
+    var KEYU = "tsb_notes_v1_";
+    var PROMPTS = [
+      "What did today's pages argue with me about?",
+      "One line I underlined twice, and why.",
+      "The habit this book says I should kill first.",
+      "If I wrote one page to my younger self, from this chapter…",
+      "A story from this book worth retelling.",
+      "What am I avoiding that this book just named?",
+      "One number from this book worth remembering.",
+      "Where did this author sound completely wrong to me?",
+      "The one sentence I keep thinking about.",
+      "What would I do tomorrow if I believed this page?",
+      "Who do I know who already lives this chapter?",
+      "The smallest step this book pushes me to take this week."
+    ];
+    function uid() { try { return (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user() && TSB_AUTH.user().id) || "guest"; } catch (e) { return "guest"; } }
+    function key() { return KEYU + uid(); }
+    function raw(k) { try { return JSON.parse(localStorage.getItem(k) || "[]"); } catch (e) { return []; } }
+    function save(arr) { try { localStorage.setItem(key(), JSON.stringify(arr)); } catch (e) {} }
+    function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]; }); }
+    function $(id) { return document.getElementById(id); }
+    function me() { try { return (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) || null; } catch (e) { return null; } }
+    function ago(t) { var d = Date.now() - t; if (d < 6e4) return "just now"; if (d < 36e5) return Math.floor(d / 6e4) + " min ago"; if (d < 864e5) return Math.floor(d / 36e5) + " h ago"; return new Date(t).toLocaleDateString(); }
+
+    /* ---------- synchronization: guest pages follow you into your account ----------
+       Signed in and the account has fewer notes than this device's guest shelf?
+       Copy the missing ones across (newest copy wins, ids dedupe). The guest
+       shelf stays put, so signing out never looks like a loss. */
+    (function sync() {
+      var u = uid();
+      if (u === "guest") return;
+      var mine = raw(key()), guest = raw(KEYU + "guest");
+      if (!guest.length) return;
+      var ids = {}; mine.forEach(function (n) { ids[n.id] = n; });
+      var added = false;
+      guest.forEach(function (g) {
+        if (!ids[g.id]) { mine.push(g); added = true; }
+        else {
+          var m = ids[g.id];
+          if ((g.updated || 0) > (m.updated || 0)) { mine = mine.map(function (n) { return n.id === g.id ? g : n; }); added = true; }
+        }
+      });
+      if (added) { mine.sort(function (a, b) { return (b.updated || 0) - (a.updated || 0); }); save(mine); }
+    })();
+
+    var notes = raw(key()), curId = null, curPage = 0, timer = null;
+
+    if (!me()) $("ntBanner").innerHTML = '<div class="nt-guest">\uD83D\uDD12 These pages live on this device until you sign in. <a href="login.html" style="color:inherit;font-weight:800">Sign in</a> and they follow your account on this device.</div>';
+
+    function note() { for (var i = 0; i < notes.length; i++) if (notes[i].id === curId) return notes[i]; return null; }
+    function persist() { save(notes); var s = $("ntSaved"); if (s) { s.textContent = "saved \u2713 just now"; setTimeout(function () { if ($("ntSaved")) $("ntSaved").textContent = "autosaves as you write"; }, 1400); } }
+    function queue() { clearTimeout(timer); timer = setTimeout(persist, 600); }
+
+    /* ---------- the cover with its table of contents ---------- */
+    function list() {
+      curId = null;
+      var m = $("ntMain");
+      var h = '<div class="nt-cover">' +
+        '<div class="nt-cover__word"><b>THE SMALL BOOK</b><i>NOTES \u00b7 PRIVATE \u00b7 ' + notes.length + (notes.length === 1 ? " ENTRY" : " ENTRIES") + '</i><span class="nt-cover__rule"></span></div>' +
+        '<div class="nt-toc"><div class="nt-toc__h">CONTENTS</div>';
+      if (!notes.length) h += '<div class="nt-empty"><b>The first page is yours.</b> One line is enough. The notebook forgives everything after it.</div>';
+      notes.forEach(function (n) {
+        var snip = String(n.pages[0] || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 46);
+        h += '<div class="nt-entry" data-n="' + n.id + '"><span class="nt-entry__t">' + esc(n.title || snip || "Untitled") + '</span><span class="nt-entry__dots"></span><span class="nt-entry__m">' + (n.pages.length > 1 ? n.pages.length + "p \u00b7 " : "") + ago(n.updated) + '</span><button class="nt-entry__x" data-x="' + n.id + '" title="Delete">\u2715</button></div>';
+      });
+      h += "</div></div>";
+      m.innerHTML = h;
+      m.querySelectorAll("[data-n]").forEach(function (e) { e.addEventListener("click", function () { open(e.getAttribute("data-n")); }); });
+      m.querySelectorAll("[data-x]").forEach(function (e) { e.addEventListener("click", function (ev) { ev.stopPropagation(); del(e.getAttribute("data-x")); }); });
+    }
+
+    function del(id) {
+      var n = null; notes.forEach(function (x) { if (x.id === id) n = x; });
+      if (!n) return;
+      if (!confirm("Delete this note forever? Only you can decide this. Nothing deletes itself.")) return;
+      notes = notes.filter(function (x) { return x.id !== id; });
+      persist(); list();
+    }
+
+    /* ---------- the paper ---------- */
+    function open(id, page, dir) {
+      curId = id; curPage = page || 0;
+      var n = note(); if (!n) { list(); return; }
+      if (curPage >= n.pages.length) curPage = n.pages.length - 1;
+      var m = $("ntMain");
+      m.innerHTML =
+        '<input class="nt-titlein" id="ntTitle" placeholder="Give this note a name\u2026" value="' + esc(n.title) + '">' +
+        '<div class="nt-bar" id="ntBar">' +
+          '<button data-cmd="bold" title="Bold"><b>B</b></button>' +
+          '<button data-cmd="italic" title="Italic"><i>I</i></button>' +
+          '<button data-cmd="underline" title="Underline"><u>U</u></button>' +
+          '<span class="nt-sep"></span>' +
+          '<button data-cmd="insertUnorderedList" title="Bullet list">\u2022</button>' +
+          '<button data-cmd="insertOrderedList" title="Numbered list">1.</button>' +
+          '<button data-block="blockquote" title="Quote">\u275D</button>' +
+          '<button data-block="h2" title="Heading">H2</button>' +
+          '<span class="nt-sep"></span>' +
+          '<button data-act="draw" title="Draw a diagram">\u270F</button>' +
+          '<button data-act="photo" title="Add a photo">\uD83D\uDCF7</button>' +
+          '<button data-act="audio" title="Record a voice note">\uD83C\uDFA4</button>' +
+        "</div>" +
+        '<div class="nt-desk"><div class="nt-paperwrap">' +
+          '<span class="nt-rings" aria-hidden="true">' + new Array(9 + 1).join("<i></i>") + "</span>" +
+          '<div class="nt-paper"><div class="nt-body" id="ntBody" contenteditable="true" data-empty="1" data-ph="' + esc(n.pages.length === 1 ? PROMPTS[notes.indexOf(n) % PROMPTS.length] : "the page continues\u2026") + '"></div></div>' +
+        "</div></div>" +
+        '<div class="nt-pager">' +
+          '<button class="nt-pbtn" id="ntPrevP">\u2039 PREV</button>' +
+          '<span class="nt-pn" id="ntPageN"></span>' +
+          '<button class="nt-pbtn nt-addpage" id="ntAddP">+ PAGE</button>' +
+          '<button class="nt-pbtn" id="ntNextP">NEXT \u203a</button>' +
+        "</div>" +
+        '<div class="nt-foot">' +
+          '<button class="nt-fbtn nt-fbtn--brand" id="ntExport">EXPORT AS FILE</button>' +
+          '<button class="nt-fbtn" id="ntShare">SHARE</button>' +
+          '<button class="nt-fbtn nt-fbtn--del" id="ntDel">DELETE</button>' +
+          '<span class="nt-saved" id="ntSaved">autosaves as you write</span>' +
+        "</div>";
+      var body = $("ntBody");
+      body.innerHTML = n.pages[curPage] || "";
+      markEmpty();
+      pagerPaint(n);
+      $("ntTitle").addEventListener("input", function () { n.title = this.value; n.updated = Date.now(); queue(); });
+      body.addEventListener("input", function () { markEmpty(); n.pages[curPage] = body.innerHTML; n.updated = Date.now(); queue(); });
+      $("ntPrevP").addEventListener("click", function () { flip(-1); });
+      $("ntNextP").addEventListener("click", function () { flip(1); });
+      $("ntAddP").addEventListener("click", function () {
+        persist();
+        n.pages.push("");
+        curPage = n.pages.length - 1;
+        var b = $("ntBody"); b.innerHTML = ""; markEmpty(); pagerPaint(n);
+        b.classList.remove("nt-turn-l", "nt-turn-r"); void b.offsetWidth; b.classList.add("nt-turn-r");
+        persist(); b.focus();
+      });
+      $("ntDel").addEventListener("click", function () { del(n.id); });
+      $("ntExport").addEventListener("click", exportOne);
+      $("ntShare").addEventListener("click", shareOne);
+      $("ntBar").addEventListener("click", function (e) {
+        var b = e.target.closest("button"); if (!b) return;
+        if (b.dataset.cmd) { document.execCommand(b.dataset.cmd, false, null); body.focus(); }
+        else if (b.dataset.block) { document.execCommand("formatBlock", false, b.dataset.block === "h2" ? "<h2>" : "blockquote"); body.focus(); }
+        else if (b.dataset.act === "draw") drawModal(function (data) { if (data) { n.pages[curPage] = insertImg(body, data); queue(); } });
+        else if (b.dataset.act === "photo") pickPhoto(function (html) { if (html) { n.pages[curPage] = insertImg(body, html); queue(); } });
+        else if (b.dataset.act === "audio") recordAudio(function (html) { if (html) { n.pages[curPage] = body.innerHTML + html; queue(); body.innerHTML = n.pages[curPage]; } });
+      });
+      if (dir) { body.classList.remove("nt-turn-l", "nt-turn-r"); void body.offsetWidth; body.classList.add(dir > 0 ? "nt-turn-r" : "nt-turn-l"); }
+      window.scrollTo({ top: 0 });
+    }
+    function insertImg(body, html) {
+      body.focus();
+      document.execCommand("insertHTML", false, html);
+      return body.innerHTML;
+    }
+    function markEmpty() { var b = $("ntBody"); if (b) b.dataset.empty = b.textContent.trim() === "" && !b.querySelector("img,audio") ? "1" : "0"; }
+    function pagerPaint(n) {
+      $("ntPageN").textContent = "PAGE " + (curPage + 1) + " OF " + n.pages.length;
+      $("ntPrevP").disabled = curPage === 0;
+      $("ntNextP").disabled = curPage === n.pages.length - 1;
+    }
+    function flip(dir) {
+      var n = note(); if (!n) return;
+      var to = curPage + dir;
+      if (to < 0 || to >= n.pages.length) return;
+      persist(); open(n.id, to, dir);
+    }
+
+    /* ---------- photo ---------- */
+    function pickPhoto(cb) {
+      var inp = document.createElement("input");
+      inp.type = "file"; inp.accept = "image/*";
+      inp.addEventListener("change", async function () {
+        var f = inp.files && inp.files[0]; if (!f) return;
+        $("ntSaved").textContent = "taping the photo in\u2026";
+        try {
+          var url;
+          if (me() && window.TSB_COMMUNITY && TSB_COMMUNITY.upload) { try { url = await TSB_COMMUNITY.upload(f, "tsb-covers"); } catch (e) { url = null; } }
+          if (!url) url = await new Promise(function (res) { var r = new FileReader(); r.onload = function () { res(String(f.size <= 300000 ? r.result : compress(r.result))); }; r.readAsDataURL(f); });
+          cb('<img src="' + esc(url) + '">');
+          $("ntSaved").textContent = "photo taped in \u2713";
+        } catch (e) { $("ntSaved").textContent = "photo failed, try again"; }
+      });
+      inp.click();
+    }
+    function compress(dataUrl) { var img = new Image(); var done = false; img.onload = function () { var c = document.createElement("canvas"); var sc = Math.min(1, 900 / img.width); c.width = img.width * sc; c.height = img.height * sc; c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); done = true; compress.out = c.toDataURL("image/jpeg", 0.72); }; img.src = dataUrl; while (!done) { /* sync guard */ break; } return compress.out || dataUrl; }
+
+    /* ---------- audio ---------- */
+    function recordAudio(cb) {
+      try {
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+          var rec = new MediaRecorder(stream), chunks = [];
+          rec.ondataavailable = function (e) { chunks.push(e.data); };
+          rec.onstop = async function () {
+            stream.getTracks().forEach(function (t) { t.stop(); });
+            var blob = new Blob(chunks, { type: rec.mimeType || "audio/webm" });
+            $("ntSaved").textContent = "keeping the voice note\u2026";
+            try {
+              var url = null;
+              if (me() && window.TSB_COMMUNITY && TSB_COMMUNITY.upload) { try { url = await TSB_COMMUNITY.upload(blob, "tsb-audio"); } catch (e) { url = null; } }
+              if (!url) url = await new Promise(function (res) { var r = new FileReader(); r.onload = function () { res(r.result); }; r.readAsDataURL(blob); });
+              cb('<audio controls src="' + esc(url) + '" style="width:100%;margin:6px 0"></audio>');
+              $("ntSaved").textContent = "voice note kept \u2713";
+            } catch (e) { $("ntSaved").textContent = "voice note failed, try again"; }
+          };
+          rec.start();
+          var bar = $("ntBar");
+          var stop = document.createElement("button");
+          stop.style.background = "#ff4d4d"; stop.style.color = "#fff";
+          stop.textContent = "\u25A0 STOP RECORDING";
+          bar.appendChild(stop);
+          stop.addEventListener("click", function () { rec.stop(); stop.remove(); });
+        }).catch(function () { alert("The microphone is shy today. Check the browser permission and try again."); });
+      } catch (e) { alert("Voice notes need a browser that can record."); }
+    }
+
+    /* ---------- draw ---------- */
+    function drawModal(cb) {
+      var w = document.createElement("div");
+      w.className = "nt-draw";
+      var W = Math.min(1000, (window.innerWidth || 800) - 60), H = Math.min(640, (window.innerHeight || 700) - 170);
+      w.innerHTML = '<div class="nt-draw__card"><canvas id="ntCv" width="' + W + '" height="' + H + '"></canvas>' +
+        '<div class="nt-draw__row">' +
+        ['<button class="nt-sw" data-c="#26221a" style="background:#26221a"></button>',
+         '<button class="nt-sw" data-c="#d64545" style="background:#d64545"></button>',
+         '<button class="nt-sw" data-c="#1d6fd1" style="background:#1d6fd1"></button>',
+         '<button class="nt-sw" data-c="#f2a900" style="background:#f2a900"></button>'].join("") +
+        '<button class="nt-fbtn" id="ntUndo">UNDO</button>' +
+        '<button class="nt-fbtn" id="ntClr">CLEAR</button>' +
+        '<span style="flex:1"></span>' +
+        '<button class="nt-fbtn" id="ntCx">CANCEL</button>' +
+        '<button class="nt-fbtn nt-fbtn--brand" id="ntOk">TAPE IT IN \u2192</button></div></div>';
+      document.body.appendChild(w);
+      var cv = w.querySelector("#ntCv"), ctx = cv.getContext("2d");
+      ctx.fillStyle = "#fffdf6"; ctx.fillRect(0, 0, W, H);
+      ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.lineWidth = 3; ctx.strokeStyle = "#26221a";
+      var col = "#26221a", down = false, snaps = [], S = 12;
+      function snap() { snaps.push(cv.toDataURL()); if (snaps.length > S) snaps.shift(); }
+      snap();
+      cv.addEventListener("pointerdown", function (e) { down = true; var r = cv.getBoundingClientRect(); ctx.beginPath(); ctx.moveTo((e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height); });
+      cv.addEventListener("pointermove", function (e) { if (!down) return; var r = cv.getBoundingClientRect(); ctx.lineTo((e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height); ctx.stroke(); });
+      window.addEventListener("pointerup", function () { if (down) { down = false; snap(); } });
+      w.querySelectorAll(".nt-sw").forEach(function (b) { b.addEventListener("click", function () { col = b.dataset.c; ctx.strokeStyle = col; }); });
+      w.querySelector("#ntUndo").addEventListener("click", function () { if (snaps.length < 2) return; snaps.pop(); var im = new Image(); im.onload = function () { ctx.drawImage(im, 0, 0); }; im.src = snaps[snaps.length - 1]; });
+      w.querySelector("#ntClr").addEventListener("click", function () { ctx.fillStyle = "#fffdf6"; ctx.fillRect(0, 0, W, H); snap(); });
+      w.querySelector("#ntCx").addEventListener("click", function () { w.remove(); });
+      w.querySelector("#ntOk").addEventListener("click", function () { cb(cv.toDataURL("image/png")); w.remove(); });
+    }
+
+    /* ---------- export: one clean file, gently branded ---------- */
+    function exportOne() {
+      var n = note(); if (!n) return;
+      var pagesHtml = n.pages.map(function (p, i) {
+        return '<section class="pg"><div class="pgno">Page ' + (i + 1) + " of " + n.pages.length + '</div>' + (p || "<p><i>(an empty page, on purpose)</i></p>") + "</section>";
+      }).join("");
+      var doc = "<!doctype html><html><head><meta charset='utf-8'><title>" + esc(n.title || "A note") + " \u00b7 TheSmallBook</title><style>" +
+        "body{font:15px/1.75 Georgia,'Times New Roman',serif;color:#26221a;background:#f4efe2;margin:0;padding:34px 16px}" +
+        "main{max-width:680px;margin:0 auto;background:#fffdf6;border:2.5px solid #26221a;border-radius:14px;padding:38px 40px;box-shadow:6px 6px 0 #26221a}" +
+        ".kick{font:800 10px 'Trebuchet MS',sans-serif;letter-spacing:3px;color:#8f8570;margin:0 0 8px}" +
+        "h1{font-size:30px;margin:0 0 4px;border-bottom:3px solid #26221a;padding-bottom:12px}" +
+        ".meta{font:500 12px 'Trebuchet MS',sans-serif;color:#8f8570;margin:10px 0 26px}" +
+        ".pg{padding:18px 0;border-bottom:1.5px dashed #cfc7b2}.pg:last-child{border-bottom:0}" +
+        ".pgno{font:800 9.5px 'Trebuchet MS',sans-serif;letter-spacing:2px;color:#b0a88f;margin-bottom:10px}" +
+        "img{max-width:100%;border:2px solid #26221a;border-radius:8px}audio{width:100%}" +
+        ".brand{margin-top:30px;padding-top:16px;border-top:2.5px solid #26221a;font:600 12px 'Trebuchet MS',sans-serif;color:#8f8570;text-align:center}" +
+        "@media print{body{background:#fff}main{border:0;box-shadow:none;padding:0}}</style></head><body><main>" +
+        "<p class='kick'>PERSONAL NOTES \u00b7 THESMALLBOOK</p><h1>" + esc(n.title || "Untitled note") + "</h1>" +
+        "<p class='meta'>" + n.pages.length + " page" + (n.pages.length === 1 ? "" : "s") + " \u00b7 written " + new Date(n.created).toLocaleDateString() + " \u00b7 last touched " + new Date(n.updated).toLocaleDateString() + "</p>" +
+        pagesHtml +
+        "<div class='brand'>Written with \uD83D\uDCD3 TheSmallBook \u00b7 thesmallbook.in</div></main></body></html>";
+      var blob = new Blob([doc], { type: "text/html" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = (n.title || "my-note").replace(/[^\w\u0900-\u097F -]/g, "").trim().slice(0, 40) + ".html";
+      a.click();
+      $("ntSaved").textContent = "exported \u2713";
+    }
+    async function shareOne() {
+      try {
+        var n = note(); if (!n) return;
+        var txt = (n.title || "My note") + ", from my TheSmallBook notebook";
+        var blob = new Blob([plain(n)], { type: "text/plain" });
+        var file = new File([blob], (n.title || "note").slice(0, 30) + ".txt", { type: "text/plain" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], title: txt });
+        else if (navigator.share) await navigator.share({ title: txt, text: plain(n).slice(0, 900) });
+        else exportOne();
+      } catch (e) {}
+    }
+    function plain(n) {
+      return (n.title ? n.title + "\n\n" : "") + n.pages.map(function (p, i) { return "\u00b7 page " + (i + 1) + " \u00b7\n" + String(p).replace(/<img[^>]*>/g, "[photo]").replace(/<audio[^>]*><\/audio>|<audio[^>]*\/>/g, "[voice note]").replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").replace(/\s+\n/g, "\n").trim(); }).join("\n\n");
+    }
+
+    /* ---------- boot ---------- */
+    $("ntNew").addEventListener("click", function () {
+      var n = { id: "n" + Date.now() + Math.floor(Math.random() * 999), title: "", pages: [""], created: Date.now(), updated: Date.now() };
+      notes.unshift(n); persist(); open(n.id, 0);
+    });
+    (function boot() {
+      var h = location.hash || "";
+      var m = h.match(/#n=([\w-]+)/);
+      if (m && notes.some(function (n) { return n.id === m[1]; })) open(m[1], 0);
+      else list();
+    })();
+    function persistNow() { clearTimeout(timer); save(notes); }
+    window.addEventListener("pagehide", persistNow);
+    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") persistNow(); });
+  })();
+  </script>
+</body>
+</html>

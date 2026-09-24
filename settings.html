@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
     <meta property="og:title" content="Settings, TheSmallBook">
   <meta property="og:description" content="Theme, language, privacy and everything else, exactly how you like it.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=276">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=284">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/settings.html">
@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=276">
+  <link rel="stylesheet" href="css/style.css?v=284">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -44,6 +44,13 @@
 
   <main class="set">
     <h1 class="set__h">SETTINGS</h1>
+
+    <section class="setcard">
+      <h2>📓 YOUR NOTEBOOK</h2>
+      <p class="sethint">Your private notebook: write, draw diagrams, tape voice notes, paste photos. Everything saves by itself and stays on your device unless you export it as one clean file.</p>
+      <a class="setopt" href="notes.html" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink)"><span>📓</span> Open my notebook →</a>
+      <a class="setopt" href="review.html" id="tsbYearLink" hidden style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink)"><span>🎛</span> Your year in books →</a>
+    </section>
 
     <section class="setcard">
       <h2>🌗 DARKNESS</h2>
@@ -162,18 +169,18 @@
       <p class="sethint" id="upDiagHint">Cover / quote images, burst videos, voice notes and profile photos live in your own Supabase storage. If any of them fail, this test names the exact missing piece, and the 30-second SQL fix for it.</p>
     </section>
 
-    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v276.</p>
+    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v284.</p>
   </main>
 
-  <script src="./js/bootguard.js?v=276"></script>
-  <script src="js/prefs.js?v=276"></script>
-  <script src="js/lang.js?v=276"></script>
-  <script src="js/config.js?v=276"></script>
-  <script src="js/install.js?v=276"></script>
-  <script src="js/auth.js?v=276"></script>
-  <script src="js/sounds.js?v=276"></script>
-  <script src="js/community.js?v=276"></script>
-  <script src="js/bar.js?v=276" defer></script>
+  <script src="./js/bootguard.js?v=284"></script>
+  <script src="js/prefs.js?v=284"></script>
+  <script src="js/lang.js?v=284"></script>
+  <script src="js/config.js?v=284"></script>
+  <script src="js/install.js?v=284"></script>
+  <script src="js/auth.js?v=284"></script>
+  <script src="js/sounds.js?v=284"></script>
+  <script src="js/community.js?v=284"></script>
+  <script src="js/bar.js?v=284" defer></script>
   <script>
     (function () {
       /* theme */
@@ -293,7 +300,7 @@
   });
 })();
 </script>
-  <script src="js/onboard.js?v=276" defer></script>
+  <script src="js/onboard.js?v=284" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {
@@ -388,5 +395,27 @@
         if (window.TSB_ONBOARD && TSB_ONBOARD.start) TSB_ONBOARD.start();
       });
 </script>
+
+  <script>
+  /* the year card link exists only after a full year of reading */
+  (function () {
+    try {
+      var best = "";
+      try { best = JSON.parse(localStorage.getItem("tsb_birthday") || '""'); } catch (e) {}
+      var uid = "guest";
+      try { if (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) uid = TSB_AUTH.user().id; } catch (e) {}
+      try {
+        (JSON.parse(localStorage.getItem("tsb_notes_v1_" + uid) || "[]") || []).forEach(function (n) {
+          if (n.created && (!best || n.created < best)) best = n.created;
+        });
+      } catch (e) {}
+      if (!best) return;
+      var bd = typeof best === "number" ? best : Date.parse(best);
+      if (!bd || Date.now() - bd < 365 * 864e5) return;
+      var a = document.getElementById("tsbYearLink");
+      if (a) a.hidden = false;
+    } catch (e) {}
+  })();
+  </script>
 </body>
 </html>

@@ -914,7 +914,7 @@ const C = window.TSB_COMMUNITY;
     ok("the watchdog rides first on every app page, and the ID wall is gone for good", bg275.includes("TSB_BOOT_OK") && bg275.includes("tsb_purge_a") && rd("index.html").indexOf("js/bootguard.js") === 0 || (rd("index.html").includes("js/bootguard.js") && !rd("index.html").includes("js/vault.js") && !rd("book.html").includes("js/vault.js")));
     ok("a worker handover can never reload the page again", !prefs275.includes("controllerchange") && prefs275.includes("window.TSB_BOOT_OK = true"));
     ok("no worker = no purge reload; a true hang self-heals once, then an honest banner", bg275.includes("done(had)") && bg275.includes("Load trouble detected."));
-    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v276"'));
+    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v284"'));
     ok("storage is plain device storage again, exactly like v267", !rd("index.html").includes("js/vault.js") && rd("js/prefs.js").includes("for (let i = 0; i < localStorage.length; i++)") && !rd("js/prefs.js").includes("TSB_VAULT"));
 
     /* --- watermark --- */

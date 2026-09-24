@@ -24,7 +24,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=276">
+  <link rel="stylesheet" href="css/style.css?v=284">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -32,11 +32,11 @@
   <meta property="og:title" content="The Graveyard, 300 Failures, Autopsied | TheSmallBook">
   <meta property="og:description" content="Why startups, empires and legends failed, free case studies with the lesson, no signup.">
   <meta property="og:site_name" content="TheSmallBook">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=276">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=284">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="TheSmallBook, 400 books · 2637 lessons · 308 autopsies · free to read">
-  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=276">
+  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=284">
 </head>
 <body class="graveyard-page">
 
@@ -92,6 +92,32 @@
     </div>
   </header>
 
+  <!-- THE CASE FILE · a folder worth opening -->
+  <div style="max-width:720px;margin:26px auto 8px;width:calc(100% - 36px)">
+    <a class="cf-banner" href="casefile.html" style="display:block;position:relative;text-decoration:none;background:repeating-linear-gradient(45deg,#e9dcb8,#e9dcb8 12px,#e4d6ae 12px,#e4d6ae 24px);border:3px solid var(--ink);border-radius:16px;box-shadow:8px 8px 0 var(--ink);padding:22px 20px 18px;color:#241f14;transform:rotate(-.6deg);transition:transform .15s ease,box-shadow .15s ease">
+      <span style="position:absolute;top:12px;right:-34px;transform:rotate(35deg);background:var(--red);color:#fff;font:800 9.5px var(--font-head);letter-spacing:2px;padding:5px 42px;box-shadow:0 2px 0 rgba(0,0,0,.25)">CONFIDENTIAL</span>
+      <span style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:34px;line-height:1">📂</span>
+        <span style="flex:1">
+          <b style="font-family:var(--font-head);font-size:12.5px;letter-spacing:2.5px;color:#7a2c22;display:block">CASE FILE · NO. 001 · OPEN TO EVERY READER</b>
+          <b style="font-family:'Special Elite',Georgia,serif;font-weight:400;font-size:21px;display:block;margin-top:5px">Who Killed NovaChai?</b>
+          <b id="cfGyCount" style="display:inline-block;margin-top:9px;font:800 10.5px var(--font-head);letter-spacing:1.5px;background:#241f14;color:var(--yellow);border:2px solid var(--yellow);border-radius:8px;padding:6px 9px;font-variant-numeric:tabular-nums">CLOSES THURSDAY 9 PM</b>
+        </span>
+      </span>
+      <span style="display:block;font:500 12.5px/1.65 var(--font-body);color:#4c4433;margin-top:10px">A company died in nine months. <b>Fourteen documents, one secret phone call, no answer key.</b> Read the evidence, name the killer, defend it. The Founder reads every verdict himself, and a <b>real prize</b> goes to the one he believes.</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;margin-top:13px;background:var(--yellow);color:#111;border:2.5px solid var(--ink);border-radius:10px;box-shadow:3px 3px 0 var(--ink);padding:10px 14px;font:800 11px var(--font-head);letter-spacing:1.2px">OPEN THE FOLDER →</span>
+    </a>
+  </div>
+
+  <!-- THE CASE MUSEUM · solved files stay playable -->
+  <div id="cfMuseum" style="max-width:720px;margin:14px auto 0;width:calc(100% - 36px)">
+    <div style="display:flex;align-items:center;gap:10px;margin:0 2px 10px">
+      <b style="font:800 11px var(--font-head);letter-spacing:2px">🏛 THE CASE MUSEUM</b>
+      <span style="flex:1;height:2.5px;background:var(--ink);border-radius:2px;opacity:.85"></span>
+    </div>
+    <div id="cfMuseumList" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
   <!-- SEARCH + FILTERS -->
   <div class="section-head" id="graves">
     <h2>⚰️ Open Graves</h2>
@@ -138,20 +164,20 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="./js/bootguard.js?v=276"></script>
-  <script src="js/prefs.js?v=276"></script>
-  <script src="js/support.js?v=276"></script>
-  <script src="js/lang.js?v=276"></script>
-  <script src="js/config.js?v=276"></script>
-  <script src="js/auth.js?v=276"></script>
-  <script src="js/data.js?v=276"></script>
-  <script src="js/failures.js?v=276"></script>
-  <script src="js/graveyard-content.js?v=276"></script>
-  <script src="js/graveyard.js?v=276"></script>
-    <script src="js/ask-data.js?v=276"></script>
-  <script src="js/tts-engine.js?v=276"></script>
-  <script src="js/ask.js?v=276"></script>
-  <script src="js/bar.js?v=276" defer></script>
+  <script src="./js/bootguard.js?v=284"></script>
+  <script src="js/prefs.js?v=284"></script>
+  <script src="js/support.js?v=284"></script>
+  <script src="js/lang.js?v=284"></script>
+  <script src="js/config.js?v=284"></script>
+  <script src="js/auth.js?v=284"></script>
+  <script src="js/data.js?v=284"></script>
+  <script src="js/failures.js?v=284"></script>
+  <script src="js/graveyard-content.js?v=284"></script>
+  <script src="js/graveyard.js?v=284"></script>
+    <script src="js/ask-data.js?v=284"></script>
+  <script src="js/tts-engine.js?v=284"></script>
+  <script src="js/ask.js?v=284"></script>
+  <script src="js/bar.js?v=284" defer></script>
   <script>
     /* v267 · the fresh anchor, a quiet way down, never an interruption */
     (function () {
@@ -169,7 +195,44 @@
       });
     })();
   </script>
-  <script src="js/gate.js?v=276" defer></script>
-  <script src="js/trial.js?v=276" defer></script>
+  <script src="js/gate.js?v=284" defer></script>
+  <script src="js/trial.js?v=284" defer></script>
+  <script src="js/casefile-data.js?v=284"></script>
+  <script>
+  (function () {
+    "use strict";
+    /* the countdown on the folder cover */
+    var C = window.TSB_CASEFILE, el = document.getElementById("cfGyCount");
+    if (C && el) {
+      function tick() {
+        var now = new Date(), next = new Date(now);
+        next.setDate(now.getDate() + ((C.closeDay - now.getDay() + 7) % 7));
+        next.setHours(C.closeHour, C.closeMin || 0, 0, 0);
+        if (next - now < 6 * 36e5) next.setDate(next.getDate() + 7);   /* never closes tonight: full week always */
+        var ms = next - now, d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5), m = Math.floor(ms % 36e5 / 6e4);
+        var days = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"][C.closeDay];
+        el.textContent = "CLOSES " + days + " " + ((C.closeHour % 12) || 12) + (C.closeHour >= 12 ? " PM" : " AM") + " \u00b7 " +
+          (d ? d + "d " : "") + h + "h " + String(m).padStart(2, "0") + "m";
+      }
+      tick(); setInterval(tick, 3e4);
+    }
+    /* the museum */
+    var list = document.getElementById("cfMuseumList");
+    if (list) {
+      var arcs = window.TSB_CASE_ARCHIVE || [];
+      if (!arcs.length) {
+        list.innerHTML = '<div style="background:var(--surface-2);border:2.5px dashed var(--ink);border-radius:12px;padding:12px 14px;font:500 12.5px/1.6 var(--font-body);color:var(--muted)">The museum opens when Case 001 closes this Thursday. Every solved file then stays here forever \u2014 playable, prize or no prize. The graveyard keeps its dead, and now its cases too.</div>';
+      } else {
+        list.innerHTML = arcs.map(function (c) {
+          return '<a href="casefile.html?case=' + encodeURIComponent(c.id) + '" style="display:flex;align-items:center;gap:12px;text-decoration:none;background:var(--paper);border:2.5px solid var(--ink);border-radius:12px;box-shadow:3px 3px 0 var(--ink);padding:11px 13px;color:var(--ink)">' +
+            '<span style="font-size:22px">\uD83D\uDCC2</span>' +
+            '<span style="flex:1;min-width:0"><b style="font:800 11px var(--font-head);letter-spacing:1.5px;display:block">CASE ' + String(c.no || "").slice(0, 4) + '</b>' +
+            '<b style="font-family:\'Special Elite\',Georgia,serif;font-weight:400;font-size:15px;display:block;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + String(c.title || "").replace(/&/g,"&amp;").replace(/</g,"&lt;") + '</b></span>' +
+            '<span style="font:800 9px var(--font-head);letter-spacing:1.5px;color:#1d6fd1;border:2px solid #1d6fd1;border-radius:7px;padding:4px 7px;transform:rotate(-2deg)">CLOSED</span></a>';
+        }).join("");
+      }
+    }
+  })();
+  </script>
 </body>
 </html>

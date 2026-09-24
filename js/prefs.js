@@ -163,6 +163,12 @@
       s.count = s.last === yesterday ? s.count + 1 : 1;
       s.last = today;
       set("tsb_streak", s);
+      /* v281: the day log + reading birthday behind the Year-in-Review card */
+      try {
+        const days = get("tsb_days", []);
+        if (!days.includes(today)) { days.push(today); set("tsb_days", days.slice(-400)); }
+        if (!get("tsb_birthday", "")) set("tsb_birthday", today);
+      } catch (e) {}
       if (s.count >= 3) achv.award("streak-3");
       if (s.count >= 7) achv.award("streak-7");
       if (s.count >= 30) achv.award("streak-30");

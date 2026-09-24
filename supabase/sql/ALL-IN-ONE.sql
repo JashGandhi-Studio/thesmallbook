@@ -518,7 +518,8 @@ grant execute on function public.respond_follow_request(uuid, boolean) to authen
 grant execute on function public.cancel_follow_request(uuid)           to authenticated;
 grant execute on function public.unfollow(uuid)                        to authenticated;
 
-create or replace view public.my_follow_requests as
+create or replace view public.my_follow_requests
+  with (security_invoker = true) as
   select r.id as request_id, r.requester_id,
          coalesce(p.name, 'A reader') as name, p.avatar_url, r.created_at
     from public.follow_requests r
@@ -788,3 +789,46 @@ select
   (select count(*) from pg_proc
      where pronamespace = 'public'::regnamespace and proname = 'set_my_username')
     as name_claim_ok_want_1;
+
+-- ============================================================
+-- §8 · THE CASE FILE · public verdict wall (v277)
+-- The weekly case's public guesses. Everyone reads the wall
+-- (even signed-out); only signed-in readers may post; authors
+-- may edit their own. Idempotent: safe to run the file again.
+-- ============================================================
+create table if not exists public.case_guesses (
+  id          uuid primary key default gen_random_uuid(),
+  case_id     text not null,
+  user_id     uuid not null references public.profiles(id) on delete cascade,
+  name        text not null default 'A reader',
+  body        text not null check (char_length(body) between 1 and 4000),
+  image_url   text,
+  created_at  timestamptz not null default now()
+);
+create index if not exists case_guesses_case_idx on public.case_guesses (case_id, created_at desc);
+
+alter table public.case_guesses enable row level security;
+
+drop policy if exists "case guesses are public to read" on public.case_guesses;
+create policy "case guesses are public to read"
+  on public.case_guesses for select using (true);
+
+drop policy if exists "signed-in readers may post a verdict" on public.case_guesses;
+create policy "signed-in readers may post a verdict"
+  on public.case_guesses for insert to authenticated
+  with check (user_id = auth.uid());
+
+drop policy if exists "authors manage own verdicts" on public.case_guesses;
+create policy "authors manage own verdicts"
+  on public.case_guesses for update to authenticated
+  using (user_id = auth.uid());
+
+-- guard
+do $$
+begin
+  if (select count(*) from pg_policies
+      where schemaname='public' and tablename='case_guesses') < 3 then
+    raise notice 'case_guesses policies missing - rerun this file';
+  end if;
+end $$;
+

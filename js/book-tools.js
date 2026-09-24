@@ -218,7 +218,7 @@
 
     var flow = plan.map(function (s, i) {
       return '<li class="cs2__do"><span class="cs2__donum">' + (i + 1) + "</span>" +
-        "<span>" + esc(clip(s, 100)) + "</span></li>";
+        "<span>" + esc(clip(s, 88)) + '</span><span class="cs2__tick" aria-hidden="true"></span></li>';
     }).join("");
 
     var restList = rest.map(function (l, i) {
@@ -275,10 +275,11 @@
       '<section class="cs2__page"><div class="cs2__body">' +
         pageHead(b, 2, pal) +
         pageIdBar(b) +
+        '<div class="cs2__dates"><span>STARTED READING</span><i></i><span>FINISHED</span><i></i></div>' +
 
         (openQuote
           ? '<figure class="cs2__lead"><span class="cs2__leadq">\u275d</span>' +
-            "<p>" + esc(clip(openQuote, 150)) + "</p>" +
+            "<p>" + esc(clip(openQuote, 120)) + "</p>" +
             "<figcaption>\u2014 " + esc(b.author || "") + "</figcaption></figure>"
           : "") +
 
@@ -286,25 +287,11 @@
         '<ol class="cs2__dos">' + flow + "</ol>" +
 
         '<div class="cs2__watch"><b>WHERE IT BREAKS</b><p>' +
-          esc(clip(b.caveat || "No book fixes a system you never set up. Pick the first step and start it today.", 230)) +
+          esc(clip(b.caveat || "No book fixes a system you never set up. Pick the first step and start it today.", 148)) +
         "</p></div>" +
 
-        (lines.length
-          ? h2("Lines that land", true) +
-            '<div class="cs2__quotes">' + lines.map(function (q) {
-              return "<blockquote>\u275d " + esc(clip(q, 130)) + "</blockquote>";
-            }).join("") + "</div>"
-          : "") +
-
-        (next.length
-          ? h2("If this one landed, read next", true) +
-            '<div class="cs2__next">' + next.map(function (r) {
-              return '<div class="cs2__nb">' +
-                '<img src="' + esc(r.cover || "") + '" alt="">' +
-                "<span><b>" + esc(clip(r.title, 40)) + "</b><i>" + esc(clip(r.author || "", 26)) + "</i></span>" +
-              "</div>";
-            }).join("") + "</div>"
-          : "") +
+        /* the write-on strip: the reason this sheet lives on a desk, not in a drawer */
+        '<div class="cs2__mine"><b>MY NOTES \u00b7 THIS WEEK IN PRACTICE</b><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>' +
       "</div>" + pageFoot(b) + "</section>" +
     "</div>";
   }
