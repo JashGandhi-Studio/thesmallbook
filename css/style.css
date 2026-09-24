@@ -8473,12 +8473,12 @@ html.dark .freshhead__btn { border-color: #000; box-shadow: 3px 3px 0 #000; }
 .pk-save:active { transform: translate(1.5px,1.5px); box-shadow: 1.5px 1.5px 0 rgba(17,17,17,.35); }
 .pk-unsave { flex: none; background: var(--paper); color: var(--muted); border: 2px dashed var(--muted-2, #8a8378); border-radius: 12px; padding: 12px 14px; font: 600 11px var(--font-body); cursor: pointer; }
 .pk-shelfwrap { padding: 26px 18px 0; }
-.pk-shelfrow { display: flex; align-items: flex-end; gap: 12px; overflow-x: auto; padding: 0 6px 0; scrollbar-width: none; }
+.pk-shelfrow { display: flex; align-items: flex-end; justify-content: safe center; gap: clamp(6px, 2vw, 12px); overflow-x: auto; padding: 10px 6px 2px; scrollbar-width: none; scroll-snap-type: x proximity; }
 .pk-shelfrow::-webkit-scrollbar { display: none; }
-.pk-vol { position: relative; flex: none; width: 64px; transition: transform .15s ease; }
+.pk-vol { position: relative; flex: none; width: clamp(44px, 12.5vw, 64px); transition: transform .15s ease; scroll-snap-align: center; }
 .pk-vol:hover { transform: translateY(-4px); }
-.pk-vol img { width: 64px; height: 92px; object-fit: cover; border: 3px solid var(--ink); border-radius: 6px 9px 9px 6px; box-shadow: 4px 4px 0 var(--ink); display: block; background: var(--paper); }
-.pk-vol i { position: absolute; top: -9px; left: -7px; font: 800 8.5px var(--font-head); font-style: normal; letter-spacing: .8px; background: var(--ink); color: #ffc800; border-radius: 6px; padding: 3.5px 6px; }
+.pk-vol img { width: 100%; aspect-ratio: 64 / 92; height: auto; object-fit: cover; border: 3px solid var(--ink); border-radius: 6px 9px 9px 6px; box-shadow: 4px 4px 0 var(--ink); display: block; background: var(--paper); }
+.pk-vol i { position: absolute; top: -9px; left: 50%; transform: translateX(-50%); font: 800 8px var(--font-head); font-style: normal; letter-spacing: .6px; background: var(--ink); color: #ffc800; border-radius: 6px; padding: 3px 5px; white-space: nowrap; max-width: 130%; overflow: hidden; text-overflow: ellipsis; }
 .pk-plank { display: block; height: 10px; margin: -2px 8px 0; border: 3px solid var(--ink); border-radius: 6px; box-shadow: 5px 6px 0 var(--ink); }
 .pk-days { padding: 18px 18px 6px; display: flex; flex-direction: column; gap: 10px; }
 .pk-day { display: flex; align-items: center; gap: 12px; background: var(--paper); border: 3px solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); padding: 10px 12px; text-decoration: none; color: var(--ink); }

@@ -24,7 +24,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=284">
+  <link rel="stylesheet" href="css/style.css?v=286">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -32,11 +32,11 @@
   <meta property="og:title" content="The Graveyard, 300 Failures, Autopsied | TheSmallBook">
   <meta property="og:description" content="Why startups, empires and legends failed, free case studies with the lesson, no signup.">
   <meta property="og:site_name" content="TheSmallBook">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=284">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=286">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="TheSmallBook, 400 books · 2637 lessons · 308 autopsies · free to read">
-  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=284">
+  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=286">
 </head>
 <body class="graveyard-page">
 
@@ -164,20 +164,20 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="./js/bootguard.js?v=284"></script>
-  <script src="js/prefs.js?v=284"></script>
-  <script src="js/support.js?v=284"></script>
-  <script src="js/lang.js?v=284"></script>
-  <script src="js/config.js?v=284"></script>
-  <script src="js/auth.js?v=284"></script>
-  <script src="js/data.js?v=284"></script>
-  <script src="js/failures.js?v=284"></script>
-  <script src="js/graveyard-content.js?v=284"></script>
-  <script src="js/graveyard.js?v=284"></script>
-    <script src="js/ask-data.js?v=284"></script>
-  <script src="js/tts-engine.js?v=284"></script>
-  <script src="js/ask.js?v=284"></script>
-  <script src="js/bar.js?v=284" defer></script>
+  <script src="./js/bootguard.js?v=286"></script>
+  <script src="js/prefs.js?v=286"></script>
+  <script src="js/support.js?v=286"></script>
+  <script src="js/lang.js?v=286"></script>
+  <script src="js/config.js?v=286"></script>
+  <script src="js/auth.js?v=286"></script>
+  <script src="js/data.js?v=286"></script>
+  <script src="js/failures.js?v=286"></script>
+  <script src="js/graveyard-content.js?v=286"></script>
+  <script src="js/graveyard.js?v=286"></script>
+    <script src="js/ask-data.js?v=286"></script>
+  <script src="js/tts-engine.js?v=286"></script>
+  <script src="js/ask.js?v=286"></script>
+  <script src="js/bar.js?v=286" defer></script>
   <script>
     /* v267 · the fresh anchor, a quiet way down, never an interruption */
     (function () {
@@ -195,9 +195,9 @@
       });
     })();
   </script>
-  <script src="js/gate.js?v=284" defer></script>
-  <script src="js/trial.js?v=284" defer></script>
-  <script src="js/casefile-data.js?v=284"></script>
+  <script src="js/gate.js?v=286" defer></script>
+  <script src="js/trial.js?v=286" defer></script>
+  <script src="js/casefile-data.js?v=286"></script>
   <script>
   (function () {
     "use strict";
@@ -208,7 +208,7 @@
         var now = new Date(), next = new Date(now);
         next.setDate(now.getDate() + ((C.closeDay - now.getDay() + 7) % 7));
         next.setHours(C.closeHour, C.closeMin || 0, 0, 0);
-        if (next - now < 6 * 36e5) next.setDate(next.getDate() + 7);   /* never closes tonight: full week always */
+        if (next - now < 24 * 36e5) next.setDate(next.getDate() + 7);  /* full week, always: less than a day left -> next Thursday */
         var ms = next - now, d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5), m = Math.floor(ms % 36e5 / 6e4);
         var days = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"][C.closeDay];
         el.textContent = "CLOSES " + days + " " + ((C.closeHour % 12) || 12) + (C.closeHour >= 12 ? " PM" : " AM") + " \u00b7 " +
@@ -216,6 +216,24 @@
       }
       tick(); setInterval(tick, 3e4);
     }
+    /* the Founder's desk doorway: him alone */
+    function fPaint() {
+      var me2 = null;
+      try { var u0 = (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) || null; if (u0) me2 = u0; } catch (e) {}
+      try { if (!me2) { var s = JSON.parse(localStorage.getItem("tsb_auth_session")); me2 = (s && s.user) || null; } } catch (e) {}
+      if (!me2 || String(me2.email || "").toLowerCase() !== "acimotreyothy@gmail.com") return;
+      var host = document.getElementById("cfMuseum");
+      if (!host || document.getElementById("cfDeskDoor")) return;
+      var d = document.createElement("div");
+      d.id = "cfDeskDoor";
+      d.style.cssText = "display:flex;align-items:center;gap:12px;margin:0 auto 14px;background:#10151f;border:3px solid #1d6fd1;border-radius:14px;box-shadow:5px 5px 0 var(--ink);padding:13px 15px;max-width:720px";
+      d.innerHTML = '<span style="font-size:24px">\uD83D\uDD75</span><span style="flex:1;color:#e6ecf7"><b style="font:800 11px var(--font-head);letter-spacing:2px;color:#9cc0ff;display:block">FOUNDER\u2019S DESK</b><span style="font:500 12px var(--font-body);color:#b9c4d8">Your sealed pile is open. Open a case file to read every verdict, with names and sheets.</span></span><a href="casefile.html" style="font:800 10px var(--font-head);letter-spacing:1px;background:#1d6fd1;color:#fff;border:2px solid #10151f;border-radius:8px;padding:8px 10px;text-decoration:none">OPEN \u2192</a>';
+      host.parentNode.insertBefore(d, host);
+    }
+    fPaint();
+    try { if (window.TSB_COMMUNITY && TSB_COMMUNITY.whenReady) TSB_COMMUNITY.whenReady(fPaint); } catch (e) {}
+    window.addEventListener("tsb:auth", fPaint);
+    (function deskWatchGy() { var k = 0, iv = setInterval(function () { fPaint(); if (++k >= 10) clearInterval(iv); }, 800); })();
     /* the museum */
     var list = document.getElementById("cfMuseumList");
     if (list) {

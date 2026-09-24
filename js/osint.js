@@ -150,7 +150,7 @@
   function fetchWikimediaImages(query){
     var q = String(query||"aesthetic").trim() || "aesthetic";
     // bias to photos: add filetype filter via search? Wikimedia search is broad, we keep as is but live.
-    var url = "https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch="+encodeURIComponent(q)+"&gsrnamespace=6&gsrlimit=8&prop=imageinfo&iiprop=url&iiurlwidth=640&format=json&origin=*";
+    var url = "https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch="+encodeURIComponent(q)+"&gsrnamespace=6&gsrlimit=8&prop=imageinfo&iiprop=url&iiurlwidth=1280&format=json&origin=*";
     return jfetch(url, 7000).then(function(j){
       var pages = j.query && j.query.pages ? j.query.pages : {};
       var out=[];

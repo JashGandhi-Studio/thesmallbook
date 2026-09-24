@@ -727,23 +727,27 @@
     root.addEventListener("click", function (e) { if (e.target === root) close(); });
     $("stuDl").addEventListener("click", async function () {
       this.textContent = "… rendering";
-      try { await shareOrDownload(await render(false), "thesmallbook-card.png"); } finally { this.textContent = "⬇ DOWNLOAD CARD"; }
+      try { await shareOrDownload(await renderSafe(), "thesmallbook-card.png"); }
+      catch (e) { toast("❌ This photo\u2019s source is blocking exports \u2014 save it and add it from your gallery, or pick another."); }
+      finally { this.textContent = "⬇ DOWNLOAD CARD"; }
     });
     // v244: export the picture ALONE, clean image, no text, no watermark (your "image & text separately" choice)
     $("stuDlPhoto").addEventListener("click", async function () {
       this.textContent = "… rendering";
-      try { await shareOrDownload(await render(true), "thesmallbook-photo.png"); } finally { this.textContent = "⬇ PHOTO ONLY"; }
+      try { await shareOrDownload(await renderSafe(true), "thesmallbook-photo.png"); }
+      catch (e) { toast("❌ This photo\u2019s source is blocking exports \u2014 save it and add it from your gallery, or pick another."); }
+      finally { this.textContent = "⬇ PHOTO ONLY"; }
     });
     $("stuApply").addEventListener("click", async function () {
       this.textContent = "… rendering";
       try {
         /* in-app cover: no credit chip, the free mark only rides downloads */
-        var file = await canvasToFile(await render(false, { mark: false }), "studio-card.png");
+        var file = await canvasToFile(await renderSafe({ mark: false }), "studio-card.png");
         if (cfg.onApply) await cfg.onApply(file, styleBag());
         toast("✅ Studio card set as your cover");
         close();
       } catch (e) {
-        toast("❌ Couldn't compose, re-pick the photo on this page, then try again.");
+        toast("❌ Couldn\u2019t compose. This photo\u2019s source is blocking exports \u2014 save it and add it from your gallery, or pick another.");
       } finally { this.textContent = "✔ USE AS COVER"; }
     });
 
@@ -768,9 +772,11 @@
             // Smooth: load picked aesthetic image directly into the card preview (no extra window)
             try{
               var isPic = /picsum|wikimedia|upload\.wikimedia/i.test(url);
-              // For live aesthetic, load as photo (so user can reframe), feels instant
+              // v285: desk images load CORS-first. Without it the canvas taints and
+              // every export dies with "Couldn't compose". Desk sources send CORS
+              // headers; the _corsFailed fallback still covers the odd one out.
               if(typeof _load === "function"){
-                _load(url, false);
+                _load(url, true);
                 toast("✨ Aesthetic image loaded, drag to reframe, pick ratio");
               } else {
                 window.open(url,"_blank");
@@ -846,6 +852,27 @@
       };
       img.src = src;
     }
+    /* v286: if an export ever still hits a tainted canvas, re-fetch the photo as a
+       same-origin blob and render again — the user never sees "Couldn't compose". */
+    async function _detaint() {
+      try {
+        if (!img || !img.src || !/^https?:\/\//.test(img.src)) return false;
+        var b = await fetch(img.src, { mode: "cors", credentials: "omit" }).then(function (r) { if (!r.ok) throw new Error("bad"); return r.blob(); });
+        var u = URL.createObjectURL(b);
+        var ok = await new Promise(function (res) {
+          var done = false;
+          _load(u, false);
+          var t = setInterval(function () { if (img && img.src === u && img.complete && img.naturalWidth) { done = true; clearInterval(t); res(true); } }, 60);
+          setTimeout(function () { if (!done) { clearInterval(t); res(!!(img && img.complete && img.naturalWidth)); } }, 2500);
+        });
+        return ok;
+      } catch (e) { return false; }
+    }
+    async function renderSafe(photoOnly, opts) {
+      try { return await render(photoOnly, opts); }
+      catch (e1) { if (await _detaint()) return await render(photoOnly, opts); throw e1; }
+    }
+
     // Prefer fetch→blob for remote URLs to avoid canvas taint when Supabase CORS allows it
     if(cfg.src && /^https?:\/\//.test(cfg.src) && !/^blob:/.test(cfg.src) && !/^data:/.test(cfg.src)){
       fetch(cfg.src, {mode:"cors", credentials:"omit"}).then(function(r){ if(!r.ok) throw new Error("bad"); return r.blob(); }).then(function(b){

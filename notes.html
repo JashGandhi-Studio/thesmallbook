@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=284">
+  <link rel="stylesheet" href="css/style.css?v=286">
   <style>
     .nt-wrap { max-width: 780px; margin: 0 auto; padding: 18px 16px calc(90px + env(safe-area-inset-bottom)); }
     .nt-top { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
@@ -21,7 +21,7 @@
     .nt-new:active { transform: translate(1.5px,1.5px); box-shadow: 1px 1px 0 rgba(17,17,17,.35); }
     .nt-guest { background: var(--surface-2); border: 2.5px dashed var(--ink); border-radius: 12px; padding: 10px 13px; font: 500 12.5px/1.6 var(--font-body); margin-bottom: 14px; }
 
-    /* ================= the cover: one material, one accent ================= */
+    /* ================= the cover ================= */
     .nt-cover {
       position: relative; overflow: hidden;
       background: linear-gradient(165deg, #23231f 0%, #1b1b18 60%, #161614 100%);
@@ -29,25 +29,15 @@
       box-shadow: 8px 8px 0 var(--ink), inset 0 1px 0 rgba(255,255,255,.05);
       padding: 34px 26px 26px 56px; color: #e9dcb8;
     }
-    /* the spine: darker band, two stitched seams */
     .nt-cover::before {
       content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 34px;
       background: linear-gradient(90deg, #101010, #191917 70%, rgba(255,255,255,.05));
       border-right: 1.5px solid rgba(255,255,255,.12);
     }
-    .nt-cover::after {
-      content: ""; position: absolute; top: 0; bottom: 0; left: 34px; width: 0;
-      border-left: 5px dotted rgba(255,255,255,.16);
-    }
+    .nt-cover::after { content: ""; position: absolute; top: 0; bottom: 0; left: 34px; width: 0; border-left: 5px dotted rgba(255,255,255,.16); }
     .nt-cover__word { text-align: center; }
-    .nt-cover__word b {
-      display: block; font: 800 14px var(--font-head); letter-spacing: 5px; color: #cfcabe;
-      text-shadow: 0 1px 0 #000;
-    }
-    .nt-cover__word i {
-      display: block; font: 500 11px var(--font-body); letter-spacing: 2.5px; color: #8a8a80;
-      margin-top: 6px; font-style: normal;
-    }
+    .nt-cover__word b { display: block; font: 800 14px var(--font-head); letter-spacing: 5px; color: #cfcabe; text-shadow: 0 1px 0 #000; }
+    .nt-cover__word i { display: block; font: 500 11px var(--font-body); letter-spacing: 2.5px; color: #8a8a80; margin-top: 6px; font-style: normal; }
     .nt-cover__rule { width: 54px; height: 1.5px; background: #6f6f66; margin: 15px auto 0; }
     .nt-toc { margin-top: 24px; }
     .nt-toc__h { text-align: center; font: 800 10px var(--font-head); letter-spacing: 3.5px; color: #8a8a80; margin-bottom: 8px; }
@@ -61,22 +51,12 @@
     .nt-empty { text-align: center; font: 500 13.5px/1.8 var(--font-body); color: #9a8f76; padding: 30px 12px 18px; }
     .nt-empty b { display: block; font-family: 'Caveat', Georgia, serif; font-size: 26px; font-weight: 600; color: #d6d2c6; margin-bottom: 6px; }
 
-    /* ================= the writing desk ================= */
-    .nt-titlein {
-      width: 100%; background: transparent; border: 0; border-bottom: 2.5px solid rgba(17,17,17,.85);
-      font: 700 20px/1.3 var(--font-body); padding: 4px 2px 6px; color: var(--ink); box-sizing: border-box;
-    }
+    /* ================= the desk ================= */
+    .nt-titlein { width: 100%; background: transparent; border: 0; border-bottom: 2.5px solid rgba(17,17,17,.85); font: 700 20px/1.3 var(--font-body); padding: 4px 2px 6px; color: var(--ink); box-sizing: border-box; }
     .nt-titlein:focus { outline: none; }
     .nt-titlein::placeholder { color: #c9c2b0; }
-    .nt-bar {
-      display: flex; gap: 2px; align-items: center; flex-wrap: wrap;
-      background: transparent; border: 0; border-bottom: 2.5px solid var(--ink);
-      padding: 4px 2px 7px; margin: 10px 0 14px;
-    }
-    .nt-bar button {
-      background: transparent; border: 0; border-radius: 7px; min-width: 34px; min-height: 32px;
-      padding: 4px 9px; font: 700 13px var(--font-body); color: var(--ink); cursor: pointer; opacity: .78;
-    }
+    .nt-bar { display: flex; gap: 2px; align-items: center; flex-wrap: wrap; background: transparent; border: 0; border-bottom: 2.5px solid var(--ink); padding: 4px 2px 7px; margin: 10px 0 14px; }
+    .nt-bar button { background: transparent; border: 0; border-radius: 7px; min-width: 34px; min-height: 32px; padding: 4px 9px; font: 700 13px var(--font-body); color: var(--ink); cursor: pointer; opacity: .78; }
     .nt-bar button:hover { opacity: 1; background: var(--surface-2); }
     .nt-bar button:active { transform: translateY(1px); }
     .nt-bar .nt-sep { flex: none; width: 1.5px; height: 20px; background: rgba(17,17,17,.25); margin: 0 7px; }
@@ -86,28 +66,59 @@
     .nt-paperwrap::before { transform: rotate(1deg) translate(3px,3px); }
     .nt-paperwrap::after { transform: rotate(-.9deg) translate(-3px,4px); }
     .nt-paper {
-      position: relative; z-index: 1;
+      position: relative; z-index: 1; transform-origin: left center;
       background:
         linear-gradient(90deg, transparent 0 44px, rgba(214,69,69,.45) 44px 45.5px, transparent 45.5px),
         repeating-linear-gradient(180deg, transparent 0 33px, #cfdae6 33px 34.5px),
         #fffdf6;
       background-position: 14px 0, 0 33px, 0 0;
-      border: 3px solid var(--ink); border-radius: 14px 14px 14px 14px;
+      border: 3px solid var(--ink); border-radius: 14px;
       padding: 18px 20px 24px 64px; min-height: 440px;
+      transition: box-shadow .2s ease;
     }
     .nt-rings { position: absolute; top: -12px; left: 24px; right: 24px; height: 20px; display: flex; justify-content: space-between; z-index: 2; }
     .nt-rings i { width: 22px; height: 20px; border-radius: 10px/12px; background: linear-gradient(180deg, #f0ede4, #b9b4a4); border: 3px solid var(--ink); box-shadow: inset 0 -3px 0 rgba(0,0,0,.22); }
     .nt-body { font: 500 15.5px/34px 'Special Elite', Georgia, serif; color: #26221a; min-height: 440px; outline: none; caret-color: #d64545; }
     .nt-body:empty::before { content: attr(data-ph); color: #b9b2a2; font-family: var(--font-body); font-size: 14px; pointer-events: none; }
-    .nt-body img { max-width: 100%; border: 2.5px solid var(--ink); border-radius: 10px; margin: 4px 0; }
+    .nt-body img { max-width: 100%; border: 2.5px solid var(--ink); border-radius: 10px; margin: 4px 0; cursor: pointer; }
     .nt-body blockquote { border-left: 5px solid #3a3a36; margin: 4px 0; padding-left: 12px; }
     .nt-body ul, .nt-body ol { padding-left: 22px; }
     .nt-body h2 { font: 700 22px/34px var(--font-body); }
-    .nt-turn-l { transform-origin: left center; animation: ntTurnL .24s ease; }
-    .nt-turn-r { transform-origin: right center; animation: ntTurnR .24s ease; }
-    @keyframes ntTurnL { 0% { transform: rotateY(-12deg); opacity: .4; } 100% { transform: none; opacity: 1; } }
-    @keyframes ntTurnR { 0% { transform: rotateY(12deg); opacity: .4; } 100% { transform: none; opacity: 1; } }
-    @media (prefers-reduced-motion: reduce) { .nt-turn-l, .nt-turn-r { animation: none; } }
+
+    /* the page turn: the sheet lifts off the rings */
+    .nt-paper.turn-fwd { animation: ntCurlF .34s cubic-bezier(.45,.05,.35,1); }
+    .nt-paper.turn-back { animation: ntCurlB .34s cubic-bezier(.45,.05,.35,1); }
+    @keyframes ntCurlF {
+      0% { transform: rotateY(0); box-shadow: none; }
+      45% { transform: rotateY(-13deg) translateZ(26px); box-shadow: -22px 18px 34px rgba(17,17,17,.35); }
+      100% { transform: rotateY(0); box-shadow: none; }
+    }
+    @keyframes ntCurlB {
+      0% { transform: rotateY(0); box-shadow: none; }
+      45% { transform: rotateY(11deg) translateZ(26px); box-shadow: 22px 18px 34px rgba(17,17,17,.35); }
+      100% { transform: rotateY(0); box-shadow: none; }
+    }
+    @media (prefers-reduced-motion: reduce) { .nt-paper.turn-fwd, .nt-paper.turn-back { animation: none; } }
+
+    /* the voice chip, dressed like the page */
+    .nt-chip { display: flex; align-items: center; gap: 9px; border: 2.5px solid var(--ink); border-radius: 12px; background: #f6f0e0; padding: 7px 11px; margin: 6px 0; max-width: 320px; }
+    .nt-chip button { flex: none; width: 30px; height: 30px; border-radius: 9px; border: 2.5px solid var(--ink); background: var(--ink); color: #fff; font-size: 11px; cursor: pointer; line-height: 1; }
+    .nt-chip .nt-chip__t { font: 700 11.5px var(--font-body); color: #26221a; }
+    .nt-chip .nt-chip__d { font: 500 10px var(--font-body); color: #8a8a80; }
+    .nt-chip .nt-bars { display: flex; gap: 2.5px; align-items: flex-end; height: 16px; margin-left: auto; }
+    .nt-chip .nt-bars i { width: 3px; background: #26221a; border-radius: 2px; opacity: .55; height: 5px; }
+    .nt-chip.playing .nt-bars i { animation: ntBar .8s ease-in-out infinite; }
+    .nt-chip.playing .nt-bars i:nth-child(2) { animation-delay: .12s; }
+    .nt-chip.playing .nt-bars i:nth-child(3) { animation-delay: .24s; }
+    .nt-chip.playing .nt-bars i:nth-child(4) { animation-delay: .36s; }
+    @keyframes ntBar { 0%,100% { height: 5px; } 50% { height: 15px; } }
+    @media (prefers-reduced-motion: reduce) { .nt-chip.playing .nt-bars i { animation: none; height: 11px; } }
+
+    /* the resize bar */
+    .nt-rs { position: fixed; z-index: 99997; display: none; gap: 4px; background: var(--ink); border: 2.5px solid var(--ink); border-radius: 11px; padding: 4px; box-shadow: 3px 3px 0 rgba(17,17,17,.4); }
+    .nt-rs button { border: 0; background: transparent; color: #fff; font: 800 10px var(--font-head); letter-spacing: .5px; padding: 7px 9px; border-radius: 7px; cursor: pointer; }
+    .nt-rs button:hover { background: rgba(255,255,255,.14); }
+    .nt-rs button.on { background: var(--ink); color: var(--paper); }
 
     .nt-pager { display: flex; align-items: center; gap: 10px; margin: 16px 2px 0; }
     .nt-pbtn { background: var(--paper); border: 2.5px solid var(--ink); border-radius: 10px; box-shadow: 3px 3px 0 var(--ink); padding: 10px 13px; font: 800 10.5px var(--font-head); letter-spacing: 1px; cursor: pointer; }
@@ -115,12 +126,18 @@
     .nt-pbtn[disabled] { opacity: .45; }
     .nt-pn { font: 800 10px var(--font-head); letter-spacing: 1.5px; color: var(--muted); margin: 0 auto; }
     .nt-addpage { background: var(--ink); color: #fff; }
-    .nt-foot { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; align-items: center; }
+    .nt-foot { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; align-items: center; position: relative; }
     .nt-fbtn { background: var(--paper); border: 2.5px solid var(--ink); border-radius: 10px; box-shadow: 3px 3px 0 var(--ink); padding: 10px 12px; font: 800 10px var(--font-head); letter-spacing: 1px; cursor: pointer; }
     .nt-fbtn:active { transform: translate(1.5px,1.5px); box-shadow: 1px 1px 0 var(--ink); }
     .nt-fbtn--brand { background: var(--ink); color: #fff; }
     .nt-fbtn--del { color: #c22b2b; }
     .nt-saved { font: 500 11px var(--font-body); color: var(--muted); margin-left: auto; }
+    .nt-export { position: absolute; bottom: calc(100% + 6px); left: 0; display: none; flex-direction: column; background: var(--paper); border: 2.5px solid var(--ink); border-radius: 12px; box-shadow: 5px 5px 0 var(--ink); overflow: hidden; z-index: 30; min-width: 180px; }
+    .nt-export.on { display: flex; }
+    .nt-export button { border: 0; border-bottom: 2px solid var(--surface-2); background: var(--paper); text-align: left; padding: 12px 14px; font: 700 12.5px var(--font-body); cursor: pointer; }
+    .nt-export button:last-child { border-bottom: 0; }
+    .nt-export button:hover { background: var(--surface-2); }
+    .nt-export button i { display: block; font: 500 10px var(--font-body); font-style: normal; color: var(--muted); margin-top: 2px; }
 
     .nt-draw { position: fixed; inset: 0; z-index: 99995; background: rgba(17,14,9,.72); display: grid; place-items: center; padding: 14px; }
     .nt-draw__card { background: var(--paper); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 8px 8px 0 var(--ink); padding: 14px; max-width: 94vw; }
@@ -128,7 +145,6 @@
     .nt-draw__row { display: flex; gap: 7px; margin-top: 10px; flex-wrap: wrap; align-items: center; }
     .nt-sw { width: 30px; height: 30px; border: 2.5px solid var(--ink); border-radius: 9px; cursor: pointer; }
     html.dark .nt-paperwrap::before, html.dark .nt-paperwrap::after { background: #efe9da; }
-    html.dark .nt-entry__t { color: #fdf6e3; }
   </style>
 </head>
 <body>
@@ -142,19 +158,20 @@
     <div id="ntMain"></div>
   </main>
 
-  <script src="js/bootguard.js?v=284"></script>
-  <script src="js/prefs.js?v=284"></script>
-  <script src="js/lang.js?v=284"></script>
-  <script src="js/config.js?v=284"></script>
-  <script src="js/auth.js?v=284"></script>
-  <script src="js/sounds.js?v=284"></script>
-  <script src="js/founder.js?v=284"></script>
-  <script src="js/community.js?v=284"></script>
-  <script src="js/bar.js?v=284" defer></script>
+  <script src="js/bootguard.js?v=286"></script>
+  <script src="js/prefs.js?v=286"></script>
+  <script src="js/lang.js?v=286"></script>
+  <script src="js/config.js?v=286"></script>
+  <script src="js/auth.js?v=286"></script>
+  <script src="js/sounds.js?v=286"></script>
+  <script src="js/founder.js?v=286"></script>
+  <script src="js/community.js?v=286"></script>
+  <script src="js/bar.js?v=286" defer></script>
   <script>
   (function () {
     "use strict";
     var KEYU = "tsb_notes_v1_";
+    var MEDK = "tsb_note_media_";
     var PROMPTS = [
       "What did today's pages argue with me about?",
       "One line I underlined twice, and why.",
@@ -171,18 +188,43 @@
     ];
     function uid() { try { return (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user() && TSB_AUTH.user().id) || "guest"; } catch (e) { return "guest"; } }
     function key() { return KEYU + uid(); }
+    function mkey() { return MEDK + uid(); }
     function raw(k) { try { return JSON.parse(localStorage.getItem(k) || "[]"); } catch (e) { return []; } }
+    function rawObj(k) { try { return JSON.parse(localStorage.getItem(k) || "{}"); } catch (e) { return {}; } }
+    function saveObj(k, o) { try { localStorage.setItem(k, JSON.stringify(o)); } catch (e) {} }
     function save(arr) { try { localStorage.setItem(key(), JSON.stringify(arr)); } catch (e) {} }
     function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]; }); }
     function $(id) { return document.getElementById(id); }
-    function me() { try { return (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) || null; } catch (e) { return null; } }
+    function me() {
+      try { var u0 = (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) || null; if (u0) return u0; } catch (e) {}
+      try { var s = JSON.parse(localStorage.getItem("tsb_auth_session")); return (s && s.user) || null; } catch (e) { return null; }
+    }
     function ago(t) { var d = Date.now() - t; if (d < 6e4) return "just now"; if (d < 36e5) return Math.floor(d / 6e4) + " min ago"; if (d < 864e5) return Math.floor(d / 36e5) + " h ago"; return new Date(t).toLocaleDateString(); }
 
-    /* ---------- synchronization: guest pages follow you into your account ----------
-       Signed in and the account has fewer notes than this device's guest shelf?
-       Copy the missing ones across (newest copy wins, ids dedupe). The guest
-       shelf stays put, so signing out never looks like a loss. */
-    (function sync() {
+    /* ---------- the guest banner answers only after auth has spoken ---------- */
+    function paintBanner() {
+      var b = $("ntBanner");
+      if (me()) { b.innerHTML = ""; return; }
+      b.innerHTML = '<div class="nt-guest">\uD83D\uDD12 These pages live on this device. <a href="login.html" style="color:inherit;font-weight:800">Sign in</a> and they follow your account on every device you use.</div>';
+    }
+    paintBanner();
+    function afterAuth() {
+      paintBanner();
+      syncFromGuest();
+      notes = raw(key());
+      if (!curId) list();
+    }
+    try { if (window.TSB_COMMUNITY && TSB_COMMUNITY.whenReady) TSB_COMMUNITY.whenReady(afterAuth); } catch (e) {}
+    window.addEventListener("tsb:auth", afterAuth);
+    /* v286 watchdog: whatever order auth speaks in, the banner obeys the real state.
+       Checks for ~9s, then hands over to the tsb:auth listener for the rest of the session. */
+    (function bannerWatch() {
+      var ticks = 0;
+      var iv = setInterval(function () { paintBanner(); if (++ticks >= 26) clearInterval(iv); }, 350);
+    })();
+
+    /* ---------- synchronization: guest pages follow you into your account ---------- */
+    function syncFromGuest() {
       var u = uid();
       if (u === "guest") return;
       var mine = raw(key()), guest = raw(KEYU + "guest");
@@ -197,17 +239,45 @@
         }
       });
       if (added) { mine.sort(function (a, b) { return (b.updated || 0) - (a.updated || 0); }); save(mine); }
-    })();
+    }
 
     var notes = raw(key()), curId = null, curPage = 0, timer = null;
-
-    if (!me()) $("ntBanner").innerHTML = '<div class="nt-guest">\uD83D\uDD12 These pages live on this device until you sign in. <a href="login.html" style="color:inherit;font-weight:800">Sign in</a> and they follow your account on this device.</div>';
 
     function note() { for (var i = 0; i < notes.length; i++) if (notes[i].id === curId) return notes[i]; return null; }
     function persist() { save(notes); var s = $("ntSaved"); if (s) { s.textContent = "saved \u2713 just now"; setTimeout(function () { if ($("ntSaved")) $("ntSaved").textContent = "autosaves as you write"; }, 1400); } }
     function queue() { clearTimeout(timer); timer = setTimeout(persist, 600); }
 
-    /* ---------- the cover with its table of contents ---------- */
+    /* ---------- big media lives in a side drawer, never as raw code in the page ---------- */
+    function vstore() { return rawObj(mkey()); }
+    function virtualize(html) {
+      var box = document.createElement("div");
+      box.innerHTML = html;
+      var store = vstore(), touched = false;
+      box.querySelectorAll("img, audio, source").forEach(function (el) {
+        var src = el.getAttribute("src") || "";
+        if (src.indexOf("data:") === 0 && src.length > 24000) {
+          var id = "m" + Date.now().toString(36) + Math.floor(Math.random() * 46656).toString(36);
+          store[id] = src; touched = true;
+          el.setAttribute("data-ntv", id);
+          el.removeAttribute("src");
+        }
+      });
+      if (touched) { saveObj(mkey(), store); try { var keys = Object.keys(store); if (keys.length > 80) { delete store[keys[0]]; saveObj(mkey(), store); } } catch (e) {} }
+      return box.innerHTML;
+    }
+    function materialize(html) {
+      if (html.indexOf("data-ntv") < 0) return html;
+      var box = document.createElement("div");
+      box.innerHTML = html;
+      var store = vstore();
+      box.querySelectorAll("[data-ntv]").forEach(function (el) {
+        var id = el.getAttribute("data-ntv");
+        if (store[id]) { el.src = store[id]; el.removeAttribute("data-ntv"); }
+      });
+      return box.innerHTML;
+    }
+
+    /* ---------- the cover ---------- */
     function list() {
       curId = null;
       var m = $("ntMain");
@@ -216,7 +286,7 @@
         '<div class="nt-toc"><div class="nt-toc__h">CONTENTS</div>';
       if (!notes.length) h += '<div class="nt-empty"><b>The first page is yours.</b> One line is enough. The notebook forgives everything after it.</div>';
       notes.forEach(function (n) {
-        var snip = String(n.pages[0] || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 46);
+        var snip = String(materialize(n.pages[0] || "")).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 46);
         h += '<div class="nt-entry" data-n="' + n.id + '"><span class="nt-entry__t">' + esc(n.title || snip || "Untitled") + '</span><span class="nt-entry__dots"></span><span class="nt-entry__m">' + (n.pages.length > 1 ? n.pages.length + "p \u00b7 " : "") + ago(n.updated) + '</span><button class="nt-entry__x" data-x="' + n.id + '" title="Delete">\u2715</button></div>';
       });
       h += "</div></div>";
@@ -234,7 +304,7 @@
     }
 
     /* ---------- the paper ---------- */
-    function open(id, page, dir) {
+    function open(id, page) {
       curId = id; curPage = page || 0;
       var n = note(); if (!n) { list(); return; }
       if (curPage >= n.pages.length) curPage = n.pages.length - 1;
@@ -253,12 +323,16 @@
           '<span class="nt-sep"></span>' +
           '<button data-act="draw" title="Draw a diagram">\u270F</button>' +
           '<button data-act="photo" title="Add a photo">\uD83D\uDCF7</button>' +
+          '<button data-act="cam" title="Snap a page">\uD83D\uDCF8</button>' +
           '<button data-act="audio" title="Record a voice note">\uD83C\uDFA4</button>' +
         "</div>" +
         '<div class="nt-desk"><div class="nt-paperwrap">' +
           '<span class="nt-rings" aria-hidden="true">' + new Array(9 + 1).join("<i></i>") + "</span>" +
-          '<div class="nt-paper"><div class="nt-body" id="ntBody" contenteditable="true" data-empty="1" data-ph="' + esc(n.pages.length === 1 ? PROMPTS[notes.indexOf(n) % PROMPTS.length] : "the page continues\u2026") + '"></div></div>' +
+          '<div class="nt-paper" id="ntPaper"><div class="nt-body" id="ntBody" contenteditable="true" data-empty="1" data-ph="' + esc(n.pages.length === 1 ? PROMPTS[notes.indexOf(n) % PROMPTS.length] : "the page continues\u2026") + '"></div></div>' +
         "</div></div>" +
+        '<div class="nt-rs" id="ntRs">' +
+          '<button data-w="32%">S</button><button data-w="50%">M</button><button data-w="75%">L</button><button data-w="100%">FULL</button><button data-x="1">\u2715</button>' +
+        "</div>" +
         '<div class="nt-pager">' +
           '<button class="nt-pbtn" id="ntPrevP">\u2039 PREV</button>' +
           '<span class="nt-pn" id="ntPageN"></span>' +
@@ -267,16 +341,22 @@
         "</div>" +
         '<div class="nt-foot">' +
           '<button class="nt-fbtn nt-fbtn--brand" id="ntExport">EXPORT AS FILE</button>' +
+          '<div class="nt-export" id="ntExMenu">' +
+            '<button data-x="pdf">PDF <i>for printing and keeping</i></button>' +
+            '<button data-x="word">WORD <i>editable .doc, formatting kept</i></button>' +
+            '<button data-x="png">PNG <i>one long image of the pages</i></button>' +
+            '<button data-x="card">CARD <i>a shareable card for your stories</i></button>' +
+          "</div>" +
           '<button class="nt-fbtn" id="ntShare">SHARE</button>' +
           '<button class="nt-fbtn nt-fbtn--del" id="ntDel">DELETE</button>' +
           '<span class="nt-saved" id="ntSaved">autosaves as you write</span>' +
         "</div>";
       var body = $("ntBody");
-      body.innerHTML = n.pages[curPage] || "";
+      body.innerHTML = materialize(n.pages[curPage] || "");
       markEmpty();
       pagerPaint(n);
       $("ntTitle").addEventListener("input", function () { n.title = this.value; n.updated = Date.now(); queue(); });
-      body.addEventListener("input", function () { markEmpty(); n.pages[curPage] = body.innerHTML; n.updated = Date.now(); queue(); });
+      body.addEventListener("input", function () { markEmpty(); n.pages[curPage] = virtualize(body.innerHTML); n.updated = Date.now(); queue(); });
       $("ntPrevP").addEventListener("click", function () { flip(-1); });
       $("ntNextP").addEventListener("click", function () { flip(1); });
       $("ntAddP").addEventListener("click", function () {
@@ -284,27 +364,46 @@
         n.pages.push("");
         curPage = n.pages.length - 1;
         var b = $("ntBody"); b.innerHTML = ""; markEmpty(); pagerPaint(n);
-        b.classList.remove("nt-turn-l", "nt-turn-r"); void b.offsetWidth; b.classList.add("nt-turn-r");
         persist(); b.focus();
       });
       $("ntDel").addEventListener("click", function () { del(n.id); });
-      $("ntExport").addEventListener("click", exportOne);
+      $("ntExport").addEventListener("click", function (e) { e.stopPropagation(); $("ntExMenu").classList.toggle("on"); });
+      if (!window.__ntExBound) { window.__ntExBound = 1; document.addEventListener("click", function (ev) { var menu = $("ntExMenu"); if (menu && !menu.contains(ev.target) && ev.target !== $("ntExport")) menu.classList.remove("on"); }); }
+      $("ntExMenu").addEventListener("click", function (e) {
+        var b = e.target.closest("button"); if (!b) return;
+        $("ntExMenu").classList.remove("on");
+        var k = b.getAttribute("data-x");
+        if (k === "pdf") exportPDF(n);
+        else if (k === "word") exportWord(n);
+        else if (k === "png") exportPNG(n);
+        else if (k === "card") exportCard(n, true);
+      });
       $("ntShare").addEventListener("click", shareOne);
       $("ntBar").addEventListener("click", function (e) {
         var b = e.target.closest("button"); if (!b) return;
         if (b.dataset.cmd) { document.execCommand(b.dataset.cmd, false, null); body.focus(); }
         else if (b.dataset.block) { document.execCommand("formatBlock", false, b.dataset.block === "h2" ? "<h2>" : "blockquote"); body.focus(); }
-        else if (b.dataset.act === "draw") drawModal(function (data) { if (data) { n.pages[curPage] = insertImg(body, data); queue(); } });
-        else if (b.dataset.act === "photo") pickPhoto(function (html) { if (html) { n.pages[curPage] = insertImg(body, html); queue(); } });
-        else if (b.dataset.act === "audio") recordAudio(function (html) { if (html) { n.pages[curPage] = body.innerHTML + html; queue(); body.innerHTML = n.pages[curPage]; } });
+        else if (b.dataset.act === "draw") drawModal(function (data) { if (data) insertHTML(body, '<img src="' + data + '">'); });
+        else if (b.dataset.act === "photo") pickPhoto(false, function (html) { if (html) insertHTML(body, html); });
+        else if (b.dataset.act === "cam") pickPhoto(true, function (html) { if (html) insertHTML(body, html); });
+        else if (b.dataset.act === "audio") recordAudio(function (chip) { if (chip) insertHTML(body, chip); });
       });
-      if (dir) { body.classList.remove("nt-turn-l", "nt-turn-r"); void body.offsetWidth; body.classList.add(dir > 0 ? "nt-turn-r" : "nt-turn-l"); }
+      /* images: tap to resize, right on the page */
+      body.addEventListener("click", function (e) {
+        var chipBtn = e.target.closest(".nt-chip button");
+        if (chipBtn) { toggleChip(chipBtn.closest(".nt-chip")); return; }
+        var img = e.target.closest("img");
+        if (img) { showResize(img); return; }
+        $("ntRs").style.display = "none";
+      });
       window.scrollTo({ top: 0 });
     }
-    function insertImg(body, html) {
+    function insertHTML(body, html) {
       body.focus();
-      document.execCommand("insertHTML", false, html);
-      return body.innerHTML;
+      var clean = virtualize(html);
+      document.execCommand("insertHTML", false, materialize(clean));
+      var n = note(); if (n) { n.pages[curPage] = virtualize(body.innerHTML); n.updated = Date.now(); queue(); }
+      body.querySelectorAll("audio").forEach(wireChipAudio);
     }
     function markEmpty() { var b = $("ntBody"); if (b) b.dataset.empty = b.textContent.trim() === "" && !b.querySelector("img,audio") ? "1" : "0"; }
     function pagerPaint(n) {
@@ -312,31 +411,88 @@
       $("ntPrevP").disabled = curPage === 0;
       $("ntNextP").disabled = curPage === n.pages.length - 1;
     }
+    /* the turn: the sheet lifts off the rings, then the next page settles */
     function flip(dir) {
       var n = note(); if (!n) return;
       var to = curPage + dir;
       if (to < 0 || to >= n.pages.length) return;
-      persist(); open(n.id, to, dir);
+      persist();
+      var paper = $("ntPaper");
+      if (paper) {
+        paper.classList.remove("turn-fwd", "turn-back"); void paper.offsetWidth;
+        paper.classList.add(dir > 0 ? "turn-fwd" : "turn-back");
+      }
+      var body = $("ntBody");
+      if (body) { body.classList.remove("nt-turn-l", "nt-turn-r"); void body.offsetWidth; body.classList.add(dir < 0 ? "nt-turn-l" : "nt-turn-r"); }
+      setTimeout(function () {
+        open(n.id, to);
+        var nb = $("ntBody"); /* the rebuild wipes state: re-apply the turn */
+        if (nb) { nb.classList.remove("nt-turn-l", "nt-turn-r"); nb.classList.add(dir < 0 ? "nt-turn-l" : "nt-turn-r"); }
+      }, 150);
     }
 
-    /* ---------- photo ---------- */
-    function pickPhoto(cb) {
+    /* ---------- the resize bar ---------- */
+    var rsImg = null;
+    function showResize(img) {
+      rsImg = img;
+      var rs = $("ntRs");
+      var w = img.getBoundingClientRect();
+      rs.style.display = "flex";
+      rs.style.left = Math.max(8, Math.min(window.innerWidth - 260, w.left + w.width / 2 - 120)) + "px";
+      rs.style.top = Math.max(8, w.top - 46 + (window.scrollY || 0)) + "px";
+      rs.querySelectorAll("[data-w]").forEach(function (b) { b.classList.remove("on"); });
+      rs.style.position = "absolute";
+    }
+    document.addEventListener("click", function (e) {
+      var rs = $("ntRs"); if (!rs || !rs.contains(e.target)) return;
+      var b = e.target.closest("button"); if (!b || !rsImg) return;
+      if (b.getAttribute("data-x")) { rsImg.style.width = ""; rsImg = null; rs.style.display = "none"; }
+      else { rsImg.style.width = b.getAttribute("data-w"); rsImg.style.height = "auto"; }
+      var n = note(); if (n) { n.pages[curPage] = virtualize($("ntBody").innerHTML); n.updated = Date.now(); queue(); }
+    });
+
+    /* ---------- the voice chip ---------- */
+    function chipHTML(src, label) {
+      return '<span class="nt-chip" contenteditable="false">' +
+        '<button type="button" title="Play">\u25B6</button>' +
+        '<span><span class="nt-chip__t">' + esc(label || "Voice note") + '</span><br><span class="nt-chip__d">tap play</span></span>' +
+        '<span class="nt-bars"><i></i><i></i><i></i><i></i></span>' +
+        '<audio src="' + esc(src) + '" preload="metadata"></audio>' +
+        "</span>";
+    }
+    function wireChipAudio(audio) {
+      var chip = audio.closest(".nt-chip"); if (!chip) return;
+      audio.addEventListener("loadedmetadata", function () {
+        var d = chip.querySelector(".nt-chip__d");
+        if (d && isFinite(audio.duration)) d.textContent = Math.round(audio.duration) + " sec";
+      });
+    }
+    function toggleChip(chip) {
+      var audio = chip.querySelector("audio"); if (!audio) return;
+      document.querySelectorAll(".nt-chip.playing").forEach(function (c) { if (c !== chip) { c.classList.remove("playing"); c.querySelector("audio").pause(); c.querySelector("button").textContent = "\u25B6"; } });
+      if (chip.classList.contains("playing")) { audio.pause(); chip.classList.remove("playing"); chip.querySelector("button").textContent = "\u25B6"; }
+      else { audio.play(); chip.classList.add("playing"); chip.querySelector("button").textContent = "\u25A0"; audio.onended = function () { chip.classList.remove("playing"); chip.querySelector("button").textContent = "\u25B6"; }; }
+    }
+
+    /* ---------- photo / camera ---------- */
+    function pickPhoto(capture, cb) {
       var inp = document.createElement("input");
       inp.type = "file"; inp.accept = "image/*";
+      if (capture) inp.setAttribute("capture", "environment");
       inp.addEventListener("change", async function () {
         var f = inp.files && inp.files[0]; if (!f) return;
-        $("ntSaved").textContent = "taping the photo in\u2026";
+        $("ntSaved").textContent = "taping it in\u2026";
         try {
           var url;
           if (me() && window.TSB_COMMUNITY && TSB_COMMUNITY.upload) { try { url = await TSB_COMMUNITY.upload(f, "tsb-covers"); } catch (e) { url = null; } }
-          if (!url) url = await new Promise(function (res) { var r = new FileReader(); r.onload = function () { res(String(f.size <= 300000 ? r.result : compress(r.result))); }; r.readAsDataURL(f); });
-          cb('<img src="' + esc(url) + '">');
-          $("ntSaved").textContent = "photo taped in \u2713";
+          if (!url) url = await new Promise(function (res) { var r = new FileReader(); r.onload = function () { if (f.size <= 300000) return res(r.result); compress(r.result, res); }; r.readAsDataURL(f); });
+          cb('<img src="' + url + '" style="width:75%">');
+          $("ntSaved").textContent = "taped in \u2713 tap it to resize";
         } catch (e) { $("ntSaved").textContent = "photo failed, try again"; }
       });
       inp.click();
     }
-    function compress(dataUrl) { var img = new Image(); var done = false; img.onload = function () { var c = document.createElement("canvas"); var sc = Math.min(1, 900 / img.width); c.width = img.width * sc; c.height = img.height * sc; c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); done = true; compress.out = c.toDataURL("image/jpeg", 0.72); }; img.src = dataUrl; while (!done) { /* sync guard */ break; } return compress.out || dataUrl; }
+    function compress(dataUrl, cb) { var img = new Image(); img.onload = function () { var c = document.createElement("canvas"); var sc = Math.min(1, 1000 / img.width); c.width = img.width * sc; c.height = img.height * sc; c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); cb(c.toDataURL("image/jpeg", 0.72)); }; img.onerror = function () { cb(dataUrl); }; img.src = dataUrl; }
 
     /* ---------- audio ---------- */
     function recordAudio(cb) {
@@ -352,16 +508,15 @@
               var url = null;
               if (me() && window.TSB_COMMUNITY && TSB_COMMUNITY.upload) { try { url = await TSB_COMMUNITY.upload(blob, "tsb-audio"); } catch (e) { url = null; } }
               if (!url) url = await new Promise(function (res) { var r = new FileReader(); r.onload = function () { res(r.result); }; r.readAsDataURL(blob); });
-              cb('<audio controls src="' + esc(url) + '" style="width:100%;margin:6px 0"></audio>');
+              cb(chipHTML(url));
               $("ntSaved").textContent = "voice note kept \u2713";
             } catch (e) { $("ntSaved").textContent = "voice note failed, try again"; }
           };
           rec.start();
-          var bar = $("ntBar");
           var stop = document.createElement("button");
           stop.style.background = "#ff4d4d"; stop.style.color = "#fff";
           stop.textContent = "\u25A0 STOP RECORDING";
-          bar.appendChild(stop);
+          $("ntBar").appendChild(stop);
           stop.addEventListener("click", function () { rec.stop(); stop.remove(); });
         }).catch(function () { alert("The microphone is shy today. Check the browser permission and try again."); });
       } catch (e) { alert("Voice notes need a browser that can record."); }
@@ -387,60 +542,176 @@
       var cv = w.querySelector("#ntCv"), ctx = cv.getContext("2d");
       ctx.fillStyle = "#fffdf6"; ctx.fillRect(0, 0, W, H);
       ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.lineWidth = 3; ctx.strokeStyle = "#26221a";
-      var col = "#26221a", down = false, snaps = [], S = 12;
+      var down = false, snaps = [], S = 12;
       function snap() { snaps.push(cv.toDataURL()); if (snaps.length > S) snaps.shift(); }
       snap();
       cv.addEventListener("pointerdown", function (e) { down = true; var r = cv.getBoundingClientRect(); ctx.beginPath(); ctx.moveTo((e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height); });
       cv.addEventListener("pointermove", function (e) { if (!down) return; var r = cv.getBoundingClientRect(); ctx.lineTo((e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height); ctx.stroke(); });
       window.addEventListener("pointerup", function () { if (down) { down = false; snap(); } });
-      w.querySelectorAll(".nt-sw").forEach(function (b) { b.addEventListener("click", function () { col = b.dataset.c; ctx.strokeStyle = col; }); });
+      w.querySelectorAll(".nt-sw").forEach(function (b) { b.addEventListener("click", function () { ctx.strokeStyle = b.dataset.c; }); });
       w.querySelector("#ntUndo").addEventListener("click", function () { if (snaps.length < 2) return; snaps.pop(); var im = new Image(); im.onload = function () { ctx.drawImage(im, 0, 0); }; im.src = snaps[snaps.length - 1]; });
       w.querySelector("#ntClr").addEventListener("click", function () { ctx.fillStyle = "#fffdf6"; ctx.fillRect(0, 0, W, H); snap(); });
       w.querySelector("#ntCx").addEventListener("click", function () { w.remove(); });
       w.querySelector("#ntOk").addEventListener("click", function () { cb(cv.toDataURL("image/png")); w.remove(); });
     }
 
-    /* ---------- export: one clean file, gently branded ---------- */
-    function exportOne() {
-      var n = note(); if (!n) return;
-      var pagesHtml = n.pages.map(function (p, i) {
-        return '<section class="pg"><div class="pgno">Page ' + (i + 1) + " of " + n.pages.length + '</div>' + (p || "<p><i>(an empty page, on purpose)</i></p>") + "</section>";
+    /* ---------- export: four doors, one clean document ---------- */
+    function gather(n) {
+      return {
+        title: n.title || "Untitled note",
+        pages: (n.pages || []).map(function (p) { return materialize(p || ""); })
+      };
+    }
+    function docHTML(n) {
+      var g = gather(n);
+      var bodyPages = g.pages.map(function (p, i) {
+        return '<section class="pg"><div class="pgno">Page ' + (i + 1) + " of " + g.pages.length + '</div>' + (p || "<p><i>(an empty page, on purpose)</i></p>") + "</section>";
       }).join("");
-      var doc = "<!doctype html><html><head><meta charset='utf-8'><title>" + esc(n.title || "A note") + " \u00b7 TheSmallBook</title><style>" +
-        "body{font:15px/1.75 Georgia,'Times New Roman',serif;color:#26221a;background:#f4efe2;margin:0;padding:34px 16px}" +
-        "main{max-width:680px;margin:0 auto;background:#fffdf6;border:2.5px solid #26221a;border-radius:14px;padding:38px 40px;box-shadow:6px 6px 0 #26221a}" +
+      return '<!doctype html><html><head><meta charset="utf-8"><title>' + esc(g.title) + '</title><style>' +
+        "body{font:15px/1.8 Georgia,'Times New Roman',serif;color:#26221a;background:#fff;margin:0;padding:44px 52px}" +
         ".kick{font:800 10px 'Trebuchet MS',sans-serif;letter-spacing:3px;color:#8f8570;margin:0 0 8px}" +
         "h1{font-size:30px;margin:0 0 4px;border-bottom:3px solid #26221a;padding-bottom:12px}" +
         ".meta{font:500 12px 'Trebuchet MS',sans-serif;color:#8f8570;margin:10px 0 26px}" +
         ".pg{padding:18px 0;border-bottom:1.5px dashed #cfc7b2}.pg:last-child{border-bottom:0}" +
         ".pgno{font:800 9.5px 'Trebuchet MS',sans-serif;letter-spacing:2px;color:#b0a88f;margin-bottom:10px}" +
-        "img{max-width:100%;border:2px solid #26221a;border-radius:8px}audio{width:100%}" +
+        "img{max-width:100%;border:2px solid #26221a;border-radius:8px;margin:8px 0}" +
+        ".nt-chip{display:inline-flex;align-items:center;gap:8px;border:2px solid #26221a;border-radius:10px;padding:6px 10px;font:600 12px 'Trebuchet MS',sans-serif}" +
+        ".nt-chip audio{display:none}" +
         ".brand{margin-top:30px;padding-top:16px;border-top:2.5px solid #26221a;font:600 12px 'Trebuchet MS',sans-serif;color:#8f8570;text-align:center}" +
-        "@media print{body{background:#fff}main{border:0;box-shadow:none;padding:0}}</style></head><body><main>" +
-        "<p class='kick'>PERSONAL NOTES \u00b7 THESMALLBOOK</p><h1>" + esc(n.title || "Untitled note") + "</h1>" +
-        "<p class='meta'>" + n.pages.length + " page" + (n.pages.length === 1 ? "" : "s") + " \u00b7 written " + new Date(n.created).toLocaleDateString() + " \u00b7 last touched " + new Date(n.updated).toLocaleDateString() + "</p>" +
-        pagesHtml +
-        "<div class='brand'>Written with \uD83D\uDCD3 TheSmallBook \u00b7 thesmallbook.in</div></main></body></html>";
-      var blob = new Blob([doc], { type: "text/html" });
-      var a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = (n.title || "my-note").replace(/[^\w\u0900-\u097F -]/g, "").trim().slice(0, 40) + ".html";
-      a.click();
-      $("ntSaved").textContent = "exported \u2713";
+        "@page{margin:14mm}" +
+        "</style></head><body>" +
+        "<p class='kick'>PERSONAL NOTES \u00b7 THESMALLBOOK</p><h1>" + esc(g.title) + "</h1>" +
+        "<p class='meta'>" + g.pages.length + " page" + (g.pages.length === 1 ? "" : "s") + " \u00b7 " + new Date(n.updated).toLocaleDateString() + "</p>" +
+        bodyPages +
+        "<div class='brand'>Written with \uD83D\uDCD3 TheSmallBook \u00b7 thesmallbook.in</div></body></html>";
+    }
+    function exportPDF(n) {
+      var iframe = document.createElement("iframe");
+      iframe.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;";
+      document.body.appendChild(iframe);
+      iframe.srcdoc = docHTML(n);
+      iframe.onload = function () { try { iframe.contentWindow.focus(); iframe.contentWindow.print(); } catch (e) {} setTimeout(function () { iframe.remove(); }, 60000); };
+      $("ntSaved").textContent = "choose Save as PDF in the print sheet";
+    }
+    function download(blob, name) { var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; a.click(); }
+    function exportWord(n) {
+      var doc = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word'><head><meta charset='utf-8'><!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View></w:WordDocument></xml><![endif]--><style>body{font:12pt Georgia;line-height:1.7}h1{font-size:20pt;border-bottom:2px solid #26221a}.pgno{font:8pt Trebuchet MS;color:#8f8570;letter-spacing:2px}img{max-width:100%}</style></head><body>" +
+        "<p style='font:8pt Trebuchet MS;letter-spacing:3px;color:#8f8570'>PERSONAL NOTES \u00b7 THESMALLBOOK</p><h1>" + esc(gather(n).title) + "</h1>" +
+        gather(n).pages.map(function (p, i) { return "<div class='pgno'>PAGE " + (i + 1) + "</div>" + p; }).join("<br clear=all style='page-break-before:always'>") +
+        "<p style='font:8pt Trebuchet MS;color:#8f8570;text-align:center;margin-top:24pt'>Written with TheSmallBook \u00b7 thesmallbook.in</p></body></html>";
+      download(new Blob(["\ufeff", doc], { type: "application/msword" }), (gather(n).title).replace(/[^\w\u0900-\u097F -]/g, "").trim().slice(0, 40) + ".doc");
+      $("ntSaved").textContent = "word file downloaded \u2713";
+    }
+    async function exportPNG(n) {
+      var g = gather(n);
+      $("ntSaved").textContent = "drawing your pages\u2026";
+      try {
+        var W = 900, M = 56, LH = 40;
+        var procs = [];
+        g.pages.forEach(function (p) {
+          var box = document.createElement("div"); box.innerHTML = p;
+          box.querySelectorAll("audio").forEach(function (a) { var s = document.createElement("div"); s.textContent = "[ voice note ]"; a.replaceWith(s); });
+          procs.push(box);
+        });
+        try { await document.fonts.load('21px "Special Elite"'); await document.fonts.ready; } catch (e) {}
+        /* first pass: measure */
+        var blocks = [];
+        blocks.push({ t: "title", s: g.title });
+        procs.forEach(function (box) {
+          Array.prototype.slice.call(box.childNodes).forEach(function walk(node) {
+            if (node.nodeType === 3) {
+              var txt = String(node.textContent || "").replace(/\s+/g, " ").trim();
+              if (txt) txt.split("\n").forEach(function (line) { blocks.push({ t: "text", s: line }); });
+            } else if (node.nodeType === 1) {
+              if (node.tagName === "IMG") blocks.push({ t: "img", s: node.getAttribute("src") || "" });
+              else if (node.tagName === "AUDIO" || node.closest && node.closest(".nt-chip")) { blocks.push({ t: "text", s: "[ voice note ]" }); }
+              else Array.prototype.slice.call(node.childNodes).forEach(walk);
+            }
+          });
+        });
+        var ctx0 = document.createElement("canvas").getContext("2d");
+        ctx0.font = '21px "Special Elite", Georgia';
+        function wrap(t) {
+          var words = String(t).split(" "), lines = [], cur = "";
+          words.forEach(function (wd) {
+            var test = cur ? cur + " " + wd : wd;
+            if (ctx0.measureText(test).width > W - M * 2) { if (cur) lines.push(cur); cur = wd; }
+            else cur = test;
+          });
+          if (cur) lines.push(cur);
+          return lines.length ? lines : [""];
+        }
+        var flow = [];
+        blocks.forEach(function (b) {
+          if (b.t === "img") {
+            flow.push({ t: "img", s: b.s, h: 0 });
+          } else if (b.t === "title") {
+            wrap(b.s).forEach(function (l) { flow.push({ t: "title", s: l, h: 56 }); });
+          } else wrap(b.s).forEach(function (l) { flow.push({ t: "text", s: l, h: LH }); });
+        });
+        var loaded = await Promise.all(flow.filter(function (f) { return f.t === "img" && f.s && f.s.indexOf("data:") === 0; }).map(function (f) {
+          return new Promise(function (res) { var im = new Image(); im.onload = function () { res({ f: f, im: im }); }; im.onerror = function () { res(null); }; im.src = f.s; });
+        }));
+        loaded.filter(Boolean).forEach(function (o) {
+          var sc = Math.min(1, (W - M * 2) / o.im.width);
+          o.f.iw = o.im.width * sc; o.f.ih = o.im.height * sc; o.f.im_ = o.im; o.f.h = o.f.ih + 20;
+        });
+        flow.forEach(function (f) { if (f.t === "img" && !f.h) f.h = 30; });
+        var H = M * 2 + 70 + flow.reduce(function (a, f) { return a + f.h + 8; }, 0) + 60;
+        var c = document.createElement("canvas"); c.width = W; c.height = Math.min(H, 16000);
+        var x = c.getContext("2d");
+        x.fillStyle = "#fffdf6"; x.fillRect(0, 0, W, c.height);
+        var y = M + 30;
+        flow.forEach(function (f) {
+          if (f.t === "title") { x.font = '800 30px "Space Grotesk", Arial'; x.fillStyle = "#26221a"; x.fillText(f.s, M, y + 34); }
+          else if (f.t === "text") { x.font = '21px "Special Elite", Georgia'; x.fillStyle = "#26221a"; x.fillText(f.s, M, y + 28); }
+          else if (f.t === "img" && f.im_) { x.drawImage(f.im_, M, y, f.iw, Math.min(f.ih, c.height - y - M)); y += Math.min(f.ih, c.height - y - M) - 20; }
+          y += f.h + 8;
+        });
+        x.font = '600 14px "Trebuchet MS", Arial'; x.fillStyle = "#8f8570"; x.textAlign = "center";
+        x.fillText("Written with \uD83D\uDCD3 TheSmallBook \u00b7 thesmallbook.in", W / 2, c.height - 28);
+        c.toBlob(function (blob) { if (blob) { download(blob, (g.title).replace(/[^\w\u0900-\u097F -]/g, "").trim().slice(0, 40) + ".png"); $("ntSaved").textContent = "png downloaded \u2713"; } });
+      } catch (e) { $("ntSaved").textContent = "png failed, try again"; }
+    }
+    async function exportCard(n, dl) {
+      var g = gather(n);
+      var first = String(g.pages.join(" ")).replace(/<img[^>]*>/g, " ").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 220);
+      var W = 1080, H = 1350, c = document.createElement("canvas"); c.width = W; c.height = H;
+      var x = c.getContext("2d");
+      x.fillStyle = "#161614"; x.fillRect(0, 0, W, H);
+      x.strokeStyle = "#6f6f66"; x.lineWidth = 3; x.strokeRect(26, 26, W - 52, H - 52);
+      x.textAlign = "center";
+      x.fillStyle = "#8a8a80"; x.font = "800 26px 'Trebuchet MS',Arial";
+      x.fillText("F R O M   M Y   N O T E B O O K", W / 2, 120);
+      var words = (g.title || "Untitled").split(" "), line = "", lines = [];
+      words.forEach(function (wd) { var t = line ? line + " " + wd : wd; if (t.length > 18) { lines.push(line); line = wd; } else line = t; });
+      if (line) lines.push(line);
+      x.fillStyle = "#f4f1e8"; x.font = "600 92px Caveat, Georgia";
+      (lines.slice(0, 3)).forEach(function (l, i) { x.fillText(l, W / 2, 260 + i * 110); });
+      x.strokeStyle = "#6f6f66"; x.beginPath(); x.moveTo(W / 2 - 40, 610); x.lineTo(W / 2 + 40, 610); x.stroke();
+      x.fillStyle = "#cfcabe"; x.font = "500 38px 'Special Elite', Georgia";
+      var l2 = first.match(/.{1,42}(\s|$)/g) || [" "];
+      (l2.slice(0, 6)).forEach(function (l, i) { x.fillText(l.trim(), W / 2, 700 + i * 62); });
+      x.fillStyle = "#6f6f66"; x.font = "600 24px 'Trebuchet MS',Arial";
+      x.fillText("Written with \uD83D\uDCD3 TheSmallBook", W / 2, H - 90);
+      x.fillText("thesmallbook.in", W / 2, H - 52);
+      return await new Promise(function (res) {
+        c.toBlob(async function (blob) {
+          if (!blob) return res(null);
+          if (dl) { download(blob, (g.title || "my-note").replace(/[^\w\u0900-\u097F -]/g, "").trim().slice(0, 40) + "-card.png"); $("ntSaved").textContent = "card downloaded \u2713"; }
+          res(blob);
+        }, "image/png");
+      });
     }
     async function shareOne() {
+      var n = note(); if (!n) return;
       try {
-        var n = note(); if (!n) return;
-        var txt = (n.title || "My note") + ", from my TheSmallBook notebook";
-        var blob = new Blob([plain(n)], { type: "text/plain" });
-        var file = new File([blob], (n.title || "note").slice(0, 30) + ".txt", { type: "text/plain" });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], title: txt });
-        else if (navigator.share) await navigator.share({ title: txt, text: plain(n).slice(0, 900) });
-        else exportOne();
+        var blob = await exportCard(n, false);
+        var file = blob && new File([blob], "my-note-card.png", { type: "image/png" });
+        if (file && navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], title: n.title || "My note" });
+        else if (navigator.share) await navigator.share({ title: (n.title || "My note") + " \u00b7 TheSmallBook", text: (n.title ? n.title + "\n\n" : "") + String(gather(n).pages.join(" ")).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 600) });
+        else exportCard(n, true);
       } catch (e) {}
-    }
-    function plain(n) {
-      return (n.title ? n.title + "\n\n" : "") + n.pages.map(function (p, i) { return "\u00b7 page " + (i + 1) + " \u00b7\n" + String(p).replace(/<img[^>]*>/g, "[photo]").replace(/<audio[^>]*><\/audio>|<audio[^>]*\/>/g, "[voice note]").replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").replace(/\s+\n/g, "\n").trim(); }).join("\n\n");
     }
 
     /* ---------- boot ---------- */
@@ -454,7 +725,7 @@
       if (m && notes.some(function (n) { return n.id === m[1]; })) open(m[1], 0);
       else list();
     })();
-    function persistNow() { clearTimeout(timer); save(notes); }
+    function persistNow() { clearTimeout(timer); var b = $("ntBody"); var n = note(); if (b && n) n.pages[curPage] = virtualize(b.innerHTML); save(notes); }
     window.addEventListener("pagehide", persistNow);
     document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") persistNow(); });
   })();

@@ -1,12 +1,22 @@
 -- ============================================================
--- THESMALLBOOK · THE ONE SQL UPDATE (case wall + security lints)
--- Paste this whole file into Supabase → SQL Editor → Run. Once.
--- Safe to re-run. Your data is not touched. The app keeps working.
+-- THESMALLBOOK · THE ONE SQL (v285) · run this whole file ONCE.
+-- Replaces the earlier version: safe even if you already ran it.
+-- What it does, in order:
+--   1. Verdicts become PRIVATE: only the writer and the
+--      Founder account (acimotreyothy@gmail.com) can read them.
+--      Dev tools, other readers, anon: nothing.
+--   2. The wall shows only sealed tiles (case_plays).
+--   3. Winner-contact email column.
+--   4. The Supabase lint fixes (the error + the warnings).
+-- Paste into Supabase → SQL Editor → Run. Nothing breaks if
+-- some parts already exist: everything is "if missing, create".
+-- If Supabase shows "Potential issues detected", press
+-- RUN AND ENABLE RLS. The "destructive operations" warning is
+-- expected: this file deletes the OLD public-read rules on
+-- purpose. No data, tables or rows are removed.
 -- ============================================================
 
--- PART 1 · THE CASE FILE: the public verdict wall
--- (this time with the correct link to profiles.id — the line that
---  errored for you last time is fixed)
+-- 1 · THE SEALED PILE ----------------------------------------
 create table if not exists public.case_guesses (
   id          uuid primary key default gen_random_uuid(),
   case_id     text not null,
@@ -16,13 +26,43 @@ create table if not exists public.case_guesses (
   image_url   text,
   created_at  timestamptz not null default now()
 );
+alter table public.case_guesses add column if not exists email text;
 create index if not exists case_guesses_case_idx on public.case_guesses (case_id, created_at desc);
-
 alter table public.case_guesses enable row level security;
 
+-- the staff list: you, by login email
+create table if not exists public.case_staff (
+  email text primary key
+);
+insert into public.case_staff (email)
+values ('acimotreyothy@gmail.com')
+on conflict (email) do nothing;
+-- nobody reads or writes this list through the API: RLS on, zero
+-- policies. The check below runs server-side with owner rights.
+alter table public.case_staff enable row level security;
+
+create or replace function public.tsb_is_case_staff()
+returns boolean
+language sql stable security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.case_staff s
+    where s.email = auth.jwt() ->> 'email'
+  );
+$$;
+revoke execute on function public.tsb_is_case_staff() from public;
+revoke execute on function public.tsb_is_case_staff() from anon;
+grant execute on function public.tsb_is_case_staff() to authenticated;
+
 drop policy if exists "case guesses are public to read" on public.case_guesses;
-create policy "case guesses are public to read"
-  on public.case_guesses for select using (true);
+drop policy if exists "owner or thesmallbook team read" on public.case_guesses;
+create policy "owner or thesmallbook team read"
+  on public.case_guesses for select
+  using (
+    user_id = auth.uid()
+    or public.tsb_is_case_staff()
+  );
 
 drop policy if exists "signed-in readers may post a verdict" on public.case_guesses;
 create policy "signed-in readers may post a verdict"
@@ -34,13 +74,23 @@ create policy "authors manage own verdicts"
   on public.case_guesses for update to authenticated
   using (user_id = auth.uid());
 
--- PART 2 · THE LINTS: the error and the warnings that matter
+-- 2 · THE WALL TILES (no words, just who dared) ---------------
+create table if not exists public.case_plays (
+  id         uuid primary key default gen_random_uuid(),
+  case_id    text not null,
+  name       text not null default 'A reader',
+  created_at timestamptz not null default now()
+);
+alter table public.case_plays enable row level security;
+drop policy if exists "plays are public to read" on public.case_plays;
+create policy "plays are public to read" on public.case_plays for select using (true);
+drop policy if exists "signed-in readers may log a play" on public.case_plays;
+create policy "signed-in readers may log a play"
+  on public.case_plays for insert to authenticated with check (true);
 
--- 2a. THE ERROR: the follow-requests view read with the creator's powers.
---     From now it reads as the asking user. The inbox works the same.
+-- 3 · THE LINTS (same as before, idempotent) ------------------
 alter view public.my_follow_requests set (security_invoker = true);
 
--- 2b. Two functions with a loose search_path: pinned to public.
 do $$
 declare f record;
 begin
@@ -54,7 +104,6 @@ begin
   end loop;
 end $$;
 
--- 2c. Six social/account functions: signed-in readers only from now on.
 do $$
 declare f record;
 begin
@@ -71,12 +120,9 @@ begin
   end loop;
 end $$;
 
--- 2d. The audio bucket could be listed like an open folder. Door closed.
---     Listening is untouched: players open each file's public link directly.
 drop policy if exists "tsb-audio public read" on storage.objects;
 drop policy if exists "tsb read storage" on storage.objects;
 drop policy if exists "public read storage" on storage.objects;
 
--- PART 3 · the one warning no SQL can fix (do this in the dashboard):
--- Supabase Dashboard → Authentication → Sign In / Providers →
--- turn ON "Leaked password protection". It blocks passwords seen in breaches.
+-- 4 · one dashboard toggle, no SQL:
+-- Authentication → Sign In / Providers → Leaked password protection → ON

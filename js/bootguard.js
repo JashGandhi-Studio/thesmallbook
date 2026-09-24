@@ -18,7 +18,7 @@
 (function () {
   "use strict";
 
-  var BUILD = "284";
+  var BUILD = "286";
   var PHASE_A = "tsb_purge_a";
 
   /* returns through done(hadWorker). No worker anywhere = nothing to

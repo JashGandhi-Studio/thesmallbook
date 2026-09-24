@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=284">
+  <link rel="stylesheet" href="css/style.css?v=286">
   <style>
     .cf-wrap { max-width: 900px; margin: 0 auto; padding: 20px 18px calc(80px + env(safe-area-inset-bottom)); }
     .cf-top { display: flex; align-items: center; gap: 10px; margin: 2px 2px 18px; }
@@ -117,9 +117,12 @@
     .cf-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--yellow); color: #111; border: 2.5px solid var(--ink); border-radius: 10px; box-shadow: 3px 3px 0 var(--ink); padding: 11px 14px; font: 800 11px var(--font-head); letter-spacing: 1px; cursor: pointer; text-decoration: none; }
     .cf-btn:active { transform: translate(1.5px,1.5px); box-shadow: 1.5px 1.5px 0 var(--ink); }
     .cf-btn--ghost { background: var(--paper); color: var(--ink); }
-    .cf-btn--wa { background: #25d366; }
-    .cf-btn[disabled] { opacity: .55; cursor: default; }
+        .cf-btn[disabled] { opacity: .55; cursor: default; }
     .cf-wall { margin-top: 18px; }
+    .cf-guess--blur { background: var(--surface-2); }
+    .cf-blurlines { margin-top: 8px; }
+    .cf-blurlines i { display: block; height: 11px; border-radius: 6px; background: #c9c2b0; margin: 7px 0; filter: blur(4px); opacity: .8; }
+    .cf-seal { margin-left: auto; font: 800 8.5px var(--font-head); letter-spacing: 1.5px; background: var(--ink); color: var(--yellow); border-radius: 6px; padding: 3px 7px; }
     .cf-guess { border: 2.5px solid var(--ink); border-radius: 12px; background: #fffdf5; padding: 11px 13px; margin: 8px 0; }
     .cf-guess__top { display: flex; gap: 8px; align-items: center; font: 700 12px var(--font-body); margin-bottom: 4px; }
     .cf-guess__top i { font: 500 10.5px var(--font-body); font-style: normal; color: var(--muted); }
@@ -154,7 +157,7 @@
       <h1 id="cfTitle"></h1>
       <p id="cfLine"></p>
       <div class="cf-hero__meta">
-        <span>14 DOCUMENTS</span><span>1 AUDIO EXHIBIT</span><span>NO AI CAN CRACK IT</span><span>VERDICT BY A HUMAN</span>
+        <span>14 DOCUMENTS</span><span>1 AUDIO EXHIBIT</span><span>NO AI CAN CRACK IT</span><span>VERDICT BY A HUMAN</span><a href="assets/case/worksheet.pdf" download="case-001-worksheet.pdf" style="color:inherit;text-decoration:underline;text-underline-offset:2px">&#9998; WORKSHEET</a>
       </div>
       <div class="cf-count" id="cfCount"></div>
     </section>
@@ -178,16 +181,16 @@
     <section class="cf-verdict" id="cfVerdict"></section>
   </main>
 
-  <script src="js/bootguard.js?v=284"></script>
-  <script src="js/prefs.js?v=284"></script>
-  <script src="js/lang.js?v=284"></script>
-  <script src="js/config.js?v=284"></script>
-  <script src="js/auth.js?v=284"></script>
-  <script src="js/sounds.js?v=284"></script>
-  <script src="js/founder.js?v=284"></script>
-  <script src="js/community.js?v=284"></script>
-  <script src="js/casefile-data.js?v=284"></script>
-  <script src="js/bar.js?v=284" defer></script>
+  <script src="js/bootguard.js?v=286"></script>
+  <script src="js/prefs.js?v=286"></script>
+  <script src="js/lang.js?v=286"></script>
+  <script src="js/config.js?v=286"></script>
+  <script src="js/auth.js?v=286"></script>
+  <script src="js/sounds.js?v=286"></script>
+  <script src="js/founder.js?v=286"></script>
+  <script src="js/community.js?v=286"></script>
+  <script src="js/casefile-data.js?v=286"></script>
+  <script src="js/bar.js?v=286" defer></script>
   <script>
   (function () {
     "use strict";
@@ -206,7 +209,10 @@
     var SURL = (CFG.SUPABASE_URL || "").replace(/\/$/, "");
     var SKEY = CFG.SUPABASE_ANON_KEY || "";
     function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]; }); }
-    function me() { try { return (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) || null; } catch (e) { return null; } }
+    function me() {
+      try { var u0 = (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) || null; if (u0) return u0; } catch (e) {}
+      try { var s = JSON.parse(localStorage.getItem("tsb_auth_session")); return (s && s.user) || null; } catch (e) { return null; }
+    }
     function myName() { var u = me(); return (u && ((u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)) || u.email || "")) || "A reader"; }
 
     /* ---------- folder front ---------- */
@@ -309,36 +315,44 @@
       }
       if (!FROM_ARCHIVE) h += '<div class="cf-sealed"><h3>\uD83D\uDD12 ' + esc(CASE.seal) + "</h3><p>" + esc(CASE.closed) + "</p><p>" + esc(CASE.prizeTeaser) + "</p></div>";
       h += '<textarea class="cf-ta" id="cfTa" placeholder="I name ... the weapon was ... the email was really ... and if I held the investors\' seats, I would ..."></textarea>' +
+        '<input id="cfEmail" type="email" placeholder="Your email, only used if you win the prize" style="width:100%;margin-top:8px;background:#fffdf5;color:#111;border:2.5px solid #3a352b;border-radius:10px;padding:11px 13px;font:500 13px var(--font-body);box-sizing:border-box">' +
         '<div class="cf-rows">' +
-          '<button class="cf-btn" id="cfSend">POST MY VERDICT TO THE WALL</button>' +
+          '<button class="cf-btn" id="cfSend">POST MY VERDICT</button>' +
           '<button class="cf-btn cf-btn--ghost" id="cfPhoto">ATTACH HANDWRITING</button>' +
-          (FROM_ARCHIVE ? "" : '<button class="cf-btn cf-btn--ghost" id="cfPrivate">SEND PRIVATELY TO THE FOUNDER</button>' +
-          (CASE.wa ? '<a class="cf-btn cf-btn--wa" target="_blank" rel="noopener" href="https://wa.me/' + esc(CASE.wa) + '?text=' + encodeURIComponent("CASE " + CASE.no + " verdict: ") + '">SEND ON WHATSAPP</a>' : "")) +
+          '<button class="cf-btn cf-btn--ghost" id="cfCam">\uD83D\uDCF8 SNAP YOUR SHEET</button>' +
+          (FROM_ARCHIVE ? "" : '<button class="cf-btn cf-btn--ghost" id="cfPrivate">SEAL IT FOR THE FOUNDER</button>') +
         "</div>" +
         '<p class="cf-note" id="cfMsg" style="display:none"></p>';
       if (photoUrl) h += '<p class="cf-note">Handwriting attached \u2713</p>';
+      h += '<p class="cf-note" style="text-align:center"><a id="cfSheet" href="assets/case/worksheet.pdf" download="case-001-worksheet.pdf" style="color:inherit;font-weight:800;text-decoration:underline">\u270E OLD SCHOOL? Take the one-page worksheet to the case</a></p>';
       v.innerHTML = h;
 
-      document.getElementById("cfPhoto").addEventListener("click", function () {
+      function grabInput(capture) {
         var inp = document.createElement("input");
         inp.type = "file"; inp.accept = "image/*";
+        if (capture) inp.setAttribute("capture", "environment");
         inp.addEventListener("change", async function () {
           var f = inp.files && inp.files[0]; if (!f) return;
           if (!me()) { msg("Sign in first, so your handwriting reaches the file."); return; }
-          try { photoUrl = await window.TSB_COMMUNITY.upload(f, "tsb-covers"); msg("Handwriting attached \u2713 It will ride with your verdict."); }
+          msg("Pinning your sheet to the verdict\u2026");
+          try { photoUrl = await window.TSB_COMMUNITY.upload(f, "tsb-covers"); msg("Sheet attached \u2713 It rides with your verdict, seen by no one but the Founder."); }
           catch (e) { msg("Upload failed: " + (e && e.message ? e.message : e)); }
         });
         inp.click();
-      });
+      }
+      document.getElementById("cfPhoto").addEventListener("click", function () { grabInput(false); });
+      var camBtn = document.getElementById("cfCam");
+      if (camBtn) camBtn.addEventListener("click", function () { grabInput(true); });
 
       document.getElementById("cfSend").addEventListener("click", async function () {
         var btn = this; btn.disabled = true;
         var body = (document.getElementById("cfTa").value || "").trim();
         if (body.length < 20) { msg("A verdict needs reasoning, not a name alone. Give the wall at least a couple of lines."); btn.disabled = false; return; }
         if (!me()) { msg("Sign in to post on the public wall (your handwriting photo needs an account too). Or use SEND PRIVATELY with WhatsApp."); btn.disabled = false; return; }
-        var ok = await postToWall(body, photoUrl);
-        if (ok === true) { msg("Posted to the wall. The Founder reads every verdict when the case closes."); document.getElementById("cfTa").value = ""; loadWall(); }
-        else msg("The wall is resting (its table isn't set up yet). Your verdict still counts: use SEND PRIVATELY, it always reaches the Founder." + (ok && ok !== true ? " [" + ok + "]" : ""));
+        var em = (document.getElementById("cfEmail") || {}).value || "";
+        var ok = await postToWall(body, photoUrl, em.trim());
+        if (ok === true) { msg("Sealed. Your verdict goes to the Founder alone; the wall only shows that you dared. If you win, the prize finds you."); document.getElementById("cfTa").value = ""; loadWall(); }
+        else msg("The wall is resting (its table isn't set up yet). Your verdict still counts: use SEAL IT FOR THE FOUNDER, it always reaches him." + (ok && ok !== true ? " [" + ok + "]" : ""));
         btn.disabled = false;
       });
 
@@ -360,15 +374,17 @@
       wall.className = "cf-wall";
       wall.id = "cfWall";
       v.appendChild(wall);
-      loadWall();
+      try { if (window.TSB_COMMUNITY && TSB_COMMUNITY.whenReady) TSB_COMMUNITY.whenReady(function () { paintFounder(); loadWall(); }); } catch (e) { loadWall(); }
+      (function deskWatch() { var k = 0, iv = setInterval(function () { paintFounder(); if (++k >= 10) clearInterval(iv); }, 800); })();
     }
 
     function msg(t) { var m = document.getElementById("cfMsg"); if (!m) { alert(t); return; } m.style.display = "block"; m.textContent = t; }
 
-    async function postToWall(body, img) {
+    async function postToWall(body, img, email) {
       try {
         var u = me(); if (!u) return "sign-in";
-        var row = { case_id: CASE.id, user_id: u.id, name: myName(), body: String(body).slice(0, 4000), image_url: img || null };
+        var row = { case_id: CASE.id, user_id: u.id, name: myName(), body: String(body).slice(0, 4000), image_url: img || null, email: email || null };
+        try { await window.TSB_COMMUNITY.api("case_plays", { method: "POST", body: { case_id: CASE.id, name: myName() } }); } catch (ePlay) {}
         try {
           await window.TSB_COMMUNITY.api("case_guesses", { method: "POST", body: row });
           return true;
@@ -386,21 +402,54 @@
 
     async function loadWall() {
       var w = document.getElementById("cfWall"); if (!w) return;
-      w.innerHTML = '<p class="cf-note">THE WALL · every posted verdict, unedited. Reading others is allowed; changing yours because of them is cowardice.</p><div id="cfWallList"><p class="cf-note">Loading the wall…</p></div>';
+      w.innerHTML = '<p class="cf-note">THE WALL \u00b7 verdicts are sealed. The Founder alone reads every word; the wall only shows who dared.</p><div id="cfWallList"><p class="cf-note">Loading the wall\u2026</p></div>';
       var rows = null;
       try {
-        try { rows = await window.TSB_COMMUNITY.api("case_guesses?case_id=eq." + CASE.id + "&select=*&order=created_at.desc&limit=100"); }
+        try { rows = await window.TSB_COMMUNITY.api("case_plays?case_id=eq." + CASE.id + "&select=name,created_at&order=created_at.desc&limit=60"); }
         catch (eA) {
-          var res = await fetch(SURL + "/rest/v1/case_guesses?case_id=eq." + CASE.id + "&select=*&order=created_at.desc&limit=100", { headers: { apikey: SKEY } });
+          var res = await fetch(SURL + "/rest/v1/case_plays?case_id=eq." + CASE.id + "&select=name,created_at&order=created_at.desc&limit=60", { headers: { apikey: SKEY } });
           if (res.ok) rows = await res.json();
         }
         var list = document.getElementById("cfWallList");
-        if (!rows || !rows.length) { list.innerHTML = '<p class="cf-note">Empty. The first verdict is always the bravest.</p>'; return; }
+        if (!rows) { list.innerHTML = '<p class="cf-note">The wall sleeps until its table is set up (the Founder has the one-file SQL). Sealed verdicts always reach him.</p>'; return; }
+        if (!rows.length) { list.innerHTML = '<p class="cf-note">No one has dared yet. The first verdict is always the bravest.</p>'; return; }
         list.innerHTML = rows.map(function (r) {
-          return '<div class="cf-guess"><div class="cf-guess__top"><b>' + esc(r.name || "A reader") + '</b><i>' + esc(String(r.created_at || "").slice(0, 10)) + "</i></div><p>" + esc(r.body) + "</p>" + (r.image_url ? '<img src="' + esc(r.image_url) + '" alt="handwriting">' : "") + "</div>";
+          var t = String(r.created_at || "").replace("T", " ").slice(0, 16);
+          return '<div class="cf-guess cf-guess--blur"><div class="cf-guess__top"><b>\uD83D\uDD0F ' + esc(r.name || "A reader") + '</b><i>' + esc(t) + '</i><span class="cf-seal">SEALED</span></div>' +
+            '<div class="cf-blurlines"><i style="width:92%"></i><i style="width:78%"></i><i style="width:85%"></i><i style="width:40%"></i></div></div>';
         }).join("");
       } catch (e) {
-        document.getElementById("cfWallList").innerHTML = '<p class="cf-note">The public wall sleeps until its table is set up (run the Founder\u2019s UPDATE-run-this.sql). Private verdicts always reach the Founder.</p>';
+        document.getElementById("cfWallList").innerHTML = '<p class="cf-note">The wall sleeps until its table is set up (the Founder has the one-file SQL). Sealed verdicts always reach him.</p>';
+      }
+    }
+
+    /* ---------- the Founder\u2019s desk: him alone ---------- */
+    var FOUNDER_EMAIL = "acimotreyothy@gmail.com";
+    function isFounder() { var u = me(); return !!(u && (u.email || "").toLowerCase() === FOUNDER_EMAIL); }
+    function paintFounder() {
+      if (!isFounder()) return;
+      var old = document.getElementById("cfDesk"); if (old) old.remove();
+      var desk = document.createElement("div");
+      desk.className = "cf-verdict"; desk.id = "cfDesk";
+      desk.style.borderColor = "#1d6fd1";
+      desk.innerHTML = '<h2 style="color:#9cc0ff">FOUNDER\u2019S DESK \u00b7 EYES ONLY</h2><p class="cf-note" id="cfDeskList">Opening the sealed pile\u2026</p>';
+      var v = document.getElementById("cfVerdict");
+      v.parentNode.insertBefore(desk, v);
+      loadDesk();
+    }
+    async function loadDesk() {
+      var list = document.getElementById("cfDeskList"); if (!list) return;
+      try {
+        var rows = await window.TSB_COMMUNITY.api("case_guesses?case_id=eq." + CASE.id + "&select=*&order=created_at.desc&limit=200");
+        if (!rows || !rows.length) { list.innerHTML = "No verdicts yet on this case."; return; }
+        list.innerHTML = rows.map(function (r) {
+          return '<div class="cf-guess" style="margin:8px 0"><div class="cf-guess__top"><b>' + esc(r.name || "A reader") + '</b><i>' + esc(String(r.created_at || "").replace("T", " ").slice(0, 16)) + '</i>' +
+            (r.email ? '<i>\u2709 ' + esc(r.email) + '</i>' : '') +
+            (r.user_id ? '<a class="cf-btn cf-btn--ghost" style="padding:6px 9px;margin-left:auto" href="dm.html?peer=' + esc(r.user_id) + '">MESSAGE</a>' : '') +
+            '</div><p>' + esc(r.body || "") + '</p>' + (r.image_url ? '<img src="' + esc(r.image_url) + '" alt="handwriting" style="max-width:100%;border:2.5px solid #3a352b;border-radius:8px;margin-top:8px">' : '') + '</div>';
+        }).join("");
+      } catch (e) {
+        list.innerHTML = "Could not open the pile (is the desk SQL in?). " + (e && e.message ? esc(e.message) : "");
       }
     }
 
@@ -419,9 +468,9 @@
         var add = (CASE.closeDay - now.getDay() + 7) % 7;
         next.setDate(now.getDate() + add);
         next.setHours(CASE.closeHour, CASE.closeMin || 0, 0, 0);
-        /* the case always runs its full seven days: on closing day itself,
-           the clock shows the NEXT week, never tonight */
-        if (next - now < 6 * 36e5) next.setDate(next.getDate() + 7);
+        /* the case always runs its full seven days: less than a day left
+           means the clock rolls to NEXT Thursday, never tonight (v285) */
+        if (next - now < 24 * 36e5) next.setDate(next.getDate() + 7);
         var ms = next - now, d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5), m = Math.floor(ms % 36e5 / 6e4), sec = Math.floor(ms % 6e4 / 1e3);
         if (d === 0 && h === 0 && m < 60 && ms > 0) { el.classList.add("cf-count--hot"); }
         var days = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"][CASE.closeDay];

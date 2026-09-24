@@ -14,10 +14,12 @@ window.TSB_CASEFILE = {
   line: "A fizzy chai startup burns \u20B94 crore in nine months and dies of a 'contamination scare'. The paperwork says otherwise. So does the phone call nobody was supposed to keep.",
   closed: "Fourteen documents. One month. The Founder reads every verdict himself and closes the case this Thursday 9 PM. The winner is announced by him, in the open, and the prize is real. What the prize is: we say when the verdict drops.",
   rules: [
-    "Read everything. Every document is evidence; every date is a witness.",
+    "Take a pen and real paper first. Map every name, date, time and number on one sheet. Every solver who cracks this works on paper.",
+    "This case is genuinely hard. It is built to survive a week, not a commute.",
+    "Every document is evidence, and every time-stamp is a witness. Some times matter more than dates.",
     "No AI, no internet sleuthing. There is nothing to look up, only things to reason about.",
     "There is no single right answer. There are defended answers and lazy ones.",
-    "Name WHO killed NovaChai, WHAT the weapon was, and WHAT the 'leak' really was."
+    "The map near the end is one true path through the month, not the only one."
   ],
   wa: "",   /* the Founder's WhatsApp number with country code, e.g. 919XXXXXXXXX. Empty hides the button. */
   closeDay: 4, closeHour: 21, closeMin: 0,   /* the case closes Thursday 21:00 local. 4=Thursday. */
@@ -187,6 +189,8 @@ window.TSB_CASEFILE = {
         '<p class="cf-wa__r"><b>ARJUN \u00b7 12th, 8:19 AM</b><br>they come for contamination, we show the plant, we are clean. they never come for a shed they don\u2019t know exists</p>' +
         '<p class="cf-wa__l"><b>VIKRAM \u00b7 13th, 9:30 PM</b><br>ruth\u2019s last memo did the rounds. people talk when payrolls late</p>' +
         '<p class="cf-wa__r"><b>ARJUN \u00b7 13th, 9:37 PM</b><br>payroll goes tomorrow. and delete this chat friday</p>' +
+        '<p class="cf-wa__l"><b>VIKRAM \u00b7 14th, 7:45 AM</b><br>the plant whatsapp group is spreading something. poison pen again. press is calling me</p>' +
+        '<p class="cf-wa__r"><b>ARJUN \u00b7 14th, 8:15 AM</b><br>ignore it. stay away from the office today. i will handle it</p>' +
         "</div>" +
         '<p class="cf-note">The chat was never deleted. Vikram\u2019s phone was surrendered with the rest of the winding-down papers. Read the 12th, 8:19 AM once more: <i>they come for contamination, we show the plant, we are clean.</i></p>'
     },
@@ -243,9 +247,12 @@ window.TSB_CASEFILE = {
         '<div class="cf-tl">' +
         '<div class="cf-tl__row"><span class="cf-tl__d">1st</span><span>Ruth resigns. Her laptop is returned the same evening; her memos stay pinned on the board.</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">10-13th</span><span>\u20B92.6L in cash to the shed man, off the company books, from the marketing card.</span></div>' +
-        '<div class="cf-tl__row"><span class="cf-tl__d">12th</span><span>Stamp paper #1042 is bought \u2014 nine days before the deed dated on it.</span></div>' +
-        '<div class="cf-tl__row cf-tl__row--hot"><span class="cf-tl__d">14th</span><span>A Sunday. 3:12 AM: the poison email. By evening, the leak is everywhere. Brewkart will later swear they first heard of it "Monday morning, the 14th".</span></div>' +
-        '<div class="cf-tl__row"><span class="cf-tl__d">16th</span><span>The \u20B98L recall: one clean batch from the clean plant. Theatre.</span></div>' +
+        '<div class="cf-tl__row"><span class="cf-tl__d">12th</span><span>10:20 AM: stamp paper #1042 is bought \u2014 nine days before the deed dated on it.</span></div>' +
+        '<div class="cf-tl__row"><span class="cf-tl__d">14th</span><span>2:58 AM: the camera on the sealed renovation floor powers down. Maintenance will call it "scheduled".</span></div>' +
+        '<div class="cf-tl__row cf-tl__row--hot"><span class="cf-tl__d">14th</span><span>3:12 AM: the poison email leaves a dead account. 3:31 AM: the camera wakes up. By evening, the leak is everywhere; Brewkart will swear they first heard of it "Monday morning, the 14th".</span></div>' +
+        '<div class="cf-tl__row"><span class="cf-tl__d">14th</span><span>7:45 AM: Vikram texts that the leak is loose and the press is calling him. It was out by breakfast.</span></div>' +
+        '<div class="cf-tl__row"><span class="cf-tl__d">14th</span><span>8:15 AM: Arjun replies "ignore it \u2014 I will handle it". Read the chats once more: Vikram never says what <i>it</i> is. Arjun never asks.</span></div>' +
+        '<div class="cf-tl__row"><span class="cf-tl__d">16th</span><span>11:00 AM: the \u20B98L recall lands with the press: one clean batch from the clean plant. Theatre.</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">19th</span><span>Meera\u2019s share transfer is registered, on paper bought on the 12th.</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">21st</span><span>The filing goes public. QuickInk is paid \u20B94.2L for 40,000 new label sheets \u2014 without the lab-tested line.</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">24th</span><span>\u20B98L to Meera\u2019s aunt\u2019s firm. "Consulting."</span></div>' +
