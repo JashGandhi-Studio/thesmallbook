@@ -663,7 +663,7 @@
       '<div class="modal__box modal__box--wide">' +
       '<button class="modal__close">✕</button>' +
       '<div class="modal__title" translate="no">🌐 Read in YOUR Language</div>' +
-      '<p style="font-weight:600; font-size:.85rem; margin-bottom:14px;">All 400 books, 2,600+ lessons — translated instantly. ' +
+      '<p style="font-weight:600; font-size:.85rem; margin-bottom:14px;">All 460 books, 3,100+ lessons — translated instantly. ' +
       '<strong>Hinglish &amp; Gujlish</strong> are our special modes: Hindi/Gujarati in the way you actually text — ' +
       '"main yeh kaam kal shuru karunga", not machine-roman. 🔥</p>' +
       '<div class="langsection" translate="no">🇮🇳 INDIA</div>' +

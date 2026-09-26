@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
     <meta property="og:title" content="Messages, TheSmallBook">
   <meta property="og:description" content="Your private conversations on TheSmallBook.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=286">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=291">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/dm.html">
@@ -18,7 +18,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
-  <script src="./js/bootguard.js?v=286"></script>
+  <script src="./js/bootguard.js?v=291"></script>
   <script>
     try {
       var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
@@ -28,7 +28,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=286">
+  <link rel="stylesheet" href="css/style.css?v=291">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -56,7 +56,6 @@
   <main class="cm-wrap" id="dmMain">
     <div id="dmList" class="dm-list"></div>
     <div id="dmThread" class="dm-thread" hidden>
-      <div id="dmThreadBanner" class="dm-threadbanner" hidden></div>
       <div class="dm-msgs" id="dmMsgs"></div>
       <!-- v250: one capsule. The mic is a real SVG docked inside the field and
            morphs into Send the moment there is text, no emoji, no orphan button. -->
@@ -92,15 +91,15 @@
     </div>
   </div>
 
-  <script src="js/prefs.js?v=286"></script>
-  <script src="js/lang.js?v=286"></script>
-  <script src="js/config.js?v=286"></script>
-  <script src="js/data.js?v=286"></script>
-  <script src="js/auth.js?v=286"></script>
-  <script src="js/sounds.js?v=286"></script>
-  <script src="js/founder.js?v=286"></script>
-  <script src="js/community.js?v=286"></script>
-  <script src="js/voice.js?v=286"></script>
+  <script src="js/prefs.js?v=291"></script>
+  <script src="js/lang.js?v=291"></script>
+  <script src="js/config.js?v=291"></script>
+  <script src="js/data.js?v=291"></script>
+  <script src="js/auth.js?v=291"></script>
+  <script src="js/sounds.js?v=291"></script>
+  <script src="js/founder.js?v=291"></script>
+  <script src="js/community.js?v=291"></script>
+  <script src="js/voice.js?v=291"></script>
   <script>
   (function () {
     "use strict";
@@ -241,17 +240,6 @@
       }).join("") || '<div class="cm-empty cm-empty--sm">Say hello 👋</div>';
       if (V) V.mountPlayers(msgs);
       msgs.scrollTop = msgs.scrollHeight;
-      (function () {
-        var banner = document.getElementById("dmThreadBanner"); if (!banner) return;
-        var meta = getThreadMeta(uid);
-        if (!meta) { for (var i = 0; i < rows.length; i++) { if (rows[i].book_id && rows[i].expires_at && Date.parse(rows[i].expires_at) > Date.now()) { meta = { bookId: rows[i].book_id, expiresAt: Date.parse(rows[i].expires_at) }; break; } } }
-        if (meta && meta.expiresAt > Date.now()) {
-          var bk = (window.BOOKS || []).filter(function (x) { return x.id === meta.bookId; })[0];
-          var days = Math.ceil((meta.expiresAt - Date.now()) / 864e5);
-          banner.hidden = false;
-          banner.innerHTML = '📖 7-day reading thread' + (bk ? ' · <b>' + C.esc(bk.title) + '</b>' : '') + ' · <b>' + days + 'd left</b>';
-        } else { banner.hidden = true; }
-      })();
       try {
         /* v223 read receipts: opening the thread marks THEIR messages read.
            My own ticks are NOT swept blue here, each tick follows its own
@@ -295,8 +283,6 @@
 
     /* live read receipts: while the thread is open, poll lightly; blue ✓✓ when they read */
     /* ---- voice messages + reading-thread meta ---- */
-    function saveThreadMeta(peer, bookId, expires) { try { var a = JSON.parse(localStorage.getItem("tsb_threads") || "{}"); a[peer] = { bookId: bookId, expiresAt: expires }; localStorage.setItem("tsb_threads", JSON.stringify(a)); } catch (e) {} }
-    function getThreadMeta(peer) { try { return (JSON.parse(localStorage.getItem("tsb_threads") || "{}"))[peer] || null; } catch (e) { return null; } }
     /* ---- 🎙️ voice notes (v250) ------------------------------------
        Hold to record · release to send · slide up to review (Delete/Send)
        · quick tap for hands-free. Live waveform, mm:ss timer, 2:00 cap,
@@ -518,7 +504,7 @@
         return '<div class="pk-row" data-book="' + b.id + '">' +
           '<img src="' + C.esc(b.cover || "") + '" alt="" onerror="this.style.visibility=\'hidden\'">' +
           "<div><b>" + C.esc(b.title) + "</b><span>" + C.esc(b.author) + "</span></div>" +
-          '<span class="pk-acts"><button class="pk-rec" type="button" data-book="' + b.id + '">＋ Recommend</button><button class="pk-read" type="button" data-book="' + b.id + '">📖 Read together</button></span>' +
+          '<span class="pk-acts"><button class="pk-rec" type="button" data-book="' + b.id + '">＋ Recommend this book</button></span>' +
           "</div>";
       }).join("") || '<p class="cm-empty cm-empty--sm">No book matched that.</p>';
     }
@@ -542,17 +528,6 @@
       if (!row) return;
       var book = BOOKS.filter(function (x) { return x.id === row.getAttribute("data-book"); })[0];
       if (!book) return;
-      if (e.target.closest(".pk-read")) {
-        picker.classList.remove("on"); setTimeout(function () { picker.hidden = true; }, 220);
-        try {
-          var exp = Date.now() + 7 * 864e5;
-          saveThreadMeta(uid, book.id, exp);
-          await C.sendDM(uid, "📖 Let's read " + book.title + " together, 7-day thread! " + (book.tagline || "tap the book above"), book.id,
-            (window.TSB_CONFIG && TSB_CONFIG.DM_THREADS) ? { expires_at: new Date(exp).toISOString() } : null);
-          await loadThread();
-        } catch (err) { C.say("Couldn't start thread, " + (err && err.message ? err.message : err)); }
-        return;
-      }
       if (e.target.closest(".pk-rec")) {
         picker.classList.remove("on"); setTimeout(function () { picker.hidden = true; }, 220);
         try {
@@ -587,6 +562,6 @@
     });
   })();
   </script>
-  <script src="js/bar.js?v=286" defer></script>
+  <script src="js/bar.js?v=291" defer></script>
 </body>
 </html>

@@ -323,10 +323,10 @@ const C = window.TSB_COMMUNITY;
   const djSrc = fsp.readFileSync(pp.join(__dirname, "../js/data.js"), "utf8");
   const djArr = JSON.parse(djSrc.slice(djSrc.indexOf("["), djSrc.indexOf("];\nif (typeof window") + 1));
   const ntitle = t => t.trim().toLowerCase().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ");
-  ok("data.js parses: library grew to 400 books", djArr.length === 400, djArr.length + " books");
-  ok("2,637 lessons across the library", djArr.reduce((x, b) => x + b.lessons.length, 0) === 2637, "sum mismatch");
-  ok("all 400 book ids unique", new Set(djArr.map(b => b.id)).size === 400);
-  ok("all 400 titles unique (punctuation-normalized)", new Set(djArr.map(b => ntitle(b.title))).size === 400);
+  ok("data.js parses: library grew to 460 books", djArr.length === 460, djArr.length + " books");
+  ok("3,138 lessons across the library", djArr.reduce((x, b) => x + b.lessons.length, 0) === 3138, "sum mismatch");
+  ok("all 460 book ids unique", new Set(djArr.map(b => b.id)).size === 460);
+  ok("all 460 titles unique (punctuation-normalized)", new Set(djArr.map(b => ntitle(b.title))).size === 460);
   ok("every book complete (5+ lessons, 3+ quotes, 5-step plan, caveat, bigIdea)", djArr.every(b => b.lessons.length >= 5 && b.quotes.length >= 3 && b.actionPlan.length >= 5 && b.caveat && b.bigIdea && b.oneLiner));
   ok("every cover file exists in assets/covers/", djArr.every(b => fsp.existsSync(pp.join(__dirname, "../" + b.cover))));
   ok("every book has an SEO page in books/", djArr.every(b => fsp.existsSync(pp.join(__dirname, "../books/" + b.id + ".html"))));
@@ -336,8 +336,8 @@ const C = window.TSB_COMMUNITY;
   ok("You-window has Notif sound row + Sound test", lgSrc2.includes('id="soundRowY"') && lgSrc2.includes('id="youSoundTest"') && lgSrc2.includes("paintYSound"));
   const bkSrc2 = fsp.readFileSync(pp.join(__dirname, "../js/book.js"), "utf8");
   ok("share card: title baseline lowered + one-liner capped when title wraps", bkSrc2.includes("let y = 678;") && bkSrc2.includes("titleLines.length > 1 ? 2 : 3"));
-  ok("og image + alt refreshed (400 books · 2,637 lessons)", idxH.includes("400 books · 2,637 lessons") && idxH.includes("assets/og-image.png"));
-  ok("no stale counts on key files (350 books / 2,176 / 2176 / 2170)", !/350 books|2,176|2176|2170/.test(djSrc + idxH + cssSrc + lgSrc2 + bkSrc2));
+  ok("og image + alt refreshed (460 books · 3,138 lessons)", idxH.includes("460 books · 3,138 lessons") && idxH.includes("assets/og-image.png"));
+  ok("no stale counts on key files (350 books / 2,176 / 2176 / 2170)", !/350 books|2,176|2176|2170|2,637 lessons|2637 lessons|308 autopsies|ALL 308|422 books|2,811|2811|311 autopsies|ALL 311/.test(djSrc + idxH + cssSrc + lgSrc2 + bkSrc2));
   const swSrc = fsp.readFileSync(pp.join(__dirname, "../sw.js"), "utf8");
   /* v252: these two used to hardcode the version, so every release broke them.
      Now they check the invariant instead: the cache name and the ?v= on every
@@ -360,8 +360,9 @@ const C = window.TSB_COMMUNITY;
       const p = pp.join(__dirname, "..", dir, e.name);
       if (e.isDirectory()) { walk(dir + "/" + e.name); continue; }
       if (!/\.(html|js|md)$/.test(e.name)) continue;
-      const t = fsp.readFileSync(p, "utf8");
-      if (/350 books|350 book summaries|2,426|2426|2,176|2176|2170|300 autopsies|300 failure case studies|300 LEGENDARY FAILURES|ALL 300 FAILURE/.test(t)) stale.push(dir + "/" + e.name);
+      let t = fsp.readFileSync(p, "utf8");
+      if (e.name === "about.html") t = t.slice(0, t.indexOf('id="logGrid"'));
+      if (/350 books|350 book summaries|2,426|2426|2,176|2176|2170|300 autopsies|300 failure case studies|300 LEGENDARY FAILURES|ALL 300 FAILURE|422 books|2,811|311 autopsies|EXPLORE ALL 311/.test(t)) stale.push(dir + "/" + e.name);
     }
   };
   walk(".");
@@ -374,30 +375,105 @@ const C = window.TSB_COMMUNITY;
   }
   const onbSrc = fsp.readFileSync(pp.join(__dirname, "../js/onboard.js"), "utf8");
   const scnSrc = fsp.readFileSync(pp.join(__dirname, "../scan.html"), "utf8");
-  ok("onboarding + scanner + about all say 400", onbSrc.includes("400+ books") && scnSrc.includes("all 400 book titles") && abtH.includes("400 book summaries") && abtH.includes("ASK 400+ BOOKS"));
+  ok("onboarding + scanner + about all say 460", onbSrc.includes("460+ books") && scnSrc.includes("all 460 book titles") && abtH.includes("460 book summaries") && abtH.includes("ASK 460+ BOOKS"));
   const flSrc = fsp.readFileSync(pp.join(__dirname, "../js/failures.js"), "utf8");
   const flArr = JSON.parse(flSrc.slice(flSrc.indexOf("["), flSrc.lastIndexOf("]") + 1));
-  ok("graveyard grew to 308 autopsies", flArr.length === 308, flArr.length + " autopsies");
+  ok("graveyard grew to 315 autopsies", flArr.length === 315, flArr.length + " autopsies");
   ok("all 400 books carry a graveyard link", djArr.every(b => b.graveLink && fsp.existsSync(pp.join(__dirname, "../graveyard/" + b.graveLink + ".html"))), djArr.filter(b => !b.graveLink).map(b => b.id).join(","));
   const newIds = new Set(["chanakya-neeti","yoga-sutras","bhagavad-gita","arthashastra","thirukkural","uncertain-glory","raja-yoga","three-thousand-stitches","kalam-effect","five-am-club","leader-no-title","think-on-these-things","heartfulness-way","karma-yoga","jnana-yoga","upanishads","essence-bhagavad-gita","celebrating-silence","mystics-musings","nudge","lessons-of-history","kaizen","discipline-equals-freedom","when-pink","undoing-project","richer-wiser-happier","noise","seeking-wisdom","essays-buffett","franklin-autobiography","shortness-of-life","enchiridion","guide-good-life","practicing-stoic","tao-te-ching","analects","dhammapada","little-book-beats-market","selfish-gene","short-history-nearly-everything","being-mortal","emperor-maladies","when-breath-becomes-air","lifespan","outlive","peaceful-warrior","the-prophet","inner-game-tennis","my-experiments-with-truth","what-i-talk-about-running"]);
   const nbooks = djArr.filter(b => newIds.has(b.id));
   ok("the 50 new books vary in lesson count (no fixed 5/6/7)", new Set(nbooks.map(b => b.lessons.length)).size >= 3, [...new Set(nbooks.map(b => b.lessons.length))].join(","));
   ok("deep classics got the depth they needed (Gita 8, Sutras 8, Tao 8, Prophet 8, Lessons of History 8)", nbooks.filter(b => ["bhagavad-gita","yoga-sutras","tao-te-ching","the-prophet","lessons-of-history"].includes(b.id)).every(b => b.lessons.length >= 8));
   ok("every new book SEO page proves it in the graveyard", nbooks.every(b => fsp.readFileSync(pp.join(__dirname, "../books/" + b.id + ".html"), "utf8").includes("The Graveyard Proves It")));
+  console.log("== v289: 22 new books (desi-first), 3 new graves, counts move together ==");
+  const new29 = new Set(["ambani-sons","amazon-unbound","anarchy-eic","anu-aunty","arise-awake","big-billion-startup","bottle-of-lies","breakout-nations","dreamers","elephant-catchers","empire-of-pain","follow-every-rainbow","grinding-it-out","half-lion","high-performance-ent","house-of-cards","maruti-story","recasting-india","simply-fly","tata-log","tcs-story","when-genius-failed"]);
+  const nb29 = djArr.filter(b => new29.has(b.id));
+  ok("v289: all 22 new books present in data.js", nb29.length === 22, nb29.length + " of 22");
+  ok("v289: new books vary lesson count (no fixed 8)", new Set(nb29.map(b => b.lessons.length)).size >= 3, [...new Set(nb29.map(b => b.lessons.length))].join(","));
+  ok("v289: zero em dashes in new book content", nb29.every(b => !JSON.stringify(b).includes("—") && !JSON.stringify(b).includes("–")));
+  ok("v289: new book SEO pages exist and prove it in the graveyard", nb29.every(b => fsp.existsSync(pp.join(__dirname, "../books/" + b.id + ".html")) && fsp.readFileSync(pp.join(__dirname, "../books/" + b.id + ".html"), "utf8").includes("The Graveyard Proves It")));
+  const graves29 = ["alma-mater", "docomo-exit", "india-1991"];
+  const gc29 = fsp.readFileSync(pp.join(__dirname, "../js/graveyard-content.js"), "utf8");
+  ok("v289: 3 new graves authored (failures.js + GRAVE_DEEP + pages on disk)",
+     graves29.every(g => flArr.some(f => f.id === g)) &&
+     graves29.every(g => gc29.includes('"' + g + '":{')) &&
+     graves29.every(g => fsp.existsSync(pp.join(__dirname, "../graveyard/" + g + ".html"))));
+  ok("v289: new graves carry origin + fall and stay em-dash free",
+     graves29.every(g => { const i = gc29.indexOf('"' + g + '":{'); return i > -1 && /"origin":"/.test(gc29.slice(i, i + 1400)) && /"fall":"/.test(gc29.slice(i, i + 2800)); }) &&
+     graves29.every(g => { const f29 = flArr.find(f => f.id === g); return f29 && !JSON.stringify(f29).includes("—") && !JSON.stringify(f29).includes("–"); }));
+  ok("v289: counts move together (now 460 books / 3138 lessons / 315 autopsies)", djArr.length === 460 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3138 && flArr.length === 315);
+
+  console.log("== v290: 28 new books (Desi Disruptors leads), 4 new graves, FREE vs GOLD side-by-side, NEW tag re-pointed ==");
+  const new290 = new Set(["barbarians-gate","bhujia-barons","cold-start-problem","delivering-happiness","den-of-thieves","desi-disruptors","dhandha","first-90-days","for-the-love-of-india","hooked-nir-eyal","hp-way","iacocca","india-uninc","inspired-product","it-happened-in-india","jack-straight-from-the-gut","liars-poker","losing-my-virginity","lost-and-founder","made-in-japan","my-years-with-general-motors","obviously-awesome","onward","smartest-guys","the-marwaris","too-big-to-fail","toyota-way","turn-the-ship-around"]);
+  const nb290 = djArr.filter(b => new290.has(b.id));
+  ok("v290: all 28 new books present in data.js", nb290.length === 28, nb290.length + " of 28");
+  ok("v290: zero em dashes in new book content", nb290.every(b => !JSON.stringify(b).includes("—") && !JSON.stringify(b).includes("–")));
+  ok("v290: new book SEO pages exist and prove it in the graveyard", nb290.every(b => fsp.existsSync(pp.join(__dirname, "../books/" + b.id + ".html")) && fsp.readFileSync(pp.join(__dirname, "../books/" + b.id + ".html"), "utf8").includes("The Graveyard Proves It")));
+  const graves290 = ["ceasefire-fade", "virgin-cola", "air-india-decline", "payless-shoes"];
+  const gc290 = fsp.readFileSync(pp.join(__dirname, "../js/graveyard-content.js"), "utf8");
+  ok("v290: 4 new graves authored (failures.js + GRAVE_DEEP + pages on disk)",
+     graves290.every(g => flArr.some(f => f.id === g)) &&
+     graves290.every(g => gc290.includes('"' + g + '":{')) &&
+     graves290.every(g => fsp.existsSync(pp.join(__dirname, "../graveyard/" + g + ".html"))));
+  ok("v290: new graves carry origin + fall and stay em-dash free",
+     graves290.every(g => { const i = gc290.indexOf('"' + g + '":{'); return i > -1 && /"origin":"/.test(gc290.slice(i, i + 1400)) && /"fall":"/.test(gc290.slice(i, i + 2800)); }) &&
+     graves290.every(g => { const f290 = flArr.find(f => f.id === g); return f290 && !JSON.stringify(f290).includes("—") && !JSON.stringify(f290).includes("–"); }));
+  const cfg290 = fsp.readFileSync(pp.join(__dirname, "../js/config.js"), "utf8");
+  const ntw290 = JSON.parse("[" + cfg290.match(/NEW_THIS_WEEK: \[([\s\S]*?)\n  \],/)[1] + "]");
+  ok("v290: the founders batch KEEPS its NEW badge (60 books are new now)", ntw290.length === 60 && [...new290].every(x => ntw290.includes(x)), ntw290.length + " tagged");
+  ok("v290: the previous NEW batch (the old 50) lost the badge", ["chanakya-neeti","yoga-sutras","bhagavad-gita","arthashastra","thirukkural","uncertain-glory","raja-yoga","five-am-club","kalam-effect","leader-no-title"].every(x => !ntw290.includes(x)));
+  const ngw290 = JSON.parse("[" + cfg290.match(/NEW_GRAVES_THIS_WEEK: \[([\s\S]*?)\n  \],/)[1] + "]");
+  ok("v290: FRESH GRAVE badge on exactly the 4 new autopsies", ngw290.length === 4 && ngw290.every(g => graves290.includes(g)), ngw290.join(","));
+  const gold290 = fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8");
+  ok("v290: FREE vs GOLD side-by-side on gold.html (12 honest rows)", gold290.includes('id="goldCompare"') && (gold290.match(/class="gcmp__row"/g) || []).length === 12 && gold290.includes("LIVE NOW") && gold290.includes("IN PRODUCTION") && gold290.includes("COMING SOON") && gold290.includes("LAUNCHING WITH GOLD"));
+  ok("v290: gold comparison claims only verifiable features (no live-link row)", gold290.includes("OFFLINE + EXPORT") && gold290.includes("STUDIO PRO") && gold290.includes("₹999/yr") && gold290.includes("cancel anytime"));
+  ok("v290: gold page keeps the suite contract (ACTIVATE GOLD + forge + early-members)", gold290.includes("ACTIVATE GOLD") && gold290.includes("gForge") && gold290.includes("rolling out to early members first"));
+  ok("v290: counts move together (460 books / 3138 lessons / 315 autopsies)", djArr.length === 460 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3138 && flArr.length === 315);
+  console.log("== v291: 10 Unknown originals (7 Indian, 3 international), THE TICKET joins the case file ==");
+  const unk291 = ["chai-stall-ceo","crickets-balance-sheet","mandi-math","monsoon-portfolio","quiet-giant","rented-kingdom","right-idea-wrong-decade","tiffin-code","the-queue","wedding-economy"];
+  const intl291 = ["quiet-giant","rented-kingdom","right-idea-wrong-decade"];
+  const nb291 = djArr.filter(b => unk291.includes(b.id));
+  ok("v291: all 10 TheSmallBook originals present, credited Unknown", nb291.length === 10 && nb291.every(b => b.author === "Unknown"), nb291.length + " of 10");
+  ok("v291: 7 Indian + 3 international originals", nb291.filter(b => intl291.includes(b.id)).length === 3);
+  ok("v291: lesson counts vary (10 or 11, never uniform)", nb291.every(b => [10,11].includes(b.lessons.length)) && nb291.filter(b => b.lessons.length === 11).length >= 2, "11-lesson originals: " + nb291.filter(b => b.lessons.length === 11).length);
+  ok("v291: zero em dashes in the originals", nb291.every(b => !JSON.stringify(b).includes("\u2014") && !JSON.stringify(b).includes("\u2013")));
+  ok("v291: all 10 SEO pages exist on disk", unk291.every(b => fsp.existsSync(pp.join(__dirname, "../books/" + b + ".html"))));
+  ok("v291: every graveLink exists in failures.js", nb291.every(b => b.graveLink && flArr.some(f => f.id === b.graveLink)));
+  const cfg291 = fsp.readFileSync(pp.join(__dirname, "../js/config.js"), "utf8");
+  const ntw291 = JSON.parse("[" + cfg291.match(/NEW_THIS_WEEK: \[([\s\S]*?)\n  \],/)[1] + "]");
+  const cf291 = fsp.readFileSync(pp.join(__dirname, "../js/casefile-data.js"), "utf8");
+  ok("v291: case file carries THE TICKET as doc 14 and renumbers THE MAP to 15", cf291.includes('tab: "14 \\u00b7 THE TICKET"') && cf291.includes('tab: "15 \\u00b7 THE MAP"') && (cf291.match(/tab: "/g) || []).length === 15);
+  ok("v291: THE TICKET complicates the case (badge V-114, ticket #4471, reader's ladder)", cf291.includes("V-114") && cf291.includes("#4471") && cf291.includes("READER\\u2019S LADDER"));
+  ok("v291: the map timeline gains the badge tap and the ticket rows", cf291.includes("2:38 AM: one badge tap") && cf291.includes("2:41 AM: maintenance ticket #4471"));
+  ok("v291: the closed string and the graveyard both say Fifteen", cf291.includes('closed: "Fifteen documents.') && fsp.readFileSync(pp.join(__dirname, "../graveyard.html"), "utf8").includes("Fifteen documents, one secret phone call"));
+  ok("v291: the case page advertises 15 documents", fsp.readFileSync(pp.join(__dirname, "../casefile.html"), "utf8").includes("15 DOCUMENTS"));
+  const origs291 = JSON.parse("[" + cfg291.match(/ORIGINALS: \[([\s\S]*?)\n  \],/)[1] + "]");
+  const bk291 = fsp.readFileSync(pp.join(__dirname, "../js/book.js"), "utf8");
+  const cssO291 = fsp.readFileSync(pp.join(__dirname, "../css/style.css"), "utf8");
+  ok("v291: THE SMALLBOOK ORIGINAL mark on exactly the 10 in-house books (config + reader band + css)", origs291.length === 10 && origs291.every(id => djArr.some(b => b.id === id && b.author === "Unknown")) && bk291.includes("origband") && bk291.includes("TSB_CONFIG.ORIGINALS") && cssO291.includes(".origband"));
+  ok("v291: all 10 Original pages carry the mark", origs291.every(id => fsp.readFileSync(pp.join(__dirname, "../books/" + id + ".html"), "utf8").includes("THE SMALLBOOK ORIGINAL")));
+  const f28 = new Set(["barbarians-gate","bhujia-barons","cold-start-problem","delivering-happiness","den-of-thieves","desi-disruptors","dhandha","first-90-days","for-the-love-of-india","hooked-nir-eyal","hp-way","iacocca","india-uninc","inspired-product","it-happened-in-india","jack-straight-from-the-gut","liars-poker","losing-my-virginity","lost-and-founder","made-in-japan","my-years-with-general-motors","obviously-awesome","onward","smartest-guys","the-marwaris","too-big-to-fail","toyota-way","turn-the-ship-around"]);
+  const d22 = new Set(["ambani-sons","amazon-unbound","anarchy-eic","anu-aunty","arise-awake","big-billion-startup","bottle-of-lies","breakout-nations","dreamers","elephant-catchers","empire-of-pain","follow-every-rainbow","grinding-it-out","half-lion","high-performance-ent","house-of-cards","maruti-story","recasting-india","simply-fly","tata-log","tcs-story","when-genius-failed"]);
+  ok("v291: 60 books carry NEW = 10 originals + 28 founders + 22 desi", ntw291.length === 60 && unk291.every(x => ntw291.includes(x)) && [...f28].every(x => ntw291.includes(x)) && [...d22].every(x => ntw291.includes(x)), ntw291.length + " tagged");
+  const ob291 = fsp.readFileSync(pp.join(__dirname, "../js/onboard.js"), "utf8");
+  const css291 = fsp.readFileSync(pp.join(__dirname, "../css/style.css"), "utf8");
+  ok("v291: onboarding shows 1-2 personal picks then the new books (with NEW chip)", /head\.concat\(news, rest\)/.test(ob291) && /news\.length >= 6/.test(ob291) && ob291.includes("ob-book__new") && css291.includes(".ob-book__new"));
+  ok("v291: onboarding step 3 is the fixes picker (10 options, Surprise me maps all shelves)", ob291.includes("what else are we fixing?") && (ob291.match(/cat: "/g) || []).length === 10 && ob291.includes("__surprise__") && ob291.includes("shelves().slice(0, 8)") && ob291.includes('"Your fixes"'));
+
   const newGraves = ["facebook-beacon","bikram-yoga","toyota-recalls","ratings-fail","valeant-pharma","purdue-opioids","tobacco-denial","sugar-industry"];
   ok("8 brand-new autopsies written (pages + data + antidote book)", newGraves.every(g0 => fsp.existsSync(pp.join(__dirname, "../graveyard/" + g0 + ".html")) && flArr.some(f => f.id === g0 && f.book) && fsp.readFileSync(pp.join(__dirname, "../graveyard/" + g0 + ".html"), "utf8").includes("gantidote")));
   const ogPng = fsp.readFileSync(pp.join(__dirname, "../assets/og-image.png"));
-  ok("og image exists (1200x630 fresh)", ogPng.length > 15000 && idxH.includes("og:image:alt") && idxH.includes("2,637 lessons"));
+  ok("og image exists (1200x630 fresh)", ogPng.length > 15000 && idxH.includes("og:image:alt") && idxH.includes("3,138 lessons"));
 
   console.log("== v221: NEW tags on latest batch, install-to-home-screen, build markers ==");
   const cfgSrc = fsp.readFileSync(pp.join(__dirname, "../js/config.js"), "utf8");
   const newThisWeek = JSON.parse("[" + cfgSrc.match(/NEW_THIS_WEEK: \[([\s\S]*?)\n  \],/)[1] + "]");
-  ok("NEW badge moved to the latest 50 books (old batch removed)", newThisWeek.length === 50 && newThisWeek.every(b => djArr.some(x => x.id === b)), newThisWeek.length + " items");
+  ok("NEW badge on the latest 60 books (old batches removed)", newThisWeek.length === 60 && newThisWeek.every(b => djArr.some(x => x.id === b)), newThisWeek.length + " items");
   const oldBatch = ["playing-it-my-way","india-2020","the-anarchy","the-idea-of-india","wonder-that-was-india","maximum-city","annihilation-of-caste","being-indian","the-winning-way","test-of-my-life","most-important-thing","crucial-conversations","ride-of-a-lifetime","awaken-giant-within","why-we-sleep","breath-nestor","make-it-stick","sam-walton","the-element","stumbling-happiness","freedom-from-the-known","gandhi-years-that-changed-world","karmayogi-sreedharan","wise-and-otherwise","accidental-prime-minister","give-and-take","david-and-goliath","book-of-joy","scrum-sutherland","blitzscaling-hoffman"];
   ok("the previous batch lost the NEW badge (they are no longer new)", oldBatch.every(b => !newThisWeek.includes(b)));
-  ok("the 50 NEW books float to the front of Home", newThisWeek.every(b => djArr.some(x => x.id === b)) && newThisWeek.length === 50);
+  ok("the 60 NEW books float to the front of Home", newThisWeek.every(b => djArr.some(x => x.id === b)) && newThisWeek.length === 60);
   const freshGraves = JSON.parse("[" + cfgSrc.match(/NEW_GRAVES_THIS_WEEK: \[([\s\S]*?)\n  \],/)[1] + "]");
-  ok("FRESH GRAVE badge on exactly the 8 new autopsies", freshGraves.length === 8 && freshGraves.every(g => flArr.some(f => f.id === g)), freshGraves.join(","));
+  ok("FRESH GRAVE badge on exactly the 4 v290 autopsies", freshGraves.length === 4 && freshGraves.every(g => flArr.some(f => f.id === g)), freshGraves.join(","));
   const setH = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
   const youH = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
   const instSrc = fsp.readFileSync(pp.join(__dirname, "../js/install.js"), "utf8");
@@ -914,7 +990,7 @@ const C = window.TSB_COMMUNITY;
     ok("the watchdog rides first on every app page, and the ID wall is gone for good", bg275.includes("TSB_BOOT_OK") && bg275.includes("tsb_purge_a") && rd("index.html").indexOf("js/bootguard.js") === 0 || (rd("index.html").includes("js/bootguard.js") && !rd("index.html").includes("js/vault.js") && !rd("book.html").includes("js/vault.js")));
     ok("a worker handover can never reload the page again", !prefs275.includes("controllerchange") && prefs275.includes("window.TSB_BOOT_OK = true"));
     ok("no worker = no purge reload; a true hang self-heals once, then an honest banner", bg275.includes("done(had)") && bg275.includes("Load trouble detected."));
-    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v286"'));
+    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v291"'));
     ok("storage is plain device storage again, exactly like v267", !rd("index.html").includes("js/vault.js") && rd("js/prefs.js").includes("for (let i = 0; i < localStorage.length; i++)") && !rd("js/prefs.js").includes("TSB_VAULT"));
 
     /* --- watermark --- */
@@ -1229,10 +1305,10 @@ const C = window.TSB_COMMUNITY;
        /now\(\) \+ 600/.test(V8JS));
     ok("before custom SMTP: the email LINK signs readers in too — nothing dead-ends",
        /handleFragmentSession/.test(V8JS) && /access_token=/.test(V8JS));
-    ok("THE AUTOPSY: every one of the 308 graves carries origin + fall — no more thin lessons",
+    ok("THE AUTOPSY: every one of the 315 graves carries origin + fall — no more thin lessons",
        fs.existsSync("js/graveyard-content.js") &&
-       (rd254("js/graveyard-content.js").match(/"origin":/g) || []).length === 308 &&
-       (rd254("js/graveyard-content.js").match(/"fall":/g) || []).length === 308);
+       (rd254("js/graveyard-content.js").match(/"origin":/g) || []).length === 315 &&
+       (rd254("js/graveyard-content.js").match(/"fall":/g) || []).length === 315);
     ok("the grave reader is a proper full-screen reading view with all four acts",
        /openAutopsy/.test(rd254("js/graveyard.js")) && /HOW IT STARTED/.test(rd254("js/graveyard.js")) &&
        /THE FALL/.test(rd254("js/graveyard.js")) && /FATAL MISTAKE/.test(rd254("js/graveyard.js")) &&

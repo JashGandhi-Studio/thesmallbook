@@ -743,6 +743,7 @@
       try {
         /* in-app cover: no credit chip, the free mark only rides downloads */
         var file = await canvasToFile(await renderSafe({ mark: false }), "studio-card.png");
+        try { window.TSB_STUDIO = window.TSB_STUDIO || {}; window.TSB_STUDIO._last = { quote: S.quote || "", byline: S.byline || "" }; } catch (eLast) {}
         if (cfg.onApply) await cfg.onApply(file, styleBag());
         toast("✅ Studio card set as your cover");
         close();
@@ -763,7 +764,8 @@
         api.openInspire("quotes", q, { tabs:["quotes","images"],
           onUseQuote: function(o){
             var txt=o.text||"", auth=o.author||"";
-            S.quote = txt + (auth ? ", " + auth : "");
+            S.quote = txt;
+            if (auth && !(S.byline||"").trim()) S.byline = auth;   /* v287: the author is a byline, not part of the sentence */
             var ta=$("stuQuoteTa"); if(ta) ta.value=S.quote;
             layoutPreview();
             toast("✨ Quote loaded, tweak it to make it yours");

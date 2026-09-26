@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
     <meta property="og:title" content="Write, TheSmallBook">
   <meta property="og:description" content="Publish your story, your quote card or your voice, right from the phone.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=286">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=291">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/write.html">
@@ -27,8 +27,8 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=286">
-  <link rel="stylesheet" href="css/studio.css?v=286">
+  <link rel="stylesheet" href="css/style.css?v=291">
+  <link rel="stylesheet" href="css/studio.css?v=291">
   <style>
   /* v246, compact attach bar: professional one-row adding */
   .wr-addrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
@@ -140,18 +140,18 @@
     </section>
   </main>
 
-  <script src="./js/bootguard.js?v=286"></script>
-  <script src="js/prefs.js?v=286"></script>
-  <script src="js/lang.js?v=286"></script>
-  <script src="js/config.js?v=286"></script>
-  <script src="js/auth.js?v=286"></script>
-  <script src="js/sounds.js?v=286"></script>
-  <script src="js/founder.js?v=286"></script>
-  <script src="js/community.js?v=286"></script>
-  <script src="js/weekly.js?v=286"></script>
-  <script src="js/gold.js?v=286"></script>
-  <script src="js/paywall.js?v=286"></script>
-  <script src="js/studio.js?v=286"></script>
+  <script src="./js/bootguard.js?v=291"></script>
+  <script src="js/prefs.js?v=291"></script>
+  <script src="js/lang.js?v=291"></script>
+  <script src="js/config.js?v=291"></script>
+  <script src="js/auth.js?v=291"></script>
+  <script src="js/sounds.js?v=291"></script>
+  <script src="js/founder.js?v=291"></script>
+  <script src="js/community.js?v=291"></script>
+  <script src="js/weekly.js?v=291"></script>
+  <script src="js/gold.js?v=291"></script>
+  <script src="js/paywall.js?v=291"></script>
+  <script src="js/studio.js?v=291"></script>
   <style>/* hide Puter branding, keep AI silent */ .puter-modal,.puter-dialog,.puter-auth{ display:none !important }</style>
   <script>
   // silent Puter loader, don't block rendering, hide GUI
@@ -163,10 +163,10 @@
     document.head.appendChild(s);
   })();
   </script>
-  <script src="js/dictate.js?v=286"></script>
-  <script src="js/data.js?v=286"></script>
-  <script src="js/osint.js?v=286"></script>
-  <script src="js/quotedesk.js?v=286"></script>
+  <script src="js/dictate.js?v=291"></script>
+  <script src="js/data.js?v=291"></script>
+  <script src="js/osint.js?v=291"></script>
+  <script src="js/quotedesk.js?v=291"></script>
   <script>
   (function () {
     "use strict";
@@ -504,6 +504,13 @@
                 qCardReady = true; cleanCover = false;
                 paintCleanChip();
                 $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
+                /* v287: whatever words were on the card travel back to the page,
+                   the preview always mirrors what was framed */
+                try {
+                  var lastQ = window.TSB_STUDIO && TSB_STUDIO._last;
+                  if (lastQ && lastQ.quote && !title.value.trim()) { title.value = lastQ.quote; title.dispatchEvent(new Event("input", { bubbles: true })); }
+                  if (lastQ && lastQ.byline && !sub.value.trim()) { sub.value = lastQ.byline; sub.dispatchEvent(new Event("input", { bubbles: true })); }
+                } catch (eSync) {}
                 renderQuoteLive();
                 saveDraft();
               }catch(err){
@@ -849,6 +856,13 @@
            lives IN it). Clean cover → the quote travels as text. An unframed
            photo is composed exactly like the Studio preview, the default,
            never a question. */
+        /* v288: in quote mode the words live in the title, the body is empty —
+           so the quote itself never reached the feed. Now it always travels:
+           the caption carries the quote and the author, outside the card. */
+        if (kind === "quote" && !bText) {
+          var qA = (sub.value || "").replace(/^-\s*/, "").trim();
+          b = "<p>" + t.replace(/&/g, "&amp;").replace(/</g, "&lt;") + (qA ? "<br>\u2014 " + qA.replace(/&/g, "&amp;").replace(/</g, "&lt;") : "") + "</p>";
+        }
         var qTags = tags.value.split(",").map(function (x) { return x.trim(); }).filter(Boolean);
         var qFlags = (typeof window.__tsbQFlags === "function") ? window.__tsbQFlags() : { ready: false, clean: false };
         if (qFlags.clean) qCardReady = false; else if (qFlags.ready) qCardReady = true;
@@ -973,6 +987,6 @@
     }
   })();
   </script>
-  <script src="js/bar.js?v=286" defer></script>
+  <script src="js/bar.js?v=291" defer></script>
 </body>
 </html>

@@ -927,7 +927,7 @@
             html+='<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;text-align:center;margin-top:2px;">No readable full book matched “'+esc(rq)+'” — TheSmallBook\'s own library below covers your topic.</div>';
           }
           if(localBooks.length){
-            html+='<div style="background:#ffc800;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#111;margin-bottom:8px;">📕 From TheSmallBook — your 400 books (tap to use)</div>'+localBooks.map(cardLocalBook).join('<div style="height:8px"></div>')+'<div style="font:600 10px Space Grotesk,sans-serif;color:#111;margin-top:8px;text-align:center;opacity:.7">Suggestions from our library matching “'+esc(rq)+'”</div></div>';
+            html+='<div style="background:#ffc800;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#111;margin-bottom:8px;">📕 From TheSmallBook — your 460 books (tap to use)</div>'+localBooks.map(cardLocalBook).join('<div style="height:8px"></div>')+'<div style="font:600 10px Space Grotesk,sans-serif;color:#111;margin-top:8px;text-align:center;opacity:.7">Suggestions from our library matching “'+esc(rq)+'”</div></div>';
           }
           $res.innerHTML = html;
           var n3=document.createElement("div");

@@ -21,6 +21,17 @@
   document.getElementById("cat").textContent = book.category;
   document.getElementById("title").textContent = book.title;
   document.getElementById("author").textContent = `by ${book.author} · ${book.year}`;
+  /* ✦ TheSmallBook Original — the in-house shelf */
+  try {
+    var origs = (window.TSB_CONFIG && TSB_CONFIG.ORIGINALS) || [];
+    if (origs.indexOf(book.id) >= 0) {
+      var ob = document.createElement("div");
+      ob.className = "origband";
+      ob.innerHTML = '<span class="origband__row">✦ THE SMALLBOOK ORIGINAL ✦</span>' +
+        '<small>Written in-house. You will not find this book anywhere else.</small>';
+      document.getElementById("author").after(ob);
+    }
+  } catch (e) {}
   document.getElementById("oneliner").textContent = book.oneLiner;
 
   function drawBadges() {

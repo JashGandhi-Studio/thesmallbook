@@ -402,7 +402,7 @@
       hero.className = "cht-hero";
       hero.innerHTML = '<div class="cht-hero__logo">📕</div>' +
         "<h1>Ask the library</h1>" +
-        "<p>400 books · 2,637 lessons · 308 autopsies, one question away.</p>";
+        "<p>460 books · 3,138 lessons · 315 autopsies, one question away.</p>";
       msgsEl.insertBefore(hero, msgsEl.firstChild);
       try {
         var mo = new MutationObserver(function () {

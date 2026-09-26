@@ -71,6 +71,19 @@
     "History": ["🏛️", "old plays, new games"],
     "Biography": ["👤", "lives worth borrowing"]
   };
+  /* v292: the fixes list — pick what you want fixed, the shelf builds itself */
+  var FIXES = [
+    { cat: "Money & Finance",      ic: "💸", t: "Get good with money",     s: "budgets · investing · zero scams" },
+    { cat: "Business & Startups",  ic: "🏢", t: "Build the side hustle",   s: "real founder plays, minus jargon" },
+    { cat: "Psychology & People",  ic: "🎭", t: "Understand humans",       s: "negotiate · persuade · read rooms" },
+    { cat: "Power & Strategy",     ic: "♟️", t: "Get strategic",           s: "see three moves ahead" },
+    { cat: "Productivity",         ic: "🧠", t: "Get my focus back",       s: "deep work on a calm schedule" },
+    { cat: "Self-Improvement",     ic: "🌱", t: "Upgrade the basics",      s: "habits · sleep · discipline" },
+    { cat: "Creativity",           ic: "🎨", t: "Make better things",      s: "ideas with a kick" },
+    { cat: "History",              ic: "🏛️", t: "Learn from the falls",    s: "empires · crashes · comebacks" },
+    { cat: "Leadership",           ic: "🎖️", t: "Run the room",            s: "lead teams without breaking them" },
+    { cat: "__surprise__",         ic: "🎲", t: "Surprise me",             s: "a bit of everything, hand-picked" }
+  ];
   var STYLES = [
     { id: "skim", ic: "⚡", t: "Just the tactics, coach", s: "Key lessons — in and out" },
     { id: "steady", ic: "🍿", t: "Story me through it", s: "Case studies & real examples" },
@@ -129,7 +142,21 @@
       }
     }
     (window.BOOKS || []).forEach(function (b) { if (pick.length < want && !seen[b.id]) { seen[b.id] = 1; pick.push(b); } });
-    return pick.slice(0, want);
+    pick = pick.slice(0, want);
+    /* v292: 1 or 2 picked for the reader first, then the fresh books, then the rest of the matches */
+    var head = pick.slice(0, Math.min(2, pick.length));
+    var rest = pick.slice(2);
+    var inPool = {};
+    head.concat(rest).forEach(function (b) { inPool[b.id] = 1; });
+    var news = [];
+    ((window.TSB_CONFIG && TSB_CONFIG.NEW_THIS_WEEK) || []).forEach(function (id) {
+      if (news.length >= 6) return;
+      if (inPool[id]) return;
+      for (var k = 0; k < (window.BOOKS || []).length; k++) {
+        if (BOOKS[k].id === id) { inPool[id] = 1; news.push(BOOKS[k]); break; }
+      }
+    });
+    return head.concat(news, rest).slice(0, want);
   }
 
   function langList() {
@@ -154,6 +181,14 @@
   function recPool() {
     if (!recPoolCache) recPoolCache = starterShelf(12);
     return recPoolCache;
+  }
+  function newCount() {
+    try { return ((window.TSB_CONFIG && TSB_CONFIG.NEW_THIS_WEEK) || []).length; } catch (e) { return 0; }
+  }
+  function newIds() {
+    var out = {};
+    try { ((window.TSB_CONFIG && TSB_CONFIG.NEW_THIS_WEEK) || []).forEach(function (id) { out[id] = 1; }); } catch (e) {}
+    return out;
   }
   function ensurePicks() {
     var pool = recPool();
@@ -185,7 +220,7 @@
           '<span class="ob-eyebrow">WELCOME TO</span>' +
           '<h2 class="ob-hero__t">The<span>Small</span>Book</h2>' +
           '<p class="ob-tag">big books · small reads</p>' +
-          '<p class="ob-sub">400+ books, distilled into lessons you can use today. Six quick questions tune the whole library to you — or skip the line and read right now.</p>' +
+          '<p class="ob-sub">460+ books, distilled into lessons you can use today. Six quick questions tune the whole library to you — or skip the line and read right now.</p>' +
           '<div class="ob-btns ob-btns--col">' +
             '<button class="ob-cta" data-next>🚀 GET STARTED</button>' +
           '</div>' +
@@ -197,13 +232,12 @@
           '<div class="ob-rows">' + rows(WHYS, "why", draft.why, true) + "</div>" +
           '<div class="ob-btns"><button class="ob-cta" data-next data-need="why">Continue →</button></div>';
       case 2:
-        return "<h2>Pick your shelves</h2>" +
-          '<p class="ob-sub">Tap everything you’d browse at 2am.</p>' +
-          '<div class="ob-rows">' + shelves().map(function (c) {
-            var on = draft.shelves.indexOf(c) >= 0;
-            var m = SHELF_META[c] || ["📚", ""];
-            return '<button class="ob-row' + (on ? " on" : "") + '" data-shelf="' + c.replace(/"/g, "&quot;") + '"><span class="ic">' + m[0] + "</span><span>" + c +
-              (m[1] ? "<small>" + m[1] + "</small>" : "") + '<span class="tick">✓</span></button>';
+        return "<h2>And what else are we fixing?</h2>" +
+          '<p class="ob-sub">Pick your fixes — the shelf builds itself around them. Fine-tune the genres later.</p>' +
+          '<div class="ob-rows">' + FIXES.map(function (f) {
+            var on = f.cat === "__surprise__" ? draft.shelves.length >= 8 : draft.shelves.indexOf(f.cat) >= 0;
+            return '<button class="ob-row' + (on ? " on" : "") + '" data-shelf="' + f.cat.replace(/"/g, "&quot;") + '"><span class="ic">' + f.ic +
+              "</span><span>" + f.t + "<small>" + f.s + '</small></span><span class="tick">✓</span></button>';
           }).join("") + "</div>" +
           '<div class="ob-btns"><button class="ob-cta" data-next data-need="shelves">Continue →</button></div>';
       case 3:
@@ -235,12 +269,14 @@
       case 6:
         ensurePicks(body);
         return "<h2>Pick your starter shelf 🎁</h2>" +
-          '<p class="ob-sub">Chosen from your answers — tap a cover to keep it or drop it. These lead your Home.</p>' +
+          '<p class="ob-sub">1 or 2 picked from your answers, then " + newCount() + " fresh books (look for NEW) — tap a cover to keep it or drop it. These lead your Home.</p>' +
           '<p class="ob-pickctr" id="obPickCtr">✓ ' + (draft.picks || []).length + " on your shelf · tap covers to add or remove</p>" +
           '<div class="ob-shelf">' + recPool().map(function (b, i) {
             var on = (draft.picks || []).indexOf(b.id) >= 0;
+            var isNew = newIds()[b.id];
             return '<button class="ob-book' + (on ? "" : " is-off") + '" data-pick="' + b.id + '">' +
               '<span class="ob-book__n">' + (i + 1) + "</span>" +
+              (isNew ? '<span class="ob-book__new">NEW</span>' : "") +
               '<span class="ob-book__pick">✓</span>' +
               '<img src="assets/covers/' + encodeURIComponent(b.id) + '.jpg" alt="" loading="lazy">' +
               '<span class="ob-book__t">' + b.title + "</span></button>";
@@ -275,7 +311,7 @@
   var body = null;
   var busy = false;
 
-  var STEP_NAMES = ["Welcome", "Your battle", "Shelves", "Daily time", "Taste", "Look", "Your books"];
+  var STEP_NAMES = ["Welcome", "Your battle", "Your fixes", "Daily time", "Taste", "Look", "Your books"];
   function paintProg() {
     wrap.querySelectorAll("[data-seg]").forEach(function (s, i) {
       s.classList.toggle("on", i <= step);
@@ -412,9 +448,20 @@
       }
       if ((t = e.target.closest("[data-shelf]"))) { recPoolCache = null;
         var c = t.getAttribute("data-shelf");
-        var ix = draft.shelves.indexOf(c);
-        if (ix >= 0) draft.shelves.splice(ix, 1); else draft.shelves.push(c);
-        t.classList.toggle("on", ix < 0);
+        if (c === "__surprise__") {
+          if (draft.shelves.length >= 8) { draft.shelves = []; }
+          else { draft.shelves = shelves().slice(0, 8); }
+          body.querySelectorAll("[data-shelf]").forEach(function (b) {
+            var v = b.getAttribute("data-shelf");
+            b.classList.toggle("on", v === "__surprise__" ? draft.shelves.length >= 8 : draft.shelves.indexOf(v) >= 0);
+          });
+        } else {
+          var ix = draft.shelves.indexOf(c);
+          if (ix >= 0) draft.shelves.splice(ix, 1); else draft.shelves.push(c);
+          t.classList.toggle("on", ix < 0);
+          var sur = body.querySelector('[data-shelf="__surprise__"]');
+          if (sur) sur.classList.toggle("on", draft.shelves.length >= 8);
+        }
         return;
       }
       if ((t = e.target.closest("[data-min]"))) {

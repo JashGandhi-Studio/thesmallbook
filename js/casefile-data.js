@@ -12,7 +12,7 @@ window.TSB_CASEFILE = {
   title: "Who Killed NovaChai?",
   seal: "THE VERDICT IS SEALED",
   line: "A fizzy chai startup burns \u20B94 crore in nine months and dies of a 'contamination scare'. The paperwork says otherwise. So does the phone call nobody was supposed to keep.",
-  closed: "Fourteen documents. One month. The Founder reads every verdict himself and closes the case this Thursday 9 PM. The winner is announced by him, in the open, and the prize is real. What the prize is: we say when the verdict drops.",
+  closed: "Fifteen documents. One month. The Founder reads every verdict himself and closes the case this Thursday 9 PM. The winner is announced by him, in the open, and the prize is real. What the prize is: we say when the verdict drops.",
   rules: [
     "Take a pen and real paper first. Map every name, date, time and number on one sheet. Every solver who cracks this works on paper.",
     "This case is genuinely hard. It is built to survive a week, not a commute.",
@@ -240,7 +240,25 @@ window.TSB_CASEFILE = {
         '<p class="cf-note">Most of these sentences belong in a different story. Find the ones that belong in this one, and you have read the file the way the Founder does. Beware the ones that look like clues and are only lives being lived.</p>'
     },
     {
-      tab: "14 \u00b7 THE MAP",
+      tab: "14 \u00b7 THE TICKET",
+      title: "Maintenance ticket #4471, seized from the facilities vendor",
+      kind: "doc",
+      html:
+        '<p class="cf-lead">The sealed floor had a camera, and the camera kept a schedule. Facilities keeps the paperwork, and the paperwork keeps its word: ticket <b>#4471</b>, logged <b>2:41 AM on the 14th</b> from terminal <b>FRONT-DESK-02</b>, requesting the 3F camera "for scheduled maintenance", window <b>02:45 to 03:30</b>. The camera died at 2:58. It woke at 3:31. The email left at 3:12. All true, all on one page now.</p>' +
+        '<table class="cf-table"><tr><th>TICKET RULE</th><th>WHAT THE VENDOR CONFIRMED</th></tr>' +
+        '<tr><td>A maintenance ticket auto-cancels within 5 minutes unless a live badge taps at the front desk.</td><td>The ticket survived. Somebody badged in.</td></tr>' +
+        '<tr><td>Badge log, front desk, that night: one tap, <b>2:38 AM</b>, badge <b>V-114</b>.</td><td>V-114 was issued on the 9th to contractor "B. Goods, Bhiwandi", signed out under Vikram\u2019s team for "night shift training". It was never returned.</td></tr>' +
+        '<tr><td>The sealed floor had no staff that week.</td><td>Whoever tapped was not an employee on duty. He was the shed, standing inside the office.</td></tr></table>' +
+        '<p class="cf-lead">Now lay the nights side by side. The 13th, 9:30 PM: Vikram texts that the shed man wants cash again. The 13th, night: \u20B91,10,000 leaves the marketing card to B. Goods, narrated "partnership bonus". The 14th, 2:38 AM: the shed man\u2019s badge opens the front door of a sealed building. 2:41: the ticket that switches off the camera on three. 3:12: an email that tells the truth about the company\u2019s own crates, in the style of a CFO who was on a flight, sent from a login that lives on the COO\u2019s desk.</p>' +
+        '<p class="cf-note">The auditor\u2019s pencil, in the margin of this ticket: <i>"We spent a month asking who hated NovaChai. Wrong question. The pen had the company\u2019s keys, the company\u2019s cash and the company\u2019s crimes on its side. Ask instead who profits from a leak that scares everyone, empties the bad crates from the market, and leaves the stage clear for a relaunch. Somebody ordered 40,000 new labels on the 21st."</i></p>' +
+        '<table class="cf-table"><tr><th>READER\u2019S LADDER</th><th>WHAT IT PINS DOWN</th></tr>' +
+        '<tr><td>The ticket dies without a badge tap within five minutes.</td><td>2:38 AM is not a glitch. It is a person, inside a sealed building, keeping the ticket alive on purpose.</td></tr>' +
+        '<tr><td>The badge belongs to the shed man; his cash bonus arrived the night before.</td><td>The visit was bought, planned and paid for from the card that "the company books never see".</td></tr>' +
+        '<tr><td>The email\u2019s crates claim was true.</td><td>The pen served the company\u2019s secret, not a whistleblower\u2019s conscience. Somebody rented a truth to fire it.</td></tr></table>' +
+        '<p class="cf-note">What this page does not tell you: whose hand was on the badge. V-114 was out for five nights, and five nights is long enough for a badge to become a favour, a threat or a plan. The ticket proves the visit. It does not name the visitor. That answer is still yours to defend.</p>'
+    },
+    {
+      tab: "15 \u00b7 THE MAP",
       title: "The whole month on one page",
       kind: "tl",
       html:
@@ -248,6 +266,8 @@ window.TSB_CASEFILE = {
         '<div class="cf-tl__row"><span class="cf-tl__d">1st</span><span>Ruth resigns. Her laptop is returned the same evening; her memos stay pinned on the board.</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">10-13th</span><span>\u20B92.6L in cash to the shed man, off the company books, from the marketing card.</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">12th</span><span>10:20 AM: stamp paper #1042 is bought \u2014 nine days before the deed dated on it.</span></div>' +
+        '<div class="cf-tl__row"><span class="cf-tl__d">14th</span><span>2:38 AM: one badge tap at the front desk. Badge V-114, issued to the Bhiwandi contractor on the 9th, never returned.</span></div>' +
+        '<div class="cf-tl__row"><span class="cf-tl__d">14th</span><span>2:41 AM: maintenance ticket #4471 is logged from FRONT-DESK-02. "Scheduled maintenance" on the sealed floor\u2019s camera: 02:45 to 03:30.</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">14th</span><span>2:58 AM: the camera on the sealed renovation floor powers down. Maintenance will call it "scheduled".</span></div>' +
         '<div class="cf-tl__row cf-tl__row--hot"><span class="cf-tl__d">14th</span><span>3:12 AM: the poison email leaves a dead account. 3:31 AM: the camera wakes up. By evening, the leak is everywhere; Brewkart will swear they first heard of it "Monday morning, the 14th".</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">14th</span><span>7:45 AM: Vikram texts that the leak is loose and the press is calling him. It was out by breakfast.</span></div>' +

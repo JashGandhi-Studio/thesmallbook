@@ -55,6 +55,18 @@ window.TSB_PACKS = [
     books: ["deep-work", "limitless", "thinking-fast-slow", "mindset", "grit"]
   },
   {
+    id: "stoic-month", title: "The Stoic Month", emoji: "\u2696", hue: "#c8b68e",
+    tag: "stoic", days: 7,
+    line: "One month with the old masters: control what is yours, drop what is not, act with reason.",
+    books: ["meditations", "daily-stoic", "letters-from-a-stoic", "obstacle-is-way", "courage-disliked"]
+  },
+  {
+    id: "speak-so-they-listen", title: "Speak So They Listen", emoji: "\uD83D\uDDE3", hue: "#ff7ab6",
+    tag: "speak", days: 7,
+    line: "From mumbling at meetings to holding a room: the honest arc of becoming heard.",
+    books: ["how-to-talk", "crucial-conversations", "nonviolent-communication", "charisma-myth", "talk-like-ted"]
+  },
+  {
     id: "creative-spark", title: "The Idea Machine", emoji: "\u270D", hue: "#ffc800",
     tag: "create", days: 7,
     line: "For the one who keeps saying someday. Start making things every single day.",

@@ -5,14 +5,14 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>TSB GOLD, Human Audio, Deep Dives, PDFs, Coming Soon | TheSmallBook</title>
-  <meta name="description" content="TSB Gold, human audio, deep dives & PDFs for 400 books. First 500 lock ₹999/yr (33% off forever). Free library stays free.">
+  <meta name="description" content="TSB Gold, human audio, deep dives & PDFs for 460 books. First 500 lock ₹999/yr (33% off forever). Free library stays free.">
   <meta name="robots" content="noindex,follow">
   <meta name="theme-color" content="#ffc800">
   <meta property="og:title" content="TSB GOLD · Coming Soon | TheSmallBook">
-  <meta property="og:description" content="400 books, 2637 lessons, human audio, deep dives & PDFs roll out to Gold first. ₹999/yr locks 33% off.">
+  <meta property="og:description" content="460 books, 3138 lessons, human audio, deep dives & PDFs roll out to Gold first. ₹999/yr locks 33% off.">
   <meta property="og:url" content="https://thesmallbook.in/gold.html">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=286">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=291">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <script>
@@ -31,7 +31,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=286">
+  <link rel="stylesheet" href="css/style.css?v=291">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -147,6 +147,37 @@
     .goldfoot { text-align: center; font-size: 12.5px; color: #777; line-height: 1.8; margin-top: 26px; }
     html.dark .goldfoot { color: #9a937f; }
     .goldfoot b { color: var(--ink); }
+    /* 💎 free vs gold side-by-side (v290) */
+    .gcmp { margin: 34px 0; background: var(--paper); border: 3px solid var(--ink); box-shadow: 8px 8px 0 var(--yellow); padding: 22px 18px; }
+    .gcmp__head { text-align: center; margin-bottom: 16px; }
+    .gcmp__head h2 { font-family: "Archivo Black", sans-serif; font-size: clamp(1.2rem, 4vw, 1.6rem); margin: 6px 0 8px; letter-spacing: .5px; }
+    .gcmp__head p { font-size: 13px; color: #555; max-width: 560px; margin: 0 auto; line-height: 1.6; }
+    html.dark .gcmp__head p { color: #c9c2b2; }
+    .gcmp__grid { display: grid; gap: 8px; }
+    .gcmp__row { display: grid; grid-template-columns: 1.15fr 1fr 1.25fr; gap: 8px; align-items: stretch; }
+    .gcmp__row--head > div { font-family: "Archivo Black", sans-serif; font-size: 11px; letter-spacing: 1.5px; padding: 9px 10px; border: 2.5px solid var(--ink); }
+    .gcmp__row--head .gcmp__free { background: #f1ede2; }
+    .gcmp__row--head .gcmp__gold { background: var(--yellow); }
+    .gcmp__cell { font-size: 12px; line-height: 1.5; padding: 10px 11px; border: 2.5px solid var(--ink); background: #fff; display: flex; flex-direction: column; gap: 6px; justify-content: center; }
+    html.dark .gcmp__cell { background: #17130b; color: #e8e2d2; border-color: #000; }
+    .gcmp__cell b { font-size: 12.5px; }
+    .gcmp__feat { font-family: "Space Grotesk", sans-serif; font-weight: 700; background: #fffdf5; }
+    html.dark .gcmp__feat { background: #201a0e; }
+    .gcmp__goldcell { background: #ffedad; }
+    html.dark .gcmp__goldcell { background: #2a2410; }
+    .gcmp__chip { align-self: flex-start; font-family: "Archivo Black", sans-serif; font-size: 8.5px; letter-spacing: 1.5px; background: var(--yellow); border: 2px solid var(--ink); padding: 2px 7px; color: #111; }
+    .gcmp__chip--live { background: #00c48c; color: #fff; }
+    .gcmp__chip--no { background: #eee; color: #777; border-style: dashed; }
+    .gcmp__foot { text-align: center; font-size: 12px; color: #555; margin-top: 14px; line-height: 1.7; }
+    html.dark .gcmp__foot { color: #c9c2b2; }
+    .gcmp__foot b { color: var(--ink); }
+    html.dark .gcmp__foot b { color: var(--yellow); }
+    @media (max-width: 680px) {
+      .gcmp { padding: 16px 12px; }
+      .gcmp__row { grid-template-columns: 1fr; }
+      .gcmp__row--head { display: none; }
+      .gcmp__cell::before { content: attr(data-col); font-family: "Archivo Black", sans-serif; font-size: 8.5px; letter-spacing: 1.5px; color: #999; display: block; margin-bottom: 4px; }
+    }
     .goldnote { text-align: center; font-size: 11.5px; color: #888; max-width: 560px; margin: 14px auto 0; line-height: 1.6; }
   </style>
 </head>
@@ -259,9 +290,94 @@
           </div>
 
         </div>
-        <div class="gs-panel__foot">🎧 Full human audio for all 300+ books, deep dives &amp; PDFs come with <b>TSB Gold</b>, hear it, then join the first 500.</div>
+        <div class="gs-panel__foot">🎧 Full human audio for all 460+ books, deep dives &amp; PDFs come with <b>TSB Gold</b>, hear it, then join the first 500.</div>
       </div>
     </div>
+
+
+    <!-- 💎 FREE vs GOLD, the honest side-by-side (v290) -->
+    <section class="gcmp" id="goldCompare">
+      <div class="gcmp__head">
+        <div class="goldhero__badge">💎 FREE vs GOLD, SIDE BY SIDE</div>
+        <h2>Everything Gold adds. Nothing Free loses.</h2>
+        <p>The library stays free to read, always: 460 books, 3,138 lessons, 26 languages, every failure autopsy. Gold is the layer on top, for people who want the full machine. Every single premium feature on this page, in one honest table.</p>
+      </div>
+      <div class="gcmp__grid">
+      <div class="gcmp__row gcmp__row--head">
+        <div class="gcmp__cell gcmp__feat">FEATURE</div>
+        <div class="gcmp__cell gcmp__free">FREE</div>
+        <div class="gcmp__cell gcmp__gold">👑 GOLD</div>
+      </div>
+      <div class="gcmp__row">
+        <div class="gcmp__cell gcmp__feat" data-col="FEATURE">📚 THE LIBRARY</div>
+        <div class="gcmp__cell" data-col="FREE">All 460 books, 3,138 lessons, 26 languages. Free forever, no signup.</div>
+        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">Everything in Free, plus every row below.</div>
+      </div>
+      <div class="gcmp__row">
+        <div class="gcmp__cell gcmp__feat" data-col="FEATURE">🎙️ HUMAN AUDIO</div>
+        <div class="gcmp__cell" data-col="FREE">Live samples: hear the exact narration quality, free.</div>
+        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">The full library, read like a show by real voices, as it ships.
+          <span class="gcmp__chip ">ROLLING OUT · EARLY MEMBERS FIRST</span></div>
+      </div>
+      <div class="gcmp__row">
+        <div class="gcmp__cell gcmp__feat" data-col="FEATURE">🌊 DEEP DIVES</div>
+        <div class="gcmp__cell" data-col="FREE"><span class="gcmp__chip gcmp__chip--no">NOT INCLUDED</span></div>
+        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">Full-length breakdowns: context, history, counter-arguments. Worth ₹999.
+          <span class="gcmp__chip ">IN PRODUCTION</span></div>
+      </div>
+      <div class="gcmp__row">
+        <div class="gcmp__cell gcmp__feat" data-col="FEATURE">📄 PDF CHEAT-SHEETS</div>
+        <div class="gcmp__cell" data-col="FREE"><span class="gcmp__chip gcmp__chip--no">NOT INCLUDED</span></div>
+        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">One page per book. Print, pin, share. Worth ₹499.
+          <span class="gcmp__chip ">IN PRODUCTION</span></div>
+      </div>
+      <div class="gcmp__row">
+        <div class="gcmp__cell gcmp__feat" data-col="FEATURE">📖 CHAPTER-BY-CHAPTER</div>
+        <div class="gcmp__cell" data-col="FREE">The full lesson breakdown of every book.</div>
+        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">Every single chapter covered and expanded, nothing missed.
+          <span class="gcmp__chip ">COMING SOON</span></div>
+      </div>
+      <div class="gcmp__row">
+        <div class="gcmp__cell gcmp__feat" data-col="FEATURE">🔑 NEW DROPS &amp; REQUESTS</div>
+        <div class="gcmp__cell" data-col="FREE">New releases reach you in the normal rollout.</div>
+        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">New books and features first, and your book requests jump the queue.</div>
+      </div>
+      <div class="gcmp__row">
+        <div class="gcmp__cell gcmp__feat" data-col="FEATURE">🔒 STREAK VAULT</div>
+        <div class="gcmp__cell" data-col="FREE">Miss a day, your streak resets to zero.</div>
+        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">Freeze your streak once a month. Life happens; the fire stays.
+          <span class="gcmp__chip gcmp__chip--live">LIVE NOW</span></div>
+      </div>
+      <div class="gcmp__row">
+        <div class="gcmp__cell gcmp__feat" data-col="FEATURE">📴 OFFLINE + EXPORT</div>
+        <div class="gcmp__cell" data-col="FREE">Offline reading already works for free.</div>
+        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">Curated next-20 book cache + one-tap export of highlights to PDF/Notion.
+          <span class="gcmp__chip ">LAUNCHING WITH GOLD</span></div>
+      </div>
+      <div class="gcmp__row">
+        <div class="gcmp__cell gcmp__feat" data-col="FEATURE">🎨 STUDIO PRO</div>
+        <div class="gcmp__cell" data-col="FREE">Studio exports with a small credit on the card.</div>
+        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">Watermark off, 6 Pro filters, 9:16 / 1:1 / 4:5, pixel-perfect drag-reframe.
+          <span class="gcmp__chip gcmp__chip--live">LIVE NOW</span></div>
+      </div>
+      <div class="gcmp__row">
+        <div class="gcmp__cell gcmp__feat" data-col="FEATURE">👑 FOUNDING BADGE</div>
+        <div class="gcmp__cell" data-col="FREE"><span class="gcmp__chip gcmp__chip--no">FIRST 500 ONLY</span></div>
+        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">Verified "Founding Supporter" badge on your profile. First 500, ever.</div>
+      </div>
+      <div class="gcmp__row">
+        <div class="gcmp__cell gcmp__feat" data-col="FEATURE">✉️ INSIDER LAYER</div>
+        <div class="gcmp__cell" data-col="FREE">Public updates like everyone else.</div>
+        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">Insider posts and direct founder emails, what ships next and why.</div>
+      </div>
+      <div class="gcmp__row">
+        <div class="gcmp__cell gcmp__feat" data-col="FEATURE">💛 YOUR PRICE</div>
+        <div class="gcmp__cell" data-col="FREE">₹0. Forever. Seriously.</div>
+        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">₹999/yr, locked at 33% off for as long as you keep it.</div>
+      </div>
+      </div>
+      <p class="gcmp__foot">THE MATH: human audio alone runs ₹1,999/yr (Audible). Deep dives ₹999. PDFs ₹499. Gold locks all of it for <b>₹999/yr</b> · 33% off, forever · cancel anytime · <b>and the free library stays free either way.</b></p>
+    </section>
 
     <!-- Gold member, professional, quiet -->
     <section class="goldjoin gold-member" id="goldMember" hidden>
@@ -337,7 +453,7 @@
 
     <p class="goldnote">💛 The free library stays free. Gold is optional, for readers who want more, and for the readers who keep this whole thing running.</p>
 
-    <p class="goldfoot">✦ MADE BY JASH GANDHI ✦<br><b>400 books, 2637 lessons, free to read.</b></p>
+    <p class="goldfoot">✦ MADE BY JASH GANDHI ✦<br><b>460 books, 3138 lessons, free to read.</b></p>
   </div>
 
   <div class="gold-sticky" id="goldSticky" aria-label="Claim Gold">
@@ -355,14 +471,14 @@
     <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
   </footer>
 
-  <script src="./js/bootguard.js?v=286"></script>
-  <script src="js/prefs.js?v=286"></script>
-  <script src="js/lang.js?v=286"></script>
-  <script src="js/config.js?v=286"></script>
-  <script src="js/auth.js?v=286"></script>
-  <script src="js/upi.js?v=286"></script>
-  <script src="js/gold.js?v=286"></script>
-  <script src="js/paywall.js?v=286"></script>
+  <script src="./js/bootguard.js?v=291"></script>
+  <script src="js/prefs.js?v=291"></script>
+  <script src="js/lang.js?v=291"></script>
+  <script src="js/config.js?v=291"></script>
+  <script src="js/auth.js?v=291"></script>
+  <script src="js/upi.js?v=291"></script>
+  <script src="js/gold.js?v=291"></script>
+  <script src="js/paywall.js?v=291"></script>
   <script>
     /* v225, checksummed activation + founder forge */
     (function () {
@@ -729,6 +845,6 @@
     // sticky: hide when join section is in view (already there)
     var sticky=document.getElementById("goldSticky");var join=document.getElementById("goldJoin");if(sticky&&join&&"IntersectionObserver"in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){sticky.style.transform=e.isIntersecting?"translateY(110%)":"translateY(0)";})},{threshold:.15});io.observe(join);}})();
   </script>
-  <script src="js/gate.js?v=286" defer></script>
+  <script src="js/gate.js?v=291" defer></script>
 </body>
 </html>
