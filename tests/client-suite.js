@@ -990,7 +990,7 @@ const C = window.TSB_COMMUNITY;
     ok("the watchdog rides first on every app page, and the ID wall is gone for good", bg275.includes("TSB_BOOT_OK") && bg275.includes("tsb_purge_a") && rd("index.html").indexOf("js/bootguard.js") === 0 || (rd("index.html").includes("js/bootguard.js") && !rd("index.html").includes("js/vault.js") && !rd("book.html").includes("js/vault.js")));
     ok("a worker handover can never reload the page again", !prefs275.includes("controllerchange") && prefs275.includes("window.TSB_BOOT_OK = true"));
     ok("no worker = no purge reload; a true hang self-heals once, then an honest banner", bg275.includes("done(had)") && bg275.includes("Load trouble detected."));
-    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v294"'));
+    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v295"'));
     ok("storage is plain device storage again, exactly like v267", !rd("index.html").includes("js/vault.js") && rd("js/prefs.js").includes("for (let i = 0; i < localStorage.length; i++)") && !rd("js/prefs.js").includes("TSB_VAULT"));
 
     /* --- watermark --- */
@@ -1525,8 +1525,8 @@ const C = window.TSB_COMMUNITY;
     }
     const sw292 = rd292("sw.js");
     ok("service worker precaches ask-modes-data.js", sw292.includes('"./js/ask-modes-data.js"'));
-    ok("cache name and bootguard build both say 294", /CACHE_VERSION = "tsb-v294"/.test(sw292) && /var BUILD = "294";/.test(rd292("js/bootguard.js")));
-    ok("login and settings say Build tsb-v294", rd292("login.html").includes("Build tsb-v294") && rd292("settings.html").includes("Build tsb-v294"));
+    ok("cache name and bootguard build both say 295", /CACHE_VERSION = "tsb-v295"/.test(sw292) && /var BUILD = "295";/.test(rd292("js/bootguard.js")));
+    ok("login and settings say Build tsb-v295", rd292("login.html").includes("Build tsb-v295") && rd292("settings.html").includes("Build tsb-v295"));
     ok("about.html changelog documents v292 and the 8 modes", /log-item__ver">v292</.test(rd292("about.html")) && rd292("about.html").includes("8 modes"));
     ok("no page still carries an old ?v=291", !glob292.some(f => /\?v=29[12]\b/.test(rd292(f))), glob292.filter(f => /\?v=29[12]\b/.test(rd292(f))).join(",") || "clean");
 
@@ -1556,9 +1556,9 @@ const C = window.TSB_COMMUNITY;
     console.log("== v293: small scroller is a first-class module ==");
     ok("own module, own namespace, no bolt-ons", /window\.TSB_SCROLLER = \{/.test(tss) && /isEnabled|bindSettings|tutorial/.test(tss));
     ok("the toggle lives in Settings with a tutorial row beside it", set293.includes('id="scrollerToggle"') && set293.includes('id="scrollerTutorial"') && set293.includes("SMALL SCROLLER"));
-    ok("settings loads the module and binds it", /smallscroller\.js\?v=294/.test(set293) && /TSB_SCROLLER\.bindSettings/.test(set293));
+    ok("settings loads the module and binds it", /smallscroller\.js\?v=295/.test(set293) && /TSB_SCROLLER\.bindSettings/.test(set293));
     let incCount = 0;
-    for (const f of glob292) { if (/smallscroller\.js\?v=294/.test(rd293(f))) incCount++; }
+    for (const f of glob292) { if (/smallscroller\.js\?v=295/.test(rd293(f))) incCount++; }
     ok("the module rides on every bar page (" + incCount + " pages)", incCount >= 17, incCount + "");
     ok("service worker precaches the module", rd293("sw.js").includes('"./js/smallscroller.js"'));
     ok("about.html changelog documents v293", /log-item__ver">v293</.test(rd293("about.html")) && rd293("about.html").includes("TheSmallScroller"));
