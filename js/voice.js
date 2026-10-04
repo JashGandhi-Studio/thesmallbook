@@ -559,7 +559,7 @@
         '<div class="vp__meta">' +
           '<span class="vp__cur">0:00</span>' +
           '<span class="vp__tag">' + ICO.wave + esc(label) + '</span>' +
-          '<span class="vp__dur">–:––</span>' +
+          '<span class="vp__dur">-:--</span>' +
         '</div>' +
       '</div>' +
       '<button class="vp__rate" type="button" aria-label="Playback speed">1×</button>' +
@@ -614,7 +614,7 @@
       var filled = Math.round(p * BARS);
       for (var i = 0; i < wbars.length; i++) wbars[i].classList.toggle("on", i < filled);
       if (cur) cur.textContent = mmss(audio.currentTime);
-      if (dur) dur.textContent = t ? mmss(t) : "–:––";
+      if (dur) dur.textContent = t ? mmss(t) : "-:--";
       if (wave) wave.setAttribute("aria-valuenow", String(Math.round(p * 100)));
       el.classList.toggle("is-playing", !audio.paused && !audio.ended);
     }

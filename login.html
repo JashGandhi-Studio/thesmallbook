@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
     <meta property="og:title" content="Sign in, TheSmallBook">
   <meta property="og:description" content="Create a free account or sign in, your shelf, streak and progress follow you to every device. 13+ with an honest age check.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=291">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=294">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/login.html">
@@ -29,8 +29,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=291">
-  <link rel="stylesheet" href="css/store.css?v=291">
+  <link rel="stylesheet" href="css/style.css?v=294">
+  <link rel="stylesheet" href="css/store.css?v=294">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -422,17 +422,17 @@
       </section>
 
       <button class="acc__out" id="signoutBtn">Sign out</button>
-      <p class="youfine">Build tsb-v291 · Your reading data lives on your device and syncs privately to your account. We never post without asking. · <a href="about.html" style="color:inherit;text-decoration:underline;font-weight:800">ⓘ About & feature guide</a></p>
+      <p class="youfine">Build tsb-v294 · Your reading data lives on your device and syncs privately to your account. We never post without asking. · <a href="about.html" style="color:inherit;text-decoration:underline;font-weight:800">ⓘ About & feature guide</a></p>
     </main>
   </div>
 
-  <script src="./js/bootguard.js?v=291"></script>
-  <script src="js/prefs.js?v=291"></script>
-  <script src="js/lang.js?v=291"></script>
-  <script src="js/config.js?v=291"></script>
-  <script src="js/install.js?v=291"></script>
-  <script src="js/auth.js?v=291"></script>
-  <script src="js/data.js?v=291"></script>
+  <script src="./js/bootguard.js?v=294"></script>
+  <script src="js/prefs.js?v=294"></script>
+  <script src="js/lang.js?v=294"></script>
+  <script src="js/config.js?v=294"></script>
+  <script src="js/install.js?v=294"></script>
+  <script src="js/auth.js?v=294"></script>
+  <script src="js/data.js?v=294"></script>
   <script>
     /* v223, store banner live status chip */
     (function () {
@@ -456,7 +456,8 @@
       });
     })();
   </script>
-  <script src="js/bar.js?v=291" defer></script>
+  <script src="js/bar.js?v=294" defer></script>
+  <script src="js/smallscroller.js?v=294"></script>
   <script>
     (function () {
       var vIn = document.getElementById("view-signin");
@@ -648,7 +649,7 @@
             hint = document.getElementById("youUserHint"),
             btn = this;
         var v = inp.value.trim().toLowerCase().replace(/^@+/, "");
-        if (!/^[a-z0-9_]{3,20}$/.test(v)) { hint.textContent = "3–20 characters, small letters, numbers, _"; inp.focus(); return; }
+        if (!/^[a-z0-9_]{3,20}$/.test(v)) { hint.textContent = "3-20 characters, small letters, numbers, _"; inp.focus(); return; }
         /* keeping the @name you already are is a success, never a trip to the register */
         var curNow = ((window.TSB_AUTH && TSB_AUTH.user ? (TSB_AUTH.user().user_metadata || {}).username : "") || "").toLowerCase();
         if (curNow && v === curNow) { hint.textContent = "✓ @" + v + " is already yours, all set."; return; }
@@ -658,7 +659,7 @@
           var r = await TSB_AUTH.setMyUsername(v);
           if (r && r.ok) { hint.textContent = "✓ @" + v + " is yours, change any time"; inp.value = v; renderAccount(); }
           else if (r && r.code === "taken") hint.textContent = "This name is already taken, try another spelling.";
-          else if (r && r.code === "bad") hint.textContent = "3–20 characters, small letters, numbers, _";
+          else if (r && r.code === "bad") hint.textContent = "3-20 characters, small letters, numbers, _";
           else hint.textContent = "couldn't save, try once more";
         } catch (e) { hint.textContent = "couldn't save, try once more"; }
         userDeskBusy = false; btn.textContent = "✓";
@@ -690,7 +691,7 @@
         clearTimeout(finTimer);
         var u = el.value;
         if (!u) return;
-        if (!FIN_HANDLE.test(u)) { st.textContent = "3–20: a-z, 0–9, _"; st.className = "youser__state is-bad"; return; }
+        if (!FIN_HANDLE.test(u)) { st.textContent = "3-20: a-z, 0-9, _"; st.className = "youser__state is-bad"; return; }
         finTimer = setTimeout(async function () {
           var free = (window.TSB_AUTH && TSB_AUTH.usernameFree) ? await TSB_AUTH.usernameFree(u) : true;
           if (el.value !== u) return;
@@ -710,7 +711,7 @@
         }
         var handle = document.getElementById("finUser").value,
             pass = document.getElementById("finPass").value;
-        if (!FIN_HANDLE.test(handle)) { show2("Usernames are 3–20 characters: small letters, numbers, underscore."); document.getElementById("finUser").focus(); return; }
+        if (!FIN_HANDLE.test(handle)) { show2("Usernames are 3-20 characters: small letters, numbers, underscore."); document.getElementById("finUser").focus(); return; }
         if (handle !== finLast) { show2("Checking that username… one second, then submit again."); document.getElementById("finUser").focus(); return; }
         if (!finFree) { show2("That username is taken, try another spelling."); document.getElementById("finUser").focus(); return; }
         if (pass.length < 8) { show2("Passwords need at least 8 characters."); document.getElementById("finPass").focus(); return; }
@@ -815,7 +816,7 @@
           clearTimeout(userTimer);
           var u = el.value;
           if (!u) return;
-          if (!HANDLE.test(u)) { st.textContent = "3–20: a-z, 0–9, _"; st.className = "youser__state is-bad"; return; }
+          if (!HANDLE.test(u)) { st.textContent = "3-20: a-z, 0-9, _"; st.className = "youser__state is-bad"; return; }
           userTimer = setTimeout(async function () {
             var free = (window.TSB_AUTH && TSB_AUTH.usernameFree) ? await TSB_AUTH.usernameFree(u) : true;
             if (el.value !== u) return;                    // kept typing
@@ -839,7 +840,7 @@
               mail = $("suMail").value.trim(), pass = $("suPass").value,
               mo = $("suMonth").value, yr = +$("suYear").value;
           if (!first) { show("Add your first name."); $("suFirst").focus(); return; }
-          if (!HANDLE.test(handle)) { show("Usernames are 3–20 characters: small letters, numbers, underscore."); $("suUser").focus(); return; }
+          if (!HANDLE.test(handle)) { show("Usernames are 3-20 characters: small letters, numbers, underscore."); $("suUser").focus(); return; }
           if (handle !== lastChecked) { show("Checking that username… one second, then submit again."); $("suUser").focus(); return; }
           if (!userFree) { show("That username is taken, try another spelling."); $("suUser").focus(); return; }
           if (!mailOk(mail)) { show("That email doesn't look right, check the spelling."); $("suMail").focus(); return; }
@@ -1077,12 +1078,12 @@
   });
 })();
 </script>
-  <script src="js/sounds.js?v=291"></script>
-  <script src="js/community.js?v=291"></script>
-  <script src="js/gold.js?v=291"></script>
-  <script src="js/ideaaudit.js?v=291"></script>
-  <script src="js/paywall.js?v=291"></script>
-  <script src="js/onboard.js?v=291" defer></script>
+  <script src="js/sounds.js?v=294"></script>
+  <script src="js/community.js?v=294"></script>
+  <script src="js/gold.js?v=294"></script>
+  <script src="js/ideaaudit.js?v=294"></script>
+  <script src="js/paywall.js?v=294"></script>
+  <script src="js/onboard.js?v=294" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {

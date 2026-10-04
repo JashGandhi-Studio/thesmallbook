@@ -1,6 +1,6 @@
 /* ============================================================
    THESMALLBOOK, ASK THE LIBRARY (floating widget v3)
-   Bottom-right chat on EVERY page. No AI server.
+   Bottom-right chat on EVERY page. Answers come from the library, not a server.
 
    v3:
    - Replies in the SAME language as the site (Google engine:
@@ -95,8 +95,13 @@
   function norm(q) {
     return String(q).toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
   }
+  /* v292 house rule: no em dashes anywhere in the app. Ask pulls lines from
+     480 books and 315 autopsies, older shelves included, so the escape gate
+     also flattens every dash to a plain hyphen. Nothing rendered in the panel
+     (or saved to history) can carry one, whatever the source file says. */
   function esc(s) {
     return String(s == null ? "" : s)
+      .replace(/ ?[\u2014\u2013] ?/g, " - ")
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
@@ -325,6 +330,14 @@
         "</div>" +
         '<input id="tsb-libsearch" class="aq-lib__search" type="text" placeholder="' + t("Filter questions… (e.g. money, habits, fear)") + '">' +
         '<div class="aq-lib__list" id="tsb-liblist"></div>' +
+      "</div>" +
+      '<div id="tsb-modes" class="aq-lib aq-lib--modes" role="dialog" aria-label="Ask modes">' +
+        '<div class="aq-lib__head">' +
+          '<span class="aq-lib__t">🎭 ' + t("ASK MODES") + "</span>" +
+          '<span class="aq-lib__s">' + t("7 formats · every answer from the real library") + "</span>" +
+          '<button class="aq-lib__close" id="tsb-modesclose">✕</button>' +
+        "</div>" +
+        '<div class="aq-mdgrid" id="tsb-mdgrid"></div>' +
       "</div>";
     document.body.appendChild(root);
     panel = root.querySelector(".aq-panel");
@@ -345,6 +358,23 @@
     bind();
     headStats();
     if (PAGE_MODE) pageExtras();
+    /* ?mode=<key>&arg=<arg>: every mode is an independent destination */
+    var mq = null, ma = null;
+    try {
+      var qsp = new URLSearchParams(location.search);
+      mq = qsp.get("mode"); ma = qsp.get("arg");
+    } catch (e) {
+      mq = (location.search.match(/[?&]mode=([a-z]+)/) || [])[1] || null;
+      ma = (location.search.match(/[?&]arg=([^&]+)/) || [])[1] || null;
+    }
+    if (mq && MODES.some(function (m) { return m.key === mq; })) {
+      setTimeout(function () {
+        open();
+        if (ma) modeGo(mq, ma, mq);
+        else { var mdef = MODES.filter(function (m) { return m.key === mq; })[0];
+          mdef && mdef.pick ? pickBubble(mq) : modeGo(mq, null, mq); }
+      }, 380);
+    }
   }
 
   /* ---- full-page chat mode: back button + library search + auto-open ---- */
@@ -402,7 +432,7 @@
       hero.className = "cht-hero";
       hero.innerHTML = '<div class="cht-hero__logo">📕</div>' +
         "<h1>Ask the library</h1>" +
-        "<p>460 books · 3,138 lessons · 315 autopsies, one question away.</p>";
+        "<p>480 books · 3,340 lessons · 315 autopsies, one question away.</p>";
       msgsEl.insertBefore(hero, msgsEl.firstChild);
       try {
         var mo = new MutationObserver(function () {
@@ -462,10 +492,336 @@
     return out;
   }
 
+
+  /* ============ 🎭 ASK MODES (v292): 8 editorial formats. Every answer is
+     composed live from real book lessons + real Graveyard autopsies. No
+     filler, no invented facts: history comes from FAILURES, ideas from BOOKS. ============ */
+  var MODES = [
+    { key: "compare",  label: "⚖️ Compare books", pick: true },
+    { key: "decision", label: "🧨 The decision before the disaster" },
+    { key: "redflag",  label: "🚩 Red Flag Friday" },
+    { key: "before",   label: "⚠️ Read this before you…", pick: true },
+    { key: "seven",    label: "📅 The 7-day challenge", pick: true },
+    { key: "myth",     label: "🃏 Myth vs lesson" },
+    { key: "field",    label: "📓 Founder field notes" }
+  ];
+  var modePick = null; /* set while the reader is in a pick-mode menu */
+  var SEVEN_CYCLE = ["atomic-habits", "deep-work", "psychology-of-money", "raja-yoga", "ikigai", "subtle-art", "the-goal", "made-to-stick"];
+
+  function MDD() { return window.TSB_ASK_MODES || { TOPICS: [], REDFLAGS: [], SCENARIOS: [], MYTHS: [], FIELD: [] }; }
+  function firstSent(s, n) {
+    var parts = String(s || "").replace(/\s+/g, " ").split(". ");
+    var k = Math.min(parts.length, n || 1);
+    var out = parts.slice(0, k).join(". ");
+    if (out && out.charAt(out.length - 1) !== "." && out.charAt(out.length - 1) !== "!" && out.charAt(out.length - 1) !== "?") out += ".";
+    return out;
+  }
+  function weekNum(salt) { return Math.floor(Date.now() / (7 * 24 * 36e5)) + (salt || 0); }
+  /* cut at a word border, never mid-word */
+  function ell(s, n) {
+    s = String(s || "");
+    if (s.length <= n) return s;
+    var cut = s.slice(0, n);
+    return cut.slice(0, Math.max(cut.lastIndexOf(" "), n - 20)).replace(/[\s,;:]+$/, "") + "\u2026";
+  }
+  function nextBtn(label, opt, axLabel) {
+    return '<button class="aq-chip aq-chip--mini aq-mode-next" data-axopt="' + esc(opt) + '"' +
+      (axLabel ? ' data-axlabel="' + esc(axLabel) + '"' : "") + ">" + label + "</button>";
+  }
+  /* best lesson of each book for a query, books ranked */
+  function bestPerBook(q, nBooks) {
+    var ws = words(q);
+    if (!ws.length) return [];
+    var byBook = {};
+    (window.BOOKS || []).forEach(function (b) {
+      b.lessons.forEach(function (l, i) {
+        var title = String(l.title || "").toLowerCase();
+        var body = ((l.summary || "") + " " + (l.action || "")).toLowerCase();
+        var score = 0;
+        ws.forEach(function (w) { if (title.indexOf(w) !== -1) score += 3; if (body.indexOf(w) !== -1) score += 1; });
+        if (score > 0 && (!byBook[b.id] || score > byBook[b.id].score)) byBook[b.id] = { book: b, lesson: l, idx: i, score: score };
+      });
+    });
+    return Object.keys(byBook).map(function (k) { return byBook[k]; })
+      .sort(function (a, b2) { return b2.score - a.score; })
+      .slice(0, nBooks || 4);
+  }
+  function topicFromText(q) {
+    var nq = " " + norm(q) + " ";
+    var best = null, bs = 0;
+    MDD().TOPICS.forEach(function (tp) {
+      var s = 0;
+      tp.kws.forEach(function (k) { if (nq.indexOf(k) >= 0) s += (k.length > 4 ? 2 : 1); });
+      if (s > bs) { bs = s; best = tp; }
+    });
+    return bs ? best : null;
+  }
+  function scenarioFromText(q) {
+    var nq = norm(q);
+    var best = null, bs = 0;
+    MDD().SCENARIOS.forEach(function (s) {
+      var score = 0;
+      norm(s.label).split(" ").forEach(function (w) { if (w.length > 3 && nq.indexOf(w) >= 0) score += 2; });
+      s.books.forEach(function (bid) {
+        var b = bookIndex()[bid];
+        if (b && nq.indexOf(norm(b.title)) >= 0) score += 4;
+      });
+      if (score > bs) { bs = score; best = s; }
+    });
+    return bs >= 2 ? best : null;
+  }
+  function bookFromText(q) {
+    var nq = norm(q);
+    var best = null, bs = 0;
+    (window.BOOKS || []).forEach(function (b) {
+      var t2 = norm(b.title || "");
+      var score = 0;
+      if (t2 && nq.indexOf(t2) >= 0) score = t2.length;
+      else t2.split(" ").forEach(function (w) { if (w.length > 4 && nq.indexOf(w) >= 0) score = Math.max(score, w.length); });
+      if (score > bs) { bs = score; best = b; }
+    });
+    return bs >= 5 ? best : null;
+  }
+  function bookBlurb(bid) {
+    var b = bookIndex()[bid];
+    if (!b || !b.lessons || !b.lessons[0]) return "";
+    return ell(firstSent(b.lessons[0].summary, 1), 120);
+  }
+
+  /* ---- mode 1+2: compare / one idea five books ---- */
+  function compareHtml(label, hits, five) {
+    var cards = hits.map(function (r) {
+      var sum = firstSent(r.lesson.summary, 1);
+      var act = firstSent(r.lesson.action, 1);
+      var blurb = act && act !== sum ? sum + " → " + act : sum;
+      return srcCard(r.book.id, r.lesson.title, ell(blurb, 150));
+    }).join("");
+    var intro = five
+      ? "One idea, " + hits.length + " books, " + hits.length + " different answers. No single book owns the truth; that is the whole point of a library."
+      : "Same question, " + hits.length + " books, side by side. Read the answers next to each other, then steal what fits your life. That comparison is the part nobody does, and it is where the value hides.";
+    return answerBlock(five ? "5️⃣ ONE IDEA, FIVE BOOKS" : "⚖️ COMPARE IDEAS ACROSS BOOKS", intro, "\u201C" + label + "\u201D") +
+      sourceHead(hits.length, t("FROM THE LIBRARY")) + '<div class="aq-srcs">' + cards + "</div>" +
+      '<div class="aq-foot">✦ ' + esc(t("same question, different authors, your call")) + " ✦</div>";
+  }
+
+  /* ---- mode 3: the decision before the disaster ---- */
+  function decisionHtml(page) {
+    var list = (window.FAILURES || []).filter(function (f) { return f.mistake && String(f.mistake).length > 40; });
+    var per = 3;
+    var pages = Math.ceil(list.length / per);
+    var p = ((page % pages) + pages) % pages;
+    var picks = list.slice(p * per, p * per + per);
+    var cards = picks.map(function (f) { return graveCard(f.id, "THE CALL: " + firstSent(f.mistake, 1)); }).join("");
+    var intro = "Every collapse had a moment when it was still reversible. Here are " + picks.length + " of those moments, drawn from " + list.length + " autopsies. Notice the pattern: in the room, none of these decisions felt reckless. They all felt normal. That is the lesson.";
+    return answerBlock("🧨 THE DECISION BEFORE THE DISASTER", intro, "case files " + (p * per + 1) + " to " + (p * per + picks.length) + " of " + list.length) +
+      sourceHead(picks.length, t("FROM THE GRAVEYARD")) + '<div class="aq-srcs">' + cards + "</div>" +
+      '<div class="aq-foot">' + nextBtn("🧨 Next 3 case files", "decision:" + (p + 1)) + "</div>";
+  }
+
+  /* ---- mode 4: red flag friday ---- */
+  /* curated flags first, then one derived from every real autopsy: the pool runs years */
+  var _DFLAGS = null;
+  function allFlags() {
+    if (_DFLAGS) return _DFLAGS;
+    var base = MDD().REDFLAGS.slice();
+    var seen = {};
+    base.forEach(function (r) { seen[r.grave] = 1; });
+    (window.FAILURES || []).forEach(function (f) {
+      if (seen[f.id]) return;
+      var flag = firstSent(f.mistake || f.lesson, 1);
+      if (flag && flag.length > 24) base.push({ flag: ell(flag, 120), grave: f.id });
+    });
+    _DFLAGS = base;
+    return base;
+  }
+  function redflagHtml(explicit) {
+    var flags = allFlags();
+    if (!flags.length) return "";
+    var idx = (explicit === null || explicit === undefined || explicit === "")
+      ? ((weekNum(3) % flags.length) + flags.length) % flags.length
+      : ((parseInt(explicit, 10) % flags.length) + flags.length) % flags.length;
+    var r = flags[idx];
+    var g = graveIndex()[r.grave];
+    if (!g) return "";
+    var intro = "This week's flag: " + r.flag + ". " + firstSent(g.lesson, 1) + " The flag never feels like a flag while you are waving it. That is exactly what makes it a flag.";
+    return answerBlock("🚩 RED FLAG FRIDAY", intro, "exhibit: " + g.name + (g.year ? ", " + g.year : "")) +
+      sourceHead(1, t("FROM THE GRAVEYARD")) + '<div class="aq-srcs">' +
+        graveCard(g.id, "THE FLAG: " + firstSent(g.mistake || g.lesson, 1)) + "</div>" +
+      '<div class="aq-foot">' + nextBtn("🚩 Peek next week's flag", "redflag:" + ((idx + 1) % flags.length)) + "</div>";
+  }
+
+  /* ---- mode 5: read this before you… ---- */
+  function beforeHtml(key, typed) {
+    var scs = MDD().SCENARIOS;
+    var sc = null;
+    if (typed) {
+      sc = scenarioFromText(typed);
+      if (!sc) {
+        var hits = bestPerBook(typed, 3);
+        var gs = searchGraves(typed, 1);
+        if (hits.length >= 2) {
+          var cards0 = hits.map(function (r) { return srcCard(r.book.id, r.lesson.title, ell(firstSent(r.lesson.summary, 1), 130)); }).join("");
+          return answerBlock("⚠️ READ THIS BEFORE YOU…", "Typed in the dark, matched in the library. This is the pre-flight reading for it.", "\u201C" + typed + "\u201D") +
+            sourceHead(hits.length, t("FROM THE LIBRARY")) + '<div class="aq-srcs">' + cards0 + "</div>" +
+            (gs.length ? sourceHead(1, t("THE WARNING")) + '<div class="aq-srcs">' + graveCard(gs[0].f.id, "THE WARNING: " + firstSent(gs[0].f.lesson, 1)) + "</div>" : "");
+        }
+      }
+    }
+    if (!sc && key) sc = scs.filter(function (s) { return s.key === key; })[0] || null;
+    if (!sc) sc = scs[0];
+    if (!sc) return "";
+    var cards = sc.books.map(function (bid, i) {
+      var b = bookIndex()[bid];
+      return srcCard(bid, b && b.lessons[0] ? b.lessons[0].title : "", sc.whys[i]);
+    }).join("");
+    var g = graveIndex()[sc.grave];
+    return answerBlock("⚠️ READ THIS BEFORE YOU…", "Three short reads before the leap. The books will not make the decision for you; they make sure it is your decision, not an accident with a receipt.", "before " + sc.label.toLowerCase()) +
+      sourceHead(sc.books.length, t("FROM THE LIBRARY")) + '<div class="aq-srcs">' + cards + "</div>" +
+      (g ? sourceHead(1, t("THE WARNING")) + '<div class="aq-srcs">' + graveCard(g.id, "WHO SKIPPED THIS READING: " + firstSent(g.lesson, 1)) + "</div>" : "") +
+      '<div class="aq-foot">' + nextBtn("⚠️ A different scenario", "before:" + scs[(scs.indexOf(sc) + 1) % scs.length].key) + "</div>";
+  }
+
+  /* ---- mode 6: the 7-day application challenge ---- */
+  function sevenHtml(bid) {
+    var b = bookIndex()[bid];
+    if (!b || !b.lessons || !b.lessons.length) return "";
+    var ls = b.lessons.slice(0, 7);
+    var cards = ls.map(function (l, i) {
+      return srcCard(b.id, l.title, ell("DAY " + (i + 1) + ": " + firstSent(l.action || l.summary, 1), 140));
+    }).join("");
+    var intro = "No speed reading. One action a day for 7 days, pulled straight from " + b.title + " by " + (b.author || "the author") + ". Small, boring, done. That is how a book becomes a week of your life instead of a screenshot.";
+    var nx = SEVEN_CYCLE[(SEVEN_CYCLE.indexOf(bid) + 1 + SEVEN_CYCLE.length) % SEVEN_CYCLE.length] || SEVEN_CYCLE[0];
+    return answerBlock("📅 THE 7-DAY APPLICATION CHALLENGE", intro, b.title + " · " + (b.author || "")) +
+      sourceHead(ls.length, t("7 DAYS, 7 ACTIONS")) + '<div class="aq-srcs">' + cards + "</div>" +
+      '<div class="aq-foot">' + nextBtn("📅 Challenge me with another book", "seven:" + nx) + "</div>";
+  }
+
+  /* ---- mode 7: myth vs lesson ---- */
+  function mythHtml(offset) {
+    var ms = MDD().MYTHS;
+    if (!ms.length) return "";
+    var start = (((weekNum(5) + (offset || 0)) % ms.length) + ms.length) % ms.length;
+    var picks = [ms[start], ms[(start + 1) % ms.length]];
+    var blocks = picks.map(function (m2) {
+      return '<div class="aq-mythrow">' +
+          '<div class="aq-myth"><span>🃏 THE MYTH</span>' + esc("\u201C" + m2.myth + "\u201D") + "</div>" +
+          '<div class="aq-myth aq-myth--t"><span>📖 THE LESSON</span>' + esc(m2.truth) + "</div>" +
+          srcCard(m2.book, "", bookBlurb(m2.book)) +
+        "</div>";
+    }).join("");
+    return answerBlock("🃏 MYTH vs LESSON", "Popular advice on top, what the books actually say underneath. Two this week; the deck keeps shuffling, tap for two more.", "myths die here") +
+      '<div class="aq-srcs">' + blocks + "</div>" +
+      '<div class="aq-foot">' + nextBtn("🃏 Two more myths", "myth:" + (start + 2)) + "</div>";
+  }
+
+  /* ---- mode 7: from the founders' record (documented, sourced) ---- */
+  function fieldHtml(offset) {
+    var ns = MDD().FIELD;
+    if (!ns.length) return "";
+    var start = (((weekNum(7) + (offset || 0)) % ns.length) + ns.length) % ns.length;
+    var picks = [ns[start], ns[(start + 1) % ns.length]];
+    var blocks = picks.map(function (n2) {
+      return '<div class="aq-fieldnote"><span>📓 ON THE RECORD · ' + esc(n2.who) + "</span>" + esc(n2.note) + "</div>" +
+        srcCard(n2.book, "", bookBlurb(n2.book));
+    }).join("");
+    return answerBlock("📓 FROM THE FOUNDERS' RECORD", "Documented moves from real founders and operators, all on the public record: what they actually did, and the book in the library that teaches it. Two entries this week, tap for two more.", "on the record") +
+      '<div class="aq-srcs">' + blocks + "</div>" +
+      '<div class="aq-foot">' + nextBtn("📓 Two more from the record", "field:" + (start + 2)) + "</div>";
+  }
+
+  /* ---- dispatcher ---- */
+  function modeRender(key, arg) {
+    if (key === "compare") {
+      var tp = arg ? MDD().TOPICS.filter(function (x) { return x.key === arg; })[0] : null;
+      var text = tp ? tp.kws.join(" ") : String(arg || "");
+      var hits = bestPerBook(text, 4);
+      return hits.length ? compareHtml(tp ? tp.label : text, hits, false) : "";
+    }
+    if (key === "decision") return decisionHtml(parseInt(arg || "0", 10) || weekNum(0));
+    if (key === "redflag") return redflagHtml(arg);
+    if (key === "before") return beforeHtml(arg || null, null);
+    if (key === "seven") return sevenHtml(arg || SEVEN_CYCLE[weekNum(2) % SEVEN_CYCLE.length]);
+    if (key === "myth") return mythHtml(arg ? parseInt(arg, 10) : 0);
+    if (key === "field") return fieldHtml(arg ? parseInt(arg, 10) : 0);
+    return "";
+  }
+  /* free text typed while a pick-mode menu is open */
+  function modeFromText(key, q) {
+    if (key === "compare") {
+      var tp = topicFromText(q);
+      var hits = bestPerBook(tp ? tp.kws.join(" ") : q, 4);
+      return hits.length ? compareHtml(tp ? tp.label : q, hits, false) : "";
+    }
+    if (key === "before") return beforeHtml(null, q);
+    if (key === "seven") {
+      var b = bookFromText(q);
+      if (!b) {
+        var top = bestPerBook(q, 1);
+        b = top.length ? top[0].book : bookIndex()[SEVEN_CYCLE[weekNum(2) % SEVEN_CYCLE.length]];
+      }
+      return b ? sevenHtml(b.id) : "";
+    }
+    return "";
+  }
+  function modeGo(key, arg, userLabel) {
+    if (!open_) { try { open(); } catch (e) {} }
+    modePick = null;
+    addMsg("user", userLabel || key);
+    if (input) input.value = "";
+    var stopT = thinking();
+    var html = modeRender(key, arg);
+    Promise.all([delay(1800)]).then(function () {
+      stopT();
+      renderBotAnswer(userLabel || key, html || "<div class='aq-guided'>" + t("Something went wrong, try again!") + "</div>");
+    });
+  }
+  /* pick-mode menu: chips for presets, typing also works */
+  function pickBubble(key) {
+    modePick = key;
+    var head = "", opts = "";
+    if (key === "compare") {
+      head = "Pick a topic and the books go side by side, lesson by lesson. Or type your own topic below.";
+      MDD().TOPICS.slice(0, 6).forEach(function (tp) {
+        opts += '<button class="aq-chip aq-chip--mini" data-axopt="' + key + ":" + tp.key + '" data-axlabel="' + esc(tp.label) + '">' + esc(tp.label) + "</button>";
+      });
+    } else if (key === "before") {
+      head = "The reads before the leap. Pick a jump, or type it: raising money, hiring fast, buying a franchise, quitting your job…";
+      MDD().SCENARIOS.slice(0, 6).forEach(function (sc) {
+        opts += '<button class="aq-chip aq-chip--mini" data-axopt="before:' + sc.key + '" data-axlabel="' + esc(sc.label) + '">' + esc(sc.label) + "</button>";
+      });
+    } else if (key === "seven") {
+      head = "One book. Seven days. One action a day from the book itself. Pick a book or type one: Atomic Habits, Deep Work…";
+      SEVEN_CYCLE.slice(0, 6).forEach(function (bid) {
+        var b = bookIndex()[bid];
+        if (b) opts += '<button class="aq-chip aq-chip--mini" data-axopt="seven:' + bid + '" data-axlabel="' + esc(b.title) + '">' + esc(b.title) + "</button>";
+      });
+    } else { return ""; }
+    return '<div class="aq-guided"><b>' + esc(head) + "</b>" +
+      '<div class="aq-optrow">' + opts + "</div>" +
+      '<div class="aq-foot aq-foot--dim">✍️ ' + esc(t("or just type it below")) + "</div></div>";
+  }
+  function showModeIntro(key, label) {
+    if (!open_) { try { open(); } catch (e) {} }
+    modePick = null;
+    addMsg("user", label);
+    if (input) input.value = "";
+    setTimeout(function () {
+      var html = pickBubble(key);
+      if (html) addMsg("bot", html); /* a menu, not an answer: not saved to history */
+      else modeGo(key, null, label);
+    }, 350);
+  }
+
   function renderChips() {
     var wrap = root.querySelector("#tsb-chips");
     if (!wrap) return;
     wrap.innerHTML = "";
+    /* 🎭 v292: ONE modes chip opens the grid, the chip row stays a single line */
+    var mdb = document.createElement("button");
+    mdb.className = "aq-chip aq-chip--modes";
+    mdb.textContent = "🎭 " + t("MODES");
+    mdb.addEventListener("click", openModes);
+    wrap.appendChild(mdb);
     contextChips().slice(0, 5).forEach(function (c, i) {
       var b = document.createElement("button");
       b.className = "aq-chip aq-chip--" + (i % 5);
@@ -662,6 +1018,20 @@
     if (window.TSB) { try { window.TSB.achv.award("ask-1"); } catch (e) {} }
     var q = String(raw || "").trim();
     if (!q) return;
+    /* 🎭 v292 typed input while a pick-mode menu is open routes to that mode */
+    if (modePick) {
+      var mk = modePick; modePick = null;
+      addMsg("user", q);
+      input.value = "";
+      var stopM = thinking();
+      var htmlM = modeFromText(mk, q);
+      Promise.all([delay(1800)]).then(function () {
+        stopM();
+        if (htmlM) renderBotAnswer(q, htmlM);
+        else answer(q);
+      });
+      return;
+    }
     var b = currentBook();
     if (q === "Show related failures" && b) {
       addMsg("user", "💀 " + b.title + ", " + t("related failures"));
@@ -722,6 +1092,36 @@
     setTimeout(function () { s.focus(); }, 80);
   }
   function closeLib() { root.querySelector("#tsb-lib").classList.remove("aq-lib--open"); }
+
+  /* ============ 🎭 MODES SHEET (v292): the 8 formats live in one grid,
+     the chat keeps its original single-line chip bar ============ */
+  var MODE_DESC = {
+    compare:  "Lessons from different books, side by side on one question",
+    decision: "The reversible moment before famous collapses",
+    redflag:  "A fresh warning sign every week, straight from the autopsies",
+    before:   "The reads before the big jumps: money, hiring, franchises",
+    seven:    "One book, seven days, one action a day",
+    myth:     "Popular advice vs what the books actually say",
+    field:    "Honest notes from readers out in the field"
+  };
+  function renderModes() {
+    var g = root.querySelector("#tsb-mdgrid");
+    if (!g || g.children.length) return;
+    MODES.forEach(function (m, i) {
+      var c = document.createElement("button");
+      c.className = "aq-mdcard aq-mdcard--" + (i % 5);
+      c.setAttribute("data-md", m.key);
+      c.innerHTML = "<b>" + esc(m.label) + "</b><span>" + esc(t(MODE_DESC[m.key] || "")) + "</span>";
+      c.addEventListener("click", function () {
+        closeModes();
+        if (m.pick) showModeIntro(m.key, m.label);
+        else modeGo(m.key, null, m.label);
+      });
+      g.appendChild(c);
+    });
+  }
+  function openModes() { renderModes(); root.querySelector("#tsb-modes").classList.add("aq-lib--open"); }
+  function closeModes() { root.querySelector("#tsb-modes").classList.remove("aq-lib--open"); }
   function renderLib(filter) {
     var list = root.querySelector("#tsb-liblist");
     var f = filter.trim().toLowerCase();
@@ -765,6 +1165,7 @@
     root.querySelector(".aq-close").addEventListener("click", close);
     root.querySelector("#tsb-libbtn").addEventListener("click", openLib);
     root.querySelector("#tsb-libclose").addEventListener("click", closeLib);
+    root.querySelector("#tsb-modesclose").addEventListener("click", closeModes);
     root.querySelector("#tsb-libsearch").addEventListener("input", function (e) { renderLib(e.target.value); });
     root.querySelector(".aq-clear").addEventListener("click", function () {
       if (!confirm("Clear this chat?")) return;
@@ -773,9 +1174,18 @@
     });
     root.querySelector("#tsb-send").addEventListener("click", function () { send(input.value); });
     input.addEventListener("keydown", function (e) { if (e.key === "Enter") send(input.value); });
+    /* 🎭 v292 delegated taps on mode option buttons inside bot bubbles */
+    msgs.addEventListener("click", function (e) {
+      var b = e.target && e.target.closest ? e.target.closest("[data-axopt]") : null;
+      if (!b) return;
+      var v = b.getAttribute("data-axopt") || "";
+      var ci = v.indexOf(":");
+      modeGo(ci >= 0 ? v.slice(0, ci) : v, ci >= 0 ? v.slice(ci + 1) : null, b.getAttribute("data-axlabel") || b.textContent);
+    });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") {
-        if (root.querySelector("#tsb-lib").classList.contains("aq-lib--open")) closeLib();
+        if (root.querySelector("#tsb-modes").classList.contains("aq-lib--open")) closeModes();
+        else if (root.querySelector("#tsb-lib").classList.contains("aq-lib--open")) closeLib();
         else if (open_) close();
       }
     });

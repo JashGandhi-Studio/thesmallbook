@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@500;600;700&family=Special+Elite&family=Indie+Flower&family=Patrick+Hand&family=Shadows+Into+Light&family=Homemade+Apple&family=Dancing+Script&family=Permanent+Marker&family=Rock+Salt&family=Amatic+SC&family=Gloria+Hallelujah&family=Kaushan+Script&family=Playfair+Display&family=Bebas+Neue&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=291">
+  <link rel="stylesheet" href="css/style.css?v=294">
   <style>
     .nt-wrap { max-width: 780px; margin: 0 auto; padding: 18px 16px calc(90px + env(safe-area-inset-bottom)); }
     .nt-top { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
@@ -163,17 +163,18 @@
     <div id="ntMain"></div>
   </main>
 
-  <script src="js/bootguard.js?v=291"></script>
-  <script src="js/prefs.js?v=291"></script>
-  <script src="js/lang.js?v=291"></script>
-  <script src="js/config.js?v=291"></script>
-  <script src="js/auth.js?v=291"></script>
-  <script src="js/sounds.js?v=291"></script>
-  <script src="js/founder.js?v=291"></script>
-  <script src="js/community.js?v=291"></script>
-  <script src="js/gold.js?v=291"></script>
-  <script src="js/dictate.js?v=291"></script>
-  <script src="js/bar.js?v=291" defer></script>
+  <script src="js/bootguard.js?v=294"></script>
+  <script src="js/prefs.js?v=294"></script>
+  <script src="js/lang.js?v=294"></script>
+  <script src="js/config.js?v=294"></script>
+  <script src="js/auth.js?v=294"></script>
+  <script src="js/sounds.js?v=294"></script>
+  <script src="js/founder.js?v=294"></script>
+  <script src="js/community.js?v=294"></script>
+  <script src="js/gold.js?v=294"></script>
+  <script src="js/dictate.js?v=294"></script>
+  <script src="js/bar.js?v=294" defer></script>
+  <script src="js/smallscroller.js?v=294"></script>
   <script>
   (function () {
     "use strict";
@@ -417,7 +418,7 @@
         else if (b.dataset.act === "photo") pickPhoto(false, function (html) { if (html) insertHTML(body, html); });
         else if (b.dataset.act === "audio") recordAudio(function (chip) { if (chip) insertHTML(body, chip); });
       });
-      /* v287: pick a font, write with it — like Word, the selection obeys */
+      /* v287: pick a font, write with it - like Word, the selection obeys */
       $("ntFont").addEventListener("change", function () {
         if (!this.value) return;
         body.focus();
@@ -425,7 +426,7 @@
         document.execCommand("fontName", false, this.value);
         queue();
       });
-      /* v287: like Word — Enter after a quote line returns to normal writing,
+      /* v287: like Word - Enter after a quote line returns to normal writing,
          the quote never carries into the next sentence on its own */
       body.addEventListener("keydown", function (e) {
         if (e.key !== "Enter" || e.shiftKey) return;
@@ -439,7 +440,7 @@
           } catch (err) {}
         }, 0);
       });
-      /* v287: press and hold a photo (~half a second), it lifts — then drag
+      /* v287: press and hold a photo (~half a second), it lifts - then drag
          it anywhere on the page and let go. v288: two fingers on a photo
          pinch it bigger or smaller, straight on the page. */
       (function () {
@@ -718,7 +719,7 @@
         pages: (n.pages || []).map(function (p) { return materialize(p || ""); })
       };
     }
-    /* v287: the free mark, redesigned — a quiet signature, not a shout.
+    /* v287: the free mark, redesigned - a quiet signature, not a shout.
        Premium (Gold) writers export clean. */
     function wm() { try { if (window.TSB_GOLD && TSB_GOLD.isGold && TSB_GOLD.isGold()) return ""; } catch (e) {} return "\u00b7 written with thesmallbook \u00b7"; }
     function docHTML(n) {

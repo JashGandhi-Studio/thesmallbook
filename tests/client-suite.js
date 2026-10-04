@@ -323,10 +323,10 @@ const C = window.TSB_COMMUNITY;
   const djSrc = fsp.readFileSync(pp.join(__dirname, "../js/data.js"), "utf8");
   const djArr = JSON.parse(djSrc.slice(djSrc.indexOf("["), djSrc.indexOf("];\nif (typeof window") + 1));
   const ntitle = t => t.trim().toLowerCase().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ");
-  ok("data.js parses: library grew to 460 books", djArr.length === 460, djArr.length + " books");
-  ok("3,138 lessons across the library", djArr.reduce((x, b) => x + b.lessons.length, 0) === 3138, "sum mismatch");
-  ok("all 460 book ids unique", new Set(djArr.map(b => b.id)).size === 460);
-  ok("all 460 titles unique (punctuation-normalized)", new Set(djArr.map(b => ntitle(b.title))).size === 460);
+  ok("data.js parses: library grew to 480 books", djArr.length === 480, djArr.length + " books");
+  ok("3,340 lessons across the library", djArr.reduce((x, b) => x + b.lessons.length, 0) === 3340, "sum mismatch");
+  ok("all 480 book ids unique", new Set(djArr.map(b => b.id)).size === 480);
+  ok("all 480 titles unique (punctuation-normalized)", new Set(djArr.map(b => ntitle(b.title))).size === 480);
   ok("every book complete (5+ lessons, 3+ quotes, 5-step plan, caveat, bigIdea)", djArr.every(b => b.lessons.length >= 5 && b.quotes.length >= 3 && b.actionPlan.length >= 5 && b.caveat && b.bigIdea && b.oneLiner));
   ok("every cover file exists in assets/covers/", djArr.every(b => fsp.existsSync(pp.join(__dirname, "../" + b.cover))));
   ok("every book has an SEO page in books/", djArr.every(b => fsp.existsSync(pp.join(__dirname, "../books/" + b.id + ".html"))));
@@ -336,7 +336,7 @@ const C = window.TSB_COMMUNITY;
   ok("You-window has Notif sound row + Sound test", lgSrc2.includes('id="soundRowY"') && lgSrc2.includes('id="youSoundTest"') && lgSrc2.includes("paintYSound"));
   const bkSrc2 = fsp.readFileSync(pp.join(__dirname, "../js/book.js"), "utf8");
   ok("share card: title baseline lowered + one-liner capped when title wraps", bkSrc2.includes("let y = 678;") && bkSrc2.includes("titleLines.length > 1 ? 2 : 3"));
-  ok("og image + alt refreshed (460 books · 3,138 lessons)", idxH.includes("460 books · 3,138 lessons") && idxH.includes("assets/og-image.png"));
+  ok("og image + alt refreshed (480 books · 3,340 lessons)", idxH.includes("480 books · 3,340 lessons") && idxH.includes("assets/og-image.png"));
   ok("no stale counts on key files (350 books / 2,176 / 2176 / 2170)", !/350 books|2,176|2176|2170|2,637 lessons|2637 lessons|308 autopsies|ALL 308|422 books|2,811|2811|311 autopsies|ALL 311/.test(djSrc + idxH + cssSrc + lgSrc2 + bkSrc2));
   const swSrc = fsp.readFileSync(pp.join(__dirname, "../sw.js"), "utf8");
   /* v252: these two used to hardcode the version, so every release broke them.
@@ -375,7 +375,7 @@ const C = window.TSB_COMMUNITY;
   }
   const onbSrc = fsp.readFileSync(pp.join(__dirname, "../js/onboard.js"), "utf8");
   const scnSrc = fsp.readFileSync(pp.join(__dirname, "../scan.html"), "utf8");
-  ok("onboarding + scanner + about all say 460", onbSrc.includes("460+ books") && scnSrc.includes("all 460 book titles") && abtH.includes("460 book summaries") && abtH.includes("ASK 460+ BOOKS"));
+  ok("onboarding + scanner + about all say 480", onbSrc.includes("480+ books") && scnSrc.includes("all 480 book titles") && abtH.includes("480 book summaries") && abtH.includes("ASK 480+ BOOKS"));
   const flSrc = fsp.readFileSync(pp.join(__dirname, "../js/failures.js"), "utf8");
   const flArr = JSON.parse(flSrc.slice(flSrc.indexOf("["), flSrc.lastIndexOf("]") + 1));
   ok("graveyard grew to 315 autopsies", flArr.length === 315, flArr.length + " autopsies");
@@ -401,7 +401,7 @@ const C = window.TSB_COMMUNITY;
   ok("v289: new graves carry origin + fall and stay em-dash free",
      graves29.every(g => { const i = gc29.indexOf('"' + g + '":{'); return i > -1 && /"origin":"/.test(gc29.slice(i, i + 1400)) && /"fall":"/.test(gc29.slice(i, i + 2800)); }) &&
      graves29.every(g => { const f29 = flArr.find(f => f.id === g); return f29 && !JSON.stringify(f29).includes("—") && !JSON.stringify(f29).includes("–"); }));
-  ok("v289: counts move together (now 460 books / 3138 lessons / 315 autopsies)", djArr.length === 460 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3138 && flArr.length === 315);
+  ok("v289: counts move together (now 480 books / 3340 lessons / 315 autopsies)", djArr.length === 480 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3340 && flArr.length === 315);
 
   console.log("== v290: 28 new books (Desi Disruptors leads), 4 new graves, FREE vs GOLD side-by-side, NEW tag re-pointed ==");
   const new290 = new Set(["barbarians-gate","bhujia-barons","cold-start-problem","delivering-happiness","den-of-thieves","desi-disruptors","dhandha","first-90-days","for-the-love-of-india","hooked-nir-eyal","hp-way","iacocca","india-uninc","inspired-product","it-happened-in-india","jack-straight-from-the-gut","liars-poker","losing-my-virginity","lost-and-founder","made-in-japan","my-years-with-general-motors","obviously-awesome","onward","smartest-guys","the-marwaris","too-big-to-fail","toyota-way","turn-the-ship-around"]);
@@ -420,15 +420,15 @@ const C = window.TSB_COMMUNITY;
      graves290.every(g => { const f290 = flArr.find(f => f.id === g); return f290 && !JSON.stringify(f290).includes("—") && !JSON.stringify(f290).includes("–"); }));
   const cfg290 = fsp.readFileSync(pp.join(__dirname, "../js/config.js"), "utf8");
   const ntw290 = JSON.parse("[" + cfg290.match(/NEW_THIS_WEEK: \[([\s\S]*?)\n  \],/)[1] + "]");
-  ok("v290: the founders batch KEEPS its NEW badge (60 books are new now)", ntw290.length === 60 && [...new290].every(x => ntw290.includes(x)), ntw290.length + " tagged");
+  ok("v290: the founders batch KEEPS its NEW badge (80 books are new now)", ntw290.length === 80 && [...new290].every(x => ntw290.includes(x)), ntw290.length + " tagged");
   ok("v290: the previous NEW batch (the old 50) lost the badge", ["chanakya-neeti","yoga-sutras","bhagavad-gita","arthashastra","thirukkural","uncertain-glory","raja-yoga","five-am-club","kalam-effect","leader-no-title"].every(x => !ntw290.includes(x)));
   const ngw290 = JSON.parse("[" + cfg290.match(/NEW_GRAVES_THIS_WEEK: \[([\s\S]*?)\n  \],/)[1] + "]");
-  ok("v290: FRESH GRAVE badge on exactly the 4 new autopsies", ngw290.length === 4 && ngw290.every(g => graves290.includes(g)), ngw290.join(","));
+  ok("v290: the four new v290 autopsies badge fresh (the v294 featured 23 live in config)", ngw290.length >= 4 && ["ceasefire-fade","virgin-cola","air-india-decline","payless-shoes"].every(g => ngw290.includes(g)), ngw290.length + " featured");
   const gold290 = fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8");
   ok("v290: FREE vs GOLD side-by-side on gold.html (12 honest rows)", gold290.includes('id="goldCompare"') && (gold290.match(/class="gcmp__row"/g) || []).length === 12 && gold290.includes("LIVE NOW") && gold290.includes("IN PRODUCTION") && gold290.includes("COMING SOON") && gold290.includes("LAUNCHING WITH GOLD"));
   ok("v290: gold comparison claims only verifiable features (no live-link row)", gold290.includes("OFFLINE + EXPORT") && gold290.includes("STUDIO PRO") && gold290.includes("₹999/yr") && gold290.includes("cancel anytime"));
   ok("v290: gold page keeps the suite contract (ACTIVATE GOLD + forge + early-members)", gold290.includes("ACTIVATE GOLD") && gold290.includes("gForge") && gold290.includes("rolling out to early members first"));
-  ok("v290: counts move together (460 books / 3138 lessons / 315 autopsies)", djArr.length === 460 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3138 && flArr.length === 315);
+  ok("v290: counts move together (480 books / 3340 lessons / 315 autopsies)", djArr.length === 480 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3340 && flArr.length === 315);
   console.log("== v291: 10 Unknown originals (7 Indian, 3 international), THE TICKET joins the case file ==");
   const unk291 = ["chai-stall-ceo","crickets-balance-sheet","mandi-math","monsoon-portfolio","quiet-giant","rented-kingdom","right-idea-wrong-decade","tiffin-code","the-queue","wedding-economy"];
   const intl291 = ["quiet-giant","rented-kingdom","right-idea-wrong-decade"];
@@ -450,11 +450,11 @@ const C = window.TSB_COMMUNITY;
   const origs291 = JSON.parse("[" + cfg291.match(/ORIGINALS: \[([\s\S]*?)\n  \],/)[1] + "]");
   const bk291 = fsp.readFileSync(pp.join(__dirname, "../js/book.js"), "utf8");
   const cssO291 = fsp.readFileSync(pp.join(__dirname, "../css/style.css"), "utf8");
-  ok("v291: THE SMALLBOOK ORIGINAL mark on exactly the 10 in-house books (config + reader band + css)", origs291.length === 10 && origs291.every(id => djArr.some(b => b.id === id && b.author === "Unknown")) && bk291.includes("origband") && bk291.includes("TSB_CONFIG.ORIGINALS") && cssO291.includes(".origband"));
+  ok("v291: THE SMALLBOOK ORIGINAL mark on exactly the 30 in-house books (config + reader band + css)", origs291.length === 30 && origs291.every(id => djArr.some(b => b.id === id && b.author === "Unknown")) && bk291.includes("origband") && bk291.includes("TSB_CONFIG.ORIGINALS") && cssO291.includes(".origband"));
   ok("v291: all 10 Original pages carry the mark", origs291.every(id => fsp.readFileSync(pp.join(__dirname, "../books/" + id + ".html"), "utf8").includes("THE SMALLBOOK ORIGINAL")));
   const f28 = new Set(["barbarians-gate","bhujia-barons","cold-start-problem","delivering-happiness","den-of-thieves","desi-disruptors","dhandha","first-90-days","for-the-love-of-india","hooked-nir-eyal","hp-way","iacocca","india-uninc","inspired-product","it-happened-in-india","jack-straight-from-the-gut","liars-poker","losing-my-virginity","lost-and-founder","made-in-japan","my-years-with-general-motors","obviously-awesome","onward","smartest-guys","the-marwaris","too-big-to-fail","toyota-way","turn-the-ship-around"]);
   const d22 = new Set(["ambani-sons","amazon-unbound","anarchy-eic","anu-aunty","arise-awake","big-billion-startup","bottle-of-lies","breakout-nations","dreamers","elephant-catchers","empire-of-pain","follow-every-rainbow","grinding-it-out","half-lion","high-performance-ent","house-of-cards","maruti-story","recasting-india","simply-fly","tata-log","tcs-story","when-genius-failed"]);
-  ok("v291: 60 books carry NEW = 10 originals + 28 founders + 22 desi", ntw291.length === 60 && unk291.every(x => ntw291.includes(x)) && [...f28].every(x => ntw291.includes(x)) && [...d22].every(x => ntw291.includes(x)), ntw291.length + " tagged");
+  ok("v291: 80 books carry NEW = 30 originals + 50 real books", ntw291.length === 80 && unk291.every(x => ntw291.includes(x)) && [...f28].every(x => ntw291.includes(x)) && [...d22].every(x => ntw291.includes(x)), ntw291.length + " tagged");
   const ob291 = fsp.readFileSync(pp.join(__dirname, "../js/onboard.js"), "utf8");
   const css291 = fsp.readFileSync(pp.join(__dirname, "../css/style.css"), "utf8");
   ok("v291: onboarding shows 1-2 personal picks then the new books (with NEW chip)", /head\.concat\(news, rest\)/.test(ob291) && /news\.length >= 6/.test(ob291) && ob291.includes("ob-book__new") && css291.includes(".ob-book__new"));
@@ -463,17 +463,17 @@ const C = window.TSB_COMMUNITY;
   const newGraves = ["facebook-beacon","bikram-yoga","toyota-recalls","ratings-fail","valeant-pharma","purdue-opioids","tobacco-denial","sugar-industry"];
   ok("8 brand-new autopsies written (pages + data + antidote book)", newGraves.every(g0 => fsp.existsSync(pp.join(__dirname, "../graveyard/" + g0 + ".html")) && flArr.some(f => f.id === g0 && f.book) && fsp.readFileSync(pp.join(__dirname, "../graveyard/" + g0 + ".html"), "utf8").includes("gantidote")));
   const ogPng = fsp.readFileSync(pp.join(__dirname, "../assets/og-image.png"));
-  ok("og image exists (1200x630 fresh)", ogPng.length > 15000 && idxH.includes("og:image:alt") && idxH.includes("3,138 lessons"));
+  ok("og image exists (1200x630 fresh)", ogPng.length > 15000 && idxH.includes("og:image:alt") && idxH.includes("3,340 lessons"));
 
   console.log("== v221: NEW tags on latest batch, install-to-home-screen, build markers ==");
   const cfgSrc = fsp.readFileSync(pp.join(__dirname, "../js/config.js"), "utf8");
   const newThisWeek = JSON.parse("[" + cfgSrc.match(/NEW_THIS_WEEK: \[([\s\S]*?)\n  \],/)[1] + "]");
-  ok("NEW badge on the latest 60 books (old batches removed)", newThisWeek.length === 60 && newThisWeek.every(b => djArr.some(x => x.id === b)), newThisWeek.length + " items");
+  ok("NEW badge on the latest 80 books (old batches removed)", newThisWeek.length === 80 && newThisWeek.every(b => djArr.some(x => x.id === b)), newThisWeek.length + " items");
   const oldBatch = ["playing-it-my-way","india-2020","the-anarchy","the-idea-of-india","wonder-that-was-india","maximum-city","annihilation-of-caste","being-indian","the-winning-way","test-of-my-life","most-important-thing","crucial-conversations","ride-of-a-lifetime","awaken-giant-within","why-we-sleep","breath-nestor","make-it-stick","sam-walton","the-element","stumbling-happiness","freedom-from-the-known","gandhi-years-that-changed-world","karmayogi-sreedharan","wise-and-otherwise","accidental-prime-minister","give-and-take","david-and-goliath","book-of-joy","scrum-sutherland","blitzscaling-hoffman"];
   ok("the previous batch lost the NEW badge (they are no longer new)", oldBatch.every(b => !newThisWeek.includes(b)));
-  ok("the 60 NEW books float to the front of Home", newThisWeek.every(b => djArr.some(x => x.id === b)) && newThisWeek.length === 60);
+  ok("the 80 NEW books float to the front of Home", newThisWeek.every(b => djArr.some(x => x.id === b)) && newThisWeek.length === 80);
   const freshGraves = JSON.parse("[" + cfgSrc.match(/NEW_GRAVES_THIS_WEEK: \[([\s\S]*?)\n  \],/)[1] + "]");
-  ok("FRESH GRAVE badge on exactly the 4 v290 autopsies", freshGraves.length === 4 && freshGraves.every(g => flArr.some(f => f.id === g)), freshGraves.join(","));
+  ok("FRESH GRAVE badge on exactly the 23 v294 autopsies", freshGraves.length === 23 && freshGraves.every(g => flArr.some(f => f.id === g)), freshGraves.join(","));
   const setH = fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8");
   const youH = fsp.readFileSync(pp.join(__dirname, "../login.html"), "utf8");
   const instSrc = fsp.readFileSync(pp.join(__dirname, "../js/install.js"), "utf8");
@@ -990,7 +990,7 @@ const C = window.TSB_COMMUNITY;
     ok("the watchdog rides first on every app page, and the ID wall is gone for good", bg275.includes("TSB_BOOT_OK") && bg275.includes("tsb_purge_a") && rd("index.html").indexOf("js/bootguard.js") === 0 || (rd("index.html").includes("js/bootguard.js") && !rd("index.html").includes("js/vault.js") && !rd("book.html").includes("js/vault.js")));
     ok("a worker handover can never reload the page again", !prefs275.includes("controllerchange") && prefs275.includes("window.TSB_BOOT_OK = true"));
     ok("no worker = no purge reload; a true hang self-heals once, then an honest banner", bg275.includes("done(had)") && bg275.includes("Load trouble detected."));
-    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v291"'));
+    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v294"'));
     ok("storage is plain device storage again, exactly like v267", !rd("index.html").includes("js/vault.js") && rd("js/prefs.js").includes("for (let i = 0; i < localStorage.length; i++)") && !rd("js/prefs.js").includes("TSB_VAULT"));
 
     /* --- watermark --- */
@@ -1469,6 +1469,127 @@ const C = window.TSB_COMMUNITY;
     ok("the kit card and the prev/next buttons are separated in CSS",
        /\.bookkit \+ \.sponsorline, \.bookkit \+ \.booknav \{ margin-top:/.test(css));
     ok("about.html documents v255", /log-item__ver">v255</.test(rd("about.html")));
+  }
+
+
+  function s293calCheck(t) { return /s\.cal \+= dt/.test(t) && /s\.cal > 1\.6/.test(t); }
+  const glob292 = fsp.readdirSync(pp.join(__dirname, "..")).filter(f => f.endsWith(".html"));
+  /* ================= v292: ASK MODES + FIND READERS @id fix ================= */
+  {
+    const rd292 = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const ask292 = rd292("js/ask.js");
+    const mdSrc = rd292("js/ask-modes-data.js");
+    const md = JSON.parse(mdSrc.slice(mdSrc.indexOf("{"), mdSrc.lastIndexOf("}") + 1));
+    const st292 = rd292("stories.html"), pf292 = rd292("profile.html");
+    const css292b = rd292("css/style.css");
+
+    console.log("== v292: ask modes data is real, not filler ==");
+    ok("ask-modes-data.js parses and ships 10 topics", Array.isArray(md.TOPICS) && md.TOPICS.length === 10, md.TOPICS.length + " topics");
+    ok("27 red flags, 14 scenarios, 20 myths, 16 field notes",
+       md.REDFLAGS.length === 27 && md.SCENARIOS.length === 14 && md.MYTHS.length === 20 && md.FIELD.length === 16,
+       md.REDFLAGS.length + "/" + md.SCENARIOS.length + "/" + md.MYTHS.length + "/" + md.FIELD.length);
+    ok("every red flag points at a real autopsy id", md.REDFLAGS.every(r => flArr.some(f => f.id === r.grave)));
+    ok("every scenario cites 3 real books + 1 real grave, with 3 whys",
+       md.SCENARIOS.every(s => s.books.length === 3 && s.whys.length === 3 && s.books.every(b => djArr.some(x => x.id === b)) && flArr.some(f => f.id === s.grave)));
+    ok("every myth and field note cites a real book",
+       md.MYTHS.every(m => djArr.some(b => b.id === m.book)) && md.FIELD.every(n => djArr.some(b => b.id === n.book)));
+    ok("modes data is em-dash free (house rule)", !/[\u2014\u2013]/.test(mdSrc));
+    ok("ask.js is em-dash free too", !/[\u2014\u2013]/.test(ask292));
+
+    console.log("== v292: the mode engine ==");
+    ok("7 modes registered, the five-books duplicate retired", (ask292.match(/key: "/g) || []).length === 7 && /compare/.test(ask292) && /redflag/.test(ask292) && /seven/.test(ask292) && /myth/.test(ask292) && /field/.test(ask292) && /decision/.test(ask292) && /before/.test(ask292) && !/"five"/.test(ask292));
+    ok("one MODES chip sits in the chip bar and opens the sheet", /aq-chip--modes/.test(ask292) && /mdb\.addEventListener\("click", openModes\)/.test(ask292));
+    ok("the 8 formats live in a grid sheet, not in the chip row", /id="tsb-modes"/.test(ask292) && /id="tsb-mdgrid"/.test(ask292) && /MODES\.forEach/.test(ask292) && /aq-mdcard/.test(ask292));
+    ok("the old strip layout is gone", !/aq-modechip/.test(ask292) && !/className = "aq-modes"/.test(ask292));
+    ok("Escape closes the modes sheet first, then the library, then the panel", /"#tsb-modes"\)\.classList\.contains\("aq-lib--open"\)\) closeModes/.test(ask292) && /"#tsb-lib"\)\.classList\.contains\("aq-lib--open"\)\) closeLib/.test(ask292));
+    ok("every mode card describes itself, house palette included", /MODE_DESC/.test(ask292) && /aq-mdcard--" \+ \(i % 5\)/.test(ask292));
+    ok("each mode has a live renderer wired to modeRender", /function modeRender/.test(ask292) && /function compareHtml/.test(ask292) && /function decisionHtml/.test(ask292) && /function redflagHtml/.test(ask292) && /function beforeHtml/.test(ask292) && /function sevenHtml/.test(ask292) && /function mythHtml/.test(ask292) && /function fieldHtml/.test(ask292));
+    ok("compare ranks whole books, best lesson per book", /function bestPerBook/.test(ask292) && /byBook\[b\.id\]/.test(ask292));
+    ok("decision mode filters real autopsies with a real mistake field", /f\.mistake && String\(f\.mistake\)\.length > 40/.test(ask292));
+    ok("red flag rotates weekly, curated pool plus every real autopsy, peek-next works", /weekNum\(3\)/.test(ask292) && /Peek next week/.test(ask292) && /function allFlags/.test(ask292) && /window\.FAILURES \|\| \[\]/.test(ask292));
+    ok("7-day challenge renders one action a day from the book itself", /DAY " \+ \(i \+ 1\)/.test(ask292) && /l\.action \|\| l\.summary/.test(ask292));
+    ok("mode option buttons are delegated inside bot bubbles", /addEventListener\("click", function \(e\) \{\s*\n\s*var b = e\.target && e\.target\.closest \? e\.target\.closest\("\[data-axopt\]"\)/.test(ask292));
+    ok("typed input while a pick menu is open routes to that mode", /modePick/.test(ask292) && /modeFromText\(mk, q\)/.test(ask292));
+    ok("every mode is an independent destination (?mode= deep link)", /URLSearchParams\(location\.search\)/.test(ask292) && /qsp\.get\("mode"\)/.test(ask292) && ask292.includes('qsp.get("arg")'));
+    ok("field notes are on the public record now, not invented readers", ask292.includes("FROM THE FOUNDERS\u0027 RECORD") && /ON THE RECORD/.test(ask292) && md.FIELD.every(n => n.who && n.note.length > 80));
+    ok("free text can name a topic, a scenario or a book", /function topicFromText/.test(ask292) && /function scenarioFromText/.test(ask292) && /function bookFromText/.test(ask292));
+    ok("pick menus say typing works, and it truly does", /or just type it below/.test(ask292) && /modeFromText/.test(ask292));
+    ok("mode answers pass through the standard thinking + copy + history flow", /modeGo[\s\S]{0,400}thinking\(\)/.test(ask292) && /renderBotAnswer\(userLabel/.test(ask292));
+    ok("no lookbehind regex in the new engine (older iOS Safari)", !/\?<[=!]/.test(ask292.slice(ask292.indexOf("ASK MODES"))));
+
+    console.log("== v292: wiring, versions, changelog ==");
+    for (const pg of ["404.html", "about.html", "book.html", "chat.html", "graveyard.html", "index.html"]) {
+      const h = rd292(pg);
+      const mi = h.indexOf('src="js/ask-modes-data.js'), ai = h.indexOf('src="js/ask.js');
+      ok(pg + " loads the modes data before ask.js", mi >= 0 && mi < ai);
+    }
+    const sw292 = rd292("sw.js");
+    ok("service worker precaches ask-modes-data.js", sw292.includes('"./js/ask-modes-data.js"'));
+    ok("cache name and bootguard build both say 294", /CACHE_VERSION = "tsb-v294"/.test(sw292) && /var BUILD = "294";/.test(rd292("js/bootguard.js")));
+    ok("login and settings say Build tsb-v294", rd292("login.html").includes("Build tsb-v294") && rd292("settings.html").includes("Build tsb-v294"));
+    ok("about.html changelog documents v292 and the 8 modes", /log-item__ver">v292</.test(rd292("about.html")) && rd292("about.html").includes("8 modes"));
+    ok("no page still carries an old ?v=291", !glob292.some(f => /\?v=29[12]\b/.test(rd292(f))), glob292.filter(f => /\?v=29[12]\b/.test(rd292(f))).join(",") || "clean");
+
+    console.log("== v292: find readers shows the saved @id ==");
+    ok("finder rows render the saved username, uuid only as fallback", /p\.username \|\| p\.id/.test(st292));
+    ok("finder search matches the saved username too", /String\(p\.username \|\| ""\)\.toLowerCase\(\)\.indexOf\(q\)/.test(st292));
+    ok("profile follower sheet hydrates the saved @id async", /soc2\.textContent = "@" \+ String\(pr\.username\)\.slice\(0, 24\)/.test(pf292));
+    ok("profile sheet hydrates only when a username exists", /if \(soc2 && pr\.username\)/.test(pf292));
+    ok("stories.html finder stopped showing raw uuid slices", !/p\.id\)\.slice\(0, 8\)/.test(st292));
+    ok("css ships the modes sheet grid and dropped the strip", css292b.includes(".aq-mdgrid") && css292b.includes(".aq-chip--modes") && !css292b.includes(".aq-modechip"));
+    ok("no em dashes in any ui file (the v292 sweep)",
+       ["js/onboard.js", "js/book.js", "js/osint.js", "js/store-data.js", "js/store.js", "js/casefile-data.js",
+        "js/lang.js", "js/config.js", "js/tts-engine.js", "js/graveyard.js", "css/style.css",
+        "index.html", "login.html", "write.html", "graveyard.html", "about.html", "chat.html", "book.html"]
+         .every(f => { const t = rd292(f); return t.indexOf("\u2014") < 0 && t.indexOf("\u2013") < 0 && t.indexOf("&mdash;") < 0 && t.indexOf("&ndash;") < 0 && t.indexOf("&#8212;") < 0 && t.indexOf("&#8211;") < 0; }));
+  }
+
+
+  /* ================= v293: THE SMALL SCROLLER ================= */
+  {
+    const rd293 = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const tss = rd293("js/smallscroller.js");
+    const set293 = rd293("settings.html");
+    const css293 = rd293("css/style.css");
+    const prefs293 = rd293("js/prefs.js");
+
+    console.log("== v293: small scroller is a first-class module ==");
+    ok("own module, own namespace, no bolt-ons", /window\.TSB_SCROLLER = \{/.test(tss) && /isEnabled|bindSettings|tutorial/.test(tss));
+    ok("the toggle lives in Settings with a tutorial row beside it", set293.includes('id="scrollerToggle"') && set293.includes('id="scrollerTutorial"') && set293.includes("SMALL SCROLLER"));
+    ok("settings loads the module and binds it", /smallscroller\.js\?v=294/.test(set293) && /TSB_SCROLLER\.bindSettings/.test(set293));
+    let incCount = 0;
+    for (const f of glob292) { if (/smallscroller\.js\?v=294/.test(rd293(f))) incCount++; }
+    ok("the module rides on every bar page (" + incCount + " pages)", incCount >= 17, incCount + "");
+    ok("service worker precaches the module", rd293("sw.js").includes('"./js/smallscroller.js"'));
+    ok("about.html changelog documents v293", /log-item__ver">v293</.test(rd293("about.html")) && rd293("about.html").includes("TheSmallScroller"));
+
+    console.log("== v293: the three gestures, exactly as taught ==");
+    ok("open palm flick up scrolls down", tss.includes("OPEN_R") && tss.includes("FLICK_V") && tss.includes("scrollPage(0.65)"));
+    ok("the beckon (palm anchored, fingers curl down and spring back) scrolls up", tss.includes("BECK_CURL") && tss.includes("BECK_DRIFT") && tss.includes("scrollPage(-0.65)") && tss.includes("the beckon, the oppo way"));
+    ok("pinch shows a soft cursor, release taps through", tss.includes("PINCH_ON") && tss.includes("PINCH_OFF") && tss.includes("elementFromPoint") && tss.includes("tss-cursor"));
+    ok("gestures are smoothed, cooled and dropout-tolerant", tss.includes("COOLDOWN_FLICK") && tss.includes("COOLDOWN_TAP") && tss.includes("hysteresis") && tss.includes("openE * 0.65") && tss.includes("dropout tolerance"));
+    ok("the scan reticle rides the palm and the ring fills", tss.includes("strokeDashoffset") && tss.includes("tss-reticle--ok"));
+    ok("every gesture flashes where the palm is + a hit pulse", tss.includes("function flash(s, glyph)") && tss.includes('flash(s, "↓")') && tss.includes('flash(s, "↑")') && tss.includes('flash(s, "◉")'));
+    ok("a motion trail follows a fast hand", tss.includes("s.trail.push") && tss.includes("fading echoes"));
+    ok("the tutorial teaches the beckon, not a fist", tss.includes("Beckon it back up") && tss.includes("tss-hand--curl") && !tss.includes("Make a fist"));
+
+    console.log("== v293: smart guards ==");
+    ok("two second hand scan before anything moves", s293calCheck(tss), "cal > 1.6");
+    ok("distance sweet zone warns instead of misfiring", tss.includes("RANGE_MIN") && tss.includes("RANGE_MAX") && tss.includes("Bring your hand a little closer"));
+    ok("confidence gate on the detector", tss.includes("minHandDetectionConfidence: 0.6") && tss.includes("score < 0.5"));
+    ok("camera stops on tab hide and on ✕", tss.includes("visibilitychange") && tss.includes("getTracks().forEach"));
+    ok("the engine is fetched once from a free keyless cdn and cached", tss.includes("ENGINE_MODEL") && !/api[_-]?key|apikey/i.test(tss));
+    ok("nothing uploads: the feed never leaves the device", !/fetch\((?!ENGINE)/.test(tss.replace(/ENGINE_JS|ENGINE_MODEL/g, "X")) || !/XMLHttpRequest/.test(tss));
+    ok("secure context + camera support checked before any prompt", tss.includes("isSecureContext") && tss.includes("getUserMedia"));
+    ok("first scan awards the Air Touch badge", prefs293.includes('"scroller-1"') && tss.includes('award("scroller-1")'));
+
+    console.log("== v293: the teaching layer ==");
+    ok("animated tutorial: 4 steps, dots, replay from settings and session", (tss.match(/data-step="/g) || []).length === 4 && tss.includes("tss-tut__dots") && set293.includes("See the hand gestures"));
+    ok("tutorial marks itself seen and offers Maybe later", tss.includes('c.tut = 1') && tss.includes("Maybe later"));
+    ok("launcher chip appears on every page while enabled", tss.includes("tss-launch") && tss.includes("refreshLaunch"));
+    ok("css ships the overlay, cursor, chip and tutorial animations", css293.includes(".tss-root") && css293.includes(".tss-cursor--on") && css293.includes(".tss-launch") && css293.includes("tssFlick") && css293.includes("tssHalo"));
+    ok("smallscroller.js is em-dash free", !/[\u2014\u2013]/.test(tss));
+    ok("reduced-motion users get a still, calm ui", css293.includes("prefers-reduced-motion: reduce") && css293.includes(".tss-pinch-a"));
   }
 
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");

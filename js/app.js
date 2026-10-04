@@ -440,8 +440,8 @@
 
     let shownDay = -1;
     /* 🎯 PERSONALIZED pick: prefs.goal (onboarding Q1) + prefs.time (Q4)
-       Weekdays (Mon–Fri) → lessons from the user's chosen category.
-       Weekends (Sat–Sun) → random discovery (keeps variety). */
+       Weekdays (Mon-Fri) → lessons from the user's chosen category.
+       Weekends (Sat-Sun) → random discovery (keeps variety). */
     const GOAL_CAT = {
       "self": "Self-Improvement", "money": "Money & Finance",
       "business": "Business & Startups", "people": "Psychology & People",

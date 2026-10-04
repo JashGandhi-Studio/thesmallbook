@@ -1,7 +1,7 @@
 /* ============================================================
    THESMALLBOOK, ⏳ THE FREE TASTER (js/trial.js) v265
    After onboarding, every guest reads free for 15 minutes.
-     · 0–5 min   → nothing, just reading
+     · 0-5 min   → nothing, just reading
      · 5 min     → a polite pop-up: 10 minutes left
      · 10 min    → another pop-up: 5 minutes left
      · 15 min    → THE GATE, sign in to keep going

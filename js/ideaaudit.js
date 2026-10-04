@@ -392,7 +392,7 @@
 
   var CATS = [
     ["STARTUP", "🚀"], ["HEALTH", "🏥"], ["FINANCE", "💸"], ["EDUCATION", "🎓"],
-    ["FOOD", "🍜"], ["TRAVEL", "✈️"], ["RETAIL", "🛍️"], ["TECH", "🤖"],
+    ["FOOD", "🍜"], ["TRAVEL", "✈️"], ["RETAIL", "🛍️"], ["TECH", "💻"],
     ["MEDIA", "🎬"], ["FASHION", "👕"], ["AGRI", "🌾"], ["OTHER", "✳️"]
   ];
   var MONEYS = [["subscription", "🔁 Subscription"], ["one-time", "🛒 One-time sale"], ["commission", " Percent take"], ["ads", "📺 Ads"], ["unsure", "🤷 Not sure yet"]];
@@ -682,7 +682,7 @@
       if (ai) {
         A.aiRead(draft, (last && last.weak || []).map(function (x) { return x.t; })).then(function (txt) {
           if (!txt) { if (ai.parentNode) ai.parentNode.removeChild(ai); return; }
-          ai.innerHTML = '<span class="iaudit__ai__lbl">🤖 SECOND OPINION, A FREE AI READS IT TOO</span><p>' + esc(txt) + "</p>" +
+          ai.innerHTML = '<span class="iaudit__ai__lbl">🔍 SECOND OPINION, A FRESH OUTSIDE READ</span><p>' + esc(txt) + "</p>" +
             '<span class="iaudit__ai__fine">One machine\u2019s opinion, not gospel, the meters above come from 315 real case files.</span>';
         });
       }

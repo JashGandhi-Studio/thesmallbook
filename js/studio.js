@@ -728,14 +728,14 @@
     $("stuDl").addEventListener("click", async function () {
       this.textContent = "… rendering";
       try { await shareOrDownload(await renderSafe(), "thesmallbook-card.png"); }
-      catch (e) { toast("❌ This photo\u2019s source is blocking exports \u2014 save it and add it from your gallery, or pick another."); }
+      catch (e) { toast("❌ This photo\u2019s source is blocking exports, save it and add it from your gallery, or pick another."); }
       finally { this.textContent = "⬇ DOWNLOAD CARD"; }
     });
     // v244: export the picture ALONE, clean image, no text, no watermark (your "image & text separately" choice)
     $("stuDlPhoto").addEventListener("click", async function () {
       this.textContent = "… rendering";
       try { await shareOrDownload(await renderSafe(true), "thesmallbook-photo.png"); }
-      catch (e) { toast("❌ This photo\u2019s source is blocking exports \u2014 save it and add it from your gallery, or pick another."); }
+      catch (e) { toast("❌ This photo\u2019s source is blocking exports, save it and add it from your gallery, or pick another."); }
       finally { this.textContent = "⬇ PHOTO ONLY"; }
     });
     $("stuApply").addEventListener("click", async function () {
@@ -748,7 +748,7 @@
         toast("✅ Studio card set as your cover");
         close();
       } catch (e) {
-        toast("❌ Couldn\u2019t compose. This photo\u2019s source is blocking exports \u2014 save it and add it from your gallery, or pick another.");
+        toast("❌ Couldn\u2019t compose. This photo\u2019s source is blocking exports, save it and add it from your gallery, or pick another.");
       } finally { this.textContent = "✔ USE AS COVER"; }
     });
 
@@ -855,7 +855,7 @@
       img.src = src;
     }
     /* v286: if an export ever still hits a tainted canvas, re-fetch the photo as a
-       same-origin blob and render again — the user never sees "Couldn't compose". */
+       same-origin blob and render again - the user never sees "Couldn't compose". */
     async function _detaint() {
       try {
         if (!img || !img.src || !/^https?:\/\//.test(img.src)) return false;

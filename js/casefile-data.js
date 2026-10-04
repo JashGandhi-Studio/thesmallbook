@@ -40,11 +40,11 @@ window.TSB_CASEFILE = {
         '<tr><td>Vikram</td><td>COO. Ran vendors, warehouses and the "second unit" everyone was told not to mention.</td></tr>' +
         '<tr><td>Ruth</td><td>CFO. Quit two weeks before the leak. Says she "saw the numbers behind the numbers."</td></tr>' +
         '<tr><td>Brewkart</td><td>The giant competitor. Motive stamped on its forehead.</td></tr></table>' +
-        '<p class="cf-note">Read the call first. It is the only time anyone in this file speaks freely \u2014 and that is exactly why it misleads.</p>'
+        '<p class="cf-note">Read the call first. It is the only time anyone in this file speaks freely, and that is exactly why it misleads.</p>'
     },
     {
       tab: "02 · THE CALL",
-      title: "Intercepted investor call \u2014 41 days before death",
+      title: "Intercepted investor call: 41 days before death",
       kind: "call",
       audio: true,
       html:
@@ -58,9 +58,9 @@ window.TSB_CASEFILE = {
         '<p><b>ARJUN:</b> Reach. Sometimes we pay channel partners to push us into new lanes. Cash moves where the market is, gentlemen. You know this.</p>' +
         '<p><b>ARJUN:</b> And last week Brewkart\u2019s people were calling our distributors asking them to return stock. This is a dirty-tricks war and we are winning it anyway.</p>' +
         '<p><b>FUND PARTNER:</b> Ruth\u2019s exit surprised us. She was your discipline.</p>' +
-        '<p><b>ARJUN:</b> <i>(laughs)</i> Ruth was tired. You don\u2019t build a rocket on a calculator. Anyway \u2014 even after she left, the second unit kept the COGS flat. The engine is fine, gentlemen. I am three weeks from breakeven, and I will send the sheet myself.</p>' +
+        '<p><b>ARJUN:</b> <i>(laughs)</i> Ruth was tired. You don\u2019t build a rocket on a calculator. Anyway, even after she left, the second unit kept the COGS flat. The engine is fine, gentlemen. I am three weeks from breakeven, and I will send the sheet myself.</p>' +
         '<p><b>ANGEL 2:</b> Which second unit?</p>' +
-        '<p><b>ARJUN:</b> <i>(pause, four seconds \u2014 the analyst logged it)</i> The... packaging annex. Bhiwandi. Forget the name, it\u2019s a shed, it saves us eleven percent on cost. Meera\u2019s find.</p>' +
+        '<p><b>ARJUN:</b> <i>(pause, four seconds, the analyst logged it)</i> The... packaging annex. Bhiwandi. Forget the name, it\u2019s a shed, it saves us eleven percent on cost. Meera\u2019s find.</p>' +
         '<p><b>FUND PARTNER:</b> Send the sheet.</p>' +
         '<p><b>ARJUN:</b> Tonight.</p>' +
         "</div>" +
@@ -109,7 +109,7 @@ window.TSB_CASEFILE = {
         '<p><b>FROM:</b> a thrown-away account · <b>TO:</b> three food-safety influencers, two journalists</p>' +
         '<p><b>SUBJECT:</b> before you drink NovaChai, read this</p>' +
         '<p class="cf-mail__body">"i worked with there logistics vendor. the bhiwandi shed is not a annex it is the whole truth. they blended cheap dust tea there from a unlicenced supplier to cost cut after the CFO leaved. the expired creamer crates was relabeled. i have photos. i leaved because i costed my soul. check batch NV-2271 to NV-2290. i could not stay quiet anymore."</p>' +
-        '<p class="cf-note">Language note by the forensics reader: the writer misspells the same way twice \u2014 <i>"leaved"</i>, and <i>"costed my soul"</i>. </p>' +
+        '<p class="cf-note">Language note by the forensics reader: the writer misspells the same way twice: <i>"leaved"</i>, and <i>"costed my soul"</i>. </p>' +
         "</div>" +
         '<p class="cf-lead">The video that went with it was clean, cropped, and knew exactly which crate labels to show. Whoever shot it understood the batch numbering system. Consumers don\u2019t. Staff do.</p>'
     },
@@ -118,11 +118,11 @@ window.TSB_CASEFILE = {
       title: "What the forensic audit found (and underlined twice)",
       kind: "doc",
       html:
-        '<p class="cf-lead">\u00A71 \u2014 <b>VPN log, the night of the email.</b> The office was sealed for renovation that week. Exactly one external session touched the shared <i>vendor-onboarding</i> login that night: 03:04 to 03:15 AM. Vendor onboarding was <b>Vikram\u2019s</b> desk. Ruth had already left the company and returned her laptop.</p>' +
-        '<p class="cf-lead">\u00A72 \u2014 <b>The share sale paperwork.</b> Meera\u2019s transfer deed is executed on stamp paper invoice <b>#1042, dated the 21st</b>. The stamp vendor\u2019s own register shows <b>#1042 was purchased on the 12th</b> (and #1043 on the 19th). Paper bought on the 12th cannot witness a deed dated the 21st: the exit was being papered <b>six days before the leak</b>. Meera knew the valuation was about to fall, because somebody was about to make it fall.</p>' +
-        '<p class="cf-lead">\u00A73 \u2014 <b>The second unit.</b> Bhiwandi shed, no licence, no quality testing, batch numbers NV-2271 to NV-2290 blended there. The recall tested <b>one</b> batch from the main plant only. The shed never appeared in any test.</p>' +
-        '<p class="cf-lead">\u00A74 \u2014 <b>The packaging swap.</b> The certified label printer was dropped the same week ad spend tripled; a cheaper press took over. The new label artwork (Exhibit C) quietly dropped the line <i>"lab-tested batch-wise"</i> that the old label carried.</p>' +
-        '<p class="cf-lead">\u00A75 \u2014 <b>The 90-day distributor invoice.</b> Invoice 2277 booked \u20B912.4L as "sales" in the final week. The distributor is owned by Arjun\u2019s brother-in-law. Payment terms: 90 days. Revenue recognised immediately.</p>' +
+        '<p class="cf-lead">\u00A71: <b>VPN log, the night of the email.</b> The office was sealed for renovation that week. Exactly one external session touched the shared <i>vendor-onboarding</i> login that night: 03:04 to 03:15 AM. Vendor onboarding was <b>Vikram\u2019s</b> desk. Ruth had already left the company and returned her laptop.</p>' +
+        '<p class="cf-lead">\u00A72: <b>The share sale paperwork.</b> Meera\u2019s transfer deed is executed on stamp paper invoice <b>#1042, dated the 21st</b>. The stamp vendor\u2019s own register shows <b>#1042 was purchased on the 12th</b> (and #1043 on the 19th). Paper bought on the 12th cannot witness a deed dated the 21st: the exit was being papered <b>six days before the leak</b>. Meera knew the valuation was about to fall, because somebody was about to make it fall.</p>' +
+        '<p class="cf-lead">\u00A73: <b>The second unit.</b> Bhiwandi shed, no licence, no quality testing, batch numbers NV-2271 to NV-2290 blended there. The recall tested <b>one</b> batch from the main plant only. The shed never appeared in any test.</p>' +
+        '<p class="cf-lead">\u00A74: <b>The packaging swap.</b> The certified label printer was dropped the same week ad spend tripled; a cheaper press took over. The new label artwork (Exhibit C) quietly dropped the line <i>"lab-tested batch-wise"</i> that the old label carried.</p>' +
+        '<p class="cf-lead">\u00A75: <b>The 90-day distributor invoice.</b> Invoice 2277 booked \u20B912.4L as "sales" in the final week. The distributor is owned by Arjun\u2019s brother-in-law. Payment terms: 90 days. Revenue recognised immediately.</p>' +
         '<p class="cf-note">Everything above is true at the same time. That is what makes the case hard: the alibi clears the CFO, the register convicts the company, and the company was following orders.</p>' 
     },
     {
@@ -157,7 +157,7 @@ window.TSB_CASEFILE = {
         '<tr><td>21st</td><td>QuickInk Press</td><td>\u20B94,20,000</td><td>NEFT, "label job 40,000 sheets, urgent"</td></tr>' +
         '<tr><td>24th</td><td>SR Enterprises</td><td>\u20B98,00,000</td><td>NEFT, "consulting, supply chain"</td></tr>' +
         "</table>" +
-        '<p class="cf-lead">Three things the auditor circled. The shed was paid <b>from the marketing card</b>, in cash, days before the leak \u2014 the auditable company never met him. The new labels were ordered <b>after</b> the leak: a relaunch was being priced while the funeral was being written. And SR Enterprises, the "consultant" paid \u20B98L on the 24th, is registered to Meera\u2019s aunt \u2014 paid <b>five days after Meera sold her shares and left</b>.</p>' +
+        '<p class="cf-lead">Three things the auditor circled. The shed was paid <b>from the marketing card</b>, in cash, days before the leak, the auditable company never met him. The new labels were ordered <b>after</b> the leak: a relaunch was being priced while the funeral was being written. And SR Enterprises, the "consultant" paid \u20B98L on the 24th, is registered to Meera\u2019s aunt, paid <b>five days after Meera sold her shares and left</b>.</p>' +
         '<p class="cf-note">Is the 8L severance dressed as consulting? Hush money? Or exactly what it says? The account paper does not say. People do.</p>'
     },
     {
@@ -172,7 +172,7 @@ window.TSB_CASEFILE = {
         '<tr><td>W5</td><td>8,000</td><td>12,500</td><td>"relabel job, night shift"</td></tr>' +
         '<tr><td>W6</td><td>1,500</td><td>5,500</td><td>"last lot, plant numbers"</td></tr>' +
         "</table>" +
-        '<p class="cf-lead">Read the last column and then the maths. 20,000 crates went in; 31,000 came out. Four thousand of the difference were plant-numbered crates trucked to the shed and <b>relabeled by the company\u2019s own night shift</b> \u2014 the exact crates, in the exact NV-2271 to NV-2290 range, that the 3:12 AM email told the influencers to check.</p>' +
+        '<p class="cf-lead">Read the last column and then the maths. 20,000 crates went in; 31,000 came out. Four thousand of the difference were plant-numbered crates trucked to the shed and <b>relabeled by the company\u2019s own night shift</b>: the exact crates, in the exact NV-2271 to NV-2290 range, that the 3:12 AM email told the influencers to check.</p>' +
         '<figure class="cf-photo"><img src="assets/case/exhibit-shed.jpg" alt="Exhibit B: the shed" loading="lazy"><figcaption>EXHIBIT B \u00b7 the Bhiwandi unit, photographed by the auditor</figcaption></figure>' +
         '<figure class="cf-photo"><img src="assets/case/exhibit-crates.jpg" alt="Exhibit C: relabeled crates" loading="lazy"><figcaption>EXHIBIT C \u00b7 fresh stickers over old markings, night shift, seized</figcaption></figure>' +
         '<p class="cf-note">So the poison pen was right about the crates. It lied only about who was holding the pen. A true accusation with a false witness: decide for yourself what that makes the sender.</p>'
@@ -196,12 +196,12 @@ window.TSB_CASEFILE = {
     },
     {
       tab: "11 \u00b7 THE LAB",
-      title: "The official recall test \u2014 and what it never touched",
+      title: "The official recall test, and what it never touched",
       kind: "doc",
       html:
         '<p class="cf-lead">The lab report everyone quotes: batch <b>NV-2260</b>, sampled from the <b>main plant</b>, full panel, all parameters <b>PASS</b>. Signed, stamped, clean.</p>' +
-        '<p class="cf-lead">Now the auditor\u2019s red pen beside it: the recall tested the plant the shed was hiding. Not one crate from Bhiwandi, not one of the relabeled NV-2271 to NV-2290 lots, was ever opened by an accredited lab \u2014 before or after the leak. The untested milk powder in those crates sat in un-airconditioned sheds through a 40-degree May.</p>' +
-        '<p class="cf-lead">So the company\u2019s cleanest document is clean the way an alibi is clean: technically true, arranged in advance. The recall was theatre \u2014 eight lakhs spent to look responsible while the actual risk stayed in the market with new labels on it.</p>' +
+        '<p class="cf-lead">Now the auditor\u2019s red pen beside it: the recall tested the plant the shed was hiding. Not one crate from Bhiwandi, not one of the relabeled NV-2271 to NV-2290 lots, was ever opened by an accredited lab, before or after the leak. The untested milk powder in those crates sat in un-airconditioned sheds through a 40-degree May.</p>' +
+        '<p class="cf-lead">So the company\u2019s cleanest document is clean the way an alibi is clean: technically true, arranged in advance. The recall was theatre: eight lakhs spent to look responsible while the actual risk stayed in the market with new labels on it.</p>' +
         '<p class="cf-note">If there was a child drinking NovaChai from a relabeled crate, no document in this file would have warned anyone. Sit with that. Someone in this story did.</p>'
     },
     {
@@ -265,16 +265,16 @@ window.TSB_CASEFILE = {
         '<div class="cf-tl">' +
         '<div class="cf-tl__row"><span class="cf-tl__d">1st</span><span>Ruth resigns. Her laptop is returned the same evening; her memos stay pinned on the board.</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">10-13th</span><span>\u20B92.6L in cash to the shed man, off the company books, from the marketing card.</span></div>' +
-        '<div class="cf-tl__row"><span class="cf-tl__d">12th</span><span>10:20 AM: stamp paper #1042 is bought \u2014 nine days before the deed dated on it.</span></div>' +
+        '<div class="cf-tl__row"><span class="cf-tl__d">12th</span><span>10:20 AM: stamp paper #1042 is bought, nine days before the deed dated on it.</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">14th</span><span>2:38 AM: one badge tap at the front desk. Badge V-114, issued to the Bhiwandi contractor on the 9th, never returned.</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">14th</span><span>2:41 AM: maintenance ticket #4471 is logged from FRONT-DESK-02. "Scheduled maintenance" on the sealed floor\u2019s camera: 02:45 to 03:30.</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">14th</span><span>2:58 AM: the camera on the sealed renovation floor powers down. Maintenance will call it "scheduled".</span></div>' +
         '<div class="cf-tl__row cf-tl__row--hot"><span class="cf-tl__d">14th</span><span>3:12 AM: the poison email leaves a dead account. 3:31 AM: the camera wakes up. By evening, the leak is everywhere; Brewkart will swear they first heard of it "Monday morning, the 14th".</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">14th</span><span>7:45 AM: Vikram texts that the leak is loose and the press is calling him. It was out by breakfast.</span></div>' +
-        '<div class="cf-tl__row"><span class="cf-tl__d">14th</span><span>8:15 AM: Arjun replies "ignore it \u2014 I will handle it". Read the chats once more: Vikram never says what <i>it</i> is. Arjun never asks.</span></div>' +
+        '<div class="cf-tl__row"><span class="cf-tl__d">14th</span><span>8:15 AM: Arjun replies "ignore it, I will handle it". Read the chats once more: Vikram never says what <i>it</i> is. Arjun never asks.</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">16th</span><span>11:00 AM: the \u20B98L recall lands with the press: one clean batch from the clean plant. Theatre.</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">19th</span><span>Meera\u2019s share transfer is registered, on paper bought on the 12th.</span></div>' +
-        '<div class="cf-tl__row"><span class="cf-tl__d">21st</span><span>The filing goes public. QuickInk is paid \u20B94.2L for 40,000 new label sheets \u2014 without the lab-tested line.</span></div>' +
+        '<div class="cf-tl__row"><span class="cf-tl__d">21st</span><span>The filing goes public. QuickInk is paid \u20B94.2L for 40,000 new label sheets, without the lab-tested line.</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">24th</span><span>\u20B98L to Meera\u2019s aunt\u2019s firm. "Consulting."</span></div>' +
         '<div class="cf-tl__row"><span class="cf-tl__d">30th</span><span>The investors\u2019 call: "three weeks from breakeven." The sheet never comes.</span></div>' +
         "</div>" +
@@ -284,7 +284,7 @@ window.TSB_CASEFILE = {
 
   question: {
     head: "YOUR VERDICT \u00b7 THREE QUESTIONS",
-    ask: "One: who sent the 3:12 AM email, and what was it really \u2014 a rescue, a revenge, or an exit? Two: what actually killed NovaChai \u2014 the leak, the fraud, or the ambition that needed both? Three: you hold the investors\u2019 seats \u2014 do you fund the relaunch, sue, or walk away? Defend all three in your own words. Handwritten is welcome \u2014 some verdicts deserve ink.",
+    ask: "One: who sent the 3:12 AM email, and what was it really: a rescue, a revenge, or an exit? Two: what actually killed NovaChai: the leak, the fraud, or the ambition that needed both? Three: you hold the investors\u2019 seats: do you fund the relaunch, sue, or walk away? Defend all three in your own words. Handwritten is welcome, some verdicts deserve ink.",
     accepted: "There is no single right answer. The Founder reads every verdict personally and grades the reasoning, not the guess."
   },
 

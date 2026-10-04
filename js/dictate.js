@@ -4,7 +4,7 @@
    - v244: WEB SPEECH API FIRST, the browser's own speech-to-text.
      No account, no popup, no Puter sign-in. Works on Chrome / Edge /
      Android / Safari 14.5+, on-device or browser service, instantly.
-   - Puter AI (GPT-4o-transcribe / Whisper) is only a transparent
+   - Cloud fallback (GPT-4o-transcribe / Whisper) is only a transparent
      FALLBACK for browsers without Web Speech (e.g. Firefox desktop).
    - Hinglish + 7 Indian languages · smart punctuation retained
    - Auto punctuation + lang memory: EN-IN · Hinglish · HI · TA · BN · MR · GU · KN · TE · EN-US
@@ -262,7 +262,7 @@
     } else {
       btn.classList.remove("on");
       btn.setAttribute("aria-pressed","false");
-      btn.title = "Dictate, AI: just speak Hinglish/English naturally, we add full stops";
+      btn.title = "Dictate: just speak Hinglish/English naturally, we add full stops";
       btn.innerHTML = '<span class="wr-dictate__dot"></span> Dictate';
     }
   }
@@ -293,7 +293,7 @@
       var f = LANGS.find(function(l){ return l.id===id; });
       return f ? f.label : id;
     })(cur);
-    if (lab) lab.textContent = labTxt + " • AI • you can edit after";
+    if (lab) lab.textContent = labTxt + " • auto • you can edit after";
     if (title) title.textContent = listening ? (window._puterRecording ? "● Recording, speak Hinglish/English" : "Listening") : "Ready";
     var inter = document.getElementById("dictateInterim");
     if (!text && !listening) {
@@ -382,7 +382,7 @@
     // ensure puter loaded
     var ok = isPuterReady() ? true : await loadPuter();
     if (!ok) {
-      toast("AI not ready, using browser dictation");
+      toast("Cloud voice not ready, using browser dictation");
       return startWebSpeech();
     }
     // check mic
@@ -427,7 +427,7 @@
       var el = ensureInterimEl();
       el.hidden = false;
       var inter = document.getElementById("dictateInterim");
-      if (inter) inter.textContent = "✨ Transcribing with AI (GPT-4o), " + (lang==="hinglish" ? "Hinglish + English" : (LANGS.find(function(l){return l.id===lang;})||{}).label||lang) + ", adding full stops…";
+      if (inter) inter.textContent = "✨ Transcribing, " + (lang==="hinglish" ? "Hinglish + English" : (LANGS.find(function(l){return l.id===lang;})||{}).label||lang) + ", adding full stops…";
       var liveTitle = document.getElementById("dictateLiveTitle");
       if (liveTitle) liveTitle.textContent = "Transcribing…";
       listening = false; updateBtnState(); stopTimer();
@@ -446,7 +446,7 @@
         toast("✓ Added, " + txt.slice(0, 42) + (txt.length>42?"…":""));
       }catch(e){
         console.warn("puter transcribe failed", e);
-        toast("AI busy, trying browser fallback");
+        toast("Cloud busy, trying browser fallback");
         // fallback to web speech interim text if any? For now just show error and fallback
         el.hidden = true;
         // Try web speech as fallback for next utterance
@@ -466,7 +466,7 @@
       var body = document.getElementById("wBody");
       if (body) { body.focus(); placeCaretAtEnd(body); }
     }
-    toast("● Recording, speak Hinglish/English naturally, tap Stop when done. AI will add full stops.");
+    toast("● Recording, speak Hinglish/English naturally, tap Stop when done. Full stops get added automatically.");
   }
 
   function stopPuter(){
