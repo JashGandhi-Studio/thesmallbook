@@ -109,9 +109,6 @@ window.TSB_CONFIG = {
 
   // Email where readers send their story files for the Global Shelf
   // (used by the no-backend submission flow - set this before launch!)
-  /* 👑 GOLD BANNER meter - set GOLD_TAKEN to your real waitlist count
-     (0 hides the meter and shows "FIRST 500 EARLY-BIRDS" instead). */
-  GOLD_TAKEN: 0,
   GOLD_TOTAL: 500,
 
   SUBMIT_EMAIL: "jashgandhicreator07@gmail.com",
@@ -122,6 +119,26 @@ window.TSB_CONFIG = {
   /* 🔥 THIS WEEK'S NEW RELEASES - only the latest batch (updated every batch).
      Old books leave this list automatically - they're no longer "new". */
   NEW_THIS_WEEK: [
+    "the-first-20-hours",
+    "working-backwards",
+    "that-will-never-work",
+    "guns-germs-and-steel",
+    "prisoners-of-geography",
+    "the-silk-roads",
+    "attached",
+    "the-defining-decade",
+    "maybe-you-should-talk-to-someone",
+    "turning-pro",
+    "a-brief-history-of-time",
+    "games-people-play",
+    "lost-connections",
+    "unlimited-power",
+    "seven-brief-lessons-on-physics",
+    "the-gene",
+    "lets-talk-money",
+    "black-box-thinking",
+    "common-stocks-and-uncommon-profits",
+    "siddhartha",
     "the-art-of-letting-go",
     "the-weight-of-maybe",
     "letters-to-my-younger-self",
@@ -276,6 +293,7 @@ window.TSB_CONFIG = {
      screens to call TSB_PAYWALL.gate(feature, onLocked). */
   PAYWALL: {
     ENABLED: false,                    // flip to true to turn the wall on
+    FREE_ASK_PER_DAY: 5,               // free Ask questions per rolling 24h once the wall is on (Gold unlimited)
     PRICE_INR: 999,                    // price shown / charged
     UPI_ID: "9702510680@fam",          // your UPI handle (matches gold.html)
     RAZORPAY_LINK: "",                 // optional: Razorpay Payment Link for auto-receipts

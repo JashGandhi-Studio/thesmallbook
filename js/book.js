@@ -10,7 +10,28 @@
   const book = BOOKS.find((b) => b.id === id) || BOOKS[0];
   const idx = BOOKS.indexOf(book);
 
-  document.title = `${book.title} - TheSmallBook`;
+  /* ---------- dynamic SEO: the reader page wears the book's real face ----------
+     A direct hit on book.html?id=x gets a full title, description and a
+     canonical pointing at the static summary page, so Google sees one clean
+     URL per book and never a templated "Book, TheSmallBook". */
+  document.title = `${book.title} Summary \u2014 Key Lessons, Notes & Action Steps (Free) | TheSmallBook`;
+  try {
+    const setM = (sel, attr, val) => {
+      let el = document.head.querySelector(sel);
+      if (!el) { el = document.createElement("meta"); const [a, k] = sel.replace(/[\[\]"]/g, "").split("="); el.setAttribute(a, k); document.head.appendChild(el); }
+      el.setAttribute(attr, val);
+    };
+    const desc = `${book.title} by ${book.author || "the original author"}: free summary, no paywall \u2014 ${book.lessons.length} key lessons with real examples, quotes and an action plan. Read online free.`;
+    const url = `https://thesmallbook.in/books/${book.id}.html`;
+    setM('meta[name="description"]', "content", desc);
+    setM('meta[property="og:title"]', "content", document.title);
+    setM('meta[property="og:description"]', "content", desc);
+    setM('meta[property="og:url"]', "content", url);
+    setM('meta[property="og:image"]', "content", `https://thesmallbook.in/${String(book.cover || "").replace(/^\//, "")}`);
+    let can = document.head.querySelector('link[rel="canonical"]');
+    if (!can) { can = document.createElement("link"); can.rel = "canonical"; document.head.appendChild(can); }
+    can.href = url;
+  } catch (e) {}
   TSB.achv.award("first-open");
   TSB.lastRead.set(book.id);
 

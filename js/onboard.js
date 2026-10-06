@@ -220,7 +220,7 @@
           '<span class="ob-eyebrow">WELCOME TO</span>' +
           '<h2 class="ob-hero__t">The<span>Small</span>Book</h2>' +
           '<p class="ob-tag">big books · small reads</p>' +
-          '<p class="ob-sub">480+ books, distilled into lessons you can use today. Six quick questions tune the whole library to you, or skip the line and read right now.</p>' +
+          '<p class="ob-sub">500+ books, distilled into lessons you can use today. Six quick questions tune the whole library to you, or skip the line and read right now.</p>' +
           '<div class="ob-btns ob-btns--col">' +
             '<button class="ob-cta" data-next>🚀 GET STARTED</button>' +
           '</div>' +

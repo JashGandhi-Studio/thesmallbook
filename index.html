@@ -5,19 +5,19 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>TheSmallBook, Skim Every Great Book in Minutes</title>
-  <meta name="description" content="480 book summaries · 3,340 lessons · 315 autopsies. Skim any great book in minutes, in 26 languages, with audio, free to read.">
+  <meta name="description" content="500 book summaries · 3,540 lessons · 315 autopsies. Skim any great book in minutes, in 26 languages, with audio, free to read.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
       <meta property="og:title" content="TheSmallBook, Skim Every Great Book in Minutes">
-  <meta property="og:description" content="480 book summaries · 3,340 lessons · 315 autopsies, free to read, in 26 languages, with audio.">
+  <meta property="og:description" content="500 book summaries · 3,540 lessons · 315 autopsies, free to read, in 26 languages, with audio.">
     <meta property="og:url" content="https://thesmallbook.in/">
   <meta property="og:site_name" content="TheSmallBook">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=295">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=300">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="TheSmallBook, 480 books · 3,340 lessons · 315 autopsies · free to read">
-  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=295">
+  <meta property="og:image:alt" content="TheSmallBook, 500 books · 3,540 lessons · 315 autopsies · free to read">
+  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=300">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="manifest" href="manifest.json">
@@ -36,7 +36,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=295">
+  <link rel="stylesheet" href="css/style.css?v=300">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -175,12 +175,15 @@
       <div class="search__hint">⚡ IMPROVED SEARCH, TYPOS OK &nbsp;·&nbsp; 📷 SCAN A BOOK, INSTANT MATCH</div>
     </div>
 
+    <!-- 🧠 PROBLEM-FIRST: what's on your mind? (mindpick.js) -->
+    <div id="mindpick"></div>
+
     <!-- STATS -->
     <div class="stats">
-      <div class="stat stat--yellow"><div class="stat__num" id="statBooks">0</div><div class="stat__label">Books</div></div>
-      <div class="stat stat--red"><div class="stat__num" id="statLessons">0</div><div class="stat__label">Lessons</div></div>
-      <div class="stat stat--blue"><div class="stat__num" id="statCats">0</div><div class="stat__label">Categories</div></div>
-      <div class="stat stat--green"><div class="stat__num" id="statMins">0</div><div class="stat__label">Total Mins</div></div>
+      <div class="stat stat--yellow"><div class="stat__num" id="statBooks">500</div><div class="stat__label">Books</div></div>
+      <div class="stat stat--red"><div class="stat__num" id="statLessons">3540</div><div class="stat__label">Lessons</div></div>
+      <div class="stat stat--blue"><div class="stat__num" id="statCats">9</div><div class="stat__label">Categories</div></div>
+      <div class="stat stat--green"><div class="stat__num" id="statMins">4313</div><div class="stat__label">Total Mins</div></div>
     </div>
 
     <!-- GAMIFICATION -->
@@ -222,9 +225,9 @@
         <div class="goldbanner__head">
           <span class="goldbanner__icon">👑</span>
           <b class="goldbanner__title">TSB GOLD</b>
-          <span class="goldbanner__soon">CLOSING SOON</span>
+          <span class="goldbanner__soon">GO DEEPER</span>
         </div>
-        <p class="goldbanner__sub">Human Audio, Deep Dives, PDFs and Premium Book Access. <b>First 500 early-birds only.</b></p>
+        <p class="goldbanner__sub">Human Audio, Deep Dives, PDFs and Premium Book Access. <b>The free library stays free, always.</b></p>
         <div class="goldbanner__perks">
           <span>🔊 HUMAN AUDIO</span>
           <span>📄 PDF CHEAT-SHEETS</span>
@@ -235,30 +238,11 @@
       <div class="goldbanner__offer">
         <div class="goldbanner__price"><s>₹1,499</s><b>₹999</b><em>/yr</em><span class="goldbanner__off">-33%</span></div>
         <div class="goldbanner__lock">33% OFF · LOCKED FOR LIFE</div>
-        <span class="goldbanner__spotsbar" id="goldSpotsBar"><i id="goldSpotsFill"></i></span>
-        <small class="goldbanner__spotslbl" id="goldSpotsLabel">FIRST 500 EARLY-BIRDS</small>
-        <a class="goldbanner__cta" href="gold.html">CLAIM MY ₹999 PRICE →</a>
+        <a class="goldbanner__cta" href="gold.html">SEE WHAT GOLD INCLUDES →</a>
       </div>
     </div>
   </div>
-  <script>
-    /* 👑 gold spots meter, set GOLD_TAKEN in config.js to your real waitlist count */
-    (function () {
-      var cfg = window.TSB_CONFIG || {};
-      var taken = cfg.GOLD_TAKEN || 0;
-      var total = cfg.GOLD_TOTAL || 500;
-      var fill = document.getElementById("goldSpotsFill");
-      var label = document.getElementById("goldSpotsLabel");
-      var bar = document.getElementById("goldSpotsBar");
-      if (!fill || !label) return;
-      if (taken > 0 && total > 0) {
-        fill.style.width = Math.min(100, Math.round((taken / total) * 100)) + "%";
-        label.textContent = taken + " of " + total + " spots claimed";
-      } else if (bar) {
-        bar.style.display = "none";
-      }
-    })();
-  </script>
+  
 
   <!-- LIBRARY -->
   <div class="section-head" id="library">
@@ -325,23 +309,24 @@
     <div id="tsb-auth-slot"></div>
     <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
     <p class="tiny" style="margin-top:8px;"><a href="about.html" style="color:inherit;">ABOUT</a>, <a href="gold.html" style="color:inherit;">TSB GOLD, WAITLIST OPEN</a>, <a href="graveyard.html" style="color:inherit;">GRAVEYARD</a></p>
-    <p class="tiny">NEW BOOKS ADDED EVERY WEEK · © 2026 THESMALLBOOK · ALL RIGHTS RESERVED</p>
+    <p class="tiny"><a href="pseo/index.html" style="color:inherit;">READING LISTS</a> · NEW BOOKS ADDED EVERY WEEK · © 2026 THESMALLBOOK · ALL RIGHTS RESERVED</p>
   </footer>
 
-  <script src="./js/bootguard.js?v=295"></script>
-  <script src="js/prefs.js?v=295"></script>
-  <script src="js/support.js?v=295"></script>
-  <script src="js/upi.js?v=295"></script>
-  <script src="js/lang.js?v=295"></script>
-  <script src="js/config.js?v=295"></script>
-  <script src="js/auth.js?v=295"></script>
-  <script src="js/sounds.js?v=295"></script>
-  <script src="js/community.js?v=295"></script>
-  <script src="js/data.js?v=295"></script>
-  <script src="js/failures.js?v=295"></script>
-  <script src="js/app.js?v=295"></script>
-  <script src="js/packs-data.js?v=295"></script>
-  <script src="js/packs-ui.js?v=295"></script>
+  <script src="./js/bootguard.js?v=300"></script>
+  <script src="js/prefs.js?v=300"></script>
+  <script src="js/support.js?v=300"></script>
+  <script src="js/upi.js?v=300"></script>
+  <script src="js/lang.js?v=300"></script>
+  <script src="js/config.js?v=300"></script>
+  <script src="js/auth.js?v=300"></script>
+  <script src="js/sounds.js?v=300"></script>
+  <script src="js/community.js?v=300"></script>
+  <script src="js/data.js?v=300"></script>
+  <script src="js/failures.js?v=300"></script>
+  <script src="js/app.js?v=300"></script>
+  <script src="js/packs-data.js?v=300"></script>
+  <script src="js/mindpick.js?v=300" defer></script>
+  <script src="js/packs-ui.js?v=300"></script>
   <script>
     /* ⭐ render real reader words (from config.js TESTIMONIALS, no fake) */
     (function () {
@@ -367,12 +352,14 @@
       box.style.display = "";
     })();
   </script>
-  <script src="js/onboard.js?v=295"></script>
-  <script src="js/trial.js?v=295" defer></script>
-  <script src="js/ask-data.js?v=295"></script>
-  <script src="js/tts-engine.js?v=295"></script>
-  <script src="js/ask-modes-data.js?v=295"></script>
-  <script src="js/ask.js?v=295"></script>
+  <script src="js/onboard.js?v=300"></script>
+  <script src="js/trial.js?v=300" defer></script>
+  <script src="js/ask-data.js?v=300"></script>
+  <script src="js/tts-engine.js?v=300"></script>
+  <script src="js/ask-modes-data.js?v=300"></script>
+  <script src="js/paywall.js?v=300"></script>
+  <script src="js/askquota.js?v=300"></script>
+  <script src="js/ask.js?v=300"></script>
   <script>
     /* deep-link search from the scanner: index.html?q=<title> */
     (function () {
@@ -392,9 +379,9 @@
       } catch (e) {}
     })();
   </script>
-  <script src="js/bar.js?v=295" defer></script>
-  <script src="js/smallscroller.js?v=295"></script>
-  <script src="js/gate.js?v=295" defer></script>
+  <script src="js/bar.js?v=300" defer></script>
+  <script src="js/smallscroller.js?v=300"></script>
+  <script src="js/gate.js?v=300" defer></script>
 
 </body>
 </html>

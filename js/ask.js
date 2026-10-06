@@ -96,7 +96,7 @@
     return String(q).toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
   }
   /* v292 house rule: no em dashes anywhere in the app. Ask pulls lines from
-     480 books and 315 autopsies, older shelves included, so the escape gate
+     500 books and 315 autopsies, older shelves included, so the escape gate
      also flattens every dash to a plain hyphen. Nothing rendered in the panel
      (or saved to history) can carry one, whatever the source file says. */
   function esc(s) {
@@ -288,6 +288,11 @@
     var nl = (window.BOOKS || []).reduce(function (a, b) { return a + (b.lessons ? b.lessons.length : 0); }, 0);
     var ng = (window.FAILURES || []).length;
     el.textContent = nb + " books · " + nl + " lessons · " + ng + " autopsies";
+    /* ⏳ v300 free-quota meter lives in the same line, wall-on only */
+    try {
+      var meter = window.TSB_ASK_QUOTA && TSB_ASK_QUOTA.meterText && TSB_ASK_QUOTA.meterText();
+      if (meter) el.textContent += " · " + meter;
+    } catch (e) {}
   }
   var STORE_KEY = "tsb_ask_hist";
   function loadHist() { try { return JSON.parse(localStorage.getItem(STORE_KEY) || "[]"); } catch (e) { return []; } }
@@ -374,6 +379,9 @@
         else { var mdef = MODES.filter(function (m) { return m.key === mq; })[0];
           mdef && mdef.pick ? pickBubble(mq) : modeGo(mq, null, mq); }
       }, 380);
+    } else if (!mq && ma) {
+      /* v300: chat.html?arg=<question> lands as a plain asked question */
+      setTimeout(function () { open(); send(ma); }, 380);
     }
   }
 
@@ -432,7 +440,7 @@
       hero.className = "cht-hero";
       hero.innerHTML = '<div class="cht-hero__logo">📕</div>' +
         "<h1>Ask the library</h1>" +
-        "<p>480 books · 3,340 lessons · 315 autopsies, one question away.</p>";
+        "<p>500 books · 3,540 lessons · 315 autopsies, one question away.</p>";
       msgsEl.insertBefore(hero, msgsEl.firstChild);
       try {
         var mo = new MutationObserver(function () {
@@ -764,8 +772,10 @@
     return "";
   }
   function modeGo(key, arg, userLabel) {
+    if (quotaBlocked()) { paintQuota(); return; }
     if (!open_) { try { open(); } catch (e) {} }
     modePick = null;
+    if (window.TSB_ASK_QUOTA) { try { TSB_ASK_QUOTA.consume(); } catch (e) {} }
     addMsg("user", userLabel || key);
     if (input) input.value = "";
     var stopT = thinking();
@@ -1015,9 +1025,12 @@
   }
 
   function send(raw) {
-    if (window.TSB) { try { window.TSB.achv.award("ask-1"); } catch (e) {} }
     var q = String(raw || "").trim();
     if (!q) return;
+    /* ⏳ v300 free quota: one honest card instead of a silent fourth answer */
+    if (quotaBlocked()) { input.value = ""; paintQuota(); return; }
+    if (window.TSB) { try { window.TSB.achv.award("ask-1"); } catch (e) {} }
+    if (window.TSB_ASK_QUOTA) { try { TSB_ASK_QUOTA.consume(); } catch (e) {} }
     /* 🎭 v292 typed input while a pick-mode menu is open routes to that mode */
     if (modePick) {
       var mk = modePick; modePick = null;
@@ -1227,8 +1240,71 @@
     try { return bookIndex()[new URLSearchParams(location.search).get("id")] || null; } catch (e) { return null; }
   }
 
+  function goldLocked() {
+    try { return !!(window.TSB_PAYWALL && TSB_PAYWALL.locked && TSB_PAYWALL.locked("ask")); } catch (e) { return false; }
+  }
+  function paintLocked() {
+    var msgs = root.querySelector("#tsb-msgs");
+    var row = root.querySelector(".aq-inputrow");
+    var chips = root.querySelector("#tsb-chips");
+    if (!msgs.classList.contains("aq-msgs--locked")) {
+      msgs.classList.add("aq-msgs--locked");
+      if (chips) chips.style.display = "none";
+      if (row) row.style.display = "none";
+      msgs.innerHTML =
+        '<div class="aq-locked">' +
+          '<div class="aq-locked__chip">👑</div>' +
+          '<h3>ASK THE LIBRARY IS PART OF GOLD</h3>' +
+          '<p>Every answer is composed live from <b>500 books, 3,540 lessons and 315 autopsies</b>, with the exact lesson it came from, one tap away. Nothing invented, no chatbot filler.</p>' +
+          '<p class="aq-locked__modes">Seven ways to ask: compare books on one question, the decision before the disaster, red flags, seven-day plans and more.</p>' +
+          '<a class="aq-locked__go" href="gold.html">👑 SEE TSB GOLD</a>' +
+          '<small>The library itself stays free, every book, every lesson, forever.</small>' +
+        '</div>';
+    }
+  }
+  /* ⏳ v300 free quota: honest over-window card (wall on + not Gold + 5/24h used) */
+  function quotaBlocked() {
+    try { return !!(window.TSB_ASK_QUOTA && TSB_ASK_QUOTA.blocked && TSB_ASK_QUOTA.blocked()); } catch (e) { return false; }
+  }
+  function paintQuota() {
+    var msgs = root.querySelector("#tsb-msgs");
+    var row = root.querySelector(".aq-inputrow");
+    var chips = root.querySelector("#tsb-chips");
+    var clock = (window.TSB_ASK_QUOTA && TSB_ASK_QUOTA.resetClock) ? TSB_ASK_QUOTA.resetClock() : "";
+    var nb = (window.BOOKS || []).length;
+    var nl = (window.BOOKS || []).reduce(function (a, b) { return a + (b.lessons ? b.lessons.length : 0); }, 0);
+    var ng = (window.FAILURES || []).length;
+    if (!msgs.classList.contains("aq-msgs--locked")) {
+      msgs.classList.add("aq-msgs--locked");
+      if (chips) chips.style.display = "none";
+      if (row) row.style.display = "none";
+      msgs.innerHTML =
+        '<div class="aq-quota">' +
+          '<div class="aq-quota__chip">⏳</div>' +
+          '<h3>THE FREE DAY\u2019S ' + ((window.TSB_ASK_QUOTA && TSB_ASK_QUOTA.perDay) ? TSB_ASK_QUOTA.perDay() : 5) + ' QUESTIONS ARE USED</h3>' +
+          '<p>Each one was composed live from <b>' + nb + ' books, ' + nl.toLocaleString("en-IN") + ' lessons and ' + ng + ' autopsies</b>, with the exact lesson it came from. That depth takes real work, so the free window is ' + ((window.TSB_ASK_QUOTA && TSB_ASK_QUOTA.perDay) ? TSB_ASK_QUOTA.perDay() : 5) + ' questions every 24 hours.</p>' +
+          '<p class="aq-quota__clock">Your next window opens in <b>' + (clock || "about 24h") + '</b>.</p>' +
+          '<a class="aq-quota__go" href="gold.html">👑 GO GOLD, ASK WITHOUT LIMITS</a>' +
+          '<small>The books stay free, every page, every lesson, forever.</small>' +
+        '</div>';
+    }
+  }
   function open() {
     if (!root) build();
+    if (goldLocked()) {
+      open_ = true;
+      panel.classList.add("aq-panel--open");
+      paintLocked();
+      try { document.dispatchEvent(new CustomEvent("tsb-ask", { detail: { open: true } })); } catch (e) {}
+      return;
+    }
+    if (quotaBlocked()) {
+      open_ = true;
+      panel.classList.add("aq-panel--open");
+      paintQuota();
+      try { document.dispatchEvent(new CustomEvent("tsb-ask", { detail: { open: true } })); } catch (e) {}
+      return;
+    }
     open_ = true;
     panel.classList.add("aq-panel--open");
     try { document.dispatchEvent(new CustomEvent("tsb-ask", { detail: { open: true } })); } catch (e) {}

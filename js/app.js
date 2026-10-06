@@ -33,7 +33,9 @@
 
   function animateNum(el, target) {
     if (!el) return;
-    let cur = 0;
+    /* the real numbers ship in the HTML now, so count up only from what a
+       slow phone actually sees: most days this settles instantly */
+    let cur = Math.min(parseInt(el.textContent, 10) || 0, target);
     const step = Math.max(1, Math.ceil(target / 30));
     const t = setInterval(() => {
       cur += step;

@@ -17,6 +17,8 @@
   var FLICK_V = 1.15;          /* palm speed (screen heights per second) for a flick */
   var OPEN_R = 1.32;           /* avg fingertip distance / hand size: open palm */
   var PINCH_ON = 0.5;          /* thumb-index distance / hand size */
+  var PINCH_CLICK_MS = 400;    /* pinch shorter than this = a click, longer = pan */
+  var PINCH_DRAG_GAIN = 1.9;   /* hand travel to page travel while pan is on */
   var PINCH_OFF = 0.68;        /* hysteresis so the cursor does not flicker */
   var BECK_CURL = 1.14;        /* fingertip height while the fingers curl in */
   var BECK_MS = 650, BECK_BACK_MS = 750, BECK_MAX_MS = 1500;
@@ -75,6 +77,7 @@
     root.innerHTML =
       '<video class="tss-video" id="tss-video" playsinline muted autoplay></video>' +
       '<canvas class="tss-canvas" id="tss-canvas"></canvas>' +
+      '<canvas class="tss-handbox" id="tss-handbox" width="132" height="176"></canvas>' +
       '<div class="tss-reticle" id="tss-reticle">' +
         '<svg viewBox="0 0 100 100"><circle class="tss-ring__bg" cx="50" cy="50" r="46"/><circle class="tss-ring" id="tss-ring" cx="50" cy="50" r="46"/></svg>' +
         '<i></i>' +
@@ -86,7 +89,7 @@
         '<button class="tss-btn" id="tss-flip" aria-label="Flip camera">🔄</button>' +
       "</div>" +
       '<div class="tss-legend" id="tss-legend">' +
-        '<button class="tss-legend__item" id="tss-again">✋ flick up = down · 🤙 beckon = up · 🤏 pinch = tap</button>' +
+        '<button class="tss-legend__item" id="tss-again">✋ flick = down · 🤙 beckon = up · 🤏 pinch = cursor &amp; click</button>' +
       "</div>";
     document.body.appendChild(root);
     return root;
@@ -112,11 +115,18 @@
     f.classList.add("tss-flash--go");
   }
 
+  var LIVE = { str: null, until: 0 };   /* the live hand toast: what the hand is doing now */
   function pill(root, txt, kind) {
-    var p = root.querySelector("#tss-pill"), t = root.querySelector("#tss-pilltxt");
+    var p = root.querySelector("#tss-pill"), tx = root.querySelector("#tss-pilltxt");
     p.classList.remove("tss-pill--ok", "tss-pill--warn");
     if (kind) p.classList.add("tss-pill--" + kind);
-    t.textContent = txt;
+    tx.textContent = txt;
+    LIVE.str = txt; LIVE.until = performance.now() + 1500;   /* transient: the live state may retake it */
+  }
+  function livePill(s, txt, kind) {
+    if (LIVE.str === txt) return;
+    pill(s.root, txt, kind);
+    LIVE.until = 0;   /* the live state is sticky until the hand changes */
   }
 
   /* ---------- the tutorial, animated, replayable any time ---------- */
@@ -177,7 +187,7 @@
               '</svg>' +
             '</div>' +
             '<h3>Pinch the air to tap</h3>' +
-            '<p>Pinch your thumb and index finger together and a soft cursor appears where you point. Release the pinch over any button, chip or link to press it.</p>' +
+            '<p>Pinch and hold: a cursor rides your fingertip, drag it and the page glides with you, hover anything to aim. A quick pinch and release is the click, on exactly what you aimed at.</p>' +
           '</div>' +
 
           '<div class="tss-step" data-step="3">' +
@@ -226,6 +236,7 @@
     try { s.raf && cancelAnimationFrame(s.raf); } catch (e) {}
     try { s.stream && s.stream.getTracks().forEach(function (t) { t.stop(); }); } catch (e) {}
     try { s.landmarker && s.landmarker.close(); } catch (e) {}
+    clearHover(s);
     if (s.root && s.root.parentNode) s.root.remove();
     document.documentElement.classList.remove("tss-lock");
     refreshLaunch();
@@ -246,6 +257,9 @@
     var cursor = root.querySelector("#tss-cursor");
     session = { root: root, video: video, canvas: canvas, ctx: ctx, cursor: cursor, facing: opts.facing || "user", cal: 0, last: {} };
     session.reticle = root.querySelector("#tss-reticle");
+    session.handbox = root.querySelector("#tss-handbox");
+    session.boxR = null; session.boxHide = 0;
+    session.fast = !!cfg().lk;   /* the first scan is remembered: later locks are near-instant */
     session.ring = root.querySelector("#tss-ring");
     session.lastPt = null;
 
@@ -282,6 +296,7 @@
     session.miss = 0;
     session.trail = [];
     session.pinched = false;
+    session.pinchT = 0; session.pinchY = 0.5; session.pinchPanT = 0; session.hoverEl = null;
     session.coolScroll = 0, session.coolCycle = 0, session.coolTap = 0;
     session.hintT = 0;
     session.scanned = false;
@@ -320,7 +335,41 @@
     var x = s.facing === "user" ? (1 - p.x) : p.x;
     return { x: x * vw, y: p.y * vh };
   }
+  /* the hand-only window: a live crop of the feed around the hand, face and room never */
+  function drawBox(s, pts, t) {
+    var b = s.handbox; if (!b) return;
+    var vwv = s.video.videoWidth, vhv = s.video.videoHeight;
+    if (!vwv || !vhv) return;
+    if (!pts) {
+      if (!s.boxHide) s.boxHide = t;
+      if (t - s.boxHide > 600) b.classList.remove("tss-handbox--on");
+      return;
+    }
+    s.boxHide = 0;
+    b.classList.add("tss-handbox--on");
+    var minx = 1, miny = 1, maxx = 0, maxy = 0;
+    pts.forEach(function (p) {
+      minx = Math.min(minx, p.x); maxx = Math.max(maxx, p.x);
+      miny = Math.min(miny, p.y); maxy = Math.max(maxy, p.y);
+    });
+    var w = Math.max(maxx - minx, 0.08), h = Math.max(maxy - miny, 0.08);
+    var m = Math.max(w, h) * 0.75 + 0.04;
+    minx -= m; miny -= m; w += 2 * m; h += 2 * m;
+    var BW = b.width, BH = b.height, ar = BW / BH;
+    if (w / h > ar) { var nh = w / ar; miny -= (nh - h) / 2; h = nh; }
+    else { var nw = h * ar; minx -= (nw - w) / 2; w = nw; }
+    minx = Math.max(0, Math.min(minx, 1 - w)); miny = Math.max(0, Math.min(miny, 1 - h));
+    if (!s.boxR) s.boxR = { x: minx, y: miny, w: w, h: h };
+    else { var r = s.boxR, k = 0.35; r.x += (minx - r.x) * k; r.y += (miny - r.y) * k; r.w += (w - r.w) * k; r.h += (h - r.h) * k; }
+    var ctx = b.getContext("2d");
+    ctx.save();
+    if (s.facing === "user") { ctx.translate(BW, 0); ctx.scale(-1, 1); }
+    ctx.drawImage(s.video, s.boxR.x * vwv, s.boxR.y * vhv, s.boxR.w * vwv, s.boxR.h * vhv, 0, 0, BW, BH);
+    ctx.restore();
+  }
+
   function draw(s, res, t) {
+    drawBox(s, res && res.landmarks && res.landmarks[0], t);
     var vw = window.innerWidth, vh = window.innerHeight;
     if (s.canvas.width !== vw || s.canvas.height !== vh) { s.canvas.width = vw; s.canvas.height = vh; }
     s.ctx.clearRect(0, 0, vw, vh);
@@ -376,12 +425,14 @@
       s.reticle.style.display = "block";
       s.reticle.style.left = s.lastPt.x + "px";
       s.reticle.style.top = s.lastPt.y + "px";
-      s.ring.style.strokeDashoffset = Math.max(289 * (1 - Math.min(s.cal / 1.6, 1)), 0);
-      if (s.cal > 1.6) {
+      var LOCK_S = s.fast ? 0.45 : 1.6;   /* remembered hands lock in almost instantly */
+      s.ring.style.strokeDashoffset = Math.max(289 * (1 - Math.min(s.cal / LOCK_S, 1)), 0);
+      if (s.cal > LOCK_S) {
         s.scanned = true;
+        try { var c2 = cfg(); if (!c2.lk) { c2.lk = 1; save(c2); } } catch (e) {}
         s.reticle.classList.add("tss-reticle--ok");
         setTimeout(function () { if (session === s) s.reticle.style.display = "none"; }, 700);
-        pill(s.root, "✋ Hand scanned, you are good to go", "ok");
+        pill(s.root, s.fast ? "✋ Hand remembered, you are good to go" : "✋ Hand scanned, you are good to go", "ok");
         vibrate([18, 60, 18]);
         try { if (window.TSB && TSB.achv) TSB.achv.award("scroller-1"); } catch (e) {}
         setTimeout(function () { if (session === s) pill(s.root, "Hands-free is live"); }, 2200);
@@ -434,6 +485,9 @@
     if (s.beck === 0) {
       if (openness >= OPEN_R && inZone && !s.pinched) { s.beck = 1; s.beckT = t; s.beckCy = cy; }
     } else if (s.beck === 1) {
+      /* an open, in-zone hand keeps the arm fresh, so the curl window counts
+         from the moment the curl actually starts, not from a random phase */
+      if (openness >= OPEN_R && inZone) { s.beckT = t; s.beckCy = cy; }
       if (openness <= BECK_CURL && Math.abs(cy - s.beckCy) < BECK_DRIFT && t - s.beckT < BECK_MS) {
         s.beck = 2; s.beckT = t;
       } else if (t - s.beckT > BECK_MAX_MS) { s.beck = 0; }
@@ -450,25 +504,58 @@
       } else if (t - s.beckT > BECK_MAX_MS) { s.beck = 0; }
     }
 
-    /* 3) pinch = soft cursor, release = tap */
+    /* 3) the pinch is a mouse. Hold it: a cursor rides your fingertip and the
+       page glides as you drag, hover anything to aim. Open fast after a short
+       pinch and it is the left click, on exactly what you aimed at.
+       A pinch keeps the middle and ring fingers extended; if they folded with
+       the index, this is a beckon curl, never a pinch. */
     var pd = dist(hand[4], hand[8]) / scale;
-    if (!s.pinched && pd < PINCH_ON) {
+    var pinchFree = dist(hand[12], wrist) / scale > 1.9 && dist(hand[16], wrist) / scale > 1.9;
+    if (!s.pinched && pd < PINCH_ON && pinchFree) {
       s.pinched = true;
-      cursor.classList.add("tss-cursor--on");
+      s.pinchT = t; s.pinchY = cy; s.pinchPanT = 0;
+      s.cursor.classList.add("tss-cursor--on");
     } else if (s.pinched && pd > PINCH_OFF) {
       s.pinched = false;
-      cursor.classList.remove("tss-cursor--on");
-      if (t - s.coolTap > COOLDOWN_TAP) {
+      var r = s.cursor.getBoundingClientRect();   /* read before the cursor hides */
+      s.cursor.classList.remove("tss-cursor--on");
+      clearHover(s);
+      /* a short pinch clicks, and so does a held aim that never dragged:
+         only a real pan forfeits the click */
+      if ((t - s.pinchT < PINCH_CLICK_MS || s.pinchPanT === 0) && t - s.coolTap > COOLDOWN_TAP) {
         s.coolTap = t;
-        var r = cursor.getBoundingClientRect();
-        tapAt(r.left + r.width / 2, r.top + r.height / 2, cursor);
+        tapAt(r.left + r.width / 2, r.top + r.height / 2, s.cursor);
         flash(s, "◉");
       }
     }
     if (s.pinched) {
       var q = mapPt(s, hand[8]);
-      cursor.style.left = q.x + "px";
-      cursor.style.top = q.y + "px";
+      var qx = Math.min(Math.max(q.x, 10), window.innerWidth - 10), qy = Math.min(Math.max(q.y, 10), window.innerHeight - 10);
+      s.cursor.style.left = qx + "px";
+      s.cursor.style.top = qy + "px";
+      /* drag = pan: the page glides with your hand, the way a touch drag feels */
+      var dyPan = cy - s.pinchY;
+      if (Math.abs(dyPan) > 0.004) {
+        try { window.scrollBy({ top: Math.round(dyPan * window.innerHeight * PINCH_DRAG_GAIN), behavior: "auto" }); } catch (e) { window.scrollBy(0, dyPan * window.innerHeight * PINCH_DRAG_GAIN); }
+        s.pinchY = cy; s.pinchPanT = t;
+      }
+      hoverAt(s, qx, qy);
+    }
+    if (t > LIVE.until) liveState(s, openness, vy, t);
+  }
+
+  /* the live hand toast: always on, it names the motion your hand is making */
+  function liveState(s, openness, vy, t) {
+    if (s.pinched) {
+      livePill(s, t - s.pinchPanT < 260 ? "🤏 CURSOR · THE PAGE GLIDES WITH YOU" : "🤏 CURSOR · QUICK RELEASE = CLICK", "");
+    } else if (s.beck === 1 && openness <= 1.25) {
+      livePill(s, "🤙 CURLING · THE PAGE CLIMBS", "");
+    } else if (vy < -0.9 && openness >= OPEN_R) {
+      livePill(s, "🖐 FLICKING · PAGE GOES DOWN", "");
+    } else if (openness >= OPEN_R) {
+      livePill(s, "✋ OPEN PALM · FLICK UP = DOWN", "");
+    } else {
+      livePill(s, "🖐 HAND UP · READY", "");
     }
   }
 
@@ -476,12 +563,25 @@
     try { window.scrollBy({ top: Math.round(window.innerHeight * frac), behavior: "smooth" }); } catch (e) { window.scrollBy(0, window.innerHeight * frac); }
   }
 
+  var HOVER_SEL = "a, button, [role=button], input, select, textarea, label, summary, .setopt, .aq-chip, .aq-mdcard, .aq-modechip, video";
+  function clearHover(s) {
+    if (s.hoverEl) { try { s.hoverEl.classList.remove("tss-hover"); } catch (e) {} s.hoverEl = null; }
+  }
+  function hoverAt(s, x, y) {
+    var el = document.elementFromPoint(x, y);
+    var hit = el && el.closest ? el.closest(HOVER_SEL) : null;
+    if (hit !== s.hoverEl) {
+      clearHover(s);
+      if (hit) { try { hit.classList.add("tss-hover"); } catch (e) {} s.hoverEl = hit; }
+    }
+  }
+
   function tapAt(x, y, cursor) {
     var ghost = cursor; cursor.classList.add("tss-cursor--tap");
     setTimeout(function () { ghost.classList.remove("tss-cursor--tap"); }, 380);
     var target = document.elementFromPoint(x, y);
     if (!target) return;
-    var hit = target.closest("a, button, [role=button], input, select, textarea, label, summary, .setopt, .aq-chip, .aq-mdcard, .aq-modechip, video");
+    var hit = target.closest(HOVER_SEL);
     if (hit) {
       /* inputs get focus instead of a click so the keyboard behaves */
       if (/^(input|select|textarea)$/i.test(hit.tagName)) { try { hit.focus(); } catch (e) {} }
@@ -533,6 +633,94 @@
       tut.dataset.tss = "1";
       tut.addEventListener("click", function () { showTutorial(null); });
     }
+    var room = document.getElementById("scrollerRoom");
+    if (room && !room.dataset.tss) {
+      room.dataset.tss = "1";
+      room.addEventListener("click", function () { menu(); });
+    }
+  }
+
+
+  /* ---------- the hands-free room: one place that teaches, toggles and starts ----------
+     Opened from the corner nudge, from Settings, from the You page, or any page via
+     TSB_SCROLLER.menu(). Styled like the rest of the app: paper, ink, one yellow. */
+  var menuRoot = null;
+  var HAND_SVG =
+    '<svg viewBox="0 0 120 140" aria-hidden="true">' +
+      '<g stroke="#14110c" stroke-width="5" stroke-linejoin="round" fill="#fff3cf">' +
+        '<rect x="78" y="30" width="15" height="46" rx="7.5" transform="rotate(14 85 50)"/>' +
+        '<rect x="63" y="18" width="15" height="60" rx="7.5" transform="rotate(6 71 47)"/>' +
+        '<rect x="49" y="14" width="15" height="66" rx="7.5"/>' +
+        '<rect x="35" y="20" width="15" height="60" rx="7.5" transform="rotate(-6 43 49)"/>' +
+        '<rect x="14" y="60" width="42" height="15" rx="7.5" transform="rotate(-38 32 68)"/>' +
+        '<rect x="30" y="58" width="62" height="54" rx="20"/>' +
+      '</g>' +
+      '<rect x="42" y="114" width="40" height="16" rx="7" fill="#ffc800" stroke="#14110c" stroke-width="5"/>' +
+    '</svg>';
+  function menu() {
+    if (menuRoot) return;
+    if (!support()) { alert("Hands-free scrolling needs a camera and a secure (https) page. This browser cannot open the camera."); return; }
+    menuRoot = el("div", "tss-menu");
+    menuRoot.innerHTML =
+      '<div class="tss-menu__card" role="dialog" aria-label="The Small Scroller">' +
+        '<div class="tss-menu__top"><h2>✋ THE SMALL SCROLLER</h2><button class="tss-menu__x" aria-label="Close">✕</button></div>' +
+        '<div class="tss-menu__hero">' + HAND_SVG + '</div>' +
+        '<p class="tss-menu__hint">Hold your hand <b>20-40 cm</b> from the phone, palm facing the screen, and keep it still for a beat. It locks in, then the page is yours.</p>' +
+        '<button class="tss-menu__row" id="tss-menu-sw"><span>Hands-free scrolling<small>The master switch, on every page until you turn it off</small></span><span class="tss-sw" id="tss-menu-pill"><i></i></span></button>' +
+        '<button class="tss-menu__row" id="tss-menu-learn"><span>Learn the gestures<small>A 30 second animated walkthrough, all three moves</small></span><span>▶</span></button>' +
+        '<button class="tss-menu__row" id="tss-menu-go"><span>Practice with your camera<small>Live session, the toast reads your hand as you move</small></span><span>🎥</span></button>' +
+        '<div class="tss-menu__chips"><span>✋ FLICK = DOWN</span><span>🤙 BECKON = UP</span><span>🤏 PINCH = CURSOR &amp; CLICK</span></div>' +
+        '<p class="tss-menu__tiny">The camera is read on this device only: nothing records, nothing uploads. The small preview shows only your hand, never your face, and your first scan is remembered so the next start is instant.</p>' +
+      '</div>';
+    document.body.appendChild(menuRoot);
+    var sw = menuRoot.querySelector("#tss-menu-pill");
+    function paintSw() { sw.classList.toggle("tss-sw--on", enabled()); }
+    paintSw();
+    function close() { if (menuRoot) { menuRoot.remove(); menuRoot = null; } document.removeEventListener("keydown", esc); }
+    function esc(e) { if (e.key === "Escape") close(); }
+    menuRoot.querySelector(".tss-menu__x").addEventListener("click", close);
+    menuRoot.addEventListener("click", function (e) { if (e.target === menuRoot) close(); });
+    document.addEventListener("keydown", esc);
+    menuRoot.querySelector("#tss-menu-sw").addEventListener("click", function () {
+      var c = cfg();
+      if (c.on) { c.on = 0; save(c); stop(); paintSw(); return; }
+      c.on = 1; save(c); paintSw();
+      close();
+      showTutorial(function () { start({ skipTutorial: true }); });
+    });
+    menuRoot.querySelector("#tss-menu-learn").addEventListener("click", function () { showTutorial(null); });
+    menuRoot.querySelector("#tss-menu-go").addEventListener("click", function () {
+      var c = cfg();
+      if (!c.on) { c.on = 1; save(c); }
+      close();
+      start({ skipTutorial: true });
+    });
+  }
+
+  /* ---------- the corner nudge: one small card, once, until they choose ---------- */
+  function maybeNudge() {
+    if (!support()) return;
+    var c = cfg();
+    if (c.nudge || c.on) return;
+    try { var ob = localStorage.getItem("tsb_onboarded"); if (!ob || ob === "false") return; } catch (e) {}
+    setTimeout(function () {
+      if (session || enabled() || cfg().nudge) return;
+      var n = el("div", "tss-nudge");
+      n.innerHTML =
+        '<button class="tss-nudge__x" aria-label="Dismiss">✕</button>' +
+        '<span class="tss-nudge__eyebrow">NEW · HANDS-FREE</span>' +
+        '<b>Scroll with your hand</b>' +
+        '<small>Flick, beckon, pinch. No touch, the page obeys.</small>' +
+        '<button class="tss-nudge__go">✋ TRY IT</button>';
+      document.body.appendChild(n);
+      var gone = function (forever) {
+        if (forever) { var c2 = cfg(); c2.nudge = 1; save(c2); }
+        if (n && n.parentNode) n.remove();
+      };
+      n.querySelector(".tss-nudge__x").addEventListener("click", function () { gone(true); });
+      n.querySelector(".tss-nudge__go").addEventListener("click", function () { gone(true); menu(); });
+      setTimeout(function () { if (n && n.parentNode) n.remove(); }, 16000);
+    }, 2400);
   }
 
   /* ---------- boot ---------- */
@@ -540,6 +728,7 @@
     if (!document.body) { document.addEventListener("DOMContentLoaded", boot); return; }
     bindSettings();
     refreshLaunch();
+    maybeNudge();
   }
   boot();
 
@@ -547,6 +736,7 @@
     start: start,
     stop: stop,
     tutorial: function () { showTutorial(null); },
+    menu: menu,
     isEnabled: enabled,
     bindSettings: bindSettings,
     refresh: refreshLaunch

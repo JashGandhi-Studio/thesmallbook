@@ -12,7 +12,7 @@
   <meta property="og:description" content="460 books, 3138 lessons, human audio, deep dives & PDFs roll out to Gold first. ₹999/yr locks 33% off.">
   <meta property="og:url" content="https://thesmallbook.in/gold.html">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=295">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=300">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <script>
@@ -31,7 +31,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=295">
+  <link rel="stylesheet" href="css/style.css?v=300">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -203,7 +203,7 @@
       <h1>HUMAN AUDIO.<br><span class="hl">DEEP DIVES. PDFs.</span><br>COMING SOON.</h1>
       <p class="goldhero__sub">The library stays <b>free to read</b>. TSB Gold is the premium layer, real human narration, full-length deep dives &amp; PDF cheat-sheets, <i>rolling out to early members first</i> as each drops. Lock your price now, get each feature the day it ships.</p>
       <div class="goldhero__price">₹999 / YEAR
-        <small>FIRST 500 EARLY-BIRDS, LOCKS IN 33% OFF FOREVER</small>
+        <small>EARLY-BIRD PRICE, LOCKS IN 33% OFF FOREVER</small>
       </div>
       <a class="goldhero__cta" href="#goldJoin">🚀 CLAIM MY ₹999 EARLY-BIRD PRICE →</a>
       <p class="goldhero__trust">🔒 Lock now, pay when Gold ships · Cancel anytime · <b>Free to read</b> stays free</p>
@@ -310,7 +310,7 @@
       </div>
       <div class="gcmp__row">
         <div class="gcmp__cell gcmp__feat" data-col="FEATURE">📚 THE LIBRARY</div>
-        <div class="gcmp__cell" data-col="FREE">All 460 books, 3,138 lessons, 26 languages. Free forever, no signup.</div>
+        <div class="gcmp__cell" data-col="FREE">All 460 books, 3,138 lessons, 26 languages. Free forever.</div>
         <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">Everything in Free, plus every row below.</div>
       </div>
       <div class="gcmp__row">
@@ -362,7 +362,7 @@
       </div>
       <div class="gcmp__row">
         <div class="gcmp__cell gcmp__feat" data-col="FEATURE">👑 FOUNDING BADGE</div>
-        <div class="gcmp__cell" data-col="FREE"><span class="gcmp__chip gcmp__chip--no">FIRST 500 ONLY</span></div>
+        <div class="gcmp__cell" data-col="FREE"><span class="gcmp__chip gcmp__chip--no">GOLD ONLY</span></div>
         <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">Verified "Founding Supporter" badge on your profile. First 500, ever.</div>
       </div>
       <div class="gcmp__row">
@@ -402,8 +402,8 @@
     </section>
     <div class="gold-confetti" id="goldConfetti" hidden></div>
     <section class="goldjoin" id="goldJoin">
-      <h2>JOIN THE FIRST 500</h2>
-      <p>Reserve your early-bird spot now. ₹999/yr, <b>33% off locked forever</b>, for as long as you keep Gold. No spam, cancel anytime.</p>
+      <h2>JOIN TSB GOLD</h2>
+      <p>₹999/yr, <b>33% off locked forever</b>, for as long as you keep Gold. No spam, cancel anytime, and the free library stays free either way.</p>
       <p style="font-size:11.5px;color:#666;background:#fffbe6;border:2px dashed var(--ink);padding:8px 10px;margin:-4px 0 14px;line-height:1.5">🎧 <b>Heads up:</b> human audio, deep dives &amp; PDFs are <i>in production</i>, you lock the price today and get each one <b>the day it ships</b> (early Gold members first). Samples above are the exact sound. The free library stays free from day one.</p>
       <div class="goldjoin__row">
         <div class="goldform">
@@ -412,10 +412,12 @@
           <label for="gEmail">EMAIL</label>
           <input id="gEmail" type="email" placeholder="you@example.com" autocomplete="email">
           <button id="gJoin">🚀 CLAIM MY ₹999 EARLY-BIRD PRICE</button>
-          <p class="tiny">We'll email you the day Gold launches, and the first 500 get the locked price.</p>
+          <p class="tiny">We'll email you the day Gold opens wider, and early-birds keep the locked price.</p>
         </div>
         <div class="goldupi">
-          <div class="upi">OR PAY &amp; CLAIM THE PRICE</div>
+          <a class="pay" id="gRzp" hidden href="#" rel="noopener">💳 PAY ₹999 — CARD / UPI / NETBANKING</a>
+          <p class="tiny" id="gRzpHint" hidden style="margin:6px 0 10px;color:#666"></p>
+          <div class="upi">OR PAY STRAIGHT VIA UPI</div>
           <a class="pay" id="gPayBtn" href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=999&cu=INR">📲 PAY ₹999 VIA UPI</a>
           <div class="alt">Your UPI app opens with ₹999 pre-filled &nbsp;<button id="gCopy">📋 COPY UPI ID</button></div>
           <a class="wadeal" id="gWa" href="https://wa.me/919702510680?text=Hi%20Jash!%20I%20want%20to%20join%20the%20TSB%20Gold%20first-500%20waitlist%20(%E2%82%B9999%2Fyr%2C%2033%25%20off%20locked).%20Please%20share%20the%20QR%20code%20for%20payment." target="_blank" rel="noopener">
@@ -440,15 +442,9 @@
 
 
     <section class="goldjoin" id="gForge" hidden style="box-shadow:8px 8px 0 #111;border-style:dashed">
-      <h2>👑 FOUNDER, CODE FORGE</h2>
-      <p>You’re signed in as founder. Mint a fresh checksummed code for a buyer after you verify their ₹999 payment, one tap, no guessing, no reuse needed.</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <code id="gForgeCode" style="flex:1;min-width:200px;border:3px solid var(--ink);background:var(--yellow);padding:12px;font-family:Space Grotesk,monospace;font-weight:800;letter-spacing:1px;box-shadow:3px 3px 0 var(--ink)">-</code>
-        <button id="gForgeBtn" type="button" style="border:3px solid var(--ink);background:var(--ink);color:var(--yellow);font-family:Archivo Black,sans-serif;font-size:13px;padding:12px 18px;cursor:pointer;box-shadow:4px 4px 0 var(--red)">⚡ FORGE NEW CODE</button>
-        <button id="gForgeCopy" type="button" style="border:3px solid var(--ink);background:var(--paper);font-family:Archivo Black,sans-serif;font-size:11px;padding:12px 14px;cursor:pointer">📋 COPY</button>
-      </div>
-      <p class="tiny" id="gForgeMsg" style="margin-top:10px"></p>
-      <p class="tiny" style="margin-top:6px;color:#666">Keep a private sheet: code → buyer name → date → txn ID. Codes are checksummed, so random guesses fail. One code per buyer is cleanest.</p>
+      <h2>👑 FOUNDER, CODES</h2>
+      <p>You’re signed in as founder. Codes are provisioned server-side now: create one row per buyer in the Supabase SQL editor after you verify their ₹999 payment (gold_codes, one INSERT, the sample lives in UPDATE-v298-gold.sql). A code redeems once, on the buyer’s own signed-in account, through the redeem-gold function. There is nothing to mint here any more, and that is the point: no code can be guessed or forged in a browser.</p>
+      <p class="tiny" style="margin-top:6px;color:#666">Keep a private sheet: code → buyer name → date → txn ID. One code per buyer is cleanest.</p>
     </section>
 
     <p class="goldnote">💛 The free library stays free. Gold is optional, for readers who want more, and for the readers who keep this whole thing running.</p>
@@ -471,14 +467,14 @@
     <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
   </footer>
 
-  <script src="./js/bootguard.js?v=295"></script>
-  <script src="js/prefs.js?v=295"></script>
-  <script src="js/lang.js?v=295"></script>
-  <script src="js/config.js?v=295"></script>
-  <script src="js/auth.js?v=295"></script>
-  <script src="js/upi.js?v=295"></script>
-  <script src="js/gold.js?v=295"></script>
-  <script src="js/paywall.js?v=295"></script>
+  <script src="./js/bootguard.js?v=300"></script>
+  <script src="js/prefs.js?v=300"></script>
+  <script src="js/lang.js?v=300"></script>
+  <script src="js/config.js?v=300"></script>
+  <script src="js/auth.js?v=300"></script>
+  <script src="js/upi.js?v=300"></script>
+  <script src="js/gold.js?v=300"></script>
+  <script src="js/paywall.js?v=300"></script>
   <script>
     /* v225, checksummed activation + founder forge */
     (function () {
@@ -489,15 +485,24 @@
       var sticky = document.getElementById("goldSticky");
       function show() {
         if (!window.TSB_GOLD) return;
-        var s = TSB_GOLD.state();
-        var isOn = !!(s && s.active);
+        var isOn = !!(window.TSB_GOLD && TSB_GOLD.isGold());
         if (member) member.hidden = !isOn;
         if (join) join.hidden = isOn;
         if (activateSec) activateSec.hidden = isOn;
         if (sticky) sticky.style.display = isOn ? "none" : "";
-        if (s && s.active) {
-          msg.innerHTML = "Gold is ON, you\u2019re all set" + (s.until ? " until " + new Date(s.until).toLocaleDateString() : "") + ", watermark off, Pro filters on.";
-          // also update hero trust line if needed
+        if (isOn) {
+          msg.innerHTML = "Gold is ON, you\u2019re all set, watermark off, Pro filters on.";
+          /* the until date comes straight from the member's own table row */
+          try {
+            var C = window.TSB_CONFIG || {};
+            if (window.TSB_AUTH && TSB_AUTH.user() && TSB_AUTH.token) {
+              TSB_AUTH.token().then(function (tk) {
+                return fetch(C.SUPABASE_URL + "/rest/v1/gold_members?user_id=eq." + encodeURIComponent(TSB_AUTH.user().id) + "&select=expires_at", { headers: { apikey: C.SUPABASE_ANON_KEY, Authorization: "Bearer " + tk } });
+              }).then(function (r) { return r.json(); }).then(function (rows) {
+                if (rows && rows[0] && rows[0].expires_at) msg.innerHTML = "Gold is ON, you\u2019re all set until " + new Date(rows[0].expires_at).toLocaleDateString() + ", watermark off, Pro filters on.";
+              }).catch(function () {});
+            }
+          } catch (e) {}
         }
         return isOn;
       }
@@ -520,25 +525,39 @@
       }
       show();
       var b = document.getElementById("gAct");
-      if (b) b.addEventListener("click", function () {
-        var r = TSB_GOLD.activate(document.getElementById("gCode").value);
-        if (r.ok) {
-          msg.innerHTML = "Gold active, you\u2019re all set. Early-bird locked at \u20B999/yr, Pro on, Store unlocked.";
-          show();
-          celebrate();
-        } else {
-          msg.innerHTML = "⚠️ " + r.why;
-          // shake
-          var inp = document.getElementById("gCode");
-          if(inp){ inp.style.transform="translateX(-6px)"; setTimeout(function(){ inp.style.transform=""; }, 180); }
+      if (b) b.addEventListener("click", async function () {
+        var code = (document.getElementById("gCode").value || "").trim();
+        if (!code) { msg.innerHTML = "Type the code first, it looks like TSB-XXXX-XXXX."; return; }
+        b.disabled = true;
+        msg.innerHTML = "Checking your code...";
+        try {
+          var C = window.TSB_CONFIG || {};
+          var tk = window.TSB_AUTH && TSB_AUTH.token ? await TSB_AUTH.token() : null;
+          if (!tk) { msg.innerHTML = "Sign in first (top of this page), then redeem your code, so Gold lands on your account."; b.disabled = false; return; }
+          var res = await fetch(C.SUPABASE_URL + "/functions/v1/redeem-gold", {
+            method: "POST",
+            headers: { apikey: C.SUPABASE_ANON_KEY, Authorization: "Bearer " + tk, "Content-Type": "application/json" },
+            body: JSON.stringify({ code: code })
+          });
+          var r = await res.json().catch(function () { return {}; });
+          if (r && r.ok) {
+            await new Promise(function (res2) { setTimeout(res2, 250); });
+            await (window.TSB_GOLD && TSB_GOLD.isGold(true));
+            msg.innerHTML = "Gold active, you\u2019re all set. Early-bird locked at \u20B999/yr, Pro on, Store unlocked.";
+            show();
+            celebrate();
+          } else {
+            msg.innerHTML = "⚠️ " + ((r && r.error) || "That code did not go through. Check it once.");
+            var inp = document.getElementById("gCode");
+            if (inp) { inp.style.transform = "translateX(-6px)"; setTimeout(function () { inp.style.transform = ""; }, 180); }
+          }
+        } catch (e) {
+          msg.innerHTML = "⚠️ The network ate that one. Check your internet once and try again.";
         }
+        b.disabled = false;
       });
-      /* founder forge, only visible when founder email signed in */
+      /* the founder note shows only for the founder email */
       var forgeSec = document.getElementById("gForge");
-      var forgeCode = document.getElementById("gForgeCode");
-      var forgeBtn = document.getElementById("gForgeBtn");
-      var forgeCopy = document.getElementById("gForgeCopy");
-      var forgeMsg = document.getElementById("gForgeMsg");
       function isFounderNow() {
         try {
           if (window.TSB_COMMUNITY && TSB_COMMUNITY.signedIn && TSB_COMMUNITY.signedIn()) {
@@ -555,32 +574,48 @@
         } catch (e2) {}
         return false;
       }
-      function revealForgeIfNeeded() {
-        if (isFounderNow() && forgeSec) {
-          forgeSec.hidden = false;
-          if (forgeCode && forgeCode.textContent === "-" && window.TSB_GOLD && TSB_GOLD.forge) forgeCode.textContent = TSB_GOLD.forge();
+      if (isFounderNow() && forgeSec) forgeSec.hidden = false;
+      setTimeout(function () { if (isFounderNow() && forgeSec) forgeSec.hidden = false; }, 1200);
+
+      /* ---- Razorpay checkout: the link comes from config, the grant never does ---- */
+      try {
+        var RZ = window.TSB_CONFIG && TSB_CONFIG.PAYWALL ? TSB_CONFIG.PAYWALL.RAZORPAY_LINK : "";
+        var rz = document.getElementById("gRzp"), hint = document.getElementById("gRzpHint");
+        if (RZ && rz) {
+          rz.href = RZ; rz.hidden = false;
+          if (hint) {
+            hint.hidden = false;
+            try {
+              var u3 = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null;
+              if (u3) hint.innerHTML = "Use the same email as your account here (" + (u3.email || "your account email") + ") at checkout, Gold lands on your account automatically in a few seconds.";
+              else hint.innerHTML = "Sign in first (top of this page), then pay with that same email so Gold lands on your account automatically.";
+            } catch (e) {}
+          }
         }
-      }
-      // check immediately and after auth loads (auth.js fires async)
-      revealForgeIfNeeded();
-      setTimeout(revealForgeIfNeeded, 800);
-      setTimeout(revealForgeIfNeeded, 2500);
-      window.addEventListener("storage", revealForgeIfNeeded);
-      if (forgeBtn) forgeBtn.addEventListener("click", function () {
-        if (!window.TSB_GOLD || !TSB_GOLD.forge) return;
-        var c = TSB_GOLD.forge();
-        forgeCode.textContent = c;
-        forgeMsg.textContent = "Fresh code minted, WhatsApp this to the buyer after you confirm their ₹999.";
-        try { navigator.clipboard.writeText(c); forgeMsg.textContent += " (copied)"; } catch (e) {}
-      });
-      if (forgeCopy) forgeCopy.addEventListener("click", function () {
-        var c = (forgeCode.textContent || "").trim();
-        if (!c || c === "-") return;
-        try {
-          if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(c).then(function(){ forgeMsg.textContent = "📋 Copied, paste it to the buyer on WhatsApp"; });
-          else { var ta=document.createElement("textarea"); ta.value=c; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); forgeMsg.textContent="📋 Copied"; }
-        } catch (e) { forgeMsg.textContent = "Copy failed, long-press the code."; }
-      });
+      } catch (e) {}
+
+      /* ---- back from payment: poll the server, never flip a local flag ---- */
+      (function () {
+        var fromPay = /[?&](paid=1|gold=poll)/.test(location.search) || /razorpay\.com/.test(document.referrer || "");
+        if (!fromPay || !window.TSB_GOLD) return;
+        var msg = document.getElementById("gActMsg");
+        var sec = document.getElementById("goldJoin") || document.querySelector("section.goldjoin");
+        if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (msg) msg.innerHTML = "💳 Payment received, activating... stay on this page a few seconds.";
+        var tries = 0;
+        var iv = setInterval(async function () {
+          tries++;
+          var on = await (window.TSB_GOLD.isGold(true));
+          if (on) {
+            clearInterval(iv);
+            if (msg) msg.innerHTML = "";
+            show(); celebrate();
+          } else if (tries > 20) {
+            clearInterval(iv);
+            if (msg) msg.innerHTML = "Still activating, banks can take a minute. If Gold is not on in a couple of minutes, message us with your payment reference and we will sort it the same day.";
+          }
+        }, 3000);
+      })();
     })();
   </script>
   <script>
@@ -845,6 +880,6 @@
     // sticky: hide when join section is in view (already there)
     var sticky=document.getElementById("goldSticky");var join=document.getElementById("goldJoin");if(sticky&&join&&"IntersectionObserver"in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){sticky.style.transform=e.isIntersecting?"translateY(110%)":"translateY(0)";})},{threshold:.15});io.observe(join);}})();
   </script>
-  <script src="js/gate.js?v=295" defer></script>
+  <script src="js/gate.js?v=300" defer></script>
 </body>
 </html>
