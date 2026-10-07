@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <title>Deep Dives: the chapter worth reading in full | TheSmallBook</title>
+  <meta name="description" content="TheSmallBook Deep Dives: original long-form essays around the one chapter that matters, with the evidence, the holes and the practice. Gold reads them all; the sample is free.">
+  <meta name="author" content="Jash Gandhi">
+  <meta property="og:title" content="Deep Dives: the chapter worth reading in full | TheSmallBook">
+  <meta property="og:description" content="Original long-form reads built around one chapter. The sample is free.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://thesmallbook.in/deepdive.html">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    try {
+      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      if (tsbDark) document.documentElement.classList.add("dark");
+      var tsbTC = document.querySelector('meta[name="theme-color"]');
+      if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
+      tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
+    } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=309">
+  <link rel="stylesheet" href="css/deepdive.css?v=309">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+</head>
+<body class="ddpage">
+  <div class="dd-progress"><i id="ddBar"></i></div>
+  <nav class="nav">
+    <a class="logo" href="index.html">
+      <span class="logo__mark">📕</span>
+      <span>The<span class="logo__small">Small</span>Book</span>
+    </a>
+    <div class="nav__links">
+      <a class="btn btn--yellow" href="index.html#library">📚 LIBRARY</a>
+      <a class="btn btn--red" href="podcasts.html">🎧 LISTEN</a>
+    </div>
+  </nav>
+  <main class="dd-main">
+    <div id="ddGate" hidden></div>
+    <article class="dd-paper" id="ddPaper">
+      <div class="dd-head"><h1 class="dd-h1">Opening the dive…</h1></div>
+    </article>
+    <section class="dd-index">
+      <h3>🌊 EVERY DEEP DIVE ON THE SHELF</h3>
+      <div id="ddIndex"></div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="head">📕 TheSmallBook</div>
+    <p>Big books. Small reads. Original educational analyses  -  no book text reproduced. Support the authors: buy the full books.</p>
+    <div class="credits">&#10022; MADE BY JASH GANDHI &#10022;</div>
+    <p class="tiny"><a href="about.html" style="color:inherit;">ABOUT</a>&nbsp;&nbsp;<strong><a href="gold.html" style="color:inherit;">👑 TSB GOLD</a></strong>&nbsp;&nbsp;MUMBAI, INDIA&nbsp;&nbsp;<strong>FREE TO READ</strong></p>
+  </footer>
+  <script src="js/bootguard.js?v=309"></script>
+  <script src="js/prefs.js?v=309"></script>
+  <script src="js/config.js?v=309"></script>
+  <script src="js/data.js?v=309"></script>
+  <script src="js/auth.js?v=309"></script>
+  <script src="js/community.js?v=309"></script>
+  <script src="js/gold.js?v=309"></script>
+  <script src="js/paywall.js?v=309"></script>
+  <script src="js/deepdive-data.js?v=309"></script>
+  <script src="js/deepdive.js?v=309"></script>
+  <script src="js/tts-engine.js?v=309"></script>
+  <script src="js/audioplayer.js?v=309"></script>
+  <script>
+    (function () {
+      var w = document.getElementById("ddIndex");
+      if (!w) return;
+      function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+      (window.TSB_DEEPDIVES || []).forEach(function (d) {
+        var el = document.createElement("a");
+        el.className = "dd-idx";
+        el.href = "deepdive.html?id=" + d.id;
+        el.innerHTML = '<span class="dd-idx__t">' + esc(d.title) + '</span><span class="dd-idx__m">' + esc(d.chapterLabel) + " · " + d.minutes + ' min ' + (d.sample ? '· <b class="free">FREE SAMPLE</b>' : '· 👑 GOLD') + '</span>';
+        w.appendChild(el);
+      });
+    })();
+  </script>
+</body>
+</html>

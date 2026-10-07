@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
     <meta property="og:title" content="Stories, TheSmallBook">
   <meta property="og:description" content="True reader stories and the library's own channel, lessons people actually lived.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=300">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=309">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/stories.html">
@@ -27,7 +27,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=300">
+  <link rel="stylesheet" href="css/style.css?v=309">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -42,14 +42,25 @@
       </div>
       <a class="cm-bell" href="notifications.html" title="Notifications & updates"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="nt-dot" data-notifdot hidden></span></a>
     </div>
-    <div class="cm-head__acts">
-      <button class="cm-chipbtn" id="reelsBtn" title="Bursts, swipe through stories">🎬 Bursts</button>
-      <button class="cm-chipbtn" id="finderBtn" title="Find readers to follow"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Find readers</button>
-      <button class="cm-chipbtn" id="quoteBtn" title="Post a small quote">❝ Quote</button>
+    <div class="cm-head__acts cm-head__acts--v2">
       <button class="cm-write" id="writeBtn">✍️ Write a story</button>
+      <div class="cm-head__row">
+        <button class="cm-chipbtn" id="quoteBtn" title="The public wall of small lines">📌 Quote Wall</button>
+        <button class="cm-chipbtn" id="reelsBtn" title="Bursts, swipe through stories">🎬 Bursts</button>
+        <button class="cm-chipbtn" id="finderBtn" title="Find readers to follow"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Find readers</button>
+      </div>
     </div>
   </header>
 
+  <div class="pc-promo pc-promo--v2" id="pcPromo" hidden>
+    <div class="pc-promo__wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="pc-promo__mid"><b>THE AUDIO ROOM 🎧</b><i>Podcasts and full audiobooks, playing right here. Bring your commute.</i></span>
+    <span class="pc-promo__acts"><a class="pc-promo__go" href="podcasts.html">START LISTENING FREE</a></span>
+  </div>
+  <section class="lt-rail" id="ltRail" aria-label="Listen today">
+    <div class="lt-head"><b>🎧 LISTEN TODAY</b><span>hands-free, while you do the other thing</span></div>
+    <div class="lt-scroll" id="ltScroll"></div>
+  </section>
   <nav class="cm-tabs" id="cmTabs" aria-label="Story feeds">
     <button data-tab="all" class="on">✨ For you</button>
     <button data-tab="following"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Following</button>
@@ -73,18 +84,81 @@
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="./js/bootguard.js?v=300"></script>
-  <script src="js/prefs.js?v=300"></script>
-  <script src="js/lang.js?v=300"></script>
-  <script src="js/config.js?v=300"></script>
-  <script src="js/auth.js?v=300"></script>
-  <script src="js/sounds.js?v=300"></script>
-  <script src="js/founder.js?v=300"></script>
-  <script src="js/community.js?v=300"></script>
-  <script src="js/weekly.js?v=300"></script>
+  <script src="./js/bootguard.js?v=309"></script>
+  <script src="js/prefs.js?v=309"></script>
+  <script src="js/lang.js?v=309"></script>
+  <script src="js/config.js?v=309"></script>
+  <script src="js/auth.js?v=309"></script>
+  <script src="js/sounds.js?v=309"></script>
+  <script src="js/founder.js?v=309"></script>
+  <script>
+  /* LISTEN TODAY - the rail that makes the library a radio */
+  (function () {
+    var DIVE_PICK = ["dd-atomic-identity", "dd-habit-golden-rule", "dd-money-scarred", "dd-fast-slow-two-selves", "dd-deep-rhythm", "dd-meaning-hollow"];
+    var BOOK_PICK = ["atomic-habits", "the-psychology-of-money", "deep-work", "meditations"];
+    function el(id) { return document.getElementById(id); }
+    function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+    function tile(icon, big, small, onclick, tag, tagClass) {
+      var d = document.createElement("button");
+      d.className = "lt-tile";
+      d.innerHTML = (tag ? '<span class="lt-tag' + (tagClass ? " " + tagClass : "") + '">' + esc(tag) + '</span>' : '') +
+        '<span class="lt-ico">' + icon + '</span><span class="lt-big">' + esc(big) + '</span><span class="lt-small">' + esc(small) + '</span>';
+      d.addEventListener("click", onclick);
+      return d;
+    }
+    function boot() {
+      var A = window.TSB_AUDIO, D = window.TSB_DEEPDIVE, B = window.BOOKS || [];
+      if (!A) return;
+      var sc = el("ltScroll");
+      function bookById(id) { for (var i = 0; i < B.length; i++) if (B[i].id === id) return B[i]; return null; }
+      /* continue card first */
+      var cont = A.continueCard();
+      if (cont) {
+        var c = tile("⏩", "Continue: " + cont.title, cont.itemLabel, function () { A.resume(); }, "CONTINUE", "lt-tag--go");
+        c.classList.add("lt-tile--cont");
+        sc.appendChild(c);
+      }
+      /* whole books, spoken by the app */
+      BOOK_PICK.forEach(function (id) {
+        var b = bookById(id);
+        if (!b) return;
+        sc.appendChild(tile("📚", b.title, "all " + b.lessons.length + " lessons, spoken", function () { A.playBook(b.id, 0); }, "SPOKEN BY YOUR APP"));
+      });
+      /* full audiobooks, real narrators, LibriVox */
+      var AB = window.TSB_AUDIOBOOKS || {};
+      ["meditations", "richest-man-babylon", "siddhartha"].forEach(function (id) {
+        if (!AB[id]) return;
+        var b = bookById(id);
+        sc.appendChild(tile("📖", b ? b.title : (AB[id].title || id), "full audiobook, real narrator", function () { A.playAudiobook(id); }, "AUDIOBOOK", "lt-tag--go"));
+      });
+      /* podcasts, streaming from the shows' own feeds */
+      var shows = (window.TSB_PODCASTS && window.TSB_PODCASTS.shows) || [];
+      ["wtf-nikhil", "founders-senra", "figuring-out"].forEach(function (sid) {
+        var sh2 = shows.filter(function (x) { return x.id === sid; })[0];
+        if (!sh2) return;
+        sc.appendChild(tile("🎙️", sh2.name, "latest episode, plays here", function () { A.playFeed(sh2); }, "PODCAST", "lt-tag--go"));
+      });
+      /* deep dive narrations (data module: TSB_DEEPDIVES) */
+      var dives = window.TSB_DEEPDIVES || (D && D.all && D.all()) || [];
+      dives.filter(function (d) { return DIVE_PICK.indexOf(d.id) >= 0; }).slice(0, 2).forEach(function (d) {
+        sc.appendChild(tile("🪑", d.title, (d.minutes || 6) + " min narration", function () { location.href = "deepdive.html?id=" + d.id + "&listen=1"; }, d.sample ? "FREE NARRATION" : "TSB GOLD"));
+      });
+      /* a link out to the full audio room */
+      var more = document.createElement("a");
+      more.className = "lt-more"; more.href = "podcasts.html";
+      more.textContent = "THE AUDIO ROOM →";
+      sc.appendChild(more);
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { setTimeout(boot, 400); });
+    else setTimeout(boot, 400);
+  })();
+  </script>
+  <script src="js/deepdive-data.js?v=309"></script>
+  <script src="js/community.js?v=309"></script>
+  <script src="js/weekly.js?v=309"></script>
   <!-- v252: the library story shelf (js/stories-seed.js) was never loaded here,
        so none of those stories could ever appear. It is loaded now. -->
-  <script src="js/stories-seed.js?v=300"></script>
+  <script src="js/stories-seed.js?v=309"></script>
   <script>
   (function () {
     "use strict";
@@ -599,7 +673,7 @@
       burstBusy = true; paintBurstEnd();
       var posts = [];
       try { posts = await C.listPosts({ limit: BURST_BATCH, offset: burstOffset }); } catch (e) {}
-      var fresh = posts.filter(function (p) { return !burstSeen[p.id]; });
+      var fresh = posts.filter(function (p) { return !burstSeen[p.id] && !/^wall-/.test(p.kind || ""); });
       fresh.forEach(function (p) { burstSeen[p.id] = 1; });
       var el = burstEnd();
       if (fresh.length && el) {
@@ -668,7 +742,8 @@
 
     document.getElementById("reelsBtn").addEventListener("click", openBursts);
     document.getElementById("reelsX").addEventListener("click", closeBursts);
-    document.getElementById("quoteBtn").addEventListener("click", function () { location.href = "write.html?mode=quote"; });
+    /* v300: the Quote button is now the public Quote Wall - a soft board with pins. */
+document.getElementById("quoteBtn").addEventListener("click", function () { location.href = "quotes.html"; });
 
     async function load() {
       if (tab === "people") return renderPeople();
@@ -689,7 +764,7 @@
           posts = ids.length ? await C.listPosts({ ids: ids }) : [];
           if (!posts.length) { feed.innerHTML = '<div class="cm-empty">' + C.icon('user') + " Follow writers from the For-you feed and their stories land here.</div>"; return; }
         } else {
-          posts = await C.listPosts({});
+          posts = (await C.listPosts({})).filter(function (p) { return !/^wall-/.test(p.kind || ""); });
           try { (await C.followingIds()).forEach(function (id) { followSet[id] = 1; }); } catch (e) {}
           posts = posts.slice().sort(function (a, b) { return score(b) - score(a); });
         }
@@ -1008,11 +1083,19 @@
     load();
   })();
   </script>
-  <script src="js/data.js?v=300"></script>
-  <script src="js/osint.js?v=300"></script>
-  <script src="js/bar.js?v=300" defer></script>
-  <script src="js/smallscroller.js?v=300"></script>
-  <script src="js/gate.js?v=300" defer></script>
-  <script src="js/trial.js?v=300" defer></script>
+  <script src="js/data.js?v=309"></script>
+  <script src="js/osint.js?v=309"></script>
+  <script src="js/bar.js?v=309" defer></script>
+  <script src="js/gate.js?v=309" defer></script>
+  <script src="js/trial.js?v=309" defer></script>
+<script>
+  (function () {
+    var p = document.getElementById("pcPromo");
+    if (!p) return;
+    p.hidden = false;
+  })();
+  </script>
+  <script src="js/podcast-data.js?v=309"></script>
+  <script src="js/audioplayer.js?v=309"></script>
 </body>
 </html>

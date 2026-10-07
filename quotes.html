@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>The Quote Wall - TheSmallBook</title>
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="A public wall of small lines worth keeping. Readers pin lessons, teachings and photos to one big soft board.">
+  <meta property="og:title" content="The Quote Wall - pin the line worth keeping | TheSmallBook">
+  <meta property="og:description" content="A public soft board of lessons and teachings, pinned by readers. Zoom in, wander, pin your own.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://thesmallbook.in/quotes.html">
+  <meta property="og:site_name" content="TheSmallBook">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📌</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Archivo+Black&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=309">
+  <link rel="stylesheet" href="css/community.css?v=309">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body.qw-body { padding-bottom: 0; }
+    .qw-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px 10px; }
+    .qw-head .qw-back { min-width: 38px; width: 38px; height: 38px; padding: 0; border: 2.5px solid var(--ink); border-radius: 12px; background: var(--paper); font-size: 16px; cursor: pointer; box-shadow: 2.5px 2.5px 0 var(--ink); }
+    .qw-head > div { flex: 1; min-width: 0; }
+    .qw-head h1 { font: 400 16px "Archivo Black", "Arial Black", sans-serif; color: var(--ink); margin: 0; letter-spacing: .3px; white-space: nowrap; }
+    .qw-head p { margin: 2px 0 0; font: 600 10px "Space Grotesk", sans-serif; color: var(--ink); opacity: .6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .qw-count { margin-left: auto; flex: 0 0 auto; font: 800 8.5px "Archivo Black", sans-serif; letter-spacing: .5px; color: var(--ink); background: var(--yellow); border: 2px solid var(--ink); border-radius: 999px; padding: 5px 8px; white-space: nowrap; }
+    .qw-vp { position: relative; height: calc(100dvh - 96px); overflow: hidden; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none;
+      background: url("assets/cork.jpg") 0 0 / 480px auto, #c9a271;
+      box-shadow: inset 0 6px 22px rgba(60,30,0,.45), inset 0 -6px 18px rgba(60,30,0,.3);
+      border-top: 12px solid #8a5a2b; border-bottom: 12px solid #8a5a2b; }
+    .qw-vp::before { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+      background: linear-gradient(180deg, rgba(255,235,200,.10), rgba(0,0,0,0) 30%, rgba(0,0,0,.06) 75%, rgba(50,25,0,.18)); }
+    .qw-vp:active { cursor: grabbing; }
+    .qw-board { position: absolute; top: 0; left: 0; transform-origin: 0 0; will-change: transform; }
+    .qw-note, .qw-photo { position: absolute; width: 188px; padding: 18px 13px 12px; box-shadow: 3px 5px 10px rgba(40,20,0,.28); cursor: default; }
+    .qw-note { min-height: 96px; border-radius: 2px;
+      background-image: linear-gradient(rgba(255,255,255,.25), rgba(255,255,255,0) 34%, rgba(0,0,0,.045) 78%, rgba(0,0,0,.09));
+      box-shadow: 0 1px 0 rgba(255,255,255,.35) inset, 4px 7px 12px rgba(40,18,0,.34), 1px 2px 3px rgba(40,18,0,.22);
+      transition: transform .16s, box-shadow .16s; }
+    .qw-note:hover, .qw-photo:hover { transform: rotate(0deg) scale(1.04); box-shadow: 6px 12px 22px rgba(40,18,0,.42); z-index: 4; }
+    .qw-note::after { content: ""; position: absolute; right: 0; bottom: 0; border-style: solid; border-width: 0 0 18px 18px; border-color: transparent transparent rgba(0,0,0,.10) transparent; }
+    .qw-pin, .qw-pin--red { position: absolute; top: 8px; left: 50%; margin-left: -7px; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ff9d9d, #d21f1f 70%); border: 2px solid #7d0f0f; box-shadow: 1px 2px 3px rgba(0,0,0,.35); z-index: 2; }
+    .qw-photo .qw-pin--red { top: 6px; }
+    .qw-pin:not(.qw-pin--red) { background: radial-gradient(circle at 35% 30%, #ffd86e, #e0a90f 70%); border-color: #8a6604; }
+    .qw-txt { margin: 2px 0 10px; font: 700 16.5px/1.3 "Caveat", "Comic Sans MS", cursive; color: #333; overflow-wrap: anywhere; }
+    .qw-by { display: block; font: 700 11px "Caveat", cursive; color: #6b5a3a; }
+    .qw-photo { background: #fff; width: 208px; padding: 20px 10px 10px; box-shadow: 4px 7px 12px rgba(40,18,0,.34); transition: transform .16s, box-shadow .16s; }
+    .qw-photo::before { content: ""; position: absolute; top: -10px; left: 50%; margin-left: -44px; width: 88px; height: 22px; z-index: 3;
+      background: linear-gradient(180deg, rgba(250,246,225,.92), rgba(240,232,200,.82)); box-shadow: 0 2px 4px rgba(40,18,0,.25); transform: rotate(-2deg); }
+    .qw-photo img { display: block; width: 100%; max-height: 210px; object-fit: cover; background: #eee; }
+    .qw-cap { display: block; font: 700 15px/1.25 "Caveat", cursive; color: #333; padding: 7px 2px 2px; overflow-wrap: anywhere; }
+    .qw-photo .qw-by { display: block; padding-top: 5px; }
+    .qw-del { position: absolute; top: -9px; right: -9px; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--ink); background: var(--paper); font: 800 10px "Space Grotesk", sans-serif; cursor: pointer; z-index: 3; }
+    .qw-corner { position: absolute; left: 26px; top: 6px; font: 700 13px "Caveat", cursive; color: #4a3413; opacity: .75; max-width: 210px; }
+    .qw-zoom { position: absolute; left: 12px; bottom: 100px; display: flex; flex-direction: column; gap: 8px; z-index: 5; }
+    .qw-zoom button { width: 44px; height: 44px; border-radius: 50%; border: 3px solid var(--ink); background: var(--paper); box-shadow: 3px 3px 0 var(--ink); font: 800 16px "Archivo Black", sans-serif; color: var(--ink); cursor: pointer; }
+    .qw-add { position: fixed; right: 16px; bottom: 92px; z-index: 110; width: 58px; height: 58px; border-radius: 50%; border: 3px solid var(--ink); background: var(--yellow); box-shadow: 4px 4px 0 var(--ink); font-size: 24px; cursor: pointer; }
+    .qw-add:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+    #qwSheet { position: fixed; inset: 0; z-index: 270; background: rgba(20, 12, 0, .5); display: flex; align-items: flex-end; }
+    .qw-sheet__card { width: 100%; background: var(--paper); border-radius: 22px 22px 0 0; border-top: 3px solid var(--ink); padding: 16px 16px 26px; }
+    .qw-sheet__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .qw-sheet__top b { font: 400 14px "Archivo Black", "Arial Black", sans-serif; color: var(--ink); }
+    .qw-sheet__top button { border: 2.5px solid var(--ink); background: var(--paper); border-radius: 10px; width: 32px; height: 32px; font-weight: 800; cursor: pointer; }
+    .qw-find { display: block; width: 100%; border: 2px dashed var(--ink); background: transparent; border-radius: 12px; padding: 10px; font: 800 12px "Space Grotesk", sans-serif; color: var(--ink); cursor: pointer; margin-bottom: 10px; }
+    #qwFindBox { border: 2px solid var(--ink); border-radius: 14px; padding: 10px; margin-bottom: 10px; background: #fffdf2; }
+    #qwSearch { width: 100%; box-sizing: border-box; border: 2px solid var(--ink); border-radius: 10px; padding: 9px 11px; font: 600 13px "Space Grotesk", sans-serif; background: #fff; }
+    .qw-topics { display: flex; gap: 6px; flex-wrap: wrap; margin: 9px 0; }
+    .qw-tp { border: 2px solid var(--ink); background: #fff; border-radius: 999px; padding: 5px 10px; font: 800 9.5px "Space Grotesk", sans-serif; color: var(--ink); cursor: pointer; }
+    .qw-tp.on { background: var(--yellow); box-shadow: 2px 2px 0 var(--ink); }
+    .qw-qlist { max-height: 240px; overflow: auto; display: flex; flex-direction: column; gap: 6px; }
+    .qw-qi { text-align: left; border: 2px solid var(--ink); background: #fff; border-radius: 12px; padding: 8px 10px; cursor: pointer; }
+    .qw-qi span { display: block; font: 700 13px/1.35 "Caveat", cursive; color: #333; }
+    .qw-qi i { display: block; font: 600 10px "Space Grotesk", sans-serif; font-style: normal; color: #6b5a3a; margin-top: 3px; }
+    .qw-qmore { font: 600 10.5px "Space Grotesk", sans-serif; color: #6b5a3a; text-align: center; margin: 6px 0 0; }
+    .qw-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+    .qw-tab { flex: 1; border: 2px solid var(--ink); background: var(--paper); border-radius: 999px; padding: 9px 0; font: 800 11px "Space Grotesk", sans-serif; color: var(--ink); cursor: pointer; }
+    .qw-tab.on { background: var(--yellow); box-shadow: 2px 2px 0 var(--ink); }
+    #qwText, #qwCap { width: 100%; border: 2.5px solid var(--ink); border-radius: 14px; background: #fffdf2; padding: 12px; font: 600 15px "Caveat", cursive; color: #333; min-height: 92px; resize: vertical; box-sizing: border-box; }
+    #qwCap { min-height: 44px; margin-top: 10px; }
+    .qw-colors { display: flex; gap: 10px; margin: 12px 0; }
+    .qw-c { width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(0,0,0,.25); cursor: pointer; }
+    .qw-c.on { border: 3px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+    .qw-go { width: 100%; border: 3px solid var(--ink); background: var(--green); border-radius: 14px; box-shadow: 3px 3px 0 var(--ink); padding: 13px; font: 400 13px "Archivo Black", "Arial Black", sans-serif; color: var(--ink); cursor: pointer; }
+    .qw-go:disabled { opacity: .6; }
+    .qw-pick { width: 100%; border: 2.5px dashed var(--ink); border-radius: 14px; background: #fffdf2; padding: 22px 0; font: 800 12px "Space Grotesk", sans-serif; color: var(--ink); cursor: pointer; }
+    #qwPrev { display: block; width: 100%; max-height: 180px; object-fit: cover; border: 2.5px solid var(--ink); border-radius: 12px; margin-top: 10px; }
+    .qw-fine { font: 600 10.5px/1.5 "Space Grotesk", sans-serif; color: var(--ink); opacity: .55; margin: 12px 0 0; }
+    .qw-anonrow { display: flex; align-items: center; gap: 9px; margin: 2px 0 4px; }
+    .qw-anonrow span { font: 600 10px "Space Grotesk", sans-serif; color: var(--ink); opacity: .55; }
+    .qw-anon { border: 2px solid var(--ink); background: var(--paper); border-radius: 999px; padding: 7px 12px; font: 800 10px "Archivo Black", sans-serif; letter-spacing: .4px; color: var(--ink); cursor: pointer; }
+    .qw-anon.on { background: var(--ink); color: var(--paper); box-shadow: 2px 2px 0 rgba(0,0,0,.25); }
+  </style>
+</head>
+<body class="qw-body">
+  <div id="tsb-loader" aria-hidden="true"><div class="loader-book">📖</div></div>
+  <script>
+    /* kill the loader fast: the wall paints its own first screen */
+    window.addEventListener("DOMContentLoaded", function () {
+      setTimeout(function () { var l = document.getElementById("tsb-loader"); if (l) { l.style.opacity = "0"; l.style.pointerEvents = "none"; setTimeout(function () { l.remove(); }, 300); } }, 350);
+    });
+  </script>
+
+  <header class="qw-head">
+    <button class="qw-back" onclick="history.length > 1 ? history.back() : (location.href = 'stories.html')" aria-label="Back">←</button>
+    <div>
+      <h1>📌 THE QUOTE WALL</h1>
+      <p>Small lines worth keeping, pinned by readers</p>
+    </div>
+    <span class="qw-count" id="qwCount">THE WALL</span>
+  </header>
+
+  <div class="qw-vp" id="qwVp">
+    <div class="qw-board" id="qwBoard"></div>
+    <div class="qw-zoom">
+      <button id="qwZin" aria-label="Zoom in">+</button>
+      <button id="qwZout" aria-label="Zoom out">−</button>
+      <button id="qwZfit" aria-label="Reset view" style="font-size:11px">1:1</button>
+    </div>
+  </div>
+
+  <button class="qw-add" id="qwAdd" aria-label="Pin to the wall">📌</button>
+
+  <script src="js/config.js?v=309"></script>
+  <script src="js/bar.js?v=309" defer></script>
+  <script src="js/community.js?v=309"></script>
+  <script src="js/quotewall.js?v=309"></script>
+  <script src="js/podcast-data.js?v=309"></script>
+  <script src="js/audioplayer.js?v=309"></script>
+</body>
+</html>

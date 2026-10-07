@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
     <meta property="og:title" content="Settings, TheSmallBook">
   <meta property="og:description" content="Theme, language, privacy and everything else, exactly how you like it.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=300">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=309">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/settings.html">
@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=300">
+  <link rel="stylesheet" href="css/style.css?v=309">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -112,18 +112,14 @@
       <p class="sethint">How book cards look on Home, your choice, applied everywhere.</p>
     </section>
 
-    <section class="setcard">
-      <h2>✋ SMALL SCROLLER</h2>
+    <section class="setcard" id="founderCard" hidden>
+      <h2>👑 FOUNDER</h2>
+      <p class="sethint">Your accounts see every Gold feature on every device. Flip the preview to walk the app exactly like a free reader, then flip back. The preview lasts until this tab closes.</p>
       <div class="setrow">
-        <button class="setbtn setbtn--yellow" id="scrollerRoom">🚪 Open the hands-free room</button>
+        <button class="setbtn" id="founderPreviewFree">🔎 Preview as a free reader</button>
+        <button class="setbtn setbtn--yellow" id="founderPreviewGold">👑 Preview as Gold (everything on)</button>
       </div>
-      <div class="setrow">
-        <button class="setbtn" id="scrollerToggle">✋ Turn on hands-free scrolling</button>
-      </div>
-      <div class="setrow">
-        <button class="setbtn" id="scrollerTutorial">▶ See the hand gestures</button>
-      </div>
-      <p class="sethint">Scroll any page without touching it: an open palm flicked up scrolls down, a beckon (palm facing the phone, curl your fingers down like calling someone, let them spring back) scrolls up, a pinch is a mouse: hold it and a cursor rides your fingertip, drag and the page glides with you, hover anything to aim, and a quick pinch and release clicks exactly what you aimed at. The camera is read on your phone only: nothing records, nothing uploads. The small preview window shows only your hand, never your face or your room, and your first scan is remembered: the next session starts almost instantly.</p>
+      <p class="sethint" id="founderState"></p>
     </section>
 
     <section class="setcard">
@@ -170,6 +166,19 @@
     </section>
 
     <section class="setcard">
+      <h2>🔔 DAILY PROMPTS</h2>
+      <div class="setrow" id="mpCardRow">
+        <button class="setopt" data-mpcard="on"><span>🧠</span> What's on your mind</button>
+        <button class="setopt" data-mpcard="off"><span>🚫</span> Hide the card</button>
+      </div>
+      <div class="setrow" id="mpDailyRow">
+        <button class="setopt" data-mpdaily="on"><span>⏳</span> Today's question daily</button>
+        <button class="setopt" data-mpdaily="off"><span>🚫</span> No daily question</button>
+      </div>
+      <p class="sethint">Turn off either or both. Hide the what's-on-your-mind card and today's question still comes; or silence both for a quiet home.</p>
+    </section>
+
+    <section class="setcard">
       <h2>🧹 DATA</h2>
       <button class="setbtn" id="resetOnboard">🎯 Change preferences, re-tune my library</button>
       <button class="setbtn" data-repref>✨ Re-tune now (live, stay on this page)</button>
@@ -183,19 +192,22 @@
       <p class="sethint" id="upDiagHint">Cover / quote images, burst videos, voice notes and profile photos live in your own Supabase storage. If any of them fail, this test names the exact missing piece, and the 30-second SQL fix for it.</p>
     </section>
 
-    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v300.</p>
+    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v309.</p>
   </main>
 
-  <script src="./js/bootguard.js?v=300"></script>
-  <script src="js/prefs.js?v=300"></script>
-  <script src="js/lang.js?v=300"></script>
-  <script src="js/config.js?v=300"></script>
-  <script src="js/install.js?v=300"></script>
-  <script src="js/auth.js?v=300"></script>
-  <script src="js/sounds.js?v=300"></script>
-  <script src="js/community.js?v=300"></script>
-  <script src="js/bar.js?v=300" defer></script>
-  <script src="js/smallscroller.js?v=300"></script>
+  <script src="./js/bootguard.js?v=309"></script>
+  <script src="js/prefs.js?v=309"></script>
+  <script src="js/lang.js?v=309"></script>
+  <script src="js/config.js?v=309"></script>
+  <script src="js/install.js?v=309"></script>
+  <script src="js/auth.js?v=309"></script>
+  <script src="js/sounds.js?v=309"></script>
+  <script src="js/community.js?v=309"></script>
+  <script src="js/gold.js?v=309"></script>
+  <script src="js/paywall.js?v=309"></script>
+  <script src="js/podcast-data.js?v=309"></script>
+  <script src="js/audioplayer.js?v=309"></script>
+  <script src="js/bar.js?v=309" defer></script>
   <script>
     (function () {
       /* theme */
@@ -227,6 +239,29 @@
         paintFont();
       });
 
+      /* daily prompts: mindpick card + the daily question */
+      function paintMp() {
+        var cardOn = TSB.get("tsb_show_mp_card", true) !== false;
+        var dailyOn = TSB.get("tsb_show_mp_daily", true) !== false;
+        document.querySelectorAll("#mpCardRow .setopt").forEach(function (b) {
+          b.classList.toggle("on", (b.dataset.mpcard === "on") === cardOn);
+        });
+        document.querySelectorAll("#mpDailyRow .setopt").forEach(function (b) {
+          b.classList.toggle("on", (b.dataset.mpdaily === "on") === dailyOn);
+        });
+      }
+      document.getElementById("mpCardRow").addEventListener("click", function (e) {
+        var b = e.target.closest(".setopt"); if (!b) return;
+        TSB.set("tsb_show_mp_card", b.dataset.mpcard === "on");
+        paintMp();
+      });
+      document.getElementById("mpDailyRow").addEventListener("click", function (e) {
+        var b = e.target.closest(".setopt"); if (!b) return;
+        TSB.set("tsb_show_mp_daily", b.dataset.mpdaily === "on");
+        paintMp();
+      });
+      paintMp();
+
       /* accent */
       function paintAccent() {
         var cur = TSB.get("tsb_accent", "#ffc800");
@@ -240,9 +275,6 @@
         document.documentElement.style.setProperty("--tsb-bar-accent", b.dataset.accent);
         paintAccent();
       });
-
-      /* small scroller (the module paints and binds its own buttons) */
-      if (window.TSB_SCROLLER && TSB_SCROLLER.bindSettings) TSB_SCROLLER.bindSettings();
 
       /* language grid */
       function paintLangs() {
@@ -318,7 +350,7 @@
   });
 })();
 </script>
-  <script src="js/onboard.js?v=300" defer></script>
+  <script src="js/onboard.js?v=309" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {
@@ -433,6 +465,30 @@
       var a = document.getElementById("tsbYearLink");
       if (a) a.hidden = false;
     } catch (e) {}
+  })();
+  </script>
+  <script>
+  /* 👑 v300 founder controls: full access by email, honest free preview */
+  (function () {
+    "use strict";
+    function reveal() {
+      var P = window.TSB_PAYWALL;
+      if (!P || !P.isFounder) return;
+      var card = document.getElementById("founderCard");
+      if (!P.isFounder()) { card.hidden = true; return; }
+      card.hidden = false;
+      var st = document.getElementById("founderState");
+      function paint() {
+        var free = P.founderPreview && P.founderPreview();
+        st.textContent = free ? "Previewing as a FREE reader right now: walls and gates behave exactly as a new reader sees them."
+                              : "Founder access is ON: every Gold feature answers to you. Flip the preview to see the free experience.";
+      }
+      paint();
+      document.getElementById("founderPreviewFree").addEventListener("click", function () { P.setFounderPreview(true); paint(); try { location.reload(); } catch (e) {} });
+      document.getElementById("founderPreviewGold").addEventListener("click", function () { P.setFounderPreview(false); paint(); try { location.reload(); } catch (e) {} });
+    }
+    try { if (window.TSB_COMMUNITY && TSB_COMMUNITY.whenReady) TSB_COMMUNITY.whenReady(reveal); } catch (e) {}
+    window.addEventListener("tsb:auth", reveal);
   })();
   </script>
 </body>

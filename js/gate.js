@@ -1,10 +1,10 @@
 /* ============================================================
    THESMALLBOOK, 🎁 FRIENDLY GUEST GATE (gate.js)
-   Guests browse the whole library freely at first.
-   After ~10 minutes of browsing OR ~6 opened books, ONE clean
-   card appears: everything is free to read, sign in to keep
-   reading. Never blocks the very first session instantly,
-   never nags signed-in readers, snoozes for 3 minutes.
+   ONE popup per session, ever. It does not fire by itself:
+   the 15-minute free-taster clock (trial.js) calls TSB_GATE.show()
+   at the 15-minute mark, and this module renders the single
+   friendly card. No "+5 minutes" extend, no mid-reading nudges.
+   Dismiss once per session, signed-in readers never see it.
    ============================================================ */
 (function () {
   "use strict";
@@ -13,9 +13,6 @@
 
   var path = (location.pathname.split("/").pop() || "index.html").toLowerCase();
   if (/login\.html|settings\.html|scan\.html|404\.html/.test(path)) return;
-
-  var GRACE_MS = 10 * 60 * 1000; /* 10 minutes of browsing */
-  var READ_LIMIT = 6;            /* …or six opened books   */
 
   function lsGet(k, d) {
     try { var v = JSON.parse(localStorage.getItem(k)); return v === null || v === undefined ? d : v; } catch (e) { return d; }
@@ -31,23 +28,15 @@
     return false;
   }
 
-  /* first-ever visit starts the grace clock */
-  var start = lsGet("tsb_guest_start", 0);
-  if (!start) { start = Date.now(); lsSet("tsb_guest_start", start); }
-
-  /* every opened book counts as a read */
-  if (path === "book.html") lsSet("tsb_reads", lsGet("tsb_reads", 0) + 1);
-
   function due() {
     if (signedIn()) return false;
     try { if (sessionStorage.getItem("tsb_gate_done")) return false; } catch (e) {}
-    var snooze = lsGet("tsb_gate_snooze", 0);
-    if (snooze && Date.now() - snooze < 3 * 60 * 1000) return false;
-    return (Date.now() - start >= GRACE_MS) || lsGet("tsb_reads", 0) >= READ_LIMIT;
+    return true;
   }
 
   function show() {
     if (!due() || document.querySelector(".gatewrap")) return;
+    try { sessionStorage.setItem("tsb_gate_done", "1"); } catch (e2) {}
     var w = document.createElement("div");
     w.className = "gatewrap";
     w.innerHTML =
@@ -57,7 +46,7 @@
         "<p>Every book here is <b>free to read</b>, no card, no catch, no ads. " +
         "Sign in (10 seconds with Google) and the library stays open, with your progress saved.</p>" +
         '<a class="gate__cta" href="login.html">Sign in, it’s free →</a>' +
-        '<button class="gate__later" data-later>5 more minutes</button>' +
+        '<button class="gate__later" data-later>Keep reading as a guest</button>' +
         '<p class="gate__tiny">Reading as a guest stays possible after sign-in too, this just keeps your shelf safe.</p>' +
       "</div>";
     document.body.appendChild(w);
@@ -71,8 +60,6 @@
     });
   }
 
-  /* first nudge a few seconds in, then whenever the tab wakes up */
-  window.setTimeout(show, 5000);
-  document.addEventListener("visibilitychange", function () { if (!document.hidden) show(); });
-  window.addEventListener("pageshow", function () { window.setTimeout(show, 1500); });
+  /* the only trigger: the 15-minute free-taster clock in trial.js */
+  window.TSB_GATE = { show: show };
 })();

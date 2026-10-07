@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <title>Topics - every shelf in the library | TheSmallBook</title>
+  <meta name="description" content="Walk a whole shelf: 14 topics, 500 books, every summary free.">
+  <meta name="author" content="Jash Gandhi">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="canonical" href="https://thesmallbook.in/topics/index.html">
+  <meta property="og:title" content="Topics - every shelf in the library | TheSmallBook">
+  <meta property="og:description" content="Walk a whole shelf: 14 topics, 500 books, every summary free.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://thesmallbook.in/topics/index.html">
+  <meta property="og:site_name" content="TheSmallBook">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    try {
+      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      if (tsbDark) document.documentElement.classList.add("dark");
+      var tsbTC = document.querySelector('meta[name="theme-color"]');
+      if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
+      tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
+    } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css?v=309">
+  <style>
+    .hubwrap { max-width: 860px; margin: 0 auto; padding: 18px 16px 40px; }
+    .hubhead { border: 3px solid var(--ink); border-radius: 20px; background: var(--paper); box-shadow: 6px 6px 0 var(--ink); padding: 20px 18px; }
+    .hubcrumb { font: 600 11px "Space Grotesk", sans-serif; opacity: .6; margin: 0 0 8px; }
+    .hubcrumb a { color: inherit; }
+    .hubhead h1 { font: 400 clamp(22px, 5.6vw, 34px) "Archivo Black", "Arial Black", sans-serif; color: var(--ink); margin: 0 0 8px; line-height: 1.12; }
+    .hubhead p { font: 600 13.5px/1.55 "Space Grotesk", sans-serif; color: var(--ink); margin: 0; }
+    .hubpill { display: inline-block; margin-top: 12px; font: 800 10px "Archivo Black", sans-serif; letter-spacing: .6px; background: var(--yellow); border: 2px solid var(--ink); border-radius: 999px; padding: 6px 11px; color: var(--ink); }
+    .hublist { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+    .hubcard { display: flex; gap: 12px; align-items: center; border: 2.5px solid var(--ink); border-radius: 16px; background: var(--paper); box-shadow: 3px 3px 0 var(--ink); padding: 10px; text-decoration: none; }
+    .hubcard img { width: 90px; height: 135px; object-fit: cover; border: 2px solid var(--ink); border-radius: 8px; flex: 0 0 auto; background: var(--bg); }
+    .hubcard__m { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+    .hubcard__m b { font: 800 14px/1.25 "Space Grotesk", sans-serif; color: var(--ink); }
+    .hubcard__m i { font: 600 11px "Space Grotesk", sans-serif; font-style: normal; color: var(--ink); opacity: .6; }
+    .hubcard__m em { font: 500 12px/1.4 "Space Grotesk", sans-serif; font-style: normal; color: var(--ink); opacity: .85; }
+    .hubcard__m u { font: 700 9.5px "Archivo Black", sans-serif; letter-spacing: .4px; text-decoration: none; color: var(--ink); background: var(--yellow); border-radius: 999px; padding: 4px 8px; align-self: flex-start; margin-top: 3px; }
+    .hubmore { margin: 22px 0 8px; }
+    .hubmore h2 { font: 400 15px "Archivo Black", "Arial Black", sans-serif; color: var(--ink); margin: 0 0 10px; }
+    .hubchips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .hubchips a { font: 700 12px "Space Grotesk", sans-serif; color: var(--ink); border: 2px solid var(--ink); border-radius: 999px; padding: 7px 12px; text-decoration: none; background: var(--paper); }
+    .hubchips a:hover { background: var(--yellow); }
+    .hubcta { margin: 26px 0 0; border: 3px solid var(--ink); border-radius: 18px; background: var(--yellow); box-shadow: 5px 5px 0 var(--ink); padding: 18px; text-align: center; }
+    .hubcta a { font: 400 14px "Archivo Black", "Arial Black", sans-serif; color: var(--ink); text-decoration: none; }
+    .hubcta p { font: 600 11.5px "Space Grotesk", sans-serif; color: var(--ink); margin: 8px 0 0; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a class="logo" href="../index.html">
+      <span class="logo__mark">📕</span>
+      <span>The<span class="logo__small">Small</span>Book</span>
+    </a>
+    <div class="nav__links">
+      <a class="btn btn--yellow" href="../index.html#library">📚 LIBRARY</a>
+      <a class="btn btn--red" href="../graveyard.html">💀 GRAVEYARD</a>
+    </div>
+  </nav>
+  <main class="seopage"><div class="hubwrap">
+    <header class="hubhead"><p class="hubcrumb"><a href="../index.html">Library</a> › Topics</p><h1>Walk a whole shelf</h1><p>Not the top 7 - everything we have, sorted by the problem you showed up with. 500 books across 14 shelves.</p></header>
+    <div class="hubmore"><div class="hubchips"><a href="habits.html">Habits · 116 books</a><a href="focus-and-deep-work.html">Focus &amp; Deep Work · 36 books</a><a href="money.html">Money · 58 books</a><a href="investing.html">Investing · 55 books</a><a href="discipline.html">Discipline · 111 books</a><a href="productivity.html">Productivity · 35 books</a><a href="leadership.html">Leadership · 22 books</a><a href="startups-and-business.html">Startups &amp; Business · 118 books</a><a href="psychology.html">Psychology &amp; People · 107 books</a><a href="stoicism-and-calm.html">Stoicism &amp; Calm · 112 books</a><a href="creativity.html">Creativity · 30 books</a><a href="negotiation-and-influence.html">Negotiation &amp; Influence · 87 books</a><a href="purpose-and-meaning.html">Purpose &amp; Meaning · 122 books</a><a href="power-and-strategy.html">Power &amp; Strategy · 66 books</a></div></div>
+  </div></main>  <footer class="footer">
+    <div class="head">📕 TheSmallBook</div>
+    <p>Big books. Small reads. Original educational analyses - no book text reproduced. Support the authors: buy the full books.</p>
+    <p class="affnote">As an Amazon Associate, TheSmallBook earns from qualifying purchases. It keeps the library free. 💛</p>
+    <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
+    <p class="tiny"><a href="../about.html" style="color:inherit;">ABOUT</a>&nbsp;&nbsp;<strong><a href="../gold.html" style="color:inherit;">👑 TSB GOLD</a></strong>&nbsp;&nbsp;MUMBAI, INDIA&nbsp;&nbsp;<strong>FREE TO READ</strong></p>
+  </footer>
+</body>
+</html>

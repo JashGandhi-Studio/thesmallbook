@@ -69,14 +69,22 @@
   function loadPuter(){
     if (isPuterReady()) return Promise.resolve(true);
     return new Promise(function(resolve){
-      var s = document.createElement("script");
-      s.src = "https://js.puter.com/v2/";
-      s.async = true;
-      s.onload = function(){ setTimeout(function(){ resolve(isPuterReady()); }, 400); };
-      s.onerror = function(){ resolve(false); };
-      document.head.appendChild(s);
-      // safety timeout 4s
-      setTimeout(function(){ resolve(isPuterReady()); }, 4200);
+      /* one puter per page: the TTS engine may already be loading it */
+      if (!window.__tsbPuterTag) {
+        var fresh = document.createElement("script");
+        fresh.src = "https://js.puter.com/v2/";
+        fresh.async = true;
+        fresh.dataset.tsb = "1";
+        window.__tsbPuterTag = fresh;
+        document.head.appendChild(fresh);
+      }
+      var s = window.__tsbPuterTag;
+      if (!isPuterReady()) {
+        s.addEventListener("load", function(){ setTimeout(function(){ resolve(isPuterReady()); }, 400); });
+        s.addEventListener("error", function(){ resolve(false); });
+        // safety timeout 4s
+        setTimeout(function(){ resolve(isPuterReady()); }, 4200);
+      } else { resolve(true); }
     });
   }
 

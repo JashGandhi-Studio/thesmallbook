@@ -1,0 +1,77 @@
+/* ============================================================
+   🌊 DEEP DIVE reader · v300 (deepdive.html)
+   ============================================================ */
+.ddpage { background: var(--bg); }
+.dd-progress { position: fixed; top: 0; left: 0; right: 0; height: 6px; z-index: 90; background: transparent; }
+.dd-progress i { display: block; height: 100%; width: 0; background: var(--yellow); border-right: 2px solid var(--ink); transition: width .15s linear; }
+.dd-main { max-width: 720px; margin: 0 auto; padding: 22px 16px 40px; }
+.dd-paper { background: var(--paper); border: 3px solid var(--ink); border-radius: 22px; box-shadow: 7px 7px 0 var(--ink); padding: 30px 24px 26px; }
+.dd-head { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; margin-bottom: 18px; }
+.dd-crumb { font: 800 12px "Space Grotesk", sans-serif; color: var(--ink); background: var(--bg); border: 2px solid var(--ink); border-radius: 999px; padding: 6px 12px; text-decoration: none; }
+.dd-chip { font: 800 9.5px "Archivo Black", "Arial Black", sans-serif; letter-spacing: .6px; color: var(--ink); border: 2px solid var(--ink); border-radius: 999px; padding: 5px 10px; background: var(--paper); }
+.dd-chip--free { background: var(--green); }
+.dd-chip--gold { background: var(--yellow); }
+.dd-chip--min { opacity: .75; }
+.dd-h1 { font: 400 clamp(26px, 6.4vw, 40px)/1.15 "Archivo Black", "Arial Black", sans-serif; letter-spacing: -.5px; color: var(--ink); margin: 6px 0 14px; }
+.dd-hook { font: 700 17px/1.5 "Space Grotesk", sans-serif; color: var(--ink); border-left: 5px solid var(--yellow); padding-left: 14px; margin: 0 0 26px; }
+.dd-h2 { font: 400 20px/1.3 "Archivo Black", "Arial Black", sans-serif; color: var(--ink); margin: 30px 0 10px; }
+.dd-p { font: 500 16px/1.75 "Space Grotesk", sans-serif; color: var(--ink); margin: 0 0 14px; }
+.dd-take { margin: 26px 0 6px; background: var(--yellow); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 4px 4px 0 var(--ink); padding: 16px; }
+.dd-take b { font: 800 11px "Archivo Black", "Arial Black", sans-serif; letter-spacing: .7px; color: var(--ink); display: block; margin-bottom: 6px; }
+.dd-take p { margin: 0; font: 700 14.5px/1.6 "Space Grotesk", sans-serif; color: var(--ink); }
+.dd-foot { margin-top: 26px; border-top: 2px dashed var(--ink); padding-top: 16px; }
+.dd-note { font: 600 12.5px/1.6 "Space Grotesk", sans-serif; opacity: .75; color: var(--ink); margin: 0 0 14px; }
+.dd-note a { color: inherit; font-weight: 800; }
+.dd-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.dd-btn { display: inline-block; border: 3px solid var(--ink); background: var(--yellow); border-radius: 999px; box-shadow: 3px 3px 0 var(--ink); padding: 11px 16px; font: 800 12px "Archivo Black", "Arial Black", sans-serif; letter-spacing: .4px; color: var(--ink); text-decoration: none; cursor: pointer; }
+.dd-btn:active { transform: translate(2px, 2px); box-shadow: none; }
+.dd-btn--ghost { background: var(--paper); }
+/* gate card */
+.dd-gate { max-width: 420px; margin: 40px auto; background: var(--paper); border: 3px solid var(--ink); border-radius: 22px; box-shadow: 7px 7px 0 var(--ink); padding: 30px 22px; text-align: center; }
+.dd-gate__emoji { font-size: 40px; }
+.dd-gate h2 { font: 400 20px "Archivo Black", "Arial Black", sans-serif; color: var(--ink); margin: 10px 0 10px; }
+.dd-gate__p { font: 700 14.5px/1.55 "Space Grotesk", sans-serif; color: var(--ink); opacity: .85; margin: 0 0 18px; }
+.dd-gate__row { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.dd-gate__go { display: inline-block; background: var(--yellow); border: 3px solid var(--ink); border-radius: 999px; box-shadow: 3px 3px 0 var(--ink); padding: 12px 20px; font: 800 13px "Archivo Black", "Arial Black", sans-serif; color: var(--ink); text-decoration: none; }
+.dd-gate__try { font: 800 11.5px "Space Grotesk", sans-serif; color: var(--ink); opacity: .7; }
+.dd-gate__tiny { display: block; margin-top: 16px; font: 700 11px/1.5 "Space Grotesk", sans-serif; color: var(--ink); opacity: .6; }
+/* index of dives */
+.dd-index { margin-top: 26px; background: var(--paper); border: 3px solid var(--ink); border-radius: 20px; box-shadow: 5px 5px 0 var(--ink); padding: 18px; }
+.dd-index h3 { font: 400 15px "Archivo Black", "Arial Black", sans-serif; color: var(--ink); margin: 0 0 12px; }
+.dd-idx { display: block; padding: 11px 4px; border-bottom: 1.5px dashed var(--ink); text-decoration: none; }
+.dd-idx:last-child { border-bottom: none; }
+.dd-idx__t { display: block; font: 800 13.5px/1.4 "Space Grotesk", sans-serif; color: var(--ink); }
+.dd-idx__m { display: block; margin-top: 3px; font: 700 10.5px "Space Grotesk", sans-serif; color: var(--ink); opacity: .6; }
+.dd-idx__m .free { color: var(--ink); background: var(--green); border-radius: 999px; padding: 1px 7px; }
+@media (max-width: 480px) { .dd-paper { padding: 22px 16px 20px; } }
+
+/* ============================================================
+   🎧 AUDIO ROOM (podcasts.html) · v300
+   ============================================================ */
+.pc-hero { text-align: left; margin-bottom: 8px; }
+.pc-kick { display: inline-block; background: var(--purple); border: 2.5px solid var(--ink); border-radius: 999px; box-shadow: 2.5px 2.5px 0 var(--ink); padding: 6px 13px; font: 800 10.5px "Space Grotesk", sans-serif; letter-spacing: .7px; color: var(--ink); margin-bottom: 12px; }
+.pc-h2 { font: 400 17px "Archivo Black", "Arial Black", sans-serif; color: var(--ink); margin: 26px 0 4px; }
+.pc-sub { font: 600 13px/1.5 "Space Grotesk", sans-serif; color: var(--ink); opacity: .7; margin: 0 0 14px; }
+.pc-orig__card { display: flex; gap: 12px; align-items: center; background: var(--paper); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 4px 4px 0 var(--ink); padding: 13px 14px; margin-bottom: 10px; text-decoration: none; color: var(--ink); }
+.pc-orig__card:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+.pc-orig__play { flex: 0 0 auto; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: var(--yellow); border: 2.5px solid var(--ink); border-radius: 50%; font: 800 14px "Space Grotesk", sans-serif; }
+.pc-orig__mid { flex: 1; min-width: 0; }
+.pc-orig__mid b { display: block; font: 800 13px/1.35 "Space Grotesk", sans-serif; }
+.pc-orig__mid i { display: block; margin-top: 2px; font: 700 10.5px "Space Grotesk", sans-serif; opacity: .6; font-style: normal; }
+.pc-orig__mid .free { background: var(--green); border-radius: 999px; padding: 1px 7px; }
+.pc-orig__go { flex: 0 0 auto; font: 800 10px "Archivo Black", "Arial Black", sans-serif; letter-spacing: .4px; }
+.pc-cats { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0 14px; }
+.pc-cat { border: 2px solid var(--ink); background: var(--paper); border-radius: 999px; padding: 7px 12px; font: 800 10.5px "Space Grotesk", sans-serif; color: var(--ink); cursor: pointer; }
+.pc-cat.on { background: var(--yellow); box-shadow: 2px 2px 0 var(--ink); }
+.pc-show { display: flex; gap: 12px; align-items: flex-start; background: var(--paper); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 4px 4px 0 var(--ink); padding: 14px; margin-bottom: 10px; text-decoration: none; color: var(--ink); }
+.pc-show:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+.pc-show__mic { flex: 0 0 auto; font-size: 22px; margin-top: 2px; }
+.pc-show__mid { flex: 1; min-width: 0; }
+.pc-show__tag { display: inline-block; background: var(--bg); border: 1.5px solid var(--ink); border-radius: 999px; font: 800 8.5px "Archivo Black", "Arial Black", sans-serif; letter-spacing: .5px; padding: 3px 8px; margin-bottom: 5px; }
+.pc-show__mid b { display: block; font: 800 14.5px/1.3 "Space Grotesk", sans-serif; }
+.pc-show__mid > i { display: block; font: 700 11px "Space Grotesk", sans-serif; opacity: .6; font-style: normal; margin: 1px 0 6px; }
+.pc-show__mid p { margin: 0 0 8px; font: 600 12.5px/1.55 "Space Grotesk", sans-serif; opacity: .85; }
+.pc-show__start { display: block; font: 600 11.5px/1.5 "Space Grotesk", sans-serif; opacity: .7; }
+.pc-show__start b { font-weight: 800; }
+.pc-show__go { flex: 0 0 auto; font: 800 10px "Archivo Black", "Arial Black", sans-serif; letter-spacing: .4px; margin-top: 3px; }
+.pc-fine { margin-top: 18px; font: 600 10.5px/1.6 "Space Grotesk", sans-serif; color: var(--ink); opacity: .55; }

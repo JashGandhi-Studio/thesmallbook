@@ -1,4 +1,4 @@
-# TSB GOLD — SERVER-SIDE SETUP (v298)
+# TSB GOLD - SERVER-SIDE SETUP (v298)
 
 Gold cannot be forged any more because nothing gold-related is decided in the
 browser. Membership lives in `gold_members`; the site can only read its own row.
@@ -47,4 +47,4 @@ In `js/config.js`: `PAYWALL.ENABLED: true` and list the feature keys to gate.
 
 ## 7. MAINTENANCE
 Monthly (or via a trigger later): refresh `profiles.email` from `auth.users`
-so new accounts are webhook-matchable — the snippet is at the bottom of the SQL file.
+so new accounts are webhook-matchable - the snippet is at the bottom of the SQL file.

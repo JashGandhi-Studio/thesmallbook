@@ -27,7 +27,7 @@
     { id: "books", label: "📚 Books" },
     { id: "fun", label: "🎧 Music & video" },
     { id: "learning", label: "🧠 Learning" },
-    { id: "food", label: "🍜 Food" },
+
     { id: "shopping", label: "🛒 Shopping" },
     { id: "travel", label: "🎟️ Going out" }
   ];
@@ -148,6 +148,20 @@
   }
 
   /* ---------- editor's picks rail ---------- */
+  /* v300 · OFFER RADAR: the official hubs we sweep monthly, one rail */
+  function renderRadar(a) {
+    var host = $("stRadar");
+    if (!host) return;
+    var hubs = DATA.offers.filter(function (o) { return o.radar; });
+    host.innerHTML = hubs.map(function (o) {
+      return '<a class="st-radar__card" href="' + esc(o.url) + '" target="_blank" rel="noopener noreferrer">' +
+        '<img loading="lazy" src="' + LOGO_DIR + esc(o.logo) + '" alt="">' +
+        '<span><b>' + esc(o.brand) + '</b><i>' + esc(o.value) + '</i></span>' +
+        '<em>OFFICIAL HUB › </em></a>';
+    }).join("") + '<span class="st-radar__meta">Swept monthly · ' + esc(DATA.verified) + ' · every card links straight to the bank or brand\u2019s own offers page, no middleman codes.</span>';
+    host.hidden = false;
+  }
+
   function renderPicks(a) {
     var rail = $("stPicks");
     if (!rail) return;
@@ -343,6 +357,7 @@
     $("stWriteBtn").addEventListener("click", function () { location.href = "write.html"; });
 
     renderUnlock(a);
+    renderRadar(a);
     renderPicks(a);
     renderGrid(a);
 

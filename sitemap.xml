@@ -10,6 +10,8 @@
 <url><loc>https://thesmallbook.in/settings.html</loc><lastmod>2026-10-06</lastmod><priority>0.6</priority></url>
 <url><loc>https://thesmallbook.in/community.html</loc><lastmod>2026-10-06</lastmod><priority>0.6</priority></url>
 <url><loc>https://thesmallbook.in/stories.html</loc><lastmod>2026-10-06</lastmod><priority>0.6</priority></url>
+<url><loc>https://thesmallbook.in/deepdive.html</loc><lastmod>2026-10-06</lastmod><priority>0.7</priority></url>
+<url><loc>https://thesmallbook.in/podcasts.html</loc><lastmod>2026-10-06</lastmod><priority>0.7</priority></url>
 <url><loc>https://thesmallbook.in/books/100-dollar-startup.html</loc><lastmod>2026-10-06</lastmod><priority>0.8</priority></url>
 <url><loc>https://thesmallbook.in/books/100m-leads.html</loc><lastmod>2026-10-06</lastmod><priority>0.8</priority></url>
 <url><loc>https://thesmallbook.in/books/100m-offers.html</loc><lastmod>2026-10-06</lastmod><priority>0.8</priority></url>
@@ -1046,4 +1048,78 @@
 <url><loc>https://thesmallbook.in/pseo/vs/war-of-art-vs-turning-pro.html</loc><lastmod>2026-10-06</lastmod><priority>0.6</priority></url>
 <url><loc>https://thesmallbook.in/pseo/vs/working-backwards-vs-rework.html</loc><lastmod>2026-10-06</lastmod><priority>0.6</priority></url>
 <url><loc>https://thesmallbook.in/pseo/vs/zero-to-one-vs-rework.html</loc><lastmod>2026-10-06</lastmod><priority>0.6</priority></url>
+  <url><loc>https://thesmallbook.in/topics/habits.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/topics/focus-and-deep-work.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/topics/money.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/topics/investing.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/topics/discipline.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/topics/productivity.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/topics/leadership.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/topics/startups-and-business.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/topics/psychology.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/topics/stoicism-and-calm.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/topics/creativity.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/topics/negotiation-and-influence.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/topics/purpose-and-meaning.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/topics/power-and-strategy.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/robert-greene.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/amish-tripathi.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/robin-sharma.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/malcolm-gladwell.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/rashmi-bansal.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/devdutt-pattanaik.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/seth-godin.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/a-p-j-abdul-kalam.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/nassim-nicholas-taleb.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/chip-heath-dan-heath.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/chetan-bhagat.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/morgan-housel.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/alex-hormozi.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/cal-newport.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/simon-sinek.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/yuval-noah-harari.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/steven-pressfield.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/nir-eyal.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/austin-kleon.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/ryan-holiday.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/adam-grant.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/daniel-h-pink.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/jonathan-haidt.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/tony-robbins.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/sadhguru.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/saurabh-mukherjea.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/gurcharan-das.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/sanjeev-sanyal.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/radhakrishnan-pillai.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/subroto-bagchi.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/swami-vivekananda.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/dale-carnegie.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/mel-robbins.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/david-goggins.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/eckhart-tolle.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/charles-duhigg.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/brian-tracy.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/jim-collins.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/daniel-coyle.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/al-ries-jack-trout.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/atul-gawande.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/josh-kaufman.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/brene-brown.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/johann-hari.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/harish-bhat.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/shashi-tharoor.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/mahatma-gandhi.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/ramachandra-guha.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/brad-stone.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/seneca.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/bill-bryson.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/william-dalrymple.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/j-krishnamurti.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/sudha-murty.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/eknath-easwaran.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/michael-lewis.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/siddhartha-mukherjee.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/anonymous.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/topics/index.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://thesmallbook.in/authors/index.html</loc><changefreq>weekly</changefreq></url>
 </urlset>

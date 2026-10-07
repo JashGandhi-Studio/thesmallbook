@@ -111,8 +111,13 @@ window.TTS_ENGINE = (function () {
         return;
       }
       puterLoading = true;
-      const sc = document.createElement("script");
-      sc.src = "https://js.puter.com/v2/";
+      /* one puter per page: dictate.js may already be loading it */
+      if (!window.__tsbPuterTag) window.__tsbPuterTag = document.createElement("script");
+      const sc = window.__tsbPuterTag;
+      if (!sc.dataset.tsb) {
+        sc.src = "https://js.puter.com/v2/";
+        sc.dataset.tsb = "1";
+      }
       sc.onload = () => {
         puterReady = !!(window.puter && window.puter.ai && window.puter.ai.tts);
         if (puterReady && window.puter.ai.listTTSVoices) {

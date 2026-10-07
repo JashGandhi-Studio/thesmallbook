@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <title>TSB Audio Room: book podcasts, founder conversations & original audio | TheSmallBook</title>
+  <meta name="description" content="The audio room: hand-picked book podcasts and Indian founder conversations on their own platforms, plus TheSmallBook's own audio essays nobody else carries.">
+  <meta name="author" content="Jash Gandhi">
+  <meta property="og:title" content="TSB Audio Room | TheSmallBook">
+  <meta property="og:description" content="Book podcasts, founder conversations and original TSB audio essays.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://thesmallbook.in/podcasts.html">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    try {
+      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      if (tsbDark) document.documentElement.classList.add("dark");
+      var tsbTC = document.querySelector('meta[name="theme-color"]');
+      if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
+      tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
+    } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=309">
+  <link rel="stylesheet" href="css/deepdive.css?v=309">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+</head>
+<body class="ddpage">
+  <nav class="nav">
+    <a class="logo" href="index.html">
+      <span class="logo__mark">📕</span>
+      <span>The<span class="logo__small">Small</span>Book</span>
+    </a>
+    <div class="nav__links">
+      <a class="btn btn--yellow" href="index.html#library">📚 LIBRARY</a>
+      <a class="btn btn--red" href="deepdive.html">🌊 DEEP DIVES</a>
+    </div>
+  </nav>
+  <main class="dd-main">
+    <header class="pc-hero">
+      <p class="pc-kick">🎧 THE AUDIO ROOM</p>
+      <h1 class="dd-h1">Press play here. Cook, commute, listen.</h1>
+      <p class="dd-hook">Podcast episodes stream right here from each show's official feed, full public-domain audiobooks read by LibriVox volunteers play in the app's own player, and the deep dives are narrated by the app itself. Every stream credits its maker. Nothing bootlegged.</p>
+    </header>
+
+    <nav class="pc-jump" aria-label="Jump to a shelf">
+      <a href="#shelf-books">📚 AUDIOBOOKS</a>
+      <a href="#shelf-shows">🎙️ PODCASTS</a>
+      <a href="#shelf-originals">🪑 OUR NARRATION</a>
+    </nav>
+
+    <section class="pc-ab" id="shelf-books">
+      <h2 class="pc-h2">📚 AUDIOBOOKS, FULL CHAPTERS</h2>
+      <p class="pc-sub">Full public-domain classics, read by LibriVox volunteers, streamed into the app's player: chapters, speed, sleep timer and all, English aur Hindi dono mein. The library's oldest friends, for keeps.</p>
+      <div id="pcAudiobooks" class="pc-ab__grid"></div>
+      <p class="pc-fine">Read by volunteers for LibriVox, streamed from Archive.org. TheSmallBook hosts nothing; we just point at the free shelves. Podcast episodes stream from each show's own official public feed - all rights with their makers. TSB Gold covers only our own originals; everything above stays free.</p>
+    </section>
+
+    <section class="pc-shows" id="shelf-shows">
+      <h2 class="pc-h2">🎙️ SHOWS WORTH YOUR EARS</h2>
+      <div class="pc-cats" id="pcCats"></div>
+      <div id="pcShowList"></div>
+    </section>
+
+    <section class="pc-orig" id="shelf-originals">
+      <h2 class="pc-h2">🪑 TSB ORIGINALS · READ BY YOUR APP</h2>
+      <p class="pc-sub">Our deep dives, narrated. Tap listen and the app reads the whole essay, in your language where it can.</p>
+      <div id="pcOriginals"></div>
+    </section>
+
+
+  </main>
+  <footer class="footer">
+    <div class="head">📕 TheSmallBook</div>
+    <p>Big books. Small reads. Original educational analyses  -  no book text reproduced. Support the authors: buy the full books.</p>
+    <div class="credits">&#10022; MADE BY JASH GANDHI &#10022;</div>
+    <p class="tiny"><a href="about.html" style="color:inherit;">ABOUT</a>&nbsp;&nbsp;<strong><a href="gold.html" style="color:inherit;">👑 TSB GOLD</a></strong>&nbsp;&nbsp;MUMBAI, INDIA&nbsp;&nbsp;<strong>FREE TO READ</strong></p>
+  </footer>
+  <script src="js/bootguard.js?v=309"></script>
+  <script src="js/prefs.js?v=309"></script>
+  <script src="js/config.js?v=309"></script>
+  <script src="js/data.js?v=309"></script>
+  <script src="js/deepdive-data.js?v=309"></script>
+  <script src="js/podcast-data.js?v=309"></script>
+  <script>
+  (function () {
+    "use strict";
+    function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+    var D = window.TSB_PODCASTS || { shows: [], cats: [] };
+    var DD = window.TSB_DEEPDIVES || [];
+    var cat = "all";
+
+    /* originals: our deep dives, listenable */
+    var ow = document.getElementById("pcOriginals");
+    ow.innerHTML = DD.map(function (d) {
+      return '<a class="pc-orig__card" href="deepdive.html?id=' + d.id + '">' +
+        '<span class="pc-orig__play">▶</span>' +
+        '<span class="pc-orig__mid"><b>' + esc(d.title) + '</b><i>' + esc(d.chapterLabel) + " · " + d.minutes + ' min read · narrated by your app' + (d.sample ? ' · <b class="free">FREE</b>' : ' · 👑 GOLD') + '</i></span>' +
+        '<span class="pc-orig__go">OPEN &amp; LISTEN → </span></a>';
+    }).join("");
+
+    /* show list: play the feed right here, or visit the show's home */
+    function paint() {
+      var w = document.getElementById("pcShowList");
+      var list = D.shows.filter(function (s) { return cat === "all" || s.cat === cat; });
+      w.innerHTML = list.map(function (s) {
+        var play = s.rss
+          ? '<button class="pc-play" data-feed="' + esc(s.id) + '">▶ PLAY HERE, FREE</button>'
+          : '';
+        var home = '<a class="pc-home" href="' + esc(s.home || s.url) + '" target="_blank" rel="noopener noreferrer">show home ↗</a>';
+        return '<div class="pc-show">' +
+          '<span class="pc-show__mic">🎙️</span>' +
+          '<span class="pc-show__mid"><span class="pc-show__tag">' + esc(s.tag) + '</span>' +
+          '<b>' + esc(s.name) + '</b><i>with ' + esc(s.host) + '</i>' +
+          '<p>' + esc(s.why) + '</p>' +
+          '<span class="pc-show__start"><b>Start here:</b> ' + esc(s.start) + '</span>' +
+          '<span class="pc-show__acts">' + play + home + '</span></span>' +
+          '</div>';
+      }).join("");
+      w.querySelectorAll("[data-feed]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var show = D.shows.filter(function (x) { return x.id === b.getAttribute("data-feed"); })[0];
+          if (show && window.TSB_AUDIO) TSB_AUDIO.playFeed(show);
+        });
+      });
+    }
+    var cw = document.getElementById("pcCats");
+    cw.innerHTML = D.cats.map(function (c) {
+      return '<button class="pc-cat' + (c.id === "all" ? " on" : "") + '" data-c="' + c.id + '">' + esc(c.label) + "</button>";
+    }).join("");
+    cw.addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      cat = b.getAttribute("data-c");
+      cw.querySelectorAll(".pc-cat").forEach(function (x) { x.classList.toggle("on", x === b); });
+      paint();
+    });
+    paint();
+  })();
+  </script>
+  <script src="js/bar.js?v=309" defer></script>
+  <script src="js/audioplayer.js?v=309"></script>
+  <script>
+  (function () {
+    var AB = window.TSB_AUDIOBOOKS || {};
+    var B = window.BOOKS || [];
+    var w = document.getElementById("pcAudiobooks");
+    function esc(x) { return String(x == null ? "" : x).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+    var FIRST_SHELF = 6;
+    function abCard(bid) {
+      var rec = AB[bid];
+      var b = B.filter(function (x) { return x.id === bid; })[0] || {};
+      var hi = rec.lang === "hi";
+      var cover = hi
+        ? '<span class="pc-ab__dev"><b>' + esc(rec.dev || "हिंदी") + '</b><i>HINDI MEIN</i></span>'
+        : '<img src="assets/covers/' + esc(bid) + '.jpg" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">';
+      return '<div class="pc-ab__card' + (hi ? " pc-ab__card--hi" : "") + '">' +
+        cover +
+        '<b>' + esc(b.title || rec.title) + '</b>' +
+        '<i>' + esc(rec.author || b.author || "anonymous") + '</i>' +
+        (hi ? '<span class="pc-ab__lang">हिंदी</span>' : '') +
+        (rec.ch ? '<span class="pc-ab__ch">' + rec.ch + ' CHAPTERS</span>' : '') +
+        '<button data-ab="' + esc(bid) + '">▶ PLAY</button>' +
+        '</div>';
+    }
+    var allBids = Object.keys(AB);
+    function paintShelf(all) {
+      w.innerHTML = allBids.slice(0, all ? allBids.length : FIRST_SHELF).map(abCard).join("") +
+        (all ? "" : '<button class="pc-ab__more" id="abMore">SHOW ALL ' + allBids.length + ' AUDIOBOOKS ↓</button>');
+    }
+    paintShelf(false);
+    w.addEventListener("click", function (e) {
+      if (e.target.id === "abMore") { paintShelf(true); return; }
+      var btn = e.target.closest("[data-ab]");
+      if (btn && window.TSB_AUDIO) TSB_AUDIO.playAudiobook(btn.getAttribute("data-ab"));
+    });
+
+    /* deep link: podcasts.html?ab=meditations starts playing */
+    var m = location.search.match(/[?&]ab=([a-z-]+)/);
+    if (m && AB[m[1]] && window.TSB_AUDIO) setTimeout(function () { TSB_AUDIO.playAudiobook(m[1]); }, 800);
+  })();
+  </script>
+</body>
+</html>

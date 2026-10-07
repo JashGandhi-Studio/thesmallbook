@@ -150,8 +150,8 @@
     var mk = function (withFlag) {
       var body = {
         author_id: u.id,
-        author_name: (prof && prof.name) || "Reader",
-        author_avatar: (prof && prof.avatar_url) || "",
+        author_name: p.anon ? "A hidden reader" : ((prof && prof.name) || "Reader"),
+        author_avatar: p.anon ? "" : ((prof && prof.avatar_url) || ""),
         title: p.title, subtitle: p.subtitle || "", cover_url: p.cover_url || "",
         body: p.body || "", tags: p.tags || [], audio_url: p.audio_url || "", kind: p.kind || "text"
       };
@@ -253,7 +253,8 @@
   var UPLOAD_RULES = {
     "tsb-covers": { mimes: ["image/jpeg", "image/png", "image/webp", "image/gif"], max: 8 },
     "tsb-avatars": { mimes: ["image/jpeg", "image/png", "image/webp"], max: 4 },
-    "tsb-audio": { mimes: ["audio/webm", "audio/m4a", "audio/mp4", "audio/x-m4a", "audio/mpeg", "audio/mp3", "audio/ogg", "audio/opus", "audio/wav", "audio/aac"], max: 20 }
+    "tsb-audio": { mimes: ["audio/webm", "audio/m4a", "audio/mp4", "audio/x-m4a", "audio/mpeg", "audio/mp3", "audio/ogg", "audio/opus", "audio/wav", "audio/aac"], max: 20 },
+    "tsb-note-media": { mimes: ["image/jpeg", "image/png", "image/webp", "audio/webm", "audio/mp4", "audio/x-m4a", "audio/m4a", "audio/mpeg", "audio/mp3", "audio/ogg", "audio/wav", "audio/aac"], max: 10 }
   };
   async function upload(file, bucket) {
     var u = me();

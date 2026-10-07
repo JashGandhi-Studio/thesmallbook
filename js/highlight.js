@@ -138,7 +138,9 @@
   /* ---------- selection → pencil button ---------- */
   var btn = null;
   function hideBtn() {
-    if (btn) { btn.remove(); btn = null; }
+    /* every chip goes: highlight, note, stale ones from races */
+    document.querySelectorAll(".tsb-hl-btn").forEach(function (el) { el.remove(); });
+    btn = null;
   }
 
   function onSelect() {
@@ -159,11 +161,15 @@
       if (!rect || (!rect.width && !rect.height)) { hideBtn(); return; }
 
       hideBtn();
+      var selText = sel.toString().trim();
+      var cx = Math.min(Math.max(rect.left + rect.width / 2, 90), window.innerWidth - 90);
+      var ctop = Math.min(Math.max(rect.top - 46, 8), Math.max(8, window.innerHeight - 60)); /* always on screen */
+      /* highlight chip */
       btn = document.createElement("button");
       btn.className = "tsb-hl-btn";
       btn.textContent = "✏️ HIGHLIGHT";
-      btn.style.left = Math.min(Math.max(rect.left + rect.width / 2 - 55, 8), window.innerWidth - 130) + "px";
-      btn.style.top = Math.max(rect.top - 46, 8) + "px";
+      btn.style.left = Math.max(cx - 108, 8) + "px";
+      btn.style.top = ctop + "px";
       btn.addEventListener("mousedown", function (e) { e.preventDefault(); e.stopPropagation(); });
       btn.addEventListener("click", function (e) {
         e.preventDefault(); e.stopPropagation();
@@ -176,8 +182,71 @@
         hideBtn();
       });
       document.body.appendChild(btn);
+      /* note chip: a note only exists because you underlined something */
+      var nb = document.createElement("button");
+      nb.className = "tsb-hl-btn tsb-hl-btn--note";
+      nb.textContent = "📝 NOTE";
+      nb.style.left = Math.min(cx + 12, window.innerWidth - 100) + "px";
+      nb.style.top = ctop + "px";
+      nb.addEventListener("mousedown", function (e) { e.preventDefault(); e.stopPropagation(); });
+      nb.addEventListener("click", function (e) {
+        e.preventDefault(); e.stopPropagation();
+        hideBtn();
+        try { window.getSelection().removeAllRanges(); } catch (err) {} /* so no stray mouseup re-pins the chips */
+        openNoteSheet(lessonEl, selText);
+      });
+      document.body.appendChild(nb);
       setTimeout(hideBtn, 6000);
     }, 10);
+  }
+
+  /* ---------- v303: NOTE from a selection - the notebook catches the underline ---------- */
+  function openNoteSheet(lessonEl, quote) {
+    var old = document.getElementById("tsbNoteSheet");
+    if (old) old.remove();
+    var li = lessonIndex(lessonEl);
+    var lTitle = "";
+    try {
+      var h = lessonEl.querySelector(".lesson__title, .lesson__head b, .lesson__head h2");
+      if (h) lTitle = h.textContent.trim();
+    } catch (e) {}
+    var sh = document.createElement("div");
+    sh.id = "tsbNoteSheet";
+    sh.innerHTML =
+      '<div class="tsb-note__card">' +
+        '<h3>📝 NOTE FROM THIS LINE</h3>' +
+        '<textarea id="tsbNoteQuote" readonly></textarea>' +
+        '<textarea id="tsbNoteThink" placeholder="Your thought on it…"></textarea>' +
+        '<button id="tsbNoteSave">SAVE TO NOTEBOOK</button>' +
+      '</div>';
+    document.body.appendChild(sh);
+    document.getElementById("tsbNoteQuote").value = quote;
+    sh.addEventListener("click", function (e) { if (e.target === sh) sh.remove(); });
+    document.getElementById("tsbNoteSave").addEventListener("click", function () {
+      var think = document.getElementById("tsbNoteThink").value.trim();
+      var S = window.TSB_NOTES_STORE;
+      if (!S) { location.href = "notes.html"; return; }
+      var bookId = currentBookId();
+      var bookTitle = "";
+      try { bookTitle = (window.BOOKS || []).filter(function (b) { return b.id === bookId; })[0].title; } catch (e) {}
+      var pages = ['<p><i>"' + quote + '"</i></p><p><br></p>'];
+      if (think) pages.push("<p>" + think.replace(/\n/g, "<br>") + "</p>");
+      S.create({
+        bookId: bookId,
+        lessonIdx: li,
+        lessonTitle: lTitle,
+        title: lTitle || "Note from " + (bookTitle || "reading"),
+        pages: pages
+      });
+      sh.remove();
+      try {
+        var t = document.createElement("div");
+        t.style.cssText = "position:fixed;left:50%;transform:translateX(-50%);bottom:110px;z-index:280;background:var(--ink);color:var(--paper);border-radius:999px;padding:10px 16px;font:800 12px 'Space Grotesk',sans-serif";
+        t.textContent = "📝 In your notebook, with the line you underlined";
+        document.body.appendChild(t);
+        setTimeout(function () { t.remove(); }, 2600);
+      } catch (e) {}
+    });
   }
 
   /* ---------- add / remove ---------- */

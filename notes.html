@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@500;600;700&family=Special+Elite&family=Indie+Flower&family=Patrick+Hand&family=Shadows+Into+Light&family=Homemade+Apple&family=Dancing+Script&family=Permanent+Marker&family=Rock+Salt&family=Amatic+SC&family=Gloria+Hallelujah&family=Kaushan+Script&family=Playfair+Display&family=Bebas+Neue&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=300">
+  <link rel="stylesheet" href="css/style.css?v=309">
   <style>
     .nt-wrap { max-width: 780px; margin: 0 auto; padding: 18px 16px calc(90px + env(safe-area-inset-bottom)); }
     .nt-top { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
@@ -163,18 +163,20 @@
     <div id="ntMain"></div>
   </main>
 
-  <script src="js/bootguard.js?v=300"></script>
-  <script src="js/prefs.js?v=300"></script>
-  <script src="js/lang.js?v=300"></script>
-  <script src="js/config.js?v=300"></script>
-  <script src="js/auth.js?v=300"></script>
-  <script src="js/sounds.js?v=300"></script>
-  <script src="js/founder.js?v=300"></script>
-  <script src="js/community.js?v=300"></script>
-  <script src="js/gold.js?v=300"></script>
-  <script src="js/dictate.js?v=300"></script>
-  <script src="js/bar.js?v=300" defer></script>
-  <script src="js/smallscroller.js?v=300"></script>
+  <script src="js/bootguard.js?v=309"></script>
+  <script src="js/prefs.js?v=309"></script>
+  <script src="js/lang.js?v=309"></script>
+  <script src="js/config.js?v=309"></script>
+  <script src="js/auth.js?v=309"></script>
+  <script src="js/sounds.js?v=309"></script>
+  <script src="js/founder.js?v=309"></script>
+  <script src="js/community.js?v=309"></script>
+  <script src="js/notes-store.js?v=309"></script>
+  <script src="js/gold.js?v=309"></script>
+  <script src="js/dictate.js?v=309"></script>
+  <script src="js/podcast-data.js?v=309"></script>
+  <script src="js/audioplayer.js?v=309"></script>
+  <script src="js/bar.js?v=309" defer></script>
   <script>
   (function () {
     "use strict";
@@ -218,10 +220,13 @@
     paintBanner();
     function afterAuth() {
       paintBanner();
-      syncFromGuest();
-      notes = raw(key());
+      if (STORE) STORE.absorbGuest();
+      refreshFromStore();
       if (!curId) list();
     }
+    /* v300: the pull-merge happens in the store (tsb_notes table); this page repaints */
+    if (window.addEventListener) window.addEventListener("tsb:notes-synced", function () { refreshFromStore(); if (!curId && typeof list === "function") list(); });
+    function refreshFromStore() { if (STORE) notes = STORE.list(); }
     try { if (window.TSB_COMMUNITY && TSB_COMMUNITY.whenReady) TSB_COMMUNITY.whenReady(afterAuth); } catch (e) {}
     window.addEventListener("tsb:auth", afterAuth);
     /* v286 watchdog: whatever order auth speaks in, the banner obeys the real state.
@@ -249,10 +254,23 @@
       if (added) { mine.sort(function (a, b) { return (b.updated || 0) - (a.updated || 0); }); save(mine); }
     }
 
-    var notes = raw(key()), curId = null, curPage = 0, timer = null;
+    /* v300: the store owns persistence + sync now; the page owns the reading.
+       `notes` is a view over the shared cache, refreshed after every write. */
+    var STORE = window.TSB_NOTES_STORE;
+    var notes = STORE ? STORE.list() : raw(key());
+    var curId = null, curPage = 0, timer = null;
+    var bookFilter = null, searchQ = "";
 
     function note() { for (var i = 0; i < notes.length; i++) if (notes[i].id === curId) return notes[i]; return null; }
-    function persist() { save(notes); var s = $("ntSaved"); if (s) { s.textContent = "saved \u2713 just now"; setTimeout(function () { if ($("ntSaved")) $("ntSaved").textContent = "autosaves as you write"; }, 1400); } }
+    function persist() {
+      save(notes); /* instant local write, the notebook never waits on a network */
+      if (STORE && curId) {
+        var n = note();
+        if (n) STORE.update(curId, { title: n.title, pages: n.pages }); /* the store queues the push to tsb_notes */
+      }
+      var s = $("ntSaved");
+      if (s) { s.textContent = "saved \u2713 just now"; setTimeout(function () { if ($("ntSaved")) $("ntSaved").textContent = "autosaves as you write"; }, 1400); }
+    }
     function queue() { clearTimeout(timer); timer = setTimeout(persist, 600); }
 
     /* ---------- big media lives in a side drawer, never as raw code in the page ---------- */
@@ -286,6 +304,12 @@
     }
 
     /* ---------- the cover ---------- */
+    function visibleNotes() {
+      var arr = notes;
+      if (STORE && searchQ) arr = STORE.search(searchQ, arr);
+      if (bookFilter) arr = arr.filter(function (n) { return n.bookId === bookFilter; });
+      return arr;
+    }
     function list() {
       if (pen.on) endPen(true);
       curId = null;
@@ -293,29 +317,91 @@
       var m = $("ntMain");
       var h = '<div class="nt-cover">' +
         '<div class="nt-cover__word"><b>THE SMALL BOOK</b><i>NOTES \u00b7 PRIVATE \u00b7 ' + notes.length + (notes.length === 1 ? " ENTRY" : " ENTRIES") + '</i><span class="nt-cover__rule"></span></div>' +
-        '<div class="nt-toc"><div class="nt-toc__h">CONTENTS</div>';
+        /* v300: today's prompt, one a day, so a blank page becomes an invitation */
+        (notes.length ? "" : '<div class="nt-prompt" id="ntPromptCard"><span class="nt-prompt__tag">TODAY\u2019S PROMPT</span><p>' + esc(STORE ? STORE.dailyPrompt() : "") + '</p><button id="ntPromptGo">WRITE ON IT \u2192</button></div>') +
+        /* v300: search across every note */
+        (notes.length ? '<div class="nt-searchrow"><input id="ntSearch" type="text" placeholder="Search your notes\u2026" value="' + esc(searchQ) + '" autocomplete="off"><button id="ntSearchX" aria-label="Clear" ' + (searchQ ? "" : "hidden") + '>\u2715</button></div>' : '') +
+        /* v300: all my notes from one book, one tap */
+        (function () {
+          var bm = {}, ord = [];
+          notes.forEach(function (n) { if (n.bookId && !bm[n.bookId]) { bm[n.bookId] = n.bookTitle || n.bookId; ord.push(n.bookId); } });
+          if (!ord.length) return "";
+          return '<div class="nt-bookrow" id="ntBookRow">' +
+            '<button class="nt-booktag' + (bookFilter ? "" : " on") + '" data-bf="">ALL</button>' +
+            ord.map(function (b) { return '<button class="nt-booktag' + (bookFilter === b ? " on" : "") + '" data-bf="' + esc(b) + '">' + esc(bm[b]) + '</button>'; }).join("") +
+            '</div>';
+        })() +
+        '<div class="nt-toc"><div class="nt-toc__h">CONTENTS' + ((searchQ || bookFilter) ? " \u00b7 " + visibleNotes().length + " SHOWN" : "") + '</div>';
+      var shown = visibleNotes();
       if (!notes.length) h += '<div class="nt-empty"><b>The first page is yours.</b> One line is enough. The notebook forgives everything after it.</div>';
-      notes.forEach(function (n) {
+      else if (!shown.length) h += '<div class="nt-empty"><b>Nothing matches.</b> Try another word, or tap ALL to see every page.</div>';
+      shown.forEach(function (n) {
         var snip = String(materialize(n.pages[0] || "")).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 46);
-        h += '<div class="nt-entry" data-n="' + n.id + '" role="button" tabindex="0"><span class="nt-entry__fold">\uD83D\uDCD3</span><span class="nt-entry__mid"><b class="nt-entry__t">' + esc(n.title || "Untitled") + '</b><i class="nt-entry__s">' + esc(snip || "An empty page, waiting for its first line.") + '</i><span class="nt-entry__m">' + (n.pages.length > 1 ? n.pages.length + " pages \u00b7 " : "1 page \u00b7 ") + ago(n.updated) + ' \u00b7 tap to open</span></span><button class="nt-entry__x" data-x="' + n.id + '" title="Delete">\u2715</button></div>';
+        h += '<div class="nt-entry" data-n="' + n.id + '" role="button" tabindex="0"><span class="nt-entry__fold">\uD83D\uDCD3</span><span class="nt-entry__mid"><b class="nt-entry__t">' + esc(n.title || "Untitled") + '</b>' +
+          (n.bookId ? '<a class="nt-entry__book" href="book.html?id=' + esc(n.bookId) + '" data-blink="' + esc(n.bookId) + '">\uD83D\uDCD6 ' + esc(n.bookTitle || n.bookId) + '</a>' : '') +
+          '<i class="nt-entry__s">' + esc(snip || "An empty page, waiting for its first line.") + '</i><span class="nt-entry__m">' + (n.pages.length > 1 ? n.pages.length + " pages \u00b7 " : "1 page \u00b7 ") + ago(n.updated) + ' \u00b7 tap to open</span></span><button class="nt-entry__x" data-x="' + n.id + '" title="Delete">\u2715</button></div>';
       });
-      h += "</div></div>";
+      h += "</div>";
+      /* v300: the lines you highlighted while reading, finally in the notebook */
+      if (STORE) {
+        var hls = STORE.highlights();
+        if (hls.length) {
+          h += '<div class="nt-toc nt-toc--hl"><div class="nt-toc__h">FROM YOUR READING \u00b7 ' + hls.length + ' HIGHLIGHT' + (hls.length === 1 ? "" : "S") + '</div>';
+          hls.slice(0, 20).forEach(function (hl, i) {
+            h += '<div class="nt-hl"><span class="nt-hl__mark"></span><span class="nt-hl__mid"><b>' + esc(hl.bookTitle || "A book") + '</b><i>\u201c' + esc(String(hl.text).slice(0, 110)) + (String(hl.text).length > 110 ? "\u2026" : "") + '\u201d</i></span><button class="nt-hl__save" data-hl="' + i + '">MAKE IT A NOTE</button></div>';
+          });
+          if (hls.length > 20) h += '<div class="nt-hl__more">and ' + (hls.length - 20) + ' more, kept with their books</div>';
+          h += "</div>";
+        }
+      }
+      h += "</div>";
       m.innerHTML = h;
       m.querySelectorAll("[data-n]").forEach(function (e) { e.addEventListener("click", function () { open(e.getAttribute("data-n")); }); });
       m.querySelectorAll("[data-x]").forEach(function (e) { e.addEventListener("click", function (ev) { ev.stopPropagation(); del(e.getAttribute("data-x")); }); });
+      /* book links open the reader, not the note */
+      m.querySelectorAll("[data-blink]").forEach(function (e) { e.addEventListener("click", function (ev) { ev.stopPropagation(); }); });
+      /* search as you type */
+      var si = $("ntSearch");
+      if (si) {
+        si.addEventListener("input", function () {
+          searchQ = this.value;
+          var x = $("ntSearchX"); if (x) x.hidden = !searchQ;
+          var caret = this.value.length;
+          list();
+          var s2 = $("ntSearch");
+          if (s2) { s2.focus(); try { s2.setSelectionRange(caret, caret); } catch (e) {} }
+        });
+        $("ntSearchX").addEventListener("click", function () { searchQ = ""; list(); });
+      }
+      /* book filter chips */
+      m.querySelectorAll("[data-bf]").forEach(function (e) { e.addEventListener("click", function () { bookFilter = this.getAttribute("data-bf") || null; list(); }); });
+      /* the prompt writes its own first line */
+      var pg = $("ntPromptGo");
+      if (pg) pg.addEventListener("click", function () { newNote(STORE ? STORE.dailyPrompt() : ""); });
+      /* highlight → note, one tap */
+      m.querySelectorAll("[data-hl]").forEach(function (e) {
+        e.addEventListener("click", function () {
+          var hl = STORE.highlights()[parseInt(this.getAttribute("data-hl"), 10)];
+          if (!hl) return;
+          var n = STORE.create({ bookId: hl.bookId, lessonIdx: hl.lessonIdx, title: "From " + (hl.bookTitle || "my reading"), pages: ["<p><b>\u201c" + esc(hl.text) + "\u201d</b></p><p><br></p>"] });
+          notes = STORE.list(); save(notes); open(n.id, 0);
+        });
+      });
     }
 
     function del(id) {
       var n = null; notes.forEach(function (x) { if (x.id === id) n = x; });
       if (!n) return;
       if (!confirm("Delete this note forever? Only you can decide this. Nothing deletes itself.")) return;
-      notes = notes.filter(function (x) { return x.id !== id; });
-      persist(); list();
+      if (STORE) STORE.remove(id); /* tombstone travels to every device */
+      notes = STORE ? STORE.list() : notes.filter(function (x) { return x.id !== id; });
+      save(notes); list();
     }
 
     /* ---------- the paper ---------- */
     function open(id, page) {
       curId = id; curPage = page || 0;
+      if (STORE) STORE.setLastNote(id); /* continue-writing lands here next time */
       var mb = $("ntMenu"); if (mb) mb.hidden = false;
       var n = note(); if (!n) { list(); return; }
       if (curPage >= n.pages.length) curPage = n.pages.length - 1;
@@ -377,6 +463,7 @@
             '<button data-x="reader">READER LINK <i>a living page anyone can read, like an ebook</i></button>' +
           "</div>" +
           '<button class="nt-fbtn" id="ntShare">SHARE</button>' +
+          '<button class="nt-fbtn nt-fbtn--story" id="ntPublish">PUBLISH</button>' +
           '<button class="nt-fbtn nt-fbtn--del" id="ntDel">DELETE</button>' +
           '<span class="nt-saved" id="ntSaved">autosaves as you write</span>' +
         "</div>";
@@ -409,6 +496,16 @@
         else if (k === "card") exportCard(n, true);
       });
       $("ntShare").addEventListener("click", shareOne);
+      /* v300: a good note becomes a public story in one tap */
+      $("ntPublish").addEventListener("click", function () {
+        var n2 = note(); if (!n2) return;
+        var text = n2.pages.map(function (p) { return String(p || "").replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]*>/g, ""); }).join("\n\n").replace(/\n{3,}/g, "\n\n").trim();
+        if (!text) { $("ntSaved").textContent = "write something first \u2713"; return; }
+        try {
+          localStorage.setItem("tsb_story_draft", JSON.stringify({ title: n2.title || "A page from my notebook", body: text, from: "note:" + n2.id, at: Date.now() }));
+          location.href = "write.html?from=note";
+        } catch (e) { $("ntSaved").textContent = "could not hand off, try again"; }
+      });
       $("ntBar").addEventListener("click", function (e) {
         var b = e.target.closest("button"); if (!b) return;
         if (b.dataset.cmd) { document.execCommand(b.dataset.cmd, false, null); body.focus(); }
@@ -596,6 +693,20 @@
     }
 
     /* ---------- photo / camera ---------- */
+    /* v300: the 5 MB wall is real, so it is spoken, not swallowed */
+    var pressureShown = false;
+    function pressureWarn() {
+      if (pressureShown) return;
+      pressureShown = true;
+      var p = STORE ? STORE.pressure() : { pct: 0 };
+      if (p.pct < 80) return;
+      var b = document.createElement("div");
+      b.style.cssText = "position:fixed;left:10px;right:10px;bottom:14px;z-index:60;background:var(--paper);border:3px solid var(--ink);border-radius:14px;box-shadow:4px 4px 0 var(--ink);padding:12px;font:700 12.5px/1.5 'Space Grotesk',sans-serif;color:var(--ink)";
+      b.innerHTML = "<b>\uD83D\uDCDD This device\u2019s notebook is " + p.pct + "% full.</b> Photos and voice notes here live in Storage once you sign in, and then this wall disappears. <a href=\"login.html\" style=\"font-weight:800;color:inherit\">Sign in</a> to lift it off your notes.";
+      document.body.appendChild(b);
+      setTimeout(function () { if (b.parentNode) b.remove(); }, 9000);
+    }
+
     function pickPhoto(capture, cb) {
       var inp = document.createElement("input");
       inp.type = "file"; inp.accept = "image/*";
@@ -605,8 +716,16 @@
         $("ntSaved").textContent = "taping it in\u2026";
         try {
           var url;
-          if (me() && window.TSB_COMMUNITY && TSB_COMMUNITY.upload) { try { url = await TSB_COMMUNITY.upload(f, "tsb-covers"); } catch (e) { url = null; } }
-          if (!url) url = await new Promise(function (res) { var r = new FileReader(); r.onload = function () { if (f.size <= 300000) return res(r.result); compress(r.result, res); }; r.readAsDataURL(f); });
+          /* v300: photos live in the tsb-note-media bucket (10 MB cap), not in a 5 MB localStorage */
+          if (me() && STORE && STORE.uploadMedia) {
+            try {
+              var small = await new Promise(function (res) { var r = new FileReader(); r.onload = function () { if (f.size <= 400000) return res(r.result); compress(r.result, res); }; r.readAsDataURL(f); });
+              var blob = await (await fetch(small)).blob();
+              var up = await STORE.uploadMedia(blob, "image");
+              url = up.url; if (up.local) pressureWarn();
+            } catch (e) { url = null; }
+          }
+          if (!url) { url = await new Promise(function (res) { var r = new FileReader(); r.onload = function () { if (f.size <= 300000) return res(r.result); compress(r.result, res); }; r.readAsDataURL(f); }); if (!me()) pressureWarn(); }
           cb('<img src="' + url + '" style="width:75%">');
           $("ntSaved").textContent = "taped in \u2713 tap it to resize";
         } catch (e) { $("ntSaved").textContent = "photo failed, try again"; }
@@ -627,8 +746,11 @@
             $("ntSaved").textContent = "keeping the voice note\u2026";
             try {
               var url = null;
-              if (me() && window.TSB_COMMUNITY && TSB_COMMUNITY.upload) { try { url = await TSB_COMMUNITY.upload(blob, "tsb-audio"); } catch (e) { url = null; } }
-              if (!url) url = await new Promise(function (res) { var r = new FileReader(); r.onload = function () { res(r.result); }; r.readAsDataURL(blob); });
+              /* v300: voice notes go to Storage too, local only as the offline fallback */
+              if (me() && STORE && STORE.uploadMedia) {
+                try { var up = await STORE.uploadMedia(blob, "audio"); url = up.url; if (up.local) pressureWarn(); } catch (e) { url = null; }
+              }
+              if (!url) { url = await new Promise(function (res) { var r = new FileReader(); r.onload = function () { res(r.result); }; r.readAsDataURL(blob); }); if (!me()) pressureWarn(); }
               cb(chipHTML(url));
               $("ntSaved").textContent = "voice note kept \u2713";
             } catch (e) { $("ntSaved").textContent = "voice note failed, try again"; }
@@ -938,17 +1060,31 @@
 
     /* ---------- boot ---------- */
     $("ntMenu").addEventListener("click", function () { list(); });
-    $("ntNew").addEventListener("click", function () {
-      var n = { id: "n" + Date.now() + Math.floor(Math.random() * 999), title: "", pages: [""], created: Date.now(), updated: Date.now() };
-      notes.unshift(n); persist(); open(n.id, 0);
-    });
+    function newNote(withTitle) {
+      var n = STORE ? STORE.create({ title: withTitle || "", pages: [""] })
+                    : { id: "n" + Date.now() + Math.floor(Math.random() * 999), title: withTitle || "", pages: [""], created: Date.now(), updated: Date.now() };
+      notes = STORE ? STORE.list() : [n].concat(notes);
+      save(notes); open(n.id, 0);
+    }
+    $("ntNew").addEventListener("click", function () { newNote(""); });
     (function boot() {
       var h = location.hash || "";
       var m = h.match(/#n=([\w-]+)/);
-      if (m && notes.some(function (n) { return n.id === m[1]; })) open(m[1], 0);
-      else list();
+      if (m && notes.some(function (n) { return n.id === m[1]; })) { open(m[1], 0); return; }
+      /* v300: nobody visits a notebook to admire a list. Land inside the last
+         page you touched, or the newest one; an empty notebook keeps its cover. */
+      var last = STORE ? STORE.lastNote() : null;
+      if (last && notes.some(function (n) { return n.id === last.id; })) { open(last.id, 0); return; }
+      if (notes.length) { open(notes[0].id, 0); return; }
+      list();
     })();
-    function persistNow() { clearTimeout(timer); var b = $("ntBody"); var n = note(); if (b && n) n.pages[curPage] = virtualize(b.innerHTML); save(notes); }
+    function persistNow() {
+      clearTimeout(timer);
+      var b = $("ntBody"); var n = note();
+      if (b && n) n.pages[curPage] = virtualize(b.innerHTML);
+      save(notes);
+      if (STORE) { if (n) STORE.update(n.id, { title: n.title, pages: n.pages }); try { STORE.flush(); } catch (e) {} }
+    }
     window.addEventListener("pagehide", persistNow);
     document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") persistNow(); });
   })();

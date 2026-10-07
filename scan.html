@@ -17,7 +17,7 @@
   </script>
   <meta property="og:title" content="Scan, TheSmallBook">
   <meta property="og:description" content="Point at a book, get the lessons, TheSmallBook's scanner.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=300">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=309">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/scan.html">
@@ -381,15 +381,16 @@ body {
   <!-- NOT FOUND -->
   <div class="res nof" id="nof" hidden>
     <div class="card">
-      <div class="tag">No Match</div>
-      <div class="bdesc" style="margin-top:14px;">We couldn't read this cover. Try again with better light, or search by name:</div>
+      <div class="tag">STILL BUILDING</div>
+      <div class="bdesc" style="margin-top:14px;">This one is not in the library yet. <b id="scanOcrEcho"></b>500 summaries are live and new ones are made every week. Ask for it and it gets built:</div>
       <input class="type" id="typeIn" type="text" placeholder="Type the book title…" autocomplete="off">
       <div class="chips" id="chips"></div>
       <div class="sugg" id="sugg"></div>
       <div class="actions">
-        <a class="btn-white" id="searchLib" href="#">Search the Library</a>
-        <a class="reqlink" id="reqBook" href="#" target="_blank" rel="noopener">Don't have it? Request this book →</a>
+        <a class="btn-white" id="reqBook" href="#" target="_blank" rel="noopener">📣 REQUEST THIS BOOK</a>
+        <a class="reqlink" id="mailBook" href="#" >✉️ Mail the founder</a>
         <button class="btn-ghost" id="again2">Scan Again</button>
+        <a class="reqlink" id="searchLib" href="#">or browse all 500 first</a>
       </div>
     </div>
   </div>
@@ -496,7 +497,10 @@ body {
   }
   function reqHref(title) {
     var t = (title && String(title).trim()) ? String(title).trim() : "a book";
-    return "https://wa.me/919702510680?text=" + encodeURIComponent("Hi Jash! Please add this book to TheSmallBook: " + t);
+    var mb = document.getElementById("mailBook");
+    if (mb) mb.href = "mailto:jashgandhicreator07@gmail.com?subject=" + encodeURIComponent("Book request for TheSmallBook") +
+      "&body=" + encodeURIComponent("Hi Jash! Please add this book to TheSmallBook: " + (t || "a book I just scanned"));
+    return "https://wa.me/919702510680?text=" + encodeURIComponent("Hi Jash! Please add this book to TheSmallBook: " + (t || "a book I just scanned"));
   }
 
   /* ---------------- live loop (auto-capture) ---------------- */
@@ -574,6 +578,7 @@ body {
          automatic sharpen retry, then an honest NOT FOUND. */
       anaTxt.textContent = ocrPass === 0 ? "READING TITLE…" : "READING AGAIN…";
       ocrRead(function (text) {
+        try { window.__tsbScanOcr = (text && (text.big || text.full) || "").trim().slice(0, 90); } catch (e) { window.__tsbScanOcr = ""; }
         var ocrHit = null;
         try { ocrHit = text ? matchTitleByOcr(text) : null; } catch (e) {}
         if (ocrHit) { done(ocrHit); return; }
@@ -934,8 +939,12 @@ body {
     try { localStorage.setItem("tsb_flag_scanned", "1"); } catch (e) {}
   }
   function showNotFound() {
-    typeIn.value = ""; sugg.innerHTML = "";
-    reqBook.href = reqHref("");
+    sugg.innerHTML = "";
+    var guess = String(window.__tsbScanOcr || "").trim();
+    if (guess && guess.length >= 3 && guess.length <= 70 && !typeIn.value) typeIn.value = guess;
+    var echo = document.getElementById("scanOcrEcho");
+    if (echo) echo.textContent = guess ? ("We read: \u201c" + guess + "\u201d. ") : "";
+    reqBook.href = reqHref(typeIn.value || guess);
     /* best-guess chips: fingerprint candidates as TAPPABLE options,
        clearly labeled, never auto-opened, so no wrong auto-match */
     var chips = [];
@@ -1058,9 +1067,9 @@ body {
   start();
 })();
 </script>
-  <script src="./js/bootguard.js?v=300"></script>
-<script src="js/osint.js?v=300"></script>
-<script src="js/scan-titles.js?v=300"></script>
-<script src="js/scanner-data.js?v=300"></script>
+  <script src="./js/bootguard.js?v=309"></script>
+<script src="js/osint.js?v=309"></script>
+<script src="js/scan-titles.js?v=309"></script>
+<script src="js/scanner-data.js?v=309"></script>
 </body>
 </html>

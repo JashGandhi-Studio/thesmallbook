@@ -14,8 +14,23 @@
   function cfg() {
     return (window.TSB_CONFIG && window.TSB_CONFIG.PAYWALL) || { ENABLED: false, GATED: [] };
   }
+  /* 👑 FOUNDER: the founder's own accounts see every Gold feature, on every
+     device they sign into, and can flip a session preview to experience the
+     app exactly like a free reader (preview lasts until the tab closes). */
+  var FOUNDER_EMAILS = ["jashgandhicreator07@gmail.com", "acimotreyothy@gmail.com"];
+  function founderPreview() {
+    try { return sessionStorage.getItem("tsb_founder_preview") === "free"; } catch (e) { return false; }
+  }
+  function isFounder() {
+    try {
+      var u = (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) || null;
+      var em = ((u && u.email) || "").toLowerCase();
+      return !!em && FOUNDER_EMAILS.indexOf(em) >= 0;
+    } catch (e) { return false; }
+  }
   function isGold() {
-    try { return !!(window.TSB_GOLD && window.TSB_GOLD.isGold()); } catch (e) { return false; }
+    if (isFounder() && !founderPreview()) return true;
+    try { return !!(window.TSB_GOLD && TSB_GOLD.isGold()); } catch (e) { return false; }
   }
   function enabled() { return !!cfg().ENABLED; }
 
@@ -23,6 +38,7 @@
   function locked(feature) {
     if (!enabled()) return false;
     if (isGold()) return false;
+    if (isFounder() && !founderPreview()) return false;
     var g = cfg().GATED || [];
     return g.indexOf(feature) >= 0;
   }
@@ -43,6 +59,9 @@
   }
 
   window.TSB_PAYWALL = {
+    isFounder: isFounder,
+    founderPreview: founderPreview,
+    setFounderPreview: function (on) { try { if (on) sessionStorage.setItem("tsb_founder_preview", "free"); else sessionStorage.removeItem("tsb_founder_preview"); } catch (e) {} },
     cfg: cfg,
     enabled: enabled,
     isGold: isGold,

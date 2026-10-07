@@ -170,17 +170,29 @@
 
     pbs.forEach((pb) => {
       pb.addEventListener("click", () => {
-        if (!window.TTS_ENGINE) { toast("🎧 Podcast engine loading…"); return; }
-        if (window.TTS_ENGINE.playing) {
+        /* v303: for the classics, the free LibriVox audiobook beats synthetic
+           speech - real human narrators, chapters, works with the same player */
+        const A = window.TSB_AUDIO;
+        const ab = A && A.audiobookFor && A.audiobookFor(book.id);
+        if (window.TTS_ENGINE && window.TTS_ENGINE.playing) {
           window.TTS_ENGINE.stop();
           syncAll(false);
           return;
         }
         stopSpeech(); // stop any single-lesson speech first
+        if (ab) { A.playAudiobook(book.id); return; }
+        if (!window.TTS_ENGINE) { toast("🎧 Podcast engine loading…"); return; }
         playPodcastLive();
         syncAll(true);
       });
     });
+    /* the hero button wears the honest badge when a real audiobook exists */
+    if (window.TSB_AUDIO && window.TSB_AUDIO.audiobookFor && window.TSB_AUDIO.audiobookFor(book.id) && heroBtn) {
+      const lbl = heroBtn.querySelector(".podcastbtn__label");
+      if (lbl) lbl.textContent = "Listen: Full Audiobook";
+      const live = heroBtn.querySelector(".podcastbtn__live");
+      if (live) live.textContent = "FREE";
+    }
     // keep the buttons in sync when the player is closed or podcast ends
     if (window.TTS_ENGINE) {
       window.TTS_ENGINE.onProgress(() => {
@@ -909,10 +921,11 @@
           </div>
           <button class="tipjar__x" aria-label="Hide tip prompt">✕</button>
         </div>
-        <div class="lesson__tools">
-          <button class="minibtn ${readSet.has(i) ? "active" : ""}" data-read="${i}">${readSet.has(i) ? "✓ READ" : "MARK AS READ"}</button>
-          <button class="minibtn" data-listen="${i}">🔊 LISTEN</button>
-          <button class="minibtn" data-sharelesson="${i}">🎴 SHARE CARD</button>
+          <div class="lesson__tools">
+            <button class="minibtn ${readSet.has(i) ? "active" : ""}" data-read="${i}">${readSet.has(i) ? "✓ READ" : "MARK READ"}</button>
+            <button class="minibtn" data-listen="${i}">🔊 LISTEN</button>
+            <button class="minibtn" data-sharelesson="${i}">🎴 CARD</button>
+          </div>
         </div>
       </div>`;
     d.querySelector(".lesson__head").addEventListener("click", () => d.classList.toggle("open"));
@@ -929,6 +942,27 @@
     }
     lessonsWrap.appendChild(d);
   });
+
+  /* 🌊 v300: the deep dive, right under the lessons that feed it */
+  if (window.TSB_DEEPDIVES) {
+    const ddEsc = (x) => String(x == null ? "" : x).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const dives = TSB_DEEPDIVES.filter((dd) => dd.bookId === book.id);
+    if (dives.length) {
+      const wrap = document.createElement("section");
+      wrap.className = "dd-card";
+      wrap.innerHTML = dives.map((dd) => `
+        <a class="dd-card__row" href="deepdive.html?id=${dd.id}">
+          <span class="dd-card__wave">🌊</span>
+          <span class="dd-card__mid">
+            <b>THE DEEP DIVE · ${ddEsc(dd.chapterLabel.toUpperCase())}</b>
+            <i>${ddEsc(dd.title)}</i>
+            <span class="dd-card__m">${dd.minutes} min · the one chapter worth reading in full · ${dd.sample ? '<b class="dd-card__free">FREE SAMPLE</b>' : '<b class="dd-card__gold">👑 GOLD</b>'}</span>
+          </span>
+          <span class="dd-card__go">READ → </span>
+        </a>`).join("");
+      lessonsWrap.parentNode.insertBefore(wrap, lessonsWrap.nextSibling);
+    }
+  }
 
   /* mark as read */
   lessonsWrap.querySelectorAll("[data-read]").forEach((btn) => {
@@ -1110,26 +1144,16 @@
     }
   })();
 
-  /* listen buttons - speak the LIVE (translated) lesson text */
+  /* v300: listen = the real player. One tap queues the whole book from
+     this lesson: queue, speed, sleep timer, lockscreen controls, and it
+     picks up where you left off next time. */
   lessonsWrap.querySelectorAll("[data-listen]").forEach((btn) => {
     btn.setAttribute("translate", "no");
     btn.addEventListener("click", () => {
-      if (!("speechSynthesis" in window)) { toast("🔇 Speech not supported on this browser"); return; }
-      if (speakingBtn === btn) { stopSpeech(); return; }
-      stopSpeech();
+      const A = window.TSB_AUDIO;
+      if (!A) { toast("🎧 The player is loading, try again in a second"); return; }
       const i = +btn.dataset.listen;
-      const l = liveLesson(i); // live = translated when page is translated
-      /* sections carry their own natural pauses: title → summary → example → action */
-      const parts = [
-        { text: l.title, pause: 600 },
-        { text: l.summary, pause: 750 },
-        { text: l.example, pause: 750 },
-        { text: l.action, pause: 0 }
-      ];
-      speakingBtn = btn;
-      btn.classList.add("speaking");
-      btn.textContent = "⏹ STOP";
-      speakChunks(naturalChunks(parts), btn);
+      A.playBook(book.id, i + 1); /* +1: item 0 is the intro line */
     });
   });
   window.addEventListener("beforeunload", () => { if ("speechSynthesis" in window) speechSynthesis.cancel(); });

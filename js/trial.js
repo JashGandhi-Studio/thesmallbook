@@ -1,10 +1,8 @@
 /* ============================================================
-   THESMALLBOOK, ⏳ THE FREE TASTER (js/trial.js) v265
+   THESMALLBOOK, ⏳ THE FREE TASTER (js/trial.js) v306
    After onboarding, every guest reads free for 15 minutes.
-     · 0-5 min   → nothing, just reading
-     · 5 min     → a polite pop-up: 10 minutes left
-     · 10 min    → another pop-up: 5 minutes left
-     · 15 min    → THE GATE, sign in to keep going
+     · 0-15 min  → nothing, just reading (no mid-way pop-ups)
+     · 15 min    → ONE friendly card (gate.js renders it)
    Rules:
      · the clock only runs while the tab is VISIBLE (no cheating
        the timer by hiding the tab, no punishment for switching)
@@ -15,8 +13,6 @@
    ============================================================ */
 (function () {
   var LIMIT = 15 * 60;          /* the full taster */
-  var WARN1 = 5 * 60;           /* first pop-up  */
-  var WARN2 = 10 * 60;          /* second pop-up */
 
   /* storage that never dies (same ladder as onboard.js) */
   function get(k, d) {
@@ -71,26 +67,10 @@
     setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, 320);
   }
 
-  function minutesLeft() { return Math.max(0, Math.ceil((LIMIT - st.used) / 60)); }
-
-  function warn(which) {
-    var left = minutesLeft();
-    var head = which === 1 ? "⏳ 5 minutes flown" : "⏳ 10 minutes flown";
-    var line = which === 1
-      ? "You are reading on the house. <b>" + left + " minutes</b> of the free taster are left, your shelf, streak and progress wait behind one sign-in."
-      : "<b>" + left + " minutes</b> left on the house. Sign in now and everything you\u2019ve read today stays yours forever.";
-    var btn = which === 1 ? "KEEP READING, " + left + " MIN LEFT" : "USE MY LAST " + left + " MINUTES";
-    card(
-      '<h2 class="trial__t">' + head + "</h2>" +
-      '<p class="trial__s">' + line + "</p>",
-      '<button class="trial__go" data-trial-cont>' + btn + "</button>" +
-      '<a class="trial__ghost" href="login.html">Sign in now →</a>'
-    );
-    box.querySelector("[data-trial-cont]").addEventListener("click", undress);
-  }
-
   function gate() {
     dead = true;
+    /* ONE card, the friendly one. gate.js owns the copy and the styles. */
+    try { if (window.TSB_GATE && TSB_GATE.show) { TSB_GATE.show(); return; } } catch (e) {}
     card(
       '<span class="trial__eyebrow">THE FREE TASTER IS OVER</span>' +
       '<h2 class="trial__t">You\u2019ve had 15 good minutes.</h2>' +
@@ -111,16 +91,12 @@
     if (document.visibilityState !== "visible") return;
     st.used += 1;
     if (st.used >= LIMIT) { set("tsb_trial", st); gate(); return; }
-    if (st.used >= WARN2 && !st.w2) { st.w2 = true; set("tsb_trial", st); warn(2); return; }
-    if (st.used >= WARN1 && !st.w1) { st.w1 = true; set("tsb_trial", st); warn(1); return; }
     if (st.used % 5 === 0) set("tsb_trial", st);
   }
 
   function boot() {
     if (!onboarded() || signedIn()) return;
     if (st.used >= LIMIT) { gate(); return; }
-    if (st.used >= WARN2 && !st.w2) { st.w2 = true; warn(2); }
-    else if (st.used >= WARN1 && !st.w1) { st.w1 = true; warn(1); }
     setInterval(tick, 1000);
   }
 
