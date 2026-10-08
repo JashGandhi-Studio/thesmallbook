@@ -25,8 +25,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=314">
-  <link rel="stylesheet" href="css/deepdive.css?v=314">
+  <link rel="stylesheet" href="css/style.css?v=316">
+  <link rel="stylesheet" href="css/deepdive.css?v=316">
   <link rel="icon" href="favicon.ico" sizes="32x32">
 </head>
 <body class="ddpage">
@@ -80,13 +80,14 @@
     <div class="credits">&#10022; MADE BY JASH GANDHI &#10022;</div>
     <p class="tiny"><a href="about.html" style="color:inherit;">ABOUT</a>&nbsp;&nbsp;<strong><a href="gold.html" style="color:inherit;">👑 TSB GOLD</a></strong>&nbsp;&nbsp;MUMBAI, INDIA&nbsp;&nbsp;<strong>FREE TO READ</strong></p>
   </footer>
-  <script src="js/bootguard.js?v=314"></script>
-  <script src="js/prefs.js?v=314"></script>
-  <script src="js/config.js?v=314"></script>
-  <script src="js/data.js?v=314"></script>
-  <script src="js/deepdive-data.js?v=314"></script>
-  <script src="js/podcast-data.js?v=314"></script>
-  <script src="js/ab-discovery.js?v=314"></script>
+  <script src="js/bootguard.js?v=316"></script>
+  <script src="js/prefs.js?v=316"></script>
+  <script src="js/config.js?v=316"></script>
+  <script src="js/data.js?v=316"></script>
+  <script src="js/deepdive-data.js?v=316"></script>
+  <script src="js/podcast-data.js?v=316"></script>
+  <script src="js/ab-discovery.js?v=316"></script>
+  <script src="js/show-discovery.js?v=316"></script>
   <script>
   (function () {
     "use strict";
@@ -104,12 +105,31 @@
         '<span class="pc-orig__go">OPEN &amp; LISTEN → </span></a>';
     }).join("");
 
-    /* show list: browse episodes in-app, play right here, or visit home */
+    /* show list: browse episodes in-app, play right here, or visit home.
+       v316: hand-picked shows first, then FIND 3 MORE SHOWS pulls fresh
+       ones from the podcast directory - the shelf never runs dry - and
+       every card saves to YOUR SHOWS with the heart in its corner. */
     var SHOW_STEP = 6, shown = SHOW_STEP;
+    function allShows() {
+      return D.shows.concat(window.TSB_SHOWS_EXTRA || []);
+    }
+    function showsMine() { try { return (window.TSB && TSB.bookmarks) ? TSB.bookmarks.list().filter(function (x) { return x.indexOf("show:") === 0; }).map(function (x) { return x.slice(5); }) : []; } catch (e0) { return []; } }
+    function findShow(id) { return allShows().filter(function (x) { return x.id === id; })[0] || null; }
     function paint() {
       var w = document.getElementById("pcShowList");
-      var list = D.shows.filter(function (s) { return cat === "all" || s.cat === cat; });
-      w.innerHTML = list.slice(0, shown).map(function (s) {
+      var list = allShows().filter(function (s) { return cat === "all" || s.cat === cat; });
+      var mine = showsMine();
+      var strip = (cat === "all" && mine.length)
+        ? '<div class="pc-ab__mine"><b>❤️ YOUR SHOWS</b>' + mine.map(function (sid) {
+            var sh3 = findShow(sid) || { name: sid };
+            return '<button class="pc-ab__minechip" data-feed="' + esc(sid) + '">' + esc(sh3.name) + ' ▶</button>';
+          }).join("") + '</div>'
+        : "";
+      var heart = function (sid) {
+        var on = mine.indexOf(sid) >= 0;
+        return '<button class="pc-show__save' + (on ? " on" : "") + '" data-showsave="' + esc(sid) + '" aria-label="Save this show to your shelf">' + (on ? "❤️" : "🤍") + '</button>';
+      };
+      w.innerHTML = strip + list.slice(0, shown).map(function (s) {
         var play = s.rss
           ? '<button class="pc-play" data-feed="' + esc(s.id) + '">▶ PLAY LATEST</button>'
           : '';
@@ -118,6 +138,7 @@
           : '';
         var home = '<a class="pc-home" href="' + esc(s.home || s.url) + '" target="_blank" rel="noopener noreferrer">show home ↗</a>';
         return '<div class="pc-show">' +
+          heart(s.id) +
           '<span class="pc-show__mic">🎙️</span>' +
           '<span class="pc-show__mid"><span class="pc-show__tag">' + esc(s.tag) + '</span>' +
           '<b>' + esc(s.name) + '</b><i>with ' + esc(s.host) + '</i>' +
@@ -128,20 +149,42 @@
       }).join("") +
       (shown < list.length
         ? '<button class="pc-more" id="pcMoreShows">+' + Math.min(3, list.length - shown) + ' MORE SHOWS (' + (list.length - shown) + ' left)</button>'
-        : "");
+        : (cat === "all" ? '<button class="pc-more" id="pcFindShows">✨ FIND 3 MORE SHOWS</button>' : ""));
       var more = w.querySelector("#pcMoreShows");
       if (more) more.addEventListener("click", function () { shown += 3; paint(); });
+      var finder = w.querySelector("#pcFindShows");
+      if (finder) finder.addEventListener("click", findShows);
       w.querySelectorAll("[data-feed]").forEach(function (b) {
         b.addEventListener("click", function () {
-          var show = D.shows.filter(function (x) { return x.id === b.getAttribute("data-feed"); })[0];
+          var show = findShow(b.getAttribute("data-feed"));
           if (show && window.TSB_AUDIO) TSB_AUDIO.playFeed(show);
         });
       });
       w.querySelectorAll("[data-browse]").forEach(function (b) {
         b.addEventListener("click", function () {
-          var show = D.shows.filter(function (x) { return x.id === b.getAttribute("data-browse"); })[0];
+          var show = findShow(b.getAttribute("data-browse"));
           if (show && window.TSB_AUDIO && TSB_AUDIO.showBrowser) TSB_AUDIO.showBrowser(show);
         });
+      });
+      w.querySelectorAll("[data-showsave]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          if (window.TSB && TSB.bookmarks) { TSB.bookmarks.toggle("show:" + b.getAttribute("data-showsave")); paint(); }
+        });
+      });
+    }
+    /* the directory fetch: three real shows at a time, forever */
+    function findShows() {
+      if (!window.TSB_SHOWMORE) return;
+      var btn = document.getElementById("pcFindShows");
+      if (btn) { btn.disabled = true; btn.textContent = "FETCHING FROM THE DIRECTORY…"; }
+      TSB_SHOWMORE.serve(3, function (got) {
+        shown += got.length;
+        paint();
+        var t = document.createElement("div");
+        t.style.cssText = "position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--bar-total, 84px) + 24px);z-index:280;background:var(--ink);color:var(--paper);border-radius:999px;padding:10px 16px;font:800 12px 'Space Grotesk',sans-serif;max-width:86vw;text-align:center";
+        t.textContent = got.length ? got.length + " new shows on the shelf, pulled fresh from the directory." : "Couldn't reach the directory just now - try again in a bit.";
+        document.body.appendChild(t);
+        setTimeout(function () { t.remove(); }, 3200);
       });
     }
     var cw = document.getElementById("pcCats");
@@ -159,9 +202,9 @@
     paint();
   })();
   </script>
-  <script src="js/bar.js?v=314" defer></script>
-  <script src="js/guide.js?v=314"></script>
-  <script src="js/audioplayer.js?v=314"></script>
+  <script src="js/bar.js?v=316" defer></script>
+  <script src="js/guide.js?v=316"></script>
+  <script src="js/audioplayer.js?v=316"></script>
   <script>
   (function () {
     var AB = window.TSB_AUDIOBOOKS || {};
@@ -185,7 +228,7 @@
         var words = String(rec.title || "Audiobook").split(" ").slice(0, 3).join(" ");
         fallback = ('<span class=\\"pc-ab__dev\\"><b>' + esc(words) + '</b><i>FRESH FROM LIBRIVOX</i></span>').replace(/"/g, "&quot;").replace(/'/g, "\\'");
       }
-      var cover = '<img src="assets/covers/' + esc(bid) + '.jpg?v=314" alt="" loading="lazy" onerror="this.outerHTML=\'' + fallback + '\'">';
+      var cover = '<img src="assets/covers/' + esc(bid) + '.jpg?v=316" alt="" loading="lazy" onerror="this.outerHTML=\'' + fallback + '\'">';
       var isSaved = saved().indexOf(bid) >= 0;
       return '<div class="pc-ab__card' + (hi ? " pc-ab__card--hi" : "") + '">' +
         cover +
@@ -213,6 +256,17 @@
       return out;
     }
     var shown = FIRST_SHELF;
+    /* v316: warm the shelf - the first screen's chapter lists quietly fetch
+       in the background, so the first tap plays in seconds, not minutes.
+       Repeat plays are instant: what the app loaded once, it keeps. */
+    function warmShelf() {
+      if (!window.TSB_AUDIO || !TSB_AUDIO.fetchAudiobook) return;
+      mixedBids().slice(0, 6).forEach(function (bid, i) {
+        setTimeout(function () {
+          try { if (AB[bid]) TSB_AUDIO.fetchAudiobook(AB[bid], function () {}); } catch (e1) {}
+        }, 700 + i * 500);
+      });
+    }
     function paintShelf() {
       var mine = saved();
       var strip = mine.length
@@ -255,6 +309,14 @@
       });
     }
     paintShelf();
+    warmShelf();
+    /* a touch on PLAY starts the fetch before the tap even lands */
+    w.addEventListener("pointerdown", function (e) {
+      var ab = e.target && e.target.closest && e.target.closest("[data-ab]");
+      if (ab && AB[ab.getAttribute("data-ab")] && window.TSB_AUDIO && TSB_AUDIO.fetchAudiobook) {
+        try { TSB_AUDIO.fetchAudiobook(AB[ab.getAttribute("data-ab")], function () {}); } catch (e1) {}
+      }
+    }, true);
     w.addEventListener("click", function (e) {
       var sv = e.target.closest("[data-save]");
       if (sv) {
@@ -264,7 +326,11 @@
       if (e.target.id === "abMore") { shown += FIRST_SHELF; paintShelf(); return; }
       if (e.target.id === "abWant" || e.target.id === "abWantMore2") { wantMore(); return; }
       var btn = e.target.closest("[data-ab]");
-      if (btn && window.TSB_AUDIO) TSB_AUDIO.playAudiobook(btn.getAttribute("data-ab"));
+      if (btn && window.TSB_AUDIO) {
+        btn.textContent = "LOADING…";
+        TSB_AUDIO.playAudiobook(btn.getAttribute("data-ab"));
+        setTimeout(function () { paintShelf(); }, 2500);   /* restore the label either way */
+      }
     });
 
     /* deep link: podcasts.html?ab=meditations starts playing */

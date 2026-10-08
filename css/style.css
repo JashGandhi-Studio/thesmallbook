@@ -9163,7 +9163,7 @@ html.dark .dm-replybar__txt span { color: #b3a486; }
 .nt-list { position: relative; touch-action: pan-y; }
 .nt-clearbg {
   position: absolute; z-index: 0; border-radius: 16px; border: 2.5px solid var(--ink);
-  background: #d33; color: #fff; display: flex; align-items: center; justify-content: flex-end;
+  background: #d33; color: #fff; display: flex; align-items: center; justify-content: flex-start;
   padding: 0 16px; font: 700 13px "Space Grotesk", sans-serif; pointer-events: none;
 }
 .nt-row { will-change: transform; }
@@ -9178,3 +9178,15 @@ html.dark .nt-clearall { background: #241f17; color: var(--ink); }
 /* v314: while the walkthrough is live, the bottom menu never hides -
    the tour points at the plus and the reader has to be able to tap it */
 html.tsb-walking .tsb-bar--off { transform: none !important; }
+
+/* ── v316: show cards save to YOUR SHOWS ── */
+.pc-show { position: relative; }
+.pc-show__save {
+  position: absolute; top: 12px; right: 12px; z-index: 2;
+  border: 2px solid var(--ink); border-radius: 999px; background: var(--paper);
+  width: 38px; height: 38px; font-size: 16px; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.pc-show__save.on { background: var(--yellow); }
+.pc-show__save:active { transform: translate(1.5px, 1.5px); }
+.pc-more[disabled] { opacity: .55; pointer-events: none; }

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
     <meta property="og:title" content="Messages, TheSmallBook">
   <meta property="og:description" content="Your private conversations on TheSmallBook.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=314">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=316">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/dm.html">
@@ -18,7 +18,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
-  <script src="./js/bootguard.js?v=314"></script>
+  <script src="./js/bootguard.js?v=316"></script>
   <script>
     try {
       var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
@@ -28,7 +28,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=314">
+  <link rel="stylesheet" href="css/style.css?v=316">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -48,6 +48,7 @@
 
   <!-- message action popout (anchored where you tapped) -->
   <div class="dm-pop" id="ctxPop" hidden>
+    <button id="actReply"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 7 4 12.2l5.5 5.2"/><path d="M4 12.2h9.4a6.4 6.4 0 0 1 6.4 6.4v1"/></svg> Reply</button>
     <button id="actEdit"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Edit</button>
     <button id="actDelAll"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Delete for everyone</button>
     <button id="actDelMe"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg> Delete for me</button>
@@ -98,15 +99,15 @@
     </div>
   </div>
 
-  <script src="js/prefs.js?v=314"></script>
-  <script src="js/lang.js?v=314"></script>
-  <script src="js/config.js?v=314"></script>
-  <script src="js/data.js?v=314"></script>
-  <script src="js/auth.js?v=314"></script>
-  <script src="js/sounds.js?v=314"></script>
-  <script src="js/founder.js?v=314"></script>
-  <script src="js/community.js?v=314"></script>
-  <script src="js/voice.js?v=314"></script>
+  <script src="js/prefs.js?v=316"></script>
+  <script src="js/lang.js?v=316"></script>
+  <script src="js/config.js?v=316"></script>
+  <script src="js/data.js?v=316"></script>
+  <script src="js/auth.js?v=316"></script>
+  <script src="js/sounds.js?v=316"></script>
+  <script src="js/founder.js?v=316"></script>
+  <script src="js/community.js?v=316"></script>
+  <script src="js/voice.js?v=316"></script>
   <script>
   (function () {
     "use strict";
@@ -552,6 +553,13 @@
       cancelPress();
       openActions(bub, e.clientX, e.clientY);
     });
+    document.getElementById("actReply").addEventListener("click", function () {
+      closePop(ctx);
+      if (!selectedMsg) return;
+      /* v315: reply from the hold menu - works on every bubble, voice and
+         book cards included, where a swipe has nothing to hold */
+      setReplyBar(selectedMsg);
+    });
     document.getElementById("actEdit").addEventListener("click", async function () {
       closePop(ctx);
       if (!selectedMsg) return;
@@ -663,8 +671,8 @@
     });
   })();
   </script>
-  <script src="js/podcast-data.js?v=314"></script>
-  <script src="js/audioplayer.js?v=314"></script>
-  <script src="js/bar.js?v=314" defer></script>
+  <script src="js/podcast-data.js?v=316"></script>
+  <script src="js/audioplayer.js?v=316"></script>
+  <script src="js/bar.js?v=316" defer></script>
 </body>
 </html>

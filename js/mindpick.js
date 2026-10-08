@@ -1,15 +1,13 @@
 /* ============================================================
-   THESMALLBOOK, 🧠 MINDPICK (mindpick.js) · v300
-   Problem-first block for the homepage: readers do not come for
-   books, they come for a problem. "What's on your mind?" hands
-   back 3 books + one thing to do this week.
-   • DAILY CARD: first open of the day only (per user, seeded by
-     a persistent uid + the date), a fresh question or quote.
-     Dismiss (x) cancels it for the whole day. Never nags.
-   • PICKER: accurate key-problem buttons or free typing, both
-     land in the same engine: 3 real books from the shelf plus
-     one concrete action. No invented books, ever: every id is
-     verified against window.BOOKS at render time.
+   THESMALLBOOK, 🧠 MINDPICK (mindpick.js) · v316
+   One quiet daily card, nothing else. First open of the day
+   (seeded per reader + date) lands a fresh question - some days
+   it opens with a quote from a real book, some days it is a bare
+   one-line ask. Tap it and the engine hands back 3 real books
+   plus one thing to do this week. No invented books, ever: every
+   id is verified against window.BOOKS at render time.
+   (v316: the "what's on your mind?" picker is retired - the daily
+   question is the whole mindpick now.)
    ============================================================ */
 (function () {
   "use strict";
@@ -134,7 +132,6 @@
     mounted = true;
     /* settings: the reader can switch off the picker card, the daily
        question, or both (Settings > daily prompts) */
-    var showCard = get("tsb_show_mp_card", true) !== false;
     var showDaily = get("tsb_show_mp_daily", true) !== false;
 
     /* the permanent picker mounts instantly.
@@ -150,90 +147,10 @@
         var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
       }
     })(rot);
-    var html = '<div class="mp mp--ask" id="mpPick">' +
-      '<div class="mp-tag"><span class="mp-badge">🧠</span><span>WHAT\'S ON YOUR MIND THIS WEEK?</span><span class="mp-rot">new spread daily</span></div>' +
-      '<p class="mp-promise">Type one honest line. Get <b>three books that actually help</b>, each with the one thing to do about it this week. Free to try, no signup.</p>' +
-      '<div class="mp-inputrow mp-inputrow--hero">' +
-        '<input id="mpInput" type="text" maxlength="90" placeholder="i keep putting off the thing that matters…" autocomplete="off">' +
-        '<button id="mpGo" class="mp-go">SHOW ME →</button>' +
-      '</div>' +
-      '<div class="mp-or"><span>or tap what stings today</span></div>' +
-      '<div class="mp-row" id="mpChips">' +
-        rot.slice(0, 8).map(function (p) {
-          return '<button class="mp-chip" data-mppick="' + p.key + '">' + p.emoji + " " + esc(p.label) + "</button>";
-        }).join("") +
-        '<button class="mp-chip mp-chip--more" id="mpMore">' + (rot.length > 8 ? "↺ show me different ones" : "") + "</button>" +
-      '</div>' +
-    '</div>' +
-    '<div id="mpResult"></div>';
-    if (showCard) host.innerHTML = html;
-    else host.innerHTML = '<div id="mpResult"></div>';
-    /* the input is the hero: the card wakes on focus and the button
-       reflects the commitment as you type (goal gradient, honestly) */
-    try {
-      var goBtn = document.getElementById("mpGo");
-      var inp = document.getElementById("mpInput");
-      inp.addEventListener("focus", function () { document.getElementById("mpPick").classList.add("mp--live"); });
-      inp.addEventListener("blur", function () { document.getElementById("mpPick").classList.remove("mp--live"); });
-      inp.addEventListener("input", function () {
-        var has = inp.value.trim().length > 0;
-        goBtn.textContent = has ? "SHOW ME MY BOOKS →" : "SHOW ME →";
-        goBtn.classList.toggle("mp-go--armed", has);
-      });
-    } catch (e) {}
+    /* v316: the "what's on your mind?" picker is retired - the daily
+       card below is the whole mindpick now. */
+    host.innerHTML = '<div id="mpResult"></div>';
 
-    /* events */
-    host.addEventListener("click", function (e) {
-      var x = e.target.closest && e.target.closest("#mpDailyX");
-      if (x) {
-        set("tsb_mindpick_day", todayKey()); /* dismissed: never again today */
-        var d = document.getElementById("mpDaily");
-        if (d) { d.classList.add("mp--bye"); setTimeout(function () { d.parentNode && d.parentNode.removeChild(d); }, 240); }
-        return;
-      }
-      var chip = e.target.closest && e.target.closest("[data-mppick]");
-      if (chip) {
-        set("tsb_mindpick_day", todayKey()); /* engaging with the daily also closes it */
-        var dd = document.getElementById("mpDaily");
-        if (dd) { dd.parentNode && dd.parentNode.removeChild(dd); }
-        show(chip.getAttribute("data-mppick"));
-      }
-    });
-    var go = document.getElementById("mpGo");
-    var inp = document.getElementById("mpInput");
-    function fire() {
-      var v = (inp.value || "").trim();
-      if (!v) return;
-      var p = matchProblem(v);
-      if (!p) {
-        resultNone(v);
-        return;
-      }
-      show(p.key, p, v);
-    }
-    function dealMore() {
-      var hand = rot.slice(0, 8);
-      var rest = rot.slice(8);
-      /* swap half the hand for fresh problems */
-      var next = rest.concat(hand.slice(0, 4));
-      var sd = hash(uid() + "|hand|" + Date.now());
-      for (var i = next.length - 1; i > 0; i--) {
-        sd = (sd * 1664525 + 1013904223) >>> 0;
-        var j = sd % (i + 1);
-        var t = next[i]; next[i] = next[j]; next[j] = t;
-      }
-      rot = next;
-      var row = document.getElementById("mpChips");
-      if (row) row.innerHTML = rot.slice(0, 8).map(function (p) {
-        return '<button class="mp-chip" data-mppick="' + p.key + '">' + p.emoji + " " + esc(p.label) + "</button>";
-      }).join("") + '<button class="mp-chip mp-chip--more" id="mpMore">↺ show me different ones</button>';
-      var m2 = document.getElementById("mpMore");
-      if (m2) m2.addEventListener("click", dealMore);
-    }
-    var more = document.getElementById("mpMore");
-    if (more) more.addEventListener("click", dealMore);
-    if (go) go.addEventListener("click", fire);
-    if (inp) inp.addEventListener("keydown", function (e) { if (e.key === "Enter") fire(); });
 
     /* daily card: first open of the day, per user; dismiss = gone all day.
        Waits out the hands-free corner nudge so the two never fight for the
@@ -256,11 +173,17 @@
         '<div class="mp-daily__tag">⏳ TODAY, ONE QUESTION</div>' + lead +
         '<div class="mp-row">' +
           '<button class="mp-chip mp-chip--go" data-mppick="' + d.pick + '">Show me ' + esc(problemLabel(d.pick).toLowerCase()) + ' &rarr;</button>' +
-          '<span class="mp-or">or type it below</span>' +
         '</div>';
       var pick = document.getElementById("mpPick");
       if (pick && pick.parentNode) pick.parentNode.insertBefore(card, pick);
       else if (host) host.insertBefore(card, host.firstChild);
+      var go = card.querySelector("[data-mppick]");
+      if (go) go.addEventListener("click", function () { show(d.pick); });
+      var x = document.getElementById("mpDailyX");
+      if (x) x.addEventListener("click", function () {
+        card.classList.add("mp--bye");
+        setTimeout(function () { if (card.parentNode) card.parentNode.removeChild(card); }, 240);
+      });
       /* the day is consumed the moment the card actually shows */
       set("tsb_mindpick_day", tKey);
     }.bind(null, 0), 2800);
@@ -305,18 +228,10 @@
     var rx = document.getElementById("mpResultX");
     if (rx) rx.addEventListener("click", function () {
       document.getElementById("mpResult").innerHTML = "";
-      var inp2 = document.getElementById("mpInput");
-      if (inp2) { inp2.value = ""; inp2.focus(); }
-      var pp = document.getElementById("mpPick");
-      if (pp) pp.scrollIntoView({ behavior: "smooth", block: "center" });
     });
     var again = document.getElementById("mpAgain");
     if (again) again.addEventListener("click", function () {
       document.getElementById("mpResult").innerHTML = "";
-      var inp = document.getElementById("mpInput");
-      if (inp) { inp.value = ""; inp.focus(); }
-      var pp = document.getElementById("mpPick");
-      if (pp) pp.scrollIntoView({ behavior: "smooth", block: "center" });
     });
     var res = document.getElementById("mpResult");
     if (res && res.firstElementChild) res.firstElementChild.scrollIntoView({ behavior: "smooth", block: "nearest" });

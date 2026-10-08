@@ -989,7 +989,7 @@ const C = window.TSB_COMMUNITY;
     ok("the watchdog rides first on every app page, and the ID wall is gone for good", bg275.includes("TSB_BOOT_OK") && bg275.includes("tsb_purge_a") && rd("index.html").indexOf("js/bootguard.js") === 0 || (rd("index.html").includes("js/bootguard.js") && !rd("index.html").includes("js/vault.js") && !rd("book.html").includes("js/vault.js")));
     ok("a worker handover can never reload the page again", !prefs275.includes("controllerchange") && prefs275.includes("window.TSB_BOOT_OK = true"));
     ok("no worker = no purge reload; a true hang self-heals once, then an honest banner", bg275.includes("done(had)") && bg275.includes("Load trouble detected."));
-    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v314"'));
+    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v316"'));
     ok("storage is plain device storage again, exactly like v267", !rd("index.html").includes("js/vault.js") && rd("js/prefs.js").includes("for (let i = 0; i < localStorage.length; i++)") && !rd("js/prefs.js").includes("TSB_VAULT"));
 
     /* --- watermark --- */
@@ -1129,12 +1129,12 @@ const C = window.TSB_COMMUNITY;
     {
       const gd = rd("js/guide.js"), cm = rd("js/community.js"), css = rd("css/style.css");
       const walkPages = ["index.html", "podcasts.html", "stories.html", "graveyard.html", "quotes.html", "chat.html", "notes.html", "deepdive.html", "login.html", "settings.html"];
-      ok("the full tutorial ships: 20 hands-on stops across 10 pages, resumable", (gd.match(/p: "/g) || []).length === 20 && gd.includes('"tsb_walk"') && gd.includes('"tsb_walk_done"') && gd.includes("function walkGo"));
+      ok("the full tutorial ships: 21 hands-on stops across 10 pages, resumable", (gd.match(/p: "/g) || []).length === 21 && gd.includes('"tsb_walk"') && gd.includes('"tsb_walk_done"') && gd.includes("function walkGo"));
       ok("every walkthrough page loads guide.js", walkPages.every(pg => rd(pg).includes("js/guide.js")));
       ok("index.html loads guide.js exactly once", rd("index.html").split("js/guide.js").length === 2);
       ok("skipping asks first and names the Settings replay door", gd.includes("Skip the tutorial?") && gd.includes("FEELING LOST"));
       ok("settings carries the full-tutorial replay row", rd("settings.html").includes("tsbWalkReplay") && gd.includes('getElementById("tsbWalkReplay")'));
-      ok("old mini-tour readers are never force-walked (migration)", gd.includes("jget(TOURKEY, false) && !jget(WALKDONE, false)"));
+      ok("every reader walks the new tutorial once - no old-user exemption", !gd.includes("jget(TOURKEY, false) && !jget(WALKDONE, false)"));
       ok("the walkthrough stops point at real elements", WALKSEL_OK(gd));
       ok("clearing a notification is a capped local ledger", cm.includes('"tsb_notif_cleared"') && cm.includes("function notifClear") && cm.includes("function notifIsCleared"));
       ok("notifications swipe left to clear, with a Clear-all", rd("notifications.html").includes("nt-clearbg") && rd("notifications.html").includes("nClearAll") && css.includes(".nt-clearbg"));
@@ -1154,7 +1154,7 @@ const C = window.TSB_COMMUNITY;
     {
       const gd = rd("js/guide.js");
       const tryStops = (gd.match(/tryit: "[^"]+"/g) || []);
-      ok("six stops are hands-on: the tour moves when the reader acts", tryStops.length === 6, tryStops.join(" "));
+      ok("seven stops are hands-on: the tour moves when the reader acts", tryStops.length === 7, tryStops.join(" "));
       ok("the walkthrough opens with a Welcome to TheSmallBook", gd.includes('t: "Welcome to TheSmallBook"'));
       ok("try-stops listen to real taps and focus, capture phase", gd.includes('document.addEventListener("click", tryClick, true)') && gd.includes('document.addEventListener("focusin", tryFocus, true)'));
       ok("a try-stop on a link saves state and lets the hop resume", gd.includes("never double-navigate"));
@@ -1175,6 +1175,38 @@ const C = window.TSB_COMMUNITY;
       ok("podcasts.html loads the module before its shelf paints", pcst.indexOf("ab-discovery.js") < pcst.indexOf("var AB = window.TSB_AUDIOBOOKS"));
       ok("WANT MORE sits where the shelf ends, with an honest fetching state", pcst.includes("abWant") && pcst.includes("FETCHING FROM LIBRIVOX"));
       ok("discovered covers degrade to a proper title block, not a broken img", pcst.includes("FRESH FROM LIBRIVOX"));
+    }
+
+    /* --- v315 · the fixes round: sheet class, tap-open, right-swipe, reply --- */
+    {
+      const ap = rd("js/audioplayer.js"), gd = rd("js/guide.js"), nt = rd("notifications.html"), cssv = rd("css/style.css"), dmv = rd("dm.html");
+      ok("the full player sheet wears its fixed dim backdrop (the v314 bug)", ap.includes('sheet.className = "ap-backdrop"'));
+      ok("a tap on the dock title opens the player on every device", ap.includes("if (dx < 8 && e && e.target && !e.target.closest(\"button\")) { openSheet(); return; }"));
+      ok("the equalizer badge is ink on yellow-bars, visible everywhere", ap.includes("background:var(--ink);border:2.5px solid var(--ink);border-radius:8px;padding:3.5px 4px;color:var(--yellow)"));
+      ok("the tutorial greets every reader, old and new, once", !gd.includes("jset(WALKDONE, true);") || gd.includes("no migration"));
+      ok("the plus stop teaches the scroll trick first", gd.includes("the menu bar tucks itself away"));
+      ok("pinning a quote is a YOUR TURN stop with per-step skip", gd.includes("tryit: \"#qwAdd\"") && gd.includes("tt-stepskip") && gd.includes("skip this step"));
+      ok("notifications clear on a swipe RIGHT, backdrop on the left", nt.includes("dx > 12") && nt.includes("nsw.dx >= 84") && nt.includes("translateX(110%)") && cssv.includes("justify-content: flex-start"));
+      ok("hold-menu Reply works on every bubble, voice and book included", dmv.includes('id="actReply"') && dmv.includes("setReplyBar(selectedMsg)"));
+    }
+
+    /* --- v316 · speed, endless shows, saved shows, the corner chip --- */
+    {
+      const pcst = rd("podcasts.html"), sd = rd("js/show-discovery.js"), apv = rd("js/audioplayer.js"), gd = rd("js/guide.js"), mpv = rd("js/mindpick.js");
+      ok("the shelf warms itself: first screen's chapter lists prefetch", pcst.includes("function warmShelf()") && pcst.includes("TSB_AUDIO.fetchAudiobook(AB[bid]"));
+      ok("a touch on PLAY fetches before the tap lands", pcst.includes('e.target.closest("[data-ab]")') && pcst.includes("pointerdown"));
+      ok("the player exposes its cache so warming works", apv.includes("fetchAudiobook: fetchAudiobook"));
+      ok("tapped PLAY says LOADING, never a dead button", pcst.includes('btn.textContent = "LOADING…"'));
+      ok("show discovery ships as a first-class module", sd.includes("window.TSB_SHOWMORE") && sd.includes("itunes.apple.com/search") && sd.includes("callback="));
+      ok("a discovered show must carry a real https RSS feed", sd.includes("!r.feedUrl || !/^https:/.test(r.feedUrl)"));
+      ok("discovery skips everything the shelf or the reader already has", sd.includes("tsb_show_seen") && sd.includes("k.names[s.name.toLowerCase()]"));
+      ok("fetched shows persist on the device", sd.includes('"tsb_show_got"') && sd.includes("function boot()"));
+      ok("the shows shelf never runs dry: FIND 3 MORE SHOWS", pcst.includes('id="pcFindShows"') && pcst.includes("✨ FIND 3 MORE SHOWS") && pcst.includes("TSB_SHOWMORE.serve(3"));
+      ok("every show card saves from its corner heart", pcst.includes("data-showsave") && pcst.includes("pc-show__save") && pcst.includes('bookmarks.toggle("show:'));
+      ok("YOUR SHOWS strip rides above the list, one tap to play", pcst.includes("❤️ YOUR SHOWS") && pcst.includes("showsMine()"));
+      ok("the ? chip is a corner tab, rounded away from the edge", gd.includes("border-radius:0 0 0 24px") && gd.includes("border-left:3px solid var(--ink);border-bottom:3px solid var(--ink)"));
+      ok("the guide sheet's close sits in the card, not the sky", gd.includes(".tg-x{position:sticky;top:8px"));
+      ok("mindpick is the daily question alone, as asked", mpv.includes("the whole mindpick now") && !mpv.includes("WHAT\'S ON YOUR MIND"));
     }
 
     /* --- v314 · the premium player: dock, sheet, motion --- */
@@ -1198,7 +1230,7 @@ const C = window.TSB_COMMUNITY;
       const stops = [];
       const re = /p: "([a-z]+\.html)", sel: (null|"[^"]+")/g; let m;
       while ((m = re.exec(gd))) stops.push({ p: m[1], sel: m[2] === "null" ? null : m[2].slice(1, -1) });
-      if (stops.length !== 20) return false;
+      if (stops.length !== 21) return false;
       return stops.every(s => {
         if (!s.sel) return true;   /* the Welcome stop points at nothing */
         const pg = rd(s.p);
@@ -1636,8 +1668,8 @@ const C = window.TSB_COMMUNITY;
     }
     const sw292 = rd292("sw.js");
     ok("service worker precaches ask-modes-data.js", sw292.includes('"./js/ask-modes-data.js"'));
-    ok("cache name and bootguard build both say 314", /CACHE_VERSION = "tsb-v314"/.test(sw292) && /var BUILD = "314";/.test(rd292("js/bootguard.js")));
-    ok("login and settings say Build tsb-v314", rd292("login.html").includes("Build tsb-v314") && rd292("settings.html").includes("Build tsb-v314"));
+    ok("cache name and bootguard build both say 316", /CACHE_VERSION = "tsb-v316"/.test(sw292) && /var BUILD = "316";/.test(rd292("js/bootguard.js")));
+    ok("login and settings say Build tsb-v316", rd292("login.html").includes("Build tsb-v316") && rd292("settings.html").includes("Build tsb-v316"));
     ok("about.html changelog documents v292 and the 8 modes", /log-item__ver">v292</.test(rd292("about.html")) && rd292("about.html").includes("8 modes"));
     ok("no page still carries an old ?v=291", !glob292.some(f => /\?v=29[12]\b/.test(rd292(f))), glob292.filter(f => /\?v=29[12]\b/.test(rd292(f))).join(",") || "clean");
 
@@ -1727,7 +1759,8 @@ const C = window.TSB_COMMUNITY;
     const cfg300 = fsp.readFileSync(pp.join(__dirname, "../js/config.js"), "utf8");
     const aq300 = fsp.readFileSync(pp.join(__dirname, "../js/askquota.js"), "utf8");
     const ask300 = fsp.readFileSync(pp.join(__dirname, "../js/ask.js"), "utf8");
-    ok("the homepage asks what is on your mind before it shows the shelf", idx300.includes('id="mindpick"') && idx300.indexOf('id="mindpick"') < idx300.indexOf('id="statBooks"') && idx300.includes("js/mindpick.js"));
+    ok("the homepage carries the daily-question block above the shelf", idx300.includes('id="mindpick"') && idx300.indexOf('id="mindpick"') < idx300.indexOf('id="statBooks"') && idx300.includes("js/mindpick.js"));
+    ok("the picker is retired: today's question is the whole mindpick", mp300.includes("whole mindpick now") && !mp300.includes('id="mpPick"') && !mp300.includes("mpInput"));
     ok("mindpick renders only real books: every problem id must exist in data.js", (() => {
       const ids = [...mp300.matchAll(/ids: \[([^\]]+)\]/g)].flatMap(m => (m[1].match(/"[a-z0-9-]+"/g) || []).map(x => x.slice(1, -1)));
       return ids.length >= 40 && ids.every(id => djArr.some(b => b.id === id));
@@ -1823,8 +1856,8 @@ const C = window.TSB_COMMUNITY;
     ok("the sitemap carries the hub shelves", rd302("sitemap.xml").includes("/topics/habits.html") && rd302("sitemap.xml").includes("/authors/robert-greene.html"));
     ok("pseo index links the shelves", rd302("pseo/index.html").includes("topics/habits.html") && rd302("pseo/index.html").includes("authors/"));
     // 5. mindpick header
-    ok("the mindpick header is composed: badge, headline, spread pill",
-       rd302("js/mindpick.js").includes("mp-badge") && rd302("css/style.css").includes(".mp-tag .mp-badge"));
+    ok("the daily card wears the TODAY, ONE QUESTION tag",
+       rd302("js/mindpick.js").includes("TODAY, ONE QUESTION") && rd302("css/style.css").includes(".mp-daily__tag"));
     // 6. stories listen rail
     ok("stories carries the LISTEN TODAY rail: continue, dives, whole books",
        rd302("stories.html").includes("ltRail") && rd302("stories.html").includes("A.resume()") &&

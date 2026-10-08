@@ -123,9 +123,9 @@
       ".ap-eq i:nth-child(2){animation-delay:.18s}" +
       ".ap-eq i:nth-child(3){animation-delay:.36s}" +
       "@keyframes apEq{0%,100%{height:4px}50%{height:13px}}" +
-      "#tsbAp .ap-eq--art{position:absolute;right:-7px;bottom:-7px;background:var(--yellow);border:2.5px solid var(--ink);border-radius:8px;padding:3.5px 4px;color:var(--ink);opacity:0;transform:scale(.4);transition:opacity .25s,transform .25s}" +
+      "#tsbAp .ap-eq--art{position:absolute;right:-7px;bottom:-7px;background:var(--ink);border:2.5px solid var(--ink);border-radius:8px;padding:3.5px 4px;color:var(--yellow);opacity:0;transform:scale(.4);transition:opacity .25s,transform .25s}" +
       "#tsbAp.ap-on .ap-eq--art{opacity:1;transform:none}" +
-      "#tsbAp .ap-mid{flex:1;min-width:0}" +
+      "#tsbAp .ap-mid{flex:1;min-width:0;cursor:pointer;-webkit-tap-highlight-color:transparent}" +
       "#tsbAp .ap-t{display:block;font:800 12.5px/1.25 'Space Grotesk',sans-serif;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
       "#tsbAp .ap-s{display:block;font:600 10px 'Space Grotesk',sans-serif;color:var(--ink);opacity:.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}" +
       /* the progress hairline rides the dock's bottom edge, full width */
@@ -281,10 +281,12 @@
       dx = Math.max(0, e.clientX - sx);
       dock.style.transform = "translateX(" + dx + "px) rotate(" + (dx * 0.03) + "deg)";
     });
-    function end() {
+    function end(e) {
       if (!drag) return;
       drag = false;
       dock.style.transition = "";
+      /* v315: a tap (not a swipe) on the title or art opens the full player */
+      if (dx < 8 && e && e.target && !e.target.closest("button")) { openSheet(); return; }
       if (dx > Math.min(140, window.innerWidth * 0.35)) {
         dock.style.transform = "translateX(" + window.innerWidth + "px) rotate(7deg)";
         dock.style.opacity = "0";
@@ -320,6 +322,7 @@
     }
     sheet = document.createElement("div");
     sheet.id = "tsbApSheet";
+    sheet.className = "ap-backdrop";   /* v315: fixed dim layer + pinned card - without this the sheet painted as stray content at the page bottom */
     sheet.setAttribute("translate", "no");
     var speed = jget(SPEEDKEY, 1);
     var sl = sleepAt ? Math.max(0, Math.round((sleepAt - Date.now()) / 60000)) : 0;
@@ -483,7 +486,7 @@
   function toggle() {
     if (q && q.type === "audio") {
       if (!AU) return;
-      if (AU.paused) { AU.play().catch(function () {}); } else { AU.pause(); }
+      if (AU.paused) { AU.play().catch(function () { parkNote(); }); } else { AU.pause(); }
       setTimeout(paintPlay, 120);
       return;
     }
@@ -1139,6 +1142,8 @@
     showBrowser: showBrowser,
     playAudiobook: playAudiobook,
     audiobookFor: function (bookId) { return (window.TSB_AUDIOBOOKS || {})[bookId] || null; },
+    fetchAudiobook: fetchAudiobook,   /* v316: the shelf warms its own cache */
+    audiobookCache: function (rec) { return jget(FEEDCACHE + "ab3_" + rec.id, null); },
     toggle: toggle, next: nextItem, prev: prevItem, stop: stopAll,
     last: function () { return jget(LASTKEY, null); },
     continueCard: function () {

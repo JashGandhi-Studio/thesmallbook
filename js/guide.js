@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK, 🧭 THE GUIDE (guide.js) · v314
+   THESMALLBOOK, 🧭 THE GUIDE (guide.js) · v316
    Three answers to "I feel lost":
    1. THE WALKTHROUGH - the full tutorial, and it is hands-on:
       twenty stops across ten pages, starting with a welcome. The
@@ -58,6 +58,19 @@
     ]}
   ];
 
+  /* the ? corner tab dresses itself the moment home loads - it must not
+     wait for the guide sheet to ever be opened */
+  function chipCss() {
+    if (!document.getElementById("tsbHelpChip") || document.getElementById("tsb-chip-style")) return;
+    var st = document.createElement("style");
+    st.id = "tsb-chip-style";
+    st.textContent =
+      "#tsbHelpChip{position:absolute;top:0;right:0;z-index:6;width:48px;height:44px;border:none;border-left:3px solid var(--ink);border-bottom:3px solid var(--ink);border-radius:0 0 0 24px;background:var(--yellow);color:var(--ink);font:800 17px 'Space Grotesk',sans-serif;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;padding:0 2px 6px 0}" +
+      "#tsbHelpChip:active{transform:translateY(1.5px)}";
+    document.head.appendChild(st);
+  }
+  chipCss();
+
   function sheetCss() {
     if (document.getElementById("tsb-guide-style")) return;
     var st = document.createElement("style");
@@ -66,7 +79,7 @@
       "#tsbGuideSheet{position:fixed;inset:0;z-index:262;background:rgba(20,12,0,.5);display:flex;align-items:flex-end}" +
       "#tsbGuideSheet .tg-card{width:100%;max-height:84vh;overflow:auto;background:var(--paper);border-top:3px solid var(--ink);border-radius:22px 22px 0 0;padding:18px 16px calc(26px + env(safe-area-inset-bottom, 0px));animation:tgIn .28s cubic-bezier(.22,.9,.35,1)}" +
       "@keyframes tgIn{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}" +
-      "#tsbGuideSheet .tg-x{position:absolute;top:12px;right:12px;border:2.5px solid var(--ink);background:var(--paper);border-radius:10px;width:32px;height:32px;font:800 13px 'Space Grotesk',sans-serif;color:var(--ink);cursor:pointer}" +
+      "#tsbGuideSheet .tg-x{position:sticky;top:8px;z-index:5;margin-left:auto;display:flex;align-items:center;justify-content:center;border:2.5px solid var(--ink);background:var(--paper);border-radius:10px;width:34px;height:34px;font:800 13px 'Space Grotesk',sans-serif;color:var(--ink);cursor:pointer}" +
       "#tsbGuideSheet .tg-head{font:400 15px 'Archivo Black','Arial Black',sans-serif;color:var(--ink);letter-spacing:.5px;margin:0 44px 4px 2px}" +
       "#tsbGuideSheet .tg-sub{font:600 11.5px/1.5 'Space Grotesk',sans-serif;color:var(--ink);opacity:.65;margin:0 2px 12px}" +
       "#tsbGuideSheet .tg-g{font:800 9.5px 'Archivo Black','Arial Black',sans-serif;letter-spacing:1px;color:var(--ink);opacity:.55;margin:14px 2px 6px}" +
@@ -81,9 +94,6 @@
       "#tsbGuideSheet .tg-walk:active{transform:translate(2px,2px);box-shadow:none}" +
       "#tsbGuideSheet .tg-replay{display:block;width:100%;border:none;background:none;color:var(--ink);opacity:.6;font:800 10.5px 'Space Grotesk',sans-serif;cursor:pointer;padding:10px 0 0;text-decoration:underline}" +
       "#tsbGuideSheet .tg-fine{text-align:center;font:600 10.5px/1.5 'Space Grotesk',sans-serif;color:var(--ink);opacity:.55;margin:10px 0 0}" +
-      /* the ? chip on home */
-      ".tsb-help-chip{position:absolute;top:14px;right:16px;z-index:6;width:38px;height:38px;border:3px solid var(--ink);border-radius:50%;background:var(--yellow);box-shadow:2.5px 2.5px 0 var(--ink);color:var(--ink);font:800 17px 'Space Grotesk',sans-serif;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none}" +
-      ".tsb-help-chip:active{transform:translate(1.5px,1.5px);box-shadow:none}" +
       /* shared ring + card for the walkthrough and the mini tour */
       "#tsbTourRing{position:fixed;z-index:9992;border:3.5px solid var(--yellow);border-radius:16px;box-shadow:0 0 0 4000px rgba(12,10,6,.44);pointer-events:none;transition:all .35s cubic-bezier(.22,.9,.35,1)}" +
       "#tsbTourRing.tsb-try{animation:tsbTryRing 1.5s ease-in-out infinite}" +
@@ -92,6 +102,8 @@
       "#tsbTourCard .tt-step{font:800 9px 'Archivo Black',sans-serif;letter-spacing:1px;color:var(--ink);opacity:.5;display:flex;align-items:center;gap:7px}" +
       "#tsbTourCard .tt-turnbadge{font:800 9px 'Archivo Black',sans-serif;letter-spacing:1px;font-style:normal;color:#16130e;background:var(--yellow);border:2px solid var(--ink);border-radius:999px;padding:3px 8px;opacity:1}" +
       "#tsbTourCard .tt-wait{flex:1;font:800 11.5px 'Space Grotesk',sans-serif;color:var(--ink);background:var(--bg);border:2.5px dashed var(--ink);border-radius:12px;padding:10px 12px;animation:tsbWaitPulse 1.6s ease-in-out infinite}" +
+      "#tsbTourCard .tt-acts2{display:flex;gap:8px;align-items:center;margin-top:9px}" +
+      "#tsbTourCard .tt-stepskip{flex:1;background:none;border:none;font:800 10.5px 'Space Grotesk',sans-serif;color:var(--ink);opacity:.55;cursor:pointer;padding:8px;text-decoration:underline;text-align:left}" +
       "@keyframes tsbWaitPulse{0%,100%{opacity:.85}50%{opacity:.55}}" +
       "#tsbTourCard .tt-t{display:block;font:800 14px/1.3 'Space Grotesk',sans-serif;color:var(--ink);margin:4px 0 4px}" +
       "#tsbTourCard .tt-d{display:block;font:600 12px/1.5 'Space Grotesk',sans-serif;color:var(--ink);opacity:.75}" +
@@ -158,7 +170,7 @@
     { p: "index.html", sel: "#searchInput", t: "Your turn: search the library", d: "500 books in 26 languages, every one free. Titles, authors, moods - type 'focus' or 'money' or a name, the shelf rearranges itself around it.", tryit: "#searchInput", tryTxt: "Tap the search box" },
     { p: "index.html", sel: ".scanbtn", t: "Scan a paper book", d: "Holding a real book? The scanner reads its cover and opens that book's whole shelf here: lessons, audio, everything it has. It works on any book, not just the famous ones." },
     { p: "index.html", sel: ".gravebanner__box", t: "The Graveyard", d: "360 real failures autopsied - Enron, the Titan, Nokia, and cons nobody taught you about. Each grave reads the same way: HOW IT STARTED, THE FALL, THE LESSON. The people in it paid billions for these lessons; reading them is free. You will open one yourself in a minute." },
-    { p: "index.html", sel: ".tsb-bar__item--plus", t: "Your turn: the big + is audio country", d: "Everything you can listen to lives behind this plus: Listen Today, the Audio Room, audiobooks, podcasts. Go on - tap it and let's go in together.", tryit: ".tsb-bar__item--plus", tryTxt: "Tap the big yellow +" },
+    { p: "index.html", sel: ".tsb-bar__item--plus", t: "Your turn: the big + is audio country", d: "First, a trick: scroll down a little and the menu bar tucks itself away - scroll back up and it returns, so it never eats your screen. Bring it back, then tap the big + and let's go in together.", tryit: ".tsb-bar__item--plus", tryTxt: "Scroll a bit, then tap the big yellow +" },
     { p: "stories.html", sel: ".lt-head", t: "Listen Today", d: "Your daily audio front page, made for doing the other thing: the continue card resumes exactly where you paused, then today's picks - books spoken by the app, full audiobooks read by real narrators, podcasts from their own feeds. One tap, it plays." },
     { p: "stories.html", sel: "#writeBtn", t: "Or write your own", d: "Every reader can write here: lessons from your own life, published to the stories feed, read by other readers. No follower count needed to start - a good lesson travels on its own." },
     { p: "podcasts.html", sel: ".pc-hero", t: "The Audio Room", d: "40 full audiobooks and real podcasts, all playable right here. The small heart on any cover saves it to your shelf. Playback never dies when you move around the app - you are about to hear it for yourself." },
@@ -168,7 +180,8 @@
     { p: "graveyard.html", sel: "#freshAnchor", t: "The Graveyard, the full museum", d: "360 autopsies, filterable by era, cause and how much burned. New graves land every week - the fresh ones wear the red tag." },
     { p: "graveyard.html", sel: ".grave__stone", t: "Your turn: open a grave", d: "Any gravestone. The autopsy opens right here - the full story in three acts.", tryit: ".grave__stone", tryTxt: "Tap any gravestone" },
     { p: "graveyard.html", sel: ".autopsy__page", t: "Every autopsy reads the same honest way", d: "HOW IT STARTED: the rise, with the numbers. THE FALL: exactly what broke it. THE LESSON: the one line worth carrying. Close the reader when you're done and pick up the tour right here." },
-    { p: "quotes.html", sel: "#qwBoard", t: "The Quote Wall", d: "A public soft board of lines worth keeping, pinnable by any reader. Move it around with your fingers, zoom in, tap any note to share it as a card. The 📌 button pins your own - a line you found, or one that found you." },
+    { p: "quotes.html", sel: "#qwBoard", t: "The Quote Wall", d: "A public soft board of lines worth keeping, pinnable by any reader. Move it around with your fingers, zoom in, tap any note to share it as a card." },
+    { p: "quotes.html", sel: "#qwAdd", t: "Your turn: pin a line of your own", d: "The 📌 button opens the pinning sheet - pick a ready line from the shelf, or write your own and put it on the wall for other readers. Leave your first line behind.", tryit: "#qwAdd", tryTxt: "Tap the 📌 button" },
     { p: "chat.html", sel: "#tsb-input", t: "Ask the library anything", d: "Type a life question in your own words - why do I procrastinate, how do I pick a career - and the library answers with real books and real cases, not opinions. A handful of questions a day keeps it free for everyone." },
     { p: "notes.html", sel: ".nt-wrap", t: "Your notebook", d: "Every highlight, saved line, voice note and diagram you keep lands here. Private by default, saves by itself, exports as one clean file. Sign in and it follows your account to every device." },
     { p: "deepdive.html", sel: ".dd-head", t: "Deep dives", d: "One chapter of a book, read in full, with narration - for the ideas that need more than five minutes. Free samples are always marked; the full dives are part of Gold." },
@@ -283,7 +296,7 @@
       '<b class="tt-t">' + s.t + "</b>" +
       '<span class="tt-d">' + s.d + "</span>" +
       (turn
-        ? '<span class="tt-acts"><span class="tt-wait">☝ ' + (s.tryTxt || "do it now") + '</span><button class="tt-skip">skip the tutorial</button></span>'
+        ? '<span class="tt-acts"><span class="tt-wait">☝ ' + (s.tryTxt || "do it now") + '</span></span><span class="tt-acts2"><button class="tt-stepskip">skip this step</button><button class="tt-skip">skip the tutorial</button></span>'
         : '<span class="tt-acts">' +
             (cur > 0 ? '<button class="tt-back">← BACK</button>' : "") +
             '<button class="tt-next">' + (last ? "FINISH ✓" : "NEXT →") + "</button>" +
@@ -291,6 +304,8 @@
     document.body.appendChild(card);
     walk.card = card;
     if (turn) armTry(s.tryit);
+    var ssB = card.querySelector(".tt-stepskip");
+    if (ssB) ssB.addEventListener("click", function () { walkGo(cur + 1); });
     var backB = card.querySelector(".tt-back");
     if (backB) backB.addEventListener("click", function () { walkGo(cur - 1); });
     var nextB = card.querySelector(".tt-next");
@@ -427,9 +442,8 @@
 
   /* ---------- boot: walkthrough, mini tour, guide on #guide ---------- */
   function boot() {
-    /* migration: anyone who already saw the v312 mini tour has "been shown
-       the ropes" - the full tutorial is theirs to choose, never forced */
-    if (jget(TOURKEY, false) && !jget(WALKDONE, false)) jset(WALKDONE, true);
+    /* v315: no migration - the hands-on tutorial is new for EVERYONE,
+       readers of every vintage walk it once; after that it never repeats */
 
     /* the guide door works even when the reader is already on this page:
        hash changes never reload, so listen for them */

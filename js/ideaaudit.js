@@ -709,7 +709,7 @@
     return new Promise(function (res) {
       if (window.FAILURES && window.FAILURES.length) return res();
       var sc = document.createElement("script");
-      sc.src = "js/failures.js?v=314";
+      sc.src = "js/failures.js?v=316";
       sc.onload = function () { res(); };
       sc.onerror = function () { res(); };
       document.head.appendChild(sc);
