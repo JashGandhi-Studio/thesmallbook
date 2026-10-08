@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
     <meta property="og:title" content="Settings, TheSmallBook">
   <meta property="og:description" content="Theme, language, privacy and everything else, exactly how you like it.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=309">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=314">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/settings.html">
@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=309">
+  <link rel="stylesheet" href="css/style.css?v=314">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -50,6 +50,17 @@
       <p class="sethint">Your private notebook: write, draw diagrams, tape voice notes, paste photos. Everything saves by itself and stays on your device unless you export it as one clean file.</p>
       <a class="setopt" href="notes.html" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);border:2.5px solid var(--ink);border-radius:12px;box-shadow:4px 4px 0 var(--ink);padding:13px 14px;margin:10px 0;background:#fff"><span style="font-size:22px">📓</span><span style="flex:1;min-width:0"><b style="font:800 13px var(--font-head);letter-spacing:.5px;display:block">MY NOTEBOOK</b><span style="font:500 12px var(--font-body);color:#6b7280;display:block">write, draw, dictate · share as a card or a living reader link</span></span><span style="flex:none;background:var(--yellow);border:2px solid var(--ink);border-radius:999px;font:800 9px var(--font-head);letter-spacing:1px;padding:4px 8px">NEW</span></a>
       <a class="setopt" href="review.html" id="tsbYearLink" hidden style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink)"><span>🎛</span> Your year in books →</a>
+    </section>
+
+    <section class="setcard">
+      <h2>🧭 FEELING LOST?</h2>
+      <div class="setrow">
+        <a class="setbtn setbtn--yellow" href="index.html#guide" style="text-decoration:none">📖 WHAT DOES EVERYTHING DO? OPEN THE PLAIN GUIDE</a>
+      </div>
+      <div class="setrow">
+        <button class="setbtn setbtn--yellow" id="tsbWalkReplay" type="button">▶ PLAY THE FULL TUTORIAL - IT WALKS EVERY PAGE</button>
+      </div>
+      <p class="sethint">The plain guide is one line per function. The full tutorial is a guided walk across the whole app, stop by stop, and you can replay it from here anytime.</p>
     </section>
 
     <section class="setcard">
@@ -192,22 +203,23 @@
       <p class="sethint" id="upDiagHint">Cover / quote images, burst videos, voice notes and profile photos live in your own Supabase storage. If any of them fail, this test names the exact missing piece, and the 30-second SQL fix for it.</p>
     </section>
 
-    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v309.</p>
+    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v314.</p>
   </main>
 
-  <script src="./js/bootguard.js?v=309"></script>
-  <script src="js/prefs.js?v=309"></script>
-  <script src="js/lang.js?v=309"></script>
-  <script src="js/config.js?v=309"></script>
-  <script src="js/install.js?v=309"></script>
-  <script src="js/auth.js?v=309"></script>
-  <script src="js/sounds.js?v=309"></script>
-  <script src="js/community.js?v=309"></script>
-  <script src="js/gold.js?v=309"></script>
-  <script src="js/paywall.js?v=309"></script>
-  <script src="js/podcast-data.js?v=309"></script>
-  <script src="js/audioplayer.js?v=309"></script>
-  <script src="js/bar.js?v=309" defer></script>
+  <script src="./js/bootguard.js?v=314"></script>
+  <script src="js/prefs.js?v=314"></script>
+  <script src="js/lang.js?v=314"></script>
+  <script src="js/config.js?v=314"></script>
+  <script src="js/install.js?v=314"></script>
+  <script src="js/auth.js?v=314"></script>
+  <script src="js/sounds.js?v=314"></script>
+  <script src="js/community.js?v=314"></script>
+  <script src="js/gold.js?v=314"></script>
+  <script src="js/paywall.js?v=314"></script>
+  <script src="js/podcast-data.js?v=314"></script>
+  <script src="js/audioplayer.js?v=314"></script>
+  <script src="js/bar.js?v=314" defer></script>
+  <script src="js/guide.js?v=314"></script>
   <script>
     (function () {
       /* theme */
@@ -350,7 +362,7 @@
   });
 })();
 </script>
-  <script src="js/onboard.js?v=309" defer></script>
+  <script src="js/onboard.js?v=314" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {

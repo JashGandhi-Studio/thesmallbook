@@ -614,9 +614,21 @@
     if (opts) {
       if (opts.expires_at) payload.expires_at = opts.expires_at;   /* reading-thread expiry (needs messages.expires_at column) */
       if (opts.audio_url) payload.audio_url = opts.audio_url;       /* voice note (needs messages.audio_url column) */
+      if (opts.reply_to) payload.reply_to = String(opts.reply_to);  /* v313 swipe-to-reply (needs messages.reply_to column) */
     }
-    var row = await api("messages?select=*", { method: "POST", body: payload });
-    return (row && row[0]) || row;
+    try {
+      var row = await api("messages?select=*", { method: "POST", body: payload });
+      return (row && row[0]) || row;
+    } catch (err) {
+      /* v313: older databases may not have reply_to yet - send the message
+         anyway rather than failing the reply. */
+      if (payload.reply_to) {
+        delete payload.reply_to;
+        var row2 = await api("messages?select=*", { method: "POST", body: payload });
+        return (row2 && row2[0]) || row2;
+      }
+      throw err;
+    }
   }
   async function editDM(msgId, body) {
     if (!api || !signedIn()) throw new Error("sign-in");
@@ -906,6 +918,13 @@
   /* v250: mark one exact key read (a voice reply you just sent is "handled",
      even though no toast was ever shown for it) */
   function notifMarkKey(key) { if (key) notifMarkRead([key]); }
+  /* v313: swipe-to-clear. Notifications are derived, nothing is deleted on
+     the server - a cleared item is remembered in its own ledger and simply
+     never painted again. Same shape + cap as the read ledger. */
+  var NOTIF_CLEARED = "tsb_notif_cleared";   // { key: clearedAtMs }
+  function notifClear(keys) { markIn(NOTIF_CLEARED, keys, null); }
+  function notifIsCleared(key) { return !!readStore(NOTIF_CLEARED, null)[key]; }
+  function notifClearedCount() { return Object.keys(readStore(NOTIF_CLEARED, null)).length; }
   function notifMarkUser(userId) { return notifMarkContext(function (n) { return n.who === userId; }); }
   function notifMarkAll() { return notifMarkContext(function () { return true; }); }
 
@@ -1782,6 +1801,8 @@
     notifKey: notifKey, notifMarkRead: notifMarkRead, notifIsRead: notifIsRead, notifUnread: notifUnread,
     notifMarkAll: notifMarkAll, notifMarkPeer: notifMarkPeer, notifMarkPost: notifMarkPost,
     notifMarkContext: notifMarkContext,
+    /* v313: swipe-to-clear ledger */
+    notifClear: notifClear, notifIsCleared: notifIsCleared, notifClearedCount: notifClearedCount,
     notifMarkUser: notifMarkUser, notifRefresh: notifRefresh, paintNotifUI: paintNotifUI,
     boot: boot, countLessons: countLessons, say: say,
     myMessages: myMessages, conversations: conversations, threadWith: threadWith, sendDM: sendDM, markThreadRead: markThreadRead,

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
     <meta property="og:title" content="Notifications, TheSmallBook">
   <meta property="og:description" content="Likes, comments, follows and messages, all in one quiet list.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=309">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=314">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/notifications.html">
@@ -27,7 +27,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=309">
+  <link rel="stylesheet" href="css/style.css?v=314">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -51,6 +51,10 @@
         <svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
         Mark all read
       </button>
+      <button class="nt-markall nt-clearall" id="nClearAll" type="button" aria-pressed="false">
+        <svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V5a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 5v2"/><path d="M6.5 7l.8 12a1.5 1.5 0 0 0 1.5 1.4h6.4a1.5 1.5 0 0 0 1.5-1.4l.8-12"/></svg>
+        Clear all
+      </button>
     </div>
     <!-- v250 · follow requests from private accounts waiting on YOU -->
     <div id="nReqs" hidden></div>
@@ -59,14 +63,14 @@
     </div>
   </main>
 
-  <script src="./js/bootguard.js?v=309"></script>
-  <script src="js/prefs.js?v=309"></script>
-  <script src="js/lang.js?v=309"></script>
-  <script src="js/config.js?v=309"></script>
-  <script src="js/auth.js?v=309"></script>
-  <script src="js/sounds.js?v=309"></script>
-  <script src="js/founder.js?v=309"></script>
-  <script src="js/community.js?v=309"></script>
+  <script src="./js/bootguard.js?v=314"></script>
+  <script src="js/prefs.js?v=314"></script>
+  <script src="js/lang.js?v=314"></script>
+  <script src="js/config.js?v=314"></script>
+  <script src="js/auth.js?v=314"></script>
+  <script src="js/sounds.js?v=314"></script>
+  <script src="js/founder.js?v=314"></script>
+  <script src="js/community.js?v=314"></script>
   <script>
   (function () {
     "use strict";
@@ -128,19 +132,31 @@
     }
 
     function paint() {
-      var unread = C.notifUnread(ITEMS);
-      var shown = filter === "unread" ? unread : ITEMS;
+      /* v313: swiped-away notifications never come back - the cleared ledger
+         filters them out of the list AND the counters */
+      var alive = ITEMS.filter(function (n) { return !C.notifIsCleared(C.notifKey(n)); });
+      var unread = C.notifUnread(alive);
+      var shown = filter === "unread" ? unread : alive;
       var cAll = document.getElementById("nCountAll");
       var cNew = document.getElementById("nCountNew");
-      if (cAll) cAll.textContent = ITEMS.length;
+      if (cAll) cAll.textContent = alive.length;
       if (cNew) cNew.textContent = unread.length;
       var markAll = document.getElementById("nMarkAll");
       if (markAll) {
         markAll.hidden = unread.length === 0;
         markAll.setAttribute("aria-pressed", unread.length === 0 ? "true" : "false");
       }
+      var clearAll = document.getElementById("nClearAll");
+      if (clearAll) {
+        clearAll.hidden = alive.length === 0;
+        clearAll.setAttribute("aria-pressed", alive.length === 0 ? "true" : "false");
+      }
       if (!ITEMS.length) {
         list.innerHTML = '<div class="cm-empty">Nothing yet, your likes, comments, new followers and messages will land here.<br><a class="cm-write" href="stories.html">← Back to Stories</a></div>';
+        return;
+      }
+      if (!alive.length) {
+        list.innerHTML = '<div class="cm-empty cm-empty--sm">All clear ✨ you swiped everything away.<br><a class="cm-write" href="stories.html">← Back to Stories</a></div>';
         return;
       }
       if (!shown.length) {
@@ -182,6 +198,88 @@
       try { C.paintNotifUI(ITEMS); } catch (e) {}
       paint();
     });
+
+    /* v313: Clear all - swipes the whole list away in one tap */
+    document.getElementById("nClearAll").addEventListener("click", function () {
+      var keys = ITEMS.filter(function (n) { return !C.notifIsCleared(C.notifKey(n)); }).map(C.notifKey);
+      if (!keys.length) return;
+      var rows = list.querySelectorAll('.nt-row[data-nkey]');
+      Array.prototype.forEach.call(rows, function (r) {
+        r.style.height = r.offsetHeight + "px"; r.style.overflow = "hidden";
+        r.classList.add("nt-row--bye");
+      });
+      setTimeout(function () {
+        try { C.notifClear(keys); } catch (e) {}
+        paint();
+      }, 240);
+    });
+
+    /* v313: swipe a row LEFT to clear it. Like everything else in the app
+       the clear is local: the derived list just never paints it again. */
+    var clearBg = null, swipeKilled = false;
+    function killBg() { if (clearBg && clearBg.parentNode) clearBg.parentNode.removeChild(clearBg); clearBg = null; }
+    var nsw = { row: null, x0: 0, y0: 0, on: false, dx: 0 };
+    list.addEventListener("pointerdown", function (e) {
+      if (e.target.closest && e.target.closest("a, button")) return;   /* links and buttons keep their taps */
+      var r = e.target.closest ? e.target.closest(".nt-row") : null;
+      if (!r || r.classList.contains("nt-row--skel") || r.classList.contains("nt-row--bye")) return;
+      nsw.row = r; nsw.x0 = e.clientX; nsw.y0 = e.clientY; nsw.on = false; nsw.dx = 0;
+    });
+    list.addEventListener("pointermove", function (e) {
+      if (!nsw.row) return;
+      var dx = e.clientX - nsw.x0, dy = e.clientY - nsw.y0;
+      if (!nsw.on) {
+        if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { nsw.row = null; return; }  /* scrolling wins */
+        if (dx < -12) {
+          nsw.on = true; swipeKilled = true;
+          try { nsw.row.setPointerCapture(e.pointerId); } catch (e2) {}
+          if (!clearBg) {
+            clearBg = document.createElement("div");
+            clearBg.className = "nt-clearbg";
+            clearBg.innerHTML = "<span>Clear ✕</span>";
+            var lr = list.getBoundingClientRect(), rr = nsw.row.getBoundingClientRect();
+            clearBg.style.top = (rr.top - lr.top + list.scrollTop) + "px";
+            clearBg.style.left = rr.left + "px";
+            clearBg.style.width = rr.width + "px";
+            clearBg.style.height = rr.height + "px";
+            list.appendChild(clearBg);
+          }
+        }
+      }
+      if (nsw.on) {
+        nsw.dx = Math.min(0, Math.max(-140, dx));
+        nsw.row.style.transition = "none";
+        nsw.row.style.transform = "translateX(" + nsw.dx + "px)";
+      }
+    });
+    function nswEnd() {
+      if (!nsw.row) return;
+      var r = nsw.row, gone = nsw.on && nsw.dx <= -84;
+      nsw.row = null; nsw.on = false;
+      killBg();
+      if (gone) {
+        r.style.height = r.offsetHeight + "px"; r.style.overflow = "hidden";
+        r.classList.add("nt-row--bye");
+        r.style.transform = "translateX(-110%)";
+        var k = r.getAttribute("data-nkey");
+        setTimeout(function () {
+          try { if (k) C.notifClear([k]); } catch (e) {}
+          paint();
+        }, 230);
+      } else {
+        r.style.transition = "transform .18s ease";
+        r.style.transform = "";
+      }
+    }
+    list.addEventListener("pointerup", nswEnd);
+    list.addEventListener("pointercancel", nswEnd);
+    list.addEventListener("pointerleave", function () { if (nsw.on) nswEnd(); });
+    /* after a swipe, the release must not also open the row's links */
+    list.addEventListener("click", function (e) {
+      if (!swipeKilled) return;
+      swipeKilled = false;
+      e.stopPropagation(); e.preventDefault();
+    }, true);
 
     C.whenReady(async function () {
       if (!C.signedIn()) {
@@ -266,8 +364,8 @@
     });
   })();
   </script>
-  <script src="js/podcast-data.js?v=309"></script>
-  <script src="js/audioplayer.js?v=309"></script>
-  <script src="js/bar.js?v=309" defer></script>
+  <script src="js/podcast-data.js?v=314"></script>
+  <script src="js/audioplayer.js?v=314"></script>
+  <script src="js/bar.js?v=314" defer></script>
 </body>
 </html>

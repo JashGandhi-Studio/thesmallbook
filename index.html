@@ -5,19 +5,19 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>TheSmallBook, Skim Every Great Book in Minutes</title>
-  <meta name="description" content="500 book summaries · 3,540 lessons · 315 autopsies. Skim any great book in minutes, in 26 languages, with audio, free to read.">
+  <meta name="description" content="500 book summaries · 3,540 lessons · 360 autopsies. Skim any great book in minutes, in 26 languages, with audio, free to read.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
       <meta property="og:title" content="TheSmallBook, Skim Every Great Book in Minutes">
-  <meta property="og:description" content="500 book summaries · 3,540 lessons · 315 autopsies, free to read, in 26 languages, with audio.">
+  <meta property="og:description" content="500 book summaries · 3,540 lessons · 360 autopsies, free to read, in 26 languages, with audio.">
     <meta property="og:url" content="https://thesmallbook.in/">
   <meta property="og:site_name" content="TheSmallBook">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=309">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=314">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="TheSmallBook, 500 books · 3,540 lessons · 315 autopsies · free to read">
-  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=309">
+  <meta property="og:image:alt" content="TheSmallBook, 500 books · 3,540 lessons · 360 autopsies · free to read">
+  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=314">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="manifest" href="manifest.json">
@@ -36,7 +36,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=309">
+  <link rel="stylesheet" href="css/style.css?v=314">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -141,6 +141,7 @@
 
   <!-- HERO -->
   <header class="hero">
+    <button class="tsb-help-chip" id="tsbHelpChip" aria-label="Every function, explained">?</button>
     <span class="deco deco--sq" style="top:12%; left:6%;"></span>
     <span class="deco deco--circ" style="top:22%; right:8%;"></span>
     <span class="deco deco--tri" style="bottom:18%; left:10%;"></span>
@@ -202,7 +203,7 @@
       <span class="gravebanner__skull">💀</span>
       <span class="gravebanner__text">
         <span class="gravebanner__title">The Graveyard</span>
-        <span class="gravebanner__sub">300 legendary failures, startups, frauds, bankruptcies & ego trips. They paid billions; your lesson is free.</span>
+        <span class="gravebanner__sub">360 legendary failures, startups, frauds, bankruptcies & ego trips. They paid billions; your lesson is free.</span>
       </span>
       <span class="gravebanner__cta">ENTER IF YOU DARE →</span>
     </a>
@@ -312,54 +313,119 @@
     <p class="tiny"><a href="pseo/index.html" style="color:inherit;">READING LISTS</a> · NEW BOOKS ADDED EVERY WEEK · © 2026 THESMALLBOOK · ALL RIGHTS RESERVED</p>
   </footer>
 
-  <script src="./js/bootguard.js?v=309"></script>
-  <script src="js/prefs.js?v=309"></script>
-  <script src="js/support.js?v=309"></script>
-  <script src="js/upi.js?v=309"></script>
-  <script src="js/lang.js?v=309"></script>
-  <script src="js/config.js?v=309"></script>
-  <script src="js/auth.js?v=309"></script>
-  <script src="js/sounds.js?v=309"></script>
-  <script src="js/community.js?v=309"></script>
-  <script src="js/data.js?v=309"></script>
-  <script src="js/failures.js?v=309"></script>
-  <script src="js/app.js?v=309"></script>
-  <script src="js/packs-data.js?v=309"></script>
-  <script src="js/mindpick.js?v=309" defer></script>
-  <script src="js/packs-ui.js?v=309"></script>
+  <script src="./js/bootguard.js?v=314"></script>
+  <script src="js/prefs.js?v=314"></script>
+  <script src="js/support.js?v=314"></script>
+  <script src="js/upi.js?v=314"></script>
+  <script src="js/lang.js?v=314"></script>
+  <script src="js/config.js?v=314"></script>
+  <script src="js/auth.js?v=314"></script>
+  <script src="js/sounds.js?v=314"></script>
+  <script src="js/community.js?v=314"></script>
+  <script src="js/data.js?v=314"></script>
+  <script src="js/failures.js?v=314"></script>
+  <script src="js/app.js?v=314"></script>
+  <script src="js/packs-data.js?v=314"></script>
+  <script src="js/mindpick.js?v=314" defer></script>
+  <script src="js/packs-ui.js?v=314"></script>
   <script>
-    /* ⭐ render real reader words (from config.js TESTIMONIALS, no fake) */
+    /* ⭐ render real reader words (from config.js TESTIMONIALS, no fake)
+       plus your own words: add yours, stars first, name or hidden */
     (function () {
       var t = (window.TSB_CONFIG && TSB_CONFIG.TESTIMONIALS) || [];
       var real = t.filter(function (x) { return x && x.quote && x.who; });
-      if (!real.length) return;
       var row = document.getElementById("spRow");
       var box = document.getElementById("socialproof");
       if (!row || !box) return;
-      /* pick 3 random different ones each load, fresh every visit */
-      var pick = real.slice();
-      for (var i = pick.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var tmp = pick[i]; pick[i] = pick[j]; pick[j] = tmp;
-      }
-      pick = pick.slice(0, Math.min(3, pick.length));
-      pick.forEach(function (x) {
+      function mine() { try { return JSON.parse(localStorage.getItem("tsb_my_reviews") || "[]"); } catch (e) { return []; } }
+      function starsHtml(n) { var h = ""; for (var i = 1; i <= 5; i++) h += '<i class="sp-star' + (i <= n ? " on" : "") + '">★</i>'; return '<span class="sp-stars">' + h + "</span>"; }
+      function card(x, own, idx) {
         var q = document.createElement("div");
-        q.className = "sp-quote";
-        q.innerHTML = '<p>“' + String(x.quote).replace(/"/g, "&quot;") + '”</p><cite>' + String(x.who).replace(/</g, "&lt;") + '</cite>';
-        row.appendChild(q);
-      });
-      box.style.display = "";
+        q.className = "sp-quote" + (own ? " sp-quote--mine" : "");
+        q.innerHTML = (x.stars ? starsHtml(x.stars) : "") +
+          '<p>“' + String(x.quote).replace(/"/g, "&quot;") + '”</p><cite>' + String(x.who).replace(/</g, "&lt;") + "</cite>" +
+          (own ? '<button class="sp-del" aria-label="Remove my review">✕</button>' : "");
+        if (own) q.querySelector(".sp-del").addEventListener("click", function () {
+          var list = mine(); list.splice(idx, 1);
+          localStorage.setItem("tsb_my_reviews", JSON.stringify(list));
+          paint();
+        });
+        return q;
+      }
+      function addCard() {
+        var q = document.createElement("div");
+        q.className = "sp-quote sp-quote--add";
+        q.innerHTML = "<b>＋ ADD YOURS</b><span>stars, a few lines, done</span>";
+        q.addEventListener("click", openSheet);
+        return q;
+      }
+      function openSheet() {
+        var old = document.getElementById("spSheet");
+        if (old) old.remove();
+        var sh = document.createElement("div");
+        sh.id = "spSheet";
+        sh.innerHTML = '<div class="sp-sheet__card">' +
+          '<button class="ap-x" aria-label="Close">✕</button>' +
+          "<h3>⭐ YOUR REVIEW</h3>" +
+          '<div class="sp-pick" id="spPick">' + starsHtml(0) + "</div>" +
+          '<textarea id="spText" maxlength="280" rows="4" placeholder="What did TheSmallBook actually do for you?"></textarea>' +
+          '<input id="spName" maxlength="40" placeholder="Your name (e.g. Aarav, Mumbai)">' +
+          '<label class="sp-hide"><input type="checkbox" id="spHide"> hide my name, show as “a reader”</label>' +
+          '<button id="spSave">POST MY REVIEW</button>' +
+          "</div>";
+        document.body.appendChild(sh);
+        sh.querySelector(".ap-x").addEventListener("click", function () { sh.remove(); });
+        sh.addEventListener("click", function (e) { if (e.target === sh) sh.remove(); });
+        var picked = 0;
+        var starEls = sh.querySelectorAll("#spPick .sp-star");
+        starEls.forEach(function (st, i) {
+          st.addEventListener("click", function () {
+            picked = i + 1;
+            starEls.forEach(function (s2, j) { s2.classList.toggle("on", j < picked); });
+          });
+        });
+        sh.querySelector("#spSave").addEventListener("click", function () {
+          var txt = sh.querySelector("#spText").value.trim();
+          if (!picked) { sh.querySelector("#spPick").classList.add("sp-pick--shake"); setTimeout(function () { sh.querySelector("#spPick").classList.remove("sp-pick--shake"); }, 450); return; }
+          if (txt.length < 10) { sh.querySelector("#spText").focus(); return; }
+          var hide = sh.querySelector("#spHide").checked;
+          var name = hide ? "a reader" : (sh.querySelector("#spName").value.trim() || "a reader");
+          var list = mine();
+          list.unshift({ quote: txt, who: name, stars: picked, at: Date.now() });
+          localStorage.setItem("tsb_my_reviews", JSON.stringify(list.slice(0, 20)));
+          sh.remove();
+          paint();
+          var head = document.querySelector(".socialproof__head");
+          if (head) { head.scrollIntoView({ behavior: "smooth", block: "center" }); }
+        });
+      }
+      function paint() {
+        row.innerHTML = "";
+        var my = mine();
+        my.forEach(function (x, i) { row.appendChild(card(x, true, i)); });
+        var pick = real.slice();
+        for (var i = pick.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = pick[i]; pick[i] = pick[j]; pick[j] = tmp;
+        }
+        pick = pick.slice(0, Math.min(3, pick.length));
+        pick.forEach(function (x) { row.appendChild(card(x, false, 0)); });
+        row.appendChild(addCard());
+        box.style.display = "";
+      }
+      paint();
     })();
   </script>
-  <script src="js/onboard.js?v=309"></script>
-  <script src="js/trial.js?v=309" defer></script>
-  <script src="js/ask-data.js?v=309"></script>
-  <script src="js/tts-engine.js?v=309"></script>
-  <script src="js/ask-modes-data.js?v=309"></script>
-  <script src="js/paywall.js?v=309"></script>
-  <script src="js/askquota.js?v=309"></script>
-  <script src="js/ask.js?v=309"></script>
+  <script src="js/guide.js?v=314"></script>
+  <script>window.addEventListener("DOMContentLoaded", function () { var c = document.getElementById("tsbHelpChip"); if (c) c.addEventListener("click", function () { TSB_GUIDE.openGuide(); }); });</script>
+  <script src="js/onboard.js?v=314"></script>
+  <script src="js/trial.js?v=314" defer></script>
+  <script src="js/ask-data.js?v=314"></script>
+  <script src="js/tts-engine.js?v=314"></script>
+  <script src="js/ask-modes-data.js?v=314"></script>
+  <script src="js/paywall.js?v=314"></script>
+  <script src="js/askquota.js?v=314"></script>
+  <script src="js/ask.js?v=314"></script>
   <script>
     /* deep-link search from the scanner: index.html?q=<title> */
     (function () {
@@ -379,10 +445,10 @@
       } catch (e) {}
     })();
   </script>
-  <script src="js/podcast-data.js?v=309"></script>
-  <script src="js/audioplayer.js?v=309"></script>
-  <script src="js/bar.js?v=309" defer></script>
-  <script src="js/gate.js?v=309" defer></script>
+  <script src="js/podcast-data.js?v=314"></script>
+  <script src="js/audioplayer.js?v=314"></script>
+  <script src="js/bar.js?v=314" defer></script>
+  <script src="js/gate.js?v=314" defer></script>
 
 </body>
 </html>

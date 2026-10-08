@@ -24,6 +24,8 @@
   var SLEEPS = [0, 5, 15, 30];           /* minutes, 0 = off */
   var LASTKEY = "tsb_audio_last";
   var SPEEDKEY = "tsb_audio_speed";
+  var PLAYKEY = "tsb_audio_playing";      /* 1 = it was playing when you left, 0 = you paused it */
+  var CANCELKEY = "tsb_audio_cancelled";  /* a swipe-away cancel survives reloads; only Continue lifts it */
   var FEEDCACHE = "tsb_feed_";
 
   function jget(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
@@ -83,83 +85,161 @@
 
   /* ================= dock + sheet ================= */
 
+  /* v314: crisp stroke icons instead of emoji glyphs - the premium pass */
+  var IC = {
+    play: '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M8.4 5.3v13.4L19.4 12z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>',
+    pause: '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M8.5 5.5v13M15.5 5.5v13" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round"/></svg>',
+    playBig: '<svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><path d="M8.6 5.2v13.6L20 12z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>',
+    pauseBig: '<svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true"><path d="M8.6 5.4v13.2M15.4 5.4v13.2" fill="none" stroke="currentColor" stroke-width="3.8" stroke-linecap="round"/></svg>',
+    prev: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6.4 5.6v12.8" stroke-width="3"/><path d="M18.2 6.4v11.2L9.8 12z" fill="currentColor" stroke-width="1.2"/></svg>',
+    next: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17.6 5.6v12.8" stroke-width="3"/><path d="M5.8 6.4v11.2L14.2 12z" fill="currentColor" stroke-width="1.2"/></svg>',
+    list: '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M4.5 6.5h15M4.5 12h15M4.5 17.5h9"/></svg>',
+    x: '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>',
+    back15: '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.2 5v4.5h4.5"/><path d="M4.6 9.2A8.2 8.2 0 1 1 12 20.3"/></svg>',
+    fwd30: '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19.8 5v4.5h-4.5"/><path d="M19.4 9.2A8.2 8.2 0 1 0 12 20.3"/></svg>',
+    cont: '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h13.5"/><path d="M12.5 6.8 17.8 12l-5.3 5.2"/></svg>'
+  };
+  var EQ = '<span class="ap-eq" aria-hidden="true"><i></i><i></i><i></i></span>';
+
   function css() {
     if (document.getElementById("tsb-ap-style")) return;
     var st = document.createElement("style");
     st.id = "tsb-ap-style";
     st.textContent =
+            /* ---------- the dock ---------- */
       "body.tsb-audio-live #tsb-player{display:none!important}" +
-      "#tsbAp{position:fixed;left:10px;right:10px;bottom:74px;z-index:255;background:var(--paper);border:3px solid var(--ink);border-radius:18px;box-shadow:4px 4px 0 var(--ink);padding:9px 12px;display:flex;align-items:center;gap:10px}" +
-      "#tsbAp .ap-art{flex:0 0 auto;width:38px;height:38px;border:2.5px solid var(--ink);border-radius:12px;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:17px;overflow:hidden}" +
+      "#tsbAp{position:fixed;left:10px;right:10px;bottom:74px;z-index:255;background:var(--paper);border:3px solid var(--ink);border-radius:22px;box-shadow:5px 6px 0 var(--ink);padding:9px 12px 12px;display:flex;align-items:center;gap:9px;animation:apDockIn .42s cubic-bezier(.18,1.16,.3,1)}" +
+      "@keyframes apDockIn{from{transform:translateY(120px);opacity:0}to{transform:none;opacity:1}}" +
+      "#tsbAp .ap-artwrap{position:relative;flex:0 0 auto}" +
+      "#tsbAp .ap-art{width:48px;height:48px;border:3px solid var(--ink);border-radius:15px;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;box-shadow:2.5px 2.5px 0 var(--ink)}" +
+      "#tsbAp.ap-on .ap-art{animation:apArtPulse 2.6s ease-in-out infinite}" +
+      "@keyframes apArtPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}" +
       "#tsbAp .ap-art img{width:100%;height:100%;object-fit:cover}" +
+      /* equalizer: three ink bars, they dance only while playing */
+      ".ap-eq{display:inline-flex;align-items:flex-end;gap:2.5px;height:13px}" +
+      ".ap-eq i{width:3px;height:5px;border-radius:2px;background:currentColor;transform-origin:bottom;animation:none}" +
+      ".ap-playing .ap-eq i{animation:apEq 1s ease-in-out infinite}" +
+      "#tsbAp.ap-on .ap-eq i{animation:apEq 1s ease-in-out infinite}" +
+      ".ap-eq i:nth-child(2){animation-delay:.18s}" +
+      ".ap-eq i:nth-child(3){animation-delay:.36s}" +
+      "@keyframes apEq{0%,100%{height:4px}50%{height:13px}}" +
+      "#tsbAp .ap-eq--art{position:absolute;right:-7px;bottom:-7px;background:var(--yellow);border:2.5px solid var(--ink);border-radius:8px;padding:3.5px 4px;color:var(--ink);opacity:0;transform:scale(.4);transition:opacity .25s,transform .25s}" +
+      "#tsbAp.ap-on .ap-eq--art{opacity:1;transform:none}" +
       "#tsbAp .ap-mid{flex:1;min-width:0}" +
-      "#tsbAp .ap-t{display:block;font:800 12px/1.25 'Space Grotesk',sans-serif;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
-      "#tsbAp .ap-s{display:block;font:600 10px 'Space Grotesk',sans-serif;color:var(--ink);opacity:.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
-      /* the yellow strip rides the dock's top edge, like the book player */
-      "#tsbAp .ap-prog{position:absolute;left:2px;right:2px;top:2px;height:5px;border-radius:99px;background:var(--bg);overflow:hidden}" +
-      "#tsbAp .ap-prog i{display:block;height:100%;width:0;background:var(--yellow);border-radius:99px;transition:width .4s}" +
+      "#tsbAp .ap-t{display:block;font:800 12.5px/1.25 'Space Grotesk',sans-serif;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}" +
+      "#tsbAp .ap-s{display:block;font:600 10px 'Space Grotesk',sans-serif;color:var(--ink);opacity:.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}" +
+      /* the progress hairline rides the dock's bottom edge, full width */
+      "#tsbAp .ap-prog{position:absolute;left:4px;right:4px;bottom:4px;height:5px;border-radius:99px;background:var(--bg);overflow:hidden}" +
+      "#tsbAp .ap-prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--yellow),#ffb300);border-radius:99px;transition:width .4s}" +
       "#tsbAp .ap-prog.loading i{width:38%;transition:none;animation:apLoad 1.1s ease-in-out infinite}" +
       "@keyframes apLoad{0%{margin-left:-38%}100%{margin-left:100%}}" +
-      "#tsbAp button{border:2.5px solid var(--ink);background:var(--paper);border-radius:50%;width:38px;height:38px;font:800 14px 'Space Grotesk',sans-serif;color:var(--ink);cursor:pointer;flex:0 0 auto}" +
-      "#tsbAp .ap-play{background:var(--yellow);width:44px;height:44px;font-size:16px}" +
-      "#tsbAp .ap-list{border-radius:12px}" +
-      "#tsbApSheet{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:258;background:var(--paper);border-top:3px solid var(--ink);border-radius:22px 22px 0 0;box-shadow:0 -6px 0 rgba(0,0,0,.08);max-height:76vh;overflow:auto;padding:16px 16px 26px}" +
-      "#tsbApSheet h3{font:400 14px 'Archivo Black','Arial Black',sans-serif;color:var(--ink);margin:0 0 10px}" +
-      "#tsbApSheet .ap-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}" +
-      "#tsbApSheet .ap-chip{border:2px solid var(--ink);background:var(--paper);border-radius:999px;padding:7px 12px;font:800 10.5px 'Space Grotesk',sans-serif;color:var(--ink);cursor:pointer}" +
-      "#tsbApSheet .ap-chip.on{background:var(--yellow);box-shadow:2px 2px 0 var(--ink)}" +
-      "#tsbApSheet .ap-lab{font:800 9.5px 'Archivo Black','Arial Black',sans-serif;letter-spacing:.7px;color:var(--ink);opacity:.6;margin:12px 0 6px}" +
-      "#tsbApSheet .ap-q{display:flex;flex-direction:column;gap:6px}" +
-      "#tsbApSheet .ap-qi{display:flex;gap:9px;align-items:center;border:2px solid var(--ink);border-radius:12px;padding:8px 10px;cursor:pointer;background:var(--paper)}" +
-      "#tsbApSheet .ap-qi.on{background:var(--yellow);box-shadow:2px 2px 0 var(--ink)}" +
-      "#tsbApSheet .ap-qi b{font:800 12px/1.3 'Space Grotesk',sans-serif;color:var(--ink)}" +
-      "#tsbApSheet .ap-qi i{display:block;font:600 10px 'Space Grotesk',sans-serif;font-style:normal;opacity:.6;color:var(--ink)}" +
-      "#tsbApSheet .ap-num{flex:0 0 auto;width:26px;height:26px;border:2px solid var(--ink);border-radius:8px;display:flex;align-items:center;justify-content:center;font:800 11px 'Archivo Black',sans-serif;color:var(--ink)}" +
-      "#tsbApSheet .ap-x{position:absolute;top:12px;right:12px;border:2.5px solid var(--ink);background:var(--paper);border-radius:10px;width:32px;height:32px;font:800 13px 'Space Grotesk',sans-serif;color:var(--ink);cursor:pointer}" +
-      "#tsbApSheet .ap-cont{width:100%;border:2.5px solid var(--ink);background:var(--green);border-radius:12px;box-shadow:3px 3px 0 var(--ink);padding:11px;font:800 12px 'Archivo Black','Arial Black',sans-serif;color:var(--ink);cursor:pointer;margin-bottom:12px}" +
-      "#tsbApSheet .ap-credit{font:600 10px/1.5 'Space Grotesk',sans-serif;color:var(--ink);opacity:.55;margin:12px 0 0}" +
-      /* the dock always parks above the bottom bar, never under it */
+      /* dock buttons: quiet prev/next, one heavy yellow play */
+      "#tsbAp .ap-prev,#tsbAp .ap-next{border:none;background:transparent;width:38px;height:44px;color:var(--ink);cursor:pointer;flex:0 0 auto;display:flex;align-items:center;justify-content:center;opacity:.85;transition:transform .12s,opacity .15s}" +
+      "#tsbAp .ap-prev:active,#tsbAp .ap-next:active{transform:scale(.85)}" +
+      "#tsbAp .ap-play{border:3px solid var(--ink);background:var(--yellow);border-radius:50%;width:54px;height:54px;color:var(--ink);cursor:pointer;flex:0 0 auto;display:flex;align-items:center;justify-content:center;box-shadow:3px 3.5px 0 var(--ink);transition:transform .12s,box-shadow .12s}" +
+      "#tsbAp .ap-play:active{transform:translate(2px,2.5px);box-shadow:none}" +
+      "#tsbAp .ap-list{border:2.5px solid var(--ink);background:var(--paper);border-radius:13px;width:40px;height:44px;color:var(--ink);cursor:pointer;flex:0 0 auto;display:flex;align-items:center;justify-content:center;box-shadow:2.5px 2.5px 0 var(--ink);transition:transform .12s,box-shadow .12s}" +
+      "#tsbAp .ap-list:active{transform:translate(1.5px,1.5px);box-shadow:none}" +
+      "#tsbAp svg{display:block}" +
+      /* ---------- the now-playing sheet ---------- */
+      ".ap-backdrop{position:fixed;inset:0;z-index:258;background:rgba(16,11,2,.55);backdrop-filter:blur(2.5px);-webkit-backdrop-filter:blur(2.5px);display:flex;align-items:flex-end;animation:apDim .26s ease}" +
+      "@keyframes apDim{from{opacity:0}to{opacity:1}}" +
+      ".ap-backdrop.ap-closing{animation:apDimOut .2s ease forwards;pointer-events:none}" +
+      "@keyframes apDimOut{to{opacity:0}}" +
+      ".ap-card{width:100%;max-height:90vh;overflow:auto;background:var(--paper);border-top:3px solid var(--ink);border-radius:28px 28px 0 0;box-shadow:0 -10px 0 rgba(0,0,0,.10);padding:8px 18px calc(30px + env(safe-area-inset-bottom, 0px));animation:apCardIn .36s cubic-bezier(.18,1.14,.3,1);transition:transform .24s cubic-bezier(.2,1.2,.3,1);overscroll-behavior:contain;-webkit-overflow-scrolling:touch}" +
+      "@keyframes apCardIn{from{transform:translateY(100px)}to{transform:none}}" +
+      ".ap-backdrop.ap-closing .ap-card{animation:none;transform:translateY(105%);transition:transform .22s ease}" +
+      /* the sticky head: grip + NOW PLAYING ribbon + close */
+      ".ap-head{position:sticky;top:0;z-index:3;background:var(--paper);margin:0 -18px 4px;padding:8px 16px 9px;touch-action:none}" +
+      ".ap-grip{display:block;width:46px;height:5px;border-radius:99px;background:var(--ink);opacity:.25;margin:0 auto 10px}" +
+      ".ap-headrow{display:flex;align-items:center;gap:10px}" +
+      ".ap-ribbon{display:inline-flex;align-items:center;gap:9px;background:var(--yellow);border:2.5px solid var(--ink);border-radius:999px;padding:8px 14px;font:800 10px 'Archivo Black','Arial Black',sans-serif;letter-spacing:1.2px;color:var(--ink);box-shadow:2.5px 2.5px 0 var(--ink)}" +
+      ".ap-ribbon .ap-eq{height:12px}" +
+      ".ap-x{margin-left:auto;width:37px;height:37px;border:2.5px solid var(--ink);background:var(--red);border-radius:50%;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:2.5px 2.5px 0 var(--ink);transition:transform .12s,box-shadow .12s;flex:0 0 auto}" +
+      ".ap-x:active{transform:translate(2px,2px);box-shadow:none}" +
+      /* continue-where-you-left */
+      ".ap-cont{width:100%;border:3px solid var(--ink);background:var(--green);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:13px;font:800 11.5px 'Archivo Black','Arial Black',sans-serif;color:var(--ink);cursor:pointer;margin:8px 0 6px;display:flex;align-items:center;justify-content:center;gap:9px;text-align:left}" +
+      ".ap-cont:active{transform:translate(2px,2px);box-shadow:none}" +
+      /* the hero: big tilted art, big type */
+      ".ap-hero{display:flex;gap:16px;align-items:center;margin:14px 2px 14px}" +
+      ".ap-art--big{flex:0 0 auto;width:118px;height:118px;border:3.5px solid var(--ink);border-radius:24px;background:var(--yellow);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:5px 6px 0 var(--ink);transform:rotate(-2.5deg)}" +
+      ".ap-art--big img{width:100%;height:100%;object-fit:cover}" +
+      ".ap-npwrap{flex:1;min-width:0}" +
+      ".ap-np-t{display:block;font:800 19px/1.22 'Space Grotesk',sans-serif;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
+      ".ap-np-s{display:block;font:600 12px 'Space Grotesk',sans-serif;color:var(--ink);opacity:.62;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
+      ".ap-np-x{display:inline-block;font:800 9px 'Archivo Black','Arial Black',sans-serif;letter-spacing:.8px;color:var(--ink);background:var(--bg);border:2px solid var(--ink);border-radius:999px;padding:4px 9px;margin-top:8px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
+      /* seek: fat track, yellow fill drawn by the tick */
+      ".ap-seekrow{display:flex;align-items:center;gap:11px;margin:4px 0 16px}" +
+      ".ap-time{flex:0 0 auto;font:800 11px 'Space Grotesk',sans-serif;color:var(--ink);opacity:.75;min-width:38px;font-variant-numeric:tabular-nums}" +
+      ".ap-time--r{text-align:right}" +
+      "input.ap-seek{flex:1;appearance:none;-webkit-appearance:none;height:14px;background:var(--bg);border:2.5px solid var(--ink);border-radius:99px;cursor:pointer;min-width:0}" +
+      "input.ap-seek::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--yellow);border:3px solid var(--ink);box-shadow:inset 0 0 0 3px var(--paper)}" +
+      "input.ap-seek::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--yellow);border:3px solid var(--ink)}" +
+      /* transport: quiet jumps, chunky skips, one big play */
+      ".ap-ctl{display:flex;align-items:center;justify-content:center;gap:13px;margin:6px 0 8px}" +
+      ".ap-jump{border:none;background:transparent;width:46px;height:48px;color:var(--ink);cursor:pointer;flex:0 0 auto;display:flex;align-items:center;justify-content:center;opacity:.85;transition:transform .12s}" +
+      ".ap-jump:active{transform:scale(.85)}" +
+      ".ap-skip{border:2.5px solid var(--ink);background:var(--paper);border-radius:999px;height:46px;min-width:62px;padding:0 13px;color:var(--ink);font:800 12px 'Space Grotesk',sans-serif;cursor:pointer;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:5px;box-shadow:2.5px 2.5px 0 var(--ink);transition:transform .12s,box-shadow .12s}" +
+      ".ap-skip:active{transform:translate(1.5px,1.5px);box-shadow:none}" +
+      ".ap-playbig{width:80px;height:80px;border-radius:50%;border:3.5px solid var(--ink);background:var(--yellow);box-shadow:5px 6px 0 var(--ink);color:var(--ink);cursor:pointer;flex:0 0 auto;display:flex;align-items:center;justify-content:center;transition:transform .12s,box-shadow .12s}" +
+      ".ap-playbig:active{transform:translate(2.5px,3px);box-shadow:none}" +
+      ".ap-part{display:block;width:max-content;margin:2px auto 14px;border:2.5px solid var(--ink);background:var(--bg);border-radius:999px;padding:8px 15px;font:800 10.5px 'Archivo Black','Arial Black',sans-serif;letter-spacing:1px;color:var(--ink)}" +
+      ".ap-sleepnote{text-align:center;font:800 10.5px 'Space Grotesk',sans-serif;color:var(--ink);opacity:.65;margin:0 0 10px}" +
+      /* section labels as little ink tags */
+      ".ap-lab{display:inline-block;font:800 9px 'Archivo Black','Arial Black',sans-serif;letter-spacing:1px;color:var(--ink);background:var(--bg);border:2px solid var(--ink);border-radius:999px;padding:5px 11px;margin:16px 0 9px}" +
+      ".ap-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-bottom:4px}" +
+      ".ap-chip{border:2.5px solid var(--ink);background:var(--paper);border-radius:999px;padding:9px 15px;font:800 11px 'Space Grotesk',sans-serif;color:var(--ink);cursor:pointer;transition:transform .12s,box-shadow .12s,background .15s}" +
+      ".ap-chip:active{transform:translate(1.5px,1.5px)}" +
+      ".ap-chip.on{background:var(--yellow);box-shadow:2.5px 2.5px 0 var(--ink)}" +
+      /* the queue */
+      ".ap-q{display:flex;flex-direction:column;gap:7px;max-height:44vh;overflow:auto;padding:2px 2px 8px}" +
+      ".ap-qi{display:flex;gap:11px;align-items:center;border:2.5px solid var(--ink);border-radius:15px;padding:10px 12px;cursor:pointer;background:var(--paper);transition:transform .12s,background .15s}" +
+      ".ap-qi:active{transform:translate(1.5px,1.5px)}" +
+      ".ap-qi b{font:800 12.5px/1.3 'Space Grotesk',sans-serif;color:var(--ink)}" +
+      ".ap-qi i{display:block;font:600 10px 'Space Grotesk',sans-serif;font-style:normal;opacity:.6;color:var(--ink)}" +
+      ".ap-qi.on{background:var(--yellow);border-width:3px;box-shadow:3px 3px 0 var(--ink)}" +
+      ".ap-qi.on b{font-weight:800}" +
+      ".ap-num svg{width:14px;height:14px}" +
+      ".ap-num{flex:0 0 auto;width:30px;height:30px;border:2.5px solid var(--ink);border-radius:10px;display:flex;align-items:center;justify-content:center;font:800 11.5px 'Archivo Black','Arial Black',sans-serif;color:var(--ink);background:var(--paper)}" +
+      ".ap-qi.on .ap-num{background:var(--ink);color:var(--yellow)}" +
+      ".ap-qi .ap-eq{margin-left:auto;flex:0 0 auto;color:var(--ink)}" +
+      ".ap-credit{font:600 10.5px/1.6 'Space Grotesk',sans-serif;color:var(--ink);opacity:.6;border-top:2.5px dashed var(--ink);margin:16px 0 0;padding:13px 2px 0}" +
+      /* small phones: keep the transport comfortable */
+      "@media (max-width:360px){.ap-playbig{width:72px;height:72px}.ap-art--big{width:100px;height:100px}.ap-hero{gap:12px}}" +
+      /* dark keeps every colour readable */
+      "html.dark .ap-card{box-shadow:0 -10px 0 rgba(0,0,0,.45)}" +
+      "html.dark .ap-backdrop{background:rgba(0,0,0,.66)}" +
+      "html.dark input.ap-seek{background:#16130e}" +
+      /* the show browser sheet */
+      "#tsbShowSheet{position:fixed;inset:0;z-index:258;background:rgba(20,12,0,.5);display:flex;align-items:flex-end}" +
+      "#tsbShowSheet .tsb-showcard{width:100%;max-height:82vh;overflow:auto;background:var(--paper);border-top:3px solid var(--ink);border-radius:22px 22px 0 0;padding:16px 16px calc(26px + env(safe-area-inset-bottom, 0px));animation:apCardIn .28s cubic-bezier(.22,.9,.35,1)}" +
+      "#tsbShowSheet .tss-hero{display:flex;gap:12px;align-items:center;margin:2px 44px 12px 2px}" +
+      "#tsbShowSheet .tss-art{flex:0 0 auto;width:74px;height:74px;border:3px solid var(--ink);border-radius:16px;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:30px;overflow:hidden}" +
+      "#tsbShowSheet .tss-art img{width:100%;height:100%;object-fit:cover}" +
+      "#tsbShowSheet .tss-mid{flex:1;min-width:0}" +
+      "#tsbShowSheet .tss-mid b{display:block;font:800 15px/1.3 'Space Grotesk',sans-serif;color:var(--ink)}" +
+      "#tsbShowSheet .tss-mid i{display:block;font:600 11px 'Space Grotesk',sans-serif;font-style:normal;color:var(--ink);opacity:.6;margin-top:2px}" +
+      "#tsbShowSheet .tss-mid p{display:block;font:600 11.5px/1.5 'Space Grotesk',sans-serif;color:var(--ink);opacity:.75;margin:6px 0 0}" +
+      "#tsbShowSheet .tss-acts{display:flex;gap:8px;align-items:center;margin-bottom:12px}" +
+      "#tsbShowSheet .tss-playlatest{flex:1;border:3px solid var(--ink);background:var(--yellow);border-radius:999px;box-shadow:3px 3px 0 var(--ink);padding:12px 16px;font:800 12px 'Archivo Black',sans-serif;color:var(--ink);cursor:pointer}" +
+      "#tsbShowSheet .tss-home{flex:0 0 auto;font:800 11px 'Space Grotesk',sans-serif;color:var(--ink);border-bottom:2px solid var(--yellow);text-decoration:none;padding-bottom:2px}" +
+      "#tsbShowSheet .tss-list{display:flex;flex-direction:column;gap:7px}" +
+      "#tsbShowSheet .tss-ep{text-align:left;border:2px solid var(--ink);background:var(--paper);border-radius:14px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px}" +
+      "#tsbShowSheet .tss-ep:active{transform:translate(1.5px,1.5px)}" +
+      "#tsbShowSheet .tss-ept{font:800 12.5px/1.35 'Space Grotesk',sans-serif;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
+      "#tsbShowSheet .tss-ep i{font:600 10px 'Space Grotesk',sans-serif;font-style:normal;color:var(--ink);opacity:.55}" +
+      "#tsbShowSheet .tss-ep em{align-self:flex-start;font:800 9px 'Archivo Black',sans-serif;font-style:normal;letter-spacing:.6px;color:var(--ink);background:var(--yellow);border:2px solid var(--ink);border-radius:999px;padding:2px 8px;margin-top:5px}" +
+      "#tsbShowSheet .tss-more{border:2px dashed var(--ink);background:transparent;border-radius:999px;padding:10px;font:800 11px 'Space Grotesk',sans-serif;color:var(--ink);cursor:pointer;margin-top:4px}" +
+      "#tsbShowSheet .tss-note{font:600 11px/1.5 'Space Grotesk',sans-serif;color:var(--ink);opacity:.65;text-align:center;padding:8px 0}" +
+      "#tsbShowSheet .tss-note--load{display:flex;align-items:center;justify-content:center;gap:5px;padding:16px 0}" +
+      "#tsbShowSheet .tss-dot{width:6px;height:6px;border-radius:50%;background:var(--ink);opacity:.7;animation:tssBounce 1s ease-in-out infinite}" +
+      "#tsbShowSheet .tss-dot:nth-child(2){animation-delay:.15s}" +
+      "#tsbShowSheet .tss-dot:nth-child(3){animation-delay:.3s}" +
+      "@keyframes tssBounce{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-5px);opacity:1}}" +
+      /* dock placement rides the bar, tucks when it hides (physics, untouched) */
       "html.tsb-hasbar #tsbAp{bottom:calc(var(--bar-total) + 22px)}" +
-      /* same physics as the book-page player: bar tucks on scroll down, the
-         dock glides down with it; scroll up, both glide back. bar.js owns
-         the html.tsb-bar-hidden toggle. */
       "#tsbAp{transition:transform .32s cubic-bezier(.22,.9,.35,1);touch-action:pan-y}" +
-      /* tucked = exactly the bar's resting spot: dock sits (bar-total + 12) high,
-         the bar rests (gap + safe-area) high, so glide the difference */
-      "html.tsb-bar-hidden #tsbAp{transform:translateY(calc(var(--bar-total) + 12px))}" +
-      "#tsbAp .ap-mid{cursor:pointer}" +
-      /* now-playing sheet */
-      "#tsbApSheet .ap-hero{display:flex;gap:12px;align-items:center;margin:2px 44px 14px 2px}" +
-      "#tsbApSheet .ap-art--big{flex:0 0 auto;width:74px;height:74px;border:3px solid var(--ink);border-radius:16px;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:30px;overflow:hidden;box-shadow:3px 3px 0 var(--ink)}" +
-      "#tsbApSheet .ap-art--big img{width:100%;height:100%;object-fit:cover}" +
-      "#tsbApSheet .ap-npwrap{flex:1;min-width:0}" +
-      "#tsbApSheet .ap-np-t{display:block;font:800 15px/1.3 'Space Grotesk',sans-serif;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
-      "#tsbApSheet .ap-np-s{display:block;font:600 11px 'Space Grotesk',sans-serif;color:var(--ink);opacity:.6;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
-      "#tsbApSheet .ap-np-x{display:block;font:800 9.5px 'Archivo Black',sans-serif;letter-spacing:.6px;color:var(--ink);opacity:.5;margin-top:5px}" +
-      "#tsbApSheet .ap-seekrow{display:flex;align-items:center;gap:9px;margin:2px 0 12px}" +
-      "#tsbApSheet .ap-time{flex:0 0 auto;font:800 10.5px 'Space Grotesk',sans-serif;color:var(--ink);opacity:.7;min-width:36px}" +
-      "#tsbApSheet .ap-time--r{text-align:right}" +
-      "#tsbApSheet input.ap-seek{flex:1;appearance:none;-webkit-appearance:none;height:10px;background:var(--bg);border:2px solid var(--ink);border-radius:99px;cursor:pointer;min-width:0}" +
-      "#tsbApSheet input.ap-seek::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--yellow);border:3px solid var(--ink)}" +
-      "#tsbApSheet input.ap-seek::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--yellow);border:3px solid var(--ink)}" +
-      "#tsbApSheet .ap-ctl{display:flex;align-items:center;justify-content:center;gap:13px;margin:4px 0 6px}" +
-      "#tsbApSheet .ap-jump{border:2.5px solid var(--ink);background:var(--paper);border-radius:14px;width:48px;height:48px;font-size:16px;color:var(--ink);cursor:pointer;flex:0 0 auto}" +
-      "#tsbApSheet .ap-jump:active{transform:translate(1.5px,1.5px)}" +
-      "#tsbApSheet .ap-skip{border:2.5px solid var(--ink);background:var(--paper);border-radius:50%;width:48px;height:48px;font:800 9.5px 'Space Grotesk',sans-serif;color:var(--ink);cursor:pointer;flex:0 0 auto}" +
-      "#tsbApSheet .ap-skip:active{transform:translate(1.5px,1.5px)}" +
-      "#tsbApSheet .ap-playbig{width:68px;height:68px;border-radius:50%;border:3px solid var(--ink);background:var(--yellow);box-shadow:3px 3px 0 var(--ink);font-size:22px;color:var(--ink);cursor:pointer;flex:0 0 auto}" +
-      "#tsbApSheet .ap-playbig:active{transform:translate(2px,2px);box-shadow:none}" +
-      "#tsbApSheet .ap-part{text-align:center;font:800 10.5px 'Archivo Black',sans-serif;letter-spacing:.7px;color:var(--ink);opacity:.6;margin:2px 0 10px}" +
-      "#tsbApSheet .ap-sleepnote{text-align:center;font:800 10px 'Space Grotesk',sans-serif;color:var(--ink);opacity:.6;margin:0 0 10px}" +
-      /* sheet entry: rises and settles, like the podcast apps */
-      "#tsbApSheet{transform:translateY(70px);opacity:0;animation:apSheetIn .28s cubic-bezier(.22,.9,.35,1) forwards;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:calc(26px + env(safe-area-inset-bottom, 0px))}" +
-      "@keyframes apSheetIn{to{transform:none;opacity:1}}" +
-      /* queue: quieter rows, the playing one clearly ours */
-      "#tsbApSheet .ap-q{max-height:44vh;overflow:auto;padding-bottom:8px}" +
-      "#tsbApSheet .ap-qi{border-radius:14px;transition:background .15s}" +
-      "#tsbApSheet .ap-qi.on{background:var(--yellow);border-width:2.5px;box-shadow:3px 3px 0 var(--ink)}" +
-      "#tsbApSheet .ap-qi.on .ap-num{background:var(--ink);color:var(--yellow)}" +
-      "#tsbApSheet h3{letter-spacing:.5px}";
+      "html.tsb-bar-hidden #tsbAp{transform:translateY(calc(var(--bar-total) + 12px))}";
     document.head.appendChild(st);
   }
 
@@ -170,18 +250,19 @@
     dock.id = "tsbAp";
     dock.setAttribute("translate", "no");
     dock.innerHTML =
-      '<span class="ap-art">🎧</span>' +
+      '<span class="ap-artwrap"><span class="ap-art">🎧</span>' + EQ.replace('class="ap-eq"', 'class="ap-eq ap-eq--art"') + '</span>' +
       '<span class="ap-mid" role="button" tabindex="0" aria-label="Open the player"><span class="ap-t"></span><span class="ap-s"></span><span class="ap-prog"><i></i></span></span>' +
-      '<button class="ap-prev" aria-label="Previous chapter">⏮</button>' +
-      '<button class="ap-play" aria-label="Play or pause">⏸</button>' +
-      '<button class="ap-next" aria-label="Next chapter">⏭</button>' +
-      '<button class="ap-list" aria-label="Queue and settings">☰</button>';
+      '<button class="ap-prev" aria-label="Previous chapter">' + IC.prev + '</button>' +
+      '<button class="ap-play" aria-label="Play or pause">' + IC.pause + '</button>' +
+      '<button class="ap-next" aria-label="Next chapter">' + IC.next + '</button>' +
+      '<button class="ap-list" aria-label="Queue and settings">' + IC.list + '</button>';
     document.body.appendChild(dock);
     dock.querySelector(".ap-play").addEventListener("click", function () { toggle(); });
     dock.querySelector(".ap-next").addEventListener("click", function () { nextItem(); });
     dock.querySelector(".ap-prev").addEventListener("click", function () { prevItem(); });
     dock.querySelector(".ap-list").addEventListener("click", function () { openSheet(); });
     dock.querySelector(".ap-mid").addEventListener("click", function () { openSheet(); });
+    dock.querySelector(".ap-artwrap").addEventListener("click", function () { openSheet(); });   /* v314: the whole left side opens the player */
     bindSwipe();
     document.body.classList.add("tsb-audio-live");
   }
@@ -198,14 +279,14 @@
     dock.addEventListener("pointermove", function (e) {
       if (!drag) return;
       dx = Math.max(0, e.clientX - sx);
-      dock.style.transform = "translateX(" + dx + "px)";
+      dock.style.transform = "translateX(" + dx + "px) rotate(" + (dx * 0.03) + "deg)";
     });
     function end() {
       if (!drag) return;
       drag = false;
       dock.style.transition = "";
       if (dx > Math.min(140, window.innerWidth * 0.35)) {
-        dock.style.transform = "translateX(" + window.innerWidth + "px)";
+        dock.style.transform = "translateX(" + window.innerWidth + "px) rotate(7deg)";
         dock.style.opacity = "0";
         setTimeout(function () { stopAll(); toast("Player closed. Your spot is kept."); }, 190);
       } else {
@@ -233,9 +314,9 @@
     if (q.type === "audio") {
       var pos = audioPos(q.key);
       if (pos && pos.ch < q.items.length - 1 && pos.ch !== curItem)
-        cont = '<button class="ap-cont" id="apCont">⏩ CONTINUE WHERE YOU LEFT: ' + esc((q.items[pos.ch] || {}).label || "") + '</button>';
+        cont = '<button class="ap-cont" id="apCont">' + IC.cont + '<span>CONTINUE WHERE YOU LEFT: ' + esc((q.items[pos.ch] || {}).label || "") + '</span></button>';
     } else if (last && last.key === q.key && last.item > 0 && last.item < q.items.length - 1 && curItem !== last.item) {
-      cont = '<button class="ap-cont" id="apCont">⏩ CONTINUE WHERE YOU LEFT: ' + esc((q.items[last.item] || {}).label || "") + '</button>';
+      cont = '<button class="ap-cont" id="apCont">' + IC.cont + '<span>CONTINUE WHERE YOU LEFT: ' + esc((q.items[last.item] || {}).label || "") + '</span></button>';
     }
     sheet = document.createElement("div");
     sheet.id = "tsbApSheet";
@@ -244,8 +325,11 @@
     var sl = sleepAt ? Math.max(0, Math.round((sleepAt - Date.now()) / 60000)) : 0;
     var isAudio = q.type === "audio";
     sheet.innerHTML =
-      '<button class="ap-x" aria-label="Close">✕</button>' +
-      '<h3>🎧 NOW PLAYING</h3>' + cont +
+      '<div class="ap-card">' +
+      '<div class="ap-head" id="apHead"><span class="ap-grip"></span><div class="ap-headrow">' +
+        '<span class="ap-ribbon">' + EQ + 'NOW PLAYING</span>' +
+        '<button class="ap-x" aria-label="Close">' + IC.x + '</button>' +
+      '</div></div>' + cont +
       '<div class="ap-hero">' +
         '<span class="ap-art--big"' + (q.glyph ? ' style="font-size:15px;line-height:1.4"' : '') + '>' + (q.art ? '<img src="' + esc(q.art) + '" alt="" onerror="this.parentNode.textContent=\'🎧\'">' : (q.glyph || '🎧')) + '</span>' +
         '<span class="ap-npwrap"><span class="ap-np-t" id="apNpT"></span><span class="ap-np-s" id="apNpS"></span><span class="ap-np-x">' + esc(q.title) + '</span></span>' +
@@ -254,18 +338,18 @@
         ? '<div class="ap-seekrow"><span class="ap-time" id="apT0">0:00</span><input class="ap-seek" id="apSeek" type="range" min="0" max="1000" value="0" aria-label="Seek"><span class="ap-time ap-time--r" id="apT1">-:--</span></div>'
         : '<div class="ap-part" id="apPart"></div>') +
       '<div class="ap-ctl">' +
-        '<button class="ap-jump" id="apPrevC" aria-label="Previous chapter">⏮</button>' +
-        (isAudio ? '<button class="ap-skip" id="apBack" aria-label="Back 15 seconds">◀15</button>' : '') +
-        '<button class="ap-playbig" id="apBigPlay" aria-label="Play or pause">⏸</button>' +
-        (isAudio ? '<button class="ap-skip" id="apFwd" aria-label="Forward 30 seconds">30▶</button>' : '') +
-        '<button class="ap-jump" id="apNextC" aria-label="Next chapter">⏭</button>' +
+        '<button class="ap-jump" id="apPrevC" aria-label="Previous chapter">' + IC.prev + '</button>' +
+        (isAudio ? '<button class="ap-skip" id="apBack" aria-label="Back 15 seconds">' + IC.back15 + '<b>15</b></button>' : '') +
+        '<button class="ap-playbig" id="apBigPlay" aria-label="Play or pause">' + IC.pauseBig + '</button>' +
+        (isAudio ? '<button class="ap-skip" id="apFwd" aria-label="Forward 30 seconds"><b>30</b>' + IC.fwd30 + '</button>' : '') +
+        '<button class="ap-jump" id="apNextC" aria-label="Next chapter">' + IC.next + '</button>' +
       '</div>' +
       (sl ? '<div class="ap-sleepnote" id="apSleepNote">😴 pausing by itself in ' + sl + ' min</div>' : '') +
       '<div class="ap-lab">SPEED</div><div class="ap-row">' +
         SPEEDS.map(function (s) { return '<button class="ap-chip ap-sp' + (s === speed ? " on" : "") + '" data-sp="' + s + '">' + s + 'x</button>'; }).join("") +
       '</div>' +
       (/^ab:/.test(q.key) ? '<div class="ap-lab">VOLUME BOOST · THE OLD RECORDINGS RUN QUIET</div><div class="ap-row">' +
-        [1, 1.5, 2].map(function (m) { return '<button class="ap-chip ap-bo' + (boostPref() === m ? " on" : "") + '" data-bo="' + m + '">' + (m === 1 ? "OFF" : "+" + Math.round((m - 1) * 100) + "%") + '</button>'; }).join("") +
+        BOOSTS.map(function (b) { return '<button class="ap-chip ap-bo' + (boostPref() === b.g ? " on" : "") + '" data-bo="' + b.g + '">' + b.l + '</button>'; }).join("") +
       '</div>' : '') +
       '<div class="ap-lab">SLEEP TIMER</div><div class="ap-row">' +
         SLEEPS.map(function (m) { return '<button class="ap-chip ap-sl" data-sl="' + m + '">' + (m === 0 ? "OFF" : m + " min") + '</button>'; }).join("") +
@@ -274,25 +358,56 @@
       '<div class="ap-lab">QUEUE · ' + q.items.length + '</div>' +
       '<div class="ap-q">' +
         q.items.map(function (it, i) {
-          return '<div class="ap-qi' + (i === curItem ? " on" : "") + '" data-i="' + i + '"><span class="ap-num">' + (i === curItem ? "▶" : i + 1) + '</span><span style="min-width:0"><b>' + esc(it.label) + '</b><i>' + esc(it.sub || "") + '</i></span></div>';
+          return '<div class="ap-qi' + (i === curItem ? " on" : "") + '" data-i="' + i + '"><span class="ap-num">' + (i === curItem ? IC.play : i + 1) + '</span><span style="min-width:0"><b>' + esc(it.label) + '</b><i>' + esc(it.sub || "") + '</i></span>' + (i === curItem ? EQ : '') + '</div>';
         }).join("") +
       '</div>' +
-      (q.credit ? '<p class="ap-credit">' + q.credit + '</p>' : '');
+      (q.credit ? '<p class="ap-credit">' + q.credit + '</p>' : '') +
+      '</div>';
     document.body.appendChild(sheet);
+    sheet.classList.toggle("ap-playing", !!playing());
+    /* v314: swipe the head (or the grip) down and the sheet follows your
+       finger; let go past 90px and it closes, else it snaps back */
+    (function () {
+      var head2 = sheet.querySelector(".ap-head"), card2 = sheet.querySelector(".ap-card");
+      var sy2 = 0, dy2 = 0, drag2 = false;
+      head2.addEventListener("pointerdown", function (e) {
+        if (e.target.closest(".ap-x")) return;
+        drag2 = true; sy2 = e.clientY; dy2 = 0;
+        try { card2.style.transition = "none"; } catch (e3) {}
+      });
+      head2.addEventListener("pointermove", function (e) {
+        if (!drag2) return;
+        dy2 = Math.max(0, e.clientY - sy2);
+        card2.style.transform = "translateY(" + dy2 + "px)";
+      });
+      function end2() {
+        if (!drag2) return;
+        drag2 = false;
+        try { card2.style.transition = ""; card2.style.transform = ""; } catch (e3) {}
+        if (dy2 > 90) closeSheet();
+      }
+      head2.addEventListener("pointerup", end2);
+      head2.addEventListener("pointercancel", end2);
+    })();
     /* live repaint: seek slider, times, big play glyph, sleep countdown */
     sheet._apTick = setInterval(function () {
       if (!sheet || !q) return;
       var it2 = q.items[curItem] || {};
       var t2 = sheet.querySelector("#apNpT"); if (t2) t2.textContent = it2.label || q.title;
       var s2 = sheet.querySelector("#apNpS"); if (s2) s2.textContent = q.title + " · " + (curItem + 1) + " of " + q.items.length;
-      var bp2 = sheet.querySelector("#apBigPlay"); if (bp2) bp2.textContent = playing() ? "⏸" : "▶";
+      sheet.classList.toggle("ap-playing", !!playing());
+      var bp2 = sheet.querySelector("#apBigPlay"); if (bp2) bp2.innerHTML = playing() ? IC.pauseBig : IC.playBig;
       if (q.type === "audio" && AU) {
         var d = AU.duration, sk = sheet.querySelector("#apSeek");
-        if (sk && !apSeeking && isFinite(d) && d > 0) sk.value = Math.round((AU.currentTime / d) * 1000);
+        if (sk && !apSeeking && isFinite(d) && d > 0) {
+          sk.value = Math.round((AU.currentTime / d) * 1000);
+          /* v314: paint the yellow fill up to the thumb, the smooth way */
+          sk.style.background = "linear-gradient(90deg, var(--yellow) " + Math.round(sk.value / 10) + "%, var(--bg) " + Math.round(sk.value / 10) + "%)";
+        }
         var t02 = sheet.querySelector("#apT0"); if (t02) t02.textContent = fmtTime(AU.currentTime);
         var t12 = sheet.querySelector("#apT1"); if (t12) t12.textContent = isFinite(d) ? fmtTime(d) : "-:--";
       } else {
-        var p2 = sheet.querySelector("#apPart"); if (p2) p2.textContent = "PART " + (curItem + 1) + " OF " + q.items.length;
+        var p2 = sheet.querySelector("#apPart"); if (p2) p2.textContent = (/^pod:/.test(q.key) ? "EPISODE " : "PART ") + (curItem + 1) + " OF " + q.items.length;
       }
       var slLeft = sleepAt ? Math.max(0, Math.round((sleepAt - Date.now()) / 60000)) : 0;
       var slEl = sheet.querySelector("#apSleepLeft");
@@ -313,6 +428,7 @@
         apSeeking = true;
         var d = AU && isFinite(AU.duration) ? AU.duration : 0;
         if (d) sheet.querySelector("#apT0").textContent = fmtTime((sk2.value / 1000) * d);
+        sk2.style.background = "linear-gradient(90deg, var(--yellow) " + Math.round(sk2.value / 10) + "%, var(--bg) " + Math.round(sk2.value / 10) + "%)";
       });
       sk2.addEventListener("change", function () {
         var d = AU && isFinite(AU.duration) ? AU.duration : 0;
@@ -338,7 +454,7 @@
         setBoost(parseFloat(this.getAttribute("data-bo")));
         if (q && q.type === "audio" && AU && AU.paused && boostPref() > 1 && actx && actx.resume) actx.resume();
         openSheet();
-        toast("🔊 Boost " + (boostPref() > 1 ? "+" + Math.round((boostPref() - 1) * 100) + "%" : "off") + ".");
+        toast("🔊 Boost " + boostLabel(boostPref()) + ".");
       });
     });
     sheet.querySelectorAll(".ap-qi").forEach(function (el) {
@@ -349,7 +465,14 @@
       });
     });
   }
-  function closeSheet() { if (sheet) { try { clearInterval(sheet._apTick); } catch (e) {} sheet.remove(); sheet = null; } }
+  function closeSheet() {
+    if (!sheet) return;
+    try { clearInterval(sheet._apTick); } catch (e) {}
+    var old = sheet; sheet = null;
+    old.removeAttribute("id");            /* a rising sheet never shares the id */
+    old.classList.add("ap-closing");
+    setTimeout(function () { old.remove(); }, 230);
+  }
 
   /* ================= controls (both engines) ================= */
 
@@ -388,8 +511,13 @@
      so element-source routing is safe there; other hosts get a clean element. */
   var actx = null, gainNode = null, mediaSrc = null;
   var BOOSTKEY = "tsb_ab_boost", SLEEPKEY = "tsb_sleep_until";
+  /* what the chips say and what they really do: +50% is a true 150%,
+     +100% is a true 300% - the compressor keeps 300% loud, not shredded */
+  var BOOSTS = [{ g: 1, l: "OFF" }, { g: 1.5, l: "+50%" }, { g: 3, l: "+100%" }];
+  function boostLabel(g) { for (var i = 0; i < BOOSTS.length; i++) if (BOOSTS[i].g === g) return BOOSTS[i].l; return g > 1 ? "+" + Math.round((g - 1) * 100) + "%" : "off"; }
 
-  function boostPref() { return jget(BOOSTKEY, 1); }
+  function boostPref() { var v = jget(BOOSTKEY, 1); return v === 2 ? 3 : v; }   /* old 2x becomes the new 300% */
+  var comp = null;
   function ensureGraph(el) {
     if (mediaSrc) return true;
     var AC = window.AudioContext || window.webkitAudioContext;
@@ -399,15 +527,23 @@
       mediaSrc = actx.createMediaElementSource(el);
       gainNode = actx.createGain();
       gainNode.gain.value = boostPref();
+      /* at 300% raw gain would clip into distortion; the compressor catches
+         the peaks so the loudness stays and the voice stays clear */
+      comp = actx.createDynamicsCompressor();
+      try {
+        comp.threshold.value = -20; comp.knee.value = 22; comp.ratio.value = 5;
+        comp.attack.value = 0.004; comp.release.value = 0.22;
+      } catch (eC) {}
       mediaSrc.connect(gainNode);
-      gainNode.connect(actx.destination);
+      gainNode.connect(comp);
+      comp.connect(actx.destination);
       if (actx.state === "suspended" && actx.resume) actx.resume();
       return true;
-    } catch (e) { actx = null; mediaSrc = null; gainNode = null; return false; }
+    } catch (e) { actx = null; mediaSrc = null; gainNode = null; comp = null; return false; }
   }
   function dropGraph() {
     /* a fresh element is the only way to un-route a tainted source */
-    mediaSrc = null; gainNode = null;
+    mediaSrc = null; gainNode = null; comp = null;
     try { if (actx && actx.close) actx.close(); } catch (e) {}
     actx = null;
   }
@@ -458,6 +594,7 @@
     }, at - Date.now());
   }
   function stopAll() {
+    jset(CANCELKEY, Date.now());   /* cancelled is cancelled: no dock on reload */
     clearTimeout(sleepTimer); sleepAt = 0; jset(SLEEPKEY, 0);
     try { if (T) T.stop(); } catch (e) {}
     try { if (AU) { AU.pause(); AU.src = ""; } } catch (e) {}
@@ -469,8 +606,9 @@
 
   function paintPlay() {
     if (!dock) return;
-    dock.querySelector(".ap-play").textContent = playing() ? "⏸" : "▶";
-    try { if (sheet) { var bp2 = sheet.querySelector("#apBigPlay"); if (bp2) bp2.textContent = playing() ? "⏸" : "▶"; } } catch (e) {}
+    dock.classList.toggle("ap-on", !!playing());
+    dock.querySelector(".ap-play").innerHTML = playing() ? IC.pause : IC.play;
+    try { if (sheet) { var bp2 = sheet.querySelector("#apBigPlay"); if (bp2) bp2.innerHTML = playing() ? IC.pauseBig : IC.playBig; } } catch (e) {}
   }
   function paintAll() {
     if (!dock || !q) return;
@@ -572,12 +710,12 @@
   function newAU() {
     var a = new Audio();
     a.preload = "auto";
-    a.addEventListener("play", function () { try { if (actx && actx.state === "suspended" && actx.resume) actx.resume(); } catch (e) {} paintPlay(); });
+    a.addEventListener("play", function () { jset(PLAYKEY, 1); try { if (actx && actx.state === "suspended" && actx.resume) actx.resume(); } catch (e) {} paintPlay(); });
     a.addEventListener("waiting", function () { var pr = dock && dock.querySelector(".ap-prog"); if (pr) pr.classList.add("loading"); });
     a.addEventListener("stalled", function () { var pr = dock && dock.querySelector(".ap-prog"); if (pr) pr.classList.add("loading"); });
     a.addEventListener("canplay", function () { var pr = dock && dock.querySelector(".ap-prog"); if (pr) pr.classList.remove("loading"); });
     a.addEventListener("playing", function () { var pr = dock && dock.querySelector(".ap-prog"); if (pr) pr.classList.remove("loading"); });
-    a.addEventListener("pause", paintPlay);
+    a.addEventListener("pause", function () { jset(PLAYKEY, 0); paintPlay(); });
     a.addEventListener("ended", function () { if (q && curItem < q.items.length - 1) playChapter(curItem + 1, 0); else paintPlay(); });
     a.addEventListener("timeupdate", function () {
       if (!q || q.type !== "audio" || !AU) return;
@@ -650,8 +788,17 @@
       if (name === "NotAllowedError" || name === "AbortError") {
         paintAll(); paintPlay(); parkNote();
         toast("Paused where you left it - tap play to continue.");
-      } else {
+        /* the first tap anywhere brings the sound back: switching pages
+           should feel like the audio never stopped */
+        var resume = function () {
+          document.removeEventListener("pointerdown", resume);
+          try { if (q && q.type === "audio" && AU && AU.paused) AU.play().catch(function () {}); } catch (eR) {}
+        };
+        document.addEventListener("pointerdown", resume);
+      } else if (name === "" || /notsupported|media/i.test(name)) {
         toast("Could not stream this one. Check the connection.");
+      } else {
+        toast("Paused where you left it - tap play to continue.");
       }
     });
     if (!seekT) { audioPosSave(q.key, curItem, 0); paintAll(); savePos(); }
@@ -669,6 +816,7 @@
 
   function startAudio(queue) {
     try { if (T && T.stop) T.stop(); } catch (e) {}
+    jset(CANCELKEY, 0);   /* starting anything new lifts an old cancel; PLAYKEY follows the element's own play/pause events */
     q = queue; curItem = queue.ch || 0;
     mountDock();
     playChapter(curItem, queue.seek || 0);
@@ -677,14 +825,48 @@
 
   /* ================= feeds (podcast RSS) ================= */
 
+  /* feeds are the one thing we do not host, so fetching must survive a
+     flaky network: direct fetch, then the rss2json mirror, then the last
+     good copy we ever fetched. Only when all three fail does the reader
+     see an error. */
+  function feedKey(url) { return url.split("").reduce(function (a, c) { return ((a << 5) - a + c.charCodeAt(0)) | 0; }, 0); }
   function fetchFeed(url, cb) {
-    var ck = FEEDCACHE + url.split("").reduce(function (a, c) { return ((a << 5) - a + c.charCodeAt(0)) | 0; }, 0);
+    var ck = FEEDCACHE + feedKey(url);
+    var goodKey = "tsb_feed_good_" + feedKey(url);
     var cached = jget(ck, null);
-    if (cached && Date.now() - cached.at < 6 * 36e5 && cached.items.length) { cb(cached.items, cached.showTitle); return; }
-    fetch(url).then(function (r) { return r.text(); }).then(function (xml) {
+    var lastGood = jget(goodKey, null);
+    if (cached && Date.now() - cached.at < 6 * 36e5 && cached.items.length) { cb(cached.items, cached.showTitle, false, cached.art); return; }
+    function viaMirror() {
+      fetch("https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(url))
+        .then(function (r) { return r.json(); }).then(function (d) {
+          if (!d || d.status !== "ok" || !d.items || !d.items.length) throw new Error("mirror empty");
+          var out = [];
+          d.items.forEach(function (it) {
+            if (out.length >= 40) return;
+            var src = (it.enclosure && it.enclosure.link) || "";
+            if (!/^https:/.test(src)) return;
+            var dd = ""; try { dd = new Date(it.pubDate).toLocaleDateString(undefined, { day: "numeric", month: "short" }); } catch (e0) {}
+            out.push({ label: it.title || "Episode", sub: dd || "episode", src: src });
+          });
+          if (!out.length) throw new Error("mirror has no audio");
+          var res = { at: Date.now(), items: out, showTitle: (d.feed && d.feed.title) || "", art: (d.feed && d.feed.image) || "" };
+          jset(ck, res); jset(goodKey, res);
+          cb(out, res.showTitle, false, res.art);
+        }).catch(function () {
+          if (lastGood && lastGood.items && lastGood.items.length) { cb(lastGood.items, lastGood.showTitle, true, lastGood.art); return; }
+          cb([], "", false, "");
+        });
+    }
+    fetch(url).then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.text(); }).then(function (xml) {
       var doc = new DOMParser().parseFromString(xml, "text/xml");
       var ch = doc.querySelector("channel") || doc.documentElement;
       var showTitle = ch && ch.querySelector("> title") ? ch.querySelector("> title").textContent : "";
+      var artEl = "";
+      try {
+        var imgs = doc.getElementsByTagName("itunes:image");
+        if (imgs && imgs.length) artEl = imgs[0].getAttribute("href") || "";
+        if (!artEl) { var im = ch.querySelector("image > url"); if (im) artEl = im.textContent || ""; }
+      } catch (eArt) {}
       var out = [];
       doc.querySelectorAll("item").forEach(function (it) {
         if (out.length >= 40) return;
@@ -705,22 +887,96 @@
         seenT[k] = true; clean.push(e2);
       });
       out = clean;
-      if (out.length) jset(ck, { at: Date.now(), items: out, showTitle: showTitle });
-      cb(out, showTitle);
-    }).catch(function () { cb([], ""); });
+      if (out.length) {
+        var res = { at: Date.now(), items: out, showTitle: showTitle, art: artEl };
+        jset(ck, res); jset(goodKey, res);
+        cb(out, showTitle, false, artEl);
+      } else { viaMirror(); }
+    }).catch(function () { viaMirror(); });
   }
 
-  function playFeed(show) {
-    fetchFeed(show.rss, function (items, feedTitle) {
+  /* ── the show browser: one show, its episodes, play any of them here ── */
+  var showSheet = null;
+  function showBrowser(show, startAt) {
+    closeShowSheet();
+    showSheet = document.createElement("div");
+    showSheet.id = "tsbShowSheet";
+    showSheet.innerHTML =
+      '<div class="tsb-showcard">' +
+        '<button class="ap-x" aria-label="Close">✕</button>' +
+        '<div class="tss-hero"><span class="tss-art">🎙️</span>' +
+          '<span class="tss-mid"><b>' + esc(show.name) + '</b><i>with ' + esc(show.host) + '</i>' +
+          '<p>' + esc(show.why) + '</p></span></div>' +
+        '<div class="tss-acts"><button class="tss-playlatest" id="tssLatest">▶ PLAY THE LATEST</button>' +
+          '<a class="tss-home" href="' + esc(show.home || show.url) + '" target="_blank" rel="noopener noreferrer">show home ↗</a></div>' +
+        '<div class="ap-lab">EPISODES</div>' +
+        '<div class="tss-list" id="tssList"><p class="tss-note tss-note--load"><span class="tss-dot"></span><span class="tss-dot"></span><span class="tss-dot"></span> Fetching the episodes…</p></div>' +
+      '</div>';
+    document.body.appendChild(showSheet);
+    showSheet.querySelector(".ap-x").addEventListener("click", closeShowSheet);
+    showSheet.addEventListener("click", function (e) { if (e.target === showSheet) closeShowSheet(); });
+    var st = { all: [], shown: 0, art: "" };
+    var STEP = 3;
+    function paintList(stale) {
+      var list = showSheet.querySelector("#tssList");
+      if (!list) return;
+      var html = stale ? '<p class="tss-note">Offline, showing the episodes saved from last time.</p>' : "";
+      var i0 = 0;
+      html += st.all.slice(0, st.shown).map(function (ep, i) {
+        return '<button class="tss-ep" data-i="' + i + '"><span class="tss-ept">' + esc(ep.label) + '</span><i>' + esc(ep.sub || "") + '</i><em>▶ PLAY</em></button>';
+      }).join("");
+      if (st.shown < st.all.length) html += '<button class="tss-more" id="tssMore">+' + Math.min(STEP, st.all.length - st.shown) + ' MORE EPISODES</button>';
+      list.innerHTML = html;
+      var more = list.querySelector("#tssMore");
+      if (more) more.addEventListener("click", function () { st.shown += STEP; paintList(false); });
+      list.querySelectorAll(".tss-ep").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var i = Number(b.getAttribute("data-i"));
+          closeShowSheet();
+          playFeed(show, i);
+        });
+      });
+    }
+    if (startAt !== undefined) {
+      /* opened to play a specific episode */
+    }
+    fetchFeed(show.rss, function (items, feedTitle, stale, art) {
+      if (!showSheet) return;
+      if (!items.length) {
+        showSheet.querySelector("#tssList").innerHTML = '<p class="tss-note">Could not reach the feed right now. The show plays fine in its own app: ' + esc(show.home || show.url) + '</p>';
+        return;
+      }
+      st.all = items; st.art = art || "";
+      st.shown = Math.max(6, startAt !== undefined ? startAt + 3 : 6);
+      var heroArt = showSheet.querySelector(".tss-art");
+      if (heroArt && st.art) heroArt.innerHTML = '<img src="' + esc(st.art) + '" alt="" onerror="this.parentNode.textContent=\'🎙️\'">';
+      paintList(stale);
+    });
+  }
+  function closeShowSheet() {
+    if (showSheet) { showSheet.remove(); showSheet = null; }
+  }
+
+  function playFeed(show, startAt) {
+    fetchFeed(show.rss, function (items, feedTitle, stale, art) {
       if (!items.length) { toast("Could not reach the feed. Try the show's own app today."); return; }
+      var idx = Math.min(startAt !== undefined ? startAt : 0, items.length - 1);
+      var pos = audioPos("pod:" + show.id);
+      /* a manual episode choice always wins over a remembered position,
+         unless the choice IS the same episode */
+      var seek = 0, ch = idx;
+      if (pos && idx === 0 && pos.t) { ch = pos.ch; seek = pos.t; }
+      if (startAt !== undefined) { ch = idx; seek = 0; }
       startAudio(audioQueue({
         key: "pod:" + show.id,
         title: show.name,
-        sub: "Latest episodes, streaming from the show's own feed",
+        sub: stale ? "Saved episodes from last visit · streaming from the show's feed" : "Latest episodes, streaming from the show's own feed",
         items: items,
+        ch: ch,
+        seek: seek,
         credit: "Episodes stream from " + (feedTitle || show.name) + "'s official public feed. All rights with " + (show.host || "the show") + " and their publisher. Show home: " + (show.home || "") +
           " · TheSmallBook does not host or alter this audio.",
-        art: show.art || ""
+        art: show.art || art || ""
       }));
     });
   }
@@ -794,7 +1050,7 @@
         ch: pos ? pos.ch : 0,
         seek: pos ? pos.t : 0,
         credit: "Read by volunteers for LibriVox (public domain), streamed from Archive.org. TheSmallBook hosts nothing; we just point at the free shelves.",
-        art: (b.id ? "assets/covers/" + b.id + ".jpg" : "")
+        art: ("assets/covers/" + (b.id || bookId) + ".jpg")
       }));
     });
   }
@@ -806,10 +1062,16 @@
 
   function bootRestore() {
     if (q) return;
+    /* you swiped the player away: it stays gone. Only LISTEN TODAY's
+       continue (or starting anything new) brings audio back. */
+    if (jget(CANCELKEY, 0)) return;
     var l = jget(LASTKEY, null);
     if (!l || l.type !== "audio" || !l.key) return;
-    var auto = !jget(SLEEPKEY, 0);   /* sleep overdue → restore silent */
-    if (jget(SLEEPKEY, 0)) rearmSleep();
+    /* the state you left in is the state you get back: paused stays
+       parked at the same second, playing picks up where it was */
+    var sleepHold = !!jget(SLEEPKEY, 0);   /* sleep ran out while away → restore silent */
+    var auto = !sleepHold && jget(PLAYKEY, 0) === 1;
+    if (sleepHold) rearmSleep();
     if (l.key.indexOf("ab:") === 0) {
       var bid = l.key.slice(3);
       var rec = (window.TSB_AUDIOBOOKS || {})[bid];
@@ -828,9 +1090,9 @@
           seek: pos.t || 0,
           autoplay: auto,
           credit: "Read by volunteers for LibriVox (public domain), streamed from Archive.org.",
-          art: (b.id ? "assets/covers/" + b.id + ".jpg" : "")
+          art: ("assets/covers/" + (b.id || bid) + ".jpg")
         }));
-        if (!auto) toast("😴 Restored where the sleep timer paused it - tap play.");
+        if (sleepHold) toast("😴 Restored where the sleep timer paused it - tap play.");
       });
     } else if (l.key.indexOf("pod:") === 0) {
       var pid = l.key.slice(4);
@@ -850,11 +1112,14 @@
           credit: "Episodes stream from " + show.name + "'s official public feed. All rights with " + (show.host || "the show") + " and their publisher. Show home: " + (show.home || "") + " · TheSmallBook does not host or alter this audio.",
           art: show.art || ""
         }));
-        if (!auto) toast("😴 Restored where the sleep timer paused it - tap play.");
+        if (sleepHold) toast("😴 Restored where the sleep timer paused it - tap play.");
       });
     }
   }
-  setTimeout(bootRestore, 500);
+  window.addEventListener("pagehide", function () {
+    try { if (q && q.type === "audio" && AU) jset(PLAYKEY, AU.paused ? 0 : 1); } catch (e) {}
+  });
+  setTimeout(bootRestore, 150);
 
   /* ================= boot a queue ================= */
 
@@ -871,6 +1136,7 @@
       if (qc) startTTS(qc);
     },
     playFeed: playFeed,
+    showBrowser: showBrowser,
     playAudiobook: playAudiobook,
     audiobookFor: function (bookId) { return (window.TSB_AUDIOBOOKS || {})[bookId] || null; },
     toggle: toggle, next: nextItem, prev: prevItem, stop: stopAll,
@@ -894,6 +1160,7 @@
     resume: function () {
       var l = jget(LASTKEY, null);
       if (!l) return;
+      jset(CANCELKEY, 0);   /* continue is the one key that undoes a cancel */
       if (l.type === "book" && l.bookId) {
         var qc = bookQueue(l.bookId, l.item || 0);
         if (qc) startTTS(qc);
@@ -906,7 +1173,7 @@
               if (!items.length) return;
               var pos = audioPos("ab:" + bid);
               var hiRec = (window.TSB_AUDIOBOOKS || {})[bid] || {};
-              startAudio(audioQueue({ key: "ab:" + bid, title: l.title, sub: hiRec.lang === "hi" ? "Hindi mein poora audiobook · LibriVox" : "full audiobook · LibriVox", glyph: hiRec.dev || "", items: items, ch: pos ? pos.ch : 0, seek: pos ? pos.t : 0, autoplay: auto, credit: "Read by volunteers for LibriVox (public domain), streamed from Archive.org." }));
+              startAudio(audioQueue({ key: "ab:" + bid, title: l.title, sub: hiRec.lang === "hi" ? "Hindi mein poora audiobook · LibriVox" : "full audiobook · LibriVox", glyph: hiRec.dev || "", items: items, ch: pos ? pos.ch : 0, seek: pos ? pos.t : 0, autoplay: true, credit: "Read by volunteers for LibriVox (public domain), streamed from Archive.org." }));
             });
           }
         } else if (/^pod:/.test(l.key)) {

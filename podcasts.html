@@ -25,8 +25,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=309">
-  <link rel="stylesheet" href="css/deepdive.css?v=309">
+  <link rel="stylesheet" href="css/style.css?v=314">
+  <link rel="stylesheet" href="css/deepdive.css?v=314">
   <link rel="icon" href="favicon.ico" sizes="32x32">
 </head>
 <body class="ddpage">
@@ -80,12 +80,13 @@
     <div class="credits">&#10022; MADE BY JASH GANDHI &#10022;</div>
     <p class="tiny"><a href="about.html" style="color:inherit;">ABOUT</a>&nbsp;&nbsp;<strong><a href="gold.html" style="color:inherit;">👑 TSB GOLD</a></strong>&nbsp;&nbsp;MUMBAI, INDIA&nbsp;&nbsp;<strong>FREE TO READ</strong></p>
   </footer>
-  <script src="js/bootguard.js?v=309"></script>
-  <script src="js/prefs.js?v=309"></script>
-  <script src="js/config.js?v=309"></script>
-  <script src="js/data.js?v=309"></script>
-  <script src="js/deepdive-data.js?v=309"></script>
-  <script src="js/podcast-data.js?v=309"></script>
+  <script src="js/bootguard.js?v=314"></script>
+  <script src="js/prefs.js?v=314"></script>
+  <script src="js/config.js?v=314"></script>
+  <script src="js/data.js?v=314"></script>
+  <script src="js/deepdive-data.js?v=314"></script>
+  <script src="js/podcast-data.js?v=314"></script>
+  <script src="js/ab-discovery.js?v=314"></script>
   <script>
   (function () {
     "use strict";
@@ -103,13 +104,17 @@
         '<span class="pc-orig__go">OPEN &amp; LISTEN → </span></a>';
     }).join("");
 
-    /* show list: play the feed right here, or visit the show's home */
+    /* show list: browse episodes in-app, play right here, or visit home */
+    var SHOW_STEP = 6, shown = SHOW_STEP;
     function paint() {
       var w = document.getElementById("pcShowList");
       var list = D.shows.filter(function (s) { return cat === "all" || s.cat === cat; });
-      w.innerHTML = list.map(function (s) {
+      w.innerHTML = list.slice(0, shown).map(function (s) {
         var play = s.rss
-          ? '<button class="pc-play" data-feed="' + esc(s.id) + '">▶ PLAY HERE, FREE</button>'
+          ? '<button class="pc-play" data-feed="' + esc(s.id) + '">▶ PLAY LATEST</button>'
+          : '';
+        var browse = s.rss
+          ? '<button class="pc-browse" data-browse="' + esc(s.id) + '">☰ BROWSE EPISODES</button>'
           : '';
         var home = '<a class="pc-home" href="' + esc(s.home || s.url) + '" target="_blank" rel="noopener noreferrer">show home ↗</a>';
         return '<div class="pc-show">' +
@@ -118,13 +123,24 @@
           '<b>' + esc(s.name) + '</b><i>with ' + esc(s.host) + '</i>' +
           '<p>' + esc(s.why) + '</p>' +
           '<span class="pc-show__start"><b>Start here:</b> ' + esc(s.start) + '</span>' +
-          '<span class="pc-show__acts">' + play + home + '</span></span>' +
+          '<span class="pc-show__acts">' + play + browse + home + '</span></span>' +
           '</div>';
-      }).join("");
+      }).join("") +
+      (shown < list.length
+        ? '<button class="pc-more" id="pcMoreShows">+' + Math.min(3, list.length - shown) + ' MORE SHOWS (' + (list.length - shown) + ' left)</button>'
+        : "");
+      var more = w.querySelector("#pcMoreShows");
+      if (more) more.addEventListener("click", function () { shown += 3; paint(); });
       w.querySelectorAll("[data-feed]").forEach(function (b) {
         b.addEventListener("click", function () {
           var show = D.shows.filter(function (x) { return x.id === b.getAttribute("data-feed"); })[0];
           if (show && window.TSB_AUDIO) TSB_AUDIO.playFeed(show);
+        });
+      });
+      w.querySelectorAll("[data-browse]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var show = D.shows.filter(function (x) { return x.id === b.getAttribute("data-browse"); })[0];
+          if (show && window.TSB_AUDIO && TSB_AUDIO.showBrowser) TSB_AUDIO.showBrowser(show);
         });
       });
     }
@@ -136,14 +152,16 @@
       var b = e.target.closest("button");
       if (!b) return;
       cat = b.getAttribute("data-c");
+      shown = SHOW_STEP;
       cw.querySelectorAll(".pc-cat").forEach(function (x) { x.classList.toggle("on", x === b); });
       paint();
     });
     paint();
   })();
   </script>
-  <script src="js/bar.js?v=309" defer></script>
-  <script src="js/audioplayer.js?v=309"></script>
+  <script src="js/bar.js?v=314" defer></script>
+  <script src="js/guide.js?v=314"></script>
+  <script src="js/audioplayer.js?v=314"></script>
   <script>
   (function () {
     var AB = window.TSB_AUDIOBOOKS || {};
@@ -151,15 +169,27 @@
     var w = document.getElementById("pcAudiobooks");
     function esc(x) { return String(x == null ? "" : x).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
     var FIRST_SHELF = 6;
+    function saved() { try { return (window.TSB && TSB.bookmarks) ? TSB.bookmarks.list().filter(function (x) { return x.indexOf("ab:") === 0; }).map(function (x) { return x.slice(3); }) : []; } catch (e0) { return []; } }
     function abCard(bid) {
       var rec = AB[bid];
       var b = B.filter(function (x) { return x.id === bid; })[0] || {};
       var hi = rec.lang === "hi";
-      var cover = hi
-        ? '<span class="pc-ab__dev"><b>' + esc(rec.dev || "हिंदी") + '</b><i>HINDI MEIN</i></span>'
-        : '<img src="assets/covers/' + esc(bid) + '.jpg" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">';
+      var dev = '<span class="pc-ab__dev"><b>' + esc(rec.dev || "हिंदी") + '</b><i>HINDI MEIN</i></span>';
+      /* the fallback travels inside a double-quoted onerror attribute, so
+         both quote kinds need safe forms: " as &quot; (the parser decodes
+         it before the JS runs), ' as \' */
+      var fallback = hi ? dev.replace(/"/g, "&quot;").replace(/'/g, "\\'") : "";
+      /* v314: WANT MORE books have no painted cover yet - their fallback
+         is a proper little cover block with the title, never a broken img */
+      if (rec.discovered && !hi) {
+        var words = String(rec.title || "Audiobook").split(" ").slice(0, 3).join(" ");
+        fallback = ('<span class=\\"pc-ab__dev\\"><b>' + esc(words) + '</b><i>FRESH FROM LIBRIVOX</i></span>').replace(/"/g, "&quot;").replace(/'/g, "\\'");
+      }
+      var cover = '<img src="assets/covers/' + esc(bid) + '.jpg?v=314" alt="" loading="lazy" onerror="this.outerHTML=\'' + fallback + '\'">';
+      var isSaved = saved().indexOf(bid) >= 0;
       return '<div class="pc-ab__card' + (hi ? " pc-ab__card--hi" : "") + '">' +
         cover +
+        '<button class="pc-ab__save' + (isSaved ? " on" : "") + '" data-save="' + esc(bid) + '" aria-label="Save to your shelf">' + (isSaved ? "❤️" : "🤍") + '</button>' +
         '<b>' + esc(b.title || rec.title) + '</b>' +
         '<i>' + esc(rec.author || b.author || "anonymous") + '</i>' +
         (hi ? '<span class="pc-ab__lang">हिंदी</span>' : '') +
@@ -167,14 +197,72 @@
         '<button data-ab="' + esc(bid) + '">▶ PLAY</button>' +
         '</div>';
     }
-    var allBids = Object.keys(AB);
-    function paintShelf(all) {
-      w.innerHTML = allBids.slice(0, all ? allBids.length : FIRST_SHELF).map(abCard).join("") +
-        (all ? "" : '<button class="pc-ab__more" id="abMore">SHOW ALL ' + allBids.length + ' AUDIOBOOKS ↓</button>');
+    /* mixed shelf, not hindi-first: three English, one Hindi, on repeat, so
+       every screen of books carries both - the point of the shelf is that
+       people SEE the whole library, not one language at the top.
+       v314: rebuilt on every paint, so WANT MORE books join the mix. */
+    function mixedBids() {
+      var allBids = Object.keys(AB);
+      var hi = allBids.filter(function (b) { return AB[b].lang === "hi"; });
+      var en = allBids.filter(function (b) { return AB[b].lang !== "hi"; });
+      var out = [], e = 0, h = 0;
+      while (e < en.length || h < hi.length) {
+        for (var k = 0; k < 3 && e < en.length; k++) out.push(en[e++]);
+        if (h < hi.length) out.push(hi[h++]);
+      }
+      return out;
     }
-    paintShelf(false);
+    var shown = FIRST_SHELF;
+    function paintShelf() {
+      var mine = saved();
+      var strip = mine.length
+        ? '<div class="pc-ab__mine"><b>❤️ YOUR AUDIO SHELF</b>' + mine.map(function (bid) {
+            var rec = AB[bid] || {}; var b = B.filter(function (x) { return x.id === bid; })[0] || {};
+            return '<button class="pc-ab__minechip" data-ab="' + esc(bid) + '">' + esc((rec.dev ? rec.dev + " · " : "") + (b.title || rec.title || bid)) + ' ▶</button>';
+          }).join("") + '</div>'
+        : "";
+      var mb = mixedBids();
+      var left = mb.length - shown;
+      var tail = "";
+      if (left > 0) {
+        tail = '<button class="pc-ab__more" id="abMore">+' + Math.min(FIRST_SHELF, left) + ' MORE AUDIOBOOKS (' + left + ' of ' + mb.length + ' left)</button>';
+      } else {
+        /* v314: the shelf ran out - WANT MORE pulls new books in, live */
+        tail = '<button class="pc-ab__more" id="abWant"' + (wantBusy ? " disabled" : "") + '>' + (wantBusy ? 'FETCHING FROM LIBRIVOX' + '…' : '✨ WANT MORE AUDIOBOOKS? THE APP FETCHES THEM') + '</button>' +
+          (gotCount() ? '<button class="pc-ab__more pc-ab__more--soft" id="abWantMore2">+' + FIRST_SHELF + ' MORE (' + gotCount() + ' fetched so far)</button>' : "");
+      }
+      w.innerHTML = strip + mb.slice(0, shown).map(abCard).join("") + tail;
+    }
+    function gotCount() { return (window.TSB_ABMORE ? TSB_ABMORE.count() : 0); }
+    function toast(msg) {
+      var t = document.createElement("div");
+      t.style.cssText = "position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--bar-total, 84px) + 24px);z-index:280;background:var(--ink);color:var(--paper);border-radius:999px;padding:10px 16px;font:800 12px 'Space Grotesk',sans-serif;max-width:86vw;text-align:center";
+      t.textContent = msg;
+      document.body.appendChild(t);
+      setTimeout(function () { t.remove(); }, 3200);
+    }
+    var wantBusy = false;
+    function wantMore() {
+      if (wantBusy || !window.TSB_ABMORE) return;
+      wantBusy = true;
+      paintShelf();
+      TSB_ABMORE.serve(FIRST_SHELF, function (recs) {
+        wantBusy = false;
+        shown += recs.length;   /* the new books are visible at once */
+        paintShelf();
+        if (recs.length) toast(recs.length + " new audiobook" + (recs.length > 1 ? "s" : "") + " on the shelf, fetched fresh from LibriVox.");
+        else toast("Couldn't reach LibriVox just now. Try again in a bit, it fetches in seconds.");
+      });
+    }
+    paintShelf();
     w.addEventListener("click", function (e) {
-      if (e.target.id === "abMore") { paintShelf(true); return; }
+      var sv = e.target.closest("[data-save]");
+      if (sv) {
+        if (window.TSB && TSB.bookmarks) { TSB.bookmarks.toggle("ab:" + sv.getAttribute("data-save")); paintShelf(); }
+        return;
+      }
+      if (e.target.id === "abMore") { shown += FIRST_SHELF; paintShelf(); return; }
+      if (e.target.id === "abWant" || e.target.id === "abWantMore2") { wantMore(); return; }
       var btn = e.target.closest("[data-ab]");
       if (btn && window.TSB_AUDIO) TSB_AUDIO.playAudiobook(btn.getAttribute("data-ab"));
     });

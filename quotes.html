@@ -15,8 +15,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Archivo+Black&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=309">
-  <link rel="stylesheet" href="css/community.css?v=309">
+  <link rel="stylesheet" href="css/style.css?v=314">
+  <link rel="stylesheet" href="css/community.css?v=314">
   <link rel="manifest" href="manifest.json">
   <style>
     body.qw-body { padding-bottom: 0; }
@@ -82,6 +82,10 @@
     .qw-colors { display: flex; gap: 10px; margin: 12px 0; }
     .qw-c { width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(0,0,0,.25); cursor: pointer; }
     .qw-c.on { border: 3px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+    .qw-c--custom { position: relative; overflow: hidden; display: inline-block; }
+    .qw-c--custom input { position: absolute; inset: -8px; width: 160%; height: 160%; opacity: 0; cursor: pointer; }
+    .qw-c--share { display: inline-flex; align-items: center; justify-content: center; font-size: 13px; background: var(--paper); }
+    .qw-c--share.on { border: 3px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); background: var(--yellow); }
     .qw-go { width: 100%; border: 3px solid var(--ink); background: var(--green); border-radius: 14px; box-shadow: 3px 3px 0 var(--ink); padding: 13px; font: 400 13px "Archivo Black", "Arial Black", sans-serif; color: var(--ink); cursor: pointer; }
     .qw-go:disabled { opacity: .6; }
     .qw-pick { width: 100%; border: 2.5px dashed var(--ink); border-radius: 14px; background: #fffdf2; padding: 22px 0; font: 800 12px "Space Grotesk", sans-serif; color: var(--ink); cursor: pointer; }
@@ -122,11 +126,12 @@
 
   <button class="qw-add" id="qwAdd" aria-label="Pin to the wall">📌</button>
 
-  <script src="js/config.js?v=309"></script>
-  <script src="js/bar.js?v=309" defer></script>
-  <script src="js/community.js?v=309"></script>
-  <script src="js/quotewall.js?v=309"></script>
-  <script src="js/podcast-data.js?v=309"></script>
-  <script src="js/audioplayer.js?v=309"></script>
+  <script src="js/config.js?v=314"></script>
+  <script src="js/bar.js?v=314" defer></script>
+  <script src="js/guide.js?v=314"></script>
+  <script src="js/community.js?v=314"></script>
+  <script src="js/quotewall.js?v=314"></script>
+  <script src="js/podcast-data.js?v=314"></script>
+  <script src="js/audioplayer.js?v=314"></script>
 </body>
 </html>

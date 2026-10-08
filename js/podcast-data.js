@@ -135,6 +135,20 @@
     "upanishads":                { id: "kathaupanishad_1503_librivox",     title: "The Upanishads" , ch: 6 },
     "raja-yoga":                 { id: "rajayoga_1408_librivox",           title: "Raja Yoga" , ch: 27 },
     "yoga-sutras":               { id: "yogasutras_1207_librivox",         title: "The Yoga Sutras of Patanjali" , ch: 10 },
-    "analects":                  { id: "analects_confucius_1303_librivox", title: "The Analects" , ch: 21 }
+    "analects":                  { id: "analects_confucius_1303_librivox", title: "The Analects" , ch: 21 },
+  "walden":                    { id: "walden_librivox",                    title: "Walden", author: "Henry David Thoreau" },
+  "zarathustra":               { id: "zarathustra_2010_librivox",          title: "Thus Spake Zarathustra", author: "Friedrich Nietzsche" },
+  "24-hours":                  { id: "twenty-four_hours_a_day_librivox",   title: "How to Live on 24 Hours a Day", author: "Arnold Bennett" },
+  "acres-of-diamonds":         { id: "acres_of_diamonds_1008_librivox",    title: "Acres of Diamonds", author: "Russell Conwell" },
+  "science-of-being-great":    { id: "science_of_being_great_1203_librivox", title: "The Science of Being Great", author: "Wallace D. Wattles" },
+  "consolation-philosophy":    { id: "the_consolation_of_philosophy_librivox", title: "The Consolation of Philosophy", author: "Boethius" },
+  "kybalion":                  { id: "kybalion_ghs_librivox",              title: "The Kybalion", author: "The Three Initiates" },
+  "shortness-of-life":         { id: "shortness_of_life_2305_librivox",    title: "On the Shortness of Life", author: "Seneca" },
+  "coolidge":                  { id: "autobiographycoolidge_2507_librivox", title: "The Autobiography of Calvin Coolidge", author: "Calvin Coolidge" },
+  "public-speaking":           { id: "art_public_speaking_1101_librivox",  title: "The Art of Public Speaking", author: "Dale Carnegie et al." },
+  "common-sense":              { id: "commonsensever4_2507_librivox",      title: "Common Sense", author: "Thomas Paine" },
+  "carnegie":                  { id: "autobiography_carnegie_1212_librivox", title: "The Autobiography of Andrew Carnegie", author: "Andrew Carnegie" },
+  "frederick-douglass":        { id: "frederick-douglass_jf_librivox",     title: "Narrative of the Life of Frederick Douglass", author: "Frederick Douglass" },
+  "odyssey":                   { id: "odyssey_butler_librivox",            title: "The Odyssey", author: "Homer" }
   };
 })();

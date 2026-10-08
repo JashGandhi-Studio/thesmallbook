@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
     <meta property="og:title" content="Messages, TheSmallBook">
   <meta property="og:description" content="Your private conversations on TheSmallBook.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=309">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=314">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/dm.html">
@@ -18,7 +18,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffc800">
-  <script src="./js/bootguard.js?v=309"></script>
+  <script src="./js/bootguard.js?v=314"></script>
   <script>
     try {
       var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
@@ -28,7 +28,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=309">
+  <link rel="stylesheet" href="css/style.css?v=314">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -63,6 +63,13 @@
            thread, instead of a blocking alert() that hides the whole screen. -->
       <div class="dm-note" id="dmNote" role="status" aria-live="polite" hidden></div>
 
+      <!-- v313: swipe a bubble → this bar previews what you are replying to -->
+      <div class="dm-replybar" id="dmReplyBar" hidden>
+        <span class="dm-replybar__ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 7 4 12.2l5.5 5.2"/><path d="M4 12.2h9.4a6.4 6.4 0 0 1 6.4 6.4v1"/></svg></span>
+        <div class="dm-replybar__txt"><b id="dmReplyWho"></b><span id="dmReplyPrev"></span></div>
+        <button type="button" class="dm-replybar__x" id="dmReplyX" aria-label="Cancel reply">✕</button>
+      </div>
+
       <form class="dm-send" id="dmSend">
         <button class="dm-plus" id="dmPlus" type="button" title="Send a book" aria-label="Send a book" aria-expanded="false" aria-haspopup="dialog">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5.6v12.8M5.6 12h12.8"/></svg>
@@ -91,15 +98,15 @@
     </div>
   </div>
 
-  <script src="js/prefs.js?v=309"></script>
-  <script src="js/lang.js?v=309"></script>
-  <script src="js/config.js?v=309"></script>
-  <script src="js/data.js?v=309"></script>
-  <script src="js/auth.js?v=309"></script>
-  <script src="js/sounds.js?v=309"></script>
-  <script src="js/founder.js?v=309"></script>
-  <script src="js/community.js?v=309"></script>
-  <script src="js/voice.js?v=309"></script>
+  <script src="js/prefs.js?v=314"></script>
+  <script src="js/lang.js?v=314"></script>
+  <script src="js/config.js?v=314"></script>
+  <script src="js/data.js?v=314"></script>
+  <script src="js/auth.js?v=314"></script>
+  <script src="js/sounds.js?v=314"></script>
+  <script src="js/founder.js?v=314"></script>
+  <script src="js/community.js?v=314"></script>
+  <script src="js/voice.js?v=314"></script>
   <script>
   (function () {
     "use strict";
@@ -202,10 +209,12 @@
       var prof = null;
       try { prof = await C.getProfile(uid); } catch (e) {}
       document.getElementById("dmTitle").innerHTML = C.icon("chat") + " " + C.esc(prof ? prof.name : "Reader");
+      peerFirst = (prof && prof.name ? prof.name : "Reader").split(" ")[0];
+      hideReplyBar();
       back.href = "dm.html";
       var lastId = msgs.getAttribute("data-last") || "";
       var nowLast = rows.length ? rows[rows.length - 1].id + ":" + rows.length : "";
-      if (silent && nowLast && nowLast === lastId) return;
+      if (silent && nowLast === lastId) return;   /* v313: empty threads stop repainting too - a swipe or a pending bubble must never be wiped by a poll */
       /* never repaint the thread while a voice note is playing, the old
          6 s poll used to cut people off mid-sentence */
       if (silent && msgs.querySelector(".vp.is-playing")) return;
@@ -227,7 +236,21 @@
         var mineRow = m.sender_id === meId;
         var isRead = mineRow ? waRead(m, rows) : false;
         var body = String(m.body || "");
+        /* v313: quoted reply strip - find the original bubble in this thread */
+        var strip = "";
+        if (m.reply_to) {
+          var src = null;
+          for (var ri = 0; ri < rows.length; ri++) { if (rows[ri].id === m.reply_to) { src = rows[ri]; break; } }
+          if (src) {
+            var srcMine = src.sender_id === meId;
+            var srcBody = String(src.body || "").trim() || (src.audio_url ? "🎙️ Voice message" : (src.book_id ? "📖 Book" : ""));
+            var who = srcMine ? "You" : ((prof && prof.name ? prof.name : "Reader").split(" ")[0]);
+            strip = '<button type="button" class="dm-quote" data-jump="' + C.esc(src.id) + '" aria-label="Jump to replied message">' +
+              "<b>↩ " + C.esc(who) + "</b><span>" + C.esc(String(srcBody).slice(0, 110)) + "</span></button>";
+          }
+        }
         return '<div class="dm-bub' + (mineRow ? " me" : "") + (m.audio_url ? " dm-bub--voice" : "") + '" data-mid="' + m.id + '" data-mine="' + (mineRow ? 1 : 0) + '" data-body="' + C.esc(body) + '">' +
+          strip +
           (m.book_id ? bookCard(m.book_id) : "") +
           /* v250: the real player, ring progress, scrubbable waveform,
              elapsed/total and 1× 1.5× 2×. The bare <audio controls> is gone. */
@@ -263,13 +286,16 @@
       if (!body) return;
       document.getElementById("dmBody").value = "";
       syncMicMode();
+      /* v313: replying to a specific bubble? take it and close the bar */
+      var replyTo = replyTarget ? replyTarget.getAttribute("data-mid") : "";
+      hideReplyBar();
       /* optimistic bubble: ✓ = just sent, then ✓✓ once the server confirms */
       var pend = document.createElement("div");
       pend.className = "dm-bub me dm-bub--pend";
       pend.innerHTML = "<span>" + C.esc(body) + '</span><em>just now</em><span class="dm-tick pending">✓</span>';
       msgs.appendChild(pend); msgs.scrollTop = msgs.scrollHeight;
       try {
-        await C.sendDM(uid, body);
+        await C.sendDM(uid, body, "", replyTo ? { reply_to: replyTo } : null);
         await loadThread();
         /* v250: replying IS reading, the "new message" note never comes back */
         try { C.notifMarkPeer(uid).catch(function () {}); } catch (e2) {}
@@ -279,6 +305,81 @@
         setTimeout(function () { pend.remove(); }, 4000);
         C.say("Message failed, " + (err && err.message ? err.message : err));
       }
+    });
+
+    /* v313: swipe a bubble sideways → reply to it -------------------------- */
+    var replyBar = document.getElementById("dmReplyBar");
+    var replyTarget = null;
+    var peerFirst = "Reader";
+
+    function setReplyBar(bub) {
+      replyTarget = bub;
+      var mine = bub.getAttribute("data-mine") === "1";
+      var txt = String(bub.getAttribute("data-body") || "").trim();
+      if (!txt) txt = bub.classList.contains("dm-bub--voice") ? "🎙️ Voice message" : "📖 Book";
+      document.getElementById("dmReplyWho").textContent = "↩ Replying to " + (mine ? "yourself" : peerFirst);
+      document.getElementById("dmReplyPrev").textContent = txt.slice(0, 120);
+      replyBar.hidden = false;
+      try { if (navigator.vibrate) navigator.vibrate(10); } catch (e2) {}
+      setTimeout(function () { try { document.getElementById("dmBody").focus(); } catch (e3) {} }, 60);
+    }
+    function hideReplyBar() {
+      replyTarget = null;
+      if (replyBar) replyBar.hidden = true;
+    }
+    document.getElementById("dmReplyX").addEventListener("click", hideReplyBar);
+
+    /* same exclusions as the long-press: never steal the player, book cards
+       or links - and the quote strip inside a bubble stays clickable */
+    function swipeable(el) {
+      if (!el || !el.closest) return null;
+      if (el.closest(".dm-book") || el.closest(".vp") || el.closest("a") || el.closest(".dm-quote")) return null;
+      return el.closest(".dm-bub");
+    }
+    var sw = { bub: null, x0: 0, y0: 0, on: false, max: 0 };
+    function swEnd() {
+      if (sw.bub && sw.on) {
+        sw.bub.style.transition = "transform .18s ease";
+        sw.bub.style.transform = "";
+        setTimeout(function () { if (sw.bub) sw.bub.style.transition = ""; }, 200);
+        if (sw.max >= 56) setReplyBar(sw.bub);
+      }
+      sw.bub = null; sw.on = false; sw.max = 0;
+    }
+    msgs.addEventListener("pointerdown", function (e) {
+      var bub = swipeable(e.target);
+      if (!bub) return;
+      sw.bub = bub; sw.x0 = e.clientX; sw.y0 = e.clientY; sw.on = false; sw.max = 0;
+    });
+    msgs.addEventListener("pointermove", function (e) {
+      if (!sw.bub) return;
+      var dx = e.clientX - sw.x0, dy = e.clientY - sw.y0;
+      if (!sw.on) {
+        if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { sw.bub = null; return; }  /* scrolling */
+        if (Math.abs(dx) > 10) {
+          sw.on = true;
+          cancelPress();  /* a swipe is not a long-press */
+          try { sw.bub.setPointerCapture(e.pointerId); } catch (e2) {}
+        }
+      }
+      if (sw.on) {
+        var shift = Math.max(-96, Math.min(96, dx));
+        sw.bub.style.transform = "translateX(" + shift + "px)";
+        sw.max = Math.max(sw.max, Math.abs(shift));
+      }
+    });
+    msgs.addEventListener("pointerup", swEnd);
+    msgs.addEventListener("pointercancel", swEnd);
+
+    /* tapping the quoted strip inside a bubble jumps to the original */
+    msgs.addEventListener("click", function (e) {
+      var q = e.target && e.target.closest ? e.target.closest(".dm-quote") : null;
+      if (!q || !msgs.contains(q)) return;
+      var t = msgs.querySelector('.dm-bub[data-mid="' + q.getAttribute("data-jump") + '"]');
+      if (!t) return;
+      t.scrollIntoView({ behavior: "smooth", block: "center" });
+      t.classList.add("dm-flash");
+      setTimeout(function () { t.classList.remove("dm-flash"); }, 1100);
     });
 
     /* live read receipts: while the thread is open, poll lightly; blue ✓✓ when they read */
@@ -562,8 +663,8 @@
     });
   })();
   </script>
-  <script src="js/podcast-data.js?v=309"></script>
-  <script src="js/audioplayer.js?v=309"></script>
-  <script src="js/bar.js?v=309" defer></script>
+  <script src="js/podcast-data.js?v=314"></script>
+  <script src="js/audioplayer.js?v=314"></script>
+  <script src="js/bar.js?v=314" defer></script>
 </body>
 </html>

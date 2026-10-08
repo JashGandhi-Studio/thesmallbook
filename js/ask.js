@@ -96,7 +96,7 @@
     return String(q).toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
   }
   /* v292 house rule: no em dashes anywhere in the app. Ask pulls lines from
-     500 books and 315 autopsies, older shelves included, so the escape gate
+     500 books and 360 autopsies, older shelves included, so the escape gate
      also flattens every dash to a plain hyphen. Nothing rendered in the panel
      (or saved to history) can carry one, whatever the source file says. */
   function esc(s) {
@@ -440,7 +440,7 @@
       hero.className = "cht-hero";
       hero.innerHTML = '<div class="cht-hero__logo">📕</div>' +
         "<h1>Ask the library</h1>" +
-        "<p>500 books · 3,540 lessons · 315 autopsies, one question away.</p>";
+        "<p>500 books · 3,540 lessons · 360 autopsies, one question away.</p>";
       msgsEl.insertBefore(hero, msgsEl.firstChild);
       try {
         var mo = new MutationObserver(function () {
@@ -1255,7 +1255,7 @@
         '<div class="aq-locked">' +
           '<div class="aq-locked__chip">👑</div>' +
           '<h3>ASK THE LIBRARY IS PART OF GOLD</h3>' +
-          '<p>Every answer is composed live from <b>500 books, 3,540 lessons and 315 autopsies</b>, with the exact lesson it came from, one tap away. Nothing invented, no chatbot filler.</p>' +
+          '<p>Every answer is composed live from <b>500 books, 3,540 lessons and 360 autopsies</b>, with the exact lesson it came from, one tap away. Nothing invented, no chatbot filler.</p>' +
           '<p class="aq-locked__modes">Seven ways to ask: compare books on one question, the decision before the disaster, red flags, seven-day plans and more.</p>' +
           '<a class="aq-locked__go" href="gold.html">👑 SEE TSB GOLD</a>' +
           '<small>The library itself stays free, every book, every lesson, forever.</small>' +

@@ -20,7 +20,7 @@
   function hash(s) { var h = 5381; s = String(s || ""); for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0; return h; }
   function me() { try { return (window.TSB_COMMUNITY && TSB_COMMUNITY.me && TSB_COMMUNITY.me()) || null; } catch (e) { return null; } }
 
-  var COLORS = ["#fff8b8", "#d8f5c0", "#ffd9e2", "#d9e8ff"]; /* sticky pastels */
+  var COLORS = ["#fff8b8", "#d8f5c0", "#ffd9e2", "#d9e8ff", "#ffe3a3", "#e2d3ff", "#c2f0e4", "#ffd9c4"]; /* sticky pastels */
 
   /* a small open shelf of lines (old, public-domain voices) so a reader
      can pin a great line even when no words come. Tap one, it fills
@@ -128,6 +128,17 @@
     };
   }
 
+  function noteColor(p) {
+    try {
+      var tags = p.tags || [];
+      for (var i = 0; i < tags.length; i++) {
+        var t = String(tags[i]);
+        if (t.indexOf("c:") === 0 && /^c:[0-9a-fA-F]{6}$/.test(t)) return "#" + t.slice(2);
+      }
+    } catch (e) {}
+    return null;
+  }
+  function isMine(p) { var u = me(); return !!(u && p.author_id === u.id); }
   function noteHTML(p, pos) {
     if (p.by) {
       var ci2 = hash(p.id) % COLORS.length;
@@ -137,8 +148,9 @@
         '<span class="qw-by">- ' + esc(p.by) + '</span>' +
         '</div>';
     }
-    var mine = me() && p.author_id === me().id;
+    var mine = isMine(p);
     var ci = hash(p.id) % COLORS.length;
+    var col = noteColor(p) || COLORS[ci];
     if (p.kind === "wall-photo") {
       return '<div class="qw-photo" style="left:' + pos.x + 'px;top:' + pos.y + 'px;transform:rotate(' + pos.rot + 'deg)" data-p="' + esc(p.id) + '">' +
         '<span class="qw-pin qw-pin--red"></span>' +
@@ -149,7 +161,7 @@
         '</div>';
     }
     var txt = String(p.body || "").slice(0, 320);
-    return '<div class="qw-note" style="left:' + pos.x + 'px;top:' + pos.y + 'px;background:' + COLORS[ci] + ';transform:rotate(' + pos.rot + 'deg)" data-p="' + esc(p.id) + '">' +
+    return '<div class="qw-note" data-own="' + (mine ? "1" : "0") + '" style="left:' + pos.x + 'px;top:' + pos.y + 'px;background:' + col + ';transform:rotate(' + pos.rot + 'deg)" data-p="' + esc(p.id) + '">' +
       '<span class="qw-pin"></span>' +
       (mine ? '<button class="qw-del" data-del="' + esc(p.id) + '" aria-label="Remove">✕</button>' : '') +
       '<p class="qw-txt">' + esc(txt) + '</p>' +
@@ -157,10 +169,14 @@
       '</div>';
   }
 
+  function posOverride(id) {
+    try { return JSON.parse(localStorage.getItem("tsb_wall_pos_" + id) || "null"); } catch (e) { return null; }
+  }
   function paint() {
     if (!board) return;
     var all = SEEDS.concat(notes);
-    var pos = layout(all.length + 3);
+    var base = layout(all.length + 3);
+    var pos = function (id) { var o = posOverride(id); return o ? { x: o.x, y: o.y, rot: o.rot || 0 } : base(id); };
     var html = "";
     all.forEach(function (p) {
       html += noteHTML(p, pos(p.id));
@@ -185,8 +201,71 @@
     if (!board) return;
     board.style.transform = "translate(" + view.x + "px," + view.y + "px) scale(" + view.s + ")";
   }
+  function shareNote(txt, by) {
+    var text = '"' + txt + '"' + (by ? " - " + by : "") + " · TheSmallBook quote wall";
+    if (navigator.share) {
+      navigator.share({ title: "A line worth keeping", text: text }).catch(function () {});
+      return;
+    }
+    function done() { toast("📋 Copied. Paste it anywhere."); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done).catch(function () { fallbackCopy(text); done(); });
+    else { fallbackCopy(text); done(); }
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.cssText = "position:fixed;opacity:0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    ta.remove();
+  }
   function bindGestures() {
     var pts = {}, lastMid = null, lastDist = 0, panning = false, sx = 0, sy = 0, vx0 = 0, vy0 = 0, moved = false;
+    /* tap a note to share it · drag YOUR own note to move it */
+    var tapNote = null, tapX = 0, tapY = 0, draggingNote = null;
+    vp.addEventListener("pointerdown", function (e) {
+      var n = e.target.closest(".qw-note");
+      tapNote = n; tapX = e.clientX; tapY = e.clientY; draggingNote = null;
+      if (n && n.getAttribute("data-own") === "1" && !e.target.closest(".qw-del")) {
+        try { n.setPointerCapture(e.pointerId); } catch (e0) {}
+      }
+    }, true);
+    vp.addEventListener("pointermove", function (e) {
+      if (!tapNote) return;
+      var dx2 = e.clientX - tapX, dy2 = e.clientY - tapY;
+      if (!draggingNote && tapNote.getAttribute("data-own") === "1" && Math.abs(dx2) + Math.abs(dy2) > 10) {
+        draggingNote = tapNote;
+        draggingNote.style.transition = "none";
+        draggingNote.style.zIndex = 50;
+      }
+      if (draggingNote) {
+        e.stopPropagation();
+        var r = vp.getBoundingClientRect();
+        var bx = (e.clientX - r.left - view.x) / view.s - 110;
+        var by = (e.clientY - r.top - view.y) / view.s - 60;
+        draggingNote.style.left = Math.max(4, bx) + "px";
+        draggingNote.style.top = Math.max(4, by) + "px";
+      }
+    }, true);
+    vp.addEventListener("pointerup", function (e) {
+      if (draggingNote) {
+        var id2 = draggingNote.getAttribute("data-p");
+        var r2 = vp.getBoundingClientRect();
+        var bx2 = Math.max(4, (e.clientX - r2.left - view.x) / view.s - 110);
+        var by2 = Math.max(4, (e.clientY - r2.top - view.y) / view.s - 60);
+        var prev = posOverride(id2) || {};
+        try { localStorage.setItem("tsb_wall_pos_" + id2, JSON.stringify({ x: Math.round(bx2), y: Math.round(by2), rot: prev.rot || 0 })); } catch (e1) {}
+        draggingNote.style.transition = ""; draggingNote.style.zIndex = "";
+        draggingNote = null; tapNote = null;
+        return;
+      }
+      if (tapNote && Math.abs(e.clientX - tapX) + Math.abs(e.clientY - tapY) < 9 && !e.target.closest(".qw-del") && !e.target.closest("button")) {
+        var p3 = null;
+        var id3 = tapNote.getAttribute("data-p");
+        SEEDS.concat(notes).forEach(function (x) { if (x.id === id3) p3 = x; });
+        if (p3) shareNote(p3.by ? p3.txt : String(p3.body || "").slice(0, 320), p3.by || p3.author_name || "");
+      }
+      tapNote = null;
+    }, true);
     vp.addEventListener("pointerdown", function (e) {
       if (e.target.closest("button")) return;
       pts[e.pointerId] = { x: e.clientX, y: e.clientY };
@@ -275,7 +354,10 @@
             '<div class="qw-qlist" id="qwQList"></div>' +
           '</div>' +
           '<textarea id="qwText" maxlength="300" placeholder="The line, the lesson, the thing you keep repeating to people…"></textarea>' +
-          '<div class="qw-colors">' + COLORS.map(function (c, i) { return '<button class="qw-c' + (i === 0 ? " on" : "") + '" data-c="' + c + '" style="background:' + c + '" aria-label="sticky colour"></button>'; }).join("") + '</div>' +
+          '<div class="qw-colors">' + COLORS.map(function (c, i) { return '<button class="qw-c' + (i === 0 ? " on" : "") + '" data-c="' + c + '" style="background:' + c + '" aria-label="sticky colour"></button>'; }).join("") +
+            '<label class="qw-c qw-c--custom" aria-label="custom colour" style="background:conic-gradient(#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#b28dff,#ff6b6b)"><input type="color" id="qwCustom" value="#fff8b8"></label>' +
+            '<button class="qw-c qw-c--share" id="qwShareAfter" type="button" aria-label="share after pinning" title="share after pinning">📎</button>' +
+          '</div>' +
           '<div class="qw-anonrow"><button class="qw-anon" id="qwAnon">🕵️ POST AS ' + esc((u.name || "READER").toUpperCase()) + '</button><span>tap to switch to anonymous</span></div>' +
           '<button class="qw-go" id="qwPinNote">📌 PIN IT</button>' +
         '</div>' +
@@ -288,7 +370,7 @@
         '<p class="qw-fine">Kind words travel far. Keep it yours, keep it original; the wall is public and every pin carries your reader name.</p>' +
       '</div>';
     document.body.appendChild(sh);
-    var color = COLORS[0], file = null, anon = false;
+    var color = COLORS[0], file = null, anon = false, shareAfter = false;
     var anonBtn = sh.querySelector("#qwAnon");
     anonBtn.addEventListener("click", function () {
       anon = !anon;
@@ -342,9 +424,23 @@
     });
     sh.querySelectorAll(".qw-c").forEach(function (b) {
       b.addEventListener("click", function () {
+        if (b.id === "qwShareAfter") return;
         sh.querySelectorAll(".qw-c").forEach(function (x) { x.classList.remove("on"); });
-        b.classList.add("on"); color = b.getAttribute("data-c");
+        b.classList.add("on");
+        color = b.getAttribute("data-c") || sh.querySelector("#qwCustom").value;
       });
+    });
+    sh.querySelector("#qwCustom").addEventListener("input", function () {
+      color = this.value;
+      sh.querySelectorAll(".qw-c").forEach(function (x) { x.classList.remove("on"); });
+      var lab = sh.querySelector(".qw-c--custom");
+      lab.classList.add("on");
+      lab.style.background = color;
+    });
+    sh.querySelector("#qwShareAfter").addEventListener("click", function () {
+      shareAfter = !shareAfter;
+      this.classList.toggle("on", shareAfter);
+      toast(shareAfter ? "📎 Will copy it for sharing after pinning." : "📎 Sharing off.");
     });
     $("qwPick").addEventListener("click", function () {
       var inp = document.createElement("input");
@@ -363,8 +459,12 @@
       if (!txt) { $("qwText").focus(); return; }
       this.textContent = "📌 pinning…"; this.disabled = true;
       try {
-        await C.publish({ title: "", subtitle: "", body: txt, kind: "wall-note", tags: ["wall"], cover_url: "", audio_url: "", anon: anon });
-        sh.remove(); toast("📌 Pinned. The whole library can see it now."); load();
+        var tags = ["wall", "c:" + String(color).replace("#", "")];
+        await C.publish({ title: "", subtitle: "", body: txt, kind: "wall-note", tags: tags, cover_url: "", audio_url: "", anon: anon });
+        sh.remove();
+        toast("📌 Pinned. The whole library can see it now.");
+        if (shareAfter) shareNote(txt, (anon ? "a reader" : (u.name || "")));
+        load();
       } catch (e) {
         this.textContent = "📌 PIN IT"; this.disabled = false;
         if (/sign-in/i.test(String(e && e.message))) location.href = "login.html?next=quotes.html";

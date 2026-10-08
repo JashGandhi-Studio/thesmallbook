@@ -19,6 +19,7 @@ const BASE = "http://127.0.0.1:8799";
       localStorage.clear(); sessionStorage.clear();
       localStorage.setItem("tsb_onboarded", "true"); /* returning reader: onboarding stays out of the way */
       localStorage.setItem("tsb_supportbar_seen", "true");
+      localStorage.setItem("tsb_tour_done", "true");
     });
     await page.reload({ waitUntil: "domcontentloaded" });
     await sleep(3200);
@@ -90,6 +91,7 @@ const BASE = "http://127.0.0.1:8799";
       localStorage.clear(); sessionStorage.clear();
       localStorage.setItem("tsb_onboarded", "true");
       localStorage.setItem("tsb_supportbar_seen", "true");
+      localStorage.setItem("tsb_tour_done", "true");
     });
     await page.goto(BASE + "/index.html", { waitUntil: "domcontentloaded" });
     await sleep(700);
@@ -140,7 +142,8 @@ const BASE = "http://127.0.0.1:8799";
     ok((await page.locator(".dd-gate").textContent()).includes("UNLOCK WITH GOLD"), "the gate points at Gold, plainly");
     await page.goto(BASE + "/podcasts.html", { waitUntil: "domcontentloaded" });
     await sleep(700);
-    ok(await page.locator(".pc-show").count() >= 9 && (await page.locator(".pc-play").count()) >= 8, "the audio room lists the real shows, playable here");
+    /* v310: the grid paginates - six shows first, +3 MORE SHOWS per tap */
+    ok(await page.locator(".pc-show").count() === 6 && (await page.locator(".pc-play").count()) === 6 && (await page.locator("#pcMoreShows").count()) === 1, "the audio room lists the real shows, playable here");
     ok(await page.locator(".pc-orig__card").count() >= 6, "TSB originals ride on the deep dives");
     ok(errs.length === 0, "no page errors on deepdive/podcasts", errs.join(" || "));
     await ctx.close();
@@ -153,7 +156,8 @@ const BASE = "http://127.0.0.1:8799";
     const errs = [];
     page.on("pageerror", e => { if (!/ServiceWorker/.test(e.message)) errs.push(e.message); });
     await page.goto(BASE + "/notes.html", { waitUntil: "domcontentloaded" });
-    await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); localStorage.setItem("tsb_supportbar_seen", "true"); });
+    await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); localStorage.setItem("tsb_supportbar_seen", "true");
+      localStorage.setItem("tsb_tour_done", "true"); });
     await page.reload({ waitUntil: "domcontentloaded" });
     await sleep(2200);
     ok(await page.locator("#ntPromptCard").count() === 1, "an empty notebook opens on today\u2019s prompt");
@@ -258,7 +262,8 @@ const BASE = "http://127.0.0.1:8799";
     const errs = [];
     page.on("pageerror", e => { if (!/ServiceWorker/.test(e.message)) errs.push(e.message); });
     await page.goto(BASE + "/stories.html", { waitUntil: "domcontentloaded" });
-    await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); localStorage.setItem("tsb_supportbar_seen", "true"); localStorage.setItem("tsb_pc_promo", "gone"); });
+    await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); localStorage.setItem("tsb_supportbar_seen", "true");
+      localStorage.setItem("tsb_tour_done", "true"); localStorage.setItem("tsb_pc_promo", "gone"); });
     await page.reload({ waitUntil: "domcontentloaded" });
     await sleep(2200);
     ok(await page.locator("#ltRail .lt-tile").count() >= 5, "LISTEN TODAY rail renders: dives + whole books", String(await page.locator("#ltRail .lt-tile").count()));
@@ -275,7 +280,8 @@ const BASE = "http://127.0.0.1:8799";
     const errs = [];
     page.on("pageerror", e => { if (!/ServiceWorker/.test(e.message)) errs.push(e.message); });
     await page.goto(BASE + "/book.html?id=atomic-habits", { waitUntil: "domcontentloaded" });
-    await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); localStorage.setItem("tsb_supportbar_seen", "true"); });
+    await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); localStorage.setItem("tsb_supportbar_seen", "true");
+      localStorage.setItem("tsb_tour_done", "true"); });
     await page.reload({ waitUntil: "domcontentloaded" });
     await sleep(2400);
     ok(await page.locator(".lesson__tools .minibtn").count() >= 3, "lesson tools: compact row, three quiet buttons", String(await page.locator(".lesson__tools .minibtn").count()));
@@ -332,7 +338,8 @@ const BASE = "http://127.0.0.1:8799";
     const errs = [];
     page.on("pageerror", e => { if (!/ServiceWorker/.test(e.message)) errs.push(e.message); });
     await page.goto(BASE + "/book.html?id=meditations", { waitUntil: "domcontentloaded" });
-    await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); localStorage.setItem("tsb_supportbar_seen", "true"); });
+    await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); localStorage.setItem("tsb_supportbar_seen", "true");
+      localStorage.setItem("tsb_tour_done", "true"); });
     await page.reload({ waitUntil: "domcontentloaded" });
     await sleep(2200);
     ok(await page.locator("#heroPodcastBtn").count() === 1, "classics wear the Listen Free audiobook button");
@@ -349,6 +356,62 @@ const BASE = "http://127.0.0.1:8799";
     ok(errs.length === 0, "no page errors on the audiobook flow", errs.join(" || "));
     await ctx.close();
   }
+
+  /* --- v314 · the premium player: look, motion, grip-close --- */
+  {
+    const fs2 = require("fs");
+    try { fs2.mkdirSync("/tmp/qa314", { recursive: true }); } catch (e) {}
+    const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    page.on("pageerror", e => ok(/sign in again|session expired|ServiceWorker/i.test(String(e)), "no page errors in the premium player flow", String(e).slice(0, 90)));
+    await page.goto(BASE + "/book.html?id=meditations", { waitUntil: "domcontentloaded" });
+    await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); localStorage.setItem("tsb_supportbar_seen", "true"); localStorage.setItem("tsb_tour_done", "true"); });
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await sleep(2200);
+    await page.locator("#heroPodcastBtn").click();
+    await sleep(3500);
+    ok(await page.locator("#tsbAp .ap-eq--art").count() === 1, "the dock art wears the equalizer badge");
+    ok(await page.locator("#tsbAp .ap-play svg").count() === 1, "the dock play button is a drawn icon, not an emoji");
+    await sleep(2600);
+    await page.screenshot({ path: "/tmp/qa314/dock.png" });
+    await page.locator("#tsbAp .ap-play").click();
+    await sleep(700);
+    await page.locator("#tsbAp .ap-list").click();
+    await page.waitForSelector("#tsbApSheet .ap-card", { timeout: 8000 });
+    await sleep(900);
+    ok(await page.locator("#tsbApSheet .ap-card").count() === 1, "the sheet is a real card on a dim backdrop");
+    ok(/NOW PLAYING/.test(await page.locator("#tsbApSheet .ap-ribbon").textContent()), "the ribbon says NOW PLAYING");
+    ok(await page.locator("#tsbApSheet .ap-grip").count() === 1 && await page.locator("#tsbApSheet .ap-x svg").count() === 1, "the head carries the grip and the drawn close");
+    ok(await page.locator("#tsbApSheet .ap-playbig svg").count() === 1, "the big play is a drawn icon");
+    ok(await page.locator("#tsbApSheet .ap-skip b").count() === 2, "the 15/30 skips read as proper buttons");
+    await page.screenshot({ path: "/tmp/qa314/sheet.png" });
+    /* swipe the grip down: the sheet follows, then closes */
+    const hb = await page.locator("#tsbApSheet .ap-head").boundingBox();
+    await page.mouse.move(hb.x + hb.width / 2, hb.y + 16);
+    await page.mouse.down();
+    await page.mouse.move(hb.x + hb.width / 2, hb.y + 150, { steps: 6 });
+    await page.mouse.up();
+    await sleep(600);
+    if (await page.locator("#tsbApSheet .ap-card").count()) {
+      /* synthetic retry: the same gesture, dispatched for certain */
+      await page.evaluate(() => {
+        const h = document.querySelector("#tsbApSheet .ap-head");
+        const opts = { bubbles: true, cancelable: true };
+        h.dispatchEvent(new PointerEvent("pointerdown", Object.assign({ clientY: 300 }, opts)));
+        h.dispatchEvent(new PointerEvent("pointermove", Object.assign({ clientY: 460 }, opts)));
+        h.dispatchEvent(new PointerEvent("pointerup", Object.assign({ clientY: 460 }, opts)));
+      });
+      await sleep(600);
+    }
+    ok(await page.locator("#tsbApSheet").count() === 0, "swiping the grip down closes the sheet");
+    /* and the red close still works */
+    await page.locator("#tsbAp .ap-list").click();
+    await page.waitForSelector("#tsbApSheet .ap-card", { timeout: 8000 });
+    await sleep(400);
+    await page.locator("#tsbApSheet .ap-x").click();
+    await sleep(500);
+    ok(await page.locator("#tsbApSheet").count() === 0, "the red close still closes");
+    await page.close();
+  }
   {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
     const page = await ctx.newPage();
@@ -358,18 +421,264 @@ const BASE = "http://127.0.0.1:8799";
     await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); });
     await page.reload({ waitUntil: "domcontentloaded" });
     await sleep(1400);
-    ok(await page.locator(".pc-play").count() >= 8, "every show offers PLAY HERE, FREE", String(await page.locator(".pc-play").count()));
-    /* v307: the shelf shows 6 first + a show-all; after expanding, all 21 are there */
+    ok(await page.locator(".pc-play").count() === 6 && (await page.locator(".pc-browse").count()) === 6, "every show offers PLAY LATEST + BROWSE EPISODES", String(await page.locator(".pc-play").count()));
+    /* v311: the shelf opens mixed (English + Hindi on repeat) at six and
+       grows six per tap until the whole catalogue is out */
     ok(await page.locator(".pc-ab__card").count() === 6, "the shelf opens with six books, not a wall", String(await page.locator(".pc-ab__card").count()));
-    await page.locator("#abMore").click();
-    await sleep(400);
-    ok(await page.locator(".pc-ab__card").count() >= 21, "show-all reveals the whole shelf", String(await page.locator(".pc-ab__card").count()));
+    for (let t = 0; t < 20 && (await page.locator("#abMore").count()); t++) {
+      await page.locator("#abMore").click();
+      await sleep(150);
+    }
+    ok(await page.locator(".pc-ab__card").count() >= 40, "show-more reveals the whole shelf, six at a time", String(await page.locator(".pc-ab__card").count()));
     await page.evaluate(() => { const f = window.fetch; window.__realFetch = f; });
     await page.locator(".pc-play").first().click();
     await sleep(2500);
     ok(true, "PLAY HERE clicked and the feed path ran");
     ok(errs.length === 0, "no page errors in the audio room", errs.join(" || "));
     await ctx.close();
+  }
+
+  /* --- v312 · the guide doors (v313: mini tour is replay-only now) --- */
+  {
+    const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    page.on("pageerror", e => ok(/sign in again|session expired|ServiceWorker/i.test(String(e)), "no page errors while the guide doors run", String(e).slice(0, 90)));
+    await page.goto(BASE + "/index.html", { waitUntil: "domcontentloaded" });
+    /* a reader who saw the v312 mini tour is migrated: nothing nags them */
+    await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); localStorage.setItem("tsb_supportbar_seen", "true"); localStorage.setItem("tsb_tour_done", "true"); });
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await sleep(2600);
+    ok((await page.locator("#tsbTourCard").count()) === 0, "an old mini-tour reader is never force-walked");
+    ok(await page.evaluate(() => JSON.parse(localStorage.getItem("tsb_walk_done"))) === true, "the migration marks old readers as walk-done");
+    ok((await page.locator("#tsbHelpChip").count()) === 1, "the ? chip sits on the home header");
+    await page.goto(BASE + "/index.html#guide", { waitUntil: "domcontentloaded" });
+    await sleep(900);
+    ok((await page.locator("#tsbGuideSheet .tg-row").count()) >= 15, "#guide opens the plain map with every function", String(await page.locator("#tsbGuideSheet .tg-row").count()));
+    ok(await page.evaluate(() => Array.from(document.querySelectorAll("#tsbGuideSheet .tg-row")).every(a => (a.getAttribute("href") || "").endsWith(".html"))), "every guide row is a real link that goes somewhere");
+    ok((await page.locator("#tgWalk").count()) === 1 && (await page.locator("#tgReplay").count()) === 1, "the sheet carries the full-tutorial button and the mini-tour replay");
+    if (await page.locator("#tgReplay").count()) { await page.locator("#tgReplay").click(); await sleep(900); }
+    ok((await page.locator("#tsbTourCard").count()) === 1, "replay brings the 30-second tour back");
+    if (await page.locator("#tsbTourCard .tt-skip").count()) { await page.locator("#tsbTourCard .tt-skip").click(); await sleep(300); }
+    await page.close();
+  }
+
+  /* --- v313/v314 · the hands-on walkthrough: every stop, try-stops, resume --- */
+  {
+    const fs2 = require("fs");
+    try { fs2.mkdirSync("/tmp/qa314", { recursive: true }); } catch (e) {}
+    const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    page.on("pageerror", e => ok(/sign in again|session expired|ServiceWorker/i.test(String(e)), "no page errors across the whole walkthrough", String(e).slice(0, 90)));
+
+    /* 1. a brand-new reader auto-walks the full tutorial, starting with Welcome */
+    await page.goto(BASE + "/index.html", { waitUntil: "domcontentloaded" });
+    await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); localStorage.setItem("tsb_supportbar_seen", "true"); });
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.waitForSelector("#tsbTourCard", { timeout: 12000 });
+    await sleep(700);
+    let label = await page.evaluate(() => (document.querySelector("#tsbTourCard .tt-step") || {}).textContent || "");
+    ok(/STOP 1 OF 20/.test(label), "a brand-new reader gets the hands-on walkthrough, 20 stops", label);
+    ok(/Welcome to TheSmallBook/.test(await page.locator("#tsbTourCard .tt-t").textContent()), "stop 1 is the Welcome card");
+    await page.screenshot({ path: "/tmp/qa314/walk-01.png" });
+
+    /* 2. walk it like a reader: NEXT on explain stops, real taps on YOUR TURN stops */
+    const TRY_TAPS = {
+      2: () => page.locator("#searchInput").click(),
+      5: () => page.locator(".tsb-bar__item--plus").click(),
+      9: () => page.locator("#pcAudiobooks [data-ab]").first().click(),
+      10: () => page.locator("#tsbAp .ap-mid").click(),
+      11: () => page.locator("#tsbApSheet .ap-x").click(),
+      13: () => page.locator(".grave__stone").first().click()
+    };
+    const seen = {};
+    let prevLabel = "";
+    for (let i = 0; i < 70; i++) {
+      let label = await page.evaluate(() => (document.querySelector("#tsbTourCard .tt-step") || {}).textContent || "");
+      if (!label) { await sleep(1000); continue; }
+      const n = parseInt((label.match(/STOP (\d+) OF 20/) || [])[1] || "0", 10);
+      if (!n) { await sleep(1000); continue; }
+      if (seen[n]) { await sleep(900); continue; }   /* mid-advance settle */
+      const isTry = !!(await page.locator("#tsbTourCard .tt-wait").count());
+      seen[n] = isTry;
+      prevLabel = label;
+      await sleep(650);
+      await page.screenshot({ path: "/tmp/qa314/walk-" + String(n).padStart(2, "0") + ".png" });
+      /* mid-walk resume: reload once, on the stories stop */
+      if (n === 6) {
+        await page.reload({ waitUntil: "domcontentloaded" });
+        await page.waitForSelector("#tsbTourCard", { timeout: 15000 });
+        const rl = await page.evaluate(() => (document.querySelector("#tsbTourCard .tt-step") || {}).textContent || "");
+        ok(/STOP 6 OF 20/.test(rl), "a mid-walk reload resumes at the same stop", rl);
+      }
+      if (n === 20) { await page.locator("#tsbTourCard .tt-next").click(); await sleep(500); break; }
+      if (isTry) {
+        ok(await page.locator("#tsbTourCard .tt-next").count() === 0, "stop " + n + " is a YOUR TURN stop: no NEXT until the reader acts");
+        await TRY_TAPS[n]();
+      } else {
+        await page.locator("#tsbTourCard .tt-next").click();
+      }
+      /* the tour must move: wait until the card is gone or shows the next stop */
+      await page.waitForFunction(p => {
+        const c = document.querySelector("#tsbTourCard .tt-step");
+        return !c || (c.textContent || "") !== p;
+      }, prevLabel, { timeout: 30000 });
+      await sleep(400);
+    }
+    const shotCount = Object.keys(seen).length;
+    ok(shotCount === 20, "all 20 stops rendered and were screenshotted", Object.keys(seen).join(","));
+    ok(Object.keys(seen).filter(k => seen[k]).length === 6, "exactly six stops were hands-on");
+    ok(await page.evaluate(() => JSON.parse(localStorage.getItem("tsb_walk_done"))) === true, "finishing marks the walkthrough done");
+    ok(await page.evaluate(() => localStorage.getItem("tsb_walk")) === null, "the walk state clears on finish");
+    await sleep(1200);
+    ok(page.url().indexOf("index.html") >= 0, "finishing on settings carries you home");
+    await page.close();
+  }
+
+  /* --- v313 · skip asks first, settings replays, swipe-to-clear, swipe-to-reply --- */
+  {
+    const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    page.on("pageerror", e => ok(/sign in again|session expired|ServiceWorker/i.test(String(e)), "no page errors in the gesture suite", String(e).slice(0, 90)));
+
+    /* 3. skipping asks first and names the Settings replay door */
+    let skipMsg = "";
+    page.on("dialog", async d => { skipMsg = d.message(); await d.accept(); });
+    await page.goto(BASE + "/index.html", { waitUntil: "domcontentloaded" });
+    await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); localStorage.setItem("tsb_supportbar_seen", "true"); });
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.waitForSelector("#tsbTourCard", { timeout: 12000 });
+    await sleep(500);
+    await page.locator("#tsbTourCard .tt-next").click(); await sleep(600);
+    /* stop 2 is a YOUR TURN stop: skipping from a hands-on stop must work too */
+    await page.locator("#tsbTourCard .tt-skip").click();
+    await sleep(600);
+    ok(/Settings/i.test(skipMsg) && /FEELING LOST/i.test(skipMsg), "skipping says the tutorial replays from Settings", skipMsg.slice(0, 80));
+    ok(await page.evaluate(() => JSON.parse(localStorage.getItem("tsb_walk_done"))) === true && (await page.locator("#tsbTourCard").count()) === 0, "accepted skip ends the walkthrough");
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await sleep(2200);
+    ok((await page.locator("#tsbTourCard").count()) === 0, "a skipped walkthrough never nags again");
+
+    /* 4. Settings replays the ENTIRE tutorial */
+    await page.goto(BASE + "/settings.html", { waitUntil: "domcontentloaded" });
+    await sleep(900);
+    ok((await page.locator("#tsbWalkReplay").count()) === 1, "settings carries the full-tutorial replay row");
+    await page.locator("#tsbWalkReplay").click();
+    await page.waitForSelector("#tsbTourCard", { timeout: 12000 });
+    const rl = await page.evaluate(() => (document.querySelector("#tsbTourCard .tt-step") || {}).textContent || "");
+    ok(/STOP 1 OF 20/.test(rl), "settings replay starts the whole walkthrough from stop 1", rl);
+    await page.close();
+  }
+
+  {
+    /* 5. notifications: swipe a row left, it clears for good (local ledger) */
+    const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    page.on("pageerror", e => ok(/sign in again|session expired|ServiceWorker/i.test(String(e)), "no page errors in notifications", String(e).slice(0, 90)));
+    await page.goto(BASE + "/notifications.html", { waitUntil: "domcontentloaded" });
+    await sleep(900);
+    await page.evaluate(() => {
+      const list = document.getElementById("nList");
+      list.innerHTML = '<div class="nt-row new" data-nkey="like:u1:p9:2026-01-01T00:00:00Z"><a href="profile.html?id=u1"><span class="cm-ava cm-ava--lg"><span>R</span></span></a><div class="nt-row__meta"><b><a class="nt-name" href="profile.html?id=u1">Riya</a> <span>liked your story</span></b></div></div>' +
+        '<div class="nt-row new" data-nkey="follow:u2::2026-01-02T00:00:00Z"><a href="profile.html?id=u2"><span class="cm-ava cm-ava--lg"><span>A</span></span></a><div class="nt-row__meta"><b><a class="nt-name" href="profile.html?id=u2">Arjun</a> <span>started following you</span></b></div></div>';
+    });
+    const row = page.locator('.nt-row[data-nkey="like:u1:p9:2026-01-01T00:00:00Z"]');
+    const rb = await row.boundingBox();
+    const C_ = await page.evaluate(() => typeof window.TSB_COMMUNITY.notifClear === "function" && typeof window.TSB_COMMUNITY.notifIsCleared === "function");
+    ok(C_, "the clear ledger is live in the page (notifClear + notifIsCleared)");
+    /* drag left past the clear threshold */
+    await page.mouse.move(rb.x + rb.width - 30, rb.y + rb.height / 2);
+    await page.mouse.down();
+    let bgSeen = false;
+    for (let sx = rb.x + rb.width - 30; sx > rb.x - 110; sx -= 14) {
+      await page.mouse.move(sx, rb.y + rb.height / 2);
+      if (!bgSeen) bgSeen = await page.evaluate(() => !!document.querySelector(".nt-clearbg"));
+    }
+    ok(bgSeen, "swiping left reveals the red Clear backdrop");
+    await page.mouse.up();
+    await sleep(500);
+    ok(await page.evaluate(() => window.TSB_COMMUNITY.notifIsCleared("like:u1:p9:2026-01-01T00:00:00Z")), "the swiped row is cleared in the ledger");
+    ok(await page.evaluate(() => (document.getElementById("nList").querySelectorAll(".nt-row").length)) === 0, "the cleared row is gone from the list");
+    ok(!/Riya/.test(await page.evaluate(() => document.getElementById("nList").textContent)), "the repaint never paints the cleared row again");
+    await page.close();
+  }
+
+  {
+    /* 6. DMs: swipe a bubble sideways, the reply bar names it; quote strips jump */
+    const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    page.on("pageerror", e => ok(/sign in again|session expired|ServiceWorker/i.test(String(e)), "no page errors in the chat gestures", String(e).slice(0, 90)));
+    await page.goto(BASE + "/dm.html?u=00000000-0000-0000-0000-0000000000ff", { waitUntil: "domcontentloaded" });
+    /* a fake session: the thread UI (and the swipe handlers) only bind signed-in */
+    await page.evaluate(() => {
+      localStorage.setItem("tsb_auth_session", JSON.stringify({ access_token: "fake.jwt.sig", refresh_token: "r", expires_at: 9999999999999, user: { id: "00000000-0000-0000-0000-0000000000aa", user_metadata: { full_name: "Test Reader" } } }));
+    });
+    await page.reload({ waitUntil: "domcontentloaded" });
+    /* let the thread's first (real) paint finish so later polls early-return */
+    await page.waitForFunction(() => document.getElementById("dmMsgs").hasAttribute("data-last"), null, { timeout: 15000 }).catch(() => {});
+    const injectThread = () => page.evaluate(() => {
+      document.getElementById("dmThread").hidden = false;
+      const m = document.getElementById("dmMsgs");
+      m.innerHTML = '<div class="dm-bub" data-mid="m1" data-mine="0" data-body="Have you read the Enron grave?"><span>Have you read the Enron grave?</span><em>2 min ago</em></div>' +
+        '<div class="dm-bub me" data-mid="m2" data-mine="1" data-body="Twice. The lesson part is brutal."><button type="button" class="dm-quote" data-jump="m1"><b>↩ Riya</b><span>Have you read the Enron grave?</span></button><span>Twice. The lesson part is brutal.</span><em>just now</em></div>';
+    });
+    /* let the thread's first (real) paint finish so later polls early-return */
+    await page.waitForFunction(() => document.getElementById("dmMsgs").hasAttribute("data-last"), null, { timeout: 15000 }).catch(() => {});
+    await injectThread();
+    /* a late thread repaint could wipe the injected bubbles - re-inject then */
+    await page.waitForSelector('.dm-bub[data-mid="m1"]', { timeout: 4000 }).catch(() => {});
+    if (!(await page.locator('.dm-bub[data-mid="m1"]').count())) await injectThread();
+    await page.waitForSelector('.dm-bub[data-mid="m1"]', { timeout: 4000 });
+    const bub = page.locator('.dm-bub[data-mid="m1"]');
+    const bb = await bub.boundingBox();
+    await page.mouse.move(bb.x + 20, bb.y + bb.height / 2);
+    await page.mouse.down();
+    for (let sx = bb.x + 20; sx < bb.x + 120; sx += 16) await page.mouse.move(sx, bb.y + bb.height / 2);
+    await page.mouse.up();
+    await sleep(400);
+    ok(await page.evaluate(() => !document.getElementById("dmReplyBar").hidden), "swiping a bubble opens the reply bar");
+    ok(/Replying to/i.test(await page.evaluate(() => document.getElementById("dmReplyWho").textContent)), "the reply bar says who is being replied to");
+    ok(/Enron/.test(await page.evaluate(() => document.getElementById("dmReplyPrev").textContent)), "the reply bar previews the right message");
+    await page.locator("#dmReplyX").click();
+    await sleep(200);
+    ok(await page.evaluate(() => document.getElementById("dmReplyBar").hidden), "the ✕ cancels the reply");
+    await page.evaluate(() => document.querySelector('.dm-quote[data-jump="m1"]').click());
+    await sleep(300);
+    ok(await page.evaluate(() => document.querySelector('.dm-bub[data-mid="m1"]').classList.contains("dm-flash")), "tapping the quoted strip flashes the original bubble");
+    await page.close();
+  }
+
+  /* --- v314 · WANT MORE: the shelf fetches its own next books, live --- */
+  {
+    const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    page.on("pageerror", e => ok(/sign in again|session expired|ServiceWorker/i.test(String(e)), "no page errors in WANT MORE", String(e).slice(0, 90)));
+    await page.goto(BASE + "/podcasts.html", { waitUntil: "domcontentloaded" });
+    await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); localStorage.setItem("tsb_supportbar_seen", "true"); localStorage.setItem("tsb_tour_done", "true"); localStorage.setItem("tsb_walk_done", "true"); });
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await sleep(1500);
+    /* page through the whole curated shelf until WANT MORE appears */
+    for (let i = 0; i < 14; i++) {
+      if (await page.locator("#abWant").count()) break;
+      await page.locator("#abMore").click().catch(() => {});
+      await sleep(350);
+    }
+    ok(await page.locator("#abWant").count() === 1, "WANT MORE appears where the curated shelf ends");
+    const before = await page.locator("#pcAudiobooks .pc-ab__card").count();
+    await page.locator("#abWant").click();
+    let diag = "", served = 0;
+    for (let t = 0; t < 30; t++) {
+      await sleep(3000);
+      const st = await page.evaluate(() => ({
+        got: Object.keys(JSON.parse(localStorage.getItem("tsb_ab_got") || "{}")).length,
+        cards: document.querySelectorAll("#pcAudiobooks .pc-ab__card").length,
+        busy: !!(document.getElementById("abWant") && document.getElementById("abWant").disabled),
+        pool: (JSON.parse(localStorage.getItem("tsb_ab_pool") || "[]")).length
+      }));
+      served = st.got; diag = JSON.stringify(st);
+      if (st.cards > before) break;
+    }
+    ok(served > 0, "WANT MORE pulled new audiobooks onto the shelf, live", diag);
+    ok(await page.locator("#pcAudiobooks .pc-ab__card").count() > before, "the new books are painted on the shelf", (await page.locator("#pcAudiobooks .pc-ab__card").count()) + " vs " + before);
+    ok(await page.evaluate(() => Object.keys(window.TSB_AUDIOBOOKS).some(k => k.indexOf("got-") === 0 && window.TSB_AUDIOBOOKS[k].discovered)), "the fetched books are real injected entries");
+    await page.screenshot({ path: "/tmp/qa314/wantmore.png" });
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await sleep(1500);
+    ok(await page.evaluate(() => Object.keys(window.TSB_AUDIOBOOKS).filter(k => k.indexOf("got-") === 0).length) > 0, "fetched books survive a reload (they stay yours)");
+    await page.close();
   }
 
   await browser.close();

@@ -378,7 +378,7 @@ const C = window.TSB_COMMUNITY;
   ok("onboarding + scanner + about all say 500", onbSrc.includes("500+ books") && scnSrc.includes("all 500 book titles") && abtH.includes("500 book summaries") && abtH.includes("ASK 500+ BOOKS"));
   const flSrc = fsp.readFileSync(pp.join(__dirname, "../js/failures.js"), "utf8");
   const flArr = JSON.parse(flSrc.slice(flSrc.indexOf("["), flSrc.lastIndexOf("]") + 1));
-  ok("graveyard grew to 315 autopsies", flArr.length === 315, flArr.length + " autopsies");
+  ok("graveyard grew to 360 autopsies", flArr.length === 360, flArr.length + " autopsies");
   ok("all 400 books carry a graveyard link", djArr.every(b => b.graveLink && fsp.existsSync(pp.join(__dirname, "../graveyard/" + b.graveLink + ".html"))), djArr.filter(b => !b.graveLink).map(b => b.id).join(","));
   const newIds = new Set(["chanakya-neeti","yoga-sutras","bhagavad-gita","arthashastra","thirukkural","uncertain-glory","raja-yoga","three-thousand-stitches","kalam-effect","five-am-club","leader-no-title","think-on-these-things","heartfulness-way","karma-yoga","jnana-yoga","upanishads","essence-bhagavad-gita","celebrating-silence","mystics-musings","nudge","lessons-of-history","kaizen","discipline-equals-freedom","when-pink","undoing-project","richer-wiser-happier","noise","seeking-wisdom","essays-buffett","franklin-autobiography","shortness-of-life","enchiridion","guide-good-life","practicing-stoic","tao-te-ching","analects","dhammapada","little-book-beats-market","selfish-gene","short-history-nearly-everything","being-mortal","emperor-maladies","when-breath-becomes-air","lifespan","outlive","peaceful-warrior","the-prophet","inner-game-tennis","my-experiments-with-truth","what-i-talk-about-running"]);
   const nbooks = djArr.filter(b => newIds.has(b.id));
@@ -401,7 +401,7 @@ const C = window.TSB_COMMUNITY;
   ok("v289: new graves carry origin + fall and stay em-dash free",
      graves29.every(g => { const i = gc29.indexOf('"' + g + '":{'); return i > -1 && /"origin":"/.test(gc29.slice(i, i + 1400)) && /"fall":"/.test(gc29.slice(i, i + 2800)); }) &&
      graves29.every(g => { const f29 = flArr.find(f => f.id === g); return f29 && !JSON.stringify(f29).includes(" - ") && !JSON.stringify(f29).includes(" - "); }));
-  ok("v289: counts move together (now 500 books / 3540 lessons / 315 autopsies)", djArr.length === 500 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3540 && flArr.length === 315);
+  ok("v289: counts move together (now 500 books / 3540 lessons / 360 autopsies)", djArr.length === 500 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3540 && flArr.length === 360);
 
   console.log("== v290: 28 new books (Desi Disruptors leads), 4 new graves, FREE vs GOLD side-by-side, NEW tag re-pointed ==");
   const new290 = new Set(["barbarians-gate","bhujia-barons","cold-start-problem","delivering-happiness","den-of-thieves","desi-disruptors","dhandha","first-90-days","for-the-love-of-india","hooked-nir-eyal","hp-way","iacocca","india-uninc","inspired-product","it-happened-in-india","jack-straight-from-the-gut","liars-poker","losing-my-virginity","lost-and-founder","made-in-japan","my-years-with-general-motors","obviously-awesome","onward","smartest-guys","the-marwaris","too-big-to-fail","toyota-way","turn-the-ship-around"]);
@@ -428,7 +428,7 @@ const C = window.TSB_COMMUNITY;
   ok("v290: FREE vs GOLD side-by-side on gold.html (12 honest rows)", gold290.includes('id="goldCompare"') && (gold290.match(/class="gcmp__row"/g) || []).length === 12 && gold290.includes("LIVE NOW") && gold290.includes("IN PRODUCTION") && gold290.includes("COMING SOON") && gold290.includes("LAUNCHING WITH GOLD"));
   ok("v290: gold comparison claims only verifiable features (no live-link row)", gold290.includes("OFFLINE + EXPORT") && gold290.includes("STUDIO PRO") && gold290.includes("₹999/yr") && gold290.includes("cancel anytime"));
   ok("v290: gold page keeps the suite contract (ACTIVATE GOLD + early-members)", gold290.includes("ACTIVATE GOLD") && gold290.includes("rolling out to early members first"));
-  ok("v290: counts move together (500 books / 3540 lessons / 315 autopsies)", djArr.length === 500 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3540 && flArr.length === 315);
+  ok("v290: counts move together (500 books / 3540 lessons / 360 autopsies)", djArr.length === 500 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3540 && flArr.length === 360);
   console.log("== v291: 10 Unknown originals (7 Indian, 3 international), THE TICKET joins the case file ==");
   const unk291 = ["chai-stall-ceo","crickets-balance-sheet","mandi-math","monsoon-portfolio","quiet-giant","rented-kingdom","right-idea-wrong-decade","tiffin-code","the-queue","wedding-economy"];
   const intl291 = ["quiet-giant","rented-kingdom","right-idea-wrong-decade"];
@@ -989,7 +989,7 @@ const C = window.TSB_COMMUNITY;
     ok("the watchdog rides first on every app page, and the ID wall is gone for good", bg275.includes("TSB_BOOT_OK") && bg275.includes("tsb_purge_a") && rd("index.html").indexOf("js/bootguard.js") === 0 || (rd("index.html").includes("js/bootguard.js") && !rd("index.html").includes("js/vault.js") && !rd("book.html").includes("js/vault.js")));
     ok("a worker handover can never reload the page again", !prefs275.includes("controllerchange") && prefs275.includes("window.TSB_BOOT_OK = true"));
     ok("no worker = no purge reload; a true hang self-heals once, then an honest banner", bg275.includes("done(had)") && bg275.includes("Load trouble detected."));
-    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v309"'));
+    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v314"'));
     ok("storage is plain device storage again, exactly like v267", !rd("index.html").includes("js/vault.js") && rd("js/prefs.js").includes("for (let i = 0; i < localStorage.length; i++)") && !rd("js/prefs.js").includes("TSB_VAULT"));
 
     /* --- watermark --- */
@@ -1114,6 +1114,120 @@ const C = window.TSB_COMMUNITY;
       ok("there is a plain-English setup guide", /SQL-EDITOR|SQL Editor/i.test(rd("docs/SQL-SETUP.md")) && /supabase\/sql\/follow-requests\.sql/.test(rd("docs/SQL-SETUP.md")));
     }
 
+    /* --- v312 · the guide: nobody gets lost --- */
+    {
+      const gd = rd("js/guide.js");
+      ok("guide.js ships as a first-class module", gd.includes("window.TSB_GUIDE") && gd.includes("openGuide") && gd.includes("startTour"));
+      ok("the tour is once per reader, skippable", gd.includes("tsb_tour_done") && gd.includes("skip the tour"));
+      ok("the guide lists every function with a real link", (gd.match(/h: "/g) || []).length >= 15 && gd.includes("index.html") && gd.includes("podcasts.html") && gd.includes("graveyard.html") && gd.includes("scan.html") && gd.includes("quotes.html") && gd.includes("chat.html"));
+      ok("the ? chip lives on home and opens the guide", rd("index.html").includes("tsbHelpChip") && rd("index.html").includes("TSB_GUIDE.openGuide"));
+      ok("settings carries the plain-guide door", rd("settings.html").includes("index.html#guide"));
+      ok("guide auto-opens on the #guide hash", gd.includes('location.hash === "#guide"'));
+    }
+
+    /* --- v313 · the full walkthrough, swipe-to-clear, swipe-to-reply, grave depth --- */
+    {
+      const gd = rd("js/guide.js"), cm = rd("js/community.js"), css = rd("css/style.css");
+      const walkPages = ["index.html", "podcasts.html", "stories.html", "graveyard.html", "quotes.html", "chat.html", "notes.html", "deepdive.html", "login.html", "settings.html"];
+      ok("the full tutorial ships: 20 hands-on stops across 10 pages, resumable", (gd.match(/p: "/g) || []).length === 20 && gd.includes('"tsb_walk"') && gd.includes('"tsb_walk_done"') && gd.includes("function walkGo"));
+      ok("every walkthrough page loads guide.js", walkPages.every(pg => rd(pg).includes("js/guide.js")));
+      ok("index.html loads guide.js exactly once", rd("index.html").split("js/guide.js").length === 2);
+      ok("skipping asks first and names the Settings replay door", gd.includes("Skip the tutorial?") && gd.includes("FEELING LOST"));
+      ok("settings carries the full-tutorial replay row", rd("settings.html").includes("tsbWalkReplay") && gd.includes('getElementById("tsbWalkReplay")'));
+      ok("old mini-tour readers are never force-walked (migration)", gd.includes("jget(TOURKEY, false) && !jget(WALKDONE, false)"));
+      ok("the walkthrough stops point at real elements", WALKSEL_OK(gd));
+      ok("clearing a notification is a capped local ledger", cm.includes('"tsb_notif_cleared"') && cm.includes("function notifClear") && cm.includes("function notifIsCleared"));
+      ok("notifications swipe left to clear, with a Clear-all", rd("notifications.html").includes("nt-clearbg") && rd("notifications.html").includes("nClearAll") && css.includes(".nt-clearbg"));
+      ok("a cleared row never paints again, list or counters", rd("notifications.html").includes("notifIsCleared(C.notifKey(n))"));
+      ok("DMs reply to one bubble: swipe, reply bar, quoted strip", cm.includes("opts.reply_to") && cm.includes("delete payload.reply_to") && rd("dm.html").includes("dm-replybar") && rd("dm.html").includes("dm-quote") && rd("dm.html").includes("setReplyBar"));
+      ok("the reply survives an older database (graceful fallback)", cm.includes("needs messages.reply_to column"));
+      ok("chat CSS ships the reply bar, quote strip and jump flash", css.includes(".dm-replybar") && css.includes(".dm-quote") && css.includes("dmFlash"));
+      const gwSave = global.window; global.window = {};
+      require(pp.join(__dirname, "..", "js", "failures.js"));
+      require(pp.join(__dirname, "..", "js", "graveyard-content.js"));
+      const F313 = global.window.FAILURES || [], D313 = global.window.GRAVE_DEEP || {};
+      ok("all 360 graves carry their full two-act autopsy", F313.length === 360 && F313.every(f => D313[f.id] && D313[f.id].origin && D313[f.id].fall));
+      global.window = gwSave;
+    }
+
+    /* --- v314 · the tutorial goes hands-on: YOUR TURN stops --- */
+    {
+      const gd = rd("js/guide.js");
+      const tryStops = (gd.match(/tryit: "[^"]+"/g) || []);
+      ok("six stops are hands-on: the tour moves when the reader acts", tryStops.length === 6, tryStops.join(" "));
+      ok("the walkthrough opens with a Welcome to TheSmallBook", gd.includes('t: "Welcome to TheSmallBook"'));
+      ok("try-stops listen to real taps and focus, capture phase", gd.includes('document.addEventListener("click", tryClick, true)') && gd.includes('document.addEventListener("focusin", tryFocus, true)'));
+      ok("a try-stop on a link saves state and lets the hop resume", gd.includes("never double-navigate"));
+      ok("late mounts are waited for, not skipped past", gd.includes("waitTries++ < 13"));
+      ok("mid-tour wandering follows the reader to their page", gd.includes("the tour follows the reader"));
+      ok("the try ring pulses while the tour waits", gd.includes("#tsbTourRing.tsb-try") && gd.includes("tsbTryRing"));
+    }
+
+    /* --- v314 · WANT MORE: the shelf fetches its own next books --- */
+    {
+      const disc = rd("js/ab-discovery.js"), pcst = rd("podcasts.html");
+      ok("ab-discovery ships as a first-class module", disc.includes("window.TSB_ABMORE") && disc.includes("function serve"));
+      ok("the starter pool is embedded and verified-shaped", (disc.match(/^\s*\["[a-z0-9_.-]+", "[^"]+", "[^"]+"\]/gm) || []).length >= 30);
+      ok("every candidate must prove real mp3 chapters before it joins", disc.includes("/\\.mp3$/i.test(f.name"));
+      ok("the pool refreshes from the live LibriVox search, offline falls back", disc.includes("advancedsearch.php") && disc.includes("archive.org/metadata/") && disc.includes("cb(POOL)"));
+      ok("no second recording of a book the shelf already carries", disc.includes('"t:" +') && disc.includes("known[p[0]]"));
+      ok("fetched books persist on the device and ride every reload", disc.includes('"tsb_ab_got"') && disc.includes("function boot()"));
+      ok("podcasts.html loads the module before its shelf paints", pcst.indexOf("ab-discovery.js") < pcst.indexOf("var AB = window.TSB_AUDIOBOOKS"));
+      ok("WANT MORE sits where the shelf ends, with an honest fetching state", pcst.includes("abWant") && pcst.includes("FETCHING FROM LIBRIVOX"));
+      ok("discovered covers degrade to a proper title block, not a broken img", pcst.includes("FRESH FROM LIBRIVOX"));
+    }
+
+    /* --- v314 · the premium player: dock, sheet, motion --- */
+    {
+      const ap = rd("js/audioplayer.js"), cssv = rd("css/style.css");
+      ok("the player draws its own icons - no emoji transport buttons", ap.includes("var IC = {") && ap.includes("IC.pauseBig") && !ap.includes('aria-label="Play or pause">⏸') && !ap.includes('aria-label="Next chapter">⏭'));
+      ok("the sheet is a real card over a dimmed, blurred backdrop", ap.includes('class="ap-card"') && ap.includes(".ap-backdrop{position:fixed;inset:0") && ap.includes("backdrop-filter:blur(2.5px)"));
+      ok("the card rises with a spring and closes with an exit animation", ap.includes("apCardIn .36s cubic-bezier(.18,1.14,.3,1)") && ap.includes("ap-closing") && ap.includes('old.removeAttribute("id")'));
+      ok("the head carries a grip and swipe-down-to-close", ap.includes('class="ap-grip"') && ap.includes("if (dy2 > 90) closeSheet();"));
+      ok("the ribbon, tags and queue dance: equalizer tied to the playing state", ap.includes("ap-ribbon") && ap.includes('sheet.classList.toggle("ap-playing"') && ap.includes(".ap-playing .ap-eq i{animation:apEq"));
+      ok("the dock keeps its physics: rides the bar, tucks when it hides, swipe-right cancels", ap.includes("html.tsb-hasbar #tsbAp{bottom:calc(var(--bar-total) + 22px)}") && ap.includes("html.tsb-bar-hidden #tsbAp{transform:translateY(calc(var(--bar-total) + 12px))}") && ap.includes("Math.min(140, window.innerWidth * 0.35)"));
+      ok("the seek bar fills yellow up to the thumb", ap.includes("linear-gradient(90deg, var(--yellow) ") && ap.includes("input.ap-seek::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:24px"));
+      ok("hero art sits big and tilted, the play button is the heavy one", ap.includes(".ap-art--big{flex:0 0 auto;width:118px;height:118px") && ap.includes("transform:rotate(-2.5deg)") && ap.includes(".ap-playbig{width:80px;height:80px"));
+      ok("the queue marks the playing chapter with a glyph, not a text arrow", ap.includes('(i === curItem ? IC.play : i + 1)'));
+      ok("every functional string survived the redesign", ap.includes("VOLUME BOOST · THE OLD RECORDINGS RUN QUIET") && ap.includes('"tsb_audio_last"') && ap.includes("EPISODE ") && ap.includes("CONTINUE WHERE YOU LEFT: "));
+    }
+
+    /* WALKSEL: every stop's selector really exists - in the page's static
+       HTML, or in a script the page loads (chat mounts #tsb-input at runtime) */
+    function WALKSEL_OK(gd) {
+      const stops = [];
+      const re = /p: "([a-z]+\.html)", sel: (null|"[^"]+")/g; let m;
+      while ((m = re.exec(gd))) stops.push({ p: m[1], sel: m[2] === "null" ? null : m[2].slice(1, -1) });
+      if (stops.length !== 20) return false;
+      return stops.every(s => {
+        if (!s.sel) return true;   /* the Welcome stop points at nothing */
+        const pg = rd(s.p);
+        if (!pg) return false;
+        const first = s.sel.split(" ")[0];           /* "#id .child" points at the id first */
+        if (first.charAt(0) === "#") {
+          const id = first.slice(1);
+          if (pg.includes('id="' + id + '"') || pg.includes('id = "' + id + '"')) return true;
+          /* runtime-mounted elements: check the scripts the page loads */
+          return (pg.match(/src="js\/([a-z-]+)\.js/g) || []).some(t => {
+            const name = t.replace('src="js/', "").replace(".js", "");
+            const src = rd("js/" + name + ".js") || "";
+            return src.includes('id="' + id + '"') || src.includes('id = "' + id + '"') || src.includes('"' + id + '"');
+          });
+        }
+        if (first.charAt(0) === ".") {
+          const cls = first.slice(1);
+          if (pg.includes(cls)) return true;
+          /* runtime-built elements (the bottom bar, chat) live in scripts */
+          return (pg.match(/src="js\/([a-z-]+)\.js/g) || []).some(t => {
+            const name = t.replace('src="js/', "").replace(".js", "");
+            const src = rd("js/" + name + ".js") || "";
+            return src.includes(cls);
+          });
+        }
+        return true;
+      });
+    }
+
     /* --- v251 · no orphan artwork (superseded covers / dead logos) --- */
     {
       const fs2 = require("fs"), path2 = require("path");
@@ -1129,7 +1243,9 @@ const C = window.TSB_COMMUNITY;
       const blob = texts.join("\n");
       for (const dir of ["assets/covers", "assets/logos"]) {
         const files = fs2.readdirSync(dir);
-        const orphans = files.filter(f => !blob.includes(f));
+        /* audiobook covers are addressed dynamically as assets/covers/<catalog-id>.jpg,
+           so a cover counts as referenced when its catalog key exists as a quoted id */
+        const orphans = files.filter(f => !blob.includes(f) && !blob.includes('"' + f.replace(/\.jpg$/, "") + '"'));
         ok(`no orphaned files left in ${dir}`, orphans.length === 0, orphans.slice(0, 4).join(", "));
       }
     }
@@ -1302,10 +1418,10 @@ const C = window.TSB_COMMUNITY;
        /now\(\) \+ 600/.test(V8JS));
     ok("before custom SMTP: the email LINK signs readers in too - nothing dead-ends",
        /handleFragmentSession/.test(V8JS) && /access_token=/.test(V8JS));
-    ok("THE AUTOPSY: every one of the 315 graves carries origin + fall - no more thin lessons",
+    ok("THE AUTOPSY: every one of the 360 graves carries origin + fall - no more thin lessons",
        fs.existsSync("js/graveyard-content.js") &&
-       (rd254("js/graveyard-content.js").match(/"origin":/g) || []).length === 315 &&
-       (rd254("js/graveyard-content.js").match(/"fall":/g) || []).length === 315);
+       (rd254("js/graveyard-content.js").match(/"origin":/g) || []).length === 360 &&
+       (rd254("js/graveyard-content.js").match(/"fall":/g) || []).length === 360);
     ok("the grave reader is a proper full-screen reading view with all four acts",
        /openAutopsy/.test(rd254("js/graveyard.js")) && /HOW IT STARTED/.test(rd254("js/graveyard.js")) &&
        /THE FALL/.test(rd254("js/graveyard.js")) && /FATAL MISTAKE/.test(rd254("js/graveyard.js")) &&
@@ -1520,8 +1636,8 @@ const C = window.TSB_COMMUNITY;
     }
     const sw292 = rd292("sw.js");
     ok("service worker precaches ask-modes-data.js", sw292.includes('"./js/ask-modes-data.js"'));
-    ok("cache name and bootguard build both say 309", /CACHE_VERSION = "tsb-v309"/.test(sw292) && /var BUILD = "309";/.test(rd292("js/bootguard.js")));
-    ok("login and settings say Build tsb-v309", rd292("login.html").includes("Build tsb-v309") && rd292("settings.html").includes("Build tsb-v309"));
+    ok("cache name and bootguard build both say 314", /CACHE_VERSION = "tsb-v314"/.test(sw292) && /var BUILD = "314";/.test(rd292("js/bootguard.js")));
+    ok("login and settings say Build tsb-v314", rd292("login.html").includes("Build tsb-v314") && rd292("settings.html").includes("Build tsb-v314"));
     ok("about.html changelog documents v292 and the 8 modes", /log-item__ver">v292</.test(rd292("about.html")) && rd292("about.html").includes("8 modes"));
     ok("no page still carries an old ?v=291", !glob292.some(f => /\?v=29[12]\b/.test(rd292(f))), glob292.filter(f => /\?v=29[12]\b/.test(rd292(f))).join(",") || "clean");
 

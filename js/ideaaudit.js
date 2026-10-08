@@ -1,7 +1,7 @@
 /* ============================================================
    THESMALLBOOK, ⚡ IDEA AUTOPSY v1 (js/ideaaudit.js) v266
    Rebuilt from scratch for the YOU section. The graveyard's
-   315 corpses cross-examine your startup idea.
+   360 corpses cross-examine your startup idea.
 
    THE ENGINE (deterministic, same answers, same verdict):
      · ~20 weighted rules, each with a real why, a real fix and
@@ -683,7 +683,7 @@
         A.aiRead(draft, (last && last.weak || []).map(function (x) { return x.t; })).then(function (txt) {
           if (!txt) { if (ai.parentNode) ai.parentNode.removeChild(ai); return; }
           ai.innerHTML = '<span class="iaudit__ai__lbl">🔍 SECOND OPINION, A FRESH OUTSIDE READ</span><p>' + esc(txt) + "</p>" +
-            '<span class="iaudit__ai__fine">One machine\u2019s opinion, not gospel, the meters above come from 315 real case files.</span>';
+            '<span class="iaudit__ai__fine">One machine\u2019s opinion, not gospel, the meters above come from 360 real case files.</span>';
         });
       }
     }).catch(function () {
@@ -703,13 +703,13 @@
     return w.slice(0, 6).join(" ") || "startup failed";
   }
 
-  /* the 315 case files arrive only when the autopsy needs them.
+  /* the 360 case files arrive only when the autopsy needs them.
      the login page never carries 358KB it doesn't use */
   function ensureFailures() {
     return new Promise(function (res) {
       if (window.FAILURES && window.FAILURES.length) return res();
       var sc = document.createElement("script");
-      sc.src = "js/failures.js?v=267";
+      sc.src = "js/failures.js?v=314";
       sc.onload = function () { res(); };
       sc.onerror = function () { res(); };
       document.head.appendChild(sc);
@@ -721,7 +721,7 @@
     var body = $("iauditBody");
     body.innerHTML = '<div class="iaudit__working"><span class="iaudit__working__rip" translate="no">⚰️</span>' +
       "<b>The graveyard is cross-examining your idea…</b>" +
-      '<p>315 case files · the public record · zero mercy</p>' +
+      '<p>360 case files · the public record · zero mercy</p>' +
       '<div class="iaudit__workbar"><i></i></div></div>';
     ensureFailures().then(function () {
       /* the public record gets its say BEFORE the meters are painted */
