@@ -11,6 +11,44 @@
   "use strict";
   function yt(q) { return "https://www.youtube.com/results?search_query=" + encodeURIComponent(q); }
 
+  /* ── TSB ORIGINALS: our own show, real voices, recorded in-studio.
+     Nobody else carries these. Parts stream from the app itself.
+     Attached to TSB_PODCASTS right after the shelf object is built. ── */
+  var TSB_ORIGINALS = {
+    id: "tsb-show",
+    name: "The Small Book Show",
+    host: "Jai & Meera",
+    art: "assets/podcast/tsb-show-cover.png",
+    why: "The library talks back: every episode takes one idea worth your life and argues it out loud - one host builds the case, the other tears into it, and you leave with a protocol, not a vibe. Recorded by the app, free forever.",
+    episodes: [
+      { id: "ep1", title: "Why You Quit Five Minutes Before the Miracle", desc: "The valley every skill hides, the 40% rule, and the four-line protocol that carries you across. With the counterpoint: when quitting is the smart play.",
+        parts: [
+          { url: "assets/podcast/tsb-show-ep1-p1.mp3", label: "Part 1 · The valley and the lie" },
+          { url: "assets/podcast/tsb-show-ep1-p2.mp3", label: "Part 2 · The Dip test and the protocol" }
+        ] },
+      { id: "ep2", title: "Money Is a Behaviour, Not a Math Problem", desc: "The janitor with eight million dollars, the executive who went broke, and the four-part money machine you can run from Friday.",
+        parts: [
+          { url: "assets/podcast/tsb-show-ep2-p1.mp3", label: "Part 1 · The janitor and the banker" },
+          { url: "assets/podcast/tsb-show-ep2-p2.mp3", label: "Part 2 · The Friday protocol" }
+        ] },
+      { id: "ep3", title: "The Power Laws Your Workplace Runs On", desc: "Never outshine the master, framed menus, credit that drifts upward - the laws read ethically: how to use them, and how to spot them aimed at you.",
+        parts: [
+          { url: "assets/podcast/tsb-show-ep3-p1.mp3", label: "Part 1 · The three laws in the room" },
+          { url: "assets/podcast/tsb-show-ep3-p2.mp3", label: "Part 2 · The defence manual" }
+        ] },
+      { id: "ep4", title: "Attention Is the Last Cheat Code", desc: "Six-minute interruptions, twenty-three-minute recovery bills, and the four moves that hand you back the deep hours of your day.",
+        parts: [
+          { url: "assets/podcast/tsb-show-ep4-p1.mp3", label: "Part 1 · The residue tax" },
+          { url: "assets/podcast/tsb-show-ep4-p2.mp3", label: "Part 2 · The four moves" }
+        ] },
+      { id: "ep5", title: "Failure Is Tuition: Five Autopsies", desc: "Blockbuster's laughing meeting, Kodak's buried camera, Nokia's fear, Enron's nods - and the four tools to run the autopsy on yourself first.",
+        parts: [
+          { url: "assets/podcast/tsb-show-ep5-p1.mp3", label: "Part 1 · Five useful corpses" },
+          { url: "assets/podcast/tsb-show-ep5-p2.mp3", label: "Part 2 · Autopsy yourself first" }
+        ] }
+    ]
+  };
+
   window.TSB_PODCASTS = {
     shows: [
       /* ── founders & builders, India ── */
@@ -104,6 +142,8 @@
       { id: "mind", label: "🧠 MIND & HEALTH" }
     ]
   };
+  window.TSB_PODCASTS.originals = TSB_ORIGINALS;
+
 
   /* 📚 FREE AUDIOBOOKS: public-domain classics read by LibriVox volunteers,
      streamed straight from Archive.org (metadata fetched on play, cached). */

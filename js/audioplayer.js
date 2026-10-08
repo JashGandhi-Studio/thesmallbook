@@ -616,14 +616,24 @@
   function paintAll() {
     if (!dock || !q) return;
     var it = q.items[curItem] || {};
-    /* real cover art when the queue carries it */
+    /* v317: repaint the art whenever the QUEUE's art changes. The old check
+       ("an img already exists") meant switching book → podcast kept the
+       book's cover on the dock for the whole podcast. */
     try {
       var art = dock.querySelector(".ap-art");
-      if (q.art && art && !art.querySelector("img")) {
-        art.innerHTML = '<img src="' + esc(q.art) + '" alt="" onerror="this.parentNode.textContent=\'🎧\'">';
-      } else if (!q.art && q.glyph && art) {
-        art.textContent = q.glyph.length > 3 ? q.glyph.slice(0, 3) + "." : q.glyph;
-        art.style.fontSize = "11px";
+      var artKey = q.art || "g:" + (q.glyph || "🎧");
+      if (art && art.getAttribute("data-ak") !== artKey) {
+        art.setAttribute("data-ak", artKey);
+        if (q.art) art.innerHTML = '<img src="' + esc(q.art) + '" alt="" onerror="this.parentNode.textContent=\'🎧\'">';
+        else { art.textContent = q.glyph && q.glyph.length > 3 ? q.glyph.slice(0, 3) + "." : (q.glyph || "🎧"); art.style.fontSize = "11px"; }
+        /* the full sheet, if it is open right now, swaps in the same breath */
+        try {
+          var big = sheet && sheet.querySelector(".ap-art--big");
+          if (big) {
+            big.removeAttribute("style");
+            big.innerHTML = q.art ? '<img src="' + esc(q.art) + '" alt="" onerror="this.parentNode.textContent=\'🎧\'">' : (q.glyph || '🎧');
+          }
+        } catch (e3) {}
       }
     } catch (e) {}
     dock.querySelector(".ap-t").textContent = it.label || q.title;
@@ -863,7 +873,7 @@
     fetch(url).then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.text(); }).then(function (xml) {
       var doc = new DOMParser().parseFromString(xml, "text/xml");
       var ch = doc.querySelector("channel") || doc.documentElement;
-      var showTitle = ch && ch.querySelector("> title") ? ch.querySelector("> title").textContent : "";
+      var showTitle = ch && ch.querySelector(":scope > title") ? ch.querySelector(":scope > title").textContent : "";
       var artEl = "";
       try {
         var imgs = doc.getElementsByTagName("itunes:image");
@@ -984,6 +994,79 @@
     });
   }
 
+  /* ================= fetched shows follow you like the rest =================
+     v318: FIND 3 MORE SHOWS pulls shows that live only on the device, so a
+     plain lookup in the curated list misses them - the player would drop a
+     fetched show on the next page or reload. One lookup, three shelves:
+     the curated list, the discovery module's live set, and tsb_show_got
+     (the device store, readable without any module). */
+  function findShowAnywhere(id) {
+    var all = (window.TSB_PODCASTS && TSB_PODCASTS.shows) || [];
+    for (var i = 0; i < all.length; i++) { if (all[i].id === id) return all[i]; }
+    var extra = window.TSB_SHOWS_EXTRA || [];
+    for (var j = 0; j < extra.length; j++) { if (extra[j].id === id) return extra[j]; }
+    try {
+      var got = JSON.parse(localStorage.getItem("tsb_show_got") || "{}");
+      if (got[id] && got[id].rss) return got[id];
+    } catch (e) {}
+    return null;
+  }
+
+  /* ================= TSB ORIGINALS: our own show, real audio =================
+     Five recorded episodes, two hosts, local files - no feed, no TTS, no
+     network dependency. Plays like everything else: one dock, one sheet,
+     resume where you left. */
+  function originals() { return (window.TSB_PODCASTS && TSB_PODCASTS.originals) || null; }
+  function playOriginal(epIdx, startPart, autoplay) {
+    var O = originals();
+    if (!O || !O.episodes || !O.episodes.length) { toast("The show is still warming up - try again in a bit."); return; }
+    var ep = O.episodes[Math.max(0, Math.min(epIdx || 0, O.episodes.length - 1))];
+    var items = ep.parts.map(function (p, i) { return { label: p.label, url: p.url, part: i }; });
+    var pos = startPart !== undefined ? {} : (audioPos("orig:" + ep.id) || {});
+    startAudio(audioQueue({
+      key: "orig:" + ep.id,
+      title: O.name,
+      sub: ep.title,
+      items: items,
+      ch: startPart !== undefined ? startPart : (pos.ch || 0),
+      seek: startPart !== undefined ? 0 : (pos.t || 0),
+      autoplay: autoplay !== false,
+      credit: "Recorded in-studio for TheSmallBook by " + (O.host || "the library") + ". Original audio, free forever.",
+      art: O.art || "",
+      glyph: "🎙️"
+    }));
+  }
+  function originalBrowser() {
+    var O = originals();
+    if (!O) { toast("The show is still warming up - try again in a bit."); return; }
+    var old = document.getElementById("tsbOrigSheet");
+    if (old) old.remove();
+    var sh = document.createElement("div");
+    sh.id = "tsbOrigSheet";
+    sh.className = "ap-backdrop";
+    var eps = O.episodes.map(function (ep, i) {
+      return '<button class="tss-ep" data-oep="' + i + '"><span class="tss-ep__n">E' + (i + 1) + '</span><span><b>' + esc(ep.title) + "</b><i>" + esc(ep.desc) + '</i><em>' + ep.parts.length + ' parts · ' + (O.host || "the library") + '</em></span><span class="tss-ep__go">▶</span></button>';
+    }).join("");
+    sh.innerHTML = '<div class="tss-card">' +
+        '<button class="ap-x" aria-label="Close">✕</button>' +
+        '<div class="tss-hero">' +
+          (O.art ? '<span class="tss-art"><img src="' + esc(O.art) + '" alt="" onerror="this.parentNode.textContent=\'🎙️\'"></span>' : '<span class="tss-art">🎙️</span>') +
+          '<div class="tss-mid"><b>' + esc(O.name) + '</b><i>' + esc(O.host || "") + ' · a TSB ORIGINAL</i></div>' +
+        "</div>" +
+        '<p class="tss-why">' + esc(O.why || "") + "</p>" +
+        '<div class="tss-list" id="tssOrigList">' + eps + "</div>" +
+      "</div>";
+    document.body.appendChild(sh);
+    sh.querySelector(".ap-x").addEventListener("click", function () { sh.remove(); });
+    sh.addEventListener("click", function (e) { if (e.target === sh) sh.remove(); });
+    sh.querySelectorAll("[data-oep]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        sh.remove();
+        playOriginal(Number(b.getAttribute("data-oep")));
+      });
+    });
+  }
+
   /* ================= audiobooks (LibriVox via Archive.org) ================= */
 
   function fetchAudiobook(rec, cb) {
@@ -1097,9 +1180,15 @@
         }));
         if (sleepHold) toast("😴 Restored where the sleep timer paused it - tap play.");
       });
+    } else if (l.key.indexOf("orig:") === 0) {
+      /* v317: our own show restores like everything else - local files, no
+         fetch, parked at the saved second unless the browser allows play */
+      var O0 = originals(), oid = l.key.slice(5), oi = -1;
+      if (O0) for (var oi2 = 0; oi2 < O0.episodes.length; oi2++) { if (O0.episodes[oi2].id === oid) { oi = oi2; break; } }
+      if (oi >= 0) playOriginal(oi, undefined, false);
     } else if (l.key.indexOf("pod:") === 0) {
       var pid = l.key.slice(4);
-      var show = ((window.TSB_PODCASTS || {}).shows || []).filter(function (x) { return x.id === pid; })[0];
+      var show = findShowAnywhere(pid);   /* curated AND fetched shows restore */
       if (!show || !show.rss) return;
       fetchFeed(show.rss, function (items) {
         if (q || !items.length) return;
@@ -1140,6 +1229,9 @@
     },
     playFeed: playFeed,
     showBrowser: showBrowser,
+    playOriginal: playOriginal,       /* v317: TSB ORIGINALS */
+    originalBrowser: originalBrowser,
+    playOriginalLatest: function () { playOriginal(0); },
     playAudiobook: playAudiobook,
     audiobookFor: function (bookId) { return (window.TSB_AUDIOBOOKS || {})[bookId] || null; },
     fetchAudiobook: fetchAudiobook,   /* v316: the shelf warms its own cache */
@@ -1183,7 +1275,7 @@
           }
         } else if (/^pod:/.test(l.key)) {
           var pid = l.key.slice(4);
-          var show = ((window.TSB_PODCASTS || {}).shows || []).filter(function (s) { return s.id === pid; })[0];
+          var show = findShowAnywhere(pid);   /* a fetched show continues too */
           if (show && show.rss) playFeed(show);
         }
       }

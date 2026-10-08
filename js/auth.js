@@ -546,19 +546,9 @@
      gate remembers, so it never nags twice. The You window still offers
      the @name any time. */
   async function skipFinish() {
-    if (!ENABLED || !session) return { ok: false };
-    try {
-      const tok = await ensureToken();
-      await fetch(URL + "/auth/v1/user", {
-        method: "PUT",
-        headers: { "apikey": ANON, "Content-Type": "application/json", "Authorization": "Bearer " + tok },
-        body: JSON.stringify({ data: { google_finished: true } })
-      });
-      session.user = session.user || {};
-      session.user.user_metadata = Object.assign({}, session.user.user_metadata || {}, { google_finished: true });
-      lsSet(AUTH_KEY, session);
-      return { ok: true };
-    } catch (e) { return { ok: false }; }
+    /* v317: retired. A new account claims an @username, no side door -
+       the finish sheet is the only way forward (and it takes seconds). */
+    return { ok: false, code: "retired" };
   }
 
   /* ================= v257 · THE GOOGLE FINISH-LINE =================

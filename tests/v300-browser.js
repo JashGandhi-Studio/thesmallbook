@@ -141,7 +141,8 @@ const BASE = "http://127.0.0.1:8799";
     await page.goto(BASE + "/podcasts.html", { waitUntil: "domcontentloaded" });
     await sleep(700);
     /* v310: the grid paginates - six shows first, +3 MORE SHOWS per tap */
-    ok(await page.locator(".pc-show").count() === 6 && (await page.locator(".pc-play").count()) === 6 && (await page.locator("#pcMoreShows").count()) === 1, "the audio room lists the real shows, playable here");
+    /* v317: our own recorded show pins itself above the shelf - 6 curated + ours */
+    ok(await page.locator(".pc-show").count() === 7 && (await page.locator(".pc-play").count()) === 7 && (await page.locator("#pcMoreShows").count()) === 1, "the audio room lists the real shows + our original, playable here");
     ok(await page.locator(".pc-orig__card").count() >= 6, "TSB originals ride on the deep dives");
     ok(errs.length === 0, "no page errors on deepdive/podcasts", errs.join(" || "));
     await ctx.close();
@@ -419,7 +420,7 @@ const BASE = "http://127.0.0.1:8799";
     await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); });
     await page.reload({ waitUntil: "domcontentloaded" });
     await sleep(1400);
-    ok(await page.locator(".pc-play").count() === 6 && (await page.locator(".pc-browse").count()) === 6, "every show offers PLAY LATEST + BROWSE EPISODES", String(await page.locator(".pc-play").count()));
+    ok(await page.locator(".pc-play").count() === 7 && (await page.locator(".pc-browse").count()) === 7, "every show offers PLAY LATEST + BROWSE EPISODES", String(await page.locator(".pc-play").count()));
     /* v311: the shelf opens mixed (English + Hindi on repeat) at six and
        grows six per tap until the whole catalogue is out */
     ok(await page.locator(".pc-ab__card").count() === 6, "the shelf opens with six books, not a wall", String(await page.locator(".pc-ab__card").count()));
@@ -689,7 +690,9 @@ const BASE = "http://127.0.0.1:8799";
     }
     ok(await page.locator("#pcFindShows").count() === 1, "FIND 3 MORE SHOWS waits where the curated list ends");
     await page.locator("#pcFindShows").click();
-    await page.waitForFunction(n => document.querySelectorAll("#pcShowList .pc-show").length > n, curated, { timeout: 45000 }).catch(() => {});
+    /* v317: wait for the fetch itself - the pinned original card already
+       pushes .pc-show above the curated count, so counting cards races */
+    await page.waitForFunction(() => (window.TSB_SHOWS_EXTRA || []).length >= 3, null, { timeout: 45000 }).catch(() => {});
     const fresh = await page.evaluate(() => (window.TSB_SHOWS_EXTRA || []).length);
     ok(fresh >= 3, "FIND 3 MORE pulled real shows from the directory, live", fresh + " fetched");
     ok(await page.evaluate(() => (window.TSB_SHOWS_EXTRA || []).every(s => /^https:/.test(s.rss))), "every fetched show carries a real https feed");

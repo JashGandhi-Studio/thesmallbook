@@ -17,7 +17,7 @@
   </script>
   <meta property="og:title" content="Scan, TheSmallBook">
   <meta property="og:description" content="Point at a book, get the lessons, TheSmallBook's scanner.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=316">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=318">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/scan.html">
@@ -382,7 +382,7 @@ body {
   <div class="res nof" id="nof" hidden>
     <div class="card">
       <div class="tag">STILL BUILDING</div>
-      <div class="bdesc" style="margin-top:14px;">This one is not in the library yet. <b id="scanOcrEcho"></b>500 summaries are live and new ones are made every week. Ask for it and it gets built:</div>
+      <div class="bdesc" style="margin-top:14px;">We could not match that cover confidently. <b id="scanOcrEcho"></b>If it is one of the 500, type it below and it opens - if not, ask for it and it gets built: and new ones are made every week. Ask for it and it gets built:</div>
       <input class="type" id="typeIn" type="text" placeholder="Type the book title…" autocomplete="off">
       <div class="chips" id="chips"></div>
       <div class="sugg" id="sugg"></div>
@@ -572,19 +572,25 @@ body {
       finish();
     }, 150); /* near-zero delay, OCR is pre-warmed, so results come fast */
 
-    var ocrPass = 0; /* 0 = standard preprocess, 1 = sharpen retry */
+    /* v317: three reads, one verdict. Stylised covers defeat a single OCR
+       pass; the merged words of three differently-processed reads catch
+       what any one pass mangles. The scanner still never guesses. */
+    var ocrPass = 0; /* 0 = standard, 1 = sharpen, 2 = tight title-band crop */
+    var accBig = "", accMed = "", accFull = "";
     function finish() {
-      /* OCR only, the scanner never guesses. Unreadable covers get an
-         automatic sharpen retry, then an honest NOT FOUND. */
-      anaTxt.textContent = ocrPass === 0 ? "READING TITLE…" : "READING AGAIN…";
+      anaTxt.textContent = ocrPass === 0 ? "READING TITLE…" : (ocrPass === 1 ? "READING AGAIN…" : "ONE LAST READ…");
       ocrRead(function (text) {
-        try { window.__tsbScanOcr = (text && (text.big || text.full) || "").trim().slice(0, 90); } catch (e) { window.__tsbScanOcr = ""; }
+        if (text) {
+          accBig = (accBig + " " + (text.big || "")).trim();
+          accMed = (accMed + " " + (text.med || "")).trim();
+          accFull = (accFull + " " + (text.full || "")).trim();
+        }
+        try { window.__tsbScanOcr = (accBig || accFull || "").trim().slice(0, 90); } catch (e) { window.__tsbScanOcr = ""; }
         var ocrHit = null;
-        try { ocrHit = text ? matchTitleByOcr(text) : null; } catch (e) {}
+        try { ocrHit = matchTitleByOcr({ big: accBig, med: accMed, full: accFull }); } catch (e) {}
         if (ocrHit) { done(ocrHit); return; }
-        if (ocrPass === 0) {
-          /* second chance: sharpen + re-read (kills blur/motion misses) */
-          ocrPass = 1;
+        if (ocrPass < 2) {
+          ocrPass++;
           finish();
           return;
         }
@@ -664,18 +670,28 @@ body {
     var timer = setTimeout(function () { if (!done) { done = true; cb(""); } }, 12000);
     loadTesseract().then(function (T) {
       if (done) return;
-      var prep = preprocessForOcr(cap, pass === 1);
+      var prep = cap;
+    if (pass === 2) {
+      /* tight crop on the upper half where cover titles live, bigger scale */
+      var cw2 = cap.width, ch2 = cap.height;
+      var bandC = document.createElement("canvas");
+      bandC.width = Math.round(cw2 * 0.86); bandC.height = Math.round(ch2 * 0.52);
+      bandC.getContext("2d").drawImage(cap, cw2 * 0.07, ch2 * 0.08, cw2 * 0.86, ch2 * 0.52, 0, 0, bandC.width, bandC.height);
+      prep = bandC;
+    }
+    prep = preprocessForOcr(prep, pass >= 1);
       return T.recognize(prep, "eng", { logger: function () {} });
     }).then(function (res) {
       if (done) return;
       done = true; clearTimeout(timer);
       if (!res || !res.data) { cb(""); return; }
-      /* build BOTH: the biggest text (title) and the full text.
-         The title is the largest type on the cover, subtitles, taglines
-         and blurbs are smaller and must not drive the match. */
+      /* build THREE bands: the biggest text (title), the medium text
+         (subtitles, which often carry the tail of a two-line title), and
+         the full text. The bands feed the matcher with different weights,
+         so a stylised title can still win through its subtitle or author. */
       var words = (res.data.words || []).filter(function (w) { return w && w.text; });
       var fullText = (res.data.text || "").trim();
-      var bigText = "";
+      var bigText = "", medText = "";
       if (words.length) {
         var maxH = 0;
         for (var i = 0; i < words.length; i++) {
@@ -683,19 +699,23 @@ body {
           if (h > maxH) maxH = h;
         }
         if (maxH > 0) {
-          var keep = words.filter(function (w) {
-            var h = (w.bbox && (w.bbox.y1 - w.bbox.y0)) || 0;
-            return h >= maxH * 0.4;
-          });
-          keep.sort(function (a, b) {
-            var ay = (a.bbox && a.bbox.y0) || 0, by = (b.bbox && b.bbox.y0) || 0;
-            var ax = (a.bbox && a.bbox.x0) || 0, bx = (b.bbox && b.bbox.x0) || 0;
-            return (ay - by) || (ax - bx);
-          });
-          bigText = keep.map(function (w) { return w.text; }).join(" ");
+          var byBand = function (lo, hi) {
+            var keep = words.filter(function (w) {
+              var h2 = (w.bbox && (w.bbox.y1 - w.bbox.y0)) || 0;
+              return h2 >= maxH * lo && h2 < maxH * hi;
+            });
+            keep.sort(function (a, b) {
+              var ay = (a.bbox && a.bbox.y0) || 0, by = (b.bbox && b.bbox.y0) || 0;
+              var ax = (a.bbox && a.bbox.x0) || 0, bx = (b.bbox && b.bbox.x0) || 0;
+              return (ay - by) || (ax - bx);
+            });
+            return keep.map(function (w) { return w.text; }).join(" ");
+          };
+          bigText = byBand(0.5, 99);
+          medText = byBand(0.28, 0.5);
         }
       }
-      cb({ big: bigText, full: fullText });
+      cb({ big: bigText, med: medText, full: fullText });
     }).catch(function () {
       if (!done) { done = true; clearTimeout(timer); cb(""); }
     });
@@ -766,11 +786,12 @@ body {
     var lib = window.TSB_SCAN || [];
     var books = window.TSB_TITLES || [];
     var t = books.length ? books : lib.map(function (e) { return { id: e.id, title: e.t, author: "" }; });
-    var big = (ocrText && ocrText.big) || "";
+    var big = ((ocrText && ocrText.big) || "") + " " + ((ocrText && ocrText.med) || "");
     var full = (ocrText && ocrText.full) || "";
+    var bigOnly = (ocrText && ocrText.big) || "";
     var bigNorm = " " + String(big).toUpperCase().replace(/[^A-Z0-9' ]/g, " ").replace(/\s+/g, " ") + " ";
     var fullNorm = " " + String(full).toUpperCase().replace(/[^A-Z0-9' ]/g, " ").replace(/\s+/g, " ") + " ";
-    var best = null, bestScore = 0, bestExact = 0, bestPhrase = false, bestN = 0, secondScore = 0;
+    var best = null, bestScore = 0, bestExact = 0, bestPhrase = false, bestN = 0, secondScore = 0, bestAExact = 0;
     for (var i = 0; i < t.length; i++) {
       var b = t[i];
       var bTitle = b.title || b.t || "";
@@ -788,11 +809,20 @@ body {
         w = w.toUpperCase().replace(/'/g, "");
         for (var k = 0; k < sig.length; k++) if (sig[k] === w) { exactBig++; break; }
       });
-      if (sBig > bestScore) {
+      /* v317: the author is on every cover and is rarely stylised - read
+         author names are strong evidence when a title is drawn in art type */
+      var aSig = ocrSigWords(String(b.author || b.a || ""));
+      var aExact = 0;
+      if (aSig.length) {
+        var bigUp = " " + bigOnly.toUpperCase().replace(/[^A-Z0-9' ]/g, " ").replace(/\s+/g, " ") + " ";
+        aSig.forEach(function (a2) { if (bigUp.indexOf(" " + a2 + " ") !== -1) aExact++; });
+      }
+      var score = sBig + aExact * 0.18;
+      if (score > bestScore) {
         secondScore = bestScore;
-        bestScore = sBig; best = b; bestExact = exactBig; bestPhrase = phrase; bestN = sig.length;
-      } else if (sBig > secondScore) {
-        secondScore = sBig;
+        bestScore = score; best = b; bestExact = exactBig; bestPhrase = phrase; bestN = sig.length; bestAExact = aExact;
+      } else if (score > secondScore) {
+        secondScore = score;
       }
     }
     if (!best) return null;
@@ -800,7 +830,10 @@ body {
     var ok = false;
     if (bestN >= 2) {
       /* strong evidence from the biggest text on the cover, never stray words */
-      ok = (bestScore >= 0.6 && bestExact >= 2 && margin >= 0.04) || (bestPhrase && bestExact >= 2);
+      ok = (bestScore >= 0.6 && bestExact >= 2 && margin >= 0.04) || (bestPhrase && bestExact >= 2) ||
+           /* v317: one exact title word + the author clearly read = confident
+              (art-type titles drawn by hand on the cover) */
+           (bestExact >= 1 && bestAExact >= 2 && margin >= 0.1);
     } else {
       /* single-word titles (Sapiens, Grit…) need an exact big-text phrase
          AND a clear margin, a lone word can appear in any subtitle */
@@ -1067,9 +1100,9 @@ body {
   start();
 })();
 </script>
-  <script src="./js/bootguard.js?v=316"></script>
-<script src="js/osint.js?v=316"></script>
-<script src="js/scan-titles.js?v=316"></script>
-<script src="js/scanner-data.js?v=316"></script>
+  <script src="./js/bootguard.js?v=318"></script>
+<script src="js/osint.js?v=318"></script>
+<script src="js/scan-titles.js?v=318"></script>
+<script src="js/scanner-data.js?v=318"></script>
 </body>
 </html>

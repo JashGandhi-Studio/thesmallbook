@@ -95,7 +95,7 @@
       "#tsbGuideSheet .tg-replay{display:block;width:100%;border:none;background:none;color:var(--ink);opacity:.6;font:800 10.5px 'Space Grotesk',sans-serif;cursor:pointer;padding:10px 0 0;text-decoration:underline}" +
       "#tsbGuideSheet .tg-fine{text-align:center;font:600 10.5px/1.5 'Space Grotesk',sans-serif;color:var(--ink);opacity:.55;margin:10px 0 0}" +
       /* shared ring + card for the walkthrough and the mini tour */
-      "#tsbTourRing{position:fixed;z-index:9992;border:3.5px solid var(--yellow);border-radius:16px;box-shadow:0 0 0 4000px rgba(12,10,6,.44);pointer-events:none;transition:all .35s cubic-bezier(.22,.9,.35,1)}" +
+      "#tsbTourRing{position:fixed;left:0;top:0;z-index:9992;border:3.5px solid var(--yellow);border-radius:16px;box-shadow:0 0 0 4000px rgba(12,10,6,.44);pointer-events:none;transition:opacity .18s linear;will-change:transform}" +
       "#tsbTourRing.tsb-try{animation:tsbTryRing 1.5s ease-in-out infinite}" +
       "@keyframes tsbTryRing{0%,100%{border-color:var(--yellow);border-width:3.5px}50%{border-color:#fff;border-width:5px}}" +
       "#tsbTourCard{position:fixed;left:12px;right:12px;z-index:9993;bottom:calc(var(--bar-total, 68px) + 18px);background:var(--paper);border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:14px 14px 12px;animation:tgIn .28s cubic-bezier(.22,.9,.35,1)}" +
@@ -196,47 +196,72 @@
      taps the thing. A capture-phase click/focus listener matches the
      stop's try target; links that navigate just save the state and
      let the hop resume us on the next page. ---- */
-  var tryClick = null, tryFocus = null;
+  /* v317: ONE persistent capture listener for the whole walkthrough.
+     The old engine re-bound document listeners every stop and then went
+     deaf for 800ms after each hit - a fast user's taps landed in that
+     dead zone and were swallowed, and the per-step re-binding stacked.
+     Now the listener lives as long as the walk does, reads the CURRENT
+     stop's target, and advances in ~120ms. */
+  var tryArmed = false, tryAdvTimer = null;
 
-  function disarmTry() {
-    if (tryClick) { document.removeEventListener("click", tryClick, true); tryClick = null; }
-    if (tryFocus) { document.removeEventListener("focusin", tryFocus, true); tryFocus = null; }
+  function trySel() {
+    if (!walk) return null;
+    var s = WALK[walk.i];
+    return s && s.tryit ? s.tryit : null;
   }
-
-  function armTry(sel) {
-    disarmTry();
-    function hit(t) { return !!(t && t.closest && t.closest(sel)); }
-    function advance() {
-      disarmTry();
-      var nxt = walk ? walk.i + 1 : 0;
-      var s2 = WALK[nxt];
-      setTimeout(function () {
-        if (!walk) return;   /* finished or skipped meanwhile */
-        if (s2 && s2.p !== pageName()) walkGo(nxt);
-        else { walk.i = nxt; jset(WALKKEY, { i: nxt }); walkShow(); }
-      }, 800);   /* let the tap's own effect unfold first */
-    }
-    tryClick = function (e) {
-      if (!hit(e.target)) return;
-      /* a real link that leaves this page: save the state, the hop
-         itself resumes the tour - never double-navigate */
-      var a = e.target.closest && e.target.closest("a[href]");
-      if (a) {
-        var h = a.getAttribute("href") || "";
-        if (h && h.indexOf("#") !== 0 && h.split("?")[0] !== pageName()) {
-          disarmTry();
-          jset(WALKKEY, { i: (walk ? walk.i + 1 : 0) });
-          return;
+  function tryAdvance() {
+    if (tryAdvTimer) { clearTimeout(tryAdvTimer); tryAdvTimer = null; }
+    var me = walkGen, nxt = walk ? walk.i + 1 : 0;
+    var s2 = WALK[nxt];
+    tryAdvTimer = setTimeout(function () {
+      tryAdvTimer = null;
+      if (me !== walkGen || !walk) return;   /* step changed / stopped meanwhile */
+      if (s2 && s2.p !== pageName()) walkGo(nxt);
+      else { walk.i = nxt; jset(WALKKEY, { i: nxt }); walkShow(); }
+    }, 120);   /* just enough for the tap's own effect to begin */
+  }
+  function tryDocHandler(kind) {
+    return function (e) {
+      var sel = trySel();
+      if (!sel || !walk) return;
+      var t = e.target;
+      if (t.closest && t.closest("#tsbTourCard")) return;   /* the tour's own buttons */
+      if (!t.closest || !t.closest(sel)) return;
+      if (kind === "click") {
+        var a = t.closest && t.closest("a[href]");
+        if (a) {
+          var h = a.getAttribute("href") || "";
+          if (h && h.indexOf("#") !== 0 && h.split("?")[0] !== pageName()) {
+            jset(WALKKEY, { i: (walk ? walk.i + 1 : 0) });
+            return;   /* the hop itself resumes the tour */
+          }
         }
+        tryAdvance();
+      } else if (!tryAdvTimer) {
+        tryAdvance();   /* focus (search box): fire once, not on every keystroke */
       }
-      advance();
     };
-    tryFocus = function (e) { if (hit(e.target)) advance(); };
+  }
+  var tryClick = tryDocHandler("click");
+  var tryFocus = tryDocHandler("focus");
+  function armTry() {
+    if (tryArmed) return;
+    tryArmed = true;
     document.addEventListener("click", tryClick, true);
     document.addEventListener("focusin", tryFocus, true);
   }
+  function disarmTry() {
+    if (!tryArmed) return;
+    tryArmed = false;
+    document.removeEventListener("click", tryClick, true);
+    document.removeEventListener("focusin", tryFocus, true);
+    if (tryAdvTimer) { clearTimeout(tryAdvTimer); tryAdvTimer = null; }
+  }
+
+  var walkGen = 0;   /* v317: bumped on every step/stop - stale timers check it and bail */
 
   function walkStop() {
+    walkGen++;
     disarmTry();
     if (walk) {
       window.removeEventListener("resize", walk.place);
@@ -268,6 +293,7 @@
 
   function walkShow() {
     if (!walk) return;
+    var me = ++walkGen;              /* every timer from the previous step is now stale */
     var cur = walk.i;
     var s = WALK[cur];
     if (!s) { walkFinish(); return; }
@@ -277,20 +303,27 @@
       if (!el) {
         /* sheets, docks and readers mount late - wait for them before
            giving up and stepping aside */
-        if (waitTries++ < 13) { setTimeout(walkShow, 700); return; }
+        if (waitTries++ < 13) { setTimeout(function () { if (me === walkGen && walk) walkShow(); }, 700); return; }
         walkGo(cur + 1); return;
       }
     }
     waitTries = 0;
-    walkStop();
-    walk = { i: cur, ring: null, card: null, place: function () {} };
-    sheetCss();
-    try { document.documentElement.classList.add("tsb-walking"); } catch (e2) {}
+    disarmTry();
+    sheetCss();   /* the tour's own styles - ring, card, try pulse */
+    try { document.documentElement.classList.add("tsb-walking"); } catch (e2) {}   /* keeps the bar pinned up while the walk points at it */
+    /* one card for the whole walk: the old engine tore the card down and
+       rebuilt it every stop - jank plus a focus steal on every step */
+    var card = walk.card;
+    var fresh = !card;
+    if (fresh) {
+      card = document.createElement("div");
+      card.id = "tsbTourCard";
+      document.body.appendChild(card);
+      walk.card = card;
+    }
     var n = cur + 1;
     var last = cur === WALK.length - 1;
     var turn = !!s.tryit;
-    var card = document.createElement("div");
-    card.id = "tsbTourCard";
     card.innerHTML =
       '<span class="tt-step">' + (turn ? '<i class="tt-turnbadge">YOUR TURN</i>' : "") + "STOP " + n + " OF " + WALK.length + "</span>" +
       '<b class="tt-t">' + s.t + "</b>" +
@@ -301,44 +334,60 @@
             (cur > 0 ? '<button class="tt-back">← BACK</button>' : "") +
             '<button class="tt-next">' + (last ? "FINISH ✓" : "NEXT →") + "</button>" +
             '<button class="tt-skip">skip the tutorial</button></span>');
-    document.body.appendChild(card);
-    walk.card = card;
-    if (turn) armTry(s.tryit);
-    var ssB = card.querySelector(".tt-stepskip");
-    if (ssB) ssB.addEventListener("click", function () { walkGo(cur + 1); });
-    var backB = card.querySelector(".tt-back");
-    if (backB) backB.addEventListener("click", function () { walkGo(cur - 1); });
-    var nextB = card.querySelector(".tt-next");
-    if (nextB) nextB.addEventListener("click", function () {
-      if (last) walkFinish();
-      else walkGo(cur + 1);
-    });
-    card.querySelector(".tt-skip").addEventListener("click", walkSkipConfirm);
+    if (fresh) {
+      /* v317: the card persists but its buttons are re-rendered every stop,
+         so the listeners are DELEGATED - one binding, alive for all 21 */
+      card.addEventListener("click", function (e) {
+        if (!walk) return;
+        if (e.target.closest(".tt-stepskip")) { walkGo(walk.i + 1); return; }
+        if (e.target.closest(".tt-back")) { walkGo(walk.i - 1); return; }
+        if (e.target.closest(".tt-next")) {
+          if (walk.i === WALK.length - 1) walkFinish();
+          else walkGo(walk.i + 1);
+          return;
+        }
+        if (e.target.closest(".tt-skip")) walkSkipConfirm();
+      });
+    }
+    if (turn) armTry();
+    /* v317, the lag fix: ONE scrollIntoView per stop (the old code re-fired
+       it on every scroll event, fighting its own smooth scroll), and the
+       ring is created once per step then MOVED with transform - GPU-composited,
+       no layout, no full-screen shadow repaint on every frame */
+    var scrolled = false;
+    var rafPending = 0;
     function place() {
-      if (!walk || !walk.card) return;
+      if (!walk || !walk.card || me !== walkGen) return;
       if (!el) { walk.card.style.bottom = "calc(var(--bar-total, 68px) + 18px)"; return; }
-      var fixedEl = false;
-      try { fixedEl = getComputedStyle(el).position === "fixed"; } catch (e4) {}
-      if (!fixedEl) { try { el.scrollIntoView({ block: "center", behavior: "smooth" }); } catch (e) {} }
       var r = el.getBoundingClientRect();
-      var ring = document.createElement("div");
-      ring.id = "tsbTourRing";
-      if (turn) ring.className = "tsb-try";
-      document.body.appendChild(ring);
-      ring.style.left = (r.left - 7) + "px";
-      ring.style.top = (r.top - 7) + "px";
+      if (!scrolled) {
+        scrolled = true;
+        var fixedEl = false;
+        try { fixedEl = getComputedStyle(el).position === "fixed"; } catch (e4) {}
+        if (!fixedEl) { try { el.scrollIntoView({ block: "center" }); } catch (e) {} r = el.getBoundingClientRect(); }
+      }
+      var ring = walk.ring;
+      if (!ring) {
+        ring = document.createElement("div");
+        ring.id = "tsbTourRing";
+        if (turn) ring.className = "tsb-try";
+        document.body.appendChild(ring);
+        walk.ring = ring;
+      }
       ring.style.width = (r.width + 14) + "px";
       ring.style.height = (r.height + 14) + "px";
-      if (walk.ring) walk.ring.remove();
-      walk.ring = ring;
-      /* keep the card off the ring: if the target sits low, park the card above it */
+      ring.style.transform = "translate(" + Math.round(r.left - 7) + "px," + Math.round(r.top - 7) + "px)";
       if (r.top > window.innerHeight * 0.55) walk.card.style.bottom = (window.innerHeight - r.top + 18) + "px";
       else walk.card.style.bottom = "calc(var(--bar-total, 68px) + 18px)";
     }
-    walk.place = place;
-    window.addEventListener("resize", place);
-    window.addEventListener("scroll", place, true);
-    setTimeout(place, 250);
+    walk.place = function () {
+      if (rafPending) return;
+      rafPending = 1;
+      requestAnimationFrame(function () { rafPending = 0; place(); });
+    };
+    window.addEventListener("resize", walk.place);
+    window.addEventListener("scroll", walk.place, true);
+    setTimeout(function () { if (me === walkGen) place(); }, 60);
   }
 
   function walkGo(i) {

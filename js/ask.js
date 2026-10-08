@@ -217,7 +217,12 @@
     var graves = (topic.graves || []).map(function (s, i) {
       return graveCard(s.id, gBlurbsT[i] || s.blurb);
     }).join("");
-    return answerBlock(t("THE ANSWER"), ansT, "\u201C" + qT + "\u201D") +
+    /* v317: the receipt - what the answer was built from, said out loud.
+       This is the thing AI chat cannot say, so we say it every time. */
+    var receipt = '<div class="aq-receipt">✦ answered from <b>' + (topic.books || []).length + ' book lesson' + ((topic.books || []).length === 1 ? "" : "s") +
+      '</b> + <b>' + (topic.graves || []).length + ' real failure' + ((topic.graves || []).length === 1 ? "" : "s") +
+      "</b> · zero opinions, every line traceable ✦</div>";
+    return answerBlock(t("THE ANSWER"), ansT, "\u201C" + qT + "\u201D") + receipt +
       (books ? sourceHead((topic.books || []).length, t("FROM THE LIBRARY")) + '<div class="aq-srcs">' + books + "</div>" : "") +
       (graves ? sourceHead((topic.graves || []).length, t("FROM THE GRAVEYARD")) + '<div class="aq-srcs">' + graves + "</div>" : "") +
       '<div class="aq-foot">✦ ' + esc(t("tap a source to read the real lesson")) + " ✦</div>";
@@ -889,7 +894,9 @@
       t("Scanning") + " " + nb + " books…",
       t("Reading") + " " + nl + " lessons…",
       t("Checking") + " " + ng + " autopsies…",
-      t("Compiling your answer") + "…"
+      t("Compiling your answer") + "…",
+      /* v317: the promise, stated while it works */
+      "every answer comes with its sources, no opinions"
     ];
     var si = 0;
     var statusEl = d.querySelector(".aq-think__status");

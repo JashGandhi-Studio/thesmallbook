@@ -14,6 +14,29 @@
   var path = (location.pathname.split("/").pop() || "index.html").toLowerCase();
   if (/login\.html|settings\.html|scan\.html|404\.html/.test(path)) return;
 
+  /* v317: THE FINISH GATE - a fresh sign-in must claim an @username before
+     it can use the app. Signed-in-but-unfinished readers get exactly one
+     experience on every content page: a quiet redirect to the finish sheet
+     (username + 13+ tick), and the finish flow returns them to the page
+     they were on. Info pages stay open: about (terms, privacy), store and
+     gold are readable by everyone, guest or not. */
+  function needsFinishGate() {
+    try {
+      var s = JSON.parse(localStorage.getItem("tsb_auth_session"));
+      var u = s && s.user;
+      if (!u || !u.app_metadata) return false;
+      var prov = u.app_metadata.provider || (u.app_metadata.providers || [])[0];
+      if (prov !== "google") return false;
+      var md = u.user_metadata || {};
+      return !(md.username || md.google_finished);
+    } catch (e) { return false; }
+  }
+  if (!/about\.html|store\.html|gold\.html/.test(path) && needsFinishGate()) {
+    try { sessionStorage.setItem("tsb_auth_return", location.href); } catch (e1) {}
+    location.replace("login.html");
+    return;
+  }
+
   function lsGet(k, d) {
     try { var v = JSON.parse(localStorage.getItem(k)); return v === null || v === undefined ? d : v; } catch (e) { return d; }
   }

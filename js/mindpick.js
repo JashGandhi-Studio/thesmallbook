@@ -171,6 +171,14 @@
       card.innerHTML =
         '<button class="mp-x" id="mpDailyX" aria-label="Close today\'s question">✕</button>' +
         '<div class="mp-daily__tag">⏳ TODAY, ONE QUESTION</div>' + lead +
+        /* v317: the question is the best conversion point there is - so it
+           leads somewhere. First door: your own notebook, the question
+           already written at the top. Second: answer it publicly as a
+           story. Third: the books, as always. */
+        '<div class="mp-row mp-row--go">' +
+          '<a class="mp-chip mp-chip--note" href="notes.html?about=' + encodeURIComponent(d.text) + '">📓 WRITE ON THIS, FOR YOURSELF</a>' +
+          '<a class="mp-chip mp-chip--story" href="write.html?about=' + encodeURIComponent(d.text) + '">📣 ANSWER IT AS A STORY</a>' +
+        '</div>' +
         '<div class="mp-row">' +
           '<button class="mp-chip mp-chip--go" data-mppick="' + d.pick + '">Show me ' + esc(problemLabel(d.pick).toLowerCase()) + ' &rarr;</button>' +
         '</div>';

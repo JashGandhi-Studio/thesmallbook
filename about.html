@@ -12,11 +12,11 @@
   <meta property="og:description" content="The story behind the free library: 500 books distilled, 360 failures autopsied, 83 life questions answered, 26 languages. Built by Jash Gandhi, Mumbai.">
     <meta property="og:url" content="https://thesmallbook.in/about.html">
   <meta property="og:site_name" content="TheSmallBook">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=316">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=318">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="TheSmallBook, 500 books · 3540 lessons · 360 autopsies · free to read">
-  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=316">
+  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=318">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary">
   <link rel="manifest" href="manifest.json">
@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=316">
+  <link rel="stylesheet" href="css/style.css?v=318">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -378,6 +378,12 @@
       <h2 class="about__head">🆕 What's new, changelog</h2>
       <p style="font:600 11px 'Space Grotesk',sans-serif;color:#8f8a80">We ship every week. New books, new graves, and small polish. This page is the living changelog.</p>
       <div class="log-grid" id="logGrid">
+        <div class="log-item">
+            <span class="log-item__ver">v318</span>
+            <p><b>The shows you find now behave like the shows we chose.</b> Every podcast pulled in from FIND 3 MORE plays with full chapter sheets, rides the mini dock to every page, comes back mid-episode after a reload, and waits in the Continue card - identical treatment, because a show you discovered should never be a second-class guest. Hunting that promise down caught something worse: the feed reader itself had been going silent in the whole Chrome family (one selector Chromium refuses to parse), so feeds fell back to a mirror that rate-limits - shows would load on some phones and never on others. Fixed at the root; every show now plays straight from its own feed, and this build's tests play real feeds from empty caches to prove it. The cheat sheet found its center: the book's cover and its KEY TAKEAWAYS ribbon now sit mid-page with the seven takeaways flanking on both sides, a full-width band underneath carries the week's first step beside WHERE THE BOOK BITES - the page fills like a poster instead of a form. And audiobooks pulled from LibriVox arrive speaking: each fresh card now carries the book's own description under its title, so the shelf reads like a friend's recommendations, not a list of names. The walkthrough survived 400 taps a second in testing - no swallowed clicks, no stall at slide 8. Build 318.</p></div>
+        <div class="log-item">
+            <span class="log-item__ver">v317</span>
+            <p><b>The sheet worth printing, a show of our own, and doors where questions used to dead-end.</b> The PDF cheat-sheet is rebuilt from zero: page one is the whole book under a single A4 - handwritten in real bundled fonts (Patrick Hand + Caveat, they print from your own machine), seven numbered takeaways around the real cover, the book's big reveal and its best line up top, the first action boxed at the bottom right - one page, always, aligned and made to be printed. Page two is yours: raw ruled notes with today's question about that book written at the top - it changes every day, seeded per book, and your notes stay yours. Gold's promise is now live: members print unlimited sheets, no credit counter; everyone gets four free, and every weekend the whole app gets two bonus sheets - a real limited offer, not a countdown costume. The scanner reads before it judges: three differently-processed OCR passes (grayscale, sharpened, title-band crop) merge their words, the author's printed name counts as evidence, and only then does the cover fingerprint get a strict, clearly-labeled say - a random wall can never again be called a book. The walkthrough was rebuilt for fast hands: one listener for all 21 stops (the old one re-bound every slide and went deaf for 0.8s after each tap), one scroll per stop, a GPU-moved spotlight ring - no more lag at slide 8, no more swallowed taps. And the player stopped lying: switching from a book to a podcast now swaps the cover art instantly, the dock opens the full player from anywhere on it, and pause and play keep their word across pages. Reviews learned manners - five stars gets a warm thank-you, four gets asked what kept it from five, one to three gets asked what broke, no defence - and every review now posts to the live wall for all readers (one SQL ships with the build). New Google accounts claim an @username before using the app: the skip door is gone, info pages stay open to everyone, and the finish sheet returns you to exactly where you were. The daily question grew hands: WRITE ON THIS opens your notebook with the question already at the top, ANSWER IT AS A STORY opens the composer with it pre-titled, and the books remain one tap away. Ask the Library now shows its receipts - "answered from N book lessons + M real failures, zero opinions" - because that line is the thing AI chat cannot say. The store keeps only honest offers: the early Gold lock, the weekend sheet pack, and the writer's path. And the Idea Autopsy tells the truth twice: a three-line idea gets asked for specifics instead of a score, and every saved autopsy replays its frozen numbers - the public record may move, your verdict does not, and each report names the day the record was checked. Build 317.</p></div>
         <div class="log-item">
             <span class="log-item__ver">v316</span>
             <p><b>Faster plays, a show shelf that never runs out, and one quiet daily question.</b> The audio room now plays like it should have from the start: the moment the shelf opens, the first screen of audiobooks quietly fetches their chapter lists in the background, a touch on PLAY starts the fetch before the tap even lands, and the button says LOADING while it works - so the first play takes seconds and every play after that is instant, because what the app loaded once, it keeps. "Worth your ears" grew a bottomless shelf: when the hand-picked shows end, FIND 3 MORE SHOWS pulls three real podcasts fresh from the directory - every one verified to carry its own feed, remembered on your device, playable right here - and every show card now saves with the heart in its corner, so YOUR SHOWS sits above the list one tap from a replay. The homepage is calmer: "what's on your mind" is retired, and the mindpick is just today's question - some days opening with a quote, some days a bare ask - every day something new. And two small honest fixes: the ? chip is now a proper little tab attached to the top edge, rounded away from the corner instead of a floating circle, and the guide sheet's close button sits inside the card where your thumb is, not pinned to the top of the screen. Build 316.</p></div>
@@ -731,24 +737,24 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="./js/bootguard.js?v=316"></script>
-  <script src="js/prefs.js?v=316"></script>
-  <script src="js/support.js?v=316"></script>
-  <script src="js/lang.js?v=316"></script>
-  <script src="js/config.js?v=316"></script>
-  <script src="js/auth.js?v=316"></script>
-  <script src="js/data.js?v=316"></script>
-  <script src="js/failures.js?v=316"></script>
-  <script src="js/ask-data.js?v=316"></script>
-  <script src="js/tts-engine.js?v=316"></script>
-  <script src="js/ask-modes-data.js?v=316"></script>
-  <script src="js/paywall.js?v=316"></script>
-  <script src="js/askquota.js?v=316"></script>
-  <script src="js/ask.js?v=316"></script>
-  <script src="js/podcast-data.js?v=316"></script>
-  <script src="js/audioplayer.js?v=316"></script>
-  <script src="js/bar.js?v=316" defer></script>
-  <script src="js/gate.js?v=316" defer></script>
+  <script src="./js/bootguard.js?v=318"></script>
+  <script src="js/prefs.js?v=318"></script>
+  <script src="js/support.js?v=318"></script>
+  <script src="js/lang.js?v=318"></script>
+  <script src="js/config.js?v=318"></script>
+  <script src="js/auth.js?v=318"></script>
+  <script src="js/data.js?v=318"></script>
+  <script src="js/failures.js?v=318"></script>
+  <script src="js/ask-data.js?v=318"></script>
+  <script src="js/tts-engine.js?v=318"></script>
+  <script src="js/ask-modes-data.js?v=318"></script>
+  <script src="js/paywall.js?v=318"></script>
+  <script src="js/askquota.js?v=318"></script>
+  <script src="js/ask.js?v=318"></script>
+  <script src="js/podcast-data.js?v=318"></script>
+  <script src="js/audioplayer.js?v=318"></script>
+  <script src="js/bar.js?v=318" defer></script>
+  <script src="js/gate.js?v=318" defer></script>
   <script>
   // 🧪 Lab, one professional playground that explains every tricky feature
   (function(){

@@ -427,7 +427,7 @@ const C = window.TSB_COMMUNITY;
   const gold290 = fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8");
   ok("v290: FREE vs GOLD side-by-side on gold.html (12 honest rows)", gold290.includes('id="goldCompare"') && (gold290.match(/class="gcmp__row"/g) || []).length === 12 && gold290.includes("LIVE NOW") && gold290.includes("IN PRODUCTION") && gold290.includes("COMING SOON") && gold290.includes("LAUNCHING WITH GOLD"));
   ok("v290: gold comparison claims only verifiable features (no live-link row)", gold290.includes("OFFLINE + EXPORT") && gold290.includes("STUDIO PRO") && gold290.includes("₹999/yr") && gold290.includes("cancel anytime"));
-  ok("v290: gold page keeps the suite contract (ACTIVATE GOLD + early-members)", gold290.includes("ACTIVATE GOLD") && gold290.includes("rolling out to early members first"));
+  ok("v290: gold page keeps the suite contract (ACTIVATE GOLD + live sheets)", gold290.includes("ACTIVATE GOLD") && gold290.includes("unlimited PDF cheat-sheets are LIVE today"));
   ok("v290: counts move together (500 books / 3540 lessons / 360 autopsies)", djArr.length === 500 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3540 && flArr.length === 360);
   console.log("== v291: 10 Unknown originals (7 Indian, 3 international), THE TICKET joins the case file ==");
   const unk291 = ["chai-stall-ceo","crickets-balance-sheet","mandi-math","monsoon-portfolio","quiet-giant","rented-kingdom","right-idea-wrong-decade","tiffin-code","the-queue","wedding-economy"];
@@ -736,7 +736,7 @@ const C = window.TSB_COMMUNITY;
   ok("v225: founder email set to acimotreyothy@gmail.com", storeV4.includes("acimotreyothy@gmail.com") && storeV4.includes("FOUNDER_EMAILS"));
   ok("v225: store supports affiliate links", storeV4.includes("TSB_AFFILIATE") && storeV4.includes("finalUrl"));
   ok("v225\u2192v298: codes are single-use rows now, no checksum to forge", !goldV3.includes("CODE_SECRET") && goldV3.includes("isGold"));
-  ok("v225: gold forge panel + honest in-production copy", fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes('id="gForge"') && fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes("IN PRODUCTION") && fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes("rolling out to early members first"));
+  ok("v225: gold forge panel + honest in-production copy", fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes('id="gForge"') && fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes("IN PRODUCTION") && fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes("unlimited PDF cheat-sheets are LIVE today"));
   ok("v226: You banner shows 40 perks + affiliate.js precached", loginV4.includes("40 real perks") && swSrc.includes("./js/affiliate.js") && swSrc.includes("./assets/logos/jio.png"));
   ok("v225: service worker precaches hidden-hub logos", swSrc.includes("./assets/logos/airtel.png") && swSrc.includes("./assets/logos/hdfc.png") && swSrc.includes("./assets/logos/sbi.png") && swSrc.includes("./assets/logos/axis.png"));
 
@@ -989,7 +989,7 @@ const C = window.TSB_COMMUNITY;
     ok("the watchdog rides first on every app page, and the ID wall is gone for good", bg275.includes("TSB_BOOT_OK") && bg275.includes("tsb_purge_a") && rd("index.html").indexOf("js/bootguard.js") === 0 || (rd("index.html").includes("js/bootguard.js") && !rd("index.html").includes("js/vault.js") && !rd("book.html").includes("js/vault.js")));
     ok("a worker handover can never reload the page again", !prefs275.includes("controllerchange") && prefs275.includes("window.TSB_BOOT_OK = true"));
     ok("no worker = no purge reload; a true hang self-heals once, then an honest banner", bg275.includes("done(had)") && bg275.includes("Load trouble detected."));
-    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v316"'));
+    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v318"'));
     ok("storage is plain device storage again, exactly like v267", !rd("index.html").includes("js/vault.js") && rd("js/prefs.js").includes("for (let i = 0; i < localStorage.length; i++)") && !rd("js/prefs.js").includes("TSB_VAULT"));
 
     /* --- watermark --- */
@@ -1067,15 +1067,18 @@ const C = window.TSB_COMMUNITY;
       const bt = rd("js/book-tools.js");
       const bh = rd("book.html");
       const cssSrc = rd("css/style.css");
-      ok("the cheat-sheet is built as exactly TWO designed pages", (bt.match(/<section class="cs2__page">/g) || []).length === 2);
+      ok("the cheat-sheet is built as exactly TWO pages: sheet + raw notes", (bt.match(/<section class="cs2__page">/g) || []).length === 2 && bt.includes("RAW NOTES"));
+      ok("the handwriting is bundled, not borrowed", fsp.existsSync(pp.join(__dirname, "../assets/fonts/patrick-hand.woff2")) && fsp.existsSync(pp.join(__dirname, "../assets/fonts/caveat-700.woff2")) && /Patrick Hand/.test(cssSrc));
+      ok("page two asks today's question and hands you ruled paper", bt.includes("QUESTION OF THE DAY") && bt.includes("cs3-lines") && /function questionFor/.test(bt));
+      ok("the question is seeded per book and changes daily", /bhash\(/.test(bt) && /todayKey\(\)/.test(bt) && /"\\u007btitle\\u007d"|\\{title\\}/.test(bt));
       ok("each book gets its own colour palette", /Self-Improvement/.test(bt) && /Money & Finance/.test(bt) && /History/.test(bt));
       ok("it never prints the whole page any more", !/body\.tsb-printing \* \{ visibility:hidden/.test(cssSrc) && /body\.tsb-printing > \*:not\(#tsbCheat\)/.test(cssSrc));
       ok("the printed page is 290mm tall so a third page cannot appear", /height:\s*290mm/.test(cssSrc));
       ok("content is clipped by design, not by luck", /\.cs2__page \{[^}]*overflow:\s*hidden/.test(cssSrc));
-      ok("the cover, big idea and takeaways are on page one", /cs2__cover/.test(bt) && /THE BIG IDEA/.test(bt) && /The five that matter/.test(bt));
-      ok("every remaining chapter still appears, compressed", /And the rest of the book/.test(bt) && /cs2__rest/.test(bt));
-      ok("the plan, the watch-out and the diagram are on page two", /Do this/.test(bt) && /WHERE IT BREAKS/.test(bt) && /cs2__map/.test(bt));
-      ok("the diagram wraps its own labels (no 'Cue ->' truncation)", /function wrapWords/.test(bt) && /function svgLines/.test(bt));
+      ok("page one: the cover, the reveal and seven takeaways, all handwritten", /cs3-cover/.test(bt) && /What this book reveals/.test(bt) && /KEY TAKEAWAYS/.test(bt) && /function takeaways/.test(bt));
+      ok("nothing is invented: every line is compressed from the book's own data", /function firstSentence/.test(bt) && /function clip/.test(bt) && /cleanHead/.test(bt));
+      ok("the first action rides page one, the rest live in the app", /START THIS WEEK/.test(bt) && /more lessons inside the app/.test(bt));
+      ok("branding is a whisper in the bottom-right corner", /cs3-foot__brand/.test(bt) && /thesmallbook\.in/.test(bt));
       ok("it prints on colour, with the backgrounds kept", /print-color-adjust:exact/.test(cssSrc) && /@page \{ size: A4 portrait/.test(cssSrc));
       ok("four free sheets, then Gold", /FREE_PDF = 4/.test(bt) && /gold\.html/.test(bt));
       ok("the sheet waits for the cover image before printing", /img\.onload|document\.fonts/.test(bt) && /afterprint/.test(bt));
@@ -1157,7 +1160,7 @@ const C = window.TSB_COMMUNITY;
       ok("seven stops are hands-on: the tour moves when the reader acts", tryStops.length === 7, tryStops.join(" "));
       ok("the walkthrough opens with a Welcome to TheSmallBook", gd.includes('t: "Welcome to TheSmallBook"'));
       ok("try-stops listen to real taps and focus, capture phase", gd.includes('document.addEventListener("click", tryClick, true)') && gd.includes('document.addEventListener("focusin", tryFocus, true)'));
-      ok("a try-stop on a link saves state and lets the hop resume", gd.includes("never double-navigate"));
+      ok("a try-stop on a link saves state and lets the hop resume", gd.includes("the hop itself resumes the tour"));
       ok("late mounts are waited for, not skipped past", gd.includes("waitTries++ < 13"));
       ok("mid-tour wandering follows the reader to their page", gd.includes("the tour follows the reader"));
       ok("the try ring pulses while the tour waits", gd.includes("#tsbTourRing.tsb-try") && gd.includes("tsbTryRing"));
@@ -1207,6 +1210,31 @@ const C = window.TSB_COMMUNITY;
       ok("the ? chip is a corner tab, rounded away from the edge", gd.includes("border-radius:0 0 0 24px") && gd.includes("border-left:3px solid var(--ink);border-bottom:3px solid var(--ink)"));
       ok("the guide sheet's close sits in the card, not the sky", gd.includes(".tg-x{position:sticky;top:8px"));
       ok("mindpick is the daily question alone, as asked", mpv.includes("the whole mindpick now") && !mpv.includes("WHAT\'S ON YOUR MIND"));
+    }
+
+    /* --- v317 · the sheet that earns its desk, the voices, the gates --- */
+    {
+      const idx = rd("index.html"), gd = rd("js/guide.js"), apv = rd("js/audioplayer.js"), pd = rd("js/podcast-data.js"), mp300 = rd("js/mindpick.js"),
+            g = rd("js/gate.js"), au = rd("js/auth.js"), lg = rd("login.html"), st = rd("store.html"), bt = rd("js/book-tools.js");
+      ok("the daily question leads to your notebook, question included", mp300.includes("notes.html?about=") && mp300.includes("WRITE ON THIS, FOR YOURSELF"));
+      ok("or it becomes a story, title pre-written", mp300.includes("write.html?about=") && rd("write.html").includes('location.search).get("about")'));
+      ok("the notebook opens the question as a note's title", rd("notes.html").includes('location.search).get("about")'));
+      ok("the wall posts live and merges everyone's words", idx.includes("tsb_reviews") && idx.includes("tsb_reviews_cache") && idx.includes("toneFor"));
+      ok("the sheet answers every star its own way", /toneFor/.test(idx) && idx.includes("WHAT KEPT IT FROM 5") && idx.includes("TELL US WHAT WENT WRONG"));
+      ok("reviews SQL ships with the build", fsp.existsSync(pp.join(__dirname, "../supabase/sql/UPDATE-v317-reviews.sql")));
+      ok("the walkthrough listens once, not per slide", gd.includes("tryArmed") && !/armTry\(s\.tryit\)/.test(gd));
+      ok("no dead zone: a fast tap advances in ~120ms", gd.includes("}, 120)") && !/}, 800\)/.test(gd));
+      ok("one scroll per stop, transform-moved ring", gd.includes("var scrolled = false") && gd.includes('ring.style.transform'));
+      ok("new accounts claim a username, no side door", lg.includes("btnFinSkip") === false && au.includes('code: "retired"') && g.includes("needsFinishGate"));
+      ok("info pages stay open to everyone", g.includes("about\\.html|store\\.html|gold\\.html"));
+      ok("our podcast is real audio, recorded, two hosts", pd.includes("TSB_PODCASTS.originals") && fsp.existsSync(pp.join(__dirname, "../assets/podcast/tsb-show-ep1-p1.mp3")) && fsp.existsSync(pp.join(__dirname, "../assets/podcast/tsb-show-ep5-p2.mp3")));
+      ok("the player carries it: play, browse, restore", apv.includes("playOriginal: playOriginal") && apv.includes("originalBrowser") && apv.includes('"orig:"'));
+      ok("our show pins the shelf above every other show", rd("podcasts.html").includes("pc-show--orig") && rd("podcasts.html").includes("data-obrowse"));
+      ok("the store keeps only honest offers", st.includes("no fake countdowns") && st.includes("WEEKEND SHEET PACK"));
+      ok("the weekend bonus is real engine behavior", bt.includes("function weekendBonus") && bt.includes("weekend bonus on"));
+      ok("the autopsy refuses to score a one-liner", rd("js/ideaaudit.js").includes("tooThin") && rd("js/ideaaudit.js").includes("TOO LITTLE TO AUTOPSY"));
+      ok("a saved autopsy replays its frozen verdict", rd("js/ideaaudit.js").includes("result: rep") && rd("js/ideaaudit.js").includes("saved.result"));
+      ok("every answer shows its receipts", rd("js/ask.js").includes("aq-receipt") && rd("js/ask.js").includes("zero opinions"));
     }
 
     /* --- v314 · the premium player: dock, sheet, motion --- */
@@ -1668,8 +1696,8 @@ const C = window.TSB_COMMUNITY;
     }
     const sw292 = rd292("sw.js");
     ok("service worker precaches ask-modes-data.js", sw292.includes('"./js/ask-modes-data.js"'));
-    ok("cache name and bootguard build both say 316", /CACHE_VERSION = "tsb-v316"/.test(sw292) && /var BUILD = "316";/.test(rd292("js/bootguard.js")));
-    ok("login and settings say Build tsb-v316", rd292("login.html").includes("Build tsb-v316") && rd292("settings.html").includes("Build tsb-v316"));
+    ok("cache name and bootguard build both say 318", /CACHE_VERSION = "tsb-v318"/.test(sw292) && /var BUILD = "318";/.test(rd292("js/bootguard.js")));
+    ok("login and settings say Build tsb-v318", rd292("login.html").includes("Build tsb-v318") && rd292("settings.html").includes("Build tsb-v318"));
     ok("about.html changelog documents v292 and the 8 modes", /log-item__ver">v292</.test(rd292("about.html")) && rd292("about.html").includes("8 modes"));
     ok("no page still carries an old ?v=291", !glob292.some(f => /\?v=29[12]\b/.test(rd292(f))), glob292.filter(f => /\?v=29[12]\b/.test(rd292(f))).join(",") || "clean");
 

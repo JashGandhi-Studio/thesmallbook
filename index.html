@@ -13,11 +13,11 @@
   <meta property="og:description" content="500 book summaries · 3,540 lessons · 360 autopsies, free to read, in 26 languages, with audio.">
     <meta property="og:url" content="https://thesmallbook.in/">
   <meta property="og:site_name" content="TheSmallBook">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=316">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=318">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="TheSmallBook, 500 books · 3,540 lessons · 360 autopsies · free to read">
-  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=316">
+  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=318">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="manifest" href="manifest.json">
@@ -36,7 +36,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=316">
+  <link rel="stylesheet" href="css/style.css?v=318">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -313,37 +313,45 @@
     <p class="tiny"><a href="pseo/index.html" style="color:inherit;">READING LISTS</a> · NEW BOOKS ADDED EVERY WEEK · © 2026 THESMALLBOOK · ALL RIGHTS RESERVED</p>
   </footer>
 
-  <script src="./js/bootguard.js?v=316"></script>
-  <script src="js/prefs.js?v=316"></script>
-  <script src="js/support.js?v=316"></script>
-  <script src="js/upi.js?v=316"></script>
-  <script src="js/lang.js?v=316"></script>
-  <script src="js/config.js?v=316"></script>
-  <script src="js/auth.js?v=316"></script>
-  <script src="js/sounds.js?v=316"></script>
-  <script src="js/community.js?v=316"></script>
-  <script src="js/data.js?v=316"></script>
-  <script src="js/failures.js?v=316"></script>
-  <script src="js/app.js?v=316"></script>
-  <script src="js/packs-data.js?v=316"></script>
-  <script src="js/mindpick.js?v=316" defer></script>
-  <script src="js/packs-ui.js?v=316"></script>
+  <script src="./js/bootguard.js?v=318"></script>
+  <script src="js/prefs.js?v=318"></script>
+  <script src="js/support.js?v=318"></script>
+  <script src="js/upi.js?v=318"></script>
+  <script src="js/lang.js?v=318"></script>
+  <script src="js/config.js?v=318"></script>
+  <script src="js/auth.js?v=318"></script>
+  <script src="js/sounds.js?v=318"></script>
+  <script src="js/community.js?v=318"></script>
+  <script src="js/data.js?v=318"></script>
+  <script src="js/failures.js?v=318"></script>
+  <script src="js/app.js?v=318"></script>
+  <script src="js/packs-data.js?v=318"></script>
+  <script src="js/mindpick.js?v=318" defer></script>
+  <script src="js/packs-ui.js?v=318"></script>
   <script>
-    /* ⭐ render real reader words (from config.js TESTIMONIALS, no fake)
-       plus your own words: add yours, stars first, name or hidden */
+    /* ⭐ THE REVIEW WALL v317 - real reader words (config.js TESTIMONIALS,
+       no fake), your own words, and now EVERYONE'S words: posts go to the
+       live reviews table (tsb_reviews) and the wall merges them in.
+       The sheet answers you the way a good shop would: five stars gets a
+       warm thank-you, four gets asked what kept it from five, and one to
+       three gets asked what broke - no defence, we fix fast. */
     (function () {
       var t = (window.TSB_CONFIG && TSB_CONFIG.TESTIMONIALS) || [];
       var real = t.filter(function (x) { return x && x.quote && x.who; });
       var row = document.getElementById("spRow");
       var box = document.getElementById("socialproof");
       if (!row || !box) return;
+      var SB_URL = ((window.TSB_CONFIG && TSB_CONFIG.SUPABASE_URL) || "").replace(/\/$/, "");
+      var SB_ANON = (window.TSB_CONFIG && TSB_CONFIG.SUPABASE_ANON_KEY) || "";
+      var CACHE = "tsb_reviews_cache";
       function mine() { try { return JSON.parse(localStorage.getItem("tsb_my_reviews") || "[]"); } catch (e) { return []; } }
+      function remote() { try { return JSON.parse(localStorage.getItem(CACHE) || "[]"); } catch (e) { return []; } }
       function starsHtml(n) { var h = ""; for (var i = 1; i <= 5; i++) h += '<i class="sp-star' + (i <= n ? " on" : "") + '">★</i>'; return '<span class="sp-stars">' + h + "</span>"; }
       function card(x, own, idx) {
         var q = document.createElement("div");
         q.className = "sp-quote" + (own ? " sp-quote--mine" : "");
         q.innerHTML = (x.stars ? starsHtml(x.stars) : "") +
-          '<p>“' + String(x.quote).replace(/"/g, "&quot;") + '”</p><cite>' + String(x.who).replace(/</g, "&lt;") + "</cite>" +
+          '<p>\u201c' + String(x.quote).replace(/"/g, "&quot;") + '\u201d</p><cite>' + String(x.who).replace(/</g, "&lt;") + "</cite>" +
           (own ? '<button class="sp-del" aria-label="Remove my review">✕</button>' : "");
         if (own) q.querySelector(".sp-del").addEventListener("click", function () {
           var list = mine(); list.splice(idx, 1);
@@ -359,6 +367,12 @@
         q.addEventListener("click", openSheet);
         return q;
       }
+      /* the sheet changes its tone with the stars, like every good shop */
+      function toneFor(n) {
+        if (n >= 5) return { h: "THANK YOU - REALLY.", p: "What did TheSmallBook actually do for you? One honest line helps the next reader more than a hundred ads ever could." };
+        if (n === 4) return { h: "SO CLOSE. WHAT KEPT IT FROM 5?", p: "Tell us the one thing that fell short - your answer goes straight to the builder, not a bin." };
+        return { h: "TELL US WHAT WENT WRONG.", p: "No defence, no excuses. What broke, where, how? We fix fast, and the fix ships in the next build." };
+      }
       function openSheet() {
         var old = document.getElementById("spSheet");
         if (old) old.remove();
@@ -368,64 +382,102 @@
           '<button class="ap-x" aria-label="Close">✕</button>' +
           "<h3>⭐ YOUR REVIEW</h3>" +
           '<div class="sp-pick" id="spPick">' + starsHtml(0) + "</div>" +
+          '<div id="spTone"><p class="sp-tone">Tap the stars first - the sheet listens.</p></div>' +
           '<textarea id="spText" maxlength="280" rows="4" placeholder="What did TheSmallBook actually do for you?"></textarea>' +
           '<input id="spName" maxlength="40" placeholder="Your name (e.g. Aarav, Mumbai)">' +
-          '<label class="sp-hide"><input type="checkbox" id="spHide"> hide my name, show as “a reader”</label>' +
+          '<label class="sp-hide"><input type="checkbox" id="spHide"> hide my name, show as \u201ca reader\u201d</label>' +
           '<button id="spSave">POST MY REVIEW</button>' +
           "</div>";
         document.body.appendChild(sh);
         sh.querySelector(".ap-x").addEventListener("click", function () { sh.remove(); });
         sh.addEventListener("click", function (e) { if (e.target === sh) sh.remove(); });
         var picked = 0;
-        var starEls = sh.querySelectorAll("#spPick .sp-star");
-        starEls.forEach(function (st, i) {
-          st.addEventListener("click", function () {
-            picked = i + 1;
-            starEls.forEach(function (s2, j) { s2.classList.toggle("on", j < picked); });
-          });
+        sh.querySelector("#spPick").addEventListener("click", function (e) {
+          var st = e.target.closest ? e.target.closest(".sp-star") : null;
+          if (!st) return;
+          var all = Array.prototype.slice.call(sh.querySelectorAll("#spPick .sp-star"));
+          picked = all.indexOf(st) + 1;
+          all.forEach(function (x, i) { x.className = "sp-star" + (i < picked ? " on" : ""); });
+          var tn = toneFor(picked);
+          sh.querySelector("#spTone").innerHTML = "<p class=\"sp-tone\"><b>" + tn.h + "</b> " + tn.p + "</p>";
+          var tx = sh.querySelector("#spText");
+          if (picked <= 3 && tx && !tx.value.trim()) tx.placeholder = "What went wrong? Be blunt - it helps most.";
+          else if (tx) tx.placeholder = "What did TheSmallBook actually do for you?";
         });
         sh.querySelector("#spSave").addEventListener("click", function () {
-          var txt = sh.querySelector("#spText").value.trim();
-          if (!picked) { sh.querySelector("#spPick").classList.add("sp-pick--shake"); setTimeout(function () { sh.querySelector("#spPick").classList.remove("sp-pick--shake"); }, 450); return; }
-          if (txt.length < 10) { sh.querySelector("#spText").focus(); return; }
-          var hide = sh.querySelector("#spHide").checked;
-          var name = hide ? "a reader" : (sh.querySelector("#spName").value.trim() || "a reader");
-          var list = mine();
-          list.unshift({ quote: txt, who: name, stars: picked, at: Date.now() });
-          localStorage.setItem("tsb_my_reviews", JSON.stringify(list.slice(0, 20)));
-          sh.remove();
-          paint();
-          var head = document.querySelector(".socialproof__head");
-          if (head) { head.scrollIntoView({ behavior: "smooth", block: "center" }); }
+          var btn = this;
+          var txt = (sh.querySelector("#spText").value || "").trim();
+          if (!picked) { btn.textContent = "TAP THE STARS FIRST"; setTimeout(function () { btn.textContent = "POST MY REVIEW"; }, 1600); return; }
+          if (!txt) { btn.textContent = "A LINE OR TWO FIRST"; setTimeout(function () { btn.textContent = "POST MY REVIEW"; }, 1600); return; }
+          var name = (sh.querySelector("#spHide").checked || !sh.querySelector("#spName").value.trim()) ? "a reader" : sh.querySelector("#spName").value.trim();
+          btn.disabled = true; btn.textContent = "POSTING…";
+          var rec = { stars: picked, quote: txt.slice(0, 280), who: name, at: Date.now() };
+          /* live post first; the local copy is the fallback, never the wall's end */
+          function doneLocal() {
+            var list = mine(); list.unshift(rec);
+            localStorage.setItem("tsb_my_reviews", JSON.stringify(list.slice(0, 20)));
+            sh.remove(); paint();
+          }
+          if (SB_URL && SB_ANON) {
+            var hdrs = { apikey: SB_ANON, "Content-Type": "application/json", Prefer: "return=representation" };
+            var post = function (tk) {
+              if (tk) hdrs.Authorization = "Bearer " + tk;
+              return fetch(SB_URL + "/rest/v1/tsb_reviews", { method: "POST", headers: hdrs, body: JSON.stringify({ stars: picked, quote: rec.quote, who: name }) });
+            };
+            var tk = null;
+            try { if (window.TSB_AUTH && TSB_AUTH.token) tk = TSB_AUTH.token(); } catch (e) {}
+            Promise.resolve(tk).then(post).then(function (r) {
+              if (!r.ok) throw new Error(r.status);
+              doneLocal();
+            }).catch(function () {
+              /* cloud off / cold: keep it on the device, it shows as yours */
+              doneLocal();
+            });
+          } else doneLocal();
         });
       }
       function paint() {
         row.innerHTML = "";
         var my = mine();
         my.forEach(function (x, i) { row.appendChild(card(x, true, i)); });
-        var pick = real.slice();
+        var live = remote().filter(function (x) { return x && x.quote; });
+        var pick = real.concat(live);
         for (var i = pick.length - 1; i > 0; i--) {
           var j = Math.floor(Math.random() * (i + 1));
           var tmp = pick[i]; pick[i] = pick[j]; pick[j] = tmp;
         }
-        pick = pick.slice(0, Math.min(3, pick.length));
-        pick.forEach(function (x) { row.appendChild(card(x, false, 0)); });
+        pick = pick.slice(0, Math.min(6, pick.length));
+        pick.forEach(function (x) {
+          row.appendChild(card({ stars: x.stars, quote: x.quote, who: x.who }, false, 0));
+        });
         row.appendChild(addCard());
         box.style.display = "";
       }
       paint();
+      /* pull the live wall once - cached so the next visit paints instantly */
+      if (SB_URL && SB_ANON) {
+        fetch(SB_URL + "/rest/v1/tsb_reviews?select=stars,quote,who,created_at&order=created_at.desc&limit=20", { headers: { apikey: SB_ANON } })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (list) {
+            if (!list || !list.length) return;
+            var seen = {};
+            list = list.filter(function (x) { var k = x.quote; if (seen[k]) return false; seen[k] = 1; return true; });
+            localStorage.setItem(CACHE, JSON.stringify(list));
+            paint();
+          }).catch(function () {});
+      }
     })();
   </script>
-  <script src="js/guide.js?v=316"></script>
+  <script src="js/guide.js?v=318"></script>
   <script>window.addEventListener("DOMContentLoaded", function () { var c = document.getElementById("tsbHelpChip"); if (c) c.addEventListener("click", function () { TSB_GUIDE.openGuide(); }); });</script>
-  <script src="js/onboard.js?v=316"></script>
-  <script src="js/trial.js?v=316" defer></script>
-  <script src="js/ask-data.js?v=316"></script>
-  <script src="js/tts-engine.js?v=316"></script>
-  <script src="js/ask-modes-data.js?v=316"></script>
-  <script src="js/paywall.js?v=316"></script>
-  <script src="js/askquota.js?v=316"></script>
-  <script src="js/ask.js?v=316"></script>
+  <script src="js/onboard.js?v=318"></script>
+  <script src="js/trial.js?v=318" defer></script>
+  <script src="js/ask-data.js?v=318"></script>
+  <script src="js/tts-engine.js?v=318"></script>
+  <script src="js/ask-modes-data.js?v=318"></script>
+  <script src="js/paywall.js?v=318"></script>
+  <script src="js/askquota.js?v=318"></script>
+  <script src="js/ask.js?v=318"></script>
   <script>
     /* deep-link search from the scanner: index.html?q=<title> */
     (function () {
@@ -445,10 +497,10 @@
       } catch (e) {}
     })();
   </script>
-  <script src="js/podcast-data.js?v=316"></script>
-  <script src="js/audioplayer.js?v=316"></script>
-  <script src="js/bar.js?v=316" defer></script>
-  <script src="js/gate.js?v=316" defer></script>
+  <script src="js/podcast-data.js?v=318"></script>
+  <script src="js/audioplayer.js?v=318"></script>
+  <script src="js/bar.js?v=318" defer></script>
+  <script src="js/gate.js?v=318" defer></script>
 
 </body>
 </html>

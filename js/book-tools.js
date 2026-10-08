@@ -1,13 +1,16 @@
 /* ============================================================
-   THESMALLBOOK - BOOK TOOLS (book-tools.js) · v250
+   THESMALLBOOK - BOOK TOOLS (book-tools.js) · v317
    Two things live on the book page, and both were rebuilt this release:
 
-   • 📄 GET CHEAT-SHEET - a real deliverable, not a print of the page.
-     EXACTLY TWO A4 pages, in colour, with a designed background per
-     category, the real cover, the big idea, five distilled takeaways
-     and a diagram. The old version printed the whole document, which is
-     where the eleven pages with blanks came from. Now: two pages, always,
-     clipped by design so nothing can spill onto a third.
+   • 📄 GET CHEAT-SHEET - v317: a deliverable that earns its desk space.
+     PAGE ONE reads like a friend's neat notes, not a dashboard: the whole
+     book under one A4 page, handwriting-set (Patrick Hand + Caveat, both
+     bundled locally), seven numbered takeaways around the real cover, the
+     big idea and the book's own line up top, one action for the week, and
+     nothing that can spill to a second sheet. PAGE TWO is the raw notes
+     page: today's question about THIS book (seeded, changes daily) as the
+     title, date and name lines, and clean ruled space to write to
+     yourself. Branding stays a whisper in the bottom-right corner.
 
    • 💛 FUEL THIS BREAKDOWN - the sponsor sheet, rebuilt in the app's own
      visual language (thick ink borders, hard shadows, amount picker).
@@ -49,6 +52,11 @@
   }
   function palette(b) { return PALETTES[b && b.category] || FALLBACK; }
   function pdfCount() { try { return +(localStorage.getItem(STORE_KEY) || 0); } catch (e) { return 0; } }
+  /* v317: THE WEEKEND SHEET PACK - the store promises it, the engine honors
+     it: every Saturday and Sunday the free allowance is FREE_PDF + 2.
+     A real limited-time offer, not a countdown costume. */
+  function weekendBonus() { var d = new Date().getDay(); return (d === 0 || d === 6) ? 2 : 0; }
+  function allowance() { return FREE_PDF + weekendBonus(); }
   function isGold() { try { return !!(window.TSB_GOLD && TSB_GOLD.isGold()); } catch (e) { return false; } }
   function upiId() {
     try { return (window.TSB_CONFIG && TSB_CONFIG.PAYWALL && TSB_CONFIG.PAYWALL.UPI_ID) || "9702510680@fam"; }
@@ -79,39 +87,6 @@
     return (cut > cap * 0.6 ? out.slice(0, cut) : out).replace(/[,;:\u2014-]$/, "") + "…";
   }
 
-  /* SVG <text> cannot wrap, so the diagram's boxes wrap their own labels */
-  function wrapWords(txt, perLine, maxLines) {
-    var words = String(txt || "").replace(/\s+/g, " ").trim().split(" ");
-    var lines = [], cur = "";
-    for (var i = 0; i < words.length; i++) {
-      var w = words[i];
-      if (!cur) { cur = w; continue; }
-      if ((cur + " " + w).length <= perLine) cur += " " + w;
-      else { lines.push(cur); cur = w; }
-      if (lines.length === maxLines) break;
-    }
-    if (cur && lines.length < maxLines) lines.push(cur);
-    if (lines.length === maxLines && words.join(" ").length > lines.join(" ").length + 1) {
-      lines[maxLines - 1] = lines[maxLines - 1].replace(/[.,;:!?]*$/, "") + "…";
-    }
-    return lines;
-  }
-  function svgLines(lines, x, y, size, fill, font, weight, gap) {
-    return lines.map(function (ln, i) {
-      return '<text x="' + x + '" y="' + (y + i * (gap || (size + 2))) + '" text-anchor="middle" font-size="' + size +
-        '"' + (weight ? ' font-weight="' + weight + '"' : "") + ' fill="' + fill + '" font-family="' + font + '">' +
-        esc(ln) + "</text>";
-    }).join("");
-  }
-  function relatedBooks(b, n) {
-    try {
-      var all = window.BOOKS || [];
-      var same = all.filter(function (x) { return x && x.id !== b.id && x.category === b.category; });
-      if (same.length < n) same = same.concat(all.filter(function (x) { return x && x.id !== b.id && same.indexOf(x) < 0; }));
-      return same.slice(0, n);
-    } catch (e) { return []; }
-  }
-
   /* ---------- sponsor line ---------- */
   function renderSponsor(b) {
     var el = $("sponsorLine"); if (!el || !b) return;
@@ -122,177 +97,168 @@
   }
 
   /* ============================================================
-     THE CHEAT SHEET - two pages, built to fit, never three
+     THE CHEAT SHEET v317 - page one: the whole book, handwritten.
+     page two: raw notes. Caps everywhere so one sheet stays one.
      ============================================================ */
-  /* a heading with its colour chip as real markup - a ::before pseudo-element
-     gets positioned unpredictably by print engines, and an orphaned chip in
-     the margin is exactly the kind of thing that makes a sheet look sloppy */
-  function h2(label, tight, tail) {
-    return '<h2 class="cs2__h2' + (tight ? " cs2__h2--tight" : "") + '">' +
-      '<span class="cs2__h2c"></span>' + label + (tail || "") + "</h2>";
+  /* today's question for this book - deterministic, changes daily */
+  function bhash(s) {
+    var h = 5381, i;
+    for (i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
+    return h;
   }
-  function pageHead(b, n, pal) {
-    return '<div class="cs2__head">' +
-        '<span class="cs2__brand"><i></i>THESMALLBOOK</span>' +
-        '<span class="cs2__cat" style="background:' + pal.a + ';color:' + (pal.ink === "#14110c" ? "#14110c" : "#fff") + '">' +
-          esc(b.category || "Book") + "</span>" +
-        '<span class="cs2__pg">' + n + " / 2</span>" +
-      "</div>";
+  function todayKey() {
+    var d = new Date();
+    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
   }
-  function pageFoot(b) {
-    return '<div class="cs2__foot">' +
-        '<span>' + esc(b.title) + " · " + esc(b.author || "") + "</span>" +
-        '<span class="cs2__url">thesmallbook.in &nbsp;·&nbsp; cheat sheet, 2 pages</span>' +
-      "</div>";
+  var QUESTIONS = {
+    "general": [
+      "After {title}: which chapter felt like it was written about you - and what did it name that you never said out loud?",
+      "If you had to bet one habit of yours that {title} would kill first, which one - and what replaces it this week?",
+      "What did {title} say that you instantly wanted to argue with? Argue it here - you keep what you defend.",
+      "One year from now, what would the you who actually applied {title} be doing differently every morning?",
+      "Which line of {title} is really a mirror? Write it, then write what it shows.",
+      "What is the smallest, almost-stupid step {title} points at - and what has stopped you from taking it so far?"
+    ],
+    "Money & Finance": [
+      "{title} in one line: money behaves, or you don't. Which of your money habits is really a mood wearing a costume?",
+      "What would future-you thank present-you for buying LESS of, starting this week - and what does {title} say about why you still buy it?"
+    ],
+    "Self-Improvement": [
+      "{title} wants one habit from you, not ten. Which one are you quietly avoiding - and what will you tell yourself tonight if you skip it again?",
+      "Where exactly did you quit last time, and what would {title} say was really happening at that exact moment?"
+    ],
+    "Power & Strategy": [
+      "Who around you is playing the game {title} describes - and what is one move you have been too polite to make?",
+      "What does {title} call strategy that you have been calling bad luck?"
+    ],
+    "Psychology & People": [
+      "Think of one person you keep misunderstanding. What would {title} say you are actually reading wrong in them?",
+      "Which of your reactions this week was really an old script - and what would {title} rewrite it to?"
+    ],
+    "Business & Startups": [
+      "What is the one assumption your plan stands on that {title} would poke first - and how would you test it for under ₹500?",
+      "If {title} audited your week, which hour would it call theatre - looking busy instead of getting customers?"
+    ],
+    "Productivity": [
+      "What did you say yes to this week that {title} would have you say no to - and what did that yes cost the thing you actually care about?",
+      "Which system, not intention, failed you this week - and what does {title} say a working system looks like?"
+    ],
+    "Creativity": [
+      "What would you make today if nobody ever saw it? {title} has an opinion - write yours against it.",
+      "Where did you last stop yourself from making the thing, and what would {title} call that voice?"
+    ],
+    "History": [
+      "Which decision in your life right now rhymes with a story {title} tells - and how does that story end for the people who ignored it?",
+      "What did the losers in {title} all have in common - and which of those do you still carry?"
+    ]
+  };
+  function questionFor(b) {
+    var bank = (QUESTIONS[b && b.category] || []).concat(QUESTIONS.general);
+    var q = bank[bhash((b && b.id) + "|" + todayKey()) % bank.length];
+    return q.replace(/\{title\}/g, b && b.title ? b.title : "this book");
   }
-
-  /* the map: the book's big idea over five numbered ideas, the plan beneath.
-     Every label wraps and clips inside its own box, so nothing can overflow. */
-  function ideaMap(b, pal, takes) {
-    var colW = 94, x0 = 14, cy = 44;
-    var nodes = takes.map(function (l, i) {
-      var cx = x0 + i * colW + colW / 2;
-      var short = String(l.title || ("Idea " + (i + 1)))
-        .split(/\s+[--]\s+/)[0]                 /* keep the headline, drop the subtitle */
-        .replace(/^(The|A|An)\s+/i, "")
-        .replace(/[:.]+$/, "");
-      /* "Cue → Craving → Response → Reward" must not wrap to a dangling arrow */
-      var chain = short.split(/\s*→\s*/);
-      if (chain.length > 2) short = chain.slice(0, 2).join(" → ");
-      var lines = wrapWords(short, 15, 2);
-      var arrow = i < takes.length - 1
-        ? '<path d="M' + (x0 + (i + 1) * colW - 15) + " " + cy + "h7" +
-          'M' + (x0 + (i + 1) * colW - 11) + " " + (cy - 3.4) + "l3.6 3.4-3.6 3.4" +
-          '" fill="none" stroke="' + pal.ink + '" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>'
-        : "";
-      return "<g>" +
-        '<circle cx="' + cx + '" cy="' + cy + '" r="13.5" fill="' + pal.a + '" stroke="' + pal.ink + '" stroke-width="2.6"/>' +
-        '<text x="' + cx + '" y="' + (cy + 4.2) + '" text-anchor="middle" font-size="12.5" font-weight="800" fill="' +
-          pal.ink + '" font-family="Archivo Black, Arial Black, sans-serif">' + (i + 1) + "</text>" +
-        arrow +
-        svgLines(lines, cx, 72, 8.8, pal.ink, "Space Grotesk, Arial, sans-serif", 700, 10.6) +
-      "</g>";
-    }).join("");
-    /* the viewBox is 512x92 - close to 186mm wide by 33mm tall, the box the page
-       gives it, so the art fills the column instead of letterboxing */
-    return '<svg class="cs2__map" viewBox="0 0 512 92" role="img" aria-label="The five ideas in order">' +
-      '<rect x="14" y="2" width="484" height="21" rx="10.5" fill="' + pal.a + '" stroke="' + pal.ink + '" stroke-width="2.6"/>' +
-      '<text x="256" y="16.4" text-anchor="middle" font-size="10" font-weight="800" fill="' + pal.ink +
-        '" font-family="Archivo Black, Arial Black, sans-serif">ALL FIVE SIT UNDER THE BIG IDEA: THE 5-STEP PLAN IS ON PAGE 2</text>' +
-      nodes +
-      "</svg>";
+  /* seven real takeaways: lessons first, the action plan fills the gaps.
+     Nothing invented - every line is compressed out of the book's own data. */
+  function takeaways(b) {
+    var out = [];
+    var L = (b.lessons || []).filter(Boolean);
+    for (var i = 0; i < L.length && out.length < 7; i++) {
+      out.push({ t: cleanHead(L[i].title || "Idea " + (out.length + 1)), d: firstSentence(L[i].summary || "", 260) });
+    }
+    var P = (b.actionPlan || []).filter(Boolean);
+    for (var j = 0; j < P.length && out.length < 7; j++) {
+      out.push({ t: "Do this", d: clip(P[j], 220) });
+    }
+    return out;
   }
-
-  /* page two opens with the book's identity, so a loose sheet still says what it is */
-  function pageIdBar(b) {
-    return '<div class="cs2__idbar">' +
-      (b.cover ? '<img class="cs2__idcov" src="' + esc(b.cover) + '" alt="">' : "") +
-      "<span><b>" + esc(clip(b.title, 52)) + "</b>" +
-      "<i>" + esc(b.author || "") + " \u00b7 the action page</i></span>" +
-      "</div>";
+  function cleanHead(t) {
+    var s = String(t || "").replace(/^(chapter|lesson|part|section)\s*\d+\s*[:.\-]\s*/i, "").replace(/\s+/g, " ").trim();
+    s = s.split(/\s+[--]\s+/)[0].replace(/[:.]+$/, "");
+    return clip(s, 56);
   }
-
+  function cs3Head(b, label, pal) {
+    return '<div class="cs3-bar">' + esc(clip(((b.title || "") + " - " + (b.author || "")).toUpperCase(), 64)) +
+      '<span class="cs3-bar__tag" style="background:' + pal.a + '">' + esc(label) + "</span></div>";
+  }
+  function cs3Foot() {
+    return '<div class="cs3-foot"><span class="cs3-foot__by">notes by: <i></i></span>' +
+      '<span class="cs3-foot__brand">THE SMALL BOOK <b>·</b> thesmallbook.in</span></div>';
+  }
   function buildSheet(b, gold) {
     var pal = palette(b);
-    var L = (b.lessons || []).filter(Boolean);
-    var takes = L.slice(0, 5);
-    var plan = (b.actionPlan || []).filter(Boolean).slice(0, 5);
+    var takes = takeaways(b);
+    /* v318: the reference layout - the book sits IN THE CENTER, lessons
+       flank it left and right, the week's action anchors the bottom-left.
+       Three packed columns, almost no white space. */
+    var left = takes.slice(0, 3), right = takes.slice(3, 7);
+    var caveat = b.caveat || "";
+    var plan = (b.actionPlan || []).filter(Boolean);
     var quotes = (b.quotes || []).filter(Boolean);
     var openQuote = quotes[0] || "";
-    var restAll = L.slice(5);
-    /* A fixed cap keeps page one the same height for a 6-chapter book and a
-       48-chapter one. The rest are counted ("+N more in the app"), never lost. */
-    var REST_MAX = 6;
-    var rest = restAll.slice(0, REST_MAX);
-    var extra = Math.max(0, restAll.length - rest.length);   /* counted, not hidden */
-    var lines = quotes.slice(1, 3);
-    var next = relatedBooks(b, 3);
+    var q = questionFor(b);
+    var more = Math.max(0, ((b.lessons || []).filter(Boolean)).length - Math.min(7, (b.lessons || []).filter(Boolean).length));
+    var keyLabel = takes.length + " KEY TAKEAWAYS";
 
-    var ladder = takes.map(function (l, i) {
-      return '<li class="cs2__step">' +
-          '<span class="cs2__num">' + (i + 1) + "</span>" +
-          '<span class="cs2__stx"><b>' + esc(clip(l.title || ("Idea " + (i + 1)), 72)) + "</b>" +
-            "<span>" + esc(firstSentence(l.summary, 104)) + "</span></span>" +
-        "</li>";
-    }).join("");
+    function take(t, i) {
+      return '<div class="cs3-take"><span class="cs3-num">' + (i + 1) + "</span>" +
+        "<span><b>" + esc(t.t) + "</b><p>" + esc(t.d) + "</p></span></div>";
+    }
+    var leftHtml = left.map(function (t, i) { return take(t, i); }).join("");
+    var rightHtml = right.map(function (t, i) { return take(t, i + 3); }).join("");   /* left carries 1-3, right carries 4-7 */
+    var weekHtml = "";
+    if (plan.length) {
+      weekHtml = '<div class="cs3-week"><b>START THIS WEEK</b><span class="cs3-week__do"><i class="cs3-week__box"></i>' +
+        esc(clip(plan[0], 170)) + "</span>" +
+        (more > 0 ? '<span class="cs3-week__more">+' + more + " more lessons inside the app</span>" : "") + "</div>";
+    }
+    /* v318: the bottom band - one full-width row, two cards, zero air */
+    var bottomHtml = "";
+    if (plan.length || caveat) {
+      bottomHtml = '<div class="cs3-bottom">' +
+        (plan.length ? '<div class="cs3-week cs3-week--band">' + weekHtml.replace(/^<div class="cs3-week">/, "").replace(/<\/div>$/, "") + "</div>" : "") +
+        (caveat ? '<div class="cs3-bite"><b>WHERE THE BOOK BITES</b><p>' + esc(clip(caveat, 210)) + "</p></div>" : "") +
+        "</div>";
+    }
 
-    var flow = plan.map(function (s, i) {
-      return '<li class="cs2__do"><span class="cs2__donum">' + (i + 1) + "</span>" +
-        "<span>" + esc(clip(s, 88)) + '</span><span class="cs2__tick" aria-hidden="true"></span></li>';
-    }).join("");
-
-    var restList = rest.map(function (l, i) {
-      return "<li><span class=\"cs2__restn\">" + (i + 6) + "</span>" +
-        "<span><b>" + esc(clip(l.title || "", 46)) + "</b>" +
-        (l.chapter ? "<i>" + esc(clip(String(l.chapter).replace(/^Chapter\s*/i, "Ch "), 44)) + "</i>" : "") +
-        "</span></li>";
-    }).join("");
-
-    return '<div class="cs2' + (gold ? " cs2--gold" : "") + '" style="--a:' + pal.a + ";--b:" + pal.b + ";--c:" + pal.c +
+    return '<div class="cs2 cs3' + (gold ? " cs2--gold" : "") + '" style="--a:' + pal.a + ";--b:" + pal.b + ";--c:" + pal.c +
         ";--ink-x:" + pal.ink + ";--accent:" + pal.accent + '">' +
 
       /* ============================ PAGE ONE ============================ */
-      '<section class="cs2__page"><div class="cs2__body">' +
-        pageHead(b, 1, pal) +
+      '<section class="cs2__page"><div class="cs3__body">' +
+        cs3Head(b, gold ? "GOLD SHEET" : "CHEAT SHEET", pal) +
 
-        '<div class="cs2__hero">' +
-          (b.cover
-            ? '<img class="cs2__cover" src="' + esc(b.cover) + '" alt="' + esc(b.title) + ' cover">'
-            : '<div class="cs2__cover cs2__cover--none">B</div>') +
-          "<div>" +
-            "<h1>" + esc(clip(b.title, 62)) + "</h1>" +
-            '<div class="cs2__by">' + esc(b.author || "") + (b.year ? " \u00b7 " + esc(b.year) : "") + "</div>" +
-            '<div class="cs2__chips">' +
-              (L.length ? "<span><b>" + L.length + "</b> lessons</span>" : "") +
-              (b.readTime ? "<span><b>" + esc(String(b.readTime).replace(/\s*read$/i, "")) + "</b> min</span>" : "") +
-              (plan.length ? "<span><b>" + plan.length + "</b>-step plan</span>" : "") +
-              (restAll.length ? "<span><b>+" + restAll.length + "</b> more inside</span>" : "") +
-            "</div>" +
-            (b.tagline ? '<div class="cs2__tag">' + esc(clip(b.tagline, 108)) + "</div>" : "") +
-            (gold ? '<div class="cs2__gold">TSB GOLD \u00b7 NO CREDIT LINE</div>' : "") +
+        '<div class="cs3-top">' +
+          '<div class="cs3-intro"><b>What this book reveals</b><p>' + esc(clip(b.bigIdea || b.oneLiner || b.tagline || "", 420)) + "</p></div>" +
+          (openQuote
+            ? '<div class="cs3-quote"><p>\u201c' + esc(clip(openQuote, 190)) + '\u201d</p><span>- ' + esc(b.author || "the author") + "</span></div>"
+            : '<div class="cs3-quote cs3-quote--solo"><p>' + esc(clip(b.tagline || "", 150)) + "</p></div>") +
+        "</div>" +
+
+        '<div class="cs3-grid">' +
+          '<div class="cs3-col">' + leftHtml + "</div>" +
+          '<div class="cs3-midcol">' +
+            '<span class="cs3-key">' + esc(keyLabel) + "</span>" +
+            (b.cover
+              ? '<img class="cs3-cover" src="' + esc(b.cover) + '" alt="' + esc(b.title) + ' cover">'
+              : '<div class="cs3-cover cs3-cover--none">B</div>') +
+            '<span class="cs3-chips">' + esc(b.category || "") + (b.readTime ? '<i>' + esc(String(b.readTime).replace(/\s*min(\s*read)?$/i, "") + " min read") + "</i>" : "") + "</span>" +
           "</div>" +
+          '<div class="cs3-col">' + rightHtml + "</div>" +
         "</div>" +
+        bottomHtml +
 
-        '<div class="cs2__big">' +
-          '<span class="cs2__biglbl">THE BIG IDEA</span>' +
-          "<p>" + esc(firstSentence(b.bigIdea || b.oneLiner || "", 180)) + "</p>" +
-        "</div>" +
+        cs3Foot() +
+      "</div></section>" +
 
-        h2("The five that matter") +
-        '<ol class="cs2__ladder">' + ladder + "</ol>" +
-
-        h2("How they hold together", true) +
-        ideaMap(b, pal, takes) +
-
-        (rest.length
-          ? h2("And the rest of the book", true,
-              extra > 0 ? ' <span class="cs2__morenum">+' + extra + " more in the app</span>" : "") +
-            '<ul class="cs2__rest">' + restList + "</ul>"
-          : "") +
-      "</div>" + pageFoot(b) + "</section>" +
-
-      /* ============================ PAGE TWO ============================ */
-      '<section class="cs2__page"><div class="cs2__body">' +
-        pageHead(b, 2, pal) +
-        pageIdBar(b) +
-        '<div class="cs2__dates"><span>STARTED READING</span><i></i><span>FINISHED</span><i></i></div>' +
-
-        (openQuote
-          ? '<figure class="cs2__lead"><span class="cs2__leadq">\u275d</span>' +
-            "<p>" + esc(clip(openQuote, 120)) + "</p>" +
-            "<figcaption>" + esc(b.author || "") + "</figcaption></figure>"
-          : "") +
-
-        h2("Do this, this week") +
-        '<ol class="cs2__dos">' + flow + "</ol>" +
-
-        '<div class="cs2__watch"><b>WHERE IT BREAKS</b><p>' +
-          esc(clip(b.caveat || "No book fixes a system you never set up. Pick the first step and start it today.", 148)) +
-        "</p></div>" +
-
-        /* the write-on strip: the reason this sheet lives on a desk, not in a drawer */
-        '<div class="cs2__mine"><b>MY NOTES \u00b7 THIS WEEK IN PRACTICE</b><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>' +
-      "</div>" + pageFoot(b) + "</section>" +
+      /* ============================ PAGE TWO: RAW NOTES ============================ */
+      '<section class="cs2__page"><div class="cs3__body cs3__body--notes">' +
+        cs3Head(b, "RAW NOTES", pal) +
+        '<div class="cs3-qday"><span>QUESTION OF THE DAY · ' + todayKey() + '</span><h2>' + esc(q) + "</h2></div>" +
+        '<div class="cs3-meta"><span>my name: <i></i></span><span>date: <i></i></span></div>' +
+        '<div class="cs3-lines" aria-hidden="true"></div>' +
+        '<p class="cs3-prompt">Write like you are the only reader. The question on top is just a door - walk through it in your own words.</p>' +
+        cs3Foot() +
+      "</div></section>" +
     "</div>";
   }
 
@@ -320,7 +286,7 @@
 
     /* the cover is the only network/disk hit - wait for it, or the sheet
        prints with an empty frame */
-    var img = host.querySelector(".cs2__cover");
+    var img = host.querySelector(".cs3-cover");
     var fontsReady = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
     var imgReady = (img && !img.complete)
       ? new Promise(function (res) { img.onload = res; img.onerror = res; })
@@ -335,8 +301,11 @@
     var b = book();
     if (!b) { say("Open a book first - the cheat-sheet is built per book."); return; }
     var gold = isGold();
-    if (!gold && pdfCount() >= FREE_PDF) {
-      if (!window.confirm("Your " + FREE_PDF + " free cheat-sheets are used. Gold gives you unlimited, credit-free sheets. Open Gold?")) return;
+    if (!gold && pdfCount() >= allowance()) {
+      var msg = weekendBonus()
+        ? "Your " + allowance() + " free sheets (weekend bonus included) are used. Gold gives you unlimited, credit-free sheets. Open Gold?"
+        : "Your " + FREE_PDF + " free cheat-sheets are used. Tip: every weekend the app adds 2 bonus sheets for everyone. Or Gold gives unlimited, credit-free sheets. Open Gold?";
+      if (!window.confirm(msg)) return;
       location.href = "gold.html";
       return;
     }
@@ -363,7 +332,8 @@
     var gold = isGold();
     var txt, cls;
     if (gold) { txt = "Gold · unlimited sheets"; cls = "bookcta__q bookcta__q--gold"; }
-    else { txt = Math.max(0, FREE_PDF - pdfCount()) + " of " + FREE_PDF + " free sheets left"; cls = "bookcta__q"; }
+    else if (weekendBonus()) { txt = Math.max(0, allowance() - pdfCount()) + " free sheets left (weekend bonus on)"; cls = "bookcta__q bookcta__q--gold"; }
+    else { txt = Math.max(0, allowance() - pdfCount()) + " of " + allowance() + " free sheets left"; cls = "bookcta__q"; }
     all("[data-tsb-quota]").forEach(function (n) { n.textContent = txt; n.className = cls; });
   }
 

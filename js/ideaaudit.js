@@ -186,6 +186,18 @@
       money: input.money || "",
       stage: input.stage || "idea"
     };
+    /* v317: HONESTY GATE - a one-line idea cannot be autopsied, and handing
+       it a healthy score is a lie. If the wound was never written down,
+       the audit says so and asks for specifics, it does not invent numbers. */
+    var proseLen = (String(input.problem || "") + " " + String(input.solution || "") + " " + String(input.audience || "")).replace(/\s+/g, " ").trim().length;
+    if (proseLen < 130) {
+      return {
+        tooThin: true, score: 0, meters: { survival: 0, scale: 0, timing: 0, trust: 0 },
+        verdict: { label: "TOO LITTLE TO AUTOPSY", color: "#ffc800",
+          line: "The audit grades evidence, and three lines is not evidence. Write the wound properly: who hurts, how much, how often, what they use today. Two honest sentences per box and the scalpels come out." },
+        weak: [], strong: [], steps: [], graves: [], signals: []
+      };
+    }
     var weak = [], strong = [], burn = 0;
     RULES.forEach(function (r) {
       var hit = false;
@@ -234,6 +246,11 @@
       signals.push({ ic: "📰", t: "The failure press is loud here", d: sig.hnCount + " recent field reports tell failure stories in this space in the last year. The graveyard is fresh, read them before you spend." }); }
     if (sig.hnSilent) { timing = Math.min(96, timing + 3);
       signals.push({ ic: "🕊️", t: "No fresh post-mortems matched", d: "A quiet year in your space\u2019s failure press. Either survivors, or a field too small to autopsy." }); }
+    /* v317: say WHEN the public record was checked - a frozen autopsy names its day */
+    try {
+      var mon = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][new Date().getMonth()];
+      signals.push({ ic: "🗓️", t: "Public record checked " + mon + " " + new Date().getDate(), d: "This audit keeps its numbers even when the record moves. Run a fresh audit anytime to re-check Wikipedia and Hacker News against your idea." });
+    } catch (eD) {}
     overall = Math.max(6, Math.min(94, overall));
 
     return {
@@ -517,7 +534,13 @@
           if (saved && saved.draft) {
             draft = Object.assign({ name: "", problem: "", solution: "", audience: "", category: "STARTUP", money: "", stage: "idea" }, saved.draft);
             step = 1;
-            last = A.analyze(draft);
+            /* v317: a saved audit replays its frozen verdict - same idea,
+               same numbers, always. Only a FRESH run re-checks the record. */
+            if (saved.result && saved.result.score !== undefined && !saved.result.tooThin) {
+              last = saved.result;
+            } else {
+              last = A.analyze(draft);
+            }
             report(last);
             paintHistory();
           }
@@ -709,7 +732,7 @@
     return new Promise(function (res) {
       if (window.FAILURES && window.FAILURES.length) return res();
       var sc = document.createElement("script");
-      sc.src = "js/failures.js?v=316";
+      sc.src = "js/failures.js?v=318";
       sc.onload = function () { res(); };
       sc.onerror = function () { res(); };
       document.head.appendChild(sc);
@@ -752,7 +775,11 @@
         at: Date.now(), name: draft.name, score: rep.score, label: rep.verdict.label,
         draft: { name: draft.name, problem: draft.problem, solution: draft.solution,
                  audience: draft.audience, category: draft.category, money: draft.money,
-                 stage: draft.stage, catCustom: draft.catCustom || "" }
+                 stage: draft.stage, catCustom: draft.catCustom || "" },
+        /* v317: the WHOLE verdict is frozen with the audit - the public
+           record moves, your autopsy does not. Reopening shows exactly the
+           numbers you were shown, with the day the record was checked. */
+        result: rep
       });
       hset("tsb_iaudits", h.slice(0, 8));
     } catch (e) {}

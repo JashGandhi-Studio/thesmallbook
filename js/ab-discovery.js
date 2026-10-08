@@ -125,10 +125,15 @@
         var mp3 = (d.files || []).filter(function (f) { return /\.mp3$/i.test(f.name || ""); });
         if (!mp3.length) { cb(null); return; }
         var meta = d.metadata || {};
+        /* v318: the book's own description travels with it - the shelf card
+           reads like a friend's recommendation, never like a placeholder */
+        var desc = String((Array.isArray(meta.description) ? meta.description[0] : meta.description) || "")
+          .replace(/<[^>]*>/g, " ").replace(/&[a-z]+;/gi, " ").replace(/\s+/g, " ").trim();
         cb({
           id: id,
           title: cleanTitle(meta.title || id),
-          author: String((Array.isArray(meta.creator) ? meta.creator[0] : meta.creator) || "LibriVox Volunteers").replace(/\s+/g, " ").trim().slice(0, 30)
+          author: String((Array.isArray(meta.creator) ? meta.creator[0] : meta.creator) || "LibriVox Volunteers").replace(/\s+/g, " ").trim().slice(0, 30),
+          desc: desc.slice(0, 220)
         });
       })
       .catch(function () { cb(null); });
