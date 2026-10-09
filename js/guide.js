@@ -22,7 +22,8 @@
 
   var TOURKEY = "tsb_tour_done";
   var WALKKEY = "tsb_walk";        /* { i: n } - the stop you are on */
-  var WALKDONE = "tsb_walk_done";  /* true - finished, skipped, or seen the old mini tour */
+  var WALKDONE = "tsb_walk_done";  /* the BUILD number the tutorial was completed on - v322 */
+  var THIS_BUILD = (window.TSB_BUILD || "0");   /* bootguard declares it before any page script runs */
 
   function jget(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v === null || v === undefined ? d : v; } catch (e) { return d; } }
   function jset(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -273,7 +274,7 @@
   }
 
   function walkFinish(silent) {
-    jset(WALKDONE, true);
+    jset(WALKDONE, THIS_BUILD);
     jdel(WALKKEY);
     walkStop();
     try { document.documentElement.classList.remove("tsb-walking"); } catch (e2) {}
@@ -522,12 +523,19 @@
        onboarding has calmed down - home page only */
     if (!document.getElementById("tsbHelpChip") || !document.querySelector("#searchInput")) return;
     if (pageName() !== "index.html") return;
-    if (jget(WALKDONE, false) || jget("tsb_onboarded", false) !== true) return;
+    /* v322: the tutorial is once per era. Brand-new readers get it after
+       onboarding; when a build adds enough to warrant a tour, everyone
+       sees the NEW walkthrough exactly once - never again every open. */
+    var seenBuild = jget(WALKDONE, null);
+    var fresh = seenBuild === null || seenBuild === false;
+    var replay = !fresh && String(seenBuild) !== String(THIS_BUILD);
+    if (seenBuild && !replay) return;
+    if (jget("tsb_onboarded", false) !== true) return;
     var tries = 0;
     (function whenCalm() {
       var ob = document.querySelector(".obwrap:not(.obwrap--off)");
       if (ob && tries++ < 8) { setTimeout(whenCalm, 900); return; }
-      setTimeout(function () { startWalk(0); }, tries > 0 ? 500 : 1500);
+      setTimeout(function () { startWalk(0); if (replay) { try { toast("\uD83D\uDDFA New in this update - a quick tour of what changed."); } catch (eT) {} } }, tries > 0 ? 500 : 1500);
     })();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);

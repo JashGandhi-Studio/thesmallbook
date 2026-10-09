@@ -9340,3 +9340,73 @@ html[data-ts="xl"] .lessons, html[data-ts="xl"] .cm-post, html[data-ts="xl"] .nt
   .statgrid { gap: 8px; }
   body { background-size: 22px 22px; }
 }
+
+/* v321 - the sheet reads FULL, like the reference: bigger hand, deeper lines,
+   the example sitting under every takeaway, a prouder cover */
+.cs3-take b { font-size: 17.5px; line-height: 1.24; }
+.cs3-take p { font-size: 13.2px; line-height: 1.38; margin-top: 3px; }
+.cs3-take__ex { display: block; margin-top: 3px; font-size: 11px; line-height: 1.36; font-style: italic; color: rgba(20,17,12,.78); }
+.cs3-take__ex u { text-decoration: none; background: rgba(255,200,0,.42); border-radius: 3px; padding: 0 3px; font-style: normal; font-weight: 700; font-size: 10.2px; letter-spacing: .4px; text-transform: uppercase; margin-right: 3px; }
+.cs3-cover { width: 164px; height: 226px; }
+.cs3-intro p { font-size: 14px; line-height: 1.48; }
+.cs3-quote p { font-size: 15.5px; line-height: 1.5; }
+.cs3-bite p { font-size: 13.6px; line-height: 1.5; }
+.cs3-week__do { font-size: 13.6px !important; line-height: 1.5 !important; }
+.cs3-key { font-size: 13px !important; }
+
+/* v321 - THE SHOW SEARCH BAR: proper, professional, one job done well */
+.pc-search { display:flex; align-items:center; gap:8px; margin:12px 0 8px; padding:6px 6px 6px 12px; border:2.5px solid var(--ink,#14110c); border-radius:999px; background:#fff; box-shadow:3px 3px 0 var(--ink,#14110c); }
+html.dark .pc-search { background:#241f17; border-color:#000; box-shadow:3px 3px 0 #000; }
+.pc-search__ico { flex:none; font-size:15px; }
+.pc-search input { flex:1; min-width:0; border:none; outline:none; background:transparent; font:600 12.5px 'Space Grotesk',sans-serif; color:var(--ink,#14110c); padding:8px 0; }
+html.dark .pc-search input { color:#f2ead8; }
+.pc-search input::placeholder { color:#9a948a; font-weight:500; }
+.pc-search__go { flex:none; border:2.5px solid var(--ink,#14110c); background:var(--yellow,#ffc800); border-radius:999px; padding:9px 14px; font:800 11.5px 'Space Grotesk',sans-serif; letter-spacing:.6px; cursor:pointer; }
+.pc-search__go:active { transform:translate(1px,1px); }
+.pc-search__chips { display:flex; gap:6px; overflow-x:auto; padding:2px 2px 8px; scrollbar-width:none; }
+.pc-search__chips::-webkit-scrollbar { display:none; }
+.pc-search__chips button { flex:none; border:2px solid var(--ink,#14110c); background:#fff; border-radius:999px; padding:6px 11px; font:700 11px 'Space Grotesk',sans-serif; color:var(--ink,#14110c); }
+html.dark .pc-search__chips button { background:#241f17; color:#f2ead8; border-color:#000; }
+.pc-show--found { position:relative; }
+.pc-search__art { width:58px; height:58px; border-radius:10px; border:2.5px solid var(--ink,#14110c); object-fit:cover; flex:none; }
+.pc-show--found { display:flex; gap:10px; align-items:flex-start; }
+.pc-show--found .pc-show__tx { min-width:0; flex:1; }
+.pc-search__empty { font:600 11.5px/1.5 'Space Grotesk',sans-serif; color:#8f8a80; padding:10px 6px; }
+
+/* v321 - About wears quiet folds: deep details tuck away, calm first */
+.aboutfold { border: 2.5px solid var(--ink,#14110c); border-radius: 16px; background: #fff; box-shadow: 4px 4px 0 var(--ink,#14110c); margin: 12px 0; overflow: hidden; }
+html.dark .aboutfold { background: #241f17; border-color: #000; box-shadow: 4px 4px 0 #000; }
+.aboutfold > summary { cursor: pointer; padding: 14px 16px; font: 800 12.5px 'Space Grotesk',sans-serif; letter-spacing: .4px; text-transform: uppercase; list-style: none; }
+.aboutfold > summary::-webkit-details-marker { display: none; }
+.aboutfold > summary::after { content: " +"; float: right; font-weight: 800; }
+.aboutfold[open] > summary::after { content: " -"; }
+.aboutfold > summary:active { transform: translate(1px,1px); }
+
+/* v321 - found-by-search cards: title on its own line, clear of the heart */
+.pc-show--found { position: relative; }
+.pc-show--found .pc-show__tag { display: inline-block; margin-bottom: 4px; }
+.pc-show--found .pc-show__tx > b { display: block; max-width: calc(100% - 46px); }
+.pc-show--found .pc-show__tx > i { display: block; }
+.pc-show--found .pc-show__save { position: absolute; top: 10px; right: 10px; }
+
+/* v322 - the search feels alive: skeleton pulse, results glide in, recents ride along */
+@keyframes pcSkel { 0%,100% { opacity: .45 } 50% { opacity: .9 } }
+.pc-skel__art { animation: pcSkel 1.2s ease-in-out infinite; background: rgba(20,17,12,.14); }
+.pc-skel__bar { display: block; height: 13px; border-radius: 7px; background: rgba(20,17,12,.14); margin: 7px 0; animation: pcSkel 1.2s ease-in-out infinite; }
+.pc-skel__bar--thin { height: 9px; opacity: .7; }
+@keyframes pcIn { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: none } }
+.pc-show--found { animation: pcIn .34s cubic-bezier(.2,.8,.2,1) both; }
+.pc-show--found:nth-child(2) { animation-delay: .05s } .pc-show--found:nth-child(3) { animation-delay: .1s }
+.pc-show--found:nth-child(4) { animation-delay: .15s } .pc-show--found:nth-child(5) { animation-delay: .2s }
+.pc-search__recent { display: flex; gap: 6px; align-items: center; overflow-x: auto; padding: 2px 2px 0; scrollbar-width: none; flex-basis: 100%; }
+.pc-search__recent::-webkit-scrollbar { display: none; }
+.pc-search__recent i { flex: none; font: 800 9.5px 'Space Grotesk',sans-serif; letter-spacing: 1.2px; color: #8f8a80; }
+.pc-search__recent button { flex: none; border: 1.5px dashed #b9b2a6; background: transparent; border-radius: 999px; padding: 4px 10px; font: 600 10.5px 'Space Grotesk',sans-serif; color: #6b665c; }
+
+/* v323 - THE AUDIO ROOM: names where you are, keeps episodes, flows on */
+.ap-chap { margin: -8px 0 14px; font: 600 11.5px/1.45 'Space Grotesk',sans-serif; color: #6b665c; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ap-chap b { display: block; font: 800 10px 'Space Grotesk',sans-serif; letter-spacing: 1.4px; color: var(--ink,#14110c); opacity: .65; margin-bottom: 2px; }
+.ap-qi__sv { display: inline-flex; align-items: center; gap: 4px; margin-top: 5px; border: 2px solid var(--ink,#14110c); border-radius: 999px; background: #fff; padding: 4px 10px; font: 800 10px 'Space Grotesk',sans-serif; letter-spacing: .6px; color: var(--ink,#14110c); cursor: pointer; }
+.ap-qi__sv.on { background: var(--yellow,#ffc800); }
+.ap-qi__sv:disabled { opacity: .55; }
+.ap-un { max-width: 46%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

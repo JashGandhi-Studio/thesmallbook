@@ -25,8 +25,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=320">
-  <link rel="stylesheet" href="css/deepdive.css?v=320">
+  <link rel="stylesheet" href="css/style.css?v=323">
+  <link rel="stylesheet" href="css/deepdive.css?v=323">
   <link rel="icon" href="favicon.ico" sizes="32x32">
 </head>
 <body class="ddpage">
@@ -62,6 +62,26 @@
 
     <section class="pc-shows" id="shelf-shows">
       <h2 class="pc-h2">🎙️ SHOWS WORTH YOUR EARS</h2>
+
+      <!-- v321: THE SEARCH BAR - any topic, any host, five at a time -->
+      <div class="pc-search">
+        <span class="pc-search__ico">🔍</span>
+        <input id="pcSearchIn" type="search" autocomplete="off" enterkeyhint="search"
+               placeholder="Search podcasts: money, fitness, history, interviews, a host you like…"
+               aria-label="Search podcasts by topic or host">
+        <button class="pc-search__go" id="pcSearchGo" type="button">SEARCH</button>
+      </div>
+      <div class="pc-search__chips" id="pcSearchChips">
+        <button data-q="money and investing">money</button>
+        <button data-q="health and fitness">fitness</button>
+        <button data-q="history">history</button>
+        <button data-q="great interviews">interviews</button>
+        <button data-q="books and reading">books</button>
+        <button data-q="startups and business">startups</button>
+        <button data-q="mind and psychology">mind</button>
+      </div>
+      <div id="pcSearchOut" aria-live="polite"></div>
+
       <div class="pc-cats" id="pcCats"></div>
       <div id="pcShowList"></div>
     </section>
@@ -80,14 +100,14 @@
     <div class="credits">&#10022; MADE BY JASH GANDHI &#10022;</div>
     <p class="tiny"><a href="about.html" style="color:inherit;">ABOUT</a>&nbsp;&nbsp;<strong><a href="gold.html" style="color:inherit;">👑 TSB GOLD</a></strong>&nbsp;&nbsp;MUMBAI, INDIA&nbsp;&nbsp;<strong>FREE TO READ</strong></p>
   </footer>
-  <script src="js/bootguard.js?v=320"></script>
-  <script src="js/prefs.js?v=320"></script>
-  <script src="js/config.js?v=320"></script>
-  <script src="js/data.js?v=320"></script>
-  <script src="js/deepdive-data.js?v=320"></script>
-  <script src="js/podcast-data.js?v=320"></script>
-  <script src="js/ab-discovery.js?v=320"></script>
-  <script src="js/show-discovery.js?v=320"></script>
+  <script src="js/bootguard.js?v=323"></script>
+  <script src="js/prefs.js?v=323"></script>
+  <script src="js/config.js?v=323"></script>
+  <script src="js/data.js?v=323"></script>
+  <script src="js/deepdive-data.js?v=323"></script>
+  <script src="js/podcast-data.js?v=323"></script>
+  <script src="js/ab-discovery.js?v=323"></script>
+  <script src="js/show-discovery.js?v=323"></script>
   <script>
   (function () {
     "use strict";
@@ -157,7 +177,7 @@
         var browse = s.rss
           ? '<button class="pc-browse" data-browse="' + esc(s.id) + '">☰ BROWSE EPISODES</button>'
           : '';
-        var home = '<a class="pc-home" href="' + esc(s.home || s.url) + '" target="_blank" rel="noopener noreferrer">show home ↗</a>';
+        var home = "";   /* v322: no exits - the show belongs to the app */
         return '<div class="pc-show">' +
           heart(s.id) +
           '<span class="pc-show__mic">🎙️</span>' +
@@ -197,10 +217,24 @@
       });
       w.querySelectorAll("[data-showsave]").forEach(function (b) {
         b.addEventListener("click", function () {
-          if (window.TSB && TSB.bookmarks) { TSB.bookmarks.toggle("show:" + b.getAttribute("data-showsave")); paint(); }
+          if (window.TSB && TSB.bookmarks) { TSB.bookmarks.toggle("show:" + b.getAttribute("data-showsave")); var sid2 = b.getAttribute("data-showsave"); var sh2 = findShow(sid2); if (sh2 && window.TSB_SHOWMORE) TSB_SHOWMORE.learn(sh2, 1); paint(); }
         });
       });
     }
+    /* one listener catches every broken audiobook cover and swaps in its
+       fallback block - no inline JS in attributes, ever again */
+    document.addEventListener("error", function (e) {
+      var el = e.target;
+      if (!el || !el.matches || !el.matches("img.pc-ab__cover") || el.getAttribute("data-fbdone")) return;
+      el.setAttribute("data-fbdone", "1");
+      var fb = el.getAttribute("data-fb") || "";
+      if (!fb) { el.style.visibility = "hidden"; return; }
+      var wrap = document.createElement("span");
+      wrap.innerHTML = fb;
+      var node = wrap.firstChild || document.createElement("span");
+      el.replaceWith(node);
+    }, true);
+
     /* the directory fetch: three real shows at a time, forever */
     function findShows() {
       if (!window.TSB_SHOWMORE) return;
@@ -231,10 +265,147 @@
     paint();
   })();
   </script>
-  <script src="js/bar.js?v=320" defer></script>
-  <script src="js/gate.js?v=320" defer></script>
-  <script src="js/guide.js?v=320"></script>
-  <script src="js/audioplayer.js?v=320"></script>
+  <script src="js/bar.js?v=323" defer></script>
+  <script src="js/gate.js?v=323" defer></script>
+  <script src="js/guide.js?v=323"></script>
+  <script>
+    /* v321: the show search - type a topic, get five real shows, MORE gives
+       five more on the same topic. Every card plays, browses and saves
+       exactly like a shelf card; the heart also drops the show on the shelf. */
+    (function () {
+      var inp = document.getElementById("pcSearchIn");
+      var go = document.getElementById("pcSearchGo");
+      var out = document.getElementById("pcSearchOut");
+      var chips = document.getElementById("pcSearchChips");
+      if (!inp || !go || !out) return;
+      var adopted = {};
+
+      function esc2(s) { return String(s || "").replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+
+      function render(shows, moreCount, term) {
+        if (!shows.length && !out.dataset.searched) { out.innerHTML = '<p class="pc-search__empty">The directory did not answer. Check the connection and try again.</p>'; return; }
+        if (!shows.length) return;
+        out.dataset.searched = "1";
+        var mine = (window.TSB && TSB.bookmarks) ? TSB.bookmarks.list().filter(function (x) { return x.indexOf("show:") === 0; }).map(function (x) { return x.slice(5); }) : [];
+        var html = shows.map(function (s) {
+          var on = mine.indexOf(s.id) >= 0;
+          return '<div class="pc-show pc-show--found">' +
+            '<button class="pc-show__save' + (on ? " on" : "") + '" data-ssave="' + esc2(s.id) + '" aria-label="Save this show to your shelf">' + (on ? "❤️" : "🤍") + '</button>' +
+            '<img class="pc-search__art" src="' + esc2(s.art) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
+            '<div class="pc-show__tx"><span class="pc-show__tag">' + esc2(s.tag) + '</span>' +
+            '<b>' + esc2(s.name) + '</b><i>with ' + esc2(s.host) + '</i>' +
+            '<p>' + esc2(s.why) + '</p>' +
+            '<span class="pc-show__acts"><button class="pc-play" data-feed="' + esc2(s.id) + '">▶ PLAY LATEST</button>' +
+            '<button class="pc-browse" data-browse="' + esc2(s.id) + '">☰ BROWSE EPISODES</button>' +
+            '</span></div></div>';
+        }).join("") +
+        (moreCount
+          ? '<button class="pc-more" id="pcSearchMore">+ 5 MORE ON "' + esc2(term).toUpperCase() + '" (' + moreCount + ' in line)</button>'
+          : '<p class="pc-search__empty">That is the whole shelf for "' + esc2(term) + '" - search another topic, or FIND 3 MORE SHOWS below surprises you instead.</p>');
+        var old = out.querySelector("#pcSearchMore");
+        out.insertAdjacentHTML("beforeend", html);
+        bind();
+      }
+
+      function findShow(id) {
+        var all = ((window.TSB_PODCASTS && TSB_PODCASTS.shows) || []).concat(window.TSB_SHOWS_EXTRA || []);
+        return all.filter(function (x) { return x.id === id; })[0] || null;
+      }
+
+      function bind() {
+        out.querySelectorAll("[data-feed]").forEach(function (b) {
+          if (b._w) return; b._w = 1;
+          b.addEventListener("click", function () {
+            var show = findShow(b.getAttribute("data-feed"));
+            if (show && window.TSB_AUDIO) TSB_AUDIO.playFeed(show);
+          });
+        });
+        out.querySelectorAll("[data-browse]").forEach(function (b) {
+          if (b._w) return; b._w = 1;
+          b.addEventListener("click", function () {
+            var show = findShow(b.getAttribute("data-browse"));
+            if (show && window.TSB_AUDIO && TSB_AUDIO.showBrowser) TSB_AUDIO.showBrowser(show);
+          });
+        });
+        out.querySelectorAll("[data-ssave]").forEach(function (b) {
+          if (b._w) return; b._w = 1;
+          b.addEventListener("click", function () {
+            var sid = b.getAttribute("data-ssave");
+            var show = findShow(sid);
+            /* the heart also drops the show onto the shelf for good */
+            if (show && window.TSB_SHOWMORE && !adopted[sid]) { TSB_SHOWMORE.adopt(show); TSB_SHOWMORE.learn(show, 1); adopted[sid] = 1; }
+            if (window.TSB && TSB.bookmarks) TSB.bookmarks.toggle("show:" + sid);
+            b.textContent = b.textContent.trim() === "🤍" ? "❤️" : "🤍";
+            b.classList.toggle("on");
+          });
+        });
+        var moreBtn = out.querySelector("#pcSearchMore");
+        if (moreBtn && !moreBtn._w) {
+          moreBtn._w = 1;
+          moreBtn.addEventListener("click", function () {
+            moreBtn.disabled = true; moreBtn.textContent = "FETCHING FIVE MORE…";
+            if (window.TSB_SHOWMORE) TSB_SHOWMORE.searchMore(function (shows, moreCount, term) { render(shows, moreCount, term); });
+          });
+        }
+      }
+
+      /* v322: the flight - instant skeletons, stale answers dropped, the
+         term remembered for next time, results glide in */
+      var flight = 0;
+      var RECENTKEY = "tsb_show_recent";
+      function saveRecent(q) {
+        try {
+          var r = JSON.parse(localStorage.getItem(RECENTKEY) || "[]").filter(function (x) { return x.toLowerCase() !== q.toLowerCase(); });
+          r.unshift(q);
+          localStorage.setItem(RECENTKEY, JSON.stringify(r.slice(0, 5)));
+        } catch (e) {}
+      }
+      function paintRecent() {
+        var r = [];
+        try { r = JSON.parse(localStorage.getItem(RECENTKEY) || "[]"); } catch (e) {}
+        if (!r.length) return;
+        var oldRow = chips.querySelector(".pc-search__recent");
+        if (oldRow) oldRow.remove();
+        var row = document.createElement("div");
+        row.className = "pc-search__recent";
+        row.innerHTML = '<i>RECENT:</i>' + r.map(function (t) { return '<button data-rq="' + esc2(t) + '">' + esc2(t) + '</button>'; }).join("");
+        chips.appendChild(row);
+      }
+      function skeletons(term) {
+        var one = '<div class="pc-show pc-show--found pc-skel"><span class="pc-search__art pc-skel__art"></span><div class="pc-show__tx"><span class="pc-skel__bar" style="width:34%"></span><span class="pc-skel__bar" style="width:62%"></span><span class="pc-skel__bar pc-skel__bar--thin" style="width:88%"></span><span class="pc-skel__bar pc-skel__bar--thin" style="width:76%"></span></div></div>';
+        return '<p class="pc-search__empty">🔎 Searching the directory for "' + esc2(term) + '"…</p>' + one + one;
+      }
+      function run() {
+        var q = (inp.value || "").trim();
+        if (!q) { inp.focus(); return; }
+        var my = ++flight;
+        go.disabled = true; go.textContent = "…";
+        out.dataset.searched = "";
+        out.innerHTML = skeletons(q);
+        out.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        if (window.TSB_SHOWMORE) TSB_SHOWMORE.search(q, function (shows, moreCount, term) {
+          if (my !== flight) return;   /* a newer search already owns the page */
+          go.disabled = false; go.textContent = "SEARCH";
+          out.dataset.searched = "1";
+          if (!shows.length) { out.innerHTML = '<p class="pc-search__empty">Nothing with a playable feed came back for "' + esc2(q) + '" - try a broader word like money, history, fitness…</p>'; paintRecent(); return; }
+          saveRecent(q);
+          out.innerHTML = "";
+          render(shows, moreCount, term);
+          paintRecent();
+        });
+      }
+      go.addEventListener("click", run);
+      inp.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); run(); } });
+      chips.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-q]") || e.target.closest("[data-rq]");
+        if (!b) return;
+        inp.value = b.getAttribute("data-q") || b.getAttribute("data-rq");
+        run();
+      });
+      paintRecent();
+    })();
+  </script>
+  <script src="js/audioplayer.js?v=323"></script>
   <script>
     /* v319: while you browse, the first three chosen shows quietly load their
        episode lists - tapping PLAY starts the sound, not a wait */
@@ -259,17 +430,15 @@
       var b = B.filter(function (x) { return x.id === bid; })[0] || {};
       var hi = rec.lang === "hi";
       var dev = '<span class="pc-ab__dev"><b>' + esc(rec.dev || "हिंदी") + '</b><i>HINDI MEIN</i></span>';
-      /* the fallback travels inside a double-quoted onerror attribute, so
-         both quote kinds need safe forms: " as &quot; (the parser decodes
-         it before the JS runs), ' as \' */
-      var fallback = hi ? dev.replace(/"/g, "&quot;").replace(/'/g, "\\'") : "";
-      /* v314: WANT MORE books have no painted cover yet - their fallback
-         is a proper little cover block with the title, never a broken img */
+      /* v321: the fallback travels in a data attribute, never in inline JS.
+         The old onerror string broke on any title with an apostrophe - the
+         parser hands &#39; back as a bare quote and the eval'd JS dies. */
+      var fallback = hi ? dev : "";
       if (rec.discovered && !hi) {
         var words = String(rec.title || "Audiobook").split(" ").slice(0, 3).join(" ");
-        fallback = ('<span class=\\"pc-ab__dev\\"><b>' + esc(words) + '</b><i>FRESH FROM LIBRIVOX</i></span>').replace(/"/g, "&quot;").replace(/'/g, "\\'");
+        fallback = '<span class="pc-ab__dev"><b>' + esc(words) + '</b><i>FRESH FROM LIBRIVOX</i></span>';
       }
-      var cover = '<img src="assets/covers/' + esc(bid) + '.jpg?v=320" alt="" loading="lazy" onerror="this.outerHTML=\'' + fallback + '\'">';
+      var cover = '<img class="pc-ab__cover" data-fb="' + esc(fallback) + '" src="assets/covers/' + esc(bid) + '.jpg?v=323" alt="" loading="lazy">';
       var isSaved = saved().indexOf(bid) >= 0;
       return '<div class="pc-ab__card' + (hi ? " pc-ab__card--hi" : "") + '">' +
         cover +

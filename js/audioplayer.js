@@ -167,7 +167,7 @@
       ".ap-cont:active{transform:translate(2px,2px);box-shadow:none}" +
       /* the hero: big tilted art, big type */
       ".ap-hero{display:flex;gap:16px;align-items:center;margin:14px 2px 14px}" +
-      ".ap-art--big{flex:0 0 auto;width:118px;height:118px;border:3.5px solid var(--ink);border-radius:24px;background:var(--yellow);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:5px 6px 0 var(--ink);transform:rotate(-2.5deg)}" +
+      ".ap-art--big{flex:0 0 auto;width:148px;height:148px;border:3.5px solid var(--ink);border-radius:24px;background:var(--yellow);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:5px 6px 0 var(--ink);transform:rotate(-2.5deg)}" +
       ".ap-art--big img{width:100%;height:100%;object-fit:cover}" +
       ".ap-npwrap{flex:1;min-width:0}" +
       ".ap-np-t{display:block;font:800 19px/1.22 'Space Grotesk',sans-serif;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
@@ -274,15 +274,28 @@
 
   /* swipe the dock fully right to cancel: finger follows, past a third of
      the screen it flies out and the player closes (your spot is kept) */
+  /* v322: the dock's home pose. Whatever happens - drag, sheet, app switch -
+     it always returns here, pinned to the bottom, never drifting or
+     freezing mid-air. */
+  function resetDockPose() {
+    if (!dock) return;
+    dock.style.transition = "";
+    dock.style.transform = "";
+    dock.style.opacity = "";
+  }
   function bindSwipe() {
-    var sx = 0, dx = 0, drag = false;
+    var sx = 0, sy = 0, dx = 0, drag = false;
     dock.addEventListener("pointerdown", function (e) {
       if (e.target.closest("button")) return;
-      drag = true; sx = e.clientX; dx = 0;
+      drag = true; sx = e.clientX; sy = e.clientY; dx = 0;
+      try { if (e.target.setPointerCapture) e.target.setPointerCapture(e.pointerId); } catch (eC) {}
       try { dock.style.transition = "none"; } catch (e2) {}
     });
     dock.addEventListener("pointermove", function (e) {
       if (!drag) return;
+      /* horizontal is the dock's only axis: vertical finger movement never
+         lifts or drops it (that was the "player floated up and froze" bug) */
+      if (Math.abs(e.clientY - sy) > Math.abs(e.clientX - sx)) return;
       dx = Math.max(0, e.clientX - sx);
       dock.style.transform = "translateX(" + dx + "px) rotate(" + (dx * 0.03) + "deg)";
     });
@@ -297,13 +310,12 @@
         dock.style.opacity = "0";
         setTimeout(function () { stopAll(); toast("Player closed. Your spot is kept."); }, 190);
       } else {
-        dock.style.transform = "";
-        dock.style.opacity = "";
+        resetDockPose();
       }
     }
     dock.addEventListener("pointerup", end);
     dock.addEventListener("pointercancel", end);
-    dock.addEventListener("pointerleave", end);
+    window.addEventListener("pointerup", function () { if (drag) { drag = false; resetDockPose(); } });
   }
 
   function unmountDock() {
@@ -313,8 +325,121 @@
     try { if (navigator.mediaSession) navigator.mediaSession.metadata = null; } catch (e) {}
   }
 
+  /* ================= v323: THE ROOM - offline saves, up next, autoplay ================= */
+
+  var SAVEKEY = "tsb_ep_saved";   /* { src: { label, show, at } } - episodes kept on the phone */
+  function savedMap() { return jget(SAVEKEY, {}); }
+  function isSaved(src) { return !!savedMap()[src]; }
+  function savedCount() { return Object.keys(savedMap()).length; }
+  /* fetch with a live percentage when the host allows cors (most do);
+     otherwise fall back to an opaque copy - no progress, still offline */
+  function fetchSaved(src, onProg) {
+    return fetch(src).then(function (res) {
+      if (!res.ok) throw new Error("http " + res.status);
+      var total = Number(res.headers.get("content-length")) || 0;
+      if (!res.body || !window.ReadableStream || !total) return res;
+      var seen = 0;
+      var reader = res.body.getReader();
+      var chunks = [];
+      function pump() {
+        return reader.read().then(function (part) {
+          if (part.done) {
+            return new Response(new Blob(chunks), { status: 200, headers: { "Content-Type": res.headers.get("Content-Type") || "audio/mpeg", "Content-Length": String(total) } });
+          }
+          chunks.push(part.value); seen += part.value.length;
+          if (onProg) onProg(seen, total);
+          return pump();
+        });
+      }
+      return pump();
+    });
+  }
+  function saveEpisode(src, label, show, btn) {
+    if (btn) { btn.disabled = true; btn.textContent = "SAVING…"; }
+    if (!window.caches) { if (btn) { btn.disabled = false; btn.textContent = "⤓ SAVE"; } toast("This browser cannot keep offline copies."); return; }
+    var t0 = Date.now();
+    caches.open("tsb-saved-media").then(function (c) {
+      return fetchSaved(src, function (seen, total) {
+        if (btn && total > 51200) {
+          var pc = Math.min(99, Math.round((seen / total) * 100));
+          btn.textContent = pc + "%";
+        }
+      }).then(function (res) { return c.put(src, res); })
+        .catch(function () {
+          /* no-cors path: the copy is opaque, no progress, but it still plays */
+          return fetch(src, { mode: "no-cors" }).then(function (op) { return c.put(src, op); });
+        })
+      .then(function () {
+        var m = savedMap(); m[src] = { label: label || "", show: show || "", at: Date.now() };
+        jset(SAVEKEY, m);
+        var secs = Math.round((Date.now() - t0) / 1000);
+        if (btn) { btn.textContent = "✓ OFFLINE"; btn.classList.add("on"); btn.disabled = false; }
+        toast("⤓ Saved for offline" + (secs > 3 ? " (" + secs + "s)" : "") + ". It plays even in airplane mode.");
+      });
+    }).catch(function () {
+      if (btn) { btn.disabled = false; btn.textContent = "⤓ SAVE"; }
+      toast("Could not save this one - try again online.");
+    });
+  }
+  function unsaveEpisode(src, btn) {
+    var m = savedMap(); delete m[src]; jset(SAVEKEY, m);
+    if (window.caches) caches.open("tsb-saved-media").then(function (c) { c.delete(src); }).catch(function () {});
+    if (btn) { btn.classList.remove("on"); btn.textContent = "⤓ SAVE"; }
+  }
+  /* the shows you keep, for the up-next strip */
+  function savedShowIds() {
+    try { return (window.TSB && TSB.bookmarks) ? TSB.bookmarks.list().filter(function (x) { return x.indexOf("show:") === 0; }).map(function (x) { return x.slice(5); }) : []; } catch (e) { return []; }
+  }
+  function upNextHtml() {
+    if (!q || q.type !== "audio" || !/^(pod|orig):/.test(q.key)) return "";
+    var ids = savedShowIds().filter(function (id) { return id !== q.key.slice(4); }).slice(0, 4);
+    if (!ids.length) return "";
+    var chips = ids.map(function (id) {
+      var show = findShowAnywhere(id);
+      return show ? '<button class="ap-chip ap-un" data-un="' + esc(id) + '">▶ ' + esc((show.name || "").slice(0, 22)) + '</button>' : "";
+    }).join("");
+    return '<div class="ap-lab">UP NEXT · FROM YOUR SHOWS</div><div class="ap-row">' + chips +
+      '<button class="ap-chip" data-unfind="1">🔍 FIND NEW</button></div>';
+  }
+  function autoplayOn() { return jget("tsb_autoplay", 1) === 1; }
+  /* when a show's queue ends, flow into another show you keep - the loop */
+  function chainToShow() {
+    var ids = savedShowIds().filter(function (id) { return id !== (q && q.key ? q.key.slice(4) : ""); });
+    if (!ids.length) return;
+    var n = +(jget("tsb_chain", 0) || 0) % ids.length;
+    jset("tsb_chain", n + 1);
+    var show = findShowAnywhere(ids[n]);
+    if (!show) return;
+    toast("▶ Up next: " + (show.name || "your show"));
+    if (show.orig) { playOriginal(0); return; }
+    if (!show.rss) return;
+    playFeed(show);
+  }
+  function bindRoom(sheet) {
+    sheet.addEventListener("click", function (e) {
+      var sv = e.target.closest("[data-sv]");
+      if (sv) {
+        e.stopPropagation();
+        var src = sv.getAttribute("data-sv");
+        var itSv = (q.items || []).filter(function (x) { return x.src === src; })[0] || {};
+        if (isSaved(src)) unsaveEpisode(src, sv);
+        else saveEpisode(src, itSv.label, q.title, sv);
+        return;
+      }
+      var un = e.target.closest("[data-un]");
+      if (un) {
+        var show = findShowAnywhere(un.getAttribute("data-un"));
+        closeSheet();
+        if (show && show.rss) playFeed(show);
+        return;
+      }
+      if (e.target.closest("[data-unfind]")) { closeSheet(); location.href = "podcasts.html#shelf-shows"; }
+    });
+  }
+
   function openSheet() {
     if (!q) return;
+    resetDockPose();   /* v322: the bar sits home while its sheet is up */
     closeSheet();
     var last = jget(LASTKEY, null);
     var cont = "";
@@ -343,7 +468,8 @@
         '<span class="ap-npwrap"><span class="ap-np-t" id="apNpT"></span><span class="ap-np-s" id="apNpS"></span><span class="ap-np-x">' + esc(q.title) + '</span></span>' +
       '</div>' +
       (isAudio
-        ? '<div class="ap-seekrow"><span class="ap-time" id="apT0">0:00</span><input class="ap-seek" id="apSeek" type="range" min="0" max="1000" value="0" aria-label="Seek"><span class="ap-time ap-time--r" id="apT1">-:--</span></div>'
+        ? '<div class="ap-seekrow"><span class="ap-time" id="apT0">0:00</span><input class="ap-seek" id="apSeek" type="range" min="0" max="1000" value="0" aria-label="Seek"><span class="ap-time ap-time--r" id="apT1">-:--</span></div>' +
+          '<div class="ap-chap" id="apChap"></div>'
         : '<div class="ap-part" id="apPart"></div>') +
       '<div class="ap-ctl">' +
         '<button class="ap-jump" id="apPrevC" aria-label="Previous chapter">' + IC.prev + '</button>' +
@@ -356,22 +482,50 @@
       '<div class="ap-lab">SPEED</div><div class="ap-row">' +
         SPEEDS.map(function (s) { return '<button class="ap-chip ap-sp' + (s === speed ? " on" : "") + '" data-sp="' + s + '">' + s + 'x</button>'; }).join("") +
       '</div>' +
-      (/^ab:/.test(q.key) ? '<div class="ap-lab">VOLUME BOOST · THE OLD RECORDINGS RUN QUIET</div><div class="ap-row">' +
+      /* v322: boost lives ONLY on the LibriVox queue - the old recordings run
+        quiet and their host allows the clean re-wiring. On podcast streams
+        the circuit cannot legally tap the audio (no CORS) and trying mutes
+        it, so those rooms get speed and sleep only. */
+      (isAudio && /^ab:/.test(q.key) ? '<div class="ap-lab">VOLUME BOOST</div><div class="ap-row">' +
+        BOOSTS.map(function (b) { return '<button class="ap-chip ap-bo' + (boostPref() === b.g ? " on" : "") + '" data-bo="' + b.g + '">' + b.l + '</button>'; }).join("") +
+      '</div>' : '') +
+      /* v321: the narrated engine already had speed - it only lacked BOOST */
+      (!isAudio ? '<div class="ap-lab">VOLUME BOOST</div><div class="ap-row">' +
         BOOSTS.map(function (b) { return '<button class="ap-chip ap-bo' + (boostPref() === b.g ? " on" : "") + '" data-bo="' + b.g + '">' + b.l + '</button>'; }).join("") +
       '</div>' : '') +
       '<div class="ap-lab">SLEEP TIMER</div><div class="ap-row">' +
         SLEEPS.map(function (m) { return '<button class="ap-chip ap-sl" data-sl="' + m + '">' + (m === 0 ? "OFF" : m + " min") + '</button>'; }).join("") +
         (sl ? '<span class="ap-chip on" id="apSleepLeft">' + sl + ' min left</span>' : '') +
       '</div>' +
-      '<div class="ap-lab">QUEUE · ' + q.items.length + '</div>' +
+      (isAudio ? '<div class="ap-lab">AUTOPLAY · WHEN THE SHOW ENDS</div><div class="ap-row">' +
+        '<button class="ap-chip ap-au' + (autoplayOn() ? " on" : "") + '" data-au="1">ON - FLOW INTO YOUR SHOWS</button>' +
+        '<button class="ap-chip ap-au' + (!autoplayOn() ? " on" : "") + '" data-au="0">OFF - STOP AFTER</button>' +
+      '</div>' : '') +
+      '<div class="ap-lab">QUEUE · ' + q.items.length + (savedCount() ? ' · ' + savedCount() + ' SAVED OFFLINE' : '') + '</div>' +
       '<div class="ap-q">' +
         q.items.map(function (it, i) {
-          return '<div class="ap-qi' + (i === curItem ? " on" : "") + '" data-i="' + i + '"><span class="ap-num">' + (i === curItem ? IC.play : i + 1) + '</span><span style="min-width:0"><b>' + esc(it.label) + '</b><i>' + esc(it.sub || "") + '</i></span>' + (i === curItem ? EQ : '') + '</div>';
+          var sv = "";
+          if (isAudio && /^(pod|orig):/.test(q.key) && it.src) {
+            var on = isSaved(it.src);
+            sv = '<button class="ap-qi__sv' + (on ? " on" : "") + '" data-sv="' + esc(it.src) + '" aria-label="Save this episode for offline">' + (on ? "✓ OFFLINE" : "⤓ SAVE") + '</button>';
+          }
+          return '<div class="ap-qi' + (i === curItem ? " on" : "") + '" data-i="' + i + '"><span class="ap-num">' + (i === curItem ? IC.play : i + 1) + '</span><span style="min-width:0"><b>' + esc(it.label) + '</b><i>' + esc(it.sub || "") + '</i>' + sv + '</span>' + (i === curItem ? EQ : '') + '</div>';
         }).join("") +
       '</div>' +
+      upNextHtml() +
       (q.credit ? '<p class="ap-credit">' + q.credit + '</p>' : '') +
       '</div>';
     document.body.appendChild(sheet);
+    bindRoom(sheet);
+    /* v323: name where you are immediately - the tick paints it again every second */
+    (function () {
+      var ch0 = sheet.querySelector("#apChap");
+      if (ch0 && q) {
+        var it0 = q.items[curItem] || {};
+        var kind0 = /^pod:/.test(q.key) ? "EPISODE" : (/^orig:/.test(q.key) ? "PART" : "CHAPTER");
+        ch0.innerHTML = "<b>" + kind0 + " " + (curItem + 1) + " OF " + q.items.length + "</b> " + esc((it0.label || "").slice(0, 64));
+      }
+    })();
     sheet.classList.toggle("ap-playing", !!playing());
     /* v314: swipe the head (or the grip) down and the sheet follows your
        finger; let go past 90px and it closes, else it snaps back */
@@ -414,6 +568,13 @@
         }
         var t02 = sheet.querySelector("#apT0"); if (t02) t02.textContent = fmtTime(AU.currentTime);
         var t12 = sheet.querySelector("#apT1"); if (t12) t12.textContent = isFinite(d) ? fmtTime(d) : "-:--";
+        /* v323: the room names where you are - chapter/episode number and title */
+        var ch3 = sheet.querySelector("#apChap");
+        if (ch3) {
+          var it3 = q.items[curItem] || {};
+          var kind3 = /^pod:/.test(q.key) ? "EPISODE" : (/^orig:/.test(q.key) ? "PART" : "CHAPTER");
+          ch3.innerHTML = "<b>" + kind3 + " " + (curItem + 1) + " OF " + q.items.length + "</b> " + esc((it3.label || "").slice(0, 64));
+        }
       } else {
         var p2 = sheet.querySelector("#apPart"); if (p2) p2.textContent = (/^pod:/.test(q.key) ? "EPISODE " : "PART ") + (curItem + 1) + " OF " + q.items.length;
       }
@@ -457,6 +618,9 @@
     sheet.querySelectorAll(".ap-sl").forEach(function (b) {
       b.addEventListener("click", function () { setSleep(parseInt(this.getAttribute("data-sl"), 10)); openSheet(); });
     });
+    sheet.querySelectorAll(".ap-au").forEach(function (b) {
+      b.addEventListener("click", function () { jset("tsb_autoplay", parseInt(b.getAttribute("data-au"), 10)); openSheet(); });
+    });
     sheet.querySelectorAll(".ap-bo").forEach(function (b) {
       b.addEventListener("click", function () {
         setBoost(parseFloat(this.getAttribute("data-bo")));
@@ -466,7 +630,9 @@
       });
     });
     sheet.querySelectorAll(".ap-qi").forEach(function (el) {
-      el.addEventListener("click", function () {
+      el.addEventListener("click", function (e) {
+        /* v323: the save chip lives inside the row - it saves, it never plays */
+        if (e.target.closest("[data-sv]")) return;
         var i = parseInt(this.getAttribute("data-i"), 10);
         if (q.type === "audio") playChapter(i, 0); else seekItem(i);
         closeSheet();
@@ -474,6 +640,7 @@
     });
   }
   function closeSheet() {
+    resetDockPose();
     if (!sheet) return;
     try { clearInterval(sheet._apTick); } catch (e) {}
     var old = sheet; sheet = null;
@@ -521,7 +688,7 @@
   var BOOSTKEY = "tsb_ab_boost", SLEEPKEY = "tsb_sleep_until";
   /* what the chips say and what they really do: +50% is a true 150%,
      +100% is a true 300% - the compressor keeps 300% loud, not shredded */
-  var BOOSTS = [{ g: 1, l: "OFF" }, { g: 1.5, l: "+50%" }, { g: 3, l: "+100%" }];
+  var BOOSTS = [{ g: 1, l: "OFF" }, { g: 1.5, l: "+50%" }, { g: 3, l: "+100%" }, { g: 4.75, l: "150%" }];   /* v321: the 150% chip - honest words outside, the full circuit inside (about 475% of the original signal) */
   function boostLabel(g) { for (var i = 0; i < BOOSTS.length; i++) if (BOOSTS[i].g === g) return BOOSTS[i].l; return g > 1 ? "+" + Math.round((g - 1) * 100) + "%" : "off"; }
 
   function boostPref() { var v = jget(BOOSTKEY, 1); return v === 2 ? 3 : v; }   /* old 2x becomes the new 300% */
@@ -557,7 +724,14 @@
   }
   function setBoost(mult) {
     jset(BOOSTKEY, mult);
+    /* v321: the narrated summaries share the same knob (their engine has its
+       own booster circuit) */
+    try { if (T && T.setBoost) T.setBoost(mult); } catch (eT) {}
     if (!AU) return;
+    /* v322: the amplifier may only touch the LibriVox element. A podcast
+       stream without CORS headers goes SILENT the moment it is wired into
+       the graph - so podcast queues keep their honest volume. */
+    if (!q || !/^ab:/.test(q.key)) return;
     if (mult > 1) {
       if (ensureGraph(AU)) { gainNode.gain.value = mult; if (actx.resume) actx.resume(); }
     } else if (gainNode) gainNode.gain.value = 1;
@@ -702,6 +876,8 @@
     curItem = 0;
     var speed = jget(SPEEDKEY, 1);
     try { T.setSpeed(speed); } catch (e) {}
+    /* v321: the chosen boost rides the narrator too */
+    try { var b0 = jget(BOOSTKEY, 1); if (b0 !== 1 && T.setBoost) T.setBoost(b0); } catch (eB) {}
     T.onProgress(function (idx, total, playing2) {
       if (!q) return;
       var item = 0;
@@ -734,7 +910,12 @@
     a.addEventListener("canplay", function () { var pr = dock && dock.querySelector(".ap-prog"); if (pr) pr.classList.remove("loading"); });
     a.addEventListener("playing", function () { var pr = dock && dock.querySelector(".ap-prog"); if (pr) pr.classList.remove("loading"); });
     a.addEventListener("pause", function () { jset(PLAYKEY, 0); paintPlay(); });
-    a.addEventListener("ended", function () { if (q && curItem < q.items.length - 1) playChapter(curItem + 1, 0); else paintPlay(); });
+    a.addEventListener("ended", function () {
+      if (q && curItem < q.items.length - 1) { playChapter(curItem + 1, 0); return; }
+      /* v323: the loop - a finished show flows into the next one you keep */
+      if (q && q.type === "audio" && /^(pod|orig):/.test(q.key) && autoplayOn()) { chainToShow(); return; }
+      paintPlay();
+    });
     a.addEventListener("timeupdate", function () {
       if (!q || q.type !== "audio" || !AU) return;
       var d = AU.duration || 0;
@@ -788,6 +969,8 @@
       try { au.crossOrigin = "anonymous"; } catch (e) {}
       if (boostPref() > 1) { if (ensureGraph(au)) gainNode.gain.value = boostPref(); }
       else if (gainNode) gainNode.gain.value = 1;
+      /* v322: a podcast stream must never meet the graph at all */
+      if (q && !/^ab:/.test(q.key) && gainNode) { try { au.crossOrigin = null; } catch (eX) {} }
     } else {
       try { au.removeAttribute && au.removeAttribute("crossorigin"); } catch (e) {}
       if (gainNode) gainNode.gain.value = 1;
@@ -848,6 +1031,22 @@
      good copy we ever fetched. Only when all three fail does the reader
      see an error. */
   function feedKey(url) { return url.split("").reduce(function (a, c) { return ((a << 5) - a + c.charCodeAt(0)) | 0; }, 0); }
+  /* v322: a stalled connection used to hang the whole chain - now every
+     leg gets its own deadline, so fallback and the retry button actually
+     arrive while the reader is still looking. */
+  function fetchWithDeadline(url, ms) {
+    return new Promise(function (resolve, reject) {
+      var done = false;
+      var t = setTimeout(function () { if (!done) { done = true; reject(new Error("timeout")); } }, ms || 9000);
+      fetch(url).then(function (r) {
+        if (done) return;
+        done = true; clearTimeout(t); resolve(r);
+      }, function (e) {
+        if (done) return;
+        done = true; clearTimeout(t); reject(e);
+      });
+    });
+  }
   function fetchFeed(url, cb) {
     var ck = FEEDCACHE + feedKey(url);
     var goodKey = "tsb_feed_good_" + feedKey(url);
@@ -855,7 +1054,7 @@
     var lastGood = jget(goodKey, null);
     if (cached && Date.now() - cached.at < 6 * 36e5 && cached.items.length) { cb(cached.items, cached.showTitle, false, cached.art); return; }
     function viaMirror() {
-      fetch("https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(url))
+      fetchWithDeadline("https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(url), 9000)
         .then(function (r) { return r.json(); }).then(function (d) {
           if (!d || d.status !== "ok" || !d.items || !d.items.length) throw new Error("mirror empty");
           var out = [];
@@ -875,7 +1074,7 @@
           cb([], "", false, "");
         });
     }
-    fetch(url).then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.text(); }).then(function (xml) {
+    fetchWithDeadline(url, 9000).then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.text(); }).then(function (xml) {
       var doc = new DOMParser().parseFromString(xml, "text/xml");
       var ch = doc.querySelector("channel") || doc.documentElement;
       var showTitle = ch && ch.querySelector(":scope > title") ? ch.querySelector(":scope > title").textContent : "";
@@ -897,6 +1096,26 @@
         var dd = ""; try { dd = new Date(d).toLocaleDateString(undefined, { day: "numeric", month: "short" }); } catch (e) {}
         out.push({ label: t, sub: dd || "episode", src: src });
       });
+      /* v322: some browsers refuse a feed's XML outright (undeclared
+         namespace prefixes that Chrome shrugs at). If the polite parse
+         found nothing, scan the raw text the same way every reader does -
+         the episodes are in there, whatever the mime says. */
+      if (!out.length) {
+        var re = /<item[\s\S]*?<\/item>/gi, m2;
+        while ((m2 = re.exec(xml)) && out.length < 40) {
+          var block = m2[0];
+          var s2 = (block.match(/<enclosure[^>]*url=["']([^"']+)["']/i) || [])[1] || "";
+          if (!/^https:/.test(s2)) {
+            s2 = (block.match(/<link[^>]*href=["']([^"']+\.mp3[^"']*)["']/i) || [])[1] || "";
+          }
+          if (!/^https:/.test(s2)) continue;
+          var t2 = (block.match(/<title>([\s\S]*?)<\/title>/i) || [])[1] || "Episode";
+          var d3 = (block.match(/<pubDate>([\s\S]*?)<\/pubDate>/i) || [])[1] || "";
+          var dd2 = ""; try { dd2 = new Date(d3).toLocaleDateString(undefined, { day: "numeric", month: "short" }); } catch (e2) {}
+          var el2 = document.createElement("textarea"); el2.innerHTML = t2;   /* decode &amp; words */
+          out.push({ label: el2.value.replace(/\s+/g, " ").trim() || "Episode", sub: dd2 || "episode", src: s2 });
+        }
+      }
       /* feeds occasionally repeat an entry; the queue never should */
       var seenT = {}, clean = [];
       out.forEach(function (e2) {
@@ -926,7 +1145,7 @@
           '<span class="tss-mid"><b>' + esc(show.name) + '</b><i>with ' + esc(show.host) + '</i>' +
           '<p>' + esc(show.why) + '</p></span></div>' +
         '<div class="tss-acts"><button class="tss-playlatest" id="tssLatest">▶ PLAY THE LATEST</button>' +
-          '<a class="tss-home" href="' + esc(show.home || show.url) + '" target="_blank" rel="noopener noreferrer">show home ↗</a></div>' +
+          '</div>' +
         '<div class="ap-lab">EPISODES</div>' +
         '<div class="tss-list" id="tssList"><p class="tss-note tss-note--load"><span class="tss-dot"></span><span class="tss-dot"></span><span class="tss-dot"></span> Fetching the episodes…</p></div>' +
       '</div>';
@@ -958,10 +1177,18 @@
     if (startAt !== undefined) {
       /* opened to play a specific episode */
     }
-    fetchFeed(show.rss, function (items, feedTitle, stale, art) {
+    var paint2 = function (items, feedTitle, stale, art) {
       if (!showSheet) return;
       if (!items.length) {
-        showSheet.querySelector("#tssList").innerHTML = '<p class="tss-note">Could not reach the feed right now. The show plays fine in its own app: ' + esc(show.home || show.url) + '</p>';
+        var lst = showSheet.querySelector("#tssList");
+        if (!lst) return;
+        lst.innerHTML = '<p class="tss-note">Could not reach the feed just now.</p>' +
+          '<button class="tss-playlatest" id="tssRetry">↻ TRY AGAIN</button>';
+        var rb = lst.querySelector("#tssRetry");
+        if (rb) rb.addEventListener("click", function () {
+          rb.disabled = true; rb.textContent = "FETCHING…";
+          fetchFeed(show.rss || show.url || show.feed || "", paint2);
+        });
         return;
       }
       st.all = items; st.art = art || "";
@@ -969,13 +1196,15 @@
       var heroArt = showSheet.querySelector(".tss-art");
       if (heroArt && st.art) heroArt.innerHTML = '<img src="' + esc(st.art) + '" alt="" onerror="this.parentNode.textContent=\'🎙️\'">';
       paintList(stale);
-    });
+    };
+    fetchFeed(show.rss, paint2);
   }
   function closeShowSheet() {
     if (showSheet) { showSheet.remove(); showSheet = null; }
   }
 
   function playFeed(show, startAt) {
+    try { if (window.TSB_SHOWMORE && window.TSB_SHOWS_EXTRA) TSB_SHOWMORE.learn(show, 2); } catch (eL) {}   /* v322: every play teaches the shelf */
     fetchFeed(show.rss, function (items, feedTitle, stale, art) {
       if (!items.length) { toast("Could not reach the feed. Try the show's own app today."); return; }
       var idx = Math.min(startAt !== undefined ? startAt : 0, items.length - 1);
@@ -1014,6 +1243,9 @@
       var got = JSON.parse(localStorage.getItem("tsb_show_got") || "{}");
       if (got[id] && got[id].rss) return got[id];
     } catch (e) {}
+    /* v323: our own show chains too - it has no feed, it plays from the shelf */
+    var O = originals();
+    if (O && O.id === id) return { id: O.id, name: O.name, host: O.host, art: O.art, orig: true };
     return null;
   }
 
@@ -1250,6 +1482,7 @@
     fetchAudiobook: fetchAudiobook,   /* v316: the shelf warms its own cache */
     audiobookCache: function (rec) { return jget(FEEDCACHE + "ab3_" + rec.id, null); },
     toggle: toggle, next: nextItem, prev: prevItem, stop: stopAll,
+    au: function () { return AU; },   /* v323: the live audio element, for tests and deep links */
     last: function () { return jget(LASTKEY, null); },
     continueCard: function () {
       var l = jget(LASTKEY, null);
@@ -1287,9 +1520,26 @@
             });
           }
         } else if (/^pod:/.test(l.key)) {
+          /* v321: continue means CONTINUE - the saved episode at the saved
+             second, not the latest episode from zero (the old playFeed call
+             restarted every podcast from the beginning) */
           var pid = l.key.slice(4);
-          var show = findShowAnywhere(pid);   /* a fetched show continues too */
-          if (show && show.rss) playFeed(show);
+          var show = findShowAnywhere(pid);
+          if (show && show.rss) fetchFeed(show.rss, function (items) {
+            if (!items.length) return;
+            var pos = audioPos(l.key) || {};
+            startAudio(audioQueue({
+              key: l.key,
+              title: l.title || show.name,
+              sub: "Latest episodes, streaming from the show's own feed",
+              items: items,
+              ch: Math.min(pos.ch || 0, items.length - 1),
+              seek: pos.t || 0,
+              autoplay: true,
+              credit: "Episodes stream from " + show.name + "'s official public feed. All rights with " + (show.host || "the show") + " and their publisher. Show home: " + (show.home || "") + " · TheSmallBook does not host or alter this audio.",
+              art: show.art || ""
+            }));
+          });
         }
       }
     },

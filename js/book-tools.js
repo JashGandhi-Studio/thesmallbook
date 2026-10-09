@@ -163,11 +163,13 @@
     var out = [];
     var L = (b.lessons || []).filter(Boolean);
     for (var i = 0; i < L.length && out.length < 7; i++) {
-      out.push({ t: cleanHead(L[i].title || "Idea " + (out.length + 1)), d: firstSentence(L[i].summary || "", 260) });
+      /* v321: the third block - the book's own story/example, so the page
+         reads full the way the reference sheet does */
+      out.push({ t: cleanHead(L[i].title || "Idea " + (out.length + 1)), d: firstSentence(L[i].summary || "", 265), x: clip(L[i].example || "", 105) });
     }
     var P = (b.actionPlan || []).filter(Boolean);
     for (var j = 0; j < P.length && out.length < 7; j++) {
-      out.push({ t: "Do this", d: clip(P[j], 220) });
+      out.push({ t: "Do this", d: clip(P[j], 250) });
     }
     return out;
   }
@@ -201,14 +203,15 @@
 
     function take(t, i) {
       return '<div class="cs3-take"><span class="cs3-num">' + (i + 1) + "</span>" +
-        "<span><b>" + esc(t.t) + "</b><p>" + esc(t.d) + "</p></span></div>";
+        "<span><b>" + esc(t.t) + "</b><p>" + esc(t.d) + "</p>" +
+        (t.x ? '<em class="cs3-take__ex"><u>from the book:</u> ' + esc(t.x) + "</em>" : "") + "</span></div>";
     }
     var leftHtml = left.map(function (t, i) { return take(t, i); }).join("");
     var rightHtml = right.map(function (t, i) { return take(t, i + 3); }).join("");   /* left carries 1-3, right carries 4-7 */
     var weekHtml = "";
     if (plan.length) {
       weekHtml = '<div class="cs3-week"><b>START THIS WEEK</b><span class="cs3-week__do"><i class="cs3-week__box"></i>' +
-        esc(clip(plan[0], 170)) + "</span>" +
+        esc(clip(plan[0], 240)) + "</span>" +
         (more > 0 ? '<span class="cs3-week__more">+' + more + " more lessons inside the app</span>" : "") + "</div>";
     }
     /* v318: the bottom band - one full-width row, two cards, zero air */
@@ -216,7 +219,7 @@
     if (plan.length || caveat) {
       bottomHtml = '<div class="cs3-bottom">' +
         (plan.length ? '<div class="cs3-week cs3-week--band">' + weekHtml.replace(/^<div class="cs3-week">/, "").replace(/<\/div>$/, "") + "</div>" : "") +
-        (caveat ? '<div class="cs3-bite"><b>WHERE THE BOOK BITES</b><p>' + esc(clip(caveat, 210)) + "</p></div>" : "") +
+        (caveat ? '<div class="cs3-bite"><b>WHERE THE BOOK BITES</b><p>' + esc(clip(caveat, 330)) + "</p></div>" : "") +
         "</div>";
     }
 
@@ -228,9 +231,9 @@
         cs3Head(b, gold ? "GOLD SHEET" : "CHEAT SHEET", pal) +
 
         '<div class="cs3-top">' +
-          '<div class="cs3-intro"><b>What this book reveals</b><p>' + esc(clip(b.bigIdea || b.oneLiner || b.tagline || "", 420)) + "</p></div>" +
+          '<div class="cs3-intro"><b>What this book reveals</b><p>' + esc(clip(b.bigIdea || b.oneLiner || b.tagline || "", 480)) + "</p></div>" +
           (openQuote
-            ? '<div class="cs3-quote"><p>\u201c' + esc(clip(openQuote, 190)) + '\u201d</p><span>- ' + esc(b.author || "the author") + "</span></div>"
+            ? '<div class="cs3-quote"><p>\u201c' + esc(clip(openQuote, 260)) + '\u201d</p><span>- ' + esc(b.author || "the author") + "</span></div>"
             : '<div class="cs3-quote cs3-quote--solo"><p>' + esc(clip(b.tagline || "", 150)) + "</p></div>") +
         "</div>" +
 

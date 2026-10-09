@@ -168,11 +168,11 @@
       customRow.style.display = "none";
     }
     amtBtns.forEach(b => b.addEventListener("click", () => setAmount(parseInt(b.dataset.amt, 10), b)));
-    modal.querySelector(".fuel-amt--custom")?.addEventListener("click", () => {
+    (function () { var elC = modal.querySelector(".fuel-amt--custom"); if (elC) elC.addEventListener("click", () => {
       amtBtns.forEach(b => b.classList.remove("sel"));
       customRow.style.display = "flex";
       customInp.focus();
-    });
+    }); })();
     modal.querySelector("#fuelCustomGo").addEventListener("click", () => {
       const v = parseInt(customInp.value, 10);
       if (v && v > 0) setAmount(v);

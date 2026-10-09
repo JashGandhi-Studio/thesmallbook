@@ -18,7 +18,8 @@
 (function () {
   "use strict";
 
-  var BUILD = "320";
+  var BUILD = "323";
+window.TSB_BUILD = BUILD;   /* v322: every page knows its era - the tutorial replays once per era */
   var PHASE_A = "tsb_purge_a";
 
   /* returns through done(hadWorker). No worker anywhere = nothing to

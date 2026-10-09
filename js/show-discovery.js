@@ -64,23 +64,74 @@
   }
 
   /* a candidate only counts if it carries a real, https RSS feed */
+  var DSCKEY = "tsb_show_desc";  /* { cid: real description from the directory } */
+
   function shape(r) {
     if (!r || !r.feedUrl || !/^https:/.test(r.feedUrl)) return null;
     if (!r.collectionName) return null;
     var name = String(r.collectionName).replace(/\s+/g, " ").trim().slice(0, 48);
+    var dsc = jget(DSCKEY, {});
+    var cid = String(r.collectionId || "");
+    /* v321: the why-line is the show's own - real directory description when
+       we have it, otherwise a line built from ITS genre, size and the shelf
+       that pulled it. No two cards need read the same. */
+    var genre = String(r.primaryGenreName || "Podcast");
+    var eps = r.trackCount > 0 ? r.trackCount : 0;
+    var why = (dsc[cid] || dsc[String(r.feedUrl || "")])
+      ? String(dsc[cid] || dsc[String(r.feedUrl || "")]).replace(/\s+/g, " ").trim().slice(0, 175) + " - the latest plays right here."
+      : genre + (eps ? " · " + eps + " episodes in the can" : "") + ". Pulled fresh for this shelf - the latest episode plays right here, straight from the show's own feed.";
     return {
       id: slug(name),
       name: name,
       host: String(r.artistName || "its host").slice(0, 32),
       rss: r.feedUrl,
       art: (r.artworkUrl600 || r.artworkUrl100 || "").replace("http://", "https://"),
-      tag: String(r.primaryGenreName || "PODCAST").toUpperCase() + " · FRESH FIND",
+      tag: genre.toUpperCase() + " · FRESH FIND",
       cat: "all",
-      why: "Pulled fresh from the podcast directory for this shelf. The latest episode plays right here; the show's own feed does the hosting.",
+      why: why,
       start: "whatever episode sounds like you - the latest usually is",
       home: "https://podcasts.apple.com/search?term=" + encodeURIComponent(name),
+      cid: cid,
       discovered: true
     };
+  }
+
+  /* the show's OWN words: the channel description from its RSS feed - that
+     is the honest "what this show is" text, straight from the maker. Cached
+     by feed url forever, so a show is only fetched for words once. */
+  function fetchDesc(rss, cb) {
+    var dsc = jget(DSCKEY, {});
+    if (dsc[rss]) { cb(dsc[rss]); return; }
+    var done = false;
+    var timer = setTimeout(function () { if (!done) { done = true; cb(""); } }, 4500);
+    fetch(rss).then(function (r) { return r.ok ? r.text() : ""; }).then(function (xml) {
+      if (done) return;
+      done = true; clearTimeout(timer);
+      if (!xml) { cb(""); return; }
+      var doc = new DOMParser().parseFromString(xml, "text/xml");
+      var ch = doc.querySelector("channel") || doc.documentElement;
+      var el = ch.querySelector(":scope > description");
+      if ((!el || !el.textContent) && ch.querySelector("subtitle")) el = ch.querySelector("subtitle");
+      var txt = el ? String(el.textContent).replace(/<[^>]*>/g, " ").replace(/&[a-z]+;/gi, " ").replace(/\s+/g, " ").trim() : "";
+      if (txt.length > 24) { dsc[rss] = txt; jset(DSCKEY, dsc); }
+      cb(txt);
+    }).catch(function () { if (!done) { done = true; clearTimeout(timer); cb(""); } });
+  }
+
+  function fetchDescs(list, cb) {
+    var left = list.length;
+    if (!left) { cb(); return; }
+    list.forEach(function (s) {
+      fetchDesc(s.rss, function (txt) {
+        if (txt) s.why = txt.slice(0, 175) + (txt.length > 175 ? "…" : "") + " - the latest plays right here.";
+        left--; if (!left) cb();
+      });
+    });
+  }
+
+  /* wash a batch of shows in their own descriptions (their feeds tell them) */
+  function enrich(shows, done) {
+    fetchDescs(shows, function () { done(shows); });
   }
 
   /* pull the next n shows the shelf has never met */
@@ -90,10 +141,12 @@
     var t0 = day % TERMS.length;
     var seen = jget(SEENKEY, {});
     var tried = 0, out = [], qi = 0, queue = [];
+    /* v322: your top two neighbourhoods lead the hunt; the rest still roam */
+    var mine = topTaste(2);
 
     function nextTerm() {
       if (tried >= 4) { finish(); return; }
-      var term = TERMS[(t0 + tried) % TERMS.length];
+      var term = tried < mine.length ? mine[tried] : TERMS[(t0 + tried) % TERMS.length];
       tried++;
       itunesSearch(term, function (results) {
         var k = known();
@@ -114,20 +167,92 @@
     function finish() {
       jset(SEENKEY, seen);
       if (out.length) {
-        var got = jget(GOTKEY, {});
-        out.forEach(function (s) { got[s.id] = s; });
-        var ks = Object.keys(got);
-        if (ks.length > GOT_CAP) ks.slice(0, ks.length - GOT_CAP).forEach(function (k) { delete got[k]; });
-        jset(GOTKEY, got);
-        boot();
-      }
-      done(out);
+        if (mine.length) out.forEach(function (s2) { s2.whyFor = "because you listen to " + mine[0]; });
+        enrich(out, function (withDesc) {
+          var got = jget(GOTKEY, {});
+          withDesc.forEach(function (s) { got[s.id] = s; });
+          var ks = Object.keys(got);
+          if (ks.length > GOT_CAP) ks.slice(0, ks.length - GOT_CAP).forEach(function (k) { delete got[k]; });
+          jset(GOTKEY, got);
+          boot();
+          done(withDesc);
+        });
+      } else done(out);
     }
     nextTerm();
   }
 
   function count() { return Object.keys(jget(GOTKEY, {})).length; }
 
+  /* v322: TASTE. Every show you play or heart teaches the shelf what you
+     love - its genre and its words. FIND 3 MORE then hunts in your
+     neighbourhood first, so the shelf keeps becoming yours. */
+  var TASTEKEY = "tsb_show_taste";   /* { genres: {}, words: {}, at } */
+  function taste() { return jget(TASTEKEY, { genres: {}, words: {} }); }
+  var STOP = ["the","and","with","podcast","show","your","for","from","that","this","about","into","what","when","how","why","episode","episodes","audio","talk","talks","life","part","series","real","new","one","two"];
+  function learn(show, weight) {
+    try {
+      var t = taste(), w = weight || 1, k;
+      var g = String(show.tag || "").split("·")[0].trim().toLowerCase();
+      if (g) t.genres[g] = (t.genres[g] || 0) + w;
+      String(show.name + " " + (show.why || "")).toLowerCase().replace(/[^a-z ]/g, " ").split(/\s+/).forEach(function (word) {
+        if (word.length < 4 || STOP.indexOf(word) >= 0) return;
+        t.words[word] = (t.words[word] || 0) + w * 0.5;
+      });
+      jset(TASTEKEY, t);
+    } catch (e) {}
+  }
+  function topTaste(n) {
+    var t = taste(), out = [];
+    Object.keys(t.genres).sort(function (a, b) { return t.genres[b] - t.genres[a]; }).slice(0, n).forEach(function (g) { out.push(g); });
+    return out;
+  }
+
+  /* v321: THE SEARCH BAR. Type any topic or host - money, fitness, history,
+     interviews - and the directory answers with five real shows that carry
+     their own feed. MORE ON THIS serves the next five from the same answer,
+     and every result can join the shelf with its heart. */
+  var lastResults = [], lastCursor = 0, lastTerm = "";
+
+  function search(term, cb) {
+    lastTerm = String(term || "").trim();
+    lastResults = []; lastCursor = 0;
+    if (!lastTerm) { cb([], ""); return; }
+    itunesSearch(lastTerm, function (results) {
+      lastResults = results.map(shape).filter(Boolean);
+      serveSlice(cb);
+    });
+  }
+
+  function serveSlice(cb) {
+    var out = lastResults.slice(lastCursor, lastCursor + 5);
+    lastCursor += out.length;
+    enrich(out, function (withDesc) {
+      /* a searched show you keep joins the shelf for good */
+      if (withDesc.length) {
+        var got = jget(GOTKEY, {});
+        withDesc.forEach(function (s) { got[s.id] = s; });
+        jset(GOTKEY, got);
+        boot();
+      }
+      cb(withDesc, lastCursor < lastResults.length ? lastResults.length - lastCursor : 0, lastTerm);
+    });
+  }
+
+  function searchMore(cb) {
+    if (!lastResults.length) { cb([], 0, ""); return; }
+    serveSlice(cb);
+  }
+
+  /* adopt: a heart on a search result puts the show on the shelf too */
+  function adopt(show) {
+    if (!show || !show.id) return;
+    var got = jget(GOTKEY, {});
+    got[show.id] = show;
+    jset(GOTKEY, got);
+    boot();
+  }
+
   boot();
-  window.TSB_SHOWMORE = { serve: serve, count: count, boot: boot };
+  window.TSB_SHOWMORE = { serve: serve, count: count, boot: boot, search: search, searchMore: searchMore, adopt: adopt, learn: learn };
 })();

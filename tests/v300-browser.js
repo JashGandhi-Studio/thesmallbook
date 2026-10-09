@@ -449,7 +449,7 @@ const BASE = "http://127.0.0.1:8799";
     ok((await page.locator("#tsbTourCard").count()) === 1, "an old reader is greeted by the new tutorial too");
     page.on("dialog", async d => { await d.accept(); });   /* the skip confirm */
     if (await page.locator("#tsbTourCard .tt-skip").count()) { await page.locator("#tsbTourCard .tt-skip").click(); await sleep(500); }
-    ok(await page.evaluate(() => JSON.parse(localStorage.getItem("tsb_walk_done"))) === true, "after they walk or skip it, it never repeats");
+    ok(await page.evaluate(() => { const v = JSON.parse(localStorage.getItem("tsb_walk_done")); return v && v !== false; }), "after they walk or skip it, it never repeats (it stamps the era)");
     ok((await page.locator("#tsbHelpChip").count()) === 1, "the ? chip sits on the home header");
     await page.goto(BASE + "/index.html#guide", { waitUntil: "domcontentloaded" });
     await sleep(900);
@@ -532,7 +532,7 @@ const BASE = "http://127.0.0.1:8799";
     const shotCount = Object.keys(seen).length;
     ok(shotCount === 21, "all 21 stops rendered and were screenshotted", Object.keys(seen).join(","));
     ok(Object.keys(seen).filter(k => seen[k]).length === 7, "exactly seven stops were hands-on");
-    ok(await page.evaluate(() => JSON.parse(localStorage.getItem("tsb_walk_done"))) === true, "finishing marks the walkthrough done");
+    ok(await page.evaluate(() => { const v = JSON.parse(localStorage.getItem("tsb_walk_done")); return v && v !== false; }), "finishing marks the walkthrough done (stamps the era)");
     ok(await page.evaluate(() => localStorage.getItem("tsb_walk")) === null, "the walk state clears on finish");
     await sleep(1200);
     ok(page.url().indexOf("index.html") >= 0, "finishing on settings carries you home");
@@ -557,7 +557,7 @@ const BASE = "http://127.0.0.1:8799";
     await page.locator("#tsbTourCard .tt-skip").click();
     await sleep(600);
     ok(/Settings/i.test(skipMsg) && /FEELING LOST/i.test(skipMsg), "skipping says the tutorial replays from Settings", skipMsg.slice(0, 80));
-    ok(await page.evaluate(() => JSON.parse(localStorage.getItem("tsb_walk_done"))) === true && (await page.locator("#tsbTourCard").count()) === 0, "accepted skip ends the walkthrough");
+    ok(await page.evaluate(() => { const v = JSON.parse(localStorage.getItem("tsb_walk_done")); return v && v !== false; }) && (await page.locator("#tsbTourCard").count()) === 0, "accepted skip ends the walkthrough (stamps the era)");
     await page.reload({ waitUntil: "domcontentloaded" });
     await sleep(2200);
     ok((await page.locator("#tsbTourCard").count()) === 0, "a skipped walkthrough never nags again");

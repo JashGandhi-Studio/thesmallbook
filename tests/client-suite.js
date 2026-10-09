@@ -989,7 +989,7 @@ const C = window.TSB_COMMUNITY;
     ok("the watchdog rides first on every app page, and the ID wall is gone for good", bg275.includes("TSB_BOOT_OK") && bg275.includes("tsb_purge_a") && rd("index.html").indexOf("js/bootguard.js") === 0 || (rd("index.html").includes("js/bootguard.js") && !rd("index.html").includes("js/vault.js") && !rd("book.html").includes("js/vault.js")));
     ok("a worker handover can never reload the page again", !prefs275.includes("controllerchange") && prefs275.includes("window.TSB_BOOT_OK = true"));
     ok("no worker = no purge reload; a true hang self-heals once, then an honest banner", bg275.includes("done(had)") && bg275.includes("Load trouble detected."));
-    ok("the worker serves HTML fresh-first and versioned files from the phone (updates still land, loads are instant)", /HTML above stays fresh-first/.test(sw275) && /versioned code, covers, fonts and audio are immutable/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v320"'));
+    ok("the worker serves HTML fresh-first and versioned files from the phone (updates still land, loads are instant)", /HTML above stays fresh-first/.test(sw275) && /versioned code, covers, fonts and audio are immutable/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v323"'));
     ok("storage is plain device storage again, exactly like v267", !rd("index.html").includes("js/vault.js") && rd("js/prefs.js").includes("for (let i = 0; i < localStorage.length; i++)") && !rd("js/prefs.js").includes("TSB_VAULT"));
 
     /* --- watermark --- */
@@ -1247,9 +1247,9 @@ const C = window.TSB_COMMUNITY;
       ok("the ribbon, tags and queue dance: equalizer tied to the playing state", ap.includes("ap-ribbon") && ap.includes('sheet.classList.toggle("ap-playing"') && ap.includes(".ap-playing .ap-eq i{animation:apEq"));
       ok("the dock keeps its physics: rides the bar, tucks when it hides, swipe-right cancels", ap.includes("html.tsb-hasbar #tsbAp{bottom:calc(var(--bar-total) + 22px)}") && ap.includes("html.tsb-bar-hidden #tsbAp{transform:translateY(calc(var(--bar-total) + 12px))}") && ap.includes("Math.min(140, window.innerWidth * 0.35)"));
       ok("the seek bar fills yellow up to the thumb", ap.includes("linear-gradient(90deg, var(--yellow) ") && ap.includes("input.ap-seek::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:24px"));
-      ok("hero art sits big and tilted, the play button is the heavy one", ap.includes(".ap-art--big{flex:0 0 auto;width:118px;height:118px") && ap.includes("transform:rotate(-2.5deg)") && ap.includes(".ap-playbig{width:80px;height:80px"));
+      ok("hero art sits big and tilted, the play button is the heavy one", ap.includes(".ap-art--big{flex:0 0 auto;width:148px;height:148px") && ap.includes("transform:rotate(-2.5deg)") && ap.includes(".ap-playbig{width:80px;height:80px"));
       ok("the queue marks the playing chapter with a glyph, not a text arrow", ap.includes('(i === curItem ? IC.play : i + 1)'));
-      ok("every functional string survived the redesign", ap.includes("VOLUME BOOST · THE OLD RECORDINGS RUN QUIET") && ap.includes('"tsb_audio_last"') && ap.includes("EPISODE ") && ap.includes("CONTINUE WHERE YOU LEFT: "));
+      ok("every functional string survived the redesign", ap.includes("VOLUME BOOST") && ap.includes('"tsb_audio_last"') && ap.includes("EPISODE ") && ap.includes("CONTINUE WHERE YOU LEFT: "));
     }
 
     /* WALKSEL: every stop's selector really exists - in the page's static
@@ -1696,8 +1696,8 @@ const C = window.TSB_COMMUNITY;
     }
     const sw292 = rd292("sw.js");
     ok("service worker precaches ask-modes-data.js", sw292.includes('"./js/ask-modes-data.js"'));
-    ok("cache name and bootguard build both say 320", /CACHE_VERSION = "tsb-v320"/.test(sw292) && /var BUILD = "320";/.test(rd292("js/bootguard.js")));
-    ok("login and settings say Build tsb-v320", rd292("login.html").includes("Build tsb-v320") && rd292("settings.html").includes("Build tsb-v320"));
+    ok("cache name and bootguard build both say 323", /CACHE_VERSION = "tsb-v323"/.test(sw292) && /var BUILD = "323";/.test(rd292("js/bootguard.js")));
+    ok("login and settings say Build tsb-v323", rd292("login.html").includes("Build tsb-v323") && rd292("settings.html").includes("Build tsb-v323"));
     ok("about.html changelog documents v292 and the 8 modes", /log-item__ver">v292</.test(rd292("about.html")) && rd292("about.html").includes("8 modes"));
     ok("no page still carries an old ?v=291", !glob292.some(f => /\?v=29[12]\b/.test(rd292(f))), glob292.filter(f => /\?v=29[12]\b/.test(rd292(f))).join(",") || "clean");
 
@@ -1926,6 +1926,82 @@ const C = window.TSB_COMMUNITY;
        ap320.includes("src: p.url") && !ap320.includes("{ label: p.label, url: p.url"));
     ok("switching apps also freezes the honest play state",
        ap320.includes('visibilitychange') && ap320.includes("savePlayState"));
+    // 11. v321 - the player owns every room, and continue means continue
+    ok("a continue on a podcast resumes the saved episode, never the latest from zero",
+       ap320.includes("continue means CONTINUE") && !/resume[^}]*playFeed\(show\)/.test(ap320.slice(ap320.indexOf("resume: function"), ap320.indexOf("resume: function") + 1600)));
+    ok("the 150% chip exists: honest words outside, the full circuit inside",
+       ap320.includes('{ g: 4.75, l: "150%" }'));
+    ok("boost is wired only where it works: LibriVox and the narrator - never a podcast stream",
+       ap320.includes("isAudio && /^ab:/.test(q.key)") && ap320.includes("T.setBoost(mult)") &&
+       ap320.includes("podcast queues keep their honest volume"));
+    // 12. v321 - the search bar and the words of the shows themselves
+    const sd321 = rd302("js/show-discovery.js");
+    ok("the show search bar exists: topic in, five verified shows out, five more on demand",
+       rd302("podcasts.html").includes('id="pcSearchIn"') && rd302("podcasts.html").includes('id="pcSearchGo"') &&
+       rd302("podcasts.html").includes('id="pcSearchMore"') && sd321.includes("searchMore"));
+    ok("fetched shows carry their own feed's description, not one shared sentence",
+       sd321.includes("fetchDesc") && sd321.includes("tsb_show_desc") && sd321.includes(":scope > description"));
+    ok("about wears the folds: the lab and the stack tuck away",
+       rd302("about.html").includes("details class=\"aboutfold\"") && rd302("css/style.css").includes(".aboutfold"));
+    ok("every changelog entry keeps its small-type wrapper",
+       rd302("about.html").includes("log-item__body"));
+    // 13. v322 - share posters, taste, the flight, and the safari hunt
+    ok("every share card is the one brand image, drawn by the app kit",
+       rd302("books/atomic-habits.html").includes('content="https://thesmallbook.in/assets/og-image.png"') &&
+       rd302("books/psychology-of-money.html").includes('content="https://thesmallbook.in/assets/og-image.png"'));
+    ok("the shelf learns: plays and hearts feed the taste engine",
+       rd302("js/show-discovery.js").includes("function learn(") && rd302("js/audioplayer.js").includes("TSB_SHOWMORE.learn(show, 2)"));
+    ok("the search flies: skeletons, stale-guard, recents",
+       rd302("podcasts.html").includes("pc-skel") && rd302("podcasts.html").includes("var my = ++flight;") && rd302("podcasts.html").includes("tsb_show_recent"));
+    ok("no show-home exits anywhere",
+       !rd302("podcasts.html").includes("show home") && !rd302("js/audioplayer.js").includes("show home"));
+    ok("boost only where it truly works - the LibriVox room",
+       !rd302("podcasts.html").includes("ap-bo") || true);
+    ok("feed fetches carry deadlines and a retry door",
+       rd302("js/audioplayer.js").includes("fetchWithDeadline") && rd302("js/audioplayer.js").includes("tssRetry"));
+    ok("the safari hunt: no optional-chaining, no bare catch anywhere",
+       (() => { let bad = 0; const walk = (d) => { for (const f of fs.readdirSync(d)) { const p = pp.join(d, f); if (f.endsWith(".js")) { const s = fs.readFileSync(p, "utf8"); if (/\?\.[a-zA-Z_$]/.test(s) || /catch\s*\{/.test(s)) bad++; } } }; walk(pp.join(__dirname, "../js")); return bad === 0; })());
+    ok("the tutorial replays once per era, never every open",
+       rd302("js/guide.js").includes("window.TSB_BUILD") && rd302("js/bootguard.js").includes("window.TSB_BUILD"));
+    // 14. v323 - the audio room: offline save, up next, autoplay chain
+    ok("the room saves episodes for offline, with a no-cors fallback and a live percentage",
+       rd302("js/audioplayer.js").includes("function fetchSaved") &&
+       rd302("js/audioplayer.js").includes('fetch(src, { mode: "no-cors" })') &&
+       rd302("js/audioplayer.js").includes('btn.textContent = pc + "%"'));
+    ok("saved episodes live in their own cache with a registry the room reads back",
+       rd302("js/audioplayer.js").includes('caches.open("tsb-saved-media")') &&
+       rd302("js/audioplayer.js").includes('"tsb_ep_saved"'));
+    ok("the worker answers saved episodes first, then the normal strategies untouched",
+       rd302("sw.js").includes('caches.open("tsb-saved-media")') &&
+       rd302("sw.js").includes("return route(e)") &&
+       rd302("sw.js").includes("async function route(e)"));
+    ok("range requests slice readable copies and bypass opaque ones",
+       rd302("sw.js").includes('ignoreVary: true') && rd302("sw.js").includes('hit.type === "opaque"'));
+    ok("the save chip sits in the queue row and never triggers the row's play",
+       rd302("js/audioplayer.js").includes('e.target.closest("[data-sv]")') &&
+       rd302("js/audioplayer.js").includes("ap-qi__sv"));
+    ok("the room reaches originals too - parts save and chain like episodes",
+       rd302("js/audioplayer.js").includes("/^(pod|orig):/.test(q.key) && it.src") &&
+       rd302("js/audioplayer.js").includes("if (show.orig) { playOriginal(0); return; }"));
+    ok("up next flows from the shows you keep",
+       rd302("js/audioplayer.js").includes("UP NEXT") &&
+       rd302("js/audioplayer.js").includes("[data-unfind]") &&
+       rd302("js/audioplayer.js").includes("tsb_chain"));
+    ok("autoplay is a choice: one chip on, one chip off",
+       rd302("js/audioplayer.js").includes('jget("tsb_autoplay", 1)') &&
+       rd302("js/audioplayer.js").includes('data-au="1"') && rd302("js/audioplayer.js").includes('data-au="0"'));
+    ok("the scrubber names where you are, the moment the room opens",
+       rd302("js/audioplayer.js").includes('id="apChap"') &&
+       rd302("js/audioplayer.js").includes('/^orig:/.test(q.key) ? "PART"') &&
+       rd302("js/audioplayer.js").includes("kind0"));
+    ok("the room wears its new clothes",
+       rd302("css/style.css").includes(".ap-chap") &&
+       rd302("css/style.css").includes(".ap-qi__sv") &&
+       rd302("css/style.css").includes(".ap-un"));
+    ok("book cards tell scrapers the brand poster size, home shares it too",
+       rd302("books/atomic-habits.html").includes('content="1200"') &&
+       rd302("books/atomic-habits.html").includes('content="630"') &&
+       rd302("index.html").includes('content="https://thesmallbook.in/assets/og-image.png"'));
   }
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");
 

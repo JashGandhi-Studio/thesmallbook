@@ -73,8 +73,8 @@
   const MARKS_KEY = "tsb_bookmarks";        // [bookId, ...]
 
   /* ---------------- tiny helpers ---------------- */
-  function lsGet(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v === null || v === undefined ? d : v; } catch { return d; } }
-  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+  function lsGet(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v === null || v === undefined ? d : v; } catch (e) { return d; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   function uid() { const s = sessionStorage; return (s && s.getItem("tsb_code_verifier")) || ""; }
   function now() { return Math.floor(Date.now() / 1000); }
 
@@ -126,7 +126,7 @@
     if (!ENABLED) return;
     // remember where to return after login (unless we're ON the login page)
     if (!/login\.html/.test(location.pathname)) {
-      try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch {}
+      try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch (e) {}
     }
     // ✅ THE PROVEN FLOW, Supabase-hosted redirect (the one that always
     // worked, no secret, no JS origins, no extra Google config):
@@ -209,7 +209,7 @@
     if (!code) return false;
     const { v: verifier } = readVerifier();
     let ret = "";
-    try { ret = sessionStorage.getItem("tsb_auth_return") || ""; } catch {}
+    try { ret = sessionStorage.getItem("tsb_auth_return") || ""; } catch (e) {}
 
     // SUPABASE-HOSTED flow (the ONLY flow): exchange the auth_code
     //    GoTrue gave us (it landed us here with ?code=). No secret needed.
@@ -227,10 +227,10 @@
       return true;
     } catch (e) {
       console.warn("TSB auth callback failed:", e);
-      try { history.replaceState({}, "", location.pathname); } catch {}
+      try { history.replaceState({}, "", location.pathname); } catch (e) {}
       clearVerifier();
       // tell the login page: something went wrong, show friendly retry
-      try { window.dispatchEvent(new CustomEvent("tsb:auth-error", { detail: "login-failed" })); } catch {}
+      try { window.dispatchEvent(new CustomEvent("tsb:auth-error", { detail: "login-failed" })); } catch (e) {}
       return false;
     }
   }
@@ -635,8 +635,8 @@
 
   function signOut() {
     session = null;
-    try { localStorage.removeItem(AUTH_KEY); } catch {}
-    try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
+    try { localStorage.removeItem(AUTH_KEY); } catch (e) {}
+    try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch (e) {}
   }
 
   function user() { return (session && session.user) || null; }
@@ -703,7 +703,7 @@
     if (changed) {
       lsSet(PROGRESS_KEY, prog);
       lsSet(MARKS_KEY, marks);
-      try { window.dispatchEvent(new CustomEvent("tsb:sync")); } catch {}
+      try { window.dispatchEvent(new CustomEvent("tsb:sync")); } catch (e) {}
     }
     return changed;
   }
@@ -846,7 +846,7 @@
   }
 
   function toast(msg, variant) {
-    try { document.querySelectorAll(".tsb-auth-toast").forEach((t) => t.remove()); } catch {}
+    try { document.querySelectorAll(".tsb-auth-toast").forEach((t) => t.remove()); } catch (e) {}
     const t = document.createElement("div");
     t.className = "tsb-auth-toast" + (variant === "welcome" ? " tsb-auth-toast--welcome" : "");
     t.textContent = msg;
@@ -856,7 +856,7 @@
 
   function showSaveModal() {
     if (!ENABLED || user()) return;
-    try { if (lsGet(OFFER_KEY, false)) return; } catch {}
+    try { if (lsGet(OFFER_KEY, false)) return; } catch (e) {}
     injectStyles();
     const ov = document.createElement("div");
     ov.className = "tsb-auth-ov";
@@ -949,7 +949,7 @@
     document.querySelectorAll("[data-nav-auth]").forEach((a) => {
       a.addEventListener("click", () => {
         if (!/login\.html/.test(location.pathname)) {
-          try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch {}
+          try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch (e) {}
         }
       });
     });
@@ -997,7 +997,7 @@
     } else {
       slot.innerHTML = `<a class="tsb-auth-chip tsb-auth-chip--out" href="login.html" id="tsbAuthChip">${GOOGLE_G} LOG IN, SAVE PROGRESS</a>`;
       slot.querySelector("#tsbAuthChip").addEventListener("click", () => {
-        try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch {}
+        try { sessionStorage.setItem("tsb_auth_return", location.pathname + location.search); } catch (e) {}
       });
     }
   }
@@ -1027,8 +1027,8 @@
     try { sessionStorage.removeItem("tsb_onboarded_pending"); } catch (e2) {}
     renderNav();
     renderChip();
-    try { window.dispatchEvent(new CustomEvent("tsb:loggedin")); } catch {}
-    try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
+    try { window.dispatchEvent(new CustomEvent("tsb:loggedin")); } catch (e) {}
+    try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch (e) {}
     if (showToastMsg) {
       setTimeout(() => {
         syncProgress().catch(() => {});
@@ -1109,8 +1109,8 @@
       renderChip();
       attachNavHandlers();
       welcomeBack();
-      try { window.addEventListener("tsb:sync", () => { renderChip(); renderNav(); }); } catch {}
-      try { window.addEventListener("tsb:auth", () => { renderChip(); renderNav(); }); } catch {}
+      try { window.addEventListener("tsb:sync", () => { renderChip(); renderNav(); }); } catch (e) {}
+      try { window.addEventListener("tsb:auth", () => { renderChip(); renderNav(); }); } catch (e) {}
       window.TSB_AUTH = {
         enabled: true,
         user,
@@ -1137,12 +1137,12 @@
         me: user,
         visits: () => (user() ? lsGet("tsb_auth_visits", { d: "", n: 0 }).n : 0)
       };
-      try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
+      try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch (e) {}
     } catch (e) {
       console.warn("TSB boot error:", e);
       // never leave the app without TSB_AUTH, degrade gracefully
       window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, track, onBookComplete, renderNav, clientId: GCLIENT, openSheet, closeSheet, token: () => ensureToken(), signUpEmail, signInEmail, signInId, sendReset, authCooldown, usernameFree, setPassword, needsFinish, finishGoogleAccount, skipFinish, requestLoginCode, resendSignupCode, verifyLoginCode, verifySignupCode, verifyRecoveryCode, setMyUsername, gateStatus };
-      try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch {}
+      try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch (e) {}
     }
   }
 

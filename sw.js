@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v320";
+const CACHE_VERSION = "tsb-v323";
 /* NOTE: the assets/logos/* entries below mirror js/store-data.js exactly.
    every tile the store links to must be precached, or the offline store
    shows broken images. tests/client-suite.js asserts they never drift. */
@@ -172,23 +172,45 @@ self.addEventListener("fetch", (e) => {
     return;
   }
   const url = new URL(e.request.url);
+  /* v323: episodes the reader SAVED FOR OFFLINE answer from the phone.
+     The saved-media cache is checked FIRST; a miss flows into the normal
+     strategies below, untouched. */
+  e.respondWith((async () => {
+    let c;
+    try { c = await caches.open("tsb-saved-media"); } catch (eS) { return route(e); }
+    let hit = null;
+    try { hit = await c.match(e.request, { ignoreVary: true }); } catch (eR) {}
+    /* opaque copies cannot be sliced to 206 - hand the full body over and let
+       the media element cope; readable (cors-saved) copies are sliced by match */
+    if (hit && hit.type === "opaque" && e.request.headers.get("range")) {
+      try {
+        const bare = new Request(e.request.url, { method: "GET" });
+        const full = await c.match(bare, { ignoreVary: true });
+        if (full) hit = full;
+      } catch (eB) {}
+    }
+    return hit || route(e);
+  })());
+  return;
+
+  /* v323: the normal strategies, consulted only when the episode is not saved */
+  async function route(e) {
+  const url = new URL(e.request.url);
   // never cache supabase API calls
-  if (url.hostname.includes("supabase")) return;
-  if (e.request.method !== "GET") return;
+  if (url.hostname.includes("supabase")) return fetch(e.request);
+  if (e.request.method !== "GET") return fetch(e.request);
   /* media byte-range (audio seeking) always goes to the network untouched;
      answering a partial request from a full cached response breaks playback */
-  if (e.request.headers.get("range")) return;
+  if (e.request.headers.get("range")) return fetch(e.request);
 
   if (e.request.mode === "navigate" || url.pathname.endsWith(".html")) {
-    e.respondWith(
-      fetch(e.request)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE_VERSION).then((c) => c.put(e.request, copy));
-          return res;
-        })
-        .catch(() => caches.match(e.request, { ignoreSearch: true }).then((r) => r || caches.match("./index.html")))
-    );
+    return fetch(e.request)
+      .then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE_VERSION).then((c) => c.put(e.request, copy));
+        return res;
+      })
+      .catch(() => caches.match(e.request, { ignoreSearch: true }).then((r) => r || caches.match("./index.html")));
   } else if (url.origin === location.origin &&
              (/[?&]v=/.test(url.search) ||
               /\.(woff2|woff|png|jpe?g|svg|webp|ico|mp3|m4a|ogg|json)$/i.test(url.pathname))) {
@@ -197,30 +219,37 @@ self.addEventListener("fetch", (e) => {
        They load from the phone, not the network: after the first visit every
        page, book and podcast opens instantly, even on the slowest connection.
        HTML above stays fresh-first so updates still land the moment they ship. */
-    e.respondWith(
-      caches.open(CACHE_VERSION).then(async (c) => {
-        const hit = await c.match(e.request);
-        if (hit) return hit;
-        const res = await fetch(e.request);
-        if (res.ok && res.status === 200) c.put(e.request, res.clone());
-        return res;
-      })
-    );
+    return caches.open(CACHE_VERSION).then(async (c) => {
+      const hit = await c.match(e.request);
+      if (hit) return hit;
+      const res = await fetch(e.request);
+      if (res.ok && res.status === 200) c.put(e.request, res.clone());
+      return res;
+    });
   } else {
     /* anything else (cross-origin feeds, CDNs): network-first, the saved
        copy is only the offline fallback */
-    e.respondWith(
-      fetch(e.request)
-        .then((res) => {
-          if (res.ok && url.hostname.includes("fonts")) {
-            const copy = res.clone();
-            caches.open(CACHE_VERSION).then((c) => c.put(e.request, copy));
-          }
-          return res;
-        })
-        .catch(() =>
-          caches.match(e.request).then((r) => r || caches.match(e.request, { ignoreSearch: true }))
-        )
-    );
+    return fetch(e.request)
+      .then((res) => {
+        if (res.ok && url.hostname.includes("fonts")) {
+          const copy = res.clone();
+          caches.open(CACHE_VERSION).then((c) => c.put(e.request, copy));
+        }
+        return res;
+      })
+      .catch(() =>
+        caches.match(e.request).then((r) => r || caches.match(e.request, { ignoreSearch: true }))
+      );
+  }
+  }
+
+  /* community media (covers / voice / avatars): cache-first = offline listening */
+  async function communityMedia(e) {
+    const c = await caches.open(CACHE_VERSION + "-media");
+    const hit = await c.match(e.request);
+    if (hit) return hit;
+    const res = await fetch(e.request);
+    if (res.ok && res.status === 200) c.put(e.request, res.clone());
+    return res;
   }
 });

@@ -8,10 +8,10 @@
   /* ---------- tiny storage helpers ---------- */
   function get(key, def) {
     try { const v = JSON.parse(localStorage.getItem(key)); return v === null || v === undefined ? def : v; }
-    catch { return def; }
+    catch (e) { return def; }
   }
   function set(key, val) {
-    try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+    try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
   }
 
   /* ---------- accent colour (picked in the You window) ---------- */
