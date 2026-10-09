@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
     <meta property="og:title" content="Settings, TheSmallBook">
   <meta property="og:description" content="Theme, language, privacy and everything else, exactly how you like it.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=318">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=320">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/settings.html">
@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=318">
+  <link rel="stylesheet" href="css/style.css?v=320">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -54,6 +54,18 @@
 
     <section class="setcard">
       <h2>🧭 FEELING LOST?</h2>
+      <div class="setrow">
+        <a class="setbtn" href="legal.html" style="text-decoration:none">⚖ LEGAL & PRIVACY - THE PLAIN-WORDS RULEBOOK</a>
+      </div>
+      <div class="setrow" id="tsTextRow">
+        <span class="setbtn" style="background:#fff;cursor:default;display:flex;align-items:center;gap:8px;flex-wrap:wrap">🔤 READER TEXT SIZE:
+          <button class="setbtn" data-ts="s" type="button" style="padding:8px 12px">A−</button>
+          <button class="setbtn setbtn--yellow" data-ts="n" type="button" style="padding:8px 12px">A</button>
+          <button class="setbtn" data-ts="l" type="button" style="padding:8px 12px">A+</button>
+          <button class="setbtn" data-ts="xl" type="button" style="padding:8px 12px">A++</button>
+        </span>
+      </div>
+      <p class="sethint" id="tsTextHint">Bigger or smaller words on every book page, story and note. Your size rides every page, on this device.</p>
       <div class="setrow">
         <a class="setbtn setbtn--yellow" href="index.html#guide" style="text-decoration:none">📖 WHAT DOES EVERYTHING DO? OPEN THE PLAIN GUIDE</a>
       </div>
@@ -203,23 +215,23 @@
       <p class="sethint" id="upDiagHint">Cover / quote images, burst videos, voice notes and profile photos live in your own Supabase storage. If any of them fail, this test names the exact missing piece, and the 30-second SQL fix for it.</p>
     </section>
 
-    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v318.</p>
+    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v320.</p>
   </main>
 
-  <script src="./js/bootguard.js?v=318"></script>
-  <script src="js/prefs.js?v=318"></script>
-  <script src="js/lang.js?v=318"></script>
-  <script src="js/config.js?v=318"></script>
-  <script src="js/install.js?v=318"></script>
-  <script src="js/auth.js?v=318"></script>
-  <script src="js/sounds.js?v=318"></script>
-  <script src="js/community.js?v=318"></script>
-  <script src="js/gold.js?v=318"></script>
-  <script src="js/paywall.js?v=318"></script>
-  <script src="js/podcast-data.js?v=318"></script>
-  <script src="js/audioplayer.js?v=318"></script>
-  <script src="js/bar.js?v=318" defer></script>
-  <script src="js/guide.js?v=318"></script>
+  <script src="./js/bootguard.js?v=320"></script>
+  <script src="js/prefs.js?v=320"></script>
+  <script src="js/lang.js?v=320"></script>
+  <script src="js/config.js?v=320"></script>
+  <script src="js/install.js?v=320"></script>
+  <script src="js/auth.js?v=320"></script>
+  <script src="js/sounds.js?v=320"></script>
+  <script src="js/community.js?v=320"></script>
+  <script src="js/gold.js?v=320"></script>
+  <script src="js/paywall.js?v=320"></script>
+  <script src="js/podcast-data.js?v=320"></script>
+  <script src="js/audioplayer.js?v=320"></script>
+  <script src="js/bar.js?v=320" defer></script>
+  <script src="js/guide.js?v=320"></script>
   <script>
     (function () {
       /* theme */
@@ -362,7 +374,7 @@
   });
 })();
 </script>
-  <script src="js/onboard.js?v=318" defer></script>
+  <script src="js/onboard.js?v=320" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {
@@ -500,6 +512,30 @@
       document.getElementById("founderPreviewGold").addEventListener("click", function () { P.setFounderPreview(false); paint(); try { location.reload(); } catch (e) {} });
     }
     try { if (window.TSB_COMMUNITY && TSB_COMMUNITY.whenReady) TSB_COMMUNITY.whenReady(reveal); } catch (e) {}
+    /* v319: reader text size - one tap, saved, applied everywhere */
+    (function () {
+      var rowEl = document.getElementById("tsTextRow");
+      if (!rowEl) return;
+      function paintTs() {
+        var cur = "n";
+        try { cur = localStorage.getItem("tsb_textsize") || "n"; } catch (e) {}
+        rowEl.querySelectorAll("[data-ts]").forEach(function (b) {
+          var on = b.getAttribute("data-ts") === cur;
+          b.style.background = on ? "#ffc800" : "#fff";
+          b.style.outline = on ? "3px solid #14110c" : "none";
+        });
+      }
+      rowEl.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-ts]");
+        if (!b) return;
+        try { localStorage.setItem("tsb_textsize", b.getAttribute("data-ts")); } catch (e2) {}
+        if (b.getAttribute("data-ts") === "n") document.documentElement.removeAttribute("data-ts");
+        else document.documentElement.setAttribute("data-ts", b.getAttribute("data-ts"));
+        paintTs();
+      });
+      paintTs();
+    })();
+
     window.addEventListener("tsb:auth", reveal);
   })();
   </script>

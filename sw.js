@@ -1,10 +1,10 @@
 /* ============================================================
    THESMALLBOOK, SERVICE WORKER
-   Cache-first for app shell & covers = installable + offline.
+   Installable + offline. Versioned files load from the phone (instant), HTML always fresh.
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v318";
+const CACHE_VERSION = "tsb-v320";
 /* NOTE: the assets/logos/* entries below mirror js/store-data.js exactly.
    every tile the store links to must be precached, or the offline store
    shows broken images. tests/client-suite.js asserts they never drift. */
@@ -29,6 +29,7 @@ const APP_SHELL = [
   "./deepdive.html",
   "./podcasts.html",
   "./about.html",
+  "./legal.html",
   "./scan.html",
   "./js/tts-engine.js",
   "./js/bootguard.js",
@@ -47,31 +48,7 @@ const APP_SHELL = [
   "./js/studio.js",
   "./js/dictate.js",
   "./js/osint.js",
-  "./assets/quote-bgs/bg01-paper.jpg",
-  "./assets/quote-bgs/bg02-dark.jpg",
-  "./assets/quote-bgs/bg03-sunset.jpg",
-  "./assets/quote-bgs/bg04-ocean.jpg",
-  "./assets/quote-bgs/bg05-forest.jpg",
-  "./assets/quote-bgs/bg06-blush.jpg",
-  "./assets/quote-bgs/bg07-lilac.jpg",
-  "./assets/quote-bgs/bg08-gold.jpg",
-  "./assets/quote-bgs/bg09-cream.jpg",
-  "./assets/quote-bgs/bg10-terracotta.jpg",
-  "./assets/quote-bgs/bg11-midnight.jpg",
-  "./assets/quote-bgs/bg12-marble.jpg",
-  "./assets/quote-bgs/bg13-pastel-dream.jpg",
-  "./assets/quote-bgs/bg14-minimal-plant.jpg",
-  "./assets/quote-bgs/bg15-sunset-ocean.jpg",
-  "./assets/quote-bgs/bg16-forest-mist.jpg",
-  "./assets/quote-bgs/bg17-beige-dunes.jpg",
-  "./assets/quote-bgs/bg18-white-shadow.jpg",
-  "./assets/quote-bgs/bg19-lavender-sky.jpg",
-  "./assets/quote-bgs/bg20-peach-watercolor.jpg",
-  "./assets/quote-bgs/bg21-night-forest.jpg",
-  "./assets/quote-bgs/bg22-cream-linen.jpg",
-  "./assets/quote-bgs/bg23-teal-horizon.jpg",
-  "./assets/quote-bgs/bg24-blossom-sky.jpg",
-  "./js/gold.js",
+                                                  "./js/gold.js",
   "./store.html",
   "./js/store.js",
   "./js/store-data.js",
@@ -198,8 +175,10 @@ self.addEventListener("fetch", (e) => {
   // never cache supabase API calls
   if (url.hostname.includes("supabase")) return;
   if (e.request.method !== "GET") return;
+  /* media byte-range (audio seeking) always goes to the network untouched;
+     answering a partial request from a full cached response breaks playback */
+  if (e.request.headers.get("range")) return;
 
-  // v275: network-first for HTML and code (fresh first), cache = offline fallback
   if (e.request.mode === "navigate" || url.pathname.endsWith(".html")) {
     e.respondWith(
       fetch(e.request)
@@ -210,13 +189,30 @@ self.addEventListener("fetch", (e) => {
         })
         .catch(() => caches.match(e.request, { ignoreSearch: true }).then((r) => r || caches.match("./index.html")))
     );
+  } else if (url.origin === location.origin &&
+             (/[?&]v=/.test(url.search) ||
+              /\.(woff2|woff|png|jpe?g|svg|webp|ico|mp3|m4a|ogg|json)$/i.test(url.pathname))) {
+    /* v319: versioned code, covers, fonts and audio are immutable - a new
+       deploy ships new ?v= URLs, so the saved copy can never meet new code.
+       They load from the phone, not the network: after the first visit every
+       page, book and podcast opens instantly, even on the slowest connection.
+       HTML above stays fresh-first so updates still land the moment they ship. */
+    e.respondWith(
+      caches.open(CACHE_VERSION).then(async (c) => {
+        const hit = await c.match(e.request);
+        if (hit) return hit;
+        const res = await fetch(e.request);
+        if (res.ok && res.status === 200) c.put(e.request, res.clone());
+        return res;
+      })
+    );
   } else {
-    /* v275: network-first for EVERYTHING, cache is only the offline fallback.
-       New HTML can never meet stale saved code again. */
+    /* anything else (cross-origin feeds, CDNs): network-first, the saved
+       copy is only the offline fallback */
     e.respondWith(
       fetch(e.request)
         .then((res) => {
-          if (res.ok && (url.origin === location.origin || url.hostname.includes("fonts"))) {
+          if (res.ok && url.hostname.includes("fonts")) {
             const copy = res.clone();
             caches.open(CACHE_VERSION).then((c) => c.put(e.request, copy));
           }

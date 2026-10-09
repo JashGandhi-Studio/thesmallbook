@@ -182,7 +182,7 @@
   }
   function cs3Foot() {
     return '<div class="cs3-foot"><span class="cs3-foot__by">notes by: <i></i></span>' +
-      '<span class="cs3-foot__brand">THE SMALL BOOK <b>·</b> thesmallbook.in</span></div>';
+      '<span class="cs3-foot__brand">THE SMALL BOOK <b>·</b> thesmallbook.in <i>· for your personal study - please buy the book</i></span></div>';
   }
   function buildSheet(b, gold) {
     var pal = palette(b);

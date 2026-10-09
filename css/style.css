@@ -9320,3 +9320,23 @@ html.dark .pc-show--orig { background:linear-gradient(135deg,#2a2318,#1b1712 55%
 /* v318 - fetched audiobooks speak for themselves on the shelf */
 .pc-ab__why { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; font:600 11px/1.45 'Space Grotesk',sans-serif; color:var(--ink,#14110c); opacity:.72; margin:2px 0 4px; }
 .cs3-chips i { display:block; margin-top:2px; }
+
+/* v319 - READER TEXT SIZE (Settings): the sizing mechanism that goes with the
+   viewport lock - readers who need bigger (or smaller) words get them without
+   breaking the layout. Zoom applies only to the reading columns, never to the
+   bar, sheets or fixed chrome. */
+html[data-ts="s"] .lessons, html[data-ts="s"] .cm-post, html[data-ts="s"] .nt-wrap { zoom: 0.92; }
+html[data-ts="l"] .lessons, html[data-ts="l"] .cm-post, html[data-ts="l"] .nt-wrap { zoom: 1.12; }
+html[data-ts="xl"] .lessons, html[data-ts="xl"] .cm-post, html[data-ts="xl"] .nt-wrap { zoom: 1.25; }
+
+.cs3-foot__brand i { font-style: normal; opacity: .6; letter-spacing: .2px; }
+
+/* v319 - small phones (<=360px): same layout, gentler scale, so nothing
+   ever feels zoomed-in on a low-end device */
+@media (max-width: 360px) {
+  .hero__title, .ahero h1 { font-size: clamp(24px, 8.4vw, 34px); }
+  .hero__sub, .ahero__sub { font-size: 13px; }
+  .card, .gcard, .pk-card { padding: 13px; }
+  .statgrid { gap: 8px; }
+  body { background-size: 22px 22px; }
+}

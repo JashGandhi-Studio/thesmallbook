@@ -799,6 +799,49 @@ const BASE = "http://127.0.0.1:8799";
     await page.close();
   }
 
+  /* ============ v320: THE PAUSE PROMISE (autoplay-allowed browser = the real phone) ============
+     A paused session must NEVER start sound on its own - not on a page switch,
+     not on a reload, not on a tab return. Only a session that was truly playing
+     when you left may pick up with sound on the next page. These tests run in a
+     context that ALLOWS autoplay (like a phone after the first tap), because the
+     default headless context blocks play() and hides exactly this class of bug. */
+  {
+    const ctx2 = await browser.newContext({ viewport: { width: 390, height: 844 }, args: ["--autoplay-policy=no-user-gesture-required"] });
+    const pg = await ctx2.newPage();
+    const flag2 = () => pg.evaluate(() => window.localStorage.getItem("tsb_audio_playing"));
+    const seed = () => pg.evaluate(() => { localStorage.clear(); localStorage.setItem("tsb_onboarded", "true"); localStorage.setItem("tsb_tour_done", "true"); localStorage.setItem("tsb_walk_done", "true"); localStorage.setItem("tsb_supportbar_seen", "true"); });
+    await pg.goto("http://127.0.0.1:8799/podcasts.html", { waitUntil: "domcontentloaded" });
+    await seed();
+    await pg.reload({ waitUntil: "domcontentloaded" });
+    await pg.waitForTimeout(1400);
+    let und404 = 0;
+    pg.on("response", (r) => { if (r.status() === 404 && r.url().endsWith("/undefined")) und404++; });
+    await pg.evaluate(() => window.TSB_AUDIO.playOriginal(0));
+    await pg.waitForTimeout(2200);
+    ok(await flag2() === "1", "an original really plays (sound allowed, not just the dock)", await flag2());
+    await pg.evaluate(() => document.querySelector("#tsbAp .ap-play").click());
+    await pg.waitForTimeout(600);
+    ok(await flag2() === "0", "pause really pauses");
+    await pg.goto("http://127.0.0.1:8799/index.html", { waitUntil: "domcontentloaded" });
+    await pg.waitForSelector("#tsbAp", { timeout: 20000 });
+    await pg.waitForTimeout(3200);
+    ok(await flag2() === "0", "PAUSED stays silent when you open another page", await flag2());
+    await pg.reload({ waitUntil: "domcontentloaded" });
+    await pg.waitForSelector("#tsbAp", { timeout: 20000 });
+    await pg.waitForTimeout(3200);
+    ok(await flag2() === "0", "PAUSED stays silent on a full reload", await flag2());
+    await pg.evaluate(() => document.querySelector("#tsbAp .ap-play").click());
+    await pg.waitForTimeout(1400);
+    ok(await flag2() === "1", "one tap on the dock wakes a parked session on demand", await flag2());
+    await pg.goto("http://127.0.0.1:8799/notes.html", { waitUntil: "domcontentloaded" });
+    await pg.waitForSelector("#tsbAp", { timeout: 20000 });
+    await pg.waitForTimeout(3200);
+    ok(await flag2() === "1", "PLAYING continues to the next page, unchanged", await flag2());
+    ok(und404 === 0, "no original episode ever fetches a broken /undefined source", "404s=" + und404);
+    await pg.close();
+    await ctx2.close();
+  }
+
   await browser.close();
   console.log("RESULT(browser): " + pass + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);

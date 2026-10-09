@@ -12,11 +12,11 @@
   <meta property="og:description" content="The story behind the free library: 500 books distilled, 360 failures autopsied, 83 life questions answered, 26 languages. Built by Jash Gandhi, Mumbai.">
     <meta property="og:url" content="https://thesmallbook.in/about.html">
   <meta property="og:site_name" content="TheSmallBook">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=318">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=320">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="TheSmallBook, 500 books · 3540 lessons · 360 autopsies · free to read">
-  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=318">
+  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=320">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary">
   <link rel="manifest" href="manifest.json">
@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=318">
+  <link rel="stylesheet" href="css/style.css?v=320">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -378,6 +378,12 @@
       <h2 class="about__head">🆕 What's new, changelog</h2>
       <p style="font:600 11px 'Space Grotesk',sans-serif;color:#8f8a80">We ship every week. New books, new graves, and small polish. This page is the living changelog.</p>
       <div class="log-grid" id="logGrid">
+        <div class="log-item">
+            <span class="log-item__ver">v320</span>
+            <p><b>The pause promise.</b> You paused a book, opened another page or came back later - and the audio started shouting again. That is fixed at the root: the queue builder had quietly dropped the autoplay flag, so every restored session looked like a "keep playing" one. Paused stays paused - across pages, reloads and app switches - and only a session that was truly playing when you left picks up with sound. The state you leave in is the state you return to, on every engine: full audiobooks, fetched shows and our own episodes. Switching apps or tabs also freezes the honest state now. And the hunch about the originals was right: our show's episodes were wired to the wrong field name and fetched a dead link - the voice you heard never existed. Every episode now plays its real audio, and the browser suite grew seven tests that run in an autoplay-allowed browser (what a real phone is after your first tap) so this class of bug can never hide behind a blocked player again. Updates still need zero steps from you - HTML lands fresh, everything else rides your phone. Build 320.</p></div>
+        <div class="log-item">
+            <span class="log-item__ver">v319</span>
+            <p><b>The rulebook, and an app that opens like it is already on your phone.</b> There is now a real Legal & Privacy page - terms, privacy, content credit, takedowns and contact, all in plain words, linked from the About page, Settings and the login footer, open to guests and saved for offline. It says what the app always did: notes stay on your device, no ads, no trackers, nothing sold, LibriVox and podcast feeds credited to their makers, and one message removes anything that is yours within 48 hours. The bigger change is speed: every versioned file, cover, font and audio now loads from your phone instead of the network - HTML still arrives fresh first, so updates land the moment they ship, but the second visit to any page, book or show opens in a blink, offline included. The first install got 2.3 MB lighter (the 24 quote wallpapers now load only when a quote needs them), the show cover went on a diet (1.08 MB to 67 KB), and the first three shows quietly fetch their episode lists while you browse, so PLAY makes sound, not a wait. And the same app now fits every device: a new Reader Text Size control in Settings (A- to A++) rides every book page, story and note, small phones get a gentler scale pass, and the audit at 320, 360 and 390 px shows zero overflowing elements on any of them. Every printed cheat-sheet now carries one quiet line: for your personal study - please buy the book. Build 319.</p></div>
         <div class="log-item">
             <span class="log-item__ver">v318</span>
             <p><b>The shows you find now behave like the shows we chose.</b> Every podcast pulled in from FIND 3 MORE plays with full chapter sheets, rides the mini dock to every page, comes back mid-episode after a reload, and waits in the Continue card - identical treatment, because a show you discovered should never be a second-class guest. Hunting that promise down caught something worse: the feed reader itself had been going silent in the whole Chrome family (one selector Chromium refuses to parse), so feeds fell back to a mirror that rate-limits - shows would load on some phones and never on others. Fixed at the root; every show now plays straight from its own feed, and this build's tests play real feeds from empty caches to prove it. The cheat sheet found its center: the book's cover and its KEY TAKEAWAYS ribbon now sit mid-page with the seven takeaways flanking on both sides, a full-width band underneath carries the week's first step beside WHERE THE BOOK BITES - the page fills like a poster instead of a form. And audiobooks pulled from LibriVox arrive speaking: each fresh card now carries the book's own description under its title, so the shelf reads like a friend's recommendations, not a list of names. The walkthrough survived 400 taps a second in testing - no swallowed clicks, no stall at slide 8. Build 318.</p></div>
@@ -725,6 +731,7 @@
     Summaries are original educational analyses. Please support the authors, buy the full books.</p>
     <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:14px 0">
       <a class="btn btn--yellow" href="about.html" style="border-radius:999px;padding:9px 14px;font-size:.72rem;box-shadow:3px 3px 0 #fff;">ⓘ ABOUT & FEATURE GUIDE</a>
+      <a class="btn btn--yellow" href="legal.html" style="border-radius:999px;padding:9px 14px;font-size:.72rem;box-shadow:3px 3px 0 #fff;">⚖ LEGAL & PRIVACY</a>
       <a class="btn" href="index.html#library" style="border-radius:999px;background:#fff;">📚 LIBRARY</a>
       <a class="btn btn--red" href="graveyard.html" style="border-radius:999px;">💀 GRAVEYARD</a>
     </div>
@@ -737,24 +744,24 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="./js/bootguard.js?v=318"></script>
-  <script src="js/prefs.js?v=318"></script>
-  <script src="js/support.js?v=318"></script>
-  <script src="js/lang.js?v=318"></script>
-  <script src="js/config.js?v=318"></script>
-  <script src="js/auth.js?v=318"></script>
-  <script src="js/data.js?v=318"></script>
-  <script src="js/failures.js?v=318"></script>
-  <script src="js/ask-data.js?v=318"></script>
-  <script src="js/tts-engine.js?v=318"></script>
-  <script src="js/ask-modes-data.js?v=318"></script>
-  <script src="js/paywall.js?v=318"></script>
-  <script src="js/askquota.js?v=318"></script>
-  <script src="js/ask.js?v=318"></script>
-  <script src="js/podcast-data.js?v=318"></script>
-  <script src="js/audioplayer.js?v=318"></script>
-  <script src="js/bar.js?v=318" defer></script>
-  <script src="js/gate.js?v=318" defer></script>
+  <script src="./js/bootguard.js?v=320"></script>
+  <script src="js/prefs.js?v=320"></script>
+  <script src="js/support.js?v=320"></script>
+  <script src="js/lang.js?v=320"></script>
+  <script src="js/config.js?v=320"></script>
+  <script src="js/auth.js?v=320"></script>
+  <script src="js/data.js?v=320"></script>
+  <script src="js/failures.js?v=320"></script>
+  <script src="js/ask-data.js?v=320"></script>
+  <script src="js/tts-engine.js?v=320"></script>
+  <script src="js/ask-modes-data.js?v=320"></script>
+  <script src="js/paywall.js?v=320"></script>
+  <script src="js/askquota.js?v=320"></script>
+  <script src="js/ask.js?v=320"></script>
+  <script src="js/podcast-data.js?v=320"></script>
+  <script src="js/audioplayer.js?v=320"></script>
+  <script src="js/bar.js?v=320" defer></script>
+  <script src="js/gate.js?v=320" defer></script>
   <script>
   // 🧪 Lab, one professional playground that explains every tricky feature
   (function(){

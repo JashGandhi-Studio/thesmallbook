@@ -461,5 +461,11 @@
     );
   }, true);
 
+/* v319: reader text size chosen in Settings rides every page from the first paint */
+try {
+  var tsz = localStorage.getItem("tsb_textsize");
+  if (tsz && tsz !== "n") document.documentElement.setAttribute("data-ts", tsz);
+} catch (eTs) {}
+
 /* v275: the page booted, tell the watchdog it can stand down */
 window.TSB_BOOT_OK = true;

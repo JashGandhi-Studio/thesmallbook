@@ -989,7 +989,7 @@ const C = window.TSB_COMMUNITY;
     ok("the watchdog rides first on every app page, and the ID wall is gone for good", bg275.includes("TSB_BOOT_OK") && bg275.includes("tsb_purge_a") && rd("index.html").indexOf("js/bootguard.js") === 0 || (rd("index.html").includes("js/bootguard.js") && !rd("index.html").includes("js/vault.js") && !rd("book.html").includes("js/vault.js")));
     ok("a worker handover can never reload the page again", !prefs275.includes("controllerchange") && prefs275.includes("window.TSB_BOOT_OK = true"));
     ok("no worker = no purge reload; a true hang self-heals once, then an honest banner", bg275.includes("done(had)") && bg275.includes("Load trouble detected."));
-    ok("the worker serves code fresh-first, saved files are only the offline backup", /network-first for EVERYTHING/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v318"'));
+    ok("the worker serves HTML fresh-first and versioned files from the phone (updates still land, loads are instant)", /HTML above stays fresh-first/.test(sw275) && /versioned code, covers, fonts and audio are immutable/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v320"'));
     ok("storage is plain device storage again, exactly like v267", !rd("index.html").includes("js/vault.js") && rd("js/prefs.js").includes("for (let i = 0; i < localStorage.length; i++)") && !rd("js/prefs.js").includes("TSB_VAULT"));
 
     /* --- watermark --- */
@@ -1696,8 +1696,8 @@ const C = window.TSB_COMMUNITY;
     }
     const sw292 = rd292("sw.js");
     ok("service worker precaches ask-modes-data.js", sw292.includes('"./js/ask-modes-data.js"'));
-    ok("cache name and bootguard build both say 318", /CACHE_VERSION = "tsb-v318"/.test(sw292) && /var BUILD = "318";/.test(rd292("js/bootguard.js")));
-    ok("login and settings say Build tsb-v318", rd292("login.html").includes("Build tsb-v318") && rd292("settings.html").includes("Build tsb-v318"));
+    ok("cache name and bootguard build both say 320", /CACHE_VERSION = "tsb-v320"/.test(sw292) && /var BUILD = "320";/.test(rd292("js/bootguard.js")));
+    ok("login and settings say Build tsb-v320", rd292("login.html").includes("Build tsb-v320") && rd292("settings.html").includes("Build tsb-v320"));
     ok("about.html changelog documents v292 and the 8 modes", /log-item__ver">v292</.test(rd292("about.html")) && rd292("about.html").includes("8 modes"));
     ok("no page still carries an old ?v=291", !glob292.some(f => /\?v=29[12]\b/.test(rd292(f))), glob292.filter(f => /\?v=29[12]\b/.test(rd292(f))).join(",") || "clean");
 
@@ -1890,6 +1890,42 @@ const C = window.TSB_COMMUNITY;
     ok("stories carries the LISTEN TODAY rail: continue, dives, whole books",
        rd302("stories.html").includes("ltRail") && rd302("stories.html").includes("A.resume()") &&
        rd302("stories.html").includes("A.playBook(b.id, 0)") && rd302("stories.html").includes("deepdive.html?id="));
+    // 7. v319 - the plain-words rulebook
+    const lg = rd302("legal.html");
+    ok("legal.html exists: terms, privacy, credit, takedowns, contact in plain words",
+       lg.includes("TERMS OF USE") && lg.includes("PRIVACY") && lg.includes("CONTENT, CREDIT") &&
+       lg.includes("TAKEDOWNS") && lg.includes("48 hours") && lg.includes("7 days") &&
+       lg.includes("hello@thesmallbook.in") && lg.includes("NOT PROFESSIONAL ADVICE"));
+    ok("the rulebook is reachable everywhere and open to guests",
+       rd302("about.html").includes('href="legal.html"') && rd302("settings.html").includes('href="legal.html"') &&
+       rd302("login.html").includes('href="legal.html"') &&
+       rd302("js/gate.js").replace(/\\/g, "").includes("about.html|store.html|gold.html|legal.html"));
+    ok("the rulebook rides offline in the app shell", rd302("sw.js").includes('"./legal.html"'));
+    // 8. v319 - the app opens like it is already on the phone
+    ok("the player warms show feeds in idle time (tap = sound, not wait)",
+       rd302("js/audioplayer.js").includes("warmShow") && rd302("podcasts.html").includes("TSB_AUDIO.warmShow"));
+    ok("the show cover travels light (jpg, not the 1MB png)",
+       rd302("js/podcast-data.js").includes("tsb-show-cover.jpg") && !rd302("js/podcast-data.js").includes("tsb-show-cover.png"));
+    ok("the offline shell no longer precaches the 24 quote wallpapers",
+       !/quote-bgs/.test(rd302("sw.js").split("self.addEventListener")[0]));
+    // 9. v319 - same app on every device
+    ok("every page keeps the viewport lock (the reader's own ask, unchanged)",
+       (() => { let missing = 0; const walk = (d) => { if (d.includes("node_modules") || d.endsWith("tests")) return; for (const f of fs.readdirSync(d)) { const p = pp.join(d, f); const st = fs.statSync(p); if (st.isDirectory()) walk(p); else if (f.endsWith(".html")) { const m = fs.readFileSync(p, "utf8").match(/<meta name="viewport" content="([^"]+)"/); if (!m || !/user-scalable=no/.test(m[1])) missing++; } } }; walk(pp.join(__dirname, "..")); return missing === 0; })());
+    ok("reader text size rides every page from the first paint",
+       rd302("js/prefs.js").includes("tsb_textsize") && rd302("css/style.css").includes('html[data-ts="xl"]') &&
+       rd302("settings.html").includes('data-ts="xl"'));
+    ok("small phones get the gentler scale pass",
+       rd302("css/style.css").includes("@media (max-width: 360px)"));
+    ok("the cheat sheet carries the personal-use line",
+       rd302("js/book-tools.js").includes("for your personal study - please buy the book"));
+    // 10. v320 - the pause promise, in code not just in tests
+    const ap320 = rd302("js/audioplayer.js");
+    ok("the queue builder carries autoplay (a paused restore may never auto-play)",
+       /autoplay: spec\.autoplay/.test(ap320) && ap320.includes("Paused stays paused; only a session"));
+    ok("TSB original episodes feed the engine a real src (never a 404)",
+       ap320.includes("src: p.url") && !ap320.includes("{ label: p.label, url: p.url"));
+    ok("switching apps also freezes the honest play state",
+       ap320.includes('visibilitychange') && ap320.includes("savePlayState"));
   }
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");
 

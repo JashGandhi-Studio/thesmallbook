@@ -732,7 +732,7 @@
     return new Promise(function (res) {
       if (window.FAILURES && window.FAILURES.length) return res();
       var sc = document.createElement("script");
-      sc.src = "js/failures.js?v=318";
+      sc.src = "js/failures.js?v=320";
       sc.onload = function () { res(); };
       sc.onerror = function () { res(); };
       document.head.appendChild(sc);

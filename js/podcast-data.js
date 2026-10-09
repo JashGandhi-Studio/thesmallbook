@@ -18,7 +18,7 @@
     id: "tsb-show",
     name: "The Small Book Show",
     host: "Jai & Meera",
-    art: "assets/podcast/tsb-show-cover.png",
+    art: "assets/podcast/tsb-show-cover.jpg",
     why: "The library talks back: every episode takes one idea worth your life and argues it out loud - one host builds the case, the other tears into it, and you leave with a protocol, not a vibe. Recorded by the app, free forever.",
     episodes: [
       { id: "ep1", title: "Why You Quit Five Minutes Before the Miracle", desc: "The valley every skill hides, the 40% rule, and the four-line protocol that carries you across. With the counterpoint: when quitting is the smart play.",

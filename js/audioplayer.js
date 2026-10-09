@@ -79,7 +79,12 @@
     return {
       type: "audio", key: spec.key, title: spec.title, sub: spec.sub || "",
       items: spec.items, credit: spec.credit || "", art: spec.art || "", glyph: spec.glyph || "",
-      ch: spec.ch || 0, seek: spec.seek || 0
+      ch: spec.ch || 0, seek: spec.seek || 0,
+      /* v320: the one the builder forgot. Without this, every restored
+         session looked "autoplay" and a PAUSED book started shouting the
+         moment you opened any page. Paused stays paused; only a session
+         that was truly playing picks up with sound. */
+      autoplay: spec.autoplay
     };
   }
 
@@ -1021,7 +1026,7 @@
     var O = originals();
     if (!O || !O.episodes || !O.episodes.length) { toast("The show is still warming up - try again in a bit."); return; }
     var ep = O.episodes[Math.max(0, Math.min(epIdx || 0, O.episodes.length - 1))];
-    var items = ep.parts.map(function (p, i) { return { label: p.label, url: p.url, part: i }; });
+    var items = ep.parts.map(function (p, i) { return { label: p.label, src: p.url, part: i }; });   /* v320: src, not url - the audio engine reads it.src; the old mapping fed every original episode a 404 */
     var pos = startPart !== undefined ? {} : (audioPos("orig:" + ep.id) || {});
     startAudio(audioQueue({
       key: "orig:" + ep.id,
@@ -1208,8 +1213,14 @@
       });
     }
   }
-  window.addEventListener("pagehide", function () {
+  function savePlayState() {
     try { if (q && q.type === "audio" && AU) jset(PLAYKEY, AU.paused ? 0 : 1); } catch (e) {}
+  }
+  window.addEventListener("pagehide", savePlayState);
+  /* v320: switching apps or tabs also freezes the honest state, so what you
+     come back to is exactly what you left - paused or playing, never a surprise */
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden") savePlayState();
   });
   setTimeout(bootRestore, 150);
 
@@ -1219,6 +1230,8 @@
 
   /* ================= public ================= */
   window.TSB_AUDIO = {
+  /* v319: pre-fetch a show's episode list in idle time so the first tap plays, not waits */
+  warmShow: function (show) { try { fetchFeed(show.rss || show.url || show.feed || "", function () {}); } catch (e) {} },
     playBook: function (bookId, fromLesson) {
       var qc = bookQueue(bookId, fromLesson);
       if (qc) startTTS(qc);
