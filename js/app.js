@@ -98,8 +98,85 @@
     } catch (e) {}
   }
 
+  /* ---------- ⚡ INSTANT LIVE TITLE SEARCH (FAST SEPARATED TITLES) ---------- */
+  const searchLiveOut = document.getElementById("searchLiveResults");
+
+  function escHTML(s) {
+    return String(s || "").replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function renderLiveTitleSearch(val) {
+    if (!searchLiveOut) return;
+    const v = String(val || "").trim().toLowerCase();
+    if (!v) {
+      searchLiveOut.style.display = "none";
+      searchLiveOut.innerHTML = "";
+      return;
+    }
+
+    const words = v.split(/\s+/).filter(Boolean);
+    const hits = BOOKS.filter((b) => {
+      const titleLower = (b.title || "").toLowerCase();
+      const authorLower = (b.author || "").toLowerCase();
+      const catLower = (b.category || "").toLowerCase();
+      return words.every((w) => titleLower.includes(w) || authorLower.includes(w) || catLower.includes(w));
+    });
+
+    if (!hits.length) {
+      searchLiveOut.style.display = "block";
+      searchLiveOut.innerHTML = `<div style="padding:10px 12px;font:700 13px 'Space Grotesk',sans-serif;color:var(--muted,#777);text-align:center;">No matching titles found for “${escHTML(v)}”. Press Enter to search inside all lessons.</div>`;
+      return;
+    }
+
+    searchLiveOut.style.display = "flex";
+    const topHits = hits.slice(0, 6);
+    let html = `<div class="search-live-header"><span>MATCHING BOOK TITLES (${hits.length})</span><small>FAST PREVIEW</small></div>`;
+    topHits.forEach((b) => {
+      html += `
+        <a class="search-hit-item" href="book.html?id=${encodeURIComponent(b.id)}">
+          <img class="search-hit-cover" src="${escHTML(b.cover)}" alt="" loading="lazy" onerror="this.style.display='none'">
+          <div class="search-hit-info">
+            <div class="search-hit-title">${escHTML(b.title)}</div>
+            <div class="search-hit-meta">${escHTML(b.author)} · ${escHTML(b.category)} · ${b.lessons.length} lessons</div>
+          </div>
+          <span class="search-hit-badge">READ →</span>
+        </a>`;
+    });
+
+    if (hits.length > 6) {
+      html += `
+        <div class="search-live-footer">
+          <button type="button" id="searchLiveMoreBtn">↓ SEE ALL ${hits.length} BOOKS ON THE SHELF</button>
+        </div>`;
+    }
+
+    searchLiveOut.innerHTML = html;
+    const moreBtn = document.getElementById("searchLiveMoreBtn");
+    if (moreBtn) {
+      moreBtn.addEventListener("click", () => {
+        searchLiveOut.style.display = "none";
+        smoothScrollToShelf();
+      });
+    }
+  }
+
+  document.addEventListener("click", (e) => {
+    if (!searchLiveOut || searchLiveOut.style.display === "none") return;
+    if (!e.target.closest("#searchWrap")) {
+      searchLiveOut.style.display = "none";
+    }
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && searchLiveOut) {
+      searchLiveOut.style.display = "none";
+    }
+  });
+
   searchInput.addEventListener("input", (e) => {
     const v = e.target.value.trim().toLowerCase();
+    renderLiveTitleSearch(v);
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => {
       query = v;

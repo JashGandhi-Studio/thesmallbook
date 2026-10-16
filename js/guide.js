@@ -43,7 +43,7 @@
       { e: "⏩", n: "Listen Today", d: "Your continue card, book picks and today's listens. Continue plays exactly where you paused.", h: "stories.html" }
     ]},
     { g: "DISCOVER", rows: [
-      { e: "💀", n: "The Graveyard", d: "360 real failures autopsied: startups, frauds, empires, egos. They paid billions; your lesson is free.", h: "graveyard.html" },
+      { e: "💀", n: "The Graveyard", d: "400 real failures autopsied: startups, frauds, empires, egos. They paid billions; your lesson is free.", h: "graveyard.html" },
       { e: "📌", n: "Quote Wall", d: "A public soft board of lines worth keeping. Find a great line first, or pin your own. Tap any note to share it.", h: "quotes.html" }
     ]},
     { g: "ASK & WRITE", rows: [
@@ -140,7 +140,29 @@
     sh.innerHTML = html;
     document.body.appendChild(sh);
     sh.querySelector(".tg-x").addEventListener("click", closeGuide);
-    sh.addEventListener("click", function (e) { if (e.target === sh) closeGuide(); });
+    sh.addEventListener("click", function (e) {
+      if (e.target === sh) { closeGuide(); return; }
+      var a = e.target.closest("a.tg-row");
+      if (a) {
+        var href = a.getAttribute("href");
+        var GATED_PAGES = ["write.html"];
+        if (GATED_PAGES.indexOf(href) !== -1) {
+          var u = null;
+          try { u = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null; } catch (err) {}
+          if (!u) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeGuide();
+            if (window.TSB_AUTH && TSB_AUTH.openSheet) {
+              TSB_AUTH.openSheet();
+            } else {
+              location.href = "login.html?gate=" + encodeURIComponent(href);
+            }
+            return;
+          }
+        }
+      }
+    });
     sh.querySelector("#tgWalk").addEventListener("click", function () {
       closeGuide();
       startWalk(0);
@@ -167,10 +189,10 @@
      exactly where you were. A stop whose element is missing waits a
      while (sheets and docks mount late), then steps aside. */
   var WALK = [
-    { p: "index.html", sel: null, t: "Welcome to TheSmallBook", d: "A quiet library: 500 books broken into 5-minute lessons, full audiobooks, real podcasts, a private notebook - and 360 stories of failure worth more than most success books. This walkthrough is hands-on. When you see YOUR TURN, the next move is yours: the tour only moves when you actually do the thing. Everything stays free, nothing breaks, and you can leave anytime with skip." },
+    { p: "index.html", sel: null, t: "Welcome to TheSmallBook", d: "A quiet library: 500 books broken into 5-minute lessons, full audiobooks, real podcasts, a private notebook - and 400 stories of failure worth more than most success books. This walkthrough is hands-on. When you see YOUR TURN, the next move is yours: the tour only moves when you actually do the thing. Everything stays free, nothing breaks, and you can leave anytime with skip." },
     { p: "index.html", sel: "#searchInput", t: "Your turn: search the library", d: "500 books in 26 languages, every one free. Titles, authors, moods - type 'focus' or 'money' or a name, the shelf rearranges itself around it.", tryit: "#searchInput", tryTxt: "Tap the search box" },
     { p: "index.html", sel: ".scanbtn", t: "Scan a paper book", d: "Holding a real book? The scanner reads its cover and opens that book's whole shelf here: lessons, audio, everything it has. It works on any book, not just the famous ones." },
-    { p: "index.html", sel: ".gravebanner__box", t: "The Graveyard", d: "360 real failures autopsied - Enron, the Titan, Nokia, and cons nobody taught you about. Each grave reads the same way: HOW IT STARTED, THE FALL, THE LESSON. The people in it paid billions for these lessons; reading them is free. You will open one yourself in a minute." },
+    { p: "index.html", sel: ".gravebanner__box", t: "The Graveyard", d: "400 real failures autopsied - Enron, the Titan, Nokia, and cons nobody taught you about. Each grave reads the same way: HOW IT STARTED, THE FALL, THE LESSON. The people in it paid billions for these lessons; reading them is free. You will open one yourself in a minute." },
     { p: "index.html", sel: ".tsb-bar__item--plus", t: "Your turn: the big + is audio country", d: "First, a trick: scroll down a little and the menu bar tucks itself away - scroll back up and it returns, so it never eats your screen. Bring it back, then tap the big + and let's go in together.", tryit: ".tsb-bar__item--plus", tryTxt: "Scroll a bit, then tap the big yellow +" },
     { p: "stories.html", sel: ".lt-head", t: "Listen Today", d: "Your daily audio front page, made for doing the other thing: the continue card resumes exactly where you paused, then today's picks - books spoken by the app, full audiobooks read by real narrators, podcasts from their own feeds. One tap, it plays." },
     { p: "stories.html", sel: "#writeBtn", t: "Or write your own", d: "Every reader can write here: lessons from your own life, published to the stories feed, read by other readers. No follower count needed to start - a good lesson travels on its own." },
@@ -178,7 +200,7 @@
     { p: "podcasts.html", sel: ".pc-ab__card", t: "Your turn: press play for real", d: "Pick any book on the shelf. It streams the moment you tap - the chapters come straight from Archive.org, read by volunteer narrators, free and public domain.", tryit: "#pcAudiobooks [data-ab]", tryTxt: "Tap PLAY on any audiobook" },
     { p: "podcasts.html", sel: "#tsbAp", t: "This dock follows you everywhere", d: "That little bar is the player. It rides above the menu on every page, keeps playing while you read, and its thin yellow line is your progress in this chapter. Swipe it fully right to close it - your spot is kept.", tryit: "#tsbAp .ap-mid", tryTxt: "Tap the title on the dock" },
     { p: "podcasts.html", sel: "#tsbApSheet .ap-card", t: "The now-playing screen", d: "Big art, a seek bar you can drag, 15 and 30 second skips, speed from 0.75x to 1.5x, a sleep timer, a volume boost for the old recordings, and the full chapter queue below. Close it any way you like - the music never stops.", tryit: "#tsbApSheet .ap-x", tryTxt: "Look around, then close it with the red button" },
-    { p: "graveyard.html", sel: "#freshAnchor", t: "The Graveyard, the full museum", d: "360 autopsies, filterable by era, cause and how much burned. New graves land every week - the fresh ones wear the red tag." },
+    { p: "graveyard.html", sel: "#freshAnchor", t: "The Graveyard, the full museum", d: "400 autopsies, filterable by era, cause and how much burned. New graves land every week - the fresh ones wear the red tag." },
     { p: "graveyard.html", sel: ".grave__stone", t: "Your turn: open a grave", d: "Any gravestone. The autopsy opens right here - the full story in three acts.", tryit: ".grave__stone", tryTxt: "Tap any gravestone" },
     { p: "graveyard.html", sel: ".autopsy__page", t: "Every autopsy reads the same honest way", d: "HOW IT STARTED: the rise, with the numbers. THE FALL: exactly what broke it. THE LESSON: the one line worth carrying. Close the reader when you're done and pick up the tour right here." },
     { p: "quotes.html", sel: "#qwBoard", t: "The Quote Wall", d: "A public soft board of lines worth keeping, pinnable by any reader. Move it around with your fingers, zoom in, tap any note to share it as a card." },
@@ -412,7 +434,7 @@
     { sel: "#tsbHelpChip", t: "This ? is your map", d: "Lost anytime, on any day? Tap it: every function of the app, explained in plain words, one tap away." },
     { sel: "#searchInput", t: "Type a book, a mood, a problem", d: "500 books live here, broken into 5-minute lessons. Every single one free to read." },
     { sel: ".scanbtn", t: "Reading a paper book?", d: "Scan its cover and its whole shelf opens here - lessons, audio, everything it has." },
-    { sel: ".gravebanner__box", t: "The Graveyard", d: "360 real failures autopsied, from Enron to the Titan. The best free read on the internet." },
+    { sel: ".gravebanner__box", t: "The Graveyard", d: "400 real failures autopsied, from Enron to the Titan. The best free read on the internet." },
     { sel: ".tsb-bar__item--plus", t: "The big + is your audio home", d: "Stories, Listen Today, your continue card, audiobooks and podcasts - it all lives behind the plus." }
   ];
 
@@ -523,20 +545,15 @@
        onboarding has calmed down - home page only */
     if (!document.getElementById("tsbHelpChip") || !document.querySelector("#searchInput")) return;
     if (pageName() !== "index.html") return;
-    /* v322: the tutorial is once per era. Brand-new readers get it after
-       onboarding; when a build adds enough to warrant a tour, everyone
-       sees the NEW walkthrough exactly once - never again every open. */
+    /* v322: the tutorial is on-demand or once per era. Brand-new readers get it
+       only when requested via ? or Settings, never forced on open. */
     var seenBuild = jget(WALKDONE, null);
-    var fresh = seenBuild === null || seenBuild === false;
-    var replay = !fresh && String(seenBuild) !== String(THIS_BUILD);
-    if (seenBuild && !replay) return;
+    if (!seenBuild) jset(WALKDONE, THIS_BUILD);
     if (jget("tsb_onboarded", false) !== true) return;
-    var tries = 0;
-    (function whenCalm() {
-      var ob = document.querySelector(".obwrap:not(.obwrap--off)");
-      if (ob && tries++ < 8) { setTimeout(whenCalm, 900); return; }
-      setTimeout(function () { startWalk(0); if (replay) { try { toast("\uD83D\uDDFA New in this update - a quick tour of what changed."); } catch (eT) {} } }, tries > 0 ? 500 : 1500);
-    })();
+    /* Only start if explicitly requested or via help chip / settings replay */
+    if (location.hash === "#tour" || location.hash === "#walk") {
+      setTimeout(function () { startWalk(0); }, 600);
+    }
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();

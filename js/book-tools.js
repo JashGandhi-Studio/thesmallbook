@@ -24,6 +24,7 @@
   var FREE_PDF = 4;                       /* "any three to four books, free" */
   var STORE_KEY = "tsb_pdf_free";
   var AMOUNTS = [199, 499, 999];
+  AMOUNTS = [99];                         /* v328: book sponsorship updated to ₹99 */
 
   /* ---- eight designed palettes, one per category ------------------- */
   var PALETTES = {
@@ -368,8 +369,9 @@
               return '<button type="button" data-amt="' + a + '"' + (i === 0 ? ' class="on"' : "") + ">₹" + a + "</button>";
             }).join("") +
           "</div>" +
-          '<a class="fuelmodal__pay" id="fuelPay" href="#" rel="noopener">📲 PAY ₹199 VIA UPI</a>' +
-          '<div class="fuelmodal__alt">Opens your UPI app with the amount filled in</div>' +
+          '<a class="fuelmodal__pay" id="fuelPay" href="#" rel="noopener">📲 PAY ₹99 VIA UPI</a>' +
+          '<a class="fuelmodal__rzp" id="fuelRzp" href="#" rel="noopener">💳 PAY ₹99 (CARD / NETBANKING / UPI)</a>' +
+          '<div class="fuelmodal__alt">Opens Razorpay checkout or your UPI app with the amount filled in</div>' +
           '<div class="fuelmodal__upirow">' +
             '<span class="fuelmodal__upi" id="fuelUpi">' + esc(upi) + "</span>" +
             '<button class="fuelmodal__copy" id="fuelCopy" type="button">📋 Copy</button>' +
@@ -412,6 +414,35 @@
       pay.href = "upi://pay?pa=" + encodeURIComponent(upi) + "&pn=" + encodeURIComponent("TheSmallBook") +
                  "&am=" + amt + "&cu=INR&tn=" + encodeURIComponent("Fuel-" + bTitle);
       pay.textContent = "📲 PAY ₹" + amt + " VIA UPI";
+      var rzp = m.querySelector("#fuelRzp");
+      if (rzp) {
+        rzp.textContent = "💳 PAY ₹" + amt + " (CARD / NETBANKING / UPI)";
+        rzp.onclick = function (e) {
+          e.preventDefault();
+          var pcfg = (window.TSB_CONFIG && TSB_CONFIG.PAYWALL) || {};
+          var rzKey = pcfg.RAZORPAY_KEY_ID || "";
+          var rzLink = pcfg.RAZORPAY_LINK || "";
+          if (window.Razorpay && rzKey) {
+            var rzpInst = new window.Razorpay({
+              key: rzKey,
+              amount: amt * 100,
+              currency: "INR",
+              name: "TheSmallBook",
+              description: "Fuel " + bTitle,
+              notes: { type: "fuel", book_id: b.id, book_title: bTitle },
+              handler: function (resp) {
+                alert("Thank you! Your sponsorship has been received (Payment ID: " + resp.razorpay_payment_id + ").");
+                closeFuel();
+              }
+            });
+            rzpInst.open();
+          } else if (rzLink) {
+            window.open(rzLink, "_blank", "noopener");
+          } else {
+            location.href = pay.href;
+          }
+        };
+      }
       var wa = "https://wa.me/919702510680?text=" + encodeURIComponent(
         "Hi Jash! I want to fuel the breakdown of \"" + bTitle + "\" on TheSmallBook (₹" + amt + "). " +
         "Please share the UPI QR / id. Show my name as: ");

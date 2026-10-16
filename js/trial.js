@@ -38,6 +38,22 @@
   var box = null;
 
   /* ---------- the card ---------- */
+  function undress() {
+    if (!box) return;
+    var b = box; box = null;
+    b.classList.remove("trial--on");
+    document.documentElement.classList.remove("trial-lock");
+    setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, 320);
+  }
+
+  function dismiss() {
+    undress();
+    try { sessionStorage.setItem("tsb_trial_snooze", String(Date.now())); } catch (e) {}
+    dead = false;
+    st.used = Math.max(0, LIMIT - 600); /* 10 more minutes of free uninterrupted reading */
+    set("tsb_trial", st);
+  }
+
   function card(inner, actions) {
     if (box) box.parentNode.removeChild(box);
     box = document.createElement("div");
@@ -46,6 +62,7 @@
     box.setAttribute("aria-modal", "true");
     box.innerHTML =
       '<div class="trial">' +
+        '<button type="button" class="trial__x" id="trialX" aria-label="Close" style="position:absolute;top:14px;right:16px;background:none;border:none;font:800 22px sans-serif;cursor:pointer;color:#111;z-index:10;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;">✕</button>' +
         '<span class="trial__deco trial__deco--sq" aria-hidden="true"></span>' +
         '<span class="trial__deco trial__deco--ring" aria-hidden="true"></span>' +
         '<div class="trial__chip">📕</div>' +
@@ -57,15 +74,19 @@
     var reveal = function () { if (box) box.classList.add("trial--on"); };
     if (typeof requestAnimationFrame === "function") requestAnimationFrame(function () { requestAnimationFrame(reveal); });
     else setTimeout(reveal, 30);
+
+    box.addEventListener("click", function (e) {
+      if (e.target === box || e.target.closest("#trialX") || e.target.closest("[data-trial-later]")) {
+        dismiss();
+      }
+    });
+
     return box;
   }
-  function undress() {
-    if (!box) return;
-    var b = box; box = null;
-    b.classList.remove("trial--on");
-    document.documentElement.classList.remove("trial-lock");
-    setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, 320);
-  }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && box) dismiss();
+  });
 
   function gate() {
     dead = true;
@@ -81,7 +102,7 @@
         "<li>🔒 No spam, we never post for you</li>" +
       "</ul>",
       '<a class="trial__go" href="login.html">CREATE MY FREE ACCOUNT →</a>' +
-      '<a class="trial__ghost" href="login.html">I already have one, sign in</a>'
+      '<button type="button" class="trial__ghost" data-trial-later style="background:none;border:none;cursor:pointer;width:100%;font:700 12.5px \'Space Grotesk\',sans-serif;color:#6b6656;text-decoration:underline;padding:6px 0 2px;">Keep reading as a guest</button>'
     );
   }
 
@@ -89,6 +110,10 @@
   function tick() {
     if (dead || signedIn() || !onboarded()) return;
     if (document.visibilityState !== "visible") return;
+    try {
+      var sn = sessionStorage.getItem("tsb_trial_snooze");
+      if (sn && (Date.now() - Number(sn)) < 600000) return;
+    } catch (e) {}
     st.used += 1;
     if (st.used >= LIMIT) { set("tsb_trial", st); gate(); return; }
     if (st.used % 5 === 0) set("tsb_trial", st);
@@ -96,6 +121,10 @@
 
   function boot() {
     if (!onboarded() || signedIn()) return;
+    try {
+      var sn = sessionStorage.getItem("tsb_trial_snooze");
+      if (sn && (Date.now() - Number(sn)) < 600000) return;
+    } catch (e) {}
     if (st.used >= LIMIT) { gate(); return; }
     setInterval(tick, 1000);
   }

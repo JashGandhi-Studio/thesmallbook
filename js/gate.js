@@ -63,7 +63,8 @@
     var w = document.createElement("div");
     w.className = "gatewrap";
     w.innerHTML =
-      '<div class="gate" role="dialog" aria-modal="true" aria-label="Sign in to keep reading">' +
+      '<div class="gate" role="dialog" aria-modal="true" aria-label="Sign in to keep reading" style="position:relative;">' +
+        '<button type="button" class="gate__x" aria-label="Close" style="position:absolute;top:14px;right:16px;background:none;border:none;font:800 22px sans-serif;cursor:pointer;color:#111;z-index:10;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;">✕</button>' +
         '<div class="gate__icon">📚</div>' +
         "<h2>You’ve read a whole stack!</h2>" +
         "<p>Every book here is <b>free to read</b>, no card, no catch, no ads. " +
@@ -74,11 +75,20 @@
       "</div>";
     document.body.appendChild(w);
     requestAnimationFrame(function () { w.classList.add("on"); });
+    function closeGate() {
+      lsSet("tsb_gate_snooze", Date.now());
+      w.classList.remove("on");
+      window.setTimeout(function () { if (w.parentNode) w.parentNode.removeChild(w); }, 260);
+    }
     w.addEventListener("click", function (e) {
-      if (e.target.closest("[data-later]")) {
-        lsSet("tsb_gate_snooze", Date.now());
-        w.classList.remove("on");
-        window.setTimeout(function () { if (w.parentNode) w.parentNode.removeChild(w); }, 260);
+      if (e.target === w || e.target.closest("[data-later]") || e.target.closest(".gate__x")) {
+        closeGate();
+      }
+    });
+    document.addEventListener("keydown", function onEsc(e) {
+      if (e.key === "Escape" && w.parentNode) {
+        document.removeEventListener("keydown", onEsc);
+        closeGate();
       }
     });
   }

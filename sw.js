@@ -54,48 +54,88 @@ const APP_SHELL = [
   "./js/store-data.js",
   "./css/store.css",
   "./assets/logos/adobe-tile.png",
+  "./assets/logos/adobe.svg",
   "./assets/logos/airtel.png",
   "./assets/logos/ajio-tile.svg",
+  "./assets/logos/ajio.svg",
   "./assets/logos/amazon-tile.png",
-  "./assets/logos/swiggy.png",
   "./assets/logos/amazon.svg",
   "./assets/logos/apple.svg",
   "./assets/logos/audible.svg",
   "./assets/logos/axis.png",
+  "./assets/logos/bigbasket.svg",
+  "./assets/logos/blinkit-tile.png",
+  "./assets/logos/blinkit.png",
   "./assets/logos/bookmyshow.svg",
   "./assets/logos/canva.png",
   "./assets/logos/coursera.png",
   "./assets/logos/cred.svg",
   "./assets/logos/cultfit-tile.svg",
+  "./assets/logos/cultfit.svg",
+  "./assets/logos/dominos-tile.png",
+  "./assets/logos/dominos.svg",
   "./assets/logos/duolingo-tile.svg",
+  "./assets/logos/duolingo.svg",
+  "./assets/logos/eatclub-tile.svg",
+  "./assets/logos/eatclub.svg",
   "./assets/logos/firstcry-tile.svg",
+  "./assets/logos/firstcry.svg",
   "./assets/logos/flipkart.png",
   "./assets/logos/github.png",
   "./assets/logos/grammarly-tile.svg",
+  "./assets/logos/grammarly.svg",
   "./assets/logos/hdfc.png",
   "./assets/logos/headspace-tile.svg",
+  "./assets/logos/headspace.svg",
   "./assets/logos/hotstar-tile.png",
+  "./assets/logos/hotstar.svg",
   "./assets/logos/indigo-tile.svg",
+  "./assets/logos/indigo.svg",
   "./assets/logos/irctc-tile.svg",
+  "./assets/logos/irctc.svg",
   "./assets/logos/jio.png",
+  "./assets/logos/kfc-tile.svg",
+  "./assets/logos/kfc.svg",
   "./assets/logos/lenskart-tile.svg",
+  "./assets/logos/lenskart.svg",
   "./assets/logos/makemytrip.png",
+  "./assets/logos/mcdonalds-tile.svg",
+  "./assets/logos/mcdonalds.svg",
   "./assets/logos/meesho-tile.png",
+  "./assets/logos/meesho.svg",
   "./assets/logos/myntra-tile.png",
+  "./assets/logos/myntra.svg",
   "./assets/logos/netflix-tile.svg",
+  "./assets/logos/netflix.svg",
   "./assets/logos/notion.svg",
   "./assets/logos/nykaa-tile.png",
+  "./assets/logos/nykaa.svg",
+  "./assets/logos/ola-tile.png",
+  "./assets/logos/ola.svg",
   "./assets/logos/perplexity-tile.svg",
+  "./assets/logos/perplexity.svg",
+  "./assets/logos/pizzahut-tile.png",
+  "./assets/logos/pizzahut.svg",
   "./assets/logos/redbus.png",
   "./assets/logos/sbi.png",
   "./assets/logos/skillshare.svg",
   "./assets/logos/sonyliv-tile.png",
+  "./assets/logos/sonyliv.svg",
   "./assets/logos/spotify.svg",
   "./assets/logos/storytel.png",
+  "./assets/logos/swiggy.png",
   "./assets/logos/thesmallbook-tile.svg",
+  "./assets/logos/thesmallbook.svg",
+  "./assets/logos/uber-tile.png",
+  "./assets/logos/uber.svg",
   "./assets/logos/udemy.svg",
   "./assets/logos/youtube.png",
   "./assets/logos/zee5-tile.png",
+  "./assets/logos/zee5.svg",
+  "./assets/logos/zepto-tile.png",
+  "./assets/logos/zepto.png",
+  "./assets/logos/zomato-tile.svg",
+  "./assets/logos/zomato.svg",
   "./js/affiliate.js",
   "./css/style.css",
   "./js/prefs.js",
@@ -219,9 +259,26 @@ self.addEventListener("fetch", (e) => {
        They load from the phone, not the network: after the first visit every
        page, book and podcast opens instantly, even on the slowest connection.
        HTML above stays fresh-first so updates still land the moment they ship. */
+    if (e.request.cache === "reload" || e.request.cache === "no-cache") {
+      return fetch(e.request).then((res) => {
+        if (res.ok && res.status === 200) {
+          const copy = res.clone();
+          caches.open(CACHE_VERSION).then((c) => c.put(e.request, copy));
+        }
+        return res;
+      });
+    }
     return caches.open(CACHE_VERSION).then(async (c) => {
       const hit = await c.match(e.request);
-      if (hit) return hit;
+      if (hit) {
+        /* background revalidation for code so updates land without clearing phone cache */
+        if (/\.(js|css)$/.test(url.pathname)) {
+          fetch(e.request).then((res) => {
+            if (res && res.ok && res.status === 200) c.put(e.request, res.clone());
+          }).catch(() => {});
+        }
+        return hit;
+      }
       const res = await fetch(e.request);
       if (res.ok && res.status === 200) c.put(e.request, res.clone());
       return res;

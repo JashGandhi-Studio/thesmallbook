@@ -1004,7 +1004,29 @@ document.getElementById("quoteBtn").addEventListener("click", function () { loca
     });
 
 
-    document.getElementById("writeBtn").addEventListener("click", function () { location.href = "write.html"; });
+    function checkAuthForWrite() {
+      if (C && C.signedIn && C.signedIn()) return true;
+      var existing = document.getElementById("tsbAuthGateBlur");
+      if (existing) existing.remove();
+      var gate = document.createElement("div");
+      gate.id = "tsbAuthGateBlur";
+      gate.className = "tsb-auth-gate-blur";
+      gate.innerHTML = '<div class="tsb-auth-gate-card">' +
+        '<svg class="inline-svg" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 12px;display:block;"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>' +
+        '<h3 style="font-family:var(--font-head);font-size:1.25rem;margin:0 0 8px;color:var(--ink);">Sign in to Write</h3>' +
+        '<p style="font-size:0.88rem;line-height:1.5;color:var(--sub,#555);margin:0 0 20px;">Please sign in or create an account to publish your own takeaways, voice stories, and participate in community discussions.</p>' +
+        '<a href="login.html" class="tsb-auth-gate-btn">SIGN IN / CREATE ACCOUNT →</a>' +
+        '<button type="button" id="tsbAuthGateDismiss" class="tsb-auth-gate-cancel">Continue reading stories</button>' +
+        '</div>';
+      document.body.appendChild(gate);
+      document.getElementById("tsbAuthGateDismiss").addEventListener("click", function () { gate.remove(); });
+      return false;
+    }
+
+    document.getElementById("writeBtn").addEventListener("click", function () {
+      if (!checkAuthForWrite()) return;
+      location.href = "write.html";
+    });
     // v244: no separate Inspire button on Stories, Inspire Desk lives INSIDE the quote & story card in Write (perfectly embedded, as decided)
 
     document.getElementById("reelsTrack").addEventListener("click", function (e) {

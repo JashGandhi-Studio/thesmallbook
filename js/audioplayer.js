@@ -116,7 +116,7 @@
       "#tsbAp{position:fixed;left:10px;right:10px;bottom:74px;z-index:255;background:var(--paper);border:3px solid var(--ink);border-radius:22px;box-shadow:5px 6px 0 var(--ink);padding:9px 12px 12px;display:flex;align-items:center;gap:9px;animation:apDockIn .42s cubic-bezier(.18,1.16,.3,1)}" +
       "@keyframes apDockIn{from{transform:translateY(120px);opacity:0}to{transform:none;opacity:1}}" +
       "#tsbAp .ap-artwrap{position:relative;flex:0 0 auto}" +
-      "#tsbAp .ap-art{width:48px;height:48px;border:3px solid var(--ink);border-radius:15px;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;box-shadow:2.5px 2.5px 0 var(--ink)}" +
+      "#tsbAp .ap-art{width:48px;height:48px;border:3px solid var(--ink);border-radius:15px;background:var(--yellow);color:var(--on-accent,#111111);display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;box-shadow:2.5px 2.5px 0 var(--ink)}" +
       "#tsbAp.ap-on .ap-art{animation:apArtPulse 2.6s ease-in-out infinite}" +
       "@keyframes apArtPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}" +
       "#tsbAp .ap-art img{width:100%;height:100%;object-fit:cover}" +
@@ -141,7 +141,7 @@
       /* dock buttons: quiet prev/next, one heavy yellow play */
       "#tsbAp .ap-prev,#tsbAp .ap-next{border:none;background:transparent;width:38px;height:44px;color:var(--ink);cursor:pointer;flex:0 0 auto;display:flex;align-items:center;justify-content:center;opacity:.85;transition:transform .12s,opacity .15s}" +
       "#tsbAp .ap-prev:active,#tsbAp .ap-next:active{transform:scale(.85)}" +
-      "#tsbAp .ap-play{border:3px solid var(--ink);background:var(--yellow);border-radius:50%;width:54px;height:54px;color:var(--ink);cursor:pointer;flex:0 0 auto;display:flex;align-items:center;justify-content:center;box-shadow:3px 3.5px 0 var(--ink);transition:transform .12s,box-shadow .12s}" +
+      "#tsbAp .ap-play{border:3px solid var(--ink);background:var(--yellow);border-radius:50%;width:54px;height:54px;color:var(--on-accent,#111111);cursor:pointer;flex:0 0 auto;display:flex;align-items:center;justify-content:center;box-shadow:3px 3.5px 0 var(--ink);transition:transform .12s,box-shadow .12s}" +
       "#tsbAp .ap-play:active{transform:translate(2px,2.5px);box-shadow:none}" +
       "#tsbAp .ap-list{border:2.5px solid var(--ink);background:var(--paper);border-radius:13px;width:40px;height:44px;color:var(--ink);cursor:pointer;flex:0 0 auto;display:flex;align-items:center;justify-content:center;box-shadow:2.5px 2.5px 0 var(--ink);transition:transform .12s,box-shadow .12s}" +
       "#tsbAp .ap-list:active{transform:translate(1.5px,1.5px);box-shadow:none}" +
@@ -158,16 +158,16 @@
       ".ap-head{position:sticky;top:0;z-index:3;background:var(--paper);margin:0 -18px 4px;padding:8px 16px 9px;touch-action:none}" +
       ".ap-grip{display:block;width:46px;height:5px;border-radius:99px;background:var(--ink);opacity:.25;margin:0 auto 10px}" +
       ".ap-headrow{display:flex;align-items:center;gap:10px}" +
-      ".ap-ribbon{display:inline-flex;align-items:center;gap:9px;background:var(--yellow);border:2.5px solid var(--ink);border-radius:999px;padding:8px 14px;font:800 10px 'Archivo Black','Arial Black',sans-serif;letter-spacing:1.2px;color:var(--ink);box-shadow:2.5px 2.5px 0 var(--ink)}" +
+      ".ap-ribbon{display:inline-flex;align-items:center;gap:9px;background:var(--yellow);border:2.5px solid var(--ink);border-radius:999px;padding:8px 14px;font:800 10px 'Archivo Black','Arial Black',sans-serif;letter-spacing:1.2px;color:var(--on-accent,#111111);box-shadow:2.5px 2.5px 0 var(--ink)}" +
       ".ap-ribbon .ap-eq{height:12px}" +
       ".ap-x{margin-left:auto;width:37px;height:37px;border:2.5px solid var(--ink);background:var(--red);border-radius:50%;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:2.5px 2.5px 0 var(--ink);transition:transform .12s,box-shadow .12s;flex:0 0 auto}" +
       ".ap-x:active{transform:translate(2px,2px);box-shadow:none}" +
       /* continue-where-you-left */
-      ".ap-cont{width:100%;border:3px solid var(--ink);background:var(--green);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:13px;font:800 11.5px 'Archivo Black','Arial Black',sans-serif;color:var(--ink);cursor:pointer;margin:8px 0 6px;display:flex;align-items:center;justify-content:center;gap:9px;text-align:left}" +
+      ".ap-cont{width:100%;border:3px solid var(--ink);background:var(--green);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:13px;font:800 11.5px 'Archivo Black','Arial Black',sans-serif;color:var(--on-accent,#111111);cursor:pointer;margin:8px 0 6px;display:flex;align-items:center;justify-content:center;gap:9px;text-align:left}" +
       ".ap-cont:active{transform:translate(2px,2px);box-shadow:none}" +
       /* the hero: big tilted art, big type */
       ".ap-hero{display:flex;gap:16px;align-items:center;margin:14px 2px 14px}" +
-      ".ap-art--big{flex:0 0 auto;width:148px;height:148px;border:3.5px solid var(--ink);border-radius:24px;background:var(--yellow);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:5px 6px 0 var(--ink);transform:rotate(-2.5deg)}" +
+      ".ap-art--big{flex:0 0 auto;width:148px;height:148px;border:3.5px solid var(--ink);border-radius:24px;background:var(--yellow);color:var(--on-accent,#111111);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:5px 6px 0 var(--ink);transform:rotate(-2.5deg)}" +
       ".ap-art--big img{width:100%;height:100%;object-fit:cover}" +
       ".ap-npwrap{flex:1;min-width:0}" +
       ".ap-np-t{display:block;font:800 19px/1.22 'Space Grotesk',sans-serif;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
@@ -186,7 +186,7 @@
       ".ap-jump:active{transform:scale(.85)}" +
       ".ap-skip{border:2.5px solid var(--ink);background:var(--paper);border-radius:999px;height:46px;min-width:62px;padding:0 13px;color:var(--ink);font:800 12px 'Space Grotesk',sans-serif;cursor:pointer;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:5px;box-shadow:2.5px 2.5px 0 var(--ink);transition:transform .12s,box-shadow .12s}" +
       ".ap-skip:active{transform:translate(1.5px,1.5px);box-shadow:none}" +
-      ".ap-playbig{width:80px;height:80px;border-radius:50%;border:3.5px solid var(--ink);background:var(--yellow);box-shadow:5px 6px 0 var(--ink);color:var(--ink);cursor:pointer;flex:0 0 auto;display:flex;align-items:center;justify-content:center;transition:transform .12s,box-shadow .12s}" +
+      ".ap-playbig{width:80px;height:80px;border-radius:50%;border:3.5px solid var(--ink);background:var(--yellow);box-shadow:5px 6px 0 var(--ink);color:var(--on-accent,#111111);cursor:pointer;flex:0 0 auto;display:flex;align-items:center;justify-content:center;transition:transform .12s,box-shadow .12s}" +
       ".ap-playbig:active{transform:translate(2.5px,3px);box-shadow:none}" +
       ".ap-part{display:block;width:max-content;margin:2px auto 14px;border:2.5px solid var(--ink);background:var(--bg);border-radius:999px;padding:8px 15px;font:800 10.5px 'Archivo Black','Arial Black',sans-serif;letter-spacing:1px;color:var(--ink)}" +
       ".ap-sleepnote{text-align:center;font:800 10.5px 'Space Grotesk',sans-serif;color:var(--ink);opacity:.65;margin:0 0 10px}" +
@@ -493,6 +493,9 @@
       (!isAudio ? '<div class="ap-lab">VOLUME BOOST</div><div class="ap-row">' +
         BOOSTS.map(function (b) { return '<button class="ap-chip ap-bo' + (boostPref() === b.g ? " on" : "") + '" data-bo="' + b.g + '">' + b.l + '</button>'; }).join("") +
       '</div>' : '') +
+      (isAudio && !/^ab:/.test(q.key) ? '<div class="ap-lab">PODCAST 300% VOLUME BOOST</div><div class="ap-row">' +
+        '<button class="ap-chip ap-pc-boost' + (podcastBoostOn() ? " on" : "") + '" data-pcboost="' + (podcastBoostOn() ? "0" : "1") + '">' + (podcastBoostOn() ? "⚡ 300% BOOST: ON" : "⚡ 300% BOOST: OFF") + '</button>' +
+      '</div>' : '') +
       '<div class="ap-lab">SLEEP TIMER</div><div class="ap-row">' +
         SLEEPS.map(function (m) { return '<button class="ap-chip ap-sl" data-sl="' + m + '">' + (m === 0 ? "OFF" : m + " min") + '</button>'; }).join("") +
         (sl ? '<span class="ap-chip on" id="apSleepLeft">' + sl + ' min left</span>' : '') +
@@ -629,6 +632,14 @@
         toast("🔊 Boost " + boostLabel(boostPref()) + ".");
       });
     });
+    sheet.querySelectorAll(".ap-pc-boost").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var turnOn = b.getAttribute("data-pcboost") === "1";
+        setPodcastBoost(turnOn);
+        openSheet();
+        toast(turnOn ? "🔊 Podcast 300% Boost Activated!" : "🔈 Podcast Volume Boost Off.");
+      });
+    });
     sheet.querySelectorAll(".ap-qi").forEach(function (el) {
       el.addEventListener("click", function (e) {
         /* v323: the save chip lives inside the row - it saves, it never plays */
@@ -685,7 +696,21 @@
   /* volume boost: real gain via WebAudio. Archive.org serves CORS headers,
      so element-source routing is safe there; other hosts get a clean element. */
   var actx = null, gainNode = null, mediaSrc = null;
-  var BOOSTKEY = "tsb_ab_boost", SLEEPKEY = "tsb_sleep_until";
+  var BOOSTKEY = "tsb_ab_boost", SLEEPKEY = "tsb_sleep_until", PCBOOSTKEY = "tsb_pc_boost";
+  function podcastBoostOn() { return jget(PCBOOSTKEY, 0) === 1; }
+  function setPodcastBoost(on) {
+    jset(PCBOOSTKEY, on ? 1 : 0);
+    if (!AU) return;
+    if (on) {
+      try { AU.crossOrigin = "anonymous"; } catch (e) {}
+      if (ensureGraph(AU)) {
+        gainNode.gain.value = 3.0; /* 300% volume boost */
+        if (actx && actx.resume) actx.resume();
+      }
+    } else {
+      if (gainNode) gainNode.gain.value = 1.0;
+    }
+  }
   /* what the chips say and what they really do: +50% is a true 150%,
      +100% is a true 300% - the compressor keeps 300% loud, not shredded */
   var BOOSTS = [{ g: 1, l: "OFF" }, { g: 1.5, l: "+50%" }, { g: 3, l: "+100%" }, { g: 4.75, l: "150%" }];   /* v321: the 150% chip - honest words outside, the full circuit inside (about 475% of the original signal) */
@@ -972,8 +997,13 @@
       /* v322: a podcast stream must never meet the graph at all */
       if (q && !/^ab:/.test(q.key) && gainNode) { try { au.crossOrigin = null; } catch (eX) {} }
     } else {
-      try { au.removeAttribute && au.removeAttribute("crossorigin"); } catch (e) {}
-      if (gainNode) gainNode.gain.value = 1;
+      if (podcastBoostOn()) {
+        try { au.crossOrigin = "anonymous"; } catch (e) {}
+        if (ensureGraph(au)) gainNode.gain.value = 3.0;
+      } else {
+        try { au.removeAttribute && au.removeAttribute("crossorigin"); } catch (e) {}
+        if (gainNode) gainNode.gain.value = 1;
+      }
     }
     au.src = it.src;
     au.playbackRate = jget(SPEEDKEY, 1);

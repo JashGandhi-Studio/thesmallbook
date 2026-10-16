@@ -30,12 +30,11 @@
   if (!path) path = "index.html";
 
   /* ---------- outline icons (stroke = currentColor) ---------- */
-  var SVG_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+  var SVG_OPEN = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
   var ICO = {
     home: SVG_OPEN + '<path d="M3 10.4 12 3l9 7.4"/><path d="M5.6 8.9V21h12.8V8.9"/><path d="M9.9 21v-6.3h4.2V21"/></svg>',
-    read: SVG_OPEN + '<path d="M12 6.9C10.6 5.1 8.4 4.1 5.7 4.1H2.9v13.5h3.3c2.5 0 4.5 1 5.8 2.8 1.3-1.8 3.3-2.8 5.8-2.8h3.3V4.1h-2.8c-2.7 0-4.9 1-6.3 2.8Z"/><path d="M12 6.9v13.5"/></svg>',
-    plus: SVG_OPEN + '<path d="M12 5.6v12.8M5.6 12h12.8"/></svg>',
-    chat: SVG_OPEN + '<path d="M21 11.6a8.4 8.4 0 0 1-8.5 8.3 8.9 8.9 0 0 1-3.7-.8L3 20.6l1.6-5.5a8 8 0 0 1-.9-3.6 8.4 8.4 0 0 1 8.6-8.2 8.4 8.4 0 0 1 8.7 8.3Z"/></svg>',
+    audio: SVG_OPEN + '<path d="M3 14v-3a9 9 0 0 1 18 0v3"/><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="17" y="12" width="4" height="9" rx="1"/></svg>',
+    stories: SVG_OPEN + '<path d="M12 6.9C10.6 5.1 8.4 4.1 5.7 4.1H2.9v13.5h3.3c2.5 0 4.5 1 5.8 2.8 1.3-1.8 3.3-2.8 5.8-2.8h3.3V4.1h-2.8c-2.7 0-4.9 1-6.3 2.8Z"/><path d="M12 6.9v13.5"/></svg>',
     you:  SVG_OPEN + '<circle cx="12" cy="7.6" r="3.6"/><path d="M4.9 20.4v-1.1a5.4 5.4 0 0 1 5.4-5.4h3.4a5.4 5.4 0 0 1 5.4 5.4v1.1"/></svg>'
   };
 
@@ -45,32 +44,23 @@
   }
   function currentActive() {
     var p = pageName();
-    if (p === "index.html") return location.hash === "#library" ? "read" : "home";
-    if (p === "book.html") return "read";
-    if (p === "stories.html" || p === "story.html") return "scan";
-    if (p === "chat.html") return "chat";
-    if (p === "login.html" || p === "settings.html" || p === "profile.html") return "you";
+    if (p === "index.html") return "home";
+    if (p === "podcasts.html") return "audio";
+    if (p === "stories.html" || p === "story.html" || p === "write.html") return "stories";
+    if (p === "login.html" || p === "settings.html" || p === "profile.html" || p === "you.html") return "you";
     return "";
   }
   var active = currentActive();
 
-  var onIndex = path === "index.html";
-  /* chat carries the current book so the page keeps its context chips */
-  var bookCtx = "";
-  if (path === "book.html") {
-    var m = location.search.match(/[?&]id=([\w-]+)/);
-    if (m) bookCtx = "?book=" + encodeURIComponent(m[1]);
-  }
-
   var bar = document.createElement("nav");
   bar.id = "tsbBar";
-  bar.className = "tsb-bar tsb-bar--off"; /* parked below the screen */
+  bar.className = "tsb-bar tsb-bar--off ed-mobile-nav"; /* parked below the screen */
   bar.setAttribute("aria-label", "Main");
   bar.innerHTML =
     '<a class="tsb-bar__item' + (active === "home" ? " is-active" : "") + '" data-tab="home" href="index.html"' + (active === "home" ? ' aria-current="page"' : "") + '>' + ICO.home + '<span class="tsb-bar__lbl">Home</span></a>' +
-    '<a class="tsb-bar__item' + (active === "read" ? " is-active" : "") + '" data-tab="read" href="' + (onIndex ? "#library" : "index.html#library") + '"' + (active === "read" ? ' aria-current="page"' : "") + '>' + ICO.read + '<span class="tsb-bar__lbl">Read</span></a>' +
-    '<a class="tsb-bar__item tsb-bar__item--plus' + (active === "scan" ? " is-active" : "") + '" data-tab="scan" href="stories.html" aria-label="Stories">' + '<span class="tsb-bar__plus">' + ICO.plus + "</span></a>" +
-    '<a class="tsb-bar__item' + (active === "chat" ? " is-active" : "") + '" data-tab="chat" href="chat.html' + bookCtx + '"' + (active === "chat" ? ' aria-current="page"' : "") + '>' + ICO.chat + '<span class="tsb-bar__lbl">Chat</span></a>' +
+    '<a class="tsb-bar__item' + (active === "audio" ? " is-active" : "") + '" data-tab="audio" href="podcasts.html"' + (active === "audio" ? ' aria-current="page"' : "") + '>' + ICO.audio + '<span class="tsb-bar__lbl">Audio Room</span></a>' +
+    '<a class="tsb-bar__item tsb-bar__item--plus' + (active === "stories" ? " is-active" : "") + '" data-tab="stories" href="stories.html" aria-label="Stories & Audio"><div class="tsb-bar__plus"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div></a>' +
+    '<a class="tsb-bar__item' + (active === "stories" ? " is-active" : "") + '" data-tab="stories" href="stories.html"' + (active === "stories" ? ' aria-current="page"' : "") + '>' + ICO.stories + '<span class="tsb-bar__lbl">Stories</span></a>' +
     '<a class="tsb-bar__item' + (active === "you" ? " is-active" : "") + '" data-tab="you" href="login.html"' + (active === "you" ? ' aria-current="page"' : "") + '>' + ICO.you + '<span class="tsb-bar__lbl">You</span></a>';
 
   document.body.appendChild(bar);
@@ -95,16 +85,9 @@
     if (!item) return;
     var id = item.getAttribute("data-tab");
 
-    /* YOU: signed-out readers get the premium sign-in sheet first */
+    /* YOU: always allow direct navigation to account / login page */
     if (id === "you") {
-      var u = null;
-      try { u = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null; } catch (err) {}
-      if (!u && window.TSB_AUTH && TSB_AUTH.openSheet) {
-        e.preventDefault();
-        TSB_AUTH.openSheet();
-        return;
-      }
-      return; /* signed in (or auth off) → normal link to the account page */
+      return; /* direct link to login.html */
     }
 
     /* READ on the home page → glide to the shelf, highlight follows */
@@ -126,11 +109,26 @@
       return;
     }
 
-    /* tapping the tab you're already on (Home/Read/Stories/Chat/You):
+    /* tapping the tab you're already on (Home/Audiobooks/Stories/You):
        1st tap glides to top silently, a quick 2nd tap says "you're here" */
     if (item.classList.contains("is-active")) {
       e.preventDefault();
       sameTabTap(id);
+      return;
+    }
+
+    /* instant view transition navigation if supported */
+    var href = item.getAttribute("href");
+    if (href && href !== location.pathname && href !== pageName()) {
+      if (document.startViewTransition) {
+        e.preventDefault();
+        try { if (navigator.vibrate) navigator.vibrate(8); } catch (err) {}
+        setActive(id);
+        document.startViewTransition(function () {
+          location.href = href;
+        });
+        return;
+      }
     }
   });
 
@@ -145,7 +143,7 @@
   }
 
   /* clean paper toast, matches the app, never a black box */
-  var NAMES = { home: "Home", read: "Read", scan: "Stories", chat: "Chat", you: "You" };
+  var NAMES = { home: "Home", audio: "Audiobooks", stories: "Stories", you: "You" };
   function cleanToast(msg) {
     try {
       document.querySelectorAll(".tsb-clean-toast").forEach(function (x) { x.parentNode.removeChild(x); });
@@ -221,4 +219,255 @@
     };
     window.addEventListener("scroll", onScroll, { passive: true });
   }
+
+  /* ---------- Instagram-style horizontal touch swipe navigation between tabs ---------- */
+  (function initSwipeNav() {
+    var TABS = [
+      { id: "home", url: "index.html" },
+      { id: "audio", url: "podcasts.html" },
+      { id: "stories", url: "stories.html" },
+      { id: "you", url: "login.html" }
+    ];
+
+    var startX = 0, startY = 0, startTime = 0;
+    var tracking = false;
+
+    function isScrollableX(el) {
+      var cur = el;
+      while (cur && cur !== document.body && cur !== document.documentElement) {
+        if (cur.scrollWidth > cur.clientWidth + 12) {
+          try {
+            var ov = window.getComputedStyle(cur).overflowX;
+            if (ov === "auto" || ov === "scroll") return true;
+          } catch (e) {}
+        }
+        if (cur.classList && (
+          cur.classList.contains("cm-rail") ||
+          cur.classList.contains("filters") ||
+          cur.classList.contains("dailytrio-shelf__scroll") ||
+          cur.classList.contains("goldgrid") ||
+          cur.classList.contains("goldgrid--collapsed") ||
+          cur.classList.contains("tsb-sheet") ||
+          cur.classList.contains("pc-rail")
+        )) return true;
+        cur = cur.parentElement;
+      }
+      return false;
+    }
+
+    function isInputOrModal(el) {
+      if (!el) return false;
+      var tag = (el.tagName || "").toLowerCase();
+      if (tag === "input" || tag === "textarea" || tag === "select" || el.isContentEditable) return true;
+      if (el.closest("dialog[open], .personal-dialog, .tsb-sheetwrap--on, .gold-celebrate, .audio-modal, .aq-panel--open, #tsbCheat")) return true;
+      return false;
+    }
+
+    window.addEventListener("touchstart", function (e) {
+      if (e.touches.length !== 1) { tracking = false; return; }
+      var t = e.touches[0];
+      startX = t.clientX;
+      startY = t.clientY;
+      startTime = Date.now();
+
+      var w = window.innerWidth || document.documentElement.clientWidth;
+      if (startX < 24 || startX > w - 24) { tracking = false; return; }
+
+      if (isInputOrModal(e.target) || isScrollableX(e.target)) {
+        tracking = false;
+        return;
+      }
+      tracking = true;
+    }, { passive: true });
+
+    window.addEventListener("touchend", function (e) {
+      if (!tracking || !e.changedTouches || e.changedTouches.length !== 1) { tracking = false; return; }
+      tracking = false;
+
+      var t = e.changedTouches[0];
+      var dx = t.clientX - startX;
+      var dy = t.clientY - startY;
+      var dt = Date.now() - startTime;
+
+      if (dt > 520) return;
+      if (Math.abs(dx) < 45) return;
+      if (Math.abs(dy) > Math.abs(dx) * 0.75) return;
+
+      var curTab = currentActive();
+      var idx = -1;
+      for (var i = 0; i < TABS.length; i++) {
+        if (TABS[i].id === curTab) { idx = i; break; }
+      }
+      if (idx === -1) return;
+
+      var nextIdx = -1;
+      if (dx < -45) {
+        /* Swipe Left (finger moves right to left) -> next tab */
+        if (idx < TABS.length - 1) nextIdx = idx + 1;
+      } else if (dx > 45) {
+        /* Swipe Right (finger moves left to right) -> prev tab */
+        if (idx > 0) nextIdx = idx - 1;
+      }
+
+      if (nextIdx !== -1 && nextIdx !== idx) {
+        var targetTab = TABS[nextIdx];
+        if (targetTab.id === "you") {
+          var u = null;
+          try { u = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null; } catch (err) {}
+          if (!u && window.TSB_AUTH && TSB_AUTH.openSheet) {
+            try { if (navigator.vibrate) navigator.vibrate(10); } catch (e) {}
+            TSB_AUTH.openSheet();
+            return;
+          }
+        }
+        try { if (navigator.vibrate) navigator.vibrate(10); } catch (e) {}
+        setActive(targetTab.id);
+        if (document.startViewTransition) {
+          document.startViewTransition(function () {
+            location.href = targetTab.url;
+          });
+        } else {
+          location.href = targetTab.url;
+        }
+      }
+    }, { passive: true });
+  })();
+
+  /* ============================================================
+     BACKGROUND TAB PRELOADING & SPECULATION ENGINE
+     Every core tab (index, podcasts, stories, login) pre-renders
+     in the background so navigation is 0-latency and feels native.
+     ============================================================ */
+  (function initTabPreload() {
+    var TABS_URLS = ["index.html", "podcasts.html", "stories.html", "login.html"];
+    var cur = pageName();
+
+    /* 1. Speculation Rules API (Chrome / Edge / Android) for zero-latency prerender */
+    try {
+      if (!document.getElementById("tsb-speculation-rules")) {
+        var spec = document.createElement("script");
+        spec.id = "tsb-speculation-rules";
+        spec.type = "speculationrules";
+        spec.textContent = JSON.stringify({
+          prerender: [
+            { source: "list", urls: TABS_URLS, eagerness: "immediate" }
+          ]
+        });
+        document.head.appendChild(spec);
+      }
+    } catch (e1) {}
+
+    /* 2. Standard link rel="prefetch" & rel="prerender" for all browsers */
+    try {
+      TABS_URLS.forEach(function (u) {
+        if (u === cur) return;
+        if (!document.querySelector('link[rel="prefetch"][href="' + u + '"]')) {
+          var l = document.createElement("link");
+          l.rel = "prefetch";
+          l.href = u;
+          l.as = "document";
+          document.head.appendChild(l);
+        }
+      });
+    } catch (e2) {}
+
+    /* 3. Fast idle pre-cache fetch into browser HTTP cache */
+    var warmFetch = function () {
+      TABS_URLS.forEach(function (u) {
+        if (u === cur) return;
+        try {
+          fetch(u, { priority: "low", cache: "force-cache" }).catch(function () {});
+        } catch (e3) {}
+      });
+    };
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(warmFetch, { timeout: 1500 });
+    } else {
+      setTimeout(warmFetch, 800);
+    }
+  })();
+
+  /* ---------- 📱 INSTAGRAM-STYLE SMOOTH TOUCH SWIPING ---------- */
+  (function () {
+    var tabs = ["home", "audio", "stories", "you"];
+    var urls = {
+      home: "index.html",
+      audio: "podcasts.html",
+      stories: "stories.html",
+      you: "login.html"
+    };
+
+    var curTab = currentActive();
+    var curIdx = tabs.indexOf(curTab);
+    if (curIdx === -1) return;
+
+    var touchStartX = 0;
+    var touchStartY = 0;
+    var touchStartTime = 0;
+    var isSwiping = false;
+
+    function isInteractive(el) {
+      if (!el || !el.closest) return false;
+      return !!el.closest(
+        "input, textarea, select, button, a, [contenteditable], " +
+        ".pc-search__chips, .aq-chips, .ap-sheet, .modal, .st-modal, " +
+        "[data-swipe-ignore], pre, code, .horizontal-scroller, .pc-cats, .pc-livegrid, .pc-ab__mine, .pc-myshelf"
+      );
+    }
+
+    window.addEventListener("touchstart", function (e) {
+      if (e.touches.length !== 1) { isSwiping = false; return; }
+      if (isInteractive(e.target)) { isSwiping = false; return; }
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchStartTime = Date.now();
+      isSwiping = true;
+    }, { passive: true });
+
+    window.addEventListener("touchmove", function (e) {
+      if (!isSwiping || e.touches.length !== 1) return;
+      var dx = e.touches[0].clientX - touchStartX;
+      var dy = e.touches[0].clientY - touchStartY;
+      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 15) {
+        isSwiping = false;
+      }
+    }, { passive: true });
+
+    window.addEventListener("touchend", function (e) {
+      if (!isSwiping) return;
+      isSwiping = false;
+      var touchEndX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : 0;
+      var touchEndY = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY : 0;
+      var dx = touchEndX - touchStartX;
+      var dy = touchEndY - touchStartY;
+      var dt = Date.now() - touchStartTime;
+
+      if (dt > 500) return;
+      if (Math.abs(dy) > 65) return;
+      if (Math.abs(dx) < 65) return;
+
+      var targetIdx = -1;
+      if (dx < -65) {
+        if (curIdx < tabs.length - 1) targetIdx = curIdx + 1;
+      } else if (dx > 65) {
+        if (curIdx > 0) targetIdx = curIdx - 1;
+      }
+
+      if (targetIdx !== -1 && targetIdx !== curIdx) {
+        var targetTab = tabs[targetIdx];
+        var targetUrl = urls[targetTab];
+        if (targetUrl) {
+          try { if (navigator.vibrate) navigator.vibrate(10); } catch (err) {}
+          setActive(targetTab);
+          if (document.startViewTransition) {
+            document.startViewTransition(function () {
+              location.href = targetUrl;
+            });
+          } else {
+            location.href = targetUrl;
+          }
+        }
+      }
+    }, { passive: true });
+  })();
 })();
