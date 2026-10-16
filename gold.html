@@ -32,6 +32,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=323">
+  <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -39,42 +40,44 @@
     .goldwrap { max-width: 980px; margin: 0 auto; padding: 44px clamp(14px, 4vw, 40px) 60px; }
     .goldhero { text-align: center; margin-bottom: 34px; }
     .goldhero__badge {
-      display: inline-block; font-family: "Archivo Black", sans-serif; font-size: 13px; letter-spacing: 3px;
-      background: linear-gradient(135deg, #ffc800, #ff8a3d); color: #111;
+      display: inline-flex; align-items: center; gap: 8px; font-family: "Archivo Black", sans-serif; font-size: 12px; letter-spacing: 2px;
+      background: var(--yellow); color: #111;
       border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
-      padding: 9px 20px; margin-bottom: 20px; transform: rotate(-1deg);
-      animation: goldGlow 2.4s ease-in-out infinite;
+      border-radius: 999px; padding: 7px 18px; margin-bottom: 20px;
     }
-    @keyframes goldGlow { 0%,100% { box-shadow: 4px 4px 0 var(--ink); } 50% { box-shadow: 4px 4px 0 var(--ink), 0 0 0 8px rgba(255,200,0,.15); } }
     .goldhero h1 { font-family: "Archivo Black", sans-serif; font-size: clamp(1.9rem, 5.5vw, 3rem); line-height: 1.12; }
     .goldhero h1 .hl { background: var(--yellow); border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); padding: 2px 12px; display: inline-block; }
     html.dark .goldhero h1 .hl { color: #111; }
     .goldhero__sub { max-width: 560px; margin: 18px auto 0; font-size: 15.5px; color: #555; line-height: 1.65; }
     html.dark .goldhero__sub { color: #c9c2b2; }
-    html.dark .goldhero__price { background: #17130b; }
     .goldhero__price {
       display: inline-block; margin-top: 20px;
-      background: var(--ink); color: var(--yellow);
-      border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--red);
-      font-family: "Archivo Black", sans-serif; font-size: 17px; letter-spacing: 1px;
+      background: var(--paper); color: var(--ink);
+      border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink);
+      border-radius: 14px;
+      font-family: "Archivo Black", sans-serif; font-size: 15px; letter-spacing: .5px;
       padding: 13px 24px;
     }
-    .goldhero__price small { display: block; font-family: "Space Grotesk", sans-serif; font-size: 11.5px; letter-spacing: 0; color: #c9c2b2; font-weight: 600; margin-top: 3px; }
+    html.dark .goldhero__price { background: #17130b; }
+    .goldhero__price small { display: block; font-family: "Space Grotesk", sans-serif; font-size: 11.5px; letter-spacing: 0; color: #666; font-weight: 700; margin-top: 4px; }
+    html.dark .goldhero__price small { color: #b5ac9b; }
 
     .goldgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 30px 0; }
     @media (max-width: 680px) { .goldgrid { grid-template-columns: 1fr; } }
-    .goldcard { background: var(--paper); border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); padding: 20px 18px; }
-    .goldcard:nth-child(1) { box-shadow: 5px 5px 0 var(--yellow); }
-    .goldcard:nth-child(2) { box-shadow: 5px 5px 0 var(--pink); }
-    .goldcard:nth-child(3) { box-shadow: 5px 5px 0 var(--blue); }
-    .goldcard:nth-child(4) { box-shadow: 5px 5px 0 var(--green); }
-    .goldcard .e { font-size: 30px; }
+    .goldcard { background: var(--paper); border: 3px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); border-radius: 16px; padding: 22px 20px; }
+    html.dark .goldcard { background: #1c1813; }
+    .goldcard__icon {
+      width: 44px; height: 44px; border-radius: 12px; border: 2.5px solid var(--ink);
+      background: var(--yellow); color: #111; box-shadow: 2.5px 2.5px 0 var(--ink);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 12px;
+    }
     .goldcard h3 { font-family: "Archivo Black", sans-serif; font-size: 16px; margin: 8px 0 4px; letter-spacing: .5px; }
     .goldcard p { font-size: 13px; color: #555; line-height: 1.55; }
     html.dark .goldcard p { color: #c9c2b2; }
-    .goldcard .soon { font-family: "Archivo Black", sans-serif; font-size: 10px; letter-spacing: 2px; background: var(--yellow); color: #111; border: 2px solid var(--ink); padding: 3px 9px; display: inline-block; margin-top: 8px; }
+    .goldcard .soon { font-family: "Archivo Black", sans-serif; font-size: 10px; letter-spacing: 2px; background: var(--yellow); color: #111; border: 2px solid var(--ink); border-radius: 6px; padding: 3px 9px; display: inline-block; margin-top: 8px; }
 
-    .goldjoin { background: var(--paper); border: 4px solid var(--ink); box-shadow: 8px 8px 0 var(--yellow); padding: 26px 22px; margin: 34px 0; }
+    .goldjoin { background: var(--paper); border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); border-radius: 18px; padding: 26px 22px; margin: 34px 0; }
+    html.dark .goldjoin { background: #1c1813; }
     .goldjoin h2 { font-family: "Archivo Black", sans-serif; font-size: 21px; margin-bottom: 4px; }
     .goldjoin > p { font-size: 13.5px; color: #555; margin-bottom: 16px; }
     html.dark .goldjoin > p { color: #c9c2b2; }
@@ -84,45 +87,46 @@
     .goldform input {
       width: 100%; border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink);
       padding: 12px 14px; font-family: inherit; font-size: 14px; background: #fff; color: var(--ink);
-      box-sizing: border-box; margin-bottom: 12px;
+      box-sizing: border-box; margin-bottom: 12px; border-radius: 10px;
     }
     .goldform button {
-      width: 100%; border: 3px solid var(--ink); background: linear-gradient(135deg, #ffc800, #ff8a3d);
+      width: 100%; border: 3px solid var(--ink); background: var(--yellow);
       color: #111; font-family: "Archivo Black", sans-serif; font-size: 14px; letter-spacing: 1px;
       padding: 14px 10px; cursor: pointer; box-shadow: 4px 4px 0 var(--ink); box-sizing: border-box;
+      border-radius: 12px; transition: transform .1s, box-shadow .1s;
     }
     .goldform button:hover { transform: translate(-1px,-1px); box-shadow: 6px 6px 0 var(--ink); }
     .goldform .tiny { font-size: 11px; color: #888; margin-top: 8px; text-align: center; }
     .goldupi { text-align: center; display: flex; flex-direction: column; justify-content: center; }
     .goldupi .upi { font-family: "Archivo Black", sans-serif; font-size: 15px; margin-bottom: 6px; }
-    .goldupi code { font-size: 14px; font-weight: 800; background: var(--yellow); border: 3px solid var(--ink); padding: 6px 12px; display: inline-block; margin-bottom: 12px; box-shadow: 3px 3px 0 var(--ink); }
+    .goldupi code { font-size: 14px; font-weight: 800; background: var(--yellow); border: 3px solid var(--ink); padding: 6px 12px; display: inline-block; margin-bottom: 12px; box-shadow: 3px 3px 0 var(--ink); border-radius: 8px; }
     .goldupi .pay {
       display: inline-block; border: 3px solid var(--ink); background: #00c48c; color: #111;
       font-family: "Archivo Black", sans-serif; font-size: 14px; letter-spacing: 1px;
       padding: 13px 26px; text-decoration: none; box-shadow: 4px 4px 0 var(--ink); margin-bottom: 8px;
+      border-radius: 12px; transition: transform .1s, box-shadow .1s;
     }
     .goldupi .pay:hover { transform: translate(-1px,-1px); box-shadow: 6px 6px 0 var(--ink); }
-    .goldupi .alt { font-size: 12px; color: #666; }
-    .goldupi .alt button { border: 2px solid var(--ink); background: var(--paper); font-family: "Archivo Black", sans-serif; font-size: 10px; padding: 5px 10px; cursor: pointer; }
+    .goldupi .alt { font-size: 12px; color: #666; margin-top: 4px; }
+    .goldupi .alt button { border: 2px solid var(--ink); background: var(--paper); font-family: "Archivo Black", sans-serif; font-size: 10px; padding: 5px 10px; cursor: pointer; border-radius: 6px; }
 
-    .goldhero__cta{display:inline-block;margin-top:16px;background:linear-gradient(135deg,#ffc800,#ff8a3d);color:#111;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);font-family:"Archivo Black",sans-serif;font-size:15px;letter-spacing:.5px;padding:14px 22px;text-decoration:none}
-    .goldhero__cta:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--ink)}
+    .goldhero__cta{display:inline-block;margin-top:16px;background:var(--yellow);color:#111;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);border-radius:12px;font-family:"Archivo Black",sans-serif;font-size:15px;letter-spacing:.5px;padding:14px 24px;text-decoration:none;transition:transform .12s,box-shadow .12s;}
+    .goldhero__cta:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
     .goldhero__trust{margin-top:10px;font-size:11.5px;color:#666}
     .goldhero__trust b{color:var(--ink)}
     @media(max-width:680px){.goldwrap{padding:22px 14px 80px} .goldhero h1{font-size:clamp(1.7rem,8vw,2.2rem)} .goldhero__sub{font-size:14px} .goldhero__cta{width:100%;box-sizing:border-box;text-align:center}}
     /* collapsed grid, show 4 first, hide rest behind expand (desktop only) */
     .goldgrid--collapsed .goldcard:nth-child(n+5){display:none}
     .goldmore{display:flex;justify-content:center;margin:-8px 0 28px}
-    .goldmore button{border:3px solid var(--ink);background:var(--paper);font-family:"Archivo Black",sans-serif;font-size:12px;letter-spacing:.5px;padding:12px 18px;box-shadow:3px 3px 0 var(--ink);cursor:pointer}
+    .goldmore button{border:3px solid var(--ink);background:var(--paper);font-family:"Archivo Black",sans-serif;font-size:12px;letter-spacing:.5px;padding:12px 18px;box-shadow:3px 3px 0 var(--ink);border-radius:10px;cursor:pointer}
     .goldmore button:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
     /* sticky, floating pill, perfect on mobile notch */
-    .gold-sticky{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(560px,calc(100% - 24px));z-index:90;background:#111;color:#fff;border:3px solid #111;border-radius:18px;box-shadow:0 10px 28px rgba(0,0,0,.35), 6px 6px 0 #ffc800;padding:12px 14px;display:none;align-items:center;justify-content:space-between;gap:14px}
-    .gold-sticky__price{font-family:"Archivo Black",sans-serif;font-size:15px;line-height:1;color:#ffc800}
+    .gold-sticky{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(560px,calc(100vw - 24px));z-index:90;background:#111;color:#fff;border:3px solid #111;border-radius:18px;box-shadow:0 10px 28px rgba(0,0,0,.35), 6px 6px 0 var(--yellow);padding:12px 16px;display:none;align-items:center;justify-content:space-between;gap:14px}
+    .gold-sticky__price{font-family:"Archivo Black",sans-serif;font-size:15px;line-height:1;color:var(--yellow)}
     .gold-sticky__price s{font-size:11px;color:#888;margin-left:6px}
     .gold-sticky__price small{display:block;font-family:"Space Grotesk",sans-serif;font-size:10px;color:#c9c2b2;letter-spacing:.3px}
-    .gold-sticky__urg{font-family:"Space Grotesk",sans-serif;font-size:10px;color:#ff8a3d;font-weight:700;margin-top:2px}
-    .gold-sticky__go{white-space:nowrap;border:3px solid #111;background:linear-gradient(135deg,#ffc800,#ff8a3d);color:#111;font-family:"Archivo Black",sans-serif;font-size:13px;padding:12px 18px;box-shadow:3px 3px 0 #fff;text-decoration:none;border-radius:12px;animation:goldPulse 1.8s infinite}
-    @keyframes goldPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+    .gold-sticky__urg{font-family:"Space Grotesk",sans-serif;font-size:10px;color:var(--yellow);font-weight:700;margin-top:2px}
+    .gold-sticky__go{white-space:nowrap;border:3px solid #111;background:var(--yellow);color:#111;font-family:"Archivo Black",sans-serif;font-size:13px;padding:12px 18px;box-shadow:3px 3px 0 #fff;text-decoration:none;border-radius:12px;}
     @media(max-width:680px){.gold-sticky{display:flex} html{scroll-behavior:smooth}}
     /* gold member, calm, professional */
     .gold-member{border-color:#111;box-shadow:8px 8px 0 #111;background:#fffdf5}
@@ -131,15 +135,15 @@
     .gold-celebrate{position:fixed;inset:0;z-index:9999;background:rgba(17,17,17,.68);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:goldCeleIn .28s ease}
     @keyframes goldCeleIn{from{opacity:0}to{opacity:1}}
     .gold-celebrate__card{position:relative;background:#fffdf5;border:3.5px solid #111;box-shadow:8px 8px 0 #111;border-radius:20px;padding:28px 24px 22px;max-width:420px;width:90%;text-align:left;overflow:hidden}
-    .gold-celebrate__card::before{content:"";position:absolute;left:0;top:0;right:0;height:6px;background:linear-gradient(90deg,#ffc800,#ff8a3d,#ffc800)}
-    .gold-celebrate__check{width:44px;height:44px;border-radius:999px;background:#111;color:#ffc800;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;border:2.5px solid #111;box-shadow:3px 3px 0 #ffc800;margin-bottom:14px}
+    .gold-celebrate__card::before{content:"";position:absolute;left:0;top:0;right:0;height:6px;background:var(--yellow)}
+    .gold-celebrate__check{width:44px;height:44px;border-radius:999px;background:#111;color:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;border:2.5px solid #111;box-shadow:3px 3px 0 var(--yellow);margin-bottom:14px}
     .gold-celebrate__card h2{font-family:"Archivo Black",sans-serif;font-size:20px;line-height:1.15;color:#111;margin:0 0 6px}
     .gold-celebrate__card p{font-family:"Space Grotesk",sans-serif;font-size:13.5px;line-height:1.55;color:#333;margin:0}
     .gold-celebrate__card .tiny{font-size:11.5px;color:#666;margin-top:8px;line-height:1.5}
     .gold-celebrate__actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
     .gold-celebrate__actions a,.gold-celebrate__actions button{flex:1;min-width:140px;border:3px solid #111;font-family:"Archivo Black",sans-serif;font-size:12.5px;padding:12px 14px;cursor:pointer;box-shadow:3px 3px 0 #111;border-radius:12px;text-decoration:none;text-align:center;transition:transform .12s,box-shadow .12s}
-    .gold-celebrate__actions a{background:linear-gradient(135deg,#ffc800,#ff8a3d);color:#111}
-    .gold-celebrate__actions button{background:#111;color:#ffc800}
+    .gold-celebrate__actions a{background:var(--yellow);color:#111}
+    .gold-celebrate__actions button{background:#111;color:var(--yellow)}
     .gold-celebrate__actions a:active,.gold-celebrate__actions button:active{transform:translate(1.5px,1.5px);box-shadow:1.5px 1.5px 0 #111}
     .gold-confetti{display:none !important}
     /* gold perks: horizontal swipe on mobile to avoid vertical scroll wall */
@@ -185,6 +189,7 @@
       .gcmp__cell { padding: 9px 10px; }
       .gcmp__cell::before { content: attr(data-col); font-family: "Archivo Black", sans-serif; font-size: 8.5px; letter-spacing: 1.5px; color: #999; display: block; margin-bottom: 4px; }
     }
+    #goldCompare, .gcmp { display: none !important; }
     .goldnote { text-align: center; font-size: 11.5px; color: #888; max-width: 560px; margin: 14px auto 0; line-height: 1.6; }
   </style>
 </head>
@@ -206,29 +211,116 @@
 
   <div class="goldwrap">
     <header class="goldhero">
-      <div class="goldhero__badge">✦ TSB GOLD ✦</div>
+      <div class="goldhero__badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/><circle cx="12" cy="19" r="1"/></svg>
+        TSB GOLD
+      </div>
       <h1>HUMAN AUDIO.<br><span class="hl">DEEP DIVES. PDFs.</span><br>COMING SOON.</h1>
       <p class="goldhero__sub">The library stays <b>free to read</b>. TSB Gold is the premium layer, and it is shipping: <b>unlimited PDF cheat-sheets are LIVE today</b> - the handwritten-style sheet and the raw notes page, every book, no credit counter. Real human narration and full-length deep dives land for members as each drops. Lock your price now, get each feature the day it ships.</p>
-      <div class="goldhero__price">₹999 / YEAR
-        <small>EARLY-BIRD PRICE, LOCKS IN 33% OFF FOREVER</small>
+      <div class="goldhero__price">FROM ₹49 (75-DAY PDF PASS) · GOLD ₹99/MO · ₹999/YR
+        <small>NO HIDDEN AUTO-DEBIT · CANCEL ANYTIME</small>
       </div>
-      <a class="goldhero__cta" href="#goldJoin">🚀 CLAIM MY ₹999 EARLY-BIRD PRICE →</a>
+      <a class="goldhero__cta" href="#goldPricing">CHOOSE YOUR PLAN · FROM ₹49 →</a>
       <p class="goldhero__trust">🔒 Lock now, pay when Gold ships · Cancel anytime · <b>Free to read</b> stays free</p>
-      <p style="max-width:620px;margin:12px auto 0;font-size:11.5px;color:#555;line-height:1.5;background:#fffbe6;border:2px solid var(--ink);padding:8px 12px;box-shadow:3px 3px 0 var(--ink)">✓ All-in: <b>40-offer Store</b> + <b>Studio Pro</b> (watermark off, 6 filters, 9:16/1:1/4:5, drag-reframe) + <b>human audio, deep dives &amp; PDFs</b> as each ships, one price, no add-ons.</p>
+      <p style="max-width:620px;margin:12px auto 0;font-size:11.5px;color:#555;line-height:1.5;background:#fffbe6;border:2px solid var(--ink);border-radius:10px;padding:8px 12px;box-shadow:3px 3px 0 var(--ink)">✓ All-in: <b>40-offer Store</b> + <b>Studio Pro</b> (watermark off, 6 filters, 9:16/1:1/4:5, drag-reframe) + <b>human audio, deep dives &amp; PDFs</b> as each ships, one price, no add-ons.</p>
     </header>
 
     <div class="goldgrid goldgrid--collapsed" id="goldGrid">
-      <div class="goldcard goldcard--audio"><div class="e">🎙️</div><h3>HUMAN AUDIO <span class="live">LIVE SAMPLES</span></h3><p>Podcast-grade narration by real voices, not robotic TTS. Every lesson, chapter and deep dive, read to you like a show.</p><div style="margin-top:8px;font:700 11px Space Grotesk,sans-serif;color:#00c48c">Worth ₹1,999/yr (Audible) → <b style="color:#111;background:#ffc800;padding:1px 5px;border:1px solid #111">FREE WITH GOLD</b></div><button class="gs-open" id="gsOpenSamples" type="button"><span class="gs-open__ico">▶</span> LISTEN TO SAMPLES</button><span class="soon" style="display:none">COMING SOON</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Samples are live, deep-dive narration is live now, and the <a href="podcasts.html" style="font-weight:800;color:inherit">Audio Room</a> curates the shows worth your ears.</small></div>
-      <div class="goldcard"><div class="e">🌊</div><h3>DEEP DIVES <span class="live">LIVE</span></h3><p>The one chapter worth reading in full, taken all the way: the evidence, the holes, the practice, in a proper reader with narration. New dives land on the shelf regularly; every one is a Gold read, the sample is free.</p><div style="margin-top:8px;font:700 11px Space Grotesk,sans-serif;color:#6c5ce7">Worth ₹999 → <b style="color:#111;background:#ffc800;padding:1px 5px;border:1px solid #111">FREE WITH GOLD</b></div><a class="gs-open" href="deepdive.html?id=dd-atomic-identity" type="button"><span class="gs-open__ico">▶</span> READ THE FREE SAMPLE</a><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Original TheSmallBook essays around the chapter, never the chapter itself.</small></div>
-      <div class="goldcard"><div class="e">📄</div><h3>PDF CHEAT-SHEETS</h3><p>One-page downloadable summaries, print, pin, share. Every book in one page.</p><div style="margin-top:8px;font:700 11px Space Grotesk,sans-serif;color:#6c5ce7">Worth ₹499 → <b style="color:#111;background:#ffc800;padding:1px 5px;border:1px solid #111">FREE WITH GOLD</b></div><span class="soon">IN PRODUCTION</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Early Gold members get first access as each ships.</small></div>
-      <div class="goldcard"><div class="e">📕</div><h3>EARLY ACCESS</h3><p>New books & features first, before free library. Priority requests + Founding badge.</p><div style="margin-top:8px;font:700 11px Space Grotesk,sans-serif;color:#ff4d6a">Priceless · Founders only</div><span class="soon" style="background:var(--green);color:#fff;border-color:var(--ink)">LOCKED PRICE</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Your ₹999 early-bird price is locked as long as you keep Gold.</small></div>
-      <div class="goldcard" style="box-shadow:5px 5px 0 var(--ink);border-style:dashed"><div class="e">🔒</div><h3>STREAK VAULT <span style="font-size:10px;letter-spacing:1px;background:#00c48c;color:#fff;border:2px solid var(--ink);padding:2px 7px;vertical-align:middle;margin-left:6px">VAULT 1×/MO</span></h3><p>Life happens. Gold lets you freeze your streak once a month, miss a day, keep the fire. No guilt, no reset to zero.</p><span class="soon" style="background:#00c48c;color:#fff">INCLUDED</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Tap “Vault” on streak widget, Gold only.<br><span style="color:#00c48c;font-weight:700">Keep 30-day streak alive</span></small></div>
-      <div class="goldcard" style="box-shadow:5px 5px 0 #6c5ce7"><div class="e">📴</div><h3>OFFLINE LIBRARY + EXPORT <span style="font-size:10px;letter-spacing:1px;background:#111;color:var(--yellow);border:2px solid var(--ink);padding:2px 7px;vertical-align:middle;margin-left:6px">READ ANYWHERE</span></h3><p>Gold caches your next 20 books for offline reading (flight, metro, no signal) and lets you export highlights to PDF/Notion in one tap.</p><span class="soon" style="background:#6c5ce7;color:#fff">LAUNCHING WITH GOLD</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Offline uses free SW; export is Gold-unlocked.<br><span style="color:#6c5ce7;font-weight:700">Read on flight, no signal</span></small></div>
-      <div class="goldcard" style="box-shadow:5px 5px 0 var(--pink)"><div class="e">👑</div><h3>FOUNDING BADGE + PRIORITY <span style="font-size:10px;letter-spacing:1px;background:var(--yellow);color:#111;border:2px solid var(--ink);padding:2px 7px;vertical-align:middle;margin-left:6px">ON YOUR PROFILE</span></h3><p>Verified ✔ on every story, “Founding Supporter” badge on your profile, and priority book-request lane, your picks ship first.</p><span class="soon" style="background:var(--yellow);color:#111">FOUNDING 500 ONLY</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Badge = Gold active; priority = email your request to Jash.</small></div>
-      <div class="goldcard"><div class="e">📚</div><h3>FULL CHAPTER-BY-CHAPTER SUMMARIES</h3><p>Every book distilled chapter by chapter, every single chapter covered, every lesson expanded, in one complete summary you can actually finish. Not the book, the full understanding.</p><span class="soon">COMING SOON</span></div>
-      <div class="goldcard" style="box-shadow:5px 5px 0 #111"><div class="e">🎨</div><h3>STUDIO PRO EDITOR <span style="font-size:10px;letter-spacing:1px;background:#111;color:var(--yellow);border:2px solid var(--ink);padding:2px 7px;vertical-align:middle;margin-left:6px">PRO-GRADE</span></h3><p>Precision-built cover editor, 9:16 / 1:1 / 4:5 ratios, pixel-perfect drag-reframe, 6 Pro filters &amp; quote-typography that exports print-grade. Zero jitter, zero “vibe-coded” blur.</p><span class="soon" style="background:#111;color:var(--yellow)">LIVE FOR GOLD</span><br><small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Live today, Gold = watermark off + Pro filters on. Free users still get high-quality exports, just with a tiny credit.</small></div>
+      <div class="goldcard goldcard--audio">
+        <div class="goldcard__icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </div>
+        <h3>HUMAN AUDIO <span class="live">LIVE SAMPLES</span></h3>
+        <p>Podcast-grade narration by real voices, not robotic TTS. Every lesson, chapter and deep dive, read to you like a show.</p>
+        <div style="margin-top:8px;font:700 11px Space Grotesk,sans-serif;color:#00c48c">Worth ₹1,999/yr (Audible) → <b style="color:#111;background:#ffc800;padding:1px 5px;border:1px solid #111">FREE WITH GOLD</b></div>
+        <button class="gs-open" id="gsOpenSamples" type="button"><span class="gs-open__ico">▶</span> LISTEN TO SAMPLES</button>
+        <span class="soon" style="display:none">COMING SOON</span><br>
+        <small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Samples are live, deep-dive narration is live now, and the <a href="podcasts.html" style="font-weight:800;color:inherit">Audio Room</a> curates the shows worth your ears.</small>
+      </div>
+
+      <div class="goldcard">
+        <div class="goldcard__icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <h3>DEEP DIVES <span class="live">LIVE</span></h3>
+        <p>The one chapter worth reading in full, taken all the way: the evidence, the holes, the practice, in a proper reader with narration. New dives land on the shelf regularly; every one is a Gold read, the sample is free.</p>
+        <div style="margin-top:8px;font:700 11px Space Grotesk,sans-serif;color:#6c5ce7">Worth ₹999 → <b style="color:#111;background:#ffc800;padding:1px 5px;border:1px solid #111">FREE WITH GOLD</b></div>
+        <a class="gs-open" href="deepdive.html?id=dd-atomic-identity" type="button"><span class="gs-open__ico">▶</span> READ THE FREE SAMPLE</a><br>
+        <small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Original TheSmallBook essays around the chapter, never the chapter itself.</small>
+      </div>
+
+      <div class="goldcard">
+        <div class="goldcard__icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h3>PDF CHEAT-SHEETS</h3>
+        <p>One-page downloadable summaries, print, pin, share. Every book in one page.</p>
+        <div style="margin-top:8px;font:700 11px Space Grotesk,sans-serif;color:#6c5ce7">Worth ₹499 → <b style="color:#111;background:#ffc800;padding:1px 5px;border:1px solid #111">FREE WITH GOLD</b></div>
+        <span class="soon">IN PRODUCTION</span><br>
+        <small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Early Gold members get first access as each ships.</small>
+      </div>
+
+      <div class="goldcard">
+        <div class="goldcard__icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <h3>EARLY ACCESS</h3>
+        <p>New books & features first, before free library. Priority requests + Founding badge.</p>
+        <div style="margin-top:8px;font:700 11px Space Grotesk,sans-serif;color:#ff4d6a">Priceless · Founders only</div>
+        <span class="soon" style="background:var(--green);color:#fff;border-color:var(--ink)">LOCKED PRICE</span><br>
+        <small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Your ₹999 early-bird price is locked as long as you keep Gold.</small>
+      </div>
+
+      <div class="goldcard">
+        <div class="goldcard__icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h3>STREAK VAULT <span style="font-size:10px;letter-spacing:1px;background:#00c48c;color:#fff;border:2px solid var(--ink);padding:2px 7px;vertical-align:middle;margin-left:6px;border-radius:6px;">VAULT 1×/MO</span></h3>
+        <p>Life happens. Gold lets you freeze your streak once a month, miss a day, keep the fire. No guilt, no reset to zero.</p>
+        <span class="soon" style="background:#00c48c;color:#fff">INCLUDED</span><br>
+        <small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Tap “Vault” on streak widget, Gold only.<br><span style="color:#00c48c;font-weight:700">Keep 30-day streak alive</span></small>
+      </div>
+
+      <div class="goldcard">
+        <div class="goldcard__icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <h3>OFFLINE LIBRARY + EXPORT <span style="font-size:10px;letter-spacing:1px;background:#111;color:var(--yellow);border:2px solid var(--ink);padding:2px 7px;vertical-align:middle;margin-left:6px;border-radius:6px;">READ ANYWHERE</span></h3>
+        <p>Gold caches your next 20 books for offline reading (flight, metro, no signal) and lets you export highlights to PDF/Notion in one tap.</p>
+        <span class="soon" style="background:var(--yellow);color:#111">LAUNCHING WITH GOLD</span><br>
+        <small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Offline uses free SW; export is Gold-unlocked.<br><span style="color:var(--yellow);font-weight:700">Read on flight, no signal</span></small>
+      </div>
+
+      <div class="goldcard">
+        <div class="goldcard__icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/><circle cx="12" cy="19" r="1"/></svg>
+        </div>
+        <h3>FOUNDING BADGE + PRIORITY <span style="font-size:10px;letter-spacing:1px;background:var(--yellow);color:#111;border:2px solid var(--ink);padding:2px 7px;vertical-align:middle;margin-left:6px;border-radius:6px;">ON YOUR PROFILE</span></h3>
+        <p>Verified ✔ on every story, “Founding Supporter” badge on your profile, and priority book-request lane, your picks ship first.</p>
+        <span class="soon" style="background:var(--yellow);color:#111">FOUNDING MEMBERS ONLY</span><br>
+        <small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Badge = Gold active; priority = email your request to Jash.</small>
+      </div>
+
+      <div class="goldcard">
+        <div class="goldcard__icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <h3>FULL CHAPTER-BY-CHAPTER SUMMARIES</h3>
+        <p>Every book distilled chapter by chapter, every single chapter covered, every lesson expanded, in one complete summary you can actually finish. Not the book, the full understanding.</p>
+        <span class="soon">COMING SOON</span>
+      </div>
+
+      <div class="goldcard">
+        <div class="goldcard__icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+        </div>
+        <h3>STUDIO PRO EDITOR <span style="font-size:10px;letter-spacing:1px;background:#111;color:var(--yellow);border:2px solid var(--ink);padding:2px 7px;vertical-align:middle;margin-left:6px;border-radius:6px;">PRO-GRADE</span></h3>
+        <p>Precision-built cover editor, 9:16 / 1:1 / 4:5 ratios, pixel-perfect drag-reframe, 6 Pro filters &amp; quote-typography that exports print-grade. Zero jitter, zero “vibe-coded” blur.</p>
+        <span class="soon" style="background:#111;color:var(--yellow)">LIVE FOR GOLD</span><br>
+        <small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Live today, Gold = watermark off + Pro filters on. Free users still get high-quality exports, just with a tiny credit.</small>
+      </div>
     </div>
-    <div class="goldmore" id="goldMore"><button type="button" id="goldMoreBtn" style="background:linear-gradient(135deg,#ffc800,#ff8a3d);border-color:#111">🎁 Worth ₹12,000+ for ₹999, tap to see why 312 locked it →</button></div>
+    <div class="goldmore" id="goldMore"><button type="button" id="goldMoreBtn">🎁 All perks included, tap to explore full membership breakdown →</button></div>
 
     <!-- 🎙️ HUMAN AUDIO · LIVE SAMPLES, same design language as the app's podcast player -->
     <div class="gs-panel" id="gsPanel" hidden>
@@ -381,7 +473,7 @@
       <div class="gcmp__row">
         <div class="gcmp__cell gcmp__feat" data-col="FEATURE">💛 YOUR PRICE</div>
         <div class="gcmp__cell" data-col="FREE">₹0. Forever. Seriously.</div>
-        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">₹999/yr, locked at 33% off for as long as you keep it.</div>
+        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">₹99/yr (or ₹49/mo), locked for as long as you keep it.</div>
       </div>
       </div>
       <p class="gcmp__foot">THE MATH: human audio alone runs ₹1,999/yr (Audible). Deep dives ₹999. PDFs ₹499. Gold locks all of it for <b>₹999/yr</b> · 33% off, forever · cancel anytime · <b>and the free library stays free either way.</b></p>
@@ -408,27 +500,98 @@
       </div>
       <p class="tiny" style="margin-top:10px;color:#666">Price stays ₹999 as long as Gold is active. Glad you're here.</p>
     </section>
+        <!-- 👑 THREE CLEAN PRICING PLANS (₹49, ₹99, ₹999) -->
+    <section class="gold-pricing-grid" id="goldPricing" aria-label="Membership plans">
+      <div class="goldplan">
+        <span class="goldplan__badge goldplan__badge--subtle">📄 PDF PASS</span>
+        <h3 class="goldplan__title">Cheat-Sheets Unlock</h3>
+        <p class="goldplan__sub">Unlimited PDF downloads across all 500 books.</p>
+        <div class="goldplan__pricebox">
+          <b>₹49</b> <span class="period">/ 75 days</span>
+          <small>Full library PDF unlock · 75 days access</small>
+        </div>
+        <ul class="goldplan__features">
+          <li>Unlimited 2-page PDF cheat-sheets</li>
+          <li>Print-ready chapter summaries &amp; action plans</li>
+          <li>Offline download &amp; personal library storage</li>
+          <li>One-time payment · No auto-renewal mandate</li>
+        </ul>
+        <button class="goldplan-btn goldplan-btn--subtle" id="goldBuyPdf" type="button">UNLOCK PDFS · ₹49</button>
+      </div>
+
+      <div class="goldplan">
+        <span class="goldplan__badge goldplan__badge--subtle">👑 GOLD MONTHLY</span>
+        <h3 class="goldplan__title">Monthly Pass</h3>
+        <p class="goldplan__sub">Flexible full Gold access. Cancel anytime.</p>
+        <div class="goldplan__pricebox">
+          <b>₹99</b> <span class="period">/ month</span>
+          <small>Rolling monthly membership · Cancel anytime</small>
+        </div>
+        <ul class="goldplan__features">
+          <li><b>Offline Audio &amp; Shelf Caching</b> (listen offline anywhere)</li>
+          <li><b>Studio Pro</b> (watermark off, custom ratios, 6 aesthetic filters)</li>
+          <li><b>Unlimited AI Ask the Library</b> (zero daily quota across 500 books)</li>
+          <li><b>40-Offer Store Unlocked</b> (instant access to all perks &amp; coupons)</li>
+          <li><b>Unlimited PDF Cheat-Sheets</b> (handwritten-style summaries)</li>
+        </ul>
+        <button class="goldplan-btn goldplan-btn--subtle" id="goldBuyMonthly" type="button">CHOOSE MONTHLY · ₹99</button>
+      </div>
+
+      <div class="goldplan goldplan--featured">
+        <span class="goldplan__badge">⭐ MOST POPULAR · BEST VALUE</span>
+        <h3 class="goldplan__title">Gold Annual Pass</h3>
+        <p class="goldplan__sub">One full year of complete depth &amp; perks.</p>
+        <div class="goldplan__pricebox">
+          <b>₹999</b> <span class="period">/ 1 full year</span>
+          <small>Just ₹83 / month · Locked renewal price · cancel anytime</small>
+        </div>
+        <ul class="goldplan__features">
+          <li>Everything in Monthly Pass included for 365 days</li>
+          <li><b>Offline Audio &amp; Shelf Caching</b> across all audiobooks &amp; shows</li>
+          <li><b>Studio Pro</b> watermark off, all ratios, export &amp; drag-reframe</li>
+          <li><b>Unlimited AI Ask the Library</b> intelligence across all books</li>
+          <li><b>Instant 40-Offer Store Unlock</b> + priority curation lane</li>
+          <li><b>Unlimited PDF Cheat-Sheets</b> &amp; print-ready action plans</li>
+          <li>One-time payment · No surprise auto-debit</li>
+        </ul>
+        <button class="goldplan-btn goldplan-btn--highlight" id="goldBuyYearly" type="button">GET GOLD YEARLY · ₹999 →</button>
+      </div>
+    </section>
+
+    <!-- 🛡️ Reassurance post-plan slide -->
+    <div class="gold-post-plan-slide" style="margin: 28px auto 0; max-width: 680px; background: var(--paper, #fff); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 5px 5px 0 var(--ink); padding: 20px 24px; text-align: left;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+        <svg class="inline-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#0b7a58" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <b style="font-family:var(--font-head); font-size:1rem; letter-spacing:.5px; color:var(--ink);">CLEAN MEMBERSHIP · ZERO NAGS</b>
+      </div>
+      <p style="margin:0; font-size:.88rem; line-height:1.6; color:var(--sub, #4a463c);">
+        After payment confirmation, this upgrade window disappears completely. Inside your <b>You</b> section, you will simply see your active plan and the exact days remaining. No recurring upgrade popups, no clutter, and no renewed sales pitches.
+      </p>
+    </div>
+
     <div class="gold-confetti" id="goldConfetti" hidden></div>
     <section class="goldjoin" id="goldJoin">
       <h2>JOIN TSB GOLD</h2>
-      <p>₹999/yr, <b>33% off locked forever</b>, for as long as you keep Gold. No spam, cancel anytime, and the free library stays free either way.</p>
-      <p style="font-size:11.5px;color:#666;background:#fffbe6;border:2px dashed var(--ink);padding:8px 10px;margin:-4px 0 14px;line-height:1.5">🎧 <b>Heads up:</b> human audio, deep dives &amp; PDFs are <i>in production</i>, you lock the price today and get each one <b>the day it ships</b> (early Gold members first). Samples above are the exact sound. The free library stays free from day one.</p>
+      <p>From <b>₹49 (75-day PDF Pass)</b>, <b>₹99/month (Gold Monthly)</b> or <b>₹999/year (Gold Annual)</b>. One-time payment, no auto-renewal mandate, cancel anytime, and the free library stays free either way.</p>
+      <p style="font-size:11.5px;color:#666;background:#fffbe6;border:2px dashed var(--ink);border-radius:10px;padding:8px 10px;margin:-4px 0 14px;line-height:1.5">🎧 <b>Heads up:</b> human audio, deep dives &amp; PDFs are <i>in production</i>, you lock the price today and get each one <b>the day it ships</b> (early Gold members first). Samples above are the exact sound. The free library stays free from day one.</p>
       <div class="goldjoin__row">
         <div class="goldform">
           <!-- 👉 Replace with your real Google Form action link (Form → ⋮ → Get pre-filled link)
                or keep the mailto fallback below · it works right now. -->
           <label for="gEmail">EMAIL</label>
           <input id="gEmail" type="email" placeholder="you@example.com" autocomplete="email">
-          <button id="gJoin">🚀 CLAIM MY ₹999 EARLY-BIRD PRICE</button>
+          <button id="gJoin">🚀 CLAIM GOLD ACCESS</button>
           <p class="tiny">We'll email you the day Gold opens wider, and early-birds keep the locked price.</p>
         </div>
         <div class="goldupi">
-          <a class="pay" id="gRzp" hidden href="#" rel="noopener">💳 PAY ₹999 - CARD / UPI / NETBANKING</a>
+          <a class="pay" id="gRzp" hidden href="#" rel="noopener">💳 PAY WITH RAZORPAY - CARD / UPI / NETBANKING</a>
           <p class="tiny" id="gRzpHint" hidden style="margin:6px 0 10px;color:#666"></p>
           <div class="upi">OR PAY STRAIGHT VIA UPI</div>
-          <a class="pay" id="gPayBtn" href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=999&cu=INR">📲 PAY ₹999 VIA UPI</a>
-          <div class="alt">Your UPI app opens with ₹999 pre-filled &nbsp;<button id="gCopy">📋 COPY UPI ID</button></div>
-          <a class="wadeal" id="gWa" href="https://wa.me/919702510680?text=Hi%20Jash!%20I%20want%20to%20join%20the%20TSB%20Gold%20first-500%20waitlist%20(%E2%82%B9999%2Fyr%2C%2033%25%20off%20locked).%20Please%20share%20the%20QR%20code%20for%20payment." target="_blank" rel="noopener">
+          <a class="pay" id="gPayBtn" href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=999&cu=INR">📲 PAY ₹999 (ANNUAL PASS)</a>
+          <a class="pay" id="gPayMonthlyBtn" style="background:var(--paper);color:var(--ink)" href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=99&cu=INR">📲 PAY ₹99 (MONTHLY PASS)</a>
+          <a class="pay" id="gPayPdfBtn" style="background:var(--paper);color:var(--ink)" href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=49&cu=INR">📲 PAY ₹49 (75-DAY PDF PASS)</a>
+          <div class="alt">Your UPI app opens with the amount pre-filled &nbsp;<button id="gCopy">📋 COPY UPI ID</button></div>
+          <a class="wadeal" id="gWa" href="https://wa.me/919702510680?text=Hi%20Jash!%20I%20want%20to%20join%20TSB%20Gold%20(%E2%82%B9999%2Fyr%20or%20%E2%82%B999%2Fmo).%20Please%20share%20the%20QR%20code%20for%20payment." target="_blank" rel="noopener">
             <span class="wadeal__ico">💬</span>
             <span>Can't pay via UPI? Want the QR code? <b>Message us on WhatsApp</b>, we'll send it right away.</span>
             <span class="wadeal__go">CHAT →</span>
@@ -437,7 +600,7 @@
       </div>
     </section>
 
-    <section class="goldjoin" style="box-shadow:8px 8px 0 var(--pink)">
+    <section class="goldjoin" style="box-shadow:6px 6px 0 var(--ink)">
       <h2>ALREADY PAID? ACTIVATE GOLD</h2>
       <p>Paid via UPI or WhatsApp? Type the code we sent you, <b>TSB-XXXX-XXXX</b>, and Gold switches on instantly on this device: watermark off, Pro filters on.</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -458,15 +621,6 @@
     <p class="goldnote">💛 The free library stays free. Gold is optional, for readers who want more, and for the readers who keep this whole thing running.</p>
 
     <p class="goldfoot">✦ MADE BY JASH GANDHI ✦<br><b>500 books, 3,540 lessons, free to read.</b></p>
-  </div>
-
-  <div class="gold-sticky" id="goldSticky" aria-label="Claim Gold">
-    <div>
-      <div class="gold-sticky__price">₹999<span style="font-size:11px;color:#ffc800">/yr</span> <s>₹1,499</s> <span style="font-size:10px;background:#ffc800;color:#111;padding:2px 6px;margin-left:6px;font-family:Archivo Black">-33%</span></div>
-      <div class="gold-sticky__urg">🔥 312/500 claimed · Price locks forever</div>
-      <small style="color:#888;font-size:10px;display:block">40 perks + Studio Pro + Audio</small>
-    </div>
-    <a class="gold-sticky__go" href="#goldJoin">CLAIM →</a>
   </div>
 
   <footer class="footer">
@@ -585,19 +739,57 @@
       if (isFounderNow() && forgeSec) forgeSec.hidden = false;
       setTimeout(function () { if (isFounderNow() && forgeSec) forgeSec.hidden = false; }, 1200);
 
-      /* ---- Razorpay checkout: the link comes from config, the grant never does ---- */
+      /* ---- Razorpay checkout: modal or link from config, the grant is always server-side ---- */
       try {
-        var RZ = window.TSB_CONFIG && TSB_CONFIG.PAYWALL ? TSB_CONFIG.PAYWALL.RAZORPAY_LINK : "";
+        var rzCfg = window.TSB_CONFIG && TSB_CONFIG.PAYWALL ? TSB_CONFIG.PAYWALL : {};
+        var RZ = rzCfg.RAZORPAY_LINK || "";
+        var RZ_KEY = rzCfg.RAZORPAY_KEY_ID || "";
         var rz = document.getElementById("gRzp"), hint = document.getElementById("gRzpHint");
-        if (RZ && rz) {
-          rz.href = RZ; rz.hidden = false;
-          if (hint) {
-            hint.hidden = false;
-            try {
-              var u3 = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null;
-              if (u3) hint.innerHTML = "Use the same email as your account here (" + (u3.email || "your account email") + ") at checkout, Gold lands on your account automatically in a few seconds.";
-              else hint.innerHTML = "Sign in first (top of this page), then pay with that same email so Gold lands on your account automatically.";
-            } catch (e) {}
+        if (rz) {
+          if (RZ || RZ_KEY || window.Razorpay) {
+            if (RZ) rz.href = RZ;
+            rz.hidden = false;
+            if (hint) {
+              hint.hidden = false;
+              try {
+                var u3 = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null;
+                if (u3) hint.innerHTML = "Use the same email as your account here (" + (u3.email || "your account email") + ") at checkout, Gold lands on your account automatically in a few seconds.";
+                else hint.innerHTML = "Sign in first (top of this page), then pay with that same email so Gold lands on your account automatically.";
+              } catch (e) {}
+            }
+            rz.addEventListener("click", function (e) {
+              if (RZ_KEY && window.Razorpay) {
+                e.preventDefault();
+                var u3 = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null;
+                var rzpInst = new window.Razorpay({
+                  key: RZ_KEY,
+                  amount: 9900,
+                  currency: "INR",
+                  name: "TheSmallBook Gold",
+                  description: "TSB GOLD Yearly Access (₹99/yr)",
+                  prefill: { email: u3 ? u3.email : "" },
+                  notes: { type: "gold", user_id: u3 ? u3.id : "" },
+                  handler: function (resp) {
+                    var msg = document.getElementById("gActMsg");
+                    if (msg) msg.innerHTML = "💳 Payment received (" + resp.razorpay_payment_id + "), activating...";
+                    var tries = 0;
+                    var iv = setInterval(async function () {
+                      tries++;
+                      var on = await (window.TSB_GOLD.isGold(true));
+                      if (on) {
+                        clearInterval(iv);
+                        if (msg) msg.innerHTML = "";
+                        show(); celebrate();
+                      } else if (tries > 20) {
+                        clearInterval(iv);
+                        if (msg) msg.innerHTML = "Still activating, banks can take a minute. If Gold is not on in a couple of minutes, message us with payment ID: " + resp.razorpay_payment_id;
+                      }
+                    }, 3000);
+                  }
+                });
+                rzpInst.open();
+              }
+            });
           }
         }
       } catch (e) {}
@@ -629,11 +821,25 @@
   <script>
     /* 💸 TSB GOLD payment → universal UPI engine */
     (function () {
-      var btn = document.getElementById("gPayBtn");
-      if (btn && window.TSB_UPI) {
-        btn.addEventListener("click", function (e) {
+      var btnYr = document.getElementById("gPayBtn");
+      if (btnYr && window.TSB_UPI) {
+        btnYr.addEventListener("click", function (e) {
           e.preventDefault();
-          window.TSB_UPI.pay(999, "TSB GOLD early-bird (₹999/yr, 33% off locked)");
+          window.TSB_UPI.pay(999, "TSB GOLD Annual Pass (₹999/yr)");
+        });
+      }
+      var btnMo = document.getElementById("gPayMonthlyBtn");
+      if (btnMo && window.TSB_UPI) {
+        btnMo.addEventListener("click", function (e) {
+          e.preventDefault();
+          window.TSB_UPI.pay(99, "TSB GOLD Monthly Pass (₹99/mo)");
+        });
+      }
+      var btnPdf = document.getElementById("gPayPdfBtn");
+      if (btnPdf && window.TSB_UPI) {
+        btnPdf.addEventListener("click", function (e) {
+          e.preventDefault();
+          window.TSB_UPI.pay(49, "TSB PDF Cheat-Sheets Pass (₹49, 75 days)");
         });
       }
     })();
@@ -801,95 +1007,78 @@
     })();
   </script>
   <script>
-    /* 🎙️ HUMAN AUDIO SAMPLES, expandable pro player (one plays at a time).
-       The samples live INSIDE the Human Audio feature card: tap LISTEN TO
-       SAMPLES to open the panel right below the features grid. */
-    (function () {
-      var openBtn = document.getElementById("gsOpenSamples");
-      var panel = document.getElementById("gsPanel");
-      var closeBtn = document.getElementById("gsClose");
-      var panelOpen = false;
-
-      function setOpen(open) {
-        panelOpen = open;
-        panel.hidden = !open;
-        openBtn.querySelector(".gs-open__ico").textContent = open ? "✕" : "▶";
-        var lbl = openBtn.childNodes[1];
-        if (lbl) lbl.textContent = open ? " CLOSE SAMPLES" : " LISTEN TO SAMPLES";
-      }
-
-      if (openBtn) openBtn.addEventListener("click", function () {
-        setOpen(!panelOpen);
-        if (panelOpen) {
-          try { panel.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch (e) {}
-        }
-      });
-      if (closeBtn) closeBtn.addEventListener("click", function () { setOpen(false); });
-
-      /* ---- players ---- */
-      var PLAY_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
-      var PAUSE_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z" fill="currentColor"/></svg>';
-
-      var players = Array.prototype.map.call(document.querySelectorAll(".gs-row"), function (row, i) {
-        var audio = row.querySelector("audio");
-        var playBtn = row.querySelector(".gs-row__play");
-        var bar = row.querySelector(".gs-row__bar");
-        var fill = row.querySelector("[data-fill]");
-        var time = row.querySelector(".gs-row__time");
-        audio.src = audio.dataset.src;
-        audio.preload = "none";
-        var dur = 0;
-        var playing = false; // self-tracked, never trust audio.paused (stale in some browsers)
-        var fmt = function (s) { if (!isFinite(s) || s < 0) s = 0; var m = Math.floor(s / 60), sec = Math.floor(s % 60); return m + ":" + (sec < 10 ? "0" : "") + sec; };
-
-        audio.addEventListener("loadedmetadata", function () { dur = audio.duration; });
-        audio.addEventListener("timeupdate", function () {
-          if (dur) fill.style.width = (audio.currentTime / dur * 100) + "%";
-          time.textContent = fmt(audio.currentTime) + " / " + fmt(dur || 0);
-        });
-        audio.addEventListener("ended", function () {
-          playing = false;
-          playBtn.innerHTML = PLAY_ICON;
-          fill.style.width = "0%";
-          time.textContent = "0:00 / " + fmt(dur);
-          row.classList.remove("playing");
-        });
-        playBtn.addEventListener("click", function () {
-          var wasPlaying = playing;
-          players.forEach(function (p, j) { if (j !== i && p.isPlaying()) p.pause(); });
-          if (wasPlaying) {
-            playing = false;
-            audio.pause();
-            playBtn.innerHTML = PLAY_ICON;
-            row.classList.remove("playing");
-          } else {
-            playing = true;
-            audio.play().then(function () {
-              if (!playing) return; // was paused while loading
-              playBtn.innerHTML = PAUSE_ICON;
-              row.classList.add("playing");
-            }).catch(function () { playing = false; });
-          }
-        });
-        bar.addEventListener("click", function (e) {
-          var r = bar.getBoundingClientRect();
-          var ratio = (e.clientX - r.left) / r.width;
-          if (dur) { audio.currentTime = ratio * dur; fill.style.width = (ratio * 100) + "%"; }
-        });
-        return {
-          pause: function () { playing = false; audio.pause(); playBtn.innerHTML = PLAY_ICON; row.classList.remove("playing"); },
-          isPlaying: function () { return playing; }
-        };
-      });
-    })();
-  </script>
-  <script>
-    (function(){var g=document.getElementById("goldGrid"),b=document.getElementById("goldMoreBtn"),w=document.getElementById("goldMore");if(!g||!b)return;b.addEventListener("click",function(){var c=g.classList.contains("goldgrid--collapsed");g.classList.toggle("goldgrid--collapsed",!c);b.textContent=c?"▲ SHOW LESS, 9 perks for ₹999":"🎁 Worth ₹12,000+ for ₹999, tap to see why 312 locked it →";if(c) {try{g.scrollIntoView({behavior:"smooth",block:"start"})}catch(e){}}});
-    // sticky: hide when join section is in view (already there)
-    var sticky=document.getElementById("goldSticky");var join=document.getElementById("goldJoin");if(sticky&&join&&"IntersectionObserver"in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){sticky.style.transform=e.isIntersecting?"translateY(110%)":"translateY(0)";})},{threshold:.15});io.observe(join);}})();
+    (function(){var g=document.getElementById("goldGrid"),b=document.getElementById("goldMoreBtn");if(!g||!b)return;b.addEventListener("click",function(){var c=g.classList.contains("goldgrid--collapsed");g.classList.toggle("goldgrid--collapsed",!c);b.textContent=c?"▲ SHOW LESS, 9 perks for ₹999":"🎁 All perks included, tap to explore full membership breakdown →";if(c) {try{g.scrollIntoView({behavior:"smooth",block:"start"})}catch(e){}}});})();
   </script>
   <script src="js/gate.js?v=323" defer></script>
   <script src="js/podcast-data.js?v=323"></script>
   <script src="js/audioplayer.js?v=323"></script>
+  <script>
+    /* Direct plan button checkout wiring for ₹49, ₹99, ₹999 */
+    (function () {
+      function launchPayment(planType, amount, title, desc) {
+        var RZ_KEY = (window.TSB_CONFIG && TSB_CONFIG.PAYWALL && TSB_CONFIG.PAYWALL.RAZORPAY_KEY) || "rzp_live_SKfX1q14dEvn1a";
+        var u = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null;
+        if (RZ_KEY && window.Razorpay) {
+          try {
+            var rzp = new window.Razorpay({
+              key: RZ_KEY,
+              amount: amount * 100,
+              currency: "INR",
+              name: "TheSmallBook",
+              description: desc,
+              prefill: { email: u ? u.email : "" },
+              notes: { type: planType, amount: amount, user_id: u ? u.id : "" },
+              handler: function (resp) {
+                var msg = document.getElementById("gActMsg");
+                if (msg) msg.innerHTML = "💳 Payment received (" + resp.razorpay_payment_id + "), activating...";
+                var tries = 0;
+                var iv = setInterval(async function () {
+                  tries++;
+                  var on = await (window.TSB_GOLD.isGold(true));
+                  if (on) {
+                    clearInterval(iv);
+                    if (msg) msg.innerHTML = "";
+                    if (typeof show === "function") show();
+                    if (typeof celebrate === "function") celebrate();
+                  } else if (tries > 20) {
+                    clearInterval(iv);
+                    if (msg) msg.innerHTML = "Payment ID: " + resp.razorpay_payment_id + " received. If not active shortly, message support.";
+                  }
+                }, 3000);
+              }
+            });
+            rzp.open();
+            return;
+          } catch(e) {}
+        }
+        if (window.TSB_UPI) {
+          window.TSB_UPI.pay(amount, title);
+        } else {
+          location.href = "upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=" + amount + "&cu=INR&tn=" + encodeURIComponent(title);
+        }
+      }
+
+      var btnPdf = document.getElementById("goldBuyPdf");
+      if (btnPdf) {
+        btnPdf.addEventListener("click", function () {
+          launchPayment("pdf_75d", 49, "TheSmallBook PDF Pass (75 days)", "TSB 75-Day PDF Cheat-Sheets Unlock (₹49)");
+        });
+      }
+
+      var btnMo = document.getElementById("goldBuyMonthly");
+      if (btnMo) {
+        btnMo.addEventListener("click", function () {
+          launchPayment("gold_monthly", 99, "TheSmallBook Gold Monthly", "TSB GOLD Monthly Pass (₹99/mo)");
+        });
+      }
+
+      var btnYr = document.getElementById("goldBuyYearly");
+      if (btnYr) {
+        btnYr.addEventListener("click", function () {
+          launchPayment("gold_yearly", 999, "TheSmallBook Gold Annual Pass", "TSB GOLD Annual Pass (₹999/yr)");
+        });
+      }
+    })();
+  </script>
 </body>
 </html>

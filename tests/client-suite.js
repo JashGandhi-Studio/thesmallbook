@@ -378,7 +378,7 @@ const C = window.TSB_COMMUNITY;
   ok("onboarding + scanner + about all say 500", onbSrc.includes("500+ books") && scnSrc.includes("all 500 book titles") && abtH.includes("500 book summaries") && abtH.includes("ASK 500+ BOOKS"));
   const flSrc = fsp.readFileSync(pp.join(__dirname, "../js/failures.js"), "utf8");
   const flArr = JSON.parse(flSrc.slice(flSrc.indexOf("["), flSrc.lastIndexOf("]") + 1));
-  ok("graveyard grew to 360 autopsies", flArr.length === 360, flArr.length + " autopsies");
+  ok("graveyard grew to 400 autopsies", flArr.length === 400, flArr.length + " autopsies");
   ok("all 400 books carry a graveyard link", djArr.every(b => b.graveLink && fsp.existsSync(pp.join(__dirname, "../graveyard/" + b.graveLink + ".html"))), djArr.filter(b => !b.graveLink).map(b => b.id).join(","));
   const newIds = new Set(["chanakya-neeti","yoga-sutras","bhagavad-gita","arthashastra","thirukkural","uncertain-glory","raja-yoga","three-thousand-stitches","kalam-effect","five-am-club","leader-no-title","think-on-these-things","heartfulness-way","karma-yoga","jnana-yoga","upanishads","essence-bhagavad-gita","celebrating-silence","mystics-musings","nudge","lessons-of-history","kaizen","discipline-equals-freedom","when-pink","undoing-project","richer-wiser-happier","noise","seeking-wisdom","essays-buffett","franklin-autobiography","shortness-of-life","enchiridion","guide-good-life","practicing-stoic","tao-te-ching","analects","dhammapada","little-book-beats-market","selfish-gene","short-history-nearly-everything","being-mortal","emperor-maladies","when-breath-becomes-air","lifespan","outlive","peaceful-warrior","the-prophet","inner-game-tennis","my-experiments-with-truth","what-i-talk-about-running"]);
   const nbooks = djArr.filter(b => newIds.has(b.id));
@@ -401,7 +401,7 @@ const C = window.TSB_COMMUNITY;
   ok("v289: new graves carry origin + fall and stay em-dash free",
      graves29.every(g => { const i = gc29.indexOf('"' + g + '":{'); return i > -1 && /"origin":"/.test(gc29.slice(i, i + 1400)) && /"fall":"/.test(gc29.slice(i, i + 2800)); }) &&
      graves29.every(g => { const f29 = flArr.find(f => f.id === g); return f29 && !JSON.stringify(f29).includes(" - ") && !JSON.stringify(f29).includes(" - "); }));
-  ok("v289: counts move together (now 500 books / 3540 lessons / 360 autopsies)", djArr.length === 500 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3540 && flArr.length === 360);
+  ok("v289: counts move together (now 500 books / 3540 lessons / 400 autopsies)", djArr.length === 500 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3540 && flArr.length === 400);
 
   console.log("== v290: 28 new books (Desi Disruptors leads), 4 new graves, FREE vs GOLD side-by-side, NEW tag re-pointed ==");
   const new290 = new Set(["barbarians-gate","bhujia-barons","cold-start-problem","delivering-happiness","den-of-thieves","desi-disruptors","dhandha","first-90-days","for-the-love-of-india","hooked-nir-eyal","hp-way","iacocca","india-uninc","inspired-product","it-happened-in-india","jack-straight-from-the-gut","liars-poker","losing-my-virginity","lost-and-founder","made-in-japan","my-years-with-general-motors","obviously-awesome","onward","smartest-guys","the-marwaris","too-big-to-fail","toyota-way","turn-the-ship-around"]);
@@ -428,7 +428,7 @@ const C = window.TSB_COMMUNITY;
   ok("v290: FREE vs GOLD side-by-side on gold.html (12 honest rows)", gold290.includes('id="goldCompare"') && (gold290.match(/class="gcmp__row"/g) || []).length === 12 && gold290.includes("LIVE NOW") && gold290.includes("IN PRODUCTION") && gold290.includes("COMING SOON") && gold290.includes("LAUNCHING WITH GOLD"));
   ok("v290: gold comparison claims only verifiable features (no live-link row)", gold290.includes("OFFLINE + EXPORT") && gold290.includes("STUDIO PRO") && gold290.includes("₹999/yr") && gold290.includes("cancel anytime"));
   ok("v290: gold page keeps the suite contract (ACTIVATE GOLD + live sheets)", gold290.includes("ACTIVATE GOLD") && gold290.includes("unlimited PDF cheat-sheets are LIVE today"));
-  ok("v290: counts move together (500 books / 3540 lessons / 360 autopsies)", djArr.length === 500 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3540 && flArr.length === 360);
+  ok("v290: counts move together (500 books / 3540 lessons / 400 autopsies)", djArr.length === 500 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3540 && flArr.length === 400);
   console.log("== v291: 10 Unknown originals (7 Indian, 3 international), THE TICKET joins the case file ==");
   const unk291 = ["chai-stall-ceo","crickets-balance-sheet","mandi-math","monsoon-portfolio","quiet-giant","rented-kingdom","right-idea-wrong-decade","tiffin-code","the-queue","wedding-economy"];
   const intl291 = ["quiet-giant","rented-kingdom","right-idea-wrong-decade"];
@@ -1149,7 +1149,7 @@ const C = window.TSB_COMMUNITY;
       require(pp.join(__dirname, "..", "js", "failures.js"));
       require(pp.join(__dirname, "..", "js", "graveyard-content.js"));
       const F313 = global.window.FAILURES || [], D313 = global.window.GRAVE_DEEP || {};
-      ok("all 360 graves carry their full two-act autopsy", F313.length === 360 && F313.every(f => D313[f.id] && D313[f.id].origin && D313[f.id].fall));
+      ok("all 400 graves carry their full two-act autopsy", F313.length === 400 && F313.every(f => D313[f.id] && D313[f.id].origin && D313[f.id].fall));
       global.window = gwSave;
     }
 
@@ -1478,10 +1478,10 @@ const C = window.TSB_COMMUNITY;
        /now\(\) \+ 600/.test(V8JS));
     ok("before custom SMTP: the email LINK signs readers in too - nothing dead-ends",
        /handleFragmentSession/.test(V8JS) && /access_token=/.test(V8JS));
-    ok("THE AUTOPSY: every one of the 360 graves carries origin + fall - no more thin lessons",
+    ok("THE AUTOPSY: every one of the 400 graves carries origin + fall - no more thin lessons",
        fs.existsSync("js/graveyard-content.js") &&
-       (rd254("js/graveyard-content.js").match(/"origin":/g) || []).length === 360 &&
-       (rd254("js/graveyard-content.js").match(/"fall":/g) || []).length === 360);
+       (rd254("js/graveyard-content.js").match(/"origin":/g) || []).length === 400 &&
+       (rd254("js/graveyard-content.js").match(/"fall":/g) || []).length === 400);
     ok("the grave reader is a proper full-screen reading view with all four acts",
        /openAutopsy/.test(rd254("js/graveyard.js")) && /HOW IT STARTED/.test(rd254("js/graveyard.js")) &&
        /THE FALL/.test(rd254("js/graveyard.js")) && /FATAL MISTAKE/.test(rd254("js/graveyard.js")) &&
@@ -1826,7 +1826,7 @@ const C = window.TSB_COMMUNITY;
     ok("the audio room is real: shows on their own platforms + TSB originals", (() => { const pc = fsp.readFileSync(pp.join(__dirname, "../podcasts.html"), "utf8"); const pd = fsp.readFileSync(pp.join(__dirname, "../js/podcast-data.js"), "utf8"); return pc.includes("podcast-data.js") && (pd.match(/id: "/g) || []).length >= 9 && pc.includes("pcOriginals"); })());
     ok("founder access: every feature by email, honest free preview", fsp.readFileSync(pp.join(__dirname, "../js/paywall.js"), "utf8").includes("FOUNDER_EMAILS") && fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8").includes("founderPreviewFree"));
     const sd = fsp.readFileSync(pp.join(__dirname, "../js/store-data.js"), "utf8");
-    ok("the store keeps only what saves a reader money: no food, cabs or delivery", (sd.match(/id: "/g) || []).length === 49 && !sd.includes("swiggy-one") && !sd.includes("zomato-gold") && !sd.includes("uber-first"));
+    ok("the store keeps only what saves a reader money: no food, cabs or delivery", (sd.match(/id: "/g) || []).length === 100 && !sd.includes("swiggy-one") && !sd.includes("zomato-gold") && !sd.includes("uber-first"));
     ok("offer radar points at official hubs only, codes stay honest", sd.includes("radar: true") && fsp.readFileSync(pp.join(__dirname, "../js/store.js"), "utf8").includes("renderRadar") && !/code: "(FKSTEAL|SWIGGY50|HDFC10)"/.test(sd));
     
     const coverIds = ["the-first-20-hours","working-backwards","that-will-never-work","guns-germs-and-steel","prisoners-of-geography","the-silk-roads","attached","the-defining-decade","maybe-you-should-talk-to-someone","turning-pro","a-brief-history-of-time","games-people-play","lost-connections","unlimited-power","seven-brief-lessons-on-physics","the-gene","lets-talk-money","black-box-thinking","common-stocks-and-uncommon-profits","siddhartha"];
