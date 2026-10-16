@@ -5,18 +5,18 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>TheSmallBook, Skim Every Great Book in Minutes</title>
-  <meta name="description" content="500 book summaries · 3,540 lessons · 400 autopsies. Skim any great book in minutes, in 26 languages, with audio, free to read.">
+  <meta name="description" content="500 book summaries · 3,540 lessons · 360 autopsies. Skim any great book in minutes, in 26 languages, with audio, free to read.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
       <meta property="og:title" content="TheSmallBook, Skim Every Great Book in Minutes">
-  <meta property="og:description" content="500 book summaries · 3,540 lessons · 400 autopsies, free to read, in 26 languages, with audio.">
+  <meta property="og:description" content="500 book summaries · 3,540 lessons · 360 autopsies, free to read, in 26 languages, with audio.">
     <meta property="og:url" content="https://thesmallbook.in/">
   <meta property="og:site_name" content="TheSmallBook">
   <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="TheSmallBook, 500 books · 3,540 lessons · 400 autopsies · free to read">
+  <meta property="og:image:alt" content="TheSmallBook, 500 books · 3,540 lessons · 360 autopsies · free to read">
   <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=323">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
@@ -131,43 +131,13 @@
     </a>
     <div class="nav__links">
       <a class="btn btn--yellow" href="#library">LIBRARY</a>
-      <a class="btn btn--red" href="stories.html">
-        <svg class="inline-svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>STORIES
-      </a>
-      <button class="btn btn--icon" id="randomBtn" title="Random book (R)" aria-label="Random book">
-        <svg class="nav-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-          <circle cx="8" cy="8" r="1.5"></circle>
-          <circle cx="16" cy="16" r="1.5"></circle>
-          <circle cx="8" cy="16" r="1.5"></circle>
-          <circle cx="16" cy="8" r="1.5"></circle>
-          <circle cx="12" cy="12" r="1.5"></circle>
-        </svg>
-      </button>
-      <button class="btn btn--icon" data-lang-btn title="Change language" aria-label="Language">
-        <svg class="nav-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="2" y1="12" x2="22" y2="12"></line>
-          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-        </svg>
-      </button>
-      <button class="btn btn--ink btn--icon" data-theme-toggle title="Dark mode (D)" aria-label="Dark mode">
-        <svg class="nav-svg nav-svg--moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-      </button>
+      <a class="btn btn--red" href="stories.html">✍️ STORIES</a>
+      <button class="btn btn--icon" id="randomBtn" title="Random book (R)" aria-label="Random book">🎲</button>
+      <button class="btn btn--icon" data-lang-btn title="Change language" aria-label="Language">🌐</button>
+      <button class="btn btn--ink btn--icon" data-theme-toggle title="Dark mode (D)" aria-label="Dark mode">🌙</button>
     </div>
     <div class="nav__auth" id="tsb-nav-auth" aria-live="polite"></div>
   </nav>
-
-  <!-- EDITORIAL DATE LINE -->
-  <div class="todaybar" id="todayBar">
-    <div class="todaybar__inner">
-      <span class="todaybar__date" id="todayDate">Friday, October 16</span>
-      <span class="todaybar__sep" aria-hidden="true">·</span>
-      <span class="todaybar__quote" id="todayQuote">A little wiser, every single day.</span>
-    </div>
-  </div>
 
   <!-- HERO -->
   <header class="hero">
@@ -203,10 +173,7 @@
           <button type="button" id="searchGo">FIND IT</button>
         </div>
       </div>
-      <div class="search__hint">
-        <svg class="inline-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>IMPROVED SEARCH, TYPOS OK &nbsp;·&nbsp; 
-        <svg class="inline-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>SCAN A BOOK, INSTANT MATCH
-      </div>
+      <div class="search__hint">⚡ IMPROVED SEARCH, TYPOS OK &nbsp;·&nbsp; 📷 SCAN A BOOK, INSTANT MATCH</div>
     </div>
 
     <!-- 🧠 PROBLEM-FIRST: what's on your mind? (mindpick.js) -->
@@ -230,28 +197,13 @@
   <!-- CONTINUE READING -->
   <div class="continue" id="continue"></div>
 
-  <!-- TODAY'S CURATED TRIO: THREE GOOD BOOKS. FIND YOUR SPARK. -->
-  <section class="dailytrio-shelf" id="dailyTrioSection" aria-label="Today's Curated Trio">
-    <div class="dailytrio-shelf__box">
-      <div class="dailytrio-shelf__header">
-        <div>
-          <span class="dailytrio-shelf__eyebrow">TODAY'S THREE PICKS · CURATED DAILY</span>
-          <h2 class="dailytrio-shelf__title">THREE GOOD BOOKS. FIND YOUR SPARK.</h2>
-          <p class="dailytrio-shelf__subtitle">Curated daily from 500 classics and modern masterpieces. Read one in ten minutes.</p>
-        </div>
-        <button class="trio-tune-btn" id="dailyTrioTuneBtn" data-personalize type="button">✦ Customize interests</button>
-      </div>
-      <div class="dailytrio-shelf__grid" id="dailyTrioCovers" aria-label="Today's three recommended books"></div>
-    </div>
-  </section>
-
   <!-- 💀 GRAVEYARD BANNER -->
   <div class="gravebanner">
     <a class="gravebanner__box" href="graveyard.html">
       <span class="gravebanner__skull">💀</span>
       <span class="gravebanner__text">
         <span class="gravebanner__title">The Graveyard</span>
-        <span class="gravebanner__sub">400 legendary failures, startups, frauds, bankruptcies & ego trips. They paid billions; your lesson is free.</span>
+        <span class="gravebanner__sub">360 legendary failures, startups, frauds, bankruptcies & ego trips. They paid billions; your lesson is free.</span>
       </span>
       <span class="gravebanner__cta">ENTER IF YOU DARE →</span>
     </a>
@@ -266,45 +218,32 @@
     <div class="socialproof__row" id="spRow"></div>
   </div>
 
-  <!-- TSB GOLD BANNER (REFINED EDITORIAL STYLE, NO AI GRADIENTS, CLEAN SVGS) -->
-  <div class="goldbanner" id="goldbanner" aria-label="TSB Gold membership">
+  <!-- 👑 TSB GOLD BANNER, right after the lesson, impossible to miss -->
+  <div class="goldbanner" id="goldbanner">
     <div class="goldbanner__box">
+      <span class="goldbanner__shine" aria-hidden="true"></span>
       <div class="goldbanner__main">
         <div class="goldbanner__head">
-          <svg class="gold-svg-crown" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/>
-            <circle cx="12" cy="19" r="1"/>
-          </svg>
+          <span class="goldbanner__icon">👑</span>
           <b class="goldbanner__title">TSB GOLD</b>
-          <span class="goldbanner__pill">GO DEEPER</span>
+          <span class="goldbanner__soon">GO DEEPER</span>
         </div>
-        <p class="goldbanner__sub">Human Audio, Deep Dives, PDFs &amp; Studio Pro. <b>The free library stays free, always.</b></p>
+        <p class="goldbanner__sub">Human Audio, Deep Dives, PDFs and Premium Book Access. <b>The free library stays free, always.</b></p>
         <div class="goldbanner__perks">
-          <span>
-            <svg class="gold-svg-perk" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-            HUMAN AUDIO
-          </span>
-          <span>
-            <svg class="gold-svg-perk" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            PDF CHEAT-SHEETS
-          </span>
-          <span>
-            <svg class="gold-svg-perk" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
-            DEEP DIVES
-          </span>
-          <span>
-            <svg class="gold-svg-perk" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
-            STUDIO PRO
-          </span>
+          <span>🔊 HUMAN AUDIO</span>
+          <span>📄 PDF CHEAT-SHEETS</span>
+          <span>🎧 DEEP DIVES</span>
+          <span>👑 PREMIUM ACCESS</span>
         </div>
       </div>
       <div class="goldbanner__offer">
-        <div class="goldbanner__price"><small>FROM</small> <b>₹99</b><em>/mo</em></div>
-        <div class="goldbanner__lock">PDF PASS ₹49 (75 DAYS) · ANNUAL PASS ₹999/YR</div>
-        <a class="goldbanner__cta" href="gold.html">EXPLORE TSB GOLD →</a>
+        <div class="goldbanner__price"><s>₹1,499</s><b>₹999</b><em>/yr</em><span class="goldbanner__off">-33%</span></div>
+        <div class="goldbanner__lock">33% OFF · LOCKED FOR LIFE</div>
+        <a class="goldbanner__cta" href="gold.html">SEE WHAT GOLD INCLUDES →</a>
       </div>
     </div>
   </div>
+  
 
   <!-- LIBRARY -->
   <div class="section-head" id="library">
@@ -560,7 +499,6 @@
   </script>
   <script src="js/podcast-data.js?v=323"></script>
   <script src="js/audioplayer.js?v=323"></script>
-  <script src="js/personalize.js?v=328"></script>
   <script src="js/bar.js?v=323" defer></script>
   <script src="js/gate.js?v=323" defer></script>
 

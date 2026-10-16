@@ -47,23 +47,6 @@ Deno.serve(async (req) => {
   if (ev?.event !== "payment.captured") return ok();
   const pay = ev?.payload?.payment?.entity ?? {};
 
-  // book sponsorship ("fuel this breakdown")
-  if (pay.notes?.type === "fuel" || pay.notes?.book_id) {
-    const bookId = String(pay.notes.book_id || "");
-    const sponsorName = String(pay.notes.sponsor_name || pay.notes.name || "A reader");
-    const amount = Number(pay.amount || 0) / 100;
-    try {
-      await admin.from("book_sponsors").insert({
-        book_id: bookId,
-        sponsor_name: sponsorName,
-        amount: amount,
-        payment_id: pay.id,
-        created_at: new Date().toISOString()
-      });
-    } catch (_) {}
-    return ok();
-  }
-
   // match the account: notes.user_id when the link carried it, else the
   // payer email mapped through profiles (see UPDATE-v298-gold.sql step 4)
   let userId: string | null = (pay.notes?.user_id ?? null) || null;

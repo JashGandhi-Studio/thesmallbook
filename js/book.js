@@ -64,112 +64,52 @@
   }
   drawBadges();
 
-  /* ---------- 📖 BUY THE FULL BOOK (Amazon affiliate) in utility bar ---------- */
+  /* ---------- 📖 BUY THE FULL BOOK (Amazon affiliate) ---------- */
   (function () {
-    const amazonLink = document.getElementById("nbAmazonLink");
-    if (amazonLink) {
-      amazonLink.href = TSB.amazonLink(book.title, book.author, book.id);
-    }
+    const meta = document.querySelector(".bookhero__meta");
+    if (!meta) return;
+    const a = document.createElement("a");
+    a.className = "buybtn buybtn--soft";
+    a.href = TSB.amazonLink(book.title, book.author, book.id);
+    a.target = "_blank";
+    a.rel = "noopener sponsored";
+    a.setAttribute("translate", "no");
+    a.innerHTML = `📖 GET THE FULL BOOK <span class="buybtn__amz">on Amazon →</span>`;
+    meta.appendChild(a);
   })();
 
-  /* ---------- ACTION BAR: ONLY POPULATE IF NOT ALREADY IN DOM ---------- */
+  /* ---------- ACTION BAR ---------- */
   const bar = document.getElementById("actionbar");
-  if (bar && !document.getElementById("expandBtn")) {
-    bar.innerHTML = `
-      <button class="abtn abtn--expand" id="expandBtn" title="Open every lesson">
-        <i class="abtn__ico">⤵</i><span class="abtn__lbl">EXPAND ALL</span>
-      </button>
-      <button class="abtn abtn--font" id="fontBtn" title="Adjust text size">
-        <i class="abtn__ico">🔠</i><span class="abtn__lbl">TEXT SIZE</span>
-      </button>
-      <button class="abtn abtn--link" id="shareLinkBtn" title="Copy link" translate="no">
-        <i class="abtn__ico">🔗</i><span class="abtn__lbl">COPY LINK</span>
-      </button>`;
-  }
+  const fav = TSB.bookmarks.has(book.id);
+  bar.innerHTML = `
+    <button class="abtn abtn--save ${fav ? "on" : ""}" id="favBtn" title="Save to your shelf">
+      <i class="abtn__ico">${fav ? "❤️" : "🤍"}</i><span class="abtn__lbl">${fav ? "SAVED" : "SAVE"}</span>
+    </button>
+    <button class="abtn abtn--card" id="shareBtn" title="Download a beautiful share card">
+      <i class="abtn__ico">🎴</i><span class="abtn__lbl">SHARE CARD</span>
+    </button>
+    <button class="abtn abtn--link" id="shareLinkBtn" title="Copy link" translate="no">
+      <i class="abtn__ico">🔗</i><span class="abtn__lbl">SHARE LINK</span>
+    </button>
+    <button class="abtn abtn--pod" id="podcastBtn" title="Listen to the whole book like a podcast">
+      <i class="abtn__ico">🎧</i><span class="abtn__lbl">PODCAST</span>
+    </button>
+    <button class="abtn abtn--expand" id="expandBtn" title="Open every lesson">
+      <i class="abtn__ico">⤵</i><span class="abtn__lbl">EXPAND ALL</span>
+    </button>
+    <button class="abtn abtn--font" id="fontBtn" title="Adjust text size">
+      <i class="abtn__ico">🔠</i><span class="abtn__lbl">TEXT SIZE</span>
+    </button>`;
 
-  /* Sync and wire primary favBtn on top row */
-  const favBtn = document.getElementById("favBtn");
-  if (favBtn) {
-    const isSaved = TSB.bookmarks.has(book.id);
-    favBtn.classList.toggle("on", isSaved);
-    const ico = favBtn.querySelector(".nav-svg--heart") || favBtn.querySelector("svg");
-    if (ico) {
-      ico.setAttribute("fill", isSaved ? "#e53935" : "none");
-      ico.setAttribute("stroke", isSaved ? "#e53935" : "currentColor");
-    }
-  }
-
-  if (favBtn) {
-    favBtn.addEventListener("click", () => {
-      const on = TSB.bookmarks.toggle(book.id);
-      favBtn.classList.toggle("on", on);
-      const ico = favBtn.querySelector(".nav-svg--heart") || favBtn.querySelector("svg");
-      if (ico) {
-        ico.setAttribute("fill", on ? "#e53935" : "none");
-        ico.setAttribute("stroke", on ? "#e53935" : "currentColor");
-      }
-      toast(on ? "Saved to your shelf" : "Removed from your shelf");
-      if (window.TSB_AUTH && window.TSB_AUTH.enabled) window.TSB_AUTH.track();
-    });
-  }
-
-  /* Wire primary book action bar */
-  const rdrLink = document.getElementById("nbOpenReader");
-  if (rdrLink) {
-    rdrLink.addEventListener("click", (e) => {
-      const bSec = document.getElementById("bigidea-sec") || document.getElementById("bigidea");
-      if (bSec) {
-        e.preventDefault();
-        bSec.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    });
-  }
-
-  const heroListen = document.getElementById("nbHeroListen");
-  if (heroListen) {
-    heroListen.addEventListener("click", () => {
-      const heroPodcast = document.getElementById("heroPodcastBtn");
-      if (heroPodcast) heroPodcast.click();
-      else playPodcastLive();
-    });
-  }
-
-  const saveTop = document.getElementById("nbSaveTop");
-  if (saveTop) {
-    const isSaved = TSB.bookmarks.has(book.id);
-    saveTop.textContent = isSaved ? "❤️ Saved" : "🤍 Save";
-    saveTop.addEventListener("click", () => {
-      const fb = document.getElementById("favBtn");
-      if (fb) fb.click();
-    });
-  }
-
-  const shareTop = document.getElementById("nbShareTop");
-  if (shareTop) {
-    shareTop.addEventListener("click", () => {
-      const sb = document.getElementById("shareBtn");
-      if (sb) sb.click();
-    });
-  }
-
-  const transBtn = document.getElementById("nbBookTranslate");
-  if (transBtn) {
-    transBtn.addEventListener("click", () => {
-      const lb = document.querySelector("[data-lang-btn]");
-      if (lb) lb.click();
-      else if (window.TSB && window.TSB.openLangModal) window.TSB.openLangModal();
-    });
-  }
-
-  const amazonLink = document.getElementById("nbAmazonLink");
-  if (amazonLink) {
-    amazonLink.href = book.affiliate || ("https://www.amazon.in/s?k=" + encodeURIComponent(book.title + " " + book.author));
-  }
-
-  const noteLink = document.getElementById("nbNoteLink");
-  if (noteLink) {
-    noteLink.href = "notes.html?book=" + encodeURIComponent(book.title);
-  }
+  document.getElementById("favBtn").addEventListener("click", (e) => {
+    const on = TSB.bookmarks.toggle(book.id);
+    e.currentTarget.classList.toggle("on", on);
+    const ico = e.currentTarget.querySelector(".abtn__ico");
+    const lbl = e.currentTarget.querySelector(".abtn__lbl");
+    if (ico) ico.textContent = on ? "❤️" : "🤍";
+    if (lbl) lbl.textContent = on ? "SAVED" : "SAVE";
+    if (window.TSB_AUTH && window.TSB_AUTH.enabled) window.TSB_AUTH.track();
+  });
 
   /* 🎧 PODCAST MODE - full-book listening via TTS_ENGINE
      Uses the LIVE translated text from the DOM (like the 🔊 LISTEN button),
@@ -208,121 +148,42 @@
     } else finalize(intros);
   }
 
-  /* 🎧 AUDIOBOOK MODE - human LibriVox audiobooks & category shelves */
+  /* 🎧 PODCAST MODE - full-book listening via TTS_ENGINE */
   (function () {
     const actionBtn = document.getElementById("podcastBtn");
     const heroBtn = document.getElementById("heroPodcastBtn");
     const pbs = [actionBtn, heroBtn].filter(Boolean);
     if (!pbs.length) return;
 
-    const CATEGORY_AUDIOBOOKS = {
-      wealth: [
-        { id: "richest-man-babylon", title: "The Richest Man in Babylon", author: "George S. Clason", chapters: 18 },
-        { id: "science-of-getting-rich", title: "The Science of Getting Rich", author: "Wallace D. Wattles", chapters: 17 },
-        { id: "as-a-man-thinketh", title: "As a Man Thinketh", author: "James Allen", chapters: 7 }
-      ],
-      stoic: [
-        { id: "meditations", title: "Meditations", author: "Marcus Aurelius", chapters: 12 },
-        { id: "art-of-war", title: "The Art of War", author: "Sun Tzu", chapters: 13 },
-        { id: "tao-te-ching", title: "Tao Te Ching", author: "Lao Tzu", chapters: 81 }
-      ],
-      life: [
-        { id: "siddhartha", title: "Siddhartha", author: "Hermann Hesse", chapters: 12 },
-        { id: "bhagavad-gita", title: "Bhagavad Gita", author: "Sir Edwin Arnold", chapters: 18 },
-        { id: "the-prophet", title: "The Prophet", author: "Kahlil Gibran", chapters: 28 }
-      ],
-      classics: [
-        { id: "franklin-autobiography", title: "Autobiography of Benjamin Franklin", author: "Benjamin Franklin", chapters: 15 },
-        { id: "walden", title: "Walden", author: "Henry David Thoreau", chapters: 18 },
-        { id: "the-prince", title: "The Prince", author: "Niccolò Machiavelli", chapters: 26 }
-      ]
-    };
-
-    function getCategoryAudiobooks(b) {
-      const cat = (b.category || "").toLowerCase();
-      if (/money|wealth|finance|business|career|work|invest/i.test(cat)) return { name: "Mind & Wealth", list: CATEGORY_AUDIOBOOKS.wealth };
-      if (/stoic|mind|philosophy|think|mental/i.test(cat)) return { name: "Philosophy & Stoicism", list: CATEGORY_AUDIOBOOKS.stoic };
-      if (/classic|history|bio|leadership/i.test(cat)) return { name: "World Classics", list: CATEGORY_AUDIOBOOKS.classics };
-      return { name: "Life & Wisdom", list: CATEGORY_AUDIOBOOKS.life };
-    }
-
-    function showCategoryAudiobooksModal(catInfo) {
-      const existing = document.getElementById("tsbCategoryAudioModal");
-      if (existing) existing.remove();
-      const modal = document.createElement("div");
-      modal.id = "tsbCategoryAudioModal";
-      modal.className = "tsb-auth-gate-blur";
-      modal.innerHTML = '<div class="tsb-auth-gate-card" style="max-width:440px; text-align:left; padding:24px 22px;">' +
-        '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">' +
-          '<span style="font-family:var(--font-head); font-size:11px; letter-spacing:1px; background:var(--yellow); color:var(--ink); padding:4px 10px; border-radius:999px; border:2px solid var(--ink); font-weight:900;">' +
-            '🎧 ' + catInfo.name.toUpperCase() + ' AUDIOBOOKS' +
-          '</span>' +
-          '<button id="tsbCatAudioClose" type="button" style="background:transparent; border:none; font-size:18px; font-weight:800; cursor:pointer; color:var(--ink); padding:2px 6px;">✕</button>' +
-        '</div>' +
-        '<h3 style="font-family:var(--font-head); font-size:1.15rem; line-height:1.25; margin:0 0 6px; color:var(--ink);">' +
-          'Listen to 3 Classics in this Category' +
-        '</h3>' +
-        '<p style="font-size:0.85rem; line-height:1.5; color:var(--sub,#555); margin:0 0 16px;">' +
-          'Full-length human-narrated audiobooks from LibriVox matching this book’s theme:' +
-        '</p>' +
-        '<div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">' +
-          catInfo.list.map(function (item) {
-            return '<div style="display:flex; align-items:center; justify-content:space-between; background:var(--paper,#fff); border:2.5px solid var(--ink); border-radius:12px; padding:10px 12px; box-shadow:3px 3px 0 var(--ink);">' +
-              '<div style="flex:1; min-width:0; padding-right:10px;">' +
-                '<b style="font-family:var(--font-head); font-size:0.85rem; display:block; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + item.title + '</b>' +
-                '<span style="font-size:0.75rem; color:var(--sub,#666);">' + item.author + ' · ' + item.chapters + ' chapters</span>' +
-              '</div>' +
-              '<button data-catplay="' + item.id + '" type="button" style="background:var(--yellow); color:var(--ink); border:2px solid var(--ink); border-radius:8px; font-family:var(--font-head); font-size:0.75rem; padding:8px 12px; cursor:pointer; font-weight:900; white-space:nowrap; box-shadow:2px 2px 0 var(--ink);">' +
-                '▶ PLAY' +
-              '</button>' +
-            '</div>';
-          }).join("") +
-        '</div>' +
-        '<a href="podcasts.html" style="display:block; text-align:center; font-family:var(--font-head); font-size:0.8rem; color:var(--ink); text-decoration:underline;">' +
-          'Browse all audiobooks in the Audio Room →' +
-        '</a>' +
-      '</div>';
-      document.body.appendChild(modal);
-      document.getElementById("tsbCatAudioClose").addEventListener("click", function () { modal.remove(); });
-      modal.addEventListener("click", function (e) {
-        if (e.target === modal) modal.remove();
-        var playBtn = e.target.closest("[data-catplay]");
-        if (playBtn) {
-          var abId = playBtn.getAttribute("data-catplay");
-          modal.remove();
-          if (window.TSB_AUDIO && TSB_AUDIO.playAudiobook) {
-            TSB_AUDIO.playAudiobook(abId);
-          } else {
-            location.href = "podcasts.html?ab=" + encodeURIComponent(abId);
-          }
-        }
-      });
-    }
-
     function setHeroPlaying(on) {
       if (!heroBtn) return;
       heroBtn.classList.toggle("podcastbtn--playing", on);
       const lbl = heroBtn.querySelector(".podcastbtn__label");
-      if (lbl) lbl.textContent = on ? "Stop Audiobook" : "Listen: Full Audiobook";
+      if (lbl) lbl.textContent = on ? "Stop Podcast" : "Listen to Full Book";
       const live = heroBtn.querySelector(".podcastbtn__live");
-      if (live) live.textContent = on ? "LIVE" : "AUDIOBOOK";
+      if (live) live.textContent = on ? "LIVE" : "LIVE";
     }
     function setActionPlaying(on) {
-      if (actionBtn) actionBtn.textContent = on ? "⏹ STOP AUDIOBOOK" : "🎧 AUDIOBOOK MODE";
+      if (actionBtn) actionBtn.textContent = on ? "⏹ STOP PODCAST" : "🎧 PODCAST MODE";
     }
     function syncAll(on) { setHeroPlaying(on); setActionPlaying(on); }
 
     pbs.forEach((pb) => {
       pb.addEventListener("click", () => {
+        /* v303: for the classics, the free LibriVox audiobook beats synthetic
+           speech - real human narrators, chapters, works with the same player */
         const A = window.TSB_AUDIO;
         const ab = A && A.audiobookFor && A.audiobookFor(book.id);
-        stopSpeech(); // stop any single-lesson speech first
-        if (ab) {
-          A.playAudiobook(book.id);
+        if (window.TTS_ENGINE && window.TTS_ENGINE.playing) {
+          window.TTS_ENGINE.stop();
+          syncAll(false);
           return;
         }
-        const catInfo = getCategoryAudiobooks(book);
-        showCategoryAudiobooksModal(catInfo);
+        stopSpeech(); // stop any single-lesson speech first
+        if (ab) { A.playAudiobook(book.id); return; }
+        if (!window.TTS_ENGINE) { toast("🎧 Podcast engine loading…"); return; }
+        playPodcastLive();
+        syncAll(true);
       });
     });
     /* the hero button wears the honest badge when a real audiobook exists */
@@ -330,7 +191,7 @@
       const lbl = heroBtn.querySelector(".podcastbtn__label");
       if (lbl) lbl.textContent = "Listen: Full Audiobook";
       const live = heroBtn.querySelector(".podcastbtn__live");
-      if (live) live.textContent = "AUDIOBOOK";
+      if (live) live.textContent = "FREE";
     }
     // keep the buttons in sync when the player is closed or podcast ends
     if (window.TTS_ENGINE) {
@@ -338,22 +199,6 @@
         syncAll(!!window.TTS_ENGINE.playing);
       });
     }
-
-    // Auto-stream verified audiobook if arrived via listen parameter
-    try {
-      if (new URLSearchParams(window.location.search).get("listen") === "1") {
-        setTimeout(function () {
-          var A = window.TSB_AUDIO;
-          var ab = A && A.audiobookFor && A.audiobookFor(book.id);
-          if (ab) {
-            A.playAudiobook(book.id);
-          } else {
-            var catInfo = getCategoryAudiobooks(book);
-            showCategoryAudiobooksModal(catInfo);
-          }
-        }, 500);
-      }
-    } catch (eListen) {}
   })();
 
   function toast(msg) {
@@ -1077,9 +922,9 @@
           <button class="tipjar__x" aria-label="Hide tip prompt">✕</button>
         </div>
           <div class="lesson__tools">
-            <button class="minibtn ${readSet.has(i) ? "active" : ""}" data-read="${i}"><svg class="mini-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>${readSet.has(i) ? "READ" : "MARK READ"}</span></button>
-            <button class="minibtn" data-listen="${i}"><svg class="mini-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> <span>LISTEN</span></button>
-            <button class="minibtn" data-sharelesson="${i}"><svg class="mini-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> <span>CARD</span></button>
+            <button class="minibtn ${readSet.has(i) ? "active" : ""}" data-read="${i}">${readSet.has(i) ? "✓ READ" : "MARK READ"}</button>
+            <button class="minibtn" data-listen="${i}">🔊 LISTEN</button>
+            <button class="minibtn" data-sharelesson="${i}">🎴 CARD</button>
           </div>
         </div>
       </div>`;
@@ -1127,7 +972,7 @@
       try { TSB.interest.ping(book.category); } catch (e) {}
       if (window.TSB_AUTH && window.TSB_AUTH.enabled) window.TSB_AUTH.track();
       btn.classList.add("active");
-      btn.innerHTML = '<svg class="mini-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>READ</span>';
+      btn.textContent = "✓ READ";
       document.querySelector(`#lesson-${i} .lesson__num`).textContent = "✓";
       drawBadges();
       if (TSB.progress.forBook(book.id).length >= book.lessons.length) {
@@ -1327,25 +1172,19 @@
 
   /* expand / collapse all */
   let expanded = false;
-  const eb = document.getElementById("expandBtn");
-  if (eb) {
-    eb.addEventListener("click", () => {
-      expanded = !expanded;
-      document.querySelectorAll(".lesson").forEach((l) => l.classList.toggle("open", expanded));
-      eb.innerHTML = expanded
-        ? '<svg class="btn-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"></polyline></svg> <span class="abtn__lbl">COLLAPSE ALL</span>'
-        : '<svg class="btn-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg> <span class="abtn__lbl">EXPAND ALL</span>';
-    });
-  }
+  document.getElementById("expandBtn").addEventListener("click", (e) => {
+    expanded = !expanded;
+    document.querySelectorAll(".lesson").forEach((l) => l.classList.toggle("open", expanded));
+    e.target.textContent = expanded ? "⤴ COLLAPSE ALL" : "⤵ EXPAND ALL";
+  });
 
   /* 🎯 onboarding personalisation - deep readers start fully open */
   try {
     if (TSB.get("tsb_read_style", "") === "deep") {
       expanded = true;
       document.querySelectorAll(".lesson").forEach((l) => l.classList.add("open"));
-      if (eb) {
-        eb.innerHTML = '<svg class="btn-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"></polyline></svg> <span class="abtn__lbl">COLLAPSE ALL</span>';
-      }
+      const eb = document.getElementById("expandBtn");
+      if (eb) eb.innerHTML = '<i class="abtn__ico">⤴</i><span class="abtn__lbl">COLLAPSE ALL</span>';
     }
   } catch (e) {}
 

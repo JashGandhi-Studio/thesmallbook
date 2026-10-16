@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
-  <title>Audiobooks: Full Chapters &amp; Public Domain Classics | TheSmallBook</title>
-  <meta name="description" content="Public domain audiobooks read by real human narrators from LibriVox. Full chapters, speed control, sleep timer. English, Hindi, and world classics.">
+  <title>TSB Audio Room: book podcasts, founder conversations & original audio | TheSmallBook</title>
+  <meta name="description" content="The audio room: hand-picked book podcasts and Indian founder conversations on their own platforms, plus TheSmallBook's own audio essays nobody else carries.">
   <meta name="author" content="Jash Gandhi">
-  <meta property="og:title" content="Audiobooks Library | TheSmallBook">
-  <meta property="og:description" content="Public-domain audiobooks: Meditations, Bhagavad Gita, Art of War, Siddhartha, Premchand stories in Hindi and more.">
+  <meta property="og:title" content="TSB Audio Room | TheSmallBook">
+  <meta property="og:description" content="Book podcasts, founder conversations and original TSB audio essays.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://thesmallbook.in/podcasts.html">
   <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png">
@@ -28,9 +28,6 @@
   <link rel="stylesheet" href="css/style.css?v=323">
   <link rel="stylesheet" href="css/deepdive.css?v=323">
   <link rel="icon" href="favicon.ico" sizes="32x32">
-  <link rel="prefetch" href="index.html">
-  <link rel="prefetch" href="stories.html">
-  <link rel="prefetch" href="login.html">
 </head>
 <body class="ddpage">
   <nav class="nav">
@@ -39,76 +36,32 @@
       <span>The<span class="logo__small">Small</span>Book</span>
     </a>
     <div class="nav__links">
-      <a class="btn btn--yellow" href="index.html#library">
-        <svg class="inline-svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>LIBRARY
-      </a>
-      <a class="btn btn--red" href="stories.html">
-        <svg class="inline-svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>STORIES
-      </a>
-      <button class="btn btn--ink btn--icon" data-theme-toggle title="Dark mode" aria-label="Dark mode">
-        <svg class="nav-svg nav-svg--moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-      </button>
+      <a class="btn btn--yellow" href="index.html#library">📚 LIBRARY</a>
+      <a class="btn btn--red" href="deepdive.html">🌊 DEEP DIVES</a>
     </div>
   </nav>
   <main class="dd-main">
     <header class="pc-hero">
-      <p class="pc-kick">
-        <svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>THE AUDIO ROOM
-      </p>
-      <h1 class="dd-h1">The Audio Room. Classics &amp; Top Shows.</h1>
-      <p class="dd-hook">Full-length human-narrated classics, top long-form podcasts, and original deep dives. Stream with chapters, sleep timer, and speed controls.</p>
+      <p class="pc-kick">🎧 THE AUDIO ROOM</p>
+      <h1 class="dd-h1">Press play here. Cook, commute, listen.</h1>
+      <p class="dd-hook">Podcast episodes stream right here from each show's official feed, full public-domain audiobooks read by LibriVox volunteers play in the app's own player, and the deep dives are narrated by the app itself. Every stream credits its maker. Nothing bootlegged.</p>
     </header>
 
-    <!-- LIVE SEARCH & CATEGORY CHIPS -->
-    <div class="pc-search ab-search" style="margin: 18px 0 10px;">
-      <span class="pc-search__ico">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-      </span>
-      <input id="abSearchIn" type="search" autocomplete="off" enterkeyhint="search"
-             placeholder="Search audiobooks by title, author, or topic (e.g. Meditations, Siddhartha, Gita)…"
-             aria-label="Search audiobooks">
-      <button class="pc-search__go" id="abSearchClear" type="button" style="display:none;background:var(--paper);color:var(--ink);border-left:2.5px solid var(--ink)">✕ CLEAR</button>
-    </div>
+    <nav class="pc-jump" aria-label="Jump to a shelf">
+      <a href="#shelf-books">📚 AUDIOBOOKS</a>
+      <a href="#shelf-shows">🎙️ PODCASTS</a>
+      <a href="#shelf-originals">🪑 OUR NARRATION</a>
+    </nav>
 
-    <!-- LIVE SEARCH RESULTS -->
-    <div id="abSearchLiveOut" style="display:none; margin: 0 0 20px;" aria-live="polite"></div>
-
-    <!-- AUDIO ROOM FILTER CHIPS -->
-    <div class="pc-search__chips" id="abSearchChips" style="margin: 0 0 24px;">
-      <button class="on" data-abfilter="all">All Audio</button>
-      <button data-abfilter="stoic">Philosophy &amp; Stoicism</button>
-      <button data-abfilter="wealth">Mind &amp; Wealth</button>
-      <button data-abfilter="shows">Top Podcasts</button>
-      <button data-abfilter="classics">World Classics</button>
-      <button data-abfilter="hi">Hindi Classics (हिंदी)</button>
-    </div>
-
-    <!-- ❤️ PERSONALIZED AUDIO SHELF -->
-    <section class="pc-myshelf" id="shelf-mine" style="margin-bottom: 30px;">
-      <h2 class="pc-h2" style="font-size: 1.15rem; display: flex; align-items: center; justify-content: space-between;">
-        <span><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>YOUR AUDIO SHELF</span>
-        <span id="myShelfCount" style="font-family: var(--font-body); font-size: .8rem; font-weight: 700; color: var(--sub);">0 SAVED</span>
-      </h2>
-      <div class="pc-myshelf__scroll" id="pcMyShelfList"></div>
-    </section>
-
-    <!-- 🎧 AUDIOBOOKS · COMPLETE CHAPTERS -->
     <section class="pc-ab" id="shelf-books">
-      <h2 class="pc-h2">
-        <svg class="inline-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>AUDIOBOOKS, FULL CHAPTERS
-      </h2>
+      <h2 class="pc-h2">📚 AUDIOBOOKS, FULL CHAPTERS</h2>
       <p class="pc-sub">Full public-domain classics, read by LibriVox volunteers, streamed into the app's player: chapters, speed, sleep timer and all, English aur Hindi dono mein. The library's oldest friends, for keeps.</p>
-
       <div id="pcAudiobooks" class="pc-ab__grid"></div>
-      <p class="pc-fine">Read by volunteers for LibriVox, streamed from Archive.org. TheSmallBook curates the finest public shelves. TSB Gold covers our studio deep dives and cheat-sheets.</p>
+      <p class="pc-fine">Read by volunteers for LibriVox, streamed from Archive.org. TheSmallBook hosts nothing; we just point at the free shelves. Podcast episodes stream from each show's own official public feed - all rights with their makers. TSB Gold covers only our own originals; everything above stays free.</p>
     </section>
 
-    <!-- 🎙️ TOP SHOWS & PODCASTS (DIRECTLY BELOW AUDIOBOOKS) -->
-    <section class="pc-shows" id="shelf-shows" style="margin-top: 36px;">
-      <h2 class="pc-h2">
-        <svg class="inline-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px;"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>TOP SHOWS &amp; PODCASTS
-      </h2>
-      <p class="pc-sub">World-class long-form podcasts streamed in-app with episode navigation and sleep timer. Browse full archives or play the latest drops.</p>
+    <section class="pc-shows" id="shelf-shows">
+      <h2 class="pc-h2">🎙️ SHOWS WORTH YOUR EARS</h2>
 
       <!-- v321: THE SEARCH BAR - any topic, any host, five at a time -->
       <div class="pc-search">
@@ -133,11 +86,8 @@
       <div id="pcShowList"></div>
     </section>
 
-    <!-- 🌊 TSB ORIGINALS · DEEP DIVES -->
-    <section class="pc-orig" id="shelf-originals" style="margin-top: 36px;">
-      <h2 class="pc-h2">
-        <svg class="inline-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="22"></line></svg>TSB ORIGINALS · READ BY YOUR APP
-      </h2>
+    <section class="pc-orig" id="shelf-originals">
+      <h2 class="pc-h2">🪑 TSB ORIGINALS · READ BY YOUR APP</h2>
       <p class="pc-sub">Our deep dives, narrated. Tap listen and the app reads the whole essay, in your language where it can.</p>
       <div id="pcOriginals"></div>
     </section>
@@ -148,7 +98,7 @@
     <div class="head">📕 TheSmallBook</div>
     <p>Big books. Small reads. Original educational analyses  -  no book text reproduced. Support the authors: buy the full books.</p>
     <div class="credits">&#10022; MADE BY JASH GANDHI &#10022;</div>
-    <p class="tiny"><a href="about.html" style="color:inherit;">ABOUT</a>&nbsp;&nbsp;<strong><a href="gold.html" style="color:inherit;">👑 TSB GOLD</a></strong>&nbsp;&nbsp;MUMBAI, INDIA&nbsp;&nbsp;<strong>AUDIOBOOKS ARCHIVE</strong></p>
+    <p class="tiny"><a href="about.html" style="color:inherit;">ABOUT</a>&nbsp;&nbsp;<strong><a href="gold.html" style="color:inherit;">👑 TSB GOLD</a></strong>&nbsp;&nbsp;MUMBAI, INDIA&nbsp;&nbsp;<strong>FREE TO READ</strong></p>
   </footer>
   <script src="js/bootguard.js?v=323"></script>
   <script src="js/prefs.js?v=323"></script>
@@ -171,7 +121,7 @@
     ow.innerHTML = DD.map(function (d) {
       return '<a class="pc-orig__card" href="deepdive.html?id=' + d.id + '">' +
         '<span class="pc-orig__play">▶</span>' +
-        '<span class="pc-orig__mid"><b>' + esc(d.title) + '</b><i>' + esc(d.chapterLabel) + " · " + d.minutes + ' min read · narrated by your app' + (d.sample ? ' · <b class="sample">SAMPLE</b>' : ' · 👑 GOLD') + '</i></span>' +
+        '<span class="pc-orig__mid"><b>' + esc(d.title) + '</b><i>' + esc(d.chapterLabel) + " · " + d.minutes + ' min read · narrated by your app' + (d.sample ? ' · <b class="free">FREE</b>' : ' · 👑 GOLD') + '</i></span>' +
         '<span class="pc-orig__go">OPEN &amp; LISTEN → </span></a>';
     }).join("");
 
@@ -267,14 +217,7 @@
       });
       w.querySelectorAll("[data-showsave]").forEach(function (b) {
         b.addEventListener("click", function () {
-          if (window.TSB && TSB.bookmarks) {
-            TSB.bookmarks.toggle("show:" + b.getAttribute("data-showsave"));
-            var sid2 = b.getAttribute("data-showsave");
-            var sh2 = findShow(sid2);
-            if (sh2 && window.TSB_SHOWMORE) TSB_SHOWMORE.learn(sh2, 1);
-            paint();
-            if (window.paintMyShelf) window.paintMyShelf();
-          }
+          if (window.TSB && TSB.bookmarks) { TSB.bookmarks.toggle("show:" + b.getAttribute("data-showsave")); var sid2 = b.getAttribute("data-showsave"); var sh2 = findShow(sid2); if (sh2 && window.TSB_SHOWMORE) TSB_SHOWMORE.learn(sh2, 1); paint(); }
         });
       });
     }
@@ -394,7 +337,6 @@
             if (window.TSB && TSB.bookmarks) TSB.bookmarks.toggle("show:" + sid);
             b.textContent = b.textContent.trim() === "🤍" ? "❤️" : "🤍";
             b.classList.toggle("on");
-            if (window.paintMyShelf) window.paintMyShelf();
           });
         });
         var moreBtn = out.querySelector("#pcSearchMore");
@@ -536,275 +478,27 @@
         }, 700 + i * 500);
       });
     }
-    var abFilter = "all";
-    var FILTER_MAP = {
-      stoic: ["meditations", "letters-from-a-stoic", "enchiridion", "shortness-of-life", "consolation-philosophy", "art-of-war", "tao-te-ching", "analects", "dhammapada"],
-      hi: ["panchatantra-hi", "do-sakhiyan-hi", "idgaah-hi", "gulli-danda-hi", "anaath-ladki-hi", "andher-hi", "jhanki-hi"],
-      wealth: ["richest-man-babylon", "science-of-getting-rich", "as-a-man-thinketh", "science-of-being-great", "acres-of-diamonds", "kybalion"],
-      classics: ["walden", "odyssey", "common-sense", "franklin-autobiography", "carnegie", "zarathustra", "bhagavad-gita", "the-prophet", "the-prince", "siddhartha", "24-hours", "public-speaking"]
-    };
-
-    function paintMyShelf() {
-      var shelfEl = document.getElementById("pcMyShelfList");
-      var countEl = document.getElementById("myShelfCount");
-      if (!shelfEl) return;
-
-      var allShows = ((window.TSB_PODCASTS && TSB_PODCASTS.shows) || []).concat(window.TSB_SHOWS_EXTRA || []);
-      var orig = (window.TSB_PODCASTS && TSB_PODCASTS.originals) || null;
-
-      var allBm = (window.TSB && TSB.bookmarks) ? TSB.bookmarks.list() : [];
-      var abIds = allBm.filter(function (x) { return x.indexOf("ab:") === 0; }).map(function (x) { return x.slice(3); });
-      var showIds = allBm.filter(function (x) { return x.indexOf("show:") === 0; }).map(function (x) { return x.slice(5); });
-
-      var total = abIds.length + showIds.length;
-      if (countEl) countEl.textContent = total + " SAVED";
-
-      if (total === 0) {
-        shelfEl.innerHTML = '<div class="pc-myshelf__empty">' +
-          '<p style="margin:0 0 4px;font-weight:700;color:var(--ink);">Your audio shelf is empty.</p>' +
-          '<p style="margin:0;font-size:11.5px;color:var(--sub,#666);">Tap ❤️ on any audiobook or podcast below to pin it here for instant listening.</p>' +
-          '</div>';
-        return;
-      }
-
-      var items = [];
-      abIds.forEach(function (bid) {
-        var rec = AB[bid] || {};
-        var b = B.filter(function (x) { return x.id === bid; })[0] || {};
-        items.push({
-          type: "ab",
-          id: bid,
-          title: b.title || rec.title || bid,
-          subtitle: rec.author || b.author || "LibriVox Volunteer",
-          cover: "assets/covers/" + bid + ".jpg?v=323",
-          badge: "AUDIOBOOK"
-        });
-      });
-
-      showIds.forEach(function (sid) {
-        var sh = allShows.filter(function (x) { return x.id === sid; })[0];
-        if (!sh && orig && orig.id === sid) sh = orig;
-        if (sh) {
-          items.push({
-            type: "show",
-            id: sid,
-            title: sh.name,
-            subtitle: sh.host ? "with " + sh.host : "Podcast",
-            cover: sh.art || "assets/covers/knowledge-project.jpg",
-            badge: "PODCAST"
-          });
-        }
-      });
-
-      shelfEl.innerHTML = items.map(function (item) {
-        return '<div class="pc-myshelf__card">' +
-          '<button class="pc-myshelf__save" data-unsave="' + item.type + ':' + esc(item.id) + '" aria-label="Remove from shelf">❤️</button>' +
-          '<img src="' + esc(item.cover) + '" alt="" loading="lazy" onerror="this.src=\'assets/covers/meditations.jpg\'">' +
-          '<span style="font:800 8.5px var(--font-head);letter-spacing:1px;color:var(--muted,#666);margin-bottom:2px;">' + item.badge + '</span>' +
-          '<b>' + esc(item.title) + '</b>' +
-          '<i>' + esc(item.subtitle) + '</i>' +
-          '<button class="pc-myshelf__btn" data-shelfplay="' + item.type + ':' + esc(item.id) + '">▶ PLAY</button>' +
-          '</div>';
-      }).join("");
-
-      shelfEl.querySelectorAll("[data-unsave]").forEach(function (btn) {
-        btn.addEventListener("click", function (e) {
-          e.stopPropagation();
-          var key = btn.getAttribute("data-unsave");
-          if (window.TSB && TSB.bookmarks) {
-            TSB.bookmarks.toggle(key);
-            paintMyShelf();
-            paintShelf();
-          }
-        });
-      });
-
-      shelfEl.querySelectorAll("[data-shelfplay]").forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          var key = btn.getAttribute("data-shelfplay");
-          var parts = key.split(":");
-          var type = parts[0], id = parts[1];
-          if (type === "ab") {
-            if (window.TSB_AUDIO && TSB_AUDIO.playAudiobook) TSB_AUDIO.playAudiobook(id);
-          } else if (type === "show") {
-            if (id === "tsb-show" && window.TSB_AUDIO && TSB_AUDIO.playOriginalLatest) {
-              TSB_AUDIO.playOriginalLatest();
-              return;
-            }
-            var all = ((window.TSB_PODCASTS && TSB_PODCASTS.shows) || []).concat(window.TSB_SHOWS_EXTRA || []);
-            var sh = all.filter(function (x) { return x.id === id; })[0];
-            if (sh && window.TSB_AUDIO && TSB_AUDIO.playFeed) TSB_AUDIO.playFeed(sh);
-          }
-        });
-      });
-    }
-    window.paintMyShelf = paintMyShelf;
-
-    function liveAudioSearch(query) {
-      var out = document.getElementById("abSearchLiveOut");
-      if (!out) return;
-      var q = String(query || "").trim().toLowerCase();
-      if (!q) {
-        out.style.display = "none";
-        out.innerHTML = "";
-        return;
-      }
-      out.style.display = "block";
-
-      var abHits = Object.keys(AB).filter(function (bid) {
-        var rec = AB[bid] || {};
-        var b = B.filter(function (x) { return x.id === bid; })[0] || {};
-        var t = (b.title || rec.title || "").toLowerCase();
-        var a = (b.author || rec.author || "").toLowerCase();
-        var d = (rec.desc || "").toLowerCase();
-        var l = (rec.lang === "hi" ? "hindi हिंदी" : "english");
-        var f = (rec._fetchedFor || rec.q || "").toLowerCase();
-        return t.indexOf(q) !== -1 || a.indexOf(q) !== -1 || d.indexOf(q) !== -1 || l.indexOf(q) !== -1 || f.indexOf(q) !== -1;
-      });
-
-      if (abHits.length === 0) {
-        out.innerHTML = '<div class="pc-search__empty" style="padding:14px;background:var(--paper);border:2px solid var(--ink);border-radius:14px;">' +
-          'No audiobooks matched “' + esc(q) + '”. Tap the button below to fetch recordings from LibriVox.' +
-          '</div>';
-        return;
-      }
-
-      var html = '<div style="background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:14px;box-shadow:4px 4px 0 var(--ink);">' +
-        '<div style="font:800 11px var(--font-head);letter-spacing:1px;color:var(--ink);margin-bottom:10px;">AUDIOBOOKS MATCHING “' + esc(q).toUpperCase() + '” (' + abHits.length + ')</div>' +
-        '<div class="pc-livegrid">';
-
-      abHits.slice(0, 6).forEach(function (bid) {
-        var rec = AB[bid] || {};
-        var b = B.filter(function (x) { return x.id === bid; })[0] || {};
-        html += '<div style="background:var(--bg);border:2px solid var(--ink);border-radius:12px;padding:10px;display:flex;flex-direction:column;">' +
-          '<span style="font:800 8.5px var(--font-head);letter-spacing:.8px;color:var(--muted,#777);margin-bottom:3px;">AUDIOBOOK</span>' +
-          '<b style="font:800 12px var(--font-body);color:var(--ink);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(b.title || rec.title || bid) + '</b>' +
-          '<i style="font:600 10.5px var(--font-body);color:var(--sub,#666);margin-bottom:8px;font-style:normal;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(rec.author || b.author || "LibriVox") + '</i>' +
-          '<button data-livesearch-ab="' + esc(bid) + '" style="margin-top:auto;width:100%;border:2px solid var(--ink);background:var(--yellow);border-radius:8px;padding:6px 0;font:800 10px var(--font-head);color:var(--ink);cursor:pointer;">▶ PLAY</button>' +
-          '</div>';
-      });
-
-      html += '</div></div>';
-      out.innerHTML = html;
-
-      out.querySelectorAll("[data-livesearch-ab]").forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          var bid = btn.getAttribute("data-livesearch-ab");
-          if (window.TSB_AUDIO && TSB_AUDIO.playAudiobook) TSB_AUDIO.playAudiobook(bid);
-        });
-      });
-    }
-
     function paintShelf() {
-      var searchIn = document.getElementById("abSearchIn");
-      var clearBtn = document.getElementById("abSearchClear");
-      var q = (searchIn ? searchIn.value : "").trim().toLowerCase();
-      if (clearBtn) clearBtn.style.display = q ? "block" : "none";
-
       var mine = saved();
-      var strip = (mine.length && !q && abFilter === "all")
+      var strip = mine.length
         ? '<div class="pc-ab__mine"><b>❤️ YOUR AUDIO SHELF</b>' + mine.map(function (bid) {
             var rec = AB[bid] || {}; var b = B.filter(function (x) { return x.id === bid; })[0] || {};
             return '<button class="pc-ab__minechip" data-ab="' + esc(bid) + '">' + esc((rec.dev ? rec.dev + " · " : "") + (b.title || rec.title || bid)) + ' ▶</button>';
           }).join("") + '</div>'
         : "";
-
       var mb = mixedBids();
-      if (abFilter !== "all" && FILTER_MAP[abFilter]) {
-        var targets = FILTER_MAP[abFilter];
-        mb = mb.filter(function (bid) {
-          if (abFilter === "hi") return AB[bid] && AB[bid].lang === "hi";
-          return targets.indexOf(bid) >= 0;
-        });
-      }
-
-      if (q) {
-        mb = Object.keys(AB).filter(function (bid) {
-          var rec = AB[bid] || {};
-          var b = B.filter(function (x) { return x.id === bid; })[0] || {};
-          var t = (b.title || rec.title || "").toLowerCase();
-          var a = (b.author || rec.author || "").toLowerCase();
-          var l = (rec.lang === "hi" ? "hindi हिंदी" : "english");
-          return t.indexOf(q) !== -1 || a.indexOf(q) !== -1 || l.indexOf(q) !== -1;
-        });
-        var fetchMoreBtn = '<button class="pc-ab__more" id="abFetchMoreLive" style="margin-top:16px;background:var(--yellow);color:var(--ink);border:2.5px solid var(--ink);font-weight:800">✨ FETCH MORE “' + esc(q).toUpperCase() + '” FROM LIBRIVOX</button>';
-        if (!mb.length) {
-          w.innerHTML = '<p class="pc-search__empty" style="margin:20px 0 12px">No local audiobooks found for “' + esc(q) + '”.</p>' + fetchMoreBtn;
-          bindFetchLive(q);
-          return;
-        }
-        w.innerHTML = '<div style="width:100%;font:700 12px Space Grotesk,sans-serif;letter-spacing:1px;color:var(--muted,#666);margin:4px 0 10px;">MATCHING AUDIOBOOKS (' + mb.length + ') · STORED ON DEVICE</div>' +
-          mb.map(abCard).join("") + fetchMoreBtn;
-        bindFetchLive(q);
-        return;
-      }
-
       var left = mb.length - shown;
       var tail = "";
       if (left > 0) {
         tail = '<button class="pc-ab__more" id="abMore">+' + Math.min(FIRST_SHELF, left) + ' MORE AUDIOBOOKS (' + left + ' of ' + mb.length + ' left)</button>';
       } else {
+        /* v314: the shelf ran out - WANT MORE pulls new books in, live */
         tail = '<button class="pc-ab__more" id="abWant"' + (wantBusy ? " disabled" : "") + '>' + (wantBusy ? 'FETCHING FROM LIBRIVOX' + '…' : '✨ WANT MORE AUDIOBOOKS? THE APP FETCHES THEM') + '</button>' +
           (gotCount() ? '<button class="pc-ab__more pc-ab__more--soft" id="abWantMore2">+' + FIRST_SHELF + ' MORE (' + gotCount() + ' fetched so far)</button>' : "");
       }
       w.innerHTML = strip + mb.slice(0, shown).map(abCard).join("") + tail;
     }
-    function bindFetchLive(term) {
-      setTimeout(function () {
-        var btn = document.getElementById("abFetchMoreLive");
-        if (btn && !btn._bound) {
-          btn._bound = 1;
-          btn.addEventListener("click", function () {
-            btn.disabled = true;
-            btn.textContent = "FETCHING VERIFIED AUDIOBOOKS FROM LIBRIVOX…";
-            if (window.TSB_ABMORE && TSB_ABMORE.searchTopic) {
-              TSB_ABMORE.searchTopic(term, 6, function (recs) {
-                btn.disabled = false;
-                if (recs && recs.length) {
-                  recs.forEach(function (r) { r._fetchedFor = String(term).toLowerCase(); });
-                  toast(recs.length + " new audiobooks on “" + term + "” saved to your shelf!");
-                  shown += recs.length;
-                  paintShelf();
-                  liveAudioSearch(term);
-                } else {
-                  toast("No additional recordings found on LibriVox for “" + term + "”.");
-                  btn.textContent = "NO MORE RECORDINGS FOUND";
-                }
-              });
-            } else {
-              toast("Audiobook fetch engine loading, please try again in a moment.");
-              btn.disabled = false;
-            }
-          });
-        }
-      }, 50);
-    }
-
     function gotCount() { return (window.TSB_ABMORE ? TSB_ABMORE.count() : 0); }
-    
-    function checkAuthForAudio() {
-      var u = null;
-      try { u = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null; } catch (e) {}
-      if (!u) {
-        var existing = document.getElementById("tsbAuthGateBlur");
-        if (existing) existing.remove();
-        var gate = document.createElement("div");
-        gate.id = "tsbAuthGateBlur";
-        gate.className = "tsb-auth-gate-blur";
-        gate.innerHTML = '<div class="tsb-auth-gate-card">' +
-          '<svg class="inline-svg" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 12px;display:block;"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>' +
-          '<h3 style="font-family:var(--font-head);font-size:1.25rem;margin:0 0 8px;color:var(--ink);">Sign in to Listen</h3>' +
-          '<p style="font-size:0.88rem;line-height:1.5;color:var(--sub,#555);margin:0 0 20px;">Please sign in or create a reader account to stream full-length audiobooks with chapter tracking and sleep timer.</p>' +
-          '<a href="login.html" class="tsb-auth-gate-btn">SIGN IN / CREATE ACCOUNT →</a>' +
-          '<button type="button" id="tsbAuthGateDismiss" class="tsb-auth-gate-cancel">Browse catalog first</button>' +
-          '</div>';
-        document.body.appendChild(gate);
-        document.getElementById("tsbAuthGateDismiss").addEventListener("click", function () { gate.remove(); });
-        return false;
-      }
-      return true;
-    }
-
     function toast(msg) {
       var t = document.createElement("div");
       t.style.cssText = "position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--bar-total, 84px) + 24px);z-index:280;background:var(--ink);color:var(--paper);border-radius:999px;padding:10px 16px;font:800 12px 'Space Grotesk',sans-serif;max-width:86vw;text-align:center";
@@ -827,39 +521,6 @@
     }
     paintShelf();
     warmShelf();
-
-    /* wire audiobook filter chips */
-    var abChips = document.getElementById("abSearchChips");
-    if (abChips) {
-      abChips.querySelectorAll("button").forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          abChips.querySelectorAll("button").forEach(function (b) { b.classList.remove("on"); });
-          btn.classList.add("on");
-          abFilter = btn.getAttribute("data-abfilter") || "all";
-          if (abFilter === "shows") {
-            var shEl = document.getElementById("shelf-shows");
-            if (shEl) shEl.scrollIntoView({ behavior: "smooth" });
-          }
-          paintShelf();
-        });
-      });
-    }
-
-    var sIn = document.getElementById("abSearchIn");
-    if (sIn) {
-      sIn.addEventListener("input", function () {
-        paintShelf();
-        liveAudioSearch(sIn.value);
-      });
-    }
-    var cBtn = document.getElementById("abSearchClear");
-    if (cBtn) {
-      cBtn.addEventListener("click", function () {
-        if (sIn) { sIn.value = ""; sIn.focus(); }
-        paintShelf();
-        liveAudioSearch("");
-      });
-    }
     /* a touch on PLAY starts the fetch before the tap even lands */
     w.addEventListener("pointerdown", function (e) {
       var ab = e.target && e.target.closest && e.target.closest("[data-ab]");
@@ -870,18 +531,13 @@
     w.addEventListener("click", function (e) {
       var sv = e.target.closest("[data-save]");
       if (sv) {
-        if (window.TSB && TSB.bookmarks) {
-          TSB.bookmarks.toggle("ab:" + sv.getAttribute("data-save"));
-          paintShelf();
-          paintMyShelf();
-        }
+        if (window.TSB && TSB.bookmarks) { TSB.bookmarks.toggle("ab:" + sv.getAttribute("data-save")); paintShelf(); }
         return;
       }
       if (e.target.id === "abMore") { shown += FIRST_SHELF; paintShelf(); return; }
       if (e.target.id === "abWant" || e.target.id === "abWantMore2") { wantMore(); return; }
       var btn = e.target.closest("[data-ab]");
       if (btn && window.TSB_AUDIO) {
-        if (!checkAuthForAudio()) return;
         btn.textContent = "LOADING…";
         TSB_AUDIO.playAudiobook(btn.getAttribute("data-ab"));
         setTimeout(function () { paintShelf(); }, 2500);   /* restore the label either way */
@@ -891,9 +547,6 @@
     /* deep link: podcasts.html?ab=meditations starts playing */
     var m = location.search.match(/[?&]ab=([a-z-]+)/);
     if (m && AB[m[1]] && window.TSB_AUDIO) setTimeout(function () { TSB_AUDIO.playAudiobook(m[1]); }, 800);
-
-    /* paint personalized shelf initially */
-    paintMyShelf();
   })();
   </script>
 </body>

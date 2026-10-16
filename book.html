@@ -38,12 +38,23 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="TheSmallBook, 460 books · 3138 lessons · 360 autopsies · free to read">
   <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=323">
-  <link rel="prefetch" href="index.html">
-  <link rel="prefetch" href="podcasts.html">
-  <link rel="prefetch" href="stories.html">
-  <link rel="prefetch" href="login.html">
 </head>
 <body>
+
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker__track">
+      <span>📕 EVERY LESSON. EVERY CHAPTER. <em>ZERO FLUFF.</em></span>
+      <span>⚡ SKIM A BOOK IN MINUTES, NOT WEEKS</span>
+      <span>🧠 REAL EXAMPLES + ACTION STEPS</span>
+      <span>🆕 NEW BOOKS ADDED EVERY WEEK</span>
+      <span>📕 EVERY LESSON. EVERY CHAPTER. <em>ZERO FLUFF.</em></span>
+      <span>⚡ SKIM A BOOK IN MINUTES, NOT WEEKS</span>
+      <span>🧠 REAL EXAMPLES + ACTION STEPS</span>
+      <span>🆕 NEW BOOKS ADDED EVERY WEEK</span>
+    </div>
+  </div>
 
   <!-- NAV -->
   <nav class="nav">
@@ -53,40 +64,16 @@
     </a>
     <div class="nav__links">
       <a class="btn btn--yellow" href="index.html#library">← SHELF</a>
-      <button class="btn btn--icon" id="favBtn" title="Save book to shelf" aria-label="Save book">
-        <svg class="nav-svg nav-svg--heart" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-        </svg>
-      </button>
-      <button class="btn btn--icon" id="shareLinkBtn" title="Copy link to book" aria-label="Copy link">
-        <svg class="nav-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-        </svg>
-      </button>
-      <button class="btn btn--icon" id="fontBtn" title="Adjust text size" aria-label="Text size">
-        <svg class="nav-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M4 19V7a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v12"></path>
-          <path d="M4 13h8"></path>
-          <path d="M15 19v-7a1.5 1.5 0 0 1 1.5-1.5H19a1.5 1.5 0 0 1 1.5 1.5v7"></path>
-          <path d="M15 15.5h5.5"></path>
-        </svg>
-      </button>
-      <button class="btn btn--icon" data-lang-btn title="Change language" aria-label="Language">
-        <svg class="nav-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="2" y1="12" x2="22" y2="12"></line>
-          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-        </svg>
-      </button>
-      <button class="btn btn--ink btn--icon" data-theme-toggle title="Dark mode" aria-label="Dark mode">
-        <svg class="nav-svg nav-svg--moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-      </button>
+      <a class="btn btn--red" href="stories.html">✍️ STORIES</a>
+      <a class="btn btn--icon" href="graveyard.html" title="The Graveyard">💀</a>
+      <button class="btn btn--icon" data-lang-btn title="Change language" aria-label="Language">🌐</button>
+      <button class="btn btn--ink btn--icon" data-theme-toggle title="Dark mode (D)" aria-label="Dark mode">🌙</button>
     </div>
     <div class="nav__auth" id="tsb-nav-auth" aria-live="polite"></div>
   </nav>
+
+  <!-- ACTION BAR -->
+  <div class="actionbar" id="actionbar"></div>
 
   <!-- BOOK HERO -->
   <section class="bookhero">
@@ -99,86 +86,42 @@
       <div class="bookhero__author" id="author"></div>
       <div class="bookhero__oneliner" id="oneliner"></div>
       <div class="bookhero__badges" id="badges"></div>
-
-      <!-- SERENE BOOK ACTION ROW: 2 PRIMARY CTAs -->
-      <div class="bookhero__cta-row">
-        <a class="nb-act-btn nb-act-btn--primary" id="nbOpenReader" href="#bigidea">
-          <svg class="btn-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-          </svg>
-          <span class="nb-act-lbl">READ SUMMARY</span>
-        </a>
-        <button class="nb-act-btn podcastbtn" id="heroPodcastBtn" type="button" title="Listen to audiobook">
-          <svg class="btn-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
-            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
-          </svg>
-          <span class="podcastbtn__label">LISTEN TO AUDIOBOOK</span>
-          <span class="podcastbtn__live">LIVE</span>
-        </button>
-        <button class="btn btn--icon" id="shareBtn" type="button" title="Share book card" style="min-height:48px;min-width:48px;border:3px solid var(--ink);border-radius:14px;box-shadow:3px 3px 0 var(--ink);">
-          <svg class="nav-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-            <circle cx="8.5" cy="8.5" r="1.5"></circle>
-            <polyline points="21 15 16 10 5 21"></polyline>
-          </svg>
-        </button>
-      </div>
+      <button class="podcastbtn" id="heroPodcastBtn" title="Listen to the whole book like a podcast, keeps playing like songs">
+        <span class="podcastbtn__icon">🎧</span>
+        <span class="podcastbtn__label">Listen to Full Book</span>
+        <span class="podcastbtn__live">LIVE</span>
+      </button>
     </div>
   </section>
 
+  <!-- BOOK ACTIONS, the cheat-sheet and the sponsor sheet, above the fold -->
+
   <!-- BIG IDEA -->
-  <section class="bigidea" id="bigidea-sec">
+  <section class="bigidea">
     <div class="bigidea__box">
-      <div class="bigidea__label">
-        <svg class="inline-svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;" aria-hidden="true">
-          <path d="M9 18h6m-4 4h2M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"></path>
-        </svg>The Big Idea
-      </div>
+      <div class="bigidea__label">💡 The Big Idea</div>
       <p id="bigidea"></p>
     </div>
   </section>
 
   <!-- LESSONS -->
-  <div class="section-head" style="margin-top:48px;">
-    <div class="section-head__flex">
-      <h2>
-        <svg class="inline-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px;" aria-hidden="true">
-          <path d="M12 2a9 9 0 0 0-9 9c0 3.6 2.1 6.7 5.2 8.1l.8 2.9h6l.8-2.9C18.9 17.7 21 14.6 21 11a9 9 0 0 0-9-9z"></path>
-          <path d="M9.5 9a2.5 2.5 0 0 1 5 0v3a2.5 2.5 0 0 1-5 0z"></path>
-        </svg>The Lessons
-      </h2>
-      <button class="btn-clean-expand" id="expandBtn" type="button">
-        <svg class="btn-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-        <span class="abtn__lbl">EXPAND ALL</span>
-      </button>
-    </div>
-    <div class="actionbar actionbar--inline" id="actionbar" style="display:none;"></div>
+  <div class="section-head" style="margin-top:60px;">
+    <h2>🧠 The Lessons</h2>
     <div class="line"></div>
   </div>
   <section class="lessons" id="lessons"></section>
 
   <!-- QUOTES -->
   <div class="section-head">
-    <h2>
-      <svg class="inline-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px;" aria-hidden="true">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-      </svg>Lines That Hit
-    </h2>
+    <h2>💬 Lines That Hit</h2>
     <div class="line"></div>
   </div>
   <section class="quotes" id="quotes" style="margin-top:40px;"></section>
 
+
   <!-- ACTION PLAN -->
   <div class="section-head">
-    <h2>
-      <svg class="inline-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px;" aria-hidden="true">
-        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-      </svg>Your 5-Step Plan
-    </h2>
+    <h2>⚡ Your 5-Step Plan</h2>
     <div class="line"></div>
   </div>
   <section class="plan" style="margin-top:40px;">
@@ -201,7 +144,7 @@
         </button>
         <button class="bookkit__btn bookkit__btn--fuel" data-tsb="fuel" type="button">
           <span class="bookkit__ic" aria-hidden="true">💛</span>
-          <span class="bookkit__tx"><b>Fuel this breakdown</b><i>Put your name on this book · ₹99</i></span>
+          <span class="bookkit__tx"><b>Fuel this breakdown</b><i>Put your name on the book, from ₹199</i></span>
         </button>
       </div>
       <div class="bookkit__q"><span data-tsb-quota></span> · the library stays free, always</div>

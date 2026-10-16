@@ -17,7 +17,7 @@
   var GOTKEY = "tsb_ab_got";      /* { key: rec } - everything WANT MORE pulled in */
   var POOLKEY = "tsb_ab_pool";    /* cached candidate list from the live search */
   var POOL_AT = "tsb_ab_pool_at";
-  var GOT_CAP = 300;
+  var GOT_CAP = 60;
 
   function jget(k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v === null || v === undefined ? d : v; } catch (e) { return d; } }
   function jset(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -59,21 +59,7 @@
     ["romeo_and_juliet_librivox", "Romeo and Juliet", "William Shakespeare"],
     ["invisible_man_librivox", "The Invisible Man", "H.G. Wells"],
     ["timemachine_sjm_librivox", "The Time Machine", "H. G. Wells"],
-    ["wizard_of_oz", "The Wonderful Wizard of Oz", "L. Frank Baum"],
-    ["meditations_0708_librivox", "Meditations", "Marcus Aurelius"],
-    ["prince_librivox", "The Prince", "Niccolo Machiavelli"],
-    ["art_of_war_librivox", "The Art of War", "Sun Tzu"],
-    ["tao_teh_king_librivox", "Tao Te Ching", "Lao Tzu"],
-    ["siddhartha_1912_librivox", "Siddhartha", "Hermann Hesse"],
-    ["as_a_man_thinketh_1312_librivox", "As a Man Thinketh", "James Allen"],
-    ["science_gettingrich_1005_librivox", "The Science of Getting Rich", "Wallace D. Wattles"],
-    ["autobiographyofayogi_2601_librivox", "Autobiography of a Yogi", "Paramahansa Yogananda"],
-    ["richestman_2604_librivox", "The Richest Man in Babylon", "George S. Clason"],
-    ["bhagavad_gita_0803_librivox", "Bhagavad Gita", "Edwin Arnold"],
-    ["walden_librivox", "Walden", "Henry David Thoreau"],
-    ["zarathustra_2010_librivox", "Thus Spake Zarathustra", "Friedrich Nietzsche"],
-    ["panchatantra_2604_librivox", "Panchatantra", "Vishnu Sharma"],
-    ["dosakhiyan_2512_librivox", "Do Sakhiyan", "Munshi Premchand"]
+    ["wizard_of_oz", "The Wonderful Wizard of Oz", "L. Frank Baum"]
   ];
 
   function cleanTitle(t) {
@@ -133,43 +119,11 @@
   /* no shelf seat without a real recording: the metadata page must
      list actual mp3 chapters, or the candidate is dropped */
   function verify(id, cb) {
-    var poolHit = POOL.filter(function (p) { return p[0] === id; })[0];
-    var called = false;
-    var timer = setTimeout(function () {
-      if (called) return;
-      called = true;
-      if (poolHit) {
-        cb({
-          id: id,
-          title: cleanTitle(poolHit[1]),
-          author: poolHit[2] || "LibriVox Volunteers",
-          desc: "Full public-domain audio recording from LibriVox, streaming from Archive.org."
-        });
-      } else {
-        cb(null);
-      }
-    }, 2800);
-
     fetch("https://archive.org/metadata/" + id)
       .then(function (r) { return r.json(); })
       .then(function (d) {
-        if (called) return;
-        called = true;
-        clearTimeout(timer);
         var mp3 = (d.files || []).filter(function (f) { return /\.mp3$/i.test(f.name || ""); });
-        if (!mp3.length) {
-          if (poolHit) {
-            cb({
-              id: id,
-              title: cleanTitle(poolHit[1]),
-              author: poolHit[2] || "LibriVox Volunteers",
-              desc: "Full public-domain audio recording from LibriVox, streaming from Archive.org."
-            });
-            return;
-          }
-          cb(null);
-          return;
-        }
+        if (!mp3.length) { cb(null); return; }
         var meta = d.metadata || {};
         /* v318: the book's own description travels with it - the shelf card
            reads like a friend's recommendation, never like a placeholder */
@@ -182,21 +136,7 @@
           desc: desc.slice(0, 220)
         });
       })
-      .catch(function () {
-        if (called) return;
-        called = true;
-        clearTimeout(timer);
-        if (poolHit) {
-          cb({
-            id: id,
-            title: cleanTitle(poolHit[1]),
-            author: poolHit[2] || "LibriVox Volunteers",
-            desc: "Full public-domain audio recording from LibriVox, streaming from Archive.org."
-          });
-        } else {
-          cb(null);
-        }
-      });
+      .catch(function () { cb(null); });
   }
 
   /* pull the next n audiobooks onto the shelf, verified one by one */
@@ -235,82 +175,8 @@
     });
   }
 
-  /* Live search on LibriVox / Archive.org: fetch any topic or author on demand */
-  function searchTopic(query, n, done) {
-    boot();
-    var q = String(query || "").trim();
-    if (!q) { done([]); return; }
-    var term = encodeURIComponent(q);
-    var url = "https://archive.org/advancedsearch.php?q=collection%3Alibrivoxaudio+AND+(" + term + ")&fl%5B%5D=identifier&fl%5B%5D=title&fl%5B%5D=creator&sort%5B%5D=downloads+desc&rows=60&output=json";
-    fetch(url)
-      .then(function (r) { return r.json(); })
-      .then(function (d) {
-        var docs = (((d || {}).response || {}).docs || [])
-          .filter(function (x) { return x && x.identifier && x.title; })
-          .map(function (x) {
-            var cr = Array.isArray(x.creator) ? x.creator[0] : x.creator;
-            return [x.identifier, cleanTitle(x.title), String(cr || "LibriVox Volunteers").slice(0, 30)];
-          });
-        var known = knownIds();
-        var cand = docs.filter(function (p) {
-          if (known[p[0]]) return false;
-          if (known["t:" + String(p[1] || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim()]) return false;
-          return true;
-        });
-        var out = [], queue = cand.slice(0, (n || 6) * 3), i = 0;
-        (function next() {
-          if (out.length >= (n || 6) || i >= queue.length) { done(out); return; }
-          var c = queue[i++];
-          verify(c[0], function (rec) {
-            if (rec) {
-              var key = "got-" + String(c[0]).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
-              rec.key = key;
-              rec.lang = (q.toLowerCase().indexOf("hindi") !== -1 ? "hi" : "en");
-              rec.discovered = true;
-              var got = jget(GOTKEY, {});
-              got[key] = rec;
-              jset(GOTKEY, got);
-              window.TSB_AUDIOBOOKS[key] = rec;
-              out.push(rec);
-            }
-            next();
-          });
-        })();
-      })
-      .catch(function () {
-        var ql = q.toLowerCase();
-        var matches = POOL.filter(function (p) {
-          return p[1].toLowerCase().indexOf(ql) !== -1 || p[2].toLowerCase().indexOf(ql) !== -1;
-        });
-        if (matches.length) {
-          var known = knownIds();
-          var cand = matches.filter(function (p) { return !known[p[0]]; }).slice(0, n || 6);
-          var out = cand.map(function (c) {
-            var key = "got-" + String(c[0]).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
-            var rec = {
-              id: c[0],
-              key: key,
-              title: cleanTitle(c[1]),
-              author: c[2] || "LibriVox Volunteers",
-              desc: "Full public-domain audio recording from LibriVox, streaming from Archive.org.",
-              lang: (q.toLowerCase().indexOf("hindi") !== -1 ? "hi" : "en"),
-              discovered: true
-            };
-            var got = jget(GOTKEY, {});
-            got[key] = rec;
-            jset(GOTKEY, got);
-            window.TSB_AUDIOBOOKS[key] = rec;
-            return rec;
-          });
-          done(out);
-        } else {
-          done([]);
-        }
-      });
-  }
-
   function count() { return Object.keys(jget(GOTKEY, {})).length; }
 
   boot();
-  window.TSB_ABMORE = { serve: serve, searchTopic: searchTopic, count: count, boot: boot };
+  window.TSB_ABMORE = { serve: serve, count: count, boot: boot };
 })();

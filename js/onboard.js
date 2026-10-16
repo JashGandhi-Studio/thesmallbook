@@ -375,9 +375,6 @@
     (draft.shelves || []).forEach(function (c) { if (order.indexOf(c) < 0) order.push(c); });
     set("tsb_onboard_draft", draft);
     set("tsb_onboarded", true);
-    /* never auto-play walkthrough after onboarding; available on-demand via ? or settings */
-    set("tsb_walk_done", window.TSB_BUILD || "323");
-    set("tsb_tour_done", true);
     set("tsb_interests", order.length ? order : draft.shelves);
     set("tsb_read_minutes", draft.minutes);
     set("tsb_read_style", draft.style || "steady");

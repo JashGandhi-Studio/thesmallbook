@@ -17,7 +17,7 @@
   /* 👑 FOUNDER: your Gmail - you get the whole store free on login. */
   var FOUNDER_EMAILS = ["acimotreyothy@gmail.com"];
   var INSIDER_POSTS = 3;   /* stories a writer must publish to unlock free */
-  var FREE_TEASERS = 6;    /* first 6 offers visible without unlocking, remainder locked */
+  var FREE_TEASERS = 3;    /* offers everyone can open without unlocking */
   var LOGO_DIR = "assets/logos/";
 
   var C = window.TSB_COMMUNITY;
@@ -269,8 +269,8 @@
         '<div class="st-modal__grab"></div>' +
         '<div class="st-nudge">' + logoHTML(o) +
           "<h2>" + esc(o.brand) + " is behind the shelf</h2>" +
-          "<p>" + esc(o.value) + " - unlock all 40+ perks two ways: publish " + (a && a.signed ? left + " more " + (left === 1 ? "story" : "stories") : INSIDER_POSTS + " stories") + " in the Community to unlock free forever, OR unlock immediately with TSB Gold (₹99/mo or ₹999/yr).</p>" +
-          '<div class="st-nudge__btns"><a href="gold.html">💛 UNLOCK WITH GOLD</a><a href="write.html">✍️ WRITE A STORY</a></div>' +
+          "<p>" + esc(o.value) + " - unlock the full store two ways: go Gold, or publish " + (a && a.signed ? left + " more " + (left === 1 ? "story" : "stories") : INSIDER_POSTS + " stories") + " and it’s free forever.</p>" +
+          '<div class="st-nudge__btns"><a href="gold.html">💛 GET GOLD</a><a href="write.html">✍️ WRITE A STORY</a></div>' +
           '<button class="st-dead" id="stX" type="button" style="background:none;border:0;cursor:pointer;width:100%;margin-top:14px">Not now</button>' +
         "</div>" +
       "</div>";
