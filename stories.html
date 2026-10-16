@@ -207,22 +207,66 @@
       if (p.audio_url) sc += 2;
       return sc;
     }
+    /* 24-HOUR PROFILE NOTES SYSTEM (Instagram Notes) */
+    var activeNotes = {
+      "u-naval": { note_type: "quote", quote_text: "Desire is a contract you make with yourself to be unhappy until you get what you want.", quote_author: "Naval", note_text: "Desire contract" },
+      "u-jash": { note_type: "song", song_title: "Midnight City", song_artist: "M83", note_text: "Late night building" }
+    };
+    function loadLocalNotes() {
+      try {
+        var myNote = JSON.parse(localStorage.getItem("tsb_my_note"));
+        if (myNote && myNote.expires_at > Date.now()) {
+          activeNotes["me"] = myNote;
+        }
+      } catch(e) {}
+    }
+    loadLocalNotes();
+
     function railHtml(posts) {
       var seen = {}, rail = [];
       posts.forEach(function (p) {
         if (!seen[p.author_id]) { seen[p.author_id] = 1; rail.push(p); }
       });
       rail = rail.slice(0, 12);
-      if (!rail.length) return "";
-      return '<div class="cm-rail">' + rail.map(function (p) {
+
+      var myUser = whoAmI();
+      var myAva = myUser ? C.avaUrl(myUser.name, myUser.avatar_url, myUser.id) : null;
+      var myNote = activeNotes["me"];
+      var myBubble = "";
+      if (myNote) {
+        var isSong = myNote.note_type === "song";
+        var txt = isSong ? ("🎵 " + (myNote.song_title || "Song")) : (myNote.note_text || "Thinking...");
+        myBubble = '<span class="cm-note-bubble' + (isSong ? ' cm-note-bubble--song' : '') + '" title="' + C.esc(txt) + '">' + C.esc(txt) + '</span>';
+      }
+
+      var myItem = '<div class="cm-rail__i" id="cmMyNoteBtn" style="cursor:pointer;position:relative;" title="Share a 24h Note">' +
+        myBubble +
+        '<span class="cm-rail__ring" style="position:relative;">' +
+          (myAva ? '<img src="' + C.esc(myAva) + '" alt="">' : '<span>' + C.esc(((myUser && myUser.name) || "You").charAt(0).toUpperCase()) + '</span>') +
+          (!myNote ? '<span class="cm-note-add">+</span>' : '') +
+        '</span>' +
+        '<span class="cm-rail__n">' + (myNote ? 'Your Note' : 'Add Note') + '</span>' +
+      '</div>';
+
+      var otherItems = rail.map(function (p) {
         var avu = C.avaUrl(p.author_name, p.author_avatar, p.author_id);
         var av = avu
           ? '<img src="' + C.esc(avu) + '" alt="">'
           : "<span>" + C.esc((p.author_name || "R").charAt(0).toUpperCase()) + "</span>";
-        return '<a class="cm-rail__i' + (followSet[p.author_id] ? " fol" : "") + '" href="profile.html?id=' + p.author_id + '" title="' + C.esc(p.author_name) + '">' +
+        var pNote = activeNotes[p.author_id];
+        var pBubble = "";
+        if (pNote) {
+          var isSong2 = pNote.note_type === "song";
+          var txt2 = isSong2 ? ("🎵 " + (pNote.song_title || "Song")) : (pNote.note_text || "");
+          pBubble = '<span class="cm-note-bubble' + (isSong2 ? ' cm-note-bubble--song' : '') + '" data-note-user="' + p.author_id + '">' + C.esc(txt2) + '</span>';
+        }
+        return '<a class="cm-rail__i' + (followSet[p.author_id] ? " fol" : "") + '" href="profile.html?id=' + p.author_id + '" title="' + C.esc(p.author_name) + '" style="position:relative;">' +
+          pBubble +
           '<span class="cm-rail__ring">' + av + "</span>" +
           '<span class="cm-rail__n">' + C.esc(String(p.author_name).split(" ")[0]) + "</span></a>";
-      }).join("") + "</div>";
+      }).join("");
+
+      return '<div class="cm-rail">' + myItem + otherItems + '</div>';
     }
 
     function card(p, extra) {
@@ -855,9 +899,97 @@ document.getElementById("quoteBtn").addEventListener("click", function () { loca
       } catch (err) {}
     });
 
+    /* ---------- 24h Profile Note Modal & Popup (Instagram-Style) ---------- */
+    function openNoteModal() {
+      if (document.getElementById("noteModalOvl")) return;
+      var cur = activeNotes["me"] || {};
+      var ovl = document.createElement("div");
+      ovl.id = "noteModalOvl";
+      ovl.style.cssText = "position:fixed;inset:0;background:rgba(17,17,17,0.7);z-index:99998;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px);";
+      ovl.innerHTML =
+        '<div style="background:var(--paper,#fffdf5);border:3.5px solid var(--ink,#111);border-radius:18px;box-shadow:8px 8px 0 var(--ink,#111);max-width:390px;width:100%;padding:22px;position:relative;">' +
+          '<button id="noteCloseBtn" style="position:absolute;top:14px;right:14px;background:none;border:none;font:800 20px sans-serif;cursor:pointer;color:var(--ink,#111);">✕</button>' +
+          '<div style="font-size:26px;margin-bottom:4px;">💭</div>' +
+          '<h3 style="font:800 17px var(--font-head);margin:0 0 4px;letter-spacing:0.5px;">24-HOUR PROFILE NOTE</h3>' +
+          '<p style="font-size:12px;color:var(--muted,#666);margin:0 0 14px;">Floating over your photo for friends for 24 hours.</p>' +
+          '<label style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;margin-bottom:4px;">YOUR THOUGHT (UP TO 60 CHARS)</label>' +
+          '<input id="noteTextInput" maxlength="60" placeholder="What\'s on your mind today?" value="' + C.esc(cur.note_text || "") + '" style="width:100%;border:2px solid var(--ink,#111);border-radius:10px;padding:10px;font:600 13px var(--font-body);margin-bottom:12px;background:#fff;color:#111;box-sizing:border-box;">' +
+          '<label style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;margin-bottom:4px;">🎵 ADD A SONG NOTE (OPTIONAL)</label>' +
+          '<input id="noteSongInput" maxlength="50" placeholder="Song Title · Artist" value="' + C.esc(cur.song_title ? (cur.song_title + (cur.song_artist ? ' · ' + cur.song_artist : '')) : "") + '" style="width:100%;border:2px solid var(--ink,#111);border-radius:10px;padding:10px;font:600 13px var(--font-body);margin-bottom:12px;background:#fff;color:#111;box-sizing:border-box;">' +
+          '<label style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;margin-bottom:4px;">❝ OR ATTACH A QUOTE (OPTIONAL)</label>' +
+          '<input id="noteQuoteInput" maxlength="80" placeholder="Book quote..." value="' + C.esc(cur.quote_text || "") + '" style="width:100%;border:2px solid var(--ink,#111);border-radius:10px;padding:10px;font:600 13px var(--font-body);margin-bottom:16px;background:#fff;color:#111;box-sizing:border-box;">' +
+          '<div style="display:flex;gap:8px;">' +
+            '<button id="saveNoteBtn" style="flex:1;background:var(--yellow,#ffc800);border:2.5px solid var(--ink,#111);border-radius:12px;padding:12px;font:800 12px var(--font-head);cursor:pointer;box-shadow:3px 3px 0 var(--ink,#111);">SHARE NOTE (24H) 🚀</button>' +
+            (cur.note_text || cur.song_title ? '<button id="delNoteBtn" style="background:#fff;border:2.5px solid var(--ink,#111);border-radius:12px;padding:12px;font:800 12px var(--font-head);cursor:pointer;color:#d64545;">CLEAR</button>' : '') +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(ovl);
+      ovl.addEventListener("click", function (ev) { if (ev.target === ovl) ovl.remove(); });
+      document.getElementById("noteCloseBtn").addEventListener("click", function () { ovl.remove(); });
+      var delBtn = document.getElementById("delNoteBtn");
+      if (delBtn) {
+        delBtn.addEventListener("click", function () {
+          localStorage.removeItem("tsb_my_note");
+          delete activeNotes["me"];
+          ovl.remove();
+          renderFeed();
+        });
+      }
+      document.getElementById("saveNoteBtn").addEventListener("click", function () {
+        var txt = (document.getElementById("noteTextInput").value || "").trim();
+        var song = (document.getElementById("noteSongInput").value || "").trim();
+        var quote = (document.getElementById("noteQuoteInput").value || "").trim();
+        if (!txt && !song && !quote) { ovl.remove(); return; }
+        var type = song ? "song" : (quote ? "quote" : "text");
+        var obj = {
+          note_text: txt || (song ? "Listening to" : "Reading"),
+          note_type: type,
+          song_title: song,
+          quote_text: quote,
+          created_at: Date.now(),
+          expires_at: Date.now() + 864e5
+        };
+        localStorage.setItem("tsb_my_note", JSON.stringify(obj));
+        activeNotes["me"] = obj;
+        ovl.remove();
+        renderFeed();
+      });
+    }
+
+    function showNotePopup(nuid) {
+      var n = activeNotes[nuid];
+      if (!n) return;
+      var ovl = document.createElement("div");
+      ovl.style.cssText = "position:fixed;inset:0;background:rgba(17,17,17,0.65);z-index:99998;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px);";
+      var songHtml = n.song_title ? '<div style="background:var(--yellow,#ffc800);border:2px solid var(--ink,#111);border-radius:10px;padding:8px 12px;font:700 13px var(--font-body);margin:10px 0;">🎵 ' + C.esc(n.song_title) + (n.song_artist ? ' · ' + C.esc(n.song_artist) : '') + '</div>' : '';
+      var quoteHtml = n.quote_text ? '<blockquote style="border-left:4px solid var(--ink,#111);padding-left:10px;font:italic 13px Georgia,serif;margin:10px 0;">\u201c' + C.esc(n.quote_text) + '\u201d' + (n.quote_author ? '<br><small>- ' + C.esc(n.quote_author) + '</small>' : '') + '</blockquote>' : '';
+      ovl.innerHTML =
+        '<div style="background:var(--paper,#fffdf5);border:3.5px solid var(--ink,#111);border-radius:18px;box-shadow:8px 8px 0 var(--ink,#111);max-width:340px;width:100%;padding:22px;position:relative;">' +
+          '<button id="popCloseBtn" style="position:absolute;top:12px;right:12px;background:none;border:none;font:800 20px sans-serif;cursor:pointer;">✕</button>' +
+          '<div style="font:800 11px var(--font-head);letter-spacing:1px;color:var(--muted,#666);margin-bottom:8px;">24-HOUR NOTE</div>' +
+          (n.note_text ? '<p style="font:700 15px var(--font-body);margin:0 0 10px;">' + C.esc(n.note_text) + '</p>' : '') +
+          songHtml + quoteHtml +
+          '<a href="dm.html?u=' + encodeURIComponent(nuid) + '" style="display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;background:var(--ink,#111);color:#fff;border:2.5px solid var(--ink,#111);border-radius:12px;padding:10px;font:800 12px var(--font-head);text-decoration:none;margin-top:14px;">' + C.icon("chat") + ' REPLY IN CHAT →</a>' +
+        '</div>';
+      document.body.appendChild(ovl);
+      ovl.addEventListener("click", function (ev) { if (ev.target === ovl) ovl.remove(); });
+      document.getElementById("popCloseBtn").addEventListener("click", function () { ovl.remove(); });
+    }
+
     /* ---------- feed actions ---------- */
     feed.addEventListener("click", async function (e) {
       var t;
+      if ((t = e.target.closest("#cmMyNoteBtn"))) {
+        e.preventDefault();
+        openNoteModal();
+        return;
+      }
+      if ((t = e.target.closest("[data-note-user]"))) {
+        e.preventDefault();
+        var nuid = t.getAttribute("data-note-user");
+        showNotePopup(nuid);
+        return;
+      }
       if ((t = e.target.closest("[data-like]"))) {
         e.preventDefault();
         if (!C.signedIn()) { location.href = "login.html"; return; }

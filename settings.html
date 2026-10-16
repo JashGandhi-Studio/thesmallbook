@@ -158,6 +158,28 @@
     <p class="sethint">Only the bottom bar’s selected-tab pill wears this colour, the rest of the app stays classic.</p>
     </section>
 
+    <!-- 🎛️ CUSTOMIZE ACTION BAR -->
+    <section class="setcard" id="barCustomCard">
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><rect x="2" y="16" width="20" height="6" rx="2"></rect><path d="M6 16V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8"></path></svg>CUSTOMIZE ACTION BAR</h2>
+      <p class="sethint">Personalize your bottom navigation bar. Keep a minimum of 4 buttons (up to 5). Swap in Continue Reading, Messages, Library, Notes or Graveyard.</p>
+      
+      <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 6px;">
+        <b style="font-size:12px;letter-spacing:1px;text-transform:uppercase;">CURRENT SLOTS (MIN 4)</b>
+        <span id="barQuotaBadge" style="font-size:11px;font-weight:700;color:var(--ink,#111);background:var(--paper,#fff);border:2px solid var(--ink,#111);border-radius:6px;padding:3px 8px;">2 / 2 free edits left</span>
+      </div>
+
+      <div id="barSlotsRow" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;"></div>
+
+      <b style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin:12px 0 6px;color:var(--muted,#666);">AVAILABLE BUTTONS TO ADD / SWAP</b>
+      <div id="barPoolRow" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;"></div>
+
+      <div class="setrow" style="gap:10px;">
+        <button class="setbtn setbtn--yellow" id="saveBarBtn">💾 Save Action Bar</button>
+        <button class="setbtn" id="resetBarBtn">↺ Reset to Default</button>
+      </div>
+      <p class="sethint" id="barCustomMsg" style="margin-top:8px;font-weight:600;"></p>
+    </section>
+
     <section class="setcard">
       <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>READING LANGUAGE</h2>
       <div class="setlangs" id="langGrid"></div>
@@ -537,6 +559,168 @@
     })();
 
     window.addEventListener("tsb:auth", reveal);
+  })();
+  </script>
+  <script>
+  /* 🎛️ Customize Action Bar (with 2 free monthly edits) */
+  (function () {
+    var POOL = [
+      { id: "home", label: "Home", icon: "🏠", desc: "Main library & search" },
+      { id: "audio", label: "Audio Room", icon: "🎧", desc: "Podcasts & audiobooks" },
+      { id: "stories", label: "Stories", icon: "✍️", desc: "Daily lessons & writing" },
+      { id: "you", label: "You", icon: "👤", desc: "Profile, streak & saved" },
+      { id: "messages", label: "Messages", icon: "✈️", desc: "Community chat & DMs" },
+      { id: "continue", label: "Continue", icon: "📖", desc: "Instant resume last book" },
+      { id: "library", label: "Library", icon: "📚", desc: "Full 500-book catalog" },
+      { id: "scan", label: "Scan", icon: "📷", desc: "Camera book scanner" },
+      { id: "notes", label: "Notebook", icon: "📓", desc: "Private reading notes" },
+      { id: "graveyard", label: "Graveyard", icon: "💀", desc: "400 business autopsies" },
+      { id: "plus", label: "Plus", icon: "➕", desc: "Quick action / write post" }
+    ];
+
+    var slotsEl = document.getElementById("barSlotsRow");
+    var poolEl = document.getElementById("barPoolRow");
+    var quotaEl = document.getElementById("barQuotaBadge");
+    var msgEl = document.getElementById("barCustomMsg");
+    var saveBtn = document.getElementById("saveBarBtn");
+    var resetBtn = document.getElementById("resetBarBtn");
+    if (!slotsEl || !poolEl) return;
+
+    function getMonthKey() {
+      var d = new Date();
+      return d.getFullYear() + "-" + (d.getMonth() + 1 < 10 ? "0" : "") + (d.getMonth() + 1);
+    }
+
+    function isGoldOrFounder() {
+      try {
+        if (window.TSB_GOLD && TSB_GOLD.isGold && TSB_GOLD.isGold()) return true;
+        var s = JSON.parse(localStorage.getItem("tsb_auth_session") || "null");
+        var em = ((s && s.user && s.user.email) || "").toLowerCase();
+        if (em === "acimotreyothy@gmail.com") return true;
+      } catch (e) {}
+      return false;
+    }
+
+    function getQuota() {
+      if (isGoldOrFounder()) return { unlimited: true, left: 999 };
+      var ym = getMonthKey();
+      var data = { ym: ym, count: 0 };
+      try {
+        var raw = JSON.parse(localStorage.getItem("tsb_bar_custom_count"));
+        if (raw && raw.ym === ym) data = raw;
+      } catch (e) {}
+      return { unlimited: false, left: Math.max(0, 2 - data.count), count: data.count };
+    }
+
+    function useQuota() {
+      if (isGoldOrFounder()) return true;
+      var ym = getMonthKey();
+      var data = { ym: ym, count: 0 };
+      try {
+        var raw = JSON.parse(localStorage.getItem("tsb_bar_custom_count"));
+        if (raw && raw.ym === ym) data = raw;
+      } catch (e) {}
+      data.count++;
+      localStorage.setItem("tsb_bar_custom_count", JSON.stringify(data));
+      return true;
+    }
+
+    function loadSlots() {
+      try {
+        var saved = JSON.parse(localStorage.getItem("tsb_custom_bar"));
+        if (Array.isArray(saved) && saved.length >= 4) return saved;
+      } catch (e) {}
+      return ["home", "audio", "stories", "you"];
+    }
+
+    var currentSlots = loadSlots();
+
+    function render() {
+      var q = getQuota();
+      if (q.unlimited) {
+        quotaEl.innerHTML = "👑 Unlimited (Gold / Founder)";
+        quotaEl.style.color = "#0b7a58";
+      } else {
+        quotaEl.innerHTML = q.left + " / 2 free edits left this month";
+        quotaEl.style.color = q.left > 0 ? "var(--ink,#111)" : "#d64545";
+      }
+
+      slotsEl.innerHTML = currentSlots.map(function (k, idx) {
+        var it = POOL.filter(function (p) { return p.id === k; })[0] || { id: k, label: k, icon: "✦" };
+        return '<div style="display:flex;align-items:center;gap:6px;background:var(--paper,#fff);border:2.5px solid var(--ink,#111);border-radius:10px;padding:6px 10px;box-shadow:3px 3px 0 var(--ink,#111);">' +
+          '<b style="font-size:11px;opacity:0.6;">#' + (idx + 1) + '</b>' +
+          '<span style="font-size:15px;">' + it.icon + '</span>' +
+          '<b style="font-size:12px;font-family:var(--font-head);">' + it.label + '</b>' +
+          (currentSlots.length > 4 ? '<button type="button" data-del="' + idx + '" style="background:none;border:none;color:#999;font-weight:900;cursor:pointer;padding:0 0 0 4px;font-size:13px;" title="Remove slot">✕</button>' : '') +
+        '</div>';
+      }).join("");
+
+      poolEl.innerHTML = POOL.map(function (p) {
+        var inSlots = currentSlots.indexOf(p.id) >= 0;
+        return '<button type="button" data-add="' + p.id + '" style="display:inline-flex;align-items:center;gap:5px;background:' + (inSlots ? 'var(--yellow,#ffc800)' : 'var(--paper,#fff)') + ';border:2px solid var(--ink,#111);border-radius:8px;padding:6px 9px;font:700 11.5px var(--font-body);cursor:pointer;box-shadow:2px 2px 0 var(--ink,#111);' + (inSlots ? 'opacity:0.85;' : '') + '">' +
+          '<span>' + p.icon + '</span><span>' + p.label + '</span>' + (inSlots ? '<small style="font-size:9px;opacity:0.8;">(in bar)</small>' : '') +
+        '</button>';
+      }).join("");
+    }
+
+    slotsEl.addEventListener("click", function (e) {
+      var delBtn = e.target.closest("[data-del]");
+      if (!delBtn) return;
+      var idx = parseInt(delBtn.getAttribute("data-del"), 10);
+      if (currentSlots.length <= 4) return;
+      currentSlots.splice(idx, 1);
+      render();
+    });
+
+    poolEl.addEventListener("click", function (e) {
+      var addBtn = e.target.closest("[data-add]");
+      if (!addBtn) return;
+      var id = addBtn.getAttribute("data-add");
+      var at = currentSlots.indexOf(id);
+      if (at >= 0) {
+        if (currentSlots.length > 4) {
+          currentSlots.splice(at, 1);
+        } else {
+          msgEl.textContent = "Minimum 4 buttons required in the action bar.";
+          setTimeout(function () { msgEl.textContent = ""; }, 2500);
+        }
+      } else {
+        if (currentSlots.length >= 5) {
+          msgEl.textContent = "Maximum 5 buttons allowed. Tap an existing button to swap it.";
+          setTimeout(function () { msgEl.textContent = ""; }, 2500);
+          return;
+        }
+        currentSlots.push(id);
+      }
+      render();
+    });
+
+    saveBtn.addEventListener("click", function () {
+      if (currentSlots.length < 4) {
+        msgEl.textContent = "Please select at least 4 buttons for the action bar.";
+        return;
+      }
+      var q = getQuota();
+      if (!q.unlimited && q.left <= 0) {
+        msgEl.innerHTML = "⚠️ You have used your 2 free bar customizations this month. Upgrade to Gold for unlimited changes anytime!";
+        return;
+      }
+      useQuota();
+      localStorage.setItem("tsb_custom_bar", JSON.stringify(currentSlots));
+      msgEl.innerHTML = "✅ Action bar updated successfully!";
+      render();
+      setTimeout(function () { location.reload(); }, 600);
+    });
+
+    resetBtn.addEventListener("click", function () {
+      currentSlots = ["home", "audio", "stories", "you"];
+      localStorage.removeItem("tsb_custom_bar");
+      msgEl.innerHTML = "↺ Reset to classic: Home, Audio Room, Stories, You.";
+      render();
+      setTimeout(function () { location.reload(); }, 600);
+    });
+
+    render();
   })();
   </script>
 </body>

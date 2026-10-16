@@ -6188,6 +6188,62 @@ html.dark .cm-card__tags span { background: #1b1712; }
 .cm-rail__ring > * , .cm-rail__ring img, .cm-rail__ring span { width: 52px; height: 52px; border-radius: 50%; border: 2.5px solid var(--ink); object-fit: cover; display: grid; place-items: center; background: var(--paper); color: var(--ink); font-weight: 800; font-size: 1.05rem; overflow: hidden; }
 .cm-rail__n { font-size: .62rem; font-weight: 800; color: #55504a; max-width: 64px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 html.dark .cm-rail__n { color: #b7b0a5; }
+
+/* Instagram-style 24-hour Profile Note bubble */
+.cm-note-bubble {
+  position: absolute;
+  top: -14px;
+  background: var(--paper, #fff);
+  border: 1.8px solid var(--ink, #111);
+  border-radius: 12px;
+  box-shadow: 2px 2px 0 var(--ink, #111);
+  padding: 3px 6px;
+  font-family: var(--font-body);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--ink, #111);
+  max-width: 78px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 3;
+  pointer-events: auto;
+  animation: noteFloat 2.4s ease-in-out infinite alternate;
+}
+.cm-note-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: var(--paper, #fff);
+  border-right: 1.8px solid var(--ink, #111);
+  border-bottom: 1.8px solid var(--ink, #111);
+  transform: translateX(-50%) rotate(45deg);
+}
+@keyframes noteFloat {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-2.5px); }
+}
+.cm-note-bubble--song {
+  background: var(--yellow, #ffc800);
+}
+.cm-note-add {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 18px;
+  height: 18px;
+  background: var(--yellow, #ffc800);
+  border: 1.8px solid var(--ink, #111);
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 900;
+  display: grid;
+  place-items: center;
+  color: var(--ink, #111);
+}
 .cm-feed > .cm-sect { margin: 2px 0 -4px; font-family: var(--font-head); font-size: .82rem; letter-spacing: .5px; }
 .cm-heart { position: absolute; inset: 0; display: grid; place-items: center; font-size: 74px; color: #e5484d; text-shadow: 0 2px 0 rgba(0,0,0,.25); animation: cmHeart .85s cubic-bezier(.22,.9,.35,1) forwards; pointer-events: none; }
 @keyframes cmHeart { 0% { transform: scale(0); opacity: 0; } 25% { transform: scale(1.25); opacity: 1; } 60% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.1); opacity: 0; } }

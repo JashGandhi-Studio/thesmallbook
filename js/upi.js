@@ -109,7 +109,13 @@
     window.addEventListener("pagehide", markOpened);
     window.addEventListener("blur", markOpened);
     document.addEventListener("visibilitychange", function () { if (document.hidden) markOpened(); });
-    try { location.href = build(amount, note); }
+    try {
+      var ifr = document.createElement("iframe");
+      ifr.style.display = "none";
+      ifr.src = build(amount, note);
+      document.body.appendChild(ifr);
+      setTimeout(function () { try { ifr.remove(); } catch (e) {} }, 2500);
+    }
     catch (e) { showModal(amount, note); return; }
     setTimeout(function () {
       if (!opened && !document.hidden) showModal(amount, note);
