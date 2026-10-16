@@ -178,6 +178,19 @@
         <button class="setbtn" id="resetBarBtn">↺ Reset to Default</button>
       </div>
       <p class="sethint" id="barCustomMsg" style="margin-top:8px;font-weight:600;"></p>
+
+      <div style="margin-top:16px;padding-top:14px;border-top:2px dashed rgba(20,17,12,0.2);">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+          <div>
+            <b style="font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;">TAB LABELS</b>
+            <span class="sethint" style="margin:2px 0 0;">Hide text labels for modern, icon-only navigation.</span>
+          </div>
+          <div class="tsb-toggle-group" style="display:flex;gap:6px;">
+            <button type="button" class="setbtn setbtn--sm" id="btnBarLabelFull" style="padding:6px 12px;font-size:11px;">Icons + Text</button>
+            <button type="button" class="setbtn setbtn--sm" id="btnBarLabelIcons" style="padding:6px 12px;font-size:11px;">Icons Only</button>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="setcard">
@@ -569,7 +582,8 @@
       { id: "audio", label: "Audio Room", icon: "🎧", desc: "Podcasts & audiobooks" },
       { id: "stories", label: "Stories", icon: "✍️", desc: "Daily lessons & writing" },
       { id: "you", label: "You", icon: "👤", desc: "Profile, streak & saved" },
-      { id: "messages", label: "Messages", icon: "✈️", desc: "Community chat & DMs" },
+      { id: "messages", label: "Messages", icon: "✈️", desc: "Reader chat & Notes (dm.html)" },
+      { id: "ask", label: "Ask Library", icon: "💬", desc: "Ask 500-book library (chat.html)" },
       { id: "continue", label: "Continue", icon: "📖", desc: "Instant resume last book" },
       { id: "library", label: "Library", icon: "📚", desc: "Full 500-book catalog" },
       { id: "scan", label: "Scan", icon: "📷", desc: "Camera book scanner" },
@@ -719,6 +733,37 @@
       render();
       setTimeout(function () { location.reload(); }, 600);
     });
+
+    /* Tab labels toggle */
+    var btnFull = document.getElementById("btnBarLabelFull");
+    var btnIcons = document.getElementById("btnBarLabelIcons");
+    function syncLabelBtns() {
+      var pref = "";
+      try { pref = localStorage.getItem("tsb_bar_labels") || "labels"; } catch(e) {}
+      if (btnFull && btnIcons) {
+        btnFull.classList.toggle("setbtn--yellow", pref !== "icons");
+        btnIcons.classList.toggle("setbtn--yellow", pref === "icons");
+      }
+    }
+    syncLabelBtns();
+    if (btnFull) {
+      btnFull.addEventListener("click", function () {
+        try { localStorage.setItem("tsb_bar_labels", "labels"); } catch(e) {}
+        document.documentElement.removeAttribute("data-bar-labels");
+        var b = document.getElementById("tsbBar");
+        if (b) b.classList.remove("tsb-bar--icons-only");
+        syncLabelBtns();
+      });
+    }
+    if (btnIcons) {
+      btnIcons.addEventListener("click", function () {
+        try { localStorage.setItem("tsb_bar_labels", "icons"); } catch(e) {}
+        document.documentElement.setAttribute("data-bar-labels", "icons");
+        var b = document.getElementById("tsbBar");
+        if (b) b.classList.add("tsb-bar--icons-only");
+        syncLabelBtns();
+      });
+    }
 
     render();
   })();

@@ -55,6 +55,7 @@
   </div>
 
   <main class="cm-wrap" id="dmMain">
+    <div id="dmNotesHub" class="dm-notes-hub" hidden></div>
     <div id="dmList" class="dm-list"></div>
     <div id="dmThread" class="dm-thread" hidden>
       <div class="dm-msgs" id="dmMsgs"></div>
@@ -646,6 +647,344 @@
       }
     });
 
+    /* 24-HOUR PROFILE NOTES SYSTEM (Instagram Notes Hub) */
+    var activeNotes = {
+      "u-naval": {
+        note_type: "quote",
+        quote_text: "Desire is a contract you make with yourself to be unhappy until you get what you want.",
+        quote_author: "Naval",
+        note_text: "Desire contract",
+        author_name: "Naval"
+      },
+      "u-jash": {
+        note_type: "song",
+        song_title: "Midnight City",
+        song_artist: "M83",
+        artwork_url: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/52/aa/85/52aa851f-15b7-6322-f91f-df84b15b7b19/190295978044.jpg/100x100bb.jpg",
+        preview_url: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a3/30/8e/a3308eed-d8b7-e0b3-f09d-5e1b0f4d660a/mzaf_8517946447501075134.plus.aac.p.m4a",
+        note_text: "Late night building",
+        author_name: "Jash"
+      }
+    };
+
+    function loadLocalNotes() {
+      try {
+        var myNote = JSON.parse(localStorage.getItem("tsb_my_note"));
+        if (myNote && myNote.expires_at > Date.now()) {
+          activeNotes["me"] = myNote;
+        }
+      } catch (e) {}
+    }
+    loadLocalNotes();
+
+    function loadNotesHub() {
+      var hub = document.getElementById("dmNotesHub");
+      if (!hub) return;
+      hub.hidden = false;
+      var myUser = (window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null) || (window.TSB_AUTH && TSB_AUTH.me ? TSB_AUTH.me() : null) || C.me();
+      var myName = (myUser && (myUser.name || (myUser.user_metadata && (myUser.user_metadata.full_name || myUser.user_metadata.name)))) || "You";
+      
+      /* Retrieve user photo from auth session, profile, or metadata */
+      var myPhoto = "";
+      if (myUser) {
+        myPhoto = myUser.avatar_url || (myUser.user_metadata && (myUser.user_metadata.avatar_url || myUser.user_metadata.picture)) || "";
+      }
+      if (!myPhoto) {
+        try {
+          var s = JSON.parse(localStorage.getItem("tsb_auth_session") || "null");
+          if (s && s.user) {
+            myPhoto = s.user.avatar_url || (s.user.user_metadata && (s.user.user_metadata.avatar_url || s.user.user_metadata.picture)) || "";
+          }
+        } catch(e) {}
+      }
+      if (!myPhoto) {
+        try {
+          var prf = JSON.parse(localStorage.getItem("tsb_profile") || "null");
+          if (prf && prf.avatar_url) myPhoto = prf.avatar_url;
+        } catch(e) {}
+      }
+      if (!myPhoto && myUser) {
+        myPhoto = C.avaUrl(myName, "", myUser.id);
+      }
+
+      var myNote = activeNotes["me"];
+      var myBubble = "";
+      if (myNote) {
+        var isSong = myNote.note_type === "song";
+        var txt = isSong ? ("🎵 " + (myNote.song_title || "Song")) : (myNote.note_text || "Thinking...");
+        myBubble = '<span class="cm-note-bubble' + (isSong ? ' cm-note-bubble--song' : '') + '" title="' + C.esc(txt) + '">' + C.esc(txt) + '</span>';
+      } else {
+        /* Instagram-style prompt bubble in subtle grey font */
+        myBubble = '<span class="cm-note-bubble cm-note-bubble--prompt" title="Share a thought...">Note...</span>';
+      }
+
+      var myItem = '<div class="cm-rail__i" id="dmMyNoteBtn" style="cursor:pointer;position:relative;" title="Share a 24h Note">' +
+        myBubble +
+        '<span class="cm-rail__ring" style="position:relative;">' +
+          (myPhoto ? '<img src="' + C.esc(myPhoto) + '" alt="" style="object-fit:cover;width:100%;height:100%;border-radius:50%;">' : '<span>' + C.esc(myName.charAt(0).toUpperCase()) + '</span>') +
+        '</span>' +
+        '<span class="cm-rail__n">Your note</span>' +
+      '</div>';
+
+      var otherKeys = Object.keys(activeNotes).filter(function (k) { return k !== "me"; });
+      var otherItems = otherKeys.map(function (k) {
+        var n = activeNotes[k];
+        var isSong2 = n.note_type === "song";
+        var txt2 = isSong2 ? ("🎵 " + (n.song_title || "Song")) : (n.note_text || "");
+        var pBubble = '<span class="cm-note-bubble' + (isSong2 ? ' cm-note-bubble--song' : '') + '" data-note-key="' + C.esc(k) + '">' + C.esc(txt2) + '</span>';
+        var nm = n.author_name || "Friend";
+        var let1 = nm.charAt(0).toUpperCase();
+        return '<div class="cm-rail__i" data-note-key="' + C.esc(k) + '" style="cursor:pointer;position:relative;" title="' + C.esc(nm) + '">' +
+          pBubble +
+          '<span class="cm-rail__ring"><span>' + C.esc(let1) + '</span></span>' +
+          '<span class="cm-rail__n">' + C.esc(nm.split(" ")[0]) + '</span>' +
+        '</div>';
+      }).join("");
+
+      hub.innerHTML = '<div class="cm-rail">' + myItem + otherItems + '</div>';
+    }
+
+    function openNoteModal() {
+      if (document.getElementById("noteModalOvl")) return;
+      var cur = activeNotes["me"] || {};
+      var ovl = document.createElement("div");
+      ovl.id = "noteModalOvl";
+      ovl.style.cssText = "position:fixed;inset:0;background:rgba(17,17,17,0.7);z-index:99998;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px);";
+
+      var selSong = cur.song_title ? {
+        title: cur.song_title,
+        artist: cur.song_artist || "",
+        artwork: cur.artwork_url || "",
+        preview: cur.preview_url || ""
+      } : null;
+
+      ovl.innerHTML =
+        '<div style="background:var(--paper,#fffdf5);border:3.5px solid var(--ink,#111);border-radius:18px;box-shadow:8px 8px 0 var(--ink,#111);max-width:390px;width:100%;max-height:92vh;overflow-y:auto;padding:22px;position:relative;box-sizing:border-box;">' +
+          '<button id="noteCloseBtn" style="position:absolute;top:14px;right:14px;background:none;border:none;font:800 20px sans-serif;cursor:pointer;color:var(--ink,#111);">✕</button>' +
+          '<h3 style="font:800 17px var(--font-head);margin:0 0 4px;letter-spacing:0.5px;">24-HOUR NOTE</h3>' +
+          '<p style="font-size:12px;color:var(--muted,#666);margin:0 0 14px;">Floating over your avatar for friends for 24 hours.</p>' +
+          '<label style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;margin-bottom:4px;">YOUR THOUGHT (UP TO 60 CHARS)</label>' +
+          '<input id="noteTextInput" maxlength="60" placeholder="What is on your mind today?" value="' + C.esc(cur.note_text || "") + '" style="width:100%;border:2px solid var(--ink,#111);border-radius:10px;padding:10px;font:600 13px var(--font-body);margin-bottom:12px;background:#fff;color:#111;box-sizing:border-box;">' +
+          '<label style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;margin-bottom:4px;">🎵 ATTACH SONG (ITUNES LIVE SEARCH)</label>' +
+          '<div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">' +
+            '<input id="noteSongSearch" placeholder="Search song or artist on iTunes..." style="flex:1;border:2px solid var(--ink,#111);border-radius:10px;padding:9px;font:600 12.5px var(--font-body);background:#fff;color:#111;box-sizing:border-box;">' +
+            '<span id="noteSongSpin" style="font-size:12px;display:none;">...</span>' +
+          '</div>' +
+          '<div id="noteSongRes" class="dm-song-res" style="display:none;"></div>' +
+          '<div id="noteSongSel" style="margin-bottom:12px;display:none;background:var(--yellow,#ffc800);border:2px solid var(--ink,#111);border-radius:10px;padding:8px 10px;align-items:center;gap:8px;"></div>' +
+          '<label style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;margin-bottom:4px;">❝ OR ATTACH A QUOTE (OPTIONAL)</label>' +
+          '<input id="noteQuoteInput" maxlength="80" placeholder="Book quote..." value="' + C.esc(cur.quote_text || "") + '" style="width:100%;border:2px solid var(--ink,#111);border-radius:10px;padding:10px;font:600 13px var(--font-body);margin-bottom:16px;background:#fff;color:#111;box-sizing:border-box;">' +
+          '<div style="display:flex;gap:8px;">' +
+            '<button id="saveNoteBtn" style="flex:1;background:var(--yellow,#ffc800);border:2.5px solid var(--ink,#111);border-radius:12px;padding:12px;font:800 12px var(--font-head);cursor:pointer;box-shadow:3px 3px 0 var(--ink,#111);">SHARE NOTE (24H) 🚀</button>' +
+            (cur.note_text || cur.song_title ? '<button id="delNoteBtn" style="background:#fff;border:2.5px solid var(--ink,#111);border-radius:12px;padding:12px;font:800 12px var(--font-head);cursor:pointer;color:#d64545;">CLEAR</button>' : '') +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(ovl);
+
+      var songResEl = document.getElementById("noteSongRes");
+      var songSelEl = document.getElementById("noteSongSel");
+      var songInput = document.getElementById("noteSongSearch");
+      var songSpin = document.getElementById("noteSongSpin");
+
+      function updateSelectedSongUI() {
+        if (!songSelEl) return;
+        if (!selSong) {
+          songSelEl.style.display = "none";
+          songSelEl.innerHTML = "";
+          return;
+        }
+        songSelEl.style.display = "flex";
+        songSelEl.innerHTML =
+          (selSong.artwork ? '<img src="' + C.esc(selSong.artwork) + '" style="width:34px;height:34px;border-radius:6px;border:1.5px solid #111;object-fit:cover;">' : '<span style="font-size:18px;">🎵</span>') +
+          '<div style="flex:1;min-width:0;line-height:1.2;">' +
+            '<b style="display:block;font-size:12px;color:#111;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + C.esc(selSong.title) + '</b>' +
+            '<span style="font-size:11px;color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;">' + C.esc(selSong.artist) + '</span>' +
+          '</div>' +
+          '<button type="button" id="rmSelSongBtn" style="background:none;border:none;font:800 14px sans-serif;cursor:pointer;padding:4px 8px;color:#111;" title="Remove song">✕</button>';
+        var rm = document.getElementById("rmSelSongBtn");
+        if (rm) {
+          rm.addEventListener("click", function () {
+            selSong = null;
+            updateSelectedSongUI();
+          });
+        }
+      }
+      updateSelectedSongUI();
+
+      var itunesTimer = null;
+      if (songInput) {
+        songInput.addEventListener("input", function () {
+          clearTimeout(itunesTimer);
+          var q = (this.value || "").trim();
+          if (!q || q.length < 2) {
+            if (songResEl) { songResEl.style.display = "none"; songResEl.innerHTML = ""; }
+            return;
+          }
+          if (songSpin) songSpin.style.display = "inline";
+          itunesTimer = setTimeout(async function () {
+            try {
+              var r = await fetch("https://itunes.apple.com/search?term=" + encodeURIComponent(q) + "&entity=song&limit=6");
+              var json = await r.json();
+              if (songSpin) songSpin.style.display = "none";
+              if (!json || !json.results || !json.results.length) {
+                songResEl.style.display = "block";
+                songResEl.innerHTML = '<div style="padding:8px 12px;font-size:11.5px;color:#666;">No songs found for "' + C.esc(q) + '"</div>';
+                return;
+              }
+              songResEl.style.display = "block";
+              songResEl.innerHTML = json.results.map(function (item, idx) {
+                var art = item.artworkUrl60 || item.artworkUrl30 || "";
+                return '<div class="itunes-song-row" data-song-idx="' + idx + '">' +
+                  (art ? '<img src="' + C.esc(art) + '" alt="">' : '<span style="font-size:18px;">🎵</span>') +
+                  '<div style="flex:1;min-width:0;">' +
+                    '<div style="font:700 12px var(--font-body);color:#111;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + C.esc(item.trackName) + '</div>' +
+                    '<div style="font:500 11px var(--font-body);color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + C.esc(item.artistName) + '</div>' +
+                  '</div>' +
+                '</div>';
+              }).join("");
+
+              songResEl.querySelectorAll(".itunes-song-row").forEach(function (row) {
+                row.addEventListener("click", function () {
+                  var i = parseInt(this.getAttribute("data-song-idx"), 10);
+                  var match = json.results[i];
+                  if (match) {
+                    selSong = {
+                      title: match.trackName,
+                      artist: match.artistName,
+                      artwork: match.artworkUrl100 || match.artworkUrl60 || "",
+                      preview: match.previewUrl || ""
+                    };
+                    updateSelectedSongUI();
+                    songResEl.style.display = "none";
+                    songResEl.innerHTML = "";
+                    songInput.value = "";
+                  }
+                });
+              });
+            } catch (err) {
+              if (songSpin) songSpin.style.display = "none";
+              songResEl.style.display = "block";
+              songResEl.innerHTML = '<div style="padding:8px 12px;font-size:11.5px;color:#d64545;">Search offline or blocked. You can type thoughts or quote.</div>';
+            }
+          }, 300);
+        });
+      }
+
+      ovl.addEventListener("click", function (ev) { if (ev.target === ovl) ovl.remove(); });
+      document.getElementById("noteCloseBtn").addEventListener("click", function () { ovl.remove(); });
+      var delBtn = document.getElementById("delNoteBtn");
+      if (delBtn) {
+        delBtn.addEventListener("click", function () {
+          try { localStorage.removeItem("tsb_my_note"); } catch (eD) {}
+          delete activeNotes["me"];
+          ovl.remove();
+          loadNotesHub();
+        });
+      }
+      document.getElementById("saveNoteBtn").addEventListener("click", function () {
+        var txt = (document.getElementById("noteTextInput").value || "").trim();
+        var quote = (document.getElementById("noteQuoteInput").value || "").trim();
+        if (!txt && !selSong && !quote) { ovl.remove(); return; }
+        var type = selSong ? "song" : (quote ? "quote" : "text");
+        var obj = {
+          note_text: txt || (selSong ? "Listening to" : "Reading"),
+          note_type: type,
+          song_title: selSong ? selSong.title : "",
+          song_artist: selSong ? selSong.artist : "",
+          artwork_url: selSong ? selSong.artwork : "",
+          preview_url: selSong ? selSong.preview : "",
+          quote_text: quote,
+          created_at: Date.now(),
+          expires_at: Date.now() + 864e5
+        };
+        try { localStorage.setItem("tsb_my_note", JSON.stringify(obj)); } catch (eS) {}
+        activeNotes["me"] = obj;
+        ovl.remove();
+        loadNotesHub();
+      });
+    }
+
+    function showNotePopup(k) {
+      var n = activeNotes[k];
+      if (!n) return;
+      var ovl = document.createElement("div");
+      ovl.style.cssText = "position:fixed;inset:0;background:rgba(17,17,17,0.65);z-index:99998;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px);";
+
+      var songHtml = "";
+      if (n.song_title) {
+        var hasPrev = !!n.preview_url;
+        songHtml = '<div style="background:var(--yellow,#ffc800);border:2px solid var(--ink,#111);border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:10px;margin:10px 0;">' +
+          (n.artwork_url ? '<img src="' + C.esc(n.artwork_url) + '" style="width:38px;height:38px;border-radius:6px;border:1.5px solid #111;object-fit:cover;">' : '<span style="font-size:20px;">🎵</span>') +
+          '<div style="flex:1;min-width:0;">' +
+            '<b style="display:block;font-size:13px;color:#111;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + C.esc(n.song_title) + '</b>' +
+            '<span style="font-size:11.5px;color:#222;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;">' + C.esc(n.song_artist || "") + '</span>' +
+          '</div>' +
+          (hasPrev ? '<button id="noteAudioBtn" type="button" style="background:var(--ink,#111);color:#fff;border:none;border-radius:8px;padding:6px 10px;font:700 11px sans-serif;cursor:pointer;">PLAY ▶</button>' : '') +
+        '</div>';
+      }
+
+      var quoteHtml = n.quote_text ? '<blockquote style="border-left:4px solid var(--ink,#111);padding-left:10px;font:italic 13px Georgia,serif;margin:10px 0;">\u201c' + C.esc(n.quote_text) + '\u201d' + (n.quote_author ? '<br><small>- ' + C.esc(n.quote_author) + '</small>' : '') + '</blockquote>' : '';
+
+      var replyBtn = (k !== "me") ? '<button id="noteReplyBtn" style="width:100%;display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;background:var(--ink,#111);color:#fff;border:2.5px solid var(--ink,#111);border-radius:12px;padding:10px;font:800 12px var(--font-head);cursor:pointer;margin-top:14px;">' + C.icon("chat") + ' REPLY IN CHAT →</button>' : '';
+
+      ovl.innerHTML =
+        '<div style="background:var(--paper,#fffdf5);border:3.5px solid var(--ink,#111);border-radius:18px;box-shadow:8px 8px 0 var(--ink,#111);max-width:340px;width:100%;padding:22px;position:relative;box-sizing:border-box;">' +
+          '<button id="popCloseBtn" style="position:absolute;top:12px;right:12px;background:none;border:none;font:800 20px sans-serif;cursor:pointer;color:var(--ink,#111);">✕</button>' +
+          '<div style="font:800 11px var(--font-head);letter-spacing:1px;color:var(--muted,#666);margin-bottom:8px;">24-HOUR NOTE</div>' +
+          (n.note_text ? '<p style="font:700 15px var(--font-body);margin:0 0 10px;color:var(--ink,#111);">' + C.esc(n.note_text) + '</p>' : '') +
+          songHtml + quoteHtml + replyBtn +
+        '</div>';
+      document.body.appendChild(ovl);
+
+      var audioEl = null;
+      var audBtn = document.getElementById("noteAudioBtn");
+      if (audBtn && n.preview_url) {
+        audBtn.addEventListener("click", function () {
+          if (!audioEl) {
+            audioEl = new Audio(n.preview_url);
+            audioEl.addEventListener("ended", function () { audBtn.textContent = "PLAY ▶"; });
+          }
+          if (audioEl.paused) {
+            audioEl.play().catch(function () {});
+            audBtn.textContent = "PAUSE ❚❚";
+          } else {
+            audioEl.pause();
+            audBtn.textContent = "PLAY ▶";
+          }
+        });
+      }
+
+      function cleanup() {
+        if (audioEl) { audioEl.pause(); audioEl = null; }
+        ovl.remove();
+      }
+
+      ovl.addEventListener("click", function (ev) { if (ev.target === ovl) cleanup(); });
+      document.getElementById("popCloseBtn").addEventListener("click", cleanup);
+      var rBtn = document.getElementById("noteReplyBtn");
+      if (rBtn) {
+        rBtn.addEventListener("click", function () {
+          cleanup();
+          location.href = "dm.html?u=" + encodeURIComponent(k);
+        });
+      }
+    }
+
+    document.getElementById("dmMain").addEventListener("click", function (e) {
+      var t;
+      if ((t = e.target.closest("#dmMyNoteBtn"))) {
+        e.preventDefault();
+        openNoteModal();
+        return;
+      }
+      if ((t = e.target.closest("[data-note-key]"))) {
+        e.preventDefault();
+        var k = t.getAttribute("data-note-key");
+        showNotePopup(k);
+        return;
+      }
+    });
+
     /* ---- routing ---- */
     if (!uid) {
       try {
@@ -660,11 +999,14 @@
         try { ret = sessionStorage.getItem("tsb_dm_return") || ""; } catch (err) {}
         location.href = ret || "stories.html?tab=people";
       });
+      loadNotesHub();
       loadList();
     } else {
       list.hidden = true;
       thread.hidden = false;
       menuBtn.hidden = false;
+      var nh = document.getElementById("dmNotesHub");
+      if (nh) nh.hidden = true;
       loadThread();
       setInterval(function () { loadThread(true); }, 6000);
     }

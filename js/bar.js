@@ -51,7 +51,8 @@
     audio:     { id: "audio", url: "podcasts.html", lbl: "Audio Room", ico: ICO.audio, cls: "tsb-bar__item--audio" },
     stories:   { id: "stories", url: "stories.html", lbl: "Stories", ico: ICO.stories, cls: "tsb-bar__item--stories" },
     you:       { id: "you", url: "login.html", lbl: "You", ico: ICO.you, cls: "tsb-bar__item--you" },
-    messages:  { id: "messages", url: "chat.html", lbl: "Messages", ico: ICO.messages, cls: "tsb-bar__item--messages" },
+    messages:  { id: "messages", url: "dm.html", lbl: "Messages", ico: ICO.messages, cls: "tsb-bar__item--messages" },
+    ask:       { id: "ask", url: "chat.html", lbl: "Ask Library", ico: ICO.messages, cls: "tsb-bar__item--ask" },
     continue:  { id: "continue", url: "book.html?resume=1", lbl: "Continue", ico: ICO.continue, cls: "tsb-bar__item--continue" },
     library:   { id: "library", url: "index.html#library", lbl: "Library", ico: ICO.library, cls: "tsb-bar__item--library" },
     scan:      { id: "scan", url: "scan.html", lbl: "Scan", ico: ICO.scan, cls: "tsb-bar__item--scan" },
@@ -70,7 +71,8 @@
     if (p === "podcasts.html") return "audio";
     if (p === "stories.html" || p === "story.html" || p === "write.html") return "stories";
     if (p === "login.html" || p === "settings.html" || p === "profile.html" || p === "you.html") return "you";
-    if (p === "chat.html" || p === "dm.html") return "messages";
+    if (p === "dm.html") return "messages";
+    if (p === "chat.html") return "ask";
     if (p === "notes.html") return "notes";
     if (p === "scan.html") return "scan";
     if (p === "graveyard.html") return "graveyard";
@@ -96,6 +98,14 @@
   bar.id = "tsbBar";
   bar.className = "tsb-bar tsb-bar--off ed-mobile-nav"; /* parked below the screen */
   bar.setAttribute("aria-label", "Main");
+
+  /* Tab labels preference: icons-only vs full labels */
+  var barLabelsPref = "";
+  try { barLabelsPref = localStorage.getItem("tsb_bar_labels") || "labels"; } catch (ePref) {}
+  if (barLabelsPref === "icons") {
+    bar.classList.add("tsb-bar--icons-only");
+    document.documentElement.setAttribute("data-bar-labels", "icons");
+  }
 
   function buildBarHtml(slots) {
     return slots.map(function (key) {
@@ -127,8 +137,17 @@
     if (pageName() === "index.html") setActive(currentActive());
   });
 
+  /* Suppress tab jump right after drag-and-drop reorder */
+  var suppressClickUntil = 0;
+
   /* ---------- taps ---------- */
   bar.addEventListener("click", function (e) {
+    if (suppressClickUntil && Date.now() < suppressClickUntil) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+
     var item = e.target.closest ? e.target.closest(".tsb-bar__item") : null;
     if (!item) return;
     var id = item.getAttribute("data-tab");
@@ -303,10 +322,184 @@
     } catch (e) {}
   })();
 
+  /* ============================================================
+     ACUTE PHYSICS DRAG-AND-DROP ACTION BAR REORDERING
+     Long-press detection (380ms) with acute haptics, lift/float physics,
+     live slot swapping during drag, release snap drop, and persistent
+     localStorage sync.
+     ============================================================ */
+  var updateSwipeNavTabs = null;
+
+  (function initBarDragReorder() {
+    var pressTimer = null;
+    var draggedEl = null;
+    var draggedIdx = -1;
+    var startX = 0;
+    var startY = 0;
+    var isReordering = false;
+    var itemRects = [];
+    var barItems = [];
+
+    function updateItemRects() {
+      barItems = Array.prototype.slice.call(bar.querySelectorAll(".tsb-bar__item"));
+      itemRects = barItems.map(function (el) {
+        var r = el.getBoundingClientRect();
+        return { el: el, left: r.left, width: r.width, cx: r.left + r.width / 2 };
+      });
+    }
+
+    function cancelLongPress() {
+      if (pressTimer) {
+        clearTimeout(pressTimer);
+        pressTimer = null;
+      }
+    }
+
+    function startReorder(el, clientX, clientY) {
+      isReordering = true;
+      draggedEl = el;
+      draggedIdx = barItems.indexOf(el);
+      if (draggedIdx === -1) return;
+
+      try { if (navigator.vibrate) navigator.vibrate(25); } catch (eV) {}
+
+      bar.classList.add("tsb-bar--reordering");
+      draggedEl.classList.add("tsb-bar__item--floating");
+
+      updateItemRects();
+    }
+
+    function handlePointerDown(e) {
+      if (isReordering) return;
+      var item = e.target.closest ? e.target.closest(".tsb-bar__item") : null;
+      if (!item || !bar.contains(item)) return;
+
+      var pt = e.touches ? e.touches[0] : e;
+      startX = pt.clientX;
+      startY = pt.clientY;
+
+      updateItemRects();
+
+      cancelLongPress();
+      pressTimer = setTimeout(function () {
+        pressTimer = null;
+        startReorder(item, startX, startY);
+      }, 380);
+    }
+
+    function handlePointerMove(e) {
+      var pt = e.touches ? e.touches[0] : e;
+      var cx = pt.clientX;
+      var cy = pt.clientY;
+
+      if (pressTimer) {
+        if (Math.abs(cx - startX) > 8 || Math.abs(cy - startY) > 8) {
+          cancelLongPress();
+        }
+      }
+
+      if (!isReordering || !draggedEl) return;
+
+      if (e.cancelable) e.preventDefault();
+      if (e.stopPropagation) e.stopPropagation();
+
+      var dx = cx - startX;
+      var rot = Math.max(-5, Math.min(5, dx * 0.08));
+      draggedEl.style.transform = "translate3d(" + dx + "px, -16px, 0) scale(1.16) rotate(" + rot + "deg)";
+
+      var currentCenterX = itemRects[draggedIdx].cx + dx;
+      for (var i = 0; i < itemRects.length; i++) {
+        if (i === draggedIdx) continue;
+        var sibling = itemRects[i];
+        var dist = currentCenterX - sibling.cx;
+        var shouldSwap = false;
+        if (i > draggedIdx && dist > -sibling.width * 0.1) {
+          shouldSwap = true;
+        } else if (i < draggedIdx && dist < sibling.width * 0.1) {
+          shouldSwap = true;
+        }
+
+        if (shouldSwap) {
+          try { if (navigator.vibrate) navigator.vibrate(10); } catch (eV) {}
+
+          var tempSlot = activeSlots[draggedIdx];
+          activeSlots[draggedIdx] = activeSlots[i];
+          activeSlots[i] = tempSlot;
+
+          var offset = (draggedIdx - i) * sibling.width;
+          sibling.el.style.transform = "translate3d(" + offset + "px, 0, 0)";
+          sibling.el.style.transition = "transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1)";
+
+          draggedIdx = i;
+          startX = cx;
+          updateItemRects();
+          break;
+        }
+      }
+    }
+
+    function handlePointerUp(e) {
+      cancelLongPress();
+      if (!isReordering || !draggedEl) {
+        return;
+      }
+
+      suppressClickUntil = Date.now() + 420;
+      isReordering = false;
+
+      var el = draggedEl;
+      draggedEl = null;
+
+      try { if (navigator.vibrate) navigator.vibrate(15); } catch (eV) {}
+
+      el.classList.add("tsb-bar__item--dropping");
+      el.style.transform = "translate3d(0, 0, 0) scale(1) rotate(0)";
+      el.style.boxShadow = "none";
+
+      setTimeout(function () {
+        bar.classList.remove("tsb-bar--reordering");
+        barItems.forEach(function (it) {
+          it.classList.remove("tsb-bar__item--floating", "tsb-bar__item--dropping");
+          it.style.transform = "";
+          it.style.transition = "";
+          it.style.boxShadow = "";
+        });
+
+        try {
+          localStorage.setItem("tsb_custom_bar", JSON.stringify(activeSlots));
+        } catch (eS) {}
+
+        bar.innerHTML = buildBarHtml(activeSlots);
+        cleanToast("Action bar order saved ✨");
+
+        if (typeof updateSwipeNavTabs === "function") {
+          updateSwipeNavTabs();
+        }
+      }, 250);
+    }
+
+    bar.addEventListener("touchstart", handlePointerDown, { passive: true });
+    window.addEventListener("touchmove", handlePointerMove, { passive: false });
+    window.addEventListener("touchend", handlePointerUp, { passive: true });
+    window.addEventListener("touchcancel", handlePointerUp, { passive: true });
+
+    bar.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+    window.addEventListener("pointercancel", handlePointerUp);
+  })();
+
+  /* ============================================================
+     DYNAMIC SWIPING SYNCED WITH CUSTOM BAR & PRELOADING
+     ============================================================ */
   (function initSwipeNav() {
-    /* Dynamic tabs based on user's active bar order */
-    var slots = getActiveSlots();
-    var TABS = slots.map(function (k) { return ITEM_DEFS[k] || ITEM_DEFS.home; });
+    var TABS = [];
+    function refreshTabs() {
+      var slots = getActiveSlots();
+      TABS = slots.map(function (k) { return ITEM_DEFS[k] || ITEM_DEFS.home; });
+    }
+    refreshTabs();
+    updateSwipeNavTabs = refreshTabs;
 
     var startX = 0, startY = 0, startTime = 0;
     var tracking = false;
@@ -370,7 +563,6 @@
 
       if (!isHorizontal) {
         if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) {
-          /* Vertical scroll wins: disengage horizontal dragging */
           tracking = false;
           return;
         }
@@ -387,13 +579,11 @@
           if (TABS[i].id === curTab) { idx = i; break; }
         }
 
-        /* Bounds rubber-band resistance when dragging beyond edge */
         var dragX = dx;
         if ((idx === 0 && dx > 0) || (idx === TABS.length - 1 && dx < 0)) {
           dragX = dx * 0.25;
         }
 
-        /* Visually shift the entire screen with finger */
         document.body.style.transform = "translate3d(" + dragX + "px, 0, 0)";
         document.body.style.transition = "none";
         document.body.style.willChange = "transform";
@@ -458,7 +648,6 @@
         try { if (navigator.vibrate) navigator.vibrate(12); } catch (eV) {}
         setActive(targetTab.id);
 
-        /* Complete slide-out in drag direction */
         document.body.style.transition = "transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.2s ease";
         document.body.style.transform = "translate3d(" + (dx < 0 ? -w : w) + "px, 0, 0)";
         document.body.style.opacity = "0.75";
@@ -469,7 +658,6 @@
           location.href = targetTab.url;
         }, 180);
       } else {
-        /* Cancelled or rubber-band release: spring back smoothly */
         document.body.style.transition = "transform 0.24s cubic-bezier(0.2, 0.9, 0.3, 1)";
         document.body.style.transform = "translate3d(0, 0, 0)";
         setTimeout(function () {
@@ -483,14 +671,16 @@
 
   /* ============================================================
      BACKGROUND TAB PRELOADING & SPECULATION ENGINE
-     Every core tab (index, podcasts, stories, login) pre-renders
-     in the background so navigation is 0-latency and feels native.
+     Every custom tab in the user's bar pre-renders in the background
+     so tab navigation is 0-latency and feels native.
      ============================================================ */
   (function initTabPreload() {
-    var TABS_URLS = ["index.html", "podcasts.html", "stories.html", "login.html"];
     var cur = pageName();
+    var slots = getActiveSlots();
+    var TABS_URLS = slots.map(function (k) {
+      return (ITEM_DEFS[k] && ITEM_DEFS[k].url) || "index.html";
+    });
 
-    /* 1. Speculation Rules API (Chrome / Edge / Android) for zero-latency prerender */
     try {
       if (!document.getElementById("tsb-speculation-rules")) {
         var spec = document.createElement("script");
@@ -505,7 +695,6 @@
       }
     } catch (e1) {}
 
-    /* 2. Standard link rel="prefetch" & rel="prerender" for all browsers */
     try {
       TABS_URLS.forEach(function (u) {
         if (u === cur) return;
@@ -519,7 +708,6 @@
       });
     } catch (e2) {}
 
-    /* 3. Fast idle pre-cache fetch into browser HTTP cache */
     var warmFetch = function () {
       TABS_URLS.forEach(function (u) {
         if (u === cur) return;
@@ -533,89 +721,5 @@
     } else {
       setTimeout(warmFetch, 800);
     }
-  })();
-
-  /* ---------- 📱 INSTAGRAM-STYLE SMOOTH TOUCH SWIPING ---------- */
-  (function () {
-    var tabs = ["home", "audio", "stories", "you"];
-    var urls = {
-      home: "index.html",
-      audio: "podcasts.html",
-      stories: "stories.html",
-      you: "login.html"
-    };
-
-    var curTab = currentActive();
-    var curIdx = tabs.indexOf(curTab);
-    if (curIdx === -1) return;
-
-    var touchStartX = 0;
-    var touchStartY = 0;
-    var touchStartTime = 0;
-    var isSwiping = false;
-
-    function isInteractive(el) {
-      if (!el || !el.closest) return false;
-      return !!el.closest(
-        "input, textarea, select, button, a, [contenteditable], " +
-        ".pc-search__chips, .aq-chips, .ap-sheet, .modal, .st-modal, " +
-        "[data-swipe-ignore], pre, code, .horizontal-scroller, .pc-cats, .pc-livegrid, .pc-ab__mine, .pc-myshelf"
-      );
-    }
-
-    window.addEventListener("touchstart", function (e) {
-      if (e.touches.length !== 1) { isSwiping = false; return; }
-      if (isInteractive(e.target)) { isSwiping = false; return; }
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-      touchStartTime = Date.now();
-      isSwiping = true;
-    }, { passive: true });
-
-    window.addEventListener("touchmove", function (e) {
-      if (!isSwiping || e.touches.length !== 1) return;
-      var dx = e.touches[0].clientX - touchStartX;
-      var dy = e.touches[0].clientY - touchStartY;
-      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 15) {
-        isSwiping = false;
-      }
-    }, { passive: true });
-
-    window.addEventListener("touchend", function (e) {
-      if (!isSwiping) return;
-      isSwiping = false;
-      var touchEndX = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : 0;
-      var touchEndY = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY : 0;
-      var dx = touchEndX - touchStartX;
-      var dy = touchEndY - touchStartY;
-      var dt = Date.now() - touchStartTime;
-
-      if (dt > 500) return;
-      if (Math.abs(dy) > 65) return;
-      if (Math.abs(dx) < 65) return;
-
-      var targetIdx = -1;
-      if (dx < -65) {
-        if (curIdx < tabs.length - 1) targetIdx = curIdx + 1;
-      } else if (dx > 65) {
-        if (curIdx > 0) targetIdx = curIdx - 1;
-      }
-
-      if (targetIdx !== -1 && targetIdx !== curIdx) {
-        var targetTab = tabs[targetIdx];
-        var targetUrl = urls[targetTab];
-        if (targetUrl) {
-          try { if (navigator.vibrate) navigator.vibrate(10); } catch (err) {}
-          setActive(targetTab);
-          if (document.startViewTransition) {
-            document.startViewTransition(function () {
-              location.href = targetUrl;
-            });
-          } else {
-            location.href = targetUrl;
-          }
-        }
-      }
-    }, { passive: true });
   })();
 })();

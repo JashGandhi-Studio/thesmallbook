@@ -230,22 +230,46 @@
       rail = rail.slice(0, 12);
 
       var myUser = whoAmI();
-      var myAva = myUser ? C.avaUrl(myUser.name, myUser.avatar_url, myUser.id) : null;
+      var myName = (myUser && (myUser.name || (myUser.user_metadata && (myUser.user_metadata.full_name || myUser.user_metadata.name)))) || "You";
+      var myPhoto = "";
+      if (myUser) {
+        myPhoto = myUser.avatar_url || (myUser.user_metadata && (myUser.user_metadata.avatar_url || myUser.user_metadata.picture)) || "";
+      }
+      if (!myPhoto) {
+        try {
+          var s = JSON.parse(localStorage.getItem("tsb_auth_session") || "null");
+          if (s && s.user) {
+            myPhoto = s.user.avatar_url || (s.user.user_metadata && (s.user.user_metadata.avatar_url || s.user.user_metadata.picture)) || "";
+          }
+        } catch(e) {}
+      }
+      if (!myPhoto) {
+        try {
+          var prf = JSON.parse(localStorage.getItem("tsb_profile") || "null");
+          if (prf && prf.avatar_url) myPhoto = prf.avatar_url;
+        } catch(e) {}
+      }
+      if (!myPhoto && myUser) {
+        myPhoto = C.avaUrl(myName, "", myUser.id);
+      }
+
       var myNote = activeNotes["me"];
       var myBubble = "";
       if (myNote) {
         var isSong = myNote.note_type === "song";
         var txt = isSong ? ("🎵 " + (myNote.song_title || "Song")) : (myNote.note_text || "Thinking...");
         myBubble = '<span class="cm-note-bubble' + (isSong ? ' cm-note-bubble--song' : '') + '" title="' + C.esc(txt) + '">' + C.esc(txt) + '</span>';
+      } else {
+        /* Instagram-style prompt bubble in subtle grey font */
+        myBubble = '<span class="cm-note-bubble cm-note-bubble--prompt" title="Share a thought...">Note...</span>';
       }
 
       var myItem = '<div class="cm-rail__i" id="cmMyNoteBtn" style="cursor:pointer;position:relative;" title="Share a 24h Note">' +
         myBubble +
         '<span class="cm-rail__ring" style="position:relative;">' +
-          (myAva ? '<img src="' + C.esc(myAva) + '" alt="">' : '<span>' + C.esc(((myUser && myUser.name) || "You").charAt(0).toUpperCase()) + '</span>') +
-          (!myNote ? '<span class="cm-note-add">+</span>' : '') +
+          (myPhoto ? '<img src="' + C.esc(myPhoto) + '" alt="" style="object-fit:cover;width:100%;height:100%;border-radius:50%;">' : '<span>' + C.esc(myName.charAt(0).toUpperCase()) + '</span>') +
         '</span>' +
-        '<span class="cm-rail__n">' + (myNote ? 'Your Note' : 'Add Note') + '</span>' +
+        '<span class="cm-rail__n">Your note</span>' +
       '</div>';
 
       var otherItems = rail.map(function (p) {

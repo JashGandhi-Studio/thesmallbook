@@ -5162,6 +5162,51 @@ html.dark .search .scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
   white-space: nowrap;
   letter-spacing: -0.1px;
 }
+/* ── Action Bar: Icons Only Mode ── */
+.tsb-bar--icons-only .tsb-bar__lbl,
+html[data-bar-labels="icons"] .tsb-bar__lbl {
+  display: none !important;
+}
+.tsb-bar--icons-only .tsb-bar__item,
+html[data-bar-labels="icons"] .tsb-bar__item {
+  justify-content: center;
+  gap: 0;
+  padding: 10px 2px;
+}
+.tsb-bar--icons-only .tsb-bar__item svg,
+html[data-bar-labels="icons"] .tsb-bar__item svg {
+  width: 25px;
+  height: 25px;
+  stroke-width: 2.2;
+}
+
+/* ── Acute Physics Drag-and-Drop Reordering ── */
+.tsb-bar.tsb-bar--reordering {
+  user-select: none;
+  -webkit-user-select: none;
+}
+.tsb-bar.tsb-bar--reordering .tsb-bar__item:not(.tsb-bar__item--floating) {
+  opacity: 0.65;
+  transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.2s ease;
+}
+.tsb-bar__item.tsb-bar__item--floating {
+  z-index: 100 !important;
+  opacity: 1 !important;
+  background: var(--yellow, #ffc800) !important;
+  border: 2px solid var(--ink, #111) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.38) !important;
+  color: var(--ink, #111) !important;
+  pointer-events: auto;
+  cursor: grabbing !important;
+  transition: transform 0.08s ease-out, box-shadow 0.12s ease;
+}
+.tsb-bar__item.tsb-bar__item--floating svg {
+  stroke: var(--ink, #111) !important;
+}
+.tsb-bar__item.tsb-bar__item--dropping {
+  transition: transform 0.26s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.22s ease !important;
+}
 /* ACTIVE PILL - painted ONLY by this ::before (rule 3) */
 .tsb-bar__item::before {
   content: "";
@@ -6229,6 +6274,19 @@ html.dark .cm-rail__n { color: #b7b0a5; }
 .cm-note-bubble--song {
   background: var(--yellow, #ffc800);
 }
+.cm-note-bubble--prompt {
+  color: #8f8a80 !important;
+  font-weight: 600 !important;
+  font-size: 10px !important;
+  background: var(--paper, #fff) !important;
+  box-shadow: 1.5px 1.5px 0 rgba(20, 17, 12, 0.15) !important;
+  border-color: rgba(20, 17, 12, 0.28) !important;
+}
+html.dark .cm-note-bubble--prompt {
+  color: #8f8a80 !important;
+  background: #242019 !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
 .cm-note-add {
   position: absolute;
   bottom: 0px;
@@ -6398,6 +6456,48 @@ html.dark .cm-person { background: #241f17; }
 .cm-reel .cm-like b { font-size: .75rem; }
 /* DMs */
 .dmpage .cm-wrap { padding-bottom: calc(var(--bar-total) + 120px); }
+.dm-notes-hub {
+  padding: 4px 0 14px;
+  margin-bottom: 12px;
+  border-bottom: 2px dashed rgba(20, 17, 12, 0.18);
+}
+html.dark .dm-notes-hub {
+  border-bottom: 2px dashed rgba(255, 255, 255, 0.15);
+}
+.dm-notes-hub .cm-rail {
+  padding: 16px 4px 6px;
+  gap: 16px;
+}
+.dm-song-res {
+  max-height: 170px;
+  overflow-y: auto;
+  border: 2px solid var(--ink, #111);
+  border-radius: 10px;
+  background: var(--paper, #fff);
+  margin-top: 6px;
+}
+.itunes-song-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(20, 17, 12, 0.08);
+  transition: background 0.12s ease;
+}
+.itunes-song-row:last-child {
+  border-bottom: none;
+}
+.itunes-song-row:hover, .itunes-song-row:active {
+  background: rgba(255, 200, 0, 0.22);
+}
+.itunes-song-row img {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: 1.5px solid var(--ink, #111);
+  object-fit: cover;
+}
 .dm-list { display: flex; flex-direction: column; gap: 8px; }
 .dm-row { display: flex; align-items: center; gap: 12px; background: var(--paper); border: 2.5px solid var(--ink); border-radius: 16px; box-shadow: 3px 3px 0 var(--ink); padding: 10px 14px; text-decoration: none; color: var(--ink); }
 .dm-row__meta { flex: 1; min-width: 0; display: flex; flex-direction: column; }
