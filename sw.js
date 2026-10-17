@@ -271,9 +271,9 @@ self.addEventListener("fetch", (e) => {
     return caches.open(CACHE_VERSION).then(async (c) => {
       const hit = await c.match(e.request);
       if (hit) {
-        /* background revalidation for code so updates land without clearing phone cache */
-        if (/\.(js|css)$/.test(url.pathname)) {
-          fetch(e.request).then((res) => {
+        /* background revalidation for code and SVGs so updates land immediately */
+        if (/\.(js|css|svg)$/.test(url.pathname)) {
+          fetch(e.request, { cache: "no-cache" }).then((res) => {
             if (res && res.ok && res.status === 200) c.put(e.request, res.clone());
           }).catch(() => {});
         }

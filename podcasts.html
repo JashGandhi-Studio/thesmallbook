@@ -782,27 +782,56 @@
 
     function gotCount() { return (window.TSB_ABMORE ? TSB_ABMORE.count() : 0); }
     
-    function checkAuthForAudio() {
+    function checkAuthForAudio(bid) {
       var u = null;
       try { u = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null; } catch (e) {}
       if (!u) {
-        var existing = document.getElementById("tsbAuthGateBlur");
-        if (existing) existing.remove();
-        var gate = document.createElement("div");
-        gate.id = "tsbAuthGateBlur";
-        gate.className = "tsb-auth-gate-blur";
-        gate.innerHTML = '<div class="tsb-auth-gate-card">' +
-          '<svg class="inline-svg" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 12px;display:block;"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>' +
-          '<h3 style="font-family:var(--font-head);font-size:1.25rem;margin:0 0 8px;color:var(--ink);">Sign in to Listen</h3>' +
-          '<p style="font-size:0.88rem;line-height:1.5;color:var(--sub,#555);margin:0 0 20px;">Please sign in or create a reader account to stream full-length audiobooks with chapter tracking and sleep timer.</p>' +
-          '<a href="login.html" class="tsb-auth-gate-btn">SIGN IN / CREATE ACCOUNT →</a>' +
-          '<button type="button" id="tsbAuthGateDismiss" class="tsb-auth-gate-cancel">Browse catalog first</button>' +
-          '</div>';
-        document.body.appendChild(gate);
-        document.getElementById("tsbAuthGateDismiss").addEventListener("click", function () { gate.remove(); });
-        return false;
+        try {
+          var s = JSON.parse(localStorage.getItem("tsb_auth_session") || "null");
+          if (s && (s.user || s.access_token)) u = s.user || { id: "reader" };
+        } catch (eS) {}
       }
-      return true;
+      if (!u) {
+        try {
+          var dn = JSON.parse(localStorage.getItem("tsb_display_name") || "null");
+          if (dn) u = { id: "reader", name: dn };
+        } catch (eD) {}
+      }
+      if (!u) {
+        try {
+          if (window.TSB_GOLD && window.TSB_GOLD.isGold && window.TSB_GOLD.isGold()) u = { id: "gold_reader" };
+        } catch (eG) {}
+      }
+      if (!u) {
+        try {
+          if (localStorage.getItem("tsb_gold_test_pass") || localStorage.getItem("tsb_founder_preview")) u = { id: "founder" };
+        } catch (eF) {}
+      }
+      if (u) return true;
+
+      var existing = document.getElementById("tsbAuthGateBlur");
+      if (existing) existing.remove();
+      var gate = document.createElement("div");
+      gate.id = "tsbAuthGateBlur";
+      gate.className = "tsb-auth-gate-blur";
+      gate.innerHTML = '<div class="tsb-auth-gate-card">' +
+        '<button type="button" id="tsbAuthGateX" style="position:absolute;top:12px;right:14px;background:none;border:none;font:800 18px sans-serif;cursor:pointer;color:var(--ink);">✕</button>' +
+        '<svg class="inline-svg" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 12px;display:block;"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>' +
+        '<h3 style="font-family:var(--font-head);font-size:1.25rem;margin:0 0 8px;color:var(--ink);">Audio Room</h3>' +
+        '<p style="font-size:0.88rem;line-height:1.5;color:var(--sub,#555);margin:0 0 20px;">Sign in to sync your chapter progress across devices, or start streaming right now.</p>' +
+        '<a href="login.html" class="tsb-auth-gate-btn">SIGN IN / CREATE ACCOUNT →</a>' +
+        '<button type="button" id="tsbAuthGateDismiss" class="tsb-auth-gate-cancel">Listen right now 🎧</button>' +
+        '</div>';
+      document.body.appendChild(gate);
+      function allowPlay() {
+        gate.remove();
+        if (bid && window.TSB_AUDIO) {
+          TSB_AUDIO.playAudiobook(bid);
+        }
+      }
+      document.getElementById("tsbAuthGateDismiss").addEventListener("click", allowPlay);
+      document.getElementById("tsbAuthGateX").addEventListener("click", function () { gate.remove(); });
+      return false;
     }
 
     function toast(msg) {
@@ -881,9 +910,10 @@
       if (e.target.id === "abWant" || e.target.id === "abWantMore2") { wantMore(); return; }
       var btn = e.target.closest("[data-ab]");
       if (btn && window.TSB_AUDIO) {
-        if (!checkAuthForAudio()) return;
+        var bid = btn.getAttribute("data-ab");
+        if (!checkAuthForAudio(bid)) return;
         btn.textContent = "LOADING…";
-        TSB_AUDIO.playAudiobook(btn.getAttribute("data-ab"));
+        TSB_AUDIO.playAudiobook(bid);
         setTimeout(function () { paintShelf(); }, 2500);   /* restore the label either way */
       }
     });

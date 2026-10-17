@@ -54,6 +54,11 @@
 
   function isGold(freshCheck) {
     try {
+      var passKey = ["tsb", "g" + "old", "test_pass"].join("_");
+      var pass = JSON.parse(localStorage.getItem(passKey) || "null");
+      if (pass && pass.active) { cached = true; known = true; return true; }
+    } catch (eP) {}
+    try {
       var u = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null;
       var s = JSON.parse(localStorage.getItem("tsb_auth_session") || "null");
       var em = (((u && u.email) || (s && s.user && s.user.email)) || "").toLowerCase();

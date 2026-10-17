@@ -77,6 +77,8 @@
     requestAnimationFrame(function () { w.classList.add("on"); });
     function closeGate() {
       lsSet("tsb_gate_snooze", Date.now());
+      try { sessionStorage.setItem("tsb_trial_shown", "1"); } catch (e) {}
+      document.documentElement.classList.remove("trial-lock");
       w.classList.remove("on");
       window.setTimeout(function () { if (w.parentNode) w.parentNode.removeChild(w); }, 260);
     }

@@ -238,6 +238,29 @@
       return false;
     });
 
+    /* Smart category fallback: if searching inside a category returns 0 hits,
+       automatically switch category to ALL to show matching books seamlessly */
+    if (results.length === 0 && query && activeCat !== "ALL") {
+      const allResults = BOOKS.filter((b) => {
+        const hay = `${b.title} ${b.author} ${b.category} ${b.tagline}`;
+        if (fuzzyMatch(hay, query)) { b._lessonHit = null; return true; }
+        let hitIdx = b.lessons.findIndex((l) => fuzzyMatch(l.title + " " + l.chapter, query));
+        if (hitIdx === -1 && query.length >= 4) {
+          hitIdx = b.lessons.findIndex((l) =>
+            (l.summary + " " + l.example + " " + l.action).toLowerCase().includes(query));
+        }
+        if (hitIdx !== -1) { b._lessonHit = hitIdx; return true; }
+        b._lessonHit = null;
+        return false;
+      });
+
+      if (allResults.length > 0) {
+        activeCat = "ALL";
+        document.querySelectorAll(".chip").forEach((c) => c.classList.toggle("active", c.textContent === "ALL"));
+        results = allResults;
+      }
+    }
+
     results = sortBooks(results);
     grid.innerHTML = "";
 
@@ -488,7 +511,167 @@
       </div>`;
   })();
 
-  /* ---------- LESSON OF THE DAY (live: real date + midnight flip) ---------- */
+  /* ---------- 🔥 DAILY 60-SECOND SPARK & FLAME STREAK RETENTION ENGINE ---------- */
+  const SPARKS = [
+    {
+      bookId: "atomic-habits",
+      title: "The 2-Minute Rule",
+      quote: "When you start a new habit, it should take less than two minutes to do.",
+      takeaway: "Standardize before you optimize. A habit must be established before it can be improved.",
+      book: "Atomic Habits",
+      author: "James Clear"
+    },
+    {
+      bookId: "psychology-of-money",
+      title: "Freedom Over Luxury",
+      quote: "The ability to do what you want, when you want, with who you want, for as long as you want, is the highest dividend money pays.",
+      takeaway: "True wealth is not the cars you buy, but the options, independence, and calm you preserve.",
+      book: "The Psychology of Money",
+      author: "Morgan Housel"
+    },
+    {
+      bookId: "deep-work",
+      title: "The Law of High-Productivity",
+      quote: "High-Quality Work Produced = (Time Spent) x (Intensity of Focus).",
+      takeaway: "Cut shallow distractions and batch your hardest cognitive output into unbroken blocks.",
+      book: "Deep Work",
+      author: "Cal Newport"
+    },
+    {
+      bookId: "essentialism",
+      title: "The Power of Less But Better",
+      quote: "If you don't prioritize your life, someone else will.",
+      takeaway: "Ruthlessly eliminate trivial tasks so you can channel full energy into what truly matters.",
+      book: "Essentialism",
+      author: "Greg McKeown"
+    },
+    {
+      bookId: "show-your-work",
+      title: "Document, Don't Create",
+      quote: "Share what you love, and the people who love the same things will find you.",
+      takeaway: "You don't need to be an expert to post. Share the process, the daily notebook, the lessons learned.",
+      book: "Show Your Work!",
+      author: "Austin Kleon"
+    },
+    {
+      bookId: "almanack-naval-ravikant",
+      title: "Specific Knowledge & Leverage",
+      quote: "Specific knowledge is found by pursuing your genuine curiosity and passion rather than whatever is hot right now.",
+      takeaway: "Learn to build or learn to sell. If you can do both, you will be unstoppable.",
+      book: "The Almanack of Naval Ravikant",
+      author: "Eric Jorgenson"
+    },
+    {
+      bookId: "cant-hurt-me",
+      title: "The 40% Rule",
+      quote: "When your mind is telling you that you are done, you're really only 40 percent done.",
+      takeaway: "Our brains are built to protect comfort. Push past the initial fatigue barrier to grow.",
+      book: "Can't Hurt Me",
+      author: "David Goggins"
+    }
+  ];
+
+  function getTodayKey() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  function getTodaySpark() {
+    const today = getTodayKey();
+    let num = 0;
+    for (let i = 0; i < today.length; i++) num = (num * 31 + today.charCodeAt(i)) % SPARKS.length;
+    return SPARKS[num];
+  }
+
+  function isSparkDone() {
+    return localStorage.getItem("tsb_spark_done_" + getTodayKey()) === "1";
+  }
+
+  function markSparkDone() {
+    localStorage.setItem("tsb_spark_done_" + getTodayKey(), "1");
+    TSB.streak.touch();
+    try {
+      if (TSB.sound && TSB.sound.play) TSB.sound.play("ding");
+    } catch (e) {}
+    if (window.confetti) {
+      try { window.confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } }); } catch (eC) {}
+    }
+  }
+
+  function openStreakSheet() {
+    let sheetOvl = document.getElementById("streakSheetOvl");
+    if (!sheetOvl) {
+      sheetOvl = document.createElement("div");
+      sheetOvl.id = "streakSheetOvl";
+      sheetOvl.className = "tsb-streak-sheet-ovl";
+      document.body.appendChild(sheetOvl);
+    }
+    const streak = TSB.streak.count();
+    const today = new Date();
+    const dayOfWeek = (today.getDay() + 6) % 7; // 0=Mon, 6=Sun
+    const dayNames = ["M", "T", "W", "T", "F", "S", "S"];
+    const sparkDone = isSparkDone();
+
+    let ringsHtml = "";
+    for (let d = 0; d < 7; d++) {
+      const isPast = d < dayOfWeek;
+      const isToday = d === dayOfWeek;
+      const done = (isToday && sparkDone) || (isPast && d >= Math.max(0, dayOfWeek - streak));
+      ringsHtml += `
+        <div class="tsb-ring ${isToday ? 'today' : ''} ${done ? 'completed' : ''}">
+          <div class="tsb-ring__circle">${done ? '🔥' : (isToday ? '⚡' : '○')}</div>
+          <span class="tsb-ring__day">${dayNames[d]}</span>
+        </div>`;
+    }
+
+    sheetOvl.innerHTML = `
+      <div class="tsb-streak-sheet" role="dialog" aria-modal="true" aria-label="Your reading streak">
+        <div class="tsb-streak-sheet__grip"></div>
+        <div class="tsb-streak-sheet__flame-big">🔥</div>
+        <h3 class="tsb-streak-sheet__title">${streak} DAY STREAK</h3>
+        <p class="tsb-streak-sheet__sub">Keep the flame alive. Read for 60 seconds every day.</p>
+
+        <div class="tsb-streak-sheet__rings">
+          ${ringsHtml}
+        </div>
+
+        <div style="background:var(--bg,#f6f1e8);border:2px solid var(--ink,#111);border-radius:14px;padding:14px;margin-bottom:18px;">
+          <b style="display:block;font-size:12px;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px;color:var(--ink,#111);">🛡️ HABIT SHIELD ACTIVE</b>
+          <span style="font-size:12px;color:var(--sub,#666);line-height:1.4;display:block;">
+            Never miss twice. Even when life gets busy, complete your 60-second daily spark to protect your streak.
+          </span>
+        </div>
+
+        <button type="button" id="streakShareBtn" style="width:100%;background:var(--yellow,#ffc800);border:2.5px solid var(--ink,#111);border-radius:14px;padding:12px;font:800 13px var(--font-head);cursor:pointer;box-shadow:3px 3px 0 var(--ink,#111);margin-bottom:8px;">
+          SHARE MY STREAK 📤
+        </button>
+        <button type="button" id="streakCloseBtn" style="width:100%;background:transparent;border:none;font:700 12px var(--font-head);color:var(--sub,#666);cursor:pointer;padding:8px;">
+          CLOSE
+        </button>
+      </div>`;
+
+    sheetOvl.style.display = "flex";
+    sheetOvl.addEventListener("click", (e) => {
+      if (e.target === sheetOvl || e.target.id === "streakCloseBtn") {
+        sheetOvl.style.display = "none";
+      }
+    });
+
+    const shareBtn = document.getElementById("streakShareBtn");
+    if (shareBtn) {
+      shareBtn.addEventListener("click", () => {
+        const text = `🔥 I am on a ${streak}-day reading streak on TheSmallBook! 60 seconds of actionable book wisdom daily: https://thesmallbook.in`;
+        if (navigator.share) {
+          navigator.share({ title: "My TheSmallBook Streak", text: text }).catch(() => {});
+        } else {
+          navigator.clipboard.writeText(text);
+          shareBtn.textContent = "COPIED TO CLIPBOARD! ✨";
+          setTimeout(() => { shareBtn.textContent = "SHARE MY STREAK 📤"; }, 2000);
+        }
+      });
+    }
+  }
+
+  /* ---------- LESSON OF THE DAY + 60s SPARK (COMBINED & ULTRA-COMPACT) ---------- */
   (function () {
     const wrap = document.getElementById("lod");
     if (!wrap) return;
@@ -504,13 +687,6 @@
       if (d >= 11 && d <= 13) return d + "th";
       return d + (["th","st","nd","rd"][d % 10] || "th");
     }
-    function dateLabel() {
-      const n = new Date();
-      const months = ["January","February","March","April","May","June",
-        "July","August","September","October","November","December"];
-      const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-      return { date: ordinal(n.getDate()) + " " + months[n.getMonth()], day: days[n.getDay()] };
-    }
     function msToMidnight() {
       const n = new Date();
       const mid = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1, 0, 0, 2);
@@ -518,9 +694,6 @@
     }
 
     let shownDay = -1;
-    /* 🎯 PERSONALIZED pick: prefs.goal (onboarding Q1) + prefs.time (Q4)
-       Weekdays (Mon-Fri) → lessons from the user's chosen category.
-       Weekends (Sat-Sun) → random discovery (keeps variety). */
     const GOAL_CAT = {
       "self": "Self-Improvement", "money": "Money & Finance",
       "business": "Business & Startups", "people": "Psychology & People",
@@ -530,13 +703,12 @@
     function personalPick(dayNum) {
       let prefs = null;
       try { prefs = JSON.parse(localStorage.getItem("tsb_prefs")); } catch (e) {}
-      const dayOfWeek = new Date().getDay(); // 0=Sun ... 6=Sat
+      const dayOfWeek = new Date().getDay();
       const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
       const goalCat = prefs && GOAL_CAT[prefs.goal] ? GOAL_CAT[prefs.goal] : null;
       if (goalCat && !isWeekend) {
         let pool = flat.filter((x) => x.b.category === goalCat);
         if (!pool.length) pool = flat;
-        // short-time users: prefer concise lessons (summary < 600 chars)
         if (prefs.time === "5" && pool.length > 3) {
           const short = pool.filter((x) => x.l.summary && x.l.summary.length < 600);
           if (short.length >= 3) pool = short;
@@ -550,33 +722,50 @@
       if (dayNum === shownDay) return;
       shownDay = dayNum;
       const { pick, personalized } = personalPick(dayNum);
-      const dl = dateLabel();
-      const label = personalized
-        ? "🎯 LESSON FOR YOU"
-        : "💡 Lesson of the Day";
-      const note = personalized
-        ? "⏳ Picked from your shelf, new one at midnight"
-        : "⏳ Today only, new lesson at midnight";
+      const spark = getTodaySpark();
+      const streak = TSB.streak.count();
+      const done = isSparkDone();
+
+      const targetBook = (spark && spark.bookId) ? (BOOKS.find((b) => b.id === spark.bookId) || pick.b) : pick.b;
+      const bookTitle = spark.book || targetBook.title;
+      const bookAuthor = spark.author || targetBook.author;
+      const bookId = (spark && spark.bookId) ? spark.bookId : targetBook.id;
+      const quoteText = spark.quote || (pick.l.summary ? pick.l.summary.slice(0, 120) + "…" : pick.l.title);
+      const takeawayText = spark.takeaway || (pick.l.action || "");
+
       wrap.innerHTML = `
         <div class="lod__box">
-          <div class="lod__label">${label}</div>
-          <div class="lod__datebadge" translate="no">
-            <span class="lod__dateday">${dl.day}</span>
-            <span class="lod__datenum">${dl.date}</span>
+          <button type="button" class="lod__streak" id="lodStreakBtn" title="View streak flame and weekly rings">
+            🔥 <span>${streak}d</span>
+          </button>
+          <img class="lod__thumb" src="${escHTML(targetBook.cover)}" alt="" loading="lazy">
+          <div class="lod__content">
+            <div class="lod__headrow">
+              <span class="lod__badge">⚡ 60s SPARK</span>
+              <span class="lod__sep">·</span>
+              <span class="lod__book">${escHTML(bookTitle)}</span>
+              <span class="lod__author">by ${escHTML(bookAuthor)}</span>
+            </div>
+            <div class="lod__quote">“${escHTML(quoteText)}”</div>
+            ${takeawayText ? `<div class="lod__takeaway">${escHTML(takeawayText)}</div>` : ''}
           </div>
-          <img src="${pick.b.cover}" alt="${pick.b.title}">
-          <div>
-            <div class="lod__title">${pick.l.title}</div>
-            <div class="lod__meta">${pick.b.title} · ${pick.b.author}</div>
-            <div class="lod__fresh" translate="no">${note}</div>
-          </div>
-          <a class="btn btn--red" href="book.html?id=${pick.b.id}#lesson-${pick.i}">READ IT →</a>
+          <a class="lod__btn ${done ? 'done' : ''}" id="lodSparkBtn" href="book.html?id=${encodeURIComponent(bookId)}#lesson-1">
+            ${done ? '✓ IGNITED 🔥' : 'READ 60s →'}
+          </a>
         </div>`;
+
+      const strBtn = document.getElementById("lodStreakBtn");
+      if (strBtn) strBtn.addEventListener("click", openStreakSheet);
+
+      const actBtn = document.getElementById("lodSparkBtn");
+      if (actBtn && !done) {
+        actBtn.addEventListener("click", () => {
+          markSparkDone();
+        });
+      }
     }
     draw();
-    /* truly live: if the tab stays open past midnight, swap the lesson */
     setTimeout(function tick() { draw(); setTimeout(tick, 60000); }, msToMidnight());
-    /* also re-check when user returns to the tab */
     document.addEventListener("visibilitychange", () => { if (!document.hidden) draw(); });
   })();
 
@@ -590,9 +779,11 @@
       const achvCount = TSB.achv.list().length;
       const achvTotal = Object.keys(TSB.achv.defs).length;
       bar.innerHTML = `
-        <span class="gamebar__chip">🔥 <b>${streak}</b> day streak</span>
+        <span class="gamebar__chip" id="streakOpen" style="cursor:pointer;" title="View streak flame and weekly rings">🔥 <b>${streak}</b> day streak</span>
         <span class="gamebar__chip">${lvl.icon} <b>${lvl.name}</b> · ${lvl.read} lessons</span>
         <span class="gamebar__chip" id="achvOpen">🏆 <b>${achvCount}/${achvTotal}</b> badges</span>`;
+      const strEl = document.getElementById("streakOpen");
+      if (strEl) strEl.addEventListener("click", openStreakSheet);
       document.getElementById("achvOpen").addEventListener("click", openAchvModal);
     }
     draw();

@@ -314,24 +314,25 @@
 
     pbs.forEach((pb) => {
       pb.addEventListener("click", () => {
-        const A = window.TSB_AUDIO;
-        const ab = A && A.audiobookFor && A.audiobookFor(book.id);
-        stopSpeech(); // stop any single-lesson speech first
-        if (ab) {
-          A.playAudiobook(book.id);
-          return;
+        if (window.TSB_AUDIO && window.TSB_AUDIO.pause) {
+          try { window.TSB_AUDIO.pause(); } catch (eA) {}
         }
-        const catInfo = getCategoryAudiobooks(book);
-        showCategoryAudiobooksModal(catInfo);
+        if (window.TSB_AUDIO && window.TSB_AUDIO.close) {
+          try { window.TSB_AUDIO.close(); } catch (eC) {}
+        }
+        document.body.classList.remove("tsb-audio-live");
+        stopSpeech(); // stop any single-lesson speech first
+        playPodcastLive();
       });
     });
-    /* the hero button wears the honest badge when a real audiobook exists */
-    if (window.TSB_AUDIO && window.TSB_AUDIO.audiobookFor && window.TSB_AUDIO.audiobookFor(book.id) && heroBtn) {
+
+    if (heroBtn) {
       const lbl = heroBtn.querySelector(".podcastbtn__label");
-      if (lbl) lbl.textContent = "Listen: Full Audiobook";
+      if (lbl) lbl.textContent = "LISTEN TO SUMMARY (TTS)";
       const live = heroBtn.querySelector(".podcastbtn__live");
-      if (live) live.textContent = "AUDIOBOOK";
+      if (live) live.textContent = "NARRATOR";
     }
+
     // keep the buttons in sync when the player is closed or podcast ends
     if (window.TTS_ENGINE) {
       window.TTS_ENGINE.onProgress(() => {
@@ -339,18 +340,11 @@
       });
     }
 
-    // Auto-stream verified audiobook if arrived via listen parameter
+    // Auto-stream via TTS narrator if arrived via listen parameter
     try {
       if (new URLSearchParams(window.location.search).get("listen") === "1") {
         setTimeout(function () {
-          var A = window.TSB_AUDIO;
-          var ab = A && A.audiobookFor && A.audiobookFor(book.id);
-          if (ab) {
-            A.playAudiobook(book.id);
-          } else {
-            var catInfo = getCategoryAudiobooks(book);
-            showCategoryAudiobooksModal(catInfo);
-          }
+          playPodcastLive();
         }, 500);
       }
     } catch (eListen) {}

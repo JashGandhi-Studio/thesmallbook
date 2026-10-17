@@ -755,25 +755,58 @@
         title: cur.song_title,
         artist: cur.song_artist || "",
         artwork: cur.artwork_url || "",
-        preview: cur.preview_url || ""
+        preview: cur.preview_url || "",
+        segment: cur.segment_start || 0
       } : null;
+
+      var TRENDING_SONGS = [
+        { title: "Midnight City", artist: "M83", artwork: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/bf/1a/07/bf1a0740-fa9c-9c02-e251-ce58a0eb1b3f/source/100x100bb.jpg", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/c3/00/69/c30069dc-1c4b-c7d9-2915-d5cce1a7042a/mzaf_10526027961226767699.plus.aac.p.m4a" },
+        { title: "Starboy", artist: "The Weeknd", artwork: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/71/39/3a/71393a52-b8ec-f5e1-897f-850f38b1ad64/source/100x100bb.jpg", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/b8/91/d5/b891d5cb-b6be-ee55-f2aa-a3f295b9d3e5/mzaf_1623846665798031557.plus.aac.p.m4a" },
+        { title: "As It Was", artist: "Harry Styles", artwork: "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/d3/18/84/d3188448-9714-38c2-488b-1cb81ec45672/source/100x100bb.jpg", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview122/v4/64/0e/ea/640eea6c-1349-41ec-b2c6-302a0a2df335/mzaf_14486518177570498745.plus.aac.p.m4a" },
+        { title: "Levitating", artist: "Dua Lipa", artwork: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/7c/49/a0/7c49a04f-63a2-2580-c115-0d046c823058/source/100x100bb.jpg", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/21/df/4b/21df4b5b-ea9f-0925-5460-1e58e0a8be0a/mzaf_15783311652179836336.plus.aac.p.m4a" },
+        { title: "Kesariya", artist: "Arijit Singh", artwork: "https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/1f/24/38/1f243884-297f-2d64-e1d5-8f64582f3efc/source/100x100bb.jpg", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview122/v4/df/a5/34/dfa53424-df31-e17b-d249-14a0ad3a9437/mzaf_13504351602737633270.plus.aac.p.m4a" },
+        { title: "Blinding Lights", artist: "The Weeknd", artwork: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/71/39/3a/71393a52-b8ec-f5e1-897f-850f38b1ad64/source/100x100bb.jpg", preview: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/1d/a5/d5/1da5d5ef-cb43-fa88-d6e8-ea9a0a09e078/mzaf_1130389366488349286.plus.aac.p.m4a" }
+      ];
+
+      var INSPIRED_QUOTES = [
+        { quote: "Desire is a contract you make with yourself to be unhappy until you get what you want.", author: "Naval Ravikant" },
+        { quote: "You have power over your mind - not outside events. Realize this, and you will find strength.", author: "Marcus Aurelius" },
+        { quote: "Every action you take is a vote for the type of person you wish to become.", author: "James Clear" },
+        { quote: "We suffer more often in imagination than in reality.", author: "Seneca" },
+        { quote: "When we are no longer able to change a situation, we are challenged to change ourselves.", author: "Viktor Frankl" },
+        { quote: "Your time is limited, so don't waste it living someone else's life.", author: "Steve Jobs" }
+      ];
+
+      var trendChips = TRENDING_SONGS.map(function (s, idx) {
+        return '<button type="button" class="dm-trend-song-btn" data-trend-idx="' + idx + '" style="background:#fff;border:1.5px solid var(--ink,#111);border-radius:999px;padding:3px 9px;font:700 11px var(--font-body);cursor:pointer;white-space:nowrap;color:var(--ink,#111);">🎵 ' + C.esc(s.title) + '</button>';
+      }).join(" ");
 
       ovl.innerHTML =
         '<div style="background:var(--paper,#fffdf5);border:3.5px solid var(--ink,#111);border-radius:18px;box-shadow:8px 8px 0 var(--ink,#111);max-width:390px;width:100%;max-height:92vh;overflow-y:auto;padding:22px;position:relative;box-sizing:border-box;">' +
           '<button id="noteCloseBtn" style="position:absolute;top:14px;right:14px;background:none;border:none;font:800 20px sans-serif;cursor:pointer;color:var(--ink,#111);">✕</button>' +
           '<h3 style="font:800 17px var(--font-head);margin:0 0 4px;letter-spacing:0.5px;">24-HOUR NOTE</h3>' +
           '<p style="font-size:12px;color:var(--muted,#666);margin:0 0 14px;">Floating over your avatar for friends for 24 hours.</p>' +
+          
           '<label style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;margin-bottom:4px;">YOUR THOUGHT (UP TO 60 CHARS)</label>' +
           '<input id="noteTextInput" maxlength="60" placeholder="What is on your mind today?" value="' + C.esc(cur.note_text || "") + '" style="width:100%;border:2px solid var(--ink,#111);border-radius:10px;padding:10px;font:600 13px var(--font-body);margin-bottom:12px;background:#fff;color:#111;box-sizing:border-box;">' +
-          '<label style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;margin-bottom:4px;">🎵 ATTACH SONG (ITUNES LIVE SEARCH)</label>' +
+          
+          '<label style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;margin-bottom:4px;">🎵 TRENDING SONGS (PRE-FILLED MENU)</label>' +
+          '<div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:8px;scrollbar-width:none;">' + trendChips + '</div>' +
+
           '<div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">' +
-            '<input id="noteSongSearch" placeholder="Search song or artist on iTunes..." style="flex:1;border:2px solid var(--ink,#111);border-radius:10px;padding:9px;font:600 12.5px var(--font-body);background:#fff;color:#111;box-sizing:border-box;">' +
+            '<input id="noteSongSearch" placeholder="Search other songs on iTunes..." style="flex:1;border:2px solid var(--ink,#111);border-radius:10px;padding:9px;font:600 12px var(--font-body);background:#fff;color:#111;box-sizing:border-box;">' +
             '<span id="noteSongSpin" style="font-size:12px;display:none;">...</span>' +
           '</div>' +
           '<div id="noteSongRes" class="dm-song-res" style="display:none;"></div>' +
-          '<div id="noteSongSel" style="margin-bottom:12px;display:none;background:var(--yellow,#ffc800);border:2px solid var(--ink,#111);border-radius:10px;padding:8px 10px;align-items:center;gap:8px;"></div>' +
-          '<label style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;margin-bottom:4px;">❝ OR ATTACH A QUOTE (OPTIONAL)</label>' +
+          '<div id="noteSongSel" style="margin-bottom:12px;display:none;background:var(--yellow,#ffc800);border:2px solid var(--ink,#111);border-radius:10px;padding:8px 10px;flex-direction:column;gap:6px;"></div>' +
+
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">' +
+            '<label style="font:800 10.5px var(--font-head);letter-spacing:1px;margin:0;">❝ OR ATTACH A QUOTE (OPTIONAL)</label>' +
+            '<button type="button" id="openInspireDeskBtn" style="background:var(--yellow,#ffc800);border:1.5px solid var(--ink,#111);border-radius:6px;font:800 9.5px var(--font-head);padding:2px 7px;cursor:pointer;">✨ INSPIRE DESK</button>' +
+          '</div>' +
+          '<div id="inspireDeskTray" style="display:none;background:#f6f1e8;border:2px solid var(--ink,#111);border-radius:10px;padding:8px;margin-bottom:10px;max-height:140px;overflow-y:auto;"></div>' +
           '<input id="noteQuoteInput" maxlength="80" placeholder="Book quote..." value="' + C.esc(cur.quote_text || "") + '" style="width:100%;border:2px solid var(--ink,#111);border-radius:10px;padding:10px;font:600 13px var(--font-body);margin-bottom:16px;background:#fff;color:#111;box-sizing:border-box;">' +
+
           '<div style="display:flex;gap:8px;">' +
             '<button id="saveNoteBtn" style="flex:1;background:var(--yellow,#ffc800);border:2.5px solid var(--ink,#111);border-radius:12px;padding:12px;font:800 12px var(--font-head);cursor:pointer;box-shadow:3px 3px 0 var(--ink,#111);">SHARE NOTE (24H) 🚀</button>' +
             (cur.note_text || cur.song_title ? '<button id="delNoteBtn" style="background:#fff;border:2.5px solid var(--ink,#111);border-radius:12px;padding:12px;font:800 12px var(--font-head);cursor:pointer;color:#d64545;">CLEAR</button>' : '') +
@@ -785,6 +818,9 @@
       var songSelEl = document.getElementById("noteSongSel");
       var songInput = document.getElementById("noteSongSearch");
       var songSpin = document.getElementById("noteSongSpin");
+      var inspireTray = document.getElementById("inspireDeskTray");
+      var quoteInput = document.getElementById("noteQuoteInput");
+      var curSeg = (selSong && selSong.segment) || 0;
 
       function updateSelectedSongUI() {
         if (!songSelEl) return;
@@ -795,12 +831,20 @@
         }
         songSelEl.style.display = "flex";
         songSelEl.innerHTML =
-          (selSong.artwork ? '<img src="' + C.esc(selSong.artwork) + '" style="width:34px;height:34px;border-radius:6px;border:1.5px solid #111;object-fit:cover;">' : '<span style="font-size:18px;">🎵</span>') +
-          '<div style="flex:1;min-width:0;line-height:1.2;">' +
-            '<b style="display:block;font-size:12px;color:#111;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + C.esc(selSong.title) + '</b>' +
-            '<span style="font-size:11px;color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;">' + C.esc(selSong.artist) + '</span>' +
+          '<div style="display:flex;align-items:center;gap:8px;width:100%;">' +
+            (selSong.artwork ? '<img src="' + C.esc(selSong.artwork) + '" style="width:34px;height:34px;border-radius:6px;border:1.5px solid #111;object-fit:cover;">' : '<span style="font-size:18px;">🎵</span>') +
+            '<div style="flex:1;min-width:0;line-height:1.2;">' +
+              '<b style="display:block;font-size:12px;color:#111;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + C.esc(selSong.title) + '</b>' +
+              '<span style="font-size:11px;color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;">' + C.esc(selSong.artist) + '</span>' +
+            '</div>' +
+            '<button type="button" id="rmSelSongBtn" style="background:none;border:none;font:800 14px sans-serif;cursor:pointer;padding:4px 8px;color:#111;" title="Remove song">✕</button>' +
           '</div>' +
-          '<button type="button" id="rmSelSongBtn" style="background:none;border:none;font:800 14px sans-serif;cursor:pointer;padding:4px 8px;color:#111;" title="Remove song">✕</button>';
+          '<div style="display:flex;align-items:center;gap:6px;margin-top:4px;border-top:1px dashed rgba(0,0,0,0.2);padding-top:4px;">' +
+            '<span style="font:800 10px var(--font-head);color:#111;">30S SEGMENT:</span>' +
+            '<button type="button" class="dm-seg-btn ' + (curSeg === 0 ? 'on' : '') + '" data-seg="0" style="padding:2px 7px;font:700 10.5px var(--font-body);border-radius:6px;border:1.5px solid #111;background:' + (curSeg === 0 ? '#111' : '#fff') + ';color:' + (curSeg === 0 ? '#fff' : '#111') + ';cursor:pointer;">0:00 - 0:30</button>' +
+            '<button type="button" class="dm-seg-btn ' + (curSeg === 30 ? 'on' : '') + '" data-seg="30" style="padding:2px 7px;font:700 10.5px var(--font-body);border-radius:6px;border:1.5px solid #111;background:' + (curSeg === 30 ? '#111' : '#fff') + ';color:' + (curSeg === 30 ? '#fff' : '#111') + ';cursor:pointer;">0:30 - 1:00</button>' +
+          '</div>';
+
         var rm = document.getElementById("rmSelSongBtn");
         if (rm) {
           rm.addEventListener("click", function () {
@@ -808,8 +852,53 @@
             updateSelectedSongUI();
           });
         }
+        songSelEl.querySelectorAll(".dm-seg-btn").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            curSeg = parseInt(this.getAttribute("data-seg"), 10) || 0;
+            if (selSong) selSong.segment = curSeg;
+            updateSelectedSongUI();
+          });
+        });
       }
       updateSelectedSongUI();
+
+      ovl.querySelectorAll(".dm-trend-song-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var idx = parseInt(this.getAttribute("data-trend-idx"), 10);
+          var s = TRENDING_SONGS[idx];
+          if (s) {
+            selSong = { title: s.title, artist: s.artist, artwork: s.artwork, preview: s.preview, segment: 0 };
+            curSeg = 0;
+            updateSelectedSongUI();
+          }
+        });
+      });
+
+      var deskBtn = document.getElementById("openInspireDeskBtn");
+      if (deskBtn && inspireTray) {
+        deskBtn.addEventListener("click", function () {
+          if (inspireTray.style.display === "none") {
+            inspireTray.style.display = "block";
+            inspireTray.innerHTML = INSPIRED_QUOTES.map(function (q, qidx) {
+              return '<div class="dm-inspire-item" data-qidx="' + qidx + '" style="padding:6px 8px;margin-bottom:4px;border-radius:6px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:11.5px;line-height:1.3;">' +
+                '<i style="font-family:Georgia,serif;">\u201c' + C.esc(q.quote) + '\u201d</i><br><b style="font-size:10px;color:#666;">- ' + C.esc(q.author) + '</b>' +
+              '</div>';
+            }).join("");
+            inspireTray.querySelectorAll(".dm-inspire-item").forEach(function (it) {
+              it.addEventListener("click", function () {
+                var qidx = parseInt(this.getAttribute("data-qidx"), 10);
+                var picked = INSPIRED_QUOTES[qidx];
+                if (picked) {
+                  quoteInput.value = picked.quote + " - " + picked.author;
+                  inspireTray.style.display = "none";
+                }
+              });
+            });
+          } else {
+            inspireTray.style.display = "none";
+          }
+        });
+      }
 
       var itunesTimer = null;
       if (songInput) {
@@ -852,8 +941,10 @@
                       title: match.trackName,
                       artist: match.artistName,
                       artwork: match.artworkUrl100 || match.artworkUrl60 || "",
-                      preview: match.previewUrl || ""
+                      preview: match.previewUrl || "",
+                      segment: 0
                     };
+                    curSeg = 0;
                     updateSelectedSongUI();
                     songResEl.style.display = "none";
                     songResEl.innerHTML = "";
@@ -893,6 +984,7 @@
           song_artist: selSong ? selSong.artist : "",
           artwork_url: selSong ? selSong.artwork : "",
           preview_url: selSong ? selSong.preview : "",
+          segment_start: selSong ? (selSong.segment || 0) : 0,
           quote_text: quote,
           created_at: Date.now(),
           expires_at: Date.now() + 864e5
@@ -925,7 +1017,9 @@
 
       var quoteHtml = n.quote_text ? '<blockquote style="border-left:4px solid var(--ink,#111);padding-left:10px;font:italic 13px Georgia,serif;margin:10px 0;">\u201c' + C.esc(n.quote_text) + '\u201d' + (n.quote_author ? '<br><small>- ' + C.esc(n.quote_author) + '</small>' : '') + '</blockquote>' : '';
 
-      var replyBtn = (k !== "me") ? '<button id="noteReplyBtn" style="width:100%;display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;background:var(--ink,#111);color:#fff;border:2.5px solid var(--ink,#111);border-radius:12px;padding:10px;font:800 12px var(--font-head);cursor:pointer;margin-top:14px;">' + C.icon("chat") + ' REPLY IN CHAT →</button>' : '';
+      var replyBtn = (k !== "me")
+        ? '<button id="noteReplyBtn" style="width:100%;display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;background:var(--ink,#111);color:#fff;border:2.5px solid var(--ink,#111);border-radius:12px;padding:10px;font:800 12px var(--font-head);cursor:pointer;margin-top:14px;">' + C.icon("chat") + ' REPLY IN CHAT →</button>'
+        : '<button id="noteEditBtn" style="width:100%;display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;background:var(--yellow,#ffc800);color:#111;border:2.5px solid var(--ink,#111);border-radius:12px;padding:10px;font:800 12px var(--font-head);cursor:pointer;margin-top:14px;box-shadow:3px 3px 0 var(--ink,#111);">EDIT YOUR NOTE</button>';
 
       ovl.innerHTML =
         '<div style="background:var(--paper,#fffdf5);border:3.5px solid var(--ink,#111);border-radius:18px;box-shadow:8px 8px 0 var(--ink,#111);max-width:340px;width:100%;padding:22px;position:relative;box-sizing:border-box;">' +
@@ -942,6 +1036,7 @@
         audBtn.addEventListener("click", function () {
           if (!audioEl) {
             audioEl = new Audio(n.preview_url);
+            if (n.segment_start) audioEl.currentTime = n.segment_start;
             audioEl.addEventListener("ended", function () { audBtn.textContent = "PLAY ▶"; });
           }
           if (audioEl.paused) {
@@ -968,13 +1063,24 @@
           location.href = "dm.html?u=" + encodeURIComponent(k);
         });
       }
+      var eBtn = document.getElementById("noteEditBtn");
+      if (eBtn) {
+        eBtn.addEventListener("click", function () {
+          cleanup();
+          openNoteModal();
+        });
+      }
     }
 
     document.getElementById("dmMain").addEventListener("click", function (e) {
       var t;
       if ((t = e.target.closest("#dmMyNoteBtn"))) {
         e.preventDefault();
-        openNoteModal();
+        if (activeNotes["me"]) {
+          showNotePopup("me");
+        } else {
+          openNoteModal();
+        }
         return;
       }
       if ((t = e.target.closest("[data-note-key]"))) {

@@ -42,6 +42,7 @@
     scan: SVG_OPEN + '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
     notes: SVG_OPEN + '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>',
     graveyard: SVG_OPEN + '<path d="M18 2H6a2 2 0 0 0-2 2v18h16V4a2 2 0 0 0-2-2z"></path><line x1="12" y1="7" x2="12" y2="13"></line><line x1="9" y1="10" x2="15" y2="10"></line></svg>',
+    ask: SVG_OPEN + '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="13" y2="13"></line></svg>',
     plus: '<div class="tsb-bar__plus"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>'
   };
 
@@ -52,7 +53,7 @@
     stories:   { id: "stories", url: "stories.html", lbl: "Stories", ico: ICO.stories, cls: "tsb-bar__item--stories" },
     you:       { id: "you", url: "login.html", lbl: "You", ico: ICO.you, cls: "tsb-bar__item--you" },
     messages:  { id: "messages", url: "dm.html", lbl: "Messages", ico: ICO.messages, cls: "tsb-bar__item--messages" },
-    ask:       { id: "ask", url: "chat.html", lbl: "Ask Library", ico: ICO.messages, cls: "tsb-bar__item--ask" },
+    ask:       { id: "ask", url: "chat.html", lbl: "Ask Library", ico: ICO.ask, cls: "tsb-bar__item--ask" },
     continue:  { id: "continue", url: "book.html?resume=1", lbl: "Continue", ico: ICO.continue, cls: "tsb-bar__item--continue" },
     library:   { id: "library", url: "index.html#library", lbl: "Library", ico: ICO.library, cls: "tsb-bar__item--library" },
     scan:      { id: "scan", url: "scan.html", lbl: "Scan", ico: ICO.scan, cls: "tsb-bar__item--scan" },
@@ -137,17 +138,8 @@
     if (pageName() === "index.html") setActive(currentActive());
   });
 
-  /* Suppress tab jump right after drag-and-drop reorder */
-  var suppressClickUntil = 0;
-
   /* ---------- taps ---------- */
   bar.addEventListener("click", function (e) {
-    if (suppressClickUntil && Date.now() < suppressClickUntil) {
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    }
-
     var item = e.target.closest ? e.target.closest(".tsb-bar__item") : null;
     if (!item) return;
     var id = item.getAttribute("data-tab");
@@ -330,164 +322,18 @@
      ============================================================ */
   var updateSwipeNavTabs = null;
 
-  (function initBarDragReorder() {
-    var pressTimer = null;
-    var draggedEl = null;
-    var draggedIdx = -1;
-    var startX = 0;
-    var startY = 0;
-    var isReordering = false;
-    var itemRects = [];
-    var barItems = [];
+  /* ============================================================
+     ACTION BAR NAVIGATION:
+     Custom slots are customized in settings.html. On the live bar,
+     all clicks and long-presses navigate immediately without
+     accidental drag reordering or click suppression.
+     ============================================================ */
+  var updateSwipeNavTabs = null;
 
-    function updateItemRects() {
-      barItems = Array.prototype.slice.call(bar.querySelectorAll(".tsb-bar__item"));
-      itemRects = barItems.map(function (el) {
-        var r = el.getBoundingClientRect();
-        return { el: el, left: r.left, width: r.width, cx: r.left + r.width / 2 };
-      });
-    }
-
-    function cancelLongPress() {
-      if (pressTimer) {
-        clearTimeout(pressTimer);
-        pressTimer = null;
-      }
-    }
-
-    function startReorder(el, clientX, clientY) {
-      isReordering = true;
-      draggedEl = el;
-      draggedIdx = barItems.indexOf(el);
-      if (draggedIdx === -1) return;
-
-      try { if (navigator.vibrate) navigator.vibrate(25); } catch (eV) {}
-
-      bar.classList.add("tsb-bar--reordering");
-      draggedEl.classList.add("tsb-bar__item--floating");
-
-      updateItemRects();
-    }
-
-    function handlePointerDown(e) {
-      if (isReordering) return;
-      var item = e.target.closest ? e.target.closest(".tsb-bar__item") : null;
-      if (!item || !bar.contains(item)) return;
-
-      var pt = e.touches ? e.touches[0] : e;
-      startX = pt.clientX;
-      startY = pt.clientY;
-
-      updateItemRects();
-
-      cancelLongPress();
-      pressTimer = setTimeout(function () {
-        pressTimer = null;
-        startReorder(item, startX, startY);
-      }, 380);
-    }
-
-    function handlePointerMove(e) {
-      var pt = e.touches ? e.touches[0] : e;
-      var cx = pt.clientX;
-      var cy = pt.clientY;
-
-      if (pressTimer) {
-        if (Math.abs(cx - startX) > 8 || Math.abs(cy - startY) > 8) {
-          cancelLongPress();
-        }
-      }
-
-      if (!isReordering || !draggedEl) return;
-
-      if (e.cancelable) e.preventDefault();
-      if (e.stopPropagation) e.stopPropagation();
-
-      var dx = cx - startX;
-      var rot = Math.max(-5, Math.min(5, dx * 0.08));
-      draggedEl.style.transform = "translate3d(" + dx + "px, -16px, 0) scale(1.16) rotate(" + rot + "deg)";
-
-      var currentCenterX = itemRects[draggedIdx].cx + dx;
-      for (var i = 0; i < itemRects.length; i++) {
-        if (i === draggedIdx) continue;
-        var sibling = itemRects[i];
-        var dist = currentCenterX - sibling.cx;
-        var shouldSwap = false;
-        if (i > draggedIdx && dist > -sibling.width * 0.1) {
-          shouldSwap = true;
-        } else if (i < draggedIdx && dist < sibling.width * 0.1) {
-          shouldSwap = true;
-        }
-
-        if (shouldSwap) {
-          try { if (navigator.vibrate) navigator.vibrate(10); } catch (eV) {}
-
-          var tempSlot = activeSlots[draggedIdx];
-          activeSlots[draggedIdx] = activeSlots[i];
-          activeSlots[i] = tempSlot;
-
-          var offset = (draggedIdx - i) * sibling.width;
-          sibling.el.style.transform = "translate3d(" + offset + "px, 0, 0)";
-          sibling.el.style.transition = "transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1)";
-
-          draggedIdx = i;
-          startX = cx;
-          updateItemRects();
-          break;
-        }
-      }
-    }
-
-    function handlePointerUp(e) {
-      cancelLongPress();
-      if (!isReordering || !draggedEl) {
-        return;
-      }
-
-      suppressClickUntil = Date.now() + 420;
-      isReordering = false;
-
-      var el = draggedEl;
-      draggedEl = null;
-
-      try { if (navigator.vibrate) navigator.vibrate(15); } catch (eV) {}
-
-      el.classList.add("tsb-bar__item--dropping");
-      el.style.transform = "translate3d(0, 0, 0) scale(1) rotate(0)";
-      el.style.boxShadow = "none";
-
-      setTimeout(function () {
-        bar.classList.remove("tsb-bar--reordering");
-        barItems.forEach(function (it) {
-          it.classList.remove("tsb-bar__item--floating", "tsb-bar__item--dropping");
-          it.style.transform = "";
-          it.style.transition = "";
-          it.style.boxShadow = "";
-        });
-
-        try {
-          localStorage.setItem("tsb_custom_bar", JSON.stringify(activeSlots));
-        } catch (eS) {}
-
-        bar.innerHTML = buildBarHtml(activeSlots);
-        cleanToast("Action bar order saved ✨");
-
-        if (typeof updateSwipeNavTabs === "function") {
-          updateSwipeNavTabs();
-        }
-      }, 250);
-    }
-
-    bar.addEventListener("touchstart", handlePointerDown, { passive: true });
-    window.addEventListener("touchmove", handlePointerMove, { passive: false });
-    window.addEventListener("touchend", handlePointerUp, { passive: true });
-    window.addEventListener("touchcancel", handlePointerUp, { passive: true });
-
-    bar.addEventListener("pointerdown", handlePointerDown);
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", handlePointerUp);
-    window.addEventListener("pointercancel", handlePointerUp);
-  })();
+  bar.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+    return false;
+  });
 
   /* ============================================================
      DYNAMIC SWIPING SYNCED WITH CUSTOM BAR & PRELOADING
@@ -505,6 +351,50 @@
     var tracking = false;
     var isHorizontal = false;
     var currentDx = 0;
+
+    var hud = null;
+    function getHud() {
+      if (!hud) {
+        hud = document.getElementById("tsbSwipeHud");
+        if (!hud) {
+          hud = document.createElement("div");
+          hud.id = "tsbSwipeHud";
+          hud.className = "tsb-swipe-hud";
+          document.body.appendChild(hud);
+        }
+      }
+      return hud;
+    }
+
+    function showSwipeHud(dx, w, idx, shouldSwitch) {
+      var h = getHud();
+      if (!h) return;
+      if (Math.abs(dx) < 18) {
+        h.classList.remove("on", "ready");
+        return;
+      }
+      var target = null;
+      var arrow = "";
+      if (dx < 0 && idx < TABS.length - 1) {
+        target = TABS[idx + 1];
+        arrow = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        h.innerHTML = '<span>' + (target ? target.lbl : "Next") + '</span> ' + arrow;
+      } else if (dx > 0 && idx > 0) {
+        target = TABS[idx - 1];
+        arrow = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+        h.innerHTML = arrow + ' <span>' + (target ? target.lbl : "Previous") + '</span>';
+      } else {
+        h.innerHTML = '<span>' + (dx > 0 ? "First Tab" : "Last Tab") + '</span>';
+      }
+      h.classList.add("on");
+      h.classList.toggle("ready", !!shouldSwitch);
+    }
+
+    function hideSwipeHud() {
+      if (hud) {
+        hud.classList.remove("on", "ready");
+      }
+    }
 
     function isScrollableX(el) {
       var cur = el;
@@ -524,7 +414,11 @@
           cur.classList.contains("tsb-sheet") ||
           cur.classList.contains("pc-rail") ||
           cur.classList.contains("pc-search__chips") ||
-          cur.classList.contains("nt-bar")
+          cur.classList.contains("nt-bar") ||
+          cur.classList.contains("ap-dock") ||
+          cur.classList.contains("ap-sheet") ||
+          cur.classList.contains("ap-card") ||
+          cur.id === "tsbAp"
         )) return true;
         cur = cur.parentElement;
       }
@@ -535,7 +429,7 @@
       if (!el) return false;
       var tag = (el.tagName || "").toLowerCase();
       if (tag === "input" || tag === "textarea" || tag === "select" || el.isContentEditable) return true;
-      if (el.closest("dialog[open], .personal-dialog, .tsb-sheetwrap--on, .gold-celebrate, .audio-modal, .aq-panel--open, #tsbCheat, #tsbTourCard")) return true;
+      if (el.closest && el.closest("dialog[open], .personal-dialog, .tsb-sheetwrap--on, .gold-celebrate, .audio-modal, .aq-panel--open, #tsbCheat, #tsbTourCard, #tsbAp, .ap-dock, .ap-sheet, .ap-backdrop, .ap-card, audio, .pc-player, .pc-audio")) return true;
       return false;
     }
 
@@ -551,6 +445,10 @@
       var w = window.innerWidth || document.documentElement.clientWidth;
       if (startX < 16 || startX > w - 16) { tracking = false; return; }
       if (isInputOrModal(e.target) || isScrollableX(e.target)) { tracking = false; return; }
+      if (e.target && e.target.closest && e.target.closest("#tsbAp, .ap-dock, .ap-sheet, .ap-backdrop, .ap-card, audio, .pc-player, .pc-audio")) {
+        tracking = false;
+        return;
+      }
 
       tracking = true;
     }, { passive: true });
@@ -579,6 +477,10 @@
           if (TABS[i].id === curTab) { idx = i; break; }
         }
 
+        var w = window.innerWidth || document.documentElement.clientWidth;
+        var shouldSwitch = (Math.abs(dx) > w * 0.22);
+        showSwipeHud(dx, w, idx, shouldSwitch);
+
         var dragX = dx;
         if ((idx === 0 && dx > 0) || (idx === TABS.length - 1 && dx < 0)) {
           dragX = dx * 0.25;
@@ -592,6 +494,7 @@
     }, { passive: true });
 
     window.addEventListener("touchend", function (e) {
+      hideSwipeHud();
       if (!tracking || !isHorizontal) {
         if (isHorizontal) {
           document.body.style.transform = "";

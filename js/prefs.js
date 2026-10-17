@@ -439,7 +439,9 @@
   /* ---------- PWA ---------- */
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js").catch(() => {});
+      navigator.serviceWorker.register("sw.js").then((reg) => {
+        try { if (reg && reg.update) reg.update(); } catch (eU) {}
+      }).catch(() => {});
       /* a deployed update takes over → reload ONCE so signed-in readers
          never sit on a stale build (accounts live in localStorage/Supabase,
          untouched by cache purges) */

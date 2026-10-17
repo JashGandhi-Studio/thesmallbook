@@ -39,18 +39,24 @@
 
   /* ---------- the card ---------- */
   function undress() {
-    if (!box) return;
+    if (!box) {
+      document.documentElement.classList.remove("trial-lock");
+      return;
+    }
     var b = box; box = null;
     b.classList.remove("trial--on");
     document.documentElement.classList.remove("trial-lock");
-    setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, 320);
+    setTimeout(function () { if (b.parentNode) b.parentNode.removeChild(b); }, 260);
   }
 
   function dismiss() {
     undress();
-    try { sessionStorage.setItem("tsb_trial_snooze", String(Date.now())); } catch (e) {}
+    try {
+      sessionStorage.setItem("tsb_trial_snooze", String(Date.now()));
+      sessionStorage.setItem("tsb_trial_shown", "1");
+    } catch (e) {}
     dead = false;
-    st.used = Math.max(0, LIMIT - 600); /* 10 more minutes of free uninterrupted reading */
+    st.used = 0; /* Reset timer so user gets 15 more minutes of clean, uninterrupted guest reading */
     set("tsb_trial", st);
   }
 
@@ -89,6 +95,11 @@
   });
 
   function gate() {
+    if (dead || signedIn()) return;
+    try {
+      if (sessionStorage.getItem("tsb_gate_done") || sessionStorage.getItem("tsb_trial_shown")) return;
+      sessionStorage.setItem("tsb_trial_shown", "1");
+    } catch (e) {}
     dead = true;
     /* ONE card, the friendly one. gate.js owns the copy and the styles. */
     try { if (window.TSB_GATE && TSB_GATE.show) { TSB_GATE.show(); return; } } catch (e) {}
@@ -112,7 +123,8 @@
     if (document.visibilityState !== "visible") return;
     try {
       var sn = sessionStorage.getItem("tsb_trial_snooze");
-      if (sn && (Date.now() - Number(sn)) < 600000) return;
+      if (sn && (Date.now() - Number(sn)) < 900000) return;
+      if (sessionStorage.getItem("tsb_trial_shown") || sessionStorage.getItem("tsb_gate_done")) return;
     } catch (e) {}
     st.used += 1;
     if (st.used >= LIMIT) { set("tsb_trial", st); gate(); return; }
@@ -123,9 +135,14 @@
     if (!onboarded() || signedIn()) return;
     try {
       var sn = sessionStorage.getItem("tsb_trial_snooze");
-      if (sn && (Date.now() - Number(sn)) < 600000) return;
+      if (sn && (Date.now() - Number(sn)) < 900000) return;
+      if (sessionStorage.getItem("tsb_trial_shown") || sessionStorage.getItem("tsb_gate_done")) return;
     } catch (e) {}
-    if (st.used >= LIMIT) { gate(); return; }
+    if (st.used >= LIMIT) {
+      /* If already reached limit but user just refreshed or navigated, don't trap them immediately */
+      st.used = 0;
+      set("tsb_trial", st);
+    }
     setInterval(tick, 1000);
   }
 

@@ -1184,6 +1184,7 @@
               if (window.TSB_GOLD) {
                 window.TSB_GOLD.isGold = function () { return true; };
               }
+              try { window.dispatchEvent(new Event("tsbgold")); } catch(eE) {}
             } catch(eP) {}
 
             ovl.remove();

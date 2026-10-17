@@ -285,6 +285,14 @@
   }
   function bindSwipe() {
     var sx = 0, sy = 0, dx = 0, drag = false;
+    try { dock.style.touchAction = "pan-y"; } catch (eT) {}
+    dock.addEventListener("touchstart", function (e) {
+      if (e.target.closest("button")) return;
+      e.stopPropagation();
+    }, { passive: true });
+    dock.addEventListener("touchmove", function (e) {
+      if (drag) e.stopPropagation();
+    }, { passive: true });
     dock.addEventListener("pointerdown", function (e) {
       if (e.target.closest("button")) return;
       drag = true; sx = e.clientX; sy = e.clientY; dx = 0;
@@ -702,10 +710,21 @@
     jset(PCBOOSTKEY, on ? 1 : 0);
     if (!AU) return;
     if (on) {
-      try { AU.crossOrigin = "anonymous"; } catch (e) {}
-      if (ensureGraph(AU)) {
-        gainNode.gain.value = 3.0; /* 300% volume boost */
-        if (actx && actx.resume) actx.resume();
+      /* Safe boost: only route through WebAudio if the stream has confirmed CORS headers.
+         External non-CORS podcast streams mute and freeze when wired to createMediaElementSource.
+         For non-CORS streams, run cleanly at max native volume without stalling the audio thread. */
+      var curSrc = (q && q.items && q.items[curItem] && q.items[curItem].src) || AU.src || "";
+      var isCorsSafe = /archive\.org|^blob:|^data:|\/\/localhost|\/\/127\.0\.0\.1/.test(curSrc);
+      if (isCorsSafe) {
+        try { AU.crossOrigin = "anonymous"; } catch (e) {}
+        if (ensureGraph(AU)) {
+          gainNode.gain.value = 3.0; /* 300% volume boost */
+          if (actx && actx.resume) actx.resume();
+        }
+      } else {
+        /* Non-CORS external stream: keep native audio pipeline alive, never mute */
+        AU.volume = 1.0;
+        if (mediaSrc) rebuildAU();
       }
     } else {
       if (gainNode) gainNode.gain.value = 1.0;
@@ -972,6 +991,18 @@
     a.addEventListener("loadedmetadata", function () {
       if (q && q.type === "audio" && q.seek && q.seekCh === curItem) { try { AU.currentTime = q.seek; } catch (e) {} q.seek = 0; }
     });
+    a.addEventListener("error", function () {
+      if (a.hasAttribute && a.hasAttribute("crossorigin")) {
+        try {
+          a.removeAttribute("crossorigin");
+          if (mediaSrc) rebuildAU();
+          var safeAu = ensureAU();
+          safeAu.src = (q && q.items && q.items[curItem] && q.items[curItem].src) || a.src;
+          safeAu.currentTime = a.currentTime || 0;
+          safeAu.play().catch(function () {});
+        } catch (errRec) {}
+      }
+    });
     return a;
   }
   function ensureAU() { if (!AU) AU = newAU(); return AU; }
@@ -997,11 +1028,15 @@
       /* v322: a podcast stream must never meet the graph at all */
       if (q && !/^ab:/.test(q.key) && gainNode) { try { au.crossOrigin = null; } catch (eX) {} }
     } else {
-      if (podcastBoostOn()) {
+      var isCorsPodcast = /archive\.org|^blob:|^data:|\/\/localhost|\/\/127\.0\.0\.1/.test(it.src || "");
+      if (podcastBoostOn() && isCorsPodcast) {
         try { au.crossOrigin = "anonymous"; } catch (e) {}
         if (ensureGraph(au)) gainNode.gain.value = 3.0;
       } else {
         try { au.removeAttribute && au.removeAttribute("crossorigin"); } catch (e) {}
+        if (mediaSrc) rebuildAU();
+        au = ensureAU();
+        au.volume = 1.0;
         if (gainNode) gainNode.gain.value = 1;
       }
     }
@@ -1383,12 +1418,38 @@
       });
       if (items.length) jset(ck, { at: Date.now(), items: items });
       cb(items);
-    }).catch(function () { cb([]); });
+    }).catch(function () {
+      var fallback = [{
+        label: "Chapter 1",
+        sub: rec.lang === "hi" ? "kahani" : "chapter",
+        src: "https://archive.org/download/" + rec.id + "/" + rec.id + "_64kb.mp3"
+      }];
+      cb(fallback);
+    });
   }
 
   function playAudiobook(bookId) {
     var rec = (window.TSB_AUDIOBOOKS || {})[bookId];
-    if (!rec) { toast("No audiobook for this one yet."); return; }
+    if (!rec && window.TSB_ABMORE && window.TSB_ABMORE.get) {
+      rec = window.TSB_ABMORE.get(bookId);
+    }
+    if (!rec) {
+      try {
+        var got = JSON.parse(localStorage.getItem("tsb_ab_got") || "{}");
+        if (got[bookId]) rec = got[bookId];
+      } catch (eG) {}
+    }
+    if (!rec) {
+      var pool = (window.TSB_ABMORE && window.TSB_ABMORE.pool) ? window.TSB_ABMORE.pool() : [];
+      var found = pool.find(function (p) { return p[0] === bookId || p[1] === bookId; });
+      if (found) {
+        rec = { id: found[0], title: found[1], author: found[2] };
+      }
+    }
+    if (!rec) {
+      rec = { id: bookId, title: String(bookId).replace(/[_-]+/g, " ") };
+    }
+    if (!rec || !rec.id) { toast("No audiobook for this one yet."); return; }
     fetchAudiobook(rec, function (items) {
       if (!items.length) { toast("Could not reach the audiobook. Try again online."); return; }
       var B = window.BOOKS || [];
