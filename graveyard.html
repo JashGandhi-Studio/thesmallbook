@@ -114,6 +114,10 @@
     <div style="display:flex;align-items:center;gap:10px;margin:0 2px 10px">
       <b style="font:800 11px var(--font-head);letter-spacing:2px">🏛 THE CASE MUSEUM</b>
       <span style="flex:1;height:2.5px;background:var(--ink);border-radius:2px;opacity:.85"></span>
+      <button type="button" id="iaModalTrigger" style="background:var(--paper,#fff);border:2px solid var(--ink,#111);border-radius:8px;padding:4px 10px;font:800 10.5px var(--font-head);color:var(--ink,#111);display:inline-flex;align-items:center;gap:5px;cursor:pointer;box-shadow:2px 2px 0 var(--ink,#111);">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+        TEST AN IDEA (AUTOPSY)
+      </button>
     </div>
     <div id="cfMuseumList" style="display:flex;flex-direction:column;gap:8px"></div>
   </div>
@@ -161,6 +165,78 @@
     <p class="tiny" style="margin-top:8px;"><a href="about.html" style="color:inherit;">ABOUT · WHO MADE THIS?</a></p>
     <p class="tiny">LEARN CHEAP. THE ALTERNATIVE IS EXPENSIVE.</p>
   </footer>
+
+  <!-- 💀 IDEA AUTOPSY POPUP MODAL WINDOW (Non-overwhelming, opens on-demand) -->
+  <div id="iaModal" class="ia-modal-backdrop" hidden style="position:fixed;inset:0;z-index:99999;background:rgba(20,17,12,0.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;">
+    <div class="ia-modal-card" id="autopsy" style="background:var(--paper,#fffdf5);border:3px solid var(--ink,#111);border-radius:20px;box-shadow:8px 8px 0 var(--ink,#111);width:100%;max-width:560px;max-height:90vh;overflow-y:auto;padding:22px;box-sizing:border-box;position:relative;">
+      <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--ink,#111);padding-bottom:12px;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:22px;line-height:1;">💀</span>
+          <div>
+            <h2 style="font:800 18px var(--font-head);margin:0;letter-spacing:0.5px;color:var(--ink,#111);">IDEA AUTOPSY</h2>
+            <span style="font:600 11px var(--font-body);color:var(--muted,#666);">Pre-mortem diagnostic against 400 real corporate failures</span>
+          </div>
+        </div>
+        <button type="button" id="iaModalClose" aria-label="Close Idea Autopsy" style="background:none;border:none;font-size:22px;line-height:1;font-weight:700;color:var(--ink,#111);cursor:pointer;padding:4px 8px;border-radius:6px;">✕</button>
+      </div>
+
+      <p style="font:500 12px/1.5 var(--font-body);color:var(--ink,#111);margin:0 0 14px;">Stress-test your idea before spending years and capital. Uncover fatal blind spots, identify corpses that died of this exact syndrome, and read the antidote book.</p>
+
+      <form id="iaForm" style="display:flex;flex-direction:column;gap:12px;">
+        <div>
+          <label style="display:block;font:800 10.5px var(--font-head);letter-spacing:0.8px;margin-bottom:4px;">STARTUP / BUSINESS IDEA</label>
+          <input type="text" id="iaIdeaName" placeholder="e.g. 10-minute grocery delivery, AI legal assistant..." required style="width:100%;border:2px solid var(--ink,#111);border-radius:10px;padding:9px 12px;font:600 12.5px var(--font-body);background:#fff;color:#111;box-sizing:border-box;">
+        </div>
+
+        <div>
+          <label style="display:block;font:800 10.5px var(--font-head);letter-spacing:0.8px;margin-bottom:5px;">ARCHETYPE</label>
+          <div id="iaArchetypes" style="display:flex;gap:5px;flex-wrap:wrap;">
+            <button type="button" class="setbtn setbtn--sm on" data-arch="saas" style="padding:5px 9px;font-size:11px;background:var(--yellow,#ffc800);border:2px solid var(--ink,#111);">🚀 B2B SaaS</button>
+            <button type="button" class="setbtn setbtn--sm" data-arch="qcom" style="padding:5px 9px;font-size:11px;background:#fff;border:2px solid var(--ink,#111);">⚡ Quick-Comm</button>
+            <button type="button" class="setbtn setbtn--sm" data-arch="d2c" style="padding:5px 9px;font-size:11px;background:#fff;border:2px solid var(--ink,#111);">🛍️ D2C Brand</button>
+            <button type="button" class="setbtn setbtn--sm" data-arch="social" style="padding:5px 9px;font-size:11px;background:#fff;border:2px solid var(--ink,#111);">💬 Consumer</button>
+            <button type="button" class="setbtn setbtn--sm" data-arch="marketplace" style="padding:5px 9px;font-size:11px;background:#fff;border:2px solid var(--ink,#111);">🔄 Platform</button>
+            <button type="button" class="setbtn setbtn--sm" data-arch="fintech" style="padding:5px 9px;font-size:11px;background:#fff;border:2px solid var(--ink,#111);">💳 FinTech</button>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div>
+            <label style="display:block;font:800 10px var(--font-head);letter-spacing:0.6px;margin-bottom:3px;">DISTRIBUTION</label>
+            <select id="iaDist" style="width:100%;border:2px solid var(--ink,#111);border-radius:8px;padding:7px;font:600 11.5px var(--font-body);background:#fff;color:#111;">
+              <option value="ads">Paid Meta/Google Ads (CAC)</option>
+              <option value="viral">Organic Word of Mouth</option>
+              <option value="outbound">Direct Enterprise Sales</option>
+              <option value="audience">Creator / Owned Community</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block;font:800 10px var(--font-head);letter-spacing:0.6px;margin-bottom:3px;">GROSS MARGIN</label>
+            <select id="iaMargin" style="width:100%;border:2px solid var(--ink,#111);border-radius:8px;padding:7px;font:600 11.5px var(--font-body);background:#fff;color:#111;">
+              <option value="high">High Software Margin (&gt;75%)</option>
+              <option value="slim">Physical Slim Margin (10-25%)</option>
+              <option value="loss">Subsidized / Negative Margin</option>
+              <option value="take">Commission Take Rate (10-20%)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label style="display:block;font:800 10px var(--font-head);letter-spacing:0.6px;margin-bottom:3px;">DEFENSE / MOAT</label>
+          <select id="iaMoat" style="width:100%;border:2px solid var(--ink,#111);border-radius:8px;padding:7px;font:600 11.5px var(--font-body);background:#fff;color:#111;">
+            <option value="speed">Speed only (No moat yet, easily cloned)</option>
+            <option value="network">Data or Multi-sided Network Effects</option>
+            <option value="ip">Proprietary IP / Hard Tech</option>
+            <option value="switching">High Switching Costs &amp; System Lock-in</option>
+          </select>
+        </div>
+
+        <button type="submit" id="iaRunBtn" style="width:100%;padding:12px;font:800 12px var(--font-head);letter-spacing:1px;cursor:pointer;box-shadow:3px 3px 0 var(--ink,#111);background:var(--yellow,#ffc800);border:2px solid var(--ink,#111);border-radius:10px;margin-top:4px;">RUN DIAGNOSTIC →</button>
+      </form>
+
+      <div id="iaResultCard" style="display:none;margin-top:14px;border-top:2px dashed rgba(20,17,12,0.25);padding-top:14px;"></div>
+    </div>
+  </div>
 
   <div class="toast" id="toast"></div>
 

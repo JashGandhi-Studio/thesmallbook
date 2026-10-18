@@ -215,14 +215,14 @@
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/><circle cx="12" cy="19" r="1"/></svg>
         TSB GOLD
       </div>
-      <h1>HUMAN AUDIO.<br><span class="hl">DEEP DIVES. PDFs.</span><br>COMING SOON.</h1>
+      <h1>MASTER ANY BOOK.<br><span class="hl">PDF CHEAT-SHEETS &amp; AUDIO.</span><br>LIVE TODAY.</h1>
       <p class="goldhero__sub">The library stays <b>free to read</b>. TSB Gold is the premium layer, and it is shipping: <b>unlimited PDF cheat-sheets are LIVE today</b> - the handwritten-style sheet and the raw notes page, every book, no credit counter. Real human narration and full-length deep dives land for members as each drops. Lock your price now, get each feature the day it ships.</p>
       <div class="goldhero__price">FROM ₹49 (75-DAY PDF PASS) · GOLD ₹99/MO · ₹999/YR
         <small>NO HIDDEN AUTO-DEBIT · CANCEL ANYTIME</small>
       </div>
       <a class="goldhero__cta" href="#goldPricing">CHOOSE YOUR PLAN · FROM ₹49 →</a>
       <p class="goldhero__trust">🔒 Lock now, pay when Gold ships · Cancel anytime · <b>Free to read</b> stays free</p>
-      <p style="max-width:620px;margin:12px auto 0;font-size:11.5px;color:#555;line-height:1.5;background:#fffbe6;border:2px solid var(--ink);border-radius:10px;padding:8px 12px;box-shadow:3px 3px 0 var(--ink)">✓ All-in: <b>40-offer Store</b> + <b>Studio Pro</b> (watermark off, 6 filters, 9:16/1:1/4:5, drag-reframe) + <b>human audio, deep dives &amp; PDFs</b> as each ships, one price, no add-ons.</p>
+      <p style="max-width:620px;margin:12px auto 0;font-size:11.5px;color:#555;line-height:1.5;background:#fffbe6;border:2px solid var(--ink);border-radius:10px;padding:8px 12px;box-shadow:3px 3px 0 var(--ink)">✓ All-in: <b>100-offer Store</b> + <b>Studio Pro</b> (watermark off, 6 filters, 9:16/1:1/4:5, drag-reframe) + <b>unlimited visual PDF cheat-sheets &amp; audio</b>, one price, no add-ons.</p>
     </header>
 
     <div class="goldgrid goldgrid--collapsed" id="goldGrid">
@@ -230,12 +230,12 @@
         <div class="goldcard__icon">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
         </div>
-        <h3>HUMAN AUDIO <span class="live">LIVE SAMPLES</span></h3>
-        <p>Podcast-grade narration by real voices, not robotic TTS. Every lesson, chapter and deep dive, read to you like a show.</p>
+        <h3>HUMAN AUDIO <span class="soon" style="background:#ff9800;color:#111;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800;display:inline-block;vertical-align:middle;margin-left:6px;">UNDER CONSTRUCTION</span></h3>
+        <p>The Audio Room and podcasts are 100% live. Full human studio narration for all 500 books is under construction and in production.</p>
         <div style="margin-top:8px;font:700 11px Space Grotesk,sans-serif;color:#00c48c">Worth ₹1,999/yr (Audible) → <b style="color:#111;background:#ffc800;padding:1px 5px;border:1px solid #111">FREE WITH GOLD</b></div>
         <button class="gs-open" id="gsOpenSamples" type="button"><span class="gs-open__ico">▶</span> LISTEN TO SAMPLES</button>
         <span class="soon" style="display:none">COMING SOON</span><br>
-        <small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Samples are live, deep-dive narration is live now, and the <a href="podcasts.html" style="font-weight:800;color:inherit">Audio Room</a> curates the shows worth your ears.</small>
+        <small style="font-size:10.5px;color:#666;line-height:1.4;display:inline-block;margin-top:6px">Samples are live, and the <a href="podcasts.html" style="font-weight:800;color:inherit">Audio Room</a> curates the shows and audiobooks live today.</small>
       </div>
 
       <div class="goldcard">
@@ -1024,6 +1024,12 @@
   <script>
     /* Direct plan button checkout wiring for ₹49, ₹99, ₹999 */
     (function () {
+      function esc(s) {
+        return String(s || "").replace(/[&<>"']/g, function (m) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m];
+        });
+      }
+
       function launchPayment(planType, amount, title, desc) {
         if (typeof isFounderNow === "function" && isFounderNow()) {
           try {
@@ -1103,7 +1109,7 @@
               '<span style="background:var(--yellow,#ffc800);border:2px solid var(--ink,#111);border-radius:8px;padding:4px 8px;font:800 11px var(--font-head);letter-spacing:1px;">RAZORPAY TEST MODE</span>' +
               '<span style="font:700 11px var(--font-body);color:var(--muted,#666);">Sandbox Gateway</span>' +
             '</div>' +
-            '<h3 style="font:800 19px var(--font-head);margin:0 0 2px;">' + C.esc(pTitle) + '</h3>' +
+            '<h3 style="font:800 19px var(--font-head);margin:0 0 2px;">' + esc(pTitle) + '</h3>' +
             '<div style="font:800 24px var(--font-head);color:var(--ink,#111);margin:4px 0 14px;">₹' + pAmt + '</div>' +
             
             '<div style="display:flex;gap:6px;margin-bottom:14px;border-bottom:2px solid var(--ink,#111);padding-bottom:10px;">' +

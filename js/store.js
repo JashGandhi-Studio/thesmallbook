@@ -24,10 +24,10 @@
   var DATA = window.TSB_STORE_DATA || { offers: [] };
   var CATS = [
     { id: "all", label: "✦ All" },
+    { id: "vouchers", label: "🎟️ Vouchers (Limited)" },
     { id: "books", label: "📚 Books" },
     { id: "fun", label: "🎧 Music & video" },
     { id: "learning", label: "🧠 Learning" },
-
     { id: "shopping", label: "🛒 Shopping" },
     { id: "travel", label: "🎟️ Going out" }
   ];
@@ -186,13 +186,18 @@
       '<span class="st-card__brand">' + esc(o.brand) + "</span>" +
       '<span class="st-card__val">' + esc(o.value) + "</span>" +
       '<b class="st-card__t">' + esc(o.title) + "</b>" +
+      (o.code ? '<div style="margin:4px 0 6px;display:inline-flex;align-items:center;gap:5px;background:#fff8db;border:1.5px solid var(--ink);border-radius:6px;padding:2px 7px;font:700 10.5px monospace;color:var(--ink);"><span style="color:#d64545;">⚡ CODE:</span> ' + esc(o.code) + '<small style="color:#666;font-family:sans-serif;font-size:9.5px;">(' + (o.left || 4) + ' left)</small></div>' : '') +
       '<div class="st-card__foot"><span class="st-card__worth">' + esc(o.worth || o.verified || DATA.verified) + '</span><span class="st-card__go">→</span></div>' +
       "</div>";
   }
 
   function renderGrid(a) {
     var grid = $("stGrid");
-    var list = DATA.offers.filter(function (o) { return cat === "all" || o.cat === cat; });
+    var list = DATA.offers.filter(function (o) {
+      if (cat === "all") return true;
+      if (cat === "vouchers") return !!o.code;
+      return o.cat === cat;
+    });
     if (!list.length) { grid.innerHTML = '<div class="st-empty">Nothing on this shelf yet - new drops land monthly.</div>'; return; }
     grid.innerHTML = list.map(function (o, i) { return cardHTML(o, isOpen(o, a), i); }).join("");
   }
@@ -200,7 +205,7 @@
   function renderCats() {
     var cats = $("stCats");
     cats.innerHTML = CATS.map(function (c) {
-      var n = c.id === "all" ? DATA.offers.length : DATA.offers.filter(function (o) { return o.cat === c.id; }).length;
+      var n = c.id === "all" ? DATA.offers.length : (c.id === "vouchers" ? DATA.offers.filter(function (o) { return !!o.code; }).length : DATA.offers.filter(function (o) { return o.cat === c.id; }).length);
       return '<button class="st-cat' + (c.id === cat ? " on" : "") + '" data-cat="' + c.id + '" type="button">' + c.label + "<small>" + n + "</small></button>";
     }).join("");
   }
@@ -239,7 +244,11 @@
           '<p class="st-desc">' + esc(o.desc) + "</p>" +
           (o.worth ? '<div class="st-worth">💸 ' + esc(o.worth) + "<span>" + esc(o.tag) + "</span></div>" : "") +
           (o.code
-            ? '<div class="st-codebox"><code>' + esc(o.code) + '</code><button id="stCopy" type="button">COPY</button></div>'
+            ? '<div class="st-codebox"><code>' + esc(o.code) + '</code><button id="stCopy" type="button">COPY</button></div>' +
+              '<div class="st-voucher-fomo" style="display:flex;align-items:center;justify-content:space-between;background:#fff8db;border:2px solid var(--ink);border-radius:10px;padding:8px 12px;margin:8px 0 14px;box-shadow:2px 2px 0 var(--ink);">' +
+                '<div><b style="color:#c92a2a;font-size:11.5px;display:block;">⚡ LIMITED VOUCHER · ONLY ' + (o.left || 4) + ' OF ' + (o.quota || 100) + ' CODES LEFT TODAY</b><span style="font-size:10.5px;color:#555;">' + (o.claimed || 96) + '% claimed by readers this month</span></div>' +
+                '<span style="font-size:18px;">🔥</span>' +
+              '</div>'
             : '<div class="st-nocode"><em>NO CODE NEEDED</em>Applied automatically on the ' + esc(o.brand) + " page - just follow the steps.</div>") +
           '<div class="st-lbl">HOW TO CLAIM</div>' +
           '<ol class="st-steps">' + o.steps.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ol>" +
@@ -269,7 +278,7 @@
         '<div class="st-modal__grab"></div>' +
         '<div class="st-nudge">' + logoHTML(o) +
           "<h2>" + esc(o.brand) + " is behind the shelf</h2>" +
-          "<p>" + esc(o.value) + " - unlock all 40+ perks two ways: publish " + (a && a.signed ? left + " more " + (left === 1 ? "story" : "stories") : INSIDER_POSTS + " stories") + " in the Community to unlock free forever, OR unlock immediately with TSB Gold (₹99/mo or ₹999/yr).</p>" +
+          "<p>" + esc(o.value) + " - unlock all " + DATA.offers.length + "+ perks two ways: publish " + (a && a.signed ? left + " more " + (left === 1 ? "story" : "stories") : INSIDER_POSTS + " stories") + " in the Community to unlock free forever, OR unlock immediately with TSB Gold (₹99/mo or ₹999/yr).</p>" +
           '<div class="st-nudge__btns"><a href="gold.html">💛 UNLOCK WITH GOLD</a><a href="write.html">✍️ WRITE A STORY</a></div>' +
           '<button class="st-dead" id="stX" type="button" style="background:none;border:0;cursor:pointer;width:100%;margin-top:14px">Not now</button>' +
         "</div>" +
@@ -304,7 +313,16 @@
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeOffer(); });
 
   function copyText(t) {
-    var done = function () { toast("📋 Code copied - paste it at checkout"); haptic(); };
+    var done = function () {
+      var btn = $("stCopy");
+      if (btn) {
+        btn.textContent = "✓ COPIED";
+        btn.style.background = "#2f8f5b";
+        btn.style.color = "#fff";
+      }
+      toast("📋 Code copied to clipboard - paste at checkout!");
+      haptic();
+    };
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(done).catch(done); return; }
     } catch (e) {}

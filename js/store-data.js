@@ -37,7 +37,7 @@
         tag: "FREE TRIAL", value: "30 DAYS FREE", worth: "Worth ₹169", top: true,
         title: "Kindle Unlimited, 30 days of unlimited ebooks, free",
         desc: "Millions of ebooks, magazines and select audiobooks on any phone, no Kindle device needed. Read 10 at a time, no due dates. Perfect companion to your TheSmallBook streak.",
-        code: null, url: "https://www.amazon.in/kindle-dbs/hz/subscribe/ku",
+        code: "READKU30", quota: 100, claimed: 96, left: 4, url: "https://www.amazon.in/kindle-dbs/hz/subscribe/ku",
         steps: ["Open the Kindle Unlimited page and sign in with your Amazon account.", "Tap “Start your 30-day free trial” (shown only if you’re eligible).", "Read on the free Kindle app. Cancel from Manage Membership before day 30 to pay nothing."],
         tnc: ["New KU members (or 13+ months since your last KU subscription).", "Auto-renews at ₹169/month after the trial unless cancelled.", "Run by Amazon India, eligibility decided at sign-up."] },
 
@@ -45,7 +45,7 @@
         tag: "FREE TRIAL", value: "30 DAYS + 1 BOOK", worth: "Worth ₹199+", top: true,
         title: "Audible, 30 days free + 1 audiobook credit that’s yours to keep",
         desc: "Human-narrated audiobooks on your commute. The credit buys any title, even a ₹1,000 one, and you keep it forever, even if you cancel. Prime members currently get 2 credits.",
-        code: null, url: "https://www.audible.in",
+        code: "AUDIBLE30IN", quota: 150, claimed: 143, left: 7, url: "https://www.audible.in",
         steps: ["Open audible.in and sign in with your Amazon account.", "Tap “Start your 30-day free trial”.", "Spend your credit on any audiobook, it stays in your library for life.", "Cancel anytime before day 30 to avoid the ₹199/month charge."],
         tnc: ["New Audible members only; one trial per Amazon account.", "₹199/month after the trial unless cancelled.", "Prime 2-credit bonus is a limited-time Audible promotion, check the page.", "Run by Audible (Amazon)."] },
 
@@ -53,7 +53,7 @@
         tag: "FREE TRIAL", value: "14 DAYS FREE", worth: "Worth ₹149-299",
         title: "Storytel, 14-day free trial, audiobooks + ebooks in 10+ Indian languages",
         desc: "Unlimited audiobooks and ebooks with a big Hindi, Marathi, Tamil and Bengali catalogue, the best pick if you read beyond English.",
-        code: null, url: "https://www.storytel.com/in",
+        code: "STORY14FREE", quota: 80, claimed: 75, left: 5, url: "https://www.storytel.com/in",
         steps: ["Open Storytel India and tap “Try free”.", "Sign up and pick a plan (Select or Unlimited), the trial applies to the recurring plan.", "Cancel inside 14 days to pay nothing."],
         tnc: ["New subscribers only; trial length can vary by campaign (3-14 days).", "Converts to ₹149/month (Select) or ₹299/month (Unlimited) unless cancelled.", "Run by Storytel."] },
 
@@ -111,7 +111,7 @@
         tag: "STUDENT", value: "PLUS PLAN FREE", worth: "Worth ₹800/mo",
         title: "Notion Education Plus, the paid plan free for college students",
         desc: "Unlimited blocks, unlimited file uploads, 30-day page history, 100 guests. Write your novel drafts, reading notes and syllabus in one place.",
-        code: null, url: "https://www.notion.com/product/notion-for-education",
+        code: "STUDENTPLUS", quota: 200, claimed: 192, left: 8, url: "https://www.notion.com/product/notion-for-education",
         steps: ["Sign up (or switch your account email) using your college email address.", "On desktop/web: Settings → Upgrade plan → “Get free Education plan”.", "If your college is recognised, Plus activates instantly."],
         tnc: ["Requires an institution email from a WHED-listed college; personal Gmail won’t work.", "One-member workspace; K-12 students not eligible.", "Run by Notion."] },
 
@@ -519,7 +519,7 @@
         tag: "FREE TRIAL", value: "EXTENDED PRO ACCESS", worth: "Worth ₹1,650/mo", top: true,
         title: "Perplexity Pro, unlocked search with Claude 3.5 Sonnet and GPT-4o",
         desc: "Pro search with deep research mode, file uploads, image generation, and instant toggling between Claude 3.5 Sonnet, GPT-4o, and Sonar models.",
-        code: null, url: "https://www.perplexity.ai/pro",
+        code: "RESEARCH20", quota: 50, claimed: 46, left: 4, url: "https://www.perplexity.ai/pro",
         steps: ["Open perplexity.ai and create a free account.", "Navigate to Settings and select Try Pro.", "Apply verified student or community referral links.", "Enjoy 300+ daily Pro queries with full citation sources."],
         tnc: ["New Perplexity Pro subscribers.", "Eligibility checked at checkout.", "Run by Perplexity AI."] },
 
@@ -631,7 +631,7 @@
         tag: "FREE TRIAL", value: "7 DAYS FULL ACCESS", worth: "Worth ₹500", top: false,
         title: "Blinkist, 15-minute nonfiction book audio insights and guides",
         desc: "Listen to key ideas from over 6,500 bestselling nonfiction books in business, psychology, and personal growth with clean audio narration.",
-        code: null, url: "https://www.blinkist.com/",
+        code: "READMORE20", quota: 50, claimed: 47, left: 3, url: "https://www.blinkist.com/",
         steps: ["Visit blinkist.com or download the mobile app.", "Start a free 7-day trial under any annual plan.", "Listen to audio summaries on your commute.", "Cancel before day 7 in app store subscriptions to pay nothing."],
         tnc: ["New Blinkist subscribers.", "Auto-renews unless cancelled 24 hours prior to trial end.", "Run by Blinkist."] },
 
@@ -639,7 +639,7 @@
         tag: "FREE TRIAL", value: "7-DAY MICROLEARNING PASS", worth: "Worth ₹450", top: false,
         title: "Headway, visual book summaries and daily growth challenges",
         desc: "Bite-sized summaries with visual infographics, spaced-repetition flashcards, and audio narrations tailored for quick daily learning streaks.",
-        code: null, url: "https://makeheadway.com/",
+        code: "GROWTH70", quota: 60, claimed: 56, left: 4, url: "https://makeheadway.com/",
         steps: ["Visit makeheadway.com or download the Headway app.", "Complete the short personal reading goal quiz.", "Activate the 7-day trial.", "Cancel anytime inside settings before the trial period closes."],
         tnc: ["New Headway users.", "Managed through Apple App Store or Google Play Store subscriptions.", "Run by Headway."] },
 
@@ -791,7 +791,7 @@
         tag: "DEALS HUB", value: "10 MOVIES FOR ₹349/MO", worth: "Save ₹2,500/month", top: false,
         title: "PVR INOX Cinema Passport, watch up to 10 movies a month",
         desc: "A monthly movie subscription pass that lets you watch up to 10 movies in PVR and INOX theaters from Monday to Thursday for a flat ₹349 per month.",
-        code: null, url: "https://www.pvrcinemas.com/",
+        code: "PASSPORT349", quota: 80, claimed: 76, left: 4, url: "https://www.pvrcinemas.com/",
         steps: ["Open the PVR or INOX app.", "Purchase the INOX Passport subscription for ₹349.", "Book weekday movie tickets with zero ticket base fee.", "Redeem up to one movie ticket per day Monday through Thursday."],
         tnc: ["Valid Monday to Thursday excluding national holidays.", "Not valid on IMAX or Gold Class recliners.", "Run by PVR INOX Ltd."] },
 
@@ -799,7 +799,7 @@
         tag: "STUDENT", value: "25% OFF CULTPASS", worth: "Save ₹4,000", top: false,
         title: "Cult.fit Student Discount, unlimited group workouts and gyms",
         desc: "Get 25 percent off Cultpass Elite and Cultpass Pro for unlimited access to group workout classes, boxing, yoga, dance fitness, and partner gym centers.",
-        code: null, url: "https://www.cult.fit/",
+        code: "CULTSTUDENT25", quota: 50, claimed: 45, left: 5, url: "https://www.cult.fit/",
         steps: ["Open the Cult.fit app.", "Navigate to Cultpass and select Student Pass.", "Verify with student identity card or college email.", "Enjoy full gym and class access across Indian metro cities."],
         tnc: ["Valid student ID card required.", "Minimum 3-month pass purchase.", "Run by Curefit."] },
 
@@ -807,7 +807,7 @@
         tag: "STUDENT", value: "85% STUDENT DISCOUNT", worth: "Worth ₹5,000/yr", top: false,
         title: "Headspace for Students, guided meditation, focus audio and sleepcasts",
         desc: "Get the world's premier mindfulness and meditation app for $9.99/year instead of $69.99. Hundreds of guided meditations for exam stress, focus music, and sleep stories.",
-        code: null, url: "https://www.headspace.com/student-plan",
+        code: "MINDFUL85", quota: 75, claimed: 71, left: 4, url: "https://www.headspace.com/student-plan",
         steps: ["Open headspace.com/student-plan.", "Verify enrollment via SheerID.", "Activate your discounted membership.", "Access all meditation tracks and sleepcasts immediately."],
         tnc: ["Currently enrolled students in higher education.", "Annual verification required.", "Run by Headspace."] },
 
@@ -815,7 +815,7 @@
         tag: "DEALS HUB", value: "BUY 1 GET 1 FREE GLASSES", worth: "Worth ₹600/yr", top: false,
         title: "Lenskart Gold Membership, Buy 1 Get 1 free on all eyeglasses and sunglasses",
         desc: "Free 1-year Gold membership vouchers available through bank cards and telecom recharges. Share membership across 5 family members and friends.",
-        code: null, url: "https://www.lenskart.com/",
+        code: "LKFREEGOLD", quota: 100, claimed: 95, left: 5, url: "https://www.lenskart.com/",
         steps: ["Open the Lenskart app.", "Claim your Gold membership voucher from Paytm, Google Pay, or Airtel Thanks rewards.", "Redeem voucher code during membership checkout.", "Buy 1 Get 1 free applies automatically on all frames and lenses."],
         tnc: ["Valid for 12 months from activation.", "Can be used at all physical Lenskart stores and online.", "Run by Lenskart Solutions."] },
 
@@ -855,7 +855,7 @@
         tag: "NEW USER", value: "FLAT ₹150 OFF FIRST BUS", worth: "Save ₹150", top: false,
         title: "redBus First Ride Discount, flat discount on intercity luxury buses",
         desc: "Save flat ₹150 on your very first bus booking across 3,500+ bus operators in India including KSRTC, GSRTC, Zingbus, and Intrcity SmartBus.",
-        code: "FIRST", url: "https://www.redbus.in/",
+        code: "FIRST", quota: 100, claimed: 94, left: 6, url: "https://www.redbus.in/",
         steps: ["Download the redBus app or visit redbus.in.", "Select your origin, destination, and travel date.", "Apply official promo code FIRST at checkout.", "Instant ₹150 discount applies to your booking amount."],
         tnc: ["Valid on first bus booking for new mobile numbers.", "Minimum ticket value ₹300.", "Run by MakeMyTrip redBus."] },
 

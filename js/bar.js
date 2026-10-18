@@ -113,9 +113,9 @@
       var def = ITEM_DEFS[key] || ITEM_DEFS.home;
       var isAct = active === def.id;
       if (def.isPlus) {
-        return '<a class="tsb-bar__item tsb-bar__item--plus' + (isAct ? " is-active" : "") + '" data-tab="' + def.id + '" href="' + def.url + '" aria-label="' + def.lbl + '">' + def.ico + '</a>';
+        return '<a class="tsb-bar__item tsb-bar__item--plus' + (isAct ? " is-active" : "") + '" data-tab="' + def.id + '" href="' + def.url + '" draggable="false" aria-label="' + def.lbl + '">' + def.ico + '</a>';
       }
-      return '<a class="tsb-bar__item ' + (def.cls || "") + (isAct ? " is-active" : "") + '" data-tab="' + def.id + '" href="' + def.url + '"' + (isAct ? ' aria-current="page"' : "") + '>' +
+      return '<a class="tsb-bar__item ' + (def.cls || "") + (isAct ? " is-active" : "") + '" data-tab="' + def.id + '" href="' + def.url + '" draggable="false"' + (isAct ? ' aria-current="page"' : "") + '>' +
         def.ico + '<span class="tsb-bar__lbl">' + def.lbl + '</span></a>';
     }).join("");
   }
@@ -186,19 +186,10 @@
       return;
     }
 
-    /* instant view transition navigation if supported */
-    var href = item.getAttribute("href");
-    if (href && href !== location.pathname && href !== pageName()) {
-      if (document.startViewTransition) {
-        e.preventDefault();
-        try { if (navigator.vibrate) navigator.vibrate(8); } catch (err) {}
-        setActive(id);
-        document.startViewTransition(function () {
-          location.href = href;
-        });
-        return;
-      }
-    }
+    /* Optimistic UI: instant tab highlight & gentle tactile haptic */
+    setActive(id);
+    try { if (navigator.vibrate) navigator.vibrate(8); } catch (err) {}
+    /* Native immediate browser navigation proceeds smoothly */
   });
 
   /* double-tap language: first tap = silent glide, second = clean note */
@@ -289,314 +280,18 @@
     window.addEventListener("scroll", onScroll, { passive: true });
   }
 
-  /* ---------- Instagram-style interactive touch swipe navigation between tabs ---------- */
-  (function handleIncomingSwipe() {
-    try {
-      var dir = sessionStorage.getItem("tsb_swipe_dir");
-      if (dir) {
-        sessionStorage.removeItem("tsb_swipe_dir");
-        var startX = dir === "next" ? "45px" : "-45px";
-        document.body.style.transform = "translate3d(" + startX + ", 0, 0)";
-        document.body.style.opacity = "0.82";
-        requestAnimationFrame(function () {
-          requestAnimationFrame(function () {
-            document.body.style.transition = "transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.22s ease";
-            document.body.style.transform = "translate3d(0, 0, 0)";
-            document.body.style.opacity = "1";
-            setTimeout(function () {
-              document.body.style.transition = "";
-              document.body.style.transform = "";
-              document.body.style.opacity = "";
-            }, 240);
-          });
-        });
-      }
-    } catch (e) {}
-  })();
-
-  /* ============================================================
-     ACUTE PHYSICS DRAG-AND-DROP ACTION BAR REORDERING
-     Long-press detection (380ms) with acute haptics, lift/float physics,
-     live slot swapping during drag, release snap drop, and persistent
-     localStorage sync.
-     ============================================================ */
-  var updateSwipeNavTabs = null;
-
-  /* ============================================================
-     ACTION BAR NAVIGATION:
-     Custom slots are customized in settings.html. On the live bar,
-     all clicks and long-presses navigate immediately without
-     accidental drag reordering or click suppression.
-     ============================================================ */
-  var updateSwipeNavTabs = null;
-
   bar.addEventListener("contextmenu", function (e) {
     e.preventDefault();
     return false;
   });
 
-  /* ============================================================
-     DYNAMIC SWIPING SYNCED WITH CUSTOM BAR & PRELOADING
-     ============================================================ */
-  (function initSwipeNav() {
-    var TABS = [];
-    function refreshTabs() {
-      var slots = getActiveSlots();
-      TABS = slots.map(function (k) { return ITEM_DEFS[k] || ITEM_DEFS.home; });
-    }
-    refreshTabs();
-    updateSwipeNavTabs = refreshTabs;
-
-    var startX = 0, startY = 0, startTime = 0;
-    var tracking = false;
-    var isHorizontal = false;
-    var currentDx = 0;
-
-    var hud = null;
-    function getHud() {
-      if (!hud) {
-        hud = document.getElementById("tsbSwipeHud");
-        if (!hud) {
-          hud = document.createElement("div");
-          hud.id = "tsbSwipeHud";
-          hud.className = "tsb-swipe-hud";
-          document.body.appendChild(hud);
-        }
-      }
-      return hud;
-    }
-
-    function showSwipeHud(dx, w, idx, shouldSwitch) {
-      var h = getHud();
-      if (!h) return;
-      if (Math.abs(dx) < 18) {
-        h.classList.remove("on", "ready");
-        return;
-      }
-      var target = null;
-      var arrow = "";
-      if (dx < 0 && idx < TABS.length - 1) {
-        target = TABS[idx + 1];
-        arrow = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
-        h.innerHTML = '<span>' + (target ? target.lbl : "Next") + '</span> ' + arrow;
-      } else if (dx > 0 && idx > 0) {
-        target = TABS[idx - 1];
-        arrow = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
-        h.innerHTML = arrow + ' <span>' + (target ? target.lbl : "Previous") + '</span>';
-      } else {
-        h.innerHTML = '<span>' + (dx > 0 ? "First Tab" : "Last Tab") + '</span>';
-      }
-      h.classList.add("on");
-      h.classList.toggle("ready", !!shouldSwitch);
-    }
-
-    function hideSwipeHud() {
-      if (hud) {
-        hud.classList.remove("on", "ready");
-      }
-    }
-
-    function isScrollableX(el) {
-      var cur = el;
-      while (cur && cur !== document.body && cur !== document.documentElement) {
-        if (cur.scrollWidth > cur.clientWidth + 12) {
-          try {
-            var ov = window.getComputedStyle(cur).overflowX;
-            if (ov === "auto" || ov === "scroll") return true;
-          } catch (e) {}
-        }
-        if (cur.classList && (
-          cur.classList.contains("cm-rail") ||
-          cur.classList.contains("filters") ||
-          cur.classList.contains("dailytrio-shelf__scroll") ||
-          cur.classList.contains("goldgrid") ||
-          cur.classList.contains("goldgrid--collapsed") ||
-          cur.classList.contains("tsb-sheet") ||
-          cur.classList.contains("pc-rail") ||
-          cur.classList.contains("pc-search__chips") ||
-          cur.classList.contains("nt-bar") ||
-          cur.classList.contains("ap-dock") ||
-          cur.classList.contains("ap-sheet") ||
-          cur.classList.contains("ap-card") ||
-          cur.id === "tsbAp"
-        )) return true;
-        cur = cur.parentElement;
-      }
-      return false;
-    }
-
-    function isInputOrModal(el) {
-      if (!el) return false;
-      var tag = (el.tagName || "").toLowerCase();
-      if (tag === "input" || tag === "textarea" || tag === "select" || el.isContentEditable) return true;
-      if (el.closest && el.closest("dialog[open], .personal-dialog, .tsb-sheetwrap--on, .gold-celebrate, .audio-modal, .aq-panel--open, #tsbCheat, #tsbTourCard, #tsbAp, .ap-dock, .ap-sheet, .ap-backdrop, .ap-card, audio, .pc-player, .pc-audio")) return true;
-      return false;
-    }
-
-    window.addEventListener("touchstart", function (e) {
-      if (e.touches.length !== 1) { tracking = false; return; }
-      var t = e.touches[0];
-      startX = t.clientX;
-      startY = t.clientY;
-      startTime = Date.now();
-      currentDx = 0;
-      isHorizontal = false;
-
-      var w = window.innerWidth || document.documentElement.clientWidth;
-      if (startX < 16 || startX > w - 16) { tracking = false; return; }
-      if (isInputOrModal(e.target) || isScrollableX(e.target)) { tracking = false; return; }
-      if (e.target && e.target.closest && e.target.closest("#tsbAp, .ap-dock, .ap-sheet, .ap-backdrop, .ap-card, audio, .pc-player, .pc-audio")) {
-        tracking = false;
-        return;
-      }
-
-      tracking = true;
-    }, { passive: true });
-
-    window.addEventListener("touchmove", function (e) {
-      if (!tracking || e.touches.length !== 1) return;
-      var t = e.touches[0];
-      var dx = t.clientX - startX;
-      var dy = t.clientY - startY;
-
-      if (!isHorizontal) {
-        if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) {
-          tracking = false;
-          return;
-        }
-        if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.25) {
-          isHorizontal = true;
-        }
-      }
-
-      if (isHorizontal) {
-        currentDx = dx;
-        var curTab = currentActive();
-        var idx = -1;
-        for (var i = 0; i < TABS.length; i++) {
-          if (TABS[i].id === curTab) { idx = i; break; }
-        }
-
-        var w = window.innerWidth || document.documentElement.clientWidth;
-        var shouldSwitch = (Math.abs(dx) > w * 0.22);
-        showSwipeHud(dx, w, idx, shouldSwitch);
-
-        var dragX = dx;
-        if ((idx === 0 && dx > 0) || (idx === TABS.length - 1 && dx < 0)) {
-          dragX = dx * 0.25;
-        }
-
-        document.body.style.transform = "translate3d(" + dragX + "px, 0, 0)";
-        document.body.style.transition = "none";
-        document.body.style.willChange = "transform";
-        document.documentElement.style.overflowX = "hidden";
-      }
-    }, { passive: true });
-
-    window.addEventListener("touchend", function (e) {
-      hideSwipeHud();
-      if (!tracking || !isHorizontal) {
-        if (isHorizontal) {
-          document.body.style.transform = "";
-          document.body.style.transition = "";
-        }
-        tracking = false;
-        isHorizontal = false;
-        return;
-      }
-      tracking = false;
-      isHorizontal = false;
-
-      var dx = currentDx;
-      var dt = Date.now() - startTime;
-      var w = window.innerWidth || document.documentElement.clientWidth;
-      var velocity = Math.abs(dx) / (dt || 1);
-
-      var curTab = currentActive();
-      var idx = -1;
-      for (var i = 0; i < TABS.length; i++) {
-        if (TABS[i].id === curTab) { idx = i; break; }
-      }
-
-      var nextIdx = -1;
-      var shouldSwitch = (Math.abs(dx) > w * 0.22) || (velocity > 0.42 && Math.abs(dx) > 36);
-
-      if (shouldSwitch) {
-        if (dx < 0 && idx < TABS.length - 1) {
-          nextIdx = idx + 1;
-        } else if (dx > 0 && idx > 0) {
-          nextIdx = idx - 1;
-        }
-      }
-
-      if (nextIdx !== -1 && nextIdx !== idx) {
-        var targetTab = TABS[nextIdx];
-        if (targetTab.id === "you") {
-          var u = null;
-          try { u = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null; } catch (err) {}
-          if (!u && window.TSB_AUTH && TSB_AUTH.openSheet) {
-            document.body.style.transition = "transform 0.24s cubic-bezier(0.2, 0.9, 0.3, 1)";
-            document.body.style.transform = "translate3d(0, 0, 0)";
-            setTimeout(function () {
-              document.body.style.transform = "";
-              document.body.style.transition = "";
-              document.body.style.willChange = "";
-            }, 250);
-            try { if (navigator.vibrate) navigator.vibrate(10); } catch (eU) {}
-            TSB_AUTH.openSheet();
-            return;
-          }
-        }
-
-        try { if (navigator.vibrate) navigator.vibrate(12); } catch (eV) {}
-        setActive(targetTab.id);
-
-        document.body.style.transition = "transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.2s ease";
-        document.body.style.transform = "translate3d(" + (dx < 0 ? -w : w) + "px, 0, 0)";
-        document.body.style.opacity = "0.75";
-
-        try { sessionStorage.setItem("tsb_swipe_dir", dx < 0 ? "next" : "prev"); } catch (eS) {}
-
-        setTimeout(function () {
-          location.href = targetTab.url;
-        }, 180);
-      } else {
-        document.body.style.transition = "transform 0.24s cubic-bezier(0.2, 0.9, 0.3, 1)";
-        document.body.style.transform = "translate3d(0, 0, 0)";
-        setTimeout(function () {
-          document.body.style.transform = "";
-          document.body.style.transition = "";
-          document.body.style.willChange = "";
-        }, 260);
-      }
-    }, { passive: true });
-  })();
-
-  /* ============================================================
-     BACKGROUND TAB PRELOADING & SPECULATION ENGINE
-     Every custom tab in the user's bar pre-renders in the background
-     so tab navigation is 0-latency and feels native.
-     ============================================================ */
+  /* Fast optimistic link prefetch for idle tab switching */
   (function initTabPreload() {
     var cur = pageName();
     var slots = getActiveSlots();
     var TABS_URLS = slots.map(function (k) {
       return (ITEM_DEFS[k] && ITEM_DEFS[k].url) || "index.html";
     });
-
-    try {
-      if (!document.getElementById("tsb-speculation-rules")) {
-        var spec = document.createElement("script");
-        spec.id = "tsb-speculation-rules";
-        spec.type = "speculationrules";
-        spec.textContent = JSON.stringify({
-          prerender: [
-            { source: "list", urls: TABS_URLS, eagerness: "immediate" }
-          ]
-        });
-        document.head.appendChild(spec);
-      }
-    } catch (e1) {}
 
     try {
       TABS_URLS.forEach(function (u) {
@@ -610,19 +305,5 @@
         }
       });
     } catch (e2) {}
-
-    var warmFetch = function () {
-      TABS_URLS.forEach(function (u) {
-        if (u === cur) return;
-        try {
-          fetch(u, { priority: "low", cache: "force-cache" }).catch(function () {});
-        } catch (e3) {}
-      });
-    };
-    if (window.requestIdleCallback) {
-      window.requestIdleCallback(warmFetch, { timeout: 1500 });
-    } else {
-      setTimeout(warmFetch, 800);
-    }
   })();
 })();

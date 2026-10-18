@@ -690,10 +690,16 @@
 
       slotsEl.innerHTML = currentSlots.map(function (k, idx) {
         var it = POOL.filter(function (p) { return p.id === k; })[0] || { id: k, label: k, icon: "✦" };
+        var canLeft = idx > 0;
+        var canRight = idx < currentSlots.length - 1;
         return '<div style="display:flex;align-items:center;gap:6px;background:var(--paper,#fff);border:2.5px solid var(--ink,#111);border-radius:10px;padding:6px 10px;box-shadow:3px 3px 0 var(--ink,#111);">' +
           '<b style="font-size:11px;opacity:0.6;">#' + (idx + 1) + '</b>' +
           '<span style="font-size:15px;">' + it.icon + '</span>' +
           '<b style="font-size:12px;font-family:var(--font-head);">' + it.label + '</b>' +
+          '<div style="display:inline-flex;gap:3px;margin-left:4px;">' +
+            (canLeft ? '<button type="button" data-move-left="' + idx + '" style="background:#f0ede4;border:1.5px solid var(--ink,#111);border-radius:5px;cursor:pointer;padding:2px 6px;font-size:10px;font-weight:900;" title="Move left">◀</button>' : '') +
+            (canRight ? '<button type="button" data-move-right="' + idx + '" style="background:#f0ede4;border:1.5px solid var(--ink,#111);border-radius:5px;cursor:pointer;padding:2px 6px;font-size:10px;font-weight:900;" title="Move right">▶</button>' : '') +
+          '</div>' +
           (currentSlots.length > 4 ? '<button type="button" data-del="' + idx + '" style="background:none;border:none;color:#999;font-weight:900;cursor:pointer;padding:0 0 0 4px;font-size:13px;" title="Remove slot">✕</button>' : '') +
         '</div>';
       }).join("");
@@ -707,6 +713,28 @@
     }
 
     slotsEl.addEventListener("click", function (e) {
+      var leftBtn = e.target.closest("[data-move-left]");
+      if (leftBtn) {
+        var lIdx = parseInt(leftBtn.getAttribute("data-move-left"), 10);
+        if (lIdx > 0) {
+          var tmp = currentSlots[lIdx];
+          currentSlots[lIdx] = currentSlots[lIdx - 1];
+          currentSlots[lIdx - 1] = tmp;
+          render();
+        }
+        return;
+      }
+      var rightBtn = e.target.closest("[data-move-right]");
+      if (rightBtn) {
+        var rIdx = parseInt(rightBtn.getAttribute("data-move-right"), 10);
+        if (rIdx < currentSlots.length - 1) {
+          var tmp2 = currentSlots[rIdx];
+          currentSlots[rIdx] = currentSlots[rIdx + 1];
+          currentSlots[rIdx + 1] = tmp2;
+          render();
+        }
+        return;
+      }
       var delBtn = e.target.closest("[data-del]");
       if (!delBtn) return;
       var idx = parseInt(delBtn.getAttribute("data-del"), 10);

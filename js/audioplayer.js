@@ -1217,6 +1217,13 @@
     document.body.appendChild(showSheet);
     showSheet.querySelector(".ap-x").addEventListener("click", closeShowSheet);
     showSheet.addEventListener("click", function (e) { if (e.target === showSheet) closeShowSheet(); });
+    var latestBtn = showSheet.querySelector("#tssLatest");
+    if (latestBtn) {
+      latestBtn.addEventListener("click", function () {
+        closeShowSheet();
+        playFeed(show, 0);
+      });
+    }
     var st = { all: [], shown: 0, art: "" };
     var STEP = 3;
     function paintList(stale) {

@@ -219,12 +219,12 @@
           '<div class="ob-logo">📕</div>' +
           '<span class="ob-eyebrow">WELCOME TO</span>' +
           '<h2 class="ob-hero__t">The<span>Small</span>Book</h2>' +
-          '<p class="ob-tag">big books · small reads</p>' +
-          '<p class="ob-sub">500+ books, distilled into lessons you can use today. Six quick questions tune the whole library to you, or skip the line and read right now.</p>' +
+          '<p class="ob-tag">READ 100 BOOKS IN 15 MINS A DAY</p>' +
+          '<p class="ob-sub">500+ books, distilled into punchy masterclass frameworks you can apply today. Six quick questions tailor the entire library to your exact ambition.</p>' +
           '<div class="ob-btns ob-btns--col">' +
-            '<button class="ob-cta" data-next>🚀 GET STARTED</button>' +
+            '<button class="ob-cta" data-next>🚀 GET STARTED →</button>' +
           '</div>' +
-          '<p class="ob-fine">2 minutes · nothing is posted anywhere · your 15-minute free taster starts after this</p>' +
+          '<p class="ob-fine">Takes 60 seconds · instant starter shelf · unlimited reading free</p>' +
           '</div>';
       case 1:
         return "<h2>What mess are we fixing?</h2>" +

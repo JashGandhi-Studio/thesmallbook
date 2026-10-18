@@ -821,6 +821,209 @@
     }
   });
 
+  /* ============================================================
+     💀 THE IDEA AUTOPSY ENGINE:
+     Interactive diagnostic matching ideas against 400 autopsies.
+     ============================================================ */
+  (function initIdeaAutopsy() {
+    var form = document.getElementById("iaForm");
+    var resCard = document.getElementById("iaResultCard");
+    var chips = document.querySelectorAll("#iaArchetypes [data-arch]");
+    if (!form || !resCard) return;
+
+    var curArch = "saas";
+    chips.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        chips.forEach(function (b) {
+          b.classList.remove("on");
+          b.style.background = "#fff";
+        });
+        btn.classList.add("on");
+        btn.style.background = "var(--yellow,#ffc800)";
+        curArch = btn.getAttribute("data-arch");
+      });
+    });
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var idea = (document.getElementById("iaIdeaName").value || "").trim();
+      var dist = document.getElementById("iaDist").value;
+      var margin = document.getElementById("iaMargin").value;
+      var moat = document.getElementById("iaMoat").value;
+
+      var riskScore = 60;
+      if (margin === "loss") riskScore += 24;
+      else if (margin === "slim") riskScore += 14;
+
+      if (dist === "ads") riskScore += 16;
+      else if (dist === "outbound") riskScore += 8;
+
+      if (moat === "speed") riskScore += 18;
+      else if (moat === "network") riskScore -= 12;
+      else if (moat === "ip") riskScore -= 14;
+
+      riskScore = Math.min(96, Math.max(48, riskScore));
+
+      var syndrome = "";
+      var gravePicks = [];
+      var antidoteBook = "";
+      var antidoteSlug = "";
+      var tests = [];
+
+      if (curArch === "qcom" || margin === "loss") {
+        syndrome = "The Subsidized Illusion & Terminal Unit Economics";
+        gravePicks = ["webvan", "fast", "moviepass"];
+        antidoteBook = "The Lean Startup (Eric Ries)";
+        antidoteSlug = "the-lean-startup";
+        tests = [
+          "Deliver your first 50 orders manually with positive gross contribution on order #1.",
+          "Refuse to subsidize customer acquisition or shipping with venture capital.",
+          "Identify why customer retention drops when prices match true cost of service."
+        ];
+      } else if (curArch === "hardware") {
+        syndrome = "The Hardware Working Capital & Cash-Cycle Trap";
+        gravePicks = ["pebble", "jawbone", "juicero"];
+        antidoteBook = "Shoe Dog (Phil Knight)";
+        antidoteSlug = "shoe-dog";
+        tests = [
+          "Collect full non-refundable pre-orders before placing manufacturing POs.",
+          "Model supply chain delays of 6 months and ensure runway survives zero revenue.",
+          "Clarify why Apple, Samsung or Xiaomi will not clone the core feature into their next OS update."
+        ];
+      } else if (dist === "ads" && (curArch === "d2c" || margin === "slim")) {
+        syndrome = "The Meta/Google CAC Death Spiral";
+        gravePicks = ["quirky", "fab", "solyndra"];
+        antidoteBook = "The Mom Test (Rob Fitzpatrick)";
+        antidoteSlug = "the-mom-test";
+        tests = [
+          "Acquire your first 100 paying customers purely through organic community and word of mouth.",
+          "Calculate 90-day repeat purchase rate before spending a single dollar on ad networks.",
+          "Verify that customer lifetime value is at least 3.5x blended customer acquisition cost."
+        ];
+      } else if (moat === "speed" && curArch === "saas") {
+        syndrome = "The Feature-Not-A-Product Incumbent Squeeze";
+        gravePicks = ["quibi", "vine", "segway"];
+        antidoteBook = "Zero to One (Peter Thiel)";
+        antidoteSlug = "zero-to-one";
+        tests = [
+          "Identify the proprietary workflow data that creates 10x switching costs for users.",
+          "Interview 10 potential buyers and ask why they will still pay if a tech giant releases this for free.",
+          "Build distribution advantages into the product itself rather than relying on speed alone."
+        ];
+      } else {
+        syndrome = "Premature Scaling & Synthetic Market Seduction";
+        gravePicks = ["theranos", "ftx", "friendster"];
+        antidoteBook = "Good Strategy Bad Strategy (Richard Rumelt)";
+        antidoteSlug = "good-strategy-bad-strategy";
+        tests = [
+          "Validate organic pull where users scream when the prototype goes down.",
+          "Conduct 15 neutral Mom Test interviews without pitching the solution.",
+          "Build one focused wedge that solves an urgent hair-on-fire problem."
+        ];
+      }
+
+      var corpseCards = gravePicks.map(function (gid) {
+        var match = F.filter(function (x) { return x.id === gid; })[0];
+        if (!match) return "";
+        return '<a href="#grave=' + match.id + '" style="display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--ink,#111);border-radius:10px;padding:8px 12px;text-decoration:none;color:var(--ink,#111);box-shadow:2px 2px 0 var(--ink,#111);">' +
+          '<span style="font-size:20px;">' + (match.emoji || "💀") + '</span>' +
+          '<div style="flex:1;min-width:0;">' +
+            '<b style="display:block;font-size:12.5px;font-family:var(--font-head);">' + esc(match.name) + '</b>' +
+            '<span style="font-size:11px;color:#c92a2a;font-weight:700;">Burned: ' + esc(match.burned || "$50M+") + ' · Died ' + esc(match.year || "") + '</span>' +
+          '</div>' +
+          '<span style="font-size:12px;font-weight:800;color:var(--ink,#111);">VIEW AUTOPSY ›</span>' +
+        '</a>';
+      }).filter(Boolean).join("");
+
+      var riskColor = riskScore >= 75 ? "#c92a2a" : (riskScore >= 60 ? "#d97706" : "#2f8f5b");
+
+      resCard.style.display = "block";
+      resCard.innerHTML =
+        '<div style="background:var(--surface,#fff);border:3px solid var(--ink,#111);border-radius:14px;padding:18px;box-shadow:4px 4px 0 var(--ink,#111);">' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:2px solid var(--ink,#111);padding-bottom:10px;margin-bottom:12px;">' +
+            '<div>' +
+              '<span style="font:800 10px var(--font-head);letter-spacing:1px;color:var(--muted,#666);text-transform:uppercase;">AUTOPSY REPORT</span>' +
+              '<h3 style="font:800 18px var(--font-head);margin:2px 0 0;color:var(--ink,#111);">“' + esc(idea) + '”</h3>' +
+            '</div>' +
+            '<div style="background:' + riskColor + ';color:#fff;border:2px solid var(--ink,#111);border-radius:10px;padding:6px 12px;text-align:center;">' +
+              '<div style="font:800 9.5px var(--font-head);letter-spacing:1px;">MORTALITY RISK</div>' +
+              '<div style="font:800 20px var(--font-head);">' + riskScore + '%</div>' +
+            '</div>' +
+          '</div>' +
+
+          '<div style="margin-bottom:14px;">' +
+            '<b style="display:block;font:800 11px var(--font-head);letter-spacing:1px;color:#c92a2a;text-transform:uppercase;margin-bottom:4px;">🚨 PRIMARY FATAL SYNDROME</b>' +
+            '<div style="font:700 15px var(--font-head);color:var(--ink,#111);">' + esc(syndrome) + '</div>' +
+          '</div>' +
+
+          (corpseCards ? (
+            '<div style="margin-bottom:14px;">' +
+              '<b style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">💀 CORPSES THAT DIED OF THIS EXACT SYNDROME:</b>' +
+              '<div style="display:flex;flex-direction:column;gap:7px;">' + corpseCards + '</div>' +
+            '</div>'
+          ) : '') +
+
+          '<div style="background:#fff8db;border:2px solid var(--ink,#111);border-radius:10px;padding:12px;margin-bottom:14px;">' +
+            '<b style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;text-transform:uppercase;color:#854d0e;margin-bottom:4px;">💊 RECOMMENDED BOOK ANTIDOTE:</b>' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">' +
+              '<span style="font:700 13px var(--font-body);color:var(--ink,#111);">📖 ' + esc(antidoteBook) + '</span>' +
+              '<a href="book.html?id=' + esc(antidoteSlug) + '" style="background:var(--yellow,#ffc800);border:2px solid var(--ink,#111);border-radius:8px;padding:5px 10px;font:800 11px var(--font-head);color:#111;text-decoration:none;box-shadow:2px 2px 0 var(--ink,#111);">READ SUMMARY FREE →</a>' +
+            '</div>' +
+          '</div>' +
+
+          '<div>' +
+            '<b style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">🛡️ 3 PRE-MORTEM RULES TO TEST THIS WEEK:</b>' +
+            '<ol style="margin:0;padding-left:18px;font:600 12px/1.55 var(--font-body);color:var(--ink,#111);">' +
+              tests.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') +
+            '</ol>' +
+          '</div>' +
+        '</div>';
+
+      try { resCard.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch(err) {}
+    });
+
+    var modal = document.getElementById("iaModal");
+    var openBtn = document.getElementById("iaModalTrigger");
+    var closeBtn = document.getElementById("iaModalClose");
+
+    function openModal() {
+      if (!modal) return;
+      modal.hidden = false;
+      modal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+      var input = document.getElementById("iaIdeaName");
+      if (input) setTimeout(function () { input.focus(); }, 100);
+    }
+
+    function closeModal() {
+      if (!modal) return;
+      modal.hidden = true;
+      modal.style.display = "none";
+      document.body.style.overflow = "";
+      if (location.hash === "#autopsy") {
+        try { history.replaceState(null, "", location.pathname); } catch (e) {}
+      }
+    }
+
+    if (openBtn) openBtn.addEventListener("click", openModal);
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    if (modal) {
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) closeModal();
+      });
+    }
+    window.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && modal && !modal.hidden) closeModal();
+    });
+
+    if (location.hash === "#autopsy") {
+      setTimeout(openModal, 300);
+    }
+    window.addEventListener("hashchange", function () {
+      if (location.hash === "#autopsy") openModal();
+    });
+  })();
+
   /* deep-link: graveyard.html#grave=thomas-cook opens the reader */
   if (/^#grave=/.test(location.hash)) {
     var deepId = decodeURIComponent(location.hash.replace("#grave=", ""));

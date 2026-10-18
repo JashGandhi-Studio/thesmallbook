@@ -5281,6 +5281,9 @@ html.dark .search .scanbtn:hover { background: #3a2c1a; color: #ffd94d; }
   text-decoration: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   transition: transform .12s ease, color .12s ease;
 }
 .tsb-bar__item:active { transform: scale(.92); }
@@ -7321,7 +7324,7 @@ html.dark .fuelmodal__amts button.on { background:var(--yellow); color:var(--on-
 .cs2 { display:none; }
 .cs2__page {
   position:relative; box-sizing:border-box; overflow:hidden; color:var(--ink-x,#14110c);
-  width:210mm; height:290mm; padding:11mm 12mm 22mm;
+  width:210mm; height:290mm; padding:8mm 10mm 8mm;
   background:
     radial-gradient(115% 55% at 100% 0%, var(--c) 0%, rgba(255,255,255,0) 58%),
     linear-gradient(180deg, #ffffff 0%, var(--b) 100%);
@@ -7440,7 +7443,7 @@ html.dark .fuelmodal__amts button.on { background:var(--yellow); color:var(--on-
   .cs2__page {
     width:210mm; height:290mm;             /* 7mm of slack on a 297mm sheet:
                                               rounding can never invent page 3 */
-    padding:11mm 12mm 14mm;               /* the bottom 14mm is the footer's, always */
+    padding:8mm 10mm 8mm;                 /* balanced margins prevent bottom cutoffs */
   }
   .cs2__page + .cs2__page { break-before:page; page-break-before:always; }
   * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
@@ -9902,17 +9905,17 @@ html[data-ts="xl"] .lessons, html[data-ts="xl"] .cm-post, html[data-ts="xl"] .nt
   body { background-size: 22px 22px; }
 }
 
-/* v321 - the sheet reads FULL, like the reference: bigger hand, deeper lines,
-   the example sitting under every takeaway, a prouder cover */
-.cs3-take b { font-size: 17.5px; line-height: 1.24; }
-.cs3-take p { font-size: 13.2px; line-height: 1.38; margin-top: 3px; }
-.cs3-take__ex { display: block; margin-top: 3px; font-size: 11px; line-height: 1.36; font-style: italic; color: rgba(20,17,12,.78); }
-.cs3-take__ex u { text-decoration: none; background: rgba(255,200,0,.42); border-radius: 3px; padding: 0 3px; font-style: normal; font-weight: 700; font-size: 10.2px; letter-spacing: .4px; text-transform: uppercase; margin-right: 3px; }
-.cs3-cover { width: 164px; height: 226px; }
-.cs3-intro p { font-size: 14px; line-height: 1.48; }
-.cs3-quote p { font-size: 15.5px; line-height: 1.5; }
-.cs3-bite p { font-size: 13.6px; line-height: 1.5; }
-.cs3-week__do { font-size: 13.6px !important; line-height: 1.5 !important; }
+/* v321 - the sheet reads FULL, like the reference: handcrafted scale,
+   balanced typography and margins ensure zero text clipping */
+.cs3-take b { font-size: 14.5px; line-height: 1.22; }
+.cs3-take p { font-size: 12px; line-height: 1.34; margin-top: 2px; }
+.cs3-take__ex { display: block; margin-top: 2px; font-size: 10px; line-height: 1.3; font-style: italic; color: rgba(20,17,12,.78); }
+.cs3-take__ex u { text-decoration: none; background: rgba(255,200,0,.42); border-radius: 3px; padding: 0 3px; font-style: normal; font-weight: 700; font-size: 9.5px; letter-spacing: .4px; text-transform: uppercase; margin-right: 3px; }
+.cs3-cover { width: 122px; height: 168px; }
+.cs3-intro p { font-size: 12.5px; line-height: 1.38; }
+.cs3-quote p { font-size: 14px; line-height: 1.28; }
+.cs3-bite p { font-size: 12px; line-height: 1.36; }
+.cs3-week__do { font-size: 12px !important; line-height: 1.36 !important; }
 .cs3-key { font-size: 13px !important; }
 
 /* v321 - THE SHOW SEARCH BAR: proper, professional, one job done well */
