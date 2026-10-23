@@ -472,5 +472,40 @@ try {
   if (tsz && tsz !== "n") document.documentElement.setAttribute("data-ts", tsz);
 } catch (eTs) {}
 
+/* ultra-quick link prefetching: instant page transitions on pointerdown and hover */
+(function initUltraQuickLinks() {
+  if (typeof window === "undefined" || !window.document) return;
+  var prefetched = new Set();
+
+  function prefetchUrl(url) {
+    if (!url || prefetched.has(url)) return;
+    try {
+      var u = new URL(url, location.href);
+      if (u.origin !== location.origin) return;
+      if (u.pathname === location.pathname && u.search === location.search) return;
+      if (/\.(jpg|png|webp|mp3|zip|pdf)$/i.test(u.pathname)) return;
+      prefetched.add(url);
+      var link = document.createElement("link");
+      link.rel = "prefetch";
+      link.href = url;
+      link.as = "document";
+      document.head.appendChild(link);
+    } catch (e) {}
+  }
+
+  function onPointer(e) {
+    var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+    if (!a) return;
+    var href = a.getAttribute("href");
+    if (href && !href.startsWith("#") && !href.startsWith("javascript:") && !href.startsWith("mailto:") && !href.startsWith("tel:")) {
+      prefetchUrl(a.href);
+    }
+  }
+
+  document.addEventListener("pointerenter", onPointer, { capture: true, passive: true });
+  document.addEventListener("pointerdown", onPointer, { capture: true, passive: true });
+  document.addEventListener("touchstart", onPointer, { capture: true, passive: true });
+})();
+
 /* v275: the page booted, tell the watchdog it can stand down */
 window.TSB_BOOT_OK = true;

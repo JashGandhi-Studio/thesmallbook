@@ -279,8 +279,8 @@ window.TSB_CONFIG = {
       YEARLY: 999
     },
     UPI_ID: "9702510680@fam",          // your UPI handle (matches gold.html)
-    RAZORPAY_LINK: "",                 // optional: Razorpay Payment Link for auto-receipts
-    RAZORPAY_KEY_ID: "rzp_test_1DP5mmOlF5G5ag", // Razorpay Key ID for in-page Checkout modal (ready for test payment)              // optional: Razorpay Key ID for in-page Checkout modal
+    PAYEE_NAME: "TheSmallBook",
+    GATEWAY: "YOUPI",                  // YouPI-PG direct UPI gateway (0% fees, instant settlement)
     GATED: [                          // feature keys to lock once ENABLED:
       // "store-full",                //  full store shelf (3 editor's picks stay free)
       // "audio-gold",                //  human-narration audio

@@ -1,11 +1,12 @@
 /* ============================================================
-   THESMALLBOOK, 💸 UPI PAYMENT ENGINE (upi.js)
-   One payment helper for the whole app: tip jar, TSB Gold,
+   THESMALLBOOK · UPI PAYMENT ENGINE (upi.js)
+   Universal UPI helper for TheSmallBook: tip jar, TSB Gold,
    Fuel the Library.
-   - Native UPI deep link first (opens GPay/PhonePe/Paytm)
-   - If the app doesn't open (desktop / no UPI handler), a
-     neo-brutalist fallback sheet appears: COPY UPI ID + tap-to-
-     open app buttons. Payment never dead-ends.
+   - Delegates directly to YouPI checkout engine when available
+     (pure vector SVG QR, 5:00 session timer, UTR verification)
+   - Fallback to native UPI deep link (GPay/PhonePe/Paytm)
+   - Neo-brutalist fallback sheet if opened on desktop without
+     YouPI script loaded.
    ============================================================ */
 (function () {
   var UPI_ID = "9702510680@fam";
@@ -27,6 +28,7 @@
       gpay: "gpay://upi/pay?",
       phonepe: "phonepe://pay?",
       paytm: "paytmmp://pay?",
+      cred: "credpay://?",
       upi: "upi://pay?"
     };
     return (map[app] || map.upi) + param;
@@ -63,6 +65,12 @@
   }
 
   function showModal(amount, note) {
+    /* If YouPI engine is present, delegate directly */
+    if (window.Youpi && window.Youpi.pay) {
+      window.Youpi.pay({ amount: amount, title: note, description: note });
+      return;
+    }
+
     if (document.getElementById("tsb-upi-modal")) return;
     var ov = document.createElement("div");
     ov.id = "tsb-upi-modal";
@@ -93,12 +101,11 @@
     });
   }
 
-  /* main entry, MOBILE-FIRST:
-     1) phone → fire the native UPI deep link straight to the UPI app
-        (GPay/PhonePe/Paytm open on their own). The sheet appears ONLY
-        if the app genuinely did not open (page still visible + focused).
-     2) desktop → no UPI handler exists, so show the sheet right away. */
   function pay(amount, note) {
+    if (window.Youpi && window.Youpi.pay) {
+      window.Youpi.pay({ amount: amount, title: note, description: note });
+      return;
+    }
     var isMobile = /android|iphone|ipad|mobile/i.test(navigator.userAgent || "");
     if (!isMobile) {
       showModal(amount, note);

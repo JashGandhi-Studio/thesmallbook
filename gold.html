@@ -32,7 +32,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=323">
-  <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
+  <script src="js/youpi.js?v=323" defer></script>
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -516,7 +516,7 @@
           <li>Offline download &amp; personal library storage</li>
           <li>One-time payment · No auto-renewal mandate</li>
         </ul>
-        <button class="goldplan-btn goldplan-btn--subtle" id="goldBuyPdf" type="button">UNLOCK PDFS · ₹49</button>
+        <button class="goldplan-btn goldplan-btn--subtle" id="goldBuyPdf" type="button" data-youpi-pay data-amount="49" data-plan="pdf_75d" data-title="TSB PDF Cheat-Sheets Pass (₹49, 75 days)">UNLOCK PDFS · ₹49</button>
       </div>
 
       <div class="goldplan">
@@ -534,7 +534,7 @@
           <li><b>40-Offer Store Unlocked</b> (instant access to all perks &amp; coupons)</li>
           <li><b>Unlimited PDF Cheat-Sheets</b> (handwritten-style summaries)</li>
         </ul>
-        <button class="goldplan-btn goldplan-btn--subtle" id="goldBuyMonthly" type="button">CHOOSE MONTHLY · ₹99</button>
+        <button class="goldplan-btn goldplan-btn--subtle" id="goldBuyMonthly" type="button" data-youpi-pay data-amount="99" data-plan="gold_monthly" data-title="TSB GOLD Monthly Pass (₹99/mo)">CHOOSE MONTHLY · ₹99</button>
       </div>
 
       <div class="goldplan goldplan--featured">
@@ -554,7 +554,7 @@
           <li><b>Unlimited PDF Cheat-Sheets</b> &amp; print-ready action plans</li>
           <li>One-time payment · No surprise auto-debit</li>
         </ul>
-        <button class="goldplan-btn goldplan-btn--highlight" id="goldBuyYearly" type="button">GET GOLD YEARLY · ₹999 →</button>
+        <button class="goldplan-btn goldplan-btn--highlight" id="goldBuyYearly" type="button" data-youpi-pay data-amount="999" data-plan="gold_yearly" data-title="TSB GOLD Annual Pass (₹999/yr)">GET GOLD YEARLY · ₹999 →</button>
       </div>
     </section>
 
@@ -584,17 +584,49 @@
           <p class="tiny">We'll email you the day Gold opens wider, and early-birds keep the locked price.</p>
         </div>
         <div class="goldupi">
-          <a class="pay" id="gRzp" hidden href="#" rel="noopener">💳 PAY WITH RAZORPAY - CARD / UPI / NETBANKING</a>
-          <button type="button" class="pay" id="gSimulateTest" style="background:#eaf8ef;color:#0b7a58;border:2.5px solid #0b7a58;cursor:pointer;font-weight:800;">🧪 TEST TRANSACTION: Verify Payment &amp; Unlock (1-Click)</button>
-          <p class="tiny" id="gRzpHint" hidden style="margin:6px 0 10px;color:#666"></p>
-          <div class="upi">OR PAY STRAIGHT VIA UPI</div>
-          <a class="pay" id="gPayBtn" href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=999&cu=INR">📲 PAY ₹999 (ANNUAL PASS)</a>
-          <a class="pay" id="gPayMonthlyBtn" style="background:var(--paper);color:var(--ink)" href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=99&cu=INR">📲 PAY ₹99 (MONTHLY PASS)</a>
-          <a class="pay" id="gPayPdfBtn" style="background:var(--paper);color:var(--ink)" href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=49&cu=INR">📲 PAY ₹49 (75-DAY PDF PASS)</a>
-          <div class="alt">Your UPI app opens with the amount pre-filled &nbsp;<button id="gCopy">📋 COPY UPI ID</button></div>
+          <div class="ypg-direct-card" style="background:#fffdf5;border:3px solid var(--ink);border-radius:14px;padding:16px 14px;box-shadow:4px 4px 0 var(--ink);text-align:left;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <span style="font-family:var(--font-head);font-size:13px;letter-spacing:.5px;color:var(--ink);display:inline-flex;align-items:center;gap:6px;">
+                📕 <b>TSB PAY</b>
+                <span style="background:#eaf8ef;color:#0b7a58;font-size:10px;padding:2px 7px;border-radius:999px;border:1.5px solid #0b7a58;font-weight:700;">0% FEES · DIRECT UPI</span>
+              </span>
+              <span style="font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:700;color:#666;">POWERED BY YOUPI</span>
+            </div>
+
+            <!-- Quick Plan Selector -->
+            <div class="ypg-plan-pills" id="ypgPlanPills" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px;">
+              <button type="button" class="ypg-plan-pill" data-plan="pdf_75d" data-amount="49" data-title="TSB PDF Cheat-Sheets Pass (₹49, 75 days)" style="border:2px solid var(--ink);background:var(--paper);border-radius:8px;padding:8px 2px;text-align:center;cursor:pointer;font-family:'Space Grotesk',sans-serif;">
+                <div style="font-size:10px;color:#777;font-weight:600;">PDF PASS</div>
+                <div style="font-family:var(--font-head);font-size:14px;font-weight:900;">₹49</div>
+                <div style="font-size:9.5px;color:#888;">75 days</div>
+              </button>
+              <button type="button" class="ypg-plan-pill" data-plan="gold_monthly" data-amount="99" data-title="TSB GOLD Monthly Pass (₹99/mo)" style="border:2px solid var(--ink);background:var(--paper);border-radius:8px;padding:8px 2px;text-align:center;cursor:pointer;font-family:'Space Grotesk',sans-serif;">
+                <div style="font-size:10px;color:#777;font-weight:600;">MONTHLY</div>
+                <div style="font-family:var(--font-head);font-size:14px;font-weight:900;">₹99</div>
+                <div style="font-size:9.5px;color:#888;">per month</div>
+              </button>
+              <button type="button" class="ypg-plan-pill active" data-plan="gold_yearly" data-amount="999" data-title="TSB GOLD Annual Pass (₹999/yr)" style="border:2.5px solid var(--ink);background:var(--yellow);border-radius:8px;padding:8px 2px;text-align:center;cursor:pointer;font-family:'Space Grotesk',sans-serif;box-shadow:2px 2px 0 var(--ink);">
+                <div style="font-size:10px;color:#111;font-weight:800;">⭐ ANNUAL</div>
+                <div style="font-family:var(--font-head);font-size:14px;font-weight:900;">₹999</div>
+                <div style="font-size:9.5px;color:#333;font-weight:700;">best value</div>
+              </button>
+            </div>
+
+            <!-- Single Unified Action Button -->
+            <button type="button" class="pay" id="gPayBtn" data-youpi-pay data-amount="999" data-plan="gold_yearly" data-title="TSB GOLD Annual Pass (₹999/yr)" style="width:100%;margin:0 0 10px;background:#00c48c;color:#111;cursor:pointer;display:block;text-align:center;">
+              ⚡ PAY ₹999 (ANNUAL PASS) VIA TSB PAY →
+            </button>
+
+            <!-- UPI ID & Quick Copy -->
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:#fff;border:2px solid var(--ink);border-radius:8px;font-size:11.5px;font-family:'Space Grotesk',sans-serif;">
+              <span>VPA: <b>9702510680@fam</b></span>
+              <button type="button" id="gCopy" style="border:1.5px solid var(--ink);background:var(--yellow);font-family:var(--font-head);font-size:10px;padding:3px 8px;cursor:pointer;border-radius:5px;">📋 COPY</button>
+            </div>
+          </div>
+
           <a class="wadeal" id="gWa" href="https://wa.me/919702510680?text=Hi%20Jash!%20I%20want%20to%20join%20TSB%20Gold%20(%E2%82%B9999%2Fyr%20or%20%E2%82%B999%2Fmo).%20Please%20share%20the%20QR%20code%20for%20payment." target="_blank" rel="noopener">
             <span class="wadeal__ico">💬</span>
-            <span>Can't pay via UPI? Want the QR code? <b>Message us on WhatsApp</b>, we'll send it right away.</span>
+            <span>Can't pay via UPI? Want personal assistance? <b>Message us on WhatsApp</b>.</span>
             <span class="wadeal__go">CHAT →</span>
           </a>
         </div>
@@ -635,6 +667,7 @@
   <script src="js/lang.js?v=323"></script>
   <script src="js/config.js?v=323"></script>
   <script src="js/auth.js?v=323"></script>
+  <script src="js/youpi.js?v=323"></script>
   <script src="js/upi.js?v=323"></script>
   <script src="js/gold.js?v=323"></script>
   <script src="js/paywall.js?v=323"></script>
@@ -648,15 +681,15 @@
       var sticky = document.getElementById("goldSticky");
       function show() {
         if (!window.TSB_GOLD) return;
-        var hasTestPass = false;
+        var isVerified = false;
         try {
-          var tp = JSON.parse(localStorage.getItem("tsb_gold_test_pass") || "null");
-          if (tp && tp.active) hasTestPass = true;
+          var ypg = JSON.parse(localStorage.getItem("ypg_payment_verified") || "null");
+          if (ypg && ypg.active) isVerified = true;
         } catch(e) {}
-        if (hasTestPass && window.TSB_GOLD) {
+        if (isVerified && window.TSB_GOLD) {
           window.TSB_GOLD.isGold = function () { return true; };
         }
-        var isOn = !!(window.TSB_GOLD && (TSB_GOLD.isGold() || hasTestPass));
+        var isOn = !!(window.TSB_GOLD && (TSB_GOLD.isGold() || isVerified));
         if (member) member.hidden = !isOn;
         if (join) join.hidden = isOn;
         if (activateSec) activateSec.hidden = isOn;
@@ -748,60 +781,7 @@
       if (isFounderNow() && forgeSec) forgeSec.hidden = false;
       setTimeout(function () { if (isFounderNow() && forgeSec) forgeSec.hidden = false; }, 1200);
 
-      /* ---- Razorpay checkout: modal or link from config, the grant is always server-side ---- */
-      try {
-        var rzCfg = window.TSB_CONFIG && TSB_CONFIG.PAYWALL ? TSB_CONFIG.PAYWALL : {};
-        var RZ = rzCfg.RAZORPAY_LINK || "";
-        var RZ_KEY = rzCfg.RAZORPAY_KEY_ID || "";
-        var rz = document.getElementById("gRzp"), hint = document.getElementById("gRzpHint");
-        if (rz) {
-          if (RZ || RZ_KEY || window.Razorpay) {
-            if (RZ) rz.href = RZ;
-            rz.hidden = false;
-            if (hint) {
-              hint.hidden = false;
-              try {
-                var u3 = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null;
-                if (u3) hint.innerHTML = "Use the same email as your account here (" + (u3.email || "your account email") + ") at checkout, Gold lands on your account automatically in a few seconds.";
-                else hint.innerHTML = "Sign in first (top of this page), then pay with that same email so Gold lands on your account automatically.";
-              } catch (e) {}
-            }
-            rz.addEventListener("click", function (e) {
-              if (RZ_KEY && window.Razorpay) {
-                e.preventDefault();
-                var u3 = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null;
-                var rzpInst = new window.Razorpay({
-                  key: RZ_KEY,
-                  amount: 9900,
-                  currency: "INR",
-                  name: "TheSmallBook Gold",
-                  description: "TSB GOLD Yearly Access (₹99/yr)",
-                  prefill: { email: u3 ? u3.email : "" },
-                  notes: { type: "gold", user_id: u3 ? u3.id : "" },
-                  handler: function (resp) {
-                    var msg = document.getElementById("gActMsg");
-                    if (msg) msg.innerHTML = "💳 Payment received (" + resp.razorpay_payment_id + "), activating...";
-                    var tries = 0;
-                    var iv = setInterval(async function () {
-                      tries++;
-                      var on = await (window.TSB_GOLD.isGold(true));
-                      if (on) {
-                        clearInterval(iv);
-                        if (msg) msg.innerHTML = "";
-                        show(); celebrate();
-                      } else if (tries > 20) {
-                        clearInterval(iv);
-                        if (msg) msg.innerHTML = "Still activating, banks can take a minute. If Gold is not on in a couple of minutes, message us with payment ID: " + resp.razorpay_payment_id;
-                      }
-                    }, 3000);
-                  }
-                });
-                rzpInst.open();
-              }
-            });
-          }
-        }
-      } catch (e) {}
+      /* TSB Pay (YouPI-PG sovereign direct UPI) enabled */
 
       /* ---- back from payment: poll the server, never flip a local flag ---- */
       (function () {
@@ -827,32 +807,7 @@
       })();
     })();
   </script>
-  <script>
-    /* 💸 TSB GOLD payment → universal UPI engine */
-    (function () {
-      var btnYr = document.getElementById("gPayBtn");
-      if (btnYr && window.TSB_UPI) {
-        btnYr.addEventListener("click", function (e) {
-          e.preventDefault();
-          window.TSB_UPI.pay(999, "TSB GOLD Annual Pass (₹999/yr)");
-        });
-      }
-      var btnMo = document.getElementById("gPayMonthlyBtn");
-      if (btnMo && window.TSB_UPI) {
-        btnMo.addEventListener("click", function (e) {
-          e.preventDefault();
-          window.TSB_UPI.pay(99, "TSB GOLD Monthly Pass (₹99/mo)");
-        });
-      }
-      var btnPdf = document.getElementById("gPayPdfBtn");
-      if (btnPdf && window.TSB_UPI) {
-        btnPdf.addEventListener("click", function (e) {
-          e.preventDefault();
-          window.TSB_UPI.pay(49, "TSB PDF Cheat-Sheets Pass (₹49, 75 days)");
-        });
-      }
-    })();
-  </script>
+
   <script>
     (function () {
       /* email capture → opens a pre-filled email to Jash (works now);
@@ -1022,236 +977,94 @@
   <script src="js/podcast-data.js?v=323"></script>
   <script src="js/audioplayer.js?v=323"></script>
   <script>
-    /* Direct plan button checkout wiring for ₹49, ₹99, ₹999 */
+    /* Direct TSB Pay (YouPI sovereign direct UPI engine) checkout wiring */
     (function () {
-      function esc(s) {
-        return String(s || "").replace(/[&<>"']/g, function (m) {
-          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m];
-        });
-      }
-
-      function launchPayment(planType, amount, title, desc) {
+      function launchPayment(planType, amount, title) {
         if (typeof isFounderNow === "function" && isFounderNow()) {
-          try {
-            var msgF = document.getElementById("gActMsg");
-            if (msgF) msgF.innerHTML = "👑 Founder Mode: Unlimited Gold Access is already active on your account!";
-            if (typeof show === "function") show();
-            if (typeof celebrate === "function") celebrate();
-          } catch(e) {}
+          var msgF = document.getElementById("gActMsg");
+          if (msgF) msgF.innerHTML = "👑 Founder Mode: Unlimited Gold Access is already active on your account!";
+          if (typeof show === "function") show();
+          if (typeof celebrate === "function") celebrate();
           return;
         }
 
-        var customKey = "";
-        try { customKey = localStorage.getItem("tsb_rzp_key") || ""; } catch(eK) {}
-        var rzCfg = window.TSB_CONFIG && TSB_CONFIG.PAYWALL ? TSB_CONFIG.PAYWALL : {};
-        var RZ_KEY = customKey || rzCfg.RAZORPAY_KEY_ID || rzCfg.RAZORPAY_KEY || "";
-        var u = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null;
-
-        if (customKey && window.Razorpay) {
-          try {
-            var rzp = new window.Razorpay({
-              key: RZ_KEY,
-              amount: amount * 100,
-              currency: "INR",
-              name: "TheSmallBook",
-              description: desc,
-              prefill: {
-                name: (u && (u.displayName || (u.user_metadata && u.user_metadata.full_name))) || "TheSmallBook Reader",
-                email: (u && u.email) || "test@thesmallbook.in",
-                contact: "9999999999"
-              },
-              theme: { color: "#ffc800" },
-              notes: { type: planType, amount: amount, user_id: u ? u.id : "" },
-              handler: function (resp) {
-                var msg = document.getElementById("gActMsg");
-                if (msg) msg.innerHTML = "💳 Payment received (" + resp.razorpay_payment_id + "), activating...";
-                var tries = 0;
-                var iv = setInterval(async function () {
-                  tries++;
-                  var on = await (window.TSB_GOLD.isGold(true));
-                  if (on) {
-                    clearInterval(iv);
-                    if (msg) msg.innerHTML = "";
-                    if (typeof show === "function") show();
-                    if (typeof celebrate === "function") celebrate();
-                  } else if (tries > 20) {
-                    clearInterval(iv);
-                    if (msg) msg.innerHTML = "Payment ID: " + resp.razorpay_payment_id + " received. If not active shortly, message support.";
-                  }
-                }, 3000);
-              }
-            });
-            rzp.on("payment.failed", function (response) {
-              openRzpTestModal(planType, amount, title);
-            });
-            rzp.open();
-            return;
-          } catch(e) {
-            console.warn("Razorpay open error:", e);
-          }
+        if (window.Youpi && window.Youpi.pay) {
+          window.Youpi.pay({
+            amount: amount,
+            plan: planType,
+            name: "TheSmallBook",
+            title: title,
+            description: title,
+            handler: function (resp) {
+              if (typeof show === "function") show();
+              if (typeof celebrate === "function") celebrate();
+            }
+          });
+        } else if (window.TSB_UPI && window.TSB_UPI.pay) {
+          window.TSB_UPI.pay(amount, title);
+        } else {
+          location.href = "upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=" + encodeURIComponent(amount) + "&cu=INR&tn=" + encodeURIComponent(title);
         }
-
-        /* Default to interactive Razorpay Test Checkout modal with official test credentials */
-        openRzpTestModal(planType, amount, title);
       }
 
-      function openRzpTestModal(planType, amount, title) {
-        if (document.getElementById("rzpTestModal")) return;
-        var pAmt = amount || 49;
-        var pTitle = title || "TheSmallBook Gold (" + (planType || "Monthly") + ")";
-        var ovl = document.createElement("div");
-        ovl.id = "rzpTestModal";
-        ovl.style.cssText = "position:fixed;inset:0;background:rgba(18,14,10,0.75);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px);";
-        ovl.innerHTML =
-          '<div style="background:var(--paper,#fffdf5);border:3.5px solid var(--ink,#111);border-radius:18px;box-shadow:8px 8px 0 var(--ink,#111);max-width:420px;width:100%;max-height:92vh;overflow-y:auto;padding:24px;position:relative;box-sizing:border-box;">' +
-            '<button id="rzpCloseBtn" style="position:absolute;top:14px;right:14px;background:none;border:none;font:800 20px sans-serif;cursor:pointer;color:var(--ink,#111);">✕</button>' +
-            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">' +
-              '<span style="background:var(--yellow,#ffc800);border:2px solid var(--ink,#111);border-radius:8px;padding:4px 8px;font:800 11px var(--font-head);letter-spacing:1px;">RAZORPAY TEST MODE</span>' +
-              '<span style="font:700 11px var(--font-body);color:var(--muted,#666);">Sandbox Gateway</span>' +
-            '</div>' +
-            '<h3 style="font:800 19px var(--font-head);margin:0 0 2px;">' + esc(pTitle) + '</h3>' +
-            '<div style="font:800 24px var(--font-head);color:var(--ink,#111);margin:4px 0 14px;">₹' + pAmt + '</div>' +
-            
-            '<div style="display:flex;gap:6px;margin-bottom:14px;border-bottom:2px solid var(--ink,#111);padding-bottom:10px;">' +
-              '<button type="button" id="tabCardBtn" class="setbtn setbtn--sm setbtn--yellow" style="padding:7px 12px;font-size:12px;">💳 Test Card</button>' +
-              '<button type="button" id="tabUpiBtn" class="setbtn setbtn--sm" style="padding:7px 12px;font-size:12px;">📱 Test UPI</button>' +
-            '</div>' +
+      /* Plan pills inside the TSB Pay direct box */
+      var currentPlan = { type: "gold_yearly", amount: 999, label: "ANNUAL PASS", title: "TSB GOLD Annual Pass (₹999/yr)" };
+      var pills = document.querySelectorAll(".ypg-plan-pills .ypg-plan-pill");
+      var mainPayBtn = document.getElementById("gPayBtn");
 
-            '<div id="secCard">' +
-              '<label style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;margin-bottom:4px;">TEST CARD NUMBER</label>' +
-              '<input id="tcNum" value="4100 2800 0000 1007" style="width:100%;border:2px solid var(--ink,#111);border-radius:10px;padding:10px;font:700 14px monospace;background:#fff;margin-bottom:10px;box-sizing:border-box;">' +
-              '<div style="display:flex;gap:10px;margin-bottom:14px;">' +
-                '<div style="flex:1;">' +
-                  '<label style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;margin-bottom:4px;">EXPIRY</label>' +
-                  '<input id="tcExp" value="12/26" style="width:100%;border:2px solid var(--ink,#111);border-radius:10px;padding:10px;font:700 14px monospace;background:#fff;box-sizing:border-box;">' +
-                '</div>' +
-                '<div style="width:100px;">' +
-                  '<label style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;margin-bottom:4px;">CVV</label>' +
-                  '<input id="tcCvv" value="123" style="width:100%;border:2px solid var(--ink,#111);border-radius:10px;padding:10px;font:700 14px monospace;background:#fff;box-sizing:border-box;">' +
-                '</div>' +
-              '</div>' +
-              '<button type="button" id="payWithCardBtn" style="width:100%;background:var(--yellow,#ffc800);border:2.5px solid var(--ink,#111);border-radius:12px;padding:13px;font:800 13px var(--font-head);cursor:pointer;box-shadow:3px 3px 0 var(--ink,#111);">PAY ₹' + pAmt + ' (TEST CARD) →</button>' +
-            '</div>' +
+      pills.forEach(function (pill) {
+        pill.addEventListener("click", function () {
+          pills.forEach(function (p) {
+            p.classList.remove("active");
+            p.style.background = "var(--paper)";
+            p.style.border = "2px solid var(--ink)";
+            p.style.boxShadow = "none";
+          });
+          pill.classList.add("active");
+          pill.style.background = "var(--yellow)";
+          pill.style.border = "2.5px solid var(--ink)";
+          pill.style.boxShadow = "2px 2px 0 var(--ink)";
 
-            '<div id="secUpi" style="display:none;">' +
-              '<label style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;margin-bottom:4px;">TEST UPI ID / VPA</label>' +
-              '<input id="tcUpi" value="test@razorpay" style="width:100%;border:2px solid var(--ink,#111);border-radius:10px;padding:10px;font:700 14px monospace;background:#fff;margin-bottom:14px;box-sizing:border-box;">' +
-              '<button type="button" id="payWithUpiBtn" style="width:100%;background:var(--yellow,#ffc800);border:2.5px solid var(--ink,#111);border-radius:12px;padding:13px;font:800 13px var(--font-head);cursor:pointer;box-shadow:3px 3px 0 var(--ink,#111);">PAY ₹' + pAmt + ' (TEST UPI) →</button>' +
-            '</div>' +
+          var amt = parseInt(pill.getAttribute("data-amount"), 10) || 999;
+          var pl = pill.getAttribute("data-plan") || "gold_yearly";
+          var ttl = pill.getAttribute("data-title") || "TSB Membership";
+          currentPlan = { type: pl, amount: amt, label: amt === 49 ? "PDF PASS" : (amt === 99 ? "MONTHLY PASS" : "ANNUAL PASS"), title: ttl };
 
-            '<div id="rzpProc" style="display:none;text-align:center;padding:16px 0;">' +
-              '<div style="font:800 13px var(--font-head);margin-bottom:6px;">Processing Razorpay test payment...</div>' +
-              '<div style="font:600 11px var(--font-body);color:var(--muted,#666);">Communicating with sandbox simulator</div>' +
-            '</div>' +
-
-            '<div style="margin-top:14px;padding-top:10px;border-top:1px dashed #ccc;text-align:center;">' +
-              '<small style="font-size:11px;color:#888;">Live Razorpay Checkout Key ID: </small>' +
-              '<button type="button" id="setRzpKeyBtn" style="background:none;border:none;font:700 11px sans-serif;color:var(--ink,#111);text-decoration:underline;cursor:pointer;">Enter custom key</button>' +
-            '</div>' +
-          '</div>';
-
-        document.body.appendChild(ovl);
-
-        var tabCard = document.getElementById("tabCardBtn");
-        var tabUpi = document.getElementById("tabUpiBtn");
-        var secCard = document.getElementById("secCard");
-        var secUpi = document.getElementById("secUpi");
-
-        tabCard.addEventListener("click", function () {
-          tabCard.classList.add("setbtn--yellow");
-          tabUpi.classList.remove("setbtn--yellow");
-          secCard.style.display = "block";
-          secUpi.style.display = "none";
-        });
-        tabUpi.addEventListener("click", function () {
-          tabUpi.classList.add("setbtn--yellow");
-          tabCard.classList.remove("setbtn--yellow");
-          secUpi.style.display = "block";
-          secCard.style.display = "none";
-        });
-
-        function completeTestPayment(method, detail) {
-          secCard.style.display = "none";
-          secUpi.style.display = "none";
-          document.getElementById("rzpProc").style.display = "block";
-
-          var testId = "pay_test_" + method + "_" + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
-          setTimeout(function () {
-            try {
-              localStorage.setItem("tsb_gold_test_pass", JSON.stringify({
-                active: true,
-                id: testId,
-                method: method,
-                detail: detail,
-                amount: pAmt,
-                plan: planType,
-                time: Date.now()
-              }));
-              if (window.TSB_GOLD) {
-                window.TSB_GOLD.isGold = function () { return true; };
-              }
-              try { window.dispatchEvent(new Event("tsbgold")); } catch(eE) {}
-            } catch(eP) {}
-
-            ovl.remove();
-
-            var msg = document.getElementById("gActMsg");
-            if (msg) msg.innerHTML = "✅ Payment verified (" + testId + ") via " + method.toUpperCase() + " (" + detail + ")! Gold membership activated.";
-            if (typeof show === "function") show();
-            if (typeof celebrate === "function") celebrate();
-          }, 850);
-        }
-
-        document.getElementById("payWithCardBtn").addEventListener("click", function () {
-          var num = (document.getElementById("tcNum").value || "4100 2800 0000 1007").trim();
-          completeTestPayment("card", num);
-        });
-
-        document.getElementById("payWithUpiBtn").addEventListener("click", function () {
-          var upi = (document.getElementById("tcUpi").value || "test@razorpay").trim();
-          completeTestPayment("upi", upi);
-        });
-
-        document.getElementById("setRzpKeyBtn").addEventListener("click", function () {
-          var k = prompt("Enter your Razorpay Key ID (rzp_test_... or rzp_live_...):", localStorage.getItem("tsb_rzp_key") || "");
-          if (k !== null) {
-            try {
-              if (k.trim()) localStorage.setItem("tsb_rzp_key", k.trim());
-              else localStorage.removeItem("tsb_rzp_key");
-            } catch(eK) {}
-            if (typeof C !== "undefined" && C.say) C.say("Razorpay Key ID saved: " + (k.trim() || "Default config key restored"));
+          if (mainPayBtn) {
+            mainPayBtn.setAttribute("data-amount", amt);
+            mainPayBtn.setAttribute("data-plan", pl);
+            mainPayBtn.setAttribute("data-title", ttl);
+            mainPayBtn.textContent = "⚡ PAY ₹" + amt + " (" + currentPlan.label + ") VIA TSB PAY →";
           }
         });
+      });
 
-        document.getElementById("rzpCloseBtn").addEventListener("click", function () { ovl.remove(); });
-        ovl.addEventListener("click", function (e) { if (e.target === ovl) ovl.remove(); });
-      }
-
-      var btnSim = document.getElementById("gSimulateTest");
-      if (btnSim) {
-        btnSim.addEventListener("click", function () {
-          openRzpTestModal("test_plan", 49, "Razorpay Sandbox Integration Verification");
+      if (mainPayBtn) {
+        mainPayBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          launchPayment(currentPlan.type, currentPlan.amount, currentPlan.title);
         });
       }
 
+      /* Direct plan triggers from the 3 pricing cards */
       var btnPdf = document.getElementById("goldBuyPdf");
       if (btnPdf) {
         btnPdf.addEventListener("click", function () {
-          launchPayment("pdf_75d", 49, "TheSmallBook PDF Pass (75 days)", "TSB 75-Day PDF Cheat-Sheets Unlock (₹49)");
+          launchPayment("pdf_75d", 49, "TSB PDF Cheat-Sheets Pass (₹49, 75 days)");
         });
       }
 
       var btnMo = document.getElementById("goldBuyMonthly");
       if (btnMo) {
         btnMo.addEventListener("click", function () {
-          launchPayment("gold_monthly", 99, "TheSmallBook Gold Monthly", "TSB GOLD Monthly Pass (₹99/mo)");
+          launchPayment("gold_monthly", 99, "TSB GOLD Monthly Pass (₹99/mo)");
         });
       }
 
       var btnYr = document.getElementById("goldBuyYearly");
       if (btnYr) {
         btnYr.addEventListener("click", function () {
-          launchPayment("gold_yearly", 999, "TheSmallBook Gold Annual Pass", "TSB GOLD Annual Pass (₹999/yr)");
+          launchPayment("gold_yearly", 999, "TSB GOLD Annual Pass (₹999/yr)");
         });
       }
     })();

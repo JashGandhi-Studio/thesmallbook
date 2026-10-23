@@ -54,10 +54,9 @@
 
   function isGold(freshCheck) {
     try {
-      var passKey = ["tsb", "g" + "old", "test_pass"].join("_");
-      var pass = JSON.parse(localStorage.getItem(passKey) || "null");
-      if (pass && pass.active) { cached = true; known = true; return true; }
-    } catch (eP) {}
+      var ypg = JSON.parse(localStorage.getItem("ypg_payment_verified") || "null");
+      if (ypg && ypg.active && (!ypg.expiresAt || ypg.expiresAt > Date.now())) { cached = true; known = true; return true; }
+    } catch (eY) {}
     try {
       var u = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null;
       var s = JSON.parse(localStorage.getItem("tsb_auth_session") || "null");
