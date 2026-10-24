@@ -473,7 +473,7 @@
       <div class="gcmp__row">
         <div class="gcmp__cell gcmp__feat" data-col="FEATURE">💛 YOUR PRICE</div>
         <div class="gcmp__cell" data-col="FREE">₹0. Forever. Seriously.</div>
-        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">₹99/yr (or ₹49/mo), locked for as long as you keep it.</div>
+        <div class="gcmp__cell gcmp__goldcell" data-col="👑 GOLD">₹999/yr (or ₹99/mo), locked for as long as you keep it.</div>
       </div>
       </div>
       <p class="gcmp__foot">THE MATH: human audio alone runs ₹1,999/yr (Audible). Deep dives ₹999. PDFs ₹499. Gold locks all of it for <b>₹999/yr</b> · 33% off, forever · cancel anytime · <b>and the free library stays free either way.</b></p>
@@ -528,6 +528,7 @@
           <small>Rolling monthly membership · Cancel anytime</small>
         </div>
         <ul class="goldplan__features">
+          <li><b>5-Action-Button Bottom Dock</b> (keep 5 customizable bottom buttons · free is 4)</li>
           <li><b>Offline Audio &amp; Shelf Caching</b> (listen offline anywhere)</li>
           <li><b>Studio Pro</b> (watermark off, custom ratios, 6 aesthetic filters)</li>
           <li><b>Unlimited AI Ask the Library</b> (zero daily quota across 500 books)</li>
@@ -547,6 +548,7 @@
         </div>
         <ul class="goldplan__features">
           <li>Everything in Monthly Pass included for 365 days</li>
+          <li><b>5-Action-Button Bottom Dock</b> with drag-and-drop customization</li>
           <li><b>Offline Audio &amp; Shelf Caching</b> across all audiobooks &amp; shows</li>
           <li><b>Studio Pro</b> watermark off, all ratios, export &amp; drag-reframe</li>
           <li><b>Unlimited AI Ask the Library</b> intelligence across all books</li>
@@ -563,7 +565,10 @@
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
         <svg class="inline-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#0b7a58" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
         <b style="font-family:var(--font-head); font-size:1rem; letter-spacing:.5px; color:var(--ink);">CLEAN MEMBERSHIP · ZERO NAGS</b>
+      </div><div style="margin-top:14px; padding:10px 12px; background:#f5eedc; border:1.5px solid var(--ink); border-radius:10px; font-size:12px; font-weight:700;">
+        👑 <b>5-Button Custom Action Bar Privilege:</b> Gold members unlock a 5th customizable bottom dock button (free tier is limited to 4) with live drag-and-drop tool swapping.
       </div>
+      
       <p style="margin:0; font-size:.88rem; line-height:1.6; color:var(--sub, #4a463c);">
         After payment confirmation, this upgrade window disappears completely. Inside your <b>You</b> section, you will simply see your active plan and the exact days remaining. No recurring upgrade popups, no clutter, and no renewed sales pitches.
       </p>
@@ -679,17 +684,15 @@
       var join = document.getElementById("goldJoin");
       var activateSec = document.querySelector('section.goldjoin[style*="var(--pink)"]');
       var sticky = document.getElementById("goldSticky");
+      
+    try {
+      localStorage.removeItem("ypg_payment_verified");
+      localStorage.removeItem("tsb_verified_membership");
+    } catch(e) {}
+
       function show() {
         if (!window.TSB_GOLD) return;
-        var isVerified = false;
-        try {
-          var ypg = JSON.parse(localStorage.getItem("ypg_payment_verified") || "null");
-          if (ypg && ypg.active) isVerified = true;
-        } catch(e) {}
-        if (isVerified && window.TSB_GOLD) {
-          window.TSB_GOLD.isGold = function () { return true; };
-        }
-        var isOn = !!(window.TSB_GOLD && (TSB_GOLD.isGold() || isVerified));
+        var isOn = !!(window.TSB_GOLD && TSB_GOLD.isGold());
         if (member) member.hidden = !isOn;
         if (join) join.hidden = isOn;
         if (activateSec) activateSec.hidden = isOn;
@@ -812,7 +815,7 @@
     (function () {
       /* email capture → opens a pre-filled email to Jash (works now);
          swap in your Google Form action when ready */
-      var CONTACT = (window.TSB_CONFIG && TSB_CONFIG.SUBMIT_EMAIL) || "jashgandhicreator07@gmail.com";
+      var CONTACT = (window.TSB_CONFIG && TSB_CONFIG.SUBMIT_EMAIL) || "thesmallbook.in@gmail.com";
       var btn = document.getElementById("gJoin");
       if (btn) btn.addEventListener("click", function () {
         var em = (document.getElementById("gEmail") || {}).value || "";

@@ -32,7 +32,13 @@
     if (isFounder() && !founderPreview()) return true;
     try { return !!(window.TSB_GOLD && TSB_GOLD.isGold()); } catch (e) { return false; }
   }
-  function enabled() { return !!cfg().ENABLED; }
+  function enabled() {
+    try {
+      var rc = JSON.parse(localStorage.getItem("tsb_remote_config") || "{}");
+      if (rc.goldPaywall === false) return false;
+    } catch (eRC) {}
+    return !!cfg().ENABLED;
+  }
 
   /* A feature is locked only if: wall is on + reader is not Gold + key is listed */
   function locked(feature) {

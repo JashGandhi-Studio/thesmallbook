@@ -9,7 +9,7 @@
 (function () {
   const GITHUB_URL = "https://github.com/JashGandhi-Studio/thesmallbook";
   const UPI_ID = "9702510680@fam";
-  const CONTACT = (window.TSB_CONFIG && TSB_CONFIG.SUBMIT_EMAIL) || "jashgandhicreator07@gmail.com";
+  const CONTACT = (window.TSB_CONFIG && TSB_CONFIG.SUBMIT_EMAIL) || "thesmallbook.in@gmail.com";
 
   function upiLink(amount) {
     let l = "upi://pay?pa=" + encodeURIComponent(UPI_ID) + "&pn=" + encodeURIComponent("TheSmallBook") + "&cu=INR";

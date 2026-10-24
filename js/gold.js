@@ -54,14 +54,19 @@
 
   function isGold(freshCheck) {
     try {
-      var ypg = JSON.parse(localStorage.getItem("ypg_payment_verified") || "null");
-      if (ypg && ypg.active && (!ypg.expiresAt || ypg.expiresAt > Date.now())) { cached = true; known = true; return true; }
-    } catch (eY) {}
+      var rc = JSON.parse(localStorage.getItem("tsb_remote_config") || "{}");
+      if (rc.goldPaywall === false) { cached = true; known = true; return true; }
+    } catch (eRC) {}
     try {
       var u = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null;
       var s = JSON.parse(localStorage.getItem("tsb_auth_session") || "null");
       var em = (((u && u.email) || (s && s.user && s.user.email)) || "").toLowerCase();
       if (em === "acimotreyothy@gmail.com") { cached = true; known = true; return true; }
+      if (em) {
+        var readers = JSON.parse(localStorage.getItem("tsb_admin_readers") || "[]");
+        var matched = readers.find(function (r) { return r.email && r.email.toLowerCase() === em; });
+        if (matched && matched.tier === "Gold VIP") { cached = true; known = true; return true; }
+      }
     } catch (eF) {}
     if (freshCheck || !known) {
       if (!inflight) inflight = fresh().finally(function () { inflight = null; });

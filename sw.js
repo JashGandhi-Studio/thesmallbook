@@ -31,6 +31,7 @@ const APP_SHELL = [
   "./about.html",
   "./legal.html",
   "./scan.html",
+  "./random.html",
   "./js/tts-engine.js",
   "./js/bootguard.js",
   "./js/weekly.js",
@@ -245,18 +246,15 @@ self.addEventListener("fetch", (e) => {
   if (e.request.headers.get("range")) return fetch(e.request);
 
   if (e.request.mode === "navigate" || url.pathname.endsWith(".html")) {
-    return caches.match(e.request, { ignoreSearch: true }).then((cached) => {
-      const fetchPromise = fetch(e.request)
-        .then((res) => {
-          if (res && res.status === 200) {
-            const copy = res.clone();
-            caches.open(CACHE_VERSION).then((c) => c.put(e.request, copy));
-          }
-          return res;
-        })
-        .catch(() => cached || caches.match("./index.html"));
-      return cached || fetchPromise;
-    });
+    return fetch(e.request)
+      .then((res) => {
+        if (res && res.status === 200) {
+          const copy = res.clone();
+          caches.open(CACHE_VERSION).then((c) => c.put(e.request, copy));
+        }
+        return res;
+      })
+      .catch(() => caches.match(e.request, { ignoreSearch: true }).then((cached) => cached || caches.match("./index.html")));
   } else if (url.origin === location.origin &&
              (/[?&]v=/.test(url.search) ||
               /\.(woff2|woff|png|jpe?g|svg|webp|ico|mp3|m4a|ogg|json)$/i.test(url.pathname))) {

@@ -41,6 +41,7 @@
     library: SVG_OPEN + '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>',
     scan: SVG_OPEN + '<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>',
     notes: SVG_OPEN + '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>',
+    random: SVG_OPEN + '<rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="8" cy="8" r="1.5" fill="currentColor"></circle><circle cx="16" cy="8" r="1.5" fill="currentColor"></circle><circle cx="12" cy="12" r="1.5" fill="currentColor"></circle><circle cx="8" cy="16" r="1.5" fill="currentColor"></circle><circle cx="16" cy="16" r="1.5" fill="currentColor"></circle></svg>',
     graveyard: SVG_OPEN + '<path d="M18 2H6a2 2 0 0 0-2 2v18h16V4a2 2 0 0 0-2-2z"></path><line x1="12" y1="7" x2="12" y2="13"></line><line x1="9" y1="10" x2="15" y2="10"></line></svg>',
     ask: SVG_OPEN + '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="13" y2="13"></line></svg>',
     plus: '<div class="tsb-bar__plus"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div>'
@@ -58,6 +59,7 @@
     library:   { id: "library", url: "index.html#library", lbl: "Library", ico: ICO.library, cls: "tsb-bar__item--library" },
     scan:      { id: "scan", url: "scan.html", lbl: "Scan", ico: ICO.scan, cls: "tsb-bar__item--scan" },
     notes:     { id: "notes", url: "notes.html", lbl: "Notebook", ico: ICO.notes, cls: "tsb-bar__item--notes" },
+    random:    { id: "random", url: "random.html", lbl: "3D Discovery", ico: ICO.random, cls: "tsb-bar__item--random" },
     graveyard: { id: "graveyard", url: "graveyard.html", lbl: "Graveyard", ico: ICO.graveyard, cls: "tsb-bar__item--graveyard" },
     plus:      { id: "plus", url: "stories.html#write", lbl: "Plus", ico: ICO.plus, cls: "tsb-bar__item--plus", isPlus: true }
   };
@@ -81,13 +83,33 @@
   }
   var active = currentActive();
 
+  function checkIsGold() {
+    try {
+      if (window.TSB_GOLD && typeof window.TSB_GOLD.isGold === "function" && window.TSB_GOLD.isGold()) return true;
+      if (window.TSB_PAYWALL && typeof window.TSB_PAYWALL.isGold === "function" && window.TSB_PAYWALL.isGold()) return true;
+      if (localStorage.getItem("tsb_gold_active") === "true" || localStorage.getItem("tsb_gold") === "true") return true;
+      var plan = localStorage.getItem("tsb_plan");
+      if (plan && (plan === "gold" || plan === "annual" || plan === "monthly")) return true;
+      var rc = JSON.parse(localStorage.getItem("tsb_remote_config") || "{}");
+      if (rc.goldPaywall === false) return true;
+    } catch (e) {}
+    return false;
+  }
+
   /* Load active custom slots or fallback to clean 4-item bar */
   function getActiveSlots() {
+    var gold = checkIsGold();
     try {
       var saved = JSON.parse(localStorage.getItem("tsb_custom_bar"));
       if (Array.isArray(saved) && saved.length >= 4) {
         var valid = saved.filter(function (k) { return !!ITEM_DEFS[k]; });
-        if (valid.length >= 4) return valid;
+        if (valid.length >= 4) {
+          if (!gold && valid.length > 4) {
+            valid = valid.slice(0, 4);
+            try { localStorage.setItem("tsb_custom_bar", JSON.stringify(valid)); } catch (e) {}
+          }
+          return valid.slice(0, 5);
+        }
       }
     } catch (e) {}
     return ["home", "audio", "stories", "you"];
@@ -285,389 +307,496 @@
     return false;
   });
 
-  /* Fast optimistic link prefetch for idle tab switching */
-  (function initTabPreload() {
-    var cur = pageName();
-    var slots = getActiveSlots();
-    var TABS_URLS = slots.map(function (k) {
-      return (ITEM_DEFS[k] && ITEM_DEFS[k].url) || "index.html";
-    });
 
-    try {
-      TABS_URLS.forEach(function (u) {
-        if (u === cur) return;
-        if (!document.querySelector('link[rel="prefetch"][href="' + u + '"]')) {
-          var l = document.createElement("link");
-          l.rel = "prefetch";
-          l.href = u;
-          l.as = "document";
-          document.head.appendChild(l);
-        }
-      });
-    } catch (e2) {}
-  })();
 
-  /* ---------- Apple-Grade Action Bar Customizer Sheet & Long-Press Engine ---------- */
-  function injectBarSheetStyles() {
-    if (document.getElementById("tsb-barsheet-styles")) return;
+  /* ---------- Apple-Grade Live Drag-and-Drop & Customization Engine ---------- */
+  var isEditMode = false;
+  var selectedSlotIdx = 0;
+  var liveDock = null;
+
+  function injectLiveDockStyles() {
+    if (document.getElementById("tsb-livedock-styles")) return;
     var st = document.createElement("style");
-    st.id = "tsb-barsheet-styles";
+    st.id = "tsb-livedock-styles";
     st.textContent = `
-      .tsb-barsheet-overlay {
-        position: fixed; inset: 0; z-index: 99999;
-        background: rgba(17, 17, 17, 0.65);
-        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        display: flex; align-items: flex-end; justify-content: center;
-        animation: tsbSheetFadeIn .22s cubic-bezier(.16,1,.3,1);
+      @keyframes tsbJiggle {
+        0% { transform: rotate(-1.5deg) scale(0.98); }
+        100% { transform: rotate(1.5deg) scale(1.02); }
       }
-      @keyframes tsbSheetFadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+      .tsb-bar.tsb-bar--reordering .tsb-bar__item:not(.tsb-bar__item--floating) {
+        animation: tsbJiggle 0.28s ease-in-out infinite alternate;
+        cursor: grab;
       }
-      .tsb-barsheet {
-        width: 100%; max-width: 480px; max-height: 85vh;
+      .tsb-bar__item.tsb-bar__item--selected {
+        outline: 3px solid var(--yellow, #ffc800) !important;
+        outline-offset: -3px;
+        background: rgba(255, 200, 0, 0.15) !important;
+      }
+      .tsb-livedock {
+        position: fixed; left: 50%; transform: translateX(-50%);
+        bottom: calc(var(--tsb-bar-h, 58px) + var(--tsb-bar-gap, 10px) + env(safe-area-inset-bottom, 0px) + 14px);
+        width: min(520px, calc(100vw - 24px));
         background: var(--paper, #fffdf5); color: var(--ink, #111);
-        border: 3.5px solid var(--ink, #111); border-bottom: none;
-        border-radius: 24px 24px 0 0; box-shadow: 0 -12px 36px rgba(0,0,0,0.3);
-        padding: 10px 18px 24px; box-sizing: border-box; overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        animation: tsbSheetSlideUp .28s cubic-bezier(.16,1,.3,1);
+        border: 3px solid var(--ink, #111); border-radius: 18px;
+        box-shadow: 0 16px 36px rgba(0,0,0,0.32), 6px 6px 0 var(--ink, #111);
+        padding: 12px 14px 14px; box-sizing: border-box; z-index: 99998;
         font-family: -apple-system, BlinkMacSystemFont, "Space Grotesk", "Segoe UI", sans-serif;
+        animation: tsbDockPop .25s cubic-bezier(.16,1,.3,1);
       }
-      @keyframes tsbSheetSlideUp {
-        from { transform: translateY(100%); }
-        to { transform: translateY(0); }
+      @keyframes tsbDockPop {
+        from { opacity: 0; transform: translateX(-50%) translateY(16px) scale(.95); }
+        to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
       }
-      .tsb-sheet-handle {
-        width: 38px; height: 5px; border-radius: 999px;
-        background: rgba(0, 0, 0, 0.22); margin: 4px auto 14px;
-      }
-      .tsb-sheet-head {
-        text-align: center; margin-bottom: 16px;
-      }
-      .tsb-sheet-title {
-        font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 17px; margin: 0 0 4px; color: var(--ink, #111); letter-spacing: .3px;
-      }
-      .tsb-sheet-sub {
-        font-size: 12px; color: #666; margin: 0; font-weight: 600;
-      }
-      
-      /* Apple-style segmented picker for action titles */
-      .tsb-sheet-seg {
-        display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
-        background: #e5e0d3; padding: 4px; border-radius: 12px;
-        border: 2px solid var(--ink, #111); margin-bottom: 16px;
-      }
-      .tsb-sheet-segbtn {
-        border: none; background: transparent; padding: 8px 12px;
-        border-radius: 8px; font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 11.5px; color: #555; cursor: pointer; transition: all .15s ease;
-      }
-      .tsb-sheet-segbtn.active {
-        background: #fff; color: #111; box-shadow: 2px 2px 0 var(--ink, #111);
-        border: 1.5px solid var(--ink, #111);
-      }
-      
-      /* Slot shift rows */
-      .tsb-slot-list {
-        display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;
-      }
-      .tsb-slot-row {
+      .tsb-livedock__top {
         display: flex; align-items: center; justify-content: space-between;
-        background: #fff; border: 2.5px solid var(--ink, #111);
-        border-radius: 12px; padding: 8px 12px; box-shadow: 3px 3px 0 var(--ink, #111);
+        margin-bottom: 10px; gap: 8px;
       }
-      .tsb-slot-info {
-        display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 13px;
-      }
-      .tsb-slot-num {
-        font-size: 10.5px; opacity: 0.6; font-family: var(--font-head, "Archivo Black", sans-serif);
-      }
-      .tsb-slot-actions {
-        display: flex; align-items: center; gap: 5px;
-      }
-      .tsb-slot-btn {
-        border: 1.5px solid var(--ink, #111); background: #f0ede4;
-        color: #111; border-radius: 6px; padding: 5px 9px; cursor: pointer;
+      .tsb-livedock__title {
         font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 11px; transition: transform .1s;
+        font-size: 13px; letter-spacing: .4px; color: var(--ink, #111);
       }
-      .tsb-slot-btn:hover { transform: translate(-1px,-1px); box-shadow: 2px 2px 0 var(--ink, #111); }
-      .tsb-slot-btn:active { transform: translate(1px,1px); }
-      
-      /* Swap Pool */
-      .tsb-pool-grid {
-        display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;
-        margin-top: 10px; padding-top: 10px; border-top: 2px dashed #ddd;
+      .tsb-livedock__seg {
+        display: inline-flex; gap: 3px; background: #e5e0d3; padding: 3px;
+        border-radius: 9px; border: 1.5px solid var(--ink, #111);
       }
-      .tsb-pool-item {
-        border: 1.5px solid var(--ink, #111); background: var(--paper, #fffdf5);
-        border-radius: 8px; padding: 6px 4px; text-align: center;
-        font-size: 10.5px; font-weight: 700; cursor: pointer;
+      .tsb-livedock__segbtn {
+        border: none; background: transparent; padding: 4px 8px;
+        border-radius: 6px; font-family: var(--font-head, "Archivo Black", sans-serif);
+        font-size: 10.5px; color: #555; cursor: pointer;
       }
-      .tsb-pool-item:hover { background: var(--yellow, #ffc800); }
-      
-      .tsb-sheet-done-btn {
-        display: block; width: 100%; border: 3px solid var(--ink, #111);
+      .tsb-livedock__segbtn.active {
+        background: #fff; color: #111; box-shadow: 1px 1px 0 var(--ink, #111);
+        border: 1px solid var(--ink, #111);
+      }
+      .tsb-livedock__done {
+        background: var(--yellow, #ffc800); border: 2px solid var(--ink, #111);
+        border-radius: 8px; font-family: var(--font-head, "Archivo Black", sans-serif);
+        font-size: 11.5px; padding: 5px 12px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink, #111);
+        transition: transform .1s;
+      }
+      .tsb-livedock__done:hover { transform: translate(-1px, -1px); }
+      .tsb-livedock__hint {
+        font-size: 11.5px; color: #666; font-weight: 600; margin-bottom: 8px;
+      }
+      .tsb-livedock__shelf {
+        display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      }
+      .tsb-livedock__shelf::-webkit-scrollbar { display: none; }
+      .tsb-shelf-item {
+        flex-shrink: 0; display: inline-flex; align-items: center; gap: 5px;
+        background: #fff; border: 2px solid var(--ink, #111); border-radius: 10px;
+        padding: 6px 10px; font-size: 12px; font-weight: 700; cursor: pointer;
+        box-shadow: 2px 2px 0 var(--ink, #111); transition: transform .1s;
+      }
+      .tsb-shelf-item:hover { background: var(--yellow, #ffc800); transform: translate(-1px,-1px); }
+      .tsb-shelf-item.is-inbar { opacity: 0.55; }
+      .tsb-livedock__slotbar {
+        display: flex; align-items: center; justify-content: space-between;
+        background: #f0ebe1; border: 1.5px solid var(--ink, #111); border-radius: 10px;
+        padding: 6px 10px; margin-bottom: 8px; font-size: 11px; font-weight: 700;
+      }
+      .tsb-livedock__slotstatus {
+        display: flex; align-items: center; gap: 5px; color: var(--ink, #111);
+      }
+      .tsb-livedock__slotbtn {
+        background: #fff; border: 1.5px solid var(--ink, #111); border-radius: 6px;
+        padding: 4px 8px; font-family: var(--font-head, "Archivo Black", sans-serif);
+        font-size: 10.5px; cursor: pointer; box-shadow: 1px 1px 0 var(--ink, #111);
+        transition: transform .1s;
+      }
+      .tsb-livedock__slotbtn:hover { transform: translate(-1px, -1px); }
+      .tsb-livedock__slotbtn--gold {
         background: var(--yellow, #ffc800); color: #111;
-        font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 14px; letter-spacing: .5px; padding: 12px; border-radius: 12px;
-        box-shadow: 4px 4px 0 var(--ink, #111); cursor: pointer; text-align: center;
-        box-sizing: border-box; transition: transform .1s;
       }
-      .tsb-sheet-done-btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink, #111); }
+      .tsb-gold-bar-modal {
+        position: fixed; inset: 0; z-index: 999999;
+        display: flex; align-items: center; justify-content: center;
+        padding: 20px; box-sizing: border-box;
+      }
+      .tsb-gold-bar-backdrop {
+        position: absolute; inset: 0; background: rgba(0,0,0,0.68);
+        backdrop-filter: blur(4px);
+      }
+      .tsb-gold-bar-card {
+        position: relative; width: min(420px, 100%);
+        background: var(--paper, #fffdf5); border: 3px solid var(--ink, #111);
+        border-radius: 18px; padding: 22px 20px; box-sizing: border-box;
+        box-shadow: 0 20px 48px rgba(0,0,0,0.4), 6px 6px 0 var(--ink, #111);
+        text-align: center; font-family: -apple-system, BlinkMacSystemFont, "Space Grotesk", sans-serif;
+      }
+      .tsb-gold-bar-crown { font-size: 32px; margin-bottom: 6px; }
+      .tsb-gold-bar-tag {
+        font-family: var(--font-head, "Archivo Black", sans-serif);
+        font-size: 10px; letter-spacing: 1px; color: #b45309; margin-bottom: 4px;
+      }
+      .tsb-gold-bar-h3 {
+        font-family: var(--font-head, "Archivo Black", sans-serif);
+        font-size: 18px; color: var(--ink, #111); margin: 0 0 8px;
+      }
+      .tsb-gold-bar-p {
+        font-size: 12.5px; line-height: 1.5; color: #444; margin: 0 0 14px;
+      }
+      .tsb-gold-bar-perks {
+        background: #f7f3e8; border: 2px dashed var(--ink, #111); border-radius: 12px;
+        padding: 10px 14px; margin-bottom: 16px; text-align: left;
+      }
+      .tsb-gold-bar-perk {
+        font-size: 12px; font-weight: 700; color: #111; margin: 4px 0;
+      }
+      .tsb-gold-bar-btns {
+        display: flex; flex-direction: column; gap: 8px;
+      }
+      .tsb-gold-bar-cta {
+        display: block; background: var(--yellow, #ffc800); color: #111;
+        border: 2.5px solid var(--ink, #111); border-radius: 10px;
+        padding: 10px 14px; font-family: var(--font-head, "Archivo Black", sans-serif);
+        font-size: 12.5px; text-decoration: none; box-shadow: 3px 3px 0 var(--ink, #111);
+        font-weight: 900;
+      }
+      .tsb-gold-bar-dismiss {
+        background: transparent; border: none; font-size: 12px; color: #666;
+        cursor: pointer; text-decoration: underline; padding: 4px;
+      }
     `;
     document.head.appendChild(st);
   }
 
-  var activeSheetOverlay = null;
+  function enterEditMode() {
+    if (isEditMode) return;
+    isEditMode = true;
+    injectLiveDockStyles();
+    bar.classList.add("tsb-bar--reordering");
+    try { if (navigator.vibrate) navigator.vibrate([35, 50]); } catch (e) {}
 
-  function openBarCustomizerSheet(selectedId) {
-    injectBarSheetStyles();
-    if (activeSheetOverlay) {
-      try { activeSheetOverlay.remove(); } catch (e) {}
-      activeSheetOverlay = null;
+    renderLiveDock();
+    updateSlotHighlight();
+  }
+
+  function exitEditMode() {
+    if (!isEditMode) return;
+    isEditMode = false;
+    bar.classList.remove("tsb-bar--reordering");
+    bar.querySelectorAll(".tsb-bar__item").forEach(function (it) {
+      it.classList.remove("tsb-bar__item--selected", "tsb-bar__item--floating");
+      it.style.transform = "";
+    });
+    if (liveDock) {
+      try { liveDock.remove(); } catch (e) {}
+      liveDock = null;
     }
+    setActive(currentActive());
+  }
 
-    var ov = document.createElement("div");
-    ov.className = "tsb-barsheet-overlay";
-    ov.id = "tsbBarSheetOverlay";
+  function updateSlotHighlight() {
+    var items = bar.querySelectorAll(".tsb-bar__item");
+    items.forEach(function (it, idx) {
+      it.classList.toggle("tsb-bar__item--selected", idx === selectedSlotIdx);
+    });
+  }
 
-    function renderSheetContent() {
-      var isIcons = bar.classList.contains("tsb-bar--icons-only") || barLabelsPref === "icons";
 
-      ov.innerHTML = `
-        <div class="tsb-barsheet" role="dialog" aria-modal="true" aria-labelledby="tsbSheetTitle">
-          <div class="tsb-sheet-handle"></div>
-          <div class="tsb-sheet-head">
-            <h2 class="tsb-sheet-title" id="tsbSheetTitle">Customize Action Bar</h2>
-            <p class="tsb-sheet-sub">Shift positions, swap tools, or toggle titles</p>
-          </div>
+  function showGoldModal() {
+    var old = document.getElementById("tsbGoldBarModal");
+    if (old) old.remove();
 
-          <!-- Titles Switcher -->
-          <div class="tsb-sheet-seg">
-            <button type="button" class="tsb-sheet-segbtn ${!isIcons ? 'active' : ''}" id="tsbSegLabels">
-              🏷️ Show Labels
-            </button>
-            <button type="button" class="tsb-sheet-segbtn ${isIcons ? 'active' : ''}" id="tsbSegIcons">
-              ✦ Icons Only
-            </button>
-          </div>
-
-          <!-- Active Slots Shifting -->
-          <div class="tsb-slot-list" id="tsbSlotList">
-            ${activeSlots.map(function (k, idx) {
-              var def = ITEM_DEFS[k] || ITEM_DEFS.home;
-              var canLeft = idx > 0;
-              var canRight = idx < activeSlots.length - 1;
-              return `
-                <div class="tsb-slot-row">
-                  <div class="tsb-slot-info">
-                    <span class="tsb-slot-num">#${idx + 1}</span>
-                    <span>${def.lbl}</span>
-                  </div>
-                  <div class="tsb-slot-actions">
-                    ${canLeft ? `<button type="button" class="tsb-slot-btn" data-shift-left="${idx}" title="Shift Left">◀</button>` : ''}
-                    ${canRight ? `<button type="button" class="tsb-slot-btn" data-shift-right="${idx}" title="Shift Right">▶</button>` : ''}
-                    <button type="button" class="tsb-slot-btn" data-swap-slot="${idx}" style="background:var(--yellow,#ffc800);" title="Swap Tool">⇄</button>
-                  </div>
-                </div>
-              `;
-            }).join("")}
-          </div>
-
-          <div id="tsbSwapContainer" hidden>
-            <div style="font-size:11px; font-weight:700; color:#666; margin-bottom:6px;">Choose tool to place in slot:</div>
-            <div class="tsb-pool-grid">
-              ${Object.keys(ITEM_DEFS).map(function (k) {
-                var it = ITEM_DEFS[k];
-                var inBar = activeSlots.indexOf(k) >= 0;
-                return `<button type="button" class="tsb-pool-item" data-choose-tool="${k}" style="${inBar ? 'opacity:0.6;' : ''}">${it.lbl}</button>`;
-              }).join("")}
-            </div>
-          </div>
-
-          <button type="button" class="tsb-sheet-done-btn" id="tsbSheetDone" style="margin-top:14px;">
-            ✓ Done
-          </button>
+    var modal = document.createElement("div");
+    modal.id = "tsbGoldBarModal";
+    modal.className = "tsb-gold-bar-modal";
+    modal.innerHTML = `
+      <div class="tsb-gold-bar-backdrop"></div>
+      <div class="tsb-gold-bar-card">
+        <div class="tsb-gold-bar-crown">👑</div>
+        <div class="tsb-gold-bar-tag">THESMALLBOOK GOLD</div>
+        <h3 class="tsb-gold-bar-h3">Unlock 5 Action Buttons</h3>
+        <p class="tsb-gold-bar-p">
+          Free readers can customize up to 4 action buttons. Keeping 5 buttons in your bottom dock is an exclusive privilege of TheSmallBook Gold (99 Monthly / 999 Annual).
+        </p>
+        <div class="tsb-gold-bar-perks">
+          <div class="tsb-gold-bar-perk">✓ 5-Button Custom Action Bar</div>
+          <div class="tsb-gold-bar-perk">✓ Ad-free executive library</div>
+          <div class="tsb-gold-bar-perk">✓ Full offline audio lounges</div>
+          <div class="tsb-gold-bar-perk">✓ 137 Startup Graveyard autopsies</div>
         </div>
-      `;
+        <div class="tsb-gold-bar-btns">
+          <a href="gold.html#goldPricing" class="tsb-gold-bar-cta">UNLOCK WITH GOLD · ₹99 →</a>
+          <button type="button" class="tsb-gold-bar-dismiss" id="tsbGoldModalDismiss">Keep 4 Buttons</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
 
-      /* Event listeners inside sheet */
-      var btnLabels = ov.querySelector("#tsbSegLabels");
-      var btnIcons = ov.querySelector("#tsbSegIcons");
-      if (btnLabels && btnIcons) {
-        btnLabels.addEventListener("click", function () {
-          bar.classList.remove("tsb-bar--icons-only");
-          document.documentElement.removeAttribute("data-bar-labels");
-          barLabelsPref = "labels";
-          try { localStorage.setItem("tsb_bar_labels", "labels"); } catch (e) {}
-          try { if (navigator.vibrate) navigator.vibrate(10); } catch (e) {}
-          renderSheetContent();
-        });
-        btnIcons.addEventListener("click", function () {
-          bar.classList.add("tsb-bar--icons-only");
-          document.documentElement.setAttribute("data-bar-labels", "icons");
-          barLabelsPref = "icons";
-          try { localStorage.setItem("tsb_bar_labels", "icons"); } catch (e) {}
-          try { if (navigator.vibrate) navigator.vibrate(10); } catch (e) {}
-          renderSheetContent();
-        });
-      }
+    modal.querySelector(".tsb-gold-bar-backdrop").onclick = function () { modal.remove(); };
+    modal.querySelector("#tsbGoldModalDismiss").onclick = function () { modal.remove(); };
+  }
 
-      /* Shift buttons */
-      ov.querySelectorAll("[data-shift-left]").forEach(function (b) {
-        b.addEventListener("click", function () {
-          var idx = parseInt(b.getAttribute("data-shift-left"), 10);
-          if (idx > 0) {
-            var tmp = activeSlots[idx];
-            activeSlots[idx] = activeSlots[idx - 1];
-            activeSlots[idx - 1] = tmp;
-            saveAndRefreshBar();
-            renderSheetContent();
-          }
-        });
-      });
-
-      ov.querySelectorAll("[data-shift-right]").forEach(function (b) {
-        b.addEventListener("click", function () {
-          var idx = parseInt(b.getAttribute("data-shift-right"), 10);
-          if (idx < activeSlots.length - 1) {
-            var tmp = activeSlots[idx];
-            activeSlots[idx] = activeSlots[idx + 1];
-            activeSlots[idx + 1] = tmp;
-            saveAndRefreshBar();
-            renderSheetContent();
-          }
-        });
-      });
-
-      /* Swap slot with pool */
-      var pendingSwapIdx = -1;
-      ov.querySelectorAll("[data-swap-slot]").forEach(function (b) {
-        b.addEventListener("click", function () {
-          pendingSwapIdx = parseInt(b.getAttribute("data-swap-slot"), 10);
-          var swapCont = ov.querySelector("#tsbSwapContainer");
-          if (swapCont) swapCont.hidden = false;
-        });
-      });
-
-      ov.querySelectorAll("[data-choose-tool]").forEach(function (b) {
-        b.addEventListener("click", function () {
-          var toolKey = b.getAttribute("data-choose-tool");
-          if (pendingSwapIdx >= 0 && ITEM_DEFS[toolKey]) {
-            activeSlots[pendingSwapIdx] = toolKey;
-            saveAndRefreshBar();
-            renderSheetContent();
-          }
-        });
-      });
-
-      var doneBtn = ov.querySelector("#tsbSheetDone");
-      if (doneBtn) {
-        doneBtn.addEventListener("click", closeBarCustomizerSheet);
-      }
+  function renderLiveDock() {
+    if (liveDock) {
+      try { liveDock.remove(); } catch (e) {}
+      liveDock = null;
     }
 
-    function saveAndRefreshBar() {
-      try {
-        localStorage.setItem("tsb_custom_bar", JSON.stringify(activeSlots));
-      } catch (e) {}
+    var dock = document.createElement("div");
+    dock.className = "tsb-livedock";
+    dock.id = "tsbLiveDock";
+
+    var isIcons = bar.classList.contains("tsb-bar--icons-only") || barLabelsPref === "icons";
+    var activeSlotName = (ITEM_DEFS[activeSlots[selectedSlotIdx]] && ITEM_DEFS[activeSlots[selectedSlotIdx]].lbl) || "Slot";
+    var isGold = checkIsGold();
+    var hasFive = activeSlots.length >= 5;
+
+    var slotBarHtml = hasFive
+      ? `<div class="tsb-livedock__slotbar">
+          <div class="tsb-livedock__slotstatus">👑 <b>5 BUTTONS ACTIVE (GOLD VIP)</b></div>
+          <button type="button" class="tsb-livedock__slotbtn" id="tsbDockSlotToggle">Switch to 4</button>
+        </div>`
+      : `<div class="tsb-livedock__slotbar">
+          <div class="tsb-livedock__slotstatus">📱 <b>4 BUTTONS ACTIVE (FREE)</b></div>
+          <button type="button" class="tsb-livedock__slotbtn tsb-livedock__slotbtn--gold" id="tsbDockSlotToggle">+ Add 5th Button · Gold ₹99</button>
+        </div>`;
+
+    dock.innerHTML = `
+      <div class="tsb-livedock__top">
+        <span class="tsb-livedock__title">CUSTOMIZE ACTION BAR</span>
+        <div class="tsb-livedock__seg">
+          <button type="button" class="tsb-livedock__segbtn ${!isIcons ? 'active' : ''}" id="tsbDockSegLabels">Titles</button>
+          <button type="button" class="tsb-livedock__segbtn ${isIcons ? 'active' : ''}" id="tsbDockSegIcons">Icons</button>
+        </div>
+        <button type="button" class="tsb-livedock__done" id="tsbDockDone">✓ Done</button>
+      </div>
+      ${slotBarHtml}
+      <div class="tsb-livedock__hint">
+        Drag tabs below to reorder · Or tap a tool to replace <b>${activeSlotName}</b>:
+      </div>
+      <div class="tsb-livedock__shelf" id="tsbDockShelf">
+        ${Object.keys(ITEM_DEFS).map(function (k) {
+          var def = ITEM_DEFS[k];
+          var inBar = activeSlots.indexOf(k) >= 0;
+          return `
+            <button type="button" class="tsb-shelf-item ${inBar ? 'is-inbar' : ''}" data-tool="${k}">
+              <span>${def.lbl}</span>
+            </button>
+          `;
+        }).join("")}
+      </div>
+    `;
+
+    document.body.appendChild(dock);
+    liveDock = dock;
+
+    var segLabels = dock.querySelector("#tsbDockSegLabels");
+    var segIcons = dock.querySelector("#tsbDockSegIcons");
+    if (segLabels && segIcons) {
+      segLabels.addEventListener("click", function () {
+        bar.classList.remove("tsb-bar--icons-only");
+        document.documentElement.removeAttribute("data-bar-labels");
+        barLabelsPref = "labels";
+        try { localStorage.setItem("tsb_bar_labels", "labels"); } catch (e) {}
+        try { if (navigator.vibrate) navigator.vibrate(10); } catch (e) {}
+        renderLiveDock();
+      });
+      segIcons.addEventListener("click", function () {
+        bar.classList.add("tsb-bar--icons-only");
+        document.documentElement.setAttribute("data-bar-labels", "icons");
+        barLabelsPref = "icons";
+        try { localStorage.setItem("tsb_bar_labels", "icons"); } catch (e) {}
+        try { if (navigator.vibrate) navigator.vibrate(10); } catch (e) {}
+        renderLiveDock();
+      });
+    }
+
+    var doneBtn = dock.querySelector("#tsbDockDone");
+    if (doneBtn) doneBtn.addEventListener("click", exitEditMode);
+
+    var slotToggleBtn = dock.querySelector("#tsbDockSlotToggle");
+    if (slotToggleBtn) {
+      slotToggleBtn.addEventListener("click", function () {
+        if (activeSlots.length >= 5) {
+          activeSlots = activeSlots.slice(0, 4);
+          try { localStorage.setItem("tsb_custom_bar", JSON.stringify(activeSlots)); } catch (e) {}
+          bar.innerHTML = buildBarHtml(activeSlots);
+          if (selectedSlotIdx >= 4) selectedSlotIdx = 3;
+          try { if (navigator.vibrate) navigator.vibrate(15); } catch (e) {}
+          updateSlotHighlight();
+          renderLiveDock();
+          cleanToast("Action bar switched to 4 buttons.");
+        } else {
+          if (!checkIsGold()) {
+            showGoldModal();
+            return;
+          }
+          var candidates = ["ask", "plus", "messages", "library", "notes", "random", "graveyard", "scan", "continue"];
+          var nextTool = "ask";
+          for (var c = 0; c < candidates.length; c++) {
+            if (activeSlots.indexOf(candidates[c]) === -1) {
+              nextTool = candidates[c];
+              break;
+            }
+          }
+          activeSlots.push(nextTool);
+          try { localStorage.setItem("tsb_custom_bar", JSON.stringify(activeSlots)); } catch (e) {}
+          bar.innerHTML = buildBarHtml(activeSlots);
+          selectedSlotIdx = activeSlots.length - 1;
+          try { if (navigator.vibrate) navigator.vibrate([25, 30]); } catch (e) {}
+          updateSlotHighlight();
+          renderLiveDock();
+          cleanToast("5th button added to your action bar! ✨");
+        }
+      });
+    }
+
+    dock.querySelectorAll("[data-tool]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var toolKey = btn.getAttribute("data-tool");
+        if (toolKey && ITEM_DEFS[toolKey]) {
+          activeSlots[selectedSlotIdx] = toolKey;
+          try { localStorage.setItem("tsb_custom_bar", JSON.stringify(activeSlots)); } catch (e) {}
+          bar.innerHTML = buildBarHtml(activeSlots);
+          try { if (navigator.vibrate) navigator.vibrate(15); } catch (e) {}
+          updateSlotHighlight();
+          renderLiveDock();
+        }
+      });
+    });
+  }
+
+  /* ---------- Smooth Live Drag & Drop Interaction ---------- */
+  var dragItem = null;
+  var dragIdx = -1;
+  var startX = 0;
+  var initialLeft = 0;
+  var longTimer = null;
+  var suppressClick = false;
+
+  function onTouchStart(e) {
+    var item = e.target && e.target.closest ? e.target.closest(".tsb-bar__item") : null;
+    if (!item) return;
+
+    var touch = e.touches ? e.touches[0] : e;
+    startX = touch.clientX;
+
+    if (!isEditMode) {
+      longTimer = setTimeout(function () {
+        longTimer = null;
+        suppressClick = true;
+        var items = Array.from(bar.querySelectorAll(".tsb-bar__item"));
+        selectedSlotIdx = items.indexOf(item);
+        enterEditMode();
+      }, 400);
+      return;
+    }
+
+    /* Already in edit mode: start dragging immediately */
+    var items = Array.from(bar.querySelectorAll(".tsb-bar__item"));
+    dragIdx = items.indexOf(item);
+    selectedSlotIdx = dragIdx;
+    updateSlotHighlight();
+    renderLiveDock();
+
+    dragItem = item;
+    dragItem.classList.add("tsb-bar__item--floating");
+    initialLeft = dragItem.getBoundingClientRect().left;
+  }
+
+  function onTouchMove(e) {
+    var touch = e.touches ? e.touches[0] : e;
+    var currentX = touch.clientX;
+    var dx = currentX - startX;
+
+    if (!isEditMode) {
+      if (Math.abs(dx) > 10) {
+        if (longTimer) { clearTimeout(longTimer); longTimer = null; }
+      }
+      return;
+    }
+
+    if (!dragItem) return;
+    if (e.cancelable) e.preventDefault();
+
+    dragItem.style.transform = "translate3d(" + dx + "px, -12px, 0) scale(1.1)";
+
+    /* Detect hover over other slots and swap live */
+    var items = Array.from(bar.querySelectorAll(".tsb-bar__item"));
+    var barRect = bar.getBoundingClientRect();
+    var slotWidth = barRect.width / items.length;
+    var relativeX = currentX - barRect.left;
+    var targetIdx = Math.floor(relativeX / slotWidth);
+    targetIdx = Math.max(0, Math.min(items.length - 1, targetIdx));
+
+    if (targetIdx !== dragIdx && targetIdx >= 0 && targetIdx < activeSlots.length) {
+      var tmp = activeSlots[dragIdx];
+      activeSlots[dragIdx] = activeSlots[targetIdx];
+      activeSlots[targetIdx] = tmp;
+
+      dragIdx = targetIdx;
+      selectedSlotIdx = targetIdx;
+
+      try { localStorage.setItem("tsb_custom_bar", JSON.stringify(activeSlots)); } catch (e) {}
       bar.innerHTML = buildBarHtml(activeSlots);
-      setActive(currentActive());
+      updateSlotHighlight();
       try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) {}
-    }
 
-    function closeBarCustomizerSheet() {
-      if (activeSheetOverlay) {
-        try { activeSheetOverlay.remove(); } catch (e) {}
-        activeSheetOverlay = null;
+      /* re-bind dragItem to newly positioned element */
+      var newItems = Array.from(bar.querySelectorAll(".tsb-bar__item"));
+      dragItem = newItems[targetIdx];
+      if (dragItem) {
+        dragItem.classList.add("tsb-bar__item--floating");
+        dragItem.style.transform = "translate3d(" + dx + "px, -12px, 0) scale(1.1)";
       }
     }
-
-    renderSheetContent();
-    document.body.appendChild(ov);
-    activeSheetOverlay = ov;
-
-    ov.addEventListener("click", function (e) {
-      if (e.target === ov) closeBarCustomizerSheet();
-    });
-    document.addEventListener("keydown", function escSheet(e) {
-      if (e.key === "Escape" && activeSheetOverlay) {
-        closeBarCustomizerSheet();
-        document.removeEventListener("keydown", escSheet);
-      }
-    });
   }
 
-  /* ---------- Long-Press Touch & Mouse Detection ---------- */
-  var longPressTimer = null;
-  var suppressNextClick = false;
-  var pressStartPos = { x: 0, y: 0 };
-
-  function cancelLongPress() {
-    if (longPressTimer) {
-      clearTimeout(longPressTimer);
-      longPressTimer = null;
+  function onTouchEnd() {
+    if (longTimer) { clearTimeout(longTimer); longTimer = null; }
+    if (dragItem) {
+      dragItem.classList.remove("tsb-bar__item--floating");
+      dragItem.classList.add("tsb-bar__item--dropping");
+      dragItem.style.transform = "";
+      setTimeout(function () {
+        if (dragItem) dragItem.classList.remove("tsb-bar__item--dropping");
+        dragItem = null;
+      }, 200);
+      try { if (navigator.vibrate) navigator.vibrate(15); } catch (e) {}
     }
   }
 
-  function startLongPress(item, e) {
-    cancelLongPress();
-    var touch = e.touches ? e.touches[0] : e;
-    pressStartPos = { x: touch.clientX, y: touch.clientY };
+  bar.addEventListener("touchstart", onTouchStart, { passive: true });
+  window.addEventListener("touchmove", onTouchMove, { passive: false });
+  window.addEventListener("touchend", onTouchEnd, { passive: true });
+  window.addEventListener("touchcancel", onTouchEnd, { passive: true });
 
-    longPressTimer = setTimeout(function () {
-      longPressTimer = null;
-      suppressNextClick = true;
-      try { if (navigator.vibrate) navigator.vibrate([25, 45]); } catch (err) {}
-      item.style.transform = "scale(1.12)";
-      setTimeout(function () { item.style.transform = ""; }, 200);
-      openBarCustomizerSheet(item.getAttribute("data-tab"));
-    }, 450);
-  }
+  bar.addEventListener("mousedown", onTouchStart);
+  window.addEventListener("mousemove", onTouchMove);
+  window.addEventListener("mouseup", onTouchEnd);
 
-  bar.addEventListener("touchstart", function (e) {
-    var item = e.target && e.target.closest ? e.target.closest(".tsb-bar__item") : null;
-    if (item) startLongPress(item, e);
-  }, { passive: true });
-
-  bar.addEventListener("touchmove", function (e) {
-    if (!longPressTimer) return;
-    var touch = e.touches ? e.touches[0] : e;
-    var dx = Math.abs(touch.clientX - pressStartPos.x);
-    var dy = Math.abs(touch.clientY - pressStartPos.y);
-    if (dx > 10 || dy > 10) cancelLongPress();
-  }, { passive: true });
-
-  bar.addEventListener("touchend", function () { cancelLongPress(); }, { passive: true });
-  bar.addEventListener("touchcancel", function () { cancelLongPress(); }, { passive: true });
-
-  bar.addEventListener("mousedown", function (e) {
-    if (e.button !== 0) return;
-    var item = e.target && e.target.closest ? e.target.closest(".tsb-bar__item") : null;
-    if (item) startLongPress(item, e);
-  });
-
-  bar.addEventListener("mousemove", function (e) {
-    if (!longPressTimer) return;
-    var dx = Math.abs(e.clientX - pressStartPos.x);
-    var dy = Math.abs(e.clientY - pressStartPos.y);
-    if (dx > 10 || dy > 10) cancelLongPress();
-  });
-
-  bar.addEventListener("mouseup", function () { cancelLongPress(); });
-  bar.addEventListener("mouseleave", function () { cancelLongPress(); });
-
-  /* Suppress navigation if long-press triggered */
   bar.addEventListener("click", function (e) {
-    if (suppressNextClick) {
+    if (suppressClick) {
       e.preventDefault();
       e.stopPropagation();
-      suppressNextClick = false;
+      suppressClick = false;
+      return false;
+    }
+    if (isEditMode) {
+      e.preventDefault();
+      e.stopPropagation();
+      var item = e.target && e.target.closest ? e.target.closest(".tsb-bar__item") : null;
+      if (item) {
+        var items = Array.from(bar.querySelectorAll(".tsb-bar__item"));
+        selectedSlotIdx = items.indexOf(item);
+        updateSlotHighlight();
+        renderLiveDock();
+      }
       return false;
     }
   }, true);
 
+  /* Tap outside dock or bar to exit edit mode */
+  document.addEventListener("click", function (e) {
+    if (isEditMode) {
+      if (!bar.contains(e.target) && (!liveDock || !liveDock.contains(e.target))) {
+        exitEditMode();
+      }
+    }
+  });
 })();
+

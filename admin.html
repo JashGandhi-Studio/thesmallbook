@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <title>TheSmallBook Command Center | Executive Admin</title>
+  <meta name="description" content="TheSmallBook Executive Command Center and Central Operations Console.">
+  <meta property="og:title" content="TheSmallBook Command Center | Executive Admin">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#090d16">
+  <style>
+    :root {
+      --bg-base: #080c14;
+      --bg-surface: #0e1422;
+      --bg-surface-elevated: #151d30;
+      --bg-surface-hover: #1c2740;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-medium: rgba(255, 255, 255, 0.14);
+      --border-strong: rgba(255, 255, 255, 0.22);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-primary: #38bdf8;
+      --accent-indigo: #6366f1;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 18px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 24px -4px rgba(56, 189, 248, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg-base);
+      color: var(--text-primary);
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 13.5px;
+      line-height: 1.5;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* Monospace Utility */
+    .mono {
+      font-family: "JetBrains Mono", monospace;
+      letter-spacing: -0.2px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      font-family: "Inter", sans-serif;
+      font-size: 12.5px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      padding: 8px 14px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: #38bdf8;
+      color: #04121e;
+      border-color: #38bdf8;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+    }
+    .btn-primary:hover {
+      background: #7dd3fc;
+      border-color: #7dd3fc;
+    }
+    .btn-secondary {
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+      border-color: var(--border-medium);
+    }
+    .btn-secondary:hover {
+      background: var(--bg-surface-hover);
+      border-color: var(--border-strong);
+    }
+    .btn-danger {
+      background: rgba(244, 63, 94, 0.12);
+      color: #fb7185;
+      border-color: rgba(244, 63, 94, 0.3);
+    }
+    .btn-danger:hover {
+      background: rgba(244, 63, 94, 0.2);
+      border-color: rgba(244, 63, 94, 0.5);
+    }
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 11.5px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+    .badge-live {
+      background: rgba(16, 185, 129, 0.12);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+    .badge-live::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #34d399;
+      box-shadow: 0 0 8px #34d399;
+    }
+    .badge-amber {
+      background: rgba(245, 158, 11, 0.12);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+    .badge-blue {
+      background: rgba(56, 189, 248, 0.12);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+    .badge-gray {
+      background: rgba(148, 163, 184, 0.1);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    /* Inputs */
+    .form-input {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      color: var(--text-primary);
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+      transition: all 0.15s ease;
+      width: 100%;
+    }
+    .form-input:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    }
+
+    /* =========================================================
+       LOGIN GATEWAY (AUTHENTICATION OVERLAY)
+       ========================================================= */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 20%, #151f38 0%, #080c14 70%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+    .login-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-xl);
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 32px rgba(56, 189, 248, 0.1);
+      position: relative;
+    }
+    .login-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .login-logo-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid var(--border-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .login-brand-title {
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+      color: #fff;
+      letter-spacing: -0.3px;
+    }
+    .login-brand-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+    }
+    .login-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+    .login-form-group {
+      margin-bottom: 16px;
+    }
+    .login-form-group label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .login-input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .login-input-wrap svg {
+      position: absolute;
+      left: 12px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .login-input-wrap input {
+      padding-left: 36px;
+    }
+    .login-quick-creds {
+      background: rgba(56, 189, 248, 0.06);
+      border: 1px dashed rgba(56, 189, 248, 0.25);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.15s;
+    }
+    .login-quick-creds:hover {
+      background: rgba(56, 189, 248, 0.12);
+    }
+    .login-quick-creds span {
+      font-size: 11.5px;
+      color: #7dd3fc;
+      font-weight: 500;
+    }
+    .login-err {
+      color: #fb7185;
+      font-size: 12px;
+      margin-top: 10px;
+      display: none;
+      font-weight: 500;
+    }
+
+    /* =========================================================
+       APP HEADER & GLOBAL BAR
+       ========================================================= */
+    .top-header {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .top-header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid var(--border-medium);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .brand-name {
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .header-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .admin-profile-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-medium);
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--text-primary);
+    }
+    .admin-avatar-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-green);
+    }
+
+    /* =========================================================
+       SUB-NAVIGATION TABS (LINEAR STYLE)
+       ========================================================= */
+    .subnav-bar {
+      background: var(--bg-base);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 60px;
+      z-index: 40;
+    }
+    .subnav-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .subnav-inner::-webkit-scrollbar {
+      display: none;
+    }
+    .nav-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .nav-tab:hover {
+      color: var(--text-primary);
+    }
+    .nav-tab.is-active {
+      color: #38bdf8;
+      border-bottom-color: #38bdf8;
+      font-weight: 600;
+    }
+    .nav-tab svg {
+      opacity: 0.75;
+      transition: opacity 0.15s ease;
+    }
+    .nav-tab.is-active svg {
+      opacity: 1;
+      color: #38bdf8;
+    }
+
+    /* =========================================================
+       MAIN WORKSPACE LAYOUT
+       ========================================================= */
+    .admin-main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 28px 24px 80px;
+    }
+
+    /* View Sections */
+    .admin-view-panel {
+      display: none;
+    }
+    .admin-view-panel.is-active {
+      display: block;
+      animation: fadeIn 0.2s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Section Headers */
+    .section-head {
+      margin-bottom: 24px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .section-head-title {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.3px;
+    }
+    .section-head-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-md);
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-subtitle {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      margin-bottom: 18px;
+    }
+
+    /* =========================================================
+       METRICS & TELEMETRY DECK
+       ========================================================= */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .metric-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
+    }
+    .metric-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .metric-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .metric-icon {
+      color: var(--accent-primary);
+    }
+    .metric-body {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .metric-val {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+    .metric-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #34d399;
+    }
+    .metric-footer {
+      margin-top: 12px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* =========================================================
+       FEATURE FLAGS & REMOTE MATRIX
+       ========================================================= */
+    .features-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .feature-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      transition: border-color 0.15s ease;
+    }
+    .feature-row:hover {
+      border-color: var(--border-medium);
+    }
+    .feature-info {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .feature-icon-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .feature-icon-badge.amber {
+      background: rgba(245, 158, 11, 0.08);
+      border-color: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+    }
+    .feature-icon-badge.green {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+    }
+    .feature-icon-badge.rose {
+      background: rgba(244, 63, 94, 0.08);
+      border-color: rgba(244, 63, 94, 0.2);
+      color: #fb7185;
+    }
+    .feature-texts {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .feature-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .feature-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .feature-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* Modern Linear Switch Toggle */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #334155;
+      border: 1px solid var(--border-medium);
+      transition: 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      border-radius: 999px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 2px;
+      bottom: 2px;
+      background-color: #fff;
+      transition: 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+    input:checked + .slider {
+      background-color: #10b981;
+      border-color: #10b981;
+    }
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    /* =========================================================
+       DATATABLES (READERS & BOOKS)
+       ========================================================= */
+    .table-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    .table-toolbar {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .search-box-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 320px;
+    }
+    .search-box-wrap svg {
+      position: absolute;
+      left: 12px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .search-box-wrap input {
+      padding-left: 36px;
+    }
+    .table-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    .admin-table th {
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .admin-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 13px;
+      color: var(--text-primary);
+      vertical-align: middle;
+    }
+    .admin-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .admin-table tr:last-child td {
+      border-bottom: none;
+    }
+    .user-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-medium);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #38bdf8;
+    }
+    .book-thumb {
+      width: 36px;
+      height: 48px;
+      border-radius: 4px;
+      object-fit: cover;
+      border: 1px solid var(--border-medium);
+      background: #111;
+    }
+
+    /* Table Pagination */
+    .table-pagination {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .pagination-btns {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* =========================================================
+       PLANS & PRICING GRID
+       ========================================================= */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .pricing-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    .pricing-card.is-featured {
+      border-color: #38bdf8;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.12);
+    }
+    .pricing-head {
+      margin-bottom: 16px;
+    }
+    .pricing-tier-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pricing-amount-row {
+      margin: 14px 0 6px;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .pricing-curr {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+    .pricing-val {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .pricing-term {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .pricing-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    /* =========================================================
+       SYSTEM AUDIT CONSOLE
+       ========================================================= */
+    .console-box {
+      background: #04070e;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      color: #94a3b8;
+      height: 280px;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+    .console-line {
+      display: flex;
+      gap: 12px;
+    }
+    .console-time {
+      color: #64748b;
+      user-select: none;
+    }
+    .console-tag {
+      font-weight: 600;
+    }
+    .console-tag.info { color: #38bdf8; }
+    .console-tag.ok { color: #34d399; }
+    .console-tag.warn { color: #fbbf24; }
+
+    /* =========================================================
+       TOAST NOTIFICATION
+       ========================================================= */
+    .toast-pill {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      border: 1px solid #38bdf8;
+      border-radius: 999px;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 18px rgba(56, 189, 248, 0.3);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      z-index: 2000;
+      animation: toastSlide 0.25s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+    @keyframes toastSlide {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .top-header-inner {
+        padding: 0 16px;
+      }
+      .admin-main {
+        padding: 20px 16px 60px;
+      }
+      .header-meta-item.hide-mobile {
+        display: none;
+      }
+      .feature-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .switch {
+        align-self: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================
+       LOGIN GATEWAY (AUTHENTICATION OVERLAY)
+       ========================================================= -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="login-logo-icon">📕</div>
+        <div>
+          <div class="login-brand-title">TheSmallBook</div>
+          <div class="login-brand-sub">Executive Console</div>
+        </div>
+      </div>
+
+      <p class="login-desc">
+        Enter privileged administrative credentials to access real-time system telemetry, feature flags, and reader operations.
+      </p>
+
+      <form id="adminLoginForm">
+        <div class="login-form-group">
+          <label for="adminUsername">Operator ID</label>
+          <div class="login-input-wrap">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <input class="form-input" id="adminUsername" type="text" autocomplete="username" placeholder="Enter Operator ID" required>
+          </div>
+        </div>
+
+        <div class="login-form-group">
+          <label for="adminPassword">Security Key</label>
+          <div class="login-input-wrap">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input class="form-input" id="adminPassword" type="password" autocomplete="current-password" placeholder="Enter Security Key" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 10px;" id="btnLoginSubmit">
+          <span>Authenticate & Open Console</span>
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+
+        <div class="login-err" id="loginErrMsg">
+          Invalid administrative credentials. Access denied.
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       EXECUTIVE APP HEADER
+       ========================================================= -->
+  <header class="top-header">
+    <div class="top-header-inner">
+      <div class="brand-group">
+        <div class="brand-mark">📕</div>
+        <div class="brand-name">
+          <span>TheSmallBook</span>
+          <span class="badge badge-gray mono">CONSOLE</span>
+        </div>
+      </div>
+
+      <div class="header-meta">
+        <div class="header-meta-item hide-mobile">
+          <span class="badge badge-live">SYSTEM LIVE</span>
+        </div>
+        <div class="header-meta-item hide-mobile mono">
+          <span id="liveClock">14:00:00 UTC</span>
+        </div>
+        <div class="admin-profile-chip">
+          <span class="admin-avatar-dot"></span>
+          <span class="mono" style="font-weight:600;">tsb_admin</span>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" id="btnAdminLogout" title="Log out of console">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>Exit</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================
+       SUB-NAVIGATION TABS (LINEAR STYLE)
+       ========================================================= -->
+  <nav class="subnav-bar">
+    <div class="subnav-inner">
+      <button type="button" class="nav-tab is-active" data-view="viewOverview">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <span>Overview & Telemetry</span>
+      </button>
+
+      <button type="button" class="nav-tab" data-view="viewFeatures">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+        <span>Remote Feature Matrix</span>
+      </button>
+
+      <button type="button" class="nav-tab" data-view="viewMonetization">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+          <line x1="1" y1="10" x2="23" y2="10"></line>
+        </svg>
+        <span>Plans & Monetization</span>
+      </button>
+
+      <button type="button" class="nav-tab" data-view="viewReaders">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <span>Reader Directory</span>
+      </button>
+
+      <button type="button" class="nav-tab" data-view="viewCatalog">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+        </svg>
+        <span>Catalog Registry</span>
+      </button>
+
+      <button type="button" class="nav-tab" data-view="viewAudit">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="4 17 10 11 4 5"></polyline>
+          <line x1="12" y1="19" x2="20" y2="19"></line>
+        </svg>
+        <span>System Logs & Audit</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- =========================================================
+       MAIN WORKSPACE
+       ========================================================= -->
+  <main class="admin-main">
+
+    <!-- TAB 1: OVERVIEW & TELEMETRY -->
+    <section class="admin-view-panel is-active" id="viewOverview">
+      <div class="section-head">
+        <div>
+          <h1 class="section-head-title">System Telemetry & Vitals</h1>
+          <p class="section-head-desc">Real-time health, library capacity, active sessions, and reader traffic.</p>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <a href="index.html" class="btn btn-secondary btn-sm" target="_blank">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+            <span>Open Main Library</span>
+          </a>
+          <button type="button" class="btn btn-primary btn-sm" id="btnSyncDiagnostics">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+            <span>Sync Diagnostics</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Visitors & Real-Time Telemetry Row -->
+      <div class="metrics-grid" style="margin-bottom: 24px;">
+        <div class="metric-card" style="border-left: 3px solid #10b981;">
+          <div class="metric-head">
+            <span class="metric-label">Live Visitors</span>
+            <span class="badge badge-live mono">ONLINE NOW</span>
+          </div>
+          <div class="metric-body">
+            <span class="metric-val" id="metricLiveVisitors">34</span>
+            <span class="metric-change" style="color:#10b981;">
+              ● Real-time
+            </span>
+          </div>
+          <div class="metric-footer">
+            <span>68% Mobile · 32% Desktop</span>
+            <span class="mono">India & Global</span>
+          </div>
+        </div>
+
+        <div class="metric-card" style="border-left: 3px solid #38bdf8;">
+          <div class="metric-head">
+            <span class="metric-label">Today's Sessions</span>
+            <span class="metric-icon">🌐</span>
+          </div>
+          <div class="metric-body">
+            <span class="metric-val" id="metricTotalSessions">8420</span>
+            <span class="metric-change">
+              <span>+14.2%</span>
+            </span>
+          </div>
+          <div class="metric-footer">
+            <span>Avg Session: 6m 42s</span>
+            <span class="mono">99.4% Bounce-free</span>
+          </div>
+        </div>
+
+        <div class="metric-card" style="border-left: 3px solid #f59e0b;">
+          <div class="metric-head">
+            <span class="metric-label">Page Views Today</span>
+            <span class="metric-icon">👁️</span>
+          </div>
+          <div class="metric-body">
+            <span class="metric-val" id="metricPageViews">19840</span>
+            <span class="metric-change" style="color:#fbbf24;">
+              <span>+22.8%</span>
+            </span>
+          </div>
+          <div class="metric-footer">
+            <span>Summaries & 3D Shelves</span>
+            <span class="mono">3.8 pages / session</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Core KPI Grid -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-head">
+            <span class="metric-label">Curated Titles</span>
+            <span class="metric-icon">📚</span>
+          </div>
+          <div class="metric-body">
+            <span class="metric-val" id="metricTotalBooks">520</span>
+            <span class="metric-change">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+              <span>+20 NEW</span>
+            </span>
+          </div>
+          <div class="metric-footer">
+            <span>52 Categories</span>
+            <span class="mono">100% Curated</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-head">
+            <span class="metric-label">Executive Lessons</span>
+            <span class="metric-icon">⚡</span>
+          </div>
+          <div class="metric-body">
+            <span class="metric-val" id="metricTotalLessons">3685</span>
+            <span class="metric-change">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+              <span>+140 NEW</span>
+            </span>
+          </div>
+          <div class="metric-footer">
+            <span>Avg 7.1 per book</span>
+            <span class="mono">8 min reads</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-head">
+            <span class="metric-label">Graveyard Autopsies</span>
+            <span class="metric-icon">💀</span>
+          </div>
+          <div class="metric-body">
+            <span class="metric-val" id="metricTotalGraves">400</span>
+            <span class="badge badge-amber mono" style="font-size:10px;">TRUTHBOX</span>
+          </div>
+          <div class="metric-footer">
+            <span>Anti-patterns mapped</span>
+            <span class="mono">100% Verified</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-head">
+            <span class="metric-label">Active Readers</span>
+            <span class="metric-icon">👥</span>
+          </div>
+          <div class="metric-body">
+            <span class="metric-val" id="metricActiveUsers">1428</span>
+            <span class="metric-change">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+              <span>+18.4%</span>
+            </span>
+          </div>
+          <div class="metric-footer">
+            <span>98.6% Completion rate</span>
+            <span class="mono">24.2k Reads</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Health Banner -->
+      <div class="card" style="border-left: 4px solid #10b981;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:10px;height:10px;border-radius:50%;background:#10b981;box-shadow:0 0 10px #10b981;"></div>
+            <div>
+              <div style="font-weight:700;color:#fff;font-size:14px;">All Operational Services Online & Nominal</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">
+                Edge worker, client storage caching, procedural audio engine, and UPI gateway intents operating at zero latency.
+              </div>
+            </div>
+          </div>
+          <span class="badge badge-live mono">LATENCY: 22ms</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: REMOTE FEATURE MATRIX -->
+    <section class="admin-view-panel" id="viewFeatures">
+      <div class="section-head">
+        <div>
+          <h1 class="section-head-title">Remote Configuration & Feature Flags</h1>
+          <p class="section-head-desc">Instant toggles synchronized across all reader sessions without requiring code deployment.</p>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" id="btnSaveFeatureFlags">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+            <polyline points="7 3 7 8 15 8"></polyline>
+          </svg>
+          <span>Save Remote Config</span>
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span>Monetization & Paywall Controls</span>
+        </div>
+        <p class="card-subtitle">Control subscriber access barriers, free tiers, and upgrade prompts.</p>
+
+        <div class="features-list">
+          <div class="feature-row">
+            <div class="feature-info">
+              <div class="feature-icon-badge amber">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              </div>
+              <div class="feature-texts">
+                <div class="feature-title-wrap">
+                  <span class="feature-title">Gold Paywall Lock</span>
+                  <span class="badge badge-amber">CRITICAL</span>
+                </div>
+                <span class="feature-desc">When disabled, all 520 book summaries, audio clips, and autopsies unlock 100% free for all readers.</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="flagGoldPaywall" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-info">
+              <div class="feature-icon-badge green">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              </div>
+              <div class="feature-texts">
+                <div class="feature-title-wrap">
+                  <span class="feature-title">Direct UPI Intent Checkout</span>
+                  <span class="badge badge-live">ENABLED</span>
+                </div>
+                <span class="feature-desc">Enables honest direct UPI intent deep links (GPay, PhonePe, Paytm, BHIM) on mobile devices.</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="flagDirectUpi" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          <span>Reader Experience & Interactive Modules</span>
+        </div>
+        <p class="card-subtitle">Toggle optional client-side visual, audio, and discovery features.</p>
+
+        <div class="features-list">
+          <div class="feature-row">
+            <div class="feature-info">
+              <div class="feature-icon-badge">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+              </div>
+              <div class="feature-texts">
+                <div class="feature-title-wrap">
+                  <span class="feature-title">3D Interactive Random Discovery</span>
+                  <span class="badge badge-blue">DOCK TOOL</span>
+                </div>
+                <span class="feature-desc">Interactive 3D rotatable book drop mode with WebGL lighting and physics.</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="flag3DDiscovery" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-info">
+              <div class="feature-icon-badge">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+              </div>
+              <div class="feature-texts">
+                <div class="feature-title-wrap">
+                  <span class="feature-title">Procedural Web Audio Engine</span>
+                  <span class="badge badge-gray">TACTILE</span>
+                </div>
+                <span class="feature-desc">Zero-network synthetic paper flips, wooden impacts, and subtle click responses.</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="flagSoundFX" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-info">
+              <div class="feature-icon-badge">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
+              </div>
+              <div class="feature-texts">
+                <div class="feature-title-wrap">
+                  <span class="feature-title">Audio Listening Rooms</span>
+                  <span class="badge badge-blue">OFFLINE</span>
+                </div>
+                <span class="feature-desc">Continuous episodic background audio player with range caching and scrubbers.</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="flagAudioRoom" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-info">
+              <div class="feature-icon-badge">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              </div>
+              <div class="feature-texts">
+                <div class="feature-title-wrap">
+                  <span class="feature-title">Visual 'NEW' Badges</span>
+                  <span class="badge badge-gray">EDITORIAL</span>
+                </div>
+                <span class="feature-desc">Show high-visibility NEW tags on the 20 newly curated titles and original releases.</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="flagNewBadges" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-info">
+              <div class="feature-icon-badge">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+              </div>
+              <div class="feature-texts">
+                <div class="feature-title-wrap">
+                  <span class="feature-title">Category Filter Rail</span>
+                  <span class="badge badge-gray">SHELF UX</span>
+                </div>
+                <span class="feature-desc">Streamlined horizontal pill scrolling rail for fast genre switching on the main screen.</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="flagCategoryRail" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-info">
+              <div class="feature-icon-badge amber">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+              </div>
+              <div class="feature-texts">
+                <div class="feature-title-wrap">
+                  <span class="feature-title">Graveyard Failure Autopsies</span>
+                  <span class="badge badge-amber">TRUTHBOX</span>
+                </div>
+                <span class="feature-desc">Display post-mortems and failure case studies explaining when core advice breaks down.</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="flagGraveyardAutopsies" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-info">
+              <div class="feature-icon-badge green">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              </div>
+              <div class="feature-texts">
+                <div class="feature-title-wrap">
+                  <span class="feature-title">TheSmallBook In-House Originals</span>
+                  <span class="badge badge-live">STUDIO</span>
+                </div>
+                <span class="feature-desc">Feature the 10 original TheSmallBook editions alongside curated non-fiction titles.</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="flagOriginalsSection" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-info">
+              <div class="feature-icon-badge">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              </div>
+              <div class="feature-texts">
+                <div class="feature-title-wrap">
+                  <span class="feature-title">Reader Community Reviews & Quotes</span>
+                  <span class="badge badge-gray">SOCIAL</span>
+                </div>
+                <span class="feature-desc">Display verified reader endorsements, key quotes, and discussion insights.</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="flagCommunityReviews" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-info">
+              <div class="feature-icon-badge">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+              </div>
+              <div class="feature-texts">
+                <div class="feature-title-wrap">
+                  <span class="feature-title">Action Bar Tool Customizer</span>
+                  <span class="badge badge-gray">DOCK</span>
+                </div>
+                <span class="feature-desc">Allow readers to customize action bar tools. Free users get up to 4 buttons; keeping 5 buttons requires Gold (₹99).</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="flagActionBarCustomizer" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="feature-row">
+            <div class="feature-info">
+              <div class="feature-icon-badge rose">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+              </div>
+              <div class="feature-texts">
+                <div class="feature-title-wrap">
+                  <span class="feature-title">Emergency Maintenance Mode</span>
+                  <span class="badge badge-gray">OVERRIDE</span>
+                </div>
+                <span class="feature-desc">Displays a graceful system maintenance overlay to readers while updates are in flight.</span>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="flagMaintenance">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: MONETIZATION & PLANS -->
+    <section class="admin-view-panel" id="viewMonetization">
+      <div class="section-head">
+        <div>
+          <h1 class="section-head-title">Monetization & Plan Controls</h1>
+          <p class="section-head-desc">Configure subscription pricing tiers, UPI payment targets, and conversion mechanics.</p>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" id="btnSavePricing">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+            <polyline points="7 3 7 8 15 8"></polyline>
+          </svg>
+          <span>Update Monetization Config</span>
+        </button>
+      </div>
+
+      <!-- Pricing Tiers Grid -->
+      <div class="pricing-grid">
+        <!-- Monthly Tier -->
+        <div class="pricing-card">
+          <div class="pricing-head">
+            <div class="pricing-tier-name">
+              <span>Gold Monthly</span>
+              <label class="switch" style="width:36px;height:20px;">
+                <input type="checkbox" id="tierMonthlyActive" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="pricing-amount-row">
+              <span class="pricing-curr">₹</span>
+              <span class="pricing-val" id="valMonthly">99</span>
+              <span class="pricing-term">/ month</span>
+            </div>
+          </div>
+          <div class="pricing-inputs">
+            <div>
+              <label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:4px;">Display Price (INR)</label>
+              <input type="number" class="form-input mono" id="inputMonthlyPrice" value="99">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:4px;">Paywall Kicker Headline</label>
+              <input type="text" class="form-input" id="inputMonthlyKicker" value="Cancel anytime, instant full unlock">
+            </div>
+          </div>
+        </div>
+
+        <!-- Annual Tier (Featured) -->
+        <div class="pricing-card is-featured">
+          <div class="pricing-head">
+            <div class="pricing-tier-name">
+              <span style="color:#38bdf8;">Gold Annual (Best Value)</span>
+              <label class="switch" style="width:36px;height:20px;">
+                <input type="checkbox" id="tierAnnualActive" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="pricing-amount-row">
+              <span class="pricing-curr">₹</span>
+              <span class="pricing-val" id="valAnnual">999</span>
+              <span class="pricing-term">/ year</span>
+            </div>
+          </div>
+          <div class="pricing-inputs">
+            <div>
+              <label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:4px;">Display Price (INR)</label>
+              <input type="number" class="form-input mono" id="inputAnnualPrice" value="999">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:4px;">Savings Label</label>
+              <input type="text" class="form-input" id="inputAnnualKicker" value="Save 58% vs monthly billing">
+            </div>
+          </div>
+        </div>
+
+        <!-- Lifetime Tier -->
+        <div class="pricing-card">
+          <div class="pricing-head">
+            <div class="pricing-tier-name">
+              <span>Gold Lifetime Patron</span>
+              <label class="switch" style="width:36px;height:20px;">
+                <input type="checkbox" id="tierLifetimeActive" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="pricing-amount-row">
+              <span class="pricing-curr">₹</span>
+              <span class="pricing-val" id="valLifetime">2499</span>
+              <span class="pricing-term">/ forever</span>
+            </div>
+          </div>
+          <div class="pricing-inputs">
+            <div>
+              <label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:4px;">Display Price (INR)</label>
+              <input type="number" class="form-input mono" id="inputLifetimePrice" value="2499">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:4px;">Patron Badge Copy</label>
+              <input type="text" class="form-input" id="inputLifetimeKicker" value="Lifetime library access with all future updates">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan Entitlements & Action Bar Matrix -->
+      <div class="card" style="margin-top:20px;">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+          <span>Plan Entitlements & Action Bar Dock Matrix</span>
+        </div>
+        <p class="card-subtitle">Tier access rules. Free readers are limited to 4 bottom action bar buttons; 5 buttons requires Gold (₹99 Monthly / ₹999 Annual).</p>
+
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border);text-align:left;color:var(--text-secondary);">
+                <th style="padding:10px 8px;">ENTITLEMENT</th>
+                <th style="padding:10px 8px;">FREE READER</th>
+                <th style="padding:10px 8px;color:var(--accent);">GOLD MONTHLY (₹99)</th>
+                <th style="padding:10px 8px;color:#38bdf8;">GOLD ANNUAL (₹999)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 8px;font-weight:600;">Bottom Action Bar Buttons</td>
+                <td style="padding:10px 8px;color:var(--text-secondary);">Up to 4 buttons</td>
+                <td style="padding:10px 8px;font-weight:700;color:var(--accent);">5 full custom buttons</td>
+                <td style="padding:10px 8px;font-weight:700;color:#38bdf8;">5 full custom buttons</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 8px;font-weight:600;">Live Drag & Drop Tool Swapping</td>
+                <td style="padding:10px 8px;">Included (4 slots)</td>
+                <td style="padding:10px 8px;font-weight:600;">Included (5 slots)</td>
+                <td style="padding:10px 8px;font-weight:600;">Included (5 slots)</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 8px;font-weight:600;">Audio Lounges & Offline Listening</td>
+                <td style="padding:10px 8px;color:var(--text-secondary);">Streaming preview only</td>
+                <td style="padding:10px 8px;font-weight:600;">Full 520 books offline</td>
+                <td style="padding:10px 8px;font-weight:600;">Full 520 books offline</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:10px 8px;font-weight:600;">Studio Pro & PDF Cheat-Sheets</td>
+                <td style="padding:10px 8px;color:var(--text-secondary);">Watermarked</td>
+                <td style="padding:10px 8px;font-weight:600;">Unwatermarked, high-res</td>
+                <td style="padding:10px 8px;font-weight:600;">Unwatermarked, high-res</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- UPI Merchant Configuration -->
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+          <span>Merchant Payment Gateway Configuration</span>
+        </div>
+        <p class="card-subtitle">Set the active Unified Payments Interface (UPI) VPA handle and verification protocol.</p>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:16px;">
+          <div>
+            <label style="font-size:11.5px;color:var(--text-secondary);display:block;margin-bottom:6px;text-transform:uppercase;font-weight:600;">Merchant UPI VPA</label>
+            <input type="text" class="form-input mono" id="merchantUpiVpa" value="thesmallbook@upi">
+          </div>
+          <div>
+            <label style="font-size:11.5px;color:var(--text-secondary);display:block;margin-bottom:6px;text-transform:uppercase;font-weight:600;">Merchant Registered Name</label>
+            <input type="text" class="form-input" id="merchantUpiName" value="TheSmallBook Media">
+          </div>
+          <div>
+            <label style="font-size:11.5px;color:var(--text-secondary);display:block;margin-bottom:6px;text-transform:uppercase;font-weight:600;">Transaction Verification Protocol</label>
+            <select class="form-input" id="upiVerifyProtocol">
+              <option value="direct_intent">Strict Manual User Confirmation (Recommended)</option>
+              <option value="webhook">Webhook Server Verification</option>
+              <option value="simulation">Local Test Simulation Mode</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: READER DIRECTORY -->
+    <section class="admin-view-panel" id="viewReaders">
+      <div class="section-head">
+        <div>
+          <h1 class="section-head-title">Reader Management & Directory</h1>
+          <p class="section-head-desc">Audit registered users, toggle VIP status, review reading history, or remove records.</p>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" id="btnOpenAddReader">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Add New Reader</span>
+        </button>
+      </div>
+
+      <div class="table-container">
+        <div class="table-toolbar">
+          <div class="search-box-wrap">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="form-input" id="readerSearchInput" placeholder="Filter readers by name or email...">
+          </div>
+
+          <div class="table-actions">
+            <select class="form-input" id="readerTierFilter" style="width: auto; padding: 6px 10px;">
+              <option value="all">All Plan Tiers</option>
+              <option value="gold">Gold VIP Only</option>
+              <option value="free">Standard Only</option>
+            </select>
+          </div>
+        </div>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Reader</th>
+              <th>Subscription Status</th>
+              <th>Member Since</th>
+              <th>Books Completed</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="readersTableBody">
+            <!-- Dynamically populated via js/admin.js -->
+          </tbody>
+        </table>
+
+        <div class="table-pagination">
+          <span id="readersCountDisplay">Showing 6 registered accounts</span>
+          <div class="pagination-btns">
+            <button type="button" class="btn btn-secondary btn-sm" disabled>Prev</button>
+            <button type="button" class="btn btn-secondary btn-sm" disabled>Next</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: CATALOG REGISTRY -->
+    <section class="admin-view-panel" id="viewCatalog">
+      <div class="section-head">
+        <div>
+          <h1 class="section-head-title">Catalog Registry (520 Books)</h1>
+          <p class="section-head-desc">Complete index of titles, core lessons, graveyard autopsies, and editorial tags.</p>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <span class="badge badge-live mono">520 TITLES ACTIVE</span>
+          <span class="badge badge-blue mono">3685 LESSONS</span>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div class="table-toolbar">
+          <div class="search-box-wrap" style="max-width:380px;">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="form-input" id="catalogSearchInput" placeholder="Search by title, author, slug, or category...">
+          </div>
+
+          <div class="table-actions">
+            <select class="form-input" id="catalogCategoryFilter" style="width: auto; padding: 6px 10px;">
+              <option value="all">All Categories</option>
+              <option value="mindset">Mindset & Thinking</option>
+              <option value="business">Business & Strategy</option>
+              <option value="money">Money & Wealth</option>
+              <option value="habits">Habits & Routine</option>
+              <option value="originals">TheSmallBook Originals</option>
+            </select>
+          </div>
+        </div>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th style="width:50px;">Cover</th>
+              <th>Book Details</th>
+              <th>Category</th>
+              <th>Lessons</th>
+              <th>Read Time</th>
+              <th style="text-align:right;">Deep Links</th>
+            </tr>
+          </thead>
+          <tbody id="catalogTableBody">
+            <!-- Dynamically populated via js/admin.js -->
+          </tbody>
+        </table>
+
+        <div class="table-pagination">
+          <span id="catalogCountDisplay">Showing 15 of 520 books</span>
+          <div class="pagination-btns">
+            <button type="button" class="btn btn-secondary btn-sm" id="btnCatalogPrev">Prev Page</button>
+            <span class="mono" id="catalogPageNumber" style="padding:0 8px;">1 / 35</span>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnCatalogNext">Next Page</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: SYSTEM LOGS & AUDIT -->
+    <section class="admin-view-panel" id="viewAudit">
+      <div class="section-head">
+        <div>
+          <h1 class="section-head-title">System Audit Log & Environment State</h1>
+          <p class="section-head-desc">Immutable log stream of administrator interventions, config alterations, and sessions.</p>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button type="button" class="btn btn-secondary btn-sm" id="btnExportConfigJson">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Export Config JSON</span>
+          </button>
+          <button type="button" class="btn btn-danger btn-sm" id="btnPurgeLocalCaches">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            <span>Purge Client Cache</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="card" style="padding:16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <span class="mono" style="font-size:12px;font-weight:600;color:var(--text-secondary);">EVENT LOG STREAM</span>
+          <span class="badge badge-live mono">REAL-TIME</span>
+        </div>
+        <div class="console-box" id="adminConsoleBox">
+          <!-- Populated dynamically via js/admin.js -->
+        </div>
+      </div>
+
+      <!-- Administrator Password / Security Key Settings Card -->
+      <div class="card" style="margin-top: 24px;">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>Administrator Security Key & Access Credentials</span>
+        </div>
+        <p class="card-subtitle">Update your private operator security key. Only the active administrator can change this key.</p>
+
+        <form id="formChangeSecurityKey" style="max-width: 520px;">
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div>
+              <label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:5px;font-weight:600;text-transform:uppercase;">Current Security Key</label>
+              <input type="password" class="form-input" id="inputCurrentPass" placeholder="Enter current security key" required>
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:5px;font-weight:600;text-transform:uppercase;">New Security Key (Min 6 Characters)</label>
+              <input type="password" class="form-input" id="inputNewPass" placeholder="Enter new security key" required minlength="6">
+            </div>
+            <div>
+              <label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:5px;font-weight:600;text-transform:uppercase;">Confirm New Security Key</label>
+              <input type="password" class="form-input" id="inputConfirmPass" placeholder="Confirm new security key" required minlength="6">
+            </div>
+            <div>
+              <button type="submit" class="btn btn-primary" id="btnUpdatePass" style="padding:10px 18px;">
+                <span>Update Security Key</span>
+              </button>
+            </div>
+            <div id="changePassMsg" style="font-size:12px;font-weight:600;display:none;"></div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================
+       MODAL: ADD NEW READER
+       ========================================================= -->
+  <div class="login-overlay" id="addReaderModal" style="display:none;">
+    <div class="login-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+        <h3 style="font-size:16px;font-weight:700;color:#fff;">Enroll New Reader</h3>
+        <button type="button" class="btn btn-secondary btn-sm" id="btnCloseAddReader">✕</button>
+      </div>
+
+      <form id="formAddReader">
+        <div class="login-form-group">
+          <label for="newReaderName">Full Name</label>
+          <input class="form-input" id="newReaderName" type="text" placeholder="e.g. Vikramaditya Sen" required>
+        </div>
+
+        <div class="login-form-group">
+          <label for="newReaderEmail">Email Address</label>
+          <input class="form-input" id="newReaderEmail" type="email" placeholder="e.g. vikram@example.com" required>
+        </div>
+
+        <div class="login-form-group">
+          <label for="newReaderTier">Subscription Tier</label>
+          <select class="form-input" id="newReaderTier">
+            <option value="Gold VIP">Gold VIP (Full Access)</option>
+            <option value="Free Standard">Free Standard</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;padding:10px;margin-top:8px;">
+          <span>Register Reader Record</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Pill -->
+  <div class="toast-pill" id="adminToast">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    <span id="toastMsg">Operation successful</span>
+  </div>
+
+  <script src="./js/bootguard.js?v=323"></script>
+  <script src="js/data.js?v=323"></script>
+  <script src="js/failures.js?v=323"></script>
+  <script src="js/admin.js?v=323"></script>
+</body>
+</html>

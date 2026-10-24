@@ -134,7 +134,8 @@
           '<span class="tg-go">OPEN →</span></a>';
       });
     });
-    html += '<button class="tg-walk" id="tgWalk">▶ REPLAY THE FULL TUTORIAL</button>' +
+    html += '<button class="tg-walk" id="tgShowcase" style="background:var(--yellow);color:var(--ink);margin-bottom:8px;box-shadow:3px 3px 0 var(--ink);">🎬 WATCH MOTION GRAPHICS PRODUCT FILM</button>' +
+      '<button class="tg-walk" id="tgWalk">▶ REPLAY THE FULL TUTORIAL</button>' +
       '<button class="tg-replay" id="tgReplay">just the 30-second home tour</button>' +
       '<p class="tg-fine">Nothing here breaks and nothing bites. Everything worth reading or hearing is free.</p></div>';
     sh.innerHTML = html;
@@ -163,6 +164,13 @@
         }
       }
     });
+    var scBtn = sh.querySelector("#tgShowcase");
+    if (scBtn) {
+      scBtn.addEventListener("click", function () {
+        closeGuide();
+        if (window.TSB_SHOWCASE) TSB_SHOWCASE.play();
+      });
+    }
     sh.querySelector("#tgWalk").addEventListener("click", function () {
       closeGuide();
       startWalk(0);

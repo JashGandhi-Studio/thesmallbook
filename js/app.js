@@ -14,8 +14,30 @@
   const statCats = document.getElementById("statCats");
   const statMins = document.getElementById("statMins");
 
-  const NEW_IDS = new Set((window.TSB_CONFIG && TSB_CONFIG.NEW_THIS_WEEK) || []);
-  function isNew(id) { return NEW_IDS.has(id); }
+  const LATEST_20_NEW = new Set([
+    "the-intellectuals-and-society",
+    "zen-mind-beginners-mind",
+    "the-third-pillar",
+    "alchemy-rory-sutherland",
+    "the-great-derangement",
+    "the-effective-engineer",
+    "the-brahmagupta-scrolls",
+    "the-courtyard-stories",
+    "the-curious-investor",
+    "the-sovereign-individual",
+    "the-kirana-ledger",
+    "the-zero-discount-diner",
+    "the-first-hundred-patrons",
+    "the-midnight-dispatch",
+    "the-silent-partner-tax",
+    "the-unclaimed-shelf",
+    "the-reputation-audit",
+    "the-apprentice-hour",
+    "the-founders-warranty",
+    "the-patient-capitalist"
+  ]);
+
+  function isNew(id) { return LATEST_20_NEW.has(id); }
 
   let activeCat = "ALL";
   let query = "";
@@ -305,7 +327,7 @@
         <div class="card__body">
           <div class="card__title">${b.title}</div>
           <div class="card__author">by ${b.author} · ${b.year}</div>
-          <div class="card__tag">${b.tagline}</div>
+          <div class="card__tag">${b.tagline || b.oneLiner || ""}</div>
           ${lessonHit !== null ? `<div class="card__hit" translate="no">🔍 FOUND INSIDE: <strong>${b.lessons[lessonHit].title}</strong></div>` : ""}
           <div class="card__footer">
             <span class="card__lessons">${read > 0 ? read + "/" : ""}${b.lessons.length} lessons</span>
@@ -353,7 +375,7 @@
       <div class="card__body">
         <div class="card__title">${b.title}</div>
         <div class="card__author">by ${b.author} · ${b.year}</div>
-        <div class="card__tag">${b.tagline}</div>
+        <div class="card__tag">${b.tagline || b.oneLiner || ""}</div>
         <div class="card__footer">
           <span class="card__lessons">${read > 0 ? read + "/" : ""}${b.lessons.length} lessons</span>
           <span class="card__go">READ IT →</span>
@@ -512,74 +534,82 @@
   })();
 
   /* ---------- 🔥 DAILY 60-SECOND SPARK & FLAME STREAK RETENTION ENGINE ---------- */
-  const SPARKS = [
-    {
-      bookId: "atomic-habits",
-      title: "The 2-Minute Rule",
-      quote: "When you start a new habit, it should take less than two minutes to do.",
-      takeaway: "Standardize before you optimize. A habit must be established before it can be improved.",
-      book: "Atomic Habits",
-      author: "James Clear"
-    },
-    {
-      bookId: "psychology-of-money",
-      title: "Freedom Over Luxury",
-      quote: "The ability to do what you want, when you want, with who you want, for as long as you want, is the highest dividend money pays.",
-      takeaway: "True wealth is not the cars you buy, but the options, independence, and calm you preserve.",
-      book: "The Psychology of Money",
-      author: "Morgan Housel"
-    },
-    {
-      bookId: "deep-work",
-      title: "The Law of High-Productivity",
-      quote: "High-Quality Work Produced = (Time Spent) x (Intensity of Focus).",
-      takeaway: "Cut shallow distractions and batch your hardest cognitive output into unbroken blocks.",
-      book: "Deep Work",
-      author: "Cal Newport"
-    },
-    {
-      bookId: "essentialism",
-      title: "The Power of Less But Better",
-      quote: "If you don't prioritize your life, someone else will.",
-      takeaway: "Ruthlessly eliminate trivial tasks so you can channel full energy into what truly matters.",
-      book: "Essentialism",
-      author: "Greg McKeown"
-    },
-    {
-      bookId: "show-your-work",
-      title: "Document, Don't Create",
-      quote: "Share what you love, and the people who love the same things will find you.",
-      takeaway: "You don't need to be an expert to post. Share the process, the daily notebook, the lessons learned.",
-      book: "Show Your Work!",
-      author: "Austin Kleon"
-    },
-    {
-      bookId: "almanack-naval-ravikant",
-      title: "Specific Knowledge & Leverage",
-      quote: "Specific knowledge is found by pursuing your genuine curiosity and passion rather than whatever is hot right now.",
-      takeaway: "Learn to build or learn to sell. If you can do both, you will be unstoppable.",
-      book: "The Almanack of Naval Ravikant",
-      author: "Eric Jorgenson"
-    },
-    {
-      bookId: "cant-hurt-me",
-      title: "The 40% Rule",
-      quote: "When your mind is telling you that you are done, you're really only 40 percent done.",
-      takeaway: "Our brains are built to protect comfort. Push past the initial fatigue barrier to grow.",
-      book: "Can't Hurt Me",
-      author: "David Goggins"
-    }
-  ];
-
   function getTodayKey() {
-    return new Date().toISOString().slice(0, 10);
+    const d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   }
 
-  function getTodaySpark() {
-    const today = getTodayKey();
-    let num = 0;
-    for (let i = 0; i < today.length; i++) num = (num * 31 + today.charCodeAt(i)) % SPARKS.length;
-    return SPARKS[num];
+  function localDayNum() {
+    const n = new Date();
+    return Math.floor((n.getTime() - n.getTimezoneOffset() * 60000) / 864e5);
+  }
+
+  /* Dynamically sources daily spark from the entire 520-book / 3,685-lesson library */
+  function getTodaySpark(dayNum, offset) {
+    if (dayNum == null) dayNum = localDayNum();
+    const off = offset || 0;
+    const flat = [];
+    if (typeof BOOKS !== "undefined" && Array.isArray(BOOKS)) {
+      BOOKS.forEach((b) => {
+        if (b && Array.isArray(b.lessons)) {
+          b.lessons.forEach((l, i) => flat.push({ b, l, i }));
+        }
+      });
+    }
+    if (!flat.length) return null;
+
+    let prefs = null;
+    try { prefs = JSON.parse(localStorage.getItem("tsb_prefs")); } catch (e) {}
+    const now = new Date();
+    const dayOfWeek = now.getDay();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    const GOAL_CAT = {
+      "self": "Self-Improvement", "money": "Money & Finance",
+      "business": "Business & Startups", "people": "Psychology & People",
+      "creativity": "Creativity", "productivity": "Productivity",
+      "power": "Power & Strategy"
+    };
+    const goalCat = prefs && GOAL_CAT[prefs.goal] ? GOAL_CAT[prefs.goal] : null;
+
+    let pool = flat;
+    let isPersonalized = false;
+    if (goalCat && !isWeekend) {
+      const catPool = flat.filter((x) => x.b.category === goalCat);
+      if (catPool.length >= 10) {
+        pool = catPool;
+        isPersonalized = true;
+      }
+    }
+
+    // High-dispersion prime stride 137 ensures zero consecutive repeats across days
+    const effectiveIndex = Math.abs((dayNum + off) * 137 + 41) % pool.length;
+    const pick = pool[effectiveIndex];
+    const b = pick.b;
+    const l = pick.l;
+
+    let quote = "";
+    if (b.quotes && b.quotes.length > 0) {
+      quote = b.quotes[Math.abs(dayNum + off) % b.quotes.length];
+    } else if (l.summary) {
+      quote = l.summary.split(".")[0].trim() + ".";
+    } else {
+      quote = l.title;
+    }
+
+    const takeaway = l.action || b.oneLiner || b.bigIdea || "";
+
+    return {
+      bookId: b.id,
+      book: b.title,
+      author: b.author,
+      cover: b.cover,
+      category: b.category,
+      lessonIndex: pick.i,
+      lessonTitle: l.title,
+      quote: quote,
+      takeaway: takeaway,
+      personalized: isPersonalized
+    };
   }
 
   function isSparkDone() {
@@ -588,14 +618,20 @@
 
   function markSparkDone() {
     localStorage.setItem("tsb_spark_done_" + getTodayKey(), "1");
-    TSB.streak.touch();
+    if (window.TSB && window.TSB.streak && window.TSB.streak.touch) {
+      window.TSB.streak.touch();
+    }
     try {
-      if (TSB.sound && TSB.sound.play) TSB.sound.play("ding");
+      if (window.TSB && window.TSB.sound && window.TSB.sound.play) window.TSB.sound.play("ding");
     } catch (e) {}
     if (window.confetti) {
       try { window.confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } }); } catch (eC) {}
     }
   }
+
+  window.getTodaySpark = getTodaySpark;
+  window.isSparkDone = isSparkDone;
+  window.markSparkDone = markSparkDone;
 
   function openStreakSheet() {
     let sheetOvl = document.getElementById("streakSheetOvl");
@@ -675,87 +711,62 @@
   (function () {
     const wrap = document.getElementById("lod");
     if (!wrap) return;
-    const flat = [];
-    BOOKS.forEach((b) => b.lessons.forEach((l, i) => flat.push({ b, l, i })));
 
-    /* LOCAL day number, flips at the user's own midnight, not UTC */
-    function localDayNum() {
-      const n = new Date();
-      return Math.floor((n.getTime() - n.getTimezoneOffset() * 60000) / 864e5);
-    }
-    function ordinal(d) {
-      if (d >= 11 && d <= 13) return d + "th";
-      return d + (["th","st","nd","rd"][d % 10] || "th");
-    }
     function msToMidnight() {
       const n = new Date();
       const mid = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1, 0, 0, 2);
-      return mid - n;
+      return Math.max(1000, mid.getTime() - n.getTime());
     }
 
     let shownDay = -1;
-    const GOAL_CAT = {
-      "self": "Self-Improvement", "money": "Money & Finance",
-      "business": "Business & Startups", "people": "Psychology & People",
-      "creativity": "Creativity", "productivity": "Productivity",
-      "power": "Power & Strategy"
-    };
-    function personalPick(dayNum) {
-      let prefs = null;
-      try { prefs = JSON.parse(localStorage.getItem("tsb_prefs")); } catch (e) {}
-      const dayOfWeek = new Date().getDay();
-      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-      const goalCat = prefs && GOAL_CAT[prefs.goal] ? GOAL_CAT[prefs.goal] : null;
-      if (goalCat && !isWeekend) {
-        let pool = flat.filter((x) => x.b.category === goalCat);
-        if (!pool.length) pool = flat;
-        if (prefs.time === "5" && pool.length > 3) {
-          const short = pool.filter((x) => x.l.summary && x.l.summary.length < 600);
-          if (short.length >= 3) pool = short;
-        }
-        return { pick: pool[dayNum % pool.length], personalized: true };
-      }
-      return { pick: flat[dayNum % flat.length], personalized: false };
-    }
-    function draw() {
-      const dayNum = localDayNum();
-      if (dayNum === shownDay) return;
-      shownDay = dayNum;
-      const { pick, personalized } = personalPick(dayNum);
-      const spark = getTodaySpark();
-      const streak = TSB.streak.count();
-      const done = isSparkDone();
+    let sparkOffset = 0;
 
-      const targetBook = (spark && spark.bookId) ? (BOOKS.find((b) => b.id === spark.bookId) || pick.b) : pick.b;
-      const bookTitle = spark.book || targetBook.title;
-      const bookAuthor = spark.author || targetBook.author;
-      const bookId = (spark && spark.bookId) ? spark.bookId : targetBook.id;
-      const quoteText = spark.quote || (pick.l.summary ? pick.l.summary.slice(0, 120) + "…" : pick.l.title);
-      const takeawayText = spark.takeaway || (pick.l.action || "");
+    function draw(force) {
+      const dayNum = localDayNum();
+      if (!force && dayNum === shownDay && sparkOffset === 0) return;
+      shownDay = dayNum;
+
+      const spark = getTodaySpark(dayNum, sparkOffset);
+      if (!spark) return;
+
+      const streak = (window.TSB && window.TSB.streak) ? window.TSB.streak.count() : 0;
+      const done = isSparkDone();
 
       wrap.innerHTML = `
         <div class="lod__box">
           <button type="button" class="lod__streak" id="lodStreakBtn" title="View streak flame and weekly rings">
             🔥 <span>${streak}d</span>
           </button>
-          <img class="lod__thumb" src="${escHTML(targetBook.cover)}" alt="" loading="lazy">
+          <img class="lod__thumb" src="${escHTML(spark.cover)}" alt="" loading="lazy">
           <div class="lod__content">
             <div class="lod__headrow">
               <span class="lod__badge">⚡ 60s SPARK</span>
               <span class="lod__sep">·</span>
-              <span class="lod__book">${escHTML(bookTitle)}</span>
-              <span class="lod__author">by ${escHTML(bookAuthor)}</span>
+              <span class="lod__book">${escHTML(spark.book)}</span>
+              <span class="lod__author">by ${escHTML(spark.author)}</span>
+              ${spark.personalized ? `<span class="lod__badge" style="background:#eaf5ea;color:#1e6b2e;border-color:var(--ink);">FOR YOU</span>` : ''}
+              <button type="button" class="lod__shuffle" id="lodShuffleBtn" title="Get another 60-second spark from the library">
+                🔄 Another
+              </button>
             </div>
-            <div class="lod__quote">“${escHTML(quoteText)}”</div>
-            ${takeawayText ? `<div class="lod__takeaway">${escHTML(takeawayText)}</div>` : ''}
+            <div class="lod__quote">“${escHTML(spark.quote)}”</div>
+            ${spark.takeaway ? `<div class="lod__takeaway">${escHTML(spark.takeaway)}</div>` : ''}
           </div>
-          <a class="lod__btn ${done ? 'done' : ''}" id="lodSparkBtn" href="book.html?id=${encodeURIComponent(bookId)}#lesson-1">
+          <a class="lod__btn ${done ? 'done' : ''}" id="lodSparkBtn" href="book.html?id=${encodeURIComponent(spark.bookId)}#lesson-${spark.lessonIndex + 1}">
             ${done ? '✓ IGNITED 🔥' : 'READ 60s →'}
           </a>
         </div>`;
 
       const strBtn = document.getElementById("lodStreakBtn");
       if (strBtn) strBtn.addEventListener("click", openStreakSheet);
+
+      const shufBtn = document.getElementById("lodShuffleBtn");
+      if (shufBtn) {
+        shufBtn.addEventListener("click", () => {
+          sparkOffset++;
+          draw(true);
+        });
+      }
 
       const actBtn = document.getElementById("lodSparkBtn");
       if (actBtn && !done) {
@@ -764,9 +775,50 @@
         });
       }
     }
-    draw();
-    setTimeout(function tick() { draw(); setTimeout(tick, 60000); }, msToMidnight());
-    document.addEventListener("visibilitychange", () => { if (!document.hidden) draw(); });
+
+    draw(true);
+
+    // Auto-refresh exactly at local midnight
+    function scheduleMidnight() {
+      setTimeout(() => {
+        shownDay = -1;
+        sparkOffset = 0;
+        draw(true);
+        scheduleMidnight();
+      }, msToMidnight());
+    }
+    scheduleMidnight();
+
+    // Refresh when returning to tab / waking device
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        const curDay = localDayNum();
+        if (curDay !== shownDay) {
+          shownDay = -1;
+          sparkOffset = 0;
+          draw(true);
+        }
+      }
+    });
+
+    window.addEventListener("pageshow", () => {
+      const curDay = localDayNum();
+      if (curDay !== shownDay) {
+        shownDay = -1;
+        sparkOffset = 0;
+        draw(true);
+      }
+    });
+
+    // Heartbeat every 30s to detect midnight transition across sleep
+    setInterval(() => {
+      const curDay = localDayNum();
+      if (curDay !== shownDay) {
+        shownDay = -1;
+        sparkOffset = 0;
+        draw(true);
+      }
+    }, 30000);
   })();
 
   /* ---------- GAMEBAR (streak + level + achievements) ---------- */

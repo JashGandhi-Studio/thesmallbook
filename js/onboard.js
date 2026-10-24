@@ -191,8 +191,9 @@
     return out;
   }
   function ensurePicks() {
+    recPoolCache = null;
     var pool = recPool();
-    if (!draft.picks) {
+    if (!draft.picks || !draft.picks.length) {
       draft.picks = [];
       pool.slice(0, 6).forEach(function (b) { draft.picks.push(b.id); });
     }
@@ -219,8 +220,8 @@
           '<div class="ob-logo">📕</div>' +
           '<span class="ob-eyebrow">WELCOME TO</span>' +
           '<h2 class="ob-hero__t">The<span>Small</span>Book</h2>' +
-          '<p class="ob-tag">READ 100 BOOKS IN 15 MINS A DAY</p>' +
-          '<p class="ob-sub">500+ books, distilled into punchy masterclass frameworks you can apply today. Six quick questions tailor the entire library to your exact ambition.</p>' +
+          '<p class="ob-tag">READ 1 BOOK IN 8 MINUTES. BECOME 1% BETTER EVERY DAY.</p>' +
+          '<p class="ob-sub">500+ books (520 curated editions), distilled into punchy masterclass frameworks you can apply today. Six quick questions tailor the entire library to your exact ambition.</p>' +
           '<div class="ob-btns ob-btns--col">' +
             '<button class="ob-cta" data-next>🚀 GET STARTED →</button>' +
           '</div>' +
@@ -267,9 +268,10 @@
           "</div>" +
           '<div class="ob-btns"><button class="ob-cta" data-next>Pick my books →</button></div>';
       case 6:
+        recPoolCache = null;
         ensurePicks(body);
         return "<h2>Pick your starter shelf 🎁</h2>" +
-          '<p class="ob-sub">1 or 2 picked from your answers, then " + newCount() + " fresh books (look for NEW), tap a cover to keep it or drop it. These lead your Home.</p>' +
+          '<p class="ob-sub">Handpicked from your answers, then ' + newCount() + ' fresh books (look for NEW), tap a cover to keep it or drop it. These lead your Home.</p>' +
           '<p class="ob-pickctr" id="obPickCtr">✓ ' + (draft.picks || []).length + " on your shelf · tap covers to add or remove</p>" +
           '<div class="ob-shelf">' + recPool().map(function (b, i) {
             var on = (draft.picks || []).indexOf(b.id) >= 0;

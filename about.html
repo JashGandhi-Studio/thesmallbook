@@ -129,6 +129,26 @@
     .about-short__card b{font:800 12px 'Space Grotesk',sans-serif}
     .about-short__card span{font:500 11px 'Space Grotesk',sans-serif;color:#6b7280}
     html.dark .about-short__card{background:#1b1712;border-color:#000;box-shadow:4px 4px 0 #000}
+
+    /* legal-card aesthetic alignment */
+    .about { max-width: 760px; margin: 0 auto; padding: 20px 16px 60px; display: flex; flex-direction: column; gap: 18px; }
+    .about__block {
+      background: #fff;
+      border: 2.5px solid var(--ink);
+      border-radius: 16px;
+      box-shadow: 4px 4px 0 var(--ink);
+      padding: 22px 18px;
+      margin-top: 0;
+    }
+    html.dark .about__block { background: #241f17; border-color: #000; box-shadow: 4px 4px 0 #000; }
+    .about__block p, .about__block li {
+      font: 500 12.8px/1.65 'Space Grotesk', sans-serif;
+      color: #3c3627;
+      margin: 0 0 10px;
+    }
+    html.dark .about__block p, html.dark .about__block li { color: #c9c2b2; }
+    .about__block b, .about__block strong { color: var(--ink); }
+    html.dark .about__block b, html.dark .about__block strong { color: #f2ead8; }
   </style>
 </head>
 <body>
@@ -228,13 +248,12 @@
           <div class="idcard__avatar">👨‍💻</div>
           <div class="idcard__info">
             <div class="idcard__name">JASH GANDHI</div>
-            <div class="idcard__role">Founder · Builder · Chief Chai Officer ☕</div>
+            <div class="idcard__role">Founder · Builder · Public speaker</div>
             <div class="idcard__loc">📍 Mumbai, India</div>
             <div class="idcard__links">
               <a class="idcard__chip idcard__chip--insta" href="https://instagram.com/thesmallbook.in" target="_blank" rel="noopener">📸 @thesmallbook.in</a>
               <a class="idcard__chip idcard__chip--insta" href="https://instagram.com/jash._gandhi7" target="_blank" rel="noopener">👤 @jash._gandhi7</a>
               <a class="idcard__chip" href="mailto:thesmallbook.in@gmail.com" style="background:#ffc800"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> thesmallbook.in@gmail.com</a>
-              <a class="idcard__chip" href="mailto:jashgandhicreator07@gmail.com">📬 jashgandhicreator07@gmail.com</a>
               <a class="idcard__chip" href="https://github.com/JashGandhi-Studio/thesmallbook" target="_blank" rel="noopener">⭐ GitHub</a>
             </div>
           </div>
@@ -377,20 +396,42 @@
 
 
 
-    <!-- WHAT'S NEW -->
+    <!-- WHAT'S NEW TRIGGER CARD -->
     <section class="about__block">
-      <h2 class="about__head">🆕 What's new, changelog</h2>
-      <p style="font:600 11px 'Space Grotesk',sans-serif;color:#8f8a80">We ship every week. New books, new graves, and small polish. This page is the living changelog.</p>
-      <div class="log-grid" id="logGrid">
-        <div class="log-item">
-            <span       <div class="log-item">
-        <span class="log-item__date">OCT 2026</span>
-        <div class="log-item__body">
-          <h4>Build 323 - The Audio Room</h4>
-          <p>The full player sheet is now the audio room: bigger cover art, and the line under the scrubber names exactly where you are - episode 3 of 12, or chapter 4 of 21. Every podcast episode and TSB Original carries a SAVE button - one tap keeps the audio on your phone, and it plays with zero network, airplane mode included, with a live save percentage while it copies. Under the queue sits UP NEXT: the shows you keep, one tap to flow into them. When an episode ends and autoplay is ON, the room chains into your next saved show by itself - built for the commute. Turn the flow OFF with one chip.</p>
+      <div style="background:var(--yellow);border:2.5px solid var(--ink);border-radius:16px;padding:20px;box-shadow:4px 4px 0 var(--ink);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:220px;">
+          <div style="font:800 10.5px 'Space Grotesk',sans-serif;letter-spacing:1.5px;color:#8a6d00;">WEEKLY RELEASE NOTES</div>
+          <h2 class="about__head" style="margin:4px 0 6px;font-size:1.2rem;">🆕 What's new, changelog</h2>
+          <p style="font:600 12px/1.55 'Space Grotesk',sans-serif;color:#3c3627;margin:0;">We ship every week: new books, new graveyard autopsies, and small polish. Tap to open the living changelog modal.</p>
         </div>
+        <button id="openLogModal" class="btn btn--ink" style="padding:11px 20px;font-size:11.5px;letter-spacing:1px;font-family:var(--font-head);border-radius:11px;box-shadow:3px 3px 0 rgba(0,0,0,.35);cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;">
+          OPEN CHANGELOG ↗
+        </button>
       </div>
-class="log-item__ver">v322</span>
+    </section>
+
+    <!-- CHANGELOG POP-OUT MODAL -->
+    <div id="logModal" class="tsb-modal" style="display:none;position:fixed;inset:0;background:rgba(17,17,17,.68);backdrop-filter:blur(5px);z-index:99999;align-items:center;justify-content:center;padding:16px;">
+      <div class="tsb-modal__card" style="background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:8px 8px 0 var(--ink);max-width:720px;width:100%;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;position:relative;">
+        <div style="padding:16px 20px;border-bottom:2.5px solid var(--ink);background:var(--yellow);display:flex;align-items:center;justify-content:space-between;flex:none;">
+          <div>
+            <div style="font-family:var(--font-head);font-size:10px;font-weight:900;letter-spacing:1.5px;color:#8a6d00;">LIVING CHANGELOG</div>
+            <h3 style="font-family:var(--font-head);font-size:17px;margin:2px 0 0;color:var(--ink);">What's New in TheSmallBook</h3>
+          </div>
+          <button id="closeLogModal" aria-label="Close changelog modal" style="background:#fff;border:2px solid var(--ink);border-radius:8px;box-shadow:2px 2px 0 var(--ink);font-weight:900;font-size:14px;width:34px;height:34px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;">✕</button>
+        </div>
+        <div style="padding:18px 20px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;">
+          <p style="font:600 12px 'Space Grotesk',sans-serif;color:#8f8a80;margin:0 0 14px;">We ship every week. New books, new graves, and small polish. This page is the living changelog.</p>
+          <div class="log-grid" id="logGrid">
+            <div class="log-item">
+              <span class="log-item__ver">v323</span>
+              <div class="log-item__body">
+                <h4>Build 323 - The Audio Room</h4>
+                <p>The full player sheet is now the audio room: bigger cover art, and the line under the scrubber names exactly where you are - episode 3 of 12, or chapter 4 of 21. Every podcast episode and TSB Original carries a SAVE button - one tap keeps the audio on your phone, and it plays with zero network, airplane mode included, with a live save percentage while it copies. Under the queue sits UP NEXT: the shows you keep, one tap to flow into them. When an episode ends and autoplay is ON, the room chains into your next saved show by itself - built for the commute. Turn the flow OFF with one chip.</p>
+              </div>
+            </div>
+            <div class="log-item">
+              <span class="log-item__ver">v322</span>
             <div class="log-item__body"><p><b>Share cards worth tapping, a search that flies, and a shelf that learns you.</b> Every one of the 500 book pages now unfurls its own poster when the link is shared - the real cover tilted on cream paper, the book's own line, the app's stamps - drawn by the app's own design kit, never a stock image, and the main share card got the same tailoring. The show search became a flight: instant skeleton cards while the directory answers, results that glide in, your recent searches kept as one-tap chips, and a newer search always wins over an older one. The shelf now learns: play or heart a few shows and FIND 3 MORE hunts in your neighbourhoods first - listen to startups, find startups. Browsing a show's episodes works before you ever press play, feeds answer through a stricter parser with a fallback for the browsers that refuse odd XML, and every fetch carries a deadline with a real TRY AGAIN button. The player: volume boost now appears only where it honestly works (the quiet LibriVox recordings), the dock is pinned back to its home pose whenever the full player opens or closes, and the show-home exits are gone from every card - the story stays in the app. For Safari and older browsers: twenty-one silent syntax traps that could blank whole features were hunted down and rewritten. And the tutorial grew eras - you see it once; when an update truly changes the app, it returns once with a heads-up, never on every open. Build 322.</p></div>
         </div>
         <div class="log-item">
@@ -710,27 +751,60 @@ class="log-item__ver">v322</span>
         </div>
       </div>
       <button class="logmore" id="logMore" type="button">SHOW MORE UPDATES</button>
-      <script>
-      /* v266 · the changelog reads like a feed: newest first, more on demand */
-      (function () {
-        var grid = document.getElementById("logGrid");
-        var btn = document.getElementById("logMore");
-        if (!grid || !btn) return;
-        var items = Array.prototype.slice.call(grid.querySelectorAll(".log-item"));
-        var SHOWN = 4, visible = SHOWN;
-        function paint() {
-          items.forEach(function (el, i) { el.classList.toggle("logitem--hidden", i >= visible); });
-          if (visible >= items.length) { btn.textContent = "THAT\u2019S THE WHOLE STORY ✦"; btn.disabled = true; }
-          else btn.textContent = "SHOW MORE UPDATES (+" + Math.min(SHOWN, items.length - visible) + ")";
-        }
-        btn.addEventListener("click", function () { visible = Math.min(items.length, visible + SHOWN); paint(); });
-        paint();
-      })();
-      </script>
       <div style="text-align:center;margin-top:14px">
         <a href="https://instagram.com/thesmallbook.in" target="_blank" rel="noopener" class="lab-cta" style="background:#111;color:#ffc800">📸 Follow @thesmallbook.in for weekly drops →</a>
       </div>
-    </section>
+        </div>
+      </div>
+    </div>
+    <script>
+    /* v266 · the changelog reads like a feed: newest first, more on demand */
+    (function () {
+      var grid = document.getElementById("logGrid");
+      var btn = document.getElementById("logMore");
+      var modal = document.getElementById("logModal");
+      var openBtn = document.getElementById("openLogModal");
+      var closeBtn = document.getElementById("closeLogModal");
+
+      if (openBtn && modal) {
+        openBtn.addEventListener("click", function () {
+          modal.style.display = "flex";
+          document.body.style.overflow = "hidden";
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener("click", function () {
+          modal.style.display = "none";
+          document.body.style.overflow = "";
+        });
+      }
+      if (modal) {
+        modal.addEventListener("click", function (e) {
+          if (e.target === modal) {
+            modal.style.display = "none";
+            document.body.style.overflow = "";
+          }
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && modal.style.display === "flex") {
+            modal.style.display = "none";
+            document.body.style.overflow = "";
+          }
+        });
+      }
+
+      if (!grid || !btn) return;
+      var items = Array.prototype.slice.call(grid.querySelectorAll(".log-item"));
+      var SHOWN = 4, visible = SHOWN;
+      function paint() {
+        items.forEach(function (el, i) { el.classList.toggle("logitem--hidden", i >= visible); });
+        if (visible >= items.length) { btn.textContent = "THAT\u2019S THE WHOLE STORY ✦"; btn.disabled = true; }
+        else btn.textContent = "SHOW MORE UPDATES (+" + Math.min(SHOWN, items.length - visible) + ")";
+      }
+      btn.addEventListener("click", function () { visible = Math.min(items.length, visible + SHOWN); paint(); });
+      paint();
+    })();
+    </script>
 
     <!-- RULES AS STAMPS -->
     <section class="about__block">

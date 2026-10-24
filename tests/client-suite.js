@@ -323,10 +323,10 @@ const C = window.TSB_COMMUNITY;
   const djSrc = fsp.readFileSync(pp.join(__dirname, "../js/data.js"), "utf8");
   const djArr = JSON.parse(djSrc.slice(djSrc.indexOf("["), djSrc.indexOf("];\nif (typeof window") + 1));
   const ntitle = t => t.trim().toLowerCase().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ");
-  ok("data.js parses: library grew to 500 books", djArr.length === 500, djArr.length + " books");
-  ok("3,540 lessons across the library", djArr.reduce((x, b) => x + b.lessons.length, 0) === 3540, "sum mismatch");
-  ok("all 500 book ids unique", new Set(djArr.map(b => b.id)).size === 500);
-  ok("all 500 titles unique (punctuation-normalized)", new Set(djArr.map(b => ntitle(b.title))).size === 500);
+  ok("data.js parses: library grew to 520 books", djArr.length === 520, djArr.length + " books");
+  ok("3,685 lessons across the library", djArr.reduce((x, b) => x + b.lessons.length, 0) === 3685, "sum mismatch");
+  ok("all 520 book ids unique", new Set(djArr.map(b => b.id)).size === 520);
+  ok("all 520 titles unique (punctuation-normalized)", new Set(djArr.map(b => ntitle(b.title))).size === 520);
   ok("every book complete (5+ lessons, 3+ quotes, 5-step plan, caveat, bigIdea)", djArr.every(b => b.lessons.length >= 5 && b.quotes.length >= 3 && b.actionPlan.length >= 5 && b.caveat && b.bigIdea && b.oneLiner));
   ok("every cover file exists in assets/covers/", djArr.every(b => fsp.existsSync(pp.join(__dirname, "../" + b.cover))));
   ok("every book has an SEO page in books/", djArr.every(b => fsp.existsSync(pp.join(__dirname, "../books/" + b.id + ".html"))));
@@ -401,7 +401,7 @@ const C = window.TSB_COMMUNITY;
   ok("v289: new graves carry origin + fall and stay em-dash free",
      graves29.every(g => { const i = gc29.indexOf('"' + g + '":{'); return i > -1 && /"origin":"/.test(gc29.slice(i, i + 1400)) && /"fall":"/.test(gc29.slice(i, i + 2800)); }) &&
      graves29.every(g => { const f29 = flArr.find(f => f.id === g); return f29 && !JSON.stringify(f29).includes(" - ") && !JSON.stringify(f29).includes(" - "); }));
-  ok("v289: counts move together (now 500 books / 3540 lessons / 400 autopsies)", djArr.length === 500 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3540 && flArr.length === 400);
+  ok("v289: counts move together (now 520 books / 3685 lessons / 400 autopsies)", djArr.length === 520 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3685 && flArr.length === 400);
 
   console.log("== v290: 28 new books (Desi Disruptors leads), 4 new graves, FREE vs GOLD side-by-side, NEW tag re-pointed ==");
   const new290 = new Set(["barbarians-gate","bhujia-barons","cold-start-problem","delivering-happiness","den-of-thieves","desi-disruptors","dhandha","first-90-days","for-the-love-of-india","hooked-nir-eyal","hp-way","iacocca","india-uninc","inspired-product","it-happened-in-india","jack-straight-from-the-gut","liars-poker","losing-my-virginity","lost-and-founder","made-in-japan","my-years-with-general-motors","obviously-awesome","onward","smartest-guys","the-marwaris","too-big-to-fail","toyota-way","turn-the-ship-around"]);
@@ -428,7 +428,7 @@ const C = window.TSB_COMMUNITY;
   ok("v290: FREE vs GOLD side-by-side on gold.html (12 honest rows)", gold290.includes('id="goldCompare"') && (gold290.match(/class="gcmp__row"/g) || []).length === 12 && gold290.includes("LIVE NOW") && gold290.includes("IN PRODUCTION") && gold290.includes("COMING SOON") && gold290.includes("LAUNCHING WITH GOLD"));
   ok("v290: gold comparison claims only verifiable features (no live-link row)", gold290.includes("OFFLINE + EXPORT") && gold290.includes("STUDIO PRO") && gold290.includes("₹999/yr") && gold290.includes("cancel anytime"));
   ok("v290: gold page keeps the suite contract (ACTIVATE GOLD + live sheets)", gold290.includes("ACTIVATE GOLD") && gold290.includes("unlimited PDF cheat-sheets are LIVE today"));
-  ok("v290: counts move together (500 books / 3540 lessons / 400 autopsies)", djArr.length === 500 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3540 && flArr.length === 400);
+  ok("v290: counts move together (520 books / 3685 lessons / 400 autopsies)", djArr.length === 520 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3685 && flArr.length === 400);
   console.log("== v291: 10 Unknown originals (7 Indian, 3 international), THE TICKET joins the case file ==");
   const unk291 = ["chai-stall-ceo","crickets-balance-sheet","mandi-math","monsoon-portfolio","quiet-giant","rented-kingdom","right-idea-wrong-decade","tiffin-code","the-queue","wedding-economy"];
   const intl291 = ["quiet-giant","rented-kingdom","right-idea-wrong-decade"];
@@ -450,7 +450,7 @@ const C = window.TSB_COMMUNITY;
   const origs291 = JSON.parse("[" + cfg291.match(/ORIGINALS: \[([\s\S]*?)\n  \],/)[1] + "]");
   const bk291 = fsp.readFileSync(pp.join(__dirname, "../js/book.js"), "utf8");
   const cssO291 = fsp.readFileSync(pp.join(__dirname, "../css/style.css"), "utf8");
-  ok("v291: THE SMALLBOOK ORIGINAL mark on exactly the 30 in-house books (config + reader band + css)", origs291.length === 30 && origs291.every(id => djArr.some(b => b.id === id && b.author === "Unknown")) && bk291.includes("origband") && bk291.includes("TSB_CONFIG.ORIGINALS") && cssO291.includes(".origband"));
+  ok("v291: THE SMALLBOOK ORIGINAL mark on exactly the 40 in-house books (config + reader band + css)", origs291.length === 40 && origs291.every(id => djArr.some(b => b.id === id && b.author === "Unknown")) && bk291.includes("origband") && bk291.includes("TSB_CONFIG.ORIGINALS") && cssO291.includes(".origband"));
   ok("v291: all 10 Original pages carry the mark", origs291.every(id => fsp.readFileSync(pp.join(__dirname, "../books/" + id + ".html"), "utf8").includes("THE SMALLBOOK ORIGINAL")));
   const f28 = new Set(["barbarians-gate","bhujia-barons","cold-start-problem","delivering-happiness","den-of-thieves","desi-disruptors","dhandha","first-90-days","for-the-love-of-india","hooked-nir-eyal","hp-way","iacocca","india-uninc","inspired-product","it-happened-in-india","jack-straight-from-the-gut","liars-poker","losing-my-virginity","lost-and-founder","made-in-japan","my-years-with-general-motors","obviously-awesome","onward","smartest-guys","the-marwaris","too-big-to-fail","toyota-way","turn-the-ship-around"]);
   const d22 = new Set(["ambani-sons","amazon-unbound","anarchy-eic","anu-aunty","arise-awake","big-billion-startup","bottle-of-lies","breakout-nations","dreamers","elephant-catchers","empire-of-pain","follow-every-rainbow","grinding-it-out","half-lion","high-performance-ent","house-of-cards","maruti-story","recasting-india","simply-fly","tata-log","tcs-story","when-genius-failed"]);
@@ -1776,7 +1776,7 @@ const C = window.TSB_COMMUNITY;
     const idx298 = fsp.readFileSync(pp.join(__dirname, "../index.html"), "utf8");
     ok("the homepage promise matches reality: free, account only to save", !/no signup/i.test(idx298) && rd293("about.html").includes("A free account, only so your shelf and progress save"));
     ok("no manufactured urgency: closing-soon and the fake spots meter are gone", !idx298.includes("CLOSING SOON") && !idx298.includes("goldSpots") && !rd293("js/config.js").includes("GOLD_TAKEN") && idx298.includes("GO DEEPER"));
-    ok("the counters carry real numbers from the first frame, no zero flash", /id="statBooks">500</.test(idx298) && /id="statLessons">3540</.test(idx298));
+    ok("the counters carry real numbers from the first frame, no zero flash", /id="statBooks">520</.test(idx298) && /id="statLessons">3685</.test(idx298));
     ok("gold.html asks plainly instead of shouting", !/FIRST 500/.test(rd293("gold.html")) && rd293("gold.html").includes("JOIN TSB GOLD"));
   }
 

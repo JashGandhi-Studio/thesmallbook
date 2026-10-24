@@ -660,18 +660,30 @@
     }
 
     modal.innerHTML =
-      '<div class="modal__box modal__box--wide">' +
+      '<div class="modal__box modal__box--wide" style="max-width:740px;padding:26px 24px;">' +
       '<button class="modal__close">✕</button>' +
-      '<div class="modal__title" translate="no">🌐 Read in YOUR Language</div>' +
-      '<p style="font-weight:600; font-size:.85rem; margin-bottom:14px;">All 500 books, 3,500+ lessons - translated instantly. ' +
-      '<strong>Hinglish &amp; Gujlish</strong> are our special modes: Hindi/Gujarati in the way you actually text - ' +
-      '"main yeh kaam kal shuru karunga", not machine-roman. 🔥</p>' +
-      '<div class="langsection" translate="no">🇮🇳 INDIA</div>' +
-      '<div class="langgrid">' + indian.map(card).join("") + "</div>" +
-      '<div class="langsection" translate="no">🌍 WORLD</div>' +
-      '<div class="langgrid">' + world.map(card).join("") + "</div>" +
-      '<p class="support__note">Powered by Google Translate + our natural Hinglish/Gujlish engine (curated vocabulary + live transliteration). Needs internet. Takes 2-5 seconds after the page reloads. Search works best in English.</p>' +
-      "</div>";
+      '<div class="modal__title" translate="no" style="font-size:20px;margin-bottom:6px;">🌐 Read in YOUR Language</div>' +
+      '<p style="font-weight:600; font-size:.9rem; color:#444; margin-bottom:16px;">All 520 curated books, 3,685 lessons - translated instantly.</p>' +
+      '<div style="background:#fff9e6;border:2px solid #ffc800;border-radius:12px;padding:14px 16px;margin-bottom:18px;box-shadow:3px 3px 0 #111;">' +
+        '<div style="font-family:\'Archivo Black\',sans-serif;font-size:12px;color:#111;margin-bottom:4px;display:flex;align-items:center;gap:6px;">' +
+          '<span>💬</span><span>Hinglish &amp; Gujlish: Natural Text-Message Modes</span>' +
+        '</div>' +
+        '<p style="font-size:12.5px;line-height:1.45;color:#222;margin:0 0 10px;">' +
+          'Hindi and Gujarati rendered in the exact natural way you chat with friends - ' +
+          '<strong>"main yeh kaam kal shuru karunga"</strong>, not formal machine-roman.' +
+        '</p>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;font-size:11.5px;font-weight:700;">' +
+          '<span style="background:#fff;border:1.5px solid #111;border-radius:999px;padding:3px 10px;">EN: Never decide in anger</span>' +
+          '<span style="background:#ffc800;border:1.5px solid #111;border-radius:999px;padding:3px 10px;">HI: Gusse mein decision mat lo</span>' +
+          '<span style="background:#fff;border:1.5px solid #111;border-radius:999px;padding:3px 10px;">GU: Gussa ma decision na levo</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="langsection" translate="no" style="font-weight:800;letter-spacing:0.5px;margin-top:16px;">🇮🇳 INDIAN LANGUAGES &amp; TEXT MODES</div>' +
+      '<div class="langgrid" style="margin-bottom:20px;">' + indian.map(card).join("") + '</div>' +
+      '<div class="langsection" translate="no" style="font-weight:800;letter-spacing:0.5px;">🌍 GLOBAL LANGUAGES</div>' +
+      '<div class="langgrid">' + world.map(card).join("") + '</div>' +
+      '<p class="support__note" style="margin-top:18px;font-size:11.5px;color:#666;">Powered by natural transliteration and Google Translate engine. Offline caching preserves read progress. Instant switch anytime.</p>' +
+      '</div>';
     modal.classList.add("open");
     modal.querySelector(".modal__close").addEventListener("click", function () { modal.classList.remove("open"); });
     modal.addEventListener("click", function (e) { if (e.target === modal) modal.classList.remove("open"); });

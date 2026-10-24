@@ -45,11 +45,13 @@
   /* ✦ TheSmallBook Original - the in-house shelf */
   try {
     var origs = (window.TSB_CONFIG && TSB_CONFIG.ORIGINALS) || [];
-    if (origs.indexOf(book.id) >= 0) {
+    var origIdx = origs.indexOf(book.id);
+    if (origIdx >= 0) {
+      var isSpecial = origIdx >= 5;
       var ob = document.createElement("div");
       ob.className = "origband";
-      ob.innerHTML = '<span class="origband__row">✦ THE SMALLBOOK ORIGINAL ✦</span>' +
-        '<small>Written in-house. You will not find this book anywhere else.</small>';
+      ob.innerHTML = '<span class="origband__row">✦ THE SMALLBOOK ORIGINAL' + (isSpecial ? ' · GOLD EDITION' : '') + ' ✦</span>' +
+        '<small>' + (isSpecial ? 'Special in-house edition. 5 in-house originals are free; remaining unlock with Gold.' : 'Written in-house. You will not find this book anywhere else.') + '</small>';
       document.getElementById("author").after(ob);
     }
   } catch (e) {}
@@ -116,13 +118,7 @@
   /* Wire primary book action bar */
   const rdrLink = document.getElementById("nbOpenReader");
   if (rdrLink) {
-    rdrLink.addEventListener("click", (e) => {
-      const bSec = document.getElementById("bigidea-sec") || document.getElementById("bigidea");
-      if (bSec) {
-        e.preventDefault();
-        bSec.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    });
+    rdrLink.href = "reader.html?id=" + encodeURIComponent(book.id);
   }
 
   const heroListen = document.getElementById("nbHeroListen");
@@ -328,7 +324,7 @@
 
     if (heroBtn) {
       const lbl = heroBtn.querySelector(".podcastbtn__label");
-      if (lbl) lbl.textContent = "LISTEN TO SUMMARY (TTS)";
+      if (lbl) lbl.textContent = "LISTEN";
       const live = heroBtn.querySelector(".podcastbtn__live");
       if (live) live.textContent = "NARRATOR";
     }
@@ -1040,20 +1036,33 @@
   /* ---------- LESSONS ---------- */
   const lessonsWrap = document.getElementById("lessons");
   const readSet = new Set(TSB.progress.forBook(book.id));
+  const origList = (window.TSB_CONFIG && TSB_CONFIG.ORIGINALS) || [];
+  const origOrder = origList.indexOf(book.id);
+  const isGatedOriginal = origOrder >= 5;
+  let isGoldReader = false;
+  try {
+    isGoldReader = Boolean((window.TSB_GOLD && TSB_GOLD.isGold && TSB_GOLD.isGold()) || (window.TSB_PAYWALL && TSB_PAYWALL.isFounder && TSB_PAYWALL.isFounder()));
+  } catch (e) {}
 
   book.lessons.forEach((l, i) => {
+    const isLockedLesson = isGatedOriginal && !isGoldReader && i > 0;
     const d = document.createElement("div");
-    d.className = "lesson" + (i === 0 ? " open" : "");
+    d.className = "lesson" + (i === 0 ? " open" : "") + (isLockedLesson ? " lesson--gold-locked" : "");
     d.id = "lesson-" + i;
-    d.innerHTML = `
-      <div class="lesson__head">
-        <div class="lesson__num">${readSet.has(i) ? "✓" : String(i + 1).padStart(2, "0")}</div>
-        <div class="lesson__titlebox">
-          <div class="lesson__title">${l.title}</div>
-          <div class="lesson__chapter">${l.chapter}</div>
+
+    const bodyContent = isLockedLesson ? `
+      <div class="lesson__body">
+        <p>${l.summary.slice(0, 160)}...</p>
+        <div class="callout callout--example" style="filter:blur(3.5px);user-select:none;opacity:0.45;pointer-events:none;"><strong class="tag">📖 Example from the book</strong><br>${l.example}</div>
+        <div class="callout callout--action" style="filter:blur(3.5px);user-select:none;opacity:0.45;pointer-events:none;"><strong class="tag">⚡ Do this</strong><br>${l.action}</div>
+        <div class="orig-gold-gate" style="background:#fefbf4;border:2px solid var(--ink);border-radius:12px;padding:18px 16px;text-align:center;box-shadow:3px 3px 0 var(--ink);margin:16px 0 8px;">
+          <div style="font-family:var(--font-head);font-size:11px;font-weight:900;letter-spacing:1.5px;color:#8a6d00;margin-bottom:4px;">✦ EXCLUSIVE TO GOLD MEMBERS ✦</div>
+          <div style="font-weight:800;font-size:15px;color:var(--ink);margin-bottom:6px;">Unlock All 35+ In-House Originals</div>
+          <p style="font-size:12.5px;color:#555;line-height:1.45;max-width:440px;margin:0 auto 14px;">The first 5 in-house originals are completely free for everyone. Unlock all lessons across our full library of 35+ proprietary masterclasses for ₹99/month.</p>
+          <a href="gold.html" class="btn btn--yellow" style="font-family:var(--font-head);font-weight:900;font-size:12px;letter-spacing:1px;padding:9px 20px;border:2px solid var(--ink);border-radius:9px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:2.5px 2.5px 0 var(--ink);">👑 UPGRADE TO GOLD (₹99/MO) →</a>
         </div>
-        <div class="lesson__toggle">+</div>
       </div>
+    ` : `
       <div class="lesson__body">
         <p>${l.summary}</p>
         <div class="callout callout--example"><strong class="tag">📖 Example from the book</strong><br>${l.example}</div>
@@ -1075,8 +1084,20 @@
             <button class="minibtn" data-listen="${i}"><svg class="mini-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> <span>LISTEN</span></button>
             <button class="minibtn" data-sharelesson="${i}"><svg class="mini-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> <span>CARD</span></button>
           </div>
+      </div>
+    `;
+
+    d.innerHTML = `
+      <div class="lesson__head">
+        <div class="lesson__num">${readSet.has(i) ? "✓" : String(i + 1).padStart(2, "0")}</div>
+        <div class="lesson__titlebox">
+          <div class="lesson__title">${l.title}</div>
+          <div class="lesson__chapter">${l.chapter}</div>
         </div>
-      </div>`;
+        ${isLockedLesson ? '<span style="font-family:var(--font-head);font-size:10px;font-weight:900;letter-spacing:1px;background:#fef3c7;color:#92400e;border:1px solid #d97706;padding:2px 7px;border-radius:6px;margin-right:8px;">👑 GOLD</span>' : ''}
+        <div class="lesson__toggle">+</div>
+      </div>
+      ${bodyContent}`;
     d.querySelector(".lesson__head").addEventListener("click", () => d.classList.toggle("open"));
     const tipX = d.querySelector(".tipjar__x");
     if (tipX) tipX.addEventListener("click", () => { const tj = d.querySelector(".tipjar"); if (tj) tj.remove(); });

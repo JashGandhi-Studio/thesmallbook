@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <title>3D Library & Book Discovery | TheSmallBook</title>
+  <meta name="description" content="Discover 520 curated executive book summaries in an interactive 3D Library. Browse realistic wooden shelves and rotate hardcover books in 3D.">
+  <meta property="og:title" content="3D Library & Book Discovery | TheSmallBook">
+  <meta property="og:description" content="Discover 520 curated executive book summaries in an interactive 3D Library.">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=323">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#140f0b">
+  <style>
+    :root {
+      --ink: #111111;
+      --paper: #fffdf5;
+      --paper-warm: #fcf9ee;
+      --yellow: #ffc800;
+      --red: #ff5a5f;
+      --book-w: 300px;
+      --book-h: 460px;
+      --book-depth: 42px;
+      --book-open-w: 920px;
+      --book-open-h: 560px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100dvh;
+      background: #110d09;
+      color: var(--ink);
+      font-family: "Space Grotesk", -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* =========================================================
+       AESTHETIC ARCHITECTURAL LIBRARY BACKGROUND
+       ========================================================= */
+    .library-env-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      background: #120e0a;
+    }
+
+    /* Ambient Warm Lamp Beam */
+    .library-lamp-glow {
+      position: absolute;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1200px, 150vw);
+      height: 100%;
+      background: radial-gradient(ellipse at 50% 20%, rgba(255, 230, 170, 0.26) 0%, rgba(220, 180, 120, 0.1) 45%, transparent 75%);
+    }
+
+    /* Background Wall Bookshelves */
+    .library-shelves-backdrop {
+      position: absolute;
+      top: 50px;
+      left: 0;
+      right: 0;
+      height: 380px;
+      opacity: 0.22;
+      background-image:
+        repeating-linear-gradient(to right,
+          #0b0805 0px, #0b0805 16px,
+          #362214 16px, #362214 42px,
+          #1e130b 42px, #1e130b 68px,
+          #4d311d 68px, #4d311d 94px,
+          #22140a 94px, #22140a 120px,
+          #58371f 120px, #58371f 148px,
+          #180e07 148px, #180e07 174px
+        );
+      box-shadow: inset 0 -50px 70px #120e0a;
+      filter: blur(2.5px);
+    }
+
+    .library-floating-motes {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1.5px 1.5px at 20% 30%, rgba(255, 230, 160, 0.45) 50%, transparent),
+        radial-gradient(1.5px 1.5px at 75% 25%, rgba(255, 230, 160, 0.35) 50%, transparent),
+        radial-gradient(2px 2px at 45% 65%, rgba(255, 230, 160, 0.3) 50%, transparent),
+        radial-gradient(1px 1px at 85% 70%, rgba(255, 230, 160, 0.4) 50%, transparent);
+      animation: floatMotes 24s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    @keyframes floatMotes {
+      0% { transform: translateY(0); opacity: 0.6; }
+      50% { transform: translateY(-18px); opacity: 0.9; }
+      100% { transform: translateY(-32px); opacity: 0.7; }
+    }
+
+    /* Polished Oak Desk in Foreground */
+    .desk-surface {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 48%;
+      background: linear-gradient(to bottom, #cfa875 0%, #b38954 22%, #8b6233 70%, #583a1b 100%);
+      box-shadow: inset 0 16px 36px rgba(0,0,0,0.5);
+      border-top: 3.5px solid rgba(0,0,0,0.5);
+      z-index: 2;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    /* =========================================================
+       NAVIGATION BAR WITH CLEAN SVGS & ZERO CLIPPING
+       ========================================================= */
+    .nav {
+      position: relative;
+      z-index: 70;
+      width: 100%;
+      border-bottom: 3px solid var(--ink);
+      background: var(--paper, #fffdf5);
+    }
+    .nav__right-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rnd-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-family: "Archivo Black", sans-serif;
+      font-size: 11.5px;
+      letter-spacing: 0.3px;
+      text-decoration: none;
+      box-shadow: 2px 2px 0 var(--ink);
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .rnd-nav-btn:hover {
+      background: #f4efe2;
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+    .rnd-nav-btn:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0 var(--ink);
+    }
+    .rnd-nav-btn.is-active {
+      background: #111;
+      color: #ffc800;
+      border-color: #ffc800;
+      box-shadow: 2px 2px 0 #ffc800;
+    }
+
+    .rnd-nav-btn--primary {
+      background: var(--yellow) !important;
+      color: var(--ink) !important;
+      border: 2px solid var(--ink) !important;
+      box-shadow: 2px 2px 0 var(--ink) !important;
+      font-weight: 800;
+    }
+    .rnd-nav-btn--primary:hover {
+      background: #ffd633 !important;
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 var(--ink) !important;
+    }
+    .rnd-nav-btn--roll {
+      background: var(--yellow);
+      border-width: 2px;
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+        .rnd-nav-btn--save.is-saved {
+      background: var(--yellow, #ffc800) !important;
+      color: #111 !important;
+      border-color: #111 !important;
+    }
+    .rnd-nav-btn--save.is-saved svg {
+      fill: #111 !important;
+    }
+    .btn-spread-save {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: 100%;
+      background: #fff;
+      color: var(--ink, #111);
+      border: 2px solid var(--ink, #111);
+      border-radius: 9px;
+      padding: 10px 14px;
+      font-family: var(--font-head, "Archivo Black", sans-serif);
+      font-size: 11.5px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0 var(--ink, #111);
+      transition: transform 0.12s, background 0.12s;
+      margin-bottom: 8px;
+    }
+    .btn-spread-save:hover {
+      background: #f7f3e8;
+      transform: translate(-1px, -1px);
+    }
+    .btn-spread-save.is-saved {
+      background: var(--yellow, #ffc800);
+      border-color: var(--ink, #111);
+    }
+    .btn-spread-save.is-saved svg {
+      fill: currentColor;
+    }
+
+    .rnd-nav-btn--roll:hover {
+      background: #ffd633;
+    }
+
+    #rollDiceIcon {
+      display: inline-block;
+      transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+
+    /* =========================================================
+       VIEW 2: 3D READING DESK MODE ("BOOK IN HAND")
+       ========================================================= */
+    .desk-view {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1080px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 14px 40px;
+      flex: 1;
+    }
+
+    /* Tactile Hint Badge */
+    .rnd-hint-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      background: #fff;
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      padding: 6px 18px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 2.5px 2.5px 0 var(--ink);
+      margin-bottom: 16px;
+      transition: all 0.25s;
+    }
+    .rnd-hint-pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: pulseGreen 1.5s infinite ease-in-out;
+    }
+    @keyframes pulseGreen {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.6); opacity: 0.45; }
+    }
+
+    /* 3D BOOK THEATER VIEWPORT */
+    .book-theater {
+      perspective: 1600px;
+      perspective-origin: 50% 45%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 10px 0 20px;
+      min-height: 520px;
+      cursor: grab;
+      touch-action: none;
+    }
+    .book-theater:active {
+      cursor: grabbing;
+    }
+
+    /* THE PHYSICAL 3D BOOK BODY */
+    .book-physical {
+      position: relative;
+      transform-style: preserve-3d;
+      will-change: transform, width, height;
+      transition:
+        width 0.65s cubic-bezier(0.2, 0.9, 0.25, 1),
+        height 0.65s cubic-bezier(0.2, 0.9, 0.25, 1);
+    }
+
+    /* Closed 3D State */
+    .book-physical.is-closed {
+      width: var(--book-w);
+      height: var(--book-h);
+    }
+
+    /* Open 3D State: Razor-sharp 2-page spread */
+    .book-physical.is-open {
+      width: min(var(--book-open-w), 96vw);
+      height: auto;
+      min-height: var(--book-open-h);
+      transform: rotateY(0deg) rotateX(0deg) translateY(0) !important;
+      cursor: default;
+    }
+
+    /* Continuous 3D rotation while image loads */
+    .book-physical.is-spinning-load {
+      animation: bookContinuousSpin 1.35s linear infinite !important;
+      pointer-events: none !important;
+      cursor: wait;
+    }
+
+    @keyframes bookContinuousSpin {
+      0% {
+        transform: translateY(-24px) rotateX(12deg) rotateY(0deg);
+      }
+      50% {
+        transform: translateY(-38px) rotateX(6deg) rotateY(180deg);
+      }
+      100% {
+        transform: translateY(-24px) rotateX(12deg) rotateY(360deg);
+      }
+    }
+
+    /* Landing and settling when image is loaded */
+    .book-physical.settle-landing {
+      animation: bookSettleLanding 0.52s cubic-bezier(0.18, 0.9, 0.32, 1.2) forwards !important;
+    }
+
+    @keyframes bookSettleLanding {
+      0% {
+        transform: translateY(-24px) rotateX(12deg) rotateY(360deg) scale(1.02);
+      }
+      62% {
+        transform: translateY(8px) rotateX(6deg) rotateY(-20deg) scaleY(0.96);
+      }
+      82% {
+        transform: translateY(-6px) rotateX(9deg) rotateY(-23deg) scaleY(1.01);
+      }
+      100% {
+        transform: translateY(0) rotateX(10deg) rotateY(-22deg) scale(1);
+      }
+    }
+
+    /* Falling Down Animation (when rolling another book) */
+    .book-physical.falling-down {
+      transform: translateY(130vh) rotateX(60deg) rotateZ(-30deg) rotateY(-25deg) !important;
+      opacity: 0 !important;
+      transition: transform 0.45s cubic-bezier(0.55, 0.055, 0.675, 0.19), opacity 0.35s ease !important;
+    }
+
+    /* Realistic Library Drop Animation */
+    .book-physical.swoop-from-library {
+      animation: bookRealisticDrop 0.72s cubic-bezier(0.18, 0.9, 0.32, 1.2) forwards !important;
+    }
+    @keyframes bookRealisticDrop {
+      0% {
+        transform: translateY(-90vh) scale(0.7) rotateX(-26deg) rotateZ(12deg);
+        opacity: 0;
+      }
+      68% {
+        transform: translateY(14px) scaleY(0.96) scaleX(1.02) rotateX(4deg) rotateZ(-2deg);
+        opacity: 1;
+      }
+      84% {
+        transform: translateY(-12px) scaleY(1.02) scaleX(0.99) rotateX(-2deg);
+        opacity: 1;
+      }
+      100% {
+        transform: rotateY(-22deg) rotateX(10deg) translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Dynamic Ambient Floor Shadow */
+    .book-shadow {
+      position: absolute;
+      bottom: -22px;
+      left: 6%;
+      width: 88%;
+      height: 44px;
+      background: radial-gradient(ellipse at center, rgba(17, 17, 17, 0.58) 0%, rgba(17, 17, 17, 0.16) 50%, transparent 75%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      transition: all 0.5s cubic-bezier(0.2, 0.9, 0.25, 1);
+    }
+    .book-physical.is-open .book-shadow {
+      bottom: -32px;
+      width: 98%;
+      height: 60px;
+      left: 1%;
+      background: radial-gradient(ellipse at center, rgba(17, 17, 17, 0.62) 0%, rgba(17, 17, 17, 0.2) 55%, transparent 80%);
+    }
+
+    /* 3D Realistic Spine (Left Edge) */
+    .book-spine-3d {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: var(--book-depth);
+      height: 100%;
+      background: linear-gradient(to right, #110e0c 0%, #2a1f18 45%, #15100c 100%);
+      transform: rotateY(-90deg) translateX(-100%);
+      transform-origin: left top;
+      border: 2px solid var(--ink);
+      border-radius: 4px 0 0 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 3px;
+      color: #ffc800;
+      font-size: 10px;
+      font-weight: 800;
+      box-shadow: inset 3px 0 6px rgba(255,255,255,0.18), inset -4px 0 8px rgba(0,0,0,0.65);
+      backface-visibility: hidden;
+      transition: opacity 0.3s;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .book-spine-3d::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: repeating-linear-gradient(45deg, #d4af37 0px, #d4af37 3px, #800000 3px, #800000 6px);
+      border-bottom: 1px solid rgba(0,0,0,0.6);
+      pointer-events: none;
+    }
+    .book-spine-3d::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: repeating-linear-gradient(45deg, #d4af37 0px, #d4af37 3px, #800000 3px, #800000 6px);
+      border-top: 1px solid rgba(0,0,0,0.6);
+      pointer-events: none;
+    }
+    .spine-hub-rib {
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to bottom, #d4af37 0%, #684813 50%, #221808 100%);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.35);
+      border-radius: 1px;
+      flex-shrink: 0;
+    }
+    .spine-head-mark,
+    .spine-year-mark {
+      font-size: 8.5px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      flex-shrink: 0;
+    }
+    .book-physical.is-open .book-spine-3d {
+      opacity: 0;
+    }
+    .book-spine-text {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      letter-spacing: 1.2px;
+      max-height: 290px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* =========================================================
+       ZERO VERTICAL SCROLLING WHEN BOOK IS CLOSED (MOBILE & DESKTOP)
+       ========================================================= */
+    body.is-desk-closed {
+      height: 100dvh;
+      max-height: 100dvh;
+      overflow: hidden !important;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+    }
+    body.is-desk-closed .desk-view {
+      height: calc(100dvh - 56px);
+      max-height: calc(100dvh - 56px);
+      overflow: hidden;
+      padding: 6px 12px 10px;
+      justify-content: space-between;
+    }
+    body.is-desk-closed .book-theater {
+      flex: 1;
+      min-height: 0;
+      height: 100%;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    body.is-desk-closed .rnd-clean-footer {
+      margin-top: 4px;
+      margin-bottom: 4px;
+      font-size: 11px;
+    }
+
+    body.is-desk-open {
+      overflow-y: auto !important;
+      min-height: 100dvh;
+      height: auto;
+    }
+    body.is-desk-open .desk-view {
+      height: auto;
+      min-height: calc(100dvh - 56px);
+      padding: 16px 14px 48px;
+    }
+
+    /* 3D Paper Stack Thickness Edges (Seamless Hardcover Deckled Profile) */
+    .book-pages-right {
+      position: absolute;
+      top: 5px;
+      bottom: 5px;
+      right: 4px;
+      width: calc(var(--book-depth) - 4px);
+      background: repeating-linear-gradient(to right, #fdf9ee 0px, #fdf9ee 2px, #eadbb6 2px, #eadbb6 4px, #d9c89e 4px, #eadbb6 6px);
+      transform-origin: right center;
+      transform: rotateY(-90deg);
+      border: 1px solid #c9b996;
+      border-left: none;
+      box-shadow: inset 8px 0 16px rgba(0,0,0,0.35);
+      z-index: 5;
+      pointer-events: none;
+    }
+    .book-pages-top {
+      position: absolute;
+      top: 4px;
+      left: 6px;
+      right: 4px;
+      height: calc(var(--book-depth) - 4px);
+      background: repeating-linear-gradient(to bottom, #fdf9ee 0px, #fdf9ee 2px, #eadbb6 2px, #eadbb6 4px, #d9c89e 4px, #eadbb6 6px);
+      transform-origin: top center;
+      transform: rotateX(-90deg);
+      border: 1px solid #c9b996;
+      border-bottom: none;
+      box-shadow: inset 0 8px 16px rgba(0,0,0,0.32);
+      z-index: 5;
+      pointer-events: none;
+    }
+    .book-pages-bottom {
+      position: absolute;
+      bottom: 4px;
+      left: 6px;
+      right: 4px;
+      height: calc(var(--book-depth) - 4px);
+      background: repeating-linear-gradient(to top, #fdf9ee 0px, #fdf9ee 2px, #eadbb6 2px, #eadbb6 4px, #d9c89e 4px, #eadbb6 6px);
+      transform-origin: bottom center;
+      transform: rotateX(90deg);
+      border: 1px solid #c9b996;
+      border-top: none;
+      box-shadow: inset 0 -8px 16px rgba(0,0,0,0.32);
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    /* 3D Back Cover: Luxury Executive Archival Binding */
+    .book-back-cover {
+      position: absolute;
+      inset: 0;
+      border-radius: 4px 14px 14px 4px;
+      background: radial-gradient(circle at 50% 30%, #251d18 0%, #15100d 80%, #0d0a08 100%);
+      border: 3.5px solid var(--ink);
+      transform: translateZ(calc(var(--book-depth) * -1)) rotateY(180deg);
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: space-between;
+      padding: 16px 14px;
+      color: #ffc800;
+      box-shadow:
+        inset 16px 0 20px rgba(0,0,0,0.4),
+        inset -4px 0 8px rgba(0,0,0,0.5),
+        6px 6px 0 var(--ink),
+        0 16px 32px rgba(0,0,0,0.38);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .back-cover-border-frame {
+      border: 1.5px solid rgba(255, 200, 0, 0.45);
+      outline: 1px solid rgba(255, 200, 0, 0.2);
+      outline-offset: -5px;
+      border-radius: 2px 10px 10px 2px;
+      padding: 12px 10px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      background: rgba(0,0,0,0.25);
+    }
+    .back-crest-emblem {
+      font-size: 20px;
+      margin-bottom: 2px;
+      text-align: center;
+    }
+    .back-crest-heading {
+      font-family: "Archivo Black", sans-serif;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: #ffc800;
+      text-align: center;
+    }
+    .back-crest-sub {
+      font-size: 8.5px;
+      font-weight: 700;
+      color: #bfa882;
+      text-align: center;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+    .back-cover-synopsis {
+      font-family: "Newsreader", Georgia, serif;
+      font-style: italic;
+      font-size: 11px;
+      line-height: 1.4;
+      color: #e5dac5;
+      text-align: center;
+      padding: 6px 4px;
+      border-top: 1px dashed rgba(255,200,0,0.25);
+      border-bottom: 1px dashed rgba(255,200,0,0.25);
+      margin: 6px 0;
+      max-height: 80px;
+      overflow: hidden;
+    }
+    .back-cover-metadata {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .back-barcode-block {
+      background: #fff;
+      padding: 3px 5px;
+      border-radius: 4px;
+      border: 1px solid var(--ink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .back-barcode-lines {
+      display: flex;
+      align-items: stretch;
+      gap: 1.5px;
+      height: 16px;
+      width: 58px;
+    }
+    .back-barcode-lines span {
+      background: #111;
+      width: 2px;
+      display: inline-block;
+    }
+    .back-barcode-lines span:nth-child(2n) {
+      width: 1px;
+    }
+    .back-barcode-lines span:nth-child(3n) {
+      width: 3px;
+    }
+    .back-isbn {
+      font-family: monospace;
+      font-size: 7px;
+      font-weight: 700;
+      color: #222;
+      margin-top: 1px;
+      letter-spacing: -0.2px;
+    }
+    .back-gold-stamp {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid #ffc800;
+      border-radius: 6px;
+      padding: 3px 6px;
+      font-family: "Archivo Black", sans-serif;
+      font-size: 7.5px;
+      letter-spacing: 0.5px;
+      color: #ffc800;
+      background: rgba(255,200,0,0.08);
+      text-align: center;
+    }
+    .back-gold-stamp .back-gold-star {
+      font-size: 10px;
+      line-height: 1;
+      margin-bottom: 1px;
+    }
+    .back-tap-hint {
+      font-family: "Archivo Black", sans-serif;
+      font-size: 8px;
+      letter-spacing: 0.8px;
+      color: #ffc800;
+      text-align: center;
+      background: rgba(255,200,0,0.12);
+      border: 1px solid rgba(255,200,0,0.3);
+      border-radius: 4px;
+      padding: 2.5px 5px;
+      margin-top: 3px;
+    }
+
+    .book-physical.is-open .book-pages-right,
+    .book-physical.is-open .book-pages-top,
+    .book-physical.is-open .book-pages-bottom,
+    .book-physical.is-open .book-back-cover {
+      opacity: 0;
+    }
+
+    /* =========================================================
+       FRONT COVER HINGE DOOR (Swings open 180deg)
+       ========================================================= */
+    .book-cover-door {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: var(--book-w);
+      height: var(--book-h);
+      transform-origin: left center;
+      transform-style: preserve-3d;
+      transition: transform 0.85s cubic-bezier(0.22, 0.9, 0.25, 1);
+      z-index: 30;
+      will-change: transform;
+      pointer-events: none;
+    }
+    .book-physical.is-open .book-cover-door {
+      transform: rotateY(-180deg);
+    }
+
+    .book-cover-front {
+      position: absolute;
+      inset: 0;
+      border-radius: 4px 14px 14px 4px;
+      overflow: hidden;
+      border: 3.5px solid var(--ink);
+      background: #221d19;
+      backface-visibility: hidden;
+      box-shadow:
+        inset 16px 0 20px rgba(0,0,0,0.35),
+        6px 6px 0 var(--ink),
+        0 16px 32px rgba(0,0,0,0.38);
+    }
+    .book-cover-front::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 18px;
+      width: 3.5px;
+      background: linear-gradient(to right, rgba(0,0,0,0.5), rgba(255,255,255,0.2) 48%, rgba(0,0,0,0.4));
+      box-shadow: inset 1px 0 1.5px rgba(0,0,0,0.65);
+      z-index: 5;
+      pointer-events: none;
+    }
+    .cover-emboss-frame {
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 2px 10px 10px 2px;
+      pointer-events: none;
+      z-index: 4;
+    }
+    .book-cover-front img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    /* Specular Light Sheen Overlay */
+    .cover-specular-sheen {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.22) 0%, transparent 45%, rgba(0,0,0,0.2) 100%);
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .book-cover-inside {
+      position: absolute;
+      inset: 0;
+      border-radius: 14px 4px 4px 14px;
+      background: #fbf7eb;
+      border: 3.5px solid var(--ink);
+      transform: rotateY(180deg);
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-shadow: inset 0 0 25px rgba(0,0,0,0.12);
+    }
+    .bookplate-box {
+      background: #fff;
+      border: 2px dashed var(--ink);
+      border-radius: 12px;
+      padding: 22px 18px;
+      width: 85%;
+      box-shadow: 3px 3px 0 rgba(0,0,0,0.12);
+      text-align: center;
+    }
+
+    /* =========================================================
+       OPENED TWO-PAGE EDITORIAL SPREAD
+       ========================================================= */
+    .book-opened-spread {
+      position: relative;
+      z-index: 10;
+      background: #181513;
+      border: 3.5px solid var(--ink);
+      border-radius: 14px;
+      box-shadow: 8px 10px 0 var(--ink), 0 22px 48px rgba(0,0,0,0.32);
+      padding: 12px;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease 0.3s;
+    }
+    .book-physical.is-open .book-opened-spread {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .book-opened-spread::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      bottom: 12px;
+      left: 50%;
+      width: 44px;
+      transform: translateX(-50%);
+      background: linear-gradient(to right,
+        rgba(0,0,0,0.2) 0%,
+        rgba(0,0,0,0.06) 22%,
+        transparent 38%,
+        rgba(0,0,0,0.3) 49%,
+        rgba(0,0,0,0.4) 50%,
+        rgba(0,0,0,0.3) 51%,
+        transparent 62%,
+        rgba(0,0,0,0.06) 78%,
+        rgba(0,0,0,0.2) 100%
+      );
+      pointer-events: none;
+      z-index: 15;
+    }
+
+    .book-silk-ribbon {
+      position: absolute;
+      bottom: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 16px;
+      height: 38px;
+      background: var(--red);
+      border: 2px solid var(--ink);
+      border-top: none;
+      box-shadow: 2px 2px 0 var(--ink);
+      z-index: 18;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+    }
+
+    .spread-pages-grid {
+      background: var(--paper-warm);
+      border: 2px solid #332f2b;
+      border-radius: 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .page-col-left {
+      padding: 34px 30px 28px 36px;
+      border-right: 1.5px solid #ded3be;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #fffdf9;
+    }
+    .page-col-right {
+      padding: 34px 36px 28px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #fffdf9;
+    }
+
+    .editorial-category-stamp {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+    .editorial-readtime {
+      font-size: 11px;
+      font-weight: 700;
+      color: #666;
+    }
+
+    .editorial-title {
+      font-family: "Newsreader", Georgia, serif;
+      font-size: 28px;
+      line-height: 1.16;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 8px 0 4px;
+    }
+    .editorial-author {
+      font-size: 13px;
+      font-weight: 700;
+      color: #666;
+      margin: 0 0 16px;
+    }
+
+    .bigidea-editorial-card {
+      background: #fbf5e6;
+      border: 2px solid var(--ink);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      box-shadow: 3px 3px 0 var(--ink);
+    }
+    .bigidea-kicker {
+      font-family: "Archivo Black", sans-serif;
+      font-size: 10px;
+      color: #777;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 5px;
+    }
+    .bigidea-text {
+      font-size: 13px;
+      line-height: 1.48;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .lessons-editorial-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .lesson-editorial-card {
+      background: #fff;
+      border: 1.5px solid var(--ink);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .quote-editorial-box {
+      font-family: "Newsreader", Georgia, serif;
+      font-style: italic;
+      font-size: 15.5px;
+      line-height: 1.42;
+      color: #111;
+      background: #fffdf2;
+      border-left: 4px solid var(--ink);
+      border-radius: 0 10px 10px 0;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+    }
+
+    .plan-editorial-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 16px;
+    }
+    .plan-step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12px;
+      line-height: 1.35;
+      color: #222;
+    }
+    .plan-step-badge {
+      width: 18px;
+      height: 18px;
+      background: var(--yellow);
+      border: 1.5px solid var(--ink);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .caveat-editorial-box {
+      font-size: 11.5px;
+      line-height: 1.38;
+      color: #555;
+      background: #fff0f0;
+      border: 1.5px solid #ff9999;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 18px;
+    }
+    .caveat-editorial-box b {
+      color: #dc2626;
+    }
+
+    .btn-read-breakdown-full {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      text-align: center;
+      background: var(--yellow);
+      color: var(--ink);
+      border: 2.5px solid var(--ink);
+      border-radius: 12px;
+      padding: 13px 18px;
+      font-family: "Archivo Black", sans-serif;
+      font-size: 13.5px;
+      letter-spacing: 0.3px;
+      text-decoration: none;
+      box-shadow: 3.5px 3.5px 0 var(--ink);
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
+    }
+    .btn-read-breakdown-full:hover {
+      background: #ffd633;
+      transform: translate(-1px, -1px);
+      box-shadow: 4.5px 4.5px 0 var(--ink);
+    }
+
+    .rnd-clean-footer {
+      font-size: 12px;
+      color: #ded3be;
+      font-weight: 700;
+      margin-top: 18px;
+      text-align: center;
+      letter-spacing: 0.3px;
+    }
+
+    /* Responsive Mobile Rules */
+    @media (max-width: 760px) {
+      :root {
+        --book-w: min(250px, 66vw);
+        --book-h: min(375px, 50vh);
+        --book-depth: 34px;
+      }
+      body.is-desk-closed .book-theater {
+        min-height: 0;
+      }
+      body.is-desk-closed .rnd-hint-badge {
+        margin-bottom: 6px;
+        padding: 4px 12px;
+        font-size: 10.5px;
+      }
+      .nav__right-actions {
+        gap: 5px;
+      }
+      .rnd-nav-btn {
+        padding: 5px 9px;
+        font-size: 10.5px;
+        gap: 4px;
+      }
+      .desk-view {
+        padding: 10px 10px 18px;
+      }
+      .book-theater {
+        min-height: 380px;
+      }
+      .book-opened-spread {
+        padding: 6px;
+      }
+      .book-opened-spread::before,
+      .book-silk-ribbon {
+        display: none;
+      }
+      .spread-pages-grid {
+        grid-template-columns: 1fr;
+      }
+      .page-col-left {
+        border-right: none;
+        border-bottom: 2px dashed #ded3be;
+        padding: 20px 16px 16px;
+      }
+      .page-col-right {
+        padding: 16px 16px 20px;
+      }
+      .rnd-full-experience-dock {
+        margin: 2px auto;
+      }
+      .rnd-full-exp-card {
+        padding: 6px 10px;
+        gap: 8px;
+        border-radius: 10px;
+      }
+      .rnd-exp-subline {
+        display: none;
+      }
+      .rnd-exp-headline {
+        font-size: 11px;
+      }
+      .rnd-exp-cta-btn {
+        padding: 5px 9px;
+        font-size: 9.5px;
+      }
+      .editorial-title {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Architectural Library Backdrop -->
+  <div class="library-env-scene">
+    <div class="library-lamp-glow"></div>
+    <div class="library-shelves-backdrop"></div>
+    <div class="library-floating-motes"></div>
+  </div>
+  <div class="desk-surface" id="deskSurfacePlank"></div>
+
+  <!-- Responsive Header with Crisp SVGs & Zero Overflow -->
+  <nav class="nav">
+    <a class="logo" href="index.html">
+      <span class="logo__mark">📕</span>
+      <span>The<span class="logo__small">Small</span>Book</span>
+    </a>
+    <div class="nav__right-actions">
+
+      <!-- Open / Close Book Cover Toggle -->
+      <button type="button" class="rnd-nav-btn" id="btnToggleOpen" title="Open or close book cover">
+        <svg id="iconBookOpen" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+        </svg>
+        <span id="labelOpenBtn">OPEN</span>
+      </button>
+
+      <!-- Roll Another Book -->
+            <!-- Save to Shelf Bookmark Toggle -->
+      <button type="button" class="rnd-nav-btn rnd-nav-btn--save" id="btnSaveBook" title="Save book to your shelf">
+        <svg id="iconBookmark" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <span id="labelSaveBtn">SAVE</span>
+      </button>
+
+      <button type="button" class="rnd-nav-btn rnd-nav-btn--roll" id="btnRoll" title="Pick another random book">
+        <svg id="rollDiceIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="3"></rect>
+          <circle cx="8" cy="8" r="1.5" fill="currentColor"></circle>
+          <circle cx="16" cy="8" r="1.5" fill="currentColor"></circle>
+          <circle cx="12" cy="12" r="1.5" fill="currentColor"></circle>
+          <circle cx="8" cy="16" r="1.5" fill="currentColor"></circle>
+          <circle cx="16" cy="16" r="1.5" fill="currentColor"></circle>
+        </svg>
+        <span id="labelRollBtn">ROLL</span>
+      </button>
+    </div>
+  </nav>
+
+
+
+  <!-- =========================================================
+       VIEW 2: 3D READING DESK MODE ("BOOK IN HAND")
+       ========================================================= -->
+  <main class="desk-view" id="deskView">
+    
+    <!-- Tactile Interactive Hint Badge -->
+    <div class="rnd-hint-badge" id="hintBadge">
+      <span class="rnd-hint-pulse"></span>
+      <span id="hintText">Drag anywhere to spin 360° in 3D · Click to open</span>
+    </div>
+
+    <!-- 3D Book Theater Viewport -->
+    <div class="book-theater" id="bookTheater">
+      
+      <!-- The Physical 3D Book Body -->
+      <div class="book-physical is-closed swoop-from-library" id="bookPhysical">
+        
+        <!-- Contact Floor Shadow -->
+        <div class="book-shadow" id="bookFloorShadow"></div>
+
+        <!-- 3D Spine (Left Edge) -->
+        <div class="book-spine-3d">
+          <div class="spine-hub-rib"></div>
+          <span class="spine-head-mark">📕 TSB</span>
+          <div class="spine-hub-rib"></div>
+          <span class="book-spine-text" id="spineTitle">Title</span>
+          <div class="spine-hub-rib"></div>
+          <span class="spine-year-mark">2026</span>
+          <div class="spine-hub-rib"></div>
+        </div>
+
+        <!-- 3D Paper Stack Thickness Edges -->
+        <div class="book-pages-right"></div>
+        <div class="book-pages-top"></div>
+        <div class="book-pages-bottom"></div>
+
+        <!-- 3D Back Cover: Luxury Executive Archival Binding -->
+        <div class="book-back-cover" id="bookBackCover">
+          <div class="back-cover-border-frame">
+            <div class="book-back-crest">
+              <div class="back-crest-emblem">🏛️</div>
+              <div class="back-crest-heading">THESMALLBOOK ARCHIVES</div>
+              <div class="back-crest-sub">EXECUTIVE LIBRARY EDITION · EST. 2026</div>
+            </div>
+
+            <div class="back-cover-synopsis" id="backCoverBlurb">
+              Every volume in this curated collection has been distilled into an eight-minute masterclass framework. Unconditional editorial integrity.
+            </div>
+
+            <div class="back-cover-metadata">
+              <div class="back-barcode-block">
+                <div class="back-barcode-lines" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="back-isbn" id="backCoverIsbn">ISBN 978-0-2026-TSB-520</div>
+              </div>
+              <div class="back-gold-stamp">
+                <span class="back-gold-star">★</span>
+                <span>8-MIN COMPACT</span>
+              </div>
+            </div>
+
+            <div class="back-tap-hint">TAP ANYWHERE TO OPEN & READ</div>
+          </div>
+        </div>
+
+        <!-- 3D Front Cover Door (Swings Open 180deg) -->
+        <div class="book-cover-door" id="coverDoor">
+          <div class="book-cover-front">
+            <img id="coverImg" src="" alt="Book Cover" draggable="false">
+            <div class="cover-emboss-frame"></div>
+            <div class="cover-specular-sheen" id="coverSheen"></div>
+          </div>
+
+          <div class="book-cover-inside">
+            <div class="bookplate-box">
+              <div style="font-family:'Archivo Black',sans-serif;font-size:13px;margin-bottom:4px;">THESMALLBOOK</div>
+              <div style="font-size:11px;color:#666;font-weight:700;">Executive Library Edition</div>
+              <div style="font-size:24px;margin:8px 0;">📕</div>
+              <div style="font-size:10.5px;color:#888;">Executive Book Summary</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Opened 2-Page Editorial Spread -->
+        <div class="book-opened-spread" id="openedSpread">
+          <div class="book-silk-ribbon"></div>
+
+          <article class="spread-pages-grid">
+            <!-- Left Page -->
+            <section class="page-col-left">
+              <div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                  <span class="editorial-category-stamp" id="bookCategory">CATEGORY</span>
+                  <span class="editorial-readtime" id="bookReadTime">8 MIN READ</span>
+                </div>
+
+                <h1 class="editorial-title" id="bookTitle">Book Title</h1>
+                <div class="editorial-author" id="bookAuthor">by Author · Year</div>
+
+                <div class="bigidea-editorial-card">
+                  <div class="bigidea-kicker">💡 The Big Idea</div>
+                  <p class="bigidea-text" id="bookBigIdea">Loading core summary...</p>
+                </div>
+
+                <div style="font-family:'Archivo Black',sans-serif;font-size:10.5px;text-transform:uppercase;color:#666;margin-bottom:8px;">Core Lessons</div>
+                <div class="lessons-editorial-stack" id="bookLessonsContainer"></div>
+              </div>
+
+              <button type="button" class="btn" style="background:transparent;border:none;color:#666;font-size:12px;font-weight:700;cursor:pointer;padding-top:12px;" id="btnPageClose">
+                📖 Close Book Cover
+              </button>
+            </section>
+
+            <!-- Right Page -->
+            <section class="page-col-right">
+              <div>
+                <div class="quote-editorial-box" id="bookQuote">
+                  <span style="font-size:26px;color:#ffc800;vertical-align:-4px;margin-right:4px;">“</span><span id="bookQuoteText">Quote here.</span>
+                </div>
+
+                <div style="font-family:'Archivo Black',sans-serif;font-size:10.5px;text-transform:uppercase;color:#666;margin-bottom:8px;">Action Blueprint</div>
+                <div class="plan-editorial-stack" id="bookActionPlan"></div>
+
+                <div class="caveat-editorial-box" id="bookCaveat">
+                  <b>Where advice breaks:</b> Contextual failure analysis.
+                </div>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <button type="button" class="btn-spread-save" id="btnSpreadSave">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                  <span id="labelSpreadSave">Save to My Shelf</span>
+                </button>
+                <a href="#" class="btn-read-breakdown-full" id="btnReadFull">
+                  <span>READ FULL BREAKDOWN</span>
+                  <span>&rarr;</span>
+                </a>
+
+              </div>
+            </section>
+          </article>
+        </div>
+
+      </div>
+    </div>
+
+
+
+    <!-- Clean Footer -->
+    <div class="rnd-clean-footer">
+      520 Curated Book Breakdowns · Executive Summaries · Read in 8 Minutes
+    </div>
+
+  </main>
+
+  <script src="./js/bootguard.js?v=323"></script>
+  <script src="js/data.js?v=323"></script>
+  <script>
+    (function () {
+      "use strict";
+
+      var books = window.BOOKS || [];
+      if (!books.length) return;
+
+      /* =========================================================
+         SYNTHESIZED WEB AUDIO SOUND FX
+         ========================================================= */
+      var SoundFX = (function () {
+        var ctx = null;
+
+        function init() {
+          if (!ctx) {
+            try {
+              var AudioCtx = window.AudioContext || window.webkitAudioContext;
+              if (AudioCtx) ctx = new AudioCtx();
+            } catch (e) {}
+          }
+          if (ctx && ctx.state === "suspended") {
+            ctx.resume().catch(function () {});
+          }
+        }
+
+        function thud() {
+          init();
+          if (!ctx) return;
+          try {
+            var now = ctx.currentTime;
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+            var filter = ctx.createBiquadFilter();
+
+            filter.type = "lowpass";
+            filter.frequency.setValueAtTime(280, now);
+            filter.frequency.exponentialRampToValueAtTime(40, now + 0.16);
+
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(150, now);
+            osc.frequency.exponentialRampToValueAtTime(32, now + 0.16);
+
+            gain.gain.setValueAtTime(0.24, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.start(now);
+            osc.stop(now + 0.18);
+          } catch (e) {}
+        }
+
+        function tumble() {
+          init();
+          if (!ctx) return;
+          try {
+            [0, 0.08, 0.16].forEach(function (d, i) {
+              var now = ctx.currentTime + d;
+              var osc = ctx.createOscillator();
+              var gain = ctx.createGain();
+              osc.type = "sine";
+              osc.frequency.setValueAtTime([300, 210, 140][i], now);
+              osc.frequency.exponentialRampToValueAtTime(45, now + 0.06);
+
+              gain.gain.setValueAtTime([0.16, 0.12, 0.08][i], now);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+
+              osc.start(now);
+              osc.stop(now + 0.07);
+            });
+          } catch (e) {}
+        }
+
+        function pageFlip() {
+          init();
+          if (!ctx) return;
+          try {
+            var now = ctx.currentTime;
+            var buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.12), ctx.sampleRate);
+            var data = buf.getChannelData(0);
+            for (var i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.1;
+
+            var noise = ctx.createBufferSource();
+            noise.buffer = buf;
+
+            var filter = ctx.createBiquadFilter();
+            filter.type = "highpass";
+            filter.frequency.setValueAtTime(1800, now);
+
+            var gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.12, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+
+            noise.start(now);
+          } catch (e) {}
+        }
+
+        function shelfSlide() {
+          init();
+          if (!ctx) return;
+          try {
+            var now = ctx.currentTime;
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(180, now);
+            osc.frequency.exponentialRampToValueAtTime(320, now + 0.12);
+
+            gain.gain.setValueAtTime(0.14, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.start(now);
+            osc.stop(now + 0.14);
+          } catch (e) {}
+        }
+
+        return { thud: thud, tumble: tumble, pageFlip: pageFlip, shelfSlide: shelfSlide };
+      })();
+
+      /* =========================================================
+         DOM ELEMENTS & STATE
+         ========================================================= */
+      var deskView = document.getElementById("deskView");
+      var shelvesView = document.getElementById("shelvesView");
+      var deskSurfacePlank = document.getElementById("deskSurfacePlank");
+      var btnToggleShelves = document.getElementById("btnToggleShelves");
+      var labelShelvesBtn = document.getElementById("labelShelvesBtn");
+            var btnSaveBook = document.getElementById("btnSaveBook");
+      var labelSaveBtn = document.getElementById("labelSaveBtn");
+      var iconBookmark = document.getElementById("iconBookmark");
+      var btnSpreadSave = document.getElementById("btnSpreadSave");
+      var labelSpreadSave = document.getElementById("labelSpreadSave");
+
+      function isBookSaved(id) {
+        if (!id) return false;
+        try {
+          var list = JSON.parse(localStorage.getItem("tsb_bookmarks")) || [];
+          return Array.isArray(list) && list.indexOf(id) >= 0;
+        } catch (e) { return false; }
+      }
+
+      function updateSaveUI(saved) {
+        if (btnSaveBook) {
+          btnSaveBook.classList.toggle("is-saved", saved);
+          if (labelSaveBtn) labelSaveBtn.textContent = saved ? "SAVED ✓" : "SAVE";
+          if (iconBookmark) iconBookmark.style.fill = saved ? "currentColor" : "none";
+        }
+        if (btnSpreadSave) {
+          btnSpreadSave.classList.toggle("is-saved", saved);
+          if (labelSpreadSave) labelSpreadSave.textContent = saved ? "Saved in My Shelf ✓" : "Save to My Shelf";
+        }
+      }
+
+      function showCleanToast(msg) {
+        try {
+          var old = document.getElementById("rndToast");
+          if (old) old.remove();
+          var t = document.createElement("div");
+          t.id = "rndToast";
+          t.style.cssText = "position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#111;color:#fff;border:2px solid #ffc800;border-radius:999px;padding:9px 18px;font:700 12px 'Space Grotesk',sans-serif;z-index:999999;box-shadow:0 8px 24px rgba(0,0,0,0.4);pointer-events:none;white-space:nowrap;";
+          t.textContent = msg;
+          document.body.appendChild(t);
+          setTimeout(function () {
+            t.style.opacity = "0";
+            t.style.transition = "opacity .3s";
+            setTimeout(function () { if (t.parentNode) t.remove(); }, 350);
+          }, 2400);
+        } catch (e) {}
+      }
+
+      function toggleSaveCurrent() {
+        if (!currentBook || !currentBook.id) return;
+        var id = currentBook.id;
+        var list = [];
+        try { list = JSON.parse(localStorage.getItem("tsb_bookmarks")) || []; } catch (e) {}
+        if (!Array.isArray(list)) list = [];
+        var idx = list.indexOf(id);
+        var nowSaved = false;
+        if (idx >= 0) {
+          list.splice(idx, 1);
+          nowSaved = false;
+        } else {
+          list.push(id);
+          nowSaved = true;
+        }
+        try { localStorage.setItem("tsb_bookmarks", JSON.stringify(list)); } catch (e) {}
+        try { if (window.TSB && TSB.bookmarks && TSB.bookmarks.toggle) { if (nowSaved && !TSB.bookmarks.has(id)) TSB.bookmarks.toggle(id); else if (!nowSaved && TSB.bookmarks.has(id)) TSB.bookmarks.toggle(id); } } catch (e) {}
+        try { if (window.TSB_AUTH && TSB_AUTH.sync) TSB_AUTH.sync(); } catch (e) {}
+        updateSaveUI(nowSaved);
+        SoundFX.playPop();
+        try { if (navigator.vibrate) navigator.vibrate(20); } catch (e) {}
+        if (nowSaved) {
+          showCleanToast("Saved to your shelf! Sign in anytime to keep it synced ✨");
+        } else {
+          showCleanToast("Removed from your shelf.");
+        }
+      }
+
+      if (btnSaveBook) btnSaveBook.addEventListener("click", toggleSaveCurrent);
+      if (btnSpreadSave) btnSpreadSave.addEventListener("click", toggleSaveCurrent);
+
+      var btnToggleOpen = document.getElementById("btnToggleOpen");
+      var labelOpenBtn = document.getElementById("labelOpenBtn");
+      var btnRoll = document.getElementById("btnRoll");
+      var rollDiceIcon = document.getElementById("rollDiceIcon");
+
+      var bookTheater = document.getElementById("bookTheater");
+      var bookPhysical = document.getElementById("bookPhysical");
+      var bookFloorShadow = document.getElementById("bookFloorShadow");
+      var coverImg = document.getElementById("coverImg");
+      var coverSheen = document.getElementById("coverSheen");
+      var spineTitle = document.getElementById("spineTitle");
+      var bookCategory = document.getElementById("bookCategory");
+      var bookTitle = document.getElementById("bookTitle");
+      var bookAuthor = document.getElementById("bookAuthor");
+      var bookBigIdea = document.getElementById("bookBigIdea");
+      var bookLessonsContainer = document.getElementById("bookLessonsContainer");
+      var bookQuoteText = document.getElementById("bookQuoteText");
+      var bookActionPlan = document.getElementById("bookActionPlan");
+      var bookCaveat = document.getElementById("bookCaveat");
+      var bookReadTime = document.getElementById("bookReadTime");
+      var btnReadFull = document.getElementById("btnReadFull");
+      var btnPageClose = document.getElementById("btnPageClose");
+      var hintText = document.getElementById("hintText");
+      var shelvesContainer = document.getElementById("shelvesContainer");
+
+      var currentBook = null;
+      var activeMode = "desk"; // "desk" | "shelves"
+
+      // 3D Rotation & Physics Inertia State
+      var rotY = -22;
+      var rotX = 10;
+      var vx = 0;
+      var vy = 0;
+      var isDragging = false;
+      var startX = 0;
+      var startY = 0;
+      var lastX = 0;
+      var lastY = 0;
+      var dragDistance = 0;
+      var inertiaAnimId = null;
+
+      function update3DTransform() {
+        if (!bookPhysical || bookPhysical.classList.contains("is-open")) return;
+        bookPhysical.style.transform = "rotateY(" + rotY + "deg) rotateX(" + rotX + "deg)";
+
+        // Shift dynamic floor shadow opposite to rotation angle
+        if (bookFloorShadow) {
+          var shadowOffsetX = -Math.sin(rotY * Math.PI / 180) * 20;
+          bookFloorShadow.style.transform = "translateX(" + shadowOffsetX + "px)";
+        }
+
+        // Shift specular sheen across book cover
+        if (coverSheen) {
+          var sheenPos = 50 + (rotY % 360) * 0.4;
+          coverSheen.style.background = "linear-gradient(" + (135 + rotY * 0.3) + "deg, rgba(255,255,255,0.24) 0%, transparent 45%, rgba(0,0,0,0.2) 100%)";
+        }
+      }
+
+      function startInertia() {
+        if (inertiaAnimId) cancelAnimationFrame(inertiaAnimId);
+        function loop() {
+          if (isDragging) return;
+          if (Math.abs(vx) > 0.05 || Math.abs(vy) > 0.05) {
+            rotY += vx;
+            rotX = Math.max(-38, Math.min(38, rotX - vy));
+            vx *= 0.92;
+            vy *= 0.92;
+            update3DTransform();
+            inertiaAnimId = requestAnimationFrame(loop);
+          }
+        }
+        inertiaAnimId = requestAnimationFrame(loop);
+      }
+
+      function populateBook(b) {
+        currentBook = b;
+        document.title = b.title + " | TheSmallBook 3D Discovery";
+
+        var coverSrc = String(b.cover || "").replace(/^\//, "");
+        if (coverImg) {
+          coverImg.src = coverSrc;
+          coverImg.alt = b.title;
+        }
+
+        if (spineTitle) spineTitle.textContent = b.title;
+        var isOriginal = (b.author === "Unknown");
+        if (bookCategory) {
+          bookCategory.textContent = isOriginal ? "✦ THESMALLBOOK ORIGINAL ✦" : ("✦ " + (b.category || "NON-FICTION").toUpperCase());
+        }
+        var backCoverBlurb = document.getElementById("backCoverBlurb");
+        var backCoverIsbn = document.getElementById("backCoverIsbn");
+        if (backCoverBlurb) {
+          backCoverBlurb.textContent = b.bigIdea || b.tagline || b.oneLiner || "Distilled into an 8-minute masterclass framework.";
+        }
+        if (backCoverIsbn) {
+          var numHash = 1000 + Math.abs((b.id || "").split("").reduce(function(a,c){ return ((a << 5) - a) + c.charCodeAt(0); }, 0)) % 9000;
+          backCoverIsbn.textContent = "ISBN 978-0-2026-" + numHash;
+        }
+        if (bookTitle) bookTitle.textContent = b.title;
+        if (bookAuthor) {
+          bookAuthor.textContent = isOriginal ? "Written In-House · 2026" : ("by " + b.author + (b.year ? " · " + b.year : ""));
+        }
+        if (bookBigIdea) bookBigIdea.textContent = b.bigIdea || b.oneLiner || "Essence of this breakthrough work.";
+
+        if (bookLessonsContainer) {
+          bookLessonsContainer.innerHTML = "";
+          var previewLessons = (b.lessons || []).slice(0, 2);
+          previewLessons.forEach(function (l) {
+            var el = document.createElement("div");
+            el.className = "lesson-editorial-card";
+            el.innerHTML = "<b>" + (l.title || "Lesson") + ":</b> " + (l.summary || "");
+            bookLessonsContainer.appendChild(el);
+          });
+        }
+
+        if (bookQuoteText) {
+          bookQuoteText.textContent = (b.quotes && b.quotes[0]) ? b.quotes[0] : (b.oneLiner || "");
+        }
+
+        if (bookActionPlan) {
+          bookActionPlan.innerHTML = "";
+          var steps = (b.actionPlan || []).slice(0, 4);
+          steps.forEach(function (step, i) {
+            var row = document.createElement("div");
+            row.className = "plan-step-item";
+            row.innerHTML = "<span class='plan-step-badge'>" + (i + 1) + "</span><span>" + step + "</span>";
+            bookActionPlan.appendChild(row);
+          });
+        }
+
+        if (bookCaveat) {
+          bookCaveat.innerHTML = "<b>Where advice breaks:</b> " + (b.caveat || "Apply contextually to your specific domain.");
+        }
+
+        if (bookReadTime) {
+          bookReadTime.textContent = "⏱ " + (b.readTime || "8 min") + " READ";
+        }
+
+        if (btnReadFull) {
+          btnReadFull.href = "book.html?id=" + encodeURIComponent(b.id) + "&from=3d";
+        }
+        updateSaveUI(isBookSaved(b.id));
+      }
+
+      function openBook() {
+        if (!bookPhysical) return;
+        if (inertiaAnimId) cancelAnimationFrame(inertiaAnimId);
+        vx = 0; vy = 0;
+        bookPhysical.classList.remove("is-closed");
+        bookPhysical.classList.add("is-open");
+        bookPhysical.style.transform = "rotateY(0deg) rotateX(0deg)";
+        document.body.classList.remove("is-desk-closed");
+        document.body.classList.add("is-desk-open");
+        if (labelOpenBtn) labelOpenBtn.textContent = "CLOSE";
+        if (btnToggleOpen) btnToggleOpen.classList.add("is-active");
+        if (hintText) hintText.textContent = "Book open · Read core summary below";
+        SoundFX.pageFlip();
+      }
+
+      function closeBook() {
+        if (!bookPhysical) return;
+        bookPhysical.classList.remove("is-open");
+        bookPhysical.classList.add("is-closed");
+        rotY = -22;
+        rotX = 10;
+        update3DTransform();
+        document.body.classList.remove("is-desk-open");
+        document.body.classList.add("is-desk-closed");
+        try { window.scrollTo({ top: 0, behavior: "instant" }); } catch (e) {}
+        if (labelOpenBtn) labelOpenBtn.textContent = "OPEN";
+        if (btnToggleOpen) btnToggleOpen.classList.remove("is-active");
+        if (hintText) hintText.textContent = "Drag anywhere to spin 360° in 3D · Click to open";
+        SoundFX.pageFlip();
+      }
+
+      if (btnToggleOpen) {
+        btnToggleOpen.addEventListener("click", function () {
+          if (activeMode === "shelves") {
+            setMode("desk");
+            setTimeout(openBook, 150);
+            return;
+          }
+          if (bookPhysical.classList.contains("is-open")) {
+            closeBook();
+          } else {
+            openBook();
+          }
+        });
+      }
+
+      if (btnPageClose) {
+        btnPageClose.addEventListener("click", function (e) {
+          e.stopPropagation();
+          closeBook();
+        });
+      }
+
+      /* CONTINUOUS 3D ROTATION WHILE IMAGE IS LOADING */
+      function loadAndDisplayBook(bookData, minSpinDuration) {
+        minSpinDuration = minSpinDuration || 440;
+        var startTime = performance.now();
+
+        if (bookPhysical.classList.contains("is-open")) {
+          closeBook();
+        }
+
+        if (btnRoll) btnRoll.disabled = true;
+        if (rollDiceIcon) rollDiceIcon.style.transform = "rotate(360deg)";
+
+        // Start continuous 3D rotation animation while image loads
+        bookPhysical.classList.remove("settle-landing", "swoop-from-library", "falling-down");
+        bookPhysical.classList.add("is-spinning-load");
+        SoundFX.shelfSlide();
+
+        var coverSrc = String(bookData.cover || "").replace(/^\//, "");
+        var img = new Image();
+
+        function finishLoad() {
+          var elapsed = performance.now() - startTime;
+          var remaining = Math.max(0, minSpinDuration - elapsed);
+
+          setTimeout(function () {
+            // Update book details now that image is ready
+            populateBook(bookData);
+
+            // Stop rotating animation and trigger realistic settle landing
+            bookPhysical.classList.remove("is-spinning-load");
+            void bookPhysical.offsetWidth; // trigger reflow
+            bookPhysical.classList.add("settle-landing");
+
+            rotY = -22;
+            rotX = 10;
+            update3DTransform();
+
+            setTimeout(function () {
+              SoundFX.thud();
+              try { if (navigator.vibrate) navigator.vibrate(25); } catch (e) {}
+            }, 180);
+
+            setTimeout(function () {
+              bookPhysical.classList.remove("settle-landing");
+              update3DTransform();
+              if (rollDiceIcon) rollDiceIcon.style.transform = "rotate(0deg)";
+              if (btnRoll) btnRoll.disabled = false;
+            }, 540);
+
+          }, remaining);
+        }
+
+        img.onload = finishLoad;
+        img.onerror = finishLoad;
+        img.src = coverSrc;
+      }
+
+      /* ROLL ANOTHER RANDOM BOOK WITH 3D CONTINUOUS ROTATION */
+      if (btnRoll) {
+        btnRoll.addEventListener("click", function () {
+          
+          var next = books[Math.floor(Math.random() * books.length)];
+          loadAndDisplayBook(next, 480);
+        });
+      }
+
+      /* =========================================================
+         TACTILE 360-DEGREE 3D DRAG ROTATION (MOUSE & TOUCH)
+         ========================================================= */
+      if (bookTheater) {
+        bookTheater.addEventListener("pointerdown", function (e) {
+          if (bookPhysical.classList.contains("is-open")) return;
+          isDragging = true;
+          dragDistance = 0;
+          startX = e.clientX;
+          startY = e.clientY;
+          lastX = e.clientX;
+          lastY = e.clientY;
+          vx = 0;
+          vy = 0;
+          if (inertiaAnimId) cancelAnimationFrame(inertiaAnimId);
+          try { bookTheater.setPointerCapture(e.pointerId); } catch (err) {}
+        });
+
+        window.addEventListener("pointermove", function (e) {
+          if (!isDragging || bookPhysical.classList.contains("is-open")) return;
+          var dx = e.clientX - lastX;
+          var dy = e.clientY - lastY;
+          dragDistance += Math.abs(dx) + Math.abs(dy);
+
+          rotY += dx * 0.7;
+          rotX = Math.max(-38, Math.min(38, rotX - dy * 0.45));
+
+          vx = dx * 0.55;
+          vy = dy * 0.45;
+
+          lastX = e.clientX;
+          lastY = e.clientY;
+
+          update3DTransform();
+        });
+
+        window.addEventListener("pointerup", function (e) {
+          if (!isDragging) return;
+          isDragging = false;
+          try { bookTheater.releasePointerCapture(e.pointerId); } catch (err) {}
+
+          // Quick tap without drag (< 8px movement) toggles book open!
+          if (dragDistance < 8 && bookPhysical.classList.contains("is-closed")) {
+            openBook();
+          } else {
+            startInertia();
+          }
+        });
+      }
+
+      /* Initial Boot with Continuous 3D Loading & URL Param Support */
+      document.body.classList.add("is-desk-closed");
+
+      var urlParams = new URLSearchParams(window.location.search);
+      var targetId = urlParams.get("id");
+      var targetOrig = urlParams.get("original") || urlParams.get("orig");
+      var initial = null;
+
+      if (targetId) {
+        initial = books.find(function (b) { return b.id === targetId; });
+      }
+      if (!initial && targetOrig) {
+        var originals = books.filter(function (b) { return b.author === "Unknown"; });
+        if (originals.length) {
+          initial = originals[Math.floor(Math.random() * originals.length)];
+        }
+      }
+      if (!initial) {
+        initial = books[Math.floor(Math.random() * books.length)];
+      }
+
+      loadAndDisplayBook(initial, 350);
+
+    })();
+  </script>
+</body>
+</html>

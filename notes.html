@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1">>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta property="og:title" content="Your Notebook · TheSmallBook">
   <title>YOUR NOTEBOOK · TheSmallBook</title>
@@ -155,7 +155,8 @@
 <body>
   <main class="nt-wrap">
     <div class="nt-top">
-      <button class="nt-back" id="ntMenu" type="button" hidden>☰ MENU</button><a class="nt-back" href="login.html#view-account">← YOU</a>
+      <button class="nt-back" id="ntMenu" type="button" hidden>← ALL NOTES</button>
+      <a class="nt-back" id="ntBack" href="index.html">← HOME</a>
       <span class="nt-h">📓 MY NOTEBOOK</span>
       <button class="nt-new" id="ntNew">+ NEW NOTE</button>
     </div>
@@ -316,6 +317,7 @@
       if (pen.on) endPen(true);
       curId = null;
       var mb = $("ntMenu"); if (mb) mb.hidden = true;
+      var nb = $("ntBack"); if (nb) nb.hidden = false;
       var m = $("ntMain");
       var h = '<div class="nt-cover">' +
         '<div class="nt-cover__word"><b>THE SMALL BOOK</b><i>NOTES \u00b7 PRIVATE \u00b7 ' + notes.length + (notes.length === 1 ? " ENTRY" : " ENTRIES") + '</i><span class="nt-cover__rule"></span></div>' +
@@ -405,6 +407,7 @@
       curId = id; curPage = page || 0;
       if (STORE) STORE.setLastNote(id); /* continue-writing lands here next time */
       var mb = $("ntMenu"); if (mb) mb.hidden = false;
+      var nb = $("ntBack"); if (nb) nb.hidden = true;
       var n = note(); if (!n) { list(); return; }
       if (curPage >= n.pages.length) curPage = n.pages.length - 1;
       var m = $("ntMain");

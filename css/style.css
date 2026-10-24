@@ -827,12 +827,22 @@ html.dark .stat__label  { color: #aaa18e; }
 /* ---------- FILTERS ---------- */
 .filters {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  padding: 36px clamp(16px, 4vw, 48px) 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 8px;
+  justify-content: flex-start;
+  padding: 16px clamp(16px, 4vw, 48px) 12px;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.filters::-webkit-scrollbar {
+  display: none;
 }
 .chip {
+  flex-shrink: 0;
+  white-space: nowrap;
   font-family: var(--font-body);
   font-weight: 700;
   font-size: .8rem;
@@ -1711,8 +1721,8 @@ html.dark .cm-cmts--lib { background: var(--yellow); color: #14110c; }
   .stat { padding: 12px 8px; }
 
   /* filters & grid */
-  .filters { gap: 8px; padding: 26px 14px 4px; }
-  .chip { font-size: .7rem; padding: 7px 12px; }
+  .filters { gap: 6px; padding: 12px 14px; flex-wrap: nowrap; overflow-x: auto; }
+  .chip { font-size: .72rem; padding: 7px 12px; }
   .grid { grid-template-columns: 1fr; gap: 20px; padding: 0 14px; margin: 26px auto 50px; }
   .card__top { min-height: 200px; padding: 18px; }
   .card__cover { width: 120px; }
@@ -2020,6 +2030,34 @@ html.dark .lod__badge { background: #2f2010; color: #ffb84d; border-color: var(-
   color: var(--sub, #666);
 }
 html.dark .lod__author { color: #aaa18e; }
+.lod__shuffle {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: transparent;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  padding: 2px 7px;
+  font-family: var(--font-head);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  margin-left: auto;
+  transition: transform .12s, background .15s;
+}
+.lod__shuffle:hover {
+  background: #f0ebe1;
+  transform: rotate(12deg);
+}
+html.dark .lod__shuffle {
+  background: #25201a;
+  color: #ddd;
+  border-color: #555;
+}
+html.dark .lod__shuffle:hover {
+  background: #332b22;
+}
 .lod__quote {
   font-family: Georgia, serif;
   font-size: 13.5px;
