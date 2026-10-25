@@ -54,6 +54,12 @@
 
   function isGold(freshCheck) {
     try {
+      var plan = localStorage.getItem("tsb_plan");
+      if (plan && (plan === "gold" || plan === "annual" || plan === "monthly")) {
+        cached = true; known = true; return true;
+      }
+    } catch (eG) {}
+    try {
       var rc = JSON.parse(localStorage.getItem("tsb_remote_config") || "{}");
       if (rc.goldPaywall === false) { cached = true; known = true; return true; }
     } catch (eRC) {}

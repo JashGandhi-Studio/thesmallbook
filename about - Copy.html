@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <title>About TheSmallBook, Created by Jash Gandhi</title>
+  <meta name="description" content="TheSmallBook is a free library of 500 book summaries, 3,540+ lessons and 360 failure case studies, plus an Ask-the-Library mode, created by Jash Gandhi from Mumbai, India. Free to read, no ads.">
+  <meta name="author" content="Jash Gandhi">
+  <link rel="canonical" href="https://thesmallbook.in/about.html">
+  <meta property="og:title" content="About TheSmallBook, Created by Jash Gandhi">
+  <meta property="og:description" content="The story behind the free library: 500 books distilled, 360 failures autopsied, 83 life questions answered, 26 languages. Built by Jash Gandhi, Mumbai.">
+    <meta property="og:url" content="https://thesmallbook.in/about.html">
+  <meta property="og:site_name" content="TheSmallBook">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=323">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="TheSmallBook, 500 books · 3540 lessons · 360 autopsies · free to read">
+  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=323">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    try {
+      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      if (tsbDark) document.documentElement.classList.add("dark");
+      var tsbTC = document.querySelector('meta[name="theme-color"]');
+      if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
+      tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
+    } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=323">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://thesmallbook.in/#website",
+        "url": "https://thesmallbook.in/",
+        "name": "TheSmallBook",
+        "description": "Free library of 500 book summaries with 3,540 lessons, examples and action steps, plus 360 failure case studies and an Ask-the-Library mode.",
+        "inLanguage": "en",
+        "author": { "@id": "https://thesmallbook.in/about.html#jash" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://thesmallbook.in/about.html#jash",
+        "name": "Jash Gandhi",
+        "url": "https://thesmallbook.in/about.html",
+        "jobTitle": "Creator of TheSmallBook",
+        "address": { "@type": "PostalAddress", "addressLocality": "Mumbai", "addressCountry": "IN" },
+        "sameAs": [
+          "https://github.com/JashGandhi-Studio",
+          "https://instagram.com/thesmallbook.in",
+          "https://instagram.com/jash._gandhi7"
+        ]
+      },
+      {
+        "@type": "AboutPage",
+        "@id": "https://thesmallbook.in/about.html#page",
+        "url": "https://thesmallbook.in/about.html",
+        "name": "About TheSmallBook",
+        "isPartOf": { "@id": "https://thesmallbook.in/#website" },
+        "about": { "@id": "https://thesmallbook.in/about.html#jash" }
+      }
+    ]
+  }
+  </script>
+  <style>
+    /* ABOUT LAB, interactive playground */
+    .about__lab-badge{display:inline-block;font:800 10px 'Space Grotesk',sans-serif;letter-spacing:1.8px;background:#111;color:#ffc800;border:2px solid #111;border-radius:999px;padding:6px 12px;margin-bottom:12px;transform:rotate(-.8deg)}
+    html.dark .about__lab-badge{border-color:#000}
+    .lab-tabs{display:flex;gap:7px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+    .lab-tabs::-webkit-scrollbar{display:none}
+    .lab-tabs button{flex:none;display:inline-flex;align-items:center;gap:7px;border:2px solid #111;background:#fff;color:#111;border-radius:999px;padding:7px 12px;font:700 11px 'Space Grotesk',sans-serif;letter-spacing:.2px;cursor:pointer;box-shadow:2px 2px 0 #111;white-space:nowrap;transition:transform .12s,box-shadow .12s,background .12s}
+    .lab-tabs button svg{flex:none;width:14px;height:14px;stroke-width:2.1}
+    .lab-tabs button.on{background:#ffc800;box-shadow:3px 3px 0 #111;transform:translate(-1px,-1px)}
+    .lab-tabs button:active{transform:translate(1px,1px);box-shadow:1px 1px 0 #111}
+    html.dark .lab-tabs button{background:#1b1712;color:#f2ead8;border-color:#000;box-shadow:2px 2px 0 #000}
+    html.dark .lab-tabs button.on{background:#ffc800;color:#111}
+    .lab-stage{border:3px solid #111;border-radius:18px;background:#fff;box-shadow:5px 5px 0 #111;padding:16px;min-height:260px;overflow:hidden}
+    html.dark .lab-stage{background:#1b1712;border-color:#000;box-shadow:5px 5px 0 #000}
+    .lab-stage__head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+    .lab-stage__title{font:800 12px 'Space Grotesk',sans-serif;letter-spacing:.6px;text-transform:uppercase}
+    .lab-stage__hint{font:600 11px 'Space Grotesk',sans-serif;color:#8f8a80}
+    .lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:560px){.lab-grid{grid-template-columns:1fr}}
+    .lab-mini{border:2.5px solid #111;border-radius:14px;padding:12px;background:#fffdf5;box-shadow:3px 3px 0 #111}
+    html.dark .lab-mini{background:#241f17;border-color:#000;box-shadow:3px 3px 0 #000}
+    .lab-mini b{display:block;font:800 12px 'Space Grotesk',sans-serif;margin-bottom:4px}
+    .lab-mini span{font:500 11.5px 'Space Grotesk',sans-serif;color:#555;line-height:1.45;display:block}
+    html.dark .lab-mini span{color:#c9c2b2}
+    .lab-cta{display:inline-flex;align-items:center;gap:6px;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:9px 14px;font:800 11px 'Space Grotesk',sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;text-decoration:none;color:#111}
+    .lab-cta:active{transform:translate(1px,1px)}
+    .lab-cta--ghost{background:#fff}
+    html.dark .lab-cta{border-color:#000;box-shadow:2px 2px 0 #000}
+    /* changelog */
+    .log-grid{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+    .log-item.logitem--hidden{display:none}
+    .logmore{display:block;width:100%;margin:14px 0 4px;background:#ffc800;color:#111;border:3px solid #111;border-radius:999px;box-shadow:4px 4px 0 #111;padding:14px;font:900 12px 'Archivo Black',sans-serif;letter-spacing:1.2px;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease}
+    .logmore:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 #111}
+    html.dark .logmore{border-color:#000;box-shadow:4px 4px 0 #000}
+    @media (prefers-reduced-motion: reduce){.logmore{transition:none}}
+    .log-item{border:2.5px solid #111;border-radius:14px;padding:12px 14px;background:#fff;box-shadow:3px 3px 0 #111;display:flex;gap:12px;align-items:flex-start}
+    .log-item__ver{flex:none;font:800 11px 'Space Grotesk',sans-serif;background:#111;color:#ffc800;border-radius:999px;padding:5px 9px;letter-spacing:.4px}
+    .log-item__body b{font:800 12.5px 'Space Grotesk',sans-serif}
+    .log-item__body p{font:500 11.5px 'Space Grotesk',sans-serif;color:#555;margin-top:4px !important;line-height:1.5}
+    html.dark .log-item{background:#241f17;border-color:#000;box-shadow:3px 3px 0 #000}
+    html.dark .log-item__body p{color:#c9c2b2}
+    /* stack */
+    .stack-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}
+    .stack-chip{border:2.5px solid #111;border-radius:14px;padding:12px;background:#fff;box-shadow:3px 3px 0 #111;text-align:center}
+    .stack-chip b{font:800 11px 'Space Grotesk',sans-serif;letter-spacing:.4px}
+    .stack-chip span{font:600 10.5px 'Space Grotesk',sans-serif;color:#8f8a80;display:block;margin-top:4px}
+    html.dark .stack-chip{background:#1b1712;border-color:#000;box-shadow:3px 3px 0 #000}
+    /* about shortcut card in You - styled separately, here just for about page hero */
+    .about-short{max-width:820px;margin:14px auto 0;padding:0 20px}
+    .about-short__card{display:flex;align-items:center;gap:12px;background:#fff;border:3px solid #111;border-radius:16px;box-shadow:4px 4px 0 #111;padding:12px 14px;text-decoration:none;color:inherit}
+    .about-short__card b{font:800 12px 'Space Grotesk',sans-serif}
+    .about-short__card span{font:500 11px 'Space Grotesk',sans-serif;color:#6b7280}
+    html.dark .about-short__card{background:#1b1712;border-color:#000;box-shadow:4px 4px 0 #000}
+
+    /* legal-card aesthetic alignment */
+    .about { max-width: 760px; margin: 0 auto; padding: 20px 16px 60px; display: flex; flex-direction: column; gap: 18px; }
+    .about__block {
+      background: #fff;
+      border: 2.5px solid var(--ink);
+      border-radius: 16px;
+      box-shadow: 4px 4px 0 var(--ink);
+      padding: 22px 18px;
+      margin-top: 0;
+    }
+    html.dark .about__block { background: #241f17; border-color: #000; box-shadow: 4px 4px 0 #000; }
+    .about__block p, .about__block li {
+      font: 500 12.8px/1.65 'Space Grotesk', sans-serif;
+      color: #3c3627;
+      margin: 0 0 10px;
+    }
+    html.dark .about__block p, html.dark .about__block li { color: #c9c2b2; }
+    .about__block b, .about__block strong { color: var(--ink); }
+    html.dark .about__block b, html.dark .about__block strong { color: #f2ead8; }
+  </style>
+</head>
+<body>
+
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker__track">
+      <span>📕 EVERY LESSON. EVERY CHAPTER. <em>ZERO FLUFF.</em></span>
+      <span>⚡ SKIM A BOOK IN MINUTES, NOT WEEKS</span>
+      <span>💀 LEARN FROM 360 LEGENDARY FAILURES</span>
+      <span>🆕 NEW BOOKS ADDED EVERY WEEK</span>
+      <span>📕 EVERY LESSON. EVERY CHAPTER. <em>ZERO FLUFF.</em></span>
+      <span>⚡ SKIM A BOOK IN MINUTES, NOT WEEKS</span>
+      <span>💀 LEARN FROM 360 LEGENDARY FAILURES</span>
+      <span>🆕 NEW BOOKS ADDED EVERY WEEK</span>
+    </div>
+  </div>
+
+  <!-- NAV, About is now a proper top-level destination -->
+  <nav class="nav">
+    <a class="logo" href="index.html">
+      <span class="logo__mark">📕</span>
+      <span>The<span class="logo__small">Small</span>Book</span>
+    </a>
+    <div class="nav__links">
+      <a class="btn btn--yellow" href="index.html#library">📚 LIBRARY</a>
+      <a class="btn btn--red" href="graveyard.html">💀 GRAVEYARD</a>
+      <button class="btn btn--icon" data-lang-btn title="Change language" aria-label="Language">🌐</button>
+      <button class="btn btn--ink btn--icon" data-theme-toggle title="Dark mode (D)" aria-label="Dark mode">🌙</button>
+    </div>
+    <div class="nav__auth" id="tsb-nav-auth" aria-live="polite"></div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="ahero">
+    <div class="ahero__inner">
+      <span class="ahero__blob ahero__blob--1"></span>
+      <span class="ahero__blob ahero__blob--2"></span>
+      <span class="ahero__mark">📕</span>
+      <div class="ahero__badge">👋 THE STORY BEHIND THE LIBRARY</div>
+      <h1>ABOUT <span class="ahero__hl">THESMALLBOOK</span></h1>
+      <p class="ahero__sub">
+        Big books. Small reads. <strong>Free to read.</strong><br>
+        Built with an unreasonable amount of chai in Mumbai, India. ☕
+      </p>
+      <div class="ahero__chips">
+        <span>🇮🇳 MADE IN INDIA</span>
+        <span>📚 ASK 500+ BOOKS</span>
+        <span>🌐 26 LANGUAGES</span>
+        <span>☕ CHAI-POWERED</span>
+      </div>
+      <div style="margin-top:18px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <a class="btn btn--yellow" href="#features-lab" style="border-radius:999px;padding:10px 16px;font-size:.75rem;box-shadow:3px 3px 0 #111;display:inline-flex;align-items:center;gap:7px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.914A1 1 0 0 0 5.608 22h12.784a1 1 0 0 0 .89-1.086l-5.07-10.49A2 2 0 0 1 14 9.527V2"/><path d="M8 2h7"/><path d="M7 16h10"/></svg> TRY LIVE DEMOS ↓</a>
+        <a class="btn" href="index.html#library" style="border-radius:999px;background:#fff;display:inline-flex;align-items:center;gap:7px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> START READING</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ABOUT CONTENT -->
+  <main class="about">
+
+    <!-- WHAT IS THIS -->
+    <section class="about__block about__block--intro">
+      <span class="about__sticker about__sticker--tl" translate="no">100% FREE</span>
+      <h2 class="about__head">📕 What is TheSmallBook?</h2>
+      <p>A <strong>free library of the world's best non-fiction books, cracked open</strong>.
+      every book distilled into its big idea, chapter-by-chapter lessons with real stories,
+      three killer quotes, and a 5-step action plan you can actually use.
+      <strong>No 300-page grind. No paywall. A free account, only so your shelf and progress save.</strong> Just the lessons.</p>
+      <div class="about__stats">
+        <div class="stat stat--yellow"><div class="stat__num">500</div><div class="stat__label">Books Distilled</div></div>
+        <div class="stat stat--pink"><div class="stat__num">3540</div><div class="stat__label">Lessons</div></div>
+        <div class="stat stat--red"><div class="stat__num">360</div><div class="stat__label">Failures Autopsied</div></div>
+        <div class="stat stat--blue"><div class="stat__num">83</div><div class="stat__label">Life Questions</div></div>
+        <div class="stat stat--green"><div class="stat__num">26</div><div class="stat__label">Languages</div></div>
+      </div>
+      <p style="margin-top:14px;font-size:.85rem;color:#8f8a80;font-weight:600">Tip: Open <b>You → About & feature guide</b> to come back to this guide. We keep it updated with every app update.</p>
+    </section>
+
+    <!-- GRAVEYARD TEASE -->
+    <section class="about__block about__block--grave">
+      <h2 class="about__head" style="color:#ff5252;">💀 And the Graveyard?</h2>
+      <p>Success books teach you what TO do. <strong>The Graveyard teaches the opposite:</strong>
+      300 real people, startups and empires, Evergrande, Theranos, Kingfisher, Lehman Brothers.
+      autopsied into what happened, the fatal mistake, and the lesson.</p>
+      <p class="about__gravepunch">They paid billions for those lessons. Here, your tuition is free.</p>
+      <a class="btn btn--red" href="graveyard.html" style="align-self:flex-start; margin-top:14px;">💀 ENTER IF YOU DARE →</a>
+    </section>
+
+    <!-- CREATOR ID CARD -->
+    <section class="about__block about__block--creator">
+      <h2 class="about__head">👨‍💻 Who built this?</h2>
+      <div class="idcard">
+        <div class="idcard__strip" translate="no">✦ CREATOR ID ✦ THESMALLBOOK ✦ CREATOR ID ✦</div>
+        <div class="idcard__body">
+          <div class="idcard__avatar">👨‍💻</div>
+          <div class="idcard__info">
+            <div class="idcard__name">JASH GANDHI</div>
+            <div class="idcard__role">Founder · Builder · Public speaker</div>
+            <div class="idcard__loc">📍 Mumbai, India</div>
+            <div class="idcard__links">
+              <a class="idcard__chip idcard__chip--insta" href="https://instagram.com/thesmallbook.in" target="_blank" rel="noopener">📸 @thesmallbook.in</a>
+              <a class="idcard__chip idcard__chip--insta" href="https://instagram.com/jash._gandhi7" target="_blank" rel="noopener">👤 @jash._gandhi7</a>
+              <a class="idcard__chip" href="mailto:thesmallbook.in@gmail.com" style="background:#ffc800"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> thesmallbook.in@gmail.com</a>
+              <a class="idcard__chip" href="https://github.com/JashGandhi-Studio/thesmallbook" target="_blank" rel="noopener">⭐ GitHub</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="idcard idcard--editor" style="margin-top:16px;">
+        <div class="idcard__strip" translate="no" style="background:var(--orange,#ff8a3d);color:#111;">✦ EDITOR ID ✦ THE SHARP EYE ✦</div>
+        <div class="idcard__body">
+          <div class="idcard__avatar" style="background:var(--orange,#ff8a3d);">🤓</div>
+          <div class="idcard__info">
+            <div class="idcard__name">NILAY SHAH</div>
+            <div class="idcard__role">Editor, Book Analyst, The sharp eye behind every summary</div>
+            <div class="idcard__loc">📍 India</div>
+            <div class="idcard__links">
+              <a class="idcard__chip" href="mailto:nilay.shah1307@gmail.com">📬 nilay.shah1307@gmail.com</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px;display:flex;align-items:center;gap:12px;background:#fff;border:2.5px solid #111;border-radius:14px;padding:12px 14px;box-shadow:3px 3px 0 #111">
+        <span style="flex:none;width:42px;height:42px;display:grid;place-items:center;background:#ffc800;border:2.5px solid #111;border-radius:12px;box-shadow:2px 2px 0 #111">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </span>
+        <div style="flex:1;min-width:0">
+          <b style="display:block;font:800 11px 'Space Grotesk',sans-serif;letter-spacing:1px;color:#111">OFFICIAL CONTACT</b>
+          <a href="mailto:thesmallbook.in@gmail.com" style="font:800 13px 'Space Grotesk',sans-serif;color:#111;text-decoration:none;word-break:break-all;border-bottom:2px solid #ffc800">thesmallbook.in@gmail.com</a>
+          <span style="display:block;font:500 11px 'Space Grotesk',sans-serif;color:#6b7280;margin-top:3px">Partnerships, press & support, we reply within 24 hours.</span>
+        </div>
+        <a href="mailto:thesmallbook.in@gmail.com" style="flex:none;font:800 11px 'Space Grotesk',sans-serif;background:#111;color:#ffc800;border:2px solid #111;border-radius:999px;padding:8px 12px;text-decoration:none;box-shadow:2px 2px 0 #111">WRITE →</a>
+      </div>
+      <!-- Legal: Terms & Privacy, anchored for You → legal -->
+      <div id="terms" style="margin-top:16px;background:#fff;border:2.5px solid #111;border-radius:14px;padding:14px;box-shadow:3px 3px 0 #111;scroll-margin-top:76px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="display:grid;place-items:center;width:28px;height:28px;background:#111;color:#ffc800;border-radius:8px;font-size:13px;">§</span><b style="font:800 12px 'Space Grotesk',sans-serif;letter-spacing:.6px;text-transform:uppercase;">Terms of Use</b><span style="margin-left:auto;font:600 10px 'Space Grotesk',sans-serif;color:#8f8a80;">Updated Sep 13, 2026</span></div>
+        <ul style="margin:0;padding-left:18px;font:500 12px 'Space Grotesk',sans-serif;color:#334155;line-height:1.6;">
+          <li><b>Free to read.</b> 400 summaries, lessons, audio & Ask stay free. Some perks (Store coupons) unlock via Gold or 3 published stories, never paywalled reading.</li>
+          <li><b>Your words, your rights.</b> You own what you publish (quotes/stories). By publishing you give TheSmallBook a non-exclusive right to show it in the community. You can delete anytime.</li>
+          <li><b>Be kind, be real.</b> No hate, no spam, no plagiarism. We may remove content that harms others. Repeated abuse → account pause.</li>
+          <li><b>No legal/medical advice.</b> Summaries are for learning, not professional advice. Read the full book or consult a pro before big decisions.</li>
+          <li><b>Links & offers.</b> Store shows official programs only, verified monthly. External sites have their own terms.</li>
+        </ul>
+      </div>
+      <div id="privacy" style="margin-top:10px;background:#fff;border:2.5px solid #111;border-radius:14px;padding:14px;box-shadow:3px 3px 0 #111;scroll-margin-top:76px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="display:grid;place-items:center;width:28px;height:28px;background:#ffc800;border:2px solid #111;border-radius:8px;font-size:13px;">🔒</span><b style="font:800 12px 'Space Grotesk',sans-serif;letter-spacing:.6px;text-transform:uppercase;">Privacy, what we store</b><span style="margin-left:auto;font:600 10px 'Space Grotesk',sans-serif;color:#8f8a80;">On-device first</span></div>
+        <ul style="margin:0;padding-left:18px;font:500 12px 'Space Grotesk',sans-serif;color:#334155;line-height:1.6;">
+          <li><b>Offline-first.</b> Your shelf, streak, drafts & reading progress live on your device (localStorage). No tracking SDKs, no ad beacons.</li>
+          <li><b>Sign-in (optional) = sync.</b> If you use Google sign-in, we sync your profile, shelf & posts to Supabase so they follow you. We never post without asking.</li>
+          <li><b>No selling, no fingerprinting.</b> We don’t sell, rent or fingerprint your reading history. Email (thesmallbook.in@gmail.com) only for support/partnerships.</li>
+          <li><b>Delete anytime.</b> Clear site data → local data gone. Ask us to delete cloud data via thesmallbook.in@gmail.com, we do within 7 days.</li>
+          <li><b>Cookies:</b> Only essentials for theme, language & auth. No third-party ad cookies.</li>
+        </ul>
+        <p style="margin:8px 0 0;font:600 10px 'Space Grotesk',sans-serif;color:#8f8a80;text-align:center;">Questions? <a href="mailto:thesmallbook.in@gmail.com" style="color:#111;text-decoration:underline;font-weight:800;">thesmallbook.in@gmail.com</a> · Mumbai, India</p>
+      </div>
+      <p style="margin-top:18px;">Got tired of two things: books that take three weeks to finish, and "summary" apps
+      that lock the good parts behind a subscription. So he built the library he wished existed.
+      every lesson free, readable in a chai break, updated with new books and fresh corpses <strong>every week</strong>.</p>
+      <p class="about__reach">
+        📸 The official page is <strong>@thesmallbook.in</strong>, new books, fresh corpses, book battles &amp; giveaways.
+        Follow it, and DM for offers &amp; collabs! 🚀<br>
+        👤 Creator's personal: <strong>@jash._gandhi7</strong>, behind-the-scenes of every build.
+      </p>
+    </section>
+
+    <!-- FEATURES AS TILES, quick glance -->
+    <section class="about__block about__block--naked">
+      <h2 class="about__head">🎁 Everything inside <span class="hl">(all free)</span></h2>
+      <div class="featgrid">
+        <div class="feattile" style="--tile:var(--yellow);"><span class="feattile__emoji">📕</span><strong>500 books distilled</strong>Big idea → lessons → action plan</div>
+        <div class="feattile" style="--tile:#ffb3b3;"><span class="feattile__emoji">💀</span><strong>The Graveyard</strong>360 failure autopsies + antidotes</div>
+        <div class="feattile" style="--tile:var(--green);"><span class="feattile__emoji">🎧</span><strong>Listen mode</strong>Lessons read aloud in your language</div>
+        <div class="feattile" style="--tile:var(--blue);"><span class="feattile__emoji">🌐</span><strong>26 languages</strong>Hinglish &amp; Gujlish exclusive modes</div>
+        <div class="feattile" style="--tile:var(--pink);"><span class="feattile__emoji">🎴</span><strong>Share-card studio</strong>Quotes as art in 20 color styles</div>
+        <div class="feattile" style="--tile:var(--purple);"><span class="feattile__emoji">📚</span><strong>Ask the Library</strong>83 life questions answered by books + autopsies</div>
+        <div class="feattile" style="--tile:#ffd9a8;"><span class="feattile__emoji">❤️</span><strong>My Shelf</strong>Bookmark, track, resume anywhere</div>
+        <div class="feattile" style="--tile:#c8f7dc;"><span class="feattile__emoji">✍️</span><strong>Your stories</strong>Get published with your name on it</div>
+        <div class="feattile" style="--tile:#d8e2ff;"><span class="feattile__emoji">🔍</span><strong>Deep search</strong>Searches inside lessons, typos OK</div>
+        <div class="feattile" style="--tile:#ffe9f5;"><span class="feattile__emoji">💬</span><strong>Problem library</strong>Browse 83 questions, copy &amp; ask in your language</div>
+        <div class="feattile" style="--tile:#d8ffd8;"><span class="feattile__emoji">🔁</span><strong>Related failures</strong>Every book links to the companies that died ignoring it</div>
+        <div class="feattile" style="--tile:#ffe9f5;"><span class="feattile__emoji">📱</span><strong>Installable app</strong>Add to home screen, works offline</div>
+        <div class="feattile" style="--tile:#fff3c4;"><span class="feattile__emoji">📓</span><strong>The Notebook</strong>Notes with pens, fonts &amp; ink on the page</div>
+        <div class="feattile" style="--tile:#ffd6d6;"><span class="feattile__emoji">🕵️</span><strong>The Case</strong>Who Killed Nova Chai? 15 documents, only sharp eyes crack it</div>
+        <div class="feattile" style="--tile:#e2dcff;"><span class="feattile__emoji">✦</span><strong>TheSmallBook Originals</strong>10 books written in-house, found nowhere else</div>
+        <div class="feattile" style="--tile:#d2f4ff;"><span class="feattile__emoji">📻</span><strong>The Audio Room</strong>19 free audiobooks + 19 real podcasts, one player</div>
+        <div class="feattile" style="--tile:#ffe1b8;"><span class="feattile__emoji">📷</span><strong>Scan any cover</strong>Point at any book in print; we match it or you request it</div>
+      </div>
+      <p style="margin-top:14px;font:600 11px 'Space Grotesk',sans-serif;color:#8f8a80;text-align:center">↑ Quick map, interactive demos below explain the tricky ones in 30 seconds each.</p>
+    </section>
+
+<details class="aboutfold"><summary>🧪 TRY EVERY FEATURE, LIVE - 30-SECOND DEMOS</summary>
+    <!-- 🧪 INTERACTIVE FEATURE LAB, the professional simulation you asked for -->
+    <section class="about__block" id="features-lab" style="padding:20px 16px 16px">
+      <div style="text-align:center;margin-bottom:6px">
+        <span class="about__lab-badge">✦ INTERACTIVE PLAYGROUND, TAP TO TRY, NO SIGNUP</span>
+        <h2 class="about__head" style="margin-bottom:8px">🧪 Try the features, live demos</h2>
+        <p style="max-width:620px;margin:8px auto 0;font:500 12.5px 'Space Grotesk',sans-serif;color:#555;line-height:1.55">Some features are hard to explain in words. Tap a demo below, each is a 30-second simulation of the real app, right here on this page. No data leaves your phone.</p>
+      </div>
+
+      <div class="lab-tabs" id="labTabs" role="tablist" aria-label="Feature demos">
+        <button data-lab="inspire" class="on" role="tab" aria-selected="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 1 4 12.7V16a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-1.3A7 7 0 0 1 12 2z"/><circle cx="12" cy="7" r="1.2"/></svg> Inspire Desk</button>
+        <button data-lab="quotes" role="tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg> Quotes & Images</button>
+        <button data-lab="studio" role="tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19l7-7a1.5 1.5 0 0 0-1.4-2.3l-7 7a2 2 0 0 0-.5 1.1L9 21l3-.5c.4-.1.8-.4 1-.8z"/><path d="M14.5 7.5l2 2"/></svg> Studio</button>
+        <button data-lab="dictate" role="tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10a7 7 0 0 1-14 0"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg> Dictate</button>
+        <button data-lab="drafts" role="tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Drafts</button>
+        <button data-lab="ask" role="tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> Ask</button>
+        <button data-lab="install" role="tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Install</button>
+        <button data-lab="read" role="tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Read</button>
+        <button data-lab="grave" role="tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M8 13v3a4 4 0 0 0 8 0v-3"/><path d="M9 11h.01"/><path d="M15 11h.01"/><path d="M12 13a1 1 0 0 0-.3.9V14a1 1 0 0 0 .6.9"/><path d="M9 16h6"/></svg> Graveyard</button>
+        <button data-lab="shelf" role="tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> Shelf</button>
+        <button data-lab="store" role="tab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Store</button>
+      </div>
+
+      <div class="lab-stage" id="labStage" aria-live="polite">
+        <!-- injected by JS -->
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px">
+        <a href="index.html#library" class="lab-cta">📚 Open Library →</a>
+        <a href="write.html" class="lab-cta lab-cta--ghost">✍️ Try Inspire Desk in Write →</a>
+      </div>
+    </details>
+
+<details class="aboutfold"><summary>🔧 HOW THE APP IS BUILT - THE ENGINEERING, FOR THE CURIOUS</summary>
+    <!-- HOW IT'S BUILT -->
+    <section class="about__block">
+      
+      <p>Fast, offline-first, privacy-respecting. No trackers. No ad SDKs. Your shelf and streak stay on your device and sync only if you sign in with Google.</p>
+      <div class="stack-grid">
+        <div class="stack-chip"><b>⚡ Offline-first</b><span>Works on flaky trains, caches books for later</span></div>
+        <div class="stack-chip"><b>🔒 Privacy</b><span>No ads, no trackers, no selling your reading history</span></div>
+        <div class="stack-chip"><b>📱 PWA</b><span>Add to home screen, feels native, no App Store</span></div>
+        <div class="stack-chip"><b>🌐 26 langs</b><span>Hinglish & Gujlish: how Indians actually text</span></div>
+        <div class="stack-chip"><b>🎙️ On-device</b><span>Voice & text stay local unless you tap Share</span></div>
+        <div class="stack-chip"><b>☁️ Supabase</b><span>Google sign-in, shelf & stories sync when enabled</span></div>
+      </div>
+      <div style="margin-top:14px;border:2.5px dashed #111;border-radius:14px;padding:12px;background:#fffdf5">
+        <b style="font:800 11px 'Space Grotesk',sans-serif;letter-spacing:.5px">🧭 DESIGN PHILOSOPHY</b>
+        <p style="font:500 11.5px 'Space Grotesk',sans-serif;color:#555;margin-top:6px !important;line-height:1.6">1) <b>Small reads > big books.</b> Every page must be finishable in a chai break.<br>2) <b>Honest, not hype.</b> Each lesson links to a failure that ignored it, so you see the cost.<br>3) <b>Own your progress.</b> Streaks, shelves and notes are yours; the cloud is opt-in.</p>
+      </div>
+      <p style="font:600 11px 'Space Grotesk',sans-serif;color:#8f8a80;margin-top:10px">Open-source knowledge, original summaries. If you love a book, buy the full book, our buy buttons keep this free.</p>
+    </details>
+
+
+
+    <!-- WHAT'S NEW TRIGGER CARD -->
+    <section class="about__block">
+      <div style="background:var(--yellow);border:2.5px solid var(--ink);border-radius:16px;padding:20px;box-shadow:4px 4px 0 var(--ink);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:220px;">
+          <div style="font:800 10.5px 'Space Grotesk',sans-serif;letter-spacing:1.5px;color:#8a6d00;">WEEKLY RELEASE NOTES</div>
+          <h2 class="about__head" style="margin:4px 0 6px;font-size:1.2rem;">🆕 What's new, changelog</h2>
+          <p style="font:600 12px/1.55 'Space Grotesk',sans-serif;color:#3c3627;margin:0;">We ship every week: new books, new graveyard autopsies, and small polish. Tap to open the living changelog modal.</p>
+        </div>
+        <button id="openLogModal" class="btn btn--ink" style="padding:11px 20px;font-size:11.5px;letter-spacing:1px;font-family:var(--font-head);border-radius:11px;box-shadow:3px 3px 0 rgba(0,0,0,.35);cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;">
+          OPEN CHANGELOG ↗
+        </button>
+      </div>
+    </section>
+
+    <!-- CHANGELOG POP-OUT MODAL -->
+    <div id="logModal" class="tsb-modal" style="display:none;position:fixed;inset:0;background:rgba(17,17,17,.68);backdrop-filter:blur(5px);z-index:99999;align-items:center;justify-content:center;padding:16px;">
+      <div class="tsb-modal__card" style="background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:8px 8px 0 var(--ink);max-width:720px;width:100%;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;position:relative;">
+        <div style="padding:16px 20px;border-bottom:2.5px solid var(--ink);background:var(--yellow);display:flex;align-items:center;justify-content:space-between;flex:none;">
+          <div>
+            <div style="font-family:var(--font-head);font-size:10px;font-weight:900;letter-spacing:1.5px;color:#8a6d00;">LIVING CHANGELOG</div>
+            <h3 style="font-family:var(--font-head);font-size:17px;margin:2px 0 0;color:var(--ink);">What's New in TheSmallBook</h3>
+          </div>
+          <button id="closeLogModal" aria-label="Close changelog modal" style="background:#fff;border:2px solid var(--ink);border-radius:8px;box-shadow:2px 2px 0 var(--ink);font-weight:900;font-size:14px;width:34px;height:34px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;">✕</button>
+        </div>
+        <div style="padding:18px 20px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;">
+          <p style="font:600 12px 'Space Grotesk',sans-serif;color:#8f8a80;margin:0 0 14px;">We ship every week. New books, new graves, and small polish. This page is the living changelog.</p>
+          <div class="log-grid" id="logGrid">
+            <div class="log-item">
+              <span class="log-item__ver">v323</span>
+              <div class="log-item__body">
+                <h4>Build 323 - The Audio Room</h4>
+                <p>The full player sheet is now the audio room: bigger cover art, and the line under the scrubber names exactly where you are - episode 3 of 12, or chapter 4 of 21. Every podcast episode and TSB Original carries a SAVE button - one tap keeps the audio on your phone, and it plays with zero network, airplane mode included, with a live save percentage while it copies. Under the queue sits UP NEXT: the shows you keep, one tap to flow into them. When an episode ends and autoplay is ON, the room chains into your next saved show by itself - built for the commute. Turn the flow OFF with one chip.</p>
+              </div>
+            </div>
+            <div class="log-item">
+              <span class="log-item__ver">v322</span>
+            <div class="log-item__body"><p><b>Share cards worth tapping, a search that flies, and a shelf that learns you.</b> Every one of the 500 book pages now unfurls its own poster when the link is shared - the real cover tilted on cream paper, the book's own line, the app's stamps - drawn by the app's own design kit, never a stock image, and the main share card got the same tailoring. The show search became a flight: instant skeleton cards while the directory answers, results that glide in, your recent searches kept as one-tap chips, and a newer search always wins over an older one. The shelf now learns: play or heart a few shows and FIND 3 MORE hunts in your neighbourhoods first - listen to startups, find startups. Browsing a show's episodes works before you ever press play, feeds answer through a stricter parser with a fallback for the browsers that refuse odd XML, and every fetch carries a deadline with a real TRY AGAIN button. The player: volume boost now appears only where it honestly works (the quiet LibriVox recordings), the dock is pinned back to its home pose whenever the full player opens or closes, and the show-home exits are gone from every card - the story stays in the app. For Safari and older browsers: twenty-one silent syntax traps that could blank whole features were hunted down and rewritten. And the tutorial grew eras - you see it once; when an update truly changes the app, it returns once with a heads-up, never on every open. Build 322.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v321</span>
+            <div class="log-item__body"><p><b>Continue means continue, and the sheet is complete.</b> The full player now opens complete from every door - the small bar's title, the art, anywhere - with speed, volume boost, the sleep timer and the queue on every kind of audio, narrated summaries included. A continue on a podcast was quietly restarting from the latest episode; it now lands on the saved episode at the saved second. Boost grew a 150% step - the words outside say 150%, the circuit inside gives everything it has. The sheet that fills the page got its own fill: every takeaway now carries a "from the book" line - the story, the number, the receipt - and the hand got bigger, so page one reads full, like the reference sheet, top to bottom. The About page stopped shouting: the changelog is back in small type, the engine room and the live demos tuck into quiet folds, and the footer is one calm row. And the shows shelf grew a proper search bar - type any topic or host and the directory answers five real shows at a time, with five more on demand, every card playing right here and saving to YOUR SHOWS - and every fetched show now introduces itself in its own words, straight from its feed, not one shared sentence. Build 321.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v320</span>
+            <div class="log-item__body"><p><b>The pause promise.</b> You paused a book, opened another page or came back later - and the audio started shouting again. That is fixed at the root: the queue builder had quietly dropped the autoplay flag, so every restored session looked like a "keep playing" one. Paused stays paused - across pages, reloads and app switches - and only a session that was truly playing when you left picks up with sound. The state you leave in is the state you return to, on every engine: full audiobooks, fetched shows and our own episodes. Switching apps or tabs also freezes the honest state now. And the hunch about the originals was right: our show's episodes were wired to the wrong field name and fetched a dead link - the voice you heard never existed. Every episode now plays its real audio, and the browser suite grew seven tests that run in an autoplay-allowed browser (what a real phone is after your first tap) so this class of bug can never hide behind a blocked player again. Updates still need zero steps from you - HTML lands fresh, everything else rides your phone. Build 320.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v319</span>
+            <div class="log-item__body"><p><b>The rulebook, and an app that opens like it is already on your phone.</b> There is now a real Legal & Privacy page - terms, privacy, content credit, takedowns and contact, all in plain words, linked from the About page, Settings and the login footer, open to guests and saved for offline. It says what the app always did: notes stay on your device, no ads, no trackers, nothing sold, LibriVox and podcast feeds credited to their makers, and one message removes anything that is yours within 48 hours. The bigger change is speed: every versioned file, cover, font and audio now loads from your phone instead of the network - HTML still arrives fresh first, so updates land the moment they ship, but the second visit to any page, book or show opens in a blink, offline included. The first install got 2.3 MB lighter (the 24 quote wallpapers now load only when a quote needs them), the show cover went on a diet (1.08 MB to 67 KB), and the first three shows quietly fetch their episode lists while you browse, so PLAY makes sound, not a wait. And the same app now fits every device: a new Reader Text Size control in Settings (A- to A++) rides every book page, story and note, small phones get a gentler scale pass, and the audit at 320, 360 and 390 px shows zero overflowing elements on any of them. Every printed cheat-sheet now carries one quiet line: for your personal study - please buy the book. Build 319.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v318</span>
+            <div class="log-item__body"><p><b>The shows you find now behave like the shows we chose.</b> Every podcast pulled in from FIND 3 MORE plays with full chapter sheets, rides the mini dock to every page, comes back mid-episode after a reload, and waits in the Continue card - identical treatment, because a show you discovered should never be a second-class guest. Hunting that promise down caught something worse: the feed reader itself had been going silent in the whole Chrome family (one selector Chromium refuses to parse), so feeds fell back to a mirror that rate-limits - shows would load on some phones and never on others. Fixed at the root; every show now plays straight from its own feed, and this build's tests play real feeds from empty caches to prove it. The cheat sheet found its center: the book's cover and its KEY TAKEAWAYS ribbon now sit mid-page with the seven takeaways flanking on both sides, a full-width band underneath carries the week's first step beside WHERE THE BOOK BITES - the page fills like a poster instead of a form. And audiobooks pulled from LibriVox arrive speaking: each fresh card now carries the book's own description under its title, so the shelf reads like a friend's recommendations, not a list of names. The walkthrough survived 400 taps a second in testing - no swallowed clicks, no stall at slide 8. Build 318.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v317</span>
+            <div class="log-item__body"><p><b>The sheet worth printing, a show of our own, and doors where questions used to dead-end.</b> The PDF cheat-sheet is rebuilt from zero: page one is the whole book under a single A4 - handwritten in real bundled fonts (Patrick Hand + Caveat, they print from your own machine), seven numbered takeaways around the real cover, the book's big reveal and its best line up top, the first action boxed at the bottom right - one page, always, aligned and made to be printed. Page two is yours: raw ruled notes with today's question about that book written at the top - it changes every day, seeded per book, and your notes stay yours. Gold's promise is now live: members print unlimited sheets, no credit counter; everyone gets four free, and every weekend the whole app gets two bonus sheets - a real limited offer, not a countdown costume. The scanner reads before it judges: three differently-processed OCR passes (grayscale, sharpened, title-band crop) merge their words, the author's printed name counts as evidence, and only then does the cover fingerprint get a strict, clearly-labeled say - a random wall can never again be called a book. The walkthrough was rebuilt for fast hands: one listener for all 21 stops (the old one re-bound every slide and went deaf for 0.8s after each tap), one scroll per stop, a GPU-moved spotlight ring - no more lag at slide 8, no more swallowed taps. And the player stopped lying: switching from a book to a podcast now swaps the cover art instantly, the dock opens the full player from anywhere on it, and pause and play keep their word across pages. Reviews learned manners - five stars gets a warm thank-you, four gets asked what kept it from five, one to three gets asked what broke, no defence - and every review now posts to the live wall for all readers (one SQL ships with the build). New Google accounts claim an @username before using the app: the skip door is gone, info pages stay open to everyone, and the finish sheet returns you to exactly where you were. The daily question grew hands: WRITE ON THIS opens your notebook with the question already at the top, ANSWER IT AS A STORY opens the composer with it pre-titled, and the books remain one tap away. Ask the Library now shows its receipts - "answered from N book lessons + M real failures, zero opinions" - because that line is the thing AI chat cannot say. The store keeps only honest offers: the early Gold lock, the weekend sheet pack, and the writer's path. And the Idea Autopsy tells the truth twice: a three-line idea gets asked for specifics instead of a score, and every saved autopsy replays its frozen numbers - the public record may move, your verdict does not, and each report names the day the record was checked. Build 317.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v316</span>
+            <div class="log-item__body"><p><b>Faster plays, a show shelf that never runs out, and one quiet daily question.</b> The audio room now plays like it should have from the start: the moment the shelf opens, the first screen of audiobooks quietly fetches their chapter lists in the background, a touch on PLAY starts the fetch before the tap even lands, and the button says LOADING while it works - so the first play takes seconds and every play after that is instant, because what the app loaded once, it keeps. "Worth your ears" grew a bottomless shelf: when the hand-picked shows end, FIND 3 MORE SHOWS pulls three real podcasts fresh from the directory - every one verified to carry its own feed, remembered on your device, playable right here - and every show card now saves with the heart in its corner, so YOUR SHOWS sits above the list one tap from a replay. The homepage is calmer: "what's on your mind" is retired, and the mindpick is just today's question - some days opening with a quote, some days a bare ask - every day something new. And two small honest fixes: the ? chip is now a proper little tab attached to the top edge, rounded away from the corner instead of a floating circle, and the guide sheet's close button sits inside the card where your thumb is, not pinned to the top of the screen. Build 316.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v315</span>
+            <div class="log-item__body"><p><b>One real bug hunted down, and the tutorial now greets every reader.</b> The full player - the box with the chapters, the queue, the speed and the sleep timer - was painting off the bottom of the page on real phones; a fixed, dim, blurred sheet now rises properly every time you tap the dock, and a tap anywhere on the dock's title opens it, on every device, not just in the lab. The walkthrough went to every reader, old and new, exactly once: the graveyard stop now teaches the scroll trick first (the menu bar tucks away as you read and returns when you head up), and the Quote Wall got its own YOUR TURN - pin a line for real, with a "skip this step" escape so no single action is ever forced. Notifications flip to the natural flick: swipe right and the row is gone. And the hold-menu on any message gained a Reply, so even voice notes and book cards can be answered in one tap. The equalizer badge on the dock now wears ink with yellow dancing bars - visible on every background. Build 315.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v314</span>
+            <div class="log-item__body"><p><b>The player grew up, the tutorial got hands, and the shelf grew itself.</b> The audio dock and the now-playing sheet got the full premium pass: real drawn icons replace the emoji buttons, the dock grows a live equalizer badge and a progress hairline along its bottom edge, and the sheet now rises over a dimmed, blurred page with a proper spring - big tilted artwork, a seek bar that fills in yellow, circular 15 and 30 second skips, ink-tag sections, a queue where the playing chapter dances, and three ways to close it: the red button, a swipe down on the grip, or just picking a chapter. The full tutorial went hands-on: twenty stops, six of them YOUR TURN stops where the tour only moves when you actually do the thing - search, tap the plus, press play on a real audiobook, open the player, the now-playing screen, a grave. And when the audiobook shelf runs out, WANT MORE fetches the next books by itself, live from LibriVox in seconds, each one verified real before it joins, and yours on this device forever. Build 314.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v313</span>
+            <div class="log-item__body"><p><b>The app now teaches itself.</b> A full walkthrough joins the guide: fourteen stops across ten pages - the library and search, the scanner, the graveyard, the plus and its audio home, the Audio Room, Listen Today, the quote wall, Ask, the notebook, deep dives, your account and Settings - each one pointing at the real thing and explaining how it works. Every brand-new reader walks it once; it resumes exactly where you left it, even mid-page-hop; skipping asks first and tells you it replays from Settings under "Feeling lost?", where a replay button now lives. Replies grew a hold: swipe any message in a chat sideways and you are replying to exactly that one, with the quoted line riding inside the bubble on both phones. And notifications finally let go: swipe any row left and it is gone for good, or clear the whole list in one tap. All 360 graves now carry their complete two-act autopsy. Build 313.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v312</span>
+            <div class="log-item__body"><p><b>Nobody gets lost in here anymore.</b> A new ? chip sits on the home header, and it opens the plain guide: every function of the app - the library, the scanner, deep dives, the notebook, the audio room, Listen Today, the graveyard, the quote wall, Ask, Write, your account, settings, Gold, the store - one honest line each, with a link that takes you straight there. Behind the same button lives the 30-second home tour: five soft steps that point at the map, the search, the scanner, the graveyard and the big plus, once per reader, skippable in one tap, never in the way. All Settings carries the same door under "Feeling lost?", and index.html#guide opens it directly. Build 312.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v311</span>
+            <div class="log-item__body"><p><b>Five legends join the shelf, the shelf mixes itself, and boost got honest.</b> The Art of Public Speaking, Common Sense, Andrew Carnegie's life, Frederick Douglass's Narrative and Homer's Odyssey - the audiobooks people actually go looking for - now stream free beside the 35 already there. The audiobook shelf no longer leads with one language: every screen of six mixes English and Hindi on repeat, and the more button adds six at a time. The boost chips now say what they truly do: +50% is a real 150% and +100% is a real 300%, with a compressor keeping the loud voices clear instead of shredded. The show browser's fetching state is an honest animated dots line instead of a quiet pause. And every painted cover - Hindi and English - went minimal: the name, one yellow bar, the author, nothing else. Build 311.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v310</span>
+            <div class="log-item__body"><p><b>The shows fetch in any weather, the player remembers everything, and the wall got colourful.</b> "Worth your ears" now loads straight from each show's own feed with a mirror as backup and a saved copy as the last resort, so "couldn't fetch" is retired; every show opens a proper in-app browser with artwork, the description and episodes, three more appearing per tap, all playable right here. The player learned your habits: pause it and it stays paused at the same second on every page; swipe it away and it stays gone until you tap Continue in the audio room; reopen the app and it is exactly where you left it. Audiobooks got real cover pages - the seven Hindi titles painted in-house, from Idgaah's diya to the Panchatantra's tree - plus nine new full audiobooks including Walden, Zarathustra, the Kybalion and Seneca's On the Shortness of Life, every audiobook saveable to your shelf with one heart-tap. Settings rows wrap instead of squeezing, the quote wall grew to eight sticky colours plus any custom colour you pick, notes share with a tap and your own pins drag anywhere, and forty-five new graves join the graveyard - 360 autopsies, from Bhopal to Horizon to the Titan. And after the three reader quotes, a small button says add yours: stars first, then your words, name shown or hidden. Build 310.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v309</span>
+            <div class="log-item__body"><p><b>More Hindi, less noise, and a player that tells you it is working.</b> Seven Hindi listens now lead the shelf: the Panchatantra, Do Sakhiyan, and five Premchand stories (Idgaah, Gulli Danda, Anaath Ladki, Andher, Jhanki), all presented the way India actually reads it - Hinglish covers, Hinglish labels. The word "free" retired from the audio surfaces where it was doing nothing; what needs saying free still says it. The player's yellow strip now runs along its top edge and animates while a chapter is buffering, so a slow network looks like a slow network, not a freeze. Loading popups are gone; one clean notification appears above the player when playback starts, never mid-screen. Build 309.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v308</span>
+            <div class="log-item__body"><p><b>The duplicates are gone from every audiobook, the player learned manners, and the Quote Wall lends you the words.</b> LibriVox ships every chapter in three bitrates and the app was playing all three; each book now carries its real chapters once - Meditations is 15, not 30 - with the light 64kb copy preferred for smooth streaming. The mini player tucks into exactly the spot the bottom bar leaves, never cut off, and glides back with it. A strip of remaining time rides in the player now, so you always know what is left of the book. Swipe the player fully right and it closes cleanly, your spot kept. The now-playing sheet got the polish pass: it rises like the podcast apps, the playing chapter stands out, and the queue scrolls calm. And before writing your own on the Quote Wall, a find-a-line shelf offers sixty lines from the old voices, searchable by word, author or topic; tap one and it lands in your note ready to pin. Build 308.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v307</span>
+            <div class="log-item__body"><p><b>Hindi on the free shelf, one popup instead of two, and a Quote Wall that greets you with lines.</b> Guests now meet exactly one card: at the fifteen-minute mark, the friendly free-forever sign-in card, nothing mid-way, no five-more-minutes button. The audiobook shelf speaks Hindi: the Panchatantra in its full 222-chapter Hindi reading and Premchand's Do Sakhiyan, both read by LibriVox volunteers, sitting proudly at the top with Devanagari covers. The shelf now shows six books first with a show-all button, so the wall of covers never scares anyone off. The Quote Wall opens full: fourteen real lines from the shelf pinned like readers left them, tilted every which way, so a first visit feels like a board in use, and the pin and zoom buttons finally have their own corners. Settings grew two quiet switches: hide the what's-on-your-mind card, the daily question, or both. And the footer leads with the book. Build 307.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v306</span>
+            <div class="log-item__body"><p><b>The player now follows your thumb, and your listening follows you.</b> Scroll down and the mini player tucks away with the bottom bar, exactly like on the book pages; scroll up and both glide back, the player riding a small gap above the bar. Whatever you were listening to - an audiobook or a show - now meets you on every page and every visit: leave, close the app, come back the next day, and it is parked at the exact second, one tap from continuing; if the sleep timer is what stopped it, it comes back quiet instead of shouting. A volume boost finally fixes the quiet old recordings - up to double, honest gain done properly, off by default, one tap in the player. And the stories bell is pinned back to its corner. Build 306.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v305</span>
+            <div class="log-item__body"><p><b>The Audio Room got a real player, a bottom bar, and its free books moved to the front door.</b> The room now opens on the free shelf: nineteen complete audiobooks with their chapter counts on every cover, then the nineteen shows, and our own narrations after - with three jump buttons at the top for anyone in a hurry. The bottom action bar finally shows up here too, and the mini player parks above it exactly like on the book pages. The player itself grew up: a full now-playing sheet with the cover art big, a seek bar with times, back 15 and forward 30 buttons, chapter skip, speed, a sleep timer that counts down in front of you and cancels cleanly, and the whole queue below. The lock screen now carries the artwork and controls too, so playback survives the phone switching off the screen. Build 305.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v304</span>
+            <div class="log-item__body"><p><b>Scan any cover, a mindpick that pulls you in, and an Audio Room twice the size.</b> The scanner stopped being a library lookup: point it at any book in print. If we have it, the summary opens straight away; if we do not, it says so honestly and hands you two taps - a WhatsApp to the team with the title it just read, or a mail - and that summary goes to the front of the build queue. The what's-on-your-mind card now leads with the typing box: one honest line in, three books out, each carrying the one thing to do about it this week; the quick buttons moved under it for people who would rather tap. Dark mode got a full sweep with a real contrast audit on every page: the logo highlight, every yellow button, the podcast chips, the graveyard stamps, the notebook cover - nothing disappears into the background anymore. The Audio Room doubled: nineteen podcasts now stream from their own official feeds (The Ranveer Show, Huberman Lab, Naval, Hidden Brain, How I Built This, The Diary Of A CEO, Modern Wisdom, On Purpose, The Neon Show and Dreamers and Unicorns joined the nine) and nineteen complete audiobooks read by LibriVox volunteers - the Analects, the Dhammapada, the Katha Upanishad, Franklin's autobiography, Epictetus' Enchiridion, Seneca's moral letters, the Yoga Sutras and Raja Yoga are the new ones. And a housekeeping pass nobody will see but everybody reads easier: forty thousand em dashes retired from the shelves in favour of the plain hyphen. Build 304.</p></div>
+        </div>
+        <div class="log-item">
+            <span class="log-item__ver">v303</span>
+            <div class="log-item__body"><p><b>The Audio Room learned to actually play, the Quote Wall became a real board, and the hands-free scroller retired.</b> Podcasts now stream right inside the app from each show's own official feed - WTF is, Figuring Out, The Barbershop, Founders, Invest Like the Best, Tim Ferriss, The Knowledge Project, The Book Review, Paisa Vaisa - with full credits to their makers, plus eleven complete public-domain audiobooks read by LibriVox volunteers (Meditations, The Prince, The Art of War, Siddhartha and more), all through one player with queue, speed, sleep timer, lock-screen controls and continue-where-you-left. The classics on the shelf grew a Listen Free button. The Quote Wall got cork, wood, tape and pins, and an anonymous switch for readers who'd rather whisper. Lesson buttons went back to one quiet row; notes now live where your finger is - underline any line and tap NOTE. The hands-free camera scroller is gone for good: native scroll only, faster for everyone. The mindpick header, the stories buttons and the audio room card were redrawn by hand. AI-slop sweep with fresh eyes: gradient text, thick edge stripes, washed-out grays and bounce easing all replaced with honest, plain design. Build 303.</p></div>
+        </div>
+<div class="log-item">
+            <span class="log-item__ver">v302</span>
+            <div class="log-item__body"><p><b>The app learned to speak in whole books, and readers got a wall to pin the lines worth keeping.</b> The listening machine arrived: one real player for everything - tap LISTEN on any lesson and the whole book queues up spoken, with a queue you can jump around, speed from 0.75x to 1.5x, a sleep timer that pauses politely at 5, 15 or 30 minutes, lock-screen controls so it keeps playing on a commute, and a continue card that remembers exactly where you left off. Deep-dive narrations and the Stories rail flow through the same player. The lesson buttons grew up: four quiet cells, icon over label, no more toy outlines cheapening the page. The QUOTE button now opens the Quote Wall - a public soft board where readers pin lines, lessons and photos as sticky notes on a corkboard you can pan and zoom forever; posting is one tap and the wall never runs out of space. And the library learned to introduce itself: 14 complete topic shelves (everything on habits, money, focus, discipline and more) and 58 author shelves (every book by Robert Greene, by Robin Sharma, by the anonymous classics), 72 new landing pages for readers who arrive asking for a shelf, not a title. The mindpick header wears its badge calmly now. Build 302, sitemap at 1,122 URLs.</p></div>
+        </div>
+<div class="log-item">
+          <span class="log-item__ver">v300</span>
+          <div class="log-item__body"><b>500 books, a homepage that asks what&rsquo;s wrong, a free day of questions, and 219 reading lists</b>
+          <p><b>The shelf crossed 500 books: 3,540 lessons, 4,313 minutes of reading, every cover real.</b> Twenty new summaries joined, from Atomic Habits&rsquo; neighbours (The First 20 Hours, Working Backwards) to old friends (Siddhartha, A Brief History of Time), each with the ten lessons, the quotes, the action plan and the case study it deserves. The homepage now leads with the problem, not the shelf: a card asks what&rsquo;s on your mind this week, twelve problem buttons (focus, money, procrastination, a stuck career) or your own words hand back three books that fit plus one thing to actually do, and on the first open of each day a different question or quote greets you, dismissable in one tap, never to nag again until tomorrow.</p>
+          <p><b>Reading lists went programmatic: 221 new pages</b> answering the searches readers really type, books like Atomic Habits, the best books on money, stress, stoicism or beating procrastination, and honest head-to-heads (Deep Work vs Make Time, Sapiens vs Guns, Germs and Steel). Every link on them was machine-verified live. And they follow the reader&rsquo;s language: choose Hindi and the list and every book page open in Hindi, while titles and author names stay untouched by the translator. Ask the Library got a free day: once the paywall is on, every reader still gets 5 questions in any rolling 24 hours with an honest counter in the header, menus and browsing always free; the wall only asks when the day&rsquo;s questions are genuinely used. The notebook became a real notebook: notes now follow your account to every device (a Supabase table behind them, with the page working offline exactly as before), photos and voice notes move into real storage instead of quietly filling a 5 MB pocket, the lines you highlight while reading land in the notebook under From your reading, every lesson carries a one-tap NOTE button, and the notebook opens on the last page you touched with a search box, book tags and a prompt of the day. Gold got its first real layer: Deep Dives, original long-form reads around the one chapter worth a book's full price, in a proper reader with narration, one sample free; beside them the Audio Room curates the book podcasts and founder conversations worth your ears, read by your app or heard on their own platforms. The hands-free room got simpler and faster: one illustration, one hint, Learn gestures, one toggle, and the full-screen skeleton that made mid-range phones stutter is gone, each flick now one clean animated step. And a founder preview in Settings: Jash's own accounts carry every Gold feature on every device, with an honest switch to walk the app as a free reader. Build 300, sitemap at 1,048 URLs.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v299</span>
+          <div class="log-item__body"><b>Built for search: every book page targets what readers actually type, and Ask the Library stands behind Gold</b>
+          <p><b>All 480 book pages now carry search titles that match real queries</b> (&ldquo;summary&rdquo;, &ldquo;key lessons&rdquo;, &ldquo;notes&rdquo;, &ldquo;free&rdquo;), and every one of the 795 summary and case-study pages describes itself honestly (no signup claims, the trial is real). Open a book link straight from a search result and you read the whole book on the spot: the reader page now wears the book&rsquo;s real title, description and a canonical pointing at its summary page, so there is one clean URL per book in Google, never a templated &ldquo;Book, TheSmallBook&rdquo;. The sitemap was rebuilt with every page listed, 805 URLs, the 130 missing books included. And Ask the Library, the assistant that answers from the library&rsquo;s own 3,340 lessons and 360 autopsies with the exact lesson cited, now stands behind Gold: the panel opens into an honest card the moment the wall switches on (it is config-driven, silent until then), the question library stays browsable, and the books never lock. The gold banner says GO DEEPER now, because that is all it is.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v298</span>
+          <div class="log-item__body"><b>The hands-free room: the scroller teaches itself, and Gold becomes unhackable</b>
+          <p><b>Open the app and a small card drops from the top corner: Scroll with your hand.</b> One tap on Try it opens the hands-free room, a single place that teaches and runs the whole feature: how close to hold your hand, a master switch in the app&rsquo;s own style, the 30 second animated walkthrough, a one-tap live practice session where the toast reads your hand as you move, the three gesture chips, and the on-device privacy line. The room opens from the corner nudge, from Settings, from the You page, and from any page. The nudge appears once and stays gone the moment you dismiss it; the people who want it get a door, the people who don&rsquo;t never see it again.</p>
+          <p><b>Gold is now server-side.</b> Membership lives in a gold_members table on Supabase with one read-own-row policy, and the browser can only ask, never answer: editing local storage, minting codes or flipping flags in devtools grants nothing, because the code that answered those things no longer exists. Codes redeem through the redeem-gold function (single-use, burns on the buyer&rsquo;s own signed-in account), card and netbanking checkout goes through Razorpay with a signature-verified webhook that writes membership server-side, replays do nothing twice, and gold.html polls the server with a honest &ldquo;Payment received, activating&hellip;&rdquo; instead of trusting the device. And a honesty pass on the front page: the promise now says exactly what is true (the library is free, a free account saves your shelf and progress), the gold banner says OPTIONAL EXTRA instead of CLOSING SOON, the invented spots meter is gone, the books and lessons counters carry their real numbers from the very first frame, and the meta descriptions no longer claim no signup anywhere.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v297</span>
+          <div class="log-item__body"><b>The pinch becomes a mouse, and the toast reads your hand live</b>
+          <p><b>Pinch is now a full pointer.</b> Hold the pinch and a cursor rides your fingertip anywhere on the page; drag your hand and the page glides with it, up or down, the way a touch drag feels; hover anything and it lights up so you can aim before you commit. A quick pinch and release is the left click, landing on exactly what you aimed at. Hold as long as you like to roam the page, end with a quick pinch to press. And the top toast, the same quiet one every message uses, now stays live the whole session: it shows an open palm when your palm is up, flicking when your hand sweeps, curling when the beckon starts, and cursor or gliding while you drag, so you always know what the scroller sees and what it is about to do.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v296</span>
+          <div class="log-item__body"><b>The scroller loses the mirror: hand only, face never, and it remembers you</b>
+          <p><b>The camera never paints your page again.</b> The hands-free session used to lay a faint mirror of your camera over the whole screen, face and room included. That is gone: the feed is now a hidden pipeline that nothing but the detector ever sees. In its place a small corner window shows just your hand, cropped live around your palm, and it disappears the moment your hand leaves the frame, so your face and your room never appear at all. The page itself stays fully visible the whole time, which is the way it always should have read: hands-free looks exactly like hands-on, you simply scroll. And the session remembers you: the first scan still does the steady lock-in, and every session after that recognizes your hand and locks in almost the instant it appears, with a hand-remembered nod instead of the long wait. This ship also fixes four real scroller bugs found by driving the real pipeline with a synthetic hand: the pinch cursor now actually appears (it used to crash the frame it should have shown), releasing a pinch taps exactly where the cursor sat instead of the screen corner, a beckon curl can no longer be mistaken for a pinch (the middle and ring fingers must stay up), and the beckon window now counts from the moment your curl starts, so it works every time instead of roughly half.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v295</span>
+          <div class="log-item__body"><b>The You page now owns its settings: the hands-free switch lives there, and the full settings room is one tap away</b>
+          <p><b>You → 🎛️ Settings → ✋ Hands-free scrolling.</b> The on/off switch for the Small Scroller now sits right in your settings on the You page, as its own department, with the gesture replay beside it and the on-device privacy line under it: flick down, beckon up, pinch to tap, turn it off the moment you want, all without leaving the page. Beside it a new ⚙️ All settings door opens the full settings room, text size, font style, notification sound, app display size, library view, bar colour, reading language and the data tools, which until now had no door from anywhere in the app. The rooms you already used (activity, look &amp; feel, notifications, privacy, account) are untouched and stay where they were.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v294</span>
+          <div class="log-item__body"><b>Twenty new Originals: the in-house shelf doubles to 30</b>
+          <p><b>The library is now 480 books and 3,340 lessons, all free.</b> Twenty new TheSmallBook Originals join the shelf, credited Unknown, each with 10 lessons, real examples from the public record, an honest caveat, its own generated cover and its own Graveyard link. On the mind side: The Art of Letting Go (an 11-lesson remake, Kodak to Dhoni), The Weight of Maybe (the rent unfinished decisions charge), Letters to My Younger Self (11 letters, age 16 to 40), The Second Life of Broken Things (kintsugi for careers and companies), Nobody Is Thinking About You (the spotlight is in your head) and The Comparison Tax. On the business side: The Franchise Lie (decompose the fee before you sign), The Bootstrapped Rebellion (profit-first playbooks), The Exit That Almost Wasn't (the seller's side of the table), The Last Mile Lie (the economics of getting it there), The Price Is the Product and The Moat Map. On leading people: The Quiet Leader, The Successor's Dilemma, The Delegation Ladder, The Turnaround Captain and The Decision Room (dissent, premortems, decision journals). And to close: The Apology Engine, The Unsexy Hours (boring consistency, the whole secret) and The Scrolled Mind (attention in the feed age). The NEW shelf carries all 80 this week, the og image and every count moved together, the MODES chip got a small polish to match the language pills, and the app no longer wears robot emojis anywhere: it is a library, it says what it is. The chat got an honesty pass too: the duplicate one-idea-five-books mode was retired, Founder Field Notes (invented reader notes) is now From the Founders&rsquo; Record with sixteen documented moves from real founders wired to their books, Red Flag Friday draws from every autopsy so the pool runs years, and all seven modes open standalone from their own links.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v293</span>
+          <div class="log-item__body"><b>TheSmallScroller: read hands-free, with your own hand as the remote</b>
+          <p><b>Turn it on in Settings, show your hand, and the page obeys.</b> The Small Scroller reads your hand from the camera, right on your phone: an open palm flicked up scrolls down, the calling gesture (palm facing the phone, fingers curl down and spring back, exactly like calling someone over) scrolls up, and a pinch shows a soft translucent cursor you can release over any button, chip or link to tap it. A first-run animated tutorial teaches all three gestures, and you can replay it any time from Settings or the little bar in the session. Smart guards keep it honest: your hand locks in after a two second scan, a distance zone warns you to come closer or back off instead of misfiring, gestures are smoothed and need steady frames with cooldowns, a scan reticle fills as your hand locks in, every gesture pops a flash where your palm is, and a motion trail follows a fast hand, and the whole thing pauses the moment you leave the page. Nothing records and nothing uploads: every frame dies on your device. There is a new ✋ Air Touch badge for your first scan, and while the toggle is on a small floating hand chip on every page restarts the session one tap later.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v292</span>
+          <div class="log-item__body"><b>Ask the Library grows 8 modes, and your @id finally shows everywhere</b>
+          <p><b>7 modes, one tap away under the 🎭 MODES chip in the chat, and each one is an independent destination: every mode opens straight from its own link (chat.html?mode=seven or ?mode=redflag, any mode, any page).</b> Compare Books puts lessons from different books side by side on one question (habits, negotiation, leadership, risk and more; the old one-idea-five-books duplicate was retired, it did the same job with a different hat). The Decision Before the Disaster shows the reversible moment from real autopsies. Red Flag Friday rotates a fresh warning flag every week: 27 curated flags first, then one drawn from every autopsy in the Graveyard, a pool that runs for years without repeating. Read This Before You… preps you for the big jumps: raising money, hiring fast, buying a franchise, quitting your job. The 7-Day Application Challenge turns one book into seven days of actions. Myth vs Lesson puts popular advice against what the books actually say. And From the Founders&rsquo; Record replaced the old reader-notes gimmick: every entry is now a documented move from a real founder on the public record (Tony Hsieh&rsquo;s $2,000 quit offer, Karsanbhai Patel&rsquo;s bicycle detergent, David Marquet&rsquo;s banned &ldquo;request permission&rdquo;), each wired to the book in the library that teaches it. Every answer is composed live from the library&rsquo;s own 480 books and 360 autopsies: nothing invented, nothing padded.</p>
+          <p><b>Find Readers now shows the @id you saved.</b> The finder and the follower lists used to show a random-looking code instead of the username you picked in Stories. Fixed: your saved @id shows everywhere a reader appears, on the finder and on profiles.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v291</span>
+          <div class="log-item__body"><b>Ten books that exist nowhere else, and a case file that just got harder</b>
+          <p><b>30 TheSmallBook Originals, written in-house, credited Unknown.</b> The first ten: The Chai Stall CEO (the tapri that out-thinks the chains), The Queue (what India stood in line for in 1991), Mandi Math (how markets really move), The Tiffin Code (the system that never misses), The Wedding Economy (the biggest industry nobody runs), The Cricket Balance Sheet (the business under the game), The Monsoon Portfolio (investing by the rain), Right Idea, Wrong Decade (timing), The Quiet Giant (how big organizations die politely) and The Rented Kingdom (owning your ground on platforms). The twenty new ones: The Art of Letting Go, The Weight of Maybe, Letters to My Younger Self, The Second Life of Broken Things, Nobody Is Thinking About You and The Comparison Tax on the mind side; The Franchise Lie, The Bootstrapped Rebellion, The Exit That Almost Wasn't, The Last Mile Lie, The Price Is the Product and The Moat Map on the business side; The Quiet Leader, The Successor's Dilemma, The Delegation Ladder, The Turnaround Captain and The Decision Room on leading people; and The Apology Engine, The Unsexy Hours and The Scrolled Mind to close. Every one carries 10 or 11 lessons, real examples, honest caveats and its own generated cover, and every one is wired to the Graveyard. The library is now 480 books and 3,340 lessons, all free.</p>
+          <p><b>The case file grows a 14th document, and it is the hard one.</b> THE TICKET: a facilities maintenance ticket from the night of the 14th, with the badge log beside it. It proves the shed man stood inside the sealed office minutes before the camera died, and it raises the question the whole file was missing: who rents a truth? The case is now 15 pages; veterans will want to re-read the emails.</p>
+          <p><b>The Originals get their mark.</b> Every in-house book now wears a ✦ THE SMALLBOOK ORIGINAL band in the reader and on its page: written by us, credited Unknown, found nowhere else. The tune-up also got smarter: it asks what you want to fix first, then builds your shelf from that.</p>
+          <p><b>The NEW badge got generous.</b> 80 books carry it this week: the thirty originals plus the fifty real books from the last two rounds (the desi-first 22 and the founders 28), so the whole recent shelf reads as new, newest first. And the tune-up now opens with 1 or 2 books picked from your answers, then the fresh arrivals, chip on the new ones. Counts move together: 480 books, 3,340 lessons, 360 autopsies, swept across every page, meter and the og image.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v290</span>
+          <div class="log-item__body"><b>The library crosses 450: founders, moguls and product doctrine, with an honest FREE vs GOLD table</b>
+          <p><b>28 new books, full depth.</b> Desi Disruptors (the insight playbook behind Vicks, Maggi, Fogg and Ceasefire), It Happened in India (Future Group), Bhujia Barons (Bikanervala), For the Love of India (Jamsetji Tata), India Uninc, The Marwaris, Dhandha, Losing My Virginity (Branson), Delivering Happiness (Zappos), Onward (Schultz), Iacocca, My Years with General Motors (Sloan), Jack: Straight from the Gut, Made in Japan (Morita), The HP Way, The Smartest Guys in the Room (Enron), Liar&rsquo;s Poker, Too Big to Fail, Den of Thieves, Barbarians at the Gate, The Toyota Way, Turn the Ship Around!, The First 90 Days, Hooked, Inspired, The Cold Start Problem, Obviously Awesome and Lost and Founder. Real chapters, named examples, honest caveats, and every quote checked: nothing invented, zero slop, no em dashes anywhere in the new pages.</p>
+          <p><b>4 new graves.</b> Ceasefire (created a category, then left it and nobody came), Virgin Cola (fought a distribution war with a marketing army), Air India (the Maharaja grounded by the state, bought back after 68 years) and Payless ShoeSource (sold shoes cheaper than everyone and went broke twice). The Graveyard now autopsies 360 failures, and every new book carries its graveyard connection.</p>
+          <p><b>TSB Gold, laid honest.</b> A FREE vs GOLD side-by-side now sits on the Gold page: all twelve premium features in one table, status chips that tell the truth (LIVE NOW, IN PRODUCTION, COMING SOON), and the math at the bottom. The free library stays free; Gold only adds.</p>
+          <p><b>The NEW tag moved.</b> The fresh 28 carry the &ldquo;new&rdquo; badge; the previous batch lost it, as it should. Counts move together: 450 books, 3,035 lessons, 360 autopsies, swept across every page, meta, meter and the og image. Covers for all 28.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v289</span>
+          <div class="log-item__body"><b>The library crosses 422: a desi founders&rsquo; shelf, and three new graves</b>
+          <p><b>22 new books, full depth.</b> The Big Billion Startup (Flipkart), Simply Fly (Air Deccan), The Maruti Story, TCS under Ramadorai, two by Subroto Bagchi (The Elephant Catchers, The High Performance Entrepreneur), three by Rashmi Bansal (Arise Awake, Follow Every Rainbow, the Anu Aunty story), Dreamers, Recasting India, The Anarchy, Ambani &amp; Sons, Tata Log, Bottle of Lies, Half-Lion, Breakout Nations, Amazon Unbound, Grinding It Out, Empire of Pain, House of Cards and When Genius Failed. Real chapters, named examples, honest caveats: nothing missed out, zero slop, and no em dashes anywhere in the new pages.</p>
+          <p><b>3 new graves.</b> Alma Mater (the t-shirt wave that crested), Tata Docomo (per-second billing won the users and lost the money) and the License Raj (the economy that died of waiting in 1991). The Graveyard now autopsies 311 failures, and every new book carries its graveyard connection.</p>
+          <p><b>Counts move together.</b> 422 books, 2,811 lessons, 311 autopsies, swept across every page, meta, meter and the og image. Covers for all 22: real artwork where the public record had it, house-style typography where it did not.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v288</span>
+          <div class="log-item__body"><b>The notebook grows a pen, a voice, and a living link</b>
+          <p><b>Draw on the page itself.</b> The pen button now opens a tiny ink tray: four inks, three nibs, and you draw straight over your words, no window, no taping in. Pen off (or turning the page) saves the ink exactly where you drew it. Photos pinch bigger and smaller with two fingers, and the notebook cover finally shows your notes as notes: title, first line, page count, tap to open. The YOU section carries a proper notebook card now, badge and all.</p>
+          <p><b>Speak, and it types.</b> A dictate button sits in the shelf, the same voice typing the writer uses, ten languages, straight into the page. The page-turn finally looks like a page turning: the arriving sheet swings in off the rings.</p>
+          <p><b>EXPORT AS FILE grows a READER LINK.</b> Your note becomes a small standalone page with a real ebook page-turn, a header, and the small book brand, uploaded as one file and shared as a link. Four a month free, unlimited with Gold. The share card got redesigned too: one cream sheet, a red margin, the brand quiet in the corner. And the reading-thread experiment in messages is gone; recommending a book stays.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v287</span>
+          <div class="log-item__body"><b>The notebook grows up: menu, fonts, drawing on the page itself</b>
+          <p><b>Inside a note, the top-left is MENU now</b>, it opens the notebook, and the YOU link sits beside it. The toolbar scrolls like shelves and carries a font book: fifteen hands and faces, from Homemade Apple to Bebas. The camera button is gone; the photo button already does that job.</p>
+          <p><b>Drawing happens on the page itself.</b> No more pop-up window: a transparent sheet floats over your paper, you draw with lines right where the drawing will live, and DONE tapes it in place. And like Word, pressing Enter after a quote line returns you to normal writing, a quote never leaks into the next sentence by itself.</p>
+          <p><b>Photos can be dragged now:</b> press and hold one for half a second, it lifts, drop it anywhere. The free watermark became a quiet signature instead of a shout, and Gold writers export without it. The studio finally puts an author in the byline instead of gluing it into the sentence, and whatever you framed there mirrors back into the page preview.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v286</span>
+          <div class="log-item__body"><b>Proven, not promised: the whole complaint list now passes in a live browser</b>
+          <p><b>The studio can no longer refuse to compose.</b> Picking an Inspire Desk image and exporting is now tested end-to-end in a real browser, and even a photo whose source blocks exports is silently re-fetched as a blob before giving up. The last-resort message finally tells you exactly what to do instead of "re-pick and pray".</p>
+          <p><b>The notebook banner obeys the truth.</b> It reads your session the moment the page builds and keeps checking, so a signed-in reader never sees "these pages live on this device" again, even if auth boots slowly or an extension interferes.</p>
+          <p><b>The case grows morning anchors.</b> The chats now carry 7:45 AM (the leak is loose, the press is calling) and 8:15 AM (Arjun's "I will handle it", to a question Vikram never asked). The map rows for both are in. Some times matter. Some are just morning.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v285</span>
+          <div class="log-item__body"><b>Sealed verdicts · a notebook that turns · the 8h 30m ghost</b>
+          <p><b>Verdicts are sealed now.</b> What you post is read by the Founder alone; the wall only shows that you dared, as blurred tiles with nothing to sniff. His desk lists every verdict with names, emails and handwriting sheets, so the winner can be reached directly. WhatsApp is gone; a camera button snaps your sheet in-app; and you leave an email so the prize can find you if you win.</p>
+          <p><b>The notebook got a body.</b> Pages turn with a paper curl, voice notes sit as small chips, photos resize with a tap, drawings save as drawings, and exports come out clean as PDF, Word, PNG or a shareable card. Guest notes follow you into your account.</p>
+          <p><b>Also:</b> the graveyard countdown now always offers a full week (the 8h 30m window is gone), the case rules say it straight: pen and paper first, map everything, and the timeline carries the exact clock times that matter.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v284</span>
+          <div class="log-item__body"><b>🖼 Fourteen documents now: the file grows a noise page</b>
+          <p><b>Document 13 is "The Noise."</b> Nine true things that happened that month, and almost none of them matter. That is the point: a real file is mostly lives being lived, and the Founder grades the argument, not the name. The bottle exhibit testifies now too: read its label, then read document 07.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v283</span>
+          <div class="log-item__body"><b>🖼 The case file carries real evidence now · the notebook goes quiet · the week is a full week</b>
+          <p><b>Photos in the file.</b> The product shot from the launch kit opens the case; the Bhiwandi shed and the seized relabeled crates sit in the shed register. Every exhibit is captioned.</p>
+          <p><b>The notebook is dressed down.</b> One dark cover, one hairline, calm grey ink. No gold, no noise. It reads like an object you own, not an effect.</p>
+          <p><b>The closing day always gives a full week.</b> On Thursdays themselves, the clock counts to next Thursday, never tonight.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v282</span>
+          <div class="log-item__body"><b>📓 The notebook, dressed properly · the sheet gets a writing page · closes Thursday now</b>
+          <p><b>The notebook looks the part.</b> A proper cover with a spine and stitched seams, a hand-written contents page, quieter paper, a calm toolbar, and your guest pages follow you into your account when you sign in.</p>
+          <p><b>Cheat sheet page two is now the work page.</b> Page one stays loaded with the book. Page two is light: the identity line, the five steps with tick boxes, where it breaks, and a full ruled writing area for the week. Print page two, work the week, repeat.</p>
+          <p><b>The case closes Thursday 9 PM now,</b> and every clock in the app says so.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v281</span>
+          <div class="log-item__body"><b>🏛 The Case Museum · a closing clock · a year page · cheat sheets you can write on</b>
+          <p><b>Solved cases now stay forever.</b> When a case closes it moves to the Case Museum on the Graveyard page: still fully playable, verdict and all, prize or no prize. The folder on the Graveyard now carries a clock too, counting down to Thursday 9 PM.</p>
+          <p><b>Your Year in Books.</b> After one full year of reading, a page appears in YOU with your numbers for the year: lessons, finished books, streaks, notes, cases. One card, downloadable, shareable. Until then it is not there at all, exactly as it should be.</p>
+          <p><b>Cheat sheets earn the print.</b> Tick boxes on the five steps, lines to write when you started and finished the book, and a My Notes strip at the bottom. Print it glossy, work it with a pen.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v279</span>
+          <div class="log-item__body"><b>📖 Books open plain now.</b>
+          <p>You said the little cover animation was too much. It is gone. Picking up a book opens it straight, with one calm settle, nothing in the way. Everything else from v278 stays.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v278</span>
+          <div class="log-item__body"><b>📓 Your Notes · 🔍 The Case File · 📖 Reading Journeys</b>
+          <p><b>Your Notes is a notebook now, not an app screen.</b> Ruled paper, a red margin, ring binding, pages you turn. A note holds as many pages as it needs. Photos, voice notes and drawings go right on the page. It saves as you write, a note leaves only when you delete it, and export gives you one clean file.</p>
+          <p><b>The Case File is live.</b> A manila folder on the Graveyard page with a CONFIDENTIAL stamp. Inside: thirteen documents on one dead company, a phone call you can listen to, and no answer key. Send your verdict privately to the Founder, or post it on the public wall for every reader. A real prize goes to the winner, announced by the Founder when the case closes.</p>
+          <p><b>Reading Journeys, renamed and sharpened.</b> Kill the Overthinking. Never Broke Again. Laser Focus: The 7-Day Lock-In. Top the Class, Skip the Tuition. Zero to Founder. The Great Indian Money Stories. The Idea Machine. Win Friends, Win Big. The Iron Discipline Month. Your First ₹1 Lakh.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v266</span>
+          <div class="log-item__body"><b>⚡ The Idea Autopsy moves into YOU, with the app&rsquo;s first lock &middot; the wire retires &middot; onboarding becomes a chapter book</b>
+          <p><b>The Idea Autopsy lives in YOU now, rebuilt from zero.</b> A banner that glows like the graveyard door: cross-examine your startup idea against 308 case files, four meters, a verdict in plain words, fixes that name the grave that paid for the mistake, an ordered scale-up plan, and live proof from the public record. The old audit and the wire are gone from the graveyard page; the corpses lead there now, alone.</p>
+          <p><b>The first lock.</b> Free readers see the meters, the verdict and a blurred glimpse of the fixes. The full treatment, every fix, the plan, the family history of failures like yours, the OSINT proof, unlocks with Gold or the launch batch (the first 500 claims are free).</p>
+          <p><b>Onboarding questions became a chapter book.</b> Every question is now a page, spine, ghost chapter number, the question underlined in yellow, and the pages turn in 3D as you answer.</p>
+          <p><b>This changelog learned manners.</b> You see the newest updates first; the rest arrive when you tap SHOW MORE, no endless wall on your phone.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v265</span>
+          <div class="log-item__body"><b>⏳ The 15-minute free taster, and the final clean-up</b>
+          <p><b>Onboarding completes; it is never skipped.</b> The extra doors and the cross are gone, one GET STARTED carries you through all seven questions, and finishing opens the app with a clear <b>15-minute free taster</b>. The clock only runs while you&rsquo;re actually looking at the app, and a refresh doesn&rsquo;t refill it.</p>
+          <p><b>At 5 minutes a polite pop-up: 10 left. At 10: five left. At 15 the gate</b>, sign in (30 seconds, free) and your shelf, streak, @name and everything you read today stay yours forever.</p>
+          <p><b>The graveyard leads again.</b> The 308 corpses and the search open the page; AUDIT YOUR IDEA and THE WIRE now sit below the graves on dark case-file boards that belong to the graveyard. Search has no DIG button, typing is the search.</p>
+          <p><b>Nothing borrowed, nothing extra.</b> The reader is the full story, the case-study-page detour and the &ldquo;images displayed from&hellip;&rdquo; credit line are gone; grave photos simply carry our stamp, THE FACE OF THE GRAVE. The wire speaks in our voice (&ldquo;tuning the wire&hellip; THE WIRE IS LIVE&rdquo;), sources stay linked on the items themselves. Login inputs: the show-password eye sits dead-centre, tabs never clip, the 13+ tick is bigger and nudges you if it&rsquo;s the one thing missing. Profiles centre on one axis. Motion everywhere it earns its place, floating shapes, breathing onboarding, card entrances, all silenced by reduced-motion.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v264</span>
+          <div class="log-item__body"><b>🎨 The premium pass, onboarding becomes a full-screen tune-up, YOU gets rooms, profiles get the reference card, graves get faces</b>
+          <p><b>Onboarding is now a page, not a pop-up.</b> First visit opens a full-screen tune-up with a numbered timeline, one question per screen, and three doors: GET STARTED, CUSTOMISE MY SHELF, or &ldquo;Use the app right now&rdquo;, nobody is trapped by a quiz. The same full-screen experience reopens from You &rarr; Re-tune.</p>
+          <p><b>The YOU window has rooms.</b> Settings are five departments, My activity, Look &amp; feel, Notifications &amp; sound, Privacy, Account &amp; keys, each opening its own aligned window with a back button. MY ACTIVITY shows the reading ring (how much of the library you&rsquo;ve read), lessons/books/badges counters, and the bold streak cards.</p>
+          <p><b>Profiles rebuilt to the reference card.</b> Colour banner with shapes, centered photo and name, @handle, bio and links, follower pills, three round buttons up top (message / share / copy) and ONE big black SUBSCRIBE button, or 🔒 Request to follow on private accounts, with Requested ⏳ state and cancel.</p>
+          <p><b>Every grave shows its face.</b> Opening any of the 308 autopsies quietly fetches the company&rsquo;s photograph from the free public record (Wikipedia, keyless), plus a small gallery when the article carries more, display only, credited, linked back, and hidden gracefully offline. v263&rsquo;s premium circular login card and the button-less Graveyard, cards that read like stories, audit and Wire in one flow, are all part of this ship.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v255</span>
+          <div class="log-item__body"><b>🕵️ The audit round, one channel, and every page cleaned up</b>
+          <p><b>One TheSmallBook channel.</b> The shelf no longer repeats the five stories the official account already published, they appear once, under the channel&rsquo;s name, in the feed and on its profile page. The channel&rsquo;s profile now shows its complete work: the published posts plus the 23 library stories still coming. Every library story&rsquo;s byline links to that channel page.</p>
+          <p><b>The full site audit ran, 46 findings, all fixed.</b> Like the paid scanners do: share previews (og:title / description / image) were missing on thirteen pages, chat shares and story links showed blank cards; nine pages had no proper heading for search engines; three hidden form fields had no accessible name; the internal OG builder shipped with no title, language or viewport; and two book covers weighed 670&nbsp;KB where 150 now does the same job. Every page now passes the audit, and the audit tool itself ships with the app so it can never quietly rot again.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v254</span>
+          <div class="log-item__body"><b>📣 TheSmallBook becomes a channel &middot; hooks that feel like you &middot; a proper account card &middot; the quote-mode bugs, found and fixed</b>
+          <p><b>The library now posts as TheSmallBook.</b> Every library story carries the app&rsquo;s own name, tick and logo, one channel, always posting, exactly like a real author page.</p>
+          <p><b>Hooks.</b> All 28 stories lead with a question that sounds like the reader&rsquo;s own 2 AM, &ldquo;Would you keep posting if nobody clapped for four years?&rdquo;, on the shelf cards and as the headline of every burst. The title and the book sit underneath.</p>
+          <p><b>The account card is complete.</b> First name, last name, a real <b>@username</b> (checked live while you type, lowercase, unique, held by the database, SQL&nbsp;#12), a reader name people see, email, password, and below it, the required <b>13+ tick</b> with the terms. The birthday stays: the tick is the promise, the birthday is the proof.</p>
+          <p><b>The sign-out gap is closed.</b> Readers who joined with Google can set a password on the <i>same</i> account (You &rarr; set a password), and the sign-in page says exactly that. Nobody has to lose their shelf.</p>
+          <p><b>Quote mode, honest about everything.</b> Three real bugs: a card could be composed twice (tiny text inside a big frame), a photo that failed to upload vanished silently into a text-only post, and a duplicated field in the publish payload. All fixed, failed uploads now stop the publish with a clear message and keep your photo. And one clear <b>CONTINUE</b> button instead of three same-looking choices.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v253</span>
+          <div class="log-item__body"><b>🔐 Real accounts, and a 21-point security pass</b>
+          <p><b>Create an account, sign in again anywhere.</b> Until now the only way in was Google. Now the sign-in page has <b>CREATE ACCOUNT</b> and <b>SIGN IN</b> tabs: your name, email and a password (8+ characters), and you can log back in on any phone or laptop, no Google needed. Forgot the password? One tap emails you a reset link. Five wrong tries cool the form down instead of letting it be bashed. The You sheet now offers email sign-in too. Everything else, progress sync, streaks, posting, DMs, works exactly as before.</p>
+          <p><b>The 13+ gate.</b> Creating an account asks your birth month and year; under 13 is stopped in the browser, before anything is sent anywhere. Only the birth <i>year</i> is kept, never the full birthday.</p>
+          <p><b>The security pass.</b> A 21-point shipping checklist was audited line by line. Fixed: a leftover code path that could have shipped a Google <i>client secret</i> to every visitor (removed, the slot no longer exists), uploads that were never checked for type or size (now validated before they leave your device), and a like button that could be double-tapped into fake counts (a one-like-per-reader index in the database). Story titles, comments and profile names are now length-locked <i>inside the database</i>, not just in the form, and every page sends a strict referrer policy. Supabase owners run the new <b>SQL #11</b> (supabase/sql/hardening-v253.sql) once, it is re-runnable and proven against real PostgreSQL.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v252</span>
+          <div class="log-item__body"><b>📚 Ask the Library, rebuilt &middot; the story shelf is finally alive &middot; the Quote Desk stops repeating Studio</b>
+          <p><b>Ask the Library no longer looks like a settings page.</b> The answer is a designed block now: your question sits above it as a quoted strip, the reasoning sits in a bordered card with the app&rsquo;s yellow spine, and the sources below are real cards, cover, book, the lesson it came from, the category and the reading time. Sources are grouped under numbered heads (&ldquo;From the library&nbsp;&middot;&nbsp;4&rdquo;, &ldquo;From the graveyard&nbsp;&middot;&nbsp;1&rdquo;) instead of arriving as one long wall. And every cover is now read from the book itself, seven books whose covers are not <code>.jpg</code> had been showing a broken image in every answer.</p>
+          <p><b>The story shelf was empty for a reason worth explaining.</b> The library&rsquo;s own stories, fifteen of them, well written, sitting in the codebase, were loaded by no page at all. Nobody had ever seen one. They are <b>thirteen more now, twenty-eight in all</b>, each tied to a real book on the shelf, and they load where they belong: the Stories page shows them as proper cards with a <b>Library Story</b> badge, no fake like buttons, and a <b>Read&nbsp;it&nbsp;&rarr;</b> that opens the full piece. Ten of them carry a real <b>quote card</b> as the cover, drawn in this app&rsquo;s own type and palette, not stock art. A brand-new visitor to an empty community no longer lands on &ldquo;no stories yet&rdquo;; they land on a shelf.</p>
+          <p><b>The Quote Desk finds. Studio designs.</b> The desk used to repeat Studio, its own font picker, and a &ldquo;find a photo&rdquo; button that opened a second sheet on top of the first. That is gone. The desk now does the two things only it can do: <b>find a line</b> and <b>find a photo</b>, both right there on the sheet, and it previews your card in the shape you will actually post, 4:5, 1:1, 9:16 or 16:9, with the true crop. Frames, filters, backgrounds, fonts and export stay in Studio, once, where they belong. One job, one place.</p>
+          <p><b>Research hands you writing, not links.</b> Searching a topic used to return sources, a Wikipedia link, a dictionary entry, some book covers, and you still had the blank page in front of you. Now the research tab leads with <b>Ready to use</b>: what the library&rsquo;s own lessons actually say about your topic (real summaries, insertable in one tap), the citable facts pulled out of the Wikipedia extract one line at a time, and three openers so the first sentence is never the hardest part. Then the voices, the full readable books and the links, below, for going deeper.</p>
+          <p><b>And the small thing that was annoying you:</b> the reader&rsquo;s card on a book page, the cheat-sheet and Fuel buttons, no longer touches the pair of coloured buttons below it. There is 56&nbsp;px of clear space at every width, and the alignment harness now fails the build if that gap ever collapses again.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v251</span>
+          <div class="log-item__body"><b>🔒 Locked voice notes &middot; the Quote Desk &middot; last seen &amp; read receipts &middot; private accounts &middot; real brand logos</b><p><b>Own messages are readable in dark mode again.</b> A dark-mode pass had painted the yellow &ldquo;you&rdquo; bubble the same near-black as the page while the text stayed dark, your own words were invisible. Fixed, along with two sibling bugs the same audit found (pink tiles and unlocked badges).</p><p><b>Voice notes:</b> press the mic and <b>let go, it keeps recording (locked)</b>, with a green LOCKED badge, a live timer and the audio bars still dancing. Tap the mic to send it while locked, or Delete. Slide up to review instead, or hold-and-travel for the old send-on-release. Switching apps no longer kills a live note, it locks it. A 2:00 locked note sends itself rather than throwing a &ldquo;too short&rdquo; error.</p><p><b>Messages:</b> the edit / delete-for-me / delete-for-everyone buttons now appear <b>only on a long press</b>, so tapping a voice note to listen never pops them up by accident. The <b>+</b> lives inside the composer capsule now (one soft disc that rotates as it opens) instead of floating next to it, and it is labelled &ldquo;Send a book&rdquo;, because that is what it does.</p><p><b>Quote section, much simpler:</b> one sheet does everything. <b>Open Quote Desk</b> &rarr; type your line, or tap a topic for live quotes, or search. Pick a photo and it lands <b>in the preview right there</b>, no second window, nothing to go &ldquo;back&rdquo; from. &ldquo;Why this line hit you&rdquo; now sits <b>under the card</b>, on the page, where readers meet it. Studio opens only if you choose a baked-in card.</p><p><b>The font you pick is the font you keep.</b> The page preview used to snap back to the old default the moment you left Studio; now the card and the page always agree, and the published quote carries the same layout.</p><p><b>No watermark inside the app.</b> Framing, composing and publishing are clean for everyone. Only a <b>download</b> on the free plan carries the credit, redesigned as a small dark sticker with the brand dot, sized to the export. Gold has no chip anywhere. Dictation is gone from the Quote section, on purpose.</p><p><b>Last seen &amp; read receipts (You):</b> two switches. Show &ldquo;last seen&rdquo; or stay invisible; show that you read a story or keep it to yourself. The online dot lights up when someone was here in the last 90 seconds, and a writer finally sees <b>&ldquo;read by N&rdquo;</b> on their own story.</p><p><b>Private accounts, handled properly:</b> nobody disappears from &hearts; People any more. A private reader shows a lock; following them sends a <b>request</b>, they accept or decline from People or Notifications, and only then does the follow become real, no row is ever written into someone else&rsquo;s account.</p><p><b>Store logos:</b> the fake text-labels are gone, and the tiles are the real thing now. Sixteen brands wear their own app icon, Netflix, KFC, Duolingo, Zomato, Perplexity, Amazon, Uber, Adobe, Myntra, Nykaa, Meesho, Ola, ZEE5, SonyLIV, JioHotstar, Domino&rsquo;s, Pizza&nbsp;Hut, Blinkit, Zepto, Lenskart, EatClub. Where a mark is a long wordmark nobody could read at 52&nbsp;px, you get a bold brand-colour monogram instead of a smudge. Every tile is measured against its own square, so nothing floats. Two that were simply broken are fixed: the Uber mark was black on a black tile, and the Amazon file was a white rectangle on a white tile. The old placeholder files were deleted, and the service worker now precaches exactly the tiles the store links to, so the offline store shows logos, not holes.</p><p><b>Fixed: the odd text in the links on a profile.</b> Small lines like <code>{"k":"peek","v":1789830203108}</code> were showing up under people's links. They were never links, they are this app's own presence, privacy and follow-request records, which share the same column as your links. The profile page was printing the whole column, so the machinery was on show. Now only real links are shown, in the profile header and in the edit box. Saving your profile also keeps those records instead of wiping them, before this, editing your links quietly reset your last-seen, your privacy switches and any follow request waiting on you. Any account that already collected the mess cleans itself up on the next visit.</p><p><b>Cheat-sheets, rebuilt from scratch.</b> The old button printed the whole page, that is where eleven pages with blanks came from. Now it builds a designed, full-colour <b>two-page A4 PDF</b>. Page one: the real cover, the big idea, the five ideas that matter, a diagram of how they hold each other up, and every remaining chapter compressed to one line each. Page two: your 5-step plan, where it breaks, two lines worth keeping, and three books to read next. Backgrounds are per-category, so a money book does not look like a psychology book. It is measured to fit, <b>two pages every time</b>, for all 400 books, with nothing clipped and never a blank third page. Free for your first four books; Gold is unlimited and carries no credit line.</p><p><b>The buttons moved to where you have actually finished.</b> &ldquo;Get the 2-page cheat-sheet&rdquo; and &ldquo;Fuel this breakdown&rdquo; used to sit at the top, before you had read a word, that is not when anybody wants either. They now sit in one card <b>after the lessons, the quotes and your 5-step plan</b>: the moment the book is behind you. The card is in the same 1100px column as the rest of the page and its own margins are balanced at every screen width, so it lines up with the text instead of hugging the edges.</p><p><b>The Fuel sheet looks like it belongs here now.</b> Amount picker (₹199 / ₹499 / ₹999), a UPI button that fills in the amount you chose, a one-tap copy of the UPI id, a WhatsApp button, and a preview of the line your name will appear on: &ldquo;This breakdown was fuelled by <u>your name</u>&rdquo;. <span class="ch-kbd">esc</span> or a tap outside closes it.</p><p><b>Private accounts are server-backed now.</b> A new SQL file (<code>supabase/sql/follow-requests.sql</code>) turns follow requests into a real feature: the Accept works instantly from any device, you cannot follow yourself, you cannot ask twice, and nobody can forge a request in someone else's name. The app checks for the table and falls back to the old handshake by itself if you have not run it, so nothing breaks either way. Setup guide: <code>docs/SQL-SETUP.md</code>.</p><p><b>Graveyard:</b> tombstones have real depth (highlight, inner shadow, engraved epitaph in the category colour), cards press under your thumb, and the category strip is clipped like a ripped marker.</p></div>
+        </div>
+        <span class="log-item__ver">v249</span>
+          <div class="log-item__body"><b>🎙️ Voice notes · read-once notifications · every reader listed · dark mode finished</b><p><b>Voice notes:</b> hold the mic to record and release to send, slide up to review with Delete or Send, or tap for hands-free. Live waveform, running timer, a hard 2:00 cap, and a real player, scrub the waveform, see elapsed and total, and switch 1× / 1.5× / 2×. The recording is never lost: a failed upload keeps the note and offers Try again. Safari records mp4, Android webm, the browser is asked, never guessed. <b>Notifications:</b> one read ledger for the whole app. Open a story, a profile or a DM thread and those notifications are read everywhere, bell, badge and You window agree, and the item stays in your history instead of coming back as NEW. The page now has Unread / All filters and Mark all read. <b>People:</b> the tab unions profiles, posts, likes, comments, follows and message participants, so nobody can be missing, it says how many readers there are, and it quietly refreshes while you watch. <b>Reading:</b> lessons read now sync to your public profile from the book page itself. <b>Dark mode:</b> audited every rule, no dark text on dark surfaces anywhere, and pale text on the red, blue and green cards was lifted from 2.5:1 to 5-8:1. <b>Everywhere:</b> blocking alert() popups replaced with inline notes you can tap away.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v247</span>
+          <div class="log-item__body"><b>Mobile-verified: the strip-preview and hidden-buttons bugs are dead</b><p>This release was audited in a real mobile browser (390px &amp; 360px) with screenshots of every screen. Two real flex-layout bugs were found and fixed: the Card Studio preview being <b>crushed into a 200px strip</b> (it now never shrinks, full card, full quote, byline and export size always visible), and the Inspire image grid <b>rows overlapping</b>, which painted photos over the "Use as cover" buttons (grid can no longer be crushed; rows are true height). Image cards got a definite 190px photo band with the Use button glued on the photo. Quote add-bar layout polished (video hidden → audio spans cleanly). Research tab visually verified: story starter, Wiki, voices, dictionary, readable books.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v246</span>
+          <div class="log-item__body"><b>Big-file previews + one-tap attach bar</b><p><b>Inspire images:</b> "Use as cover" is now a bold button <b>glued on the photo itself</b>, full picture visible, one tap, can never hide again. <b>Card Studio:</b> preview is now MAXIMUM size (62% of your screen on mobile, 72% on desktop, wider sheet), you genuinely see the file before export. <b>Write page:</b> the three stacked cards (Cover / Burst / Voice) are replaced by <b>one compact attach bar</b>, 📷 Choose image · 🎬 Choose video · 🎙 Record · 🎧 Choose audio in a single clean row, with small live status under each and the preview right below. Quote mode shows the same bar with the video chip hidden and "the image is your cover" wording. Cache bumped to v246 so every device picks this up.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v245</span>
+          <div class="log-item__body"><b>Previews you can trust + Quote flow made simple</b><p>Inspire image cards now show the <b>FULL photo</b> in its natural shape, no more cropped "20% of the image" previews. Card Studio auto-fits tall <b>and wide</b> photos so the entire picture becomes the card (FREE ratio picks itself). The ugly colour background buttons (Paper, Kraft, Ink, gradients) are <b>deleted</b>, 24 aesthetic photo backgrounds only, nothing extra. Fonts grow to <b>10 famous faces</b> (+Anton, +Montserrat), each name shown in its own style. Quote mode decluttered: burst video hidden, image is optional, Studio opens with your quote already on it.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v244</span>
+          <div class="log-item__body"><b>Quote Studio pro · anonymous Dictate · research that reads YOUR story</b><p><b>Write:</b> the last separate Inspire button (Stories page) removed, Inspire Desk lives only inside the quote &amp; story card, seeded from what you actually wrote. <b>Dictate:</b> free browser voice typing, <b>no sign-in, fully anonymous</b> like our read-aloud; a hidden cloud fallback exists only for browsers that cannot type. Works in Quote mode too. <b>Research:</b> no more single default topic, multi-source live results (Wikipedia + Wikiquote voices + Dictionary meanings + Explore board) for YOUR topic, and Open Library now serves <b>readable full books</b> (one-tap Archive.org reader) that never duplicate TheSmallBook's own library. <b>Card Studio:</b> true-size preview (exact ratio, real edges, export size shown), 8 famous fonts, each name shown in its own face, + Bebas &amp; Lobster, background buttons rebuilt as clean swatch tiles, and a publish choice: <b>aesthetic card with the quote inside the image</b> or image &amp; text separate. In Quote mode your uploaded image IS the cover, Studio opens with the quote already on it.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v242</span>
+          <div class="log-item__body"><b>Studio pro · Inspire Desk perfect · About polished</b><p>Card Studio rebuilt, no overlap, RATIO/PHOTO/BACKGROUNDS aligned, preview centered, 320-390px no bleed. Inspire Desk live (quotes+images) via toolbar, stray button removed. Puter silent, Dictate hidden in Quote. <b>About:</b> removed top-nav About (now only <b>You → About & feature guide</b>), 11 demos rebuilt with SVG icons (professional, not emoji), new updates properly listed, official contact <b>thesmallbook.in@gmail.com</b> added. Store 57 offers, mobile flawless.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v241</span>
+          <div class="log-item__body"><b>Inspire Desk v2 + Story essay starter + Studio fix</b><p>Quote only shows Quotes+Images, Story only shows Images+Research, no more 3-tab clutter. New <b>✍️ Story starter</b> card generates a rewritable essay from Wiki + your 422 books. Studio opens without needing a cover first. Dictate adds Hinglish pills + Puter fallback.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v240</span>
+          <div class="log-item__body"><b>Perfect library + offline polish + 1299 catalog</b><p>1-14 retained perfect, 1285+14=1299 stories, stories essay engine via Wiki+book ideology. Flat zip 28M tsb-v240. About prominent in You window/global nav, 11-tab lab, Store 57 offers legal-clean.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v239</span>
+          <div class="log-item__body"><b>Language & dictate polish</b><p>Hinglish (Roman) now sounds how Indians WhatsApp, zindagi not jiiindagii, potana not pota na. Gujlish fused forms fixed. Puter speech2txt wired with Whisper fallback.</p></div>
+        </div>
+        <div class="log-item">
+          <span class="log-item__ver">v230-238</span>
+          <div class="log-item__body"><b>Community & writer tools</b><p>Instagram-grade profile header, double-tap hearts, real-time toasts, DMs with book sharing, mini audio player, drafts split per mode, background uploads, Graveyard cross-links from lessons.</p></div>
+        </div>
+      </div>
+      <button class="logmore" id="logMore" type="button">SHOW MORE UPDATES</button>
+      <div style="text-align:center;margin-top:14px">
+        <a href="https://instagram.com/thesmallbook.in" target="_blank" rel="noopener" class="lab-cta" style="background:#111;color:#ffc800">📸 Follow @thesmallbook.in for weekly drops →</a>
+      </div>
+        </div>
+      </div>
+    </div>
+    <script>
+    /* v266 · the changelog reads like a feed: newest first, more on demand */
+    (function () {
+      var grid = document.getElementById("logGrid");
+      var btn = document.getElementById("logMore");
+      var modal = document.getElementById("logModal");
+      var openBtn = document.getElementById("openLogModal");
+      var closeBtn = document.getElementById("closeLogModal");
+
+      if (openBtn && modal) {
+        openBtn.addEventListener("click", function () {
+          modal.style.display = "flex";
+          document.body.style.overflow = "hidden";
+        });
+      }
+      if (closeBtn && modal) {
+        closeBtn.addEventListener("click", function () {
+          modal.style.display = "none";
+          document.body.style.overflow = "";
+        });
+      }
+      if (modal) {
+        modal.addEventListener("click", function (e) {
+          if (e.target === modal) {
+            modal.style.display = "none";
+            document.body.style.overflow = "";
+          }
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && modal.style.display === "flex") {
+            modal.style.display = "none";
+            document.body.style.overflow = "";
+          }
+        });
+      }
+
+      if (!grid || !btn) return;
+      var items = Array.prototype.slice.call(grid.querySelectorAll(".log-item"));
+      var SHOWN = 4, visible = SHOWN;
+      function paint() {
+        items.forEach(function (el, i) { el.classList.toggle("logitem--hidden", i >= visible); });
+        if (visible >= items.length) { btn.textContent = "THAT\u2019S THE WHOLE STORY ✦"; btn.disabled = true; }
+        else btn.textContent = "SHOW MORE UPDATES (+" + Math.min(SHOWN, items.length - visible) + ")";
+      }
+      btn.addEventListener("click", function () { visible = Math.min(items.length, visible + SHOWN); paint(); });
+      paint();
+    })();
+    </script>
+
+    <!-- RULES AS STAMPS -->
+    <section class="about__block">
+      <h2 class="about__head">🧭 The rules this site lives by</h2>
+      <div class="rulestack">
+        <div class="rulecard" style="--tilt:-1deg;"><span class="rulecard__num">01</span><div><strong>Free to read.</strong> Every book, every lesson, every autopsy. No paywall in your way.</div></div>
+        <div class="rulecard" style="--tilt:.8deg;"><span class="rulecard__num">02</span><div><strong>No ads, no tracking.</strong> Your reading habits are your business; the free account just saves your shelf.</div></div>
+        <div class="rulecard" style="--tilt:-.7deg;"><span class="rulecard__num">03</span><div><strong>Respect the authors.</strong> Original educational analyses, loved a breakdown? <strong>Buy the full book.</strong> The buy buttons keep this library free.</div></div>
+        <div class="rulecard" style="--tilt:1deg;"><span class="rulecard__num">04</span><div><strong>Always growing.</strong> New books and Graveyard cases land every week. The library is never finished.</div></div>
+      </div>
+    </section>
+
+    <!-- INSTAGRAM -->
+    <section class="about__block about__block--insta">
+      <h2 class="about__head">📸 Follow the journey</h2>
+      <div class="instabox">
+        <div class="instabox__handle">@thesmallbook.in</div>
+        <div class="instabox__tag">THE OFFICIAL PAGE</div>
+        <p>New books every week · fresh corpses 💀 · book battles ⚔️ · lesson-of-the-day 🧠 · behind-the-scenes builds 🔨</p>
+        <p style="margin-top:6px;">One library. Many projects. This is where it all starts.</p>
+        <a class="btn btn--yellow btn--big" href="https://instagram.com/thesmallbook.in" target="_blank" rel="noopener">📸 FOLLOW @THESMALLBOOK.IN</a>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="about__block about__block--cta">
+      <a class="btn btn--yellow btn--big" href="index.html#library">📚 START READING, IT'S FREE</a>
+      <a class="btn btn--ink btn--big" href="graveyard.html">💀 ENTER THE GRAVEYARD</a>
+    </section>
+  </main>
+
+  <!-- FOOTER, About is now obvious, not tiny -->
+  <footer class="footer">
+    <div class="head">📕 TheSmallBook</div>
+    <p>Big books. Small reads. All the lessons, examples and takeaways from the world's best books.
+    Summaries are original educational analyses. Please support the authors, buy the full books.</p>
+    <div style="display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin:14px 0">
+      <a href="index.html#library" style="border:2px solid #14110c;background:#fff;border-radius:999px;padding:7px 12px;font:700 11px 'Space Grotesk',sans-serif;text-decoration:none;color:#14110c">📚 Library</a>
+      <a href="graveyard.html" style="border:2px solid #14110c;background:#fff;border-radius:999px;padding:7px 12px;font:700 11px 'Space Grotesk',sans-serif;text-decoration:none;color:#14110c">💀 Graveyard</a>
+      <a href="about.html" style="border:2px solid #14110c;background:#ffc800;border-radius:999px;padding:7px 12px;font:700 11px 'Space Grotesk',sans-serif;text-decoration:none;color:#14110c">ⓘ About</a>
+      <a href="legal.html" style="border:2px solid #14110c;background:#fff;border-radius:999px;padding:7px 12px;font:700 11px 'Space Grotesk',sans-serif;text-decoration:none;color:#14110c">⚖ Legal</a>
+    </div>
+    <div class="supportbar" data-supportbar style="margin-bottom:14px;"></div>
+    <p class="affnote">As an Amazon Associate, TheSmallBook earns from qualifying purchases. It keeps the library free. 💛</p>
+    <div id="tsb-auth-slot"></div>
+    <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
+    <p class="tiny">MUMBAI, INDIA · FREE TO READ · NEW BOOKS EVERY WEEK · <a href="about.html" style="color:inherit;text-decoration:underline">ABOUT</a> · <a href="store.html" style="color:inherit;text-decoration:underline">STORE</a> · <a href="mailto:thesmallbook.in@gmail.com" style="color:inherit;text-decoration:underline">thesmallbook.in@gmail.com</a></p>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="./js/bootguard.js?v=323"></script>
+  <script src="js/prefs.js?v=323"></script>
+  <script src="js/support.js?v=323"></script>
+  <script src="js/lang.js?v=323"></script>
+  <script src="js/config.js?v=323"></script>
+  <script src="js/auth.js?v=323"></script>
+  <script src="js/data.js?v=323"></script>
+  <script src="js/failures.js?v=323"></script>
+  <script src="js/ask-data.js?v=323"></script>
+  <script src="js/tts-engine.js?v=323"></script>
+  <script src="js/ask-modes-data.js?v=323"></script>
+  <script src="js/paywall.js?v=323"></script>
+  <script src="js/askquota.js?v=323"></script>
+  <script src="js/ask.js?v=323"></script>
+  <script src="js/podcast-data.js?v=323"></script>
+  <script src="js/audioplayer.js?v=323"></script>
+  <script src="js/bar.js?v=323" defer></script>
+  <script src="js/gate.js?v=323" defer></script>
+  <script>
+  // 🧪 Lab, one professional playground that explains every tricky feature
+  (function(){
+    var stage=document.getElementById('labStage');
+    var tabs=document.getElementById('labTabs');
+    if(!stage||!tabs) return;
+
+    var demos={
+      inspire: function(){
+        var q="habits";
+        return '<div class="lab-stage__head"><span class="lab-stage__title" style="display:inline-flex;align-items:center;gap:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 1 4 12.7V16a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-1.3A7 7 0 0 1 12 2z"/></svg> Inspire Desk, stories, not just quotes</span><span class="lab-stage__hint">Essay starter = Wiki + your 480 books · you rewrite it</span></div>'
+        + '<div style="display:flex;gap:8px;margin-bottom:12px"><input id="labQ" value="'+q+'" placeholder="Try: loneliness, startup failure, love" style="flex:1;border:2.5px solid #111;border-radius:999px;padding:10px 14px;font:600 12px Space Grotesk,sans-serif;outline:none"><button id="labGo" class="lab-cta" style="flex:none">Generate →</button></div>'
+        + '<div id="labEssay" style="border:2.5px solid #111;border-radius:14px;padding:12px;background:#fffdf5"></div>'
+        + '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><span class="lab-cta lab-cta--ghost" style="pointer-events:none;display:inline-flex;align-items:center;gap:6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Wiki + Book</span><span class="lab-cta lab-cta--ghost" style="pointer-events:none">→ Your essay</span><a href="write.html" class="lab-cta">Open real Inspire Desk →</a></div>';
+      },
+
+      quotes: function(){
+        return '<div class="lab-stage__head"><span class="lab-stage__title" style="display:inline-flex;align-items:center;gap:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg> Quotes & Images, smart handling</span><span class="lab-stage__hint">Quote = quotes + images · Story = images + research (no mirror)</span></div>'
+        + '<div style="display:flex;gap:8px;margin-bottom:10px"><button id="qTabQuote" class="lab-cta" style="background:#ffc800">💬 Quote mode</button><button id="qTabStory" class="lab-cta lab-cta--ghost">✍️ Story mode</button></div>'
+        + '<div id="qDemo" class="lab-grid"></div>'
+        + '<p style="font:600 10.5px Space Grotesk,sans-serif;color:#8f8a80;margin-top:8px;text-align:center">Real: Write page auto-shows only the panels you need, no 3-tab clutter, no overflow on 320px.</p>';
+      },
+      drafts: function(){
+        return '<div class="lab-stage__head"><span class="lab-stage__title" style="display:inline-flex;align-items:center;gap:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Drafts, never lose a word</span><span class="lab-stage__hint">Split per mode · autosave every 2s · background uploads</span></div>'
+        + '<div class="lab-grid">'
+        + '<div class="lab-mini" style="background:#fffdf5"><b>💬 Quote drafts</b><span id="dQuote">“ habits are identity…”, saved 2s ago</span><div style="margin-top:8px;height:6px;background:#eee;border-radius:999px;overflow:hidden"><i style="display:block;width:60%;height:100%;background:#111"></i></div></div>'
+        + '<div class="lab-mini" style="background:#fff"><b>✍️ Story drafts</b><span id="dStory">Essay: “startup failure” + research, saved</span><div style="margin-top:8px;height:6px;background:#eee;border-radius:999px;overflow:hidden"><i style="display:block;width:85%;height:100%;background:#00c48c"></i></div></div></div>'
+        + '<div style="display:flex;gap:8px;margin-top:10px;align-items:center"><button id="dAdd" class="lab-cta">＋ Add draft (sim)</button><span id="dToast" style="font:700 11px Space Grotesk,sans-serif;color:#00c48c"></span></div>'
+        + '<p style="font:600 10.5px Space Grotesk,sans-serif;color:#8f8a80;margin-top:8px">Drafts live per-mode, capped softly. Image uploads continue in background, close the tab, it finishes.</p>';
+      },
+      install: function(){
+        return '<div class="lab-stage__head"><span class="lab-stage__title" style="display:inline-flex;align-items:center;gap:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Install, app without the app store</span><span class="lab-stage__hint">2 taps · works offline · no tracking</span></div>'
+        + '<div class="lab-grid">'
+        + '<div class="lab-mini" style="text-align:center"><b>🍎 iPhone</b><span style="margin-top:6px">Share <span style="background:#111;color:#fff;border-radius:6px;padding:2px 6px">⎙</span> → <b>Add to Home Screen</b></span><div style="margin-top:8px;border:2.5px solid #111;border-radius:12px;padding:8px;background:#fff;font:500 11px Space Grotesk,sans-serif">📕 TheSmallBook<br><span style="color:#8f8a80">thesmallbook.in</span></div></div>'
+        + '<div class="lab-mini" style="text-align:center"><b>📱 Android</b><span style="margin-top:6px">Menu ⋮ → <b>Install app</b></span><div style="margin-top:8px;border:2.5px solid #111;border-radius:12px;padding:8px;background:#ffc800;font:700 11px Space Grotesk,sans-serif">📲 Install TheSmallBook</div></div></div>'
+        + '<div style="margin-top:10px;border:2px dashed rgba(127,127,127,.35);border-radius:12px;padding:10px;background:#fffdf5;font:600 11px Space Grotesk,sans-serif">After: icon on home screen, opens like an app, books cache for offline, updates silently. No Play Store needed.</div>'
+        + '<div style="text-align:center;margin-top:10px"><button id="iSim" class="lab-cta">📲 Simulate install prompt</button></div>';
+      },
+      studio: function(){
+        return '<div class="lab-stage__head"><span class="lab-stage__title" style="display:inline-flex;align-items:center;gap:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7a1.5 1.5 0 0 0-1.4-2.3l-7 7a2 2 0 0 0-.5 1.1L9 21l3-.5c.4-.1.8-.4 1-.8z"/><path d="M14.5 7.5l2 2"/></svg> Studio, quotes as art</span><span class="lab-stage__hint">Drag, reframe, filter, export</span></div>'
+        + '<div class="lab-grid" style="align-items:start">'
+        + '<div id="labCard" style="aspect-ratio:4/5;border:3px solid #111;border-radius:16px;background:linear-gradient(135deg,#fff6d9 0%,#ffe27a 55%,#ffd94d 100%);display:grid;place-items:center;padding:18px;text-align:center;box-shadow:4px 4px 0 #111;transition:filter .2s">'
+        + '<div><div style="font:700 italic 16px Georgia,serif;line-height:1.35">Your habits shape your identity.</div><div style="font:600 11px Space Grotesk,sans-serif;margin-top:8px;letter-spacing:.5px">ATOMIC HABITS</div></div></div>'
+        + '<div style="display:flex;flex-direction:column;gap:8px">'
+        + '<button class="lab-cta lab-cta--ghost" data-ratio="4/5">4:5 Portrait</button><button class="lab-cta lab-cta--ghost" data-ratio="1/1">1:1 Square</button><button class="lab-cta lab-cta--ghost" data-ratio="9/16">9:16 Story</button>'
+        + '<button class="lab-cta lab-cta--ghost" data-filter="grayscale(1)">B&W</button><button class="lab-cta lab-cta--ghost" data-filter="none">Color</button>'
+        + '</div></div>'
+        + '<p style="font:600 11px Space Grotesk,sans-serif;color:#8f8a80;margin-top:10px;text-align:center">Tap a ratio/filter, this simulates the real Studio. Export adds a watermark only for free users.</p>';
+      },
+      dictate: function(){
+        return '<div class="lab-stage__head"><span class="lab-stage__title" style="display:inline-flex;align-items:center;gap:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10a7 7 0 0 1-14 0"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg> Dictate, speak, we write</span><span class="lab-stage__hint">Hinglish that sounds like WhatsApp, not robots</span></div>'
+        + '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px"><button class="lab-cta lab-cta--ghost" style="background:#ffc800">🇮🇳 Hinglish (Roman)</button><button class="lab-cta lab-cta--ghost">🇮🇳 हिन्दी</button><button class="lab-cta lab-cta--ghost">🇮🇳 தமிழ்</button><button class="lab-cta lab-cta--ghost">🇬🇧 English</button></div>'
+        + '<div style="border:2.5px solid #111;border-radius:14px;padding:12px;background:#fff;display:flex;align-items:center;gap:10px">'
+        + '<button id="labMic" class="lab-cta" style="border-radius:999px">🎙️ Tap to simulate</button>'
+        + '<div id="labWave" style="flex:1;display:flex;gap:3px;align-items:center;height:26px"><i style="flex:1;height:6px;background:#111;border-radius:999px;opacity:.15"></i><i style="flex:1;height:14px;background:#111;border-radius:999px;opacity:.15"></i><i style="flex:1;height:10px;background:#111;border-radius:999px;opacity:.15"></i><i style="flex:1;height:18px;background:#111;border-radius:999px;opacity:.15"></i><i style="flex:1;height:8px;background:#111;border-radius:999px;opacity:.15"></i></div></div>'
+        + '<div id="labOut" style="margin-top:10px;border:2px dashed rgba(127,127,127,.35);border-radius:12px;padding:10px 12px;font:600 12px Space Grotesk,sans-serif;background:#fffdf5;min-height:38px">Try: “zindagi me kabhi kabhi aisa lagta hai…” → we write it naturally, add full-stops, no echoes.</div>'
+        + '<p style="font:600 11px Space Grotesk,sans-serif;color:#8f8a80;margin-top:8px">Real page: <b>write.html → 🎙️ Record</b>. Puter (Whisper) fallback included.</p>';
+      },
+      ask: function(){
+        return '<div class="lab-stage__head"><span class="lab-stage__title" style="display:inline-flex;align-items:center;gap:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> Ask the Library, 83 life questions</span><span class="lab-stage__hint">Not a chatbot, answers quoted from books</span></div>'
+        + '<div style="display:flex;flex-direction:column;gap:8px">'
+        + '<button class="lab-mini" data-ask="How do I stop procrastinating?"><b>“How do I stop procrastinating?”</b><span>→ Atomic Habits · Eat That Frog · Deep Work, 3 lessons + action</span></button>'
+        + '<button class="lab-mini" data-ask="Why do startups fail?"><b>“Why do startups fail?”</b><span>→ Grave: Theranos, WeWork + Zero to One, antidote books</span></button>'
+        + '<button class="lab-mini" data-ask="How to be confident?"><b>“How to be confident?”</b><span>→ Confidence Gap · Mindset, reframes + quotes</span></button></div>'
+        + '<div id="labAskOut" style="margin-top:10px;border:2.5px solid #111;border-radius:14px;padding:12px;background:#fff;min-height:44px;font:500 12px Space Grotesk,sans-serif;color:#111">Tap a question above, real Ask streams the same, with sources & “Open book”.</div>'
+        + '<div style="text-align:center;margin-top:10px"><a href="chat.html" class="lab-cta">💬 Open real Ask →</a></div>';
+      },
+      read: function(){
+        return '<div class="lab-stage__head"><span class="lab-stage__title" style="display:inline-flex;align-items:center;gap:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Read, big books, small lessons</span><span class="lab-stage__hint">Tap lessons to mark read, progress follows you</span></div>'
+        + '<div class="lab-grid">'
+        + '<div class="lab-mini" style="background:var(--yellow)"> <b>ATOMIC HABITS, 6 lessons</b><span>Big idea → lesson → real story → action step. No fluff.</span><div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap"><button class="lab-cta lab-cta--ghost" data-lesson>✓ Lesson 1: 1% better</button><button class="lab-cta lab-cta--ghost" data-lesson>✓ Lesson 2: Identity</button></div><div style="margin-top:8px;height:8px;border:2px solid #111;border-radius:999px;overflow:hidden;background:#fff"><i id="labProg" style="display:block;height:100%;width:0%;background:#00c48c;transition:width .3s"></i></div></div>'
+        + '<div class="lab-mini"><b>📖 How to read in 4 mins</b><span>1) Big idea (30s) → 2) Open a lesson → 3) Try the action.<br>Bookmark ♥ stays on your shelf.</span><a href="index.html#library" class="lab-cta" style="margin-top:8px">📚 Open Library →</a></div></div>';
+      },
+      grave: function(){
+        return '<div class="lab-stage__head"><span class="lab-stage__title" style="display:inline-flex;align-items:center;gap:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M8 13v3a4 4 0 0 0 8 0v-3"/><path d="M9 11h.01"/><path d="M15 11h.01"/></svg> Graveyard, why success books fail</span><span class="lab-stage__hint">Tap to autopsy, same as the real page</span></div>'
+        + '<div id="labGrave" class="lab-mini" style="cursor:pointer;background:linear-gradient(135deg,#1a0505 0%,#2b0e0e 100%);color:#f2ead8;border-color:#000;box-shadow:4px 4px 0 #000">'
+        + '<div style="display:flex;gap:12px;align-items:center"><span style="font-size:28px">🪦</span><div style="flex:1"><b style="color:#ff8a7a">THERANOS, the tech that lied</b><span style="color:#d8b9b9">“One drop of blood.” Raised $945M. Valued at $9B. Fell to $0.</span></div><span style="flex:none;background:#ffc800;color:#111;border:2px solid #111;border-radius:999px;padding:6px 10px;font:800 10px Space Grotesk,sans-serif">DIG →</span></div>'
+        + '<div id="labGraveBody" hidden style="margin-top:12px;border-top:2px dashed rgba(242,234,216,.25);padding-top:10px"><b style="color:#ffd94d">Fatal mistake:</b> Secretive culture + faking demos. <b style="color:#00d99b">Antidote:</b> <i>Thinking in Systems</i> + <i>Measure What Matters</i>, build what you can measure, honestly.</div></div>'
+        + '<div style="text-align:center;margin-top:10px"><a href="graveyard.html" class="lab-cta" style="background:#1a0505;color:#ff5252;border-color:#000">💀 Enter Graveyard →</a></div>';
+      },
+      shelf: function(){
+        return '<div class="lab-stage__head"><span class="lab-stage__title" style="display:inline-flex;align-items:center;gap:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> Shelf, streak & progress</span><span class="lab-stage__hint">Your private study record, no public posting</span></div>'
+        + '<div class="lab-grid">'
+        + '<div class="lab-mini" style="text-align:center"><div style="width:84px;height:84px;border-radius:50%;border:4px solid #111;margin:0 auto;display:grid;place-items:center;font:800 22px Space Grotesk,sans-serif;background:conic-gradient(#ffc800 0 65%, #eee 65% 100%)">65%</div><b style="margin-top:8px">3540 lessons → you’re moving</b><span>Read → tick → level up. 0 → Reader → Scholar → Sage.</span></div>'
+        + '<div class="lab-mini"><b>🔥 Streak</b><span>Open the library each day, lose it, it resets at midnight. No ghost streak.</span><b style="margin-top:10px">🤍 Shelf</b><span>Tap ♥ on any book, it lives on <i>index.html#library → MY SHELF</i> until you remove it.</span><div style="margin-top:10px;display:flex;gap:6px"><span class="lab-cta lab-cta--ghost" style="pointer-events:none">♥ Saved</span><span class="lab-cta lab-cta--ghost" style="pointer-events:none">🔥 7-day</span></div></div></div>';
+      },
+      store: function(){
+        return '<div class="lab-stage__head"><span class="lab-stage__title" style="display:inline-flex;align-items:center;gap:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Store, real perks, no junk coupons</span><span class="lab-stage__hint">Official programs only, verified monthly</span></div>'
+        + '<div class="lab-grid">'
+        + '<div class="lab-mini" style="background:#fff"><b>Kindle Unlimited, 30 days free</b><span>Millions of ebooks on your phone. Official Amazon program.</span><span style="margin-top:6px;font:700 10px Space Grotesk,sans-serif;letter-spacing:.5px;color:#111;background:#ffc800;display:inline-block;border:2px solid #111;border-radius:999px;padding:3px 8px">WORTH ₹169</span></div>'
+        + '<div class="lab-mini" style="background:#fff"><b>GitHub Student Pack, ₹1.5L+ free</b><span>Copilot + JetBrains + cloud credits + domains.</span><span style="margin-top:6px;font:700 10px Space Grotesk,sans-serif;letter-spacing:.5px;color:#fff;background:#111;display:inline-block;border:2px solid #111;border-radius:999px;padding:3px 8px">STUDENT</span></div></div>'
+        + '<p style="font:600 11px Space Grotesk,sans-serif;color:#8f8a80;margin-top:10px;text-align:center">Unlocks via 💛 Gold or ✍️ 3 stories (Insider path). 3 teasers always free.</p>'
+        + '<div style="text-align:center;margin-top:10px"><a href="store.html" class="lab-cta" style="background:#111;color:#ffc800">🛍️ Open Store →</a></div>';
+      }
+    };
+
+    function essayFor(q){
+      var hook='As '+(["James Clear","Naval Ravikant","Morgan Housel"][q.length%3])+' shows, small systems beat big goals.';
+      var ctx='Context: '+q+' is not a mood, it’s a system. Your brain rehearses what you feed it daily.';
+      var prompt='Your turn, (1) What happened with '+q+'? (2) What did it teach? (3) Advice to someone feeling this now?';
+      return hook+' '+ctx+' '+prompt;
+    }
+    function render(key){
+      var fn=demos[key]||demos.inspire;
+      stage.innerHTML=fn();
+      // wire per demo
+      if(key==='inspire'){
+        var inp=stage.querySelector('#labQ'), go=stage.querySelector('#labGo'), out=stage.querySelector('#labEssay');
+        function paint(){
+          var q=(inp.value||'habits').trim()||'habits';
+          var txt=essayFor(q);
+          out.innerHTML='<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">Story starter for “'+q.replace(/</g,'&lt;')+'” · inspired by Atomic Habits</div><div style="font:500 12px Space Grotesk,sans-serif;line-height:1.55;background:#fff;border:2px solid #111;border-radius:12px;padding:10px">'+txt.replace(/</g,'&lt;')+'</div><div style="display:flex;gap:8px;margin-top:8px"><button class="lab-cta" id="labCopy">📋 Copy</button><button class="lab-cta" id="labInsert">✨ Simulated insert</button></div><div style="font:600 10px Space Grotesk,sans-serif;color:#8f8a80;margin-top:6px;text-align:center">Real Inspire Desk inserts at cursor, rewrite in your voice before publishing.</div>';
+          var c=stage.querySelector('#labCopy'); if(c) c.onclick=function(){ try{navigator.clipboard.writeText(txt)}catch(e){} c.textContent='✓ Copied'; setTimeout(function(){c.textContent='📋 Copy'},1200)};
+          var ins=stage.querySelector('#labInsert'); if(ins) ins.onclick=function(){ ins.textContent='✓ Inserted (sim)'; setTimeout(function(){ins.textContent='✨ Simulated insert'},1200)};
+        }
+        paint(); go.onclick=paint; inp.addEventListener('keydown',function(e){ if(e.key==='Enter') paint(); });
+      }
+      if(key==='quotes'){
+        var qDemo=stage.querySelector('#qDemo'), bQ=stage.querySelector('#qTabQuote'), bS=stage.querySelector('#qTabStory');
+        function paintQ(mode){
+          var isQuote = mode==='quote';
+          bQ.style.background=isQuote?'#ffc800':'#fff'; bS.style.background=isQuote?'#fff':'#ffc800';
+          qDemo.innerHTML = isQuote
+            ? '<div class="lab-mini" style="background:#fff"><b>💬 Quotes (3)</b><span>“Habits shape identity.”, Atomic Habits<br>“Show up daily.”, Deep Work</span></div><div class="lab-mini" style="background:#fffdf5"><b>🖼️ Images (4)</b><span>Tap to insert cover / Unsplash, fills frame</span></div>'
+            : '<div class="lab-mini" style="background:#fff"><b>🖼️ Images (4)</b><span>Story cover + inline images, crop to 4:5 / 1:1</span></div><div class="lab-mini" style="background:#fffdf5"><b>🔎 Research start</b><span>Wiki extract + book-lens prompt → “Story starter → insert”</span></div>';
+        }
+        paintQ('quote'); bQ.onclick=function(){paintQ('quote')}; bS.onclick=function(){paintQ('story')};
+      }
+      if(key==='drafts'){
+        var add=stage.querySelector('#dAdd'), toast=stage.querySelector('#dToast'), cnt=2;
+        add.onclick=function(){ cnt++; toast.textContent='✓ Draft '+(cnt)+' saved, autosaving…'; setTimeout(function(){toast.textContent='✓ All drafts safe'},900); };
+      }
+      if(key==='install'){
+        var iBtn=stage.querySelector('#iSim');
+        if(iBtn) iBtn.onclick=function(){ iBtn.textContent='✓ Prompt shown (sim), tap Install in real browser bar'; iBtn.style.background='#00c48c'; setTimeout(function(){iBtn.textContent='📲 Simulate install prompt'; iBtn.style.background='#ffc800'},1800); };
+      }
+      if(key==='studio'){
+        var card=stage.querySelector('#labCard');
+        stage.querySelectorAll('[data-ratio]').forEach(function(b){ b.onclick=function(){ card.style.aspectRatio=b.getAttribute('data-ratio'); }});
+        stage.querySelectorAll('[data-filter]').forEach(function(b){ b.onclick=function(){ card.style.filter=b.getAttribute('data-filter'); }});
+      }
+      if(key==='dictate'){
+        var mic=stage.querySelector('#labMic'), wave=stage.querySelector('#labWave'), out2=stage.querySelector('#labOut');
+        var on=false, t=null;
+        mic.onclick=function(){
+          on=!on; mic.textContent= on ? '⏹️ Stop (sim)' : '🎙️ Tap to simulate';
+          mic.style.background= on ? '#111' : '#ffc800'; mic.style.color= on ? '#ffc800' : '#111';
+          wave.querySelectorAll('i').forEach(function(el){ el.style.background= on ? '#00c48c' : '#111'; el.style.opacity= on ? '1' : '.15'; if(on) el.animate([{height:'6px'},{height:'18px'},{height:'8px'}],{duration:600,iterations:Infinity, direction:'alternate'}); });
+          if(on){ var i=0, phrases=["zindagi me kabhi kabhi","aisa lagta hai ki sab ruk gaya hai","par ek chhota kadam bhi kaafi hai"]; out2.textContent="Listening…"; t=setInterval(function(){ out2.textContent=phrases[i%phrases.length] + (i<2 ? " …" : " ."); i++; if(i>4) { clearInterval(t); on=false; mic.textContent='🎙️ Tap to simulate'; mic.style.background='#ffc800'; mic.style.color='#111'; } },700); } else { clearInterval(t); out2.textContent="Paused, tap again."; }
+        };
+      }
+      if(key==='ask'){
+        stage.querySelectorAll('[data-ask]').forEach(function(b){ b.onclick=function(){ var q=b.getAttribute('data-ask'); var o=stage.querySelector('#labAskOut'); o.innerHTML='<b style="font:800 12px Space Grotesk,sans-serif">Q: '+q+'</b><div style="margin-top:8px;font:500 12px Space Grotesk,sans-serif;line-height:1.6">Answer (sim): 3 lessons quoted, <i>Atomic Habits (1% rule)</i> + <i>Deep Work (time-block)</i> + a failure antidote. Real Ask shows sources with cover + “Open book”.</div>'; }});
+      }
+      if(key==='read'){
+        var prog=0; var bar=stage.querySelector('#labProg');
+        stage.querySelectorAll('[data-lesson]').forEach(function(b){ b.onclick=function(){ prog=Math.min(100, prog+50); bar.style.width=prog+'%'; b.textContent='✓ Done'; b.style.background='#00c48c'; b.style.color='#111'; if(prog>=100) setTimeout(function(){ bar.style.width='100%'; },300); }});
+      }
+      if(key==='grave'){
+        var g=stage.querySelector('#labGrave'), body=stage.querySelector('#labGraveBody');
+        g.onclick=function(){ var hid=body.hasAttribute('hidden'); if(hid) body.removeAttribute('hidden'); else body.setAttribute('hidden',''); g.querySelector('span:last-child').textContent= hid ? 'BURY →' : 'DIG →'; };
+      }
+    }
+
+    tabs.addEventListener('click', function(e){
+      var b=e.target.closest('button[data-lab]'); if(!b) return;
+      tabs.querySelectorAll('button').forEach(function(x){ x.classList.remove('on'); x.setAttribute('aria-selected','false'); });
+      b.classList.add('on'); b.setAttribute('aria-selected','true');
+      render(b.getAttribute('data-lab'));
+    });
+    render('inspire');
+  })();
+  </script>
+</body>
+</html>

@@ -104,10 +104,6 @@
       if (Array.isArray(saved) && saved.length >= 4) {
         var valid = saved.filter(function (k) { return !!ITEM_DEFS[k]; });
         if (valid.length >= 4) {
-          if (!gold && valid.length > 4) {
-            valid = valid.slice(0, 4);
-            try { localStorage.setItem("tsb_custom_bar", JSON.stringify(valid)); } catch (e) {}
-          }
           return valid.slice(0, 5);
         }
       }

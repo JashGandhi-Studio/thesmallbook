@@ -150,9 +150,28 @@
 
   const transBtn = document.getElementById("nbBookTranslate");
   if (transBtn) {
+    function updateLangBadge() {
+      try {
+        const cur = (window.TSB_LANG && TSB_LANG.get ? TSB_LANG.get() : (localStorage.getItem("tsb_lang") || "en"));
+        const lbl = document.getElementById("nbLangLbl");
+        if (lbl) {
+          if (cur && cur !== "en") {
+            const lEntry = window.TSB_LANG && TSB_LANG.list ? TSB_LANG.list.find(x => x.code === cur) : null;
+            lbl.textContent = lEntry ? lEntry.name.toUpperCase() : cur.toUpperCase();
+          } else {
+            lbl.textContent = "TRANSLATE";
+          }
+        }
+      } catch (e) {}
+    }
+    updateLangBadge();
+    window.addEventListener("tsblang", updateLangBadge);
+    window.addEventListener("storage", updateLangBadge);
+
     transBtn.addEventListener("click", () => {
       const lb = document.querySelector("[data-lang-btn]");
       if (lb) lb.click();
+      else if (window.TSB_LANG && window.TSB_LANG.open) window.TSB_LANG.open();
       else if (window.TSB && window.TSB.openLangModal) window.TSB.openLangModal();
     });
   }
@@ -738,10 +757,11 @@
     if (!blob) { toast("❌ Could not create image"); return; }
     const file = new File([blob], filename, { type: "image/png" });
     TSB.achv.award("sharer");
+    const previewUrl = location.origin + "/random.html?id=" + book.id;
     // native share with the image itself (mobile share sheets)
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       try {
-        await navigator.share({ files: [file], title: "TheSmallBook", text });
+        await navigator.share({ files: [file], title: "TheSmallBook", text: text + "\n3D Preview: " + previewUrl, url: previewUrl });
         return;
       } catch (e) { /* user cancelled or unsupported - fall through */ }
     }
@@ -756,8 +776,8 @@
 
   /* 🔗 share the page LINK (WhatsApp-friendly - brings traffic, not just brand) */
   document.getElementById("shareLinkBtn").addEventListener("click", async () => {
-    const url = location.origin + location.pathname + "?id=" + book.id;
-    const text = `📕 ${book.title} - ${book.oneLiner}\n\nFree breakdown (${book.lessons.length} lessons, ${book.readTime}):`;
+    const url = location.origin + "/random.html?id=" + book.id;
+    const text = `📕 ${book.title} - ${book.oneLiner}\n\nExperience the 3D book and free breakdown (${book.lessons.length} lessons, ${book.readTime}):`;
     if (navigator.share) {
       try { await navigator.share({ title: `${book.title} - TheSmallBook`, text, url }); return; }
       catch (e) { if (e && e.name === "AbortError") return; }

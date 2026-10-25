@@ -1340,7 +1340,7 @@
       ch: startPart !== undefined ? startPart : (pos.ch || 0),
       seek: startPart !== undefined ? 0 : (pos.t || 0),
       autoplay: autoplay !== false,
-      credit: "Recorded in-studio for TheSmallBook by " + (O.host || "the library") + ". Original audio, free forever.",
+      credit: "Recorded in-studio for TheSmallBook by " + (O.host || "the library") + ". Original audio, open to all.",
       art: O.art || "",
       glyph: "🎙️"
     }));

@@ -45,13 +45,13 @@ def booklogo(x, y, s):
 # header
 booklogo(70, 52, 58)
 d.text((150, 62), "TheSmallBook", font=arch(40), fill=INK)
-hb = d.textbbox((0, 0), "FREE FOREVER · NO ADS", font=arch(19))
+hb = d.textbbox((0, 0), "BIG BOOKS · SMALL READS", font=arch(19))
 htw = hb[2]-hb[0]
 hx1 = W - 70
 hx0 = hx1 - (htw + 36)
 d.rectangle([hx0+8, 68, hx1+8, 126], fill=INK)
 d.rectangle([hx0, 60, hx1, 118], fill=YELLOW)
-d.text((hx0 + 18 - hb[0], 60 + (58 - (hb[3]-hb[1]))/2 - hb[1]), "FREE FOREVER · NO ADS", font=arch(19), fill=INK)
+d.text((hx0 + 18 - hb[0], 60 + (58 - (hb[3]-hb[1]))/2 - hb[1]), "BIG BOOKS · SMALL READS", font=arch(19), fill=INK)
 
 # kicker with flanking dot-trios (draw text first, use its width)
 kick = "EVERY BOOK'S LESSONS · NONE OF THE FLUFF"

@@ -1186,8 +1186,16 @@
         <span id="labelOpenBtn">OPEN</span>
       </button>
 
-      <!-- Roll Another Book -->
-            <!-- Save to Shelf Bookmark Toggle -->
+      <!-- Direct Read Breakdown Link -->
+      <a href="#" class="rnd-nav-btn rnd-nav-btn--read" id="navReadFull" title="Read complete chapter breakdown" style="background:var(--yellow);color:#111;text-decoration:none;font-weight:800;display:inline-flex;align-items:center;gap:6px;">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+        </svg>
+        <span>READ</span>
+      </a>
+
+      <!-- Save to Shelf Bookmark Toggle -->
       <button type="button" class="rnd-nav-btn rnd-nav-btn--save" id="btnSaveBook" title="Save book to your shelf">
         <svg id="iconBookmark" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
@@ -1370,10 +1378,13 @@
   </main>
 
   <script src="./js/bootguard.js?v=323"></script>
+  <script>window.TSB_BOOT_OK = true;</script>
   <script src="js/data.js?v=323"></script>
+  <script src="js/showcase.js?v=323"></script>
   <script>
     (function () {
       "use strict";
+      window.TSB_BOOT_OK = true;
 
       var books = window.BOOKS || [];
       if (!books.length) return;
@@ -1605,6 +1616,7 @@
       var bookCaveat = document.getElementById("bookCaveat");
       var bookReadTime = document.getElementById("bookReadTime");
       var btnReadFull = document.getElementById("btnReadFull");
+      var navReadFull = document.getElementById("navReadFull");
       var btnPageClose = document.getElementById("btnPageClose");
       var hintText = document.getElementById("hintText");
       var shelvesContainer = document.getElementById("shelvesContainer");
@@ -1661,6 +1673,15 @@
       function populateBook(b) {
         currentBook = b;
         document.title = b.title + " | TheSmallBook 3D Discovery";
+
+        try {
+          sessionStorage.setItem("tsb_random_book_id", b.id);
+          if (window.history && window.history.replaceState) {
+            var curUrl = new URL(window.location.href);
+            curUrl.searchParams.set("id", b.id);
+            window.history.replaceState(null, "", curUrl.toString());
+          }
+        } catch (eSync) {}
 
         var coverSrc = String(b.cover || "").replace(/^\//, "");
         if (coverImg) {
@@ -1724,6 +1745,9 @@
 
         if (btnReadFull) {
           btnReadFull.href = "book.html?id=" + encodeURIComponent(b.id) + "&from=3d";
+        }
+        if (navReadFull) {
+          navReadFull.href = "book.html?id=" + encodeURIComponent(b.id) + "&from=3d";
         }
         updateSaveUI(isBookSaved(b.id));
       }
@@ -1903,10 +1927,16 @@
       var urlParams = new URLSearchParams(window.location.search);
       var targetId = urlParams.get("id");
       var targetOrig = urlParams.get("original") || urlParams.get("orig");
+      var storedId = null;
+      try { storedId = sessionStorage.getItem("tsb_random_book_id"); } catch (e) {}
+
       var initial = null;
 
       if (targetId) {
         initial = books.find(function (b) { return b.id === targetId; });
+      }
+      if (!initial && storedId) {
+        initial = books.find(function (b) { return b.id === storedId; });
       }
       if (!initial && targetOrig) {
         var originals = books.filter(function (b) { return b.author === "Unknown"; });

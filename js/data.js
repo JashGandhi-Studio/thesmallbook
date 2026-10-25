@@ -2066,7 +2066,7 @@ const BOOKS = [
     "category": "Money & Finance",
     "cover": "assets/covers/almanack-naval.jpg",
     "readTime": "8 min",
-    "tagline": "A guide to wealth and happiness - the collected wisdom of Silicon Valley's philosopher-investor, free forever.",
+    "tagline": "A guide to wealth and happiness - the collected wisdom of Silicon Valley's philosopher-investor, distilled for deep readers.",
     "oneLiner": "Seek wealth, not money: assets that earn while you sleep. And happiness is a skill you can learn, like coding.",
     "bigIdea": "Naval Ravikant - AngelList founder, early investor in Uber and Twitter - became the internet's philosopher through tweetstorms and podcasts; Jorgenson organized it all into this free book. Two halves, one system: WEALTH (arm yourself with specific knowledge, accountability, and leverage - code and media are permissionless leverage that work while you sleep; play long-term games with long-term people) and HAPPINESS (a trainable skill, not a destination - peace is happiness at rest, desire is a contract you make with yourself to be unhappy until you get what you want). Escape competition through authenticity; no one can compete with you on being you.",
     "quotes": [

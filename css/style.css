@@ -1219,6 +1219,8 @@ html.dark .btn-clean-expand:hover {
   border: var(--border);
   box-shadow: var(--shadow);
   transition: transform .15s, box-shadow .15s;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 .lesson:hover { transform: translate(-3px,-3px); box-shadow: 9px 9px 0 var(--ink); }
 .lesson__head {
@@ -1229,6 +1231,8 @@ html.dark .btn-clean-expand:hover {
   border-bottom: var(--border);
   cursor: pointer;
   user-select: none;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 .lesson__num {
   font-family: var(--font-head);
@@ -1239,8 +1243,8 @@ html.dark .btn-clean-expand:hover {
   border: 2px solid var(--ink);
   flex-shrink: 0;
 }
-.lesson__titlebox { flex: 1; }
-.lesson__title { font-family: var(--font-head); font-size: clamp(.95rem, 2vw, 1.2rem); text-transform: uppercase; line-height: 1.2; }
+.lesson__titlebox { flex: 1; min-width: 0; overflow-wrap: break-word; word-break: break-word; }
+.lesson__title { font-family: var(--font-head); font-size: clamp(.95rem, 2vw, 1.2rem); text-transform: uppercase; line-height: 1.25; overflow-wrap: break-word; word-break: break-word; }
 .lesson__chapter { font-size: .7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-top: 3px; }
 .lesson__toggle {
   font-family: var(--font-head);
@@ -1254,17 +1258,22 @@ html.dark .btn-clean-expand:hover {
   transition: transform .2s, background .2s;
 }
 .lesson.open .lesson__toggle { transform: rotate(45deg); background: var(--red); color: #fff; }
-.lesson__body { display: none; padding: 22px; }
+.lesson__body { display: none; padding: 22px; overflow-wrap: break-word; word-break: break-word; }
 .lesson.open .lesson__body { display: block; animation: drop .25s ease; }
 @keyframes drop { from { opacity: 0; transform: translateY(-8px);} to { opacity: 1; transform: none;} }
-.lesson__body p { margin-bottom: 14px; font-size: .98rem; }
+.lesson__body p { margin-bottom: 14px; font-size: .98rem; line-height: 1.6; overflow-wrap: break-word; word-break: break-word; }
 
 .callout {
   border: 2px solid var(--ink);
   padding: 14px 16px;
   margin-top: 14px;
   font-size: .93rem;
+  line-height: 1.55;
   position: relative;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 .callout strong.tag {
   display: inline-block;
