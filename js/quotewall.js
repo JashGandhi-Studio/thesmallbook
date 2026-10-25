@@ -218,12 +218,122 @@
     try { document.execCommand("copy"); } catch (e) {}
     ta.remove();
   }
+
+  function playPinSound() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      var ctx = new AC();
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(420, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(70, ctx.currentTime + 0.07);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.07);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.08);
+    } catch (e) {}
+  }
+
+  function openInspectModal(p) {
+    var modal = $("qwModal");
+    if (!modal || !p) return;
+    playPinSound();
+    var txt = p.by ? p.txt : String(p.body || "").slice(0, 320);
+    var by = p.by || p.author_name || "A reader";
+    var bodyEl = $("qwInspectBody");
+    var metaEl = $("qwInspectMeta");
+    var photoWrap = $("qwInspectPhotoWrap");
+    var photoEl = $("qwInspectPhoto");
+    var bookLink = $("qwInspectBook");
+    var delBtn = $("qwInspectDel");
+
+    if (bodyEl) {
+      if (p.kind === "wall-photo") {
+        bodyEl.textContent = txt || p.title || "Pinned photograph";
+      } else {
+        bodyEl.textContent = '"' + txt + '"';
+      }
+    }
+    if (metaEl) {
+      metaEl.textContent = "Pinned by " + by + (p.created_at ? (" · " + ago(Date.parse(p.created_at) || 0)) : "");
+    }
+
+    if (photoWrap && photoEl) {
+      if (p.kind === "wall-photo" && p.cover_url) {
+        photoEl.src = p.cover_url;
+        photoWrap.hidden = false;
+      } else {
+        photoWrap.hidden = true;
+      }
+    }
+
+    if (bookLink) {
+      bookLink.hidden = true;
+      var bks = window.BOOKS || [];
+      var match = null;
+      var cleanBy = String(by).toLowerCase();
+      var cleanTxt = String(txt).toLowerCase();
+      for (var i = 0; i < bks.length; i++) {
+        var b = bks[i];
+        if (b.author && cleanBy.indexOf(b.author.toLowerCase()) >= 0) {
+          match = b;
+          break;
+        }
+        if (b.title && (cleanTxt.indexOf(b.title.toLowerCase()) >= 0 || cleanBy.indexOf(b.title.toLowerCase()) >= 0)) {
+          match = b;
+          break;
+        }
+      }
+      if (match) {
+        bookLink.href = "book.html?id=" + encodeURIComponent(match.id);
+        bookLink.textContent = "📖 Read " + match.title;
+        bookLink.hidden = false;
+      }
+    }
+
+    if (delBtn) {
+      delBtn.hidden = !isMine(p);
+      delBtn.onclick = function () {
+        if (!confirm("Take your pin off the wall?")) return;
+        modal.hidden = true;
+        var C2 = window.TSB_COMMUNITY;
+        if (C2) C2.deletePost(p.id).then(load).catch(function () { alert("Could not remove it, try again."); });
+      };
+    }
+
+    var copyBtn = $("qwInspectCopy");
+    if (copyBtn) {
+      copyBtn.onclick = function () {
+        var copyText = '"' + txt + '" - ' + by + ' · TheSmallBook';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(copyText).then(function () { toast("📋 Copied to clipboard"); });
+        } else {
+          fallbackCopy(copyText);
+          toast("📋 Copied to clipboard");
+        }
+      };
+    }
+
+    var shareBtn = $("qwInspectShare");
+    if (shareBtn) {
+      shareBtn.onclick = function () {
+        shareNote(txt, by);
+      };
+    }
+
+    modal.hidden = false;
+  }
+
   function bindGestures() {
     var pts = {}, lastMid = null, lastDist = 0, panning = false, sx = 0, sy = 0, vx0 = 0, vy0 = 0, moved = false;
     /* tap a note to share it · drag YOUR own note to move it */
     var tapNote = null, tapX = 0, tapY = 0, draggingNote = null;
     vp.addEventListener("pointerdown", function (e) {
-      var n = e.target.closest(".qw-note");
+      var n = e.target.closest(".qw-note, .qw-photo");
       tapNote = n; tapX = e.clientX; tapY = e.clientY; draggingNote = null;
       if (n && n.getAttribute("data-own") === "1" && !e.target.closest(".qw-del")) {
         try { n.setPointerCapture(e.pointerId); } catch (e0) {}
@@ -262,7 +372,7 @@
         var p3 = null;
         var id3 = tapNote.getAttribute("data-p");
         SEEDS.concat(notes).forEach(function (x) { if (x.id === id3) p3 = x; });
-        if (p3) shareNote(p3.by ? p3.txt : String(p3.body || "").slice(0, 320), p3.by || p3.author_name || "");
+        if (p3) openInspectModal(p3);
       }
       tapNote = null;
     }, true);
@@ -505,6 +615,10 @@
     if (!vp || !board) return;
     bindGestures();
     $("qwAdd").addEventListener("click", openCompose);
+    var inspectClose = $("qwInspectClose");
+    if (inspectClose) inspectClose.addEventListener("click", function () { var m = $("qwModal"); if (m) m.hidden = true; });
+    var inspectBackdrop = $("qwInspectBackdrop");
+    if (inspectBackdrop) inspectBackdrop.addEventListener("click", function () { var m = $("qwModal"); if (m) m.hidden = true; });
     load();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);

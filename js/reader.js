@@ -15,13 +15,6 @@
     return;
   }
 
-  // First-open milestone
-  try {
-    if (window.TSB && window.TSB.achv) {
-      window.TSB.achv.award('first-open');
-    }
-  } catch(e) {}
-
   // Set Back link
   var backBtn = document.getElementById('rmBack');
   if (backBtn) {
@@ -89,9 +82,15 @@
   }
 
   var curPage = 0;
-  var savedPos = parseInt(localStorage.getItem('tsb_reader_pos_' + book.id), 10);
-  if (!isNaN(savedPos) && savedPos >= 0 && savedPos < pages.length) {
-    curPage = savedPos;
+  var urlParams = new URLSearchParams(window.location.search);
+  var urlPage = parseInt(urlParams.get('page'), 10);
+  if (!isNaN(urlPage) && urlPage >= 0 && urlPage < pages.length) {
+    curPage = urlPage;
+  } else {
+    var savedPos = parseInt(localStorage.getItem('tsb_reader_pos_' + book.id), 10);
+    if (!isNaN(savedPos) && savedPos >= 0 && savedPos < pages.length) {
+      curPage = savedPos;
+    }
   }
 
   var articleEl = document.getElementById('rmArticle');
@@ -320,16 +319,23 @@
     var size = localStorage.getItem('tsb_rm_size') || '20px';
     var font = localStorage.getItem('tsb_rm_font') || "'Newsreader', Georgia, serif";
     var spacing = localStorage.getItem('tsb_rm_spacing') || '1.8';
-    var theme = localStorage.getItem('tsb_rm_theme') || 'paper';
+    var theme = localStorage.getItem('tsb_rm_theme') || 'auto';
     var mode = getMode();
 
     document.documentElement.style.setProperty('--rm-size', size);
     document.documentElement.style.setProperty('--rm-font', font);
     document.documentElement.style.setProperty('--rm-spacing', spacing);
 
+    var effectiveTheme = theme;
+    if (theme === 'auto') {
+      var isSysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var appDark = document.documentElement.classList.contains('dark');
+      effectiveTheme = (appDark || isSysDark) ? 'night' : 'paper';
+    }
+
     document.body.classList.remove('rm-theme-sepia', 'rm-theme-night');
-    if (theme === 'sepia') document.body.classList.add('rm-theme-sepia');
-    if (theme === 'night') document.body.classList.add('rm-theme-night');
+    if (effectiveTheme === 'sepia') document.body.classList.add('rm-theme-sepia');
+    if (effectiveTheme === 'night') document.body.classList.add('rm-theme-night');
 
     if (sizeSelect) sizeSelect.value = size;
     if (fontSelect) fontSelect.value = font;
@@ -358,6 +364,16 @@
     localStorage.setItem('tsb_rm_theme', this.value);
     applyPrefs();
   });
+
+  try {
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+        if ((localStorage.getItem('tsb_rm_theme') || 'auto') === 'auto') {
+          applyPrefs();
+        }
+      });
+    }
+  } catch (e) {}
 
   // Language translation handler & graceful failure
   var langBtn = document.getElementById('rmLanguage');

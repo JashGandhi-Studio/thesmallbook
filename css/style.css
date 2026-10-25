@@ -310,6 +310,44 @@
   .lgsheet { border-radius: 26px; border-bottom: 3px solid #111; margin-bottom: 20px;
     box-shadow: 0 -12px 34px rgba(17,17,17,.14), 8px 10px 0 rgba(17,17,17,.85); }
 }
+html.dark .lgsheet {
+  background: #1c1813 !important;
+  border-color: #000 !important;
+  color: #f2ead8 !important;
+  box-shadow: 0 -12px 34px rgba(0,0,0,.6), 8px 10px 0 #000 !important;
+}
+html.dark .lghero--fin {
+  background: #2a2215 !important;
+}
+html.dark .lghero__sub {
+  color: #3c3222 !important;
+}
+html.dark .yoeye {
+  color: #f2ead8 !important;
+}
+html.dark .lghero__perks span {
+  background: #241f17 !important;
+  color: #f2ead8 !important;
+  border-color: #000 !important;
+}
+html.dark .youpage .yotab {
+  color: #a39a88;
+}
+html.dark .youpage .yotab.on {
+  background: var(--yellow);
+  color: #14110c !important;
+}
+html.dark .youpage .yougoogle {
+  background: #241f17;
+  color: #f2ead8;
+  border-color: #000;
+  box-shadow: 4px 4px 0 #000;
+}
+html.dark .youpage .yoforgot,
+html.dark .youpage .yohint,
+html.dark .youpage .yocode__hint {
+  color: #a89d88 !important;
+}
 @media (prefers-reduced-motion: reduce) {
   .youpage .yoform:not([hidden]) { animation: none; }
 }
@@ -1848,14 +1886,14 @@ html.dark .stat__label,
 html.dark .lesson__chapter,
 html.dark .bookhero__author,
 html.dark .field__hint,
-html.dark .reader__by { color: #9a917d; }
-html.dark .search input::placeholder { color: #8a8170; }
+html.dark .reader__by { color: #b5ab96; }
+html.dark .search input::placeholder { color: #aba28d; }
 html.dark .callout--example { background: #1c2637; }
 html.dark .callout--action { background: #14322a; }
 html.dark .quote, html.dark .quote:nth-child(2n), html.dark .quote:nth-child(3n) { color: #111; }
 /* v250: ink text needs the pink tile behind it - dark paper made this 1.1:1 */
 html.dark .storyform__box[style*="--pink"] { color: #14110c; background: var(--pink); }
-html.dark .hero__sub strong { color: #111; }
+html.dark .hero__sub strong { color: #14110c !important; }
 html.dark .card__lessons { color: #111; }
 html.dark .badge--yellow, html.dark .badge--green, html.dark .badge--pink { color: #111; }
 html.dark .bigidea__box { color: #111; }
@@ -1863,9 +1901,11 @@ html.dark .bigidea__box p { color: #111; }
 html.dark .plan__box ol li::before { color: #111; }
 html.dark .lesson__num { color: var(--yellow); }
 html.dark .stat .stat__num { color: #ffffff; }
-html.dark .stat--yellow, html.dark .stat--green { color: #111111; }
-html.dark .stat--yellow .stat__num, html.dark .stat--green .stat__num { color: #111111 !important; }
-html.dark .stat--yellow .stat__label, html.dark .stat--green .stat__label { color: #111111 !important; font-weight: 800; }
+html.dark .stat--yellow, html.dark .stat--green { color: #f2ead8; }
+html.dark .stat--yellow .stat__num { color: var(--yellow) !important; }
+html.dark .stat--yellow .stat__label { color: #f2ead8 !important; font-weight: 800; }
+html.dark .stat--green .stat__num { color: #4ade80 !important; }
+html.dark .stat--green .stat__label { color: #f2ead8 !important; font-weight: 800; }
 html.dark .stat--red { color: #ffffff; }
 html.dark .stat--red .stat__num { color: #ffffff; }
 html.dark .stat--red .stat__label { color: #ffffff; font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
@@ -1874,6 +1914,36 @@ html.dark .stat--blue .stat__num { color: #ffffff; }
 html.dark .stat--blue .stat__label { color: #ffffff; font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 html.dark .chip.active { color: var(--yellow); }
 html.dark .deco--sq, html.dark .deco--circ { border-color: var(--ink); }
+html.dark .logo__mark { color: #14110c !important; }
+html.dark .trio-card__readbtn { color: #14110c !important; }
+html.dark .trio-card__save { color: var(--ink) !important; border-color: #000; box-shadow: 2px 2px 0 #000; }
+html.dark #tsbHelpChip { color: #14110c !important; }
+html.dark .pk-chip { background: #241f17; border-color: #000; box-shadow: 4px 4px 0 #000; color: #f2ead8; }
+html.dark .pk-chip b { color: #f2ead8; }
+html.dark .pk-chip i { color: #b7a892; }
+html.dark .pk-chip--mine { background: var(--yellow); color: #14110c; }
+html.dark .pk-chip--mine b { color: #14110c; }
+html.dark .pk-chip--mine i { color: #443c2c; }
+html.dark .nt-prompt { border-color: #000; box-shadow: 4px 4px 0 #000; }
+html.dark .nt-prompt p { color: #14110c !important; }
+html.dark .nt-prompt button { background: #14110c; color: #f2ead8 !important; border-color: #000; box-shadow: 2.5px 2.5px 0 #000; }
+html.dark .nt-prompt__tag { background: #14110c; color: #f2ead8; }
+html.dark .cf-banner span[style*="background:var(--yellow)"] { color: #14110c !important; }
+html.dark .goldmore button { color: #f2ead8 !important; border-color: #000 !important; box-shadow: 3px 3px 0 #000 !important; background: #241f17 !important; }
+html.dark .idcard__avatar { color: #14110c !important; }
+html.dark .lg-chip { background: var(--yellow) !important; color: #14110c !important; }
+html.dark .feattile,
+html.dark .feattile strong,
+html.dark .feattile span { color: #14110c !important; }
+html.dark .pk-chip__emo { color: #14110c !important; }
+html.dark .ob-logo { color: #14110c !important; }
+html.dark .wadeal__ico { color: #14110c !important; }
+html.dark .cht-hero__logo { color: #14110c !important; }
+html.dark .cf-banner span[style*="background:var(--red)"] { color: #ffffff !important; }
+html.dark .gravecross__em { color: #ffffff !important; }
+html.dark .youpage .yoin { background: #241f17 !important; color: #f2ead8 !important; border-color: #000 !important; }
+html.dark .youpage .yoin::placeholder { color: #8e8470 !important; }
+html.dark .yoage__t b { color: #14110c !important; }
 
 /* ============================================================
    NEW FEATURE COMPONENTS
@@ -2337,8 +2407,9 @@ html.dark .abtn:hover { box-shadow: 5px 5px 0 #000; }
    DARK MODE - CONTRAST FIXES
    Any element sitting on a bright background must use dark text.
    ============================================================ */
-html.dark .hl { color: #111; }
-html.dark .hl--red { color: #fff; }
+.hl { background: var(--yellow); color: #14110c; padding: 1px 6px; border-radius: 4px; display: inline-block; }
+html.dark .hl { background: var(--yellow); color: #14110c !important; }
+html.dark .hl--red { color: #fff; background: var(--red); }
 html.dark .btn--yellow { color: #111; }
 html.dark .search button { color: #111; }
 html.dark .search button:hover { color: #fff; }
@@ -2577,7 +2648,7 @@ html.dark .reader__by { color: #b3a98f; }
 /* stat labels on colored stat tiles stay high contrast */
 html.dark .stat--red .stat__label { color: #ffffff; }
 html.dark .stat--blue .stat__label { color: #ffffff; }
-html.dark .stat--yellow .stat__label, html.dark .stat--green .stat__label { color: #111111; }
+html.dark .stat--yellow .stat__label, html.dark .stat--green .stat__label { color: #f2ead8; }
 
 /* section heads & toolbar chips */
 html.dark .section-head h2 { background: var(--paper); color: var(--ink); }
@@ -3229,6 +3300,7 @@ html.dark .ahero__inner { border-color: #000; box-shadow: 8px 8px 0 #000; }
 html.dark .about__head { box-shadow: 3px 3px 0 #000; }
 .about__block--grave .about__head { background: #2b0e0e; color: #ff8a7a; box-shadow: 3px 3px 0 #000; }
 .about__block--insta .about__head { background: #fff; }
+html.dark .about__block--insta .about__head { background: #241f17; color: #f2ead8; border-color: #000; }
 .about__block p { font-size: 1rem; line-height: 1.65; margin-top: 10px; }
 .about__block a:not(.btn) { color: inherit; font-weight: 700; }
 .about__block--cta .btn--ink { color: #fffdf5 !important; }
@@ -4604,12 +4676,14 @@ html.dark .tipjar__q { color: #f2ead8; }
 .tipjar__btns a {
   font-family: var(--font-head); font-size: .72rem; letter-spacing: 1px;
   border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink);
-  background: linear-gradient(135deg, #ffd94d, #ffc800); color: #111;
+  background: linear-gradient(135deg, #ffd94d, #ffc800);
+  background-color: #ffc800 !important;
+  color: #111;
   padding: 5px 11px; text-decoration: none;
   transition: transform .1s, box-shadow .1s, filter .1s;
 }
-.tipjar__btns a:nth-child(2) { background: linear-gradient(135deg, #ffb36b, #ff8a3d); }
-.tipjar__btns a:nth-child(3) { background: linear-gradient(135deg, #ff9d8a, #ff5252); color: #fff; }
+.tipjar__btns a:nth-child(2) { background: linear-gradient(135deg, #ffb36b, #ff8a3d); background-color: #ff8a3d !important; color: #111; }
+.tipjar__btns a:nth-child(3) { background: linear-gradient(135deg, #ff9d8a, #ff5252); background-color: #ff5252 !important; color: #fff; }
 .tipjar__btns a:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--ink); filter: brightness(1.05); }
 .tipjar__btns a:active { transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--ink); }
 /* ✕ pinned to the top-right corner of the box */
@@ -4729,9 +4803,10 @@ html.dark .goldbanner__sub b { color: var(--yellow); }
   border-radius: 6px;
 }
 html.dark .goldbanner__perks span {
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #e5decb;
-  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #f2ead8;
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 800;
 }
 .gold-svg-perk { flex-shrink: 0; color: inherit; }
 .goldbanner__offer {
@@ -11323,4 +11398,147 @@ body, p, .lesson__body p, .bigidea p, .hero__sub, .goldhero p {
   background: rgba(255, 255, 255, 0.92) !important;
   backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* ============================================================
+   DARK MODE COMPREHENSIVE CONTRAST & LEGIBILITY POLISH
+   ============================================================ */
+html.dark .gold-post-plan-slide {
+  background: #241f17 !important;
+  color: #f2ead8 !important;
+  border-color: #000 !important;
+  box-shadow: 5px 5px 0 #000 !important;
+}
+html.dark .gold-post-plan-slide div[style*="#f5eedc"] {
+  background: #2e261a !important;
+  color: #f2ead8 !important;
+  border-color: #000 !important;
+}
+html.dark .gold-post-plan-slide div[style*="#f5eedc"] b {
+  color: var(--yellow) !important;
+}
+html.dark .gold-post-plan-slide p {
+  color: #b8b0a0 !important;
+}
+
+html.dark .ypg-direct-card {
+  background: #241f17 !important;
+  color: #f2ead8 !important;
+  border-color: #000 !important;
+  box-shadow: 4px 4px 0 #000 !important;
+}
+html.dark .ypg-plan-pill {
+  background: #1b1712 !important;
+  color: #f2ead8 !important;
+  border-color: #000 !important;
+}
+html.dark .ypg-plan-pill div {
+  color: #f2ead8 !important;
+}
+html.dark .ypg-plan-pill.active {
+  background: var(--yellow) !important;
+  color: #111 !important;
+  border-color: #000 !important;
+}
+html.dark .ypg-plan-pill.active div {
+  color: #111 !important;
+}
+html.dark .goldjoin p[style*="#fffbe6"] {
+  background: #2b2316 !important;
+  color: #f2ead8 !important;
+  border-color: #000 !important;
+}
+
+html.dark .cf-banner {
+  background: repeating-linear-gradient(45deg, #2b2319, #2b2319 12px, #211a12 12px, #211a12 24px) !important;
+  border-color: #000 !important;
+  box-shadow: 8px 8px 0 #000 !important;
+  color: #f2ead8 !important;
+}
+html.dark .cf-banner b {
+  color: #f2ead8 !important;
+}
+html.dark .cf-banner span {
+  color: #d6ccba !important;
+}
+html.dark .cf-banner span b {
+  color: #f2ead8 !important;
+}
+html.dark #cfGyCount {
+  background: #15110b !important;
+  color: var(--yellow) !important;
+  border-color: var(--yellow) !important;
+}
+html.dark #iaModalTrigger {
+  background: #241f17 !important;
+  color: #f2ead8 !important;
+  border-color: #000 !important;
+}
+
+html.dark .aq-libbtn,
+html.dark .aq-clear,
+html.dark .aq-close {
+  color: var(--ink) !important;
+  border-color: rgba(242, 234, 216, 0.25) !important;
+}
+
+html.dark .youpage .yotick,
+html.dark .yotick {
+  background: #1b1712 !important;
+  border-color: #000 !important;
+  color: #f2ead8 !important;
+}
+html.dark .youpage .yotick__t,
+html.dark .yotick__t {
+  color: #d6ccba !important;
+}
+html.dark .youpage .yotick__t b,
+html.dark .yotick__t b {
+  color: var(--yellow) !important;
+}
+html.dark .youpage .yotick__t a,
+html.dark .yotick__t a {
+  color: #f2ead8 !important;
+}
+html.dark .youpage .yoage,
+html.dark .yoage {
+  background: #1b1712 !important;
+  border-color: rgba(242, 234, 216, 0.25) !important;
+}
+html.dark .youpage .yoage__t,
+html.dark .yoage__t {
+  color: #f2ead8 !important;
+}
+html.dark .lgi__ic {
+  background: transparent !important;
+  color: #f2ead8 !important;
+}
+
+html.dark #barSlotsRow > div {
+  background: #241f17 !important;
+  color: #f2ead8 !important;
+  border-color: #000 !important;
+  box-shadow: 3px 3px 0 #000 !important;
+}
+html.dark #barSlotsRow button {
+  background: #1b1712 !important;
+  color: #f2ead8 !important;
+  border-color: #000 !important;
+}
+html.dark #barPoolRow button {
+  background: #241f17 !important;
+  color: #f2ead8 !important;
+  border-color: #000 !important;
+  box-shadow: 2px 2px 0 #000 !important;
+}
+html.dark #barPoolRow button[style*="var(--yellow)"] {
+  background: var(--yellow) !important;
+  color: #111 !important;
+}
+html.dark #barPoolRow button[style*="var(--yellow)"] small {
+  color: #333 !important;
+}
+html.dark #barQuotaBadge {
+  background: #241f17 !important;
+  border-color: #000 !important;
 }

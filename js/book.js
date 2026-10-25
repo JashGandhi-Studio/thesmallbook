@@ -32,7 +32,6 @@
     if (!can) { can = document.createElement("link"); can.rel = "canonical"; document.head.appendChild(can); }
     can.href = url;
   } catch (e) {}
-  TSB.achv.award("first-open");
   TSB.lastRead.set(book.id);
 
   /* ---------- HERO ---------- */
@@ -115,11 +114,37 @@
     });
   }
 
-  /* Wire primary book action bar */
-  const rdrLink = document.getElementById("nbOpenReader");
-  if (rdrLink) {
-    rdrLink.href = "reader.html?id=" + encodeURIComponent(book.id);
+  /* Wire primary book action bar with reading continuity */
+  function updateReaderCTA() {
+    const rdrLink = document.getElementById("nbOpenReader");
+    if (!rdrLink) return;
+    const hasEnd = Boolean((book.actionPlan && book.actionPlan.length) || (book.quotes && book.quotes.length));
+    const totalPages = 1 + (book.lessons ? book.lessons.length : 0) + (hasEnd ? 1 : 0);
+    const readLessons = (window.TSB && TSB.progress) ? TSB.progress.forBook(book.id) : [];
+    const savedPos = parseInt(localStorage.getItem("tsb_reader_pos_" + book.id), 10);
+
+    let resumeIdx = -1;
+    if (!isNaN(savedPos) && savedPos >= 0 && savedPos < totalPages) {
+      if (savedPos > 0 || (readLessons && readLessons.length > 0)) {
+        resumeIdx = savedPos;
+      }
+    } else if (readLessons && readLessons.length > 0) {
+      const maxRead = Math.max(...readLessons);
+      resumeIdx = Math.min(totalPages - 1, maxRead + 1);
+    }
+
+    if (resumeIdx >= 0) {
+      const pageNum = resumeIdx + 1;
+      rdrLink.href = "reader.html?id=" + encodeURIComponent(book.id) + "&page=" + resumeIdx;
+      const lbl = rdrLink.querySelector(".nb-act-lbl");
+      if (lbl) lbl.textContent = `CONTINUE (Page ${pageNum} of ${totalPages})`;
+    } else {
+      rdrLink.href = "reader.html?id=" + encodeURIComponent(book.id);
+      const lbl = rdrLink.querySelector(".nb-act-lbl");
+      if (lbl) lbl.textContent = "READ";
+    }
   }
+  updateReaderCTA();
 
   const heroListen = document.getElementById("nbHeroListen");
   if (heroListen) {
@@ -1165,6 +1190,7 @@
       btn.innerHTML = '<svg class="mini-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>READ</span>';
       document.querySelector(`#lesson-${i} .lesson__num`).textContent = "✓";
       drawBadges();
+      try { updateReaderCTA(); } catch (e) {}
       if (TSB.progress.forBook(book.id).length >= book.lessons.length) {
         TSB.achv.award("book-complete");
         try {

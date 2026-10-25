@@ -300,7 +300,6 @@
       padding: 10px 0 20px;
       min-height: 520px;
       cursor: grab;
-      touch-action: none;
     }
     .book-theater:active {
       cursor: grabbing;
@@ -350,23 +349,46 @@
       }
     }
 
-    /* Landing and settling when image is loaded */
+    /* Realistic Double-Bounce Desk Impact Landing */
     .book-physical.settle-landing {
-      animation: bookSettleLanding 0.52s cubic-bezier(0.18, 0.9, 0.32, 1.2) forwards !important;
+      animation: bookDeskImpact 0.58s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
     }
 
-    @keyframes bookSettleLanding {
+    @keyframes bookDeskImpact {
       0% {
-        transform: translateY(-24px) rotateX(12deg) rotateY(360deg) scale(1.02);
+        transform: translateY(-24px) rotateX(12deg) rotateY(-22deg) scale(1.02);
       }
-      62% {
-        transform: translateY(8px) rotateX(6deg) rotateY(-20deg) scaleY(0.96);
+      45% {
+        transform: translateY(3.5px) rotateX(8deg) rotateY(-22deg) scaleY(0.97);
       }
-      82% {
-        transform: translateY(-6px) rotateX(9deg) rotateY(-23deg) scaleY(1.01);
+      72% {
+        transform: translateY(-3px) rotateX(10.5deg) rotateY(-22deg) scaleY(1.01);
       }
       100% {
         transform: translateY(0) rotateX(10deg) rotateY(-22deg) scale(1);
+      }
+    }
+
+    .book-physical.settle-landing .book-shadow {
+      animation: shadowImpactPuff 0.58s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+    }
+
+    @keyframes shadowImpactPuff {
+      0% {
+        transform: scale(0.85);
+        opacity: 0.35;
+      }
+      45% {
+        transform: scale(1.08);
+        opacity: 0.85;
+      }
+      72% {
+        transform: scale(0.96);
+        opacity: 0.55;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0.7;
       }
     }
 
@@ -525,6 +547,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      touch-action: none !important;
     }
     body.is-desk-closed .rnd-clean-footer {
       margin-top: 4px;
@@ -533,14 +556,36 @@
     }
 
     body.is-desk-open {
+      position: relative !important;
       overflow-y: auto !important;
+      overflow-x: hidden !important;
+      -webkit-overflow-scrolling: touch !important;
       min-height: 100dvh;
-      height: auto;
+      height: auto !important;
+      touch-action: pan-y !important;
     }
     body.is-desk-open .desk-view {
-      height: auto;
+      height: auto !important;
+      max-height: none !important;
       min-height: calc(100dvh - 56px);
-      padding: 16px 14px 48px;
+      padding: 16px 14px 64px;
+      justify-content: flex-start !important;
+      overflow: visible !important;
+      touch-action: pan-y !important;
+    }
+    body.is-desk-open .book-theater {
+      height: auto !important;
+      min-height: auto !important;
+      cursor: default;
+      touch-action: pan-y !important;
+    }
+    body.is-desk-open .book-physical,
+    body.is-desk-open .book-opened-spread,
+    body.is-desk-open .spread-pages-grid,
+    body.is-desk-open .page-col-left,
+    body.is-desk-open .page-col-right {
+      touch-action: pan-y !important;
+      cursor: default;
     }
 
     /* 3D Paper Stack Thickness Edges (Seamless Hardcover Deckled Profile) */
@@ -1114,8 +1159,14 @@
       .desk-view {
         padding: 10px 10px 18px;
       }
+      body.is-desk-open .desk-view {
+        padding: 12px 10px 48px;
+      }
       .book-theater {
         min-height: 380px;
+      }
+      body.is-desk-open .book-theater {
+        min-height: auto;
       }
       .book-opened-spread {
         padding: 6px;
@@ -1156,6 +1207,184 @@
       .editorial-title {
         font-size: 22px;
       }
+    }
+
+    /* =========================================================
+       DARK MODE STYLING FOR RANDOM 3D DISCOVERY
+       ========================================================= */
+    html.dark .nav {
+      background: rgba(20, 17, 13, 0.88) !important;
+      border-bottom-color: #000 !important;
+    }
+    html.dark .rnd-nav-btn {
+      background: #241f17;
+      color: #f2ead8;
+      border-color: #000;
+      box-shadow: 2px 2px 0 #000;
+    }
+    html.dark .rnd-nav-btn:hover {
+      background: #322b20;
+    }
+    html.dark .rnd-nav-btn--roll {
+      background: var(--yellow) !important;
+      color: #14110c !important;
+      border-color: #000 !important;
+    }
+    html.dark .rnd-nav-btn--roll svg,
+    html.dark .rnd-nav-btn--roll span {
+      color: #14110c !important;
+    }
+    html.dark .rnd-nav-btn--read {
+      background: var(--yellow) !important;
+      color: #14110c !important;
+      border-color: #000 !important;
+    }
+    html.dark .rnd-nav-btn--save.is-saved {
+      background: var(--yellow) !important;
+      color: #14110c !important;
+      border-color: #000 !important;
+    }
+    html.dark .rnd-nav-btn--save.is-saved svg {
+      fill: #14110c !important;
+    }
+    html.dark .rnd-hint-badge {
+      background: #1c1813;
+      color: #f2ead8;
+      border-color: #000;
+      box-shadow: 2px 2px 0 #000;
+    }
+    html.dark .desk-surface {
+      background: linear-gradient(to bottom, #2b1d12 0%, #1e130a 22%, #140c06 70%, #0d0703 100%);
+      border-top-color: rgba(0,0,0,0.85);
+      box-shadow: inset 0 20px 48px rgba(0,0,0,0.85);
+    }
+    html.dark .spread-open-view {
+      background: #1c1813;
+      border-color: #000;
+      color: #f2ead8;
+    }
+    html.dark .spread-page--left {
+      background: #241f17;
+      border-color: #000;
+    }
+    html.dark .spread-page--right {
+      background: #1f1a13;
+      border-color: #000;
+    }
+    html.dark .editorial-category-stamp {
+      background: var(--yellow);
+      color: #14110c !important;
+    }
+    html.dark .editorial-quote-chip {
+      background: #18140f;
+      color: #f2ead8;
+      border-color: #3e3526;
+    }
+    html.dark .editorial-summary-lead,
+    html.dark .editorial-takeaways-lead {
+      color: #e5decb;
+    }
+    html.dark .plan-step-pill {
+      background: #272118;
+      border-color: #3e3526;
+    }
+    html.dark .plan-step-num {
+      background: var(--yellow);
+      color: #14110c;
+    }
+    html.dark .plan-step-text {
+      color: #f2ead8;
+    }
+    html.dark .editorial-caveat-box {
+      background: #2d1e1c;
+      border-color: #ff5252;
+      color: #ffc9c9;
+    }
+    html.dark .spread-actions-dock {
+      background: #18140f;
+      border-color: #000;
+    }
+    html.dark .btn-spread-read {
+      background: var(--yellow) !important;
+      color: #14110c !important;
+      border-color: #000 !important;
+    }
+    html.dark .btn-spread-save {
+      background: #241f17;
+      color: #f2ead8;
+      border-color: #000;
+    }
+    html.dark .btn-spread-roll {
+      background: #1e1913;
+      color: #f2ead8;
+      border-color: #000;
+    }
+    html.dark .editorial-takeaways-lead strong,
+    html.dark .editorial-summary-lead strong {
+      color: var(--yellow);
+    }
+
+    /* Open book spread paper elements must always use dark ink */
+    html.dark .spread-pages-grid,
+    html.dark .spread-pages-grid * {
+      --ink: #14110c;
+    }
+    html.dark .spread-pages-grid {
+      color: #14110c !important;
+    }
+    html.dark .page-col-left,
+    html.dark .page-col-right {
+      color: #14110c !important;
+    }
+    html.dark .editorial-title {
+      color: #14110c !important;
+    }
+    html.dark .editorial-author {
+      color: #55504a !important;
+    }
+    html.dark .editorial-readtime {
+      color: #55504a !important;
+    }
+    html.dark .bigidea-editorial-card {
+      color: #14110c !important;
+      border-color: #14110c !important;
+    }
+    html.dark .bigidea-editorial-card * {
+      color: #14110c !important;
+    }
+    html.dark .lesson-editorial-card {
+      color: #14110c !important;
+      border-color: #14110c !important;
+    }
+    html.dark .lesson-editorial-card * {
+      color: #14110c !important;
+    }
+    html.dark .plan-editorial-box {
+      color: #14110c !important;
+      border-color: #14110c !important;
+    }
+    html.dark .plan-editorial-box * {
+      color: #14110c !important;
+    }
+    html.dark .editorial-warning-box {
+      color: #14110c !important;
+      border-color: #14110c !important;
+    }
+    html.dark .editorial-warning-box * {
+      color: #14110c !important;
+    }
+    html.dark .book-cover-inside {
+      color: #14110c !important;
+    }
+    html.dark .book-cover-inside * {
+      color: #14110c !important;
+    }
+    html.dark .back-barcode-block,
+    html.dark .back-barcode-block * {
+      color: #14110c !important;
+    }
+    html.dark .back-barcode-lines span {
+      background: #14110c !important;
     }
   </style>
 </head>
@@ -1337,7 +1566,7 @@
             <section class="page-col-right">
               <div>
                 <div class="quote-editorial-box" id="bookQuote">
-                  <span style="font-size:26px;color:#ffc800;vertical-align:-4px;margin-right:4px;">“</span><span id="bookQuoteText">Quote here.</span>
+                  <span style="font-size:26px;color:#b45309;vertical-align:-4px;margin-right:4px;">“</span><span id="bookQuoteText">Quote here.</span>
                 </div>
 
                 <div style="font-family:'Archivo Black',sans-serif;font-size:10.5px;text-transform:uppercase;color:#666;margin-bottom:8px;">Action Blueprint</div>
@@ -1637,21 +1866,64 @@
       var dragDistance = 0;
       var inertiaAnimId = null;
 
+      // Device Orientation Tilt State (Mobile phone movement physics)
+      var tiltY = 0;
+      var tiltX = 0;
+      var targetTiltY = 0;
+      var targetTiltX = 0;
+      var tiltAnimId = null;
+
       function update3DTransform() {
         if (!bookPhysical || bookPhysical.classList.contains("is-open")) return;
-        bookPhysical.style.transform = "rotateY(" + rotY + "deg) rotateX(" + rotX + "deg)";
+        var totalRotY = rotY + tiltY;
+        var totalRotX = Math.max(-38, Math.min(38, rotX + tiltX));
+        bookPhysical.style.transform = "rotateY(" + totalRotY + "deg) rotateX(" + totalRotX + "deg)";
 
         // Shift dynamic floor shadow opposite to rotation angle
         if (bookFloorShadow) {
-          var shadowOffsetX = -Math.sin(rotY * Math.PI / 180) * 20;
+          var shadowOffsetX = -Math.sin(totalRotY * Math.PI / 180) * 20;
           bookFloorShadow.style.transform = "translateX(" + shadowOffsetX + "px)";
         }
 
         // Shift specular sheen across book cover
         if (coverSheen) {
-          var sheenPos = 50 + (rotY % 360) * 0.4;
-          coverSheen.style.background = "linear-gradient(" + (135 + rotY * 0.3) + "deg, rgba(255,255,255,0.24) 0%, transparent 45%, rgba(0,0,0,0.2) 100%)";
+          coverSheen.style.background = "linear-gradient(" + (135 + totalRotY * 0.35) + "deg, rgba(255,255,255,0.26) 0%, transparent 45%, rgba(0,0,0,0.2) 100%)";
         }
+      }
+
+      function startTiltLoop() {
+        if (tiltAnimId) return;
+        function tiltLoop() {
+          if (!bookPhysical || bookPhysical.classList.contains("is-open")) {
+            tiltAnimId = null;
+            return;
+          }
+          if (!isDragging && Math.abs(vx) < 0.05 && Math.abs(vy) < 0.05) {
+            var diffY = targetTiltY - tiltY;
+            var diffX = targetTiltX - tiltX;
+            if (Math.abs(diffY) > 0.01 || Math.abs(diffX) > 0.01) {
+              tiltY += diffY * 0.12;
+              tiltX += diffX * 0.12;
+              update3DTransform();
+            }
+          }
+          tiltAnimId = requestAnimationFrame(tiltLoop);
+        }
+        tiltAnimId = requestAnimationFrame(tiltLoop);
+      }
+
+      if (window.DeviceOrientationEvent) {
+        window.addEventListener("deviceorientation", function (e) {
+          if (!e || e.gamma === null || e.beta === null) return;
+          if (!bookPhysical || bookPhysical.classList.contains("is-open")) return;
+          // Subtly clamp gamma (+/- 15deg) to +/- 3deg book rotation
+          var g = Math.max(-15, Math.min(15, e.gamma));
+          targetTiltY = g * 0.2;
+          // Normal phone holding angle baseline is ~45deg
+          var b = Math.max(-15, Math.min(15, (e.beta || 45) - 45));
+          targetTiltX = -b * 0.15;
+          startTiltLoop();
+        }, { passive: true });
       }
 
       function startInertia() {
@@ -1833,26 +2105,30 @@
             // Update book details now that image is ready
             populateBook(bookData);
 
-            // Stop rotating animation and trigger realistic settle landing
+            // Stop rotating animation and trigger realistic double-bounce settle landing
             bookPhysical.classList.remove("is-spinning-load");
             void bookPhysical.offsetWidth; // trigger reflow
             bookPhysical.classList.add("settle-landing");
 
             rotY = -22;
             rotX = 10;
+            tiltY = 0;
+            tiltX = 0;
+            targetTiltY = 0;
+            targetTiltX = 0;
             update3DTransform();
 
             setTimeout(function () {
               SoundFX.thud();
-              try { if (navigator.vibrate) navigator.vibrate(25); } catch (e) {}
-            }, 180);
+              try { if (navigator.vibrate) navigator.vibrate([18, 40, 10]); } catch (e) {}
+            }, 260);
 
             setTimeout(function () {
               bookPhysical.classList.remove("settle-landing");
               update3DTransform();
               if (rollDiceIcon) rollDiceIcon.style.transform = "rotate(0deg)";
               if (btnRoll) btnRoll.disabled = false;
-            }, 540);
+            }, 580);
 
           }, remaining);
         }

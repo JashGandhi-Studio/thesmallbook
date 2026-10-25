@@ -16,16 +16,23 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Archivo+Black&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=323">
-  <link rel="stylesheet" href="css/community.css?v=323">
   <link rel="manifest" href="manifest.json">
+  <script>
+    try {
+      var rawTh = localStorage.getItem("tsb_theme");
+      var isSysDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var tsbDark = rawTh === '"dark"' || rawTh === 'dark' || ((!rawTh || rawTh === '"auto"' || rawTh === 'auto') && isSysDark);
+      if (tsbDark) document.documentElement.classList.add("dark");
+    } catch (e) {}
+  </script>
   <style>
     body.qw-body { padding-bottom: 0; }
-    .qw-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px 10px; }
+    .qw-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px 10px; background: var(--bg); border-bottom: 2px solid var(--ink); }
     .qw-head .qw-back { min-width: 38px; width: 38px; height: 38px; padding: 0; border: 2.5px solid var(--ink); border-radius: 12px; background: var(--paper); font-size: 16px; cursor: pointer; box-shadow: 2.5px 2.5px 0 var(--ink); }
     .qw-head > div { flex: 1; min-width: 0; }
     .qw-head h1 { font: 400 16px "Archivo Black", "Arial Black", sans-serif; color: var(--ink); margin: 0; letter-spacing: .3px; white-space: nowrap; }
     .qw-head p { margin: 2px 0 0; font: 600 10px "Space Grotesk", sans-serif; color: var(--ink); opacity: .6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .qw-count { margin-left: auto; flex: 0 0 auto; font: 800 8.5px "Archivo Black", sans-serif; letter-spacing: .5px; color: var(--ink); background: var(--yellow); border: 2px solid var(--ink); border-radius: 999px; padding: 5px 8px; white-space: nowrap; }
+    .qw-count { margin-left: auto; flex: 0 0 auto; font: 800 8.5px "Archivo Black", sans-serif; letter-spacing: .5px; color: #14110c; background: var(--yellow); border: 2px solid var(--ink); border-radius: 999px; padding: 5px 8px; white-space: nowrap; }
     .qw-vp { position: relative; height: calc(100dvh - 96px); overflow: hidden; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none;
       background: url("assets/cork.jpg") 0 0 / 480px auto, #c9a271;
       box-shadow: inset 0 6px 22px rgba(60,30,0,.45), inset 0 -6px 18px rgba(60,30,0,.3);
@@ -95,6 +102,74 @@
     .qw-anonrow span { font: 600 10px "Space Grotesk", sans-serif; color: var(--ink); opacity: .55; }
     .qw-anon { border: 2px solid var(--ink); background: var(--paper); border-radius: 999px; padding: 7px 12px; font: 800 10px "Archivo Black", sans-serif; letter-spacing: .4px; color: var(--ink); cursor: pointer; }
     .qw-anon.on { background: var(--ink); color: var(--paper); box-shadow: 2px 2px 0 rgba(0,0,0,.25); }
+
+    /* Focused Pin Inspection Card */
+    .qw-inspect-modal { position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .qw-inspect-backdrop { position: absolute; inset: 0; background: rgba(14, 11, 7, 0.72); backdrop-filter: blur(4px); }
+    .qw-inspect-card { position: relative; z-index: 2; width: 100%; max-width: 440px; background: var(--paper); border: 3px solid var(--ink); border-radius: 18px; box-shadow: 6px 6px 0 var(--ink); padding: 26px 22px 20px; animation: qwPop .18s cubic-bezier(.2,.9,.3,1); }
+    @keyframes qwPop { from { opacity: 0; transform: scale(.92); } to { opacity: 1; transform: none; } }
+    .qw-inspect-pin { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); font-size: 24px; }
+    .qw-inspect-close { position: absolute; top: 10px; right: 10px; width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--ink); background: var(--paper); color: var(--ink); font-weight: 900; cursor: pointer; }
+    .qw-inspect-body { font: 700 21px/1.38 "Caveat", "Comic Sans MS", cursive; color: var(--ink); margin: 10px 0 14px; word-break: break-word; }
+    .qw-inspect-photo { width: 100%; max-height: 240px; object-fit: cover; border-radius: 8px; border: 2px solid var(--ink); margin-bottom: 12px; }
+    .qw-inspect-meta { font: 700 12.5px "Space Grotesk", sans-serif; color: var(--muted); border-top: 1.5px dashed var(--ink); padding-top: 10px; margin-bottom: 16px; }
+    .qw-inspect-acts { display: flex; gap: 8px; flex-wrap: wrap; }
+    .qw-inspect-btn { flex: 1; min-width: 110px; border: 2px solid var(--ink); border-radius: 10px; background: var(--paper); color: var(--ink); padding: 10px 12px; font: 800 11.5px "Space Grotesk", sans-serif; cursor: pointer; box-shadow: 2.5px 2.5px 0 var(--ink); text-decoration: none; text-align: center; }
+    .qw-inspect-btn:hover { background: var(--surface-2); transform: translate(-1px, -1px); box-shadow: 3.5px 3.5px 0 var(--ink); }
+    .qw-inspect-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+    .qw-inspect-btn--share { background: var(--yellow); color: #14110c; }
+    .qw-inspect-btn--book { background: var(--green); color: #14110c; }
+
+    /* =========================================================
+       DARK MODE FOR QUOTE WALL
+       ========================================================= */
+    html.dark .qw-head { background: #16130e; border-bottom-color: #000; }
+    html.dark .qw-head h1 { color: #f2ead8; }
+    html.dark .qw-head p { color: #b7a892; opacity: 1; }
+    html.dark .qw-back { background: #241f17; color: #f2ead8; border-color: #000; box-shadow: 2.5px 2.5px 0 #000; }
+    html.dark .qw-count { background: var(--yellow); color: #14110c !important; border-color: #000; }
+    html.dark .qw-vp {
+      background: radial-gradient(ellipse at center, #26190e 0%, #130b05 100%), #130b05 !important;
+      border-top-color: #2b1708 !important;
+      border-bottom-color: #2b1708 !important;
+      box-shadow: inset 0 8px 32px rgba(0,0,0,.88), inset 0 -8px 24px rgba(0,0,0,.8) !important;
+    }
+    html.dark .qw-zoom button { background: #241f17; color: #f2ead8; border-color: #000; box-shadow: 3px 3px 0 #000; }
+    html.dark .qw-add { border-color: #000; box-shadow: 4px 4px 0 #000; }
+    html.dark .qw-sheet__card { background: #241f17; border-color: #000; color: #f2ead8; }
+    html.dark .qw-sheet__top b { color: #f2ead8; }
+    html.dark .qw-sheet__top button { background: #1b1712; color: #f2ead8; border-color: #000; }
+    html.dark .qw-find { border-color: rgba(242, 234, 216, 0.3); color: #f2ead8; }
+    html.dark #qwFindBox { background: #1b1712; border-color: #3e3425; color: #f2ead8; }
+    html.dark #qwSearch { background: #241f17; color: #f2ead8; border-color: #3e3425; }
+    html.dark #qwSearch::placeholder { color: #8e8470; }
+    html.dark .qw-tp { background: #241f17; color: #f2ead8; border-color: #3e3425; }
+    html.dark .qw-tp.on { background: var(--yellow); color: #14110c !important; border-color: #000; }
+    html.dark .qw-qi { background: #241f17; border-color: #3e3425; }
+    html.dark .qw-qi span { color: #f2ead8; }
+    html.dark .qw-qi i { color: #bcae94; }
+    html.dark .qw-qmore { color: #bcae94; }
+    html.dark .qw-tab { background: #241f17; color: #f2ead8; border-color: #3e3425; }
+    html.dark .qw-tab.on { background: var(--yellow); color: #14110c !important; border-color: #000; }
+    html.dark #qwText, html.dark #qwCap { background: #1b1712; color: #f2ead8; border-color: #3e3425; }
+    html.dark #qwText::placeholder, html.dark #qwCap::placeholder { color: #8e8470; }
+    html.dark .qw-pick { background: #1b1712; color: #f2ead8; border-color: #3e3425; }
+    html.dark .qw-anon { background: #241f17; color: #f2ead8; border-color: #000; }
+    html.dark .qw-anon.on { background: var(--yellow); color: #14110c !important; border-color: #000; }
+    html.dark .qw-anonrow span { color: #b7a892; opacity: 1; }
+    html.dark .qw-fine { color: #b7a892; opacity: 1; }
+    html.dark .qw-c--share { background: #241f17; color: #f2ead8; border-color: #000; }
+    html.dark .qw-c--share.on { background: var(--yellow); color: #14110c; border-color: #000; }
+    html.dark .qw-corner { color: #d6ccba; opacity: .85; }
+    html.dark .qw-photo { background: #1e1913; color: #f2ead8; border: 2px solid #000; }
+    html.dark .qw-cap { color: #f2ead8; }
+    html.dark .qw-photo .qw-by { color: #b7a892; }
+    html.dark .qw-del { background: #241f17; color: #f2ead8; border-color: #000; }
+    html.dark .qw-inspect-card { background: #241f17; border-color: #000; box-shadow: 6px 6px 0 #000; color: #f2ead8; }
+    html.dark .qw-inspect-close { background: #1b1712; color: #f2ead8; border-color: #000; }
+    html.dark .qw-inspect-body { color: #f2ead8; }
+    html.dark .qw-inspect-meta { color: #b7a892; border-top-color: #3e3425; }
+    html.dark .qw-inspect-btn { background: #1b1712; color: #f2ead8; border-color: #000; box-shadow: 2.5px 2.5px 0 #000; }
   </style>
 </head>
 <body class="qw-body">
@@ -126,7 +201,29 @@
 
   <button class="qw-add" id="qwAdd" aria-label="Pin to the wall">📌</button>
 
+  <!-- Focused Pin Inspection Modal -->
+  <div id="qwModal" class="qw-inspect-modal" hidden>
+    <div class="qw-inspect-backdrop" id="qwInspectBackdrop"></div>
+    <div class="qw-inspect-card">
+      <button class="qw-inspect-close" id="qwInspectClose" aria-label="Close">✕</button>
+      <div class="qw-inspect-pin">📌</div>
+      <div id="qwInspectPhotoWrap" hidden>
+        <img class="qw-inspect-photo" id="qwInspectPhoto" src="" alt="Pinned photo">
+      </div>
+      <div class="qw-inspect-body" id="qwInspectBody"></div>
+      <div class="qw-inspect-meta" id="qwInspectMeta"></div>
+      <div class="qw-inspect-acts">
+        <button type="button" class="qw-inspect-btn" id="qwInspectCopy">📋 Copy Quote</button>
+        <button type="button" class="qw-inspect-btn qw-inspect-btn--share" id="qwInspectShare">📤 Share</button>
+        <a class="qw-inspect-btn qw-inspect-btn--book" id="qwInspectBook" href="#" hidden>📖 Read Book</a>
+        <button type="button" class="qw-inspect-btn qw-inspect-btn--del" id="qwInspectDel" hidden>🗑 Remove Pin</button>
+      </div>
+    </div>
+  </div>
+
   <script src="js/config.js?v=323"></script>
+  <script src="js/prefs.js?v=323"></script>
+  <script src="js/data.js?v=323"></script>
   <script src="js/bar.js?v=323" defer></script>
   <script src="js/gate.js?v=323" defer></script>
   <script src="js/guide.js?v=323"></script>

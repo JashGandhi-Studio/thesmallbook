@@ -82,18 +82,45 @@
 
   const theme = {
     isDark: () => document.documentElement.classList.contains("dark"),
-    toggle() {
-      document.documentElement.classList.toggle("dark");
-      set("tsb_theme", theme.isDark() ? "dark" : "light");
+    getMode() {
+      const m = get("tsb_theme", "auto");
+      return (m === "dark" || m === "light" || m === "auto") ? m : "auto";
+    },
+    set(mode) {
+      const clean = (mode === "dark" || mode === "light" || mode === "auto") ? mode : "auto";
+      set("tsb_theme", clean);
+      theme.apply();
+    },
+    apply() {
+      const mode = theme.getMode();
+      const sysDark = !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+      const wantDark = mode === "dark" || (mode === "auto" && sysDark);
+      document.documentElement.classList.toggle("dark", wantDark);
       /* keep the phone status bar in sync instantly (no flash next load) */
       try {
         var m = document.querySelector('meta[name="theme-color"]');
-        if (m) m.content = theme.isDark() ? "#16130e" : "#ffc800";
+        if (m) m.content = wantDark ? "#16130e" : "#ffc800";
       } catch (e) {}
-      document.querySelectorAll("[data-theme-toggle]").forEach((b) => (b.innerHTML = theme.isDark() ? SVG_SUN : SVG_MOON));
-      if (theme.isDark()) achv.award("night-owl");
+      document.querySelectorAll("[data-theme-toggle]").forEach((b) => (b.innerHTML = wantDark ? SVG_SUN : SVG_MOON));
+      if (wantDark) achv.award("night-owl");
+    },
+    toggle() {
+      const next = theme.isDark() ? "light" : "dark";
+      theme.set(next);
     }
   };
+
+  // Immediate pre-paint theme application
+  try { theme.apply(); } catch (e) {}
+
+  // Match system changes dynamically when in auto mode
+  try {
+    if (window.matchMedia) {
+      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () {
+        if (theme.getMode() === "auto") theme.apply();
+      });
+    }
+  } catch (e) {}
 
   /* ---------- bookmarks ---------- */
   const bookmarks = {
@@ -403,6 +430,7 @@
 
   /* ---------- boot ---------- */
   document.addEventListener("DOMContentLoaded", () => {
+    theme.apply();
     // bind theme toggles
     document.querySelectorAll("[data-theme-toggle]").forEach((b) => {
       b.innerHTML = theme.isDark() ? SVG_SUN : SVG_MOON;
