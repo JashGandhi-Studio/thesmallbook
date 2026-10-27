@@ -205,6 +205,37 @@
         "<div><b>" + C.esc(b.title) + "</b><span>" + C.esc(b.author) + "</span><em>Open in library →</em></div></a>";
     }
 
+    function playChatChime(type) {
+      try {
+        if (window.TSB && window.TSB.sound && typeof window.TSB.sound.play === "function") {
+          window.TSB.sound.play();
+          return;
+        }
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return;
+        var ctx = new AC();
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        if (type === "send") {
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(440, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.08);
+          gain.gain.setValueAtTime(0.12, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+        } else {
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+          osc.frequency.setValueAtTime(880, ctx.currentTime + 0.08);
+          gain.gain.setValueAtTime(0.15, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.16);
+        }
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + (type === "send" ? 0.09 : 0.18));
+      } catch (e) {}
+    }
+
     async function loadThread(silent) {
       var rows = [];
       try { rows = await C.threadWith(uid); } catch (e) {}
@@ -220,6 +251,13 @@
       /* never repaint the thread while a voice note is playing, the old
          6 s poll used to cut people off mid-sentence */
       if (silent && msgs.querySelector(".vp.is-playing")) return;
+      if (silent && lastId && rows.length) {
+        var newest = rows[rows.length - 1];
+        if (newest && newest.sender_id === uid) {
+          playChatChime("recv");
+          try { if (navigator.vibrate) navigator.vibrate([15, 40, 15]); } catch (e4) {}
+        }
+      }
       msgs.setAttribute("data-last", nowLast);
       // WhatsApp-style: a tick is blue if peer has read it OR has replied after it
       function waRead(m, all) {
@@ -291,20 +329,26 @@
       /* v313: replying to a specific bubble? take it and close the bar */
       var replyTo = replyTarget ? replyTarget.getAttribute("data-mid") : "";
       hideReplyBar();
+      playChatChime("send");
+      try { if (navigator.vibrate) navigator.vibrate(10); } catch (e2) {}
       /* optimistic bubble: ✓ = just sent, then ✓✓ once the server confirms */
       var pend = document.createElement("div");
       pend.className = "dm-bub me dm-bub--pend";
       pend.innerHTML = "<span>" + C.esc(body) + '</span><em>just now</em><span class="dm-tick pending">✓</span>';
       msgs.appendChild(pend); msgs.scrollTop = msgs.scrollHeight;
       try {
-        await C.sendDM(uid, body, "", replyTo ? { reply_to: replyTo } : null);
-        await loadThread();
+        var res = await C.sendDM(uid, body, "", replyTo ? { reply_to: replyTo } : null);
+        var tick = pend.querySelector(".dm-tick");
+        if (tick) { tick.className = "dm-tick"; tick.textContent = "✓✓"; }
+        pend.classList.remove("dm-bub--pend");
+        if (res && res.id) pend.setAttribute("data-mid", res.id);
         /* v250: replying IS reading, the "new message" note never comes back */
-        try { C.notifMarkPeer(uid).catch(function () {}); } catch (e2) {}
+        try { C.notifMarkPeer(uid).catch(function () {}); } catch (e3) {}
+        loadThread(true);
       }
       catch (err) {
         pend.classList.add("dm-bub--fail");
-        setTimeout(function () { pend.remove(); }, 4000);
+        setTimeout(function () { try { pend.remove(); } catch (e4) {} }, 4000);
         C.say("Message failed, " + (err && err.message ? err.message : err));
       }
     });
@@ -918,7 +962,15 @@
       var nh = document.getElementById("dmNotesHub");
       if (nh) nh.hidden = true;
       loadThread();
-      setInterval(function () { loadThread(true); }, 6000);
+      var dmPollTimer = setInterval(function () {
+        if (!document.hidden) loadThread(true);
+      }, 2000);
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden) loadThread(true);
+      });
+      window.addEventListener("focus", function () {
+        loadThread(true);
+      });
     }
     });
   })();

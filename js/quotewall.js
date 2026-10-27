@@ -138,11 +138,16 @@
     } catch (e) {}
     return null;
   }
-  function isMine(p) { var u = me(); return !!(u && p.author_id === u.id); }
-  function noteHTML(p, pos) {
+  function isMine(p) {
+    if (p._optimistic) return true;
+    var u = me();
+    return !!(u && p.author_id === u.id);
+  }
+  function noteHTML(p, pos, isSpring) {
+    var springCls = isSpring ? " qw-note--spring" : "";
     if (p.by) {
       var ci2 = hash(p.id) % COLORS.length;
-      return '<div class="qw-note" style="left:' + pos.x + 'px;top:' + pos.y + 'px;background:' + COLORS[ci2] + ';transform:rotate(' + pos.rot + 'deg)" data-p="' + esc(p.id) + '">' +
+      return '<div class="qw-note' + springCls + '" style="left:' + pos.x + 'px;top:' + pos.y + 'px;background:' + COLORS[ci2] + ';transform:rotate(' + pos.rot + 'deg)" data-p="' + esc(p.id) + '">' +
         '<span class="qw-pin"></span>' +
         '<p class="qw-txt">' + esc(p.txt) + '</p>' +
         '<span class="qw-by">- ' + esc(p.by) + '</span>' +
@@ -152,7 +157,8 @@
     var ci = hash(p.id) % COLORS.length;
     var col = noteColor(p) || COLORS[ci];
     if (p.kind === "wall-photo") {
-      return '<div class="qw-photo" style="left:' + pos.x + 'px;top:' + pos.y + 'px;transform:rotate(' + pos.rot + 'deg)" data-p="' + esc(p.id) + '">' +
+      var photoSpring = isSpring ? " qw-photo--spring" : "";
+      return '<div class="qw-photo' + photoSpring + '" data-own="' + (mine ? "1" : "0") + '" style="left:' + pos.x + 'px;top:' + pos.y + 'px;transform:rotate(' + pos.rot + 'deg)" data-p="' + esc(p.id) + '">' +
         '<span class="qw-pin qw-pin--red"></span>' +
         (mine ? '<button class="qw-del" data-del="' + esc(p.id) + '" aria-label="Remove">✕</button>' : '') +
         '<img src="' + esc(p.cover_url || "") + '" alt="pinned photo" loading="lazy">' +
@@ -161,7 +167,7 @@
         '</div>';
     }
     var txt = String(p.body || "").slice(0, 320);
-    return '<div class="qw-note" data-own="' + (mine ? "1" : "0") + '" style="left:' + pos.x + 'px;top:' + pos.y + 'px;background:' + col + ';transform:rotate(' + pos.rot + 'deg)" data-p="' + esc(p.id) + '">' +
+    return '<div class="qw-note' + springCls + '" data-own="' + (mine ? "1" : "0") + '" style="left:' + pos.x + 'px;top:' + pos.y + 'px;background:' + col + ';transform:rotate(' + pos.rot + 'deg)" data-p="' + esc(p.id) + '">' +
       '<span class="qw-pin"></span>' +
       (mine ? '<button class="qw-del" data-del="' + esc(p.id) + '" aria-label="Remove">✕</button>' : '') +
       '<p class="qw-txt">' + esc(txt) + '</p>' +
@@ -172,14 +178,15 @@
   function posOverride(id) {
     try { return JSON.parse(localStorage.getItem("tsb_wall_pos_" + id) || "null"); } catch (e) { return null; }
   }
-  function paint() {
+  function paint(springId) {
     if (!board) return;
     var all = SEEDS.concat(notes);
     var base = layout(all.length + 3);
     var pos = function (id) { var o = posOverride(id); return o ? { x: o.x, y: o.y, rot: o.rot || 0 } : base(id); };
     var html = "";
     all.forEach(function (p) {
-      html += noteHTML(p, pos(p.id));
+      var isSpring = springId && p.id === springId;
+      html += noteHTML(p, pos(p.id), isSpring);
     });
     board.innerHTML = html +
       '<div class="qw-corner">📌 pin something, the board never runs out of space</div>';
@@ -191,7 +198,9 @@
         var id = this.getAttribute("data-del");
         var C = window.TSB_COMMUNITY;
         if (!confirm("Take your pin off the wall?")) return;
-        C.deletePost(id).then(load).catch(function () { alert("Could not remove it, try again."); });
+        notes = notes.filter(function (n) { return n.id !== id; });
+        paint();
+        if (C) C.deletePost(id).catch(function () {});
       });
     });
   }
@@ -457,13 +466,17 @@
         '<div class="qw-sheet__top"><b>📌 PIN TO THE WALL</b><button id="qwSheetX" aria-label="Close">✕</button></div>' +
         '<div class="qw-tabs"><button class="qw-tab on" data-t="note">✍️ WRITE A LINE</button><button class="qw-tab" data-t="photo">📷 PIN A PHOTO</button></div>' +
         '<div class="qw-pane" id="qwPaneNote">' +
-          '<button class="qw-find" id="qwFind" type="button">📚 Find a line first</button>' +
+          '<button class="qw-find" id="qwFind" type="button">📚 Find a line from library or shelf</button>' +
           '<div id="qwFindBox" hidden>' +
-            '<input id="qwSearch" type="text" maxlength="40" placeholder="Search a word or an author…">' +
+            '<div class="qw-sources">' +
+              '<button type="button" class="qw-src on" data-src="books">📚 520 LIBRARY BOOKS</button>' +
+              '<button type="button" class="qw-src" data-src="shelf">📜 CLASSICAL WISDOM</button>' +
+            '</div>' +
+            '<input id="qwSearch" type="text" maxlength="40" placeholder="Search book, author or quote...">' +
             '<div class="qw-topics">' + TOPICS.map(function (tp) { return '<button type="button" class="qw-tp' + (tp[0] === "all" ? " on" : "") + '" data-k="' + tp[0] + '">' + tp[1] + '</button>'; }).join("") + '</div>' +
             '<div class="qw-qlist" id="qwQList"></div>' +
           '</div>' +
-          '<textarea id="qwText" maxlength="300" placeholder="The line, the lesson, the thing you keep repeating to people…"></textarea>' +
+          '<textarea id="qwText" maxlength="300" placeholder="The line, the lesson, the thing you keep repeating to people..."></textarea>' +
           '<div class="qw-colors">' + COLORS.map(function (c, i) { return '<button class="qw-c' + (i === 0 ? " on" : "") + '" data-c="' + c + '" style="background:' + c + '" aria-label="sticky colour"></button>'; }).join("") +
             '<label class="qw-c qw-c--custom" aria-label="custom colour" style="background:conic-gradient(#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#b28dff,#ff6b6b)"><input type="color" id="qwCustom" value="#fff8b8"></label>' +
             '<button class="qw-c qw-c--share" id="qwShareAfter" type="button" aria-label="share after pinning" title="share after pinning">📎</button>' +
@@ -488,27 +501,72 @@
       anonBtn.classList.toggle("on", anon);
     });
     sh.querySelector("#qwSheetX").addEventListener("click", function () { sh.remove(); });
-    /* find-a-line: search + topic chips over the little open shelf */
-    var qTopic = "all", qTerm = "";
+    /* find-a-line: search + topic chips over library books or classical shelf */
+    var qSource = "books", qTopic = "all", qTerm = "";
     function paintQList() {
       var list = sh.querySelector("#qwQList");
       var term = qTerm.trim().toLowerCase();
-      var rows = SHELF.filter(function (q) {
-        if (qTopic !== "all" && q.k !== qTopic) return false;
-        if (term && (q.t + " " + q.a).toLowerCase().indexOf(term) < 0) return false;
-        return true;
-      });
-      list.innerHTML = rows.slice(0, 12).map(function (q, i) {
-        return '<button type="button" class="qw-qi" data-i="' + SHELF.indexOf(q) + '"><span>' + esc(q.t) + '</span><i>' + esc(q.a) + '</i></button>';
-      }).join("") +
-      (rows.length > 12 ? '<p class="qw-qmore">Showing 12 of ' + rows.length + ', refine the search to see more</p>' : '') +
-      (rows.length ? "" : '<p class="qw-qmore">Nothing matched. Type your own below.</p>');
+      if (qSource === "shelf") {
+        var rows = SHELF.filter(function (q) {
+          if (qTopic !== "all" && q.k !== qTopic) return false;
+          if (term && (q.t + " " + q.a).toLowerCase().indexOf(term) < 0) return false;
+          return true;
+        });
+        list.innerHTML = rows.slice(0, 16).map(function (q) {
+          return '<button type="button" class="qw-qi" data-src="shelf" data-i="' + SHELF.indexOf(q) + '"><span>"' + esc(q.t) + '"</span><i>- ' + esc(q.a) + '</i></button>';
+        }).join("") +
+        (rows.length > 16 ? '<p class="qw-qmore">Showing 16 of ' + rows.length + ', refine search to see more</p>' : '') +
+        (rows.length ? "" : '<p class="qw-qmore">Nothing matched in classical shelf. Type your own below.</p>');
+      } else {
+        var bks = window.BOOKS || [];
+        var matches = [];
+        for (var bi = 0; bi < bks.length; bi++) {
+          var b = bks[bi];
+          var catMatch = (qTopic === "all") || (String(b.category || "").toLowerCase().indexOf(qTopic) >= 0);
+          if (!catMatch) {
+            if (qTopic === "habits" && /habit|routine|system|atomic/i.test(b.title + " " + (b.tagline || ""))) catMatch = true;
+            else if (qTopic === "money" && /money|wealth|invest|capital|finance/i.test(b.title + " " + (b.tagline || ""))) catMatch = true;
+            else if (qTopic === "focus" && /focus|deep|distract|time|think/i.test(b.title + " " + (b.tagline || ""))) catMatch = true;
+            else if (qTopic === "calm" && /calm|stoic|mind|peace|zen|meditat/i.test(b.title + " " + (b.tagline || ""))) catMatch = true;
+            else if (qTopic === "courage" && /courage|fear|brave|grit|resilien/i.test(b.title + " " + (b.tagline || ""))) catMatch = true;
+            else if (qTopic === "discipline" && /discipline|willpower|control|ego/i.test(b.title + " " + (b.tagline || ""))) catMatch = true;
+            else if (qTopic === "life" && /life|meaning|man|death|happy/i.test(b.title + " " + (b.tagline || ""))) catMatch = true;
+          }
+          if (!catMatch) continue;
+
+          var bQuotes = b.quotes || [];
+          if (b.oneLiner) bQuotes = bQuotes.concat([b.oneLiner]);
+          for (var qi = 0; qi < bQuotes.length; qi++) {
+            var qStr = String(bQuotes[qi]).trim();
+            if (!qStr) continue;
+            var fullSearch = (qStr + " " + b.title + " " + b.author).toLowerCase();
+            if (!term || fullSearch.indexOf(term) >= 0) {
+              matches.push({ q: qStr, a: b.author, book: b.title, bookId: b.id });
+              if (matches.length >= 24) break;
+            }
+          }
+          if (matches.length >= 24) break;
+        }
+        sh._currentBookMatches = matches;
+        list.innerHTML = matches.map(function (m, idx) {
+          return '<button type="button" class="qw-qi" data-src="books" data-idx="' + idx + '"><span>"' + esc(m.q) + '"</span><i>- ' + esc(m.a) + ' (' + esc(m.book) + ')</i></button>';
+        }).join("") +
+        (matches.length >= 24 ? '<p class="qw-qmore">Showing 24 matching book quotes, type a book or author name to narrow down</p>' : '') +
+        (matches.length ? "" : '<p class="qw-qmore">No matching book quotes. Try searching an author or book title.</p>');
+      }
     }
     sh.querySelector("#qwFind").addEventListener("click", function () {
       var box = sh.querySelector("#qwFindBox");
       box.hidden = !box.hidden;
-      this.textContent = box.hidden ? "📚 Find a line first" : "✕ Hide the shelf";
+      this.textContent = box.hidden ? "📚 Find a line from library or shelf" : "✕ Hide quote finder";
       if (!box.hidden) { paintQList(); sh.querySelector("#qwSearch").focus(); }
+    });
+    sh.querySelectorAll(".qw-src").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        sh.querySelectorAll(".qw-src").forEach(function (x) { x.classList.toggle("on", x === btn); });
+        qSource = btn.getAttribute("data-src");
+        paintQList();
+      });
     });
     sh.querySelector("#qwSearch").addEventListener("input", function () { qTerm = this.value; paintQList(); });
     sh.querySelector(".qw-topics").addEventListener("click", function (e) {
@@ -518,12 +576,21 @@
     });
     sh.querySelector("#qwQList").addEventListener("click", function (e) {
       var b = e.target.closest(".qw-qi"); if (!b) return;
-      var q = SHELF[Number(b.getAttribute("data-i"))];
+      var srcType = b.getAttribute("data-src");
       var ta = sh.querySelector("#qwText");
-      ta.value = '"' + q.t + '" - ' + q.a;
+      if (srcType === "books") {
+        var mList = sh._currentBookMatches || [];
+        var item = mList[Number(b.getAttribute("data-idx"))];
+        if (item) {
+          ta.value = '"' + item.q + '" - ' + item.a + ' (' + item.book + ')';
+        }
+      } else {
+        var q = SHELF[Number(b.getAttribute("data-i"))];
+        if (q) ta.value = '"' + q.t + '" - ' + q.a;
+      }
       ta.focus();
       sh.querySelector("#qwFindBox").hidden = true;
-      sh.querySelector("#qwFind").textContent = "📚 Find a line first";
+      sh.querySelector("#qwFind").textContent = "📚 Find a line from library or shelf";
     });
     sh.querySelectorAll(".qw-tab").forEach(function (t) {
       t.addEventListener("click", function () {
@@ -567,23 +634,114 @@
     $("qwPinNote").addEventListener("click", async function () {
       var txt = ($("qwText").value || "").trim();
       if (!txt) { $("qwText").focus(); return; }
-      this.textContent = "📌 pinning…"; this.disabled = true;
+
+      var optId = "opt-" + Date.now();
+      var tags = ["wall", "c:" + String(color).replace("#", "")];
+      var optNote = {
+        id: optId,
+        author_id: u ? u.id : "me",
+        author_name: anon ? "A reader" : ((u && (u.name || (u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)))) || "Reader"),
+        body: txt,
+        kind: "wall-note",
+        tags: tags,
+        created_at: new Date().toISOString(),
+        _optimistic: true
+      };
+
+      // Spawn in viewport center
+      var vpEl = $("qwVp");
+      var vpRect = vpEl ? vpEl.getBoundingClientRect() : { width: 400, height: 600 };
+      var spawnX = Math.round((vpRect.width / 2 - view.x) / view.s - 94);
+      var spawnY = Math.round((vpRect.height / 2 - view.y) / view.s - 60);
+      var rot = (Math.floor(Math.random() * 9) - 4);
       try {
-        var tags = ["wall", "c:" + String(color).replace("#", "")];
-        await C.publish({ title: "", subtitle: "", body: txt, kind: "wall-note", tags: tags, cover_url: "", audio_url: "", anon: anon });
-        sh.remove();
-        toast("📌 Pinned. The whole library can see it now.");
-        if (shareAfter) shareNote(txt, (anon ? "a reader" : (u.name || "")));
-        load();
+        localStorage.setItem("tsb_wall_pos_" + optId, JSON.stringify({
+          x: Math.max(16, spawnX),
+          y: Math.max(30, spawnY),
+          rot: rot
+        }));
+      } catch (e0) {}
+
+      // Play tactile pin sound + haptics
+      playPinSound();
+      try { if (navigator.vibrate) navigator.vibrate([15, 30, 20]); } catch (e1) {}
+
+      // Immediate local board paint with spring animation!
+      notes.unshift(optNote);
+      paint(optId);
+      $("qwCount").textContent = (SEEDS.length + notes.length) + " PINS";
+      sh.remove();
+      toast("📌 Pinned! The whole library can see it now.");
+      if (shareAfter) shareNote(txt, (anon ? "a reader" : (u ? (u.name || "Reader") : "Reader")));
+
+      // Background dispatch to Supabase
+      try {
+        var res = await C.publish({ title: "", subtitle: "", body: txt, kind: "wall-note", tags: tags, cover_url: "", audio_url: "", anon: anon });
+        if (res && res.id) {
+          var realId = res.id;
+          optNote.id = realId;
+          delete optNote._optimistic;
+          var savedPos = localStorage.getItem("tsb_wall_pos_" + optId);
+          if (savedPos) {
+            localStorage.setItem("tsb_wall_pos_" + realId, savedPos);
+            localStorage.removeItem("tsb_wall_pos_" + optId);
+          }
+          var el = board ? board.querySelector('[data-p="' + optId + '"]') : null;
+          if (el) el.setAttribute("data-p", realId);
+        }
       } catch (e) {
-        this.textContent = "📌 PIN IT"; this.disabled = false;
-        if (/sign-in/i.test(String(e && e.message))) location.href = "login.html?next=quotes.html";
-        else toast("Could not pin: " + String(e && e.message || "").slice(0, 80));
+        if (/sign-in/i.test(String(e && e.message))) {
+          location.href = "login.html?next=quotes.html";
+        } else {
+          notes = notes.filter(function (n) { return n.id !== optId; });
+          paint();
+          toast("Could not pin: " + String(e && e.message || "").slice(0, 80));
+        }
       }
     });
     $("qwPinPhoto").addEventListener("click", async function () {
       if (!file) { $("qwPick").click(); return; }
-      this.textContent = "📌 pinning…"; this.disabled = true;
+      var cap = ($("qwCap").value || "").trim();
+      var optId = "opt-ph-" + Date.now();
+      var localBlob = URL.createObjectURL(file);
+      var optPhoto = {
+        id: optId,
+        author_id: u ? u.id : "me",
+        author_name: anon ? "A reader" : ((u && (u.name || (u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)))) || "Reader"),
+        body: cap,
+        kind: "wall-photo",
+        tags: ["wall"],
+        cover_url: localBlob,
+        created_at: new Date().toISOString(),
+        _optimistic: true
+      };
+
+      // Spawn in viewport center
+      var vpEl = $("qwVp");
+      var vpRect = vpEl ? vpEl.getBoundingClientRect() : { width: 400, height: 600 };
+      var spawnX = Math.round((vpRect.width / 2 - view.x) / view.s - 104);
+      var spawnY = Math.round((vpRect.height / 2 - view.y) / view.s - 80);
+      var rot = (Math.floor(Math.random() * 9) - 4);
+      try {
+        localStorage.setItem("tsb_wall_pos_" + optId, JSON.stringify({
+          x: Math.max(16, spawnX),
+          y: Math.max(30, spawnY),
+          rot: rot
+        }));
+      } catch (e0) {}
+
+      // Play tactile pin sound + haptics
+      playPinSound();
+      try { if (navigator.vibrate) navigator.vibrate([15, 30, 20]); } catch (e1) {}
+
+      // Immediate local board paint with spring animation!
+      notes.unshift(optPhoto);
+      paint(optId);
+      $("qwCount").textContent = (SEEDS.length + notes.length) + " PINS";
+      sh.remove();
+      toast("📌 Pinned! The photo is now on the board.");
+
+      // Background upload + publish
       try {
         var small = await new Promise(function (res) {
           var r = new FileReader();
@@ -593,11 +751,24 @@
         var blob = await (await fetch(small)).blob();
         var f2 = new File([blob], "wall-" + Date.now() + ".jpg", { type: "image/jpeg" });
         var url = await C.upload(f2, "tsb-covers");
-        await C.publish({ title: "", subtitle: "", body: ($("qwCap").value || "").trim(), kind: "wall-photo", tags: ["wall"], cover_url: url, audio_url: "", anon: anon });
-        sh.remove(); toast("📌 Pinned."); load();
+        var res = await C.publish({ title: "", subtitle: "", body: cap, kind: "wall-photo", tags: ["wall"], cover_url: url, audio_url: "", anon: anon });
+        if (res && res.id) {
+          var realId = res.id;
+          optPhoto.id = realId;
+          optPhoto.cover_url = url;
+          delete optPhoto._optimistic;
+          var savedPos = localStorage.getItem("tsb_wall_pos_" + optId);
+          if (savedPos) {
+            localStorage.setItem("tsb_wall_pos_" + realId, savedPos);
+            localStorage.removeItem("tsb_wall_pos_" + optId);
+          }
+          var el = board ? board.querySelector('[data-p="' + optId + '"]') : null;
+          if (el) el.setAttribute("data-p", realId);
+        }
       } catch (e) {
-        this.textContent = "📌 PIN THE PHOTO"; this.disabled = false;
-        toast("Could not pin: " + String(e && e.message || "").slice(0, 80));
+        notes = notes.filter(function (n) { return n.id !== optId; });
+        paint();
+        toast("Could not pin photo: " + String(e && e.message || "").slice(0, 80));
       }
     });
   }

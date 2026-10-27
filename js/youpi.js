@@ -304,6 +304,10 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
             </button>
             <div id="ypgStatusMsg" class="ypg-status-msg" style="display:none;"></div>
           </div>
+
+          <div style="margin-top:10px; font-size:10px; color:#777; text-align:center; line-height:1.4;">
+            🔒 DPDP Act Compliant: Zero telemetry leak. Data processed strictly for receipt matching under India Digital Personal Data Protection Act, 2023.
+          </div>
         </div>
       </div>
     `;

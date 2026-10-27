@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <radialGradient id="glow_hidden-brain" cx="75%" cy="25%" r="65%">
+      <stop offset="0%" stop-color="#c084fc" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#1a1226" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="400" fill="#1a1226"/>
+  <rect width="400" height="400" fill="url(#glow_hidden-brain)"/>
+  
+  <rect x="12" y="12" width="376" height="376" fill="none" stroke="#c084fc" stroke-width="3" rx="16"/>
+  
+  <rect x="32" y="36" width="138" height="26" rx="13" fill="#c084fc"/>
+  <text x="44" y="53" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="10" fill="#0d0d0d" letter-spacing="1">SCIENCE - MIND</text>
+  
+  <g transform="translate(320, 36)">
+    <circle cx="18" cy="18" r="18" fill="rgba(255,255,255,0.08)" stroke="#c084fc" stroke-width="1.5"/>
+    <path d="M18 10a4 4 0 0 0-4 4v4a4 4 0 0 0 8 0v-4a4 4 0 0 0-4-4z" fill="#c084fc"/>
+    <path d="M11 17a7 7 0 0 0 14 0M18 24v4M14 28h8" fill="none" stroke="#c084fc" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  
+  <text x="32" y="235" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="34" fill="#ffffff">Hidden Brain</text>
+  
+  <line x1="32" y1="295" x2="368" y2="295" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+  
+  <text x="32" y="328" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="11" fill="#d6ccba" letter-spacing="1">HOST</text>
+  <text x="32" y="356" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="18" fill="#c084fc">Shankar Vedantam</text>
+</svg>

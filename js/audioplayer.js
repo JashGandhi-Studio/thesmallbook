@@ -306,19 +306,23 @@
       if (Math.abs(e.clientY - sy) > Math.abs(e.clientX - sx)) return;
       dx = Math.max(0, e.clientX - sx);
       dock.style.transform = "translateX(" + dx + "px) rotate(" + (dx * 0.03) + "deg)";
+      dock.style.opacity = Math.max(0.1, 1 - (dx / (window.innerWidth * 0.6)));
     });
     function end(e) {
       if (!drag) return;
       drag = false;
-      dock.style.transition = "";
       /* v315: a tap (not a swipe) on the title or art opens the full player */
       if (dx < 8 && e && e.target && !e.target.closest("button")) { openSheet(); return; }
       if (dx > Math.min(140, window.innerWidth * 0.35)) {
+        dock.style.transition = "transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.18s ease";
         dock.style.transform = "translateX(" + window.innerWidth + "px) rotate(7deg)";
         dock.style.opacity = "0";
         setTimeout(function () { stopAll(); toast("Player closed. Your spot is kept."); }, 190);
       } else {
-        resetDockPose();
+        dock.style.transition = "transform 0.24s cubic-bezier(0.18, 0.89, 0.32, 1.25), opacity 0.2s ease";
+        dock.style.transform = "translateX(0) rotate(0deg)";
+        dock.style.opacity = "1";
+        setTimeout(function () { resetDockPose(); }, 250);
       }
     }
     dock.addEventListener("pointerup", end);
@@ -538,29 +542,58 @@
       }
     })();
     sheet.classList.toggle("ap-playing", !!playing());
-    /* v314: swipe the head (or the grip) down and the sheet follows your
-       finger; let go past 90px and it closes, else it snaps back */
+    /* Butter-smooth swipe down to close the full player */
     (function () {
       var head2 = sheet.querySelector(".ap-head"), card2 = sheet.querySelector(".ap-card");
+      if (!head2 || !card2) return;
       var sy2 = 0, dy2 = 0, drag2 = false;
+
       head2.addEventListener("pointerdown", function (e) {
-        if (e.target.closest(".ap-x")) return;
-        drag2 = true; sy2 = e.clientY; dy2 = 0;
-        try { card2.style.transition = "none"; } catch (e3) {}
+        if (e.target.closest(".ap-x") || e.target.closest("button") || e.target.closest("input")) return;
+        drag2 = true;
+        sy2 = e.clientY;
+        dy2 = 0;
+        try { if (e.target.setPointerCapture) e.target.setPointerCapture(e.pointerId); } catch (eC) {}
+        try { card2.style.transition = "none"; sheet.style.transition = "none"; } catch (e3) {}
       });
+
       head2.addEventListener("pointermove", function (e) {
         if (!drag2) return;
         dy2 = Math.max(0, e.clientY - sy2);
         card2.style.transform = "translateY(" + dy2 + "px)";
+        var op = Math.max(0.15, 1 - (dy2 / (window.innerHeight * 0.75)));
+        sheet.style.opacity = op;
       });
+
       function end2() {
         if (!drag2) return;
         drag2 = false;
-        try { card2.style.transition = ""; card2.style.transform = ""; } catch (e3) {}
+        if (dy2 > 90) {
+          card2.style.transition = "transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1)";
+          card2.style.transform = "translateY(105%)";
+          sheet.style.transition = "opacity 0.2s ease";
+          sheet.style.opacity = "0";
+          setTimeout(function () { closeSheet(); }, 210);
+          return;
+        }
+        card2.style.transition = "transform 0.26s cubic-bezier(0.18, 0.89, 0.32, 1.25)";
+        card2.style.transform = "translateY(0)";
+        sheet.style.transition = "opacity 0.2s ease";
+        sheet.style.opacity = "1";
+        setTimeout(function () {
+          try {
+            card2.style.transition = "";
+            card2.style.transform = "";
+            if (sheet) { sheet.style.transition = ""; sheet.style.opacity = ""; }
+          } catch (e3) {}
+        }, 270);
         if (dy2 > 90) closeSheet();
       }
+
       head2.addEventListener("pointerup", end2);
       head2.addEventListener("pointercancel", end2);
+      var grip2 = head2.querySelector(".ap-grip");
+      if (grip2) grip2.style.touchAction = "none";
     })();
     /* live repaint: seek slider, times, big play glyph, sleep countdown */
     sheet._apTick = setInterval(function () {
@@ -1471,7 +1504,7 @@
         ch: pos ? pos.ch : 0,
         seek: pos ? pos.t : 0,
         credit: "Read by volunteers for LibriVox (public domain), streamed from Archive.org. TheSmallBook hosts nothing; we just point at the free shelves.",
-        art: ("assets/covers/" + (b.id || bookId) + ".jpg")
+        art: (b && b.cover) ? b.cover : ("assets/covers/" + (b.id || bookId) + ".jpg")
       }));
     });
   }
@@ -1511,7 +1544,7 @@
           seek: pos.t || 0,
           autoplay: auto,
           credit: "Read by volunteers for LibriVox (public domain), streamed from Archive.org.",
-          art: ("assets/covers/" + (b.id || bid) + ".jpg")
+          art: (b && b.cover) ? b.cover : ("assets/covers/" + (b.id || bid) + ".jpg")
         }));
         if (sleepHold) toast("😴 Restored where the sleep timer paused it - tap play.");
       });

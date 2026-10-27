@@ -1592,11 +1592,23 @@
   function lastSeenText(ms) {
     if (!ms) return "";
     var d = Date.now() - ms;
-    if (d < 90 * 1000) return "online now";
-    if (d < 3600 * 1000) return "last seen " + Math.max(1, Math.round(d / 60000)) + "m ago";
-    if (d < 24 * 3600 * 1000) return "last seen " + Math.round(d / 3600000) + "h ago";
-    if (d < 7 * 24 * 3600 * 1000) return "last seen " + Math.round(d / 86400000) + "d ago";
-    return "last seen " + ago(new Date(ms).toISOString());
+    if (d < 90 * 1000) return "Active now";
+    if (d < 3600 * 1000) {
+      var mins = Math.max(1, Math.round(d / 60000));
+      return "Active " + mins + (mins === 1 ? " min ago" : " mins ago");
+    }
+    if (d < 24 * 3600 * 1000) {
+      var hrs = Math.round(d / 3600000);
+      return hrs <= 1 ? "Active 1 hour ago" : "Active " + hrs + " hours ago";
+    }
+    if (d < 48 * 3600 * 1000) return "Active yesterday";
+    if (d < 7 * 24 * 3600 * 1000) {
+      var days = Math.round(d / 86400000);
+      return "Active " + days + (days === 1 ? " day ago" : " days ago");
+    }
+    if (d < 14 * 24 * 3600 * 1000) return "Active last week";
+    if (d < 30 * 24 * 3600 * 1000) return "Active a month ago";
+    return "Active recently";
   }
   function privacyOf(person) {
     var pub = linkBucket(person && person.links, "pub", {}) || {};

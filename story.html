@@ -263,12 +263,19 @@
       if (fb) fb.addEventListener("click", async function () {
         if (!C.signedIn()) { location.href = "login.html"; return; }
         var on = !this.classList.contains("on");
+        this.classList.toggle("on", on);
+        this.textContent = on ? "✓ Following" : "+ Follow";
+        try { if (navigator.vibrate) navigator.vibrate(10); } catch (e0) {}
         try {
           await C.setFollow(p.author_id, on);
           var f = await C.followInfo(p.author_id);
           this.classList.toggle("on", f.mine);
           this.textContent = f.mine ? "✓ Following" : "+ Follow";
-        } catch (e) { this.classList.toggle("on", !on); C.say("Follow failed, " + (e && e.message ? e.message : e)); }
+        } catch (e) {
+          this.classList.toggle("on", !on);
+          this.textContent = !on ? "✓ Following" : "+ Follow";
+          C.say("Follow failed, " + (e && e.message ? e.message : e));
+        }
       });
       var lb = root.querySelector("[data-audio]");
       if (lb) lb.addEventListener("click", function () { C.playAudio(lb.getAttribute("data-audio"), lb.getAttribute("data-title")); });

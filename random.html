@@ -79,8 +79,8 @@
     .library-shelves-backdrop {
       position: absolute;
       top: 50px;
-      left: 0;
-      right: 0;
+      left: -32px;
+      right: -32px;
       height: 380px;
       opacity: 0.22;
       background-image:
@@ -95,6 +95,7 @@
         );
       box-shadow: inset 0 -50px 70px #120e0a;
       filter: blur(2.5px);
+      will-change: transform;
     }
 
     .library-floating-motes {
@@ -117,9 +118,9 @@
     /* Polished Oak Desk in Foreground */
     .desk-surface {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: -10px;
+      left: -24px;
+      right: -24px;
       height: 48%;
       background: linear-gradient(to bottom, #cfa875 0%, #b38954 22%, #8b6233 70%, #583a1b 100%);
       box-shadow: inset 0 16px 36px rgba(0,0,0,0.5);
@@ -127,6 +128,7 @@
       z-index: 2;
       pointer-events: none;
       transition: opacity 0.4s ease;
+      will-change: transform;
     }
 
     /* =========================================================
@@ -1415,15 +1417,6 @@
         <span id="labelOpenBtn">OPEN</span>
       </button>
 
-      <!-- Direct Read Breakdown Link -->
-      <a href="#" class="rnd-nav-btn rnd-nav-btn--read" id="navReadFull" title="Read complete chapter breakdown" style="background:var(--yellow);color:#111;text-decoration:none;font-weight:800;display:inline-flex;align-items:center;gap:6px;">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-        </svg>
-        <span>READ</span>
-      </a>
-
       <!-- Save to Shelf Bookmark Toggle -->
       <button type="button" class="rnd-nav-btn rnd-nav-btn--save" id="btnSaveBook" title="Save book to your shelf">
         <svg id="iconBookmark" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1849,6 +1842,9 @@
       var btnPageClose = document.getElementById("btnPageClose");
       var hintText = document.getElementById("hintText");
       var shelvesContainer = document.getElementById("shelvesContainer");
+      var deskSurfacePlank = document.getElementById("deskSurfacePlank");
+      var envShelves = document.querySelector(".library-shelves-backdrop");
+      var envGlow = document.querySelector(".library-lamp-glow");
 
       var currentBook = null;
       var activeMode = "desk"; // "desk" | "shelves"
@@ -1872,22 +1868,40 @@
       var targetTiltY = 0;
       var targetTiltX = 0;
       var tiltAnimId = null;
+      var hasDeviceOrientation = false;
 
       function update3DTransform() {
         if (!bookPhysical || bookPhysical.classList.contains("is-open")) return;
         var totalRotY = rotY + tiltY;
-        var totalRotX = Math.max(-38, Math.min(38, rotX + tiltX));
+        var totalRotX = Math.max(-42, Math.min(42, rotX + tiltX));
         bookPhysical.style.transform = "rotateY(" + totalRotY + "deg) rotateX(" + totalRotX + "deg)";
 
         // Shift dynamic floor shadow opposite to rotation angle
         if (bookFloorShadow) {
-          var shadowOffsetX = -Math.sin(totalRotY * Math.PI / 180) * 20;
-          bookFloorShadow.style.transform = "translateX(" + shadowOffsetX + "px)";
+          var shadowOffsetX = -Math.sin(totalRotY * Math.PI / 180) * 34;
+          var shadowScaleX = 1 + Math.abs(Math.sin(totalRotY * Math.PI / 180)) * 0.35;
+          bookFloorShadow.style.transform = "translateX(" + shadowOffsetX + "px) scaleX(" + shadowScaleX + ")";
         }
 
         // Shift specular sheen across book cover
         if (coverSheen) {
-          coverSheen.style.background = "linear-gradient(" + (135 + totalRotY * 0.35) + "deg, rgba(255,255,255,0.26) 0%, transparent 45%, rgba(0,0,0,0.2) 100%)";
+          var sheenAngle = 135 + totalRotY * 0.75;
+          coverSheen.style.background = "linear-gradient(" + sheenAngle + "deg, rgba(255,255,255,0.36) 0%, transparent 46%, rgba(0,0,0,0.22) 100%)";
+        }
+
+        // 2.5D ambient room parallax: shelves and glow shift slightly opposite to phone tilt
+        if (envShelves) {
+          var sX = -tiltY * 0.7;
+          var sY = -tiltX * 0.45;
+          envShelves.style.transform = "translate3d(" + sX + "px, " + sY + "px, 0)";
+        }
+        if (envGlow) {
+          var gX = -tiltY * 0.45;
+          envGlow.style.transform = "translateX(calc(-50% + " + gX + "px))";
+        }
+        if (deskSurfacePlank) {
+          var dY = tiltX * 0.35;
+          deskSurfacePlank.style.transform = "translate3d(0, " + dY + "px, 0)";
         }
       }
 
@@ -1902,8 +1916,8 @@
             var diffY = targetTiltY - tiltY;
             var diffX = targetTiltX - tiltX;
             if (Math.abs(diffY) > 0.01 || Math.abs(diffX) > 0.01) {
-              tiltY += diffY * 0.12;
-              tiltX += diffX * 0.12;
+              tiltY += diffY * 0.14;
+              tiltX += diffX * 0.14;
               update3DTransform();
             }
           }
@@ -1912,19 +1926,51 @@
         tiltAnimId = requestAnimationFrame(tiltLoop);
       }
 
-      if (window.DeviceOrientationEvent) {
+      function bindOrientation() {
+        if (!window.DeviceOrientationEvent) return;
         window.addEventListener("deviceorientation", function (e) {
           if (!e || e.gamma === null || e.beta === null) return;
+          hasDeviceOrientation = true;
           if (!bookPhysical || bookPhysical.classList.contains("is-open")) return;
-          // Subtly clamp gamma (+/- 15deg) to +/- 3deg book rotation
-          var g = Math.max(-15, Math.min(15, e.gamma));
-          targetTiltY = g * 0.2;
-          // Normal phone holding angle baseline is ~45deg
-          var b = Math.max(-15, Math.min(15, (e.beta || 45) - 45));
-          targetTiltX = -b * 0.15;
+
+          // Responsive natural tilt:
+          // Gamma is left/right roll (-90 to +90). Range clamped to +/- 36deg.
+          var g = Math.max(-36, Math.min(36, e.gamma));
+          targetTiltY = g * 0.48; // Results in noticeable +/- 17deg 3D tilt
+
+          // Beta is front/back pitch. Normal phone holding angle is ~42deg.
+          var b = Math.max(-32, Math.min(32, (e.beta || 42) - 42));
+          targetTiltX = -b * 0.38; // Results in noticeable +/- 12deg pitch
           startTiltLoop();
         }, { passive: true });
       }
+
+      // iOS 13+ motion permission handler
+      function requestOrientationPermission() {
+        if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") {
+          DeviceOrientationEvent.requestPermission().then(function (resp) {
+            if (resp === "granted") bindOrientation();
+          }).catch(function () {});
+        } else {
+          bindOrientation();
+        }
+        window.removeEventListener("touchstart", requestOrientationPermission);
+        window.removeEventListener("click", requestOrientationPermission);
+      }
+      window.addEventListener("touchstart", requestOrientationPermission, { passive: true });
+      window.addEventListener("click", requestOrientationPermission, { passive: true });
+      bindOrientation();
+
+      // Desktop Pointer fallback parallax when gyroscope is absent
+      window.addEventListener("pointermove", function (e) {
+        if (hasDeviceOrientation || isDragging) return;
+        if (!bookPhysical || bookPhysical.classList.contains("is-open")) return;
+        var normX = (e.clientX / window.innerWidth) - 0.5;
+        var normY = (e.clientY / window.innerHeight) - 0.5;
+        targetTiltY = normX * 18;
+        targetTiltX = -normY * 14;
+        startTiltLoop();
+      }, { passive: true });
 
       function startInertia() {
         if (inertiaAnimId) cancelAnimationFrame(inertiaAnimId);

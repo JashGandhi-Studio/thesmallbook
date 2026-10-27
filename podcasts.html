@@ -15,8 +15,14 @@
   <meta name="theme-color" content="#ffc800">
   <script>
     try {
-      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      var rawTh = localStorage.getItem("tsb_theme");
+      var hr = new Date().getHours();
+      var isNight = (hr < 6 || hr >= 18);
+      var isExplicitDark = rawTh === '"dark"' || rawTh === 'dark';
+      var isExplicitLight = rawTh === '"light"' || rawTh === 'light';
+      var tsbDark = isExplicitDark || (!isExplicitLight && isNight);
       if (tsbDark) document.documentElement.classList.add("dark");
+      else document.documentElement.classList.remove("dark");
       var tsbTC = document.querySelector('meta[name="theme-color"]');
       if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
@@ -181,7 +187,27 @@
        every card saves to YOUR SHOWS with the heart in its corner. */
     var SHOW_STEP = 6, shown = SHOW_STEP;
     function allShows() {
-      return D.shows.concat(window.TSB_SHOWS_EXTRA || []);
+      var base = D.shows.concat(window.TSB_SHOWS_EXTRA || []);
+      var lead = "";
+      var ints = [];
+      try {
+        lead = JSON.parse(localStorage.getItem("tsb_ob_lead") || '""');
+        ints = JSON.parse(localStorage.getItem("tsb_interests") || '[]');
+      } catch (e) {}
+      var term = (lead + " " + ints.join(" ")).toLowerCase();
+      var favCat = null;
+      if (/money|finance|invest|compounding/.test(term)) favCat = "money";
+      else if (/productivity|focus|mind|health|habit|overthinking/.test(term)) favCat = "mind";
+      else if (/business|startup|founder|leadership/.test(term)) favCat = "founders";
+      else if (/psychology|power|strategy|creativity|history|book/.test(term)) favCat = "books";
+
+      if (!favCat) return base;
+      var fav = [], other = [];
+      base.forEach(function (s) {
+        if (s.cat === favCat) fav.push(s);
+        else other.push(s);
+      });
+      return fav.concat(other);
     }
     function showsMine() { try { return (window.TSB && TSB.bookmarks) ? TSB.bookmarks.list().filter(function (x) { return x.indexOf("show:") === 0; }).map(function (x) { return x.slice(5); }) : []; } catch (e0) { return []; } }
     function originals() { return (window.TSB_PODCASTS && TSB_PODCASTS.originals) || null; }
@@ -215,7 +241,7 @@
         origCard = '<div class="pc-show pc-show--orig">' +
           '<span class="pc-orig__tag">🎙️ TSB ORIGINAL · RECORDED BY YOUR APP</span>' +
           '<img class="pc-orig__art" src="' + esc(O.art) + '" alt="" onerror="this.style.display=\'none\'">' +
-          '<div class="pc-show__tx"><b>' + esc(O.name) + '</b><i>with ' + esc(O.host || "the library") + '</i>' +
+          '<div class="pc-show__tx"><b>' + esc(O.name) + '</b><i>by ' + esc(O.host || "TheSmallBook Studio") + '</i>' +
           '<p>' + esc(O.why || "") + '</p>' +
           '<span class="pc-show__acts"><button class="pc-play" data-feed="tsb-show">▶ PLAY</button>' +
           '<button class="pc-browse" data-obrowse="1">☰ ' + O.episodes.length + ' EPISODES</button></span></div></div>';
@@ -496,7 +522,8 @@
         var words = String(rec.title || "Audiobook").split(" ").slice(0, 3).join(" ");
         fallback = '<span class="pc-ab__dev"><b>' + esc(words) + '</b><i>FRESH FROM LIBRIVOX</i></span>';
       }
-      var cover = '<img class="pc-ab__cover" data-fb="' + esc(fallback) + '" src="assets/covers/' + esc(bid) + '.jpg?v=323" alt="" loading="lazy">';
+      var coverSrc = (b && b.cover) ? b.cover : ("assets/covers/" + esc(bid) + ".jpg?v=323");
+      var cover = '<img class="pc-ab__cover" data-fb="' + esc(fallback) + '" src="' + esc(coverSrc) + '" alt="" loading="lazy">';
       var isSaved = saved().indexOf(bid) >= 0;
       return '<div class="pc-ab__card' + (hi ? " pc-ab__card--hi" : "") + '">' +
         cover +
@@ -515,8 +542,35 @@
        v314: rebuilt on every paint, so WANT MORE books join the mix. */
     function mixedBids() {
       var allBids = Object.keys(AB);
+      var lead = "";
+      var ints = [];
+      try {
+        lead = JSON.parse(localStorage.getItem("tsb_ob_lead") || '""');
+        ints = JSON.parse(localStorage.getItem("tsb_interests") || '[]');
+      } catch (e) {}
+      var term = (lead + " " + ints.join(" ")).toLowerCase();
+      var prioritized = [];
+      if (/money|finance|invest|compounding/.test(term)) {
+        prioritized = ["richest-man-babylon", "science-of-getting-rich", "franklin-autobiography", "as-a-man-thinketh", "science-of-being-great", "acres-of-diamonds"];
+      } else if (/productivity|focus|mind|health|habit|overthinking/.test(term)) {
+        prioritized = ["meditations", "letters-from-a-stoic", "shortness-of-life", "tao-te-ching", "siddhartha", "enchiridion"];
+      } else if (/business|startup|founder|strategy|power/.test(term)) {
+        prioritized = ["the-prince", "art-of-war", "common-sense", "meditations", "public-speaking", "franklin-autobiography"];
+      } else if (/history|psychology|creativity/.test(term)) {
+        prioritized = ["walden", "the-prophet", "odyssey", "zarathustra", "bhagavad-gita", "siddhartha"];
+      }
+
       var hi = allBids.filter(function (b) { return AB[b].lang === "hi"; });
       var en = allBids.filter(function (b) { return AB[b].lang !== "hi"; });
+
+      if (prioritized.length) {
+        var topMatched = [];
+        var remEn = [];
+        prioritized.forEach(function (p) { if (en.indexOf(p) >= 0) topMatched.push(p); });
+        en.forEach(function (b) { if (topMatched.indexOf(b) < 0) remEn.push(b); });
+        en = topMatched.concat(remEn);
+      }
+
       var out = [], e = 0, h = 0;
       while (e < en.length || h < hi.length) {
         for (var k = 0; k < 3 && e < en.length; k++) out.push(en[e++]);
@@ -571,12 +625,13 @@
       abIds.forEach(function (bid) {
         var rec = AB[bid] || {};
         var b = B.filter(function (x) { return x.id === bid; })[0] || {};
+        var coverUrl = (b && b.cover) ? b.cover : ("assets/covers/" + bid + ".jpg?v=323");
         items.push({
           type: "ab",
           id: bid,
           title: b.title || rec.title || bid,
           subtitle: rec.author || b.author || "LibriVox Volunteer",
-          cover: "assets/covers/" + bid + ".jpg?v=323",
+          cover: coverUrl,
           badge: "AUDIOBOOK"
         });
       });
@@ -585,12 +640,21 @@
         var sh = allShows.filter(function (x) { return x.id === sid; })[0];
         if (!sh && orig && orig.id === sid) sh = orig;
         if (sh) {
+          var showArt = sh.art || ("assets/podcasts/" + sh.id + ".svg");
+          try {
+            if (sh.rss) {
+              var fkey = sh.rss.replace(/[^a-zA-Z0-9]/g, "").slice(-32);
+              var c1 = JSON.parse(localStorage.getItem("tsb_feed_" + fkey) || "null");
+              var c2 = JSON.parse(localStorage.getItem("tsb_feed_good_" + fkey) || "null");
+              if ((c1 && c1.art) || (c2 && c2.art)) showArt = (c1 && c1.art) || (c2 && c2.art);
+            }
+          } catch (eArt) {}
           items.push({
             type: "show",
             id: sid,
-            title: sh.name,
+            title: sh.name || sid,
             subtitle: sh.host ? "with " + sh.host : "Podcast",
-            cover: sh.art || "assets/covers/knowledge-project.jpg",
+            cover: showArt,
             badge: "PODCAST"
           });
         }
@@ -599,7 +663,14 @@
       shelfEl.innerHTML = items.map(function (item) {
         return '<div class="pc-myshelf__card">' +
           '<button class="pc-myshelf__save" data-unsave="' + item.type + ':' + esc(item.id) + '" aria-label="Remove from shelf">❤️</button>' +
-          '<img src="' + esc(item.cover) + '" alt="" loading="lazy" onerror="this.src=\'assets/covers/meditations.jpg\'">' +
+          '<div class="pc-myshelf__imgwrap">' +
+            '<img class="pc-myshelf__cover" src="' + esc(item.cover) + '" alt="" loading="lazy" onerror="this.style.display=\'none\';var f=this.nextElementSibling;if(f)f.style.display=\'flex\';">' +
+            '<div class="pc-myshelf__fallback" style="display:none;">' +
+              '<span class="pc-myshelf__fb-tag">' + (item.type === "ab" ? "📖 AUDIOBOOK" : "🎙️ PODCAST") + '</span>' +
+              '<b class="pc-myshelf__fb-title">' + esc(item.title) + '</b>' +
+              '<i class="pc-myshelf__fb-sub">' + esc(item.subtitle) + '</i>' +
+            '</div>' +
+          '</div>' +
           '<span style="font:800 8.5px var(--font-head);letter-spacing:1px;color:var(--muted,#666);margin-bottom:2px;">' + item.badge + '</span>' +
           '<b>' + esc(item.title) + '</b>' +
           '<i>' + esc(item.subtitle) + '</i>' +

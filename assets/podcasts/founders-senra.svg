@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <radialGradient id="glow_founders-senra" cx="75%" cy="25%" r="65%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="400" fill="#0f172a"/>
+  <rect width="400" height="400" fill="url(#glow_founders-senra)"/>
+  
+  <rect x="12" y="12" width="376" height="376" fill="none" stroke="#38bdf8" stroke-width="3" rx="16"/>
+  
+  <rect x="32" y="36" width="179" height="26" rx="13" fill="#38bdf8"/>
+  <text x="44" y="53" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="10" fill="#0d0d0d" letter-spacing="1">BOOKS - BIOGRAPHIES</text>
+  
+  <g transform="translate(320, 36)">
+    <circle cx="18" cy="18" r="18" fill="rgba(255,255,255,0.08)" stroke="#38bdf8" stroke-width="1.5"/>
+    <path d="M18 10a4 4 0 0 0-4 4v4a4 4 0 0 0 8 0v-4a4 4 0 0 0-4-4z" fill="#38bdf8"/>
+    <path d="M11 17a7 7 0 0 0 14 0M18 24v4M14 28h8" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  
+  <text x="32" y="235" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="34" fill="#ffffff">Founders</text>
+  
+  <line x1="32" y1="295" x2="368" y2="295" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+  
+  <text x="32" y="328" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="11" fill="#d6ccba" letter-spacing="1">HOST</text>
+  <text x="32" y="356" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="18" fill="#38bdf8">David Senra</text>
+</svg>

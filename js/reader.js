@@ -328,9 +328,14 @@
 
     var effectiveTheme = theme;
     if (theme === 'auto') {
-      var isSysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      var appDark = document.documentElement.classList.contains('dark');
-      effectiveTheme = (appDark || isSysDark) ? 'night' : 'paper';
+      var isSysDark = false;
+      try { isSysDark = !!(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches); } catch (eMedia) {}
+      var rawTh = '';
+      try { rawTh = localStorage.getItem('tsb_theme') || ''; } catch (eTh) {}
+      var isAppDark = rawTh === '"dark"' || rawTh === 'dark';
+      var isAppLight = rawTh === '"light"' || rawTh === 'light';
+      var wantDark = isAppDark || (!isAppLight && isSysDark);
+      effectiveTheme = wantDark ? 'night' : 'paper';
     }
 
     document.body.classList.remove('rm-theme-sepia', 'rm-theme-night');

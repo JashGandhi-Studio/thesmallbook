@@ -18,8 +18,12 @@
        Rule 2: theme-color set here, before any stylesheet, so dark mode
        never flashes a light status bar. */
     try {
-      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      var rawTh = localStorage.getItem("tsb_theme");
+      var isSysDark = false;
+      try { isSysDark = !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches); } catch (eMedia) {}
+      var tsbDark = rawTh === '"dark"' || rawTh === 'dark' || ((!rawTh || rawTh === '"auto"' || rawTh === 'auto') && isSysDark);
       if (tsbDark) document.documentElement.classList.add("dark");
+      else document.documentElement.classList.remove("dark");
       var tsbTC = document.querySelector('meta[name="theme-color"]');
       if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";

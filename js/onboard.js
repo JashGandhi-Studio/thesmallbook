@@ -51,14 +51,14 @@
   /* ---------- real personalisation dimensions (v4: unique & fun) ---------- */
   /* each "mess" maps straight onto a real library shelf */
   var WHYS = [
-    { id: "Productivity", ic: "🧠", t: "Close my 47 open brain tabs", s: "Focus, deep work, zero chaos" },
-    { id: "Money & Finance", ic: "💸", t: "Make money make sense", s: "Earn it · keep it · grow it" },
-    { id: "Business & Startups", ic: "🏢", t: "Build something of my own", s: "Founder brain, minus the burnout" },
-    { id: "Psychology & People", ic: "🎭", t: "Read people like books", s: "Why everyone does that thing" },
-    { id: "Power & Strategy", ic: "♟️", t: "Win quietly", s: "Chess moves for real life" },
-    { id: "Creativity", ic: "🎨", t: "Make stuff people stare at", s: "Ideas that actually slap" },
-    { id: "Self-Improvement", ic: "🌱", t: "Fix my habits (and my sleep)", s: "Become v2.0 of me" },
-    { id: "History", ic: "🏛️", t: "Steal plays from dead empires", s: "Old games, new wins" }
+    { id: "Productivity", ic: '<svg class="ob-ic-svg ob-ic-svg--brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04z"/></svg>', t: "Close my 47 open brain tabs", s: "Focus, deep work, zero chaos" },
+    { id: "Money & Finance", ic: '<svg class="ob-ic-svg ob-ic-svg--money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg>', t: "Make money make sense", s: "Earn it · keep it · grow it" },
+    { id: "Business & Startups", ic: '<svg class="ob-ic-svg ob-ic-svg--biz" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1"/></svg>', t: "Build something of my own", s: "Founder brain, minus the burnout" },
+    { id: "Psychology & People", ic: '<svg class="ob-ic-svg ob-ic-svg--psych" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>', t: "Read people like books", s: "Why everyone does that thing" },
+    { id: "Power & Strategy", ic: '<svg class="ob-ic-svg ob-ic-svg--power" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21h14M7 21v-4l2-2v-3a3 3 0 0 1 6 0v3l2 2v4M9 5l3-3 3 3-1.5 4h-3L9 5z"/></svg>', t: "Win quietly", s: "Chess moves for real life" },
+    { id: "Creativity", ic: '<svg class="ob-ic-svg ob-ic-svg--art" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C22 6.5 17.5 2 12 2z"/></svg>', t: "Make stuff people stare at", s: "Ideas that actually slap" },
+    { id: "Self-Improvement", ic: '<svg class="ob-ic-svg ob-ic-svg--growth" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-9M12 13a5 5 0 0 1 5-5h2a7 7 0 0 1-7 7M12 13a5 5 0 0 0-5-5H5a7 7 0 0 0 7 7"/></svg>', t: "Fix my habits (and my sleep)", s: "Become v2.0 of me" },
+    { id: "History", ic: '<svg class="ob-ic-svg ob-ic-svg--hist" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 18h16M4 10h16M12 3L2 8h20L12 3zM6 10v8M10 10v8M14 10v8M18 10v8"/></svg>', t: "Steal plays from dead empires", s: "Old games, new wins" }
   ];
   var SHELF_META = {
     "Self-Improvement": ["🌱", "habits, sleep, becoming v2.0"],
@@ -73,25 +73,30 @@
   };
   /* v292: the fixes list, pick what you want fixed, the shelf builds itself */
   var FIXES = [
-    { cat: "Money & Finance",      ic: "💸", t: "Get good with money",     s: "budgets · investing · zero scams" },
-    { cat: "Business & Startups",  ic: "🏢", t: "Build the side hustle",   s: "real founder plays, minus jargon" },
-    { cat: "Psychology & People",  ic: "🎭", t: "Understand humans",       s: "negotiate · persuade · read rooms" },
-    { cat: "Power & Strategy",     ic: "♟️", t: "Get strategic",           s: "see three moves ahead" },
-    { cat: "Productivity",         ic: "🧠", t: "Get my focus back",       s: "deep work on a calm schedule" },
-    { cat: "Self-Improvement",     ic: "🌱", t: "Upgrade the basics",      s: "habits · sleep · discipline" },
-    { cat: "Creativity",           ic: "🎨", t: "Make better things",      s: "ideas with a kick" },
-    { cat: "History",              ic: "🏛️", t: "Learn from the falls",    s: "empires · crashes · comebacks" },
-    { cat: "Leadership",           ic: "🎖️", t: "Run the room",            s: "lead teams without breaking them" },
-    { cat: "__surprise__",         ic: "🎲", t: "Surprise me",             s: "a bit of everything, hand-picked" }
+    { cat: "Money & Finance",      ic: '<svg class="ob-ic-svg ob-ic-svg--money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg>', t: "Get good with money",     s: "budgets · investing · zero scams" },
+    { cat: "Business & Startups",  ic: '<svg class="ob-ic-svg ob-ic-svg--biz" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1"/></svg>', t: "Build the side hustle",   s: "real founder plays, minus jargon" },
+    { cat: "Psychology & People",  ic: '<svg class="ob-ic-svg ob-ic-svg--psych" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>', t: "Understand humans",       s: "negotiate · persuade · read rooms" },
+    { cat: "Power & Strategy",     ic: '<svg class="ob-ic-svg ob-ic-svg--power" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21h14M7 21v-4l2-2v-3a3 3 0 0 1 6 0v3l2 2v4M9 5l3-3 3 3-1.5 4h-3L9 5z"/></svg>', t: "Get strategic",           s: "see three moves ahead" },
+    { cat: "Productivity",         ic: '<svg class="ob-ic-svg ob-ic-svg--brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04z"/></svg>', t: "Get my focus back",       s: "deep work on a calm schedule" },
+    { cat: "Self-Improvement",     ic: '<svg class="ob-ic-svg ob-ic-svg--growth" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-9M12 13a5 5 0 0 1 5-5h2a7 7 0 0 1-7 7M12 13a5 5 0 0 0-5-5H5a7 7 0 0 0 7 7"/></svg>', t: "Upgrade the basics",      s: "habits · sleep · discipline" },
+    { cat: "Creativity",           ic: '<svg class="ob-ic-svg ob-ic-svg--art" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C22 6.5 17.5 2 12 2z"/></svg>', t: "Make better things",      s: "ideas with a kick" },
+    { cat: "History",              ic: '<svg class="ob-ic-svg ob-ic-svg--hist" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 18h16M4 10h16M12 3L2 8h20L12 3zM6 10v8M10 10v8M14 10v8M18 10v8"/></svg>', t: "Learn from the falls",    s: "empires · crashes · comebacks" },
+    { cat: "Leadership",           ic: '<svg class="ob-ic-svg ob-ic-svg--lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5 2 7-6.5-4.5-6.5 4.5 2-7L3 9h7z"/></svg>', t: "Run the room",            s: "lead teams without breaking them" },
+    { cat: "__surprise__",         ic: '<svg class="ob-ic-svg ob-ic-svg--surp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="16" cy="16" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>', t: "Surprise me",             s: "a bit of everything, hand-picked" }
   ];
   var STYLES = [
-    { id: "skim", ic: "⚡", t: "Just the tactics, coach", s: "Key lessons, in and out" },
-    { id: "steady", ic: "🍿", t: "Story me through it", s: "Case studies & real examples" },
-    { id: "deep", ic: "💀", t: "Autopsies & deep dives", s: "Everything open, graves included" },
-    { id: "listen", ic: "🎧", t: "Read it to me", s: "Audio lessons while I move" }
+    { id: "skim", ic: '<svg class="ob-ic-svg ob-ic-svg--bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', t: "Just the tactics, coach", s: "Key lessons, in and out" },
+    { id: "steady", ic: '<svg class="ob-ic-svg ob-ic-svg--story" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg>', t: "Story me through it", s: "Case studies & real examples" },
+    { id: "deep", ic: '<svg class="ob-ic-svg ob-ic-svg--deep" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>', t: "Autopsies & deep dives", s: "Everything open, graves included" },
+    { id: "listen", ic: '<svg class="ob-ic-svg ob-ic-svg--listen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>', t: "Read it to me", s: "Audio lessons while I move" }
   ];
   var MINUTES = [5, 10, 20, 30];
-  var MIN_LABEL = { 5: "🐟 5′", 10: "☕ 10′", 20: "📖 20′", 30: "🐋 30′" };
+  var MIN_LABEL = {
+    5: '<svg class="ob-min-svg ob-min-svg--5" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12c4-6 12-4 15 0-3 4-11 6-15 0z"/><path d="M6 12L2 9v6l4-3z"/><circle cx="17" cy="11" r="1" fill="currentColor"/></svg> 5′',
+    10: '<svg class="ob-min-svg ob-min-svg--10" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg> 10′',
+    20: '<svg class="ob-min-svg ob-min-svg--20" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> 20′',
+    30: '<svg class="ob-min-svg ob-min-svg--30" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13c1.5-4 6-7 12-7 4 0 7 2 8 5-1 3-4 6-9 6-3 0-5.5-.8-7.5-2L2 16v-3z"/><path d="M10 6V2"/><circle cx="18" cy="11" r="1" fill="currentColor"/></svg> 30′'
+  };
   var MIN_SUB = { 5: "reel brain", 10: "one chai", 20: "proper sit-down", 30: "deep sea" };
 
   /* top shelves straight from the real library */
@@ -118,13 +123,36 @@
     if (!order.length) order = shelves().slice(0, 3);
     function readMin(b) { var m = parseInt(b.readTime, 10); return isNaN(m) ? 15 : m; }
     var budget = draft.minutes || 10;
+    var seedStr = (draft.why || "") + (draft.shelves || []).join("") + (draft.minutes || "") + (draft.style || "");
+    function seedRank(str) {
+      var h = 0;
+      for (var s = 0; s < str.length; s++) h = ((h << 5) - h + str.charCodeAt(s)) | 0;
+      return Math.abs(h);
+    }
+    var userSeed = seedRank(seedStr);
+
     var pools = {};
     (window.BOOKS || []).forEach(function (b) { (pools[b.category] = pools[b.category] || []).push(b); });
     Object.keys(pools).forEach(function (k) {
       pools[k].sort(function (a, b) {
         if (draft.style === "deep") { var d = (b.graveLink ? 1 : 0) - (a.graveLink ? 1 : 0); if (d) return d; }
-        if (budget <= 10) return readMin(a) - readMin(b);
-        return 0; /* stable, library order otherwise */
+        // Diverse preference scoring rather than static minimum-length forcing
+        var scoreA = 0, scoreB = 0;
+        var rA = readMin(a), rB = readMin(b);
+        if (budget <= 10) {
+          if (rA <= 10) scoreA += 2;
+          if (rB <= 10) scoreB += 2;
+        } else {
+          if (rA >= 10) scoreA += 2;
+          if (rB >= 10) scoreB += 2;
+        }
+        if (draft.style === "skim" && (a.lessons || []).length <= 7) scoreA += 1;
+        if (draft.style === "skim" && (b.lessons || []).length <= 7) scoreB += 1;
+        if (scoreB !== scoreA) return scoreB - scoreA;
+        // User-specific deterministic permutation so different selections yield diverse shelves
+        var hA = (seedRank(a.id) ^ userSeed) % 97;
+        var hB = (seedRank(b.id) ^ userSeed) % 97;
+        return hA - hB;
       });
     });
     var idx = {};
@@ -149,11 +177,24 @@
     var inPool = {};
     head.concat(rest).forEach(function (b) { inPool[b.id] = 1; });
     var news = [];
-    ((window.TSB_CONFIG && TSB_CONFIG.NEW_THIS_WEEK) || []).forEach(function (id) {
+    var ntwList = (window.TSB_CONFIG && TSB_CONFIG.NEW_THIS_WEEK) || [];
+    // Personalize NEW books: prioritize new additions matching user selected categories first
+    ntwList.forEach(function (id) {
       if (news.length >= 6) return;
       if (inPool[id]) return;
       for (var k = 0; k < (window.BOOKS || []).length; k++) {
-        if (BOOKS[k].id === id) { inPool[id] = 1; news.push(BOOKS[k]); break; }
+        var bCand = BOOKS[k];
+        if (bCand.id === id && order.indexOf(bCand.category) >= 0) {
+          inPool[id] = 1; news.push(bCand); break;
+        }
+      }
+    });
+    // Top up to 6 fresh books from NEW_THIS_WEEK
+    ntwList.forEach(function (id) {
+      if (news.length >= 6) return;
+      if (inPool[id]) return;
+      for (var k2 = 0; k2 < (window.BOOKS || []).length; k2++) {
+        if (BOOKS[k2].id === id) { inPool[id] = 1; news.push(BOOKS[k2]); break; }
       }
     });
     return head.concat(news, rest).slice(0, want);
@@ -213,6 +254,8 @@
   function stepHtml(i) {
     switch (i) {
       case 0:
+        var savedName = "";
+        try { savedName = localStorage.getItem("tsb_reader_name") || ""; } catch (e) {}
         return '<div class="ob-step__center ob-hero">' +
           '<span class="ob-hero__deco ob-hero__deco--sq" aria-hidden="true"></span>' +
           '<span class="ob-hero__deco ob-hero__deco--circ" aria-hidden="true"></span>' +
@@ -222,14 +265,24 @@
           '<h2 class="ob-hero__t">The<span>Small</span>Book</h2>' +
           '<p class="ob-tag">READ 1 BOOK IN 8 MINUTES. BECOME 1% BETTER EVERY DAY.</p>' +
           '<p class="ob-sub">500+ books (520 curated editions), distilled into punchy masterclass frameworks you can apply today. Six quick questions tailor the entire library to your exact ambition.</p>' +
+          '<div class="ob-guest-box" style="margin:16px auto 14px;max-width:320px;text-align:left;">' +
+            '<label for="obReaderName" style="display:block;font:800 11px var(--font-head);letter-spacing:1px;text-transform:uppercase;color:var(--ink);margin-bottom:6px;">Your Name (Guest / Sign In)</label>' +
+            '<div style="display:flex;gap:8px;">' +
+              '<input id="obReaderName" type="text" maxlength="24" placeholder="Enter guest name (e.g. Alex)" value="' + (savedName ? savedName.replace(/"/g, "&quot;") : "") + '" style="flex:1;border:2.5px solid var(--ink);border-radius:12px;padding:11px 14px;font:700 13px var(--font-body);background:var(--paper);color:var(--ink);box-shadow:3px 3px 0 var(--ink);outline:none;">' +
+            '</div>' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:7px;font:600 11px var(--font-body);color:var(--muted);">' +
+              '<span>Reads instantly as Guest</span>' +
+              '<a href="login.html?next=index.html" style="color:var(--ink);font-weight:800;text-decoration:underline;">Or sign in →</a>' +
+            '</div>' +
+          '</div>' +
           '<div class="ob-btns ob-btns--col">' +
             '<button class="ob-cta" data-next>🚀 GET STARTED →</button>' +
           '</div>' +
           '<p class="ob-fine">Takes 60 seconds · instant starter shelf · unlimited reading free</p>' +
           '</div>';
       case 1:
-        return "<h2>What mess are we fixing?</h2>" +
-          '<p class="ob-sub">Your main battle. The library will lead with it.</p>' +
+        return "<h2>What is your primary reading focus?</h2>" +
+          '<p class="ob-sub">Your main ambition. The library will lead with it.</p>' +
           '<div class="ob-rows">' + rows(WHYS, "why", draft.why, true) + "</div>" +
           '<div class="ob-btns"><button class="ob-cta" data-next data-need="why">Continue →</button></div>';
       case 2:
@@ -388,6 +441,84 @@
     try { set("tsb_starter_shelf", (draft.picks && draft.picks.length ? draft.picks : starterShelf().map(function (b) { return b.id; }))); } catch (e) {}
   }
 
+  function showFirstReadModal() {
+    var picks = (draft.picks && draft.picks.length) ? draft.picks : [];
+    var all = window.BOOKS || [];
+    var recBooks = [];
+
+    // Collect picked books first
+    for (var i = 0; i < picks.length; i++) {
+      for (var j = 0; j < all.length; j++) {
+        if (all[j].id === picks[i] && recBooks.indexOf(all[j]) < 0) {
+          recBooks.push(all[j]);
+          break;
+        }
+      }
+      if (recBooks.length >= 6) break;
+    }
+    // If fewer than 4, top up from starterShelf
+    if (recBooks.length < 4) {
+      var pool = starterShelf(6);
+      for (var k = 0; k < pool.length; k++) {
+        if (recBooks.indexOf(pool[k]) < 0) recBooks.push(pool[k]);
+        if (recBooks.length >= 6) break;
+      }
+    }
+    if (!recBooks.length) return;
+
+    var readerName = "";
+    try { readerName = localStorage.getItem("tsb_reader_name") || ""; } catch (e) {}
+    if (!readerName || readerName === "Guest Reader") readerName = "";
+
+    var modal = document.createElement("div");
+    modal.className = "firstread-wrap";
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-label", "Welcome to TheSmallBook");
+
+    var railHtml = recBooks.map(function (b) {
+      var time = b.readTime || "8 min";
+      return '<a href="book.html?id=' + encodeURIComponent(b.id) + '" class="firstread-item">' +
+        '<div class="firstread-cover">' +
+          '<img src="assets/covers/' + encodeURIComponent(b.id) + '.jpg" alt="' + b.title.replace(/"/g, "&quot;") + '" loading="lazy">' +
+        '</div>' +
+        '<h3 class="firstread-booktitle">' + b.title + '</h3>' +
+        '<span class="firstread-author">' + b.author + '</span>' +
+        '<span class="firstread-time">⏱ ' + time + '</span>' +
+        '<span class="firstread-readbtn">Read →</span>' +
+      '</a>';
+    }).join("");
+
+    modal.innerHTML =
+      '<div class="firstread-card">' +
+        '<button class="firstread-close" aria-label="Close" id="frClose">✕</button>' +
+        '<div class="firstread-header">' +
+          '<h2 class="firstread-title">Welcome to TheSmallBook' + (readerName ? ', ' + readerName : '') + '</h2>' +
+          '<p class="firstread-sub">Here are your personal book recommendations</p>' +
+        '</div>' +
+        '<div class="firstread-rail">' + railHtml + '</div>' +
+        '<button type="button" class="firstread-btn" id="frHomeBtn">Explore All Books →</button>' +
+      '</div>';
+
+    document.body.appendChild(modal);
+
+    function dismissModal() {
+      modal.style.opacity = "0";
+      modal.style.transition = "opacity .2s ease";
+      setTimeout(function () {
+        if (modal.parentNode) modal.parentNode.removeChild(modal);
+      }, 200);
+    }
+
+    var closeBtn = modal.querySelector("#frClose");
+    if (closeBtn) closeBtn.addEventListener("click", dismissModal);
+    var homeBtn = modal.querySelector("#frHomeBtn");
+    if (homeBtn) homeBtn.addEventListener("click", dismissModal);
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) dismissModal();
+    });
+  }
+
   function finish() {
     saveProfile();
     try {
@@ -409,6 +540,7 @@
       document.documentElement.classList.remove("ob-lock");
       setTimeout(function () {
         if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
+        showFirstReadModal();
         /* apply the tuned shelf live, tap the matching filter chip */
         try {
           var leadNow = JSON.parse(localStorage.getItem("tsb_ob_lead") || "null");
@@ -423,9 +555,26 @@
   }
 
   function bind() {
+    wrap.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && e.target && e.target.id === "obReaderName") {
+        e.preventDefault();
+        var nextBtn = wrap.querySelector("[data-next]");
+        if (nextBtn) nextBtn.click();
+      }
+    });
+
     wrap.addEventListener("click", function (e) {
       var t;
       if ((t = e.target.closest("[data-next]"))) {
+        if (step === 0) {
+          var nameInput = body.querySelector("#obReaderName");
+          var rawName = nameInput ? (nameInput.value || "").trim() : "";
+          if (!rawName) rawName = "Guest Reader";
+          try {
+            localStorage.setItem("tsb_reader_name", rawName);
+            localStorage.setItem("tsb_guest_user", rawName === "Guest Reader" ? "true" : "false");
+          } catch (e) {}
+        }
         var need = t.getAttribute("data-need");
         if (need === "why" && !draft.why) return shakeNeed(".ob-rows");
         if (need === "style" && !draft.style) return shakeNeed(".ob-rows");
@@ -446,9 +595,12 @@
         return;
       }
       if (e.target.closest("[data-back]")) { goBack(); return; }
-      if ((t = e.target.closest("[data-why]"))) { recPoolCache = null;
+      if ((t = e.target.closest("[data-why]"))) {
+        recPoolCache = null;
         draft.why = t.getAttribute("data-why");
         body.querySelectorAll("[data-why]").forEach(function (b) { b.classList.toggle("on", b === t); });
+        set("tsb_onboard_draft", draft);
+        setTimeout(function () { if (step === 1 && !busy) goNext(); }, 200);
         return;
       }
       if ((t = e.target.closest("[data-shelf]"))) { recPoolCache = null;
@@ -472,11 +624,15 @@
       if ((t = e.target.closest("[data-min]"))) {
         draft.minutes = Number(t.getAttribute("data-min"));
         body.querySelectorAll("[data-min]").forEach(function (b) { b.classList.toggle("on", b === t); });
+        set("tsb_onboard_draft", draft);
+        setTimeout(function () { if (step === 3 && !busy) goNext(); }, 200);
         return;
       }
       if ((t = e.target.closest("[data-style]"))) {
         draft.style = t.getAttribute("data-style");
         body.querySelectorAll("[data-style]").forEach(function (b) { b.classList.toggle("on", b === t); });
+        set("tsb_onboard_draft", draft);
+        setTimeout(function () { if (step === 4 && !busy) goNext(); }, 200);
         return;
       }
       if ((t = e.target.closest("[data-lang]"))) {

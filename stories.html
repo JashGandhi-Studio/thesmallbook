@@ -20,8 +20,14 @@
   <meta name="theme-color" content="#ffc800">
   <script>
     try {
-      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      var rawTh = localStorage.getItem("tsb_theme");
+      var hr = new Date().getHours();
+      var isNight = (hr < 6 || hr >= 18);
+      var isExplicitDark = rawTh === '"dark"' || rawTh === 'dark';
+      var isExplicitLight = rawTh === '"light"' || rawTh === 'light';
+      var tsbDark = isExplicitDark || (!isExplicitLight && isNight);
       if (tsbDark) document.documentElement.classList.add("dark");
+      else document.documentElement.classList.remove("dark");
       var tsbTC = document.querySelector('meta[name="theme-color"]');
       if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
@@ -52,11 +58,6 @@
     </div>
   </header>
 
-  <div class="pc-promo pc-promo--v2" id="pcPromo" hidden>
-    <div class="pc-promo__wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <span class="pc-promo__mid"><b>THE AUDIO ROOM 🎧</b><i>Podcasts and full audiobooks, playing right here. Bring your commute.</i></span>
-    <span class="pc-promo__acts"><a class="pc-promo__go" href="podcasts.html">START LISTENING FREE</a></span>
-  </div>
   <section class="lt-rail" id="ltRail" aria-label="Listen today">
     <div class="lt-head"><b>🎧 LISTEN TODAY</b><span>hands-free, while you do the other thing</span></div>
     <div class="lt-scroll" id="ltScroll"></div>
@@ -510,11 +511,11 @@
         var seenAt = C.lastSeenOf ? C.lastSeenOf(p) : 0;
         if (seenAt) {
           var txt = C.lastSeenText(seenAt);
-          var online = /online now/.test(txt);
+          var online = /online now|active now/i.test(txt);
           active = '<span class="cm-seen' + (online ? " cm-seen--on" : "") + '">' +
                      (online ? '<i class="cm-seen__dot"></i>' : "") + C.esc(txt) + "</span>";
         } else if (p.lastActive) {
-          active = '<span class="cm-time cm-time--live">' + C.ago(new Date(p.lastActive).toISOString()) + "</span>";
+          active = '<span class="cm-time cm-time--live">' + C.lastSeenText(new Date(p.lastActive).getTime()) + "</span>";
         }
       } catch (e) {}
       return '<div class="cm-person' + (p._synth ? " cm-person--ghost" : "") + '" data-person="' + p.id + '">' +
@@ -1090,31 +1091,39 @@ document.getElementById("quoteBtn").addEventListener("click", function () { loca
       }
       if ((t = e.target.closest("[data-pfol]"))) {
         if (!C.signedIn()) { location.href = "login.html"; return; }
-        t.disabled = true;
+        var on2 = !t.classList.contains("on");
+        t.classList.toggle("on", on2);
+        t.textContent = on2 ? "Following ✓" : "+ Follow";
+        try { if (navigator.vibrate) navigator.vibrate(10); } catch (e0) {}
         try {
-          var on2 = !t.classList.contains("on");
           await C.setFollow(t.getAttribute("data-pfol"), on2);
-          t.classList.toggle("on", on2);
-          t.textContent = on2 ? "Following ✓" : "+ Follow";
-        } catch (err) { C.say("Follow failed, " + (err && err.message ? err.message : err)); }
-        t.disabled = false;
+        } catch (err) {
+          t.classList.toggle("on", !on2);
+          t.textContent = !on2 ? "Following ✓" : "+ Follow";
+          C.say("Follow failed, " + (err && err.message ? err.message : err));
+        }
         return;
       }
       /* ---- v250 · private accounts ---- */
       if ((t = e.target.closest("[data-preq]"))) {
         if (!C.signedIn()) { location.href = "login.html"; return; }
-        t.disabled = true;
+        var pidReq = t.getAttribute("data-preq");
+        t.classList.add("is-req");
+        t.removeAttribute("data-preq");
+        t.setAttribute("data-pcancel", pidReq);
+        t.textContent = "Requested ⏳";
+        try { if (navigator.vibrate) navigator.vibrate(10); } catch (e0) {}
         try {
-          var pidReq = t.getAttribute("data-preq");
           await C.requestFollow(pidReq);
-          t.classList.add("is-req");
-          t.removeAttribute("data-preq");
-          t.setAttribute("data-pcancel", pidReq);
-          t.textContent = "Requested ⏳";
           C.say("🔒 Request sent, they'll see it the moment they open the app.");
           renderPeople(true);
-        } catch (err) { C.say("Couldn't send that request, " + (err && err.message ? err.message : err)); }
-        t.disabled = false;
+        } catch (err) {
+          t.classList.remove("is-req");
+          t.setAttribute("data-preq", pidReq);
+          t.removeAttribute("data-pcancel");
+          t.textContent = "Request";
+          C.say("Couldn't send that request, " + (err && err.message ? err.message : err));
+        }
         return;
       }
       if ((t = e.target.closest("[data-pcancel]"))) {
@@ -1300,14 +1309,17 @@ document.getElementById("quoteBtn").addEventListener("click", function () { loca
       var t = e.target.closest("[data-ffol]");
       if (!t) return;
       if (!C.signedIn()) { location.href = "login.html"; return; }
-      t.disabled = true;
       var on = !t.classList.contains("on");
+      t.classList.toggle("on", on);
+      t.innerHTML = on ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
+      try { if (navigator.vibrate) navigator.vibrate(10); } catch (e0) {}
       try {
         await C.setFollow(t.getAttribute("data-ffol"), on);
-        t.classList.toggle("on", on);
-        t.innerHTML = on ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
-      } catch (err) { C.say("Subscribe failed, " + (err && err.message ? err.message : err)); }
-      t.disabled = false;
+      } catch (err) {
+        t.classList.toggle("on", !on);
+        t.innerHTML = !on ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
+        C.say("Subscribe failed, " + (err && err.message ? err.message : err));
+      }
     });
 
     /* coming back to the tab from another app/screen -> refresh People now */
@@ -1325,13 +1337,6 @@ document.getElementById("quoteBtn").addEventListener("click", function () { loca
   <script src="js/guide.js?v=323"></script>
   <script src="js/gate.js?v=323" defer></script>
   <script src="js/trial.js?v=323" defer></script>
-<script>
-  (function () {
-    var p = document.getElementById("pcPromo");
-    if (!p) return;
-    p.hidden = false;
-  })();
-  </script>
   <script src="js/podcast-data.js?v=323"></script>
   <script src="js/audioplayer.js?v=323"></script>
 </body>

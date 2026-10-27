@@ -29,8 +29,14 @@
        Rule 2: theme-color set here, before any stylesheet, so dark mode
        never flashes a light status bar. */
     try {
-      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      var rawTh = localStorage.getItem("tsb_theme");
+      var hr = new Date().getHours();
+      var isNight = (hr < 6 || hr >= 18);
+      var isExplicitDark = rawTh === '"dark"' || rawTh === 'dark';
+      var isExplicitLight = rawTh === '"light"' || rawTh === 'light';
+      var tsbDark = isExplicitDark || (!isExplicitLight && isNight);
       if (tsbDark) document.documentElement.classList.add("dark");
+      else document.documentElement.classList.remove("dark");
       var tsbTC = document.querySelector('meta[name="theme-color"]');
       if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
@@ -333,7 +339,7 @@
 
   <!-- COMMUNITY CTA -->
   <section class="storyform" style="margin:0 auto 70px;">
-    <div class="storyform__box" style="background:var(--pink); text-align:center; align-items:center;">
+    <div class="storyform__box" style="background:var(--paper); text-align:center; align-items:center;">
       <div style="font-family:var(--font-head); font-size:clamp(1.2rem,3vw,1.8rem); text-transform:uppercase;">✍️ Lived one of these lessons?</div>
       <p style="font-weight:600; max-width:560px;">Turn it into a story. Type it or upload a PDF, design your own cover, and publish it on the Community Shelf for everyone to read.</p>
       <a class="btn btn--ink" href="stories.html" style="font-size:1rem; padding:14px 30px;">GO TO COMMUNITY STORIES →</a>

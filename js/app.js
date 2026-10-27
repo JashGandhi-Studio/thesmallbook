@@ -38,6 +38,7 @@
   ]);
 
   function isNew(id) { return LATEST_20_NEW.has(id); }
+  function isOrig(id) { try { return ((window.TSB_CONFIG && TSB_CONFIG.ORIGINALS) || []).indexOf(id) >= 0; } catch (e) { return false; } }
 
   let activeCat = "ALL";
   let query = "";
@@ -318,6 +319,7 @@
       a.innerHTML = `
         <div class="card__top">
           ${isNew(b.id) ? `<span class="card__new" translate="no">✦ NEW</span>` : ""}
+          ${isOrig(b.id) ? `<span class="card__orig" translate="no">✦ TSB ORIGINAL</span>` : ""}
           <span class="card__cat">${b.category}</span>
           <span class="card__time">⏱ ${b.readTime}</span>
           <img class="card__cover" src="${b.cover}" alt="${b.title} cover" loading="lazy">
@@ -366,6 +368,7 @@
     return `
       <div class="card__top">
         ${isNew(b.id) ? `<span class="card__new" translate="no">✦ NEW</span>` : ""}
+        ${isOrig(b.id) ? `<span class="card__orig" translate="no">✦ TSB ORIGINAL</span>` : ""}
         <span class="card__cat">${b.category}</span>
         <span class="card__time">⏱ ${b.readTime}</span>
         <img class="card__cover" src="${b.cover}" alt="${b.title} cover" loading="lazy">

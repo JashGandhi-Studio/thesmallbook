@@ -93,8 +93,11 @@
     },
     apply() {
       const mode = theme.getMode();
-      const sysDark = !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
-      const wantDark = mode === "dark" || (mode === "auto" && sysDark);
+      const hr = new Date().getHours();
+      const isNight = (hr < 6 || hr >= 18);
+      const isExplicitDark = mode === "dark";
+      const isExplicitLight = mode === "light";
+      const wantDark = isExplicitDark || (!isExplicitLight && isNight);
       document.documentElement.classList.toggle("dark", wantDark);
       /* keep the phone status bar in sync instantly (no flash next load) */
       try {

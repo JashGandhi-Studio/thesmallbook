@@ -103,11 +103,6 @@
       var priv = !mine && prof.is_public === false;
       var reqd = priv && C.iRequested && C.iRequested(pid);
       var handle = prof.username ? C.esc(prof.username) : pid.slice(0, 8);
-      var hue = parseInt(String(pid).replace(/-/g, "").slice(0, 4), 16) % 360;
-      var avaHtml = '<div class="cm-avawrap">' +
-        '<div class="cm-ava cm-ava--xl cm-ava--ring">' + (C.avaUrl(prof.name, prof.avatar_url, pid) ? '<img src="' + C.esc(C.avaUrl(prof.name, prof.avatar_url, pid)) + '" alt="">' : "<span>" + C.esc((prof.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
-        (mine ? '<button class="cm-avaplus" id="avaPlus" title="Change profile picture" aria-label="Change profile picture">+</button>' : "") +
-      "</div>";
       root.innerHTML =
         '<header class="cm-profhead cm-profhead--v3">' +
           '<div class="cm-banner" style="background:linear-gradient(135deg,hsl(' + hue + ',78%,62%),hsl(' + ((hue + 42) % 360) + ',70%,40%))">' +
@@ -274,14 +269,17 @@
         var t = e.target.closest("[data-pfol]");
         if (!t) return;
         if (!C.signedIn()) { location.href = "login.html"; return; }
-        t.disabled = true;
         var on = !t.classList.contains("on");
+        t.classList.toggle("on", on);
+        t.innerHTML = on ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
+        try { if (navigator.vibrate) navigator.vibrate(10); } catch (e0) {}
         try {
           await C.setFollow(t.getAttribute("data-pfol"), on);
-          t.classList.toggle("on", on);
-          t.innerHTML = on ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
-        } catch (err) { C.say("Subscribe failed, " + (err && err.message ? err.message : err)); }
-        t.disabled = false;
+        } catch (err) {
+          t.classList.toggle("on", !on);
+          t.innerHTML = !on ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
+          C.say("Subscribe failed, " + (err && err.message ? err.message : err));
+        }
       });
       var sheetEl = null;
       function closeSocial() {
@@ -349,14 +347,17 @@
             var t = e.target.closest("[data-socfol]");
             if (!t) return;
             if (!C.signedIn()) { location.href = "login.html"; return; }
-            t.disabled = true;
             var on2 = !t.classList.contains("on");
+            t.classList.toggle("on", on2);
+            t.innerHTML = on2 ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
+            try { if (navigator.vibrate) navigator.vibrate(10); } catch (e0) {}
             try {
               await C.setFollow(t.getAttribute("data-socfol"), on2);
-              t.classList.toggle("on", on2);
-              t.innerHTML = on2 ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
-            } catch (err) { C.say("Subscribe failed, " + (err && err.message ? err.message : err)); }
-            t.disabled = false;
+            } catch (err) {
+              t.classList.toggle("on", !on2);
+              t.innerHTML = !on2 ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
+              C.say("Subscribe failed, " + (err && err.message ? err.message : err));
+            }
           });
           ids.forEach(async function (fid) {
             try {
@@ -394,13 +395,19 @@
       if (fb) fb.addEventListener("click", async function () {
         if (!C.signedIn()) { location.href = "login.html"; return; }
         var on = !this.classList.contains("on");
+        this.classList.toggle("on", on);
+        this.innerHTML = on ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
+        try { if (navigator.vibrate) navigator.vibrate(10); } catch (e0) {}
         try {
           await C.setFollow(pid, on);
           var f = await C.followInfo(pid);
           this.classList.toggle("on", f.mine);
           this.innerHTML = f.mine ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
-          var fc = root.querySelector(".cm-stats b");
-        } catch (e) { C.say((on ? "Subscribe" : "Unsubscribe") + " failed, " + (e && e.message ? e.message : e)); }
+        } catch (e) {
+          this.classList.toggle("on", !on);
+          this.innerHTML = !on ? C.icon('check') + " Subscribed" : C.icon('bell') + " Subscribe";
+          C.say((on ? "Subscribe" : "Unsubscribe") + " failed, " + (e && e.message ? e.message : e));
+        }
       });
       function copyTxt(t) {
         if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).catch(function () {}); return; }

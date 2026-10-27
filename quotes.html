@@ -20,9 +20,11 @@
   <script>
     try {
       var rawTh = localStorage.getItem("tsb_theme");
-      var isSysDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var isSysDark = false;
+      try { isSysDark = !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches); } catch (eMedia) {}
       var tsbDark = rawTh === '"dark"' || rawTh === 'dark' || ((!rawTh || rawTh === '"auto"' || rawTh === 'auto') && isSysDark);
       if (tsbDark) document.documentElement.classList.add("dark");
+      else document.documentElement.classList.remove("dark");
     } catch (e) {}
   </script>
   <style>
@@ -48,6 +50,22 @@
       transition: transform .16s, box-shadow .16s; }
     .qw-note:hover, .qw-photo:hover { transform: rotate(0deg) scale(1.04); box-shadow: 6px 12px 22px rgba(40,18,0,.42); z-index: 4; }
     .qw-note::after { content: ""; position: absolute; right: 0; bottom: 0; border-style: solid; border-width: 0 0 18px 18px; border-color: transparent transparent rgba(0,0,0,.10) transparent; }
+    @keyframes qwSpringIn {
+      0% { opacity: 0; transform: scale(0.2) translateY(-36px); }
+      60% { opacity: 1; transform: scale(1.08) translateY(6px); }
+      80% { transform: scale(0.96) translateY(-2px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .qw-note--spring, .qw-photo--spring {
+      animation: qwSpringIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both !important;
+      z-index: 20 !important;
+      box-shadow: 0 16px 36px rgba(40,18,0,.45) !important;
+    }
+    .qw-sources { display: flex; gap: 6px; margin-bottom: 8px; }
+    .qw-src { flex: 1; border: 2px solid var(--ink); background: var(--paper); border-radius: 8px; padding: 7px 4px; font: 800 10.5px "Space Grotesk", sans-serif; cursor: pointer; color: var(--ink); text-align: center; }
+    .qw-src.on { background: var(--yellow); box-shadow: 2px 2px 0 var(--ink); }
+    html.dark .qw-src { background: #241f17; color: #f2ead8; border-color: #3e3425; }
+    html.dark .qw-src.on { background: var(--yellow); color: #14110c !important; border-color: #000; }
     .qw-pin, .qw-pin--red { position: absolute; top: 8px; left: 50%; margin-left: -7px; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ff9d9d, #d21f1f 70%); border: 2px solid #7d0f0f; box-shadow: 1px 2px 3px rgba(0,0,0,.35); z-index: 2; }
     .qw-photo .qw-pin--red { top: 6px; }
     .qw-pin:not(.qw-pin--red) { background: radial-gradient(circle at 35% 30%, #ffd86e, #e0a90f 70%); border-color: #8a6604; }

@@ -19,8 +19,14 @@
   <script>
     /* theme + phone status bar BEFORE first paint (no flash). */
     try {
-      var tsbDark = localStorage.getItem("tsb_theme") === '"dark"';
+      var rawTh = localStorage.getItem("tsb_theme");
+      var hr = new Date().getHours();
+      var isNight = (hr < 6 || hr >= 18);
+      var isExplicitDark = rawTh === '"dark"' || rawTh === 'dark';
+      var isExplicitLight = rawTh === '"light"' || rawTh === 'light';
+      var tsbDark = isExplicitDark || (!isExplicitLight && isNight);
       if (tsbDark) document.documentElement.classList.add("dark");
+      else document.documentElement.classList.remove("dark");
       var tsbTC = document.querySelector('meta[name="theme-color"]');
       if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
@@ -205,16 +211,16 @@
       </header>
 
       <section class="youwin__hero">
-        <div class="acc__ava" id="accAva">📕</div>
+        <div class="acc__ava" id="accAva"><svg class="inline-svg" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
         <div class="acc__who">
           <h1 id="accName">Reader</h1>
           <p id="accMail">signed in</p>
         </div>
-        <span class="acc__cloud" id="accCloud" title="Progress syncs privately to your account">☁️ SYNCED</span>
+        <span class="acc__cloud" id="accCloud" title="Progress syncs privately to your account"><svg class="inline-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>SYNCED</span>
       </section>
 
-      <!-- 👑 TSB Gold Status Card in You section -->
-      <section class="acc__goldcard" id="youGoldCard" style="display:none; margin: 12px 0 16px; background: linear-gradient(135deg, #fffbe6 0%, #fff3b3 100%); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 4px 4px 0 var(--ink); padding: 16px 18px;">
+      <!-- 👑 TSB Gold Status Card in You section (Active Members) -->
+      <section class="acc__goldcard" id="youGoldCard" style="display:none; margin: 12px 0 16px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
           <span style="display:inline-flex; align-items:center; gap:6px; font-family:var(--font-head); font-size:11.5px; letter-spacing:1px; background:var(--ink); color:var(--yellow); padding:5px 12px; border-radius:999px;">
             <svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"></path><circle cx="12" cy="19" r="1"></circle></svg>
@@ -222,7 +228,26 @@
           </span>
           <span id="youGoldDaysBadge" style="font-family:var(--font-head); font-size:13px; color:var(--ink); font-weight:800;">365 DAYS LEFT</span>
         </div>
-        <p style="margin:0; font-size:12px; line-height:1.55; color:#333;">Your membership is fully active. Enjoy unlimited PDF cheat-sheets, human audio, and Studio Pro without watermarks.</p>
+        <p style="margin:0; font-size:12px; line-height:1.55;">Your membership is fully active. Enjoy unlimited PDF cheat-sheets, human audio, and Studio Pro without watermarks.</p>
+      </section>
+
+      <!-- 👑 TSB Gold Upgrade Card (Apple-clean presentation for non-Gold readers) -->
+      <section class="acc__upgradecard" id="youUpgradeCard">
+        <div class="acc__upgradetop">
+          <span class="acc__goldtag">
+            <svg class="inline-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"></path><circle cx="12" cy="19" r="1"></circle></svg>
+            TSB GOLD
+          </span>
+          <span class="acc__upgradeprice">₹99 / mo</span>
+        </div>
+        <p class="acc__upgradedesc">Elevate your daily reading with studio audio narrations, executive cheat-sheet PDFs, and full offline packs.</p>
+        <div class="acc__perkslist">
+          <div class="acc__perkitem"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Studio audio narrations</div>
+          <div class="acc__perkitem"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Downloadable PDFs &amp; packs</div>
+          <div class="acc__perkitem"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> All TheSmallBook Originals</div>
+          <div class="acc__perkitem"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 5-action bottom bar slots</div>
+        </div>
+        <a class="acc__upgradebtn" href="gold.html">UPGRADE TO GOLD &rarr;</a>
       </section>
 
       <section class="acc__levelcard">
@@ -245,7 +270,7 @@
           <a href="dm.html"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> Messages</a>
           <a href="profile.html?id=me"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> My stories</a>
           <a href="notes.html"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> Your notebook</a>
-          <a href="review.html" id="tsbYearLink" hidden>🎛 Your year</a>
+          <a href="review.html" id="tsbYearLink" hidden><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Your year</a>
           <a href="profile.html?id=me"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Edit profile &amp; avatar</a>
         </div>
       </section>
@@ -267,7 +292,7 @@
       <section class="acc__stats">
         <div class="accstat"><b id="stStreak">0</b><span>day streak</span></div>
         <div class="accstat"><b id="stLessons">0</b><span>lessons read</span></div>
-        <div class="accstat"><b id="stBooks">0</b><span>📕 books finished</span></div>
+        <div class="accstat"><b id="stBooks">0</b><span><svg class="inline-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:3px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>books finished</span></div>
         <div class="accstat"><b id="stSaved">0</b><span>on shelf</span></div>
         <div class="accstat"><b id="stBadges">0</b><span>badges</span></div>
         <div class="accstat"><b id="stVisits">0</b><span>visits</span></div>
@@ -282,12 +307,12 @@
           <button class="ydept__row" data-sub="subNotif"><span class="ydept__ic"><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span><span class="ydept__t">Notifications &amp; sound<b>Pop-ups · ding · push when the app is closed</b></span><i>→</i></button>
           <button class="ydept__row" data-sub="subPrivacy"><span class="ydept__ic"><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span><span class="ydept__t">Privacy<b>Public account · last seen · read receipts · requests</b></span><i>→</i></button>
           <button class="ydept__row" data-sub="subAccount"><span class="ydept__ic"><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></span><span class="ydept__t">Account &amp; keys<b>Name · @name · my ID</b></span><i>→</i></button>
-          <a class="ydept__row" href="settings.html" style="text-decoration:none;color:inherit"><span class="ydept__ic">⚙️</span><span class="ydept__t">All settings<b>Text size · fonts · sound · display · language · data</b></span><i>→</i></a>
+          <a class="ydept__row" href="settings.html" style="text-decoration:none;color:inherit"><span class="ydept__ic"><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span><span class="ydept__t">All settings<b>Text size · fonts · sound · display · language · data</b></span><i>→</i></a>
         </div>
         <div class="yquick">
-          <button class="setbtn" id="langBtn">🌐 English</button>
-          <button class="setbtn" data-repref>🎯 Re-tune my library</button>
-          <button class="setbtn" data-install>📲 Install on home screen</button>
+          <button class="setbtn" id="langBtn"><svg class="inline-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> English</button>
+          <button class="setbtn" data-repref><svg class="inline-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> Re-tune my library</button>
+          <button class="setbtn" data-install><svg class="inline-svg" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Install on home screen</button>
         </div>
       </section>
 
@@ -297,7 +322,7 @@
           <span class="iaudban__deco iaudban__deco--ring" aria-hidden="true"></span>
           <span class="iaudban__deco iaudban__deco--sq" aria-hidden="true"></span>
           <span class="iaudban__deco iaudban__deco--tri" aria-hidden="true"></span>
-          <span class="iaudban__chip" aria-hidden="true">⚰️</span>
+          <span class="iaudban__chip" aria-hidden="true"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg></span>
           <span class="iaudban__main">
             <span class="iaudban__eyebrow">FROM THE GRAVEYARD · 360 CASE FILES</span>
             <span class="iaudban__t">THE IDEA AUTOPSY</span>
@@ -321,10 +346,10 @@
 
       <section class="acc__menu">
         <a class="accrow" href="index.html#library"><span><svg class="inline-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></span> My shelf &amp; library <i>→</i></a>
-        <a class="accrow" href="write.html"><span>✍️</span> Write a story <i>→</i></a>
+        <a class="accrow" href="write.html"><span><svg class="inline-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span> Write a story <i>→</i></a>
         <a class="accrow" href="chat.html"><span><svg class="inline-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></span> Ask the library <i>→</i></a>
-        <a class="accrow" href="graveyard.html"><span>💀</span> The Graveyard <i>→</i></a>
-        <a class="accrow accrow--about" href="about.html"><span>ⓘ</span> About & feature guide <i>→</i></a>
+        <a class="accrow" href="graveyard.html"><span><svg class="inline-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;"><path d="M12 2v20M2 12h20"/></svg></span> The Graveyard <i>→</i></a>
+        <a class="accrow accrow--about" href="about.html"><span><svg class="inline-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span> About & feature guide <i>→</i></a>
         <a class="accrow" href="store.html"><span><svg class="inline-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg></span> TSB Store, perks & coupons <i>→</i></a>
       </section>
 
@@ -407,7 +432,7 @@
         <header class="accsub__top"><button class="accsub__back" data-subback aria-label="Back to settings">←</button><span class="accsub__t">🔒 Privacy</span></header>
         <div class="accsub__body">
           <div class="yset__row"><span class="yset__lbl">Public account</span><div class="yset__ctl"><button class="setopt setopt--sm" id="youPublicBtn">Public ✓</button><span class="cm-time" id="youPublicHint">shown in 👥 People</span></div></div>
-          <div class="yset__row"><span class="yset__lbl">Last seen</span><div class="yset__ctl ysw"><button class="ysw__sw on" id="youLastBtn" type="button" role="switch" aria-checked="true" aria-label="Show my last seen"><i></i></button><span class="ysw__lbl" id="youLastLbl">Visible</span><span class="cm-time" id="youLastHint">readers see “last seen 12m ago”</span></div></div>
+          <div class="yset__row"><span class="yset__lbl">Last seen</span><div class="yset__ctl ysw"><button class="ysw__sw on" id="youLastBtn" type="button" role="switch" aria-checked="true" aria-label="Show my last seen"><i></i></button><span class="ysw__lbl" id="youLastLbl">Visible</span><span class="cm-time" id="youLastHint">readers see “Active 10 mins ago”</span></div></div>
           <div class="yset__row"><span class="yset__lbl">Read receipts</span><div class="yset__ctl ysw"><button class="ysw__sw on" id="youHearBtn" type="button" role="switch" aria-checked="true" aria-label="Show that I read a story"><i></i></button><span class="ysw__lbl" id="youHearLbl">On</span><span class="cm-time" id="youHearHint">writers see “read by N”</span></div></div>
           <div class="yset__row" id="youReqRow" hidden><span class="yset__lbl">Follow requests</span><div class="yset__ctl"><a class="setopt setopt--sm" id="youReqLink" href="stories.html?tab=people">0 waiting →</a><span class="cm-time">your private account: accept them in 👥 People</span></div></div>
         </div>
@@ -562,16 +587,14 @@
         } catch (e) {}
         try {
           var goldCard = document.getElementById("youGoldCard");
+          var upCard = document.getElementById("youUpgradeCard");
           var goldDays = document.getElementById("youGoldDaysBadge");
-          if (goldCard) {
-            var isG = (window.TSB_GOLD && TSB_GOLD.isGold()) || (window.TSB_PAYWALL && TSB_PAYWALL.isFounder && TSB_PAYWALL.isFounder());
-            if (isG) {
-              goldCard.style.display = "block";
-              var dLeft = (window.TSB_GOLD && TSB_GOLD.daysLeft) ? TSB_GOLD.daysLeft() : 365;
-              if (goldDays) goldDays.textContent = dLeft + " DAYS LEFT";
-            } else {
-              goldCard.style.display = "none";
-            }
+          var isG = (window.TSB_GOLD && TSB_GOLD.isGold()) || (window.TSB_PAYWALL && TSB_PAYWALL.isFounder && TSB_PAYWALL.isFounder());
+          if (goldCard) goldCard.style.display = isG ? "block" : "none";
+          if (upCard) upCard.style.display = isG ? "none" : "block";
+          if (isG && goldDays) {
+            var dLeft = (window.TSB_GOLD && TSB_GOLD.daysLeft) ? TSB_GOLD.daysLeft() : 365;
+            goldDays.textContent = dLeft > 900 ? "LIFETIME ACCESS" : (dLeft + " DAYS LEFT");
           }
         } catch (eG) {}
         if (!(window.TSB_AUTH && TSB_AUTH.enabled)) document.getElementById("accCloud").style.display = "none";
@@ -1308,7 +1331,7 @@
           if (lastBtn) { lastBtn.classList.toggle("on", showLast); lastBtn.setAttribute("aria-checked", showLast ? "true" : "false"); }
           if (lastLbl) lastLbl.textContent = showLast ? "Visible" : "Hidden";
           if (lastHint) lastHint.textContent = showLast
-            ? "readers see \u201clast seen 12m ago\u201d"
+            ? "readers see \u201cActive 10 mins ago\u201d"
             : "nobody sees when you were here, you stay invisible";
           if (hearBtn) { hearBtn.classList.toggle("on", showHear); hearBtn.setAttribute("aria-checked", showHear ? "true" : "false"); }
           if (hearLbl) hearLbl.textContent = showHear ? "On" : "Off";
