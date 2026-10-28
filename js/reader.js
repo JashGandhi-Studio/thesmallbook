@@ -285,32 +285,86 @@
     }
   });
 
-  // Reading Settings Dialog
-  var dialog = document.getElementById('rmDialog');
+  // Reading Controls Popover & Swatches
   var toolsBtn = document.getElementById('rmTools');
-  var closeDialogBtn = document.getElementById('rmCloseDialog');
-  var sizeSelect = document.getElementById('rmSizeSelect');
-  var fontSelect = document.getElementById('rmFontSelect');
-  var spacingSelect = document.getElementById('rmSpacingSelect');
-  var themeSelect = document.getElementById('rmThemeSelect');
+  var popover = document.getElementById('rmToolsPopover');
+  var closePopoverBtn = document.getElementById('rmToolsClose');
+  var fontSlider = document.getElementById('rmFontSizeSlider');
+  var swatchPaper = document.getElementById('swatchPaper');
+  var swatchSepia = document.getElementById('swatchSepia');
+  var swatchNight = document.getElementById('swatchNight');
 
-  if (toolsBtn && dialog) {
-    toolsBtn.addEventListener('click', function() {
-      if (typeof dialog.showModal === 'function') {
-        dialog.showModal();
+  function openPopover() {
+    if (!popover) return;
+    popover.style.display = 'block';
+  }
+
+  function closePopover() {
+    if (!popover) return;
+    popover.style.display = 'none';
+  }
+
+  if (toolsBtn && popover) {
+    toolsBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (popover.style.display === 'block') {
+        closePopover();
       } else {
-        dialog.setAttribute('open', 'true');
+        openPopover();
       }
     });
   }
 
-  if (closeDialogBtn && dialog) {
-    closeDialogBtn.addEventListener('click', function() {
-      if (typeof dialog.close === 'function') {
-        dialog.close();
-      } else {
-        dialog.removeAttribute('open');
+  if (closePopoverBtn) {
+    closePopoverBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      closePopover();
+    });
+  }
+
+  document.addEventListener('click', function(e) {
+    if (popover && popover.style.display === 'block') {
+      if (!popover.contains(e.target) && e.target !== toolsBtn) {
+        closePopover();
       }
+    }
+  });
+
+  // Swatch clicks
+  function updateSwatches(theme) {
+    [swatchPaper, swatchSepia, swatchNight].forEach(function(s) {
+      if (s) s.classList.remove('active');
+    });
+    if (theme === 'sepia' && swatchSepia) swatchSepia.classList.add('active');
+    else if (theme === 'night' && swatchNight) swatchNight.classList.add('active');
+    else if (swatchPaper) swatchPaper.classList.add('active');
+  }
+
+  if (swatchPaper) {
+    swatchPaper.addEventListener('click', function() {
+      localStorage.setItem('tsb_rm_theme', 'paper');
+      applyPrefs();
+    });
+  }
+  if (swatchSepia) {
+    swatchSepia.addEventListener('click', function() {
+      localStorage.setItem('tsb_rm_theme', 'sepia');
+      applyPrefs();
+    });
+  }
+  if (swatchNight) {
+    swatchNight.addEventListener('click', function() {
+      localStorage.setItem('tsb_rm_theme', 'night');
+      applyPrefs();
+    });
+  }
+
+  // Font Slider
+  if (fontSlider) {
+    fontSlider.addEventListener('input', function() {
+      var val = this.value + 'px';
+      localStorage.setItem('tsb_rm_size', val);
+      document.documentElement.style.setProperty('--rm-size', val);
     });
   }
 
@@ -325,6 +379,11 @@
     document.documentElement.style.setProperty('--rm-size', size);
     document.documentElement.style.setProperty('--rm-font', font);
     document.documentElement.style.setProperty('--rm-spacing', spacing);
+
+    var numericSize = parseInt(size, 10);
+    if (!isNaN(numericSize) && fontSlider) {
+      fontSlider.value = numericSize;
+    }
 
     var effectiveTheme = theme;
     if (theme === 'auto') {
@@ -342,32 +401,14 @@
     if (effectiveTheme === 'sepia') document.body.classList.add('rm-theme-sepia');
     if (effectiveTheme === 'night') document.body.classList.add('rm-theme-night');
 
-    if (sizeSelect) sizeSelect.value = size;
-    if (fontSelect) fontSelect.value = font;
-    if (spacingSelect) spacingSelect.value = spacing;
-    if (themeSelect) themeSelect.value = theme;
+    updateSwatches(effectiveTheme);
+
     if (modeSelect) modeSelect.value = mode;
   }
 
   if (modeSelect) modeSelect.addEventListener('change', function() {
     localStorage.setItem('tsb_rm_mode', this.value);
     renderView();
-  });
-  if (sizeSelect) sizeSelect.addEventListener('change', function() {
-    localStorage.setItem('tsb_rm_size', this.value);
-    applyPrefs();
-  });
-  if (fontSelect) fontSelect.addEventListener('change', function() {
-    localStorage.setItem('tsb_rm_font', this.value);
-    applyPrefs();
-  });
-  if (spacingSelect) spacingSelect.addEventListener('change', function() {
-    localStorage.setItem('tsb_rm_spacing', this.value);
-    applyPrefs();
-  });
-  if (themeSelect) themeSelect.addEventListener('change', function() {
-    localStorage.setItem('tsb_rm_theme', this.value);
-    applyPrefs();
   });
 
   try {
@@ -380,8 +421,9 @@
     }
   } catch (e) {}
 
-  // Language translation handler & graceful failure
+  // Language translation sheet drawer & handlers
   var langBtn = document.getElementById('rmLanguage');
+  var langSheetOverlay = document.getElementById('rmLangSheetOverlay');
   var transError = document.getElementById('rmTransError');
   var transDismiss = document.getElementById('rmTransDismiss');
 
@@ -391,25 +433,96 @@
     });
   }
 
-  if (langBtn) {
-    langBtn.addEventListener('click', function() {
-      if (window.TSB && window.TSB.openLangModal) {
-        try {
-          window.TSB.openLangModal();
-        } catch(err) {
-          if (transError) transError.classList.add('active');
-        }
-      } else {
-        var modal = document.getElementById('langModal');
-        if (modal) {
-          modal.classList.add('open');
-        } else {
-          // If translation unavailable or offline
-          if (transError) transError.classList.add('active');
-        }
-      }
+  var LANG_LABELS = {
+    'en': '🌐 English',
+    'hi': '🌐 हिन्दी',
+    'hi-Latn': '🌐 Hinglish',
+    'gu': '🌐 ગુજરાતી',
+    'mr': '🌐 मराठी',
+    'ta': '🌐 தமிழ்',
+    'bn': '🌐 বাংলা'
+  };
+
+  function updateLangBtnText(code) {
+    if (!langBtn) return;
+    if (LANG_LABELS[code]) {
+      langBtn.textContent = LANG_LABELS[code];
+    } else if (code && code !== 'en') {
+      langBtn.textContent = '🌐 ' + code.toUpperCase();
+    } else {
+      langBtn.textContent = '🌐 Translate';
+    }
+  }
+
+  function openLangSheet() {
+    if (!langSheetOverlay) return;
+    var currentLang = 'en';
+    try { currentLang = JSON.parse(localStorage.getItem('tsb_lang')) || 'en'; } catch (e) {}
+    var cards = langSheetOverlay.querySelectorAll('.rm-lang-card');
+    cards.forEach(function(card) {
+      var cLang = card.getAttribute('data-lang');
+      card.classList.toggle('active', cLang === currentLang);
+    });
+    langSheetOverlay.style.display = 'flex';
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        langSheetOverlay.classList.add('active');
+      });
     });
   }
+
+  function closeLangSheet() {
+    if (!langSheetOverlay) return;
+    langSheetOverlay.classList.remove('active');
+    setTimeout(function() {
+      if (langSheetOverlay) langSheetOverlay.style.display = 'none';
+    }, 280);
+  }
+
+  if (langBtn && langSheetOverlay) {
+    langBtn.addEventListener('click', function() {
+      openLangSheet();
+    });
+
+    langSheetOverlay.addEventListener('click', function(e) {
+      if (e.target === langSheetOverlay) closeLangSheet();
+    });
+
+    var langCards = langSheetOverlay.querySelectorAll('.rm-lang-card');
+    langCards.forEach(function(card) {
+      card.addEventListener('click', function() {
+        var chosen = card.getAttribute('data-lang');
+        if (chosen === 'more') {
+          closeLangSheet();
+          if (window.TSB_LANG && window.TSB_LANG.open) {
+            window.TSB_LANG.open();
+          }
+          return;
+        }
+
+        try {
+          localStorage.setItem('tsb_lang', JSON.stringify(chosen));
+        } catch (e) {}
+
+        updateLangBtnText(chosen);
+        closeLangSheet();
+
+        if (window.TSB_LANG) {
+          if (typeof window.TSB_LANG.select === 'function') {
+            window.TSB_LANG.select(chosen);
+          } else if (typeof window.TSB_LANG.activate === 'function') {
+            window.TSB_LANG.activate(chosen);
+          }
+        }
+      });
+    });
+  }
+
+  // Sync initial language label
+  try {
+    var initLang = JSON.parse(localStorage.getItem('tsb_lang')) || 'en';
+    updateLangBtnText(initLang);
+  } catch (e) {}
 
   applyPrefs();
   renderView();

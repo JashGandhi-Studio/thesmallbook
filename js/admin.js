@@ -200,8 +200,22 @@
   }
 
   /* =========================================================
-     AUTHENTICATION LOGIC
+     AUTHENTICATION LOGIC & SECURITY AUDIT LOGGING
      ========================================================= */
+  function logAdminAudit(action, details) {
+    try {
+      var logs = JSON.parse(localStorage.getItem("tsb_admin_audit_log") || "[]");
+      logs.unshift({
+        timestamp: new Date().toISOString(),
+        action: action,
+        details: details || "",
+        ua: navigator.userAgent
+      });
+      if (logs.length > 100) logs.length = 100;
+      localStorage.setItem("tsb_admin_audit_log", JSON.stringify(logs));
+    } catch (e) {}
+  }
+
   function isAuthed() {
     try {
       return sessionStorage.getItem("tsb_admin_session") === "active_authenticated";
@@ -212,6 +226,8 @@
 
   function checkAuthUI() {
     var authed = isAuthed();
+    var prot = document.getElementById("adminProtectedContent");
+    if (prot) prot.style.display = authed ? "block" : "none";
     if (loginOverlay) {
       loginOverlay.style.display = authed ? "none" : "flex";
     }
@@ -223,6 +239,16 @@
   if (adminLoginForm) {
     adminLoginForm.addEventListener("submit", function (e) {
       e.preventDefault();
+      var lockUntil = +(localStorage.getItem("tsb_admin_lock_until") || 0);
+      if (Date.now() < lockUntil) {
+        var remainingSec = Math.ceil((lockUntil - Date.now()) / 1000);
+        if (loginErrMsg) {
+          loginErrMsg.style.display = "block";
+          loginErrMsg.textContent = "Security Lockout: System temporarily locked for " + remainingSec + " seconds.";
+        }
+        return;
+      }
+
       var u = (adminUsername.value || "").trim();
       var p = (adminPassword.value || "").trim();
       var activePass = getActiveAdminPass();
@@ -230,14 +256,31 @@
       if ((u === ADMIN_USER || u === "admin") && p === activePass) {
         try {
           sessionStorage.setItem("tsb_admin_session", "active_authenticated");
+          localStorage.removeItem("tsb_admin_failed_count");
+          localStorage.removeItem("tsb_admin_lock_until");
         } catch (err) {}
         if (loginErrMsg) loginErrMsg.style.display = "none";
         logEvent("AUTH", "Operator authenticated as " + u);
+        logAdminAudit("AUTH_SUCCESS", "Operator " + u + " authenticated");
         checkAuthUI();
         notify("Access Granted: Welcome to Command Center");
       } else {
-        if (loginErrMsg) loginErrMsg.style.display = "block";
+        var fails = (+(localStorage.getItem("tsb_admin_failed_count") || 0)) + 1;
+        try {
+          localStorage.setItem("tsb_admin_failed_count", String(fails));
+          if (fails >= 4) {
+            localStorage.setItem("tsb_admin_lock_until", String(Date.now() + 180000)); // 3 min lockout
+          }
+        } catch (eLock) {}
+
+        if (loginErrMsg) {
+          loginErrMsg.style.display = "block";
+          loginErrMsg.textContent = fails >= 4
+            ? "Multiple failed attempts recorded. Console access locked for 3 minutes."
+            : "Invalid administrative credentials. Attempt " + fails + " of 4.";
+        }
         logEvent("WARN", "Failed administrative login attempt for: " + u);
+        logAdminAudit("AUTH_FAILED", "Failed attempt for " + u + " (count: " + fails + ")");
       }
     });
   }
@@ -248,6 +291,7 @@
         sessionStorage.removeItem("tsb_admin_session");
       } catch (err) {}
       logEvent("AUTH", "Operator session closed");
+      logAdminAudit("LOGOUT", "Operator logged out");
       checkAuthUI();
       notify("Logged out of Command Center");
     });

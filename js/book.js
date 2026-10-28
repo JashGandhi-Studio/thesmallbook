@@ -799,36 +799,51 @@
     /* (share toast removed - silent download, no black popup) */
   }
 
-  /* 🔗 share the page LINK (WhatsApp-friendly - brings traffic, not just brand) */
-  document.getElementById("shareLinkBtn").addEventListener("click", async () => {
-    const url = location.origin + "/random.html?id=" + book.id;
-    const text = `📕 ${book.title} - ${book.oneLiner}\n\nExperience the 3D book and free breakdown (${book.lessons.length} lessons, ${book.readTime}):`;
-    if (navigator.share) {
-      try { await navigator.share({ title: `${book.title} - TheSmallBook`, text, url }); return; }
-      catch (e) { if (e && e.name === "AbortError") return; }
-    }
-    try {
-      await navigator.clipboard.writeText(text + "\n" + url);
-      toast("🔗 Link copied - paste it anywhere!");
-    } catch (e) {
-      // last-resort fallback
-      const ta = document.createElement("textarea");
-      ta.value = text + "\n" + url;
-      document.body.appendChild(ta);
-      ta.select();
-      try { document.execCommand("copy"); toast("🔗 Link copied - paste it anywhere!"); }
-      catch (err) { toast("Copy failed - long-press the URL bar instead"); }
-      ta.remove();
-    }
-    if (window.TSB) TSB.achv.award("sharer");
-  });
+  /* 🔗 share the page LINK (Neo-Brutalist bottom sheet matching product film) */
+  const shareLinkBtn = document.getElementById("shareLinkBtn");
+  if (shareLinkBtn) {
+    shareLinkBtn.addEventListener("click", async () => {
+      if (window.TSB_SHARE) {
+        window.TSB_SHARE.open(book);
+        return;
+      }
+      const url = location.origin + "/random.html?id=" + book.id;
+      const text = `📕 ${book.title} - ${book.oneLiner}\n\nExperience the 3D book and free breakdown (${book.lessons.length} lessons, ${book.readTime}):`;
+      if (navigator.share) {
+        try { await navigator.share({ title: `${book.title} - TheSmallBook`, text, url }); return; }
+        catch (e) { if (e && e.name === "AbortError") return; }
+      }
+      try {
+        await navigator.clipboard.writeText(text + "\n" + url);
+        toast("🔗 Link copied - paste it anywhere!");
+      } catch (e) {
+        // last-resort fallback
+        const ta = document.createElement("textarea");
+        ta.value = text + "\n" + url;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); toast("🔗 Link copied - paste it anywhere!"); }
+        catch (err) { toast("Copy failed - long-press the URL bar instead"); }
+        ta.remove();
+      }
+      if (window.TSB) TSB.achv.award("sharer");
+    });
+  }
 
-  document.getElementById("shareBtn").addEventListener("click", async () => {
-    toast("🎨 Creating your share card...");
-    const canvas = await renderBookCard();
-    shareCanvas(canvas, `thesmallbook-${book.id}.png`,
-      `📕 ${book.title} - every lesson summarized on TheSmallBook`);
-  });
+  const shareBtn = document.getElementById("shareBtn");
+  if (shareBtn) {
+    shareBtn.addEventListener("click", () => {
+      if (window.TSB_SHARE) {
+        window.TSB_SHARE.open(book);
+      } else {
+        toast("🎨 Creating your share card...");
+        renderBookCard().then(canvas => {
+          shareCanvas(canvas, `thesmallbook-${book.id}.png`,
+            `📕 ${book.title} - every lesson summarized on TheSmallBook`);
+        });
+      }
+    });
+  }
 
   /* ---------- FONT SIZE ---------- */
   let fontLevel = TSB.get("tsb_fontsize", 0);

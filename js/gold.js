@@ -31,9 +31,23 @@
     var c = conf();
     var u = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null;
     try {
+      var plan = localStorage.getItem("tsb_plan");
+      if (plan && (plan === "gold" || plan === "annual" || plan === "monthly" || plan === "gold_yearly" || plan === "gold_monthly" || plan === "pro")) {
+        cached = true; known = true; return true;
+      }
+      if (localStorage.getItem("gold_member_pass") === "active" || localStorage.getItem("plan_tier") === "gold") {
+        cached = true; known = true; return true;
+      }
+    } catch (ePlan) {}
+    try {
       var s = JSON.parse(localStorage.getItem("tsb_auth_session") || "null");
       var em = (((u && u.email) || (s && s.user && s.user.email)) || "").toLowerCase();
       if (em === "acimotreyothy@gmail.com") { cached = true; known = true; return true; }
+      if (em) {
+        var readers = JSON.parse(localStorage.getItem("tsb_admin_readers") || "[]");
+        var matched = readers.find(function (r) { return r.email && r.email.toLowerCase() === em; });
+        if (matched && matched.tier === "Gold VIP") { cached = true; known = true; return true; }
+      }
     } catch (eF) {}
     if (!c.ok || !u) { cached = false; known = true; return cached; }
     var tk = window.TSB_AUTH.token ? await TSB_AUTH.token() : null;
@@ -55,10 +69,15 @@
   function isGold(freshCheck) {
     try {
       var plan = localStorage.getItem("tsb_plan");
-      if (plan && (plan === "gold" || plan === "annual" || plan === "monthly")) {
+      if (plan && (plan === "gold" || plan === "annual" || plan === "monthly" || plan === "gold_yearly" || plan === "gold_monthly" || plan === "pro")) {
         cached = true; known = true; return true;
       }
     } catch (eG) {}
+    try {
+      if (localStorage.getItem("gold_member_pass") === "active" || localStorage.getItem("plan_tier") === "gold") {
+        cached = true; known = true; return true;
+      }
+    } catch (ePass) {}
     try {
       var rc = JSON.parse(localStorage.getItem("tsb_remote_config") || "{}");
       if (rc.goldPaywall === false) { cached = true; known = true; return true; }

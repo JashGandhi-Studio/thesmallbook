@@ -50,14 +50,30 @@
         "name": "TheSmallBook",
         "description": "Free library of 500 book summaries with 3,540 lessons, examples and action steps, plus 360 failure case studies and an Ask-the-Library mode.",
         "inLanguage": "en",
+        "publisher": { "@id": "https://thesmallbook.in/#organization" },
         "author": { "@id": "https://thesmallbook.in/about.html#jash" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://thesmallbook.in/#organization",
+        "name": "TheSmallBook",
+        "url": "https://thesmallbook.in/",
+        "logo": "https://thesmallbook.in/assets/loader-logo.png",
+        "founder": { "@id": "https://thesmallbook.in/about.html#jash" },
+        "foundingLocation": { "@type": "Place", "name": "Mumbai, India" },
+        "sameAs": [
+          "https://github.com/JashGandhi-Studio",
+          "https://instagram.com/thesmallbook.in"
+        ]
       },
       {
         "@type": "Person",
         "@id": "https://thesmallbook.in/about.html#jash",
         "name": "Jash Gandhi",
         "url": "https://thesmallbook.in/about.html",
-        "jobTitle": "Creator of TheSmallBook",
+        "image": "https://thesmallbook.in/assets/jash-gandhi.jpg",
+        "jobTitle": "Founder & Creator of TheSmallBook",
+        "worksFor": { "@id": "https://thesmallbook.in/#organization" },
         "address": { "@type": "PostalAddress", "addressLocality": "Mumbai", "addressCountry": "IN" },
         "sameAs": [
           "https://github.com/JashGandhi-Studio",
@@ -71,7 +87,12 @@
         "url": "https://thesmallbook.in/about.html",
         "name": "About TheSmallBook",
         "isPartOf": { "@id": "https://thesmallbook.in/#website" },
-        "about": { "@id": "https://thesmallbook.in/about.html#jash" }
+        "about": { "@id": "https://thesmallbook.in/about.html#jash" },
+        "primaryImageOfPage": {
+          "@type": "ImageObject",
+          "url": "https://thesmallbook.in/assets/jash-gandhi.jpg",
+          "caption": "Jash Gandhi, Founder of TheSmallBook"
+        }
       }
     ]
   }
@@ -245,7 +266,9 @@
       <div class="idcard">
         <div class="idcard__strip" translate="no">✦ CREATOR ID ✦ THESMALLBOOK ✦ CREATOR ID ✦</div>
         <div class="idcard__body">
-          <div class="idcard__avatar">👨‍💻</div>
+          <div class="idcard__avatar">
+            <img src="assets/jash-gandhi.jpg" alt="Jash Gandhi, Founder of TheSmallBook" width="58" height="58" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" onerror="this.style.display='none';this.parentElement.textContent='👨‍💻';">
+          </div>
           <div class="idcard__info">
             <div class="idcard__name">JASH GANDHI</div>
             <div class="idcard__role">Founder · Builder · Public speaker</div>

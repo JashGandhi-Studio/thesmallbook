@@ -153,6 +153,7 @@ const APP_SHELL = [
   "./js/scan-titles.js",
   "./js/book.js",
   "./js/book-tools.js",
+  "./js/share.js",
   "./js/config.js",
   "./js/mindpick.js",
   "./js/notes-store.js",

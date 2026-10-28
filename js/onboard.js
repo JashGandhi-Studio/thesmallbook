@@ -446,7 +446,7 @@
     var all = window.BOOKS || [];
     var recBooks = [];
 
-    // Collect picked books first
+    // Select personal picks and tailored recommendations (at least 6 books for swipeable selection)
     for (var i = 0; i < picks.length; i++) {
       for (var j = 0; j < all.length; j++) {
         if (all[j].id === picks[i] && recBooks.indexOf(all[j]) < 0) {
@@ -454,13 +454,40 @@
           break;
         }
       }
-      if (recBooks.length >= 6) break;
+      if (recBooks.length >= 8) break;
     }
-    // If fewer than 4, top up from starterShelf
-    if (recBooks.length < 4) {
-      var pool = starterShelf(6);
+
+    // Top up from user selected shelves
+    var userShelves = (draft.shelves || []).concat(draft.why ? [draft.why] : []);
+    if (recBooks.length < 6 && userShelves.length) {
+      for (var sIdx = 0; sIdx < userShelves.length; sIdx++) {
+        var sName = userShelves[sIdx];
+        var shelfMatches = all.filter(function (b) {
+          return b.category === sName || (b.tags && b.tags.indexOf(sName) >= 0);
+        });
+        for (var mIdx = 0; mIdx < shelfMatches.length; mIdx++) {
+          if (recBooks.indexOf(shelfMatches[mIdx]) < 0) {
+            recBooks.push(shelfMatches[mIdx]);
+          }
+          if (recBooks.length >= 6) break;
+        }
+        if (recBooks.length >= 6) break;
+      }
+    }
+
+    // Top up from starterShelf
+    if (recBooks.length < 6) {
+      var pool = starterShelf(8);
       for (var k = 0; k < pool.length; k++) {
         if (recBooks.indexOf(pool[k]) < 0) recBooks.push(pool[k]);
+        if (recBooks.length >= 6) break;
+      }
+    }
+
+    // Fallback if still under 6
+    if (recBooks.length < 6) {
+      for (var a = 0; a < all.length; a++) {
+        if (recBooks.indexOf(all[a]) < 0) recBooks.push(all[a]);
         if (recBooks.length >= 6) break;
       }
     }
@@ -489,25 +516,28 @@
       '</a>';
     }).join("");
 
+    var welcomeHeading = "WELCOME TO THESMALLBOOK" + (readerName ? ", " + readerName.toUpperCase() : "");
+
     modal.innerHTML =
       '<div class="firstread-card">' +
         '<button class="firstread-close" aria-label="Close" id="frClose">✕</button>' +
         '<div class="firstread-header">' +
-          '<h2 class="firstread-title">Welcome to TheSmallBook' + (readerName ? ', ' + readerName : '') + '</h2>' +
+          '<h2 class="firstread-title">' + welcomeHeading + '</h2>' +
           '<p class="firstread-sub">Here are your personal book recommendations</p>' +
+          '<div class="firstread-swipe-hint">↔ SWIPE TO EXPLORE ' + recBooks.length + ' RECOMMENDATIONS</div>' +
         '</div>' +
         '<div class="firstread-rail">' + railHtml + '</div>' +
-        '<button type="button" class="firstread-btn" id="frHomeBtn">Explore All Books →</button>' +
+        '<button type="button" class="firstread-btn" id="frHomeBtn">EXPLORE ALL BOOKS →</button>' +
       '</div>';
 
     document.body.appendChild(modal);
 
     function dismissModal() {
       modal.style.opacity = "0";
-      modal.style.transition = "opacity .2s ease";
+      modal.style.transition = "opacity .22s cubic-bezier(0.16, 1, 0.3, 1)";
       setTimeout(function () {
         if (modal.parentNode) modal.parentNode.removeChild(modal);
-      }, 200);
+      }, 220);
     }
 
     var closeBtn = modal.querySelector("#frClose");

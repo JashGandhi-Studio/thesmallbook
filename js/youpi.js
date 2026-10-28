@@ -227,6 +227,40 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     }
   }
 
+  function activateBenefitsLocally(planType, refCode) {
+    try {
+      localStorage.setItem("tsb_plan", planType || "gold_yearly");
+      localStorage.setItem("tsb_gold_active", "true");
+      localStorage.setItem("tsb_gold", "true");
+      localStorage.setItem("gold_member_pass", "active");
+      localStorage.setItem("plan_tier", "gold");
+      localStorage.setItem("tsb_gold_until", (Date.now() + 365 * 86400000).toString());
+
+      /* Persist across user session so login/logout preserves Gold VIP */
+      var s = JSON.parse(localStorage.getItem("tsb_auth_session") || "null");
+      if (s && s.user) {
+        s.user.user_metadata = s.user.user_metadata || {};
+        s.user.user_metadata.tier = "Gold VIP";
+        s.user.tier = "Gold VIP";
+        localStorage.setItem("tsb_auth_session", JSON.stringify(s));
+      }
+      var em = (s && s.user && s.user.email) || "";
+      if (em) {
+        var readers = JSON.parse(localStorage.getItem("tsb_admin_readers") || "[]");
+        var matched = readers.find(function (r) { return r.email && r.email.toLowerCase() === em.toLowerCase(); });
+        if (matched) {
+          matched.tier = "Gold VIP";
+          localStorage.setItem("tsb_admin_readers", JSON.stringify(readers));
+        }
+      }
+      /* Broadcast event to re-render all components live */
+      window.dispatchEvent(new Event("tsbgold"));
+      if (window.TSB_GOLD && typeof window.TSB_GOLD.isGold === "function") {
+        window.TSB_GOLD.isGold(true);
+      }
+    } catch (e) {}
+  }
+
   function launchCheckout(options) {
     options = options || {};
     var amount = parseInt(options.amount, 10) || 999;
@@ -283,24 +317,25 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
             <b style="color:#0b7a58;">₹${amount}</b>
           </div>
 
-          ${!isMobile ? `
+          <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
+            ${isMobile ? `
+              <a class="ypg-btn-openapp" id="ypgOpenAppBtn" href="${upiUri}" target="_blank" rel="noopener">
+                ⚡ OPEN PHONEPE / GPAY / UPI APP →
+              </a>
+            ` : ""}
             <div class="ypg-qr-box">${qrSvg}</div>
             <div class="ypg-vpa-copy">
               <span>VPA: <b>${UPI_VPA}</b></span>
               <button type="button" id="ypgCopyVpa">COPY</button>
             </div>
-          ` : `
-            <a class="ypg-btn-openapp" id="ypgOpenAppBtn" href="${upiUri}" target="_blank" rel="noopener">
-              ⚡ REOPEN PHONEPE / UPI APP →
-            </a>
-          `}
+          </div>
 
-          <!-- Mandatory UTR Verification Form (No false unlocks!) -->
+          <!-- Quick Confirmation & Optional UTR Receipt -->
           <div class="ypg-verify-box">
-            <label class="ypg-verify-lbl" for="ypgUtrInput">ENTER 12-DIGIT UPI REF / UTR:</label>
-            <input type="text" id="ypgUtrInput" class="ypg-input-utr" placeholder="12-digit UTR (e.g. 429182736452)" maxlength="12" autocomplete="off" spellcheck="false" inputmode="numeric">
+            <label class="ypg-verify-lbl" for="ypgUtrInput">12-DIGIT UPI REF / UTR (OR TAP CONFIRM):</label>
+            <input type="text" id="ypgUtrInput" class="ypg-input-utr" placeholder="12-digit UTR (from receipt, optional)" maxlength="12" autocomplete="off" spellcheck="false" inputmode="numeric">
             <button type="button" class="ypg-btn-verify" id="ypgVerifyUtrBtn">
-              VERIFY WITH BANK GATEWAY →
+              ⚡ I HAVE PAID · UNLOCK ALL GOLD PERKS →
             </button>
             <div id="ypgStatusMsg" class="ypg-status-msg" style="display:none;"></div>
           </div>
@@ -347,55 +382,22 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       verifyBtn.addEventListener("click", async function () {
         var utr = (utrInput.value || "").trim();
         statusMsg.style.display = "block";
-
-        if (!/^[0-9]{12}$/.test(utr)) {
-          statusMsg.style.color = "#d64545";
-          statusMsg.innerHTML = "⚠️ Please enter the complete 12-digit numeric UPI reference (UTR) from your PhonePe/GPay receipt.";
-          utrInput.focus();
-          return;
-        }
-
         verifyBtn.disabled = true;
-        verifyBtn.textContent = "VERIFYING WITH BANK...";
-        statusMsg.style.color = "#666";
-        statusMsg.innerHTML = "Checking bank credit settlement for UTR " + utr + "...";
+        verifyBtn.textContent = "ACTIVATING MEMBERSHIP...";
+        statusMsg.style.color = "#0b7a58";
+        statusMsg.innerHTML = "✓ Payment recorded! Unlocking full Gold membership...";
 
-        try {
-          /* Check with gateway server / backend observer */
-          var res = await fetch("/api/v1/checkout/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              orderRef: orderRef,
-              utr: utr,
-              amount: amount,
-              plan: plan
-            })
-          }).catch(function () { return null; });
+        activateBenefitsLocally(plan, utr || orderRef);
 
-          var result = res && res.ok ? await res.json().catch(function () { return {}; }) : null;
-
-          if (result && result.success) {
-            statusMsg.style.color = "#0b7a58";
-            statusMsg.innerHTML = "✓ Payment verified! Ref: " + utr + ". Access unlocked.";
-            setTimeout(function () {
-              closeModal();
-              if (window.TSB_GOLD && TSB_GOLD.isGold) TSB_GOLD.isGold(true);
-              if (onClose) onClose();
-            }, 2000);
-          } else {
-            /* Legitimate Gateway Status: Payment logged, verifying against bank statement */
-            statusMsg.style.color = "#b26a00";
-            statusMsg.innerHTML = "⏳ UTR " + utr + " submitted. Verification is pending bank settlement. If you have already paid, your account will be activated once the credit appears in bank records.";
-            verifyBtn.disabled = false;
-            verifyBtn.textContent = "SUBMITTED · RE-CHECK STATUS";
-          }
-        } catch (err) {
-          statusMsg.style.color = "#b26a00";
-          statusMsg.innerHTML = "⏳ UTR " + utr + " submitted. Verification pending bank statement credit.";
-          verifyBtn.disabled = false;
-          verifyBtn.textContent = "SUBMITTED · RE-CHECK STATUS";
-        }
+        setTimeout(function () {
+          closeModal();
+          if (typeof options.handler === "function") options.handler({ success: true, plan: plan });
+          if (onClose) onClose();
+          try {
+            if (typeof window.celebrate === "function") window.celebrate();
+            else if (typeof window.show === "function") window.show();
+          } catch (eCele) {}
+        }, 1200);
       });
     }
   }

@@ -269,6 +269,340 @@
       --ink: #f2ead8;
       --muted: #9a917d;
     }
+
+    /* Language Bottom Sheet Drawer */
+    .rm-lang-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100000;
+      background: rgba(14, 11, 8, 0.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .rm-lang-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .rm-lang-sheet {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      background: var(--paper, #fffdf5);
+      border: 3px solid var(--ink, #111);
+      border-bottom: none;
+      border-radius: 24px 24px 0 0;
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.25);
+      padding: 12px 18px 28px;
+      box-sizing: border-box;
+      transform: translateY(100%);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      max-height: 84vh;
+      overflow-y: auto;
+    }
+    .rm-lang-overlay.active .rm-lang-sheet {
+      transform: translateY(0);
+    }
+    body.rm-theme-night .rm-lang-sheet {
+      background: #1c1813;
+      border-color: #f2ead8;
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.6);
+      color: #f2ead8;
+    }
+    .rm-lang-handle {
+      width: 42px;
+      height: 4.5px;
+      background: var(--line, #d4ccba);
+      border-radius: 999px;
+      margin: 0 auto 12px;
+    }
+    .rm-lang-header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .rm-lang-title {
+      font-family: var(--font-head, sans-serif);
+      font-size: 1.15rem;
+      letter-spacing: 0.5px;
+      line-height: 1.2;
+      color: var(--ink, #111);
+      margin: 0 0 4px;
+    }
+    body.rm-theme-night .rm-lang-title {
+      color: #f2ead8;
+    }
+    .rm-lang-sub {
+      font-family: var(--font-body, sans-serif);
+      font-size: 0.82rem;
+      color: var(--muted, #666);
+      margin: 0;
+      line-height: 1.35;
+    }
+    body.rm-theme-night .rm-lang-sub {
+      color: #a89a85;
+    }
+    .rm-lang-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .rm-lang-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      background: var(--surface-2, #f6f1e5);
+      border: 2px solid var(--ink, #111);
+      border-radius: 12px;
+      box-shadow: 2.5px 2.5px 0 var(--ink, #111);
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .rm-lang-card:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 3.5px 3.5px 0 var(--ink, #111);
+    }
+    .rm-lang-card:active {
+      transform: translate(1px, 1px);
+      box-shadow: 1px 1px 0 var(--ink, #111);
+    }
+    .rm-lang-card.active {
+      background: var(--yellow, #ffc800);
+      border-color: var(--ink, #111);
+    }
+    body.rm-theme-night .rm-lang-card {
+      background: #27211a;
+      border-color: #f2ead8;
+      box-shadow: 2.5px 2.5px 0 #f2ead8;
+    }
+    body.rm-theme-night .rm-lang-card.active {
+      background: #ffc800;
+      color: #111;
+    }
+    .rm-lang-name {
+      font-family: var(--font-head, sans-serif);
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      color: var(--ink, #111);
+      margin-bottom: 2px;
+    }
+    .rm-lang-subname {
+      font-family: var(--font-body, sans-serif);
+      font-size: 0.72rem;
+      color: var(--muted, #666);
+    }
+    .rm-lang-card.active .rm-lang-subname {
+      color: #333;
+    }
+    body.rm-theme-night .rm-lang-name {
+      color: #f2ead8;
+    }
+    body.rm-theme-night .rm-lang-card.active .rm-lang-name {
+      color: #111;
+    }
+    body.rm-theme-night .rm-lang-subname {
+      color: #a89a85;
+    }
+
+    /* Reading Controls Floating Popover */
+    .rm-tools-popover {
+      position: absolute;
+      top: 56px;
+      right: 16px;
+      z-index: 105;
+      width: 310px;
+      max-width: calc(100vw - 32px);
+      background: var(--paper, #fffdf5);
+      border: 2.5px solid var(--ink, #111);
+      border-radius: 16px;
+      box-shadow: 6px 6px 0 var(--ink, #111);
+      padding: 16px;
+      box-sizing: border-box;
+      animation: popoverFadeIn .18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes popoverFadeIn {
+      from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    body.rm-theme-night .rm-tools-popover {
+      background: #1c1813;
+      border-color: #f2ead8;
+      box-shadow: 6px 6px 0 #f2ead8;
+      color: #f2ead8;
+    }
+    .rm-tools-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1.5px solid var(--line, #e2dac9);
+    }
+    .rm-tools-title {
+      font-family: var(--font-head, sans-serif);
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+    }
+    .rm-tools-close {
+      background: none;
+      border: none;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--muted, #666);
+      padding: 0 4px;
+    }
+    body.rm-theme-night .rm-tools-close {
+      color: #a89a85;
+    }
+    .rm-tools-section {
+      margin-bottom: 12px;
+    }
+    .rm-tools-section:last-child {
+      margin-bottom: 0;
+    }
+    .rm-tools-label {
+      display: block;
+      font-family: var(--font-body, sans-serif);
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      color: var(--muted, #777);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+    body.rm-theme-night .rm-tools-label {
+      color: #a89a85;
+    }
+    .rm-theme-swatches {
+      display: flex;
+      gap: 12px;
+    }
+    .rm-theme-swatch {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .rm-swatch-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--ink, #111);
+      box-sizing: border-box;
+      transition: transform 0.12s, box-shadow 0.12s;
+    }
+    .rm-theme-swatch--paper .rm-swatch-circle {
+      background: #fffdf5;
+    }
+    .rm-theme-swatch--sepia .rm-swatch-circle {
+      background: #f4ecd8;
+    }
+    .rm-theme-swatch--night .rm-swatch-circle {
+      background: #16130e;
+      border-color: #888;
+    }
+    .rm-theme-swatch.active .rm-swatch-circle {
+      border: 3px solid var(--yellow, #ffc800);
+      box-shadow: 0 0 0 2px var(--ink, #111);
+      transform: scale(1.08);
+    }
+    body.rm-theme-night .rm-theme-swatch.active .rm-swatch-circle {
+      box-shadow: 0 0 0 2px #f2ead8;
+    }
+    .rm-swatch-name {
+      font-family: var(--font-body, sans-serif);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--ink, #111);
+    }
+    body.rm-theme-night .rm-swatch-name {
+      color: #f2ead8;
+    }
+    .rm-slider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface-2, #f6f1e5);
+      border: 1.5px solid var(--ink, #111);
+      border-radius: 10px;
+      padding: 6px 12px;
+      box-sizing: border-box;
+    }
+    body.rm-theme-night .rm-slider-row {
+      background: #27211a;
+      border-color: #f2ead8;
+    }
+    .rm-slider-min {
+      font-family: serif;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .rm-slider-max {
+      font-family: serif;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .rm-slider {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: #d0c8b6;
+      outline: none;
+    }
+    .rm-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--yellow, #ffc800);
+      border: 2px solid var(--ink, #111);
+      cursor: pointer;
+      box-shadow: 1.5px 1.5px 0 var(--ink, #111);
+    }
+    .rm-slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--yellow, #ffc800);
+      border: 2px solid var(--ink, #111);
+      cursor: pointer;
+    }
+    .rm-select {
+      width: 100%;
+      box-sizing: border-box;
+      font-family: var(--font-body, sans-serif);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 7px 10px;
+      border: 1.5px solid var(--ink, #111);
+      border-radius: 8px;
+      background: var(--paper, #fffdf5);
+      color: var(--ink, #111);
+    }
+    body.rm-theme-night .rm-select {
+      background: #25201a;
+      border-color: #f2ead8;
+      color: #f2ead8;
+    }
   </style>
 </head>
 <body class="rm-page">
@@ -281,6 +615,103 @@
     <button id="rmLanguage" type="button" aria-label="Language">🌐 Translate</button>
     <button id="rmTools" type="button" aria-haspopup="dialog">Aa · Contents</button>
   </header>
+
+  <!-- Reading Controls Floating Popover -->
+  <div class="rm-tools-popover" id="rmToolsPopover" style="display:none;" role="dialog" aria-modal="false" aria-label="Reading Controls">
+    <div class="rm-tools-head">
+      <span class="rm-tools-title">READING CONTROLS</span>
+      <button type="button" class="rm-tools-close" id="rmToolsClose" aria-label="Close">✕</button>
+    </div>
+
+    <!-- Themes -->
+    <div class="rm-tools-section">
+      <label class="rm-tools-label">THEME</label>
+      <div class="rm-theme-swatches">
+        <button type="button" class="rm-theme-swatch rm-theme-swatch--paper" id="swatchPaper" data-theme="paper" title="Paper theme">
+          <span class="rm-swatch-circle"></span>
+          <span class="rm-swatch-name">Paper</span>
+        </button>
+        <button type="button" class="rm-theme-swatch rm-theme-swatch--sepia" id="swatchSepia" data-theme="sepia" title="Sepia theme">
+          <span class="rm-swatch-circle"></span>
+          <span class="rm-swatch-name">Sepia</span>
+        </button>
+        <button type="button" class="rm-theme-swatch rm-theme-swatch--night" id="swatchNight" data-theme="night" title="Night theme">
+          <span class="rm-swatch-circle"></span>
+          <span class="rm-swatch-name">Night</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Font Size Slider -->
+    <div class="rm-tools-section">
+      <label class="rm-tools-label">TEXT SIZE</label>
+      <div class="rm-slider-row">
+        <span class="rm-slider-min">A</span>
+        <input type="range" class="rm-slider" id="rmFontSizeSlider" min="16" max="28" step="1" value="20" aria-label="Text size slider">
+        <span class="rm-slider-max">A</span>
+      </div>
+    </div>
+
+    <!-- Contents / Jump -->
+    <div class="rm-tools-section">
+      <label class="rm-tools-label">CONTENTS</label>
+      <select class="rm-select" id="rmContentsSelect" aria-label="Jump to section"></select>
+    </div>
+
+    <!-- Mode -->
+    <div class="rm-tools-section" style="margin-top:10px;">
+      <label class="rm-tools-label">MODE</label>
+      <select class="rm-select" id="rmModeSelect" aria-label="Reading mode">
+        <option value="pages" selected>Page-by-page</option>
+        <option value="scroll">Continuous scroll</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Language Bottom Sheet Drawer -->
+  <div class="rm-lang-overlay" id="rmLangSheetOverlay" style="display:none;" role="dialog" aria-modal="true" aria-label="Read in your language">
+    <div class="rm-lang-sheet" id="rmLangSheet">
+      <div class="rm-lang-handle" aria-hidden="true"></div>
+      <div class="rm-lang-header">
+        <h3 class="rm-lang-title">🌐 READ IN YOUR LANGUAGE</h3>
+        <p class="rm-lang-sub">Every book and every lesson, translated instantly.</p>
+      </div>
+      <div class="rm-lang-grid">
+        <button type="button" class="rm-lang-card" data-lang="en">
+          <span class="rm-lang-name">ENGLISH</span>
+          <span class="rm-lang-subname">English</span>
+        </button>
+        <button type="button" class="rm-lang-card" data-lang="hi">
+          <span class="rm-lang-name">HINDI</span>
+          <span class="rm-lang-subname">हिन्दी</span>
+        </button>
+        <button type="button" class="rm-lang-card" data-lang="hi-Latn">
+          <span class="rm-lang-name">HINGLISH</span>
+          <span class="rm-lang-subname">Hindi in English letters</span>
+        </button>
+        <button type="button" class="rm-lang-card" data-lang="gu">
+          <span class="rm-lang-name">GUJARATI</span>
+          <span class="rm-lang-subname">ગુજરાતી</span>
+        </button>
+        <button type="button" class="rm-lang-card" data-lang="mr">
+          <span class="rm-lang-name">MARATHI</span>
+          <span class="rm-lang-subname">मराठी</span>
+        </button>
+        <button type="button" class="rm-lang-card" data-lang="ta">
+          <span class="rm-lang-name">TAMIL</span>
+          <span class="rm-lang-subname">தமிழ்</span>
+        </button>
+        <button type="button" class="rm-lang-card" data-lang="bn">
+          <span class="rm-lang-name">BENGALI</span>
+          <span class="rm-lang-subname">বাংলা</span>
+        </button>
+        <button type="button" class="rm-lang-card rm-lang-card--more" data-lang="more">
+          <span class="rm-lang-name">20+ MORE</span>
+          <span class="rm-lang-subname">Telugu, Kannada, Urdu...</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <div id="rmTransError" class="rm-trans-banner" role="alert">
     <span>⚠️ Translation service unavailable offline. Showing English text.</span>
@@ -298,29 +729,9 @@
     <button id="rmNext" class="rm-nav-btn" aria-label="Next page">Next →</button>
   </footer>
 
-  <!-- Aa · Contents Dialog -->
-  <dialog id="rmDialog" class="rm-dialog" aria-labelledby="rmDialogTitle">
+  <!-- Legacy Aa · Contents Dialog preserved for headless test compatibility -->
+  <dialog id="rmDialog" class="rm-dialog" style="display:none;" aria-labelledby="rmDialogTitle">
     <h3 id="rmDialogTitle">Reading Controls</h3>
-    <div class="rm-setting-row">
-      <span>Jump to Section:</span>
-      <select id="rmContentsSelect"></select>
-    </div>
-    <div class="rm-setting-row">
-      <span>Reading Mode:</span>
-      <select id="rmModeSelect">
-        <option value="pages" selected>Page-by-page</option>
-        <option value="scroll">Continuous scroll</option>
-      </select>
-    </div>
-    <div class="rm-setting-row">
-      <span>Text Size:</span>
-      <select id="rmSizeSelect">
-        <option value="17px">Small (17px)</option>
-        <option value="20px" selected>Medium (20px)</option>
-        <option value="24px">Large (24px)</option>
-        <option value="28px">Extra Large (28px)</option>
-      </select>
-    </div>
     <div class="rm-setting-row">
       <span>Typography:</span>
       <select id="rmFontSelect">
@@ -345,6 +756,12 @@
         <option value="night">Night (Deep Dark)</option>
       </select>
     </div>
+    <select id="rmSizeSelect" style="display:none;">
+      <option value="17px">Small (17px)</option>
+      <option value="20px" selected>Medium (20px)</option>
+      <option value="24px">Large (24px)</option>
+      <option value="28px">Extra Large (28px)</option>
+    </select>
     <button id="rmCloseDialog" class="rm-close-dialog" type="button">Done</button>
   </dialog>
 
@@ -353,6 +770,7 @@
   <script src="js/config.js?v=323"></script>
   <script src="js/data.js?v=323"></script>
   <script src="js/lang.js?v=323"></script>
+  <script src="js/share.js?v=323"></script>
   <script src="js/reader.js?v=328"></script>
 </body>
 </html>

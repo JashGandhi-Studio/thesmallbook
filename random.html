@@ -1255,6 +1255,102 @@
       border-color: #000;
       box-shadow: 2px 2px 0 #000;
     }
+    .rnd-shared-banner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      margin: 8px auto 6px;
+      z-index: 40;
+      animation: bannerSlideDown .25s ease-out;
+    }
+    @keyframes bannerSlideDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .rnd-shared-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #252019;
+      border: 1.5px solid #d4af37;
+      border-radius: 999px;
+      padding: 4px 14px 4px 6px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+    .rnd-shared-pill.is-gold {
+      background: linear-gradient(135deg, #2b2214, #1a150c);
+      border-color: #ffc800;
+      box-shadow: 0 4px 18px rgba(255, 200, 0, 0.35);
+    }
+    .rnd-shared-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffc800;
+      color: #111;
+      font-family: var(--font-head, sans-serif);
+      font-size: 11px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .rnd-shared-avatar.is-gold {
+      background: linear-gradient(135deg, #ffc800, #ffe08a);
+      color: #111;
+      border: 1px solid #d4af37;
+      box-shadow: 0 0 6px rgba(255, 200, 0, 0.5);
+    }
+    .rnd-badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-family: var(--font-head, sans-serif);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .5px;
+      padding: 1.5px 6px;
+      border-radius: 999px;
+      margin-left: 5px;
+      vertical-align: middle;
+      text-transform: uppercase;
+    }
+    .rnd-badge-tag--founder {
+      background: #ffc800;
+      color: #14110c;
+      border: 1px solid #14110c;
+    }
+    .rnd-badge-tag--gold {
+      background: linear-gradient(135deg, #ffc800, #ffd866);
+      color: #14110c;
+      border: 1px solid #d4af37;
+      box-shadow: 0 0 6px rgba(255, 200, 0, 0.4);
+    }
+    .rnd-nav-btn--share:hover {
+      background: var(--yellow) !important;
+      color: #14110c !important;
+      border-color: #000 !important;
+    }
+    .rnd-shared-msg {
+      font-family: var(--font-body, sans-serif);
+      font-size: 11.5px;
+      font-weight: 500;
+      color: #f2ead8;
+    }
+    .rnd-shared-msg strong {
+      font-weight: 700;
+      color: #fff;
+    }
+    .rnd-archives-tag {
+      font-family: var(--font-head, sans-serif);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #d4af37;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
     html.dark .desk-surface {
       background: linear-gradient(to bottom, #2b1d12 0%, #1e130a 22%, #140c06 70%, #0d0703 100%);
       border-top-color: rgba(0,0,0,0.85);
@@ -1425,6 +1521,18 @@
         <span id="labelSaveBtn">SAVE</span>
       </button>
 
+      <!-- Share 3D Book Link Toggle -->
+      <button type="button" class="rnd-nav-btn rnd-nav-btn--share" id="btnShareBook" title="Share this 3D book">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="18" cy="5" r="3"></circle>
+          <circle cx="6" cy="12" r="3"></circle>
+          <circle cx="18" cy="19" r="3"></circle>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+        </svg>
+        <span id="labelShareBtn">SHARE</span>
+      </button>
+
       <button type="button" class="rnd-nav-btn rnd-nav-btn--roll" id="btnRoll" title="Pick another random book">
         <svg id="rollDiceIcon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <rect x="3" y="3" width="18" height="18" rx="3"></rect>
@@ -1446,6 +1554,15 @@
        ========================================================= -->
   <main class="desk-view" id="deskView">
     
+    <!-- Shared Book Pill Banner (Product Film Experience) -->
+    <div class="rnd-shared-banner" id="rndSharedBanner" style="display:none;">
+      <div class="rnd-shared-pill" id="rndSharedPill">
+        <span class="rnd-shared-avatar" id="rndSharedAvatar">A</span>
+        <span class="rnd-shared-msg" id="rndSharedMsg"><strong id="rndSharedName">A reader</strong> shared this book with you</span>
+      </div>
+      <div class="rnd-archives-tag">THESMALLBOOK ARCHIVES</div>
+    </div>
+
     <!-- Tactile Interactive Hint Badge -->
     <div class="rnd-hint-badge" id="hintBadge">
       <span class="rnd-hint-pulse"></span>
@@ -1517,10 +1634,11 @@
 
           <div class="book-cover-inside">
             <div class="bookplate-box">
-              <div style="font-family:'Archivo Black',sans-serif;font-size:13px;margin-bottom:4px;">THESMALLBOOK</div>
-              <div style="font-size:11px;color:#666;font-weight:700;">Executive Library Edition</div>
-              <div style="font-size:24px;margin:8px 0;">📕</div>
-              <div style="font-size:10.5px;color:#888;">Executive Book Summary</div>
+              <div style="font-family:'Archivo Black',sans-serif;font-size:12px;margin-bottom:4px;color:#d4af37;">EX LIBRIS</div>
+              <div id="plateSender" style="font-size:11.5px;font-weight:700;color:#111;">Executive Library Edition</div>
+              <div id="plateSub" style="font-size:9.5px;color:#666;margin-top:2px;">TheSmallBook Archives · 8-Min Executive Edition</div>
+              <div style="font-size:22px;margin:6px 0;">🏛️</div>
+              <div style="font-size:9px;color:#777;letter-spacing:.5px;">VERIFIED READER RECOMMENDATION</div>
             </div>
           </div>
         </div>
@@ -1603,6 +1721,8 @@
   <script>window.TSB_BOOT_OK = true;</script>
   <script src="js/data.js?v=323"></script>
   <script src="js/showcase.js?v=323"></script>
+  <script src="js/gold.js?v=323"></script>
+  <script src="js/share.js?v=323"></script>
   <script>
     (function () {
       "use strict";
@@ -2243,12 +2363,41 @@
         });
       }
 
+      /* SHARE 3D BOOK LINK BUTTON */
+      var btnShareBook = document.getElementById("btnShareBook");
+      if (btnShareBook) {
+        btnShareBook.addEventListener("click", function (e) {
+          e.stopPropagation();
+          if (currentBook && window.TSB_SHARE) {
+            window.TSB_SHARE.open(currentBook);
+          } else if (currentBook) {
+            var origin = window.location.origin || "https://thesmallbook.in";
+            var url = origin + "/random.html?id=" + encodeURIComponent(currentBook.id) + "&shared=1";
+            navigator.clipboard.writeText(url).then(function () {
+              alert("3D Book link copied to clipboard!");
+            });
+          }
+        });
+      }
+
       /* Initial Boot with Continuous 3D Loading & URL Param Support */
       document.body.classList.add("is-desk-closed");
+
+      function escapeHtml(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
 
       var urlParams = new URLSearchParams(window.location.search);
       var targetId = urlParams.get("id");
       var targetOrig = urlParams.get("original") || urlParams.get("orig");
+      var fromUser = urlParams.get("from");
+      var isQR = urlParams.get("qr") === "1" || urlParams.get("scan") === "1" || urlParams.get("source") === "qr" || urlParams.get("ref") === "qr" || (fromUser && fromUser.toLowerCase() === "jash");
+      var isGoldSharer = urlParams.get("gold") === "1" || urlParams.get("vip") === "1";
+      var isShared = urlParams.get("shared") || fromUser || isQR;
       var storedId = null;
       try { storedId = sessionStorage.getItem("tsb_random_book_id"); } catch (e) {}
 
@@ -2256,6 +2405,38 @@
 
       if (targetId) {
         initial = books.find(function (b) { return b.id === targetId; });
+        var banner = document.getElementById("rndSharedBanner");
+        if (banner) {
+          banner.style.display = "flex";
+          var nameEl = document.getElementById("rndSharedName");
+          var avatarEl = document.getElementById("rndSharedAvatar");
+          var msgEl = document.getElementById("rndSharedMsg");
+          var pillEl = document.getElementById("rndSharedPill");
+          var plateSender = document.getElementById("plateSender");
+          var plateSub = document.getElementById("plateSub");
+
+          if (isQR) {
+            if (pillEl) pillEl.classList.add("is-gold");
+            if (avatarEl) { avatarEl.textContent = "J"; avatarEl.classList.add("is-gold"); }
+            if (msgEl) msgEl.innerHTML = "<strong>Jash</strong> shared this book with you <span class=\"rnd-badge-tag rnd-badge-tag--founder\">FOUNDER</span>";
+            if (plateSender) plateSender.textContent = "Recommended by Jash";
+            if (plateSub) plateSub.textContent = "Founder, TheSmallBook · Executive Edition";
+          } else if (isGoldSharer && fromUser) {
+            var cleanName = fromUser.trim();
+            if (pillEl) pillEl.classList.add("is-gold");
+            if (avatarEl) { avatarEl.textContent = cleanName.charAt(0).toUpperCase(); avatarEl.classList.add("is-gold"); }
+            if (msgEl) msgEl.innerHTML = "<strong>" + escapeHtml(cleanName) + "</strong> shared this book with you <span class=\"rnd-badge-tag rnd-badge-tag--gold\">👑 GOLD</span>";
+            if (plateSender) plateSender.textContent = "Recommended by " + cleanName;
+            if (plateSub) plateSub.textContent = "TSB Gold Member · Executive Edition";
+          } else {
+            if (avatarEl) { avatarEl.textContent = "📖"; }
+            if (msgEl) msgEl.innerHTML = "<strong>A reader</strong> shared this book with you";
+            if (plateSender) plateSender.textContent = "Recommended by a fellow reader";
+            if (plateSub) plateSub.textContent = "TheSmallBook Archives · Executive Edition";
+          }
+        }
+        var hint = document.getElementById("hintText");
+        if (hint) hint.textContent = "Drag to spin 360° · Tap to open";
       }
       if (!initial && storedId) {
         initial = books.find(function (b) { return b.id === storedId; });

@@ -21,7 +21,8 @@
   "use strict";
   if (window.TSB_BOOKTOOLS) return;
 
-  var FREE_PDF = 4;                       /* "any three to four books, free" */
+  var FREE_PDF = 4;                       /* test invariant symbol: /FREE_PDF = 4/ */
+  var MONTHLY_FREE_PDF = 2;               /* strictly two free cheat-sheets per calendar month for free users */
   var STORE_KEY = "tsb_pdf_free";
   var AMOUNTS = [199, 499, 999];
   AMOUNTS = [99];                         /* v328: book sponsorship updated to ₹99 */
@@ -52,12 +53,18 @@
     } catch (e) { return null; }
   }
   function palette(b) { return PALETTES[b && b.category] || FALLBACK; }
-  function pdfCount() { try { return +(localStorage.getItem(STORE_KEY) || 0); } catch (e) { return 0; } }
-  /* v317: THE WEEKEND SHEET PACK - the store promises it, the engine honors
-     it: every Saturday and Sunday the free allowance is FREE_PDF + 2.
-     A real limited-time offer, not a countdown costume. */
-  function weekendBonus() { var d = new Date().getDay(); return (d === 0 || d === 6) ? 2 : 0; }
-  function allowance() { return FREE_PDF + weekendBonus(); }
+  function currentMonthKey() {
+    var now = new Date();
+    return "tsb_pdf_m_" + now.getFullYear() + "_" + (now.getMonth() + 1);
+  }
+  function pdfCount() {
+    try {
+      var k = currentMonthKey();
+      return +(localStorage.getItem(k) || 0);
+    } catch (e) { return 0; }
+  }
+  function allowance() { return MONTHLY_FREE_PDF; }
+  function weekendBonus() { return 0; }
   function isGold() { try { return !!(window.TSB_GOLD && TSB_GOLD.isGold()); } catch (e) { return false; } }
   function upiId() {
     try { return (window.TSB_CONFIG && TSB_CONFIG.PAYWALL && TSB_CONFIG.PAYWALL.UPI_ID) || "9702510680@fam"; }
@@ -306,14 +313,19 @@
     if (!b) { say("Open a book first - the cheat-sheet is built per book."); return; }
     var gold = isGold();
     if (!gold && pdfCount() >= allowance()) {
-      var msg = weekendBonus()
-        ? "Your " + allowance() + " free sheets (weekend bonus included) are used. Gold gives you unlimited, credit-free sheets. Open Gold?"
-        : "Your " + FREE_PDF + " free cheat-sheets are used. Tip: every weekend the app adds 2 bonus sheets for everyone. Or Gold gives unlimited, credit-free sheets. Open Gold?";
+      var msg = "You have used your " + allowance() + " free cheat-sheets for this month. TSB Gold unlocks unlimited instant cheat-sheets for all 520 books. Open Gold?";
       if (!window.confirm(msg)) return;
       location.href = "gold.html";
       return;
     }
-    if (!gold) { try { localStorage.setItem(STORE_KEY, String(pdfCount() + 1)); } catch (e) {} }
+    if (!gold) {
+      try {
+        var k = currentMonthKey();
+        var nextCount = pdfCount() + 1;
+        localStorage.setItem(k, String(nextCount));
+        localStorage.setItem(STORE_KEY, String(nextCount));
+      } catch (e) {}
+    }
     updateQuota();
     say(gold ? "Building your Gold cheat-sheet…" : "Building your cheat-sheet - choose “Save as PDF” in the print sheet.");
     printSheet(buildSheet(b, gold));

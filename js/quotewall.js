@@ -143,11 +143,37 @@
     var u = me();
     return !!(u && p.author_id === u.id);
   }
+  function noteAspect(p) {
+    try {
+      var tags = p.tags || [];
+      for (var i = 0; i < tags.length; i++) {
+        var t = String(tags[i]);
+        if (t.indexOf("asp:") === 0) return t.slice(4);
+      }
+    } catch (e) {}
+    return "square";
+  }
+
+  function noteRot(p, fallbackRot) {
+    try {
+      var tags = p.tags || [];
+      for (var i = 0; i < tags.length; i++) {
+        var t = String(tags[i]);
+        if (t.indexOf("rot:") === 0) return parseFloat(t.slice(4)) || 0;
+      }
+    } catch (e) {}
+    return typeof fallbackRot !== "undefined" ? fallbackRot : 0;
+  }
+
   function noteHTML(p, pos, isSpring) {
     var springCls = isSpring ? " qw-note--spring" : "";
+    var asp = noteAspect(p);
+    var aspCls = asp === "wide" ? " qw-note--wide" : (asp === "tall" ? " qw-note--tall" : "");
+    var rot = typeof pos.rot !== "undefined" ? pos.rot : noteRot(p, 0);
+
     if (p.by) {
       var ci2 = hash(p.id) % COLORS.length;
-      return '<div class="qw-note' + springCls + '" style="left:' + pos.x + 'px;top:' + pos.y + 'px;background:' + COLORS[ci2] + ';transform:rotate(' + pos.rot + 'deg)" data-p="' + esc(p.id) + '">' +
+      return '<div class="qw-note' + aspCls + springCls + '" style="left:' + pos.x + 'px;top:' + pos.y + 'px;background:' + COLORS[ci2] + ';transform:rotate(' + rot + 'deg)" data-p="' + esc(p.id) + '" data-rot="' + rot + '">' +
         '<span class="qw-pin"></span>' +
         '<p class="qw-txt">' + esc(p.txt) + '</p>' +
         '<span class="qw-by">- ' + esc(p.by) + '</span>' +
@@ -158,7 +184,7 @@
     var col = noteColor(p) || COLORS[ci];
     if (p.kind === "wall-photo") {
       var photoSpring = isSpring ? " qw-photo--spring" : "";
-      return '<div class="qw-photo' + photoSpring + '" data-own="' + (mine ? "1" : "0") + '" style="left:' + pos.x + 'px;top:' + pos.y + 'px;transform:rotate(' + pos.rot + 'deg)" data-p="' + esc(p.id) + '">' +
+      return '<div class="qw-photo' + photoSpring + '" data-own="' + (mine ? "1" : "0") + '" style="left:' + pos.x + 'px;top:' + pos.y + 'px;transform:rotate(' + rot + 'deg)" data-p="' + esc(p.id) + '" data-rot="' + rot + '">' +
         '<span class="qw-pin qw-pin--red"></span>' +
         (mine ? '<button class="qw-del" data-del="' + esc(p.id) + '" aria-label="Remove">✕</button>' : '') +
         '<img src="' + esc(p.cover_url || "") + '" alt="pinned photo" loading="lazy">' +
@@ -167,7 +193,7 @@
         '</div>';
     }
     var txt = String(p.body || "").slice(0, 320);
-    return '<div class="qw-note' + springCls + '" data-own="' + (mine ? "1" : "0") + '" style="left:' + pos.x + 'px;top:' + pos.y + 'px;background:' + col + ';transform:rotate(' + pos.rot + 'deg)" data-p="' + esc(p.id) + '">' +
+    return '<div class="qw-note' + aspCls + springCls + '" data-own="' + (mine ? "1" : "0") + '" style="left:' + pos.x + 'px;top:' + pos.y + 'px;background:' + col + ';transform:rotate(' + rot + 'deg)" data-p="' + esc(p.id) + '" data-rot="' + rot + '">' +
       '<span class="qw-pin"></span>' +
       (mine ? '<button class="qw-del" data-del="' + esc(p.id) + '" aria-label="Remove">✕</button>' : '') +
       '<p class="qw-txt">' + esc(txt) + '</p>' +
@@ -182,11 +208,17 @@
     if (!board) return;
     var all = SEEDS.concat(notes);
     var base = layout(all.length + 3);
-    var pos = function (id) { var o = posOverride(id); return o ? { x: o.x, y: o.y, rot: o.rot || 0 } : base(id); };
+    var pos = function (p) {
+      var o = posOverride(p.id);
+      if (o) return { x: o.x, y: o.y, rot: typeof o.rot !== "undefined" ? o.rot : 0 };
+      var b = base(p.id);
+      var tagRot = noteRot(p, b.rot);
+      return { x: b.x, y: b.y, rot: tagRot };
+    };
     var html = "";
     all.forEach(function (p) {
       var isSpring = springId && p.id === springId;
-      html += noteHTML(p, pos(p.id), isSpring);
+      html += noteHTML(p, pos(p), isSpring);
     });
     board.innerHTML = html +
       '<div class="qw-corner">📌 pin something, the board never runs out of space</div>';
@@ -341,6 +373,28 @@
     var pts = {}, lastMid = null, lastDist = 0, panning = false, sx = 0, sy = 0, vx0 = 0, vy0 = 0, moved = false;
     /* tap a note to share it · drag YOUR own note to move it */
     var tapNote = null, tapX = 0, tapY = 0, draggingNote = null;
+    /* Interactive tactile 3D tilt on pointer move */
+    vp.addEventListener("pointermove", function (e) {
+      if (draggingNote || panning) return;
+      var n = e.target.closest(".qw-note, .qw-photo");
+      if (!n) return;
+      var r = n.getBoundingClientRect();
+      var cx = r.left + r.width / 2;
+      var cy = r.top + r.height / 2;
+      var dx = (e.clientX - cx) / (r.width / 2);
+      var dy = (e.clientY - cy) / (r.height / 2);
+      var baseRot = parseFloat(n.getAttribute("data-rot") || 0);
+      var tiltX = Math.max(-12, Math.min(12, -dy * 9));
+      var tiltY = Math.max(-12, Math.min(12, dx * 9));
+      n.style.transform = "rotate(" + baseRot + "deg) rotateX(" + tiltX + "deg) rotateY(" + tiltY + "deg) translateZ(16px)";
+    });
+    vp.addEventListener("pointerout", function (e) {
+      var n = e.target.closest(".qw-note, .qw-photo");
+      if (!n) return;
+      var baseRot = parseFloat(n.getAttribute("data-rot") || 0);
+      n.style.transform = "rotate(" + baseRot + "deg)";
+    });
+
     vp.addEventListener("pointerdown", function (e) {
       var n = e.target.closest(".qw-note, .qw-photo");
       tapNote = n; tapX = e.clientX; tapY = e.clientY; draggingNote = null;
@@ -361,8 +415,10 @@
         var r = vp.getBoundingClientRect();
         var bx = (e.clientX - r.left - view.x) / view.s - 110;
         var by = (e.clientY - r.top - view.y) / view.s - 60;
+        var baseRot = parseFloat(draggingNote.getAttribute("data-rot") || 0);
         draggingNote.style.left = Math.max(4, bx) + "px";
         draggingNote.style.top = Math.max(4, by) + "px";
+        draggingNote.style.transform = "rotate(" + (baseRot + dx2 * 0.08) + "deg) translateZ(28px) scale(1.05)";
       }
     }, true);
     vp.addEventListener("pointerup", function (e) {
@@ -477,6 +533,20 @@
             '<div class="qw-qlist" id="qwQList"></div>' +
           '</div>' +
           '<textarea id="qwText" maxlength="300" placeholder="The line, the lesson, the thing you keep repeating to people..."></textarea>' +
+          '<div class="qw-ratios">' +
+            '<span class="qw-ctl-lbl">RATIO:</span>' +
+            '<button type="button" class="qw-r-btn on" data-r="square">🔲 SQUARE</button>' +
+            '<button type="button" class="qw-r-btn" data-r="wide">📄 WIDE</button>' +
+            '<button type="button" class="qw-r-btn" data-r="tall">📑 TALL</button>' +
+          '</div>' +
+          '<div class="qw-angles">' +
+            '<span class="qw-ctl-lbl">DIRECTION:</span>' +
+            '<button type="button" class="qw-a-btn" data-a="-14">↖ -14°</button>' +
+            '<button type="button" class="qw-a-btn" data-a="-7">↖ -7°</button>' +
+            '<button type="button" class="qw-a-btn on" data-a="0">⬆ 0°</button>' +
+            '<button type="button" class="qw-a-btn" data-a="7">↗ +7°</button>' +
+            '<button type="button" class="qw-a-btn" data-a="14">↗ +14°</button>' +
+          '</div>' +
           '<div class="qw-colors">' + COLORS.map(function (c, i) { return '<button class="qw-c' + (i === 0 ? " on" : "") + '" data-c="' + c + '" style="background:' + c + '" aria-label="sticky colour"></button>'; }).join("") +
             '<label class="qw-c qw-c--custom" aria-label="custom colour" style="background:conic-gradient(#ff6b6b,#ffd93d,#6bcb77,#4d96ff,#b28dff,#ff6b6b)"><input type="color" id="qwCustom" value="#fff8b8"></label>' +
             '<button class="qw-c qw-c--share" id="qwShareAfter" type="button" aria-label="share after pinning" title="share after pinning">📎</button>' +
@@ -494,6 +564,23 @@
       '</div>';
     document.body.appendChild(sh);
     var color = COLORS[0], file = null, anon = false, shareAfter = false;
+    var currentAspect = "square", currentAngle = 0;
+
+    sh.querySelectorAll(".qw-r-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        sh.querySelectorAll(".qw-r-btn").forEach(function (x) { x.classList.remove("on"); });
+        btn.classList.add("on");
+        currentAspect = btn.getAttribute("data-r") || "square";
+      });
+    });
+    sh.querySelectorAll(".qw-a-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        sh.querySelectorAll(".qw-a-btn").forEach(function (x) { x.classList.remove("on"); });
+        btn.classList.add("on");
+        currentAngle = parseFloat(btn.getAttribute("data-a")) || 0;
+      });
+    });
+
     var anonBtn = sh.querySelector("#qwAnon");
     anonBtn.addEventListener("click", function () {
       anon = !anon;
@@ -636,7 +723,7 @@
       if (!txt) { $("qwText").focus(); return; }
 
       var optId = "opt-" + Date.now();
-      var tags = ["wall", "c:" + String(color).replace("#", "")];
+      var tags = ["wall", "c:" + String(color).replace("#", ""), "asp:" + currentAspect, "rot:" + currentAngle];
       var optNote = {
         id: optId,
         author_id: u ? u.id : "me",
@@ -648,17 +735,18 @@
         _optimistic: true
       };
 
-      // Spawn in viewport center
+      // Spawn in viewport center with selected rotation angle and aspect
       var vpEl = $("qwVp");
       var vpRect = vpEl ? vpEl.getBoundingClientRect() : { width: 400, height: 600 };
       var spawnX = Math.round((vpRect.width / 2 - view.x) / view.s - 94);
       var spawnY = Math.round((vpRect.height / 2 - view.y) / view.s - 60);
-      var rot = (Math.floor(Math.random() * 9) - 4);
+      var rot = currentAngle || (Math.floor(Math.random() * 9) - 4);
       try {
         localStorage.setItem("tsb_wall_pos_" + optId, JSON.stringify({
           x: Math.max(16, spawnX),
           y: Math.max(30, spawnY),
-          rot: rot
+          rot: rot,
+          aspect: currentAspect
         }));
       } catch (e0) {}
 
