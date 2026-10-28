@@ -227,40 +227,6 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     }
   }
 
-  function activateBenefitsLocally(planType, refCode) {
-    try {
-      localStorage.setItem("tsb_plan", planType || "gold_yearly");
-      localStorage.setItem("tsb_gold_active", "true");
-      localStorage.setItem("tsb_gold", "true");
-      localStorage.setItem("gold_member_pass", "active");
-      localStorage.setItem("plan_tier", "gold");
-      localStorage.setItem("tsb_gold_until", (Date.now() + 365 * 86400000).toString());
-
-      /* Persist across user session so login/logout preserves Gold VIP */
-      var s = JSON.parse(localStorage.getItem("tsb_auth_session") || "null");
-      if (s && s.user) {
-        s.user.user_metadata = s.user.user_metadata || {};
-        s.user.user_metadata.tier = "Gold VIP";
-        s.user.tier = "Gold VIP";
-        localStorage.setItem("tsb_auth_session", JSON.stringify(s));
-      }
-      var em = (s && s.user && s.user.email) || "";
-      if (em) {
-        var readers = JSON.parse(localStorage.getItem("tsb_admin_readers") || "[]");
-        var matched = readers.find(function (r) { return r.email && r.email.toLowerCase() === em.toLowerCase(); });
-        if (matched) {
-          matched.tier = "Gold VIP";
-          localStorage.setItem("tsb_admin_readers", JSON.stringify(readers));
-        }
-      }
-      /* Broadcast event to re-render all components live */
-      window.dispatchEvent(new Event("tsbgold"));
-      if (window.TSB_GOLD && typeof window.TSB_GOLD.isGold === "function") {
-        window.TSB_GOLD.isGold(true);
-      }
-    } catch (e) {}
-  }
-
   function launchCheckout(options) {
     options = options || {};
     var amount = parseInt(options.amount, 10) || 999;
@@ -308,7 +274,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
         <div class="ypg-content">
           <h2 style="font-family:var(--font-head); font-size:17px; margin:0 0 6px;" id="ypgTitle">Awaiting UPI Payment</h2>
           <p style="font-size:12px; color:#666; margin:0 0 12px; line-height:1.4;">
-            ${isMobile ? "Complete payment of ₹" + amount + " in PhonePe or your UPI app, then submit the 12-digit UTR receipt number below." : "Scan with PhonePe, Google Pay or any UPI app, then enter the 12-digit UTR from your receipt."}
+            ${isMobile ? "Complete payment of ₹" + amount + " in PhonePe or your UPI app, then enter your single-use activation code below." : "Scan with PhonePe, Google Pay or any UPI app, then enter your single-use activation code below."}
           </p>
 
           <div class="ypg-plan-pill">
@@ -330,18 +296,30 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
             </div>
           </div>
 
-          <!-- Quick Confirmation & Optional UTR Receipt -->
+          <!-- Real Code Activation Mesh (No Free Bypasses) -->
           <div class="ypg-verify-box">
-            <label class="ypg-verify-lbl" for="ypgUtrInput">12-DIGIT UPI REF / UTR (OR TAP CONFIRM):</label>
-            <input type="text" id="ypgUtrInput" class="ypg-input-utr" placeholder="12-digit UTR (from receipt, optional)" maxlength="12" autocomplete="off" spellcheck="false" inputmode="numeric">
-            <button type="button" class="ypg-btn-verify" id="ypgVerifyUtrBtn">
-              ⚡ I HAVE PAID · UNLOCK ALL GOLD PERKS →
-            </button>
-            <div id="ypgStatusMsg" class="ypg-status-msg" style="display:none;"></div>
+            <div style="background:#fffbe6; border:1.5px solid #d4af37; border-radius:10px; padding:10px 12px; margin-bottom:12px; text-align:left; font-size:11.5px; line-height:1.5; color:#333;">
+              <b>1.</b> Complete UPI payment of <b>₹${amount}</b> to <b>${UPI_VPA}</b>.<br>
+              <b>2.</b> Message Jash on WhatsApp with your payment screenshot to receive your activation code.<br>
+              <b>3.</b> Type your <b>TSB-XXXX-XXXX</b> code below to activate.
+            </div>
+
+            <a class="ypg-btn-openapp" id="ypgWaBtn" href="https://wa.me/919702510680?text=Hi%20Jash!%20I%20have%20paid%20%E2%82%B9${amount}%20for%20${encodeURIComponent(title)}.%20Here%20is%20my%20screenshot%20to%20receive%20my%20Gold%20activation%20code." target="_blank" rel="noopener" style="margin-bottom:12px; background:#25D366; color:#fff; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:8px;">
+              💬 GET ACTIVATION CODE ON WHATSAPP →
+            </a>
+
+            <label class="ypg-verify-lbl" for="ypgCodeInput">ENTER YOUR ACTIVATION CODE:</label>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="ypgCodeInput" class="ypg-input-utr" placeholder="TSB-XXXX-XXXX" maxlength="16" autocomplete="off" spellcheck="false" style="text-transform:uppercase; font-weight:700; flex:1; font-family:'Space Grotesk',sans-serif;">
+              <button type="button" class="ypg-btn-verify" id="ypgRedeemBtn" style="width:auto; padding:0 16px; white-space:nowrap;">
+                ACTIVATE →
+              </button>
+            </div>
+            <div id="ypgStatusMsg" class="ypg-status-msg" style="display:none; margin-top:8px;"></div>
           </div>
 
           <div style="margin-top:10px; font-size:10px; color:#777; text-align:center; line-height:1.4;">
-            🔒 DPDP Act Compliant: Zero telemetry leak. Data processed strictly for receipt matching under India Digital Personal Data Protection Act, 2023.
+            🔒 DPDP Act Compliant: Zero telemetry leak. Codes are verified single-use via encrypted server mesh.
           </div>
         </div>
       </div>
@@ -373,31 +351,77 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       });
     }
 
-    /* UTR Verification Handler: strictly validates and checks with gateway */
-    var verifyBtn = document.getElementById("ypgVerifyUtrBtn");
-    var utrInput = document.getElementById("ypgUtrInput");
+    /* Code Verification Handler: strictly validates single-use code with server */
+    var redeemBtn = document.getElementById("ypgRedeemBtn");
+    var codeInput = document.getElementById("ypgCodeInput");
     var statusMsg = document.getElementById("ypgStatusMsg");
 
-    if (verifyBtn && utrInput) {
-      verifyBtn.addEventListener("click", async function () {
-        var utr = (utrInput.value || "").trim();
+    if (redeemBtn && codeInput) {
+      redeemBtn.addEventListener("click", async function () {
+        var code = (codeInput.value || "").trim().toUpperCase();
+        if (!code) {
+          statusMsg.style.display = "block";
+          statusMsg.style.color = "#c22b2b";
+          statusMsg.innerHTML = "⚠️ Please type your activation code first (looks like TSB-XXXX-XXXX). If you just paid, message Jash on WhatsApp above to receive your code.";
+          return;
+        }
+
+        if (!/^TSB-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) {
+          statusMsg.style.display = "block";
+          statusMsg.style.color = "#c22b2b";
+          statusMsg.innerHTML = "⚠️ That does not look like a valid code. Codes look like TSB-XXXX-XXXX.";
+          return;
+        }
+
+        redeemBtn.disabled = true;
+        redeemBtn.textContent = "VERIFYING...";
         statusMsg.style.display = "block";
-        verifyBtn.disabled = true;
-        verifyBtn.textContent = "ACTIVATING MEMBERSHIP...";
-        statusMsg.style.color = "#0b7a58";
-        statusMsg.innerHTML = "✓ Payment recorded! Unlocking full Gold membership...";
+        statusMsg.style.color = "#4a463c";
+        statusMsg.innerHTML = "Checking code with secure server...";
 
-        activateBenefitsLocally(plan, utr || orderRef);
+        try {
+          var C = window.TSB_CONFIG || {};
+          var tk = window.TSB_AUTH && TSB_AUTH.token ? await TSB_AUTH.token() : null;
+          if (!tk) {
+            statusMsg.style.color = "#c22b2b";
+            statusMsg.innerHTML = "⚠️ Please sign in first (top of page), then redeem your code so Gold lands on your account.";
+            redeemBtn.disabled = false;
+            redeemBtn.textContent = "ACTIVATE →";
+            return;
+          }
 
-        setTimeout(function () {
-          closeModal();
-          if (typeof options.handler === "function") options.handler({ success: true, plan: plan });
-          if (onClose) onClose();
-          try {
-            if (typeof window.celebrate === "function") window.celebrate();
-            else if (typeof window.show === "function") window.show();
-          } catch (eCele) {}
-        }, 1200);
+          var res = await fetch(C.SUPABASE_URL + "/functions/v1/redeem-gold", {
+            method: "POST",
+            headers: { apikey: C.SUPABASE_ANON_KEY, Authorization: "Bearer " + tk, "Content-Type": "application/json" },
+            body: JSON.stringify({ code: code })
+          });
+          var r = await res.json().catch(function () { return {}; });
+
+          if (r && r.ok) {
+            statusMsg.style.color = "#0b7a58";
+            statusMsg.innerHTML = "✓ Code verified! Gold membership activated!";
+            await (window.TSB_GOLD && TSB_GOLD.isGold(true));
+            setTimeout(function () {
+              closeModal();
+              if (typeof options.handler === "function") options.handler({ success: true, plan: plan });
+              if (onClose) onClose();
+              try {
+                if (typeof window.celebrate === "function") window.celebrate();
+                else if (typeof window.show === "function") window.show();
+              } catch (eCele) {}
+            }, 1000);
+          } else {
+            statusMsg.style.color = "#c22b2b";
+            statusMsg.innerHTML = "⚠️ " + ((r && r.error) || "That code did not go through. Check it once or message Jash on WhatsApp.");
+            redeemBtn.disabled = false;
+            redeemBtn.textContent = "ACTIVATE →";
+          }
+        } catch (err) {
+          statusMsg.style.color = "#c22b2b";
+          statusMsg.innerHTML = "⚠️ Connection error. Check your internet and try again.";
+          redeemBtn.disabled = false;
+          redeemBtn.textContent = "ACTIVATE →";
+        }
       });
     }
   }

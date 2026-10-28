@@ -638,10 +638,10 @@
       </section>
     </div>
 
-    <!-- Hidden Activation Section (Kept strictly for test invariants, hidden from user view) -->
-    <section class="goldjoin" id="gActBox" style="display:none !important;" aria-hidden="true">
+    <!-- 🔑 Official Activation Section (Secure, Server-Side Only) -->
+    <section class="goldjoin" id="gActBox" style="margin: 28px auto 20px; max-width: 600px; box-shadow: 6px 6px 0 var(--ink); text-align: left;">
       <h2>ALREADY PAID? ACTIVATE GOLD</h2>
-      <p>Paid via UPI or WhatsApp? Type the code we sent you, <b>TSB-XXXX-XXXX</b>, and Gold switches on instantly on this device: watermark off, Pro filters on.</p>
+      <p>Paid via UPI or WhatsApp? Type the single-use code we sent you, <b>TSB-XXXX-XXXX</b>, and Gold switches on instantly on your account.</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <input id="gCode" type="text" placeholder="TSB-XXXX-XXXX" autocomplete="off" spellcheck="false"
           style="flex:1;min-width:200px;border:3px solid var(--ink);padding:12px;font-family:'Space Grotesk',sans-serif;font-weight:700;text-transform:uppercase;background:var(--paper);color:var(--ink)">
@@ -689,6 +689,10 @@
     try {
       localStorage.removeItem("ypg_payment_verified");
       localStorage.removeItem("tsb_verified_membership");
+      localStorage.removeItem("tsb_plan");
+      localStorage.removeItem("tsb_gold_active");
+      localStorage.removeItem("gold_member_pass");
+      localStorage.removeItem("plan_tier");
     } catch(e) {}
 
       function show() {
@@ -696,6 +700,10 @@
         var isOn = !!(window.TSB_GOLD && TSB_GOLD.isGold());
         if (member) member.hidden = !isOn;
         if (join) join.hidden = isOn;
+        var actBox = document.getElementById("gActBox");
+        if (actBox) actBox.hidden = isOn;
+        var pricingSec = document.getElementById("goldPricing");
+        if (pricingSec) pricingSec.style.display = isOn ? "none" : "";
         if (activateSec) activateSec.hidden = isOn;
         if (sticky) sticky.style.display = isOn ? "none" : "";
         if (isOn) {
