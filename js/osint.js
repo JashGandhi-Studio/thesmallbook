@@ -295,14 +295,14 @@
   function cardLocalBook(b){
     var cover = b.cover ? b.cover : (b.id ? "assets/covers/"+b.id+".jpg" : "");
     var lessons = (b.lessons||[]).length;
-    return '<div style="background:#fff;border:2.5px solid #111;border-radius:14px;padding:10px;display:flex;gap:10px;align-items:center;">' +
-      (cover ? '<img src="'+esc(cover)+'" alt="" style="width:56px;height:78px;object-fit:cover;border-radius:8px;border:2px solid #111;flex:none;" loading="lazy" onerror="this.style.display=\'none\'">' : '<div style="width:56px;height:78px;border-radius:8px;border:2px solid #111;background:#fffdf5;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;">📕</div>') +
+    return '<div style="background:#fff;border:var(--bw) solid var(--edge);border-radius:20px;padding:10px;display:flex;gap:10px;align-items:center;">' +
+      (cover ? '<img src="'+esc(cover)+'" alt="" style="width:56px;height:78px;object-fit:cover;border-radius:12px;border:var(--bw) solid var(--edge);flex:none;" loading="lazy" onerror="this.style.display=\'none\'">' : '<div style="width:56px;height:78px;border-radius:12px;border:var(--bw) solid var(--edge);background:#fffdf5;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;">📕</div>') +
       '<div style="flex:1 1 auto;min-width:0;">' +
         '<div style="font:800 12px Space Grotesk,sans-serif;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(b.title||b.t||"")+'</div>' +
         '<div style="font:600 11px Space Grotesk,sans-serif;color:#64748b;margin-top:2px;">'+esc(b.author||b.a||"")+(b.category?" · "+esc(b.category):"")+ (lessons ? " · "+lessons+" lessons":"")+'</div>' +
         '<div style="font:600 10px Space Grotesk,sans-serif;color:#16a34a;letter-spacing:.5px;text-transform:uppercase;margin-top:4px;">📚 TheSmallBook · tap to use</div>' +
       '</div>' +
-      '<button type="button" data-use-local="'+esc(b.id||b.title)+'" style="flex:none;border:2px solid #111;background:#ffc800;border-radius:999px;padding:7px 10px;font:700 10px Space Grotesk,sans-serif;cursor:pointer;white-space:nowrap">+ Use</button>' +
+      '<button type="button" data-use-local="'+esc(b.id||b.title)+'" style="flex:none;border:var(--bw) solid var(--edge);background:#ffc800;border-radius:999px;padding:7px 10px;font:700 10px Space Grotesk,sans-serif;cursor:pointer;white-space:nowrap">+ Use</button>' +
     '</div>';
   }
   function essayStarter(query, wikiExtract, book){
@@ -328,12 +328,12 @@
     var prompt = "Your turn - rewrite these 3 lines in your voice: (1) What happened with "+q+"? (2) What did it teach you? (3) What would you tell someone feeling this now" + (lesson? " - hint: "+lesson+"." : ".");
     var full = hook + " " + context + " " + prompt;
     // card html - compact, not bombarded, easy on mobile
-    var html = '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;">' +
+    var html = '<div style="background:#fff;border:var(--bw) solid var(--edge);border-radius:22px;padding:12px;box-shadow:var(--sh-2);">' +
       '<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#111;margin-bottom:8px;">\u270D\uFE0F Story starter for &ldquo;'+esc(q)+'&rdquo;'+(title?' &middot; inspired by '+esc(title):'')+'</div>' +
-      '<div style="font:500 12.5px Space Grotesk,sans-serif;color:#1f2937;line-height:1.55;background:#fffdf5;border:2px solid #111;border-radius:12px;padding:10px;">'+esc(hook)+'<br><span style="color:#334155">'+esc(context)+'</span><br><span style="font:700 11.5px Space Grotesk,sans-serif;color:#0f172a">'+esc(prompt)+'</span></div>' +
+      '<div style="font:500 12.5px Space Grotesk,sans-serif;color:#1f2937;line-height:1.55;background:#fffdf5;border:var(--bw) solid var(--edge);border-radius:17px;padding:10px;">'+esc(hook)+'<br><span style="color:#334155">'+esc(context)+'</span><br><span style="font:700 11.5px Space Grotesk,sans-serif;color:#0f172a">'+esc(prompt)+'</span></div>' +
       '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">' +
-        '<button type="button" data-use-essay="'+esc(full).replace(/"/g,"&quot;")+'" style="flex:1 1 140px;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:9px 12px;font:800 11px Space Grotesk,sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;">\u2728 Insert story starter</button>' +
-        '<button type="button" data-copy-essay style="border:2.5px solid #111;background:#fff;border-radius:999px;padding:9px 12px;font:700 11px Space Grotesk,sans-serif;cursor:pointer;">\uD83D\uDCCB Copy</button>' +
+        '<button type="button" data-use-essay="'+esc(full).replace(/"/g,"&quot;")+'" style="flex:1 1 140px;border:var(--bw) solid var(--edge);background:#ffc800;border-radius:999px;padding:9px 12px;font:800 11px Space Grotesk,sans-serif;cursor:pointer;box-shadow:var(--sh-1);">\u2728 Insert story starter</button>' +
+        '<button type="button" data-copy-essay style="border:var(--bw) solid var(--edge);background:#fff;border-radius:999px;padding:9px 12px;font:700 11px Space Grotesk,sans-serif;cursor:pointer;">\uD83D\uDCCB Copy</button>' +
       '</div>' +
       '<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;text-align:center;margin-top:6px;">Tap Insert - it drops in your editor. Rewrite in your voice before publishing.</div>' +
     '</div>';
@@ -367,8 +367,8 @@
   function chipRow(chips, active){
     var h='<div style=\"display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 8px\">';
     chips.forEach(function(c){
-      var on = active===c.id ? 'background:#111;color:#ffc800;box-shadow:2px 2px 0 #111;' : 'background:#fff;color:#111;';
-      h+='<button type=\"button\" data-chip=\"'+esc(c.id)+'\" style=\"border:2px solid #111;border-radius:999px;padding:6px 10px;font:700 11px Space Grotesk,sans-serif;cursor:pointer;'+on+'\">'+esc(c.label)+'</button>';
+      var on = active===c.id ? 'background:#111;color:#ffc800;box-shadow:var(--sh-1);' : 'background:#fff;color:#111;';
+      h+='<button type=\"button\" data-chip=\"'+esc(c.id)+'\" style=\"border:var(--bw) solid var(--edge);border-radius:999px;padding:6px 10px;font:700 11px Space Grotesk,sans-serif;cursor:pointer;'+on+'\">'+esc(c.label)+'</button>';
     });
     h+='</div>';
     return h;
@@ -415,20 +415,20 @@
 
     // Build tabs HTML only for allowed set - keeps Quote=2 tabs, Stories=2 tabs, not 3 everywhere (professional, not everywhere)
     var tabHtml = '<div style="display:flex;gap:6px;flex-wrap:wrap;flex:none;">';
-    if(allowed.indexOf("quotes")>=0) tabHtml += '<button type="button" id="tabQuotes" style="flex:1 1 90px;border:2.5px solid #111;border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;">💬 Quotes</button>';
-    if(allowed.indexOf("images")>=0) tabHtml += '<button type="button" id="tabImages" style="flex:1 1 90px;border:2.5px solid #111;border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;">🖼️ Images</button>';
-    if(allowed.indexOf("research")>=0) tabHtml += '<button type="button" id="tabResearch" style="flex:1 1 100px;border:2.5px solid #111;border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;">📖 Research</button>';
+    if(allowed.indexOf("quotes")>=0) tabHtml += '<button type="button" id="tabQuotes" style="flex:1 1 90px;border:var(--bw) solid var(--edge);border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;">💬 Quotes</button>';
+    if(allowed.indexOf("images")>=0) tabHtml += '<button type="button" id="tabImages" style="flex:1 1 90px;border:var(--bw) solid var(--edge);border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;">🖼️ Images</button>';
+    if(allowed.indexOf("research")>=0) tabHtml += '<button type="button" id="tabResearch" style="flex:1 1 100px;border:var(--bw) solid var(--edge);border-radius:999px;padding:9px 10px;font:800 12px Archivo Black,sans-serif;letter-spacing:.6px;cursor:pointer;text-transform:uppercase;">📖 Research</button>';
     tabHtml += '</div>';
     var html =
       tabHtml +
-      '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;flex:none;">' +
+      '<div style="background:#fff;border:var(--bw) solid var(--edge);border-radius:22px;padding:12px;box-shadow:var(--sh-2);flex:none;">' +
         '<div style="display:flex;gap:8px;align-items:center;">' +
-          '<input id="inspQ" type="text" placeholder="Type anything - e.g. lonely after breakup, startup failure, love…" value="'+esc(seedQuery)+'" style="flex:1 1 auto;border:2.5px solid #111;border-radius:999px;padding:11px 14px;font:600 13px Space Grotesk,sans-serif;outline:none;">' +
-          '<button id="inspClear" type="button" title="Clear" style="flex:none;width:36px;height:36px;border:2px solid #111;border-radius:999px;background:#fff;font:800 13px Space Grotesk,sans-serif;cursor:pointer;">✕</button>' +
-          '<button id="inspGo" type="button" style="flex:none;border:2.5px solid #111;border-radius:999px;padding:10px 14px;font:800 12px Space Grotesk,sans-serif;background:#ffc800;box-shadow:2px 2px 0 #111;cursor:pointer;white-space:nowrap">Search →</button>' +
+          '<input id="inspQ" type="text" placeholder="Type anything - e.g. lonely after breakup, startup failure, love…" value="'+esc(seedQuery)+'" style="flex:1 1 auto;border:var(--bw) solid var(--edge);border-radius:999px;padding:11px 14px;font:600 13px Space Grotesk,sans-serif;outline:none;">' +
+          '<button id="inspClear" type="button" title="Clear" style="flex:none;width:36px;height:36px;border:var(--bw) solid var(--edge);border-radius:999px;background:#fff;font:800 13px Space Grotesk,sans-serif;cursor:pointer;">✕</button>' +
+          '<button id="inspGo" type="button" style="flex:none;border:var(--bw) solid var(--edge);border-radius:999px;padding:10px 14px;font:800 12px Space Grotesk,sans-serif;background:#ffc800;box-shadow:var(--sh-1);cursor:pointer;white-space:nowrap">Search →</button>' +
         '</div>' +
         '<div id="inspChips"></div>' +
-        '<div style="font-size:11px;color:#8f8a80;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-top:6px;">LIVE · as you type it filters · tap <span style="background:#ffc800;padding:1px 6px;border-radius:999px;border:1.5px solid #111;color:#111">Use this</span> to drop instantly</div>' +
+        '<div style="font-size:11px;color:#8f8a80;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-top:6px;">LIVE · as you type it filters · tap <span style="background:#ffc800;padding:1px 6px;border-radius:999px;border:1px solid var(--edge);color:#111">Use this</span> to drop instantly</div>' +
       '</div>' +
       '<div id="inspResults" style="display:flex;flex-direction:column;gap:10px;min-height:120px;flex:none;">' +
         '<div style="text-align:center;padding:18px 10px;color:#8f8a80;font:600 13px Space Grotesk,sans-serif;">Loading live library…</div>' +
@@ -486,22 +486,22 @@
 
     function cardQuote(q){
       var srcLive = q._live ? '<span style="font:700 9px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;margin-left:6px;">LIVE</span>' : '';
-      return '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:14px;box-shadow:4px 4px 0 #111;">' +
-        '<div style="font-family:Georgia,serif;font-size:1.08rem;font-style:italic;line-height:1.45;color:#111">“ '+esc(q.c)+' ”'+srcLive+'</div>' +
+      return '<div style="background:#fff;border:var(--bw) solid var(--edge);border-radius:22px;padding:14px;box-shadow:var(--sh-2);">' +
+        '<div style="font-family:Newsreader, Georgia,serif;font-size:1.08rem;font-style:italic;line-height:1.45;color:#111">“ '+esc(q.c)+' ”'+srcLive+'</div>' +
         '<div style="font:700 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#64748b;margin-top:8px;">- '+esc(q.a)+' '+(q.tags&&q.tags.length?'<span style="font-weight:400;text-transform:none;letter-spacing:0;color:#94a3b8">· '+esc(q.tags.slice(0,2).join(", "))+'</span>':"")+'</div>' +
         '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">' +
-          '<button type="button" data-use-quote="'+esc(q.c).replace(/\"/g,"&quot;")+'" data-author="'+esc(q.a)+'" style="flex:1 1 120px;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:9px 12px;font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;cursor:pointer;box-shadow:2px 2px 0 #111;">✨ Use this quote</button>' +
-          '<button type="button" data-copy-quote style="border:2.5px solid #111;background:#fff;border-radius:999px;padding:9px 12px;font:700 11px Space Grotesk,sans-serif;cursor:pointer;">📋 Copy</button>' +
+          '<button type="button" data-use-quote="'+esc(q.c).replace(/\"/g,"&quot;")+'" data-author="'+esc(q.a)+'" style="flex:1 1 120px;border:var(--bw) solid var(--edge);background:#ffc800;border-radius:999px;padding:9px 12px;font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;cursor:pointer;box-shadow:var(--sh-1);">✨ Use this quote</button>' +
+          '<button type="button" data-copy-quote style="border:var(--bw) solid var(--edge);background:#fff;border-radius:999px;padding:9px 12px;font:700 11px Space Grotesk,sans-serif;cursor:pointer;">📋 Copy</button>' +
         '</div>' +
       '</div>';
     }
     function cardImage(im){
       // v247: definite-height photo band (190px) - grid rows can NEVER collapse or overlap again;
       // full photo shown via contain, "Use as cover" glued ON the photo (z-index 2 = untouchable)
-      return '<div style="background:#fff;border:2.5px solid #111;border-radius:16px;overflow:hidden;box-shadow:3px 3px 0 #111;">' +
-        '<div style="position:relative;height:190px;background:#0e0c0a;border-bottom:2.5px solid #111;">' +
+      return '<div style="background:#fff;border:var(--bw) solid var(--edge);border-radius:22px;overflow:hidden;box-shadow:var(--sh-2);">' +
+        '<div style="position:relative;height:190px;background:#0e0c0a;border-bottom:var(--bw) solid var(--edge);">' +
           '<img src="'+esc(im.thumb)+'" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;display:block;" loading="lazy">' +
-          '<button type="button" data-use-image="'+esc(im.full)+'" style="position:absolute;left:8px;right:8px;bottom:8px;z-index:2;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:9px 10px;font:800 11.5px Space Grotesk,sans-serif;letter-spacing:.3px;cursor:pointer;box-shadow:2px 2px 0 #111;text-shadow:none;">\u2728 Use as cover</button>' +
+          '<button type="button" data-use-image="'+esc(im.full)+'" style="position:absolute;left:8px;right:8px;bottom:8px;z-index:2;border:var(--bw) solid var(--edge);background:#ffc800;border-radius:999px;padding:9px 10px;font:800 11.5px Space Grotesk,sans-serif;letter-spacing:.3px;cursor:pointer;box-shadow:var(--sh-1);text-shadow:none;">\u2728 Use as cover</button>' +
         '</div>' +
         '<div style="padding:6px 9px 7px;display:flex;align-items:center;gap:6px;">' +
           '<div style="flex:1 1 auto;min-width:0;font:700 10.5px Space Grotesk,sans-serif;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(im.title.slice(0,52))+'</div>' +
@@ -510,14 +510,14 @@
       '</div>';
     }
     function cardResearchWiki(sum){
-      if(!sum) return '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:14px;box-shadow:4px 4px 0 #111;"><div style="font:800 13px Space Grotesk,sans-serif;color:#111">No summary yet</div><div style="font:500 12px Space Grotesk,sans-serif;color:#64748b;margin-top:6px">Try broader: habits, loneliness, stoicism.</div></div>';
-      return '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:14px;box-shadow:4px 4px 0 #111;">' +
-        (sum.thumb ? '<img src="'+esc(sum.thumb)+'" alt="" style="width:100%;height:140px;object-fit:cover;border-radius:12px;border:2px solid #111;margin-bottom:10px;">' : '') +
+      if(!sum) return '<div style="background:#fff;border:var(--bw) solid var(--edge);border-radius:22px;padding:14px;box-shadow:var(--sh-2);"><div style="font:800 13px Space Grotesk,sans-serif;color:#111">No summary yet</div><div style="font:500 12px Space Grotesk,sans-serif;color:#64748b;margin-top:6px">Try broader: habits, loneliness, stoicism.</div></div>';
+      return '<div style="background:#fff;border:var(--bw) solid var(--edge);border-radius:22px;padding:14px;box-shadow:var(--sh-2);">' +
+        (sum.thumb ? '<img src="'+esc(sum.thumb)+'" alt="" style="width:100%;height:140px;object-fit:cover;border-radius:17px;border:var(--bw) solid var(--edge);margin-bottom:10px;">' : '') +
         '<div style="font:800 13px Archivo Black,sans-serif;color:#0f172a;">'+esc(sum.title)+' <span style="font:700 9px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;vertical-align:2px;">LIVE Wikipedia</span></div>' +
         '<div style="font:500 12px Space Grotesk,sans-serif;color:#334155;line-height:1.6;margin-top:6px;">'+esc(sum.extract.slice(0,300))+(sum.extract.length>300?"…":"")+'</div>' +
         '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">' +
-          '<button type="button" data-use-research style="flex:1 1 120px;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:9px 12px;font:800 11px Space Grotesk,sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;">✨ Insert snippet</button>' +
-          (sum.url ? '<a href="'+esc(sum.url)+'" target="_blank" rel="noopener" style="border:2.5px solid #111;background:#fff;border-radius:999px;padding:9px 12px;font:700 11px Space Grotesk,sans-serif;text-decoration:none;color:#111;text-align:center;">Wikipedia →</a>' : '') +
+          '<button type="button" data-use-research style="flex:1 1 120px;border:var(--bw) solid var(--edge);background:#ffc800;border-radius:999px;padding:9px 12px;font:800 11px Space Grotesk,sans-serif;cursor:pointer;box-shadow:var(--sh-1);">✨ Insert snippet</button>' +
+          (sum.url ? '<a href="'+esc(sum.url)+'" target="_blank" rel="noopener" style="border:var(--bw) solid var(--edge);background:#fff;border-radius:999px;padding:9px 12px;font:700 11px Space Grotesk,sans-serif;text-decoration:none;color:#111;text-align:center;">Wikipedia →</a>' : '') +
         '</div>' +
       '</div>';
     }
@@ -559,11 +559,11 @@
         rows.push('<div style="font:800 10.5px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#166534;margin:12px 0 6px;">📚 What the library says - real lessons, ready to rewrite</div>' +
           lessons.map(function(x){
             var paste = x.book + " - " + x.lesson + ": " + x.body;
-            return '<div style="border:2px solid #111;border-radius:12px;padding:10px;background:#f0fdf4;margin-bottom:8px;">' +
+            return '<div style="border:var(--bw) solid var(--edge);border-radius:17px;padding:10px;background:#f0fdf4;margin-bottom:8px;">' +
               '<div style="font:800 11px Space Grotesk,sans-serif;color:#111;">' + esc(x.lesson) + '</div>' +
               '<div style="font:700 9.5px Space Grotesk,sans-serif;letter-spacing:.4px;text-transform:uppercase;color:#64748b;margin-top:3px;">' + esc(x.book) + '</div>' +
               '<div style="font:500 12px Space Grotesk,sans-serif;color:#1f2937;line-height:1.55;margin-top:6px;">' + esc(x.body.slice(0, 260)) + (x.body.length > 260 ? "…" : "") + '</div>' +
-              '<button type="button" data-use-research-sum="' + esc(paste).replace(/"/g, "&quot;") + '" style="margin-top:8px;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:8px 12px;font:800 10.5px Space Grotesk,sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;">✨ Use this in my story</button>' +
+              '<button type="button" data-use-research-sum="' + esc(paste).replace(/"/g, "&quot;") + '" style="margin-top:8px;border:var(--bw) solid var(--edge);background:#ffc800;border-radius:999px;padding:8px 12px;font:800 10.5px Space Grotesk,sans-serif;cursor:pointer;box-shadow:var(--sh-1);">✨ Use this in my story</button>' +
             '</div>';
           }).join(""));
       }
@@ -577,7 +577,7 @@
             return '<div style="display:flex;gap:9px;align-items:flex-start;border-bottom:1.5px dashed #cbd5e1;padding:7px 0;">' +
               '<span style="flex:none;width:17px;height:17px;border-radius:999px;background:#111;color:#ffc800;font:800 9.5px/17px Space Grotesk,sans-serif;text-align:center;margin-top:1px;">' + (i + 1) + '</span>' +
               '<span style="flex:1;font:500 12px Space Grotesk,sans-serif;color:#1f2937;line-height:1.55;">' + esc(f) + '</span>' +
-              '<button type="button" data-use-research-sum="' + esc(f).replace(/"/g, "&quot;") + '" title="Insert this fact" style="flex:none;border:2px solid #111;background:#fff;border-radius:999px;padding:5px 9px;font:800 9.5px Space Grotesk,sans-serif;cursor:pointer;">+</button>' +
+              '<button type="button" data-use-research-sum="' + esc(f).replace(/"/g, "&quot;") + '" title="Insert this fact" style="flex:none;border:var(--bw) solid var(--edge);background:#fff;border-radius:999px;padding:5px 9px;font:800 9.5px Space Grotesk,sans-serif;cursor:pointer;">+</button>' +
             '</div>';
           }).join(""));
       }
@@ -595,13 +595,13 @@
           openers.map(function(o){
             return '<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">' +
               '<span style="flex:1;font:600 12px Space Grotesk,sans-serif;color:#334155;line-height:1.5;">' + esc(o) + '</span>' +
-              '<button type="button" data-use-research-sum="' + esc(o).replace(/"/g, "&quot;") + '" style="flex:none;border:2.5px solid #111;background:#fff;border-radius:999px;padding:6px 10px;font:800 10px Space Grotesk,sans-serif;cursor:pointer;">Insert</button>' +
+              '<button type="button" data-use-research-sum="' + esc(o).replace(/"/g, "&quot;") + '" style="flex:none;border:var(--bw) solid var(--edge);background:#fff;border-radius:999px;padding:6px 10px;font:800 10px Space Grotesk,sans-serif;cursor:pointer;">Insert</button>' +
             '</div>';
           }).join(""));
       }
 
       if (!rows.length) return "";
-      return '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:14px;box-shadow:4px 4px 0 #111;">' +
+      return '<div style="background:#fff;border:var(--bw) solid var(--edge);border-radius:22px;padding:14px;box-shadow:var(--sh-2);">' +
         '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
           '<span style="font:800 12px Archivo Black,sans-serif;color:#111;">✍️ READY TO USE</span>' +
           '<span style="font:700 9px Space Grotesk,sans-serif;letter-spacing:.5px;text-transform:uppercase;background:#111;color:#ffc800;padding:3px 7px;border-radius:999px;">content, not links</span>' +
@@ -613,29 +613,29 @@
     function cardBook(b){
       var cover = b.cover ? "https://covers.openlibrary.org/b/id/"+b.cover+"-M.jpg" : "";
       // v244: READABLE - one tap opens the full book in the Archive.org reader. Different from TheSmallBook's own library by design.
-      return '<div style="background:#fff;border:2.5px solid #111;border-radius:14px;padding:10px;display:flex;gap:10px;align-items:center;">' +
-        (cover ? '<img src="'+esc(cover)+'" alt="" style="width:56px;height:78px;object-fit:cover;border-radius:8px;border:2px solid #111;flex:none;" loading="lazy" onerror="this.style.opacity=.25">' : '<div style="width:56px;height:78px;border-radius:8px;border:2px solid #111;background:#fffdf5;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;">📖</div>') +
+      return '<div style="background:#fff;border:var(--bw) solid var(--edge);border-radius:20px;padding:10px;display:flex;gap:10px;align-items:center;">' +
+        (cover ? '<img src="'+esc(cover)+'" alt="" style="width:56px;height:78px;object-fit:cover;border-radius:12px;border:var(--bw) solid var(--edge);flex:none;" loading="lazy" onerror="this.style.opacity=.25">' : '<div style="width:56px;height:78px;border-radius:12px;border:var(--bw) solid var(--edge);background:#fffdf5;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;">📖</div>') +
         '<div style="flex:1 1 auto;min-width:0;">' +
           '<div style="font:800 12px Space Grotesk,sans-serif;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(b.title)+'</div>' +
           '<div style="font:600 11px Space Grotesk,sans-serif;color:#64748b;margin-top:2px;">'+esc(b.author||"")+(b.year?" · "+b.year:"")+'</div>' +
           '<div style="font:600 10px Space Grotesk,sans-serif;color:#16a34a;letter-spacing:.5px;text-transform:uppercase;margin-top:4px;">Read free · full book · Open Library</div>' +
         '</div>' +
-        (b.ia ? '<button type="button" data-read-ia="'+esc(b.ia)+'" data-read-title="'+esc(b.title)+'" style="flex:none;border:2px solid #111;background:#ffc800;border-radius:999px;padding:8px 11px;font:800 10px Space Grotesk,sans-serif;cursor:pointer;white-space:nowrap;box-shadow:2px 2px 0 #111">📖 Read</button>' : '') +
-        '<button type="button" data-use-book="'+esc(b.title)+'" data-book-author="'+esc(b.author||"")+'" title="Add as reference in your story" style="flex:none;border:2px solid #111;background:#fff;border-radius:999px;padding:7px 10px;font:700 10px Space Grotesk,sans-serif;cursor:pointer;white-space:nowrap">+ Use</button>' +
+        (b.ia ? '<button type="button" data-read-ia="'+esc(b.ia)+'" data-read-title="'+esc(b.title)+'" style="flex:none;border:var(--bw) solid var(--edge);background:#ffc800;border-radius:999px;padding:8px 11px;font:800 10px Space Grotesk,sans-serif;cursor:pointer;white-space:nowrap;box-shadow:var(--sh-1)">📖 Read</button>' : '') +
+        '<button type="button" data-use-book="'+esc(b.title)+'" data-book-author="'+esc(b.author||"")+'" title="Add as reference in your story" style="flex:none;border:var(--bw) solid var(--edge);background:#fff;border-radius:999px;padding:7px 10px;font:700 10px Space Grotesk,sans-serif;cursor:pointer;white-space:nowrap">+ Use</button>' +
       '</div>';
     }
     // v244: LIVE Wikiquote card - voices & lines you can drop into your story
     function cardVoices(list, q){
       if(!list || !list.length) return "";
-      return '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:14px;box-shadow:4px 4px 0 #111;">' +
+      return '<div style="background:#fff;border:var(--bw) solid var(--edge);border-radius:22px;padding:14px;box-shadow:var(--sh-2);">' +
         '<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin-bottom:8px;">💬 Voices & lines - LIVE Wikiquote <span style="font:700 9px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;">facts you can add</span></div>' +
         list.map(function(h){
-          return '<div style="border:2px solid #e2e8f0;border-radius:12px;padding:9px 11px;margin-top:8px;background:#fffdf5;">' +
+          return '<div style="border:2px solid #e2e8f0;border-radius:17px;padding:9px 11px;margin-top:8px;background:#fffdf5;">' +
             '<b style="font:800 12px Space Grotesk,sans-serif;color:#111">'+esc(h.title)+'</b>' +
             '<div style="font:500 11.5px Space Grotesk,sans-serif;color:#475569;line-height:1.5;margin-top:3px;">'+esc(h.snippet.slice(0,150))+(h.snippet.length>150?"…":"")+'</div>' +
             '<div style="display:flex;gap:8px;margin-top:7px;flex-wrap:wrap;">' +
-              '<button type="button" data-use-voice="'+esc((h.title+" - "+h.snippet.slice(0,180)).replace(/"/g,"&quot;"))+'" style="border:2px solid #111;background:#ffc800;border-radius:999px;padding:6px 11px;font:800 10px Space Grotesk,sans-serif;cursor:pointer;">✨ Insert</button>' +
-              '<a href="https://en.wikiquote.org/wiki/'+encodeURIComponent(h.title.replace(/\s+/g,"_"))+'" target="_blank" rel="noopener" style="border:2px solid #111;background:#fff;border-radius:999px;padding:6px 11px;font:700 10px Space Grotesk,sans-serif;text-decoration:none;color:#111;">Wikiquote →</a>' +
+              '<button type="button" data-use-voice="'+esc((h.title+" - "+h.snippet.slice(0,180)).replace(/"/g,"&quot;"))+'" style="border:var(--bw) solid var(--edge);background:#ffc800;border-radius:999px;padding:6px 11px;font:800 10px Space Grotesk,sans-serif;cursor:pointer;">✨ Insert</button>' +
+              '<a href="https://en.wikiquote.org/wiki/'+encodeURIComponent(h.title.replace(/\s+/g,"_"))+'" target="_blank" rel="noopener" style="border:var(--bw) solid var(--edge);background:#fff;border-radius:999px;padding:6px 11px;font:700 10px Space Grotesk,sans-serif;text-decoration:none;color:#111;">Wikiquote →</a>' +
             '</div></div>';
         }).join("") +
       '</div>';
@@ -643,25 +643,25 @@
     // v244: LIVE dictionary card - word power with meaning + example
     function cardDict(d){
       if(!d) return "";
-      return '<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:14px;box-shadow:4px 4px 0 #111;">' +
+      return '<div style="background:#fff;border:var(--bw) solid var(--edge);border-radius:22px;padding:14px;box-shadow:var(--sh-2);">' +
         '<div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin-bottom:6px;">🔤 Word power - LIVE Dictionary</div>' +
         '<div style="font:800 16px Space Grotesk,sans-serif;color:#111;">'+esc(d.word)+' <span style="font:600 11px Space Grotesk,sans-serif;color:#94a3b8;">'+esc(d.ph||"")+(d.pos?" · "+esc(d.pos):"")+'</span></div>' +
         '<div style="font:500 12.5px Space Grotesk,sans-serif;color:#334155;line-height:1.55;margin-top:5px;">'+esc(d.def)+'</div>' +
         (d.ex ? '<div style="font:500 12px Space Grotesk,sans-serif;color:#64748b;font-style:italic;margin-top:4px;">“'+esc(d.ex)+'”</div>' : '') +
-        '<button type="button" data-use-dict="'+esc(("“"+d.word+"”"+(d.pos?" ("+d.pos+")":"")+" - "+d.def).replace(/"/g,"&quot;"))+'" style="margin-top:9px;border:2.5px solid #111;background:#ffc800;border-radius:999px;padding:8px 12px;font:800 11px Space Grotesk,sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;">✨ Insert meaning</button>' +
+        '<button type="button" data-use-dict="'+esc(("“"+d.word+"”"+(d.pos?" ("+d.pos+")":"")+" - "+d.def).replace(/"/g,"&quot;"))+'" style="margin-top:9px;border:var(--bw) solid var(--edge);background:#ffc800;border-radius:999px;padding:8px 12px;font:800 11px Space Grotesk,sans-serif;cursor:pointer;box-shadow:var(--sh-1);">✨ Insert meaning</button>' +
       '</div>';
     }
     // v244: Explore board - no default topic ever again; rotating live topics with real summaries
     function cardExplore(sum){
       if(!sum) return "";
-      return '<div style="background:#fff;border:2.5px solid #111;border-radius:14px;overflow:hidden;box-shadow:3px 3px 0 #111;display:flex;flex-direction:column;">' +
-        (sum.thumb ? '<img src="'+esc(sum.thumb)+'" alt="" style="width:100%;height:92px;object-fit:cover;border-bottom:2px solid #111;" loading="lazy">' : '') +
+      return '<div style="background:#fff;border:var(--bw) solid var(--edge);border-radius:20px;overflow:hidden;box-shadow:var(--sh-2);display:flex;flex-direction:column;">' +
+        (sum.thumb ? '<img src="'+esc(sum.thumb)+'" alt="" style="width:100%;height:92px;object-fit:cover;border-bottom:var(--bw) solid var(--edge);" loading="lazy">' : '') +
         '<div style="padding:9px 11px;display:flex;flex-direction:column;gap:5px;flex:1;">' +
           '<div style="font:800 12px Space Grotesk,sans-serif;color:#111;">'+esc(sum.title)+'</div>' +
           '<div style="font:500 11px Space Grotesk,sans-serif;color:#475569;line-height:1.45;">'+esc(sum.extract.slice(0,110))+(sum.extract.length>110?"…":"")+'</div>' +
           '<div style="display:flex;gap:6px;margin-top:auto;padding-top:4px;flex-wrap:wrap;">' +
-            '<button type="button" data-use-research-sum="'+esc(sum.extract.slice(0,400).replace(/"/g,"&quot;"))+'" style="flex:1 1 auto;border:2px solid #111;background:#ffc800;border-radius:999px;padding:6px 9px;font:800 10px Space Grotesk,sans-serif;cursor:pointer;">✨ Insert</button>' +
-            (sum.url ? '<a href="'+esc(sum.url)+'" target="_blank" rel="noopener" style="border:2px solid #111;background:#fff;border-radius:999px;padding:6px 9px;font:700 10px Space Grotesk,sans-serif;text-decoration:none;color:#111;">Open →</a>' : '') +
+            '<button type="button" data-use-research-sum="'+esc(sum.extract.slice(0,400).replace(/"/g,"&quot;"))+'" style="flex:1 1 auto;border:var(--bw) solid var(--edge);background:#ffc800;border-radius:999px;padding:6px 9px;font:800 10px Space Grotesk,sans-serif;cursor:pointer;">✨ Insert</button>' +
+            (sum.url ? '<a href="'+esc(sum.url)+'" target="_blank" rel="noopener" style="border:var(--bw) solid var(--edge);background:#fff;border-radius:999px;padding:6px 9px;font:700 10px Space Grotesk,sans-serif;text-decoration:none;color:#111;">Open →</a>' : '') +
           '</div>' +
         '</div></div>';
     }
@@ -789,7 +789,7 @@
       lastQuery=effective;
       if(pending) return;
       pending=true;
-      $res.innerHTML = '<div style="text-align:center;padding:22px 10px;color:#64748b;font:600 13px Space Grotesk,sans-serif;"><span style="display:inline-block;width:18px;height:18px;border:2.5px solid #111;border-top-color:#ffc800;border-radius:50%;animation:rot .7s linear infinite;margin-right:8px;vertical-align:-4px;"></span> Searching live…</div><style>@keyframes rot{to{transform:rotate(360deg)}}</style>';
+      $res.innerHTML = '<div style="text-align:center;padding:22px 10px;color:#64748b;font:600 13px Space Grotesk,sans-serif;"><span style="display:inline-block;width:18px;height:18px;border:var(--bw) solid var(--edge);border-top-color:#ffc800;border-radius:50%;animation:rot .7s linear infinite;margin-right:8px;vertical-align:-4px;"></span> Searching live…</div><style>@keyframes rot{to{transform:rotate(360deg)}}</style>';
 
       // reset grid vs flex per tab - images is grid, others flex
       if(activeTab==="images"){
@@ -912,8 +912,8 @@
           if(!explore){
             if(sums.length) html+=cardResearchWiki(sums[0]);
             else if(hits2.length){
-              html+='<div style="background:#fff;border:2.5px solid #111;border-radius:14px;padding:12px;"><div style="font:700 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;">Related on Wikipedia (live)</div>' +
-                hits2.map(function(h){ return '<div style="border:2px solid #e2e8f0;border-radius:10px;padding:8px 10px;margin-top:8px;background:#f8fafc"><b style="font:800 12px Space Grotesk,sans-serif">'+esc(h.title)+'</b><br><span style="font:500 11px Space Grotesk,sans-serif;color:#475569">'+esc(h.snippet.slice(0,140))+'</span></div>'; }).join("") +
+              html+='<div style="background:#fff;border:var(--bw) solid var(--edge);border-radius:20px;padding:12px;"><div style="font:700 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;">Related on Wikipedia (live)</div>' +
+                hits2.map(function(h){ return '<div style="border:2px solid #e2e8f0;border-radius:14px;padding:8px 10px;margin-top:8px;background:#f8fafc"><b style="font:800 12px Space Grotesk,sans-serif">'+esc(h.title)+'</b><br><span style="font:500 11px Space Grotesk,sans-serif;color:#475569">'+esc(h.snippet.slice(0,140))+'</span></div>'; }).join("") +
                 '</div>';
             } else {
               html+='<div style="text-align:center;padding:14px;color:#94a3b8;font:600 12px Space Grotesk,sans-serif;">No live wiki page for that - try broader: habits, loneliness, startup.</div>';
@@ -922,12 +922,12 @@
           if(dict) html+=cardDict(dict);
           if(voices.length) html+=cardVoices(voices, rq);
           if(books2.length){
-            html+='<div style="background:#fff;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin-bottom:8px;">📖 Read free - full books · LIVE Open Library <span style="font:700 9px Space Grotesk,sans-serif;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;text-transform:uppercase;">readable now</span></div>'+books2.map(cardBook).join('<div style="height:8px"></div>')+'<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;margin-top:8px;text-align:center;">Readable classics &amp; public-domain finds - never duplicates TheSmallBook\'s own shelf below.</div></div>';
+            html+='<div style="background:#fff;border:var(--bw) solid var(--edge);border-radius:22px;padding:12px;box-shadow:var(--sh-2);margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#0f172a;margin-bottom:8px;">📖 Read free - full books · LIVE Open Library <span style="font:700 9px Space Grotesk,sans-serif;background:#dcfce7;border:1px solid #16a34a;color:#166534;padding:2px 6px;border-radius:999px;text-transform:uppercase;">readable now</span></div>'+books2.map(cardBook).join('<div style="height:8px"></div>')+'<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;margin-top:8px;text-align:center;">Readable classics &amp; public-domain finds - never duplicates TheSmallBook\'s own shelf below.</div></div>';
           } else if(!explore && hasQ){
             html+='<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;text-align:center;margin-top:2px;">No readable full book matched “'+esc(rq)+'” - TheSmallBook\'s own library below covers your topic.</div>';
           }
           if(localBooks.length){
-            html+='<div style="background:#ffc800;border:3px solid #111;border-radius:16px;padding:12px;box-shadow:4px 4px 0 #111;margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#111;margin-bottom:8px;">📕 From TheSmallBook - your 500 books (tap to use)</div>'+localBooks.map(cardLocalBook).join('<div style="height:8px"></div>')+'<div style="font:600 10px Space Grotesk,sans-serif;color:#111;margin-top:8px;text-align:center;opacity:.7">Suggestions from our library matching “'+esc(rq)+'”</div></div>';
+            html+='<div style="background:#ffc800;border:var(--bw) solid var(--edge);border-radius:22px;padding:12px;box-shadow:var(--sh-2);margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#111;margin-bottom:8px;">📕 From TheSmallBook - your 520 books (tap to use)</div>'+localBooks.map(cardLocalBook).join('<div style="height:8px"></div>')+'<div style="font:600 10px Space Grotesk,sans-serif;color:#111;margin-top:8px;text-align:center;opacity:.7">Suggestions from our library matching “'+esc(rq)+'”</div></div>';
           }
           $res.innerHTML = html;
           var n3=document.createElement("div");

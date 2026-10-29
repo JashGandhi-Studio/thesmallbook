@@ -25,7 +25,7 @@
   var titleEl = document.getElementById('rmTitle');
   var authorEl = document.getElementById('rmAuthor');
   if (titleEl) titleEl.textContent = book.title;
-  if (authorEl) authorEl.textContent = 'by ' + book.author;
+  if (authorEl) authorEl.textContent = /^unknown$/i.test(book.author || '') ? 'A TheSmallBook Original' : 'by ' + book.author;
   document.title = book.title + ' | TheSmallBook Reader';
 
   // Build Pages/Sections
@@ -34,7 +34,7 @@
   // Page 0: The Big Idea
   pages.push({
     title: 'The Big Idea',
-    meta: (book.cat || 'OVERVIEW') + ' · OVERVIEW',
+    meta: (book.cat || book.category || 'Overview') + ' · The big idea',
     content: '<p><strong>' + (book.tagline || '') + '</strong></p>' +
              '<p>' + (book.oneliner || '') + '</p>' +
              (book.bigidea ? '<div class="rm-callout"><b>💡 The Core Insight</b>' + book.bigidea + '</div>' : '')
@@ -371,7 +371,7 @@
   // Preferences
   function applyPrefs() {
     var size = localStorage.getItem('tsb_rm_size') || '20px';
-    var font = localStorage.getItem('tsb_rm_font') || "'Newsreader', Georgia, serif";
+    var font = localStorage.getItem('tsb_rm_font') || "Newsreader, Georgia, serif";
     var spacing = localStorage.getItem('tsb_rm_spacing') || '1.8';
     var theme = localStorage.getItem('tsb_rm_theme') || 'auto';
     var mode = getMode();
@@ -481,6 +481,8 @@
 
   if (langBtn && langSheetOverlay) {
     langBtn.addEventListener('click', function() {
+      /* v324: one translate sheet everywhere (drops from the top) */
+      if (window.TSB_LANG && typeof window.TSB_LANG.open === 'function') { window.TSB_LANG.open(); return; }
       openLangSheet();
     });
 

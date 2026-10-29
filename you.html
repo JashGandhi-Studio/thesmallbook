@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta property="og:title" content="You, TheSmallBook">
+  <meta property="og:description" content="Your reading year: minutes, streak, finished books and highlights.">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=335">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://thesmallbook.in/you.html">
+  <meta property="og:type" content="website">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <title>You, TheSmallBook</title>
+  <meta name="description" content="Your TheSmallBook year: minutes this week, your streak, finished books as spines on a shelf and your highlights.">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="https://thesmallbook.in/you.html">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    /* theme + phone status bar BEFORE first paint (no flash). */
+    try {
+      var rawTh = localStorage.getItem("tsb_theme");
+      var hr = new Date().getHours();
+      var isNight = (hr < 6 || hr >= 18);
+      var isExplicitDark = rawTh === '"dark"' || rawTh === 'dark';
+      var isExplicitLight = rawTh === '"light"' || rawTh === 'light';
+      var tsbDark = isExplicitDark || (!isExplicitLight && isNight);
+      if (tsbDark) document.documentElement.classList.add("dark");
+      else document.documentElement.classList.remove("dark");
+      var tsbTC = document.querySelector('meta[name="theme-color"]');
+      if (!tsbTC) { tsbTC = document.createElement("meta"); tsbTC.name = "theme-color"; document.head.appendChild(tsbTC); }
+      tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
+    } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=335">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="css/film.css?v=335">
+  <link rel="stylesheet" href="css/film2.css?v=335">
+  <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
+</head>
+<body class="youpage youpage--film">
+  <main class="fy" id="filmYou" aria-label="You"></main>
+  <script src="./js/bootguard.js?v=335"></script>
+  <script src="js/prefs.js?v=335"></script>
+  <script src="js/lang.js?v=335"></script>
+  <script src="js/config.js?v=335"></script>
+  <script src="js/auth.js?v=335"></script>
+  <script src="js/data.js?v=335"></script>
+  <script src="js/podcast-data.js?v=335"></script>
+  <script src="js/audioplayer.js?v=335"></script>
+  <script src="js/bar.js?v=335" defer></script>
+  <script src="js/onboard.js?v=335" defer></script>
+  <script src="js/stt.js?v=335"></script>
+  <script src="js/film.js?v=335" defer></script>
+  <script src="js/film2.js?v=335" defer></script>
+</body>
+</html>

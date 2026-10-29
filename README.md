@@ -2,11 +2,32 @@
 
 **Live repo:** [github.com/JashGandhi-Studio/thesmallbook](https://github.com/JashGandhi-Studio/thesmallbook) - ⭐ star it if the lessons helped you!
 
-**400 books · 2,637 lessons · 308 failure autopsies - free.**
+**520 books · 3,685 lessons · 400 failure autopsies - free to read.**
 
 **Big books. Small reads.** Every lesson from the world's greatest books - broken down chapter by chapter with real examples, killer quotes, and action steps. Skim it, understand it, apply it. No 300-page grind.
 
-> 🎨 Design language: **Neo-Brutalism** - thick black borders, hard offset shadows, loud colors, zero subtlety.
+## 🆕 What's new in v335 (30 October 2026)
+
+- **Gold in You:** members see "You are Gold", their plan and end date, with Manage. The ₹99 offer no longer shows to people who already pay, on You or Today. The Gold screen ends cleanly (no stray footer).
+- **Story time only in You:** removed from Today, the home banner, Listen and onboarding. You has a small sheet to show or hide it; Settings has a switch that asks before hiding it everywhere (`tsb_kids_show`).
+- **Smoother Read:** the opening page is laid out on finger down, layout is read before it is written, and the book shadow no longer redraws every frame (tap work 108 ms to 17 ms on a 4x slowed CPU; 60 fps).
+- **520 books, 3,685 lessons** everywhere, including the share image.
+- Nothing new to run in Supabase: the v334 SQL still applies.
+
+## 🆕 What's new in v334 (30 October 2026)
+
+- **Read opens the real 3D book.** The cover swings open and the first page becomes the reader, with no loading pause.
+- **New scanner (`scan.html`).** Reads the ISBN barcode live (where the phone supports it) or the cover title; missing books can be requested in one tap.
+- **Gold by UPI.** Pay with a UPI app or QR, paste the 12-digit UTR, and the server switches Gold on. YouPI-PG works alongside when it is set up. See `docs/GOLD-PAYMENTS.md`.
+- **13+ sign-up**, no parent tick. **Kids mode** opens from Today and You.
+- **Voice typing** with the phone's recogniser, then free on-device Whisper-tiny. **Hold a word** to see its meaning.
+- **Hindi audiobook covers**, a cleaner search bar, and dark-mode contrast fixes.
+- **Security:** no admin password in the app, no email in public profiles, exact-amount payment checks.
+- **SEO:** canonical links, site structured data with a search box, a clean sitemap, and no invented star ratings.
+
+**After uploading:** run `supabase/sql/UPDATE-v334-payments-security.sql` once in the Supabase SQL editor, then deploy the edge functions listed in `docs/GOLD-PAYMENTS.md`. Files removed in this release are listed in `docs/REMOVED-FILES.txt`.
+
+> 🎨 Design language: calm paper, ink and one yellow. Newsreader for reading, Space Grotesk for the interface.
 
 ## ✨ Features
 

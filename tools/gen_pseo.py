@@ -110,7 +110,7 @@ PSEO_TPL = '''<!DOCTYPE html>
 {LIST}
     </section>
     <section class="seoblock seocta">
-      <a class="btn btn--yellow" href="../index.html#library">&#128218; BROWSE THE FULL 500-BOOK SHELF</a>
+      <a class="btn btn--yellow" href="../index.html#library">&#128218; BROWSE THE FULL 520-BOOK SHELF</a>
       <p>Every summary is free: lessons, examples, action steps, audio in your language.</p>
     </section>
   </main>

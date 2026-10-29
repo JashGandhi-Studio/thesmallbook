@@ -19,7 +19,7 @@
     name: "The Small Book Audio Edition",
     host: "TheSmallBook Studio",
     art: "assets/podcast/tsb-show-cover.jpg",
-    why: "The library talks back: masterclass lessons and big ideas argued out loud, distilled into actionable frameworks and practical protocols you can apply immediately. Recorded by the app, open to all.",
+    why: "Our own show. One big idea from a book per episode, talked through with an example you can try this week. Free for everyone.",
     episodes: [
       { id: "ep1", title: "Why You Quit Five Minutes Before the Miracle", desc: "The valley every skill hides, the 40% rule, and the four-line protocol that carries you across. With the counterpoint: when quitting is the smart play.",
         parts: [
@@ -52,84 +52,84 @@
   window.TSB_PODCASTS = {
     shows: [
       /* ── founders & builders, India ── */
-      { id: "wtf-nikhil", art: "assets/podcasts/wtf-nikhil.svg", cat: "founders", tag: "INDIA · FOUNDERS", name: "WTF is with Nikhil Kamath",
+      { id: "wtf-nikhil", art: "assets/podcasts/art/wtf-nikhil.jpg", cat: "founders", tag: "INDIA · FOUNDERS", name: "WTF is with Nikhil Kamath",
         rss: "https://feeds.hubhopper.com/664690fdea0d7a6f61a052da119934d3.rss", home: "https://www.youtube.com/results?search_query=WTF+is+with+Nikhil+Kamath+podcast",
         host: "Nikhil Kamath", why: "India's best-known founders and operators in long, unscripted conversation: what they bet on, what broke, what they would do again.",
         start: "the Zerodha founder episodes, then any episode whose guest built something you use", url: yt("WTF is with Nikhil Kamath podcast") },
-      { id: "figuring-out", art: "assets/podcasts/figuring-out.svg", cat: "founders", tag: "INDIA · FOUNDERS", name: "Figuring Out",
+      { id: "figuring-out", art: "assets/podcasts/art/figuring-out.jpg", cat: "founders", tag: "INDIA · FOUNDERS", name: "Figuring Out",
         rss: "https://anchor.fm/s/f5347ab0/podcast/rss", home: "https://www.youtube.com/results?search_query=Raj+Shamani+Figuring+Out+podcast",
         host: "Raj Shamani", why: "Founder and creator journeys with real numbers on the table: revenue, failures, first customers. The most-watched business show out of India.",
         start: "the episodes with bootstrapped founders; note the numbers they quote in year one", url: yt("Raj Shamani Figuring Out podcast") },
-      { id: "barbershop", art: "assets/podcasts/barbershop.svg", cat: "founders", tag: "INDIA · CONVERSATIONS", name: "The Barbershop with Shantanu",
+      { id: "barbershop", art: "assets/podcasts/art/barbershop.jpg", cat: "founders", tag: "INDIA · CONVERSATIONS", name: "The Barbershop with Shantanu",
         rss: "https://media.rss.com/thebarbershopwithshantanu/feed.xml", home: "https://www.youtube.com/results?search_query=The+Barbershop+with+Shantanu+podcast",
         host: "Shantanu Deshmukh", why: "Long-form walks and talks with Indian operators, investors and athletes, recorded like two people actually talking, not performing.",
         start: "any episode taped on a walk; the format keeps the honesty high", url: yt("The Barbershop with Shantanu podcast") },
       /* ── books & ideas, global ── */
-      { id: "founders-senra", art: "assets/podcasts/founders-senra.svg", cat: "books", tag: "BOOKS · BIOGRAPHIES", name: "Founders",
+      { id: "founders-senra", art: "assets/podcasts/art/founders-senra.jpg", cat: "books", tag: "BOOKS · BIOGRAPHIES", name: "Founders",
         rss: "https://feeds.megaphone.fm/DSLLC6297708582", home: "https://founderspodcast.com/",
         host: "David Senra", why: "One founder biography per episode, read in full and argued with out loud. The closest thing to a book podcast that acts like a mentor.",
         start: "the episodes on Walton, Marriott and the Honda founder; then let the algorithm take the wheel", url: yt("Founders podcast David Senra") },
-      { id: "knowledge-project", art: "assets/podcasts/knowledge-project.svg", cat: "books", tag: "BOOKS · DECISIONS", name: "The Knowledge Project",
+      { id: "knowledge-project", art: "assets/podcasts/art/knowledge-project.jpg", cat: "books", tag: "BOOKS · DECISIONS", name: "The Knowledge Project",
         rss: "https://feeds.megaphone.fm/FSMI7575968096", home: "https://www.fs.blog/knowledge-project-podcast/",
         host: "Shane Parrish", why: "Clear thinkers on judgment, defaults and deliberate practice; the audio companion to the reading list this app is built on.",
         start: "episodes with poker players, coaches and authors of books you have summaries of", url: yt("The Knowledge Project Shane Parrish podcast") },
-      { id: "tim-ferriss", art: "assets/podcasts/tim-ferriss.svg", cat: "books", tag: "AUTHORS · CRAFT", name: "The Tim Ferriss Show",
+      { id: "tim-ferriss", art: "assets/podcasts/art/tim-ferriss.jpg", cat: "books", tag: "AUTHORS · CRAFT", name: "The Tim Ferriss Show",
         rss: "https://rss.art19.com/tim-ferriss-show", home: "https://tim.blog/podcast/",
         host: "Tim Ferriss", why: "Hundreds of author interviews where the book's argument gets stress-tested by someone who has lived it.",
         start: "the interviews with the authors already on your shelf", url: yt("Tim Ferriss Show podcast author interviews") },
-      { id: "book-review", art: "assets/podcasts/book-review.svg", cat: "books", tag: "BOOKS · WEEKLY", name: "The Book Review",
+      { id: "book-review", art: "assets/podcasts/art/book-review.jpg", cat: "books", tag: "BOOKS · WEEKLY", name: "The Book Review",
         rss: "https://feeds.simplecast.com/zyaxg_KL", home: "https://www.nytimes.com/column/the-book-review-podcast",
         host: "The New York Times", why: "Fifteen minutes a week on what is worth reading and why, by people who read for a living.",
         start: "any episode about a nonfiction pick; perfect commute length", url: yt("NYT The Book Review podcast") },
       /* ── money & investing ── */
-      { id: "invest-best", art: "assets/podcasts/invest-best.svg", cat: "money", tag: "MONEY · INVESTING", name: "Invest Like the Best",
+      { id: "invest-best", art: "assets/podcasts/art/invest-best.jpg", cat: "money", tag: "MONEY · INVESTING", name: "Invest Like the Best",
         rss: "https://feeds.megaphone.fm/CLS2859450455", home: "https://joincolossus.com/",
         host: "Patrick O'Shaughnessy", why: "Investors and operators explain how they actually think about risk and compounding, one repeated idea at a time.",
         start: "the episodes with value investors who write letters you can read free", url: yt("Invest Like the Best Patrick O'Shaughnessy podcast") },
-      { id: "paisa-waisa", art: "assets/podcasts/paisa-waisa.svg", cat: "money", tag: "INDIA · MONEY", name: "Paisa Vaisa",
+      { id: "paisa-waisa", art: "assets/podcasts/art/paisa-waisa.jpg", cat: "money", tag: "INDIA · MONEY", name: "Paisa Vaisa",
         rss: "https://www.omnycontent.com/d/playlist/e0dce4b3-2eb8-48cb-822c-af1d00e03e20/b3d9fccc-662e-4aa7-a14a-af4e0097d44b/e2ba1850-2b92-4a77-b08f-af4e0097d46c/podcast.rss", home: "https://ivmpodcasts.com/paisa-vaisa",
         host: "Anupam Gupta", why: "India's longest-running personal finance show: SIPs, insurance, loans and the stuff your bank never explains plainly.",
         start: "the beginner-archive episodes on mutual funds and emergency funds", url: yt("Paisa Vaisa podcast Anupam Gupta") },
       /* ── more founders & India, added v304 ── */
-      { id: "the-neon-show", art: "assets/podcasts/the-neon-show.svg", cat: "founders", tag: "INDIA · FOUNDERS", name: "The Neon Show",
+      { id: "the-neon-show", art: "assets/podcasts/art/the-neon-show.jpg", cat: "founders", tag: "INDIA · FOUNDERS", name: "The Neon Show",
         rss: "https://rss.buzzsprout.com/1601695.rss", home: "https://www.youtube.com/results?search_query=The+Neon+Show+Siddhartha+Ahluwalia+podcast",
         host: "Siddhartha Ahluwalia", why: "Indian founders at the messy early stage: first customers, cofounder fights, money running out. Honest numbers from people still in the arena.",
         start: "the solo episodes where Siddhartha breaks down his own startup's mistakes", url: yt("The Neon Show Siddhartha Ahluwalia podcast") },
-      { id: "dreamers-unicorns", art: "assets/podcasts/dreamers-unicorns.svg", cat: "founders", tag: "INDIA · STARTUPS", name: "Dreamers and Unicorns",
+      { id: "dreamers-unicorns", art: "assets/podcasts/art/dreamers-unicorns.jpg", cat: "founders", tag: "INDIA · STARTUPS", name: "Dreamers and Unicorns",
         rss: "https://feeds.megaphone.fm/HTMEDIALTD6831633219", home: "https://www.youtube.com/results?search_query=Dreamers+and+Unicorns+podcast",
         host: "Nitin Pai · HT Smartcast", why: "How Indian startups actually get built and funded, told by the operators and investors writing the cheques.",
         start: "the season openers; they map where Indian capital is moving next", url: yt("Dreamers and Unicorns podcast") },
-      { id: "how-i-built-this", art: "assets/podcasts/how-i-built-this.svg", cat: "founders", tag: "FOUNDERS · GLOBAL", name: "How I Built This",
+      { id: "how-i-built-this", art: "assets/podcasts/art/how-i-built-this.jpg", cat: "founders", tag: "FOUNDERS · GLOBAL", name: "How I Built This",
         rss: "https://rss.art19.com/how-i-built-this", home: "https://www.wondery.com/shows/how-i-built-this/",
         host: "Guy Raz", why: "The origin stories behind Airbnb, Spanx, Dropbox and a hundred others, told by the founders themselves with the failures left in.",
         start: "the Airbnb, Bumble and Bootstrapped founders episodes", url: yt("How I Built This Guy Raz podcast") },
-      { id: "diary-of-a-ceo", art: "assets/podcasts/diary-of-a-ceo.svg", cat: "founders", tag: "FOUNDERS · GLOBAL", name: "The Diary Of A CEO",
+      { id: "diary-of-a-ceo", art: "assets/podcasts/art/diary-of-a-ceo.jpg", cat: "founders", tag: "FOUNDERS · GLOBAL", name: "The Diary Of A CEO",
         rss: "https://rss2.flightcast.com/xmsftuzjjykcmqwolaqn6mdn", home: "https://www.youtube.com/results?search_query=Diary+of+a+CEO+Steven+Bartlett",
         host: "Steven Bartlett", why: "Long interviews with the people behind the world's biggest companies and loudest ideas, focused on the decisions more than the glory.",
         start: "the code and negotiation episodes; Steven asks about money the way readers of this app do", url: yt("Diary of a CEO Steven Bartlett podcast") },
       /* ── books & ideas, added v304 ── */
-      { id: "modern-wisdom", art: "assets/podcasts/modern-wisdom.svg", cat: "books", tag: "BOOKS · IDEAS", name: "Modern Wisdom",
+      { id: "modern-wisdom", art: "assets/podcasts/art/modern-wisdom.jpg", cat: "books", tag: "BOOKS · IDEAS", name: "Modern Wisdom",
         rss: "https://feeds.megaphone.fm/SIXMSB5088139739", home: "https://www.youtube.com/results?search_query=Modern+Wisdom+Chris+Williamson",
         host: "Chris Williamson", why: "Three episodes a week with authors and scientists distilling their life's work into plain talk. A reading list that argues back.",
         start: "any episode whose author guest wrote a book on your shelf", url: yt("Modern Wisdom Chris Williamson podcast") },
-      { id: "naval", art: "assets/podcasts/naval.svg", cat: "books", tag: "WEALTH · WISDOM", name: "Naval",
+      { id: "naval", art: "assets/podcasts/art/naval.jpg", cat: "books", tag: "WEALTH · WISDOM", name: "Naval",
         rss: "https://feeds.libsyn.com/166112", home: "https://nav.al/",
         host: "Naval Ravikant", why: "The angel investor and philosopher on wealth, leverage and happiness, in short episodes that read like the Almanack he never wrote.",
         start: "the episodes on specific knowledge and long-term games", url: yt("Naval Ravikant podcast") },
       /* ── mind & health, added v304 ── */
-      { id: "the-ranveer-show", art: "assets/podcasts/the-ranveer-show.svg", cat: "mind", tag: "INDIA · CONVERSATIONS", name: "The Ranveer Show",
+      { id: "the-ranveer-show", art: "assets/podcasts/art/the-ranveer-show.jpg", cat: "mind", tag: "INDIA · CONVERSATIONS", name: "The Ranveer Show",
         rss: "https://feeds.simplecast.com/7PWFZi_d", home: "https://www.youtube.com/results?search_query=The+Ranveer+Show+BeerBiceps",
         host: "Ranveer Allahbadia", why: "India's biggest self-growth show: monks, doctors, investors and historians in long Hinglish conversations about the mind and the country.",
         start: "the episodes with the monks and the money managers; notice how often they agree", url: yt("The Ranveer Show BeerBiceps podcast") },
-      { id: "huberman-lab", art: "assets/podcasts/huberman-lab.svg", cat: "mind", tag: "SCIENCE · HEALTH", name: "Huberman Lab",
+      { id: "huberman-lab", art: "assets/podcasts/art/huberman-lab.jpg", cat: "mind", tag: "SCIENCE · HEALTH", name: "Huberman Lab",
         rss: "https://feeds.megaphone.fm/hubermanlab", home: "https://www.hubermanlab.com/",
         host: "Andrew Huberman", why: "A Stanford neuroscientist explains focus, sleep, stress and motivation with protocols you can try the same day. Dense, patient, worth it.",
         start: "the episodes on dopamine, morning light and beating procrastination", url: yt("Huberman Lab podcast") },
-      { id: "hidden-brain", art: "assets/podcasts/hidden-brain.svg", cat: "mind", tag: "SCIENCE · MIND", name: "Hidden Brain",
+      { id: "hidden-brain", art: "assets/podcasts/art/hidden-brain.jpg", cat: "mind", tag: "SCIENCE · MIND", name: "Hidden Brain",
         rss: "https://feeds.simplecast.com/kwWc0lhf", home: "https://hiddenbrain.org/",
         host: "Shankar Vedantam", why: "The invisible patterns that run your decisions, told through stories. It does for your biases what the shelf does for your habits.",
         start: "the episodes on habit loops and scarcity; you will recognise yourself", url: yt("Hidden Brain podcast") },
-      { id: "on-purpose", art: "assets/podcasts/on-purpose.svg", cat: "mind", tag: "MIND · HABITS", name: "On Purpose",
+      { id: "on-purpose", art: "assets/podcasts/art/on-purpose.jpg", cat: "mind", tag: "MIND · HABITS", name: "On Purpose",
         rss: "https://feeds.megaphone.fm/on-purpose", home: "https://www.youtube.com/results?search_query=On+Purpose+Jay+Shetty+podcast",
         host: "Jay Shetty", why: "Calm, practical conversations about discipline, relationships and doing work that means something, with the authors behind the ideas.",
         start: "the solo episodes on building routines that survive bad weeks", url: yt("On Purpose Jay Shetty podcast") }
@@ -149,13 +149,13 @@
      streamed straight from Archive.org (metadata fetched on play, cached). */
   window.TSB_AUDIOBOOKS = {
     /* हिंदी: LibriVox's complete Hindi catalog - volunteer-read, public domain */
-    "panchatantra-hi":           { id: "panchatantra_2604_librivox",       title: "Panchatantra (Hindi)", dev: "पंचतंत्र", author: "Vishnu Sharma", lang: "hi", ch: 74 },
-    "do-sakhiyan-hi":            { id: "dosakhiyan_2512_librivox",         title: "Do Sakhiyan (Hindi)", dev: "दो सखियाँ", author: "Munshi Premchand", lang: "hi", ch: 13 },
-    "idgaah-hi":                 { id: "IdgaahByMunshiPremchand",          title: "Idgaah (Hindi)", dev: "ईदगाह", author: "Munshi Premchand", lang: "hi" },
-    "gulli-danda-hi":            { id: "gulli-danda-munshi-premchand",     title: "Gulli Danda (Hindi)", dev: "गुल्ली डंडा", author: "Munshi Premchand", lang: "hi" },
-    "anaath-ladki-hi":           { id: "AnaathLadkiByMunshiPremchand",     title: "Anaath Ladki (Hindi)", dev: "अनाथ लड़की", author: "Munshi Premchand", lang: "hi" },
-    "andher-hi":                 { id: "AndherByMunshiPremchand",          title: "Andher (Hindi)", dev: "अंधेर", author: "Munshi Premchand", lang: "hi" },
-    "jhanki-hi":                 { id: "JhankiByMunshiPremchand",          title: "Jhanki (Hindi)", dev: "झाँकी", author: "Munshi Premchand", lang: "hi" },
+    "panchatantra-hi":           { id: "panchatantra_2604_librivox",       title: "Panchatantra (Hindi)", dev: "पंचतंत्र", author: "Vishnu Sharma", lang: "hi", art: "assets/covers/panchatantra-hi.jpg", ch: 74 },
+    "do-sakhiyan-hi":            { id: "dosakhiyan_2512_librivox",         title: "Do Sakhiyan (Hindi)", dev: "दो सखियाँ", author: "Munshi Premchand", lang: "hi", art: "assets/covers/do-sakhiyan-hi.jpg", ch: 13 },
+    "idgaah-hi":                 { id: "IdgaahByMunshiPremchand",          title: "Idgaah (Hindi)", dev: "ईदगाह", author: "Munshi Premchand", lang: "hi", art: "assets/covers/idgaah-hi.jpg" },
+    "gulli-danda-hi":            { id: "gulli-danda-munshi-premchand",     title: "Gulli Danda (Hindi)", dev: "गुल्ली डंडा", author: "Munshi Premchand", lang: "hi", art: "assets/covers/gulli-danda-hi.jpg" },
+    "anaath-ladki-hi":           { id: "AnaathLadkiByMunshiPremchand",     title: "Anaath Ladki (Hindi)", dev: "अनाथ लड़की", author: "Munshi Premchand", lang: "hi", art: "assets/covers/anaath-ladki-hi.jpg" },
+    "andher-hi":                 { id: "AndherByMunshiPremchand",          title: "Andher (Hindi)", dev: "अंधेर", author: "Munshi Premchand", lang: "hi", art: "assets/covers/andher-hi.jpg" },
+    "jhanki-hi":                 { id: "JhankiByMunshiPremchand",          title: "Jhanki (Hindi)", dev: "झाँकी", author: "Munshi Premchand", lang: "hi", art: "assets/covers/jhanki-hi.jpg" },
     "meditations":               { id: "meditations_0708_librivox",        title: "Meditations" , ch: 15 },
     "the-prince":                { id: "prince_librivox",                  title: "The Prince" , ch: 13 },
     "art-of-war":                { id: "art_of_war_librivox",              title: "The Art of War" , ch: 7 },
@@ -190,5 +190,64 @@
   "carnegie":                  { id: "autobiography_carnegie_1212_librivox", title: "The Autobiography of Andrew Carnegie", author: "Andrew Carnegie" },
   "frederick-douglass":        { id: "frederick-douglass_jf_librivox",     title: "Narrative of the Life of Frederick Douglass", author: "Frederick Douglass" },
   "odyssey":                   { id: "odyssey_butler_librivox",            title: "The Odyssey", author: "Homer" }
+  };
+})();
+
+/* v334 · TSB_ABCOVER(rec): a cover for any audiobook that has none
+   (books pulled in by "Want more", new Hindi finds). Drawn once on the
+   phone in the house style: palette and motif picked from the title,
+   Devanagari or Latin title, rule, author. Returns a JPEG data URL. */
+(function () {
+  if (window.TSB_ABCOVER) return;
+  var cache = {};
+  var PAL = [["#2E4636", "#F3EBDD", "#E9C46A"], ["#F6F0E4", "#7A3B2E", "#D9825B"], ["#1F2B4D", "#F3EBDD", "#E9C46A"], ["#E7B04A", "#2A1E0E", "#FBF3DF"],
+    ["#5B2230", "#F6E7D8", "#F2B45A"], ["#17140F", "#EFE6D3", "#C9A24A"], ["#1E5A5E", "#F1EBDD", "#E9C46A"], ["#F2EDE2", "#16130F", "#B9503A"]];
+  function hash(s) { var h = 2166136261; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function wrap(ctx, text, max) {
+    var words = String(text).split(/\s+/), lines = [], cur = "";
+    words.forEach(function (w) { var t = cur ? cur + " " + w : w; if (ctx.measureText(t).width > max && cur) { lines.push(cur); cur = w; } else cur = t; });
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  window.TSB_ABCOVER = function (rec) {
+    rec = rec || {};
+    var title = String(rec.dev || rec.title || "Audiobook").replace(/\s*\((Hindi|हिंदी)\)\s*$/i, "");
+    var key = title + "|" + (rec.author || "");
+    if (cache[key]) return cache[key];
+    try {
+      var W = 400, H = 600, c = document.createElement("canvas"); c.width = W; c.height = H;
+      var x = c.getContext("2d"), h = hash(key), p = PAL[h % PAL.length], bg = p[0], ink = p[1], acc = p[2];
+      var deva = /[\u0900-\u097F]/.test(title);
+      x.fillStyle = bg; x.fillRect(0, 0, W, H);
+      var g = x.createLinearGradient(0, 0, 48, 0); g.addColorStop(0, "rgba(0,0,0,.12)"); g.addColorStop(1, "rgba(0,0,0,0)"); x.fillStyle = g; x.fillRect(0, 0, 48, H);
+      x.fillStyle = ink; x.font = "700 10px 'Space Grotesk', system-ui, sans-serif"; x.textBaseline = "top";
+      x.fillText("T H E S M A L L B O O K", 28, 26);
+      var tag = deva ? "\u0939\u093f\u0928\u094d\u0926\u0940" : "LIBRIVOX"; x.textAlign = "right"; x.fillText(tag, W - 28, 26); x.textAlign = "left";
+      /* motif */
+      var m = (h >>> 5) % 4, cx = 200, cy = 190;
+      x.fillStyle = acc; x.strokeStyle = acc;
+      if (m === 0) { for (var r = 0; r < 6; r++) for (var q = 0; q < 6; q++) { x.beginPath(); x.arc(110 + q * 36, 100 + r * 36, 3 + q * 1.6, 0, 7); x.fill(); } }
+      else if (m === 1) { x.lineWidth = 16; for (var a = 0; a < 3; a++) { x.beginPath(); x.arc(cx, cy + 60, 110 - a * 32, Math.PI, 0); x.stroke(); } }
+      else if (m === 2) { x.beginPath(); x.arc(cx - 34, cy, 74, 0, 7); x.globalAlpha = .85; x.fill(); x.globalAlpha = 1; x.lineWidth = 8; x.strokeStyle = ink; x.beginPath(); x.arc(cx + 34, cy, 74, 0, 7); x.stroke(); }
+      else { x.beginPath(); x.moveTo(cx - 110, cy + 80); x.lineTo(cx - 30, cy - 50); x.lineTo(cx + 20, cy + 20); x.lineTo(cx + 50, cy - 10); x.lineTo(cx + 110, cy + 80); x.closePath(); x.globalAlpha = .9; x.fill(); x.globalAlpha = 1; x.beginPath(); x.arc(cx + 70, cy - 70, 16, 0, 7); x.fillStyle = ink; x.fill(); }
+      /* title */
+      var fam = deva ? "'Noto Serif Devanagari', 'Noto Sans Devanagari', serif" : "Newsreader, Georgia, serif";
+      var size = 52, lines;
+      do { x.font = "700 " + size + "px " + fam; lines = wrap(x, title, 340); size -= 4; } while ((lines.length > 3 || lines.some(function (l) { return x.measureText(l).width > 344; })) && size > 26);
+      size += 4; x.fillStyle = ink; var y = 340;
+      lines.slice(0, 3).forEach(function (l) { x.fillText(l, 28, y); y += size * 1.12; });
+      x.fillStyle = acc; x.fillRect(28, y + 14, 34, 3);
+      x.fillStyle = ink; x.font = "700 10.5px 'Space Grotesk', system-ui, sans-serif";
+      x.fillText(String(rec.author || "LibriVox").toUpperCase().split("").join(" ").slice(0, 60), 28, H - 40);
+      return (cache[key] = c.toDataURL("image/jpeg", 0.86));
+    } catch (e) { return ""; }
+  };
+  /* where a cover lives: the book's, the record's own art, or a drawn one */
+  window.TSB_ABART = function (bid, rec, book) {
+    if (book && book.cover) return book.cover;
+    rec = rec || {};
+    if (rec.art) return rec.art;
+    if (rec.discovered) return window.TSB_ABCOVER(rec);
+    return "assets/covers/" + bid + ".jpg";
   };
 })();

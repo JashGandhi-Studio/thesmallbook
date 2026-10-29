@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
+Disallow: /admin.html
+Disallow: /og-builder.html
+Disallow: /supabase/
+Disallow: /tests/
+Disallow: /tools/
+Disallow: /docs/
+Disallow: /whatsapp-bot/
 
 Sitemap: https://thesmallbook.in/sitemap.xml

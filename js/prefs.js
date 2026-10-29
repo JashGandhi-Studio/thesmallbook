@@ -193,7 +193,18 @@
       const s = get("tsb_streak", { last: "", count: 0 });
       if (s.last === today) return s.count;
       const yesterday = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
-      s.count = s.last === yesterday ? s.count + 1 : 1;
+      /* v331: Gold's streak freeze. Miss exactly one day and, once a month,
+         the streak carries on instead of resetting. */
+      const dayBefore = new Date(Date.now() - 2 * 864e5).toISOString().slice(0, 10);
+      let frozen = false;
+      try {
+        const month = today.slice(0, 7);
+        if (s.last === dayBefore && s.count > 0 && window.TSB_GOLD && TSB_GOLD.isGold() && get("tsb_streak_freeze", "") !== month) {
+          set("tsb_streak_freeze", month);
+          frozen = true;
+        }
+      } catch (e) {}
+      s.count = (s.last === yesterday || frozen) ? s.count + 1 : 1;
       s.last = today;
       set("tsb_streak", s);
       /* v281: the day log + reading birthday behind the Year-in-Review card */
@@ -266,7 +277,7 @@
   };
 
   const achv = {
-    list: () => get("tsb_achv", []),
+    list: () => { const v = get("tsb_achv", []); return Array.isArray(v) ? v : []; },
     award(id, silent) {
       if (!ACHV[id]) return;
       const l = achv.list();
@@ -279,7 +290,7 @@
       const el = document.createElement("div");
       el.className = "achvpop";
       el.innerHTML = `<span class="achvpop__icon">${a.icon}</span>
-        <div><div class="achvpop__title">ACHIEVEMENT UNLOCKED!</div>
+        <div><div class="achvpop__title">Unlocked</div>
         <div class="achvpop__name">${a.name}</div>
         <div class="achvpop__desc">${a.desc}</div></div>`;
       document.body.appendChild(el);

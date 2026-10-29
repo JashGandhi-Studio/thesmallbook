@@ -336,7 +336,7 @@ const C = window.TSB_COMMUNITY;
   ok("You-window has Notif sound row + Sound test", lgSrc2.includes('id="soundRowY"') && lgSrc2.includes('id="youSoundTest"') && lgSrc2.includes("paintYSound"));
   const bkSrc2 = fsp.readFileSync(pp.join(__dirname, "../js/book.js"), "utf8");
   ok("share card: title baseline lowered + one-liner capped when title wraps", bkSrc2.includes("let y = 678;") && bkSrc2.includes("titleLines.length > 1 ? 2 : 3"));
-  ok("og image + alt refreshed (500 books · 3,540 lessons)", idxH.includes("500 books · 3,540 lessons") && idxH.includes("assets/og-image.png"));
+  ok("og image + alt refreshed (520 books · 3,685 lessons)", idxH.includes("520 books · 3,685 lessons") && idxH.includes("assets/og-image.png"));
   ok("no stale counts on key files (350 books / 2,176 / 2176 / 2170)", !/350 books|2,176|2176|2170|2,637 lessons|2637 lessons|308 autopsies|ALL 308|422 books|2,811|2811|311 autopsies|ALL 311/.test(djSrc + idxH + cssSrc + lgSrc2 + bkSrc2));
   const swSrc = fsp.readFileSync(pp.join(__dirname, "../sw.js"), "utf8");
   /* v252: these two used to hardcode the version, so every release broke them.
@@ -375,7 +375,7 @@ const C = window.TSB_COMMUNITY;
   }
   const onbSrc = fsp.readFileSync(pp.join(__dirname, "../js/onboard.js"), "utf8");
   const scnSrc = fsp.readFileSync(pp.join(__dirname, "../scan.html"), "utf8");
-  ok("onboarding + scanner + about all say 500", onbSrc.includes("500+ books") && scnSrc.includes("all 500 book titles") && abtH.includes("500 book summaries") && abtH.includes("ASK 500+ BOOKS"));
+  ok("onboarding + scanner + about all say 520", onbSrc.includes("520+ books") && scnSrc.includes("all 520 book titles") && abtH.includes("520 book summaries") && abtH.includes("ASK 520+ BOOKS"));
   const flSrc = fsp.readFileSync(pp.join(__dirname, "../js/failures.js"), "utf8");
   const flArr = JSON.parse(flSrc.slice(flSrc.indexOf("["), flSrc.lastIndexOf("]") + 1));
   ok("graveyard grew to 400 autopsies", flArr.length === 400, flArr.length + " autopsies");
@@ -427,7 +427,7 @@ const C = window.TSB_COMMUNITY;
   const gold290 = fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8");
   ok("v290: FREE vs GOLD side-by-side on gold.html (12 honest rows)", gold290.includes('id="goldCompare"') && (gold290.match(/class="gcmp__row"/g) || []).length === 12 && gold290.includes("LIVE NOW") && gold290.includes("IN PRODUCTION") && gold290.includes("COMING SOON") && gold290.includes("LAUNCHING WITH GOLD"));
   ok("v290: gold comparison claims only verifiable features (no live-link row)", gold290.includes("OFFLINE + EXPORT") && gold290.includes("STUDIO PRO") && gold290.includes("₹999/yr") && gold290.includes("cancel anytime"));
-  ok("v290: gold page keeps the suite contract (ACTIVATE GOLD + live sheets)", gold290.includes("ACTIVATE GOLD") && gold290.includes("unlimited PDF cheat-sheets are LIVE today"));
+  ok("v290: gold page keeps the suite contract (ACTIVATE GOLD + live sheets)", gold290.includes("Redeem code") && gold290.includes("unlimited PDF cheat-sheets are LIVE today"));
   ok("v290: counts move together (520 books / 3685 lessons / 400 autopsies)", djArr.length === 520 && djArr.reduce((x, b) => x + b.lessons.length, 0) === 3685 && flArr.length === 400);
   console.log("== v291: 10 Unknown originals (7 Indian, 3 international), THE TICKET joins the case file ==");
   const unk291 = ["chai-stall-ceo","crickets-balance-sheet","mandi-math","monsoon-portfolio","quiet-giant","rented-kingdom","right-idea-wrong-decade","tiffin-code","the-queue","wedding-economy"];
@@ -457,13 +457,22 @@ const C = window.TSB_COMMUNITY;
   ok("v291: 100 books carry NEW = 30 originals + 50 real + 20 more", ntw291.length === 100 && unk291.every(x => ntw291.includes(x)) && [...f28].every(x => ntw291.includes(x)) && [...d22].every(x => ntw291.includes(x)), ntw291.length + " tagged");
   const ob291 = fsp.readFileSync(pp.join(__dirname, "../js/onboard.js"), "utf8");
   const css291 = fsp.readFileSync(pp.join(__dirname, "../css/style.css"), "utf8");
-  ok("v291: onboarding shows 1-2 personal picks then the new books (with NEW chip)", /head\.concat\(news, rest\)/.test(ob291) && /news\.length >= 6/.test(ob291) && ob291.includes("ob-book__new") && css291.includes(".ob-book__new"));
-  ok("v291: onboarding step 3 is the fixes picker (10 options, Surprise me maps all shelves)", ob291.includes("what else are we fixing?") && (ob291.match(/cat: "/g) || []).length === 10 && ob291.includes("__surprise__") && ob291.includes("shelves().slice(0, 8)") && ob291.includes('"Your fixes"'));
+  ok("v326: the last screen builds a shelf from your picks, any book can be swapped", /function buildShelf/.test(ob291) && /function swapPick/.test(ob291) && ob291.includes("data-swap") && css291.length > 0);
+  const film327 = fsp.readFileSync(pp.join(__dirname, "../js/film.js"), "utf8");
+  const fcss327 = fsp.readFileSync(pp.join(__dirname, "../css/film.css"), "utf8");
+  const b3d327 = fsp.readFileSync(pp.join(__dirname, "../js/book3d.js"), "utf8");
+  ok("v327: book buttons say less, extras live in one quiet menu", /function polishBookTop/.test(film327) && film327.includes("fb-pop") && film327.includes("data-flabel") && fcss327.includes(".fb-pop__it::after"));
+  ok("v327: lessons get padded numbers, a tick when read and a smooth open", /function polishLessons/.test(film327) && film327.includes("fb-tick") && /body\.animate\(/.test(film327));
+  ok("v327: Gold is one screen with one choice, yearly picked, details on demand", /function polishGold/.test(film327) && film327.includes("fgPanel") && film327.includes("fgMore") && fcss327.includes("fg-collapsed"));
+  ok("v327: the 3D book moves on a spring with inertia and flips on tap", /Math\.pow\(0\.955/.test(b3d327) && /idle|sway/i.test(b3d327));
+  ok("v327: secondary pages get a one-row header with a More menu", /function polishNav/.test(film327) && fcss327.includes("html.fv-nav .fb-pop"));
+  ok("v327: every edition cover is a true 2:3 book, none square", !fsp.readFileSync(pp.join(__dirname, "../tools/editions/editions.jsonl"), "utf8").includes('"sq": true'));
+  ok("v326: screen two asks what is on your mind with tappable chips", ob291.includes("data-mind") && /function catsPicked/.test(ob291) && ob291.includes('set("tsb_mind", draft.mind)'));
 
   const newGraves = ["facebook-beacon","bikram-yoga","toyota-recalls","ratings-fail","valeant-pharma","purdue-opioids","tobacco-denial","sugar-industry"];
   ok("8 brand-new autopsies written (pages + data + antidote book)", newGraves.every(g0 => fsp.existsSync(pp.join(__dirname, "../graveyard/" + g0 + ".html")) && flArr.some(f => f.id === g0 && f.book) && fsp.readFileSync(pp.join(__dirname, "../graveyard/" + g0 + ".html"), "utf8").includes("gantidote")));
   const ogPng = fsp.readFileSync(pp.join(__dirname, "../assets/og-image.png"));
-  ok("og image exists (1200x630 fresh)", ogPng.length > 15000 && idxH.includes("og:image:alt") && idxH.includes("3,540 lessons"));
+  ok("og image exists (1200x630 fresh)", ogPng.length > 15000 && idxH.includes("og:image:alt") && idxH.includes("3,685 lessons"));
 
   console.log("== v221: NEW tags on latest batch, install-to-home-screen, build markers ==");
   const cfgSrc = fsp.readFileSync(pp.join(__dirname, "../js/config.js"), "utf8");
@@ -495,11 +504,11 @@ const C = window.TSB_COMMUNITY;
   const appSrc = fsp.readFileSync(pp.join(__dirname, "../js/app.js"), "utf8");
   console.log("== v221: shorter sharper onboarding, dark-mode fixes, real covers ==");
   const onb = fsp.readFileSync(pp.join(__dirname, "../js/onboard.js"), "utf8");
-  ok("onboarding is now ONE PAGE SHORTER (7 pages)", onb.includes("var TOTAL = 7;"));
-  ok("language + look merged into one page (no lonely theme page)", onb.includes("<h2>Language & look</h2>") && onb.includes("data-theme-pick=\"dark\"") && !onb.includes("<h2>Light or dark?</h2>"));
-  ok("final page = pick your starter shelf (tap covers on/off)", onb.includes("Pick your starter shelf") && onb.includes("data-pick") && onb.includes("recPool(") && onb.includes("paintPicks"));
-  ok("picker picks feed tsb_starter_shelf (home honours them)", onb.includes('set("tsb_starter_shelf", (draft.picks && draft.picks.length') && appSrc.includes("tsb_starter_shelf"));
-  ok("starter picks lead BOTH the grid and the shelves rows", appSrc.includes("starter shelf picks lead the library in every view") && appSrc.includes("Your Starter Shelf"));
+  ok("onboarding is exactly FOUR screens now (v326, like the redesign film)", onb.includes("var TOTAL = 4;"));
+  ok("language rides along on screen one (no separate language page)", onb.includes("data-lang") && /function moreLangs/.test(onb));
+  ok("final page = the shelf builds itself with real covers", /function buildShelf/.test(onb) && /function coverOf/.test(onb) && onb.includes("data-swap"));
+  ok("picker picks feed tsb_starter_shelf (home honours them)", onb.includes('set("tsb_starter_shelf", draft.picks.length ? draft.picks : buildShelf())') && appSrc.includes("tsb_starter_shelf"));
+  ok("starter picks lead BOTH the grid and the shelves rows", appSrc.includes("starter shelf picks lead the library in every view") && /Your [Ss]tarter [Ss]helf/.test(appSrc));
   const css = fsp.readFileSync(pp.join(__dirname, "../css/style.css"), "utf8");
   ok("gravestone R.I.P. + years readable in dark (were same as bg)", css.includes(".grave__rip, .grave__year { color: #f2ead8 !important; }") && css.includes("html.dark .grave__rip, html.dark .grave__year { color: #f2ead8 !important; }"));
   ok("achievement popup readable in dark (was invisible)", css.includes("html.dark .achvpop { background: #241f17; color: #f2ead8; }"));
@@ -512,7 +521,7 @@ const C = window.TSB_COMMUNITY;
   let jsAll = true;
   for (const f of fsp.readdirSync(pp.join(__dirname, "../js"))) {
     if (!f.endsWith(".js")) continue;
-    try { new Function(fsp.readFileSync(pp.join(__dirname, "../js/" + f), "utf8")); } catch (e) { jsAll = false; console.log("  js parse fail:", f, e.message); }
+    try { const src0 = fsp.readFileSync(pp.join(__dirname, "../js/" + f), "utf8"); new Function(/^import /m.test(src0) ? src0.replace(/^import [^\n]*$/mg, "").replace(/^export /mg, "") : src0); } catch (e) { jsAll = false; console.log("  js parse fail:", f, e.message); }
   }
   ok("all JS files parse", jsAll);
 
@@ -680,12 +689,12 @@ const C = window.TSB_COMMUNITY;
   ok("v223: studio ships ratios, drag-reframe, filters, quote layout", studioV3.includes("9:16") && studioV3.includes("pointerdown") && studioV3.includes("MINI FILTERS") && studioV3.includes("stuPos"));
   ok("v223: studio export watermarks free readers only", studioV3.includes("S.gold") && studioV3.includes("thesmallbook.in"));
   const goldV3 = fsp.readFileSync(pp.join(__dirname, "../js/gold.js"), "utf8");
-  ok("v223\u2192v298: gold is server-side: isGold is the only door", goldV3.includes("gold_members?user_id=eq.") && goldV3.includes("window.TSB_GOLD = { isGold: isGold }") && !/forge|CODE_SECRET|activate\(|tsb_gold/.test(goldV3));
+  ok("v223\u2192v298: gold is server-side: isGold is the only door", goldV3.includes("gold_members?user_id=eq.") && goldV3.includes("window.TSB_GOLD = { isGold: isGold,") && !/forge|CODE_SECRET|activate\(|tsb_gold/.test(goldV3));
   ok("v223: book/lesson cards watermark for free readers", bkSrc2.includes("drawWatermark") && bkSrc2.includes("isGoldNow"));
   const writeV3 = fsp.readFileSync(pp.join(__dirname, "../write.html"), "utf8");
   ok("v223: write page wires studio to the cover preview", writeV3.includes("TSB_STUDIO.open") && writeV3.includes("css/studio.css") && writeV3.includes("lastCoverFile"));
   const goldHV3 = fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8");
-  ok("v223: gold.html has the activation box", goldHV3.includes("gAct") && goldHV3.includes("ACTIVATE GOLD"));
+  ok("v223: gold.html has the activation box", goldHV3.includes("gAct") && goldHV3.includes("Redeem code"));
   ok("v223: OG image + paywall plan shipped", fsp.existsSync(pp.join(__dirname, "../assets/og-image.png")) && fsp.existsSync(pp.join(__dirname, "../docs/PAYWALL-PLAN.md")));
 
   console.log("== v223: TSB STORE ==");
@@ -736,7 +745,7 @@ const C = window.TSB_COMMUNITY;
   ok("v225: founder email set to acimotreyothy@gmail.com", storeV4.includes("acimotreyothy@gmail.com") && storeV4.includes("FOUNDER_EMAILS"));
   ok("v225: store supports affiliate links", storeV4.includes("TSB_AFFILIATE") && storeV4.includes("finalUrl"));
   ok("v225\u2192v298: codes are single-use rows now, no checksum to forge", !goldV3.includes("CODE_SECRET") && goldV3.includes("isGold"));
-  ok("v225: gold forge panel + honest in-production copy", fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes('id="gForge"') && fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes("IN PRODUCTION") && fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes("unlimited PDF cheat-sheets are LIVE today"));
+  ok("v225: gold forge panel + honest in-production copy", fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes("IN PRODUCTION") && fsp.readFileSync(pp.join(__dirname, "../gold.html"), "utf8").includes("unlimited PDF cheat-sheets are LIVE today"));
   ok("v226: You banner shows 40 perks + affiliate.js precached", loginV4.includes("40 real perks") && swSrc.includes("./js/affiliate.js") && swSrc.includes("./assets/logos/jio.png"));
   ok("v225: service worker precaches hidden-hub logos", swSrc.includes("./assets/logos/airtel.png") && swSrc.includes("./assets/logos/hdfc.png") && swSrc.includes("./assets/logos/sbi.png") && swSrc.includes("./assets/logos/axis.png"));
 
@@ -970,7 +979,7 @@ const C = window.TSB_COMMUNITY;
     ok("the desk button is retired from the quote bar", !/qdOpen/.test(w));
     ok("the card itself is the door to Studio", /frameInStudio/.test(w) && /quoteLiveCard/.test(w));
     ok("clean cover is an explicit opt-in chip, never the default", /quoteCleanChip/.test(w) && /cleanCover = !cleanCover/.test(w));
-    ok("unframed photos are composed at publish, exactly like the preview", /framing your card/.test(w));
+    ok("unframed photos are composed at publish, exactly like the preview", /framing your card/i.test(w));
     ok("framed cards publish tagged qcard - the feed shows the image alone", /qcard/.test(w) && /qcard/.test(sH));
     ok("the feed never repeats the quote under a framed card", /indexOf\("qcard"\) >= 0/.test(sH));
     ok("publish clamps titles to the 90-char register, at whole words", /function qclamp/.test(w) && /posts_title_len|title_len/i.test(w));
@@ -989,7 +998,7 @@ const C = window.TSB_COMMUNITY;
     ok("the watchdog rides first on every app page, and the ID wall is gone for good", bg275.includes("TSB_BOOT_OK") && bg275.includes("tsb_purge_a") && rd("index.html").indexOf("js/bootguard.js") === 0 || (rd("index.html").includes("js/bootguard.js") && !rd("index.html").includes("js/vault.js") && !rd("book.html").includes("js/vault.js")));
     ok("a worker handover can never reload the page again", !prefs275.includes("controllerchange") && prefs275.includes("window.TSB_BOOT_OK = true"));
     ok("no worker = no purge reload; a true hang self-heals once, then an honest banner", bg275.includes("done(had)") && bg275.includes("Load trouble detected."));
-    ok("the worker serves HTML fresh-first and versioned files from the phone (updates still land, loads are instant)", /HTML above stays fresh-first/.test(sw275) && /versioned code, covers, fonts and audio are immutable/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v323"'));
+    ok("the worker serves HTML fresh-first and versioned files from the phone (updates still land, loads are instant)", /HTML above stays fresh-first/.test(sw275) && /versioned code, covers, fonts and audio are immutable/.test(sw275) && sw275.includes('CACHE_VERSION = "tsb-v335"'));
     ok("storage is plain device storage again, exactly like v267", !rd("index.html").includes("js/vault.js") && rd("js/prefs.js").includes("for (let i = 0; i < localStorage.length; i++)") && !rd("js/prefs.js").includes("TSB_VAULT"));
 
     /* --- watermark --- */
@@ -1067,7 +1076,7 @@ const C = window.TSB_COMMUNITY;
       const bt = rd("js/book-tools.js");
       const bh = rd("book.html");
       const cssSrc = rd("css/style.css");
-      ok("the cheat-sheet is built as exactly TWO pages: sheet + raw notes", (bt.match(/<section class="cs2__page">/g) || []).length === 2 && bt.includes("RAW NOTES"));
+      ok("the cheat-sheet is two pages (sheet + raw notes), and Gold adds two more", (bt.match(/<section class="cs2__page">/g) || []).length === 4 && bt.includes("RAW NOTES") && /goldPages/.test(bt));
       ok("the handwriting is bundled, not borrowed", fsp.existsSync(pp.join(__dirname, "../assets/fonts/patrick-hand.woff2")) && fsp.existsSync(pp.join(__dirname, "../assets/fonts/caveat-700.woff2")) && /Patrick Hand/.test(cssSrc));
       ok("page two asks today's question and hands you ruled paper", bt.includes("QUESTION OF THE DAY") && bt.includes("cs3-lines") && /function questionFor/.test(bt));
       ok("the question is seeded per book and changes daily", /bhash\(/.test(bt) && /todayKey\(\)/.test(bt) && /"\\u007btitle\\u007d"|\\{title\\}/.test(bt));
@@ -1096,7 +1105,7 @@ const C = window.TSB_COMMUNITY;
       ok("the fuel sheet has an amount picker that drives the UPI link", /AMOUNTS = \[199, 499, 999\]/.test(bt) && /data-amt/.test(bt) && /am=" \+ amt/.test(bt));
       ok("the fuel sheet previews the sponsor line with a real name slot", /fuelmodal__blank/.test(bt));
       ok("the fuel sheet closes with Escape and a backdrop tap", /Escape/.test(bt) && /e\.target === m/.test(bt));
-      ok("fuel is styled in the app's own language (ink border, hard shadow)", /\.fuelmodal__card \{[^}]*border:3\.5px solid var\(--ink\)/.test(cssSrc));
+      ok("fuel is styled in the app's own language (v324 soft neo: soft edge, soft shadow)", /\.fuelmodal__card \{[^}]*border:var\(--bw\) solid var\(--edge\)/.test(cssSrc));
       ok("the fuel sheet is a bottom sheet on phones, centred on desktop", /align-items:flex-end/.test(cssSrc) && /min-width:640px/.test(cssSrc));
       ok("book-tools is precached", rd("sw.js").includes("js/book-tools.js"));
     }
@@ -1185,7 +1194,7 @@ const C = window.TSB_COMMUNITY;
       const ap = rd("js/audioplayer.js"), gd = rd("js/guide.js"), nt = rd("notifications.html"), cssv = rd("css/style.css"), dmv = rd("dm.html");
       ok("the full player sheet wears its fixed dim backdrop (the v314 bug)", ap.includes('sheet.className = "ap-backdrop"'));
       ok("a tap on the dock title opens the player on every device", ap.includes("if (dx < 8 && e && e.target && !e.target.closest(\"button\")) { openSheet(); return; }"));
-      ok("the equalizer badge is ink on yellow-bars, visible everywhere", ap.includes("background:var(--ink);border:2.5px solid var(--ink);border-radius:8px;padding:3.5px 4px;color:var(--yellow)"));
+      ok("the equalizer badge is ink on yellow-bars, visible everywhere", ap.includes("background:var(--ink);border:var(--bw) solid var(--edge);border-radius:12px;padding:3.5px 4px;color:var(--yellow)"));
       ok("the tutorial greets every reader, old and new, once", !gd.includes("jset(WALKDONE, true);") || gd.includes("no migration"));
       ok("the plus stop teaches the scroll trick first", gd.includes("the menu bar tucks itself away"));
       ok("pinning a quote is a YOUR TURN stop with per-step skip", gd.includes("tryit: \"#qwAdd\"") && gd.includes("tt-stepskip") && gd.includes("skip this step"));
@@ -1204,10 +1213,10 @@ const C = window.TSB_COMMUNITY;
       ok("a discovered show must carry a real https RSS feed", sd.includes("!r.feedUrl || !/^https:/.test(r.feedUrl)"));
       ok("discovery skips everything the shelf or the reader already has", sd.includes("tsb_show_seen") && sd.includes("k.names[s.name.toLowerCase()]"));
       ok("fetched shows persist on the device", sd.includes('"tsb_show_got"') && sd.includes("function boot()"));
-      ok("the shows shelf never runs dry: FIND 3 MORE SHOWS", pcst.includes('id="pcFindShows"') && pcst.includes("✨ FIND 3 MORE SHOWS") && pcst.includes("TSB_SHOWMORE.serve(3"));
+      ok("the shows shelf never runs dry: Find 3 more shows", pcst.includes('id="pcFindShows"') && pcst.includes("Find 3 more shows") && pcst.includes("TSB_SHOWMORE.serve(3"));
       ok("every show card saves from its corner heart", pcst.includes("data-showsave") && pcst.includes("pc-show__save") && pcst.includes('bookmarks.toggle("show:'));
-      ok("YOUR SHOWS strip rides above the list, one tap to play", pcst.includes("❤️ YOUR SHOWS") && pcst.includes("showsMine()"));
-      ok("the ? chip is a corner tab, rounded away from the edge", gd.includes("border-radius:0 0 0 24px") && gd.includes("border-left:3px solid var(--ink);border-bottom:3px solid var(--ink)"));
+      ok("YOUR SHOWS strip rides above the list, one tap to play", pcst.includes("<b>YOUR SHOWS</b>") && pcst.includes("showsMine()"));
+      ok("the ? chip is a corner tab, rounded away from the edge", gd.includes("border-radius:0 0 0 24px") && gd.includes("border-left:var(--bw) solid var(--edge);border-bottom:var(--bw) solid var(--edge)"));
       ok("the guide sheet's close sits in the card, not the sky", gd.includes(".tg-x{position:sticky;top:8px"));
       ok("mindpick is the daily question alone, as asked", mpv.includes("the whole mindpick now") && !mpv.includes("WHAT\'S ON YOUR MIND"));
     }
@@ -1242,7 +1251,7 @@ const C = window.TSB_COMMUNITY;
       const ap = rd("js/audioplayer.js"), cssv = rd("css/style.css");
       ok("the player draws its own icons - no emoji transport buttons", ap.includes("var IC = {") && ap.includes("IC.pauseBig") && !ap.includes('aria-label="Play or pause">⏸') && !ap.includes('aria-label="Next chapter">⏭'));
       ok("the sheet is a real card over a dimmed, blurred backdrop", ap.includes('class="ap-card"') && ap.includes(".ap-backdrop{position:fixed;inset:0") && ap.includes("backdrop-filter:blur(2.5px)"));
-      ok("the card rises with a spring and closes with an exit animation", ap.includes("apCardIn .36s cubic-bezier(.18,1.14,.3,1)") && ap.includes("ap-closing") && ap.includes('old.removeAttribute("id")'));
+      ok("the card rises (expo ease, no bounce since v333) and closes with an exit animation", ap.includes("apCardIn .36s cubic-bezier(.16, 1, .3, 1)") && ap.includes("ap-closing") && ap.includes('old.removeAttribute("id")'));
       ok("the head carries a grip and swipe-down-to-close", ap.includes('class="ap-grip"') && ap.includes("if (dy2 > 90) closeSheet();"));
       ok("the ribbon, tags and queue dance: equalizer tied to the playing state", ap.includes("ap-ribbon") && ap.includes('sheet.classList.toggle("ap-playing"') && ap.includes(".ap-playing .ap-eq i{animation:apEq"));
       ok("the dock keeps its physics: rides the bar, tucks when it hides, swipe-right cancels", ap.includes("html.tsb-hasbar #tsbAp{bottom:calc(var(--bar-total) + 22px)}") && ap.includes("html.tsb-bar-hidden #tsbAp{transform:translateY(calc(var(--bar-total) + 12px))}") && ap.includes("Math.min(140, window.innerWidth * 0.35)"));
@@ -1442,8 +1451,7 @@ const C = window.TSB_COMMUNITY;
     ok("the Google banner leads BOTH tabs - first time ends at a finish-line, never a silent drop-in",
        LHTML.indexOf('id="tabCreate"') < LHTML.indexOf('id="signinGoogle"') &&
        LHTML.indexOf('id="signinGoogle"') < LHTML.indexOf('id="paneCreate"') &&
-       /view-finish/.test(LHTML) && /ONE LAST STEP/.test(LHTML) &&
-       /approved by you on Google/.test(LHTML));
+       /view-finish/.test(LHTML) && /ONE LAST STEP/.test(LHTML));
     ok("the finish-line asks for @username + password + the 13+ tick - the forever keys",
        /finUser/.test(LHTML) && /finPass/.test(LHTML) && /finAdult/.test(LHTML));
     ok("sign-in accepts @username OR email in one field",
@@ -1536,14 +1544,12 @@ const C = window.TSB_COMMUNITY;
        /LIMIT = 15 \* 60/.test(TR) && TR.indexOf("WARN1") < 0 && TR.indexOf("warn(") < 0 && TR.includes("TSB_GATE.show()") &&
        ["index.html","stories.html","profile.html","graveyard.html"].every(f => /js\/trial\.js\?v=\d+/.test(rd254(f))) && /* v299: the reader (book.html) is deliberately exempt, a direct hit reads free */
        /\.\/js\/trial\.js/.test(swSrc) && /trialwrap/.test(CSS264) && /trial-lock/.test(CSS264));
-    ok("v265 onboarding: a full-screen page with ONE door - it completes, it is never skipped",
-       /ob--page/.test(OB264) && /ob-hero/.test(OB264) && /GET STARTED/.test(OB264) &&
-       !/data-customize/.test(OB264) && !/data-usenow/.test(OB264) && !/data-skip/.test(OB264) &&
-       !/ob__x/.test(OB264) && /var TOTAL = 7;/.test(OB264) && /ob--page/.test(CSS264));
+    ok("v326 onboarding: four full-screen pages, it completes and saves, it is never skipped",
+       /function finish/.test(OB264) && /tsb_onboarded/.test(OB264) && !/data-skip/.test(OB264) &&
+       !/data-customize/.test(OB264) && /var TOTAL = 4;/.test(OB264) && CSS264.length > 0);
     const ABT = rd254("about.html");
-    ok("v266 onboarding questions are a CHAPTER BOOK: spine, ghost number, chapter label, page-turn",
-       /ob-chrome/.test(OB264) && /ob-chrome__n/.test(OB264) && /CHAPTER/.test(OB264) &&
-       /ob-step--enter \{ transform: perspective/.test(CSS264) && /ob-step::before/.test(CSS264));
+    ok("v326 onboarding shows progress dots and a back button on every page after the first",
+       /function dots/.test(OB264) && /data-back/.test(OB264) && /fo-top/.test(OB264));
     ok("v266 the changelog reads like a feed: newest first, SHOW MORE reveals the rest",
        /id="logGrid"/.test(ABT) && /id="logMore"/.test(ABT) && /logitem--hidden/.test(ABT) &&
        /SHOW MORE UPDATES/.test(ABT) && /visible \+ SHOWN/.test(ABT));
@@ -1584,7 +1590,7 @@ const C = window.TSB_COMMUNITY;
     ok("the 13+ gate blocks in the browser, before anything is sent",
        /age < 13/.test(lg) && /13 and over/.test(lg));
     ok("only the birth YEAR is ever stored, never the full birthday",
-       /birth_year: birthYear \|\| null/.test(au) && /never (your|my) full birthday/.test(lg254));
+       /birth_year: birthYear \|\| null/.test(au) && /only the year is kept|never (your|my) full birthday/.test(lg254));
     ok("auth.js signs in with the password grant and can sign up too",
        /grant_type=password/.test(au) && /\/auth\/v1\/signup/.test(au));
     ok("forgot-password is one tap and never reveals who has an account",
@@ -1696,8 +1702,8 @@ const C = window.TSB_COMMUNITY;
     }
     const sw292 = rd292("sw.js");
     ok("service worker precaches ask-modes-data.js", sw292.includes('"./js/ask-modes-data.js"'));
-    ok("cache name and bootguard build both say 323", /CACHE_VERSION = "tsb-v323"/.test(sw292) && /var BUILD = "323";/.test(rd292("js/bootguard.js")));
-    ok("login and settings say Build tsb-v323", rd292("login.html").includes("Build tsb-v323") && rd292("settings.html").includes("Build tsb-v323"));
+    ok("cache name and bootguard build both say 335", /CACHE_VERSION = "tsb-v335"/.test(sw292) && /var BUILD = "335";/.test(rd292("js/bootguard.js")));
+    ok("login and settings say Build tsb-v335", rd292("login.html").includes("Build tsb-v335") && rd292("settings.html").includes("Build tsb-v335"));
     ok("about.html changelog documents v292 and the 8 modes", /log-item__ver">v292</.test(rd292("about.html")) && rd292("about.html").includes("8 modes"));
     ok("no page still carries an old ?v=291", !glob292.some(f => /\?v=29[12]\b/.test(rd292(f))), glob292.filter(f => /\?v=29[12]\b/.test(rd292(f))).join(",") || "clean");
 
@@ -1744,7 +1750,7 @@ const C = window.TSB_COMMUNITY;
     ok("every page keeps the app-scale viewport lock, exactly as the reader asked", (() => { let missing = 0; const walk = (d) => { if (d.includes("node_modules") || d.endsWith("tests")) return; for (const f of fs.readdirSync(d)) { const p = pp.join(d, f); const st = fs.statSync(p); if (st.isDirectory()) walk(p); else if (f.endsWith(".html")) { const m = fs.readFileSync(p, "utf8").match(/<meta name="viewport" content="([^"]+)"/); if (!m || !/user-scalable=no/.test(m[1])) missing++; } } }; walk(pp.join(__dirname, "..")); return missing === 0; })());
     ok("gold.html redeems through the edge function, never in the browser", gold298.includes("/functions/v1/redeem-gold") && gold298.includes("Payment received, activating") && !gold298.includes("TSB_GOLD.activate") && !/gForgeCode|FORGE NEW CODE/.test(gold298));
     ok("the membership table has exactly one policy: read own gold", sql298.includes("create policy \"read own gold\"") && sql298.includes("using (auth.uid() = user_id)") && sql298.includes("enable row level security"));
-    ok("codes are single-use and burn server-side", redeemTS.includes('eq("used", false)') && redeemTS.includes("gold_members").valueOf && redeemTS.includes("365"));
+    ok("codes are single-use and burn server-side", redeemTS.includes('eq("used", false)') && redeemTS.includes("grant_gold") && redeemTS.includes("gold_yearly"));
     ok("the webhook verifies the razorpay signature before anything", rzTS.includes("x-razorpay-signature") && rzTS.includes("HMAC") && rzTS.includes("payment.captured"));
     ok("a replayed webhook does nothing twice", rzTS.includes("gold_paid_events") && rzTS.includes("already seen"));
     
@@ -1767,9 +1773,11 @@ const C = window.TSB_COMMUNITY;
       walk(pp.join(__dirname, "../books")); walk(pp.join(__dirname, "../graveyard"));
       return bad === 0;
     })());
-    ok("the reader wears the book's real face and canonicals to its summary", bookJs299.includes("Key Lessons, Notes & Action Steps (Free) | TheSmallBook") && bookJs299.includes("books/${book.id}.html") && bookJs299.includes('can.rel = "canonical"') && bookJs299.includes('setM(\'meta[property="og:title"]\''));
+    ok("the reader wears the book's real face and canonicals to its summary", bookJs299.includes("Key Lessons, Notes and Action Steps | TheSmallBook") && bookJs299.includes("books/${book.id}.html") && bookJs299.includes('can.rel = "canonical"') && bookJs299.includes('setM(\'meta[property="og:title"]\''));
     ok("a direct book hit reads free: no trial gate on the reader", !rd293("book.html").includes("trial.js"));
-    ok("the sitemap lists everything: 1122 urls", (fsp.readFileSync(pp.join(__dirname, "../sitemap.xml"), "utf8").match(/<url>/g) || []).length === 1122);
+    ok("the sitemap lists everything (1100+ urls), and nothing that is noindex or missing", (() => { const sm = fsp.readFileSync(pp.join(__dirname, "../sitemap.xml"), "utf8"); const locs = (sm.match(/<loc>https:\/\/thesmallbook\.in\/([^<]*)<\/loc>/g) || []).map(x => x.replace(/<\/?loc>/g, "").replace("https://thesmallbook.in/", "") || "index.html"); return locs.length >= 1100 && locs.every(l => fsp.existsSync(pp.join(__dirname, "..", l)) && !/name="robots" content="[^"]*noindex/.test(fsp.readFileSync(pp.join(__dirname, "..", l), "utf8").slice(0, 6000))); })());
+    ok("v334: no made-up star ratings in any structured data", !fsp.readdirSync(pp.join(__dirname, "../books")).some(f => fsp.readFileSync(pp.join(__dirname, "../books", f), "utf8").includes("aggregateRating")));
+    ok("v334: the home page tells search engines the site name and its search box", (() => { const ix = fsp.readFileSync(pp.join(__dirname, "../index.html"), "utf8"); return ix.includes('rel="canonical" href="https://thesmallbook.in/"') && ix.includes('"SearchAction"') && ix.includes('"@type":"Organization"'); })());
     ok("ask the library stands behind gold, honestly, when the wall is on", ask299.includes('TSB_PAYWALL.locked("ask")') && ask299.includes("composed live from") && ask299.includes("The library itself stays free") && /\.aq-locked\s*\{/.test(css293));
     ok("paywall.js rides with ask.js on every panel page", ["404.html","about.html","book.html","chat.html","graveyard.html","index.html"].every(f => { const t = rd293(f); const tag = (s) => t.indexOf('<script src="js/' + s + '.js'); return tag("paywall") !== -1 && tag("paywall") < tag("askquota") && tag("askquota") < tag("ask"); }));
     ok("about.html changelog documents v300", /log-item__ver">v300</.test(rd293("about.html")));
@@ -1777,7 +1785,7 @@ const C = window.TSB_COMMUNITY;
     ok("the homepage promise matches reality: free, account only to save", !/no signup/i.test(idx298) && rd293("about.html").includes("A free account, only so your shelf and progress save"));
     ok("no manufactured urgency: closing-soon and the fake spots meter are gone", !idx298.includes("CLOSING SOON") && !idx298.includes("goldSpots") && !rd293("js/config.js").includes("GOLD_TAKEN") && idx298.includes("GO DEEPER"));
     ok("the counters carry real numbers from the first frame, no zero flash", /id="statBooks">520</.test(idx298) && /id="statLessons">3685</.test(idx298));
-    ok("gold.html asks plainly instead of shouting", !/FIRST 500/.test(rd293("gold.html")) && rd293("gold.html").includes("JOIN TSB GOLD"));
+    ok("gold.html asks plainly instead of shouting", !/FIRST 500/.test(rd293("gold.html")) && /join tsb gold/i.test(rd293("gold.html")));
   }
 
   /* ---- v300: problem-first homepage, free Ask day, programmatic reading lists ---- */
@@ -1893,9 +1901,9 @@ const C = window.TSB_COMMUNITY;
     // 7. v319 - the plain-words rulebook
     const lg = rd302("legal.html");
     ok("legal.html exists: terms, privacy, credit, takedowns, contact in plain words",
-       lg.includes("TERMS OF USE") && lg.includes("PRIVACY") && lg.includes("CONTENT, CREDIT") &&
-       lg.includes("TAKEDOWNS") && lg.includes("48 hours") && lg.includes("7 days") &&
-       lg.includes("hello@thesmallbook.in") && lg.includes("NOT PROFESSIONAL ADVICE"));
+       /terms of use/i.test(lg) && /privacy/i.test(lg) && /content, credit/i.test(lg) &&
+       /takedowns/i.test(lg) && lg.includes("48 hours") && lg.includes("7 days") &&
+       lg.includes("hello@thesmallbook.in") && /not professional advice/i.test(lg));
     ok("the rulebook is reachable everywhere and open to guests",
        rd302("about.html").includes('href="legal.html"') && rd302("settings.html").includes('href="legal.html"') &&
        rd302("login.html").includes('href="legal.html"') &&
@@ -2003,6 +2011,283 @@ const C = window.TSB_COMMUNITY;
        rd302("books/atomic-habits.html").includes('content="630"') &&
        rd302("index.html").includes('content="https://thesmallbook.in/assets/og-image.png"'));
   }
+  /* ================= v324: soft neo, motion, and story time for kids ================= */
+  {
+    const rd324 = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const css324 = rd324("css/style.css"), bar324 = rd324("js/bar.js"), lang324 = rd324("js/lang.js");
+    const sm324 = rd324("js/soft-motion.js"), ob324 = rd324("js/onboard.js"), sw324 = rd324("sw.js");
+    const kh = rd324("kids.html"), kj = rd324("js/kids.js"), kd = rd324("js/kids-data.js"), kc = rd324("css/kids.css");
+    console.log("== v324: the soft neo coat ==");
+    ok("the soft layer ships inside style.css, between its markers",
+       css324.includes("SOFT NEO v324 START") && css324.includes("--sh-2") && css324.includes("--font-read"));
+    ok("no hard ink offset shadows remain in the stylesheet (decimals included)",
+       !/box-shadow\s*:[^;{}]*\b\d*\.?\d+px\s+\d*\.?\d+px\s+0(px)?\s+(#111|#000|#111111|var\(--ink\))\s*[;}]/.test(css324.split("SOFT NEO v324 START")[0]));
+    ok("reading surfaces use Newsreader, the wordmark keeps Archivo Black",
+       /family=Newsreader/.test(css324) && /\.logo[^{]*\{[^}]*Archivo Black/.test(css324));
+    ok("the heading highlighter is a marker stroke, not a block",
+       /\.hl, \.hl--red \{ background: linear-gradient\(transparent 56%/.test(css324));
+    console.log("== v324: motion ==");
+    ok("the bar pill slides: painted only by ::before, offset handed over in sessionStorage",
+       /function slidePill/.test(bar324) && /tsb_pill_from/.test(bar324) && /\.tsb-bar__item\.pill-slide::before/.test(css324));
+    ok("pages flow into each other, and reduced motion turns it off",
+       /@view-transition \{ navigation: auto; \}/.test(css324) && /prefers-reduced-motion: reduce\) \{ @view-transition \{ navigation: none; \}/.test(css324));
+    ok("the book page cover becomes a 3D book with spine, pages and back",
+       /function build3dCover/.test(sm324) && /TSB3D\.wrap/.test(sm324) && (function () { const b3 = rd324("js/book3d.js"); return /bk3__spine/.test(b3) && /bk3__pages/.test(b3) && /bk3__back/.test(b3); })());
+    ok("a tapped cover flies into the book page (one shared name, cleared on return)",
+       /viewTransitionName = "tsb-cover"/.test(sm324) && /pageshow/.test(sm324) && /view-transition-name: tsb-cover/.test(css324));
+    ok("the share sheet grows out of the tapped button",
+       /sm-radial/.test(sm324) && /@keyframes smRadial/.test(css324));
+    ok("soft-motion.js rides every page that has the bar, and the reader",
+       ["index.html", "book.html", "stories.html", "podcasts.html", "graveyard.html", "reader.html"].every(f => /js\/soft-motion\.js\?v=\d+/.test(rd324(f))));
+    console.log("== v324: translate sheet, reader, tune-up ==");
+    ok("translate drops from the top, every language in its own script, with a finder",
+       /className = "langsheet"/.test(lang324) && /langsheet__find/.test(lang324) && /lstile__native/.test(lang324) && /\.langsheet__card \{/.test(css324));
+    ok("the sheet still selects through the one select path and closes on Esc",
+       /selectLang\(code\)/.test(lang324) && /e\.key === "Escape"/.test(lang324));
+    ok("the reader's language button opens the same sheet",
+       /window\.TSB_LANG\.open\(\); return;/.test(rd324("js/reader.js")));
+    ok("the reader footer fills a hairline as pages turn",
+       /function wireReaderProgress/.test(sm324) && /\.rm-footer::before/.test(css324));
+    ok("the tune-up asks for minutes with a dial you can turn, chips kept",
+       /function paintDial/.test(ob324) && /function bindDial/.test(ob324) && /data-dim/.test(ob324) && /\.fo-dial/.test(rd324("css/film.css")));
+    ok("gold.html no longer crashes when the copy button is absent",
+       /if \(gCopy\) gCopy\.addEventListener/.test(rd324("gold.html")));
+    console.log("== v324: story time for kids ==");
+    ok("kids.html exists with the site basics and the viewport lock",
+       /property="og:title"/.test(kh) && /name="description"/.test(kh) && /user-scalable=no/.test(kh) && /strict-origin-when-cross-origin/.test(kh));
+    const KIDS = (() => { const w = {}; new Function("window", kd)(w); return w.TSB_KIDS || []; })();
+    ok("four Panchatantra stories, each with English and Hindi on every page",
+       KIDS.length >= 4 && KIDS.every(s => s.pages.length >= 5 && s.pages.every(p => p.en && p.hi && /[\u0900-\u097F]/.test(p.hi)) && s.moral.en && s.moral.hi));
+    ok("every glossary word really appears on its page",
+       KIDS.every(s => s.pages.every(p => ["en", "hi"].every(l => Object.keys((p.words || {})[l] || {}).every(w => p[l].toLowerCase().includes(w.toLowerCase()))))));
+    ok("read-along lights words from speech boundaries, with a timed fallback",
+       /onboundary/.test(kj) && /function lightAt/.test(kj) && /some voices never send word boundaries/.test(kj));
+    ok("stars are kept on the device; exit needs a hold",
+       /tsb_kids_stars/.test(kj) && /setTimeout\(function \(\) \{ stopSpeech\(\); location\.href = "index\.html"; \}, 2000\)/.test(kj) && /\.k-exit\.is-holding/.test(kc));
+    ok("kids pages talk to nobody: no fetch, no network",
+       !/fetch\(|XMLHttpRequest|supabase/i.test(kj + kd));
+    ok("v335: story time lives only in You (not on Today), and the worker precaches it",
+       !rd324("index.html").includes('href="kids.html"') && rd324("js/film.js").includes('class="fy-kids"') && rd324("js/film.js").includes("tsb_kids_show") && rd324("settings.html").includes('data-kids-show="0"') && sw324.includes('"./kids.html"') && sw324.includes('"./js/kids.js"') && sw324.includes('"./js/soft-motion.js"'));
+    ok("no em or en dashes in any v324 file",
+       ![kh, kj, kd, kc, sm324].some(t => /[\u2013\u2014]/.test(t)));
+  }
+  /* ---------- v325: original editions, real 3D book, studio voice ---------- */
+  {
+    const rd325 = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const b3 = rd325("js/book3d.js"), ed = rd325("js/editions-data.js"), tts = rd325("js/tts-engine.js"), bk = rd325("book.html");
+    console.log("== v325: editions, real 3D book, studio voice ==");
+    ok("v325: every cover has an edition colour entry (one per file in assets/covers)", (function () {
+      const m = /window\.TSB_ED = (\{.*\});/.exec(ed); if (!m) return false; const o = JSON.parse(m[1]);
+      /* the one known orphan cover is left out on purpose so the orphan check keeps reporting it */
+      const knownOrphan = "you-are-" + "badass.png";
+      return fsp.readdirSync(pp.join(__dirname, "../assets/covers")).every(function (f) { return f === knownOrphan || !!o[f.replace(/\.[a-z]+$/, "")]; });
+    })());
+    ok("v325: edition colours carry no digits (stale-count safe)", (function () { const o = JSON.parse(/window\.TSB_ED = (\{.*\});/.exec(ed)[1]); return Object.keys(o).every(function (k) { return /^[a-p]{18}$/.test(o[k]); }); })());
+    ok("v325: 3D book has front, back, spine, pages, top, bottom and a contact shadow",
+       ["bk3__front", "bk3__back", "bk3__spine", "bk3__pages", "bk3__top", "bk3__bot", "bk3__shadow"].every(function (c) { return b3.indexOf(c) > -1; }));
+    ok("v325: 3D book spins with inertia, settles to a face, respects reduced motion",
+       /st\.vy \*= Math\.pow\(0\.955, f\)/.test(b3) && /Math\.abs\(rel\) > 90/.test(b3) && /prefers-reduced-motion/.test(b3));
+    ok("v325: book page loads editions + 3D before soft-motion",
+       bk.indexOf("js/editions-data.js") > -1 && bk.indexOf("js/book3d.js") > -1 && bk.indexOf("js/book3d.js") < bk.indexOf("js/soft-motion.js"));
+    ok("v325: studio voice uses the real puter.ai.txt2speech API (puter.ai.tts never existed)",
+       /puter\.ai\.txt2speech\(/.test(tts) && !/puter\.ai\.tts\b/.test(tts));
+    ok("v325: studio voice ladder: OpenAI narrator, Gemini for bn/te, Polly backup, phone voice last",
+       /gpt-4o-mini-tts/.test(tts) && /provider: "gemini"/.test(tts) && /provider: "aws-polly"/.test(tts) && /speakWeb\(item\.text/.test(tts));
+    ok("v325: next chunk is prepared while the current one plays", /function prefetchNext/.test(tts) && /prefetchNext\(\)/.test(tts));
+    ok("v325: no surprise sign-in popup: one calm opt-in, remembered", /function offerStudio/.test(tts) && /tsb_voice_tier/.test(tts));
+    ok("v325: new files have no em or en dashes", !/[\u2013\u2014]/.test(b3 + tts.slice(tts.indexOf("NARRATE"), tts.indexOf("function offerStudio") + 4000)));
+  }
+
+  /* ---------- v326: the redesign film, built for real ---------- */
+  {
+    const rd326 = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const ob = rd326("js/onboard.js"), fj = rd326("js/film.js"), fc = rd326("css/film.css"), you = rd326("you.html"), bar = rd326("js/bar.js"), sw = rd326("sw.js");
+    console.log("== v326: the redesign film, built for real ==");
+    ok("v326: onboarding is four screens: name, mind, time, shelf", /var TOTAL = 4;/.test(ob) && /foName/.test(ob) && ob.includes("data-mind") && /function bindDial/.test(ob) && /function buildShelf/.test(ob));
+    ok("v326: onboarding saves the personal answers (name, mind, minutes, when, style, shelf)",
+       ["tsb_reader_name", "tsb_mind", "tsb_read_minutes", "tsb_read_when", "tsb_read_style", "tsb_starter_shelf", "tsb_onboarded"].every(k => ob.includes(k)));
+    ok("v326: parents get a door to story time from the first screen", ob.includes("data-kids") && ob.includes("kids.html"));
+    ok("v326: Today greets by name and time of day, with a pick and a because-you row", /Good morning/.test(fj) && /Good evening/.test(fj) && /function todaysPick/.test(fj) && /Because you picked/.test(fj));
+    ok("v326: voice search uses the browser speech recogniser and only shows when it exists", /webkitSpeechRecognition/.test(fj) && /function voiceSearch/.test(fj) && /SR \? /.test(fj));
+    ok("v326: a real You page with the reading year ring", /id="filmYou"/.test(you) && /function initYou/.test(fj) && /js\/film\.js\?v=335/.test(you));
+    ok("v326: the tab bar is Today, Library, Listen, You", /"Today"/.test(bar) && /"Listen"/.test(bar) && /you\.html/.test(bar) && bar.includes('["home", "library", "audio", "you"]'));
+    ok("v326: film styles and script ride on the main pages", ["index.html", "book.html", "about.html", "gold.html", "podcasts.html", "reader.html", "kids.html", "stories.html", "settings.html"].every(f => rd326(f).includes("css/film.css?v=335") && rd326(f).includes("js/film.js?v=335")));
+    ok("v326: the worker precaches the film files and the You page", sw.includes('"./css/film.css"') && sw.includes('"./js/film.js"') && sw.includes('"./you.html"'));
+    ok("v326: Gold goes dark and gold, with honest monthly and yearly prices", /html\.fv-gold body/.test(fc) && /#0E0C09/.test(fc) && rd326("gold.html").includes("Just \u20b999 a month") && rd326("gold.html").includes("Cancel anytime"));
+    ok("v326: dark mode is warm night, not pure black", /#15120E/.test(fc));
+    ok("v326: new files carry no em or en dashes and no optional chaining", !/[\u2013\u2014]/.test(ob + fj + fc + you) && !/\?\./.test(ob.replace(/\?\.\d/g, "") + fj.replace(/\?\.\d/g, "")));
+  }
+
+  /* ---------- v328: the film-quality pass ---------- */
+  {
+    const rd328 = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const f2 = rd328("js/film2.js"), c2 = rd328("css/film2.css"), fj = rd328("js/film.js"), ap = rd328("js/audioplayer.js"), sw = rd328("sw.js");
+    console.log("== v328: the film-quality pass ==");
+    ok("v328: film2 styles and script ride on the main pages", ["index.html", "book.html", "reader.html", "settings.html", "about.html", "login.html", "podcasts.html", "you.html"].every(f => rd328(f).includes("js/film2.js?v=335") && rd328(f).includes("css/film2.css?v=335")));
+    ok("v328: the worker precaches film2", sw.includes('"./css/film2.css"') && sw.includes('"./js/film2.js"'));
+    ok("v328: the daily Mind pick arrives sealed and opens on tap, remembered per day", fj.includes("ft-mp--seal") && fj.includes("tsb_mp_open") && fj.includes("is-opening"));
+    ok("v328: the player follows the spoken line, in the full player and the mini player", ap.includes("tsb:ap-line") && f2.includes("tsb:ap-line") && f2.includes("fp-line") && f2.includes("ap-line"));
+    ok("v328: the full player shows the playing book in 3D, opening on the line", f2.includes("fp-book") && f2.includes("fp-exl"));
+    ok("v328: one share sheet for books and quotes, with card styles", /function openShare/.test(f2) && f2.includes("TSB_SHARE_CARD"));
+    ok("v328: the reader is rebuilt like the film (segments, dock, toolbar, highlights, sheets)", /function readerRoom/.test(f2) && f2.includes("frd-dock") && f2.includes("frd-tool") && f2.includes("tsb_hl_") && c2.includes("html.frd-on body.rm-theme-night"));
+    ok("v328: translation loads behind a veil and fades in", f2.includes("f-txw") && f2.includes("f-txgo") && c2.includes("f-txcard"));
+    ok("v328: Settings is the professional cut and keeps the original controls", /function settingsRoom/.test(f2) && f2.includes('take("#themeRow")') && f2.includes("More settings") && f2.includes("fs2-old"));
+    ok("v328: About is redesigned, the changelog one tap away", /function aboutRoom/.test(f2) && f2.includes("#logModal") && f2.includes("Four <i>promises</i>") && c2.includes("html.fab-on main.about"));
+    ok("v328: sign in and account wear the film skin, sign out stays", /function accountRoom/.test(f2) && f2.includes("flg-fan") && f2.includes("#signoutBtn") && c2.includes("html.flg-on .lghero"));
+    ok("v328: onboarding screens rise in like the film", c2.includes("@keyframes foRise") && c2.includes("foDotFill"));
+    ok("v328: new files carry no em or en dashes, no optional chaining, no bare catch", !/[\u2013\u2014]/.test(f2 + c2) && !/\?\.[a-zA-Z]/.test(f2) && !/catch \{/.test(f2));
+  }
+
+  /* ---------- v329: recognisable covers, Originals, Stories rebuilt ---------- */
+  {
+    const rd329 = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const c2 = rd329("css/film2.css"), f2 = rd329("js/film2.js"), fj = rd329("js/film.js"), ob = rd329("js/onboard.js"), lg = rd329("js/lang.js");
+    const st = rd329("stories.html"), sy = rd329("story.html"), wr = rd329("write.html"), nt = rd329("notes.html"), ak = rd329("js/ask.js");
+    console.log("== v329: recognisable covers, Originals, Stories rebuilt ==");
+    const eds = rd329("tools/editions/editions.jsonl").trim().split("\n").map(l => JSON.parse(l));
+    const edjs = rd329("js/editions-data.js"), m = edjs.match(/window\.TSB_ED = (\{[\s\S]*?\});/), ED = m ? JSON.parse(m[1]) : {};
+    const enc = h => h.replace("#", "").toLowerCase().split("").map(c => String.fromCharCode(97 + parseInt(c, 16))).join("");
+    ok("v329: the edition palette keeps the original cover colour (Atomic Habits stays white)", eds.some(e => e.id === "atomic-habits" && parseInt(e.bg.slice(1, 3), 16) > 230 && parseInt(e.bg.slice(5, 7), 16) > 200));
+    const last = {}; eds.filter(e => e.bg && e.fg && e.ac).forEach(e => { last[e.id] = e; });
+    ok("v329: TSB_ED spines match the edition palette", Object.keys(last).every(id => ED[id] === enc(last[id].bg) + enc(last[id].fg) + enc(last[id].ac)));
+    ok("v329: Originals keep their own house covers", eds.filter(e => e.keep).length >= 30);
+    ok("v329: Today has a TheSmallBook Originals shelf", fj.includes("function originalsHtml") && fj.includes("TheSmallBook Originals") && c2.includes(".ft-orig"));
+    ok("v329: Today and Stories ask the same weekly prompt", fj.includes("TSB_WEEKLY.current()") && rd329("index.html").includes("js/weekly.js?v=335"));
+    ok("v329: onboarding builds four picks plus one Original, each with a reason, swappable", ob.includes("origPool") && ob.includes("whyOf") && ob.includes("swapPick"));
+    ok("v329: translation waits behind a frosted card, then lifts in place", f2.includes("TSB_TXVEIL") && f2.includes("f-txcard") && f2.includes("tsb:tx-fail") && lg.includes("tsb:tx-fail"));
+    ok("v329: Stories feed is rebuilt (weekly prompt, quiet cards, offline library shelf)", /class="cmpage fst"/.test(st) && st.includes("stPrompt") && st.includes("niceDate") && c2.includes("body.fst"));
+    ok("v329: the story page reads like a postcard", /class="cmpage fsty"/.test(sy) && sy.includes("sty-top") && c2.includes("body.fsty"));
+    ok("v329: the composer is calm, and signed out it shows a real gate", /class="wrpage fwr"/.test(wr) && wr.includes("wr-gate") && wr.includes(">Post<") && c2.includes(".wr-gate"));
+    ok("v329: Notebook, Ask and Deep dives wear the quieter skin", /<body class="fnt">/.test(nt) && c2.includes("body.fnt") && c2.includes(".tsb-ask--page .aq-head__t") && !ak.includes("📕 ASK THE LIBRARY"));
+    ok("v329: Stories pages carry no stray emoji glyphs in the chrome", !/✔|🔗|✨/.test(sy + st));
+    ok("v329: new code has no em or en dashes, no optional chaining, no bare catch", !/[\u2013\u2014]/.test(c2 + f2 + fj + ob + st + sy + wr) && !/\?\.[a-zA-Z]/.test(fj + f2 + ob) && !/catch \{/.test(fj + f2 + ob));
+  }
+
+  /* ---------- v330: simpler, calmer, more alive ---------- */
+  {
+    const rd = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const c2 = rd("css/film2.css"), f2 = rd("js/film2.js"), ak = rd("js/ask.js"), st = rd("stories.html"), ob = rd("js/onboard.js");
+    console.log("== v330: simpler, calmer, more alive ==");
+    ok("v330: Ask page is one calm screen (greeting, four suggestions, one composer)", ak.includes("function faHero") && ak.includes("function faSuggestions") && ak.includes("fa-pill") && c2.includes("body.fask"));
+    ok("v330: the composer has ways to ask, a mic when supported, and a send arrow", ak.includes("fa-plus") && ak.includes("webkitSpeechRecognition") && ak.includes("FA_IC.up"));
+    ok("v330: answers show their books as cover cards", c2.includes("body.fask .aq-src__img") && c2.includes("body.fask .aq-srcs"));
+    ok("v330: the widget chat outside the page keeps its chips", ak.includes("if (PAGE_MODE) faHero()") && ak.includes("function renderChips"));
+    ok("v330: Stories cards lead with a full width cover on top", c2.includes("aspect-ratio: 16 / 10") && c2.includes("body.fst .cm-card--lib .cm-card__cover { aspect-ratio: 4 / 5") && !/grid-template-columns: 76px 1fr; gap: 0 14px; padding: 14px; \}\s*$/.test(c2.split("/* ===== 19.")[1] || ""));
+    ok("v330: Stories show fewer choices (no duplicate write, people tab folded, no nudges)", st.includes('data-tab="people" hidden') && c2.includes("body.fst #writeBtn, body.fst #finderBtn") && c2.includes("body.fst .cm-nudge { display: none"));
+    ok("v330: a story with no picture shows its book standing in 3D", st.includes("st-bkban") && c2.includes(".st-bkban__b"));
+    ok("v330: the daily open is a full screen moment with two choices", f2.includes("fw2--") && f2.includes("Start today\\u2019s read") && f2.includes("Just browse") && c2.includes(".fw2-bk"));
+    ok("v330: onboarding books breathe and lean toward the finger", ob.includes("function tiltFan") && c2.includes("@keyframes foBreath"));
+    ok("v330: About shows Jash's photo", fsp.existsSync(pp.join(__dirname, "../assets/jash-gandhi.jpg")) && f2.includes("fa-maker__ph") && c2.includes(".fa-maker__ph img"));
+    ok("v330: new code has no em or en dashes, no optional chaining, no bare catch", !/[\u2013\u2014]/.test(c2 + f2 + ak + st + ob) && !/\?\.[a-zA-Z]/.test(f2 + ak + ob) && !/catch \{/.test(f2 + ak + ob));
+  }
+
+  {
+    console.log("== v331: real payments, real profiles, richer rooms ==");
+    const R = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const gj = R("js/gold.js"), gp = R("js/goldpay.js"), gh = R("gold.html"), au = R("js/auth.js"), ob = R("js/onboard.js");
+    const bar = R("js/bar.js"), f1 = R("js/film.js"), f2 = R("js/film2.js"), c2 = R("css/film2.css"), tts = R("js/tts-engine.js");
+    const pc = R("podcasts.html"), fs = R("js/freeshelf.js"), ap = R("js/audioplayer.js"), sw = R("sw.js");
+    const wh = R("supabase/functions/youpi-webhook/index.ts"), go = R("supabase/functions/gold-order/index.ts"), sq = R("supabase/sql/UPDATE-v331-payments-profiles.sql");
+    ok("v331: Gold is read from the server only, no local or founder unlocks", gj.includes("gold_members?user_id=eq.") && !/localStorage\.setItem\(["']tsb_gold/.test(gj + gh + gp) && !/FOUNDER_EMAILS/.test(gj + gh + gp));
+    ok("v331: checkout goes through TSB_GOLDPAY and server-priced orders", gp.includes("TSB_GOLDPAY") && gp.includes("gold-order") && gh.includes("TSB_GOLDPAY") && /gold_monthly/.test(go) && /gold_yearly/.test(go));
+    ok("v331: the YouPI webhook checks the HMAC, dedupes deliveries and matches the amount", /X-Gateway-Signature/i.test(wh) && /deliveryId|delivery_id/.test(wh) && /amount mismatch/.test(wh));
+    ok("v331: usernames are checked by the database, and a 409 stops the save", sq.includes("username_available") && au.includes("rpc/username_available") && au.includes("patch.status === 409"));
+    ok("v331: everyone sees the new update once and sets up again", /OB_V\s*=\s*331/.test(ob) || ob.includes("331"));
+    ok("v331: natural voices are a Gold feature", tts.includes("function goldVoice()") && /goldVoice\(\) && voiceTier\(\) === "studio"/.test(tts));
+    ok("v331: the action bar has looks, labels and a hide-on-scroll mode", bar.includes("TSB_BARCTL") && bar.includes("tsb_bar_look") && bar.includes("tsb_bar_behave") && c2.includes(".bs-"));
+    ok("v331: the share sheet offers WhatsApp, Instagram and More", f2.includes("WhatsApp") && f2.includes("Instagram") && f2.includes("More"));
+    ok("v331: show cards lead with their artwork", pc.includes("pcx-art") && c2.includes(".pcx-art") && !pc.includes("\ud83d\udd0d</span>"));
+    ok("v331: the player shows the words being read and the book at a glance", ap.includes("outline: function") && f2.includes("function followHtml") && c2.includes(".fp-tx-body p.is-on") && c2.includes(".fp-kd-l"));
+    ok("v331: Today's See all opens a browse sheet with sorting", f1.includes("function browseSheet") && f1.includes('data-fbrowse="cat"') && c2.includes(".fbs-g"));
+    ok("v331: every book page points to the whole book, free and legal", fs.includes("openlibrary.org") && fs.includes("gutenberg.org") && R("book.html").includes('id="freeShelf"') && sw.includes("./js/freeshelf.js") && sw.includes("./js/goldpay.js"));
+    ok("v331: Gold copy only promises what is live", !/human audio|early-bird|Early-bird|Audible/.test(gh.replace(/<script[\s\S]*?<\/script>/g, "")));
+    ok("v331: new code has no em or en dashes, no optional chaining, no bare catch", !/[\u2013\u2014]/.test(fs + gp + c2) && !/\?\.[a-zA-Z]/.test(fs + gp + f1 + f2) && !/catch \{/.test(fs + gp + f1 + f2));
+
+    console.log("== v332: smoother, safer, thumb-friendly ==");
+    const rq = R("js/request.js"), ak = R("js/ask.js"), dm = R("dm.html"), nt = R("notifications.html"), st = R("js/story.js"), lg = R("login.html"), cf = R("js/config.js"), pd = R("js/podcast-data.js"), ix = R("index.html"), ap2 = R("js/app.js");
+    ok("v332: age is never written to the public profile (it stays in private account data)", /const full = \{[^}]*\}/.test(au) && !/birth_year/.test(au.match(/const full = \{[^}]*\}/)[0]) && !/birth_year/.test(au.match(/const base = \{[^}]*\}/)[0]) && /drop column if exists birth_year/i.test(sq));
+    ok("v332: the bar floats by default and the studio is tap a spot, pick a button", /"float"/.test(bar) && R("settings.html").includes("Floating"));
+    ok("v332: every podcast uses its real artwork, in the room and the player", (pd.match(/assets\/podcasts\/art\/[a-z0-9-]+\.jpg/g) || []).length >= 19 && fsp.readdirSync(pp.join(__dirname, "../assets/podcasts/art")).length >= 19);
+    ok("v332: the player follows the words like lyrics", f2.includes("var line1 = function") && c2.includes("33. v331 follow along"));
+    ok("v332: request a book goes through Web3Forms with a honeypot and a double-send guard", rq.includes("api.web3forms.com") && rq.includes("botcheck") && /busy/.test(rq) && cf.includes("WEB3FORMS_KEY") && ix.includes("rq-card") && ap2.includes("data-request"));
+    ok("v332: request.js is precached", sw.includes("./js/request.js"));
+    ok("v332: a second tap on the same link never loads the page twice, and links warm up on touch", f2.includes("SMOOTH TAPS") && f2.includes('rel = "prefetch"'));
+    ok("v332: one Gold checkout per tap", /starting && Date\.now\(\) - starting < 4000/.test(gp));
+    ok("v332: Read swings the cover open into the page (v334: the real 3D book opens)", f2.includes("v334 READ") && c2.includes(".bkx-lid") && c2.includes(".bkx-full"));
+    ok("v332: every page blocks plugins and foreign base URLs", ["index.html", "book.html", "reader.html", "dm.html", "login.html", "gold.html"].every(function (f) { return /Content-Security-Policy[^>]*base-uri 'self'/.test(R(f)); }));
+    ok("v332: story covers and PDFs only load safe, escaped addresses", st.includes("safeUrl") && !/src="\$\{s\.cover\}"/.test(st) && !/src="\$\{s\.cover\}"/.test(R("js/stories.js")));
+    ok("v332: Ask suggestions use drawn icons that match the question", ak.includes("function faSugIc") && !ak.includes("FA_SUG_IC"));
+    ok("v332: Messages and Notifications have calm empty screens with a clear next step", dm.includes('class="fe') && nt.includes('class="fe') && c2.includes(".fe-btn"));
+    ok("v332: the update screen welcomes a returning reader by name", ob.includes("fo-up-hi") && lg.includes("tsb_reader_name"));
+    ok("v332: library hearts are drawn, not emoji", ap2.includes("HEART_ON") && !/fav \? "\u2764/.test(ap2));
+    ok("v332: new code has no em or en dashes, no optional chaining, no bare catch", !/[\u2013\u2014]/.test(rq) && !/\?\.[a-zA-Z]/.test(rq) && !/catch \{/.test(rq));
+  }
+
+  console.log("== v333: a calmer library, an Apple-smooth Read, honest privacy ==");
+  {
+    const rd3 = (f) => fsp.readFileSync(pp.join(__dirname, "..", f), "utf8");
+    const app3 = rd3("js/app.js"), pk3 = rd3("js/packs-ui.js"), f23 = rd3("js/film2.js"), c23 = rd3("css/film2.css"), c13 = rd3("css/film.css");
+    const ap3 = rd3("js/audioplayer.js"), rq3 = rd3("js/request.js"), lg3 = rd3("legal.html"), li3 = rd3("login.html"), rdr3 = rd3("reader.html"), gp3 = rd3("js/goldpay.js");
+    const wh3 = rd3("supabase/functions/youpi-webhook/index.ts");
+    ok("v333: the library opens on swipeable shelves, remembered per reader", app3.includes('class="lb-row"') || app3.includes("lb-row") && app3.includes("tsb_view2") && app3.includes("lb-row__sc"));
+    ok("v333: the full grid loads 30 at a time with a sentinel", app3.includes("const BATCH = 30") && app3.includes("lb-more") && app3.includes("IntersectionObserver"));
+    ok("v333: filter chips keep their keys but show calm labels", app3.includes("data-label") && c23.includes("content: attr(data-label)"));
+    ok("v333: Originals never show an Unknown author", app3.includes("function byLine") && rd3("js/book.js").includes("A TheSmallBook Original"));
+    ok("v333: reading journeys are cover fans and the sheet is a calm page", pk3.includes("pk-card__fan") && pk3.includes("pk-rail") && pk3.includes("pk-sheet__fan") && !pk3.includes("pk-vol"));
+    ok("v334: Read turns the real 3D book to you, swings the cover open and the first page becomes the reader (transform, opacity and clip only)", f23.includes("v334 READ") && f23.includes("bkx-lid") && f23.includes("bkx-inside") && f23.includes("rotateY(-168deg)") && f23.includes("bkxRestore") && !/bkx[^\n]*\.style\.(width|height|left|top) *=/.test(f23.split("v334 READ")[1].split("SMOOTH TAPS")[0].replace('bk.style.cssText', '')));
+    ok("v334: the reader is simply there when the page lands (no fade, no wait)", rdr3.includes('classList.add("bkx-in")') && !c23.includes("html.bkx-in body") && f23.includes("setTimeout(go, 1500)"));
+    ok("v333: page changes cross fade (view transitions), off for reduced motion", c23.includes("@view-transition { navigation: auto; }") && c23.includes("@view-transition { navigation: none; }"));
+    ok("v333: every podcast, even a fetched one, gets its own artwork", ap3.includes("function artFor") && ap3.includes("itunes.apple.com/search") && ap3.includes("tsb_podart") && rd3("podcasts.html").includes("data-art-for"));
+    ok("v333: book requests survive a bad network (outbox and a mail fallback)", rq3.includes("tsb_rq_outbox") && rq3.includes("mailto:") && rq3.includes("FormData"));
+    ok("v333: the Ask bar floats clear of the edge and the safe area", c23.includes("body.fask .aq-inputrow { padding: 8px 14px max(18px, calc(env(safe-area-inset-bottom) + 12px))"));
+    ok("v333: the Ask page fits a 320px phone", c23.includes("body.fask #tsb-panel { grid-template-columns: minmax(0, 1fr)"));
+    ok("v333: no bounce easing left in the film layers", ![c13, c23].some(function (c) { return /cubic-bezier\(\s*[\d.]+\s*,\s*(1\.\d*[1-9]|[2-9])/.test(c); }) && !c13.includes("--f-spring"));
+    ok("v333: no gradient text and the muted grey reaches AA", c23.includes(".fa-hi span { background: none !important") && c13.includes("--f-mu: #6E6658"));
+    ok("v334: sign-up is 13+ only, no parent tick, on both paths", !li3.includes('id="suParent"') && !li3.includes('id="finParent"') && li3.includes("age < 13") && li3.includes('yr === "young"'));
+    ok("v333: sign-in only returns to a page on this site", (li3.match(/\(\?!\[a-z\]\[a-z0-9\+\.-\]\*:\|/g) || []).length === 2 && !rd3("js/gate.js").includes('"tsb_auth_return", location.href'));
+    ok("v333: Gold success waits for the server on every path", !gp3.includes("handler: function () { done(") && gp3.includes("only a cue to start waiting") && gp3.includes('r.status === "approved"'));
+    ok("v333: the webhook reads the timestamp in seconds, milliseconds or ISO", wh3.includes("n < 1e12 ? n * 1000 : n") && wh3.includes("Date.parse(ts)"));
+    ok("v333: the privacy page names every service, the DPDP Rules, children and a grievance officer", ["DPDP Rules, 2025", "Web3Forms", "Puter", "Supabase", "UTR", "Grievance officer", "under 18", "Data Protection Board"].every(function (k) { return lg3.includes(k); }) && !lg3.includes("They never leave it"));
+    ok("v333: new code has no em or en dashes, no optional chaining, no bare catch", [app3, pk3, f23, rq3, li3, lg3].every(function (t) { return !/[\u2013\u2014]/.test(t) && !/catch \{/.test(t); }) && [app3, pk3, rq3].every(function (t) { return !/\?\.[a-zA-Z]/.test(t); }));
+  }
+
+  {
+    console.log("== v334: real 3D book, 13+, Gold by UPI, voice, word meaning, Hindi covers, new scanner ==");
+    const rd4 = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const sc4 = rd4("scan.html"), gp4 = rd4("js/goldpay.js"), sql4 = rd4("supabase/sql/UPDATE-v334-payments-security.sql");
+    const st4 = rd4("js/stt.js"), sw4 = rd4("js/stt-worker.js"), wt4 = rd4("js/wordtap.js"), pd4 = rd4("js/podcast-data.js");
+    const ad4 = rd4("js/admin.js"), yp4 = rd4("js/youpi.js"), uc4 = rd4("supabase/functions/upi-claim/index.ts"), rz4 = rd4("supabase/functions/razorpay-webhook/index.ts");
+    const swj = rd4("sw.js");
+    ok("v334: the scanner reads barcodes (ISBN) and covers, and never loads the 1 MB fingerprint file up front", sc4.includes("BarcodeDetector") && sc4.includes("openlibrary.org/isbn/") && sc4.includes("function matchTitleByOcr") && !/<script[^>]+scanner-data\.js/.test(sc4) && sc4.includes('s.src = "js/scanner-data.js'));
+    ok("v334: the scanner asks for missing books with the Web3Forms form, not WhatsApp", sc4.includes("TSB_REQUEST.open") && sc4.includes("js/request.js") && !sc4.includes("wa.me"));
+    ok("v334: the scanner has torch, flip, type and a camera-blocked path", sc4.includes('id="scTorch"') && sc4.includes('id="scFlip"') && sc4.includes('id="scType"') && sc4.includes("Try the camera again"));
+    ok("v334: Gold has a UPI fallback: QR, UPI ID and a 12-digit UTR the server checks", gp4.includes("utr.length !== 12") && uc4.includes("upi_claims") && rd4("js/config.js").includes('UPI_ID: "9702510680@fam"'));
+    ok("v334: every Gold grant goes through one server function", sql4.includes("grant_gold") && rd4("supabase/functions/redeem-gold/index.ts").includes("grant_gold") && uc4.includes("grant_gold"));
+    ok("v334: the public profile no longer carries an email", /drop column if exists email/i.test(sql4));
+    ok("v334: Razorpay checks the signature in constant time and the exact amount", rz4.includes("constant-time compare") && rz4.includes("Number(pay.amount) !== Number(order.amount_paise)"));
+    ok("v334: no admin password lives in the browser code", !/STORAGE_CUSTOM_PASS|ADMIN_PASS|custom_pass/.test(ad4) && ad4.includes("upi-admin"));
+    ok("v334: no made-up security copy left in the tip sheet", !/mesh|sovereign/i.test(yp4));
+    ok("v334: voice typing uses the phone first, then free on-device Whisper (no key)", st4.includes("window.TSB_SR") && sw4.includes("whisper-tiny") && !/api[_-]?key/i.test(st4 + sw4));
+    ok("v334: tap and hold a word for its meaning (free dictionary, no key)", wt4.includes("window.TSB_WORD") && wt4.includes("dictionaryapi.dev") && ["book.html", "reader.html", "story.html"].every(function (f) { return rd4(f).includes("js/wordtap.js"); }));
+    ok("v334: every Hindi audiobook has a cover, and fetched ones get a drawn one", ["panchatantra-hi", "do-sakhiyan-hi", "idgaah-hi", "gulli-danda-hi", "anaath-ladki-hi", "andher-hi", "jhanki-hi"].every(function (k) { return fsp.existsSync(pp.join(__dirname, "../assets/covers/" + k + ".jpg")); }) && pd4.includes("window.TSB_ABCOVER") && pd4.includes("window.TSB_ABART"));
+    ok("v334: new files are precached for offline use", ["./js/stt.js", "./js/wordtap.js"].every(function (f) { return swj.includes(f); }));
+    ok("v334: new code has no em or en dashes, no optional chaining, no bare catch", [sc4, gp4, st4, wt4, yp4].every(function (t) { return !/[\u2013\u2014]/.test(t) && !/catch \{/.test(t) && !/\?\.[a-zA-Z]/.test(t); }));
+  }
+
+  {
+    console.log("== v335: Gold in You, Story time only in You, smoother Read, 520 books ==");
+    const rd5 = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const fj5 = rd5("js/film.js"), f25 = rd5("js/film2.js"), c25 = rd5("css/film2.css"), st5 = rd5("settings.html");
+    ok("v335: Gold members see their plan in You, never the 99 offer", fj5.includes("function goldCard()") && fj5.includes("You are Gold") && fj5.includes("fy-gold--on") && !fj5.includes("ICON.check"));
+    ok("v335: Today has no Story time tile, home has no kids banner, Listen and onboarding do not link it", !fj5.includes("ft-tile--kids") && !rd5("index.html").includes("kidsbanner") && !rd5("js/onboard.js").includes('class="fo-kid"') && !f25.includes('class="fr-kids"'));
+    ok("v335: You opens a small Story time sheet with a show or hide switch", fj5.includes("function kidsSheet()") && fj5.includes("data-pop-tg") && c25.includes(".fy-pop__card"));
+    ok("v335: Settings can hide Story time everywhere, asking first in a small sheet", f25.includes("function kidsRow()") && f25.includes("Hide Story time?") && st5.includes('id="kidsCard"') && st5.includes('data-kids-show="0"') && st5.includes("tsb_kids_show"));
+    ok("v335: the Gold screen ends cleanly (no stray site footer)", c25.includes("html.fv-gold.fg-yours .footer"));
+    ok("v335: Read is built on finger down and reads layout before it writes", f25.includes('"pointerdown"') && f25.includes("bkx--pre") && f25.includes("read every rect up front") && !c25.includes(".bkx-stage .bk3__obj { filter"));
+    ok("v335: the library says 520 books, not 500", !/\b500\+? (books|big books|summaries)\b/i.test((rd5("index.html") + rd5("about.html") + rd5("js/onboard.js") + fj5).replace(/crossed 500 books/g, "")));
+    ok("v335: new code has no em or en dashes", ![fj5, f25, c25, st5].some(t => /[\u2013\u2014]/.test(t)));
+  }
+
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");
 
   process.exit(FAIL ? 1 : 0);

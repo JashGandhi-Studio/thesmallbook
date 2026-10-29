@@ -1,11 +1,8 @@
 /* ============================================================
-   THESMALLBOOK · YOUPI PG SECURE GATEWAY ENGINE (js/youpi.js)
-   Sovereign, self-hosted 0% fee UPI payment gateway for TSB.
-   - Real Gateway Security: Zero Client-Side Unlocks Without Verification
-   - Direct 1-Tap UPI Launch on Mobile (PhonePe / GPay / Paytm)
-   - Mandatory 12-Digit UTR Bank Verification Mesh
-   - Server-Side Reconciliation with Bank Credit Records
-   - Zero Forbidden Dashes · 100% Invariant Compliant
+   THESMALLBOOK · tip sheet (js/youpi.js)
+   Fuel, tips and sponsorship only: pay, QR, UPI ID, Done.
+   Gold never comes here; Gold uses js/goldpay.js, and Gold only
+   switches on when the server says so.
    ============================================================ */
 (function (globalScope) {
   "use strict";
@@ -14,12 +11,8 @@
   globalScope.__TSB_YOUPI_INITIALIZED__ = true;
 
   var UPI_VPA = "9702510680@fam";
-  try {
-    var pCfg = JSON.parse(localStorage.getItem("tsb_pricing_config") || "{}");
-    if (pCfg.upi && pCfg.upi.vpa) {
-      UPI_VPA = pCfg.upi.vpa;
-    }
-  } catch (eCfg) {}
+  /* v331: the payee comes from config.js only, never from storage */
+  try { var PW = (window.TSB_CONFIG || {}).PAYWALL || {}; if (PW.UPI_ID) UPI_VPA = PW.UPI_ID; } catch (eCfg) {}
   var PAYEE_NAME = "TheSmallBook";
 
   /* --- 1. EMBEDDED ISO-18004 PURE JS QR CODE GENERATOR --- */
@@ -61,132 +54,36 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     var style = document.createElement("style");
     style.id = "ypg-checkout-styles";
     style.textContent = `
-      .ypg-overlay {
-        position: fixed; inset: 0; z-index: 99999;
-        background: rgba(17, 17, 17, 0.72);
-        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-        display: flex; align-items: center; justify-content: center;
-        padding: 16px; animation: ypgFadeIn .22s cubic-bezier(.16,1,.3,1);
-        box-sizing: border-box;
-      }
-      @keyframes ypgFadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-      .ypg-modal {
-        position: relative; max-width: 420px; width: 100%;
-        background: var(--paper, #fffdf5); color: var(--ink, #111);
-        border: 3.5px solid var(--ink, #111); border-radius: 22px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.35), 8px 8px 0 var(--ink, #111);
-        overflow: hidden; display: flex; flex-direction: column;
-        max-height: 92vh; animation: ypgSpringUp .26s cubic-bezier(.16,1,.3,1);
-        font-family: -apple-system, BlinkMacSystemFont, "Space Grotesk", "Segoe UI", sans-serif;
-      }
-      @keyframes ypgSpringUp {
-        from { opacity: 0; transform: translateY(20px) scale(.97); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
-      }
-      .ypg-topbar {
-        background: var(--yellow, #ffc800); padding: 14px 18px;
-        border-bottom: 3px solid var(--ink, #111);
-        display: flex; align-items: center; justify-content: space-between;
-      }
-      .ypg-brand {
-        display: flex; align-items: center; gap: 8px;
-        font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 13.5px; letter-spacing: .4px; color: #111;
-      }
-      .ypg-badge {
-        background: #0b7a58; color: #fff; font-size: 9px;
-        font-family: "Space Grotesk", sans-serif; font-weight: 800;
-        padding: 2px 7px; border-radius: 999px; letter-spacing: .3px;
-      }
-      .ypg-close-btn {
-        border: 2px solid var(--ink, #111); background: #fff;
-        color: #111; font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 11px; font-weight: 900; width: 28px; height: 28px;
-        border-radius: 8px; cursor: pointer; display: flex;
-        align-items: center; justify-content: center;
-        box-shadow: 2px 2px 0 var(--ink, #111); transition: transform .1s;
-      }
-      .ypg-close-btn:hover { transform: translate(-1px, -1px); }
-      
-      .ypg-content {
-        padding: 18px 20px 22px; overflow-y: auto; -webkit-overflow-scrolling: touch; text-align: center;
-      }
-      .ypg-plan-pill {
-        display: inline-flex; align-items: center; gap: 6px;
-        background: #fff; border: 2px solid var(--ink, #111);
-        padding: 6px 12px; border-radius: 10px; margin-bottom: 14px;
-        box-shadow: 2px 2px 0 var(--ink, #111); font-size: 13px;
-      }
-      .ypg-plan-pill b { font-family: var(--font-head, "Archivo Black", sans-serif); }
-      
-      .ypg-btn-openapp {
-        display: block; width: 100%; border: 2.5px solid var(--ink, #111);
-        background: #00c48c; color: #111; font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 13.5px; letter-spacing: .4px; padding: 12px 14px; border-radius: 12px;
-        box-shadow: 3px 3px 0 var(--ink, #111); cursor: pointer; text-decoration: none;
-        box-sizing: border-box; margin-bottom: 14px; transition: transform .1s;
-      }
-      .ypg-btn-openapp:hover { transform: translate(-1px, -1px); }
-      
-      .ypg-qr-box {
-        background: #fff; border: 2px solid var(--ink, #111);
-        border-radius: 12px; padding: 10px; margin-bottom: 12px;
-        box-shadow: 2px 2px 0 var(--ink, #111); display: inline-block;
-      }
+      .ypg-overlay { position: fixed; inset: 0; z-index: 100002; background: rgba(22,19,15,.55); display: flex; align-items: flex-end; justify-content: center; box-sizing: border-box; animation: ypgFadeIn .22s cubic-bezier(.16,1,.3,1); }
+      @keyframes ypgFadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes ypgUp { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+      .ypg-modal { position: relative; width: 100%; max-width: 440px; max-height: 92vh; box-sizing: border-box; background: #FBF8F1; color: #16130F; border-radius: 26px 26px 0 0; overflow: hidden; display: flex; flex-direction: column; animation: ypgUp .32s cubic-bezier(.16,1,.3,1); font-family: "Space Grotesk", system-ui, sans-serif; box-shadow: 0 -12px 40px rgba(22,19,15,.18); }
+      .ypg-topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px 0; }
+      .ypg-brand { display: flex; align-items: center; gap: 8px; font: 600 14px "Space Grotesk", sans-serif; }
+      .ypg-badge { background: #FFC800; color: #16130F; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; }
+      .ypg-close-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ECE5D6; background: transparent; color: inherit; display: grid; place-items: center; cursor: pointer; padding: 0; }
+      .ypg-content { padding: 6px 20px calc(22px + env(safe-area-inset-bottom, 0px)); overflow-y: auto; -webkit-overflow-scrolling: touch; text-align: center; }
+      .ypg-content h2 { font-family: Newsreader, Georgia, serif !important; font-weight: 600; font-size: 24px !important; }
+      .ypg-content > p { color: #6E6658 !important; font-size: 14px !important; }
+      .ypg-plan-pill { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #ECE5D6; padding: 7px 14px; border-radius: 999px; margin-bottom: 14px; font-size: 13px; }
+      .ypg-plan-pill b { color: #8A5A00 !important; }
+      .ypg-btn-openapp { display: flex !important; align-items: center; justify-content: center; width: 100%; box-sizing: border-box; min-height: 52px; line-height: 1.2 !important; padding: 0 14px !important; border-radius: 16px; background: #FFC800; color: #16130F; font: 700 16px "Space Grotesk", sans-serif; text-decoration: none; margin-bottom: 14px; }
+      .ypg-qr-box { background: #fff; border: 1px solid #ECE5D6; border-radius: 18px; padding: 12px; margin: 0 auto 12px; display: inline-block; }
       .ypg-qr-box svg { display: block; margin: 0 auto; width: 160px; height: 160px; }
-      
-      .ypg-vpa-copy {
-        display: flex; align-items: center; justify-content: center; gap: 8px;
-        font-size: 12px; font-weight: 700; background: #fffdf5; border: 1.5px dashed var(--ink, #111);
-        padding: 5px 10px; border-radius: 8px; margin-bottom: 14px;
-      }
-      .ypg-vpa-copy button {
-        border: 1.5px solid var(--ink, #111); background: var(--yellow, #ffc800);
-        font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 10px; padding: 2px 7px; cursor: pointer; border-radius: 5px;
-      }
-
-      /* Verification Box */
-      .ypg-verify-box {
-        background: #fff; border: 2.5px solid var(--ink, #111);
-        border-radius: 14px; padding: 14px; margin-top: 8px;
-        box-shadow: 3px 3px 0 var(--ink, #111); text-align: left;
-      }
-      .ypg-verify-lbl {
-        display: block; font-size: 11px; font-weight: 800;
-        font-family: var(--font-head, "Archivo Black", sans-serif);
-        margin-bottom: 6px; color: var(--ink, #111); letter-spacing: .3px;
-      }
-      .ypg-input-utr {
-        width: 100%; border: 2px solid var(--ink, #111); border-radius: 8px;
-        padding: 10px 12px; font-family: monospace; font-size: 14px; font-weight: 700;
-        letter-spacing: 1px; box-sizing: border-box; margin-bottom: 8px;
-        background: var(--paper, #fffdf5); color: var(--ink, #111);
-      }
-      .ypg-input-utr:focus { outline: none; border-color: #00c48c; box-shadow: 0 0 0 2px #00c48c; }
-      
-      .ypg-btn-verify {
-        display: block; width: 100%; border: 2.5px solid var(--ink, #111);
-        background: var(--yellow, #ffc800); color: #111; font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 12.5px; letter-spacing: .4px; padding: 11px; border-radius: 10px;
-        box-shadow: 3px 3px 0 var(--ink, #111); cursor: pointer; text-align: center;
-        box-sizing: border-box; transition: transform .1s;
-      }
-      .ypg-btn-verify:hover { transform: translate(-1px, -1px); }
-      .ypg-status-msg {
-        font-size: 11.5px; line-height: 1.4; margin-top: 8px; font-weight: 600;
-      }
-      
-      @media (max-width: 600px) {
-        .ypg-overlay { align-items: flex-end; padding: 0; }
-        .ypg-modal {
-          border-bottom-left-radius: 0; border-bottom-right-radius: 0;
-          border-bottom: none; max-width: 100%; box-shadow: none;
-        }
-      }
+      .ypg-vpa-copy { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 14px; background: #F3EEE3; border-radius: 14px; padding: 8px 8px 8px 14px; margin-bottom: 14px; text-align: left; }
+      .ypg-vpa-copy span { color: #6E6658; } .ypg-vpa-copy b { color: #16130F; font-weight: 700; }
+      .ypg-vpa-copy button { min-height: 36px; padding: 0 14px; border-radius: 10px; border: 1px solid #ECE5D6; background: #fff; color: #16130F; font: 700 13px "Space Grotesk", sans-serif; cursor: pointer; }
+      .ypg-btn-verify { display: block; width: 100%; box-sizing: border-box; min-height: 50px; border: 1px solid #ECE5D6; background: transparent; color: inherit; font: 700 15px "Space Grotesk", sans-serif; border-radius: 16px; cursor: pointer; }
+      .ypg-status-msg { font-size: 13px; line-height: 1.4; margin-top: 8px; font-weight: 600; }
+      .ypg-input-utr { width: 100%; box-sizing: border-box; border: 1px solid #ECE5D6; border-radius: 12px; padding: 10px 12px; font: 600 15px ui-monospace, monospace; background: #fff; color: #16130F; }
+      html.dark .ypg-modal { background: #1B1814; color: #F4EFE6; box-shadow: 0 -12px 40px rgba(0,0,0,.5); }
+      html.dark .ypg-close-btn, html.dark .ypg-plan-pill, html.dark .ypg-btn-verify { border-color: #3A332B; }
+      html.dark .ypg-content > p, html.dark .ypg-vpa-copy span { color: #ABA293 !important; }
+      html.dark .ypg-plan-pill b { color: #E9C46A !important; }
+      html.dark .ypg-vpa-copy { background: #2A251F; } html.dark .ypg-vpa-copy b { color: #F4EFE6; }
+      html.dark .ypg-vpa-copy button { background: #1B1814; color: #F4EFE6; border-color: #3A332B; }
+      @media (min-width: 601px) { .ypg-overlay { align-items: center; padding: 16px; } .ypg-modal { border-radius: 26px; } }
+      @media (prefers-reduced-motion: reduce) { .ypg-overlay, .ypg-modal { animation: none; } }
     `;
     document.head.appendChild(style);
   }
@@ -231,7 +128,7 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     options = options || {};
     var amount = parseInt(options.amount, 10) || 999;
     var plan = options.plan || (amount >= 999 ? "gold_yearly" : (amount >= 99 ? "gold_monthly" : "pdf_75d"));
-    var title = options.name || options.title || (amount >= 999 ? "Gold Annual Pass" : (amount >= 99 ? "Gold Monthly Pass" : "PDF Pass (75 days)"));
+    var title = options.name || options.title || "Support TheSmallBook";
     var onClose = typeof options.onClose === "function" ? options.onClose : null;
 
     var orderRef = options.order_id || ("TSB-" + Date.now().toString(36).toUpperCase() + "-" + Math.floor(1000 + Math.random() * 9000));
@@ -240,20 +137,6 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
 
     injectStyles();
     closeModal();
-
-    /* On mobile, open UPI app directly */
-    if (isMobile) {
-      try {
-        var ifr = document.createElement("iframe");
-        ifr.style.display = "none";
-        ifr.src = upiUri;
-        document.body.appendChild(ifr);
-        setTimeout(function () { try { ifr.remove(); } catch (e) {} }, 2500);
-      } catch (e) {}
-      setTimeout(function () {
-        try { location.href = upiUri; } catch (e) {}
-      }, 50);
-    }
 
     var ov = document.createElement("div");
     ov.className = "ypg-overlay";
@@ -265,62 +148,38 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
       <div class="ypg-modal" role="dialog" aria-modal="true" aria-labelledby="ypgTitle">
         <div class="ypg-topbar">
           <div class="ypg-brand">
-            <span>📕 THE SMALL BOOK PAY</span>
-            <span class="ypg-badge">DIRECT UPI</span>
+            <span>TheSmallBook</span>
+            <span class="ypg-badge">UPI</span>
           </div>
-          <button type="button" class="ypg-close-btn" id="ypgCloseBtn" aria-label="Close">✕</button>
+          <button type="button" class="ypg-close-btn" id="ypgCloseBtn" aria-label="Close"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
         </div>
 
         <div class="ypg-content">
-          <h2 style="font-family:var(--font-head); font-size:17px; margin:0 0 6px;" id="ypgTitle">Awaiting UPI Payment</h2>
-          <p style="font-size:12px; color:#666; margin:0 0 12px; line-height:1.4;">
-            ${isMobile ? "Complete payment of ₹" + amount + " in PhonePe or your UPI app, then enter your single-use activation code below." : "Scan with PhonePe, Google Pay or any UPI app, then enter your single-use activation code below."}
+          <h2 style="font-family:var(--font-head); font-size:17px; margin:0 0 6px;" id="ypgTitle">Pay by UPI</h2>
+          <p style="font-size:13px; color:#5F584C; margin:0 0 12px; line-height:1.4;">
+            ${isMobile ? "Tap the button to open your UPI app." : "Scan with any UPI app on your phone."} Thank you for keeping TheSmallBook going.
           </p>
 
           <div class="ypg-plan-pill">
             <span>${title}</span>
-            <span style="color:#888;">·</span>
-            <b style="color:#0b7a58;">₹${amount}</b>
+            <span style="opacity:.6;">·</span>
+            <b>₹${amount}</b>
           </div>
 
           <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
             ${isMobile ? `
               <a class="ypg-btn-openapp" id="ypgOpenAppBtn" href="${upiUri}" target="_blank" rel="noopener">
-                ⚡ OPEN PHONEPE / GPAY / UPI APP →
+                Pay ₹${amount} with a UPI app
               </a>
             ` : ""}
             <div class="ypg-qr-box">${qrSvg}</div>
             <div class="ypg-vpa-copy">
-              <span>VPA: <b>${UPI_VPA}</b></span>
-              <button type="button" id="ypgCopyVpa">COPY</button>
+              <span>UPI ID <b>${UPI_VPA}</b></span>
+              <button type="button" id="ypgCopyVpa">Copy</button>
             </div>
           </div>
 
-          <!-- Real Code Activation Mesh (No Free Bypasses) -->
-          <div class="ypg-verify-box">
-            <div style="background:#fffbe6; border:1.5px solid #d4af37; border-radius:10px; padding:10px 12px; margin-bottom:12px; text-align:left; font-size:11.5px; line-height:1.5; color:#333;">
-              <b>1.</b> Complete UPI payment of <b>₹${amount}</b> to <b>${UPI_VPA}</b>.<br>
-              <b>2.</b> Message Jash on WhatsApp with your payment screenshot to receive your activation code.<br>
-              <b>3.</b> Type your <b>TSB-XXXX-XXXX</b> code below to activate.
-            </div>
-
-            <a class="ypg-btn-openapp" id="ypgWaBtn" href="https://wa.me/919702510680?text=Hi%20Jash!%20I%20have%20paid%20%E2%82%B9${amount}%20for%20${encodeURIComponent(title)}.%20Here%20is%20my%20screenshot%20to%20receive%20my%20Gold%20activation%20code." target="_blank" rel="noopener" style="margin-bottom:12px; background:#25D366; color:#fff; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:8px;">
-              💬 GET ACTIVATION CODE ON WHATSAPP →
-            </a>
-
-            <label class="ypg-verify-lbl" for="ypgCodeInput">ENTER YOUR ACTIVATION CODE:</label>
-            <div style="display:flex; gap:8px;">
-              <input type="text" id="ypgCodeInput" class="ypg-input-utr" placeholder="TSB-XXXX-XXXX" maxlength="16" autocomplete="off" spellcheck="false" style="text-transform:uppercase; font-weight:700; flex:1; font-family:'Space Grotesk',sans-serif;">
-              <button type="button" class="ypg-btn-verify" id="ypgRedeemBtn" style="width:auto; padding:0 16px; white-space:nowrap;">
-                ACTIVATE →
-              </button>
-            </div>
-            <div id="ypgStatusMsg" class="ypg-status-msg" style="display:none; margin-top:8px;"></div>
-          </div>
-
-          <div style="margin-top:10px; font-size:10px; color:#777; text-align:center; line-height:1.4;">
-            🔒 DPDP Act Compliant: Zero telemetry leak. Codes are verified single-use via encrypted server mesh.
-          </div>
+          <button type="button" class="ypg-btn-verify" id="ypgDoneBtn">Done</button>
         </div>
       </div>
     `;
@@ -329,6 +188,8 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     activeModal = ov;
 
     var closeBtn = document.getElementById("ypgCloseBtn");
+    var doneBtn = document.getElementById("ypgDoneBtn");
+    if (doneBtn) doneBtn.addEventListener("click", function () { closeModal(); if (onClose) { try { onClose(); } catch (e) {} } });
     if (closeBtn) closeBtn.addEventListener("click", function () {
       closeModal();
       if (onClose) onClose();
@@ -434,7 +295,10 @@ var qrcode=function(){function i(t,r){function a(t,r){g=function(t){for(var r=ne
     UPI_VPA: UPI_VPA
   };
 
-  globalScope.Youpi = Youpi;
+  /* v331: window.Youpi belongs to the real YouPI-PG checkout script (loaded
+     by goldpay.js from your own server). This local sheet is only the
+     UPI + activation-code fallback. */
+  Youpi.qr = function (text) { return generateQrSvg(text, 184); };   /* v334: goldpay draws its own sheet */
   globalScope.TSB_PAY = Youpi;
 
   globalScope.TSB_UPI = {

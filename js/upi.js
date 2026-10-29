@@ -58,7 +58,7 @@
       t.textContent = msg;
       t.style.cssText = "position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:99999;" +
         "background:#111;color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;" +
-        "padding:12px 18px;border:3px solid #fff;box-shadow:5px 5px 0 #ffc800;max-width:88vw;text-align:center";
+        "padding:12px 18px;border:3px solid #fff;box-shadow:var(--sh-y);max-width:88vw;text-align:center";
       document.body.appendChild(t);
       setTimeout(function () { t.remove(); }, 2600);
     } catch (e) {}
@@ -66,8 +66,8 @@
 
   function showModal(amount, note) {
     /* If YouPI engine is present, delegate directly */
-    if (window.Youpi && window.Youpi.pay) {
-      window.Youpi.pay({ amount: amount, title: note, description: note });
+    if (window.TSB_PAY && window.TSB_PAY.pay) {
+      window.TSB_PAY.pay({ amount: amount, title: note, description: note });
       return;
     }
 
@@ -76,19 +76,19 @@
     ov.id = "tsb-upi-modal";
     ov.style.cssText = "position:fixed;inset:0;background:rgba(17,17,17,.65);z-index:99998;display:flex;align-items:center;justify-content:center;padding:16px";
     ov.innerHTML =
-      '<div style="background:#fffdf5;border:4px solid #111;box-shadow:10px 10px 0 #ffc800;max-width:380px;width:100%;padding:22px;position:relative">' +
-      '<button id="tsbUpiClose" style="position:absolute;top:10px;right:10px;border:2.5px solid #111;background:#fff;font-family:Archivo Black,sans-serif;font-size:11px;padding:4px 9px;cursor:pointer;box-shadow:2px 2px 0 #111">✕</button>' +
+      '<div style="background:#fffdf5;border:var(--bw) solid var(--edge);box-shadow:var(--sh-y);max-width:380px;width:100%;padding:22px;position:relative">' +
+      '<button id="tsbUpiClose" style="position:absolute;top:10px;right:10px;border:var(--bw) solid var(--edge);background:#fff;font-family:Archivo Black,sans-serif;font-size:11px;padding:4px 9px;cursor:pointer;box-shadow:var(--sh-1)">✕</button>' +
       '<div style="font-size:30px">💸</div>' +
       '<h3 style="font-family:Archivo Black,sans-serif;font-size:18px;margin:6px 0 2px;letter-spacing:.5px">PAY ' + (amount ? "₹" + amount : "") + ' VIA UPI</h3>' +
       '<p style="font-size:12.5px;color:#666;font-weight:600;margin:0 0 12px">' + (note || "Support TheSmallBook") + '</p>' +
-      '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;border:3px solid #111;padding:10px 12px;background:#fff;box-shadow:3px 3px 0 #111;font-family:Space Grotesk,sans-serif;font-weight:700;font-size:15px;margin-bottom:10px">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;border:var(--bw) solid var(--edge);padding:10px 12px;background:#fff;box-shadow:var(--sh-2);font-family:Space Grotesk,sans-serif;font-weight:700;font-size:15px;margin-bottom:10px">' +
       '<span>' + UPI_ID + '</span>' +
-      '<button id="tsbUpiCopy" style="border:2.5px solid #111;background:#ffc800;font-family:Archivo Black,sans-serif;font-size:11px;padding:6px 10px;cursor:pointer;box-shadow:2px 2px 0 #111">COPY</button>' +
+      '<button id="tsbUpiCopy" style="border:var(--bw) solid var(--edge);background:#ffc800;font-family:Archivo Black,sans-serif;font-size:11px;padding:6px 10px;cursor:pointer;box-shadow:var(--sh-1)">COPY</button>' +
       '</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">' +
-      '<button data-app="gpay" style="border:3px solid #111;background:#fff;font-family:Archivo Black,sans-serif;font-size:11px;padding:10px 4px;cursor:pointer;box-shadow:3px 3px 0 #111">📱 GPay</button>' +
-      '<button data-app="phonepe" style="border:3px solid #111;background:#fff;font-family:Archivo Black,sans-serif;font-size:11px;padding:10px 4px;cursor:pointer;box-shadow:3px 3px 0 #111">📱 PhonePe</button>' +
-      '<button data-app="paytm" style="border:3px solid #111;background:#fff;font-family:Archivo Black,sans-serif;font-size:11px;padding:10px 4px;cursor:pointer;box-shadow:3px 3px 0 #111">📱 Paytm</button>' +
+      '<button data-app="gpay" style="border:var(--bw) solid var(--edge);background:#fff;font-family:Archivo Black,sans-serif;font-size:11px;padding:10px 4px;cursor:pointer;box-shadow:var(--sh-2)">📱 GPay</button>' +
+      '<button data-app="phonepe" style="border:var(--bw) solid var(--edge);background:#fff;font-family:Archivo Black,sans-serif;font-size:11px;padding:10px 4px;cursor:pointer;box-shadow:var(--sh-2)">📱 PhonePe</button>' +
+      '<button data-app="paytm" style="border:var(--bw) solid var(--edge);background:#fff;font-family:Archivo Black,sans-serif;font-size:11px;padding:10px 4px;cursor:pointer;box-shadow:var(--sh-2)">📱 Paytm</button>' +
       '</div>' +
       '<p style="font-size:11px;color:#888;font-weight:600;margin:0;text-align:center">Tap an app to open payment, or copy the ID above</p>' +
       '</div>';
@@ -102,8 +102,8 @@
   }
 
   function pay(amount, note) {
-    if (window.Youpi && window.Youpi.pay) {
-      window.Youpi.pay({ amount: amount, title: note, description: note });
+    if (window.TSB_PAY && window.TSB_PAY.pay) {
+      window.TSB_PAY.pay({ amount: amount, title: note, description: note });
       return;
     }
     var isMobile = /android|iphone|ipad|mobile/i.test(navigator.userAgent || "");

@@ -33,7 +33,7 @@
   /* ---------- the guide sheet: every function, plainly ---------- */
   var ROWS = [
     { g: "READ", rows: [
-      { e: "📚", n: "The Library", d: "500 books, 3,540 lessons, 26 languages. Free to read, forever.", h: "index.html" },
+      { e: "📚", n: "The Library", d: "520 books, 3,685 lessons, 26 languages. Free to read, forever.", h: "index.html" },
       { e: "📷", n: "Scanner", d: "Holding a paper book? Scan its cover and its shelf opens here.", h: "scan.html" },
       { e: "🌊", n: "Deep Dives", d: "The one chapter of a book worth reading in full, with narration.", h: "deepdive.html" },
       { e: "🗒️", n: "Notebook", d: "Every highlight, note and saved line you keep, in one place.", h: "notes.html" }
@@ -66,7 +66,7 @@
     var st = document.createElement("style");
     st.id = "tsb-chip-style";
     st.textContent =
-      "#tsbHelpChip{position:absolute;top:0;right:0;z-index:6;width:48px;height:44px;border:none;border-left:3px solid var(--ink);border-bottom:3px solid var(--ink);border-radius:0 0 0 24px;background:var(--yellow);color:var(--ink);font:800 17px 'Space Grotesk',sans-serif;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;padding:0 2px 6px 0}" +
+      "#tsbHelpChip{position:absolute;top:0;right:0;z-index:6;width:48px;height:44px;border:none;border-left:var(--bw) solid var(--edge);border-bottom:var(--bw) solid var(--edge);border-radius:0 0 0 24px;background:var(--yellow);color:var(--ink);font:800 17px 'Space Grotesk',sans-serif;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;padding:0 2px 6px 0}" +
       "#tsbHelpChip:active{transform:translateY(1.5px)}";
     document.head.appendChild(st);
   }
@@ -78,39 +78,39 @@
     st.id = "tsb-guide-style";
     st.textContent =
       "#tsbGuideSheet{position:fixed;inset:0;z-index:262;background:rgba(20,12,0,.5);display:flex;align-items:flex-end}" +
-      "#tsbGuideSheet .tg-card{width:100%;max-height:84vh;overflow:auto;background:var(--paper);border-top:3px solid var(--ink);border-radius:22px 22px 0 0;padding:18px 16px calc(26px + env(safe-area-inset-bottom, 0px));animation:tgIn .28s cubic-bezier(.22,.9,.35,1)}" +
+      "#tsbGuideSheet .tg-card{width:100%;max-height:84vh;overflow:auto;background:var(--paper);border-top:var(--bw) solid var(--edge);border-radius:22px 22px 0 0;padding:18px 16px calc(26px + env(safe-area-inset-bottom, 0px));animation:tgIn .28s cubic-bezier(.22,.9,.35,1)}" +
       "@keyframes tgIn{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}" +
-      "#tsbGuideSheet .tg-x{position:sticky;top:8px;z-index:5;margin-left:auto;display:flex;align-items:center;justify-content:center;border:2.5px solid var(--ink);background:var(--paper);border-radius:10px;width:34px;height:34px;font:800 13px 'Space Grotesk',sans-serif;color:var(--ink);cursor:pointer}" +
-      "#tsbGuideSheet .tg-head{font:400 15px 'Archivo Black','Arial Black',sans-serif;color:var(--ink);letter-spacing:.5px;margin:0 44px 4px 2px}" +
+      "#tsbGuideSheet .tg-x{position:sticky;top:8px;z-index:5;margin-left:auto;display:flex;align-items:center;justify-content:center;border:var(--bw) solid var(--edge);background:var(--paper);border-radius:14px;width:34px;height:34px;font:800 13px 'Space Grotesk',sans-serif;color:var(--ink);cursor:pointer}" +
+      "#tsbGuideSheet .tg-head{font:400 15px 'Space Grotesk','Arial Black',sans-serif;color:var(--ink);letter-spacing:.5px;margin:0 44px 4px 2px}" +
       "#tsbGuideSheet .tg-sub{font:600 11.5px/1.5 'Space Grotesk',sans-serif;color:var(--ink);opacity:.65;margin:0 2px 12px}" +
-      "#tsbGuideSheet .tg-g{font:800 9.5px 'Archivo Black','Arial Black',sans-serif;letter-spacing:1px;color:var(--ink);opacity:.55;margin:14px 2px 6px}" +
-      "#tsbGuideSheet .tg-row{display:flex;align-items:center;gap:11px;border:2.5px solid var(--ink);background:var(--bg);border-radius:14px;padding:11px 12px;margin-bottom:7px;text-decoration:none}" +
+      "#tsbGuideSheet .tg-g{font:800 9.5px 'Space Grotesk','Arial Black',sans-serif;letter-spacing:1px;color:var(--ink);opacity:.55;margin:14px 2px 6px}" +
+      "#tsbGuideSheet .tg-row{display:flex;align-items:center;gap:11px;border:var(--bw) solid var(--edge);background:var(--bg);border-radius:20px;padding:11px 12px;margin-bottom:7px;text-decoration:none}" +
       "#tsbGuideSheet .tg-row:active{transform:translate(1.5px,1.5px)}" +
       "#tsbGuideSheet .tg-e{flex:0 0 auto;font-size:19px}" +
       "#tsbGuideSheet .tg-m{flex:1;min-width:0}" +
       "#tsbGuideSheet .tg-n{display:block;font:800 12.5px 'Space Grotesk',sans-serif;color:var(--ink)}" +
       "#tsbGuideSheet .tg-d{display:block;font:600 10.5px/1.45 'Space Grotesk',sans-serif;color:var(--ink);opacity:.65;margin-top:2px}" +
-      "#tsbGuideSheet .tg-go{flex:0 0 auto;font:800 9px 'Archivo Black',sans-serif;letter-spacing:.8px;color:var(--ink);background:var(--yellow);border:2px solid var(--ink);border-radius:999px;padding:4px 9px}" +
-      "#tsbGuideSheet .tg-walk{display:block;width:100%;border:3px solid var(--ink);background:var(--yellow);color:#16130e;border-radius:999px;box-shadow:4px 4px 0 var(--ink);padding:13px;font:800 12px 'Archivo Black','Arial Black',sans-serif;letter-spacing:.8px;cursor:pointer;margin-top:12px}" +
+      "#tsbGuideSheet .tg-go{flex:0 0 auto;font:800 9px 'Space Grotesk',sans-serif;letter-spacing:.8px;color:var(--ink);background:var(--yellow);border:var(--bw) solid var(--edge);border-radius:999px;padding:4px 9px}" +
+      "#tsbGuideSheet .tg-walk{display:block;width:100%;border:var(--bw) solid var(--edge);background:var(--yellow);color:#16130e;border-radius:999px;box-shadow:var(--sh-2);padding:13px;font:800 12px 'Space Grotesk','Arial Black',sans-serif;letter-spacing:.8px;cursor:pointer;margin-top:12px}" +
       "#tsbGuideSheet .tg-walk:active{transform:translate(2px,2px);box-shadow:none}" +
       "#tsbGuideSheet .tg-replay{display:block;width:100%;border:none;background:none;color:var(--ink);opacity:.6;font:800 10.5px 'Space Grotesk',sans-serif;cursor:pointer;padding:10px 0 0;text-decoration:underline}" +
       "#tsbGuideSheet .tg-fine{text-align:center;font:600 10.5px/1.5 'Space Grotesk',sans-serif;color:var(--ink);opacity:.55;margin:10px 0 0}" +
       /* shared ring + card for the walkthrough and the mini tour */
-      "#tsbTourRing{position:fixed;left:0;top:0;z-index:9992;border:3.5px solid var(--yellow);border-radius:16px;box-shadow:0 0 0 4000px rgba(12,10,6,.44);pointer-events:none;transition:opacity .18s linear;will-change:transform}" +
+      "#tsbTourRing{position:fixed;left:0;top:0;z-index:9992;border:3.5px solid var(--yellow);border-radius:22px;box-shadow:0 0 0 4000px rgba(12,10,6,.44);pointer-events:none;transition:opacity .18s linear;will-change:transform}" +
       "#tsbTourRing.tsb-try{animation:tsbTryRing 1.5s ease-in-out infinite}" +
       "@keyframes tsbTryRing{0%,100%{border-color:var(--yellow);border-width:3.5px}50%{border-color:#fff;border-width:5px}}" +
-      "#tsbTourCard{position:fixed;left:12px;right:12px;z-index:9993;bottom:calc(var(--bar-total, 68px) + 18px);background:var(--paper);border:3px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:14px 14px 12px;animation:tgIn .28s cubic-bezier(.22,.9,.35,1)}" +
-      "#tsbTourCard .tt-step{font:800 9px 'Archivo Black',sans-serif;letter-spacing:1px;color:var(--ink);opacity:.5;display:flex;align-items:center;gap:7px}" +
-      "#tsbTourCard .tt-turnbadge{font:800 9px 'Archivo Black',sans-serif;letter-spacing:1px;font-style:normal;color:#16130e;background:var(--yellow);border:2px solid var(--ink);border-radius:999px;padding:3px 8px;opacity:1}" +
-      "#tsbTourCard .tt-wait{flex:1;font:800 11.5px 'Space Grotesk',sans-serif;color:var(--ink);background:var(--bg);border:2.5px dashed var(--ink);border-radius:12px;padding:10px 12px;animation:tsbWaitPulse 1.6s ease-in-out infinite}" +
+      "#tsbTourCard{position:fixed;left:12px;right:12px;z-index:9993;bottom:calc(var(--bar-total, 68px) + 18px);background:var(--paper);border:var(--bw) solid var(--edge);border-radius:18px;box-shadow:var(--sh-3);padding:14px 14px 12px;animation:tgIn .28s cubic-bezier(.22,.9,.35,1)}" +
+      "#tsbTourCard .tt-step{font:800 9px 'Space Grotesk',sans-serif;letter-spacing:1px;color:var(--ink);opacity:.5;display:flex;align-items:center;gap:7px}" +
+      "#tsbTourCard .tt-turnbadge{font:800 9px 'Space Grotesk',sans-serif;letter-spacing:1px;font-style:normal;color:#16130e;background:var(--yellow);border:var(--bw) solid var(--edge);border-radius:999px;padding:3px 8px;opacity:1}" +
+      "#tsbTourCard .tt-wait{flex:1;font:800 11.5px 'Space Grotesk',sans-serif;color:var(--ink);background:var(--bg);border:2.5px dashed var(--ink);border-radius:17px;padding:10px 12px;animation:tsbWaitPulse 1.6s ease-in-out infinite}" +
       "#tsbTourCard .tt-acts2{display:flex;gap:8px;align-items:center;margin-top:9px}" +
       "#tsbTourCard .tt-stepskip{flex:1;background:none;border:none;font:800 10.5px 'Space Grotesk',sans-serif;color:var(--ink);opacity:.55;cursor:pointer;padding:8px;text-decoration:underline;text-align:left}" +
       "@keyframes tsbWaitPulse{0%,100%{opacity:.85}50%{opacity:.55}}" +
       "#tsbTourCard .tt-t{display:block;font:800 14px/1.3 'Space Grotesk',sans-serif;color:var(--ink);margin:4px 0 4px}" +
       "#tsbTourCard .tt-d{display:block;font:600 12px/1.5 'Space Grotesk',sans-serif;color:var(--ink);opacity:.75}" +
       "#tsbTourCard .tt-acts{display:flex;gap:8px;align-items:center;margin-top:11px}" +
-      "#tsbTourCard .tt-back{flex:0 0 auto;border:2.5px solid var(--ink);background:var(--paper);border-radius:999px;padding:11px 14px;font:800 11px 'Archivo Black',sans-serif;letter-spacing:.8px;color:var(--ink);cursor:pointer}" +
-      "#tsbTourCard .tt-next{flex:1;border:3px solid var(--ink);background:var(--yellow);border-radius:999px;box-shadow:3px 3px 0 var(--ink);padding:11px;font:800 11.5px 'Archivo Black',sans-serif;letter-spacing:.8px;color:var(--ink);cursor:pointer}" +
+      "#tsbTourCard .tt-back{flex:0 0 auto;border:var(--bw) solid var(--edge);background:var(--paper);border-radius:999px;padding:11px 14px;font:800 11px 'Space Grotesk',sans-serif;letter-spacing:.8px;color:var(--ink);cursor:pointer}" +
+      "#tsbTourCard .tt-next{flex:1;border:var(--bw) solid var(--edge);background:var(--yellow);border-radius:999px;box-shadow:var(--sh-2);padding:11px;font:800 11.5px 'Space Grotesk',sans-serif;letter-spacing:.8px;color:var(--ink);cursor:pointer}" +
       "#tsbTourCard .tt-next:active{transform:translate(1.5px,1.5px);box-shadow:none}" +
       "#tsbTourCard .tt-skip{flex:0 0 auto;background:none;border:none;font:800 10.5px 'Space Grotesk',sans-serif;color:var(--ink);opacity:.55;cursor:pointer;padding:8px}";
     document.head.appendChild(st);
@@ -123,7 +123,7 @@
     sh.id = "tsbGuideSheet";
     var html = '<div class="tg-card">' +
       '<button class="tg-x" aria-label="Close">✕</button>' +
-      '<h2 class="tg-head">🧭 EVERY FUNCTION, PLAINLY</h2>' +
+      '<h2 class="tg-head">🧭 Every function, plainly</h2>' +
       '<p class="tg-sub">What this app does and where it lives. Tap any row to go there.</p>';
     ROWS.forEach(function (grp) {
       html += '<div class="tg-g">' + grp.g + "</div>";
@@ -134,7 +134,7 @@
           '<span class="tg-go">OPEN →</span></a>';
       });
     });
-    html += '<button class="tg-walk" id="tgShowcase" style="background:var(--yellow);color:var(--ink);margin-bottom:8px;box-shadow:3px 3px 0 var(--ink);">🎬 WATCH MOTION GRAPHICS PRODUCT FILM</button>' +
+    html += '<button class="tg-walk" id="tgShowcase" style="background:var(--yellow);color:var(--ink);margin-bottom:8px;box-shadow:var(--sh-2);">🎬 WATCH MOTION GRAPHICS PRODUCT FILM</button>' +
       '<button class="tg-walk" id="tgWalk">▶ REPLAY THE FULL TUTORIAL</button>' +
       '<button class="tg-replay" id="tgReplay">just the 30-second home tour</button>' +
       '<p class="tg-fine">Nothing here breaks and nothing bites. Everything worth reading or hearing is free.</p></div>';
@@ -197,8 +197,8 @@
      exactly where you were. A stop whose element is missing waits a
      while (sheets and docks mount late), then steps aside. */
   var WALK = [
-    { p: "index.html", sel: null, t: "Welcome to TheSmallBook", d: "A quiet library: 500 books broken into 5-minute lessons, full audiobooks, real podcasts, a private notebook - and 400 stories of failure worth more than most success books. This walkthrough is hands-on. When you see YOUR TURN, the next move is yours: the tour only moves when you actually do the thing. Everything stays free, nothing breaks, and you can leave anytime with skip." },
-    { p: "index.html", sel: "#searchInput", t: "Your turn: search the library", d: "500 books in 26 languages, every one free. Titles, authors, moods - type 'focus' or 'money' or a name, the shelf rearranges itself around it.", tryit: "#searchInput", tryTxt: "Tap the search box" },
+    { p: "index.html", sel: null, t: "Welcome to TheSmallBook", d: "A quiet library: 520 books broken into 5-minute lessons, full audiobooks, real podcasts, a private notebook - and 400 stories of failure worth more than most success books. This walkthrough is hands-on. When you see YOUR TURN, the next move is yours: the tour only moves when you actually do the thing. Everything stays free, nothing breaks, and you can leave anytime with skip." },
+    { p: "index.html", sel: "#searchInput", t: "Your turn: search the library", d: "520 books in 26 languages, every one free. Titles, authors, moods - type 'focus' or 'money' or a name, the shelf rearranges itself around it.", tryit: "#searchInput", tryTxt: "Tap the search box" },
     { p: "index.html", sel: ".scanbtn", t: "Scan a paper book", d: "Holding a real book? The scanner reads its cover and opens that book's whole shelf here: lessons, audio, everything it has. It works on any book, not just the famous ones." },
     { p: "index.html", sel: ".gravebanner__box", t: "The Graveyard", d: "400 real failures autopsied - Enron, the Titan, Nokia, and cons nobody taught you about. Each grave reads the same way: HOW IT STARTED, THE FALL, THE LESSON. The people in it paid billions for these lessons; reading them is free. You will open one yourself in a minute." },
     { p: "index.html", sel: ".tsb-bar__item--stories", t: "Your turn: explore stories & audio", d: "First, a trick: scroll down a little and the menu bar tucks itself away - scroll back up and it returns, so it never eats your screen. Bring it back, then tap Stories and let's go in together.", tryit: ".tsb-bar__item--stories", tryTxt: "Scroll a bit, then tap Stories" },
@@ -440,7 +440,7 @@
   /* ---------- the mini tour: five soft steps across home ---------- */
   var STEPS = [
     { sel: "#tsbHelpChip", t: "This ? is your map", d: "Lost anytime, on any day? Tap it: every function of the app, explained in plain words, one tap away." },
-    { sel: "#searchInput", t: "Type a book, a mood, a problem", d: "500 books live here, broken into 5-minute lessons. Every single one free to read." },
+    { sel: "#searchInput", t: "Type a book, a mood, a problem", d: "520 books live here, broken into 5-minute lessons. Every single one free to read." },
     { sel: ".scanbtn", t: "Reading a paper book?", d: "Scan its cover and its whole shelf opens here - lessons, audio, everything it has." },
     { sel: ".gravebanner__box", t: "The Graveyard", d: "400 real failures autopsied, from Enron to the Titan. The best free read on the internet." },
     { sel: ".tsb-bar__item--plus", t: "The big + is your audio home", d: "Stories, Listen Today, your continue card, audiobooks and podcasts - it all lives behind the plus." }

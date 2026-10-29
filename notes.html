@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta property="og:title" content="Your Notebook · TheSmallBook">
@@ -11,23 +13,23 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@500;600;700&family=Special+Elite&family=Indie+Flower&family=Patrick+Hand&family=Shadows+Into+Light&family=Homemade+Apple&family=Dancing+Script&family=Permanent+Marker&family=Rock+Salt&family=Amatic+SC&family=Gloria+Hallelujah&family=Kaushan+Script&family=Playfair+Display&family=Bebas+Neue&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=323">
+  <link rel="stylesheet" href="css/style.css?v=335">
   <style>
     .nt-wrap { max-width: 780px; margin: 0 auto; padding: 18px 16px calc(90px + env(safe-area-inset-bottom)); }
     .nt-top { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-    .nt-back { display: inline-flex; align-items: center; gap: 7px; background: var(--paper); border: 3px solid var(--ink); border-radius: 11px; box-shadow: 3px 3px 0 var(--ink); padding: 9px 13px; font: 800 11px var(--font-head); letter-spacing: 1px; text-decoration: none; color: var(--ink); }
+    .nt-back { display: inline-flex; align-items: center; gap: 7px; background: var(--paper); border: var(--bw) solid var(--edge); border-radius: 16px; box-shadow: var(--sh-2); padding: 9px 13px; font: 800 11px var(--font-head); letter-spacing: 1px; text-decoration: none; color: var(--ink); }
     button.nt-back { cursor: pointer; }
     .nt-h { font: 800 13px var(--font-head); letter-spacing: 2.5px; }
-    .nt-new { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; background: var(--ink); color: #fff; border: 3px solid var(--ink); border-radius: 11px; box-shadow: 3px 3px 0 rgba(17,17,17,.35); padding: 10px 14px; font: 800 11px var(--font-head); letter-spacing: 1.2px; cursor: pointer; }
-    .nt-new:active { transform: translate(1.5px,1.5px); box-shadow: 1px 1px 0 rgba(17,17,17,.35); }
-    .nt-guest { background: var(--surface-2); border: 2.5px dashed var(--ink); border-radius: 12px; padding: 10px 13px; font: 500 12.5px/1.6 var(--font-body); margin-bottom: 14px; }
+    .nt-new { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; background: var(--ink); color: #fff; border: var(--bw) solid var(--edge); border-radius: 16px; box-shadow: var(--sh-2); padding: 10px 14px; font: 800 11px var(--font-head); letter-spacing: 1.2px; cursor: pointer; }
+    .nt-new:active { transform: translate(1.5px,1.5px); box-shadow: var(--sh-1); }
+    .nt-guest { background: var(--surface-2); border: 2.5px dashed var(--ink); border-radius: 17px; padding: 10px 13px; font: 500 12.5px/1.6 var(--font-body); margin-bottom: 14px; }
 
     /* ================= the cover ================= */
     .nt-cover {
       position: relative; overflow: hidden;
       background: linear-gradient(165deg, #23231f 0%, #1b1b18 60%, #161614 100%);
-      border: 3px solid var(--ink); border-radius: 18px;
-      box-shadow: 8px 8px 0 var(--ink), inset 0 1px 0 rgba(255,255,255,.05);
+      border: var(--bw) solid var(--edge); border-radius: 18px;
+      box-shadow: var(--sh-3), inset 0 1px 0 rgba(255,255,255,.05);
       padding: 34px 26px 26px 56px; color: #e9dcb8;
     }
     .nt-cover::before {
@@ -42,7 +44,7 @@
     .nt-cover__rule { width: 54px; height: 1.5px; background: #6f6f66; margin: 15px auto 0; }
     .nt-toc { margin-top: 24px; }
     .nt-toc__h { text-align: center; font: 800 10px var(--font-head); letter-spacing: 3.5px; color: #8a8a80; margin-bottom: 8px; }
-    .nt-entry { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,.045); border: 2.5px solid rgba(255,255,255,.14); border-radius: 13px; padding: 12px 13px; margin: 9px 0; cursor: pointer; transition: background .15s ease, transform .15s ease, border-color .15s ease; }
+    .nt-entry { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,.045); border: 2.5px solid rgba(255,255,255,.14); border-radius: 19px; padding: 12px 13px; margin: 9px 0; cursor: pointer; transition: background .15s ease, transform .15s ease, border-color .15s ease; }
     .nt-entry:hover, .nt-entry:active { background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.3); transform: translateY(-1px); }
     .nt-entry__fold { flex: none; font-size: 21px; filter: saturate(.9); }
     .nt-entry__mid { flex: 1; min-width: 0; display: block; }
@@ -58,19 +60,19 @@
     .nt-titlein { width: 100%; background: transparent; border: 0; border-bottom: 2.5px solid rgba(17,17,17,.85); font: 700 20px/1.3 var(--font-body); padding: 4px 2px 6px; color: var(--ink); box-sizing: border-box; }
     .nt-titlein:focus { outline: none; }
     .nt-titlein::placeholder { color: #c9c2b0; }
-    .nt-bar { display: flex; gap: 2px; align-items: center; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; background: transparent; border: 0; border-bottom: 2.5px solid var(--ink); padding: 4px 2px 7px; margin: 10px 0 14px; }
+    .nt-bar { display: flex; gap: 2px; align-items: center; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; background: transparent; border: 0; border-bottom: var(--bw) solid var(--edge); padding: 4px 2px 7px; margin: 10px 0 14px; }
     .nt-bar::-webkit-scrollbar { display: none; }
     .nt-bar > * { flex: none; scroll-snap-align: center; }
-    .nt-fontsel { border: 2.5px solid var(--ink); background: var(--paper); border-radius: 9px; padding: 5px 4px; font: 700 11px var(--font-body); color: var(--ink); max-width: 132px; min-height: 32px; }
+    .nt-fontsel { border: var(--bw) solid var(--edge); background: var(--paper); border-radius: 13px; padding: 5px 4px; font: 700 11px var(--font-body); color: var(--ink); max-width: 132px; min-height: 32px; }
     .nt-body img { touch-action: pan-y; }
     .nt-body img.nt-lift { outline: 3px dashed #1d6fd1; outline-offset: 4px; opacity: .88; box-shadow: 0 10px 24px rgba(17,17,17,.35); }
-    .nt-bar button { background: transparent; border: 0; border-radius: 7px; min-width: 34px; min-height: 32px; padding: 4px 9px; font: 700 13px var(--font-body); color: var(--ink); cursor: pointer; opacity: .78; }
+    .nt-bar button { background: transparent; border: 0; border-radius: 10px; min-width: 34px; min-height: 32px; padding: 4px 9px; font: 700 13px var(--font-body); color: var(--ink); cursor: pointer; opacity: .78; }
     .nt-bar button:hover { opacity: 1; background: var(--surface-2); }
     .nt-bar button:active { transform: translateY(1px); }
     .nt-bar .nt-sep { flex: none; width: 1.5px; height: 20px; background: rgba(17,17,17,.25); margin: 0 7px; }
     .nt-desk { perspective: 1600px; }
     .nt-paperwrap { position: relative; filter: drop-shadow(6px 7px 0 rgba(17,17,17,.9)); }
-    .nt-paperwrap::before, .nt-paperwrap::after { content: ""; position: absolute; inset: 0; background: #f6f0e0; border: 2.5px solid var(--ink); border-radius: 14px; z-index: 0; }
+    .nt-paperwrap::before, .nt-paperwrap::after { content: ""; position: absolute; inset: 0; background: #f6f0e0; border: var(--bw) solid var(--edge); border-radius: 20px; z-index: 0; }
     .nt-paperwrap::before { transform: rotate(1deg) translate(3px,3px); }
     .nt-paperwrap::after { transform: rotate(-.9deg) translate(-3px,4px); }
     .nt-paper {
@@ -80,15 +82,15 @@
         repeating-linear-gradient(180deg, transparent 0 33px, #cfdae6 33px 34.5px),
         #fffdf6;
       background-position: 14px 0, 0 33px, 0 0;
-      border: 3px solid var(--ink); border-radius: 14px;
+      border: var(--bw) solid var(--edge); border-radius: 20px;
       padding: 18px 20px 24px 64px; min-height: 440px;
       transition: box-shadow .2s ease;
     }
     .nt-rings { position: absolute; top: -12px; left: 24px; right: 24px; height: 20px; display: flex; justify-content: space-between; z-index: 2; }
-    .nt-rings i { width: 22px; height: 20px; border-radius: 10px/12px; background: linear-gradient(180deg, #f0ede4, #b9b4a4); border: 3px solid var(--ink); box-shadow: inset 0 -3px 0 rgba(0,0,0,.22); }
+    .nt-rings i { width: 22px; height: 20px; border-radius: 10px/12px; background: linear-gradient(180deg, #f0ede4, #b9b4a4); border: var(--bw) solid var(--edge); box-shadow: inset 0 -3px 0 rgba(0,0,0,.22); }
     .nt-body { font: 500 15.5px/34px 'Special Elite', Georgia, serif; color: #26221a; min-height: 440px; outline: none; caret-color: #d64545; }
     .nt-body:empty::before { content: attr(data-ph); color: #b9b2a2; font-family: var(--font-body); font-size: 14px; pointer-events: none; }
-    .nt-body img { max-width: 100%; border: 2.5px solid var(--ink); border-radius: 10px; margin: 4px 0; cursor: pointer; }
+    .nt-body img { max-width: 100%; border: var(--bw) solid var(--edge); border-radius: 14px; margin: 4px 0; cursor: pointer; }
     .nt-body blockquote { border-left: 5px solid #3a3a36; margin: 4px 0; padding-left: 12px; }
     .nt-body ul, .nt-body ol { padding-left: 22px; }
     .nt-body h2 { font: 700 22px/34px var(--font-body); }
@@ -109,8 +111,8 @@
     @media (prefers-reduced-motion: reduce) { .nt-paper.nt-in-l, .nt-paper.nt-in-r { animation: none; } }
 
     /* the voice chip, dressed like the page */
-    .nt-chip { display: flex; align-items: center; gap: 9px; border: 2.5px solid var(--ink); border-radius: 12px; background: #f6f0e0; padding: 7px 11px; margin: 6px 0; max-width: 320px; }
-    .nt-chip button { flex: none; width: 30px; height: 30px; border-radius: 9px; border: 2.5px solid var(--ink); background: var(--ink); color: #fff; font-size: 11px; cursor: pointer; line-height: 1; }
+    .nt-chip { display: flex; align-items: center; gap: 9px; border: var(--bw) solid var(--edge); border-radius: 17px; background: #f6f0e0; padding: 7px 11px; margin: 6px 0; max-width: 320px; }
+    .nt-chip button { flex: none; width: 30px; height: 30px; border-radius: 13px; border: var(--bw) solid var(--edge); background: var(--ink); color: #fff; font-size: 11px; cursor: pointer; line-height: 1; }
     .nt-chip .nt-chip__t { font: 700 11.5px var(--font-body); color: #26221a; }
     .nt-chip .nt-chip__d { font: 500 10px var(--font-body); color: #8a8a80; }
     .nt-chip .nt-bars { display: flex; gap: 2.5px; align-items: flex-end; height: 16px; margin-left: auto; }
@@ -123,24 +125,24 @@
     @media (prefers-reduced-motion: reduce) { .nt-chip.playing .nt-bars i { animation: none; height: 11px; } }
 
     /* the resize bar */
-    .nt-rs { position: fixed; z-index: 99997; display: none; gap: 4px; background: var(--ink); border: 2.5px solid var(--ink); border-radius: 11px; padding: 4px; box-shadow: 3px 3px 0 rgba(17,17,17,.4); }
-    .nt-rs button { border: 0; background: transparent; color: #fff; font: 800 10px var(--font-head); letter-spacing: .5px; padding: 7px 9px; border-radius: 7px; cursor: pointer; }
+    .nt-rs { position: fixed; z-index: 99997; display: none; gap: 4px; background: var(--ink); border: var(--bw) solid var(--edge); border-radius: 16px; padding: 4px; box-shadow: var(--sh-2); }
+    .nt-rs button { border: 0; background: transparent; color: #fff; font: 800 10px var(--font-head); letter-spacing: .5px; padding: 7px 9px; border-radius: 10px; cursor: pointer; }
     .nt-rs button:hover { background: rgba(255,255,255,.14); }
     .nt-rs button.on { background: var(--ink); color: var(--paper); }
 
     .nt-pager { display: flex; align-items: center; gap: 10px; margin: 16px 2px 0; }
-    .nt-pbtn { background: var(--paper); border: 2.5px solid var(--ink); border-radius: 10px; box-shadow: 3px 3px 0 var(--ink); padding: 10px 13px; font: 800 10.5px var(--font-head); letter-spacing: 1px; cursor: pointer; }
-    .nt-pbtn:active { transform: translate(1.5px,1.5px); box-shadow: 1px 1px 0 var(--ink); }
+    .nt-pbtn { background: var(--paper); border: var(--bw) solid var(--edge); border-radius: 14px; box-shadow: var(--sh-2); padding: 10px 13px; font: 800 10.5px var(--font-head); letter-spacing: 1px; cursor: pointer; }
+    .nt-pbtn:active { transform: translate(1.5px,1.5px); box-shadow: var(--sh-1); }
     .nt-pbtn[disabled] { opacity: .45; }
     .nt-pn { font: 800 10px var(--font-head); letter-spacing: 1.5px; color: var(--muted); margin: 0 auto; }
     .nt-addpage { background: var(--ink); color: #fff; }
     .nt-foot { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; align-items: center; position: relative; }
-    .nt-fbtn { background: var(--paper); border: 2.5px solid var(--ink); border-radius: 10px; box-shadow: 3px 3px 0 var(--ink); padding: 10px 12px; font: 800 10px var(--font-head); letter-spacing: 1px; cursor: pointer; }
-    .nt-fbtn:active { transform: translate(1.5px,1.5px); box-shadow: 1px 1px 0 var(--ink); }
+    .nt-fbtn { background: var(--paper); border: var(--bw) solid var(--edge); border-radius: 14px; box-shadow: var(--sh-2); padding: 10px 12px; font: 800 10px var(--font-head); letter-spacing: 1px; cursor: pointer; }
+    .nt-fbtn:active { transform: translate(1.5px,1.5px); box-shadow: var(--sh-1); }
     .nt-fbtn--brand { background: var(--ink); color: #fff; }
     .nt-fbtn--del { color: #c22b2b; }
     .nt-saved { font: 500 11px var(--font-body); color: var(--muted); margin-left: auto; }
-    .nt-export { position: absolute; bottom: calc(100% + 6px); left: 0; display: none; flex-direction: column; background: var(--paper); border: 2.5px solid var(--ink); border-radius: 12px; box-shadow: 5px 5px 0 var(--ink); overflow: hidden; z-index: 30; min-width: 180px; }
+    .nt-export { position: absolute; bottom: calc(100% + 6px); left: 0; display: none; flex-direction: column; background: var(--paper); border: var(--bw) solid var(--edge); border-radius: 17px; box-shadow: var(--sh-3); overflow: hidden; z-index: 30; min-width: 180px; }
     .nt-export.on { display: flex; }
     .nt-export button { border: 0; border-bottom: 2px solid var(--surface-2); background: var(--paper); text-align: left; padding: 12px 14px; font: 700 12.5px var(--font-body); cursor: pointer; }
     .nt-export button:last-child { border-bottom: 0; }
@@ -148,40 +150,48 @@
     .nt-export button i { display: block; font: 500 10px var(--font-body); font-style: normal; color: var(--muted); margin-top: 2px; }
 
     .nt-draw__row { display: flex; gap: 6px; align-items: center; }
-    .nt-sw { width: 30px; height: 30px; border: 2.5px solid var(--ink); border-radius: 9px; cursor: pointer; }
+    .nt-sw { width: 30px; height: 30px; border: var(--bw) solid var(--edge); border-radius: 13px; cursor: pointer; }
     html.dark .nt-paperwrap::before, html.dark .nt-paperwrap::after { background: #efe9da; }
-    html.dark .nt-new { background: var(--yellow) !important; color: #111 !important; border-color: #000 !important; box-shadow: 3px 3px 0 #000 !important; }
-    html.dark .nt-back { background: #241f17; color: #f2ead8; border-color: #000; box-shadow: 3px 3px 0 #000; }
+    html.dark .nt-new { background: var(--yellow) !important; color: #111 !important; border-color: #000 !important; box-shadow: var(--sh-2) !important; }
+    html.dark .nt-back { background: #241f17; color: #f2ead8; border-color: #000; box-shadow: var(--sh-2); }
   </style>
+  <link rel="stylesheet" href="css/film.css?v=335">
+  <link rel="stylesheet" href="css/film2.css?v=335">
+  <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
+  <link rel="canonical" href="https://thesmallbook.in/notes.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png">
 </head>
-<body>
+<body class="fnt">
   <main class="nt-wrap">
     <div class="nt-top">
-      <button class="nt-back" id="ntMenu" type="button" hidden>← ALL NOTES</button>
-      <a class="nt-back" id="ntBack" href="index.html">← HOME</a>
-      <span class="nt-h">📓 MY NOTEBOOK</span>
-      <button class="nt-new" id="ntNew">+ NEW NOTE</button>
+      <button class="nt-back" id="ntMenu" type="button" hidden><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><span>All notes</span></button>
+      <a class="nt-back" id="ntBack" href="index.html" aria-label="Home"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><span>Home</span></a>
+      <span class="nt-h">Notebook</span>
+      <button class="nt-new" id="ntNew"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>New note</span></button>
     </div>
     <div id="ntBanner"></div>
     <div id="ntMain"></div>
   </main>
 
-  <script src="js/bootguard.js?v=323"></script>
-  <script src="js/prefs.js?v=323"></script>
-  <script src="js/lang.js?v=323"></script>
-  <script src="js/config.js?v=323"></script>
-  <script src="js/auth.js?v=323"></script>
-  <script src="js/sounds.js?v=323"></script>
-  <script src="js/founder.js?v=323"></script>
-  <script src="js/community.js?v=323"></script>
-  <script src="js/notes-store.js?v=323"></script>
-  <script src="js/gold.js?v=323"></script>
-  <script src="js/dictate.js?v=323"></script>
-  <script src="js/podcast-data.js?v=323"></script>
-  <script src="js/audioplayer.js?v=323"></script>
-  <script src="js/bar.js?v=323" defer></script>
-  <script src="js/gate.js?v=323" defer></script>
-  <script src="js/guide.js?v=323"></script>
+  <script src="js/bootguard.js?v=335"></script>
+  <script src="js/prefs.js?v=335"></script>
+  <script src="js/lang.js?v=335"></script>
+  <script src="js/config.js?v=335"></script>
+  <script src="js/auth.js?v=335"></script>
+  <script src="js/sounds.js?v=335"></script>
+  <script src="js/founder.js?v=335"></script>
+  <script src="js/community.js?v=335"></script>
+  <script src="js/notes-store.js?v=335"></script>
+  <script src="js/gold.js?v=335"></script>
+  <script src="js/stt.js?v=335"></script>
+  <script src="js/dictate.js?v=335"></script>
+  <script src="js/podcast-data.js?v=335"></script>
+  <script src="js/audioplayer.js?v=335"></script>
+  <script src="js/bar.js?v=335" defer></script>
+  <script src="js/soft-motion.js?v=335" defer></script>
+  <script src="js/gate.js?v=335" defer></script>
+  <script src="js/guide.js?v=335"></script>
   <script>
   (function () {
     "use strict";
@@ -220,7 +230,7 @@
     function paintBanner() {
       var b = $("ntBanner");
       if (me()) { b.innerHTML = ""; return; }
-      b.innerHTML = '<div class="nt-guest">\uD83D\uDD12 These pages live on this device. <a href="login.html" style="color:inherit;font-weight:800">Sign in</a> and they follow your account on every device you use.</div>';
+      b.innerHTML = '<div class="nt-guest">These pages live on this device. <a href="login.html" style="color:inherit;font-weight:800">Sign in</a> and they follow your account on every device you use.</div>';
     }
     paintBanner();
     function afterAuth() {
@@ -322,9 +332,9 @@
       var nb = $("ntBack"); if (nb) nb.hidden = false;
       var m = $("ntMain");
       var h = '<div class="nt-cover">' +
-        '<div class="nt-cover__word"><b>THE SMALL BOOK</b><i>NOTES \u00b7 PRIVATE \u00b7 ' + notes.length + (notes.length === 1 ? " ENTRY" : " ENTRIES") + '</i><span class="nt-cover__rule"></span></div>' +
+        '<div class="nt-cover__word"><b>TheSmallBook</b><i>NOTES \u00b7 PRIVATE \u00b7 ' + notes.length + (notes.length === 1 ? " ENTRY" : " ENTRIES") + '</i><span class="nt-cover__rule"></span></div>' +
         /* v300: today's prompt, one a day, so a blank page becomes an invitation */
-        (notes.length ? "" : '<div class="nt-prompt" id="ntPromptCard"><span class="nt-prompt__tag">TODAY\u2019S PROMPT</span><p>' + esc(STORE ? STORE.dailyPrompt() : "") + '</p><button id="ntPromptGo">WRITE ON IT \u2192</button></div>') +
+        (notes.length ? "" : '<div class="nt-prompt" id="ntPromptCard"><span class="nt-prompt__tag">Today\u2019s page</span><p>' + esc(STORE ? STORE.dailyPrompt() : "") + '</p><button id="ntPromptGo">Write on it</button></div>') +
         /* v300: search across every note */
         (notes.length ? '<div class="nt-searchrow"><input id="ntSearch" type="text" placeholder="Search your notes\u2026" value="' + esc(searchQ) + '" autocomplete="off"><button id="ntSearchX" aria-label="Clear" ' + (searchQ ? "" : "hidden") + '>\u2715</button></div>' : '') +
         /* v300: all my notes from one book, one tap */
@@ -692,7 +702,7 @@
       var p = STORE ? STORE.pressure() : { pct: 0 };
       if (p.pct < 80) return;
       var b = document.createElement("div");
-      b.style.cssText = "position:fixed;left:10px;right:10px;bottom:14px;z-index:60;background:var(--paper);border:3px solid var(--ink);border-radius:14px;box-shadow:4px 4px 0 var(--ink);padding:12px;font:700 12.5px/1.5 'Space Grotesk',sans-serif;color:var(--ink)";
+      b.style.cssText = "position:fixed;left:10px;right:10px;bottom:14px;z-index:60;background:var(--paper);border:var(--bw) solid var(--edge);border-radius:20px;box-shadow:var(--sh-2);padding:12px;font:700 12.5px/1.5 'Space Grotesk',sans-serif;color:var(--ink)";
       b.innerHTML = "<b>\uD83D\uDCDD This device\u2019s notebook is " + p.pct + "% full.</b> Photos and voice notes here live in Storage once you sign in, and then this wall disappears. <a href=\"login.html\" style=\"font-weight:800;color:inherit\">Sign in</a> to lift it off your notes.";
       document.body.appendChild(b);
       setTimeout(function () { if (b.parentNode) b.remove(); }, 9000);
@@ -748,7 +758,7 @@
           };
           rec.start();
           var stop = document.createElement("button");
-          stop.style.background = "#ff4d4d"; stop.style.color = "#fff";
+          stop.style.background = "#D23A3A"; stop.style.color = "#fff";
           stop.textContent = "\u25A0 STOP RECORDING";
           $("ntBar").appendChild(stop);
           stop.addEventListener("click", function () { rec.stop(); stop.remove(); });
@@ -768,7 +778,7 @@
       var pb = $("ntPenBtn"); if (pb) { pb.style.background = "#1d6fd1"; pb.style.color = "#fff"; }
       var pop = document.createElement("div");
       pop.id = "ntPen";
-      pop.style.cssText = "display:flex;gap:7px;align-items:center;flex-wrap:wrap;background:var(--paper);border:3px solid var(--ink);border-radius:12px;box-shadow:3px 3px 0 var(--ink);padding:8px 10px;margin:-8px 0 12px";
+      pop.style.cssText = "display:flex;gap:7px;align-items:center;flex-wrap:wrap;background:var(--paper);border:var(--bw) solid var(--edge);border-radius:17px;box-shadow:var(--sh-2);padding:8px 10px;margin:-8px 0 12px";
       pop.innerHTML = ['<button class="nt-sw" data-c="#26221a" style="background:#26221a;outline:3px solid #1d6fd1"></button>',
         '<button class="nt-sw" data-c="#d64545" style="background:#d64545"></button>',
         '<button class="nt-sw" data-c="#1d6fd1" style="background:#1d6fd1"></button>',
@@ -841,14 +851,14 @@
         return '<section class="pg"><div class="pgno">Page ' + (i + 1) + " of " + g.pages.length + '</div>' + (p || "<p><i>(an empty page, on purpose)</i></p>") + "</section>";
       }).join("");
       return '<!doctype html><html><head><meta charset="utf-8"><title>' + esc(g.title) + '</title><style>' +
-        "body{font:15px/1.8 Georgia,'Times New Roman',serif;color:#26221a;background:#fff;margin:0;padding:44px 52px}" +
+        "body{font:15px/1.8 Newsreader, Georgia,'Times New Roman',serif;color:#26221a;background:#fff;margin:0;padding:44px 52px}" +
         ".kick{font:800 10px 'Trebuchet MS',sans-serif;letter-spacing:3px;color:#8f8570;margin:0 0 8px}" +
         "h1{font-size:30px;margin:0 0 4px;border-bottom:3px solid #26221a;padding-bottom:12px}" +
         ".meta{font:500 12px 'Trebuchet MS',sans-serif;color:#8f8570;margin:10px 0 26px}" +
         ".pg{padding:18px 0;border-bottom:1.5px dashed #cfc7b2}.pg:last-child{border-bottom:0}" +
         ".pgno{font:800 9.5px 'Trebuchet MS',sans-serif;letter-spacing:2px;color:#b0a88f;margin-bottom:10px}" +
-        "img{max-width:100%;border:2px solid #26221a;border-radius:8px;margin:8px 0}" +
-        ".nt-chip{display:inline-flex;align-items:center;gap:8px;border:2px solid #26221a;border-radius:10px;padding:6px 10px;font:600 12px 'Trebuchet MS',sans-serif}" +
+        "img{max-width:100%;border:2px solid #26221a;border-radius:12px;margin:8px 0}" +
+        ".nt-chip{display:inline-flex;align-items:center;gap:8px;border:2px solid #26221a;border-radius:14px;padding:6px 10px;font:600 12px 'Trebuchet MS',sans-serif}" +
         ".nt-chip audio{display:none}" +
         ".brand{margin-top:30px;padding-top:16px;border-top:2.5px solid #26221a;font:600 12px 'Trebuchet MS',sans-serif;color:#8f8570;text-align:center}" +
         "@page{margin:14mm}" +
@@ -955,8 +965,8 @@
       var g = gather(n);
       var pages = g.pages.map(function (p) { return '<section class="pg">' + p + "</section>"; }).join("");
       return '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc(g.title) + ' \u00b7 thesmallbook</title>' +
-        "<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#14110c;font-family:Georgia,'Times New Roman',serif;color:#26221a;min-height:100vh}.top{background:#0e0c0a;color:#8a8a80;font:800 10px 'Trebuchet MS',sans-serif;letter-spacing:3px;text-align:center;padding:15px 10px}.top b{color:#ffc800}.stage{perspective:1700px;max-width:680px;margin:26px auto;padding:0 16px}.pg{display:none;background:#fffdf6;border-radius:10px;padding:46px 42px;min-height:62vh;font:17px/1.95 Georgia;line-height:1.95;box-shadow:0 18px 50px rgba(0,0,0,.55);border-left:5px solid #d64545}.pg.on{display:block;animation:turn .55s cubic-bezier(.2,.7,.3,1)}.pg img{max-width:100%;border-radius:6px;margin:10px 0;border:2px solid #26221a}.pg audio{width:100%;margin:12px 0}@keyframes turn{from{transform:rotateY(-9deg) translateX(34px);opacity:.15}to{transform:none;opacity:1}}.hint{color:#8a8a80;text-align:center;font:600 12px 'Trebuchet MS',sans-serif;letter-spacing:2px;padding:20px 10px}.hint button{background:#ffc800;border:2.5px solid #0e0c0a;border-radius:999px;padding:12px 22px;font:800 12px 'Trebuchet MS',sans-serif;letter-spacing:1px;cursor:pointer;box-shadow:3px 3px 0 #0e0c0a}.foot{color:#6f6a5e;text-align:center;font:600 11px 'Trebuchet MS',sans-serif;letter-spacing:2px;padding:24px 10px}.foot b{color:#cfcabe}</style></head><body>" +
-        '<div class="top">THE SMALL BOOK \u00b7 <b>A NOTE WORTH SLOW READING</b></div>' +
+        "<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#14110c;font-family:Newsreader, Georgia,'Times New Roman',serif;color:#26221a;min-height:100vh}.top{background:#0e0c0a;color:#8a8a80;font:800 10px 'Trebuchet MS',sans-serif;letter-spacing:3px;text-align:center;padding:15px 10px}.top b{color:#ffc800}.stage{perspective:1700px;max-width:680px;margin:26px auto;padding:0 16px}.pg{display:none;background:#fffdf6;border-radius:14px;padding:46px 42px;min-height:62vh;font:17px/1.95 Newsreader, Georgia;line-height:1.95;box-shadow:0 18px 50px rgba(0,0,0,.55);border-left:5px solid #d64545}.pg.on{display:block;animation:turn .55s cubic-bezier(.2,.7,.3,1)}.pg img{max-width:100%;border-radius:9px;margin:10px 0;border:2px solid #26221a}.pg audio{width:100%;margin:12px 0}@keyframes turn{from{transform:rotateY(-9deg) translateX(34px);opacity:.15}to{transform:none;opacity:1}}.hint{color:#8a8a80;text-align:center;font:600 12px 'Trebuchet MS',sans-serif;letter-spacing:2px;padding:20px 10px}.hint button{background:#ffc800;border:2.5px solid #0e0c0a;border-radius:999px;padding:12px 22px;font:800 12px 'Trebuchet MS',sans-serif;letter-spacing:1px;cursor:pointer;box-shadow:var(--sh-2)}.foot{color:#6f6a5e;text-align:center;font:600 11px 'Trebuchet MS',sans-serif;letter-spacing:2px;padding:24px 10px}.foot b{color:#cfcabe}</style></head><body>" +
+        '<div class="top">THESMALLBOOK \u00b7 <b>A NOTE WORTH SLOW READING</b></div>' +
         '<div class="stage">' + pages + "</div>" +
         '<div class="hint"><button id="nx">NEXT PAGE \u203a</button><div id="pn" style="margin-top:12px"></div></div>' +
         '<div class="foot">written with \uD83D\uDCD3 <b>thesmallbook.in</b> \u00b7 notes that stay</div>' +
@@ -1086,5 +1096,7 @@
     document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") persistNow(); });
   })();
   </script>
+  <script src="js/film.js?v=335" defer></script>
+  <script src="js/film2.js?v=335" defer></script>
 </body>
 </html>

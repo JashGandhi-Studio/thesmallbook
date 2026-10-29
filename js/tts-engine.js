@@ -74,8 +74,32 @@ window.TTS_ENGINE = (function () {
     "bn","de","fa","hi","ig","nb","ro","pt","pt-br","tr","en",
     "fi","hy","ja","nl","ru","sv","uk","ur"
   ]);
+  /* v325 STUDIO VOICES (puter.ai.txt2speech providers):
+     OpenAI gpt-4o-mini-tts speaks these well, with narrator instructions */
+  const OPENAI_LANGS = new Set(["en","hi","mr","ta","kn","ur","es","fr","de","it","pt","pt-br","nl","pl","ru","ja","ko","zh","zh-cn","tr","ar","id","sv","da","fi","uk","th","fa"]);
+  /* Gemini TTS adds Bengali and Telugu */
+  const GEMINI_LANGS = new Set(["bn","te"]);
   function puterSpeaks(lang) {
-    return PUTER_LANGS.has(baseLang(lang));
+    const b = baseLang(lang);
+    return OPENAI_LANGS.has(b) || GEMINI_LANGS.has(b) || PUTER_LANGS.has(b);
+  }
+  /* tier: "studio" (cloud voice, one-time free Puter sign-in) | "device" | "" (not asked yet) */
+  function voiceTier() { try { return localStorage.getItem("tsb_voice_tier") || ""; } catch (e) { return ""; } }
+  function setVoiceTier(v) { try { localStorage.setItem("tsb_voice_tier", v); } catch (e) {} }
+  /* v331: natural (cloud) voices are a Gold feature. Gold is decided by the
+     server (gold.js); everyone else hears the phone's own voice. */
+  function goldVoice() { try { return !!(window.TSB_GOLD && TSB_GOLD.isGold()); } catch (e) { return false; } }
+  (function ensureGold() {
+    if (window.TSB_GOLD || document.querySelector('script[src*="js/gold.js"]')) return;
+    try {
+      var sc = document.createElement("script");
+      var me = document.querySelector('script[src*="tts-engine.js"]');
+      sc.src = "js/gold.js" + (me && me.src.indexOf("?v=") > 0 ? "?v=" + me.src.split("?v=").pop() : "");
+      (document.head || document.documentElement).appendChild(sc);
+    } catch (e) {}
+  })();
+  function signedIn() {
+    try { return !!(window.puter && window.puter.auth && window.puter.auth.isSignedIn && window.puter.auth.isSignedIn()); } catch (e) { return false; }
   }
   function currentLang() {
     try {
@@ -90,7 +114,7 @@ window.TTS_ENGINE = (function () {
   function loadPuter() {
     return new Promise((resolve) => {
       if (puterReady) return resolve(true);
-      if (window.puter && window.puter.ai && window.puter.ai.tts) {
+      if (window.puter && window.puter.ai && window.puter.ai.txt2speech) {
         puterReady = true;
         /* fast path (puter already loaded) - still fetch the voice list,
            otherwise gender/voice matching never gets a list */
@@ -103,7 +127,7 @@ window.TTS_ENGINE = (function () {
       }
       if (puterLoading) {
         const iv = setInterval(() => {
-          if (puterReady || (window.puter && window.puter.ai && window.puter.ai.tts)) {
+          if (puterReady || (window.puter && window.puter.ai && window.puter.ai.txt2speech)) {
             clearInterval(iv); puterReady = true; resolve(true);
           }
         }, 200);
@@ -119,7 +143,7 @@ window.TTS_ENGINE = (function () {
         sc.dataset.tsb = "1";
       }
       sc.onload = () => {
-        puterReady = !!(window.puter && window.puter.ai && window.puter.ai.tts);
+        puterReady = !!(window.puter && window.puter.ai && window.puter.ai.txt2speech);
         if (puterReady && window.puter.ai.listTTSVoices) {
           try {
             window.puter.ai.listTTSVoices().then((v) => { puterVoices = v || []; }).catch(() => {});
@@ -183,77 +207,140 @@ window.TTS_ENGINE = (function () {
     }
     return pool[0] || null;
   }
+  const NARRATE = {
+    en: "You are a warm, calm audiobook narrator with a light Indian-English accent. Read clearly and unhurriedly, like sharing a good book with a friend. Small natural pauses at commas, a fuller pause at full stops. Never rush lists.",
+    hi: "Aap ek garam, shaant audiobook narrator hain. Saaf, thehri hui shuddh Hindi mein padhiye, jaise kisi dost ko achhi kitaab sunaa rahe hon. Viraam par halka sa thehraav.",
+    other: "Warm, calm audiobook narrator. Native pronunciation for this language, clear and unhurried, natural pauses."
+  };
+  function studioVoiceFor(lang) {
+    const g = genderPref();
+    const b = baseLang(lang);
+    if (GEMINI_LANGS.has(b)) return { provider: "gemini", voice: g === "male" ? "Charon" : "Kore", instructions: NARRATE.other };
+    return { provider: "openai", model: "gpt-4o-mini-tts", voice: g === "male" ? "cedar" : "marin", instructions: NARRATE[b] || NARRATE.other, response_format: "mp3" };
+  }
+  const synthCache = new Map();          /* text|voice -> Promise<HTMLAudioElement|null> */
+  function synth(text, lang) {
+    const v = studioVoiceFor(lang);
+    const key = v.provider + "|" + v.voice + "|" + lang + "|" + text;
+    if (synthCache.has(key)) return synthCache.get(key);
+    const ladder = [
+      Object.assign({}, v),
+      { provider: "aws-polly", engine: "neural", language: region(lang), voice: baseLang(lang) === "hi" ? "Kajal" : (baseLang(lang) === "en" ? "Kajal" : undefined) }
+    ];
+    const run = (i) => {
+      if (i >= ladder.length) return Promise.resolve(null);
+      const o = ladder[i];
+      Object.keys(o).forEach((k) => { if (o[k] === undefined) delete o[k]; });
+      let p;
+      try { p = window.puter.ai.txt2speech(String(text).slice(0, 2900), o); } catch (e) { p = Promise.reject(e); }
+      return Promise.resolve(p).then((a) => (a && a.play ? a : run(i + 1))).catch(() => run(i + 1));
+    };
+    const pr = run(0);
+    synthCache.set(key, pr);
+    if (synthCache.size > 24) synthCache.delete(synthCache.keys().next().value);
+    pr.then((a) => { if (!a) synthCache.delete(key); });
+    return pr;
+  }
+  /* warm the next chunk while this one plays: gapless chapters */
+  function prefetchNext() {
+    try {
+      const nx = queue[curIdx + 1];
+      if (nx && nx.text && goldVoice() && voiceTier() === "studio" && signedIn() && puterSpeaks(nx.lang || currentLang())) synth(nx.text, nx.lang || currentLang());
+    } catch (e) {}
+  }
   function speakPuter(text, lang, speedV) {
     return new Promise((resolve) => {
-      try {
-        const g = gen;
-        const opts = { language: region(lang), speed: speedV };
-        const v = pickPuterVoice(lang);
-        if (v) opts.voice = v.name || v.id || v;
-        /* CRITICAL: for non-English text we ONLY trust Puter when its voice
-           list actually has a matching voice. If the list is empty (couldn't
-           load) or has no match, Puter may read in a WRONG language - so we
-           hand it to Web Speech, which can pick a correct regional voice
-           (e.g. Android Google TTS has ગુજરાતી, हिन्दी…). */
-        if (lang && lang !== "en" && !v) {
-          resolve(false);
-          return;
-        }
-        const audio = window.puter.ai.tts(text, opts);
-        if (audio && audio.play) {
-          let done = false;
-          let safetyT = null;
-          const end = (ok) => {
-            if (!done) { done = true; if (safetyT) clearTimeout(safetyT); if (currentAudio === audio) currentAudio = null; clearPosition(); resolve(ok); }
-          };
-          /* robust end detection - onended alone is unreliable (can fire
-             early or not at all), which made the LAST chapter cut off */
-          const tryEndFromTime = () => {
-            try {
-              const d = audio.duration;
-              if (d && isFinite(d) && d > 0 && audio.currentTime >= d - 0.3) { end(true); return true; }
-              if (audio.ended) { end(true); return true; }
-            } catch (e) {}
-            return false;
-          };
-          audio.onended = () => end(true);
-          audio.onerror = () => end(false);
-          try { audio.ontimeupdate = () => { if (!done && tryEndFromTime()) {} }; } catch (e) {}
-          /* safety net: if neither onended nor timeupdate fires, end after
-             estimated duration + buffer so the queue never stalls */
-          safetyT = setTimeout(function () {
-            if (!done) {
-              try { if (!tryEndFromTime()) end(true); } catch (e) { end(true); }
-            }
-          }, Math.max(6000, (text.length / (13 * (speed || 1))) * 1000 + 2500));
-          if (g !== gen || !playing || paused) { end(false); return; }
-          /* stop any audio still playing from a previous chunk (seekTo,
-             voice/speed change) - otherwise both play at once */
-          if (currentAudio && currentAudio !== audio) {
-            try { currentAudio.pause(); } catch (e) {}
-            currentAudio = null;
-          }
-          currentAudio = audio;
-          /* BOOST: route through Web Audio gain → louder than device max */
-          try { audio.volume = 1.0; } catch (e) {}
-          routeBoost(audio);
-          /* premium lock-screen: real progress from the audio's own duration */
-          const grabDur = () => {
-            if (audio.duration && isFinite(audio.duration) && audio.duration > 0) {
-              startPosition(audio.duration);
-            } else {
-              startPosition(Math.max(5, text.length / (15 * (speed || 1)))); // estimate
-            }
-          };
-          if (audio.readyState >= 1) grabDur();
-          else {
-            try { audio.onloadedmetadata = grabDur; } catch (e) {}
-          }
-          audio.play().then(grabDur).catch(() => end(false));
-          return;
-        }
-        resolve(false);
-      } catch (e) { resolve(false); }
+      const g = gen;
+      if (!goldVoice() || !(window.puter && window.puter.ai && window.puter.ai.txt2speech) || voiceTier() !== "studio" || !signedIn()) { resolve(false); return; }
+      let settled = false;
+      const giveUp = setTimeout(function () { if (!settled) { settled = true; resolve(false); } }, 12000);
+      synth(text, lang).then((audio) => {
+        if (settled) return;
+        settled = true; clearTimeout(giveUp);
+        if (!audio || g !== gen || !playing || paused) { resolve(false); return; }
+        let done = false, safetyT = null;
+        const end = (ok) => {
+          if (!done) { done = true; if (safetyT) clearTimeout(safetyT); if (currentAudio === audio) currentAudio = null; clearPosition(); resolve(ok); }
+        };
+        const tryEndFromTime = () => {
+          try {
+            const d = audio.duration;
+            if (d && isFinite(d) && d > 0 && audio.currentTime >= d - 0.3) { end(true); return true; }
+            if (audio.ended) { end(true); return true; }
+          } catch (e) {}
+          return false;
+        };
+        audio.onended = () => end(true);
+        audio.onerror = () => end(false);
+        try { audio.ontimeupdate = () => { if (!done) tryEndFromTime(); }; } catch (e) {}
+        safetyT = setTimeout(function () {
+          if (!done) { try { if (!tryEndFromTime()) end(true); } catch (e) { end(true); } }
+        }, Math.max(8000, (text.length / (12 * (speedV || 1))) * 1000 + 4000));
+        if (currentAudio && currentAudio !== audio) { try { currentAudio.pause(); } catch (e) {} currentAudio = null; }
+        currentAudio = audio;
+        try { audio.currentTime = 0; } catch (e) {}
+        try { audio.volume = 1.0; audio.preservesPitch = true; audio.playbackRate = Math.max(0.5, Math.min(2.5, speedV || 1)); } catch (e) {}
+        routeBoost(audio);
+        const grabDur = () => {
+          if (audio.duration && isFinite(audio.duration) && audio.duration > 0) startPosition(audio.duration / (speedV || 1));
+          else startPosition(Math.max(5, text.length / (15 * (speedV || 1))));
+        };
+        if (audio.readyState >= 1) grabDur(); else { try { audio.onloadedmetadata = grabDur; } catch (e) {} }
+        audio.play().then(function () { grabDur(); prefetchNext(); }).catch(() => end(false));
+      }).catch(() => { if (!settled) { settled = true; clearTimeout(giveUp); resolve(false); } });
+    });
+  }
+
+  /* v331: free readers hear the phone voice; once a session, a quiet card
+     says natural voices come with Gold. */
+  function offerGoldVoice() {
+    if (goldVoice() || document.getElementById("tsbStudioAsk")) return;
+    try { if (sessionStorage.getItem("tsb_studio_asked")) return; sessionStorage.setItem("tsb_studio_asked", "1"); } catch (e) {}
+    const d = document.createElement("div");
+    d.id = "tsbStudioAsk";
+    d.setAttribute("role", "dialog");
+    d.setAttribute("aria-label", "Natural voices");
+    d.style.cssText = "position:fixed;left:12px;right:12px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:100001;max-width:460px;margin:0 auto;background:#16130F;color:#F3EDE2;border-radius:22px;padding:16px 16px 14px;box-shadow:0 18px 50px rgba(0,0,0,.35);font-family:'Space Grotesk',system-ui,sans-serif;animation:tsbAskIn .45s cubic-bezier(.16,1,.3,1)";
+    d.innerHTML = "<style>@keyframes tsbAskIn{from{transform:translateY(24px);opacity:0}}</style>" +
+      "<div style=\"font:700 10px/1 'Space Grotesk';letter-spacing:.2em;text-transform:uppercase;color:#E9C46A\">Gold</div>" +
+      "<div style=\"font:500 21px/1.2 Newsreader,Georgia,serif;margin:8px 0 6px\">Hear it in a natural voice</div>" +
+      "<div style=\"font-size:13.5px;line-height:1.45;opacity:.75\">You are on your phone's voice. Gold reads every book like a real narrator, in English, Hindi and more.</div>" +
+      "<div style=\"display:flex;gap:8px;margin-top:12px\"><a href=\"gold.html\" style=\"flex:1;text-align:center;text-decoration:none;border-radius:999px;padding:12px 14px;background:linear-gradient(100deg,#D9AE4E,#F4D98C 50%,#D9AE4E);color:#16130F;font:700 14px 'Space Grotesk'\">See Gold</a>" +
+      "<button type=\"button\" data-a=\"no\" style=\"border:0;border-radius:999px;padding:12px 16px;background:rgba(255,255,255,.08);color:inherit;font:600 14px 'Space Grotesk';cursor:pointer\">Not now</button></div>";
+    document.body.appendChild(d);
+    d.addEventListener("click", function (e) { if (e.target.closest("[data-a=no]")) d.remove(); });
+    setTimeout(function () { if (d.parentNode) d.remove(); }, 12000);
+  }
+
+  /* one calm, one-time choice instead of a surprise sign-in popup */
+  function offerStudio() {
+    if (voiceTier() || document.getElementById("tsbStudioAsk")) return;
+    try { if (sessionStorage.getItem("tsb_studio_asked")) return; sessionStorage.setItem("tsb_studio_asked", "1"); } catch (e) {}
+    const d = document.createElement("div");
+    d.id = "tsbStudioAsk";
+    d.setAttribute("role", "dialog");
+    d.setAttribute("aria-label", "Studio voice");
+    d.style.cssText = "position:fixed;left:12px;right:12px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:100001;max-width:460px;margin:0 auto;background:var(--paper,#FBF8F1);color:var(--ink,#16130F);border-radius:22px;padding:16px 16px 14px;box-shadow:0 18px 50px rgba(22,19,15,.22);font-family:'Space Grotesk',system-ui,sans-serif;animation:tsbAskIn .45s cubic-bezier(.16, 1, .3, 1)";
+    d.innerHTML = "<style>@keyframes tsbAskIn{from{transform:translateY(24px);opacity:0}}</style>" +
+      "<div style=\"font:600 10px/1 'Space Grotesk';letter-spacing:.2em;text-transform:uppercase;opacity:.6\">Listening now on your phone voice</div>" +
+      "<div style=\"font:600 21px/1.2 Newsreader,Georgia,serif;margin:8px 0 6px\">Want the studio voice?</div>" +
+      "<div style=\"font-size:13.5px;line-height:1.45;opacity:.78\">Part of your Gold. A natural narrator for English, Hindi, Marathi, Tamil and more, after a one-time Puter sign-in.</div>" +
+      "<div style=\"display:flex;gap:8px;margin-top:12px\"><button type=\"button\" data-a=\"yes\" style=\"flex:1;border:0;border-radius:999px;padding:12px 14px;background:#FFC800;color:#16130F;font:700 14px 'Space Grotesk';cursor:pointer\">Turn it on</button>" +
+      "<button type=\"button\" data-a=\"no\" style=\"border:0;border-radius:999px;padding:12px 16px;background:rgba(22,19,15,.06);color:inherit;font:600 14px 'Space Grotesk';cursor:pointer\">Not now</button></div>";
+    document.body.appendChild(d);
+    d.addEventListener("click", function (e) {
+      const b = e.target.closest("button"); if (!b) return;
+      if (b.getAttribute("data-a") === "yes") {
+        const go = function () {
+          try {
+            Promise.resolve(window.puter.auth.signIn()).then(function () {
+              if (signedIn()) { setVoiceTier("studio"); if (window.TSB && window.TSB.toast) { try { window.TSB.toast("Studio voice is on"); } catch (e2) {} } }
+            }).catch(function () {});
+          } catch (e3) {}
+        };
+        if (window.puter && window.puter.auth) go(); else loadPuter().then(function () { if (window.puter && window.puter.auth) go(); });
+      } else setVoiceTier("device");
+      d.remove();
     });
   }
 
@@ -295,37 +382,79 @@ window.TTS_ENGINE = (function () {
     });
   }
 
+  /* v334 device voice that keeps playing:
+     - split into sentence pieces of at most 180 characters (Chrome stops
+       long utterances after about 15 s and never fires onend);
+     - a watchdog per piece, so a lost onend can never freeze the queue;
+     - if the chosen voice fails or never starts, retry once with the
+       phone's default voice;
+     - clear a stuck "speaking" state before the first piece. */
+  function pieces(text) {
+    var out = [], parts = String(text || "").replace(/\s+/g, " ").trim().match(/[^.!?\u0964]+[.!?\u0964]*["'\u201d\u2019)]*\s*/g) || [];
+    parts.forEach(function (p) {
+      p = p.trim(); if (!p) return;
+      while (p.length > 180) {
+        var cut = p.lastIndexOf(", ", 180); if (cut < 60) cut = p.lastIndexOf(" ", 180); if (cut < 40) cut = 180;
+        out.push(p.slice(0, cut + 1).trim()); p = p.slice(cut + 1).trim();
+      }
+      if (out.length && out[out.length - 1].length + p.length < 120) out[out.length - 1] += " " + p; else if (p) out.push(p);
+    });
+    return out.length ? out : [String(text || "")];
+  }
+  var webPrimed = false, webResume = null, webCancel = null, webBusy = false;
   function speakWeb(text, lang, speedV, done) {
-    if (!SPK) return done(false);
-    startPosition(Math.max(5, text.length / (15 * (speedV || 1))));
-    var u = new SpeechSynthesisUtterance(text);
-    utter = u;
-    var started = false;
-    function start() {
-      if (started) return;
-      started = true;
-      if (!playing || paused) { done(false); return; }
-      var v = bestVoice(lang);
-      if (v) u.voice = v;
+    if (!SPK || !window.SpeechSynthesisUtterance) return done(false);
+    startPosition(Math.max(5, String(text).length / (15 * (speedV || 1))));
+    var list = pieces(text), i = 0, myGen = gen, anyOk = false;
+    function step() {
+      if (myGen !== gen || !playing || paused) { done(false); return; }
+      if (i >= list.length) { done(anyOk); return; }
+      one(list[i], true, function (ok) { if (ok) anyOk = true; i++; step(); });
+    }
+    function one(t, useVoice, cb) {
+      var u = new SpeechSynthesisUtterance(t);
+      utter = u;
+      var v = useVoice ? bestVoice(lang) : null;
+      if (v) { try { u.voice = v; } catch (e) { v = null; } }
       u.lang = v ? v.lang : region(lang);
       u.rate = Math.min(2, Math.max(0.5, speedV));
-      /* GENDER: if no gender-specific voice exists (most mobile devices have
-         ONE voice per language), simulate male/female with pitch - this
-         guarantees an audible change on every phone */
       var pref = genderPref();
       var vGender = v ? voiceGenderOf(v.name) : "auto";
       if (pref === "male" && vGender !== "male") u.pitch = 0.72;
       else if (pref === "female" && vGender !== "female") u.pitch = 1.28;
       else u.pitch = 1;
       u.volume = 1;
-      var finished = false;
-      u.onend = function () { if (!finished) { finished = true; done(true); } };
-      u.onerror = function () { if (!finished) { finished = true; done(false); } };
-      try { SPK.speak(u); } catch (e) { done(false); }
+      var fin = false, began = false;
+      webBusy = true;
+      var limit = 4000 + (t.length / Math.max(0.5, speedV)) * 110;
+      function end(ok) {
+        if (fin) return;
+        if (paused && myGen === gen && playing) {
+          /* paused: remember this piece and say it again on resume */
+          fin = true; clearTimeout(t1); clearTimeout(t2);
+          webBusy = false;
+          webResume = function () { one(t, useVoice, cb); };
+          return;
+        }
+        fin = true; clearTimeout(t1); clearTimeout(t2); webBusy = false;
+        if (!ok && useVoice && !began && myGen === gen && playing && !paused) { one(t, false, cb); return; }
+        cb(ok);
+      }
+      var t1 = setTimeout(function () { if (!began && !(SPK.speaking && !SPK.paused)) { try { SPK.cancel(); } catch (e) {} end(false); } }, 3000);
+      var t2 = setTimeout(function () { if (!paused) { try { SPK.cancel(); } catch (e) {} end(began); } }, limit);
+      webCancel = function () { end(false); };
+      u.onstart = function () { began = true; clearTimeout(t1); };
+      u.onend = function () { end(true); };
+      u.onerror = function (e) { if (myGen !== gen) { fin = true; clearTimeout(t1); clearTimeout(t2); return; } end(false); };
+      try {
+        if (!webPrimed) { webPrimed = true; if (SPK.speaking || SPK.pending) SPK.cancel(); }
+        if (SPK.paused && !paused) SPK.resume();
+        SPK.speak(u);
+      } catch (e) { end(false); }
     }
     /* Android returns an empty voice list at first - wait for it, then
-       speak once with the correct regional voice (gu-IN, hi-IN…) */
-    voicesReady(1500).then(start);
+       speak with the correct regional voice (gu-IN, hi-IN...) */
+    voicesReady(1500).then(step);
   }
 
   /* ---------- background keep-alive ----------
@@ -416,7 +545,18 @@ window.TTS_ENGINE = (function () {
         } else done(true);
       });
     };
-    if (puterReady) tryPuter();
+    if (!goldVoice()) {
+      speakWeb(item.text, lang, spd, done);
+      setTimeout(offerGoldVoice, 2500);
+      return;
+    }
+    if (voiceTier() !== "studio") {
+      speakWeb(item.text, lang, spd, done);
+      if (!voiceTier()) { try { loadPuter(); } catch (e) {} setTimeout(offerStudio, 2500); }
+      return;
+    }
+    if (puterReady && signedIn()) tryPuter();
+    else if (puterReady) { speakWeb(item.text, lang, spd, done); }
     else {
       /* give Puter a SHORT chance (it was pre-warmed at boot) - this lets
          background/lock-screen playback start with the media element when
@@ -621,7 +761,8 @@ window.TTS_ENGINE = (function () {
 
   /* ---------- public API ---------- */
   function stop() {
-    gen++;                       // ← invalidate every in-flight async start
+    gen++;
+    webResume = null; webCancel = null; webBusy = false;                       // ← invalidate every in-flight async start
     playing = false;
     paused = false;
     queue = [];
@@ -637,7 +778,9 @@ window.TTS_ENGINE = (function () {
   function pause() {
     if (!playing) return;
     paused = true;
-    if (SPK) { try { SPK.pause(); } catch (e) {} }
+    /* cancel, never speechSynthesis.pause(): pause is broken on Android */
+    if (SPK) { try { SPK.cancel(); } catch (e) {} }
+    if (webCancel) { var wc = webCancel; webCancel = null; wc(); }
     if (currentAudio) { try { currentAudio.pause(); } catch (e) {} }
     if (silenceEl) { try { silenceEl.pause(); } catch (e) {} }
     freezePosition();
@@ -647,12 +790,14 @@ window.TTS_ENGINE = (function () {
   function resume() {
     if (!playing) return;
     paused = false;
-    if (SPK) { try { SPK.resume(); } catch (e) {} }
+    var hadPiece = !!webResume, audioLive = !!(currentAudio && !currentAudio.ended);
+    if (webResume) { var wr = webResume; webResume = null; wr(); }
     if (currentAudio) { try { currentAudio.play(); } catch (e) {} }
     if (silenceEl) { try { silenceEl.play(); } catch (e) {} }
     setMediaPlaybackState("playing");
     if (posDur) { posStart = Date.now(); if (!posTimer) posTimer = setInterval(() => { if (paused || !playing) return; const p = Math.min(posOffset + (Date.now() - posStart) / 1000, posDur); setPos(posDur, p); }, 1000); }
-    if (!utter && timer) { clearTimeout(timer); next(); }
+    /* paused in the gap between two items: carry on with the queue */
+    if (!hadPiece && !audioLive && !webBusy) { if (timer) clearTimeout(timer); next(); }
     updatePlayer();
   }
   function toggle() { if (playing && !paused) pause(); else if (playing) resume(); }
@@ -927,6 +1072,9 @@ window.TTS_ENGINE = (function () {
   }
 
   return {
+    voiceTier: voiceTier,
+    setVoiceTier: function (v) { setVoiceTier(v === "studio" ? "studio" : "device"); },
+    askStudio: function () { try { sessionStorage.removeItem("tsb_studio_asked"); } catch (e) {} offerStudio(); },
     playBook: playBook,
     playParts: playParts,
     /* translate intro/template strings into the target language (cached) */

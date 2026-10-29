@@ -8,11 +8,16 @@
 // ============================================================
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
 const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
+  new Response(JSON.stringify(body), { status, headers: { ...CORS, "Content-Type": "application/json" } });
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok");
+  if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   if (req.method !== "POST") return json({ ok: false, error: "POST only" }, 405);
 
   const admin = createClient(
@@ -49,19 +54,13 @@ Deno.serve(async (req) => {
     return json({ ok: false, error: "This code does not exist, was already used, or has expired. Check it once and message us if you think this is wrong." }, 409);
   }
 
-  // one year of Gold, extended from today or from a still-live membership
-  const { data: cur } = await admin
-    .from("gold_members")
-    .select("expires_at")
-    .eq("user_id", user.id)
-    .maybeSingle();
-  const base = cur?.expires_at && new Date(cur.expires_at) > new Date() ? new Date(cur.expires_at) : new Date();
-  const expires = new Date(base.getTime() + 365 * 24 * 3600 * 1000).toISOString();
-
-  const { error: mErr } = await admin
-    .from("gold_members")
-    .upsert({ user_id: user.id, plan: "gold-yearly", activated_at: now, expires_at: expires });
-  if (mErr) return json({ ok: false, error: "The code was accepted but activation failed. Message us, it is one tap to fix." }, 500);
-
+  // v334: one year of Gold through the single grant function (extends a
+  // live membership, never touches a founder row). If it fails, the code
+  // is given back so the reader can try again.
+  const { data: expires, error: gErr } = await admin.rpc("grant_gold", { p_user: user.id, p_plan: "gold_yearly" });
+  if (gErr || !expires) {
+    await admin.from("gold_codes").update({ used: false, used_by: null, used_at: null }).eq("code", code).eq("used_by", user.id);
+    return json({ ok: false, error: "The code is fine but activation failed. Try again in a minute." }, 500);
+  }
   return json({ ok: true, expires_at: expires });
 });

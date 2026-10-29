@@ -1,6 +1,6 @@
 {
   "name": "thesmallbook",
-  "version": "3.2.3",
+  "version": "3.3.1",
   "scripts": {
     "test": "node tests/client-suite.js",
     "youpi": "node tools/youpi-server.js",

@@ -1,23 +1,17 @@
 (function () {
   "use strict";
 
-  var ADMIN_USER = "tsb_admin";
-  var DEFAULT_ADMIN_PASS = "TheSmallBook2026!";
+  /* v334: no password in this file. Access = a signed-in account that the
+     upi-admin edge function finds in public.app_admins (server side). The
+     local panels below only edit this browser's own settings; payments go
+     through the server, which checks the admin again on every call. */
+  var serverAdmin = false;
 
   // Storage keys
   var STORAGE_REMOTE_CONFIG = "tsb_remote_config";
   var STORAGE_PRICING_CONFIG = "tsb_pricing_config";
   var STORAGE_READERS = "tsb_admin_readers";
   var STORAGE_AUDIT_LOGS = "tsb_admin_audit_logs";
-  var STORAGE_CUSTOM_PASS = "tsb_admin_custom_pass";
-
-  function getActiveAdminPass() {
-    try {
-      return localStorage.getItem(STORAGE_CUSTOM_PASS) || DEFAULT_ADMIN_PASS;
-    } catch (e) {
-      return DEFAULT_ADMIN_PASS;
-    }
-  }
 
   function maskEmail(email) {
     if (!email) return "";
@@ -216,13 +210,7 @@
     } catch (e) {}
   }
 
-  function isAuthed() {
-    try {
-      return sessionStorage.getItem("tsb_admin_session") === "active_authenticated";
-    } catch (e) {
-      return false;
-    }
-  }
+  function isAuthed() { return serverAdmin; }
 
   function checkAuthUI() {
     var authed = isAuthed();
@@ -236,59 +224,82 @@
     }
   }
 
+  async function adminCall(body) {
+    var c = window.TSB_CONFIG || {};
+    var tk = window.TSB_AUTH && TSB_AUTH.token ? await TSB_AUTH.token() : "";
+    if (!tk) return { ok: false, signin: true };
+    try {
+      var res = await fetch(c.SUPABASE_URL + "/functions/v1/upi-admin", { method: "POST", headers: { apikey: c.SUPABASE_ANON_KEY, Authorization: "Bearer " + tk, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      var r = await res.json().catch(function () { return {}; });
+      if (res.status === 404) return { ok: false, error: "Deploy the upi-admin edge function first (docs/GOLD-PAYMENTS.md)." };
+      return r || { ok: false };
+    } catch (e) { return { ok: false, error: "No connection." }; }
+  }
+  async function verifyAdmin() {
+    var lbl = document.getElementById("btnLoginLabel");
+    if (!window.TSB_AUTH || !TSB_AUTH.user || !TSB_AUTH.user()) {
+      if (lbl) lbl.textContent = "Sign in with your account";
+      return false;
+    }
+    if (lbl) lbl.textContent = "Checking";
+    var r = await adminCall({ op: "whoami" });
+    serverAdmin = !!(r && r.admin);
+    if (lbl) lbl.textContent = "Check my account";
+    if (!serverAdmin && loginErrMsg) { loginErrMsg.style.display = "block"; loginErrMsg.textContent = r && r.error ? r.error : "This account is not an admin."; }
+    checkAuthUI();
+    if (serverAdmin) loadPayments();
+    return serverAdmin;
+  }
   if (adminLoginForm) {
     adminLoginForm.addEventListener("submit", function (e) {
       e.preventDefault();
-      var lockUntil = +(localStorage.getItem("tsb_admin_lock_until") || 0);
-      if (Date.now() < lockUntil) {
-        var remainingSec = Math.ceil((lockUntil - Date.now()) / 1000);
-        if (loginErrMsg) {
-          loginErrMsg.style.display = "block";
-          loginErrMsg.textContent = "Security Lockout: System temporarily locked for " + remainingSec + " seconds.";
-        }
+      if (!window.TSB_AUTH || !TSB_AUTH.user || !TSB_AUTH.user()) {
+        try { sessionStorage.setItem("tsb_auth_return", "admin.html"); } catch (er) {}
+        location.href = "login.html";
         return;
       }
-
-      var u = (adminUsername.value || "").trim();
-      var p = (adminPassword.value || "").trim();
-      var activePass = getActiveAdminPass();
-
-      if ((u === ADMIN_USER || u === "admin") && p === activePass) {
-        try {
-          sessionStorage.setItem("tsb_admin_session", "active_authenticated");
-          localStorage.removeItem("tsb_admin_failed_count");
-          localStorage.removeItem("tsb_admin_lock_until");
-        } catch (err) {}
-        if (loginErrMsg) loginErrMsg.style.display = "none";
-        logEvent("AUTH", "Operator authenticated as " + u);
-        logAdminAudit("AUTH_SUCCESS", "Operator " + u + " authenticated");
-        checkAuthUI();
-        notify("Access Granted: Welcome to Command Center");
-      } else {
-        var fails = (+(localStorage.getItem("tsb_admin_failed_count") || 0)) + 1;
-        try {
-          localStorage.setItem("tsb_admin_failed_count", String(fails));
-          if (fails >= 4) {
-            localStorage.setItem("tsb_admin_lock_until", String(Date.now() + 180000)); // 3 min lockout
-          }
-        } catch (eLock) {}
-
-        if (loginErrMsg) {
-          loginErrMsg.style.display = "block";
-          loginErrMsg.textContent = fails >= 4
-            ? "Multiple failed attempts recorded. Console access locked for 3 minutes."
-            : "Invalid administrative credentials. Attempt " + fails + " of 4.";
-        }
-        logEvent("WARN", "Failed administrative login attempt for: " + u);
-        logAdminAudit("AUTH_FAILED", "Failed attempt for " + u + " (count: " + fails + ")");
-      }
+      verifyAdmin();
     });
   }
+  window.addEventListener("tsb:auth", function () { verifyAdmin(); });
+  setTimeout(verifyAdmin, 600);
+
+  /* ---------- v334 payments ---------- */
+  function escH(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  async function loadPayments() {
+    var list = document.getElementById("payList"), msg = document.getElementById("payMsg"), badge = document.getElementById("payBadge");
+    if (!list) return;
+    if (msg) msg.textContent = "Loading";
+    var r = await adminCall({ op: "list" });
+    if (msg) msg.textContent = r.ok ? "" : (r.error || "Could not load.");
+    var rows = (r && r.claims) || [];
+    var waiting = rows.filter(function (c) { return c.status === "pending"; }).length;
+    if (badge) { badge.hidden = !waiting; badge.textContent = waiting; }
+    list.innerHTML = rows.length ? rows.map(function (c) {
+      var when = new Date(c.created_at).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+      return '<div class="pay-row"><div><b>&#8377;' + (c.amount_paise / 100) + " \u00b7 " + escH(c.plan.replace(/_/g, " ")) + '</b> <span class="pay-st">' + escH(c.status) + '</span><small>UTR <code>' + escH(c.utr) + "</code> \u00b7 " + escH(when) + "</small><small>" + escH(c.who || c.user_id) + "</small>" + (c.note ? "<small>" + escH(c.note) + "</small>" : "") + "</div>" +
+        (c.status === "pending" ? '<div class="pay-acts"><button class="ok" data-pay="approve" data-id="' + escH(c.id) + '">Approve</button><button data-pay="reject" data-id="' + escH(c.id) + '">Reject</button></div>' : "<div></div>") + "</div>";
+    }).join("") : '<p style="font-size:13px;">No UPI claims yet.</p>';
+  }
+  document.addEventListener("click", async function (e) {
+    var b = e.target.closest && e.target.closest("[data-pay]");
+    if (b) {
+      var op = b.getAttribute("data-pay"), id = b.getAttribute("data-id");
+      if (op === "approve" && !window.confirm("Approve only if you can see this exact UTR and amount in your bank app. Approve?")) return;
+      var note = op === "reject" ? (window.prompt("Reason the reader will see (optional)", "We could not find this payment.") || "") : "";
+      b.disabled = true;
+      var r = await adminCall({ op: op, id: id, note: note });
+      notify(r.ok ? (op === "approve" ? "Gold switched on" : "Marked as rejected") : (r.error || "Did not go through"));
+      loadPayments();
+      return;
+    }
+    if (e.target.closest && e.target.closest("#btnPayRefresh")) loadPayments();
+  });
 
   if (btnAdminLogout) {
     btnAdminLogout.addEventListener("click", function () {
       try {
-        sessionStorage.removeItem("tsb_admin_session");
+        serverAdmin = false;
       } catch (err) {}
       logEvent("AUTH", "Operator session closed");
       logAdminAudit("LOGOUT", "Operator logged out");
@@ -297,63 +308,6 @@
     });
   }
 
-  // Password / Security Key Management
-  if (formChangeSecurityKey) {
-    formChangeSecurityKey.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var curr = (inputCurrentPass ? inputCurrentPass.value : "").trim();
-      var nPass = (inputNewPass ? inputNewPass.value : "").trim();
-      var cPass = (inputConfirmPass ? inputConfirmPass.value : "").trim();
-
-      var activePass = getActiveAdminPass();
-      if (curr !== activePass) {
-        if (changePassMsg) {
-          changePassMsg.style.display = "block";
-          changePassMsg.style.color = "#fb7185";
-          changePassMsg.textContent = "Current security key is incorrect.";
-        }
-        return;
-      }
-
-      if (nPass.length < 6) {
-        if (changePassMsg) {
-          changePassMsg.style.display = "block";
-          changePassMsg.style.color = "#fb7185";
-          changePassMsg.textContent = "New security key must be at least 6 characters.";
-        }
-        return;
-      }
-
-      if (nPass !== cPass) {
-        if (changePassMsg) {
-          changePassMsg.style.display = "block";
-          changePassMsg.style.color = "#fb7185";
-          changePassMsg.textContent = "New security keys do not match.";
-        }
-        return;
-      }
-
-      try {
-        localStorage.setItem(STORAGE_CUSTOM_PASS, nPass);
-      } catch (err) {}
-
-      if (inputCurrentPass) inputCurrentPass.value = "";
-      if (inputNewPass) inputNewPass.value = "";
-      if (inputConfirmPass) inputConfirmPass.value = "";
-
-      if (changePassMsg) {
-        changePassMsg.style.display = "block";
-        changePassMsg.style.color = "#34d399";
-        changePassMsg.textContent = "Security key updated successfully.";
-        setTimeout(function () { changePassMsg.style.display = "none"; }, 3000);
-      }
-
-      logEvent("AUTH", "Security key updated by administrator");
-      notify("Security key updated successfully");
-    });
-  }
-
-  // Live Clock
   function updateLiveClock() {
     if (!liveClock) return;
     var now = new Date();

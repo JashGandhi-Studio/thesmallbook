@@ -29,14 +29,12 @@
     } catch (e) { return false; }
   }
   function isGold() {
-    if (isFounder() && !founderPreview()) return true;
+    /* v331: the founder previewing as a free reader sees the free app; nobody
+       gets Gold from an email check in the browser any more. */
+    if (isFounder() && founderPreview()) return false;
     try { return !!(window.TSB_GOLD && TSB_GOLD.isGold()); } catch (e) { return false; }
   }
   function enabled() {
-    try {
-      var rc = JSON.parse(localStorage.getItem("tsb_remote_config") || "{}");
-      if (rc.goldPaywall === false) return false;
-    } catch (eRC) {}
     return !!cfg().ENABLED;
   }
 
@@ -44,7 +42,6 @@
   function locked(feature) {
     if (!enabled()) return false;
     if (isGold()) return false;
-    if (isFounder() && !founderPreview()) return false;
     var g = cfg().GATED || [];
     return g.indexOf(feature) >= 0;
   }

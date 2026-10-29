@@ -1,5 +1,5 @@
 // ============================================================
-// THE SMALL BOOK · edge function: razorpay-webhook
+// THE SMALL BOOK · edge function: razorpay-webhook (hardened v334)
 // Razorpay calls this on payment.captured. The signature is the
 // HMAC-SHA256 of the RAW body with the webhook secret, compared
 // to the X-Razorpay-Signature header. A captured payment writes
@@ -29,7 +29,10 @@ Deno.serve(async (req) => {
   const given = req.headers.get("x-razorpay-signature") ?? "";
   if (!secret) return new Response("webhook secret not configured", { status: 500 });
   const expect = await hmacHex(secret, raw);
-  if (given !== expect) return new Response("bad signature", { status: 401 });
+  // v334: constant-time compare
+  let diff = given.length === expect.length ? 0 : 1;
+  for (let i = 0; i < Math.min(given.length, expect.length); i++) diff |= given.charCodeAt(i) ^ expect.charCodeAt(i);
+  if (diff !== 0) return new Response("bad signature", { status: 401 });
 
   const ev = JSON.parse(raw || "{}");
   const admin = createClient(
@@ -64,29 +67,23 @@ Deno.serve(async (req) => {
     return ok();
   }
 
-  // match the account: notes.user_id when the link carried it, else the
-  // payer email mapped through profiles (see UPDATE-v298-gold.sql step 4)
-  let userId: string | null = (pay.notes?.user_id ?? null) || null;
-  if (!userId) {
-    const email = String(pay.email ?? pay.contact ?? "").toLowerCase().trim();
-    if (email) {
-      const { data } = await admin.from("profiles").select("id").eq("email", email).limit(1).maybeSingle();
-      userId = data?.id ?? null;
-    }
+  // v334: Gold is granted ONLY for an order our server priced (gold-order),
+  // passed to Razorpay as notes.order_id, and only when the captured amount
+  // matches that order to the paisa. A payment we cannot tie to an order
+  // grants nothing (before v334 any captured payment gave a year of Gold).
+  const orderId = String(pay.notes?.order_id ?? "");
+  if (!orderId) return ok();
+  const { data: order } = await admin.from("gold_orders").select("*").eq("order_id", orderId).maybeSingle();
+  if (!order || order.status === "paid") return ok();
+  if (Number(pay.amount) !== Number(order.amount_paise) || String(pay.currency ?? "INR") !== "INR") {
+    await admin.from("gold_orders").update({ status: "amount_mismatch" }).eq("order_id", orderId);
+    return ok();
   }
-  if (!userId) return ok();   // a payment we cannot attribute: recorded, granted to no one
-
-  const { data: cur } = await admin
-    .from("gold_members")
-    .select("expires_at")
-    .eq("user_id", userId)
-    .maybeSingle();
-  const base = cur?.expires_at && new Date(cur.expires_at) > new Date() ? new Date(cur.expires_at) : new Date();
-  const expires = new Date(base.getTime() + 365 * 24 * 3600 * 1000).toISOString();
-
-  await admin.from("gold_members").upsert({
-    user_id: userId, plan: "gold-yearly",
-    activated_at: new Date().toISOString(), expires_at: expires,
-  });
+  const { error: gErr } = await admin.rpc("grant_gold", { p_user: order.user_id, p_plan: order.plan });
+  if (gErr) {
+    if (eventId) await admin.from("gold_paid_events").delete().eq("event_id", eventId);   // let Razorpay retry
+    return new Response("activation failed", { status: 500 });
+  }
+  await admin.from("gold_orders").update({ status: "paid", utr: String(pay.id ?? ""), paid_at: new Date().toISOString() }).eq("order_id", orderId);
   return ok();
 });

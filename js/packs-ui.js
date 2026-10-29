@@ -38,24 +38,25 @@
   function strip() {
     var host = document.getElementById("tsbJourneys");
     if (!host || !PACKS.length) return;
-    var save = savedId(), sp = byId(save), h = "";
-    if (sp) {
-      var done = sp.books.filter(function (b) { return lessonsDone(b) > 0; }).length;
-      h += '<button class="pk-chip pk-chip--mine" data-open="' + sp.id + '">' +
-        '<span class="pk-chip__emo" style="background:' + sp.hue + '">' + sp.emoji + "</span>" +
-        "<span><b>MY JOURNEY</b><i>" + esc(sp.title) + " · " + done + "/" + sp.books.length + " started</i></span>" +
-        '<span class="pk-chip__go">OPEN \u2192</span></button>';
+    var save = savedId(), h = "";
+    /* v333: each journey shows its real books, fanned like a little stack */
+    function bookOf(id) { return (window.BOOKS || []).filter(function (b) { return b.id === id; })[0]; }
+    function card(p, mine) {
+      var bs = p.books.map(bookOf).filter(Boolean);
+      var done = bs.filter(function (b) { return lessonsDone(b.id) > 0; }).length;
+      var fan = bs.slice(0, 3).map(function (b, k) { return '<img src="' + esc(b.cover) + '" alt="" loading="lazy" decoding="async" style="--k:' + k + '">'; }).join("");
+      return '<button type="button" class="pk-card' + (mine ? " pk-card--mine" : "") + '" data-open="' + esc(p.id) + '" style="--pk:' + esc(p.hue) + '">' +
+        '<span class="pk-card__fan">' + fan + "</span>" +
+        '<span class="pk-card__tx">' + (mine ? '<em>Your journey</em>' : "") + "<b>" + esc(p.title) + "</b>" +
+        "<small>" + (mine ? done + " of " + bs.length + " started" : bs.length + " books \u00b7 " + p.days + " days") + "</small>" +
+        (mine ? '<i class="pk-card__bar"><s style="width:' + Math.round(done / Math.max(1, bs.length) * 100) + '%"></s></i>' : "") +
+        "</span></button>";
     }
-    PACKS.forEach(function (p) {
-      if (p.id === save) return;
-      h += '<button class="pk-chip" data-open="' + p.id + '">' +
-        '<span class="pk-chip__emo" style="background:' + p.hue + '">' + p.emoji + "</span>" +
-        "<span><b>" + esc(p.title) + "</b><i>" + p.books.length + " books · " + p.days + " days</i></span>" +
-        '<span class="pk-chip__go">' + (save ? "" : "PICK") + "\u2192</span></button>";
-    });
-    host.innerHTML = '<div class="pk-head"><span class="pk-head__t">\uD83D\uDCD6 READING JOURNEYS</span>' +
-      '<span class="pk-head__s">' + (save ? "your pack waits on the shelf below" : "a shelf a day, a book a week") + "</span></div>" +
-      '<div class="pk-strip">' + h + "</div>";
+    var sp = byId(save);
+    if (sp) h += card(sp, true);
+    PACKS.forEach(function (p) { if (p.id !== save) h += card(p, false); });
+    host.innerHTML = '<div class="pk-hd"><h3>Reading journeys</h3><p>' + (save ? "Your journey waits here. Pick another anytime." : "A few books in a row, one idea at a time.") + "</p></div>" +
+      '<div class="pk-rail">' + h + "</div>";
     host.querySelectorAll("[data-open]").forEach(function (b) {
       b.addEventListener("click", function () { openSheet(b.getAttribute("data-open")); });
     });
@@ -73,46 +74,43 @@
     closeSheet();
     var isSaved = savedId() === p.id;
     var books = p.books.map(function (bid) { return (window.BOOKS || []).filter(function (b) { return b.id === bid; })[0]; }).filter(Boolean);
-    var w = document.createElement("div");
-    w.id = "tsbPackSheet";
-    var rows = "", day = 0;
+    var rows = "", day = 0, doneN = 0, nextSet = false;
+    var CHK = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
     books.forEach(function (b) {
       day++;
       var d = lessonsDone(b.id), t = lessonsTotal(b.id);
       var pct = t ? Math.round(d / t * 100) : 0;
-      var tick = pct === 100 ? '<span class="pk-day__tick is-full">\u2713 DONE</span>'
+      if (pct === 100) doneN++;
+      else if (d > 0) nextSet = true;
+      var tick = pct === 100 ? '<span class="pk-day__tick is-full" aria-label="Finished">' + CHK + '</span>'
         : d > 0 ? '<span class="pk-day__tick">' + pct + "%</span>"
-        : '<span class="pk-day__tick pk-day__tick--go">START</span>';
-      rows += '<a class="pk-day" href="book.html?id=' + b.id + '">' +
-        '<span class="pk-day__n" style="background:' + p.hue + '">DAY ' + day + "</span>" +
+        : !nextSet ? (nextSet = true, '<span class="pk-day__tick pk-day__tick--go">Start</span>')
+        : '<span class="pk-day__tick pk-day__tick--later" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>';
+      rows += '<a class="pk-day' + (pct === 100 ? " is-done" : "") + '" href="book.html?id=' + b.id + '">' +
+        '<span class="pk-day__n">Day ' + day + "</span>" +
         '<span class="pk-day__cov"><img src="' + esc(b.cover) + '" alt="" loading="lazy"></span>' +
-        '<span class="pk-day__mid"><b>' + esc(b.title) + "</b><i>" + esc(b.author) + " · " + esc(b.readTime) + " · " + b.lessons.length + " lessons</i>" +
-        '<span class="pk-day__bar"><i style="width:' + pct + '%;background:' + p.hue + '"></i></span></span>' + tick + "</a>";
+        '<span class="pk-day__mid"><b>' + esc(b.title) + "</b><i>" + esc(b.author) + " · " + esc(b.readTime) + "</i>" +
+        (d > 0 && pct < 100 ? '<span class="pk-day__bar"><i style="width:' + pct + '%"></i></span>' : "") + "</span>" + tick + "</a>";
     });
+    var fan = books.slice(0, 5).map(function (b, i) { return '<img src="' + esc(b.cover) + '" alt="" style="--k:' + (i - (Math.min(books.length, 5) - 1) / 2) + '">'; }).join("");
+    var w = document.createElement("div");
+    w.id = "tsbPackSheet";
     w.innerHTML =
-      '<div class="pk-sheet" role="dialog" aria-modal="true" aria-label="' + esc(p.title) + '">' +
-        '<div class="pk-sheet__top" style="background:' + p.hue + '">' +
-          '<button class="pk-sheet__x" id="pkClose" aria-label="Close">\u2715</button>' +
-          '<span class="pk-sheet__emo">' + p.emoji + "</span>" +
+      '<div class="pk-sheet" role="dialog" aria-modal="true" aria-label="' + esc(p.title) + '" style="--pk:' + esc(p.hue) + '">' +
+        '<div class="pk-sheet__top">' +
+          '<button class="pk-sheet__x" id="pkClose" aria-label="Close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
+          '<div class="pk-sheet__fan">' + fan + "</div>" +
+          '<span class="pk-sheet__meta">Reading journey · ' + p.days + " days · " + books.length + " books</span>" +
           '<h2 class="pk-sheet__t">' + esc(p.title) + "</h2>" +
           '<p class="pk-sheet__l">' + esc(p.line) + "</p>" +
-          '<span class="pk-sheet__meta">' + books.length + " BOOKS · " + p.days + " DAYS · " + esc(p.tag).toUpperCase() + "</span>" +
         "</div>" +
         '<div class="pk-sheet__acts">' +
-          '<button class="pk-save" id="pkSave">' + (isSaved ? "\u2713 ON YOUR SHELF" : "SAVE THIS JOURNEY") + "</button>" +
+          '<button class="pk-save' + (isSaved ? " is-saved" : "") + '" id="pkSave">' + (isSaved ? CHK + " On your shelf" : "Save this journey") + "</button>" +
           (isSaved ? '<button class="pk-unsave" id="pkUnsave">Remove</button>' : "") +
         "</div>" +
-        '<div class="pk-shelfwrap">' +
-          '<div class="pk-shelfrow">' +
-            books.map(function (b) {
-              return '<a class="pk-vol" href="book.html?id=' + b.id + '" title="' + esc(b.title) + '">' +
-                '<img src="' + esc(b.cover) + '" alt=""><i>DAY ' + (books.indexOf(b) + 1) + "</i></a>";
-            }).join("") +
-          "</div>" +
-          '<span class="pk-plank" style="background:' + p.hue + '"></span>' +
-        "</div>" +
+        (doneN ? '<p class="pk-sheet__prog">' + doneN + " of " + books.length + " finished</p>" : "") +
         '<div class="pk-days">' + rows + "</div>" +
-        '<p class="pk-note">One short sitting a day finishes the journey in ' + p.days + " days. Your progress ticks come from your real reading.</p>" +
+        '<p class="pk-note">One short sitting a day finishes it in ' + p.days + " days. The ticks come from your real reading.</p>" +
       "</div>";
     document.body.appendChild(w);
     document.documentElement.classList.add("pk-lock");

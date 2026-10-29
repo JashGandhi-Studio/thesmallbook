@@ -18,7 +18,7 @@
 (function () {
   "use strict";
 
-  var BUILD = "323";
+  var BUILD = "335";
 window.TSB_BUILD = BUILD;   /* v322: every page knows its era - the tutorial replays once per era */
   var PHASE_A = "tsb_purge_a";
 
@@ -83,7 +83,7 @@ window.TSB_BUILD = BUILD;   /* v322: every page knows its era - the tutorial rep
     /* second failure this visit: an honest banner with a one-tap fix */
     try {
       var b = document.createElement("div");
-      b.setAttribute("style", "position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;background:#111;color:#fff;border:2px solid #ffc800;border-radius:12px;padding:12px 14px;font:600 13px/1.5 Arial,sans-serif;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.4)");
+      b.setAttribute("style", "position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;background:#111;color:#fff;border:2px solid #ffc800;border-radius:17px;padding:12px 14px;font:600 13px/1.5 Arial,sans-serif;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.4)");
       b.innerHTML = "<b style=\"color:#ffc800\">Load trouble detected.</b><br>Old saved files are in the way of the update. Tap here to clear them and reload.";
       b.onclick = function () {
         try { sessionStorage.removeItem(KEY); } catch (e) {}

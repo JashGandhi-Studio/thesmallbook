@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta property="og:title" content="Settings, TheSmallBook">
   <meta property="og:description" content="Theme, language, privacy and everything else, exactly how you like it.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=323">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=335">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/settings.html">
@@ -29,10 +31,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=323">
+  <link rel="stylesheet" href="css/style.css?v=335">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="css/film.css?v=335">
+  <link rel="stylesheet" href="css/film2.css?v=335">
+  <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
 </head>
 <body class="setpage">
   <header class="accbar">
@@ -44,8 +49,8 @@
 
   <main class="set">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-      <h1 class="set__h" style="margin:0;">SETTINGS</h1>
-      <span style="font:800 11px var(--font-head);letter-spacing:1px;background:var(--yellow);border:2px solid var(--ink);border-radius:999px;padding:3px 10px;">PREFERENCES</span>
+      <h1 class="set__h" style="margin:0;">Settings</h1>
+      <span style="font:800 11px var(--font-head);letter-spacing:1px;background:var(--yellow);border:var(--bw) solid var(--edge);border-radius:999px;padding:3px 10px;">PREFERENCES</span>
     </div>
 
     <!-- 👤 CATEGORY 1: ACCOUNT & STREAK -->
@@ -55,7 +60,7 @@
     </div>
 
     <section class="setcard">
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>ACCOUNT</h2>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Account</h2>
       <div class="setrow" style="margin-bottom:12px;">
         <input id="displayNameInput" class="setinput" type="text" maxlength="24" placeholder="Your display name">
         <button class="setbtn" id="saveName">Save</button>
@@ -64,17 +69,17 @@
     </section>
 
     <section class="setcard">
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>YOUR READING &amp; STREAK</h2>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>Your reading &amp; streak</h2>
       <div class="progbar" data-progbar><em style="width:1%"></em></div>
       <p class="progtxt" data-progtxt></p>
-      <p class="sethint">Lessons you've finished across all 500 books, straight from your reader progress.</p>
+      <p class="sethint">Lessons you've finished across all 520 books, straight from your reader progress.</p>
       <div style="margin-top:10px;">
         <a class="setopt" href="review.html" id="tsbYearLink" hidden style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink)"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg> Your year in books →</a>
       </div>
     </section>
 
     <section class="setcard" id="founderCard" hidden>
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"></path><circle cx="12" cy="19" r="1"></circle></svg>FOUNDER</h2>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"></path><circle cx="12" cy="19" r="1"></circle></svg>Founder</h2>
       <p class="sethint">Your accounts see every Gold feature on every device. Flip the preview to walk the app exactly like a free reader, then flip back. The preview lasts until this tab closes.</p>
       <div class="setrow">
         <button class="setbtn" id="founderPreviewFree">🔎 Preview as a free reader</button>
@@ -100,7 +105,7 @@
     </div>
 
     <section class="setcard">
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>DARKNESS</h2>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>Darkness</h2>
       <div class="setrow" id="themeRow">
         <button class="setopt" data-theme="auto"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg> Auto</button>
         <button class="setopt" data-theme="light"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg> Light</button>
@@ -109,8 +114,18 @@
       <p class="sethint">Also flips the phone status bar, no flash on open.</p>
     </section>
 
+    <section class="setcard" id="kidsCard">
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 14.5a4 4 0 0 0 7 0M9 10h.01M15 10h.01"></path></svg>Story time for kids</h2>
+      <div class="setrow" id="kidsRow">
+        <button class="setopt" type="button" data-kids-show="1">Show in You</button>
+        <button class="setopt" type="button" data-kids-show="0">Hide</button>
+      </div>
+      <p class="sethint">Story time lives only in the You tab. Hide it and it will not show anywhere.</p>
+      <script>(function(){var row=document.getElementById("kidsRow");function cur(){try{return localStorage.getItem("tsb_kids_show")==="0"?"0":"1"}catch(e){return "1"}}function paint(){var c=cur();row.querySelectorAll("[data-kids-show]").forEach(function(b){var on=b.getAttribute("data-kids-show")===c;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false")})}row.addEventListener("click",function(e){var b=e.target.closest("[data-kids-show]");if(!b)return;try{localStorage.setItem("tsb_kids_show",b.getAttribute("data-kids-show"))}catch(x){}paint()});paint()})();</script>
+    </section>
+
     <section class="setcard">
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>TEXT SIZE</h2>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>Text size</h2>
       <div class="setrow" id="fontRow">
         <button class="setopt" data-font="0">A</button>
         <button class="setopt setopt--md" data-font="1">A</button>
@@ -130,7 +145,7 @@
     </section>
 
     <section class="setcard">
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>FONT STYLE</h2>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>Font style</h2>
       <div class="setrow" id="fontstyleRow">
         <button class="setopt" data-fontstyle="modern"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path></svg> Modern</button>
         <button class="setopt" data-fontstyle="serif"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> Bookish</button>
@@ -140,7 +155,7 @@
     </section>
 
     <section class="setcard">
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>APP &amp; LIBRARY DISPLAY</h2>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>App &amp; library display</h2>
       <div class="setrow" id="appsizeRow" style="margin-bottom:10px;">
         <button class="setopt" data-appsize="small"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><polyline points="4 14 10 14 10 20"></polyline><polyline points="20 10 14 10 14 4"></polyline></svg> Smaller</button>
         <button class="setopt" data-appsize="default"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg> Default</button>
@@ -156,13 +171,13 @@
     </section>
 
     <section class="setcard">
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>READING LANGUAGE</h2>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Reading language</h2>
       <div class="setlangs" id="langGrid"></div>
       <p class="sethint">Summaries, chat replies and audio switch instantly.</p>
     </section>
 
     <section class="setcard">
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>NOTIFICATION SOUND</h2>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>Notification sound</h2>
       <div class="setrow" id="soundRow">
         <button class="setopt" data-sound="ding"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg> Soft ding</button>
         <button class="setopt" data-sound="chime"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> Bright chime</button>
@@ -181,7 +196,7 @@
     </div>
 
     <section class="setcard">
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C22 6.5 17.5 2 12 2z"></path></svg>ACTION BAR COLOUR</h2>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C22 6.5 17.5 2 12 2z"></path></svg>Action bar colour</h2>
       <div class="yset__ctl yset__sw" id="accentRow" style="justify-content:flex-start;">
         <button data-accent="#ffc800" style="--sw:#ffc800" aria-label="Yellow"></button>
         <button data-accent="#ff8a3d" style="--sw:#ff8a3d" aria-label="Orange"></button>
@@ -192,39 +207,17 @@
       <p class="sethint">Only the bottom bar’s selected-tab pill wears this colour, the rest of the app stays classic.</p>
     </section>
 
-    <!-- 🎛️ CUSTOMIZE ACTION BAR -->
-    <section class="setcard" id="barCustomCard">
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><rect x="2" y="16" width="20" height="6" rx="2"></rect><path d="M6 16V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8"></path></svg>CUSTOMIZE ACTION BAR</h2>
-      <p class="sethint">Personalize your bottom navigation bar. Keep a minimum of 4 buttons (up to 5). Swap in Continue Reading, Messages, Library, Notes or Graveyard.</p>
-      
-      <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 6px;">
-        <b style="font-size:12px;letter-spacing:1px;text-transform:uppercase;">CURRENT SLOTS (MIN 4)</b>
-        <span id="barQuotaBadge" style="font-size:11px;font-weight:700;color:var(--ink,#111);background:var(--paper,#fff);border:2px solid var(--ink,#111);border-radius:6px;padding:3px 8px;">2 / 2 free edits left</span>
-      </div>
-
-      <div id="barSlotsRow" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;"></div>
-
-      <b style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;margin:12px 0 6px;color:var(--muted,#666);">AVAILABLE BUTTONS TO ADD / SWAP</b>
-      <div id="barPoolRow" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;"></div>
-
-      <div class="setrow" style="gap:10px;">
-        <button class="setbtn setbtn--yellow" id="saveBarBtn">💾 Save Action Bar</button>
-        <button class="setbtn" id="resetBarBtn">↺ Reset to Default</button>
-      </div>
-      <p class="sethint" id="barCustomMsg" style="margin-top:8px;font-weight:600;"></p>
-
-      <div style="margin-top:16px;padding-top:14px;border-top:2px dashed rgba(20,17,12,0.2);">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-          <div>
-            <b style="font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;">TAB LABELS</b>
-            <span class="sethint" style="margin:2px 0 0;">Hide text labels for modern, icon-only navigation.</span>
-          </div>
-          <div class="tsb-toggle-group" style="display:flex;gap:6px;">
-            <button type="button" class="setbtn setbtn--sm" id="btnBarLabelFull" style="padding:6px 12px;font-size:11px;">Icons + Text</button>
-            <button type="button" class="setbtn setbtn--sm" id="btnBarLabelIcons" style="padding:6px 12px;font-size:11px;">Icons Only</button>
-          </div>
-        </div>
-      </div>
+    <!-- v331 · THE BAR STUDIO -->
+    <section class="setcard bs" id="barCustomCard">
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><rect x="2" y="15" width="20" height="7" rx="3"></rect><path d="M7 18.5h.01M12 18.5h.01M17 18.5h.01"></path><path d="M12 3v8M8.5 6.5 12 3l3.5 3.5"></path></svg>Action bar</h2>
+      <div class="bs-prev" aria-hidden="true"><div class="bs-phone" id="bsPhone"><div class="bs-page"><i></i><i></i><i></i><i></i></div><div class="bs-bar" id="bsBar"></div></div></div>
+      <p class="bs-hint" id="bsSlots"><b>1</b> Tap a spot in the bar above. <b>2</b> Pick what goes there. <span id="bsCount"></span></p>
+      <div class="bs-pool" id="bsPool"></div>
+      <div class="bs-k">Style</div>
+      <div class="bs-seg bs-seg--2" data-bs="look"><button type="button" data-v="float">Floating<small>Recommended</small></button><button type="button" data-v="glass">Classic<small>Edge to edge</small></button></div>
+      <div class="bs-k">When you scroll</div>
+      <div class="bs-seg bs-seg--2" data-bs="behave"><button type="button" data-v="auto">Hide, back on scroll up<small>Recommended</small></button><button type="button" data-v="fixed">Always visible<small>Never moves</small></button></div>
+      <div class="bs-foot"><button type="button" class="bs-reset" id="bsReset">Reset to default</button><span class="bs-msg" id="bsMsg" aria-live="polite"></span></div>
     </section>
 
     <!-- 💡 CATEGORY 4: HELP & APP -->
@@ -234,7 +227,7 @@
     </div>
 
     <section class="setcard">
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>FEELING LOST?</h2>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>Feeling lost?</h2>
       <div class="setrow">
         <a class="setbtn" href="legal.html" style="text-decoration:none">⚖ LEGAL &amp; PRIVACY - THE PLAIN-WORDS RULEBOOK</a>
       </div>
@@ -248,13 +241,13 @@
     </section>
 
     <section class="setcard">
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>YOUR NOTEBOOK</h2>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>Your notebook</h2>
       <p class="sethint">Your private notebook: write, draw diagrams, tape voice notes, paste photos. Everything saves by itself and stays on your device unless you export it as one clean file.</p>
-      <a class="setopt" href="notes.html" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);border:2.5px solid var(--ink);border-radius:12px;box-shadow:4px 4px 0 var(--ink);padding:13px 14px;margin:10px 0;background:#fff"><svg class="inline-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span style="flex:1;min-width:0"><b style="font:800 13px var(--font-head);letter-spacing:.5px;display:block">MY NOTEBOOK</b><span style="font:500 12px var(--font-body);color:#6b7280;display:block">write, draw, dictate · share as a card or a living reader link</span></span><span style="flex:none;background:var(--yellow);border:2px solid var(--ink);border-radius:999px;font:800 9px var(--font-head);letter-spacing:1px;padding:4px 8px">NEW</span></a>
+      <a class="setopt" href="notes.html" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);border:var(--bw) solid var(--edge);border-radius:17px;box-shadow:var(--sh-2);padding:13px 14px;margin:10px 0;background:#fff"><svg class="inline-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span style="flex:1;min-width:0"><b style="font:800 13px var(--font-head);letter-spacing:.5px;display:block">MY NOTEBOOK</b><span style="font:500 12px var(--font-body);color:#6b7280;display:block">write, draw, dictate · share as a card or a living reader link</span></span><span style="flex:none;background:var(--yellow);border:var(--bw) solid var(--edge);border-radius:999px;font:800 9px var(--font-head);letter-spacing:1px;padding:4px 8px">NEW</span></a>
     </section>
 
     <section class="setcard">
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>APP INSTALL &amp; VERSION</h2>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>App install &amp; version</h2>
       <div class="setrow" data-installwrap>
         <button class="setbtn" data-install><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>Install this app to your home screen</button>
       </div>
@@ -262,7 +255,7 @@
     </section>
 
     <section class="setcard">
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>DAILY PROMPTS</h2>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>Daily prompts</h2>
       <div class="setrow" id="mpCardRow">
         <button class="setopt" data-mpcard="on"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg> What's on your mind</button>
         <button class="setopt" data-mpcard="off"><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg> Hide the card</button>
@@ -275,29 +268,30 @@
     </section>
 
     <section class="setcard">
-      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>UPLOADS</h2>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>Uploads</h2>
       <button class="setbtn" id="upDiag">🔎 Test upload right now</button>
       <p class="sethint" id="upDiagHint">Cover / quote images, burst videos, voice notes and profile photos live in your own Supabase storage. If any of them fail, this test names the exact missing piece, and the 30-second SQL fix for it.</p>
     </section>
 
-    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v323.</p>
+    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v335.</p>
   </main>
 
-  <script src="./js/bootguard.js?v=323"></script>
-  <script src="js/prefs.js?v=323"></script>
-  <script src="js/lang.js?v=323"></script>
-  <script src="js/config.js?v=323"></script>
-  <script src="js/install.js?v=323"></script>
-  <script src="js/auth.js?v=323"></script>
-  <script src="js/sounds.js?v=323"></script>
-  <script src="js/community.js?v=323"></script>
-  <script src="js/gold.js?v=323"></script>
-  <script src="js/paywall.js?v=323"></script>
-  <script src="js/podcast-data.js?v=323"></script>
-  <script src="js/audioplayer.js?v=323"></script>
-  <script src="js/bar.js?v=323" defer></script>
-  <script src="js/showcase.js?v=323"></script>
-  <script src="js/guide.js?v=323"></script>
+  <script src="./js/bootguard.js?v=335"></script>
+  <script src="js/prefs.js?v=335"></script>
+  <script src="js/lang.js?v=335"></script>
+  <script src="js/config.js?v=335"></script>
+  <script src="js/install.js?v=335"></script>
+  <script src="js/auth.js?v=335"></script>
+  <script src="js/sounds.js?v=335"></script>
+  <script src="js/community.js?v=335"></script>
+  <script src="js/gold.js?v=335"></script>
+  <script src="js/paywall.js?v=335"></script>
+  <script src="js/podcast-data.js?v=335"></script>
+  <script src="js/audioplayer.js?v=335"></script>
+  <script src="js/bar.js?v=335" defer></script>
+  <script src="js/soft-motion.js?v=335" defer></script>
+  <script src="js/showcase.js?v=335"></script>
+  <script src="js/guide.js?v=335"></script>
   <script>
     (function () {
       /* theme */
@@ -445,7 +439,7 @@
   });
 })();
 </script>
-  <script src="js/onboard.js?v=323" defer></script>
+  <script src="js/onboard.js?v=335" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {
@@ -529,7 +523,7 @@
           if (b.firstElementChild) b.firstElementChild.style.width = Math.max(pct, 1) + "%";
         });
         document.querySelectorAll("[data-progtxt]").forEach(function (t) {
-          t.textContent = read + " of 3,540 lessons read · " + books + " book" + (books === 1 ? "" : "s") + " opened · " + (total - read) + " to go, keep stacking ✨";
+          t.textContent = read + " of 3,685 lessons read · " + books + " book" + (books === 1 ? "" : "s") + " opened";
         });
       }
       paintProgress();
@@ -611,226 +605,85 @@
   })();
   </script>
   <script>
-  /* 🎛️ Customize Action Bar (with 2 free monthly edits) */
+  /* v331 · the bar studio, one step: tap a spot in the preview, pick a button.
+     Picking a button already in the bar swaps the two, so order is free too.
+     Every change applies to the real bar at once (TSB_BARCTL.apply). */
   (function () {
-    var POOL = [
-      { id: "home", label: "Home", icon: "🏠", desc: "Main library & search" },
-      { id: "audio", label: "Audio Room", icon: "🎧", desc: "Podcasts & audiobooks" },
-      { id: "stories", label: "Stories", icon: "✍️", desc: "Daily lessons & writing" },
-      { id: "you", label: "You", icon: "👤", desc: "Profile, streak & saved" },
-      { id: "messages", label: "Messages", icon: "✈️", desc: "Reader chat & Notes (dm.html)" },
-      { id: "ask", label: "Ask Library", icon: "💬", desc: "Ask 500-book library (chat.html)" },
-      { id: "continue", label: "Continue", icon: "📖", desc: "Instant resume last book" },
-      { id: "library", label: "Library", icon: "📚", desc: "Full 500-book catalog" },
-      { id: "scan", label: "Scan", icon: "📷", desc: "Camera book scanner" },
-      { id: "notes", label: "Notebook", icon: "📓", desc: "Private reading notes" },
-      { id: "graveyard", label: "Graveyard", icon: "💀", desc: "400 business autopsies" },
-      { id: "plus", label: "Plus", icon: "➕", desc: "Quick action / write post" }
-    ];
-
-    var slotsEl = document.getElementById("barSlotsRow");
-    var poolEl = document.getElementById("barPoolRow");
-    var quotaEl = document.getElementById("barQuotaBadge");
-    var msgEl = document.getElementById("barCustomMsg");
-    var saveBtn = document.getElementById("saveBarBtn");
-    var resetBtn = document.getElementById("resetBarBtn");
-    if (!slotsEl || !poolEl) return;
-
-    function getMonthKey() {
-      var d = new Date();
-      return d.getFullYear() + "-" + (d.getMonth() + 1 < 10 ? "0" : "") + (d.getMonth() + 1);
+    var hintEl = document.getElementById("bsSlots");
+    if (!hintEl) return;
+    var poolEl = document.getElementById("bsPool"), barEl = document.getElementById("bsBar"), phone = document.getElementById("bsPhone");
+    var countEl = document.getElementById("bsCount"), msgEl = document.getElementById("bsMsg");
+    var DEF = ["home", "library", "audio", "you"];
+    var NAMES = { home: "Today", library: "Library", audio: "Listen", you: "You", stories: "Stories", messages: "Messages", ask: "Ask", continue: "Continue", scan: "Scan", notes: "Notebook", random: "Discover", graveyard: "Graveyard", plus: "Write" };
+    function defs() { return (window.TSB_BARCTL && TSB_BARCTL.defs()) || {}; }
+    function gold() { try { return !!(window.TSB_GOLD && TSB_GOLD.isGold()); } catch (e) { return false; } }
+    function max() { return gold() ? 5 : 4; }
+    function get(k, d) { try { return localStorage.getItem(k) || d; } catch (e) { return d; } }
+    function load() {
+      try { var v = JSON.parse(localStorage.getItem("tsb_custom_bar")); if (Array.isArray(v) && v.length >= 4) return v.filter(function (k) { return !!defs()[k] || NAMES[k]; }).slice(0, max()); } catch (e) {}
+      return DEF.slice();
     }
-
-    function isGoldOrFounder() {
-      try {
-        if (window.TSB_GOLD && TSB_GOLD.isGold && TSB_GOLD.isGold()) return true;
-        var s = JSON.parse(localStorage.getItem("tsb_auth_session") || "null");
-        var em = ((s && s.user && s.user.email) || "").toLowerCase();
-        if (em === "acimotreyothy@gmail.com") return true;
-      } catch (e) {}
-      return false;
+    var slots = load(), sel = slots.length - 1;
+    function ico(k) { var d = defs()[k]; return d && d.ico ? d.ico.replace(/<div class="tsb-bar__plus">|<\/div>/g, "").replace(/#ffffff/g, "currentColor") : ""; }
+    function say(t) { msgEl.textContent = t; clearTimeout(say.t); say.t = setTimeout(function () { msgEl.textContent = ""; }, 2600); }
+    function save() {
+      try { localStorage.setItem("tsb_custom_bar", JSON.stringify(slots)); } catch (e) {}
+      try { if (window.TSB_BARCTL) TSB_BARCTL.apply(); } catch (e) {}
+      try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) {}
     }
-
-    function getQuota() {
-      if (isGoldOrFounder()) return { unlimited: true, left: 999 };
-      var ym = getMonthKey();
-      var data = { ym: ym, count: 0 };
-      try {
-        var raw = JSON.parse(localStorage.getItem("tsb_bar_custom_count"));
-        if (raw && raw.ym === ym) data = raw;
-      } catch (e) {}
-      return { unlimited: false, left: Math.max(0, 2 - data.count), count: data.count };
-    }
-
-    function useQuota() {
-      if (isGoldOrFounder()) return true;
-      var ym = getMonthKey();
-      var data = { ym: ym, count: 0 };
-      try {
-        var raw = JSON.parse(localStorage.getItem("tsb_bar_custom_count"));
-        if (raw && raw.ym === ym) data = raw;
-      } catch (e) {}
-      data.count++;
-      localStorage.setItem("tsb_bar_custom_count", JSON.stringify(data));
-      return true;
-    }
-
-    function loadSlots() {
-      try {
-        var saved = JSON.parse(localStorage.getItem("tsb_custom_bar"));
-        if (Array.isArray(saved) && saved.length >= 4) return saved;
-      } catch (e) {}
-      return ["home", "audio", "stories", "you"];
-    }
-
-    var currentSlots = loadSlots();
-
-    function render() {
-      var q = getQuota();
-      if (q.unlimited) {
-        quotaEl.innerHTML = "👑 Unlimited (Gold / Founder)";
-        quotaEl.style.color = "#0b7a58";
-      } else {
-        quotaEl.innerHTML = q.left + " / 2 free edits left this month";
-        quotaEl.style.color = q.left > 0 ? "var(--ink,#111)" : "#d64545";
-      }
-
-      slotsEl.innerHTML = currentSlots.map(function (k, idx) {
-        var it = POOL.filter(function (p) { return p.id === k; })[0] || { id: k, label: k, icon: "✦" };
-        var canLeft = idx > 0;
-        var canRight = idx < currentSlots.length - 1;
-        return '<div style="display:flex;align-items:center;gap:6px;background:var(--paper,#fff);border:2.5px solid var(--ink,#111);border-radius:10px;padding:6px 10px;box-shadow:3px 3px 0 var(--ink,#111);">' +
-          '<b style="font-size:11px;opacity:0.6;">#' + (idx + 1) + '</b>' +
-          '<span style="font-size:15px;">' + it.icon + '</span>' +
-          '<b style="font-size:12px;font-family:var(--font-head);">' + it.label + '</b>' +
-          '<div style="display:inline-flex;gap:3px;margin-left:4px;">' +
-            (canLeft ? '<button type="button" data-move-left="' + idx + '" style="background:#f0ede4;border:1.5px solid var(--ink,#111);border-radius:5px;cursor:pointer;padding:2px 6px;font-size:10px;font-weight:900;" title="Move left">◀</button>' : '') +
-            (canRight ? '<button type="button" data-move-right="' + idx + '" style="background:#f0ede4;border:1.5px solid var(--ink,#111);border-radius:5px;cursor:pointer;padding:2px 6px;font-size:10px;font-weight:900;" title="Move right">▶</button>' : '') +
-          '</div>' +
-          (currentSlots.length > 4 ? '<button type="button" data-del="' + idx + '" style="background:none;border:none;color:#999;font-weight:900;cursor:pointer;padding:0 0 0 4px;font-size:13px;" title="Remove slot">✕</button>' : '') +
-        '</div>';
+    function paint() {
+      var look = get("tsb_bar_look", "float"), beh = get("tsb_bar_behave", "auto");
+      if (look !== "float") look = "glass";
+      phone.setAttribute("data-look", look); phone.setAttribute("data-labels", "labels");
+      var cells = slots.map(function (k, i) {
+        return '<button type="button" class="bs-it' + (i === 0 ? " on" : "") + (i === sel ? " sel" : "") + '" data-i="' + i + '" aria-label="Spot ' + (i + 1) + ": " + (NAMES[k] || k) + '">' + ico(k) + "<b>" + (NAMES[k] || k) + "</b></button>";
+      });
+      if (slots.length < max()) cells.push('<button type="button" class="bs-it bs-it--add' + (sel === slots.length ? " sel" : "") + '" data-i="' + slots.length + '" aria-label="Add a fifth button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><b>Add</b></button>');
+      barEl.innerHTML = cells.join("");
+      countEl.textContent = gold() ? "" : "Gold adds a fifth spot.";
+      poolEl.innerHTML = Object.keys(NAMES).filter(function (k) { return !!defs()[k]; }).map(function (k) {
+        var on = slots.indexOf(k) >= 0, here = slots[sel] === k;
+        return '<button type="button" class="bs-p' + (on ? " in" : "") + (here ? " here" : "") + '" data-p="' + k + '">' + ico(k) + "<span>" + NAMES[k] + "</span></button>";
       }).join("");
-
-      poolEl.innerHTML = POOL.map(function (p) {
-        var inSlots = currentSlots.indexOf(p.id) >= 0;
-        return '<button type="button" data-add="' + p.id + '" style="display:inline-flex;align-items:center;gap:5px;background:' + (inSlots ? 'var(--yellow,#ffc800)' : 'var(--paper,#fff)') + ';border:2px solid var(--ink,#111);border-radius:8px;padding:6px 9px;font:700 11.5px var(--font-body);cursor:pointer;box-shadow:2px 2px 0 var(--ink,#111);' + (inSlots ? 'opacity:0.85;' : '') + '">' +
-          '<span>' + p.icon + '</span><span>' + p.label + '</span>' + (inSlots ? '<small style="font-size:9px;opacity:0.8;">(in bar)</small>' : '') +
-        '</button>';
-      }).join("");
+      document.querySelectorAll(".bs-seg").forEach(function (g) {
+        var cur = { look: look, behave: beh }[g.getAttribute("data-bs")];
+        g.querySelectorAll("[data-v]").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-v") === cur); });
+      });
     }
-
-    slotsEl.addEventListener("click", function (e) {
-      var leftBtn = e.target.closest("[data-move-left]");
-      if (leftBtn) {
-        var lIdx = parseInt(leftBtn.getAttribute("data-move-left"), 10);
-        if (lIdx > 0) {
-          var tmp = currentSlots[lIdx];
-          currentSlots[lIdx] = currentSlots[lIdx - 1];
-          currentSlots[lIdx - 1] = tmp;
-          render();
-        }
-        return;
-      }
-      var rightBtn = e.target.closest("[data-move-right]");
-      if (rightBtn) {
-        var rIdx = parseInt(rightBtn.getAttribute("data-move-right"), 10);
-        if (rIdx < currentSlots.length - 1) {
-          var tmp2 = currentSlots[rIdx];
-          currentSlots[rIdx] = currentSlots[rIdx + 1];
-          currentSlots[rIdx + 1] = tmp2;
-          render();
-        }
-        return;
-      }
-      var delBtn = e.target.closest("[data-del]");
-      if (!delBtn) return;
-      var idx = parseInt(delBtn.getAttribute("data-del"), 10);
-      if (currentSlots.length <= 4) return;
-      currentSlots.splice(idx, 1);
-      render();
+    barEl.addEventListener("click", function (e) {
+      var t = e.target.closest("[data-i]"); if (!t) return;
+      sel = +t.getAttribute("data-i"); paint();
     });
-
     poolEl.addEventListener("click", function (e) {
-      var addBtn = e.target.closest("[data-add]");
-      if (!addBtn) return;
-      var id = addBtn.getAttribute("data-add");
-      var at = currentSlots.indexOf(id);
-      if (at >= 0) {
-        if (currentSlots.length > 4) {
-          currentSlots.splice(at, 1);
-        } else {
-          msgEl.textContent = "Minimum 4 buttons required in the action bar.";
-          setTimeout(function () { msgEl.textContent = ""; }, 2500);
-        }
-      } else {
-        if (currentSlots.length >= 5) {
-          msgEl.textContent = "Maximum 5 buttons allowed. Tap an existing button to swap it.";
-          setTimeout(function () { msgEl.textContent = ""; }, 2500);
-          return;
-        }
-        currentSlots.push(id);
-      }
-      render();
+      var t = e.target.closest("[data-p]"); if (!t) return;
+      var k = t.getAttribute("data-p"), at = slots.indexOf(k);
+      if (sel >= slots.length) { if (at >= 0) { say(NAMES[k] + " is already in your bar"); return; } slots.push(k); say(NAMES[k] + " added"); }
+      else if (at === sel) return;
+      else if (at >= 0) { var tmp = slots[sel]; slots[sel] = k; slots[at] = tmp; say(NAMES[k] + " and " + (NAMES[tmp] || tmp) + " swapped"); }
+      else { var was = slots[sel]; slots[sel] = k; say(NAMES[k] + " is in, " + (NAMES[was] || was) + " is out"); }
+      save(); paint();
     });
-
-    saveBtn.addEventListener("click", function () {
-      if (currentSlots.length < 4) {
-        msgEl.textContent = "Please select at least 4 buttons for the action bar.";
-        return;
-      }
-      var q = getQuota();
-      if (!q.unlimited && q.left <= 0) {
-        msgEl.innerHTML = "⚠️ You have used your 2 free bar customizations this month. Upgrade to Gold for unlimited changes anytime!";
-        return;
-      }
-      useQuota();
-      localStorage.setItem("tsb_custom_bar", JSON.stringify(currentSlots));
-      msgEl.innerHTML = "✅ Action bar updated successfully!";
-      render();
-      setTimeout(function () { location.reload(); }, 600);
-    });
-
-    resetBtn.addEventListener("click", function () {
-      currentSlots = ["home", "audio", "stories", "you"];
-      localStorage.removeItem("tsb_custom_bar");
-      msgEl.innerHTML = "↺ Reset to classic: Home, Audio Room, Stories, You.";
-      render();
-      setTimeout(function () { location.reload(); }, 600);
-    });
-
-    /* Tab labels toggle */
-    var btnFull = document.getElementById("btnBarLabelFull");
-    var btnIcons = document.getElementById("btnBarLabelIcons");
-    function syncLabelBtns() {
-      var pref = "";
-      try { pref = localStorage.getItem("tsb_bar_labels") || "labels"; } catch(e) {}
-      if (btnFull && btnIcons) {
-        btnFull.classList.toggle("setbtn--yellow", pref !== "icons");
-        btnIcons.classList.toggle("setbtn--yellow", pref === "icons");
-      }
-    }
-    syncLabelBtns();
-    if (btnFull) {
-      btnFull.addEventListener("click", function () {
-        try { localStorage.setItem("tsb_bar_labels", "labels"); } catch(e) {}
-        document.documentElement.removeAttribute("data-bar-labels");
-        var b = document.getElementById("tsbBar");
-        if (b) b.classList.remove("tsb-bar--icons-only");
-        syncLabelBtns();
+    document.querySelectorAll(".bs-seg").forEach(function (g) {
+      g.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-v]"); if (!b) return;
+        var key = { look: "tsb_bar_look", behave: "tsb_bar_behave" }[g.getAttribute("data-bs")];
+        try { localStorage.setItem(key, b.getAttribute("data-v")); } catch (e2) {}
+        try { if (window.TSB_BARCTL) TSB_BARCTL.apply(); } catch (e3) {}
+        paint();
       });
-    }
-    if (btnIcons) {
-      btnIcons.addEventListener("click", function () {
-        try { localStorage.setItem("tsb_bar_labels", "icons"); } catch(e) {}
-        document.documentElement.setAttribute("data-bar-labels", "icons");
-        var b = document.getElementById("tsbBar");
-        if (b) b.classList.add("tsb-bar--icons-only");
-        syncLabelBtns();
-      });
-    }
-
-    render();
+    });
+    document.getElementById("bsReset").addEventListener("click", function () {
+      slots = DEF.slice(); sel = 3;
+      ["tsb_custom_bar", "tsb_bar_look", "tsb_bar_labels", "tsb_bar_behave"].forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
+      try { if (window.TSB_BARCTL) TSB_BARCTL.apply(); } catch (e) {}
+      paint(); say("Back to Today, Library, Listen, You");
+    });
+    window.addEventListener("tsbgold", function () { slots = load(); paint(); });
+    if (window.TSB_BARCTL) paint(); else window.addEventListener("load", paint);
   })();
   </script>
+  <script src="js/stt.js?v=335"></script>
+  <script src="js/film.js?v=335" defer></script>
+  <script src="js/film2.js?v=335" defer></script>
 </body>
 </html>

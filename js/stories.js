@@ -96,7 +96,7 @@ async function renderShelf() {
     const words = s.text ? s.text.split(/\s+/).length : 0;
     const mins = s.pdf && !s.text ? "PDF" : Math.max(1, Math.round(words / 200)) + " min";
     const coverHTML = s.cover
-      ? `<img class="storycard__cover" src="${s.cover}" alt="${escapeHTML(s.title)} cover">`
+      ? `<img class="storycard__cover" src="${escapeHTML(s.cover)}" alt="${escapeHTML(s.title)} cover">`
       : `<div class="storycard__cover" style="display:grid;place-items:center;font-size:3.4rem;background:var(--yellow);">${s.emoji || "📖"}</div>`;
     a.innerHTML = `
       <div class="card__top">

@@ -361,6 +361,13 @@
      while the reader types, no account exists yet to reserve it. */
   async function usernameFree(u) {
     if (!ENABLED) return true;
+    /* v331: ask the database function first (works even when profiles are private) */
+    try {
+      const r = await fetch(URL + "/rest/v1/rpc/username_available", {
+        method: "POST", headers: { "apikey": ANON, "Content-Type": "application/json" }, body: JSON.stringify({ u: u })
+      });
+      if (r.ok) { const v = await r.json(); if (typeof v === "boolean") return v; }
+    } catch (e) {}
     try {
       const res = await fetch(TABLE_PROFILES + "?username=eq." + encodeURIComponent(u) + "&select=id",
         { headers: { "apikey": ANON } });
@@ -558,66 +565,82 @@
      just approved), a username to claim, a password to set, and the 13+
      tick. From that moment @username + password opens the same account
      forever, Google stays just one of two doors. */
+  /* v331: EVERY signed-in reader (Google or email, new or old) completes one
+     short profile before the app opens: name, birth year (13+) and a unique
+     @username. Old accounts that already hold a username only add the rest. */
   function needsFinish() {
     const u = user();
-    if (!u || !u.app_metadata) return false;
-    const prov = u.app_metadata.provider || (u.app_metadata.providers || [])[0];
-    if (prov !== "google") return false;              // email accounts are born finished
+    if (!u) return false;
     const md = u.user_metadata || {};
-    if (md.username || md.google_finished) return false;   // claimed, or honestly skipped
+    if (md.username && md.birth_year && md.profile_v331) return false;
     return true;
   }
 
   async function finishGoogleAccount(fields) {
     const f = fields || {};
     if (!ENABLED || !session) return { ok: false, code: "sign-in" };
-    const handle = String(f.username || "").trim().toLowerCase();
-    const pw = String(f.password || "");
-    if (!HANDLE_RE.test(handle)) return { ok: false, code: "badhandle" };
-    if (pw.length < 8) return { ok: false, code: "weak" };
-    const free = await usernameFree(handle);
-    if (!free) return { ok: false, code: "taken" };
     const u = user() || {};
     const md = u.user_metadata || {};
-    const display = String(f.display || md.full_name || md.name || handle).trim().slice(0, 24) || handle;
+    const handle = String(f.username || "").trim().toLowerCase();
+    const pw = String(f.password || "");
+    const by = parseInt(f.birth_year, 10);
+    const nowY = new Date().getFullYear();
+    if (!HANDLE_RE.test(handle)) return { ok: false, code: "badhandle" };
+    if (!(by > nowY - 110 && nowY - by >= 13)) return { ok: false, code: "age" };
+    if (pw && pw.length < 8) return { ok: false, code: "weak" };
+    const mine = String(md.username || "").toLowerCase() === handle;
+    if (!mine) {
+      const free = await usernameFree(handle);
+      if (!free) return { ok: false, code: "taken" };
+    }
+    const display = String(f.display || md.full_name || md.name || handle).trim().slice(0, 40) || handle;
+    const meta = {
+      username: handle, full_name: display, name: display, birth_year: by,
+      first_name: md.first_name || md.given_name || "", last_name: md.last_name || md.family_name || "",
+      google_finished: true, profile_v331: true
+    };
     try {
       const tok = await ensureToken();
+      const body = { data: meta };
+      if (pw) body.password = pw;
+      /* v331: claim the handle in profiles FIRST. The unique index is the referee:
+         a 409 means someone else took it a moment ago, so nothing else is saved. */
+      const full = { username: handle, name: display, full_name: display, profile_done_at: new Date().toISOString(), avatar_url: md.avatar_url || null };
+      const base = { username: handle, name: display, avatar_url: md.avatar_url || null };
+      const H = authHeaders({ "Authorization": "Bearer " + tok, "Prefer": "return=minimal" });
+      const tryPatch = (b) => fetch(TABLE_PROFILES + "?id=eq." + encodeURIComponent(u.id), { method: "PATCH", headers: H, body: JSON.stringify(b) });
+      const TAKEN = { ok: false, code: "taken" };
+      let patch = await tryPatch(full);
+      if (patch.status === 409) return TAKEN;
+      if (!patch.ok) { patch = await tryPatch(base); if (patch.status === 409) return TAKEN; }
+      if (!patch.ok) {
+        let ins = await fetch(TABLE_PROFILES, { method: "POST", headers: H, body: JSON.stringify(Object.assign({ id: u.id }, full)) });
+        if (ins.status === 409 && !/profiles_pkey/.test(await ins.text().catch(function () { return ""; }))) return TAKEN;
+        if (!ins.ok) { ins = await fetch(TABLE_PROFILES, { method: "POST", headers: H, body: JSON.stringify(Object.assign({ id: u.id }, base)) }); if (ins.status === 409) return TAKEN; }
+      }
       const res = await fetch(URL + "/auth/v1/user", {
         method: "PUT",
         headers: { "apikey": ANON, "Content-Type": "application/json", "Authorization": "Bearer " + tok },
-        body: JSON.stringify({
-          password: pw,
-          data: {
-            username: handle,
-            full_name: display,
-            name: display,
-            first_name: md.first_name || md.given_name || "",
-            last_name: md.last_name || md.family_name || "",
-            provider: "google",
-            google_finished: true
-          }
-        })
+        body: JSON.stringify(body)
       });
       if (!res.ok) return { ok: false, code: "net" };
-      /* mirror the handle into profiles, insert if the row is missing */
-      const patch = await fetch(TABLE_PROFILES + "?id=eq." + encodeURIComponent(u.id), {
-        method: "PATCH",
-        headers: authHeaders({ "Authorization": "Bearer " + tok, "Prefer": "return=minimal" }),
-        body: JSON.stringify({ username: handle, name: display, avatar_url: md.avatar_url || null })
-      });
-      if (!patch.ok) {
-        await fetch(TABLE_PROFILES, {
-          method: "POST",
-          headers: authHeaders({ "Authorization": "Bearer " + tok, "Prefer": "return=minimal" }),
-          body: JSON.stringify({ id: u.id, username: handle, name: display, avatar_url: md.avatar_url || null })
-        });
-      }
-      /* keep the local session honest, the gate never fires again */
       session.user = session.user || {};
-      session.user.user_metadata = Object.assign({}, md, { username: handle, full_name: display, name: display });
+      session.user.user_metadata = Object.assign({}, md, meta);
       lsSet(AUTH_KEY, session);
+      try { localStorage.setItem("tsb_reader_name", JSON.stringify(display.split(" ")[0])); } catch (e) {}
       return { ok: true };
     } catch (e) { return { ok: false, code: "net" }; }
+  }
+
+  /* v331: nobody uses the app half signed up. Any page sends an unfinished
+     account to the one short profile step, then straight back. */
+  function finishGate() {
+    try {
+      if (!needsFinish()) return;
+      if (/(login|legal|privacy|terms|offline)\.html$/.test(location.pathname)) return;
+      try { sessionStorage.setItem("tsb_auth_return", location.pathname.split("/").pop() + location.search); } catch (e) {}
+      location.replace("login.html#finish");
+    } catch (e) {}
   }
 
   /* always answers ok, never reveals whether the address has an account */
@@ -809,36 +832,36 @@
     st.id = "tsb-auth-style";
     st.textContent = `
       #tsb-auth-slot{margin-top:14px;text-align:center}
-      .tsb-auth-chip{display:inline-flex;align-items:center;gap:8px;border:3px solid #111;background:#fffdf5;box-shadow:4px 4px 0 #111;padding:8px 16px;font-family:"Archivo Black",sans-serif;font-size:12px;letter-spacing:.5px;cursor:pointer;color:#111;text-decoration:none}
-      .tsb-auth-chip:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 #111}
+      .tsb-auth-chip{display:inline-flex;align-items:center;gap:8px;border:var(--bw) solid var(--edge);background:#fffdf5;box-shadow:var(--sh-2);padding:8px 16px;font-family:"Archivo Black",sans-serif;font-size:12px;letter-spacing:.5px;cursor:pointer;color:#111;text-decoration:none}
+      .tsb-auth-chip:hover{transform:translate(-1px,-1px);box-shadow:var(--sh-3)}
       .tsb-auth-chip--in{background:#00c48c;color:#111}
-      .tsb-auth-chip--out{background:#fff;color:#111;border:3px solid #111;box-shadow:3px 3px 0 #111;gap:8px;padding:10px 18px;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;align-items:center;justify-content:center;text-decoration:none;display:inline-flex}
+      .tsb-auth-chip--out{background:#fff;color:#111;border:var(--bw) solid var(--edge);box-shadow:var(--sh-2);gap:8px;padding:10px 18px;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;align-items:center;justify-content:center;text-decoration:none;display:inline-flex}
       .tsb-auth-chip--out svg{flex:none}
-      .tsb-auth-chip--out:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 #111}
+      .tsb-auth-chip--out:hover{transform:translate(-1px,-1px);box-shadow:var(--sh-3)}
       /* ---- navbar user chip / login button ---- */
-      .tsb-navuser{display:inline-flex;align-items:center;gap:7px;border:3px solid var(--ink);font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:9px 14px;cursor:pointer;text-decoration:none;line-height:1;transition:transform .12s ease, box-shadow .12s ease;color:#111}
+      .tsb-navuser{display:inline-flex;align-items:center;gap:7px;border:var(--bw) solid var(--edge);font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;padding:9px 14px;cursor:pointer;text-decoration:none;line-height:1;transition:transform .12s ease, box-shadow .12s ease;color:#111}
       .tsb-navuser:hover{transform:translate(-1px,-1px)}
-      .tsb-navuser--login{background:var(--blue);box-shadow:3.5px 3.5px 0 var(--ink)}
-      .tsb-navuser--login:hover{box-shadow:5px 5px 0 var(--ink)}
-      .tsb-navuser--in{background:var(--paper);color:var(--ink);text-transform:none;letter-spacing:0;font-size:12px;font-weight:600;padding:7px 12px;box-shadow:3px 3px 0 var(--green)}
-      .tsb-navuser--in:hover{box-shadow:5px 5px 0 var(--green)}
-      .tsb-navuser__dot{width:8px;height:8px;border-radius:50%;background:var(--green);border:2px solid var(--ink);flex:none;animation:tsbDotPulse 2.2s ease-in-out infinite}
+      .tsb-navuser--login{background:var(--blue);box-shadow:var(--sh-2)}
+      .tsb-navuser--login:hover{box-shadow:var(--sh-3)}
+      .tsb-navuser--in{background:var(--paper);color:var(--ink);text-transform:none;letter-spacing:0;font-size:12px;font-weight:600;padding:7px 12px;box-shadow:var(--sh-2)}
+      .tsb-navuser--in:hover{box-shadow:var(--sh-3)}
+      .tsb-navuser__dot{width:8px;height:8px;border-radius:50%;background:var(--green);border:var(--bw) solid var(--edge);flex:none;animation:tsbDotPulse 2.2s ease-in-out infinite}
       @keyframes tsbDotPulse{0%,100%{opacity:1}50%{opacity:.35}}
-      .tsb-auth-toast--welcome{background:#ffc800;color:#111;border-color:var(--ink);box-shadow:6px 6px 0 #00c48c}
+      .tsb-auth-toast--welcome{background:#ffc800;color:#111;border-color:var(--ink);box-shadow:var(--sh-3)}
       .tsb-auth-ov{position:fixed;inset:0;background:rgba(17,17,17,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:18px;animation:tsbAuthFade .25s ease}
-      .tsb-auth-box{background:#fffdf5;border:4px solid #111;box-shadow:10px 10px 0 #ffc800;max-width:400px;width:100%;padding:26px 22px;text-align:center;position:relative;animation:tsbAuthPop .3s cubic-bezier(.2,1.4,.4,1)}
-      .tsb-auth-x{position:absolute;top:10px;right:12px;border:2.5px solid #111;background:#fffdf5;width:32px;height:32px;cursor:pointer;font-weight:700}
+      .tsb-auth-box{background:#fffdf5;border:var(--bw) solid var(--edge);box-shadow:var(--sh-y);max-width:400px;width:100%;padding:26px 22px;text-align:center;position:relative;animation:tsbAuthPop .3s cubic-bezier(.16, 1, .3, 1)}
+      .tsb-auth-x{position:absolute;top:10px;right:12px;border:var(--bw) solid var(--edge);background:#fffdf5;width:32px;height:32px;cursor:pointer;font-weight:700}
       .tsb-auth-box h3{font-family:"Archivo Black",sans-serif;font-size:21px;margin:6px 0 8px}
       .tsb-auth-box p{font-size:14px;line-height:1.55;color:#333;margin:0 0 16px}
-      .tsb-auth-g{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:3px solid #111;background:#fff;box-shadow:4px 4px 0 #111;padding:12px 16px;font-family:"Archivo Black",sans-serif;font-size:14px;cursor:pointer;color:#111;margin-bottom:10px}
-      .tsb-auth-g:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 #111}
+      .tsb-auth-g{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:var(--bw) solid var(--edge);background:#fff;box-shadow:var(--sh-2);padding:12px 16px;font-family:"Archivo Black",sans-serif;font-size:14px;cursor:pointer;color:#111;margin-bottom:10px}
+      .tsb-auth-g:hover{transform:translate(-1px,-1px);box-shadow:var(--sh-3)}
       .tsb-auth-g img{width:20px;height:20px}
       .tsb-auth-later{background:none;border:none;text-decoration:underline;cursor:pointer;font-size:12.5px;color:#666;padding:6px}
       .tsb-auth-chips{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-      .tsb-auth-chips span{font-size:10.5px;font-weight:700;letter-spacing:.4px;border:2.5px solid #111;padding:4px 8px;background:#ffc800}
+      .tsb-auth-chips span{font-size:10.5px;font-weight:700;letter-spacing:.4px;border:var(--bw) solid var(--edge);padding:4px 8px;background:#ffc800}
       .tsb-auth-chips span:nth-child(2){background:#ff90e8}
       .tsb-auth-chips span:nth-child(3){background:#00c48c}
-      .tsb-auth-toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:10000;background:#111;color:#ffc800;border:3px solid #00c48c;box-shadow:6px 6px 0 #00c48c;padding:12px 22px;font-family:"Archivo Black",sans-serif;font-size:13px;letter-spacing:.5px;animation:tsbAuthFade .3s ease}
+      .tsb-auth-toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:10000;background:#111;color:#ffc800;border:3px solid #00c48c;box-shadow:var(--sh-3);padding:12px 22px;font-family:"Archivo Black",sans-serif;font-size:13px;letter-spacing:.5px;animation:tsbAuthFade .3s ease}
       @keyframes tsbAuthFade{from{opacity:0}to{opacity:1}}
       @keyframes tsbAuthPop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
     `;
@@ -967,7 +990,7 @@
         <h3>LOG OUT?</h3>
         <p>Are you sure you want to log out? Your progress stays <b>safe</b>, just log back in with Google anytime.</p>
         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-          <button class="tsb-auth-g" id="tsbLogoutYes" style="background:#ff4d4d;color:#fff;margin-bottom:0">YES, LOG OUT</button>
+          <button class="tsb-auth-g" id="tsbLogoutYes" style="background:#D23A3A;color:#fff;margin-bottom:0">YES, LOG OUT</button>
           <button class="tsb-auth-g" id="tsbLogoutNo" style="background:#fffdf5;color:#111;margin-bottom:0">CANCEL</button>
         </div>
       </div>`;
@@ -992,7 +1015,7 @@
     if (u) {
       const nm = displayName();
       slot.innerHTML = `<button class="tsb-auth-chip tsb-auth-chip--in" id="tsbAuthChip" title="Progress synced across devices">👋 ${escapeHtml(nm.split(" ")[0])} · SYNCED ✅</button>
-        <button class="tsb-auth-chip" id="tsbAuthOut" style="margin-left:8px;background:#ff4d4d;color:#fff">LOGOUT</button>`;
+        <button class="tsb-auth-chip" id="tsbAuthOut" style="margin-left:8px;background:#D23A3A;color:#fff">LOGOUT</button>`;
       slot.querySelector("#tsbAuthOut").addEventListener("click", confirmLogout);
     } else {
       slot.innerHTML = `<a class="tsb-auth-chip tsb-auth-chip--out" href="login.html" id="tsbAuthChip">${GOOGLE_G} LOG IN, SAVE PROGRESS</a>`;
@@ -1058,7 +1081,7 @@
           '<button class="tsb-sheet__x" data-sheet-close aria-label="Close">✕</button>' +
         "</div>" +
         '<div class="tsb-sheet__wave" aria-hidden="true">👋</div>' +
-        '<h2 class="tsb-sheet__h">YOUR SHELF, EVERYWHERE</h2>' +
+        '<h2 class="tsb-sheet__h">Your shelf, everywhere</h2>' +
         '<p class="tsb-sheet__s">Sign in to keep what you read, and to start posting.</p>' +
         '<div class="tsb-sheet__perk"><span>📚</span> Progress and shelf on every device</div>' +
         '<div class="tsb-sheet__perk"><span>🔥</span> Streaks and badges that actually save</div>' +
@@ -1105,6 +1128,7 @@
         afterLogin(true);
       }
       if (user() && session.expires_at && now() >= session.expires_at - 90) await refreshSession();
+      finishGate();
       renderNav();
       renderChip();
       attachNavHandlers();

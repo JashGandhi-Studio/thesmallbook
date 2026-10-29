@@ -15,7 +15,7 @@
     "ALL":      { label: "ALL GRAVES", emoji: "💀", color: "#9aa2ad" },
     "STARTUP":  { label: "STARTUPS",   emoji: "🚀", color: "#3ec9e6" },
     "MONEY":    { label: "MONEY",      emoji: "💸", color: "#00c48c" },
-    "FRAUD":    { label: "FRAUD",      emoji: "🃏", color: "#ff4d4d" },
+    "FRAUD":    { label: "FRAUD",      emoji: "🃏", color: "#D23A3A" },
     "EGO":      { label: "EGO",        emoji: "👑", color: "#b28dff" },
     "BUSINESS": { label: "BUSINESS",   emoji: "🏢", color: "#4d7cff" },
     "TRUST":    { label: "TRUST",      emoji: "🤝", color: "#ffc800" },
@@ -580,23 +580,23 @@
           </div>
 
           <section class="autopsy__sec">
-            <h2 class="autopsy__h" translate="no">🌱 HOW IT STARTED</h2>
+            <h2 class="autopsy__h" translate="no">🌱 How it started</h2>
             <p>${esc(origin)}</p>
           </section>
 
           ${fall ? `
           <section class="autopsy__sec">
-            <h2 class="autopsy__h" translate="no">📉 THE FALL</h2>
+            <h2 class="autopsy__h" translate="no">📉 The fall</h2>
             <p>${esc(fall)}</p>
           </section>` : ""}
 
           <section class="autopsy__sec autopsy__sec--mistake">
-            <h2 class="autopsy__h autopsy__h--mistake" translate="no">☠️ THE FATAL MISTAKE</h2>
+            <h2 class="autopsy__h autopsy__h--mistake" translate="no">☠️ The fatal mistake</h2>
             <p>${esc(f.mistake)}</p>
           </section>
 
           <section class="autopsy__sec autopsy__sec--lesson">
-            <h2 class="autopsy__h autopsy__h--lesson" translate="no">🧠 THE LESSON - FREE FOR YOU</h2>
+            <h2 class="autopsy__h autopsy__h--lesson" translate="no">🧠 The lesson - free for you</h2>
             <p>${esc(f.lesson)}</p>
           </section>
 
@@ -925,7 +925,7 @@
       var corpseCards = gravePicks.map(function (gid) {
         var match = F.filter(function (x) { return x.id === gid; })[0];
         if (!match) return "";
-        return '<a href="#grave=' + match.id + '" style="display:flex;align-items:center;gap:10px;background:#fff;border:2px solid var(--ink,#111);border-radius:10px;padding:8px 12px;text-decoration:none;color:var(--ink,#111);box-shadow:2px 2px 0 var(--ink,#111);">' +
+        return '<a href="#grave=' + match.id + '" style="display:flex;align-items:center;gap:10px;background:#fff;border:var(--bw) solid var(--edge);border-radius:14px;padding:8px 12px;text-decoration:none;color:var(--ink,#111);box-shadow:var(--sh-1);">' +
           '<span style="font-size:20px;">' + (match.emoji || "💀") + '</span>' +
           '<div style="flex:1;min-width:0;">' +
             '<b style="display:block;font-size:12.5px;font-family:var(--font-head);">' + esc(match.name) + '</b>' +
@@ -939,13 +939,13 @@
 
       resCard.style.display = "block";
       resCard.innerHTML =
-        '<div style="background:var(--surface,#fff);border:3px solid var(--ink,#111);border-radius:14px;padding:18px;box-shadow:4px 4px 0 var(--ink,#111);">' +
-          '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:2px solid var(--ink,#111);padding-bottom:10px;margin-bottom:12px;">' +
+        '<div style="background:var(--surface,#fff);border:var(--bw) solid var(--edge);border-radius:20px;padding:18px;box-shadow:var(--sh-2);">' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:var(--bw) solid var(--edge);padding-bottom:10px;margin-bottom:12px;">' +
             '<div>' +
               '<span style="font:800 10px var(--font-head);letter-spacing:1px;color:var(--muted,#666);text-transform:uppercase;">AUTOPSY REPORT</span>' +
               '<h3 style="font:800 18px var(--font-head);margin:2px 0 0;color:var(--ink,#111);">“' + esc(idea) + '”</h3>' +
             '</div>' +
-            '<div style="background:' + riskColor + ';color:#fff;border:2px solid var(--ink,#111);border-radius:10px;padding:6px 12px;text-align:center;">' +
+            '<div style="background:' + riskColor + ';color:#fff;border:var(--bw) solid var(--edge);border-radius:14px;padding:6px 12px;text-align:center;">' +
               '<div style="font:800 9.5px var(--font-head);letter-spacing:1px;">MORTALITY RISK</div>' +
               '<div style="font:800 20px var(--font-head);">' + riskScore + '%</div>' +
             '</div>' +
@@ -963,11 +963,11 @@
             '</div>'
           ) : '') +
 
-          '<div style="background:#fff8db;border:2px solid var(--ink,#111);border-radius:10px;padding:12px;margin-bottom:14px;">' +
+          '<div style="background:#fff8db;border:var(--bw) solid var(--edge);border-radius:14px;padding:12px;margin-bottom:14px;">' +
             '<b style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;text-transform:uppercase;color:#854d0e;margin-bottom:4px;">💊 RECOMMENDED BOOK ANTIDOTE:</b>' +
             '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">' +
               '<span style="font:700 13px var(--font-body);color:var(--ink,#111);">📖 ' + esc(antidoteBook) + '</span>' +
-              '<a href="book.html?id=' + esc(antidoteSlug) + '" style="background:var(--yellow,#ffc800);border:2px solid var(--ink,#111);border-radius:8px;padding:5px 10px;font:800 11px var(--font-head);color:#111;text-decoration:none;box-shadow:2px 2px 0 var(--ink,#111);">READ SUMMARY FREE →</a>' +
+              '<a href="book.html?id=' + esc(antidoteSlug) + '" style="background:var(--yellow,#ffc800);border:var(--bw) solid var(--edge);border-radius:12px;padding:5px 10px;font:800 11px var(--font-head);color:#111;text-decoration:none;box-shadow:var(--sh-1);">READ SUMMARY FREE →</a>' +
             '</div>' +
           '</div>' +
 

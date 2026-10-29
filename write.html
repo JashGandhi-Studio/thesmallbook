@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta property="og:title" content="Write, TheSmallBook">
   <meta property="og:description" content="Publish your story, your quote card or your voice, right from the phone.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=323">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=335">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/write.html">
@@ -27,13 +29,13 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=323">
-  <link rel="stylesheet" href="css/studio.css?v=323">
+  <link rel="stylesheet" href="css/style.css?v=335">
+  <link rel="stylesheet" href="css/studio.css?v=335">
   <style>
   /* v246, compact attach bar: professional one-row adding */
   .wr-addrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
-  .wr-addbtn{display:flex;flex-direction:column;align-items:center;gap:3px;border:2.5px solid #111;background:#fff;border-radius:14px;padding:10px 6px 8px;cursor:pointer;box-shadow:2.5px 2.5px 0 #111;font-family:'Space Grotesk',sans-serif;min-width:0;transition:transform .12s,box-shadow .12s}
-  .wr-addbtn:active{transform:translate(1.5px,1.5px);box-shadow:1px 1px 0 #111}
+  .wr-addbtn{display:flex;flex-direction:column;align-items:center;gap:3px;border:var(--bw) solid var(--edge);background:#fff;border-radius:20px;padding:10px 6px 8px;cursor:pointer;box-shadow:var(--sh-2);font-family:'Space Grotesk',sans-serif;min-width:0;transition:transform .12s,box-shadow .12s}
+  .wr-addbtn:active{transform:translate(1.5px,1.5px);box-shadow:var(--sh-1)}
   .wr-addbtn__ic{font-size:19px;line-height:1}
   .wr-addbtn__t{font:800 11px 'Space Grotesk',sans-serif;color:#111;letter-spacing:.2px;white-space:nowrap}
   .wr-addbtn__s{font:600 9px 'Space Grotesk',sans-serif;color:#16a34a;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:11px}
@@ -43,13 +45,16 @@
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="css/film.css?v=335">
+  <link rel="stylesheet" href="css/film2.css?v=335">
+  <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
 </head>
-<body class="wrpage">
+<body class="wrpage fwr">
   <h1 class="sr-only">Write, TheSmallBook</h1>
   <header class="wr-top">
-    <a class="wr-back" id="wrBack" href="stories.html" aria-label="Back to Stories">←</a>
-    <span class="wr-save" id="saveState">✍️ draft</span>
-    <button class="cm-write" id="pubBtn">Publish →</button>
+    <a class="wr-back" id="wrBack" href="stories.html" aria-label="Back to Stories"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <span class="wr-save" id="saveState">Draft</span>
+    <button class="cm-write" id="pubBtn">Post</button>
   </header>
 
   <main class="wr-wrap">
@@ -62,19 +67,19 @@
       </div>
       <div class="wr-whyprev" id="quoteWhyPrev" hidden></div>
       <div class="wr-quotelive__chips">
-        <button id="quoteFrameChip" class="wr-qchip wr-qchip--main" type="button">🎨 FRAME IT IN STUDIO</button>
-        <button id="quoteCleanChip" class="wr-qchip" type="button">▢ CLEAN COVER, quote as text</button>
+        <button id="quoteFrameChip" class="wr-qchip wr-qchip--main" type="button">Frame it in Studio</button>
+        <button id="quoteCleanChip" class="wr-qchip" type="button">Clean cover, quote as text</button>
       </div>
       <p class="wr-quotelive__hint">Tap the card (or FRAME IT), Studio frames everything: photo, fonts, ratio. The feed shows your finished image only, the quote lives in it. Choose CLEAN COVER only if you want the words below the photo instead.</p>
     </div>
 
       <!-- INSPIRE DESK, perfectly embedded with Quote & Story (lives with the title, not as a separate card after quote) -->
-      <div id="inspireEmbed" class="wr-inspire-embed" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fff;border:2.5px solid #111;border-radius:14px;box-shadow:3px 3px 0 #111;padding:8px 10px;margin:8px 0 10px;">
+      <div id="inspireEmbed" class="wr-inspire-embed" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#fff;border:var(--bw) solid var(--edge);border-radius:20px;box-shadow:var(--sh-2);padding:8px 10px;margin:8px 0 10px;">
         <span style="display:inline-flex;align-items:center;gap:6px;flex:none;background:#111;color:#ffc800;border-radius:999px;padding:5px 9px;font:800 10px 'Space Grotesk',sans-serif;letter-spacing:.5px;text-transform:uppercase;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 1 4 12.7V16a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-1.3A7 7 0 0 1 12 2z"/></svg> Inspire Desk</span>
         <span id="inspireEmbedSub" style="flex:1 1 120px;font:600 11px 'Space Grotesk',sans-serif;color:#6b7280;min-width:0;">live, quotes & images</span>
         <span style="display:inline-flex;gap:6px;flex-wrap:wrap;flex:none;">
-          <button type="button" id="inspEmbedBtn1" style="border:2px solid #111;background:#ffc800;border-radius:999px;padding:7px 11px;font:800 11px 'Space Grotesk',sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Quotes</button>
-          <button type="button" id="inspEmbedBtn2" style="border:2px solid #111;background:#fff;border-radius:999px;padding:7px 11px;font:800 11px 'Space Grotesk',sans-serif;cursor:pointer;box-shadow:2px 2px 0 #111;display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg> Images</button>
+          <button type="button" id="inspEmbedBtn1" style="border:var(--bw) solid var(--edge);background:#ffc800;border-radius:999px;padding:7px 11px;font:800 11px 'Space Grotesk',sans-serif;cursor:pointer;box-shadow:var(--sh-1);display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Quotes</button>
+          <button type="button" id="inspEmbedBtn2" style="border:var(--bw) solid var(--edge);background:#fff;border-radius:999px;padding:7px 11px;font:800 11px 'Space Grotesk',sans-serif;cursor:pointer;box-shadow:var(--sh-1);display:inline-flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg> Images</button>
         </span>
       </div>
     <div class="wr-bar" id="wBar">
@@ -84,16 +89,16 @@
       <span class="wr-sep"></span>
       <button data-cmd="h1" title="Big heading">H1</button>
       <button data-cmd="h2" title="Heading">H2</button>
-      <button data-cmd="quote" title="Quote">❝</button>
+      <button data-cmd="quote" title="Quote">“</button>
       <span class="wr-sep"></span>
       <button data-cmd="ul" title="Bullets">•≡</button>
       <button data-cmd="ol" title="Numbered">1≡</button>
       <button data-cmd="mono" title="Monospace block">&lt;/&gt;</button>
       <span class="wr-sep"></span>
       <select id="wFont" title="Editor font">
-        <option value="grotesk">🖋 Grotesk</option>
-        <option value="serif">📜 Serif</option>
-        <option value="mono">⌨ Mono</option>
+        <option value="grotesk">Grotesk</option>
+        <option value="serif">Serif</option>
+        <option value="mono">Mono</option>
       </select>
       <span class="wr-sep wr-sep--inspire" style="display:none"></span>
     </div>
@@ -104,54 +109,54 @@
       <!-- v246: ONE compact attach bar, photo · video · voice in a single clean row. No stacked cards, no scrolling to add. -->
       <div class="wr-card" id="addCard">
         <div class="wr-card__head">
-          <span class="wr-card__title" id="addCardTitle">➕ Add to your story</span>
+          <span class="wr-card__title" id="addCardTitle">Add to your story</span>
           <span class="wr-card__sub" id="addCardSub">one tap, attach what you need</span>
         </div>
         <div class="wr-addrow" id="wAddRow">
-          <button type="button" class="wr-addbtn" id="addPhotoBtn"><span class="wr-addbtn__ic">📷</span><span class="wr-addbtn__t">Choose image</span><span class="wr-addbtn__s" id="wCoverName">No file chosen</span></button>
-          <button type="button" class="wr-addbtn" id="addVideoBtn"><span class="wr-addbtn__ic">🎬</span><span class="wr-addbtn__t">Choose video</span><span class="wr-addbtn__s" id="wBurstName">No file chosen</span></button>
-          <button type="button" class="wr-addbtn" id="wRec"><span class="wr-addbtn__ic">🎙</span><span class="wr-addbtn__t">Record</span><span class="wr-addbtn__s" id="wRecState"></span></button>
-          <button type="button" class="wr-addbtn" id="addAudioBtn"><span class="wr-addbtn__ic">🎧</span><span class="wr-addbtn__t">Choose audio</span><span class="wr-addbtn__s" id="wAudioName">No file chosen</span></button>
+          <button type="button" class="wr-addbtn" id="addPhotoBtn"><span class="wr-addbtn__ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span><span class="wr-addbtn__t">Choose image</span><span class="wr-addbtn__s" id="wCoverName">No file chosen</span></button>
+          <button type="button" class="wr-addbtn" id="addVideoBtn"><span class="wr-addbtn__ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3"/></svg></span><span class="wr-addbtn__t">Choose video</span><span class="wr-addbtn__s" id="wBurstName">No file chosen</span></button>
+          <button type="button" class="wr-addbtn" id="wRec"><span class="wr-addbtn__ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span><span class="wr-addbtn__t">Record</span><span class="wr-addbtn__s" id="wRecState"></span></button>
+          <button type="button" class="wr-addbtn" id="addAudioBtn"><span class="wr-addbtn__ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 14v-3a9 9 0 0 1 18 0v3"/><rect x="3" y="13" width="4" height="7" rx="1.5"/><rect x="17" y="13" width="4" height="7" rx="1.5"/></svg></span><span class="wr-addbtn__t">Choose audio</span><span class="wr-addbtn__s" id="wAudioName">No file chosen</span></button>
         </div>
         <input id="wCover" type="file" accept="image/*" hidden aria-label="Choose a cover image">
         <input id="wBurst" type="file" accept="video/*" hidden aria-label="Choose a burst video">
         <input id="wAudio" type="file" accept="audio/*" hidden aria-label="Choose a voice note">
         <div class="wr-addprev">
-          <img id="wCoverPrev" class="cm-prev" hidden alt="" style="display:block;margin:10px auto 0;max-height:160px;width:auto;max-width:100%;border-radius:12px;border:2.5px solid #111;">
-          <video id="wBurstPrev" class="cm-prev" controls playsinline preload="metadata" hidden style="margin-top:10px;width:100%;max-height:180px;border-radius:12px;border:2.5px solid #111;"></video>
+          <img id="wCoverPrev" class="cm-prev" hidden alt="" style="display:block;margin:10px auto 0;max-height:160px;width:auto;max-width:100%;border-radius:17px;border:var(--bw) solid var(--edge);">
+          <video id="wBurstPrev" class="cm-prev" controls playsinline preload="metadata" hidden style="margin-top:10px;width:100%;max-height:180px;border-radius:17px;border:var(--bw) solid var(--edge);"></video>
           <audio id="wAudioPrev" controls hidden style="width:100%;margin-top:10px;"></audio>
         </div>
-        <p class="wr-hint" id="addHint">📷 becomes your cover & card, tap the preview to reframe in Studio · 🎬 video up to 2 min · 🎙 record or 🎧 attach voice</p>
+        <p class="wr-hint" id="addHint">A photo becomes your cover and card, tap the preview to reframe it in Studio. Video up to 2 minutes. Record or attach a voice note.</p>
       </div>
 
       <div id="inspireInlineHint" class="wr-hint" style="text-align:center; margin:0 0 8px; font:500 11px 'Space Grotesk',sans-serif; color:#8f8a80; display:none;">Tip: Tap a pill above → live library opens → tap “Use” to drop in.</div>
 
       <label class="cm-lbl cm-lbl--chk">
         <input type="checkbox" id="wNoDl" checked>
-        <b>🔒 View-only media</b>
+        <b>View-only media</b>
         <span>Readers can watch / listen, but not save, copy or download your cover, burst or voice. (Instagram-style; hold an edge of a video for 2× speed)</span>
       </label>
       <label class="cm-lbl">Tags (comma separated)<input id="wTags" class="setinput" maxlength="80" placeholder="habits, money, failure"></label>
       <div class="wr-actions">
-        <button class="cm-pub" id="pubBtn2">Publish to the community →</button>
+        <button class="cm-pub" id="pubBtn2">Post to Stories</button>
         <button class="setbtn" id="draftDel"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Discard draft</button>
       </div>
       <p class="cm-fine">Everything autosaves to this device while you type. Be kind, be real, be yours.</p>
     </section>
   </main>
 
-  <script src="./js/bootguard.js?v=323"></script>
-  <script src="js/prefs.js?v=323"></script>
-  <script src="js/lang.js?v=323"></script>
-  <script src="js/config.js?v=323"></script>
-  <script src="js/auth.js?v=323"></script>
-  <script src="js/sounds.js?v=323"></script>
-  <script src="js/founder.js?v=323"></script>
-  <script src="js/community.js?v=323"></script>
-  <script src="js/weekly.js?v=323"></script>
-  <script src="js/gold.js?v=323"></script>
-  <script src="js/paywall.js?v=323"></script>
-  <script src="js/studio.js?v=323"></script>
+  <script src="./js/bootguard.js?v=335"></script>
+  <script src="js/prefs.js?v=335"></script>
+  <script src="js/lang.js?v=335"></script>
+  <script src="js/config.js?v=335"></script>
+  <script src="js/auth.js?v=335"></script>
+  <script src="js/sounds.js?v=335"></script>
+  <script src="js/founder.js?v=335"></script>
+  <script src="js/community.js?v=335"></script>
+  <script src="js/weekly.js?v=335"></script>
+  <script src="js/gold.js?v=335"></script>
+  <script src="js/paywall.js?v=335"></script>
+  <script src="js/studio.js?v=335"></script>
   <style>/* hide Puter branding, keep AI silent */ .puter-modal,.puter-dialog,.puter-auth{ display:none !important }</style>
   <script>
   // silent Puter loader, don't block rendering, hide GUI
@@ -163,10 +168,11 @@
     document.head.appendChild(s);
   })();
   </script>
-  <script src="js/dictate.js?v=323"></script>
-  <script src="js/data.js?v=323"></script>
-  <script src="js/osint.js?v=323"></script>
-  <script src="js/quotedesk.js?v=323"></script>
+  <script src="js/stt.js?v=335"></script>
+  <script src="js/dictate.js?v=335"></script>
+  <script src="js/data.js?v=335"></script>
+  <script src="js/osint.js?v=335"></script>
+  <script src="js/quotedesk.js?v=335"></script>
   <script>
   (function () {
     "use strict";
@@ -216,7 +222,14 @@
     function init() {
     if (!C.signedIn()) {
       document.querySelector(".wr-wrap").innerHTML =
-        '<div class="cm-empty">👋 Sign in with Google to write and publish.<br><a class="cm-write" href="login.html">Sign in, it’s free →</a></div>';
+        (function () {
+          var q = "";
+          try { var pm0 = location.search.match(/[?&]prompt=(pw-\d{4}w\d{2})/); if (pm0 && window.TSB_WEEKLY) { var w0 = TSB_WEEKLY.byId(pm0[1]); if (w0) q = w0.q; } } catch (e0) {}
+          return '<div class="wr-gate">' + (q ? '<div class="wr-gate__k">This week\u2019s prompt</div><div class="wr-gate__q">' + C.esc(q) + '</div>' : '<div class="wr-gate__q">One line from you, kept forever.</div>') +
+            '<p class="wr-gate__p">Sign in with Google to write, post and get hearts. Your draft waits on this device.</p>' +
+            '<a class="wr-gate__btn" href="login.html">Sign in, it\u2019s free</a><a class="wr-gate__alt" href="stories.html">Keep reading stories</a></div>';
+        })();
+      var pb0 = document.getElementById("pubBtn"); if (pb0) pb0.style.visibility = "hidden"; var ss0 = document.getElementById("saveState"); if (ss0) ss0.style.visibility = "hidden";
       return;
     }
 
@@ -224,7 +237,7 @@
     var saveT = null;
     function saveDraft() {
       clearTimeout(saveT);
-      $("saveState").textContent = "… saving";
+      $("saveState").textContent = "Saving";
       saveT = setTimeout(function () {
         try {
           localStorage.setItem(dkey(), JSON.stringify({
@@ -232,7 +245,7 @@
             c: coverUrl, a: audioUrl, v: burstUrl, f: $("wFont").value, at: Date.now(),
             st: quoteStyle, qk: deskKind                      /* v250: card style + desk choice */
           }));
-          $("saveState").textContent = "✓ draft saved";
+          $("saveState").textContent = "Saved";
         } catch (e) { $("saveState").textContent = "draft (private)"; }
       }, 500);
     }
@@ -248,7 +261,7 @@
         if (d.f) { $("wFont").value = d.f; setFont(d.f); }
         if (d.st) Object.keys(d.st).forEach(function (k) { quoteStyle[k] = d.st[k]; });
         if (d.qk) deskKind = d.qk;
-        if (d.t || d.b) $("saveState").textContent = "✓ draft restored";
+        if (d.t || d.b) $("saveState").textContent = "Draft restored";
       } catch (e) {}
     }
     var modeChip = document.getElementById("modeChip");
@@ -323,7 +336,7 @@
       var chip = quoteStyle.theme !== "ink";
       var chipCss = chip
         ? ";background:" + (quoteStyle.theme === "yellow" ? "#ffc800" : "#fffdf5") +
-          ";color:#111;padding:8px 12px;border:2.5px solid #111;box-shadow:4px 4px 0 #111;border-radius:8px"
+          ";color:#111;padding:8px 12px;border:var(--bw) solid var(--edge);box-shadow:var(--sh-2);border-radius:12px"
         : "";
       card.innerHTML =
         '<div class="wr-quotelive__inner" style="text-align:' + just + ";align-items:" +
@@ -420,7 +433,7 @@
           byline: (sub.value || "").replace(/^-\s*/, ""),
           onApply: async function (file) {
             try {
-              $("saveState").textContent = "… uploading your card";
+              $("saveState").textContent = "Uploading your card";
               coverUrl = await C.upload(file, "tsb-covers");
               lastCoverFile = null;
               /* v254: what leaves Studio is a FINISHED image. If deskKind stayed
@@ -446,7 +459,7 @@
         coverUrl = ""; lastCoverFile = null;
         $("wCoverPrev").hidden = true;
         renderQuoteLive(); saveDraft();
-        C.say("Text quote ready, tap Publish →");
+        C.say("Text quote ready, tap Post");
       } else {
         C.say(v.photo ? "Ready, the photo you chose is your cover, with your words below it." : "Ready, photo + your words below it.");
       }
@@ -461,7 +474,7 @@
       title.placeholder = "The quote itself, the line that stopped you…";
       sub.placeholder = "Who said it? (author, book, you)";
       document.querySelector("main").classList.add("wr-quote");
-      modeChip.textContent = "✍️ QUOTE MODE, a shareable card, not an essay";
+      modeChip.textContent = "Quote mode: a shareable card, not an essay";
       modeChip.className = "wr-modechip wr-modechip--quote";
       if(quoteWrap) quoteWrap.hidden = false;
       // v250: the quote flow is one sheet now, desk entry, honest labels
@@ -475,7 +488,7 @@
           void 0;
         }
         var addT=document.getElementById("addCardTitle");
-        if(addT) addT.innerHTML="📷 A photo behind the words, <u>optional</u>";
+        if(addT) addT.innerHTML="A photo behind the words, <u>optional</u>";
         var addS=document.getElementById("addCardSub");
         if(addS) addS.textContent="tap the preview any time to reframe it in Studio";
         var avBtn=document.getElementById("addVideoBtn");
@@ -507,7 +520,7 @@
             gold: window.TSB_GOLD && TSB_GOLD.isGold(),
             onApply: async function(file){
               try{
-                $("saveState").textContent = "… uploading studio card";
+                $("saveState").textContent = "Uploading studio card";
                 coverUrl = await C.upload(file, "tsb-covers");
                 lastCoverFile = null;
                 qCardReady = true; cleanCover = false;
@@ -536,7 +549,7 @@
         var c = document.getElementById("quoteCleanChip");
         if (!c) return;
         c.classList.toggle("on", cleanCover);
-        c.innerHTML = cleanCover ? "✓ CLEAN COVER, the quote travels as text" : "▢ CLEAN COVER, quote as text";
+        c.innerHTML = cleanCover ? "Clean cover on: the quote travels as text" : "Clean cover, quote as text";
       }
       var qCard = document.getElementById("quoteLiveCard");
       if(qCard) qCard.addEventListener("click", function(e){ e.preventDefault(); frameInStudio(); });
@@ -552,7 +565,7 @@
       });
     } else {
       // story mode
-      modeChip.textContent = "📖 STORY MODE, your story, your voice";
+      modeChip.textContent = "Story mode: your story, your voice";
       modeChip.className = "wr-modechip wr-modechip--story";
       body.setAttribute("data-ph", "Enter your story, what happened, what you felt, what you learned…\n\nYour draft saves itself here. Publish when you\'re ready.");
     }
@@ -590,7 +603,7 @@
       if (!lab) return;
       if (!f) { lab.textContent = "No file chosen"; return; }
       var nm = f.name || "file";
-      lab.textContent = "✓ " + (nm.length > 24 ? nm.slice(0, 22) + "…" : nm) + " · " + Math.max(1, Math.round(f.size / 1024)) + " KB";
+      lab.textContent = "" + (nm.length > 24 ? nm.slice(0, 22) + "…" : nm) + " · " + Math.max(1, Math.round(f.size / 1024)) + " KB";
     }
     // v246: compact attach bar, one tap opens the picker
     $("addPhotoBtn").addEventListener("click", function(){ $("wCover").click(); });
@@ -601,7 +614,7 @@
       fname("wCover", "wCoverName", f);
       if (!f) return;
       lastCoverFile = f;
-      $("saveState").textContent = "… uploading cover";
+      $("saveState").textContent = "Uploading cover";
       try {
         coverUrl = await C.upload(f, "tsb-covers");
         burstUrl = ""; $("wBurstPrev").hidden = true;
@@ -662,7 +675,7 @@
                 lastCoverFile = null;
                 var prev=document.getElementById("wCoverPrev"); if(prev){ prev.src=upUrl; prev.hidden=false; }
                 try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
-                var ss=document.getElementById("saveState"); if(ss) ss.textContent="✓ cover from Inspire";
+                var ss=document.getElementById("saveState"); if(ss) ss.textContent="Cover from Inspire";
                 try{ saveDraft(); }catch(e){}
                 // v244: in QUOTE mode the Inspire image IS the card, open Studio with the quote on it
                 if(kind==="quote" && window.TSB_STUDIO){
@@ -673,7 +686,7 @@
                     gold: window.TSB_GOLD && TSB_GOLD.isGold(),
                     onApply: async function(file){
                       try{
-                        $("saveState").textContent = "… uploading your card";
+                        $("saveState").textContent = "Uploading your card";
                         coverUrl = await C.upload(file, "tsb-covers");
                         lastCoverFile = null;
                         var pv2=document.getElementById("wCoverPrev"); if(pv2){ pv2.src = coverUrl; pv2.hidden = false; }
@@ -725,8 +738,8 @@
       try{
         var h=document.getElementById("inspireInlineHint");
         if(h){
-          if(kind==="quote") h.innerHTML='Tip: Use the <b>✨ Inspire Desk</b> strip at the top, live quotes & aesthetic images, tap to insert.';
-          else h.innerHTML='Tip: Use the <b>✨ Inspire Desk</b> strip at the top, live images & research from your own story.';
+          if(kind==="quote") h.innerHTML='Tip: Use the <b>Inspire Desk</b> strip at the top, live quotes & aesthetic images, tap to insert.';
+          else h.innerHTML='Tip: Use the <b>Inspire Desk</b> strip at the top, live images & research from your own story.';
         }
         // legacy ids for cached browsers
         var hint=document.getElementById("inspireDeskHint");
@@ -752,7 +765,7 @@
         gold: window.TSB_GOLD && TSB_GOLD.isGold(),
         onApply: async function (file) {
           try {
-            $("saveState").textContent = "… uploading studio card";
+            $("saveState").textContent = "Uploading studio card";
             coverUrl = await C.upload(file, "tsb-covers");
             lastCoverFile = null;
             $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
@@ -766,20 +779,20 @@
       var f = this.files && this.files[0];
       fname("wBurst", "wBurstName", f);
       if (!f) return;
-      $("saveState").textContent = "… checking burst";
+      $("saveState").textContent = "Checking burst";
       try {
         var d = await C.checkBurst(f);
-        $("saveState").textContent = "… uploading burst (" + Math.round(d) + "s)";
+        $("saveState").textContent = "Uploading burst (" + Math.round(d) + "s)";
         burstUrl = await C.upload(f, "tsb-covers");
         $("wBurstPrev").src = burstUrl; $("wBurstPrev").hidden = false;
         $("wCoverPrev").hidden = true;
-        $("saveState").textContent = "✓ burst attached";
+        $("saveState").textContent = "Burst attached";
         saveDraft();
       } catch (e) { $("saveState").textContent = ""; C.say("Burst not attached, " + e.message); }
     });
     $("wRec").addEventListener("click", async function () {
       var st = $("wRecState");
-      if (mediaRec && mediaRec.state === "recording") { mediaRec.stop(); this.textContent = "🎙 Record"; st.textContent = "uploading…"; return; }
+      if (mediaRec && mediaRec.state === "recording") { mediaRec.stop(); this.textContent = "Record"; st.textContent = "uploading…"; return; }
       try {
         var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         chunks = [];
@@ -794,13 +807,13 @@
           try {
             audioUrl = await C.upload(new File([new Blob(chunks, { type: bt })], "voice-" + Date.now() + (bt.indexOf("mp4") >= 0 ? ".m4a" : ".webm"), { type: bt }), "tsb-audio");
             $("wAudioPrev").src = audioUrl; $("wAudioPrev").hidden = false;
-            st.textContent = "✓ voice attached";
+            st.textContent = "Voice attached";
             saveDraft();
           } catch (e) { st.textContent = "upload failed: " + e.message; }
         };
         mediaRec.start();
         this.textContent = "⏹ Stop & attach";
-        st.textContent = "● recording…";
+        st.textContent = "Recording";
       } catch (e) { st.textContent = "mic blocked"; }
     });
     $("wAudio").addEventListener("change", async function () {
@@ -843,7 +856,7 @@
            nothing is uploaded for a draft the writer never publishes */
         if(lastCoverFile && !coverUrl){
           try{
-            $("saveState").textContent = "… uploading your photo";
+            $("saveState").textContent = "Uploading your photo";
             coverUrl = await C.upload(lastCoverFile, "tsb-covers");
             lastCoverFile = null;
             $("wCoverPrev").src = coverUrl; $("wCoverPrev").hidden = false;
@@ -852,7 +865,7 @@
                say exactly what happened, and keep the file so the next tap
                retries. The old code warned the console and posted text-only. */
             pubBusy = false;
-            $("pubBtn").textContent = "Publish →";
+            $("pubBtn").textContent = "Post";
             C.say("Your photo couldn't upload (" + (ue && ue.message ? ue.message : "connection") + "). Nothing was posted, check your connection and tap Publish again, or remove the photo to post text-only.");
             return;
           }
@@ -877,7 +890,7 @@
         if (qFlags.clean) qCardReady = false; else if (qFlags.ready) qCardReady = true;
         if(kind==="quote" && coverUrl && !burstUrl && !qCardReady && !cleanCover){
           try{
-            $("saveState").textContent = "… framing your card";
+            $("saveState").textContent = "Framing your card";
             var bag = { src: coverUrl, quote: t, byline: (sub.value || "").replace(/^-\s*/, "").replace(/^-\s*/, ""),
                         gold: window.TSB_GOLD && TSB_GOLD.isGold() };
             Object.keys(quoteStyle).forEach(function (k) { if (bag[k] === undefined) bag[k] = quoteStyle[k]; });
@@ -887,7 +900,7 @@
               qCardReady = true;
               var pv=document.getElementById("wCoverPrev"); if(pv){ pv.src = coverUrl; pv.hidden = false; }
               try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
-              $("saveState").textContent = "✓ card framed";
+              $("saveState").textContent = "Card framed";
             }
           }catch(ce){ console.warn("card compose failed, publishing image as-is", ce); }
         }
@@ -922,7 +935,7 @@
           } catch (e3) { e = e3; }
         }
         C.say("Publish failed, " + (e && e.message ? e.message : e) + ". Stay signed in and try once more.");
-        $("pubBtn").textContent = "Publish →";
+        $("pubBtn").textContent = "Post";
       } finally { pubBusy = false; }
     }
     $("pubBtn").addEventListener("click", pub);
@@ -934,7 +947,7 @@
       title.value = ""; sub.value = ""; body.innerHTML = ""; tags.value = "";
       coverUrl = ""; audioUrl = "";
       $("wCoverPrev").hidden = true; $("wAudioPrev").hidden = true;
-      $("saveState").textContent = "✍️ draft";
+      $("saveState").textContent = "Draft";
     });
 
     loadDraft();
@@ -948,7 +961,7 @@
           var tg0 = tags.value.trim();
           var has = tg0.toLowerCase().split(",").map(function (x) { return x.trim(); }).indexOf("weekly") >= 0;
           if (!has) tags.value = tg0 ? tg0 + ", weekly" : "weekly";
-          title.insertAdjacentHTML("beforebegin", '<div class="wr-weekly" id="wrWeekly"><b>THE WEEKLY PROMPT</b> ' + C.esc(wkq.q) + '</div>');
+          title.insertAdjacentHTML("beforebegin", '<div class="wr-weekly" id="wrWeekly"><b>This week\u2019s prompt</b> ' + C.esc(wkq.q) + '</div>');
           title.dispatchEvent(new Event("input", { bubbles: true }));
           tags.dispatchEvent(new Event("input", { bubbles: true }));
           saveDraft();
@@ -1011,7 +1024,7 @@
             coverUrl = upUrl; lastCoverFile=null;
             var prev=document.getElementById("wCoverPrev"); if(prev){ prev.src=upUrl; prev.hidden=false; }
             try{ if(typeof renderQuoteLive==="function") renderQuoteLive(); }catch(e){}
-            var ss=document.getElementById("saveState"); if(ss) ss.textContent="✓ cover from Inspire";
+            var ss=document.getElementById("saveState"); if(ss) ss.textContent="Cover from Inspire";
             saveDraft();
           }catch(e){ console.warn("inspire img prefill failed", e); }
           try{ sessionStorage.removeItem("tsb_inspire_img"); }catch(e){}
@@ -1022,9 +1035,12 @@
     }
   })();
   </script>
-  <script src="js/podcast-data.js?v=323"></script>
-  <script src="js/audioplayer.js?v=323"></script>
-  <script src="js/bar.js?v=323" defer></script>
-  <script src="js/gate.js?v=323" defer></script>
+  <script src="js/podcast-data.js?v=335"></script>
+  <script src="js/audioplayer.js?v=335"></script>
+  <script src="js/bar.js?v=335" defer></script>
+  <script src="js/soft-motion.js?v=335" defer></script>
+  <script src="js/gate.js?v=335" defer></script>
+  <script src="js/film.js?v=335" defer></script>
+  <script src="js/film2.js?v=335" defer></script>
 </body>
 </html>

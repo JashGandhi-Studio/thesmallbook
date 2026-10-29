@@ -32,7 +32,7 @@
   LANGS.forEach(function(l){ PUTER_MAP[l.id]=l.puter; });
 
   // Web Speech fallback detection
-  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var SR = window.TSB_SR || window.SpeechRecognition || window.webkitSpeechRecognition; /* v334: TSB_SR adds on-device Whisper when the browser has no recogniser */
   var HAS_WEB_SPEECH = !!SR;
 
   var listening = false, targetEl = null, lang = null;
@@ -581,12 +581,7 @@
       startWebSpeech();
       return;
     }
-    // rare fallback (Firefox desktop etc.): load the AI engine transparently
-    toast("Starting voice engine…");
-    loadPuter().then(function(ok){
-      if (ok && !listening) startPuter();
-      else if (!ok) toast("Voice typing needs Chrome, Edge or Safari, or allow the microphone.");
-    });
+    toast("Voice typing is not available in this browser.");
   }
   function stop(){
     if (window._puterRecording) {

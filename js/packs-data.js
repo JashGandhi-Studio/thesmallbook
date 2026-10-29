@@ -37,7 +37,7 @@ window.TSB_PACKS = [
     books: ["how-to-win-friends", "talking-to-strangers", "never-split", "supercommunicators"]
   },
   {
-    id: "founder-start", title: "Zero to Founder", emoji: "\uD83D\uDE80", hue: "#ff4d4d",
+    id: "founder-start", title: "Zero to Founder", emoji: "\uD83D\uDE80", hue: "#D23A3A",
     tag: "startup", days: 7,
     line: "Idea to first paying customers, no illusions. Read it before you quit the job.",
     books: ["10x-rule", "lean-startup", "innovators-dilemma", "good-to-great", "ego-is-enemy"]

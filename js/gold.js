@@ -20,7 +20,7 @@
   "use strict";
   if (window.TSB_GOLD) return;
 
-  var known = false, cached = false, inflight = null;
+  var known = false, cached = false, pdf = false, plan = "", expires = null, inflight = null;
 
   function conf() {
     var C = window.TSB_CONFIG || {};
@@ -30,57 +30,49 @@
   async function fresh() {
     var c = conf();
     var u = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null;
-    try {
-      var s = JSON.parse(localStorage.getItem("tsb_auth_session") || "null");
-      var em = (((u && u.email) || (s && s.user && s.user.email)) || "").toLowerCase();
-      if (em === "acimotreyothy@gmail.com") { cached = true; known = true; return true; }
-      if (em) {
-        var readers = JSON.parse(localStorage.getItem("tsb_admin_readers") || "[]");
-        var matched = readers.find(function (r) { return r.email && r.email.toLowerCase() === em; });
-        if (matched && matched.tier === "Gold VIP") { cached = true; known = true; return true; }
-      }
-    } catch (eF) {}
-    if (!c.ok || !u) { cached = false; known = true; return cached; }
+    /* v331: no email, list or storage shortcut exists any more. The founder
+       is Gold because the founder has a gold_members row, like everyone. */
+    var was = cached, wasPdf = pdf;
+    if (!c.ok || !u) { cached = false; pdf = false; known = true; return cached; }
     var tk = window.TSB_AUTH.token ? await TSB_AUTH.token() : null;
-    if (!tk) { cached = false; known = true; return cached; }
+    if (!tk) { cached = false; pdf = false; known = true; return cached; }
     try {
-      var res = await fetch(c.url + "/rest/v1/gold_members?user_id=eq." + encodeURIComponent(u.id) + "&select=expires_at", {
+      var res = await fetch(c.url + "/rest/v1/gold_members?user_id=eq." + encodeURIComponent(u.id) + "&select=plan,expires_at", {
         headers: { apikey: c.anon, Authorization: "Bearer " + tk }
       });
       var rows = res.ok ? await res.json() : [];
-      var exp = rows && rows[0] && rows[0].expires_at ? new Date(rows[0].expires_at) : null;
-      var was = cached;
-      cached = !!exp && exp.getTime() > Date.now();
+      var row = rows && rows[0];
+      var exp = row && row.expires_at ? new Date(row.expires_at) : null;
+      var live = !!exp && exp.getTime() > Date.now();
+      plan = live ? String(row.plan || "gold") : "";
+      expires = live ? exp : null;
+      /* a PDF pass unlocks PDF cheat-sheets only, never the rest of Gold */
+      pdf = live;
+      cached = live && plan !== "pdf-75d";
       known = true;
-      if (was !== cached) { try { window.dispatchEvent(new Event("tsbgold")); } catch (e) {} }
-    } catch (e) { cached = false; known = true; }
+    } catch (e) { cached = false; pdf = false; known = true; }
+    if (was !== cached || wasPdf !== pdf) { try { window.dispatchEvent(new Event("tsbgold")); } catch (e) {} }
     return cached;
   }
 
+  function kick(force) {
+    if ((force || !known) && !inflight) inflight = fresh().finally(function () { inflight = null; });
+    return inflight;
+  }
   function isGold(freshCheck) {
-    try {
-      var rc = JSON.parse(localStorage.getItem("tsb_remote_config") || "{}");
-      if (rc.goldPaywall === false) { cached = true; known = true; return true; }
-    } catch (eRC) {}
-    try {
-      var u = window.TSB_AUTH && TSB_AUTH.user ? TSB_AUTH.user() : null;
-      var s = JSON.parse(localStorage.getItem("tsb_auth_session") || "null");
-      var em = (((u && u.email) || (s && s.user && s.user.email)) || "").toLowerCase();
-      if (em === "acimotreyothy@gmail.com") { cached = true; known = true; return true; }
-      if (em) {
-        var readers = JSON.parse(localStorage.getItem("tsb_admin_readers") || "[]");
-        var matched = readers.find(function (r) { return r.email && r.email.toLowerCase() === em; });
-        if (matched && matched.tier === "Gold VIP") { cached = true; known = true; return true; }
-      }
-    } catch (eF) {}
-    if (freshCheck || !known) {
-      if (!inflight) inflight = fresh().finally(function () { inflight = null; });
-    }
+    kick(freshCheck);
     return cached;   /* current best answer; the fetch updates it and fires tsbgold */
   }
+  function hasPdf() { kick(false); return pdf; }
+  /* awaitable answer, used by checkout while it waits for the bank */
+  async function check() {
+    await (kick(true) || Promise.resolve());
+    return { gold: cached, pdf: pdf, plan: plan, expires: expires };
+  }
 
-  /* ask once on load so Gold members flip to unlocked the moment it is known */
+  /* ask once on load, and again whenever the account changes */
   try { isGold(); } catch (e) {}
+  try { window.addEventListener("tsb:auth", function () { kick(true); }); } catch (e) {}
 
-  window.TSB_GOLD = { isGold: isGold };
+  window.TSB_GOLD = { isGold: isGold, hasPdf: hasPdf, check: check, info: function () { return { gold: cached, pdf: pdf, plan: plan, expires: expires }; } };
 })();

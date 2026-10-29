@@ -27,10 +27,7 @@
       if (window.TSB_GOLD && typeof window.TSB_GOLD.isGold === 'function') {
         return window.TSB_GOLD.isGold();
       }
-      var p = localStorage.getItem('tsb_plan') || localStorage.getItem('tsb_sub_status') || localStorage.getItem('tsb_gold_tier') || '';
-      if (p === 'gold' || p === 'gold_yearly' || p === 'gold_monthly' || p === 'pro' || p === 'gold_member_pass') return true;
-      var until = localStorage.getItem('tsb_gold_until');
-      if (until && new Date(until).getTime() > Date.now()) return true;
+      /* v331: Gold is decided by the server only, never by storage */
     } catch (e) {}
     return false;
   }

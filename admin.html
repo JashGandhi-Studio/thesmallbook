@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>TheSmallBook Command Center | Executive Admin</title>
@@ -165,7 +167,7 @@
       padding: 8px 12px;
       border-radius: var(--radius-md);
       font-family: inherit;
-      font-size: 13px;
+      font-size: 16px;
       outline: none;
       transition: all 0.15s ease;
       width: 100%;
@@ -746,7 +748,7 @@
     .book-thumb {
       width: 36px;
       height: 48px;
-      border-radius: 4px;
+      border-radius: 6px;
       object-fit: cover;
       border: 1px solid var(--border-medium);
       background: #111;
@@ -908,6 +910,16 @@
       }
     }
   </style>
+  <style>
+    .pay-list { display: grid; gap: 10px; }
+    .pay-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 12px 14px; border: 1px solid rgba(255,255,255,.12); border-radius: 14px; background: rgba(255,255,255,.04); color: inherit; }
+    .pay-row b { font-size: 15px; } .pay-row small { display: block; font-size: 12px; opacity: .8; margin-top: 2px; word-break: break-all; }
+    .pay-row code { font: 600 14px ui-monospace, monospace; letter-spacing: .04em; }
+    .pay-acts { display: flex; gap: 6px; } .pay-acts button { min-height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,.2); font-weight: 700; cursor: pointer; background: transparent; color: inherit; }
+    .pay-acts .ok { background: #FFC800; border-color: #FFC800; color: #16130F; }
+    .pay-st { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+    .pay-badge { margin-left: auto; min-width: 20px; height: 20px; border-radius: 99px; background: #D23A3A; color: #fff; font-size: 11px; display: inline-grid; place-items: center; padding: 0 6px; }
+  </style>
 </head>
 <body>
 
@@ -925,43 +937,14 @@
       </div>
 
       <p class="login-desc">
-        Enter privileged administrative credentials to access real-time system telemetry, feature flags, and reader operations.
+        Sign in with your TheSmallBook account. The server checks that the account is on the admin list, so there is no password in this page.
       </p>
 
       <form id="adminLoginForm">
-        <div class="login-form-group">
-          <label for="adminUsername">Operator ID</label>
-          <div class="login-input-wrap">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            <input class="form-input" id="adminUsername" type="text" autocomplete="username" placeholder="Enter Operator ID" required>
-          </div>
-        </div>
-
-        <div class="login-form-group">
-          <label for="adminPassword">Security Key</label>
-          <div class="login-input-wrap">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-            </svg>
-            <input class="form-input" id="adminPassword" type="password" autocomplete="current-password" placeholder="Enter Security Key" required>
-          </div>
-        </div>
-
         <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 10px;" id="btnLoginSubmit">
-          <span>Authenticate & Open Console</span>
-          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
+          <span id="btnLoginLabel">Check my account</span>
         </button>
-
-        <div class="login-err" id="loginErrMsg">
-          Invalid administrative credentials. Access denied.
-        </div>
+        <div class="login-err" id="loginErrMsg"></div>
       </form>
     </div>
   </div>
@@ -991,7 +974,7 @@
         </div>
         <div class="admin-profile-chip">
           <span class="admin-avatar-dot"></span>
-          <span class="mono" style="font-weight:600;">tsb_admin</span>
+          <span class="mono" style="font-weight:600;">Admin</span>
         </div>
         <button type="button" class="btn btn-secondary btn-sm" id="btnAdminLogout" title="Log out of console">
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1020,6 +1003,10 @@
         <span>Overview & Telemetry</span>
       </button>
 
+      <button type="button" class="nav-tab" data-view="viewPayments">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path></svg>
+        <span>Payments</span><b class="pay-badge" id="payBadge" hidden></b>
+      </button>
       <button type="button" class="nav-tab" data-view="viewFeatures">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
@@ -1076,7 +1063,7 @@
           <p class="section-head-desc">Real-time health, library capacity, active sessions, and reader traffic.</p>
         </div>
         <div style="display:flex;gap:10px;">
-          <a href="index.html" class="btn btn-secondary btn-sm" target="_blank">
+          <a href="index.html" class="btn btn-secondary btn-sm" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
               <polyline points="15 3 21 3 21 9"></polyline>
@@ -1239,6 +1226,15 @@
     </section>
 
     <!-- TAB 2: REMOTE FEATURE MATRIX -->
+    <section class="admin-view-panel" id="viewPayments">
+      <div class="card">
+        <div class="card-title"><span>UPI payments to check</span></div>
+        <p class="card-subtitle">Readers who paid by UPI and pasted their 12-digit reference. Open your bank or UPI app, find the same reference and amount, then approve. Payments YouPI already saw switch on by themselves and show here as approved.</p>
+        <div style="display:flex;gap:8px;margin:10px 0 14px;"><button type="button" class="btn btn-primary" id="btnPayRefresh" style="padding:9px 16px;">Refresh</button><span id="payMsg" style="font-size:13px;align-self:center;"></span></div>
+        <div id="payList" class="pay-list"></div>
+      </div>
+    </section>
+
     <section class="admin-view-panel" id="viewFeatures">
       <div class="section-head">
         <div>
@@ -1850,32 +1846,11 @@
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
           </svg>
-          <span>Administrator Security Key & Access Credentials</span>
+          <span>Admin access</span>
         </div>
-        <p class="card-subtitle">Update your private operator security key. Only the active administrator can change this key.</p>
+        <p class="card-subtitle">Who can open this console.</p>
 
-        <form id="formChangeSecurityKey" style="max-width: 520px;">
-          <div style="display:flex;flex-direction:column;gap:14px;">
-            <div>
-              <label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:5px;font-weight:600;text-transform:uppercase;">Current Security Key</label>
-              <input type="password" class="form-input" id="inputCurrentPass" placeholder="Enter current security key" required>
-            </div>
-            <div>
-              <label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:5px;font-weight:600;text-transform:uppercase;">New Security Key (Min 6 Characters)</label>
-              <input type="password" class="form-input" id="inputNewPass" placeholder="Enter new security key" required minlength="6">
-            </div>
-            <div>
-              <label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:5px;font-weight:600;text-transform:uppercase;">Confirm New Security Key</label>
-              <input type="password" class="form-input" id="inputConfirmPass" placeholder="Confirm new security key" required minlength="6">
-            </div>
-            <div>
-              <button type="submit" class="btn btn-primary" id="btnUpdatePass" style="padding:10px 18px;">
-                <span>Update Security Key</span>
-              </button>
-            </div>
-            <div id="changePassMsg" style="font-size:12px;font-weight:600;display:none;"></div>
-          </div>
-        </form>
+        <p style="font-size:13px;line-height:1.5;max-width:520px;">Admins are the accounts listed in the <b>app_admins</b> table in Supabase. To add or remove one, edit that table in the SQL editor. Nothing secret lives in this page.</p>
       </div>
     </section>
 
@@ -1926,9 +1901,11 @@
     <span id="toastMsg">Operation successful</span>
   </div>
 
-  <script src="./js/bootguard.js?v=323"></script>
-  <script src="js/data.js?v=323"></script>
-  <script src="js/failures.js?v=323"></script>
-  <script src="js/admin.js?v=323"></script>
+  <script src="./js/bootguard.js?v=335"></script>
+  <script src="js/data.js?v=335"></script>
+  <script src="js/failures.js?v=335"></script>
+  <script src="js/config.js?v=335"></script>
+  <script src="js/auth.js?v=335"></script>
+  <script src="js/admin.js?v=335"></script>
 </body>
 </html>

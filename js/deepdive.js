@@ -27,13 +27,13 @@
     gate.hidden = false;
     gate.innerHTML =
       '<div class="dd-gate"><div class="dd-gate__emoji">🌊</div>' +
-      '<h2>THIS ONE IS A GOLD READ</h2>' +
+      '<h2>This one is a Gold read</h2>' +
       '<p class="dd-gate__p">' + esc(d.hook) + '</p>' +
       '<div class="dd-gate__row">' +
         '<a class="dd-gate__go" href="gold.html">👑 UNLOCK WITH GOLD</a>' +
         '<a class="dd-gate__try" href="deepdive.html?id=dd-atomic-identity">READ THE FREE SAMPLE FIRST</a>' +
       '</div>' +
-      '<small class="dd-gate__tiny">The 500 books stay free, every lesson. Gold is this: the layer underneath, one chapter at a time.</small></div>';
+      '<small class="dd-gate__tiny">The 520 books stay free, every lesson. Gold is this: the layer underneath, one chapter at a time.</small></div>';
     document.title = "A Gold deep dive | TheSmallBook";
   }
 
@@ -42,9 +42,9 @@
     $("ddGate").hidden = true;
     var parts = ['<header class="dd-head">',
       '<a class="dd-crumb" href="book.html?id=' + esc(d.bookId) + '">📖 ' + esc((b && b.title) || d.bookId) + '</a>',
-      '<span class="dd-chip">' + esc(d.chapterLabel.toUpperCase()) + '</span>',
-      '<span class="dd-chip dd-chip--min">⏱ ' + d.minutes + ' MIN</span>',
-      d.sample ? '<span class="dd-chip dd-chip--free">FREE SAMPLE</span>' : '<span class="dd-chip dd-chip--gold">👑 GOLD</span>',
+      '<span class="dd-chip">' + esc(d.chapterLabel) + '</span>',
+      '<span class="dd-chip dd-chip--min">' + d.minutes + ' min read</span>',
+      d.sample ? '<span class="dd-chip dd-chip--free">Free sample</span>' : '<span class="dd-chip dd-chip--gold">Gold</span>',
       '</header>',
       '<h1 class="dd-h1">' + esc(d.title) + '</h1>',
       '<p class="dd-hook">' + esc(d.hook) + '</p>'];

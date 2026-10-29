@@ -32,7 +32,7 @@
     } catch (e) { return false; }
   }
   if (!/about\.html|store\.html|gold\.html|legal\.html/.test(path) && needsFinishGate()) {
-    try { sessionStorage.setItem("tsb_auth_return", location.href); } catch (e1) {}
+    try { sessionStorage.setItem("tsb_auth_return", location.pathname.split("/").pop() + location.search + location.hash); } catch (e1) {}
     location.replace("login.html");
     return;
   }

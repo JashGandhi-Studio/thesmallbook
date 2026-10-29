@@ -279,6 +279,21 @@ window.TSB_CONFIG = {
        4) list the feature keys you want locked in GATED
      Tell me what should hide behind the wall and I'll wire those exact
      screens to call TSB_PAYWALL.gate(feature, onLocked). */
+  /* 💳 v331 · REAL CHECKOUT (YouPI-PG, self-hosted, open source).
+     Paste the address of YOUR YouPI-PG checkout server and its public key.
+     Prices are NOT here: the gold-order edge function sets them on the
+     server, and only the youpi-webhook edge function can grant Gold after
+     the bank credit is matched. See docs/YOUPI-SETUP.md.
+     Left empty, checkout falls back to UPI + an activation code (also
+     verified on the server by redeem-gold). */
+  /* v331: "Request a book" form (js/request.js) posts here. Public key, safe to ship. */
+  WEB3FORMS_KEY: "0bb63093-9610-4345-aea3-8e5a794e0051",
+
+  YOUPI: {
+    GATEWAY_URL: "",                   // e.g. "https://pay.thesmallbook.in"
+    PUBLIC_KEY: ""                     // YouPI-PG public key (safe to ship)
+  },
+
   PAYWALL: {
     ENABLED: false,                    // flip to true to turn the wall on
     FREE_ASK_PER_DAY: 5,               // free Ask questions per rolling 24h once the wall is on (Gold unlimited)

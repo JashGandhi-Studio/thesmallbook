@@ -562,7 +562,7 @@
       var fo = fontObj();
       var isMemePrev = fo.id === "impact";
       q.style.fontFamily = fo.css;
-      var extra = isMemePrev ? 'text-shadow:3px 3px 0 #111, -1px -1px 0 #111; letter-spacing:.5px;' : '';
+      var extra = isMemePrev ? 'text-shadow:0 2px 12px rgba(22,19,15,.10), -1px -1px 0 #111; letter-spacing:.5px;' : '';
       q.innerHTML = '<div class="q" style="font-size:' + px + 'px; font-family:' + fo.css + '; font-weight:' + (fo.w || 900) + ';' + extra + '"><span>' + esc((S.quote || "").trim() ? (fo.caps!==false ? esc(S.quote) .toUpperCase() : esc(S.quote)) : "YOUR TEXT HERE") + "</span></div>" +
         ((S.byline || "").trim() ? '<div class="b" style="font-size:' + Math.max(10, Math.round(px * 0.4)) + 'px;margin-top:8px">' + esc(S.byline.trim()) + '</div>' : '');
       // hint for empty quote
@@ -661,7 +661,7 @@
     // v244: theme buttons carry a real colour swatch, INK/PAPER/LOUD at a glance
     chips("stuTheme", THEMES, S.theme, function (id) { S.theme = id; }, function (it) {
       var on = it.id === S.theme;
-      var dot = '<span style="display:inline-block;width:11px;height:11px;border:2px solid ' + (on ? "#111" : "#9a938a") + ';border-radius:4px;background:' + it.swatch + ';vertical-align:-1px;margin-right:5px"></span>';
+      var dot = '<span style="display:inline-block;width:11px;height:11px;border:2px solid ' + (on ? "#111" : "#9a938a") + ';border-radius:6px;background:' + it.swatch + ';vertical-align:-1px;margin-right:5px"></span>';
       return dot + esc(it.label);
     });
     var z = $("stuZoom"); if (z) z.addEventListener("input", function () { S.zoom = this.value / 100; layoutPreview(); });
@@ -695,7 +695,7 @@
         '<div id="stuDims" style="flex:none;text-align:center;font:800 10px \'Space Grotesk\',sans-serif;letter-spacing:1.2px;color:#b3ab97;text-transform:uppercase;padding:9px 0 3px;background:#0e0c0a"></div>' +
         '<div class="stu-sec"><div class="stu-lbl">RATIO <small>where will you post it? FREE = original</small></div><div class="stu-chips" id="stuRatio"></div></div>' +
         '<div class="stu-sec"><div class="stu-lbl">PHOTO <small>zoom slider · drag the preview to reframe · no photo? pick a bg below</small></div>' +
-          '<input class="stu-range" id="stuZoom" type="range" min="100" max="300" value="100"><div style="height:8px"></div><button type="button" id="stuPick" style="width:100%;border:2.5px solid #111;background:#fff;font:700 12px Space Grotesk,sans-serif;padding:10px;border-radius:999px;box-shadow:2.5px 2.5px 0 #111;cursor:pointer">📷 CHOOSE / CHANGE PHOTO</button>' +
+          '<input class="stu-range" id="stuZoom" type="range" min="100" max="300" value="100"><div style="height:8px"></div><button type="button" id="stuPick" style="width:100%;border:var(--bw) solid var(--edge);background:#fff;font:700 12px Space Grotesk,sans-serif;padding:10px;border-radius:999px;box-shadow:var(--sh-2);cursor:pointer">📷 CHOOSE / CHANGE PHOTO</button>' +
           '<input id="stuFile" type="file" accept="image/*" hidden></div>' +
         '<div class="stu-sec"><div class="stu-lbl">BACKGROUNDS <small>24 aesthetic photos, the proven set, nothing extra · works without any cover photo · FREE exports carry a tiny watermark</small></div><div class="stu-chips" id="stuBg"></div></div>' +
         '<div class="stu-sec"><div class="stu-lbl">MINI FILTERS <small>PRO pack 💛 with Gold</small></div><div class="stu-chips" id="stuFilter"></div></div>' +
@@ -704,7 +704,7 @@
           '<div style="height:10px"></div>' +
           '<div class="stu-lbl">FONT <small>10 famous faces · each name shown in its own style</small></div><div class="stu-chips" id="stuFont"></div>' +
           '<div style="height:10px"></div>' +
-          '<button type="button" id="stuInspire" style="width:100%;border:2.5px solid #111;background:#ffc800;font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;padding:11px;border-radius:999px;box-shadow:3px 3px 0 #111;cursor:pointer">✨ Inspire Desk, quotes & aesthetic images</button><div style="font:600 10px Space Grotesk,sans-serif;color:#64748b;text-align:center;margin-top:6px;letter-spacing:.3px">Live library for quotes, tap to fill, not a verifier</div>' +
+          '<button type="button" id="stuInspire" style="width:100%;border:var(--bw) solid var(--edge);background:#ffc800;font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;padding:11px;border-radius:999px;box-shadow:var(--sh-2);cursor:pointer">✨ Inspire Desk, quotes & aesthetic images</button><div style="font:600 10px Space Grotesk,sans-serif;color:#64748b;text-align:center;margin-top:6px;letter-spacing:.3px">Live library for quotes, tap to fill, not a verifier</div>' +
           '<div style="height:10px"></div>' +
           '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><div class="stu-lbl">SHADE <small>readability</small></div><input class="stu-range" id="stuScrimR" type="range" min="0" max="85" value="55"></div><div><div class="stu-lbl">SIZE</div><div class="stu-chips" id="stuSize"></div></div></div>' +
           '<div style="height:10px"></div>' +

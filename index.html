@@ -2,22 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>TheSmallBook, Skim Every Great Book in Minutes</title>
-  <meta name="description" content="500 book summaries · 3,540 lessons · 400 autopsies. Skim any great book in minutes, in 26 languages, with audio, free to read.">
+  <meta name="description" content="520 book summaries · 3,685 lessons · 400 autopsies. Skim any great book in minutes, in 26 languages, with audio, free to read.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
       <meta property="og:title" content="TheSmallBook, Skim Every Great Book in Minutes">
-  <meta property="og:description" content="500 book summaries · 3,540 lessons · 400 autopsies, free to read, in 26 languages, with audio.">
+  <meta property="og:description" content="520 book summaries · 3,685 lessons · 400 autopsies, free to read, in 26 languages, with audio.">
     <meta property="og:url" content="https://thesmallbook.in/">
   <meta property="og:site_name" content="TheSmallBook">
   <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="TheSmallBook, 500 books · 3,540 lessons · 400 autopsies · free to read">
-  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=323">
+  <meta property="og:image:alt" content="TheSmallBook, 520 books · 3,685 lessons · 400 autopsies · free to read">
+  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=335">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="manifest" href="manifest.json">
@@ -42,10 +44,17 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=323">
+  <link rel="stylesheet" href="css/style.css?v=335">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="css/film.css?v=335">
+  <link rel="stylesheet" href="css/film2.css?v=335">
+  <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
+  <script>try{document.documentElement.classList.add("film",/^#(library|grid|filters|searchWrap|shelf)/.test(location.hash)||/[?&](q|cat|shelf)=/.test(location.search)?"fv-lib":"fv-today")}catch(e){}</script>
+  <link rel="canonical" href="https://thesmallbook.in/">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","@id":"https://thesmallbook.in/#site","name":"TheSmallBook","alternateName":"The Small Book","url":"https://thesmallbook.in/","inLanguage":"en-IN","description":"Free book summaries with key lessons, examples, action steps and audio, in 26 languages.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://thesmallbook.in/index.html?q={search_term_string}"},"query-input":"required name=search_term_string"},"publisher":{"@id":"https://thesmallbook.in/#org"}},{"@context":"https://schema.org","@type":"Organization","@id":"https://thesmallbook.in/#org","name":"TheSmallBook","url":"https://thesmallbook.in/","logo":"https://thesmallbook.in/favicon.png","founder":{"@type":"Person","name":"Jash Gandhi"},"sameAs":["https://github.com/JashGandhi-Studio/thesmallbook"]},{"@context":"https://schema.org","@type":"WebApplication","name":"TheSmallBook","url":"https://thesmallbook.in/","applicationCategory":"EducationalApplication","operatingSystem":"Any (web, installable)","offers":[{"@type":"Offer","price":"0","priceCurrency":"INR","name":"Free"},{"@type":"Offer","price":"99","priceCurrency":"INR","name":"Gold, monthly"}]}]</script>
 </head>
 <body>
 <div id="tsb-loader" class="tsb-loader" aria-hidden="true">
@@ -62,7 +71,7 @@
 <script>
   (function () {
     /* 🚀 APP OPENING SPLASH, plays ONLY when the app opens:
-       - fresh visit / refresh  → full 2.5s splash
+       - fresh visit / refresh  → a short 1.4s brand moment (v324)
        - back from a book, SHELF / LIBRARY buttons  → instant, no splash */
     var navType = ((window.performance && performance.getEntriesByType &&
       performance.getEntriesByType("navigation")[0]) || {}).type || "";
@@ -80,7 +89,7 @@
 
     /* 🔒 lock scroll while the splash is on screen, zero jump, zero flicker */
     document.documentElement.classList.add("tsb-loading");
-    var MIN = 2500;
+    var MIN = 1400;
     var started = Date.now();
     var removed = false;
     function hide() {
@@ -186,8 +195,8 @@
     <span class="deco deco--circ" style="top:60%; left:3%; background:var(--purple); animation-duration:7s;"></span>
     <div class="hero__badge">📚 THE ANTI-LIBRARY LIBRARY</div>
     <h1>
-      EVERY BOOK'S <span class="hl">LESSONS</span>.<br>
-      NONE OF THE <span class="hl hl--red">FLUFF</span>.
+      Every book's <span class="hl">lessons</span>.<br>
+      None of the <span class="hl hl--red">fluff</span>.
     </h1>
     <p class="hero__sub">
       We broke down the world's greatest books, chapter by chapter, into
@@ -244,7 +253,7 @@
       <div class="dailytrio-shelf__header">
         <div>
           <span class="dailytrio-shelf__eyebrow">TODAY'S THREE PICKS · CURATED DAILY</span>
-          <h2 class="dailytrio-shelf__title">THREE GOOD BOOKS. FIND YOUR SPARK.</h2>
+          <h2 class="dailytrio-shelf__title">Three good books. Find your spark.</h2>
           <p class="dailytrio-shelf__subtitle">Curated daily from 500 classics and modern masterpieces. Read one in ten minutes.</p>
         </div>
         <button class="trio-tune-btn" id="dailyTrioTuneBtn" data-personalize type="button">✦ Customize interests</button>
@@ -324,18 +333,23 @@
 
   <!-- TOOLBAR -->
   <div class="toolbar">
-    <select id="sortSel" title="Sort books">
-      <option value="default">SORT: FEATURED</option>
-      <option value="shelves">📺 SHELVES VIEW</option>
-      <option value="az">A → Z</option>
-      <option value="shortest">SHORTEST READ</option>
-      <option value="lessons">MOST LESSONS</option>
-      <option value="newest">NEWEST BOOKS</option>
-      <option value="progress">MY PROGRESS</option>
+    <select id="sortSel" title="Sort books" aria-label="How to show the books">
+      <option value="shelves">Shelves for you</option>
+      <option value="default">All books, featured</option>
+      <option value="az">A to Z</option>
+      <option value="shortest">Shortest first</option>
+      <option value="lessons">Most lessons</option>
+      <option value="newest">Newest first</option>
+      <option value="progress">My progress</option>
     </select>
   </div>
 
   <main class="grid" id="grid"></main>
+
+  <section class="rq-card" aria-label="Request a book">
+    <div><b>Missing a book?</b><span>Tell us. We add the most-asked ones first.</span></div>
+    <button type="button" data-request="">Request a book</button>
+  </section>
 
   <!-- COMMUNITY CTA -->
   <section class="storyform" style="margin:0 auto 70px;">
@@ -381,22 +395,22 @@
     <p class="tiny"><a href="pseo/index.html" style="color:inherit;">READING LISTS</a> · NEW BOOKS ADDED EVERY WEEK · © 2026 THESMALLBOOK · ALL RIGHTS RESERVED</p>
   </footer>
 
-  <script src="./js/bootguard.js?v=323"></script>
-  <script src="js/prefs.js?v=323"></script>
-  <script src="js/support.js?v=323"></script>
-  <script src="js/upi.js?v=323"></script>
-  <script src="js/lang.js?v=323"></script>
-  <script src="js/config.js?v=323"></script>
-  <script src="js/auth.js?v=323"></script>
-  <script src="js/sounds.js?v=323"></script>
-  <script src="js/community.js?v=323"></script>
-  <script src="js/data.js?v=323"></script>
-  <script src="js/failures.js?v=323"></script>
-  <script src="js/share.js?v=323"></script>
-  <script src="js/app.js?v=323"></script>
-  <script src="js/packs-data.js?v=323"></script>
-  <script src="js/mindpick.js?v=323" defer></script>
-  <script src="js/packs-ui.js?v=323"></script>
+  <script src="./js/bootguard.js?v=335"></script>
+  <script src="js/prefs.js?v=335"></script>
+  <script src="js/support.js?v=335"></script>
+  <script src="js/upi.js?v=335"></script>
+  <script src="js/lang.js?v=335"></script>
+  <script src="js/config.js?v=335"></script>
+  <script src="js/auth.js?v=335"></script>
+  <script src="js/sounds.js?v=335"></script>
+  <script src="js/community.js?v=335"></script>
+  <script src="js/data.js?v=335"></script>
+  <script src="js/failures.js?v=335"></script>
+  <script src="js/share.js?v=335"></script>
+  <script src="js/app.js?v=335"></script>
+  <script src="js/packs-data.js?v=335"></script>
+  <script src="js/mindpick.js?v=335" defer></script>
+  <script src="js/packs-ui.js?v=335"></script>
   <script>
     /* ⭐ THE REVIEW WALL v317 - real reader words (config.js TESTIMONIALS,
        no fake), your own words, and now EVERYONE'S words: posts go to the
@@ -537,16 +551,17 @@
       }
     })();
   </script>
-  <script src="js/guide.js?v=323"></script>
+  <script src="js/guide.js?v=335"></script>
   <script>window.addEventListener("DOMContentLoaded", function () { var c = document.getElementById("tsbHelpChip"); if (c) c.addEventListener("click", function () { TSB_GUIDE.openGuide(); }); });</script>
-  <script src="js/onboard.js?v=323"></script>
-  <script src="js/trial.js?v=323" defer></script>
-  <script src="js/ask-data.js?v=323"></script>
-  <script src="js/tts-engine.js?v=323"></script>
-  <script src="js/ask-modes-data.js?v=323"></script>
-  <script src="js/paywall.js?v=323"></script>
-  <script src="js/askquota.js?v=323"></script>
-  <script src="js/ask.js?v=323"></script>
+  <script src="js/onboard.js?v=335"></script>
+  <script src="js/trial.js?v=335" defer></script>
+  <script src="js/ask-data.js?v=335"></script>
+  <script src="js/tts-engine.js?v=335"></script>
+  <script src="js/ask-modes-data.js?v=335"></script>
+  <script src="js/paywall.js?v=335"></script>
+  <script src="js/askquota.js?v=335"></script>
+  <script src="js/stt.js?v=335"></script>
+  <script src="js/ask.js?v=335"></script>
   <script>
     /* deep-link search from the scanner: index.html?q=<title> */
     (function () {
@@ -566,12 +581,17 @@
       } catch (e) {}
     })();
   </script>
-  <script src="js/podcast-data.js?v=323"></script>
-  <script src="js/audioplayer.js?v=323"></script>
-  <script src="js/showcase.js?v=323"></script>
-  <script src="js/personalize.js?v=328"></script>
-  <script src="js/bar.js?v=323" defer></script>
-  <script src="js/gate.js?v=323" defer></script>
+  <script src="js/podcast-data.js?v=335"></script>
+  <script src="js/audioplayer.js?v=335"></script>
+  <script src="js/showcase.js?v=335"></script>
+  <script src="js/personalize.js?v=335"></script>
+  <script src="js/bar.js?v=335" defer></script>
+  <script src="js/soft-motion.js?v=335" defer></script>
+  <script src="js/gate.js?v=335" defer></script>
 
+  <script src="js/weekly.js?v=335" defer></script>
+  <script src="js/request.js?v=335" defer></script>
+  <script src="js/film.js?v=335" defer></script>
+  <script src="js/film2.js?v=335" defer></script>
 </body>
 </html>

@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>3D Library & Book Discovery | TheSmallBook</title>
@@ -12,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=323">
+  <link rel="stylesheet" href="css/style.css?v=335">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#140f0b">
@@ -138,7 +140,7 @@
       position: relative;
       z-index: 70;
       width: 100%;
-      border-bottom: 3px solid var(--ink);
+      border-bottom: var(--bw) solid var(--edge);
       background: var(--paper, #fffdf5);
     }
     .nav__right-actions {
@@ -146,6 +148,7 @@
       align-items: center;
       gap: 8px;
     }
+    @media (max-width: 340px) { .nav__right-actions { gap: 4px; } .rnd-nav-btn { padding-left: 10px !important; padding-right: 10px !important; } }
 
     .rnd-nav-btn {
       display: inline-flex;
@@ -153,14 +156,14 @@
       gap: 6px;
       background: #fff;
       color: var(--ink);
-      border: 2px solid var(--ink);
+      border: var(--bw) solid var(--edge);
       border-radius: 999px;
       padding: 6px 14px;
       font-family: "Archivo Black", sans-serif;
       font-size: 11.5px;
       letter-spacing: 0.3px;
       text-decoration: none;
-      box-shadow: 2px 2px 0 var(--ink);
+      box-shadow: var(--sh-1);
       cursor: pointer;
       transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
       white-space: nowrap;
@@ -169,35 +172,35 @@
     .rnd-nav-btn:hover {
       background: #f4efe2;
       transform: translate(-1px, -1px);
-      box-shadow: 3px 3px 0 var(--ink);
+      box-shadow: var(--sh-2);
     }
     .rnd-nav-btn:active {
       transform: translate(1px, 1px);
-      box-shadow: 1px 1px 0 var(--ink);
+      box-shadow: var(--sh-1);
     }
     .rnd-nav-btn.is-active {
       background: #111;
       color: #ffc800;
       border-color: #ffc800;
-      box-shadow: 2px 2px 0 #ffc800;
+      box-shadow: var(--sh-y);
     }
 
     .rnd-nav-btn--primary {
       background: var(--yellow) !important;
       color: var(--ink) !important;
-      border: 2px solid var(--ink) !important;
-      box-shadow: 2px 2px 0 var(--ink) !important;
+      border: var(--bw) solid var(--edge) !important;
+      box-shadow: var(--sh-1) !important;
       font-weight: 800;
     }
     .rnd-nav-btn--primary:hover {
       background: #ffd633 !important;
       transform: translate(-1px, -1px);
-      box-shadow: 3px 3px 0 var(--ink) !important;
+      box-shadow: var(--sh-2) !important;
     }
     .rnd-nav-btn--roll {
       background: var(--yellow);
       border-width: 2px;
-      box-shadow: 2px 2px 0 var(--ink);
+      box-shadow: var(--sh-1);
     }
         .rnd-nav-btn--save.is-saved {
       background: var(--yellow, #ffc800) !important;
@@ -215,13 +218,13 @@
       width: 100%;
       background: #fff;
       color: var(--ink, #111);
-      border: 2px solid var(--ink, #111);
-      border-radius: 9px;
+      border: var(--bw) solid var(--edge);
+      border-radius: 13px;
       padding: 10px 14px;
       font-family: var(--font-head, "Archivo Black", sans-serif);
       font-size: 11.5px;
       cursor: pointer;
-      box-shadow: 2px 2px 0 var(--ink, #111);
+      box-shadow: var(--sh-1);
       transition: transform 0.12s, background 0.12s;
       margin-bottom: 8px;
     }
@@ -269,12 +272,12 @@
       gap: 9px;
       background: #fff;
       color: var(--ink);
-      border: 2px solid var(--ink);
+      border: var(--bw) solid var(--edge);
       border-radius: 999px;
       padding: 6px 18px;
       font-size: 12px;
       font-weight: 700;
-      box-shadow: 2.5px 2.5px 0 var(--ink);
+      box-shadow: var(--sh-2);
       margin-bottom: 16px;
       transition: all 0.25s;
     }
@@ -353,7 +356,7 @@
 
     /* Realistic Double-Bounce Desk Impact Landing */
     .book-physical.settle-landing {
-      animation: bookDeskImpact 0.58s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+      animation: bookDeskImpact 0.58s cubic-bezier(.16, 1, .3, 1) forwards !important;
     }
 
     @keyframes bookDeskImpact {
@@ -372,7 +375,7 @@
     }
 
     .book-physical.settle-landing .book-shadow {
-      animation: shadowImpactPuff 0.58s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+      animation: shadowImpactPuff 0.58s cubic-bezier(.16, 1, .3, 1) forwards !important;
     }
 
     @keyframes shadowImpactPuff {
@@ -403,7 +406,7 @@
 
     /* Realistic Library Drop Animation */
     .book-physical.swoop-from-library {
-      animation: bookRealisticDrop 0.72s cubic-bezier(0.18, 0.9, 0.32, 1.2) forwards !important;
+      animation: bookRealisticDrop 0.72s cubic-bezier(.16, 1, .3, 1) forwards !important;
     }
     @keyframes bookRealisticDrop {
       0% {
@@ -455,7 +458,7 @@
       background: linear-gradient(to right, #110e0c 0%, #2a1f18 45%, #15100c 100%);
       transform: rotateY(-90deg) translateX(-100%);
       transform-origin: left top;
-      border: 2px solid var(--ink);
+      border: var(--bw) solid var(--edge);
       border-radius: 4px 0 0 4px;
       display: flex;
       flex-direction: column;
@@ -643,7 +646,7 @@
       inset: 0;
       border-radius: 4px 14px 14px 4px;
       background: radial-gradient(circle at 50% 30%, #251d18 0%, #15100d 80%, #0d0a08 100%);
-      border: 3.5px solid var(--ink);
+      border: var(--bw) solid var(--edge);
       transform: translateZ(calc(var(--book-depth) * -1)) rotateY(180deg);
       backface-visibility: hidden;
       display: flex;
@@ -655,7 +658,7 @@
       box-shadow:
         inset 16px 0 20px rgba(0,0,0,0.4),
         inset -4px 0 8px rgba(0,0,0,0.5),
-        6px 6px 0 var(--ink),
+        var(--sh-3),
         0 16px 32px rgba(0,0,0,0.38);
       z-index: 1;
       pointer-events: none;
@@ -716,8 +719,8 @@
     .back-barcode-block {
       background: #fff;
       padding: 3px 5px;
-      border-radius: 4px;
-      border: 1px solid var(--ink);
+      border-radius: 6px;
+      border: 1px solid var(--edge);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -754,7 +757,7 @@
       align-items: center;
       justify-content: center;
       border: 1.5px solid #ffc800;
-      border-radius: 6px;
+      border-radius: 9px;
       padding: 3px 6px;
       font-family: "Archivo Black", sans-serif;
       font-size: 7.5px;
@@ -776,7 +779,7 @@
       text-align: center;
       background: rgba(255,200,0,0.12);
       border: 1px solid rgba(255,200,0,0.3);
-      border-radius: 4px;
+      border-radius: 6px;
       padding: 2.5px 5px;
       margin-top: 3px;
     }
@@ -813,12 +816,12 @@
       inset: 0;
       border-radius: 4px 14px 14px 4px;
       overflow: hidden;
-      border: 3.5px solid var(--ink);
+      border: var(--bw) solid var(--edge);
       background: #221d19;
       backface-visibility: hidden;
       box-shadow:
         inset 16px 0 20px rgba(0,0,0,0.35),
-        6px 6px 0 var(--ink),
+        var(--sh-3),
         0 16px 32px rgba(0,0,0,0.38);
     }
     .book-cover-front::after {
@@ -865,7 +868,7 @@
       inset: 0;
       border-radius: 14px 4px 4px 14px;
       background: #fbf7eb;
-      border: 3.5px solid var(--ink);
+      border: var(--bw) solid var(--edge);
       transform: rotateY(180deg);
       backface-visibility: hidden;
       display: flex;
@@ -878,10 +881,10 @@
     .bookplate-box {
       background: #fff;
       border: 2px dashed var(--ink);
-      border-radius: 12px;
+      border-radius: 17px;
       padding: 22px 18px;
       width: 85%;
-      box-shadow: 3px 3px 0 rgba(0,0,0,0.12);
+      box-shadow: var(--sh-2);
       text-align: center;
     }
 
@@ -892,9 +895,9 @@
       position: relative;
       z-index: 10;
       background: #181513;
-      border: 3.5px solid var(--ink);
-      border-radius: 14px;
-      box-shadow: 8px 10px 0 var(--ink), 0 22px 48px rgba(0,0,0,0.32);
+      border: var(--bw) solid var(--edge);
+      border-radius: 20px;
+      box-shadow: var(--sh-3), 0 22px 48px rgba(0,0,0,0.32);
       padding: 12px;
       width: 100%;
       height: 100%;
@@ -938,9 +941,9 @@
       width: 16px;
       height: 38px;
       background: var(--red);
-      border: 2px solid var(--ink);
+      border: var(--bw) solid var(--edge);
       border-top: none;
-      box-shadow: 2px 2px 0 var(--ink);
+      box-shadow: var(--sh-1);
       z-index: 18;
       clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
     }
@@ -948,7 +951,7 @@
     .spread-pages-grid {
       background: var(--paper-warm);
       border: 2px solid #332f2b;
-      border-radius: 8px;
+      border-radius: 12px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       overflow: hidden;
@@ -977,13 +980,13 @@
       gap: 6px;
       background: var(--yellow);
       color: var(--ink);
-      border: 2px solid var(--ink);
+      border: var(--bw) solid var(--edge);
       border-radius: 999px;
       padding: 4px 12px;
       font-size: 10.5px;
       font-weight: 800;
       letter-spacing: 0.6px;
-      box-shadow: 2px 2px 0 var(--ink);
+      box-shadow: var(--sh-1);
     }
     .editorial-readtime {
       font-size: 11px;
@@ -1008,11 +1011,11 @@
 
     .bigidea-editorial-card {
       background: #fbf5e6;
-      border: 2px solid var(--ink);
-      border-radius: 12px;
+      border: var(--bw) solid var(--edge);
+      border-radius: 17px;
       padding: 14px 16px;
       margin-bottom: 16px;
-      box-shadow: 3px 3px 0 var(--ink);
+      box-shadow: var(--sh-2);
     }
     .bigidea-kicker {
       font-family: "Archivo Black", sans-serif;
@@ -1037,8 +1040,8 @@
     }
     .lesson-editorial-card {
       background: #fff;
-      border: 1.5px solid var(--ink);
-      border-radius: 8px;
+      border: 1px solid var(--edge);
+      border-radius: 12px;
       padding: 9px 12px;
       font-size: 12px;
       line-height: 1.4;
@@ -1051,7 +1054,7 @@
       line-height: 1.42;
       color: #111;
       background: #fffdf2;
-      border-left: 4px solid var(--ink);
+      border-left: var(--bw) solid var(--edge);
       border-radius: 0 10px 10px 0;
       padding: 12px 14px;
       margin-bottom: 16px;
@@ -1075,7 +1078,7 @@
       width: 18px;
       height: 18px;
       background: var(--yellow);
-      border: 1.5px solid var(--ink);
+      border: 1px solid var(--edge);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -1092,7 +1095,7 @@
       color: #555;
       background: #fff0f0;
       border: 1.5px solid #ff9999;
-      border-radius: 8px;
+      border-radius: 12px;
       padding: 8px 12px;
       margin-bottom: 18px;
     }
@@ -1109,21 +1112,21 @@
       text-align: center;
       background: var(--yellow);
       color: var(--ink);
-      border: 2.5px solid var(--ink);
-      border-radius: 12px;
+      border: var(--bw) solid var(--edge);
+      border-radius: 17px;
       padding: 13px 18px;
       font-family: "Archivo Black", sans-serif;
       font-size: 13.5px;
       letter-spacing: 0.3px;
       text-decoration: none;
-      box-shadow: 3.5px 3.5px 0 var(--ink);
+      box-shadow: var(--sh-2);
       cursor: pointer;
       transition: transform 0.1s, box-shadow 0.1s, background 0.1s;
     }
     .btn-read-breakdown-full:hover {
       background: #ffd633;
       transform: translate(-1px, -1px);
-      box-shadow: 4.5px 4.5px 0 var(--ink);
+      box-shadow: var(--sh-3);
     }
 
     .rnd-clean-footer {
@@ -1194,7 +1197,7 @@
       .rnd-full-exp-card {
         padding: 6px 10px;
         gap: 8px;
-        border-radius: 10px;
+        border-radius: 14px;
       }
       .rnd-exp-subline {
         display: none;
@@ -1222,7 +1225,7 @@
       background: #241f17;
       color: #f2ead8;
       border-color: #000;
-      box-shadow: 2px 2px 0 #000;
+      box-shadow: var(--sh-1);
     }
     html.dark .rnd-nav-btn:hover {
       background: #322b20;
@@ -1253,7 +1256,7 @@
       background: #1c1813;
       color: #f2ead8;
       border-color: #000;
-      box-shadow: 2px 2px 0 #000;
+      box-shadow: var(--sh-1);
     }
     .rnd-shared-banner {
       display: flex;
@@ -1319,7 +1322,7 @@
     .rnd-badge-tag--founder {
       background: #ffc800;
       color: #14110c;
-      border: 1px solid #14110c;
+      border: 1px solid var(--edge);
     }
     .rnd-badge-tag--gold {
       background: linear-gradient(135deg, #ffc800, #ffd866);
@@ -1485,6 +1488,11 @@
       background: #14110c !important;
     }
   </style>
+  <link rel="stylesheet" href="css/film.css?v=335">
+  <link rel="stylesheet" href="css/film2.css?v=335">
+  <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
+  <link rel="canonical" href="https://thesmallbook.in/random.html">
+  <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 
@@ -1634,7 +1642,7 @@
 
           <div class="book-cover-inside">
             <div class="bookplate-box">
-              <div style="font-family:'Archivo Black',sans-serif;font-size:12px;margin-bottom:4px;color:#d4af37;">EX LIBRIS</div>
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:12px;margin-bottom:4px;color:#8A5A00;">EX LIBRIS</div>
               <div id="plateSender" style="font-size:11.5px;font-weight:700;color:#111;">Executive Library Edition</div>
               <div id="plateSub" style="font-size:9.5px;color:#666;margin-top:2px;">TheSmallBook Archives · 8-Min Executive Edition</div>
               <div style="font-size:22px;margin:6px 0;">🏛️</div>
@@ -1664,7 +1672,7 @@
                   <p class="bigidea-text" id="bookBigIdea">Loading core summary...</p>
                 </div>
 
-                <div style="font-family:'Archivo Black',sans-serif;font-size:10.5px;text-transform:uppercase;color:#666;margin-bottom:8px;">Core Lessons</div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:10.5px;text-transform:uppercase;color:#666;margin-bottom:8px;">Core Lessons</div>
                 <div class="lessons-editorial-stack" id="bookLessonsContainer"></div>
               </div>
 
@@ -1680,7 +1688,7 @@
                   <span style="font-size:26px;color:#b45309;vertical-align:-4px;margin-right:4px;">“</span><span id="bookQuoteText">Quote here.</span>
                 </div>
 
-                <div style="font-family:'Archivo Black',sans-serif;font-size:10.5px;text-transform:uppercase;color:#666;margin-bottom:8px;">Action Blueprint</div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-size:10.5px;text-transform:uppercase;color:#666;margin-bottom:8px;">Action Blueprint</div>
                 <div class="plan-editorial-stack" id="bookActionPlan"></div>
 
                 <div class="caveat-editorial-box" id="bookCaveat">
@@ -1717,12 +1725,12 @@
 
   </main>
 
-  <script src="./js/bootguard.js?v=323"></script>
+  <script src="./js/bootguard.js?v=335"></script>
   <script>window.TSB_BOOT_OK = true;</script>
-  <script src="js/data.js?v=323"></script>
-  <script src="js/showcase.js?v=323"></script>
-  <script src="js/gold.js?v=323"></script>
-  <script src="js/share.js?v=323"></script>
+  <script src="js/data.js?v=335"></script>
+  <script src="js/showcase.js?v=335"></script>
+  <script src="js/gold.js?v=335"></script>
+  <script src="js/share.js?v=335"></script>
   <script>
     (function () {
       "use strict";
@@ -2455,5 +2463,9 @@
 
     })();
   </script>
+  <script src="js/stt.js?v=335"></script>
+  <script src="js/wordtap.js?v=335" defer></script>
+  <script src="js/film.js?v=335" defer></script>
+  <script src="js/film2.js?v=335" defer></script>
 </body>
 </html>

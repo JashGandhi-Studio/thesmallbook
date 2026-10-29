@@ -1,715 +1,514 @@
 /* ============================================================
-   THESMALLBOOK: 🎯 FIRST-VISIT ONBOARDING v3 (onboard.js)
-   Six quick steps + a picker: one less page, sharper questions:
-     1 · Welcome            2 · Why you read      3 · Your shelves
-     4 · Daily budget       5 · Reading style     6 · Language & look
-     7 · Pick your starter shelf (tap covers on/off)
-   The answers ACTUALLY tune the app:
-     • primary shelf  → library opens pre-filtered to it (app.js)
-     • reading style  → deep readers start fully expanded (book.js)
-     • language/theme → applied site-wide on finish
-     • budget/interests → saved to the profile (Supabase-ready)
-   Full-width row choices (never overlap), slide/fade transitions,
-   progress segments, back nav, shake when a required pick is missed.
-   Runs ONCE (localStorage tsb_onboarded). Skips returning users.
+   THESMALLBOOK: FIRST OPEN v326 (onboard.js)
+   Built exactly like the redesign film: four calm screens.
+     1 · Big books. Small reads.   name + the language you read in
+     2 · What is on your mind?     up to three, plus read / listen
+     3 · How long can you read?    a radial dial that snaps at 5,
+                                   plus when in the day you read
+     4 · Your shelf is ready       five real books drop onto a shelf,
+                                   tap any book to swap it
+   Every answer tunes the app (Today, Library, voice, language):
+     tsb_reader_name · tsb_interests · tsb_ob_lead · tsb_mind
+     tsb_read_minutes · tsb_read_style · tsb_read_when
+     tsb_starter_shelf · tsb_lang (via TSB_LANG)
+   Runs ONCE (tsb_onboarded). Signed-in readers never see it.
+   520+ books, eight minutes each.
    ============================================================ */
 (function () {
-  /* storage that never dies: localStorage → sessionStorage → in-memory. */
-  var memStore = {};
-  function get(key, def) {
-    try {
-      var v = JSON.parse(localStorage.getItem(key));
-      return v === null || v === undefined ? def : v;
-    } catch (e) {}
-    try {
-      var v2 = JSON.parse(sessionStorage.getItem(key));
-      return v2 === null || v2 === undefined ? def : v2;
-    } catch (e2) {}
-    return key in memStore ? memStore[key] : def;
+  "use strict";
+  var mem = {};
+  function get(k, d) {
+    try { var v = JSON.parse(localStorage.getItem(k)); return v === null || v === undefined ? d : v; } catch (e) {}
+    return k in mem ? mem[k] : d;
   }
-  function set(key, val) {
-    memStore[key] = val;
-    try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
-    try { sessionStorage.setItem(key, JSON.stringify(val)); } catch (e2) {}
+  function set(k, v) {
+    mem[k] = v;
+    try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {}
   }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
 
+  /* v331: onboarding is versioned. Everyone, new or returning, signed in or
+     not, sets the app up once per big update. Returning readers first see a
+     short "new update" card, then the same four screens, prefilled. */
+  var OB_V = 331;
+  var UPDATE = !!get("tsb_onboarded", false) && (get("tsb_onboard_v", 0) || 0) < OB_V;
   function shouldShow() {
-    try { if (sessionStorage.getItem("tsb_onboarded_pending")) { set("tsb_onboarded", true); sessionStorage.removeItem("tsb_onboarded_pending"); } } catch (e) {}
-    if (get("tsb_onboarded", false)) return false;
-    try { if (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) return false; } catch (e) {}
-    /* sync session check: logged-in readers NEVER see onboarding,
-       even if auth.js hasn't finished booting yet (no race) */
+    try { if (sessionStorage.getItem("tsb_onboarded_pending")) { set("tsb_onboarded", true); set("tsb_onboard_v", OB_V); sessionStorage.removeItem("tsb_onboarded_pending"); } } catch (e) {}
+    if ((get("tsb_onboard_v", 0) || 0) >= OB_V) return false;
+    /* a signed-in reader still owes the profile step first (auth.js sends them there) */
     try {
       var s = JSON.parse(localStorage.getItem("tsb_auth_session"));
-      if (s && (s.user || s.access_token)) return false;
+      var md = s && s.user && s.user.user_metadata;
+      if (s && s.user && !(md && md.username && md.birth_year && md.profile_v331)) return false;
     } catch (e) {}
-    if (/404\.html|login\.html|story\.html|chat\.html|settings\.html/.test(location.pathname)) return false;
+    if (/404\.html|login\.html|story\.html|chat\.html|settings\.html|kids\.html/.test(location.pathname)) return false;
     if (/[?&]code=/.test(location.search)) return false;
     return true;
   }
 
-  /* ---------- real personalisation dimensions (v4: unique & fun) ---------- */
-  /* each "mess" maps straight onto a real library shelf */
-  var WHYS = [
-    { id: "Productivity", ic: '<svg class="ob-ic-svg ob-ic-svg--brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04z"/></svg>', t: "Close my 47 open brain tabs", s: "Focus, deep work, zero chaos" },
-    { id: "Money & Finance", ic: '<svg class="ob-ic-svg ob-ic-svg--money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg>', t: "Make money make sense", s: "Earn it · keep it · grow it" },
-    { id: "Business & Startups", ic: '<svg class="ob-ic-svg ob-ic-svg--biz" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1"/></svg>', t: "Build something of my own", s: "Founder brain, minus the burnout" },
-    { id: "Psychology & People", ic: '<svg class="ob-ic-svg ob-ic-svg--psych" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>', t: "Read people like books", s: "Why everyone does that thing" },
-    { id: "Power & Strategy", ic: '<svg class="ob-ic-svg ob-ic-svg--power" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21h14M7 21v-4l2-2v-3a3 3 0 0 1 6 0v3l2 2v4M9 5l3-3 3 3-1.5 4h-3L9 5z"/></svg>', t: "Win quietly", s: "Chess moves for real life" },
-    { id: "Creativity", ic: '<svg class="ob-ic-svg ob-ic-svg--art" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C22 6.5 17.5 2 12 2z"/></svg>', t: "Make stuff people stare at", s: "Ideas that actually slap" },
-    { id: "Self-Improvement", ic: '<svg class="ob-ic-svg ob-ic-svg--growth" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-9M12 13a5 5 0 0 1 5-5h2a7 7 0 0 1-7 7M12 13a5 5 0 0 0-5-5H5a7 7 0 0 0 7 7"/></svg>', t: "Fix my habits (and my sleep)", s: "Become v2.0 of me" },
-    { id: "History", ic: '<svg class="ob-ic-svg ob-ic-svg--hist" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 18h16M4 10h16M12 3L2 8h20L12 3zM6 10v8M10 10v8M14 10v8M18 10v8"/></svg>', t: "Steal plays from dead empires", s: "Old games, new wins" }
+  /* ---------- the four questions, each mapped to a real shelf ---------- */
+  var MIND = [
+    { t: "Focus", c: "#6F5BD9", cat: "Productivity" },
+    { t: "Money", c: "#2F7D5B", cat: "Money & Finance" },
+    { t: "Habits", c: "#FFC800", cat: "Self-Improvement" },
+    { t: "People", c: "#FFA9CC", cat: "Psychology & People" },
+    { t: "Career", c: "#1F3A5F", cat: "Business & Startups" },
+    { t: "Strategy", c: "#7A1C24", cat: "Power & Strategy" },
+    { t: "Ideas", c: "#FF7A59", cat: "Creativity" },
+    { t: "History", c: "#A67C52", cat: "History" }
   ];
-  var SHELF_META = {
-    "Self-Improvement": ["🌱", "habits, sleep, becoming v2.0"],
-    "Business & Startups": ["🏢", "founder brain, real stories"],
-    "Psychology & People": ["🎭", "why people do that"],
-    "Power & Strategy": ["♟️", "chess, not checkers"],
-    "Money & Finance": ["💸", "make it · keep it · grow it"],
-    "Productivity": ["🧠", "deep work, calm schedule"],
-    "Creativity": ["🎨", "ideas that slap"],
-    "History": ["🏛️", "old plays, new games"],
-    "Biography": ["👤", "lives worth borrowing"]
-  };
-  /* v292: the fixes list, pick what you want fixed, the shelf builds itself */
-  var FIXES = [
-    { cat: "Money & Finance",      ic: '<svg class="ob-ic-svg ob-ic-svg--money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg>', t: "Get good with money",     s: "budgets · investing · zero scams" },
-    { cat: "Business & Startups",  ic: '<svg class="ob-ic-svg ob-ic-svg--biz" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 9h1M14 9h1M9 13h1M14 13h1M9 17h1M14 17h1"/></svg>', t: "Build the side hustle",   s: "real founder plays, minus jargon" },
-    { cat: "Psychology & People",  ic: '<svg class="ob-ic-svg ob-ic-svg--psych" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>', t: "Understand humans",       s: "negotiate · persuade · read rooms" },
-    { cat: "Power & Strategy",     ic: '<svg class="ob-ic-svg ob-ic-svg--power" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21h14M7 21v-4l2-2v-3a3 3 0 0 1 6 0v3l2 2v4M9 5l3-3 3 3-1.5 4h-3L9 5z"/></svg>', t: "Get strategic",           s: "see three moves ahead" },
-    { cat: "Productivity",         ic: '<svg class="ob-ic-svg ob-ic-svg--brain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04z"/></svg>', t: "Get my focus back",       s: "deep work on a calm schedule" },
-    { cat: "Self-Improvement",     ic: '<svg class="ob-ic-svg ob-ic-svg--growth" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-9M12 13a5 5 0 0 1 5-5h2a7 7 0 0 1-7 7M12 13a5 5 0 0 0-5-5H5a7 7 0 0 0 7 7"/></svg>', t: "Upgrade the basics",      s: "habits · sleep · discipline" },
-    { cat: "Creativity",           ic: '<svg class="ob-ic-svg ob-ic-svg--art" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C22 6.5 17.5 2 12 2z"/></svg>', t: "Make better things",      s: "ideas with a kick" },
-    { cat: "History",              ic: '<svg class="ob-ic-svg ob-ic-svg--hist" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 18h16M4 10h16M12 3L2 8h20L12 3zM6 10v8M10 10v8M14 10v8M18 10v8"/></svg>', t: "Learn from the falls",    s: "empires · crashes · comebacks" },
-    { cat: "Leadership",           ic: '<svg class="ob-ic-svg ob-ic-svg--lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5 2 7-6.5-4.5-6.5 4.5 2-7L3 9h7z"/></svg>', t: "Run the room",            s: "lead teams without breaking them" },
-    { cat: "__surprise__",         ic: '<svg class="ob-ic-svg ob-ic-svg--surp" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="16" cy="16" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>', t: "Surprise me",             s: "a bit of everything, hand-picked" }
-  ];
-  var STYLES = [
-    { id: "skim", ic: '<svg class="ob-ic-svg ob-ic-svg--bolt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', t: "Just the tactics, coach", s: "Key lessons, in and out" },
-    { id: "steady", ic: '<svg class="ob-ic-svg ob-ic-svg--story" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg>', t: "Story me through it", s: "Case studies & real examples" },
-    { id: "deep", ic: '<svg class="ob-ic-svg ob-ic-svg--deep" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>', t: "Autopsies & deep dives", s: "Everything open, graves included" },
-    { id: "listen", ic: '<svg class="ob-ic-svg ob-ic-svg--listen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>', t: "Read it to me", s: "Audio lessons while I move" }
-  ];
-  var MINUTES = [5, 10, 20, 30];
-  var MIN_LABEL = {
-    5: '<svg class="ob-min-svg ob-min-svg--5" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12c4-6 12-4 15 0-3 4-11 6-15 0z"/><path d="M6 12L2 9v6l4-3z"/><circle cx="17" cy="11" r="1" fill="currentColor"/></svg> 5′',
-    10: '<svg class="ob-min-svg ob-min-svg--10" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg> 10′',
-    20: '<svg class="ob-min-svg ob-min-svg--20" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> 20′',
-    30: '<svg class="ob-min-svg ob-min-svg--30" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13c1.5-4 6-7 12-7 4 0 7 2 8 5-1 3-4 6-9 6-3 0-5.5-.8-7.5-2L2 16v-3z"/><path d="M10 6V2"/><circle cx="18" cy="11" r="1" fill="currentColor"/></svg> 30′'
-  };
-  var MIN_SUB = { 5: "reel brain", 10: "one chai", 20: "proper sit-down", 30: "deep sea" };
+  var LANGS = [["en", "English"], ["hi", "हिन्दी"], ["mr", "मराठी"], ["gu", "ગુજરાતી"], ["bn", "বাংলা"], ["ta", "தமிழ்"]];
+  var MODES = [["steady", "Read"], ["listen", "Listen"], ["both", "Both"]];
+  var WHEN = [["morning", "Morning chai"], ["commute", "On the way"], ["lunch", "Lunch break"], ["night", "Before bed"]];
+  var WORDS = { 5: "Five", 10: "Ten", 15: "Fifteen", 20: "Twenty", 25: "Twenty-five", 30: "Thirty" };
+  var FAN = ["psychology-of-money", "atomic-habits", "deep-work"];
+  var TOTAL = 4;
 
-  /* top shelves straight from the real library */
-  function shelves() {
-    var out = [];
+  var draft = get("tsb_onboard_draft", null) || {};
+  if (!draft || typeof draft !== "object") draft = {};
+  draft.name = draft.name || (function () { try { var n = localStorage.getItem("tsb_reader_name") || ""; n = n.replace(/^"|"$/g, ""); return n === "Guest Reader" ? "" : n; } catch (e) { return ""; } })();
+  draft.lang = draft.lang || (window.TSB_LANG && TSB_LANG.get ? TSB_LANG.get() : "en");
+  draft.mind = Array.isArray(draft.mind) ? draft.mind.slice(0, 3) : [];
+  draft.style = draft.style || "steady";
+  draft.minutes = draft.minutes || 10;
+  draft.when = draft.when || "night";
+  draft.picks = Array.isArray(draft.picks) ? draft.picks : [];
+  if (UPDATE) {
     try {
-      var counts = {};
-      (window.BOOKS || []).forEach(function (b) { counts[b.category] = (counts[b.category] || 0) + 1; });
-      out = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; }).slice(0, 8);
+      var pm = get("tsb_mind", null); if (Array.isArray(pm) && pm.length && !draft.mind.length) draft.mind = pm.slice(0, 3);
+      draft.minutes = get("tsb_read_minutes", draft.minutes) || draft.minutes;
+      draft.style = get("tsb_read_style", draft.style) || draft.style;
+      draft.when = get("tsb_read_when", draft.when) || draft.when;
     } catch (e) {}
-    if (!out.length) out = ["Self-Improvement", "Money & Finance", "Business & Startups", "Psychology & People", "Creativity", "Productivity", "Power & Strategy", "Biography"];
+  }
+
+  var wrap = null, step = 0, busy = false;
+
+  /* ---------- books ---------- */
+  function books() { return window.BOOKS || []; }
+  function byId(id) { var a = books(); for (var i = 0; i < a.length; i++) if (a[i].id === id) return a[i]; return null; }
+  function coverOf(b) { return b && b.cover ? b.cover : "assets/covers/" + (b ? b.id : "") + ".jpg"; }
+  function mins(b) { var m = parseInt(b && b.readTime, 10); return isNaN(m) ? 10 : m; }
+  function countFor(cat) { var n = 0; books().forEach(function (b) { if (b.category === cat) n++; }); return n; }
+  function catsPicked() {
+    var out = [];
+    draft.mind.forEach(function (t) { MIND.forEach(function (m) { if (m.t === t && out.indexOf(m.cat) < 0) out.push(m.cat); }); });
+    if (!out.length) out = ["Self-Improvement", "Productivity", "Money & Finance"];
     return out;
   }
-
-  var draft = get("tsb_onboard_draft", null) || { why: null, shelves: [], minutes: 10, style: null, lang: null, theme: null };
-  var step = 0;
-  var TOTAL = 7;
-
-  /* ---------- the payoff: a starter shelf built from the answers ---------- */
-  function starterShelf(maxPicks) {
-    var pick = [], seen = {}, order = [];
-    if (draft.why) order.push(draft.why);
-    (draft.shelves || []).forEach(function (c) { if (order.indexOf(c) < 0) order.push(c); });
-    if (!order.length) order = shelves().slice(0, 3);
-    function readMin(b) { var m = parseInt(b.readTime, 10); return isNaN(m) ? 15 : m; }
-    var budget = draft.minutes || 10;
-    var seedStr = (draft.why || "") + (draft.shelves || []).join("") + (draft.minutes || "") + (draft.style || "");
-    function seedRank(str) {
-      var h = 0;
-      for (var s = 0; s < str.length; s++) h = ((h << 5) - h + str.charCodeAt(s)) | 0;
-      return Math.abs(h);
+  function pool(cat) {
+    /* the library order is already curated; nudge books that fit the daily budget forward */
+    var list = books().filter(function (b) { return b.category === cat; });
+    var cap = draft.minutes + 4;
+    return list.filter(function (b) { return mins(b) <= cap; }).concat(list.filter(function (b) { return mins(b) > cap; }));
+  }
+  /* v329: our own books (credited Unknown) are TheSmallBook Originals */
+  var NORM = { "Business": "Business & Startups", "Leadership": "Business & Startups", "Finance": "Money & Finance", "Economics": "Money & Finance", "Mindset": "Self-Improvement", "Psychology": "Psychology & People" };
+  function catOf(b) { return b ? (NORM[b.category] || b.category) : ""; }
+  function isOrig(b) {
+    if (!b) return false;
+    try { if (((window.TSB_CONFIG && TSB_CONFIG.ORIGINALS) || []).indexOf(b.id) >= 0) return true; } catch (e) {}
+    return /^unknown$/i.test(b.author || "");
+  }
+  function whyOf(b) {
+    if (isOrig(b)) return { t: "Original", c: "#FFC800" };
+    var c = catOf(b), hit = null;
+    MIND.forEach(function (m) { if (!hit && m.cat === c) hit = m; });
+    return hit ? { t: hit.t, c: hit.c } : { t: "Wildcard", c: "#857C6E" };
+  }
+  function origPool() {
+    var cats = catsPicked(), all = books().filter(isOrig);
+    return all.filter(function (b) { return cats.indexOf(catOf(b)) >= 0; }).concat(all.filter(function (b) { return cats.indexOf(catOf(b)) < 0; }));
+  }
+  function buildShelf() {
+    var four = buildShelfReal().filter(function (id) { return !isOrig(byId(id)); }).slice(0, 4);
+    var o = origPool().filter(function (b) { return four.indexOf(b.id) < 0; })[0];
+    if (o) four.splice(3, 0, o.id);
+    return four.slice(0, 5);
+  }
+  function buildShelfReal() {
+    var cats = catsPicked(), pools = cats.map(pool), out = [], seen = {}, guard = 0;
+    while (out.length < 6 && guard < 60) {
+      var p = pools[guard % pools.length], b = null;
+      while (p.length && !b) { var c = p.shift(); if (!seen[c.id]) b = c; }
+      if (b) { seen[b.id] = 1; out.push(b.id); }
+      guard++;
     }
-    var userSeed = seedRank(seedStr);
-
-    var pools = {};
-    (window.BOOKS || []).forEach(function (b) { (pools[b.category] = pools[b.category] || []).push(b); });
-    Object.keys(pools).forEach(function (k) {
-      pools[k].sort(function (a, b) {
-        if (draft.style === "deep") { var d = (b.graveLink ? 1 : 0) - (a.graveLink ? 1 : 0); if (d) return d; }
-        // Diverse preference scoring rather than static minimum-length forcing
-        var scoreA = 0, scoreB = 0;
-        var rA = readMin(a), rB = readMin(b);
-        if (budget <= 10) {
-          if (rA <= 10) scoreA += 2;
-          if (rB <= 10) scoreB += 2;
-        } else {
-          if (rA >= 10) scoreA += 2;
-          if (rB >= 10) scoreB += 2;
-        }
-        if (draft.style === "skim" && (a.lessons || []).length <= 7) scoreA += 1;
-        if (draft.style === "skim" && (b.lessons || []).length <= 7) scoreB += 1;
-        if (scoreB !== scoreA) return scoreB - scoreA;
-        // User-specific deterministic permutation so different selections yield diverse shelves
-        var hA = (seedRank(a.id) ^ userSeed) % 97;
-        var hB = (seedRank(b.id) ^ userSeed) % 97;
-        return hA - hB;
-      });
-    });
-    var idx = {};
-    var added = true;
-    var want = maxPicks || 6;
-    while (pick.length < want && added) {
-      added = false;
-      for (var i = 0; i < order.length && pick.length < 6; i++) {
-        var c = order[i], pool = pools[c] || [];
-        idx[c] = idx[c] || 0;
-        while (idx[c] < pool.length) {
-          var b = pool[idx[c]++];
-          if (!seen[b.id]) { seen[b.id] = 1; pick.push(b); added = true; break; }
-        }
-      }
-    }
-    (window.BOOKS || []).forEach(function (b) { if (pick.length < want && !seen[b.id]) { seen[b.id] = 1; pick.push(b); } });
-    pick = pick.slice(0, want);
-    /* v292: 1 or 2 picked for the reader first, then the fresh books, then the rest of the matches */
-    var head = pick.slice(0, Math.min(2, pick.length));
-    var rest = pick.slice(2);
-    var inPool = {};
-    head.concat(rest).forEach(function (b) { inPool[b.id] = 1; });
-    var news = [];
-    var ntwList = (window.TSB_CONFIG && TSB_CONFIG.NEW_THIS_WEEK) || [];
-    // Personalize NEW books: prioritize new additions matching user selected categories first
-    ntwList.forEach(function (id) {
-      if (news.length >= 6) return;
-      if (inPool[id]) return;
-      for (var k = 0; k < (window.BOOKS || []).length; k++) {
-        var bCand = BOOKS[k];
-        if (bCand.id === id && order.indexOf(bCand.category) >= 0) {
-          inPool[id] = 1; news.push(bCand); break;
-        }
-      }
-    });
-    // Top up to 6 fresh books from NEW_THIS_WEEK
-    ntwList.forEach(function (id) {
-      if (news.length >= 6) return;
-      if (inPool[id]) return;
-      for (var k2 = 0; k2 < (window.BOOKS || []).length; k2++) {
-        if (BOOKS[k2].id === id) { inPool[id] = 1; news.push(BOOKS[k2]); break; }
-      }
-    });
-    return head.concat(news, rest).slice(0, want);
-  }
-
-  function langList() {
-    var base = [{ code: "en", name: "English", flag: "📕" }];
-    try { if (window.TSB_LANG && TSB_LANG.list) return base.concat(TSB_LANG.list); } catch (e) {}
-    return base;
-  }
-
-  function rows(list, attr, picked, withSub) {
-    return list.map(function (o) {
-      var on = Array.isArray(picked) ? picked.indexOf(o.id) >= 0 : picked === o.id;
-      return '<button class="ob-row' + (on ? " on" : "") + '" data-' + attr + '="' + o.id + '">' +
-        '<span class="ic">' + o.ic + "</span><span>" + o.t +
-        (withSub ? "<small>" + o.s + "</small>" : "") +
-        '</span><span class="tick">✓</span></button>';
-    }).join("");
-  }
-
-  /* ---------- step templates ---------- */
-  /* ---------- starter-shelf picker (v221) ---------- */
-  var recPoolCache = null;
-  function recPool() {
-    if (!recPoolCache) recPoolCache = starterShelf(12);
-    return recPoolCache;
-  }
-  function newCount() {
-    try { return ((window.TSB_CONFIG && TSB_CONFIG.NEW_THIS_WEEK) || []).length; } catch (e) { return 0; }
-  }
-  function newIds() {
-    var out = {};
-    try { ((window.TSB_CONFIG && TSB_CONFIG.NEW_THIS_WEEK) || []).forEach(function (id) { out[id] = 1; }); } catch (e) {}
+    books().forEach(function (b) { if (out.length < 5 && !seen[b.id]) { seen[b.id] = 1; out.push(b.id); } });
     return out;
   }
-  function ensurePicks() {
-    recPoolCache = null;
-    var pool = recPool();
-    if (!draft.picks || !draft.picks.length) {
-      draft.picks = [];
-      pool.slice(0, 6).forEach(function (b) { draft.picks.push(b.id); });
-    }
-    var valid = {};
-    (window.BOOKS || []).forEach(function (b) { valid[b.id] = 1; });
-    draft.picks = draft.picks.filter(function (id) { return valid[id]; });
+  function swapPick(i) {
+    var cur = byId(draft.picks[i]); if (!cur) return null;
+    var list = isOrig(cur) ? origPool() : pool(cur.category).filter(function (b) { return !isOrig(b); }), taken = {};
+    draft.picks.forEach(function (id) { taken[id] = 1; });
+    var at = 0; for (var k = 0; k < list.length; k++) if (list[k].id === cur.id) at = k;
+    for (var j = 1; j <= list.length; j++) { var nb = list[(at + j) % list.length]; if (!taken[nb.id]) return nb.id; }
+    return null;
   }
-  function paintPicks() {
-    var c = body && body.querySelector("#obPickCtr");
-    if (c) c.textContent = "✓ " + (draft.picks || []).length + " on your shelf · tap covers to add or remove";
-    if (!body) return;
-    body.querySelectorAll("[data-pick]").forEach(function (b) {
-      b.classList.toggle("is-off", (draft.picks || []).indexOf(b.dataset.pick) < 0);
+
+  /* ---------- tiny icons ---------- */
+  var ARROW = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  var BACK = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+  var CHECK = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  var SPARK = '<svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg>';
+  var SWAP = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg>';
+
+  function dots(i) {
+    var h = '<div class="fo-dots" aria-hidden="true">';
+    for (var k = 0; k < TOTAL; k++) h += '<i class="' + (k <= i ? "on" : "") + '"></i>';
+    return h + "</div>";
+  }
+  function top(i) {
+    return '<div class="fo-top">' + (i > 0 ? '<button class="fo-back" type="button" data-back aria-label="Back">' + BACK + "</button>" : "<span></span>") + dots(i) + '<span class="fo-step">' + (i + 1) + " of " + TOTAL + "</span></div>";
+  }
+  function bookEl(b, w, h, cls) {
+    if (!b) return "";
+    return '<span class="fo-book ' + (cls || "") + '" style="width:' + w + "px;height:" + h + 'px"><img src="' + esc(coverOf(b)) + '" alt="' + esc(b.title) + '" loading="eager" decoding="async"></span>';
+  }
+  function niceName() { return draft.name ? esc(draft.name) : ""; }
+
+  /* ---------- screens ---------- */
+  var NEWS = [
+    ['<path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z"/>', "A new Listen room", "Real show art, and the words as they are read."],
+    ['<rect x="3" y="15" width="18" height="6" rx="3"/><path d="M7 18h.01M12 18h.01M17 18h.01M12 3v8M8 7l4-4 4 4"/>', "Your own action bar", "Your buttons, set in two taps."],
+    ['<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>', "Share in one tap", "WhatsApp, Instagram or a link."],
+    ['<path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.5 5.7 20.9l1.5-6.9L2 9.3l7-.8z"/>', "Gold, made real", "Natural voices and every Gold tool."]
+  ];
+  function screen(i) {
+    if (i === -1) {
+      var upBooks = FAN.map(function (id, k) { return bookEl(byId(id), 92, 138, "fo-upb fo-upb" + k); }).join("");
+      return '<section class="fo-s fo-s0 fo-up">' +
+        '<div class="fo-up-sky" aria-hidden="true"><i></i><i></i></div>' +
+        '<div class="fo-up-books" aria-hidden="true">' + upBooks + "</div>" +
+        '<div class="fo-upk">NEW UPDATE</div>' +
+        (draft.name ? '<p class="fo-up-hi">Welcome back, ' + niceName() + ".</p>" : "") +
+        '<h1 class="fo-h1">TheSmallBook,<br><i>made new.</i></h1>' +
+        '<div class="fo-news">' + NEWS.map(function (n, k) {
+          return '<div class="fo-new" style="--i:' + k + '"><span class="fo-new__ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + n[0] + '</svg></span><span class="fo-new__t"><b>' + n[1] + "</b><span>" + n[2] + "</span></span></div>";
+        }).join("") + "</div>" +
+        '<p class="fo-p fo-p--safe">Your books, notes and streak are safe. Thirty seconds to set up' + (draft.name ? ", your name is already in." : ".") + '</p>' +
+        '<div class="fo-foot"><button class="fo-btn" type="button" data-next>Set up again ' + ARROW + "</button></div></section>";
+    }
+    if (i === 0) {
+      var fan = FAN.map(function (id, k) { return bookEl(byId(id), 124, 186, "fo-fan" + k); }).join("");
+      return '<section class="fo-s fo-s1">' + top(0) +
+        '<div class="fo-fan">' + fan + "</div>" +
+        '<h1 class="fo-h1">Big books.<br><i>Small reads.</i></h1>' +
+        '<p class="fo-p">520+ books, eight minutes each. In English, Hindi and more.</p>' +
+        '<label class="fo-lab" for="foName">WHAT SHOULD WE CALL YOU?</label>' +
+        '<input class="fo-in" id="foName" type="text" maxlength="24" autocomplete="given-name" placeholder="Your first name" value="' + esc(draft.name) + '">' +
+        '<div class="fo-lab fo-lab--sm">I READ IN</div>' +
+        '<div class="fo-langs" role="radiogroup" aria-label="Reading language">' + LANGS.map(function (l) {
+          return '<button type="button" class="fo-pill' + (draft.lang === l[0] ? " on" : "") + '" data-lang="' + l[0] + '" role="radio" aria-checked="' + (draft.lang === l[0]) + '" translate="no">' + l[1] + "</button>";
+        }).join("") + '<button type="button" class="fo-pill fo-pill--more" data-more>More</button></div>' +
+        '<div class="fo-foot"><button class="fo-btn" type="button" data-next>Start reading ' + ARROW + "</button>" +
+        '</div></section>';
+    }
+    if (i === 1) {
+      return '<section class="fo-s fo-s2">' + top(1) +
+        '<h2 class="fo-h2">What is on your<br>mind' + (draft.name ? ", " + niceName() : "") + "?</h2>" +
+        '<p class="fo-p fo-p--q">Pick up to three.</p>' +
+        '<div class="fo-chips">' + MIND.map(function (m) {
+          var on = draft.mind.indexOf(m.t) >= 0;
+          return '<button type="button" class="fo-chip' + (on ? " on" : "") + '" data-mind="' + m.t + '" aria-pressed="' + on + '"><span class="fo-dot" style="background:' + m.c + '"></span><span class="fo-chip__t">' + m.t + '<small>' + countFor(m.cat) + " books</small></span><span class=\"fo-ck\">" + CHECK + "</span></button>";
+        }).join("") + "</div>" +
+        '<div class="fo-lab fo-lab--sm">I LIKE TO</div>' +
+        '<div class="fo-seg" role="radiogroup" aria-label="Read or listen">' + MODES.map(function (m) {
+          return '<button type="button" class="' + (draft.style === m[0] ? "on" : "") + '" data-style="' + m[0] + '" role="radio" aria-checked="' + (draft.style === m[0]) + '">' + m[1] + "</button>";
+        }).join("") + "</div>" +
+        '<div class="fo-foot"><button class="fo-btn" type="button" data-next' + (draft.mind.length ? "" : " data-dim") + ">Next</button></div></section>";
+    }
+    if (i === 2) {
+      var DS = 280, R = 112, ticks = "";
+      for (var k = 0; k < 6; k++) {
+        var a = (k / 6) * Math.PI * 2 - Math.PI / 2;
+        ticks += '<text x="' + (DS / 2 + Math.cos(a) * 136).toFixed(1) + '" y="' + (DS / 2 + Math.sin(a) * 136 + 4).toFixed(1) + '" text-anchor="middle">' + ((k + 1) * 5) + "</text>";
+      }
+      var circ = 2 * Math.PI * R;
+      return '<section class="fo-s fo-s3">' + top(2) +
+        '<h2 class="fo-h2">How long can you<br>read a day?</h2>' +
+        '<div class="fo-dial" id="foDial" role="slider" tabindex="0" aria-label="Minutes a day" aria-valuemin="5" aria-valuemax="30" aria-valuenow="' + draft.minutes + '">' +
+          '<svg viewBox="0 0 ' + DS + " " + DS + '" width="' + DS + '" height="' + DS + '">' + ticks +
+          '<circle cx="140" cy="140" r="' + R + '" class="fo-track"/>' +
+          '<circle cx="140" cy="140" r="' + R + '" class="fo-arc" stroke-dasharray="' + circ.toFixed(2) + '" stroke-dashoffset="' + circ.toFixed(2) + '" transform="rotate(-90 140 140)"/></svg>' +
+          '<span class="fo-knob"></span><span class="fo-num">' + draft.minutes + '</span><span class="fo-unit">MINUTES A DAY</span></div>' +
+        '<div class="fo-year" aria-live="polite"></div>' +
+        '<div class="fo-lab fo-lab--sm fo-lab--c">WHEN DO YOU READ?</div>' +
+        '<div class="fo-when">' + WHEN.map(function (w) {
+          return '<button type="button" class="fo-pill' + (draft.when === w[0] ? " on" : "") + '" data-when="' + w[0] + '">' + w[1] + "</button>";
+        }).join("") + "</div>" +
+        '<div class="fo-foot"><button class="fo-btn" type="button" data-next>Build my shelf</button></div></section>';
+    }
+    var lead = byId(draft.picks[0]), rest = draft.picks.slice(1).map(function (id, k) { return slotHtml(byId(id), k + 1); }).join("");
+    return '<section class="fo-s fo-s4 fo-s4b">' + top(3) +
+      '<h2 class="fo-h2">Your shelf is<br>ready' + (draft.name ? ", <i>" + niceName() + ".</i>" : ".") + "</h2>" +
+      '<p class="fo-p fo-p--q">' + esc(summary()) + "</p>" +
+      '<div class="fo-lead" data-slot="0">' + leadHtml(lead) + "</div>" +
+      '<div class="fo-list"><div class="fo-listk">Then, one a day</div>' + rest + "</div>" +
+      '<div class="fo-foot"><button class="fo-btn" type="button" data-next>Open my library</button></div></section>';
+  }
+  function authorOf(b) { return isOrig(b) ? "Written by us" : (b.author || ""); }
+  function chip(b) {
+    var w = whyOf(b);
+    return '<span class="fo-why' + (w.t === "Original" ? " fo-why--o" : "") + '" style="--c:' + w.c + '">' + (w.t === "Original" ? SPARK.replace('width="30" height="30"', 'width="11" height="11"') : "<i></i>") + esc(w.t) + "</span>";
+  }
+  function leadHtml(b) {
+    if (!b) return "";
+    return '<button type="button" class="fo-leadbk" data-swap="0" aria-label="Swap ' + esc(b.title) + '">' + bookEl(b, 104, 156, "fo-bk3") + "</button>" +
+      '<div class="fo-leadtx"><div class="fo-leadk">Start here, today</div>' +
+      '<div class="fo-leadt">' + esc(b.title) + "</div>" +
+      '<div class="fo-leada">' + esc(authorOf(b)) + "</div>" +
+      '<div class="fo-leadm">' + chip(b) + '<span class="fo-min">' + mins(b) + " min</span></div>" +
+      '<button type="button" class="fo-swap fo-swap--t" data-swap="0">' + SWAP + " Swap</button></div>";
+  }
+  function slotHtml(b, k) {
+    if (!b) return "";
+    return '<div class="fo-row' + (isOrig(b) ? " fo-row--o" : "") + '" data-slot="' + k + '" style="--i:' + k + '">' +
+      bookEl(b, 40, 60, "fo-rowbk") +
+      '<div class="fo-rowtx"><b>' + esc(b.title) + "</b><span>" + esc(authorOf(b)) + " · " + mins(b) + " min</span></div>" + chip(b) +
+      '<button type="button" class="fo-swap" data-swap="' + k + '" aria-label="Swap ' + esc(b.title) + '">' + SWAP + "</button></div>";
+  }
+  function summary() {
+    var t = draft.mind.map(function (x) { return x.toLowerCase(); });
+    var lead = t.length ? (t.length === 1 ? t[0] : t.slice(0, -1).join(", ") + " and " + t[t.length - 1]) : "a little of everything";
+    lead = lead.charAt(0).toUpperCase() + lead.slice(1);
+    var when = { morning: "with your morning chai", commute: "on the way", lunch: "at lunch", night: "before bed" }[draft.when] || "";
+    return lead + ". " + (WORDS[draft.minutes] || draft.minutes) + " minutes a day" + (when ? ", " + when : "") + ".";
+  }
+
+  /* ---------- dial ---------- */
+  function paintDial(m, live) {
+    var d = wrap && wrap.querySelector("#foDial"); if (!d) return;
+    var R = 112, circ = 2 * Math.PI * R, frac = m / 30;
+    d.querySelector(".fo-arc").style.strokeDashoffset = (circ * (1 - frac)).toFixed(2);
+    var a = frac * Math.PI * 2 - Math.PI / 2, s = d.getBoundingClientRect().width / 280 || 1;
+    var k = d.querySelector(".fo-knob");
+    k.style.transform = "translate(" + ((140 + Math.cos(a) * R) * s).toFixed(1) + "px," + ((140 + Math.sin(a) * R) * s).toFixed(1) + "px)";
+    var n = d.querySelector(".fo-num");
+    if (n.textContent !== String(m)) { n.textContent = m; n.classList.remove("bump"); void n.offsetWidth; n.classList.add("bump"); if (live && navigator.vibrate) try { navigator.vibrate(6); } catch (e) {} }
+    d.setAttribute("aria-valuenow", m);
+    var y = wrap.querySelector(".fo-year");
+    if (y) y.innerHTML = "That is about <b>" + Math.round(m * 365 / 80) + " books</b> a year";
+  }
+  function bindDial() {
+    var d = wrap.querySelector("#foDial"); if (!d) return;
+    var drag = false;
+    function at(e) {
+      var r = d.getBoundingClientRect(), x = e.clientX - (r.left + r.width / 2), y = e.clientY - (r.top + r.height / 2);
+      var ang = Math.atan2(y, x) + Math.PI / 2; if (ang < 0) ang += Math.PI * 2;
+      var m = Math.round((ang / (Math.PI * 2)) * 30 / 5) * 5;
+      if (m < 5) m = draft.minutes >= 20 ? 30 : 5;
+      if (m !== draft.minutes) { draft.minutes = m; paintDial(m, true); }
+    }
+    d.addEventListener("pointerdown", function (e) { drag = true; d.classList.add("drag"); try { d.setPointerCapture(e.pointerId); } catch (x) {} at(e); });
+    d.addEventListener("pointermove", function (e) { if (drag) at(e); });
+    function up() { drag = false; d.classList.remove("drag"); set("tsb_onboard_draft", draft); }
+    d.addEventListener("pointerup", up); d.addEventListener("pointercancel", up);
+    d.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight" || e.key === "ArrowUp") { draft.minutes = Math.min(30, draft.minutes + 5); paintDial(draft.minutes, true); e.preventDefault(); }
+      if (e.key === "ArrowLeft" || e.key === "ArrowDown") { draft.minutes = Math.max(5, draft.minutes - 5); paintDial(draft.minutes, true); e.preventDefault(); }
+    });
+    /* the arc sweeps in from zero, like the film */
+    var from = 0, t0 = 0, to = draft.minutes;
+    function sweep(ts) {
+      if (!t0) t0 = ts; var k = Math.min(1, (ts - t0) / 700), e = 1 - Math.pow(1 - k, 4);
+      var R = 112, circ = 2 * Math.PI * R, f = (from + (to - from) * e) / 30;
+      d.querySelector(".fo-arc").style.strokeDashoffset = (circ * (1 - f)).toFixed(2);
+      if (k < 1) requestAnimationFrame(sweep); else paintDial(draft.minutes);
+    }
+    paintDial(draft.minutes);
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) requestAnimationFrame(sweep);
+  }
+
+  /* ---------- flow ---------- */
+  function mount(i, dir) {
+    var col = wrap.querySelector(".fo-col");
+    var old = col.querySelector(".fo-s");
+    var tmp = document.createElement("div");
+    tmp.innerHTML = screen(i);
+    var el = tmp.firstChild;
+    el.classList.add(dir === "back" ? "in-back" : "in");
+    if (old) { old.classList.add(dir === "back" ? "out-back" : "out"); setTimeout(function () { if (old.parentNode) old.parentNode.removeChild(old); }, 340); }
+    col.appendChild(el);
+    busy = true;
+    requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.remove("in", "in-back"); }); });
+    setTimeout(function () { busy = false; }, 360);
+    if (i === 2) setTimeout(bindDial, 30);
+    if (i === 0) { var n = el.querySelector("#foName"); if (n && !("ontouchstart" in window)) setTimeout(function () { try { n.focus({ preventScroll: true }); } catch (e) {} }, 420); }
+    if (i === 3) el.classList.add("build");
+    if (i === 0) tiltFan(el);
+    wrap.scrollTop = 0;
+  }
+  /* v330: the three books lean toward the finger (or the phone's tilt) */
+  function tiltFan(sec) {
+    var fan = sec.querySelector(".fo-fan");
+    if (!fan || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
+    var set = function (x, y) { fan.style.setProperty("--fx", (x * 14).toFixed(1) + "deg"); fan.style.setProperty("--fy", (-y * 10).toFixed(1) + "deg"); };
+    sec.addEventListener("pointermove", function (e) { set(e.clientX / window.innerWidth - .5, e.clientY / window.innerHeight - .5); });
+    sec.addEventListener("pointerleave", function () { set(0, 0); });
+    window.addEventListener("deviceorientation", function (e) {
+      if (!fan.isConnected || e.gamma == null) return;
+      set(Math.max(-1, Math.min(1, e.gamma / 30)) / 2, Math.max(-1, Math.min(1, (e.beta - 45) / 30)) / 2);
     });
   }
-
-  function stepHtml(i) {
-    switch (i) {
-      case 0:
-        var savedName = "";
-        try { savedName = localStorage.getItem("tsb_reader_name") || ""; } catch (e) {}
-        return '<div class="ob-step__center ob-hero">' +
-          '<span class="ob-hero__deco ob-hero__deco--sq" aria-hidden="true"></span>' +
-          '<span class="ob-hero__deco ob-hero__deco--circ" aria-hidden="true"></span>' +
-          '<span class="ob-hero__deco ob-hero__deco--ring" aria-hidden="true"></span>' +
-          '<div class="ob-logo">📕</div>' +
-          '<span class="ob-eyebrow">WELCOME TO</span>' +
-          '<h2 class="ob-hero__t">The<span>Small</span>Book</h2>' +
-          '<p class="ob-tag">READ 1 BOOK IN 8 MINUTES. BECOME 1% BETTER EVERY DAY.</p>' +
-          '<p class="ob-sub">500+ books (520 curated editions), distilled into punchy masterclass frameworks you can apply today. Six quick questions tailor the entire library to your exact ambition.</p>' +
-          '<div class="ob-guest-box" style="margin:16px auto 14px;max-width:320px;text-align:left;">' +
-            '<label for="obReaderName" style="display:block;font:800 11px var(--font-head);letter-spacing:1px;text-transform:uppercase;color:var(--ink);margin-bottom:6px;">Your Name (Guest / Sign In)</label>' +
-            '<div style="display:flex;gap:8px;">' +
-              '<input id="obReaderName" type="text" maxlength="24" placeholder="Enter guest name (e.g. Alex)" value="' + (savedName ? savedName.replace(/"/g, "&quot;") : "") + '" style="flex:1;border:2.5px solid var(--ink);border-radius:12px;padding:11px 14px;font:700 13px var(--font-body);background:var(--paper);color:var(--ink);box-shadow:3px 3px 0 var(--ink);outline:none;">' +
-            '</div>' +
-            '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:7px;font:600 11px var(--font-body);color:var(--muted);">' +
-              '<span>Reads instantly as Guest</span>' +
-              '<a href="login.html?next=index.html" style="color:var(--ink);font-weight:800;text-decoration:underline;">Or sign in →</a>' +
-            '</div>' +
-          '</div>' +
-          '<div class="ob-btns ob-btns--col">' +
-            '<button class="ob-cta" data-next>🚀 GET STARTED →</button>' +
-          '</div>' +
-          '<p class="ob-fine">Takes 60 seconds · instant starter shelf · unlimited reading free</p>' +
-          '</div>';
-      case 1:
-        return "<h2>What is your primary reading focus?</h2>" +
-          '<p class="ob-sub">Your main ambition. The library will lead with it.</p>' +
-          '<div class="ob-rows">' + rows(WHYS, "why", draft.why, true) + "</div>" +
-          '<div class="ob-btns"><button class="ob-cta" data-next data-need="why">Continue →</button></div>';
-      case 2:
-        return "<h2>And what else are we fixing?</h2>" +
-          '<p class="ob-sub">Pick your fixes and the shelf builds itself around them. Fine-tune the genres later.</p>' +
-          '<div class="ob-rows">' + FIXES.map(function (f) {
-            var on = f.cat === "__surprise__" ? draft.shelves.length >= 8 : draft.shelves.indexOf(f.cat) >= 0;
-            return '<button class="ob-row' + (on ? " on" : "") + '" data-shelf="' + f.cat.replace(/"/g, "&quot;") + '"><span class="ic">' + f.ic +
-              "</span><span>" + f.t + "<small>" + f.s + '</small></span><span class="tick">✓</span></button>';
-          }).join("") + "</div>" +
-          '<div class="ob-btns"><button class="ob-cta" data-next data-need="shelves">Continue →</button></div>';
-      case 3:
-        return "<h2>Real talk: your attention span today?</h2>" +
-          '<p class="ob-sub">We’ll respect it. No 40-minute walls, no guilt.</p>' +
-          '<div class="ob-seg">' + MINUTES.map(function (m) {
-            return '<button class="' + (draft.minutes === m ? "on" : "") + '" data-min="' + m + '">' + (MIN_LABEL[m] || m + "′") + "</button>";
-          }).join("") + "</div>" +
-          '<p class="ob-sub ob-sub--mt">“' + (MIN_SUB[draft.minutes] || "one chai") + '” it is: one lesson fits exactly that.</p>' +
-          '<div class="ob-btns"><button class="ob-cta" data-next>Continue →</button></div>';
-      case 4:
-        return "<h2>How should lessons taste?</h2>" +
-          '<p class="ob-sub">Every book in the app obeys this.</p>' +
-          '<div class="ob-rows">' + rows(STYLES, "style", draft.style, true) + "</div>" +
-          '<div class="ob-btns"><button class="ob-cta" data-next data-need="style">Continue →</button></div>';
-      case 5:
-        return "<h2>Language & look</h2>" +
-          '<p class="ob-sub">Reading language: summaries, chat and audio switch instantly.</p>' +
-          '<div class="ob-langs">' + langList().map(function (l) {
-            var cur = draft.lang || ((window.TSB_LANG && TSB_LANG.get) ? TSB_LANG.get() : "en");
-            return '<button class="ob-lang' + (l.code === cur ? " on" : "") + '" data-lang="' + l.code + '"><span>' + l.flag + "</span>" + l.name + "</button>";
-          }).join("") + "</div>" +
-          '<p class="ob-sub ob-sub--mt" style="margin-top:14px;">And your vibe, flip any time in Settings:</p>' +
-          '<div class="ob-rows">' +
-            '<button class="ob-row' + (draft.theme === "light" ? " on" : "") + '" data-theme-pick="light"><span class="ic">☀️</span><span>Light<small>Paper & ink</small></span><span class="tick">✓</span></button>' +
-            '<button class="ob-row' + (draft.theme === "dark" ? " on" : "") + '" data-theme-pick="dark"><span class="ic">🌙</span><span>Dark<small>Low-light reading</small></span><span class="tick">✓</span></button>' +
-          "</div>" +
-          '<div class="ob-btns"><button class="ob-cta" data-next>Pick my books →</button></div>';
-      case 6:
-        recPoolCache = null;
-        ensurePicks(body);
-        return "<h2>Pick your starter shelf 🎁</h2>" +
-          '<p class="ob-sub">Handpicked from your answers, then ' + newCount() + ' fresh books (look for NEW), tap a cover to keep it or drop it. These lead your Home.</p>' +
-          '<p class="ob-pickctr" id="obPickCtr">✓ ' + (draft.picks || []).length + " on your shelf · tap covers to add or remove</p>" +
-          '<div class="ob-shelf">' + recPool().map(function (b, i) {
-            var on = (draft.picks || []).indexOf(b.id) >= 0;
-            var isNew = newIds()[b.id];
-            return '<button class="ob-book' + (on ? "" : " is-off") + '" data-pick="' + b.id + '">' +
-              '<span class="ob-book__n">' + (i + 1) + "</span>" +
-              (isNew ? '<span class="ob-book__new">NEW</span>' : "") +
-              '<span class="ob-book__pick">✓</span>' +
-              '<img src="assets/covers/' + encodeURIComponent(b.id) + '.jpg" alt="" loading="lazy">' +
-              '<span class="ob-book__t">' + b.title + "</span></button>";
-          }).join("") + "</div>" +
-          '<p class="ob-shelfnote">They wait for you on Home, tap any time to start reading.</p>' +
-          '<div class="ob-btns"><button class="ob-cta" data-finish>Save & explore home →</button></div>';
-
+  function go(i, dir) { step = Math.max(0, Math.min(TOTAL - 1, i)); set("tsb_onboard_draft", draft); mount(step, dir); }
+  function next() {
+    if (busy) return;
+    if (step === -1) { step = 0; set("tsb_onboard_draft", draft); mount(0, "fwd"); return; }
+    if (step === 0) {
+      var n = wrap.querySelector("#foName"); draft.name = n ? n.value.trim().slice(0, 24) : "";
+      if (draft.name) try { localStorage.setItem("tsb_reader_name", draft.name); } catch (e) {}
     }
-    return "";
+    if (step === 1 && !draft.mind.length) { shake(".fo-chips"); return; }
+    if (step === 2) draft.picks = buildShelf();
+    if (step === 3) { finish(); return; }
+    go(step + 1, "fwd");
   }
-
-  function build() {
-    var wrap = document.createElement("div");
-    wrap.className = "obwrap";
-    wrap.innerHTML =
-      '<div class="ob ob--page" role="dialog" aria-modal="true" aria-label="Welcome to TheSmallBook">' +
-        '<span class="ob__bg ob__bg--sq" aria-hidden="true"></span>' +
-        '<span class="ob__bg ob__bg--circ" aria-hidden="true"></span>' +
-        '<header class="ob__bar">' +
-          '<button class="ob__back" data-back aria-label="Back">←</button>' +
-          '<div class="ob__prog">' + Array.apply(null, Array(TOTAL)).map(function (_, i) { return '<i data-seg="' + i + '"><b>' + (i + 1) + "</b></i>"; }).join("") + "</div>" +
-        "</header>" +
-        '<span class="ob__count" id="obCount"></span>' +
-        '<div class="ob__body"></div>' +
-      "</div>";
-    document.body.appendChild(wrap);
-    document.documentElement.classList.add("ob-lock");
-    return wrap;
+  function shake(sel) {
+    var g = wrap.querySelector(sel); if (!g) return;
+    g.classList.remove("fo-shake"); void g.offsetWidth; g.classList.add("fo-shake");
   }
-
-  var wrap = null;
-  var body = null;
-  var busy = false;
-
-  var STEP_NAMES = ["Welcome", "Your battle", "Your fixes", "Daily time", "Taste", "Look", "Your books"];
-  function paintProg() {
-    wrap.querySelectorAll("[data-seg]").forEach(function (s, i) {
-      s.classList.toggle("on", i <= step);
-      s.classList.toggle("now", i === step);
-    });
-    wrap.querySelector(".ob__back").style.visibility = step === 0 ? "hidden" : "visible";
-    var c = wrap.querySelector(".ob__count");
-    if (c) c.textContent = step === 0 ? "THE TUNE-UP" : "STEP " + step + " / " + (TOTAL - 1) + " · " + (STEP_NAMES[step] || "").toUpperCase();
-    wrap.classList.toggle("obwrap--welcome", step === 0);
-  }
-
-  function show(i, dir) {
-    var old = body.querySelector(".ob-step");
-    function mount() {
-      var el = document.createElement("div");
-      el.className = "ob-step ob-step--enter" + (dir === "back" ? " ob-step--enterback" : "");
-      var nn = (i + 1 < 10 ? "0" : "") + (i + 1);
-      var chrome = i === 0
-        ? '<div class="ob-chrome"><span class="ob-chrome__l">THE TUNE-UP · A WORD BEFORE WE BEGIN</span></div>'
-        : '<div class="ob-chrome"><b class="ob-chrome__n">' + nn + '</b><span class="ob-chrome__l">CHAPTER ' + nn + ' · ' + (STEP_NAMES[i] || "").toUpperCase() + "</span></div>";
-      el.innerHTML = chrome + stepHtml(i);
-      body.appendChild(el);
-      body.scrollTop = 0;
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () { el.classList.remove("ob-step--enter", "ob-step--enterback"); });
-      });
-      busy = false;
-    }
-    if (old) {
-      busy = true;
-      old.classList.add(dir === "back" ? "ob-step--outback" : "ob-step--out");
-      setTimeout(function () { if (old.parentNode) old.parentNode.removeChild(old); mount(); }, 200);
-    } else mount();
-    paintProg();
-  }
-
-  function goNext() { if (!busy) { step = Math.min(TOTAL - 1, step + 1); show(step, "fwd"); } }
-  function goBack() { if (!busy && step > 0) { step -= 1; show(step, "back"); } }
-
-  /* close for good, never trap the reader */
-  function dismiss(mark) {
-    if (mark) set("tsb_onboarded", true);
-    if (!wrap) return;
-    var w = wrap;
-    wrap = null;
-    w.classList.add("obwrap--off");
-    document.documentElement.classList.remove("ob-lock");
-    setTimeout(function () { if (w.parentNode) w.parentNode.removeChild(w); }, 420);
-  }
-
-  function shakeNeed(sel) {
-    var g = body.querySelector(sel);
-    if (!g) return;
-    g.classList.add("ob-shake");
-    setTimeout(function () { g.classList.remove("ob-shake"); }, 420);
-  }
-
-  function saveProfile() {
-    var order = [];
-    if (draft.why) order.push(draft.why);
-    (draft.shelves || []).forEach(function (c) { if (order.indexOf(c) < 0) order.push(c); });
+  function save() {
+    var cats = catsPicked();
     set("tsb_onboard_draft", draft);
     set("tsb_onboarded", true);
-    /* never auto-play walkthrough after onboarding; available on-demand via ? or settings */
-    set("tsb_walk_done", window.TSB_BUILD || "323");
+    set("tsb_onboard_v", OB_V);
+    set("tsb_walk_done", window.TSB_BUILD || "331");
     set("tsb_tour_done", true);
-    set("tsb_interests", order.length ? order : draft.shelves);
+    set("tsb_interests", cats);
+    set("tsb_ob_lead", cats[0]);
+    set("tsb_mind", draft.mind);
     set("tsb_read_minutes", draft.minutes);
-    set("tsb_read_style", draft.style || "steady");
-    var lead = draft.why || draft.shelves[0];
-    if (lead) set("tsb_ob_lead", lead);
-    try { set("tsb_starter_shelf", (draft.picks && draft.picks.length ? draft.picks : starterShelf().map(function (b) { return b.id; }))); } catch (e) {}
+    set("tsb_read_style", draft.style);
+    set("tsb_read_when", draft.when);
+    set("tsb_starter_shelf", draft.picks.length ? draft.picks : buildShelf());
+    if (!get("tsb_trial_start", 0)) set("tsb_trial_start", Date.now());
+    if (draft.name) try { localStorage.setItem("tsb_reader_name", draft.name); } catch (e) {}
   }
-
-  function showFirstReadModal() {
-    var picks = (draft.picks && draft.picks.length) ? draft.picks : [];
-    var all = window.BOOKS || [];
-    var recBooks = [];
-
-    // Select personal picks and tailored recommendations (at least 6 books for swipeable selection)
-    for (var i = 0; i < picks.length; i++) {
-      for (var j = 0; j < all.length; j++) {
-        if (all[j].id === picks[i] && recBooks.indexOf(all[j]) < 0) {
-          recBooks.push(all[j]);
-          break;
-        }
-      }
-      if (recBooks.length >= 8) break;
-    }
-
-    // Top up from user selected shelves
-    var userShelves = (draft.shelves || []).concat(draft.why ? [draft.why] : []);
-    if (recBooks.length < 6 && userShelves.length) {
-      for (var sIdx = 0; sIdx < userShelves.length; sIdx++) {
-        var sName = userShelves[sIdx];
-        var shelfMatches = all.filter(function (b) {
-          return b.category === sName || (b.tags && b.tags.indexOf(sName) >= 0);
-        });
-        for (var mIdx = 0; mIdx < shelfMatches.length; mIdx++) {
-          if (recBooks.indexOf(shelfMatches[mIdx]) < 0) {
-            recBooks.push(shelfMatches[mIdx]);
-          }
-          if (recBooks.length >= 6) break;
-        }
-        if (recBooks.length >= 6) break;
-      }
-    }
-
-    // Top up from starterShelf
-    if (recBooks.length < 6) {
-      var pool = starterShelf(8);
-      for (var k = 0; k < pool.length; k++) {
-        if (recBooks.indexOf(pool[k]) < 0) recBooks.push(pool[k]);
-        if (recBooks.length >= 6) break;
-      }
-    }
-
-    // Fallback if still under 6
-    if (recBooks.length < 6) {
-      for (var a = 0; a < all.length; a++) {
-        if (recBooks.indexOf(all[a]) < 0) recBooks.push(all[a]);
-        if (recBooks.length >= 6) break;
-      }
-    }
-    if (!recBooks.length) return;
-
-    var readerName = "";
-    try { readerName = localStorage.getItem("tsb_reader_name") || ""; } catch (e) {}
-    if (!readerName || readerName === "Guest Reader") readerName = "";
-
-    var modal = document.createElement("div");
-    modal.className = "firstread-wrap";
-    modal.setAttribute("role", "dialog");
-    modal.setAttribute("aria-modal", "true");
-    modal.setAttribute("aria-label", "Welcome to TheSmallBook");
-
-    var railHtml = recBooks.map(function (b) {
-      var time = b.readTime || "8 min";
-      return '<a href="book.html?id=' + encodeURIComponent(b.id) + '" class="firstread-item">' +
-        '<div class="firstread-cover">' +
-          '<img src="assets/covers/' + encodeURIComponent(b.id) + '.jpg" alt="' + b.title.replace(/"/g, "&quot;") + '" loading="lazy">' +
-        '</div>' +
-        '<h3 class="firstread-booktitle">' + b.title + '</h3>' +
-        '<span class="firstread-author">' + b.author + '</span>' +
-        '<span class="firstread-time">⏱ ' + time + '</span>' +
-        '<span class="firstread-readbtn">Read →</span>' +
-      '</a>';
-    }).join("");
-
-    var welcomeHeading = "WELCOME TO THESMALLBOOK" + (readerName ? ", " + readerName.toUpperCase() : "");
-
-    modal.innerHTML =
-      '<div class="firstread-card">' +
-        '<button class="firstread-close" aria-label="Close" id="frClose">✕</button>' +
-        '<div class="firstread-header">' +
-          '<h2 class="firstread-title">' + welcomeHeading + '</h2>' +
-          '<p class="firstread-sub">Here are your personal book recommendations</p>' +
-          '<div class="firstread-swipe-hint">↔ SWIPE TO EXPLORE ' + recBooks.length + ' RECOMMENDATIONS</div>' +
-        '</div>' +
-        '<div class="firstread-rail">' + railHtml + '</div>' +
-        '<button type="button" class="firstread-btn" id="frHomeBtn">EXPLORE ALL BOOKS →</button>' +
-      '</div>';
-
-    document.body.appendChild(modal);
-
-    function dismissModal() {
-      modal.style.opacity = "0";
-      modal.style.transition = "opacity .22s cubic-bezier(0.16, 1, 0.3, 1)";
-      setTimeout(function () {
-        if (modal.parentNode) modal.parentNode.removeChild(modal);
-      }, 220);
-    }
-
-    var closeBtn = modal.querySelector("#frClose");
-    if (closeBtn) closeBtn.addEventListener("click", dismissModal);
-    var homeBtn = modal.querySelector("#frHomeBtn");
-    if (homeBtn) homeBtn.addEventListener("click", dismissModal);
-    modal.addEventListener("click", function (e) {
-      if (e.target === modal) dismissModal();
-    });
-  }
-
   function finish() {
-    saveProfile();
-    try {
-      if (draft.lang && window.TSB_LANG && TSB_LANG.select) TSB_LANG.select(draft.lang);
-      var isDark = document.documentElement.classList.contains("dark");
-      if (draft.theme && ((draft.theme === "dark") !== isDark) && window.TSB && TSB.theme) TSB.theme.toggle();
-    } catch (e) {}
-    var lead = draft.shelves[0] || "";
-    var styleName = (STYLES.filter(function (s) { return s.id === draft.style; })[0] || {}).t || "Steady reader";
-    try { set("tsb_trial_start", Date.now()); } catch (e) {}
-    body.innerHTML = '<div class="ob-step ob-step--done"><div class="ob-logo">🎉</div><h2>Okay, you\u2019re in</h2>' +
-      '<p class="ob-sub">' + (lead ? "📚 Leading with " + lead + "<br>" : "") +
-      "⏱ " + draft.minutes + " min a day · " + styleName + "<br>" +
-      "🌐 " + (draft.lang && draft.lang !== "en" ? draft.lang.toUpperCase() : "EN") + " · " +
-      (draft.theme === "dark" ? "🌙 dark" : "☀️ light") + "</p>" +
-      '<p class="ob-sub">Your shelf is ready, and you have a <b>15-minute free taster</b> on the house. Sign in any time to keep it forever.</p></div>';
+    save();
+    var curLang = window.TSB_LANG && TSB_LANG.get ? TSB_LANG.get() : "en";
+    var btn = wrap.querySelector("[data-next]"); if (btn) btn.classList.add("press");
+    wrap.classList.add("fo--leave");
+    document.documentElement.classList.remove("fo-lock");
+    try { window.dispatchEvent(new CustomEvent("tsb:onboarded", { detail: { picks: draft.picks, mind: draft.mind } })); } catch (e) {}
     setTimeout(function () {
-      wrap.classList.add("obwrap--off");
-      document.documentElement.classList.remove("ob-lock");
-      setTimeout(function () {
-        if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
-        showFirstReadModal();
-        /* apply the tuned shelf live, tap the matching filter chip */
-        try {
-          var leadNow = JSON.parse(localStorage.getItem("tsb_ob_lead") || "null");
-          if (leadNow) {
-            var chip = null;
-            document.querySelectorAll(".chip").forEach(function (c) { if (c.textContent === leadNow) chip = c; });
-            if (chip) chip.click();
-          }
-        } catch (e) {}
-      }, 420);
-    }, 1400);
+      if (wrap && wrap.parentNode) wrap.parentNode.removeChild(wrap);
+      wrap = null;
+      if (draft.lang && draft.lang !== curLang && window.TSB_LANG && TSB_LANG.select) TSB_LANG.select(draft.lang);
+    }, 460);
   }
-
-  function bind() {
-    wrap.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" && e.target && e.target.id === "obReaderName") {
-        e.preventDefault();
-        var nextBtn = wrap.querySelector("[data-next]");
-        if (nextBtn) nextBtn.click();
-      }
+  function dismiss(mark) {
+    if (mark) { set("tsb_onboarded", true); set("tsb_onboard_v", OB_V); }
+    if (!wrap) return;
+    var w = wrap; wrap = null;
+    w.classList.add("fo--leave");
+    document.documentElement.classList.remove("fo-lock");
+    setTimeout(function () { if (w.parentNode) w.parentNode.removeChild(w); }, 460);
+  }
+  function moreLangs(btn) {
+    var list = (window.TSB_LANG && TSB_LANG.list) || [];
+    var sel = document.createElement("select");
+    sel.className = "fo-langsel"; sel.setAttribute("aria-label", "All languages");
+    sel.innerHTML = list.map(function (l) { return '<option value="' + esc(l.code) + '"' + (l.code === draft.lang ? " selected" : "") + ">" + esc(l.name) + (l.special ? "" : " · " + esc(l.native)) + "</option>"; }).join("");
+    btn.replaceWith(sel);
+    sel.addEventListener("change", function () {
+      draft.lang = sel.value;
+      wrap.querySelectorAll("[data-lang]").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-lang") === draft.lang); b.setAttribute("aria-checked", b.getAttribute("data-lang") === draft.lang); });
     });
-
+    try { sel.focus(); if (sel.showPicker) sel.showPicker(); } catch (e) {}
+  }
+  function bind() {
     wrap.addEventListener("click", function (e) {
       var t;
-      if ((t = e.target.closest("[data-next]"))) {
-        if (step === 0) {
-          var nameInput = body.querySelector("#obReaderName");
-          var rawName = nameInput ? (nameInput.value || "").trim() : "";
-          if (!rawName) rawName = "Guest Reader";
-          try {
-            localStorage.setItem("tsb_reader_name", rawName);
-            localStorage.setItem("tsb_guest_user", rawName === "Guest Reader" ? "true" : "false");
-          } catch (e) {}
-        }
-        var need = t.getAttribute("data-need");
-        if (need === "why" && !draft.why) return shakeNeed(".ob-rows");
-        if (need === "style" && !draft.style) return shakeNeed(".ob-rows");
-        if (need === "shelves" && !draft.shelves.length) return shakeNeed(".ob-rows");
-        set("tsb_onboard_draft", draft);
-        goNext();
+      if ((t = e.target.closest("[data-next]"))) { next(); return; }
+      if ((t = e.target.closest("[data-back]"))) { if (!busy && step > 0) go(step - 1, "back"); return; }
+      if ((t = e.target.closest("[data-kids]"))) { e.preventDefault(); draft.name = (wrap.querySelector("#foName") || {}).value || draft.name; save(); try { localStorage.setItem("tsb_kids_mode", "1"); } catch (x) {} location.href = "kids.html"; return; }
+      if ((t = e.target.closest("[data-more]"))) { moreLangs(t); return; }
+      if ((t = e.target.closest("[data-lang]"))) {
+        draft.lang = t.getAttribute("data-lang");
+        wrap.querySelectorAll("[data-lang]").forEach(function (b) { b.classList.toggle("on", b === t); b.setAttribute("aria-checked", b === t); });
+        var s = wrap.querySelector(".fo-langsel"); if (s) s.value = draft.lang;
         return;
       }
-      if (e.target.closest("[data-finish]")) { finish(); return; }
-      if ((t = e.target.closest("[data-pick]"))) {
-        /* tap a cover → keep it on the starter shelf or drop it */
-        ensurePicks();
-        var id = t.getAttribute("data-pick");
-        var at = draft.picks.indexOf(id);
-        if (at >= 0) draft.picks.splice(at, 1); else draft.picks.push(id);
+      if ((t = e.target.closest("[data-mind]"))) {
+        var m = t.getAttribute("data-mind"), at = draft.mind.indexOf(m);
+        if (at >= 0) draft.mind.splice(at, 1);
+        else if (draft.mind.length >= 3) { t.classList.remove("fo-no"); void t.offsetWidth; t.classList.add("fo-no"); return; }
+        else draft.mind.push(m);
+        t.classList.toggle("on", at < 0); t.setAttribute("aria-pressed", at < 0);
+        t.classList.remove("pop"); void t.offsetWidth; t.classList.add("pop");
+        var nb = wrap.querySelector("[data-next]"); if (nb) { if (draft.mind.length) nb.removeAttribute("data-dim"); else nb.setAttribute("data-dim", ""); }
         set("tsb_onboard_draft", draft);
-        paintPicks();
-        return;
-      }
-      if (e.target.closest("[data-back]")) { goBack(); return; }
-      if ((t = e.target.closest("[data-why]"))) {
-        recPoolCache = null;
-        draft.why = t.getAttribute("data-why");
-        body.querySelectorAll("[data-why]").forEach(function (b) { b.classList.toggle("on", b === t); });
-        set("tsb_onboard_draft", draft);
-        setTimeout(function () { if (step === 1 && !busy) goNext(); }, 200);
-        return;
-      }
-      if ((t = e.target.closest("[data-shelf]"))) { recPoolCache = null;
-        var c = t.getAttribute("data-shelf");
-        if (c === "__surprise__") {
-          if (draft.shelves.length >= 8) { draft.shelves = []; }
-          else { draft.shelves = shelves().slice(0, 8); }
-          body.querySelectorAll("[data-shelf]").forEach(function (b) {
-            var v = b.getAttribute("data-shelf");
-            b.classList.toggle("on", v === "__surprise__" ? draft.shelves.length >= 8 : draft.shelves.indexOf(v) >= 0);
-          });
-        } else {
-          var ix = draft.shelves.indexOf(c);
-          if (ix >= 0) draft.shelves.splice(ix, 1); else draft.shelves.push(c);
-          t.classList.toggle("on", ix < 0);
-          var sur = body.querySelector('[data-shelf="__surprise__"]');
-          if (sur) sur.classList.toggle("on", draft.shelves.length >= 8);
-        }
-        return;
-      }
-      if ((t = e.target.closest("[data-min]"))) {
-        draft.minutes = Number(t.getAttribute("data-min"));
-        body.querySelectorAll("[data-min]").forEach(function (b) { b.classList.toggle("on", b === t); });
-        set("tsb_onboard_draft", draft);
-        setTimeout(function () { if (step === 3 && !busy) goNext(); }, 200);
         return;
       }
       if ((t = e.target.closest("[data-style]"))) {
         draft.style = t.getAttribute("data-style");
-        body.querySelectorAll("[data-style]").forEach(function (b) { b.classList.toggle("on", b === t); });
+        wrap.querySelectorAll("[data-style]").forEach(function (b) { b.classList.toggle("on", b === t); b.setAttribute("aria-checked", b === t); });
+        return;
+      }
+      if ((t = e.target.closest("[data-when]"))) {
+        draft.when = t.getAttribute("data-when");
+        wrap.querySelectorAll("[data-when]").forEach(function (b) { b.classList.toggle("on", b === t); });
+        return;
+      }
+      if ((t = e.target.closest("[data-swap]"))) {
+        var i = Number(t.getAttribute("data-swap")), nid = swapPick(i);
+        if (!nid) return;
+        draft.picks[i] = nid;
+        var b = byId(nid), slot = wrap.querySelector('[data-slot="' + i + '"]');
+        if (slot && b) {
+          slot.classList.remove("swapin"); slot.classList.add("swapout");
+          setTimeout(function () {
+            slot.innerHTML = i === 0 ? leadHtml(b) : slotHtml(b, i).replace(/^<div[^>]*>/, "").replace(/<\/div>$/, "");
+            if (i > 0) slot.classList.toggle("fo-row--o", isOrig(b));
+            slot.classList.remove("swapout"); void slot.offsetWidth; slot.classList.add("swapin");
+          }, 170);
+        }
         set("tsb_onboard_draft", draft);
-        setTimeout(function () { if (step === 4 && !busy) goNext(); }, 200);
-        return;
-      }
-      if ((t = e.target.closest("[data-lang]"))) {
-        draft.lang = t.getAttribute("data-lang");
-        body.querySelectorAll("[data-lang]").forEach(function (b) { b.classList.toggle("on", b === t); });
-        return;
-      }
-      if ((t = e.target.closest("[data-theme-pick]"))) {
-        draft.theme = t.getAttribute("data-theme-pick");
-        body.querySelectorAll("[data-theme-pick]").forEach(function (b) { b.classList.toggle("on", b === t); });
-        return;
       }
     });
+    wrap.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && e.target && (e.target.id === "foName")) { e.preventDefault(); next(); }
+    });
+  }
+  function build() {
+    var w = document.createElement("div");
+    w.className = "fo";
+    w.setAttribute("role", "dialog");
+    w.setAttribute("aria-modal", "true");
+    w.setAttribute("aria-label", "Welcome to TheSmallBook");
+    w.innerHTML = '<div class="fo-col"></div>';
+    document.body.appendChild(w);
+    document.documentElement.classList.add("fo-lock");
+    return w;
+  }
+  function open(at) {
+    if (wrap) return;
+    wrap = build(); bind(); step = at || 0; mount(step, "fwd");
+    if (step === -1) wrap.classList.add("fo--upd");
   }
 
-  /* 🎯 live re-tune from Settings / You window (no reload) */
+  /* live re-tune from You and Settings (no reload) */
   window.TSB_ONBOARD = {
     start: function () {
-      if (wrap) return;
       try {
-        var ints = JSON.parse(localStorage.getItem("tsb_interests")) || [];
-        if (ints.length && !draft.shelves.length) { draft.shelves = ints.slice(); draft.why = draft.why || ints[0]; }
-        var lead = JSON.parse(localStorage.getItem("tsb_ob_lead"));
-        if (lead) draft.why = lead;
-        var mm = JSON.parse(localStorage.getItem("tsb_read_minutes")); if (mm) draft.minutes = mm;
-        var st = JSON.parse(localStorage.getItem("tsb_read_style")); if (st) draft.style = st;
+        var mind = get("tsb_mind", null); if (Array.isArray(mind) && mind.length) draft.mind = mind.slice(0, 3);
+        draft.minutes = get("tsb_read_minutes", draft.minutes) || 10;
+        draft.style = get("tsb_read_style", draft.style) || "steady";
+        draft.when = get("tsb_read_when", draft.when) || "night";
       } catch (e) {}
-      step = 0;
-      wrap = build();
-      body = wrap.querySelector(".ob__body");
-      bind();
-      show(0, "fwd");
-    }
+      open(0);
+    },
+    summary: summary,
+    mind: MIND,
+    dismiss: dismiss
   };
 
   function boot() {
     if (!shouldShow()) return;
-    wrap = build();
-    body = wrap.querySelector(".ob__body");
-    bind();
-    show(0, "fwd");
-    /* if a login completes while this is open, bow out gracefully */
-    window.addEventListener("tsb:auth", function () {
-      try { if (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) dismiss(true); } catch (e) {}
-    });
+    open(UPDATE ? -1 : 0);
   }
-
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
 })();

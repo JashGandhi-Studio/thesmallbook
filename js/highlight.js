@@ -30,7 +30,7 @@
         box-decoration-break: clone;
         -webkit-box-decoration-break: clone;
         cursor: pointer;
-        border-bottom: 2px solid var(--ink, #111);
+        border-bottom: var(--bw) solid var(--edge);
         padding: 0 1px;
         border-radius: 2px;
         transition: background .15s;
@@ -42,25 +42,25 @@
         position: fixed; z-index: 9999;
         display: flex; align-items: center; gap: 6px;
         background: var(--paper, #fffdf5); color: var(--ink, #111);
-        border: 3px solid var(--ink, #111);
-        box-shadow: 3px 3px 0 var(--ink, #111);
+        border: var(--bw) solid var(--edge);
+        box-shadow: var(--sh-2);
         font-family: "Archivo Black", sans-serif; font-size: 11px;
         letter-spacing: 1px; padding: 7px 12px; cursor: pointer;
-        animation: tsbHlPop .18s cubic-bezier(.2,1.4,.4,1);
+        animation: tsbHlPop .18s cubic-bezier(.16, 1, .3, 1);
       }
-      .tsb-hl-btn:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--ink,#111); }
+      .tsb-hl-btn:hover { transform: translate(-1px,-1px); box-shadow: var(--sh-3); }
       @keyframes tsbHlPop { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
       /* confirm-to-remove chip */
       .tsb-hl-confirm {
         position: fixed; z-index: 10000; display: flex; align-items: center; gap: 6px;
-        background: var(--paper,#fffdf5); border: 3px solid var(--ink,#111);
-        box-shadow: 3px 3px 0 var(--ink,#111);
+        background: var(--paper,#fffdf5); border: var(--bw) solid var(--edge);
+        box-shadow: var(--sh-2);
         font-family: "Archivo Black", sans-serif; font-size: 10px; letter-spacing: .5px;
-        padding: 6px 10px; animation: tsbHlPop .15s cubic-bezier(.2,1.4,.4,1);
+        padding: 6px 10px; animation: tsbHlPop .15s cubic-bezier(.16, 1, .3, 1);
       }
       .tsb-hl-confirm .q { color: var(--ink,#111); }
-      .tsb-hl-confirm button { border: 2.5px solid var(--ink,#111); font-family: "Archivo Black", sans-serif; font-size: 11px; cursor: pointer; padding: 3px 8px; line-height: 1; }
-      .tsb-hl-confirm .yes { background: var(--red,#ff4d4d); color: #fff; }
+      .tsb-hl-confirm button { border: var(--bw) solid var(--edge); font-family: "Archivo Black", sans-serif; font-size: 11px; cursor: pointer; padding: 3px 8px; line-height: 1; }
+      .tsb-hl-confirm .yes { background: var(--red,#D23A3A); color: #fff; }
       .tsb-hl-confirm .yes:hover { transform: translate(-1px,-1px); }
       .tsb-hl-confirm .no { background: var(--paper,#fffdf5); color: var(--ink,#111); }
       .tsb-hl-confirm .no:hover { background: var(--yellow,#ffc800); }

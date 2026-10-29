@@ -230,7 +230,7 @@
       : overall >= 52
         ? { label: "PROMISING, WITH LANDMINES", color: "#ffc800",
             line: "There is a real business hiding in here, and a real funeral. Fix the landmines below BEFORE spending on growth, the graveyard is full of \u2018almosts\u2019 that scaled their flaws." }
-        : { label: "DANGER, REDRAW THE PLAN", color: "#ff4d4d",
+        : { label: "DANGER, REDRAW THE PLAN", color: "#D23A3A",
             line: "The audit found patterns that buried companies your size. That is not a verdict against you, it is the map. Rework the weak reads below before writing another line of code." };
 
     var steps = planSteps(c, weak);
@@ -551,7 +551,7 @@
 
   /* ---- dictation: speak the wound instead of typing it (guarded) ---- */
   function setupMic(btn, onText) {
-    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    var SR = window.TSB_SR || window.SpeechRecognition || window.webkitSpeechRecognition;
     /* no speech engine on this browser, the button never shows at all */
     if (!SR) { if (btn.parentNode) btn.parentNode.removeChild(btn); return; }
     var rec = null, on = false, retried = false;
@@ -732,7 +732,7 @@
     return new Promise(function (res) {
       if (window.FAILURES && window.FAILURES.length) return res();
       var sc = document.createElement("script");
-      sc.src = "js/failures.js?v=323";
+      sc.src = "js/failures.js?v=335";
       sc.onload = function () { res(); };
       sc.onerror = function () { res(); };
       document.head.appendChild(sc);

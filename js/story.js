@@ -37,20 +37,23 @@
 
     document.title = `${s.title}, TheSmallBook`;
 
-    const coverHTML = s.cover
-      ? `<img class="reader__cover" src="${s.cover}" alt="cover">`
-      : `<div class="reader__cover" style="display:grid;place-items:center;font-size:2.6rem;background:var(--yellow);height:120px;">${s.emoji || "📖"}</div>`;
+    /* v331: only safe addresses reach src, and every value is escaped */
+    const safeUrl = (u, img) => { u = String(u || ""); return (img ? /^(https:|data:image\/(png|jpe?g|webp|gif);|blob:|assets\/)/i : /^(https:|data:application\/pdf;|blob:)/i).test(u) ? escapeHTML(u) : ""; };
+    const cov = safeUrl(s.cover, true), pdf = safeUrl(s.pdf, false);
+    const coverHTML = cov
+      ? `<img class="reader__cover" src="${cov}" alt="cover">`
+      : `<div class="reader__cover" style="display:grid;place-items:center;font-size:2.6rem;background:var(--yellow);height:120px;">${escapeHTML(s.emoji || "📖")}</div>`;
 
     meta.innerHTML = `
       ${coverHTML}
       <div>
         <div class="reader__title">${escapeHTML(s.title)}</div>
-        <div class="reader__by">by ${escapeHTML(s.author)} · ${s.date || ""} · inspired by ${escapeHTML(bookTitle(s.bookId))}</div>
+        <div class="reader__by">by ${escapeHTML(s.author)} · ${escapeHTML(s.date || "")} · inspired by ${escapeHTML(bookTitle(s.bookId))}</div>
       </div>`;
 
     let html = "";
     if (s.text) html += `<div class="reader__text">${escapeHTML(s.text)}</div>`;
-    if (s.pdf) html += `<div style="margin-top:24px;"><embed src="${s.pdf}" type="application/pdf"></div>`;
+    if (pdf) html += `<div style="margin-top:24px;"><embed src="${pdf}" type="application/pdf"></div>`;
     content.innerHTML = html;
   }
 

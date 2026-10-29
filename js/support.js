@@ -38,25 +38,25 @@
       .btn--support {
         background: linear-gradient(135deg, #ffc800 0%, #ff8a3d 60%, #ff5252 100%);
         color: #111 !important;
-        border: 3px solid var(--ink, #111) !important;
-        box-shadow: 4px 4px 0 var(--ink, #111) !important;
+        border: var(--bw) solid var(--edge) !important;
+        box-shadow: var(--sh-2) !important;
         font-weight: 800;
         animation: fuelPulse 2.2s ease-in-out infinite;
       }
       .btn--support:hover {
         transform: translate(-2px,-2px) !important;
-        box-shadow: 6px 6px 0 var(--ink, #111) !important;
+        box-shadow: var(--sh-3) !important;
       }
       @keyframes fuelPulse {
-        0%,100% { box-shadow: 4px 4px 0 var(--ink, #111), 0 0 0 0 rgba(255,200,0,.5); }
-        50% { box-shadow: 4px 4px 0 var(--ink, #111), 0 0 0 10px rgba(255,200,0,0); }
+        0%,100% { box-shadow: var(--sh-2), 0 0 0 0 rgba(255,200,0,.5); }
+        50% { box-shadow: var(--sh-2), 0 0 0 10px rgba(255,200,0,0); }
       }
 
       /* modal premium styles */
       .fuel-hero {
         background: linear-gradient(135deg, #ffc800, #ff8a3d);
-        border: 3px solid var(--ink, #111);
-        box-shadow: 4px 4px 0 var(--ink, #111);
+        border: var(--bw) solid var(--edge);
+        box-shadow: var(--sh-2);
         padding: 16px 18px;
         margin-bottom: 14px;
         text-align: center;
@@ -66,28 +66,28 @@
       .fuel-hero p { font-size: 12px; color: #333; font-weight: 600; margin: 0; }
       .fuel-amounts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 12px 0; }
       .fuel-amt {
-        border: 3px solid var(--ink, #111); background: #fff;
+        border: var(--bw) solid var(--edge); background: #fff;
         font-family: "Archivo Black", sans-serif; font-size: 15px;
-        padding: 12px 4px; cursor: pointer; box-shadow: 3px 3px 0 var(--ink, #111);
+        padding: 12px 4px; cursor: pointer; box-shadow: var(--sh-2);
         transition: transform .1s, box-shadow .1s, background .1s; color: #111;
       }
-      .fuel-amt:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--ink, #111); }
-      .fuel-amt.sel { background: #ffc800; transform: translate(-1px,-1px); box-shadow: 5px 5px 0 var(--ink, #111); }
+      .fuel-amt:hover { transform: translate(-1px,-1px); box-shadow: var(--sh-3); }
+      .fuel-amt.sel { background: #ffc800; transform: translate(-1px,-1px); box-shadow: var(--sh-3); }
       .fuel-amt--custom { font-size: 12px; }
       .fuel-customrow { display: flex; gap: 8px; margin: 10px 0; }
       .fuel-customrow input {
-        flex: 1; border: 3px solid var(--ink, #111); padding: 10px 12px;
-        font-family: inherit; font-size: 15px; font-weight: 700; box-shadow: 3px 3px 0 var(--ink, #111);
+        flex: 1; border: var(--bw) solid var(--edge); padding: 10px 12px;
+        font-family: inherit; font-size: 15px; font-weight: 700; box-shadow: var(--sh-2);
         background: #fff; color: #111; min-width: 0;
       }
       .fuel-pay {
         display: block; width: 100%; text-align: center;
         background: linear-gradient(135deg, #00c48c, #00996d);
-        color: #111; border: 3px solid var(--ink, #111); box-shadow: 4px 4px 0 var(--ink, #111);
+        color: #111; border: var(--bw) solid var(--edge); box-shadow: var(--sh-2);
         font-family: "Archivo Black", sans-serif; font-size: 15px; letter-spacing: 1px;
         padding: 15px 10px; text-decoration: none; margin: 6px 0 10px; box-sizing: border-box;
       }
-      .fuel-pay:hover { transform: translate(-1px,-1px); box-shadow: 6px 6px 0 var(--ink, #111); }
+      .fuel-pay:hover { transform: translate(-1px,-1px); box-shadow: var(--sh-3); }
       .fuel-pay small { display: block; font-family: "Space Grotesk", sans-serif; font-size: 10.5px; letter-spacing: 0; font-weight: 600; margin-top: 3px; }
       @media (max-width: 420px) {
         .fuel-amounts { grid-template-columns: repeat(2, 1fr); }
@@ -115,7 +115,7 @@
           <p>₹0 forever, no ads, no paywall. Toss a coin to your summarizer 💛</p>
         </div>
         <p style="font-weight:600; margin-bottom:6px; font-size:13px;">
-          Reading 500 books so you don't have to burns a <em>lot</em> of chai. ☕
+          Reading 520 books so you don't have to burns a <em>lot</em> of chai. ☕
           If TheSmallBook saved you from a 300-page grind, pick an amount:
         </p>
         <div class="fuel-amounts">

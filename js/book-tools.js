@@ -65,7 +65,8 @@
   }
   function allowance() { return MONTHLY_FREE_PDF; }
   function weekendBonus() { return 0; }
-  function isGold() { try { return !!(window.TSB_GOLD && TSB_GOLD.isGold()); } catch (e) { return false; } }
+  /* v331: PDF cheat-sheets open for Gold and for the 75-day PDF pass */
+  function isGold() { try { return !!(window.TSB_GOLD && (TSB_GOLD.isGold() || (TSB_GOLD.hasPdf && TSB_GOLD.hasPdf()))); } catch (e) { return false; } }
   function upiId() {
     try { return (window.TSB_CONFIG && TSB_CONFIG.PAYWALL && TSB_CONFIG.PAYWALL.UPI_ID) || "9702510680@fam"; }
     catch (e) { return "9702510680@fam"; }
@@ -220,7 +221,7 @@
     if (plan.length) {
       weekHtml = '<div class="cs3-week"><b>START THIS WEEK</b><span class="cs3-week__do"><i class="cs3-week__box"></i>' +
         esc(clip(plan[0], 240)) + "</span>" +
-        (more > 0 ? '<span class="cs3-week__more">+' + more + " more lessons inside the app</span>" : "") + "</div>";
+        (more > 0 ? '<span class="cs3-week__more">+' + more + " more lessons inside the app" + (gold ? "" : ". The Gold sheet adds all of them and a 7-day plan") + "</span>" : "") + "</div>";
     }
     /* v318: the bottom band - one full-width row, two cards, zero air */
     var bottomHtml = "";
@@ -261,7 +262,9 @@
         cs3Foot() +
       "</div></section>" +
 
-      /* ============================ PAGE TWO: RAW NOTES ============================ */
+      (gold ? goldPages(b, pal) : "") +
+
+      /* ============================ RAW NOTES ============================ */
       '<section class="cs2__page"><div class="cs3__body cs3__body--notes">' +
         cs3Head(b, "RAW NOTES", pal) +
         '<div class="cs3-qday"><span>QUESTION OF THE DAY · ' + todayKey() + '</span><h2>' + esc(q) + "</h2></div>" +
@@ -271,6 +274,57 @@
         cs3Foot() +
       "</div></section>" +
     "</div>";
+  }
+
+  /* ============================================================
+     v331 · THE GOLD SHEET: two extra pages, still nothing invented.
+     Page A, THE FULL PLAYBOOK: every lesson with its own "do this"
+     and the book's example, plus every quote.
+     Page B, YOUR 7 DAYS: a checkable week built from the book's own
+     actions, a self-quiz, and a 60-second retell box.
+     ============================================================ */
+  function goldPages(b, pal) {
+    var L = (b.lessons || []).filter(Boolean);
+    var P = (b.actionPlan || []).filter(Boolean);
+    var quotes = (b.quotes || []).filter(Boolean);
+    var rows = L.map(function (l, i) {
+      return '<div class="cs4-row"><span class="cs3-num">' + (i + 1) + '</span><div class="cs4-row__a"><b>' + esc(cleanHead(l.title || "Idea " + (i + 1))) + "</b><p>" + esc(firstSentence(l.summary || "", 170)) + "</p></div>" +
+        '<div class="cs4-row__b">' + (l.action ? "<u>do this</u> " + esc(clip(l.action, 150)) : "") + (l.example ? '<em><u>example</u> ' + esc(clip(l.example, 120)) + "</em>" : "") + "</div></div>";
+    }).join("");
+    var qs = quotes.map(function (q) { return '<div class="cs4-q">\u201c' + esc(clip(q, 200)) + "\u201d</div>"; }).join("");
+    /* the week: the action plan first, then lesson actions, one per day */
+    var acts = P.slice();
+    L.forEach(function (l) { if (l.action) acts.push(l.action); });
+    var DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    var week = DAYS.map(function (d, i) {
+      var a = acts.length ? acts[i % acts.length] : "Reread one lesson and write one line about it.";
+      return '<div class="cs4-day"><span class="cs4-day__d">' + d + '</span><i class="cs3-week__box"></i><span class="cs4-day__t">' + esc(clip(a, 120)) + "</span></div>";
+    }).join("");
+    var quiz = L.slice(0, 5).map(function (l, i) {
+      return '<div class="cs4-quiz"><b>' + (i + 1) + ". In your own words: " + esc(cleanHead(l.title || "")) + '?</b><span class="cs4-ln"></span><span class="cs4-ln"></span></div>';
+    }).join("");
+    return (
+      '<section class="cs2__page"><div class="cs3__body cs4">' +
+        cs3Head(b, "GOLD · FULL PLAYBOOK", pal) +
+        '<div class="cs4-k">EVERY LESSON, WITH WHAT TO DO</div>' +
+        '<div class="cs4-rows">' + rows + "</div>" +
+        (qs ? '<div class="cs4-k">IN THE AUTHOR\u2019S WORDS</div><div class="cs4-qs">' + qs + "</div>" : "") +
+        cs3Foot() +
+      "</div></section>" +
+      '<section class="cs2__page"><div class="cs3__body cs4">' +
+        cs3Head(b, "GOLD · YOUR 7 DAYS", pal) +
+        '<div class="cs4-one"><span>IF YOU REMEMBER ONE THING</span><p>' + esc(clip(b.oneLiner || b.tagline || b.bigIdea || "", 200)) + "</p></div>" +
+        '<div class="cs4-k">YOUR WEEK WITH THIS BOOK</div>' +
+        '<div class="cs4-week">' + week + "</div>" +
+        '<div class="cs4-two">' +
+          '<div class="cs4-box"><div class="cs4-k">QUIZ YOURSELF</div>' + quiz + "</div>" +
+          '<div class="cs4-box"><div class="cs4-k">EXPLAIN IT IN 60 SECONDS</div><p class="cs4-hint">Tell a friend what this book says, without looking. Then check page one.</p>' +
+            '<span class="cs4-ln"></span><span class="cs4-ln"></span><span class="cs4-ln"></span><span class="cs4-ln"></span><span class="cs4-ln"></span><span class="cs4-ln"></span>' +
+            '<div class="cs4-k" style="margin-top:4mm">MY ONE CHANGE</div><span class="cs4-ln"></span><span class="cs4-ln"></span></div>' +
+        "</div>" +
+        cs3Foot() +
+      "</div></section>"
+    );
   }
 
   function printSheet(html, onDone) {
@@ -313,7 +367,7 @@
     if (!b) { say("Open a book first - the cheat-sheet is built per book."); return; }
     var gold = isGold();
     if (!gold && pdfCount() >= allowance()) {
-      var msg = "You have used your " + allowance() + " free cheat-sheets for this month. TSB Gold unlocks unlimited instant cheat-sheets for all 520 books. Open Gold?";
+      var msg = "You have used your " + allowance() + " free cheat-sheets this month. Gold, or the ₹49 PDF pass, unlocks unlimited cheat-sheets. Open Gold?";
       if (!window.confirm(msg)) return;
       location.href = "gold.html";
       return;
@@ -338,7 +392,7 @@
       t.textContent = msg;
       t.style.cssText = "position:fixed;left:50%;transform:translateX(-50%);bottom:78px;z-index:10050;" +
         "background:#14110c;color:#fff6d6;font:700 12.5px/1.4 'Space Grotesk',Arial,sans-serif;padding:10px 14px;" +
-        "border-radius:999px;border:2px solid #14110c;box-shadow:0 6px 20px rgba(0,0,0,.35);max-width:88vw";
+        "border-radius:999px;border:var(--bw) solid var(--edge);box-shadow:0 6px 20px rgba(0,0,0,.35);max-width:88vw";
       document.body.appendChild(t);
       setTimeout(function () { t.remove(); }, 3600);
     } catch (e) {}
@@ -428,8 +482,8 @@
       pay.textContent = "⚡ PAY ₹" + amt + " VIA TSB PAY (UPI) →";
       pay.onclick = function (e) {
         e.preventDefault();
-        if (window.Youpi && window.Youpi.pay) {
-          window.Youpi.pay({
+        if (window.TSB_PAY && window.TSB_PAY.pay) {
+          window.TSB_PAY.pay({
             amount: amt,
             plan: "fuel",
             name: "Fuel " + bTitle,

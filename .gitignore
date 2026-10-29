@@ -1,0 +1,13 @@
+# never upload these
+node_modules/
+.env
+.env.*
+*.pem
+*.key
+supabase/.temp/
+supabase/.branches/
+.vercel/
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini

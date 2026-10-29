@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>Story, TheSmallBook Community</title>
@@ -25,28 +27,32 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=323">
+  <link rel="stylesheet" href="css/style.css?v=335">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="css/film.css?v=335">
+  <link rel="stylesheet" href="css/film2.css?v=335">
+  <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
 </head>
-<body class="cmpage">
+<body class="cmpage fsty">
   <h1 class="sr-only">Story, TheSmallBook</h1>
+  <header class="sty-top"><a class="sty-back" href="stories.html" aria-label="Back to Stories"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a><span class="sty-top__t">Stories</span><span></span></header>
   <main class="cm-post" id="post">
     <article class="cm-card cm-card--skel"><div class="cm-sk cm-sk--cover"></div>
       <div class="cm-card__body"><div class="cm-sk cm-sk--line w60"></div><div class="cm-sk cm-sk--line w90"></div><div class="cm-sk cm-sk--line w40"></div></div>
     </article>
   </main>
 
-  <script src="./js/bootguard.js?v=323"></script>
-  <script src="js/prefs.js?v=323"></script>
-  <script src="js/lang.js?v=323"></script>
-  <script src="js/config.js?v=323"></script>
-  <script src="js/auth.js?v=323"></script>
-  <script src="js/sounds.js?v=323"></script>
-  <script src="js/founder.js?v=323"></script>
-  <script src="js/community.js?v=323"></script>
-  <script src="js/stories-seed.js?v=323"></script>
+  <script src="./js/bootguard.js?v=335"></script>
+  <script src="js/prefs.js?v=335"></script>
+  <script src="js/lang.js?v=335"></script>
+  <script src="js/config.js?v=335"></script>
+  <script src="js/auth.js?v=335"></script>
+  <script src="js/sounds.js?v=335"></script>
+  <script src="js/founder.js?v=335"></script>
+  <script src="js/community.js?v=335"></script>
+  <script src="js/stories-seed.js?v=335"></script>
   <script>
   (function () {
     "use strict";
@@ -131,10 +137,10 @@
             '<a class="cm-ava cm-ava--lg' + (p._lib ? " cm-ava--lib" : "") + '" href="profile.html?id=' + (p._lib ? (window.TSB_COMMUNITY && TSB_COMMUNITY.OFFICIAL_ID || "tsb-library") : p.author_id) + '">' +
               (prof.avatar_url ? '<img src="' + C.esc(prof.avatar_url) + '" alt="">' : '<span>' + C.esc((p.author_name || "R").charAt(0).toUpperCase()) + "</span>") + "</a>" +
             '<div class="cm-postcard__who">' + (p._lib
-              ? '<a class="cm-name cm-name--lib" href="profile.html?id=' + (window.TSB_COMMUNITY && TSB_COMMUNITY.OFFICIAL_ID || "tsb-library") + '">' + C.esc(p.author_name) + ' <span class="cm-vtick" title="Official channel of TheSmallBook">✔</span></a>'
-              : '<a class="cm-name" href="profile.html?id=' + p.author_id + '">' + C.esc(p.author_name) + (C.isOfficial(p.author_id) ? '<span class="cm-vtick" title="Official channel">✔</span>' : "") + "</a>") +
+              ? '<a class="cm-name cm-name--lib" href="profile.html?id=' + (window.TSB_COMMUNITY && TSB_COMMUNITY.OFFICIAL_ID || "tsb-library") + '">' + C.esc(p.author_name) + ' <span class="cm-vtick" title="Official channel of TheSmallBook"><svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></a>'
+              : '<a class="cm-name" href="profile.html?id=' + p.author_id + '">' + C.esc(p.author_name) + (C.isOfficial(p.author_id) ? '<span class="cm-vtick" title="Official channel"></span>' : "") + "</a>") +
               '<span class="cm-time">' + C.ago(p.created_at) + " · " + C.readMins(p.body) + " min read</span></div>" +
-            (p._lib ? '<span class="cm-libchip">📚 BY THEsmALLBOOK</span>' : (p.author_id !== meId ? '<button class="cm-follow' + (fol.mine ? " on" : "") + '" data-follow="' + p.author_id + '">' + (fol.mine ? "✓ Following" : "+ Follow") + "</button>" : "")) +
+            (p._lib ? '<span class="cm-libchip">From the library</span>' : (p.author_id !== meId ? '<button class="cm-follow' + (fol.mine ? " on" : "") + '" data-follow="' + p.author_id + '">' + (fol.mine ? "Following" : "Follow") + "</button>" : "")) +
           "</div>" +
           "<h1>" + C.esc(p.title) + "</h1>" +
           (p.subtitle ? '<p class="cm-postcard__sub">' + C.esc(p.subtitle) + "</p>" : "") +
@@ -144,9 +150,9 @@
           /* v250 · read receipts, the writer finally sees who read it */
           '<div class="rr" id="readBy" hidden></div>' +
           '<div class="cm-bigacts">' +
-            (p._lib ? "" : '<button class="cm-bigact cm-blike' + (like.mine ? " on" : "") + '" data-like="' + p.id + '"><span class="cm-bigact__ico">♥</span><b>' + like.count + " like" + (like.count === 1 ? "" : "s") + "</b></button>") +
+            (p._lib ? "" : '<button class="cm-bigact cm-blike' + (like.mine ? " on" : "") + '" data-like="' + p.id + '"><span class="cm-bigact__ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-9.2-8.6C1.2 8.2 3 4.8 6.4 4.5c2-.2 3.9.9 5.6 3 1.7-2.1 3.6-3.2 5.6-3 3.4.3 5.2 3.7 3.6 6.9C19 15.6 12 20 12 20z"/></svg></span><b>' + like.count + " like" + (like.count === 1 ? "" : "s") + "</b></button>") +
             (p._lib ? "" : '<a class="cm-bigact" href="#comments"><span class="cm-bigact__ico">' + C.icon('chat') + '</span><b>' + cmts.length + " comment" + (cmts.length === 1 ? "" : "s") + "</b></a>") +
-            '<button class="cm-bigact" id="shareBtn"><span class="cm-bigact__ico">🔗</span><b>Share</b></button>' +
+            '<button class="cm-bigact" id="shareBtn"><span class="cm-bigact__ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg></span><b>Share</b></button>' +
             (p.author_id === meId ? '<button class="cm-bigact cm-del" data-del="' + p.id + '"><span class="cm-bigact__ico">' + C.icon('trash') + '</span><b>Delete</b></button>' : "") +
           "</div>" +
         "</article>" +
@@ -158,7 +164,7 @@
           '<div id="cmtList">' + (cmts.length ? cmts.map(cm).join("") : '<p class="cm-empty cm-empty--sm">Be the first to say something kind.</p>') + "</div>" +
           (meId
             ? '<div class="cm-cmtrow"><input id="cmtInput" class="setinput" maxlength="280" placeholder="Add a comment…"><button class="cm-pub cm-pub--sm" id="cmtSend">Send</button></div>'
-            : '<a class="cm-write" href="login.html">Sign in to comment →</a>') +
+            : '<a class="cm-write" href="login.html">Sign in to comment</a>') +
         "</section>");
       try { C.protectMedia(root); } catch (e) {}
 
@@ -292,8 +298,8 @@
         if (navigator.share) navigator.share({ title: p.title + ", TheSmallBook", url: url }).catch(function () {});
         else if (navigator.clipboard) {
           navigator.clipboard.writeText(url).catch(function () {});
-          self.textContent = "✓ Link copied";
-          setTimeout(function () { self.textContent = "🔗 Share"; }, 1600);
+          var was = self.innerHTML; self.textContent = "Link copied";
+          setTimeout(function () { self.innerHTML = was; }, 1600);
         }
       });
       var send = document.getElementById("cmtSend");
@@ -322,9 +328,14 @@
     boot();
   })();
   </script>
-  <script src="js/podcast-data.js?v=323"></script>
-  <script src="js/audioplayer.js?v=323"></script>
-  <script src="js/bar.js?v=323" defer></script>
-  <script src="js/gate.js?v=323" defer></script>
+  <script src="js/podcast-data.js?v=335"></script>
+  <script src="js/audioplayer.js?v=335"></script>
+  <script src="js/bar.js?v=335" defer></script>
+  <script src="js/soft-motion.js?v=335" defer></script>
+  <script src="js/gate.js?v=335" defer></script>
+  <script src="js/stt.js?v=335"></script>
+  <script src="js/wordtap.js?v=335" defer></script>
+  <script src="js/film.js?v=335" defer></script>
+  <script src="js/film2.js?v=335" defer></script>
 </body>
 </html>

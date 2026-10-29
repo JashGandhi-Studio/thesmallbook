@@ -507,7 +507,8 @@
     s.id = "gt-script";
     s.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
     s.onerror = function () {
-      toast("🌐 Translation needs internet - please check your connection");
+      toast("Translation needs internet. Please check your connection");
+      try { window.dispatchEvent(new CustomEvent("tsb:tx-fail")); } catch (eF) {}
     };
     document.head.appendChild(s);
   }
@@ -594,15 +595,26 @@
     setGoogCookie(target);
     loadGoogleWidget();
     fireTranslate(target, 40, function () {
-      toast("🌐 Couldn't reach the translator - check internet & reload");
+      toast("Couldn't reach the translator. Check your internet and reload");
+      try { window.dispatchEvent(new CustomEvent("tsb:tx-fail")); } catch (eF) {}
     });
     if (entry.special) {
       startScanner(entry.code);
     }
-    setTimeout(function () { toast("🌐 Translating to " + entry.name + "..."); }, 300);
+    setTimeout(function () { if (!window.TSB_TXVEIL) toast("🌐 Translating to " + entry.name + "..."); }, 300);
   }
 
   function selectLang(code) {
+    var prev = getLang(), pe = findLang(prev), ne = findLang(code);
+    /* v329: between real languages, switch in place behind the glass. No reload, no white flash. */
+    if (code !== "en" && ne && !ne.special && !(pe && pe.special) && window.TSB_TXVEIL) {
+      setLang(code);
+      window.TSB_TXVEIL(prev !== "en");
+      activate(code);
+      var mounts = document.querySelectorAll("[data-lang-btn]");
+      for (var m = 0; m < mounts.length; m++) mounts[m].innerHTML = "🌐" + ' <span class="langbtn__label">' + ne.name + "</span>";
+      return;
+    }
     setLang(code);
     if (code === "en") {
       setGoogCookie(null);
@@ -639,58 +651,81 @@
     setTimeout(function () { t.classList.remove("show"); }, 3200);
   }
 
-  /* ---------- picker modal ---------- */
+  /* ---------- picker: v324 · the sheet DROPS from the top ----------
+     The language pill lives at the top of every page, so the sheet comes
+     down from there, on a spring. Every language is written in its own
+     script, big enough to find at a glance. Swipe up, tap outside or press
+     Esc to put it away. Same id (#langModal) and same select path. */
   function openLangModal() {
     var modal = document.getElementById("langModal");
     if (!modal) {
       modal = document.createElement("div");
       modal.id = "langModal";
-      modal.className = "modal";
       document.body.appendChild(modal);
     }
+    modal.className = "langsheet";
     var cur = getLang();
-    var indian = LANGUAGES.filter(function (l) { return l.flag === "🇮🇳" || l.code === "en"; });
-    var world = LANGUAGES.filter(function (l) { return l.flag !== "🇮🇳" && l.code !== "en"; });
-
-    function card(l) {
-      return '<button class="langcard ' + (l.code === cur ? "active" : "") + (l.special ? " langcard--special" : "") + '" data-lang="' + l.code + '" translate="no">' +
-        '<span class="langcard__flag">' + l.flag + "</span>" +
-        '<span class="langcard__name">' + l.name + (l.special ? ' <em class="langcard__badge">EXCLUSIVE</em>' : "") + "</span>" +
-        '<span class="langcard__native">' + l.native + "</span></button>";
+    var indian = LANGUAGES.filter(function (l) { return l.flag === "\ud83c\uddee\ud83c\uddf3" || l.code === "en"; });
+    var world = LANGUAGES.filter(function (l) { return l.flag !== "\ud83c\uddee\ud83c\uddf3" && l.code !== "en"; });
+    var CHECK = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+    function tile(l, big) {
+      var on = l.code === cur;
+      return '<button class="lstile' + (big ? " lstile--big" : "") + (on ? " is-on" : "") + (l.special ? " lstile--mode" : "") + '" data-lang="' + l.code + '" data-q="' + (l.name + " " + l.native).toLowerCase() + '" translate="no" aria-pressed="' + on + '">' +
+        '<span class="lstile__native">' + l.native + '</span>' +
+        '<span class="lstile__name">' + l.name + (l.special ? ' <em>text mode</em>' : '') + '</span>' +
+        '<span class="lstile__ck">' + CHECK + '</span></button>';
     }
-
+    var nb = (window.BOOKS && window.BOOKS.length) || 0;
     modal.innerHTML =
-      '<div class="modal__box modal__box--wide" style="max-width:740px;padding:26px 24px;">' +
-      '<button class="modal__close">✕</button>' +
-      '<div class="modal__title" translate="no" style="font-size:20px;margin-bottom:6px;">🌐 Read in YOUR Language</div>' +
-      '<p style="font-weight:600; font-size:.9rem; color:#444; margin-bottom:16px;">All 520 curated books, 3,685 lessons - translated instantly.</p>' +
-      '<div style="background:#fff9e6;border:2px solid #ffc800;border-radius:12px;padding:14px 16px;margin-bottom:18px;box-shadow:3px 3px 0 #111;">' +
-        '<div style="font-family:\'Archivo Black\',sans-serif;font-size:12px;color:#111;margin-bottom:4px;display:flex;align-items:center;gap:6px;">' +
-          '<span>💬</span><span>Hinglish &amp; Gujlish: Natural Text-Message Modes</span>' +
+      '<div class="langsheet__scrim" data-close></div>' +
+      '<div class="langsheet__card" role="dialog" aria-modal="true" aria-label="Choose your reading language" translate="no">' +
+        '<div class="langsheet__top">' +
+          '<div><div class="langsheet__kick">Translate</div><div class="langsheet__title">Read this in your language</div></div>' +
+          '<button class="langsheet__x" data-close aria-label="Close">' + '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
         '</div>' +
-        '<p style="font-size:12.5px;line-height:1.45;color:#222;margin:0 0 10px;">' +
-          'Hindi and Gujarati rendered in the exact natural way you chat with friends - ' +
-          '<strong>"main yeh kaam kal shuru karunga"</strong>, not formal machine-roman.' +
-        '</p>' +
-        '<div style="display:flex;gap:8px;flex-wrap:wrap;font-size:11.5px;font-weight:700;">' +
-          '<span style="background:#fff;border:1.5px solid #111;border-radius:999px;padding:3px 10px;">EN: Never decide in anger</span>' +
-          '<span style="background:#ffc800;border:1.5px solid #111;border-radius:999px;padding:3px 10px;">HI: Gusse mein decision mat lo</span>' +
-          '<span style="background:#fff;border:1.5px solid #111;border-radius:999px;padding:3px 10px;">GU: Gussa ma decision na levo</span>' +
+        '<p class="langsheet__sub">' + (nb ? "Every one of the " + nb + " books, every lesson. " : "") + 'Switches instantly, your place is kept.</p>' +
+        '<label class="langsheet__find"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" placeholder="Find a language" aria-label="Find a language" autocomplete="off"></label>' +
+        '<div class="langsheet__scroll">' +
+          '<div class="langsheet__sec">Indian languages and text modes</div>' +
+          '<div class="langsheet__grid langsheet__grid--big">' + indian.map(function (l) { return tile(l, true); }).join("") + '</div>' +
+          '<div class="langsheet__modes"><b>Hinglish and Gujlish</b> read the way you text: <span>"main yeh kaam kal shuru karunga"</span>, not machine roman.</div>' +
+          '<div class="langsheet__sec">Global</div>' +
+          '<div class="langsheet__grid">' + world.map(function (l) { return tile(l, false); }).join("") + '</div>' +
+          '<p class="langsheet__note">Natural transliteration plus the Google Translate engine. Needs internet the first time.</p>' +
         '</div>' +
-      '</div>' +
-      '<div class="langsection" translate="no" style="font-weight:800;letter-spacing:0.5px;margin-top:16px;">🇮🇳 INDIAN LANGUAGES &amp; TEXT MODES</div>' +
-      '<div class="langgrid" style="margin-bottom:20px;">' + indian.map(card).join("") + '</div>' +
-      '<div class="langsection" translate="no" style="font-weight:800;letter-spacing:0.5px;">🌍 GLOBAL LANGUAGES</div>' +
-      '<div class="langgrid">' + world.map(card).join("") + '</div>' +
-      '<p class="support__note" style="margin-top:18px;font-size:11.5px;color:#666;">Powered by natural transliteration and Google Translate engine. Offline caching preserves read progress. Instant switch anytime.</p>' +
+        '<div class="langsheet__grab" data-grab aria-hidden="true"></div>' +
       '</div>';
-    modal.classList.add("open");
-    modal.querySelector(".modal__close").addEventListener("click", function () { modal.classList.remove("open"); });
-    modal.addEventListener("click", function (e) { if (e.target === modal) modal.classList.remove("open"); });
-    var cards = modal.querySelectorAll("[data-lang]");
-    for (var i = 0; i < cards.length; i++) {
-      cards[i].addEventListener("click", function () {
-        selectLang(this.getAttribute("data-lang"));
+    var card = modal.querySelector(".langsheet__card");
+    function close() {
+      modal.classList.remove("open");
+      document.documentElement.classList.remove("langsheet-open");
+      document.removeEventListener("keydown", onKey);
+    }
+    function onKey(e) { if (e.key === "Escape") close(); }
+    document.addEventListener("keydown", onKey);
+    requestAnimationFrame(function () { requestAnimationFrame(function () { modal.classList.add("open"); document.documentElement.classList.add("langsheet-open"); }); });
+    var closers = modal.querySelectorAll("[data-close]");
+    for (var c = 0; c < closers.length; c++) closers[c].addEventListener("click", close);
+    /* swipe the sheet back up */
+    var y0 = null, dy = 0;
+    card.addEventListener("touchstart", function (e) { var sc = modal.querySelector(".langsheet__scroll"); if (sc && sc.contains(e.target) && sc.scrollTop > 0) return; y0 = e.touches[0].clientY; dy = 0; card.style.transition = "none"; }, { passive: true });
+    card.addEventListener("touchmove", function (e) { if (y0 === null) return; dy = Math.min(0, e.touches[0].clientY - y0); card.style.transform = "translateY(" + dy + "px)"; }, { passive: true });
+    card.addEventListener("touchend", function () { if (y0 === null) return; card.style.transition = ""; card.style.transform = ""; if (dy < -70) close(); y0 = null; });
+    /* filter */
+    var find = modal.querySelector(".langsheet__find input");
+    find.addEventListener("input", function () {
+      var q = find.value.trim().toLowerCase(); var ts = modal.querySelectorAll(".lstile");
+      for (var i = 0; i < ts.length; i++) ts[i].style.display = !q || ts[i].getAttribute("data-q").indexOf(q) >= 0 ? "" : "none";
+    });
+    var tiles = modal.querySelectorAll("[data-lang]");
+    for (var i = 0; i < tiles.length; i++) {
+      tiles[i].addEventListener("click", function () {
+        var code = this.getAttribute("data-lang");
+        var all = modal.querySelectorAll(".lstile");
+        for (var j = 0; j < all.length; j++) { all[j].classList.remove("is-on"); all[j].setAttribute("aria-pressed", "false"); }
+        this.classList.add("is-on"); this.setAttribute("aria-pressed", "true");
+        try { if (navigator.vibrate) navigator.vibrate(8); } catch (eV) {}
+        setTimeout(function () { close(); setTimeout(function () { selectLang(code); }, 260); }, 220);
       });
     }
   }

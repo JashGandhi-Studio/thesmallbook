@@ -49,10 +49,10 @@
 
   /* Available customizable item definitions */
   var ITEM_DEFS = {
-    home:      { id: "home", url: "index.html", lbl: "Home", ico: ICO.home, cls: "tsb-bar__item--home" },
-    audio:     { id: "audio", url: "podcasts.html", lbl: "Audio Room", ico: ICO.audio, cls: "tsb-bar__item--audio" },
+    home:      { id: "home", url: "index.html", lbl: "Today", ico: ICO.home, cls: "tsb-bar__item--home" },
+    audio:     { id: "audio", url: "podcasts.html", lbl: "Listen", ico: ICO.audio, cls: "tsb-bar__item--audio" },
     stories:   { id: "stories", url: "stories.html", lbl: "Stories", ico: ICO.stories, cls: "tsb-bar__item--stories" },
-    you:       { id: "you", url: "login.html", lbl: "You", ico: ICO.you, cls: "tsb-bar__item--you" },
+    you:       { id: "you", url: "you.html", lbl: "You", ico: ICO.you, cls: "tsb-bar__item--you" },
     messages:  { id: "messages", url: "dm.html", lbl: "Messages", ico: ICO.messages, cls: "tsb-bar__item--messages" },
     ask:       { id: "ask", url: "chat.html", lbl: "Ask Library", ico: ICO.ask, cls: "tsb-bar__item--ask" },
     continue:  { id: "continue", url: "book.html?resume=1", lbl: "Continue", ico: ICO.continue, cls: "tsb-bar__item--continue" },
@@ -70,7 +70,7 @@
   }
   function currentActive() {
     var p = pageName();
-    if (p === "index.html") return "home";
+    if (p === "index.html") return /^#(library|grid|filters|searchWrap|shelf)/.test(location.hash) ? "library" : "home";
     if (p === "podcasts.html") return "audio";
     if (p === "stories.html" || p === "story.html" || p === "write.html") return "stories";
     if (p === "login.html" || p === "settings.html" || p === "profile.html" || p === "you.html") return "you";
@@ -84,16 +84,8 @@
   var active = currentActive();
 
   function checkIsGold() {
-    try {
-      if (window.TSB_GOLD && typeof window.TSB_GOLD.isGold === "function" && window.TSB_GOLD.isGold()) return true;
-      if (window.TSB_PAYWALL && typeof window.TSB_PAYWALL.isGold === "function" && window.TSB_PAYWALL.isGold()) return true;
-      if (localStorage.getItem("tsb_gold_active") === "true" || localStorage.getItem("tsb_gold") === "true") return true;
-      var plan = localStorage.getItem("tsb_plan");
-      if (plan && (plan === "gold" || plan === "annual" || plan === "monthly")) return true;
-      var rc = JSON.parse(localStorage.getItem("tsb_remote_config") || "{}");
-      if (rc.goldPaywall === false) return true;
-    } catch (e) {}
-    return false;
+    /* v331: only the server answer counts (js/gold.js). Storage flags grant nothing. */
+    try { return !!(window.TSB_GOLD && typeof window.TSB_GOLD.isGold === "function" && window.TSB_GOLD.isGold()); } catch (e) { return false; }
   }
 
   /* Load active custom slots or fallback to clean 4-item bar */
@@ -104,11 +96,13 @@
       if (Array.isArray(saved) && saved.length >= 4) {
         var valid = saved.filter(function (k) { return !!ITEM_DEFS[k]; });
         if (valid.length >= 4) {
-          return valid.slice(0, 5);
+          /* v331: the fifth button is Gold, decided by the server */
+          return valid.slice(0, gold ? 5 : 4);
         }
       }
     } catch (e) {}
-    return ["home", "audio", "stories", "you"];
+    /* v326: the film's four tabs: Today, Library, Listen, You */
+    return ["home", "library", "audio", "you"];
   }
 
   var activeSlots = getActiveSlots();
@@ -125,6 +119,24 @@
     bar.classList.add("tsb-bar--icons-only");
     document.documentElement.setAttribute("data-bar-labels", "icons");
   }
+  /* v331 · the bar studio: look (glass, solid, ink, floating), labels
+     (titles, icons, active only) and behaviour (hide on scroll, always on).
+     Read once here and again whenever Settings calls TSB_BARCTL.apply(). */
+  var barBehave = "auto";
+  function readLook() {
+    var R = document.documentElement, look = "float", lbl = "labels";
+    try { look = localStorage.getItem("tsb_bar_look") || "float"; } catch (e) {}
+    try { lbl = localStorage.getItem("tsb_bar_labels") || "labels"; } catch (e) {}
+    try { barBehave = localStorage.getItem("tsb_bar_behave") || "auto"; } catch (e) {}
+    if (["glass", "solid", "ink", "float"].indexOf(look) < 0) look = "float";
+    R.setAttribute("data-bar-look", look);
+    R.setAttribute("data-bar-behave", barBehave);
+    barLabelsPref = lbl;
+    bar.classList.toggle("tsb-bar--icons-only", lbl === "icons");
+    bar.classList.toggle("tsb-bar--active-only", lbl === "active");
+    if (lbl === "icons") R.setAttribute("data-bar-labels", "icons"); else if (lbl === "active") R.setAttribute("data-bar-labels", "active"); else R.removeAttribute("data-bar-labels");
+  }
+  readLook();
 
   function buildBarHtml(slots) {
     return slots.map(function (key) {
@@ -143,18 +155,51 @@
   document.body.appendChild(bar);
   document.documentElement.classList.add("tsb-hasbar");
 
+  /* v324 · the pill SLIDES: the active ::before starts where the old one
+     stood (same page or the page you just left) and springs into place.
+     Still painted only by ::before, per the bar rules above. */
+  function slidePill(fromLeft) {
+    var act = bar.querySelector(".tsb-bar__item.is-active");
+    if (!act || typeof fromLeft !== "number" || isNaN(fromLeft)) return;
+    var dx = Math.round(fromLeft - act.getBoundingClientRect().left);
+    if (!dx || Math.abs(dx) > 600) return;
+    act.style.setProperty("--pill-from", dx + "px");
+    act.classList.remove("pill-slide"); void act.offsetWidth; act.classList.add("pill-slide");
+  }
+  try {
+    var pillFrom = parseFloat(sessionStorage.getItem("tsb_pill_from"));
+    sessionStorage.removeItem("tsb_pill_from");
+    if (!isNaN(pillFrom)) requestAnimationFrame(function () { slidePill(pillFrom); });
+  } catch (ePill) {}
+  window.addEventListener("pagehide", function () {
+    try { var a = bar.querySelector(".tsb-bar__item.is-active"); if (a) sessionStorage.setItem("tsb_pill_from", String(a.getBoundingClientRect().left)); } catch (eP) {}
+  });
+
   /* the highlight follows what you actually selected, live */
   function setActive(id) {
+    var was = bar.querySelector(".tsb-bar__item.is-active");
+    var wasLeft = was ? was.getBoundingClientRect().left : NaN;
+    if (was && was.getAttribute("data-tab") !== id) { try { sessionStorage.setItem("tsb_pill_from", String(wasLeft)); } catch (eS) {} }
     bar.querySelectorAll(".tsb-bar__item").forEach(function (it) {
       var on = it.getAttribute("data-tab") === id;
       it.classList.toggle("is-active", on);
       if (on) it.setAttribute("aria-current", "page");
       else it.removeAttribute("aria-current");
     });
+    slidePill(wasLeft);
   }
   window.addEventListener("hashchange", function () {
     if (pageName() === "index.html") setActive(currentActive());
   });
+  function rebuild() {
+    activeSlots = getActiveSlots();
+    bar.innerHTML = buildBarHtml(activeSlots);
+    readLook();
+    if (barBehave === "fixed") setBarOff(false);
+  }
+  /* Gold arrives after the first paint: a saved fifth button appears then */
+  window.addEventListener("tsbgold", rebuild);
+  window.TSB_BARCTL = { apply: rebuild, slots: function () { return activeSlots.slice(); }, defs: function () { return ITEM_DEFS; }, isGold: checkIsGold };
 
   /* ---------- taps ---------- */
   bar.addEventListener("click", function (e) {
@@ -263,7 +308,7 @@
       requestAnimationFrame(function () {
         /* resting at the very end of a page → stay tucked so the
            footer's last line is fully readable; any scroll-up brings it back */
-        if (!pageScrolls() || !atPageBottom()) setBarOff(false);
+        if (barBehave === "fixed" || !pageScrolls() || !atPageBottom()) setBarOff(false);
       });
     });
   }, 260);
@@ -277,7 +322,7 @@
       ticking = true;
       requestAnimationFrame(function () {
         ticking = false;
-        if (!pageScrolls()) { if (hidden) setBarOff(false); return; }
+        if (!pageScrolls() || barBehave === "fixed") { if (hidden) setBarOff(false); return; }
         var y = window.scrollY || 0;
         var dy = y - lastY;
         if (Math.abs(dy) < 6) return;
@@ -333,8 +378,8 @@
         bottom: calc(var(--tsb-bar-h, 58px) + var(--tsb-bar-gap, 10px) + env(safe-area-inset-bottom, 0px) + 14px);
         width: min(520px, calc(100vw - 24px));
         background: var(--paper, #fffdf5); color: var(--ink, #111);
-        border: 3px solid var(--ink, #111); border-radius: 18px;
-        box-shadow: 0 16px 36px rgba(0,0,0,0.32), 6px 6px 0 var(--ink, #111);
+        border: var(--bw) solid var(--edge); border-radius: 18px;
+        box-shadow: 0 16px 36px rgba(0,0,0,0.32), var(--sh-3);
         padding: 12px 14px 14px; box-sizing: border-box; z-index: 99998;
         font-family: -apple-system, BlinkMacSystemFont, "Space Grotesk", "Segoe UI", sans-serif;
         animation: tsbDockPop .25s cubic-bezier(.16,1,.3,1);
@@ -353,21 +398,21 @@
       }
       .tsb-livedock__seg {
         display: inline-flex; gap: 3px; background: #e5e0d3; padding: 3px;
-        border-radius: 9px; border: 1.5px solid var(--ink, #111);
+        border-radius: 13px; border: 1px solid var(--edge);
       }
       .tsb-livedock__segbtn {
         border: none; background: transparent; padding: 4px 8px;
-        border-radius: 6px; font-family: var(--font-head, "Archivo Black", sans-serif);
+        border-radius: 9px; font-family: var(--font-head, "Archivo Black", sans-serif);
         font-size: 10.5px; color: #555; cursor: pointer;
       }
       .tsb-livedock__segbtn.active {
-        background: #fff; color: #111; box-shadow: 1px 1px 0 var(--ink, #111);
-        border: 1px solid var(--ink, #111);
+        background: #fff; color: #111; box-shadow: var(--sh-1);
+        border: 1px solid var(--edge);
       }
       .tsb-livedock__done {
-        background: var(--yellow, #ffc800); border: 2px solid var(--ink, #111);
-        border-radius: 8px; font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 11.5px; padding: 5px 12px; cursor: pointer; box-shadow: 2px 2px 0 var(--ink, #111);
+        background: var(--yellow, #ffc800); border: var(--bw) solid var(--edge);
+        border-radius: 12px; font-family: var(--font-head, "Archivo Black", sans-serif);
+        font-size: 11.5px; padding: 5px 12px; cursor: pointer; box-shadow: var(--sh-1);
         transition: transform .1s;
       }
       .tsb-livedock__done:hover { transform: translate(-1px, -1px); }
@@ -381,24 +426,24 @@
       .tsb-livedock__shelf::-webkit-scrollbar { display: none; }
       .tsb-shelf-item {
         flex-shrink: 0; display: inline-flex; align-items: center; gap: 5px;
-        background: #fff; border: 2px solid var(--ink, #111); border-radius: 10px;
+        background: #fff; border: var(--bw) solid var(--edge); border-radius: 14px;
         padding: 6px 10px; font-size: 12px; font-weight: 700; cursor: pointer;
-        box-shadow: 2px 2px 0 var(--ink, #111); transition: transform .1s;
+        box-shadow: var(--sh-1); transition: transform .1s;
       }
       .tsb-shelf-item:hover { background: var(--yellow, #ffc800); transform: translate(-1px,-1px); }
       .tsb-shelf-item.is-inbar { opacity: 0.55; }
       .tsb-livedock__slotbar {
         display: flex; align-items: center; justify-content: space-between;
-        background: #f0ebe1; border: 1.5px solid var(--ink, #111); border-radius: 10px;
+        background: #f0ebe1; border: 1px solid var(--edge); border-radius: 14px;
         padding: 6px 10px; margin-bottom: 8px; font-size: 11px; font-weight: 700;
       }
       .tsb-livedock__slotstatus {
         display: flex; align-items: center; gap: 5px; color: var(--ink, #111);
       }
       .tsb-livedock__slotbtn {
-        background: #fff; border: 1.5px solid var(--ink, #111); border-radius: 6px;
+        background: #fff; border: 1px solid var(--edge); border-radius: 9px;
         padding: 4px 8px; font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 10.5px; cursor: pointer; box-shadow: 1px 1px 0 var(--ink, #111);
+        font-size: 10.5px; cursor: pointer; box-shadow: var(--sh-1);
         transition: transform .1s;
       }
       .tsb-livedock__slotbtn:hover { transform: translate(-1px, -1px); }
@@ -416,9 +461,9 @@
       }
       .tsb-gold-bar-card {
         position: relative; width: min(420px, 100%);
-        background: var(--paper, #fffdf5); border: 3px solid var(--ink, #111);
+        background: var(--paper, #fffdf5); border: var(--bw) solid var(--edge);
         border-radius: 18px; padding: 22px 20px; box-sizing: border-box;
-        box-shadow: 0 20px 48px rgba(0,0,0,0.4), 6px 6px 0 var(--ink, #111);
+        box-shadow: 0 20px 48px rgba(0,0,0,0.4), var(--sh-3);
         text-align: center; font-family: -apple-system, BlinkMacSystemFont, "Space Grotesk", sans-serif;
       }
       .tsb-gold-bar-crown { font-size: 32px; margin-bottom: 6px; }
@@ -434,7 +479,7 @@
         font-size: 12.5px; line-height: 1.5; color: #444; margin: 0 0 14px;
       }
       .tsb-gold-bar-perks {
-        background: #f7f3e8; border: 2px dashed var(--ink, #111); border-radius: 12px;
+        background: #f7f3e8; border: 2px dashed var(--ink, #111); border-radius: 17px;
         padding: 10px 14px; margin-bottom: 16px; text-align: left;
       }
       .tsb-gold-bar-perk {
@@ -445,9 +490,9 @@
       }
       .tsb-gold-bar-cta {
         display: block; background: var(--yellow, #ffc800); color: #111;
-        border: 2.5px solid var(--ink, #111); border-radius: 10px;
+        border: var(--bw) solid var(--edge); border-radius: 14px;
         padding: 10px 14px; font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 12.5px; text-decoration: none; box-shadow: 3px 3px 0 var(--ink, #111);
+        font-size: 12.5px; text-decoration: none; box-shadow: var(--sh-2);
         font-weight: 900;
       }
       .tsb-gold-bar-dismiss {
@@ -506,13 +551,13 @@
         <div class="tsb-gold-bar-tag">THESMALLBOOK GOLD</div>
         <h3 class="tsb-gold-bar-h3">Unlock 5 Action Buttons</h3>
         <p class="tsb-gold-bar-p">
-          Free readers can customize up to 4 action buttons. Keeping 5 buttons in your bottom dock is an exclusive privilege of TheSmallBook Gold (99 Monthly / 999 Annual).
+          Everyone picks and orders 4 buttons. A fifth button comes with Gold (&#8377;99 a month or &#8377;999 a year).
         </p>
         <div class="tsb-gold-bar-perks">
-          <div class="tsb-gold-bar-perk">✓ 5-Button Custom Action Bar</div>
-          <div class="tsb-gold-bar-perk">✓ Ad-free executive library</div>
-          <div class="tsb-gold-bar-perk">✓ Full offline audio lounges</div>
-          <div class="tsb-gold-bar-perk">✓ 137 Startup Graveyard autopsies</div>
+          <div class="tsb-gold-bar-perk">✓ A fifth button in your bar</div>
+          <div class="tsb-gold-bar-perk">✓ Natural voices for every book</div>
+          <div class="tsb-gold-bar-perk">✓ Unlimited PDF cheat-sheets</div>
+          <div class="tsb-gold-bar-perk">✓ Every deep dive</div>
         </div>
         <div class="tsb-gold-bar-btns">
           <a href="gold.html#goldPricing" class="tsb-gold-bar-cta">UNLOCK WITH GOLD · ₹99 →</a>
@@ -543,11 +588,11 @@
 
     var slotBarHtml = hasFive
       ? `<div class="tsb-livedock__slotbar">
-          <div class="tsb-livedock__slotstatus">👑 <b>5 BUTTONS ACTIVE (GOLD VIP)</b></div>
+          <div class="tsb-livedock__slotstatus"><b>5 buttons</b> · Gold</div>
           <button type="button" class="tsb-livedock__slotbtn" id="tsbDockSlotToggle">Switch to 4</button>
         </div>`
       : `<div class="tsb-livedock__slotbar">
-          <div class="tsb-livedock__slotstatus">📱 <b>4 BUTTONS ACTIVE (FREE)</b></div>
+          <div class="tsb-livedock__slotstatus"><b>4 buttons</b> · Gold adds a fifth</div>
           <button type="button" class="tsb-livedock__slotbtn tsb-livedock__slotbtn--gold" id="tsbDockSlotToggle">+ Add 5th Button · Gold ₹99</button>
         </div>`;
 

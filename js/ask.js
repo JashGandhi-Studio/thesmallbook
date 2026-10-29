@@ -96,7 +96,7 @@
     return String(q).toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
   }
   /* v292 house rule: no em dashes anywhere in the app. Ask pulls lines from
-     500 books and 400 autopsies, older shelves included, so the escape gate
+     520 books and 400 autopsies, older shelves included, so the escape gate
      also flattens every dash to a plain hyphen. Nothing rendered in the panel
      (or saved to history) can carry one, whatever the source file says. */
   function esc(s) {
@@ -317,12 +317,12 @@
     root.innerHTML =
       '<div id="tsb-panel" class="aq-panel" role="dialog" aria-label="Ask TheSmallBook">' +
         '<div class="aq-head">' +
-          '<div class="aq-head__c"><div class="aq-head__t">📕 ASK THE LIBRARY</div>' +
+          '<div class="aq-head__c"><div class="aq-head__t">Ask the library</div>' +
           '<div class="aq-head__s" id="tsb-headstats"></div></div>' +
           '<div class="aq-head__btns">' +
-            '<button class="aq-libbtn" id="tsb-libbtn" title="' + t("Browse all questions") + '">📚</button>' +
-            '<button class="aq-clear" title="' + t("Clear chat") + '">🗑</button>' +
-            '<button class="aq-close" title="' + t("Close") + '">✕</button>' +
+            '<button class="aq-libbtn" id="tsb-libbtn" title="' + t("Browse all questions") + '" aria-label="' + t("Browse all questions") + '"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="M16.5 4.6l3.8-1 3.2 15.5-3.8 1z"/></svg></button>' +
+            '<button class="aq-clear" title="' + t("Clear chat") + '" aria-label="' + t("Clear chat") + '"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>' +
+            '<button class="aq-close" title="' + t("Close") + '" aria-label="' + t("Close") + '"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
           "</div>" +
         "</div>" +
         '<div class="aq-chips" id="tsb-chips"></div>' +
@@ -360,9 +360,9 @@
         var h = root.querySelector(".aq-head__t");
         var pl = root.querySelector("#tsb-input");
         var snd = root.querySelector("#tsb-send");
-        tr1("ASK", lang).then(function (v) { if (snd) snd.textContent = v; });
-        tr1("ASK THE LIBRARY", lang).then(function (v) { if (h) h.textContent = "📕 " + v; });
-        tr1("Ask anything…", lang).then(function (v) { if (pl) pl.placeholder = v; });
+        tr1("ASK", lang).then(function (v) { if (snd && !PAGE_MODE) snd.textContent = v; });
+        tr1(PAGE_MODE ? "Ask" : "ASK THE LIBRARY", lang).then(function (v) { if (h) h.textContent = v; });
+        tr1(PAGE_MODE ? "Ask the library" : "Ask anything…", lang).then(function (v) { if (pl) pl.placeholder = v; });
       }, 250);
     }
     bind();
@@ -403,7 +403,7 @@
       back.className = "aq-back";
       back.id = "tsb-back";
       back.setAttribute("aria-label", "Back");
-      back.textContent = "←";
+      back.innerHTML = FA_IC.back;
       back.addEventListener("click", goBack);
       head.insertBefore(back, head.firstChild);
     }
@@ -438,27 +438,137 @@
         } catch (e) {}
       });
     }
-    /* empty-state hero, the designed "home" of the chat, gone on first message */
-    var msgsEl = root.querySelector("#tsb-msgs");
-    if (msgsEl) {
-      var hero = document.createElement("div");
-      hero.className = "cht-hero";
-      hero.innerHTML = '<div class="cht-hero__logo">📕</div>' +
-        "<h1>Ask the library</h1>" +
-        "<p>500 books · 3,540 lessons · 400 autopsies, one question away.</p>";
-      msgsEl.insertBefore(hero, msgsEl.firstChild);
-      try {
-        var mo = new MutationObserver(function () {
-          if (msgsEl.querySelector(".aq-msg--user") && hero.parentNode) {
-            hero.classList.add("cht-hero--off");
-            setTimeout(function () { if (hero.parentNode) hero.parentNode.removeChild(hero); }, 300);
-            mo.disconnect();
-          }
-        });
-        mo.observe(msgsEl, { childList: true });
-      } catch (e) {}
-    }
+    /* v330: the Gemini-style home. Greeting, one big ask box, four taps. */
+    try { document.body.classList.add("fask"); } catch (e) {}
+    faComposer();
+    faHero();
     open();
+  }
+
+  /* ============ v330 page chat: ChatGPT / Gemini calm ============ */
+  var FA_IC = {
+    back: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+    mic: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>',
+    up: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>',
+    edit: '<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+    copy: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>'
+  };
+  var FA_SUG_SV = {"time": "<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"13\" r=\"8\"/><path d=\"M12 9v4l2.5 2.5M9 2h6\"/></svg>", "habit": "<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"5\"/><circle cx=\"12\" cy=\"12\" r=\"1.2\"/></svg>", "focus": "<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg>", "money": "<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 17l6-6 4 4 8-8\"/><path d=\"M15 7h6v6\"/></svg>", "brave": "<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z\"/></svg>", "phone": "<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"6\" y=\"2.5\" width=\"12\" height=\"19\" rx=\"2.5\"/><path d=\"M3 3l18 18\"/></svg>", "spark": "<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6\"/></svg>"};
+  /* the icon follows the question, never its position */
+  function faSugIc(q) {
+    q = String(q).toLowerCase();
+    var k = /procrastinat|time|late|morning|sleep/.test(q) ? "time" : /habit|routine|disciplin/.test(q) ? "habit" :
+      /focus|distract|attention|study/.test(q) ? "focus" : /money|invest|paise|save|rich|salary|wealth/.test(q) ? "money" :
+      /confiden|fear|anxi|brave|shy/.test(q) ? "brave" : /phone|scroll|screen|social/.test(q) ? "phone" : "spark";
+    return FA_SUG_SV[k];
+  }
+  function faName() {
+    try { var n = JSON.parse(localStorage.getItem("tsb_reader_name") || '""'); n = typeof n === "string" ? n.trim() : ""; return n === "Guest Reader" ? "" : n.split(" ")[0]; } catch (e) { return ""; }
+  }
+  function faSuggestions() {
+    var seen = {}, out = [];
+    personalChips().concat(QUICK).forEach(function (c) {
+      var q = c.q; if (!q || seen[norm(q)] || out.length >= 4) return;
+      seen[norm(q)] = 1; out.push(q);
+    });
+    return out;
+  }
+  function faBooks() {
+    var bi = bookIndex(), ids = [];
+    try { ids = (JSON.parse(localStorage.getItem("tsb_starter_shelf") || "null") || []).map(function (x) { return x && x.id ? x.id : x; }); } catch (e) {}
+    ids = ids.concat(["atomic-habits", "psychology-of-money", "deep-work", "ikigai"]).filter(function (id) { return bi[id]; });
+    var u = []; ids.forEach(function (id) { if (u.indexOf(id) < 0) u.push(id); });
+    return u.slice(0, 3).map(function (id) { return bi[id]; });
+  }
+  function faHero() {
+    var msgsEl = root.querySelector("#tsb-msgs");
+    if (!msgsEl || msgsEl.querySelector(".aq-msg--user") || msgsEl.querySelector(".cht-hero")) return;
+    var nm = faName();
+    var hero = document.createElement("div");
+    hero.className = "cht-hero fa-hero";
+    hero.innerHTML =
+      '<div class="fa-books" aria-hidden="true">' + faBooks().map(function (b, i) {
+        return '<span class="fa-bk fa-bk--' + i + '"><img src="' + esc(coverOf(b)) + '" alt=""></span>';
+      }).join("") + "</div>" +
+      '<h1 class="fa-hi"><span>' + (nm ? "Hello, " + esc(nm) : "Hello") + "</span></h1>" +
+      '<p class="fa-sub">' + esc(t("What should the library help with?")) + "</p>" +
+      '<div class="fa-sugs">' + faSuggestions().map(function (q, i) {
+        return '<button class="fa-sug" data-faq="' + esc(q) + '"><i>' + faSugIc(q) + "</i><span>" + esc(q) + "</span></button>";
+      }).join("") + "</div>" +
+      '<button class="fa-all" id="faAll">' + esc(t("Browse all")) + " " + (window.TSB_ASK_DATA || []).length + " " + esc(t("questions")) + "</button>";
+    msgsEl.insertBefore(hero, msgsEl.firstChild);
+    hero.querySelectorAll("[data-faq]").forEach(function (b) {
+      b.addEventListener("click", function () { send(b.getAttribute("data-faq")); });
+    });
+    var all = hero.querySelector("#faAll");
+    if (all) all.addEventListener("click", openLib);
+    try {
+      var mo = new MutationObserver(function () {
+        if (msgsEl.querySelector(".aq-msg--user") && hero.parentNode) {
+          hero.classList.add("cht-hero--off");
+          setTimeout(function () { if (hero.parentNode) hero.parentNode.removeChild(hero); }, 300);
+          mo.disconnect();
+        }
+      });
+      mo.observe(msgsEl, { childList: true });
+    } catch (e) {}
+  }
+  function faComposer() {
+    var row = root.querySelector(".aq-inputrow");
+    var snd = root.querySelector("#tsb-send");
+    if (!row || !snd || row.querySelector(".fa-plus")) return;
+    var plus = document.createElement("button");
+    plus.className = "fa-plus"; plus.type = "button";
+    plus.setAttribute("aria-label", "Ways to ask"); plus.title = "Ways to ask";
+    plus.innerHTML = FA_IC.plus;
+    plus.addEventListener("click", openModes);
+    row.insertBefore(plus, row.firstChild);
+    var SR = window.TSB_SR || window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SR) {
+      var mic = document.createElement("button");
+      mic.className = "fa-mic"; mic.type = "button";
+      mic.setAttribute("aria-label", "Speak your question"); mic.title = "Speak";
+      mic.innerHTML = FA_IC.mic;
+      mic.addEventListener("click", function () {
+        try {
+          var r = new SR(); r.lang = "en-IN"; r.interimResults = true;
+          mic.classList.add("fa-mic--on");
+          r.onresult = function (e) { var tx = ""; for (var i = 0; i < e.results.length; i++) tx += e.results[i][0].transcript; input.value = tx; row.classList.toggle("fa-has", !!tx); };
+          r.onend = function () { mic.classList.remove("fa-mic--on"); if (input.value.trim()) send(input.value); };
+          r.start();
+        } catch (e) { mic.classList.remove("fa-mic--on"); }
+      });
+      row.insertBefore(mic, snd);
+    }
+    var pill = document.createElement("div");
+    pill.className = "fa-pill";
+    while (row.firstChild) pill.appendChild(row.firstChild);
+    row.appendChild(pill);
+    snd.innerHTML = FA_IC.up;
+    snd.setAttribute("aria-label", "Ask");
+    input.placeholder = "Ask the library";
+    var sync = function () { row.classList.toggle("fa-has", !!input.value.trim()); };
+    input.addEventListener("input", sync);
+    input.addEventListener("keydown", function (e) { if (e.key === "Enter") setTimeout(sync, 0); });
+    snd.addEventListener("click", function () { setTimeout(sync, 0); });
+    var clr = root.querySelector(".aq-clear");
+    if (clr) { clr.innerHTML = FA_IC.edit; clr.title = "New chat"; clr.setAttribute("aria-label", "New chat"); }
+    var ht = root.querySelector(".aq-head__t");
+    if (ht) ht.textContent = "Ask";
+    var mt = root.querySelector("#tsb-modes .aq-lib__t");
+    if (mt) mt.textContent = "Ways to ask";
+    document.addEventListener("click", function (e) {
+      var tg = e.target;
+      if (!tg || !tg.closest || tg.closest(".aq-lib") || tg.closest(".fa-plus") || tg.closest("#faAll")) return;
+      if (root.querySelector("#tsb-modes.aq-lib--open")) closeModes();
+      if (root.querySelector("#tsb-lib.aq-lib--open")) closeLib();
+    }, true);
+    var lt = root.querySelector("#tsb-lib .aq-lib__t");
+    if (lt) lt.textContent = "All questions";
+    var ls = root.querySelector("#tsb-libsearch");
+    if (ls) ls.placeholder = "Search questions";
+    root.querySelectorAll(".aq-lib__close").forEach(function (b) { b.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>'; b.setAttribute("aria-label", "Close"); });
   }
 
   var QUICK = [
@@ -918,9 +1028,9 @@
 
   function copyText(text, btn) {
     var done = function () {
-      var old = btn.textContent;
-      btn.textContent = "✅ " + t("COPIED");
-      setTimeout(function () { btn.textContent = old; }, 1300);
+      var old = btn.innerHTML;
+      btn.textContent = PAGE_MODE ? t("Copied") : "✅ " + t("COPIED");
+      setTimeout(function () { btn.innerHTML = old; }, 1300);
     };
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done).catch(done);
     else { var ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch (e) {} document.body.removeChild(ta); done(); }
@@ -928,7 +1038,8 @@
 
   function relatedChips(excludeQ) {
     var data = window.TSB_ASK_DATA || [];
-    var others = data.filter(function (t2) { return norm(t2.q) !== norm(excludeQ); }).map(function (t2) { return t2.q; });
+    var seenQ = {};
+    var others = data.filter(function (t2) { var k = norm(t2.q); if (k === norm(excludeQ) || seenQ[k]) return false; seenQ[k] = 1; return true; }).map(function (t2) { return t2.q; });
     for (var i = others.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
       var tmp = others[i]; others[i] = others[j]; others[j] = tmp;
@@ -1015,7 +1126,8 @@
     row.className = "aq-copyrow";
     var cb = document.createElement("button");
     cb.className = "aq-copy";
-    cb.textContent = "📋 " + t("COPY ANSWER");
+    if (PAGE_MODE) { cb.innerHTML = FA_IC.copy + "<span>" + esc(t("Copy")) + "</span>"; cb.setAttribute("aria-label", "Copy answer"); }
+    else cb.textContent = "📋 " + t("COPY ANSWER");
     cb.addEventListener("click", function () { copyText([q].concat(strip(html)).join("\n\n"), cb); });
     row.appendChild(cb);
     wrap.appendChild(row);
@@ -1131,7 +1243,10 @@
       var c = document.createElement("button");
       c.className = "aq-mdcard aq-mdcard--" + (i % 5);
       c.setAttribute("data-md", m.key);
-      c.innerHTML = "<b>" + esc(m.label) + "</b><span>" + esc(t(MODE_DESC[m.key] || "")) + "</span>";
+      if (PAGE_MODE) {
+        var sp = m.label.indexOf(" ");
+        c.innerHTML = "<i>" + esc(m.label.slice(0, sp)) + "</i><b>" + esc(m.label.slice(sp + 1)) + "</b><span>" + esc(t(MODE_DESC[m.key] || "")) + "</span>";
+      } else c.innerHTML = "<b>" + esc(m.label) + "</b><span>" + esc(t(MODE_DESC[m.key] || "")) + "</span>";
       c.addEventListener("click", function () {
         closeModes();
         if (m.pick) showModeIntro(m.key, m.label);
@@ -1175,6 +1290,7 @@
         act.appendChild(copyB);
         row.appendChild(q);
         row.appendChild(act);
+        if (PAGE_MODE) row.addEventListener("click", function (e) { if (e.target === copyB) return; closeLib(); send(it.q); });
         list.appendChild(row);
       });
     });
@@ -1188,9 +1304,10 @@
     root.querySelector("#tsb-modesclose").addEventListener("click", closeModes);
     root.querySelector("#tsb-libsearch").addEventListener("input", function (e) { renderLib(e.target.value); });
     root.querySelector(".aq-clear").addEventListener("click", function () {
-      if (!confirm("Clear this chat?")) return;
+      if (!PAGE_MODE && !confirm("Clear this chat?")) return;
       msgs.innerHTML = ""; saveHist([]);
       greet();
+      if (PAGE_MODE) faHero();
     });
     root.querySelector("#tsb-send").addEventListener("click", function () { send(input.value); });
     input.addEventListener("keydown", function (e) { if (e.key === "Enter") send(input.value); });
@@ -1233,13 +1350,14 @@
 
   function greet() {
     var b = currentBook();
+    if (PAGE_MODE && !b) return;
     if (b) {
       var gs = relatedGraves(b).length;
       addMsg("bot", '<div class="aq-guided">👋 <b>' + esc(b.title) + "</b>, <b>💀 " + gs + " " + t("related failures are linked to this book, tap below.") + "</b></div>");
     } else {
       var askBooks = (window.BOOKS && window.BOOKS.length) || 320;
       var askGraves = (window.FAILURES && window.FAILURES.length) || 300;
-      addMsg("bot", '<div class="aq-guided">👋 ' + t("Ask anything.") + " <b>\u201C" + t("How do I stop procrastinating?") + "\u201D</b>, <b>\u201Cpaise kaise bachau?\u201D</b>, " + (window.TSB_ASK_DATA || []).length + " " + t("questions in") + " <b>📚</b> " + askBooks + " " + t("books answer") + ". " + t("Even the Graveyard warns you") + " 💀 (" + askGraves + " " + t("autopsies") + ")</div>");
+      addMsg("bot", '<div class="aq-guided">' + t("Ask anything.") + " <b>\u201C" + t("How do I stop procrastinating?") + "\u201D</b>, <b>\u201Cpaise kaise bachau?\u201D</b>, " + (window.TSB_ASK_DATA || []).length + " " + t("questions in") + " " + askBooks + " " + t("books answer") + ". " + t("Even the Graveyard warns you") + " (" + askGraves + " " + t("autopsies") + ")</div>");
     }
   }
 
@@ -1262,7 +1380,7 @@
         '<div class="aq-locked">' +
           '<div class="aq-locked__chip">👑</div>' +
           '<h3>ASK THE LIBRARY IS PART OF GOLD</h3>' +
-          '<p>Every answer is composed live from <b>500 books, 3,540 lessons and 400 autopsies</b>, with the exact lesson it came from, one tap away. Nothing invented, no chatbot filler.</p>' +
+          '<p>Every answer is composed live from <b>520 books, 3,685 lessons and 400 autopsies</b>, with the exact lesson it came from, one tap away. Nothing invented, no chatbot filler.</p>' +
           '<p class="aq-locked__modes">Seven ways to ask: compare books on one question, the decision before the disaster, red flags, seven-day plans and more.</p>' +
           '<a class="aq-locked__go" href="gold.html">👑 SEE TSB GOLD</a>' +
           '<small>The library itself stays free, every book, every lesson, forever.</small>' +

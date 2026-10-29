@@ -6,6 +6,7 @@
 
 (function () {
   const grid = document.getElementById("grid");
+  const HEART_ON = '<svg viewBox="0 0 24 24" width="17" height="17" fill="#E5484D" stroke="#E5484D" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.2 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 5.5 3.7 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>', HEART_OFF = '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.2 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 5.5 3.7 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>';
   const searchInput = document.getElementById("searchInput");
   const filterWrap = document.getElementById("filters");
   const sortSel = document.getElementById("sortSel");
@@ -42,7 +43,7 @@
 
   let activeCat = "ALL";
   let query = "";
-  let sortMode = TSB.get("tsb_view", "default") === "shelves" ? "shelves" : "default";
+  let sortMode = TSB.get("tsb_view2", "shelves") === "grid" ? "default" : "shelves";
 
   /* ---------- STATS ---------- */
   const totalLessons = BOOKS.reduce((n, b) => n + b.lessons.length, 0);
@@ -90,6 +91,12 @@
     const b = document.createElement("button");
     b.className = "chip" + (active ? " active" : "");
     b.textContent = label;
+    /* v333: what the reader sees is calm (no emoji, no shouting); the text
+       stays the filter key every other script already compares against */
+    const shown = label === "ALL" ? "All" : label === "❤️ MY SHELF" ? "My shelf" : label === "🇮🇳 INDIAN" ? "Indian authors" : label;
+    b.setAttribute("data-label", shown);
+    b.setAttribute("aria-label", shown);
+    if (label === "❤️ MY SHELF") b.classList.add("chip--heart");
     b.addEventListener("click", () => {
       activeCat = label;
       try { sessionStorage.setItem("tsb_filter_touched", "1"); } catch (e) {}
@@ -105,8 +112,14 @@
     sortSel.value = sortMode; // restore saved view choice
     sortSel.addEventListener("change", () => {
       sortMode = sortSel.value;
+      if (sortMode === "shelves") {
+        /* asking for shelves always shows the shelves, not a filtered grid */
+        activeCat = "ALL"; query = "";
+        if (searchInput) searchInput.value = "";
+        document.querySelectorAll(".chip").forEach((c) => c.classList.toggle("active", c.textContent === "ALL"));
+      }
       // remember the view style (shelves vs classic) across visits
-      TSB.set("tsb_view", sortMode === "shelves" ? "shelves" : "default");
+      TSB.set("tsb_view2", sortMode === "shelves" ? "shelves" : "grid");
       render();
     });
   }
@@ -149,29 +162,29 @@
 
     if (!hits.length) {
       searchLiveOut.style.display = "block";
-      searchLiveOut.innerHTML = `<div style="padding:10px 12px;font:700 13px 'Space Grotesk',sans-serif;color:var(--muted,#777);text-align:center;">No matching titles found for “${escHTML(v)}”. Press Enter to search inside all lessons.</div>`;
+      searchLiveOut.innerHTML = `<div class="search-live-empty">No titles match “${escHTML(v)}”. Press search to look inside every lesson.</div>`;
       return;
     }
 
     searchLiveOut.style.display = "flex";
     const topHits = hits.slice(0, 6);
-    let html = `<div class="search-live-header"><span>MATCHING BOOK TITLES (${hits.length})</span><small>FAST PREVIEW</small></div>`;
+    let html = `<div class="search-live-header"><span>${hits.length} ${hits.length === 1 ? "book" : "books"}</span></div>`;
     topHits.forEach((b) => {
       html += `
         <a class="search-hit-item" href="book.html?id=${encodeURIComponent(b.id)}">
           <img class="search-hit-cover" src="${escHTML(b.cover)}" alt="" loading="lazy" onerror="this.style.display='none'">
           <div class="search-hit-info">
             <div class="search-hit-title">${escHTML(b.title)}</div>
-            <div class="search-hit-meta">${escHTML(b.author)} · ${escHTML(b.category)} · ${b.lessons.length} lessons</div>
+            <div class="search-hit-meta">${escHTML(b.author)}</div>
           </div>
-          <span class="search-hit-badge">READ →</span>
+          <svg class="search-hit-go" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
         </a>`;
     });
 
     if (hits.length > 6) {
       html += `
         <div class="search-live-footer">
-          <button type="button" id="searchLiveMoreBtn">↓ SEE ALL ${hits.length} BOOKS ON THE SHELF</button>
+          <button type="button" id="searchLiveMoreBtn">See all ${hits.length}</button>
         </div>`;
     }
 
@@ -288,12 +301,15 @@
     grid.innerHTML = "";
 
     if (!results.length) {
+      const qSafe = String(query || "").replace(/[&<>"']/g, "");
+      const fe = (ic, t, p, extra) => `<div class="fe fe--lib"><span class="fe-ic">${ic}</span><b>${t}</b><p>${p}</p>${extra || ""}</div>`;
       const msg = activeCat === "❤️ MY SHELF" && !query
-        ? `<span>❤️</span>Your shelf is empty.<br>Tap the heart on any book to save it here!`
+        ? fe('<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.2 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 5.5 3.7 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>', "Your shelf is empty", "Tap the heart on any book to keep it here.")
         : activeCat === "🇮🇳 INDIAN" && !query
-        ? `<span>🇮🇳</span>Indian books coming soon!<br>Check back next week.`
-        : `<span>📚</span>No books found.<br>Try another search, typos are OK!`;
-      grid.innerHTML = `<div class="empty">${msg}</div>`;
+        ? fe('<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"/></svg>', "Indian books are on the way", "New ones land every week.")
+        : fe('<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>', query ? "Not on the shelf yet" : "No books here", query ? "Check the spelling, or ask us to add <i>" + qSafe + "</i>." : "Try another shelf or a search.",
+            query ? `<button type="button" class="fe-btn rq-inline" data-request="${qSafe}">Request this book</button>` : "");
+      grid.innerHTML = msg;
       return;
     }
 
@@ -307,7 +323,24 @@
     }
     grid.classList.remove("grid--shelves");
 
-    results.forEach((b, i) => {
+    paintCount(results.length);
+    const BATCH = 30;
+    let shownN = 0;
+    function addBatch() {
+      results.slice(shownN, shownN + BATCH).forEach((b, i) => addCard(b, i));
+      shownN = Math.min(results.length, shownN + BATCH);
+      bindFavs();
+      const old = grid.querySelector(".lb-more"); if (old) old.remove();
+      if (shownN < results.length) {
+        const m = document.createElement("div"); m.className = "lb-more"; m.setAttribute("aria-hidden", "true");
+        grid.appendChild(m);
+        if ("IntersectionObserver" in window) {
+          const io = new IntersectionObserver((en) => { if (en[0].isIntersecting) { io.disconnect(); addBatch(); } }, { rootMargin: "900px 0px" });
+          io.observe(m);
+        } else { setTimeout(addBatch, 60); }
+      }
+    };
+    const addCard = (b, i) => {
       const read = TSB.progress.forBook(b.id).length;
       const pct = Math.round((read / b.lessons.length) * 100);
       const fav = TSB.bookmarks.has(b.id);
@@ -315,7 +348,7 @@
       a.className = "card";
       const lessonHit = query && b._lessonHit !== null && b._lessonHit !== undefined ? b._lessonHit : null;
       a.href = `book.html?id=${b.id}` + (lessonHit !== null ? `#lesson-${lessonHit}` : "");
-      a.style.animationDelay = `${Math.min(i, 10) * 50}ms`;
+      a.style.animationDelay = `${Math.min(i, 10) * 40}ms`;
       a.innerHTML = `
         <div class="card__top">
           ${isNew(b.id) ? `<span class="card__new" translate="no">✦ NEW</span>` : ""}
@@ -323,12 +356,12 @@
           <span class="card__cat">${b.category}</span>
           <span class="card__time">⏱ ${b.readTime}</span>
           <img class="card__cover" src="${b.cover}" alt="${b.title} cover" loading="lazy">
-          <button class="card__fav ${fav ? "on" : ""}" data-fav="${b.id}" aria-label="Bookmark">${fav ? "❤️" : "🤍"}</button>
+          <button class="card__fav ${fav ? "on" : ""}" data-fav="${b.id}" aria-label="Save to my shelf">${fav ? HEART_ON : HEART_OFF}</button>
         </div>
         ${pct > 0 ? `<div class="card__progress"><em>${pct === 100 ? "✓ DONE" : pct + "%"}</em><span style="width:${pct}%"></span></div>` : ""}
         <div class="card__body">
           <div class="card__title">${b.title}</div>
-          <div class="card__author">by ${b.author} · ${b.year}</div>
+          <div class="card__author">${/^unknown$/i.test(b.author || "") || !b.author ? "TheSmallBook Original" : "by " + escHTML(b.author)} · ${b.year}</div>
           <div class="card__tag">${b.tagline || b.oneLiner || ""}</div>
           ${lessonHit !== null ? `<div class="card__hit" translate="no">🔍 FOUND INSIDE: <strong>${b.lessons[lessonHit].title}</strong></div>` : ""}
           <div class="card__footer">
@@ -337,9 +370,22 @@
           </div>
         </div>`;
       grid.appendChild(a);
-    });
+    };
+    addBatch();
+  }
 
-    bindFavs();
+  /* the small line above the books says how many are showing */
+  function paintCount(n) {
+    const tb = document.querySelector(".toolbar"); if (!tb) return;
+    let c = document.getElementById("lbCount");
+    if (!c) { c = document.createElement("span"); c.id = "lbCount"; c.className = "lb-count"; tb.insertBefore(c, tb.firstChild); }
+    const where = activeCat === "ALL" ? "" : activeCat === "❤️ MY SHELF" ? " on your shelf" : activeCat === "🇮🇳 INDIAN" ? " by Indian authors" : " in " + activeCat;
+    c.textContent = query ? n + (n === 1 ? " match" : " matches") : (sortMode === "shelves" && activeCat === "ALL" ? "For you" : n + (n === 1 ? " book" : " books") + where);
+    /* the pill always names the order you are looking at */
+    if (sortSel) {
+      const showingShelves = sortMode === "shelves" && activeCat === "ALL" && !query;
+      if (sortMode === "shelves") sortSel.value = showingShelves ? "shelves" : "default";
+    }
   }
 
   function bindFavs() {
@@ -348,7 +394,7 @@
         e.preventDefault(); e.stopPropagation();
         const on = TSB.bookmarks.toggle(btn.dataset.fav);
         btn.classList.toggle("on", on);
-        btn.textContent = on ? "❤️" : "🤍";
+        btn.innerHTML = on ? HEART_ON : HEART_OFF;
         if (activeCat === "❤️ MY SHELF") render();
       });
     });
@@ -372,12 +418,12 @@
         <span class="card__cat">${b.category}</span>
         <span class="card__time">⏱ ${b.readTime}</span>
         <img class="card__cover" src="${b.cover}" alt="${b.title} cover" loading="lazy">
-        <button class="card__fav ${fav ? "on" : ""}" data-fav="${b.id}" aria-label="Bookmark">${fav ? "❤️" : "🤍"}</button>
+        <button class="card__fav ${fav ? "on" : ""}" data-fav="${b.id}" aria-label="Save to my shelf">${fav ? HEART_ON : HEART_OFF}</button>
       </div>
       ${pct > 0 ? `<div class="card__progress"><em>${pct === 100 ? "✓ DONE" : pct + "%"}</em><span style="width:${pct}%"></span></div>` : ""}
       <div class="card__body">
         <div class="card__title">${b.title}</div>
-        <div class="card__author">by ${b.author} · ${b.year}</div>
+        <div class="card__author">${/^unknown$/i.test(b.author || "") || !b.author ? "TheSmallBook Original" : "by " + escHTML(b.author)} · ${b.year}</div>
         <div class="card__tag">${b.tagline || b.oneLiner || ""}</div>
         <div class="card__footer">
           <span class="card__lessons">${read > 0 ? read + "/" : ""}${b.lessons.length} lessons</span>
@@ -386,64 +432,70 @@
       </div>`;
   }
 
-  function makeShelfRow(label, emoji, books, catForSeeAll) {
+  /* v333 SHELVES: rows you can swipe, like a good bookshop. Each row shows a
+     handful, "See all" opens the whole shelf, and the page stays light. */
+  const CHEV = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+  /* Originals are written here, so they never say "Unknown" */
+  function byLine(b) { return (!b.author || /^unknown$/i.test(b.author)) ? (isOrig(b.id) ? "TheSmallBook Original" : "TheSmallBook") : b.author; }
+  function lbCard(b) {
+    const read = TSB.progress.forBook(b.id).length;
+    const pct = Math.round((read / b.lessons.length) * 100);
+    return `<a class="lb-card" href="book.html?id=${b.id}">
+      <span class="lb-cover"><img src="${b.cover}" alt="" loading="lazy" decoding="async">${isOrig(b.id) ? '<em class="lb-tag">Original</em>' : (isNew(b.id) ? '<em class="lb-tag lb-tag--new">New</em>' : "")}${pct > 0 ? `<i class="lb-prog"><s style="width:${pct}%"></s></i>` : ""}</span>
+      <b>${escHTML(b.title)}</b><small>${escHTML(byLine(b))}</small></a>`;
+  }
+  function makeShelfRow(label, emoji, books, catForSeeAll, note) {
     const row = document.createElement("section");
-    row.className = "shelfrow";
-    const head = document.createElement("div");
-    head.className = "shelfrow__head";
-    head.innerHTML = `
-      <h3 class="shelfrow__title">${emoji} ${label} <span class="shelfrow__count">${books.length}</span></h3>
-      <div class="shelfrow__tools">
-        <button class="shelfrow__arrow" data-dir="-1" aria-label="Scroll left">←</button>
-        <button class="shelfrow__arrow" data-dir="1" aria-label="Scroll right">→</button>
-        ${catForSeeAll ? `<button class="shelfrow__seeall" data-seeall="${catForSeeAll}">SEE ALL →</button>` : ""}
-      </div>`;
-    const scroll = document.createElement("div");
-    scroll.className = "shelfrow__scroll";
-    books.forEach((b) => {
-      const card = document.createElement("a");
-      card.className = "card card--shelf";
-      card.href = `book.html?id=${b.id}`;
-      card.innerHTML = cardHTML(b);
-      scroll.appendChild(card);
-    });
-    row.appendChild(head);
-    row.appendChild(scroll);
-    head.querySelectorAll(".shelfrow__arrow").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        scroll.scrollBy({ left: btn.dataset.dir * (scroll.clientWidth * 0.85), behavior: "smooth" });
-      });
-    });
-    const seeAll = head.querySelector("[data-seeall]");
+    row.className = "lb-row";
+    const max = 14;
+    row.innerHTML = `<div class="lb-row__hd"><div><h3>${label}</h3>${note ? `<p>${note}</p>` : ""}</div>` +
+      (catForSeeAll && books.length > 3 ? `<button type="button" class="lb-see" data-seeall="${escHTML(catForSeeAll)}">See all ${books.length}${CHEV}</button>` : "") + `</div>` +
+      `<div class="lb-row__sc">${books.slice(0, max).map(lbCard).join("")}</div>`;
+    const seeAll = row.querySelector("[data-seeall]");
     if (seeAll) seeAll.addEventListener("click", () => {
       const target = seeAll.dataset.seeall;
-      document.querySelectorAll(".chip").forEach((c) => {
-        c.classList.toggle("active", c.textContent === target);
-      });
+      document.querySelectorAll(".chip").forEach((c) => c.classList.toggle("active", c.textContent === target));
       activeCat = target;
+      try { sessionStorage.setItem("tsb_filter_touched", "1"); } catch (e) {}
       render();
-      document.getElementById("library").scrollIntoView({ behavior: "smooth" });
+      const f = document.getElementById("filters"); if (f) f.scrollIntoView({ behavior: "smooth", block: "start" });
     });
     return row;
   }
 
   function renderShelves(all) {
-    // ❤️ Your shelf first (if any), then 🆕 new, then every category
-    /* 🎁 starter shelf picked during onboarding, leads Home */
+    paintCount(all.length);
+    const byId = {}; all.forEach((b) => { byId[b.id] = b; });
+    const used = {};
+    const add = (label, list, see, note) => { if (list.length) grid.appendChild(makeShelfRow(label, "", list, see, note)); };
+    /* 1 what you are in the middle of */
+    const going = all.filter((b) => { const r = TSB.progress.forBook(b.id).length; return r > 0 && r < b.lessons.length; });
+    add("Continue reading", going, null, null);
+    /* 2 the shelf you picked when you joined */
     let starter = [];
     try { starter = JSON.parse(localStorage.getItem("tsb_starter_shelf")) || []; } catch (e) {}
-    if (starter.length) {
-      const sb = starter.map((id) => all.find((b) => b.id === id)).filter(Boolean);
-      if (sb.length) grid.appendChild(makeShelfRow("Your Starter Shelf", "🎁", sb, null));
-    }
-    const favs = all.filter((b) => TSB.bookmarks.has(b.id));
-    if (favs.length) grid.appendChild(makeShelfRow("My Shelf", "❤️", favs, "❤️ MY SHELF"));
-    const fresh = all.filter((b) => isNew(b.id));
-    if (fresh.length) grid.appendChild(makeShelfRow("New This Week", "🆕", fresh, null));
-    cats.forEach((c) => {
-      const books = all.filter((b) => b.category === c);
-      if (books.length) grid.appendChild(makeShelfRow(c, CAT_EMOJI[c] || "📚", books, c));
+    add("Your starter shelf", starter.map((id) => byId[id]).filter(Boolean), null, "Picked for you when you joined");
+    /* 3 saved books */
+    add("My shelf", all.filter((b) => TSB.bookmarks.has(b.id)), "❤️ MY SHELF", null);
+    /* 4 new and original */
+    add("New this week", all.filter((b) => isNew(b.id)), null, null);
+    add("TheSmallBook Originals", all.filter((b) => isOrig(b.id)), null, "Written here, nowhere else");
+    /* 5 the shelves you care about first, then the rest */
+    let lead = [];
+    try { lead = (JSON.parse(localStorage.getItem("tsb_interests") || "[]") || []).map((x) => String(x).toLowerCase()); } catch (e) {}
+    const order = cats.slice().sort((a, b) => (lead.indexOf(a.toLowerCase()) < 0 ? 99 : lead.indexOf(a.toLowerCase())) - (lead.indexOf(b.toLowerCase()) < 0 ? 99 : lead.indexOf(b.toLowerCase())));
+    add("By Indian authors", all.filter((b) => TSB.isIndianBook(b.id)), "🇮🇳 INDIAN", null);
+    order.forEach((c) => add(c, all.filter((b) => b.category === c), c, null));
+    /* 6 one calm way into everything */
+    const allBtn = document.createElement("div");
+    allBtn.className = "lb-all";
+    allBtn.innerHTML = `<button type="button">Browse all ${all.length} books${CHEV}</button>`;
+    allBtn.querySelector("button").addEventListener("click", () => {
+      sortMode = "default"; if (sortSel) sortSel.value = "default";
+      TSB.set("tsb_view2", "grid"); render();
+      const f = document.getElementById("filters"); if (f) f.scrollIntoView({ behavior: "smooth", block: "start" });
     });
+    grid.appendChild(allBtn);
   }
 
   function sortBooks(list) {
@@ -673,14 +725,14 @@
           ${ringsHtml}
         </div>
 
-        <div style="background:var(--bg,#f6f1e8);border:2px solid var(--ink,#111);border-radius:14px;padding:14px;margin-bottom:18px;">
+        <div style="background:var(--bg,#f6f1e8);border:var(--bw) solid var(--edge);border-radius:20px;padding:14px;margin-bottom:18px;">
           <b style="display:block;font-size:12px;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px;color:var(--ink,#111);">🛡️ HABIT SHIELD ACTIVE</b>
           <span style="font-size:12px;color:var(--sub,#666);line-height:1.4;display:block;">
             Never miss twice. Even when life gets busy, complete your 60-second daily spark to protect your streak.
           </span>
         </div>
 
-        <button type="button" id="streakShareBtn" style="width:100%;background:var(--yellow,#ffc800);border:2.5px solid var(--ink,#111);border-radius:14px;padding:12px;font:800 13px var(--font-head);cursor:pointer;box-shadow:3px 3px 0 var(--ink,#111);margin-bottom:8px;">
+        <button type="button" id="streakShareBtn" style="width:100%;background:var(--yellow,#ffc800);border:var(--bw) solid var(--edge);border-radius:20px;padding:12px;font:800 13px var(--font-head);cursor:pointer;box-shadow:var(--sh-2);margin-bottom:8px;">
           SHARE MY STREAK 📤
         </button>
         <button type="button" id="streakCloseBtn" style="width:100%;background:transparent;border:none;font:700 12px var(--font-head);color:var(--sub,#666);cursor:pointer;padding:8px;">

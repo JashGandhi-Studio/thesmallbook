@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>Reader | TheSmallBook</title>
   <meta name="description" content="Distraction-free book reader for TheSmallBook.">
@@ -10,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=323">
+  <link rel="stylesheet" href="css/style.css?v=335">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <style>
     /* Dedicated Quiet Reader Styles */
@@ -32,7 +34,7 @@
       gap: 12px;
       padding: 12px 20px;
       background: var(--paper, #fffdf5);
-      border-bottom: 2px solid var(--ink, #111);
+      border-bottom: var(--bw) solid var(--edge);
     }
     .rm-header a.rm-back {
       font-size: 1.2rem;
@@ -40,10 +42,10 @@
       color: var(--ink);
       text-decoration: none;
       padding: 4px 10px;
-      border: 2px solid var(--ink);
-      border-radius: 8px;
+      border: var(--bw) solid var(--edge);
+      border-radius: 12px;
       background: var(--paper);
-      box-shadow: 2px 2px 0 var(--ink);
+      box-shadow: var(--sh-1);
     }
     .rm-header-title {
       flex: 1;
@@ -71,17 +73,17 @@
       font-weight: 700;
       font-size: .75rem;
       padding: 7px 12px;
-      border: 2px solid var(--ink);
+      border: var(--bw) solid var(--edge);
       border-radius: 999px;
       background: var(--paper);
       color: var(--ink);
       cursor: pointer;
-      box-shadow: 2px 2px 0 var(--ink);
+      box-shadow: var(--sh-1);
       transition: transform .1s;
     }
     .rm-header button:active {
       transform: translate(1px, 1px);
-      box-shadow: 1px 1px 0 var(--ink);
+      box-shadow: var(--sh-1);
     }
     .rm-trans-banner {
       display: none;
@@ -90,7 +92,7 @@
       z-index: 95;
       background: #fff3cd;
       color: #664d03;
-      border-bottom: 2px solid var(--ink);
+      border-bottom: var(--bw) solid var(--edge);
       padding: 8px 16px;
       font-size: .82rem;
       font-weight: 600;
@@ -107,7 +109,7 @@
       font-size: .75rem;
       font-weight: 700;
       padding: 2px 8px;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
     }
     .rm-app {
@@ -119,7 +121,7 @@
       box-sizing: border-box;
     }
     .rm-article {
-      font-family: var(--rm-font, 'Newsreader', Georgia, serif);
+      font-family: var(--rm-font, Newsreader, Georgia, serif);
       font-size: var(--rm-size, 20px);
       line-height: var(--rm-spacing, 1.8);
       color: var(--ink);
@@ -144,7 +146,7 @@
       margin: 0 0 20px;
     }
     .rm-callout {
-      border-left: 4px solid var(--ink);
+      border-left: var(--bw) solid var(--edge);
       padding: 12px 18px;
       margin: 24px 0;
       background: var(--surface-2, #f6f1e5);
@@ -174,25 +176,25 @@
       right: 0;
       z-index: 90;
       background: var(--paper, #fffdf5);
-      border-top: 2px solid var(--ink);
+      border-top: var(--bw) solid var(--edge);
       padding: 10px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      box-shadow: 0 -4px 0 rgba(0,0,0,.05);
+      box-shadow: var(--sh-2);
     }
     .rm-nav-btn {
       font-family: var(--font-body);
       font-weight: 700;
       font-size: .82rem;
       padding: 8px 16px;
-      border: 2px solid var(--ink);
+      border: var(--bw) solid var(--edge);
       border-radius: 999px;
       background: var(--paper);
       color: var(--ink);
       cursor: pointer;
-      box-shadow: 2px 2px 0 var(--ink);
+      box-shadow: var(--sh-1);
     }
     .rm-nav-btn.rm-read-btn {
       background: var(--yellow);
@@ -206,12 +208,12 @@
     }
     /* Aa Dialog */
     .rm-dialog {
-      border: 3px solid var(--ink);
+      border: var(--bw) solid var(--edge);
       border-radius: 20px;
       padding: 24px;
       background: var(--paper);
       color: var(--ink);
-      box-shadow: 8px 8px 0 var(--ink);
+      box-shadow: var(--sh-3);
       max-width: 440px;
       width: calc(100vw - 32px);
     }
@@ -238,23 +240,23 @@
       font-weight: 600;
       font-size: .82rem;
       padding: 6px 10px;
-      border: 2px solid var(--ink);
-      border-radius: 8px;
+      border: var(--bw) solid var(--edge);
+      border-radius: 12px;
       background: var(--paper);
       color: var(--ink);
     }
     .rm-close-dialog {
       width: 100%;
       padding: 12px;
-      border: 2.5px solid var(--ink);
-      border-radius: 12px;
+      border: var(--bw) solid var(--edge);
+      border-radius: 17px;
       background: var(--yellow);
       color: var(--ink);
       font-family: var(--font-head);
       font-size: .9rem;
       cursor: pointer;
       margin-top: 10px;
-      box-shadow: 3px 3px 0 var(--ink);
+      box-shadow: var(--sh-2);
     }
     /* Themes */
     body.rm-theme-sepia {
@@ -294,7 +296,7 @@
       width: 100%;
       max-width: 480px;
       background: var(--paper, #fffdf5);
-      border: 3px solid var(--ink, #111);
+      border: var(--bw) solid var(--edge);
       border-bottom: none;
       border-radius: 24px 24px 0 0;
       box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.25);
@@ -357,9 +359,9 @@
       align-items: flex-start;
       text-align: left;
       background: var(--surface-2, #f6f1e5);
-      border: 2px solid var(--ink, #111);
-      border-radius: 12px;
-      box-shadow: 2.5px 2.5px 0 var(--ink, #111);
+      border: var(--bw) solid var(--edge);
+      border-radius: 17px;
+      box-shadow: var(--sh-2);
       padding: 10px 12px;
       cursor: pointer;
       transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
@@ -368,11 +370,11 @@
     }
     .rm-lang-card:hover {
       transform: translate(-1px, -1px);
-      box-shadow: 3.5px 3.5px 0 var(--ink, #111);
+      box-shadow: var(--sh-2);
     }
     .rm-lang-card:active {
       transform: translate(1px, 1px);
-      box-shadow: 1px 1px 0 var(--ink, #111);
+      box-shadow: var(--sh-1);
     }
     .rm-lang-card.active {
       background: var(--yellow, #ffc800);
@@ -381,7 +383,7 @@
     body.rm-theme-night .rm-lang-card {
       background: #27211a;
       border-color: #f2ead8;
-      box-shadow: 2.5px 2.5px 0 #f2ead8;
+      box-shadow: var(--sh-2);
     }
     body.rm-theme-night .rm-lang-card.active {
       background: #ffc800;
@@ -422,9 +424,9 @@
       width: 310px;
       max-width: calc(100vw - 32px);
       background: var(--paper, #fffdf5);
-      border: 2.5px solid var(--ink, #111);
-      border-radius: 16px;
-      box-shadow: 6px 6px 0 var(--ink, #111);
+      border: var(--bw) solid var(--edge);
+      border-radius: 22px;
+      box-shadow: var(--sh-3);
       padding: 16px;
       box-sizing: border-box;
       animation: popoverFadeIn .18s cubic-bezier(0.16, 1, 0.3, 1);
@@ -436,7 +438,7 @@
     body.rm-theme-night .rm-tools-popover {
       background: #1c1813;
       border-color: #f2ead8;
-      box-shadow: 6px 6px 0 #f2ead8;
+      box-shadow: var(--sh-3);
       color: #f2ead8;
     }
     .rm-tools-head {
@@ -503,7 +505,7 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      border: 2px solid var(--ink, #111);
+      border: var(--bw) solid var(--edge);
       box-sizing: border-box;
       transition: transform 0.12s, box-shadow 0.12s;
     }
@@ -539,8 +541,8 @@
       align-items: center;
       gap: 12px;
       background: var(--surface-2, #f6f1e5);
-      border: 1.5px solid var(--ink, #111);
-      border-radius: 10px;
+      border: 1px solid var(--edge);
+      border-radius: 14px;
       padding: 6px 12px;
       box-sizing: border-box;
     }
@@ -574,16 +576,16 @@
       height: 20px;
       border-radius: 50%;
       background: var(--yellow, #ffc800);
-      border: 2px solid var(--ink, #111);
+      border: var(--bw) solid var(--edge);
       cursor: pointer;
-      box-shadow: 1.5px 1.5px 0 var(--ink, #111);
+      box-shadow: var(--sh-1);
     }
     .rm-slider::-moz-range-thumb {
       width: 20px;
       height: 20px;
       border-radius: 50%;
       background: var(--yellow, #ffc800);
-      border: 2px solid var(--ink, #111);
+      border: var(--bw) solid var(--edge);
       cursor: pointer;
     }
     .rm-select {
@@ -593,8 +595,8 @@
       font-size: 0.8rem;
       font-weight: 600;
       padding: 7px 10px;
-      border: 1.5px solid var(--ink, #111);
-      border-radius: 8px;
+      border: 1px solid var(--edge);
+      border-radius: 12px;
       background: var(--paper, #fffdf5);
       color: var(--ink, #111);
     }
@@ -604,6 +606,11 @@
       color: #f2ead8;
     }
   </style>
+  <link rel="stylesheet" href="css/film.css?v=335">
+  <link rel="stylesheet" href="css/film2.css?v=335">
+  <script>/* v334: arriving from the opening book, the last frame of that move (the open first page) is painted before anything else and held until the reader is drawn, so there is never a blank or half-built page */
+  try{var _b=+sessionStorage.getItem("tsb_bkx");if(_b&&Date.now()-_b<4000){sessionStorage.removeItem("tsb_bkx");var _de=document.documentElement;_de.classList.add("bkx-in");var _sh=sessionStorage.getItem("tsb_bkx_sheet")||"";sessionStorage.removeItem("tsb_bkx_sheet");var _hold=null;if(_sh){_hold=document.createElement("div");_hold.className="bkx bkx-hold";_hold.innerHTML='<div class="bkx-full" style="opacity:1">'+_sh+"</div>";_de.appendChild(_hold)}var _done=false;window.__bkxRelease=function(){if(_done)return;_done=true;if(_hold){_hold.style.transition="opacity .14s linear";_hold.style.opacity="0";setTimeout(function(){if(_hold.parentNode)_hold.parentNode.removeChild(_hold)},180)}setTimeout(function(){var _d=document.querySelector(".frd-dock");if(_d)_d.style.animation="none";_de.classList.remove("bkx-in")},400)};setTimeout(window.__bkxRelease,3000)}}catch(e){}</script>
+  <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
 </head>
 <body class="rm-page">
   <header class="rm-header" translate="no">
@@ -673,7 +680,7 @@
     <div class="rm-lang-sheet" id="rmLangSheet">
       <div class="rm-lang-handle" aria-hidden="true"></div>
       <div class="rm-lang-header">
-        <h3 class="rm-lang-title">🌐 READ IN YOUR LANGUAGE</h3>
+        <h2 class="rm-lang-title">🌐 READ IN YOUR LANGUAGE</h2>
         <p class="rm-lang-sub">Every book and every lesson, translated instantly.</p>
       </div>
       <div class="rm-lang-grid">
@@ -735,7 +742,7 @@
     <div class="rm-setting-row">
       <span>Typography:</span>
       <select id="rmFontSelect">
-        <option value="'Newsreader', Georgia, serif" selected>Book Serif</option>
+        <option value="Newsreader, Georgia, serif" selected>Book Serif</option>
         <option value="'Space Grotesk', sans-serif">Clean Sans</option>
       </select>
     </div>
@@ -765,12 +772,17 @@
     <button id="rmCloseDialog" class="rm-close-dialog" type="button">Done</button>
   </dialog>
 
-  <script src="js/bootguard.js?v=323"></script>
-  <script src="js/prefs.js?v=323"></script>
-  <script src="js/config.js?v=323"></script>
-  <script src="js/data.js?v=323"></script>
-  <script src="js/lang.js?v=323"></script>
-  <script src="js/share.js?v=323"></script>
-  <script src="js/reader.js?v=328"></script>
+  <script src="js/bootguard.js?v=335"></script>
+  <script src="js/prefs.js?v=335"></script>
+  <script src="js/config.js?v=335"></script>
+  <script src="js/data.js?v=335"></script>
+  <script src="js/lang.js?v=335"></script>
+  <script src="js/share.js?v=335"></script>
+  <script src="js/reader.js?v=335"></script>
+  <script src="js/soft-motion.js?v=335" defer></script>
+  <script src="js/stt.js?v=335"></script>
+  <script src="js/wordtap.js?v=335" defer></script>
+  <script src="js/film.js?v=335" defer></script>
+  <script src="js/film2.js?v=335" defer></script>
 </body>
 </html>

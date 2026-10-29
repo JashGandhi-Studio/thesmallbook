@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>Legal &amp; Privacy - TheSmallBook</title>
@@ -12,7 +14,7 @@
   <meta property="og:description" content="Plain-words terms, privacy and content policy: your notes never leave your device, no ads, no trackers, every book and show credited.">
   <meta property="og:url" content="https://thesmallbook.in/legal.html">
   <meta property="og:site_name" content="TheSmallBook">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=323">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=335">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary">
   <link rel="manifest" href="manifest.json">
@@ -29,14 +31,14 @@
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="css/style.css?v=323">
+  <link rel="stylesheet" href="css/style.css?v=335">
   <style>
-    .lg-hero { background: var(--yellow); border-bottom: 3px solid var(--ink); padding: 34px 16px 30px; text-align: center; }
+    .lg-hero { background: var(--yellow); border-bottom: var(--bw) solid var(--edge); padding: 34px 16px 30px; text-align: center; }
     .lg-hero h1 { font-family: var(--font-head); font-size: clamp(26px, 7vw, 40px); letter-spacing: .5px; margin: 0 0 8px; }
     .lg-hero p { max-width: 620px; margin: 0 auto; font: 600 13px/1.55 'Space Grotesk', sans-serif; color: #3c3627; }
     .lg-wrap { max-width: 760px; margin: 0 auto; padding: 22px 16px 40px; display: flex; flex-direction: column; gap: 16px; }
-    .lg-card { border: 2.5px solid var(--ink); border-radius: 16px; background: #fff; box-shadow: 4px 4px 0 var(--ink); padding: 18px 16px; }
-    html.dark .lg-card { background: #241f17; border-color: #000; box-shadow: 4px 4px 0 #000; }
+    .lg-card { border: var(--bw) solid var(--edge); border-radius: 22px; background: #fff; box-shadow: var(--sh-2); padding: 18px 16px; }
+    html.dark .lg-card { background: #241f17; border-color: #000; box-shadow: var(--sh-2); }
     .lg-card--short { background: var(--yellow); }
     html.dark .lg-card--short { background: #4d4300; }
     .lg-card h2 { font-family: var(--font-head); text-transform: uppercase; letter-spacing: .5px; font-size: 15px; margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
@@ -54,6 +56,9 @@
     html.dark .lg-hero p { color: #e8dfb8; }
     @media print { .lg-hero { border: none; } .lg-card { box-shadow: none; } }
   </style>
+  <link rel="stylesheet" href="css/film.css?v=335">
+  <link rel="stylesheet" href="css/film2.css?v=335">
+  <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
 </head>
 <body>
 
@@ -68,18 +73,18 @@
     <div class="lg-card lg-card--short">
       <span class="lg-chip">THE SHORT VERSION</span>
       <ul class="lg-short">
-        <li><b>Your notes, highlights and progress live on your device.</b> They never leave it.</li>
-        <li><b>No ads. No trackers. No selling data.</b> There is nothing to sell.</li>
-        <li>If you sign in with Google, we store your <b>name, email and @username</b> - only to make your shelf work.</li>
-        <li>Book summaries here are <b>original study companions</b>, not the books. Please buy the books - every page says so.</li>
-        <li>Audiobooks are <b>public-domain LibriVox recordings</b>, credited to their volunteer readers. Podcasts stream <b>from each show's own official feed</b>, exactly like every podcast app. We host none of it.</li>
-        <li>Gold payments go from your UPI to the creator's UPI, and there is a real <b>7-day refund promise</b>.</li>
-        <li>Something yours is here and should not be? <b>One message, 48 hours, gone.</b></li>
+        <li><b>Without an account, everything stays on your phone.</b> Notes, highlights, progress and streaks are saved in your browser only.</li>
+        <li><b>With an account, we keep what makes it work on every device:</b> your name, email, @username, birth year (private to you), progress, notes, and anything you choose to post.</li>
+        <li><b>No ads. No trackers. No selling data.</b></li>
+        <li><b>Accounts are 13+.</b> Under 18? Use the app with your parent or guardian knowing. Younger kids use Kids mode from a parent's phone.</li>
+        <li>Book summaries here are <b>original study companions</b>, not the books. Please buy the books.</li>
+        <li>Gold is paid by UPI straight to the creator, checked by our server, with a <b>7-day refund promise</b>.</li>
+        <li>Want your data gone, or something of yours taken down? <b>One email does it.</b></li>
       </ul>
     </div>
 
     <div class="lg-card">
-      <h2>1 · TERMS OF USE</h2>
+      <h2>1 · Terms of use</h2>
       <p>TheSmallBook ("the app", "we") is a free reading library built and run by Jash Gandhi, Mumbai, India, and published at thesmallbook.in. By using the app you agree to the plain rules on this page.</p>
       <ul>
         <li><b>Personal use.</b> Read, listen, learn, print cheat-sheets for your own study. Do not scrape, resell, re-host or republish the app or its original content without written permission.</li>
@@ -90,16 +95,34 @@
     </div>
 
     <div class="lg-card">
-      <h2>2 · PRIVACY &amp; DPDP ACT COMPLIANCE</h2>
-      <p><b>India Digital Personal Data Protection (DPDP) Act, 2023:</b> TheSmallBook operates in strict compliance with the DPDP Act. We adhere to rigorous data minimization, clear purpose limitation, zero tracking cookies, zero marketing pixels, and absolute prohibition on selling or transferring user data.</p>
-      <p><b>What we collect:</b> if you sign in with Google - your name, email and the @username you pick, plus the reviews and stories you choose to publish. That is the entire list. Everything else - your notes, highlights, reading progress, saved shows, daily streak - is stored <b>only on your device</b> and never uploaded anywhere.</p>
-      <p><b>Your rights:</b> Readers retain full statutory rights to access, correction, nomination, and total erasure of all personal data at any time directly through app Settings or via email to our Data Protection Contact at <a href="mailto:thesmallbook.in@gmail.com">thesmallbook.in@gmail.com</a>.</p>
-      <p><b>What we never do:</b> no advertising, no third-party analytics or tracking pixels, no location data, no contact scraping, no selling or sharing of user data with anyone. Sign out and wipe from Settings removes your synced data. Reading without signing in needs no account at all.</p>
-      <p><b>Where data lives:</b> on your phone, and for signed-in readers, on our Supabase (Postgres) database protected by row-level security. Children under 13 (or your country's minimum age) should not create accounts; the library reads fine without one.</p>
+      <h2>2 · Privacy and the DPDP Act</h2>
+      <p>We follow India's Digital Personal Data Protection Act, 2023 and the DPDP Rules, 2025. In plain words: we collect only what a feature needs, use it only for that feature, and delete it when you ask.</p>
+      <p><b>If you never sign in:</b> we receive nothing about you. Your reading data lives in your browser's local storage on your device. Clearing site data removes it.</p>
+      <p><b>If you sign in with Google:</b> Google confirms who you are and shares your name, email and photo with us. We then keep, in our Supabase database:</p>
+      <ul>
+        <li>your name, @username and photo (these are public on your profile);</li>
+        <li>your birth year, kept inside your private account record and never shown to anyone;</li>
+        <li>your reading progress and notes, so they follow you across devices;</li>
+        <li>what you choose to publish or send: stories, comments, reviews, likes, follows and messages;</li>
+        <li>if you buy Gold: the plan, amount, order number, UPI reference (UTR) and expiry date. We never see your bank account, card or UPI PIN.</li>
+      </ul>
+      <p><b>Services that help run the app</b>, each receiving only what its job needs:</p>
+      <ul>
+        <li><b>Supabase</b> (database and sign-in). Every table is locked so that you can read only your own private rows.</li>
+        <li><b>Google</b> for sign-in, web fonts, and translation when you switch a book's language (the text being translated is sent).</li>
+        <li><b>Web3Forms</b> delivers book requests: the title you type, and your email only if you add it.</li>
+        <li><b>Puter</b> produces the natural reading voices: the passage being read aloud is sent to it.</li>
+        <li><b>Podcast hosts, Apple's podcast search, rss2json and Archive.org</b> deliver episodes, show artwork and audiobooks. Like any podcast app, your device asks them directly, so they see a normal web request.</li>
+        <li><b>YouPI</b> (UPI payment matching) and, if offered, <b>Razorpay</b> process Gold payments.</li>
+      </ul>
+      <p><b>Children:</b> under the DPDP Act anyone under 18 is a child. The app asks for your birth year after sign-in. Accounts are for readers 13 and older, and if you are under 18 please use the app with your parent or guardian knowing. Children under 13 use Kids mode, opened by a parent from their own account, which needs no sign-in and stores nothing about the child. We do not track children's behaviour, do not show ads to anyone, and keep children out of the public Stories space. Reading without an account needs no consent at all.</p>
+      <p><b>Your rights:</b> you can ask to see, correct or delete your data, name someone to act for you, or withdraw consent. Email <a href="mailto:thesmallbook.in@gmail.com?subject=My%20data">thesmallbook.in@gmail.com</a> from your sign-in address. We act within 30 days, well inside the 90-day limit the Rules allow. Deleting your account removes your profile, progress, notes and posts. Payment records are kept only as long as tax law requires.</p>
+      <p><b>Grievance officer:</b> Jash Gandhi, Mumbai, Maharashtra, <a href="mailto:thesmallbook.in@gmail.com?subject=Grievance">thesmallbook.in@gmail.com</a>. If you are unhappy with our answer, you can complain to the Data Protection Board of India.</p>
+      <p><b>If something goes wrong:</b> if a data breach affects you, we will tell you without delay and report it to the Data Protection Board as the Rules require.</p>
     </div>
 
     <div class="lg-card">
-      <h2>3 · CONTENT, CREDIT &amp; COPYRIGHT</h2>
+      <h2>3 · Content, credit &amp; copyright</h2>
       <p>This library points at knowledge and always shows the receipt:</p>
       <ul>
         <li><b>Books.</b> Titles, covers and author names belong to their publishers and authors and appear here only to identify the book being summarised. TheSmallBook is not affiliated with, endorsed by, or sponsored by any author or publisher. Every summary, cheat-sheet and lesson on this site is an original educational analysis written by us - we recommend (loudly) that you buy and read the full books.</li>
@@ -110,28 +133,28 @@
     </div>
 
     <div class="lg-card">
-      <h2>4 · NOT PROFESSIONAL ADVICE</h2>
+      <h2>4 · Not professional advice</h2>
       <p>Everything here - money lessons, psychology, productivity, health-adjacent ideas - is education, not professional advice. Ideas summarized on this site belong to the original authors, credited on every page. For your own situation, talk to a qualified professional, not a summary app.</p>
     </div>
 
     <div class="lg-card">
-      <h2>5 · YOUR WORDS (REVIEWS, STORIES, MESSAGES)</h2>
+      <h2>5 · Your words (reviews, stories, messages)</h2>
       <p>What you post publicly is yours - you keep ownership and give us permission to display it inside the app. Do not post what is not yours to share. Every public space is moderated by a human; report anything with the report path or the contact below and a person (not a bot) will look at it.</p>
     </div>
 
     <div class="lg-card">
-      <h2>6 · PAYMENTS, GOLD &amp; REFUNDS</h2>
-      <p>Gold and any paid offers are optional. Payments go directly from your UPI to the creator's UPI - there is no payment middleman storing your card. What Gold promises on the store page is exactly what it delivers, and limited-time offers expire honestly, with no fake countdowns. If Gold does not work for you, write to us <b>within 7 days of payment for a full refund</b>, no questions, no forms.</p>
+      <h2>6 · Payments, Gold and refunds</h2>
+      <p>Gold is optional. You pay by UPI to the creator's UPI ID. Your bank's confirmation reaches our server through a signed message, and the server, not your browser, switches Gold on for the plan you paid for, until its end date. The app never sees your bank login, card or PIN. What the Gold page promises is exactly what it delivers, and offers never use fake countdowns. If Gold does not work for you, write within 7 days of paying for a full refund, no forms.</p>
     </div>
 
     <div class="lg-card">
-      <h2>7 · TAKEDOWNS &amp; REPORTS</h2>
+      <h2>7 · Takedowns &amp; reports</h2>
       <p>If any content here infringes your rights - a cover, a recording, a piece of writing, a podcast feed you own - send the URL and a one-line explanation to the address below. We act within 48 hours: remove first, ask questions after. You do not need a lawyer to reach us; a plain message from the rights holder (or their agent) is enough.</p>
     </div>
 
     <div class="lg-card">
-      <h2>8 · CONTACT</h2>
-      <p>One inbox, read by the human who built this place: <a href="mailto:thesmallbook.in@gmail.com">thesmallbook.in@gmail.com</a> (hello@thesmallbook.in) · Legal last updated: October 2026 · The full story of the app lives on the <a href="about.html">About page</a>.</p>
+      <h2>8 · Contact</h2>
+      <p>One inbox, read by the human who built this place: <a href="mailto:thesmallbook.in@gmail.com">thesmallbook.in@gmail.com</a> (hello@thesmallbook.in) · Legal last updated: 30 October 2026 · The full story of the app lives on the <a href="about.html">About page</a>.</p>
     </div>
 
   </main>
@@ -141,7 +164,7 @@
     <p>Big books. Small reads. All the lessons, examples and takeaways from the world's best books.
     Summaries are original educational analyses. Please support the authors, buy the full books.</p>
     <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:14px 0">
-      <a class="btn btn--yellow" href="about.html" style="border-radius:999px;padding:9px 14px;font-size:.72rem;box-shadow:3px 3px 0 #fff;">ⓘ ABOUT &amp; FEATURE GUIDE</a>
+      <a class="btn btn--yellow" href="about.html" style="border-radius:999px;padding:9px 14px;font-size:.72rem;box-shadow:var(--sh-2);">ⓘ ABOUT &amp; FEATURE GUIDE</a>
       <a class="btn" href="index.html#library" style="border-radius:999px;background:#fff;">📚 LIBRARY</a>
       <a class="btn btn--red" href="graveyard.html" style="border-radius:999px;">💀 GRAVEYARD</a>
     </div>
@@ -150,13 +173,17 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="./js/bootguard.js?v=323"></script>
-  <script src="js/prefs.js?v=323"></script>
-  <script src="js/support.js?v=323"></script>
-  <script src="js/lang.js?v=323"></script>
-  <script src="js/config.js?v=323"></script>
-  <script src="js/auth.js?v=323"></script>
-  <script src="js/bar.js?v=323" defer></script>
-  <script src="js/gate.js?v=323" defer></script>
+  <script src="./js/bootguard.js?v=335"></script>
+  <script src="js/prefs.js?v=335"></script>
+  <script src="js/support.js?v=335"></script>
+  <script src="js/lang.js?v=335"></script>
+  <script src="js/config.js?v=335"></script>
+  <script src="js/auth.js?v=335"></script>
+  <script src="js/bar.js?v=335" defer></script>
+  <script src="js/soft-motion.js?v=335" defer></script>
+  <script src="js/gate.js?v=335" defer></script>
+  <script src="js/stt.js?v=335"></script>
+  <script src="js/film.js?v=335" defer></script>
+  <script src="js/film2.js?v=335" defer></script>
 </body>
 </html>

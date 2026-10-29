@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>Audiobooks: Full Chapters &amp; Public Domain Classics | TheSmallBook</title>
   <meta name="description" content="Public domain audiobooks read by real human narrators from LibriVox. Full chapters, speed control, sleep timer. English, Hindi, and world classics.">
@@ -31,12 +33,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=323">
-  <link rel="stylesheet" href="css/deepdive.css?v=323">
+  <link rel="stylesheet" href="css/style.css?v=335">
+  <link rel="stylesheet" href="css/deepdive.css?v=335">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="prefetch" href="index.html">
   <link rel="prefetch" href="stories.html">
   <link rel="prefetch" href="login.html">
+  <link rel="stylesheet" href="css/film.css?v=335">
+  <link rel="stylesheet" href="css/film2.css?v=335">
+  <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
+  <link rel="canonical" href="https://thesmallbook.in/podcasts.html">
+  <meta name="twitter:card" content="summary_large_image">
 </head>
 <body class="ddpage">
   <nav class="nav">
@@ -59,10 +66,10 @@
   <main class="dd-main">
     <header class="pc-hero">
       <p class="pc-kick">
-        <svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>THE AUDIO ROOM
+        <svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>LISTEN
       </p>
-      <h1 class="dd-h1">The Audio Room. Classics &amp; Top Shows.</h1>
-      <p class="dd-hook">Full-length human-narrated classics, top long-form podcasts, and original deep dives. Stream with chapters, sleep timer, and speed controls.</p>
+      <h1 class="dd-h1">Press play, <i>keep living.</i></h1>
+      <p class="dd-hook">Audiobooks, top shows and our own deep dives. Chapters, 0.75 to 2x speed and a sleep timer, so you can listen while you live.</p>
     </header>
 
     <!-- LIVE SEARCH & CATEGORY CHIPS -->
@@ -73,7 +80,7 @@
       <input id="abSearchIn" type="search" autocomplete="off" enterkeyhint="search"
              placeholder="Search audiobooks by title, author, or topic (e.g. Meditations, Siddhartha, Gita)…"
              aria-label="Search audiobooks">
-      <button class="pc-search__go" id="abSearchClear" type="button" style="display:none;background:var(--paper);color:var(--ink);border-left:2.5px solid var(--ink)">✕ CLEAR</button>
+      <button class="pc-search__go" id="abSearchClear" type="button" style="display:none;background:var(--paper);color:var(--ink);border-left:var(--bw) solid var(--edge)">✕ CLEAR</button>
     </div>
 
     <!-- LIVE SEARCH RESULTS -->
@@ -92,8 +99,8 @@
     <!-- ❤️ PERSONALIZED AUDIO SHELF -->
     <section class="pc-myshelf" id="shelf-mine" style="margin-bottom: 30px;">
       <h2 class="pc-h2" style="font-size: 1.15rem; display: flex; align-items: center; justify-content: space-between;">
-        <span><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>YOUR AUDIO SHELF</span>
-        <span id="myShelfCount" style="font-family: var(--font-body); font-size: .8rem; font-weight: 700; color: var(--sub);">0 SAVED</span>
+        <span><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>Your audio shelf</span>
+        <span id="myShelfCount" style="font-family: var(--font-body); font-size: .8rem; font-weight: 700; color: var(--sub);">0 saved</span>
       </h2>
       <div class="pc-myshelf__scroll" id="pcMyShelfList"></div>
     </section>
@@ -101,9 +108,9 @@
     <!-- 🎧 AUDIOBOOKS · COMPLETE CHAPTERS -->
     <section class="pc-ab" id="shelf-books">
       <h2 class="pc-h2">
-        <svg class="inline-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>AUDIOBOOKS, FULL CHAPTERS
+        <svg class="inline-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>Audiobooks, full chapters
       </h2>
-      <p class="pc-sub">Full public-domain classics, read by LibriVox volunteers, streamed into the app's player: chapters, speed, sleep timer and all, English aur Hindi dono mein. The library's oldest friends, for keeps.</p>
+      <p class="pc-sub">Full public-domain classics, read by LibriVox volunteers, streamed into the app's player: chapters, speed, sleep timer and all, in English and Hindi. The library's oldest friends, for keeps.</p>
 
       <div id="pcAudiobooks" class="pc-ab__grid"></div>
       <p class="pc-fine">Read by volunteers for LibriVox, streamed from Archive.org. TheSmallBook curates the finest public shelves. TSB Gold covers our studio deep dives and cheat-sheets.</p>
@@ -112,13 +119,13 @@
     <!-- 🎙️ TOP SHOWS & PODCASTS (DIRECTLY BELOW AUDIOBOOKS) -->
     <section class="pc-shows" id="shelf-shows" style="margin-top: 36px;">
       <h2 class="pc-h2">
-        <svg class="inline-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px;"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>TOP SHOWS &amp; PODCASTS
+        <svg class="inline-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px;"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>Top shows &amp; podcasts
       </h2>
       <p class="pc-sub">World-class long-form podcasts streamed in-app with episode navigation and sleep timer. Browse full archives or play the latest drops.</p>
 
       <!-- v321: THE SEARCH BAR - any topic, any host, five at a time -->
       <div class="pc-search">
-        <span class="pc-search__ico">🔍</span>
+        <span class="pc-search__ico"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span>
         <input id="pcSearchIn" type="search" autocomplete="off" enterkeyhint="search"
                placeholder="Search podcasts: money, fitness, history, interviews, a host you like…"
                aria-label="Search podcasts by topic or host">
@@ -142,7 +149,7 @@
     <!-- 🌊 TSB ORIGINALS · DEEP DIVES -->
     <section class="pc-orig" id="shelf-originals" style="margin-top: 36px;">
       <h2 class="pc-h2">
-        <svg class="inline-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="22"></line></svg>TSB ORIGINALS · READ BY YOUR APP
+        <svg class="inline-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="22"></line></svg>TSB originals · Read by your app
       </h2>
       <p class="pc-sub">Our deep dives, narrated. Tap listen and the app reads the whole essay, in your language where it can.</p>
       <div id="pcOriginals"></div>
@@ -156,14 +163,14 @@
     <div class="credits">&#10022; MADE BY JASH GANDHI &#10022;</div>
     <p class="tiny"><a href="about.html" style="color:inherit;">ABOUT</a>&nbsp;&nbsp;<strong><a href="gold.html" style="color:inherit;">👑 TSB GOLD</a></strong>&nbsp;&nbsp;MUMBAI, INDIA&nbsp;&nbsp;<strong>AUDIOBOOKS ARCHIVE</strong></p>
   </footer>
-  <script src="js/bootguard.js?v=323"></script>
-  <script src="js/prefs.js?v=323"></script>
-  <script src="js/config.js?v=323"></script>
-  <script src="js/data.js?v=323"></script>
-  <script src="js/deepdive-data.js?v=323"></script>
-  <script src="js/podcast-data.js?v=323"></script>
-  <script src="js/ab-discovery.js?v=323"></script>
-  <script src="js/show-discovery.js?v=323"></script>
+  <script src="js/bootguard.js?v=335"></script>
+  <script src="js/prefs.js?v=335"></script>
+  <script src="js/config.js?v=335"></script>
+  <script src="js/data.js?v=335"></script>
+  <script src="js/deepdive-data.js?v=335"></script>
+  <script src="js/podcast-data.js?v=335"></script>
+  <script src="js/ab-discovery.js?v=335"></script>
+  <script src="js/show-discovery.js?v=335"></script>
   <script>
   (function () {
     "use strict";
@@ -225,21 +232,21 @@
       var list = allShows().filter(function (s) { return cat === "all" || s.cat === cat; });
       var mine = showsMine();
       var strip = (cat === "all" && mine.length)
-        ? '<div class="pc-ab__mine"><b>❤️ YOUR SHOWS</b>' + mine.map(function (sid) {
+        ? '<div class="pc-ab__mine"><b>YOUR SHOWS</b>' + mine.map(function (sid) {
             var sh3 = findShow(sid) || { name: sid };
             return '<button class="pc-ab__minechip" data-feed="' + esc(sid) + '">' + esc(sh3.name) + ' ▶</button>';
           }).join("") + '</div>'
         : "";
       var heart = function (sid) {
         var on = mine.indexOf(sid) >= 0;
-        return '<button class="pc-show__save' + (on ? " on" : "") + '" data-showsave="' + esc(sid) + '" aria-label="Save this show to your shelf">' + (on ? "❤️" : "🤍") + '</button>';
+        return '<button class="pc-show__save' + (on ? " on" : "") + '" data-showsave="' + esc(sid) + '" aria-label="Save this show to your shelf">' + (on ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="#E5484D" stroke="#E5484D" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.2 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 5.5 3.7 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>' : '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.2 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 5.5 3.7 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>') + '</button>';
       };
       /* v317: our own recorded show pins itself above every shelf */
       var O = originals();
       var origCard = "";
       if (O && cat === "all") {
         origCard = '<div class="pc-show pc-show--orig">' +
-          '<span class="pc-orig__tag">🎙️ TSB ORIGINAL · RECORDED BY YOUR APP</span>' +
+          '<span class="pc-orig__tag">TSB ORIGINAL</span>' +
           '<img class="pc-orig__art" src="' + esc(O.art) + '" alt="" onerror="this.style.display=\'none\'">' +
           '<div class="pc-show__tx"><b>' + esc(O.name) + '</b><i>by ' + esc(O.host || "TheSmallBook Studio") + '</i>' +
           '<p>' + esc(O.why || "") + '</p>' +
@@ -254,19 +261,20 @@
           ? '<button class="pc-browse" data-browse="' + esc(s.id) + '">☰ BROWSE EPISODES</button>'
           : '';
         var home = "";   /* v322: no exits - the show belongs to the app */
-        return '<div class="pc-show">' +
+        /* v331: the show's own artwork leads the card */
+        return '<div class="pc-show pcx">' +
           heart(s.id) +
-          '<span class="pc-show__mic">🎙️</span>' +
-          '<span class="pc-show__mid"><span class="pc-show__tag">' + esc(s.tag) + '</span>' +
-          '<b>' + esc(s.name) + '</b><i>with ' + esc(s.host) + '</i>' +
-          '<p>' + esc(s.why) + '</p>' +
-          '<span class="pc-show__start"><b>Start here:</b> ' + esc(s.start) + '</span>' +
-          '<span class="pc-show__acts">' + play + browse + home + '</span></span>' +
+          '<div class="pcx-top">' + (s.art ? '<img class="pcx-art" src="' + esc(s.art) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' : '<span class="pcx-art pcx-art--wait" data-art-for="' + esc(s.id) + '"></span>') +
+          '<span class="pcx-hd"><span class="pcx-tag">' + esc(String(s.tag || "").replace(/\s*·\s*/g, " \u00b7 ")) + '</span>' +
+          '<b>' + esc(s.name) + '</b><i>with ' + esc(s.host) + '</i></span></div>' +
+          '<p class="pcx-why">' + esc(s.why) + '</p>' +
+          (s.start ? '<span class="pcx-start"><b>Start with</b> ' + esc(s.start) + '</span>' : "") +
+          '<span class="pc-show__acts">' + play + browse + home + '</span>' +
           '</div>';
       }).join("") +
       (shown < list.length
         ? '<button class="pc-more" id="pcMoreShows">+' + Math.min(3, list.length - shown) + ' MORE SHOWS (' + (list.length - shown) + ' left)</button>'
-        : (cat === "all" ? '<button class="pc-more" id="pcFindShows">✨ FIND 3 MORE SHOWS</button>' : ""));
+        : (cat === "all" ? '<button class="pc-more" id="pcFindShows">Find 3 more shows</button>' : ""));
       var more = w.querySelector("#pcMoreShows");
       if (more) more.addEventListener("click", function () { shown += 3; paint(); });
       var finder = w.querySelector("#pcFindShows");
@@ -348,9 +356,10 @@
     paint();
   })();
   </script>
-  <script src="js/bar.js?v=323" defer></script>
-  <script src="js/gate.js?v=323" defer></script>
-  <script src="js/guide.js?v=323"></script>
+  <script src="js/bar.js?v=335" defer></script>
+  <script src="js/soft-motion.js?v=335" defer></script>
+  <script src="js/gate.js?v=335" defer></script>
+  <script src="js/guide.js?v=335"></script>
   <script>
     /* v321: the show search - type a topic, get five real shows, MORE gives
        five more on the same topic. Every card plays, browses and saves
@@ -373,7 +382,7 @@
         var html = shows.map(function (s) {
           var on = mine.indexOf(s.id) >= 0;
           return '<div class="pc-show pc-show--found">' +
-            '<button class="pc-show__save' + (on ? " on" : "") + '" data-ssave="' + esc2(s.id) + '" aria-label="Save this show to your shelf">' + (on ? "❤️" : "🤍") + '</button>' +
+            '<button class="pc-show__save' + (on ? " on" : "") + '" data-ssave="' + esc2(s.id) + '" aria-label="Save this show to your shelf">' + (on ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="#E5484D" stroke="#E5484D" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.2 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 5.5 3.7 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>' : '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.2 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 5.5 3.7 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>') + '</button>' +
             '<img class="pc-search__art" src="' + esc2(s.art) + '" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'">' +
             '<div class="pc-show__tx"><span class="pc-show__tag">' + esc2(s.tag) + '</span>' +
             '<b>' + esc2(s.name) + '</b><i>with ' + esc2(s.host) + '</i>' +
@@ -384,7 +393,7 @@
         }).join("") +
         (moreCount
           ? '<button class="pc-more" id="pcSearchMore">+ 5 MORE ON "' + esc2(term).toUpperCase() + '" (' + moreCount + ' in line)</button>'
-          : '<p class="pc-search__empty">That is the whole shelf for "' + esc2(term) + '" - search another topic, or FIND 3 MORE SHOWS below surprises you instead.</p>');
+          : '<p class="pc-search__empty">That is everything on the shelf for "' + esc2(term) + '". Try another topic, or tap Find 3 more shows.</p>');
         var old = out.querySelector("#pcSearchMore");
         out.insertAdjacentHTML("beforeend", html);
         bind();
@@ -418,8 +427,8 @@
             /* the heart also drops the show onto the shelf for good */
             if (show && window.TSB_SHOWMORE && !adopted[sid]) { TSB_SHOWMORE.adopt(show); TSB_SHOWMORE.learn(show, 1); adopted[sid] = 1; }
             if (window.TSB && TSB.bookmarks) TSB.bookmarks.toggle("show:" + sid);
-            b.textContent = b.textContent.trim() === "🤍" ? "❤️" : "🤍";
             b.classList.toggle("on");
+            b.innerHTML = b.classList.contains("on") ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="#E5484D" stroke="#E5484D" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.2 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 5.5 3.7 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>' : '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.2 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 5.5 3.7 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>';
             if (window.paintMyShelf) window.paintMyShelf();
           });
         });
@@ -489,7 +498,7 @@
       paintRecent();
     })();
   </script>
-  <script src="js/audioplayer.js?v=323"></script>
+  <script src="js/audioplayer.js?v=335"></script>
   <script>
     /* v319: while you browse, the first three chosen shows quietly load their
        episode lists - tapping PLAY starts the sound, not a wait */
@@ -522,12 +531,12 @@
         var words = String(rec.title || "Audiobook").split(" ").slice(0, 3).join(" ");
         fallback = '<span class="pc-ab__dev"><b>' + esc(words) + '</b><i>FRESH FROM LIBRIVOX</i></span>';
       }
-      var coverSrc = (b && b.cover) ? b.cover : ("assets/covers/" + esc(bid) + ".jpg?v=323");
+      var coverSrc = window.TSB_ABART ? TSB_ABART(bid, rec, b) : ((b && b.cover) ? b.cover : ("assets/covers/" + bid + ".jpg"));
       var cover = '<img class="pc-ab__cover" data-fb="' + esc(fallback) + '" src="' + esc(coverSrc) + '" alt="" loading="lazy">';
       var isSaved = saved().indexOf(bid) >= 0;
       return '<div class="pc-ab__card' + (hi ? " pc-ab__card--hi" : "") + '">' +
         cover +
-        '<button class="pc-ab__save' + (isSaved ? " on" : "") + '" data-save="' + esc(bid) + '" aria-label="Save to your shelf">' + (isSaved ? "❤️" : "🤍") + '</button>' +
+        '<button class="pc-ab__save' + (isSaved ? " on" : "") + '" data-save="' + esc(bid) + '" aria-label="Save to your shelf">' + (isSaved ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="#E5484D" stroke="#E5484D" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.2 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 5.5 3.7 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>' : '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.2 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 5.5 3.7 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>') + '</button>' +
         '<b>' + esc(b.title || rec.title) + '</b>' +
         (rec.discovered && rec.desc && !hi ? '<span class="pc-ab__why">' + esc(rec.desc.slice(0, 150)) + '</span>' : "") +
         '<i>' + esc(rec.author || b.author || "anonymous") + '</i>' +
@@ -616,7 +625,7 @@
       if (total === 0) {
         shelfEl.innerHTML = '<div class="pc-myshelf__empty">' +
           '<p style="margin:0 0 4px;font-weight:700;color:var(--ink);">Your audio shelf is empty.</p>' +
-          '<p style="margin:0;font-size:11.5px;color:var(--sub,#666);">Tap ❤️ on any audiobook or podcast below to pin it here for instant listening.</p>' +
+          '<p style="margin:0;font-size:11.5px;color:var(--sub,#666);">Tap the heart on any audiobook or show below to keep it here.</p>' +
           '</div>';
         return;
       }
@@ -640,7 +649,7 @@
         var sh = allShows.filter(function (x) { return x.id === sid; })[0];
         if (!sh && orig && orig.id === sid) sh = orig;
         if (sh) {
-          var showArt = sh.art || ("assets/podcasts/" + sh.id + ".svg");
+          var showArt = sh.art || ("assets/podcasts/art/" + sh.id + ".jpg");
           try {
             if (sh.rss) {
               var fkey = sh.rss.replace(/[^a-zA-Z0-9]/g, "").slice(-32);
@@ -662,7 +671,7 @@
 
       shelfEl.innerHTML = items.map(function (item) {
         return '<div class="pc-myshelf__card">' +
-          '<button class="pc-myshelf__save" data-unsave="' + item.type + ':' + esc(item.id) + '" aria-label="Remove from shelf">❤️</button>' +
+          '<button class="pc-myshelf__save" data-unsave="' + item.type + ':' + esc(item.id) + '" aria-label="Remove from shelf"><svg viewBox="0 0 24 24" width="18" height="18" fill="#E5484D" stroke="#E5484D" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8.2 3.4 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.6 0 5.5 3.7 4.3 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg></button>' +
           '<div class="pc-myshelf__imgwrap">' +
             '<img class="pc-myshelf__cover" src="' + esc(item.cover) + '" alt="" loading="lazy" onerror="this.style.display=\'none\';var f=this.nextElementSibling;if(f)f.style.display=\'flex\';">' +
             '<div class="pc-myshelf__fallback" style="display:none;">' +
@@ -734,24 +743,24 @@
       });
 
       if (abHits.length === 0) {
-        out.innerHTML = '<div class="pc-search__empty" style="padding:14px;background:var(--paper);border:2px solid var(--ink);border-radius:14px;">' +
+        out.innerHTML = '<div class="pc-search__empty" style="padding:14px;background:var(--paper);border:var(--bw) solid var(--edge);border-radius:20px;">' +
           'No audiobooks matched “' + esc(q) + '”. Tap the button below to fetch recordings from LibriVox.' +
           '</div>';
         return;
       }
 
-      var html = '<div style="background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;padding:14px;box-shadow:4px 4px 0 var(--ink);">' +
+      var html = '<div style="background:var(--paper);border:var(--bw) solid var(--edge);border-radius:22px;padding:14px;box-shadow:var(--sh-2);">' +
         '<div style="font:800 11px var(--font-head);letter-spacing:1px;color:var(--ink);margin-bottom:10px;">AUDIOBOOKS MATCHING “' + esc(q).toUpperCase() + '” (' + abHits.length + ')</div>' +
         '<div class="pc-livegrid">';
 
       abHits.slice(0, 6).forEach(function (bid) {
         var rec = AB[bid] || {};
         var b = B.filter(function (x) { return x.id === bid; })[0] || {};
-        html += '<div style="background:var(--bg);border:2px solid var(--ink);border-radius:12px;padding:10px;display:flex;flex-direction:column;">' +
+        html += '<div style="background:var(--bg);border:var(--bw) solid var(--edge);border-radius:17px;padding:10px;display:flex;flex-direction:column;">' +
           '<span style="font:800 8.5px var(--font-head);letter-spacing:.8px;color:var(--muted,#777);margin-bottom:3px;">AUDIOBOOK</span>' +
           '<b style="font:800 12px var(--font-body);color:var(--ink);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(b.title || rec.title || bid) + '</b>' +
           '<i style="font:600 10.5px var(--font-body);color:var(--sub,#666);margin-bottom:8px;font-style:normal;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(rec.author || b.author || "LibriVox") + '</i>' +
-          '<button data-livesearch-ab="' + esc(bid) + '" style="margin-top:auto;width:100%;border:2px solid var(--ink);background:var(--yellow);border-radius:8px;padding:6px 0;font:800 10px var(--font-head);color:var(--ink);cursor:pointer;">▶ PLAY</button>' +
+          '<button data-livesearch-ab="' + esc(bid) + '" style="margin-top:auto;width:100%;border:var(--bw) solid var(--edge);background:var(--yellow);border-radius:12px;padding:6px 0;font:800 10px var(--font-head);color:var(--ink);cursor:pointer;">▶ PLAY</button>' +
           '</div>';
       });
 
@@ -774,7 +783,7 @@
 
       var mine = saved();
       var strip = (mine.length && !q && abFilter === "all")
-        ? '<div class="pc-ab__mine"><b>❤️ YOUR AUDIO SHELF</b>' + mine.map(function (bid) {
+        ? '<div class="pc-ab__mine"><b>YOUR AUDIO SHELF</b>' + mine.map(function (bid) {
             var rec = AB[bid] || {}; var b = B.filter(function (x) { return x.id === bid; })[0] || {};
             return '<button class="pc-ab__minechip" data-ab="' + esc(bid) + '">' + esc((rec.dev ? rec.dev + " · " : "") + (b.title || rec.title || bid)) + ' ▶</button>';
           }).join("") + '</div>'
@@ -798,7 +807,7 @@
           var l = (rec.lang === "hi" ? "hindi हिंदी" : "english");
           return t.indexOf(q) !== -1 || a.indexOf(q) !== -1 || l.indexOf(q) !== -1;
         });
-        var fetchMoreBtn = '<button class="pc-ab__more" id="abFetchMoreLive" style="margin-top:16px;background:var(--yellow);color:var(--ink);border:2.5px solid var(--ink);font-weight:800">✨ FETCH MORE “' + esc(q).toUpperCase() + '” FROM LIBRIVOX</button>';
+        var fetchMoreBtn = '<button class="pc-ab__more" id="abFetchMoreLive" style="margin-top:16px;background:var(--yellow);color:var(--ink);border:var(--bw) solid var(--edge);font-weight:800">✨ FETCH MORE “' + esc(q).toUpperCase() + '” FROM LIBRIVOX</button>';
         if (!mb.length) {
           w.innerHTML = '<p class="pc-search__empty" style="margin:20px 0 12px">No local audiobooks found for “' + esc(q) + '”.</p>' + fetchMoreBtn;
           bindFetchLive(q);
@@ -872,11 +881,6 @@
         try {
           if (window.TSB_GOLD && window.TSB_GOLD.isGold && window.TSB_GOLD.isGold()) u = { id: "gold_reader" };
         } catch (eG) {}
-      }
-      if (!u) {
-        try {
-          if (localStorage.getItem("tsb_gold_test_pass") || localStorage.getItem("tsb_founder_preview")) u = { id: "founder" };
-        } catch (eF) {}
       }
       if (u) return true;
 
@@ -997,5 +1001,33 @@
     paintMyShelf();
   })();
   </script>
+  <script>
+    /* v333: a show that arrives without artwork (found, searched or newly
+       added) fetches its own official cover once, then keeps it. */
+    (function () {
+      function all() { return ((window.TSB_PODCASTS && TSB_PODCASTS.shows) || []).concat(window.TSB_SHOWS_EXTRA || []); }
+      function hydrate(root) {
+        if (!window.TSB_AUDIO || !TSB_AUDIO.artFor) return;
+        (root || document).querySelectorAll("[data-art-for]").forEach(function (el) {
+          if (el._art) return; el._art = 1;
+          var id = el.getAttribute("data-art-for");
+          var show = all().filter(function (x) { return x.id === id; })[0];
+          if (!show) return;
+          TSB_AUDIO.artFor(show, function (u) {
+            if (!u) { el.classList.remove("pcx-art--wait"); return; }
+            var img = new Image(); img.className = "pcx-art"; img.alt = ""; img.decoding = "async";
+            img.onload = function () { if (el.parentNode) el.parentNode.replaceChild(img, el); };
+            img.onerror = function () { el.classList.remove("pcx-art--wait"); };
+            img.src = u;
+          });
+        });
+      }
+      new MutationObserver(function () { hydrate(); }).observe(document.body, { childList: true, subtree: true });
+      window.addEventListener("load", function () { hydrate(); });
+    })();
+  </script>
+  <script src="js/stt.js?v=335"></script>
+  <script src="js/film.js?v=335" defer></script>
+  <script src="js/film2.js?v=335" defer></script>
 </body>
 </html>

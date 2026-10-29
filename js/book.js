@@ -14,14 +14,14 @@
      A direct hit on book.html?id=x gets a full title, description and a
      canonical pointing at the static summary page, so Google sees one clean
      URL per book and never a templated "Book, TheSmallBook". */
-  document.title = `${book.title} Summary \u2014 Key Lessons, Notes & Action Steps (Free) | TheSmallBook`;
+  document.title = `${book.title} Summary: Key Lessons, Notes and Action Steps | TheSmallBook`;
   try {
     const setM = (sel, attr, val) => {
       let el = document.head.querySelector(sel);
       if (!el) { el = document.createElement("meta"); const [a, k] = sel.replace(/[\[\]"]/g, "").split("="); el.setAttribute(a, k); document.head.appendChild(el); }
       el.setAttribute(attr, val);
     };
-    const desc = `${book.title} by ${book.author || "the original author"}: free summary, no paywall \u2014 ${book.lessons.length} key lessons with real examples, quotes and an action plan. Read online free.`;
+    const desc = `${book.title} by ${book.author || "the original author"}: free summary, no paywall. ${book.lessons.length} key lessons with real examples, quotes and an action plan. Read online free.`;
     const url = `https://thesmallbook.in/books/${book.id}.html`;
     setM('meta[name="description"]', "content", desc);
     setM('meta[property="og:title"]', "content", document.title);
@@ -40,7 +40,7 @@
 
   document.getElementById("cat").textContent = book.category;
   document.getElementById("title").textContent = book.title;
-  document.getElementById("author").textContent = `by ${book.author} · ${book.year}`;
+  document.getElementById("author").textContent = (/^unknown$/i.test(book.author || "") ? "A TheSmallBook Original" : `by ${book.author}`) + ` · ${book.year}`;
   /* ✦ TheSmallBook Original - the in-house shelf */
   try {
     var origs = (window.TSB_CONFIG && TSB_CONFIG.ORIGINALS) || [];
@@ -294,7 +294,7 @@
       modal.className = "tsb-auth-gate-blur";
       modal.innerHTML = '<div class="tsb-auth-gate-card" style="max-width:440px; text-align:left; padding:24px 22px;">' +
         '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">' +
-          '<span style="font-family:var(--font-head); font-size:11px; letter-spacing:1px; background:var(--yellow); color:var(--ink); padding:4px 10px; border-radius:999px; border:2px solid var(--ink); font-weight:900;">' +
+          '<span style="font-family:var(--font-head); font-size:11px; letter-spacing:1px; background:var(--yellow); color:var(--ink); padding:4px 10px; border-radius:999px; border:var(--bw) solid var(--edge); font-weight:900;">' +
             '🎧 ' + catInfo.name.toUpperCase() + ' AUDIOBOOKS' +
           '</span>' +
           '<button id="tsbCatAudioClose" type="button" style="background:transparent; border:none; font-size:18px; font-weight:800; cursor:pointer; color:var(--ink); padding:2px 6px;">✕</button>' +
@@ -307,12 +307,12 @@
         '</p>' +
         '<div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">' +
           catInfo.list.map(function (item) {
-            return '<div style="display:flex; align-items:center; justify-content:space-between; background:var(--paper,#fff); border:2.5px solid var(--ink); border-radius:12px; padding:10px 12px; box-shadow:3px 3px 0 var(--ink);">' +
+            return '<div style="display:flex; align-items:center; justify-content:space-between; background:var(--paper,#fff); border:var(--bw) solid var(--edge); border-radius:17px; padding:10px 12px; box-shadow:var(--sh-2);">' +
               '<div style="flex:1; min-width:0; padding-right:10px;">' +
                 '<b style="font-family:var(--font-head); font-size:0.85rem; display:block; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + item.title + '</b>' +
                 '<span style="font-size:0.75rem; color:var(--sub,#666);">' + item.author + ' · ' + item.chapters + ' chapters</span>' +
               '</div>' +
-              '<button data-catplay="' + item.id + '" type="button" style="background:var(--yellow); color:var(--ink); border:2px solid var(--ink); border-radius:8px; font-family:var(--font-head); font-size:0.75rem; padding:8px 12px; cursor:pointer; font-weight:900; white-space:nowrap; box-shadow:2px 2px 0 var(--ink);">' +
+              '<button data-catplay="' + item.id + '" type="button" style="background:var(--yellow); color:var(--ink); border:var(--bw) solid var(--edge); border-radius:12px; font-family:var(--font-head); font-size:0.75rem; padding:8px 12px; cursor:pointer; font-weight:900; white-space:nowrap; box-shadow:var(--sh-1);">' +
                 '▶ PLAY' +
               '</button>' +
             '</div>';
@@ -416,7 +416,7 @@
     { bg: "#4d7cff", fg: "#ffffff" },
     { bg: "#ff8a3d", fg: "#111111" },
     { bg: "#b28dff", fg: "#111111" },
-    { bg: "#ff4d4d", fg: "#ffffff" },
+    { bg: "#D23A3A", fg: "#ffffff" },
     { bg: "#3ec9e6", fg: "#111111" },
     { bg: "#111111", fg: "#ffc800" },
     { bg: "#fffdf5", fg: "#111111" },
@@ -425,7 +425,7 @@
     { bg: "#ff90e8", bg2: "#b28dff", fg: "#111111" },   // candy floss
     { bg: "#00c48c", bg2: "#3ec9e6", fg: "#111111" },   // mint ocean
     { bg: "#4d7cff", bg2: "#b28dff", fg: "#ffffff" },   // twilight
-    { bg: "#ff4d4d", bg2: "#ff8a3d", fg: "#ffffff" },   // lava
+    { bg: "#D23A3A", bg2: "#ff8a3d", fg: "#ffffff" },   // lava
     { bg: "#ff90e8", bg2: "#ffc800", fg: "#111111" },   // bubblegum sun
     { bg: "#3ec9e6", bg2: "#4d7cff", fg: "#ffffff" },   // deep sea
     { bg: "#111111", bg2: "#4a3800", fg: "#ffc800" },   // midnight gold
@@ -1101,7 +1101,7 @@
   const isGatedOriginal = origOrder >= 5;
   let isGoldReader = false;
   try {
-    isGoldReader = Boolean((window.TSB_GOLD && TSB_GOLD.isGold && TSB_GOLD.isGold()) || (window.TSB_PAYWALL && TSB_PAYWALL.isFounder && TSB_PAYWALL.isFounder()));
+    isGoldReader = Boolean(window.TSB_GOLD && TSB_GOLD.isGold && TSB_GOLD.isGold());
   } catch (e) {}
 
   book.lessons.forEach((l, i) => {
@@ -1115,11 +1115,11 @@
         <p>${l.summary.slice(0, 160)}...</p>
         <div class="callout callout--example" style="filter:blur(3.5px);user-select:none;opacity:0.45;pointer-events:none;"><strong class="tag">📖 Example from the book</strong><br>${l.example}</div>
         <div class="callout callout--action" style="filter:blur(3.5px);user-select:none;opacity:0.45;pointer-events:none;"><strong class="tag">⚡ Do this</strong><br>${l.action}</div>
-        <div class="orig-gold-gate" style="background:#fefbf4;border:2px solid var(--ink);border-radius:12px;padding:18px 16px;text-align:center;box-shadow:3px 3px 0 var(--ink);margin:16px 0 8px;">
+        <div class="orig-gold-gate" style="background:#fefbf4;border:var(--bw) solid var(--edge);border-radius:17px;padding:18px 16px;text-align:center;box-shadow:var(--sh-2);margin:16px 0 8px;">
           <div style="font-family:var(--font-head);font-size:11px;font-weight:900;letter-spacing:1.5px;color:#8a6d00;margin-bottom:4px;">✦ EXCLUSIVE TO GOLD MEMBERS ✦</div>
           <div style="font-weight:800;font-size:15px;color:var(--ink);margin-bottom:6px;">Unlock All 35+ In-House Originals</div>
           <p style="font-size:12.5px;color:#555;line-height:1.45;max-width:440px;margin:0 auto 14px;">The first 5 in-house originals are completely free for everyone. Unlock all lessons across our full library of 35+ proprietary masterclasses for ₹99/month.</p>
-          <a href="gold.html" class="btn btn--yellow" style="font-family:var(--font-head);font-weight:900;font-size:12px;letter-spacing:1px;padding:9px 20px;border:2px solid var(--ink);border-radius:9px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:2.5px 2.5px 0 var(--ink);">👑 UPGRADE TO GOLD (₹99/MO) →</a>
+          <a href="gold.html" class="btn btn--yellow" style="font-family:var(--font-head);font-weight:900;font-size:12px;letter-spacing:1px;padding:9px 20px;border:var(--bw) solid var(--edge);border-radius:13px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:var(--sh-2);">👑 UPGRADE TO GOLD (₹99/MO) →</a>
         </div>
       </div>
     ` : `
@@ -1154,7 +1154,7 @@
           <div class="lesson__title">${l.title}</div>
           <div class="lesson__chapter">${l.chapter}</div>
         </div>
-        ${isLockedLesson ? '<span style="font-family:var(--font-head);font-size:10px;font-weight:900;letter-spacing:1px;background:#fef3c7;color:#92400e;border:1px solid #d97706;padding:2px 7px;border-radius:6px;margin-right:8px;">👑 GOLD</span>' : ''}
+        ${isLockedLesson ? '<span style="font-family:var(--font-head);font-size:10px;font-weight:900;letter-spacing:1px;background:#fef3c7;color:#92400e;border:1px solid #d97706;padding:2px 7px;border-radius:9px;margin-right:8px;">👑 GOLD</span>' : ''}
         <div class="lesson__toggle">+</div>
       </div>
       ${bodyContent}`;

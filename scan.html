@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
 <script>
     /* theme + phone status bar BEFORE first paint (no flash).
        Rule 1: viewport-fit=cover in the viewport meta makes env(safe-area-inset-*) real.
@@ -17,7 +19,7 @@
   </script>
   <meta property="og:title" content="Scan, TheSmallBook">
   <meta property="og:description" content="Point at a book, get the lessons, TheSmallBook's scanner.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=323">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=335">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/scan.html">
@@ -25,586 +27,320 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
 <meta name="robots" content="noindex">
-<title>Scanner, TheSmallBook</title>
-<meta name="description" content="Point your camera at any book cover. TheSmallBook reads the cover and opens the summary instantly.">
+<title>Scan a book, TheSmallBook</title>
+<meta name="description" content="Point your camera at a book cover or its barcode. TheSmallBook finds the book and opens its lessons.">
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/film.css?v=335">
+<link rel="stylesheet" href="css/film2.css?v=335">
 <style>
-/* ================= THESMALLBOOK, COVER SCANNER =================
-   OCR-first: reads the actual title text off the cover, then matches
-   against the library. Fingerprint is a strict fallback only.
-   ================================================================ */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-[hidden] { display: none !important; }
-html, body { height: 100%; }
-body {
-  background: #050607;
-  font-family: 'Space Grotesk', system-ui, sans-serif;
-  color: #f2f2f0;
-  overflow: hidden;
-  -webkit-user-select: none; user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* ---------- camera stage ---------- */
-.stage { position: fixed; inset: 0; background: #000; }
-.stage video, .stage canvas {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-}
-.stage canvas { display: none; }
-.vin {
-  position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.5) 100%);
-}
-
-/* ---------- top bar ---------- */
-.top {
-  position: absolute; top: 0; left: 0; right: 0; z-index: 6;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: calc(14px + env(safe-area-inset-top)) 18px 30px;
-  background: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,0));
-  pointer-events: none;
-}
-.top > * { pointer-events: auto; }
-.wordmark {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: .68rem; letter-spacing: 3px; color: #fff;
-  text-transform: uppercase; opacity: .92;
-}
-.wordmark span { color: #c9a227; }
-.iconbtn {
-  width: 42px; height: 42px; border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.18);
-  background: rgba(255,255,255,.06);
-  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
-  color: #fff; display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: background .15s, transform .1s;
-}
-.iconbtn:hover { background: rgba(255,255,255,.14); }
-.iconbtn:active { transform: scale(.92); }
-
-/* ---------- scan frame ---------- */
-.frame {
-  position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%);
-  width: min(300px, 74vw); aspect-ratio: 2/3;
-  pointer-events: none;
-}
-.frame .box {
-  position: absolute; inset: 0;
-  border: 1.5px solid rgba(255,255,255,.16);
-  border-radius: 18px;
-}
-.frame .tick {
-  position: absolute; width: 26px; height: 26px; border: 2px solid #c9a227;
-}
-.frame .tick.tl { top: -2px; left: -2px; border-right: none; border-bottom: none; border-radius: 18px 0 0 0; }
-.frame .tick.tr { top: -2px; right: -2px; border-left: none; border-bottom: none; border-radius: 0 18px 0 0; }
-.frame .tick.bl { bottom: -2px; left: -2px; border-right: none; border-top: none; border-radius: 0 0 0 18px; }
-.frame .tick.br { bottom: -2px; right: -2px; border-left: none; border-top: none; border-radius: 0 0 18px 0; }
-.frame .line {
-  position: absolute; left: 8px; right: 8px; top: 20%; height: 1.5px;
-  background: linear-gradient(90deg, transparent, rgba(201,162,39,.85), transparent);
-  animation: sweep 3.2s ease-in-out infinite;
-  opacity: .8;
-}
-@keyframes sweep { 0% { top: 18%; opacity: 0; } 12% { opacity: .85; } 50% { top: 80%; } 88% { opacity: .85; } 100% { top: 82%; opacity: 0; } }
-
-/* ---------- status ---------- */
-.status {
-  position: absolute; left: 0; right: 0; top: calc(46% + 34vh + 18px);
-  text-align: center; padding: 0 24px; z-index: 5;
-  transition: opacity .2s;
-}
-.status .st-main {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: .78rem; letter-spacing: 2.5px; color: #fff;
-}
-.status .st-sub {
-  font-size: .72rem; font-weight: 500; color: rgba(255,255,255,.55);
-  margin-top: 6px; letter-spacing: .3px;
-}
-.status .st-dot {
-  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
-  background: #2ecc71; margin-right: 8px; vertical-align: 1px;
-  box-shadow: 0 0 8px rgba(46,204,113,.7);
-  animation: pulse 1.6s ease-in-out infinite;
-}
-@keyframes pulse { 50% { opacity: .35; } }
-
-/* ---------- bottom bar ---------- */
-.bar {
-  position: absolute; left: 0; right: 0; bottom: 0; z-index: 6;
-  padding: 18px 20px calc(22px + env(safe-area-inset-bottom));
-  background: linear-gradient(0deg, rgba(0,0,0,.6), rgba(0,0,0,0));
-}
-.bar .dock {
-  max-width: 520px; margin: 0 auto;
-  display: flex; align-items: center; gap: 12px;
-  background: rgba(14,16,18,.62);
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 24px;
-  padding: 10px;
-  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
-  box-shadow: 0 12px 40px rgba(0,0,0,.5);
-}
-.flipbtn {
-  width: 54px; height: 54px; flex: none; border-radius: 16px;
-  border: 1px solid rgba(255,255,255,.16);
-  background: rgba(255,255,255,.05);
-  color: #fff; display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: background .15s, transform .1s;
-}
-.flipbtn:hover { background: rgba(255,255,255,.12); }
-.flipbtn:active { transform: scale(.93); }
-.flipbtn svg { width: 22px; height: 22px; }
-.findbtn {
-  flex: 1 1 auto; height: 54px; border-radius: 16px; border: none;
-  background: linear-gradient(135deg, #e3b93c, #c9a227 60%, #b08d1c);
-  color: #131313; font-family: 'Archivo Black', sans-serif;
-  font-size: .76rem; letter-spacing: 1.8px; text-transform: uppercase;
-  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 9px;
-  transition: filter .15s, transform .1s;
-}
-.findbtn:hover { filter: brightness(1.07); }
-.findbtn:active { transform: translateY(1px); }
-.findbtn:disabled { opacity: .5; filter: grayscale(.4); cursor: default; }
-.findbtn svg { width: 17px; height: 17px; }
-
-/* ---------- analyzing ---------- */
-.ana {
-  position: absolute; inset: 0; z-index: 7;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
-  background: rgba(5,6,7,.88);
-  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-  animation: fadein .2s ease-out;
-}
-.ring {
-  width: 44px; height: 44px; border-radius: 50%;
-  border: 2.5px solid rgba(201,162,39,.18); border-top-color: #c9a227;
-  animation: rot .9s linear infinite;
-}
-@keyframes rot { to { transform: rotate(360deg); } }
-.ana .a-txt {
-  font-family: 'Archivo Black', sans-serif; font-size: .72rem;
-  letter-spacing: 2.5px; color: rgba(255,255,255,.85);
-}
-.ana .a-sub { font-size: .7rem; color: rgba(255,255,255,.45); margin-top: -12px; letter-spacing: .3px; }
-
-/* ---------- result ---------- */
-.res {
-  position: absolute; inset: 0; z-index: 8;
-  display: flex; align-items: center; justify-content: center; padding: 28px;
-  background: rgba(5,6,7,.92);
-  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-  animation: fadein .25s ease-out;
-}
-.res .card {
-  width: min(420px, 92vw);
-  background: rgba(18,20,23,.92);
-  border: 1px solid rgba(255,255,255,.1);
-  border-radius: 26px;
-  padding: 34px 28px 26px;
-  text-align: center;
-  box-shadow: 0 24px 80px rgba(0,0,0,.6);
-  animation: rise .35s cubic-bezier(.2,.7,.3,1);
-}
-@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
-@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
-.res .tag {
-  display: inline-flex; align-items: center; gap: 7px;
-  font-family: 'Archivo Black', sans-serif; font-size: .6rem;
-  letter-spacing: 2.5px; text-transform: uppercase;
-  padding: 7px 16px; border-radius: 999px;
-}
-.res.found .tag { background: rgba(46,204,113,.14); color: #2ecc71; border: 1px solid rgba(46,204,113,.3); }
-.res.nof .tag { background: rgba(255,107,107,.12); color: #ff6b6b; border: 1px solid rgba(255,107,107,.3); }
-.res .bt {
-  font-family: 'Archivo Black', sans-serif; font-size: 1.3rem; line-height: 1.3;
-  letter-spacing: .3px; margin-top: 16px; color: #fff;
-  text-transform: uppercase;
-}
-.res .bauth { font-size: .78rem; color: rgba(255,255,255,.5); margin-top: 7px; letter-spacing: .4px; }
-.res .bdesc { font-size: .8rem; color: rgba(255,255,255,.62); margin-top: 14px; line-height: 1.6; }
-.actions { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
-.btn-primary {
-  height: 52px; border-radius: 15px; border: none;
-  background: linear-gradient(135deg, #e3b93c, #c9a227 60%, #b08d1c);
-  color: #131313; font-family: 'Archivo Black', sans-serif;
-  font-size: .74rem; letter-spacing: 1.6px; text-transform: uppercase;
-  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-  transition: filter .15s, transform .1s; text-decoration: none;
-}
-.btn-primary:hover { filter: brightness(1.07); }
-.btn-primary:active { transform: translateY(1px); }
-.btn-ghost {
-  height: 46px; border-radius: 15px;
-  border: 1px solid rgba(255,255,255,.16);
-  background: transparent; color: rgba(255,255,255,.75);
-  font-family: 'Archivo Black', sans-serif; font-size: .64rem;
-  letter-spacing: 1.6px; text-transform: uppercase;
-  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-  transition: background .15s;
-}
-.btn-ghost:hover { background: rgba(255,255,255,.06); }
-.btn-white {
-  height: 52px; border-radius: 15px; border: none; background: #f2f2f0;
-  color: #131313; font-family: 'Archivo Black', sans-serif;
-  font-size: .74rem; letter-spacing: 1.6px; text-transform: uppercase;
-  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-  transition: filter .15s; text-decoration: none;
-}
-.btn-white:hover { filter: brightness(.94); }
-.reqlink {
-  font-size: .74rem; font-weight: 600; color: rgba(255,255,255,.55);
-  text-decoration: underline; text-underline-offset: 3px; letter-spacing: .3px;
-  padding: 6px; cursor: pointer;
-}
-.reqlink:hover { color: #fff; }
-.type {
-  width: 100%; height: 50px; margin-top: 18px;
-  border-radius: 14px; border: 1px solid rgba(255,255,255,.16);
-  background: rgba(255,255,255,.05); color: #fff;
-  font-family: inherit; font-weight: 600; font-size: .92rem;
-  padding: 0 16px; outline: none;
-}
-.type::placeholder { color: rgba(255,255,255,.35); }
-.type:focus { border-color: rgba(201,162,39,.6); }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
-.chiphead {
-  width: 100%; text-align: center;
-  font-size: .62rem; font-weight: 700; letter-spacing: 1.5px;
-  color: rgba(255,255,255,.4); text-transform: uppercase; margin-bottom: 2px;
-}
-.chipbtn {
-  border: 1px solid rgba(255,255,255,.16); border-radius: 999px;
-  background: rgba(255,255,255,.06); color: #fff; padding: 9px 16px;
-  font-family: 'Archivo Black', sans-serif; font-size: .6rem;
-  letter-spacing: .8px; text-transform: uppercase; cursor: pointer;
-  transition: background .12s, border-color .12s;
-}
-.chipbtn:hover { background: rgba(201,162,39,.16); border-color: rgba(201,162,39,.5); }
-.sugg { display: flex; flex-direction: column; gap: 7px; margin-top: 12px; max-height: 30vh; overflow: auto; }
-.shit {
-  display: flex; flex-direction: column; gap: 1px; text-align: left;
-  border: 1px solid rgba(255,255,255,.12); border-radius: 12px;
-  background: rgba(255,255,255,.05); color: #fff; padding: 11px 14px; cursor: pointer;
-  transition: background .12s;
-}
-.shit:hover { background: rgba(201,162,39,.14); }
-.shit b { font-family: 'Archivo Black', sans-serif; font-size: .66rem; text-transform: uppercase; letter-spacing: .8px; }
-.shit small { font-size: .62rem; color: rgba(255,255,255,.45); }
-.snone { font-size: .72rem; color: rgba(255,255,255,.45); font-weight: 600; margin-top: 12px; text-align: center; }
-
-/* ---------- camera error ---------- */
-.err {
-  position: absolute; inset: 0; z-index: 9;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
-  background: radial-gradient(ellipse at 50% 30%, #14161a, #050607 75%);
-  padding: 30px; text-align: center;
-}
-.err .e-ico { width: 56px; height: 56px; border-radius: 18px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12); display: flex; align-items: center; justify-content: center; }
-.err b { font-family: 'Archivo Black', sans-serif; font-size: .86rem; letter-spacing: 2px; color: #fff; }
-.err p { font-size: .8rem; color: rgba(255,255,255,.55); line-height: 1.6; max-width: 340px; }
-.err .actions { width: min(340px, 88vw); }
+  :root { --yel: #FFC800; --ink: #16130F; --paper: #FBF8F1; --mu: #6E6658; --line: #ECE5D6; --ease: cubic-bezier(.16,1,.3,1); }
+  html, body, html.film body, html.dark body { margin: 0; height: 100%; background: #0E0C09 !important; color: #F4EFE6; font-family: "Space Grotesk", system-ui, sans-serif; overflow: hidden; -webkit-tap-highlight-color: transparent; }
+  #tsbBar, .tsb-bar { display: none !important; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .sc-stage { position: fixed; inset: 0; }
+  .sc-stage video, .sc-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .sc-frame { position: fixed; left: 50%; top: 45%; width: min(64vw, 300px); aspect-ratio: 2 / 3; transform: translate(-50%, -50%); border-radius: 22px; box-shadow: 0 0 0 200vmax rgba(14, 12, 9, .52); transition: transform .5s var(--ease), box-shadow .3s; pointer-events: none; }
+  .sc-frame i { position: absolute; width: 34px; height: 34px; border: 4px solid var(--yel); }
+  .sc-frame i:nth-child(1) { left: -2px; top: -2px; border-right: 0; border-bottom: 0; border-radius: 22px 0 0 0; }
+  .sc-frame i:nth-child(2) { right: -2px; top: -2px; border-left: 0; border-bottom: 0; border-radius: 0 22px 0 0; }
+  .sc-frame i:nth-child(3) { left: -2px; bottom: -2px; border-right: 0; border-top: 0; border-radius: 0 0 0 22px; }
+  .sc-frame i:nth-child(4) { right: -2px; bottom: -2px; border-left: 0; border-top: 0; border-radius: 0 0 22px 0; }
+  .sc-frame b { position: absolute; left: 8%; right: 8%; top: 10%; height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent, var(--yel), transparent); opacity: 0; }
+  body.is-live .sc-frame b { opacity: .9; animation: scLine 2.4s var(--ease) infinite alternate; }
+  body.is-busy .sc-frame { transform: translate(-50%, -50%) scale(.96); }
+  body.is-busy .sc-frame b { animation-duration: .9s; }
+  @keyframes scLine { from { transform: translateY(0); } to { transform: translateY(calc(min(64vw, 300px) * 1.5 * .8)); } }
+  .sc-top { position: fixed; left: 0; right: 0; top: 0; padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px 0; display: flex; align-items: center; gap: 12px; z-index: 5; }
+  .sc-top h1 { flex: 1; margin: 0; text-align: center; font: 600 17px "Space Grotesk", sans-serif; color: #F4EFE6 !important; text-shadow: 0 1px 8px rgba(0,0,0,.5); }
+  .sc-ib { width: 44px; height: 44px; flex: none; border-radius: 50%; border: 0; display: grid; place-items: center; background: rgba(22, 19, 15, .55); color: #F4EFE6; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); cursor: pointer; padding: 0; }
+  .sc-ib[aria-pressed="true"] { background: var(--yel); color: var(--ink); }
+  .sc-ib[hidden] { display: grid; visibility: hidden; }
+  .sc-hint { color: #F4EFE6; position: fixed; left: 50%; top: calc(45% + min(64vw, 300px) * .75 + 18px); transform: translateX(-50%); z-index: 4; padding: 10px 16px; border-radius: 999px; background: rgba(22, 19, 15, .62); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); font: 500 14px "Space Grotesk", sans-serif; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+  .sc-hint s { width: 8px; height: 8px; border-radius: 50%; background: #5BD18B; display: none; }
+  body.is-live .sc-hint s { display: inline-block; }
+  .sc-dock { position: fixed; left: 0; right: 0; bottom: 0; padding: 0 28px calc(env(safe-area-inset-bottom, 0px) + 26px); display: flex; align-items: center; justify-content: space-between; z-index: 5; }
+  .sc-shut { width: 76px; height: 76px; border-radius: 50%; border: 4px solid #F4EFE6; background: transparent; padding: 5px; cursor: pointer; }
+  .sc-shut span { display: block; width: 100%; height: 100%; border-radius: 50%; background: var(--yel); transition: transform .2s var(--ease); }
+  .sc-shut:active span { transform: scale(.88); }
+  body.is-busy .sc-shut { opacity: .5; pointer-events: none; }
+  .sc-ib--lg { width: 52px; height: 52px; }
+  /* sheets */
+  .sc-sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; max-height: 86vh; overflow-y: auto; box-sizing: border-box; background: var(--paper); color: var(--ink); border-radius: 28px 28px 0 0; padding: 10px 20px calc(env(safe-area-inset-bottom, 0px) + 22px); transform: translateY(105%); transition: transform .42s var(--ease); box-shadow: 0 -16px 40px rgba(0,0,0,.35); }
+  .sc-sheet.on { transform: none; }
+  html.dark .sc-sheet { background: #1B1814; color: #F4EFE6; }
+  .sc-grab { width: 40px; height: 4px; border-radius: 4px; background: var(--line); margin: 0 auto 14px; }
+  html.dark .sc-grab { background: #3A332B; }
+  .sc-hit { display: flex; gap: 16px; align-items: center; }
+  .sc-hit img { width: 84px; height: 126px; object-fit: cover; border-radius: 6px; box-shadow: 0 10px 24px -8px rgba(22,19,15,.45); flex: none; background: var(--line); }
+  .sc-k { font: 600 13px "Space Grotesk", sans-serif; color: #8A5A00; margin: 0 0 4px; }
+  html.dark .sc-k { color: #E9C46A; }
+  .sc-t { font: 600 26px/1.12 Newsreader, Georgia, serif; margin: 0; }
+  .sc-a { margin: 6px 0 0; color: var(--mu); font-size: 15px; }
+  html.dark .sc-a, html.dark .sc-p { color: #ABA293; }
+  .sc-p { margin: 4px 0 12px; color: var(--mu); font-size: 15px; line-height: 1.45; }
+  .sc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 18px; }
+  .sc-btn { min-height: 52px; border-radius: 16px; border: 1px solid var(--line); background: transparent; color: inherit; font: 700 16px "Space Grotesk", sans-serif; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; cursor: pointer; box-sizing: border-box; width: 100%; }
+  html.dark .sc-btn { border-color: #3A332B; }
+  .sc-btn--y { background: var(--yel); border-color: var(--yel); color: var(--ink); }
+  .sc-link { display: block; margin: 14px auto 0; background: none; border: 0; color: inherit; font: 600 15px "Space Grotesk", sans-serif; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 8px; }
+  .sc-in { width: 100%; box-sizing: border-box; height: 52px; border-radius: 16px; border: 1px solid var(--line); background: #fff; color: var(--ink); padding: 0 16px; font: 500 16px "Space Grotesk", sans-serif; outline: none; }
+  .sc-in:focus { box-shadow: 0 0 0 3px rgba(255, 200, 0, .5); }
+  html.dark .sc-in { background: #2A251F; border-color: #3A332B; color: #F4EFE6; }
+  .sc-list { margin: 8px 0 0; padding: 0; list-style: none; }
+  .sc-list button { width: 100%; display: flex; align-items: center; gap: 12px; padding: 8px 6px; border: 0; background: none; color: inherit; text-align: left; border-radius: 12px; cursor: pointer; font: inherit; }
+  .sc-list button:hover { background: rgba(110, 102, 88, .1); }
+  .sc-list img { width: 34px; height: 51px; object-fit: cover; border-radius: 4px; flex: none; background: var(--line); }
+  .sc-list b { display: block; font-size: 15px; font-weight: 600; }
+  .sc-list small { color: var(--mu); font-size: 13px; }
+  html.dark .sc-list small { color: #ABA293; }
+  .sc-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .sc-chips button { min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: inherit; font: 600 14px "Space Grotesk", sans-serif; cursor: pointer; }
+  html.dark .sc-chips button { border-color: #3A332B; }
+  .sc-scrim { position: fixed; inset: 0; z-index: 9; background: rgba(14, 12, 9, .35); opacity: 0; pointer-events: none; transition: opacity .3s; }
+  .sc-scrim.on { opacity: 1; pointer-events: auto; }
+  @media (prefers-reduced-motion: reduce) { .sc-frame b { animation: none !important; } .sc-sheet { transition: none; } }
 </style>
+<script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
 </head>
 <body>
+  <div class="sc-stage"><video id="cam" autoplay playsinline muted></video><canvas id="cap" hidden></canvas></div>
+  <div class="sc-frame" aria-hidden="true"><i></i><i></i><i></i><i></i><b></b></div>
+  <header class="sc-top">
+    <button class="sc-ib" id="scBack" type="button" aria-label="Close"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <h1>Scan a book</h1>
+    <button class="sc-ib" id="scTorch" type="button" aria-label="Torch" aria-pressed="false" hidden><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2h8l-1 6H9z"/><path d="M9 8h6v4l-1.5 2v8h-3v-8L9 12z"/></svg></button>
+  </header>
+  <div class="sc-hint" id="scHint" role="status" aria-live="polite"><s></s><span id="scHintT">Starting the camera</span></div>
+  <nav class="sc-dock">
+    <button class="sc-ib sc-ib--lg" id="scFlip" type="button" aria-label="Flip camera"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-3l-2-3H9L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M9 13a3 3 0 0 1 5.2-2M15 13a3 3 0 0 1-5.2 2"/><path d="M14 9.5V11h-1.5M10 16.5V15h1.5"/></svg></button>
+    <button class="sc-shut" id="scShut" type="button" aria-label="Find this book"><span></span></button>
+    <button class="sc-ib sc-ib--lg" id="scType" type="button" aria-label="Type the title"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg></button>
+  </nav>
+  <div class="sc-scrim" id="scScrim"></div>
+  <section class="sc-sheet" id="scFound" aria-label="Book found">
+    <div class="sc-grab"></div>
+    <div class="sc-hit"><img id="fCover" alt=""><div><p class="sc-k">On the shelf</p><h2 class="sc-t" id="fT"></h2><p class="sc-a" id="fA"></p></div></div>
+    <div class="sc-row"><a class="sc-btn sc-btn--y" id="fRead" href="#">Read</a><a class="sc-btn" id="fListen" href="#">Listen</a></div>
+    <button class="sc-link" type="button" data-again>Scan another</button>
+  </section>
+  <section class="sc-sheet" id="scNof" aria-label="Find a book">
+    <div class="sc-grab"></div>
+    <h2 class="sc-t" id="nT">Not on the shelf yet</h2>
+    <p class="sc-p" id="nP">Type the title, or ask us to add it.</p>
+    <input class="sc-in" id="nIn" type="search" enterkeyhint="search" placeholder="Book title" autocomplete="off">
+    <ul class="sc-list" id="nList"></ul>
+    <div class="sc-chips" id="nChips"></div>
+    <div class="sc-row"><button class="sc-btn sc-btn--y" type="button" id="nReq">Ask for this book</button><button class="sc-btn" type="button" id="nAgain" data-again>Scan again</button></div>
+  </section>
   <h1 class="sr-only">Scan a book, TheSmallBook</h1>
-  <div class="stage" id="stage">
-    <video id="cam" autoplay playsinline muted></video>
-    <canvas id="cap" hidden></canvas>
-  </div>
-  <div class="vin"></div>
-
-  <!-- scan frame -->
-  <div class="frame" id="frame">
-    <div class="box"></div>
-    <span class="tick tl"></span><span class="tick tr"></span>
-    <span class="tick bl"></span><span class="tick br"></span>
-    <div class="line"></div>
-  </div>
-
-  <!-- status -->
-  <div class="status" id="status">
-    <div class="st-main"><span class="st-dot" id="liveDot" hidden></span><span id="stMain">POINT AT THE COVER</span></div>
-    <div class="st-sub" id="stSub">The camera reads the title on the book cover</div>
-  </div>
-
-  <!-- top bar -->
-  <div class="top">
-    <div class="wordmark">TheSmallBook <span>Scanner</span></div>
-    <button class="iconbtn" id="backBtn" aria-label="Close scanner">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-    </button>
-  </div>
-
-  <!-- bottom dock -->
-  <div class="bar" id="bar">
-    <div class="dock">
-      <button class="flipbtn" id="flipBtn" aria-label="Flip camera" title="Flip camera">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-      </button>
-      
-      <button class="findbtn" id="findBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
-        Find Book Summary
-      </button>
-    </div>
-  </div>
-
-  <!-- analyzing -->
-  <div class="ana" id="ana" hidden>
-    <div class="ring"></div>
-    <div class="a-txt" id="anaTxt">READING TITLE…</div>
-    <div class="a-sub" id="anaSub">Extracting the cover text</div>
-  </div>
-
-  <!-- FOUND -->
-  <div class="res found" id="found" hidden>
-    <div class="card">
-      <div class="tag">Match Found</div>
-      <div class="bt" id="foundT">Atomic Habits</div>
-      <div class="bauth" id="foundA">James Clear</div>
-      <div class="bdesc" id="foundD">Lessons, examples and a 5-step action plan, free.</div>
-      <div class="actions">
-        <a class="btn-primary" id="openBtn" href="#">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-          View Summary
-        </a>
-        <button class="btn-ghost" id="again1">Scan Again</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- NOT FOUND -->
-  <div class="res nof" id="nof" hidden>
-    <div class="card">
-      <div class="tag">STILL BUILDING</div>
-      <div class="bdesc" style="margin-top:14px;">We could not match that cover confidently. <b id="scanOcrEcho"></b>If it is one of the 500, type it below and it opens - if not, ask for it and it gets built: and new ones are made every week. Ask for it and it gets built:</div>
-      <input class="type" id="typeIn" type="text" placeholder="Type the book title…" autocomplete="off">
-      <div class="chips" id="chips"></div>
-      <div class="sugg" id="sugg"></div>
-      <div class="actions">
-        <a class="btn-white" id="reqBook" href="#" target="_blank" rel="noopener">📣 REQUEST THIS BOOK</a>
-        <a class="reqlink" id="mailBook" href="#" >✉️ Mail the founder</a>
-        <button class="btn-ghost" id="again2">Scan Again</button>
-        <a class="reqlink" id="searchLib" href="#">or browse all 500 first</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- camera error -->
-  <div class="err" id="err" hidden>
-    <div class="e-ico">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-    </div>
-    <b id="errB">Camera Not Available</b>
-    <p id="errP">We couldn't start the camera. Allow camera access in your browser settings, then try again.</p>
-    <div class="actions">
-      <a class="btn-primary" href="index.html">Go to Library</a>
-      <a class="reqlink" id="errReq" href="#" target="_blank" rel="noopener">Request a book →</a>
-    </div>
-  </div>
-
 <script>
 /* ============================================================
-   THESMALLBOOK SCANNER, OCR-first engine
-   1) Read the title text off the cover (Tesseract OCR)
-   2) Match text against all 500 book titles (word scoring)
-   3) Fingerprint only as a strict fallback (never random names)
+   TheSmallBook scanner (v334 rebuild)
+   - barcode first: phones with BarcodeDetector read the ISBN live,
+     Open Library turns it into a title, the shelf is matched;
+   - cover text: tap the shutter (or hold steady) and Tesseract
+     reads the title, three passes, matched against
+     all 520 book titles (word scoring), never a random guess;
+   - fingerprint chips load only when nothing matched;
+   - not found: type it, or ask for it (Web3Forms request form).
    ============================================================ */
 (function () {
-  var cam = document.getElementById("cam");
-  var cap = document.getElementById("cap");
-  var stMain = document.getElementById("stMain");
-  var stSub = document.getElementById("stSub");
-  var liveDot = document.getElementById("liveDot");
-  var errBox = document.getElementById("err");
-  var errB = document.getElementById("errB");
-  var errP = document.getElementById("errP");
-  var errReq = document.getElementById("errReq");
-  var ana = document.getElementById("ana");
-  var anaTxt = document.getElementById("anaTxt");
-  var anaSub = document.getElementById("anaSub");
-  var found = document.getElementById("found");
-  var foundT = document.getElementById("foundT");
-  var foundA = document.getElementById("foundA");
-  var foundD = document.getElementById("foundD");
-  var openBtn = document.getElementById("openBtn");
-  var nof = document.getElementById("nof");
-  var typeIn = document.getElementById("typeIn");
-  var sugg = document.getElementById("sugg");
-  var searchLib = document.getElementById("searchLib");
-  var reqBook = document.getElementById("reqBook");
-  var bar = document.getElementById("bar");
-  var frameEl = document.getElementById("frame");
+  "use strict";
+  var cam = document.getElementById("cam"), cap = document.getElementById("cap");
+  var hintT = document.getElementById("scHintT"), torchBtn = document.getElementById("scTorch");
+  var stream = null, raf = 0, busy = false, facing = "environment", frameN = 0, lastFrame = null, steady = 0, live = false, detector = null, torchOn = false;
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function hint(t) { hintT.textContent = t; }
+  function coverOf(id) { return "assets/covers/" + id + ".jpg"; }
+  function titles() { return window.TSB_TITLES || []; }
 
-  var stream = null, raf = null, busy = false;
-  var steady = 0, lastFrame = null, noTicks = 0, camLive = false, frameN = 0;
-  var facing = "environment";
-
-  /* ---------------- camera ---------------- */
+  /* ---------- camera ---------- */
   function start() {
     stop();
-    setStatus("ALLOW CAMERA", "Tap Allow in the browser popup");
-    var gum = null;
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) gum = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
-    else if (navigator.webkitGetUserMedia) gum = navigator.webkitGetUserMedia.bind(navigator);
-    if (!gum) { showErr("Camera Not Supported", "This browser has no camera support. Try Chrome or Safari."); return; }
-    function tryGum(cs, i) {
-      return gum(cs[i]).catch(function (err) {
-        if (i + 1 < cs.length) return tryGum(cs, i + 1);
-        throw err;
-      });
-    }
-    tryGum([
-      { video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 720 } } },
-      { video: { facingMode: facing } },
-      { video: true }
-    ], 0)
-      .then(function (s) {
-        stream = s;
-        cam.srcObject = s;
-        cam.style.display = "block";
-        var p = cam.play ? cam.play() : null;
-        if (p && p.catch) p.catch(function () {});
-        errBox.hidden = true;
-        loop();
-      })
-      .catch(function () {
-        showErr("Camera Blocked", "Camera access was blocked. Open browser settings, allow camera for this site, then press Scan Again.");
-      });
+    hint("Allow the camera");
+    var md = navigator.mediaDevices;
+    if (!md || !md.getUserMedia) { noCamera("This browser cannot open the camera."); return; }
+    var tries = [{ video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 1280 } } }, { video: { facingMode: facing } }, { video: true }];
+    (function go(i) {
+      md.getUserMedia(tries[i]).then(function (s) {
+        stream = s; cam.srcObject = s; cam.hidden = false; cap.hidden = true;
+        var p = cam.play && cam.play(); if (p && p.catch) p.catch(function () {});
+        setupTorch(); loop();
+      }).catch(function () { if (i + 1 < tries.length) go(i + 1); else noCamera("The camera is blocked. Allow it in your browser settings, or type the title."); });
+    })(0);
   }
   function stop() {
-    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    cancelAnimationFrame(raf); raf = 0;
     if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; }
-    if (cam) cam.srcObject = null;
-    lastFrame = null; steady = 0; busy = false; noTicks = 0;
+    live = false; document.body.classList.remove("is-live");
+    lastFrame = null; steady = 0;
   }
-  function setStatus(main, sub) {
-    if (stMain) stMain.textContent = main;
-    if (stSub) stSub.textContent = sub || "";
+  function noCamera(msg) {
+    stop(); hint("No camera");
+    openNof(msg, "");
+    $("nAgain").textContent = "Try the camera again";
   }
-  function showErr(b, p) {
-    stop();
-    errB.textContent = b; errP.textContent = p;
-    errReq.href = reqHref("a book I tried to scan");
-    errBox.hidden = false;
-    if (bar) bar.style.display = "none";
-    if (frameEl) frameEl.style.display = "none";
+  function setupTorch() {
+    torchBtn.hidden = true; torchOn = false; torchBtn.setAttribute("aria-pressed", "false");
+    try {
+      var tr = stream && stream.getVideoTracks()[0];
+      var caps = tr && tr.getCapabilities ? tr.getCapabilities() : {};
+      if (caps && caps.torch) torchBtn.hidden = false;
+    } catch (e) {}
   }
-  function reqHref(title) {
-    var t = (title && String(title).trim()) ? String(title).trim() : "a book";
-    var mb = document.getElementById("mailBook");
-    if (mb) mb.href = "mailto:thesmallbook.in@gmail.com?subject=" + encodeURIComponent("Book request for TheSmallBook") +
-      "&body=" + encodeURIComponent("Hi Jash! Please add this book to TheSmallBook: " + (t || "a book I just scanned"));
-    return "https://wa.me/919702510680?text=" + encodeURIComponent("Hi Jash! Please add this book to TheSmallBook: " + (t || "a book I just scanned"));
+  torchBtn.addEventListener("click", function () {
+    try {
+      var tr = stream && stream.getVideoTracks()[0]; if (!tr) return;
+      torchOn = !torchOn;
+      tr.applyConstraints({ advanced: [{ torch: torchOn }] }).catch(function () {});
+      torchBtn.setAttribute("aria-pressed", torchOn ? "true" : "false");
+    } catch (e) {}
+  });
+
+  /* ---------- barcode (ISBN) ---------- */
+  try {
+    if ("BarcodeDetector" in window) {
+      BarcodeDetector.getSupportedFormats().then(function (f) {
+        var want = ["ean_13", "isbn_13", "upc_a", "ean_8"].filter(function (x) { return f.indexOf(x) >= 0; });
+        if (want.length) detector = new BarcodeDetector({ formats: want });
+      }).catch(function () {});
+    }
+  } catch (e) {}
+  var lastIsbn = "";
+  function tryBarcode() {
+    if (!detector || busy || !cam.videoWidth) return;
+    detector.detect(cam).then(function (codes) {
+      if (busy || !codes || !codes.length) return;
+      var raw = String(codes[0].rawValue || "").replace(/\D/g, "");
+      if (!/^97[89]\d{10}$/.test(raw) || raw === lastIsbn) return;
+      lastIsbn = raw; byIsbn(raw);
+    }).catch(function () {});
+  }
+  function byIsbn(isbn) {
+    busy = true; document.body.classList.add("is-busy"); hint("Barcode found, looking it up");
+    try { navigator.vibrate && navigator.vibrate(30); } catch (e) {}
+    var done = false, t = setTimeout(function () { if (!done) { done = true; finishIsbn(null, isbn); } }, 7000);
+    fetch("https://openlibrary.org/isbn/" + isbn + ".json").then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { if (done) return; done = true; clearTimeout(t); finishIsbn(j && j.title ? String(j.title) + (j.subtitle ? " " + j.subtitle : "") : null, isbn); })
+      .catch(function () { if (!done) { done = true; clearTimeout(t); finishIsbn(null, isbn); } });
+  }
+  function finishIsbn(title, isbn) {
+    busy = false; document.body.classList.remove("is-busy");
+    if (!title) { openNof("We read the barcode (" + isbn + ") but could not find its title. Type it below.", ""); return; }
+    var hit = matchTyped(title);
+    if (hit) showFound(hit); else openNof("That is \u201c" + title + "\u201d. Ask us and we will add it.", title);
+  }
+  function norm(s) { return " " + String(s || "").toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9 ]/g, " ").replace(/\b(the|a|an)\b/g, " ").replace(/\s+/g, " ").trim() + " "; }
+  function matchTyped(title) {
+    var n = norm(title), best = null;
+    titles().forEach(function (b) {
+      var bt = norm(b.t);
+      if (!best && (n === bt || n.indexOf(bt) === 0 || bt.indexOf(n) === 0) && bt.trim().length > 3) best = b;
+    });
+    if (best) return best;
+    try { return matchTitleByOcr({ big: title, med: "", full: title }); } catch (e) { return null; }
   }
 
-  /* ---------------- live loop (auto-capture) ---------------- */
-  function downscale(v) {
-    var w = 60, h = 90;
-    var c = document.createElement("canvas"); c.width = w; c.height = h;
-    var cx = c.getContext("2d"); cx.drawImage(v, 0, 0, w, h);
-    return cx.getImageData(0, 0, w, h).data;
-  }
-  function sharpnessOf(d) {
-    var e = 0;
-    for (var y = 0; y < 90; y++) for (var x = 1; x < 60; x++) {
-      var i = (y * 60 + x) * 4, j = (y * 60 + x - 1) * 4;
-      e += Math.abs(d[i] - d[j]) + Math.abs(d[i + 1] - d[j + 1]) + Math.abs(d[i + 2] - d[j + 2]);
-    }
-    return e;
-  }
-  function diffOf(a, b) {
-    var d = 0;
-    for (var i = 0; i < a.length; i += 4)
-      d += Math.abs(a[i] - b[i]) + Math.abs(a[i + 1] - b[i + 1]) + Math.abs(a[i + 2] - b[i + 2]);
-    return d;
-  }
+  /* ---------- live loop: steady frame = auto capture ---------- */
+  function downscale(v) { var c = document.createElement("canvas"); c.width = 60; c.height = 90; var x = c.getContext("2d"); x.drawImage(v, 0, 0, 60, 90); return x.getImageData(0, 0, 60, 90).data; }
+  function sharpness(d) { var e = 0; for (var y = 0; y < 90; y++) for (var x = 1; x < 60; x++) { var i = (y * 60 + x) * 4; e += Math.abs(d[i] - d[i - 4]); } return e; }
+  function diff(a, b) { var s = 0; for (var i = 0; i < a.length; i += 16) s += Math.abs(a[i] - b[i]); return s; }
   function loop() {
-    if (!cam.videoWidth) {
-      noTicks++;
-      if (noTicks === 15) setStatus("STARTING CAMERA…", "Keep the cover in the frame");
-      else if (noTicks === 130) setStatus("CAMERA NOT STARTING", "Close and try again");
-      raf = requestAnimationFrame(loop);
-      return;
-    }
-    if (!camLive) {
-      camLive = true; noTicks = 0;
-      liveDot.hidden = false;
-      setStatus("SCANNING…", "Point at the cover and hold steady");
-    }
-    if (++frameN % 3 !== 0) { raf = requestAnimationFrame(loop); return; }
-    if (!busy) {
-      var data = downscale(cam);
-      var sharp = sharpnessOf(data);
-      var stable = lastFrame ? diffOf(data, lastFrame) < 1400 : false;
-      lastFrame = data;
-      if (sharp > 15000 && stable) {
-        steady++;
-        if (steady >= 2) { steady = 0; capture(); }
-      } else { steady = Math.max(0, steady - 1); }
-    }
     raf = requestAnimationFrame(loop);
+    if (!cam.videoWidth) return;
+    if (!live) { live = true; document.body.classList.add("is-live"); hint(detector ? "Point at the cover or the barcode" : "Point at the cover"); }
+    frameN++;
+    if (frameN % 6 === 0) tryBarcode();
+    if (busy || frameN % 4 !== 0) return;
+    var d = downscale(cam), sharp = sharpness(d), stable = lastFrame ? diff(d, lastFrame) < 1400 : false;
+    lastFrame = d;
+    if (sharp > 15000 && stable) { if (++steady >= 6) { steady = 0; capture(); } } else steady = Math.max(0, steady - 1);
   }
 
-  /* ---------------- capture: OCR-FIRST ---------------- */
+  /* ---------- capture: read the cover text ---------- */
   function capture() {
-    if (busy) return;
-    if (!cam.videoWidth) { setStatus("CAMERA STILL STARTING", "Wait a second, then tap Find again"); return; }
-    busy = true;
-    document.getElementById("findBtn").disabled = true;
-    bar.style.display = "none";
+    if (busy || !cam.videoWidth) { if (!cam.videoWidth) hint("The camera is still starting"); return; }
+    busy = true; document.body.classList.add("is-busy");
     cap.width = cam.videoWidth; cap.height = cam.videoHeight;
     cap.getContext("2d").drawImage(cam, 0, 0);
-    cam.style.display = "none"; cap.hidden = false; cap.style.display = "block";
-    frameEl.style.display = "none";
-    ana.hidden = false;
-    anaTxt.textContent = "READING TITLE…";
-    anaSub.textContent = "Extracting the cover text";
-
-    setTimeout(function () {
-      var lib = window.TSB_SCAN || [];
-      if (!lib.length) { setTimeout(finish, 1200); return; }
-      finish();
-    }, 150); /* near-zero delay, OCR is pre-warmed, so results come fast */
-
-    /* v317: three reads, one verdict. Stylised covers defeat a single OCR
-       pass; the merged words of three differently-processed reads catch
-       what any one pass mangles. The scanner still never guesses. */
-    var ocrPass = 0; /* 0 = standard, 1 = sharpen, 2 = tight title-band crop */
-    var accBig = "", accMed = "", accFull = "";
-    function finish() {
-      anaTxt.textContent = ocrPass === 0 ? "READING TITLE…" : (ocrPass === 1 ? "READING AGAIN…" : "ONE LAST READ…");
+    cam.hidden = true; cap.hidden = false;
+    var pass = 0, accBig = "", accMed = "", accFull = "";
+    (function read() {
+      hint(pass === 0 ? "Reading the cover" : (pass === 1 ? "Reading it again" : "One last look"));
       ocrRead(function (text) {
-        if (text) {
-          accBig = (accBig + " " + (text.big || "")).trim();
-          accMed = (accMed + " " + (text.med || "")).trim();
-          accFull = (accFull + " " + (text.full || "")).trim();
-        }
-        try { window.__tsbScanOcr = (accBig || accFull || "").trim().slice(0, 90); } catch (e) { window.__tsbScanOcr = ""; }
-        var ocrHit = null;
-        try { ocrHit = matchTitleByOcr({ big: accBig, med: accMed, full: accFull }); } catch (e) {}
-        if (ocrHit) { done(ocrHit); return; }
-        if (ocrPass < 2) {
-          ocrPass++;
-          finish();
-          return;
-        }
-        done(null);
-      }, ocrPass);
-    }
-    function done(entry) {
-      busy = false;
-      if (ana) ana.hidden = true;
-      if (entry) showFound(entry); else showNotFound();
-    }
+        if (text) { accBig = (accBig + " " + (text.big || "")).trim(); accMed = (accMed + " " + (text.med || "")).trim(); accFull = (accFull + " " + (text.full || "")).trim(); }
+        var guess = (accBig || accFull || "").trim().slice(0, 70);
+        var hit = null; try { hit = matchTitleByOcr({ big: accBig, med: accMed, full: accFull }); } catch (e) {}
+        if (hit) { finish(); showFound(hit); return; }
+        if (pass < 2) { pass++; read(); return; }
+        finish();
+        openNof(guess.length >= 3 ? "We read \u201c" + guess + "\u201d. Is it one of these?" : "We could not read that cover. Try the barcode, or type the title.", guess.length >= 3 ? guess : "");
+        chipsFromFingerprint();
+      }, pass);
+    })();
+    function finish() { busy = false; document.body.classList.remove("is-busy"); }
   }
 
-  /* ---------------- OCR engine ---------------- */
+  /* ---------- sheets ---------- */
+  var scrim = $("scScrim");
+  function sheet(id) {
+    ["scFound", "scNof"].forEach(function (s) { $(s).classList.toggle("on", s === id); });
+    scrim.classList.toggle("on", !!id);
+    if (id) stop();
+  }
+  function showFound(b) {
+    $("fCover").src = coverOf(b.id); $("fT").textContent = b.t || b.title || ""; $("fA").textContent = b.a || "";
+    $("fRead").href = "book.html?id=" + encodeURIComponent(b.id);
+    $("fListen").href = "book.html?id=" + encodeURIComponent(b.id) + "&play=1";
+    try { localStorage.setItem("tsb_flag_scanned", "1"); navigator.vibrate && navigator.vibrate([20, 40, 20]); } catch (e) {}
+    sheet("scFound");
+  }
+  function openNof(msg, guess) {
+    $("nT").textContent = guess ? "Not on the shelf yet" : "Find a book";
+    $("nP").textContent = msg || "Type the title, or ask us to add it.";
+    $("nIn").value = guess || ""; $("nChips").innerHTML = "";
+    $("nAgain").textContent = "Scan again";
+    suggest();
+    sheet("scNof");
+  }
+  function suggest() {
+    var q = norm($("nIn").value).trim(), list = $("nList");
+    if (q.length < 2) { list.innerHTML = ""; return; }
+    var words = q.split(" ");
+    var hits = titles().filter(function (b) { var s = norm(b.t + " " + b.a); return words.every(function (w) { return s.indexOf(w) >= 0; }); }).slice(0, 5);
+    list.innerHTML = hits.map(function (b) { return '<li><button type="button" data-id="' + esc(b.id) + '"><img src="' + esc(coverOf(b.id)) + '" alt="" loading="lazy"><span><b>' + esc(b.t) + "</b><small>" + esc(b.a) + "</small></span></button></li>"; }).join("");
+  }
+  /* closest-looking covers, loaded only now (1 MB, never on open) */
+  function chipsFromFingerprint() {
+    function paint() { var c = []; try { c = fingerprintCandidates() || []; } catch (e) {} if (c.length) $("nChips").innerHTML = c.map(function (x) { return '<button type="button" data-id="' + esc(x.id) + '">' + esc(x.t) + "</button>"; }).join(""); }
+    if (window.TSB_SCAN) { paint(); return; }
+    var s = document.createElement("script"); s.src = "js/scanner-data.js?v=335"; s.onload = paint; document.body.appendChild(s);
+  }
+  function byId(id) { return titles().filter(function (b) { return b.id === id; })[0]; }
+  document.addEventListener("click", function (e) {
+    var p = e.target.closest("[data-id]"); if (p) { var b = byId(p.getAttribute("data-id")); if (b) showFound(b); return; }
+    if (e.target.closest("[data-again]")) { again(); return; }
+  });
+  function again() { sheet(null); lastIsbn = ""; cap.hidden = true; cam.hidden = false; start(); }
+  scrim.addEventListener("click", again);
+  $("nIn").addEventListener("input", suggest);
+  $("nIn").addEventListener("keydown", function (e) { if (e.key === "Enter") { var h = matchTyped($("nIn").value); if (h) showFound(h); } });
+  $("nReq").addEventListener("click", function () {
+    var t = $("nIn").value.trim();
+    if (window.TSB_REQUEST && TSB_REQUEST.open) TSB_REQUEST.open(t);
+    else location.href = "index.html#request";
+  });
+  $("scShut").addEventListener("click", capture);
+  $("scType").addEventListener("click", function () { openNof("", ""); setTimeout(function () { $("nIn").focus(); }, 380); });
+  $("scFlip").addEventListener("click", function () { facing = facing === "environment" ? "user" : "environment"; start(); });
+  $("scBack").addEventListener("click", function () { stop(); if (history.length > 1) history.back(); else location.href = "index.html#library"; });
+  document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); else if (!$("scFound").classList.contains("on") && !$("scNof").classList.contains("on")) start(); });
+
+  /* ---------- engine (kept from v317: OCR + strict matching) ---------- */
   var tesseractPromise = null;
   function loadTesseract() {
     if (window.Tesseract) return Promise.resolve(window.Tesseract);
@@ -927,75 +663,6 @@ body {
     }
     return diff / 384;
   }
-  function runMatch() {
-    var lib = window.TSB_SCAN || [];
-    if (!lib.length) return null;
-    var profs = [profileFromCanvas(), profileFromCrop(0.9), profileFromCrop(0.8)];
-    var full = profs[0];
-    if (full.v < 4 || full.eb < 10) return null;
-    /* per-book best score */
-    var seen = {}, bookBest = {};
-    for (var i = 0; i < lib.length; i++) {
-      var id = lib[i].id;
-      if (!seen[id]) { seen[id] = 1; bookBest[id] = 1e9; }
-    }
-    for (var e = 0; e < lib.length; e++) {
-      var entry = lib[e], sc = 1e9;
-      for (var p = 0; p < profs.length; p++) {
-        var cScore = 0;
-        for (var k = 0; k < 9; k++) cScore += colorDist(profs[p].g[k], entry.g[k]);
-        cScore /= 9;
-        var eScore = edgeDist(profs[p].e, entry.e) * 100;
-        var s = cScore * 0.55 + eScore * 0.45;
-        if (s < sc) sc = s;
-      }
-      if (sc < bookBest[entry.id]) bookBest[entry.id] = sc;
-    }
-    var ranked = Object.keys(bookBest).map(function (id) { return [id, bookBest[id]]; }).sort(function (a, b) { return a[1] - b[1]; });
-    var bestId = ranked[0][0], bestScore = ranked[0][1];
-    var secondScore = ranked.length > 1 ? ranked[1][1] : 1e9;
-    /* STRICT: only very confident fingerprint matches survive */
-    if (bestScore < 38 && (secondScore - bestScore) >= 9) {
-      var bk = (window.TSB_TITLES || []).find(function (b) { return b.id === bestId; });
-      return { id: bestId, t: bk ? bk.t : bestId, a: bk ? bk.a : "" };
-    }
-    return null;
-  }
-
-  /* ---------------- results ---------------- */
-  function showFound(entry) {
-    foundT.textContent = entry.t;
-    foundA.textContent = entry.a || "";
-    foundD.textContent = (entry.a ? "by " + entry.a + " · " : "") + "Free summary, lessons, examples and action steps.";
-    openBtn.href = "book.html?id=" + encodeURIComponent(entry.id);
-    found.hidden = false;
-    try { localStorage.setItem("tsb_flag_scanned", "1"); } catch (e) {}
-  }
-  function showNotFound() {
-    sugg.innerHTML = "";
-    var guess = String(window.__tsbScanOcr || "").trim();
-    if (guess && guess.length >= 3 && guess.length <= 70 && !typeIn.value) typeIn.value = guess;
-    var echo = document.getElementById("scanOcrEcho");
-    if (echo) echo.textContent = guess ? ("We read: \u201c" + guess + "\u201d. ") : "";
-    reqBook.href = reqHref(typeIn.value || guess);
-    /* best-guess chips: fingerprint candidates as TAPPABLE options,
-       clearly labeled, never auto-opened, so no wrong auto-match */
-    var chips = [];
-    try { chips = fingerprintCandidates() || []; } catch (e) {}
-    var chipBox = document.getElementById("chips");
-    if (chipBox) {
-      if (chips.length) {
-        chipBox.innerHTML = '<div class="chiphead">Closest visual match?</div>' +
-          chips.map(function (c) {
-            return '<button class="chipbtn" data-id="' + c.id + '"><b>' + c.t + '</b></button>';
-          }).join("");
-      } else {
-        chipBox.innerHTML = "";
-      }
-    }
-    nof.hidden = false;
-    setTimeout(function () { typeIn.focus(); }, 150);
-  }
   function fingerprintCandidates() {
     var lib = window.TSB_SCAN || [];
     if (!lib.length) return [];
@@ -1027,82 +694,16 @@ body {
       return { id: r.id, t: bk ? bk.t : r.id };
     });
   }
-  function backToCam() {
-    found.hidden = true; nof.hidden = true; ana.hidden = true;
-    cap.hidden = true; cap.style.display = "none";
-    cam.style.display = "block";
-    frameEl.style.display = "";
-    bar.style.display = "";
-    document.getElementById("findBtn").disabled = false;
-    lastFrame = null; steady = 0; busy = false;
-  }
-
-  /* ---------------- buttons ---------------- */
-  document.getElementById("backBtn").addEventListener("click", function () {
-    if (history.length > 1) history.back(); else location.href = "index.html";
-  });
-  document.getElementById("findBtn").addEventListener("click", capture);
-
-  document.getElementById("flipBtn").addEventListener("click", function () {
-    if (busy) return;
-    facing = (facing === "environment") ? "user" : "environment";
-    setStatus("FLIPPING…", "Hold on a second");
-    start();
-  });
-  document.getElementById("again1").addEventListener("click", backToCam);
-  document.getElementById("again2").addEventListener("click", backToCam);
-
-  typeIn.addEventListener("input", function () {
-    var q = typeIn.value.trim().toLowerCase();
-    if (!q) { sugg.innerHTML = ""; reqBook.href = reqHref(""); return; }
-    /* search the UNIQUE title list (TSB_SCAN has 12 variants per book.
-       querying it shows the same book 5 times). TSB_TITLES is 1 per book. */
-    var lib = window.TSB_TITLES || [];
-    var hits = [];
-    var seen = {};
-    for (var i = 0; i < lib.length && hits.length < 5; i++) {
-      var b = lib[i];
-      var hay = ((b.t || "") + " " + (b.a || "")).toLowerCase();
-      if (hay.indexOf(q) !== -1 && !seen[b.id]) { seen[b.id] = 1; hits.push(b); }
-    }
-    sugg.innerHTML = hits.length
-      ? hits.map(function (b) {
-          return '<button class="shit" data-id="' + b.id + '"><b>' + (b.t || "") + '</b><small>' + (b.a || "") + '</small></button>';
-        }).join("")
-      : '<div class="snone">Not in the library, request it below</div>';
-    reqBook.href = reqHref(typeIn.value);
-  });
-  sugg.addEventListener("click", function (e) {
-    var btn = e.target.closest("[data-id]");
-    if (btn) location.href = "book.html?id=" + encodeURIComponent(btn.getAttribute("data-id"));
-  });
-  var chipBox = document.getElementById("chips");
-  if (chipBox) {
-    chipBox.addEventListener("click", function (e) {
-      var btn = e.target.closest("[data-id]");
-      if (btn) location.href = "book.html?id=" + encodeURIComponent(btn.getAttribute("data-id"));
-    });
-  }
-  searchLib.addEventListener("click", function (ev) {
-    ev.preventDefault();
-    location.href = "index.html?q=" + encodeURIComponent(typeIn.value.trim());
-  });
-
-  /* ---------------- cleanup ---------------- */
-  window.addEventListener("pagehide", stop);
-  document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); });
-
-  /* ⚡ pre-warm OCR in the background so the FIRST scan is fast (Google-fast) */
-  setTimeout(function () {
-    try { loadTesseract().catch(function () {}); } catch (e) {}
-  }, 500);
 
   start();
+  setTimeout(function () { try { loadTesseract().catch(function () {}); } catch (e) {} }, 1200);
 })();
 </script>
-  <script src="./js/bootguard.js?v=323"></script>
-<script src="js/osint.js?v=323"></script>
-<script src="js/scan-titles.js?v=323"></script>
-<script src="js/scanner-data.js?v=323"></script>
+<script src="./js/bootguard.js?v=335"></script>
+<script src="js/scan-titles.js?v=335"></script>
+<script src="js/request.js?v=335" defer></script>
+<script src="js/stt.js?v=335"></script>
+<script src="js/film.js?v=335" defer></script>
+<script src="js/film2.js?v=335" defer></script>
 </body>
 </html>

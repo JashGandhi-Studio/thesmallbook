@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1">>
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta property="og:title" content="The Case File · No. 001 · TheSmallBook">
@@ -11,89 +13,89 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=323">
+  <link rel="stylesheet" href="css/style.css?v=335">
   <style>
     .cf-wrap { max-width: 900px; margin: 0 auto; padding: 20px 18px calc(80px + env(safe-area-inset-bottom)); }
     .cf-top { display: flex; align-items: center; gap: 10px; margin: 2px 2px 18px; }
-    .cf-back { display: inline-flex; align-items: center; gap: 7px; background: var(--paper); border: 3px solid var(--ink); border-radius: 11px; box-shadow: 3px 3px 0 var(--ink); padding: 9px 13px; font: 800 11px var(--font-head); letter-spacing: 1px; text-decoration: none; color: var(--ink); transition: transform .12s ease, box-shadow .12s ease; }
-    .cf-back:active { transform: translate(1.5px,1.5px); box-shadow: 1.5px 1.5px 0 var(--ink); }
-    .cf-stamp { margin-left: auto; font: 800 10px var(--font-head); letter-spacing: 1.5px; color: var(--red-ink, #c22b2b); border: 2.5px solid var(--red-ink, #c22b2b); border-radius: 8px; padding: 5px 8px; transform: rotate(-2deg); background: var(--paper); }
+    .cf-back { display: inline-flex; align-items: center; gap: 7px; background: var(--paper); border: var(--bw) solid var(--edge); border-radius: 16px; box-shadow: var(--sh-2); padding: 9px 13px; font: 800 11px var(--font-head); letter-spacing: 1px; text-decoration: none; color: var(--ink); transition: transform .12s ease, box-shadow .12s ease; }
+    .cf-back:active { transform: translate(1.5px,1.5px); box-shadow: var(--sh-1); }
+    .cf-stamp { margin-left: auto; font: 800 10px var(--font-head); letter-spacing: 1.5px; color: var(--red-ink, #c22b2b); border: 2.5px solid var(--red-ink, #c22b2b); border-radius: 12px; padding: 5px 8px; transform: rotate(-2deg); background: var(--paper); }
 
     /* the folder tab, sitting above the folder like the real thing */
-    .cf-foldertab { display: inline-block; background: #e9dcb8; border: 3px solid var(--ink); border-bottom: 0; border-radius: 12px 12px 0 0; padding: 9px 16px 7px; font: 800 11px var(--font-head); letter-spacing: 2px; color: #4a4234; margin: 0 0 -3px 14px; position: relative; z-index: 1; }
+    .cf-foldertab { display: inline-block; background: #e9dcb8; border: var(--bw) solid var(--edge); border-bottom: 0; border-radius: 12px 12px 0 0; padding: 9px 16px 7px; font: 800 11px var(--font-head); letter-spacing: 2px; color: #4a4234; margin: 0 0 -3px 14px; position: relative; z-index: 1; }
 
     /* the folder itself: manila, string-tie, stamped */
-    .cf-hero { background: repeating-linear-gradient(45deg, #e9dcb8, #e9dcb8 12px, #e4d6ae 12px, #e4d6ae 24px); color: #241f14; border: 3px solid var(--ink); border-radius: 18px; box-shadow: 7px 7px 0 var(--ink); padding: 24px 20px 20px; position: relative; overflow: hidden; }
-    .cf-hero::before { content: "CONFIDENTIAL"; position: absolute; top: 16px; right: -36px; transform: rotate(35deg); background: var(--red, #ff4d4d); color: #fff; font: 800 9.5px var(--font-head); letter-spacing: 2px; padding: 5px 42px; box-shadow: 0 2px 0 rgba(0,0,0,.25); }
+    .cf-hero { background: repeating-linear-gradient(45deg, #e9dcb8, #e9dcb8 12px, #e4d6ae 12px, #e4d6ae 24px); color: #241f14; border: var(--bw) solid var(--edge); border-radius: 18px; box-shadow: var(--sh-3); padding: 24px 20px 20px; position: relative; overflow: hidden; }
+    .cf-hero::before { content: "CONFIDENTIAL"; position: absolute; top: 16px; right: -36px; transform: rotate(35deg); background: var(--red, #D23A3A); color: #fff; font: 800 9.5px var(--font-head); letter-spacing: 2px; padding: 5px 42px; box-shadow: var(--sh-1); }
     .cf-hero__string { position: absolute; top: 14px; left: 16px; width: 46px; height: 46px; opacity: .5; }
     .cf-hero__no { font: 800 11px var(--font-head); letter-spacing: 2.5px; color: #7a2c22; }
     .cf-hero h1 { font-family: 'Special Elite', Georgia, serif; font-weight: 400; font-size: clamp(26px, 6.4vw, 40px); margin: 8px 0 10px; line-height: 1.1; }
     .cf-hero p { font: 500 13.5px/1.65 var(--font-body); color: #4c4433; margin: 0 0 14px; max-width: 640px; }
     .cf-hero__meta { display: flex; gap: 8px; flex-wrap: wrap; }
-    .cf-hero__meta span { font: 800 9.5px var(--font-head); letter-spacing: 1.4px; border: 2px solid #a4977a; border-radius: 7px; padding: 5px 8px; color: #5d5340; background: rgba(255,252,240,.5); }
+    .cf-hero__meta span { font: 800 9.5px var(--font-head); letter-spacing: 1.4px; border: 2px solid #a4977a; border-radius: 10px; padding: 5px 8px; color: #5d5340; background: rgba(255,252,240,.5); }
 
     /* the reward panel: this is a case worth solving */
-    .cf-count { margin-top: 12px; display: inline-block; font: 800 12px var(--font-head); letter-spacing: 1.5px; background: #241f14; color: var(--yellow); border: 2px solid var(--yellow); border-radius: 9px; padding: 8px 12px; font-variant-numeric: tabular-nums; }
+    .cf-count { margin-top: 12px; display: inline-block; font: 800 12px var(--font-head); letter-spacing: 1.5px; background: #241f14; color: var(--yellow); border: 2px solid var(--yellow); border-radius: 13px; padding: 8px 12px; font-variant-numeric: tabular-nums; }
     .cf-count--hot { color: #ff6b6b; border-color: #ff6b6b; animation: cfPulse 1s ease-in-out infinite; }
     @keyframes cfPulse { 0%,100% { opacity: 1; } 50% { opacity: .7; } }
     @media (prefers-reduced-motion: reduce) { .cf-count--hot { animation: none; } }
 
-    .cf-reward { display: flex; gap: 13px; align-items: flex-start; background: #14110c; color: #f2ead8; border: 3px solid var(--yellow); border-radius: 14px; box-shadow: 5px 5px 0 rgba(17,17,17,.35); padding: 15px 16px; margin: 16px 2px 0; }
+    .cf-reward { display: flex; gap: 13px; align-items: flex-start; background: #14110c; color: #f2ead8; border: 3px solid var(--yellow); border-radius: 20px; box-shadow: var(--sh-3); padding: 15px 16px; margin: 16px 2px 0; }
     .cf-reward__ico { font-size: 26px; line-height: 1; }
     .cf-reward b { font: 800 12px var(--font-head); letter-spacing: 2px; color: var(--yellow); display: block; margin-bottom: 4px; }
     .cf-reward p { font: 500 12.5px/1.65 var(--font-body); color: #cfc8ba; margin: 0; }
 
-    .cf-note { font: 500 12.5px/1.7 var(--font-body); color: var(--muted); background: var(--surface-2); border-left: 5px solid var(--yellow); border-radius: 8px; padding: 10px 13px; margin: 12px 0; }
+    .cf-note { font: 500 12.5px/1.7 var(--font-body); color: var(--muted); background: var(--surface-2); border-left: 5px solid var(--yellow); border-radius: 12px; padding: 10px 13px; margin: 12px 0; }
     .cf-rulesnote { margin: 14px 2px 0; }
     .cf-rulesnote b { color: var(--ink); }
 
     /* folder tabs: attached to the paper, not floating, not glued to edges */
     .cf-tabs { display: flex; align-items: flex-end; gap: 0; overflow-x: auto; padding: 22px 6px 0; scrollbar-width: none; margin-top: 20px; }
     .cf-tabs::-webkit-scrollbar { display: none; }
-    .cf-tab { flex: none; font: 800 10px var(--font-head); letter-spacing: .8px; background: var(--surface-2); border: 2.5px solid var(--ink); border-bottom: 0; border-radius: 10px 10px 0 0; padding: 9px 11px 11px; cursor: pointer; color: var(--muted); margin-right: 3px; transform: translateY(2.5px); transition: background .12s ease, color .12s ease; }
+    .cf-tab { flex: none; font: 800 10px var(--font-head); letter-spacing: .8px; background: var(--surface-2); border: var(--bw) solid var(--edge); border-bottom: 0; border-radius: 10px 10px 0 0; padding: 9px 11px 11px; cursor: pointer; color: var(--muted); margin-right: 3px; transform: translateY(2.5px); transition: background .12s ease, color .12s ease; }
     .cf-tab:last-child { margin-right: 0; }
     .cf-tab.on { background: var(--paper); color: var(--ink); transform: translateY(0); padding-bottom: 13.5px; font-size: 10.5px; }
 
-    .cf-doc { background: var(--paper); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 6px 6px 0 var(--ink); padding: 22px 18px; position: relative; min-height: 260px; }
-    .cf-doc__t { font-family: 'Special Elite', Georgia, serif; font-size: 19px; margin: 0 0 14px; border-bottom: 3px solid var(--ink); padding-bottom: 10px; }
+    .cf-doc { background: var(--paper); border: var(--bw) solid var(--edge); border-radius: 22px; box-shadow: var(--sh-3); padding: 22px 18px; position: relative; min-height: 260px; }
+    .cf-doc__t { font-family: 'Special Elite', Georgia, serif; font-size: 19px; margin: 0 0 14px; border-bottom: var(--bw) solid var(--edge); padding-bottom: 10px; }
     .cf-doc.turn { animation: cfTurn .16s ease; }
     @keyframes cfTurn { 0% { opacity: .2; transform: translateX(10px); } 100% { opacity: 1; transform: none; } }
     @media (prefers-reduced-motion: reduce) { .cf-doc.turn { animation: none; } }
 
     .cf-pager { display: flex; align-items: center; gap: 10px; margin: 14px 2px 0; }
-    .cf-pager__btn { display: inline-flex; align-items: center; gap: 6px; background: var(--yellow); color: #111; border: 2.5px solid var(--ink); border-radius: 10px; box-shadow: 3px 3px 0 var(--ink); padding: 11px 14px; font: 800 10.5px var(--font-head); letter-spacing: 1px; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease; }
-    .cf-pager__btn:active { transform: translate(1.5px,1.5px); box-shadow: 1px 1px 0 var(--ink); }
+    .cf-pager__btn { display: inline-flex; align-items: center; gap: 6px; background: var(--yellow); color: #111; border: var(--bw) solid var(--edge); border-radius: 14px; box-shadow: var(--sh-2); padding: 11px 14px; font: 800 10.5px var(--font-head); letter-spacing: 1px; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease; }
+    .cf-pager__btn:active { transform: translate(1.5px,1.5px); box-shadow: var(--sh-1); }
     .cf-pager__btn[disabled] { opacity: .45; cursor: default; }
     .cf-pager__n { font: 800 10px var(--font-head); letter-spacing: 1.5px; color: var(--muted); margin: 0 auto; }
 
     .cf-lead { font: 500 14px/1.75 var(--font-body); margin: 0 0 12px; }
     .cf-table { width: 100%; border-collapse: collapse; margin: 10px 0 4px; font: 600 12.5px var(--font-body); }
     .cf-table th { font: 800 10px var(--font-head); letter-spacing: 1.2px; text-align: left; background: var(--ink); color: var(--yellow); padding: 8px 9px; }
-    .cf-table td { border: 2px solid var(--ink); padding: 7px 9px; background: #fffdf5; }
+    .cf-table td { border: var(--bw) solid var(--edge); padding: 7px 9px; background: #fffdf5; }
     .cf-table tr:nth-child(even) td { background: #f4eedd; }
     .cf-mono td { font: 600 11.5px 'Special Elite', ui-monospace, monospace; }
-    .cf-call p { font: 500 13.5px/1.7 var(--font-body); margin: 0 0 9px; padding: 9px 12px; background: var(--surface-2); border-radius: 10px; }
+    .cf-call p { font: 500 13.5px/1.7 var(--font-body); margin: 0 0 9px; padding: 9px 12px; background: var(--surface-2); border-radius: 14px; }
     .cf-call b { font-family: var(--font-head); font-size: 10.5px; letter-spacing: 1px; margin-right: 6px; }
-    .cf-wa { background: #0e2a22; border: 3px solid var(--ink); border-radius: 14px; padding: 13px 11px; display: flex; flex-direction: column; gap: 8px; }
-    .cf-wa p { max-width: 82%; font: 500 12.5px/1.55 var(--font-body); border-radius: 11px; padding: 8px 11px; margin: 0; }
+    .cf-wa { background: #0e2a22; border: var(--bw) solid var(--edge); border-radius: 20px; padding: 13px 11px; display: flex; flex-direction: column; gap: 8px; }
+    .cf-wa p { max-width: 82%; font: 500 12.5px/1.55 var(--font-body); border-radius: 16px; padding: 8px 11px; margin: 0; }
     .cf-wa__l { align-self: flex-start; background: #1f4034; color: #eaf3ee; border-bottom-left-radius: 3px !important; }
     .cf-wa__r { align-self: flex-end; background: #d8f3c9; color: #1c2b18; border-bottom-right-radius: 3px !important; }
     .cf-wa b { font: 800 9.5px var(--font-head); letter-spacing: .8px; opacity: .75; display: block; margin-bottom: 2px; }
-    .cf-tl { border-left: 4px solid var(--ink); margin: 10px 0 6px 4px; padding-left: 0; }
+    .cf-tl { border-left: var(--bw) solid var(--edge); margin: 10px 0 6px 4px; padding-left: 0; }
     .cf-tl__row { position: relative; padding: 7px 12px 9px 18px; font: 500 13px/1.6 var(--font-body); }
-    .cf-tl__row::before { content: ""; position: absolute; left: -9px; top: 13px; width: 14px; height: 14px; background: var(--paper); border: 3px solid var(--ink); border-radius: 50%; }
-    .cf-tl__d { display: inline-block; font: 800 10.5px var(--font-head); letter-spacing: 1px; background: var(--surface-2); border: 2px solid var(--ink); border-radius: 7px; padding: 2px 7px; margin-right: 8px; }
-    .cf-tl__row--hot { background: rgba(255,77,77,.09); border-radius: 10px; }
-    .cf-tl__row--hot::before { background: var(--red, #ff4d4d); border-color: var(--ink); }
-    .cf-clip { border: 2.5px solid var(--ink); border-radius: 12px; padding: 13px 15px; margin: 10px 0; background: repeating-linear-gradient(0deg, #fffdf5, #fffdf5 26px, #faf5e6 27px); }
+    .cf-tl__row::before { content: ""; position: absolute; left: -9px; top: 13px; width: 14px; height: 14px; background: var(--paper); border: var(--bw) solid var(--edge); border-radius: 50%; }
+    .cf-tl__d { display: inline-block; font: 800 10.5px var(--font-head); letter-spacing: 1px; background: var(--surface-2); border: var(--bw) solid var(--edge); border-radius: 10px; padding: 2px 7px; margin-right: 8px; }
+    .cf-tl__row--hot { background: rgba(255,77,77,.09); border-radius: 14px; }
+    .cf-tl__row--hot::before { background: var(--red, #D23A3A); border-color: var(--ink); }
+    .cf-clip { border: var(--bw) solid var(--edge); border-radius: 17px; padding: 13px 15px; margin: 10px 0; background: repeating-linear-gradient(0deg, #fffdf5, #fffdf5 26px, #faf5e6 27px); }
     .cf-clip__tag { font: 800 9px var(--font-head); letter-spacing: 1.6px; color: var(--muted); }
     .cf-clip h3 { font-family: 'Special Elite', Georgia, serif; font-weight: 400; font-size: 17px; margin: 5px 0 6px; }
     .cf-clip p { font: 500 13px/1.65 var(--font-body); margin: 0; }
-    .cf-mail { border: 2.5px solid var(--ink); border-radius: 12px; overflow: hidden; margin: 10px 0; }
+    .cf-mail { border: var(--bw) solid var(--edge); border-radius: 17px; overflow: hidden; margin: 10px 0; }
     .cf-mail p { margin: 0; padding: 8px 13px; font: 600 12px/1.6 var(--font-body); border-bottom: 2px solid #d9d2c0; background: var(--surface-2); }
     .cf-mail__body { font-family: 'Special Elite', Georgia, serif !important; font-size: 14.5px !important; background: #14110c !important; color: #e8e0cd !important; border-bottom: 0 !important; }
     .cf-labels { display: flex; gap: 12px; flex-wrap: wrap; margin: 12px 0; }
-    .cf-label { flex: 1 1 200px; border: 2.5px solid var(--ink); border-radius: 12px; padding: 13px; background: #fffdf5; display: flex; flex-direction: column; gap: 7px; }
+    .cf-label { flex: 1 1 200px; border: var(--bw) solid var(--edge); border-radius: 17px; padding: 13px; background: #fffdf5; display: flex; flex-direction: column; gap: 7px; }
     .cf-label--new { background: #f6efe0; }
     .cf-label__brand { font: 800 11px var(--font-head); letter-spacing: 1px; }
     .cf-label__old { font: 600 12.5px var(--font-body); }
@@ -101,34 +103,34 @@
     .cf-noise { margin: 10px 0; padding: 0; list-style: none; }
     .cf-noise li { font: 500 13px/1.65 var(--font-body); padding: 8px 11px; border-left: 4px solid var(--line, #ddd); background: var(--surface-2); border-radius: 0 9px 9px 0; margin: 6px 0; }
     .cf-noise li b { font-family: var(--font-head); font-size: 10px; letter-spacing: 1px; margin-right: 6px; }
-    .cf-photo { margin: 14px 0; border: 3px solid var(--ink); border-radius: 12px; overflow: hidden; background: #14110c; box-shadow: 5px 5px 0 var(--ink); }
+    .cf-photo { margin: 14px 0; border: var(--bw) solid var(--edge); border-radius: 17px; overflow: hidden; background: #14110c; box-shadow: var(--sh-3); }
     .cf-photo img { display: block; width: 100%; height: auto; }
-    .cf-photo figcaption { font: 800 9.5px var(--font-head); letter-spacing: 1.6px; color: var(--yellow); background: #14110c; padding: 8px 12px; border-top: 2.5px solid var(--ink); }
-    .cf-play { display: inline-flex; align-items: center; gap: 9px; background: var(--ink); color: var(--paper); border: 3px solid var(--ink); border-radius: 12px; box-shadow: 4px 4px 0 rgba(17,17,17,.3); padding: 12px 16px; font: 800 11.5px var(--font-head); letter-spacing: 1.2px; cursor: pointer; margin: 4px 0 12px; }
-    .cf-play.playing { background: var(--red, #ff4d4d); color: #fff; }
+    .cf-photo figcaption { font: 800 9.5px var(--font-head); letter-spacing: 1.6px; color: var(--yellow); background: #14110c; padding: 8px 12px; border-top: var(--bw) solid var(--edge); }
+    .cf-play { display: inline-flex; align-items: center; gap: 9px; background: var(--ink); color: var(--paper); border: var(--bw) solid var(--edge); border-radius: 17px; box-shadow: var(--sh-2); padding: 12px 16px; font: 800 11.5px var(--font-head); letter-spacing: 1.2px; cursor: pointer; margin: 4px 0 12px; }
+    .cf-play.playing { background: var(--red, #D23A3A); color: #fff; }
 
-    .cf-verdict { background: #14110c; color: #f2ead8; border: 3px solid var(--ink); border-radius: 16px; box-shadow: 6px 6px 0 var(--ink); padding: 20px 18px; margin: 22px 2px 0; }
+    .cf-verdict { background: #14110c; color: #f2ead8; border: var(--bw) solid var(--edge); border-radius: 22px; box-shadow: var(--sh-3); padding: 20px 18px; margin: 22px 2px 0; }
     .cf-verdict h2 { font: 800 15px var(--font-head); letter-spacing: 2px; color: var(--yellow); margin: 0 0 10px; }
     .cf-verdict .cf-lead { color: #cfc8ba; }
-    .cf-q { font: 600 14px/1.7 var(--font-body); color: #fff; background: rgba(255,200,0,.08); border: 2px solid #3a352b; border-radius: 12px; padding: 13px 15px; margin: 12px 0; }
-    .cf-ta { width: 100%; min-height: 130px; background: #fffdf5; color: #111; border: 2.5px solid var(--ink); border-radius: 12px; padding: 12px 14px; font: 500 14px/1.6 var(--font-body); box-sizing: border-box; }
+    .cf-q { font: 600 14px/1.7 var(--font-body); color: #fff; background: rgba(255,200,0,.08); border: 2px solid #3a352b; border-radius: 17px; padding: 13px 15px; margin: 12px 0; }
+    .cf-ta { width: 100%; min-height: 130px; background: #fffdf5; color: #111; border: var(--bw) solid var(--edge); border-radius: 17px; padding: 12px 14px; font: 500 14px/1.6 var(--font-body); box-sizing: border-box; }
     .cf-ta:focus { outline: none; box-shadow: 0 0 0 3px rgba(255,200,0,.4); }
     .cf-rows { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-    .cf-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--yellow); color: #111; border: 2.5px solid var(--ink); border-radius: 10px; box-shadow: 3px 3px 0 var(--ink); padding: 11px 14px; font: 800 11px var(--font-head); letter-spacing: 1px; cursor: pointer; text-decoration: none; }
-    .cf-btn:active { transform: translate(1.5px,1.5px); box-shadow: 1.5px 1.5px 0 var(--ink); }
+    .cf-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--yellow); color: #111; border: var(--bw) solid var(--edge); border-radius: 14px; box-shadow: var(--sh-2); padding: 11px 14px; font: 800 11px var(--font-head); letter-spacing: 1px; cursor: pointer; text-decoration: none; }
+    .cf-btn:active { transform: translate(1.5px,1.5px); box-shadow: var(--sh-1); }
     .cf-btn--ghost { background: var(--paper); color: var(--ink); }
         .cf-btn[disabled] { opacity: .55; cursor: default; }
     .cf-wall { margin-top: 18px; }
     .cf-guess--blur { background: var(--surface-2); }
     .cf-blurlines { margin-top: 8px; }
-    .cf-blurlines i { display: block; height: 11px; border-radius: 6px; background: #c9c2b0; margin: 7px 0; filter: blur(4px); opacity: .8; }
-    .cf-seal { margin-left: auto; font: 800 8.5px var(--font-head); letter-spacing: 1.5px; background: var(--ink); color: var(--yellow); border-radius: 6px; padding: 3px 7px; }
-    .cf-guess { border: 2.5px solid var(--ink); border-radius: 12px; background: #fffdf5; padding: 11px 13px; margin: 8px 0; }
+    .cf-blurlines i { display: block; height: 11px; border-radius: 9px; background: #c9c2b0; margin: 7px 0; filter: blur(4px); opacity: .8; }
+    .cf-seal { margin-left: auto; font: 800 8.5px var(--font-head); letter-spacing: 1.5px; background: var(--ink); color: var(--yellow); border-radius: 9px; padding: 3px 7px; }
+    .cf-guess { border: var(--bw) solid var(--edge); border-radius: 17px; background: #fffdf5; padding: 11px 13px; margin: 8px 0; }
     .cf-guess__top { display: flex; gap: 8px; align-items: center; font: 700 12px var(--font-body); margin-bottom: 4px; }
     .cf-guess__top i { font: 500 10.5px var(--font-body); font-style: normal; color: var(--muted); }
     .cf-guess p { margin: 0; font: 500 13px/1.6 var(--font-body); white-space: pre-wrap; word-break: break-word; }
-    .cf-guess img { max-width: 100%; border: 2px solid var(--ink); border-radius: 8px; margin-top: 8px; }
-    .cf-sealed { background: repeating-linear-gradient(45deg, #14110c, #14110c 14px, #191510 14px, #191510 28px); color: #f2ead8; border: 3px solid var(--yellow); border-radius: 16px; padding: 20px 18px; margin: 16px 0; }
+    .cf-guess img { max-width: 100%; border: var(--bw) solid var(--edge); border-radius: 12px; margin-top: 8px; }
+    .cf-sealed { background: repeating-linear-gradient(45deg, #14110c, #14110c 14px, #191510 14px, #191510 28px); color: #f2ead8; border: 3px solid var(--yellow); border-radius: 22px; padding: 20px 18px; margin: 16px 0; }
     .cf-sealed h3 { font: 800 14px var(--font-head); letter-spacing: 2px; color: var(--yellow); margin: 0 0 8px; }
     .cf-sealed p { font: 500 13px/1.7 var(--font-body); color: #cfc8ba; margin: 0 0 8px; }
     html.dark .cf-table td { background: #2a2419; color: #f2ead8; }
@@ -141,6 +143,9 @@
     html.dark .cf-ta { background: #fffdf5; }
     html.dark .cf-wa__r { background: #d8f3c9; color: #1c2b18; }
   </style>
+  <link rel="stylesheet" href="css/film.css?v=335">
+  <link rel="stylesheet" href="css/film2.css?v=335">
+  <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
 </head>
 <body>
   <main class="cf-wrap">
@@ -181,19 +186,20 @@
     <section class="cf-verdict" id="cfVerdict"></section>
   </main>
 
-  <script src="js/bootguard.js?v=323"></script>
-  <script src="js/prefs.js?v=323"></script>
-  <script src="js/lang.js?v=323"></script>
-  <script src="js/config.js?v=323"></script>
-  <script src="js/auth.js?v=323"></script>
-  <script src="js/sounds.js?v=323"></script>
-  <script src="js/founder.js?v=323"></script>
-  <script src="js/community.js?v=323"></script>
-  <script src="js/casefile-data.js?v=323"></script>
-  <script src="js/podcast-data.js?v=323"></script>
-  <script src="js/audioplayer.js?v=323"></script>
-  <script src="js/bar.js?v=323" defer></script>
-  <script src="js/gate.js?v=323" defer></script>
+  <script src="js/bootguard.js?v=335"></script>
+  <script src="js/prefs.js?v=335"></script>
+  <script src="js/lang.js?v=335"></script>
+  <script src="js/config.js?v=335"></script>
+  <script src="js/auth.js?v=335"></script>
+  <script src="js/sounds.js?v=335"></script>
+  <script src="js/founder.js?v=335"></script>
+  <script src="js/community.js?v=335"></script>
+  <script src="js/casefile-data.js?v=335"></script>
+  <script src="js/podcast-data.js?v=335"></script>
+  <script src="js/audioplayer.js?v=335"></script>
+  <script src="js/bar.js?v=335" defer></script>
+  <script src="js/soft-motion.js?v=335" defer></script>
+  <script src="js/gate.js?v=335" defer></script>
   <script>
   (function () {
     "use strict";
@@ -318,7 +324,7 @@
       }
       if (!FROM_ARCHIVE) h += '<div class="cf-sealed"><h3>\uD83D\uDD12 ' + esc(CASE.seal) + "</h3><p>" + esc(CASE.closed) + "</p><p>" + esc(CASE.prizeTeaser) + "</p></div>";
       h += '<textarea class="cf-ta" id="cfTa" placeholder="I name ... the weapon was ... the email was really ... and if I held the investors\' seats, I would ..."></textarea>' +
-        '<input id="cfEmail" type="email" placeholder="Your email, only used if you win the prize" style="width:100%;margin-top:8px;background:#fffdf5;color:#111;border:2.5px solid #3a352b;border-radius:10px;padding:11px 13px;font:500 13px var(--font-body);box-sizing:border-box">' +
+        '<input id="cfEmail" type="email" placeholder="Your email, only used if you win the prize" style="width:100%;margin-top:8px;background:#fffdf5;color:#111;border:2.5px solid #3a352b;border-radius:14px;padding:11px 13px;font:500 13px var(--font-body);box-sizing:border-box">' +
         '<div class="cf-rows">' +
           '<button class="cf-btn" id="cfSend">POST MY VERDICT</button>' +
           '<button class="cf-btn cf-btn--ghost" id="cfPhoto">ATTACH HANDWRITING</button>' +
@@ -435,7 +441,7 @@
       var desk = document.createElement("div");
       desk.className = "cf-verdict"; desk.id = "cfDesk";
       desk.style.borderColor = "#1d6fd1";
-      desk.innerHTML = '<h2 style="color:#9cc0ff">FOUNDER\u2019S DESK \u00b7 EYES ONLY</h2><p class="cf-note" id="cfDeskList">Opening the sealed pile\u2026</p>';
+      desk.innerHTML = '<h2 style="color:#9cc0ff">Founder\u2019s desk \u00b7 eyes only</h2><p class="cf-note" id="cfDeskList">Opening the sealed pile\u2026</p>';
       var v = document.getElementById("cfVerdict");
       v.parentNode.insertBefore(desk, v);
       loadDesk();
@@ -449,7 +455,7 @@
           return '<div class="cf-guess" style="margin:8px 0"><div class="cf-guess__top"><b>' + esc(r.name || "A reader") + '</b><i>' + esc(String(r.created_at || "").replace("T", " ").slice(0, 16)) + '</i>' +
             (r.email ? '<i>\u2709 ' + esc(r.email) + '</i>' : '') +
             (r.user_id ? '<a class="cf-btn cf-btn--ghost" style="padding:6px 9px;margin-left:auto" href="dm.html?peer=' + esc(r.user_id) + '">MESSAGE</a>' : '') +
-            '</div><p>' + esc(r.body || "") + '</p>' + (r.image_url ? '<img src="' + esc(r.image_url) + '" alt="handwriting" style="max-width:100%;border:2.5px solid #3a352b;border-radius:8px;margin-top:8px">' : '') + '</div>';
+            '</div><p>' + esc(r.body || "") + '</p>' + (r.image_url ? '<img src="' + esc(r.image_url) + '" alt="handwriting" style="max-width:100%;border:2.5px solid #3a352b;border-radius:12px;margin-top:8px">' : '') + '</div>';
         }).join("");
       } catch (e) {
         list.innerHTML = "Could not open the pile (is the desk SQL in?). " + (e && e.message ? esc(e.message) : "");
@@ -495,5 +501,9 @@
     document.addEventListener("visibilitychange", stopSpeech);
   })();
   </script>
+  <script src="js/stt.js?v=335"></script>
+  <script src="js/wordtap.js?v=335" defer></script>
+  <script src="js/film.js?v=335" defer></script>
+  <script src="js/film2.js?v=335" defer></script>
 </body>
 </html>

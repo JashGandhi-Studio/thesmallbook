@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta property="og:title" content="Stories, TheSmallBook">
   <meta property="og:description" content="True reader stories and the library's own channel, lessons people actually lived.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=323">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=335">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/stories.html">
@@ -33,40 +35,46 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="css/style.css?v=323">
+  <link rel="stylesheet" href="css/style.css?v=335">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="css/film.css?v=335">
+  <link rel="stylesheet" href="css/film2.css?v=335">
+  <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
+  <link rel="canonical" href="https://thesmallbook.in/stories.html">
+  <meta name="twitter:card" content="summary_large_image">
 </head>
-<body class="cmpage">
+<body class="cmpage fst">
   <h1 class="sr-only">Stories, TheSmallBook</h1>
   <header class="cm-head cm-head--v19">
     <div class="cm-head__row">
       <div>
-        <div class="cm-head__t">STORIES</div>
-        <div class="cm-head__s">real readers · real lessons · real voices</div>
+        <div class="cm-head__t">Stories</div>
+        <div class="cm-head__s">One line from a reader, one week at a time</div>
       </div>
       <a class="cm-bell" href="notifications.html" title="Notifications & updates"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="nt-dot" data-notifdot hidden></span></a>
     </div>
-    <div class="cm-head__acts cm-head__acts--v2">
-      <button class="cm-write" id="writeBtn">✍️ Write a story</button>
+    <section class="st-prompt" id="stPrompt" aria-label="This week's prompt"></section>
+    <div class="cm-head__acts cm-head__acts--v2 st-tools">
+      <button class="cm-write" id="writeBtn"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg> Write a story</button>
       <div class="cm-head__row">
-        <button class="cm-chipbtn" id="quoteBtn" title="The public wall of small lines">📌 Quote Wall</button>
-        <button class="cm-chipbtn" id="reelsBtn" title="Bursts, swipe through stories">🎬 Bursts</button>
+        <button class="cm-chipbtn" id="quoteBtn" title="The public wall of small lines"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h4v4c0 3-1.5 5-4 6M15 7h4v4c0 3-1.5 5-4 6"/></svg> Quote wall</button>
+        <button class="cm-chipbtn" id="reelsBtn" title="Bursts, swipe through stories"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M10.5 9.5l4 2.5-4 2.5z" fill="currentColor"/></svg> Bursts</button>
         <button class="cm-chipbtn" id="finderBtn" title="Find readers to follow"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Find readers</button>
       </div>
     </div>
   </header>
 
   <section class="lt-rail" id="ltRail" aria-label="Listen today">
-    <div class="lt-head"><b>🎧 LISTEN TODAY</b><span>hands-free, while you do the other thing</span></div>
+    <div class="lt-head"><b>LISTEN TODAY</b><span>hands-free, while you do the other thing</span></div>
     <div class="lt-scroll" id="ltScroll"></div>
   </section>
   <nav class="cm-tabs" id="cmTabs" aria-label="Story feeds">
-    <button data-tab="all" class="on">✨ For you</button>
-    <button data-tab="following"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Following</button>
-    <button data-tab="people"><svg class="tsb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> People</button>
-    <button data-tab="mine">📔 My posts</button>
+    <button data-tab="all" class="on">For you</button>
+    <button data-tab="following">Following</button>
+    <button data-tab="people" hidden>People</button>
+    <button data-tab="mine">Mine</button>
   </nav>
 
   <main class="cm-feed" id="feed" aria-live="polite"></main>
@@ -85,13 +93,13 @@
     <div class="cm-reels__track" id="reelsTrack"></div>
   </div>
 
-  <script src="./js/bootguard.js?v=323"></script>
-  <script src="js/prefs.js?v=323"></script>
-  <script src="js/lang.js?v=323"></script>
-  <script src="js/config.js?v=323"></script>
-  <script src="js/auth.js?v=323"></script>
-  <script src="js/sounds.js?v=323"></script>
-  <script src="js/founder.js?v=323"></script>
+  <script src="./js/bootguard.js?v=335"></script>
+  <script src="js/prefs.js?v=335"></script>
+  <script src="js/lang.js?v=335"></script>
+  <script src="js/config.js?v=335"></script>
+  <script src="js/auth.js?v=335"></script>
+  <script src="js/sounds.js?v=335"></script>
+  <script src="js/founder.js?v=335"></script>
   <script>
   /* LISTEN TODAY - the rail that makes the library a radio */
   (function () {
@@ -154,12 +162,26 @@
     else setTimeout(boot, 400);
   })();
   </script>
-  <script src="js/deepdive-data.js?v=323"></script>
-  <script src="js/community.js?v=323"></script>
-  <script src="js/weekly.js?v=323"></script>
+  <script src="js/deepdive-data.js?v=335"></script>
+  <script src="js/community.js?v=335"></script>
+  <script src="js/weekly.js?v=335"></script>
+  <script>
+  /* v329 · the weekly prompt sits on top, like the film: one question a week, one line to answer */
+  (function () {
+    var el = document.getElementById("stPrompt");
+    if (!el || !window.TSB_WEEKLY) { if (el) el.remove(); return; }
+    var wk = TSB_WEEKLY.current(), done = TSB_WEEKLY.done(wk);
+    function esc(t) { return String(t || "").replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+    el.innerHTML = '<div class="st-prompt__k">This week\u2019s prompt <span>Week ' + wk.week + '</span></div>' +
+      '<h2 class="st-prompt__q">' + esc(wk.q) + '</h2>' +
+      '<div class="st-prompt__row">' + (done
+        ? '<span class="st-prompt__done"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg> You replied</span><a class="st-prompt__cta st-prompt__cta--ghost" href="' + TSB_WEEKLY.replyHref(wk) + '">Write one more</a>'
+        : '<a class="st-prompt__cta" href="' + TSB_WEEKLY.replyHref(wk) + '"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg> Write yours</a><span class="st-prompt__s">One line is enough</span>') + '</div>';
+  })();
+  </script>
   <!-- v252: the library story shelf (js/stories-seed.js) was never loaded here,
        so none of those stories could ever appear. It is loaded now. -->
-  <script src="js/stories-seed.js?v=323"></script>
+  <script src="js/stories-seed.js?v=335"></script>
   <script>
   (function () {
     "use strict";
@@ -298,18 +320,19 @@
         ? (C.isVideoUrl(p.cover_url)
             ? '<video src="' + C.esc(p.cover_url) + '" preload="metadata" muted playsinline></video>'
             : '<img src="' + C.esc(p.cover_url) + '" alt="" loading="lazy">')
-        : '<span class="cm-quote" style="background:linear-gradient(135deg,hsl(' + hue + ',88%,74%),hsl(' + ((hue + 48) % 360) + ',82%,58%));">' + (p.kind === "quote" ? "❝" : C.esc((p.title || "T").charAt(0).toUpperCase())) + "</span>";
-      return '<article class="cm-card' + (p.kind === "quote" ? " cm-card--quote" : "") + '" data-post="' + p.id + '"' + (p.no_download === false ? ' data-free="1"' : "") + ">" +
+        : '<span class="cm-quote" style="background:linear-gradient(135deg,hsl(' + hue + ',88%,74%),hsl(' + ((hue + 48) % 360) + ',82%,58%));">' + (p.kind === "quote" ? "\u201c" : C.esc((p.title || "T").charAt(0).toUpperCase())) + "</span>";
+      var noCov = !p.cover_url;
+      return '<article class="cm-card' + (p.kind === "quote" ? " cm-card--quote" : "") + (noCov ? " cm-card--nocov" : "") + '" data-post="' + p.id + '"' + (p.no_download === false ? ' data-free="1"' : "") + ">" +
         '<a class="cm-card__cover" href="story.html?id=' + p.id + '">' + cover +
-          (p.audio_url ? '<span class="cm-card__aud">🎧</span>' : "") +
-          (p.kind === "quote" ? '<span class="cm-card__kind">QUOTE</span>' : (C.isVideoUrl(p.cover_url) ? '<span class="cm-card__kind cm-card__kind--burst">🎬 BURST</span>' : "")) +
+          (p.audio_url ? '<span class="cm-card__aud">Voice</span>' : "") +
+          (p.kind === "quote" ? '<span class="cm-card__kind">QUOTE</span>' : (C.isVideoUrl(p.cover_url) ? '<span class="cm-card__kind cm-card__kind--burst">BURST</span>' : "")) +
         "</a>" +
         '<div class="cm-card__body">' +
           '<div class="cm-card__meta">' +
             '<a class="cm-ava" href="profile.html?id=' + p.author_id + '">' +
               (prof.avatar_url ? '<img src="' + C.esc(prof.avatar_url) + '" alt="">' : '<span>' + C.esc((p.author_name || "R").charAt(0).toUpperCase()) + "</span>") +
             "</a>" +
-            '<a class="cm-name" href="profile.html?id=' + p.author_id + '">' + C.esc(p.author_name) + (C.isOfficial(p.author_id) ? '<span class="cm-vtick" title="Official channel">✔</span>' : "") + "</a>" +
+            '<a class="cm-name" href="profile.html?id=' + p.author_id + '">' + C.esc(p.author_name) + (C.isOfficial(p.author_id) ? '<span class="cm-vtick" title="Official channel"><svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>' : "") + "</a>" +
             '<span class="cm-time">' + C.ago(p.created_at) + "</span>" +
             (p.author_id !== meId ? '<button class="cm-follow" data-follow="' + p.author_id + '">+ Follow</button>' : "") +
           "</div>" +
@@ -318,9 +341,9 @@
           (p.subtitle ? '<p class="cm-card__sub">' + C.esc(p.subtitle) + "</p>" : "") +
           (p.tags && p.tags.length ? '<div class="cm-card__tags">' + p.tags.slice(0, 4).map(function (t) { return "<span># " + C.esc(t) + "</span>"; }).join("") + "</div>" : "") +
           '<div class="cm-card__foot">' +
-            '<button class="cm-like" data-like="' + p.id + '">♥ <b>…</b></button>' +
+            '<button class="cm-like" data-like="' + p.id + '" aria-label="Heart"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-9.2-8.6C1.2 8.2 3 4.8 6.4 4.5c2-.2 3.9.9 5.6 3 1.7-2.1 3.6-3.2 5.6-3 3.4.3 5.2 3.7 3.6 6.9C19 15.6 12 20 12 20z"/></svg> <b>…</b></button>' +
             '<a class="cm-cmts" href="story.html?id=' + p.id + '#comments">' + C.icon('chat') + " <b>…</b></a>" +
-            (p.audio_url ? '<button class="cm-listen" data-audio="' + C.esc(p.audio_url) + '" data-title="' + C.esc(p.title) + '">🎧 Listen</button>' : "") +
+            (p.audio_url ? '<button class="cm-listen" data-audio="' + C.esc(p.audio_url) + '" data-title="' + C.esc(p.title) + '">Listen</button>' : "") +
             '<span class="cm-read">' + C.readMins(p.body) + " min</span>" +
             (p.author_id === meId ? '<button class="cm-del" data-del="' + p.id + '" title="Delete my story">' + C.icon('trash') + "</button>" : "") +
           "</div>" +
@@ -344,6 +367,7 @@
       return EMPTY_NUDGES[h % EMPTY_NUDGES.length];
     }
     function weeklyCard() {
+      if (document.getElementById("stPrompt")) return "";
       if (!window.TSB_WEEKLY) return "";
       var wk = TSB_WEEKLY.current();
       var answered = TSB_WEEKLY.done(wk);
@@ -398,12 +422,24 @@
       } catch (e) {}
       return "";
     }
+    function niceDate(d) {
+      var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(d || ""));
+      if (!m) return d || "";
+      return Number(m[3]) + " " + ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][Number(m[2]) - 1];
+    }
     function libCard(s) {
       var words = String(s.text || "").split(/\s+/).length;
       var mins = Math.max(1, Math.round(words / 200));
       /* an image that will not load (offline, or a cover pulled from the shelf)
          falls back to the story's own tile instead of a broken picture icon */
       var fallbackTile = '<span class="cm-quote" style="background:var(--yellow);font-size:3rem;">' + (s.emoji || "\ud83d\udcd6") + "</span>";
+      /* v330: no picture? the book it came from stands on the banner instead */
+      var bkObj = null;
+      try { (window.BOOKS || []).some(function (b) { if (b.id === s.bookId) { bkObj = b; return true; } return false; }); } catch (e) {}
+      if (!s.cover && bkObj) {
+        var bkCov = bkObj.cover || ("assets/covers/" + bkObj.id + ".jpg");
+        fallbackTile = '<span class="st-bkban"><span class="st-bkban__b"><img src="' + C.esc(bkCov) + '" alt="" loading="lazy"></span></span>';
+      }
       var cover = s.cover
         ? '<img src="' + C.esc(s.cover) + '" alt="" loading="lazy" onerror="this.outerHTML=' +
           JSON.stringify(fallbackTile).replace(/"/g, "&quot;") + '">'
@@ -411,13 +447,13 @@
       var book = bookName(s.bookId);
       return '<article class="cm-card cm-card--lib" data-lib="' + C.esc(s.id) + '">' +
         '<a class="cm-card__cover" href="story.html?id=' + encodeURIComponent(s.id) + '">' + cover +
-          '<span class="cm-card__kind cm-card__kind--lib">\ud83d\udcd6 FROM THE LIBRARY</span>' +
+          '<span class="cm-card__kind cm-card__kind--lib">FROM THE LIBRARY</span>' +
         "</a>" +
         '<div class="cm-card__body">' +
           '<div class="cm-card__meta">' +
             '<span class="cm-ava cm-ava--lib"><img src="assets/loader-logo.png" alt="" onerror="this.parentNode.textContent=\'\ud83d\udcd5\'"></span>' +
             '<span class="cm-name cm-name--lib">TheSmallBook <span class="cm-vtick" title="Official channel of TheSmallBook">\u2714</span></span>' +
-            '<span class="cm-time">' + C.esc(s.date || "") + "</span>" +
+            '<span class="cm-time">' + C.esc(niceDate(s.date)) + "</span>" +
           "</div>" +
           '<a class="cm-card__title" href="story.html?id=' + encodeURIComponent(s.id) + '">' + C.esc(s.title) + "</a>" +
           /* v254: the hook, a question that sounds like the reader's own 2 AM */
@@ -425,7 +461,7 @@
           (book ? '<p class="cm-card__sub">Inspired by <b>' + C.esc(book) + "</b></p>" : "") +
           '<div class="cm-card__foot">' +
             '<span class="cm-read">' + mins + " min read</span>" +
-            '<a class="cm-cmts cm-cmts--lib" href="story.html?id=' + encodeURIComponent(s.id) + '">READ IT →</a>' +
+            '<a class="cm-cmts cm-cmts--lib" href="story.html?id=' + encodeURIComponent(s.id) + '">Read it</a>' +
           "</div>" +
         "</div></article>";
     }
@@ -434,7 +470,7 @@
       if (!rows.length) return "";
       var shown = rows.slice(0, limit || 12);
       var more = rows.length - shown.length;
-      return '<div class="cm-sect">\ud83d\udcd6 From the library, ' + rows.length + ' stories you can read right now' +
+      return '<div class="cm-sect">From the library, ' + rows.length + ' stories you can read right now' +
         (more > 0 ? " \u00b7 showing " + shown.length : "") + "</div>" +
         shown.map(libCard).join("") +
         (more > 0 ? '<div class="cm-more">' + more + " more on the shelf, they rotate with every reader post.</div>" : "");
@@ -459,7 +495,7 @@
           root.querySelectorAll('.cm-cmts[href="story.html?id=' + id + '#comments"] b').forEach(function (b) {
             b.textContent = cs.length;
             /* a quiet story gets a reply prompt, right under the foot */
-            if (!cs.length && b.closest) {
+            if (!cs.length && b.closest && !document.body.classList.contains("fst")) {
               var cardEl = b.closest(".cm-card");
               if (cardEl && !cardEl.querySelector(".cm-nudge")) {
                 var foot = cardEl.querySelector(".cm-card__foot");
@@ -673,13 +709,13 @@
           (p.kind === "quote" ? '<span class="cm-reel__q">❝</span>' : "") +
           '<a class="cm-reel__who" href="story.html?id=' + p.id + '">' +
             '<div class="cm-ava">' + (C.avaUrl(p.author_name, p.author_avatar, p.author_id) ? '<img src="' + C.esc(C.avaUrl(p.author_name, p.author_avatar, p.author_id)) + '" alt="">' : "<span>" + C.esc((p.author_name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
-            "<b>" + C.esc(p.author_name) + (C.isOfficial(p.author_id) ? '<span class="cm-vtick">✔</span>' : "") + "</b>" +
+            "<b>" + C.esc(p.author_name) + (C.isOfficial(p.author_id) ? '<span class="cm-vtick"><svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>' : "") + "</b>" +
           "</a>" +
           '<h3 class="cm-reel__t">' + C.esc(p.title) + "</h3>" +
           (p.subtitle ? '<p class="cm-reel__s">' + C.esc(p.subtitle) + "</p>" : "") +
           '<div class="cm-reel__acts">' +
-            '<button class="cm-like" data-rlike="' + p.id + '">♥ <b>…</b></button>' +
-            (p.audio_url ? '<button class="cm-listen" data-audio="' + C.esc(p.audio_url) + '" data-title="' + C.esc(p.title) + '">🎧 Listen</button>' : "") +
+            '<button class="cm-like" data-rlike="' + p.id + '"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg> <b>…</b></button>' +
+            (p.audio_url ? '<button class="cm-listen" data-audio="' + C.esc(p.audio_url) + '" data-title="' + C.esc(p.title) + '">Listen</button>' : "") +
             '<a class="cm-cmts" href="story.html?id=' + p.id + '">' + C.icon('chat') + " Open</a>" +
           "</div>" +
         "</div>" +
@@ -731,7 +767,7 @@
       var el = burstEnd();
       if (!el) return;
       el.innerHTML = burstBusy ? "Loading more bursts…"
-        : (burstDone ? "You're all caught up ✨<br><small>Reader bursts come from the community, the library ones above never run out.</small>" : "");
+        : (burstDone ? "You\u2019re all caught up.<br><small>Reader bursts come from the community, the library ones above never run out.</small>" : "");
     }
 
     async function burstLoadMore() {
@@ -817,7 +853,7 @@ document.getElementById("quoteBtn").addEventListener("click", function () { loca
       feed.innerHTML = skeletons();
       try {
         if (!C.enabled) {
-          feed.innerHTML = '<div class="cm-empty">☁️ Community cloud is being switched on, check back in a bit.</div>';
+          feed.innerHTML = '<div class="cm-note">Reader posts are switching on soon. Meanwhile, the library\u2019s own stories:</div>' + libraryShelf(14, {});
           return;
         }
         var posts = [];
@@ -844,24 +880,24 @@ document.getElementById("quoteBtn").addEventListener("click", function () { loca
             feed.innerHTML = libraryShelf(14, alone);
             return;
           }
-          feed.innerHTML = '<div class="cm-empty">✍️ No stories yet, yours could be the first.<br><button class="cm-write" id="emptyWrite">Write the first story</button></div>';
+          feed.innerHTML = '<div class="cm-empty">No stories yet, yours could be the first.<br><button class="cm-write" id="emptyWrite">Write the first story</button></div>';
           var ew = document.getElementById("emptyWrite");
           if (ew) ew.addEventListener("click", function () { location.href = "write.html"; });
           return;
         }
-        feed.innerHTML = (tab === "all" ? weeklyCard() + railHtml(posts) + '<div class="cm-sect">✨ For you, tuned to your shelves</div>' : "") +
+        feed.innerHTML = (tab === "all" ? weeklyCard() + railHtml(posts) + '<div class="cm-sect">From readers, tuned to your shelves</div>' : "") +
           posts.map(function (p) { return card(p); }).join("") +
           (tab === "all" ? libraryShelf(10, libPosted) : "");
         try { C.protectMedia(feed); } catch (e) {}
         hydrate(feed);
       } catch (e) {
-        feed.innerHTML = '<div class="cm-empty">⚠️ Couldn’t reach the community cloud. Pull to refresh.</div>';
+        feed.innerHTML = '<div class="cm-note">Reader posts will appear when you are back online. Meanwhile, the library\u2019s own stories:</div>' + libraryShelf(14, {});
       }
     }
 
     function signInCard() {
-      return '<div class="cm-empty">👋 Sign in with Google to write, like and follow.<br>' +
-        '<a class="cm-write" href="login.html">Sign in, it’s free →</a></div>';
+      return '<div class="cm-empty">Sign in with Google to write, heart and follow.<br>' +
+        '<a class="cm-write" href="login.html">Sign in, it\u2019s free</a></div>';
     }
 
     /* ---------- tabs ---------- */
@@ -939,25 +975,25 @@ document.getElementById("quoteBtn").addEventListener("click", function () { loca
       ];
 
       ovl.innerHTML =
-        '<div style="background:var(--paper,#fffdf5);border:3.5px solid var(--ink,#111);border-radius:18px;box-shadow:8px 8px 0 var(--ink,#111);max-width:390px;width:100%;max-height:92vh;overflow-y:auto;padding:22px;position:relative;box-sizing:border-box;">' +
+        '<div style="background:var(--paper,#fffdf5);border:var(--bw) solid var(--edge);border-radius:18px;box-shadow:var(--sh-3);max-width:390px;width:100%;max-height:92vh;overflow-y:auto;padding:22px;position:relative;box-sizing:border-box;">' +
           '<button id="noteCloseBtn" style="position:absolute;top:14px;right:14px;background:none;border:none;font:800 20px sans-serif;cursor:pointer;color:var(--ink,#111);">✕</button>' +
           '<div style="font-size:26px;margin-bottom:4px;">💭</div>' +
           '<h3 style="font:800 17px var(--font-head);margin:0 0 4px;letter-spacing:0.5px;">24-HOUR PROFILE NOTE</h3>' +
           '<p style="font-size:12px;color:var(--muted,#666);margin:0 0 14px;">Floating over your photo for friends for 24 hours.</p>' +
 
           '<label style="display:block;font:800 10.5px var(--font-head);letter-spacing:1px;margin-bottom:4px;">YOUR THOUGHT (UP TO 60 CHARS)</label>' +
-          '<input id="noteTextInput" maxlength="60" placeholder="What is on your mind today?" value="' + C.esc(cur.note_text || "") + '" style="width:100%;border:2px solid var(--ink,#111);border-radius:10px;padding:10px;font:600 13px var(--font-body);margin-bottom:14px;background:#fff;color:#111;box-sizing:border-box;">' +
+          '<input id="noteTextInput" maxlength="60" placeholder="What is on your mind today?" value="' + C.esc(cur.note_text || "") + '" style="width:100%;border:var(--bw) solid var(--edge);border-radius:14px;padding:10px;font:600 13px var(--font-body);margin-bottom:14px;background:#fff;color:#111;box-sizing:border-box;">' +
 
           '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">' +
-            '<label style="font:800 10.5px var(--font-head);letter-spacing:1px;margin:0;">❝ CHOOSE AN INSPIRE DESK QUOTE</label>' +
-            '<button type="button" id="openInspireDeskBtn" style="background:var(--yellow,#ffc800);border:1.5px solid var(--ink,#111);border-radius:6px;font:800 9.5px var(--font-head);padding:3px 8px;cursor:pointer;">✨ BROWSE QUOTES</button>' +
+            '<label style="font:800 10.5px var(--font-head);letter-spacing:1px;margin:0;">OR PICK A BOOK QUOTE</label>' +
+            '<button type="button" id="openInspireDeskBtn" style="background:var(--yellow,#ffc800);border:1px solid var(--edge);border-radius:9px;font:800 9.5px var(--font-head);padding:4px 10px;cursor:pointer;border-radius:999px;">Browse quotes</button>' +
           '</div>' +
-          '<div id="inspireDeskTray" style="display:none;background:#f6f1e8;border:2px solid var(--ink,#111);border-radius:10px;padding:8px;margin-bottom:12px;max-height:160px;overflow-y:auto;"></div>' +
-          '<input id="noteQuoteInput" maxlength="120" placeholder="Book quote or author..." value="' + C.esc(cur.quote_text || "") + '" style="width:100%;border:2px solid var(--ink,#111);border-radius:10px;padding:10px;font:600 13px var(--font-body);margin-bottom:16px;background:#fff;color:#111;box-sizing:border-box;">' +
+          '<div id="inspireDeskTray" style="display:none;background:#f6f1e8;border:var(--bw) solid var(--edge);border-radius:14px;padding:8px;margin-bottom:12px;max-height:160px;overflow-y:auto;"></div>' +
+          '<input id="noteQuoteInput" maxlength="120" placeholder="Book quote or author..." value="' + C.esc(cur.quote_text || "") + '" style="width:100%;border:var(--bw) solid var(--edge);border-radius:14px;padding:10px;font:600 13px var(--font-body);margin-bottom:16px;background:#fff;color:#111;box-sizing:border-box;">' +
 
           '<div style="display:flex;gap:8px;">' +
-            '<button id="saveNoteBtn" style="flex:1;background:var(--yellow,#ffc800);border:2.5px solid var(--ink,#111);border-radius:12px;padding:12px;font:800 12px var(--font-head);cursor:pointer;box-shadow:3px 3px 0 var(--ink,#111);">SHARE NOTE (24H) 🚀</button>' +
-            (cur.note_text || cur.quote_text ? '<button id="delNoteBtn" style="background:#fff;border:2.5px solid var(--ink,#111);border-radius:12px;padding:12px;font:800 12px var(--font-head);cursor:pointer;color:#d64545;">CLEAR</button>' : "") +
+            '<button id="saveNoteBtn" style="flex:1;background:var(--yellow,#ffc800);border:var(--bw) solid var(--edge);border-radius:17px;padding:12px;font:800 12px var(--font-head);cursor:pointer;box-shadow:var(--sh-2);">SHARE NOTE (24H) 🚀</button>' +
+            (cur.note_text || cur.quote_text ? '<button id="delNoteBtn" style="background:#fff;border:var(--bw) solid var(--edge);border-radius:17px;padding:12px;font:800 12px var(--font-head);cursor:pointer;color:#d64545;">CLEAR</button>' : "") +
           '</div>' +
         '</div>';
       document.body.appendChild(ovl);
@@ -971,8 +1007,8 @@ document.getElementById("quoteBtn").addEventListener("click", function () { loca
           if (inspireTray.style.display === "none") {
             inspireTray.style.display = "block";
             inspireTray.innerHTML = INSPIRED_QUOTES.map(function (q, qidx) {
-              return '<div class="cm-inspire-item" data-qidx="' + qidx + '" style="padding:8px 10px;margin-bottom:5px;border-radius:8px;border:1.5px solid #111;background:#fff;cursor:pointer;font-size:12px;line-height:1.35;">' +
-                '<i style="font-family:Georgia,serif;">“' + C.esc(q.quote) + '”</i><br><b style="font-size:10.5px;color:#666;">- ' + C.esc(q.author) + '</b>' +
+              return '<div class="cm-inspire-item" data-qidx="' + qidx + '" style="padding:8px 10px;margin-bottom:5px;border-radius:12px;border:1px solid var(--edge);background:#fff;cursor:pointer;font-size:12px;line-height:1.35;">' +
+                '<i style="font-family:Newsreader, Georgia,serif;">“' + C.esc(q.quote) + '”</i><br><b style="font-size:10.5px;color:#666;">- ' + C.esc(q.author) + '</b>' +
               '</div>';
             }).join("");
             inspireTray.querySelectorAll(".cm-inspire-item").forEach(function (it) {
@@ -1029,14 +1065,14 @@ document.getElementById("quoteBtn").addEventListener("click", function () { loca
       var ovl = document.createElement("div");
       ovl.style.cssText = "position:fixed;inset:0;background:rgba(17,17,17,0.65);z-index:99998;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px);";
 
-      var quoteHtml = n.quote_text ? '<blockquote style="border-left:4px solid var(--ink,#111);padding-left:10px;font:italic 13px Georgia,serif;margin:10px 0;">“' + C.esc(n.quote_text) + '”' + (n.quote_author ? '<br><small>- ' + C.esc(n.quote_author) + '</small>' : '') + '</blockquote>' : '';
+      var quoteHtml = n.quote_text ? '<blockquote style="border-left:var(--bw) solid var(--edge);padding-left:10px;font:italic 13px Newsreader, Georgia,serif;margin:10px 0;">“' + C.esc(n.quote_text) + '”' + (n.quote_author ? '<br><small>- ' + C.esc(n.quote_author) + '</small>' : '') + '</blockquote>' : '';
 
       var actionBtn = (nuid !== "me")
-        ? '<a href="dm.html?u=' + encodeURIComponent(nuid) + '" style="display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;background:var(--ink,#111);color:#fff;border:2.5px solid var(--ink,#111);border-radius:12px;padding:10px;font:800 12px var(--font-head);text-decoration:none;margin-top:14px;">' + C.icon("chat") + ' REPLY IN CHAT →</a>'
-        : '<button id="noteEditBtn" style="width:100%;display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;background:var(--yellow,#ffc800);color:#111;border:2.5px solid var(--ink,#111);border-radius:12px;padding:10px;font:800 12px var(--font-head);cursor:pointer;margin-top:14px;box-shadow:3px 3px 0 var(--ink,#111);">✏️ EDIT YOUR NOTE</button>';
+        ? '<a href="dm.html?u=' + encodeURIComponent(nuid) + '" style="display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;background:var(--ink,#111);color:#fff;border:var(--bw) solid var(--edge);border-radius:17px;padding:10px;font:800 12px var(--font-head);text-decoration:none;margin-top:14px;">' + C.icon("chat") + ' REPLY IN CHAT →</a>'
+        : '<button id="noteEditBtn" style="width:100%;display:flex;align-items:center;justify-content:center;gap:6px;text-align:center;background:var(--yellow,#ffc800);color:#111;border:var(--bw) solid var(--edge);border-radius:17px;padding:10px;font:800 12px var(--font-head);cursor:pointer;margin-top:14px;box-shadow:var(--sh-2);">✏️ EDIT YOUR NOTE</button>';
 
       ovl.innerHTML =
-        '<div style="background:var(--paper,#fffdf5);border:3.5px solid var(--ink,#111);border-radius:18px;box-shadow:8px 8px 0 var(--ink,#111);max-width:340px;width:100%;padding:22px;position:relative;box-sizing:border-box;">' +
+        '<div style="background:var(--paper,#fffdf5);border:var(--bw) solid var(--edge);border-radius:18px;box-shadow:var(--sh-3);max-width:340px;width:100%;padding:22px;position:relative;box-sizing:border-box;">' +
           '<button id="popCloseBtn" style="position:absolute;top:12px;right:12px;background:none;border:none;font:800 20px sans-serif;cursor:pointer;color:var(--ink,#111);">✕</button>' +
           '<div style="font:800 11px var(--font-head);letter-spacing:1px;color:var(--muted,#666);margin-bottom:8px;">24-HOUR NOTE</div>' +
           (n.note_text ? '<p style="font:700 15px var(--font-body);margin:0 0 10px;">' + C.esc(n.note_text) + '</p>' : '') +
@@ -1274,7 +1310,7 @@ document.getElementById("quoteBtn").addEventListener("click", function () { loca
           '<div class="cm-person__top">' +
             '<a class="cm-ava cm-ava--lg" href="profile.html?id=' + p.id + '">' + (av ? '<img src="' + C.esc(av) + '" alt="">' : "<span>" + C.esc((p.name || "R").charAt(0).toUpperCase()) + "</span>") + "</a>" +
             '<div class="cm-person__meta">' +
-              '<a class="cm-name" href="profile.html?id=' + p.id + '">' + C.esc(p.name || "Reader") + (C.isOfficial(p.id) ? '<span class="cm-vtick">✔</span>' : "") + "</a>" +
+              '<a class="cm-name" href="profile.html?id=' + p.id + '">' + C.esc(p.name || "Reader") + (C.isOfficial(p.id) ? '<span class="cm-vtick"><svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>' : "") + "</a>" +
               '<span class="cm-time cm-socid">@' + String(p.username || p.id).slice(0, 24) + (p._posts ? " · " + C.icon('pencil') + " " + p._posts + " post" + (p._posts === 1 ? "" : "s") : "") + (p.progress ? " · " + C.icon('book') + " " + p.progress + " lessons" : "") + "</span>" +
             "</div>" +
           "</div>" +
@@ -1331,13 +1367,17 @@ document.getElementById("quoteBtn").addEventListener("click", function () { loca
     load();
   })();
   </script>
-  <script src="js/data.js?v=323"></script>
-  <script src="js/osint.js?v=323"></script>
-  <script src="js/bar.js?v=323" defer></script>
-  <script src="js/guide.js?v=323"></script>
-  <script src="js/gate.js?v=323" defer></script>
-  <script src="js/trial.js?v=323" defer></script>
-  <script src="js/podcast-data.js?v=323"></script>
-  <script src="js/audioplayer.js?v=323"></script>
+  <script src="js/data.js?v=335"></script>
+  <script src="js/osint.js?v=335"></script>
+  <script src="js/bar.js?v=335" defer></script>
+  <script src="js/soft-motion.js?v=335" defer></script>
+  <script src="js/guide.js?v=335"></script>
+  <script src="js/gate.js?v=335" defer></script>
+  <script src="js/trial.js?v=335" defer></script>
+  <script src="js/podcast-data.js?v=335"></script>
+  <script src="js/audioplayer.js?v=335"></script>
+  <script src="js/stt.js?v=335"></script>
+  <script src="js/film.js?v=335" defer></script>
+  <script src="js/film2.js?v=335" defer></script>
 </body>
 </html>
