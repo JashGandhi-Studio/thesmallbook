@@ -31,9 +31,9 @@
       '<p class="dd-gate__p">' + esc(d.hook) + '</p>' +
       '<div class="dd-gate__row">' +
         '<a class="dd-gate__go" href="gold.html">👑 UNLOCK WITH GOLD</a>' +
-        '<a class="dd-gate__try" href="deepdive.html?id=dd-atomic-identity">READ THE FREE SAMPLE FIRST</a>' +
+        '<a class="dd-gate__try" href="deepdive.html?id=dd-atomic-identity">READ THE SAMPLE FIRST</a>' +
       '</div>' +
-      '<small class="dd-gate__tiny">The 520 books stay free, every lesson. Gold is this: the layer underneath, one chapter at a time.</small></div>';
+      '<small class="dd-gate__tiny">The 600 books stay open, every lesson. Gold is this: the layer underneath, one chapter at a time.</small></div>';
     document.title = "A Gold deep dive | TheSmallBook";
   }
 
@@ -44,7 +44,7 @@
       '<a class="dd-crumb" href="book.html?id=' + esc(d.bookId) + '">📖 ' + esc((b && b.title) || d.bookId) + '</a>',
       '<span class="dd-chip">' + esc(d.chapterLabel) + '</span>',
       '<span class="dd-chip dd-chip--min">' + d.minutes + ' min read</span>',
-      d.sample ? '<span class="dd-chip dd-chip--free">Free sample</span>' : '<span class="dd-chip dd-chip--gold">Gold</span>',
+      d.sample ? '<span class="dd-chip dd-chip--free">Sample</span>' : '<span class="dd-chip dd-chip--gold">Gold</span>',
       '</header>',
       '<h1 class="dd-h1">' + esc(d.title) + '</h1>',
       '<p class="dd-hook">' + esc(d.hook) + '</p>'];
@@ -54,7 +54,7 @@
     });
     parts.push('<div class="dd-take"><b>THE ONE THING TO KEEP</b><p>' + esc(d.sections[d.sections.length - 1].p[d.sections[d.sections.length - 1].p.length - 1]) + '</p></div>');
     parts.push('<div class="dd-foot">' +
-      '<p class="dd-note">An original TheSmallBook essay around the chapter: our analysis, the evidence, the holes, the practice. The chapter itself stays in the book, where it belongs. <a href="book.html?id=' + esc(d.bookId) + '">Read the full breakdown free &rarr;</a></p>' +
+      '<p class="dd-note">An original TheSmallBook essay around the chapter: our analysis, the evidence, the holes, the practice. The chapter itself stays in the book, where it belongs. <a href="book.html?id=' + esc(d.bookId) + '">Read the full breakdown &rarr;</a></p>' +
       '<div class="dd-actions">' +
         '<button id="ddListen" class="dd-btn">🎧 LISTEN TO THIS DIVE</button>' +
         '<a class="dd-btn dd-btn--ghost" href="gold.html">👑 ALL DEEP DIVES WITH GOLD</a>' +

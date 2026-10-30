@@ -33,7 +33,7 @@
   /* ---------- the guide sheet: every function, plainly ---------- */
   var ROWS = [
     { g: "READ", rows: [
-      { e: "📚", n: "The Library", d: "520 books, 3,685 lessons, 26 languages. Free to read, forever.", h: "index.html" },
+      { e: "📚", n: "The Library", d: "600 books, 4,343 lessons, 26 languages. Free to read, forever.", h: "index.html" },
       { e: "📷", n: "Scanner", d: "Holding a paper book? Scan its cover and its shelf opens here.", h: "scan.html" },
       { e: "🌊", n: "Deep Dives", d: "The one chapter of a book worth reading in full, with narration.", h: "deepdive.html" },
       { e: "🗒️", n: "Notebook", d: "Every highlight, note and saved line you keep, in one place.", h: "notes.html" }
@@ -197,8 +197,8 @@
      exactly where you were. A stop whose element is missing waits a
      while (sheets and docks mount late), then steps aside. */
   var WALK = [
-    { p: "index.html", sel: null, t: "Welcome to TheSmallBook", d: "A quiet library: 520 books broken into 5-minute lessons, full audiobooks, real podcasts, a private notebook - and 400 stories of failure worth more than most success books. This walkthrough is hands-on. When you see YOUR TURN, the next move is yours: the tour only moves when you actually do the thing. Everything stays free, nothing breaks, and you can leave anytime with skip." },
-    { p: "index.html", sel: "#searchInput", t: "Your turn: search the library", d: "520 books in 26 languages, every one free. Titles, authors, moods - type 'focus' or 'money' or a name, the shelf rearranges itself around it.", tryit: "#searchInput", tryTxt: "Tap the search box" },
+    { p: "index.html", sel: null, t: "Welcome to TheSmallBook", d: "A quiet library: 600 books broken into 5-minute lessons, full audiobooks, real podcasts, a private notebook - and 400 stories of failure worth more than most success books. This walkthrough is hands-on. When you see YOUR TURN, the next move is yours: the tour only moves when you actually do the thing. Everything stays free, nothing breaks, and you can leave anytime with skip." },
+    { p: "index.html", sel: "#searchInput", t: "Your turn: search the library", d: "600 books in 26 languages, every one free. Titles, authors, moods - type 'focus' or 'money' or a name, the shelf rearranges itself around it.", tryit: "#searchInput", tryTxt: "Tap the search box" },
     { p: "index.html", sel: ".scanbtn", t: "Scan a paper book", d: "Holding a real book? The scanner reads its cover and opens that book's whole shelf here: lessons, audio, everything it has. It works on any book, not just the famous ones." },
     { p: "index.html", sel: ".gravebanner__box", t: "The Graveyard", d: "400 real failures autopsied - Enron, the Titan, Nokia, and cons nobody taught you about. Each grave reads the same way: HOW IT STARTED, THE FALL, THE LESSON. The people in it paid billions for these lessons; reading them is free. You will open one yourself in a minute." },
     { p: "index.html", sel: ".tsb-bar__item--stories", t: "Your turn: explore stories & audio", d: "First, a trick: scroll down a little and the menu bar tucks itself away - scroll back up and it returns, so it never eats your screen. Bring it back, then tap Stories and let's go in together.", tryit: ".tsb-bar__item--stories", tryTxt: "Scroll a bit, then tap Stories" },
@@ -440,7 +440,7 @@
   /* ---------- the mini tour: five soft steps across home ---------- */
   var STEPS = [
     { sel: "#tsbHelpChip", t: "This ? is your map", d: "Lost anytime, on any day? Tap it: every function of the app, explained in plain words, one tap away." },
-    { sel: "#searchInput", t: "Type a book, a mood, a problem", d: "520 books live here, broken into 5-minute lessons. Every single one free to read." },
+    { sel: "#searchInput", t: "Type a book, a mood, a problem", d: "600 books live here, broken into 5-minute lessons. Every single one free to read." },
     { sel: ".scanbtn", t: "Reading a paper book?", d: "Scan its cover and its whole shelf opens here - lessons, audio, everything it has." },
     { sel: ".gravebanner__box", t: "The Graveyard", d: "400 real failures autopsied, from Enron to the Titan. The best free read on the internet." },
     { sel: ".tsb-bar__item--plus", t: "The big + is your audio home", d: "Stories, Listen Today, your continue card, audiobooks and podcasts - it all lives behind the plus." }

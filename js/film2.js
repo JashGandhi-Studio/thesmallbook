@@ -679,7 +679,7 @@
       $$(".rm-meta, h2, .frd-share, .frd-fin, script, style", cl).forEach(function (n) { n.remove(); });
       var h = $("h2", art), txt = (cl.textContent || "").replace(/\s+/g, " ").trim();
       if (!txt) return;
-      TSB_AUDIO.playDoc(docKey(), bk.title, (scrollMode() ? "The whole book" : "Page " + (cur() + 1) + " of " + total), [{ label: h ? h.textContent : bk.title, text: txt.slice(0, 2900) }]);
+      TSB_AUDIO.playDoc(docKey(), bk.title, (scrollMode() ? "The whole book" : "Page " + (cur() + 1) + " of " + total), [{ label: h ? h.textContent : bk.title, text: txt.slice(0, 2900) }], { art: bk.cover || "", bookId: bk.id });
       setTimeout(paintListen, 300);
     });
     window.addEventListener("tsb:ap-line", function () { paintListen(); });
@@ -998,7 +998,7 @@
       [AIC.crown, "Gold", "Deep dives, natural voices and the extras, \u20b999 a month.", "gold.html"]
     ];
     var steps = [["Read the whole book", "Cover to cover, with a pencil. No summaries of summaries."], ["Find the few ideas", "The handful of lessons the book is really about, in plain words."], ["Show it working", "One example from the book and one from life here, so it sticks."], ["Give you one thing to do", "Every lesson ends with a small action you can try today."]];
-    var promises = [["Free to read", "Every book and every lesson. Gold only adds extras on top."], ["No ads, no trackers", "Your reading habits stay yours. Nothing is sold."], ["Your data, your device", "Shelf, streak and notes live on your phone. Sign in only to sync."], ["Respect the authors", "Original lessons that send you to the full book, not replace it."]];
+    var promises = [["Open to read", "Every book and every lesson. Gold only adds extras on top."], ["No ads, no trackers", "Your reading habits stay yours. Nothing is sold."], ["Your data, your device", "Shelf, streak and notes live on your phone. Sign in only to sync."], ["Respect the authors", "Original lessons that send you to the full book, not replace it."]];
     function person(img, initial, nm2, role, place, links) {
       return '<div class="fab-person"><span class="fab-av">' + (img ? '<img src="' + img + '" alt="" onerror="this.remove()">' : "") + "<b>" + initial + "</b></span>" +
         '<div class="fab-pm"><b>' + nm2 + "</b><span>" + role + "</span><small>" + place + "</small>" + (links ? '<div class="fab-links">' + links + "</div>" : "") + "</div></div>";
@@ -1025,7 +1025,7 @@
         '<a href="https://instagram.com/thesmallbook.in" target="_blank" rel="noopener"><span class="fab-ic">' + AIC.cam + '</span><span><b>@thesmallbook.in</b><small>New books every week, behind the scenes</small></span></a>' +
         '<a href="https://github.com/JashGandhi-Studio/thesmallbook" target="_blank" rel="noopener"><span class="fab-ic">' + AIC.code + "</span><span><b>GitHub</b><small>The code behind the app</small></span></a></div>" +
       '<details class="fab-legal"><summary>Terms and privacy' + IC.down + '</summary><div class="fab-legal__in"></div><a href="legal.html">The full plain-words rulebook</a></details>' +
-      '<p class="fab-aff">As an Amazon Associate, TheSmallBook earns from qualifying purchases. It helps keep the library free to read.</p>' +
+      '<p class="fab-aff">As an Amazon Associate, TheSmallBook earns from qualifying purchases. It helps keep the library going.</p>' +
       '<p class="fab-end"><span class="fs-logo">THE<b>SMALL</b>BOOK</span><br>Made with chai in Mumbai. Version ' + esc((window.TSB_FILM2 && TSB_FILM2.version) || "328") + "</p>";
     var stage = $(".fab-stage", fab);
     if (oldBook) { var lb = $(".fa-lid__b", oldBook); if (lb && !lb.firstChild) lb.innerHTML = '<div class="fab-exl"><small>EX LIBRIS</small><b>' + esc(name() || "Every reader") + '</b><s></s><span>Read a little.<br>Keep a lot.</span></div>'; stage.appendChild(oldBook); oldBook.classList.remove("open"); setTimeout(function () { oldBook.classList.add("open"); }, 650); }
@@ -1136,7 +1136,9 @@
   (function () {
     if (page !== "book.html") return;
     var tries = 0;
-    (function warm() {
+    /* v336: only after this page has fully loaded and gone quiet, so it never competes with the first paint */
+    function later(f) { var go = function () { (window.requestIdleCallback || function (c) { setTimeout(c, 600); })(function () { setTimeout(f, 400); }); }; if (document.readyState === "complete") go(); else addEventListener("load", go); }
+    later(function warm() {
       var a = document.getElementById("nbOpenReader");
       if (!a || !/reader\.html/.test(a.href || "")) { if (tries++ < 20) setTimeout(warm, 250); return; }
       try {
@@ -1148,7 +1150,7 @@
           var l = document.createElement("link"); l.rel = "prefetch"; l.href = a.href; document.head.appendChild(l);
         }
       } catch (e) {}
-    })();
+    });
   })();
   function bkxSheet(book, vw) {
     var cat = (book && (book.cat || book.category)) || "Overview";
@@ -1245,6 +1247,7 @@
     var ry1 = Math.round(ry / 360) * 360;
     /* the cover becomes a lid that can swing; its inside is paper */
     var lid = document.createElement("div"); lid.className = "bkx-lid";
+    var a0 = 0, m3 = front ? /rotateY\((-?[\d.]+)deg\)/.exec(front.style.transform || "") : null; if (m3) a0 = -parseFloat(m3[1]) || 0;
     if (front) { front.parentNode.insertBefore(lid, front); lid.appendChild(front); front.style.transform = "none"; }
     var inside = document.createElement("div"); inside.className = "bkx-inside"; lid.appendChild(inside);
     var pg = document.createElement("div"); pg.className = "bkx-pg"; pg.innerHTML = sheet;
@@ -1269,12 +1272,23 @@
     dim.animate([{ opacity: 0 }, { opacity: 0.55, offset: 0.45 }, { opacity: 1 }], { duration: 560, easing: "ease-out", fill: "forwards" });
     /* the book rises to the middle and turns to face you */
     stage.animate([{ transform: "translate(" + dx + "px," + dy + "px) scale(" + k + ")" }, { transform: "none" }], { duration: 560, easing: EASE_OUT, fill: "forwards" });
+    /* v336: it lifts up toward you as it comes, and never quite stops moving */
+    var lift = -Math.min(34, th * 0.08);
     if (obj) obj.animate([
-      { transform: "translateY(0px) rotateX(" + rx + "deg) rotateY(" + ry + "deg)" },
-      { transform: "translateY(0px) rotateX(0deg) rotateY(" + ry1 + "deg)" }
-    ], { duration: 560, easing: EASE_OUT, fill: "forwards" });
-    /* the cover swings open on its spine */
-    lid.animate([{ transform: "translateZ(" + td / 2 + "px) rotateY(0deg)" }, { transform: "translateZ(" + td / 2 + "px) rotateY(-168deg)" }], { duration: 560, delay: 280, easing: EASE_IO, fill: "both" });
+      { transform: "translateY(0px) translateZ(0px) rotateX(" + rx + "deg) rotateY(" + ry + "deg)" },
+      { transform: "translateY(" + lift + "px) translateZ(" + (td * 1.6) + "px) rotateX(-4deg) rotateY(" + (ry1 + 6) + "deg)", offset: 0.5 },
+      { transform: "translateY(" + (lift * 0.35) + "px) translateZ(" + (td * 0.6) + "px) rotateX(-1deg) rotateY(" + (ry1 - 2) + "deg)", offset: 0.82 },
+      { transform: "translateY(" + (lift * 0.2) + "px) translateZ(0px) rotateX(0deg) rotateY(" + (ry1 - 3) + "deg)" }
+    ], { duration: 1150, easing: EASE_OUT, fill: "forwards" });
+    var shd = bk.querySelector(".bk3__shadow");
+    if (shd) shd.animate([{ transform: "scaleX(1)", opacity: 1 }, { transform: "scaleX(.8) translateY(" + (-lift * 0.6) + "px)", opacity: 0.5, offset: 0.5 }, { transform: "scaleX(.9)", opacity: 0.7 }], { duration: 1150, easing: EASE_OUT, fill: "forwards" });
+    /* the cover peels up from its corner, then swings open on its spine */
+    lid.animate([
+      { transform: "translateZ(" + td / 2 + "px) rotateY(" + (-a0) + "deg) rotateX(0deg)" },
+      { transform: "translateZ(" + td / 2 + "px) rotateY(-34deg) rotateX(7deg)", offset: 0.28 },
+      { transform: "translateZ(" + td / 2 + "px) rotateY(-120deg) rotateX(3deg)", offset: 0.7 },
+      { transform: "translateZ(" + td / 2 + "px) rotateY(-168deg) rotateX(0deg)" }
+    ], { duration: 640, delay: 220, easing: EASE_IO, fill: "both" });
     /* the first page grows into the reader */
     var pr = { l: L + tw * 0.015, t: T + th * 0.012 };
     var clipB = Math.max(0, vh - (th * 0.976) / s);
@@ -1320,5 +1334,18 @@
   })();
 
   window.TSB_FILM2 = { version: "332", openShare: openShare, ed: ed };
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
+  /* v336 app shell: reveal the page only once the new design has painted
+     (book page: once the 3D book exists; everywhere: once fonts are in, capped) */
+  function shellReady() {
+    var sh = window.TSB_SHELL; if (!sh) return;
+    var t0 = Date.now();
+    function fontsIn(cb) { var d = false, go = function () { if (!d) { d = true; cb(); } }; try { if (document.fonts && document.fonts.ready) document.fonts.ready.then(go); else go(); } catch (e) { go(); } setTimeout(go, 700); }
+    (function wait() {
+      var need = page === "book.html" && !document.querySelector(".bookhero__coverbox .bk3, .bookhero__coverbox .bk3d");
+      if (need && Date.now() - t0 < 1800) { setTimeout(wait, 60); return; }
+      fontsIn(function () { requestAnimationFrame(function () { requestAnimationFrame(sh.ready); }); });
+    })();
+  }
+  function bootAll() { boot(); shellReady(); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bootAll); else bootAll();
 })();

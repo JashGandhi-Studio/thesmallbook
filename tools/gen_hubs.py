@@ -102,7 +102,7 @@ def card(b, rel):
             f'<span class="hubcard__m"><b>{e(b["title"])}</b>'
             f'<i>{e(b["author"])} · {e(b["year"])}</i>'
             f'<em>{e((b["oneLiner"] or "")[:110])}</em>'
-            f'<u>{e(b["readTime"] or "")} · {b["n"]} lessons · free summary</u></span></a>')
+            f'<u>{e(b["readTime"] or "")} · {b["n"]} lessons · small read</u></span></a>')
 
 HEAD = """<!DOCTYPE html>
 <html lang="en">
@@ -176,9 +176,9 @@ HEAD = """<!DOCTYPE html>
 FOOT = """  <footer class="footer">
     <div class="head">📕 TheSmallBook</div>
     <p>Big books. Small reads. Original educational analyses - no book text reproduced. Support the authors: buy the full books.</p>
-    <p class="affnote">As an Amazon Associate, TheSmallBook earns from qualifying purchases. It keeps the library free. 💛</p>
+    <p class="affnote">As an Amazon Associate, TheSmallBook earns from qualifying purchases. It keeps the library going. 💛</p>
     <div class="credits">✦ MADE BY JASH GANDHI ✦</div>
-    <p class="tiny"><a href="../about.html" style="color:inherit;">ABOUT</a>&nbsp;&nbsp;<strong><a href="../gold.html" style="color:inherit;">👑 TSB GOLD</a></strong>&nbsp;&nbsp;MUMBAI, INDIA&nbsp;&nbsp;<strong>FREE TO READ</strong></p>
+    <p class="tiny"><a href="../about.html" style="color:inherit;">ABOUT</a>&nbsp;&nbsp;<strong><a href="../gold.html" style="color:inherit;">👑 TSB GOLD</a></strong>&nbsp;&nbsp;MUMBAI, INDIA&nbsp;&nbsp;<strong>EIGHT MINUTES A BOOK</strong></p>
   </footer>
 </body>
 </html>
@@ -216,12 +216,12 @@ def main():
       <span class="hubpill">{len(books)} BOOKS · ALL FREE · AUDIO IN 26 LANGUAGES</span>
     </header>
     <div class="hublist">{cards}</div>
-    <div class="hubcta"><a href="../index.html#library">📖 OPEN THE FULL LIBRARY, {len(BOOKS)} BOOKS</a><p>Every summary free. Mark lessons as read, listen in your language, share quote cards.</p></div>
+    <div class="hubcta"><a href="../index.html#library">📖 OPEN THE FULL LIBRARY, {len(BOOKS)} BOOKS</a><p>Every summary, eight minutes. Mark lessons as read, listen in your language, share quote cards.</p></div>
     <section class="hubmore"><h2>More shelves to walk</h2><div class="hubchips">{chips}</div></section>
   </div></main>"""
         write_page(f"topics/{slug}.html",
                    f"Books on {name} - the complete shelf ({len(books)} free summaries) | TheSmallBook",
-                   f"{h1}: {len(books)} free book summaries with lessons, quotes and action plans. Read free, listen in your language.",
+                   f"{h1}: {len(books)} free book summaries with lessons, quotes and action plans. Read simply, listen in your language.",
                    body, itemlist_ld(f"Books on {name}", books))
     # ---- author hubs (2+ books; Unknown gets its own honest shelf) ----
     by_au = {}
@@ -238,7 +238,7 @@ def main():
     <header class="hubhead">
       <p class="hubcrumb"><a href="../index.html">Library</a> › Authors › {e(a)}</p>
       <h1>Every book by {e(a)}, on one shelf</h1>
-      <p>{len(bs)} books in the library, each read down to its lessons: the big idea, real examples, the actions worth taking. Free summaries, no paywall, audio in 26 languages.</p>
+      <p>{len(bs)} books in the library, each read down to its lessons: the big idea, real examples, the actions worth taking. Clear summaries, audio in 26 languages.</p>
       <span class="hubpill">{len(bs)} BOOKS BY {e(a.upper())} · ALL FREE</span>
     </header>
     <div class="hublist">{cards}</div>

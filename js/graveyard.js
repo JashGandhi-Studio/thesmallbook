@@ -6,7 +6,7 @@
 
 (function () {
   const F = window.FAILURES || [];
-  const grid = document.getElementById("graveGrid");
+  const grid = document.getElementById("graveGrid") || document.createElement("main");
   const searchInput = document.getElementById("graveSearch");
   if (window.TSB) { try { window.TSB.achv.award("ghoul", true); } catch (e) {} } /* silent - no toast on entry */
   const filterWrap = document.getElementById("graveFilters");
@@ -65,7 +65,7 @@
     const crore = s.match(/₹\s*([\d,.]+)\s*(lakh\s*crore|crore)/i);
     if (crore) {
       let n = parseFloat(crore[1].replace(/,/g, ""));
-      n *= /lakh/i.test(crore[2]) ? 1.2e9 * 100 : 1.2e5 * 1000; // ≈$120k per crore
+      n *= /lakh/i.test(crore[2]) ? 1.2e10 : 1.2e5; /* v336 fix: 1 crore = 10M rupees, about $120k; 1 lakh crore about $12B */
       if (n > best) best = n;
     }
     return best;
@@ -200,6 +200,7 @@
   }
 
   function render() {
+    if (window.TSB_GY2) return; /* v336: the new graveyard draws its own list */
     let results = F.filter((f) => {
       if (activeCat !== "ALL" && f.category !== activeCat) return false;
       if (!query) return true;
@@ -644,7 +645,8 @@
   });
 
   /* v261 · export */
-  window.TSB_GRAVE = { openAutopsy: openAutopsy, CAT_META: CAT_META };
+  window.TSB_GRAVE = { openAutopsy: openAutopsy, CAT_META: CAT_META, causeOf: causeOf, lossUSD: lossUSD, fmtUSD: fmtUSD,
+    yearNum: yearNum, renderGraveCard: renderGraveCard, shareGraveCanvas: shareGraveCanvas, graveWikiImages: graveWikiImages, wikiLink: wikiLink, toast: toast };
 
   /* ============================================================
      v266 · FRESH GRAVES - the grid refills itself, silently.
@@ -722,6 +724,7 @@
         return data;
       });
   }
+  try { window.TSB_GRAVE.buildWireData = buildWireData; window.TSB_GRAVE.wikiExtract = wikiExtract; window.TSB_GRAVE.firstSentences = firstSentences; } catch (eW) {}
   var freshOffset = 0; /* every refresh turns the next batch - the pool never runs dry */
   function freshBlock(data, opts) {
     var wrap = document.createElement("div");
@@ -784,7 +787,7 @@
       });
     }).catch(function () {});
   }
-  setTimeout(function () { mountFresh(false); }, 2600);
+  if (!window.TSB_GY2) setTimeout(function () { mountFresh(false); }, 2600);
 
   /* the free-record reader - same UI as the autopsy, in-app */
   document.addEventListener("click", function (e) {
@@ -1028,6 +1031,6 @@
   if (/^#grave=/.test(location.hash)) {
     var deepId = decodeURIComponent(location.hash.replace("#grave=", ""));
     var deepF = F.find(function (x) { return x.id === deepId; });
-    if (deepF) setTimeout(function () { openAutopsy(deepF); }, 600);
+    if (deepF && !window.TSB_GY2) setTimeout(function () { openAutopsy(deepF); }, 600);
   }
 })();

@@ -36,6 +36,7 @@
     box.classList.add("b3d-box");
     window.TSB3D.wrap(img, {
       w: w,
+      ajar: true,
       title: book ? book.title : (document.title || "").split(" - ")[0],
       line: book ? (book.oneLiner || book.tagline || "") : "",
       lessons: book && book.lessons ? book.lessons.length : 7
@@ -116,7 +117,7 @@
   ready(function () {
     try { wireReaderProgress(); } catch (e5) {}
     try { build3dCover(); } catch (e1) {}
-    try { wireCoverMorph(); } catch (e2) {}
+    /* v336: no flat-cover morph; the book page arrives as its skeleton, then the 3D book */
     try { wireShareReveal(); } catch (e3) {}
     try { wireReveals(); } catch (e4) {}
   });

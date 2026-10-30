@@ -103,7 +103,7 @@ PSEO_TPL = '''<!DOCTYPE html>
     <header class="seohero">
       <p class="seocrumb">{CRUMB}</p>
       <h1>{H1}</h1>
-      <p class="seometa">&#128214; free summaries &middot; 26 languages &middot; no paywall</p>
+      <p class="seometa">&#128214; 8-minute summaries &middot; 26 languages &middot; no paywall</p>
       <p class="seotagline">{INTRO}</p>
     </header>
     <section class="seoblock pseo__listwrap">
@@ -111,15 +111,15 @@ PSEO_TPL = '''<!DOCTYPE html>
     </section>
     <section class="seoblock seocta">
       <a class="btn btn--yellow" href="../index.html#library">&#128218; BROWSE THE FULL 520-BOOK SHELF</a>
-      <p>Every summary is free: lessons, examples, action steps, audio in your language.</p>
+      <p>Every summary has it all: lessons, examples, action steps, audio in your language.</p>
     </section>
   </main>
   <footer class="footer">
     <div class="head">&#128278; TheSmallBook</div>
     <p>Big books. Small reads. Original educational analyses &mdash; no book text reproduced. Support the authors: buy the full books.</p>
-    <p class="affnote">As an Amazon Associate, TheSmallBook earns from qualifying purchases. It keeps the library free. &#128155;</p>
+    <p class="affnote">As an Amazon Associate, TheSmallBook earns from qualifying purchases. It keeps the library going. &#128155;</p>
     <div class="credits">&#10022; MADE BY JASH GANDHI &#10022;</div>
-    <p class="tiny"><a href="{R}about.html" style="color:inherit;">ABOUT</a>&nbsp;&nbsp;<strong><a href="{R}gold.html" style="color:inherit;">&#128081; TSB GOLD</a></strong>&nbsp;&nbsp;MUMBAI, INDIA&nbsp;&nbsp;<strong>FREE TO READ</strong></p>
+    <p class="tiny"><a href="{R}about.html" style="color:inherit;">ABOUT</a>&nbsp;&nbsp;<strong><a href="{R}gold.html" style="color:inherit;">&#128081; TSB GOLD</a></strong>&nbsp;&nbsp;MUMBAI, INDIA&nbsp;&nbsp;<strong>EIGHT MINUTES A BOOK</strong></p>
   </footer>
   <script src="{R}js/prefs.js?v=300"></script>
   <script src="{R}js/lang.js?v=300"></script>
@@ -179,7 +179,7 @@ for sid in seeds:
           <img class="pseo__cover" src="{R}{b['cover']}" alt="{esc(b['title'])} book cover" loading="lazy" width="54" height="81">
           <span class="pseo__ibody">
             <b class="pseo__btitle" translate="no">{esc(b['title'])}</b>
-            <span class="pseo__meta">by <span translate="no">{esc(b['author'])}</span> &middot; {b['year']} &middot; {esc(b['category'])} &middot; free summary</span>
+            <span class="pseo__meta">by <span translate="no">{esc(b['author'])}</span> &middot; {b['year']} &middot; {esc(b['category'])} &middot; small read</span>
             <span class="pseo__why">{esc(b['oneLiner'])}</span>
             <span class="pseo__go">READ THE FREE BREAKDOWN &rarr;</span>
           </span>
@@ -254,10 +254,10 @@ for slug, label, cat, ids in TOPICS:
     T = f"The {len(picks)} Best Books on {label}"
     page = PSEO_TPL.format(
         TITLE=f"{T} (Free Summaries) | TheSmallBook",
-        DESC=esc(f"The best books on {label.lower()}, chosen from a {len(BOOKS)}-book free library: what each one argues, who wrote it, and which free summary to start with."),
+        DESC=esc(f"The best books on {label.lower()}, chosen from a {len(BOOKS)}-book free library: what each one argues, who wrote it, and which summary to start with."),
         CANON=f"https://thesmallbook.in/pseo/best-books-on/{slug}.html",
         H1=T,
-        INTRO=f"Every list of books on {label.lower()} recommends the same three titles and stops. This one starts from the whole shelf: {len(BOOKS)} books distilled into lessons, examples and action steps. These {len(picks)} are the ones worth your week, and every one is free to read here, right now, in your language.",
+        INTRO=f"Every list of books on {label.lower()} recommends the same three titles and stops. This one starts from the whole shelf: {len(BOOKS)} books distilled into lessons, examples and action steps. These {len(picks)} are the ones worth your week, and every one is ready to read here, right now, in your language.",
         LIST=items,
         CRUMB=f"<a href=\"{R}index.html\">Library</a> &rsaquo; Best books on {esc(label.lower())}",
         LD=json.dumps(ld_item_list(f"Best books on {label}", [by_id[i] for i in picks]), ensure_ascii=False, separators=(',', ':')), R=R)
@@ -304,12 +304,12 @@ for a, b in PAIRS:
         return f"<span class=\"notranslate\" translate=\"no\">Read {esc(book['title'])}</span> if {x}"
     slug = f"{a}-vs-{b}"
     title = f"{ba['title']} vs {bb['title']}: Which Should You Actually Read? | TheSmallBook"
-    desc = esc(f"{ba['title']} or {bb['title']}? Both, honestly, but in an order. A straight comparison: what each book argues, where they clash, which free summary to read first.")
+    desc = esc(f"{ba['title']} or {bb['title']}? Both, honestly, but in an order. A straight comparison: what each book argues, where they clash, which summary to read first.")
     page = PSEO_TPL.format(
         TITLE=title, DESC=desc,
         CANON=f"https://thesmallbook.in/pseo/vs/{slug}.html",
         H1=f"{esc(ba['title'])} vs {esc(bb['title'])}: Which Should You Actually Read?",
-        INTRO=(f"Both books live on the same shelf: {esc(ba['category'])}. Both are free to read here, in full, right now. "
+        INTRO=(f"Both books live on the same shelf: {esc(ba['category'])}. Both are here to read, in full, right now. "
                f"<span class=\"notranslate\" translate=\"no\">{esc(ba['title'])}</span> ({ba['year']}, {esc(ba['author'])}) argues: {esc(ba['oneLiner'][:100])}… "
                f"<span class=\"notranslate\" translate=\"no\">{esc(bb['title'])}</span> ({bb['year']}, {esc(bb['author'])}) argues: {esc(bb['oneLiner'][:100])}…"),
         LIST=f'''      <div class="pseo__vs">
@@ -338,7 +338,7 @@ for a, b in PAIRS:
             bb['cover'], esc(bb['title']), esc(bb['title']), esc(bb['author']), bb['year'], esc(bb['readTime']), esc(bb['bigIdea'][:260]), bb['id'], esc(bb['title'].upper()),
             readif(f"you want {esc(ba['tagline'][:70]).lower()}", ba),
             readif(f"you want {esc(bb['tagline'][:70]).lower()}", bb),
-            ("The honest order for most readers: start with <span class=\"notranslate\" translate=\"no\">" + esc((ba if len(ba['title']) <= len(bb['title']) else bb)['title']) + "</span> for the base, then go deeper with the other. Both summaries are free, no paywall, in 26 languages.")),
+            ("The honest order for most readers: start with <span class=\"notranslate\" translate=\"no\">" + esc((ba if len(ba['title']) <= len(bb['title']) else bb)['title']) + "</span> for the base, then go deeper with the other. Both summaries are here, in 26 languages.")),
         CRUMB=f"<a href=\"{R}index.html\">Library</a> &rsaquo; <span translate=\"no\">{esc(ba['title'])}</span> vs <span translate=\"no\">{esc(bb['title'])}</span>",
         R=R,
         LD=json.dumps([

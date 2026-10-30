@@ -63,7 +63,7 @@
     };
   }
 
-  function docQueue(key, title, sub, sections) {
+  function docQueue(key, title, sub, sections, opt) {
     var parts = [{ text: title + ". From TheSmallBook.", pause: 700 }];
     var items = [{ label: title, sub: sub || "The listening version", part: 0 }];
     sections.forEach(function (s, i) {
@@ -71,7 +71,10 @@
       parts.push({ text: (s.label || s.title) + ". ", pause: 500 });
       parts.push({ text: s.text, pause: 800 });
     });
-    return { type: "doc", key: key, title: title, sub: sub || "The listening version", parts: parts, items: items, from: 0 };
+    var dq = { type: "doc", key: key, title: title, sub: sub || "The listening version", parts: parts, items: items, from: 0 };
+    if (opt && opt.art) dq.art = opt.art;          /* v336: the cover rides along to the player */
+    if (opt && opt.bookId) dq.bookId = opt.bookId;
+    return dq;
   }
 
   /* real audio queue: podcast episodes or audiobook chapters */
@@ -504,7 +507,7 @@
       /* v321: the narrated engine already had speed - it only lacked BOOST */
       (!isAudio ? '<div class="ap-lab">VOLUME BOOST</div><div class="ap-row">' +
         BOOSTS.map(function (b) { return '<button class="ap-chip ap-bo' + (boostPref() === b.g ? " on" : "") + '" data-bo="' + b.g + '">' + b.l + '</button>'; }).join("") +
-      '</div>' : '') +
+      '</div><div class="ap-lab">VOICE</div><div class="ap-row"><button class="ap-chip" id="apVoiceModel">TheSmallBook Voice Model</button></div>' : '') +
       (isAudio && !/^ab:/.test(q.key) ? '<div class="ap-lab">PODCAST 300% VOLUME BOOST</div><div class="ap-row">' +
         '<button class="ap-chip ap-pc-boost' + (podcastBoostOn() ? " on" : "") + '" data-pcboost="' + (podcastBoostOn() ? "0" : "1") + '">' + (podcastBoostOn() ? "⚡ 300% BOOST: ON" : "⚡ 300% BOOST: OFF") + '</button>' +
       '</div>' : '') +
@@ -649,6 +652,8 @@
         apSeeking = false;
       });
     }
+    var vm = sheet.querySelector("#apVoiceModel");
+    if (vm) vm.addEventListener("click", function () { try { if (T && T.openVoiceModel) T.openVoiceModel(); } catch (e) {} });
     var c = sheet.querySelector("#apCont");
     if (c) c.addEventListener("click", function () {
       var at = q.type === "audio" ? (audioPos(q.key) || {}).ch : (jget(LASTKEY, {}).item || 0);
@@ -1555,7 +1560,7 @@
         items: items,
         ch: pos ? pos.ch : 0,
         seek: pos ? pos.t : 0,
-        credit: "Read by volunteers for LibriVox (public domain), streamed from Archive.org. TheSmallBook hosts nothing; we just point at the free shelves.",
+        credit: "Read by volunteers for LibriVox (public domain), streamed from Archive.org. TheSmallBook hosts nothing; we just point at the public shelves.",
         art: window.TSB_ABART ? TSB_ABART(bookId, rec, b) : ((b && b.cover) ? b.cover : ("assets/covers/" + (b.id || bookId) + ".jpg"))
       }));
     });
@@ -1590,7 +1595,7 @@
         startAudio(audioQueue({
           key: l.key,
           title: l.title || b.title || rec.title,
-          sub: "full audiobook, free · LibriVox",
+          sub: "full audiobook · LibriVox",
           items: items,
           ch: Math.min(pos.ch || 0, items.length - 1),
           seek: pos.t || 0,
@@ -1649,11 +1654,11 @@
   /* v319: pre-fetch a show's episode list in idle time so the first tap plays, not waits */
   warmShow: function (show) { try { fetchFeed(show.rss || show.url || show.feed || "", function () {}); } catch (e) {} },
     playBook: function (bookId, fromLesson) {
-      var qc = bookQueue(bookId, fromLesson);
-      if (qc) startTTS(qc);
+      var go = function () { var qc = bookQueue(bookId, fromLesson); if (qc) startTTS(qc); };
+      if (window.TSB_LESSONS) TSB_LESSONS.ensure(bookId, go); else go();
     },
-    playDoc: function (key, title, sub, sections) {
-      var qc = docQueue(key, title, sub, sections);
+    playDoc: function (key, title, sub, sections, opt) {
+      var qc = docQueue(key, title, sub, sections, opt);
       if (qc) startTTS(qc);
     },
     playFeed: playFeed,
@@ -1695,8 +1700,8 @@
       if (!l) return;
       jset(CANCELKEY, 0);   /* continue is the one key that undoes a cancel */
       if (l.type === "book" && l.bookId) {
-        var qc = bookQueue(l.bookId, l.item || 0);
-        if (qc) startTTS(qc);
+        var goR = function () { var qc = bookQueue(l.bookId, l.item || 0); if (qc) startTTS(qc); };
+        if (window.TSB_LESSONS) TSB_LESSONS.ensure(l.bookId, goR); else goR();
       } else if (l.type === "audio") {
         if (/^ab:/.test(l.key)) {
           var bid = l.key.slice(3);

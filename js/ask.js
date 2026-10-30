@@ -24,9 +24,10 @@
   var GRAVE_MAP = null;
   function graveIndex() {
     if (GRAVE_MAP) return GRAVE_MAP;
-    GRAVE_MAP = {};
-    (window.FAILURES || []).forEach(function (f) { GRAVE_MAP[f.id] = f; });
-    return GRAVE_MAP;
+    var m = {};
+    (window.FAILURES || []).forEach(function (f) { m[f.id] = f; });
+    if ((window.FAILURES || []).length) GRAVE_MAP = m;   /* v336: cache only once the list has arrived */
+    return m;
   }
 
   /* ============ LANGUAGE ENGINE ============ */
@@ -96,7 +97,7 @@
     return String(q).toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
   }
   /* v292 house rule: no em dashes anywhere in the app. Ask pulls lines from
-     520 books and 400 autopsies, older shelves included, so the escape gate
+     600 books and 400 autopsies, older shelves included, so the escape gate
      also flattens every dash to a plain hyphen. Nothing rendered in the panel
      (or saved to history) can carry one, whatever the source file says. */
   function esc(s) {
@@ -153,7 +154,7 @@
     return out.slice(0, limit || 2);
   }
   function lessonLink(book, idx) { return "book.html?id=" + encodeURIComponent(book.id) + "#lesson-" + idx; }
-  function graveLink(f) { return "graveyard/" + encodeURIComponent(f.id) + ".html"; }
+  function graveLink(f) { return "graveyard.html#grave=" + encodeURIComponent(f.id); } /* v336: the new case view */
 
   /* ============ answer builders ============ */
   /* the cover the book actually declares, it is not always a .jpg (7 books
@@ -1146,6 +1147,9 @@
   function send(raw) {
     var q = String(raw || "").trim();
     if (!q) return;
+    /* v336: Ask reads every lesson, so the lesson text is fetched once first */
+    if (window.TSB_LESSONS && !send._all) { send._all = 1; var n = 2, both = function () { if (--n === 0) { send._all = 2; send(raw); } }; TSB_LESSONS.all(both); if (TSB_LESSONS.failures) TSB_LESSONS.failures(both); else both(); return; }
+    if (send._all === 1) return;
     /* ⏳ v300 free quota: one honest card instead of a silent fourth answer */
     if (quotaBlocked()) { input.value = ""; paintQuota(); return; }
     if (window.TSB) { try { window.TSB.achv.award("ask-1"); } catch (e) {} }
@@ -1380,10 +1384,10 @@
         '<div class="aq-locked">' +
           '<div class="aq-locked__chip">👑</div>' +
           '<h3>ASK THE LIBRARY IS PART OF GOLD</h3>' +
-          '<p>Every answer is composed live from <b>520 books, 3,685 lessons and 400 autopsies</b>, with the exact lesson it came from, one tap away. Nothing invented, no chatbot filler.</p>' +
+          '<p>Every answer is composed live from <b>600 books, 4,343 lessons and 400 autopsies</b>, with the exact lesson it came from, one tap away. Nothing invented, no chatbot filler.</p>' +
           '<p class="aq-locked__modes">Seven ways to ask: compare books on one question, the decision before the disaster, red flags, seven-day plans and more.</p>' +
           '<a class="aq-locked__go" href="gold.html">👑 SEE TSB GOLD</a>' +
-          '<small>The library itself stays free, every book, every lesson, forever.</small>' +
+          '<small>The library itself stays open, every book, every lesson.</small>' +
         '</div>';
     }
   }
@@ -1406,11 +1410,11 @@
       msgs.innerHTML =
         '<div class="aq-quota">' +
           '<div class="aq-quota__chip">⏳</div>' +
-          '<h3>THE FREE DAY\u2019S ' + ((window.TSB_ASK_QUOTA && TSB_ASK_QUOTA.perDay) ? TSB_ASK_QUOTA.perDay() : 5) + ' QUESTIONS ARE USED</h3>' +
-          '<p>Each one was composed live from <b>' + nb + ' books, ' + nl.toLocaleString("en-IN") + ' lessons and ' + ng + ' autopsies</b>, with the exact lesson it came from. That depth takes real work, so the free window is ' + ((window.TSB_ASK_QUOTA && TSB_ASK_QUOTA.perDay) ? TSB_ASK_QUOTA.perDay() : 5) + ' questions every 24 hours.</p>' +
+          '<h3>TODAY\u2019S ' + ((window.TSB_ASK_QUOTA && TSB_ASK_QUOTA.perDay) ? TSB_ASK_QUOTA.perDay() : 5) + ' QUESTIONS ARE USED</h3>' +
+          '<p>Each one was composed live from <b>' + nb + ' books, ' + nl.toLocaleString("en-IN") + ' lessons and ' + ng + ' autopsies</b>, with the exact lesson it came from. That depth takes real work, so the daily window is ' + ((window.TSB_ASK_QUOTA && TSB_ASK_QUOTA.perDay) ? TSB_ASK_QUOTA.perDay() : 5) + ' questions every 24 hours.</p>' +
           '<p class="aq-quota__clock">Your next window opens in <b>' + (clock || "about 24h") + '</b>.</p>' +
           '<a class="aq-quota__go" href="gold.html">👑 GO GOLD, ASK WITHOUT LIMITS</a>' +
-          '<small>The books stay free, every page, every lesson, forever.</small>' +
+          '<small>The books stay open, every page, every lesson.</small>' +
         '</div>';
     }
   }

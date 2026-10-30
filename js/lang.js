@@ -709,7 +709,7 @@
     /* swipe the sheet back up */
     var y0 = null, dy = 0;
     card.addEventListener("touchstart", function (e) { var sc = modal.querySelector(".langsheet__scroll"); if (sc && sc.contains(e.target) && sc.scrollTop > 0) return; y0 = e.touches[0].clientY; dy = 0; card.style.transition = "none"; }, { passive: true });
-    card.addEventListener("touchmove", function (e) { if (y0 === null) return; dy = Math.min(0, e.touches[0].clientY - y0); card.style.transform = "translateY(" + dy + "px)"; }, { passive: true });
+    card.addEventListener("touchmove", function (e) { if (y0 === null) return; dy = Math.min(0, e.touches[0].clientY - y0); card.style.transform = "translate3d(0," + dy + "px,0)"; }, { passive: true });
     card.addEventListener("touchend", function () { if (y0 === null) return; card.style.transition = ""; card.style.transform = ""; if (dy < -70) close(); y0 = null; });
     /* filter */
     var find = modal.querySelector(".langsheet__find input");

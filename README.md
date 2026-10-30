@@ -2,11 +2,21 @@
 
 **Live repo:** [github.com/JashGandhi-Studio/thesmallbook](https://github.com/JashGandhi-Studio/thesmallbook) - ⭐ star it if the lessons helped you!
 
-**520 books · 3,685 lessons · 400 failure autopsies - free to read.**
+**600 books · 4,343 lessons · 400 failure autopsies - free to read.**
 
 **Big books. Small reads.** Every lesson from the world's greatest books - broken down chapter by chapter with real examples, killer quotes, and action steps. Skim it, understand it, apply it. No 300-page grind.
 
-## 🆕 What's new in v335 (30 October 2026)
+## 🆕 What's new in v336 (30 October 2026)
+
+- **600 books, 4,343 lessons:** 80 substantial new reads, including 10 illustrated TheSmallBook Originals. Every new title has eight or more long lessons, a related graveyard case, cover, action plan and printable sheet.
+- **TheSmallBook Voice Model:** an opt-in English or Hindi on-device voice. It says exactly what it is, shows the one-time download progress, keeps the model in device storage and never sends spoken text to a cloud voice service. Gold readers can choose Voice Model Plus.
+- **A reading desk for large screens:** desktop and tablet use a responsive editorial spread and a vertical navigation rail instead of a blown-up phone screen.
+- **Smoother from first paint:** the shell stays in front until content is ready, book covers lift into the reader, lazy heavy content no longer blocks the first screen, and scripts preload above the CSP so a cold 4G opening is much faster.
+- **People and retention:** Stories exposes People again with follow and message actions. Daily phone push is available in You. Readers can explicitly choose a private weekly Sunday reading digest.
+- **Setup returns once:** existing readers get the four calm setup screens once for this version, prefilled with their saved choices.
+- **SQL:** run `supabase/sql/UPDATE-v336-retention.sql` only if you want the optional weekly email. Follow `docs/WEEKLY-DIGEST.md`; existing payments SQL remains in place.
+
+## What's new in v335 (30 October 2026)
 
 - **Gold in You:** members see "You are Gold", their plan and end date, with Manage. The ₹99 offer no longer shows to people who already pay, on You or Today. The Gold screen ends cleanly (no stray footer).
 - **Story time only in You:** removed from Today, the home banner, Listen and onboarding. You has a small sheet to show or hide it; Settings has a switch that asks before hiding it everywhere (`tsb_kids_show`).

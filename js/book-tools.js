@@ -367,7 +367,7 @@
     if (!b) { say("Open a book first - the cheat-sheet is built per book."); return; }
     var gold = isGold();
     if (!gold && pdfCount() >= allowance()) {
-      var msg = "You have used your " + allowance() + " free cheat-sheets this month. Gold, or the ₹49 PDF pass, unlocks unlimited cheat-sheets. Open Gold?";
+      var msg = "You have used your " + allowance() + " cheat-sheets this month. Gold, or the ₹49 PDF pass, unlocks unlimited cheat-sheets. Open Gold?";
       if (!window.confirm(msg)) return;
       location.href = "gold.html";
       return;
@@ -402,8 +402,8 @@
     var gold = isGold();
     var txt, cls;
     if (gold) { txt = "Gold · unlimited sheets"; cls = "bookcta__q bookcta__q--gold"; }
-    else if (weekendBonus()) { txt = Math.max(0, allowance() - pdfCount()) + " free sheets left (weekend bonus on)"; cls = "bookcta__q bookcta__q--gold"; }
-    else { txt = Math.max(0, allowance() - pdfCount()) + " of " + allowance() + " free sheets left"; cls = "bookcta__q"; }
+    else if (weekendBonus()) { txt = Math.max(0, allowance() - pdfCount()) + " sheets left (weekend bonus on)"; cls = "bookcta__q bookcta__q--gold"; }
+    else { txt = Math.max(0, allowance() - pdfCount()) + " of " + allowance() + " sheets left this month"; cls = "bookcta__q"; }
     all("[data-tsb-quota]").forEach(function (n) { n.textContent = txt; n.className = cls; });
   }
 

@@ -63,7 +63,7 @@
     var intro = (gold && name)
       ? name + ' recommended this book for you:\n'
       : 'A fellow reader recommended this book for you:\n';
-    return '📕 ' + intro + b.title + ' - ' + tag + '\n\nExperience the 3D book and free breakdown (' + lessonCount + ' lessons, ' + time + '):\n' + url;
+    return '📕 ' + intro + b.title + ' - ' + tag + '\n\nExperience the 3D book and the breakdown (' + lessonCount + ' lessons, ' + time + '):\n' + url;
   }
 
   function createSheet() {

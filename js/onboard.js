@@ -12,7 +12,7 @@
      tsb_read_minutes · tsb_read_style · tsb_read_when
      tsb_starter_shelf · tsb_lang (via TSB_LANG)
    Runs ONCE (tsb_onboarded). Signed-in readers never see it.
-   520+ books, eight minutes each.
+   600+ books, eight minutes each.
    ============================================================ */
 (function () {
   "use strict";
@@ -30,7 +30,7 @@
   /* v331: onboarding is versioned. Everyone, new or returning, signed in or
      not, sets the app up once per big update. Returning readers first see a
      short "new update" card, then the same four screens, prefilled. */
-  var OB_V = 331;
+  var OB_V = 336;
   var UPDATE = !!get("tsb_onboarded", false) && (get("tsb_onboard_v", 0) || 0) < OB_V;
   function shouldShow() {
     try { if (sessionStorage.getItem("tsb_onboarded_pending")) { set("tsb_onboarded", true); set("tsb_onboard_v", OB_V); sessionStorage.removeItem("tsb_onboarded_pending"); } } catch (e) {}
@@ -169,10 +169,10 @@
 
   /* ---------- screens ---------- */
   var NEWS = [
-    ['<path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z"/>', "A new Listen room", "Real show art, and the words as they are read."],
-    ['<rect x="3" y="15" width="18" height="6" rx="3"/><path d="M7 18h.01M12 18h.01M17 18h.01M12 3v8M8 7l4-4 4 4"/>', "Your own action bar", "Your buttons, set in two taps."],
-    ['<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>', "Share in one tap", "WhatsApp, Instagram or a link."],
-    ['<path d="M12 2l3 6.5 7 .8-5.2 4.7 1.5 6.9L12 17.5 5.7 20.9l1.5-6.9L2 9.3l7-.8z"/>', "Gold, made real", "Natural voices and every Gold tool."]
+    ['<path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/>', "A voice that stays with you", "TheSmallBook Voice Model runs on your device, when you choose it."],
+    ['<path d="M4 5.5h16v13H4z"/><path d="M8 9h8M8 13h5"/>', "A longer library", "600 books and 4,343 lessons, with new Originals on the shelf."],
+    ['<path d="M4 19V5l8-2 8 2v14l-8 2z"/><path d="M12 3v18"/>', "A notebook for real life", "Your pages, your prompts and your next small action."],
+    ['<path d="M5 12.5 9.5 17 19 7.5"/>', "The quiet details", "Smoother opens, cleaner refreshes, the same library made more yours."]
   ];
   function screen(i) {
     if (i === -1) {
@@ -186,7 +186,7 @@
         '<div class="fo-news">' + NEWS.map(function (n, k) {
           return '<div class="fo-new" style="--i:' + k + '"><span class="fo-new__ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + n[0] + '</svg></span><span class="fo-new__t"><b>' + n[1] + "</b><span>" + n[2] + "</span></span></div>";
         }).join("") + "</div>" +
-        '<p class="fo-p fo-p--safe">Your books, notes and streak are safe. Thirty seconds to set up' + (draft.name ? ", your name is already in." : ".") + '</p>' +
+        '<p class="fo-p fo-p--safe">Your books, notes and streak are safe. A minute to make this version yours' + (draft.name ? ", your name is already in." : ".") + '</p>' +
         '<div class="fo-foot"><button class="fo-btn" type="button" data-next>Set up again ' + ARROW + "</button></div></section>";
     }
     if (i === 0) {
@@ -194,7 +194,7 @@
       return '<section class="fo-s fo-s1">' + top(0) +
         '<div class="fo-fan">' + fan + "</div>" +
         '<h1 class="fo-h1">Big books.<br><i>Small reads.</i></h1>' +
-        '<p class="fo-p">520+ books, eight minutes each. In English, Hindi and more.</p>' +
+        '<p class="fo-p">600+ books, eight minutes each. In English, Hindi and more.</p>' +
         '<label class="fo-lab" for="foName">WHAT SHOULD WE CALL YOU?</label>' +
         '<input class="fo-in" id="foName" type="text" maxlength="24" autocomplete="given-name" placeholder="Your first name" value="' + esc(draft.name) + '">' +
         '<div class="fo-lab fo-lab--sm">I READ IN</div>' +

@@ -88,8 +88,8 @@
     if (!active()) return "";
     var left = remaining();
     return left > 0
-      ? left + " of " + perDay() + " free today"
-      : "free window used";
+      ? left + " of " + perDay() + " left today"
+      : "today's window used";
   }
 
   window.TSB_ASK_QUOTA = {

@@ -613,7 +613,7 @@ async function handleIncomingMessage(chatId, text) {
   if (/gold|pricing|pdf|cheat/i.test(lower)) {
     const goldMsg = 
       `👑 *TheSmallBook Gold Pass*\n\n` +
-      `Get unlimited 1-page visual PDF cheat-sheets for all 520 books to print, save, and read anywhere:\n` +
+      `Get unlimited 1-page visual PDF cheat-sheets for all 600 books to print, save, and read anywhere:\n` +
       `• ₹49 for a 75-Day PDF Pass\n` +
       `• ₹99/mo for Gold Membership\n` +
       `• ₹999/yr for Annual Founding Pass\n\n` +

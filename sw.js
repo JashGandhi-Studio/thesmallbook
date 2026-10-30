@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v335";
+const CACHE_VERSION = "tsb-v336";
 /* NOTE: the assets/logos/* entries below mirror js/store-data.js exactly.
    every tile the store links to must be precached, or the offline store
    shows broken images. tests/client-suite.js asserts they never drift. */
@@ -146,7 +146,13 @@ const APP_SHELL = [
   "./js/lang.js",
   "./js/failures.js",
   "./js/graveyard.js",
+  "./js/graveyard2.js",
+  "./css/graveyard2.css",
   "./js/data.js",
+  "./assets/fonts/newsreader.woff2",
+  "./assets/fonts/newsreader-italic.woff2",
+  "./assets/fonts/spacegrotesk.woff2",
+  "./assets/fonts/archivoblack.woff2",
   "./js/app.js",
   "./js/bar.js",
   "./js/scanner-data.js",
@@ -190,6 +196,7 @@ const APP_SHELL = [
   "./css/film.css",
   "./js/film.js",
   "./css/film2.css",
+  "./css/desktop-v336.css",
   "./js/film2.js",
   "./js/goldpay.js",
   "./js/freeshelf.js",
@@ -294,7 +301,7 @@ self.addEventListener("fetch", (e) => {
       const hit = await c.match(e.request);
       if (hit) {
         /* background revalidation for code and SVGs so updates land immediately */
-        if (/\.(js|css|svg)$/.test(url.pathname)) {
+        if (/\.(js|css|svg)$/.test(url.pathname) && !/[?&]v=/.test(url.search)) {   /* v336: ?v= files never change */
           fetch(e.request, { cache: "no-cache" }).then((res) => {
             if (res && res.ok && res.status === 200) c.put(e.request, res.clone());
           }).catch(() => {});

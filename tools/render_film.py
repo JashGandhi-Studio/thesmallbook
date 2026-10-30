@@ -151,7 +151,7 @@ def render_scene_1(frame_idx, total_frames):
     return im
 
 def render_scene_2(frame_idx, total_frames):
-    """The Anti-Library & 520 Books"""
+    """The Anti-Library & 600 Books"""
     t = frame_idx / total_frames
     im = Image.new("RGB", (W, H), (14, 15, 19))
     draw = ImageDraw.Draw(im)
@@ -195,7 +195,7 @@ def render_scene_2(frame_idx, total_frames):
     # Bottom Stats Bar
     metrics = [
         ("500+", "CURATED NON-FICTION"),
-        ("3,685", "ACTIONABLE LESSONS"),
+        ("4,343", "ACTIONABLE LESSONS"),
         ("400", "FAILURE AUTOPSIES"),
         ("4 MIN", "AVERAGE READ TIME")
     ]

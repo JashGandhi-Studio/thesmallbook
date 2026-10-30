@@ -25,7 +25,8 @@ window.TSB3D = (function () {
       ".bk3__obj{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}",
       ".bk3__f{position:absolute;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}",
       ".bk3__f::after{content:'';position:absolute;inset:0;background:#000;opacity:var(--sh,0);pointer-events:none}",
-      ".bk3__front{inset:0;transform:translateZ(calc(var(--d)/2));border-radius:2px 7px 7px 2px;background:var(--bg)}",
+      ".bk3__leaf{top:1.2%;bottom:1.2%;left:1px;right:3px;transform:translateZ(calc(var(--d)/2 - 1.5px));background:linear-gradient(90deg,rgba(0,0,0,.10),transparent 9%),repeating-linear-gradient(180deg,transparent 0 13%,rgba(60,48,30,.10) 13% 13.8%) 18% 22%/66% 60% no-repeat,#f7f1e3;border-radius:1px 5px 5px 1px}",
+      ".bk3__front{inset:0;transform:translateZ(calc(var(--d)/2));transform-origin:0 50%;border-radius:2px 7px 7px 2px;background:var(--bg)}",
       ".bk3__front img{display:block;width:100%;height:100%;object-fit:cover;border:0!important;border-radius:inherit!important;box-shadow:none!important;margin:0!important;-webkit-user-drag:none;pointer-events:none}",
       ".bk3__gloss{position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.34) 42%,rgba(255,255,255,.06) 52%,transparent 64%);background-size:320% 100%;background-position:var(--gx,60%) 0;mix-blend-mode:soft-light}",
       ".bk3__hinge{position:absolute;left:0;top:0;bottom:0;width:7%;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.22),rgba(255,255,255,.18) 45%,rgba(0,0,0,.08) 70%,transparent)}",
@@ -78,8 +79,8 @@ window.TSB3D = (function () {
     front.insertAdjacentHTML("beforeend", "<span class=\"bk3__hinge\"></span><span class=\"bk3__gloss\"></span>");
     var back = face("bk3__back", "<b>TheSmallBook</b><p>" + esc(o.line || "") + "</p><i></i>");
     var spine = face("bk3__spine", "<span>" + esc(o.title || "") + "</span>");
-    var pages = face("bk3__pages"), top = face("bk3__top"), bot = face("bk3__bot");
-    [front, back, spine, pages, top, bot].forEach(function (f) { obj.appendChild(f); });
+    var pages = face("bk3__pages"), top = face("bk3__top"), bot = face("bk3__bot"), leaf = face("bk3__leaf");
+    [leaf, front, back, spine, pages, top, bot].forEach(function (f) { obj.appendChild(f); });
     root.appendChild(obj);
     var sh = document.createElement("div"); sh.className = "bk3__shadow"; root.appendChild(sh);
     img.setAttribute("draggable", "false");
@@ -104,7 +105,11 @@ window.TSB3D = (function () {
     var REST = o.rest == null ? 26 : o.rest;
     var st = { ry: REST, rx: 5, vy: 0, av: 0, spin: false, y: 0, held: false, drag: null, t0: performance.now(), raf: 0, hover: null, target: REST, visible: true };
     function shade(el, a) { el.style.setProperty("--sh", a.toFixed(3)); }
+    /* v336: on the book page the cover breathes, lifting off its pages now
+       and then, as if the book wants to be opened. Never while it is held. */
+    var ajar = 0;
     function apply() {
+      if (o.ajar) front.style.transform = "translateZ(calc(var(--d) / 2)) rotateY(" + (-ajar).toFixed(2) + "deg)";
       obj.style.transform = "translateY(" + st.y.toFixed(2) + "px) rotateX(" + st.rx.toFixed(2) + "deg) rotateY(" + st.ry.toFixed(2) + "deg)";
       var r = st.ry * Math.PI / 180, L = -0.5; /* light from the front-left */
       var lf = Math.cos(r - L), lb = Math.cos(r + Math.PI - L), ls = Math.cos(r - Math.PI / 2 - L), lp = Math.cos(r + Math.PI / 2 - L);
@@ -145,6 +150,14 @@ window.TSB3D = (function () {
         var gx = st.hover ? 5 - st.hover.y * 12 : 5 + (idle ? Math.sin(t * 0.45) * 2.2 : 0);
         st.rx += (gx - st.rx) * (1 - Math.pow(0.92, f));
         st.y = (idle && !st.hover) ? Math.sin(t * 0.9) * 2.5 - 1 : st.y * Math.pow(0.9, f);
+      }
+      if (o.ajar) {
+        var goalA = 0;
+        if (idle && !st.held && !st.hover && !st.spin && Math.abs(norm(st.ry - REST)) < 60) {
+          var ph = ((t + 1.2) % 6.4) / 6.4;
+          if (ph > 0.52) { var u = Math.sin(Math.PI * (ph - 0.52) / 0.48); goalA = 24 * u * u; }
+        }
+        ajar += (goalA - ajar) * (1 - Math.pow(0.86, f));
       }
       apply();
       st.raf = requestAnimationFrame(loop);

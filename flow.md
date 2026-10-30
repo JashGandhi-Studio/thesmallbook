@@ -97,7 +97,7 @@ Aligns the reading surface with natural daylight cycles to minimize eye fatigue 
 - **Chapter 05: Visual Atmosphere**:
    - Language selection (English, Hindi, regional dialects) and preview theme.
 - **Chapter 06: Starter Shelf Generation**:
-   - Algorithm filters the 520-book database.
+   - Algorithm filters the 600-book database.
    - Combines the user's primary battle, secondary fixes, and new releases (tagged with NEW).
    - Reader toggles books on or off to assemble their active starter shelf.
    - Persists selections to `tsb_starter_shelf`, `tsb_interests`, and `tsb_onboarded`.
@@ -123,7 +123,7 @@ Aligns the reading surface with natural daylight cycles to minimize eye fatigue 
 ### Discovery Tracks
 1. **Curated Category Rail**:
    - Horizontal scrolling track featuring 14 clean category pills (Habits, Wealth, Calm, Stoicism, Strategy, Biographies, Psychology, Leadership, Indian Disruptors, etc.).
-   - Instant client-side DOM filter across 520 book cards without full page reload.
+   - Instant client-side DOM filter across 600 book cards without full page reload.
 2. **Instant Search Engine**:
    - Live query evaluation across book titles, authors, big ideas, and takeaway summaries.
    - Zero-delay input responsiveness using lightweight text normalization.
@@ -188,7 +188,7 @@ Composer Sheet Opens
         +---> Option A: Write / Select Quote
         |       |
         |       +---> Dual Source Finder:
-        |               [📚 520 Library Books] (1,570+ Quotes)
+        |               [📚 600 Library Books] (1,570+ Quotes)
         |               [📜 Classical Wisdom] (60 Quotes)
         |       |
         |       +---> Real-time keyword & author filter

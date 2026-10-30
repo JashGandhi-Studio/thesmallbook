@@ -265,7 +265,17 @@ window.TSB_CONFIG = {
     "the-reputation-audit",
     "the-apprentice-hour",
     "the-founders-warranty",
-    "the-patient-capitalist"
+    "the-patient-capitalist",
+    "the-8-pm-reset",
+    "the-commute-advantage",
+    "the-family-ledger",
+    "the-quiet-internship",
+    "the-neighbourhood-network",
+    "the-attention-garden",
+    "the-long-game-classroom",
+    "the-repair-economy",
+    "the-kind-boundary",
+    "the-listening-bench"
   ],
 
   /* 💛 PAYWALL / TSB GOLD - CENTRAL SWITCH (v248).

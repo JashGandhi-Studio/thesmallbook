@@ -129,10 +129,10 @@ BOOKS.forEach(b => {
 
 console.log('Updated remaining originals count:', updated);
 
-// Verify total lessons is still exactly 3685!
+// Verify total lessons is still exactly 4343!
 const newTotal = BOOKS.reduce((acc, b) => acc + b.lessons.length, 0);
 console.log('New total lessons:', newTotal);
-if (newTotal !== 3685) {
+if (newTotal !== 4343) {
   console.error('ERROR: Total lessons mismatch!');
   process.exit(1);
 }

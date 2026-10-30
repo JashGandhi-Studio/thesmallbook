@@ -21,7 +21,7 @@
       if (!el) { el = document.createElement("meta"); const [a, k] = sel.replace(/[\[\]"]/g, "").split("="); el.setAttribute(a, k); document.head.appendChild(el); }
       el.setAttribute(attr, val);
     };
-    const desc = `${book.title} by ${book.author || "the original author"}: free summary, no paywall. ${book.lessons.length} key lessons with real examples, quotes and an action plan. Read online free.`;
+    const desc = `${book.title} by ${book.author || "the original author"}: the 8-minute summary. ${book.lessons.length} key lessons with real examples, quotes and an action plan. Read it in 8 minutes.`;
     const url = `https://thesmallbook.in/books/${book.id}.html`;
     setM('meta[name="description"]', "content", desc);
     setM('meta[property="og:title"]', "content", document.title);
@@ -50,7 +50,7 @@
       var ob = document.createElement("div");
       ob.className = "origband";
       ob.innerHTML = '<span class="origband__row">✦ THE SMALLBOOK ORIGINAL' + (isSpecial ? ' · GOLD EDITION' : '') + ' ✦</span>' +
-        '<small>' + (isSpecial ? 'Special in-house edition. 5 in-house originals are free; remaining unlock with Gold.' : 'Written in-house. You will not find this book anywhere else.') + '</small>';
+        '<small>' + (isSpecial ? 'Special in-house edition. Five Originals are open to read; the complete shelf unlocks with Gold.' : 'Written in-house. You will not find this book anywhere else.') + '</small>';
       document.getElementById("author").after(ob);
     }
   } catch (e) {}
@@ -550,7 +550,7 @@
     /* LIVE totals - always current, never a hardcoded number */
     const nBooks = (window.BOOKS || []).length;
     const nLessons = (window.BOOKS || []).reduce((a, b) => a + (b.lessons ? b.lessons.length : 0), 0);
-    const tag = nBooks + "+ BOOKS · " + nLessons + "+ LESSONS · FREE TO READ";
+    const tag = nBooks + "+ BOOKS · " + nLessons + "+ LESSONS · 8 MINUTES A BOOK";
     ctx.fillStyle = "#f2ede2";
     let fs = 28;
     ctx.font = "bold " + fs + "px 'Space Grotesk', Arial";
@@ -657,7 +657,7 @@
 
     // stats pills (readTime, lessons, FREE)
     y = 1010;
-    const pills = [`⏱ ${book.readTime}`, `${book.lessons.length} LESSONS`, "FREE"];
+    const pills = [`⏱ ${book.readTime}`, `${book.lessons.length} LESSONS`, "8 MIN"];
     ctx.font = "bold 27px 'Space Grotesk', Arial";
     const padX = 28, gap = 18;
     const widths = pills.map((p) => ctx.measureText(p).width + padX * 2);
@@ -676,7 +676,7 @@
     // call to action
     ctx.fillStyle = "#111";
     ctx.font = "bold 28px 'Space Grotesk', Arial";
-    ctx.fillText("📖 READ THE FULL BREAKDOWN - FREE", W / 2, 1116);
+    ctx.fillText("📖 READ THE FULL BREAKDOWN", W / 2, 1116);
 
     drawBrandBar(ctx, W, H);
     if (!isGoldNow()) drawWatermark(ctx, W, H);
@@ -808,7 +808,7 @@
         return;
       }
       const url = location.origin + "/random.html?id=" + book.id;
-      const text = `📕 ${book.title} - ${book.oneLiner}\n\nExperience the 3D book and free breakdown (${book.lessons.length} lessons, ${book.readTime}):`;
+      const text = `📕 ${book.title} - ${book.oneLiner}\n\nExperience the 3D book and the breakdown (${book.lessons.length} lessons, ${book.readTime}):`;
       if (navigator.share) {
         try { await navigator.share({ title: `${book.title} - TheSmallBook`, text, url }); return; }
         catch (e) { if (e && e.name === "AbortError") return; }
@@ -1094,6 +1094,26 @@
   }
 
   /* ---------- LESSONS ---------- */
+  /* v336: a small visual thought lives inside the first lesson. It is not
+     decoration that floats above the content: it gives a model or a map the
+     reader can take away. Atomic Habits gets its real compounding curve;
+     the rest of the shelf receives a category-appropriate thinking map. */
+  function lessonVisual(b, idx) {
+    if (idx !== 0) return "";
+    var cat = String(b.category || ""), map = {
+      "Money & Finance": ["Earn", "Keep", "Grow", "#2F7D5B"],
+      "Productivity": ["Notice", "Choose", "Protect", "#6F5BD9"],
+      "Psychology & People": ["Event", "Story", "Response", "#C44F70"],
+      "Business & Startups": ["Observe", "Test", "Learn", "#E07A3F"],
+      "History": ["Then", "Now", "Next", "#6F6B43"],
+      "Power & Strategy": ["See", "Decide", "Act", "#8B3A42"],
+      "Creativity": ["Collect", "Combine", "Make", "#9A62A9"],
+      "Self-Improvement": ["Tiny step", "Repeat", "Change", "#B18418"]
+    }[cat] || ["Notice", "Try", "Learn", "#6E6658"];
+    if (b.id === "atomic-habits") return '<figure class="lv lv--atomic" aria-label="One percent better every day compounds over time"><figcaption><b>THE 1% CURVE</b><span>Small repetitions become a different trajectory.</span></figcaption><svg viewBox="0 0 500 220" role="img" aria-hidden="true"><path class="lv-axis" d="M46 20v159h424"/><path class="lv-grid" d="M46 138h424M46 94h424M46 50h424"/><path class="lv-curve" d="M48 176 C155 176 220 173 280 158 C349 141 392 100 462 32"/><circle class="lv-dot" cx="462" cy="32" r="7"/><text x="46" y="207">DAY 1</text><text x="406" y="207">DAY 365</text><text x="330" y="25">37× POTENTIAL</text><text x="52" y="168">1.0</text></svg><p>Do not look for a dramatic start. Protect the next small repetition and let the line bend over time.</p></figure>';
+    return '<figure class="lv" style="--lv-accent:' + map[3] + '"><figcaption><b>THE IDEA, AT A GLANCE</b><span>A simple map for the first lesson.</span></figcaption><svg viewBox="0 0 500 160" role="img" aria-hidden="true"><path class="lv-link" d="M145 80h65M290 80h65"/><circle class="lv-node" cx="105" cy="80" r="47"/><circle class="lv-node" cx="250" cy="80" r="47"/><circle class="lv-node" cx="395" cy="80" r="47"/><text x="105" y="85" text-anchor="middle">' + map[0] + '</text><text x="250" y="85" text-anchor="middle">' + map[1] + '</text><text x="395" y="85" text-anchor="middle">' + map[2] + '</text></svg><p>Use this as a question, not a formula. What is the next honest move from ' + map[0].toLowerCase() + ' to ' + map[2].toLowerCase() + '?</p></figure>';
+  }
+
   const lessonsWrap = document.getElementById("lessons");
   const readSet = new Set(TSB.progress.forBook(book.id));
   const origList = (window.TSB_CONFIG && TSB_CONFIG.ORIGINALS) || [];
@@ -1118,19 +1138,20 @@
         <div class="orig-gold-gate" style="background:#fefbf4;border:var(--bw) solid var(--edge);border-radius:17px;padding:18px 16px;text-align:center;box-shadow:var(--sh-2);margin:16px 0 8px;">
           <div style="font-family:var(--font-head);font-size:11px;font-weight:900;letter-spacing:1.5px;color:#8a6d00;margin-bottom:4px;">✦ EXCLUSIVE TO GOLD MEMBERS ✦</div>
           <div style="font-weight:800;font-size:15px;color:var(--ink);margin-bottom:6px;">Unlock All 35+ In-House Originals</div>
-          <p style="font-size:12.5px;color:#555;line-height:1.45;max-width:440px;margin:0 auto 14px;">The first 5 in-house originals are completely free for everyone. Unlock all lessons across our full library of 35+ proprietary masterclasses for ₹99/month.</p>
+          <p style="font-size:12.5px;color:#555;line-height:1.45;max-width:440px;margin:0 auto 14px;">Five in-house Originals are open to read. Gold opens the complete 50+ Original collection and every lesson for ₹99/month.</p>
           <a href="gold.html" class="btn btn--yellow" style="font-family:var(--font-head);font-weight:900;font-size:12px;letter-spacing:1px;padding:9px 20px;border:var(--bw) solid var(--edge);border-radius:13px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:var(--sh-2);">👑 UPGRADE TO GOLD (₹99/MO) →</a>
         </div>
       </div>
     ` : `
       <div class="lesson__body">
         <p>${l.summary}</p>
+        ${lessonVisual(book, i)}
         <div class="callout callout--example"><strong class="tag">📖 Example from the book</strong><br>${l.example}</div>
         <div class="callout callout--action"><strong class="tag">⚡ Do this</strong><br>${l.action}</div>
         <div class="tipjar" translate="no">
           <div class="tipjar__row">
             <span class="tipjar__icon" aria-hidden="true">☕</span>
-            <span class="tipjar__q">Liked it? Drop a chai. Keeps the next lesson free.</span>
+            <span class="tipjar__q">Liked it? Drop a chai. Keeps the next lesson coming.</span>
           </div>
           <div class="tipjar__btns">
             <a href="upi://pay?pa=9702510680%40fam&pn=TheSmallBook&am=9&cu=INR" data-tip="9">₹9</a>
@@ -1186,7 +1207,7 @@
           <span class="dd-card__mid">
             <b>THE DEEP DIVE · ${ddEsc(dd.chapterLabel.toUpperCase())}</b>
             <i>${ddEsc(dd.title)}</i>
-            <span class="dd-card__m">${dd.minutes} min · the one chapter worth reading in full · ${dd.sample ? '<b class="dd-card__free">FREE SAMPLE</b>' : '<b class="dd-card__gold">👑 GOLD</b>'}</span>
+            <span class="dd-card__m">${dd.minutes} min · the one chapter worth reading in full · ${dd.sample ? '<b class="dd-card__free">SAMPLE</b>' : '<b class="dd-card__gold">👑 GOLD</b>'}</span>
           </span>
           <span class="dd-card__go">READ → </span>
         </a>`).join("");
@@ -1558,7 +1579,7 @@
   (function () {
     function renderTruthBox() {
       if (!book.caveat && !book.graveLink) return;
-      if (book.graveLink && !(window.FAILURES || []).length) {
+      if (book.graveLink && !book.grave && !(window.FAILURES || []).length) {
         setTimeout(renderTruthBox, 150);
         return;
       }
@@ -1572,9 +1593,9 @@
       }
       if (book.graveLink) {
         let g = null;
-        try { g = (window.FAILURES || []).find((f) => f.id === book.graveLink); } catch (e) {}
+        try { g = book.grave || (window.FAILURES || []).find((f) => f.id === book.graveLink); } catch (e) {}
         if (g) {
-          html += `<a class="gravecross" href="graveyard/${g.id}.html">
+          html += `<a class="gravecross" href="graveyard.html#grave=${encodeURIComponent(g.id)}">
             <span class="gravecross__head">
               <span class="gravecross__em">${g.emoji || "💀"}</span>
               <span class="gravecross__titles">

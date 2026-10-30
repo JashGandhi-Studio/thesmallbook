@@ -559,7 +559,7 @@
         var b=document.getElementById("wBody");
         if (b){ b.focus(); placeCaretAtEnd(b); }
       }
-      toast("Listening, speak naturally (free · no sign-in), we’ll punctuate.");
+      toast("Listening, speak naturally, we’ll punctuate.");
     }catch(e){ listening=false; updateBtnState(); toast("Couldn’t start, tap Dictate again."); }
   }
   function stopWebSpeech(){
@@ -611,8 +611,8 @@
       btn.type = "button";
       btn.id = "wrDictate";
       btn.className = "wr-dictate";
-      btn.setAttribute("aria-label","Voice to text, free, no sign-in");
-      btn.title = "Voice to text, free & anonymous, no sign-in";
+      btn.setAttribute("aria-label","Voice to text, no sign-in");
+      btn.title = "Voice to text, private, no sign-in";
       btn.innerHTML = '<span class="wr-dictate__dot"></span> Dictate';
       btn.addEventListener("click", function(e){
         e.preventDefault();
@@ -632,14 +632,14 @@
       langSel = document.createElement("select");
       langSel.id = "dictateLang";
       langSel.className = "wr-dictate__lang";
-      langSel.title = "Dictation language, free voice typing, Hinglish & 7 Indian languages, no sign-in";
+      langSel.title = "Dictation language, voice typing, Hinglish & 7 Indian languages, no sign-in";
       LANGS.forEach(function(l){
         var o = document.createElement("option");
         o.value = l.id; o.textContent = l.label;
         langSel.appendChild(o);
       });
       langSel.value = getLang();
-      langSel.addEventListener("change", function(){ setLang(this.value); toast("Language: " + this.options[this.selectedIndex].textContent + " • free voice typing"); if (listening||window._puterRecording) { stop(); setTimeout(start, 300); } });
+      langSel.addEventListener("change", function(){ setLang(this.value); toast("Language: " + this.options[this.selectedIndex].textContent + " • voice typing"); if (listening||window._puterRecording) { stop(); setTimeout(start, 300); } });
       if (btn && btn.parentNode) {
         btn.parentNode.insertBefore(langSel, btn.nextSibling);
       }

@@ -252,6 +252,8 @@
 
   /* ---------- RENDER ---------- */
   function render() {
+    /* v336: lesson text arrives on the first real search, then results refresh */
+    if (query && query.length >= 4 && window.TSB_LESSONS && !render._all) { render._all = 1; TSB_LESSONS.all(function () { render(); }); }
     let results = BOOKS.filter((b) => {
       let inCat;
       if (activeCat === "ALL") inCat = true;
@@ -599,7 +601,7 @@
     return Math.floor((n.getTime() - n.getTimezoneOffset() * 60000) / 864e5);
   }
 
-  /* Dynamically sources daily spark from the entire 520-book / 3,685-lesson library */
+  /* Dynamically sources daily spark from the entire 520-book / 4,343-lesson library */
   function getTodaySpark(dayNum, offset) {
     if (dayNum == null) dayNum = localDayNum();
     const off = offset || 0;
@@ -987,7 +989,7 @@
       ov.className = "grave-transition";
       ov.innerHTML = '<div class="grave-transition__skull">💀</div>' +
         '<div class="grave-transition__text">Entering the Graveyard</div>' +
-        '<div class="grave-transition__sub">they paid full price · your lesson is free</div>';
+        '<div class="grave-transition__sub">they paid full price · you keep the lesson</div>';
       document.body.appendChild(ov);
     }
     requestAnimationFrame(() => ov.classList.add("on"));

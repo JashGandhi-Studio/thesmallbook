@@ -48,6 +48,7 @@
     pen: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>'
   };
   var SR = window.TSB_SR || window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  ICON.close = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
   ICON.mic = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
   /* voice search: say a title, an author or a feeling, the library listens */
   function voiceSearch(btn) {
@@ -65,6 +66,74 @@
     };
     rec.onend = rec.onerror = function () { btn.classList.remove("on"); var b2 = document.querySelector("#searchWrap [data-fmic]"); if (b2) b2.classList.remove("on"); };
     try { rec.start(); } catch (e) { btn.classList.remove("on"); }
+  }
+  /* v336: the Today mic listens right where you are. Your words appear as
+     you speak, the best matches arrive under them, one tap opens a book.
+     The Library mic (voiceSearch) stays its own thing. */
+  function todayVoice(btn) {
+    if (!SR) return;
+    var old = document.querySelector(".ftv"); if (old) old.parentNode.removeChild(old);
+    var rec = new SR(), lang = "en", said = "", done = false;
+    try { lang = window.TSB_LANG ? TSB_LANG.get() : "en"; } catch (e) {}
+    rec.lang = (lang === "en" || /Latn/.test(lang)) ? "en-IN" : lang + "-IN";
+    rec.interimResults = true; rec.maxAlternatives = 1;
+    var box = document.createElement("div");
+    box.className = "ftv"; box.setAttribute("role", "dialog"); box.setAttribute("aria-label", "Voice search");
+    box.innerHTML = '<i class="ftv-veil" data-ftvx></i><div class="ftv-card"><div class="ftv-head"><span class="ftv-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><b class="ftv-st">Listening\u2026</b><button type="button" class="ftv-x" data-ftvx aria-label="Close">' + ICON.close + '</button></div>' +
+      '<p class="ftv-said">Say a title, an author or a feeling</p><div class="ftv-res"></div></div>';
+    document.body.appendChild(box);
+    var st = box.querySelector(".ftv-st"), sd = box.querySelector(".ftv-said"), rs = box.querySelector(".ftv-res");
+    requestAnimationFrame(function () { box.classList.add("on"); });
+    btn.classList.add("on");
+    function close() {
+      done = true; try { rec.abort(); } catch (e) {}
+      btn.classList.remove("on"); box.classList.remove("on");
+      setTimeout(function () { if (box.parentNode) box.parentNode.removeChild(box); }, 280);
+    }
+    function find(q) {
+      q = q.toLowerCase().replace(/[^a-z0-9\u0900-\u097f ]+/g, " ").trim();
+      if (!q) return [];
+      var words = q.split(/\s+/).filter(function (w) { return w.length > 2 && !/^(the|and|for|about|book|books|some|want|read|something|with)$/.test(w); });
+      return books().map(function (b) {
+        var t = (b.title || "").toLowerCase(), a = (b.author || "").toLowerCase(), o = ((b.category || "") + " " + (b.tagline || "") + " " + (b.oneLiner || "")).toLowerCase(), sc = 0;
+        if (t.indexOf(q) !== -1) sc += 40; if (a.indexOf(q) !== -1) sc += 30;
+        words.forEach(function (w) { if (t.indexOf(w) !== -1) sc += 8; if (a.indexOf(w) !== -1) sc += 6; if (o.indexOf(w) !== -1) sc += 2; });
+        return [sc, b];
+      }).filter(function (x) { return x[0] > 0; }).sort(function (x, y) { return y[0] - x[0]; }).slice(0, 5).map(function (x) { return x[1]; });
+    }
+    function show(q, final) {
+      var r = find(q);
+      if (!r.length) { rs.innerHTML = final ? '<p class="ftv-none">Nothing close yet. Try a title or an author.</p>' : ""; return; }
+      rs.innerHTML = r.map(function (b) {
+        return '<a class="ftv-it" href="book.html?id=' + encodeURIComponent(b.id) + '"><img src="' + esc(b.cover) + '" alt="" width="40" height="60" loading="lazy"><span><b>' + esc(b.title) + '</b><em>' + esc(b.author || "") + '</em></span></a>';
+      }).join("") + (final ? '<a class="ftv-all" href="#library" data-ftvall>See all in Library</a>' : "");
+    }
+    rec.onresult = function (e) {
+      var t = ""; for (var i = 0; i < e.results.length; i++) t += e.results[i][0].transcript;
+      said = t.trim(); if (said) { sd.textContent = said; sd.classList.add("has"); show(said, false); }
+    };
+    rec.onerror = function (e) {
+      if (done) return;
+      st.textContent = (e && e.error === "not-allowed") ? "Microphone is off" : "Didn\u2019t catch that";
+      box.classList.add("idle");
+      if (e && e.error === "not-allowed") sd.textContent = "Allow the microphone for this site, then tap the mic again.";
+    };
+    rec.onend = function () {
+      if (done) return;
+      btn.classList.remove("on"); box.classList.add("idle");
+      if (said) { st.textContent = "You said"; show(said, true); }
+      else if (!/off|catch/.test(st.textContent)) { st.textContent = "Didn\u2019t catch that"; sd.textContent = "Tap the mic and try a title, an author or a feeling."; }
+    };
+    box.addEventListener("click", function (e) {
+      if (e.target.closest("[data-ftvx]")) { close(); return; }
+      if (e.target.closest("[data-ftvall]")) {
+        e.preventDefault(); var q = said; close();
+        location.hash = "library";
+        setTimeout(function () { var i = document.getElementById("searchInput"); if (i) { i.value = q; i.dispatchEvent(new Event("input", { bubbles: true })); } }, 320);
+      }
+    });
+    document.addEventListener("keydown", function k(e) { if (e.key === "Escape") { close(); document.removeEventListener("keydown", k); } });
+    try { rec.start(); } catch (e) { close(); }
   }
   var CAT_COL = { "Self-Improvement": ["#FFC800", "#16130F"], "Productivity": ["#1F3A5F", "#FBF8F1"], "Money & Finance": ["#2F7D5B", "#FBF8F1"], "Psychology & People": ["#6F5BD9", "#FBF8F1"], "Business & Startups": ["#FF7A59", "#16130F"], "Power & Strategy": ["#7A1C24", "#FBF8F1"], "Creativity": ["#FFA9CC", "#16130F"], "History": ["#A67C52", "#FBF8F1"], "Leadership": ["#25C79C", "#16130F"] };
   function catCol(c) { return CAT_COL[c] || ["#EFE6D3", "#16130F"]; }
@@ -296,7 +365,7 @@
       var t = e.target.closest("[data-fmp]");
       if (t && !e.target.closest("a")) { t.classList.toggle("flip"); if (t.classList.contains("flip")) { try { localStorage.setItem("tsb_mp_open", JSON.stringify(dayKey())); } catch (eS) {} t.classList.add("is-opening"); setTimeout(function () { t.classList.remove("is-opening"); }, 1400); } return; }
       var mic = e.target.closest("[data-fmic]");
-      if (mic) { e.preventDefault(); e.stopPropagation(); voiceSearch(mic); return; }
+      if (mic) { e.preventDefault(); e.stopPropagation(); if (mic.classList.contains("ft-mic--lib")) voiceSearch(mic); else todayVoice(mic); return; }
       var s = e.target.closest("[data-fsearch]");
       if (s) { setTimeout(function () { var i = document.getElementById("searchInput"); if (i) i.focus(); }, 350); }
       var fb = e.target.closest("[data-fbrowse]");
@@ -355,7 +424,7 @@
       '<div class="fa-book" id="faBook"><div class="fa-book__in"><div class="fa-page"><b>Big books.<br><i>Small reads.</i></b><p>Every great book, cracked open into the few ideas that matter, in your language.</p><s></s><s style="width:80%"></s><s></s><s style="width:60%"></s></div>' +
       '<div class="fa-lid"><div class="fa-lid__f"><span>THE<em>SMALL</em>BOOK</span><small>BY JASH GANDHI \u00b7 MUMBAI</small></div><div class="fa-lid__b"></div></div></div></div>' +
       '<h1 class="fa-h1">Why this <i>exists.</i></h1>' +
-      '<p class="fa-sub">Most of us will never finish the books that could change us. Not because we are lazy, because life is full. So we made the small version: honest, warm and free to read.</p>' +
+      '<p class="fa-sub">Most of us will never finish the books that could change us. Not because we are lazy, because life is full. So we made the small version: honest, warm and easy to read.</p>' +
       '<div class="fa-nums">' + [[n, "books, cracked open"], [L, "lessons you can use"], [M, "minutes, all of it"], [langs, "languages to read in"]].map(function (x) { return '<div class="fa-num"><b data-count="' + x[0] + '">0</b><span>' + x[1] + "</span></div>"; }).join("") + "</div>" +
       '<h2 class="fa-sec">How a lesson is <i>made</i></h2><div class="fa-steps">' +
       [["Read the whole book", "Cover to cover, with a pencil. No summaries of summaries."], ["Find the few ideas", "The handful of lessons the book is really about, in plain words."], ["Show it working", "An example from the book and one from life in India today."], ["Give you one thing to try", "Every book ends with an action you can do this week."], ["Make it yours", "Read it, hear it, in your language. Night mode is warm, never blue."]].map(function (s) { return '<div class="fa-step"><div><b>' + s[0] + "</b><span>" + s[1] + "</span></div></div>"; }).join("") + "</div>" +
@@ -455,10 +524,10 @@
       '<button class="fy-li" type="button" data-fy="voice">' + I.voice + 'Natural reading voice<span class="fy-tg' + (tier === "studio" ? " on" : "") + '"></span></button>' +
       '<button class="fy-li" type="button" data-fy="kids">' + I.kid + 'Kids mode<em id="fyKidsState">' + (kidsOn ? "Story time" : "Hidden") + "</em></button>" +
       '<a class="fy-li" href="notes.html">' + I.note + "Notebook<em>Notes and highlights</em></a>" +
-      '<a class="fy-li" href="login.html">' + I.acct + (signed ? "Account" : "Sign in or create account") + "<em>" + (signed ? "Manage" : "Free") + "</em></a>" +
+      '<a class="fy-li" href="login.html">' + I.acct + (signed ? "Account" : "Sign in or create account") + "<em>" + (signed ? "Manage" : "1 tap") + "</em></a>" +
       '<a class="fy-li" href="settings.html">' + ICON.gear + "All settings<em></em></a>" +
       '<a class="fy-li" href="about.html">' + I.info + "About TheSmallBook<em>v335</em></a></div>";
-    h += '<p class="fy-fine">Your reading data lives on your device' + (signed ? " and syncs privately to your account" : "") + '. Build tsb-v335. <a href="legal.html">Privacy</a></p>';
+    h += '<p class="fy-fine">Your reading data lives on your device' + (signed ? " and syncs privately to your account" : "") + '. Build tsb-v336. <a href="legal.html">Privacy</a></p>';
     host.innerHTML = h;
     setTimeout(function () {
       var fg = host.querySelector(".fy-ring .fg"); if (fg) fg.style.strokeDashoffset = fg.getAttribute("data-off");
@@ -803,7 +872,7 @@
             return '<a class="fgy-t" style="--i:' + i + '" href="' + t[3] + '"><span class="fgy-ic">' + ic(t[0]) + '</span><b>' + esc(t[1]) + "</b><small>" + esc(t[2]) + '</small><span class="fgy-on">On</span></a>';
           }).join("") + "</div>" +
           '<div class="fgy-soon"><span class="fgy-ic fgy-ic--s">' + ic("soon") + '</span><div><b>Coming to Gold</b><small>Offline library and export, then chapter-by-chapter audio.</small></div></div>' +
-          '<p class="fg-fine">Thank you for keeping the library free for everyone.</p>';
+          '<p class="fg-fine">Thank you for keeping the library going for everyone.</p>';
         return;
       }
       p.innerHTML = head +

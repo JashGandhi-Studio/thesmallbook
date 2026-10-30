@@ -7,7 +7,7 @@ This document explains the technical philosophy, architectural decisions, user e
 ## 1. Product Philosophy: Respect for Reader Attention
 
 Modern internet media is overrun by algorithmic clickbait, infinite doom-scrolling, intrusive tracking pixels, and artificial complexity. TheSmallBook was designed from the ground up as an antidote:
-- **Distilled Non-Fiction**: 520 curated masterclass summaries focusing strictly on core insights, historical evidence, and executable action plans.
+- **Distilled Non-Fiction**: 600 curated masterclass summaries focusing strictly on core insights, historical evidence, and executable action plans.
 - **Honest Utility**: The free reading library is genuinely free to read. No bait-and-switch paywalls block a person from reading a book summary.
 - **Cognitive Clarity**: Minimal fonts, clear hierarchy, high contrast, and zero word repetition.
 
@@ -89,7 +89,7 @@ The conversion model is modeled after Spotify's user psychology: **provide an ex
 
 ### 1. Honest Value Framing (Spotify Psychology)
 - Many apps lock chapter 2 of a summary behind a forced paywall, destroying reader trust.
-- TheSmallBook keeps all 520 book summaries 100% free to read.
+- TheSmallBook keeps all 600 book summaries 100% free to read.
 - Gold membership is framed transparently on `gold.html` through a 12-row side-by-side comparison table: **"Everything Gold adds. Nothing Free loses."**
 - Readers never feel coerced. They upgrade because they love the platform and want enhanced superpowers.
 

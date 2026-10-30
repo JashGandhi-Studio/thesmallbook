@@ -171,7 +171,7 @@
     if (!logs.length) {
       logs = [
         { time: "12:00:00", tag: "INFO", message: "Command Center initialized in production environment." },
-        { time: "12:00:01", tag: "OK", message: "Catalog schema verified: 520 titles and 3685 executive lessons." },
+        { time: "12:00:01", tag: "OK", message: "Catalog schema verified: 600 titles and 4343 executive lessons." },
         { time: "12:00:02", tag: "OK", message: "Graveyard autopsy engine linked: 400 failure case records." },
         { time: "12:00:03", tag: "INFO", message: "Live telemetry stream: zero edge errors, latency 22ms." }
       ];
@@ -364,7 +364,7 @@
     if (metricTotalLessons) {
       var count = 0;
       books.forEach(function (b) { count += (b.lessons ? b.lessons.length : 0); });
-      metricTotalLessons.textContent = count || 3685;
+      metricTotalLessons.textContent = count || 4343;
     }
     if (metricTotalGraves) metricTotalGraves.textContent = failures.length || 400;
 
@@ -741,7 +741,7 @@
   }
 
   /* =========================================================
-     CATALOG REGISTRY (520 BOOKS)
+     CATALOG REGISTRY (600 BOOKS)
      ========================================================= */
   function filterCatalog() {
     var books = window.BOOKS || [];

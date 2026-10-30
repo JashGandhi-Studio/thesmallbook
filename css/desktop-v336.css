@@ -1,0 +1,61 @@
+/* v336: the large-screen app is a real reading desk, not a stretched phone. */
+@media (min-width: 700px) and (max-width: 1023px) {
+  /* Tablet gets a spread, not a phone column with empty margins. */
+  html.fv-today .ft { max-width:920px; padding:38px 32px 118px; display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:18px; align-items:start; }
+  html.fv-today .ft-hd, html.fv-today .ft-search { grid-column:1 / span 7; }
+  html.fv-today .ft-search { margin-top:20px; }
+  html.fv-today .ft-hero { grid-column:1 / span 7; margin-top:18px; padding:20px; }
+  html.fv-today .ft-hero .f-cover { width:96px; height:144px; }
+  html.fv-today .ft-hero__t { font-size:25px; }
+  html.fv-today .ft-mp { grid-column:8 / -1; grid-row:1 / span 3; height:262px; margin-top:0; align-self:end; }
+  html.fv-today .ft-mp__f, html.fv-today .ft-mp__b { padding:20px; }
+  html.fv-today .ft-mp__q, html.fv-today .ft-mp__line { font-size:21px; }
+  html.fv-today .ft-cont { grid-column:1 / span 5; margin-top:20px; }
+  html.fv-today .ft-orig { grid-column:6 / -1; margin-top:20px; }
+  html.fv-today .ft-sec, html.fv-today .ft-row, html.fv-today .ft-foot { grid-column:1 / -1; }
+  html.fv-today .ft-tiles { grid-column:1 / span 7; margin-top:14px; }
+  html.fv-today .ft-prompt { grid-column:8 / -1; margin-top:14px; }
+}
+@media (min-width: 1024px) {
+  html.film body::before { content:""; position:fixed; inset:0; pointer-events:none; opacity:.42; background:linear-gradient(90deg,transparent 0,transparent 8.2%,var(--f-line) 8.25%,transparent 8.32%,transparent 91.68%,var(--f-line) 91.75%,transparent 91.82%); }
+  html.film #tsbBar.tsb-bar { left:28px !important; right:auto !important; top:28px !important; bottom:28px !important; transform:none !important; width:68px !important; max-width:68px !important; height:auto !important; min-height:0 !important; border-radius:26px !important; padding:9px 0 !important; display:flex !important; flex-direction:column !important; justify-content:center !important; gap:4px !important; box-shadow:0 22px 50px -26px rgba(40,28,10,.32) !important; }
+  html.film #tsbBar.tsb-bar.tsb-bar--off { transform:translateX(-140px) !important; }
+  html.film #tsbBar .tsb-bar__item { width:100% !important; min-height:58px !important; flex:0 0 auto !important; justify-content:center !important; padding:7px 0 !important; gap:2px !important; }
+  html.film #tsbBar .tsb-bar__item::before { top:8px !important; left:50% !important; }
+  html.film #tsbBar .tsb-bar__item svg { height:31px !important; }
+  html.film #tsbBar .tsb-bar__lbl { font-size:10px !important; }
+  html.film[data-bar-labels="icons"] #tsbBar.tsb-bar { width:58px !important; max-width:58px !important; }
+  html.film[data-bar-labels="icons"] #tsbBar .tsb-bar__item { min-height:52px !important; }
+
+  /* Today becomes an editorial desk: the day’s book and prompt are peers. */
+  html.fv-today .ft { max-width:none; margin-left:max(124px,calc((100vw - 1180px)/2)); margin-right:max(34px,calc((100vw - 1180px)/2)); padding:54px 0 124px; display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:24px; align-items:start; }
+  html.fv-today .ft-hd { grid-column:1 / span 7; padding:5px 0 0; }
+  html.fv-today .ft-search { grid-column:1 / span 7; margin-top:24px; }
+  html.fv-today .ft-hero { grid-column:1 / span 7; margin-top:22px; min-height:244px; padding:26px 28px; }
+  html.fv-today .ft-hero .f-cover { width:144px; height:216px; }
+  html.fv-today .ft-hero__t { font-size:34px; }
+  html.fv-today .ft-hero__a { font-size:15px; }
+  html.fv-today .ft-mp { grid-column:8 / -1; grid-row:1 / span 3; height:332px; margin-top:0; align-self:end; }
+  html.fv-today .ft-mp__f, html.fv-today .ft-mp__b { padding:28px; border-radius:30px; }
+  html.fv-today .ft-mp__q, html.fv-today .ft-mp__line { font-size:28px; line-height:1.12; }
+  html.fv-today .ft-cont { grid-column:1 / span 4; margin-top:24px; }
+  html.fv-today .ft-orig { grid-column:5 / -1; margin-top:24px; }
+  html.fv-today .ft-sec { grid-column:1 / -1; margin-top:36px; }
+  html.fv-today .ft-row { grid-column:1 / -1; max-width:none; }
+  html.fv-today .ft-tiles { grid-column:1 / span 7; grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:14px; }
+  html.fv-today .ft-prompt { grid-column:8 / -1; margin-top:14px; min-height:126px; box-sizing:border-box; }
+  html.fv-today .ft-foot { grid-column:1 / -1; margin-top:44px; }
+  html.fv-today .ft-row { overflow:visible; gap:18px; }
+  html.fv-today .ft-rb { width:150px; flex:0 0 150px; }
+  html.fv-today .ft-rb .f-cover { width:150px; height:225px; }
+
+  /* The catalogue and reading surfaces use real desktop breathing room. */
+  html.fv-lib main, html.fv-lib #app, html.fv-lib .app { margin-left:110px; }
+  html.film .cmpage, html.film .fnt, html.film .frd, html.film .fwr, html.film .dmpage { margin-left:max(110px,calc((100vw - 1180px)/2)); margin-right:max(28px,calc((100vw - 1180px)/2)); max-width:1180px; }
+  html.film .seopage { max-width:920px; margin-left:max(140px,calc((100vw - 920px)/2)); margin-right:auto; }
+}
+@media (min-width: 1440px) {
+  html.fv-today .ft { grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:30px; }
+  html.fv-today .ft-hero { min-height:268px; }
+  html.fv-today .ft-mp { height:356px; }
+}

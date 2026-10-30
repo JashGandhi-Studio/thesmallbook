@@ -114,8 +114,8 @@ def draw_chip(x, y, w, h, text, bg=WHITE, text_color=INK):
 
 CHIP_Y = 478
 CHIP_H = 38
-draw_chip(LEFT_X, CHIP_Y, 126, CHIP_H, "520 BOOKS", bg=YELLOW, text_color=INK)
-draw_chip(LEFT_X + 138, CHIP_Y, 156, CHIP_H, "3,685 LESSONS", bg=WHITE, text_color=INK)
+draw_chip(LEFT_X, CHIP_Y, 126, CHIP_H, "600 BOOKS", bg=YELLOW, text_color=INK)
+draw_chip(LEFT_X + 138, CHIP_Y, 156, CHIP_H, "4,343 LESSONS", bg=WHITE, text_color=INK)
 draw_chip(LEFT_X + 306, CHIP_Y, 154, CHIP_H, "400 AUTOPSIES", bg=WHITE, text_color=INK)
 
 # Bottom right: thesmallbook.in pill (ALIGNED ON EXACT SAME CHIP_Y BASELINE!)

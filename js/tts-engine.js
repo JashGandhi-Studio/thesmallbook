@@ -2,9 +2,12 @@
    THESMALLBOOK - TTS ENGINE v6 🎧 PODCAST-GRADE LISTENING
    ------------------------------------------------------------
    Providers (auto, in order):
-     1. Puter.js  - free cloud TTS (no API key), high-quality
-        neural voices, 100+ languages. Loaded lazily.
-     2. Web Speech API - fallback (device voices, works offline).
+     1. TheSmallBook Voice Model - private, on-device English and Hindi,
+        downloaded only after the reader chooses it.
+     2. Web Speech API - instant device fallback for every language.
+
+   A legacy cloud adapter remains below for older saved sessions, but new
+   listening never loads it or sends listening text to it.
 
    Features:
      • natural sentence-aware pauses (480ms / 220ms / 750ms)
@@ -248,6 +251,121 @@ window.TTS_ENGINE = (function () {
       if (nx && nx.text && goldVoice() && voiceTier() === "studio" && signedIn() && puterSpeaks(nx.lang || currentLang())) synth(nx.text, nx.lang || currentLang());
     } catch (e) {}
   }
+  /* ---------- TheSmallBook Voice Model: private, on-device, opt-in ---------- */
+  let modelApi = null, modelLoading = null;
+  function modelChoice() {
+    try {
+      var c = localStorage.getItem("tsb_voice_model") || "";
+      if (c === "plus" && !goldVoice()) return "";
+      return c === "basic" || c === "plus" ? c : "";
+    } catch (e) { return ""; }
+  }
+  function setModelChoice(c) {
+    try { localStorage.setItem("tsb_voice_model", c === "plus" ? "plus" : c === "basic" ? "basic" : ""); } catch (e) {}
+  }
+  function modelLang(lang) { return baseLang(lang) === "hi" ? "hi" : baseLang(lang) === "en" ? "en" : ""; }
+  function getModelApi() {
+    if (modelApi) return Promise.resolve(modelApi);
+    if (modelLoading) return modelLoading;
+    modelLoading = import("./tts-piper.mjs").then(function (m) { modelApi = m; return m; }).catch(function (e) { modelLoading = null; throw e; });
+    return modelLoading;
+  }
+  function modelVoiceName() {
+    var c = modelChoice();
+    return c === "plus" ? "TheSmallBook Voice Model Plus" : c === "basic" ? "TheSmallBook Voice Model" : "Phone voice";
+  }
+  function playModelBlob(blob, text, speedV, done) {
+    var u = URL.createObjectURL(blob), audio = new Audio();
+    audio.src = u; audio.preload = "auto";
+    var ended = false, safety = null;
+    function end(ok) {
+      if (ended) return; ended = true;
+      if (safety) clearTimeout(safety);
+      try { URL.revokeObjectURL(u); } catch (e) {}
+      if (currentAudio === audio) currentAudio = null;
+      clearPosition(); done(ok);
+    }
+    audio.onended = function () { end(true); };
+    audio.onerror = function () { end(false); };
+    if (currentAudio && currentAudio !== audio) { try { currentAudio.pause(); } catch (e) {} }
+    currentAudio = audio;
+    try { audio.preservesPitch = true; audio.playbackRate = Math.max(0.5, Math.min(2.5, speedV || 1)); } catch (e) {}
+    routeBoost(audio);
+    function position() {
+      var d = audio.duration;
+      startPosition(d && isFinite(d) ? d / (speedV || 1) : Math.max(5, String(text).length / (14 * (speedV || 1))));
+    }
+    audio.onloadedmetadata = position;
+    safety = setTimeout(function () { end(true); }, Math.max(10000, (String(text).length / Math.max(9, 12 * (speedV || 1))) * 1000 + 12000));
+    audio.play().then(function () { position(); }).catch(function () { end(false); });
+  }
+  function speakModel(text, lang, speedV) {
+    var choice = modelChoice(), ml = modelLang(lang);
+    if (!choice || !ml) return Promise.resolve(false);
+    var keep = gen;
+    return getModelApi().then(function (api) {
+      return api.status().then(function (all) {
+        var row = all.filter(function (x) { return x.tier === choice && x.lang === ml; })[0];
+        if (!row || !row.stored) return false;
+        provider = "model";
+        return api.speak(text, { tier: choice, lang: ml });
+      });
+    }).then(function (out) {
+      if (!out || out === false || keep !== gen || !playing || paused) return false;
+      return new Promise(function (resolve) { playModelBlob(out, text, speedV, resolve); });
+    }).catch(function () { return false; });
+  }
+  function offerVoiceModel() {
+    var asked = false;
+    try { asked = sessionStorage.getItem("tsb_voice_model_asked") === "1"; } catch (e) {}
+    if (asked || document.getElementById("tsbVoiceModel")) return;
+    try { sessionStorage.setItem("tsb_voice_model_asked", "1"); } catch (e) {}
+    var lang = modelLang(currentLang()) || "en", d = document.createElement("div");
+    d.id = "tsbVoiceModel";
+    d.style.cssText = "position:fixed;z-index:2147483002;inset:auto 12px calc(env(safe-area-inset-bottom,0px) + 16px);max-width:480px;margin:auto;background:#fffdf8;color:#16130f;border:1px solid #e7dfd0;border-radius:24px;padding:18px;box-shadow:0 24px 70px rgba(22,19,15,.28);font-family:'Space Grotesk',system-ui,sans-serif;animation:tsbVoiceRise .42s cubic-bezier(.16,1,.3,1)";
+    d.innerHTML = "<style>@keyframes tsbVoiceRise{from{transform:translateY(24px);opacity:0}}.tvm-p{font:600 12px/1.45 Space Grotesk,system-ui;color:#6e6658;margin:6px 0 0}.tvm-b{border:0;border-radius:999px;padding:12px 15px;background:#ffc800;color:#16130f;font:700 14px Space Grotesk,system-ui;cursor:pointer}.tvm-n{border:0;border-radius:999px;padding:12px 14px;background:#f0eadf;color:#16130f;font:600 14px Space Grotesk,system-ui;cursor:pointer}</style>" +
+      "<div style=\"font:700 10px/1 Space Grotesk,system-ui;letter-spacing:.16em;color:#8a6910\">LISTEN ON THIS DEVICE</div>" +
+      "<div style=\"font:600 23px/1.12 Newsreader,Georgia,serif;margin:7px 0 0\">Meet TheSmallBook Voice Model</div>" +
+      "<p class=\"tvm-p\">A warm reading voice that runs on this device. One download of about 63 MB. Your listening text stays here.</p>" +
+      "<div style=\"display:flex;gap:8px;margin-top:14px;align-items:center\"><button type=\"button\" class=\"tvm-b\" data-vm=\"download\">Download voice</button><button type=\"button\" class=\"tvm-n\" data-vm=\"later\">Not now</button></div>" +
+      (goldVoice() ? "<button type=\"button\" data-vm=\"plus\" style=\"display:block;width:100%;margin-top:10px;border:0;background:transparent;color:#725a14;text-align:left;font:600 12px Space Grotesk,system-ui;cursor:pointer\">Gold: choose Voice Model Plus instead</button>" : "");
+    document.body.appendChild(d);
+    d.addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b) return;
+      var a = b.getAttribute("data-vm");
+      if (a === "later") { d.remove(); return; }
+      if (a === "plus") { d.remove(); openVoiceModel("plus"); return; }
+      b.disabled = true; b.textContent = "Preparing…";
+      getModelApi().then(function (api) { return api.download("basic", lang, function (p) { if (p.phase === "model" && p.total) b.textContent = "Downloading " + Math.min(99, Math.round(p.loaded / p.total * 100)) + "%"; else if (p.phase === "engine") b.textContent = "Making it available offline…"; }); }).then(function () {
+        setModelChoice("basic"); b.textContent = "Voice ready"; setTimeout(function () { d.remove(); }, 700);
+        if (window.TSB && TSB.toast) try { TSB.toast("TheSmallBook Voice Model is ready."); } catch (e2) {}
+      }).catch(function (er) { b.disabled = false; b.textContent = "Try download again"; });
+    });
+  }
+  function openVoiceModel(want) {
+    var lang = modelLang(currentLang()) || "en", choice = want === "plus" && goldVoice() ? "plus" : "basic";
+    if (document.getElementById("tsbVoiceModel")) document.getElementById("tsbVoiceModel").remove();
+    var d = document.createElement("div"); d.id = "tsbVoiceModel";
+    d.style.cssText = "position:fixed;z-index:2147483002;inset:0;background:rgba(22,19,15,.42);padding:18px;display:flex;align-items:flex-end;justify-content:center;font-family:'Space Grotesk',system-ui";
+    d.innerHTML = "<div style=\"width:min(520px,100%);background:#fffdf8;color:#16130f;border-radius:26px;padding:20px;box-shadow:0 28px 70px rgba(0,0,0,.25)\"><div style=\"font:700 10px/1 Space Grotesk,system-ui;letter-spacing:.16em;color:#8a6910\">YOUR LISTENING VOICE</div><h2 style=\"font:600 27px/1.1 Newsreader,Georgia,serif;margin:8px 0\">TheSmallBook Voice Model</h2><p style=\"font:600 13px/1.45 Space Grotesk,system-ui;color:#6e6658;margin:0 0 15px\">Download once, then listen privately on this device. About 63 MB per language.</p><div data-vm-options></div><button data-vm-close style=\"margin-top:14px;border:0;background:transparent;font:600 14px Space Grotesk,system-ui;cursor:pointer\">Close</button></div>";
+    document.body.appendChild(d);
+    var opts = d.querySelector("[data-vm-options]");
+    function row(tier, label, note) {
+      var allowed = tier !== "plus" || goldVoice(), on = modelChoice() === tier;
+      return '<button data-vm-tier="' + tier + '" ' + (allowed ? "" : "disabled") + ' style="width:100%;margin-top:8px;padding:14px;text-align:left;border:1px solid ' + (on ? '#d6ab18' : '#e7dfd0') + ';border-radius:16px;background:' + (on ? '#fff4c6' : '#fff') + ';color:#16130f;font:600 14px Space Grotesk,system-ui;cursor:' + (allowed ? 'pointer' : 'default') + '"><b>' + label + '</b><small style="display:block;margin-top:3px;font:500 12px Space Grotesk,system-ui;color:#6e6658">' + note + '</small></button>';
+    }
+    opts.innerHTML = row("basic", "TheSmallBook Voice Model", "Warm on-device voice · English and Hindi") + row("plus", "TheSmallBook Voice Model Plus", goldVoice() ? "Gold voice · richer detail, downloaded only when you choose" : "Gold voice · available with Gold");
+    d.addEventListener("click", function (e) {
+      if (e.target === d || e.target.closest("[data-vm-close]")) { d.remove(); return; }
+      var b = e.target.closest("[data-vm-tier]"); if (!b || b.disabled) return;
+      var tier = b.getAttribute("data-vm-tier"); b.disabled = true; b.querySelector("small").textContent = "Checking this device…";
+      getModelApi().then(function (api) { return api.status().then(function (a) { var x = a.filter(function (z) { return z.tier === tier && z.lang === lang; })[0]; if (x && x.stored) return null; return api.download(tier, lang, function (p) { if (p.phase === "model" && p.total) b.querySelector("small").textContent = "Downloading " + Math.min(99, Math.round(p.loaded / p.total * 100)) + "%"; else if (p.phase === "engine") b.querySelector("small").textContent = "Making it available offline…"; }); }); }).then(function () {
+        setModelChoice(tier); b.querySelector("small").textContent = "Ready on this device"; if (window.TSB && TSB.toast) try { TSB.toast("Voice selected. It will begin on the next passage."); } catch (e2) {}
+        setTimeout(function () { d.remove(); if (playing && !paused) seekTo(curIdx); }, 450);
+      }).catch(function () { b.disabled = false; b.querySelector("small").textContent = "Could not download. Try again when online."; });
+    });
+  }
+
   function speakPuter(text, lang, speedV) {
     return new Promise((resolve) => {
       const g = gen;
@@ -533,8 +651,18 @@ window.TTS_ENGINE = (function () {
          es, fr, de, pt, it, ru, ar, zh-CN, ja, ko, tr, …)
        - lang ∉ PUTER_LANGS  → Web Speech device voice (gu, mr, ta, te,
          kn, ml, pa, or, id - Puter doesn't speak these natively) */
+    /* A saved TheSmallBook Voice Model always gets first choice. It covers
+       English and Hindi; other languages retain the phone's best local voice. */
+    if (modelChoice() && modelLang(lang)) {
+      speakModel(item.text, lang, spd).then(function (okModel) {
+        if (g !== gen || !playing || paused) return done(false);
+        if (okModel) done(true); else speakWeb(item.text, lang, spd, done);
+      });
+      return;
+    }
     if (!puterSpeaks(lang)) {
       speakWeb(item.text, lang, spd, done);
+      if (!modelChoice() && modelLang(lang)) setTimeout(offerVoiceModel, 1900);
       return;
     }
     const tryPuter = () => {
@@ -545,14 +673,19 @@ window.TTS_ENGINE = (function () {
         } else done(true);
       });
     };
+    /* The device voice stays instant while the reader decides whether to
+       keep a private model. Nothing is downloaded without an explicit tap. */
+    if (!modelChoice()) {
+      speakWeb(item.text, lang, spd, done);
+      if (modelLang(lang)) setTimeout(offerVoiceModel, 1900);
+      return;
+    }
     if (!goldVoice()) {
       speakWeb(item.text, lang, spd, done);
-      setTimeout(offerGoldVoice, 2500);
       return;
     }
     if (voiceTier() !== "studio") {
       speakWeb(item.text, lang, spd, done);
-      if (!voiceTier()) { try { loadPuter(); } catch (e) {} setTimeout(offerStudio, 2500); }
       return;
     }
     if (puterReady && signedIn()) tryPuter();
@@ -858,8 +991,8 @@ window.TTS_ENGINE = (function () {
     return parts;
   }
   function playBook(book, lang) {
-    const parts = queueBook(book, lang || currentLang());
-    startQueue(parts, book);
+    const go = () => { const parts = queueBook(book, lang || currentLang()); startQueue(parts, book); };
+    if (window.TSB_LESSONS && book && book.id) TSB_LESSONS.ensure(book.id, go); else go();
   }
   function playParts(parts) {
     startQueue(parts, null);
@@ -870,8 +1003,7 @@ window.TTS_ENGINE = (function () {
     curIdx = 0;
     playing = true;
     paused = false;
-    // ensure puter loads in background for quality
-    loadPuter();
+    // Voice downloads are always reader initiated. The phone voice starts at once.
     /* start the silent keep-alive loop - keeps the tab alive on the lock
        screen so the queue never freezes between chunks */
     startSilence();
@@ -944,28 +1076,8 @@ window.TTS_ENGINE = (function () {
     if (vb) vb.textContent = voiceLabel();
     if (bb) bb.textContent = "🔊 " + boost.toFixed(2).replace(/\.?0+$/, "") + "x";
   }
-  function voiceLabel() {
-    const p = genderPref();
-    return p === "male" ? "🎙️ ♂" : p === "female" ? "🎙️ ♀" : "🎙️ Auto";
-  }
-  function cycleVoice() {
-    const cur = genderPref();
-    const next = cur === "auto" ? "male" : cur === "male" ? "female" : "auto";
-    setGenderPref(next);
-    /* refresh the Puter voice list - on mobile it may load late/empty */
-    if (window.puter && window.puter.ai && window.puter.ai.listTTSVoices) {
-      try {
-        window.puter.ai.listTTSVoices().then(function (v) { puterVoices = v || []; }).catch(function () {});
-      } catch (e) {}
-    }
-    if (player) {
-      const b = player.querySelector('[data-act="voice"]');
-      if (b) b.textContent = voiceLabel();
-    }
-    /* restart the current chunk so the new voice applies right away -
-       but ONLY if still playing (never resurrect after stop) */
-    if (playing && !paused) seekTo(curIdx);
-  }
+  function voiceLabel() { return modelVoiceName(); }
+  function cycleVoice() { openVoiceModel(modelChoice() || "basic"); }
   function hidePlayer() {
     if (!player) return;
     const p = player;
@@ -1034,13 +1146,8 @@ window.TTS_ENGINE = (function () {
       if (v && v.length) { /* warm */ }
     } catch (e) {}
   }
-  // pre-warm puter as EARLY as possible - the sooner it's ready, the sooner
-  // the background-capable audio element takes over (lock screen playback)
-  if (navigator.onLine) {
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", function () { setTimeout(loadPuter, 300); });
-    } else setTimeout(loadPuter, 300);
-  }
+  /* TheSmallBook Voice Model is deliberately not preloaded. It is a large,
+     reader-owned download, not page weight. */
 
   /* ---------- translation (for intros/templates) ---------- */
   var trCache = {};
@@ -1074,7 +1181,9 @@ window.TTS_ENGINE = (function () {
   return {
     voiceTier: voiceTier,
     setVoiceTier: function (v) { setVoiceTier(v === "studio" ? "studio" : "device"); },
-    askStudio: function () { try { sessionStorage.removeItem("tsb_studio_asked"); } catch (e) {} offerStudio(); },
+    askStudio: function () { openVoiceModel(goldVoice() ? "plus" : "basic"); },
+    openVoiceModel: function () { openVoiceModel(modelChoice() || "basic"); },
+    voiceModel: function () { return modelChoice(); },
     playBook: playBook,
     playParts: playParts,
     /* translate intro/template strings into the target language (cached) */
