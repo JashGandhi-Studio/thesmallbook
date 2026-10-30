@@ -618,7 +618,7 @@
         '<div style="flex:1 1 auto;min-width:0;">' +
           '<div style="font:800 12px Space Grotesk,sans-serif;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(b.title)+'</div>' +
           '<div style="font:600 11px Space Grotesk,sans-serif;color:#64748b;margin-top:2px;">'+esc(b.author||"")+(b.year?" · "+b.year:"")+'</div>' +
-          '<div style="font:600 10px Space Grotesk,sans-serif;color:#16a34a;letter-spacing:.5px;text-transform:uppercase;margin-top:4px;">Read free · full book · Open Library</div>' +
+          '<div style="font:600 10px Space Grotesk,sans-serif;color:#16a34a;letter-spacing:.5px;text-transform:uppercase;margin-top:4px;">Open the full book · Open Library</div>' +
         '</div>' +
         (b.ia ? '<button type="button" data-read-ia="'+esc(b.ia)+'" data-read-title="'+esc(b.title)+'" style="flex:none;border:var(--bw) solid var(--edge);background:#ffc800;border-radius:999px;padding:8px 11px;font:800 10px Space Grotesk,sans-serif;cursor:pointer;white-space:nowrap;box-shadow:var(--sh-1)">📖 Read</button>' : '') +
         '<button type="button" data-use-book="'+esc(b.title)+'" data-book-author="'+esc(b.author||"")+'" title="Add as reference in your story" style="flex:none;border:var(--bw) solid var(--edge);background:#fff;border-radius:999px;padding:7px 10px;font:700 10px Space Grotesk,sans-serif;cursor:pointer;white-space:nowrap">+ Use</button>' +

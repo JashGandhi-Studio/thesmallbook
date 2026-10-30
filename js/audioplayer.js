@@ -965,17 +965,13 @@
       return true;
     }
     if (!T || !T.playParts) { toast("This browser cannot speak yet."); return false; }
-    /* The broadcast player never starts an old fallback voice. First Listen
-       asks for the opt-in model, waits for its download, then begins here. */
-    if (!queue._voiceReady && T.ensureVoiceModel) {
-      if (queue._voiceGate) return true;
-      queue._voiceGate = true;
-      T.ensureVoiceModel((queue.parts[0] || {}).lang || "en").then(function (ready) {
-        queue._voiceGate = false;
-        if (ready) { queue._voiceReady = true; startTTS(queue); }
-        else toast("Download TheSmallBook Voice Model to start listening.");
-      }).catch(function () { queue._voiceGate = false; toast("Voice setup could not open. Try Listen again."); });
-      return true;
+    /* v341 · Listen starts on the first tap, every time. The private voice
+       model is an upgrade, not a gate: a reader who keeps one hears it, and a
+       reader who does not hears the phone's own voice from the same tap while
+       the model is offered quietly later, in the player, never as a wall. */
+    if (!queue._voiceReady) {
+      queue._voiceReady = true;
+      try { if (T.hintVoiceModel) T.hintVoiceModel(25000); } catch (eHint) {}
     }
     try { if (AU) { AU.pause(); AU.src = ""; } } catch (e) {}
     q = queue;
@@ -1000,8 +996,8 @@
     mountDock();
     var from = q.from || 0;
     if (from > 0) { curItem = from; }
-    try { T.playParts(q.parts); } catch (e) { return false; }
-    if (from > 0) { try { T.seekTo(q.items[from].part); } catch (e) {} }
+    var startAt = (from > 0 && q.items && q.items[from]) ? q.items[from].part : 0;
+    try { T.playParts(q.parts, startAt); } catch (e) { return false; }
     savePos(); paintAll();
     toast("Playing. Tap the bar for queue, speed and sleep.");
     return true;

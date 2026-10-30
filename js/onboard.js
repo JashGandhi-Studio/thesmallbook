@@ -27,14 +27,26 @@
   }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
 
-  /* v331: onboarding is versioned. Everyone, new or returning, signed in or
-     not, sets the app up once per big update. Returning readers first see a
-     short "new update" card, then the same four screens, prefilled. */
-  var OB_V = 338;
-  var UPDATE = !!get("tsb_onboarded", false) && (get("tsb_onboard_v", 0) || 0) < OB_V;
+  /* v341: setting up is a once-in-a-lifetime moment, not a per-update chore.
+     A reader who has already told us their name, language, shelf and reading
+     rhythm goes straight into the app on every future open and every future
+     update. A new version may show a quiet "what is new" card, and that card
+     never leads back into the four screens. */
+  var OB_V = 341;
+  function alreadySetUp() {
+    try { if (get("tsb_onboarded", false)) return true; } catch (e) {}
+    try {
+      /* anyone who finished even a partial setup keeps it */
+      if (get("tsb_starter_shelf", null) || get("tsb_read_minutes", null) || get("tsb_mind", null)) return true;
+    } catch (e) {}
+    return false;
+  }
+  var UPDATE = alreadySetUp() && (get("tsb_onboard_v", 0) || 0) < OB_V;
   function shouldShow() {
     try { if (sessionStorage.getItem("tsb_onboarded_pending")) { set("tsb_onboarded", true); set("tsb_onboard_v", OB_V); sessionStorage.removeItem("tsb_onboarded_pending"); } } catch (e) {}
     if ((get("tsb_onboard_v", 0) || 0) >= OB_V) return false;
+    /* an existing setup is never overwritten by a new build */
+    if (alreadySetUp()) { set("tsb_onboarded", true); set("tsb_onboard_v", OB_V); return false; }
     /* a signed-in reader still owes the profile step first (auth.js sends them there) */
     try {
       var s = JSON.parse(localStorage.getItem("tsb_auth_session"));

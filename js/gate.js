@@ -67,7 +67,7 @@
         '<button type="button" class="gate__x" aria-label="Close" style="position:absolute;top:14px;right:16px;background:none;border:none;font:800 22px sans-serif;cursor:pointer;color:#111;z-index:10;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;">✕</button>' +
         '<div class="gate__icon">📚</div>' +
         "<h2>You’ve read a whole stack!</h2>" +
-        "<p>Every book here is <b>free to read</b>, no card, no catch, no ads. " +
+        "<p>No card, no catch, no ads. " +
         "Sign in (10 seconds with Google) and the library stays open, with your progress saved.</p>" +
         '<a class="gate__cta" href="login.html">Sign in, it’s free →</a>' +
         '<button class="gate__later" data-later>Keep reading as a guest</button>' +

@@ -429,10 +429,10 @@
       { id: "tsb-gold", brand: "TheSmallBook GOLD", cat: "thesmallbook", logo: "thesmallbook-tile.svg", fit: "full", bg: "#ffc800", own: true,
         tag: "MEMBERSHIP", value: "₹999 / YEAR", worth: "Unlocks everything",
         title: "TSB GOLD, the thank-you layer",
-        desc: "Go Gold to remove the share-card watermark, unlock Pro filters, human-narration audio, PDF cheat-sheets and offline reading. The library stays free to read, Gold is the thank-you.",
+        desc: "Go Gold to remove the share-card watermark, unlock Pro filters, human-narration audio, PDF cheat-sheets and offline reading. The library stays open, Gold is the thank-you.",
         code: null, url: "gold.html",
         steps: ["Open gold.html.", "Pick monthly or yearly.", "Pay with any UPI app.", "Our server confirms the payment and Gold switches on."],
-        tnc: ["Free to read never changes.", "₹999/yr, locked price while active.", "Run by TheSmallBook."] },
+        tnc: ["The open library never changes.", "₹999/yr, locked price while active.", "Run by TheSmallBook."] },
 
       { id: "tsb-sponsor", brand: "Sponsor a Book", cat: "thesmallbook", logo: "thesmallbook-tile.svg", fit: "full", bg: "#ffc800", own: true,
         tag: "FUEL THE LIBRARY", value: "₹99", worth: "Your name on the book",

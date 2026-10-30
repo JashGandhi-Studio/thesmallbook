@@ -266,16 +266,13 @@
     if (nx) nx.addEventListener("click", function () { go(1); });
     if (pl) pl.addEventListener("click", function () {
       if (playing) { playing = false; stopSpeech(); paintPlay(); return; }
-      /* Kids uses the identical opt-in private model. A story never begins
-         through a surprise fallback voice while the model is missing. */
+      /* v341: the story reads on the first tap. The private model is offered
+         afterwards, never in front of the sound. */
       var start = function () { playing = true; paintPlay(); readPage(); };
-      if (window.TTS_ENGINE && TTS_ENGINE.ensureVoiceModel) {
-        pl.disabled = true;
-        TTS_ENGINE.ensureVoiceModel(lang === "hi" ? "hi" : "en").then(function (ready) {
-          pl.disabled = false;
-          if (ready) start(); else showTip("Choose TheSmallBook Voice Model to read aloud.");
-        }).catch(function () { pl.disabled = false; showTip("Voice setup is not ready. Try again."); });
-      } else start();
+      start();
+      if (window.TTS_ENGINE && TTS_ENGINE.hintVoiceModel) {
+        try { TTS_ENGINE.hintVoiceModel(25000); } catch (e) {}
+      }
     });
     /* swipe between pages */
     var st = $(".kr-stage", app), x0 = null;

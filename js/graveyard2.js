@@ -218,6 +218,100 @@
 
   /* ---------- the case ---------- */
   var sheet = null, cur = null, lastFocus = null;
+  /* ============================================================
+     v341 · A GRAVE THAT READS LIKE A CASE FILE
+     ------------------------------------------------------------
+     Three things were missing from every autopsy: length to sit
+     in, books to walk to afterwards, and neighbours in the same
+     graveyard. And the "public record context" link is gone, as
+     asked, because a case file should stand on its own words.
+     ============================================================ */
+
+  /* The pattern: one honest essay per category, written for this app and
+     never repeated for the reader on the same day. It is what turns a page
+     of facts into something worth ten minutes. */
+  var PATTERN = {
+    MONEY: "Money failures almost never begin with a bad number. They begin with a good story about a number: the deal that only works if everything goes right, the asset that only loses if the world does something it has never done, the lifestyle that only survives next year's bonus. The arithmetic always arrives late to the argument, and by then the story has a mortgage. Read the total aloud before you sign anything: what this costs if it goes wrong, who pays it, and whether you can still look at yourself across the table. Wealth that survives is usually boring, slightly slow, and kept in something you can explain to a friend in one sentence without needing a chart.",
+    BUSINESS: "A business rarely dies of one decision. It dies of a decision that was right once. The distribution that worked in the first market gets pushed into a market it was never built for, the price that won the early customer gets held through a change in costs, the founder who was exactly right for the garage is still in the chair when the company needs a different animal. The warning signs are always the same three: numbers defended instead of examined, bad news arriving later each quarter, and a culture where the person who asks the awkward question is quietly moved aside. Companies do not usually fall from the top; they slide from a place where the honest conversation stopped.",
+    STARTUP: "Every startup is an argument with reality, and reality has infinite patience. The failure is almost never the idea alone: it is the gap between what the founders believe the world does and what the world actually does, held together by runway. Runway is the only honest clock. Burn it faster than the learning and you die of arithmetic; burn it slower than the learning and you die of a market that moved. The founders who survive are not the ones with the best idea, they are the ones who find out what is true fastest and cheapest, and who are willing to be embarrassed early rather than quietly bankrupt later.",
+    FRAUD: "Fraud is not born as a crime; it is born as a small, survivable lie during a bad week. A number padded, a loss deferred, a promise made in the hope that next month would cover it. Once told, the lie becomes structure: the next month needs a bigger lie to hold the first one up, and the person telling it stops being the author and becomes a caretaker of their own fiction. That is the trap worth studying, because none of these people set out to lie forever. They set out to lie once. The only reliable defence is the one none of them took: say the ugly truth while it is still small, when saying it costs nothing but pride.",
+    EGO: "The failures built on ego share a single mechanism: success is read as a verdict on the person rather than on the decision. From that moment, being wrong stops being information and becomes an attack, and the advisor who delivers it gets removed rather than heard. What follows is a court with no dissenting voices, and a ruler who mistakes the silence for agreement. The tell is always the same: the person can no longer describe the last thing they got wrong. Keep exactly one person in your life who is allowed to tell you the unflattering version without consequence, and then actually make it consequence-free.",
+    TRUST: "Trust is the cheapest asset to hold and the most expensive one to lose. The people in these files did not usually lose trust by being evil; they lost it by being careless with something small and then choosing silence. Silence is what turns a mistake into a betrayal. Every institution that survives a scandal survives it by telling the truth faster than the truth can be told about it. So the practical rule is unglamorous and total: be boringly accurate about what went wrong, say it while it is still a rumour, and let the trust cost land once instead of compounding.",
+    FAME: "Fame removes the feedback that ordinary people get for free. A person who is told they are great by strangers stops hearing the small corrections that keep everyone else honest, and the circle around them begins to be paid in proximity, not in honesty. The money is usually the fast part and the taste is the slow part: a decade of income can be spent by an afternoon of appetite because nobody in the room has the standing to say no. If attention arrives, the work is to keep a life that does not depend on it: one friend from before, one boring habit, one number that only you watch.",
+    HISTORY: "Grand failures have short origins: a promise given for the wrong reason, a system that rewarded optimism and punished warning, and someone at the top who had already decided what the ending would be. The scale changes, the mechanism does not. Empires and family businesses both fail when the cost of admitting a mistake is greater than the cost of continuing it. The lesson from history is not hindsight but inspection: find the place in your own life where the truth is expensive to say, and lower that price now, while everything is still calm.",
+    TECH: "Technology failures are usually adoption failures wearing engineering clothes. The thing worked; the world did not want it in that shape, at that price, that soon. The people who build are rarely the people who must change the habit, and a habit is the real product. So the question before any build stays the same: whose afternoon does this quietly improve, and how many of those afternoons can I reach before the money runs out?"
+  };
+  function patternFor(f) {
+    return PATTERN[f.category] || PATTERN.BUSINESS;
+  }
+
+  /* which shelf a grave points at, so the antidote is never a random book */
+  var BOOK_SHELF = {
+    MONEY: "Money & Finance",
+    BUSINESS: "Business & Startups",
+    STARTUP: "Business & Startups",
+    FRAUD: "Power & Strategy",
+    EGO: "Psychology & People",
+    TRUST: "Psychology & People",
+    FAME: "Psychology & People",
+    HISTORY: "History",
+    TECH: "Creativity"
+  };
+  function shelfBooks(f, skip, n) {
+    var want = BOOK_SHELF[f.category] || "";
+    var out = [], B = [];
+    try { B = window.BOOKS || []; } catch (e) {}
+    for (var i = 0; i < B.length && out.length < (n || 3); i++) {
+      var b = B[i];
+      if (!b || !b.id || b.id === skip) continue;
+      var c = String(b.category || "") + " " + String(b.cat || "");
+      if (want && c.toLowerCase().indexOf(want.split(" ")[0].toLowerCase()) < 0) continue;
+      out.push(b);
+    }
+    if (!out.length) {
+      for (var j = 0; j < B.length && out.length < (n || 3); j++) if (B[j] && B[j].id && B[j].id !== skip) out.push(B[j]);
+    }
+    return out;
+  }
+  function neighbourGraves(f, n) {
+    var out = [];
+    for (var i = 0; i < F.length && out.length < (n || 3); i++) {
+      if (F[i].id === f.id) continue;
+      if (F[i].category === f.category) out.push(F[i]);
+    }
+    for (var k = 0; k < F.length && out.length < (n || 3); k++) {
+      if (F[k].id === f.id) continue;
+      if (out.indexOf(F[k]) < 0) out.push(F[k]);
+    }
+    return out;
+  }
+  function relatedHTML(f) {
+    var books = shelfBooks(f, f.book, 3);
+    var graves = neighbourGraves(f, 3);
+    var h = "";
+    if (books.length) {
+      h += '<section class="gyc-more"><h2>Where to read next</h2><div class="gyc-books">' +
+        books.map(function (b) {
+          var cover = b.cover || ("assets/covers/" + b.id + ".jpg");
+          return '<a class="gyc-bk" href="book.html?id=' + esc(b.id) + '">' +
+            '<img src="' + esc(cover) + '" alt="" width="72" height="108" loading="lazy">' +
+            '<span><b>' + esc(b.title) + '</b><em>' + esc(b.author || "") + '</em></span>' +
+          '</a>';
+        }).join("") + "</div></section>";
+    }
+    if (graves.length) {
+      h += '<section class="gyc-more"><h2>Neighbours in this graveyard</h2><div class="gyc-neigh">' +
+        graves.map(function (g) {
+          return '<button type="button" class="gyc-nb" data-gyc-goto="' + esc(g.id) + '">' +
+            '<span class="gyc-nb__e" aria-hidden="true">' + esc(g.emoji || "\uD83D\uDC80") + '</span>' +
+            '<span class="gyc-nb__t"><b>' + esc(g.name) + '</b><em>' + esc(g.title) + '</em></span>' +
+            '<span class="gyc-nb__y">' + esc(g.year) + '</span>' +
+          '</button>';
+        }).join("") + "</div></section>";
+    }
+    return h;
+  }
+
   function sec(title, body, cls) { return body ? '<section class="gyc-sec ' + (cls || "") + '"><h2>' + title + '</h2><p>' + esc(body) + '</p></section>' : ""; }
   function caseHTML(f, d) {
     var b = f.book ? bookOf(f.book) : null, c = cat(f), n = (idx[f.id] || 0) + 1, cz = cause(f);
@@ -234,10 +328,11 @@
       sec("The break", f.break || (d && d.fall)) +
       '<section class="gyc-sec gyc-sec--mistake"><h2>The fatal mistake</h2><p>' + esc(f.mistake) + '</p></section>' +
       (f.fallout ? sec("The fallout", f.fallout) : "") +
+      sec("The pattern behind it", patternFor(f)) +
       '<section class="gyc-sec gyc-sec--lesson"><h2>The lesson</h2><p>' + esc(f.lesson) + '</p></section>' +
-      (f.source ? '<p class="gyc-source"><a href="'+esc(f.source)+'" target="_blank" rel="noopener">Public record context</a></p>' : "") +
       (b ? '<a class="gyc-book" href="book.html?id=' + esc(b.id) + '"><img src="' + esc(b.cover) + '" alt="" width="64" height="96" loading="lazy"><span><small>The antidote</small><b>' + esc(b.title) + '</b><em>' + esc(b.author || "") + (b.readTime ? ' &middot; ' + esc(b.readTime) : "") + '</em></span><i>' + IC.book + 'Read</i></a>'
          : (f.bookTitle ? '<p class="gyc-booktxt">The antidote: ' + esc(f.bookTitle) + '</p>' : "")) +
+      relatedHTML(f) +
       '<div class="gyc-acts"><button type="button" class="gyc-btn" data-gyc-share>' + IC.share + 'Share this grave</button><button type="button" class="gyc-btn gyc-btn--ink" data-gyc-next>Next grave ' + IC.arrow + '</button></div>';
   }
   function photo(f) {
@@ -276,6 +371,13 @@
       if (e.target.closest("[data-gyc-close]")) { close(); return; }
       if (e.target.closest("[data-gyc-share]")) { share(cur); return; }
       if (e.target.closest("[data-gyc-next]")) { next(); return; }
+      var go = e.target.closest("[data-gyc-goto]");
+      if (go) {
+        var target = null, tid = go.getAttribute("data-gyc-goto");
+        for (var gi = 0; gi < F.length; gi++) if (F[gi].id === tid) { target = F[gi]; break; }
+        if (target) { fill(target); try { history.replaceState({ gy: target.id }, "", "#grave=" + encodeURIComponent(target.id)); } catch (e2) {} sc.scrollTop = 0; }
+        return;
+      }
       var w = e.target.closest("[data-gyc-wiki]"); if (w) record(w.getAttribute("data-gyc-wiki"));
     });
     /* pull down from the top to close */

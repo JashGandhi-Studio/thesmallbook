@@ -57,8 +57,38 @@ html.dark .f-kick { color: var(--f-gold); }
 html.fo-lock, html.fo-lock body { overflow: hidden !important; }
 .fo { position: fixed; inset: 0; z-index: 100000; background: var(--f-paper); overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; color: var(--f-ink); font-family: var(--f-sans); transition: opacity .42s ease, transform .42s var(--f-out); }
 .fo--leave { opacity: 0; transform: scale(1.03); pointer-events: none; }
-.fo-col { position: relative; max-width: 430px; min-height: 100%; margin: 0 auto; }
-@media (min-width: 700px) { .fo { background: radial-gradient(90% 70% at 50% 0%, var(--f-yelSoft), var(--f-paper) 60%); } .fo-col { min-height: 0; margin: 4vh auto; } .fo-s { min-height: min(860px, 92vh) !important; background: var(--f-paper); border-radius: 36px; box-shadow: 0 40px 90px -40px rgba(40,28,10,.4); } }
+/* v341 · the first open owns the whole screen. The paper, the light and the
+   desk run edge to edge on every size, so a wide display is never a narrow
+   sheet floating in white. */
+.fo::before {
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(130% 90% at 50% -25%, color-mix(in srgb, #FFC800 30%, transparent), transparent 62%),
+    radial-gradient(60% 55% at 0% 105%, rgba(255, 200, 0, .16), transparent 70%),
+    radial-gradient(55% 50% at 100% 100%, rgba(122, 28, 36, .07), transparent 72%);
+}
+/* the grain of real paper, not a pattern: keeps a wide screen feeling made
+   rather than filled */
+.fo::after {
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .38;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+html.dark .fo::after { mix-blend-mode: screen; opacity: .16; }
+html.dark .fo::before { background: radial-gradient(130% 90% at 50% -25%, rgba(255, 200, 0, .14), transparent 60%), radial-gradient(60% 55% at 0% 105%, rgba(255, 200, 0, .08), transparent 70%); }
+.fo-col { position: relative; z-index: 1; max-width: 430px; min-height: 100%; margin: 0 auto; }
+@media (min-width: 700px) {
+  .fo-col { max-width: 640px; min-height: 100dvh; margin: 0 auto; }
+  .fo-s { min-height: 100dvh !important; background: transparent; border-radius: 0; box-shadow: none; padding-left: 40px; padding-right: 40px; }
+  .fo-s1 { padding-top: calc(34px + env(safe-area-inset-top, 0px)); }
+  .fo-s .fo-foot { padding-bottom: calc(30px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (min-width: 1180px) {
+  .fo-col { max-width: 760px; }
+  .fo-s { padding-left: 40px; padding-right: 40px; }
+  .fo-chips { grid-template-columns: repeat(4, 1fr); }
+  .fo-fan { margin-left: -40px; margin-right: -40px; }
+}
 .fo-s { position: relative; display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; padding: calc(14px + env(safe-area-inset-top, 0px)) 24px calc(22px + env(safe-area-inset-bottom, 0px)); box-sizing: border-box; transition: opacity .34s ease, transform .4s var(--f-out); }
 .fo-s.in { opacity: 0; transform: translateX(40px); }
 .fo-s.in-back { opacity: 0; transform: translateX(-40px); }

@@ -1435,32 +1435,284 @@
     }
   }
 
-  /* ---------- QUOTES + IMAGE GENERATOR ---------- */
+  /* ---------- QUOTES ---------- */
   const quotesWrap = document.getElementById("quotes");
-  const quoteSpins = {};
   book.quotes.forEach((q, qidx) => {
     const d = document.createElement("div");
     d.className = "quote";
     d.textContent = q;
     const btn = document.createElement("button");
     btn.className = "quote__share";
-    btn.title = "Share as image card";
-    btn.textContent = "🎴";
+    btn.title = "Make a quote card";
+    btn.setAttribute("aria-label", "Make a quote card");
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 15l4.5-4.5a2 2 0 0 1 2.8 0L15 15"/><circle cx="15.5" cy="8" r="1.6"/></svg>';
     btn.setAttribute("translate", "no");
-    btn.addEventListener("click", async () => {
-      toast("🎨 Creating your quote card...");
-      // LIVE text - translated if the page is translated
-      const liveQ = liveText(d, q).replace(/🎴/g, "").trim();
-      // fresh palette each tap: same quote cycles through all 20 looks
-      const spin = (quoteSpins[qidx] = (quoteSpins[qidx] || 0) + 1);
-      const palIdx = (qidx + spin * 7) % PALETTES.length;
-      const canvas = await renderQuoteCard(liveQ, palIdx);
-      shareCanvas(canvas, `thesmallbook-${book.id}-quote-${qidx + 1}.png`,
-        `💬 From ${liveText("#title", book.title)} - on TheSmallBook`);
+    btn.addEventListener("click", () => {
+      /* the same card the share button at the top of the book makes, opened
+         in a studio so the colour and the backdrop are one tap away */
+      openQuoteStudio(liveText(d, q).trim(), qidx);
     });
     d.appendChild(btn);
     quotesWrap.appendChild(d);
   });
+
+  /* ============================================================
+     QUOTE CARD STUDIO (v341)
+     Every quote in every book opens this: a live card, a row of
+     colours you tap through, and the desk backdrops for Gold.
+     ============================================================ */
+  const CARD_THEMES = [
+    { id: "paper", name: "Paper", bg: "#FBF8F1", fg: "#16130F", accent: "#8A5A00" },
+    { id: "ink", name: "Ink", bg: "#16130F", fg: "#FBF8F1", accent: "#FFC800" },
+    { id: "yellow", name: "Yellow", bg: "#FFC800", fg: "#16130F", accent: "#16130F" },
+    { id: "rose", name: "Rose", bg: "#FFA9CC", fg: "#16130F", accent: "#16130F" },
+    { id: "clay", name: "Clay", bg: "#C96A4B", fg: "#FFF6EA", accent: "#FFD8A8" },
+    { id: "moss", name: "Moss", bg: "#2F7D5B", fg: "#F2FBF5", accent: "#FFC800" },
+    { id: "sky", name: "Sky", bg: "#BFDDF5", fg: "#101C2B", accent: "#1F3A5F" },
+    { id: "night", name: "Night", bg: "#1B2333", fg: "#F2EDE2", accent: "#FFC800" },
+    { id: "sunset", name: "Sunset", bg: "#FFC800", bg2: "#FF7A59", fg: "#16130F", accent: "#16130F" },
+    { id: "lilac", name: "Lilac", bg: "#CDBBFF", bg2: "#F6C6E6", fg: "#1B1430", accent: "#4B2EA8" }
+  ];
+  /* the desk: photographs of paper, linen and stone, the things a good line
+     is actually written on. Gold only, exactly as asked. */
+  const CARD_DESKS = [
+    { id: "bg01-paper", name: "Paper", file: "bg01-paper" },
+    { id: "bg09-cream", name: "Cream", file: "bg09-cream" },
+    { id: "bg22-cream-linen", name: "Linen", file: "bg22-cream-linen" },
+    { id: "bg12-marble", name: "Marble", file: "bg12-marble" },
+    { id: "bg17-beige-dunes", name: "Dunes", file: "bg17-beige-dunes" },
+    { id: "bg18-white-shadow", name: "Shadow", file: "bg18-white-shadow" },
+    { id: "bg10-terracotta", name: "Terracotta", file: "bg10-terracotta" },
+    { id: "bg02-dark", name: "Ink desk", file: "bg02-dark", dark: true }
+  ];
+
+  function cardFonts() {
+    try {
+      if (document.fonts && document.fonts.load) {
+        return Promise.all([
+          document.fonts.load('600 60px Newsreader'),
+          document.fonts.load('400 40px "Archivo Black"'),
+          document.fonts.load('600 30px "Space Grotesk"')
+        ]).catch(function () {});
+      }
+    } catch (e) {}
+    return Promise.resolve();
+  }
+
+  async function drawQuoteCard(o) {
+    const W = 1080, H = 1350;
+    const canvas = document.createElement("canvas");
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext("2d");
+    const th = o.theme || CARD_THEMES[0];
+    let fg = th.fg, accent = th.accent || th.fg;
+    let painted = false;
+
+    if (o.desk) {
+      const img = await loadImage("assets/quote-bgs/" + o.desk.file + ".jpg");
+      if (img && img.width) {
+        const s = Math.max(W / img.width, H / img.height);
+        const dw = img.width * s, dh = img.height * s;
+        ctx.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
+        ctx.fillStyle = o.desk.dark ? "rgba(14,11,8,.46)" : "rgba(251,248,241,.34)";
+        ctx.fillRect(0, 0, W, H);
+        fg = o.desk.dark ? "#FBF8F1" : "#16130F";
+        accent = o.desk.dark ? "#FFC800" : "#8A5A00";
+        painted = true;
+      }
+    }
+    if (!painted) {
+      if (th.bg2) {
+        const g = ctx.createLinearGradient(0, 0, W, H);
+        g.addColorStop(0, th.bg); g.addColorStop(1, th.bg2);
+        ctx.fillStyle = g;
+      } else ctx.fillStyle = th.bg;
+      ctx.fillRect(0, 0, W, H);
+      /* the faint dot grid that makes a flat card feel printed */
+      ctx.save();
+      ctx.globalAlpha = .10;
+      ctx.fillStyle = fg;
+      for (let x = 24; x < W; x += 48) for (let y = 24; y < H; y += 48) { ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); }
+      ctx.restore();
+    }
+
+    ctx.textAlign = "left";
+    ctx.fillStyle = accent;
+    ctx.globalAlpha = .9;
+    ctx.font = '700 25px "Space Grotesk", system-ui, sans-serif';
+    ctx.fillText("W O R D S   T H A T   H I T", 96, 150);
+    ctx.globalAlpha = 1;
+
+    ctx.font = "900 210px Georgia, serif";
+    ctx.globalAlpha = .16;
+    ctx.fillStyle = fg;
+    ctx.fillText("\u201C", 74, 400);
+    ctx.globalAlpha = 1;
+
+    let size = 68;
+    const maxW = W - 192, zone = 620;
+    ctx.font = '500 ' + size + 'px Newsreader, Georgia, serif';
+    let lines = wrapText(ctx, o.text, maxW);
+    while (lines.length * (size + 12) > zone && size > 34) {
+      size -= 4;
+      ctx.font = '500 ' + size + 'px Newsreader, Georgia, serif';
+      lines = wrapText(ctx, o.text, maxW);
+    }
+    const blockH = lines.length * (size + 12);
+    let y = 330 + Math.max(0, (zone - blockH) / 2);
+    ctx.fillStyle = fg;
+    lines.forEach(function (ln) { ctx.fillText(ln, 96, y); y += size + 12; });
+
+    y = Math.min(y + 54, 1010);
+    ctx.fillStyle = accent;
+    ctx.fillRect(96, y - 26, 84, 6);
+    ctx.fillStyle = fg;
+    ctx.font = '400 40px "Archivo Black", Arial';
+    ctx.fillText(String(o.title || "").toUpperCase().slice(0, 34), 96, y + 44);
+    ctx.font = '600 25px "Space Grotesk", system-ui, sans-serif';
+    ctx.globalAlpha = .72;
+    ctx.fillText(String(o.author || "").toUpperCase().slice(0, 40), 96, y + 90);
+    ctx.globalAlpha = 1;
+
+    ctx.fillStyle = accent;
+    ctx.fillRect(0, H - 96, W, 8);
+    ctx.fillStyle = fg;
+    ctx.globalAlpha = .55;
+    ctx.font = '600 22px "Space Grotesk", system-ui, sans-serif';
+    ctx.fillText("THESMALLBOOK", 96, H - 40);
+    ctx.textAlign = "right";
+    ctx.fillText("8-MINUTE READS", W - 96, H - 40);
+    ctx.globalAlpha = 1;
+    ctx.textAlign = "left";
+    return canvas;
+  }
+
+  let qcsEl = null;
+  function openQuoteStudio(text, qidx) {
+    const gold = isGoldNow();
+    const state = { theme: CARD_THEMES[qidx % CARD_THEMES.length], desk: null };
+    if (qcsEl) qcsEl.remove();
+    const d = document.createElement("div");
+    d.className = "qcs";
+    d.innerHTML =
+      '<style>' +
+      '.qcs{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:flex-end;justify-content:center;font-family:"Space Grotesk",system-ui,sans-serif}' +
+      '.qcs__veil{position:absolute;inset:0;background:rgba(22,19,15,.44);opacity:0;transition:opacity .28s ease}' +
+      '.qcs__sheet{position:relative;width:min(560px,100%);max-height:94vh;display:flex;flex-direction:column;background:#FBF8F1;color:#16130F;border-radius:28px 28px 0 0;box-shadow:0 -20px 60px rgba(22,19,15,.3);padding:10px 0 calc(env(safe-area-inset-bottom,0px) + 12px);transform:translateY(24px);opacity:0;transition:transform .36s cubic-bezier(.16,1,.3,1),opacity .26s ease}' +
+      '.qcs.on .qcs__veil{opacity:1}.qcs.on .qcs__sheet{transform:none;opacity:1}' +
+      '.qcs__grab{width:44px;height:5px;border-radius:3px;background:#E4DCCB;margin:0 auto 8px}' +
+      '.qcs__head{display:flex;align-items:center;padding:2px 18px 8px}' +
+      '.qcs__head b{font:600 20px/1 Newsreader,Georgia,serif;letter-spacing:-.01em}' +
+      '.qcs__head .qcs__x{margin-left:auto;width:36px;height:36px;border-radius:50%;border:1px solid #ECE5D6;background:transparent;color:#16130F;display:grid;place-items:center;cursor:pointer;padding:0;font-size:15px}' +
+      '.qcs__stage{padding:0 18px;display:flex;justify-content:center}' +
+      '.qcs__stage canvas{width:auto;max-width:100%;height:auto;max-height:44vh;border-radius:14px;box-shadow:0 18px 34px -18px rgba(22,19,15,.5);display:block}' +
+      '.qcs__row{padding:12px 18px 0}' +
+      '.qcs__lab{display:flex;align-items:center;gap:7px;font:700 10.5px/1 "Space Grotesk",system-ui;letter-spacing:.14em;color:#8C8272;text-transform:uppercase}' +
+      '.qcs__lab em{font:700 10px/1 "Space Grotesk",system-ui;letter-spacing:.1em;color:#8A5A00;background:#FFF1BF;border-radius:999px;padding:3px 7px;font-style:normal}' +
+      '.qcs__strip{display:flex;gap:9px;overflow-x:auto;padding:9px 0 3px;scrollbar-width:none}' +
+      '.qcs__strip::-webkit-scrollbar{display:none}' +
+      '.qcs__sw{flex:0 0 auto;width:40px;height:40px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;transition:transform .16s ease}' +
+      '.qcs__sw:active{transform:scale(.92)}' +
+      '.qcs__sw.on{border-color:#16130F}' +
+      '.qcs__bg{flex:0 0 auto;width:52px;height:64px;border-radius:10px;border:2px solid transparent;background-size:cover;background-position:center;cursor:pointer;padding:0;position:relative;overflow:hidden;transition:transform .16s ease}' +
+      '.qcs__bg.on{border-color:#16130F}' +
+      '.qcs__bg i{position:absolute;inset:0;display:grid;place-items:center;background:rgba(22,19,15,.34);color:#FFC800;font-size:15px;font-style:normal}' +
+      '.qcs__acts{display:flex;gap:10px;padding:14px 18px 4px}' +
+      '.qcs__acts button{flex:1;height:50px;border-radius:16px;border:0;font:700 15px "Space Grotesk",system-ui;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}' +
+      '.qcs__save{background:#F0EADF;color:#16130F}' +
+      '.qcs__share{background:#FFC800;color:#16130F;box-shadow:0 10px 20px -12px rgba(160,110,0,.6)}' +
+      '.qcs__hint{padding:6px 18px 0;font:500 11.5px/1.4 "Space Grotesk",system-ui;color:#8C8272;text-align:center}' +
+      'html.dark .qcs__sheet{background:#1C1813;color:#F3EDE2}html.dark .qcs__head .qcs__x{border-color:#3A332B;color:#F3EDE2}html.dark .qcs__save{background:#2A241C;color:#F3EDE2}html.dark .qcs__grab{background:#3A332B}' +
+      '@media (min-width:760px){.qcs{align-items:center}.qcs__sheet{border-radius:28px;max-height:92vh;padding-bottom:14px}}' +
+      '</style>' +
+      '<i class="qcs__veil" data-qcs="x"></i>' +
+      '<div class="qcs__sheet" role="dialog" aria-modal="true" aria-label="Quote card">' +
+        '<div class="qcs__grab"></div>' +
+        '<div class="qcs__head"><b>Quote card</b><button class="qcs__x" data-qcs="x" aria-label="Close">\u2715</button></div>' +
+        '<div class="qcs__stage"><canvas></canvas></div>' +
+        '<div class="qcs__row"><span class="qcs__lab">Colour</span><div class="qcs__strip" data-qcs="themes"></div></div>' +
+        '<div class="qcs__row"><span class="qcs__lab">The desk <em>' + (gold ? "yours" : "Gold") + '</em></span><div class="qcs__strip" data-qcs="desks"></div></div>' +
+        '<div class="qcs__acts"><button class="qcs__save" data-qcs="save">Save</button><button class="qcs__share" data-qcs="share">Share</button></div>' +
+        (gold ? '' : '<p class="qcs__hint">Tap a backdrop to open the desk collection with Gold.</p>') +
+      '</div>';
+    document.body.appendChild(d);
+    qcsEl = d;
+    requestAnimationFrame(function () { requestAnimationFrame(function () { d.classList.add("on"); }); });
+
+    const canvas = d.querySelector("canvas");
+    const themesHost = d.querySelector('[data-qcs="themes"]');
+    const desksHost = d.querySelector('[data-qcs="desks"]');
+
+    themesHost.innerHTML = CARD_THEMES.map(function (t, i) {
+      const bg = t.bg2 ? "linear-gradient(135deg," + t.bg + "," + t.bg2 + ")" : t.bg;
+      return '<button class="qcs__sw' + (t.id === state.theme.id ? " on" : "") + '" data-qcs-theme="' + i + '" style="background:' + bg + '" aria-label="' + t.name + '"></button>';
+    }).join("");
+    desksHost.innerHTML = CARD_DESKS.map(function (b, i) {
+      const src = "assets/quote-bgs/" + b.file + "-thumb.jpg";
+      return '<button class="qcs__bg" data-qcs-desk="' + i + '" style="background-image:url(' + src + ')" aria-label="' + b.name + '">' + (gold ? "" : "<i>\uD83D\uDD12</i>") + "</button>";
+    }).join("");
+
+    let paintToken = 0;
+    async function repaint() {
+      const mine = ++paintToken;
+      await cardFonts();
+      const c = await drawQuoteCard({ text: text, title: book.title, author: book.author, theme: state.theme, desk: state.desk });
+      if (mine !== paintToken) return;
+      canvas.width = c.width; canvas.height = c.height;
+      canvas.getContext("2d").drawImage(c, 0, 0);
+    }
+    repaint();
+
+    function closeStudio() {
+      if (!qcsEl) return;
+      const el = qcsEl; qcsEl = null;
+      el.classList.remove("on");
+      setTimeout(function () { el.remove(); }, 320);
+      document.removeEventListener("keydown", onKey);
+    }
+    function onKey(e) { if (e.key === "Escape") closeStudio(); }
+    document.addEventListener("keydown", onKey);
+
+    d.addEventListener("click", function (e) {
+      const t = e.target.closest("[data-qcs],[data-qcs-theme],[data-qcs-desk]");
+      if (!t) return;
+      if (t.hasAttribute("data-qcs-theme")) {
+        state.theme = CARD_THEMES[+t.getAttribute("data-qcs-theme")] || state.theme;
+        state.desk = null;
+        d.querySelectorAll(".qcs__sw").forEach(function (b) { b.classList.toggle("on", b === t); });
+        d.querySelectorAll(".qcs__bg").forEach(function (b) { b.classList.remove("on"); });
+        repaint(); return;
+      }
+      if (t.hasAttribute("data-qcs-desk")) {
+        const b = CARD_DESKS[+t.getAttribute("data-qcs-desk")];
+        if (!b) return;
+        if (!gold) { location.href = "gold.html?from=quote-card"; return; }
+        state.desk = b;
+        d.querySelectorAll(".qcs__bg").forEach(function (x) { x.classList.toggle("on", x === t); });
+        d.querySelectorAll(".qcs__sw").forEach(function (x) { x.classList.remove("on"); });
+        repaint(); return;
+      }
+      const a = t.getAttribute("data-qcs");
+      if (a === "x") { closeStudio(); return; }
+      if (a === "save") {
+        canvas.toBlob(function (blob) {
+          if (!blob) return;
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "thesmallbook-" + book.id + "-quote-" + (qidx + 1) + ".png";
+          document.body.appendChild(link); link.click(); link.remove();
+          setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+          toast("Saved to your downloads");
+        }, "image/png");
+        return;
+      }
+      if (a === "share") {
+        shareCanvas(canvas, "thesmallbook-" + book.id + "-quote-" + (qidx + 1) + ".png",
+          "From " + liveText("#title", book.title) + " - on TheSmallBook");
+      }
+    });
+  }
 
 
   async function renderQuoteCard(quote, qidx) {

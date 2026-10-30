@@ -33,7 +33,7 @@
   /* ---------- the guide sheet: every function, plainly ---------- */
   var ROWS = [
     { g: "READ", rows: [
-      { e: "📚", n: "The Library", d: "600 books, 4,343 lessons, 26 languages. Free to read, forever.", h: "index.html" },
+      { e: "📚", n: "The Library", d: "600 books, 4,343 lessons, 26 languages. Open in one tap.", h: "index.html" },
       { e: "📷", n: "Scanner", d: "Holding a paper book? Scan its cover and its shelf opens here.", h: "scan.html" },
       { e: "🌊", n: "Deep Dives", d: "The one chapter of a book worth reading in full, with narration.", h: "deepdive.html" },
       { e: "🗒️", n: "Notebook", d: "Every highlight, note and saved line you keep, in one place.", h: "notes.html" }
@@ -440,7 +440,7 @@
   /* ---------- the mini tour: five soft steps across home ---------- */
   var STEPS = [
     { sel: "#tsbHelpChip", t: "This ? is your map", d: "Lost anytime, on any day? Tap it: every function of the app, explained in plain words, one tap away." },
-    { sel: "#searchInput", t: "Type a book, a mood, a problem", d: "600 books live here, broken into 5-minute lessons. Every single one free to read." },
+    { sel: "#searchInput", t: "Type a book, a mood, a problem", d: "600 books live here, broken into 5-minute lessons." },
     { sel: ".scanbtn", t: "Reading a paper book?", d: "Scan its cover and its whole shelf opens here - lessons, audio, everything it has." },
     { sel: ".gravebanner__box", t: "The Graveyard", d: "400 real failures autopsied, from Enron to the Titan. The best free read on the internet." },
     { sel: ".tsb-bar__item--plus", t: "The big + is your audio home", d: "Stories, Listen Today, your continue card, audiobooks and podcasts - it all lives behind the plus." }

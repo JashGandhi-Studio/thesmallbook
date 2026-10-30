@@ -1907,3 +1907,164 @@ html.fv-gold.fg-yours .fg { padding-bottom: 8px; }
 html.dark .fy-pop__row .fy-tg { background: #3A332B; }
 html.dark .fy-pop__row .fy-tg.on { background: #FFC800; }
 .bkx.bkx--pre { visibility: hidden; pointer-events: none; }
+
+/* ============================================================
+   30. v341 · PEOPLE, actually aligned
+   ------------------------------------------------------------
+   The follow pill was transparent, so it read as an empty input
+   field. The tick sat off its baseline and the message glyph was
+   pushed sideways by a global icon margin. Every one of those is
+   answered here: a real button, a centred tick, a centred icon.
+   ============================================================ */
+body.fst .cm-person {
+  display: grid !important;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px 12px;
+  padding: 14px 14px 14px 16px !important;
+  border-radius: 22px !important;
+}
+body.fst .cm-person__top {
+  display: contents !important;
+}
+body.fst .cm-person .cm-ava--lg {
+  grid-column: 1; grid-row: 1 / span 2;
+  width: 44px !important; height: 44px !important; align-self: start;
+  margin-top: 2px;
+}
+body.fst .cm-person__meta {
+  grid-column: 2; grid-row: 1;
+  gap: 3px !important;
+  min-width: 0;
+}
+body.fst .cm-person__acts {
+  grid-column: 3; grid-row: 1;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  width: auto !important;
+}
+
+/* the tick: one centred circle, never a stray punctuation mark */
+body.fst .cm-vtick,
+body.fsty .cm-vtick {
+  display: inline-grid !important;
+  place-items: center !important;
+  width: 15px !important;
+  height: 15px !important;
+  flex: 0 0 15px;
+  margin: 0 0 0 6px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  background: #FFC800 !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  vertical-align: middle !important;
+  position: relative;
+  top: -1px;
+}
+body.fst .cm-vtick::after,
+body.fsty .cm-vtick::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 50% !important; top: 50% !important;
+  width: 7px !important; height: 4px !important;
+  margin: 0 !important;
+  border: solid #16130F !important;
+  border-width: 0 0 1.8px 1.8px !important;
+  transform: translate(-50%, -65%) rotate(-45deg) !important;
+}
+
+/* follow: a button, with a colour that says "press me" */
+body.fst .cm-person__acts .cm-follow,
+body.fst .cm-follow {
+  margin-left: 0 !important;
+  height: 34px !important;
+  min-width: 96px;
+  padding: 0 15px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px !important;
+  border: 1px solid #16130F !important;
+  background: #16130F !important;
+  color: #FBF8F1 !important;
+  font: 600 12.5px/1 var(--f-sans) !important;
+  letter-spacing: 0 !important;
+  white-space: nowrap;
+  box-shadow: none !important;
+  transition: transform .16s var(--f-out), background .2s, color .2s, border-color .2s;
+}
+body.fst .cm-follow:active { transform: scale(.95); }
+body.fst .cm-follow.on {
+  background: #FFC800 !important;
+  border-color: #FFC800 !important;
+  color: #16130F !important;
+}
+body.fst .cm-follow.is-req {
+  background: transparent !important;
+  border: 1.5px dashed var(--f-line) !important;
+  color: var(--f-mu) !important;
+}
+
+/* message: a circle, with the glyph in the middle of it */
+body.fst .cm-person__acts .cm-dmbtn,
+body.fst .cm-dmbtn {
+  display: grid !important;
+  place-items: center !important;
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--f-line) !important;
+  background: var(--f-card) !important;
+  color: var(--f-ink) !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+}
+body.fst .cm-dmbtn .tsb-ic,
+body.fst .cm-dmbtn svg {
+  margin: 0 !important;
+  width: 16px !important;
+  height: 16px !important;
+  display: block;
+}
+body.fst .cm-dmbtn:active { transform: scale(.94); }
+
+/* the stats line breathes, and never shoves the name around */
+body.fst .cm-person__meta .cm-time {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11.5px !important;
+}
+
+/* phones: the two actions get their own full-width row, evenly split */
+@media (max-width: 430px) {
+  body.fst .cm-person {
+    grid-template-columns: 40px minmax(0, 1fr);
+    row-gap: 10px;
+  }
+  body.fst .cm-person .cm-ava--lg { width: 40px !important; height: 40px !important; }
+  body.fst .cm-person__acts {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: 2px !important;
+  }
+  body.fst .cm-person__acts .cm-follow { flex: 1 1 auto; min-width: 0; }
+  body.fst .cm-person__acts .cm-dmbtn { width: 34px !important; height: 34px !important; min-width: 34px; }
+  body.fst .cm-person__acts .cm-follow:not(.on):not(.is-req) {
+    background: #FFC800 !important;
+    border-color: #FFC800 !important;
+    color: #16130F !important;
+  }
+  body.fst .cm-person__acts .cm-follow:not(.on):not(.is-req):active { background: #F0B900 !important; }
+}
+
+/* the "live" chip and section label line up on one baseline */
+body.fst .cm-sect--people { display: flex !important; flex-wrap: wrap; align-items: center; gap: 8px; }
+body.fst .cm-sect--people .cm-live { margin: 0; }

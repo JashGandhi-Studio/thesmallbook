@@ -106,6 +106,10 @@ async function download(tier, lang, progress) {
   const config = await fetchBlob(modelUrl(v) + ".json");
   await write(dir, n.model, model); await write(dir, n.config, config);
   storedCache.set(v.id, true);
+  /* v342: ask the browser to keep this download for good. A voice is 63 MB of
+     the reader's patience; it should not be the first thing an automatic
+     cleanup throws away. */
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
   if (progress) progress({ loaded: 1, total: 1, phase: "engine" });
   /* Runtime caching is useful offline but never holds the download sheet or UI. */
   const idle = self.requestIdleCallback || function (fn) { return setTimeout(fn, 300); };
@@ -204,7 +208,7 @@ function workerCall(payload, transfer, onChunk) {
 }
 function workerForVoice() {
   if (voiceWorker) return voiceWorker;
-  voiceWorker = new Worker(new URL("./tts-piper-worker.js?v=338", import.meta.url));
+  voiceWorker = new Worker(new URL("./tts-piper-worker.js?v=342", import.meta.url));
   voiceWorker.onmessage = function (event) {
     const d = event.data || {}, w = workerWaiters.get(d.id); if (!w) return;
     if (d.type === "progress") { if (w.progress) w.progress({ loaded: d.loaded, total: d.total, phase: "speaking" }); return; }

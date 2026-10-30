@@ -218,7 +218,7 @@
         '<span class="mp-book__t">' + esc(b.title) + "</span>" +
         '<span class="mp-book__a">' + esc(b.author) + "</span>" +
         '<span class="mp-book__w">' + esc(b.oneLiner).slice(0, 86) + "…</span>" +
-        '<span class="mp-book__go">READ FREE &rarr;</span></a>';
+        '<span class="mp-book__go">OPEN &rarr;</span></a>';
     }).join("");
     var askQ = typed || p.label;
     var action = p.action

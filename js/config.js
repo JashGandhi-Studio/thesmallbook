@@ -72,7 +72,7 @@ window.TSB_CONFIG = {
     { quote: "Action steps at the end of Atomic Habits actually helped me set up my daily workflow.", who: "Sameer" },
     { quote: "Good alternative to paying 2k a year for apps that lock basic summaries behind paywalls.", who: "Dr. M. S. Iyer" },
     { quote: "Scanner matched the cover from my shelf in two seconds. Clean feature.", who: "@kunal_dev" },
-    { quote: "Really appreciate that the core library stays completely free to read without account gates.", who: "Rhea M." },
+    { quote: "Really appreciate that the whole library opens without an account gate in the way.", who: "Rhea M." },
     { quote: "The 5-step action plan at the end of each breakdown is the best part.", who: "Aman" },
     { quote: "Book summaries that respect your time. Exactly what I was looking for.", who: "@shreya_v" }
   ],
