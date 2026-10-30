@@ -34,8 +34,8 @@
   var cur = null, page = 0, playing = false;
 
   var UI = {
-    en: { hello: "Story time", sub: "Pick a story. Tap Read to me and follow the words.", stars: "stars", read: "Read to me", pause: "Pause", again: "Read another story", moral: "The lesson", earned: "You earned a star!", pages: "pages", hold: "Grown-ups: hold to exit", noHi: "This device has no Hindi voice yet, so it reads in its own voice.", start: "Start", back: "All stories" },
-    hi: { hello: "कहानी का समय", sub: "एक कहानी चुनो। सुनाओ दबाओ और शब्दों के साथ पढ़ो।", stars: "सितारे", read: "सुनाओ", pause: "रुको", again: "एक और कहानी", moral: "सीख", earned: "तुम्हें एक सितारा मिला!", pages: "पन्ने", hold: "बड़े: बाहर जाने के लिए दबाए रखें", noHi: "इस फ़ोन में हिंदी आवाज़ नहीं है, इसलिए अपनी आवाज़ में पढ़ेगा।", start: "शुरू करो", back: "सभी कहानियाँ" }
+    en: { hello: "Story time", sub: "Pick a story. Tap Read to me and follow the words.", stars: "stars", read: "Read to me", pause: "Pause", again: "Read another story", moral: "The lesson", earned: "You earned a star!", pages: "pages", hold: "Grown-ups: hold to exit", noHi: "This device has no Hindi voice yet, so it reads in its own voice.", start: "Start", back: "All stories", voice: "Choose offline voice" },
+    hi: { voice: "ऑफलाइन आवाज़ चुनें", hello: "कहानी का समय", sub: "एक कहानी चुनो। सुनाओ दबाओ और शब्दों के साथ पढ़ो।", stars: "सितारे", read: "सुनाओ", pause: "रुको", again: "एक और कहानी", moral: "सीख", earned: "तुम्हें एक सितारा मिला!", pages: "पन्ने", hold: "बड़े: बाहर जाने के लिए दबाए रखें", noHi: "इस फ़ोन में हिंदी आवाज़ नहीं है, इसलिए अपनी आवाज़ में पढ़ेगा।", start: "शुरू करो", back: "सभी कहानियाँ" }
   };
   function t(k) { return (UI[lang] || UI.en)[k]; }
   function starCount() { var n = 0; for (var k in stars) if (stars[k]) n++; return n; }
@@ -136,9 +136,11 @@
       topbar(false) + heroHtml(k, fresh) +
       card(td, 0, true) +
       '<p class="kp-h">' + esc(x("all")) + '</p><div class="kp-grid">' + STORIES.map(function (s, i) { return card(s, i + 1, false); }).join("") + "</div>" +
-      '<p class="kp-foot">Panchatantra, retold for small readers by TheSmallBook. <button class="kp-change" id="kpChange">' + esc(x("change")) + "</button></p>";
+      '<div class="kp-voice"><button class="kp-change" id="kpVoice">🎙 ' + esc(t("voice")) + '</button><span>' + (window.TTS_ENGINE && TTS_ENGINE.voiceModel && TTS_ENGINE.voiceModel() ? "TheSmallBook Voice Model" : "Phone voice") + '</span></div>' +
+      '<p class="kp-foot">Original picture stories by TheSmallBook. <button class="kp-change" id="kpChange">' + esc(x("change")) + "</button></p>";
     wireTop();
     var ch = $("#kpChange", app); if (ch) ch.addEventListener("click", function () { renderSetup(1); });
+    var vm = $("#kpVoice", app); if (vm) vm.addEventListener("click", function () { if (window.TTS_ENGINE && TTS_ENGINE.openVoiceModel) TTS_ENGINE.openVoiceModel(); else showTip("Voice setup is loading"); });
   }
 
   function topbar(inStory) {
@@ -264,7 +266,16 @@
     if (nx) nx.addEventListener("click", function () { go(1); });
     if (pl) pl.addEventListener("click", function () {
       if (playing) { playing = false; stopSpeech(); paintPlay(); return; }
-      playing = true; paintPlay(); readPage();
+      /* Kids uses the identical opt-in private model. A story never begins
+         through a surprise fallback voice while the model is missing. */
+      var start = function () { playing = true; paintPlay(); readPage(); };
+      if (window.TTS_ENGINE && TTS_ENGINE.ensureVoiceModel) {
+        pl.disabled = true;
+        TTS_ENGINE.ensureVoiceModel(lang === "hi" ? "hi" : "en").then(function (ready) {
+          pl.disabled = false;
+          if (ready) start(); else showTip("Choose TheSmallBook Voice Model to read aloud.");
+        }).catch(function () { pl.disabled = false; showTip("Voice setup is not ready. Try again."); });
+      } else start();
     });
     /* swipe between pages */
     var st = $(".kr-stage", app), x0 = null;
@@ -340,6 +351,15 @@
   }
 
   function speak(text, onBoundary, onEnd) {
+    /* A parent may opt into the same private Voice Model used elsewhere.
+       It stays device-local. Word highlighting keeps its timed fallback. */
+    try {
+      if (window.TTS_ENGINE && TTS_ENGINE.voiceModel && TTS_ENGINE.voiceModel()) {
+        TTS_ENGINE.playParts([{ text: text, lang: lang === "hi" ? "hi-IN" : "en-IN", pause: 0 }]);
+        if (onEnd) setTimeout(onEnd, Math.max(1100, text.length * (lang === "hi" ? 92 : 70)));
+        return true;
+      }
+    } catch (e0) {}
     if (!synth || typeof SpeechSynthesisUtterance === "undefined") { if (onEnd) setTimeout(onEnd, 1200); return false; }
     try { synth.cancel(); } catch (e) {}
     utt = new SpeechSynthesisUtterance(text);
@@ -382,6 +402,7 @@
     clearTimeout(fallbackT);
     if (!keepPlaying) playing = false;
     try { if (synth) synth.cancel(); } catch (e) {}
+    try { if (window.TTS_ENGINE && TTS_ENGINE.stop) TTS_ENGINE.stop(); } catch (e2) {}
   }
 
   /* ---------- routing: #s=story-id ---------- */

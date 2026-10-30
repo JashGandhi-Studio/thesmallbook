@@ -51,10 +51,10 @@
     var items = [{ label: "Introduction", sub: b.title, part: 0 }];
     b.lessons.forEach(function (l, i) {
       items.push({ label: (i + 1) + ". " + l.title, sub: "Lesson " + (i + 1) + " of " + b.lessons.length, part: parts.length });
-      parts.push({ text: "Lesson " + (i + 1) + ". " + l.title + ".", pause: 650 });
-      parts.push({ text: l.summary, pause: 700 });
-      parts.push({ text: "From the book: " + l.example, pause: 700 });
-      parts.push({ text: "Do this: " + l.action, pause: 900 });
+      parts.push({ text: "Lesson " + (i + 1) + ". " + l.title + ".", pause: 180 });
+      parts.push({ text: l.summary, pause: 260 });
+      parts.push({ text: "From the book: " + l.example, pause: 260 });
+      parts.push({ text: "Do this: " + l.action, pause: 320 });
     });
     return {
       type: "book", bookId: b.id, key: "book:" + b.id, art: b.cover || ("assets/covers/" + b.id + ".jpg"),
@@ -965,6 +965,18 @@
       return true;
     }
     if (!T || !T.playParts) { toast("This browser cannot speak yet."); return false; }
+    /* The broadcast player never starts an old fallback voice. First Listen
+       asks for the opt-in model, waits for its download, then begins here. */
+    if (!queue._voiceReady && T.ensureVoiceModel) {
+      if (queue._voiceGate) return true;
+      queue._voiceGate = true;
+      T.ensureVoiceModel((queue.parts[0] || {}).lang || "en").then(function (ready) {
+        queue._voiceGate = false;
+        if (ready) { queue._voiceReady = true; startTTS(queue); }
+        else toast("Download TheSmallBook Voice Model to start listening.");
+      }).catch(function () { queue._voiceGate = false; toast("Voice setup could not open. Try Listen again."); });
+      return true;
+    }
     try { if (AU) { AU.pause(); AU.src = ""; } } catch (e) {}
     q = queue;
     curItem = 0;

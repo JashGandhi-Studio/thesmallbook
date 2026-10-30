@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v336";
+const CACHE_VERSION = "tsb-v340";
 /* NOTE: the assets/logos/* entries below mirror js/store-data.js exactly.
    every tile the store links to must be precached, or the offline store
    shows broken images. tests/client-suite.js asserts they never drift. */
@@ -33,6 +33,8 @@ const APP_SHELL = [
   "./scan.html",
   "./random.html",
   "./js/tts-engine.js",
+  "./js/tts-piper.mjs",
+  "./js/tts-piper-worker.js",
   "./js/bootguard.js",
   "./js/weekly.js",
   "./js/ask-data.js",
@@ -145,6 +147,7 @@ const APP_SHELL = [
   "./js/youpi.js",
   "./js/lang.js",
   "./js/failures.js",
+  "./js/failures-extra.js",
   "./js/graveyard.js",
   "./js/graveyard2.js",
   "./css/graveyard2.css",
@@ -203,7 +206,7 @@ const APP_SHELL = [
   "./js/request.js",
   "./js/stt.js",
   "./js/wordtap.js"
-].map(function (u) { return /\.(js|css)$/.test(u) ? u + "?v=" + CACHE_VERSION.split("-")[1] : u; });
+].map(function (u) { return /\.(m?js|css)$/.test(u) ? u + "?v=" + CACHE_VERSION.split("-")[1] : u; });
 
 self.addEventListener("install", (e) => {
   e.waitUntil(

@@ -215,37 +215,11 @@
      Uses the LIVE translated text from the DOM (like the 🔊 LISTEN button),
      so it reads in whatever language the page is currently showing. */
   function playPodcastLive() {
-    const lang = currentSpeechLang();
-    const lessons = book.lessons || [];
-    const total = lessons.length;
-    const tTitle = liveText("#title", book.title);
-    const tAuthor = liveText("#author", "by " + book.author).replace(/^by\s+/i, "");
-    const tOne = liveText("#oneliner", book.oneLiner);
-    const tBig = liveText("#bigidea", book.bigIdea);
-    const bookMeta = { book: tTitle, lesson: tTitle, idx: 0, cover: book.cover, author: tAuthor };
-
-    /* intro templates get translated too (one batched request) */
-    const intros = ["You are listening to " + tTitle + (tAuthor ? " by " + tAuthor : "") + "."];
-    lessons.forEach((_, i) => intros.push("Lesson " + (i + 1) + " of " + total + "."));
-
-    const finalize = (trIntros) => {
-      const parts = [];
-      parts.push({ text: tOne, intro: trIntros[0], lang: lang, pause: 700, meta: bookMeta });
-      if (tBig) parts.push({ text: tBig, lang: lang, pause: 1100, meta: bookMeta });
-      lessons.forEach((l, i) => {
-        const live = liveLesson(i); /* translated DOM content */
-        const m = { book: tTitle, lesson: live.title, idx: i, cover: book.cover, author: tAuthor };
-        parts.push({ text: live.title, intro: trIntros[i + 1], lang: lang, pause: 700, meta: m });
-        parts.push({ text: live.summary, lang: lang, pause: 750, meta: m });
-        if (live.example) parts.push({ text: live.example, lang: lang, pause: 750, meta: m });
-        if (live.action) parts.push({ text: live.action, lang: lang, pause: 900, meta: m });
-      });
-      window.TTS_ENGINE.playParts(parts);
-    };
-
-    if (lang !== "en" && window.TTS_ENGINE.translate) {
-      window.TTS_ENGINE.translate(intros, lang).then(finalize).catch(() => finalize(intros));
-    } else finalize(intros);
+    /* One broadcast player across Listen and every book. This keeps queue,
+       speed, sleep timer, lock-screen controls and voice setup identical. */
+    const A = window.TSB_AUDIO;
+    if (!A || !A.playBook) { toast("🎧 The broadcast player is loading. Try again in a moment."); return; }
+    A.playBook(book.id, 0);
   }
 
   /* 🎧 AUDIOBOOK MODE - human LibriVox audiobooks & category shelves */
@@ -357,11 +331,7 @@
         if (window.TSB_AUDIO && window.TSB_AUDIO.pause) {
           try { window.TSB_AUDIO.pause(); } catch (eA) {}
         }
-        if (window.TSB_AUDIO && window.TSB_AUDIO.close) {
-          try { window.TSB_AUDIO.close(); } catch (eC) {}
-        }
-        document.body.classList.remove("tsb-audio-live");
-        stopSpeech(); // stop any single-lesson speech first
+        stopSpeech();
         playPodcastLive();
       });
     });
@@ -1094,12 +1064,16 @@
   }
 
   /* ---------- LESSONS ---------- */
-  /* v336: a small visual thought lives inside the first lesson. It is not
-     decoration that floats above the content: it gives a model or a map the
-     reader can take away. Atomic Habits gets its real compounding curve;
-     the rest of the shelf receives a category-appropriate thinking map. */
-  function lessonVisual(b, idx) {
-    if (idx !== 0) return "";
+  /* v337: every lesson earns a compact visual model. The visual is generated
+     from the book, category, lesson number and lesson title, so it varies as
+     the argument moves forward rather than repeating a decorative card.
+     Atomic Habits keeps its signature compounding curve in lesson one. */
+  function visualEsc(x) { return String(x == null ? "" : x).replace(/[&<>\"]/g, function (c) { return { "&":"&amp;", "<":"&lt;", ">":"&gt;", "\\":"&#92;", '\"':"&quot;" }[c]; }); }
+  function visualWords(l, fallback) {
+    var raw = String((l && l.title) || fallback || "The idea").replace(/[^A-Za-z0-9 ]/g, " ").split(/\s+/).filter(function (x) { return x.length > 2; });
+    return raw.length ? raw.slice(0, 3) : ["Notice", "Think", "Try"];
+  }
+  function lessonVisual(b, idx, l) {
     var cat = String(b.category || ""), map = {
       "Money & Finance": ["Earn", "Keep", "Grow", "#2F7D5B"],
       "Productivity": ["Notice", "Choose", "Protect", "#6F5BD9"],
@@ -1110,8 +1084,13 @@
       "Creativity": ["Collect", "Combine", "Make", "#9A62A9"],
       "Self-Improvement": ["Tiny step", "Repeat", "Change", "#B18418"]
     }[cat] || ["Notice", "Try", "Learn", "#6E6658"];
-    if (b.id === "atomic-habits") return '<figure class="lv lv--atomic" aria-label="One percent better every day compounds over time"><figcaption><b>THE 1% CURVE</b><span>Small repetitions become a different trajectory.</span></figcaption><svg viewBox="0 0 500 220" role="img" aria-hidden="true"><path class="lv-axis" d="M46 20v159h424"/><path class="lv-grid" d="M46 138h424M46 94h424M46 50h424"/><path class="lv-curve" d="M48 176 C155 176 220 173 280 158 C349 141 392 100 462 32"/><circle class="lv-dot" cx="462" cy="32" r="7"/><text x="46" y="207">DAY 1</text><text x="406" y="207">DAY 365</text><text x="330" y="25">37× POTENTIAL</text><text x="52" y="168">1.0</text></svg><p>Do not look for a dramatic start. Protect the next small repetition and let the line bend over time.</p></figure>';
-    return '<figure class="lv" style="--lv-accent:' + map[3] + '"><figcaption><b>THE IDEA, AT A GLANCE</b><span>A simple map for the first lesson.</span></figcaption><svg viewBox="0 0 500 160" role="img" aria-hidden="true"><path class="lv-link" d="M145 80h65M290 80h65"/><circle class="lv-node" cx="105" cy="80" r="47"/><circle class="lv-node" cx="250" cy="80" r="47"/><circle class="lv-node" cx="395" cy="80" r="47"/><text x="105" y="85" text-anchor="middle">' + map[0] + '</text><text x="250" y="85" text-anchor="middle">' + map[1] + '</text><text x="395" y="85" text-anchor="middle">' + map[2] + '</text></svg><p>Use this as a question, not a formula. What is the next honest move from ' + map[0].toLowerCase() + ' to ' + map[2].toLowerCase() + '?</p></figure>';
+    if (b.id === "atomic-habits" && idx === 0) return '<figure class="lv lv--atomic" aria-label="One percent better every day compounds over time"><figcaption><b>THE 1% CURVE</b><span>Small repetitions become a different trajectory.</span></figcaption><svg viewBox="0 0 500 220" role="img" aria-hidden="true"><path class="lv-axis" d="M46 20v159h424"/><path class="lv-grid" d="M46 138h424M46 94h424M46 50h424"/><path class="lv-curve" d="M48 176 C155 176 220 173 280 158 C349 141 392 100 462 32"/><circle class="lv-dot" cx="462" cy="32" r="7"/><text x="46" y="207">DAY 1</text><text x="406" y="207">DAY 365</text><text x="330" y="25">37× POTENTIAL</text><text x="52" y="168">1.0</text></svg><p>Do not look for a dramatic start. Protect the next small repetition and let the line bend over time.</p></figure>';
+    var words = visualWords(l, map[0]), label = visualEsc(words.join(" · ")), kind = ((idx + b.id.length) % 4), a = visualEsc(words[0] || map[0]), z = visualEsc(words[words.length - 1] || map[2]);
+    var cap = '<figcaption><b>LESSON ' + (idx + 1) + ' · ' + label.toUpperCase() + '</b><span>A visual handle for this exact idea.</span></figcaption>';
+    if (kind === 0) return '<figure class="lv lv--path" style="--lv-accent:' + map[3] + '">' + cap + '<svg viewBox="0 0 500 160" role="img" aria-label="A three step path from ' + a + ' to ' + z + '"><path class="lv-link" d="M145 80h65M290 80h65"/><circle class="lv-node" cx="105" cy="80" r="47"/><circle class="lv-node" cx="250" cy="80" r="47"/><circle class="lv-node" cx="395" cy="80" r="47"/><text x="105" y="85" text-anchor="middle">' + a + '</text><text x="250" y="85" text-anchor="middle">' + visualEsc(words[1] || map[1]) + '</text><text x="395" y="85" text-anchor="middle">' + z + '</text></svg><p>Move one step at a time: turn ' + a.toLowerCase() + ' into a visible next move.</p></figure>';
+    if (kind === 1) return '<figure class="lv lv--loop" style="--lv-accent:' + map[3] + '">' + cap + '<svg viewBox="0 0 500 180" role="img" aria-label="A learning loop"><path class="lv-loop" d="M250 28a62 62 0 1 1-59 82"/><path class="lv-arrow" d="M181 112l14 9-2-17"/><circle class="lv-node" cx="250" cy="90" r="39"/><text x="250" y="87" text-anchor="middle">TRY</text><text x="250" y="104" text-anchor="middle">NOTICE</text><text x="250" y="22" text-anchor="middle">ADJUST</text><text x="112" y="134" text-anchor="middle">' + a + '</text><text x="386" y="134" text-anchor="middle">' + z + '</text></svg><p>Use the loop: try once, notice what changed, then adjust without starting over.</p></figure>';
+    if (kind === 2) return '<figure class="lv lv--balance" style="--lv-accent:' + map[3] + '">' + cap + '<svg viewBox="0 0 500 165" role="img" aria-label="A decision balance"><path class="lv-axis" d="M250 30v104M155 76h190M225 134h50"/><path class="lv-link" d="M155 76l-55 58M345 76l55 58"/><rect class="lv-card" x="52" y="126" width="96" height="28" rx="14"/><rect class="lv-card" x="352" y="126" width="96" height="28" rx="14"/><text x="100" y="145" text-anchor="middle">' + a + '</text><text x="400" y="145" text-anchor="middle">' + z + '</text><text x="250" y="22" text-anchor="middle">WHAT HOLDS?</text></svg><p>Before acting, balance the immediate pull against the condition that keeps working later.</p></figure>';
+    return '<figure class="lv lv--ladder" style="--lv-accent:' + map[3] + '">' + cap + '<svg viewBox="0 0 500 165" role="img" aria-label="A three rung learning ladder"><path class="lv-ladder" d="M116 140V38M384 140V38M116 140h268M154 106h192M212 72h134M270 38h76"/><circle class="lv-dot" cx="154" cy="106" r="7"/><circle class="lv-dot" cx="212" cy="72" r="7"/><circle class="lv-dot" cx="270" cy="38" r="7"/><text x="145" y="132">1. SEE</text><text x="203" y="98">2. TEST</text><text x="261" y="64">3. KEEP</text><text x="348" y="30" text-anchor="middle">' + z + '</text></svg><p>Climb the idea: see it clearly, test it in real life, then keep only what survives.</p></figure>';
   }
 
   const lessonsWrap = document.getElementById("lessons");

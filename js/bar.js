@@ -690,7 +690,19 @@
       btn.addEventListener("click", function () {
         var toolKey = btn.getAttribute("data-tool");
         if (toolKey && ITEM_DEFS[toolKey]) {
-          activeSlots[selectedSlotIdx] = toolKey;
+          /* Never duplicate a destination. If Stories already has a place and
+             a reader chooses it for You's spot, Stories moves to You's old
+             spot. This keeps the bar a true set of shortcuts. */
+          var existing = activeSlots.indexOf(toolKey);
+          if (existing >= 0 && existing !== selectedSlotIdx) {
+            var displaced = activeSlots[selectedSlotIdx];
+            activeSlots[selectedSlotIdx] = toolKey;
+            activeSlots[existing] = displaced;
+            cleanToast((ITEM_DEFS[toolKey].lbl || toolKey) + " and " + (ITEM_DEFS[displaced].lbl || displaced) + " swapped places.");
+          } else if (existing < 0) {
+            activeSlots[selectedSlotIdx] = toolKey;
+            cleanToast((ITEM_DEFS[toolKey].lbl || toolKey) + " replaced this spot.");
+          }
           try { localStorage.setItem("tsb_custom_bar", JSON.stringify(activeSlots)); } catch (e) {}
           bar.innerHTML = buildBarHtml(activeSlots);
           try { if (navigator.vibrate) navigator.vibrate(15); } catch (e) {}

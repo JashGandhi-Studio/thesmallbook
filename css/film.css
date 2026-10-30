@@ -211,6 +211,7 @@ html:not(.fv-today) .ft { display: none; }
 .ft-search { margin: 18px 0 0; display: flex; align-items: center; gap: 10px; height: 50px; padding: 0 16px; border-radius: 16px; background: var(--f-card); box-shadow: var(--f-sh-sm); color: var(--f-mu); font: 500 15px var(--f-sans); text-decoration: none; }
 .ft-search span { flex: 1; }
 .ft-search kbd { font: 600 11px var(--f-sans); border: 1.5px solid var(--f-line); border-radius: 7px; padding: 2px 6px; color: var(--f-mu); }
+.ft-companion { margin: 5px 0 0; font: 500 13px/1.35 var(--f-sans); color: var(--f-mu); }
 .ft-hero { position: relative; margin-top: 18px; padding: 20px 18px 20px 22px; border-radius: 28px; background: radial-gradient(120% 90% at 0% 0%, var(--f-yelSoft), var(--f-card) 60%); box-shadow: var(--f-sh); overflow: hidden; }
 .ft-hero__row { display: flex; gap: 18px; margin-top: 14px; }
 .ft-hero .f-cover { width: 112px; height: 168px; box-shadow: 0 14px 24px rgba(40, 28, 10, .22); transition: transform .5s var(--f-out); }
@@ -852,3 +853,9 @@ html.film, html.film body { overflow-x: clip; }
    mini player all follow --tsb-bar-h, so one number moves everything. */
 html[data-bar-labels="icons"], html.film[data-bar-labels="icons"] { --tsb-bar-h: 50px; }
 html[data-bar-labels="icons"] #tsbBar .tsb-bar__item { padding-top: 0; padding-bottom: 0; justify-content: center; }
+
+/* v337: Today shelves breathe at each edge and browse sheets stay light. */
+.ft-row{padding-left:28px;padding-right:28px;scroll-padding-left:28px;overscroll-behavior-inline:contain}.fbs-b{content-visibility:auto;contain-intrinsic-size:110px 218px}
+
+/* v340 Graveyard doorways */
+.ft-tile--grave{background:#2a2520!important;color:#fff!important}.ft-tile--grave span{color:#e7d7c4!important}.f-libgrave{display:flex;gap:10px;align-items:center;margin:14px 0;padding:13px;border:1px solid #312a23;border-radius:16px;background:#f1eadf;color:#201b16;text-decoration:none}.f-libgrave b{font-size:10px;letter-spacing:.1em}.f-libgrave span{font-size:12px;flex:1}.f-libgrave i{font-style:normal}

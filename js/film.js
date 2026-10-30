@@ -186,14 +186,16 @@
   /* ============================================================
      TODAY + LIBRARY (index.html)
      ============================================================ */
+  function graveDoor(kind) { return kind === "library" ? '<a class="f-libgrave" href="graveyard.html"><b>THE GRAVEYARD</b><span>518 real falls, turned into sharper decisions</span><i>→</i></a>' : '<a class="ft-tile ft-tile--grave" href="graveyard.html"><b>The Graveyard</b><span>Real falls. Useful lessons.</span></a>'; }
   function todayHtml() {
     var d = new Date(), h = d.getHours();
     var hi = h < 5 ? "Still up" : h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
     var nm = name(), streak = 0;
+    var companion = h < 5 ? "A soft page before sleep?" : h < 11 ? "One good page can set the tone." : h < 15 ? "Had lunch? Let us make the afternoon lighter." : h < 18 ? "A little reset before the evening." : "Settle in. Your next good idea is waiting.";
     try { streak = window.TSB && TSB.streak ? TSB.streak.count() : 0; } catch (e) {}
     var date = d.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" });
     var pick = todaysPick(), html = "";
-    html += '<div class="ft-hd f-up" style="--d:.05"><div><div class="ft-date">' + esc(date) + '</div><h1 class="ft-hi">' + hi + (nm ? ", <i>" + esc(nm) + "</i>" : "") + "</h1></div>" +
+    html += '<div class="ft-hd f-up" style="--d:.05"><div><div class="ft-date">' + esc(date) + '</div><h1 class="ft-hi">' + hi + (nm ? ", <i>" + esc(nm) + "</i>" : "") + '</h1><p class="ft-companion">' + companion + '</p></div>' +
       '<div class="ft-acts"><a class="ft-streak" href="you.html" aria-label="' + streak + ' day streak">' + ICON.flame + streak + '</a><a class="ft-av" href="you.html" aria-label="You">' + esc((nm || "R").charAt(0).toUpperCase()) + "</a></div></div>";
     html += '<a class="ft-search f-up" style="--d:.15" href="#library" data-fsearch>' + ICON.search + "<span>Search " + books().length + " books, authors, ideas</span>" + (SR ? '<button type="button" class="ft-mic" data-fmic aria-label="Search by voice">' + ICON.mic + "</button>" : "<kbd>/</kbd>") + "</a>";
     if (pick) {
@@ -231,7 +233,7 @@
       '<a class="ft-tile" href="podcasts.html">' + ICON.listen + "<b>Listen</b><span>Audiobooks and shows, in your language</span></a>" +
       '<a class="ft-tile" href="scan.html"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M8 12h8"/></svg><b>Scan a book</b><span>Point at a cover or a barcode</span></a>' +
       '<a class="ft-tile" href="notes.html">' + ICON.pen + "<b>Notebook</b><span>Your highlights and notes</span></a>" +
-      '<a class="ft-tile ft-tile--gold" href="gold.html">' + ICON.crown + "<b>Gold</b><span>" + (function () { try { if (TSB_GOLD.isGold()) return "Yours. See what is on"; if (TSB_GOLD.hasPdf && TSB_GOLD.hasPdf()) return "PDF pass on. Upgrade"; } catch (e) {} return "Just \u20b999 a month"; })() + "</span></a></div>";
+      graveDoor("today") + '<a class="ft-tile ft-tile--gold" href="gold.html">' + ICON.crown + "<b>Gold</b><span>" + (function () { try { if (TSB_GOLD.isGold()) return "Yours. See what is on"; if (TSB_GOLD.hasPdf && TSB_GOLD.hasPdf()) return "PDF pass on. Upgrade"; } catch (e) {} return "Just \u20b999 a month"; })() + "</span></a></div>";
     /* v329: the same weekly prompt as Stories, so the app asks one question a week, everywhere */
     var WQ = null; try { if (window.TSB_WEEKLY) WQ = TSB_WEEKLY.current(); } catch (e) {}
     if (!kids) html += '<a class="ft-prompt" href="' + (WQ ? TSB_WEEKLY.replyHref(WQ) : "stories.html") + '"><div class="f-kick">THIS WEEK\u2019S PROMPT</div><q>' + esc(WQ ? WQ.q : PROMPTS[wk % PROMPTS.length]) + "</q><span>Write one sentence " + ICON.arrow + "</span></a>";
@@ -270,7 +272,7 @@
     var g = w.querySelector(".fbs-g"), shown = 0, cur = list.slice(), base = list.slice();
     var sd = seed(dayKey() + kind); base.sort(function (a, b) { return (seed(a.id + sd) % 997) - (seed(b.id + sd) % 997); });
     function card(b) { var done = finished(b), pct = lessons(b) ? Math.round(readCount(b.id) / lessons(b) * 100) : 0; return '<a class="fbs-b" href="book.html?id=' + encodeURIComponent(b.id) + '"><span class="fbs-c">' + coverEl(b, 104, 156) + (done ? '<em class="fbs-done">Read</em>' : pct ? '<em class="fbs-pct"><i style="width:' + pct + '%"></i></em>' : "") + "</span><b>" + esc(b.title) + "</b><span>" + esc(b.author && !/^unknown$/i.test(b.author) ? b.author : "Original") + " \u00b7 " + mins(b) + " min</span></a>"; }
-    function more() { var nx = cur.slice(shown, shown + 24); shown += nx.length; g.insertAdjacentHTML("beforeend", nx.map(card).join("")); }
+    function more() { var nx = cur.slice(shown, shown + 18); shown += nx.length; g.insertAdjacentHTML("beforeend", nx.map(card).join("")); }
     function sortBy(k) {
       cur = base.slice();
       if (k === "short") cur.sort(function (a, b) { return mins(a) - mins(b); });
@@ -336,7 +338,7 @@
     var lh = document.createElement("div");
     lh.className = "fl-hd"; lh.id = "filmLibHead";
     var cats = {}; books().forEach(function (b) { cats[b.category] = 1; });
-    lh.innerHTML = '<div class="fl-hd__row"><h1>Library</h1><a class="ft-av" href="you.html" aria-label="You">' + esc((name() || "R").charAt(0).toUpperCase()) + "</a></div><p>" + books().length + " books \u00b7 eight minutes each \u00b7 every shelf</p>";
+    lh.innerHTML = '<div class="fl-hd__row"><h1>Library</h1><a class="ft-av" href="you.html" aria-label="You">' + esc((name() || "R").charAt(0).toUpperCase()) + "</a></div><p>" + books().length + " books \u00b7 eight minutes each \u00b7 every shelf</p>" + graveDoor("library");
     var anchor = $(".ticker") || document.body.firstChild;
     var hero = $("header.hero");
     document.body.insertBefore(ft, hero || anchor);

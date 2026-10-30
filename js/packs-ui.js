@@ -33,12 +33,23 @@
       return B ? B.lessons.length : 0;
     } catch (e) { return 0; }
   }
+  /* v337: rank paths from onboarding instead of handing every reader the
+     same rail. Their saved journey remains first, always. */
+  function personalPacks() {
+    var ints = []; try { ints = JSON.parse(localStorage.getItem("tsb_interests") || "[]") || []; } catch (e) {}
+    var mind = []; try { mind = JSON.parse(localStorage.getItem("tsb_mind") || "[]") || []; } catch (e2) {}
+    var words = ints.concat(mind).map(function (x) { return String(x).toLowerCase(); }).join(" ");
+    var map = { "money & finance":"money", productivity:"focus", "self-improvement":"habits", "psychology & people":"people", "business & startups":"startup", creativity:"create", history:"india", leadership:"speak", study:"study" };
+    var wanted = []; ints.forEach(function (x) { var k = map[String(x).toLowerCase()]; if (k) wanted.push(k); });
+    if (/overthink|calm|sleep|mind/.test(words)) wanted.push("mind"); if (/speak|confidence|people/.test(words)) wanted.push("speak");
+    return PACKS.slice().sort(function (a, b) { return (wanted.indexOf(b.tag) >= 0 ? 1 : 0) - (wanted.indexOf(a.tag) >= 0 ? 1 : 0); });
+  }
 
   /* ---------- the strip on Home ---------- */
   function strip() {
     var host = document.getElementById("tsbJourneys");
     if (!host || !PACKS.length) return;
-    var save = savedId(), h = "";
+    var save = savedId(), h = "", ranked = personalPacks();
     /* v333: each journey shows its real books, fanned like a little stack */
     function bookOf(id) { return (window.BOOKS || []).filter(function (b) { return b.id === id; })[0]; }
     function card(p, mine) {
@@ -54,8 +65,9 @@
     }
     var sp = byId(save);
     if (sp) h += card(sp, true);
-    PACKS.forEach(function (p) { if (p.id !== save) h += card(p, false); });
-    host.innerHTML = '<div class="pk-hd"><h3>Reading journeys</h3><p>' + (save ? "Your journey waits here. Pick another anytime." : "A few books in a row, one idea at a time.") + "</p></div>" +
+    ranked.forEach(function (p) { if (p.id !== save) h += card(p, false); });
+    var mins = 10; try { mins = Number(JSON.parse(localStorage.getItem("tsb_read_minutes") || "10")) || 10; } catch (e3) {}
+    host.innerHTML = '<div class="pk-hd"><h3>Reading journeys</h3><p>' + (save ? "Your journey waits here. Pick another anytime." : "Picked around your interests and " + mins + " minutes a day.") + "</p></div>" +
       '<div class="pk-rail">' + h + "</div>";
     host.querySelectorAll("[data-open]").forEach(function (b) {
       b.addEventListener("click", function () { openSheet(b.getAttribute("data-open")); });
@@ -118,13 +130,13 @@
     w.querySelector("#pkClose").addEventListener("click", closeSheet);
     w.addEventListener("click", function (e) { if (e.target === w) closeSheet(); });
     w.querySelector("#pkSave").addEventListener("click", function () {
-      try { localStorage.setItem(KEY, p.id); } catch (e) {}
+      try { localStorage.setItem(KEY, p.id); if (window.TSB_AUTH && TSB_AUTH.queueStateSync) TSB_AUTH.queueStateSync(); } catch (e) {}
       closeSheet(); strip();
       try { if (window.TSB_COMMUNITY && TSB_COMMUNITY.say) TSB_COMMUNITY.say("Saved. Your journey leads Home now."); } catch (e) {}
     });
     var un = w.querySelector("#pkUnsave");
     if (un) un.addEventListener("click", function () {
-      try { localStorage.removeItem(KEY); } catch (e) {}
+      try { localStorage.removeItem(KEY); if (window.TSB_AUTH && TSB_AUTH.queueStateSync) TSB_AUTH.queueStateSync(); } catch (e) {}
       closeSheet(); strip();
     });
     document.addEventListener("keydown", function esc2(e) {
@@ -167,6 +179,7 @@
     }
   }
 
+  try { window.addEventListener("tsb:reading-state", function () { setTimeout(strip, 40); }); } catch (e) {}
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
   window.TSB_PACKS_UI = { open: openSheet, refresh: strip, close: closeSheet };

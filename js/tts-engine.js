@@ -28,12 +28,13 @@ window.TTS_ENGINE = (function () {
   let playing = false;
   let paused = false;
   let curIdx = 0;
-  let speed = 1;
+  let speed = 1.08;
   let timer = null;              // web-speech chunk timer
   let utter = null;              // current utterance (GC guard)
   let player = null;             // mini-player DOM
   let onProgress = null;         // callback (idx, total, playing)
   let currentAudio = null;       // Puter audio element (background-friendly)
+  let modelStreamResume = null;  // worker stream can continue after a pause
   let mediaSessionSet = false;   // lock-screen controls wired
   let gen = 0;                   // generation token: stop() kills in-flight starts
   let posTimer = null;           // lock-screen progress ticker
@@ -267,7 +268,7 @@ window.TTS_ENGINE = (function () {
   function getModelApi() {
     if (modelApi) return Promise.resolve(modelApi);
     if (modelLoading) return modelLoading;
-    modelLoading = import("./tts-piper.mjs").then(function (m) { modelApi = m; return m; }).catch(function (e) { modelLoading = null; throw e; });
+    modelLoading = import("./tts-piper.mjs?v=340").then(function (m) { modelApi = m; return m; }).catch(function (e) { modelLoading = null; throw e; });
     return modelLoading;
   }
   function modelVoiceName() {
@@ -289,15 +290,55 @@ window.TTS_ENGINE = (function () {
     audio.onerror = function () { end(false); };
     if (currentAudio && currentAudio !== audio) { try { currentAudio.pause(); } catch (e) {} }
     currentAudio = audio;
-    try { audio.preservesPitch = true; audio.playbackRate = Math.max(0.5, Math.min(2.5, speedV || 1)); } catch (e) {}
+    /* Pace is made by the model's duration scale rather than crude browser
+       time-stretching, which removes the dragged-out gaps between phrases. */
+    try { audio.preservesPitch = true; audio.playbackRate = 1; } catch (e) {}
     routeBoost(audio);
     function position() {
       var d = audio.duration;
-      startPosition(d && isFinite(d) ? d / (speedV || 1) : Math.max(5, String(text).length / (14 * (speedV || 1))));
+      startPosition(d && isFinite(d) ? d : Math.max(5, String(text).length / (15 * (speedV || 1.08))));
     }
     audio.onloadedmetadata = position;
     safety = setTimeout(function () { end(true); }, Math.max(10000, (String(text).length / Math.max(9, 12 * (speedV || 1))) * 1000 + 12000));
     audio.play().then(function () { position(); }).catch(function () { end(false); });
+  }
+  function playModelStream(api, text, choice, lang, speedV, keep) {
+    return new Promise(function (resolve) {
+      var blobs = [], active = false, sourceDone = false, heard = 0, finished = false;
+      function finish(ok) { if (finished) return; finished = true; if (modelStreamResume === pump) modelStreamResume = null; clearPosition(); resolve(ok); }
+      function pump() {
+        if (finished || active) return;
+        if (keep !== gen || !playing || paused) { finish(false); return; }
+        var blob = blobs.shift();
+        if (!blob) { if (sourceDone) finish(heard > 0); return; }
+        active = true; heard++;
+        var url = URL.createObjectURL(blob), audio = new Audio();
+        audio.src = url; audio.preload = "auto";
+        function close(ok) {
+          try { URL.revokeObjectURL(url); } catch (e) {}
+          if (currentAudio === audio) currentAudio = null;
+          active = false;
+          if (!ok) { finish(false); return; }
+          pump();
+        }
+        audio.onended = function () { close(true); };
+        audio.onerror = function () { close(false); };
+        if (currentAudio && currentAudio !== audio) { try { currentAudio.pause(); } catch (e) {} }
+        currentAudio = audio;
+        try { audio.preservesPitch = true; audio.playbackRate = 1; } catch (e) {}
+        routeBoost(audio);
+        function position() { var d = audio.duration; startPosition(d && isFinite(d) ? d : Math.max(5, String(text).length / (15 * (speedV || 1.08)))); }
+        audio.onloadedmetadata = position;
+        audio.play().then(position).catch(function () { close(false); });
+      }
+      modelStreamResume = pump;
+      api.speakStream(text, { tier: choice, lang: lang, rate: speedV || 1.08 }, function (blob) {
+        /* Keep work already made while paused. Resuming must never lose the
+           rest of a passage just because the worker finished in the pause. */
+        if (keep !== gen || !playing) return;
+        blobs.push(blob); if (!paused) pump();
+      }).then(function () { sourceDone = true; if (!paused) pump(); }).catch(function () { sourceDone = true; if (!heard) finish(false); else if (!paused) pump(); });
+    });
   }
   function speakModel(text, lang, speedV) {
     var choice = modelChoice(), ml = modelLang(lang);
@@ -308,11 +349,8 @@ window.TTS_ENGINE = (function () {
         var row = all.filter(function (x) { return x.tier === choice && x.lang === ml; })[0];
         if (!row || !row.stored) return false;
         provider = "model";
-        return api.speak(text, { tier: choice, lang: ml });
+        return playModelStream(api, text, choice, ml, speedV, keep);
       });
-    }).then(function (out) {
-      if (!out || out === false || keep !== gen || !playing || paused) return false;
-      return new Promise(function (resolve) { playModelBlob(out, text, speedV, resolve); });
     }).catch(function () { return false; });
   }
   function offerVoiceModel() {
@@ -342,9 +380,11 @@ window.TTS_ENGINE = (function () {
       }).catch(function (er) { b.disabled = false; b.textContent = "Try download again"; });
     });
   }
-  function openVoiceModel(want) {
+  function openVoiceModel(want, onReady) {
     var lang = modelLang(currentLang()) || "en", choice = want === "plus" && goldVoice() ? "plus" : "basic";
     if (document.getElementById("tsbVoiceModel")) document.getElementById("tsbVoiceModel").remove();
+    var settled = false;
+    function finishVoice(ok) { if (settled) return; settled = true; if (d && d.parentNode) d.remove(); if (onReady) onReady(!!ok); }
     var d = document.createElement("div"); d.id = "tsbVoiceModel";
     d.style.cssText = "position:fixed;z-index:2147483002;inset:0;background:rgba(22,19,15,.42);padding:18px;display:flex;align-items:flex-end;justify-content:center;font-family:'Space Grotesk',system-ui";
     d.innerHTML = "<div style=\"width:min(520px,100%);background:#fffdf8;color:#16130f;border-radius:26px;padding:20px;box-shadow:0 28px 70px rgba(0,0,0,.25)\"><div style=\"font:700 10px/1 Space Grotesk,system-ui;letter-spacing:.16em;color:#8a6910\">YOUR LISTENING VOICE</div><h2 style=\"font:600 27px/1.1 Newsreader,Georgia,serif;margin:8px 0\">TheSmallBook Voice Model</h2><p style=\"font:600 13px/1.45 Space Grotesk,system-ui;color:#6e6658;margin:0 0 15px\">Download once, then listen privately on this device. About 63 MB per language.</p><div data-vm-options></div><button data-vm-close style=\"margin-top:14px;border:0;background:transparent;font:600 14px Space Grotesk,system-ui;cursor:pointer\">Close</button></div>";
@@ -354,16 +394,31 @@ window.TTS_ENGINE = (function () {
       var allowed = tier !== "plus" || goldVoice(), on = modelChoice() === tier;
       return '<button data-vm-tier="' + tier + '" ' + (allowed ? "" : "disabled") + ' style="width:100%;margin-top:8px;padding:14px;text-align:left;border:1px solid ' + (on ? '#d6ab18' : '#e7dfd0') + ';border-radius:16px;background:' + (on ? '#fff4c6' : '#fff') + ';color:#16130f;font:600 14px Space Grotesk,system-ui;cursor:' + (allowed ? 'pointer' : 'default') + '"><b>' + label + '</b><small style="display:block;margin-top:3px;font:500 12px Space Grotesk,system-ui;color:#6e6658">' + note + '</small></button>';
     }
-    opts.innerHTML = row("basic", "TheSmallBook Voice Model", "Warm on-device voice · English and Hindi") + row("plus", "TheSmallBook Voice Model Plus", goldVoice() ? "Gold voice · richer detail, downloaded only when you choose" : "Gold voice · available with Gold");
+    opts.innerHTML = row("basic", "TheSmallBook Voice Model", "Warm on-device voice · English and Hindi") + row("plus", "TheSmallBook Voice Model Plus", goldVoice() ? "Gold voice · richer detail, downloaded only when you choose" : "Gold voice · available with Gold") + (goldVoice() ? '<div data-plus-voices style="margin-top:8px"></div>' : "");
+    if (goldVoice()) getModelApi().then(function(api){ var host=d.querySelector("[data-plus-voices]"); if(!host) return; host.innerHTML=(api.PLUS_VOICES[lang]||[]).map(function(v){return '<button type="button" data-plus-voice="'+v.id+'" style="margin:5px 5px 0 0;border:1px solid #e7dfd0;border-radius:999px;padding:7px 10px;background:#fff;color:#16130f;font:600 12px Space Grotesk,system-ui;cursor:pointer">'+v.name+'</button>';}).join(""); }).catch(function(){});
     d.addEventListener("click", function (e) {
-      if (e.target === d || e.target.closest("[data-vm-close]")) { d.remove(); return; }
+      if (e.target === d || e.target.closest("[data-vm-close]")) { finishVoice(false); return; }
+      var pv = e.target.closest("[data-plus-voice]");
+      if (pv) { getModelApi().then(function(api){ api.selectVoice(lang,pv.getAttribute("data-plus-voice")); return api.download("plus",lang); }).then(function(){ setModelChoice("plus"); finishVoice(true); }).catch(function(){}); return; }
       var b = e.target.closest("[data-vm-tier]"); if (!b || b.disabled) return;
       var tier = b.getAttribute("data-vm-tier"); b.disabled = true; b.querySelector("small").textContent = "Checking this device…";
       getModelApi().then(function (api) { return api.status().then(function (a) { var x = a.filter(function (z) { return z.tier === tier && z.lang === lang; })[0]; if (x && x.stored) return null; return api.download(tier, lang, function (p) { if (p.phase === "model" && p.total) b.querySelector("small").textContent = "Downloading " + Math.min(99, Math.round(p.loaded / p.total * 100)) + "%"; else if (p.phase === "engine") b.querySelector("small").textContent = "Making it available offline…"; }); }); }).then(function () {
         setModelChoice(tier); b.querySelector("small").textContent = "Ready on this device"; if (window.TSB && TSB.toast) try { TSB.toast("Voice selected. It will begin on the next passage."); } catch (e2) {}
-        setTimeout(function () { d.remove(); if (playing && !paused) seekTo(curIdx); }, 450);
+        setTimeout(function () { finishVoice(true); if (playing && !paused) seekTo(curIdx); }, 250);
       }).catch(function () { b.disabled = false; b.querySelector("small").textContent = "Could not download. Try again when online."; });
     });
+  }
+
+  function ensureVoiceModel(lang) {
+    var ml = modelLang(lang || currentLang());
+    /* A phone voice remains the only possible route for languages for which
+       this on-device model has no pronunciation model yet. */
+    if (!ml) return Promise.resolve(true);
+    return getModelApi().then(function (api) { return api.status(); }).then(function (all) {
+      var choice = modelChoice(), stored = function (tier) { var r = all.filter(function (x) { return x.tier === tier && x.lang === ml; })[0]; return !!(r && r.stored); };
+      if (choice && stored(choice)) return true;
+      return new Promise(function (resolve) { openVoiceModel(choice || "basic", resolve); });
+    }).catch(function () { return false; });
   }
 
   function speakPuter(text, lang, speedV) {
@@ -656,7 +711,8 @@ window.TTS_ENGINE = (function () {
     if (modelChoice() && modelLang(lang)) {
       speakModel(item.text, lang, spd).then(function (okModel) {
         if (g !== gen || !playing || paused) return done(false);
-        if (okModel) done(true); else speakWeb(item.text, lang, spd, done);
+        if (okModel) done(true);
+        else { if (window.TSB && TSB.toast) try { TSB.toast("Voice paused. Tap Listen to try again."); } catch (e) {} done(false); }
       });
       return;
     }
@@ -676,8 +732,10 @@ window.TTS_ENGINE = (function () {
     /* The device voice stays instant while the reader decides whether to
        keep a private model. Nothing is downloaded without an explicit tap. */
     if (!modelChoice()) {
+      /* The reader chose a private model experience. Never surprise them with
+         another provider while the model has not been prepared. */
+      if (modelLang(lang)) { offerVoiceModel(); done(false); return; }
       speakWeb(item.text, lang, spd, done);
-      if (modelLang(lang)) setTimeout(offerVoiceModel, 1900);
       return;
     }
     if (!goldVoice()) {
@@ -724,7 +782,7 @@ window.TTS_ENGINE = (function () {
         if (!playing) return;
         if (paused) return;
         if (!ok) { /* skip broken chunk */ }
-        const wait = Math.min(item.pause != null ? item.pause : 480, 900);
+        const wait = Math.min(item.pause != null ? item.pause : 260, 420);
         if (timer) clearTimeout(timer);
         timer = setTimeout(() => { curIdx++; next(); }, wait);
       });
@@ -733,7 +791,7 @@ window.TTS_ENGINE = (function () {
       item.introSpoken = true;
       speakItem({ text: item.intro, lang: item.lang, pause: 0 }, () => {
         if (!playing || paused) return;
-        const t2 = setTimeout(runItem, 550);
+        const t2 = setTimeout(runItem, 180);
         if (timer) clearTimeout(timer);
         timer = t2;
       });
@@ -926,11 +984,12 @@ window.TTS_ENGINE = (function () {
     var hadPiece = !!webResume, audioLive = !!(currentAudio && !currentAudio.ended);
     if (webResume) { var wr = webResume; webResume = null; wr(); }
     if (currentAudio) { try { currentAudio.play(); } catch (e) {} }
+    if (modelStreamResume) modelStreamResume();
     if (silenceEl) { try { silenceEl.play(); } catch (e) {} }
     setMediaPlaybackState("playing");
     if (posDur) { posStart = Date.now(); if (!posTimer) posTimer = setInterval(() => { if (paused || !playing) return; const p = Math.min(posOffset + (Date.now() - posStart) / 1000, posDur); setPos(posDur, p); }, 1000); }
     /* paused in the gap between two items: carry on with the queue */
-    if (!hadPiece && !audioLive && !webBusy) { if (timer) clearTimeout(timer); next(); }
+    if (!hadPiece && !audioLive && !webBusy && !modelStreamResume) { if (timer) clearTimeout(timer); next(); }
     updatePlayer();
   }
   function toggle() { if (playing && !paused) pause(); else if (playing) resume(); }
@@ -945,6 +1004,7 @@ window.TTS_ENGINE = (function () {
   }
   function seekTo(i) {
     if (!queue.length) return;
+    gen++; modelStreamResume = null;
     curIdx = Math.max(0, Math.min(queue.length - 1, i));
     /* kill any currently-playing Puter audio - otherwise the old chunk
        keeps playing over the new one (voice/speed changes sounded broken) */
@@ -1184,6 +1244,7 @@ window.TTS_ENGINE = (function () {
     askStudio: function () { openVoiceModel(goldVoice() ? "plus" : "basic"); },
     openVoiceModel: function () { openVoiceModel(modelChoice() || "basic"); },
     voiceModel: function () { return modelChoice(); },
+    ensureVoiceModel: ensureVoiceModel,
     playBook: playBook,
     playParts: playParts,
     /* translate intro/template strings into the target language (cached) */

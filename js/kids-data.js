@@ -152,3 +152,46 @@ window.TSB_KIDS = [
     moral: { en: "A clever plan can beat a big problem.", hi: "सही तरकीब से बड़ी मुसीबत भी हारती है।" }
   }
 ];
+
+/* v337 originals: short, screen-first stories made for this safe, offline room. */
+window.TSB_KIDS.push(
+  { id:"little-lamp", title:{en:"The Little Lamp",hi:"छोटा दीपक"}, tint:"#e28a32", cover:{bg:"village",actors:[["🏠",22,48,5,"sway"],["🪔",58,47,4,"bob"],["🌙",78,18,3,"float"]]}, pages:[
+    {scene:{bg:"village",actors:[["🏠",23,48,5,"sway"],["🪔",55,48,3,"bob"],["🌙",78,18,3,"float"]]},en:"A little lamp glowed outside Meera's home every evening.",hi:"हर शाम मीरा के घर के बाहर एक छोटा दीपक चमकता था।",words:{en:{glowed:"shone with a soft light",evening:"the time before night"},hi:{"चमकता":"रोशनी देता","शाम":"रात से पहले का समय"}}},
+    {scene:{bg:"village",actors:[["🌧️",48,20,3,"drop"],["🪔",55,51,3,"bob"],["🐕",28,65,3,"walk"]]},en:"One rainy night, a lost puppy saw the light and found a dry doorstep.",hi:"एक बरसाती रात, खोए हुए पिल्ले ने रोशनी देखी और सूखा दरवाज़ा ढूँढ लिया।",words:{en:{lost:"not knowing where to go",doorstep:"the step at a door"},hi:{"खोए":"जिसे रास्ता न मिले","सूखा":"जिसमें पानी न हो"}}},
+    {scene:{bg:"village",actors:[["🪔",55,48,3,"bob"],["🐕",38,64,3,"walk"],["👧",68,52,3,"bob"]]},en:"Meera smiled. Her tiny light had helped someone come home.",hi:"मीरा मुस्कुराई। उसकी छोटी रोशनी ने किसी को घर तक पहुँचाया था।",words:{en:{tiny:"very small"},hi:{"मुस्कुराई":"खुश होकर हँसी"}}}],moral:{en:"A small kindness can light the way for someone.",hi:"छोटी दया भी किसी का रास्ता रोशन कर सकती है।"}},
+  { id:"seed-and-rain", title:{en:"The Seed and the Rain",hi:"बीज और बारिश"}, tint:"#4d9b66", cover:{bg:"garden",actors:[["🌱",45,62,4,"grow"],["🌧️",66,22,3,"drop"],["🐦",22,24,3,"float"]]}, pages:[
+    {scene:{bg:"garden",actors:[["🌱",48,68,2,"grow"],["🐦",22,25,3,"float"]]},en:"A little seed slept quietly under warm soil.",hi:"एक छोटा बीज गरम मिट्टी के नीचे चुपचाप सो रहा था।",words:{en:{soil:"earth where plants grow"},hi:{"मिट्टी":"धरती जिसमें पौधे उगते हैं"}}},
+    {scene:{bg:"garden",actors:[["🌧️",65,18,3,"drop"],["🌱",48,61,4,"grow"]]},en:"Then rain tapped the ground. The seed drank one drop, then another.",hi:"फिर बारिश ने धरती पर टप-टप की। बीज ने एक बूंद पी, फिर दूसरी।",words:{en:{tapped:"made small gentle hits"},hi:{"बूंद":"पानी का छोटा हिस्सा"}}},
+    {scene:{bg:"garden",actors:[["🌻",48,36,5,"sway"],["🐝",72,35,2,"float"],["☀️",20,18,3,"float"]]},en:"Day by day it grew into a bright flower. Slow growing was still growing.",hi:"दिन-ब-दिन वह चमकदार फूल बन गया। धीरे बढ़ना भी बढ़ना ही है।",words:{en:{bright:"full of light"},hi:{"धीरे":"आहिस्ता","चमकदार":"जो रोशनी जैसा दिखे"}}}],moral:{en:"Small steps grow when we give them time.",hi:"छोटे कदम समय मिलने पर बड़े होते हैं।"}},
+  { id:"three-paper-boats", title:{en:"Three Paper Boats",hi:"तीन कागज़ की नावें"}, tint:"#4694c8", cover:{bg:"river",actors:[["⛵",25,67,3,"swim"],["⛵",50,60,3,"swim"],["⛵",75,70,3,"swim"]]}, pages:[
+    {scene:{bg:"river",actors:[["👧",28,43,3,"bob"],["👦",50,43,3,"bob"],["🧒",72,43,3,"bob"]]},en:"Three friends folded paper boats beside a puddle after the rain.",hi:"बारिश के बाद तीन दोस्तों ने पानी के गड्ढे के पास कागज़ की नावें बनाईं।",words:{en:{folded:"bent into a new shape",puddle:"a small pool of rainwater"},hi:{"कागज़":"पेपर","गड्ढे":"जगह जहाँ पानी जमा हो"}}},
+    {scene:{bg:"river",actors:[["⛵",24,68,3,"swim"],["⛵",50,60,3,"swim"],["⛵",76,70,3,"swim"],["🍃",62,24,2,"float"]]},en:"A breeze pushed all three boats forward, even the smallest one.",hi:"हवा के झोंके ने तीनों नावों को आगे बढ़ाया, सबसे छोटी नाव को भी।",words:{en:{breeze:"a soft wind"},hi:{"झोंके":"हवा का हल्का धक्का"}}},
+    {scene:{bg:"river",actors:[["🤝",50,47,4,"bob"],["⛵",50,70,3,"swim"]]},en:"They cheered for every boat. The race was more fun together.",hi:"वे हर नाव के लिए खुश हुए। साथ में खेलना ज्यादा मज़ेदार था।",words:{en:{cheered:"shouted happily"},hi:{"साथ":"एक-दूसरे के साथ"}}}],moral:{en:"There is room to cheer for everyone.",hi:"हर किसी के लिए खुशी मनाने की जगह है।"}},
+  { id:"mango-tree-promise", title:{en:"The Mango Tree Promise",hi:"आम के पेड़ का वादा"}, tint:"#c88925", cover:{bg:"forest",actors:[["🌳",40,28,7,"sway"],["🥭",64,44,2,"bob"],["🐿️",25,64,3,"walk"]]}, pages:[
+    {scene:{bg:"forest",actors:[["🌳",42,28,7,"sway"],["🐿️",25,65,3,"walk"]]},en:"Suri the squirrel wanted a mango, but the tree was still green.",hi:"सूरी गिलहरी को आम चाहिए था, पर पेड़ अभी हरा था।",words:{en:{squirrel:"a small animal with a fluffy tail"},hi:{"गिलहरी":"फूली पूँछ वाला छोटा जानवर"}}},
+    {scene:{bg:"forest",actors:[["🌳",42,28,7,"sway"],["🐿️",32,65,3,"walk"],["💧",65,66,2,"drop"]]},en:"So Suri watered the tree and promised to wait patiently.",hi:"इसलिए सूरी ने पेड़ को पानी दिया और धैर्य से इंतज़ार करने का वादा किया।",words:{en:{patiently:"calmly, without rushing"},hi:{"धैर्य":"शांत रहकर इंतज़ार करना"}}},
+    {scene:{bg:"forest",actors:[["🌳",42,28,7,"sway"],["🥭",57,43,2,"bob"],["🐿️",32,65,3,"walk"]]},en:"When the mango turned golden, Suri shared it with a friend.",hi:"जब आम सुनहरा हुआ, सूरी ने उसे अपने दोस्त के साथ बाँटा।",words:{en:{golden:"yellow like gold",shared:"gave some to another person"},hi:{"सुनहरा":"सोने जैसा पीला","बाँटा":"मिलकर दिया"}}}],moral:{en:"Care, patience and sharing make good things sweeter.",hi:"देखभाल, धैर्य और बाँटने से अच्छी चीज़ें और मीठी लगती हैं।"}}
+);
+/* A calm five-page rhythm gives every original time to breathe. */
+window.TSB_KIDS.filter(function (s) { return ["little-lamp", "seed-and-rain", "three-paper-boats", "mango-tree-promise"].indexOf(s.id) >= 0; }).forEach(function (s) {
+  if (s.pages.length >= 5) return;
+  var extra = {
+    "little-lamp": [
+      { scene:{bg:"village",actors:[["🪔",52,49,3,"bob"],["⭐",75,25,2,"float"]]}, en:"The warm glow made the quiet street feel friendly.", hi:"गरम रोशनी से शांत गली दोस्ताना लगी।", words:{en:{friendly:"kind and welcoming"},hi:{"गली":"घर के पास की छोटी सड़क"}} },
+      { scene:{bg:"village",actors:[["🪔",52,49,3,"bob"],["🐕",33,65,3,"walk"]]}, en:"The puppy rested safely until morning came.", hi:"सुबह होने तक पिल्ला सुरक्षित आराम करता रहा।", words:{en:{safely:"without danger"},hi:{"सुरक्षित":"बिना खतरे के"}} }
+    ],
+    "seed-and-rain": [
+      { scene:{bg:"garden",actors:[["🌱",48,60,4,"grow"],["💧",66,46,2,"drop"]]}, en:"The seed did not hurry. It used each drop well.", hi:"बीज ने जल्दी नहीं की। उसने हर बूंद का अच्छा उपयोग किया।", words:{en:{hurry:"move too fast"},hi:{"जल्दी":"बहुत तेज़ी से"}} },
+      { scene:{bg:"garden",actors:[["🌻",48,37,5,"sway"],["🐦",72,25,3,"float"]]}, en:"Soon a bird rested in its shade and sang.", hi:"जल्द ही एक चिड़िया उसकी छाया में बैठी और गाने लगी।", words:{en:{shade:"cool darkness under a plant"},hi:{"छाया":"पेड़ के नीचे की ठंडी जगह"}} }
+    ],
+    "three-paper-boats": [
+      { scene:{bg:"river",actors:[["⛵",50,64,3,"swim"],["🌈",53,20,5,"float"]]}, en:"The boats floated under a tiny rainbow in the puddle.", hi:"नावें पानी के गड्ढे में छोटे इंद्रधनुष के नीचे तैरती रहीं।", words:{en:{floated:"moved on top of water"},hi:{"इंद्रधनुष":"बारिश के बाद रंगों की धनुष"}} },
+      { scene:{bg:"river",actors:[["🤝",50,47,4,"bob"],["⛵",50,70,3,"swim"]]}, en:"Before going home, each friend carried one boat carefully.", hi:"घर जाने से पहले हर दोस्त ने एक नाव को संभालकर उठाया।", words:{en:{carefully:"with attention and care"},hi:{"संभालकर":"ध्यान से"}} }
+    ],
+    "mango-tree-promise": [
+      { scene:{bg:"forest",actors:[["🌳",42,28,7,"sway"],["🐿️",28,65,3,"walk"],["📅",70,35,2,"float"]]}, en:"Suri visited every day, not to take, but to care.", hi:"सूरी हर दिन आती थी, लेने के लिए नहीं, देखभाल करने के लिए।", words:{en:{visited:"came to see"},hi:{"देखभाल":"किसी चीज़ को अच्छे से रखना"}} },
+      { scene:{bg:"forest",actors:[["🥭",55,43,2,"bob"],["🐿️",32,65,3,"walk"],["🐇",68,64,3,"walk"]]}, en:"Her friend smiled at the sweet mango they shared.", hi:"उसका दोस्त उस मीठे आम को देखकर मुस्कुराया जो उन्होंने बाँटा।", words:{en:{sweet:"having a sugary taste"},hi:{"मीठे":"जिसका स्वाद अच्छा और शक्कर जैसा हो"}} }
+    ]
+  }[s.id] || [];
+  s.pages = s.pages.concat(extra);
+});

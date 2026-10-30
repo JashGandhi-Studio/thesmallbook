@@ -68,6 +68,7 @@
   const OFFER_KEY = "tsb_auth_offer";       // has the modal been shown once?
   const TABLE = URL ? URL + "/rest/v1/progress" : "";
   const TABLE_PROFILES = URL ? URL + "/rest/v1/profiles" : "";
+  const TABLE_STATE = URL ? URL + "/rest/v1/reading_state" : ""; // v337: canonical cross-device reading state
 
   const PROGRESS_KEY = "tsb_progress";      // { bookId: [lesson indexes] }
   const MARKS_KEY = "tsb_bookmarks";        // [bookId, ...]
@@ -825,6 +826,76 @@
     syncTimer = setTimeout(() => { syncProgress(); }, 2500);
   }
 
+
+  /* ---------------- v337 reading state sync ----------------
+     Account sync is deliberately narrow. It carries the reader's work:
+     lessons, shelf, resume point, plans, streak history and the journey they
+     chose. It never carries appearance, action-bar layout, text size, theme,
+     notification sounds or other device comfort settings. */
+  const STATE_KEYS = ["tsb_interests", "tsb_ob_lead", "tsb_mind", "tsb_read_minutes", "tsb_read_style", "tsb_read_when", "tsb_starter_shelf", "tsb_plans", "tsb_days", "tsb_birthday", "tsb_read_books", "tsb_highlights_v1", "tsb_last_book", "tsb_pack"];
+  function rawGet(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
+  function rawSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function union(a, b) { return [...new Set([].concat(Array.isArray(a) ? a : [], Array.isArray(b) ? b : []))]; }
+  function statePositions() {
+    const out = {};
+    try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i) || ""; if (k.indexOf("tsb_reader_pos_") === 0) { const n = parseInt(localStorage.getItem(k), 10); if (!isNaN(n)) out[k.slice(15)] = { page: n, updated_at: +(rawGet("tsb_reader_pos_updated_" + k.slice(15), 0) || 0) }; } } } catch (e) {}
+    return out;
+  }
+  function stateSnapshot() {
+    const journey = {};
+    ["tsb_interests", "tsb_ob_lead", "tsb_mind", "tsb_read_minutes", "tsb_read_style", "tsb_read_when", "tsb_starter_shelf", "tsb_pack"].forEach((k) => { journey[k] = rawGet(k, null); });
+    return { v: 1, progress: lsGet(PROGRESS_KEY, {}), bookmarks: lsGet(MARKS_KEY, []), streak: rawGet("tsb_streak", null), plans: rawGet("tsb_plans", {}), days: rawGet("tsb_days", []), birthday: rawGet("tsb_birthday", ""), read_books: rawGet("tsb_read_books", []), highlights: rawGet("tsb_highlights_v1", {}), last_book: rawGet("tsb_last_book", ""), reader_positions: statePositions(), journey: journey, updated_at: +(rawGet("tsb_reading_state_updated_at", Date.now()) || Date.now()) };
+  }
+  function mergeMapArrays(a, b) {
+    const out = Object.assign({}, a || {}); Object.keys(b || {}).forEach((k) => { out[k] = union(out[k], b[k]).map(Number).filter((n) => Number.isFinite(n)).sort((x, y) => x - y); }); return out;
+  }
+  function mergeHighlights(a, b) {
+    const out = Object.assign({}, a || {}); Object.keys(b || {}).forEach((k) => { const seen = {}; out[k] = [].concat(out[k] || [], b[k] || []).filter((x) => { const id = String((x && (x.ts || x.text)) || ""); if (seen[id]) return false; seen[id] = 1; return true; }).slice(-200); }); return out;
+  }
+  function hasJourney(j) { return !!(j && Object.keys(j).some((k) => { const v = j[k]; return Array.isArray(v) ? v.length : v !== null && v !== undefined && v !== ""; })); }
+  function mergeReadingState(local, remote) {
+    remote = remote && typeof remote === "object" ? remote : {}; const newerRemote = +(remote.updated_at || 0) > +(local.updated_at || 0);
+    const out = Object.assign({}, local);
+    /* These fields are monotonic unions. An empty new device can never erase
+       a lesson tick, shelf item, plan, day, highlight or finished book. */
+    out.progress = mergeMapArrays(remote.progress, local.progress); out.bookmarks = union(remote.bookmarks, local.bookmarks); out.read_books = union(remote.read_books, local.read_books); out.days = union(remote.days, local.days).sort().slice(-400); out.plans = mergeMapArrays(remote.plans, local.plans); out.highlights = mergeHighlights(remote.highlights, local.highlights);
+    const rs = remote.streak || null, ls = local.streak || null; out.streak = !ls ? rs : !rs ? ls : (String(rs.last || "") > String(ls.last || "") || (rs.last === ls.last && +(rs.count || 0) > +(ls.count || 0)) ? rs : ls);
+    const localJourney = local.journey || {}, remoteJourney = remote.journey || {};
+    out.birthday = local.birthday || remote.birthday || "";
+    /* A newly opened device has blank choices. It must inherit the reader's
+       cloud journey even if its local clock is newer than the saved row. */
+    out.journey = !hasJourney(localJourney) && hasJourney(remoteJourney) ? remoteJourney : !hasJourney(remoteJourney) ? localJourney : (newerRemote ? remoteJourney : localJourney);
+    out.last_book = !local.last_book ? (remote.last_book || "") : !remote.last_book ? local.last_book : (newerRemote ? remote.last_book : local.last_book);
+    out.reader_positions = Object.assign({}, remote.reader_positions || {}); Object.keys(local.reader_positions || {}).forEach((id) => { const r = out.reader_positions[id], l = local.reader_positions[id]; if (!r || +(l.updated_at || 0) >= +(r.updated_at || 0)) out.reader_positions[id] = l; });
+    out.updated_at = Date.now(); return out;
+  }
+  function applyReadingState(st) {
+    if (!st || typeof st !== "object") return;
+    lsSet(PROGRESS_KEY, st.progress || {}); lsSet(MARKS_KEY, st.bookmarks || []); rawSet("tsb_read_books", st.read_books || []); rawSet("tsb_plans", st.plans || {}); rawSet("tsb_days", st.days || []); rawSet("tsb_highlights_v1", st.highlights || {});
+    if (st.streak) rawSet("tsb_streak", st.streak); if (st.birthday) rawSet("tsb_birthday", st.birthday); if (st.last_book) rawSet("tsb_last_book", st.last_book); if (st.journey && st.journey.tsb_pack) rawSet("tsb_pack", st.journey.tsb_pack);
+    Object.keys(st.journey || {}).forEach((k) => { if (STATE_KEYS.indexOf(k) >= 0 && st.journey[k] !== null && st.journey[k] !== undefined) rawSet(k, st.journey[k]); });
+    Object.keys(st.reader_positions || {}).forEach((id) => { const p = st.reader_positions[id] || {}; if (Number.isFinite(+p.page)) { try { localStorage.setItem("tsb_reader_pos_" + id, String(+p.page)); rawSet("tsb_reader_pos_updated_" + id, +(p.updated_at || Date.now())); } catch (e) {} } });
+    rawSet("tsb_reading_state_updated_at", +(st.updated_at || Date.now()));
+    try { window.dispatchEvent(new CustomEvent("tsb:reading-state")); window.dispatchEvent(new CustomEvent("tsb:sync")); } catch (e) {}
+  }
+  async function pullReadingState() {
+    const tok = await ensureToken(); if (!tok || !TABLE_STATE) return null;
+    const res = await fetch(TABLE_STATE + "?select=state,updated_at&user_id=eq." + encodeURIComponent(session.user.id), { headers: authHeaders({ "Authorization": "Bearer " + tok }) });
+    if (res.status === 404) return null; if (!res.ok) throw new Error("reading state pull " + res.status); const rows = await res.json(); if (!rows || !rows[0]) return null; const st = rows[0].state || {}; st.updated_at = Date.parse(rows[0].updated_at || "") || st.updated_at || 0; return st;
+  }
+  async function pushReadingState(st) {
+    const tok = await ensureToken(); if (!tok || !TABLE_STATE) return false;
+    const res = await fetch(TABLE_STATE + "?on_conflict=user_id", { method: "POST", headers: authHeaders({ "Authorization": "Bearer " + tok, "Prefer": "resolution=merge-duplicates,return=minimal" }), body: JSON.stringify({ user_id: session.user.id, state: st, updated_at: new Date().toISOString() }) });
+    if (!res.ok) throw new Error("reading state push " + res.status); return true;
+  }
+  async function syncReadingState() {
+    if (!ENABLED || !user()) return { ok: false, reason: "no-user" };
+    try { const local = stateSnapshot(), remote = await pullReadingState(), merged = mergeReadingState(local, remote); applyReadingState(merged); await pushReadingState(merged); return { ok: true }; } catch (e) { console.warn("TSB reading state sync failed:", e); return { ok: false, reason: "error" }; }
+  }
+  let stateTimer = null;
+  function queueStateSync() { if (!ENABLED || !user()) return; rawSet("tsb_reading_state_updated_at", Date.now()); clearTimeout(stateTimer); stateTimer = setTimeout(() => { syncReadingState(); }, 1400); }
+  function trackReadingState() { queueSync(); queueStateSync(); }
+
   /* ---------------- "Save your progress?" modal ---------------- */
   function injectStyles() {
     if (document.getElementById("tsb-auth-style")) return;
@@ -915,7 +986,7 @@
   }
 
   /* track any read/bookmark change for debounced cloud sync */
-  function track() { if (ENABLED) queueSync(); }
+  function track() { if (ENABLED) trackReadingState(); }
 
   /* ---------------- display name (editable override) ---------------- */
   function displayName() {
@@ -1054,10 +1125,10 @@
     try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch (e) {}
     if (showToastMsg) {
       setTimeout(() => {
-        syncProgress().catch(() => {});
+        syncProgress().then(() => syncReadingState()).catch(() => {});
       }, 200);
     } else {
-      syncProgress().catch(() => {});
+      syncProgress().then(() => syncReadingState()).catch(() => {});
     }
   }
 
@@ -1128,6 +1199,8 @@
         afterLogin(true);
       }
       if (user() && session.expires_at && now() >= session.expires_at - 90) await refreshSession();
+      // A returning session must pull before the page paints its shelf.
+      if (user()) { syncProgress().then(() => syncReadingState()).catch(() => {}); }
       finishGate();
       renderNav();
       renderChip();
@@ -1135,6 +1208,7 @@
       welcomeBack();
       try { window.addEventListener("tsb:sync", () => { renderChip(); renderNav(); }); } catch (e) {}
       try { window.addEventListener("tsb:auth", () => { renderChip(); renderNav(); }); } catch (e) {}
+      try { window.addEventListener("tsb:reading-change", () => { queueStateSync(); }); } catch (e) {}
       window.TSB_AUTH = {
         enabled: true,
         user,
@@ -1145,6 +1219,8 @@
         setDisplayName,
         syncProgress,
         queueSync,
+        syncReadingState,
+        queueStateSync,
         track,
         onBookComplete,
         renderNav,
@@ -1165,7 +1241,7 @@
     } catch (e) {
       console.warn("TSB boot error:", e);
       // never leave the app without TSB_AUTH, degrade gracefully
-      window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, track, onBookComplete, renderNav, clientId: GCLIENT, openSheet, closeSheet, token: () => ensureToken(), signUpEmail, signInEmail, signInId, sendReset, authCooldown, usernameFree, setPassword, needsFinish, finishGoogleAccount, skipFinish, requestLoginCode, resendSignupCode, verifyLoginCode, verifySignupCode, verifyRecoveryCode, setMyUsername, gateStatus };
+      window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, syncReadingState, queueStateSync, track, onBookComplete, renderNav, clientId: GCLIENT, openSheet, closeSheet, token: () => ensureToken(), signUpEmail, signInEmail, signInId, sendReset, authCooldown, usernameFree, setPassword, needsFinish, finishGoogleAccount, skipFinish, requestLoginCode, resendSignupCode, verifyLoginCode, verifySignupCode, verifyRecoveryCode, setMyUsername, gateStatus };
       try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch (e) {}
     }
   }

@@ -243,3 +243,6 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
   .kh-rain { opacity: 1; } .kh-parade { left: 40%; }
 }
 /* the You page door into Kids mode */
+
+/* v337: parent-owned private voice control inside the safe Kids room. */
+.kp-voice{margin:14px 0 0;padding:10px 12px;border:2px solid rgba(62,54,31,.16);border-radius:18px;background:#fff8df;display:flex;align-items:center;gap:10px;justify-content:space-between;font:700 11px/1.2 "Baloo 2",system-ui;color:#68542c}.kp-voice .kp-change{margin:0}.kp-voice span{max-width:45%;text-align:right}

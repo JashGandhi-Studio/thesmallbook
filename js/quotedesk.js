@@ -75,7 +75,7 @@
     { id: "focus",        label: "🎯 Focus" }
   ];
 
-  var root = null, opts = null, S = {};
+  var root = null, opts = null, S = {}; var DRAFT_KEY = "tsb_quote_desk_draft_v340"; function saveDraft(){try{localStorage.setItem(DRAFT_KEY,JSON.stringify({text:S.text||"",author:S.author||"",why:S.why||""}));}catch(e){}} function loadDraft(){try{return JSON.parse(localStorage.getItem(DRAFT_KEY)||"{}")||{};}catch(e){return {};}}
   function ratioOf() {
     for (var i = 0; i < RATIOS.length; i++) if (RATIOS[i].id === S.ratio) return RATIOS[i];
     return RATIOS[0];
@@ -122,10 +122,11 @@
     }
 
     close();
+    var draft = loadDraft();
     S = {
-      text: opts.seed || "",
-      author: "",
-      why: opts.why || "",
+      text: opts.seed || draft.text || "",
+      author: draft.author || "",
+      why: opts.why || draft.why || "",
       photo: opts.photo || "",
       photoName: opts.photoName || "",
       photoRemote: opts.photoRemote || "",
@@ -148,11 +149,11 @@
     document.addEventListener("keydown", escClose);
 
     var ta = $("#qdQuote");
-    ta.addEventListener("input", function () { S.text = this.value; paintPreview(); });
+    ta.addEventListener("input", function () { S.text = this.value; saveDraft(); paintPreview(); });
     var au = $("#qdAuthor");
-    au.addEventListener("input", function () { S.author = this.value; paintPreview(); });
+    au.addEventListener("input", function () { S.author = this.value; saveDraft(); paintPreview(); });
     var wy = $("#qdWhy");
-    wy.addEventListener("input", function () { S.why = this.value; });
+    wy.addEventListener("input", function () { S.why = this.value; saveDraft(); });
 
     var grow = function () { this.style.height = "auto"; this.style.height = Math.min(220, this.scrollHeight + 2) + "px"; };
     ta.addEventListener("input", grow);

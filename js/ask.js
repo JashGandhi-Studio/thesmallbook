@@ -211,6 +211,12 @@
   function sourceHead(n, label) {
     return '<div class="aq-head2"><span>' + esc(label) + '</span><i>' + n + '</i></div>';
   }
+  /* v337: every response closes the gap between an insight and a useful next move. */
+  function nextMove(action, caveat) {
+    var a = String(action || "Open the closest lesson and choose one small action you can test today.");
+    var c = String(caveat || "Use the source, not a slogan. Context decides whether the idea fits.");
+    return '<div class="aq-move"><div><b>TRY THIS NEXT</b><span>' + esc(a) + '</span></div><div><b>KEEP IN MIND</b><span>' + esc(c) + '</span></div></div>';
+  }
   function topicHtml(topic, qT, ansT, blurbsT, gBlurbsT) {
     var books = (topic.books || []).map(function (s, i) {
       return srcCard(s.id, s.lesson, blurbsT[i] || s.blurb);
@@ -223,7 +229,9 @@
     var receipt = '<div class="aq-receipt">✦ answered from <b>' + (topic.books || []).length + ' book lesson' + ((topic.books || []).length === 1 ? "" : "s") +
       '</b> + <b>' + (topic.graves || []).length + ' real failure' + ((topic.graves || []).length === 1 ? "" : "s") +
       "</b> · zero opinions, every line traceable ✦</div>";
-    return answerBlock(t("THE ANSWER"), ansT, "\u201C" + qT + "\u201D") + receipt +
+    var first = (topic.books && topic.books[0] && bookIndex()[topic.books[0].id]) || null;
+    var firstLesson = first && first.lessons ? first.lessons[0] : null;
+    return answerBlock(t("THE ANSWER"), ansT, "\u201C" + qT + "\u201D") + nextMove(firstLesson && firstLesson.action, topic.graves && topic.graves.length ? "Open the linked failure too. It shows the condition where this advice can break." : "Test this in one small, reversible situation before making it a rule.") + receipt +
       (books ? sourceHead((topic.books || []).length, t("FROM THE LIBRARY")) + '<div class="aq-srcs">' + books + "</div>" : "") +
       (graves ? sourceHead((topic.graves || []).length, t("FROM THE GRAVEYARD")) + '<div class="aq-srcs">' + graves + "</div>" : "") +
       '<div class="aq-foot">✦ ' + esc(t("tap a source to read the real lesson")) + " ✦</div>";
@@ -240,7 +248,8 @@
       return answerBlock(t("CLOSEST MATCHES"), headT, "\u201C" + qT + "\u201D") +
         '<div class="aq-none">📖 ' + esc(t("no book lesson matched")) + "</div>";
     }
-    return answerBlock(t("CLOSEST MATCHES"), headT, "\u201C" + qT + "\u201D") +
+    var action = lRes[0] && lRes[0].lesson && lRes[0].lesson.action;
+    return answerBlock(t("CLOSEST MATCHES"), headT, "\u201C" + qT + "\u201D") + nextMove(action, gRes.length ? "Read the linked autopsy before copying the advice. Failure cases reveal missing conditions." : "These are close matches, not a verdict. Open the source and check the setting.") +
       (hits ? sourceHead(lRes.length, t("FROM THE LIBRARY")) + hits : "<div class='aq-none'>📖 " + esc(t("no book lesson matched")) + "</div>") +
       (gHits ? sourceHead(gRes.length, t("FROM THE GRAVEYARD")) + gHits : "");
   }

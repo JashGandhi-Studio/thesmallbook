@@ -10338,21 +10338,7 @@ html.dark .tss-menu__card { background: #241f17; }
 html.dark .tss-menu__row { border-top-color: rgba(242,234,216,.25); }
 html.dark .tss-menu__chips { border-top-color: rgba(242,234,216,.25); }
 /* v298: the corner nudge, once, until they choose */
-.tss-nudge { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 68px); right: 10px; z-index: 9993; width: 238px; background: var(--paper); color: var(--ink); border: var(--bw) solid var(--edge); border-radius: 22px; box-shadow: var(--sh-3); padding: 14px 12px 11px; animation: tssNudge .3s cubic-bezier(.22,.9,.35,1); }
-@keyframes tssNudge { from { opacity: 0; transform: translateX(18px); } }
-.tss-nudge__eyebrow { display: inline-block; font-family: "Archivo Black", "Arial Black", sans-serif; font-size: 8.5px; letter-spacing: 1px; background: var(--yellow); color: #111; border: var(--bw) solid var(--edge); border-radius: 999px; padding: 3px 8px; margin-bottom: 7px; }
-.tss-nudge b { display: block; font-family: "Archivo Black", "Arial Black", sans-serif; font-size: 13.5px; margin-bottom: 3px; }
-.tss-nudge small { display: block; font-weight: 700; font-size: 11px; line-height: 1.45; opacity: .8; margin-bottom: 9px; }
-.tss-nudge__go { display: block; width: 100%; border: var(--bw) solid var(--edge); background: var(--yellow); color: #111; font-family: "Archivo Black", "Arial Black", sans-serif; font-size: 11.5px; letter-spacing: .5px; padding: 9px; border-radius: 17px; cursor: pointer; box-shadow: var(--sh-2); }
-.tss-nudge__go:active { transform: translate(1.5px, 1.5px); box-shadow: var(--sh-1); }
-.tss-nudge__x { position: absolute; top: -12px; right: -10px; width: 30px; height: 30px; border: var(--bw) solid var(--edge); background: var(--paper); border-radius: 999px; font-weight: 900; font-size: 12px; cursor: pointer; }
-html.dark .tss-nudge { background: #241f17; }
-@media (prefers-reduced-motion: reduce) { .tss-nudge { animation: none; } .tss-sw i, .tss-sw { transition: none; } }
-.tss-hover { outline: 3px solid var(--yellow) !important; outline-offset: 2px; }
-html.dark .tss-hover { outline-color: var(--yellow); }
-.tss-cursor--tap { width: 74px; height: 74px; margin: -37px 0 0 -37px; background: rgba(255,200,0,.45); border-color: var(--ink); }
-.tss-cursor i { position: absolute; inset: 32%; border-radius: 50%; background: rgba(255,255,255,.9); border: 2px solid rgba(20,17,12,.5); }
-@keyframes tssBorn { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
 /* the launcher chip on every page while the toggle is on */
 .tss-launch {
   position: fixed; right: 14px; bottom: 84px; z-index: 9600; width: 52px; height: 52px;
@@ -12865,3 +12851,12 @@ body { overflow-x: clip; }
 .lv-dot { fill:var(--lv-accent); stroke:var(--paper, #FBF8F1); stroke-width:4; }
 html.dark .lv { background:color-mix(in srgb, #221E19 88%, var(--lv-accent)); border-color:#3A332B; }
 html.dark .lv--atomic { background:#362D12; }
+
+/* v337: every lesson gets a distinct visual handle, never a generic image. */
+.lv--loop .lv-loop,.lv--loop .lv-arrow,.lv--ladder .lv-ladder{fill:none;stroke:var(--lv-accent);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}.lv--loop .lv-loop{stroke-dasharray:7 8}.lv--balance .lv-axis{stroke:var(--lv-accent);stroke-width:3;fill:none}.lv--balance .lv-link{stroke:var(--lv-accent);stroke-width:3;fill:none}.lv--balance .lv-card{fill:color-mix(in srgb,var(--lv-accent) 16%,#fff);stroke:var(--lv-accent);stroke-width:2}.lv--balance text,.lv--loop text,.lv--ladder text{fill:#393126;font:700 12px var(--font-head,system-ui);letter-spacing:.06em}.lv--loop .lv-node{fill:#fffaf0;stroke:var(--lv-accent);stroke-width:3}.lv--ladder .lv-dot{fill:var(--lv-accent);stroke:#fffaf0;stroke-width:3}html.dark .lv--balance .lv-card,html.dark .lv--loop .lv-node{fill:#241f19}html.dark .lv--balance text,html.dark .lv--loop text,html.dark .lv--ladder text{fill:#f4ecdc}
+
+/* v337 Ask the Library: an answer ends in a next move and a useful caveat. */
+.aq-move{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0}.aq-move>div{border:1px solid #e5dccb;border-radius:13px;background:#fffaf0;padding:9px 10px}.aq-move>div:first-child{background:#fff0b9;border-color:#e2bb44}.aq-move b{display:block;font:800 9px/1.1 var(--font-head,system-ui);letter-spacing:.1em;color:#6a5732;margin-bottom:4px}.aq-move span{display:block;font:600 11px/1.35 var(--font-body,system-ui);color:#30291e}@media(max-width:360px){.aq-move{grid-template-columns:1fr}}html.dark .aq-move>div{background:#241f19;border-color:#443a2e}html.dark .aq-move>div:first-child{background:#392f16;border-color:#765c16}html.dark .aq-move span{color:#f4ecdc}
+
+/* v340: profile notes retired. Private Notebook remains at notes.html. */
+.cm-note-bubble,.cm-note-add,.dm-notes-hub{display:none!important}

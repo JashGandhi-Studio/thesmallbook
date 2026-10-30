@@ -20,13 +20,35 @@ const MODELS = {
     hi: { id: "hi_IN-priyamvada-medium", path: "hi/hi_IN/priyamvada/medium/hi_IN-priyamvada-medium.onnx", name: "TheSmallBook Voice Model Plus" }
   }
 };
+/* Gold readers choose an explicit download. Each route remains on-device. */
+const PLUS_VOICES = {
+  en: [MODELS.plus.en,
+    { id: "en_US-amy-medium", path: "en/en_US/amy/medium/en_US-amy-medium.onnx", name: "Amy" },
+    { id: "en_US-joe-medium", path: "en/en_US/joe/medium/en_US-joe-medium.onnx", name: "Joe" }],
+  hi: [MODELS.plus.hi,
+    { id: "hi_IN-rohan-medium", path: "hi/hi_IN/rohan/medium/hi_IN-rohan-medium.onnx", name: "Rohan" }]
+};
+const OLD_MODELS = MODELS;
+/* catalog is intentionally public so the picker can only show real downloadable voices. */
+
 let phonemize = null;
 let ortReady = null;
 let session = null;
 let sessionKey = "";
+const storedCache = new Map();
+let voiceWorker = null;
+let workerKey = "";
+let workerSeq = 0;
+const workerWaiters = new Map();
 
 function base(lang) { return String(lang || "en").toLowerCase().split(/[-_]/)[0] === "hi" ? "hi" : "en"; }
-function voice(tier, lang) { return (tier === "plus" ? MODELS.plus : MODELS.basic)[base(lang)]; }
+function voice(tier, lang) {
+  var l = base(lang); if (tier !== "plus") return MODELS.basic[l];
+  var key = ""; try { key = localStorage.getItem("tsb_voice_plus_" + l) || ""; } catch (e) {}
+  return PLUS_VOICES[l].filter(function (v) { return v.id === key; })[0] || PLUS_VOICES[l][0];
+}
+function catalog(lang) { var l = base(lang); return [{ tier:"basic", lang:l, voice:MODELS.basic[l] }].concat(PLUS_VOICES[l].map(function(v){ return { tier:"plus", lang:l, voice:v }; })); }
+function selectVoice(lang, id) { var l=base(lang), ok=PLUS_VOICES[l].some(function(v){return v.id===id;}); if(ok) try { localStorage.setItem("tsb_voice_plus_"+l,id); } catch(e){} return voice("plus",l); }
 function safe(s) { return String(s).replace(/[^a-z0-9_.-]/gi, "_"); }
 function rootHandle() {
   if (!navigator.storage || !navigator.storage.getDirectory) return Promise.reject(new Error("This browser cannot save TheSmallBook Voice Model yet."));
@@ -43,12 +65,14 @@ async function write(dir, name, blob) {
   await w.write(blob); await w.close();
 }
 async function exists(v) {
-  try { const dir = await rootHandle(), n = names(v); return !!(await read(dir, n.model)) && !!(await read(dir, n.config)); } catch (e) { return false; }
+  if (storedCache.has(v.id)) return storedCache.get(v.id);
+  try { const dir = await rootHandle(), n = names(v); const yes = !!(await read(dir, n.model)) && !!(await read(dir, n.config)); storedCache.set(v.id, yes); return yes; } catch (e) { storedCache.set(v.id, false); return false; }
 }
 async function remove(v) {
   const dir = await rootHandle(), n = names(v);
   try { await dir.removeEntry(n.model); } catch (e) {}
   try { await dir.removeEntry(n.config); } catch (e) {}
+  storedCache.set(v.id, false);
 }
 async function fetchBlob(url, progress) {
   const res = await fetch(url);
@@ -81,8 +105,11 @@ async function download(tier, lang, progress) {
   const model = await fetchBlob(modelUrl(v), progress);
   const config = await fetchBlob(modelUrl(v) + ".json");
   await write(dir, n.model, model); await write(dir, n.config, config);
+  storedCache.set(v.id, true);
   if (progress) progress({ loaded: 1, total: 1, phase: "engine" });
-  await cacheRuntime();
+  /* Runtime caching is useful offline but never holds the download sheet or UI. */
+  const idle = self.requestIdleCallback || function (fn) { return setTimeout(fn, 300); };
+  idle(function () { cacheRuntime(); }, { timeout: 4000 });
   if (progress) progress({ loaded: 1, total: 1, phase: "ready" });
   return v;
 }
@@ -166,7 +193,37 @@ async function one(text, s) {
   if (Object.keys(s.c.speaker_id_map || {}).length) feeds.sid = new s.o.Tensor("int64", [0]);
   return (await s.s.run(feeds)).output.data;
 }
-async function speak(text, opt) {
+function rejectWorkerWaiters(error) {
+  workerWaiters.forEach(function (w) { w.reject(error); }); workerWaiters.clear();
+}
+function workerCall(payload, transfer, onChunk) {
+  return new Promise(function (resolve, reject) {
+    const id = ++workerSeq; workerWaiters.set(id, { resolve: resolve, reject: reject, progress: payload.progress, chunk: onChunk });
+    try { voiceWorker.postMessage(Object.assign({}, payload, { id: id }), transfer || []); } catch (e) { workerWaiters.delete(id); reject(e); }
+  });
+}
+function workerForVoice() {
+  if (voiceWorker) return voiceWorker;
+  voiceWorker = new Worker(new URL("./tts-piper-worker.js?v=338", import.meta.url));
+  voiceWorker.onmessage = function (event) {
+    const d = event.data || {}, w = workerWaiters.get(d.id); if (!w) return;
+    if (d.type === "progress") { if (w.progress) w.progress({ loaded: d.loaded, total: d.total, phase: "speaking" }); return; }
+    if (d.type === "chunk") { if (w.chunk) w.chunk(d.wav, d.loaded, d.total); return; }
+    workerWaiters.delete(d.id);
+    if (d.type === "error") w.reject(new Error(d.error || "Voice worker failed"));
+    else w.resolve(d);
+  };
+  voiceWorker.onerror = function () { rejectWorkerWaiters(new Error("Voice worker failed")); try { voiceWorker.terminate(); } catch (e) {} voiceWorker = null; workerKey = ""; };
+  return voiceWorker;
+}
+async function prepareWorker(tier, lang) {
+  const v = voice(tier, lang), k = v.id;
+  if (voiceWorker && workerKey === k) return;
+  if (!(await exists(v))) throw new Error("TheSmallBook Voice Model has not been downloaded.");
+  const dir = await rootHandle(), n = names(v), model = await (await read(dir, n.model)).arrayBuffer(), config = await (await read(dir, n.config)).text();
+  workerForVoice(); await workerCall({ type: "init", key: k, model: model, config: config }, [model]); workerKey = k;
+}
+async function speakMain(text, opt) {
   const o = opt || {}, s = await buildSession(o.tier === "plus" ? "plus" : "basic", o.lang || "en");
   const ps = []; const cs = chunks(text);
   for (let i = 0; i < cs.length; i++) { if (o.progress) o.progress({ loaded: i, total: cs.length, phase: "speaking" }); ps.push(await one(cs[i], s)); }
@@ -175,9 +232,32 @@ async function speak(text, opt) {
   if (o.progress) o.progress({ loaded: cs.length, total: cs.length, phase: "speaking" });
   return new Blob([wav(all, s.c.audio.sample_rate)], { type: "audio/wav" });
 }
+async function speakStream(text, opt, onChunk) {
+  const o = opt || {}, tier = o.tier === "plus" ? "plus" : "basic", lang = o.lang || "en";
+  try {
+    await prepareWorker(tier, lang);
+    await workerCall({ type: "speak", text: String(text || ""), rate: o.rate || 1.08, progress: o.progress }, [], function (ab) {
+      if (onChunk) onChunk(new Blob([ab], { type: "audio/wav" }));
+    });
+  } catch (e) {
+    /* A restricted browser can still listen. Normal browsers stay entirely
+       worker-backed, so model inference never blocks the interface. */
+    if (onChunk) onChunk(await speakMain(text, o));
+  }
+}
+async function speak(text, opt) {
+  /* Compatibility for internal callers that want one Blob. The player uses
+     speakStream so normal reading begins on the first available segment. */
+  const blobs = []; await speakStream(text, opt, function (b) { blobs.push(b); });
+  if (blobs.length <= 1) return blobs[0] || new Blob([], { type: "audio/wav" });
+  const buffers = await Promise.all(blobs.map(function (b) { return b.arrayBuffer(); }));
+  const bytes = buffers.reduce(function (n, b) { return n + Math.max(0, b.byteLength - 44); }, 0), header = buffers[0].slice(0, 44), view = new DataView(header);
+  view.setUint32(4, 36 + bytes, true); view.setUint32(40, bytes, true);
+  return new Blob([header].concat(buffers.slice(0).map(function (b, i) { return i ? b.slice(44) : b.slice(44); })), { type: "audio/wav" });
+}
 async function status() {
   const all = [];
   for (const tier of ["basic", "plus"]) for (const lang of ["en", "hi"]) { const v = voice(tier, lang); all.push({ tier: tier, lang: lang, id: v.id, name: v.name, stored: await exists(v) }); }
   return all;
 }
-export { MODELS, download, remove, speak, status, exists };
+export { MODELS, PLUS_VOICES, catalog, selectVoice, download, remove, speak, speakStream, status, exists };

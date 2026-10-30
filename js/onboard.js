@@ -30,7 +30,7 @@
   /* v331: onboarding is versioned. Everyone, new or returning, signed in or
      not, sets the app up once per big update. Returning readers first see a
      short "new update" card, then the same four screens, prefilled. */
-  var OB_V = 336;
+  var OB_V = 338;
   var UPDATE = !!get("tsb_onboarded", false) && (get("tsb_onboard_v", 0) || 0) < OB_V;
   function shouldShow() {
     try { if (sessionStorage.getItem("tsb_onboarded_pending")) { set("tsb_onboarded", true); set("tsb_onboard_v", OB_V); sessionStorage.removeItem("tsb_onboarded_pending"); } } catch (e) {}
@@ -169,10 +169,10 @@
 
   /* ---------- screens ---------- */
   var NEWS = [
-    ['<path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/>', "A voice that stays with you", "TheSmallBook Voice Model runs on your device, when you choose it."],
-    ['<path d="M4 5.5h16v13H4z"/><path d="M8 9h8M8 13h5"/>', "A longer library", "600 books and 4,343 lessons, with new Originals on the shelf."],
+    ['<path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 1-3-3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/>', "Listening that keeps up", "TheSmallBook Voice Model prepares offscreen, so your pages stay smooth."],
+    ['<path d="M4 5.5h16v13H4z"/><path d="M8 9h8M8 13h5"/>', "One player, every book", "The broadcast player now follows you from Listen into any book."],
     ['<path d="M4 19V5l8-2 8 2v14l-8 2z"/><path d="M12 3v18"/>', "A notebook for real life", "Your pages, your prompts and your next small action."],
-    ['<path d="M5 12.5 9.5 17 19 7.5"/>', "The quiet details", "Smoother opens, cleaner refreshes, the same library made more yours."]
+    ['<path d="M5 12.5 9.5 17 19 7.5"/>', "The quiet details", "Tighter pauses, smoother transitions and original editions with a new look."]
   ];
   function screen(i) {
     if (i === -1) {
@@ -384,6 +384,7 @@
     set("tsb_starter_shelf", draft.picks.length ? draft.picks : buildShelf());
     if (!get("tsb_trial_start", 0)) set("tsb_trial_start", Date.now());
     if (draft.name) try { localStorage.setItem("tsb_reader_name", draft.name); } catch (e) {}
+    try { if (window.TSB_AUTH && TSB_AUTH.queueStateSync) TSB_AUTH.queueStateSync(); } catch (e) {}
   }
   function finish() {
     save();

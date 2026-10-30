@@ -59,7 +59,7 @@
     deepWait.push(cb);
     if (deepWait.length > 1) return;
     var s = document.createElement("script");
-    s.src = "js/graveyard-content.js?v=336";
+    s.src = "js/graveyard-content.js?v=338";
     s.onload = s.onerror = function () { var w = deepWait; deepWait = []; w.forEach(function (fn) { try { fn(window.GRAVE_DEEP || {}); } catch (e) {} }); };
     document.head.appendChild(s);
   }
@@ -229,10 +229,13 @@
         '<div class="gyc-facts"><span><small>The cost</small><b>' + esc(f.loss) + '</b></span>' + (cz ? '<span><small>Cause</small><b>' + esc(cz) + '</b></span>' : "") + '</div>' +
       '</div>' +
       '<figure class="gyc-photo" hidden></figure>' +
-      sec("How it started", (d && d.origin) || f.story) +
-      sec("The fall", d && d.fall) +
+      sec("The intent", f.intent || (d && d.origin) || f.story) +
+      sec("How it grew", f.growth) +
+      sec("The break", f.break || (d && d.fall)) +
       '<section class="gyc-sec gyc-sec--mistake"><h2>The fatal mistake</h2><p>' + esc(f.mistake) + '</p></section>' +
+      (f.fallout ? sec("The fallout", f.fallout) : "") +
       '<section class="gyc-sec gyc-sec--lesson"><h2>The lesson</h2><p>' + esc(f.lesson) + '</p></section>' +
+      (f.source ? '<p class="gyc-source"><a href="'+esc(f.source)+'" target="_blank" rel="noopener">Public record context</a></p>' : "") +
       (b ? '<a class="gyc-book" href="book.html?id=' + esc(b.id) + '"><img src="' + esc(b.cover) + '" alt="" width="64" height="96" loading="lazy"><span><small>The antidote</small><b>' + esc(b.title) + '</b><em>' + esc(b.author || "") + (b.readTime ? ' &middot; ' + esc(b.readTime) : "") + '</em></span><i>' + IC.book + 'Read</i></a>'
          : (f.bookTitle ? '<p class="gyc-booktxt">The antidote: ' + esc(f.bookTitle) + '</p>' : "")) +
       '<div class="gyc-acts"><button type="button" class="gyc-btn" data-gyc-share>' + IC.share + 'Share this grave</button><button type="button" class="gyc-btn gyc-btn--ink" data-gyc-next>Next grave ' + IC.arrow + '</button></div>';

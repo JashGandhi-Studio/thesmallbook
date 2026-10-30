@@ -132,6 +132,7 @@
     if (idx < 0 || idx >= pages.length) return;
     curPage = idx;
     localStorage.setItem('tsb_reader_pos_' + book.id, curPage);
+    try { localStorage.setItem('tsb_reader_pos_updated_' + book.id, JSON.stringify(Date.now())); if (window.TSB_AUTH && TSB_AUTH.track) TSB_AUTH.track(); } catch (e) {}
 
     var p = pages[curPage];
     articleEl.innerHTML =
@@ -181,6 +182,7 @@
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         curPage = idx;
         localStorage.setItem('tsb_reader_pos_' + book.id, curPage);
+    try { localStorage.setItem('tsb_reader_pos_updated_' + book.id, JSON.stringify(Date.now())); if (window.TSB_AUTH && TSB_AUTH.track) TSB_AUTH.track(); } catch (e) {}
         if (contentsSelect) contentsSelect.value = curPage;
       }
     } else {

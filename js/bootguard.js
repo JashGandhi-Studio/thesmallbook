@@ -18,7 +18,7 @@
 (function () {
   "use strict";
 
-  var BUILD = "336";
+  var BUILD = "340";
 window.TSB_BUILD = BUILD;   /* v322: every page knows its era - the tutorial replays once per era */
   var PHASE_A = "tsb_purge_a";
 

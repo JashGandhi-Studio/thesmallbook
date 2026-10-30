@@ -12,6 +12,10 @@
   }
   function set(key, val) {
     try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
+    /* v337: reading work syncs, device appearance never does. */
+    if (/^tsb_(progress|bookmarks|plans|streak|days|birthday|read_books|highlights_v1|interests|ob_lead|mind|read_minutes|read_style|read_when|starter_shelf|last_book)$/.test(key)) {
+      try { window.dispatchEvent(new CustomEvent("tsb:reading-change", { detail: { key: key } })); } catch (e2) {}
+    }
   }
 
   /* ---------- accent colour (picked in the You window) ---------- */
