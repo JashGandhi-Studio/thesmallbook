@@ -296,6 +296,48 @@
   /* ============ widget DOM ============ */
   var root = null, panel = null, msgs = null, input = null;
   var open_ = false;
+  /* v344: the Ask panel used to count whatever autopsies the page happened
+     to load. Index loaded none of them and Graveyard loaded both, so the same
+     panel said 118 on one page and 518 on another. Now the panel completes
+     the graveyard itself, in the right order (the main file overwrites, the
+     extra file appends), once, and rewrites its own numbers when it lands. */
+  var _gMain = 0, _gExtra = 0;
+  function hasMainGraves() {
+    return (window.FAILURES || []).some(function (f) { return String(f.id || "").indexOf("extra-") !== 0; });
+  }
+  function hasExtraGraves() {
+    return (window.FAILURES || []).some(function (f) { return String(f.id || "").indexOf("extra-") === 0; });
+  }
+  function refreshGraves() {
+    try { headStats(); } catch (e) {}
+    try {
+      var el = root && root.querySelector("#aqGraves");
+      if (el) el.textContent = String((window.FAILURES || []).length);
+    } catch (e2) {}
+  }
+  function gravesComplete(cb) {
+    var V = (window.TSB_LESSONS && window.TSB_LESSONS.version) || "344";
+    var load = function (file, next) {
+      var s = document.createElement("script");
+      s.src = file + "?v=" + V;
+      s.async = true;
+      s.onload = s.onerror = next;
+      (document.head || document.documentElement).appendChild(s);
+    };
+    var done = function () { refreshGraves(); if (cb) cb(); };
+    if (hasMainGraves() && hasExtraGraves()) { done(); return; }
+    if (_gExtra) { done(); return; }
+    _gExtra = 1;
+    var wantExtra = function () {
+      if (hasExtraGraves() || _gMain === 2) { done(); return; }
+      _gMain = 2;
+      load("js/failures-extra.js", done);
+    };
+    if (hasMainGraves()) { wantExtra(); return; }
+    _gMain = 1;
+    load("js/failures.js", function () { _gMain = 0; wantExtra(); });
+  }
+
   function headStats() {
     var el = root && root.querySelector("#tsb-headstats");
     if (!el) return;
@@ -338,6 +380,7 @@
         '<div class="aq-chips" id="tsb-chips"></div>' +
         '<div class="aq-msgs" id="tsb-msgs"></div>' +
         '<div class="aq-inputrow">' +
+          '<button id="tsb-plus" class="aq-plus" type="button" aria-label="' + t("Compare two books") + '" title="' + t("Compare two books") + '">+</button>' +
           '<input id="tsb-input" class="aq-input" type="text" maxlength="140" placeholder="' + t("Ask anything…") + '" autocomplete="off">' +
           '<button id="tsb-send" class="aq-send">' + t("ASK") + "</button>" +
         "</div>" +
@@ -629,17 +672,11 @@
   /* ============ 🎭 ASK MODES (v292): 8 editorial formats. Every answer is
      composed live from real book lessons + real Graveyard autopsies. No
      filler, no invented facts: history comes from FAILURES, ideas from BOOKS. ============ */
+  /* v344: one mode. The rest were noise; this one earns its tap. */
   var MODES = [
-    { key: "compare",  label: "⚖️ Compare books", pick: true },
-    { key: "decision", label: "🧨 The decision before the disaster" },
-    { key: "redflag",  label: "🚩 Red Flag Friday" },
-    { key: "before",   label: "⚠️ Read this before you…", pick: true },
-    { key: "seven",    label: "📅 The 7-day challenge", pick: true },
-    { key: "myth",     label: "🃏 Myth vs lesson" },
-    { key: "field",    label: "📓 Founder field notes" }
+    { key: "compare", label: "⚖️ Compare two books", pick: true }
   ];
   var modePick = null; /* set while the reader is in a pick-mode menu */
-  var SEVEN_CYCLE = ["atomic-habits", "deep-work", "psychology-of-money", "raja-yoga", "ikigai", "subtle-art", "the-goal", "made-to-stick"];
 
   function MDD() { return window.TSB_ASK_MODES || { TOPICS: [], REDFLAGS: [], SCENARIOS: [], MYTHS: [], FIELD: [] }; }
   function firstSent(s, n) {
@@ -737,167 +774,310 @@
       '<div class="aq-foot">✦ ' + esc(t("same question, different authors, your call")) + " ✦</div>";
   }
 
-  /* ---- mode 3: the decision before the disaster ---- */
-  function decisionHtml(page) {
-    var list = (window.FAILURES || []).filter(function (f) { return f.mistake && String(f.mistake).length > 40; });
-    var per = 3;
-    var pages = Math.ceil(list.length / per);
-    var p = ((page % pages) + pages) % pages;
-    var picks = list.slice(p * per, p * per + per);
-    var cards = picks.map(function (f) { return graveCard(f.id, "THE CALL: " + firstSent(f.mistake, 1)); }).join("");
-    var intro = "Every collapse had a moment when it was still reversible. Here are " + picks.length + " of those moments, drawn from " + list.length + " autopsies. Notice the pattern: in the room, none of these decisions felt reckless. They all felt normal. That is the lesson.";
-    return answerBlock("🧨 THE DECISION BEFORE THE DISASTER", intro, "case files " + (p * per + 1) + " to " + (p * per + picks.length) + " of " + list.length) +
-      sourceHead(picks.length, t("FROM THE GRAVEYARD")) + '<div class="aq-srcs">' + cards + "</div>" +
-      '<div class="aq-foot">' + nextBtn("🧨 Next 3 case files", "decision:" + (p + 1)) + "</div>";
-  }
+  /* ============================================================
+     ⚖️ COMPARE TWO BOOKS (v344)
 
-  /* ---- mode 4: red flag friday ---- */
-  /* curated flags first, then one derived from every real autopsy: the pool runs years */
-  var _DFLAGS = null;
-  function allFlags() {
-    if (_DFLAGS) return _DFLAGS;
-    var base = MDD().REDFLAGS.slice();
-    var seen = {};
-    base.forEach(function (r) { seen[r.grave] = 1; });
-    (window.FAILURES || []).forEach(function (f) {
-      if (seen[f.id]) return;
-      var flag = firstSent(f.mistake || f.lesson, 1);
-      if (flag && flag.length > 24) base.push({ flag: ell(flag, 120), grave: f.id });
-    });
-    _DFLAGS = base;
-    return base;
+     The modes are gone. What is left is the one worth doing properly:
+     you name two books, and the answer reads like a person who has read
+     both. What each one is actually about, where they agree, where they
+     split, which to read first, and one thing to try from each this week.
+     Every sentence is built from the book's own one-liner, first lesson
+     and action plan, so nothing here is invented and nothing is scored.
+     ============================================================ */
+  /* shared ground is described in human words, never in raw keywords:
+     a small map of the themes this library actually argues about, each
+     with the words that signal it. A theme counts only when BOTH books
+     keep returning to it, twice or more. */
+  var THEMES = [
+    { k: "habits",        w: ["habit", "routine", "streak", "cue", "trigger"] },
+    { k: "attention",     w: ["focus", "attention", "distraction", "concentration", "deep work"] },
+    { k: "money",         w: ["money", "wealth", "invest", "saving", "compound interest", "asset"] },
+    { k: "time", g: 1,          w: ["time", "schedule", "deadline", "calendar"] },
+    { k: "discipline",    w: ["discipline", "willpower", "consistency", "self-control"] },
+    { k: "people", g: 1,        w: ["people", "team", "relationship", "trust", "respect"] },
+    { k: "conversation", g: 1,  w: ["talk", "conversation", "listen", "feedback", "persuade"] },
+    { k: "risk",          w: ["risk", "downside", "uncertainty", "luck", "loss"] },
+    { k: "thinking",      w: ["think", "decision", "bias", "judgment", "mental model"] },
+    { k: "purpose",       w: ["purpose", "meaning", "values", "identity"] },
+    { k: "fear",          w: ["fear", "anxiety", "worry", "courage"] },
+    { k: "systems",       w: ["system", "process", "environment", "design"] },
+    { k: "learning",      w: ["learn", "practice", "skill", "repetition"] },
+    { k: "change", g: 1,        w: ["change", "improve", "transform", "progress"] },
+    { k: "work", g: 1,          w: ["work", "career", "job", "productivity", "output"] }
+  ];
+  function textOf(b) {
+    var out = String(b.title || "") + " " + String(b.oneLiner || "") + " " + String(b.bigIdea || "") + " " + String(b.tagline || "") + " ";
+    (b.lessons || []).forEach(function (l) { out += String(l.title || "") + " " + String(l.summary || "") + " "; });
+    return out.toLowerCase();
   }
-  function redflagHtml(explicit) {
-    var flags = allFlags();
-    if (!flags.length) return "";
-    var idx = (explicit === null || explicit === undefined || explicit === "")
-      ? ((weekNum(3) % flags.length) + flags.length) % flags.length
-      : ((parseInt(explicit, 10) % flags.length) + flags.length) % flags.length;
-    var r = flags[idx];
-    var g = graveIndex()[r.grave];
-    if (!g) return "";
-    var intro = "This week's flag: " + r.flag + ". " + firstSent(g.lesson, 1) + " The flag never feels like a flag while you are waving it. That is exactly what makes it a flag.";
-    return answerBlock("🚩 RED FLAG FRIDAY", intro, "exhibit: " + g.name + (g.year ? ", " + g.year : "")) +
-      sourceHead(1, t("FROM THE GRAVEYARD")) + '<div class="aq-srcs">' +
-        graveCard(g.id, "THE FLAG: " + firstSent(g.mistake || g.lesson, 1)) + "</div>" +
-      '<div class="aq-foot">' + nextBtn("🚩 Peek next week's flag", "redflag:" + ((idx + 1) % flags.length)) + "</div>";
-  }
-
-  /* ---- mode 5: read this before you… ---- */
-  function beforeHtml(key, typed) {
-    var scs = MDD().SCENARIOS;
-    var sc = null;
-    if (typed) {
-      sc = scenarioFromText(typed);
-      if (!sc) {
-        var hits = bestPerBook(typed, 3);
-        var gs = searchGraves(typed, 1);
-        if (hits.length >= 2) {
-          var cards0 = hits.map(function (r) { return srcCard(r.book.id, r.lesson.title, ell(firstSent(r.lesson.summary, 1), 130)); }).join("");
-          return answerBlock("⚠️ READ THIS BEFORE YOU…", "Typed in the dark, matched in the library. This is the pre-flight reading for it.", "\u201C" + typed + "\u201D") +
-            sourceHead(hits.length, t("FROM THE LIBRARY")) + '<div class="aq-srcs">' + cards0 + "</div>" +
-            (gs.length ? sourceHead(1, t("THE WARNING")) + '<div class="aq-srcs">' + graveCard(gs[0].f.id, "THE WARNING: " + firstSent(gs[0].f.lesson, 1)) + "</div>" : "");
-        }
-      }
+  function themeScore(th, text) {
+    var n = 0;
+    for (var i = 0; i < th.w.length; i++) {
+      var w = th.w[i], at = 0;
+      while ((at = text.indexOf(w, at)) !== -1) { n++; at += w.length; }
     }
-    if (!sc && key) sc = scs.filter(function (s) { return s.key === key; })[0] || null;
-    if (!sc) sc = scs[0];
-    if (!sc) return "";
-    var cards = sc.books.map(function (bid, i) {
-      var b = bookIndex()[bid];
-      return srcCard(bid, b && b.lessons[0] ? b.lessons[0].title : "", sc.whys[i]);
-    }).join("");
-    var g = graveIndex()[sc.grave];
-    return answerBlock("⚠️ READ THIS BEFORE YOU…", "Three short reads before the leap. The books will not make the decision for you; they make sure it is your decision, not an accident with a receipt.", "before " + sc.label.toLowerCase()) +
-      sourceHead(sc.books.length, t("FROM THE LIBRARY")) + '<div class="aq-srcs">' + cards + "</div>" +
-      (g ? sourceHead(1, t("THE WARNING")) + '<div class="aq-srcs">' + graveCard(g.id, "WHO SKIPPED THIS READING: " + firstSent(g.lesson, 1)) + "</div>" : "") +
-      '<div class="aq-foot">' + nextBtn("⚠️ A different scenario", "before:" + scs[(scs.indexOf(sc) + 1) % scs.length].key) + "</div>";
+    return n;
+  }
+  /* how a theme is said out loud */
+  var THEME_SAY = {
+    habits: "habits", attention: "attention", money: "money", time: "how time gets spent",
+    discipline: "keeping the promise", people: "how people respond to you", conversation: "the conversation",
+    risk: "the downside", thinking: "how decisions get made", purpose: "why any of it matters",
+    fear: "fear", systems: "systems", learning: "how skill is built", change: "how change actually happens",
+    work: "how the work actually gets done"
+  };
+  function sharedThemes(A, B) {
+    var ta = textOf(A), tb = textOf(B), hits = [];
+    THEMES.forEach(function (th) {
+      var ha = themeScore(th, ta), hb = themeScore(th, tb);
+      if (ha >= 3 && hb >= 3) hits.push({ k: th.k, s: Math.min(ha, hb) - (th.g ? 1 : 0) });
+    });
+    hits.sort(function (x, y) { return y.s - x.s; });
+    return hits.filter(function (h) { return h.s > 1; }).slice(0, 2).map(function (h) { return THEME_SAY[h.k] || h.k; });
+  }
+  function cleanSentence(s) {
+    s = String(s || "").replace(/\s+/g, " ").trim();
+    if (!s) return "";
+    if (!/[.!?]$/.test(s)) s += ".";
+    return s;
+  }
+  function actionOf(b) {
+    try {
+      if (b.actionPlan && b.actionPlan.length) return cleanSentence(b.actionPlan[0]);
+      var l = (b.lessons || [])[0];
+      return cleanSentence((l && (l.action || l.summary)) || "");
+    } catch (e) { return ""; }
+  }
+  function minsOf(b) { var m = parseInt(String(b.readTime || "").replace(/[^\d]/g, ""), 10); return isNaN(m) ? 8 : m; }
+  function aboutOf(b) {
+    var s = b.oneLiner || b.bigIdea || b.tagline || "";
+    return cleanSentence(s);
   }
 
-  /* ---- mode 6: the 7-day application challenge ---- */
-  function sevenHtml(bid) {
-    var b = bookIndex()[bid];
-    if (!b || !b.lessons || !b.lessons.length) return "";
-    var ls = b.lessons.slice(0, 7);
-    var cards = ls.map(function (l, i) {
-      return srcCard(b.id, l.title, ell("DAY " + (i + 1) + ": " + firstSent(l.action || l.summary, 1), 140));
-    }).join("");
-    var intro = "No speed reading. One action a day for 7 days, pulled straight from " + b.title + " by " + (b.author || "the author") + ". Small, boring, done. That is how a book becomes a week of your life instead of a screenshot.";
-    var nx = SEVEN_CYCLE[(SEVEN_CYCLE.indexOf(bid) + 1 + SEVEN_CYCLE.length) % SEVEN_CYCLE.length] || SEVEN_CYCLE[0];
-    return answerBlock("📅 THE 7-DAY APPLICATION CHALLENGE", intro, b.title + " · " + (b.author || "")) +
-      sourceHead(ls.length, t("7 DAYS, 7 ACTIONS")) + '<div class="aq-srcs">' + cards + "</div>" +
-      '<div class="aq-foot">' + nextBtn("📅 Challenge me with another book", "seven:" + nx) + "</div>";
+  /* the whole answer: six short sections, in the order a friend would say them */
+  function compareTwo(aId, bId) {
+    var A = bookIndex()[aId], B = bookIndex()[bId];
+    if (!A || !B || A.id === B.id) return "";
+    var nA = A.title, nB = B.title;
+    var aboutA = aboutOf(A), aboutB = aboutOf(B);
+    var lA = (A.lessons || [])[0] || {}, lB = (B.lessons || [])[0] || {};
+    var shared = sharedThemes(A, B);
+    var sameShelf = String(A.category || "").toLowerCase() === String(B.category || "").toLowerCase();
+    var m1 = minsOf(A), m2 = minsOf(B);
+    var first = m1 <= m2 ? A : B, second = m1 <= m2 ? B : A;
+    var mFirst = Math.min(m1, m2), mSecond = Math.max(m1, m2);
+
+    var s1 = "<b>" + esc(nA) + ":</b> " + esc(aboutA) + " <b>" + esc(nB) + ":</b> " + esc(aboutB);
+
+    var s2;
+    if (shared.length) {
+      s2 = "Both keep circling " + (shared[1] ? "<b>" + esc(shared[0]) + "</b> and <b>" + esc(shared[1]) + "</b>" : "<b>" + esc(shared[0]) + "</b>") +
+        ". You will meet the same idea in both books, wearing different clothes. That is a good sign: it means the idea survives two authors.";
+    } else {
+      s2 = "Almost no shared ground, and that is useful to know before you start. " +
+        esc(nA) + " opens on \u201C" + esc(String(lA.title || "")) + "\u201D, " + esc(nB) + " opens on \u201C" + esc(String(lB.title || "")) + "\u201D. " +
+        "Read them as two separate repairs, not two opinions on one question.";
+    }
+
+    var s3;
+    if (sameShelf) {
+      s3 = "They sit on the same shelf, <b>" + esc(String(A.category || "")) + "</b>, so the argument is not about the subject, it is about method. " +
+        esc(nA) + " opens with \u201C" + esc(String(lA.title || "")) + "\u201D. " + esc(nB) + " opens with \u201C" + esc(String(lB.title || "")) + "\u201D.";
+    } else {
+      s3 = esc(nA) + " comes from the <b>" + esc(String(A.category || "library")) + "</b> shelf and opens with \u201C" + esc(String(lA.title || "")) + "\u201D. " +
+        esc(nB) + " comes from <b>" + esc(String(B.category || "the library")) + "</b> and opens with \u201C" + esc(String(lB.title || "")) + "\u201D. " +
+        "Different rooms, different first question, which is exactly why reading both is worth it.";
+    }
+
+    var s4 = "Start with <b>" + esc(first.title) + "</b>. It is the shorter read, " + mFirst + " minutes here against " + mSecond +
+      ". Then read " + esc(second.title) + " while the first is still fresh, because " + (sameShelf ? "the two argue with each other" : "the second one will rewire how you heard the first") + ".";
+
+    var actA = actionOf(A), actB = actionOf(B);
+    var s5 = (actA ? "<b>From " + esc(nA) + ":</b> " + esc(actA) + " " : "") +
+      (actB ? "<b>From " + esc(nB) + ":</b> " + esc(actB) : "") +
+      " Do not start both on the same day. Three days on the first, then bring in the second.";
+
+    var html =
+      '<div class="cmp-ans">' +
+        '<p class="cmp-lead"><b>' + esc(nA) + "</b> by " + esc(A.author || "an author") + ", and <b>" + esc(nB) + "</b> by " + esc(B.author || "an author") + ". Two books, one honest comparison, no scores.</p>" +
+        '<div class="cmp-sec"><span>WHAT EACH ONE IS</span><p>' + s1 + "</p></div>" +
+        '<div class="cmp-sec"><span>WHERE THEY AGREE</span><p>' + s2 + "</p></div>" +
+        '<div class="cmp-sec"><span>WHERE THEY SPLIT</span><p>' + s3 + "</p></div>" +
+        '<div class="cmp-sec"><span>WHICH ONE FIRST</span><p>' + s4 + "</p></div>" +
+        '<div class="cmp-sec"><span>TRY THIS WEEK</span><p>' + s5 + "</p></div>" +
+      "</div>" +
+      sourceHead(2, t("THE TWO BOOKS")) +
+      '<div class="aq-srcs">' +
+        srcCard(A.id, lA.title, ell(firstSent(lA.summary || "", 1), 140)) +
+        srcCard(B.id, lB.title, ell(firstSent(lB.summary || "", 1), 140)) +
+      "</div>" +
+      '<div class="aq-foot">✦ ' + esc(t("two books, one decision, yours")) + " ✦</div>";
+    return html;
   }
 
-  /* ---- mode 7: myth vs lesson ---- */
-  function mythHtml(offset) {
-    var ms = MDD().MYTHS;
-    if (!ms.length) return "";
-    var start = (((weekNum(5) + (offset || 0)) % ms.length) + ms.length) % ms.length;
-    var picks = [ms[start], ms[(start + 1) % ms.length]];
-    var blocks = picks.map(function (m2) {
-      return '<div class="aq-mythrow">' +
-          '<div class="aq-myth"><span>🃏 THE MYTH</span>' + esc("\u201C" + m2.myth + "\u201D") + "</div>" +
-          '<div class="aq-myth aq-myth--t"><span>📖 THE LESSON</span>' + esc(m2.truth) + "</div>" +
-          srcCard(m2.book, "", bookBlurb(m2.book)) +
-        "</div>";
-    }).join("");
-    return answerBlock("🃏 MYTH vs LESSON", "Popular advice on top, what the books actually say underneath. Two this week; the deck keeps shuffling, tap for two more.", "myths die here") +
-      '<div class="aq-srcs">' + blocks + "</div>" +
-      '<div class="aq-foot">' + nextBtn("🃏 Two more myths", "myth:" + (start + 2)) + "</div>";
+  /* ---- the picker: two slots, a search, one button ---- */
+  var cmpA = "", cmpB = "", cmpSlot = "A";
+  function cmpBook(id) { return bookIndex()[id] || null; }
+  function cmpBuild() {
+    if (!root || root.querySelector("#tsb-cmp")) return;
+    var d = document.createElement("div");
+    d.id = "tsb-cmp";
+    d.className = "aq-lib aq-lib--cmp";
+    d.setAttribute("role", "dialog");
+    d.setAttribute("aria-label", "Compare two books");
+    d.innerHTML =
+      '<div class="aq-lib__head">' +
+        '<span class="aq-lib__t">⚖️ ' + esc(t("COMPARE TWO BOOKS")) + "</span>" +
+        '<span class="aq-lib__s">' + esc(t("pick two, get an honest read")) + "</span>" +
+        '<button class="aq-lib__close" id="tsb-cmpclose" aria-label="Close">✕</button>' +
+      "</div>" +
+      '<div class="cmp-slots">' +
+        '<button type="button" class="cmp-slot is-on" id="cmpSlotA"><em>FIRST</em><b>Add a book</b><i>+</i></button>' +
+        '<span class="cmp-vs">vs</span>' +
+        '<button type="button" class="cmp-slot" id="cmpSlotB"><em>SECOND</em><b>Add a book</b><i>+</i></button>' +
+      "</div>" +
+      '<input id="cmpSearch" class="aq-lib__search" type="text" placeholder="' + esc(t("Search 600 books, or type a title")) + '" autocomplete="off">' +
+      '<div class="cmp-list" id="cmpList"></div>' +
+      '<button type="button" class="cmp-go" id="cmpGo" disabled>' + esc(t("Compare these two")) + "</button>";
+    root.appendChild(d);
+    d.querySelector("#tsb-cmpclose").addEventListener("click", cmpClose);
+    d.querySelector("#cmpSlotA").addEventListener("click", function () { cmpSlot = "A"; cmpPaintSlots(); cmpList(root.querySelector("#cmpSearch").value); });
+    d.querySelector("#cmpSlotB").addEventListener("click", function () { cmpSlot = "B"; cmpPaintSlots(); cmpList(root.querySelector("#cmpSearch").value); });
+    var s = d.querySelector("#cmpSearch");
+    s.addEventListener("input", function () { cmpList(s.value); });
+    d.querySelector("#cmpGo").addEventListener("click", cmpFire);
+    cmpPaintSlots();
+    cmpList("");
   }
-
-  /* ---- mode 7: from the founders' record (documented, sourced) ---- */
-  function fieldHtml(offset) {
-    var ns = MDD().FIELD;
-    if (!ns.length) return "";
-    var start = (((weekNum(7) + (offset || 0)) % ns.length) + ns.length) % ns.length;
-    var picks = [ns[start], ns[(start + 1) % ns.length]];
-    var blocks = picks.map(function (n2) {
-      return '<div class="aq-fieldnote"><span>📓 ON THE RECORD · ' + esc(n2.who) + "</span>" + esc(n2.note) + "</div>" +
-        srcCard(n2.book, "", bookBlurb(n2.book));
-    }).join("");
-    return answerBlock("📓 FROM THE FOUNDERS' RECORD", "Documented moves from real founders and operators, all on the public record: what they actually did, and the book in the library that teaches it. Two entries this week, tap for two more.", "on the record") +
-      '<div class="aq-srcs">' + blocks + "</div>" +
-      '<div class="aq-foot">' + nextBtn("📓 Two more from the record", "field:" + (start + 2)) + "</div>";
+  function cmpPaintSlots() {
+    ["A", "B"].forEach(function (k) {
+      var el = root.querySelector("#cmpSlot" + k);
+      if (!el) return;
+      var b = cmpBook(k === "A" ? cmpA : cmpB);
+      el.classList.toggle("is-on", cmpSlot === k);
+      el.classList.toggle("is-set", !!b);
+      el.querySelector("b").textContent = b ? b.title : "Add a book";
+      var i = el.querySelector("i");
+      if (i) i.textContent = b ? "✓" : "+";
+    });
+    var go = root.querySelector("#cmpGo");
+    if (go) {
+      var ready = !!(cmpA && cmpB && cmpA !== cmpB);
+      go.disabled = !ready;
+      go.classList.toggle("is-ready", ready);
+    }
+  }
+  function cmpList(filter) {
+    var listEl = root.querySelector("#cmpList");
+    if (!listEl) return;
+    var f = String(filter || "").trim().toLowerCase();
+    var rows = (window.BOOKS || []).filter(function (b) {
+      if (b.id === cmpA || b.id === cmpB) return false;
+      if (!f) return true;
+      return (String(b.title) + " " + String(b.author || "") + " " + String(b.category || "")).toLowerCase().indexOf(f) !== -1;
+    });
+    if (f) rows.sort(function (x, y) { return String(x.title).toLowerCase().indexOf(f) - String(y.title).toLowerCase().indexOf(f); });
+    var cap = f ? 24 : 12;
+    rows = rows.slice(0, cap);
+    listEl.innerHTML = "";
+    if (!rows.length) {
+      listEl.innerHTML = '<div class="aq-lib__empty">' + esc(t("No book matches that. Try the author, or one word from the title.")) + "</div>";
+      return;
+    }
+    rows.forEach(function (b) {
+      var row = document.createElement("button");
+      row.type = "button";
+      row.className = "cmp-row";
+      row.innerHTML = '<b>' + esc(b.title) + "</b><span>" + esc(b.author || "") + " · " + esc(String(b.readTime || "")) + "</span>";
+      row.addEventListener("click", function () { cmpPick(b.id); });
+      listEl.appendChild(row);
+    });
+  }
+  function cmpPick(id) {
+    if (cmpSlot === "A") { cmpA = id; cmpSlot = "B"; }
+    else { cmpB = id; }
+    cmpPaintSlots();
+    var s = root.querySelector("#cmpSearch");
+    if (s) s.value = "";
+    cmpList("");
+  }
+  function cmpFire() {
+    if (!cmpA || !cmpB || cmpA === cmpB) return;
+    var A = cmpBook(cmpA), B = cmpBook(cmpB);
+    var label = "Compare " + (A ? A.title : "this") + " and " + (B ? B.title : "that");
+    cmpClose();
+    modeGo("compare", cmpA + "|" + cmpB, label);
+  }
+  function cmpClose() { var d = root.querySelector("#tsb-cmp"); if (d) d.classList.remove("aq-lib--open"); }
+  function openCompare(preA) {
+    if (!root) { try { build(); } catch (e) {} }
+    if (!open_) { try { open(); } catch (e) {} }
+    cmpBuild();
+    cmpA = preA || ""; cmpB = ""; cmpSlot = preA ? "B" : "A";
+    var s = root.querySelector("#cmpSearch");
+    if (s) { s.value = ""; }
+    cmpPaintSlots();
+    cmpList("");
+    var d = root.querySelector("#tsb-cmp");
+    if (d) d.classList.add("aq-lib--open");
+    setTimeout(function () { try { s.focus(); } catch (e) {} }, 120);
+  }
+  /* "compare atomic habits and deep work" typed straight into the chat */
+  function booksInText(q) {
+    var nq = norm(q), hits = [];
+    (window.BOOKS || []).forEach(function (b) {
+      var tt = norm(b.title || "");
+      if (tt && tt.length > 3 && nq.indexOf(tt) !== -1) hits.push({ b: b, at: nq.indexOf(tt), len: tt.length });
+    });
+    hits.sort(function (x, y) { return x.at - y.at || y.len - x.len; });
+    var out = [];
+    hits.forEach(function (h) { if (!out.some(function (o) { return o.id === h.b.id; })) out.push(h.b); });
+    return out.slice(0, 2);
   }
 
   /* ---- dispatcher ---- */
   function modeRender(key, arg) {
-    if (key === "compare") {
-      var tp = arg ? MDD().TOPICS.filter(function (x) { return x.key === arg; })[0] : null;
-      var text = tp ? tp.kws.join(" ") : String(arg || "");
-      var hits = bestPerBook(text, 4);
-      return hits.length ? compareHtml(tp ? tp.label : text, hits, false) : "";
-    }
-    if (key === "decision") return decisionHtml(parseInt(arg || "0", 10) || weekNum(0));
-    if (key === "redflag") return redflagHtml(arg);
-    if (key === "before") return beforeHtml(arg || null, null);
-    if (key === "seven") return sevenHtml(arg || SEVEN_CYCLE[weekNum(2) % SEVEN_CYCLE.length]);
-    if (key === "myth") return mythHtml(arg ? parseInt(arg, 10) : 0);
-    if (key === "field") return fieldHtml(arg ? parseInt(arg, 10) : 0);
-    return "";
+    if (key !== "compare") return "";
+    var pair = String(arg || "").split("|");
+    if (pair.length === 2 && pair[0] && pair[1]) return compareTwo(pair[0], pair[1]);
+    /* no pair: an idea across four books, the old strength, kept */
+    var tp = arg ? MDD().TOPICS.filter(function (x) { return x.key === arg; })[0] : null;
+    var text = tp ? tp.kws.join(" ") : String(arg || "");
+    if (!text) return "";
+    var hits = bestPerBook(text, 4);
+    return hits.length ? compareHtml(tp ? tp.label : text, hits, false) : "";
   }
   /* free text typed while a pick-mode menu is open */
   function modeFromText(key, q) {
-    if (key === "compare") {
-      var tp = topicFromText(q);
-      var hits = bestPerBook(tp ? tp.kws.join(" ") : q, 4);
-      return hits.length ? compareHtml(tp ? tp.label : q, hits, false) : "";
-    }
-    if (key === "before") return beforeHtml(null, q);
-    if (key === "seven") {
-      var b = bookFromText(q);
-      if (!b) {
-        var top = bestPerBook(q, 1);
-        b = top.length ? top[0].book : bookIndex()[SEVEN_CYCLE[weekNum(2) % SEVEN_CYCLE.length]];
-      }
-      return b ? sevenHtml(b.id) : "";
-    }
-    return "";
+    if (key !== "compare") return "";
+    var pair = booksInText(q);
+    if (pair.length >= 2) return compareTwo(pair[0].id, pair[1].id);
+    var tp = topicFromText(q);
+    var hits = bestPerBook(tp ? tp.kws.join(" ") : q, 4);
+    return hits.length ? compareHtml(tp ? tp.label : q, hits, false) : "";
   }
-  function modeGo(key, arg, userLabel) {
+  function modeGo(key, arg, userLabel, tried) {
     if (quotaBlocked()) { paintQuota(); return; }
+    /* v344: a real comparison needs both books at full text (action plans,
+       summaries). data.js keeps them light until someone asks, so ask. */
+    if (key === "compare" && !tried) {
+      var need = String(arg || "").split("|");
+      if (need.length === 2 && need[0] && need[1] && window.TSB_LESSONS && window.TSB_LESSONS.ensure) {
+        var fullA = window.TSB_LESSONS.ready ? window.TSB_LESSONS.ready(need[0]) : true;
+        var fullB = window.TSB_LESSONS.ready ? window.TSB_LESSONS.ready(need[1]) : true;
+        if (!fullA || !fullB) {
+          /* never let a slow network hold the answer hostage: 1.6s and we
+             compare with whatever text we already have */
+          var done = false, left = 2;
+          var finish = function () { if (done) return; done = true; modeGo(key, arg, userLabel, 1); };
+          var again = function () { if (--left <= 0) finish(); };
+          setTimeout(finish, 1600);
+          try { window.TSB_LESSONS.ensure(need[0], again); } catch (e1) { again(); }
+          try { window.TSB_LESSONS.ensure(need[1], again); } catch (e2) { again(); }
+          return;
+        }
+      }
+    }
     if (!open_) { try { open(); } catch (e) {} }
     modePick = null;
     if (window.TSB_ASK_QUOTA) { try { TSB_ASK_QUOTA.consume(); } catch (e) {} }
@@ -910,52 +1090,24 @@
       renderBotAnswer(userLabel || key, html || "<div class='aq-guided'>" + t("Something went wrong, try again!") + "</div>");
     });
   }
-  /* pick-mode menu: chips for presets, typing also works */
-  function pickBubble(key) {
-    modePick = key;
-    var head = "", opts = "";
-    if (key === "compare") {
-      head = "Pick a topic and the books go side by side, lesson by lesson. Or type your own topic below.";
-      MDD().TOPICS.slice(0, 6).forEach(function (tp) {
-        opts += '<button class="aq-chip aq-chip--mini" data-axopt="' + key + ":" + tp.key + '" data-axlabel="' + esc(tp.label) + '">' + esc(tp.label) + "</button>";
-      });
-    } else if (key === "before") {
-      head = "The reads before the leap. Pick a jump, or type it: raising money, hiring fast, buying a franchise, quitting your job…";
-      MDD().SCENARIOS.slice(0, 6).forEach(function (sc) {
-        opts += '<button class="aq-chip aq-chip--mini" data-axopt="before:' + sc.key + '" data-axlabel="' + esc(sc.label) + '">' + esc(sc.label) + "</button>";
-      });
-    } else if (key === "seven") {
-      head = "One book. Seven days. One action a day from the book itself. Pick a book or type one: Atomic Habits, Deep Work…";
-      SEVEN_CYCLE.slice(0, 6).forEach(function (bid) {
-        var b = bookIndex()[bid];
-        if (b) opts += '<button class="aq-chip aq-chip--mini" data-axopt="seven:' + bid + '" data-axlabel="' + esc(b.title) + '">' + esc(b.title) + "</button>";
-      });
-    } else { return ""; }
-    return '<div class="aq-guided"><b>' + esc(head) + "</b>" +
-      '<div class="aq-optrow">' + opts + "</div>" +
-      '<div class="aq-foot aq-foot--dim">✍️ ' + esc(t("or just type it below")) + "</div></div>";
-  }
-  function showModeIntro(key, label) {
+  /* v344: the picker is a real sheet with two slots, see openCompare */
+  function pickBubble() { return ""; }
+  /* v344: the only mode opens its own two-slot picker */
+  function showModeIntro(key) {
     if (!open_) { try { open(); } catch (e) {} }
     modePick = null;
-    addMsg("user", label);
-    if (input) input.value = "";
-    setTimeout(function () {
-      var html = pickBubble(key);
-      if (html) addMsg("bot", html); /* a menu, not an answer: not saved to history */
-      else modeGo(key, null, label);
-    }, 350);
+    openCompare();
   }
 
   function renderChips() {
     var wrap = root.querySelector("#tsb-chips");
     if (!wrap) return;
     wrap.innerHTML = "";
-    /* 🎭 v292: ONE modes chip opens the grid, the chip row stays a single line */
+    /* v344: one chip, one mode, straight to the picker */
     var mdb = document.createElement("button");
-    mdb.className = "aq-chip aq-chip--modes";
-    mdb.textContent = "🎭 " + t("MODES");
-    mdb.addEventListener("click", openModes);
+    mdb.className = "aq-chip aq-chip--modes aq-chip--cmp";
+    mdb.textContent = "⚖️ " + t("COMPARE BOOKS");
+    mdb.addEventListener("click", function () { openCompare(); });
     wrap.appendChild(mdb);
     contextChips().slice(0, 5).forEach(function (c, i) {
       var b = document.createElement("button");
@@ -1161,6 +1313,12 @@
     if (send._all === 1) return;
     /* ⏳ v300 free quota: one honest card instead of a silent fourth answer */
     if (quotaBlocked()) { input.value = ""; paintQuota(); return; }
+    /* ⚖️ v344: "compare atomic habits and deep work" is a comparison, not a search */
+    if (!modePick) {
+      var cpair = booksInText(q);
+      if (cpair.length >= 2) { modeGo("compare", cpair[0].id + "|" + cpair[1].id, "Compare " + cpair[0].title + " and " + cpair[1].title); return; }
+      if (cpair.length === 1 && /(\bvs\b|\bversus\b|compare)/i.test(q)) { openCompare(cpair[0].id); return; }
+    }
     if (window.TSB) { try { window.TSB.achv.award("ask-1"); } catch (e) {} }
     if (window.TSB_ASK_QUOTA) { try { TSB_ASK_QUOTA.consume(); } catch (e) {} }
     /* 🎭 v292 typed input while a pick-mode menu is open routes to that mode */
@@ -1241,13 +1399,7 @@
   /* ============ 🎭 MODES SHEET (v292): the 8 formats live in one grid,
      the chat keeps its original single-line chip bar ============ */
   var MODE_DESC = {
-    compare:  "Lessons from different books, side by side on one question",
-    decision: "The reversible moment before famous collapses",
-    redflag:  "A fresh warning sign every week, straight from the autopsies",
-    before:   "The reads before the big jumps: money, hiring, franchises",
-    seven:    "One book, seven days, one action a day",
-    myth:     "Popular advice vs what the books actually say",
-    field:    "Honest notes from readers out in the field"
+    compare: "Two books, one honest comparison, in plain English"
   };
   function renderModes() {
     var g = root.querySelector("#tsb-mdgrid");
@@ -1315,6 +1467,8 @@
     root.querySelector("#tsb-libbtn").addEventListener("click", openLib);
     root.querySelector("#tsb-libclose").addEventListener("click", closeLib);
     root.querySelector("#tsb-modesclose").addEventListener("click", closeModes);
+    var plusBtn = root.querySelector("#tsb-plus");
+    if (plusBtn) plusBtn.addEventListener("click", function () { openCompare(); });
     root.querySelector("#tsb-libsearch").addEventListener("input", function (e) { renderLib(e.target.value); });
     root.querySelector(".aq-clear").addEventListener("click", function () {
       if (!PAGE_MODE && !confirm("Clear this chat?")) return;
@@ -1370,7 +1524,7 @@
     } else {
       var askBooks = (window.BOOKS && window.BOOKS.length) || 320;
       var askGraves = (window.FAILURES && window.FAILURES.length) || 300;
-      addMsg("bot", '<div class="aq-guided">' + t("Ask anything.") + " <b>\u201C" + t("How do I stop procrastinating?") + "\u201D</b>, <b>\u201Cpaise kaise bachau?\u201D</b>, " + (window.TSB_ASK_DATA || []).length + " " + t("questions in") + " " + askBooks + " " + t("books answer") + ". " + t("Even the Graveyard warns you") + " (" + askGraves + " " + t("autopsies") + ")</div>");
+      addMsg("bot", '<div class="aq-guided">' + t("Ask anything.") + " <b>\u201C" + t("How do I stop procrastinating?") + "\u201D</b>, <b>\u201Cpaise kaise bachau?\u201D</b>, " + (window.TSB_ASK_DATA || []).length + " " + t("questions in") + " " + askBooks + " " + t("books answer") + ". " + t("Even the Graveyard warns you") + ' (<span id="aqGraves">' + askGraves + "</span> " + t("autopsies") + ")</div>");
     }
   }
 
@@ -1394,7 +1548,7 @@
           '<div class="aq-locked__chip">👑</div>' +
           '<h3>ASK THE LIBRARY IS PART OF GOLD</h3>' +
           '<p>Every answer is composed live from <b>600 books, 4,343 lessons and 400 autopsies</b>, with the exact lesson it came from, one tap away. Nothing invented, no chatbot filler.</p>' +
-          '<p class="aq-locked__modes">Seven ways to ask: compare books on one question, the decision before the disaster, red flags, seven-day plans and more.</p>' +
+          '<p class="aq-locked__modes">Ask anything, or open the plus and put two books side by side for an honest comparison.</p>' +
           '<a class="aq-locked__go" href="gold.html">👑 SEE TSB GOLD</a>' +
           '<small>The library itself stays open, every book, every lesson.</small>' +
         '</div>';
@@ -1412,6 +1566,9 @@
     var nb = (window.BOOKS || []).length;
     var nl = (window.BOOKS || []).reduce(function (a, b) { return a + (b.lessons ? b.lessons.length : 0); }, 0);
     var ng = (window.FAILURES || []).length;
+    var lim = (window.TSB_ASK_QUOTA && TSB_ASK_QUOTA.perDay) ? TSB_ASK_QUOTA.perDay() : 3;
+    var gold = (window.TSB_CONFIG && TSB_CONFIG.PAYWALL && TSB_CONFIG.PAYWALL.PLANS) || {};
+    var p99 = gold.MONTHLY || 99, p999 = gold.YEARLY || 999;
     if (!msgs.classList.contains("aq-msgs--locked")) {
       msgs.classList.add("aq-msgs--locked");
       if (chips) chips.style.display = "none";
@@ -1419,16 +1576,21 @@
       msgs.innerHTML =
         '<div class="aq-quota">' +
           '<div class="aq-quota__chip">⏳</div>' +
-          '<h3>TODAY\u2019S ' + ((window.TSB_ASK_QUOTA && TSB_ASK_QUOTA.perDay) ? TSB_ASK_QUOTA.perDay() : 5) + ' QUESTIONS ARE USED</h3>' +
-          '<p>Each one was composed live from <b>' + nb + ' books, ' + nl.toLocaleString("en-IN") + ' lessons and ' + ng + ' autopsies</b>, with the exact lesson it came from. That depth takes real work, so the daily window is ' + ((window.TSB_ASK_QUOTA && TSB_ASK_QUOTA.perDay) ? TSB_ASK_QUOTA.perDay() : 5) + ' questions every 24 hours.</p>' +
+          '<h3>TODAY\u2019S ' + lim + ' QUESTIONS ARE USED</h3>' +
+          '<p>Each one was composed live from <b>' + nb + ' books, ' + nl.toLocaleString("en-IN") + ' lessons and ' + ng + ' autopsies</b>, with the exact lesson it came from. That is real work, so the free window is ' + lim + ' a day.</p>' +
           '<p class="aq-quota__clock">Your next window opens in <b>' + (clock || "about 24h") + '</b>.</p>' +
-          '<a class="aq-quota__go" href="gold.html">👑 GO GOLD, ASK WITHOUT LIMITS</a>' +
-          '<small>The books stay open, every page, every lesson.</small>' +
+          '<div class="aq-quota__tiers">' +
+            '<a class="aq-quota__tier" href="gold.html#buy-monthly"><b>\u20b9' + p99 + ' once</b><span>10 questions a day</span></a>' +
+            '<a class="aq-quota__tier aq-quota__tier--top" href="gold.html#buy-yearly"><b>\u20b9' + p999 + ' once</b><span>ask without a limit</span></a>' +
+          '</div>' +
+          '<a class="aq-quota__go" href="gold.html">\ud83d\udc51 SEE THE TWO PASSES</a>' +
+          '<small>The books stay open, every page, every lesson. Comparing stays free.</small>' +
         '</div>';
     }
   }
   function open() {
     if (!root) build();
+    try { gravesComplete(); } catch (e) {}
     if (goldLocked()) {
       open_ = true;
       panel.classList.add("aq-panel--open");

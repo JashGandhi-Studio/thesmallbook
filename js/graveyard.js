@@ -266,154 +266,401 @@
     return t || fallback || "";
   }
 
+  /* ============================================================
+     🎴 THE GRAVE CARD (v345)
+
+     One card, one story, made to be posted. Portrait 4:5 at 1080x1350,
+     which is what WhatsApp, Instagram and X all crop kindly, drawn on the
+     app's own paper rather than a black rectangle so it looks like the
+     book it came from.
+
+     The rule while drawing: no emoji (they render differently on every
+     phone), no font that has not finished loading, no line that can spill
+     outside its box. Everything is measured, wrapped, and cut with an
+     ellipsis if a long autopsy runs long.
+
+     Sharing is a sheet: you SEE the card before it leaves, then Share,
+     Download or Copy. On a phone Share hands the PNG to WhatsApp; on a
+     desktop the same button copies or downloads, never dead-ends.
+     ============================================================ */
+  var CARD_W = 1080, CARD_H = 1350;
+  var INK = "#16130F", PAPER = "#FBF8F1", MUTED = "#6E6658",
+      YELLOW = "#FFC800", RED = "#D7263D";
+  var BODY_F = "'Space Grotesk', Arial, Helvetica, sans-serif";
+  var HEAD_F = "'Archivo Black', 'Arial Black', Arial, sans-serif";
+
+  function cardFonts() {
+    return new Promise(function (resolve) {
+      var done = false, fin = function () { if (!done) { done = true; resolve(); } };
+      var t = setTimeout(fin, 420);
+      try {
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { clearTimeout(t); fin(); });
+        else { clearTimeout(t); fin(); }
+      } catch (e) { clearTimeout(t); fin(); }
+    });
+  }
+  function face(size, weight, family) { return (weight || 900) + " " + size + "px " + (family || HEAD_F); }
+
+  /* shorten a single over-long word so nothing ever spills past a margin */
+  function cut(ctx, text, maxW) {
+    var s = String(text || "").replace(/\s+/g, " ").trim();
+    if (ctx.measureText(s).width <= maxW) return s;
+    var lo = 0, hi = s.length;
+    while (lo < hi) {
+      var mid = Math.ceil((lo + hi) / 2);
+      if (ctx.measureText(s.slice(0, mid) + "\u2026").width <= maxW) lo = mid; else hi = mid - 1;
+    }
+    return s.slice(0, Math.max(1, lo)).replace(/[\s,;:.\u2014-]+$/, "") + "\u2026";
+  }
+
+  /* greedy wrap; caps at maxLines and ellipsizes the last line only if the
+     text really did not fit. no fixed box heights anywhere. */
+  function wrap(ctx, text, maxW, maxLines) {
+    var words = String(text || "").replace(/\s+/g, " ").trim().split(" ").filter(Boolean);
+    var out = [], line = "", i;
+    for (i = 0; i < words.length; i++) {
+      var next = line ? line + " " + words[i] : words[i];
+      if (ctx.measureText(next).width <= maxW) { line = next; continue; }
+      if (line) out.push(line);
+      line = words[i];
+      if (ctx.measureText(line).width > maxW) { line = cut(ctx, line, maxW); }
+    }
+    if (line) out.push(line);
+    if (out.length > maxLines) {
+      out = out.slice(0, maxLines);
+      /* give the ellipsis room by dropping whole words, never letters */
+      var ln = out[maxLines - 1];
+      while (ln && ctx.measureText(ln + "\u2026").width > maxW) ln = ln.replace(/\s*\S+$/, "");
+      out[maxLines - 1] = (ln || out[maxLines - 1].slice(0, 1)) + "\u2026";
+    }
+    return out;
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    var rr = Math.min(r, h / 2, w / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + rr, y);
+    ctx.arcTo(x + w, y, x + w, y + h, rr);
+    ctx.arcTo(x + w, y + h, x, y + h, rr);
+    ctx.arcTo(x, y + h, x, y, rr);
+    ctx.arcTo(x, y, x + w, y, rr);
+    ctx.closePath();
+  }
+
+  /* ============================================================
+     🎴 THE GRAVE CARD (v345)
+
+     1080x1350, which is the 4:5 that WhatsApp, Instagram and X all crop
+     kindly. Drawn on the app's own paper so a posted card looks like it
+     came out of the book, not out of a template.
+
+     Two rules while drawing: everything is measured before it is placed
+     (so no sentence is ever sliced by a fixed box), and the type steps
+     down a size if a long autopsy needs the room. Nothing here depends
+     on an emoji font, a network image, or the user's theme.
+     ============================================================ */
   async function renderGraveCard(f) {
-    const W = 1080, H = 1920;
-    const canvas = document.createElement("canvas");
+    await cardFonts();
+    var W = CARD_W, H = CARD_H, M = 78, BOXW = W - M * 2;
+    var canvas = document.createElement("canvas");
     canvas.width = W; canvas.height = H;
-    const ctx = canvas.getContext("2d");
+    var ctx = canvas.getContext("2d");
+    ctx.textAlign = "left"; ctx.textBaseline = "top";
 
-    // live (translated) text if the grave is on screen
-    const graveEl = [...document.querySelectorAll(".grave")].find(g => g.querySelector(`[data-shareGrave="${f.id}"]`));
-    const tName = liveGraveText(graveEl, ".grave__name", f.name);
-    const tTitle = liveGraveText(graveEl, ".grave__epitaph", f.title);
-    const tMistake = liveGraveText(graveEl, ".grave__section--mistake p", f.mistake);
-    const tLesson = liveGraveText(graveEl, ".grave__section--lesson p", f.lesson);
+    /* the autopsy on screen wins, so a translated grave makes a translated
+       card. fall back to the record itself. */
+    var graveEl = [].slice.call(document.querySelectorAll(".autopsy")).filter(function (g) { return g.dataset.graveId === f.id; })[0]
+      || [].slice.call(document.querySelectorAll(".grave")).filter(function (g) { return g.dataset.graveId === f.id; })[0];
+    if (!graveEl) {
+      var gs = document.querySelector(".gyc.on");
+      var gt = gs && gs.querySelector(".gyc-top__t");
+      if (gs && gt && gt.textContent.trim() === String(f.name).trim()) graveEl = gs;
+    }
+    var tName = liveGraveText(graveEl, ".autopsy__name, .gyc-name, .grave__name", f.name).toUpperCase();
+    var tTitle = liveGraveText(graveEl, ".autopsy__epitaph, .gyc-ep, .grave__epitaph", f.title || "");
+    var tMistake = liveGraveText(graveEl, ".autopsy__sec--mistake p, .gyc-sec--mistake p, .grave__section--mistake p", f.mistake || "");
+    var tLesson = liveGraveText(graveEl, ".autopsy__sec--lesson p, .gyc-sec--lesson p, .grave__section--lesson p", f.lesson || "");
+    var tLoss = String(f.loss || "").replace(/^[\u{1F300}-\u{1FAFF}\u2600-\u27BF\s]+/u, "").trim();
+    var tCause = causeOf(f).replace(/^CAUSE OF DEATH:\s*/i, "").toUpperCase();
+    var no = F.indexOf(f) + 1;
 
-    // dark graveyard background
-    ctx.fillStyle = "#120404";
-    ctx.fillRect(0, 0, W, H);
-    // faint dots
-    ctx.fillStyle = "rgba(242,234,216,.05)";
-    for (let x = 22; x < W; x += 46)
-      for (let y = 22; y < H; y += 46) { ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); }
+    /* ---------- one layout pass per type size, smallest that fits ---------- */
+    function measure(S) {
+      var L = {};
+      L.S = S;
+      L.name = Math.round((tName.length > 26 ? 60 : tName.length > 15 ? 80 : 96) * S);
+      ctx.font = face(L.name, 900);
+      L.nLines = wrap(ctx, tName, BOXW, 3);
+      L.nameLH = Math.round(L.name * 1.0);
 
-    // top strip
-    ctx.fillStyle = "#ff5252";
-    ctx.fillRect(0, 0, W, 76);
-    ctx.fillStyle = "#120404";
-    ctx.font = "900 30px 'Archivo Black', Arial";
-    ctx.textAlign = "center";
-    ctx.fillText("💀 THE GRAVEYARD 💀", W / 2, 50);
+      L.meta = Math.round(29 * S);
+      ctx.font = face(L.meta, 700, BODY_F);
+      L.metaText = cut(ctx, [f.year, f.category].filter(Boolean).join("  \u00B7  ").toUpperCase(), BOXW - 260);
+      L.metaLH = Math.round(42 * S);
 
-    // tombstone
-    ctx.save();
-    ctx.translate(W / 2, 430);
-    const tw = 400, th = 480;
-    // stone shadow
-    ctx.fillStyle = "#000";
-    ctx.beginPath();
-    ctx.moveTo(-tw/2 + 14, th/2 + 14);
-    ctx.lineTo(-tw/2 + 14, -th/2 + 200 + 14);
-    ctx.arc(14, -th/2 + 200 + 14, tw/2, Math.PI, 0);
-    ctx.lineTo(tw/2 + 14, th/2 + 14);
-    ctx.closePath(); ctx.fill();
-    // stone
-    ctx.fillStyle = "#6b7280";
-    ctx.beginPath();
-    ctx.moveTo(-tw/2, th/2);
-    ctx.lineTo(-tw/2, -th/2 + 200);
-    ctx.arc(0, -th/2 + 200, tw/2, Math.PI, 0);
-    ctx.lineTo(tw/2, th/2);
-    ctx.closePath(); ctx.fill();
-    ctx.lineWidth = 8; ctx.strokeStyle = "#f2ead8"; ctx.stroke();
-    // engravings
-    ctx.fillStyle = "#f2ead8";
-    ctx.font = "900 44px 'Archivo Black', Arial";
-    ctx.fillText("R.I.P.", 0, -130);
-    ctx.font = "120px Arial";
-    ctx.fillText(f.emoji, 0, 30);
-    ctx.font = "bold 34px 'Space Grotesk', Arial";
-    ctx.fillText(String(f.year), 0, 120);
-    // grass line
-    ctx.strokeStyle = "#f2ead8"; ctx.lineWidth = 5;
-    ctx.beginPath(); ctx.moveTo(-tw/2 - 80, th/2 + 4); ctx.lineTo(tw/2 + 80, th/2 + 4); ctx.stroke();
-    ctx.restore();
+      L.ep = Math.round(44 * S);
+      L.epLH = Math.round(L.ep * 1.26);
+      ctx.font = "italic 600 " + L.ep + "px Georgia, 'Times New Roman', serif";
+      L.epLines = tTitle ? wrap(ctx, /“|”|^["']/.test(tTitle) ? tTitle : "\u201C" + tTitle + "\u201D", BOXW, 2) : [];
 
-    // name
-    ctx.fillStyle = "#f2ead8";
-    ctx.textAlign = "center";
-    let nSize = tName.length > 20 ? 56 : 68;
-    ctx.font = `900 ${nSize}px 'Archivo Black', Arial`;
-    let y = 780;
-    gwrap(ctx, tName.toUpperCase(), W - 200).slice(0, 2).forEach((ln) => { ctx.fillText(ln, W / 2, y); y += nSize + 10; });
+      L.causeH = Math.round(50 * S);
+      L.cause = Math.round(26 * S);
+      ctx.font = face(L.cause, 900);
 
-    // epitaph
-    ctx.fillStyle = "#b3a98f";
-    ctx.font = "600 32px 'Space Grotesk', Arial";
-    gwrap(ctx, tTitle, W - 240).slice(0, 2).forEach((ln) => { ctx.fillText(ln, W / 2, y); y += 44; });
-    y += 16;
+      L.gap = Math.round(28 * S);
 
-    // loss tag
-    ctx.font = "bold 30px 'Space Grotesk', Arial";
-    const lossTxt = "💸 " + f.loss;
-    const lw = ctx.measureText(lossTxt).width + 60;
-    ctx.fillStyle = "#ff5252";
-    ctx.fillRect((W - lw) / 2, y - 6, lw, 58);
-    ctx.strokeStyle = "#f2ead8"; ctx.lineWidth = 4;
-    ctx.strokeRect((W - lw) / 2, y - 6, lw, 58);
-    ctx.fillStyle = "#fff";
-    ctx.fillText(lossTxt, W / 2, y + 34);
-    y += 110;
+      L.lossSize = Math.round(28 * S);
+      L.lossLH = Math.round(38 * S);
+      ctx.font = face(L.lossSize, 900);
+      L.lossLines = wrap(ctx, "LOST  " + tLoss.toUpperCase(), BOXW - 56, 2);
+      L.tagH = Math.round(26 * S) + L.lossLines.length * L.lossLH + Math.round(20 * S);
 
-    // fatal mistake box
+      L.body = Math.round(35 * S);
+      L.bodyLH = Math.round(L.body * 1.34);
+      L.label = Math.round(25 * S);
+      L.inner = Math.round(32 * S);
+      var innerW = BOXW - L.inner * 2;
+      L.boxHead = L.inner + Math.round(28 * S) + Math.round(12 * S);
+      ctx.font = face(L.body, 500, BODY_F);
+      L.mLines = wrap(ctx, tMistake, innerW, 4);
+      L.lLines = wrap(ctx, tLesson, innerW, 4);
+      L.mH = L.boxHead + L.mLines.length * L.bodyLH + L.inner;
+      L.lH = L.boxHead + L.lLines.length * L.bodyLH + L.inner;
+
+      L.endH = Math.round(64 * S);
+      L.footH = 118;
+      L.top = 92 + Math.round(42 * S);
+      L.nLines.forEach(function () {});
+
+      var y = L.top;
+      L.yName = y; y += L.nLines.length * L.nameLH + Math.round(4 * S);
+      L.yMeta = y; y += L.metaLH;
+      L.yRule = y; y += 8 + Math.round(18 * S);
+      L.yEp = y; if (L.epLines.length) y += L.epLines.length * L.epLH + Math.round(4 * S);
+      L.yCause = y + Math.round(6 * S); y = L.yCause + L.causeH + L.gap;
+      L.yTag = y; y += L.tagH + L.gap;
+      L.yMistake = y; y += L.mH + L.gap;
+      L.yLesson = y; y += L.lH;
+      L.endTop = H - L.footH - Math.round(24 * S) - L.endH;
+      L.fits = y <= L.endTop - Math.max(24, Math.round(20 * S));
+      L.slack = (L.endTop - Math.max(36, Math.round(26 * S))) - y;
+      return L;
+    }
+
+    /* start big and step down: a four-word autopsy should look like a
+       poster, a 600-character one should still breathe inside its boxes */
+    var SCALES = [1.3, 1.22, 1.14, 1.06, 1, 0.94, 0.88, 0.82, 0.76, 0.7, 0.64];
+    var L = null;
+    for (var si = 0; si < SCALES.length; si++) { L = measure(SCALES[si]); if (L.fits) break; }
+    /* whatever room is left goes into the gaps, a little at a time, so the
+       page never pools one big hole in the middle of the card */
+    if (L.slack > 0) {
+      var each = Math.max(0, Math.min(Math.round(30 * L.S), Math.round(L.slack / 3)));
+      L.yTag += each; L.yMistake += each * 2; L.yLesson += each * 3;
+      L.slack -= each * 3;
+    }
+    if (L.slack > 0) { L.yLesson += L.slack; }
+
+    /* ---------- paper ---------- */
+    ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "rgba(22,19,15,.05)";
+    for (var dx = 30; dx < W; dx += 40) for (var dy = 30; dy < H; dy += 40) { ctx.beginPath(); ctx.arc(dx, dy, 2, 0, 7); ctx.fill(); }
+    var wash = ctx.createRadialGradient(W * .5, 280, 40, W * .5, 280, 540);
+    wash.addColorStop(0, "rgba(255,200,0,.20)");
+    wash.addColorStop(1, "rgba(255,200,0,0)");
+    ctx.fillStyle = wash; ctx.fillRect(0, 0, W, 760);
+
+    /* ---------- top strip ---------- */
+    ctx.fillStyle = INK; ctx.fillRect(0, 0, W, 92);
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = YELLOW; ctx.font = face(28, 900);
+    ctx.fillText("THE SMALLBOOK", M, 47);
+    var bw = ctx.measureText("THE SMALLBOOK").width;
+    ctx.fillStyle = "rgba(251,248,241,.70)"; ctx.font = face(23, 500, BODY_F);
+    ctx.fillText("THE GRAVEYARD", M + bw + 26, 47);
+    ctx.textAlign = "right"; ctx.fillStyle = "rgba(251,248,241,.82)"; ctx.font = face(23, 500, BODY_F);
+    ctx.fillText("AUTOPSY " + String(no).padStart(3, "0") + " / " + F.length, W - M, 47);
     ctx.textAlign = "left";
-    const pad = 90, inner = W - pad * 2 - 60;
-    ctx.fillStyle = "#2b1414";
-    ctx.fillRect(pad, y, W - pad * 2, 240);
-    ctx.strokeStyle = "#ff5252"; ctx.lineWidth = 5;
-    ctx.strokeRect(pad, y, W - pad * 2, 240);
-    ctx.fillStyle = "#ff5252";
-    ctx.font = "900 26px 'Archivo Black', Arial";
-    ctx.fillText("☠️ THE FATAL MISTAKE", pad + 30, y + 48);
-    ctx.fillStyle = "#f2ead8";
-    ctx.font = "600 27px 'Space Grotesk', Arial";
-    gwrap(ctx, tMistake, inner).slice(0, 4).forEach((ln, i) => ctx.fillText(ln, pad + 30, y + 96 + i * 38));
-    y += 280;
 
-    // lesson box
-    ctx.fillStyle = "#10291f";
-    ctx.fillRect(pad, y, W - pad * 2, 280);
-    ctx.strokeStyle = "#00d99b"; ctx.lineWidth = 5;
-    ctx.strokeRect(pad, y, W - pad * 2, 280);
-    ctx.fillStyle = "#00d99b";
-    ctx.font = "900 26px 'Archivo Black', Arial";
-    ctx.fillText("🧠 THE LESSON (FREE FOR YOU)", pad + 30, y + 48);
-    ctx.fillStyle = "#f2ead8";
-    ctx.font = "600 27px 'Space Grotesk', Arial";
-    gwrap(ctx, tLesson, inner).slice(0, 5).forEach((ln, i) => ctx.fillText(ln, pad + 30, y + 96 + i * 38));
+    /* ---------- the name ---------- */
+    ctx.textBaseline = "top";
+    ctx.fillStyle = INK; ctx.font = face(L.name, 900);
+    var yy = L.yName;
+    L.nLines.forEach(function (ln, i) {
+      var size = i === 0 ? L.name : Math.round(L.name * .86);
+      ctx.font = face(size, 900);
+      ctx.fillText(ln, M, yy);
+      yy += L.nameLH;
+    });
 
-    // brand bar
-    const barH = 200;
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, H - barH, W, barH);
-    ctx.fillStyle = "#ff5252";
-    ctx.fillRect(0, H - barH, W, 8);
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#ffc800";
-    ctx.font = "900 60px 'Archivo Black', Arial";
-    ctx.fillText("📕 THESMALLBOOK", W / 2, H - barH + 92);
-    ctx.fillStyle = "#f2ead8";
-    ctx.font = "bold 28px 'Space Grotesk', Arial";
-    ctx.fillText("THEY PAID FULL PRICE · YOUR LESSON IS FREE", W / 2, H - barH + 140);
+    /* ---------- year, category, cause ---------- */
+    ctx.font = face(L.meta, 700, BODY_F); ctx.fillStyle = MUTED;
+    ctx.fillText(L.metaText, M, L.yMeta + 4);
+    ctx.fillStyle = RED; ctx.fillRect(M, L.yRule, 96, 8);
 
+    if (L.epLines.length) {
+      ctx.fillStyle = INK; ctx.font = "italic 600 " + L.ep + "px Georgia, 'Times New Roman', serif";
+      yy = L.yEp;
+      L.epLines.forEach(function (ln) { ctx.fillText(ln, M, yy); yy += L.epLH; });
+    }
+
+    /* cause of death: a black chip, the sharpest line on the card */
+    ctx.font = face(L.cause, 900);
+    var causeTxt = cut(ctx, "CAUSE  " + tCause, BOXW - 56);
+    ctx.fillStyle = INK;
+    roundRect(ctx, M, L.yCause, ctx.measureText(causeTxt).width + 56, L.causeH, 10); ctx.fill();
+    ctx.fillStyle = YELLOW;
+    ctx.textBaseline = "middle";
+    ctx.fillText(causeTxt, M + 28, L.yCause + L.causeH / 2 + 1);
+    ctx.textBaseline = "top";
+
+    /* ---------- what it cost ---------- */
+    ctx.fillStyle = RED;
+    roundRect(ctx, M, L.yTag, BOXW, L.tagH, 14); ctx.fill();
+    ctx.fillStyle = "#FFF7EF"; ctx.font = face(L.lossSize, 900);
+    ctx.textBaseline = "top";
+    L.lossLines.forEach(function (ln, i) { ctx.fillText(ln, M + 28, L.yTag + 26 + i * L.lossLH); });
+
+    /* ---------- the mistake ---------- */
+    ctx.fillStyle = "rgba(215,38,61,.07)";
+    roundRect(ctx, M, L.yMistake, BOXW, L.mH, 22); ctx.fill();
+    ctx.strokeStyle = "rgba(215,38,61,.5)"; ctx.lineWidth = 3;
+    roundRect(ctx, M, L.yMistake, BOXW, L.mH, 22); ctx.stroke();
+    ctx.fillStyle = RED; ctx.font = face(L.label, 900);
+    ctx.fillText("THE FATAL MISTAKE", M + L.inner, L.yMistake + L.inner);
+    ctx.fillStyle = INK; ctx.font = face(L.body, 500, BODY_F);
+    L.mLines.forEach(function (ln, i) {
+      ctx.fillText(ln, M + L.inner, L.yMistake + L.boxHead + i * L.bodyLH);
+    });
+
+    /* ---------- the lesson ---------- */
+    ctx.fillStyle = YELLOW;
+    roundRect(ctx, M, L.yLesson, BOXW, L.lH, 22); ctx.fill();
+    ctx.fillStyle = INK; ctx.font = face(L.label, 900);
+    ctx.fillText("THE LESSON - FREE FOR YOU", M + L.inner, L.yLesson + L.inner);
+    ctx.font = face(L.body, 500, BODY_F);
+    L.lLines.forEach(function (ln, i) {
+      ctx.fillText(ln, M + L.inner, L.yLesson + L.boxHead + i * L.bodyLH);
+    });
+
+    /* ---------- where to read the rest ---------- */
+    ctx.strokeStyle = "rgba(22,19,15,.22)"; ctx.lineWidth = 2;
+    ctx.setLineDash([9, 9]);
+    ctx.beginPath(); ctx.moveTo(M, L.endTop); ctx.lineTo(W - M, L.endTop); ctx.stroke();
+    ctx.setLineDash([]);
+    var endSize = Math.round(23 * L.S);
+    ctx.font = face(endSize, 900, BODY_F);
+    var linkTxt = "thesmallbook.in/graveyard";
+    var linkW = ctx.measureText(linkTxt).width;
+    ctx.fillStyle = MUTED; ctx.font = face(endSize, 700, BODY_F);
+    var endW = BOXW - linkW - 34;
+    var endPick = ["THE FALL, THE FALLOUT AND THE ANTIDOTE ARE FREE",
+                   "THE REST OF THIS AUTOPSY IS FREE",
+                   "READ THE WHOLE STORY"]
+      .filter(function (t) { return ctx.measureText(t).width <= endW; })[0];
+    ctx.fillText(endPick || "", M, L.endTop + 20);
+    ctx.textAlign = "right";
+    ctx.fillStyle = INK; ctx.font = face(endSize, 900, BODY_F);
+    ctx.fillText(linkTxt, W - M, L.endTop + 20);
+    ctx.textAlign = "left";
+
+    /* ---------- footer ---------- */
+    ctx.fillStyle = INK; ctx.fillRect(0, H - L.footH, W, L.footH);
+    ctx.fillStyle = RED; ctx.fillRect(0, H - L.footH, W, 6);
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = YELLOW; ctx.font = face(30, 900);
+    ctx.fillText("thesmallbook.in", M, H - L.footH / 2 + 4);
+    ctx.textAlign = "right";
+    ctx.fillStyle = "rgba(251,248,241,.80)"; ctx.font = face(22, 500, BODY_F);
+    ctx.fillText("THEY PAID FULL PRICE. YOUR LESSON IS FREE.", W - M, H - L.footH / 2 + 4);
+    ctx.textAlign = "left";
     return canvas;
   }
 
-  async function shareGraveCanvas(canvas, filename, text) {
-    const blob = await new Promise((r) => canvas.toBlob(r, "image/png"));
-    if (!blob) { toast("❌ Could not create image"); return; }
-    const file = new File([blob], filename, { type: "image/png" });
-    if (window.TSB) TSB.achv.award("sharer");
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try { await navigator.share({ files: [file], title: "TheSmallBook", text }); return; }
-      catch (e) { /* cancelled - fall through */ }
-    }
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = filename;
+  /* ---------- the sheet: you see it before it leaves ---------- */
+  var shareSheetEl = null, shareBlob = null, shareName = "";
+  function buildShareSheet() {
+    if (shareSheetEl) return shareSheetEl;
+    var d = document.createElement("div");
+    d.id = "gvShare";
+    d.className = "gvs";
+    d.setAttribute("role", "dialog");
+    d.setAttribute("aria-modal", "true");
+    d.setAttribute("aria-label", "Share this grave");
+    d.innerHTML =
+      '<div class="gvs__card">' +
+        '<div class="gvs__hd"><b>🎴 Your grave card</b><button class="gvs__x" type="button" aria-label="Close">✕</button></div>' +
+        '<div class="gvs__img"><img alt="Grave card"></div>' +
+        '<div class="gvs__row">' +
+          '<button class="gvs__b gvs__b--share" type="button" data-gshare>Share</button>' +
+          '<button class="gvs__b" type="button" data-gdl>Download</button>' +
+          '<button class="gvs__b" type="button" data-gcopy>Copy</button>' +
+        '</div>' +
+        '<p class="gvs__note">1080 × 1350. Posts straight to WhatsApp, Instagram or X.</p>' +
+      '</div>';
+    document.body.appendChild(d);
+    d.addEventListener("click", function (e) { if (e.target === d || e.target.closest(".gvs__x")) closeShareSheet(); });
+    d.querySelector("[data-gdl]").addEventListener("click", function () { downloadShare(); });
+    d.querySelector("[data-gshare]").addEventListener("click", function () { shareNow(this); });
+    d.querySelector("[data-gcopy]").addEventListener("click", function () { copyShare(this); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeShareSheet(); });
+    return d;
+  }
+  function openShareSheet(blob, filename, text) {
+    var d = buildShareSheet();
+    shareBlob = blob; shareName = filename; d.__text = text;
+    var img = d.querySelector(".gvs__img img");
+    if (d.__url) URL.revokeObjectURL(d.__url);
+    d.__url = URL.createObjectURL(blob);
+    img.src = d.__url;
+    d.classList.add("on");
+    document.documentElement.classList.add("gvs-lock");
+    setTimeout(function () { try { d.querySelector("[data-gshare]").focus({ preventScroll: true }); } catch (e) {} }, 120);
+  }
+  function closeShareSheet() {
+    var d = shareSheetEl; if (!d) return;
+    d.classList.remove("on");
+    document.documentElement.classList.remove("gvs-lock");
+  }
+  function fileOf() { return new File([shareBlob], shareName, { type: "image/png" }); }
+  function downloadShare() {
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(shareBlob);
+    a.download = shareName;
     a.click();
-    URL.revokeObjectURL(a.href);
-    toast("🎴 Grave card downloaded - post it anywhere!");
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+    toast("🎴 Saved. Post it anywhere.");
+  }
+  async function shareNow(btn) {
+    try {
+      var file = fileOf();
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: "TheSmallBook", text: shareSheetEl.__text });
+        if (window.TSB) TSB.achv.award("sharer");
+        closeShareSheet();
+        return;
+      }
+    } catch (e) { /* cancelled, or unsupported: fall through */ }
+    downloadShare();
+  }
+  async function copyShare(btn) {
+    try {
+      if (navigator.clipboard && window.ClipboardItem) {
+        await navigator.clipboard.write([new ClipboardItem({ "image/png": shareBlob })]);
+        btn.textContent = "Copied";
+        setTimeout(function () { btn.textContent = "Copy"; }, 1400);
+        return;
+      }
+    } catch (e) {}
+    downloadShare();
+  }
+
+  /* kept for graveyard2.js and any older caller: hand a canvas in, get the
+     same preview sheet instead of an instant download */
+  async function shareGraveCanvas(canvas, filename, text) {
+    var blob = await new Promise(function (r) { canvas.toBlob(r, "image/png"); });
+    if (!blob) { toast("\u274C Could not create the image"); return; }
+    openShareSheet(blob, filename, text);
   }
 
   grid.addEventListener("click", async (e) => {
@@ -422,9 +669,15 @@
     e.stopPropagation();
     const f = F.find((x) => x.id === btn.dataset.sharegrave || x.id === btn.getAttribute("data-shareGrave"));
     if (!f) return;
-    toast("🎨 Digging up your grave card...");
-    const canvas = await renderGraveCard(f);
-    shareGraveCanvas(canvas, `graveyard-${f.id}.png`, `💀 ${f.name} - ${f.loss}. The lesson is free on TheSmallBook.`);
+    toast("🎴 Drawing your card…");
+    try {
+      const canvas = await renderGraveCard(f);
+      const blob = await new Promise((r) => canvas.toBlob(r, "image/png"));
+      if (!blob) { toast("❌ Could not create the image"); return; }
+      openShareSheet(blob, "graveyard-" + f.id + ".png",
+        f.name + " · " + (f.year || "") + ". " + (f.lesson || "The lesson is free on TheSmallBook.") + " thesmallbook.in");
+      if (window.TSB) TSB.achv.award("sharer");
+    } catch (err) { toast("❌ Could not create the image"); }
   });
 
 

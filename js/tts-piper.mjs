@@ -114,8 +114,17 @@ async function download(tier, lang, progress) {
   /* Runtime caching is useful offline but never holds the download sheet or UI. */
   const idle = self.requestIdleCallback || function (fn) { return setTimeout(fn, 300); };
   idle(function () { cacheRuntime(); }, { timeout: 4000 });
+  /* v343: the voice is only instant if the engine is already awake. The
+     worker reads the model once and keeps the session, so doing that here
+     means the reader's next Listen makes sound in a second, not in eight. */
+  idle(function () { warm(tier, lang).catch(function () {}); }, { timeout: 8000 });
   if (progress) progress({ loaded: 1, total: 1, phase: "ready" });
   return v;
+}
+async function warm(tier, lang) {
+  const t = tier === "plus" ? "plus" : "basic";
+  await prepareWorker(t, lang || "en");
+  return true;
 }
 function script(src) {
   return new Promise(function (resolve, reject) {
@@ -208,7 +217,7 @@ function workerCall(payload, transfer, onChunk) {
 }
 function workerForVoice() {
   if (voiceWorker) return voiceWorker;
-  voiceWorker = new Worker(new URL("./tts-piper-worker.js?v=342", import.meta.url));
+  voiceWorker = new Worker(new URL("./tts-piper-worker.js?v=343", import.meta.url));
   voiceWorker.onmessage = function (event) {
     const d = event.data || {}, w = workerWaiters.get(d.id); if (!w) return;
     if (d.type === "progress") { if (w.progress) w.progress({ loaded: d.loaded, total: d.total, phase: "speaking" }); return; }
@@ -264,4 +273,4 @@ async function status() {
   for (const tier of ["basic", "plus"]) for (const lang of ["en", "hi"]) { const v = voice(tier, lang); all.push({ tier: tier, lang: lang, id: v.id, name: v.name, stored: await exists(v) }); }
   return all;
 }
-export { MODELS, PLUS_VOICES, catalog, selectVoice, download, remove, speak, speakStream, status, exists };
+export { MODELS, PLUS_VOICES, catalog, selectVoice, download, remove, speak, speakStream, status, exists, warm };

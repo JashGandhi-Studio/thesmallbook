@@ -224,6 +224,13 @@ window.TSB_CONFIG = {
     "mc-hammer-broke",
     "cambridge-analytica"
   ],
+  /* ✦ v343 · WHAT IS PAID AND WHAT IS NOT
+     Five in-house Originals are open. Every Original after them is paid:
+     the first lesson reads free, the rest unlocks for a one-time 19 rupees
+     for that single book, or Gold opens everything for a one-time 99 or 999.
+     Nobody subscribes, so nothing here can ever be cancelled.
+     js/config.js is loaded by every page, so this is the one place the rule
+     lives: book.html, reader.html and the Listen queue all ask it. */
   /* ✦ THE SMALLBOOK ORIGINALS - written in-house, credited Unknown */
   ORIGINALS: [
     "chai-stall-ceo",
@@ -306,7 +313,12 @@ window.TSB_CONFIG = {
 
   PAYWALL: {
     ENABLED: false,                    // flip to true to turn the wall on
-    FREE_ASK_PER_DAY: 5,               // free Ask questions per rolling 24h once the wall is on (Gold unlimited)
+    /* v344: the Ask window has three doors, and it is live on its own
+       (ASK_LIMITS_ON) so it does not wait for the rest of the wall.
+       free: 3 a day, the ₹99 pass: 10 a day, the ₹999 pass: no limit. */
+    FREE_ASK_PER_DAY: 3,
+    ASK_LIMITS_ON: true,
+    ASK_PER_DAY_BY_PLAN: { monthly: 10, yearly: 0 },
     PRICE_INR: 999,                    // default yearly pass
     PLANS: {
       PDF_75_DAYS: 49,
@@ -361,3 +373,51 @@ window.TSB_CONFIG = {
     "start-with-why":       "0241958229"
   }
 };
+
+/* ============================================================
+   TSB_LOCK · one answer to "may this reader see the rest of this book?"
+   Used by book.html (lesson cards), reader.html (the read view) and the
+   Listen queue. A local unlock is kept per book; Gold beats everything.
+   ============================================================ */
+(function () {
+  "use strict";
+  var KEY = "tsb_book_unlock";
+  var FREE_ORIGINALS = 5;      /* the first five Originals stay open */
+  var FREE_LESSONS = 1;        /* a locked book still gives its first lesson */
+  function gold() {
+    try { return !!(window.TSB_GOLD && window.TSB_GOLD.isGold && window.TSB_GOLD.isGold()); } catch (e) { return false; }
+  }
+  function originals() {
+    return (window.TSB_CONFIG && window.TSB_CONFIG.ORIGINALS) || [];
+  }
+  function owned() {
+    try { var v = JSON.parse(localStorage.getItem(KEY) || "[]"); return Object.prototype.toString.call(v) === "[object Array]" ? v : []; } catch (e) { return []; }
+  }
+  function owns(id) {
+    if (!id) return true;
+    if (gold()) return true;
+    return owned().indexOf(id) !== -1;
+  }
+  function isOriginal(id) { return originals().indexOf(id) !== -1; }
+  function locked(id) {
+    if (!id || owns(id)) return false;
+    return originals().indexOf(id) >= FREE_ORIGINALS;
+  }
+  function unlock(id) {
+    if (!id) return;
+    var list = owned();
+    if (list.indexOf(id) === -1) { list.push(id); try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {} }
+    try { window.dispatchEvent(new CustomEvent("tsb:unlock", { detail: { id: id } })); } catch (e) {}
+    return true;
+  }
+  window.TSB_LOCK = {
+    locked: locked,
+    owns: owns,
+    unlock: unlock,
+    isOriginal: isOriginal,
+    freeOriginals: FREE_ORIGINALS,
+    freeLessons: FREE_LESSONS,
+    bookPrice: 19,
+    goldOnce: [99, 999]
+  };
+})();

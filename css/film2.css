@@ -2068,3 +2068,134 @@ body.fst .cm-person__meta .cm-time {
 /* the "live" chip and section label line up on one baseline */
 body.fst .cm-sect--people { display: flex !important; flex-wrap: wrap; align-items: center; gap: 8px; }
 body.fst .cm-sect--people .cm-live { margin: 0; }
+
+/* ===== 41. v344 · the library's yellow focus ring, whole at last =====
+   The ring is drawn outside the field, and the library's search row sat flush
+   against a clipping column, so its two rounded ends were shaved off. The row
+   keeps a few pixels of breathing space and the glow gets a soft halo instead
+   of a hard 3px edge, which reads better on a phone anyway. */
+html.film #searchWrap { padding: 4px 5px !important; overflow: visible !important; }
+html.film #searchWrap .search,
+html.film #searchWrap form { overflow: visible !important; }
+html.film #searchWrap .search:focus-within {
+  box-shadow: inset 0 0 0 1px rgba(214, 171, 24, .55),
+              0 0 0 3px rgba(255, 200, 0, .55),
+              0 12px 28px -16px rgba(160, 110, 0, .55) !important;
+}
+html.film #searchWrap .search:focus-within::before { background: var(--f-ink); }
+/* the shelves' covers arrive as soft blocks instead of empty boxes */
+html.film .ft-card img,
+html.film .f-cover img,
+html.film .ft-row img { background: linear-gradient(100deg, #efe7d8 20%, #f7f1e6 42%, #efe7d8 62%) !important; background-size: 220% 100% !important; }
+html.film .ft-card.is-shimmer img,
+html.film .f-cover.is-shimmer img { animation: tsbShimmer344 1.15s linear infinite; }
+@keyframes tsbShimmer344 { from { background-position: 120% 0; } to { background-position: -60% 0; } }
+html.film .ft-card img.is-ready,
+html.film .f-cover img.is-ready { background: none !important; animation: none !important; }
+
+/* ============================================================
+   v345 · ONBOARDING ON SHORT SCREENS
+
+   A 360x640 phone, and every landscape phone, is shorter than the first
+   screen was drawn for, so the old build pushed "Start reading" below the
+   fold and made you scroll a welcome screen. Two fixes, both only here:
+
+   1. step one folds down: the three books are rendered smaller by
+      onboard.js (fanDims) and the stack, headline, input and pills get
+      tighter, so the whole screen fits;
+   2. the footer becomes sticky on every step, with a paper fade behind
+      it, so the button stays reachable even if a translation runs long.
+
+   Nothing in this block can fire above 800px of viewport height.
+   ============================================================ */
+/* the fan the JS built (see fanDims in onboard.js) sizes its own box, so the
+   headline never has to fight the books for space, whatever the screen is */
+.fo-s1--sm .fo-fan { height: 158px; margin: 2px -24px 6px; }
+.fo-s1--sm .fo-fan .fo-book { margin-left: -48px; top: 4px; }
+.fo-s1--sm .fo-fan .fo-fan0 { --r: -11deg; --x: -56px; --y: 7px; }
+.fo-s1--sm .fo-fan .fo-fan1 { --r: 0deg; --x: 0px; --y: -4px; }
+.fo-s1--sm .fo-fan .fo-fan2 { --r: 11deg; --x: 56px; --y: 7px; }
+.fo-s1--sm .fo-fan::before { width: 250px; height: 250px; margin: -142px 0 0 -125px; }
+
+.fo-s1--dense .fo-fan { height: 136px; margin: 0 -24px 4px; }
+.fo-s1--dense .fo-fan .fo-book { margin-left: -42px; top: 3px; }
+.fo-s1--dense .fo-fan .fo-fan0 { --r: -9deg; --x: -49px; --y: 5px; }
+.fo-s1--dense .fo-fan .fo-fan1 { --r: 0deg; --x: 0px; --y: -3px; }
+.fo-s1--dense .fo-fan .fo-fan2 { --r: 9deg; --x: 49px; --y: 5px; }
+.fo-s1--dense .fo-fan::before { width: 220px; height: 220px; margin: -128px 0 0 -110px; }
+
+.fo-s1--xs .fo-fan { height: 126px; margin: 0 -24px 4px; }
+.fo-s1--xs .fo-fan .fo-book { margin-left: -39px; top: 3px; }
+.fo-s1--xs .fo-fan .fo-fan0 { --x: -46px; --y: 6px; }
+.fo-s1--xs .fo-fan .fo-fan1 { --x: 0px; --y: -4px; }
+.fo-s1--xs .fo-fan .fo-fan2 { --x: 46px; --y: 6px; }
+.fo-s1--xs .fo-fan::before { display: none; }
+
+@media (max-height: 800px) {
+  /* 1. the button never leaves the screen */
+  .fo-s .fo-foot {
+    position: sticky; bottom: 0; z-index: 6;
+    margin-top: 12px; padding-top: 10px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(180deg, rgba(251, 248, 241, 0) 0%, var(--f-paper) 44%, var(--f-paper) 100%);
+  }
+  html.dark .fo-s .fo-foot { background: linear-gradient(180deg, rgba(21, 18, 14, 0) 0%, var(--f-paper) 44%, var(--f-paper) 100%); }
+  .fo-s .fo-foot .fo-btn { box-shadow: 0 12px 26px -16px rgba(22, 19, 15, .6); }
+
+  .fo-s1 .fo-h1 { font-size: 33px !important; line-height: 1.04 !important; margin-top: -8px !important; }
+  .fo-s1 .fo-p { margin-top: 8px; font-size: 14px; line-height: 1.4; }
+  .fo-s1 .fo-lab { margin: 14px 2px 6px; }
+  .fo-s1 .fo-lab--sm { margin-top: 12px; }
+  .fo-s1 .fo-in { height: 48px !important; border-radius: 15px !important; font-size: 16px !important; }
+  .fo-s1 .fo-pill, .fo-s1 .fo-langsel { height: 36px; }
+  .fo-s1 .fo-langs { gap: 6px; }
+  .fo-s1 .fo-top { height: 38px; margin-bottom: 2px; }
+
+  /* 3. step three: the dial gives back 70px of its own */
+  .fo-s3 .fo-dial { width: 212px; margin-top: 10px; }
+  .fo-s3 .fo-num { font-size: 50px !important; top: 32% !important; }
+  .fo-s3 .fo-unit { font-size: 11px !important; }
+  .fo-s3 .fo-year { margin-top: 10px; height: 44px; font-size: 13px !important; }
+  .fo-s3 .fo-when { gap: 6px; }
+  .fo-s3 .fo-pill { height: 36px; font-size: 13.5px; }
+
+  /* 4. step four: the shelf scrolls, the button does not */
+  .fo-s4 .fo-lead { margin-top: 10px !important; }
+  .fo-s4 .fo-list { margin-top: 10px !important; }
+}
+
+/* landscape phones: 360 tall. the fan becomes a small stack and the copy
+   that is not needed to get through the screen steps aside */
+@media (max-height: 470px) {
+  .fo-s1 .fo-h1 { font-size: 27px !important; }
+  .fo-s1 .fo-p { display: none; }
+  .fo-s1 .fo-lab, .fo-s1 .fo-lab--sm { margin: 8px 2px 5px; }
+  .fo-s3 .fo-dial { width: 176px; margin-top: 4px; }
+  .fo-s3 .fo-num { font-size: 40px !important; }
+  .fo-s3 .fo-year { margin-top: 6px; height: 40px; }
+  .fo-s .fo-h2 { font-size: 26px !important; }
+  .fo-s2 .fo-chips { max-height: 48vh; overflow-y: auto; }
+}
+
+/* 620px and under: the paragraph steps aside and the type goes dense, so a
+   320x568 phone still shows the whole welcome on one screen */
+@media (max-height: 620px) {
+  .fo-s1 { padding-bottom: 10px; }
+  .fo-s1 .fo-h1 { font-size: 29px !important; }
+  .fo-s1 .fo-p { display: none; }
+  .fo-s1 .fo-lab { margin: 10px 2px 5px; }
+  .fo-s1 .fo-lab--sm { margin-top: 9px; }
+  .fo-s1 .fo-in { height: 44px !important; }
+  .fo-s1 .fo-pill, .fo-s1 .fo-langsel { height: 34px; font-size: 13.5px; }
+  .fo-s1 .fo-langs { gap: 5px; }
+  .fo-s1 .fo-top { height: 34px; }
+}
+
+/* a chip label that runs long (or a screen that runs narrow) wraps inside its
+   own box instead of pushing the grid past the screen edge */
+.fo-chip__t { min-width: 0; line-height: 1.15; overflow-wrap: anywhere; }
+.fo-chip__t small { display: block; }
+@media (max-width: 359px) {
+  .fo-chip { height: auto; min-height: 64px; padding: 10px 12px 10px 14px; gap: 9px; }
+  .fo-chip__t { font-size: 14.5px; }
+}

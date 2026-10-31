@@ -18,19 +18,40 @@
   function cfg() {
     return (window.TSB_CONFIG && window.TSB_CONFIG.PAYWALL) || {};
   }
-  function perDay() {
-    var n = parseInt(cfg().FREE_ASK_PER_DAY, 10);
-    return isNaN(n) || n < 1 ? 5 : n;
+  /* v344: three doors. free 3 a day, the 99 pass 10 a day, the 999 pass
+     unlimited. The window runs on its own switch (ASK_LIMITS_ON) instead of
+     waiting for the whole wall, because this is the one limit we want live. */
+  function limitsOn() {
+    return cfg().ASK_LIMITS_ON !== false;
   }
-  function wallOn() {
-    return !!(window.TSB_PAYWALL && window.TSB_PAYWALL.enabled());
+  function byPlan() {
+    return cfg().ASK_PER_DAY_BY_PLAN || { monthly: 10, yearly: 0 };
+  }
+  function planKey() {
+    try {
+      var info = window.TSB_GOLD && TSB_GOLD.info ? TSB_GOLD.info() : null;
+      return String((info && info.plan) || "").toLowerCase();
+    } catch (e) { return ""; }
   }
   function isGold() {
-    return !!(window.TSB_PAYWALL && window.TSB_PAYWALL.isGold());
+    if (window.TSB_PAYWALL && window.TSB_PAYWALL.isGold) { try { return !!window.TSB_PAYWALL.isGold(); } catch (e) {} }
+    try { return !!(window.TSB_GOLD && window.TSB_GOLD.isGold && window.TSB_GOLD.isGold()); } catch (e) { return false; }
   }
-  /* Quota applies only when the wall is on and the reader is not Gold */
+  /* the top pass never meets this counter */
+  function isTop() {
+    var p2 = planKey();
+    return p2 === "yearly" || p2 === "999" || byPlan()[p2] === 0;
+  }
+  function perDay() {
+    if (isTop()) return 0;                       /* 0 means unlimited */
+    var L = byPlan(), p3 = planKey();
+    if (L[p3] !== undefined) return parseInt(L[p3], 10) || 0;
+    if (isGold()) return parseInt(L.monthly, 10) || 10;   /* paid, plan unknown */
+    var n = parseInt(cfg().FREE_ASK_PER_DAY, 10);
+    return isNaN(n) || n < 1 ? 3 : n;
+  }
   function active() {
-    return wallOn() && !isGold();
+    return limitsOn() && perDay() > 0;
   }
 
   function load() {
@@ -51,6 +72,7 @@
     return st.used || 0;
   }
   function remaining() {
+    if (!active()) return Infinity;
     return Math.max(0, perDay() - used());
   }
   function blocked() {
@@ -101,6 +123,8 @@
     msLeft: msLeft,
     hoursLeft: hoursLeft,
     resetClock: resetClock,
-    meterText: meterText
+    meterText: meterText,
+    tier: function () { return isTop() ? "unlimited" : (isGold() ? "plan" : "free"); },
+    plan: planKey
   };
 })();

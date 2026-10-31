@@ -490,3 +490,21 @@ alter table public.posts add column if not exists no_download boolean not null d
 After running: the Delete button really removes the post for everyone (likes, comments
 and notifications cleared too), changing your photo updates it on every story you've
 published, DMs show read ticks, and uploaded media is view-only by default.
+
+## SQL #11 - v344: "is typing…" three dots in messages  *(additive, re-runnable)*
+
+Paste `supabase/sql/UPDATE-v344-typing.sql` into the SQL Editor and press Run.
+It creates one small table, `public.dm_typing`, where each person keeps exactly
+one row: who they are, which thread they are in, and the second they last typed.
+Nothing about what they typed is stored anywhere.
+
+Rules it sets:
+- you can write only your own row
+- you can read only a row that names you as the other side of the thread
+- the row is overwritten every three seconds while you type, and the app deletes
+  it when you send, blur the field, or stay idle for seven seconds
+
+After running: open a thread on two phones, start typing on one — the other sees
+a small paper bubble with three dots that breathes: *"Ana is typing"*. Nothing to
+enable, nothing to dismiss; if the SQL has not been run, the app simply never
+shows the dots and no error appears anywhere.

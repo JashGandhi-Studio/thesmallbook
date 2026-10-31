@@ -344,6 +344,7 @@
     document.body.insertBefore(ft, hero || anchor);
     document.body.insertBefore(lh, hero || anchor);
     function paint() { ft.innerHTML = todayHtml(); setTimeout(function () { ft.querySelectorAll(".ft-bar i").forEach(function (i) { i.style.width = i.getAttribute("data-w") + "%"; }); }, 60); }
+    view._vt = 0;
     function view(animate) {
       var lib = isLibHash();
       function apply() {
@@ -351,7 +352,20 @@
         setTab(lib ? "library" : "home");
         window.scrollTo(0, 0);
       }
-      if (animate && document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.startViewTransition(apply); else apply();
+      /* v344: one transition at a time. A hash change and a tap can land in
+         the same frame, and a second View Transition on top of the first is
+         skipped by the browser (and shows up as an error). Inside 220ms we
+         just swap the view; the motion layer animates the scene change. */
+      var now = Date.now();
+      var canVT = animate && document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!canVT || now - view._vt < 220) { apply(); return; }
+      view._vt = now;
+      try {
+        var vt = document.startViewTransition(apply);
+        ["finished", "ready", "updateCallbackDone"].forEach(function (k) {
+          if (vt && vt[k] && vt[k].catch) vt[k].catch(function () {});
+        });
+      } catch (e) { apply(); }
     }
     var si = document.getElementById("searchInput"); if (si) { si.setAttribute("placeholder", "Books, authors, ideas"); si.setAttribute("enterkeyhint", "search"); si.setAttribute("aria-label", "Search " + books().length + " books"); si.setAttribute("type", "search"); }
     var sg = document.getElementById("searchGo"); if (sg) sg.textContent = "Find";
@@ -882,11 +896,11 @@
         (m === "pdf" ? '<div class="fgy-card fgy-card--pdf"><span class="fgy-seal">' + ICON2.check + '</span><div><b>Your PDF pass is on.</b><small>Unlimited cheat-sheets' + (until() ? " until " + esc(until()) : "") + ". Gold adds everything below.</small></div></div>" : "") +
         '<ul class="fg-list">' + F.map(function (f, i) { return '<li style="--i:' + i + '"><span class="fg-c">' + ICON2.check + "</span>" + esc(f[0]) + (f[1] ? "<em>" + f[1] + "</em>" : "") + "</li>"; }).join("") + "</ul>" +
         '<div class="fg-plans" role="radiogroup" aria-label="Choose a plan">' +
-          '<button type="button" class="fg-plan' + (plan === "m" ? " on" : "") + '" role="radio" aria-checked="' + (plan === "m") + '" data-fplan="m"><small>Monthly</small><b>\u20b999<span> a month</span></b><i>Cancel anytime</i></button>' +
-          '<button type="button" class="fg-plan' + (plan === "y" ? " on" : "") + '" role="radio" aria-checked="' + (plan === "y") + '" data-fplan="y"><span class="fg-save">SAVE 16%</span><small>Yearly</small><b>\u20b9999<span> a year</span></b><i>About \u20b983 a month</i></button>' +
+          '<button type="button" class="fg-plan' + (plan === "m" ? " on" : "") + '" role="radio" aria-checked="' + (plan === "m") + '" data-fplan="m"><small>Gold 99</small><b>\u20b999<span> once</span></b><i>One payment, nothing renews</i></button>' +
+          '<button type="button" class="fg-plan' + (plan === "y" ? " on" : "") + '" role="radio" aria-checked="' + (plan === "y") + '" data-fplan="y"><span class="fg-save">BEST VALUE</span><small>Gold forever</small><b>\u20b9999<span> once</span></b><i>One payment for life</i></button>' +
         "</div>" +
-        '<button type="button" class="fg-cta" id="fgCta"><span class="fg-shim"></span><span class="fg-cta__t">' + (plan === "y" ? "Start Gold \u00b7 \u20b9999 a year" : "Start Gold \u00b7 \u20b999 a month") + "</span></button>" +
-        '<p class="fg-fine">Pay once with UPI. No auto-debit. ' + (m === "pdf" ? "" : 'Just want the PDFs? <button type="button" class="fg-link" data-fpdf>A 75-day pass is \u20b949</button>') + "</p>" +
+        '<button type="button" class="fg-cta" id="fgCta"><span class="fg-shim"></span><span class="fg-cta__t">' + (plan === "y" ? "Get Gold \u00b7 \u20b9999 once" : "Get Gold \u00b7 \u20b999 once") + "</span></button>" +
+        '<p class="fg-fine">One-time payment on UPI. Nothing to renew, nothing to cancel. ' + (m === "pdf" ? "" : 'Just want the PDFs? <button type="button" class="fg-link" data-fpdf>A 75-day pass is \u20b949</button>') + "</p>" +
         '<p class="fg-fine"><button type="button" class="fg-link" data-fact>Have a code?</button></p>' +
         '<button type="button" class="fg-more" id="fgMore" aria-expanded="false">See everything in Gold ' + ICON2.chev + "</button>";
     }
@@ -894,7 +908,7 @@
     function setPlan(v) {
       plan = v;
       p.querySelectorAll(".fg-plan").forEach(function (b) { var on = b.getAttribute("data-fplan") === v; b.classList.toggle("on", on); b.setAttribute("aria-checked", on ? "true" : "false"); });
-      var t = $(".fg-cta__t", p); if (t) t.textContent = v === "y" ? "Start Gold \u00b7 \u20b9999 a year" : "Start Gold \u00b7 \u20b999 a month";
+      var t = $(".fg-cta__t", p); if (t) t.textContent = v === "y" ? "Get Gold \u00b7 \u20b9999 once" : "Get Gold \u00b7 \u20b999 once";
     }
     function expand(target) {
       root.classList.remove("fg-collapsed");

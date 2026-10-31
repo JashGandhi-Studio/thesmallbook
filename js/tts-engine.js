@@ -268,7 +268,7 @@ window.TTS_ENGINE = (function () {
   function getModelApi() {
     if (modelApi) return Promise.resolve(modelApi);
     if (modelLoading) return modelLoading;
-    modelLoading = import("./tts-piper.mjs?v=342").then(function (m) { modelApi = m; return m; }).catch(function (e) { modelLoading = null; throw e; });
+    modelLoading = import("./tts-piper.mjs?v=343").then(function (m) { modelApi = m; return m; }).catch(function (e) { modelLoading = null; throw e; });
     return modelLoading;
   }
   function modelVoiceName() {
@@ -1333,4 +1333,21 @@ window.TTS_ENGINE = (function () {
     get provider() { return provider; },
     onProgress: (fn) => { onProgress = fn; }
   };
+
+  /* v343 · A VOICE THAT IS ALREADY AWAKE
+     Reading the 63 MB model into the worker takes a few seconds on a phone.
+     Doing it when the reader taps Listen is what made the first sentence late
+     even after the download. If this device already owns a voice, wake it in
+     the background while the page settles: nothing plays, nothing prompts,
+     and the next Listen makes sound in about a second. */
+  try {
+    if (modelChoice() && !voiceSkipped() && modelLang(currentLang())) {
+      var warmIdle = window.requestIdleCallback || function (fn) { return setTimeout(fn, 2200); };
+      warmIdle(function () {
+        getModelApi().then(function (api) {
+          if (api && api.warm) api.warm(modelChoice(), modelLang(currentLang()));
+        }).catch(function () {});
+      }, { timeout: 6000 });
+    }
+  } catch (e) {}
 })();

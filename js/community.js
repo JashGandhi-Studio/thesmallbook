@@ -648,6 +648,68 @@
     if (hidden.indexOf(mu.id) < 0) hidden.push(mu.id);
     await api("messages?id=eq." + msgId, { method: "PATCH", body: { hidden_for: hidden } });
   }
+  /* ------------------------------------------------------------------ v344
+     "IS TYPING…"
+
+     One row per person, overwritten while they type: your id, the thread
+     you are in, the second you last typed. The other side polls that row
+     and, if it is fresher than six seconds, shows three dots. Nothing
+     about WHAT you typed is stored, and a person who stops typing simply
+     lets the row go stale - six seconds and the dots are gone on their own.
+
+     If supabase/sql/UPDATE-v344-typing.sql has not been run, typingReady()
+     comes back false and every call below returns quietly: no errors, no
+     console noise, the thread simply never shows the dots.
+     ------------------------------------------------------------------ */
+  var TY = null, TY_PROMISE = null, TY_LAST = 0;
+  async function typingReady() {
+    if (TY !== null) return TY;
+    if (!TY_PROMISE) {
+      TY_PROMISE = (async function () {
+        try { var r = await api("dm_typing?select=at&limit=1"); TY = Array.isArray(r); }
+        catch (e) { TY = false; }                 /* 404 / 42501 -> not created yet */
+        return TY;
+      })();
+    }
+    return TY_PROMISE;
+  }
+  async function typingPing(peerId) {
+    if (!api || !signedIn() || !peerId) return false;
+    var now = Date.now();
+    if (now - TY_LAST < 3000) return false;       /* one write every three seconds */
+    TY_LAST = now;
+    if (!(await typingReady())) return false;
+    var mu = me(); if (!mu) return false;
+    try {
+      await api("dm_typing?on_conflict=user_id", {
+        method: "POST",
+        headers: { Prefer: "resolution=merge-duplicates,return=minimal" },
+        body: { user_id: mu.id, peer_id: peerId, at: new Date().toISOString() }
+      });
+      return true;
+    } catch (e) { return false; }
+  }
+  /* milliseconds since the peer last typed in THIS thread, or 0 */
+  async function typingOf(peerId) {
+    if (!api || !signedIn() || !peerId) return 0;
+    if (!(await typingReady())) return 0;
+    var mu = me(); if (!mu) return 0;
+    try {
+      var rows = await api("dm_typing?select=at&user_id=eq." + peerId + "&peer_id=eq." + mu.id + "&limit=1");
+      var at = rows && rows[0] && Date.parse(rows[0].at);
+      if (!at) return 0;
+      var age = Date.now() - at;
+      return age >= 0 && age < 15000 ? Math.max(age, 1) : 0;   /* a device clock can run fast */
+    } catch (e) { return 0; }
+  }
+  async function typingClear() {
+    if (!api || !signedIn()) return false;
+    if (!(await typingReady())) return false;
+    var mu = me(); if (!mu) return false;
+    try { await api("dm_typing?user_id=eq." + mu.id, { method: "DELETE" }); } catch (e) {}
+    return true;
+  }
+
   async function clearThread(uid) {
     if (!api || !signedIn()) throw new Error("sign-in");
     var mu = me();
@@ -1819,6 +1881,8 @@
     boot: boot, countLessons: countLessons, say: say,
     myMessages: myMessages, conversations: conversations, threadWith: threadWith, sendDM: sendDM, markThreadRead: markThreadRead,
     editDM: editDM, deleteDM: deleteDM, hideDM: hideDM, clearThread: clearThread,
+    /* v344: the three dots */
+    typingReady: typingReady, typingPing: typingPing, typingOf: typingOf, typingClear: typingClear,
     syncProgress: syncProgress, syncInterests: syncInterests, icon: icon,
     listComments: listComments, addComment: addComment,
     followInfo: followInfo, setFollow: setFollow, followingIds: followingIds, followerRows: followerRows,

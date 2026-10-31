@@ -81,6 +81,32 @@
     });
   }
 
+  /* v343 · A PAID ORIGINAL STOPS WHERE IT IS SOLD
+     The read view used to hand over every lesson of every Original, which
+     meant the paid ones were free the moment a reader opened this page.
+     Five Originals stay open. In a paid one the first lesson reads in full,
+     then the book closes on one honest card: 19 rupees once for this book,
+     or Gold for everything. Nothing here is a subscription. */
+  var LOCK = window.TSB_LOCK || null;
+  if (LOCK && LOCK.locked(book.id)) {
+    var free = 1 + (LOCK.freeLessons || 1);        /* the big idea page + lesson one */
+    pages = pages.slice(0, free);
+    pages.push({
+      title: 'Keep reading this Original',
+      meta: 'ONE-TIME UNLOCK',
+      paywall: true,
+      content: '<p><strong>You have read the opening of this TheSmallBook Original.</strong> The rest of it, every lesson, the action plan and the quotes, is yours for a one-time '
+        + LOCK.bookPrice + ' rupees on this book.</p>'
+        + '<div class="rm-callout"><b>\u2726 THIS BOOK, ONCE</b>'
+        + '<p style="margin:6px 0 12px">Pay ' + LOCK.bookPrice + ' rupees one time and this book stays open on your account forever. No subscription, nothing to cancel.</p>'
+        + '<a class="btn btn--yellow" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:800" href="gold.html?book=' + encodeURIComponent(book.id) + '#single">Unlock this book \u00b7 \u20b9' + LOCK.bookPrice + '</a></div>'
+        + '<div class="rm-callout"><b>\u2726 OR GOLD, ALSO ONCE</b>'
+        + '<p style="margin:6px 0 12px">99 rupees opens Gold for a season, 999 makes it permanent. Both are one-time payments, never a plan you have to cancel.</p>'
+        + '<a class="btn" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:800" href="gold.html">See Gold</a></div>'
+        + '<p style="font-size:12.5px;color:var(--mute)">Sharing, highlighting and saving phrases stays open to everyone, paid book or not.</p>'
+    });
+  }
+
   var curPage = 0;
   var urlParams = new URLSearchParams(window.location.search);
   var urlPage = parseInt(urlParams.get('page'), 10);

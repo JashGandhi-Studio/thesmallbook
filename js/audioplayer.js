@@ -49,13 +49,23 @@
     if (!b) return null;
     var parts = [{ text: b.title + ", by " + b.author + ". From TheSmallBook.", pause: 700 }];
     var items = [{ label: "Introduction", sub: b.title, part: 0 }];
-    b.lessons.forEach(function (l, i) {
+    /* v343 · a paid Original narrates exactly as much as it reads. Listen
+       used to speak every lesson of every book, which quietly gave away the
+       paid Originals. The voice now stops at the same line the page does. */
+    var LOCK = window.TSB_LOCK || null;
+    var isLocked = !!(LOCK && LOCK.locked(b.id));
+    var freeLessons = isLocked ? (LOCK.freeLessons || 1) : b.lessons.length;
+    b.lessons.slice(0, freeLessons).forEach(function (l, i) {
       items.push({ label: (i + 1) + ". " + l.title, sub: "Lesson " + (i + 1) + " of " + b.lessons.length, part: parts.length });
       parts.push({ text: "Lesson " + (i + 1) + ". " + l.title + ".", pause: 180 });
       parts.push({ text: l.summary, pause: 260 });
       parts.push({ text: "From the book: " + l.example, pause: 260 });
       parts.push({ text: "Do this: " + l.action, pause: 320 });
     });
+    if (isLocked) {
+      items.push({ label: "Unlock the rest", sub: "One-time unlock", part: parts.length, gate: true });
+      parts.push({ text: "This is where this Original stops for now. The full book, every lesson, is a one-time payment of " + LOCK.bookPrice + " rupees. No subscription, nothing to cancel.", pause: 300, gate: true });
+    }
     return {
       type: "book", bookId: b.id, key: "book:" + b.id, art: b.cover || ("assets/covers/" + b.id + ".jpg"),
       title: b.title, sub: b.author + " · " + b.lessons.length + " lessons, spoken",

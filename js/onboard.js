@@ -173,6 +173,13 @@
   function top(i) {
     return '<div class="fo-top">' + (i > 0 ? '<button class="fo-back" type="button" data-back aria-label="Back">' + BACK + "</button>" : "<span></span>") + dots(i) + '<span class="fo-step">' + (i + 1) + " of " + TOTAL + "</span></div>";
   }
+  function fanDims() {
+    var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight || 800;
+    if (h <= 470) return { w: 78, h: 117, cls: " fo-s1--xs" };
+    if (h <= 620) return { w: 84, h: 126, cls: " fo-s1--sm fo-s1--dense" };
+    if (h <= 800) return { w: 96, h: 144, cls: " fo-s1--sm" };
+    return { w: 124, h: 186, cls: "" };
+  }
   function bookEl(b, w, h, cls) {
     if (!b) return "";
     return '<span class="fo-book ' + (cls || "") + '" style="width:' + w + "px;height:" + h + 'px"><img src="' + esc(coverOf(b)) + '" alt="' + esc(b.title) + '" loading="eager" decoding="async"></span>';
@@ -202,8 +209,11 @@
         '<div class="fo-foot"><button class="fo-btn" type="button" data-next>Set up again ' + ARROW + "</button></div></section>";
     }
     if (i === 0) {
-      var fan = FAN.map(function (id, k) { return bookEl(byId(id), 124, 186, "fo-fan" + k); }).join("");
-      return '<section class="fo-s fo-s1">' + top(0) +
+      /* v345: the fan is built to the height of the phone it lands on, so a
+         640px screen gets a 144px book and never has to scroll a welcome */
+      var fd = fanDims();
+      var fan = FAN.map(function (id, k) { return bookEl(byId(id), fd.w, fd.h, "fo-fan" + k); }).join("");
+      return '<section class="fo-s fo-s1' + fd.cls + '">' + top(0) +
         '<div class="fo-fan">' + fan + "</div>" +
         '<h1 class="fo-h1">Big books.<br><i>Small reads.</i></h1>' +
         '<p class="fo-p">600+ books, eight minutes each. In English, Hindi and more.</p>' +
