@@ -257,12 +257,62 @@ window.TTS_ENGINE = (function () {
   function modelChoice() {
     try {
       var c = localStorage.getItem("tsb_voice_model") || "";
-      if (c === "plus" && !goldVoice()) return "";
-      return c === "basic" || c === "plus" ? c : "";
-    } catch (e) { return ""; }
+      if (c === "plus" && !goldVoice()) return storedChoice === "basic" ? "basic" : "";
+      if (c === "basic" || c === "plus") return c;
+      /* v346: the device said a model is here - that is the choice */
+      if (storedChoice === "plus" && !goldVoice()) return "";
+      return storedChoice === "basic" || storedChoice === "plus" ? storedChoice : "";
+    } catch (e) { return storedChoice || ""; }
   }
   function setModelChoice(c) {
     try { localStorage.setItem("tsb_voice_model", c === "plus" ? "plus" : c === "basic" ? "basic" : ""); } catch (e) {}
+    storedChoice = c === "plus" ? "plus" : c === "basic" ? "basic" : "";
+  }
+  /* ============================================================
+     v346 · A DOWNLOADED VOICE IS THE DEFAULT VOICE
+     The choice used to live only in one localStorage key. Clear it, restore a
+     backup, install an update, download on another page - and a 63 MB voice
+     the reader already owns was quietly ignored while the app spoke in a
+     phone voice. Now the device is asked directly: if a model is stored, that
+     IS the choice, and it is written back so it stays the choice.
+     ============================================================ */
+  var storedChoice = "";        // the last answer from modelChoice()
+  let probeState = "idle";      // idle | running | done
+  let probeWaiters = [];
+  function probeModel() {
+    if (probeState === "done") return Promise.resolve(modelChoice());
+    if (probeState === "running") return new Promise(function (r) { probeWaiters.push(r); });
+    probeState = "running";
+    const finish = function (v) {
+      probeState = "done";
+      var w = probeWaiters; probeWaiters = [];
+      w.forEach(function (fn) { try { fn(v); } catch (e) {} });
+      return v;
+    };
+    return getModelApi().then(function (api) {
+      return api.status().then(function (all) {
+        var lang = modelLang(currentLang()) || "en";
+        var saved = ""; try { saved = localStorage.getItem("tsb_voice_model") || ""; } catch (e) {}
+        var here = all.filter(function (x) { return x.lang === lang && x.stored; });
+        /* the reader's own choice wins when it is really on the device */
+        if (saved && here.some(function (x) { return x.tier === saved; })) { storedChoice = saved; return finish(saved); }
+        /* a Gold-only voice is only ours if Gold is on right now */
+        var pick = here.filter(function (x) { return x.tier === "basic"; })[0]
+                || here.filter(function (x) { return x.tier === "plus" && goldVoice(); })[0];
+        if (pick) { setModelChoice(pick.tier); return finish(pick.tier); }
+        /* nothing stored: a stale key is not a voice */
+        if (saved) { setModelChoice(""); }
+        storedChoice = "";
+        return finish("");
+      }).catch(function () { return finish(""); });
+    }).catch(function () { return finish(""); });
+  }
+  /* bounded wait so a cold device never holds the first sentence for long */
+  function probeThen(fn, ms) {
+    var done = false;
+    var once = function (v) { if (done) return; done = true; fn(v); };
+    try { probeModel().then(once).catch(function () { once(""); }); } catch (e) { once(""); }
+    setTimeout(function () { once(modelChoice()); }, ms || 1600);
   }
   function modelLang(lang) { return baseLang(lang) === "hi" ? "hi" : baseLang(lang) === "en" ? "en" : ""; }
   function getModelApi() {
@@ -777,8 +827,20 @@ window.TTS_ENGINE = (function () {
         if (ok) settle(true); else device();
       });
     };
+    /* 0 - v346: BEFORE ANY SHEET, ASK THE DEVICE.
+       One probe per session: is a voice model already stored here? If it is,
+       it is used, without a prompt, without a wait, without a question. */
+    if (modelLang(lang) && probeState !== "done" && !item.__probed) {
+      item.__probed = true;
+      probeThen(function () {
+        if (g !== gen) return done(false);
+        if (!playing || paused) return done(false);
+        speakItem(item, done);
+      }, 1500);
+      return;
+    }
     /* 1 - the private voice model, when the reader keeps one */
-    if (modelChoice() && modelLang(lang) && modelFails < 2) {
+    if (modelChoice() && modelLang(lang) && modelFails < 3) {
       speakModel(item.text, lang, spd).then(function (okModel) {
         if (g !== gen) return done(false);
         if (okModel) return settle(true);
@@ -794,7 +856,7 @@ window.TTS_ENGINE = (function () {
     /* 2 - the first Listen on this device asks for the voice once. Download it
        and it lives here for good; choose the phone voice and we stop asking.
        Either answer ends in sound, never in a blank page. */
-    if (modelLang(lang) && !voiceSkipped() && !prompting) {
+    if (modelLang(lang) && !voiceSkipped() && !prompting && probeState === "done") {
       prompting = true;
       openVoiceModel("basic", function (ok) {
         prompting = false;
@@ -829,6 +891,27 @@ window.TTS_ENGINE = (function () {
   }
 
   /* ---------- queue runner ---------- */
+  let lastLessonIdx = -2, watch = null;
+  /* v346 · A QUEUE NEVER GOES SILENT.
+     If a voice stops mid-sentence (a worker that hung, a stream that never
+     delivered, a decoder that died), the old runner simply waited forever -
+     which is exactly "it read lesson one and then stopped". Fifteen seconds
+     with no sound now hands that one line to the phone voice and keeps the
+     book moving. */
+  function armWatch() {
+    clearWatch();
+    const at = curIdx, g = gen;
+    watch = setTimeout(function () {
+      watch = null;
+      if (!playing || paused) return;
+      if (g !== gen) return;
+      modelFails = 3;              /* a model that stalls is not the voice today */
+      try { if (currentAudio) { currentAudio.pause(); } } catch (e) {}
+      try { if (SPK) SPK.cancel(); } catch (e) {}
+      seekTo(at);
+    }, 15000);
+  }
+  function clearWatch() { if (watch) { clearTimeout(watch); watch = null; } }
   function next(forcePause) {
     if (!playing) return;
     if (paused) return;
@@ -836,11 +919,18 @@ window.TTS_ENGINE = (function () {
     updatePlayer();
     if (curIdx >= queue.length) { finish(); return; }
     const item = queue[curIdx];
+    /* v346: every lesson is a fresh chance for the voice model. Listening must
+       not fall back to the phone voice for the whole book because one line
+       failed while the model was still waking up. */
+    const lidx = item && item.meta ? item.meta.idx : -1;
+    if (lidx !== lastLessonIdx) { lastLessonIdx = lidx; modelFails = 0; }
     // intro first (separate utterance for cleaner podcast feel)
     const runItem = () => {
       if (!playing || paused) return;
       updatePlayer();
+      armWatch();
       speakItem(item, (ok) => {
+        clearWatch();
         if (!playing) return;
         if (paused) return;
         if (!ok) { /* skip broken chunk */ }
@@ -854,7 +944,9 @@ window.TTS_ENGINE = (function () {
     };
     if (item.intro && item.introSpoken !== true) {
       item.introSpoken = true;
+      armWatch();
       speakItem({ text: item.intro, lang: item.lang, pause: 0 }, () => {
+        clearWatch();
         if (!playing || paused) return;
         const t2 = setTimeout(runItem, 180);
         if (timer) clearTimeout(timer);
@@ -866,6 +958,7 @@ window.TTS_ENGINE = (function () {
   function finish() {
     playing = false;
     curIdx = 0;
+    clearWatch();
     if (timer) clearTimeout(timer);
     clearPosition();
     if (SPK) { try { SPK.cancel(); } catch (e) {} }
@@ -1023,6 +1116,7 @@ window.TTS_ENGINE = (function () {
     paused = false;
     queue = [];
     curIdx = 0;
+    try { clearWatch(); } catch (e) {}
     if (timer) clearTimeout(timer);
     if (SPK) { try { SPK.cancel(); } catch (e) {} }
     if (currentAudio) { try { currentAudio.pause(); } catch (e) {} currentAudio = null; }
@@ -1139,6 +1233,15 @@ window.TTS_ENGINE = (function () {
     startSilence();
     ensurePlayer(book);
     updatePlayer();   // paint eq/state immediately (no wait for intro)
+    /* v346 · SMOOTH START: the probe is already warm from page load, and a
+       stored voice is woken here so the first sentence lands in about a
+       second rather than after the model cold-starts. Neither call blocks
+       the queue - reading begins on this tick either way. */
+    try {
+      if (probeState === "idle") probeModel().catch(function () {});
+      var c0 = modelChoice();
+      if (c0) getModelApi().then(function (api) { if (api && api.warm) api.warm(c0, modelLang(currentLang())); }).catch(function () {});
+    } catch (eWarm) {}
     next();
   }
 
@@ -1341,13 +1444,16 @@ window.TTS_ENGINE = (function () {
      the background while the page settles: nothing plays, nothing prompts,
      and the next Listen makes sound in about a second. */
   try {
-    if (modelChoice() && !voiceSkipped() && modelLang(currentLang())) {
-      var warmIdle = window.requestIdleCallback || function (fn) { return setTimeout(fn, 2200); };
-      warmIdle(function () {
-        getModelApi().then(function (api) {
-          if (api && api.warm) api.warm(modelChoice(), modelLang(currentLang()));
-        }).catch(function () {});
-      }, { timeout: 6000 });
-    }
+    var warmIdle = window.requestIdleCallback || function (fn) { return setTimeout(fn, 1400); };
+    warmIdle(function () {
+      /* v346: ask the device, not one key. A stored voice is woken before the
+         reader taps anything, so the first sentence is not the price of it. */
+      probeModel().then(function (choice) {
+        if (!choice || voiceSkipped()) return;
+        return getModelApi().then(function (api) {
+          if (api && api.warm) return api.warm(choice, modelLang(currentLang()));
+        });
+      }).catch(function () {});
+    }, { timeout: 3000 });
   } catch (e) {}
 })();

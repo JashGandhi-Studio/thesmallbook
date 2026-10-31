@@ -54,6 +54,11 @@
        paid Originals. The voice now stops at the same line the page does. */
     var LOCK = window.TSB_LOCK || null;
     var isLocked = !!(LOCK && LOCK.locked(b.id));
+    /* v346: "locked" is not the same as "we have not asked the server yet".
+       A Gold member whose membership check was still in flight used to get a
+       queue of exactly one lesson - reading stopped after lesson one. While
+       the answer is unknown we do not truncate anything. */
+    if (isLocked && window.TSB_GOLD && TSB_GOLD.pending && TSB_GOLD.pending()) isLocked = false;
     var freeLessons = isLocked ? (LOCK.freeLessons || 1) : b.lessons.length;
     b.lessons.slice(0, freeLessons).forEach(function (l, i) {
       items.push({ label: (i + 1) + ". " + l.title, sub: "Lesson " + (i + 1) + " of " + b.lessons.length, part: parts.length });
@@ -1673,7 +1678,15 @@
   warmShow: function (show) { try { fetchFeed(show.rss || show.url || show.feed || "", function () {}); } catch (e) {} },
     playBook: function (bookId, fromLesson) {
       var go = function () { var qc = bookQueue(bookId, fromLesson); if (qc) startTTS(qc); };
-      if (window.TSB_LESSONS) TSB_LESSONS.ensure(bookId, go); else go();
+      var run = function () { if (window.TSB_LESSONS) TSB_LESSONS.ensure(bookId, go); else go(); };
+      /* v346: give membership a moment to answer before the queue is cut */
+      try {
+        if (window.TSB_GOLD && TSB_GOLD.pending && TSB_GOLD.pending() && TSB_GOLD.ready) {
+          TSB_GOLD.ready(1200).then(run, run);
+          return;
+        }
+      } catch (e) {}
+      run();
     },
     playDoc: function (key, title, sub, sections, opt) {
       var qc = docQueue(key, title, sub, sections, opt);

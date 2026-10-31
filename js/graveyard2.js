@@ -448,7 +448,11 @@
     try { if (G.toast) G.toast("Making your grave card..."); } catch (e) {}
     Promise.resolve(G.renderGraveCard(f)).then(function (cv) {
       return G.shareGraveCanvas(cv, "graveyard-" + f.id + ".png", f.name + ": " + f.loss + ". The lesson, in 2 minutes, on TheSmallBook.");
-    }).catch(function () {});
+    }).catch(function (err) {
+      /* v346: never fail silently - a dead button is worse than an honest line */
+      try { if (G.toast) G.toast("❌ Could not make the card. Try again."); } catch (e) {}
+      try { console.warn("[grave card]", err); } catch (e) {}
+    });
   }
   /* a fresh grave's public record, read in the same sheet */
   function record(title) {

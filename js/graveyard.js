@@ -588,9 +588,10 @@
     d.setAttribute("aria-modal", "true");
     d.setAttribute("aria-label", "Share this grave");
     d.innerHTML =
-      '<div class="gvs__card">' +
+      '<div class="gvs__card" role="document">' +
+        '<i class="gvs__grab" aria-hidden="true"></i>' +
         '<div class="gvs__hd"><b>🎴 Your grave card</b><button class="gvs__x" type="button" aria-label="Close">✕</button></div>' +
-        '<div class="gvs__img"><img alt="Grave card"></div>' +
+        '<div class="gvs__img"><img alt="Grave card, 1080 by 1350"></div>' +
         '<div class="gvs__row">' +
           '<button class="gvs__b gvs__b--share" type="button" data-gshare>Share</button>' +
           '<button class="gvs__b" type="button" data-gdl>Download</button>' +
@@ -599,18 +600,40 @@
         '<p class="gvs__note">1080 × 1350. Posts straight to WhatsApp, Instagram or X.</p>' +
       '</div>';
     document.body.appendChild(d);
-    d.addEventListener("click", function (e) { if (e.target === d || e.target.closest(".gvs__x")) closeShareSheet(); });
+    shareSheetEl = d;   /* v346: without this the sheet could never be closed */
+
+    d.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-gshare],[data-gdl],[data-gcopy],.gvs__x");
+      if (b) return;                       /* buttons handle themselves */
+      closeShareSheet();                   /* tap anywhere on the dim room */
+    });
     d.querySelector("[data-gdl]").addEventListener("click", function () { downloadShare(); });
     d.querySelector("[data-gshare]").addEventListener("click", function () { shareNow(this); });
     d.querySelector("[data-gcopy]").addEventListener("click", function () { copyShare(this); });
-    document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeShareSheet(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && d.classList.contains("on")) { e.stopPropagation(); closeShareSheet(); } });
+
+    /* swipe the card down to put it away - the gesture every phone sheet has */
+    var card = d.querySelector(".gvs__card"), y0 = null, dy = 0;
+    card.addEventListener("touchstart", function (e) { if (e.touches.length !== 1) return; y0 = e.touches[0].clientY; dy = 0; card.style.transition = "none"; }, { passive: true });
+    card.addEventListener("touchmove", function (e) {
+      if (y0 === null) return;
+      dy = Math.max(0, e.touches[0].clientY - y0);
+      card.style.transform = "translateY(" + dy + "px)";
+    }, { passive: true });
+    card.addEventListener("touchend", function () {
+      card.style.transition = ""; card.style.transform = "";
+      var gone = dy; y0 = null; dy = 0;
+      if (gone > 90) closeShareSheet();
+    });
     return d;
   }
+  var shareLastFocus = null;
   function openShareSheet(blob, filename, text) {
     var d = buildShareSheet();
     shareBlob = blob; shareName = filename; d.__text = text;
+    shareLastFocus = document.activeElement;
     var img = d.querySelector(".gvs__img img");
-    if (d.__url) URL.revokeObjectURL(d.__url);
+    if (d.__url) { try { URL.revokeObjectURL(d.__url); } catch (e) {} }
     d.__url = URL.createObjectURL(blob);
     img.src = d.__url;
     d.classList.add("on");
@@ -621,7 +644,20 @@
     var d = shareSheetEl; if (!d) return;
     d.classList.remove("on");
     document.documentElement.classList.remove("gvs-lock");
+    /* v346: closing is total - the image is released, the focus goes back to
+       the grave that opened it, and the scroll lock never lingers. */
+    try { if (d.__url) { URL.revokeObjectURL(d.__url); d.__url = null; } } catch (e) {}
+    try { var im = d.querySelector(".gvs__img img"); if (im) im.removeAttribute("src"); } catch (e) {}
+    try { if (shareLastFocus && shareLastFocus.focus) shareLastFocus.focus({ preventScroll: true }); } catch (e) {}
+    shareLastFocus = null;
   }
+  /* a hard reset used when a native share comes back into a locked page */
+  function clearShareLock() {
+    try { document.documentElement.classList.remove("gvs-lock"); } catch (e) {}
+  }
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible" && shareSheetEl && !shareSheetEl.classList.contains("on")) clearShareLock();
+  });
   function fileOf() { return new File([shareBlob], shareName, { type: "image/png" }); }
   function downloadShare() {
     var a = document.createElement("a");
@@ -632,15 +668,26 @@
     toast("🎴 Saved. Post it anywhere.");
   }
   async function shareNow(btn) {
-    try {
-      var file = fileOf();
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({ files: [file], title: "TheSmallBook", text: shareSheetEl.__text });
-        if (window.TSB) TSB.achv.award("sharer");
+    var file = fileOf();
+    var can = false;
+    try { can = !!(navigator.share && navigator.canShare && navigator.canShare({ files: [file] })); } catch (e) { can = false; }
+    if (can) {
+      try {
+        await navigator.share({ files: [file], title: "TheSmallBook", text: (shareSheetEl && shareSheetEl.__text) || "" });
+        if (window.TSB) { try { TSB.achv.award("sharer"); } catch (eA) {} }
         closeShareSheet();
         return;
+      } catch (err) {
+        /* v346 · CANCELLED MEANS CANCELLED. Backing out of the phone's share
+           sheet used to fall through to a silent download, which is why the
+           card felt like it would not close. Now: cancel = stay, try again
+           whenever you like. A real failure still offers the file. */
+        var name = (err && err.name) || "";
+        if (name === "AbortError" || name === "NotAllowedError") { try { btn.focus(); } catch (e) {} return; }
+        downloadShare();
+        return;
       }
-    } catch (e) { /* cancelled, or unsupported: fall through */ }
+    }
     downloadShare();
   }
   async function copyShare(btn) {

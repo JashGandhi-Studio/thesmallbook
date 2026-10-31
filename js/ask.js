@@ -211,11 +211,13 @@
   function sourceHead(n, label) {
     return '<div class="aq-head2"><span>' + esc(label) + '</span><i>' + n + '</i></div>';
   }
-  /* v337: every response closes the gap between an insight and a useful next move. */
-  function nextMove(action, caveat) {
+  /* v346 · ONE ROW, ONE MOVE.
+     Two stacked rows under every answer ("try this next" + "keep in mind")
+     plus a receipt line made a simple answer feel like a form. One row does
+     the same job: the single next thing to do. */
+  function nextMove(action) {
     var a = String(action || "Open the closest lesson and choose one small action you can test today.");
-    var c = String(caveat || "Use the source, not a slogan. Context decides whether the idea fits.");
-    return '<div class="aq-move"><div><b>TRY THIS NEXT</b><span>' + esc(a) + '</span></div><div><b>KEEP IN MIND</b><span>' + esc(c) + '</span></div></div>';
+    return '<div class="aq-move aq-move--one"><div><b>TRY THIS NEXT</b><span>' + esc(a) + '</span></div></div>';
   }
   function topicHtml(topic, qT, ansT, blurbsT, gBlurbsT) {
     var books = (topic.books || []).map(function (s, i) {
@@ -226,12 +228,9 @@
     }).join("");
     /* v317: the receipt - what the answer was built from, said out loud.
        This is the thing AI chat cannot say, so we say it every time. */
-    var receipt = '<div class="aq-receipt">✦ answered from <b>' + (topic.books || []).length + ' book lesson' + ((topic.books || []).length === 1 ? "" : "s") +
-      '</b> + <b>' + (topic.graves || []).length + ' real failure' + ((topic.graves || []).length === 1 ? "" : "s") +
-      "</b> · zero opinions, every line traceable ✦</div>";
     var first = (topic.books && topic.books[0] && bookIndex()[topic.books[0].id]) || null;
     var firstLesson = first && first.lessons ? first.lessons[0] : null;
-    return answerBlock(t("THE ANSWER"), ansT, "\u201C" + qT + "\u201D") + nextMove(firstLesson && firstLesson.action, topic.graves && topic.graves.length ? "Open the linked failure too. It shows the condition where this advice can break." : "Test this in one small, reversible situation before making it a rule.") + receipt +
+    return answerBlock(t("THE ANSWER"), ansT, "\u201C" + qT + "\u201D") + nextMove(firstLesson && firstLesson.action) +
       (books ? sourceHead((topic.books || []).length, t("FROM THE LIBRARY")) + '<div class="aq-srcs">' + books + "</div>" : "") +
       (graves ? sourceHead((topic.graves || []).length, t("FROM THE GRAVEYARD")) + '<div class="aq-srcs">' + graves + "</div>" : "") +
       '<div class="aq-foot">✦ ' + esc(t("tap a source to read the real lesson")) + " ✦</div>";
@@ -249,7 +248,7 @@
         '<div class="aq-none">📖 ' + esc(t("no book lesson matched")) + "</div>";
     }
     var action = lRes[0] && lRes[0].lesson && lRes[0].lesson.action;
-    return answerBlock(t("CLOSEST MATCHES"), headT, "\u201C" + qT + "\u201D") + nextMove(action, gRes.length ? "Read the linked autopsy before copying the advice. Failure cases reveal missing conditions." : "These are close matches, not a verdict. Open the source and check the setting.") +
+    return answerBlock(t("CLOSEST MATCHES"), headT, "\u201C" + qT + "\u201D") + nextMove(action) +
       (hits ? sourceHead(lRes.length, t("FROM THE LIBRARY")) + hits : "<div class='aq-none'>📖 " + esc(t("no book lesson matched")) + "</div>") +
       (gHits ? sourceHead(gRes.length, t("FROM THE GRAVEYARD")) + gHits : "");
   }

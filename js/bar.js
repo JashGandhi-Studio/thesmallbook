@@ -160,11 +160,22 @@
      Still painted only by ::before, per the bar rules above. */
   function slidePill(fromLeft) {
     var act = bar.querySelector(".tsb-bar__item.is-active");
+    /* v346 · THE PILL IS ONLY EVER ON THE TAB YOU ARE ON.
+       The slide class used to stay behind on the tab you just left, and its
+       animation (fill-mode: both) paints the yellow pill there for good. One
+       yellow pill, one owner: every other item is cleared first. */
+    bar.querySelectorAll(".tsb-bar__item.pill-slide").forEach(function (it) {
+      if (it !== act) it.classList.remove("pill-slide");
+    });
     if (!act || typeof fromLeft !== "number" || isNaN(fromLeft)) return;
     var dx = Math.round(fromLeft - act.getBoundingClientRect().left);
     if (!dx || Math.abs(dx) > 600) return;
     act.style.setProperty("--pill-from", dx + "px");
     act.classList.remove("pill-slide"); void act.offsetWidth; act.classList.add("pill-slide");
+    /* the class is a one-shot: once the spring has landed it goes away, so a
+       later repaint (Gold arriving, the bar rebuilt) can never resurrect it */
+    clearTimeout(slidePill._t);
+    slidePill._t = setTimeout(function () { act.classList.remove("pill-slide"); }, 900);
   }
   try {
     var pillFrom = parseFloat(sessionStorage.getItem("tsb_pill_from"));
@@ -177,16 +188,31 @@
 
   /* the highlight follows what you actually selected, live */
   function setActive(id) {
+    if (!id) return;
     var was = bar.querySelector(".tsb-bar__item.is-active");
     var wasLeft = was ? was.getBoundingClientRect().left : NaN;
-    if (was && was.getAttribute("data-tab") !== id) { try { sessionStorage.setItem("tsb_pill_from", String(wasLeft)); } catch (eS) {} }
+    var moving = !was || was.getAttribute("data-tab") !== id;
+    /* v346: the bar's own idea of "where am I" moves with the tap. Before
+       this, any rebuild (Gold arriving, Settings applying a new look) painted
+       the pill back on Today while the reader stood in the Library. */
+    active = id;
     bar.querySelectorAll(".tsb-bar__item").forEach(function (it) {
       var on = it.getAttribute("data-tab") === id;
       it.classList.toggle("is-active", on);
       if (on) it.setAttribute("aria-current", "page");
-      else it.removeAttribute("aria-current");
+      else { it.removeAttribute("aria-current"); it.classList.remove("pill-slide"); }
     });
-    slidePill(wasLeft);
+    if (moving) slidePill(wasLeft);
+  }
+  /* used after a rebuild: same tab, no animation, no jump */
+  function repaintActive() {
+    var id = active || currentActive();
+    bar.querySelectorAll(".tsb-bar__item").forEach(function (it) {
+      var on = it.getAttribute("data-tab") === id;
+      it.classList.toggle("is-active", on);
+      if (on) it.setAttribute("aria-current", "page"); else it.removeAttribute("aria-current");
+      if (!on) it.classList.remove("pill-slide");
+    });
   }
   window.addEventListener("hashchange", function () {
     if (pageName() === "index.html") setActive(currentActive());
@@ -195,11 +221,48 @@
     activeSlots = getActiveSlots();
     bar.innerHTML = buildBarHtml(activeSlots);
     readLook();
+    /* v346: a rebuilt bar keeps the reader where they are. Gold landing, a new
+       look, a new fifth button - none of them may move the yellow pill. */
+    repaintActive();
     if (barBehave === "fixed") setBarOff(false);
   }
+  /* ============================================================
+     v346 · THE OTHER TABS ARE ALREADY HERE
+     Tapping a tab used to mean waiting for a document, its CSS and its data
+     before anything moved. The four shelf pages are warmed in idle time once
+     the page you are on has settled, so the tap opens instantly.
+     ============================================================ */
+  try {
+    var warmTabs = function () {
+      var here = pageName();
+      activeSlots.forEach(function (k) {
+        var def = ITEM_DEFS[k];
+        if (!def || !def.url || def.isPlus) return;
+        var file = def.url.split("#")[0].split("?")[0];
+        if (!file || file === here) return;
+        if (document.querySelector('link[data-tsb-prefetch="' + file + '"]')) return;
+        var l = document.createElement("link");
+        l.rel = "prefetch"; l.as = "document"; l.href = file;
+        l.setAttribute("data-tsb-prefetch", file);
+        document.head.appendChild(l);
+      });
+    };
+    var idleTab = window.requestIdleCallback || function (fn) { return setTimeout(fn, 1600); };
+    idleTab(warmTabs, { timeout: 3500 });
+    /* after a tab has been open a while, warm the rest too */
+    setTimeout(warmTabs, 6000);
+  } catch (ePrefetch) {}
+
   /* Gold arrives after the first paint: a saved fifth button appears then */
   window.addEventListener("tsbgold", rebuild);
-  window.TSB_BARCTL = { apply: rebuild, slots: function () { return activeSlots.slice(); }, defs: function () { return ITEM_DEFS; }, isGold: checkIsGold };
+  window.TSB_BARCTL = {
+    apply: rebuild,
+    setActive: setActive,
+    refresh: repaintActive,
+    slots: function () { return activeSlots.slice(); },
+    defs: function () { return ITEM_DEFS; },
+    isGold: checkIsGold
+  };
 
   /* ---------- taps ---------- */
   bar.addEventListener("click", function (e) {

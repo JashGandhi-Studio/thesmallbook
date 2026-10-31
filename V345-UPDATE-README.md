@@ -79,9 +79,9 @@ python3 tools/make-covers.py the-8-pm-reset  # one
 ## Version and cache
 
 - `js/bootguard.js` · `var BUILD = "345"`
-- `sw.js` · `CACHE_VERSION = "tsb-v345"`
-- every asset URL in the HTML · `?v=345` (1,283 pages)
-- `login.html` and `settings.html` badges · "Build tsb-v345"
+- `sw.js` · `CACHE_VERSION = "tsb-v346"`
+- every asset URL in the HTML · `?v=346` (1,283 pages)
+- `login.html` and `settings.html` badges · "Build tsb-v346"
 
 Because the cache name changed, an existing visitor picks up the new CSS, JS
 and covers on the first load after deploy.

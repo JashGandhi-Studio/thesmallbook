@@ -328,8 +328,14 @@
   }
   function partOfDay() { var h = new Date().getHours(); return h < 12 ? "morning" : h < 17 ? "afternoon" : h < 21 ? "evening" : "night"; }
   function setTab(id) {
+    /* v346 · one authority for the yellow pill. film.js used to paint the
+       highlight itself, so Today→Library jumped instead of sliding, and the
+       two painters could disagree. The bar owns it now; this is a thin call. */
+    try {
+      if (window.TSB_BARCTL && TSB_BARCTL.setActive) { TSB_BARCTL.setActive(id); return; }
+    } catch (e) {}
     var bar = document.getElementById("tsbBar"); if (!bar) return;
-    bar.querySelectorAll(".tsb-bar__item").forEach(function (it) { var on = it.getAttribute("data-tab") === id; it.classList.toggle("is-active", on); if (on) it.setAttribute("aria-current", "page"); else it.removeAttribute("aria-current"); });
+    bar.querySelectorAll(".tsb-bar__item").forEach(function (it) { var on = it.getAttribute("data-tab") === id; it.classList.toggle("is-active", on); if (on) it.setAttribute("aria-current", "page"); else { it.removeAttribute("aria-current"); it.classList.remove("pill-slide"); } });
   }
   function isLibHash() { return /^#(library|grid|filters|searchWrap|shelf)/.test(location.hash) || /[?&](q|cat|shelf)=/.test(location.search); }
   function initIndex() {
@@ -345,12 +351,16 @@
     document.body.insertBefore(lh, hero || anchor);
     function paint() { ft.innerHTML = todayHtml(); setTimeout(function () { ft.querySelectorAll(".ft-bar i").forEach(function (i) { i.style.width = i.getAttribute("data-w") + "%"; }); }, 60); }
     view._vt = 0;
+    var lastLib = null;
     function view(animate) {
       var lib = isLibHash();
       function apply() {
+        var changed = lastLib !== lib;
+        lastLib = lib;
         root.classList.toggle("fv-lib", lib); root.classList.toggle("fv-today", !lib);
         setTab(lib ? "library" : "home");
-        window.scrollTo(0, 0);
+        /* v346: a view that has not changed does not get scrolled or repainted */
+        if (changed && window.scrollY) window.scrollTo(0, 0);
       }
       /* v344: one transition at a time. A hash change and a tap can land in
          the same frame, and a second View Transition on top of the first is
@@ -553,6 +563,8 @@
     paintGold();
     window.addEventListener("tsbgold", paintGold);
     window.addEventListener("tsb:gold-on", function () { try { TSB_GOLD.check().then(paintGold); } catch (e) {} });
+    /* v346: the server answer lands after the first paint - repaint then too */
+    window.addEventListener("tsbgold", function () { try { if (!TSB_GOLD.pending || !TSB_GOLD.pending()) paintGold(); } catch (e) {} });
     /* v334: Story time lives only here. The Kids mode row opens a small sheet to show or hide it. */
     function kidsSheet() {
       if (document.querySelector(".fy-pop")) return;
@@ -926,6 +938,7 @@
     render();
     window.addEventListener("tsbgold", render);
     window.addEventListener("tsb:gold-on", function () { try { TSB_GOLD.check().then(render); } catch (e) {} });
+    window.addEventListener("tsbgold", function () { try { if (!TSB_GOLD.pending || !TSB_GOLD.pending()) render(); } catch (e) {} });
     if (/#(goldPricing|gActBox|goldCompare|goldGrid)/.test(location.hash)) expand(location.hash);
   }
 

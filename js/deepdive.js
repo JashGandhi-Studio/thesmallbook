@@ -87,14 +87,33 @@
     if (!d) { $("ddPaper").innerHTML = '<div class="dd-head"><h1 class="dd-h1">Deep dive not found.</h1><p class="dd-hook"><a href="index.html">Back to the library</a></p></div>'; return; }
     current = d;
     if (!d.sample && !isGold()) {
-      /* auth may still be arriving; repaint once it speaks */
-      gateCard(d);
+      /* v346 · A PAYING READER IS NEVER TOLD "BUY THIS".
+         The answer arrives a few hundred milliseconds after the page paints.
+         While it is on its way we say "checking your membership", not "this
+         is a Gold read" - and we keep listening for the answer instead of
+         giving up after five seconds. */
+      if (window.TSB_GOLD && TSB_GOLD.pending && TSB_GOLD.pending()) {
+        var g0 = $("ddGate"); if (g0) { g0.hidden = false; g0.innerHTML = '<div class="dd-gate dd-gate--wait"><div class="dd-gate__emoji">💛</div><h2>Checking your membership…</h2><p class="dd-gate__p">One moment. Your Gold is being confirmed with the server.</p></div>'; }
+      } else {
+        gateCard(d);
+      }
+      var done = false;
+      var unlock = function () {
+        if (done || !isGold()) return false;
+        done = true;
+        clearInterval(iv);
+        window.removeEventListener("tsbgold", unlock);
+        paint(d); afterPaint();
+        return true;
+      };
       var waited = 0;
       var iv = setInterval(function () {
         waited++;
-        if (isGold()) { clearInterval(iv); paint(d); afterPaint(); return; }
-        if (waited > 14) clearInterval(iv);
+        if (unlock()) return;
+        if (waited === 6) gateCard(d);           /* after ~2s, show the real gate */
+        if (waited > 90) clearInterval(iv);      /* ~30s, then stop asking */
       }, 350);
+      window.addEventListener("tsbgold", unlock);
       return;
     }
     paint(d);
