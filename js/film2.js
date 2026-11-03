@@ -900,7 +900,7 @@
     var wrap = el("div", "fs2");
     wrap.appendChild(el("header", "fs2-hd f-up", '<a class="fs2-back" href="you.html" aria-label="Back to You">' + IC.back + '</a><div><span class="fs2-kick">SETTINGS</span><h1>Make it <i>yours.</i></h1></div>'));
     /* you */
-    var prof = el("section", "fs2-prof f-up", '<span class="fs2-av">' + esc((nm || "R").charAt(0).toUpperCase()) + '</span><div class="fs2-pm"><label class="fs2-lab" for="displayNameInput">Your name</label><div class="fs2-namerow"></div></div>');
+    var prof = el("section", "fs2-prof f-up", '<span class="fs2-av" data-tsb-av data-name="' + esc(nm || "R") + '">' + (window.TSB_AVA ? TSB_AVA.markup(nm) : esc((nm || "R").charAt(0).toUpperCase())) + '</span><div class="fs2-pm"><label class="fs2-lab" for="displayNameInput">Your name</label><div class="fs2-namerow"></div></div>');
     var ni = take("#displayNameInput"), sn = take("#saveName");
     if (ni) { ni.placeholder = "What should we call you?"; $(".fs2-namerow", prof).appendChild(ni); }
     if (sn) $(".fs2-namerow", prof).appendChild(sn);

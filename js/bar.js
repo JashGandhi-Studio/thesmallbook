@@ -50,7 +50,7 @@
   /* Available customizable item definitions */
   var ITEM_DEFS = {
     home:      { id: "home", url: "index.html", lbl: "Today", ico: ICO.home, cls: "tsb-bar__item--home" },
-    audio:     { id: "audio", url: "podcasts.html", lbl: "Listen", ico: ICO.audio, cls: "tsb-bar__item--audio" },
+    audio:     { id: "audio", url: "audio.html", lbl: "Listen", ico: ICO.audio, cls: "tsb-bar__item--audio" },
     stories:   { id: "stories", url: "stories.html", lbl: "Stories", ico: ICO.stories, cls: "tsb-bar__item--stories" },
     you:       { id: "you", url: "you.html", lbl: "You", ico: ICO.you, cls: "tsb-bar__item--you" },
     messages:  { id: "messages", url: "dm.html", lbl: "Messages", ico: ICO.messages, cls: "tsb-bar__item--messages" },
@@ -71,7 +71,7 @@
   function currentActive() {
     var p = pageName();
     if (p === "index.html") return /^#(library|grid|filters|searchWrap|shelf)/.test(location.hash) ? "library" : "home";
-    if (p === "podcasts.html") return "audio";
+    if (p === "podcasts.html" || p === "audio.html") return "audio";
     if (p === "stories.html" || p === "story.html" || p === "write.html") return "stories";
     if (p === "login.html" || p === "settings.html" || p === "profile.html" || p === "you.html") return "you";
     if (p === "dm.html") return "messages";
@@ -259,10 +259,28 @@
     apply: rebuild,
     setActive: setActive,
     refresh: repaintActive,
+    edit: function () { enterEditMode(); return true; },
+    editing: function () { return !!isEditMode; },
     slots: function () { return activeSlots.slice(); },
     defs: function () { return ITEM_DEFS; },
     isGold: checkIsGold
   };
+
+  /* v360 · REMEMBER THE DOOR.
+     Open a book from Today and Today is still the tab you are under; open it
+     from the Library and the Library is. Recorded on the way in, restored on
+     the book page and on the way back. */
+  try {
+    document.addEventListener("click", function (e) {
+      var a = e.target && e.target.closest ? e.target.closest('a[href*="book.html"]') : null;
+      if (!a) return;
+      try { sessionStorage.setItem("tsb_from_tab", currentActive()); } catch (eS) {}
+    }, true);
+    if (/book\.html/.test(location.pathname)) {
+      var from = sessionStorage.getItem("tsb_from_tab");
+      if (from) setActive(from);
+    }
+  } catch (e0) {}
 
   /* ---------- taps ---------- */
   bar.addEventListener("click", function (e) {
@@ -423,6 +441,13 @@
     var st = document.createElement("style");
     st.id = "tsb-livedock-styles";
     st.textContent = `
+      /* ======================================================================
+         v350 · CUSTOMISE ACTION BAR - a sheet, not a box
+         It used to float above the bar as a small square window. It is a
+         bottom sheet now: it rises from the floor of the screen, it has a
+         handle you can pull down, and every tool is drawn as the button it
+         will become - same pill, same edge, same shadow as the bar itself.
+         ====================================================================== */
       @keyframes tsbJiggle {
         0% { transform: rotate(-1.5deg) scale(0.98); }
         100% { transform: rotate(1.5deg) scale(1.02); }
@@ -437,138 +462,180 @@
         background: rgba(255, 200, 0, 0.15) !important;
       }
       .tsb-livedock {
-        position: fixed; left: 50%; transform: translateX(-50%);
-        bottom: calc(var(--tsb-bar-h, 58px) + var(--tsb-bar-gap, 10px) + env(safe-area-inset-bottom, 0px) + 14px);
-        width: min(520px, calc(100vw - 24px));
-        background: var(--paper, #fffdf5); color: var(--ink, #111);
-        border: var(--bw) solid var(--edge); border-radius: 18px;
-        box-shadow: 0 16px 36px rgba(0,0,0,0.32), var(--sh-3);
-        padding: 12px 14px 14px; box-sizing: border-box; z-index: 99998;
-        font-family: -apple-system, BlinkMacSystemFont, "Space Grotesk", "Segoe UI", sans-serif;
-        animation: tsbDockPop .25s cubic-bezier(.16,1,.3,1);
+        position: fixed; left: 50%; bottom: 0; z-index: 99998;
+        transform: translateX(-50%);
+        width: min(540px, 100%);
+        background: var(--paper, #fffdf5); color: var(--ink, #16130F);
+        border: var(--bw, 3px) solid var(--edge, #16130F); border-bottom: 0;
+        border-radius: 28px 28px 0 0;
+        box-shadow: 0 -22px 60px -26px rgba(22, 19, 15, .55);
+        padding: 4px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+        box-sizing: border-box;
+        font-family: var(--font-body, "Space Grotesk", -apple-system, BlinkMacSystemFont, sans-serif);
+        animation: tsbDockIn .34s cubic-bezier(.2, .9, .2, 1);
+        will-change: transform;
       }
-      @keyframes tsbDockPop {
-        from { opacity: 0; transform: translateX(-50%) translateY(16px) scale(.95); }
-        to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+      @keyframes tsbDockIn {
+        from { opacity: .6; transform: translateX(-50%) translateY(104%); }
+        to   { opacity: 1;  transform: translateX(-50%) translateY(0); }
       }
+      .tsb-livedock__grab {
+        display: grid; place-items: center; height: 24px;
+        margin: 0 auto 2px; width: 100%; cursor: grab; touch-action: none;
+      }
+      .tsb-livedock__grab i {
+        display: block; width: 44px; height: 5px; border-radius: 99px;
+        background: var(--edge, #16130F); opacity: .26;
+        transition: opacity .2s, width .2s;
+      }
+      .tsb-livedock__grab:active i { opacity: .5; width: 58px; }
       .tsb-livedock__top {
-        display: flex; align-items: center; justify-content: space-between;
-        margin-bottom: 10px; gap: 8px;
+        display: flex; align-items: center; gap: 8px; flex-wrap: nowrap;
+        padding: 2px 0 10px;
       }
       .tsb-livedock__title {
+        flex: 1 1 auto; min-width: 0;
         font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 13px; letter-spacing: .4px; color: var(--ink, #111);
+        font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+        color: var(--ink, #16130F);
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       }
       .tsb-livedock__seg {
-        display: inline-flex; gap: 3px; background: #e5e0d3; padding: 3px;
-        border-radius: 13px; border: 1px solid var(--edge);
+        display: inline-flex; gap: 2px; background: rgba(22,19,15,.08);
+        padding: 3px; border-radius: 12px; flex: none;
       }
       .tsb-livedock__segbtn {
-        border: none; background: transparent; padding: 4px 8px;
-        border-radius: 9px; font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 10.5px; color: #555; cursor: pointer;
+        border: 0; background: transparent; cursor: pointer;
+        font-family: var(--font-body, "Space Grotesk", sans-serif);
+        font-size: 11px; font-weight: 700; color: #555;
+        padding: 6px 9px; border-radius: 9px;
       }
       .tsb-livedock__segbtn.active {
-        background: #fff; color: #111; box-shadow: var(--sh-1);
-        border: 1px solid var(--edge);
+        background: #fff; color: #16130F; box-shadow: var(--sh-1, 0 2px 0 rgba(0,0,0,.12));
       }
       .tsb-livedock__done {
-        background: var(--yellow, #ffc800); border: var(--bw) solid var(--edge);
-        border-radius: 12px; font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 11.5px; padding: 5px 12px; cursor: pointer; box-shadow: var(--sh-1);
-        transition: transform .1s;
+        flex: none; background: var(--yellow, #ffc800); color: #16130F;
+        border: var(--bw, 3px) solid var(--edge, #16130F); border-radius: 12px;
+        font-family: var(--font-head, "Archivo Black", sans-serif);
+        font-size: 11px; padding: 8px 12px; cursor: pointer;
+        box-shadow: 0 3px 0 var(--edge, #16130F); transition: transform .1s, box-shadow .1s;
       }
-      .tsb-livedock__done:hover { transform: translate(-1px, -1px); }
-      .tsb-livedock__hint {
-        font-size: 11.5px; color: #666; font-weight: 600; margin-bottom: 8px;
+      .tsb-livedock__done:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--edge, #16130F); }
+      .tsb-livedock__slotbar {
+        display: flex; align-items: center; justify-content: space-between; gap: 10px;
+        background: rgba(22,19,15,.055); border-radius: 14px;
+        padding: 9px 12px; margin-bottom: 9px;
       }
+      .tsb-livedock__slotstatus { font-size: 11.5px; font-weight: 600; color: #555; }
+      .tsb-livedock__slotstatus b { color: var(--ink, #16130F); }
+      .tsb-livedock__slotbtn {
+        border: 2px solid var(--edge, #16130F); background: transparent;
+        font-family: var(--font-body, "Space Grotesk", sans-serif);
+        font-size: 11px; font-weight: 700; color: var(--ink, #16130F);
+        padding: 6px 10px; border-radius: 99px; cursor: pointer; white-space: nowrap;
+      }
+      .tsb-livedock__slotbtn--gold { background: rgba(255,200,0,.28); border-color: var(--edge, #16130F); }
+      .tsb-livedock__hint { font-size: 11.5px; line-height: 1.4; color: #666; margin-bottom: 9px; }
+      .tsb-livedock__hint b { color: var(--ink, #16130F); }
       .tsb-livedock__shelf {
-        display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px;
-        -webkit-overflow-scrolling: touch; scrollbar-width: none;
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+        gap: 8px; max-height: min(42vh, 320px); overflow-y: auto;
+        padding: 2px 2px 6px; overscroll-behavior: contain;
+        scrollbar-width: none;
       }
       .tsb-livedock__shelf::-webkit-scrollbar { display: none; }
       .tsb-shelf-item {
-        flex-shrink: 0; display: inline-flex; align-items: center; gap: 5px;
-        background: #fff; border: var(--bw) solid var(--edge); border-radius: 14px;
-        padding: 6px 10px; font-size: 12px; font-weight: 700; cursor: pointer;
-        box-shadow: var(--sh-1); transition: transform .1s;
+        position: relative; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; gap: 5px;
+        min-height: 66px; padding: 9px 6px; cursor: pointer;
+        background: #fff; color: var(--ink, #16130F);
+        border: 2px solid var(--edge, #16130F); border-radius: 16px;
+        box-shadow: 0 3px 0 var(--edge, #16130F);
+        transition: transform .1s, box-shadow .1s, background .16s;
+        -webkit-tap-highlight-color: transparent;
       }
-      .tsb-shelf-item:hover { background: var(--yellow, #ffc800); transform: translate(-1px,-1px); }
-      .tsb-shelf-item.is-inbar { opacity: 0.55; }
-      .tsb-livedock__slotbar {
-        display: flex; align-items: center; justify-content: space-between;
-        background: #f0ebe1; border: 1px solid var(--edge); border-radius: 14px;
-        padding: 6px 10px; margin-bottom: 8px; font-size: 11px; font-weight: 700;
+      .tsb-shelf-item:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--edge, #16130F); }
+      .tsb-shelf-item__ico { display: grid; place-items: center; width: 21px; height: 21px; }
+      .tsb-shelf-item__ico svg { width: 21px; height: 21px; display: block; }
+      .tsb-shelf-item__lbl {
+        font-family: var(--font-body, "Space Grotesk", sans-serif);
+        font-size: 10.5px; font-weight: 700; letter-spacing: .01em;
+        max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
       }
-      .tsb-livedock__slotstatus {
-        display: flex; align-items: center; gap: 5px; color: var(--ink, #111);
+      .tsb-shelf-item.is-inbar { background: var(--yellow, #ffc800); }
+      .tsb-shelf-item__tick {
+        position: absolute; top: 4px; right: 7px; font-size: 10px; font-weight: 800; opacity: .55;
       }
-      .tsb-livedock__slotbtn {
-        background: #fff; border: 1px solid var(--edge); border-radius: 9px;
-        padding: 4px 8px; font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 10.5px; cursor: pointer; box-shadow: var(--sh-1);
-        transition: transform .1s;
-      }
-      .tsb-livedock__slotbtn:hover { transform: translate(-1px, -1px); }
-      .tsb-livedock__slotbtn--gold {
-        background: var(--yellow, #ffc800); color: #111;
-      }
-      .tsb-gold-bar-modal {
-        position: fixed; inset: 0; z-index: 999999;
-        display: flex; align-items: center; justify-content: center;
-        padding: 20px; box-sizing: border-box;
-      }
-      .tsb-gold-bar-backdrop {
-        position: absolute; inset: 0; background: rgba(0,0,0,0.68);
-        backdrop-filter: blur(4px);
-      }
-      .tsb-gold-bar-card {
-        position: relative; width: min(420px, 100%);
-        background: var(--paper, #fffdf5); border: var(--bw) solid var(--edge);
-        border-radius: 18px; padding: 22px 20px; box-sizing: border-box;
-        box-shadow: 0 20px 48px rgba(0,0,0,0.4), var(--sh-3);
-        text-align: center; font-family: -apple-system, BlinkMacSystemFont, "Space Grotesk", sans-serif;
-      }
-      .tsb-gold-bar-crown { font-size: 32px; margin-bottom: 6px; }
-      .tsb-gold-bar-tag {
-        font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 10px; letter-spacing: 1px; color: #b45309; margin-bottom: 4px;
-      }
-      .tsb-gold-bar-h3 {
-        font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 18px; color: var(--ink, #111); margin: 0 0 8px;
-      }
-      .tsb-gold-bar-p {
-        font-size: 12.5px; line-height: 1.5; color: #444; margin: 0 0 14px;
-      }
-      .tsb-gold-bar-perks {
-        background: #f7f3e8; border: 2px dashed var(--ink, #111); border-radius: 17px;
-        padding: 10px 14px; margin-bottom: 16px; text-align: left;
-      }
-      .tsb-gold-bar-perk {
-        font-size: 12px; font-weight: 700; color: #111; margin: 4px 0;
-      }
-      .tsb-gold-bar-btns {
-        display: flex; flex-direction: column; gap: 8px;
-      }
-      .tsb-gold-bar-cta {
-        display: block; background: var(--yellow, #ffc800); color: #111;
-        border: var(--bw) solid var(--edge); border-radius: 14px;
-        padding: 10px 14px; font-family: var(--font-head, "Archivo Black", sans-serif);
-        font-size: 12.5px; text-decoration: none; box-shadow: var(--sh-2);
-        font-weight: 900;
-      }
-      .tsb-gold-bar-dismiss {
-        background: transparent; border: none; font-size: 12px; color: #666;
-        cursor: pointer; text-decoration: underline; padding: 4px;
-      }
+      html.dark .tsb-livedock { background: #1B1712; color: #F4EFE6; }
+      html.dark .tsb-shelf-item { background: #241F17; color: #F4EFE6; }
+      html.dark .tsb-shelf-item.is-inbar { background: #FFC800; color: #16130F; }
+      html.dark .tsb-livedock__title { color: #F4EFE6; }
+      html.dark .tsb-livedock__slotstatus, html.dark .tsb-livedock__hint { color: #B9B0A2; }
     `;
     document.head.appendChild(st);
+
+    if (!document.getElementById("tsbDockPolish")) {
+      var pol = document.createElement("style");
+      pol.id = "tsbDockPolish";
+      pol.textContent = `
+        .tsb-livedock-scrim { position: fixed; inset: 0; z-index: 999998; background: rgba(22,19,15,.34); opacity: 0; transition: opacity .28s ease; -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); }
+        .tsb-livedock-scrim.on { opacity: 1; }
+        .tsb-livedock {
+          z-index: 999999 !important; position: fixed; left: 50%; bottom: 0;
+          transform: translateX(-50%); width: min(520px, 100%);
+          background: #fffdf8 !important; color: #16130f !important;
+          border-radius: 24px 24px 0 0 !important;
+          padding: 10px 16px calc(env(safe-area-inset-bottom, 0px) + 26px) !important;
+          box-shadow: 0 -20px 50px -22px rgba(22,19,15,.5) !important;
+          max-height: 74vh; overflow-y: auto;
+          font-family: 'Space Grotesk', system-ui, sans-serif !important;
+        }
+        .tsb-livedock__grab { margin: 0 auto 8px !important; width: 40px !important; height: 4px !important; border-radius: 999px !important; background: #ddd3c1 !important }
+        .tsb-livedock__top { display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 12px !important; margin-bottom: 12px !important }
+        .tsb-livedock__title { font: 700 10px/1 'Space Grotesk', system-ui !important; letter-spacing: .18em !important; color: #8a8272 !important }
+        .tsb-livedock__done { border: 0 !important; background: #16130f !important; color: #fbf8f1 !important; border-radius: 999px !important; padding: 9px 18px !important; font: 600 13px 'Space Grotesk', system-ui !important; cursor: pointer }
+        .tsb-livedock__slots { display: grid !important; grid-template-columns: repeat(5, 1fr) !important; gap: 8px !important; margin-bottom: 14px !important }
+        .tsb-slot { display: flex !important; flex-direction: column !important; align-items: center !important; gap: 6px !important;
+          padding: 10px 4px !important; border-radius: 14px !important; border: 1.5px solid #eae2d3 !important; background: #fff !important;
+          color: #6e6658 !important; cursor: pointer; transition: border-color .15s ease, background-color .15s ease }
+        .tsb-slot.is-on { border-color: #16130f !important; background: #fff8dc !important; color: #16130f !important }
+        .tsb-slot__ico { display: grid; place-items: center; width: 22px; height: 22px }
+        .tsb-slot__ico svg { width: 20px !important; height: 20px !important }
+        .tsb-slot__lbl { font: 600 10px/1 'Space Grotesk', system-ui !important; letter-spacing: .01em; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+        .tsb-slot--add { border-style: dashed !important; color: #a29884 !important }
+        .tsb-livedock__row { display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 10px !important; margin-bottom: 10px !important }
+        .tsb-livedock__hint { font: 500 12px/1.35 'Space Grotesk', system-ui !important; color: #6e6658 !important }
+        .tsb-livedock__seg { display: inline-flex !important; padding: 3px !important; gap: 2px !important; background: #f1e9da !important; border-radius: 999px !important; flex: none }
+        .tsb-livedock__segbtn { border: 0 !important; background: transparent !important; border-radius: 999px !important; padding: 6px 12px !important; font: 600 12px 'Space Grotesk', system-ui !important; color: #6e6658 !important; cursor: pointer }
+        .tsb-livedock__segbtn.active { background: #fffdf8 !important; color: #16130f !important; box-shadow: 0 1px 3px rgba(22,19,15,.14) !important }
+        .tsb-livedock__shelf { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 8px !important; padding: 0 !important; overflow: visible !important }
+        .tsb-tool { display: flex !important; align-items: center !important; gap: 10px !important; text-align: left !important;
+          padding: 11px 12px !important; border-radius: 13px !important; border: 1px solid #eae2d3 !important; background: #fff !important;
+          color: #16130f !important; font: 600 13px 'Space Grotesk', system-ui !important; cursor: pointer; transition: transform .12s ease }
+        .tsb-tool:active { transform: scale(.97) }
+        .tsb-tool__ico { width: 20px; height: 20px; display: grid; place-items: center; color: #8a8272 }
+        .tsb-tool__ico svg { width: 19px !important; height: 19px !important }
+        html.tsb-bar-editing .tsb-bar__plus { display: none !important }
+        html.tsb-bar-editing .tsb-bar { z-index: 1 !important }
+        .tsb-livedock__empty { grid-column: 1 / -1; font: 500 12.5px 'Space Grotesk', system-ui; color: #8a8272; margin: 4px 2px 8px }
+        html.dark .tsb-livedock { background: #1c1813 !important; color: #efe6d3 !important }
+        html.dark .tsb-slot, html.dark .tsb-tool { background: #241f17 !important; border-color: #342d24 !important; color: #efe6d3 !important }
+        html.dark .tsb-slot.is-on { background: #2e2716 !important; border-color: #ffc800 !important; color: #ffc800 !important }
+        html.dark .tsb-livedock__hint, html.dark .tsb-livedock__empty { color: #a29884 !important }
+        html.dark .tsb-livedock__seg { background: #241f17 !important }
+        html.dark .tsb-livedock__segbtn.active { background: #342d24 !important; color: #efe6d3 !important }
+        html.dark .tsb-livedock__done { background: #ffc800 !important; color: #16130f !important }
+`;
+      document.head.appendChild(pol);
+    }
   }
 
+  var editStartedAt = 0;
   function enterEditMode() {
     if (isEditMode) return;
     isEditMode = true;
+    editStartedAt = Date.now();
+    document.documentElement.classList.add("tsb-bar-editing");
     injectLiveDockStyles();
     bar.classList.add("tsb-bar--reordering");
     try { if (navigator.vibrate) navigator.vibrate([35, 50]); } catch (e) {}
@@ -580,6 +647,7 @@
   function exitEditMode() {
     if (!isEditMode) return;
     isEditMode = false;
+    document.documentElement.classList.remove("tsb-bar-editing");
     bar.classList.remove("tsb-bar--reordering");
     bar.querySelectorAll(".tsb-bar__item").forEach(function (it) {
       it.classList.remove("tsb-bar__item--selected", "tsb-bar__item--floating");
@@ -589,6 +657,7 @@
       try { liveDock.remove(); } catch (e) {}
       liveDock = null;
     }
+    document.querySelectorAll(".tsb-livedock-scrim").forEach(function (n) { n.remove(); });
     setActive(currentActive());
   }
 
@@ -640,6 +709,11 @@
       liveDock = null;
     }
 
+    var scrim = document.createElement("div");
+    scrim.className = "tsb-livedock-scrim";
+    document.body.appendChild(scrim);
+    setTimeout(function () { scrim.classList.add("on"); }, 10);
+
     var dock = document.createElement("div");
     dock.className = "tsb-livedock";
     dock.id = "tsbLiveDock";
@@ -659,34 +733,101 @@
           <button type="button" class="tsb-livedock__slotbtn tsb-livedock__slotbtn--gold" id="tsbDockSlotToggle">+ Add 5th Button · Gold ₹99</button>
         </div>`;
 
+    /* v358 · COMPACT AND HONEST.
+       The old sheet was a wall of twelve tiles with a gold upsell, a drag hint
+       and two segmented controls, which is not a customiser, it is a page.
+       This one is the bar itself: your four buttons, then the tools that are
+       not in it, and one Done. Nothing scrolls on a normal phone. */
+    var currentNames = activeSlots.map(function (k) {
+      return (ITEM_DEFS[k] && ITEM_DEFS[k].lbl) || k;
+    });
+    var spare = Object.keys(ITEM_DEFS).filter(function (k) { return activeSlots.indexOf(k) < 0; });
+
     dock.innerHTML = `
+      <div class="tsb-livedock__grab" id="tsbDockGrab" role="button" tabindex="0" aria-label="Drag down to close"><i></i></div>
       <div class="tsb-livedock__top">
-        <span class="tsb-livedock__title">CUSTOMIZE ACTION BAR</span>
+        <span class="tsb-livedock__title">YOUR ACTION BAR</span>
+        <button type="button" class="tsb-livedock__done" id="tsbDockDone">Done</button>
+      </div>
+      <div class="tsb-livedock__slots" id="tsbDockSlots">
+        ${activeSlots.map(function (k, i) {
+          var def = ITEM_DEFS[k] || {};
+          return `<button type="button" class="tsb-slot ${i === selectedSlotIdx ? "is-on" : ""}" data-slotpick="${i}" aria-pressed="${i === selectedSlotIdx}">
+            <span class="tsb-slot__ico" aria-hidden="true">${def.ico || ""}</span>
+            <span class="tsb-slot__lbl">${def.lbl || k}</span>
+          </button>`;
+        }).join("")}
+        ${activeSlots.length < 5 ? `<button type="button" class="tsb-slot tsb-slot--add" id="tsbDockSlotToggle" aria-label="Add a fifth button"><span class="tsb-slot__ico">+</span><span class="tsb-slot__lbl">Add</span></button>` : `<button type="button" class="tsb-slot tsb-slot--add" id="tsbDockSlotToggle" aria-label="Back to four buttons"><span class="tsb-slot__ico">\u2212</span><span class="tsb-slot__lbl">4 only</span></button>`}
+      </div>
+      <div class="tsb-livedock__row">
+        <span class="tsb-livedock__hint">Tap a tool to put it in <b>${currentNames[selectedSlotIdx] || "this slot"}</b></span>
         <div class="tsb-livedock__seg">
           <button type="button" class="tsb-livedock__segbtn ${!isIcons ? 'active' : ''}" id="tsbDockSegLabels">Titles</button>
           <button type="button" class="tsb-livedock__segbtn ${isIcons ? 'active' : ''}" id="tsbDockSegIcons">Icons</button>
         </div>
-        <button type="button" class="tsb-livedock__done" id="tsbDockDone">✓ Done</button>
-      </div>
-      ${slotBarHtml}
-      <div class="tsb-livedock__hint">
-        Drag tabs below to reorder · Or tap a tool to replace <b>${activeSlotName}</b>:
       </div>
       <div class="tsb-livedock__shelf" id="tsbDockShelf">
-        ${Object.keys(ITEM_DEFS).map(function (k) {
+        ${spare.map(function (k) {
           var def = ITEM_DEFS[k];
-          var inBar = activeSlots.indexOf(k) >= 0;
-          return `
-            <button type="button" class="tsb-shelf-item ${inBar ? 'is-inbar' : ''}" data-tool="${k}">
-              <span>${def.lbl}</span>
-            </button>
-          `;
-        }).join("")}
+          return `<button type="button" class="tsb-tool" data-tool="${k}">
+            <span class="tsb-tool__ico" aria-hidden="true">${def.ico || ""}</span>
+            <span class="tsb-tool__lbl">${def.lbl}</span>
+          </button>`;
+        }).join("") || '<p class="tsb-livedock__empty">Every tool is already on your bar.</p>'}
       </div>
     `;
 
     document.body.appendChild(dock);
     liveDock = dock;
+
+    /* v350: the sheet is a sheet, not a box: grab it and pull it down to close.
+       A short pull springs back, a real pull dismisses. Horizontal movement is
+       ignored so a slipped thumb never closes someone's editor. */
+    (function dragToClose() {
+      var grab = dock.querySelector("#tsbDockGrab");
+      var handle = grab || dock;
+      var startY = null, dy = 0, active = false;
+      function down(e) {
+        startY = (e.touches ? e.touches[0].clientY : e.clientY);
+        dy = 0; active = true;
+        dock.style.transition = "none";
+      }
+      function move(e) {
+        if (!active || startY == null) return;
+        var y = (e.touches ? e.touches[0].clientY : e.clientY);
+        dy = Math.max(0, y - startY);
+        dock.style.transform = "translateX(-50%) translateY(" + dy + "px)";
+        if (e.cancelable) e.preventDefault();
+      }
+      function up() {
+        if (!active) return;
+        active = false; startY = null;
+        dock.style.transition = "";
+        dock.style.transform = "";
+        if (dy > 84) {
+          try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) {}
+          exitEditMode();
+        }
+      }
+      handle.addEventListener("pointerdown", down);
+      handle.addEventListener("pointermove", move, { passive: false });
+      window.addEventListener("pointerup", up);
+      handle.addEventListener("touchstart", down, { passive: true });
+      handle.addEventListener("touchmove", move, { passive: false });
+      handle.addEventListener("touchend", up);
+      handle.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " " || e.key === "Escape") { e.preventDefault(); exitEditMode(); }
+      });
+    })();
+
+    dock.querySelectorAll("[data-slotpick]").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        selectedSlotIdx = parseInt(chip.getAttribute("data-slotpick"), 10) || 0;
+        try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) {}
+        renderLiveDock();
+        updateSlotHighlight();
+      });
+    });
 
     var segLabels = dock.querySelector("#tsbDockSegLabels");
     var segIcons = dock.querySelector("#tsbDockSegIcons");
@@ -908,11 +1049,15 @@
 
   /* Tap outside dock or bar to exit edit mode */
   document.addEventListener("click", function (e) {
-    if (isEditMode) {
-      if (!bar.contains(e.target) && (!liveDock || !liveDock.contains(e.target))) {
-        exitEditMode();
-      }
-    }
+    if (!isEditMode) return;
+    /* v356: the tap that opened the panel used to be the tap that closed it,
+       which is why it never stayed open. Give it half a second of immunity,
+       and never close on anything that lives inside the bar or the panel. */
+    if (Date.now() - editStartedAt < 500) return;
+    if (bar.contains(e.target)) return;
+    if (liveDock && liveDock.contains(e.target)) return;
+    if (e.target.closest && e.target.closest(".tsb-livedock-scrim")) return;
+    exitEditMode();
   });
 })();
 

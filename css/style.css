@@ -353,6 +353,11 @@ html.dark .youpage .yohint,
 html.dark .youpage .yocode__hint {
   color: #a89d88 !important;
 }
+/* v349 · the code's own clock. <b> is the running time or the word Resend. */
+.youpage .yocode__hint b { font-weight: 600; color: var(--ink, #16130F); }
+.youpage .yocode__hint.dead { color: #8A1C14; }
+html.dark .youpage .yocode__hint.dead { color: #F0A79E !important; }
+.youpage .yocode__hint.dead b { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .youpage .yoform:not([hidden]) { animation: none; }
 }
@@ -6166,6 +6171,12 @@ html.dark .tsb-bar__plus { border-color: #000; box-shadow: var(--sh-2); }
   html.tsb-hasbar body { padding-bottom: calc(var(--bar-total) + 24px); }
   html.tsb-hasbar .toast { bottom: calc(var(--bar-total) + 32px); }
   html.tsb-hasbar .achvpop { bottom: calc(var(--bar-total) + 16px); }
+  /* v351: when the player dock is up, the banner sits above IT, not above the
+     bar - otherwise "Unlocked" covers the chapter you are listening to. */
+  html.tsb-hasbar body:has(#tsbAp.ap-on) .achvpop { bottom: calc(var(--bar-total) + 104px); }
+  html.tsb-hasbar body:has(#tsbAp.ap-on) .toast { bottom: calc(var(--bar-total) + 104px); }
+  html.tsb-hasbar body.tsb-audio-live .achvpop { bottom: calc(var(--bar-total) + 104px); }
+  html.tsb-hasbar body.tsb-audio-live .toast { bottom: calc(var(--bar-total) + 104px); }
   html.tsb-hasbar .aq-panel { bottom: calc(var(--bar-total) + 12px); height: min(70vh, 620px); }
   html.tsb-hasbar .tsb-player { bottom: calc(var(--bar-total) + 14px); }
   html.tsb-hasbar .lessonnav__fab { bottom: calc(var(--bar-total) + 18px); }
@@ -13173,3 +13184,156 @@ html.fv-today #grid, html.fv-lib .ft { content-visibility: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .card, .ft-sec, .gy-row, .gy-card, .grave { content-visibility: visible; }
 }
+
+
+/* ============================================================
+   v349 · THUMBS, NOT MOUSE POINTERS
+   The audit counted real controls under 32 px: podcast filter chips,
+   Ask's chips and icon buttons, the little like/comment counters on a
+   story, the tip-jar close. Every one of them now has a 34 px box on a
+   touch screen, and touch-action removes the double-tap delay.
+   Inline text links inside prose are deliberately left alone: growing
+   them would break the line rhythm for no gain.
+   ============================================================ */
+@media (pointer: coarse) {
+  a[href], button, [role="button"], label { touch-action: manipulation; }
+
+  .pc-search__chips button,
+  .aq-chip,
+  .aq-libbtn, .aq-clear, .aq-close,
+  .cm-like, .cm-cmts,
+  .fs2-sw, .fs2-mini,
+  .tipjar__x,
+  .btn-clean-expand {
+    min-height: 34px;
+  }
+  .aq-libbtn, .aq-clear, .aq-close,
+  .tipjar__x,
+  .cm-like, .cm-cmts { min-width: 34px; }
+
+  /* a counter that grew a box should still read as a word, not a button */
+  .cm-like, .cm-cmts, .tipjar__x { display: inline-flex; align-items: center; justify-content: center; }
+}
+
+
+/* ==========================================================================
+   v350 · THE MARK, AND THE THREE GROUNDS
+   Two leaves of one book on a 64 grid: an ink left leaf, a signal-yellow
+   right leaf, and a 2.4 unit paper spine down the gutter.
+
+   The mark changes with the hour - not the drawing, the ground:
+       morning   05:00-11:59   the book sits on signal yellow
+       afternoon 12:00-16:59   the book sits on paper
+       night     17:00-04:59   the book sits on ink
+   js/mark.js sets the class on <html> before first paint, so the right
+   version is on screen from the first frame and never swaps in late.
+   ========================================================================== */
+:root {
+  /* morning: yellow ground, ink leaf, paper leaf */
+  --mk-ground: #FFC800;
+  --mk-a: #16130F;
+  --mk-b: #FBF8F1;
+  --mk-sp: #FFC800;
+  --mk-edge: #16130F;
+}
+html.tod-pm {
+  /* afternoon: paper ground, ink leaf, yellow leaf */
+  --mk-ground: #FBF8F1;
+  --mk-a: #16130F;
+  --mk-b: #FFC800;
+  --mk-sp: #FBF8F1;
+  --mk-edge: #16130F;
+}
+html.tod-night {
+  /* night: ink ground, both leaves paper */
+  --mk-ground: #16130F;
+  --mk-a: #FBF8F1;
+  --mk-b: #FBF8F1;
+  --mk-sp: #16130F;
+  --mk-edge: #FBF8F1;
+}
+
+.tsb-mark { display: inline-block; width: 1em; height: 1em; vertical-align: -.13em; flex: none; overflow: visible; }
+.tsb-mark__a { fill: var(--mk-a); transition: fill .45s ease; }
+.tsb-mark__b { fill: var(--mk-b); transition: fill .45s ease; }
+.tsb-mark__sp { fill: none; stroke: var(--mk-sp); stroke-width: 2.4; opacity: .85; transition: stroke .45s ease; }
+
+/* every place the mark gets a ground of its own */
+.logo__mark,
+.ahero__mark,
+.lghero__chip,
+.login-logo-icon,
+.brand-mark,
+.fo-os {
+  background: var(--mk-ground) !important;
+  transition: background .45s ease;
+}
+.logo__mark { border-color: var(--mk-edge) !important; }
+.ahero__mark, .fo-os { border-color: var(--mk-edge) !important; }
+.logo__mark > .tsb-mark { width: 26px; height: 26px; vertical-align: 0; }
+@media (max-width: 640px) { .logo__mark > .tsb-mark { width: 22px; height: 22px; } }
+.logo:hover .logo__mark > .tsb-mark { transform: rotate(-6deg); transition: transform .2s; }
+
+/* text-sized marks and fixed badges */
+.head > .tsb-mark, .footer .head > .tsb-mark { margin-right: .38em; }
+.logo__mark .tsb-mark, .head .tsb-mark, .tick__t .tsb-mark { vertical-align: -.13em; }
+.ahero__mark .tsb-mark { width: 44px; height: 44px; vertical-align: 0; }
+.lghero__chip .tsb-mark { width: 28px; height: 28px; vertical-align: 0; }
+.login-logo-icon .tsb-mark { width: 26px; height: 26px; vertical-align: 0; }
+.brand-mark .tsb-mark { width: 20px; height: 20px; vertical-align: 0; }
+.feattile__emoji .tsb-mark,
+.spine-head-mark .tsb-mark, .actk__m .tsb-mark { width: 1em; height: 1em; vertical-align: -.12em; }
+.spine-head-mark .tsb-mark, .actk__m .tsb-mark { margin-right: .3em; }
+.feattile__emoji { display: grid; place-items: center; }
+
+/* dark surfaces have no tile, so the leaves stay light at every hour:
+   an ink leaf on an ink footer is not a design decision, it is a bug */
+.footer, .site-footer, .site-foot, .bhead, .tsb-player, .head--onDark,
+.footer .head, .site-footer .head {
+  --mk-a: #FBF8F1;
+  --mk-b: #FFC800;
+  --mk-sp: #16130F;
+}
+html.tod-night .footer, html.tod-night .site-footer, html.tod-night .site-foot,
+html.tod-night .bhead, html.tod-night .tsb-player,
+html.tod-night .footer .head { --mk-a: #FBF8F1; --mk-b: #FBF8F1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tsb-mark__a, .tsb-mark__b, .tsb-mark__sp, .logo__mark, .ahero__mark { transition: none; }
+}
+
+/* ==========================================================================
+   v351 · NOTHING SITS ON TOP OF TEXT
+   Kids mode drew its stickers over the label they were meant to decorate.
+   The animals now live behind the card, at the edges, never across a line.
+   ========================================================================== */
+.kids-stickers, .kid-stickers, .k-stickers, .kids-float { z-index: 0 !important; pointer-events: none; }
+.kids-card, .k-card, .kids-gate, .k-gate { position: relative; z-index: 2; }
+.kid-sticker, .kids-sticker { opacity: .9; }
+@media (max-width: 420px) {
+  .kid-sticker, .kids-sticker { transform: scale(.82); }
+}
+
+/* v351 · whatever page you are on, the last row of it has to clear the bar.
+   Some shells carry a footer spacer, some (settings, you) do not, so these
+   pages get the space themselves. */
+@media (max-width: 900px) {
+  html.tsb-hasbar body.setpage { padding-bottom: calc(var(--bar-total, 74px) + 40px) !important; }
+  html.tsb-hasbar body.youpage { padding-bottom: calc(var(--bar-total, 74px) + 32px) !important; }
+  html.tsb-hasbar body.ddpage { padding-bottom: calc(var(--bar-total, 74px) + 32px) !important; }
+}
+
+/* v356 · a reader photo fills its circle wherever the circle is */
+[data-tsb-av] { overflow: hidden; display: inline-flex; align-items: center; justify-content: center; }
+[data-tsb-av] .tsb-ava-img, .fy-av .tsb-ava-img, .ft-av .tsb-ava-img, .fs2-av .tsb-ava-img {
+  width: 100%; height: 100%; object-fit: cover; border-radius: inherit; display: block;
+}
+
+/* v362 · time of day, in one place */
+:root { --mk-a: #16130F; --mk-b: #FFC800; --day-field: #FFC800; }
+html[data-day="morning"]   { --mk-b: #FFD34D; --day-field: #FFD34D }
+html[data-day="afternoon"] { --mk-b: #FFC800; --day-field: #FFC800 }
+html[data-day="evening"]   { --mk-b: #F0A81E; --day-field: #F0A81E }
+html[data-day="night"]     { --mk-b: #FFC800; --mk-a: #F2EAD8; --day-field: #16130E }
+html[data-day="night"] .sp-leaf.sp-l path { fill: #F2EAD8 }
+#tsbSplash { background: radial-gradient(120% 78% at 50% 14%, color-mix(in srgb, var(--day-field) 74%, #fff) 0%, var(--day-field) 46%, color-mix(in srgb, var(--day-field) 82%, #000) 100%) }

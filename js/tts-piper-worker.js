@@ -10,7 +10,12 @@ let activeKey = "";
 
 function chunks(text, max) {
   const s = String(text || "").trim(); if (!s) return [];
-  const lim = max || 220, out = []; let rest = s;
+  /* v347: shorter pieces. The first sentence used to wait for up to 220
+     characters of speech to be synthesised, which on a slower phone is
+     several silent seconds and, on the worst devices, long enough to look
+     like the voice had died. ~120 characters means the first words arrive
+     in about a second and every later piece is smoother. */
+  const lim = max || 120, out = []; let rest = s;
   while (rest.length > lim) {
     let p = Math.max(rest.lastIndexOf(". ", lim), rest.lastIndexOf("! ", lim), rest.lastIndexOf("? ", lim), rest.lastIndexOf(", ", lim));
     if (p < lim * .45) p = rest.lastIndexOf(" ", lim);

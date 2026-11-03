@@ -153,48 +153,54 @@
 
 
     /* daily card: first open of the day, per user; dismiss = gone all day.
-       Waits out the hands-free corner nudge so the two never fight for the
-       reader's first glance; the nudge lives at most ~18s, then we land. */
-    setTimeout(function maybeDaily(waited) {
-      /* the nudge drops at ~2.4s; we check from 2.8s so we never miss it */
+       v353: it now lands in the Today stream (#mpDailySlot). It used to be
+       injected into the hero, which the film home hides, so the question of
+       the day was never actually seen. placeDaily() is idempotent and is
+       called again after every repaint of the Today stream. */
+    function placeDaily() {
+    /* v359: the Today stream draws the mind pick card (js/film.js). This file
+       keeps the bank and the questions, and no longer draws a second card. */
+    return;
       var tKey = todayKey();
-      if (get("tsb_show_mp_daily", true) === false) return;
-      if (get("tsb_mindpick_day", "") === tKey) return;
-      var dIdx = hash(uid() + "|" + tKey) % DAILY.length;
-      var d = DAILY[dIdx];
-      var lead = d.kind === "quote"
-        ? '<div class="mp-quote">' + esc(d.text) + '<span class="mp-quote__who">' + esc(d.who) + '</span></div><div class="mp-q">That is today\'s page. So, honestly:</div>'
-        : '<div class="mp-q">' + esc(d.text) + '</div>';
+      if (get("tsb_show_mp_daily", true) === false) return false;
+      if (get("tsb_dq_dismiss_" + tKey, false)) return false;
+      var target = document.getElementById("mpDailySlot");
+      if (!target) target = document.getElementById("mpPick");
+      if (!target) { var h2 = document.getElementById("mindpick"); target = h2 && h2.offsetParent !== null ? h2 : null; }
+      if (!target || target.querySelector("#mpDaily")) return false;
       var card = document.createElement("div");
       card.className = "mp mp--daily";
       card.id = "mpDaily";
-      card.innerHTML =
-        '<button class="mp-x" id="mpDailyX" aria-label="Close today\'s question">✕</button>' +
-        '<div class="mp-daily__tag">⏳ TODAY, ONE QUESTION</div>' + lead +
-        /* v317: the question is the best conversion point there is - so it
-           leads somewhere. First door: your own notebook, the question
-           already written at the top. Second: answer it publicly as a
-           story. Third: the books, as always. */
-        '<div class="mp-row mp-row--go">' +
-          '<a class="mp-chip mp-chip--note" href="notes.html?about=' + encodeURIComponent(d.text) + '">📓 WRITE ON THIS, FOR YOURSELF</a>' +
-          '<a class="mp-chip mp-chip--story" href="write.html?about=' + encodeURIComponent(d.text) + '">📣 ANSWER IT AS A STORY</a>' +
-        '</div>' +
-        '<div class="mp-row">' +
-          '<button class="mp-chip mp-chip--go" data-mppick="' + d.pick + '">Show me ' + esc(problemLabel(d.pick).toLowerCase()) + ' &rarr;</button>' +
-        '</div>';
-      var pick = document.getElementById("mpPick");
-      if (pick && pick.parentNode) pick.parentNode.insertBefore(card, pick);
-      else if (host) host.insertBefore(card, host.firstChild);
-      var go = card.querySelector("[data-mppick]");
-      if (go) go.addEventListener("click", function () { show(d.pick); });
-      var x = document.getElementById("mpDailyX");
+      {
+        var dIdx = hash(uid() + "|" + tKey) % DAILY.length;
+        var d = DAILY[dIdx];
+        var lead = d.kind === "quote"
+          ? '<div class="mp-quote">' + esc(d.text) + '<span class="mp-quote__who">' + esc(d.who) + '</span></div><div class="mp-q">That is today\'s page. So, honestly:</div>'
+          : '<div class="mp-q">' + esc(d.text) + '</div>';
+        card.innerHTML =
+          '<button class="mp-x" id="mpDailyX" aria-label="Close today\'s question">\u2715</button>' +
+          '<div class="mp-daily__tag">\u23f3 TODAY, ONE QUESTION</div>' + lead +
+          '<div class="mp-row mp-row--go">' +
+            '<a class="mp-chip mp-chip--note" href="notes.html?about=' + encodeURIComponent(d.text) + '">\ud83d\udcd3 WRITE ON THIS, FOR YOURSELF</a>' +
+            '<a class="mp-chip mp-chip--story" href="write.html?about=' + encodeURIComponent(d.text) + '">\ud83d\udce3 ANSWER IT AS A STORY</a>' +
+          '</div>' +
+          '<div class="mp-row"><button class="mp-chip mp-chip--go" data-mppick="' + d.pick + '">Show me ' + esc(problemLabel(d.pick).toLowerCase()) + ' &rarr;</button></div>';
+        target.appendChild(card);
+        var go = card.querySelector("[data-mppick]");
+        if (go) go.addEventListener("click", function () { show(d.pick); });
+      }
+      var x = card.querySelector("#mpDailyX");
       if (x) x.addEventListener("click", function () {
         card.classList.add("mp--bye");
+        set("tsb_dq_dismiss_" + tKey, true);
         setTimeout(function () { if (card.parentNode) card.parentNode.removeChild(card); }, 240);
       });
-      /* the day is consumed the moment the card actually shows */
       set("tsb_mindpick_day", tKey);
-    }.bind(null, 0), 2800);
+      return true;
+    }
+    window.TSB_MINDPICK = window.TSB_MINDPICK || {};
+    window.TSB_MINDPICK.placeDaily = placeDaily;
+    setTimeout(placeDaily, 2800);
   }
 
   function problemLabel(key) {
@@ -259,5 +265,6 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 
-  window.TSB_MINDPICK = { matchProblem: matchProblem, show: show, problems: PROBLEMS, daily: DAILY };
+  window.TSB_MINDPICK = window.TSB_MINDPICK || {};
+  window.TSB_MINDPICK.matchProblem = matchProblem; window.TSB_MINDPICK.show = show; window.TSB_MINDPICK.problems = PROBLEMS; window.TSB_MINDPICK.daily = DAILY;
 })();

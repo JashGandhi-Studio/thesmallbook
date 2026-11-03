@@ -1490,7 +1490,7 @@ html.film .fp .ap-chap { display: none !important; }
 .fp-tx-body p.is-on.is-h em, .fp-tx-body p.is-on em { color: #FFC800; }
 
 /* ===== 34. v331 the "made new" screen: dark, cinematic, three books floating ===== */
-.fo-s0.fo-up { position: relative; overflow: hidden; background: #14110D !important; color: #F4EFE6; padding-top: 0 !important; justify-content: flex-end !important; }
+.fo-s0.fo-up { position: relative; overflow: hidden; background: #14110D !important; color: #F4EFE6; padding-top: 0 !important; justify-content: space-evenly !important; }
 .fo-up-sky { position: absolute; inset: 0; pointer-events: none; }
 .fo-up-sky i { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .55; animation: foSky 9s ease-in-out infinite alternate; }
 .fo-up-sky i:nth-child(1) { width: 340px; height: 340px; top: -90px; right: -120px; background: #FFC800; opacity: .28; }
@@ -2137,9 +2137,18 @@ html.film .f-cover img.is-ready { background: none !important; animation: none !
     position: sticky; bottom: 0; z-index: 6;
     margin-top: 12px; padding-top: 10px;
     padding-bottom: max(10px, env(safe-area-inset-bottom, 0px));
-    background: linear-gradient(180deg, rgba(251, 248, 241, 0) 0%, var(--f-paper) 44%, var(--f-paper) 100%);
+    /* v349: the page sits on a gradient, so a flat paper band used to show
+       as a pale rectangle under the button. The footer now blurs whatever
+       is under it instead of painting a colour of its own. */
+    background: none;
+    -webkit-backdrop-filter: blur(16px) saturate(1.04);
+    backdrop-filter: blur(16px) saturate(1.04);
+    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0) 0, #000 22%);
+    mask-image: linear-gradient(180deg, rgba(0,0,0,0) 0, #000 22%);
   }
-  html.dark .fo-s .fo-foot { background: linear-gradient(180deg, rgba(21, 18, 14, 0) 0%, var(--f-paper) 44%, var(--f-paper) 100%); }
+  @supports not ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+    .fo-s .fo-foot { background: linear-gradient(180deg, rgba(0,0,0,0) 0%, var(--fo-foot-bg, var(--f-paper)) 44%, var(--fo-foot-bg, var(--f-paper)) 100%); }
+  }
   .fo-s .fo-foot .fo-btn { box-shadow: 0 12px 26px -16px rgba(22, 19, 15, .6); }
 
   .fo-s1 .fo-h1 { font-size: 33px !important; line-height: 1.04 !important; margin-top: -8px !important; }
@@ -2199,3 +2208,236 @@ html.film .f-cover img.is-ready { background: none !important; animation: none !
   .fo-chip { height: auto; min-height: 64px; padding: 10px 12px 10px 14px; gap: 9px; }
   .fo-chip__t { font-size: 14.5px; }
 }
+
+/* ---------- v347 · the onboarding gaps, closed ---------- */
+.fo-tiny{display:block;margin:14px auto 0;border:0;background:none;color:var(--f-mu);
+  font:600 12.5px var(--f-sans);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.fo-mini{display:flex;align-items:center;gap:13px;margin:24px 0 0;min-height:76px;
+  opacity:0;transform:translateY(6px);transition:opacity .3s ease,transform .3s ease}
+.fo-mini--in{opacity:1;transform:none}
+.fo-mini{opacity:1;transform:none}
+.fo-mini__row{display:flex;gap:-6px;flex:none}
+.fo-mini__b{flex:none;border-radius:5px;overflow:hidden;box-shadow:0 8px 16px -10px rgba(0,0,0,.7);
+  margin-right:-8px;transition:transform .3s cubic-bezier(.16,1,.3,1)}
+.fo-mini__b0{transform:rotate(-4deg)}
+.fo-mini__b2{transform:rotate(4deg)}
+.fo-mini__tx b{display:block;font:700 12.5px var(--f-sans);color:var(--f-ink)}
+.fo-mini__tx span{display:block;font-size:11.5px;color:var(--f-mu);margin-top:3px}
+.fo-mini__hint{font-size:12.5px;color:var(--f-mu);line-height:1.5;max-width:26ch}
+@media (max-height:700px){.fo-mini{margin-top:14px;min-height:64px}}
+/* compact update card so the button is never cut off */
+.fo--upd .fo-up-hi{margin-top:2px;font-size:13px}
+.fo--upd .fo-h1{font-size:clamp(30px,8.6vw,44px)}
+.fo--upd .fo-up-books{transform:scale(.86);transform-origin:50% 100%;margin-bottom:-18px}
+.fo--upd .fo-upk{margin-top:6px}
+.fo--upd .fo-new{padding:11px 14px}
+.fo--upd .fo-new__t b{font-size:13.5px}
+.fo--upd .fo-new__t span{font-size:11.5px;line-height:1.42}
+.fo--upd .fo-news{gap:9px}
+.fo--upd .fo-p--safe{font-size:12.5px;margin-top:14px}
+.fo--upd .fo-foot{margin-top:14px}
+.fo-mini__row{display:flex;gap:0;flex:none;padding-right:10px}
+.fo-mini__b{margin-right:-10px}
+.fo-mini__b:last-child{margin-right:0}
+.fo-mini__tx{margin-left:4px}
+
+/* v348 · the first slide is the news, and it says where the reader is */
+.fo-upstep { position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); right: 24px; font: 700 12px var(--f-sans); color: var(--f-mu); letter-spacing: .02em; }
+/* v348 · no dead space above the button on tall phones: the fan grows into it */
+@media (min-height: 760px) {
+  .fo-s1 .fo-fan { height: clamp(240px, 32vh, 322px); }
+  .fo-s1 .fo-fan .fo-book { top: 50%; margin-top: -93px; }
+  .fo-s1--sm .fo-fan .fo-book { margin-top: -72px; }
+}
+
+/* v348 · the news card fits one screen, button included, down to 700px */
+.fo-up.fo-s0 { justify-content: flex-start !important; height: 100dvh; overflow: hidden !important;
+  padding-top: calc(14px + env(safe-area-inset-top, 0px)) !important; }
+.fo-up .fo-news { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.fo-up .fo-news::-webkit-scrollbar { height: 0; width: 0; }
+.fo-up .fo-foot { margin-top: auto !important; }
+.fo-up .fo-up-books { height: 176px; margin: 10px auto 26px; }
+.fo-up .fo-h1 { font-size: 33px !important; margin-top: 8px !important; }
+.fo-up .fo-news { margin-top: 14px !important; gap: 8px !important; }
+.fo-up .fo-new { padding: 11px 13px !important; border-radius: 16px !important; }
+.fo-up .fo-new__ic { flex-basis: 36px !important; height: 36px !important; border-radius: 12px !important; }
+.fo-up .fo-new__ic svg { width: 17px; height: 17px; }
+.fo-up .fo-new__t b { font-size: 14.5px !important; }
+.fo-up .fo-new__t span { font-size: 12.5px !important; line-height: 1.32 !important; }
+.fo-up .fo-p--safe { margin-top: 12px !important; font-size: 13px !important; }
+.fo-up .fo-foot { padding-top: 14px !important; gap: 10px !important; }
+.fo-up .fo-btn { height: 54px !important; font-size: 16px !important; }
+.fo-up .fo-tiny { font-size: 12px; }
+@media (max-height: 730px) {
+  .fo-up .fo-up-books { height: 120px; }
+  .fo-up .fo-h1 { font-size: 28px !important; }
+  .fo-up .fo-new__t span { display: none; }
+  .fo-up .fo-new { padding: 9px 12px !important; }
+}
+
+
+/* ============================================================
+   v349 · ASK ON A SHORT WINDOW
+   The whole Ask screen lives in one fixed box, so on a short
+   landscape phone window the page itself never scrolled and the
+   input could sit under the bottom edge with nothing to pull up.
+   On short viewports it becomes a normal, scrollable page again.
+   ============================================================ */
+@media (max-height: 620px) {
+  body.chatpage { min-height: 100dvh; overflow-y: auto; }
+  .tsb-ask--page {
+    position: relative !important;
+    inset: auto !important;
+    height: auto !important;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+  .tsb-ask--page .aq-panel { position: relative !important; inset: auto !important; flex: 1 1 auto; min-height: 0; }
+  .tsb-ask--page .aq-foot { position: sticky; bottom: 0; }
+}
+
+
+/* ============================================================
+   v349 · ONBOARDING: THE QUIET PARTS
+   1. the little line under a disabled Next button
+   2. the "it starts noticing" screen (the only place the app
+      explains what it learns, in words a reader can check)
+   3. the footer's background now follows the page instead of
+      always painting cream, which is what left a pale band under
+      the button on screens with a different ground.
+   ============================================================ */
+/* the foot only paints where it has to; the ground colour it uses is now the
+   section's, so the news card's dark footer can never be painted cream */
+.fo-s { --fo-foot-bg: var(--f-paper); }
+.fo-s.fo-up, .fo-s0.fo-up { --fo-foot-bg: #14110D; }
+
+.fo-footnote {
+  margin: 0;
+  text-align: center;
+  font: 500 12.5px/1.4 var(--f-sans);
+  color: var(--f-mu, #6E6658);
+  letter-spacing: .01em;
+}
+
+/* ---- the noticing screen ---- */
+.fo-s5 { --fo-foot-bg: var(--f-paper); }
+.fo-os {
+  position: relative;
+  width: 104px; height: 104px;
+  margin: 16px auto 6px;
+  display: grid; place-items: center;
+  border-radius: 30px;
+  background: var(--f-card, #fff);
+  border: 1px solid var(--f-line, #ECE5D6);
+  color: #16130F;
+  box-shadow: 0 18px 40px -20px rgba(40, 28, 10, .55);
+  animation: foOsPulse 3.6s ease-in-out infinite;
+}
+@keyframes foOsPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 18px 40px -20px rgba(40,28,10,.55); }
+  50%      { transform: scale(1.035); box-shadow: 0 22px 46px -18px rgba(40,28,10,.62); }
+}
+.fo-os .tsb-mark { width: 66px; height: 66px; vertical-align: 0; }
+/* the tile under the mark follows the hour (yellow / paper / ink), set in
+   css/style.css from the same two variables the mark itself uses */
+.fo-os::after {
+  content: ""; position: absolute; inset: -14px; z-index: -1; border-radius: 40px;
+  background: radial-gradient(60% 60% at 50% 50%, rgba(255,200,0,.34), rgba(255,200,0,0) 70%);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) { .fo-os { animation: none; } }
+
+.fo-know { display: grid; gap: 10px; margin: 22px 0 8px; }
+.fo-know__r {
+  display: flex; align-items: flex-start; gap: 13px;
+  padding: 13px 15px;
+  border-radius: 18px;
+  background: var(--f-card, #fff);
+  border: 1px solid var(--f-line, #ECE5D6);
+  animation: foRise .55s cubic-bezier(.2,.8,.2,1) both;
+  animation-delay: calc(.06s * var(--i, 0));
+}
+.fo-know__ic {
+  flex: none; width: 34px; height: 34px; border-radius: 11px;
+  display: grid; place-items: center;
+  background: rgba(255, 200, 0, .18);
+  color: #16130F;
+}
+html.dark .fo-know__ic { background: rgba(255, 200, 0, .16); color: #F6EFE2; }
+.fo-know__t { display: grid; gap: 2px; min-width: 0; }
+.fo-know__t b { font: 600 14px/1.3 var(--f-sans); letter-spacing: -.01em; }
+.fo-know__t span { font: 400 12.8px/1.45 var(--f-sans); color: var(--f-mu, #6E6658); }
+
+/* ============================================================
+   v350 · THE WELCOME CARD, PROPERLY FULL BLEED
+   The news card is the first thing anyone sees, so nothing about it may
+   look like a card floating on paper: no cream seam down the sides, no
+   pale band under the button, and a shelf of five covers instead of three
+   books stranded in the middle of a wide empty ground.
+   ============================================================ */
+html:has(.fo-s0.fo-up) .fo { background: #14110D !important; }
+html:has(.fo-s0.fo-up) .fo::before { background: none !important; }
+.fo-s0.fo-up { border-radius: 0 !important; }
+.fo-up.fo-s0 { padding-left: 0 !important; padding-right: 0 !important; }
+.fo-up > *:not(.fo-up-books):not(.fo-up-sky) { padding-left: 24px; padding-right: 24px; }
+
+.fo-up .fo-up-books { height: 206px !important; margin: 6px auto 8px !important; max-width: 100%; }
+.fo-up .fo-upb { top: 34px; }
+.fo-up .fo-upb0, .fo-up .fo-upb4 { width: 88px !important; height: 132px !important; }
+.fo-up .fo-upb1, .fo-up .fo-upb3 { width: 102px !important; height: 153px !important; }
+.fo-up .fo-upb2 { width: 114px !important; height: 171px !important; }
+.fo-up .fo-upb0 { margin-left: -186px !important; top: 48px; --r: -14deg; --ry: 15deg; z-index: 1; animation-delay: -1.2s; }
+.fo-up .fo-upb1 { margin-left: -110px !important; top: 28px; --r: -8deg;  --ry: 8deg;  z-index: 2; animation-delay: -2.4s; }
+.fo-up .fo-upb2 { margin-left: -57px  !important; top: 4px;  --r: 0deg;   --ry: 0deg;  z-index: 4; }
+.fo-up .fo-upb3 { margin-left: 28px   !important; top: 28px; --r: 8deg;   --ry: -8deg; z-index: 2; animation-delay: -3.6s; }
+.fo-up .fo-upb4 { margin-left: 104px  !important; top: 48px; --r: 14deg;  --ry: -15deg; z-index: 1; animation-delay: -4.8s; }
+
+/* narrow phones: the shelf closes ranks instead of bleeding off both edges */
+@media (max-width: 380px) {
+  .fo-up .fo-up-books { height: 196px !important; }
+  .fo-up .fo-upb { transform: scale(.92); transform-origin: top center; }
+  .fo-up .fo-upb0 { margin-left: -146px !important; }
+  .fo-up .fo-upb1 { margin-left: -86px !important; }
+  .fo-up .fo-upb2 { margin-left: -43px !important; }
+  .fo-up .fo-upb3 { margin-left: 17px !important; }
+  .fo-up .fo-upb4 { margin-left: 82px !important; }
+}
+@media (max-width: 340px) {
+  .fo-up .fo-up-books { height: 176px !important; }
+  .fo-up .fo-upb { transform: scale(.84); transform-origin: top center; }
+  .fo-up .fo-upb0 { margin-left: -128px !important; }
+  .fo-up .fo-upb1 { margin-left: -76px !important; }
+  .fo-up .fo-upb2 { margin-left: -38px !important; }
+  .fo-up .fo-upb3 { margin-left: 14px !important; }
+  .fo-up .fo-upb4 { margin-left: 72px !important; }
+}
+@media (max-height: 700px) {
+  .fo-up .fo-up-books { height: 158px !important; margin-top: 6px !important; }
+  .fo-up .fo-upb { transform: scale(.78); transform-origin: top center; }
+}
+
+/* v351 · two facts instead of four, given room to breathe, and no dead band
+   in the middle: the list sizes to its content and the fine print rides the
+   button at the foot of the card */
+.fo-up .fo-news { flex: 0 0 auto !important; overflow: visible !important; gap: 12px !important; margin-top: 18px !important; }
+.fo-up .fo-new { padding: 16px 16px !important; }
+.fo-up .fo-new__ic { flex-basis: 42px !important; height: 42px !important; border-radius: 14px !important; }
+.fo-up .fo-new__ic svg { width: 19px; height: 19px; }
+.fo-up .fo-new__t b { font-size: 16px !important; }
+.fo-up .fo-new__t span { font-size: 13.5px !important; line-height: 1.35 !important; }
+.fo-up .fo-p--safe { margin-top: auto !important; }
+@media (max-height: 720px) {
+  .fo-up .fo-new { padding: 12px 14px !important; }
+  .fo-up .fo-new__t b { font-size: 15px !important; }
+  .fo-up .fo-up-books { height: 168px !important; }
+}
+
+/* v361 · the character greets on the first welcome slide and nowhere else */
+.fo-s:not(.fo-s1) .fo-fan__pip { display: none !important }
+/* the golden pill must stay legible with icons only */
+html[data-bar-labels="icons"] .tsb-bar__item.is-active,
+html[data-bar-labels="icons"] .tsb-bar__item--active { color: #16130F !important }
+html[data-bar-labels="icons"] .tsb-bar__item.is-active svg,
+html[data-bar-labels="icons"] .tsb-bar__item--active svg { stroke: #16130F !important; fill: none !important }

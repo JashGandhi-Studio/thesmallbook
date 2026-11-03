@@ -296,7 +296,7 @@
     var cover = b.cover ? b.cover : (b.id ? "assets/covers/"+b.id+".jpg" : "");
     var lessons = (b.lessons||[]).length;
     return '<div style="background:#fff;border:var(--bw) solid var(--edge);border-radius:20px;padding:10px;display:flex;gap:10px;align-items:center;">' +
-      (cover ? '<img src="'+esc(cover)+'" alt="" style="width:56px;height:78px;object-fit:cover;border-radius:12px;border:var(--bw) solid var(--edge);flex:none;" loading="lazy" onerror="this.style.display=\'none\'">' : '<div style="width:56px;height:78px;border-radius:12px;border:var(--bw) solid var(--edge);background:#fffdf5;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;">📕</div>') +
+      (cover ? '<img src="'+esc(cover)+'" alt="" style="width:56px;height:78px;object-fit:cover;border-radius:12px;border:var(--bw) solid var(--edge);flex:none;" loading="lazy" onerror="this.style.display=\'none\'">' : '<div style="width:56px;height:78px;border-radius:12px;border:var(--bw) solid var(--edge);background:#fffdf5;display:flex;align-items:center;justify-content:center;font-size:26px;flex:none;"><svg class="tsb-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path class="tsb-mark__a" d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z"/><path class="tsb-mark__b" d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z"/><path class="tsb-mark__sp" d="M32 18v34"/></svg></div>') +
       '<div style="flex:1 1 auto;min-width:0;">' +
         '<div style="font:800 12px Space Grotesk,sans-serif;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+esc(b.title||b.t||"")+'</div>' +
         '<div style="font:600 11px Space Grotesk,sans-serif;color:#64748b;margin-top:2px;">'+esc(b.author||b.a||"")+(b.category?" · "+esc(b.category):"")+ (lessons ? " · "+lessons+" lessons":"")+'</div>' +
@@ -927,7 +927,7 @@
             html+='<div style="font:600 10px Space Grotesk,sans-serif;color:#94a3b8;text-align:center;margin-top:2px;">No readable full book matched “'+esc(rq)+'” - TheSmallBook\'s own library below covers your topic.</div>';
           }
           if(localBooks.length){
-            html+='<div style="background:#ffc800;border:var(--bw) solid var(--edge);border-radius:22px;padding:12px;box-shadow:var(--sh-2);margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#111;margin-bottom:8px;">📕 From TheSmallBook - your 600 books (tap to use)</div>'+localBooks.map(cardLocalBook).join('<div style="height:8px"></div>')+'<div style="font:600 10px Space Grotesk,sans-serif;color:#111;margin-top:8px;text-align:center;opacity:.7">Suggestions from our library matching “'+esc(rq)+'”</div></div>';
+            html+='<div style="background:#ffc800;border:var(--bw) solid var(--edge);border-radius:22px;padding:12px;box-shadow:var(--sh-2);margin-top:2px;"><div style="font:800 11px Space Grotesk,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:#111;margin-bottom:8px;">From TheSmallBook - your 600 books (tap to use)</div>'+localBooks.map(cardLocalBook).join('<div style="height:8px"></div>')+'<div style="font:600 10px Space Grotesk,sans-serif;color:#111;margin-top:8px;text-align:center;opacity:.7">Suggestions from our library matching “'+esc(rq)+'”</div></div>';
           }
           $res.innerHTML = html;
           var n3=document.createElement("div");

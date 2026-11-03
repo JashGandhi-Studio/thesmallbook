@@ -1,0 +1,434 @@
+/* ==========================================================================
+   v353 · LIVELY
+   Three things live here: Pip (the little book with a face, used on the
+   welcome screen and the sign-in screen), the 3D shelf used in You, and the
+   living background behind the sign-in card.
+   Everything is transform/opacity only.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1 · PIP
+   -------------------------------------------------------------------------- */
+.pip { position: relative; width: 116px; height: 152px; perspective: 700px; }
+.pip--sm { width: 74px; height: 97px; }
+.pip--lg { width: 150px; height: 196px; }
+.pip__body {
+  position: absolute; inset: 0;
+  border-radius: 3px 11px 11px 3px;
+  background: linear-gradient(168deg, #262019 0%, #16130F 58%, #221D17 100%);
+  box-shadow: inset 7px 0 0 -3px #FFC800, inset 0 0 0 1.5px rgba(255,255,255,.07),
+              0 18px 26px -14px rgba(22,19,15,.7);
+  transform-origin: 50% 100%;
+  animation: pipBob 4.6s ease-in-out infinite;
+}
+@keyframes pipBob {
+  0%, 100% { transform: translateY(0) rotate(-.6deg) }
+  50%      { transform: translateY(-4px) rotate(.6deg) }
+}
+.pip__sheen {
+  position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(104deg, transparent 34%, rgba(255,255,255,.09) 48%, transparent 60%);
+  background-size: 260% 100%;
+  animation: pipSheen 5.6s ease-in-out infinite;
+}
+@keyframes pipSheen { 0%, 62% { background-position: 140% 0 } 100% { background-position: -60% 0 } }
+.pip__page {
+  position: absolute; right: -4px; top: 4%; bottom: 3%; width: 7px;
+  border-radius: 1px 4px 4px 1px;
+  background: repeating-linear-gradient(90deg, #F7F1E2 0 1.4px, #E3DAC5 1.4px 2.8px);
+  box-shadow: 2px 2px 5px rgba(0,0,0,.35);
+}
+.pip__face {
+  position: absolute; left: 14%; right: 14%; top: 20%; height: 40%;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.pip__eye {
+  position: relative; display: block; width: 44%; aspect-ratio: 1/1; border-radius: 50%;
+  background: radial-gradient(circle at 42% 34%, #fff, #FBF8F1 62%, #EFE7D4);
+  box-shadow: inset 0 0 0 2px #16130F, inset 0 0 0 5px #FFC800, 0 3px 8px rgba(0,0,0,.4);
+  overflow: hidden;
+}
+.pip__eye b {
+  position: absolute; left: 50%; top: 50%; width: 42%; aspect-ratio: 1/1;
+  margin: -21% 0 0 -21%; border-radius: 50%; background: #16130F;
+  animation: pipPupil 7s ease-in-out infinite;
+}
+.pip__eye b::after {
+  content: ""; position: absolute; left: 12%; top: 8%; width: 46%; height: 46%;
+  border-radius: 50%; background: rgba(255,255,255,.92);
+}
+@keyframes pipPupil {
+  0%, 22%, 100% { transform: none }
+  30%, 44% { transform: translate(-20%, 8%) }
+  52%, 62% { transform: translate(18%, -8%) }
+  70%, 78% { transform: translate(0, -12%) }
+}
+.pip__lid {
+  position: absolute; inset: 0; border-radius: 50%; background: #16130F;
+  transform-origin: 50% 0; transform: scaleY(0);
+  animation: pipBlink 4.4s cubic-bezier(.5,0,.5,1) infinite;
+}
+@keyframes pipBlink {
+  0%, 92%, 100% { transform: scaleY(0) }
+  94%, 96% { transform: scaleY(1) }
+}
+.pip__brow {
+  position: absolute; top: -20%; width: 34%; height: 4px; border-radius: 99px;
+  background: #FFC800;
+}
+.pip__brow--l { left: 0; transform: rotate(-7deg) }
+.pip__brow--r { right: 0; transform: rotate(7deg) }
+.pip__mouth {
+  position: absolute; left: 50%; bottom: 9%; width: 28%; height: 9px; margin-left: -14%;
+  border-radius: 0 0 40px 40px; background: #FFC800; box-shadow: inset 0 -3px 0 #F0B400;
+}
+.pip__feet {
+  position: absolute; left: 50%; bottom: -6px; width: 52%; height: 10px; margin-left: -26%;
+  display: flex; justify-content: space-between;
+}
+.pip__feet i { display: block; width: 34%; height: 100%; border-radius: 0 0 8px 8px; background: #16130F; }
+.pip__shadow {
+  position: absolute; left: 50%; bottom: -14px; width: 78%; height: 12px; margin-left: -39%;
+  border-radius: 50%; background: radial-gradient(ellipse, rgba(22,19,15,.34), transparent 70%);
+  animation: pipShadow 4.6s ease-in-out infinite;
+}
+@keyframes pipShadow {
+  0%, 100% { transform: scaleX(1); opacity: .8 }
+  50% { transform: scaleX(.92); opacity: .62 }
+}
+
+/* --------------------------------------------------------------------------
+   2 · THE 3D SHELF  (You > shelf)
+   -------------------------------------------------------------------------- */
+.sh3d {
+  position: relative; border-radius: 22px; overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 0%, #3A2E23 0%, #241C15 46%, #171310 100%);
+  box-shadow: 0 24px 40px -28px rgba(22,19,15,.9), inset 0 0 0 1px rgba(255,255,255,.06);
+  padding: 6px 0 0;
+}
+html.dark .sh3d { background: radial-gradient(120% 90% at 50% 0%, #2C2219 0%, #1A1510 46%, #120F0C 100%); }
+.sh3d__wood {
+  position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background-image: repeating-linear-gradient(92deg, rgba(255,255,255,.035) 0 1px, transparent 1px 5px),
+                    repeating-linear-gradient(4deg, rgba(0,0,0,.14) 0 2px, transparent 2px 9px);
+}
+.sh3d__row {
+  position: relative;
+  display: flex; align-items: flex-end; gap: 9px; justify-content: center;
+  min-height: 118px;
+  padding: 26px 14px 15px;
+  perspective: 820px; perspective-origin: 50% 46%;
+  transform-style: preserve-3d;
+}
+.sh3d__plank {
+  position: relative; height: 13px; margin: 0 -2px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #5A4630 0%, #3B2E20 46%, #241B13 100%);
+  box-shadow: 0 10px 16px -8px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.22);
+}
+.sh3d__plank::after {
+  content: ""; position: absolute; left: 0; right: 0; top: -5px; height: 5px;
+  background: linear-gradient(180deg, rgba(255,255,255,.1), transparent);
+}
+.sh3d__more {
+  display: block; text-align: center; padding: 13px 0 15px;
+  font: 700 9.5px/1 "Space Grotesk", system-ui, sans-serif; letter-spacing: .18em;
+  color: #E8B22A; text-decoration: none; text-transform: uppercase;
+}
+.sh3d__more b { color: #FBF8F1 }
+.sh3d--empty { display: grid; place-items: center; padding: 30px 20px; text-align: center; }
+.sh3d--empty p { color: rgba(251,248,241,.72); font-size: 13.5px; line-height: 1.5; margin: 0 0 12px; }
+.sh3d--empty a { color: #FFC800; font-weight: 700; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; text-decoration: none }
+
+/* one book */
+.bk3d {
+  position: relative; flex: 0 0 auto; width: 58px; height: 87px;
+  border: 0; padding: 0; background: none; cursor: pointer;
+  transform-style: preserve-3d;
+  transform: rotateY(var(--ry, 0deg)) rotateZ(var(--rz, 0deg)) translateZ(var(--tz, 0px));
+  transition: transform .22s cubic-bezier(.2,.9,.25,1);
+  -webkit-tap-highlight-color: transparent;
+}
+.bk3d:nth-child(3n) { --ry: 5deg }
+.bk3d:nth-child(3n+1) { --ry: -5deg }
+.bk3d:nth-child(4n) { --rz: 1.6deg }
+.bk3d:nth-child(5n) { --rz: -1.4deg }
+.bk3d__front {
+  position: absolute; inset: 0; border-radius: 2px 5px 5px 2px; overflow: hidden;
+  transform-origin: left center; transform-style: preserve-3d;
+  background: #1B1712;
+  box-shadow: 0 10px 14px -8px rgba(0,0,0,.85), inset 0 0 0 1px rgba(255,255,255,.08);
+  transition: transform .72s cubic-bezier(.2,.9,.2,1), box-shadow .3s;
+}
+.bk3d__front img { width: 100%; height: 100%; object-fit: cover; display: block; backface-visibility: hidden; }
+.bk3d__coverback {
+  position: absolute; inset: 0; border-radius: inherit;
+  transform: rotateY(180deg); backface-visibility: hidden;
+  background: linear-gradient(168deg, #FBF8F1, #EDE4D0);
+  box-shadow: inset 0 0 0 1px rgba(22,19,15,.14), inset 14px 0 18px -16px rgba(22,19,15,.6);
+}
+.bk3d__front::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(100deg, rgba(255,255,255,.16) 0 6%, transparent 22%, transparent 78%, rgba(0,0,0,.28) 100%);
+  pointer-events: none;
+}
+.bk3d__side, .bk3d__top {
+  position: absolute; background: repeating-linear-gradient(90deg, #F6F0E1 0 1.5px, #DCD1B8 1.5px 3px);
+  pointer-events: none;
+}
+.bk3d__side { right: -5px; top: 2px; bottom: 2px; width: 6px; transform: rotateY(90deg); transform-origin: left center; border-radius: 0 2px 2px 0 }
+.bk3d__top { left: 2px; right: 2px; top: -5px; height: 6px; transform: rotateX(90deg); transform-origin: bottom center; }
+.bk3d__inner {
+  position: absolute; inset: 0; border-radius: 2px 4px 4px 2px;
+  background: linear-gradient(178deg, #FFFDF7, #F1E9D7);
+  color: #16130F; padding: 9px 8px; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between;
+  box-shadow: inset 0 0 0 1px rgba(22,19,15,.14), inset 12px 0 14px -12px rgba(22,19,15,.5);
+}
+.bk3d__inner b { font: 400 9.5px/1.2 "Newsreader", Georgia, serif; display: block }
+.bk3d__inner span { font: 700 5.5px/1.3 "Space Grotesk", system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #7A6E5D; display: block; margin-top: 3px }
+.bk3d__inner i { font: 400 5.5px/1.3 "Space Grotesk", system-ui, sans-serif; color: #9A8E7B; font-style: normal }
+
+/* the flying copy, which is the whole point */
+.bk3d-fly {
+  position: fixed; z-index: 2147483000; margin: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+  pointer-events: none;
+}
+.bk3d-fly .bk3d__front { transition: transform .66s cubic-bezier(.2,.9,.2,1) }
+.bk3d-fly.is-open .bk3d__front { transform: rotateY(-158deg); box-shadow: -22px 18px 30px -18px rgba(0,0,0,.85) }
+.bk3d-fly .bk3d__inner { box-shadow: inset 0 0 0 1px rgba(22,19,15,.18), inset 14px 0 18px -14px rgba(22,19,15,.55) }
+.bk3d-veil {
+  position: fixed; inset: 0; z-index: 2147482990; background: rgba(22,19,15,0);
+  transition: background .4s ease; pointer-events: none;
+}
+.bk3d-veil.is-on { background: rgba(22,19,15,.28) }
+.bk3d-veil.is-out { background: rgba(251,248,241,.9); transition: background .34s ease }
+
+@media (max-width: 360px) {
+  .bk3d { width: 50px; height: 75px }
+  .sh3d__row { gap: 7px; padding: 22px 10px 13px }
+}
+
+/* --------------------------------------------------------------------------
+   3 · the sign-in background, alive
+   -------------------------------------------------------------------------- */
+.lg-live { position: absolute; inset: 0; overflow: hidden; pointer-events: none; border-radius: inherit; z-index: 0 }
+.lg-live__glow {
+  position: absolute; width: 62%; aspect-ratio: 1; border-radius: 50%;
+  filter: blur(34px); opacity: .5;
+  background: radial-gradient(circle, #FFD34D 0%, rgba(255,195,0,.35) 45%, transparent 70%);
+  animation: lgGlow 13s ease-in-out infinite;
+}
+.lg-live__glow--a { left: -18%; top: -14% }
+.lg-live__glow--b { right: -22%; bottom: -10%; animation-delay: -6s; background: radial-gradient(circle, #8FD3C7 0%, rgba(143,211,199,.3) 48%, transparent 72%) }
+@keyframes lgGlow {
+  0%, 100% { transform: translate3d(0,0,0) scale(1) }
+  50% { transform: translate3d(6%, 5%, 0) scale(1.14) }
+}
+.lg-live__cover {
+  position: absolute; width: 46px; height: 69px; border-radius: 2px 4px 4px 2px;
+  overflow: hidden; opacity: .92;
+  box-shadow: 0 12px 20px -12px rgba(22,19,15,.6);
+  animation: lgDrift var(--dur, 17s) ease-in-out infinite;
+  animation-delay: var(--dl, 0s);
+  will-change: transform;
+}
+.lg-live__cover img { width: 100%; height: 100%; object-fit: cover; display: block }
+@keyframes lgDrift {
+  0%   { transform: translate3d(0, 0, 0) rotate(var(--r0, -8deg)) }
+  50%  { transform: translate3d(6px, -14px, 0) rotate(calc(var(--r0, -8deg) * -1)) }
+  100% { transform: translate3d(0, 0, 0) rotate(var(--r0, -8deg)) }
+}
+.lg-live__dust {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(22,19,15,.16) 1px, transparent 1.2px);
+  background-size: 26px 26px;
+  opacity: .35;
+  animation: lgDust 26s linear infinite;
+}
+@keyframes lgDust { 0% { background-position: 0 0 } 100% { background-position: 26px 52px } }
+@media (prefers-reduced-motion: reduce) {
+  .pip *, .lg-live * { animation: none !important }
+}
+
+/* --------------------------------------------------------------------------
+   4 · welcome hero (onboarding, before the questions)
+   -------------------------------------------------------------------------- */
+.lw { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 6px 4px 0 }
+.lw__stage {
+  position: relative; width: 100%; display: grid; place-items: center;
+  padding: 18px 0 26px; margin-bottom: 14px;
+  border-radius: 26px;
+  background:
+    radial-gradient(90% 110% at 50% 8%, #FFE071 0%, #FFC800 52%, #F2B403 100%);
+  overflow: hidden;
+}
+.lw__stage::after {
+  content: ""; position: absolute; left: 50%; bottom: 26px; width: 78%; height: 12px;
+  margin-left: -39%; border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(22,19,15,.32), transparent 72%);
+}
+.lw__lede { position: relative; z-index: 2 }
+.lw__kicker {
+  font: 700 9.5px/1 "Space Grotesk", system-ui, sans-serif; letter-spacing: .26em;
+  text-transform: uppercase; color: rgba(22,19,15,.6); margin-bottom: 12px; display: block;
+}
+.lw h1 {
+  font: 400 clamp(30px, 9.2vw, 40px)/1.02 "Newsreader", Georgia, serif;
+  letter-spacing: -.02em; margin: 0 0 10px; color: #16130F;
+}
+.lw h1 i { font-style: italic }
+.lw__sub { font-size: 14.5px; line-height: 1.5; color: rgba(22,19,15,.72); max-width: 30ch; margin: 0 auto }
+.lw__pips { display: flex; gap: 6px; justify-content: center; margin: 2px 0 14px }
+.lw__pips i { width: 5px; height: 5px; border-radius: 50%; background: rgba(22,19,15,.22) }
+/* the two "what is new" tickets */
+.lw__news { display: grid; gap: 8px; width: 100%; margin: 2px 0 4px; text-align: left }
+.lw__ticket {
+  display: flex; align-items: center; gap: 11px; padding: 11px 13px;
+  border-radius: 16px; background: #FFFDF8;
+  box-shadow: inset 0 0 0 1px #ECE3D0, 0 8px 16px -14px rgba(22,19,15,.5);
+  opacity: 0; animation: lwTicket .5s cubic-bezier(.2,1,.3,1) both;
+  animation-delay: calc(.35s + var(--i, 0) * .1s);
+}
+.lw__ticket b { font-size: 13px; display: block; color: #16130F }
+.lw__ticket span { font-size: 12px; color: #6E6355; line-height: 1.35; display: block }
+.lw__ticket i { flex: 0 0 34px; width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; background: #FFF1BE; color: #16130F }
+@keyframes lwTicket { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: none } }
+
+/* --------------------------------------------------------------------------
+   5 · the welcome screen (onboarding step before the questions)
+   It used to be a dark card with a list. Now it is the character, on a shelf,
+   in the same yellow as the opening.
+   -------------------------------------------------------------------------- */
+.fo-wlc {
+  background: #FBF8F1 !important;
+  color: #16130F !important;
+  padding-top: 0 !important;
+}
+html.dark .fo-wlc { background: #141110 !important; color: #F4EEE2 !important; }
+.fo-wlc .lw__stage {
+  position: relative; width: 100%; margin: 0 0 18px;
+  padding: 40px 0 30px;
+  display: grid; place-items: center;
+  border-radius: 0 0 30px 30px;
+  background:
+    radial-gradient(86% 120% at 50% 6%, #FFE47A 0%, #FFC800 52%, #F0B400 100%);
+  overflow: hidden;
+  box-shadow: 0 22px 40px -30px rgba(22,19,15,.7);
+}
+.fo-wlc .lw__stage::before {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 30px; height: 13px;
+  background: linear-gradient(180deg, #2A2119, #16130F);
+  box-shadow: 0 14px 22px -10px rgba(22,19,15,.5);
+}
+.fo-wlc .lw__stage::after {
+  content: ""; position: absolute; left: 50%; bottom: 42px; width: 60%; height: 14px;
+  margin-left: -30%; border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(22,19,15,.35), transparent 72%);
+}
+.fo-wlc .lw__pip { position: relative; z-index: 2; margin: 4px 0 10px; height: 150px; display: grid; place-items: end center }
+.fo-wlc .lw__pip .pip { transform: scale(.82); transform-origin: 50% 100% }
+.fo-wlc .lw__pips { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px }
+.fo-wlc .lw__pips i { width: 5px; height: 5px; border-radius: 50%; background: rgba(22,19,15,.25) }
+.fo-wlc .fo-upk {
+  background: #16130F !important; color: #FFC800 !important;
+  border: 0 !important; align-self: center !important; margin: 0 auto 14px !important;
+}
+.fo-wlc .fo-h1 { text-align: center; margin: 0 0 12px }
+.fo-wlc .fo-p { text-align: center; margin-left: auto; margin-right: auto; max-width: 32ch }
+.fo-wlc .fo-news { margin-top: 20px !important; gap: 8px !important }
+.fo-wlc .fo-new {
+  background: #FFFDF8 !important; border-radius: 16px;
+  box-shadow: inset 0 0 0 1px #ECE3D0, 0 10px 18px -16px rgba(22,19,15,.6) !important;
+}
+.fo-wlc .fo-new__t b { color: #16130F !important }
+.fo-wlc .fo-new__t span { color: #6E6355 !important }
+.fo-wlc .fo-foot { margin-top: 18px }
+
+/* Pip standing on the fan of covers */
+.fo-fan--pip { position: relative; padding-top: 46px }
+.fo-fan__pip {
+  position: absolute; left: 50%; top: -26px; z-index: 4;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 12px 12px rgba(22,19,15,.28));
+}
+@media (max-height: 700px) {
+  .fo-fan__pip { top: -18px; scale: .82 }
+  .fo-wlc .lw__stage { padding: 22px 0 24px }
+}
+
+/* the sign-in card sits above its own weather */
+#view-signin { position: relative; overflow: hidden; }
+#view-signin .lg-live { position: absolute; inset: 0; z-index: 0 }
+#view-signin .youcard.lgcard { position: relative; z-index: 1 }
+#view-signin .lg-live__cover { opacity: .5; filter: saturate(.85) }
+#view-signin .lg-live__cover img { border-radius: 2px 4px 4px 2px }
+.lgcard { backdrop-filter: none }
+
+/* --------------------------------------------------------------------------
+   7 · reading journeys (You)
+   -------------------------------------------------------------------------- */
+.fy-sec { display: flex; align-items: baseline; justify-content: space-between }
+.fy-count { font: 700 9.5px/1 "Space Grotesk", system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase; color: var(--f-ink-2, #6B6157); opacity: .7 }
+.fy-jn { display: grid; gap: 10px; margin: 0 0 22px }
+.fy-jnc {
+  display: flex; align-items: center; gap: 14px; text-decoration: none;
+  padding: 14px 14px 14px 16px; border-radius: 20px;
+  background: var(--f-card, #FFFDF8);
+  box-shadow: inset 0 0 0 1px rgba(22,19,15,.07), 0 12px 24px -20px rgba(22,19,15,.8);
+  position: relative; overflow: hidden;
+}
+.fy-jnc::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+  background: var(--tint, #16130F);
+}
+.fy-jnc__stack { position: relative; flex: 0 0 76px; height: 84px }
+.fy-jnc__stack img {
+  position: absolute; top: 0; width: 52px; height: 78px; object-fit: cover;
+  border-radius: 2px 4px 4px 2px;
+  box-shadow: 0 10px 16px -10px rgba(22,19,15,.75), inset 0 0 0 1px rgba(255,255,255,.1);
+  left: calc(var(--i) * 8px);
+  top: calc(var(--i) * 4px);
+  z-index: calc(3 - var(--i));
+  transform: rotate(calc((var(--i) - 1) * 3deg));
+}
+.fy-jnc__t b { display: block; font: 400 17px/1.15 "Newsreader", Georgia, serif; color: var(--f-ink, #16130F); margin-bottom: 3px }
+.fy-jnc__t i { display: block; font: 400 12px/1.4 "Space Grotesk", system-ui, sans-serif; font-style: normal; color: var(--f-ink-2, #6B6157); margin-bottom: 5px }
+.fy-jnc__t em { display: block; font: 700 8.5px/1.2 "Space Grotesk", system-ui, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--tint, #16130F); opacity: .85; font-style: normal }
+html.dark .fy-jnc { background: #1C1915 }
+html.dark .fy-jnc__t b { color: #F4EEE2 }
+
+/* v363 · the tap: Pip comes up out of the page and settles back */
+.pip { transition: transform .34s cubic-bezier(.22,.9,.24,1); will-change: transform }
+.pip--up { transform: translateY(-12px) scale(1.06) }
+.pip__face { transition: transform .18s ease-out }
+.pip__eye b { will-change: transform }
+
+/* v363 · STORIES OPENS LIKE A ROOM, NOT A LIST */
+body.cmpage.fst .cm-head { animation: stRoomIn .68s cubic-bezier(.22,.9,.24,1) both }
+body.cmpage.fst .cm-head__t { animation: stTitleIn .7s cubic-bezier(.16,1.02,.3,1) .05s both }
+body.cmpage.fst .cm-head__s { animation: stSubIn .6s ease .18s both }
+body.cmpage.fst .st-tools { animation: stToolsIn .6s ease .28s both }
+body.cmpage.fst .st-prompt { animation: stSubIn .6s ease .36s both }
+@keyframes stRoomIn  { 0% { opacity: 0; transform: translateY(-6px) } 100% { opacity: 1; transform: none } }
+@keyframes stTitleIn { 0% { opacity: 0; transform: translateY(14px) } 100% { opacity: 1; transform: none } }
+@keyframes stSubIn   { 0% { opacity: 0; transform: translateY(8px) } 100% { opacity: 1; transform: none } }
+@keyframes stToolsIn { 0% { opacity: 0; transform: translateY(10px) } 100% { opacity: 1; transform: none } }
+body.cmpage.fst .cm-feed > * { animation: stFeedIn .5s ease both }
+body.cmpage.fst .cm-feed > *:nth-child(1) { animation-delay: .42s }
+body.cmpage.fst .cm-feed > *:nth-child(2) { animation-delay: .48s }
+body.cmpage.fst .cm-feed > *:nth-child(3) { animation-delay: .54s }
+@keyframes stFeedIn { 0% { opacity: 0; transform: translateY(6px) } 100% { opacity: 1; transform: none } }
+/* v363 · THE LISTEN ROOM BREATHES */
+.fp-line, .ap-line, .tsb-player__line, .lr-line { transition: width .5s cubic-bezier(.3,.8,.3,1), transform .5s cubic-bezier(.3,.8,.3,1) }
+.fp, .fp-sheet, .tsb-player, .ap-mini { transition: transform .36s cubic-bezier(.22,.9,.24,1), opacity .3s ease, background-color .3s ease }
+.fp-ctl, .tsb-player button, .ap-mini button { transition: transform .18s cubic-bezier(.3,1.4,.4,1), opacity .2s ease }
+.fp-ctl:active, .tsb-player button:active, .ap-mini button:active { transform: scale(.94) }
+@media (prefers-reduced-motion: reduce) {
+  body.cmpage.fst .cm-head, body.cmpage.fst .cm-head__t, body.cmpage.fst .cm-head__s,
+  body.cmpage.fst .st-tools, body.cmpage.fst .st-prompt, body.cmpage.fst .cm-feed > *,
+  .fp-line, .ap-line, .tsb-player__line, .fp, .fp-sheet, .tsb-player, .ap-mini { animation: none !important; transition: none !important }
+}

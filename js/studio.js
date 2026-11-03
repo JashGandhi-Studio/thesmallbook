@@ -453,7 +453,7 @@
     try { file = await canvasToFile(canvas, name); }
     catch (e) { toast("❌ Export blocked by the browser, re-pick the photo on this page and try again."); return; }
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try { await navigator.share({ files: [file], title: "TheSmallBook", text: "Made with 📕 TheSmallBook" }); return; } catch (e) { return; }
+      try { await navigator.share({ files: [file], title: "TheSmallBook", text: "Made with TheSmallBook" }); return; } catch (e) { return; }
     }
     var a = document.createElement("a");
     a.href = URL.createObjectURL(file);

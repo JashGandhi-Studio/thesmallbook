@@ -316,6 +316,15 @@
   // Reading Controls Popover & Swatches
   var toolsBtn = document.getElementById('rmTools');
   var popover = document.getElementById('rmToolsPopover');
+  /* v360: choosing a theme, size, mode or contents must never turn the page.
+     The panel swallows its own taps so no page-turn handler ever sees them. */
+  if (popover) {
+    ['click', 'pointerdown', 'touchend'].forEach(function (evt) {
+      popover.addEventListener(evt, function (e) { e.stopPropagation(); }, false);
+    });
+  }
+  var sheetEl = document.getElementById('rmLangSheetOverlay');
+  if (sheetEl) sheetEl.addEventListener('click', function (e) { e.stopPropagation(); });
   var closePopoverBtn = document.getElementById('rmToolsClose');
   var fontSlider = document.getElementById('rmFontSizeSlider');
   var swatchPaper = document.getElementById('swatchPaper');
@@ -350,12 +359,11 @@
     });
   }
 
-  document.addEventListener('click', function(e) {
-    if (popover && popover.style.display === 'block') {
-      if (!popover.contains(e.target) && e.target !== toolsBtn) {
-        closePopover();
-      }
-    }
+  /* v356: the panel used to close on any click outside it, which on a phone
+     meant it vanished the moment you touched a swatch or the page behind it.
+     It now stays open until the reader closes it or presses Escape. */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && popover && popover.style.display === 'block') closePopover();
   });
 
   // Swatch clicks
@@ -428,6 +436,26 @@
     document.body.classList.remove('rm-theme-sepia', 'rm-theme-night');
     if (effectiveTheme === 'sepia') document.body.classList.add('rm-theme-sepia');
     if (effectiveTheme === 'night') document.body.classList.add('rm-theme-night');
+    /* v356: the reader theme is a decision about THIS page, so it is written on
+       <html> too and beats the app-wide dark palette. Picking "paper" in the
+       middle of the night now actually gives you paper. */
+    try {
+      document.documentElement.setAttribute('data-rm', effectiveTheme);
+      var TC = effectiveTheme === 'night' ? '#16130e' : effectiveTheme === 'sepia' ? '#f4ecd8' : '#fffdf5';
+      var mt = document.querySelector('meta[name="theme-color"]');
+      if (!mt) { mt = document.createElement('meta'); mt.name = 'theme-color'; document.head.appendChild(mt); }
+      mt.content = TC;
+      document.documentElement.style.background = TC;
+      /* v357: the theme is a token set, not a class. These are the four the
+         rest of the app reads, so a component that never learned about the
+         reader still paints itself correctly. */
+      var TOK = effectiveTheme === 'night'
+        ? { '--paper': '#16130e', '--ink': '#f2ead8', '--card': '#1f1b16', '--line': '#342d24', '--muted': '#a29884' }
+        : effectiveTheme === 'sepia'
+        ? { '--paper': '#f4ecd8', '--ink': '#2c251e', '--card': '#fbf3e1', '--line': '#d9c9a8', '--muted': '#6d5f4e' }
+        : { '--paper': '#fffdf5', '--ink': '#16130f', '--card': '#ffffff', '--line': '#e6ddca', '--muted': '#6e6658' };
+      Object.keys(TOK).forEach(function (k) { document.documentElement.style.setProperty(k, TOK[k]); });
+    } catch (eRm) {}
 
     updateSwatches(effectiveTheme);
 

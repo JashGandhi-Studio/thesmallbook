@@ -290,7 +290,13 @@
       set("tsb_achv", l);
       if (!silent) achv.popup(ACHV[id]);
     },
+    /* one banner at a time, never a pile of them, never on top of the dock */
+    _q: [],
+    _busy: false,
     popup(a) {
+      if (!a) return;
+      if (achv._busy) { if (achv._q.length < 3) achv._q.push(a); return; }
+      achv._busy = true;
       const el = document.createElement("div");
       el.className = "achvpop";
       el.innerHTML = `<span class="achvpop__icon">${a.icon}</span>
@@ -299,7 +305,15 @@
         <div class="achvpop__desc">${a.desc}</div></div>`;
       document.body.appendChild(el);
       requestAnimationFrame(() => el.classList.add("show"));
-      setTimeout(() => { el.classList.remove("show"); setTimeout(() => el.remove(), 400); }, 4200);
+      setTimeout(() => {
+        el.classList.remove("show");
+        setTimeout(() => {
+          el.remove();
+          achv._busy = false;
+          const next = achv._q.shift();
+          if (next) achv.popup(next);
+        }, 380);
+      }, 3600);
     },
     defs: ACHV
   };
@@ -483,6 +497,13 @@
   });
 
   /* ---------- PWA ---------- */
+  /* a control that is wired in JS should never also jump the page to the top:
+     one delegated rule instead of six different anchors to audit */
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest ? e.target.closest('a[href="#"]') : null;
+    if (a) e.preventDefault();
+  }, true);
+
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("sw.js").then((reg) => {

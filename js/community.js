@@ -1411,7 +1411,10 @@
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">' +
     '<rect width="96" height="96" rx="20" fill="#ffc800"/>' +
     '<rect x="4" y="4" width="88" height="88" rx="17" fill="none" stroke="#1c1a17" stroke-width="5"/>' +
-    '<text x="48" y="62" font-size="44" text-anchor="middle">📕</text></svg>'
+    '<g transform="translate(18 20) scale(.95)">' +
+      '<path d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z" fill="#1c1a17"/>' +
+      '<path d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z" fill="#fbf8f1"/>' +
+    '</g></svg>'
   );
   function avaUrl(name, url, id) {
     if (url) return url; /* uploads use unique Date.now() paths, so a new photo = new URL = no cache problem */

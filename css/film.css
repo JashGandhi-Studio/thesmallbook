@@ -55,7 +55,11 @@ html.dark .f-kick { color: var(--f-gold); }
    FIRST OPEN · four screens (onboard.js)
    ============================================================ */
 html.fo-lock, html.fo-lock body { overflow: hidden !important; }
-.fo { position: fixed; inset: 0; z-index: 100000; background: var(--f-paper); overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; color: var(--f-ink); font-family: var(--f-sans); transition: opacity .42s ease, transform .42s var(--f-out); }
+.fo { position: fixed; inset: 0; z-index: 100000; background: var(--f-paper); overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; color: var(--f-ink); font-family: var(--f-sans); transition: opacity .42s ease, transform .42s var(--f-out); animation: foOpen .62s var(--f-out); }
+/* v348 · the first open arrives like a page being laid down: a breath of
+   scale and light, never a hard cut */
+@keyframes foOpen { from { opacity: 0; transform: scale(1.015); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@media (prefers-reduced-motion: reduce) { .fo { animation: none; } }
 .fo--leave { opacity: 0; transform: scale(1.03); pointer-events: none; }
 /* v341 · the first open owns the whole screen. The paper, the light and the
    desk run edge to edge on every size, so a wide display is never a narrow
@@ -889,3 +893,6 @@ html[data-bar-labels="icons"] #tsbBar .tsb-bar__item { padding-top: 0; padding-b
 
 /* v340 Graveyard doorways */
 .ft-tile--grave{background:#2a2520!important;color:#fff!important}.ft-tile--grave span{color:#e7d7c4!important}.f-libgrave{display:flex;gap:10px;align-items:center;margin:14px 0;padding:13px;border:1px solid #312a23;border-radius:16px;background:#f1eadf;color:#201b16;text-decoration:none}.f-libgrave b{font-size:10px;letter-spacing:.1em}.f-libgrave span{font-size:12px;flex:1}.f-libgrave i{font-style:normal}
+
+/* v351 - the banner clears the dock here too, not just on the app pages */
+body:has(#tsbAp.ap-on) .achvpop, body.tsb-audio-live .achvpop { bottom: calc(var(--bar-total, 74px) + 104px) !important; }

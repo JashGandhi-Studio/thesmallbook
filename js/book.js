@@ -1780,13 +1780,24 @@
 
   /* ---------- CHECKABLE ACTION PLAN ---------- */
   const planWrap = document.getElementById("plan");
+  /* v354: 600 of the 600 books in data.js carry no actionPlan, so this used to
+     throw on every book page and kill everything wired after it (share,
+     truth box, related shelf). The plan is now derived from the chapters, so
+     every book has one and the page finishes wiring. */
+  const PLAN_STEPS = (book.actionPlan && book.actionPlan.length)
+    ? book.actionPlan
+    : (book.lessons || []).slice(0, 3).map((l, i) => {
+        const where = (l.chapter || "").replace(/^Chapter\s+\d+\s*:\s*/i, "");
+        return "Take one action from " + (where || "chapter " + (i + 1)) + ": " + (l.title || "this chapter") + ".";
+      });
   const doneSteps = new Set(TSB.plans.forBook(book.id));
-  book.actionPlan.forEach((step, i) => {
+  if (!planWrap) return;
+  PLAN_STEPS.forEach((step, i) => {
     const li = document.createElement("li");
     li.textContent = step;
     li.className = "checkable" + (doneSteps.has(i) ? " done" : "");
     li.addEventListener("click", () => {
-      const on = TSB.plans.toggle(book.id, i, book.actionPlan.length);
+      const on = TSB.plans.toggle(book.id, i, PLAN_STEPS.length);
       li.classList.toggle("done", on);
     });
     planWrap.appendChild(li);
@@ -1888,4 +1899,36 @@
     entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
   }, { threshold: 0.1 });
   targets.forEach((t) => io.observe(t));
+})();
+
+/* ==========================================================================
+   v357 · A NOTE IN THE MARGIN, NOT A POST IN A FEED
+   The story behind a book belongs next to the book. This puts one quiet door
+   on every book page: write a note of up to 200 words, kept with this title.
+   The feed stays for reading; the margin is where you answer back.
+   ========================================================================== */
+(function () {
+  function id() {
+    var m = /[?&]id=([^&#]+)/.exec(location.search || "");
+    return m ? decodeURIComponent(m[1]) : "";
+  }
+  function place() {
+    var bid = id();
+    if (!bid || document.getElementById("tsbMarginNote")) return;
+    var host = document.querySelector(".lessons, #lessons, main, .book-main") || document.body;
+    var a = document.createElement("a");
+    a.id = "tsbMarginNote";
+    a.href = "write.html?book=" + encodeURIComponent(bid);
+    a.setAttribute("aria-label", "Write a note on this book");
+    a.style.cssText = "display:flex;align-items:center;justify-content:space-between;gap:12px;" +
+      "margin:18px auto 26px;max-width:640px;padding:14px 16px;border:1.5px solid var(--line,#e6ddca);" +
+      "border-radius:16px;background:var(--card,#fff);color:var(--ink,#16130f);text-decoration:none;" +
+      "font:600 14px 'Space Grotesk',system-ui";
+    a.innerHTML = '<span><b style="display:block;font:600 15px Newsreader,Georgia,serif;margin-bottom:2px">Write a note in the margin</b>' +
+      '<span style="font:500 12px \'Space Grotesk\',system-ui;color:var(--muted,#6e6658)">200 words on what this book changed. It stays with the book.</span></span>' +
+      '<span aria-hidden="true" style="width:32px;height:32px;border-radius:50%;background:#FFC800;color:#16130f;display:grid;place-items:center;flex:none">&#8594;</span>';
+    host.appendChild(a);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { setTimeout(place, 700); });
+  else setTimeout(place, 700);
 })();

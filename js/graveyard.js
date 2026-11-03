@@ -903,7 +903,7 @@
 
           ${f.book ? `
           <a class="autopsy__book" href="book.html?id=${f.book}">
-            <span translate="no">📕 THE ANTIDOTE</span>
+            <span translate="no" class="grave__antidote"><svg class="tsb-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path class="tsb-mark__a" d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z"/><path class="tsb-mark__b" d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z"/><path class="tsb-mark__sp" d="M32 18v34"/></svg> THE ANTIDOTE</span>
             <strong>${esc(f.bookTitle || "")} →</strong>
           </a>` : ""}
 

@@ -474,8 +474,38 @@
      · forgot password: the code unlocks a new-password field
      The code itself is created and checked by Supabase's server; the
      browser only types it through. */
+  /* the server counts every request for a code: 60 s apart, 6 an hour.
+     It answers { allowed, wait, left }. If the gate is down we let the
+     request through, because a broken counter must never lock people out. */
+  async function otpGate(email) {
+    var k = String(email || "").trim().toLowerCase();
+    if (!k) return { allowed: false, wait: 0, left: 0 };
+    try {
+      const res = await fetch(URL + "/rest/v1/rpc/tsb_otp_gate", {
+        method: "POST",
+        headers: { "apikey": ANON, "Content-Type": "application/json" },
+        body: JSON.stringify({ p_ident: k })
+      });
+      if (!res.ok) return { allowed: true, wait: 0, left: 99 };
+      var j = await res.json();
+      if (!j || typeof j !== "object") return { allowed: true, wait: 0, left: 99 };
+      return { allowed: j.allowed !== false, wait: Number(j.wait || 0), left: Number(j.left || 0) };
+    } catch (e) { return { allowed: true, wait: 0, left: 99 }; }
+  }
+  async function otpClear(email) {
+    try {
+      await fetch(URL + "/rest/v1/rpc/tsb_otp_reset", {
+        method: "POST",
+        headers: { "apikey": ANON, "Content-Type": "application/json", Authorization: "Bearer " + (session && session.access_token ? session.access_token : ANON) },
+        body: JSON.stringify({ p_ident: String(email || "").trim().toLowerCase() })
+      });
+    } catch (e) {}
+  }
+
   async function requestLoginCode(email) {
     if (!ENABLED) return { ok: false, code: "off" };
+    const g = await otpGate(email);
+    if (!g.allowed) return { ok: false, code: "slow", wait: g.wait, left: g.left };
     try {
       await fetch(URL + "/auth/v1/otp", {
         method: "POST",
@@ -483,11 +513,13 @@
         body: JSON.stringify({ email: email, create_user: false })
       });
     } catch (e) {}
-    return { ok: true };   /* always, never reveals who has an account */
+    return { ok: true, wait: 0, left: g.left };   /* never reveals who has an account */
   }
 
   async function resendSignupCode(email) {
     if (!ENABLED) return { ok: false, code: "off" };
+    const g = await otpGate(email);
+    if (!g.allowed) return { ok: false, code: "slow", wait: g.wait, left: g.left };
     try {
       await fetch(URL + "/auth/v1/resend", {
         method: "POST",
@@ -513,6 +545,7 @@
           const j = await res.json().catch(() => null);
           if (j && j.access_token) {
             session = j; lsSet(AUTH_KEY, session); noteSuccess();
+            otpClear(email);
             return { ok: true };
           }
         }
@@ -647,6 +680,8 @@
   /* always answers ok, never reveals whether the address has an account */
   async function sendReset(email) {
     if (!ENABLED) return { ok: false, code: "off" };
+    const g = await otpGate(email);
+    if (!g.allowed) return { ok: false, code: "slow", wait: g.wait, left: g.left };
     try {
       await fetch(URL + "/auth/v1/recover", {
         method: "POST",
@@ -832,7 +867,7 @@
      lessons, shelf, resume point, plans, streak history and the journey they
      chose. It never carries appearance, action-bar layout, text size, theme,
      notification sounds or other device comfort settings. */
-  const STATE_KEYS = ["tsb_interests", "tsb_ob_lead", "tsb_mind", "tsb_read_minutes", "tsb_read_style", "tsb_read_when", "tsb_starter_shelf", "tsb_plans", "tsb_days", "tsb_birthday", "tsb_read_books", "tsb_highlights_v1", "tsb_last_book", "tsb_pack"];
+  const STATE_KEYS = ["tsb_interests", "tsb_ob_lead", "tsb_mind", "tsb_read_minutes", "tsb_read_style", "tsb_read_when", "tsb_starter_shelf", "tsb_plans", "tsb_days", "tsb_birthday", "tsb_read_books", "tsb_highlights_v1", "tsb_last_book", "tsb_pack", "tsb_min_log", "tsb_taste_events", "tsb_kids_stars", "tsb_notes_v1"];
   function rawGet(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
   function rawSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   function union(a, b) { return [...new Set([].concat(Array.isArray(a) ? a : [], Array.isArray(b) ? b : []))]; }
@@ -843,7 +878,7 @@
   }
   function stateSnapshot() {
     const journey = {};
-    ["tsb_interests", "tsb_ob_lead", "tsb_mind", "tsb_read_minutes", "tsb_read_style", "tsb_read_when", "tsb_starter_shelf", "tsb_pack"].forEach((k) => { journey[k] = rawGet(k, null); });
+    ["tsb_interests", "tsb_ob_lead", "tsb_mind", "tsb_read_minutes", "tsb_read_style", "tsb_read_when", "tsb_starter_shelf", "tsb_pack", "tsb_min_log", "tsb_taste_events", "tsb_kids_stars", "tsb_notes_v1"].forEach((k) => { journey[k] = rawGet(k, null); });
     return { v: 1, progress: lsGet(PROGRESS_KEY, {}), bookmarks: lsGet(MARKS_KEY, []), streak: rawGet("tsb_streak", null), plans: rawGet("tsb_plans", {}), days: rawGet("tsb_days", []), birthday: rawGet("tsb_birthday", ""), read_books: rawGet("tsb_read_books", []), highlights: rawGet("tsb_highlights_v1", {}), last_book: rawGet("tsb_last_book", ""), reader_positions: statePositions(), journey: journey, updated_at: +(rawGet("tsb_reading_state_updated_at", Date.now()) || Date.now()) };
   }
   function mergeMapArrays(a, b) {
@@ -851,6 +886,18 @@
   }
   function mergeHighlights(a, b) {
     const out = Object.assign({}, a || {}); Object.keys(b || {}).forEach((k) => { const seen = {}; out[k] = [].concat(out[k] || [], b[k] || []).filter((x) => { const id = String((x && (x.ts || x.text)) || ""); if (seen[id]) return false; seen[id] = 1; return true; }).slice(-200); }); return out;
+  }
+  function unionBy(a, b, keyFn) {
+    const seen = {}, out = [];
+    [].concat(Array.isArray(b) ? b : [], Array.isArray(a) ? a : []).forEach((x) => {
+      if (!x) return; const k = keyFn(x); if (seen[k]) return; seen[k] = 1; out.push(x);
+    });
+    return out;
+  }
+  function mergeMinLog(a, b) {
+    const out = Object.assign({}, a || {});
+    Object.keys(b || {}).forEach((d) => { out[d] = Math.max(Number(out[d] || 0), Number(b[d] || 0)); });
+    return out;
   }
   function hasJourney(j) { return !!(j && Object.keys(j).some((k) => { const v = j[k]; return Array.isArray(v) ? v.length : v !== null && v !== undefined && v !== ""; })); }
   function mergeReadingState(local, remote) {
@@ -865,6 +912,16 @@
     /* A newly opened device has blank choices. It must inherit the reader's
        cloud journey even if its local clock is newer than the saved row. */
     out.journey = !hasJourney(localJourney) && hasJourney(remoteJourney) ? remoteJourney : !hasJourney(remoteJourney) ? localJourney : (newerRemote ? remoteJourney : localJourney);
+    /* v353: minutes, the taste log and kids stars merge as unions,
+       never last-writer-wins. Reading five minutes on the phone
+       and ten on the laptop has to add up to fifteen on both. */
+    out.journey = Object.assign({}, out.journey);
+    out.journey.tsb_min_log = mergeMinLog(localJourney.tsb_min_log, remoteJourney.tsb_min_log);
+    ["tsb_taste_events"].forEach((k) => {
+      out.journey[k] = unionBy(localJourney[k], remoteJourney[k], (x) => String((x && (x.i || x.t || "")) + "|" + (x && (x.d || x.v || "")))).slice(-300);
+    });
+    out.journey.tsb_kids_stars = Object.assign({}, (remoteJourney.tsb_kids_stars || {}), (localJourney.tsb_kids_stars || {}));
+    out.journey.tsb_notes_v1 = localJourney.tsb_notes_v1 || remoteJourney.tsb_notes_v1 || null;
     out.last_book = !local.last_book ? (remote.last_book || "") : !remote.last_book ? local.last_book : (newerRemote ? remote.last_book : local.last_book);
     out.reader_positions = Object.assign({}, remote.reader_positions || {}); Object.keys(local.reader_positions || {}).forEach((id) => { const r = out.reader_positions[id], l = local.reader_positions[id]; if (!r || +(l.updated_at || 0) >= +(r.updated_at || 0)) out.reader_positions[id] = l; });
     out.updated_at = Date.now(); return out;
@@ -1241,7 +1298,7 @@
     } catch (e) {
       console.warn("TSB boot error:", e);
       // never leave the app without TSB_AUTH, degrade gracefully
-      window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, syncReadingState, queueStateSync, track, onBookComplete, renderNav, clientId: GCLIENT, openSheet, closeSheet, token: () => ensureToken(), signUpEmail, signInEmail, signInId, sendReset, authCooldown, usernameFree, setPassword, needsFinish, finishGoogleAccount, skipFinish, requestLoginCode, resendSignupCode, verifyLoginCode, verifySignupCode, verifyRecoveryCode, setMyUsername, gateStatus };
+      window.TSB_AUTH = window.TSB_AUTH || { enabled: !!ENABLED, user, signIn, signOut, confirmLogout, displayName, setDisplayName, syncProgress, queueSync, syncReadingState, queueStateSync, track, onBookComplete, renderNav, clientId: GCLIENT, openSheet, closeSheet, token: () => ensureToken(), otpGate, otpClear, signUpEmail, signInEmail, signInId, sendReset, authCooldown, usernameFree, setPassword, needsFinish, finishGoogleAccount, skipFinish, requestLoginCode, resendSignupCode, verifyLoginCode, verifySignupCode, verifyRecoveryCode, setMyUsername, gateStatus };
       try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch (e) {}
     }
   }

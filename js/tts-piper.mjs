@@ -157,7 +157,7 @@ async function phonemizer() {
 }
 function chunks(text, max) {
   const s = String(text || "").trim(); if (!s) return [];
-  const lim = max || 360, out = []; let rest = s;
+  const lim = max || 140, out = []; let rest = s;   /* v347: sooner first words */
   while (rest.length > lim) {
     let p = Math.max(rest.lastIndexOf(". ", lim), rest.lastIndexOf("! ", lim), rest.lastIndexOf("? ", lim), rest.lastIndexOf(", ", lim));
     if (p < lim * .45) p = rest.lastIndexOf(" ", lim);
@@ -209,10 +209,29 @@ async function one(text, s) {
 function rejectWorkerWaiters(error) {
   workerWaiters.forEach(function (w) { w.reject(error); }); workerWaiters.clear();
 }
+/* v347 · A DEAD WORKER MUST NOT STAY DEAD.
+   A phone under memory pressure can lose the inference worker without firing
+   an error. Every call used to wait on it for ever, so the voice simply
+   stopped mid-book and never came back. A worker that stops answering is now
+   terminated and rebuilt on the next line. */
+function resetWorker(reason) {
+  try { if (voiceWorker) voiceWorker.terminate(); } catch (e) {}
+  voiceWorker = null; workerKey = "";
+  try { rejectWorkerWaiters(new Error(reason || "Voice worker restarted")); } catch (e) {}
+}
 function workerCall(payload, transfer, onChunk) {
   return new Promise(function (resolve, reject) {
     const id = ++workerSeq; workerWaiters.set(id, { resolve: resolve, reject: reject, progress: payload.progress, chunk: onChunk });
-    try { voiceWorker.postMessage(Object.assign({}, payload, { id: id }), transfer || []); } catch (e) { workerWaiters.delete(id); reject(e); }
+    const guard = setTimeout(function () {
+      if (!workerWaiters.has(id)) return;
+      workerWaiters.delete(id);
+      resetWorker("The voice engine stopped answering, so it was restarted.");
+      reject(new Error("The voice engine stopped answering."));
+    }, payload.type === "init" ? 60000 : 45000);
+    const done = function (fn) { return function (v) { clearTimeout(guard); return fn(v); }; };
+    workerWaiters.set(id, { resolve: done(resolve), reject: done(reject), progress: payload.progress, chunk: onChunk });
+    try { voiceWorker.postMessage(Object.assign({}, payload, { id: id }), transfer || []); }
+    catch (e) { clearTimeout(guard); workerWaiters.delete(id); reject(e); }
   });
 }
 function workerForVoice() {
@@ -253,9 +272,12 @@ async function speakStream(text, opt, onChunk) {
       if (onChunk) onChunk(new Blob([ab], { type: "audio/wav" }));
     });
   } catch (e) {
+    /* v347: if the worker died, rebuild it for the next line rather than
+       leaving the reader with a voice that never comes back. */
+    try { if (/answer|restart|worker/i.test(String(e && e.message))) resetWorker(); } catch (eR) {}
     /* A restricted browser can still listen. Normal browsers stay entirely
        worker-backed, so model inference never blocks the interface. */
-    if (onChunk) onChunk(await speakMain(text, o));
+    try { if (onChunk) onChunk(await speakMain(text, o)); } catch (e2) { resetWorker(); throw e2; }
   }
 }
 async function speak(text, opt) {

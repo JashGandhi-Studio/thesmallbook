@@ -40,7 +40,7 @@ Two real bugs, both fixed:
   is not active to paint the pill at all.
 - **The pill that went home on its own.** The bar rebuilt itself whenever the
   Gold answer arrived (or Settings applied a new look), and a rebuild painted
-  the highlight from the value read at page load — always Today. A rebuild now
+  the highlight from the value read at page load  -  always Today. A rebuild now
   keeps you where you are: Gold landing cannot move the pill.
 
 `film.js` no longer paints the highlight itself; it calls the bar, so Today →
@@ -51,8 +51,8 @@ Library slides instead of jumping, and the two can never disagree.
 `js/tts-engine.js` · `js/audioplayer.js`
 
 - **A downloaded voice is the default voice.** The choice used to live in one
-  localStorage key; if that key was empty for any reason — a restore, an
-  update, a download on another page, a Plus voice without Gold — a 63 MB
+  localStorage key; if that key was empty for any reason  -  a restore, an
+  update, a download on another page, a Plus voice without Gold  -  a 63 MB
   model you already owned was silently ignored and the phone/cloud voice
   played instead. The device is now asked directly at page load: if a model is
   stored, **that is the choice**, it is written back, and it is the only voice
@@ -77,7 +77,7 @@ Library slides instead of jumping, and the two can never disagree.
 `js/graveyard.js` · `js/graveyard2.js` · `css/style.css`
 
 - **It closes now.** The sheet element was created but never stored, so the
-  close function returned immediately every time — ✕, tapping outside and
+  close function returned immediately every time  -  ✕, tapping outside and
   Escape all did nothing, and Share threw before it could hand the file over.
   One assignment fixed it (`shareSheetEl = d`).
 - **Cancel means cancel.** Backing out of the phone's share sheet used to fall
@@ -92,7 +92,7 @@ Library slides instead of jumping, and the two can never disagree.
 
 `js/ask.js` · `css/style.css`
 
-One row under the answer — **try this next** — instead of two rows plus a
+One row under the answer  -  **try this next**  -  instead of two rows plus a
 receipt line. The answer, one next move, then the sources.
 
 ## 6. Membership
@@ -124,7 +124,7 @@ Activated means access, unactivated means none:
 - pill behaviour driven in a real browser: Library → late Gold rebuild → back
   to Today · the pill followed every time
 - grave card: opens, Escape closes, ✕ closes, no scroll lock left behind
-- book page: an 8-lesson book queues **33 parts / 9 items** — the whole book
+- book page: an 8-lesson book queues **33 parts / 9 items**  -  the whole book
 - Ask: one move, one row, no receipt
 
 ## Files changed

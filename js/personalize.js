@@ -85,6 +85,15 @@
     var books = window.BOOKS || [];
     if (!books.length) return [];
 
+    /* v353: js/taste.js holds a behavioural model and anchors the trio, so one
+       new interest no longer rebuilds the whole feed. */
+    try {
+      if (window.TSB_TASTE && TSB_TASTE.picks) {
+        var tp = TSB_TASTE.picks(3);
+        if (tp && tp.length === 3) return tp;
+      }
+    } catch (e) {}
+
     var prof = readProfile();
     var userCats = prof ? prof.interests : ['Self-Improvement', 'Psychology & Mind', 'Money & Wealth'];
     var isListen = prof && prof.format === 'listen';

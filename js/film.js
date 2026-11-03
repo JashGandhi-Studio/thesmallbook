@@ -192,11 +192,22 @@
     var hi = h < 5 ? "Still up" : h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
     var nm = name(), streak = 0;
     var companion = h < 5 ? "A soft page before sleep?" : h < 11 ? "One good page can set the tone." : h < 15 ? "Had lunch? Let us make the afternoon lighter." : h < 18 ? "A little reset before the evening." : "Settle in. Your next good idea is waiting.";
+    /* v350: the line under the greeting is the app talking back. It knows the
+       time of day from the clock, and it knows what this reader said mattered
+       when they set the app up, so the second half is theirs, not a slogan. */
+    try {
+      var _mind = null;
+      try { _mind = JSON.parse(localStorage.getItem("tsb_mind") || "null"); } catch (eM) {}
+      if (Array.isArray(_mind) && _mind.length) {
+        var _pick = String(_mind[0] || "").toLowerCase();
+        if (_pick) companion += " A little on " + _pick + " fits the hour.";
+      }
+    } catch (e) {}
     try { streak = window.TSB && TSB.streak ? TSB.streak.count() : 0; } catch (e) {}
     var date = d.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" });
     var pick = todaysPick(), html = "";
     html += '<div class="ft-hd f-up" style="--d:.05"><div><div class="ft-date">' + esc(date) + '</div><h1 class="ft-hi">' + hi + (nm ? ", <i>" + esc(nm) + "</i>" : "") + '</h1><p class="ft-companion">' + companion + '</p></div>' +
-      '<div class="ft-acts"><a class="ft-streak" href="you.html" aria-label="' + streak + ' day streak">' + ICON.flame + streak + '</a><a class="ft-av" href="you.html" aria-label="You">' + esc((nm || "R").charAt(0).toUpperCase()) + "</a></div></div>";
+      '<div class="ft-acts"><a class="ft-streak" href="you.html" aria-label="' + streak + ' day streak">' + ICON.flame + streak + '</a><a class="ft-av" href="you.html" aria-label="You" data-tsb-av data-name="' + esc(nm || "R") + '">' + (window.TSB_AVA ? TSB_AVA.markup(nm) : esc((nm || "R").charAt(0).toUpperCase())) + "</a></div></div>";
     html += '<a class="ft-search f-up" style="--d:.15" href="#library" data-fsearch>' + ICON.search + "<span>Search " + books().length + " books, authors, ideas</span>" + (SR ? '<button type="button" class="ft-mic" data-fmic aria-label="Search by voice">' + ICON.mic + "</button>" : "<kbd>/</kbd>") + "</a>";
     if (pick) {
       var why = pick.tagline || pick.oneLiner || "";
@@ -207,6 +218,8 @@
         '<div class="ft-hero__btns"><a class="f-btn" href="book.html?id=' + encodeURIComponent(pick.id) + '#bigidea">' + ICON.play + ' Read</a><a class="f-btn f-btn--sq" href="book.html?id=' + encodeURIComponent(pick.id) + '&play=1" aria-label="Listen to ' + esc(pick.title) + '">' + ICON.listen + "</a></div></div></div>" +
         (why ? '<div class="ft-hero__why">' + esc(why) + "</div>" : "") + "</section>";
     }
+    /* v359: the mind pick card is the question of the day, and it is the only
+       one. It flips on tap, shows three books and the try-this line. */
     html += mindPickHtml();
     var last = null; try { last = window.TSB && TSB.lastRead ? TSB.lastRead.get() : null; } catch (e) {}
     var lb = last && byId(last.id);
@@ -313,7 +326,6 @@
     var ids = (p.ids || []).filter(byId).slice(0, 3);
     var quote = q.kind === "quote", opened = lsGet("tsb_mp_open", "") === dayKey();
     var covers = ids.map(function (id) { var b = byId(id); return '<a href="book.html?id=' + encodeURIComponent(id) + '" aria-label="' + esc(b.title) + '">' + coverEl(b, quote ? 38 : 50, quote ? 57 : 75) + "</a>"; }).join("");
-    /* v328: today's line arrives sealed. It opens once you tap, and a new one waits tomorrow */
     if (quote) return '<div class="ft-mp ft-mp--seal f-up' + (opened ? " flip" : "") + '" style="--d:.35" role="button" tabindex="0" aria-label="Mind pick, tap to open today\u2019s line" data-fmp><div class="ft-mp__in">' +
       '<div class="ft-mp__f"><div class="f-kick">MIND PICK \u00b7 TODAY\u2019S LINE</div><div class="ft-mp__seal">' + ICON.seal + '</div>' +
       '<div class="ft-mp__q ft-mp__q--tease">A line from <span>' + esc(q.who || "a great book") + "</span>, picked for this " + partOfDay() + ".</div>" +
@@ -344,12 +356,12 @@
     var lh = document.createElement("div");
     lh.className = "fl-hd"; lh.id = "filmLibHead";
     var cats = {}; books().forEach(function (b) { cats[b.category] = 1; });
-    lh.innerHTML = '<div class="fl-hd__row"><h1>Library</h1><a class="ft-av" href="you.html" aria-label="You">' + esc((name() || "R").charAt(0).toUpperCase()) + "</a></div><p>" + books().length + " books \u00b7 eight minutes each \u00b7 every shelf</p>" + graveDoor("library");
+    lh.innerHTML = '<div class="fl-hd__row"><h1>Library</h1><a class="ft-av" href="you.html" aria-label="You" data-tsb-av data-name="' + esc(name() || "R") + '">' + (window.TSB_AVA ? TSB_AVA.markup(name()) : esc((name() || "R").charAt(0).toUpperCase())) + "</a></div><p>" + books().length + " books \u00b7 eight minutes each \u00b7 every shelf</p>" + graveDoor("library");
     var anchor = $(".ticker") || document.body.firstChild;
     var hero = $("header.hero");
     document.body.insertBefore(ft, hero || anchor);
     document.body.insertBefore(lh, hero || anchor);
-    function paint() { ft.innerHTML = todayHtml(); setTimeout(function () { ft.querySelectorAll(".ft-bar i").forEach(function (i) { i.style.width = i.getAttribute("data-w") + "%"; }); }, 60); }
+    function paint() { ft.innerHTML = todayHtml(); setTimeout(function () { ft.querySelectorAll(".ft-bar i").forEach(function (i) { i.style.width = i.getAttribute("data-w") + "%"; }); try { if (window.TSB_MINDPICK && TSB_MINDPICK.placeDaily) TSB_MINDPICK.placeDaily(); } catch (e) {} }, 60); }
     view._vt = 0;
     var lastLib = null;
     function view(animate) {
@@ -496,7 +508,21 @@
     var C = 2 * Math.PI * 50, k = Math.min(1, goal ? weekTot / goal : 0);
     var mx = Math.max(10, Math.max.apply(null, week));
     var DOW = ["M", "T", "W", "T", "F", "S", "S"], today = (new Date().getDay() + 6) % 7;
-    var shelf = (fin.length ? fin : started).slice(0, 30);
+    /* v353: the shelf holds every book you have opened, finished ones first,
+       because a shelf you added to should not look empty until you finish one */
+    var shelf = (function () {
+      var seen = {}, out = [];
+      function add(b) { if (b && !seen[b.id]) { seen[b.id] = 1; out.push(b); } }
+      fin.forEach(add);
+      started.forEach(add);
+      /* anything the reader saved, and the shelf onboarding built for them,
+         so a fresh reader sees their shelf the moment they open You */
+      var saved = lsGet("tsb_read_books", []);
+      (Array.isArray(saved) ? saved : []).forEach(function (id) { add(byId(id)); });
+      var starter = lsGet("tsb_starter_shelf", []);
+      (Array.isArray(starter) ? starter : []).forEach(function (id) { add(byId(id)); });
+      return out.slice(0, 24);
+    })();
     var hlMap = lsGet("tsb_highlights_v1", {}) || {}, hls = [];
     Object.keys(hlMap).forEach(function (bid) { (hlMap[bid] || []).forEach(function (h) { if (h && h.text) hls.push({ b: byId(bid), t: h.text, ts: h.ts || 0 }); }); });
     hls.sort(function (a, b) { return b.ts - a.ts; });
@@ -527,15 +553,32 @@
       return "<div><b>TheSmallBook Gold</b><span>Cheat-sheets, natural voices, deep dives</span></div><em>\u20b999 / month</em>";
     }
     var h = "";
-    h += '<div class="fy-hd f-up"><div class="fy-av">' + esc(nm.charAt(0).toUpperCase()) + '</div><div><h1>' + esc(nm) + "</h1><p>" + (signed ? esc(email || "Signed in") + " \u00b7 synced" : since ? "Reading since " + esc(since) : "Reading on this device") + '</p></div><a class="fy-hd__gear" href="settings.html" aria-label="Settings">' + ICON.gear + "</a></div>";
+    h += '<div class="fy-hd f-up"><div class="fy-av" data-tsb-av data-name="' + esc(nm) + '">' + (window.TSB_AVA ? TSB_AVA.markup(nm) : esc(nm.charAt(0).toUpperCase())) + '</div><div><h1>' + esc(nm) + "</h1><p>" + (signed ? esc(email || "Signed in") + " \u00b7 synced" : since ? "Reading since " + esc(since) : "Reading on this device") + '</p></div><a class="fy-hd__gear" href="settings.html" aria-label="Settings">' + ICON.gear + "</a></div>";
     h += '<section class="fy-year f-up" style="--d:.1"><div class="f-kick">YOUR READING YEAR \u00b7 ' + yr + '</div><div class="fy-year__row"><div class="fy-ring"><svg viewBox="0 0 116 116"><circle class="bg" cx="58" cy="58" r="50"/><circle class="fg" cx="58" cy="58" r="50" stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + C.toFixed(1) + '" data-off="' + (C * (1 - k)).toFixed(1) + '"/></svg><div class="fy-ring__n"><b>' + weekTot + "</b><span>OF " + goal + " MIN</span></div></div>" +
       '<div class="fy-year__big">' + (streak ? "<i>" + streak + " day" + (streak === 1 ? "" : "s") + "</i> in a row." : "Today is a good <i>day one.</i>") + "<br>" + daysYr + " reading day" + (daysYr === 1 ? "" : "s") + " this year.</div></div>" +
       '<div class="fy-week" aria-label="Minutes this week">' + week.map(function (m, i) { return '<div><i class="' + (m ? "on" : "") + '" data-h="' + Math.max(6, Math.round(m / mx * 44)) + '" title="' + m + ' min"></i><span style="' + (i === today ? "color:#FFC800" : "") + '">' + DOW[i] + "</span></div>"; }).join("") + "</div></section>";
     h += '<div class="fy-stats f-up" style="--d:.2"><div class="fy-stat"><b>' + fin.length + '</b><span>Books finished</span></div><div class="fy-stat"><b>' + lessonsRead + '</b><span>Lessons read</span></div><div class="fy-stat"><b>' + streak + "</b><span>Day streak</span></div></div>";
     if (!signed) h += '<div class="fy-save f-up" style="--d:.25"><div><b>Keep it forever</b><span>Sign in to keep your shelf on every device.</span></div><a class="f-btn" href="login.html">Sign in</a></div>';
-    h += '<div class="fy-sec"><h2>' + (fin.length ? "Finished" : "On your <i>shelf</i>") + "</h2>" + (shelf.length ? '<a href="index.html#library">Library</a>' : "") + '</div><div class="fy-shelf">' +
-      (shelf.length ? '<div class="fy-spines">' + shelf.map(function (b, i) { var c = catCol(b.category); return '<a class="fy-spine" style="--i:' + i + ";height:" + (118 + (seed(b.id) % 34)) + "px;background:" + c[0] + ";color:" + c[1] + '" href="book.html?id=' + encodeURIComponent(b.id) + '" title="' + esc(b.title) + '"><span>' + esc(b.title) + "</span></a>"; }).join("") + "</div>" : '<div class="fy-empty">Books you open land here as spines on a shelf.<br><a href="index.html">Find today\u2019s pick</a></div>') +
-      '<div class="fy-plank"></div></div>';
+    /* v353: the shelf is a shelf now. Real books on real planks, and tapping
+       one pulls it off with a spring and opens it. */
+    var SHELF = (window.TSB_SHELF3D)
+      ? TSB_SHELF3D.html(shelf, { per: 6 })
+      : '<div class="fy-shelf"><div class="fy-spines">' + shelf.map(function (b, i) { var c = catCol(b.category); return '<a class="fy-spine" style="--i:' + i + ";height:" + (118 + (seed(b.id) % 34)) + "px;background:" + c[0] + ";color:" + c[1] + '" href="book.html?id=' + encodeURIComponent(b.id) + '"><span>' + esc(b.title) + "</span></a>"; }).join("") + '</div><div class="fy-plank"></div></div>';
+    h += '<div class="fy-sec"><h2>' + (fin.length ? "Finished" : "On your <i>shelf</i>") + "</h2>" + (shelf.length ? '<a href="index.html#library">Library</a>' : "") + "</div>" + SHELF;
+    /* v353: reading journeys, built from what the reader actually reads */
+    var JN = [];
+    try { if (window.TSB_TASTE && TSB_TASTE.journeys) JN = TSB_TASTE.journeys(3); } catch (e) {}
+    if (JN.length) {
+      h += '<div class="fy-sec"><h2>Reading <i>journeys</i></h2><span class="fy-count">' + JN.length + ' paths</span></div><div class="fy-jn">' +
+        JN.map(function (j) {
+          return '<a class="fy-jnc" href="book.html?id=' + encodeURIComponent(j.books[0].id) + '" style="--tint:' + j.tint + '">' +
+            '<span class="fy-jnc__stack">' + j.books.slice(0, 3).map(function (b, i) {
+              return '<img src="' + cover(b) + '" alt="" style="--i:' + i + '" loading="lazy" decoding="async">';
+            }).join("") + '</span>' +
+            '<span class="fy-jnc__t"><b>' + esc(j.title) + '</b><i>' + esc(j.blurb) + '</i>' +
+            '<em>' + j.books.length + ' books \u00b7 starts with ' + esc(j.books[0].title) + '</em></span></a>';
+        }).join("") + "</div>";
+    }
     h += '<div class="fy-sec"><h2>Highlights</h2>' + (hls.length ? '<a href="notes.html">All ' + hls.length + "</a>" : "") + "</div>" +
       (hls.length ? '<div class="fy-hls">' + hls.slice(0, 3).map(function (x) { return '<a class="fy-hl" href="' + (x.b ? "book.html?id=" + encodeURIComponent(x.b.id) : "notes.html") + '"><q>' + esc(x.t.length > 220 ? x.t.slice(0, 217) + "..." : x.t) + "</q><span>" + esc(x.b ? x.b.title : "") + "</span></a>"; }).join("") + "</div>"
         : '<div class="fy-shelf"><div class="fy-empty">Press and hold any line in a book to highlight it. It shows up here like a marker on paper.</div></div>');
@@ -556,6 +599,7 @@
     h += '<p class="fy-fine">Your reading data lives on your device' + (signed ? " and syncs privately to your account" : "") + '. Build tsb-v336. <a href="legal.html">Privacy</a></p>';
     host.innerHTML = h;
     setTimeout(function () {
+      try { if (window.TSB_SHELF3D) TSB_SHELF3D.bind(host); } catch (e) {}
       var fg = host.querySelector(".fy-ring .fg"); if (fg) fg.style.strokeDashoffset = fg.getAttribute("data-off");
       host.querySelectorAll(".fy-week i").forEach(function (i) { i.style.height = i.getAttribute("data-h") + "px"; });
     }, 120);

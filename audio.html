@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
+  <link rel="manifest" href="manifest.json">
+  <title>Listen, TheSmallBook</title>
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="description" content="Audiobooks, shows and podcasts inside TheSmallBook. Press play and keep living.">
+  <meta name="theme-color" content="#ffc800">
+  <script>
+    try {
+      document.documentElement.classList.add("film", "fv-listen");
+      var rawTh = localStorage.getItem("tsb_theme");
+      var hr = new Date().getHours();
+      var isNight = (hr < 6 || hr >= 18);
+      var isExplicitDark = rawTh === '"dark"' || rawTh === 'dark';
+      var isExplicitLight = rawTh === '"light"' || rawTh === 'light';
+      if (isExplicitDark || (!isExplicitLight && isNight)) document.documentElement.classList.add("dark");
+    } catch (e) {}
+  </script>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta property="og:title" content="Listen, TheSmallBook">
+  <meta property="og:image" content="assets/og-image.png">
+  <link rel="preload" href="assets/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/spacegrotesk.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css?v=363"><link rel="stylesheet" href="css/lively.css?v=363">
+  <link rel="stylesheet" href="css/film.css?v=363">
+  <link rel="stylesheet" href="css/film2.css?v=363">
+  <link rel="stylesheet" href="css/audio-room.css?v=363">
+</head>
+<body class="r">
+<div class="r-wrap">
+
+  <header class="r-hero">
+    <p class="r-kick">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+      Listen
+    </p>
+    <h1>Press play, <i>keep living.</i></h1>
+    <p class="r-hook">Audiobooks, shows and podcasts, in one place. Chapters, speed and a sleep timer.</p>
+  </header>
+
+  <div class="r-searchwrap">
+    <label class="r-search" for="rSearch">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+      <input id="rSearch" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search" placeholder="Search books, shows, anything" aria-label="Search audio">
+    </label>
+  </div>
+
+  <div id="rFeed" class="r-feed"></div>
+  <div id="rResults"></div>
+
+  <div class="r-foot">
+    <a id="rSignin" href="login.html">Sign in to build your feed</a>
+    <button id="rForget" type="button">Forget my history</button>
+  </div>
+</div>
+
+<script src="js/prefs.js?v=363"></script>
+<script src="js/config.js?v=363"></script><script src="js/avatar.js?v=363"></script><script src="js/daylight.js?v=363"></script>
+<script src="js/auth.js?v=363"></script>
+<script src="js/podcast-data.js?v=363"></script>
+<script src="js/audioplayer.js?v=363"></script>
+<script src="js/bar.js?v=363" defer></script>
+<script src="js/listen.js?v=363" defer></script>
+</body>
+</html>

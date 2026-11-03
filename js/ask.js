@@ -10,6 +10,9 @@
    - Library (48+ questions) fully translated per selected language
    ============================================================ */
 (function () {
+  /* the mark, used for the assistant's avatar */
+  var MARK_SVG = '<svg class="tsb-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path class="tsb-mark__a" d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z"/><path class="tsb-mark__b" d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z"/><path class="tsb-mark__sp" d="M32 18v34"/></svg>';
+  /* the mark, used for the assistant's avatar */
   "use strict";
   if (window.TSB_ASK) return;
   window.TSB_ASK = { open: open, close: close };
@@ -1129,7 +1132,7 @@
     d.className = "aq-msg aq-msg--" + role;
     if (role === "bot") {
       var av = document.createElement("span");
-      av.className = "aq-av"; av.textContent = "📕";
+      av.className = "aq-av"; av.innerHTML = MARK_SVG;
       d.appendChild(av);
       var bub = document.createElement("div");
       bub.className = "aq-bubble";
@@ -1153,9 +1156,9 @@
     var d = document.createElement("div");
     d.className = "aq-msg aq-msg--bot aq-msg--think";
     d.innerHTML =
-      '<span class="aq-av">📕</span>' +
+      '<span class="aq-av">' + MARK_SVG + '</span>' +
       '<div class="aq-think">' +
-        '<div class="aq-think__scan"><span class="aq-think__book">📕</span></div>' +
+        '<div class="aq-think__scan"><span class="aq-think__book">' + MARK_SVG + '</span></div>' +
         '<div class="aq-think__status">' + t("Scanning") + ' ' + nb + ' books…</div>' +
         '<div class="aq-think__bar"><i></i></div>' +
       '</div>';

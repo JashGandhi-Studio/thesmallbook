@@ -68,7 +68,8 @@
     if (step === 0) {
       body = '<div class="kg-art" aria-hidden="true"><span class="kg-shield">\ud83d\udee1\ufe0f</span><span class="kg-orbit">' + BUDDIES.slice(0, 4).map(function (b, i) { return '<i style="--i:' + i + '">' + b + "</i>"; }).join("") + "</span></div>" +
         '<p class="kg-kick">' + esc(x("g1k")) + '</p><h1 class="kg-h">' + esc(x("g1")) + "</h1>" +
-        '<ul class="kg-list"><li>' + esc(x("g1a")) + "</li><li>" + esc(x("g1b")) + "</li><li>" + esc(x("g1c")) + '</li><li class="kg-lock">' + esc(x("g1d")) + "</li></ul>" +
+        '<ul class="kg-list"><li>' + esc(x("g1a")) + "</li><li>" + esc(x("g1b")) + "</li><li>" + esc(x("g1c")) + "</li></ul>" +
+        '<p class="kg-foot">' + esc(x("g1d")) + "</p>" +
         '<button class="kg-go" data-kg="1">' + esc(x("next")) + "</button>";
     } else if (step === 1) {
       body = '<div class="kg-art kg-art--wave" aria-hidden="true"><span class="kg-wave">\ud83d\udc4b</span></div>' +

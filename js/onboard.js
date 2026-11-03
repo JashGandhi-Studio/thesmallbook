@@ -32,7 +32,7 @@
      rhythm goes straight into the app on every future open and every future
      update. A new version may show a quiet "what is new" card, and that card
      never leads back into the four screens. */
-  var OB_V = 341;
+  var OB_V = 363;
   function alreadySetUp() {
     try { if (get("tsb_onboarded", false)) return true; } catch (e) {}
     try {
@@ -42,9 +42,17 @@
     return false;
   }
   var UPDATE = alreadySetUp() && (get("tsb_onboard_v", 0) || 0) < OB_V;
+  /* the Open Leaf mark, inline so it is there before any image loads */
+  var MARK = '<svg class="tsb-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path class="tsb-mark__a" d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z"/><path class="tsb-mark__b" d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z"/><path class="tsb-mark__sp" d="M32 18v34"/></svg>';
   function shouldShow() {
     try { if (sessionStorage.getItem("tsb_onboarded_pending")) { set("tsb_onboarded", true); set("tsb_onboard_v", OB_V); sessionStorage.removeItem("tsb_onboarded_pending"); } } catch (e) {}
     if ((get("tsb_onboard_v", 0) || 0) >= OB_V) return false;
+    if (/404\.html|login\.html|story\.html|chat\.html|settings\.html|kids\.html/.test(location.pathname)) return false;
+    if (/[?&]code=/.test(location.search)) return false;
+    /* v347: a reader who has already set up is never sent back through the
+       four questions. They get one card: what changed in this build. It is
+       shown once, then remembered. */
+    if (UPDATE) return true;
     /* an existing setup is never overwritten by a new build */
     if (alreadySetUp()) { set("tsb_onboarded", true); set("tsb_onboard_v", OB_V); return false; }
     /* a signed-in reader still owes the profile step first (auth.js sends them there) */
@@ -74,7 +82,17 @@
   var WHEN = [["morning", "Morning chai"], ["commute", "On the way"], ["lunch", "Lunch break"], ["night", "Before bed"]];
   var WORDS = { 5: "Five", 10: "Ten", 15: "Fifteen", 20: "Twenty", 25: "Twenty-five", 30: "Thirty" };
   var FAN = ["psychology-of-money", "atomic-habits", "deep-work"];
-  var TOTAL = 4;
+  /* v350: the welcome card gets a full shelf, not three books on a wide empty
+     ground - five covers, overlapping, the middle one standing up */
+  var UPBOOKS = ["psychology-of-money", "rich-dad-poor-dad", "atomic-habits", "deep-work", "48-laws-of-power"]
+    .filter(function (id) { return !!byId(id); });
+  var TOTAL = 5;   /* v349: the last new step explains what learns from you */
+  /* v348: the first slide is always the news: what this build changed, in
+     plain words. A brand new reader sees it once before the four questions,
+     a reader who already set up sees only this card, once, and the app
+     remembers. Nobody is ever walked through setup twice. */
+  var hasNews = false;
+  function total() { return updating ? 1 : (hasNews ? TOTAL + 1 : TOTAL); }
 
   var draft = get("tsb_onboard_draft", null) || {};
   if (!draft || typeof draft !== "object") draft = {};
@@ -94,7 +112,7 @@
     } catch (e) {}
   }
 
-  var wrap = null, step = 0, busy = false;
+  var wrap = null, step = 0, busy = false, updating = false;
 
   /* ---------- books ---------- */
   function books() { return window.BOOKS || []; }
@@ -166,12 +184,20 @@
   var SWAP = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h13l-3-3M20 17H7l3 3"/></svg>';
 
   function dots(i) {
+    var off = hasNews ? 1 : 0;
+    var n = updating ? 2 : total();
+    if (updating) i = Math.max(0, i - 1);
+    else i = i + off;
     var h = '<div class="fo-dots" aria-hidden="true">';
-    for (var k = 0; k < TOTAL; k++) h += '<i class="' + (k <= i ? "on" : "") + '"></i>';
+    for (var k = 0; k < n; k++) h += '<i class="' + (k <= i ? "on" : "") + '"></i>';
     return h + "</div>";
   }
   function top(i) {
-    return '<div class="fo-top">' + (i > 0 ? '<button class="fo-back" type="button" data-back aria-label="Back">' + BACK + "</button>" : "<span></span>") + dots(i) + '<span class="fo-step">' + (i + 1) + " of " + TOTAL + "</span></div>";
+    var off = hasNews ? 1 : 0;
+    var n = updating ? 1 : total();
+    if (updating) i = 0;                 /* v349: a returning reader has one card, not a flow */
+    else i = i + off;
+    return '<div class="fo-top">' + (i > 0 ? '<button class="fo-back" type="button" data-back aria-label="Back">' + BACK + "</button>" : "<span></span>") + dots(i) + '<span class="fo-step">' + (i + 1) + " of " + n + "</span></div>";
   }
   function fanDims() {
     var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight || 800;
@@ -185,28 +211,60 @@
     return '<span class="fo-book ' + (cls || "") + '" style="width:' + w + "px;height:" + h + 'px"><img src="' + esc(coverOf(b)) + '" alt="' + esc(b.title) + '" loading="eager" decoding="async"></span>';
   }
   function niceName() { return draft.name ? esc(draft.name) : ""; }
+  /* v347: the space under the choices used to be empty. It now shows the
+     first books this reader is about to own, and it answers every tap. */
+  function miniHtml() {
+    var picks = [];
+    catsPicked().forEach(function (cat) {
+      pool(cat).forEach(function (b) { if (picks.length < 3 && picks.indexOf(b) < 0) picks.push(b); });
+    });
+    if (!picks.length) {
+      return '<div class="fo-mini__hint">Your shelf starts here. Pick one and it fills.</div>';
+    }
+    var names = draft.mind.slice(0, 3).join(", ");
+    return '<div class="fo-mini__row">' + picks.map(function (b, k) {
+      return bookEl(b, 48, 72, "fo-mini__b fo-mini__b" + k);
+    }).join("") + "</div>" +
+    '<div class="fo-mini__tx"><b>Your shelf starts here</b><span>' + esc(names || "Picked for you") + '</span></div>';
+  }
 
   /* ---------- screens ---------- */
   var NEWS = [
-    ['<path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 1-3-3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/>', "Listening that keeps up", "TheSmallBook Voice Model prepares offscreen, so your pages stay smooth."],
-    ['<path d="M4 5.5h16v13H4z"/><path d="M8 9h8M8 13h5"/>', "One player, every book", "The broadcast player now follows you from Listen into any book."],
-    ['<path d="M4 19V5l8-2 8 2v14l-8 2z"/><path d="M12 3v18"/>', "A notebook for real life", "Your pages, your prompts and your next small action."],
-    ['<path d="M5 12.5 9.5 17 19 7.5"/>', "The quiet details", "Tighter pauses, smoother transitions and original editions with a new look."]
+    ['<path d="M3 14v-3a9 9 0 0 1 18 0v3"/><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="17" y="12" width="4" height="9" rx="1"/>',
+      "Listen is a room now", "Audiobooks, shows and podcasts in one place."],
+    ['<path d="M12 3v18"/><path d="M5 8h14"/><path d="M5 16h14"/>',
+      "It builds around you", "Your feed learns from every chapter you play."],
   ];
+  function upLine() {
+    var mind = [];
+    try { var m = get("tsb_mind", null); if (Array.isArray(m)) mind = m; } catch (e) {}
+    if (!mind.length) mind = draft.mind || [];
+    var where = mind.length ? mind.slice(0, 2).join(" and ").toLowerCase() : "";
+    return (where ? where.charAt(0).toUpperCase() + where.slice(1) + (mind.length > 1 ? " still lead" : " still leads") + " your shelf. " : "") +
+      "Your notes and streak are safe, and nothing needs setting up again.";
+  }
   function screen(i) {
     if (i === -1) {
-      var upBooks = FAN.map(function (id, k) { return bookEl(byId(id), 92, 138, "fo-upb fo-upb" + k); }).join("");
-      return '<section class="fo-s fo-s0 fo-up">' +
-        '<div class="fo-up-sky" aria-hidden="true"><i></i><i></i></div>' +
-        '<div class="fo-up-books" aria-hidden="true">' + upBooks + "</div>" +
-        '<div class="fo-upk">NEW UPDATE</div>' +
+      var upIds = UPBOOKS.slice(0, 5);
+      while (upIds.length < 5) { var extra = FAN[upIds.length % FAN.length]; if (upIds.indexOf(extra) < 0) upIds.push(extra); else break; }
+      var upBooks = upIds.map(function (id, k) { return bookEl(byId(id), 92, 138, "fo-upb fo-upb" + k); }).join("");
+      return '<section class="fo-s fo-s0 fo-up fo-wlc">' +
+        '<div class="lw__stage" aria-hidden="true">' +
+          '<div class="lw__pips"><i></i><i></i><i></i></div>' +
+          '<div class="lw__pip">' + (window.TSB_PIP ? TSB_PIP("pip--lg") : "") + "</div>" +
+        "</div>" +
+        '<div class="fo-upk">' + (updating ? "WHAT IS NEW IN " + esc(String(OB_V)) : "WELCOME TO THESMALLBOOK") + '</div>' +
+        (total() > 1 ? '<div class="fo-upstep">1 of ' + total() + "</div>" : "") +
         (draft.name ? '<p class="fo-up-hi">Welcome back, ' + niceName() + ".</p>" : "") +
-        '<h1 class="fo-h1">TheSmallBook,<br><i>made new.</i></h1>' +
+        '<h1 class="fo-h1">' + (updating ? "TheSmallBook,<br><i>made new.</i>" : "A small read.<br><i>A different year.</i>") + '</h1>' +
         '<div class="fo-news">' + NEWS.map(function (n, k) {
           return '<div class="fo-new" style="--i:' + k + '"><span class="fo-new__ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + n[0] + '</svg></span><span class="fo-new__t"><b>' + n[1] + "</b><span>" + n[2] + "</span></span></div>";
         }).join("") + "</div>" +
-        '<p class="fo-p fo-p--safe">Your books, notes and streak are safe. A minute to make this version yours' + (draft.name ? ", your name is already in." : ".") + '</p>' +
-        '<div class="fo-foot"><button class="fo-btn" type="button" data-next>Set up again ' + ARROW + "</button></div></section>";
+        '<p class="fo-p fo-p--safe">' + (updating ? upLine() : "The biggest ideas, in the smallest time you actually have.") + '</p>' +
+        '<div class="fo-foot"><button class="fo-btn" type="button" data-next>' +
+          (updating ? "Continue " + ARROW : "Let’s begin " + ARROW) + "</button>" +
+        (updating ? '<button class="fo-tiny" type="button" data-restart>Set up again</button>' : "") +
+        "</div></section>";
     }
     if (i === 0) {
       /* v345: the fan is built to the height of the phone it lands on, so a
@@ -214,9 +272,9 @@
       var fd = fanDims();
       var fan = FAN.map(function (id, k) { return bookEl(byId(id), fd.w, fd.h, "fo-fan" + k); }).join("");
       return '<section class="fo-s fo-s1' + fd.cls + '">' + top(0) +
-        '<div class="fo-fan">' + fan + "</div>" +
+        '<div class="fo-fan fo-fan--pip"><span class="fo-fan__pip">' + (window.TSB_PIP ? TSB_PIP("pip--sm") : "") + "</span>" + fan + "</div>" +
         '<h1 class="fo-h1">Big books.<br><i>Small reads.</i></h1>' +
-        '<p class="fo-p">600+ books, eight minutes each. In English, Hindi and more.</p>' +
+        '<p class="fo-p">The best books, told small. In English, Hindi and more.</p>' +
         '<label class="fo-lab" for="foName">WHAT SHOULD WE CALL YOU?</label>' +
         '<input class="fo-in" id="foName" type="text" maxlength="24" autocomplete="given-name" placeholder="Your first name" value="' + esc(draft.name) + '">' +
         '<div class="fo-lab fo-lab--sm">I READ IN</div>' +
@@ -238,7 +296,10 @@
         '<div class="fo-seg" role="radiogroup" aria-label="Read or listen">' + MODES.map(function (m) {
           return '<button type="button" class="' + (draft.style === m[0] ? "on" : "") + '" data-style="' + m[0] + '" role="radio" aria-checked="' + (draft.style === m[0]) + '">' + m[1] + "</button>";
         }).join("") + "</div>" +
-        '<div class="fo-foot"><button class="fo-btn" type="button" data-next' + (draft.mind.length ? "" : " data-dim") + ">Next</button></div></section>";
+        '<div class="fo-foot"><button class="fo-btn" type="button" data-next' + (draft.mind.length ? "" : " data-dim") + ">Next</button>" +
+          '<p class="fo-footnote">' + (draft.mind.length
+            ? "Your shelf is built on the next step, not guessed at here."
+            : "Pick at least one to go on.") + "</p></div></section>";
     }
     if (i === 2) {
       var DS = 280, R = 112, ticks = "";
@@ -261,8 +322,29 @@
         }).join("") + "</div>" +
         '<div class="fo-foot"><button class="fo-btn" type="button" data-next>Build my shelf</button></div></section>';
     }
+    if (i === 3) {
+      /* v349 · the one screen that explains the machine, in plain words.
+         Not branded, not hidden: the reader is told what is noticed and what
+         is never done with it, before they answer anything else. */
+      var KN = [
+        ['<path d="M4 19V6a2 2 0 0 1 2-2h9l5 5v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M8 12h8M8 16h5"/>',
+         "Every chapter, every skip", "What you finish, what you abandon, what you save."],
+        ['<path d="M4 5h16v11H8l-4 4z"/>', "What you write and send",
+         "Notes, highlights and messages colour what comes back to you."],
+        ['<path d="M12 3l7 4v6c0 4-3 6.6-7 8-4-1.4-7-4-7-8V7z"/><path d="M9 12l2 2 4-4"/>',
+         "It never leaves your account", "Not sold, not shared, no advertising, ever."]
+      ];
+      return '<section class="fo-s fo-s5">' + top(3) +
+        '<div class="fo-os" aria-hidden="true">' + MARK + '</div>' +
+        '<h2 class="fo-h2">It starts<br><i>noticing.</i></h2>' +
+        '<p class="fo-p fo-p--q">Nothing here is a form you have to keep filling in. The library reads how you actually use it, and quietly puts the right thing in front of you.</p>' +
+        '<div class="fo-know">' + KN.map(function (k, n) {
+          return '<div class="fo-know__r" style="--i:' + n + '"><span class="fo-know__ic"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + k[0] + '</svg></span><span class="fo-know__t"><b>' + k[1] + '</b><span>' + k[2] + '</span></span></div>';
+        }).join("") + '</div>' +
+        '<div class="fo-foot"><button class="fo-btn" type="button" data-next>Build my shelf ' + ARROW + '</button></div></section>';
+    }
     var lead = byId(draft.picks[0]), rest = draft.picks.slice(1).map(function (id, k) { return slotHtml(byId(id), k + 1); }).join("");
-    return '<section class="fo-s fo-s4 fo-s4b">' + top(3) +
+    return '<section class="fo-s fo-s4 fo-s4b">' + top(4) +
       '<h2 class="fo-h2">Your shelf is<br>ready' + (draft.name ? ", <i>" + niceName() + ".</i>" : ".") + "</h2>" +
       '<p class="fo-p fo-p--q">' + esc(summary()) + "</p>" +
       '<div class="fo-lead" data-slot="0">' + leadHtml(lead) + "</div>" +
@@ -374,16 +456,24 @@
     });
   }
   function go(i, dir) { step = Math.max(0, Math.min(TOTAL - 1, i)); set("tsb_onboard_draft", draft); mount(step, dir); }
+  function goNews(dir) { step = -1; mount(-1, dir || "fwd"); }
   function next() {
     if (busy) return;
-    if (step === -1) { step = 0; set("tsb_onboard_draft", draft); mount(0, "fwd"); return; }
+    if (step === -1) {
+      set("tsb_onboard_draft", draft);
+      /* v349: a reader who already set up gets the banner and nothing else.
+         Setup is never repeated behind their back; the Settings page and the
+         "Set up again" link are where they go if they want it. */
+      if (updating) { save(); finish(); return; }
+      step = 0; mount(step, "fwd"); return;
+    }
     if (step === 0) {
       var n = wrap.querySelector("#foName"); draft.name = n ? n.value.trim().slice(0, 24) : "";
       if (draft.name) try { localStorage.setItem("tsb_reader_name", draft.name); } catch (e) {}
     }
     if (step === 1 && !draft.mind.length) { shake(".fo-chips"); return; }
     if (step === 2) draft.picks = buildShelf();
-    if (step === 3) { finish(); return; }
+    if (step === 4) { finish(); return; }
     go(step + 1, "fwd");
   }
   function shake(sel) {
@@ -446,6 +536,7 @@
       var t;
       if ((t = e.target.closest("[data-next]"))) { next(); return; }
       if ((t = e.target.closest("[data-back]"))) { if (!busy && step > 0) go(step - 1, "back"); return; }
+      if ((t = e.target.closest("[data-restart]"))) { updating = false; wrap.classList.remove("fo--upd"); go(0, "fwd"); return; }
       if ((t = e.target.closest("[data-kids]"))) { e.preventDefault(); draft.name = (wrap.querySelector("#foName") || {}).value || draft.name; save(); try { localStorage.setItem("tsb_kids_mode", "1"); } catch (x) {} location.href = "kids.html"; return; }
       if ((t = e.target.closest("[data-more]"))) { moreLangs(t); return; }
       if ((t = e.target.closest("[data-lang]"))) {
@@ -461,6 +552,7 @@
         else draft.mind.push(m);
         t.classList.toggle("on", at < 0); t.setAttribute("aria-pressed", at < 0);
         t.classList.remove("pop"); void t.offsetWidth; t.classList.add("pop");
+        var mi = wrap.querySelector("#foMini"); if (mi) { mi.classList.remove("fo-mini--in"); mi.innerHTML = miniHtml(); void mi.offsetWidth; mi.classList.add("fo-mini--in"); }
         var nb = wrap.querySelector("[data-next]"); if (nb) { if (draft.mind.length) nb.removeAttribute("data-dim"); else nb.setAttribute("data-dim", ""); }
         set("tsb_onboard_draft", draft);
         return;
@@ -508,8 +600,10 @@
   }
   function open(at) {
     if (wrap) return;
+    updating = UPDATE;
+    hasNews = updating || at === -1 || !alreadySetUp();
     wrap = build(); bind(); step = at || 0; mount(step, "fwd");
-    if (step === -1) wrap.classList.add("fo--upd");
+    if (updating) wrap.classList.add("fo--upd");
   }
 
   /* live re-tune from You and Settings (no reload) */
@@ -530,7 +624,8 @@
 
   function boot() {
     if (!shouldShow()) return;
-    open(UPDATE ? -1 : 0);
+    /* every first open begins with the news card, then the four questions */
+    open(-1);
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();

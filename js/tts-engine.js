@@ -17,6 +17,11 @@
      • section intros ("Lesson 3 of 8 - The Power of 1%")
    ============================================================ */
 window.TTS_ENGINE = (function () {
+  /* the mark used wherever the player has no cover to show */
+  var MARK_SVG = '<svg class="tsb-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">'
+    + '<path class="tsb-mark__a" d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z"/>'
+    + '<path class="tsb-mark__b" d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z"/>'
+    + '<path class="tsb-mark__sp" d="M32 18v34"/></svg>';
   "use strict";
 
   /* ---------- state ---------- */
@@ -37,6 +42,67 @@ window.TTS_ENGINE = (function () {
   let modelStreamResume = null;  // worker stream can continue after a pause
   let mediaSessionSet = false;   // lock-screen controls wired
   let gen = 0;                   // generation token: stop() kills in-flight starts
+
+  /* ---------- v347.1 · THE PLAYER THAT KEEPS PLAYING ----------
+     Closing the player is not stopping the book. The session is written down
+     (book, item, playing) so the next page can pick the same sentence back up
+     while the reader browses; a sleep timer and a screen lock keep the voice
+     alive with the phone in a pocket or face down on the table. */
+  const SESSIONKEY = "tsb_tts_session";
+  const SLEEPKEY = "tsb_tts_sleep_until";
+  let sessionBook = null, sessionItem = 0;
+  let silentStart = false;          /* v347.2 · a resumed book mounts no player */
+  let sleepAt = 0, sleepTimer = null;
+  let wakeLock = null;
+  function sGet(k) { try { return JSON.parse(localStorage.getItem(k) || "null"); } catch (e) { return null; } }
+  function sSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function saveSession(on) {
+    sSet(SESSIONKEY, { book: sessionBook, item: curIdx, on: on ? 1 : 0, at: Date.now() });
+  }
+  function clearSession() { try { localStorage.removeItem(SESSIONKEY); } catch (e) {} }
+  /* v347.3 · WHERE THIS BOOK GOT TO. Kept per book, so tapping Listen again -
+     today, tomorrow, after a reload, after the tab was killed - carries on at
+     the paragraph it stopped on instead of reading the lesson from the top. */
+  function posKey(b) { return "tsb_tts_pos_" + (b || ""); }
+  function savePos(item) {
+    if (!sessionBook) return;
+    try { localStorage.setItem(posKey(sessionBook), JSON.stringify({ item: item | 0, at: Date.now() })); } catch (e) {}
+  }
+  function loadPos(b) {
+    try {
+      const v = JSON.parse(localStorage.getItem(posKey(b)) || "null");
+      if (!v || typeof v.item !== "number") return 0;
+      if (Date.now() - (v.at || 0) > 30 * 864e5) { localStorage.removeItem(posKey(b)); return 0; }
+      return Math.max(0, v.item | 0);
+    } catch (e) { return 0; }
+  }
+  function clearPos(b) { try { localStorage.removeItem(posKey(b)); } catch (e) {} }
+  function restartBook(b) { clearPos(b); }
+  async function holdScreen() {
+    try {
+      if (!("wakeLock" in navigator) || wakeLock || document.visibilityState !== "visible") return;
+      wakeLock = await navigator.wakeLock.request("screen");
+      wakeLock.addEventListener("release", function () { wakeLock = null; });
+    } catch (e) { wakeLock = null; }
+  }
+  function dropScreen() { try { if (wakeLock) { wakeLock.release(); wakeLock = null; } } catch (e) { wakeLock = null; } }
+  function sleepLeftMin() { return sleepAt ? Math.max(0, Math.round((sleepAt - Date.now()) / 60000)) : 0; }
+  function setSleep(min) {
+    if (sleepTimer) { clearTimeout(sleepTimer); sleepTimer = null; }
+    sleepAt = min > 0 ? Date.now() + min * 60000 : 0;
+    try { if (sleepAt) localStorage.setItem(SLEEPKEY, String(sleepAt)); else localStorage.removeItem(SLEEPKEY); } catch (e) {}
+    if (sleepAt) {
+      sleepTimer = setTimeout(function () {
+        sleepTimer = null; sleepAt = 0;
+        try { localStorage.removeItem(SLEEPKEY); } catch (e) {}
+        if (playing && !paused) pause();
+        updatePlayer();
+      }, Math.max(1000, sleepAt - Date.now()));
+    }
+    updatePlayer();
+  }
+  function sleepLabel() { const m = sleepLeftMin(); return m ? "\uD83D\uDE34 " + m + "m" : "\uD83D\uDE34 Off"; }
+  try { const sv = +(localStorage.getItem(SLEEPKEY) || 0); if (sv > Date.now()) { sleepAt = sv; sleepTimer = setTimeout(function () { sleepTimer = null; sleepAt = 0; if (playing && !paused) pause(); updatePlayer(); }, sv - Date.now()); } } catch (e) {}
   let posTimer = null;           // lock-screen progress ticker
   let posStart = 0;
   let posDur = 0;
@@ -354,8 +420,24 @@ window.TTS_ENGINE = (function () {
   }
   function playModelStream(api, text, choice, lang, speedV, keep) {
     return new Promise(function (resolve) {
-      var blobs = [], active = false, sourceDone = false, heard = 0, finished = false;
-      function finish(ok) { if (finished) return; finished = true; if (modelStreamResume === pump) modelStreamResume = null; clearPosition(); resolve(ok); }
+      var blobs = [], active = false, sourceDone = false, heard = 0, heardPlaying = 0, finished = false;
+      var chunkGuard = null;
+      function clearChunk() { if (chunkGuard) { clearTimeout(chunkGuard); chunkGuard = null; } }
+      /* v347 · A CHUNK THAT NEVER SAYS "ENDED" MUST NOT FREEZE THE BOOK.
+         When an audio element plays but never reports `ended` (a decoder that
+         stalled, a suspended output route, a phone that slept mid-sentence),
+         the passage used to hang for ever and the book never reached lesson
+         two. The guard moves the passage on by itself. */
+      function armChunk(audio) {
+        clearChunk();
+        var d = audio && isFinite(audio.duration) && audio.duration ? audio.duration * 1000 : 14000;
+        chunkGuard = setTimeout(function () {
+          chunkGuard = null;
+          if (finished || !active) return;
+          close(true);
+        }, Math.max(7000, Math.min(45000, d + 2500)));
+      }
+      function finish(ok) { if (finished) return; finished = true; clearChunk(); if (modelStreamResume === pump) modelStreamResume = null; clearPosition(); resolve({ ok: ok, heard: heard }); }
       function pump() {
         if (finished || active) return;
         if (keep !== gen || !playing || paused) { finish(false); return; }
@@ -363,30 +445,53 @@ window.TTS_ENGINE = (function () {
         if (!blob) { if (sourceDone) finish(heard > 0); return; }
         active = true; heard++;
         var url = URL.createObjectURL(blob), audio = new Audio();
+        audio.setAttribute("playsinline", ""); audio.playsInline = true;
         audio.src = url; audio.preload = "auto";
         function close(ok) {
+          clearChunk();
           try { URL.revokeObjectURL(url); } catch (e) {}
           if (currentAudio === audio) currentAudio = null;
           active = false;
-          if (!ok) { finish(false); return; }
+          if (!ok) {
+            /* v347: one chunk that will not play does not cancel a passage.
+               If anything was heard, keep the rest of the sentence coming. */
+            if (heard > 1) { pump(); return; }
+            finish(false); return;
+          }
           pump();
         }
         audio.onended = function () { close(true); };
         audio.onerror = function () { close(false); };
+        audio.onstalled = function () { if (!audio.__stalled) { audio.__stalled = 1; armChunk(audio); } };
         if (currentAudio && currentAudio !== audio) { try { currentAudio.pause(); } catch (e) {} }
         currentAudio = audio;
         try { audio.preservesPitch = true; audio.playbackRate = 1; } catch (e) {}
         routeBoost(audio);
         function position() { var d = audio.duration; startPosition(d && isFinite(d) ? d : Math.max(5, String(text).length / (15 * (speedV || 1.08)))); }
         audio.onloadedmetadata = position;
-        audio.play().then(position).catch(function () { close(false); });
+        audio.onplaying = function () { heardPlaying = heard; modelPlayed = true; };
+        audio.play().then(function () { modelPlayed = true; position(); armChunk(audio); }).catch(function (err) {
+          var nm = (err && err.name) || "";
+          if (nm === "NotAllowedError" || nm === "AbortError") {
+            /* the phone refused this chunk because it was not started by a
+               tap - wake a silent element, then try the same chunk once more */
+            try { startSilence(); } catch (eS) {}
+            setTimeout(function () { audio.play().then(function () { modelPlayed = true; position(); armChunk(audio); }).catch(function () { close(false); }); }, 160);
+            return;
+          }
+          close(false);
+        });
       }
       modelStreamResume = pump;
       /* if the model does not hand back its first phrase quickly, give the
          sentence to the device voice instead of waiting in silence */
+      /* v347: a cold worker on a phone can take a while on its very first
+         sentence. Give that one 20 s (it is warmed at page load, so this is
+         rare), 9 s after it. */
+      var coldWait = modelPlayed ? 12000 : 30000;
       var firstBlob = setTimeout(function () {
         if (!heard && keep === gen) finish(false);
-      }, 9000);
+      }, coldWait);
       var clearFirst = function () { if (firstBlob) { clearTimeout(firstBlob); firstBlob = null; } };
       api.speakStream(text, { tier: choice, lang: lang, rate: speedV || 1.08 }, function (blob) {
         clearFirst();
@@ -400,15 +505,94 @@ window.TTS_ENGINE = (function () {
   function speakModel(text, lang, speedV) {
     var choice = modelChoice(), ml = modelLang(lang);
     if (!choice || !ml) return Promise.resolve(false);
+    provider = "model";
     var keep = gen;
     return getModelApi().then(function (api) {
       return api.status().then(function (all) {
         var row = all.filter(function (x) { return x.tier === choice && x.lang === ml; })[0];
-        if (!row || !row.stored) return false;
+        if (!row || !row.stored) {
+          /* v359: the choice says a model is here, the file is not. Clear the
+             stale choice so the next line goes to the phone voice instead of
+             failing once per sentence and leaving the book silent. */
+          storedChoice = ""; probeState = "idle";
+          try { localStorage.setItem("tsb_voice_model", ""); } catch (e1) {}
+          return { ok: false, heard: 0, missing: true };
+        }
         provider = "model";
         return playModelStream(api, text, choice, ml, speedV, keep);
       });
-    }).catch(function () { return false; });
+    }).catch(function () { return { ok: false, heard: 0 }; });
+  }
+  /* v347 · retry the model on the same line before giving anything up */
+  function speakModelRetry(text, lang, speedV, left) {
+    return speakModel(text, lang, speedV).then(function (res) {
+      var ok = !!(res && res.ok), heard = (res && res.heard) || 0;
+      /* v356 · NOTHING HEARD, TRY AGAIN. SOMETHING HEARD, MOVE ON.
+         Repeating a sentence the reader already heard half of is what made
+         the voice sound like it stopped and started the line again. */
+      if (!ok && heard > 0) return true;
+      if (res && res.missing) return res;
+      if (ok || left <= 1) return { ok: ok, heard: heard };
+      return new Promise(function (r) { setTimeout(r, 800); }).then(function () { return speakModelRetry(text, lang, speedV, left - 1); });
+    }).catch(function () { return { ok: false, heard: 0 }; });
+  }
+  let modelStrikes = 0, troubleAsks = 0;
+  var modelPlayed = false;    /* has a model chunk actually reached the speaker? */
+  /* v356 · THE DOWNLOAD IS NOT SILENCE TO FILL.
+     While a voice model is being downloaded the queue used to carry on in the
+     phone voice, so speech started under a progress bar. Now the queue holds:
+     nothing speaks until the model is either ready or the reader gives up. */
+  var voiceBusy = false;
+  function voiceWaiting() { return voiceBusy; }
+  function whenVoiceReady(fn, tries) {
+    tries = tries || 0;
+    if (!voiceBusy) { fn(); return; }
+    if (tries > 1200) { fn(); return; }          /* five minutes, then never hang */
+    setTimeout(function () { whenVoiceReady(fn, tries + 1); }, 250);
+  }
+  /* The one honest question: the model is not starting. Retry it, or choose
+     the phone voice on purpose. Never switch behind the reader's back. */
+  function voiceTrouble() {
+    if (troubleAsks >= 3 || document.getElementById("tsbVoiceTrouble")) return;
+    troubleAsks++;
+    var d = document.createElement("div");
+    d.id = "tsbVoiceTrouble";
+    d.style.cssText = "position:fixed;z-index:2147483003;inset:auto 12px calc(env(safe-area-inset-bottom,0px) + 16px);max-width:480px;margin:auto;background:#fffdf8;color:#16130f;border:1px solid #e7dfd0;border-radius:22px;padding:16px 18px;box-shadow:0 24px 70px rgba(22,19,15,.28);font-family:'Space Grotesk',system-ui,sans-serif";
+    d.innerHTML = '<div style="font:700 10px/1 Space Grotesk,system-ui;letter-spacing:.16em;color:#8a6910">THE VOICE MODEL</div>' +
+      '<div style="font:600 19px/1.2 Newsreader,Georgia,serif;margin:6px 0 4px">Your voice model is not starting</div>' +
+      '<p style="font:600 12.5px/1.45 Space Grotesk,system-ui;color:#6e6658;margin:0 0 12px">Nothing has been switched. The model is still the voice - retry it, or use the phone voice on purpose.</p>' +
+      '<div style="display:flex;gap:8px"><button type="button" data-vt="retry" style="flex:1;border:0;border-radius:999px;padding:12px;background:#ffc800;color:#16130f;font:700 13.5px Space Grotesk,system-ui;cursor:pointer">Retry the model</button>' +
+      '<button type="button" data-vt="phone" style="flex:1;border:1px solid #e7dfd0;border-radius:999px;padding:12px;background:#fff;color:#16130f;font:600 13.5px Space Grotesk,system-ui;cursor:pointer">Use phone voice</button></div>';
+    document.body.appendChild(d);
+    d.addEventListener("click", function (e) {
+      var b = e.target.closest("button"); if (!b) return;
+      var a = b.getAttribute("data-vt");
+      d.remove();
+      if (a === "retry") {
+        modelStrikes = 0;
+        var c = modelChoice() || "basic", ml = modelLang(currentLang()) || "en";
+        getModelApi().then(function (api) {
+          return api.status().then(function (all) {
+            var row = all.filter(function (x) { return x.tier === c && x.lang === ml; })[0];
+            if (row && row.stored) {
+              if (api.warm) api.warm(c, ml);
+              try { seekTo(curIdx); } catch (e5) {}
+              return;
+            }
+            /* the voice is not on this device any more: offer it again rather
+               than pretending the phone voice is the model */
+            try { localStorage.setItem("tsb_voice_model", ""); } catch (e6) {}
+            storedChoice = ""; probeState = "idle";
+            openVoiceModel("basic", function () { try { seekTo(curIdx); } catch (e7) {} });
+          });
+        }).catch(function () { try { seekTo(curIdx); } catch (e8) {} });
+        return;
+      }
+      /* the reader chose the phone voice - now TTS is allowed, and recorded */
+      setModelChoice(""); modelStrikes = 0; provider = "web";
+      try { seekTo(curIdx); } catch (e4) {}
+    });
+    setTimeout(function () { if (d.parentNode) d.remove(); }, 20000);
   }
   function offerVoiceModel() {
     var asked = false;
@@ -454,16 +638,31 @@ window.TTS_ENGINE = (function () {
     opts.innerHTML = row("basic", "TheSmallBook Voice Model", "Warm on-device voice · English and Hindi") + row("plus", "TheSmallBook Voice Model Plus", goldVoice() ? "Gold voice · richer detail, downloaded only when you choose" : "Gold voice · available with Gold") + (goldVoice() ? '<div data-plus-voices style="margin-top:8px"></div>' : "");
     if (goldVoice()) getModelApi().then(function(api){ var host=d.querySelector("[data-plus-voices]"); if(!host) return; host.innerHTML=(api.PLUS_VOICES[lang]||[]).map(function(v){return '<button type="button" data-plus-voice="'+v.id+'" style="margin:5px 5px 0 0;border:1px solid #e7dfd0;border-radius:999px;padding:7px 10px;background:#fff;color:#16130f;font:600 12px Space Grotesk,system-ui;cursor:pointer">'+v.name+'</button>';}).join(""); }).catch(function(){});
     d.addEventListener("click", function (e) {
-      if (e.target.closest("[data-vm-phone]")) { setModelChoice(""); skipVoiceFor(30); finishVoice(false); return; }
-      if (e.target === d || e.target.closest("[data-vm-close]")) { finishVoice(false); return; }
+      if (e.target.closest("[data-vm-phone]")) { voiceBusy = false; setModelChoice(""); skipVoiceFor(30); finishVoice(false); return; }
+      if (e.target === d || e.target.closest("[data-vm-close]")) { voiceBusy = false; finishVoice(false); return; }
       var pv = e.target.closest("[data-plus-voice]");
-      if (pv) { getModelApi().then(function(api){ api.selectVoice(lang,pv.getAttribute("data-plus-voice")); return api.download("plus",lang); }).then(function(){ setModelChoice("plus"); finishVoice(true); }).catch(function(){}); return; }
+      if (pv) {
+        voiceBusy = true;
+        getModelApi().then(function(api){ api.selectVoice(lang,pv.getAttribute("data-plus-voice")); return api.download("plus",lang); })
+          .then(function(){ setModelChoice("plus"); voiceBusy = false; finishVoice(true); })
+          .catch(function(){ voiceBusy = false; });
+        return;
+      }
       var b = e.target.closest("[data-vm-tier]"); if (!b || b.disabled) return;
       var tier = b.getAttribute("data-vm-tier"); b.disabled = true; b.querySelector("small").textContent = "Checking this device…";
+      /* v356: from the first tap to the finished file, nothing speaks */
+      voiceBusy = true;
       getModelApi().then(function (api) { return api.status().then(function (a) { var x = a.filter(function (z) { return z.tier === tier && z.lang === lang; })[0]; if (x && x.stored) return null; return api.download(tier, lang, function (p) { if (p.phase === "model" && p.total) b.querySelector("small").textContent = "Downloading " + Math.min(99, Math.round(p.loaded / p.total * 100)) + "%"; else if (p.phase === "engine") b.querySelector("small").textContent = "Making it available offline…"; }); }); }).then(function () {
-        setModelChoice(tier); b.querySelector("small").textContent = "Ready on this device"; if (window.TSB && TSB.toast) try { TSB.toast("Voice selected. It will begin on the next passage."); } catch (e2) {}
-        setTimeout(function () { finishVoice(true); if (playing && !paused) seekTo(curIdx); }, 250);
-      }).catch(function () { b.disabled = false; b.querySelector("small").textContent = "Could not download. Try again when online."; });
+        setModelChoice(tier); b.querySelector("small").textContent = "Ready on this device";
+        if (window.TSB && TSB.toast) try { TSB.toast("Voice ready. It reads from the next line."); } catch (e2) {}
+        voiceBusy = false;
+        /* v356: no seek back into the line that is already playing. That seek
+           is what made a fresh model say one line, stop, and start it again. */
+        setTimeout(function () { finishVoice(true); }, 250);
+      }).catch(function () {
+        voiceBusy = false;
+        b.disabled = false; b.querySelector("small").textContent = "Could not download. Try again when online.";
+      });
     });
   }
 
@@ -805,10 +1004,36 @@ window.TTS_ENGINE = (function () {
     }
     if (!voiceSkipped() && !prompting) { prompting = true; try { openVoiceModel("basic", function () { prompting = false; }); } catch (e) { prompting = false; } }
   }
+  /* v359 · A SILENT BOOK IS THE ONE THING NEVER ALLOWED.
+     If the voice model layer refuses a line (a stale choice left on the
+     device after clearing storage is the usual cause), the choice is wiped and
+     the same passage restarts in the phone voice, immediately. */
+  try {
+    window.addEventListener("unhandledrejection", function (e) {
+      var msg = String((e && e.reason && (e.reason.message || e.reason)) || "");
+      if (!/Voice Model has not been downloaded|not been downloaded/i.test(msg)) return;
+      try { e.preventDefault(); } catch (eP) {}
+      try { localStorage.setItem("tsb_voice_model", ""); } catch (eS) {}
+      storedChoice = ""; probeState = "idle"; modelStrikes = 0; provider = "web";
+      try { skipVoiceFor(0); } catch (eK) {}
+      if (window.TSB && TSB.toast) { try { TSB.toast("Reading with your phone voice."); } catch (eT) {} }
+      try { if (playing && !paused) seekTo(curIdx); } catch (eR) {}
+    });
+  } catch (eNet) {}
+
   function speakItem(item, done) {
     if (window.TSB) { try { window.TSB.achv.award("listener"); } catch (e) {} }
     const g = gen;
     if (!playing || paused) return done(false);
+    /* a download in progress means nobody speaks yet, in any voice */
+    if (voiceWaiting()) {
+      updatePlayer && updatePlayer();
+      whenVoiceReady(function () {
+        if (g !== gen || !playing || paused) return done(false);
+        speakItem(item, done);
+      });
+      return;
+    }
     const lang = item.lang || currentLang();
     const spd = speed;
     const settle = (ok) => {
@@ -839,17 +1064,42 @@ window.TTS_ENGINE = (function () {
       }, 1500);
       return;
     }
-    /* 1 - the private voice model, when the reader keeps one */
-    if (modelChoice() && modelLang(lang) && modelFails < 3) {
-      speakModel(item.text, lang, spd).then(function (okModel) {
+    /* 1 - THE VOICE MODEL IS THE VOICE.
+       v347: there is no silent swap to TTS any more. If a model is on this
+       device, it reads every line. If one line will not start, the model is
+       retried; if it keeps failing, the line is skipped and the reader is
+       asked - once, in plain words - instead of being handed a robot voice
+       without being told. The only way to hear TTS is to say yes to it. */
+    if (modelChoice() && modelLang(lang)) {
+      provider = "model";
+      /* nothing heard yet this session? one attempt, then ask. Mid-book? three
+         attempts before the reader is interrupted. */
+      /* a model that is working but slow gets four tries; a model that has
+         never made a sound gets one, then we ask the reader what to do */
+      var modelChain;
+      try {
+        modelChain = speakModelRetry(item.text, lang, spd, modelPlayed ? 4 : 1);
+      } catch (eStart) {
+        /* v359: if the model layer refuses to even start, the phone voice
+           reads the line. A book never plays in silence. */
+        provider = "web"; return device();
+      }
+      modelChain.catch(function () { return { ok: false, heard: 0, missing: true }; }).then(function (res) {
         if (g !== gen) return done(false);
-        if (okModel) return settle(true);
+        var okModel = !!(res && res.ok), missing = !!(res && res.missing);
+        if (okModel) { modelStrikes = 0; return settle(true); }
         if (!playing || paused) return done(false);
-        modelFails++;
-        if (modelFails === 1 && window.TSB && TSB.toast) {
-          try { TSB.toast("That voice could not start. Using your device voice instead."); } catch (e) {}
+        /* no model on this device after all: read the line in the phone voice
+           straight away, so Listen never plays a silent book */
+        if (missing || modelStrikes >= 1) { provider = "web"; return device(); }
+        modelStrikes++;
+        if (!modelPlayed) { voiceTrouble(); }
+        else if (modelStrikes === 5 && window.TSB && TSB.toast) {
+          /* it is working, this line is just stubborn: keep the voice, say so
+             quietly, never open a modal over a book that is being read */
+          /* v347.1 · silence: a slow line is not something to interrupt a book for */
         }
-        device();
+        done(false);        /* skip this line, keep the voice */
       });
       return;
     }
@@ -891,6 +1141,17 @@ window.TTS_ENGINE = (function () {
   }
 
   /* ---------- queue runner ---------- */
+  /* v347 · THE PLAYER HAS TO KNOW WHERE IT IS.
+     onProgress existed but was only ever called with (0, 0, false) when
+     playback stopped. Nothing told the dock, the follow-along page or the
+     saved position that the book had moved on - so a book could be reading
+     lesson four while the player still said "Introduction", which reads
+     exactly like "it stopped after lesson one". Every advance now reports
+     the real index. */
+  function emitProgress() {
+    if (!onProgress) return;
+    try { onProgress(curIdx, queue.length, !!playing && !paused); } catch (e) {}
+  }
   let lastLessonIdx = -2, watch = null;
   /* v346 · A QUEUE NEVER GOES SILENT.
      If a voice stops mid-sentence (a worker that hung, a stream that never
@@ -905,10 +1166,18 @@ window.TTS_ENGINE = (function () {
       watch = null;
       if (!playing || paused) return;
       if (g !== gen) return;
-      modelFails = 3;              /* a model that stalls is not the voice today */
       try { if (currentAudio) { currentAudio.pause(); } } catch (e) {}
       try { if (SPK) SPK.cancel(); } catch (e) {}
-      seekTo(at);
+      if (modelChoice()) {
+        /* v347: a stored model stays the voice. Restart this line on the
+           model; if it has already failed three times, move the book on
+           rather than looping on one sentence. */
+        modelStrikes++;
+        if (!modelPlayed) { voiceTrouble(); }
+        else if (modelStrikes % 3 === 0) { /* v347.1 · silence, not a toast */ }
+        modelFails = 0;
+      } else { modelFails = 3; }
+      seekTo(curIdx);
     }, 15000);
   }
   function clearWatch() { if (watch) { clearTimeout(watch); watch = null; } }
@@ -919,6 +1188,7 @@ window.TTS_ENGINE = (function () {
     updatePlayer();
     if (curIdx >= queue.length) { finish(); return; }
     const item = queue[curIdx];
+    emitProgress();
     /* v346: every lesson is a fresh chance for the voice model. Listening must
        not fall back to the phone voice for the whole book because one line
        failed while the model was still waking up. */
@@ -928,6 +1198,7 @@ window.TTS_ENGINE = (function () {
     const runItem = () => {
       if (!playing || paused) return;
       updatePlayer();
+      emitProgress();
       armWatch();
       speakItem(item, (ok) => {
         clearWatch();
@@ -958,6 +1229,10 @@ window.TTS_ENGINE = (function () {
   function finish() {
     playing = false;
     curIdx = 0;
+    /* the book is done: the saved position goes, so the next Listen starts it
+       properly from the top rather than resuming a finished book */
+    try { clearPos(sessionBook); } catch (e) {}
+    try { clearSession(); } catch (e) {}
     clearWatch();
     if (timer) clearTimeout(timer);
     clearPosition();
@@ -974,6 +1249,18 @@ window.TTS_ENGINE = (function () {
   function mediaSessionSupported() {
     return !!(navigator.mediaSession && "mediaSession" in navigator);
   }
+  /* v349 · ONE OWNER OF THE LOCK SCREEN.
+     Two modules register play/pause/next handlers - the episode player and
+     this book voice - so the last one to register used to win, and a reader
+     could press pause and pause the wrong thing. Each now claims the lock
+     screen only while it is the thing making sound. */
+  window.TSB_MEDIA = window.TSB_MEDIA || {
+    owner: null,
+    claim: function (w) { this.owner = w; },
+    release: function (w) { if (this.owner === w) this.owner = null; },
+    free: function (w) { return !this.owner || this.owner === w; }
+  };
+  function mediaFree(w) { try { return window.TSB_MEDIA.free(w); } catch (e) { return true; } }
   /* square branded album-art per book (cache once) - makes the lock screen
      look like a real music app instead of a cropped portrait cover */
   function squareArt(book) {
@@ -999,10 +1286,19 @@ window.TTS_ENGINE = (function () {
             ctx.strokeStyle = "#111"; ctx.lineWidth = 7; ctx.strokeRect(x, y, w, h);
             // bottom brand strip
             ctx.fillStyle = "#111"; ctx.fillRect(0, 452, 512, 60);
+            /* the mark, drawn as geometry: the lock screen gets the real
+               logo, not an emoji standing in for it */
+            ctx.save();
+            ctx.translate(146, 462); ctx.scale(.34, .34);
+            const leafL = new Path2D("M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z");
+            const leafR = new Path2D("M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z");
+            ctx.fillStyle = "#ffc800"; ctx.fill(leafL);
+            ctx.fillStyle = "#fbf8f1"; ctx.fill(leafR);
+            ctx.restore();
             ctx.fillStyle = "#ffc800";
-            ctx.font = "bold 24px 'Space Grotesk', Arial";
-            ctx.textAlign = "center";
-            ctx.fillText("📕 THESMALLBOOK", 256, 490);
+            ctx.font = "bold 22px 'Space Grotesk', Arial";
+            ctx.textAlign = "left";
+            ctx.fillText("THESMALLBOOK", 178, 490);
           } catch (e) {}
           artCache[key] = c.toDataURL("image/jpeg", 0.85);
           resolve(artCache[key]);
@@ -1061,10 +1357,10 @@ window.TTS_ENGINE = (function () {
       });
       if (!mediaSessionSet) {
         mediaSessionSet = true;
-        navigator.mediaSession.setActionHandler("play", () => resume());
-        navigator.mediaSession.setActionHandler("pause", () => pause());
-        navigator.mediaSession.setActionHandler("previoustrack", () => seekTo(prevLessonIdx()));
-        navigator.mediaSession.setActionHandler("nexttrack", () => seekTo(nextLessonIdx()));
+        navigator.mediaSession.setActionHandler("play", () => { if (mediaFree("voice")) resume(); });
+        navigator.mediaSession.setActionHandler("pause", () => { if (mediaFree("voice")) pause(); });
+        navigator.mediaSession.setActionHandler("previoustrack", () => { if (mediaFree("voice")) seekTo(prevLessonIdx()); });
+        navigator.mediaSession.setActionHandler("nexttrack", () => { if (mediaFree("voice")) seekTo(nextLessonIdx()); });
         navigator.mediaSession.setActionHandler("seekto", (d) => {
           if (d && d.seekTime != null && posDur) {
             posOffset = Math.min(d.seekTime, posDur);
@@ -1079,6 +1375,42 @@ window.TTS_ENGINE = (function () {
     if (mediaSessionSupported()) {
       try { navigator.mediaSession.playbackState = st; } catch (e) {}
     }
+    try {
+      if (st === "playing") window.TSB_MEDIA.claim("voice");
+      else window.TSB_MEDIA.release("voice");
+    } catch (e) {}
+    if (st === "playing") keepAliveOn(); else keepAliveOff();
+  }
+
+  /* v349 · THE SCREEN CAN GO OFF.
+     Browsers suspend a hidden tab unless something in it is really playing
+     media. A voice synthesised into Web Audio does not always count, which is
+     the "it stops when I lock the phone" report. This is a two-second silent
+     track, played on a loop at a volume you cannot hear, purely so the phone
+     keeps treating the tab as a running audio session. The moment the book
+     stops, it stops with it. */
+  var KEEP = null;
+  function keepAliveOn() {
+    try {
+      if (KEEP) { if (KEEP.paused) KEEP.play().catch(function () {}); return; }
+      var a = document.createElement("audio");
+      a.setAttribute("playsinline", "");
+      a.setAttribute("aria-hidden", "true");
+      a.src = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=";
+      a.loop = true;
+      a.volume = 0.001;                /* audible to the OS, not to a human */
+      KEEP = a;
+      document.body.appendChild(a);
+      a.play().catch(function () {});
+    } catch (e) {}
+  }
+  function keepAliveOff() {
+    try {
+      if (!KEEP) return;
+      KEEP.pause();
+      if (KEEP.parentNode) KEEP.parentNode.removeChild(KEEP);
+      KEEP = null;
+    } catch (e) {}
   }
   function clearMediaSession() {
     if (mediaSessionSupported()) {
@@ -1095,6 +1427,15 @@ window.TTS_ENGINE = (function () {
   }
   /* background: Puter audio keeps playing (like songs) on Android/desktop;
      web-speech is best-effort resumed when the tab comes back */
+  /* v347.1 · the browser drops the screen lock when the tab is hidden;
+     take it back the moment the reader returns to a playing book */
+  try {
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "visible" && playing && !paused) { setTimeout(holdScreen, 300); }
+    });
+    window.addEventListener("pagehide", function () { saveSession(playing && !paused); });
+  } catch (e) {}
+
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       /* keep playing in background - but never force-unpause user's pause */
@@ -1123,6 +1464,7 @@ window.TTS_ENGINE = (function () {
     stopSilence();
     hidePlayer();
     clearMediaSession();
+    clearSession(); dropScreen();
     if (onProgress) onProgress(0, 0, false);
   }
   function pause() {
@@ -1134,8 +1476,10 @@ window.TTS_ENGINE = (function () {
     if (currentAudio) { try { currentAudio.pause(); } catch (e) {} }
     if (silenceEl) { try { silenceEl.pause(); } catch (e) {} }
     freezePosition();
+    saveSession(false); dropScreen();
     setMediaPlaybackState("paused");
     updatePlayer();
+    emitProgress();
   }
   function resume() {
     if (!playing) return;
@@ -1145,11 +1489,13 @@ window.TTS_ENGINE = (function () {
     if (currentAudio) { try { currentAudio.play(); } catch (e) {} }
     if (modelStreamResume) modelStreamResume();
     if (silenceEl) { try { silenceEl.play(); } catch (e) {} }
+    saveSession(true); holdScreen();
     setMediaPlaybackState("playing");
     if (posDur) { posStart = Date.now(); if (!posTimer) posTimer = setInterval(() => { if (paused || !playing) return; const p = Math.min(posOffset + (Date.now() - posStart) / 1000, posDur); setPos(posDur, p); }, 1000); }
     /* paused in the gap between two items: carry on with the queue */
     if (!hadPiece && !audioLive && !webBusy && !modelStreamResume) { if (timer) clearTimeout(timer); next(); }
     updatePlayer();
+    emitProgress();
   }
   function toggle() { if (playing && !paused) pause(); else if (playing) resume(); }
   function nextLessonIdx() {
@@ -1165,6 +1511,7 @@ window.TTS_ENGINE = (function () {
     if (!queue.length) return;
     gen++; modelStreamResume = null;
     curIdx = Math.max(0, Math.min(queue.length - 1, i));
+    sessionItem = curIdx; savePos(curIdx); saveSession(playing && !paused);
     /* kill any currently-playing Puter audio - otherwise the old chunk
        keeps playing over the new one (voice/speed changes sounded broken) */
     if (currentAudio) { try { currentAudio.pause(); } catch (e) {} currentAudio = null; }
@@ -1209,8 +1556,12 @@ window.TTS_ENGINE = (function () {
     });
     return parts;
   }
-  function playBook(book, lang) {
-    const go = () => { const parts = queueBook(book, lang || currentLang()); startQueue(parts, book); };
+  function playBook(book, lang, startAt) {
+    if (!startAt) silentStart = false;      /* an explicit tap always gets a player */
+    /* no explicit start? pick up where this book was left */
+    let at = startAt | 0;
+    if (!at && book && book.id) { const p0 = loadPos(book.id); if (p0 > 0) at = p0; }
+    const go = () => { const parts = queueBook(book, lang || currentLang()); startQueue(parts, book, at); };
     if (window.TSB_LESSONS && book && book.id) TSB_LESSONS.ensure(book.id, go); else go();
   }
   function playParts(parts, startAt) {
@@ -1224,14 +1575,22 @@ window.TTS_ENGINE = (function () {
        the voice model was already synthesising - which is why a downloaded
        model could sound like nothing at all on the first tap. */
     curIdx = Math.max(0, Math.min(parts.length - 1, (startAt | 0) || 0));
+    sessionBook = (book && book.id) || sessionBook;
+    sessionItem = curIdx;
+    savePos(curIdx);
+    saveSession(true);
+    holdScreen();
     playing = true;
     paused = false;
-    modelFails = 0; quietItems = 0; heardItems = 0;
+    modelFails = 0; quietItems = 0; heardItems = 0; modelStrikes = 0; modelPlayed = false;
     // Voice downloads are always reader initiated. The phone voice starts at once.
     /* start the silent keep-alive loop - keeps the tab alive on the lock
        screen so the queue never freezes between chunks */
     startSilence();
-    ensurePlayer(book);
+    /* v347.2 · a session picked back up on a new page stays invisible:
+       the reader closed the player, so the player does not come back */
+    if (!silentStart) ensurePlayer(book);
+    silentStart = false;
     updatePlayer();   // paint eq/state immediately (no wait for intro)
     /* v346 · SMOOTH START: the probe is already warm from page load, and a
        stored voice is woken here so the first sentence lands in about a
@@ -1257,7 +1616,7 @@ window.TTS_ENGINE = (function () {
       player.innerHTML =
         '<div class="tsb-player__prog"><i></i></div>' +
         '<div class="tsb-player__top">' +
-          '<div class="tsb-player__art"><span>📕</span>' +
+          '<div class="tsb-player__art"><span>' + MARK_SVG + '</span>' +
             '<span class="tsb-player__eq">' +
               '<i></i><i></i><i></i><i></i>' +
             '</span>' +
@@ -1267,6 +1626,7 @@ window.TTS_ENGINE = (function () {
             '<div class="tsb-player__sub"></div>' +
             '<div class="tsb-player__live"><i></i> LIVE</div>' +
           '</div>' +
+          '<button class="tsb-player__close" data-act="min" title="Keep playing, hide this">▾</button>' +
           '<button class="tsb-player__close" data-act="close" title="Stop">✕</button>' +
         '</div>' +
         '<div class="tsb-player__row">' +
@@ -1277,6 +1637,7 @@ window.TTS_ENGINE = (function () {
           '<button class="tsb-player__pill" data-act="speed" title="Speed">1x</button>' +
           '<button class="tsb-player__pill" data-act="voice" title="Voice (male/female)">🎙️ Auto</button>' +
           '<button class="tsb-player__pill" data-act="boost" title="Volume boost">🔊 1.5x</button>' +
+          '<button class="tsb-player__pill" data-act="sleep" title="Sleep timer">😴 Off</button>' +
         '</div>';
       document.body.appendChild(player);
       player.addEventListener("click", (e) => {
@@ -1294,7 +1655,18 @@ window.TTS_ENGINE = (function () {
           cycleVoice();
         } else if (act === "boost") {
           cycleBoost();
-        } else if (act === "close") { stop(); hidePlayer(); }
+        } else if (act === "min") {
+          /* v347.1 · hide the player, the book keeps talking (and the next page
+             picks it up) - the way the podcast player already behaves */
+          saveSession(playing && !paused);
+          hidePlayer();
+        } else if (act === "sleep") {
+          const steps = [0, 15, 30, 60];
+          const cur = sleepLeftMin();
+          let i = 0;
+          for (let k = 0; k < steps.length; k++) { if (steps[k] === cur) { i = k; break; } }
+          setSleep(steps[(i + 1) % steps.length]);
+        } else if (act === "close") { stop(); }
       });
     }
     player.classList.add("tsb-player--show");
@@ -1303,11 +1675,13 @@ window.TTS_ENGINE = (function () {
     const sp = player.querySelector('[data-act="speed"]');
     const vb = player.querySelector('[data-act="voice"]');
     const bb = player.querySelector('[data-act="boost"]');
+    const sb = player.querySelector('[data-act="sleep"]');
     t.textContent = book ? book.title : "TheSmallBook";
     s.textContent = "Podcast mode";
     if (sp) sp.textContent = speed.toFixed(2).replace(/\.?0+$/, "") + "x";
     if (vb) vb.textContent = voiceLabel();
     if (bb) bb.textContent = "🔊 " + boost.toFixed(2).replace(/\.?0+$/, "") + "x";
+    if (sb) sb.textContent = sleepLabel();
   }
   function voiceLabel() { return modelVoiceName(); }
   function cycleVoice() { openVoiceModel(modelChoice() || "basic"); }
@@ -1341,17 +1715,17 @@ window.TTS_ENGINE = (function () {
       title.textContent = item.meta.book + " - " + item.meta.lesson;
       const totalLessons = Math.max(...queue.map(q => q.meta ? q.meta.idx : 0)) + 1;
       sub.textContent = "Lesson " + (item.meta.idx + 1) + " of " + totalLessons + " · " + (playing && !paused ? "playing" : "paused");
-      /* cover art - real book cover in the art tile (fallback 📕) */
+      /* cover art - real book cover in the art tile (the mark, if there is no cover) */
       if (artEl && item.meta.cover) {
         if (!artEl.dataset.src || artEl.dataset.src !== item.meta.cover) {
           artEl.dataset.src = item.meta.cover;
           const im = new Image();
           im.onload = () => { artEl.innerHTML = ""; artEl.appendChild(im); };
-          im.onerror = () => { artEl.innerHTML = "<span>📕</span>"; };
+          im.onerror = () => { artEl.innerHTML = MARK_SVG; };
           im.src = item.meta.cover;
         }
       } else if (artEl && (!item.meta || !item.meta.cover)) {
-        artEl.innerHTML = "<span>📕</span>";
+        artEl.innerHTML = MARK_SVG;
       }
       const bookObj = { id: item.meta.cover ? item.meta.cover.split("/").pop().replace(/\.(jpg|jpeg|png|webp)$/i, "") : "", title: item.meta.book, cover: item.meta.cover, author: item.meta.author };
       /* ensure square art is cached, then push metadata so the lock screen
@@ -1431,11 +1805,46 @@ window.TTS_ENGINE = (function () {
     toggle: toggle,
     seekTo: seekTo,
     setSpeed: setSpeed,
+    setSleep: setSleep,
+    sleepLeft: sleepLeftMin,
+    minimise: function () { saveSession(playing && !paused); hidePlayer(); },
+    session: function () { return sGet(SESSIONKEY); },
+    continueSession: continueSession,
     get playing() { return playing; },
     get paused() { return paused; },
     get provider() { return provider; },
     onProgress: (fn) => { onProgress = fn; }
   };
+
+  /* ---------- v347.1 · CONTINUE WHERE THE READER STOPPED ----------
+     If a book was playing when the page changed, the next page resumes the same
+     item without a player, a sheet or a toast. It only ever resumes onto the
+     downloaded voice: if there is no model, nothing starts. */
+  function continueSession(sn) {
+    const st = sn || sGet(SESSIONKEY);
+    if (!st || !st.book || !st.on) return false;
+    if (Date.now() - (st.at || 0) > 4 * 3600e3) { clearSession(); return false; }
+    const book = (window.BOOKS || []).find(function (b) { return b.id === st.book; });
+    if (!book) { clearSession(); return false; }
+    probeModel().then(function (choice) {
+      if (!choice) { clearSession(); return; }
+      const go = function () { silentStart = true; playBook(book, null, st.item | 0); };
+      if (window.TSB_LESSONS && window.TSB_LESSONS.ensure) TSB_LESSONS.ensure(book.id, go); else go();
+    }).catch(function () {});
+    return true;
+  }
+  try {
+    const pending = sGet(SESSIONKEY);
+    if (pending && pending.on) {
+      const later = function () {
+        const st = sGet(SESSIONKEY);
+        if (!st || !st.on || !(Date.now() - (st.at || 0) < 4 * 3600e3)) return;
+        /* only on a page that is not already about to play something */
+        if (!playing) continueSession(st);
+      };
+      if (window.requestIdleCallback) window.requestIdleCallback(later, { timeout: 4000 }); else setTimeout(later, 2600);
+    }
+  } catch (e) {}
 
   /* v343 · A VOICE THAT IS ALREADY AWAKE
      Reading the 63 MB model into the worker takes a few seconds on a phone.

@@ -335,7 +335,7 @@
         dock.style.transition = "transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.18s ease";
         dock.style.transform = "translateX(" + window.innerWidth + "px) rotate(7deg)";
         dock.style.opacity = "0";
-        setTimeout(function () { stopAll(); toast("Player closed. Your spot is kept."); }, 190);
+        setTimeout(function () { stopAll(); }, 190);
       } else {
         dock.style.transition = "transform 0.24s cubic-bezier(.16, 1, .3, 1), opacity 0.2s ease";
         dock.style.transform = "translateX(0) rotate(0deg)";
@@ -440,7 +440,7 @@
     jset("tsb_chain", n + 1);
     var show = findShowAnywhere(ids[n]);
     if (!show) return;
-    toast("▶ Up next: " + (show.name || "your show"));
+    /* the dock already says what is next - no toast */
     if (show.orig) { playOriginal(0); return; }
     if (!show.rss) return;
     playFeed(show);
@@ -690,7 +690,7 @@
         setBoost(parseFloat(this.getAttribute("data-bo")));
         if (q && q.type === "audio" && AU && AU.paused && boostPref() > 1 && actx && actx.resume) actx.resume();
         openSheet();
-        toast("🔊 Boost " + boostLabel(boostPref()) + ".");
+        /* boost confirmed by the button state, not a toast */
       });
     });
     sheet.querySelectorAll(".ap-pc-boost").forEach(function (b) {
@@ -730,7 +730,12 @@
   function toggle() {
     if (q && q.type === "audio") {
       if (!AU) return;
-      if (AU.paused) { AU.play().catch(function () { parkNote(); }); } else { AU.pause(); }
+      if (AU.paused) {
+        AU.play().then(function () { try { window.TSB_MEDIA.claim("player"); } catch (e) {} }).catch(function () { parkNote(); });
+      } else {
+        AU.pause();
+        try { window.TSB_MEDIA.release("player"); } catch (e) {}
+      }
       setTimeout(paintPlay, 120);
       return;
     }
@@ -873,6 +878,7 @@
     }, at - Date.now());
   }
   function stopAll() {
+    try { window.TSB_MEDIA.release("player"); } catch (e) {}
     jset(CANCELKEY, Date.now());   /* cancelled is cancelled: no dock on reload */
     clearTimeout(sleepTimer); sleepAt = 0; jset(SLEEPKEY, 0);
     try { if (T) T.stop(); } catch (e) {}
@@ -929,6 +935,16 @@
     } catch (e) {}
     mediaSession();
   }
+  /* v349 · see tts-engine.js: one owner of the lock screen, so pressing pause
+     on the lock screen can only ever pause the thing that is playing */
+  window.TSB_MEDIA = window.TSB_MEDIA || {
+    owner: null,
+    claim: function (w) { this.owner = w; },
+    release: function (w) { if (this.owner === w) this.owner = null; },
+    free: function (w) { return !this.owner || this.owner === w; }
+  };
+  function mediaFree(w) { try { return window.TSB_MEDIA.free(w); } catch (e) { return true; } }
+
   function mediaSession() {
     try {
       if (!("mediaSession" in navigator)) return;
@@ -936,13 +952,13 @@
       var md = { title: it.label || q.title, artist: q.title, album: "TheSmallBook" };
       var mca = curArt(); if (mca) md.artwork = [{ src: mca, sizes: "512x512", type: "image/jpeg" }];
       navigator.mediaSession.metadata = new MediaMetadata(md);
-      navigator.mediaSession.setActionHandler("play", function () { if (!playing()) { toggle(); } });
-      navigator.mediaSession.setActionHandler("pause", function () { if (playing()) { toggle(); } });
-      navigator.mediaSession.setActionHandler("nexttrack", function () { nextItem(); });
-      navigator.mediaSession.setActionHandler("previoustrack", function () { prevItem(); });
+      navigator.mediaSession.setActionHandler("play", function () { if (mediaFree("player") && !playing()) { toggle(); } });
+      navigator.mediaSession.setActionHandler("pause", function () { if (mediaFree("player") && playing()) { toggle(); } });
+      navigator.mediaSession.setActionHandler("nexttrack", function () { if (mediaFree("player")) nextItem(); });
+      navigator.mediaSession.setActionHandler("previoustrack", function () { if (mediaFree("player")) prevItem(); });
       navigator.mediaSession.setActionHandler("seekbackward", function () { skipSec(-15); });
       navigator.mediaSession.setActionHandler("seekforward", function () { skipSec(30); });
-      navigator.mediaSession.setActionHandler("stop", function () { stopAll(); });
+      navigator.mediaSession.setActionHandler("stop", function () { if (mediaFree("player")) stopAll(); });
     } catch (e) {}
   }
   function toast(msg) {
@@ -963,6 +979,18 @@
   function savePos() {
     if (!q) return;
     jset(LASTKEY, { key: q.key, item: curItem, type: q.type, bookId: q.bookId || null, title: q.title, at: Date.now() });
+    /* v356: what a reader listens to is taste, not just what they tap.
+       One signal per book per session, so a long listen does not flood it. */
+    if (q.bookId) {
+      try {
+        var heard = JSON.parse(sessionStorage.getItem("tsb_heard_ids") || "{}");
+        if (!heard[q.bookId]) {
+          heard[q.bookId] = 1;
+          sessionStorage.setItem("tsb_heard_ids", JSON.stringify(heard));
+          if (window.TSB_TASTE && TSB_TASTE.note) TSB_TASTE.note(q.bookId, "listen");
+        }
+      } catch (e) {}
+    }
   }
 
   /* ================= engine A: TTS ================= */
@@ -1014,7 +1042,7 @@
     var startAt = (from > 0 && q.items && q.items[from]) ? q.items[from].part : 0;
     try { T.playParts(q.parts, startAt); } catch (e) { return false; }
     savePos(); paintAll();
-    toast("Playing. Tap the bar for queue, speed and sleep.");
+    /* playing is its own feedback, the dock moves */
     return true;
   }
 
@@ -1124,11 +1152,14 @@
       parkNote();
       return;
     }
-    au.play().then(function () { paintAll(); savePos(); }).catch(function (err) {
+    au.play().then(function () {
+      try { window.TSB_MEDIA.claim("player"); } catch (e) {}
+      paintAll(); savePos();
+    }).catch(function (err) {
       var name = err && err.name ? err.name : "";
       if (name === "NotAllowedError" || name === "AbortError") {
         paintAll(); paintPlay(); parkNote();
-        toast("Paused where you left it - tap play to continue.");
+        /* paused is its own feedback */
         /* the first tap anywhere brings the sound back: switching pages
            should feel like the audio never stopped */
         var resume = function () {
@@ -1139,7 +1170,7 @@
       } else if (name === "" || /notsupported|media/i.test(name)) {
         toast("Could not stream this one. Check the connection.");
       } else {
-        toast("Paused where you left it - tap play to continue.");
+        /* paused is its own feedback */
       }
     });
     if (!seekT) { audioPosSave(q.key, curItem, 0); paintAll(); savePos(); }
@@ -1161,7 +1192,7 @@
     q = queue; curItem = queue.ch || 0;
     mountDock();
     playChapter(curItem, queue.seek || 0);
-    if (queue.autoplay !== false) toast("Playing. Tap the bar for chapters, speed and sleep.");
+    if (queue.autoplay !== false) { /* playing needs no announcement */ }
   }
 
   /* ================= feeds (podcast RSS) ================= */

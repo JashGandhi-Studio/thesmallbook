@@ -169,10 +169,10 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 .kg-dots i.on { width: 26px; background: var(--k-yel); }
 .kg-card { background: #fff; border: 1px solid var(--k-edge); border-radius: 30px; box-shadow: var(--k-sh); padding: 22px 20px 20px; text-align: center; animation: kgIn .6s var(--k-spring) both; }
 @keyframes kgIn { from { opacity: 0; transform: translateY(18px) scale(.97); } to { opacity: 1; transform: none; } }
-.kg-art { position: relative; height: 128px; display: grid; place-items: center; margin-bottom: 6px; }
-.kg-shield { font-size: 62px; animation: kBob 3s ease-in-out infinite; }
+.kg-art { position: relative; height: 132px; display: grid; place-items: center; margin: 2px 0 18px; overflow: hidden; }
+.kg-shield { font-size: 56px; animation: kBob 3s ease-in-out infinite; }
 .kg-orbit { position: absolute; inset: 0; animation: kSpin 14s linear infinite; }
-.kg-orbit i { position: absolute; left: 50%; top: 50%; font-style: normal; font-size: 28px; transform: rotate(calc(var(--i) * 90deg)) translate(74px) rotate(calc(var(--i) * -90deg)); margin: -18px 0 0 -16px; }
+.kg-orbit i { position: absolute; left: 50%; top: 50%; font-style: normal; font-size: 24px; transform: rotate(calc(var(--i) * 90deg)) translate(58px) rotate(calc(var(--i) * -90deg)); margin: -14px 0 0 -12px; }
 @keyframes kSpin { to { transform: rotate(360deg); } }
 .kg-wave { font-size: 76px; display: inline-block; transform-origin: 70% 80%; animation: kWave 1.6s ease-in-out infinite; }
 @keyframes kWave { 0%, 60%, 100% { transform: rotate(0); } 10%, 30% { transform: rotate(16deg); } 20%, 40% { transform: rotate(-10deg); } }
@@ -183,6 +183,8 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 .kg-list li::before { content: ""; position: absolute; left: 14px; top: 50%; width: 14px; height: 8px; margin-top: -6px; border-left: 3px solid #2a9d8f; border-bottom: 3px solid #2a9d8f; transform: rotate(-45deg); }
 .kg-list li.kg-lock { background: var(--k-yel-soft); }
 .kg-list li.kg-lock::before { border: 0; width: 12px; height: 10px; margin-top: -3px; border-radius: 2px; background: #9a6a00; transform: none; box-shadow: 0 -7px 0 -2px #fff1bf, 0 -8px 0 0 #9a6a00; }
+.kg-foot { margin: -6px 0 14px; font: 600 13px/1.4 var(--k-font); color: var(--k-mu); text-align: center; }
+.kg-foot::before { content: "\1F512"; margin-right: 6px; font-size: 11px; }
 .kg-in { width: 100%; height: 58px; border-radius: 18px; border: 2px solid var(--k-edge); background: var(--k-paper); padding: 0 18px; font: 700 20px var(--k-font); color: var(--k-ink); text-align: center; margin-bottom: 16px; outline: none; transition: border-color .2s; }
 .kg-in:focus { border-color: var(--k-yel); }
 .kg-in::placeholder { color: var(--k-mu); font-weight: 600; font-size: 16px; }
@@ -246,3 +248,12 @@ button { font-family: inherit; color: inherit; cursor: pointer; }
 
 /* v337: parent-owned private voice control inside the safe Kids room. */
 .kp-voice{margin:14px 0 0;padding:10px 12px;border:2px solid rgba(62,54,31,.16);border-radius:18px;background:#fff8df;display:flex;align-items:center;gap:10px;justify-content:space-between;font:700 11px/1.2 "Baloo 2",system-ui;color:#68542c}.kp-voice .kp-change{margin:0}.kp-voice span{max-width:45%;text-align:right}
+
+/* v351 · the reader's bottom row was 16px wider than the phone, so the next
+   arrow sat half off the screen. The row now shrinks to fit, and the page
+   sits in the middle of the space instead of leaving a hole below the text. */
+.kr-ctrl { min-width: 0; }
+.kr-play { min-width: 0; font-size: clamp(17px, 5vw, 22px); padding: 0 10px; }
+.kr-play__ico { flex: none; }
+.kr-stage { justify-content: center; }
+.kr-stage .ks-scene { height: min(42vh, 360px); }

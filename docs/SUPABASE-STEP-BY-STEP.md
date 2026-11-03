@@ -504,7 +504,7 @@ Rules it sets:
 - the row is overwritten every three seconds while you type, and the app deletes
   it when you send, blur the field, or stay idle for seven seconds
 
-After running: open a thread on two phones, start typing on one — the other sees
+After running: open a thread on two phones, start typing on one  -  the other sees
 a small paper bubble with three dots that breathes: *"Ana is typing"*. Nothing to
 enable, nothing to dismiss; if the SQL has not been run, the app simply never
 shows the dots and no error appears anywhere.

@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v346";
+const CACHE_VERSION = "tsb-v363";
 /* NOTE: the assets/logos/* entries below mirror js/store-data.js exactly.
    every tile the store links to must be precached, or the offline store
    shows broken images. tests/client-suite.js asserts they never drift. */
@@ -47,13 +47,24 @@ const APP_SHELL = [
   "./js/highlight.js",
   "./js/install.js",
   "./favicon.ico",
+  "./favicon.svg",
+  "./favicon.png",
+  "./apple-touch-icon.png",
+  "./manifest.json",
+  "./js/mark.js",
+  "./assets/logo/mark.svg",
+  "./assets/logo/mark-white.svg",
+  "./assets/logo/mark-black.svg",
+  "./assets/icon-192.png",
+  "./assets/icon-512.png",
+  "./assets/icon-512-maskable.png",
   "./assets/loader-logo.png",
   "./assets/og-image.png",
   "./css/studio.css",
   "./js/studio.js",
   "./js/dictate.js",
   "./js/osint.js",
-                                                  "./js/gold.js",
+  "./js/gold.js",
   "./store.html",
   "./js/store.js",
   "./js/store-data.js",
@@ -177,7 +188,8 @@ const APP_SHELL = [
   "./js/ideaaudit.js",
   "./js/gate.js",
   "./js/community.js",
-  "./js/voice.js", "js/quotedesk.js",
+  "./js/voice.js",
+  "js/quotedesk.js",
   "./profile.html",
   "./write.html",
   "./dm.html",
@@ -187,9 +199,6 @@ const APP_SHELL = [
   "./js/stories-seed.js",
   "./js/stories-community.js",
   "./js/story.js",
-  "./manifest.json",
-  "./assets/icon-192.png",
-  "./assets/icon-512.png",
   "./kids.html",
   "./css/kids.css",
   "./js/kids-data.js",
@@ -206,7 +215,7 @@ const APP_SHELL = [
   "./js/goldpay.js",
   "./js/request.js",
   "./js/stt.js",
-  "./js/wordtap.js"
+  "./js/wordtap.js",
 ].map(function (u) { return /\.(m?js|css)$/.test(u) ? u + "?v=" + CACHE_VERSION.split("-")[1] : u; });
 
 self.addEventListener("install", (e) => {
