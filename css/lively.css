@@ -432,3 +432,72 @@ body.cmpage.fst .cm-feed > *:nth-child(3) { animation-delay: .54s }
   body.cmpage.fst .st-tools, body.cmpage.fst .st-prompt, body.cmpage.fst .cm-feed > *,
   .fp-line, .ap-line, .tsb-player__line, .fp, .fp-sheet, .tsb-player, .ap-mini { animation: none !important; transition: none !important }
 }
+
+/* v364 · the chip being dragged lifts off the sheet */
+.tsb-slot { touch-action: none; transition: transform .16s cubic-bezier(.22,.9,.24,1), border-color .15s ease, background-color .15s ease }
+.tsb-slot.is-lifting { transform: scale(1.06); box-shadow: 0 10px 22px -12px rgba(22,19,15,.5); z-index: 2 }
+
+/* ==========================================================================
+   v365 · THE UPDATE SCREEN IS THE SAME ROOM AS SETUP
+   The first screen after an update is an onboarding slide, so it has to fill
+   the phone and arrive the way the setup slides do. It was a shorter card with
+   a plain fade, which is why it looked cut off and felt stiff.
+   ========================================================================== */
+.fo-wlc, .fo-s0 {
+  min-height: 100vh !important;
+  min-height: 100svh !important;
+  min-height: 100dvh !important;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 18px) !important;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 18px) !important;
+  box-sizing: border-box;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  animation: foRoomIn .55s cubic-bezier(.22,.9,.24,1) both;
+}
+.fo-wlc > *, .fo-s0 > * { animation: foRowIn .5s cubic-bezier(.16,1.02,.3,1) both }
+.fo-wlc > *:nth-child(1), .fo-s0 > *:nth-child(1) { animation-delay: .04s }
+.fo-wlc > *:nth-child(2), .fo-s0 > *:nth-child(2) { animation-delay: .10s }
+.fo-wlc > *:nth-child(3), .fo-s0 > *:nth-child(3) { animation-delay: .16s }
+.fo-wlc > *:nth-child(4), .fo-s0 > *:nth-child(4) { animation-delay: .22s }
+.fo-wlc > *:nth-child(5), .fo-s0 > *:nth-child(5) { animation-delay: .28s }
+.fo-wlc > *:nth-child(n+6), .fo-s0 > *:nth-child(n+6) { animation-delay: .34s }
+@keyframes foRoomIn { 0% { opacity: 0; transform: translateY(10px) } 100% { opacity: 1; transform: none } }
+@keyframes foRowIn  { 0% { opacity: 0; transform: translateY(12px) } 100% { opacity: 1; transform: none } }
+/* the news list steps in, one line at a time, so the copy is read not scanned */
+.fo-news .fo-new { animation: foRowIn .46s cubic-bezier(.16,1.02,.3,1) both; animation-delay: calc(.34s + var(--i, 0) * 60ms) }
+@media (prefers-reduced-motion: reduce) {
+  .fo-wlc, .fo-s0, .fo-wlc > *, .fo-s0 > *, .fo-news .fo-new { animation: none !important }
+}
+
+/* ==========================================================================
+   v368 · NO VISUAL HANDLE, ANYWHERE
+   A grab bar is a diagram of a gesture, not the gesture. Every sheet, popover
+   and card that drew one now keeps the swipe and drops the dash.
+   ========================================================================== */
+[class*="__grab"], [class*="__grip"], [class*="__handle"], [class*="-grab"],
+.st-modal__grab, .sc-grab, .fy-pop__grab, .rq-grab, .qcs__grab,
+.tsb-sheet__grip, .tsb-streak-sheet__grip, .tsb-livedock__grab,
+.share-sheet__handle, .rm-lang-handle, .langsheet__grab, .instabox__handle {
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* ==========================================================================
+   v372 · THE CHARACTER BELONGS TO THE FIRST SLIDE ONLY
+   In the update flow the bot was following readers onto later slides, where it
+   has nothing to say. It is now hidden on every slide that is not the first.
+   ========================================================================== */
+.fo-s:not(.fo-s1) .pip,
+.fo-s:not(.fo-s1) .tsb-pip,
+.fo-s2 .pip, .fo-s3 .pip, .fo-s4 .pip, .fo-s5 .pip, .fo-s6 .pip,
+.fo-wlc .pip, .fo-wlc .tsb-pip {
+  display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important;
+}

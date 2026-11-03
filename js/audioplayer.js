@@ -880,6 +880,11 @@
   function stopAll() {
     try { window.TSB_MEDIA.release("player"); } catch (e) {}
     jset(CANCELKEY, Date.now());   /* cancelled is cancelled: no dock on reload */
+    /* v367: a swipe is a decision, and it has to hold on every surface.
+       Clearing the last-played record as well means no page can rebuild a
+       "continue listening" dock or card from a podcast you swiped away. */
+    try { jset(LASTKEY, null); } catch (eL) {}
+    try { localStorage.removeItem("tsb_last_played"); } catch (eL2) {}
     clearTimeout(sleepTimer); sleepAt = 0; jset(SLEEPKEY, 0);
     try { if (T) T.stop(); } catch (e) {}
     try { if (AU) { AU.pause(); AU.src = ""; } } catch (e) {}

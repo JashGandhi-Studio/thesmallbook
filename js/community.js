@@ -933,9 +933,13 @@
   function writeStore(key, store) {
     try {
       var ks = Object.keys(store);
-      if (ks.length > LEDGER_CAP) {
+      /* v366: the popped ledger is a memory of what the reader has already been
+         told. Evicting it at a small cap is exactly why the same message kept
+         popping up again on later visits. It gets its own, much larger cap. */
+      var cap = (key === "tsb_notif_popped") ? 4000 : LEDGER_CAP;
+      if (ks.length > cap) {
         ks.sort(function (a, b) { return store[a] - store[b]; });
-        ks.slice(0, ks.length - LEDGER_CAP).forEach(function (k) { delete store[k]; });
+        ks.slice(0, ks.length - cap).forEach(function (k) { delete store[k]; });
       }
       localStorage.setItem(key, JSON.stringify(store));
     } catch (e) {}
@@ -1111,7 +1115,7 @@
       paintNotifUI(items);                       /* every badge stays truthful */
       var popped = readStore(NOTIF_POPPED, null);
       var freshAll = items.filter(function (n) {
-        return !popped[notifKey(n)] && (Date.now() - Date.parse(n.at)) < 864e5;
+        return !popped[notifKey(n)] && (Date.now() - Date.parse(n.at)) < 36e5;
       });
       if (popupsWanted()) freshAll.slice(0, 2).forEach(toastShow);
     } catch (e) {}

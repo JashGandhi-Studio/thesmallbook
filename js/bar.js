@@ -820,6 +820,53 @@
       });
     })();
 
+    /* v364: press and hold a chip, then drag it sideways to reorder. Tap still
+       selects the slot you are editing. */
+    (function dragChips() {
+      var chips = Array.prototype.slice.call(dock.querySelectorAll("[data-slotpick]"));
+      var from = null, startX = 0, moved = false, holdTimer = null;
+      chips.forEach(function (chip) {
+        chip.addEventListener("pointerdown", function (e) {
+          chip.setPointerCapture && chip.setPointerCapture(e.pointerId);
+          startX = e.clientX; moved = false;
+          holdTimer = setTimeout(function () { chip.classList.add("is-lifting"); from = chip; }, 180);
+        });
+        chip.addEventListener("pointermove", function (e) {
+          if (from !== chip) {
+            if (Math.abs(e.clientX - startX) > 8 && holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
+            return;
+          }
+          moved = true;
+          var dx = e.clientX - startX;
+          chip.style.transform = "translateX(" + dx + "px) scale(1.06)";
+          var over = document.elementFromPoint(e.clientX, e.clientY);
+          var target = over && over.closest ? over.closest("[data-slotpick]") : null;
+          if (target && target !== chip) {
+            var a = parseInt(chip.getAttribute("data-slotpick"), 10), b = parseInt(target.getAttribute("data-slotpick"), 10);
+            if (a !== b) {
+              var movedSlot = activeSlots.splice(a, 1)[0];
+              activeSlots.splice(b, 0, movedSlot);
+              selectedSlotIdx = b;
+              try { localStorage.setItem("tsb_custom_bar", JSON.stringify(activeSlots)); } catch (eS) {}
+              bar.innerHTML = buildBarHtml(activeSlots);
+              try { if (navigator.vibrate) navigator.vibrate(8); } catch (eV) {}
+              renderLiveDock();
+            }
+          }
+        });
+        function end() {
+          if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
+          chip.classList.remove("is-lifting");
+          chip.style.transform = "";
+          if (from === chip) { from = null; return; }
+        }
+        chip.addEventListener("pointerup", end);
+        chip.addEventListener("pointercancel", end);
+        chip.addEventListener("pointerleave", function () { if (!from) end(); });
+        chip.addEventListener("click", function (e) { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+      });
+    })();
+
     dock.querySelectorAll("[data-slotpick]").forEach(function (chip) {
       chip.addEventListener("click", function () {
         selectedSlotIdx = parseInt(chip.getAttribute("data-slotpick"), 10) || 0;

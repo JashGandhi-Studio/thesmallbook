@@ -437,6 +437,33 @@ window.TSB_LISTEN = (function () {
       .sort(function (a, b) { return b.at - a.at; }).slice(0, 10)
       .map(function (p) { return p.item; });
   }
+  /* v369: a swipe is a decision, and Listen has to honour it too. Positions
+     are stored separately from the last-played record, so a cancelled podcast
+     could still come back here in "Pick up where you left off". Anything that
+     started before the last swipe is filtered out of both rails. */
+  function audioCancelledAt() { try { return +(localStorage.getItem("tsb_audio_cancelled") || 0); } catch (e) { return 0; } }
+  function startedMs(it) {
+    if (!it) return 0;
+    var t = it.at || it.addedAt || it.startedAt || it.ts || 0;
+    if (!t) return 0;
+    if (typeof t === "number") return t < 1e12 ? t * 1000 : t;
+    var ms = Date.parse(t); return isNaN(ms) ? 0 : ms;
+  }
+  function liveLast() {
+    try {
+      var r = lastPlayed(), c = audioCancelledAt();
+      if (c && r && startedMs(r) && startedMs(r) < c) return null;
+      return r;
+    } catch (e) { return lastPlayed(); }
+  }
+  function liveContinue() {
+    try {
+      var c = audioCancelledAt();
+      var list = continueItems();
+      if (!c) return list;
+      return list.filter(function (it) { return !(startedMs(it) && startedMs(it) < c); });
+    } catch (e) { return continueItems(); }
+  }
   function buildFeed() {
     var feed = el("#rFeed"); if (!feed) return;
     /* v347: anyone can see what Listen holds, and play it. Signing in is
@@ -445,7 +472,7 @@ window.TSB_LISTEN = (function () {
     if (!signedIn()) {
       archive("best audiobooks", 14).then(function (pop) {
         if (el("#rSearch") && el("#rSearch").value.trim()) return;
-        var lp = lastPlayed();
+        var lp = liveLast();
         feed.innerHTML = (lp ? rail("Pick up where you left off", [lp]) : "") + rail("Popular now", pop || []);
         podcasts("storytelling", 8).then(function (p) {
           if (p && p.length) feed.insertAdjacentHTML("beforeend", rail("Podcasts", p));
@@ -457,8 +484,8 @@ window.TSB_LISTEN = (function () {
       });
       return;
     }
-    var cont = continueItems(), ts = topTerms(3), sj = topSubjects(2);
-    var lp2 = lastPlayed();
+    var cont = liveContinue(), ts = topTerms(3), sj = topSubjects(2);
+    var lp2 = liveLast();
     var steps = ["Reading your history", "Finding more like it", "Filling the shelf"];
     function skel() {
       var card = '<div class="c"><div class="b"></div><div class="t"></div><div class="t t2"></div></div>';
@@ -487,13 +514,17 @@ window.TSB_LISTEN = (function () {
         pods = l || [];
         setTimeout(function () {
           if (el("#rSearch") && el("#rSearch").value.trim()) return;
+          /* v375: a signed-in reader opens Listen to find the next thing, not to
+             stare at a player card. Books and podcasts from their own history
+             now lead; the "continue" rails sit underneath, where picking up
+             again belongs. */
           feed.innerHTML =
-            (lp2 ? rail("Pick up where you left off", [lp2]) : "") +
-            (cont.length ? rail("Continue", cont) : "") +
             (related.length ? rail(cont.length ? "Because you listened to " + shortName(cont[0].title) : "Start here", related) : "") +
-            rail("Popular now", popular) +
             (pods.length ? rail("Podcasts", pods) : "") +
-            (saved.length ? rail("Saved", saved) : "");
+            rail("Popular now", popular) +
+            (saved.length ? rail("Saved", saved) : "") +
+            (cont.length ? rail("Continue", cont) : "") +
+            (lp2 ? rail("Pick up where you left off", [lp2]) : "");
           var ft = el(".r-foot"); if (ft) ft.classList.add("on"); footState();
           var mk = el("#rForget"); if (mk) mk.style.display = "";
         }, 280);
