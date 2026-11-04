@@ -1,37 +1,25 @@
-/* v336: fonts live with the app (latin + rupee), no third-party round trips */
 @font-face{font-family:"Newsreader";font-style:normal;font-weight:400 700;font-display:swap;src:url(../assets/fonts/newsreader.woff2) format("woff2")}
 @font-face{font-family:"Newsreader";font-style:italic;font-weight:400 700;font-display:swap;src:url(../assets/fonts/newsreader-italic.woff2) format("woff2")}
 @font-face{font-family:"Space Grotesk";font-style:normal;font-weight:300 700;font-display:swap;src:url(../assets/fonts/spacegrotesk.woff2) format("woff2")}
 @font-face{font-family:"Archivo Black";font-style:normal;font-weight:400;font-display:swap;src:url(../assets/fonts/archivoblack.woff2) format("woff2")}
-/* ============================================================
-   THESMALLBOOK v326 · THE FILM, BUILT (film.css)
-   The redesign film turned into the real app. Loaded last on
-   every page, so it owns the look without touching features.
-   Paper #FBF8F1 · ink #16130F · yellow means "tap here".
-   Newsreader for reading, Space Grotesk for the interface.
-   Cards radius 24, soft shadow, no borders. Glass tab bar with
-   a sliding yellow pill. Night is warm, never blue.
-   ============================================================ */
 :root {
-  --f-paper: #FBF8F1; --f-card: #FFFFFF; --f-ink: #16130F; --f-ink2: #3B352D; --f-mu: #6E6658;
-  --f-line: #ECE5D6; --f-yel: #FFC800; --f-yelSoft: #FFF1BF; --f-gold: #E9C46A; --f-night: #15120E;
-  --f-serif: "Newsreader", Georgia, "Noto Serif Devanagari", serif;
-  --f-sans: "Space Grotesk", system-ui, -apple-system, "Segoe UI", "Noto Sans Devanagari", sans-serif;
-  --f-sh: 0 18px 40px -18px rgba(40, 28, 10, .22);
-  --f-sh-sm: 0 10px 24px -14px rgba(40, 28, 10, .24);
-  --f-glide: cubic-bezier(.16, 1, .3, 1);
-  --f-out: cubic-bezier(.16, 1, .3, 1);
+--f-paper: #FBF8F1; --f-card: #FFFFFF; --f-ink: #16130F; --f-ink2: #3B352D; --f-mu: #6E6658;
+--f-line: #ECE5D6; --f-yel: #FFC800; --f-yelSoft: #FFF1BF; --f-gold: #E9C46A; --f-night: #15120E;
+--f-serif: "Newsreader", Georgia, "Noto Serif Devanagari", serif;
+--f-sans: "Space Grotesk", system-ui, -apple-system, "Segoe UI", "Noto Sans Devanagari", sans-serif;
+--f-sh: 0 18px 40px -18px rgba(40, 28, 10, .22);
+--f-sh-sm: 0 10px 24px -14px rgba(40, 28, 10, .24);
+--f-glide: cubic-bezier(.16, 1, .3, 1);
+--f-out: cubic-bezier(.16, 1, .3, 1);
 }
 html.dark {
-  --f-paper: #15120E; --f-card: #1F1B16; --f-ink: #F3EDE2; --f-ink2: #D9D0C1; --f-mu: #A39A8A;
-  --f-line: #2C2620; --f-yelSoft: #3A2F12;
-  --f-sh: 0 18px 40px -18px rgba(0, 0, 0, .6); --f-sh-sm: 0 10px 24px -14px rgba(0, 0, 0, .6);
+--f-paper: #15120E; --f-card: #1F1B16; --f-ink: #F3EDE2; --f-ink2: #D9D0C1; --f-mu: #A39A8A;
+--f-line: #2C2620; --f-yelSoft: #3A2F12;
+--f-sh: 0 18px 40px -18px rgba(0, 0, 0, .6); --f-sh-sm: 0 10px 24px -14px rgba(0, 0, 0, .6);
 }
 html.film body { background: var(--f-paper) !important; color: var(--f-ink); }
 html.film .ticker { display: none !important; }
 html.film ::selection { background: var(--f-yelSoft); color: var(--f-ink); }
-
-/* ---------- shared bits ---------- */
 .f-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 56px; padding: 0 22px; border: 0; border-radius: 18px; background: var(--f-yel); color: #16130F !important; font: 700 17px/1 var(--f-sans); letter-spacing: -.005em; text-decoration: none !important; cursor: pointer; box-shadow: 0 10px 22px -10px rgba(40, 28, 10, .32); transition: transform .14s ease, box-shadow .2s ease; -webkit-tap-highlight-color: transparent; }
 .f-btn:active { transform: scale(.96); }
 .f-btn--ghost { background: var(--f-card); color: var(--f-ink) !important; box-shadow: var(--f-sh-sm); }
@@ -50,48 +38,37 @@ html.dark .f-kick { color: var(--f-gold); }
 @keyframes fPress { 0%, 100% { transform: scale(1); } 40% { transform: scale(.93); } }
 .f-up { animation: fUp .7s var(--f-out) both; animation-delay: calc(var(--d, 0) * 1s); }
 @media (prefers-reduced-motion: reduce) { .f-up, .fo *, .ft * { animation: none !important; transition: none !important; } }
-
-/* ============================================================
-   FIRST OPEN · four screens (onboard.js)
-   ============================================================ */
 html.fo-lock, html.fo-lock body { overflow: hidden !important; }
 .fo { position: fixed; inset: 0; z-index: 100000; background: var(--f-paper); overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; color: var(--f-ink); font-family: var(--f-sans); transition: opacity .42s ease, transform .42s var(--f-out); animation: foOpen .62s var(--f-out); }
-/* v348 · the first open arrives like a page being laid down: a breath of
-   scale and light, never a hard cut */
 @keyframes foOpen { from { opacity: 0; transform: scale(1.015); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
 @media (prefers-reduced-motion: reduce) { .fo { animation: none; } }
 .fo--leave { opacity: 0; transform: scale(1.03); pointer-events: none; }
-/* v341 · the first open owns the whole screen. The paper, the light and the
-   desk run edge to edge on every size, so a wide display is never a narrow
-   sheet floating in white. */
 .fo::before {
-  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background:
-    radial-gradient(130% 90% at 50% -25%, color-mix(in srgb, #FFC800 30%, transparent), transparent 62%),
-    radial-gradient(60% 55% at 0% 105%, rgba(255, 200, 0, .16), transparent 70%),
-    radial-gradient(55% 50% at 100% 100%, rgba(122, 28, 36, .07), transparent 72%);
+content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+background:
+radial-gradient(130% 90% at 50% -25%, color-mix(in srgb, #FFC800 30%, transparent), transparent 62%),
+radial-gradient(60% 55% at 0% 105%, rgba(255, 200, 0, .16), transparent 70%),
+radial-gradient(55% 50% at 100% 100%, rgba(122, 28, 36, .07), transparent 72%);
 }
-/* the grain of real paper, not a pattern: keeps a wide screen feeling made
-   rather than filled */
 .fo::after {
-  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .38;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
-  mix-blend-mode: multiply;
+content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .38;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+mix-blend-mode: multiply;
 }
 html.dark .fo::after { mix-blend-mode: screen; opacity: .16; }
 html.dark .fo::before { background: radial-gradient(130% 90% at 50% -25%, rgba(255, 200, 0, .14), transparent 60%), radial-gradient(60% 55% at 0% 105%, rgba(255, 200, 0, .08), transparent 70%); }
 .fo-col { position: relative; z-index: 1; max-width: 430px; min-height: 100%; margin: 0 auto; }
 @media (min-width: 700px) {
-  .fo-col { max-width: 640px; min-height: 100dvh; margin: 0 auto; }
-  .fo-s { min-height: 100dvh !important; background: transparent; border-radius: 0; box-shadow: none; padding-left: 40px; padding-right: 40px; }
-  .fo-s1 { padding-top: calc(34px + env(safe-area-inset-top, 0px)); }
-  .fo-s .fo-foot { padding-bottom: calc(30px + env(safe-area-inset-bottom, 0px)); }
+.fo-col { max-width: 640px; min-height: 100dvh; margin: 0 auto; }
+.fo-s { min-height: 100dvh !important; background: transparent; border-radius: 0; box-shadow: none; padding-left: 40px; padding-right: 40px; }
+.fo-s1 { padding-top: calc(34px + env(safe-area-inset-top, 0px)); }
+.fo-s .fo-foot { padding-bottom: calc(30px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (min-width: 1180px) {
-  .fo-col { max-width: 760px; }
-  .fo-s { padding-left: 40px; padding-right: 40px; }
-  .fo-chips { grid-template-columns: repeat(4, 1fr); }
-  .fo-fan { margin-left: -40px; margin-right: -40px; }
+.fo-col { max-width: 760px; }
+.fo-s { padding-left: 40px; padding-right: 40px; }
+.fo-chips { grid-template-columns: repeat(4, 1fr); }
+.fo-fan { margin-left: -40px; margin-right: -40px; }
 }
 .fo-s { position: relative; display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; padding: calc(14px + env(safe-area-inset-top, 0px)) 24px calc(22px + env(safe-area-inset-bottom, 0px)); box-sizing: border-box; transition: opacity .34s ease, transform .4s var(--f-out); }
 .fo-s.in { opacity: 0; transform: translateX(40px); }
@@ -192,10 +169,6 @@ html.dark .fo-plank { background: #3a3125; }
 @keyframes foSpark { 0% { opacity: 0; transform: scale(0) rotate(0); } 50% { opacity: 1; transform: scale(1.2) rotate(45deg); } 100% { opacity: 0; transform: scale(0) rotate(90deg); } }
 .fo-hint { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 18px 0 0; font: 600 13px var(--f-sans); color: var(--f-mu); animation: fUp .6s var(--f-out) 1.7s both; }
 .fo-s4 .fo-btn { animation-delay: 1.8s; }
-
-/* ============================================================
-   TAB BAR · glass, four tabs, sliding yellow pill
-   ============================================================ */
 html.film .tsb-bar { bottom: 0 !important; width: 100% !important; max-width: none !important; border-radius: 0 !important; border: 0 !important; border-top: 1px solid var(--f-line) !important; background: rgba(251, 248, 241, .9) !important; -webkit-backdrop-filter: saturate(1.6) blur(18px); backdrop-filter: saturate(1.6) blur(18px); box-shadow: none !important; padding: 0 8px env(safe-area-inset-bottom, 0px) !important; }
 html.film.dark .tsb-bar { background: rgba(21, 18, 14, .86) !important; border-top-color: rgba(255, 255, 255, .06) !important; }
 html.film { --tsb-bar-gap: 0px; --tsb-bar-h: 64px; }
@@ -209,22 +182,14 @@ html.film.dark .tsb-bar__item.is-active svg { color: #16130F; }
 html.film .tsb-bar__lbl { font: 600 11px var(--f-sans) !important; letter-spacing: 0 !important; }
 html.film .tsb-bar--off { transform: translateX(-50%) translateY(calc(100% + 20px)) !important; }
 @media (min-width: 760px) {
-  html.film .tsb-bar { bottom: 16px !important; width: 440px !important; border-radius: 26px !important; border: 1px solid var(--f-line) !important; box-shadow: var(--f-sh) !important; padding: 0 8px !important; }
-  html.film { --tsb-bar-gap: 16px; }
+html.film .tsb-bar { bottom: 16px !important; width: 440px !important; border-radius: 26px !important; border: 1px solid var(--f-line) !important; box-shadow: var(--f-sh) !important; padding: 0 8px !important; }
+html.film { --tsb-bar-gap: 16px; }
 }
-
-/* ============================================================
-   QUIET HEADERS (every page): no yellow and red blocks
-   ============================================================ */
 html.film .nav { background: rgba(251, 248, 241, .86) !important; -webkit-backdrop-filter: saturate(1.5) blur(16px); backdrop-filter: saturate(1.5) blur(16px); border: 0 !important; border-bottom: 1px solid var(--f-line) !important; box-shadow: none !important; }
 html.film.dark .nav { background: rgba(21, 18, 14, .86) !important; border-bottom-color: rgba(255,255,255,.06) !important; }
 html.film .nav .btn, html.film .nav .nb-btn { background: var(--f-card) !important; color: var(--f-ink) !important; border: 0 !important; box-shadow: var(--f-sh-sm) !important; border-radius: 999px !important; font-family: var(--f-sans) !important; letter-spacing: .02em; }
 html.film .nav .btn--icon { width: 40px; height: 40px; min-width: 40px; padding: 0 !important; display: inline-flex; align-items: center; justify-content: center; }
 html.film .logo__mark { background: none !important; box-shadow: none !important; border: 0 !important; }
-
-/* ============================================================
-   TODAY (index.html, film.js) · one hero, not twelve rows
-   ============================================================ */
 html.fv-today .nav, html.fv-today .todaybar, html.fv-today header.hero, html.fv-today #continue,
 html.fv-today #dailyTrioSection, html.fv-today .gravebanner, html.fv-today .kidsbanner, html.fv-today #lod,
 html.fv-today #socialproof, html.fv-today #goldbanner, html.fv-today #library, html.fv-today #filters,
@@ -308,8 +273,6 @@ html.dark .ft-mp__f { background: #2a241c; }
 .ft-prompt span { display: inline-flex; margin-top: 10px; font: 600 13px var(--f-sans); }
 .ft-foot { margin: 34px 0 6px; text-align: center; font: 500 12px var(--f-sans); color: var(--f-mu); }
 .ft-foot a { color: inherit; }
-
-/* ---------- LIBRARY view (index.html#library) ---------- */
 .fl-hd { max-width: 1100px; margin: 0 auto; padding: calc(18px + env(safe-area-inset-top, 0px)) 24px 0; box-sizing: border-box; display: none; }
 html.fv-lib .fl-hd { display: block; }
 .fl-hd__row { display: flex; align-items: center; justify-content: space-between; }
@@ -326,10 +289,6 @@ html.fv-lib #filters { margin: 16px auto 0 !important; padding: 0 24px !importan
 html.film #filters .chip, html.film #filters button { border: 1.5px solid var(--f-line) !important; background: var(--f-card) !important; color: var(--f-ink2) !important; border-radius: 999px !important; box-shadow: none !important; font: 600 13px var(--f-sans) !important; text-transform: none !important; letter-spacing: 0 !important; }
 html.film #filters .chip.active, html.film #filters .chip.is-active, html.film #filters .chip[aria-pressed="true"] { background: var(--f-ink) !important; color: var(--f-paper) !important; border-color: var(--f-ink) !important; }
 html.film .toolbar select { border: 1.5px solid var(--f-line) !important; background: var(--f-card) !important; border-radius: 12px !important; font: 600 13px var(--f-sans) !important; box-shadow: none !important; color: var(--f-ink) !important; }
-
-/* ============================================================
-   YOU (you.html) · your reading year
-   ============================================================ */
 .fy { max-width: 560px; margin: 0 auto; padding: calc(16px + env(safe-area-inset-top, 0px)) 20px 40px; box-sizing: border-box; font-family: var(--f-sans); color: var(--f-ink); }
 .fy-hd { display: flex; align-items: center; gap: 14px; padding: 6px 4px 0; }
 .fy-av { width: 64px; height: 64px; border-radius: 50%; background: var(--f-yel); color: #16130F; display: flex; align-items: center; justify-content: center; font: 500 30px var(--f-serif); flex: none; box-shadow: var(--f-sh-sm); }
@@ -397,10 +356,6 @@ html.dark .fy-hl q { background: linear-gradient(transparent 58%, rgba(233, 196,
 .fy-gold em { margin-left: auto; font: 700 13px var(--f-sans); font-style: normal; color: #0E0C09; background: var(--f-gold); padding: 10px 14px; border-radius: 12px; white-space: nowrap; }
 .fy-fine { margin: 26px 0 0; text-align: center; font: 500 12px/1.5 var(--f-sans); color: var(--f-mu); }
 .fy-fine a { color: inherit; }
-
-/* ============================================================
-   ABOUT (about.html) · it opens like a book
-   ============================================================ */
 .fa { max-width: 640px; margin: 0 auto; padding: calc(18px + env(safe-area-inset-top, 0px)) 22px 10px; box-sizing: border-box; font-family: var(--f-sans); color: var(--f-ink); }
 .fa-book { position: relative; height: 300px; margin: 6px 0 0; perspective: 1400px; }
 .fa-book__in { position: absolute; left: 50%; top: 18px; width: 180px; height: 260px; margin-left: -90px; transform-style: preserve-3d; transition: transform 1.2s var(--f-out); }
@@ -447,8 +402,6 @@ html.dark .fa-plank { background: #3a3125; }
 .fa-credit span { display: block; margin-top: 3px; font: 500 13px/1.45 var(--f-sans); color: #b8ad99; }
 .fa-more { margin: 26px 0 0; text-align: center; font: 600 13px var(--f-sans); color: var(--f-mu); }
 html.film.fv-about .nav { position: sticky; }
-
-/* ---------- Library grid: covers first, words quiet ---------- */
 html.fv-today #tsbJourneys, html.fv-today .pk-homelead, html.fv-today .pk-host { display: none !important; }
 html.film .search__hint { display: none !important; }
 html.fv-lib #grid:not(.grid--shelves) { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 26px 16px !important; max-width: 1100px; margin: 18px auto 0 !important; padding: 0 24px 40px !important; box-sizing: border-box; }
@@ -478,10 +431,6 @@ html.fv-lib .toolbar { max-width: 1100px; margin: 12px auto 0 !important; paddin
 html.fv-lib #tsbJourneys { max-width: 1100px; margin-left: auto !important; margin-right: auto !important; }
 html.film #grid .card__fav { left: auto !important; }
 html.fv-lib #tsbJourneys { padding-left: 24px !important; padding-right: 24px !important; box-sizing: border-box; }
-
-/* ============================================================
-   BOOK (book.html) · the book is the hero
-   ============================================================ */
 html.fv-book .bookhero { display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; gap: 0 !important; max-width: 560px !important; margin: 0 auto !important; padding: 26px 20px 6px !important; background: none !important; border: 0 !important; box-shadow: none !important; }
 html.fv-book .bookhero__coverbox { width: 168px !important; max-width: 168px !important; margin: 0 auto 14px !important; background: none !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; }
 html.fv-book .bookhero__meta { width: 100%; display: flex; flex-direction: column; align-items: center; }
@@ -531,10 +480,6 @@ html.fv-book .bookhero__cta-row { grid-template-columns: minmax(0, 1fr) minmax(0
 html.fv-book .nb-act-btn, html.fv-book .podcastbtn { min-width: 0 !important; width: auto !important; }
 html.fv-book .bookhero__cat { display: none !important; }
 html.fv-book .bigidea__label { position: static !important; transform: none !important; margin: 0 !important; display: block !important; }
-
-/* ============================================================
-   LISTEN (podcasts.html) · press play, keep living
-   ============================================================ */
 html.fv-listen .nav { display: none !important; }
 html.fv-listen .dd-main { max-width: 640px !important; padding-top: calc(18px + env(safe-area-inset-top, 0px)) !important; }
 html.fv-listen .pc-hero { background: none !important; border: 0 !important; box-shadow: none !important; padding: 8px 4px 0 !important; text-align: left !important; }
@@ -557,13 +502,8 @@ html.fv-listen .pc-show, html.fv-listen .pc-orig__card, html.fv-listen .pc-ab__g
 html.fv-listen .pc-play, html.fv-listen .pc-orig__play { background: var(--f-yel) !important; color: #16130F !important; border: 0 !important; box-shadow: 0 8px 18px -10px rgba(40, 28, 10, .32) !important; border-radius: 999px !important; }
 html.fv-listen .pc-browse, html.fv-listen .pc-more, html.fv-listen .pc-ab__more { border: 1.5px solid var(--f-line) !important; background: var(--f-card) !important; box-shadow: none !important; border-radius: 999px !important; color: var(--f-ink) !important; font-family: var(--f-sans) !important; }
 html.fv-listen footer.footer { background: none !important; border: 0 !important; }
-/* the player: a calm card above the tabs */
 html.film .tsb-player { border: 0 !important; border-radius: 22px !important; background: rgba(255, 255, 255, .92) !important; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); box-shadow: 0 18px 40px -14px rgba(40, 28, 10, .35) !important; font-family: var(--f-sans) !important; }
 html.film.dark .tsb-player { background: rgba(31, 27, 22, .94) !important; }
-
-/* ============================================================
-   GOLD (gold.html) · one screen, one price, said plainly
-   ============================================================ */
 html.fv-gold body { background: #0E0C09 !important; color: #EFE6D3 !important; }
 html.fv-gold .nav { background: rgba(14, 12, 9, .86) !important; border-bottom-color: rgba(233, 196, 106, .12) !important; }
 html.fv-gold .nav .btn { background: #1B1712 !important; color: #EFE6D3 !important; }
@@ -603,10 +543,6 @@ html.film .pc-ab__card button:not(.pc-ab__save), html.film .pc-ab__card a.pc-pla
 html.fv-gold .gold-samples-showcase { --paper: #1B1712; --ink: #FFF3CC; --edge: rgba(233,196,106,.16); --sh-3: none; color: #EFE6D3; }
 html.fv-gold .gold-samples-showcase p { color: #A39A8A !important; }
 html.fv-gold .gold-samples-showcase h2, html.fv-gold .gold-samples-showcase h3, html.fv-gold .gold-samples-showcase h4 { color: #FFF3CC !important; font-family: var(--f-serif) !important; font-weight: 500 !important; }
-
-/* ============================================================
-   THE FILM COAT for every other page: calm buttons and type
-   ============================================================ */
 html.film .btn { font-family: var(--f-sans); border: 0 !important; box-shadow: var(--f-sh-sm) !important; border-radius: 999px !important; }
 html.film .btn--yellow { background: var(--f-yel) !important; color: #16130F !important; box-shadow: 0 10px 22px -12px rgba(40, 28, 10, .32) !important; }
 html.film .btn--red { background: var(--f-ink) !important; color: var(--f-paper) !important; }
@@ -622,12 +558,11 @@ html.film .toast { border: 0 !important; border-radius: 16px !important; backgro
 html.film .ft-mic--lib { width: 38px !important; height: 38px !important; min-width: 38px !important; padding: 0 !important; background: var(--f-paper) !important; color: var(--f-ink) !important; border: 0 !important; box-shadow: none !important; border-radius: 50% !important; }
 html.film .ft-mic--lib.on { background: var(--f-yel) !important; color: #16130F !important; }
 html.film .ft-mic--lib svg { display: block !important; width: 18px !important; height: 18px !important; }
-/* book page: one quiet row, back on the left, tools on the right */
 @media (max-width: 720px) {
-  html.fv-book .nav > .logo, html.fv-book .nav > .nav__auth { display: none !important; }
-  html.fv-book .nav { padding: 10px 14px !important; }
-  html.fv-book .nav__links { width: 100%; display: flex !important; gap: 8px !important; justify-content: flex-end; flex-wrap: nowrap !important; }
-  html.fv-book .nav__links .fb-back { margin-right: auto !important; }
+html.fv-book .nav > .logo, html.fv-book .nav > .nav__auth { display: none !important; }
+html.fv-book .nav { padding: 10px 14px !important; }
+html.fv-book .nav__links { width: 100%; display: flex !important; gap: 8px !important; justify-content: flex-end; flex-wrap: nowrap !important; }
+html.fv-book .nav__links .fb-back { margin-right: auto !important; }
 }
 html.fv-book .fb-back { display: inline-flex !important; align-items: center; gap: 4px; padding: 0 14px 0 10px !important; height: 40px; font-weight: 600 !important; text-transform: none !important; }
 html.film #searchWrap .searchrow { display: flex !important; align-items: center !important; gap: 4px !important; }
@@ -637,20 +572,11 @@ html.film #searchWrap #searchGo { flex: none !important; padding: 0 16px !import
 html.film .cf-banner { overflow: hidden !important; }
 html.film body { overflow-x: clip; }
 html.dark .f-btn--sq { background: #2A251E !important; color: #F3EBDD !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08) !important; }
-
-/* ============================================================
-   v327 · POLISH
-   ============================================================ */
-/* smoother entrances: no blur (blur is what made low-end phones stutter) */
 @keyframes fUp { from { opacity: 0; transform: translate3d(0, 22px, 0); } to { opacity: 1; transform: none; } }
 .f-up { animation: fUp .62s var(--f-out) both; animation-delay: calc(var(--d, 0) * 1s); }
-/* every tap answers: a small press on all film controls */
 html.film .f-btn:active, html.film .f-calm:active, html.film .fb-cta:active, html.film .fb-chip:active, html.film .fg-plan:active, html.film .fg-cta:active, html.film .nav .btn:active, html.film .chip:active, html.film .lesson__head:active { transform: scale(.97); }
 html.film .f-calm, html.film .fb-cta, html.film .fb-chip, html.film .chip, html.film .lesson__head { transition: transform .16s var(--f-out), background-color .2s ease, box-shadow .2s ease; -webkit-tap-highlight-color: transparent; }
-/* calm labels: sentence case wherever the old CSS shouted */
 html.film .f-calm { text-transform: none !important; letter-spacing: 0 !important; font-family: var(--f-sans) !important; }
-
-/* ---------- BOOK · top row: back, save, share, more ---------- */
 html.fv-book .nav__links { position: relative; }
 html.fv-book .fb-card, html.fv-book .fb-more { width: 40px !important; height: 40px !important; min-width: 40px !important; padding: 0 !important; display: inline-flex !important; align-items: center; justify-content: center; }
 html.fv-book .fb-pop { position: absolute; right: 0; top: calc(100% + 8px); z-index: 60; min-width: 210px; padding: 6px; border-radius: 18px; background: var(--f-card); box-shadow: 0 24px 60px -18px rgba(40, 28, 10, .4), 0 0 0 1px var(--f-line); display: flex; flex-direction: column; gap: 2px; opacity: 0; transform: translateY(-6px) scale(.97); transform-origin: top right; pointer-events: none; transition: opacity .18s ease, transform .24s var(--f-out); }
@@ -660,16 +586,12 @@ html.fv-book .fb-pop .fb-pop__it:hover, html.fv-book .fb-pop .fb-pop__it:focus-v
 html.fv-book .fb-pop .fb-pop__it svg { width: 19px; height: 19px; flex: none; }
 html.dark.fv-book .fb-pop { background: #221D17; box-shadow: 0 24px 60px -18px rgba(0, 0, 0, .7), 0 0 0 1px rgba(255, 255, 255, .06); }
 html.dark.fv-book .fb-pop .fb-pop__it:hover { background: rgba(255, 255, 255, .06) !important; }
-
-/* ---------- BOOK · chips on one line ---------- */
 html.fv-book .bookhero__badges { display: block !important; margin: 14px 0 0 !important; }
 html.fv-book .fb-chips { display: flex; justify-content: center; gap: 8px; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 2px 4px; }
 html.fv-book .fb-chips::-webkit-scrollbar { display: none; }
 html.fv-book .fb-chip { flex: none; height: 32px; padding: 0 13px; border-radius: 999px; background: var(--f-card); border: 1.5px solid var(--f-line); color: var(--f-ink2); font: 600 12.5px/29px var(--f-sans); white-space: nowrap; box-shadow: none; }
 html.fv-book .fb-chip--lang { cursor: pointer; font-family: var(--f-sans), "Noto Sans Devanagari", sans-serif; }
 html.dark.fv-book .fb-chip { background: #221D17; border-color: rgba(255, 255, 255, .08); color: #CFC5B2; }
-
-/* ---------- BOOK · two honest buttons ---------- */
 html.fv-book .bookhero__cta-row { display: grid !important; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important; gap: 12px !important; margin-top: 20px !important; }
 html.fv-book .fb-cta { height: 64px !important; min-height: 64px !important; border-radius: 20px !important; padding: 0 18px !important; justify-content: flex-start !important; gap: 12px !important; text-align: left !important; }
 html.fv-book .fb-cta .nb-act-lbl, html.fv-book .fb-cta .podcastbtn__label, html.fv-book .fb-cta .podcastbtn__live { display: none !important; }
@@ -679,8 +601,6 @@ html.fv-book .fb-lbl small { font: 600 12px/1.1 var(--f-sans); opacity: .68; whi
 html.fv-book #heroPodcastBtn.fb-cta { background: var(--f-card) !important; border: 1.5px solid var(--f-line) !important; box-shadow: none !important; color: var(--f-ink) !important; }
 html.fv-book #heroPodcastBtn.podcastbtn--playing { background: var(--f-ink) !important; color: var(--f-paper) !important; border-color: transparent !important; }
 html.dark.fv-book #heroPodcastBtn.fb-cta { background: #221D17 !important; border-color: rgba(255, 255, 255, .08) !important; color: #F3EBDD !important; }
-
-/* ---------- BOOK · lessons: numbers stay numbers, read gets a tick ---------- */
 html.fv-book .lesson__num { position: relative; font: 700 13px var(--f-sans) !important; font-variant-numeric: tabular-nums; letter-spacing: .02em !important; }
 html.fv-book .lesson.is-read .lesson__num { background: #E7F4EC !important; color: #1E6B45 !important; }
 html.fv-book .lesson.open.is-read .lesson__num { background: var(--f-yel) !important; color: #16130F !important; }
@@ -701,12 +621,10 @@ html.fv-book .lesson.is-closing .lesson__body { display: block !important; anima
 html.fv-book .lesson.open .lesson__body { animation: none !important; }
 html.dark.fv-book .lesson.is-read .lesson__num { background: #1F3A2B !important; color: #9BE0B9 !important; }
 html.dark.fv-book .fb-tick { box-shadow: 0 0 0 2px #1C1813; }
-/* lesson tools: three quiet pills */
 html.fv-book .lesson__tools { display: flex !important; gap: 8px !important; flex-wrap: wrap; margin-top: 14px !important; }
 html.fv-book .minibtn { height: 38px !important; padding: 0 14px !important; border-radius: 999px !important; border: 1.5px solid var(--f-line) !important; background: var(--f-card) !important; box-shadow: none !important; color: var(--f-ink) !important; font: 600 13px var(--f-sans) !important; text-transform: none !important; letter-spacing: 0 !important; display: inline-flex !important; align-items: center; gap: 7px; }
 html.fv-book .minibtn.active { background: #E7F4EC !important; border-color: transparent !important; color: #1E6B45 !important; }
 html.dark.fv-book .minibtn { background: #221D17 !important; border-color: rgba(255, 255, 255, .08) !important; color: #F3EBDD !important; }
-/* chai jar: one soft line */
 html.fv-book .tipjar { background: var(--f-paper) !important; border: 0 !important; box-shadow: none !important; border-radius: 16px !important; padding: 12px 14px !important; }
 html.fv-book .tipjar__q { font: 600 13px/1.35 var(--f-sans) !important; color: var(--f-ink2) !important; }
 html.fv-book .tipjar__btns a { height: 34px !important; min-width: 54px; padding: 0 12px !important; border-radius: 999px !important; border: 1.5px solid var(--f-line) !important; background: var(--f-card) !important; box-shadow: none !important; color: var(--f-ink) !important; font: 700 13px/31px var(--f-sans) !important; text-align: center; }
@@ -714,8 +632,6 @@ html.fv-book .tipjar__icon { background: none !important; border: 0 !important; 
 html.fv-book .tipjar__x { background: none !important; border: 0 !important; box-shadow: none !important; color: var(--f-mu) !important; }
 html.dark.fv-book .tipjar { background: rgba(255, 255, 255, .04) !important; }
 html.dark.fv-book .tipjar__btns a { background: #221D17 !important; border-color: rgba(255, 255, 255, .08) !important; color: #F3EBDD !important; }
-
-/* ---------- BOOK · below the lessons ---------- */
 html.fv-book .quote { background: var(--f-card) !important; border: 0 !important; box-shadow: var(--f-sh-sm) !important; border-radius: 22px !important; font: italic 500 19px/1.45 var(--f-serif) !important; color: var(--f-ink) !important; padding: 22px 56px 22px 22px !important; position: relative; }
 html.fv-book .quote::before { color: var(--f-yel) !important; }
 html.fv-book .quote__share { position: absolute !important; top: 14px !important; right: 14px !important; width: 34px !important; height: 34px !important; border-radius: 50% !important; background: var(--f-paper) !important; border: 0 !important; box-shadow: none !important; font-size: 15px !important; }
@@ -737,16 +653,12 @@ html.fv-book #related img { border-radius: 4px 8px 8px 4px !important; box-shado
 html.dark.fv-book .quote, html.dark.fv-book .plan__box, html.dark.fv-book .bookkit__card, html.dark.fv-book #related a { background: #1C1813 !important; color: #F3EBDD !important; }
 html.dark.fv-book #related .t, html.dark.fv-book .bookkit__h { color: #F3EBDD !important; }
 html.dark.fv-book .booknav .btn, html.dark.fv-book .bookkit__btn:not(.bookkit__btn--cheat) { background: #221D17 !important; border-color: rgba(255, 255, 255, .08) !important; color: #F3EBDD !important; }
-
-/* ---------- the footer, everywhere: a quiet signature ---------- */
 html.film footer.footer { text-align: center; padding: 36px 22px 120px !important; }
 html.film footer.footer .head { font: 400 15px "Archivo Black", sans-serif !important; letter-spacing: -.01em !important; color: var(--f-ink) !important; text-transform: uppercase; background: none !important; border: 0 !important; box-shadow: none !important; }
 html.film footer.footer p { font: 500 12.5px/1.55 var(--f-sans) !important; color: var(--f-mu) !important; text-transform: none !important; letter-spacing: 0 !important; }
 html.film footer.footer .credits { display: inline-block; margin-top: 10px; padding: 0 !important; background: none !important; border: 0 !important; box-shadow: none !important; font: 600 12px var(--f-sans) !important; letter-spacing: .08em !important; color: var(--f-mu) !important; }
 html.film footer.footer .tiny, html.film footer.footer .tiny a { font: 600 11px var(--f-sans) !important; letter-spacing: .1em !important; color: var(--f-mu) !important; opacity: .8; }
 html.dark.film footer.footer .head { color: #F3EBDD !important; }
-
-/* ---------- LISTEN · calmer controls ---------- */
 html.film .pc-play, html.film .pc-browse, html.film #abMore, html.film #pcMoreShows, html.film .pc-ab__card button:not(.pc-ab__save) { border: 0 !important; box-shadow: none !important; border-radius: 999px !important; font: 700 13px var(--f-sans) !important; text-transform: none !important; letter-spacing: 0 !important; height: 38px; padding: 0 16px !important; display: inline-flex !important; align-items: center; justify-content: center; gap: 6px; }
 html.film .pc-play, html.film .pc-ab__card button:not(.pc-ab__save) { background: var(--f-yel) !important; color: #16130F !important; }
 html.film .pc-browse { background: var(--f-paper) !important; color: var(--f-ink) !important; }
@@ -754,8 +666,6 @@ html.film #abMore, html.film #pcMoreShows { background: var(--f-card) !important
 html.film .pc-cat { border: 1.5px solid var(--f-line) !important; box-shadow: none !important; border-radius: 999px !important; background: var(--f-card) !important; color: var(--f-ink2) !important; font: 600 13px var(--f-sans) !important; text-transform: none !important; letter-spacing: 0 !important; }
 html.film .pc-cat.active, html.film .pc-cat.on, html.film .pc-cat[aria-pressed="true"] { background: var(--f-ink) !important; color: var(--f-paper) !important; border-color: transparent !important; }
 html.dark.film .pc-browse, html.dark.film #abMore, html.dark.film #pcMoreShows, html.dark.film .pc-cat { background: #221D17 !important; color: #F3EBDD !important; border-color: rgba(255, 255, 255, .08) !important; }
-
-/* ---------- GOLD · one screen, one choice ---------- */
 html.fv-gold .nav { display: none !important; }
 html.fg-collapsed.fv-gold .goldwrap > *:not(#fgPanel) { display: none !important; }
 html.fv-gold .goldwrap { padding-top: 0 !important; }
@@ -808,7 +718,6 @@ html.dark.fv-book .fb-pop .fb-pop__it::after { color: #F3EBDD; }
 html.fv-book #shareBtn.fb-card { width: 40px !important; height: 40px !important; min-width: 40px !important; min-height: 40px !important; border-radius: 50% !important; padding: 0 !important; background: var(--f-card) !important; box-shadow: var(--f-sh-sm) !important; border: 0 !important; }
 html.dark.fv-book #shareBtn.fb-card { background: #221D17 !important; color: #F3EBDD !important; }
 html.fv-book .fb-pop [data-lang-btn] { max-width: none !important; overflow: visible !important; }
-/* one-row header on secondary pages */
 html.fv-nav .nav { display: flex !important; flex-wrap: nowrap !important; align-items: center !important; justify-content: space-between !important; gap: 10px !important; padding: 10px 14px !important; }
 html.fv-nav .nav > .logo { order: 0; flex: none; }
 html.fv-nav .nav > .nav__auth { order: 2; margin-left: auto !important; }
@@ -822,17 +731,14 @@ html.fv-nav .fb-pop .fb-pop__it:hover { background: var(--f-paper) !important; }
 html.dark.fv-nav .fb-pop { background: #221D17; box-shadow: 0 24px 60px -18px rgba(0, 0, 0, .7), 0 0 0 1px rgba(255, 255, 255, .06); }
 html.dark.fv-nav .fb-pop .fb-pop__it::after { color: #F3EBDD; }
 html.dark.fv-nav .fb-more { background: #221D17 !important; color: #F3EBDD !important; }
-/* settings: tidy rows, no 200px-tall buttons in stacked rows */
 html.film .setrow[style*="column"] > * { flex: 0 0 auto !important; }
 html.film .setrow .setopt { flex: 1 1 0 !important; min-width: 0 !important; min-height: 44px; padding: 8px 6px !important; white-space: normal !important; line-height: 1.2 !important; text-align: center; justify-content: center; }
 html.film .setrow .setbtn { min-height: 46px; }
-/* one-row header fix */
 html.fv-nav .nav > .logo { flex: 0 1 auto !important; min-width: 0 !important; width: auto !important; }
 html.fv-nav .nav__links { position: relative !important; inset: auto !important; right: auto !important; top: auto !important; }
 html.fv-nav .nav > .nav__auth { position: static !important; }
 html.film #tsTextRow .setbtn { flex: 1 1 0 !important; min-width: 0 !important; }
 html.film #appsizeRow .setopt, html.film #soundRow .setopt { flex: 1 1 calc(50% - 6px) !important; }
-/* achievement toast: a quiet glass note, not a sticker */
 html.film .achvpop { left: 50% !important; right: auto !important; width: min(340px, calc(100vw - 32px)) !important; transform: translate(-50%, 24px) scale(.98) !important; opacity: 0; transition: opacity .3s ease, transform .5s var(--f-out) !important; display: flex !important; align-items: center !important; gap: 12px !important; padding: 12px 16px 12px 12px !important; border: 0 !important; border-radius: 20px !important; background: rgba(255, 253, 248, .86) !important; -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); box-shadow: 0 18px 50px -18px rgba(40, 28, 10, .45), 0 0 0 1px rgba(22, 19, 15, .06) !important; color: var(--f-ink) !important; }
 html.film .achvpop.show { opacity: 1; transform: translate(-50%, 0) !important; }
 html.film .achvpop__icon { width: 42px !important; height: 42px !important; border: 0 !important; border-radius: 50% !important; background: var(--f-yel-soft, #FFF1BF) !important; font-size: 1.25rem !important; box-shadow: none !important; }
@@ -842,7 +748,6 @@ html.film .achvpop__desc { font: 400 12px/1.35 var(--f-sans) !important; color: 
 html.dark.film .achvpop { background: rgba(34, 29, 23, .88) !important; color: #F3EBDD !important; box-shadow: 0 18px 50px -18px rgba(0, 0, 0, .7), 0 0 0 1px rgba(255, 255, 255, .06) !important; }
 html.dark.film .achvpop__icon { background: rgba(233, 196, 106, .16) !important; }
 html.dark.film .achvpop__title { color: #E9C46A !important; }
-/* Gold, expanded details: calmer type, no split feature columns */
 html.fv-gold .goldplan__features li { display: block !important; }
 html.fv-gold .goldplan__features li b { display: inline !important; font-weight: 600 !important; color: #F3EBDD !important; }
 html.fv-gold .goldwrap h3, html.fv-gold .goldcard h3, html.fv-gold .goldplan__title, html.fv-gold .goldwrap h2 { text-transform: none !important; letter-spacing: -.005em !important; font-family: var(--f-serif) !important; font-weight: 500 !important; }
@@ -851,8 +756,6 @@ html.fv-gold .gold-post-plan-slide { background: rgba(255, 255, 255, .04) !impor
 html.fv-gold .gold-post-plan-slide b { color: #F3EBDD !important; font-family: var(--f-sans) !important; letter-spacing: 0 !important; }
 html.fv-gold .gold-post-plan-slide p { color: #B8AE9C !important; }
 html.film, html.film body { overflow-x: clip; }
-
-/* v336: Today voice search, in place */
 .ftv { position: fixed; inset: 0; z-index: 100004; pointer-events: none; }
 .ftv-veil { position: absolute; inset: 0; background: rgba(22, 19, 15, .38); opacity: 0; transition: opacity .28s ease; }
 .ftv-card { position: absolute; left: 12px; right: 12px; top: calc(12px + env(safe-area-inset-top)); max-width: 540px; margin: 0 auto; padding: 16px 16px 14px; border-radius: 24px; background: var(--f-card); color: var(--f-ink); box-shadow: 0 30px 60px -24px rgba(22, 19, 15, .45), 0 0 0 1px var(--f-line); transform: translateY(-14px) scale(.98); opacity: 0; transition: transform .38s var(--f-out), opacity .24s ease; font-family: var(--f-sans); max-height: calc(100vh - 40px); overflow-y: auto; }
@@ -882,17 +785,8 @@ html.film, html.film body { overflow-x: clip; }
 .ftv-all { display: flex; align-items: center; justify-content: center; height: 44px; margin-top: 10px; border-radius: 999px; background: var(--f-ink); color: var(--f-paper); font: 600 14px/1 var(--f-sans); text-decoration: none; }
 .ftv-none { margin: 10px 2px; font: 400 14px/1.4 var(--f-sans); color: var(--f-mu); }
 @media (prefers-reduced-motion: reduce) { .ftv-wave i, .ftv-it { animation: none; } }
-
-/* v336: "Icons only" really is smaller. The bar, the page padding and the
-   mini player all follow --tsb-bar-h, so one number moves everything. */
 html[data-bar-labels="icons"], html.film[data-bar-labels="icons"] { --tsb-bar-h: 50px; }
 html[data-bar-labels="icons"] #tsbBar .tsb-bar__item { padding-top: 0; padding-bottom: 0; justify-content: center; }
-
-/* v337: Today shelves breathe at each edge and browse sheets stay light. */
 .ft-row{padding-left:28px;padding-right:28px;scroll-padding-left:28px;overscroll-behavior-inline:contain}.fbs-b{content-visibility:auto;contain-intrinsic-size:110px 218px}
-
-/* v340 Graveyard doorways */
 .ft-tile--grave{background:#2a2520!important;color:#fff!important}.ft-tile--grave span{color:#e7d7c4!important}.f-libgrave{display:flex;gap:10px;align-items:center;margin:14px 0;padding:13px;border:1px solid #312a23;border-radius:16px;background:#f1eadf;color:#201b16;text-decoration:none}.f-libgrave b{font-size:10px;letter-spacing:.1em}.f-libgrave span{font-size:12px;flex:1}.f-libgrave i{font-style:normal}
-
-/* v351 - the banner clears the dock here too, not just on the app pages */
 body:has(#tsbAp.ap-on) .achvpop, body.tsb-audio-live .achvpop { bottom: calc(var(--bar-total, 74px) + 104px) !important; }

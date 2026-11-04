@@ -346,7 +346,9 @@
     var nb = (window.BOOKS || []).length;
     var nl = (window.BOOKS || []).reduce(function (a, b) { return a + (b.lessons ? b.lessons.length : 0); }, 0);
     var ng = (window.FAILURES || []).length;
-    el.textContent = nb + " books · " + nl + " lessons · " + ng + " autopsies";
+    /* v385: the ask sheet is not the place for a catalogue count. It says what
+       the sheet can do, in words, and the numbers stay out of the UI. */
+    el.textContent = "Every book, every lesson, every autopsy";
     /* ⏳ v300 free-quota meter lives in the same line, wall-on only */
     try {
       var meter = window.TSB_ASK_QUOTA && TSB_ASK_QUOTA.meterText && TSB_ASK_QUOTA.meterText();

@@ -7,7 +7,10 @@ if (typeof window !== "undefined") window.BOOKS = BOOKS;
    TSB_LESSONS.all(cb) completes every book (search inside lessons, Ask). */
 (function () {
   if (typeof window === "undefined") return;
-  var V = "336", byId = {}, wait = {}, allCb = null, allState = 0;
+  /* v385: the lesson URL carries the build, so a phone can never be served a
+     copy of a lesson file cached by an older deploy. */
+  var V = (typeof window !== "undefined" && window.TSB_BUILD) ? String(window.TSB_BUILD) : "336";
+  var byId = {}, wait = {}, allCb = null, allState = 0;
   BOOKS.forEach(function (b) { byId[b.id] = b; });
   function full(b) { return !b || b._full === 1; }
   window.TSB_LFILL = function (id, body, ext) {
@@ -52,6 +55,12 @@ if (typeof window !== "undefined") window.BOOKS = BOOKS;
     s.onload = s.onerror = function () { var w = fW; fW = null; w.forEach(function (f) { try { f(); } catch (e) {} }); };
     (document.head || document.documentElement).appendChild(s);
   }
+  /* v385: anything a lesson file handed to the early stub is applied now */
+  try {
+    var held = window.TSB_LFILL_QUEUE;
+    window.TSB_LFILL_QUEUE = null;
+    if (held && held.length) held.forEach(function (a) { try { window.TSB_LFILL(a[0], a[1], a[2]); } catch (e) {} });
+  } catch (e) {}
   window.TSB_LESSONS = { ensure: ensure, all: all, failures: failures, ready: function (id) { return full(byId[id]); }, version: V };
   /* the open book's text is written in by the page itself (book and reader) */
 })();

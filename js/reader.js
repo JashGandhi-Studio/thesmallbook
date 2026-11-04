@@ -8,10 +8,19 @@
 
   var bookId = getQueryParam('id') || 'atomic-habits';
   var books = window.BOOKS || [];
-  var book = books.find(function(b) { return b.id === bookId; }) || books[0];
+  var book = books.find(function(b) { return b.id === bookId; }) || null;
 
+  /* v385 · an unknown link says so. It used to fall back to the first book in
+     the shelf, so a broken link opened Atomic Habits and looked like a duplicate. */
   if (!book) {
-    document.body.innerHTML = '<div style="padding:40px;text-align:center;"><h2>Book not found</h2><a href="index.html">← Back to shelf</a></div>';
+    document.body.innerHTML =
+      '<div style="padding:56px 22px;max-width:520px;margin:0 auto;text-align:left;font-family:Newsreader,Georgia,serif">' +
+      '<div style="font:800 11px/1 \'Space Grotesk\',system-ui;letter-spacing:1.4px;color:#8a7a55;margin-bottom:10px">NOT FOUND</div>' +
+      '<h2 style="font-size:26px;line-height:1.2;margin:0 0 10px">That link does not point to a book</h2>' +
+      '<p style="font-size:16px;line-height:1.6;margin:0 0 22px">The address you opened has a book id that is not on the shelf. Nothing is broken on your side.</p>' +
+      '<a href="index.html#library" style="display:inline-block;background:#FFC800;color:#16130f;border-radius:14px;padding:12px 20px;text-decoration:none;font:800 14px \'Space Grotesk\',system-ui">Browse the library</a>' +
+      '</div>';
+    document.title = 'Book not found | TheSmallBook';
     return;
   }
 
@@ -37,84 +46,109 @@
   if (authorEl) authorEl.textContent = /^unknown$/i.test(book.author || '') ? 'A TheSmallBook Original' : 'by ' + book.author;
   document.title = book.title + ' | TheSmallBook Reader';
 
-  // Build Pages/Sections
+  /* v385 · THE PAGE THAT WROTE ITS OWN BOOK
+     Lesson text is not in data.js, it arrives later from data/lessons/<id>.js.
+     The reader used to build its pages once, at load, and if the text had not
+     landed yet it kept the empty shell forever: a book with chapter titles and
+     no words. The page now builds, then rebuilds the moment the text arrives,
+     and never loses the reader's place. */
   var pages = [];
 
-  // Page 0: The Big Idea
-  pages.push({
-    title: 'The Big Idea',
-    meta: (book.cat || book.category || 'Overview') + ' · The big idea',
-    content: '<p><strong>' + (book.tagline || '') + '</strong></p>' +
-             '<p>' + (book.oneliner || '') + '</p>' +
-             (book.bigidea ? '<div class="rm-callout"><b>💡 The Core Insight</b>' + book.bigidea + '</div>' : '')
-  });
+  /* v385 · data.js stores the keys as bigIdea, oneLiner and actionPlan. The page
+     builder asked for bigidea, oneliner and plan, which are undefined, so the big
+     idea card and the action plan came out empty on every book. Fixed here. */
+  function lessonsHaveText() {
+    if (!Array.isArray(book.lessons)) return false;
+    for (var i = 0; i < book.lessons.length; i++) {
+      var t = book.lessons[i] && book.lessons[i].summary;
+      if (t && String(t).replace(/\s+/g, " ").length > 40) return true;
+    }
+    return false;
+  }
+  var ideaOf = function () { return book.bigIdea || book.bigidea || ""; };
+  var lineOf = function () { return book.oneLiner || book.oneliner || ""; };
+  var planOf = function () { return book.actionPlan || book.plan || []; };
 
-  // Pages 1 to N: The Lessons
-  if (Array.isArray(book.lessons)) {
-    book.lessons.forEach(function(lesson, idx) {
-      var html = '<p>' + (lesson.summary || '') + '</p>';
-      if (lesson.example) {
-        html += '<div class="rm-callout"><b>REAL-WORLD EXAMPLE</b>' + lesson.example + '</div>';
-      }
-      if (lesson.action) {
-        html += '<div class="rm-callout"><b>⚡ Practical Action</b>' + lesson.action + '</div>';
-      }
-      pages.push({
-        title: lesson.title,
-        meta: (lesson.chapter ? lesson.chapter.toUpperCase() : ('LESSON ' + (idx + 1))),
-        content: html
+  function buildPages() {
+    pages = [];
+    var hasText = lessonsHaveText();
+
+    // Page 0: The Big Idea
+    pages.push({
+      title: "The Big Idea",
+      meta: (book.category || book.cat || "Overview") + " \u00b7 The big idea",
+      content: (book.tagline ? "<p><strong>" + book.tagline + "</strong></p>" : "") +
+               (lineOf() ? "<p>" + lineOf() + "</p>" : "") +
+               (ideaOf() ? '<div class="rm-callout"><b>THE CORE INSIGHT</b>' + ideaOf() + "</div>" : "")
+    });
+
+    if (hasText) {
+      // Pages 1 to N: The Lessons
+      book.lessons.forEach(function (lesson, idx) {
+        var html = "<p>" + (lesson.summary || "") + "</p>";
+        if (lesson.example) html += '<div class="rm-callout"><b>REAL-WORLD EXAMPLE</b>' + lesson.example + "</div>";
+        if (lesson.action) html += '<div class="rm-callout"><b>PRACTICAL ACTION</b>' + lesson.action + "</div>";
+        pages.push({
+          title: lesson.title,
+          meta: lesson.chapter ? lesson.chapter.toUpperCase() : ("LESSON " + (idx + 1)),
+          content: html
+        });
       });
-    });
-  }
+    } else if (Array.isArray(book.lessons) && book.lessons.length) {
+      /* The chapter text has not landed yet, or it never will. Either way the
+         reader gets the book's real spine, never eight blank pages. */
+      var list = "<p>This book, chapter by chapter:</p><ul style=\"padding-left:20px;margin-bottom:20px\">";
+      book.lessons.forEach(function (l) {
+        list += '<li style="margin-bottom:10px"><strong>' + (l.title || "") + "</strong>" +
+                (l.chapter ? '<br><span style="font-size:13px;opacity:.72">' + l.chapter + "</span>" : "") + "</li>";
+      });
+      list += "</ul>";
+      if (ideaOf()) list += '<div class="rm-callout"><b>THE CORE INSIGHT</b>' + ideaOf() + "</div>";
+      list += '<p id="rmNote" style="font-size:13.5px;margin-top:18px">The full text of these chapters is still on its way. ' +
+              '<button type="button" data-rm-retry style="font:inherit;font-weight:700;background:none;border:0;padding:0;color:inherit;text-decoration:underline;cursor:pointer">Load it again</button></p>';
+      pages.push({ title: "What this book covers", meta: "CONTENTS", content: list, retry: true });
+    }
 
-  // Final Page: Action Plan & Quotes
-  var endHtml = '';
-  if (Array.isArray(book.plan) && book.plan.length > 0) {
-    endHtml += '<h3>⚡ 5-Step Action Plan</h3><ol style="padding-left:20px;margin-bottom:24px;">';
-    book.plan.forEach(function(step) {
-      endHtml += '<li style="margin-bottom:10px;">' + step + '</li>';
-    });
-    endHtml += '</ol>';
-  }
-  if (Array.isArray(book.quotes) && book.quotes.length > 0) {
-    endHtml += '<h3>💬 Key Quotes</h3>';
-    book.quotes.forEach(function(q) {
-      endHtml += '<blockquote style="border-left:3px solid var(--yellow);padding-left:14px;margin:12px 0;font-style:italic;">“' + q + '”</blockquote>';
-    });
-  }
-  if (endHtml) {
-    pages.push({
-      title: 'Action Plan & Takeaways',
-      meta: 'WRAP-UP & RETENTION',
-      content: endHtml
-    });
-  }
+    // Final page: quotes and the action plan
+    var endHtml = "";
+    var plan = planOf();
+    if (plan.length) {
+      endHtml += '<h3>5-Step Action Plan</h3><ol style="padding-left:20px;margin-bottom:24px;">';
+      plan.forEach(function (step) { endHtml += '<li style="margin-bottom:10px;">' + step + "</li>"; });
+      endHtml += "</ol>";
+    }
+    if (Array.isArray(book.quotes) && book.quotes.length) {
+      endHtml += "<h3>KEY QUOTES</h3>";
+      book.quotes.forEach(function (q) {
+        endHtml += '<blockquote style="border-left:3px solid var(--yellow);padding-left:14px;margin:12px 0;font-style:italic;">\u201c' + q + '\u201d</blockquote>';
+      });
+    }
+    if (endHtml) {
+      pages.push({ title: "Action Plan & Takeaways", meta: "WRAP-UP & RETENTION", content: endHtml });
+    }
 
-  /* v343 · A PAID ORIGINAL STOPS WHERE IT IS SOLD
-     The read view used to hand over every lesson of every Original, which
-     meant the paid ones were free the moment a reader opened this page.
-     Five Originals stay open. In a paid one the first lesson reads in full,
-     then the book closes on one honest card: 19 rupees once for this book,
-     or Gold for everything. Nothing here is a subscription. */
-  var LOCK = window.TSB_LOCK || null;
-  if (LOCK && LOCK.locked(book.id)) {
-    var free = 1 + (LOCK.freeLessons || 1);        /* the big idea page + lesson one */
-    pages = pages.slice(0, free);
-    pages.push({
-      title: 'Keep reading this Original',
-      meta: 'ONE-TIME UNLOCK',
-      paywall: true,
-      content: '<p><strong>You have read the opening of this TheSmallBook Original.</strong> The rest of it, every lesson, the action plan and the quotes, is yours for a one-time '
-        + LOCK.bookPrice + ' rupees on this book.</p>'
-        + '<div class="rm-callout"><b>\u2726 THIS BOOK, ONCE</b>'
-        + '<p style="margin:6px 0 12px">Pay ' + LOCK.bookPrice + ' rupees one time and this book stays open on your account forever. No subscription, nothing to cancel.</p>'
-        + '<a class="btn btn--yellow" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:800" href="gold.html?book=' + encodeURIComponent(book.id) + '#single">Unlock this book \u00b7 \u20b9' + LOCK.bookPrice + '</a></div>'
-        + '<div class="rm-callout"><b>\u2726 OR GOLD, ALSO ONCE</b>'
-        + '<p style="margin:6px 0 12px">99 rupees opens Gold for a season, 999 makes it permanent. Both are one-time payments, never a plan you have to cancel.</p>'
-        + '<a class="btn" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:800" href="gold.html">See Gold</a></div>'
-        + '<p style="font-size:12.5px;color:var(--mute)">Sharing, highlighting and saving phrases stays open to everyone, paid book or not.</p>'
-    });
+    /* v343 \u00b7 A PAID ORIGINAL STOPS WHERE IT IS SOLD */
+    var LOCK = window.TSB_LOCK || null;
+    if (LOCK && LOCK.locked(book.id)) {
+      var free = 1 + (LOCK.freeLessons || 1);
+      pages = pages.slice(0, free);
+      pages.push({
+        title: "Keep reading this Original",
+        meta: "ONE-TIME UNLOCK",
+        paywall: true,
+        content: '<p><strong>You have read the opening of this TheSmallBook Original.</strong> The rest of it, every lesson, the action plan and the quotes, is yours for a one-time '
+          + LOCK.bookPrice + ' rupees on this book.</p>'
+          + '<div class="rm-callout"><b>\u2726 THIS BOOK, ONCE</b>'
+          + '<p style="margin:6px 0 12px">Pay ' + LOCK.bookPrice + ' rupees one time and this book stays open on your account forever. No subscription, nothing to cancel.</p>'
+          + '<a class="btn btn--yellow" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:800" href="gold.html?book=' + encodeURIComponent(book.id) + '#single">Unlock this book \u00b7 \u20b9' + LOCK.bookPrice + '</a></div>'
+          + '<div class="rm-callout"><b>\u2726 OR GOLD, ALSO ONCE</b>'
+          + '<p style="margin:6px 0 12px">99 rupees opens Gold for a season, 999 makes it permanent. Both are one-time payments, never a plan you have to cancel.</p>'
+          + '<a class="btn" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:800" href="gold.html">See Gold</a></div>'
+          + '<p style="font-size:12.5px;color:var(--mute)">Sharing, highlighting and saving phrases stays open to everyone, paid book or not.</p>'
+      });
+    }
   }
+  buildPages();
 
   /* v382: a reader who opens a book must land on the book. The first page is a
      three line "big idea" card, and landing there made the whole book look
@@ -157,6 +191,23 @@
     return localStorage.getItem('tsb_rm_mode') || 'pages';
   }
 
+  /* v387: the listen button used to queue only the page on screen, so a nine page
+     book stopped talking after page two. The whole page list is exposed here and
+     the queue is built from it. */
+  try {
+    window.TSB_READER = {
+      get pages() { return pages; },
+      get cur() { return curPage; },
+      get total() { return pages.length; },
+      get bookId() { return book ? book.id : null; },
+      text: function (i) {
+        var pg = pages[i]; if (!pg) return '';
+        var d = document.createElement('div'); d.innerHTML = pg.content || '';
+        return ((pg.title ? pg.title + '. ' : '') + (d.textContent || '')).replace(/\s+/g, ' ').trim();
+      }
+    };
+  } catch (e) {}
+
   function renderView() {
     var mode = getMode();
     if (mode === 'scroll') {
@@ -188,6 +239,9 @@
       nextBtn.disabled = curPage === pages.length - 1;
     }
     if (contentsSelect) contentsSelect.value = curPage;
+
+    var rb = articleEl.querySelector('[data-rm-retry]');
+    if (rb) rb.addEventListener('click', function () { location.reload(); });
 
     updateReadButton();
     try { window.scrollTo(0, 0); } catch(e) {}
@@ -517,24 +571,22 @@
   }
 
   var LANG_LABELS = {
-    'en': '🌐 English',
-    'hi': '🌐 हिन्दी',
-    'hi-Latn': '🌐 Hinglish',
-    'gu': '🌐 ગુજરાતી',
-    'mr': '🌐 मराठी',
-    'ta': '🌐 தமிழ்',
-    'bn': '🌐 বাংলা'
+    'en': 'English',
+    'hi': 'हिन्दी',
+    'hi-Latn': 'Hinglish',
+    'gu': 'ગુજરાતી',
+    'mr': 'मराठी',
+    'ta': 'தமிழ்',
+    'bn': 'বাংলা'
   };
 
   function updateLangBtnText(code) {
     if (!langBtn) return;
-    if (LANG_LABELS[code]) {
-      langBtn.textContent = LANG_LABELS[code];
-    } else if (code && code !== 'en') {
-      langBtn.textContent = '🌐 ' + code.toUpperCase();
-    } else {
-      langBtn.textContent = '🌐 Translate';
-    }
+    /* v387: the pill carries a globe glyph, so the word goes in its own span.
+       Writing textContent here used to delete the icon on every switch. */
+    var out = LANG_LABELS[code] || (code && code !== 'en' ? String(code).toUpperCase() : 'Translate');
+    var label = document.getElementById('rmLangLabel') || langBtn.querySelector('span');
+    if (label) label.textContent = out; else langBtn.textContent = out;
   }
 
   function openLangSheet() {
@@ -601,4 +653,54 @@
 
   applyPrefs();
   renderView();
+
+  /* ---------------------------------------------------------------------------
+     v385 · the words arrive after the shell, so the page waits for them
+     buildPages() above works from what data.js carries: a title and a chapter
+     name for each lesson. The lesson text lives in data/lessons/<id>.js and is
+     fetched separately. This is the bit that was missing: when the text landed,
+     nothing rebuilt, and a book stayed wordless until the reader reloaded.
+     --------------------------------------------------------------------------- */
+  function repaintContents() {
+    if (!contentsSelect) return;
+    contentsSelect.innerHTML = '';
+    pages.forEach(function (p, i) {
+      var opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = (i + 1) + '. ' + p.title;
+      contentsSelect.appendChild(opt);
+    });
+  }
+
+  function upgradeWithLessons() {
+    if (!window.TSB_LESSONS) return;
+    if (window.TSB_LESSONS.ready(book.id)) return;
+    var at = curPage;
+    var landed = false;
+    window.TSB_LESSONS.ensure(book.id, function () {
+      if (landed) return;
+      landed = true;
+      buildPages();
+      repaintContents();
+      /* a Listen session started on the empty shell only knew two pages; it
+         stops here rather than playing a shorter book than the one on screen */
+      try { if (window.TSB_AUDIO && window.TSB_AUDIO.stop) window.TSB_AUDIO.stop(); } catch (e) {}
+      var target = Math.min(at, Math.max(0, pages.length - 1));
+      if (getMode() === "scroll") { renderView(); try { window.scrollTo(0, 0); } catch (e) {} }
+      else renderPage(target);
+    });
+    /* if the file never lands, the reader is told, in one line, and can ask again */
+    setTimeout(function () {
+      if (landed || window.TSB_LESSONS.ready(book.id)) return;
+      if (document.getElementById("rmRetry")) return;
+      var p2 = document.createElement("p");
+      p2.id = "rmRetry";
+      p2.style.cssText = "margin:22px 0 0;font-size:13.5px;opacity:.9";
+      p2.innerHTML = "This chapter is still loading. <button type=\"button\" style=\"font:inherit;font-weight:700;background:none;border:0;padding:0;color:inherit;text-decoration:underline;cursor:pointer\">Try again</button>";
+      p2.querySelector("button").addEventListener("click", function () { location.reload(); });
+      if (articleEl) articleEl.appendChild(p2);
+    }, 6000);
+  }
+
+  upgradeWithLessons();
 })();

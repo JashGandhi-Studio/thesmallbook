@@ -356,7 +356,7 @@
     var lh = document.createElement("div");
     lh.className = "fl-hd"; lh.id = "filmLibHead";
     var cats = {}; books().forEach(function (b) { cats[b.category] = 1; });
-    lh.innerHTML = '<div class="fl-hd__row"><h1>Library</h1><a class="ft-av" href="you.html" aria-label="You" data-tsb-av data-name="' + esc(name() || "R") + '">' + (window.TSB_AVA ? TSB_AVA.markup(name()) : esc((name() || "R").charAt(0).toUpperCase())) + "</a></div><p>" + books().length + " books \u00b7 eight minutes each \u00b7 every shelf</p>" + graveDoor("library");
+    lh.innerHTML = '<div class="fl-hd__row"><h1>Library</h1><a class="ft-av" href="you.html" aria-label="You" data-tsb-av data-name="' + esc(name() || "R") + '">' + (window.TSB_AVA ? TSB_AVA.markup(name()) : esc((name() || "R").charAt(0).toUpperCase())) + "</a></div><p>" + "Eight minutes each \u00b7 every shelf \u00b7 free to read</p>" + graveDoor("library");
     var anchor = $(".ticker") || document.body.firstChild;
     var hero = $("header.hero");
     document.body.insertBefore(ft, hero || anchor);

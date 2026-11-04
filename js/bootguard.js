@@ -15,10 +15,23 @@
       do Phase A once; if a later load still fails, say it
       honestly with a one-tap fix button. Never a silent hang.
    ============================================================ */
+/* v385 · TSB_LFILL ARRIVES BEFORE ITS DEFINITION
+   A lesson file calls window.TSB_LFILL the moment it executes. If it executes
+   before js/data.js has defined that function, the call is a ReferenceError and
+   the book's text is lost for the life of the page. This stub holds the payload
+   and hands it to the real function as soon as it exists. */
+(function () {
+  if (typeof window === "undefined" || window.TSB_LFILL_QUEUE) return;
+  window.TSB_LFILL_QUEUE = [];
+  var held = window.TSB_LFILL;
+  window.TSB_LFILL = function (id, body, ext) { window.TSB_LFILL_QUEUE.push([id, body, ext]); };
+  window.TSB_LFILL_HOLD = held;
+})();
+
 (function () {
   "use strict";
 
-  var BUILD = "384";
+  var BUILD = "387";
 window.TSB_BUILD = BUILD;   /* v322: every page knows its era - the tutorial replays once per era */
   var PHASE_A = "tsb_purge_a";
 

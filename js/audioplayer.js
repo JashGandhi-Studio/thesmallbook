@@ -1256,6 +1256,27 @@
       });
     });
   }
+  /* v385 · the bundles load when they are needed, not on every page.
+     435 KB of episode and chapter data used to be parsed on 25 pages before
+     the reader had scrolled once. They arrive the first time a show or an
+     audiobook is opened, and then never again. */
+  var BUNDLE_BUSY = false, BUNDLE_WAIT = [];
+  function withBundles(cb) {
+    if (window.TSB_EPISODES && window.TSB_AUDIOBOOK_FILES) { cb(); return; }
+    BUNDLE_WAIT.push(cb);
+    if (BUNDLE_BUSY) return;
+    BUNDLE_BUSY = true;
+    var left = 2;
+    function done() { if (--left > 0) return; var w = BUNDLE_WAIT; BUNDLE_WAIT = []; w.forEach(function (f) { try { f(); } catch (e) {} }); }
+    var v = window.TSB_BUILD || "385";
+    ["data/podcast-episodes.js", "data/audiobook-files.js"].forEach(function (src) {
+      var el = document.createElement("script");
+      el.src = src + "?v=" + v;
+      el.onload = done; el.onerror = done;
+      (document.head || document.documentElement).appendChild(el);
+    });
+  }
+
   /* v383 · THE SHOW OPENS FROM THE APP, NOT FROM A CROSS ORIGIN FETCH.
      A feed that refuses a browser fetch used to be the end of the road, which
      is where "could not fetch" came from. Every curated show ships with its
@@ -1279,6 +1300,9 @@
   }
 
   function fetchFeed(url, cb) {
+    withBundles(function () { fetchFeedReady(url, cb); });
+  }
+  function fetchFeedReady(url, cb) {
     var bundle = bundledEpisodes(url);
     if (bundle && bundle.items.length) { cb(bundle.items, bundle.name, false, ""); return; }
     var ck = FEEDCACHE + feedKey(url);
@@ -1601,6 +1625,9 @@
   }
 
   function fetchAudiobook(rec, cb) {
+    withBundles(function () { fetchAudiobookReady(rec, cb); });
+  }
+  function fetchAudiobookReady(rec, cb) {
     var ck = FEEDCACHE + "ab3_" + rec.id;   /* ab3: base-name dedupe, every older doubled cache is ignored */
     var cached = jget(ck, null);
     if (cached && Date.now() - cached.at < 30 * 864e5 && cached.items.length) { cb(cached.items); return; }

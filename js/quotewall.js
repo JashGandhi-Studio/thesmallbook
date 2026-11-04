@@ -525,7 +525,7 @@
           '<button class="qw-find" id="qwFind" type="button">📚 Find a line from library or shelf</button>' +
           '<div id="qwFindBox" hidden>' +
             '<div class="qw-sources">' +
-              '<button type="button" class="qw-src on" data-src="books">📚 520 LIBRARY BOOKS</button>' +
+              '<button type="button" class="qw-src on" data-src="books">LIBRARY BOOKS</button>' +
               '<button type="button" class="qw-src" data-src="shelf">📜 CLASSICAL WISDOM</button>' +
             '</div>' +
             '<input id="qwSearch" type="text" maxlength="40" placeholder="Search book, author or quote...">' +

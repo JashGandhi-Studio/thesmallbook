@@ -33,7 +33,7 @@
   /* ---------- the guide sheet: every function, plainly ---------- */
   var ROWS = [
     { g: "READ", rows: [
-      { e: "📚", n: "The Library", d: "books, 4,343 lessons, 26 languages. Open in one tap.", h: "index.html" },
+      { e: "", n: "The Library", d: "every book, 4,343 lessons, 26 languages. Open in one tap.", h: "index.html" },
       { e: "📷", n: "Scanner", d: "Holding a paper book? Scan its cover and its shelf opens here.", h: "scan.html" },
       { e: "🌊", n: "Deep Dives", d: "The one chapter of a book worth reading in full, with narration.", h: "deepdive.html" },
       { e: "🗒️", n: "Notebook", d: "Every highlight, note and saved line you keep, in one place.", h: "notes.html" }

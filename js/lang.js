@@ -1,5 +1,5 @@
 /* ============================================================
-   THESMALLBOOK - UNIVERSAL LANGUAGE ENGINE 🌐  (v3 - natural v222)
+   THESMALLBOOK - UNIVERSAL LANGUAGE ENGINE (v3 - natural v222)
    Translates the ENTIRE app into 24+ languages using the Google
    Translate page engine (driven directly, retries included).
    Plus two EXCLUSIVE modes, now NATURAL - the way people actually
@@ -21,6 +21,9 @@
      3. RULES ENGINE - word-aware Devanagari→Roman that keeps
         natural spelling (short "a", no "aa/ee" verb endings).
    ============================================================ */
+/* v385: the language button draws its own globe instead of an emoji */
+var LANG_ICON = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="vertical-align:-2px;margin-right:5px"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3.4 4 3.4 14 0 18M12 3c-3.4 4-3.4 14 0 18"/></svg>';
+
 
 (function () {
   var LS_KEY = "tsb_lang";
@@ -601,7 +604,7 @@
     if (entry.special) {
       startScanner(entry.code);
     }
-    setTimeout(function () { if (!window.TSB_TXVEIL) toast("🌐 Translating to " + entry.name + "..."); }, 300);
+    setTimeout(function () { if (!window.TSB_TXVEIL) toast("Translating to " + entry.name + "..."); }, 300);
   }
 
   function selectLang(code) {
@@ -612,7 +615,13 @@
       window.TSB_TXVEIL(prev !== "en");
       activate(code);
       var mounts = document.querySelectorAll("[data-lang-btn]");
-      for (var m = 0; m < mounts.length; m++) mounts[m].innerHTML = "🌐" + ' <span class="langbtn__label">' + ne.name + "</span>";
+      for (var m = 0; m < mounts.length; m++) mounts[m].innerHTML = LANG_ICON + ' <span class="langbtn__label">' + ne.name + "</span>";
+      /* v387: nothing told the rest of the app the language had changed, so the
+         reader's pill went on saying the language you just left. One event fixes
+         every pill, on every page. */
+      try { window.dispatchEvent(new CustomEvent("tsb:lang", { detail: { code: code, name: ne.name } })); } catch (e) {}
+      var rll = document.getElementById("rmLangLabel");
+      if (rll) rll.textContent = ne.name;
       return;
     }
     setLang(code);
@@ -735,7 +744,7 @@
     var entry = findLang(cur);
     var mounts = document.querySelectorAll("[data-lang-btn]");
     for (var m = 0; m < mounts.length; m++) {
-      mounts[m].innerHTML = "🌐" + (cur !== "en" && entry ? ' <span class="langbtn__label">' + entry.name + "</span>" : "");
+      mounts[m].innerHTML = LANG_ICON + (cur !== "en" && entry ? ' <span class="langbtn__label">' + entry.name + "</span>" : "");
       mounts[m].setAttribute("translate", "no");
       mounts[m].addEventListener("click", openLangModal);
     }

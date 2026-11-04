@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- v387 · warm paper from the very first byte, so the pre-paint window is never black and never white -->
+<style id="tsb-paper-first">html{background:#FBF7EF}html.tsb-nosplash body{background:#FBF7EF}</style>
   <meta charset="UTF-8">
-  <!--tsb-pre--><link rel="preload" href="css/style.css?v=384" as="style"><link rel="preload" href="css/film.css?v=384" as="style"><link rel="preload" href="css/film2.css?v=384" as="style"><link rel="preload" href="css/desktop-v336.css?v=384" as="style"><link rel="preload" href="./js/bootguard.js?v=384" as="script"><link rel="preload" href="js/prefs.js?v=384" as="script"><link rel="preload" href="js/support.js?v=384" as="script"><link rel="preload" href="js/upi.js?v=384" as="script"><link rel="preload" href="js/lang.js?v=384" as="script"><link rel="preload" href="js/config.js?v=384" as="script"><link rel="preload" href="js/daylight.js?v=384" as="script"><link rel="preload" href="js/avatar.js?v=384" as="script"><link rel="preload" href="js/auth.js?v=384" as="script"><link rel="preload" href="js/sounds.js?v=384" as="script"><link rel="preload" href="js/community.js?v=384" as="script"><link rel="preload" href="js/data.js?v=384" as="script"><link rel="preload" href="js/share.js?v=384" as="script"><link rel="preload" href="js/app.js?v=384" as="script"><link rel="preload" href="js/packs-data.js?v=384" as="script"><link rel="preload" href="js/mindpick.js?v=384" as="script"><link rel="preload" href="js/packs-ui.js?v=384" as="script"><link rel="preload" href="js/guide.js?v=384" as="script"><link rel="preload" href="js/onboard.js?v=384" as="script"><link rel="preload" href="js/trial.js?v=384" as="script"><link rel="preload" href="js/ask-data.js?v=384" as="script"><link rel="preload" href="js/tts-engine.js?v=384" as="script"><link rel="preload" href="js/ask-modes-data.js?v=384" as="script"><link rel="preload" href="js/paywall.js?v=384" as="script"><link rel="preload" href="js/askquota.js?v=384" as="script"><link rel="preload" href="js/stt.js?v=384" as="script"><link rel="preload" href="js/ask.js?v=384" as="script"><link rel="preload" href="js/podcast-data.js?v=384" as="script"><link rel="preload" href="js/audioplayer.js?v=384" as="script"><link rel="preload" href="js/showcase.js?v=384" as="script"><link rel="preload" href="js/personalize.js?v=384" as="script"><link rel="preload" href="js/bar.js?v=384" as="script"><link rel="preload" href="js/soft-motion.js?v=384" as="script"><link rel="preload" href="js/gate.js?v=384" as="script"><link rel="preload" href="js/weekly.js?v=384" as="script"><link rel="preload" href="js/request.js?v=384" as="script"><link rel="preload" href="js/film.js?v=384" as="script"><link rel="preload" href="js/film2.js?v=384" as="script"><link rel="preload" href="js/inapp-select.js?v=384" as="script"><link rel="preload" href="js/motion-344.js?v=384" as="script"><link rel="preload" href="js/mark.js?v=384" as="script"><link rel="preload" href="js/splash.js?v=384" as="script"><link rel="preload" href="js/shelf3d.js?v=384" as="script"><link rel="preload" href="js/taste.js?v=384" as="script"><link rel="preload" as="script" href="js/pip-mind.js?v=384"><link rel="preload" as="script" href="js/pip-ui.js?v=384">
+  <!--tsb-pre--><link rel="preload" href="css/style.css?v=387" as="style"><link rel="preload" href="css/film.css?v=387" as="style"><link rel="preload" href="css/film2.css?v=387" as="style"><link rel="preload" href="css/desktop-v336.css?v=387" as="style">
 <!--/tsb-pre-->
   <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1">
   <title>TheSmallBook, Skim Every Great Book in Minutes</title>
-  <meta name="description" content="600 book summaries · 4,343 lessons · 400 autopsies. Skim any great book in minutes, in 26 languages, with audio.">
+  <meta name="description" content="Book summaries, lessons and failure autopsies. Skim any great book in minutes, in 26 languages, with audio.">
       <meta property="og:title" content="TheSmallBook, Skim Every Great Book in Minutes">
-  <meta property="og:description" content="600 book summaries · 4,343 lessons · 400 autopsies, in 26 languages, with audio.">
+  <meta property="og:description" content="Book summaries, lessons and failure autopsies, in 26 languages, with audio.">
     <meta property="og:url" content="https://thesmallbook.in/">
   <meta property="og:site_name" content="TheSmallBook">
   <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="TheSmallBook, books · 4,343 lessons · 400 autopsies">
-  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=384">
+  <meta name="twitter:image" content="https://thesmallbook.in/assets/og-image.png?v=387">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="manifest" href="manifest.json">
@@ -42,7 +44,7 @@
       tsbTC.content = tsbDark ? "#16130e" : "#ffc800";
     } catch (e) {}
   </script>
-  <!--tsb-shell--><link rel="preload" href="assets/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="assets/fonts/spacegrotesk.woff2" as="font" type="font/woff2" crossorigin><style id="tsb-shell-css">html.tsb-boot body{opacity:0!important;pointer-events:none}html.tsb-boot{background:#FBF8F1}html.tsb-boot.dark{background:#16130F}html.tsb-rev body{transition:opacity .28s cubic-bezier(.16,1,.3,1)}#tsbSkel{position:fixed;inset:0;z-index:2147482000;background:#FBF8F1;overflow:hidden;pointer-events:none;transition:opacity .3s cubic-bezier(.16,1,.3,1);contain:strict}html.dark #tsbSkel{background:#16130F}#tsbSkel.out{opacity:0}#tsbSkel i{position:absolute;display:block;border-radius:14px;background:#EFE8DA;overflow:hidden}html.dark #tsbSkel i{background:#241F19}#tsbSkel i:after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:tsbSk 1.3s cubic-bezier(.4,0,.2,1) infinite}html.dark #tsbSkel i:after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent)}#tsbSkel i.r{border-radius:999px}#tsbSkel i.d{background:#16130F}html.dark #tsbSkel i.d{background:#221E19}#tsbSkel i.d:after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent)}#tsbSkel i.c{background:#FFFDF8;box-shadow:inset 0 0 0 1px #ECE5D6;border-radius:20px}html.dark #tsbSkel i.c{background:#1C1915;box-shadow:inset 0 0 0 1px #2E2822}#tsbSkel i.y{background:#F6E7B0;border-radius:16px}#tsbSkel i.bk{background:linear-gradient(90deg,#CFC4AE,#E9E0CC 12%,#DED3BC);border-radius:4px 12px 12px 4px;box-shadow:0 30px 40px -20px rgba(0,0,0,.6)}html.dark #tsbSkel i.y{background:#3A321C}#tsbSkel i.y{background:#FFE9A3}html.dark #tsbSkel i.y{background:#3A3016}@keyframes tsbSk{to{transform:translateX(100%)}}@media (prefers-reduced-motion:reduce){#tsbSkel i:after{animation:none}}</style><script id="tsb-shell">(function(){try{
+  <!--tsb-shell--><style id="tsb-shell-css">html.tsb-boot body{opacity:0!important;pointer-events:none}html.tsb-boot{background:#FBF8F1}html.tsb-boot.dark{background:#16130F}html.tsb-rev body{transition:opacity .28s cubic-bezier(.16,1,.3,1)}#tsbSkel{position:fixed;inset:0;z-index:2147482000;background:#FBF8F1;overflow:hidden;pointer-events:none;transition:opacity .3s cubic-bezier(.16,1,.3,1);contain:strict}html.dark #tsbSkel{background:#16130F}#tsbSkel.out{opacity:0}#tsbSkel i{position:absolute;display:block;border-radius:14px;background:#EFE8DA;overflow:hidden}html.dark #tsbSkel i{background:#241F19}#tsbSkel i:after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:tsbSk 1.3s cubic-bezier(.4,0,.2,1) infinite}html.dark #tsbSkel i:after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent)}#tsbSkel i.r{border-radius:999px}#tsbSkel i.d{background:#16130F}html.dark #tsbSkel i.d{background:#221E19}#tsbSkel i.d:after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent)}#tsbSkel i.c{background:#FFFDF8;box-shadow:inset 0 0 0 1px #ECE5D6;border-radius:20px}html.dark #tsbSkel i.c{background:#1C1915;box-shadow:inset 0 0 0 1px #2E2822}#tsbSkel i.y{background:#F6E7B0;border-radius:16px}#tsbSkel i.bk{background:linear-gradient(90deg,#CFC4AE,#E9E0CC 12%,#DED3BC);border-radius:4px 12px 12px 4px;box-shadow:0 30px 40px -20px rgba(0,0,0,.6)}html.dark #tsbSkel i.y{background:#3A321C}#tsbSkel i.y{background:#FFE9A3}html.dark #tsbSkel i.y{background:#3A3016}@keyframes tsbSk{to{transform:translateX(100%)}}@media (prefers-reduced-motion:reduce){#tsbSkel i:after{animation:none}}</style><script id="tsb-shell">(function(){try{
 var d=document.documentElement,p=(location.pathname.split("/").pop()||"index.html").toLowerCase();
 if(/[?&]noshell=1/.test(location.search))return;
 d.classList.add("tsb-boot");
@@ -66,28 +68,83 @@ window.TSB_SHELL={ready:ready,page:p};
 addEventListener("load",function(){setTimeout(ready,1200)});
 setTimeout(ready,20000);
 }catch(e){try{document.documentElement.classList.remove("tsb-boot")}catch(x){}}})();</script><!--/tsb-shell-->
-  <link rel="stylesheet" href="css/style.css?v=384">
+  <link rel="stylesheet" href="css/style.css?v=387">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="css/film.css?v=384">
-  <link rel="stylesheet" href="css/film2.css?v=384">
-  <link rel="stylesheet" href="css/desktop-v336.css?v=384">
+  <link rel="stylesheet" href="css/film.css?v=387">
+  <link rel="stylesheet" href="css/film2.css?v=387">
+  <link rel="stylesheet" href="css/desktop-v336.css?v=387">
   <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
   <script>try{document.documentElement.classList.add("film",/^#(library|grid|filters|searchWrap|shelf)/.test(location.hash)||/[?&](q|cat|shelf)=/.test(location.search)?"fv-lib":"fv-today")}catch(e){}</script>
   <link rel="canonical" href="https://thesmallbook.in/">
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","@id":"https://thesmallbook.in/#site","name":"TheSmallBook","alternateName":"The Small Book","url":"https://thesmallbook.in/","inLanguage":"en-IN","description":"Free book summaries with key lessons, examples, action steps and audio, in 26 languages.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://thesmallbook.in/index.html?q={search_term_string}"},"query-input":"required name=search_term_string"},"publisher":{"@id":"https://thesmallbook.in/#org"}},{"@context":"https://schema.org","@type":"Organization","@id":"https://thesmallbook.in/#org","name":"TheSmallBook","url":"https://thesmallbook.in/","logo":"https://thesmallbook.in/favicon.png","founder":{"@type":"Person","name":"Jash Gandhi"},"sameAs":["https://github.com/JashGandhi-Studio/thesmallbook"]},{"@context":"https://schema.org","@type":"WebApplication","name":"TheSmallBook","url":"https://thesmallbook.in/","applicationCategory":"EducationalApplication","operatingSystem":"Any (web, installable)","offers":[{"@type":"Offer","price":"0","priceCurrency":"INR","name":"Free"},{"@type":"Offer","price":"99","priceCurrency":"INR","name":"Gold, monthly"}]}]</script>
-<script src="js/inapp-select.js?v=384" defer></script>
-<script src="js/motion-344.js?v=384" defer></script>
-<link rel="stylesheet" href="css/splash.css?v=384">
-<link rel="stylesheet" href="css/lively.css?v=384">
+<script src="js/inapp-select.js?v=387" defer></script>
+<script src="js/motion-344.js?v=387" defer></script>
+<link rel="stylesheet" href="css/splash.css?v=387">
+<link rel="stylesheet" href="css/lively.css?v=387">
 <script>/* v350: the opening screen is for readers who already set the app up, once per open. Decided before the first paint so nobody sees it flash. */try{var o=localStorage.getItem("tsb_onboarded");if(!o||sessionStorage.getItem("tsb_splash")){document.documentElement.className+=" tsb-nosplash";}else{sessionStorage.setItem("tsb_splash","1");}}catch(e){document.documentElement.className+=" tsb-nosplash";}</script>
+<style id="tsbBootCss">/* v387 · THE FIRST SCREEN IS NEVER EMPTY. Inline, so it is painted the moment the
+   HTML lands and does not wait on a single byte of the stylesheets or the catalogue. */
+#bootShell{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:0;background:#FBF7EF;color:#16130F;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  padding:28px 26px calc(28px + env(safe-area-inset-bottom));text-align:center;
+  transition:opacity .26s ease, visibility .26s ease;}
+#bootShell.is-off{opacity:0;visibility:hidden;pointer-events:none;}
+#bootShell .bs-mark{font:800 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:.34em;text-transform:uppercase;color:#8A8071;}
+#bootShell .bs-h1{margin:16px 0 0;font:700 clamp(21px,6.4vw,27px)/1.16 Georgia,"Times New Roman",serif;
+  letter-spacing:-.015em;max-width:13em;color:#16130F;}
+#bootShell .bs-sub{margin:9px 0 0;font:500 12.5px/1.5 inherit;color:#6E6658;max-width:20em;}
+#bootShell .bs-rows{margin:24px 0 0;width:100%;max-width:330px;display:flex;flex-direction:column;gap:9px;}
+#bootShell .bs-row{display:flex;gap:10px;align-items:center;border:1.6px solid #E2D9C6;
+  border-radius:15px;background:#fff;padding:9px 11px;text-align:left;}
+#bootShell .bs-thumb{width:34px;height:46px;border-radius:6px;flex:0 0 auto;
+  background:linear-gradient(150deg,#FFD84D,#F3B400);}
+#bootShell .bs-thumb.b{background:linear-gradient(150deg,#CFE0FF,#8FB2F0);}
+#bootShell .bs-thumb.c{background:linear-gradient(150deg,#D8F0DA,#8FCBA0);}
+#bootShell .bs-lines{flex:1 1 auto;display:flex;flex-direction:column;gap:6px;}
+#bootShell .bs-l{height:8px;border-radius:4px;background:#EDE6D6;}
+#bootShell .bs-l.s{width:52%;background:#F3EDE0;}
+#bootShell .bs-bar{margin:22px auto 0;width:132px;height:3px;border-radius:3px;background:#E7DFCE;overflow:hidden;}
+#bootShell .bs-bar i{display:block;width:38%;height:100%;background:#16130F;border-radius:3px;
+  animation:bsRun 1.15s ease-in-out infinite;}
+@keyframes bsRun{0%{transform:translateX(-102%)}100%{transform:translateX(300%)}}
+@media (prefers-reduced-motion: reduce){#bootShell .bs-bar i{animation:none;width:100%;background:#CFC6B2}}
+</style>
 </head>
 <body>
+<div id="bootShell" aria-hidden="true">
+  <div class="bs-mark">The Small Book</div>
+  <p class="bs-h1">Every book's lessons.<br>None of the fluff.</p>
+  <p class="bs-sub">Opening your shelf. Eight minutes a book, in your language.</p>
+  <div class="bs-rows">
+    <div class="bs-row"><span class="bs-thumb"></span><span class="bs-lines"><span class="bs-l"></span><span class="bs-l s"></span></span></div>
+    <div class="bs-row"><span class="bs-thumb b"></span><span class="bs-lines"><span class="bs-l"></span><span class="bs-l s"></span></span></div>
+    <div class="bs-row"><span class="bs-thumb c"></span><span class="bs-lines"><span class="bs-l"></span><span class="bs-l s"></span></span></div>
+  </div>
+  <div class="bs-bar"><i></i></div>
+</div>
+<script>/* v387 · the shell is a bridge, never a lid. It leaves on the first of: the app
+   signalling ready, window load, the bottom bar existing, or a hard 4.5 s cap, so it can
+   never sit on top of a page that has already painted. */
+(function(){var s=document.getElementById('bootShell');if(!s)return;var done=false;
+function off(){if(done||!s)return;done=true;s.classList.add('is-off');setTimeout(function(){if(s&&s.parentNode)s.parentNode.removeChild(s);},320);}
+function appUp(){try{
+if(document.querySelectorAll('.lb-card, .book-card').length>3)return true;
+var g=document.getElementById('grid'); if(g&&g.children.length>2)return true;
+var fo=document.querySelector('.fo-s'); if(fo&&fo.getBoundingClientRect().height>200)return true;
+return false;}catch(e){return false;}}
+var iv=setInterval(function(){if(appUp()){clearInterval(iv);off();}},140);
+window.addEventListener('load',function(){setTimeout(off,60);});
+document.addEventListener('tsb:ready',function(){setTimeout(off,40);});
+setTimeout(off,12000);})();</script>
+
 <div id="tsbSplash" aria-hidden="true"><div class="sp-stage"><div class="sp-mark"><span class="sp-leaf sp-l"><svg viewBox="0 0 32 64" aria-hidden="true"><path d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z" fill="var(--mk-a,#16130F)"/></svg></span><span class="sp-leaf sp-r"><svg viewBox="32 0 32 64" aria-hidden="true"><path d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z" fill="var(--mk-b,#FFC800)"/></svg></span><span class="sp-spine"></span></div></div><div class="sp-word">The<i>Small</i>Book</div><div class="sp-bar"><i></i></div></div>
-<script src="js/splash.js?v=384" defer></script>
+<script src="js/splash.js?v=387" defer></script>
 
 
 
@@ -198,7 +255,7 @@ setTimeout(ready,20000);
 
     <!-- STATS -->
     <div class="stats">
-      <div class="stat stat--yellow"><div class="stat__num" id="statBooks">600</div><div class="stat__label">Books</div></div>
+      <div class="stat stat--yellow"><div class="stat__num">8</div><div class="stat__label">Minutes a book</div></div>
       <div class="stat stat--red"><div class="stat__num" id="statLessons">4343</div><div class="stat__label">Lessons</div></div>
       <div class="stat stat--blue"><div class="stat__num" id="statCats">9</div><div class="stat__label">Categories</div></div>
       <div class="stat stat--green"><div class="stat__num" id="statMins">4477</div><div class="stat__label">Total Mins</div></div>
@@ -362,23 +419,23 @@ setTimeout(ready,20000);
     <p class="tiny"><a href="pseo/index.html" style="color:inherit;">READING LISTS</a> · NEW BOOKS ADDED EVERY WEEK · © 2026 THESMALLBOOK · ALL RIGHTS RESERVED</p>
   </footer>
 
-  <script src="./js/bootguard.js?v=384"></script>
-  <script src="js/prefs.js?v=384"></script>
-  <script src="js/support.js?v=384"></script>
-  <script src="js/upi.js?v=384"></script>
-  <script src="js/lang.js?v=384"></script>
-  <script src="js/config.js?v=384"></script><script src="js/avatar.js?v=384"></script><script src="js/daylight.js?v=384"></script>
-  <script src="js/shelf3d.js?v=384"></script>
-  <script src="js/taste.js?v=384"></script>
-  <script src="js/auth.js?v=384"></script>
-  <script src="js/sounds.js?v=384"></script>
-  <script src="js/community.js?v=384"></script>
-  <script src="js/data.js?v=384"></script>
-  <script src="js/share.js?v=384"></script>
-  <script src="js/app.js?v=384"></script>
-  <script src="js/packs-data.js?v=384"></script>
-  <script src="js/mindpick.js?v=384" defer></script>
-  <script src="js/packs-ui.js?v=384"></script>
+  <script src="./js/bootguard.js?v=387"></script>
+  <script src="js/prefs.js?v=387"></script>
+  <script src="js/support.js?v=387"></script>
+  <script src="js/upi.js?v=387"></script>
+  <script src="js/lang.js?v=387"></script>
+  <script src="js/config.js?v=387"></script><script src="js/avatar.js?v=387"></script><script src="js/daylight.js?v=387"></script>
+  <script src="js/shelf3d.js?v=387"></script>
+  <script src="js/taste.js?v=387"></script>
+  <script src="js/auth.js?v=387"></script>
+  <script src="js/sounds.js?v=387"></script>
+  <script src="js/community.js?v=387"></script>
+  <script src="js/data.js?v=387"></script>
+  <script src="js/share.js?v=387"></script>
+  <script src="js/app.js?v=387"></script>
+  <script src="js/packs-data.js?v=387"></script>
+  <script src="js/mindpick.js?v=387" defer></script>
+  <script src="js/packs-ui.js?v=387"></script>
   <script>
     /* ⭐ THE REVIEW WALL v317 - real reader words (config.js TESTIMONIALS,
        no fake), your own words, and now EVERYONE'S words: posts go to the
@@ -519,17 +576,17 @@ setTimeout(ready,20000);
       }
     })();
   </script>
-  <script src="js/guide.js?v=384"></script>
+  <script src="js/guide.js?v=387"></script>
   <script>window.addEventListener("DOMContentLoaded", function () { var c = document.getElementById("tsbHelpChip"); if (c) c.addEventListener("click", function () { TSB_GUIDE.openGuide(); }); });</script>
-  <script src="js/onboard.js?v=384"></script>
-  <script src="js/trial.js?v=384" defer></script>
-  <script src="js/ask-data.js?v=384"></script>
-  <script src="js/tts-engine.js?v=384"></script>
-  <script src="js/ask-modes-data.js?v=384"></script>
-  <script src="js/paywall.js?v=384"></script>
-  <script src="js/askquota.js?v=384"></script>
-  <script src="js/stt.js?v=384"></script>
-  <script src="js/ask.js?v=384"></script>
+  <script src="js/onboard.js?v=387"></script>
+  <script src="js/trial.js?v=387" defer></script>
+  <script src="js/ask-data.js?v=387"></script>
+  <script src="js/tts-engine.js?v=387"></script>
+  <script src="js/ask-modes-data.js?v=387"></script>
+  <script src="js/paywall.js?v=387"></script>
+  <script src="js/askquota.js?v=387"></script>
+  <script src="js/stt.js?v=387"></script>
+  <script src="js/ask.js?v=387"></script>
   <script>
     /* deep-link search from the scanner: index.html?q=<title> */
     (function () {
@@ -549,23 +606,20 @@ setTimeout(ready,20000);
       } catch (e) {}
     })();
   </script>
-  <script src="js/podcast-data.js?v=384"></script>
-  <script src="data/audiobook-files.js?v=384"></script>
-  <script src="data/podcast-episodes.js?v=384"></script>
-  <script src="data/listen-seed.js?v=384"></script>
-  <script src="js/audioplayer.js?v=384"></script>
-  <script src="js/showcase.js?v=384"></script>
-  <script src="js/personalize.js?v=384"></script>
-  <script src="js/bar.js?v=384" defer></script>
-  <script src="js/soft-motion.js?v=384" defer></script>
-  <script src="js/gate.js?v=384" defer></script>
+  <script src="js/podcast-data.js?v=387"></script>
+  <script src="js/audioplayer.js?v=387"></script>
+  <script src="js/showcase.js?v=387"></script>
+  <script src="js/personalize.js?v=387"></script>
+  <script src="js/bar.js?v=387" defer></script>
+  <script src="js/soft-motion.js?v=387" defer></script>
+  <script src="js/gate.js?v=387" defer></script>
 
-  <script src="js/weekly.js?v=384" defer></script>
-  <script src="js/request.js?v=384" defer></script>
-  <script src="js/film.js?v=384" defer></script>
-  <script src="js/film2.js?v=384" defer></script>
-<script src="js/mark.js?v=384" defer></script>
-<script src="js/pip-mind.js?v=384" defer></script>
-<script src="js/pip-ui.js?v=384" defer></script>
+  <script src="js/weekly.js?v=387" defer></script>
+  <script src="js/request.js?v=387" defer></script>
+  <script src="js/film.js?v=387" defer></script>
+  <script src="js/film2.js?v=387" defer></script>
+<script src="js/mark.js?v=387" defer></script>
+<script src="js/pip-mind.js?v=387" defer></script>
+<script src="js/pip-ui.js?v=387" defer></script>
 </body>
 </html>

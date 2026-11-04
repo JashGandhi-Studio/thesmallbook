@@ -7,8 +7,38 @@
 (function () {
   const params = new URLSearchParams(location.search);
   const id = params.get("id");
-  const book = BOOKS.find((b) => b.id === id) || BOOKS[0];
+  /* v385: a bare book.html still opens the first book; only a wrong id is not found */
+  const found = BOOKS.find((b) => b.id === id) || (id ? null : BOOKS[0]);
+  if (!found) {
+    /* v385 · an unknown link says so instead of silently opening Atomic Habits */
+    document.title = "Book not found | TheSmallBook";
+    const h1 = document.getElementById("title");
+    if (h1) h1.textContent = "Book not found";
+    const sec = document.getElementById("lessons");
+    if (sec) {
+      sec.innerHTML = '<div style="padding:18px 2px 40px;max-width:540px">' +
+        '<div style="font:800 11px/1 \'Space Grotesk\',system-ui;letter-spacing:1.4px;color:#8a7a55;margin-bottom:10px">NOT FOUND</div>' +
+        '<h2 style="font-family:Newsreader,Georgia,serif;font-size:25px;line-height:1.2;margin:0 0 10px">That link does not point to a book</h2>' +
+        '<p style="font-family:Newsreader,Georgia,serif;font-size:16px;line-height:1.6;margin:0 0 20px">The address you opened has a book id that is not on the shelf. Nothing is broken on your side.</p>' +
+        '<a href="index.html#library" style="display:inline-block;background:#FFC800;color:#16130f;border:1.5px solid #16130f;border-radius:14px;padding:12px 20px;text-decoration:none;font:800 14px \'Space Grotesk\',system-ui">Browse the library</a></div>';
+    }
+    return;
+  }
+  const book = found;
   const idx = BOOKS.indexOf(book);
+
+  /* v385 · THE CHAPTER TEXT IS NOT IN data.js
+     data.js carries every book and every lesson title. The prose arrives later
+     from data/lessons/<id>.js. This page used to depend on a document.write tag
+     to pull it in before the page code ran, and Chrome drops document.write
+     scripts on slow connections, which is why a phone could open every book and
+     see nothing. The page now paints at once and paints again when the text lands. */
+  const textReady = () => Array.isArray(book.lessons) && book.lessons.some((l) => l && typeof l.summary === "string" && l.summary.length > 40);
+  const lessonsView = () => (textReady() ? book.lessons : book.lessons.map((l) => Object.assign({}, l, {
+    summary: "Loading this chapter...",
+    example: "",
+    action: ""
+  })));
 
   /* ---------- dynamic SEO: the reader page wears the book's real face ----------
      A direct hit on book.html?id=x gets a full title, description and a
@@ -65,7 +95,7 @@
   }
   drawBadges();
 
-  /* ---------- 📖 BUY THE FULL BOOK (Amazon affiliate) in utility bar ---------- */
+  /* ---------- BUY THE FULL BOOK (Amazon affiliate) in utility bar ---------- */
   (function () {
     const amazonLink = document.getElementById("nbAmazonLink");
     if (amazonLink) {
@@ -736,7 +766,7 @@
     ctx.fillStyle = "#111";
     ctx.font = "900 24px 'Archivo Black', Arial";
     const doLabel = liveText(`#lesson-${lessonIdx} .callout--action strong.tag`, "DO THIS").replace(/[⚡]/g, "").trim().toUpperCase() || "DO THIS";
-    ctx.fillText("⚡ " + doLabel, pad + 60, boxY + 20);
+    ctx.fillText(doLabel, pad + 60, boxY + 20);
     ctx.font = "600 26px 'Space Grotesk', Arial";
     wrapText(ctx, l.action, inner - 20).slice(0, 3).forEach((ln, i) => {
       ctx.fillText(ln, pad + 60, boxY + 56 + i * 34);
@@ -1103,7 +1133,9 @@
     isGoldReader = Boolean(window.TSB_GOLD && TSB_GOLD.isGold && TSB_GOLD.isGold());
   } catch (e) {}
 
-  book.lessons.forEach((l, i) => {
+  function paintLessons() {
+  lessonsWrap.innerHTML = "";
+  lessonsView().forEach((l, i) => {
     const isLockedLesson = isGatedOriginal && !isGoldReader && i > 0;
     const d = document.createElement("div");
     d.className = "lesson" + (i === 0 ? " open" : "") + (isLockedLesson ? " lesson--gold-locked" : "");
@@ -1111,25 +1143,24 @@
 
     const bodyContent = isLockedLesson ? `
       <div class="lesson__body">
-        <p>${l.summary.slice(0, 160)}...</p>
-        <div class="callout callout--example" style="filter:blur(3.5px);user-select:none;opacity:0.45;pointer-events:none;"><strong class="tag">📖 Example from the book</strong><br>${l.example}</div>
-        <div class="callout callout--action" style="filter:blur(3.5px);user-select:none;opacity:0.45;pointer-events:none;"><strong class="tag">⚡ Do this</strong><br>${l.action}</div>
+        <p>${(l.summary || "").slice(0, 160)}...</p>
+        <div class="callout callout--example" style="filter:blur(3.5px);user-select:none;opacity:0.45;pointer-events:none;"><strong class="tag">Example from the book</strong><br>${l.example}</div>
+        <div class="callout callout--action" style="filter:blur(3.5px);user-select:none;opacity:0.45;pointer-events:none;"><strong class="tag">Do this</strong><br>${l.action}</div>
         <div class="orig-gold-gate" style="background:#fefbf4;border:var(--bw) solid var(--edge);border-radius:17px;padding:18px 16px;text-align:center;box-shadow:var(--sh-2);margin:16px 0 8px;">
           <div style="font-family:var(--font-head);font-size:11px;font-weight:900;letter-spacing:1.5px;color:#8a6d00;margin-bottom:4px;">✦ EXCLUSIVE TO GOLD MEMBERS ✦</div>
           <div style="font-weight:800;font-size:15px;color:var(--ink);margin-bottom:6px;">Unlock All 35+ In-House Originals</div>
           <p style="font-size:12.5px;color:#555;line-height:1.45;max-width:440px;margin:0 auto 14px;">Five in-house Originals are open to read. Gold opens the complete 50+ Original collection and every lesson for ₹99/month.</p>
-          <a href="gold.html" class="btn btn--yellow" style="font-family:var(--font-head);font-weight:900;font-size:12px;letter-spacing:1px;padding:9px 20px;border:var(--bw) solid var(--edge);border-radius:13px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:var(--sh-2);">👑 UPGRADE TO GOLD (₹99/MO) →</a>
+          <a href="gold.html" class="btn btn--yellow" style="font-family:var(--font-head);font-weight:900;font-size:12px;letter-spacing:1px;padding:9px 20px;border:var(--bw) solid var(--edge);border-radius:13px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;box-shadow:var(--sh-2);">UPGRADE TO GOLD · ₹99 ONCE →</a>
         </div>
       </div>
     ` : `
       <div class="lesson__body">
         <p>${l.summary}</p>
         ${lessonVisual(book, i)}
-        <div class="callout callout--example"><strong class="tag">📖 Example from the book</strong><br>${l.example}</div>
-        <div class="callout callout--action"><strong class="tag">⚡ Do this</strong><br>${l.action}</div>
+        ${l.example ? `<div class="callout callout--example"><strong class="tag">Example from the book</strong><br>${l.example}</div>` : ""}
+        ${l.action ? `<div class="callout callout--action"><strong class="tag">Do this</strong><br>${l.action}</div>` : ""}
         <div class="tipjar" translate="no">
           <div class="tipjar__row">
-            <span class="tipjar__icon" aria-hidden="true">☕</span>
             <span class="tipjar__q">Liked it? Drop a chai. Keeps the next lesson coming.</span>
           </div>
           <div class="tipjar__btns">
@@ -1172,8 +1203,10 @@
     }
     lessonsWrap.appendChild(d);
   });
+  }
+  paintLessons();
 
-  /* 🌊 v300: the deep dive, right under the lessons that feed it */
+  /* v300: the deep dive, right under the lessons that feed it */
   if (window.TSB_DEEPDIVES) {
     const ddEsc = (x) => String(x == null ? "" : x).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     const dives = TSB_DEEPDIVES.filter((dd) => dd.bookId === book.id);
@@ -1182,7 +1215,7 @@
       wrap.className = "dd-card";
       wrap.innerHTML = dives.map((dd) => `
         <a class="dd-card__row" href="deepdive.html?id=${dd.id}">
-          <span class="dd-card__wave">🌊</span>
+          <span class="dd-card__wave" aria-hidden="true"></span>
           <span class="dd-card__mid">
             <b>THE DEEP DIVE · ${ddEsc(dd.chapterLabel.toUpperCase())}</b>
             <i>${ddEsc(dd.title)}</i>
@@ -1195,6 +1228,7 @@
   }
 
   /* mark as read */
+  function wireReadButtons() {
   lessonsWrap.querySelectorAll("[data-read]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const i = +btn.dataset.read;
@@ -1218,8 +1252,25 @@
       }
     });
   });
+  }
+  wireReadButtons();
 
-  /* ---------- 🏆 BOOK COMPLETE CELEBRATION ---------- */
+  /* the text landed: paint the chapters again, in place, with the words */
+  if (window.TSB_LESSONS && !TSB_LESSONS.ready(book.id)) {
+    TSB_LESSONS.ensure(book.id, function () {
+      if (textReady()) { paintLessons(); wireReadButtons(); return; }
+      if (document.getElementById("tsbTextNote")) return;
+      const el = document.createElement("div");
+      el.id = "tsbTextNote";
+      el.className = "callout";
+      el.style.cssText = "margin:14px 0";
+      el.innerHTML = '<strong class="tag">THE CHAPTER TEXT</strong><br>The full text of this book could not be downloaded just now. <button type="button" style="font:inherit;font-weight:700;background:none;border:0;padding:0;color:white;text-decoration:underline;cursor:pointer">Load it again</button>';
+      el.querySelector("button").addEventListener("click", function () { location.reload(); });
+      lessonsWrap.parentNode.insertBefore(el, lessonsWrap);
+    });
+  }
+
+  /* ---------- BOOK COMPLETE CELEBRATION ---------- */
   function showCompleteCelebration() {
     if (document.getElementById("completeModal")) return;
     const ov = document.createElement("div");
@@ -1227,12 +1278,12 @@
     ov.id = "completeModal";
     ov.innerHTML = `
       <div class="modal__box celebmodal">
-        <div class="celebmodal__emoji">🏆</div>
+        <div class="celebmodal__emoji" aria-hidden="true"><svg viewBox="0 0 48 48" width="46" height="46" fill="none" stroke="#16130f" stroke-width="3" stroke-linejoin="round"><path d="M14 10h20v10a10 10 0 0 1-20 0V10z"/><path d="M14 13H8v3a7 7 0 0 0 7 7M34 13h6v3a7 7 0 0 1-7 7"/><path d="M24 30v6M17 40h14l-2-4H19l-2 4z"/></svg></div>
         <h3>BOOK COMPLETE!</h3>
         <p class="celebmodal__sub">You just absorbed <strong>${book.lessons.length} lessons</strong> from
         <strong>${book.title}</strong> - most people never finish the book. You finished the wisdom.</p>
         <a class="buybtn celebmodal__buy" href="${TSB.amazonLink(book.title, book.author, book.id)}" target="_blank" rel="noopener sponsored" translate="no">
-          📖 OWN THE FULL BOOK <span class="buybtn__amz">it goes 10x deeper →</span>
+          OWN THE FULL BOOK <span class="buybtn__amz">it goes 10x deeper →</span>
         </a>
         <div class="celebmodal__row">
           <button class="btn" id="celebShare">🎴 SHARE THE WIN</button>
@@ -1245,7 +1296,7 @@
       for (let i = 0; i < 24; i++) {
         const c = document.createElement("span");
         c.className = "confetti";
-        c.textContent = ["🎉","✨","📕","🏆"][i % 4];
+        c.textContent = ["✦","✧","❖","✶"][i % 4];
         c.style.left = Math.random() * 100 + "vw";
         c.style.animationDelay = (Math.random() * 0.7) + "s";
         c.style.fontSize = (14 + Math.random() * 18) + "px";
@@ -1303,7 +1354,7 @@
         <span class="lessonnav__check" data-navcheck="${i}">${TSB.progress.forBook(book.id).includes(i) ? "✓" : ""}</span>
       </a>`).join("") +
       `<a class="lessonnav__item lessonnav__item--plan" href="#plan-section" data-jump="plan">
-        <span class="lessonnav__num">⚡</span><span class="lessonnav__title">Action Plan</span><span></span>
+        <span class="lessonnav__num" aria-hidden="true">2</span><span class="lessonnav__title">Action Plan</span><span></span>
       </a>`;
     document.body.appendChild(fab);
     document.body.appendChild(panel);
@@ -1812,7 +1863,7 @@
     box.href = TSB.amazonLink(book.title, book.author, book.id);
     box.target = "_blank";
     box.rel = "noopener sponsored";
-    box.innerHTML = `<strong>Loved the lessons?</strong> The full book goes 10x deeper - <span>own it on Amazon 📖</span>`;
+    box.innerHTML = `<strong>Loved the lessons?</strong> The full book goes 10x deeper - <span>own it on Amazon</span>`;
     wrap.parentElement.appendChild(box);
   })();
 

@@ -647,10 +647,27 @@
     document.body.appendChild(dock);
     var bPrev = $(".frd-prev", dock), bListen = $(".frd-listen", dock), bNext = $(".frd-next", dock);
     function docKey() { return "rd:" + bk.id + ":" + (scrollMode() ? "all" : cur()); }
+    /* v385 · the glyph inside a dark disc was the same colour as the disc, so the
+       Listen and Finish buttons read as two solid blobs. The disc colour is set
+       here, at the same moment as the glyph, with important priority, because a
+       later stylesheet rule was winning the cascade. */
+    function disc(host, bg, fg) {
+      if (!host) return;
+      host.style.setProperty("color", fg, "important");
+      host.style.setProperty("background", bg, "important");
+      /* the glyphs are drawn with currentColor, and a stylesheet rule on svg was
+         pulling that back to ink, so the paint is set on the shape itself */
+      Array.prototype.forEach.call(host.querySelectorAll("svg"), function (svg) {
+        if (svg.getAttribute("fill") === "currentColor") svg.setAttribute("fill", fg);
+        if (svg.getAttribute("stroke") === "currentColor") svg.setAttribute("stroke", fg);
+      });
+    }
     function paintListen() {
       var st = (window.TSB_AUDIO && TSB_AUDIO.state) ? TSB_AUDIO.state() : null, on = !!(st && st.key === docKey() && st.playing);
       bListen.classList.toggle("is-on", on);
-      $(".frd-listen__ic", bListen).innerHTML = on ? RIC.pause : IC.play;
+      var ic = $(".frd-listen__ic", bListen);
+      ic.innerHTML = on ? RIC.pause : IC.play;
+      disc(ic, on ? "#FFC800" : "#16130F", on ? "#16130F" : "#ffffff");
       $(".frd-listen__t", bListen).innerHTML = on ? "Listening\u2026" : 'Listen<span class="frd-l2"> to this page</span>';
     }
     function paintDock() {
@@ -662,6 +679,7 @@
       var t = $(".frd-next__t", bNext);
       if (sm || last) { t.textContent = isRead() ? "Done" : "Finish"; bNext.classList.add("is-fin"); }
       else { t.textContent = "Next"; bNext.classList.remove("is-fin"); }
+      disc($(".frd-next__ic", bNext), (sm || last) ? "#16130F" : "#FFC800", (sm || last) ? "#FFC800" : "#16130F");
       paintListen();
     }
     bPrev.addEventListener("click", function () { var p = $("#rmPrev"); if (p) p.click(); });
@@ -679,7 +697,22 @@
       $$(".rm-meta, h2, .frd-share, .frd-fin, script, style", cl).forEach(function (n) { n.remove(); });
       var h = $("h2", art), txt = (cl.textContent || "").replace(/\s+/g, " ").trim();
       if (!txt) return;
-      TSB_AUDIO.playDoc(docKey(), bk.title, (scrollMode() ? "The whole book" : "Page " + (cur() + 1) + " of " + total), [{ label: h ? h.textContent : bk.title, text: txt.slice(0, 2900) }], { art: bk.cover || "", bookId: bk.id });
+      /* v387: queue the rest of the book too. Reading aloud used to die at the end of
+         the page you happened to be on. */
+      var secs = [], R = window.TSB_READER, from = 0;
+      try {
+        if (!scrollMode() && R && R.pages && R.pages.length > 1) {
+          from = R.cur || 0;
+          for (var pi = from; pi < R.pages.length; pi++) {
+            var ptxt = R.text(pi) || "";
+            if (!ptxt) continue;
+            secs.push({ label: "Page " + (pi + 1) + " \u00b7 " + (R.pages[pi].title || bk.title), text: ptxt.slice(0, 2900) });
+          }
+        }
+      } catch (e) { secs = []; }
+      if (!secs.length) secs = [{ label: h ? h.textContent : bk.title, text: txt.slice(0, 2900) }];
+      var sub = scrollMode() ? "The whole book" : (secs.length > 1 ? "Pages " + (from + 1) + "\u2013" + (from + secs.length) + " of " + total : "Page " + (from + 1) + " of " + total);
+      TSB_AUDIO.playDoc(docKey(), bk.title, sub, secs, { art: bk.cover || "", bookId: bk.id });
       setTimeout(paintListen, 300);
     });
     window.addEventListener("tsb:ap-line", function () { paintListen(); });
@@ -990,7 +1023,7 @@
     var oldBook = $("#faBook"), oldLog = $(".fa-log"), oldPlank = $(".fa-plank");
     var fab = el("div", "fab");
     var inside = [
-      [AIC.book, "The library", n + " books, each cracked open into the few lessons that matter.", "index.html#library"],
+      [AIC.book, "The library", "Every book, cracked open into the few lessons that matter.", "index.html#library"],
       [AIC.ear, "Listen", "Every lesson read aloud" + (nab ? ", plus " + nab + " full audiobooks" : "") + ", even in Hindi.", "podcasts.html"],
       [AIC.globe, "Your language", "Read in " + langs + " languages, each in its own script.", "settings.html"],
       [AIC.chat, "Ask the books", "Ask a question, get an answer from the books, with the page it came from.", "chat.html"],
@@ -1007,7 +1040,7 @@
       '<header class="fab-top"><a class="fs2-back" href="you.html" aria-label="Back">' + IC.back + '</a><span class="fs2-kick">ABOUT</span></header>' +
       '<section class="fab-hero"><div class="fab-stage"></div><h1 class="fab-h1 f-up" style="--d:.3">Why this<br><i>exists.</i></h1>' +
       '<p class="fab-sub f-up" style="--d:.4">Most of us will never finish the books that could change us. Not because we are lazy, because life is full. So we made the small version: honest, warm, and in your language.</p></section>' +
-      '<div class="fab-nums f-up" style="--d:.5">' + [[n, "books"], [L, "lessons"], [langs, "languages"], [Math.round(M / 60), "hours of reading"]].map(function (x) { return '<div><b data-to="' + x[0] + '">0</b><span>' + x[1] + "</span></div>"; }).join("") + "</div>" +
+      '<div class="fab-nums f-up" style="--d:.5">' + [[L, "lessons"], [langs, "languages"], [Math.round(M / 60), "hours of reading"], [8, "minutes a book"]].map(function (x) { return '<div><b data-to="' + x[0] + '">0</b><span>' + x[1] + "</span></div>"; }).join("") + "</div>" +
       '<h2 class="fab-sec">What is <i>inside</i></h2><div class="fab-grid">' + inside.map(function (x, i) { return '<a class="fab-tile fab-rv" style="--i:' + i + '" href="' + x[3] + '"><span class="fab-ic">' + x[0] + "</span><b>" + x[1] + "</b><span>" + x[2] + "</span></a>"; }).join("") + "</div>" +
       '<h2 class="fab-sec">How a lesson is <i>made</i></h2><ol class="fab-steps">' + steps.map(function (x, i) { return '<li class="fab-rv" style="--i:' + i + '"><span>' + (i + 1) + "</span><div><b>" + x[0] + "</b><p>" + x[1] + "</p></div></li>"; }).join("") + "</ol>" +
       '<h2 class="fab-sec">The <i>people</i></h2><div class="fab-people">' +

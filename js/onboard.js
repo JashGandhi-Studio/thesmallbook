@@ -32,7 +32,7 @@
      rhythm goes straight into the app on every future open and every future
      update. A new version may show a quiet "what is new" card, and that card
      never leads back into the four screens. */
-  var OB_V = 384;
+  var OB_V = 387;
   function alreadySetUp() {
     try { if (get("tsb_onboarded", false)) return true; } catch (e) {}
     try {
