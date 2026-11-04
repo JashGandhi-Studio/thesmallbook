@@ -370,3 +370,10 @@ html.tsb-nosplash #tsbSplash { display: none !important; }
   #tsbSplash .sp-tag, #tsbSplash .sp-shelf, #tsbSplash .sp-mouth { opacity: 1 !important }
   #tsbSplash .sp-grain, #tsbSplash .sp-vig { display: none }
 }
+
+
+/* ==========================================================================
+   v382 · NO OPENING FILM
+   The opening was judged twice and lost both times, so it is gone rather than
+   defended. The app paints straight into Today. */
+#tsbSplash { display: none !important }

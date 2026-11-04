@@ -54,7 +54,7 @@
     book.lessons.forEach(function(lesson, idx) {
       var html = '<p>' + (lesson.summary || '') + '</p>';
       if (lesson.example) {
-        html += '<div class="rm-callout"><b>📖 Real-World Example</b>' + lesson.example + '</div>';
+        html += '<div class="rm-callout"><b>REAL-WORLD EXAMPLE</b>' + lesson.example + '</div>';
       }
       if (lesson.action) {
         html += '<div class="rm-callout"><b>⚡ Practical Action</b>' + lesson.action + '</div>';
@@ -116,7 +116,10 @@
     });
   }
 
-  var curPage = 0;
+  /* v382: a reader who opens a book must land on the book. The first page is a
+     three line "big idea" card, and landing there made the whole book look
+     empty. We open on chapter one, and the big idea stays one tap back. */
+  var curPage = pages.length > 1 ? 1 : 0;
   var urlParams = new URLSearchParams(window.location.search);
   var urlPage = parseInt(urlParams.get('page'), 10);
   if (!isNaN(urlPage) && urlPage >= 0 && urlPage < pages.length) {
@@ -442,6 +445,11 @@
       effectiveTheme = wantDark ? 'night' : 'paper';
     }
 
+    /* v382: the app-wide night palette lives on html.dark. Left on while the
+       reader is set to paper or sepia, it kept painting the article cream on
+       white and the callout label invisible. The reader owns this page, so the
+       class now follows the reader's own theme. */
+    try { document.documentElement.classList.toggle('dark', effectiveTheme === 'night'); } catch (eDark) {}
     document.body.classList.remove('rm-theme-sepia', 'rm-theme-night');
     if (effectiveTheme === 'sepia') document.body.classList.add('rm-theme-sepia');
     if (effectiveTheme === 'night') document.body.classList.add('rm-theme-night');
@@ -458,11 +466,21 @@
       /* v357: the theme is a token set, not a class. These are the four the
          rest of the app reads, so a component that never learned about the
          reader still paints itself correctly. */
-      var TOK = effectiveTheme === 'night'
+      var BASE = effectiveTheme === 'night'
         ? { '--paper': '#16130e', '--ink': '#f2ead8', '--card': '#1f1b16', '--line': '#342d24', '--muted': '#a29884' }
         : effectiveTheme === 'sepia'
         ? { '--paper': '#f4ecd8', '--ink': '#2c251e', '--card': '#fbf3e1', '--line': '#d9c9a8', '--muted': '#6d5f4e' }
         : { '--paper': '#fffdf5', '--ink': '#16130f', '--card': '#ffffff', '--line': '#e6ddca', '--muted': '#6e6658' };
+      /* v382: the film components read their own --f-* palette, and at night that
+         palette stayed dark under a paper reader, which is how cream text ended
+         up on white paper. The two palettes are one decision, so they move
+         together. */
+      var TOK = {
+        '--paper': BASE['--paper'], '--ink': BASE['--ink'], '--card': BASE['--card'],
+        '--line': BASE['--line'], '--muted': BASE['--muted'],
+        '--f-paper': BASE['--paper'], '--f-ink': BASE['--ink'], '--f-card': BASE['--card'],
+        '--f-line': BASE['--line'], '--f-mu': BASE['--muted']
+      };
       Object.keys(TOK).forEach(function (k) { document.documentElement.style.setProperty(k, TOK[k]); });
     } catch (eRm) {}
 

@@ -22,6 +22,17 @@
       calc(var(--bar-total) + 24px), via html.tsb-hasbar (CSS).
    ============================================================ */
 (function () {
+  /* v382: the reader can hide tab labels, and the bar has to look intentional
+     when they do, so the state lives on the document where the CSS can see it */
+  function labelsState() {
+    try {
+      var off = localStorage.getItem("tsb_bar_labels") === "0" || localStorage.getItem("tsb_bar_labels") === '"0"';
+      document.documentElement.classList.toggle("bar-nolabels", off);
+      document.body && document.body.classList.toggle("bar-nolabels", off);
+    } catch (e) {}
+  }
+  try { labelsState(); document.addEventListener("DOMContentLoaded", labelsState); } catch (e) {}
+
   "use strict";
   if (window.TSB_BAR) return;
   window.TSB_BAR = true;

@@ -616,7 +616,7 @@
 
     /* top bar */
     var back = $("#rmBack");
-    if (back) { back.innerHTML = IC.x; back.setAttribute("aria-label", "Close the reader"); back.href = "book.html?id=" + encodeURIComponent(bk.id); }
+    if (back) { back.innerHTML = IC.back; back.setAttribute("aria-label", "Back to the book"); back.href = "book.html?id=" + encodeURIComponent(bk.id); }
     var nSeg = Math.min(total, 12), segs = el("div", "frd-segs");
     segs.setAttribute("aria-hidden", "true");
     for (var i = 0; i < nSeg; i++) segs.appendChild(el("i", "", "<b></b>"));

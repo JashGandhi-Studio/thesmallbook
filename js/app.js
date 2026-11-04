@@ -581,7 +581,6 @@
     if (read >= b.lessons.length) return;
     wrap.innerHTML = `
       <div class="continue__box">
-        <span style="font-size:1.6rem;">📖</span>
         <div>
           <div class="head">Continue Reading</div>
           <div style="font-size:.8rem; font-weight:600;">${b.title}, ${read}/${b.lessons.length} lessons done</div>

@@ -1256,7 +1256,31 @@
       });
     });
   }
+  /* v383 · THE SHOW OPENS FROM THE APP, NOT FROM A CROSS ORIGIN FETCH.
+     A feed that refuses a browser fetch used to be the end of the road, which
+     is where "could not fetch" came from. Every curated show ships with its
+     latest episodes in data/podcast-episodes.js, so the list is already here
+     when the tap arrives. The live feed is only consulted for a show we have
+     never heard of, and a failed fetch there is silent, not a dead end. */
+  function bundledEpisodes(url) {
+    var all = window.TSB_EPISODES || {};
+    for (var id in all) {
+      if (!Object.prototype.hasOwnProperty.call(all, id)) continue;
+      var rec = all[id];
+      if (!rec || rec.rss !== url || !rec.episodes || !rec.episodes.length) continue;
+      return {
+        name: rec.name || "",
+        items: rec.episodes.map(function (e) {
+          return { label: e.label || "Episode", sub: e.sub || (e.dur ? e.dur : "episode"), src: e.src, art: e.art || "" };
+        }).filter(function (x) { return /^https:/.test(x.src); })
+      };
+    }
+    return null;
+  }
+
   function fetchFeed(url, cb) {
+    var bundle = bundledEpisodes(url);
+    if (bundle && bundle.items.length) { cb(bundle.items, bundle.name, false, ""); return; }
     var ck = FEEDCACHE + feedKey(url);
     var goodKey = "tsb_feed_good_" + feedKey(url);
     var cached = jget(ck, null);
@@ -1422,10 +1446,23 @@
     if (showSheet) { showSheet.remove(); showSheet = null; }
   }
 
-  function playFeed(show, startAt) {
+  function playFeed(show, startAt, listOverride) {
     try { if (window.TSB_SHOWMORE && window.TSB_SHOWS_EXTRA) TSB_SHOWMORE.learn(show, 2); } catch (eL) {}   /* v322: every play teaches the shelf */
+    /* v383: a caller that already holds the episode list hands it straight in,
+       so playing a podcast does not depend on any request succeeding */
+    if (listOverride && listOverride.length) {
+      var ov = listOverride.map(function (e, i) {
+        return { label: e.label || e.title || ("Episode " + (i + 1)), sub: e.sub || (e.seconds ? fmt(e.seconds) : "episode"), src: e.src || e.url, art: e.art || show.art || "" };
+      }).filter(function (x) { return /^https?:/.test(x.src || ""); });
+      if (ov.length) { onFeedItems(show, ov, show.name, false, "", startAt); return; }
+    }
     fetchFeed(show.rss, function (items, feedTitle, stale, art) {
-      if (!items.length) { toast("Could not reach the feed. Try the show's own app today."); return; }
+      onFeedItems(show, items, feedTitle, stale, art, startAt);
+    });
+  }
+
+  function onFeedItems(show, items, feedTitle, stale, art, startAt) {
+      if (!items || !items.length) { toast("This show is updating its shelf. Try again in a moment."); return; }
       if (art) rememberArt(show, art);
       if (!show.art) { var ka = (jget(PODART, {}) || {})[artKeyOf(show)]; if (ka) show.art = ka; }
       var idx = Math.min(startAt !== undefined ? startAt : 0, items.length - 1);
@@ -1446,7 +1483,6 @@
           " · TheSmallBook does not host or alter this audio.",
         art: show.art || art || ""
       }));
-    });
   }
 
   /* ================= fetched shows follow you like the rest =================
@@ -1527,51 +1563,54 @@
 
   /* ================= audiobooks (LibriVox via Archive.org) ================= */
 
+  /* v383 · the chapter list ships with the app for every audiobook on the
+     first shelves, so a tap opens the book instead of waiting on a metadata
+     request that a weak connection can drop. The network is still used for a
+     book we have never seen, and still parsed by the same rules. */
+  function parseAudiobookFiles(d, rec) {
+    var mp3s = (d.files || []).filter(function (f) { return (f.name || "").toLowerCase().endsWith(".mp3"); });
+    /* LibriVox ships every section in up to three bitrates (plain, 128kb,
+       64kb). The queue carries ONE chapter per section: group by the file
+       name without its bitrate suffix, prefer the light 64kb for streaming,
+       then order by the section number. */
+    var byIdx = {};
+    mp3s.forEach(function (f) {
+      var low = (f.name || "").toLowerCase();
+      var base = low.replace(/[_-]?(128kb|64kb|96kb|32kb)?\.mp3$/, "");
+      var is64 = /_64kb\.mp3$/.test(low);
+      if (!byIdx[base] || (is64 && !byIdx[base].is64)) byIdx[base] = { f: f, is64: is64 };
+    });
+    mp3s = Object.keys(byIdx).map(function (k) { return byIdx[k].f; });
+    mp3s.sort(function (a, b) {
+      var la = (a.name || "").toLowerCase(), lb = (b.name || "").toLowerCase();
+      var ma = la.match(/(\d+)/), mb = lb.match(/(\d+)/);
+      return (ma ? parseInt(ma[1], 10) : 999) - (mb ? parseInt(mb[1], 10) : 999);
+    });
+    return mp3s.map(function (f, i) {
+      var label;
+      if (f.title) {
+        label = String(f.title).replace(/\.mp3$/i, "");
+        /* a slug-shaped title like "Premchand-Andher" is still a filename;
+           real chapter titles ("Ch 1-2") have spaces and stay untouched */
+        if (!/\s/.test(label) && label.indexOf("-") >= 0) label = label.split("-").pop();
+      }
+      if (!label) label = "Chapter " + (i + 1);
+      label = label.charAt(0).toUpperCase() + label.slice(1);
+      return { label: (i + 1) + ". " + label, sub: rec.lang === "hi" ? "kahani" : "chapter", src: "https://archive.org/download/" + rec.id + "/" + encodeURIComponent(f.name) };
+    });
+  }
+
   function fetchAudiobook(rec, cb) {
     var ck = FEEDCACHE + "ab3_" + rec.id;   /* ab3: base-name dedupe, every older doubled cache is ignored */
     var cached = jget(ck, null);
     if (cached && Date.now() - cached.at < 30 * 864e5 && cached.items.length) { cb(cached.items); return; }
+    var bundled = (window.TSB_AUDIOBOOK_FILES || {})[rec.id];
+    if (bundled && bundled.length) {
+      var local = parseAudiobookFiles({ files: bundled }, rec);
+      if (local.length) { jset(ck, { at: Date.now(), items: local }); cb(local); return; }
+    }
     fetch("https://archive.org/metadata/" + rec.id).then(function (r) { return r.json(); }).then(function (d) {
-      var mp3s = (d.files || []).filter(function (f) { return (f.name || "").toLowerCase().endsWith(".mp3"); });
-      /* LibriVox ships every section in up to three bitrates (plain, 128kb,
-         64kb). The queue carries ONE chapter per section: group by the file
-         name without its bitrate suffix, prefer the light 64kb for
-         streaming, then order by the section number. */
-      var byIdx = {};
-      mp3s.forEach(function (f) {
-        var low = (f.name || "").toLowerCase();
-        var base = low.replace(/[_-]?(128kb|64kb|96kb|32kb)?\.mp3$/, "");
-        var is64 = /_64kb\.mp3$/.test(low);
-        if (!byIdx[base] || (is64 && !byIdx[base].is64)) byIdx[base] = { f: f, is64: is64 };
-      });
-      mp3s = Object.keys(byIdx).map(function (k) { return byIdx[k].f; });
-      mp3s.sort(function (a, b) {
-        var la = (a.name || "").toLowerCase(), lb = (b.name || "").toLowerCase();
-        var ma = la.match(/(\d+)/), mb = lb.match(/(\d+)/);
-        return (ma ? parseInt(ma[1], 10) : 999) - (mb ? parseInt(mb[1], 10) : 999);
-      });
-      var items = mp3s.map(function (f, i) {
-        var label;
-        if (f.title) {
-          label = String(f.title).replace(/\.mp3$/i, "");
-          /* a slug-shaped title like "Premchand-Andher" is still a filename;
-             real chapter titles ("Ch 1-2") have spaces and stay untouched */
-          if (!/\s/.test(label) && label.indexOf("-") >= 0) label = label.split("-").pop();
-        } else {
-          /* filename with no title metadata: turn "premchand-idgaah_64kb"
-             into "Idgaah", keep it human */
-          label = (f.name || "Chapter " + (i + 1)).toLowerCase()
-            .replace(/\.mp3$/i, "").replace(/[_-]+/g, " ")
-            .replace(/\b(128kb|64kb|96kb|32kb)\b/g, "")
-            .replace(/^\s*\d+\s*/, "").trim();
-          var parts = label.split(" ").filter(Boolean);
-          if (parts.length > 1) label = parts[parts.length - 1];
-        }
-        label = label.replace(/^\s*\d+\s*[- ]?\s*/, "").trim();
-        if (!label) label = "Chapter " + (i + 1);
-        label = label.charAt(0).toUpperCase() + label.slice(1);
-        return { label: (i + 1) + ". " + label, sub: rec.lang === "hi" ? "kahani" : "chapter", src: "https://archive.org/download/" + rec.id + "/" + encodeURIComponent(f.name) };
-      });
+      var items = parseAudiobookFiles(d, rec);
       if (items.length) jset(ck, { at: Date.now(), items: items });
       cb(items);
     }).catch(function () {

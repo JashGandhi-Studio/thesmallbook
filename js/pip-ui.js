@@ -29,12 +29,14 @@
   function jset(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 
   /* the mark, drawn once, reused everywhere so there is never a second Pip */
+  /* v382: the face was a square frame with eyes inside it, which read as a
+     broken image tile next to the wordmark. It is a head now, drawn once, and
+     every place Pip speaks uses this same one. */
   var PIP_MARK = '<svg class="pipface" viewBox="0 0 64 64" aria-hidden="true" focusable="false">' +
-    '<path d="M10 12h44v40H10z" fill="currentColor" opacity=".92"/>' +
-    '<path d="M14 16h36v32H14z" fill="var(--paper,#FFFDF7)"/>' +
-    '<circle cx="25" cy="29" r="5.2" fill="currentColor"/><circle cx="39" cy="29" r="5.2" fill="currentColor"/>' +
-    '<circle cx="26.4" cy="27.6" r="1.7" fill="var(--paper,#FFFDF7)"/><circle cx="40.4" cy="27.6" r="1.7" fill="var(--paper,#FFFDF7)"/>' +
-    '<path d="M26 40c4 2.6 8 2.6 12 0" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>' +
+    '<circle cx="32" cy="32" r="27" fill="currentColor"/>' +
+    '<circle cx="23.5" cy="27" r="4.8" fill="var(--paper,#FFFDF7)"/>' +
+    '<circle cx="40.5" cy="27" r="4.8" fill="var(--paper,#FFFDF7)"/>' +
+    '<path d="M23 39.5c4.8 4.4 13.2 4.4 18 0" fill="none" stroke="var(--paper,#FFFDF7)" stroke-width="3.4" stroke-linecap="round"/>' +
     '</svg>';
 
   /* ------------------------------------------------------------ 1. TODAY */
@@ -225,9 +227,7 @@
     try { mountToday(); } catch (e) {}
     try { wireReader(); } catch (e) {}
     try { wireOS(); } catch (e) {}
-    try { mountShelf(); } catch (e) {}
     /* the shelf is drawn by another script too, so try once more after it runs */
-    setTimeout(function () { try { mountShelf(); } catch (e) {} }, 1500);
   });
 
   window.TSB_PIP_UI = { v: "379", askHere: askHere };

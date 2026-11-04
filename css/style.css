@@ -13400,33 +13400,38 @@ html { -webkit-tap-highlight-color: transparent; }
    ink, so the words were black on black and the page looked empty. Ink is now
    chosen by the surface, in every theme, at every weight.
    ========================================================================== */
-html.dark .rm-page,
-html.dark .rm-page #rmArticle,
-html.dark .rm-page #rmArticle p,
-html.dark .rm-page #rmArticle li,
-html.dark .rm-page #rmArticle blockquote,
-html.dark .rm-page #rmArticle h1,
-html.dark .rm-page #rmArticle h2,
-html.dark .rm-page #rmArticle h3,
-html.dark .rm-page #rmArticle h4,
-html.dark .rm-page #rmArticle strong,
-html.dark .rm-page #rmArticle b,
-html.dark .rm-page #rmArticle em,
-html.dark .rm-page #rmArticle i,
-html.dark .rm-page #rmArticle figcaption,
-html.dark .rm-page #rmArticle .rm-h,
-html.dark .rm-page .rm-kicker,
-html.dark .rm-page .rm-meta { color: #F2EAD8 !important }
-html.dark .rm-page #rmArticle a { color: #FFC800 !important }
-html.dark .rm-page #rmArticle .rm-card,
-html.dark .rm-page #rmArticle .rm-box { background: rgba(255, 255, 255, .05) !important; border-color: rgba(255, 255, 255, .12) !important }
+html[data-rm="night"] .rm-page,
+html[data-rm="night"] .rm-page #rmArticle,
+html[data-rm="night"] .rm-page #rmArticle p,
+html[data-rm="night"] .rm-page #rmArticle li,
+html[data-rm="night"] .rm-page #rmArticle blockquote,
+html[data-rm="night"] .rm-page #rmArticle h1,
+html[data-rm="night"] .rm-page #rmArticle h2,
+html[data-rm="night"] .rm-page #rmArticle h3,
+html[data-rm="night"] .rm-page #rmArticle h4,
+html[data-rm="night"] .rm-page #rmArticle strong,
+html[data-rm="night"] .rm-page #rmArticle b,
+html[data-rm="night"] .rm-page #rmArticle em,
+html[data-rm="night"] .rm-page #rmArticle i,
+html[data-rm="night"] .rm-page #rmArticle figcaption,
+html[data-rm="night"] .rm-page #rmArticle .rm-h,
+html[data-rm="night"] .rm-page .rm-kicker,
+html[data-rm="night"] .rm-page .rm-meta { color: #F2EAD8 !important }
+html[data-rm="night"] .rm-page #rmArticle a { color: #FFC800 !important }
+html[data-rm="night"] .rm-page #rmArticle .rm-card,
+html[data-rm="night"] .rm-page #rmArticle .rm-box { background: rgba(255, 255, 255, .05) !important; border-color: rgba(255, 255, 255, .12) !important }
 /* and in the light themes nothing is allowed to go pale on pale */
-html:not(.dark) .rm-page #rmArticle,
-html:not(.dark) .rm-page #rmArticle p,
-html:not(.dark) .rm-page #rmArticle li,
-html:not(.dark) .rm-page #rmArticle h1,
-html:not(.dark) .rm-page #rmArticle h2,
-html:not(.dark) .rm-page #rmArticle h3 { color: #16130F !important }
+html[data-rm="paper"] .rm-page, html[data-rm="sepia"] .rm-page #rmArticle,
+html[data-rm="paper"] .rm-page, html[data-rm="sepia"] .rm-page #rmArticle p,
+html[data-rm="paper"] .rm-page, html[data-rm="sepia"] .rm-page #rmArticle li,
+html[data-rm="paper"] .rm-page, html[data-rm="sepia"] .rm-page #rmArticle h1,
+html[data-rm="paper"] .rm-page, html[data-rm="sepia"] .rm-page #rmArticle h2,
+html[data-rm="paper"] .rm-page, html[data-rm="sepia"] .rm-page #rmArticle h3 { color: #16130F !important }
+/* sepia gets its own ink, so a candle-lit page does not read as a printed one */
+html[data-rm="sepia"] .rm-page, html[data-rm="sepia"] .rm-page #rmArticle,
+html[data-rm="sepia"] .rm-page #rmArticle p, html[data-rm="sepia"] .rm-page #rmArticle li,
+html[data-rm="sepia"] .rm-page #rmArticle h1, html[data-rm="sepia"] .rm-page #rmArticle h2,
+html[data-rm="sepia"] .rm-page #rmArticle h3 { color: #2C251E !important }
 
 /* ==========================================================================
    v378 · THE MARK IS ACTUALLY DIFFERENT AT FOUR PARTS OF THE DAY
@@ -13509,3 +13514,241 @@ html.dark .pip-shelf__notes li { border-top-color: rgba(255, 255, 255, .1) }
 .pip-shelf__notes span { font: 400 14px/1.45 var(--font-read, Georgia, serif) }
 .pip-shelf__foot { margin: 12px 0 0; font: 600 11px var(--font-body, system-ui); opacity: .5; letter-spacing: .04em }
 @media (prefers-reduced-motion: reduce) { .pip-line, .pip-ask, .pip-ask__sheet, .pip-little { animation: none !important; transition: none !important } }
+
+/* ==========================================================================
+   v382 · THE ACTION BAR, ICONS ONLY
+   With labels switched off the icons were pushed to the top of a taller slot and
+   looked stuck to the ceiling. The slot now centres one icon and orients the bar
+   on the icon row, at every width, labels or no labels.
+   ========================================================================== */
+.tsb-bar { --bar-item-pad: 0px }
+.tsb-bar .tsb-bar__item {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 5px; min-height: 56px; padding: 6px 0; box-sizing: border-box; text-align: center;
+}
+.tsb-bar .tsb-bar__item svg, .tsb-bar .tsb-bar__item > i { flex: none; margin: 0 auto; display: block }
+.tsb-bar .tsb-bar__item span, .tsb-bar .tsb-bar__item small, .tsb-bar .tsb-bar__item em {
+  display: block; line-height: 1.1; text-align: center; margin: 0 auto; letter-spacing: .01em;
+}
+/* labels off: one icon, dead centre of its slot, nothing else to align */
+body.bar-nolabels .tsb-bar .tsb-bar__item,
+html.bar-nolabels .tsb-bar .tsb-bar__item {
+  justify-content: center !important; gap: 0 !important; min-height: 58px;
+}
+body.bar-nolabels .tsb-bar .tsb-bar__item span,
+body.bar-nolabels .tsb-bar .tsb-bar__item small,
+html.bar-nolabels .tsb-bar .tsb-bar__item span,
+html.bar-nolabels .tsb-bar .tsb-bar__item small { display: none !important }
+body.bar-nolabels .tsb-bar .tsb-bar__item svg,
+html.bar-nolabels .tsb-bar .tsb-bar__item svg { width: 24px; height: 24px; vertical-align: 0 }
+
+/* ==========================================================================
+   v382 · THE WAY OUT OF A BOOK IS AN ARROW
+   The reader's back control was drawing a cross, so leaving a book looked
+   like closing a panel, and it sat in a filled black disc that shouted louder
+   than the book title. It is now a quiet arrow: a 44px target, no disc, no
+   border, the ink of whatever theme paper is behind it.
+   ========================================================================== */
+html.frd-on .rm-header a.rm-back, html.frd-on .rm-header #rmBack {
+  width: 44px !important; height: 44px !important; min-width: 44px !important;
+  padding: 0 !important; margin-left: -6px !important;
+  display: grid !important; place-items: center !important;
+  border: 0 !important; border-radius: 0 !important;
+  background: transparent !important; box-shadow: none !important;
+  color: var(--ink, #16130F) !important; opacity: .82;
+  -webkit-tap-highlight-color: transparent;
+}
+html.frd-on .rm-header a.rm-back:active, html.frd-on .rm-header #rmBack:active { opacity: .5 }
+html.frd-on .rm-header a.rm-back::before, html.frd-on .rm-header a.rm-back::after,
+html.frd-on .rm-header #rmBack::before, html.frd-on .rm-header #rmBack::after { content: none !important; display: none !important }
+html.frd-on .rm-header a.rm-back svg, html.frd-on .rm-header #rmBack svg {
+  display: block !important; width: 21px !important; height: 21px !important;
+  stroke: currentColor !important; fill: none !important; margin: 0 !important;
+}
+html.frd-on body.rm-theme-night .rm-header a.rm-back,
+html.frd-on body.rm-theme-night .rm-header #rmBack { background: transparent !important; border: 0 !important; color: #F2EAD8 !important }
+html.frd-on body.rm-theme-sepia .rm-header a.rm-back { color: #2E2418 !important }
+
+/* ==========================================================================
+   v382 · THE READER'S PAPER BEATS THE APP'S NIGHT
+   At night the app wrapper adds html.dark, and that class was painting the
+   page under the article dark even when the reader was set to paper: a cream
+   header above a black page, cream text on it. The reader writes its theme on
+   <html data-rm>, so the page now obeys that decision and nothing else.
+   ========================================================================== */
+html[data-rm] body.rm-page,
+html[data-rm] .rm-page {
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+}
+html[data-rm] .rm-app, html[data-rm] main.rm-app { background: transparent !important }
+html[data-rm] .rm-callout {
+  background: var(--card) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 18px !important;
+  padding: 18px 20px !important;
+}
+html[data-rm] .rm-callout b {
+  display: block !important;
+  font-family: 'Space Grotesk', system-ui, sans-serif !important;
+  font-size: 11px !important; font-weight: 700 !important;
+  letter-spacing: .14em !important; text-transform: uppercase !important;
+  color: var(--muted) !important;
+  margin: 0 0 8px !important;
+}
+html[data-rm="night"] body.rm-page, html[data-rm="night"] .rm-page { background: #16130e !important; color: #f4ecdd !important }
+html[data-rm="sepia"] body.rm-page, html[data-rm="sepia"] .rm-page { background: #f4ecd8 !important; color: #2c251e !important }
+
+/* ==========================================================================
+   v382 · ONE PALETTE FOR THE READER
+   The film components in the reader read --f-ink / --f-paper, and the day
+   palette writes those as inline values on <html> after the reader has chosen
+   its theme. That is how a paper reader ended up printing cream text on white
+   paper: the reader's own ink never reached the words. The reader's choice now
+   sets both palettes, at the weight that beats an inline value.
+   ========================================================================== */
+html[data-rm="paper"] {
+  --f-ink: #16130F !important; --f-paper: #FFFDF5 !important;
+  --f-card: #FFFFFF !important; --f-line: #E8DFCC !important; --f-mu: #6E6658 !important;
+}
+html[data-rm="sepia"] {
+  --f-ink: #2C251E !important; --f-paper: #F4ECD8 !important;
+  --f-card: #FBF3E1 !important; --f-line: #D9C9A8 !important; --f-mu: #6D5F4E !important;
+}
+html[data-rm="night"] {
+  --f-ink: #F2EAD8 !important; --f-paper: #16130E !important;
+  --f-card: #1F1B16 !important; --f-line: #342D24 !important; --f-mu: #A29884 !important;
+}
+
+/* ==========================================================================
+   v384 · THE CONTRAST CONTRACT
+   Every colour below was measured, not guessed. Each rule fixes a pair that
+   sat under 4.5:1 for body text or under 3:1 for large text, in light, in
+   dark, or in both. The pattern is the same everywhere: one palette was
+   written for one theme and then reused in the other. Muted ink, gold ink and
+   red ink are now three tokens that change with the theme.
+   ========================================================================== */
+html:not(.dark) {
+  --tsb-mute: #554E42;
+  --tsb-gold-ink: #6B4C00;
+  --tsb-red-ink: #B3261E;
+  --tsb-blue-ink: #2B4FCF;
+}
+html.dark {
+  --tsb-mute: #B4AA99;
+  --tsb-gold-ink: #FFD24D;
+  --tsb-red-ink: #FF9A85;
+  --tsb-blue-ink: #9DB8FF;
+}
+
+/* muted small print: footers, counters, captions, empty states */
+.footer p, .footer p.tiny, .footer p.tiny a, .footer p.tiny strong,
+.rnd-clean-footer, .pc-sub, .fy-count, .cm-empty, .youser__at,
+.nt-cover__word i, .nt-toc__h, .nt-empty, .nt-empty b,
+.book-first-page small, .bookplate-box div,
+.k-lang button, #kExit span, .kg-foot {
+  color: var(--tsb-mute) !important;
+}
+
+/* gold as ink, never gold on paper */
+html:not(.dark) .r-kick, html:not(.dark) .lghero__eyebrow,
+html:not(.dark) #kStars b, html:not(.dark) .back-crest-heading,
+html:not(.dark) .back-crest-emblem, html:not(.dark) .back-gold-stamp span,
+html:not(.dark) .back-tap-hint, html:not(.dark) .spine-head-mark,
+html:not(.dark) #spineTitle, html:not(.dark) .spine-year-mark,
+html:not(.dark) .ft-mp__f .f-kick, html:not(.dark) .sh3d--empty a {
+  color: var(--tsb-gold-ink) !important;
+}
+html.dark .r-kick, html.dark .ft-mp__f .f-kick { color: var(--tsb-gold-ink) !important }
+
+/* the mind pick tease: cream type was printing on cream paper */
+html:not(.dark) .ft-mp__q--tease { color: #16130F !important }
+html:not(.dark) .ft-mp__q--tease span { color: #7A5A00 !important }
+html.dark .ft-mp__q--tease { color: #F2EAD8 !important }
+html.dark .ft-mp__q--tease span { color: #FFD24D !important }
+
+/* the empty shelf note */
+.sh3d--empty p, .sh3d--empty p b { color: var(--tsb-mute) !important }
+
+/* red as ink */
+.logo__small, .rnd-brand__small { color: var(--tsb-red-ink) !important }
+.fg-wm span { color: var(--tsb-red-ink) !important }
+.fy-jnc__t em { color: var(--tsb-red-ink) !important }
+.gy-tool em { color: var(--tsb-red-ink) !important }
+.fy-jnc__t i { color: var(--tsb-mute) !important }
+
+/* badges that carried near black ink on saturated green */
+.dd-idx__m b.free { background: #0B7A4F !important; color: #FFFFFF !important }
+
+/* the count chip in the stats row */
+.st-stat b { color: var(--tsb-blue-ink) !important }
+
+/* casefile: a burnt red plate on a dark card, and a light chip with dark type */
+html.dark .cf-hero__no { color: #F0A392 !important }
+html.dark .cf-hero__meta span { color: #221E16 !important }
+html:not(.dark) .cf-hero__meta span { color: #3A3428 !important }
+
+/* the year page's locked date sits on a gold plate */
+.yr-wait .yr-date, html.dark .yr-wait .yr-date { color: #16130E !important }
+
+/* highlights in the 404 headline */
+html.dark .hl, html.dark .hl--red { color: #F2EAD8 !important }
+html.dark .hl--red { color: #FF9C8A !important }
+
+/* the pseo number chips are gold plates: ink belongs on them, not cream */
+html.dark .pseo__num, html.dark .pseo__go,
+html:not(.dark) .pseo__num, html:not(.dark) .pseo__go { color: #16130E !important }
+
+/* the graveyard button was ink on red */
+.btn--red, .btn.btn--red { background: #B3261E !important; color: #FFFFFF !important }
+.btn--red *, .btn.btn--red * { color: #FFFFFF !important }
+
+/* the reader's share pill: the label must take the pill's ink, not the paper's */
+#rmArticle .frd-share span, #rmArticle .frd-share span *,
+.frd-share span, .frd-share span * { color: inherit !important; -webkit-text-fill-color: currentColor !important }
+
+/* ==========================================================================
+   v384 · the second pass
+   Four of the remaining pairs were not a colour problem at all: the text was
+   drawn at 0.6 to 0.8 opacity, which quietly pulled 7:1 down to 3:1. Small
+   print is small enough already, so it now sits at full opacity. The rest are
+   specificity: a page rule was winning over the contract, so these carry the
+   whole path.
+   ========================================================================== */
+html body footer.footer p,
+html body footer.footer p.tiny,
+html body footer.footer p.tiny a,
+html body footer.footer p.tiny strong,
+html body .rnd-clean-footer,
+html body main.dd-main section.pc-ab p.pc-sub,
+html body main#filmYou div.fy-sec span.fy-count {
+  color: var(--tsb-mute) !important;
+  opacity: 1 !important;
+}
+html body main.youcard.lgcard header.lghero span.lghero__eyebrow { color: var(--tsb-gold-ink) !important }
+html body #kStars b, html body .k-stars b { color: var(--tsb-gold-ink) !important; opacity: 1 !important }
+html body .k-lang button, html body #kExit span, html body .kg-foot { color: #4C4335 !important }
+html body .dd-idx__m { opacity: 1 !important }
+html body .dd-idx__m b.free { background: #0B7A4F !important; color: #FFFFFF !important }
+html body div.fg-wm span { color: #FFB4A6 !important }
+
+/* the reader's share pill is dark in every theme, so its label is always light */
+.frd-share, #rmArticle .frd-share, html[data-rm] .frd-share {
+  background: #16130F !important; color: #FBF8F1 !important; border-color: #16130F !important;
+}
+.frd-share span, .frd-share span *, .frd-share svg, .frd-share em,
+#rmArticle .frd-share span, #rmArticle .frd-share span * {
+  color: #FBF8F1 !important; -webkit-text-fill-color: #FBF8F1 !important;
+}
+
+/* v384: the reader writes its own pill rules inside reader.html, later in the
+   cascade than this file, so the label needs the extra weight to keep the
+   pill's ink instead of the page's ink. */
+html[data-rm] body #rmArticle .frd-share,
+html[data-rm] body #rmArticle .frd-share span,
+html[data-rm] body #rmArticle .frd-share span *,
+html[data-rm] body #rmArticle .frd-share svg {
+  color: #FBF8F1 !important; -webkit-text-fill-color: #FBF8F1 !important; fill: currentColor !important;
+}
+html[data-rm] body #rmArticle .frd-share { background: #16130F !important; border-color: #16130F !important }

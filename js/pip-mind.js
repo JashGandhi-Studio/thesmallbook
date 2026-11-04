@@ -178,6 +178,13 @@
       gu: ["ગઈકાલનો સવાલ હજી ખુલ્લો છે. એક વાક્ય પૂરતું છે."],
       "gu-latn": ["Gaikaldno sawaal haji khullo chhe. Ek vaakya purtu chhe."]
     },
+    day: {
+      en: ["One good page is enough for today."],
+      hi: ["आज के लिए एक अच्छा पेज काफ़ी है।"],
+      "hi-latn": ["Aaj ke liye ek achha page kaafi hai."],
+      gu: ["આજ માટે એક સારું પાનું પૂરતું છે."],
+      "gu-latn": ["Aaj mate ek saru paanu purtu chhe."]
+    },
     night: {
       en: ["It is late. This one can wait till morning."],
       hi: ["देर हो गई। यह सुबह के लिए रहने दें।"],
@@ -229,7 +236,10 @@
   }
 
   /* ------------------------------------------------------------------ timing */
-  function quietHours() { var h = hour(); return h >= 23 || h < 6; }
+  /* v382: the app's day bands start the morning at 05:00, so Pip's quiet
+     hours have to end there too. At 05:30 the page said Good morning while
+     Pip said it was late, which reads as a bug even when both are polite. */
+  function quietHours() { var h = hour(); return h >= 23 || h < 5; }
   function saidToday(tag) { var s = state(); return s.said[tag] === today(); }
   function markSaid(tag) { var s = state(); s.said[tag] = today(); saveState(s); }
   function askedToday() { var s = state(); return s.asked.day === today(); }
@@ -295,11 +305,10 @@
       if (mins >= 3) return { text: pick(LINES, "listening", { title: String(lp.title).slice(0, 28), min: mins }), tone: "plain", tag: "listening" };
     }
 
-    /* 7. nothing true to say, and that is allowed */
-    if (!localStorage.getItem("tsb_pip_met")) {
-      try { localStorage.setItem("tsb_pip_met", "1"); } catch (e) {}
-      return { text: pick(LINES, "welcome"), tone: "warm", tag: "welcome" };
-    }
+    /* 7. a quiet morning with no history yet still deserves one true line.
+       Before this, Pip vanished from Today on every visit after the first,
+       which is the one place the character is supposed to live. */
+    if (!saidToday("day")) return { text: pick(LINES, "day"), tone: "plain", tag: "day" };
     return null;
   }
 

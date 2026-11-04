@@ -221,7 +221,7 @@
       html += noteHTML(p, pos(p), isSpring);
     });
     board.innerHTML = html +
-      '<div class="qw-corner">📌 pin something, the board never runs out of space</div>';
+      '<div class="qw-corner">Pin something. The board never runs out of space.</div>';
     board.style.width = (26 * 2 + Math.min(6, Math.max(3, Math.round(Math.sqrt(Math.max(4, all.length)) * 1.15))) * 236 + 40) + "px";
     board.style.height = "1350px";
     board.querySelectorAll("[data-del]").forEach(function (b) {

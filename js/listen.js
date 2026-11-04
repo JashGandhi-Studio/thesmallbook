@@ -198,8 +198,23 @@ window.TSB_LISTEN = (function () {
       }).filter(function (x) { return x.title; });
     });
   }
+  function seedEpisodes(cid) {
+    var seed = window.TSB_LISTEN_SEED;
+    var list = seed && seed.eps && seed.eps[String(cid)];
+    if (!list || !list.length) return null;
+    return list.filter(function (e) { return /^https:/.test(e.url || ""); }).map(function (e) {
+      return { title: e.title || "Episode", url: e.url, seconds: e.seconds || 0, date: e.date || "" };
+    });
+  }
   function episodes(cid) {
-    return jget("https://itunes.apple.com/lookup?id=" + encodeURIComponent(cid) + "&entity=podcastEpisode&limit=60").then(function (j) {
+    /* v383: every podcast card the app ships also ships its episodes, so a tap
+       never waits on a lookup that can fail on a weak signal. */
+    var seeded = seedEpisodes(cid);
+    if (seeded && seeded.length) return Promise.resolve(seeded);
+    var epUrl = "https://itunes.apple.com/lookup?id=" + encodeURIComponent(cid) + "&entity=podcastEpisode&limit=60";
+    /* v382: a podcast that played yesterday must still open today, even if the
+       lookup fails on a weak signal. Every episode list is remembered. */
+    return withCache(epUrl, function (j) {
       return ((j && j.results) || []).filter(function (r) { return r.kind === "podcast-episode" && (r.episodeUrl || r.previewUrl); })
         .map(function (r) {
           return { title: r.trackName || "Episode", url: r.episodeUrl || r.previewUrl,
@@ -296,6 +311,10 @@ window.TSB_LISTEN = (function () {
     var A = window.TSB_AUDIO;
     var show = { id: item.id, name: item.title, art: item.cover || "", home: "",
                  rss: seedFeed(item, list) };
+    /* v383: the list we already have wins. No feed request, no waiting room. */
+    if (typeof A.playFeed === "function") {
+      try { A.playFeed(show, Math.max(0, startAt || 0), list); return; } catch (eP) {}
+    }
     A.playFeed(show, Math.max(0, startAt || 0));
   }
   function isSaved(id) { return saved.some(function (s) { return s.id === id; }); }
@@ -536,20 +555,30 @@ window.TSB_LISTEN = (function () {
        what starts the feed: until then these are the room's own shelves,
        not a brain that follows you. */
     if (!signedIn()) {
-      archive("best audiobooks", 14).then(function (pop) {
+      /* v383 · THE ROOM IS NEVER EMPTY. This branch used to wait on three
+         network calls before it painted anything, so a phone that could not
+         reach them saw a blank page under "Sign in to build your feed". The
+         shelves now paint from the app itself, and the network only replaces
+         them when it actually answers. */
+      var G = window.TSB_LISTEN_SEED || {};
+      var popL = (G.popular || []).slice(0, 14);
+      var podL = (G.pods || []).slice(0, 8);
+      var finL = (G.related || []).slice(0, 10);
+      var paintGuest = function () {
         if (el("#rSearch") && el("#rSearch").value.trim()) return;
         var lp = liveLast();
         var mem = fromMemory(6);
         feed.innerHTML = (mem.length ? rail("You were listening to", mem) : "") +
-          (lp ? rail("Pick up where you left off", [lp]) : "") + rail("Popular now", pop || []);
-        podcasts("storytelling", 8).then(function (p) {
-          if (p && p.length) feed.insertAdjacentHTML("beforeend", rail("Podcasts", p));
-        });
-        archive("short stories", 10).then(function (s2) {
-          if (s2 && s2.length) feed.insertAdjacentHTML("beforeend", rail("Finish in a walk", s2));
-          var f0 = el(".r-foot"); if (f0) f0.classList.add("on"); footState();
-        });
-      });
+          (lp ? rail("Pick up where you left off", [lp]) : "") +
+          (popL.length ? rail("Popular now", popL) : "") +
+          (podL.length ? rail("Podcasts", podL) : "") +
+          (finL.length ? rail("Finish in a walk", finL) : "");
+        var f0 = el(".r-foot"); if (f0) f0.classList.add("on"); footState();
+      };
+      paintGuest();
+      archive("best audiobooks", 14).then(function (pop) { if (pop && pop.length) { popL = pop; paintGuest(); } });
+      podcasts("storytelling", 8).then(function (p) { if (p && p.length) { podL = p; paintGuest(); } });
+      archive("short stories", 10).then(function (s2) { if (s2 && s2.length) { finL = s2; paintGuest(); } });
       return;
     }
     var cont = liveContinue(), ts = topTerms(3), sj = topSubjects(2);
@@ -567,19 +596,25 @@ window.TSB_LISTEN = (function () {
       var li = el("#rb" + i); if (li) li.className = "on";
       var bp = el("#rBp"); if (bp) bp.style.width = Math.round((i + 1) / 3 * 100) + "%";
     }
-    var popular = [], related = [], pods = [];
+    /* v383: the first paint comes from the app itself. The three network calls
+       below still run and still win when they answer, but a rail is never
+       empty because a request was slow or refused. */
+    var SEEDS = window.TSB_LISTEN_SEED || {};
+    var popular = (SEEDS.popular || []).slice(0, 14);
+    var related = (SEEDS.related || []).slice(0, 12);
+    var pods = (SEEDS.pods || []).slice(0, 8);
     setTimeout(function () {
       tick(0);
       archive("best audiobooks", 14).then(function (l) {
-        popular = l || []; tick(1);
+        if (l && l.length) popular = l; tick(1);
         var terms = ts.length ? ts.join(" ") : "classic novels";
         return archive(terms, 12);
       }).then(function (l) {
-        related = l || []; tick(2);
+        if (l && l.length) related = l; tick(2);
         var subj = sj.length ? sj[0] : "storytelling";
         return podcasts(subj, 8);
       }).then(function (l) {
-        pods = l || [];
+        if (l && l.length) pods = l;
         setTimeout(function () {
           if (el("#rSearch") && el("#rSearch").value.trim()) return;
           /* v375: a signed-in reader opens Listen to find the next thing, not to

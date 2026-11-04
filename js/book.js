@@ -646,7 +646,7 @@
     // call to action
     ctx.fillStyle = "#111";
     ctx.font = "bold 28px 'Space Grotesk', Arial";
-    ctx.fillText("📖 READ THE FULL BREAKDOWN", W / 2, 1116);
+    ctx.fillText("READ THE FULL BREAKDOWN", W / 2, 1116);
 
     drawBrandBar(ctx, W, H);
     if (!isGoldNow()) drawWatermark(ctx, W, H);

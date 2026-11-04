@@ -248,7 +248,7 @@
     }).join("");
     if (!hits && !gHits) {
       return answerBlock(t("CLOSEST MATCHES"), headT, "\u201C" + qT + "\u201D") +
-        '<div class="aq-none">📖 ' + esc(t("no book lesson matched")) + "</div>";
+        '<div class="aq-none">' + esc(t("no book lesson matched")) + "</div>";
     }
     var action = lRes[0] && lRes[0].lesson && lRes[0].lesson.action;
     return answerBlock(t("CLOSEST MATCHES"), headT, "\u201C" + qT + "\u201D") + nextMove(action) +

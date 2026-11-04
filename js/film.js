@@ -191,7 +191,7 @@
     var d = new Date(), h = d.getHours();
     var hi = h < 5 ? "Still up" : h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
     var nm = name(), streak = 0;
-    var companion = h < 5 ? "A soft page before sleep?" : h < 11 ? "One good page can set the tone." : h < 15 ? "Had lunch? Let us make the afternoon lighter." : h < 18 ? "A little reset before the evening." : "Settle in. Your next good idea is waiting.";
+    var companion = h < 5 ? "A soft page before sleep?" : h < 11 ? "Take your time. The shelf is not a deadline." : h < 15 ? "Had lunch? Let us make the afternoon lighter." : h < 18 ? "A little reset before the evening." : "Settle in. Your next good idea is waiting.";
     /* v350: the line under the greeting is the app talking back. It knows the
        time of day from the clock, and it knows what this reader said mattered
        when they set the app up, so the second half is theirs, not a slogan. */
@@ -208,7 +208,7 @@
     var pick = todaysPick(), html = "";
     html += '<div class="ft-hd f-up" style="--d:.05"><div><div class="ft-date">' + esc(date) + '</div><h1 class="ft-hi">' + hi + (nm ? ", <i>" + esc(nm) + "</i>" : "") + '</h1><p class="ft-companion">' + companion + '</p></div>' +
       '<div class="ft-acts"><a class="ft-streak" href="you.html" aria-label="' + streak + ' day streak">' + ICON.flame + streak + '</a><a class="ft-av" href="you.html" aria-label="You" data-tsb-av data-name="' + esc(nm || "R") + '">' + (window.TSB_AVA ? TSB_AVA.markup(nm) : esc((nm || "R").charAt(0).toUpperCase())) + "</a></div></div>";
-    html += '<a class="ft-search f-up" style="--d:.15" href="#library" data-fsearch>' + ICON.search + "<span>Search " + books().length + " books, authors, ideas</span>" + (SR ? '<button type="button" class="ft-mic" data-fmic aria-label="Search by voice">' + ICON.mic + "</button>" : "<kbd>/</kbd>") + "</a>";
+    html += '<a class="ft-search f-up" style="--d:.15" href="#library" data-fsearch>' + ICON.search + "<span>Search books, authors, ideas</span>" + (SR ? '<button type="button" class="ft-mic" data-fmic aria-label="Search by voice">' + ICON.mic + "</button>" : "<kbd>/</kbd>") + "</a>";
     if (pick) {
       var why = pick.tagline || pick.oneLiner || "";
       html += '<section class="ft-hero f-up" style="--d:.25" aria-label="Today\u2019s pick"><div class="f-kick">TODAY\u2019S PICK FOR YOU</div><div class="ft-hero__row">' +
@@ -389,7 +389,7 @@
         });
       } catch (e) { apply(); }
     }
-    var si = document.getElementById("searchInput"); if (si) { si.setAttribute("placeholder", "Books, authors, ideas"); si.setAttribute("enterkeyhint", "search"); si.setAttribute("aria-label", "Search " + books().length + " books"); si.setAttribute("type", "search"); }
+    var si = document.getElementById("searchInput"); if (si) { si.setAttribute("placeholder", "Books, authors, ideas"); si.setAttribute("enterkeyhint", "search"); si.setAttribute("aria-label", "Search books, authors, ideas"); si.setAttribute("type", "search"); }
     var sg = document.getElementById("searchGo"); if (sg) sg.textContent = "Find";
     if (SR && sg && sg.parentNode) {
       var mb = document.createElement("button"); mb.type = "button"; mb.className = "ft-mic ft-mic--lib"; mb.setAttribute("data-fmic", ""); mb.setAttribute("aria-label", "Search by voice"); mb.innerHTML = ICON.mic;
@@ -596,7 +596,7 @@
       '<a class="fy-li" href="login.html">' + I.acct + (signed ? "Account" : "Sign in or create account") + "<em>" + (signed ? "Manage" : "1 tap") + "</em></a>" +
       '<a class="fy-li" href="settings.html">' + ICON.gear + "All settings<em></em></a>" +
       '<a class="fy-li" href="about.html">' + I.info + "About TheSmallBook<em>v335</em></a></div>";
-    h += '<p class="fy-fine">Your reading data lives on your device' + (signed ? " and syncs privately to your account" : "") + '. Build tsb-v336. <a href="legal.html">Privacy</a></p>';
+    h += '<p class="fy-fine">Your reading data lives on your device' + (signed ? " and syncs privately to your account" : "") + '. Build ' + (window.TSB_BUILD ? 'tsb-v' + window.TSB_BUILD : 'tsb-v382') + '. <a href="legal.html">Privacy</a></p>';
     host.innerHTML = h;
     setTimeout(function () {
       try { if (window.TSB_SHELF3D) TSB_SHELF3D.bind(host); } catch (e) {}
