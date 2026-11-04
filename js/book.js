@@ -1780,7 +1780,7 @@
 
   /* ---------- CHECKABLE ACTION PLAN ---------- */
   const planWrap = document.getElementById("plan");
-  /* v354: 600 of the 600 books in data.js carry no actionPlan, so this used to
+  /* v354: 600 of the books in data.js carry no actionPlan, so this used to
      throw on every book page and kill everything wired after it (share,
      truth box, related shelf). The plan is now derived from the chapters, so
      every book has one and the page finishes wiring. */

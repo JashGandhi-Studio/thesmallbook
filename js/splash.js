@@ -34,22 +34,23 @@
      here and everything that depends on it moves with it.
      --------------------------------------------------------------------- */
   var SCORE = {
-    glow:   40,     /* the light comes up */
-    shelf:  120,    /* the shelf draws itself */
-    drop:   150,    /* Pip falls */
-    blink:  820,
-    look:   960,
-    hop:    1300,   /* the hop, the bookmark, the thrown pages */
-    open:   1350,   /* the pages swing open */
-    smile:  1420,
-    rise:   1640,   /* Pip steps out of the way of the name */
-    name:   1820,   /* the name starts to set */
-    rule:   2260,
-    tag:    2400,
-    hold:   2700,   /* the frame the opening exists for */
-    lift:   3060,   /* the field lifts away */
-    end:    3680
+    glow:   30,     /* the light comes up */
+    shelf:  100,    /* the shelf draws itself */
+    drop:   130,    /* Pip falls */
+    blink:  560,
+    look:   680,
+    hop:    900,    /* the hop, the bookmark, the thrown pages */
+    open:   950,    /* the pages swing open */
+    smile:  1020,
+    rise:   1120,   /* Pip steps out of the way of the name */
+    name:   1150,   /* the name starts to set, while he is still on screen */
+    rule:   1720,
+    tag:    1900,
+    hold:   3900,   /* the frame the opening exists for */
+    lift:   4400,   /* the field lifts away */
+    end:    5100
   };
+
   var LETTER_STAGGER = 26;   /* ms between letters of the name */
   var WORD = "TheSmallBook";
   var ITALIC_FROM = 3, ITALIC_TO = 7;   /* "Small", always italic */
@@ -69,6 +70,7 @@
   el.innerHTML =
     '<div class="sp-vig" aria-hidden="true"></div>' +
     '<div class="sp-grain" aria-hidden="true"></div>' +
+    '<div class="sp-centre">' +
     '<div class="sp-stage" aria-hidden="true">' +
       '<div class="sp-glow"></div>' +
       '<div class="sp-shelf" aria-hidden="true"></div>' +
@@ -93,7 +95,8 @@
     '</div>' +
     '<div class="sp-name" aria-hidden="true">' + letters + '</div>' +
     '<div class="sp-rule" aria-hidden="true"></div>' +
-    '<div class="sp-tag" aria-hidden="true">big books &middot; small reads</div>';
+    '<div class="sp-tag" aria-hidden="true">big books &middot; small reads</div>' +
+    '</div>';
 
   /* one place writes the clock, so nothing can drift */
   function ms(n) { return (n / 1000).toFixed(3) + "s"; }

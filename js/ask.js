@@ -100,7 +100,7 @@
     return String(q).toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
   }
   /* v292 house rule: no em dashes anywhere in the app. Ask pulls lines from
-     600 books and 400 autopsies, older shelves included, so the escape gate
+     the whole library and every autopsy, older shelves included, so the escape gate
      also flattens every dash to a plain hyphen. Nothing rendered in the panel
      (or saved to history) can carry one, whatever the source file says. */
   function esc(s) {
@@ -938,7 +938,7 @@
         '<span class="cmp-vs">vs</span>' +
         '<button type="button" class="cmp-slot" id="cmpSlotB"><em>SECOND</em><b>Add a book</b><i>+</i></button>' +
       "</div>" +
-      '<input id="cmpSearch" class="aq-lib__search" type="text" placeholder="' + esc(t("Search 600 books, or type a title")) + '" autocomplete="off">' +
+      '<input id="cmpSearch" class="aq-lib__search" type="text" placeholder="' + esc(t("Search books, or type a title")) + '" autocomplete="off">' +
       '<div class="cmp-list" id="cmpList"></div>' +
       '<button type="button" class="cmp-go" id="cmpGo" disabled>' + esc(t("Compare these two")) + "</button>";
     root.appendChild(d);
@@ -1549,7 +1549,7 @@
         '<div class="aq-locked">' +
           '<div class="aq-locked__chip">👑</div>' +
           '<h3>ASK THE LIBRARY IS PART OF GOLD</h3>' +
-          '<p>Every answer is composed live from <b>600 books, 4,343 lessons and 400 autopsies</b>, with the exact lesson it came from, one tap away. Nothing invented, no chatbot filler.</p>' +
+          '<p>Every answer is composed live from <b>every book, every lesson and every autopsy</b>, with the exact lesson it came from, one tap away. Nothing invented, no chatbot filler.</p>' +
           '<p class="aq-locked__modes">Ask anything, or open the plus and put two books side by side for an honest comparison.</p>' +
           '<a class="aq-locked__go" href="gold.html">👑 SEE TSB GOLD</a>' +
           '<small>The library itself stays open, every book, every lesson.</small>' +

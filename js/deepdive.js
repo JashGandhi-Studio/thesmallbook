@@ -33,7 +33,7 @@
         '<a class="dd-gate__go" href="gold.html">👑 UNLOCK WITH GOLD</a>' +
         '<a class="dd-gate__try" href="deepdive.html?id=dd-atomic-identity">READ THE SAMPLE FIRST</a>' +
       '</div>' +
-      '<small class="dd-gate__tiny">The 600 books stay open, every lesson. Gold is this: the layer underneath, one chapter at a time.</small></div>';
+      '<small class="dd-gate__tiny">The books stay open, every lesson. Gold is this: the layer underneath, one chapter at a time.</small></div>';
     document.title = "A Gold deep dive | TheSmallBook";
   }
 

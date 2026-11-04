@@ -121,6 +121,45 @@ window.TSB_LISTEN = (function () {
       .catch(function () { return null; })
       .then(function (v) { clearTimeout(to); return v; }, function () { clearTimeout(to); return null; });
   }
+  /* v376 · NOTHING ON THIS PAGE IS ALLOWED TO DEAD-END.
+     Archive.org and iTunes are good neighbours but not perfect ones: a phone on
+     a weak signal, a blocked request, a slow morning, and the shelf used to say
+     "could not fetch, try again later" with nothing on it. Now every source
+     retries once, and every answer is remembered, so a second visit paints the
+     last good shelf instantly while the network catches up. */
+  var MEM = {};
+  function cacheKey(url) { return "tsb_listen_v1_" + url.length + "_" + url.slice(0, 120); }
+  function cacheGet(url) {
+    if (MEM[url]) return MEM[url];
+    try {
+      var raw = localStorage.getItem(cacheKey(url));
+      if (!raw) return null;
+      var box = JSON.parse(raw);
+      if (!box || !box.v || (Date.now() - (box.t || 0)) > 14 * 864e5) return null;
+      MEM[url] = box.v;
+      return box.v;
+    } catch (e) { return null; }
+  }
+  function cachePut(url, v) {
+    if (!v || !v.length) return;
+    MEM[url] = v;
+    try { localStorage.setItem(cacheKey(url), JSON.stringify({ t: Date.now(), v: v })); } catch (e) {}
+  }
+  function jgetTwice(url, ms) {
+    return jget(url, ms).then(function (v) {
+      if (v) return v;
+      return new Promise(function (res) { setTimeout(function () { res(jget(url, ms)); }, 700); });
+    });
+  }
+  function withCache(url, parse) {
+    return jgetTwice(url, 9000).then(function (j) {
+      if (!j) { var c = cacheGet(url); return c || []; }
+      var out = parse(j);
+      if (out && out.length) cachePut(url, out);
+      else { var c2 = cacheGet(url); if (c2) return c2; }
+      return out;
+    }).catch(function () { return cacheGet(url) || []; });
+  }
   function fromArchive(d) {
     return { id: "ia:" + d.identifier, src: "archive", kind: /librivox/i.test(d.identifier) ? "audio" : "audio",
       title: first(d.title) || d.identifier, creator: first(d.creator) || "", year: d.year || "",
@@ -131,15 +170,17 @@ window.TSB_LISTEN = (function () {
     var query = "(mediatype:(audio)) AND (" + q.split(/\s+/).filter(Boolean).map(function (w) {
       w = w.replace(/[^\w-]/g, ""); return "title:(" + w + ") OR subject:(" + w + ") OR creator:(" + w + ")";
     }).join(" OR ") + ")";
-    return jget("https://archive.org/advancedsearch.php?q=" + encodeURIComponent(query) +
+    var url = "https://archive.org/advancedsearch.php?q=" + encodeURIComponent(query) +
       "&fl%5B%5D=identifier&fl%5B%5D=title&fl%5B%5D=creator&fl%5B%5D=year&fl%5B%5D=subject&fl%5B%5D=downloads" +
-      "&rows=" + (rows || 24) + "&page=1&output=json&sort%5B%5D=downloads+desc").then(function (j) {
+      "&rows=" + (rows || 24) + "&page=1&output=json&sort%5B%5D=downloads+desc";
+    return withCache(url, function (j) {
       var d = j && j.response && j.response.docs ? j.response.docs : [];
       return d.map(fromArchive).filter(function (x) { return x.title; });
     });
   }
   function books(q) {
-    return jget("https://openlibrary.org/search.json?q=" + encodeURIComponent(q) + "&limit=6").then(function (j) {
+    var url = "https://openlibrary.org/search.json?q=" + encodeURIComponent(q) + "&limit=6";
+    return withCache(url, function (j) {
       return ((j && j.docs) || []).map(function (d) {
         return { id: "ol:" + (d.key || d.title), src: "openlibrary", kind: "book", title: d.title || "",
           creator: first(d.author_name) || "", year: d.first_publish_year || "", subjects: arr(d.subject).slice(0, 5),
@@ -148,7 +189,8 @@ window.TSB_LISTEN = (function () {
     });
   }
   function podcasts(q) {
-    return jget("https://itunes.apple.com/search?media=podcast&entity=podcast&limit=8&term=" + encodeURIComponent(q)).then(function (j) {
+    var url = "https://itunes.apple.com/search?media=podcast&entity=podcast&limit=8&term=" + encodeURIComponent(q);
+    return withCache(url, function (j) {
       return ((j && j.results) || []).map(function (r) {
         return { id: "pc:" + r.collectionId, src: "podcast", kind: "podcast", title: r.collectionName || "",
           creator: r.artistName || "", year: (r.releaseDate || "").slice(0, 4), subjects: arr(r.primaryGenreName),
@@ -267,6 +309,30 @@ window.TSB_LISTEN = (function () {
 
   /* ---------------- open ---------------- */
   var ITEMS = {};
+  /* v381 · the shared memory of the app. Listen writes what was actually
+     played into the same log the rest of the app reads, so the shelf, the feed
+     and Pip are looking at one truth instead of three separate guesses. */
+  function remember(item) {
+    try {
+      if (!window.TSB_PIP_MIND || !item) return;
+      window.TSB_PIP_MIND.log({ k: "listen", id: item.id, title: item.title, kind: item.kind, creator: item.creator, cover: item.cover });
+    } catch (e) {}
+  }
+  /* what this reader was playing, newest first, rebuilt as playable cards */
+  function fromMemory(n) {
+    try {
+      if (!window.TSB_PIP_MIND) return [];
+      var ev = window.TSB_PIP_MIND.events("listen").slice(-(n || 8)).reverse();
+      var seen = {}, out = [];
+      ev.forEach(function (e) {
+        if (!e || !e.title || seen[e.id]) return;
+        seen[e.id] = 1;
+        out.push({ id: e.id || ("mem:" + e.title), src: "memory", kind: e.kind || "audio",
+                   title: e.title, creator: e.creator || "", cover: e.cover || "", subjects: [] });
+      });
+      return out;
+    } catch (e) { return []; }
+  }
   function open(item) {
     if (item && item._resume) { if (resumeLast()) return; }
     learn("open", item);
@@ -473,7 +539,9 @@ window.TSB_LISTEN = (function () {
       archive("best audiobooks", 14).then(function (pop) {
         if (el("#rSearch") && el("#rSearch").value.trim()) return;
         var lp = liveLast();
-        feed.innerHTML = (lp ? rail("Pick up where you left off", [lp]) : "") + rail("Popular now", pop || []);
+        var mem = fromMemory(6);
+        feed.innerHTML = (mem.length ? rail("You were listening to", mem) : "") +
+          (lp ? rail("Pick up where you left off", [lp]) : "") + rail("Popular now", pop || []);
         podcasts("storytelling", 8).then(function (p) {
           if (p && p.length) feed.insertAdjacentHTML("beforeend", rail("Podcasts", p));
         });
@@ -518,7 +586,9 @@ window.TSB_LISTEN = (function () {
              stare at a player card. Books and podcasts from their own history
              now lead; the "continue" rails sit underneath, where picking up
              again belongs. */
+          var memS = fromMemory(8);
           feed.innerHTML =
+            (memS.length ? rail("You were listening to", memS) : "") +
             (related.length ? rail(cont.length ? "Because you listened to " + shortName(cont[0].title) : "Start here", related) : "") +
             (pods.length ? rail("Podcasts", pods) : "") +
             rail("Popular now", popular) +
@@ -536,7 +606,7 @@ window.TSB_LISTEN = (function () {
   function bind() {
     document.addEventListener("click", function (e) {
       var row = e.target.closest("[data-id]");
-      if (row) { var it = ITEMS[row.getAttribute("data-id")]; if (it) { open(it); return; } }
+      if (row) { var it = ITEMS[row.getAttribute("data-id")]; if (it) { remember(it); open(it); return; } }
       var forget = e.target.closest("#rForget");
       if (forget) { brain = { terms: {}, subjects: {}, last: Date.now(), n: 0 }; save(K(BK), brain); buildFeed(); }
     });

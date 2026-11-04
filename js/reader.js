@@ -18,7 +18,16 @@
   // Set Back link
   var backBtn = document.getElementById('rmBack');
   if (backBtn) {
-    backBtn.href = 'book.html?id=' + encodeURIComponent(book.id);
+    var bookHref = 'book.html?id=' + encodeURIComponent(book.id);
+    backBtn.href = bookHref;
+    backBtn.setAttribute('data-tsb-back', '');
+    backBtn.addEventListener('click', function (e) {
+      /* v376: back returns to the window the reader actually came from. Only a
+         cold open, with nothing behind it, lands on the book overview. */
+      e.preventDefault();
+      if (window.TSB_BACK) window.TSB_BACK.go(bookHref);
+      else location.href = bookHref;
+    });
   }
 
   // Set Title & Author
@@ -535,42 +544,32 @@
     }, 280);
   }
 
-  if (langBtn && langSheetOverlay) {
-    langBtn.addEventListener('click', function() {
-      /* v324: one translate sheet everywhere (drops from the top) */
+  if (langBtn) {
+    langBtn.addEventListener('click', function () {
+      /* v376: one translate sheet everywhere, owned by lang.js, styled by the
+         app's own stylesheet. The reader no longer carries a second copy. */
       if (window.TSB_LANG && typeof window.TSB_LANG.open === 'function') { window.TSB_LANG.open(); return; }
-      openLangSheet();
+      if (typeof openLangSheet === 'function') openLangSheet();
     });
-
-    langSheetOverlay.addEventListener('click', function(e) {
+  }
+  if (langSheetOverlay) {
+    langSheetOverlay.addEventListener('click', function (e) {
       if (e.target === langSheetOverlay) closeLangSheet();
     });
-
-    var langCards = langSheetOverlay.querySelectorAll('.rm-lang-card');
-    langCards.forEach(function(card) {
-      card.addEventListener('click', function() {
+    Array.prototype.forEach.call(langSheetOverlay.querySelectorAll('.rm-lang-card'), function (card) {
+      card.addEventListener('click', function () {
         var chosen = card.getAttribute('data-lang');
         if (chosen === 'more') {
           closeLangSheet();
-          if (window.TSB_LANG && window.TSB_LANG.open) {
-            window.TSB_LANG.open();
-          }
+          if (window.TSB_LANG && window.TSB_LANG.open) window.TSB_LANG.open();
           return;
         }
-
-        try {
-          localStorage.setItem('tsb_lang', JSON.stringify(chosen));
-        } catch (e) {}
-
+        try { localStorage.setItem('tsb_lang', JSON.stringify(chosen)); } catch (e) {}
         updateLangBtnText(chosen);
         closeLangSheet();
-
         if (window.TSB_LANG) {
-          if (typeof window.TSB_LANG.select === 'function') {
-            window.TSB_LANG.select(chosen);
-          } else if (typeof window.TSB_LANG.activate === 'function') {
-            window.TSB_LANG.activate(chosen);
-          }
+          if (typeof window.TSB_LANG.select === 'function') window.TSB_LANG.select(chosen);
+          else if (typeof window.TSB_LANG.activate === 'function') window.TSB_LANG.activate(chosen);
         }
       });
     });

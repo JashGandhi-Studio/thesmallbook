@@ -683,7 +683,7 @@
           '<div><div class="langsheet__kick">Translate</div><div class="langsheet__title">Read this in your language</div></div>' +
           '<button class="langsheet__x" data-close aria-label="Close">' + '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
         '</div>' +
-        '<p class="langsheet__sub">' + (nb ? "Every one of the " + nb + " books, every lesson. " : "") + 'Switches instantly, your place is kept.</p>' +
+        '<p class="langsheet__sub">Every book, every lesson, in your language. Switches instantly and your place is kept.</p>' +
         '<label class="langsheet__find"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" placeholder="Find a language" aria-label="Find a language" autocomplete="off"></label>' +
         '<div class="langsheet__scroll">' +
           '<div class="langsheet__sec">Indian languages and text modes</div>' +
@@ -693,7 +693,6 @@
           '<div class="langsheet__grid">' + world.map(function (l) { return tile(l, false); }).join("") + '</div>' +
           '<p class="langsheet__note">Natural transliteration plus the Google Translate engine. Needs internet the first time.</p>' +
         '</div>' +
-        '<div class="langsheet__grab" data-grab aria-hidden="true"></div>' +
       '</div>';
     var card = modal.querySelector(".langsheet__card");
     function close() {

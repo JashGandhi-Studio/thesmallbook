@@ -9,6 +9,24 @@
      night 21-6    deep ink with gold
    ============================================================ */
 (function () {
+  /* v378 · the tab icon is the same mark, in the same hour.
+     The home-screen shortcut keeps the icon it was installed with (no browser
+     lets a page repaint that), but every tab, bookmark and share sheet picks up
+     the mark for the time of day. */
+  function paintFavicon(part) {
+    try {
+      var href = "assets/logo/day-" + part + ".svg";
+      var links = document.querySelectorAll('link[rel="icon"][type="image/svg+xml"]');
+      if (!links.length) {
+        var l = document.createElement("link");
+        l.rel = "icon"; l.type = "image/svg+xml"; l.setAttribute("data-day-favicon", "1");
+        document.head.appendChild(l);
+        links = [l];
+      }
+      for (var i = 0; i < links.length; i++) links[i].setAttribute("href", href);
+    } catch (e) {}
+  }
+
   var KEY = "tsb_day_part";
   function part(h) {
     if (h >= 6 && h < 11) return "morning";
@@ -18,7 +36,7 @@
   }
   function paint() {
     var h = new Date().getHours(), p = part(h);
-    document.documentElement.setAttribute("data-day", p);
+    paintFavicon(p); document.documentElement.setAttribute("data-day", p);
     try { localStorage.setItem(KEY, p); } catch (e) {}
     var TC = { morning: "#FFD34D", afternoon: "#FFC800", evening: "#F0A81E", night: "#16130E" }[p];
     try {
@@ -30,6 +48,10 @@
   }
   paint();
   setInterval(paint, 60000);
+  /* testable hook: nothing in the app depends on this, it only lets a check
+     ask "what would the mark look like at 7 in the evening" */
+  try { window.TSB_DAYLIGHT = { paint: paint, part: part }; } catch (e) {}
+
   document.addEventListener("visibilitychange", function () { if (!document.hidden) paint(); });
   window.TSB_DAY = { part: part, paint: paint };
 })();

@@ -12,7 +12,7 @@
      tsb_read_minutes · tsb_read_style · tsb_read_when
      tsb_starter_shelf · tsb_lang (via TSB_LANG)
    Runs ONCE (tsb_onboarded). Signed-in readers never see it.
-   600+ books, eight minutes each.
+   books, eight minutes each.
    ============================================================ */
 (function () {
   "use strict";
@@ -32,7 +32,7 @@
      rhythm goes straight into the app on every future open and every future
      update. A new version may show a quiet "what is new" card, and that card
      never leads back into the four screens. */
-  var OB_V = 375;
+  var OB_V = 381;
   function alreadySetUp() {
     try { if (get("tsb_onboarded", false)) return true; } catch (e) {}
     try {
@@ -244,6 +244,7 @@
       "Your notes and streak are safe, and nothing needs setting up again.";
   }
   function screen(i) {
+    try { document.body.classList.toggle("fo-updating", !!updating); } catch (e) {}
     if (i === -1) {
       var upIds = UPBOOKS.slice(0, 5);
       while (upIds.length < 5) { var extra = FAN[upIds.length % FAN.length]; if (upIds.indexOf(extra) < 0) upIds.push(extra); else break; }

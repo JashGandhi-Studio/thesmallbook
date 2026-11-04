@@ -495,9 +495,57 @@ body.cmpage.fst .cm-feed > *:nth-child(3) { animation-delay: .54s }
    In the update flow the bot was following readers onto later slides, where it
    has nothing to say. It is now hidden on every slide that is not the first.
    ========================================================================== */
-.fo-s:not(.fo-s1) .pip,
-.fo-s:not(.fo-s1) .tsb-pip,
-.fo-s2 .pip, .fo-s3 .pip, .fo-s4 .pip, .fo-s5 .pip, .fo-s6 .pip,
-.fo-wlc .pip, .fo-wlc .tsb-pip {
+/* v376: the character belongs to the FIRST screen and nowhere else.
+   - the update / welcome screen keeps its big Pip (it was being hidden here)
+   - the fan of books screen loses the small Pip that sat among the covers
+   - every later slide keeps nothing */
+.fo-s:not(.fo-s0):not(.fo-s1) .pip,
+.fo-s:not(.fo-s0):not(.fo-s1) .tsb-pip,
+.fo-s2 .pip, .fo-s3 .pip, .fo-s4 .pip, .fo-s5 .pip, .fo-s6 .pip {
   display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important;
 }
+.fo-s0 .pip, .fo-s0 .tsb-pip, .fo-wlc .pip, .fo-wlc .tsb-pip {
+  display: inline-block !important; opacity: 1 !important; visibility: visible !important; pointer-events: auto !important;
+}
+/* in the update flow the books fan is a picture of the shelf, not a stage for
+   the character: Pip already introduced itself on the screen before */
+body.fo-updating .fo-fan__pip,
+body.fo-updating .fo-fan--pip { display: none !important }
+
+
+/* ==========================================================================
+   v376 · the welcome hero holds its character
+   Pip was taller than the band that holds him, so his feet were cut off by the
+   edge and he read as sitting on the black instead of standing on the shelf.
+   The stage now sizes itself to the character, and the character is scaled to
+   the phone it lands on.
+   ========================================================================== */
+.fo-wlc .lw__stage {
+  padding: 26px 0 34px !important;
+  min-height: clamp(210px, 30vh, 268px);
+  align-content: center !important;
+  overflow: visible !important;
+}
+.fo-wlc .lw__pip {
+  height: auto !important;
+  min-height: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  margin: 0 !important;
+}
+.fo-wlc .lw__pip .pip {
+  display: block !important;
+  transform: scale(clamp(.58, 14vw, .74)) !important;
+  transform-origin: 50% 100% !important;
+  margin: 0 auto !important;
+}
+.fo-wlc .lw__stage::before { bottom: 24px !important }
+.fo-wlc .lw__stage::after { bottom: 36px !important }
+@media (max-height: 700px) {
+  .fo-wlc .lw__stage { min-height: 176px; padding: 18px 0 26px !important }
+  .fo-wlc .lw__pip .pip { transform: scale(.56) !important }
+}
+/* the update hero on a tall phone: the band is sized to hold the character
+   with room for his shelf line, never cropping him */
+html body .fo-wlc.fo-up .lw__stage { min-height: 252px !important; padding: 24px 0 30px !important; overflow: hidden !important; }
+html body .fo-wlc .lw__pip .pip { transform: scale(.72) !important; transform-origin: 50% 92% !important; }
