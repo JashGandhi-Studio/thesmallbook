@@ -2,7 +2,79 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!--tsb-pre--><link rel="preload" href="css/style.css?v=388" as="style"><link rel="preload" href="css/film.css?v=388" as="style"><link rel="preload" href="css/film2.css?v=388" as="style"><link rel="preload" href="css/desktop-v336.css?v=388" as="style">
+  <!-- v389 · THE FIRST WORDS DO NOT WAIT FOR THE LIBRARY
+       Opening a book used to mean: parse a 1.2 MB catalogue, then ask for the chapter
+       text, then paint. On a phone that is seconds of an empty page, and the 2.2 s
+       guard used to reload the page instead of waiting, which is how a reader ended up
+       on "This lesson did not load". Here the three things a book needs (its title and
+       author from a 40 KB index, the chapter text from a 3 KB file) are fetched at the
+       same time as the catalogue and painted the moment they arrive. The catalogue then
+       arrives and rebuilds the same pages with contents, quotes and the action plan. -->
+  <script>
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var id = q.get("id"); if (!id) return;
+    var V = window.TSB_BUILD || "388";
+    var head = document.head;
+
+    var sp = document.createElement("script");
+    sp.src = "js/spine-389.js?v=" + V; head.appendChild(sp);
+
+    window.__TSB_ONE = null;
+    var prev = window.TSB_LFILL;
+    window.TSB_LFILL = function (lid, body, ext) {
+      try {
+        if (lid === id) {
+          window.__TSB_ONE = { id: lid, body: body, ext: ext };
+          try { window.dispatchEvent(new Event("tsb-one")); } catch (e) {}
+          paint();
+        }
+      } catch (e) {}
+      if (typeof prev === "function") { try { prev(lid, body, ext); } catch (e) {} }
+    };
+
+    var ls = document.createElement("script");
+    ls.src = "data/lessons/" + encodeURIComponent(id) + ".js?v=" + V;
+    ls.async = true; head.appendChild(ls);
+
+    var painted = false;
+    function esc2(x) { return String(x == null ? "" : x); }
+    function paint() {
+      if (painted) return;
+      var one = window.__TSB_ONE, S = window.BOOKS_SPINE;
+      var art = document.getElementById("rmArticle");
+      if (!one || !S || !art || !one.body || !one.body.length) return;
+      var b = null;
+      for (var i = 0; i < S.length; i++) { if (S[i].i === id) { b = S[i]; break; } }
+      if (!b) return;
+      painted = true;
+      var t = document.getElementById("rmTitle"); if (t) t.textContent = b.t;
+      var a = document.getElementById("rmAuthor");
+      if (a) a.textContent = /^unknown$/i.test(b.a || "") ? "A TheSmallBook Original" : "by " + b.a;
+      var rt = document.getElementById("rmPos"); if (rt) rt.textContent = "";
+      var x = one.body[0] || ["", "", ""];
+      var chTitle = (b.l && b.l[0]) ? b.l[0] : "Chapter 1";
+      var html = '<h2 style="font:700 22px/1.25 Newsreader,Georgia,serif;margin:0 0 6px">' + esc2(chTitle) + "</h2>" +
+                 '<div style="font:700 10.5px/1 Space Grotesk,system-ui;letter-spacing:1.3px;color:#8a7a55;margin:0 0 16px">CHAPTER 1</div>' +
+                 "<p>" + esc2(x[0]) + "</p>";
+      if (x[1]) html += '<div class="rm-callout"><b>REAL-WORLD EXAMPLE</b>' + esc2(x[1]) + "</div>";
+      if (x[2]) html += '<div class="rm-callout"><b>PRACTICAL ACTION</b>' + esc2(x[2]) + "</div>";
+      art.innerHTML = html;
+      var sk = document.getElementById("rmSkel"); if (sk) sk.parentNode && sk.parentNode.removeChild(sk);
+      document.body.classList.remove("rm-booting");
+      document.body.classList.add("rm-hastext");
+      document.documentElement.setAttribute("data-firstpaint", "1");
+    }
+    window.addEventListener("tsb-one", paint);
+    if (document.readyState !== "loading") paint();
+    document.addEventListener("DOMContentLoaded", paint);
+    window.addEventListener("load", paint);
+    [200, 600, 1200, 2000, 3200].forEach(function (ms) { setTimeout(paint, ms); });
+    window.__TSB_FIRSTPAINT = paint;
+  })();
+  </script>
+
+  <!--tsb-pre--><link rel="preload" href="css/style.css?v=389" as="style"><link rel="preload" href="css/film.css?v=389" as="style"><link rel="preload" href="css/film2.css?v=389" as="style"><link rel="preload" href="css/desktop-v336.css?v=389" as="style">
 
 <!--/tsb-pre-->
   <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
@@ -11,7 +83,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=388">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=389">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <title>Reader | TheSmallBook</title>
@@ -45,7 +117,7 @@ window.TSB_SHELL={ready:ready,page:p};
 addEventListener("load",function(){setTimeout(ready,1200)});
 setTimeout(ready,20000);
 }catch(e){try{document.documentElement.classList.remove("tsb-boot")}catch(x){}}})();</script><!--/tsb-shell-->
-  <link rel="stylesheet" href="css/style.css?v=388"><link rel="stylesheet" href="css/lively.css?v=388">
+  <link rel="stylesheet" href="css/style.css?v=389"><link rel="stylesheet" href="css/lively.css?v=389">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <style>
@@ -709,20 +781,20 @@ setTimeout(ready,20000);
     html[data-rm] .fs-sheet { background: var(--surface) !important }
     html[data-rm] .frd-toast, html[data-rm] .tsb-player { background: var(--surface) !important; color: var(--ink) !important; border-color: var(--line) !important }
 </style>
-  <link rel="stylesheet" href="css/film.css?v=388">
-  <link rel="stylesheet" href="css/film2.css?v=388">
-  <link rel="stylesheet" href="css/desktop-v336.css?v=388">
+  <link rel="stylesheet" href="css/film.css?v=389">
+  <link rel="stylesheet" href="css/film2.css?v=389">
+  <link rel="stylesheet" href="css/desktop-v336.css?v=389">
   <script>/* v334: arriving from the opening book, the last frame of that move (the open first page) is painted before anything else and held until the reader is drawn, so there is never a blank or half-built page */
   try{var _b=+sessionStorage.getItem("tsb_bkx");if(_b&&Date.now()-_b<4000){sessionStorage.removeItem("tsb_bkx");var _de=document.documentElement;_de.classList.add("bkx-in");var _sh=sessionStorage.getItem("tsb_bkx_sheet")||"";sessionStorage.removeItem("tsb_bkx_sheet");var _hold=null;if(_sh){_hold=document.createElement("div");_hold.className="bkx bkx-hold";_hold.innerHTML='<div class="bkx-full" style="opacity:1">'+_sh+"</div>";_de.appendChild(_hold)}var _done=false;window.__bkxRelease=function(){if(_done)return;_done=true;if(_hold){_hold.style.transition="opacity .14s linear";_hold.style.opacity="0";setTimeout(function(){if(_hold.parentNode)_hold.parentNode.removeChild(_hold)},180)}setTimeout(function(){var _d=document.querySelector(".frd-dock");if(_d)_d.style.animation="none";_de.classList.remove("bkx-in")},400)};setTimeout(window.__bkxRelease,3000)}}catch(e){}</script>
   <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
-<script src="js/inapp-select.js?v=388" defer></script>
-<script src="js/motion-344.js?v=388" defer></script>
-<link rel="stylesheet" href="css/splash.css?v=388">
+<script src="js/inapp-select.js?v=389" defer></script>
+<script src="js/motion-344.js?v=389" defer></script>
+<link rel="stylesheet" href="css/splash.css?v=389">
 <script>/* v350: the opening screen is for readers who already set the app up, once per open. Decided before the first paint so nobody sees it flash. */try{var o=localStorage.getItem("tsb_onboarded");if(!o||sessionStorage.getItem("tsb_splash")){document.documentElement.className+=" tsb-nosplash";}else{sessionStorage.setItem("tsb_splash","1");}}catch(e){document.documentElement.className+=" tsb-nosplash";}</script>
 </head>
 <body class="rm-page rm-booting">
 <div id="tsbSplash" aria-hidden="true"><div class="sp-stage"><div class="sp-mark"><span class="sp-leaf sp-l"><svg viewBox="0 0 32 64" aria-hidden="true"><path d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z" fill="var(--mk-a,#16130F)"/></svg></span><span class="sp-leaf sp-r"><svg viewBox="32 0 32 64" aria-hidden="true"><path d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z" fill="var(--mk-b,#FFC800)"/></svg></span><span class="sp-spine"></span></div></div><div class="sp-word">The<i>Small</i>Book</div><div class="sp-bar"><i></i></div></div>
-<script src="js/splash.js?v=388" defer></script>
+<script src="js/splash.js?v=389" defer></script>
   <header class="rm-header" translate="no">
     <a id="rmBack" class="rm-back" href="index.html" aria-label="Back to overview"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
     <div class="rm-header-title">
@@ -812,8 +884,8 @@ setTimeout(ready,20000);
       .rm-skel-l.short{max-width:46%}
       .rm-skel-cap{display:block;margin-top:22px;font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.16em;text-transform:uppercase;color:#9A9082}
       body.rm-theme-night .rm-skel-k,body.rm-theme-night .rm-skel-h,body.rm-theme-night .rm-skel-l{background:#2a261f}
-      body.rm-booting #rmPrev,body.rm-booting #rmNext,body.rm-booting #rmRead{visibility:hidden}
-      body.rm-booting .frd-dock{opacity:1}
+      body.rm-booting:not(.rm-hastext) #rmPrev,body.rm-booting:not(.rm-hastext) #rmNext,body.rm-booting:not(.rm-hastext) #rmRead{visibility:hidden}
+      body.rm-booting:not(.rm-hastext) .frd-dock{opacity:1}
     </style></article>
   </main>
 
@@ -860,63 +932,49 @@ setTimeout(ready,20000);
     <button id="rmCloseDialog" class="rm-close-dialog" type="button">Done</button>
   </dialog>
 
-  <script src="js/bootguard.js?v=388"></script>
-  <script src="js/prefs.js?v=388"></script>
-  <script src="js/config.js?v=388"></script><script src="js/avatar.js?v=388"></script><script src="js/daylight.js?v=388"></script>
-  <script src="js/data.js?v=388"></script>
+  <script defer src="js/bootguard.js?v=389"></script>
+  <script defer src="js/prefs.js?v=389"></script>
+  <script defer src="js/config.js?v=389"></script><script defer src="js/avatar.js?v=389"></script><script defer src="js/daylight.js?v=389"></script>
+  <script defer src="js/data.js?v=389"></script>
   <!-- v385: the lesson text is requested by js/reader.js and the page rebuilds
        when it arrives. The old document.write injection raced the page code and
        lost on slower connections, which is how a book ended up wordless. -->
-  <script>/* v347.2 · THE READER NEVER SITS ON AN EMPTY PAGE
-     The lesson text is injected above during parse. If data.js had not run yet,
-     or the request was lost on a slow connection, the reader used to show its
-     skeleton for ever and read as "this book has no lessons". Now it checks once
-     per page: if the text is not there it asks for it properly and, only if that
-     also fails, reloads once (never twice) so the reader always ends up with
-     either the lesson or an honest card. */
+  <script>/* v389 · THE WORDS ARRIVE WITH THE PAGE, NOT AFTER IT.
+     What was here until 388 was actively harmful: 2.2 s after load it called
+     location.reload() if the lesson file had not registered yet, and on the second
+     pass it printed "This lesson did not load. Check your connection and try again."
+     On a phone that is a 1.2 MB restart of the whole app, and when the second try
+     was also slow the reader blamed the reader's connection for the app's race.
+     Nothing here navigates any more. The lesson file is preloaded in parallel with
+     data.js, the page paints what it already has, and if the text is genuinely slow
+     the reader says so in one quiet line and re-asks in place. */
   (function () {
-    function guard() {
-      setTimeout(function () {
-        try {
-          var id = new URLSearchParams(location.search).get("id");
-          if (!id) return;
-          var L = window.TSB_LESSONS;
-          var K = "tsb_reader_retry_" + id;
-          var tried = 0; try { tried = +(sessionStorage.getItem(K) || 0); } catch (e) {}
-          if (L && L.ready && L.ready(id)) { try { sessionStorage.removeItem(K); } catch (e) {} return; }
-          if (tried >= 1) {
-            /* second attempt failed too: say so instead of spinning */
-            var d = document.querySelector(".frd-page, .frd, #frdPage, main") || document.body;
-            var n = document.createElement("div");
-            n.setAttribute("style", "margin:26px auto;max-width:34rem;padding:18px 20px;border-radius:16px;border:1px solid #E3D8C2;background:#FBF8F1;font:500 14px system-ui;color:#16130F;text-align:center");
-            n.innerHTML = "This lesson did not load. Check your connection and " +
-              '<a href="reader.html?id=' + encodeURIComponent(id) + '" style="color:#C03A24;font-weight:700">try again</a>.';
-            if (d && d.appendChild) d.appendChild(n);
-            return;
-          }
-          try { sessionStorage.setItem(K, "1"); } catch (e) {}
-          setTimeout(function () { location.reload(); }, 90);
-        } catch (e) {}
-      }, 2200);
-    }
-    if (document.readyState === "complete") guard();
-    else window.addEventListener("load", guard);
+    try {
+      var id = new URLSearchParams(location.search).get("id");
+      if (!id) return;
+      var V = (window.TSB_BUILD || "388");
+      var url = "data/lessons/" + encodeURIComponent(id) + ".js?v=" + V;
+      var l = document.createElement("link");
+      l.rel = "preload"; l.as = "script"; l.href = url;
+      document.head.appendChild(l);          /* downloads beside data.js, not behind it */
+      window.__TSB_LESSON_URL = url;
+    } catch (e) {}
   })();</script>
-  <script src="js/lang.js?v=388"></script>
-  <script src="js/share.js?v=388"></script>
-  <script src="js/reader.js?v=388"></script>
-  <script src="js/soft-motion.js?v=388" defer></script>
-  <script src="js/stt.js?v=388"></script>
-  <script src="js/wordtap.js?v=388" defer></script>
+  <script defer src="js/lang.js?v=389"></script>
+  <script defer src="js/share.js?v=389"></script>
+  <script defer src="js/reader.js?v=389"></script>
+  <script src="js/soft-motion.js?v=389" defer></script>
+  <script defer src="js/stt.js?v=389"></script>
+  <script src="js/wordtap.js?v=389" defer></script>
   <!-- v336: the universal player rides along, so Listen in the reader always plays -->
-  <script src="js/tts-engine.js?v=388" defer></script>
-  <script src="js/podcast-data.js?v=388" defer></script>
-  <script src="js/audioplayer.js?v=388" defer></script>
-  <script src="js/film.js?v=388" defer></script>
-  <script src="js/film2.js?v=388" defer></script>
-<script src="js/backnav.js?v=388" defer></script>
-<script src="js/pip-mind.js?v=388" defer></script>
-<script src="js/pip-ui.js?v=388" defer></script>
+  <script src="js/tts-engine.js?v=389" defer></script>
+  <script src="js/podcast-data.js?v=389" defer></script>
+  <script src="js/audioplayer.js?v=389" defer></script>
+  <script src="js/film.js?v=389" defer></script>
+  <script src="js/film2.js?v=389" defer></script>
+<script src="js/backnav.js?v=389" defer></script>
+<script src="js/pip-mind.js?v=389" defer></script>
+<script src="js/pip-ui.js?v=389" defer></script>
 
 </body>
 </html>

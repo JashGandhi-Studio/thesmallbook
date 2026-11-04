@@ -544,7 +544,26 @@ try {
   if (typeof window === "undefined" || !window.document) return;
   var prefetched = new Set();
 
+  /* v389 · a link to the reader also warms that book's lesson text.
+     Opening book.html fetched the chapter; opening the reader from a card did not,
+     so the same book read instantly from one path and wordlessly from another. */
+  function warmLesson(url) {
+    try {
+      var m = /[?&]id=([^&#]+)/.exec(url || "");
+      if (!m || !/reader\.html|book\.html/.test(url)) return;
+      var id = decodeURIComponent(m[1]);
+      var v = window.TSB_BUILD || "388";
+      var key = "tsb_warm_" + id;
+      if (warmLesson.done && warmLesson.done[key]) return;
+      warmLesson.done = warmLesson.done || {}; warmLesson.done[key] = 1;
+      if (window.TSB_LESSONS && window.TSB_LESSONS.ensure) { window.TSB_LESSONS.ensure(id, function () {}); return; }
+      var l = document.createElement("link");
+      l.rel = "prefetch"; l.href = "data/lessons/" + encodeURIComponent(id) + ".js?v=" + v;
+      document.head.appendChild(l);
+    } catch (e) {}
+  }
   function prefetchUrl(url) {
+    warmLesson(url);
     if (!url || prefetched.has(url)) return;
     try {
       var u = new URL(url, location.href);

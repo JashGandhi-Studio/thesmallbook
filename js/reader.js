@@ -69,6 +69,33 @@
   var lineOf = function () { return book.oneLiner || book.oneliner || ""; };
   var planOf = function () { return book.actionPlan || book.plan || []; };
 
+  /* v389 · the page captures the lesson file itself (window.__TSB_ONE) before the
+     catalogue has even parsed, so the text is already in hand when this runs. */
+  function hydrateFromOne() {
+    var one = window.__TSB_ONE;
+    if (!one || !one.body || !one.body.length) return false;
+    if (!Array.isArray(book.lessons) || !book.lessons.length) {
+      var titles = [];
+      try {
+        (window.BOOKS_SPINE || []).some(function (x) { if (x.i === book.id) { titles = x.l || []; return true; } return false; });
+      } catch (e) {}
+      book.lessons = one.body.map(function (x, i) {
+        return { title: titles[i] || ("Lesson " + (i + 1)), summary: x[0], example: x[1], action: x[2] };
+      });
+    } else {
+      book.lessons.forEach(function (l, i) {
+        var x = one.body[i] || ["", "", ""];
+        if (!l.summary) { l.summary = x[0]; l.example = x[1]; l.action = x[2]; }
+      });
+    }
+    if (one.ext) {
+      if ((!book.actionPlan || !book.actionPlan.length) && one.ext.actionPlan) book.actionPlan = one.ext.actionPlan;
+      if (!book.caveat && one.ext.caveat) book.caveat = one.ext.caveat;
+    }
+    return true;
+  }
+  hydrateFromOne();
+
   function buildPages() {
     pages = [];
     var hasText = lessonsHaveText();
@@ -104,7 +131,7 @@
       });
       list += "</ul>";
       if (ideaOf()) list += '<div class="rm-callout"><b>THE CORE INSIGHT</b>' + ideaOf() + "</div>";
-      list += '<p id="rmNote" style="font-size:13.5px;margin-top:18px">The full text of these chapters is still on its way. ' +
+      list += '<p id="rmNote" style="font-size:13.5px;margin-top:18px">The chapters are still coming through. ' +
               '<button type="button" data-rm-retry style="font:inherit;font-weight:700;background:none;border:0;padding:0;color:inherit;text-decoration:underline;cursor:pointer">Load it again</button></p>';
       pages.push({ title: "What this book covers", meta: "CONTENTS", content: list, retry: true });
     }
@@ -679,6 +706,7 @@
     if (window.TSB_LESSONS.ready(book.id)) return;
     var at = curPage;
     var landed = false;
+    if (window.TSB_LESSONS.ready(book.id)) { buildPages(); repaintContents(); return; }
     window.TSB_LESSONS.ensure(book.id, function () {
       if (landed) return;
       landed = true;
@@ -698,8 +726,12 @@
       var p2 = document.createElement("p");
       p2.id = "rmRetry";
       p2.style.cssText = "margin:22px 0 0;font-size:13.5px;opacity:.9";
-      p2.innerHTML = "This chapter is still loading. <button type=\"button\" style=\"font:inherit;font-weight:700;background:none;border:0;padding:0;color:inherit;text-decoration:underline;cursor:pointer\">Try again</button>";
-      p2.querySelector("button").addEventListener("click", function () { location.reload(); });
+      p2.innerHTML = "Still fetching this chapter… <button type=\"button\" style=\"font:inherit;font-weight:700;background:none;border:0;padding:0;color:inherit;text-decoration:underline;cursor:pointer\">Ask again</button>";
+      /* re-asks for the file in place. Reloading threw away everything already on screen. */
+      p2.querySelector("button").addEventListener("click", function () {
+        p2.remove();
+        try { window.TSB_LESSONS.ensure(book.id, function () { buildPages(); repaintContents(); renderPage(Math.min(curPage, Math.max(0, pages.length - 1))); }); } catch (e) {}
+      });
       if (articleEl) articleEl.appendChild(p2);
     }, 6000);
   }

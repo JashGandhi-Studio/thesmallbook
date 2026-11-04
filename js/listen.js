@@ -356,12 +356,12 @@ window.TSB_LISTEN = (function () {
     if (item && item._resume) { if (resumeLast()) return; }
     learn("open", item);
     if (item.kind === "book") { location.href = "book.html?id=" + encodeURIComponent(String(item.id).replace(/^ol:/, "")); return; }
-    if (!playable(item)) { note("That one has no playable audio. Every book is still readable in the Library."); return; }
+    if (!playable(item)) { note("That one is a book. Books live in the Library."); return; }
     if (item.kind === "podcast") {
       if (item._list && item._list.length) { showTracks(item, item._list); return; }
-      note("Loading…");
+      showFetching(item);
       episodes(String(item.id).replace(/^pc:/, "").replace(/^pod:/, "")).then(function (list) {
-        if (!list || !list.length) { note("Nothing playable in this one."); return; }
+        if (!list || !list.length) { showFetchFailed(item); return; }
         item._list = list;
         showTracks(item, list);
       });
@@ -369,6 +369,40 @@ window.TSB_LISTEN = (function () {
     }
     playItem(item, 0);
   }
+  /* v389 · a tap on a show answers immediately. It used to say "Loading…" in the
+     place search results live, which wiped the results and looked like a crash, and
+     if the feed was slow the show simply never opened. The sheet now opens at once
+     and fills itself in, or says plainly that the feed is not answering. */
+  function sheetHead(item, right) {
+    return '<div class="r-sechead"><div class="lead"><button class="r-back" id="rBack" aria-label="Back">' + IC.back + "</button>" +
+      "<h3>" + esc(item.title) + "</h3></div><span>" + right + "</span></div>";
+  }
+  function backToResults(item) {
+    var el2 = el("#rResults"); if (!el2) return;
+    el2.onclick = function (e) {
+      if (!e.target.closest("#rBack")) return;
+      var si = el("#rSearch");
+      if (si && si.value.trim()) search(si.value.trim());
+      else { el2.innerHTML = ""; el("#rFeed").style.display = ""; var f3 = el(".r-foot"); if (f3) f3.classList.toggle("on", signedIn()); }
+    };
+  }
+  function showFetching(item) {
+    var el2 = el("#rResults"); if (!el2) return;
+    el2.innerHTML = sheetHead(item, "connecting") +
+      '<div class="r-note" id="rFetchNote">Getting this show\u2019s episodes\u2026</div>';
+    backToResults(item);
+  }
+  function showFetchFailed(item) {
+    var el2 = el("#rResults"); if (!el2) return;
+    el2.innerHTML = sheetHead(item, "no answer") +
+      '<div class="r-note">This show\u2019s feed is not answering right now, so there is nothing to play from it. ' +
+      '<button type="button" id="rFetchRetry" style="font:inherit;font-weight:700;background:none;border:0;padding:0;color:#C03A24;text-decoration:underline;cursor:pointer">Try again</button></div>';
+    el2.onclick = function (e) {
+      if (e.target.closest("#rBack")) { var si = el("#rSearch"); if (si && si.value.trim()) search(si.value.trim()); return; }
+      if (e.target.closest("#rFetchRetry")) { item._list = null; open(item); }
+    };
+  }
+
   function showTracks(item, list) {
     var el2 = el("#rResults"); if (!el2) return;
     el2.innerHTML = '<div class="r-sechead"><div class="lead"><button class="r-back" id="rBack" aria-label="Back">' + IC.back + '</button>' +
@@ -420,24 +454,29 @@ window.TSB_LISTEN = (function () {
      them did nothing, or played the last thing instead. Now an item earns its place
      only if the audio for it already ships with the app. */
   function iaKey(id) { return String(id || "").replace(/^ia:/, ""); }
+  /* v389 · THE ROOM NEVER EMPTIES ITSELF TO PROVE A POINT.
+     In 388 a row had to prove it could play before it was drawn. That is the right
+     instinct and the wrong switch: on a phone where one of the data files was slow or
+     the archive search answered with a book we had not seen, the room filtered itself
+     down to nothing and search looked broken. The rule now is: books never appear (they
+     are not audio), everything else is offered, and if a tap cannot find parts the row
+     says so where the row is, instead of the room pretending the search had no results. */
+  function epsKnown() {
+    var P = window.TSB_PODCAST_EPS || {};
+    for (var k in P) if (Object.prototype.hasOwnProperty.call(P, k) && P[k] && P[k].length) return true;
+    return false;
+  }
   var SEEDED = null;
   function seededIds() {
     if (SEEDED) return SEEDED;
     SEEDED = {};
     var S = window.TSB_LISTEN_SEED || {};
-    ["popular", "related"].forEach(function (k) {
+    ["popular", "related", "pods"].forEach(function (k) {
       (S[k] || []).forEach(function (it) { if (it && it.id) SEEDED[iaKey(it.id)] = 1; });
     });
     return SEEDED;
   }
-  function hasFiles(id) {
-    var F = window.TSB_AUDIOBOOK_FILES || {};
-    var k = iaKey(id);
-    if ((F[k] && F[k].length) || (F["ia:" + k] && F["ia:" + k].length)) return true;
-    /* v388: the audiobooks we seed play from archive.org metadata, so seed membership
-       is enough. Requiring a shipped chapter list emptied the whole audiobook shelf. */
-    return !!seededIds()[k];
-  }
+  function hasFiles(id) { return true; }
   function hasEps(id) {
     var S = window.TSB_LISTEN_SEED || {}, P = window.TSB_PODCAST_EPS || {};
     var key = String(id || "");
@@ -447,22 +486,16 @@ window.TSB_LISTEN = (function () {
       var e = lists[i];
       if (e && e.length && e.filter(function (x) { return /^https:/.test(x.url || ""); }).length) return true;
     }
-    return false;
+    /* nothing shipped for this show: it is still allowed in. It resolves live on tap. */
+    return !epsKnown();
   }
-  function playable(it) {
-    if (!it || !it.id) return false;
-    if (it.kind === "book") return false;                        /* books are not audio */
-    if (it.kind === "podcast") return hasEps(it.id);
-    return hasFiles(it.id);                                      /* archive audiobooks */
+  function playable(item) {
+    if (!item) return false;
+    /* only books are refused here. Everything else is offered and resolved on tap:
+       a show we have never seen still deserves the chance to play its own feed. */
+    return item.kind !== "book";
   }
-  function audioOnly(list) {
-    var out = [], seen = {};
-    (list || []).forEach(function (i) {
-      if (!playable(i)) return;
-      var k = String(i.id); if (seen[k]) return; seen[k] = 1; out.push(i);
-    });
-    return out;
-  }
+  function audioOnly(list) { return (list || []).filter(function (x) { return x && x.kind !== "book"; }); }
 
   /* v388 · the shows we ship are the shows that always play. Match the query against
      them first, so "naval" or "huberman" opens a real episode list instead of an
@@ -735,7 +768,8 @@ window.TSB_LISTEN = (function () {
       var row = e.target.closest("[data-id]");
       if (row) {
         var it = ITEMS[row.getAttribute("data-id")];
-        if (!it || !playable(it)) { note("That one has no playable audio. Every book is still readable in the Library."); return; }
+        if (!it) { return; }
+        if (!playable(it)) { note("That one is a book. Books live in the Library."); return; }
         row.classList.add("is-load");
         remember(it);
         open(it);
