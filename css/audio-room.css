@@ -188,3 +188,12 @@ body.r.has-player{padding-bottom:calc(var(--bar-total,0px) + 190px)}
 
 /* the app's player sits above the bar: the room makes room for it */
 html.tsb-hasbar body.r.tsb-audio-live,body.r.tsb-audio-live{padding-bottom:calc(var(--bar-total,0px) + 132px)}
+
+/* v388 · the Listen room only speaks in audio, so it needs a quiet way to point at books,
+   and a visible "working on it" state while a tap is being honoured. */
+.r-bookhint{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:18px 20px 0;padding:12px 14px;
+  border:1.5px dashed var(--f-line,#E2D9C6);border-radius:14px;font:500 13px/1.45 system-ui,sans-serif;color:#6E6658}
+.r-bookhint a{color:#16130F;font-weight:700;text-decoration:none;border-bottom:2px solid #FFC800}
+.r-row.is-load{opacity:.55;pointer-events:none}
+.r-row.is-load .go::after{content:"…";margin-left:2px}
+.r-c.is-load{opacity:.55}

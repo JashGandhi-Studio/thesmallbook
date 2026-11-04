@@ -149,6 +149,8 @@
     }
   }
   buildPages();
+  /* v388: the shell stops pretending once there are real pages */
+  try { document.body.classList.remove('rm-booting'); } catch (e) {}
 
   /* v382: a reader who opens a book must land on the book. The first page is a
      three line "big idea" card, and landing there made the whole book look

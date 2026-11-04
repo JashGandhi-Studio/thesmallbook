@@ -356,9 +356,11 @@ window.TSB_LISTEN = (function () {
     if (item && item._resume) { if (resumeLast()) return; }
     learn("open", item);
     if (item.kind === "book") { location.href = "book.html?id=" + encodeURIComponent(String(item.id).replace(/^ol:/, "")); return; }
+    if (!playable(item)) { note("That one has no playable audio. Every book is still readable in the Library."); return; }
     if (item.kind === "podcast") {
+      if (item._list && item._list.length) { showTracks(item, item._list); return; }
       note("Loading…");
-      episodes(String(item.id).replace(/^pc:/, "")).then(function (list) {
+      episodes(String(item.id).replace(/^pc:/, "").replace(/^pod:/, "")).then(function (list) {
         if (!list || !list.length) { note("Nothing playable in this one."); return; }
         item._list = list;
         showTracks(item, list);
@@ -412,6 +414,75 @@ window.TSB_LISTEN = (function () {
     }
     return out;
   }
+  /* ---------- v388 · ONLY AUDIO THAT ACTUALLY PLAYS ----------
+     The room listed anything a search engine returned: book records (which led to
+     a "not found" page) and podcast shows whose episode lookup quietly fails. Tapping
+     them did nothing, or played the last thing instead. Now an item earns its place
+     only if the audio for it already ships with the app. */
+  function iaKey(id) { return String(id || "").replace(/^ia:/, ""); }
+  var SEEDED = null;
+  function seededIds() {
+    if (SEEDED) return SEEDED;
+    SEEDED = {};
+    var S = window.TSB_LISTEN_SEED || {};
+    ["popular", "related"].forEach(function (k) {
+      (S[k] || []).forEach(function (it) { if (it && it.id) SEEDED[iaKey(it.id)] = 1; });
+    });
+    return SEEDED;
+  }
+  function hasFiles(id) {
+    var F = window.TSB_AUDIOBOOK_FILES || {};
+    var k = iaKey(id);
+    if ((F[k] && F[k].length) || (F["ia:" + k] && F["ia:" + k].length)) return true;
+    /* v388: the audiobooks we seed play from archive.org metadata, so seed membership
+       is enough. Requiring a shipped chapter list emptied the whole audiobook shelf. */
+    return !!seededIds()[k];
+  }
+  function hasEps(id) {
+    var S = window.TSB_LISTEN_SEED || {}, P = window.TSB_PODCAST_EPS || {};
+    var key = String(id || "");
+    var cid = key.replace(/^pc:/, "").replace(/^pod:/, "");
+    var lists = [S.eps && S.eps[cid], S.eps && S.eps[key], P[cid], P[key]];
+    for (var i = 0; i < lists.length; i++) {
+      var e = lists[i];
+      if (e && e.length && e.filter(function (x) { return /^https:/.test(x.url || ""); }).length) return true;
+    }
+    return false;
+  }
+  function playable(it) {
+    if (!it || !it.id) return false;
+    if (it.kind === "book") return false;                        /* books are not audio */
+    if (it.kind === "podcast") return hasEps(it.id);
+    return hasFiles(it.id);                                      /* archive audiobooks */
+  }
+  function audioOnly(list) {
+    var out = [], seen = {};
+    (list || []).forEach(function (i) {
+      if (!playable(i)) return;
+      var k = String(i.id); if (seen[k]) return; seen[k] = 1; out.push(i);
+    });
+    return out;
+  }
+
+  /* v388 · the shows we ship are the shows that always play. Match the query against
+     them first, so "naval" or "huberman" opens a real episode list instead of an
+     iTunes result whose feed may never answer. */
+  function curated(q) {
+    var P = window.TSB_PODCAST_EPS || {};
+    var S = (window.TSB_PODCASTS && window.TSB_PODCASTS.shows) || [];
+    var t = words(q); if (!t.length) return [];
+    return S.filter(function (sh) {
+      var eps = P[sh.id];
+      if (!eps || !eps.length) return false;
+      var hay = [sh.name, sh.host, sh.why, sh.cat, sh.tag].filter(Boolean).join(" ").toLowerCase();
+      return t.every(function (w) { return hay.indexOf(w) >= 0; });
+    }).slice(0, 6).map(function (sh) {
+      return { id: "pod:" + sh.id, src: "curated", kind: "podcast", title: sh.name,
+        creator: sh.host || "Podcast", cover: sh.art || "", year: "", subjects: [sh.cat || ""],
+        _list: P[sh.id] };
+    });
+  }
+
   function search(q) {
     q = String(q || "").trim();
     var box = el("#rResults");
@@ -443,14 +514,17 @@ window.TSB_LISTEN = (function () {
           .slice(0, 8 - LIST.length).forEach(function (x) { LIST.push(x); });
       }
       var nb = 0, np = 0;
-      var list = LIST.filter(function (x) {
+      var list = audioOnly(LIST.filter(function (x) {
         var k = (x.title || "").toLowerCase().slice(0, 42); if (seen[k]) return false; seen[k] = 1; return true;
       }).filter(function (x) {
-        if (x.kind === "book") { if (nb >= 4) return false; nb++; }
-        else if (x.kind === "podcast") { if (np >= 5) return false; np++; }
+        if (x.kind === "podcast") { if (np >= 5) return false; np++; }
         return true;
-      }).slice(0, 30);
-      if (!list.length) { box.innerHTML = '<div class="r-note">Nothing found.</div>'; return; }
+      })).slice(0, 30);
+      if (!list.length) {
+        box.innerHTML = '<div class="r-note">No audio for that yet. Every book is still readable in the Library.</div>';
+        return;
+      }
+      var bh = el("#rBookHint"); if (bh) { bh.innerHTML = ""; bh.style.display = "none"; }
       all.forEach(function (i) { ITEMS[i.id] = i; });
       box.innerHTML = '<ul class="r-list">' + list.map(function (i) {
         return '<li class="r-row" data-id="' + esc(i.id) + '">' +
@@ -460,10 +534,27 @@ window.TSB_LISTEN = (function () {
       }).join("") + "</ul>";
     }
     var got = {};
-    function merge(k, l) { got[k] = l || []; all = interleave([got.archive || [], got.podcast || [], got.book || []]); paint(); }
+    function merge(k, l) { got[k] = l || []; all = interleave([got.curated || [], got.archive || [], got.podcast || []]); paint(); }
+    merge("curated", curated(q));
     archive(q, 40).then(function (l) { merge("archive", l); });
     podcasts(q, 8).then(function (l) { merge("podcast", l); });
-    books(q, 6).then(function (l) { merge("book", l); });
+    /* v388: no book rows here, ever. If the words match a book, say where books live
+       instead of dropping a row that leads to a dead page. */
+    books(q, 3).then(function (l) {
+      if (!l || !l.length) return;
+      /* only speaks when there is nothing to play, so it can never sit under real results */
+      if (document.querySelector("#rResults [data-id]")) return;
+      var b2 = l[0];
+      var hint = el("#rBookHint");
+      if (!hint) {
+        hint = document.createElement("div");
+        hint.id = "rBookHint"; hint.className = "r-bookhint";
+        box.parentNode.insertBefore(hint, box.nextSibling);
+      }
+      hint.style.display = "";
+      hint.innerHTML = '<span>Looking for the book? It is not audio &mdash;</span><a href="book.html?id=' +
+        encodeURIComponent(String(b2.id).replace(/^ol:/, "")) + '">Read &ldquo;' + esc(shortName(b2.title)) + '&rdquo;</a>';
+    });
     setTimeout(function () { if (!all.length) box.innerHTML = '<div class="r-note">Nothing found.</div>'; }, 9000);
   }
 
@@ -480,6 +571,7 @@ window.TSB_LISTEN = (function () {
       var k = String(i.title || "").toLowerCase().replace(/\s*\(.*?\)\s*/g, "").replace(/[^a-z0-9]/g, "").slice(0, 34);
       if (!k || seenR[k]) return false; seenR[k] = 1; return true;
     });
+    items = audioOnly(items);   /* v388: a card that cannot play is not a card */
     if (!items.length) return "";
     items.forEach(function (i) { ITEMS[i.id] = i; });   /* every card is playable */
     return '<section class="r-sec"><div class="r-sechead"><h3>' + esc(title) + "</h3>" + (sub ? "<span>" + esc(sub) + "</span>" : "") + "</div>" +
@@ -641,7 +733,15 @@ window.TSB_LISTEN = (function () {
   function bind() {
     document.addEventListener("click", function (e) {
       var row = e.target.closest("[data-id]");
-      if (row) { var it = ITEMS[row.getAttribute("data-id")]; if (it) { remember(it); open(it); return; } }
+      if (row) {
+        var it = ITEMS[row.getAttribute("data-id")];
+        if (!it || !playable(it)) { note("That one has no playable audio. Every book is still readable in the Library."); return; }
+        row.classList.add("is-load");
+        remember(it);
+        open(it);
+        setTimeout(function () { if (row) row.classList.remove("is-load"); }, 2600);
+        return;
+      }
       var forget = e.target.closest("#rForget");
       if (forget) { brain = { terms: {}, subjects: {}, last: Date.now(), n: 0 }; save(K(BK), brain); buildFeed(); }
     });

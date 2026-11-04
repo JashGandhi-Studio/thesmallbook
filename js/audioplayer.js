@@ -1480,13 +1480,22 @@
       }).filter(function (x) { return /^https?:/.test(x.src || ""); });
       if (ov.length) { onFeedItems(show, ov, show.name, false, "", startAt); return; }
     }
+    /* v388 · if the episode list ships with the app, use it. No feed request, no CORS,
+       no "updating its shelf" when the reader's signal dips. */
+    var shipped = (window.TSB_PODCAST_EPS || {})[show.id];
+    if (shipped && shipped.length) {
+      var sh = shipped.map(function (e, i) {
+        return { label: e.title || ("Episode " + (i + 1)), sub: (e.date ? e.date + " · " : "") + (e.seconds ? fmt(e.seconds) : "episode"), src: e.url };
+      }).filter(function (x) { return /^https?:/.test(x.src); });
+      if (sh.length) { onFeedItems(show, sh, show.name, false, "", startAt); return; }
+    }
     fetchFeed(show.rss, function (items, feedTitle, stale, art) {
       onFeedItems(show, items, feedTitle, stale, art, startAt);
     });
   }
 
   function onFeedItems(show, items, feedTitle, stale, art, startAt) {
-      if (!items || !items.length) { toast("This show is updating its shelf. Try again in a moment."); return; }
+      if (!items || !items.length) { toast("This one has no playable parts right now."); return; }
       if (art) rememberArt(show, art);
       if (!show.art) { var ka = (jget(PODART, {}) || {})[artKeyOf(show)]; if (ka) show.art = ka; }
       var idx = Math.min(startAt !== undefined ? startAt : 0, items.length - 1);
@@ -1499,7 +1508,7 @@
       startAudio(audioQueue({
         key: "pod:" + show.id,
         title: show.name,
-        sub: stale ? "Saved episodes from last visit · streaming from the show's feed" : "Latest episodes, streaming from the show's own feed",
+        sub: stale ? "Saved episodes from last visit" : "Episodes on your phone, ready to play",
         items: items,
         ch: ch,
         seek: seek,
