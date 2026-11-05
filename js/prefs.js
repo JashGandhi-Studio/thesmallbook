@@ -5,6 +5,21 @@
    ============================================================ */
 
 (function () {
+  /* ---------- where the worker lives ----------
+     A page nested in a folder (books/, authors/, pseo/books-like/) resolved
+     "sw.js" against its own folder, so it asked for /pseo/books-like/sw.js,
+     which does not exist: the browser logged a 404 and the app never installed
+     offline for anyone whose first visit was an SEO page. The root is taken
+     from this file's own address instead, so it is right at every depth and
+     still right if the app is served from a subfolder. */
+  var SELF_SRC = (document.currentScript && document.currentScript.src) || "";
+  function swUrl() {
+    if (SELF_SRC) {
+      try { return new URL("../sw.js", SELF_SRC).href; } catch (e) {}
+    }
+    return "sw.js";
+  }
+
   /* ---------- tiny storage helpers ---------- */
   function get(key, def) {
     try { const v = JSON.parse(localStorage.getItem(key)); return v === null || v === undefined ? def : v; }
@@ -506,7 +521,7 @@
 
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js").then((reg) => {
+      navigator.serviceWorker.register(swUrl()).then((reg) => {
         try { if (reg && reg.update) reg.update(); } catch (eU) {}
       }).catch(() => {});
       /* a deployed update takes over → reload ONCE so signed-in readers

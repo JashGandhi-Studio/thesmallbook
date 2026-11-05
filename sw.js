@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v390";
+const CACHE_VERSION = "tsb-v391";
 /* NOTE: the assets/logos/* entries below mirror js/store-data.js exactly.
    every tile the store links to must be precached, or the offline store
    shows broken images. tests/client-suite.js asserts they never drift. */
@@ -182,6 +182,13 @@ const APP_SHELL = [
   "./js/deepdive-data.js",
   "./js/deepdive.js",
   "./js/podcast-data.js",
+  /* the episode lists and chapter files ship with the app, so a show has to
+     open on a weak signal too. They were loaded at runtime only, which meant
+     the one moment the list was needed offline was the moment it was missing
+     and the episode sheet sat on its fetching note for ever. */
+  "./data/podcast-episodes.js",
+  "./data/podcast-eps-388.js",
+  "./data/audiobook-files.js",
   "./css/deepdive.css",
   "./js/onboard.js",
   "./js/trial.js",
