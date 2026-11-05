@@ -97,7 +97,7 @@
     return {
       type: "audio", key: spec.key, title: spec.title, sub: spec.sub || "",
       items: spec.items, credit: spec.credit || "", art: spec.art || "", glyph: spec.glyph || "",
-      ch: spec.ch || 0, seek: spec.seek || 0,
+      rss: spec.rss || "", ch: spec.ch || 0, seek: spec.seek || 0,
       /* v320: the one the builder forgot. Without this, every restored
          session looked "autoplay" and a PAUSED book started shouting the
          moment you opened any page. Paused stays paused; only a session
@@ -1105,7 +1105,7 @@
           a.removeAttribute("crossorigin");
           if (mediaSrc) rebuildAU();
           var safeAu = ensureAU();
-          safeAu.src = (q && q.items && q.items[curItem] && q.items[curItem].src) || a.src;
+          safeAu.src = cleanAudioUrl((q && q.items && q.items[curItem] && q.items[curItem].src) || a.src);
           safeAu.currentTime = a.currentTime || 0;
           safeAu.play().catch(function () {});
         } catch (errRec) {}
@@ -1123,6 +1123,7 @@
     if (!q || q.type !== "audio") return;
     curItem = Math.max(0, Math.min(i, q.items.length - 1));
     var it = q.items[curItem];
+    it.src = cleanAudioUrl(it.src);
     var isAB = /archive\.org/.test(it.src || "");
     /* the boost graph is permanent per element and needs CORS-clean media,
        so podcasts always get a pristine element */
@@ -1240,6 +1241,31 @@
   function artImg(u, fallback) { return '<img src="' + esc(u) + '" alt="" onerror="this.parentNode.innerHTML=\'' + fallback.replace(/"/g, "&quot;") + '\'">'; }
   function curArt() { var it = q && q.items ? q.items[curItem] : null; return (it && it.art) || (q && q.art) || ""; }
   function feedKey(url) { return url.split("").reduce(function (a, c) { return ((a << 5) - a + c.charCodeAt(0)) | 0; }, 0); }
+  function cleanAudioUrl(value) {
+    return String(value || "").replace(/&amp;/gi, "&").replace(/&#0*38;/gi, "&").replace(/&#x0*26;/gi, "&");
+  }
+  function rememberShow(show) {
+    if (!show || !show.id || !show.rss) return;
+    var got = jget("tsb_show_got", {}) || {};
+    if (typeof got !== "object" || Array.isArray(got)) got = {};
+    got[show.id] = { id: show.id, name: show.name || "Podcast", host: show.host || "",
+      art: show.art || "", home: show.home || "", rss: show.rss };
+    var keys = Object.keys(got);
+    while (keys.length > 100) delete got[keys.shift()];
+    jset("tsb_show_got", got);
+  }
+  function cacheFeedList(show, items, feedTitle, art) {
+    if (!show || !show.rss || !items || !items.length) return;
+    var url = cleanAudioUrl(show.rss);
+    if (!/^https?:\/\//.test(url)) return;
+    var box = { at: Date.now(), items: items.map(function (e) {
+      return { label: e.label || e.title || "Episode", sub: e.sub || e.date || "episode",
+        src: cleanAudioUrl(e.src || e.url), art: e.art || show.art || "" };
+    }).filter(function (e) { return /^https?:\/\//.test(e.src); }), showTitle: feedTitle || show.name || "", art: art || show.art || "" };
+    if (!box.items.length) return;
+    jset(FEEDCACHE + feedKey(url), box);
+    jset("tsb_feed_good_" + feedKey(url), box);
+  }
   /* v322: a stalled connection used to hang the whole chain - now every
      leg gets its own deadline, so fallback and the retry button actually
      arrive while the reader is still looking. */
@@ -1268,7 +1294,7 @@
     BUNDLE_BUSY = true;
     var left = 2;
     function done() { if (--left > 0) return; var w = BUNDLE_WAIT; BUNDLE_WAIT = []; w.forEach(function (f) { try { f(); } catch (e) {} }); }
-    var v = window.TSB_BUILD || "385";
+    var v = window.TSB_BUILD || "390";
     ["data/podcast-episodes.js", "data/audiobook-files.js"].forEach(function (src) {
       var el = document.createElement("script");
       el.src = src + "?v=" + v;
@@ -1292,7 +1318,7 @@
       return {
         name: rec.name || "",
         items: rec.episodes.map(function (e) {
-          return { label: e.label || "Episode", sub: e.sub || (e.dur ? e.dur : "episode"), src: e.src, art: e.art || "" };
+          return { label: e.label || "Episode", sub: e.sub || (e.dur ? e.dur : "episode"), src: cleanAudioUrl(e.src), art: e.art || "" };
         }).filter(function (x) { return /^https:/.test(x.src); })
       };
     }
@@ -1301,6 +1327,19 @@
 
   function fetchFeed(url, cb) {
     withBundles(function () { fetchFeedReady(url, cb); });
+  }
+  function listFeed(urlOrShow, cb) {
+    cb = typeof cb === "function" ? cb : function () {};
+    var url = typeof urlOrShow === "string" ? urlOrShow : (urlOrShow && urlOrShow.rss) || "";
+    url = cleanAudioUrl(url);
+    if (!/^https?:\/\//.test(url)) { cb([], "", false, ""); return; }
+    fetchFeed(url, function (items, title, stale, art) {
+      var out = (items || []).map(function (e) {
+        return { title: e.label || e.title || "Episode", url: cleanAudioUrl(e.src || e.url),
+          seconds: Number(e.seconds) || 0, date: e.date || e.sub || "" };
+      }).filter(function (e) { return /^https?:\/\//.test(e.url); });
+      cb(out, title || "", !!stale, art || "");
+    });
   }
   function fetchFeedReady(url, cb) {
     var bundle = bundledEpisodes(url);
@@ -1472,11 +1511,12 @@
 
   function playFeed(show, startAt, listOverride) {
     try { if (window.TSB_SHOWMORE && window.TSB_SHOWS_EXTRA) TSB_SHOWMORE.learn(show, 2); } catch (eL) {}   /* v322: every play teaches the shelf */
+    if (show) { show.rss = cleanAudioUrl(show.rss || ""); rememberShow(show); }
     /* v383: a caller that already holds the episode list hands it straight in,
        so playing a podcast does not depend on any request succeeding */
     if (listOverride && listOverride.length) {
       var ov = listOverride.map(function (e, i) {
-        return { label: e.label || e.title || ("Episode " + (i + 1)), sub: e.sub || (e.seconds ? fmt(e.seconds) : "episode"), src: e.src || e.url, art: e.art || show.art || "" };
+        return { label: e.label || e.title || ("Episode " + (i + 1)), sub: e.sub || (e.seconds ? fmt(e.seconds) : (e.date || "episode")), src: cleanAudioUrl(e.src || e.url), art: e.art || show.art || "" };
       }).filter(function (x) { return /^https?:/.test(x.src || ""); });
       if (ov.length) { onFeedItems(show, ov, show.name, false, "", startAt); return; }
     }
@@ -1485,7 +1525,7 @@
     var shipped = (window.TSB_PODCAST_EPS || {})[show.id];
     if (shipped && shipped.length) {
       var sh = shipped.map(function (e, i) {
-        return { label: e.title || ("Episode " + (i + 1)), sub: (e.date ? e.date + " · " : "") + (e.seconds ? fmt(e.seconds) : "episode"), src: e.url };
+        return { label: e.title || ("Episode " + (i + 1)), sub: (e.date ? e.date + " · " : "") + (e.seconds ? fmt(e.seconds) : "episode"), src: cleanAudioUrl(e.url) };
       }).filter(function (x) { return /^https?:/.test(x.src); });
       if (sh.length) { onFeedItems(show, sh, show.name, false, "", startAt); return; }
     }
@@ -1496,6 +1536,8 @@
 
   function onFeedItems(show, items, feedTitle, stale, art, startAt) {
       if (!items || !items.length) { toast("This one has no playable parts right now."); return; }
+      rememberShow(show);
+      cacheFeedList(show, items, feedTitle, art);
       if (art) rememberArt(show, art);
       if (!show.art) { var ka = (jget(PODART, {}) || {})[artKeyOf(show)]; if (ka) show.art = ka; }
       var idx = Math.min(startAt !== undefined ? startAt : 0, items.length - 1);
@@ -1510,6 +1552,7 @@
         title: show.name,
         sub: stale ? "Saved episodes from last visit" : "Episodes on your phone, ready to play",
         items: items,
+        rss: show.rss || "",
         ch: ch,
         seek: seek,
         credit: "Episodes stream from " + (feedTitle || show.name) + "'s official public feed. All rights with " + (show.host || "the show") + " and their publisher. Show home: " + (show.home || "") +
@@ -1757,6 +1800,7 @@
           title: l.title || show.name,
           sub: "Latest episodes, streaming from the show's own feed",
           items: items,
+          rss: show.rss || "",
           ch: Math.min(pos.ch || 0, items.length - 1),
           seek: pos.t || 0,
           autoplay: auto,
@@ -1785,6 +1829,7 @@
   /* ================= public ================= */
   window.TSB_AUDIO = {
     artFor: artFor,
+    listFeed: listFeed,
   /* v319: pre-fetch a show's episode list in idle time so the first tap plays, not waits */
   warmShow: function (show) { try { fetchFeed(show.rss || show.url || show.feed || "", function () {}); } catch (e) {} },
     playBook: function (bookId, fromLesson) {
@@ -1870,6 +1915,7 @@
               title: l.title || show.name,
               sub: "Latest episodes, streaming from the show's own feed",
               items: items,
+              rss: show.rss || "",
               ch: Math.min(pos.ch || 0, items.length - 1),
               seek: pos.t || 0,
               autoplay: true,

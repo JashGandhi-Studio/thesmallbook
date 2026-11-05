@@ -318,7 +318,7 @@
     } catch (e2) {}
   }
   function gravesComplete(cb) {
-    var V = (window.TSB_LESSONS && window.TSB_LESSONS.version) || "344";
+    var V = (window.TSB_LESSONS && window.TSB_LESSONS.version) || "390";
     var load = function (file, next) {
       var s = document.createElement("script");
       s.src = file + "?v=" + V;
@@ -1312,9 +1312,30 @@
   function send(raw) {
     var q = String(raw || "").trim();
     if (!q) return;
-    /* v336: Ask reads every lesson, so the lesson text is fetched once first */
-    if (window.TSB_LESSONS && !send._all) { send._all = 1; var n = 2, both = function () { if (--n === 0) { send._all = 2; send(raw); } }; TSB_LESSONS.all(both); if (TSB_LESSONS.failures) TSB_LESSONS.failures(both); else both(); return; }
-    if (send._all === 1) return;
+    /* Ask needs the full lesson library, but sends made while it loads must
+       wait in order instead of disappearing. */
+    if (window.TSB_LESSONS && send._all !== 2) {
+      send._pending = send._pending || [];
+      send._pending.push(q);
+      if (input && input.value.trim() === q) input.value = "";
+      if (send._all === 1) return;
+      send._all = 1;
+      var remaining = 2, settled = [false, false];
+      function ready(which) {
+        if (settled[which]) return;
+        settled[which] = true;
+        if (--remaining !== 0) return;
+        send._all = 2;
+        var pending = send._pending || [];
+        send._pending = [];
+        pending.forEach(function (question) { send(question); });
+      }
+      try { TSB_LESSONS.all(function () { ready(0); }); } catch (eAll) { ready(0); }
+      if (TSB_LESSONS.failures) {
+        try { TSB_LESSONS.failures(function () { ready(1); }); } catch (eFail) { ready(1); }
+      } else ready(1);
+      return;
+    }
     /* ⏳ v300 free quota: one honest card instead of a silent fourth answer */
     if (quotaBlocked()) { input.value = ""; paintQuota(); return; }
     /* ⚖️ v344: "compare atomic habits and deep work" is a comparison, not a search */

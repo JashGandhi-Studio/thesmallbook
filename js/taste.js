@@ -54,14 +54,23 @@
   function model() {
     var cats = {}, seen = {}, finishedIds = {};
     /* prior: what they said at onboarding, worth about four books */
-    (get("tsb_interests", []) || []).forEach(function (c) { cats[c] = (cats[c] || 0) + 1.1; });
-    (get("tsb_mind", []) || []).forEach(function (m) {
+    var interests = get("tsb_interests", []), mind = get("tsb_mind", []);
+    if (!Array.isArray(interests)) interests = [];
+    if (!Array.isArray(mind)) mind = [];
+    interests.forEach(function (c) { cats[c] = (cats[c] || 0) + 1.1; });
+    mind.forEach(function (m) {
       var mm = String(m).toLowerCase();
       books().forEach(function (b) {
         if (cats[catOf(b)]) return;
         var tag = ((b.category || "") + " " + (b.tags || []).join(" ") + " " + (b.title || "")).toLowerCase();
         if (tag.indexOf(mm.slice(0, 5)) >= 0) cats[catOf(b)] = (cats[catOf(b)] || 0) + 0.35;
       });
+    });
+    /* a new reader's chosen shelf is also a small prior */
+    var starter = get("tsb_starter_shelf", []);
+    if (Array.isArray(starter)) starter.forEach(function (item) {
+      var id = item && typeof item === "object" ? (item.id || item.bookId) : item;
+      var b = byId(id); if (b) cats[catOf(b)] = (cats[catOf(b)] || 0) + 0.18;
     });
 
     /* behaviour: everything they actually did, aged */
@@ -76,22 +85,43 @@
       if (e.k === "finish") finishedIds[e.i] = 1;
     });
 
-    /* the reading state itself is the strongest signal there is */
+    /* reading state, bookmarks and highlights count even when a tap happened
+       before the taste listener was ready. All of this stays on this device. */
     var prog = get("tsb_progress", {}) || {};
     books().forEach(function (b) {
-      var n = (prog[b.id] || []).length;
+      var rows = prog[b.id];
+      var n = Array.isArray(rows) ? rows.length : 0;
       if (!n) return;
       var total = (b.lessons && b.lessons.length) || 8;
-      cats[catOf(b)] = (cats[catOf(b)] || 0) + (n >= total ? 0.9 : 0.25 * Math.min(1, n / total));
+      var readingWeight = n >= total ? 0.9 : 0.15 + 0.35 * Math.min(1, n / total);
+      cats[catOf(b)] = (cats[catOf(b)] || 0) + readingWeight;
       seen[b.id] = seen[b.id] || now() - 30 * DAY;
       if (n >= total) finishedIds[b.id] = 1;
     });
 
-    (get("tsb_read_books", []) || []).forEach(function (id) {
+    var readBooks = get("tsb_read_books", []);
+    if (Array.isArray(readBooks)) readBooks.forEach(function (id) {
       var b = byId(id); if (!b) return;
       cats[catOf(b)] = (cats[catOf(b)] || 0) + 0.5;
       seen[id] = seen[id] || now() - 20 * DAY;
     });
+
+    var bookmarks = get("tsb_bookmarks", []);
+    if (Array.isArray(bookmarks)) bookmarks.forEach(function (id) {
+      var b = byId(id); if (!b) return;
+      cats[catOf(b)] = (cats[catOf(b)] || 0) + 0.55;
+      seen[id] = seen[id] || now() - 10 * DAY;
+    });
+
+    var highlights = get("tsb_highlights_v1", {});
+    if (highlights && typeof highlights === "object" && !Array.isArray(highlights)) {
+      Object.keys(highlights).forEach(function (id) {
+        var b = byId(id), marks = highlights[id];
+        if (!b || !Array.isArray(marks) || !marks.length) return;
+        cats[catOf(b)] = (cats[catOf(b)] || 0) + 0.45 * Math.min(2, marks.length);
+        seen[id] = seen[id] || now() - 5 * DAY;
+      });
+    }
 
     /* normalise, floor at zero */
     var keys = Object.keys(cats), total = 0;
@@ -117,17 +147,27 @@
     var done = m.finished[b.id] ? -2 : 0;
     return w * 3 + fresh + done + rnd * 0.35;
   }
+  function profileSignature() {
+    var interests = get("tsb_interests", []), mind = get("tsb_mind", []), shelf = get("tsb_starter_shelf", []);
+    if (!Array.isArray(interests)) interests = [];
+    if (!Array.isArray(mind)) mind = [];
+    if (!Array.isArray(shelf)) shelf = [];
+    shelf = shelf.map(function (item) { return item && typeof item === "object" ? (item.id || item.bookId || "") : item; });
+    return String(hash(JSON.stringify([interests, mind, shelf])));
+  }
 
   /* ---------------- picks: anchored, never rebuilt ---------------- */
   function picks(n) {
     n = n || 3;
-    var today = dayKey();
+    var today = dayKey(), profile = profileSignature();
     var saved = get("tsb_taste_slots", null);
-    if (saved && saved.day === today && (saved.ids || []).length === n) {
+    if (saved && saved.day === today && saved.profile === profile && (saved.ids || []).length === n) {
       var out = saved.ids.map(byId).filter(Boolean);
       if (out.length === n) return out;
     }
-    var m = model(), prev = (saved && saved.ids || []).map(byId).filter(Boolean);
+    var m = model();
+    var sameProfile = saved && (!saved.profile || saved.profile === profile);
+    var prev = (sameProfile && saved.ids || []).map(byId).filter(Boolean);
     var dr = drift();
     /* how much of yesterday survives. Small movement of taste keeps the feed. */
     var keep = prev.length ? (dr < 0.12 ? n - 1 : dr < 0.3 ? Math.max(1, n - 2) : 0) : 0;
@@ -158,7 +198,7 @@
       picked.push(b);
     });
     picked.forEach(function (b) { delete b.__s; });
-    set("tsb_taste_slots", { day: today, ids: picked.map(function (b) { return b.id; }), drift: Math.round(dr * 100) / 100 });
+    set("tsb_taste_slots", { day: today, profile: profile, ids: picked.map(function (b) { return b.id; }), drift: Math.round(dr * 100) / 100 });
     return picked.slice(0, n);
   }
 

@@ -32,7 +32,7 @@
      rhythm goes straight into the app on every future open and every future
      update. A new version may show a quiet "what is new" card, and that card
      never leads back into the four screens. */
-  var OB_V = 389;
+  var OB_V = 390;
   function alreadySetUp() {
     try { if (get("tsb_onboarded", false)) return true; } catch (e) {}
     try {
@@ -230,10 +230,12 @@
 
   /* ---------- screens ---------- */
   var NEWS = [
-    ['<path d="M3 14v-3a9 9 0 0 1 18 0v3"/><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="17" y="12" width="4" height="9" rx="1"/>',
-      "Listen is a room now", "Audiobooks, shows and podcasts in one place."],
     ['<path d="M12 3v18"/><path d="M5 8h14"/><path d="M5 16h14"/>',
-      "It builds around you", "Your feed learns from every chapter you play."],
+      "Your choices shape Today", "Recommendations learn from books you open, finish, save and highlight."],
+    ['<path d="M3 14v-3a9 9 0 0 1 18 0v3"/><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="17" y="12" width="4" height="9" rx="1"/>',
+      "Shows keep their feed", "Podcast search carries each show's RSS link through to the player."],
+    ['<path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>',
+      "Fewer dropped questions", "The Reader receives early chapter text, and Ask queues questions while the library loads."],
   ];
   function upLine() {
     var mind = [];
@@ -486,7 +488,7 @@
     set("tsb_onboard_draft", draft);
     set("tsb_onboarded", true);
     set("tsb_onboard_v", OB_V);
-    set("tsb_walk_done", window.TSB_BUILD || "331");
+    set("tsb_walk_done", window.TSB_BUILD || "390");
     set("tsb_tour_done", true);
     set("tsb_interests", cats);
     set("tsb_ob_lead", cats[0]);

@@ -50,6 +50,7 @@
   const cats = [...new Set(BOOKS.map((b) => b.category))];
   const totalMins = BOOKS.reduce((n, b) => n + parseInt(b.readTime), 0);
 
+  animateNum(statBooks, BOOKS.length);
   animateNum(statLessons, totalLessons);
   animateNum(statCats, cats.length);
   animateNum(statMins, totalMins);

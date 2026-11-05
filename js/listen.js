@@ -2,8 +2,8 @@
    TheSmallBook · LISTEN  (v2)
    Search three catalogues at once, play anything, and let the
    feed be built from what the reader actually does.
-   Signed-out readers get the catalogue. Signed-in readers get
-   a feed that keeps learning after onboarding.
+   Every reader gets a private local profile. Signed-in profiles
+   are kept separate by account.
    ============================================================ */
 window.TSB_LISTEN = (function () {
   "use strict";
@@ -89,7 +89,8 @@ window.TSB_LISTEN = (function () {
     brain.last = Date.now();
   }
   function learn(kind, p) {
-    if (UID === "anon") return;          /* nothing is remembered for a signed-out reader */
+    /* Anonymous readers keep their topic weights on this device only. Account
+       profiles use a separate key, so a shared phone does not mix readers. */
     p = p || {};
     var w = { search: 1, open: 1.5, play: 2.5, skip: -1, save: 3, finish: 4 }[kind] || 1;
     words([p.title, p.creator, (p.subjects || []).join(" ")].join(" ")).forEach(function (t) {
@@ -110,6 +111,11 @@ window.TSB_LISTEN = (function () {
     words(it.creator).forEach(function (w) { if (brain.terms[w]) s += brain.terms[w] * .5; });
     (it.subjects || []).forEach(function (x) { var k = String(x).toLowerCase().trim().slice(0, 28); if (brain.subjects[k]) s += brain.subjects[k]; });
     return s;
+  }
+  function byAffinity(list) {
+    return (list || []).map(function (item, index) { return { item: item, index: index, score: affinity(item) }; })
+      .sort(function (a, b) { return b.score - a.score || a.index - b.index; })
+      .map(function (row) { return row.item; });
   }
 
   /* ---------------- sources ---------------- */
@@ -194,7 +200,8 @@ window.TSB_LISTEN = (function () {
       return ((j && j.results) || []).map(function (r) {
         return { id: "pc:" + r.collectionId, src: "podcast", kind: "podcast", title: r.collectionName || "",
           creator: r.artistName || "", year: (r.releaseDate || "").slice(0, 4), subjects: arr(r.primaryGenreName),
-          cover: (r.artworkUrl600 || r.artworkUrl100 || "").replace("100x100", "600x600"), count: r.trackCount || 0 };
+          cover: (r.artworkUrl600 || r.artworkUrl100 || "").replace("100x100", "600x600"), count: r.trackCount || 0,
+          rss: r.feedUrl || "", home: r.collectionViewUrl || "" };
       }).filter(function (x) { return x.title; });
     });
   }
@@ -206,21 +213,37 @@ window.TSB_LISTEN = (function () {
       return { title: e.title || "Episode", url: e.url, seconds: e.seconds || 0, date: e.date || "" };
     });
   }
-  function episodes(cid) {
-    /* v383: every podcast card the app ships also ships its episodes, so a tap
-       never waits on a lookup that can fail on a weak signal. */
-    var seeded = seedEpisodes(cid);
+  function episodes(cid, feed) {
+    /* Local episodes make the bundled shelf instant. Unbundled shows use the
+       RSS address returned by Apple, then its episode lookup as a fallback. */
+    var id = String(cid || "").replace(/^pc:/, "").replace(/^pod:/, "");
+    var seeded = seedEpisodes(id);
     if (seeded && seeded.length) return Promise.resolve(seeded);
-    var epUrl = "https://itunes.apple.com/lookup?id=" + encodeURIComponent(cid) + "&entity=podcastEpisode&limit=60";
-    /* v382: a podcast that played yesterday must still open today, even if the
-       lookup fails on a weak signal. Every episode list is remembered. */
-    return withCache(epUrl, function (j) {
-      return ((j && j.results) || []).filter(function (r) { return r.kind === "podcast-episode" && (r.episodeUrl || r.previewUrl); })
-        .map(function (r) {
-          return { title: r.trackName || "Episode", url: r.episodeUrl || r.previewUrl,
-            seconds: (r.trackTimeMillis || 0) / 1000, date: (r.releaseDate || "").slice(0, 10) };
+    function fromApple() {
+      var epUrl = "https://itunes.apple.com/lookup?id=" + encodeURIComponent(id) + "&entity=podcastEpisode&limit=60";
+      return withCache(epUrl, function (j) {
+        return ((j && j.results) || []).filter(function (r) { return r.kind === "podcast-episode" && (r.episodeUrl || r.previewUrl); })
+          .map(function (r) {
+            return { title: r.trackName || "Episode", url: r.episodeUrl || r.previewUrl,
+              seconds: (r.trackTimeMillis || 0) / 1000, date: (r.releaseDate || "").slice(0, 10) };
+          });
+      });
+    }
+    var A = window.TSB_AUDIO;
+    if (!feed || !A || typeof A.listFeed !== "function") return fromApple();
+    return new Promise(function (resolve) {
+      var done = false;
+      var timer = setTimeout(function () { if (!done) { done = true; resolve([]); } }, 19000);
+      try {
+        A.listFeed(feed, function (items) {
+          if (done) return;
+          done = true; clearTimeout(timer);
+          resolve((items || []).map(function (e) {
+            return { title: e.title || "Episode", url: e.url || "", seconds: Number(e.seconds) || 0, date: e.date || "" };
+          }).filter(function (e) { return /^https:/.test(e.url); }));
         });
-    });
+      } catch (e) { done = true; clearTimeout(timer); resolve([]); }
+    }).then(function (list) { return list && list.length ? list : fromApple(); });
   }
   function chapters(id) {
     var key = String(id).replace(/^ia:/, "");
@@ -267,18 +290,30 @@ window.TSB_LISTEN = (function () {
     return String(url).split("").reduce(function (a, c) { return ((a << 5) - a + c.charCodeAt(0)) | 0; }, 0);
   }
   function seedFeed(show, list) {
-    var url = "https://thesmallbook.in/listen/show/" + encodeURIComponent(show.id);
+    var url = show.rss || ("https://thesmallbook.in/listen/show/" + encodeURIComponent(show.id));
     try {
       localStorage.setItem("tsb_feed_" + feedKey(url), JSON.stringify({
         at: Date.now(),
         items: list.map(function (e) {
-          return { label: e.title, sub: e.seconds ? fmt(e.seconds) : "", src: e.url, art: show.art || "" };
+          return { label: e.title || "Episode", sub: e.seconds ? fmt(e.seconds) : (e.date || ""), src: e.url, art: show.art || "" };
         }),
-        showTitle: show.title,
+        showTitle: show.name || show.title || "",
         art: show.art || ""
       }));
     } catch (e) {}
     return url;
+  }
+  function rememberShow(show) {
+    if (!show || !show.id || !show.rss) return;
+    try {
+      var got = JSON.parse(localStorage.getItem("tsb_show_got") || "{}");
+      if (!got || typeof got !== "object" || Array.isArray(got)) got = {};
+      got[show.id] = { id: show.id, name: show.name || show.title || "Podcast", host: show.host || show.creator || "",
+        art: show.art || show.cover || "", home: show.home || "", rss: show.rss };
+      var keys = Object.keys(got);
+      while (keys.length > 100) delete got[keys.shift()];
+      localStorage.setItem("tsb_show_got", JSON.stringify(got));
+    } catch (e) {}
   }
   function playItem(item, index) {
     var A = window.TSB_AUDIO;
@@ -288,7 +323,7 @@ window.TSB_LISTEN = (function () {
     if (item.kind === "podcast") {
       if (item._list) { goFeed(item, item._list, index || 0); return; }
       note("Opening the show…");
-      episodes(String(item.id).replace(/^pc:/, "")).then(function (list) {
+      episodes(item.id, item.rss).then(function (list) {
         if (!list || !list.length) { note("Nothing playable in this one."); return; }
         item._list = list;
         goFeed(item, list, index || 0);
@@ -309,8 +344,10 @@ window.TSB_LISTEN = (function () {
   }
   function goFeed(item, list, startAt) {
     var A = window.TSB_AUDIO;
-    var show = { id: item.id, name: item.title, art: item.cover || "", home: "",
-                 rss: seedFeed(item, list) };
+    var show = { id: item.id, name: item.title, host: item.creator || "", art: item.cover || "",
+                 home: item.home || "", rss: item.rss || "" };
+    show.rss = seedFeed(show, list);
+    rememberShow(show);
     /* v383: the list we already have wins. No feed request, no waiting room. */
     if (typeof A.playFeed === "function") {
       try { A.playFeed(show, Math.max(0, startAt || 0), list); return; } catch (eP) {}
@@ -360,7 +397,7 @@ window.TSB_LISTEN = (function () {
     if (item.kind === "podcast") {
       if (item._list && item._list.length) { showTracks(item, item._list); return; }
       showFetching(item);
-      episodes(String(item.id).replace(/^pc:/, "").replace(/^pod:/, "")).then(function (list) {
+      episodes(item.id, item.rss).then(function (list) {
         if (!list || !list.length) { showFetchFailed(item); return; }
         item._list = list;
         showTracks(item, list);
@@ -411,7 +448,7 @@ window.TSB_LISTEN = (function () {
       '<ul class="r-list">' + list.slice(0, 60).map(function (t, i) {
         return '<li class="r-row" data-tr="' + i + '">' +
           '<div class="art">' + (item.cover ? '<img src="' + esc(item.cover) + '" alt="">' : '<span class="fb">' + kindIcon(item.kind) + "</span>") + "</div>" +
-          "<div><h4>" + esc(t.title) + "</h4><p>" + (t.seconds ? fmt(t.seconds) : "") + "</p></div>" +
+          "<div><h4>" + esc(t.title) + "</h4><p>" + (t.seconds ? fmt(t.seconds) : esc(t.date || "")) + "</p></div>" +
           '<span class="go">' + IC.play + "</span></li>";
       }).join("") + "</ul>";
     el2.onclick = function (e) {
@@ -676,9 +713,8 @@ window.TSB_LISTEN = (function () {
   }
   function buildFeed() {
     var feed = el("#rFeed"); if (!feed) return;
-    /* v347: anyone can see what Listen holds, and play it. Signing in is
-       what starts the feed: until then these are the room's own shelves,
-       not a brain that follows you. */
+    /* Everyone can listen. Signed-out taste stays on this device, while a
+       signed-in reader gets a separate profile for that account. */
     if (!signedIn()) {
       /* v383 · THE ROOM IS NEVER EMPTY. This branch used to wait on three
          network calls before it painted anything, so a phone that could not
@@ -693,10 +729,12 @@ window.TSB_LISTEN = (function () {
         if (el("#rSearch") && el("#rSearch").value.trim()) return;
         var lp = liveLast();
         var mem = fromMemory(6);
+        var tunedPods = byAffinity(podL), tunedPopular = byAffinity(popL);
+        var hasTaste = (brain.n || 0) > 0;
         feed.innerHTML = (mem.length ? rail("You were listening to", mem) : "") +
           (lp ? rail("Pick up where you left off", [lp]) : "") +
-          (popL.length ? rail("Popular now", popL) : "") +
-          (podL.length ? rail("Podcasts", podL) : "") +
+          (tunedPopular.length ? rail(hasTaste ? "Popular, tuned to you" : "Popular now", tunedPopular) : "") +
+          (tunedPods.length ? rail(hasTaste ? "Podcasts for you" : "Podcasts", tunedPods) : "") +
           (finL.length ? rail("Finish in a walk", finL) : "");
         var f0 = el(".r-foot"); if (f0) f0.classList.add("on"); footState();
       };
@@ -803,9 +841,8 @@ window.TSB_LISTEN = (function () {
     brain = load(K(BK), { terms: {}, subjects: {}, last: 0, n: 0 });
     saved = load(K(SK), []);
     pos = load(K(PK), {});
-    if (UID === "anon") {
-      try { localStorage.removeItem(BK); localStorage.removeItem(SK); localStorage.removeItem(PK); } catch (e) {}
-    } else { decay(); save(K(BK), brain); }
+    decay();
+    save(K(BK), brain);
     bind(); buildFeed();
     var q = new URLSearchParams(location.search).get("q");
     if (q) { var si = el("#rSearch"); if (si) { si.value = q; search(q); } }

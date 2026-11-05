@@ -9,10 +9,12 @@ if (typeof window !== "undefined") window.BOOKS = BOOKS;
   if (typeof window === "undefined") return;
   /* v385: the lesson URL carries the build, so a phone can never be served a
      copy of a lesson file cached by an older deploy. */
-  var V = (typeof window !== "undefined" && window.TSB_BUILD) ? String(window.TSB_BUILD) : "336";
+  var V = (typeof window !== "undefined" && window.TSB_BUILD) ? String(window.TSB_BUILD) : "390";
   var byId = {}, wait = {}, allCb = null, allState = 0;
   BOOKS.forEach(function (b) { byId[b.id] = b; });
   function full(b) { return !b || b._full === 1; }
+  var earlyFill = window.TSB_LFILL_HOLD;
+  if (typeof earlyFill !== "function" && !window.TSB_LFILL_QUEUE && typeof window.TSB_LFILL === "function") earlyFill = window.TSB_LFILL;
   window.TSB_LFILL = function (id, body, ext) {
     var b = byId[id]; if (!b) return;
     if (ext) for (var k in ext) b[k] = ext[k];
@@ -21,7 +23,9 @@ if (typeof window !== "undefined") window.BOOKS = BOOKS;
     b.lessons.forEach(function (l, i) { var x = body[i] || ["", "", ""]; l.summary = x[0]; l.example = x[1]; l.action = x[2]; });
     var w = wait[id]; delete wait[id];
     if (w) w.forEach(function (f) { try { f(b); } catch (e) {} });
+    if (typeof earlyFill === "function") { try { earlyFill(id, body, ext); } catch (e2) {} }
   };
+  window.TSB_LFILL_HOLD = null;
   function ensure(id, cb) {
     var b = byId[id];
     if (full(b)) { if (cb) cb(b); return; }

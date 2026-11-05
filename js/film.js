@@ -165,6 +165,12 @@
   function mindWords() { var m = lsGet("tsb_mind", []); return Array.isArray(m) ? m : []; }
   function finished(b) { var n = lessons(b); return n > 0 && readCount(b.id) >= n; }
   function todaysPick() {
+    try {
+      if (window.TSB_TASTE && TSB_TASTE.picks) {
+        var personal = TSB_TASTE.picks(3);
+        if (personal && personal.length) return personal[0];
+      }
+    } catch (e) {}
     var shelf = lsGet("tsb_starter_shelf", []), pool = [];
     (Array.isArray(shelf) ? shelf : []).forEach(function (id) { var b = byId(id); if (b && !finished(b)) pool.push(b); });
     if (!pool.length) {
@@ -175,6 +181,21 @@
     if (!pool.length) pool = books().slice(0, 20);
     var day = Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 864e5);
     return pool[day % pool.length];
+  }
+  function mindPickIds(problem) {
+    var ids = (problem && problem.ids || []).filter(function (id) { return !!byId(id); });
+    try {
+      if (window.TSB_TASTE && TSB_TASTE.model) {
+        var taste = TSB_TASTE.model(), weights = taste.cats || {};
+        ids.sort(function (a, b) {
+          var ba = byId(a), bb = byId(b);
+          var sa = (weights[ba.category || ba.cat] || 0) * 3 + (taste.seen[a] ? 0 : 0.18) - (taste.finished[a] ? 3 : 0);
+          var sb = (weights[bb.category || bb.cat] || 0) * 3 + (taste.seen[b] ? 0 : 0.18) - (taste.finished[b] ? 3 : 0);
+          return sb - sa;
+        });
+      }
+    } catch (e) {}
+    return ids.slice(0, 3);
   }
   function rowFor(cat, skip, n) {
     var out = [], s = seed(dayKey() + cat);
@@ -191,7 +212,7 @@
     var d = new Date(), h = d.getHours();
     var hi = h < 5 ? "Still up" : h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
     var nm = name(), streak = 0;
-    var companion = h < 5 ? "A soft page before sleep?" : h < 11 ? "Take your time. The shelf is not a deadline." : h < 15 ? "Had lunch? Let us make the afternoon lighter." : h < 18 ? "A little reset before the evening." : "Settle in. Your next good idea is waiting.";
+    var companion = h < 5 ? "A soft page before sleep?" : h < 12 ? "The day has room for one small idea." : h < 17 ? "A good idea for your afternoon." : h < 21 ? "A little reset before the evening." : "Settle in. Your next good idea is waiting.";
     /* v350: the line under the greeting is the app talking back. It knows the
        time of day from the clock, and it knows what this reader said mattered
        when they set the app up, so the second half is theirs, not a slogan. */
@@ -200,7 +221,7 @@
       try { _mind = JSON.parse(localStorage.getItem("tsb_mind") || "null"); } catch (eM) {}
       if (Array.isArray(_mind) && _mind.length) {
         var _pick = String(_mind[0] || "").toLowerCase();
-        if (_pick) companion += " A little on " + _pick + " fits the hour.";
+        if (_pick) companion += " If " + _pick + " is on your mind, start with one small move.";
       }
     } catch (e) {}
     try { streak = window.TSB && TSB.streak ? TSB.streak.count() : 0; } catch (e) {}
@@ -323,7 +344,7 @@
     var q = M.daily[(day + seed(name() || "r") % 7) % M.daily.length], p = null;
     M.problems.forEach(function (x) { if (x.key === q.pick) p = x; });
     if (!p) p = M.problems[0];
-    var ids = (p.ids || []).filter(byId).slice(0, 3);
+    var ids = mindPickIds(p);
     var quote = q.kind === "quote", opened = lsGet("tsb_mp_open", "") === dayKey();
     var covers = ids.map(function (id) { var b = byId(id); return '<a href="book.html?id=' + encodeURIComponent(id) + '" aria-label="' + esc(b.title) + '">' + coverEl(b, quote ? 38 : 50, quote ? 57 : 75) + "</a>"; }).join("");
     if (quote) return '<div class="ft-mp ft-mp--seal f-up' + (opened ? " flip" : "") + '" style="--d:.35" role="button" tabindex="0" aria-label="Mind pick, tap to open today\u2019s line" data-fmp><div class="ft-mp__in">' +
