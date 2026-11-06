@@ -196,7 +196,7 @@ setTimeout(ready,20000);
 <script src="js/inapp-select.js?v=391" defer></script>
 <script src="js/motion-344.js?v=391" defer></script>
 <link rel="stylesheet" href="css/splash.css?v=391">
-<script>/* v350: the opening screen is for readers who already set the app up, once per open. Decided before the first paint so nobody sees it flash. */try{var o=localStorage.getItem("tsb_onboarded");if(!o||sessionStorage.getItem("tsb_splash")){document.documentElement.className+=" tsb-nosplash";}else{sessionStorage.setItem("tsb_splash","1");}}catch(e){document.documentElement.className+=" tsb-nosplash";}</script>
+<script>/* v350: the opening screen is for readers who already set the app up, once per open. Decided before the first paint so nobody sees it flash. */try{var isEntry=/(^|\/)(index\.html)?$/.test(location.pathname);if(!isEntry||sessionStorage.getItem("tsb_splash")){document.documentElement.className+=" tsb-nosplash";}else{sessionStorage.setItem("tsb_splash","1");}}catch(e){document.documentElement.className+=" tsb-nosplash";}</script>
 <link rel="stylesheet" href="css/lively.css?v=391">
   <style>/* v389 · THE ACTION BAR IS A BAR YOU CAN ACTUALLY HIT.
        It used to be one horizontal scroller of 30px icons: half the tools lived off the

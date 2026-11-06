@@ -2187,3 +2187,26 @@ radial-gradient(90% 60% at 0% 42%, #2A1D14 0%, rgba(20, 17, 13, 0) 60%),
 .fo-s0.fo-up .fo-upb,
 .fo-s0.fo-up .fo-up-books img { animation: none !important; }
 .fo-upk::before { animation: none !important; box-shadow: none !important; }
+/* v391 · ON THE TOPIC STEP THE CHOICES WERE UNDER THE BUTTON
+   The topic list runs past the bottom of a phone, and the Next button is
+   sticky there, so it landed on top of Read / Listen / Both. A reader picked
+   three topics and never saw the reading-style row at all. On short screens
+   the topic list gives height back until the row is clear. */
+@media (max-height: 800px) {
+  .fo-s2 .fo-chips { max-height: 34vh; }
+  .fo-s2 .fo-lab { margin: 10px 2px 6px; }
+  .fo-s2 .fo-lab--sm { margin-top: 10px; }
+  /* The sticky footer was the second half of the same problem: on the topic
+     step it floated up over the choices, and on the "It starts noticing" step
+     it sat below the bottom of the screen, so the one button a reader needs was
+     never visible. In the flow, it can be neither covered nor lost. */
+  .fo-s .fo-foot {
+    position: static !important;
+    margin-top: 16px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 0px));
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}

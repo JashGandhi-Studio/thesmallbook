@@ -790,3 +790,11 @@ html[data-bar-labels="icons"] #tsbBar .tsb-bar__item { padding-top: 0; padding-b
 .ft-row{padding-left:28px;padding-right:28px;scroll-padding-left:28px;overscroll-behavior-inline:contain}.fbs-b{content-visibility:auto;contain-intrinsic-size:110px 218px}
 .ft-tile--grave{background:#2a2520!important;color:#fff!important}.ft-tile--grave span{color:#e7d7c4!important}.f-libgrave{display:flex;gap:10px;align-items:center;margin:14px 0;padding:13px;border:1px solid #312a23;border-radius:16px;background:#f1eadf;color:#201b16;text-decoration:none}.f-libgrave b{font-size:10px;letter-spacing:.1em}.f-libgrave span{font-size:12px;flex:1}.f-libgrave i{font-style:normal}
 body:has(#tsbAp.ap-on) .achvpop, body.tsb-audio-live .achvpop { bottom: calc(var(--bar-total, 74px) + 104px) !important; }
+/* ==========================================================================
+   v391 · A NOTICE IS NOT A BUTTON
+   The achievement card drops in at the bottom for its first seconds, right on
+   top of the reader's Listen and Next controls. It is information, not a
+   control, and it was eating taps meant for the page, which is why the first
+   tap on Next after opening a book sometimes did nothing.
+   ========================================================================== */
+.achvpop, html.film .achvpop { pointer-events: none !important; }

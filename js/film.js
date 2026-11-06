@@ -140,7 +140,12 @@
 
   /* ---------- a quiet minutes log: real time with a book or a player ---------- */
   (function minutes() {
-    if (!/^(book|reader|podcasts|kids|story|deepdive)\.html$/.test(page)) return;
+    /* v391: only pages with a book or a player were counted, so a reader who
+       spent half an hour on Today, Library and You saw zero minutes on their
+       card and thought the app was not recording. Time in the app is time in
+       the app. Only the setup screens are excluded, because nobody counts
+       filling a form as reading. */
+    if (/^(login|onboard|welcome|start)\.html$/.test(page)) return;
     var last = Date.now(), active = Date.now();
     ["pointerdown", "keydown", "scroll", "touchstart"].forEach(function (ev) { window.addEventListener(ev, function () { active = Date.now(); }, { passive: true }); });
     function playing() { var a = document.querySelectorAll("audio"); for (var i = 0; i < a.length; i++) if (!a[i].paused) return true; try { return !!(window.speechSynthesis && speechSynthesis.speaking); } catch (e) { return false; } }

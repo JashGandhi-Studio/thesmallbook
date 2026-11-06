@@ -1294,10 +1294,10 @@
     BUNDLE_BUSY = true;
     var left = 2;
     function done() { if (--left > 0) return; var w = BUNDLE_WAIT; BUNDLE_WAIT = []; w.forEach(function (f) { try { f(); } catch (e) {} }); }
-    var v = window.TSB_BUILD || "390";
+    var v = window.TSB_BUILD || "";
     ["data/podcast-episodes.js", "data/audiobook-files.js"].forEach(function (src) {
       var el = document.createElement("script");
-      el.src = src + "?v=" + v;
+      el.src = src + (v ? "?v=" + v : "");
       el.onload = done; el.onerror = done;
       (document.head || document.documentElement).appendChild(el);
     });
@@ -1366,8 +1366,33 @@
           jset(ck, res); jset(goodKey, res);
           cb(out, res.showTitle, false, res.art);
         }).catch(function () {
-          if (lastGood && lastGood.items && lastGood.items.length) { cb(lastGood.items, lastGood.showTitle, true, lastGood.art); return; }
-          cb([], "", false, "");
+          /* v391: one mirror is one point of failure. If rss2json cannot read
+             the feed, try a second reader before telling the room there is
+             nothing to play. */
+          fetchWithDeadline("https://api.allorigins.win/raw?url=" + encodeURIComponent(url), 9000)
+            .then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.text(); })
+            .then(function (xml) {
+              var doc = new DOMParser().parseFromString(xml, "text/xml");
+              var out = [];
+              doc.querySelectorAll("item").forEach(function (it) {
+                if (out.length >= 40) return;
+                var en = it.querySelector("enclosure");
+                var src = en ? (en.getAttribute("url") || "") : "";
+                if (!/^https:/.test(src)) return;
+                var t = it.querySelector("title") ? it.querySelector("title").textContent : "Episode";
+                var d = it.querySelector("pubDate") ? it.querySelector("pubDate").textContent : "";
+                var dd = ""; try { dd = new Date(d).toLocaleDateString(undefined, { day: "numeric", month: "short" }); } catch (e1) {}
+                out.push({ label: t, sub: dd || "episode", src: src, art: "" });
+              });
+              if (!out.length) throw new Error("second mirror empty");
+              var res = { at: Date.now(), items: out, showTitle: "", art: "" };
+              jset(ck, res); jset(goodKey, res);
+              cb(out, "", false, "");
+            })
+            .catch(function () {
+              if (lastGood && lastGood.items && lastGood.items.length) { cb(lastGood.items, lastGood.showTitle, true, lastGood.art); return; }
+              cb([], "", false, "");
+            });
         });
     }
     fetchWithDeadline(url, 9000).then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.text(); }).then(function (xml) {
@@ -1516,7 +1541,7 @@
        so playing a podcast does not depend on any request succeeding */
     if (listOverride && listOverride.length) {
       var ov = listOverride.map(function (e, i) {
-        return { label: e.label || e.title || ("Episode " + (i + 1)), sub: e.sub || (e.seconds ? fmt(e.seconds) : (e.date || "episode")), src: cleanAudioUrl(e.src || e.url), art: e.art || show.art || "" };
+        return { label: e.label || e.title || ("Episode " + (i + 1)), sub: e.sub || (e.seconds ? fmtTime(e.seconds) : (e.date || "episode")), src: cleanAudioUrl(e.src || e.url), art: e.art || show.art || "" };
       }).filter(function (x) { return /^https?:/.test(x.src || ""); });
       if (ov.length) { onFeedItems(show, ov, show.name, false, "", startAt); return; }
     }
@@ -1525,7 +1550,7 @@
     var shipped = (window.TSB_PODCAST_EPS || {})[show.id];
     if (shipped && shipped.length) {
       var sh = shipped.map(function (e, i) {
-        return { label: e.title || ("Episode " + (i + 1)), sub: (e.date ? e.date + " · " : "") + (e.seconds ? fmt(e.seconds) : "episode"), src: cleanAudioUrl(e.url) };
+        return { label: e.title || ("Episode " + (i + 1)), sub: (e.date ? e.date + " · " : "") + (e.seconds ? fmtTime(e.seconds) : "episode"), src: cleanAudioUrl(e.url) };
       }).filter(function (x) { return /^https?:/.test(x.src); });
       if (sh.length) { onFeedItems(show, sh, show.name, false, "", startAt); return; }
     }
@@ -1535,7 +1560,7 @@
   }
 
   function onFeedItems(show, items, feedTitle, stale, art, startAt) {
-      if (!items || !items.length) { toast("This one has no playable parts right now."); return; }
+      if (!items || !items.length) { toast("This show's episodes could not be read on this connection. Try again in a moment."); return; }
       rememberShow(show);
       cacheFeedList(show, items, feedTitle, art);
       if (art) rememberArt(show, art);

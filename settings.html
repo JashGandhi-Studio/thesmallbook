@@ -66,7 +66,7 @@ setTimeout(ready,20000);
 <script src="js/inapp-select.js?v=391" defer></script>
 <script src="js/motion-344.js?v=391" defer></script>
 <link rel="stylesheet" href="css/splash.css?v=391">
-<script>/* v350: the opening screen is for readers who already set the app up, once per open. Decided before the first paint so nobody sees it flash. */try{var o=localStorage.getItem("tsb_onboarded");if(!o||sessionStorage.getItem("tsb_splash")){document.documentElement.className+=" tsb-nosplash";}else{sessionStorage.setItem("tsb_splash","1");}}catch(e){document.documentElement.className+=" tsb-nosplash";}</script>
+<script>/* v350: the opening screen is for readers who already set the app up, once per open. Decided before the first paint so nobody sees it flash. */try{var isEntry=/(^|\/)(index\.html)?$/.test(location.pathname);if(!isEntry||sessionStorage.getItem("tsb_splash")){document.documentElement.className+=" tsb-nosplash";}else{sessionStorage.setItem("tsb_splash","1");}}catch(e){document.documentElement.className+=" tsb-nosplash";}</script>
 <link rel="stylesheet" href="css/lively.css?v=391">
 </head>
 <body class="setpage">
@@ -283,7 +283,46 @@ setTimeout(ready,20000);
       <div class="setrow" data-installwrap>
         <button class="setbtn" data-install><svg class="inline-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>Install this app to your home screen</button>
       </div>
+      <div class="setrow" style="margin-top:8px;">
+        <button class="setbtn" id="setCheckUpdate">Check for update now</button>
+      </div>
+      <p class="sethint" id="setBuildLine">Build unknown.</p>
       <p class="sethint">One tap and TheSmallBook opens like a real app, full screen, works offline, no browser bar.</p>
+      <script>
+      (function () {
+        var line = document.getElementById("setBuildLine");
+        var btn = document.getElementById("setCheckUpdate");
+        if (!line || !btn) return;
+        function stamp() {
+          var b = window.TSB_BUILD || "unknown";
+          var from = navigator.serviceWorker && navigator.serviceWorker.controller ? "a saved copy on this device" : "the live server";
+          line.textContent = "You are on build " + b + ", running from " + from + ".";
+        }
+        stamp();
+        window.addEventListener("load", stamp);
+        window.addEventListener("tsbbuild", stamp);
+        btn.addEventListener("click", function () {
+          /* the honest update button: drop every saved copy, then ask the
+             server for everything again. No guessing whether it took. */
+          btn.disabled = true;
+          btn.textContent = "Checking...";
+          var done = function () { location.reload(); };
+          var wipe = function () {
+            if (!window.caches) return Promise.resolve();
+            return caches.keys().then(function (ks) {
+              return Promise.all(ks.map(function (k) { return caches.delete(k); }));
+            });
+          };
+          var upd = Promise.resolve();
+          if (navigator.serviceWorker && navigator.serviceWorker.getRegistration) {
+            upd = navigator.serviceWorker.getRegistration().then(function (reg) {
+              return reg ? reg.update() : Promise.resolve();
+            }).catch(function () {});
+          }
+          upd.then(wipe).then(done).catch(done);
+        });
+      })();
+      </script>
     </section>
 
     <section class="setcard">

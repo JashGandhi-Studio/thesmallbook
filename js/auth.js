@@ -423,14 +423,23 @@
   function mailOk(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
   const HANDLE_RE = /^[a-z0-9_]{3,20}$/;
 
+  /* v391: a missing lookup function and an unknown handle are not the same
+     thing. If supabase/sql/RUN-THIS-v391.sql has not been run, every @username
+     used to be answered with "no account with that username", which is a lie
+     about the reader's own account. The caller now gets a different answer for
+     each case and can say something true. */
+  let handleLookupDown = false;
   async function emailForUsername(handle) {
+    handleLookupDown = false;
     try {
       const res = await fetch(URL + "/rest/v1/rpc/tsb_email_for_username", {
         method: "POST",
         headers: { "apikey": ANON, "Content-Type": "application/json" },
         body: JSON.stringify({ p_username: handle })
       });
-      if (!res.ok) return "";
+      /* any answer that is not a successful lookup means we do not know, and
+         "no account with that username" is then a claim we cannot make */
+      if (!res.ok) { handleLookupDown = true; return ""; }
       const txt = (await res.text() || "").trim();
       let out = txt;
       try { out = JSON.parse(txt); } catch (e) {}   // PostgREST quotes plain text
@@ -442,14 +451,22 @@
     if (!ENABLED) return { ok: false, code: "off" };
     const raw = String(identifier || "").trim();
     if (!raw) return { ok: false, code: "empty" };
-    if (raw.indexOf("@") !== -1) {                    // an email, straight in
+    /* v391: the field invites "Email or @username, both work", and then any
+       value with an @ was treated as an email, so the @username form the
+       placeholder asks for was answered with "that doesn't look like an email
+       or an @username". A leading @ with no domain is a handle, not an email. */
+    const handleShaped = /^@[a-z0-9_]{3,20}$/i.test(raw);
+    if (raw.indexOf("@") !== -1 && !handleShaped) {    // an email, straight in
       if (!mailOk(raw)) return { ok: false, code: "badmail" };
       return signInGated(raw.toLowerCase(), password);
     }
     const handle = raw.replace(/^@+/, "").toLowerCase();
     if (!HANDLE_RE.test(handle)) return { ok: false, code: "badhandle" };
     const email = await emailForUsername(handle);
-    if (!email) { noteFail(); await gateFail(handle); return { ok: false, code: "nohandle" }; }
+    if (!email) {
+      if (handleLookupDown) return { ok: false, code: "handle_off" };
+      noteFail(); await gateFail(handle); return { ok: false, code: "nohandle" };
+    }
     return signInGated(email, password);
   }
 
@@ -1289,6 +1306,7 @@
         needsFinish, finishGoogleAccount, skipFinish,
         requestLoginCode, resendSignupCode, verifyLoginCode, verifySignupCode, verifyRecoveryCode,
         setMyUsername, gateStatus, emailForUsername,
+        get handleLookupDown() { return handleLookupDown; },
         displayName,
         setDisplayName,
         me: user,

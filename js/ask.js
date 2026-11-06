@@ -318,10 +318,10 @@
     } catch (e2) {}
   }
   function gravesComplete(cb) {
-    var V = (window.TSB_LESSONS && window.TSB_LESSONS.version) || "390";
+    var V = (window.TSB_LESSONS && window.TSB_LESSONS.version) || "";
     var load = function (file, next) {
       var s = document.createElement("script");
-      s.src = file + "?v=" + V;
+      s.src = file + (V ? "?v=" + V : "");
       s.async = true;
       s.onload = s.onerror = next;
       (document.head || document.documentElement).appendChild(s);

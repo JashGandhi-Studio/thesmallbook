@@ -43,12 +43,13 @@ html.tsb-nosplash #tsbSplash { display: none !important; }
 
 /* ---------- what will sit under the name ---------- */
 #tsbSplash .sp-shelf {
-  position: absolute; left: 50%; bottom: -20px;
-  width: min(150%, 330px); height: 11px;
-  margin-left: min(-75%, -165px);
-  border-radius: 6px;
-  background: linear-gradient(180deg, #2A2119, #16130F);
-  box-shadow: 0 18px 30px -10px rgba(22,19,15,.40), inset 0 2px 0 rgba(255,255,255,.20);
+  position: absolute; left: 0; right: 0; bottom: -12px;
+  width: min(118%, 260px); height: 5px;
+  margin: 0 auto;
+  border-radius: 999px;
+  /* a shelf, not a block: it tapers to nothing at both ends */
+  background: linear-gradient(90deg, rgba(22,19,15,0) 0%, #16130F 14%, #16130F 86%, rgba(22,19,15,0) 100%);
+  box-shadow: 0 14px 26px -12px rgba(22,19,15,.45);
   transform-origin: 50% 50%;
   opacity: 0;
   animation: spShelfIn .46s cubic-bezier(.22,.9,.24,1) var(--sp-shelf, .12s) both;
@@ -61,14 +62,14 @@ html.tsb-nosplash #tsbSplash { display: none !important; }
 
 /* the ground the book sits on: a soft contact shadow, so the field has depth */
 #tsbSplash .sp-shadow {
-  position: absolute; left: 50%; bottom: -16px;
-  width: min(112%, 240px); height: 26px; margin-left: min(-56%, -120px);
+  position: absolute; left: 0; right: 0; bottom: -10px;
+  width: min(96%, 210px); height: 18px; margin: 0 auto;
   border-radius: 50%;
-  background: radial-gradient(ellipse at 50% 50%, rgba(22,19,15,.34) 0%, rgba(22,19,15,.12) 46%, transparent 72%);
+  background: radial-gradient(ellipse at 50% 50%, rgba(22,19,15,.16) 0%, rgba(22,19,15,.06) 46%, transparent 72%);
   opacity: 0;
   animation: spShadow .9s cubic-bezier(.2,.8,.3,1) var(--sp-shelf, .12s) both;
 }
-@keyframes spShadow { 0% { opacity: 0; transform: scale(.4) } 100% { opacity: 1; transform: none } }
+@keyframes spShadow { 0% { opacity: 0; transform: scale(.4) } 100% { opacity: 1; transform: scale(1) } }
 #tsbSplash .sp-stage {
   position: relative; flex: none;
   width: min(52vw, 178px); height: min(66vw, 226px);
@@ -373,7 +374,89 @@ html.tsb-nosplash #tsbSplash { display: none !important; }
 
 
 /* ==========================================================================
-   v382 · NO OPENING FILM
-   The opening was judged twice and lost both times, so it is gone rather than
-   defended. The app paints straight into Today. */
-#tsbSplash { display: none !important }
+   v391 · THE OPENING IS BACK
+   v382 killed it with a display:none override and this is that override
+   removed. It plays once per app open, on a cold start, and it covers the
+   boot instead of the reader staring at an empty white screen. Any touch sends
+   it away early, so nobody is held hostage by it. To retime it, edit SCORE at
+   the top of js/splash.js, every delay is one number there.
+
+/* ==========================================================================
+   v391 · THE LOADING LINE
+   The markup has carried <div class="sp-bar"><i></i></div> since the opening
+   was written and no rule ever drew it, so the wait had nothing to show for
+   itself. A hairline that fills while the app boots behind the field, gone the
+   moment the field lifts. It is the quiet "we are nearly there", not a spinner.
+   ========================================================================== */
+#tsbSplash .sp-bar {
+  position: relative;
+  width: 148px; height: 2px;
+  margin: 30px auto 0;
+  border-radius: 2px;
+  background: rgba(22, 19, 15, .16);
+  overflow: hidden;
+  opacity: 0;
+  animation: spBarIn .5s ease var(--sp-name, 1.15s) both;
+}
+#tsbSplash .sp-bar i {
+  position: absolute; top: 0; bottom: 0; left: 0;
+  width: 0;
+  border-radius: 2px;
+  background: #16130F;
+  animation: spBarFill 3.1s cubic-bezier(.32, .08, .24, 1) var(--sp-name, 1.15s) both;
+}
+@keyframes spBarIn { from { opacity: 0 } to { opacity: 1 } }
+@keyframes spBarFill {
+  0%   { width: 0 }
+  55%  { width: 62% }
+  100% { width: 100% }
+}
+@media (prefers-reduced-motion: reduce) {
+  #tsbSplash .sp-bar { animation: none; opacity: 1 }
+  #tsbSplash .sp-bar i { animation: none; width: 100% }
+}
+
+/* ==========================================================================
+   v391 · THE QUIET OPENING
+   The field, the name and the line. No character, nothing to watch twice.
+   ========================================================================== */
+#tsbSplash .spx {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center;
+  color: #16130F;
+}
+#tsbSplash .spx-mark {
+  width: 46px; height: 46px;
+  opacity: 0; transform: translateY(10px);
+  animation: spxIn .8s cubic-bezier(.22,.9,.24,1) .06s both;
+}
+#tsbSplash .spx-name {
+  margin-top: 22px;
+  font: 400 clamp(31px, 9.4vw, 46px)/1 "Newsreader", Georgia, serif;
+  letter-spacing: -.02em;
+  opacity: 0; transform: translateY(12px);
+  animation: spxIn .9s cubic-bezier(.22,.9,.24,1) .18s both;
+}
+#tsbSplash .spx-name i { font-style: italic }
+#tsbSplash .spx-rule {
+  height: 1px; width: 0; margin-top: 20px;
+  background: rgba(22,19,15,.26);
+  animation: spxRule .8s cubic-bezier(.3,.8,.3,1) .42s both;
+}
+#tsbSplash .spx-tag {
+  margin-top: 15px;
+  font: 600 10.5px/1 "Space Grotesk", system-ui, sans-serif;
+  letter-spacing: .24em; text-transform: lowercase;
+  color: rgba(22,19,15,.6);
+  opacity: 0;
+  animation: spxIn .7s ease .56s both;
+}
+@keyframes spxIn { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: none } }
+@keyframes spxRule { from { width: 0; opacity: 0 } to { width: 104px; opacity: 1 } }
+@media (prefers-reduced-motion: reduce) {
+  #tsbSplash .spx-mark, #tsbSplash .spx-name, #tsbSplash .spx-tag {
+    animation: none !important; opacity: 1 !important; transform: none !important;
+  }
+  #tsbSplash .spx-rule { animation: none !important; opacity: 1 !important; width: 104px }
+}

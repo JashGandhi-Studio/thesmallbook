@@ -9,7 +9,8 @@ if (typeof window !== "undefined") window.BOOKS = BOOKS;
   if (typeof window === "undefined") return;
   /* v385: the lesson URL carries the build, so a phone can never be served a
      copy of a lesson file cached by an older deploy. */
-  var V = (typeof window !== "undefined" && window.TSB_BUILD) ? String(window.TSB_BUILD) : "390";
+  var V = (typeof window !== "undefined" && window.TSB_BUILD) ? String(window.TSB_BUILD) : "";
+  var QV = V ? "?v=" + V : "";   /* no guessed build number: a wrong one is a cache miss */
   var byId = {}, wait = {}, allCb = null, allState = 0;
   BOOKS.forEach(function (b) { byId[b.id] = b; });
   function full(b) { return !b || b._full === 1; }
@@ -26,15 +27,62 @@ if (typeof window !== "undefined") window.BOOKS = BOOKS;
     if (typeof earlyFill === "function") { try { earlyFill(id, body, ext); } catch (e2) {} }
   };
   window.TSB_LFILL_HOLD = null;
+  var failed = {};
+  /* v391: a lesson that did not arrive used to be reported as if it had. The
+     old code handed the caller back the empty book on error, the reader took
+     that as "lessons are here", rebuilt the same two fallback pages and went
+     quiet. That is why tapping Next on a book you had not read did nothing at
+     all, with no message. Now a miss is retried, and a real miss says so. */
   function ensure(id, cb) {
     var b = byId[id];
-    if (full(b)) { if (cb) cb(b); return; }
+    if (full(b)) { delete failed[id]; if (cb) cb(b); return; }
     if (wait[id]) { if (cb) wait[id].push(cb); return; }
     wait[id] = cb ? [cb] : [];
-    var s = document.createElement("script");
-    s.src = "data/lessons/" + encodeURIComponent(id) + ".js?v=" + V; s.async = true;
-    s.onerror = function () { var w = wait[id]; delete wait[id]; if (w) w.forEach(function (f) { try { f(b); } catch (e) {} }); };
-    (document.head || document.documentElement).appendChild(s);
+    var tries = 0;
+    function giveUp() {
+      var w = wait[id]; delete wait[id];
+      failed[id] = 1;
+      if (w) w.forEach(function (f) { try { f(null); } catch (e) {} });
+    }
+    /* The chapter text exists in two places: the small per book file and the
+       bulk catalogue. If the small one will not come, the bulk one almost
+       certainly will, and the reader should not notice which arrived. */
+    function bulkThenGiveUp() {
+      if (full(byId[id])) { land(); return; }
+      try {
+        all(function () {
+          if (full(byId[id])) { delete failed[id]; land(); return; }
+          giveUp();
+        });
+      } catch (e) { giveUp(); }
+    }
+    function land() {
+      var w = wait[id]; if (!w) return;
+      delete wait[id]; delete failed[id];
+      w.forEach(function (f) { try { f(byId[id]); } catch (e) {} });
+    }
+    function attempt() {
+      tries += 1;
+      var s = document.createElement("script");
+      /* a retry carries its own address so a bad answer held by a proxy or a
+         half finished download cannot be handed back a second time */
+      s.src = "data/lessons/" + encodeURIComponent(id) + ".js" + (tries === 1 ? QV : "?retry=" + tries);
+      s.async = true;
+      s.onerror = function () {
+        if (tries < 3) { setTimeout(attempt, 350 * tries); return; }
+        bulkThenGiveUp();
+      };
+      s.onload = function () {
+        /* a script that loads without filling the book is not a success */
+        setTimeout(function () {
+          if (full(byId[id])) { land(); return; }
+          if (tries < 3) { attempt(); return; }
+          bulkThenGiveUp();
+        }, 900);
+      };
+      (document.head || document.documentElement).appendChild(s);
+    }
+    attempt();
   }
   function all(cb) {
     if (allState === 2) { if (cb) cb(); return; }
@@ -43,7 +91,7 @@ if (typeof window !== "undefined") window.BOOKS = BOOKS;
     allState = 1;
     var done = function () { allState = 2; var c = allCb; allCb = null; c.forEach(function (f) { try { f(); } catch (e) {} }); };
     try {
-      fetch("js/data-full.js?v=" + V).then(function (r) { return r.text(); }).then(function (t) {
+      fetch("js/data-full.js" + QV).then(function (r) { return r.text(); }).then(function (t) {
         var arr = JSON.parse(t.slice(t.indexOf("["), t.indexOf("];\nif (typeof window") + 1));
         arr.forEach(function (fb) { var b = byId[fb.id]; if (b && !full(b)) window.TSB_LFILL(fb.id, fb.lessons.map(function (l) { return [l.summary || "", l.example || "", l.action || ""]; }), { caveat: fb.caveat || "", actionPlan: fb.actionPlan || [] }); });
         done();
@@ -55,7 +103,7 @@ if (typeof window !== "undefined") window.BOOKS = BOOKS;
     if (window.FAILURES && window.FAILURES.length) { if (cb) cb(); return; }
     if (fW) { if (cb) fW.push(cb); return; }
     fW = cb ? [cb] : [];
-    var s = document.createElement("script"); s.src = "js/failures.js?v=" + V; s.async = true;
+    var s = document.createElement("script"); s.src = "js/failures.js" + QV; s.async = true;
     s.onload = s.onerror = function () { var w = fW; fW = null; w.forEach(function (f) { try { f(); } catch (e) {} }); };
     (document.head || document.documentElement).appendChild(s);
   }
@@ -65,6 +113,6 @@ if (typeof window !== "undefined") window.BOOKS = BOOKS;
     window.TSB_LFILL_QUEUE = null;
     if (held && held.length) held.forEach(function (a) { try { window.TSB_LFILL(a[0], a[1], a[2]); } catch (e) {} });
   } catch (e) {}
-  window.TSB_LESSONS = { ensure: ensure, all: all, failures: failures, ready: function (id) { return full(byId[id]); }, version: V };
+  window.TSB_LESSONS = { ensure: ensure, all: all, failures: failures, failed: function (id) { return !!failed[id]; }, ready: function (id) { return full(byId[id]); }, version: V };
   /* the open book's text is written in by the page itself (book and reader) */
 })();

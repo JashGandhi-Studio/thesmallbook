@@ -7227,6 +7227,23 @@ html.dark .wr-dictate__interim{background:#1b1712;color:var(--ink);border-color:
 .wr-top{gap:8px}
 .wr-top .wr-dictate,.wr-top .wr-dictate__lang{flex:none}
 }
+/* v391: Dictate and its language picker are injected into the same header as
+   Post, and on a 390px phone they pushed Post past the right edge, so the
+   publish button was off-screen and untappable. Post keeps its place on the
+   first row, the voice controls wrap underneath on a narrow screen. */
+.wr-top{flex-wrap:wrap}
+.wr-top #pubBtn{flex:none;margin-left:auto}
+@media(max-width:430px){
+.wr-top{row-gap:8px}
+.wr-top .wr-save{order:1}
+.wr-top #pubBtn{order:2}
+.wr-top .wr-dictate{order:3}
+.wr-top .wr-dictate__lang{order:4;flex:1 1 auto;min-width:0;max-width:150px;text-overflow:ellipsis}
+}
+@media(min-width:431px){
+.wr-top #pubBtn{margin-left:0}
+.wr-top .wr-dictate__lang{min-width:0;max-width:190px;text-overflow:ellipsis}
+}
 html.dark input[type="text"],
 html.dark input[type="email"],
 html.dark input[type="search"],

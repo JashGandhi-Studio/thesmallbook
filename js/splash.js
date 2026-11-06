@@ -67,35 +67,19 @@
     letters += '<span style="--i:' + i + '">' + (italic ? "<i>" + ch + "</i>" : ch) + "</span>";
   }
 
+  /* v391: the character is gone. A reader does not need a singing book before
+     their book. What is left is the mark, the name, the promise and a line that
+     fills while the app boots behind it. */
   el.innerHTML =
-    '<div class="sp-vig" aria-hidden="true"></div>' +
-    '<div class="sp-grain" aria-hidden="true"></div>' +
-    '<div class="sp-centre">' +
-    '<div class="sp-stage" aria-hidden="true">' +
-      '<div class="sp-glow"></div>' +
-      '<div class="sp-shelf" aria-hidden="true"></div>' +
-      '<div class="sp-shadow" aria-hidden="true"></div>' +
-      '<div class="sp-pip">' +
-        '<div class="sp-body">' +
-          '<div class="sp-cover"><span class="sp-spine"></span></div>' +
-          '<span class="sp-leaves"></span>' +
-          '<span class="sp-bm"></span>' +
-          '<div class="sp-face">' +
-            '<span class="sp-eye"><b></b><span class="sp-lid"></span></span>' +
-            '<span class="sp-eye"><b></b><span class="sp-lid"></span></span>' +
-            '<span class="sp-brow sp-brow--l"></span><span class="sp-brow sp-brow--r"></span>' +
-          '</div>' +
-          '<span class="sp-mouth"></span>' +
-          '<span class="sp-feet"><i></i><i></i></span>' +
-        '</div>' +
-      '</div>' +
-      '<span class="sp-page"></span><span class="sp-page"></span><span class="sp-page"></span>' +
-      '<span class="sp-spark"></span><span class="sp-spark"></span><span class="sp-spark"></span>' +
-      '<span class="sp-spark"></span><span class="sp-spark"></span>' +
-    '</div>' +
-    '<div class="sp-name" aria-hidden="true">' + letters + '</div>' +
-    '<div class="sp-rule" aria-hidden="true"></div>' +
-    '<div class="sp-tag" aria-hidden="true">big books &middot; small reads</div>' +
+    '<div class="spx">' +
+      '<svg class="spx-mark" viewBox="0 0 48 48" aria-hidden="true">' +
+        '<path d="M24 13.4c-3.4-2.8-7.8-3.9-12.7-3.9v22.6c4.9 0 9.3 1.1 12.7 3.9 3.4-2.8 7.8-3.9 12.7-3.9V9.5c-4.9 0-9.3 1.1-12.7 3.9z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>' +
+        '<path d="M24 13.4v22.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+      '</svg>' +
+      '<div class="spx-name">The<i>Small</i>Book</div>' +
+      '<div class="spx-rule"></div>' +
+      '<div class="spx-tag">big books &middot; small reads</div>' +
+      '<div class="sp-bar" aria-hidden="true"><i></i></div>' +
     '</div>';
 
   /* one place writes the clock, so nothing can drift */

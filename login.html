@@ -75,7 +75,7 @@ setTimeout(ready,20000);
 <script src="js/motion-344.js?v=391" defer></script>
 <link rel="stylesheet" href="css/splash.css?v=391">
 <link rel="stylesheet" href="css/lively.css?v=391">
-<script>/* v350: the opening screen is for readers who already set the app up, once per open. Decided before the first paint so nobody sees it flash. */try{var o=localStorage.getItem("tsb_onboarded");if(!o||sessionStorage.getItem("tsb_splash")){document.documentElement.className+=" tsb-nosplash";}else{sessionStorage.setItem("tsb_splash","1");}}catch(e){document.documentElement.className+=" tsb-nosplash";}</script>
+<script>/* v350: the opening screen is for readers who already set the app up, once per open. Decided before the first paint so nobody sees it flash. */try{var isEntry=/(^|\/)(index\.html)?$/.test(location.pathname);if(!isEntry||sessionStorage.getItem("tsb_splash")){document.documentElement.className+=" tsb-nosplash";}else{sessionStorage.setItem("tsb_splash","1");}}catch(e){document.documentElement.className+=" tsb-nosplash";}</script>
 </head>
 <body class="youpage">
 <div id="tsbSplash" aria-hidden="true"><div class="sp-stage"><div class="sp-mark"><span class="sp-leaf sp-l"><svg viewBox="0 0 32 64" aria-hidden="true"><path d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z" fill="var(--mk-a,#16130F)"/></svg></span><span class="sp-leaf sp-r"><svg viewBox="32 0 32 64" aria-hidden="true"><path d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z" fill="var(--mk-b,#FFC800)"/></svg></span><span class="sp-spine"></span></div></div><div class="sp-word">The<i>Small</i>Book</div><div class="sp-bar"><i></i></div></div>
@@ -1016,7 +1016,10 @@ setTimeout(ready,20000);
             return;
           }
           var id = $("siMail").value.trim(), pass = $("siPass").value;
-          var isMail = id.indexOf("@") !== -1;
+          /* v391: "@name" is a handle, not an email. Without this the field's
+             own placeholder ("Email or @username, both work") led straight to
+             "that doesn't look like an email or an @username". */
+          var isMail = id.indexOf("@") !== -1 && !/^@[a-z0-9_]{3,20}$/i.test(id);
           if (!id) { show("Enter your email or @username."); $("siMail").focus(); return; }
           if (isMail ? !mailOk(id) : !/^@?[a-z0-9_]{3,20}$/.test(id.toLowerCase())) {
             show("That doesn't look like an email or an @username, check the spelling."); $("siMail").focus(); return;
@@ -1038,6 +1041,7 @@ setTimeout(ready,20000);
             }
             if (r && r.code === "confirm") { show("Confirm your email first, open the newest email, or tap 'Forgot password' for a fresh code."); return; }
             if (r && (r.code === "nohandle")) { show("No account with that @username, check the spelling, or sign in with your email."); return; }
+            if (r && (r.code === "handle_off")) { show("Signing in with an @username is not available right now. Use your email address above, it always works."); return; }
             if (r && (r.code === "bad" || r.code === "badmail" || r.code === "badhandle")) {
               show("Wrong email/@username or password. Check both and try again, or tap 'Forgot password' and we'll email you a code.");
               return;
@@ -1107,7 +1111,7 @@ setTimeout(ready,20000);
         $("btnCodeLogin").addEventListener("click", async function () {
           var id = $("siMail").value.trim();
           if (!id) { show("Type your email or @username above first, then tap this."); $("siMail").focus(); return; }
-          if (id.indexOf("@") !== -1) {
+          if (id.indexOf("@") !== -1 && !/^@[a-z0-9_]{3,20}$/i.test(id)) {
             if (!mailOk(id)) { show("That email doesn't look right, check the spelling."); $("siMail").focus(); return; }
             TSB_AUTH.requestLoginCode(id.toLowerCase()).then(function (r) {
               if (r && r.ok === false && r.code === "slow") { slowSay(r); return; }
@@ -1118,7 +1122,11 @@ setTimeout(ready,20000);
           var handle = id.replace(/^@+/, "").toLowerCase();
           if (!/^[a-z0-9_]{3,20}$/.test(handle)) { show("That doesn't look like an email or an @username."); $("siMail").focus(); return; }
           var mail = (TSB_AUTH.emailForUsername) ? await TSB_AUTH.emailForUsername(handle) : "";
-          if (!mail) { show("No account with that @username, check the spelling, or use your email."); return; }
+          if (!mail) {
+            if (TSB_AUTH.handleLookupDown) { show("Signing in with an @username is not available right now. Use your email address above, it always works."); return; }
+            show("No account with that @username, check the spelling, or use your email.");
+            return;
+          }
           TSB_AUTH.requestLoginCode(mail).then(function (r) {
             if (r && r.ok === false && r.code === "slow") { slowSay(r); return; }
             openCode("login", mail);

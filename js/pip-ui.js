@@ -147,11 +147,17 @@
     try { b = (window.BOOKS || []).filter(function (x) { return x.id === id; })[0] || null; } catch (e) {}
     P.log({ k: "open", book: id, title: b ? b.title : id });
 
+    /* v391: the question sheet is gone from the reader for good. It opened as
+       a fixed sheet covering the whole screen with pointer events on, so on a
+       phone it ate every scroll and every tap on Next. A reader who cannot
+       scroll and cannot turn the page does not think "a prompt appeared", they
+       think the app is broken, and they are right. The reader now records the
+       chapter and leaves the screen alone. The question still exists on Today;
+       it has no business interrupting a chapter. */
     document.addEventListener("click", function (ev) {
       var n = ev.target.closest ? ev.target.closest(".frd-next, [data-next], #rmNext, .rm-next") : null;
       if (!n) return;
       P.log({ k: "chapter", book: id, title: b ? b.title : id });
-      setTimeout(function () { askHere(id, b ? b.title : id); }, 900);
     }, true);
 
     /* a saved line is a moment worth noticing */

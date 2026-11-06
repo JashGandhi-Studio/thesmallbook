@@ -26,6 +26,10 @@
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   html,body { width:1200px; height:630px; overflow:hidden; }
+  /* v391: the canvas has to stay 1200x630 for the export, but on a phone that
+     meant the right two thirds were clipped with no way to reach them. Wide
+     enough screens keep the exact frame; narrow ones can scroll to see it. */
+  @media (max-width:1240px) { html,body { overflow:auto; } }
   body {
     font-family:'Space Grotesk',sans-serif; color:var(--ink);
     background:

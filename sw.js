@@ -165,6 +165,34 @@ const APP_SHELL = [
   "./js/graveyard2.js",
   "./css/graveyard2.css",
   "./js/data.js",
+  "./js/spine-389.js",
+  /* v391: the reader and the tabs it opens were never precached, so a first
+     visit followed by a lost signal left every one of them unavailable and
+     the page blank. Everything a page can load ships in the precache. */
+  "./js/ab-discovery.js",
+  "./js/audioplayer.js",
+  "./js/avatar.js",
+  "./js/backnav.js",
+  "./js/casefile-data.js",
+  "./js/daylight.js",
+  "./js/founder.js",
+  "./js/guide.js",
+  "./js/listen.js",
+  "./js/motion-344.js",
+  "./js/packs-data.js",
+  "./js/packs-ui.js",
+  "./js/personalize.js",
+  "./js/pip-mind.js",
+  "./js/pip-ui.js",
+  "./js/quotedesk.js",
+  "./js/quotewall.js",
+  "./js/reader.js",
+  "./js/shelf3d.js",
+  "./js/show-discovery.js",
+  "./js/showcase.js",
+  "./js/sounds.js",
+  "./js/splash.js",
+  "./js/taste.js",
   "./assets/fonts/newsreader.woff2",
   "./assets/fonts/newsreader-italic.woff2",
   "./assets/fonts/spacegrotesk.woff2",
@@ -223,12 +251,43 @@ const APP_SHELL = [
   "./js/request.js",
   "./js/stt.js",
   "./js/wordtap.js",
-].map(function (u) { return /\.(m?js|css)$/.test(u) ? u + "?v=" + CACHE_VERSION.split("-")[1] : u; });
+  /* v391: reader.html was not in here, so an offline visit to a book fell
+     through to the home page and every book looked empty. Every page ships. */
+  "./audio.html",
+  "./og-builder.html",
+  "./quotes.html",
+  "./reader.html",
+].map(function (u) {
+  /* The cache name is "tsb-v391", so split("-")[1] is "v391" and this used to
+     store every file as "?v=v391" while every page asks for "?v=391". Not one
+     precached script ever matched a request: online it silently fell through to
+     the network, and offline every script failed, which is why the app had no
+     working offline mode at all. The number has to have the leading v removed. */
+  return /\.(m?js|css)$/.test(u) ? u + "?v=" + CACHE_VERSION.split("-")[1].replace(/^v/, "") : u;
+});
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(
-    caches.open(CACHE_VERSION).then((c) => c.addAll(APP_SHELL)).then(() => self.skipWaiting())
-  );
+  /* addAll is all or nothing: one refused connection out of the whole list
+     threw the entire offline copy away and the app had no offline mode at all.
+     Save what we can, a few at a time, and always take over. */
+  e.waitUntil((async () => {
+    const c = await caches.open(CACHE_VERSION);
+    let i = 0;
+    const one = async () => {
+      while (i < APP_SHELL.length) {
+        const u = APP_SHELL[i];
+        i += 1;
+        try {
+          const res = await fetch(u, { cache: "reload" });
+          if (res && res.ok) await c.put(u, res);
+        } catch (err) {
+          /* a file we cannot reach now is retried on the next visit */
+        }
+      }
+    };
+    await Promise.all([one(), one(), one(), one(), one(), one()]);
+    await self.skipWaiting();
+  })());
 });
 
 self.addEventListener("activate", (e) => {
@@ -281,6 +340,15 @@ self.addEventListener("fetch", (e) => {
   return;
 
   /* v323: the normal strategies, consulted only when the episode is not saved */
+  /* the saved copy of a file, whatever number is on its address */
+  function fromCache(req) {
+    return caches.open(CACHE_VERSION).then(async (c) => {
+      const hit = (await c.match(req)) || (await c.match(req, { ignoreSearch: true }));
+      if (hit) return hit;
+      throw new Error("offline and not saved");
+    });
+  }
+
   async function route(e) {
   const url = new URL(e.request.url);
   // never cache supabase API calls
@@ -308,6 +376,10 @@ self.addEventListener("fetch", (e) => {
        They load from the phone, not the network: after the first visit every
        page, book and podcast opens instantly, even on the slowest connection.
        HTML above stays fresh-first so updates still land the moment they ship. */
+    /* A reload marks every subresource "reload", and this branch used to go
+       straight to the network with no way back. Pull the phone offline and hit
+       reload and the whole app went blank, which is the worst moment for it to
+       happen. Network first, saved copy second. */
     if (e.request.cache === "reload" || e.request.cache === "no-cache") {
       return fetch(e.request).then((res) => {
         if (res.ok && res.status === 200) {
@@ -315,7 +387,7 @@ self.addEventListener("fetch", (e) => {
           caches.open(CACHE_VERSION).then((c) => c.put(e.request, copy));
         }
         return res;
-      });
+      }).catch(() => fromCache(e.request));
     }
     return caches.open(CACHE_VERSION).then(async (c) => {
       const hit = await c.match(e.request);
@@ -328,6 +400,13 @@ self.addEventListener("fetch", (e) => {
         }
         return hit;
       }
+      /* A version mismatch must never blank the app. If the exact address is
+         not saved, the same file under another ?v= is still the right file:
+         answer with that before touching the network. Without this, one wrong
+         build number anywhere in a page turns into a dead page offline. */
+      let near = null;
+      try { near = await c.match(e.request, { ignoreSearch: true }); } catch (eN) {}
+      if (near) return near;
       const res = await fetch(e.request);
       if (res.ok && res.status === 200) c.put(e.request, res.clone());
       return res;
@@ -337,7 +416,11 @@ self.addEventListener("fetch", (e) => {
        copy is only the offline fallback */
     return fetch(e.request)
       .then((res) => {
-        if (res.ok && url.hostname.includes("fonts")) {
+        /* v391: our own files asked for on a plain address used to be served
+           and forgotten, so the reader's spine and any lesson the reader had
+           already opened were gone the moment the signal went. Same origin
+           code is kept like the fonts always were. */
+        if (res.ok && res.status === 200 && (url.origin === location.origin || url.hostname.includes("fonts"))) {
           const copy = res.clone();
           caches.open(CACHE_VERSION).then((c) => c.put(e.request, copy));
         }

@@ -159,3 +159,142 @@ do it on its own so you can judge it on its own.
 If anything still looks broken after you install this build, clear site data
 once for thesmallbook.in. The new worker should do that by itself, but a browser
 that is holding a half finished install can need the nudge.
+
+## The offline bug that made the reader look empty (fixed in this build)
+
+If you opened a book and the page came up with no text at all, this was why, and
+it was not one bug but five stacked on top of each other.
+
+1. `sw.js` stored every file it precaches as `?v=v391`. The cache name is
+   `tsb-v391`, and the code took `split("-")[1]`, which keeps the `v`. Every page
+   asks for `?v=391`. So not one precached file ever matched a request. Online
+   the browser quietly went to the network and nobody noticed. Offline, or on a
+   bad connection, every script failed and the app had no working offline mode
+   at all. The number now has its leading `v` removed before use.
+2. `reader.html` guessed the build number in two places, `"390"` and `"388"`,
+   before the build was known, so the reader asked for `spine-389.js?v=390`
+   while the cache held `?v=391`. It now asks for the plain address when the
+   build is not known yet, and the worker answers a plain address from the copy
+   it holds under any version.
+3. A reload marks every request `cache: "reload"`, and that branch of the worker
+   went straight to the network with no way back. Reloading without signal gave
+   a blank page. It now falls back to the saved copy.
+4. `reader.html` was not in the precache at all, and neither were `js/reader.js`,
+   `js/listen.js` or twenty two other scripts the pages load. A first visit
+   followed by a lost signal fell through to `index.html`, which is why a book
+   looked like the home page. Every top level page and every page script now
+   ships in the precache, and the reader's spine is in there too.
+5. `addAll` is all or nothing. One refused connection out of 238 threw the whole
+   offline copy away. The install now saves what it can, six at a time, and
+   always takes over.
+
+Two more things came out of the audit:
+
+- The Mind Pick question was wired to the Next button, so anyone swiping through
+  chapters had a full screen sheet thrown over the reading controls a second
+  later. It now waits until the chapter is actually scrolled to its end.
+- The voice pack (`js/vendor/tsb-voice/`, 38 MB, six files) was missing from the
+  tree and is restored, md5 matching the repository.
+
+Measured after the fix, on the extracted zip served over HTTP:
+
+- Reader online: 882 characters of text, chapter heading present.
+- Reader offline after one visit: 882 characters, identical.
+- Swiping four chapters offline: 844, 946, 807, 853 characters, each with its
+  own heading.
+- A book never opened, offline: 1209 characters of fallback, not a blank page.
+- 40 book sweep: 40 of 40, zero failures.
+- `npm test` in the extracted zip: 1042 passed, 0 failed.
+
+## Reader swipe, the sheet that blocked it, and the splash (this build)
+
+- The "Where do you think this idea fails?" sheet is gone from the reader. It
+  opened itself at the end of a chapter, it was fixed over the whole screen with
+  pointer events on, and on a phone it swallowed every scroll and every tap on
+  Next. That single overlay is why a chapter could not be scrolled and why Next
+  did nothing. The question still exists on Today.
+- Swipe is a real gesture now. It used to run only in page mode, measured
+  screenX which moves with zoom, and had no vertical guard, so a diagonal scroll
+  could turn a page. It now needs a sideways, quick, single finger gesture, it
+  ignores the bottom bar, and it works in both reading modes.
+- A swipe during the moment the full lesson pack lands used to be undone, because
+  the rebuild jumped back to the page captured before the tap. It now keeps the
+  page the reader is on.
+- 45 of the 50 Originals are paid and stop after the first lesson at the unlock
+  page by design. The other 560 books read start to finish.
+- Splash: v382 had killed it with a `display:none` override, which is why nobody
+  ever saw it. It is back, it plays once per app open on Today, and any touch
+  sends it away. Its shelf line was drawn with a mismatched negative margin and
+  hung off the left edge; it is centred now and tapers. The progress line the
+  markup always carried but no rule ever drew now exists and fills while the app
+  boots behind it.
+
+Measured after these changes, on a fresh iPhone profile with no storage:
+
+- 30 free books, three real touch swipes each: 30 of 30 reached four distinct
+  chapters, zero failures, zero page errors.
+- Vertical scrolls that wrongly turned a page: 0 of 30.
+- Splash progress line: 34, 58, 64, 92 percent across the opening.
+
+## The book opens on the big idea again (this build)
+
+- The reader had been made to land on chapter one in build 382, on the theory
+  that the big idea looked thin. It is back to the format the books are written
+  in: big idea, every lesson, then the action plan. Measured: a book with 8
+  lessons reports 10 pages, so nothing is being cut short.
+- 50 books are Originals. The first five are free and the other 45 stop after
+  the first lesson at the unlock page, which is the paywall, not a fault. The
+  remaining 550 books read start to finish.
+- Swipe: single finger, sideways, quick, away from the bottom bar, and it now
+  also finishes on a cancelled touch, because a repaint under the finger used to
+  swallow the gesture.
+- If a reader swipes past the last page they have while the rest of the book is
+  still arriving, the reader is told and offered a retry, instead of the swipe
+  simply doing nothing.
+- Splash: the character is gone. What is left is the mark, the name, the promise
+  and a line that fills while the app boots behind it.
+
+Measured on ten separate fresh phone sessions, one book each, three real swipes:
+ten of ten reached four distinct pages, starting at the big idea, zero failures.
+
+## v391 · the reader is never a blank page with dead controls
+
+Opening a book on a slow connection showed one chapter with no page counter and
+no working Next, because the code that counts pages and drives swipes lives in a
+script that arrives after a 1.2 MB catalogue. Three changes:
+
+1. `reader.html` now builds the whole book from the small lesson file the moment
+   it lands, not just the first chapter, and shows "Page 1 of 8" straight away.
+2. A real thumb swipe turns the page in that early window, in both directions.
+3. A watchdog keeps asking to paint until a page is on screen. The old code used
+   five one-shot timers that all fired before the index arrived on a slow phone,
+   so nothing ever painted again.
+
+`js/reader.js` takes over the moment it loads and sets `window.__TSB_EARLY = false`,
+which stands the temporary controls down. Measured on eight books with the reader
+script and catalogue held back 6 s: every one opened with a real lesson, a correct
+page count, and working swipe; after handover all page totals were correct.
+
+Test suite: 1042 passed, 0 failed.
+
+## v391 · four more defects found by using the app, not just loading it
+
+1. **Podcast shows with a shipped episode list did not play.** `js/audioplayer.js`
+   called a helper named `fmt` that does not exist, so the whole shipped-episode
+   path threw a ReferenceError and the button did nothing, silently. Two call
+   sites now use `fmtTime`. Tim Ferriss and the other list-backed shows play.
+2. **A dead image request on the quotes page.** `#qwInspectPhoto` shipped with
+   `src=""`, which asks the server for the page itself as if it were an image.
+   The attribute is gone; the script sets it when a real photo exists.
+3. **The onboarding topic step hid its own choices.** On a phone the sticky
+   Next button sat on top of Read / Listen / Both, so those were never seen. The
+   sticky footer was also falling below the bottom of the screen on the "It
+   starts noticing" step. On short screens the footer is back in the flow and the
+   topic list gives some height back, so nothing is covered and nothing is lost.
+4. **og-builder clipped its own canvas on a phone.** It keeps the exact 1200x630
+   frame for export, but a narrow screen can now scroll to see all of it.
+
+Verified after the change: 600 of 600 books read correctly (page count matches the
+label, opens on the Big Idea, swipes both ways, ends on the action plan, and the
+45 locked Originals stop at the unlock page), every page loads with no JS errors
+and no failed requests, and the suite is 1042 passed.

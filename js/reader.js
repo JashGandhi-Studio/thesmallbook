@@ -179,10 +179,11 @@
   /* v388: the shell stops pretending once there are real pages */
   try { document.body.classList.remove('rm-booting'); } catch (e) {}
 
-  /* v382: a reader who opens a book must land on the book. The first page is a
-     three line "big idea" card, and landing there made the whole book look
-     empty. We open on chapter one, and the big idea stays one tap back. */
-  var curPage = pages.length > 1 ? 1 : 0;
+  /* v391: the book is written to open on the big idea, then run through every
+     lesson, then land on the action plan. v382 had moved the opening to chapter
+     one, which is why a book never appeared to start where it should. It starts
+     at the big idea again; ?page= and a saved position still win. */
+  var curPage = 0;
   var urlParams = new URLSearchParams(window.location.search);
   var urlPage = parseInt(urlParams.get('page'), 10);
   if (!isNaN(urlPage) && urlPage >= 0 && urlPage < pages.length) {
@@ -223,6 +224,9 @@
   /* v387: the listen button used to queue only the page on screen, so a nine page
      book stopped talking after page two. The whole page list is exposed here and
      the queue is built from it. */
+  /* the page paints from the lesson file before this script can load, and its
+     temporary controls must stand down now that the real reader is here */
+  window.__TSB_EARLY = false;
   try {
     window.TSB_READER = {
       get pages() { return pages; },
@@ -309,6 +313,10 @@
     } else {
       if (idx >= 0 && idx < pages.length) {
         renderPage(idx);
+      } else if (idx >= pages.length && window.TSB_LESSONS && !window.TSB_LESSONS.ready(book.id)) {
+        /* the reader swiped past the last page they have, and the rest of the
+           book is still on its way. Say so instead of nothing happening. */
+        try { window.dispatchEvent(new CustomEvent("tsb:needlessons")); } catch (e) {}
       }
     }
   }
@@ -326,30 +334,41 @@
     }
   });
 
-  // Touch Swipe Gesture for Page-by-Page
-  var touchStartX = 0;
-  var touchEndX = 0;
-  window.addEventListener('touchstart', function(e) {
-    if (e.touches && e.touches[0]) {
-      touchStartX = e.touches[0].screenX;
-    }
+  /* Touch swipe, page by page.
+     v391: the old one only fired in pages mode, measured screenX (which moves
+     with zoom and browser chrome) and had no vertical guard at all, so a
+     diagonal scroll could turn the page by accident. A swipe now has to be
+     clearly sideways, quick, and away from the bottom bar. */
+  var tStartX = 0, tStartY = 0, tStartT = 0, tLive = false;
+  function barZone(y) {
+    /* the floating Listen / Next bar owns touches near the bottom edge */
+    return y > window.innerHeight - 96;
+  }
+  window.addEventListener('touchstart', function (e) {
+    if (!e.touches || e.touches.length !== 1) { tLive = false; return; }
+    var t = e.touches[0];
+    tStartX = t.clientX; tStartY = t.clientY; tStartT = Date.now();
+    tLive = !barZone(t.clientY);
   }, { passive: true });
 
-  window.addEventListener('touchend', function(e) {
-    if (e.changedTouches && e.changedTouches[0]) {
-      touchEndX = e.changedTouches[0].screenX;
-      var diffX = touchStartX - touchEndX;
-      if (Math.abs(diffX) > 45 && getMode() === 'pages') {
-        if (diffX > 0) {
-          // Swipe left -> next
-          goToPage(curPage + 1);
-        } else {
-          // Swipe right -> prev
-          goToPage(curPage - 1);
-        }
-      }
-    }
-  }, { passive: true });
+  function endSwipe(e) {
+    if (!tLive) return;
+    if (!e.changedTouches || e.changedTouches.length !== 1) return;
+    tLive = false;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - tStartX;
+    var dy = t.clientY - tStartY;
+    var dt = Date.now() - tStartT;
+    if (dt > 700) return;                       /* a slow drag is a scroll */
+    if (Math.abs(dx) < 50) return;              /* not far enough */
+    if (Math.abs(dx) < Math.abs(dy) * 1.4) return;  /* too vertical */
+    if (dx < 0) goToPage(curPage + 1);          /* finger left: next */
+    else goToPage(curPage - 1);                 /* finger right: back */
+  }
+  window.addEventListener('touchend', endSwipe, { passive: true });
+  /* the page repaints under the finger and the browser cancels the gesture.
+     Reading it as a finished swipe keeps a fast reader from losing one. */
+  window.addEventListener('touchcancel', endSwipe, { passive: true });
 
   // Read toggle and Milestone Awards
   function isRead() {
@@ -706,33 +725,55 @@
     if (window.TSB_LESSONS.ready(book.id)) return;
     var at = curPage;
     var landed = false;
-    if (window.TSB_LESSONS.ready(book.id)) { buildPages(); repaintContents(); return; }
-    window.TSB_LESSONS.ensure(book.id, function () {
+
+    /* v391: this line has to outlive a repaint and it has to be tappable. The
+       old one was appended to the article, which is rebuilt on the next paint,
+       so it flashed and vanished, and it only appeared after six seconds of
+       pretending everything was fine. */
+    function notice() {
+      if (document.getElementById("rmRetry")) return;
+      var p2 = document.createElement("div");
+      p2.id = "rmRetry";
+      p2.setAttribute("role", "status");
+      p2.style.cssText = "position:fixed;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom, 0px) + 88px);" +
+        "z-index:80;display:flex;gap:10px;align-items:center;justify-content:center;padding:11px 14px;border-radius:16px;" +
+        "background:#16130F;color:#FFFDF7;font:400 13.5px/1.35 var(--font-body, system-ui);" +
+        "box-shadow:0 12px 30px -14px rgba(0,0,0,.7)";
+      p2.innerHTML = '<span>This chapter did not arrive.</span><button type="button" style="font:inherit;font-weight:800;' +
+        'background:#FFC800;color:#16130F;border:0;border-radius:999px;padding:7px 14px;cursor:pointer">Try again</button>';
+      p2.querySelector("button").addEventListener("click", function () {
+        p2.remove();
+        try { window.TSB_LESSONS.ensure(book.id, onLessons); } catch (e) {}
+      });
+      document.body.appendChild(p2);
+    }
+
+    function onLessons() {
       if (landed) return;
+      if (!window.TSB_LESSONS.ready(book.id)) { notice(); return; }
       landed = true;
+      var rt = document.getElementById("rmRetry");
+      if (rt) rt.remove();
       buildPages();
       repaintContents();
       /* a Listen session started on the empty shell only knew two pages; it
          stops here rather than playing a shorter book than the one on screen */
       try { if (window.TSB_AUDIO && window.TSB_AUDIO.stop) window.TSB_AUDIO.stop(); } catch (e) {}
-      var target = Math.min(at, Math.max(0, pages.length - 1));
+      /* v391: this used to jump back to the page the reader was on when the
+         request started. Swipe during that moment and the page you just turned
+         to was taken away again, which reads as "the first swipe does nothing".
+         Keep where the reader actually is now. */
+      var target = Math.min(curPage, Math.max(0, pages.length - 1));
       if (getMode() === "scroll") { renderView(); try { window.scrollTo(0, 0); } catch (e) {} }
       else renderPage(target);
-    });
-    /* if the file never lands, the reader is told, in one line, and can ask again */
+    }
+
+    window.addEventListener("tsb:needlessons", notice);
+    window.TSB_LESSONS.ensure(book.id, onLessons);
+    /* a slow network still gets a chance before we say anything */
     setTimeout(function () {
       if (landed || window.TSB_LESSONS.ready(book.id)) return;
-      if (document.getElementById("rmRetry")) return;
-      var p2 = document.createElement("p");
-      p2.id = "rmRetry";
-      p2.style.cssText = "margin:22px 0 0;font-size:13.5px;opacity:.9";
-      p2.innerHTML = "Still fetching this chapter… <button type=\"button\" style=\"font:inherit;font-weight:700;background:none;border:0;padding:0;color:inherit;text-decoration:underline;cursor:pointer\">Ask again</button>";
-      /* re-asks for the file in place. Reloading threw away everything already on screen. */
-      p2.querySelector("button").addEventListener("click", function () {
-        p2.remove();
-        try { window.TSB_LESSONS.ensure(book.id, function () { buildPages(); repaintContents(); renderPage(Math.min(curPage, Math.max(0, pages.length - 1))); }); } catch (e) {}
-      });
-      if (articleEl) articleEl.appendChild(p2);
+      notice();
     }, 6000);
   }
 
