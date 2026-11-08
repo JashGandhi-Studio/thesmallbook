@@ -1729,8 +1729,8 @@ const C = window.TSB_COMMUNITY;
     }
     const sw292 = rd292("sw.js");
     ok("service worker precaches ask-modes-data.js", sw292.includes('"./js/ask-modes-data.js"'));
-    ok("cache name and bootguard build both say 391", /CACHE_VERSION = "tsb-v391"/.test(sw292) && /var BUILD = "391";/.test(rd292("js/bootguard.js")));
-    ok("login and settings say Build tsb-v391", rd292("login.html").includes("Build tsb-v391") && rd292("settings.html").includes("Build tsb-v391"));
+    ok("cache name and bootguard build both say 398", /CACHE_VERSION = "tsb-v398"/.test(sw292) && /var BUILD = "398";/.test(rd292("js/bootguard.js")));
+    ok("login and settings say Build tsb-v398", rd292("login.html").includes("Build tsb-v398") && rd292("settings.html").includes("Build tsb-v398"));
     ok("about.html changelog documents v292 and the 8 modes", /log-item__ver">v292</.test(rd292("about.html")) && rd292("about.html").includes("8 modes"));
     ok("no page still carries an old ?v=291", !glob292.some(f => /\?v=29[12]\b/.test(rd292(f))), glob292.filter(f => /\?v=29[12]\b/.test(rd292(f))).join(",") || "clean");
 
@@ -2132,9 +2132,9 @@ const C = window.TSB_COMMUNITY;
     ok("v326: parents get a door to story time from the first screen", ob.includes("data-kids") && ob.includes("kids.html"));
     ok("v326: Today greets by name and time of day, with a pick and a because-you row", /Good morning/.test(fj) && /Good evening/.test(fj) && /function todaysPick/.test(fj) && /Because you picked/.test(fj));
     ok("v326: voice search uses the browser speech recogniser and only shows when it exists", /webkitSpeechRecognition/.test(fj) && /function voiceSearch/.test(fj) && /SR \? /.test(fj));
-    ok("v326: a real You page with the reading year ring", /id="filmYou"/.test(you) && /function initYou/.test(fj) && /js\/film\.js\?v=391/.test(you));
+    ok("v326: a real You page with the reading year ring", /id="filmYou"/.test(you) && /function initYou/.test(fj) && /js\/film\.js\?v=398/.test(you));
     ok("v326: the tab bar is Today, Library, Listen, You", /"Today"/.test(bar) && /"Listen"/.test(bar) && /you\.html/.test(bar) && bar.includes('["home", "library", "audio", "you"]'));
-    ok("v326: film styles and script ride on the main pages", ["index.html", "book.html", "about.html", "gold.html", "podcasts.html", "reader.html", "kids.html", "stories.html", "settings.html"].every(f => rd326(f).includes("css/film.css?v=391") && rd326(f).includes("js/film.js?v=391")));
+    ok("v326: film styles and script ride on the main pages", ["index.html", "book.html", "about.html", "gold.html", "podcasts.html", "reader.html", "kids.html", "stories.html", "settings.html"].every(f => rd326(f).includes("css/film.css?v=398") && rd326(f).includes("js/film.js?v=398")));
     ok("v326: the worker precaches the film files and the You page", sw.includes('"./css/film.css"') && sw.includes('"./js/film.js"') && sw.includes('"./you.html"'));
     ok("v326: Gold goes dark and gold, with honest monthly and yearly prices", /html\.fv-gold body/.test(fc) && /#0E0C09/.test(fc) && rd326("gold.html").includes("₹99 for 30 days") && rd326("gold.html").includes("No auto-renewal"));
     ok("v326: dark mode is warm night, not pure black", /#15120E/.test(fc));
@@ -2147,7 +2147,7 @@ const C = window.TSB_COMMUNITY;
     const f2 = rd328("js/film2.js"), c2 = rd328("css/film2.css"), fj = rd328("js/film.js"), ap = rd328("js/audioplayer.js"), sw = rd328("sw.js");
     console.log("== v328: the film-quality pass ==");
     const rd358 = f => require("fs").readFileSync(require("path").join(__dirname, "..", f), "utf8");
-    ok("v328: film2 styles and script ride on the main pages", ["index.html", "book.html", "reader.html", "settings.html", "about.html", "login.html", "podcasts.html", "you.html"].every(f => rd328(f).includes("js/film2.js?v=391") && rd328(f).includes("css/film2.css?v=391")));
+    ok("v328: film2 styles and script ride on the main pages", ["index.html", "book.html", "reader.html", "settings.html", "about.html", "login.html", "podcasts.html", "you.html"].every(f => rd328(f).includes("js/film2.js?v=398") && rd328(f).includes("css/film2.css?v=398")));
     ok("v328: the worker precaches film2", sw.includes('"./css/film2.css"') && sw.includes('"./js/film2.js"'));
     ok("v359: ONE question a day: the flippable mind pick card in the Today stream, and mindpick draws no second card", /function mindPickHtml/.test(rd358("js/film.js")) && rd358("js/film.js").includes("html += mindPickHtml();") && !/TODAY, ONE QUESTION/.test(rd358("js/mindpick.js").split("function placeDaily")[1].split("return;")[0] || "") && /return;/.test(rd358("js/mindpick.js")));
     ok("v328: the player follows the spoken line, in the full player and the mini player", ap.includes("tsb:ap-line") && f2.includes("tsb:ap-line") && f2.includes("fp-line") && f2.includes("ap-line"));
@@ -2176,7 +2176,7 @@ const C = window.TSB_COMMUNITY;
     ok("v329: TSB_ED spines match the edition palette", Object.keys(last).every(id => ED[id] === enc(last[id].bg) + enc(last[id].fg) + enc(last[id].ac)));
     ok("v329: Originals keep their own house covers", eds.filter(e => e.keep).length >= 30);
     ok("v329: Today has a TheSmallBook Originals shelf", fj.includes("function originalsHtml") && fj.includes("TheSmallBook Originals") && c2.includes(".ft-orig"));
-    ok("v329: Today and Stories ask the same weekly prompt", fj.includes("TSB_WEEKLY.current()") && rd329("index.html").includes("js/weekly.js?v=391"));
+    ok("v329: Today and Stories ask the same weekly prompt", fj.includes("TSB_WEEKLY.current()") && rd329("index.html").includes("js/weekly.js?v=398"));
     ok("v329: onboarding builds four picks plus one Original, each with a reason, swappable", ob.includes("origPool") && ob.includes("whyOf") && ob.includes("swapPick"));
     ok("v329: translation waits behind a frosted card, then lifts in place", f2.includes("TSB_TXVEIL") && f2.includes("f-txcard") && f2.includes("tsb:tx-fail") && lg.includes("tsb:tx-fail"));
     ok("v329: Stories feed is rebuilt (weekly prompt, quiet cards, offline library shelf)", /class="cmpage fst"/.test(st) && st.includes("stPrompt") && st.includes("niceDate") && c2.includes("body.fst"));
@@ -2323,7 +2323,7 @@ const C = window.TSB_COMMUNITY;
     ok("v336: Read adds a real visual map, including Atomic Habits one-percent compounding", rd6("js/book.js").includes("function lessonVisual") && rd6("js/book.js").includes("THE 1% CURVE") && rd6("js/book.js").includes("37× POTENTIAL") && rd6("css/style.css").includes(".lv--atomic"));
     ok("v336: TheSmallBook Voice Model is an opt-in on-device model", vp.includes("TheSmallBook Voice Model") && vp.includes("navigator.storage.getDirectory") && vp.includes("thesmallbook-voice-model") && vp.includes("hi_IN-pratham-medium") && te.includes("function speakModel") && te.includes("function openVoiceModel"));
     ok("v336: the full player opens the exact same voice chooser", rd6("js/audioplayer.js").includes("apVoiceModel") && rd6("js/audioplayer.js").includes("openVoiceModel"));
-    ok("v336: tablet and desktop redraw as a reading desk", desk.includes("min-width: 700px") && desk.includes("min-width: 1024px") && desk.includes("#tsbBar.tsb-bar") && rd6("index.html").includes("desktop-v336.css?v=391"));
+    ok("v336: tablet and desktop redraw as a reading desk", desk.includes("min-width: 700px") && desk.includes("min-width: 1024px") && desk.includes("#tsbBar.tsb-bar") && rd6("index.html").includes("desktop-v336.css?v=398"));
     ok("v349: a reader who set the app up sees the banner and is never taken through setup again",
        ob6.includes("var OB_V = 390") && ob6.includes("function alreadySetUp") && /if \(UPDATE\) return true;/.test(ob6) &&
        /if \(alreadySetUp\(\)\) \{ set\("tsb_onboarded", true\); set\("tsb_onboard_v", OB_V\); return false; \}/.test(ob6) &&
@@ -2482,7 +2482,7 @@ const C = window.TSB_COMMUNITY;
 
     const film390 = read390("js/film.js"), onboard390 = read390("js/onboard.js"), sw390 = read390("sw.js"), boot390 = read390("js/bootguard.js");
     ok("Today uses taste picks and keeps the lunch line out of the morning", film390.includes("TSB_TASTE.picks(3)") && film390.includes("function mindPickIds") && !film390.includes("Had lunch?") && film390.includes("h < 12 ? \"The day has room for one small idea.\""));
-    ok("build 391 rotates caches and delivers refreshed update content once", sw390.includes("tsb-v391") && boot390.includes('var BUILD = "391"') && onboard390.includes("var OB_V = 390") && onboard390.includes("Shows keep their feed"));
+    ok("build 398 rotates caches and delivers refreshed update content once", sw390.includes("tsb-v398") && boot390.includes('var BUILD = "398"') && onboard390.includes("var OB_V = 390") && onboard390.includes("Shows keep their feed"));
   }
   {
     const { JSDOM } = require("jsdom");
@@ -2514,3 +2514,37 @@ const C = window.TSB_COMMUNITY;
 
   process.exit(FAIL ? 1 : 0);
 })();
+
+/* ============================================================
+   v397 · NOBODY GETS TO INJECT ANYTHING INTO THE LOGIN
+   The database functions take typed parameters, so a crafted
+   string is a name and not a command. These check the other
+   half: that the phone strips it before it is sent at all, and
+   that clearing a lockout now requires a real session.
+   ============================================================ */
+{
+  const authSrc = require("fs").readFileSync(require("path").join(__dirname, "..", "js", "auth.js"), "utf8");
+  ok("v397: every ident is stripped to letters, digits and @ . _ - + before it is sent",
+     authSrc.indexOf("function safeIdent(v)") > 0 && authSrc.indexOf("[^a-z0-9@._+") > 0 &&
+     /ident = safeIdent\(ident\)/.test(authSrc));
+  ok("v397: a handle is reduced to letters, digits and _ before the lookup",
+     /function safeHandle\(v\)/.test(authSrc) && /handle = safeHandle\(handle\)/.test(authSrc));
+  ok("v397: an empty ident never reaches the network",
+     /if \(!ident\) return null;/.test(authSrc) && /if \(!handle\) return "";/.test(authSrc));
+  ok("v397: the gate call carries the session token when there is one",
+     /await bearer\(\)/.test(authSrc) && /Authorization/.test(authSrc) && /Bearer/.test(authSrc));
+  ok("v397: clearing a lockout happens after the session exists, not before",
+     /setTimeout\(function \(\) \{ gateReset\(email\); \}, 400\)/.test(authSrc));
+  const sec = require("fs").readFileSync(require("path").join(__dirname, "..", "supabase", "sql", "RUN-THIS-v397-SECURITY.sql"), "utf8");
+  ok("v397: anon may not clear a lockout in the database either",
+     /tsb_login_reset\(text\)\s+to authenticated/.test(sec) &&
+     !/tsb_login_reset\(text\)\s+to anon/.test(sec));
+  ok("v397: the reset function refuses anyone but the account owner",
+     /not-yours/.test(sec) && /sign-in-required/.test(sec) && /auth\.uid\(\)/.test(sec));
+  ok("v397: a lock cannot be stretched by hammering the fail endpoint",
+     /already locked: answer the same thing/.test(sec) && /interval '10 minutes'/.test(sec));
+  ok("v397: handle lookups are rate limited inside the database",
+     /tsb_handle_gate/.test(sec) && /PER_WINDOW constant int := 20/.test(sec));
+  ok("v397: the security file never builds SQL from a value",
+     !/execute\s+(format|'|\")/i.test(sec));
+}

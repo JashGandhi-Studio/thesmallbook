@@ -382,7 +382,16 @@ window.TSB_CONFIG = {
 (function () {
   "use strict";
   var KEY = "tsb_book_unlock";
-  var FREE_ORIGINALS = 5;      /* the first five Originals stay open */
+  /* v394 · the email one-time-code sign-in (and the emailed reset code) need a
+   mail provider wired into the Supabase project. This app was never switched
+   on for that: the two buttons sent readers to a screen that could not send
+   anything, and the failure looked like a broken system. Off until the mail
+   provider is actually configured, then set this to true and both flows
+   come back exactly as they were. */
+window.TSB_CONFIG = window.TSB_CONFIG || {};
+if (typeof window.TSB_CONFIG.OTP_ENABLED === "undefined") window.TSB_CONFIG.OTP_ENABLED = false;
+
+var FREE_ORIGINALS = 5;      /* the first five Originals stay open */
   var FREE_LESSONS = 1;        /* a locked book still gives its first lesson */
   function gold() {
     try { return !!(window.TSB_GOLD && window.TSB_GOLD.isGold && window.TSB_GOLD.isGold()); } catch (e) { return false; }

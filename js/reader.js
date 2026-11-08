@@ -202,6 +202,7 @@
   var readBtn = document.getElementById('rmRead');
   var contentsSelect = document.getElementById('rmContentsSelect');
   var modeSelect = document.getElementById('rmModeSelect');
+  var footerEl = document.querySelector('.rm-footer');
 
   // Populate contents dropdown
   if (contentsSelect) {
@@ -263,6 +264,11 @@
       p.content;
 
     if (posEl) posEl.textContent = 'Page ' + (curPage + 1) + ' of ' + pages.length;
+    /* v397: a page that is actually on screen is a page read. You > Your time
+       counts it; this is the one event that timeline listens for. */
+    try {
+      if (curPage > 0 && window.TSB_TIME && window.TSB_TIME.pageRead) window.TSB_TIME.pageRead(book.id);
+    } catch (eT) {}
     if (prevBtn) {
       prevBtn.style.display = 'inline-block';
       prevBtn.disabled = curPage === 0;
@@ -334,41 +340,60 @@
     }
   });
 
-  /* Touch swipe, page by page.
-     v391: the old one only fired in pages mode, measured screenX (which moves
-     with zoom and browser chrome) and had no vertical guard at all, so a
-     diagonal scroll could turn the page by accident. A swipe now has to be
-     clearly sideways, quick, and away from the bottom bar. */
-  var tStartX = 0, tStartY = 0, tStartT = 0, tLive = false;
-  function barZone(y) {
-    /* the floating Listen / Next bar owns touches near the bottom edge */
-    return y > window.innerHeight - 96;
+  /* ── v395 · a swipe a real thumb can make, one whole lesson per page ───
+     The page is one lesson and it scrolls, exactly as v340 had it. What was
+     wrong was the gesture, measured on this same screen:
+
+       fast flick 150px / 120ms   turned
+       normal     120px / 300ms   turned
+       slow drag  200px / 900ms   IGNORED  (the 700ms ceiling)
+       diagonal   120x90 / 250ms  IGNORED  (the 1.4 ratio guard)
+       nudge       40px / 200ms   IGNORED  (the 50px floor)
+
+     Those three rules threw away most real thumbs. The guards are wider now,
+     and a vertical drag is still left alone so reading a long lesson by
+     scrolling never turns the page by accident. */
+  var gx = 0, gy = 0, gt = 0, glive = false;
+
+  function dockOwns(target) {
+    try {
+      return !!(target && target.closest && target.closest(".frd-dock, .rm-footer, #rmDock, .rm-tools-popover"));
+    } catch (e) { return false; }
   }
+
+  function gestureStart(x, y, target) {
+    glive = !dockOwns(target);
+    gx = x; gy = y; gt = Date.now();
+  }
+
+  function gestureEnd(x, y) {
+    if (!glive) return;
+    glive = false;
+    var dx = x - gx, dy = y - gy, dt = Date.now() - gt;
+    var W = window.innerWidth || 375;
+    var floorPx = Math.max(26, Math.min(64, Math.round(W * 0.13)));
+    var sideways = Math.abs(dx) > Math.abs(dy) * 1.1;
+    var farEnough = Math.abs(dx) >= floorPx;
+    var flick = dt < 320 && Math.abs(dx) >= 16;
+    if (sideways && (farEnough || flick) && dt < 2600) goToPage(curPage + (dx < 0 ? 1 : -1));
+  }
+
   window.addEventListener('touchstart', function (e) {
-    if (!e.touches || e.touches.length !== 1) { tLive = false; return; }
+    if (!e.touches || e.touches.length !== 1) { glive = false; return; }
     var t = e.touches[0];
-    tStartX = t.clientX; tStartY = t.clientY; tStartT = Date.now();
-    tLive = !barZone(t.clientY);
+    gestureStart(t.clientX, t.clientY, e.target);
   }, { passive: true });
 
-  function endSwipe(e) {
-    if (!tLive) return;
-    if (!e.changedTouches || e.changedTouches.length !== 1) return;
-    tLive = false;
+  function touchDone(e) {
+    if (!glive || !e.changedTouches || !e.changedTouches.length) { glive = false; return; }
     var t = e.changedTouches[0];
-    var dx = t.clientX - tStartX;
-    var dy = t.clientY - tStartY;
-    var dt = Date.now() - tStartT;
-    if (dt > 700) return;                       /* a slow drag is a scroll */
-    if (Math.abs(dx) < 50) return;              /* not far enough */
-    if (Math.abs(dx) < Math.abs(dy) * 1.4) return;  /* too vertical */
-    if (dx < 0) goToPage(curPage + 1);          /* finger left: next */
-    else goToPage(curPage - 1);                 /* finger right: back */
+    gestureEnd(t.clientX, t.clientY);
   }
-  window.addEventListener('touchend', endSwipe, { passive: true });
-  /* the page repaints under the finger and the browser cancels the gesture.
-     Reading it as a finished swipe keeps a fast reader from losing one. */
-  window.addEventListener('touchcancel', endSwipe, { passive: true });
+  window.addEventListener('touchend', touchDone, { passive: true });
+  window.addEventListener('touchcancel', function () { glive = false; }, { passive: true });
+
+  window.addEventListener('mousedown', function (e) { if (e.button === 0) gestureStart(e.clientX, e.clientY, e.target); });
+  window.addEventListener('mouseup', function (e) { if (glive) gestureEnd(e.clientX, e.clientY); });
 
   // Read toggle and Milestone Awards
   function isRead() {
@@ -515,8 +540,10 @@
       var val = this.value + 'px';
       localStorage.setItem('tsb_rm_size', val);
       document.documentElement.style.setProperty('--rm-size', val);
+      /* one lesson per page: bigger text simply reflows */
     });
   }
+
 
   // Preferences
   function applyPrefs() {
@@ -754,6 +781,25 @@
       landed = true;
       var rt = document.getElementById("rmRetry");
       if (rt) rt.remove();
+      /* v396: a book's own lesson file carries its corrected head: the big idea,
+         the real lesson titles and the quotes. data.js holds the spine of all 600
+         books, and 56 of them shipped with placeholder lesson titles and a
+         template big idea. Where the head disagrees with the catalogue the head
+         wins, so a repaired book reads correctly without rewriting the 1.2 MB
+         catalogue and turning the diff into one unreadable line. */
+      var H = window.__TSB_HEAD;
+      if (H) {
+        if (H.big) book.bigIdea = H.big;
+        if (H.one) book.oneLiner = H.one;
+        if (H.tag) book.tagline = H.tag;
+        if (H.q && H.q.length) book.quotes = H.q;
+        if (H.l && H.l.length && Array.isArray(book.lessons)) {
+          book.lessons.forEach(function (l, i) {
+            if (H.l[i]) l.title = H.l[i];
+            if (H.ch && H.ch[i]) l.chapter = H.ch[i];
+          });
+        }
+      }
       buildPages();
       repaintContents();
       /* a Listen session started on the empty shell only knew two pages; it
@@ -765,6 +811,9 @@
          Keep where the reader actually is now. */
       var target = Math.min(curPage, Math.max(0, pages.length - 1));
       if (getMode() === "scroll") { renderView(); try { window.scrollTo(0, 0); } catch (e) {} }
+      /* v393: this used to repaint a single page over the whole flow, which is
+         how page mode kept collapsing back to one chapter you had to scroll.
+         The flow is rebuilt and the reader lands on the same chapter. */
       else renderPage(target);
     }
 

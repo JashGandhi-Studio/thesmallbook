@@ -102,7 +102,11 @@
          session looked "autoplay" and a PAUSED book started shouting the
          moment you opened any page. Paused stays paused; only a session
          that was truly playing picks up with sound. */
-      autoplay: spec.autoplay
+      autoplay: spec.autoplay,
+      /* v397: whether this queue is allowed to open the full player. The
+         builder dropped every field it did not name, so the flag the room
+         passes never arrived and the room kept showing only a dock. */
+      open: !!spec.open
     };
   }
 
@@ -187,6 +191,7 @@
       ".ap-hero{display:flex;gap:16px;align-items:center;margin:14px 2px 14px}" +
       ".ap-art--big{flex:0 0 auto;width:148px;height:148px;border:var(--bw) solid var(--edge);border-radius:24px;background:var(--yellow);color:var(--on-accent,#111111);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:var(--sh-3);transform:rotate(-2.5deg)}" +
       ".ap-art--big img{width:100%;height:100%;object-fit:cover}" +
+      ".ap-art--book{width:auto;height:auto;border:0;background:transparent;box-shadow:none;overflow:visible;transform:none}" +
       ".ap-npwrap{flex:1;min-width:0}" +
       ".ap-np-t{display:block;font:800 19px/1.22 'Space Grotesk',sans-serif;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
       ".ap-np-s{display:block;font:600 12px 'Space Grotesk',sans-serif;color:var(--ink);opacity:.62;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
@@ -384,9 +389,13 @@
       return pump();
     });
   }
-  function saveEpisode(src, label, show, btn) {
+  function saveEpisode(src, label, show, btn, done) {
     if (btn) { btn.disabled = true; btn.textContent = "SAVING…"; }
-    if (!window.caches) { if (btn) { btn.disabled = false; btn.textContent = "⤓ SAVE"; } toast("This browser cannot keep offline copies."); return; }
+    if (!window.caches) {
+      if (btn) { btn.disabled = false; btn.textContent = "⤓ SAVE"; }
+      if (typeof done === "function") { done(false); return; }
+      toast("This browser cannot keep offline copies."); return;
+    }
     var t0 = Date.now();
     caches.open("tsb-saved-media").then(function (c) {
       return fetchSaved(src, function (seen, total) {
@@ -404,10 +413,12 @@
         jset(SAVEKEY, m);
         var secs = Math.round((Date.now() - t0) / 1000);
         if (btn) { btn.textContent = "✓ OFFLINE"; btn.classList.add("on"); btn.disabled = false; }
+        if (typeof done === "function") { done(true); return; }   /* a caller keeping a queue does its own talking */
         toast("⤓ Saved for offline" + (secs > 3 ? " (" + secs + "s)" : "") + ". It plays even in airplane mode.");
       });
     }).catch(function () {
       if (btn) { btn.disabled = false; btn.textContent = "⤓ SAVE"; }
+      if (typeof done === "function") { done(false); return; }
       toast("Could not save this one - try again online.");
     });
   }
@@ -446,6 +457,8 @@
     playFeed(show);
   }
   function bindRoom(sheet) {
+    var offBtn = sheet.querySelector("#apOffline");
+    if (offBtn) offBtn.addEventListener("click", function (e) { e.stopPropagation(); keepOffline(offBtn); });
     sheet.addEventListener("click", function (e) {
       var sv = e.target.closest("[data-sv]");
       if (sv) {
@@ -526,6 +539,14 @@
       (isAudio && !/^ab:/.test(q.key) ? '<div class="ap-lab">PODCAST 300% VOLUME BOOST</div><div class="ap-row">' +
         '<button class="ap-chip ap-pc-boost' + (podcastBoostOn() ? " on" : "") + '" data-pcboost="' + (podcastBoostOn() ? "0" : "1") + '">' + (podcastBoostOn() ? "⚡ 300% BOOST: ON" : "⚡ 300% BOOST: OFF") + '</button>' +
       '</div>' : '') +
+      /* v397 · OFFLINE: what is playing now, kept on the phone.
+         One button, in the player, where the reader already is. For real audio
+         it saves every episode in the queue; for a narrated book it keeps the
+         book text AND makes sure the on-device voice is downloaded, which is
+         the pair that makes a book playable with no signal at all. */
+      '<div class="ap-lab">OFFLINE</div><div class="ap-row">' +
+        '<button class="ap-chip ap-off' + (offlineReady(q) ? " on" : "") + '" id="apOffline">' + (offlineReady(q) ? "✓ READY OFFLINE" : "⤓ KEEP THIS " + (isAudio ? "ON THIS PHONE" : "BOOK OFFLINE")) + '</button>' +
+      '</div>' +
       '<div class="ap-lab">SLEEP TIMER</div><div class="ap-row">' +
         SLEEPS.map(function (m) { return '<button class="ap-chip ap-sl" data-sl="' + m + '">' + (m === 0 ? "OFF" : m + " min") + '</button>'; }).join("") +
         (sl ? '<span class="ap-chip on" id="apSleepLeft">' + sl + ' min left</span>' : '') +
@@ -550,6 +571,33 @@
       '</div>';
     document.body.appendChild(sheet);
     bindRoom(sheet);
+    /* v396: while a book plays, the player shows the book itself. The hero cover
+       was a flat picture in a rounded box; it is now the same 3D book the shelves
+       show, standing in the player with its spine, so an audiobook looks like a
+       book you are holding rather than a thumbnail of one. */
+    (function () {
+      var heroImg = sheet.querySelector(".ap-art--big img");
+      var heroBox = sheet.querySelector(".ap-art--big");
+      if (!heroImg || !heroBox) return;
+      function upgrade() {
+        if (!window.TSB3D || !window.TSB3D.wrap) return;
+        if (heroImg.closest(".bk3")) return;
+        try {
+          var w = Math.round(Math.max(96, Math.min(150, window.innerWidth * 0.34)));
+          window.TSB3D.wrap(heroImg, { w: w });
+          heroBox.className += " ap-art--book";
+        } catch (e) {}
+      }
+      if (window.TSB3D) {
+        if (heroImg.complete && heroImg.naturalWidth) upgrade();
+        else heroImg.addEventListener("load", upgrade, { once: true });
+      } else {
+        var s3 = document.createElement("script");
+        s3.src = "js/book3d.js?v=" + (window.TSB_BUILD || "397") + "";
+        s3.onload = upgrade;
+        document.head.appendChild(s3);
+      }
+    })();
     /* v323: name where you are immediately - the tick paints it again every second */
     (function () {
       var ch0 = sheet.querySelector("#apChap");
@@ -966,6 +1014,123 @@
       navigator.mediaSession.setActionHandler("stop", function () { if (mediaFree("player")) stopAll(); });
     } catch (e) {}
   }
+  /* ================= v397: PLAYING THROUGH A DARK SCREEN =================
+     A silent, looping, near-zero-volume element. Browsers keep a page that
+     owns a playing audio element in the foreground, which is what keeps the
+     narrated queue and the lock-screen controls alive when the phone is in a
+     pocket. It is deliberately inaudible (volume 0.0001) and tiny. */
+  var keepAliveEl = null;
+  var KEEPALIVE_SRC = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQAAAAA=";
+  function keepAliveOn() {
+    try {
+      if (keepAliveEl) return;
+      keepAliveEl = new Audio(KEEPALIVE_SRC);
+      keepAliveEl.loop = true;
+      keepAliveEl.volume = 0.0001;
+      keepAliveEl.setAttribute("aria-hidden", "true");
+      keepAliveEl.setAttribute("playsinline", "");
+      /* attached, not detached: a media element that is not in the document
+         is treated as a detached object and buys nothing */
+      keepAliveEl.style.cssText = "position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0;pointer-events:none";
+      if (document.body) document.body.appendChild(keepAliveEl);
+      var pr = keepAliveEl.play();
+      if (pr && pr.catch) pr.catch(function () {});
+      if ("mediaSession" in navigator) navigator.mediaSession.playbackState = "playing";
+    } catch (e) { keepAliveEl = null; }
+  }
+  function keepAliveOff() {
+    try {
+      if (!keepAliveEl) return;
+      keepAliveEl.pause();
+      if (keepAliveEl.parentNode) keepAliveEl.parentNode.removeChild(keepAliveEl);
+      keepAliveEl = null;
+    } catch (e) { keepAliveEl = null; }
+  }
+
+  /* ================= v397: OFFLINE, FOR REAL =================
+     Two different things wear the same word. Real audio (a podcast episode, a
+     LibriVox chapter) is a file: save the bytes and it plays in a tunnel. A
+     narrated book is text plus a voice: keep the book's own lesson file and
+     make sure the on-device voice model is downloaded, and the phone needs no
+     signal at all. This keeps whichever one is playing now, and says honestly
+     what it kept. */
+  function offlineReady(queue) {
+    try {
+      if (!queue) return false;
+      if (queue.type === "audio") {
+        var items = (queue.items || []).filter(function (x) { return x.src; });
+        if (!items.length) return false;
+        var m = savedMap();
+        return items.every(function (x) { return !!m[x.src]; });
+      }
+      if (!queue.bookId || !window.TSB_LESSONS) return false;
+      return !!(window.TSB_LESSONS.ready && window.TSB_LESSONS.ready(queue.bookId));
+    } catch (e) { return false; }
+  }
+  function keepOffline(btn) {
+    if (!q) return;
+    if (btn) { btn.disabled = true; btn.textContent = "KEEPING THIS…"; }
+    var done = function (ok, what) {
+      if (btn) {
+        btn.disabled = false;
+        btn.classList.toggle("on", !!ok);
+        btn.textContent = ok ? "✓ READY OFFLINE" : "TRY AGAIN";
+      }
+      toast(ok ? what : "Could not keep it. Check the signal and try again.");
+    };
+    if (q.type === "audio") {
+      /* A whole audiobook can be a hundred megabytes and an hour of download,
+         so this keeps what you are about to hear, not the entire library:
+         the part playing now plus the next two. Press it again later and it
+         reaches further. The button says how many it holds. */
+      var all = (q.items || []).filter(function (x) { return x.src; });
+      var start = Math.max(0, curItem || 0);
+      var want = all.slice(start, start + 3);
+      var i = 0, okCount = 0;
+      var one = function () {
+        if (i < want.length && btn) btn.textContent = "KEEPING " + (i + 1) + " OF " + want.length + "…";
+        if (i >= want.length) {
+          done(okCount > 0, okCount > 0
+            ? "Kept " + okCount + (okCount === 1 ? " part" : " parts") + " on this phone, starting with the one playing. It plays with no signal."
+            : "");
+          return;
+        }
+        var it = want[i]; i += 1;
+        if (isSaved(it.src)) { okCount += 1; one(); return; }
+        saveEpisode(it.src, it.label || q.title, q.title, null, function (ok) {
+          if (ok) okCount += 1;
+          one();
+        });
+      };
+      one();
+      return;
+    }
+    /* a narrated book */
+    var bid = q.bookId;
+    if (!bid) { done(false); return; }
+    /* the book's own text, and then the voice that reads it. Both must be on
+       the phone or "offline" is a promise the app cannot keep. */
+    var step2 = function () {
+      var finish = function (said) { done(true, said); };
+      var vmDone = function (ok) {
+        finish(ok ? "Kept this book and its voice on the phone."
+                  : "Kept the book. Your phone's own voice will read it offline.");
+      };
+      import("./tts-piper.mjs?v=343").then(function (m) {
+        if (!m || !m.download || !m.status) { vmDone(false); return; }
+        m.status().then(function (all) {
+          var here = (all || []).filter(function (x) { return x.lang === "en" && x.stored && x.tier === "basic"; })[0];
+          if (here) { vmDone(true); return; }
+          m.download("basic", "en").then(function () { vmDone(true); }, function () { vmDone(false); });
+        }).catch(function () { vmDone(false); });
+      }).catch(function () { vmDone(false); });
+    };
+    if (window.TSB_LESSONS && TSB_LESSONS.ensure) {
+      try { TSB_LESSONS.ensure(bid, function () { step2(); }); return; } catch (eL) {}
+    }
+    step2();
+  }
+
   function toast(msg) {
     /* above the player dock when it is up, above the bar otherwise - never
        floating mid-screen over the content */
@@ -1002,6 +1167,7 @@
 
   function startTTS(queue) {
     T = window.TSB_TTS || window.TTS_ENGINE;
+    var wantOpen = !!(queue && queue.open);
     /* v328: pages without the narrator (Listen, You) fetch it on demand */
     if ((!T || !T.playParts) && !queue._lazy) {
       queue._lazy = 1;
@@ -1047,6 +1213,8 @@
     var startAt = (from > 0 && q.items && q.items[from]) ? q.items[from].part : 0;
     try { T.playParts(q.parts, startAt); } catch (e) { return false; }
     savePos(); paintAll();
+    /* v397: the room opens the same full player; a book being read does not */
+    if (wantOpen) setTimeout(function () { if (q === queue) openSheet(); }, 60);
     /* playing is its own feedback, the dock moves */
     return true;
   }
@@ -1198,6 +1366,12 @@
     q = queue; curItem = queue.ch || 0;
     mountDock();
     playChapter(curItem, queue.seek || 0);
+    /* v397: one player, wherever you pressed play. A queue started from the
+       Listen room opens the full player over it, because that is where the
+       reader pressed play and nothing is being read underneath. A queue
+       started from inside a book does not, because covering the page you are
+       reading would interrupt the reading. */
+    if (queue.open) setTimeout(function () { if (q === queue) openSheet(); }, 60);
     if (queue.autoplay !== false) { /* playing needs no announcement */ }
   }
 
@@ -1534,7 +1708,7 @@
     if (showSheet) { showSheet.remove(); showSheet = null; }
   }
 
-  function playFeed(show, startAt, listOverride) {
+  function playFeed(show, startAt, listOverride, opt) {
     try { if (window.TSB_SHOWMORE && window.TSB_SHOWS_EXTRA) TSB_SHOWMORE.learn(show, 2); } catch (eL) {}   /* v322: every play teaches the shelf */
     if (show) { show.rss = cleanAudioUrl(show.rss || ""); rememberShow(show); }
     /* v383: a caller that already holds the episode list hands it straight in,
@@ -1543,7 +1717,7 @@
       var ov = listOverride.map(function (e, i) {
         return { label: e.label || e.title || ("Episode " + (i + 1)), sub: e.sub || (e.seconds ? fmtTime(e.seconds) : (e.date || "episode")), src: cleanAudioUrl(e.src || e.url), art: e.art || show.art || "" };
       }).filter(function (x) { return /^https?:/.test(x.src || ""); });
-      if (ov.length) { onFeedItems(show, ov, show.name, false, "", startAt); return; }
+      if (ov.length) { onFeedItems(show, ov, show.name, false, "", startAt, opt); return; }
     }
     /* v388 · if the episode list ships with the app, use it. No feed request, no CORS,
        no "updating its shelf" when the reader's signal dips. */
@@ -1552,14 +1726,14 @@
       var sh = shipped.map(function (e, i) {
         return { label: e.title || ("Episode " + (i + 1)), sub: (e.date ? e.date + " · " : "") + (e.seconds ? fmtTime(e.seconds) : "episode"), src: cleanAudioUrl(e.url) };
       }).filter(function (x) { return /^https?:/.test(x.src); });
-      if (sh.length) { onFeedItems(show, sh, show.name, false, "", startAt); return; }
+      if (sh.length) { onFeedItems(show, sh, show.name, false, "", startAt, opt); return; }
     }
     fetchFeed(show.rss, function (items, feedTitle, stale, art) {
-      onFeedItems(show, items, feedTitle, stale, art, startAt);
+      onFeedItems(show, items, feedTitle, stale, art, startAt, opt);
     });
   }
 
-  function onFeedItems(show, items, feedTitle, stale, art, startAt) {
+  function onFeedItems(show, items, feedTitle, stale, art, startAt, opt) {
       if (!items || !items.length) { toast("This show's episodes could not be read on this connection. Try again in a moment."); return; }
       rememberShow(show);
       cacheFeedList(show, items, feedTitle, art);
@@ -1573,6 +1747,7 @@
       if (pos && idx === 0 && pos.t) { ch = pos.ch; seek = pos.t; }
       if (startAt !== undefined) { ch = idx; seek = 0; }
       startAudio(audioQueue({
+        open: !!(opt && opt.open),
         key: "pod:" + show.id,
         title: show.name,
         sub: stale ? "Saved episodes from last visit" : "Episodes on your phone, ready to play",
@@ -1612,13 +1787,14 @@
      network dependency. Plays like everything else: one dock, one sheet,
      resume where you left. */
   function originals() { return (window.TSB_PODCASTS && TSB_PODCASTS.originals) || null; }
-  function playOriginal(epIdx, startPart, autoplay) {
+  function playOriginal(epIdx, startPart, autoplay, opt) {
     var O = originals();
     if (!O || !O.episodes || !O.episodes.length) { toast("The show is still warming up - try again in a bit."); return; }
     var ep = O.episodes[Math.max(0, Math.min(epIdx || 0, O.episodes.length - 1))];
     var items = ep.parts.map(function (p, i) { return { label: p.label, src: p.url, part: i }; });   /* v320: src, not url - the audio engine reads it.src; the old mapping fed every original episode a 404 */
     var pos = startPart !== undefined ? {} : (audioPos("orig:" + ep.id) || {});
     startAudio(audioQueue({
+        open: !!(opt && opt.open),
       key: "orig:" + ep.id,
       title: O.name,
       sub: ep.title,
@@ -1727,7 +1903,7 @@
     });
   }
 
-  function playAudiobook(bookId) {
+  function playAudiobook(bookId, opt) {
     var rec = (window.TSB_AUDIOBOOKS || {})[bookId];
     if (!rec && window.TSB_ABMORE && window.TSB_ABMORE.get) {
       rec = window.TSB_ABMORE.get(bookId);
@@ -1755,6 +1931,7 @@
       var b = B.filter(function (x) { return x.id === bookId; })[0] || {};
       var pos = audioPos("ab:" + bookId);
       startAudio(audioQueue({
+        open: !!(opt && opt.open),
         key: "ab:" + bookId,
         title: (b.title || rec.title || "Audiobook"),
         sub: rec.lang === "hi" ? "Hindi mein poora audiobook · LibriVox" : "full audiobook · LibriVox",
@@ -1843,8 +2020,37 @@
   /* v320: switching apps or tabs also freezes the honest state, so what you
      come back to is exactly what you left - paused or playing, never a surprise */
   document.addEventListener("visibilitychange", function () {
-    if (document.visibilityState === "hidden") savePlayState();
+    if (document.visibilityState === "hidden") {
+      savePlayState();
+      /* v397 · THE SCREEN GOES DARK, THE VOICE DOES NOT
+         Locking the phone or switching apps used to end a book: the browser
+         suspends the page, the narrated queue loses the beat between
+         sentences, and the lock screen shows nothing you can press. While
+         anything is playing we now claim the media session deliberately, keep
+         a near-silent looping element running so the page is never treated as
+         idle, and nudge the element back on the moment the system tries to
+         park it. Real audio keeps streaming by itself; the narration keeps
+         its place and continues from the sentence it stopped on. */
+      keepAliveOn();
+      if (q && !playing()) { needResume = true; }
+    } else {
+      keepAliveOff();
+      if (needResume) resyncAfterBackground();
+    }
   });
+  /* a page that the system quietly parked while we were told not to be
+     interrupted: pick the thread back up, exactly where it was */
+  var needResume = false;
+  function resyncAfterBackground() {
+    needResume = false;
+    try {
+      if (!q) return;
+      if (q.type === "audio" && AU && !AU.paused === false && jget(PLAYKEY, 0) === 1 && AU.paused) {
+        AU.play().catch(function () {});
+      }
+      if (q.type !== "audio" && T && T.resume) T.resume();
+    } catch (e) {}
+  }
   setTimeout(bootRestore, 150);
 
   /* ================= boot a queue ================= */

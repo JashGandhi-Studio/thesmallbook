@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v391";
+const CACHE_VERSION = "tsb-v398";
 /* NOTE: the assets/logos/* entries below mirror js/store-data.js exactly.
    every tile the store links to must be precached, or the offline store
    shows broken images. tests/client-suite.js asserts they never drift. */
@@ -187,6 +187,7 @@ const APP_SHELL = [
   "./js/quotedesk.js",
   "./js/quotewall.js",
   "./js/reader.js",
+  "./js/timeline.js",
   "./js/shelf3d.js",
   "./js/show-discovery.js",
   "./js/showcase.js",
@@ -266,28 +267,92 @@ const APP_SHELL = [
   return /\.(m?js|css)$/.test(u) ? u + "?v=" + CACHE_VERSION.split("-")[1].replace(/^v/, "") : u;
 });
 
+/* v397 · THE FIRST OPEN IS NOT A DOWNLOAD QUEUE
+   ------------------------------------------------------------------
+   Install used to fetch all 248 shell files before it would take over. On a
+   phone that meant two full downloads at the same moment: the page asking for
+   its own 3.8 MB, and the worker asking for the same 3.8 MB again behind it.
+   The link saturated, the app sat on a blank screen for as long as both took,
+   and the offline copy was the reason the online copy was slow.
+   Now install saves only the shell that opens the app (CORE_SHELL: the pages,
+   the styles, the few scripts that make a screen), takes over immediately,
+   and the rest arrives in the background after the reader is already reading.
+   The fill is resumable: anything already saved is skipped, so a visit cut
+   short simply continues next time. */
+const CORE_SHELL = [
+  "./",
+  "./index.html",
+  "./css/style.css",
+  "./css/film.css",
+  "./css/film2.css",
+  "./css/lively.css",
+  "./js/bootguard.js",
+  "./js/prefs.js",
+  "./js/config.js",
+  "./js/data.js",
+  "./js/app.js",
+  "./js/film.js",
+  "./js/film2.js",
+  "./js/bar.js",
+  "./js/onboard.js",
+  "./js/auth.js",
+  "./js/daylight.js",
+  "./js/avatar.js",
+  "./js/splash.js",
+  "./js/book3d.js",
+  "./js/tts-engine.js",
+  "./js/audioplayer.js",
+  "./reader.html",
+  "./js/reader.js",
+  "./js/timeline.js",
+  "./book.html",
+  "./js/book.js"
+];
+
+let warming = null;
+async function saveOne(c, u) {
+  try {
+    const already = await c.match(u);
+    if (already) return;
+    const res = await fetch(u, { cache: "force-cache" });
+    if (res && res.ok) await c.put(u, res);
+  } catch (err) {
+    /* a file we cannot reach now is retried on the next visit */
+  }
+}
+function saveList(list) {
+  const c = caches.open(CACHE_VERSION);
+  let i = 0;
+  const worker = async () => {
+    const cache = await c;
+    while (i < list.length) {
+      const u = list[i];
+      i += 1;
+      await saveOne(cache, u);
+    }
+  };
+  return Promise.all([worker(), worker(), worker()]);
+}
+function startWarm() {
+  if (warming) return warming;
+  const rest = APP_SHELL.filter((u) => CORE_SHELL.indexOf(u) < 0);
+  warming = saveList(rest).then(() => { warming = null; }, () => { warming = null; });
+  return warming;
+}
 self.addEventListener("install", (e) => {
-  /* addAll is all or nothing: one refused connection out of the whole list
-     threw the entire offline copy away and the app had no offline mode at all.
-     Save what we can, a few at a time, and always take over. */
   e.waitUntil((async () => {
-    const c = await caches.open(CACHE_VERSION);
-    let i = 0;
-    const one = async () => {
-      while (i < APP_SHELL.length) {
-        const u = APP_SHELL[i];
-        i += 1;
-        try {
-          const res = await fetch(u, { cache: "reload" });
-          if (res && res.ok) await c.put(u, res);
-        } catch (err) {
-          /* a file we cannot reach now is retried on the next visit */
-        }
-      }
-    };
-    await Promise.all([one(), one(), one(), one(), one(), one()]);
+    await saveList(CORE_SHELL);
     await self.skipWaiting();
   })());
+});
+/* the page asks for the rest once it is on screen, and once per open after */
+self.addEventListener("message", (e) => {
+  const d = e.data || {};
+  if (d && d.type === "tsb-warm") {
+    const conn = self.navigator && self.navigator.connection;
+    const cheap = !conn || !conn.saveData;
+    e.waitUntil(cheap ? startWarm() : Promise.resolve());
+  }
 });
 
 self.addEventListener("activate", (e) => {
@@ -388,6 +453,31 @@ self.addEventListener("fetch", (e) => {
         }
         return res;
       }).catch(() => fromCache(e.request));
+    }
+    /* v396: ?v= files were treated as immutable and never rechecked, so a deploy
+       that changed a script without bumping its number reached nobody: the phone
+       kept serving the old file from this cache, for ever. Code and styles are now
+       served from the cache and refreshed in the background, so the next open
+       always has the newest file, and an offline phone still has a working copy. */
+    if (/\.(js|css)$/.test(url.pathname)) {
+      /* network first, saved copy as the fallback. ?v= files used to be treated as
+         immutable, which meant a deploy that changed a script without bumping its
+         number reached nobody: the phone kept the old file from this cache for
+         ever. Fresh code when there is a connection, working app when there is
+         not, and no way for an update to get stuck again. */
+      return caches.open(CACHE_VERSION).then(async (c) => {
+        try {
+          const res = await fetch(e.request, { cache: "no-cache" });
+          if (res && res.ok && res.status === 200) {
+            c.put(e.request, res.clone()).catch(function () {});
+          }
+          return res;
+        } catch (err) {
+          const hit = await c.match(e.request);
+          if (hit) return hit;
+          throw err;
+        }
+      });
     }
     return caches.open(CACHE_VERSION).then(async (c) => {
       const hit = await c.match(e.request);

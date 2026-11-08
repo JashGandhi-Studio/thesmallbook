@@ -2210,3 +2210,186 @@ radial-gradient(90% 60% at 0% 42%, #2A1D14 0%, rgba(20, 17, 13, 0) 60%),
     backdrop-filter: none !important;
   }
 }
+
+/* ==========================================================================
+   v397 · the update card, reachable
+   On a 664px phone the WHAT IS NEW card ran taller than the screen: the nine
+   news lines plus the footer wanted more room than the sheet had, and three
+   things conspired to hide the rest. The card was pinned to exactly one
+   viewport height, it centred its children with space-evenly, and it had
+   overflow hidden, so the Continue button was painted below the fold with no
+   way to scroll to it. It is one honest column now: it grows past the screen
+   when it must, the page scrolls, and the foot always ends the scroll.
+   The character is also smaller here, because the news is the message.
+   ========================================================================== */
+.fo-s0.fo-up,
+.fo--upd .fo-s0 {
+  overflow: visible !important;
+  justify-content: flex-start !important;
+  height: auto !important;
+  padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px)) !important;
+  gap: 0;
+}
+.fo-s0.fo-up > * { flex: 0 0 auto; }
+.fo--upd .fo-wlc .lw__stage {
+  min-height: 0 !important;
+  padding: 8px 0 14px !important;
+  margin-bottom: 4px;
+}
+.fo--upd .fo-wlc .lw__pip { height: 104px !important; }
+.fo--upd .fo-wlc .lw__pip .pip { transform: scale(.58) !important; transform-origin: 50% 100% }
+.fo--upd .fo-wlc .lw__pips { top: 6px !important }
+.fo--upd .fo-upk { margin-bottom: 12px !important }
+.fo--upd .fo-h1 { margin-top: 6px !important }
+.fo--upd .fo-news { margin-top: 16px !important }
+/* the foot is the end of the scroll, never a floating thing over the text */
+.fo--upd .fo-foot {
+  margin-top: 22px !important;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+}
+/* "Set up again" is a quiet line of its own, away from Continue, so a thumb
+   aiming for the button cannot restart setup by mistake */
+.fo--upd .fo-foot .fo-tiny {
+  display: block;
+  margin: 16px auto 0;
+  opacity: .58;
+}
+/* the update card is news, not a stage: without the character the whole card
+   fits on a normal phone and Continue is on screen, no scroll needed */
+.fo--upd .fo-wlc .lw__stage { display: none !important; }
+.fo--upd .fo-new { padding: 10px 13px !important; }
+.fo--upd .fo-news { gap: 7px !important; margin-top: 12px !important; }
+.fo--upd .fo-h1 { font-size: clamp(27px, 7.6vw, 36px) !important; margin-bottom: 2px !important; }
+.fo--upd .fo-p--safe { margin-top: 12px !important; font-size: 12.5px !important; }
+.fo--upd .fo-foot { margin-top: 16px !important; }
+/* the foot sticks to the bottom of the sheet, so "Continue" is on screen at
+   every height, including a 568px SE, without hiding the news behind it */
+.fo-s0.fo-up .fo-foot,
+.fo--upd .fo-foot {
+  position: sticky !important;
+  bottom: 0;
+  z-index: 6;
+  padding: 10px 0 max(12px, env(safe-area-inset-bottom, 0px)) !important;
+  background: linear-gradient(180deg, rgba(20, 17, 13, 0) 0%, #14110D 42%, #14110D 100%) !important;
+}
+.fo-s0.fo-up .fo-foot .fo-tiny { padding-bottom: 4px; }
+
+/* ==========================================================================
+   v397 · YOUR TIME
+   The screen-time idea, for reading. A strip of seven days, a day that opens
+   when you tap its bar, and the whole month behind the corner of the card.
+   Everything is a house style: paper, ink, one accent, no charts furniture.
+   ========================================================================== */
+.tm { max-width: 560px; margin: 0 auto; padding: 6px 16px 26px; }
+@media (min-width: 760px) { .tm { max-width: 720px; padding-left: 0; padding-right: 0; } }
+.tm-card {
+  position: relative;
+  border-radius: 26px;
+  background: var(--f-card, #fff);
+  border: 1px solid var(--f-line, rgba(22,19,15,.08));
+  box-shadow: 0 18px 44px -30px rgba(22, 19, 15, .5);
+  padding: 18px 18px 14px;
+  overflow: hidden;
+}
+.tm-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.tm-kick { margin: 0 0 4px; font: 700 10.5px/1 var(--f-sans); letter-spacing: .18em; color: var(--f-mu, #6E6658); }
+.tm-title { margin: 0; font: 600 24px/1.1 var(--f-serif, Georgia, serif); color: var(--f-ink, #16130F); }
+.tm-title i { font-style: italic; color: var(--f-mu, #6E6658); }
+.tm-more {
+  flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px;
+  height: 34px; padding: 0 12px 0 10px; border-radius: 99px;
+  border: 1px solid var(--f-line, rgba(22,19,15,.12));
+  background: transparent; color: var(--f-ink, #16130F);
+  font: 600 12.5px var(--f-sans); cursor: pointer;
+}
+.tm-more svg { opacity: .7 }
+.tm-more:active { transform: scale(.97) }
+.tm-sub { margin: 8px 0 14px; font: 400 13px/1.45 var(--f-sans); color: var(--f-mu, #6E6658); }
+.tm-bars { display: flex; align-items: flex-end; gap: 7px; height: 116px; }
+.tm-bar {
+  position: relative; flex: 1 1 0; height: 100%;
+  display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+  gap: 6px; padding: 0; border: 0; background: none; cursor: pointer;
+}
+.tm-bar__v { font: 700 10px var(--f-sans); color: var(--f-mu, #6E6658); opacity: 0; transition: opacity .2s ease }
+.tm-bar.has .tm-bar__v { opacity: .75 }
+.tm-bar__f {
+  width: 100%; border-radius: 8px 8px 5px 5px;
+  background: #EDE6D6; transition: background .2s ease, transform .2s ease;
+  transform-origin: bottom center;
+}
+.tm-bar.has .tm-bar__f { background: #FFC800 }
+.tm-bar.on .tm-bar__f { background: #16130F }
+.tm-bar.on .tm-bar__v { opacity: 1; color: var(--f-ink, #16130F) }
+.tm-bar__d { font: 700 10px var(--f-sans); color: var(--f-mu, #6E6658); letter-spacing: .04em }
+.tm-bar:active .tm-bar__f { transform: scaleY(.97) }
+.tm-foot { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--f-line, rgba(22,19,15,.08)); font: 400 12px var(--f-sans); color: var(--f-mu, #6E6658); }
+.tm-foot b { color: var(--f-ink, #16130F); font-weight: 700 }
+html.dark .tm-bar__f { background: #322C24 }
+html.dark .tm-bar.has .tm-bar__f { background: #FFC800 }
+html.dark .tm-bar.on .tm-bar__f { background: #F4EFE6 }
+
+/* the day, as a sheet */
+.tm-day, .tm-month { position: fixed; inset: 0; z-index: 99950; display: flex; align-items: flex-end; justify-content: center; background: rgba(12, 10, 8, .46); animation: tmFade .22s ease both; }
+@keyframes tmFade { from { opacity: 0 } to { opacity: 1 } }
+@keyframes tmRise { from { transform: translateY(22px); opacity: .4 } to { transform: none; opacity: 1 } }
+.tm-day__card, .tm-month__card {
+  width: 100%; max-width: 460px;
+  background: var(--f-paper, #FBF7EE); color: var(--f-ink, #16130F);
+  border-radius: 28px 28px 0 0;
+  padding: 18px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -22px 60px -30px rgba(0, 0, 0, .6);
+  animation: tmRise .3s cubic-bezier(.2, .8, .2, 1) both;
+  max-height: 86vh; overflow-y: auto;
+}
+@media (min-width: 700px) {
+  .tm-day, .tm-month { align-items: center }
+  .tm-day__card, .tm-month__card { border-radius: 28px; max-width: 420px }
+}
+.tm-day__top, .tm-month__top { display: flex; align-items: center; justify-content: space-between; }
+.tm-day__k { font: 700 10.5px var(--f-sans); letter-spacing: .18em; color: var(--f-mu, #6E6658) }
+.tm-x { width: 36px; height: 36px; border-radius: 50%; border: 0; background: rgba(22,19,15,.06); color: inherit; display: grid; place-items: center; cursor: pointer }
+.tm-day__t { margin: 6px 0 16px; font: 600 23px/1.15 var(--f-serif, Georgia, serif) }
+.tm-day__stats { display: flex; gap: 10px; }
+.tm-day__stats > div { flex: 1 1 0; background: rgba(22,19,15,.045); border-radius: 16px; padding: 12px 10px; text-align: center }
+.tm-day__stats b { display: block; font: 700 17px/1.1 var(--f-sans) }
+.tm-day__stats span { font: 400 11px/1.2 var(--f-sans); color: var(--f-mu, #6E6658) }
+.tm-day__lab { margin: 18px 0 8px; font: 700 10.5px var(--f-sans); letter-spacing: .16em; color: var(--f-mu, #6E6658) }
+.tm-list { list-style: none; margin: 0; padding: 0 }
+.tm-list li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 0; border-bottom: 1px solid rgba(22,19,15,.07) }
+.tm-list li:last-child { border-bottom: 0 }
+.tm-list a { font: 600 14.5px var(--f-sans); color: inherit; text-decoration: none; border-bottom: 2px solid rgba(255,200,0,.55) }
+.tm-list i { font: 400 12px var(--f-sans); color: var(--f-mu, #6E6658); font-style: normal; white-space: nowrap }
+.tm-empty { margin: 14px 0; font: 400 13.5px/1.5 var(--f-sans); color: var(--f-mu, #6E6658) }
+.tm-done { width: 100%; margin-top: 18px; height: 50px; border: 0; border-radius: 16px; background: #FFC800; color: #16130F; font: 700 15px var(--f-sans); cursor: pointer }
+.tm-done:active { transform: scale(.99) }
+
+/* the month */
+.tm-month__top h3 { margin: 0; font: 600 18px var(--f-serif, Georgia, serif) }
+.tm-nav { width: 36px; height: 36px; border-radius: 50%; border: 0; background: rgba(22,19,15,.06); color: inherit; display: grid; place-items: center; cursor: pointer }
+.tm-month__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin: 16px 0 6px }
+.tm-mo__h { text-align: center; font: 700 9.5px var(--f-sans); letter-spacing: .1em; color: var(--f-mu, #6E6658) }
+.tm-mo__pad { height: 34px }
+.tm-mo__d {
+  height: 34px; border: 0; border-radius: 10px; cursor: pointer;
+  display: grid; place-items: center; font: 600 12.5px var(--f-sans); color: inherit;
+  background: rgba(22,19,15,.045);
+}
+.tm-mo__d.l1 { background: rgba(255, 200, 0, .28) }
+.tm-mo__d.l2 { background: rgba(255, 200, 0, .5) }
+.tm-mo__d.l3 { background: rgba(255, 200, 0, .72) }
+.tm-mo__d.l4 { background: #FFC800 }
+.tm-mo__d.on { outline: 2px solid #16130F; outline-offset: -2px }
+.tm-mo__d.future { opacity: .32; cursor: default }
+.tm-month__legend { display: flex; align-items: center; justify-content: flex-end; gap: 6px; font: 400 10.5px var(--f-sans); color: var(--f-mu, #6E6658) }
+.tm-month__legend .tm-mo__d { width: 14px; height: 14px; border-radius: 4px; display: inline-grid }
+.tm-day__stats--mo { margin-top: 14px }
+html.dark .tm-mo__d { background: rgba(255,255,255,.07) }
+html.dark .tm-mo__d.l1 { background: rgba(255, 200, 0, .3) }
+html.dark .tm-mo__d.l2 { background: rgba(255, 200, 0, .52) }
+html.dark .tm-mo__d.l3 { background: rgba(255, 200, 0, .74) }
+html.dark .tm-mo__d.on { outline-color: #F4EFE6 }
+html.dark .tm-x, html.dark .tm-nav { background: rgba(255,255,255,.1) }
+.tm-head > div { min-width: 0 }
+.tm-title { font-size: 21px }
+.tm-nav:disabled { opacity: .3; cursor: default }

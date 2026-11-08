@@ -275,7 +275,7 @@
       var fd = fanDims();
       var fan = FAN.map(function (id, k) { return bookEl(byId(id), fd.w, fd.h, "fo-fan" + k); }).join("");
       return '<section class="fo-s fo-s1' + fd.cls + '">' + top(0) +
-        '<div class="fo-fan fo-fan--pip"><span class="fo-fan__pip">' + (window.TSB_PIP ? TSB_PIP("pip--sm") : "") + "</span>" + fan + "</div>" +
+        '<div class="fo-fan">' + fan + "</div>" +
         '<h1 class="fo-h1">Big books.<br><i>Small reads.</i></h1>' +
         '<p class="fo-p">The best books, told small. In English, Hindi and more.</p>' +
         '<label class="fo-lab" for="foName">WHAT SHOULD WE CALL YOU?</label>' +

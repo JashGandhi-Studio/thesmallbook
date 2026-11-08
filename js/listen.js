@@ -340,7 +340,7 @@ window.TSB_LISTEN = (function () {
         return item.cover || (prevArt ? prevArt(bid, rec, null) : "") || "";
       };
     } catch (e) {}
-    A.playAudiobook(id);
+    A.playAudiobook(id, { open: true });
   }
   function goFeed(item, list, startAt) {
     var A = window.TSB_AUDIO;
@@ -350,9 +350,9 @@ window.TSB_LISTEN = (function () {
     rememberShow(show);
     /* v383: the list we already have wins. No feed request, no waiting room. */
     if (typeof A.playFeed === "function") {
-      try { A.playFeed(show, Math.max(0, startAt || 0), list); return; } catch (eP) {}
+      try { A.playFeed(show, Math.max(0, startAt || 0), list, { open: true }); return; } catch (eP) {}
     }
-    A.playFeed(show, Math.max(0, startAt || 0));
+    A.playFeed(show, Math.max(0, startAt || 0), null, { open: true });
   }
   function isSaved(id) { return saved.some(function (s) { return s.id === id; }); }
   function toggleSave(item) {

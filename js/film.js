@@ -621,7 +621,7 @@
       '<a class="fy-li" href="notes.html">' + I.note + "Notebook<em>Notes and highlights</em></a>" +
       '<a class="fy-li" href="login.html">' + I.acct + (signed ? "Account" : "Sign in or create account") + "<em>" + (signed ? "Manage" : "1 tap") + "</em></a>" +
       '<a class="fy-li" href="settings.html">' + ICON.gear + "All settings<em></em></a>" +
-      '<a class="fy-li" href="about.html">' + I.info + "About TheSmallBook<em>v335</em></a></div>";
+      '<a class="fy-li" href="about.html">' + I.info + "About TheSmallBook<em>v" + (window.TSB_BUILD || "397") + "</em></a></div>";
     h += '<p class="fy-fine">Your reading data lives on your device' + (signed ? " and syncs privately to your account" : "") + '. Build ' + (window.TSB_BUILD ? 'tsb-v' + window.TSB_BUILD : 'tsb-v382') + '. <a href="legal.html">Privacy</a></p>';
     host.innerHTML = h;
     setTimeout(function () {

@@ -523,6 +523,23 @@
     window.addEventListener("load", () => {
       navigator.serviceWorker.register(swUrl()).then((reg) => {
         try { if (reg && reg.update) reg.update(); } catch (eU) {}
+        /* v397: the offline copy fills itself AFTER the screen is up, not
+           during the first load. The worker saves only the shell at install
+           time; this is the nudge that says "now you may have the rest". It
+           waits for idle and for the reader to stop tapping, asks for the
+           fill once per open, and the worker skips anything already saved. */
+        var nudge = function () {
+          try {
+            var c = navigator.connection || {};
+            if (c.saveData) return;
+            if (/^(slow-)?2g$/.test(c.effectiveType || "")) return;
+            var sw = navigator.serviceWorker.controller || (reg && reg.active);
+            if (sw && sw.postMessage) sw.postMessage({ type: "tsb-warm" });
+          } catch (eW) {}
+        };
+        var later = function () { setTimeout(nudge, 2500); };
+        if (document.readyState === "complete") later();
+        else window.addEventListener("load", later, { once: true });
       }).catch(() => {});
       /* a deployed update takes over → reload ONCE so signed-in readers
          never sit on a stale build (accounts live in localStorage/Supabase,

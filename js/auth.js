@@ -304,14 +304,40 @@
     return "net";
   }
 
+  /* the session token, when there is one. v397: "clear my lockout" is now a
+     signed-in-only action, because a callable-from-anywhere reset made the
+     five-strike lock free to bypass: fail, reset, fail, reset, forever. */
+  async function bearer() {
+    try {
+      if (typeof ensureToken !== "function") return {};
+      const t = await ensureToken();
+      return t ? { "Authorization": "Bearer " + t } : {};
+    } catch (e) { return {}; }
+  }
+
   /* ============ v258 · THE LOGIN GATE (server-side) ============
      The database counts the strikes, a tampered browser changes
      nothing. 5 wrong passwords on one account → 10-minute lock. */
+  /* v397: WHAT LEAVES THE PHONE
+     Every value handed to the database goes through these two first. They are
+     not the defence (the functions take typed parameters and never build SQL
+     text); they are the guarantee that no crafted string is forwarded at all.
+     An ident is an email or an @handle: letters, digits, and @ . _ - + only. */
+  function safeIdent(v) {
+    var s = String(v == null ? "" : v).trim().toLowerCase();
+    s = s.replace(/[^a-z0-9@._+\-]/g, "");
+    return s.slice(0, 120);
+  }
+  function safeHandle(v) {
+    return String(v == null ? "" : v).trim().toLowerCase().replace(/[^a-z0-9_@]/g, "").slice(0, 24);
+  }
   async function gateCall(fn, ident) {
+    ident = safeIdent(ident);
+    if (!ident) return null;
     try {
       const res = await fetch(URL + "/rest/v1/rpc/" + fn, {
         method: "POST",
-        headers: { "apikey": ANON, "Content-Type": "application/json" },
+        headers: Object.assign({ "apikey": ANON, "Content-Type": "application/json" }, await bearer()),
         body: JSON.stringify({ p_ident: ident })
       });
       if (!res.ok) return null;
@@ -430,6 +456,8 @@
      each case and can say something true. */
   let handleLookupDown = false;
   async function emailForUsername(handle) {
+    handle = safeHandle(handle);
+    if (!handle) return "";
     handleLookupDown = false;
     try {
       const res = await fetch(URL + "/rest/v1/rpc/tsb_email_for_username", {
@@ -477,7 +505,9 @@
     const g = await gateStatus(email);
     if (g && g.locked) return { ok: false, code: "locked", wait: g.wait || 600 };
     const r = await signInEmail(email, password);
-    if (r.ok) { gateReset(email); return r; }
+    /* v397: clearing the lockout now needs the session that success just
+       created, so the call is made after the token exists */
+    if (r.ok) { setTimeout(function () { gateReset(email); }, 400); return r; }
     if (r.code === "bad") {
       const gf = await gateFail(email);
       if (gf && gf.locked) return { ok: false, code: "locked", wait: gf.wait || 600 };
@@ -494,7 +524,14 @@
   /* the server counts every request for a code: 60 s apart, 6 an hour.
      It answers { allowed, wait, left }. If the gate is down we let the
      request through, because a broken counter must never lock people out. */
+  function otpOn() {
+    try { return !!(window.TSB_CONFIG && window.TSB_CONFIG.OTP_ENABLED === true); } catch (e) { return false; }
+  }
+
   async function otpGate(email) {
+    /* v394: no mail provider, no code. Refuse locally instead of showing a
+       reader a screen that quietly cannot work. */
+    if (!otpOn()) return { ok: false, allowed: false, code: "otp_off", wait: 0, left: 0 };
     var k = String(email || "").trim().toLowerCase();
     if (!k) return { allowed: false, wait: 0, left: 0 };
     try {
@@ -521,7 +558,9 @@
 
   async function requestLoginCode(email) {
     if (!ENABLED) return { ok: false, code: "off" };
+    if (!otpOn()) return { ok: false, code: "otp_off" };   /* v394: no mail provider wired up */
     const g = await otpGate(email);
+    if (g.code === "otp_off") return { ok: false, code: "otp_off" };
     if (!g.allowed) return { ok: false, code: "slow", wait: g.wait, left: g.left };
     try {
       await fetch(URL + "/auth/v1/otp", {
