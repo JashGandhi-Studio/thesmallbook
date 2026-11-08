@@ -148,6 +148,7 @@
       }).join("") +
       "</div>" +
       '<div class="tm-foot">' +
+        '<span>Today <b>' + fmtMin(mins(today())) + "</b></span>" +
         '<span><b>' + bars.filter(function (b) { return b.m > 0; }).length + "</b> of 7 days read</span>" +
         '<span><b>' + fmtMin(Math.round(total / 7)) + "</b> a day</span>" +
       "</div>" +

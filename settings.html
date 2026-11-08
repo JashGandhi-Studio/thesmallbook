@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!--tsb-pre--><link rel="preload" href="css/style.css?v=398" as="style"><link rel="preload" href="css/film.css?v=398" as="style"><link rel="preload" href="css/film2.css?v=398" as="style"><link rel="preload" href="css/desktop-v336.css?v=398" as="style">
+  <!--tsb-pre--><link rel="preload" href="css/style.css?v=401" as="style"><link rel="preload" href="css/film.css?v=401" as="style"><link rel="preload" href="css/film2.css?v=401" as="style"><link rel="preload" href="css/desktop-v336.css?v=401" as="style">
 <!--/tsb-pre-->
   <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
     <meta property="og:title" content="Settings, TheSmallBook">
   <meta property="og:description" content="Theme, language, privacy and everything else, exactly how you like it.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=398">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=401">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/settings.html">
@@ -54,24 +54,24 @@ window.TSB_SHELL={ready:ready,page:p};
 addEventListener("load",function(){setTimeout(ready,1200)});
 setTimeout(ready,20000);
 }catch(e){try{document.documentElement.classList.remove("tsb-boot")}catch(x){}}})();</script><!--/tsb-shell-->
-  <link rel="stylesheet" href="css/style.css?v=398">
+  <link rel="stylesheet" href="css/style.css?v=401">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="css/film.css?v=398">
-  <link rel="stylesheet" href="css/film2.css?v=398">
-  <link rel="stylesheet" href="css/desktop-v336.css?v=398">
+  <link rel="stylesheet" href="css/film.css?v=401">
+  <link rel="stylesheet" href="css/film2.css?v=401">
+  <link rel="stylesheet" href="css/desktop-v336.css?v=401">
   <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
-<script src="js/inapp-select.js?v=398" defer></script>
-<script src="js/motion-344.js?v=398" defer></script>
-<link rel="stylesheet" href="css/splash.css?v=398">
+<script src="js/inapp-select.js?v=401" defer></script>
+<script src="js/motion-344.js?v=401" defer></script>
+<link rel="stylesheet" href="css/splash.css?v=401">
 <script>/* v350: the opening screen is for readers who already set the app up, once per open. Decided before the first paint so nobody sees it flash. */try{var isEntry=/(^|\/)(index\.html)?$/.test(location.pathname);if(!isEntry||sessionStorage.getItem("tsb_splash")){document.documentElement.className+=" tsb-nosplash";}else{sessionStorage.setItem("tsb_splash","1");}}catch(e){document.documentElement.className+=" tsb-nosplash";}</script>
-<link rel="stylesheet" href="css/lively.css?v=398">
+<link rel="stylesheet" href="css/lively.css?v=401">
 </head>
 <body class="setpage">
 <div id="tsbSplash" aria-hidden="true"><div class="sp-stage"><div class="sp-mark"><span class="sp-leaf sp-l"><svg viewBox="0 0 32 64" aria-hidden="true"><path d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z" fill="var(--mk-a,#16130F)"/></svg></span><span class="sp-leaf sp-r"><svg viewBox="32 0 32 64" aria-hidden="true"><path d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z" fill="var(--mk-b,#FFC800)"/></svg></span><span class="sp-spine"></span></div></div><div class="sp-word">The<i>Small</i>Book</div><div class="sp-bar"><i></i></div></div>
-<script src="js/splash.js?v=398" defer></script>
+<script src="js/splash.js?v=401" defer></script>
   <header class="accbar">
     <a class="logo" href="index.html"><span class="logo__mark"><svg class="tsb-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path class="tsb-mark__a" d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z"/><path class="tsb-mark__b" d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z"/><path class="tsb-mark__sp" d="M32 18v34"/></svg></span><span>The<span class="logo__small">Small</span>Book</span></a>
     <div class="accbar__acts">
@@ -249,6 +249,11 @@ setTimeout(ready,20000);
       <div class="bs-seg bs-seg--2" data-bs="look"><button type="button" data-v="float">Floating<small>Recommended</small></button><button type="button" data-v="glass">Classic<small>Edge to edge</small></button></div>
       <div class="bs-k">When you scroll</div>
       <div class="bs-seg bs-seg--2" data-bs="behave"><button type="button" data-v="auto">Hide, back on scroll up<small>Recommended</small></button><button type="button" data-v="fixed">Always visible<small>Never moves</small></button></div>
+      <!-- v400: titles or icons only. The switch lived in the bar sheet alone,
+           so most people never found it; it belongs on this card, right under
+           the bar it changes. -->
+      <div class="bs-k">Button labels</div>
+      <div class="bs-seg bs-seg--2" data-bs="labels"><button type="button" data-v="labels">Titles<small>Name under each icon</small></button><button type="button" data-v="icons">Icons only<small>More room, same bar</small></button></div>
       <div class="bs-foot"><button type="button" class="bs-reset" id="bsReset">Reset to default</button><span class="bs-msg" id="bsMsg" aria-live="polite"></span></div>
     </section>
 
@@ -344,26 +349,26 @@ setTimeout(ready,20000);
       <p class="sethint" id="upDiagHint">Cover / quote images, burst videos, voice notes and profile photos live in your own Supabase storage. If any of them fail, this test names the exact missing piece, and the 30-second SQL fix for it.</p>
     </section>
 
-    <p class="youfine">Settings save on this device and sync with your account when signed in. Build tsb-v398.</p>
+    <p class="youfine" data-tsb-build-text>Settings save on this device and sync with your account when signed in. Build tsb-v401.</p>
   </main>
 
-  <script src="./js/bootguard.js?v=398"></script>
-  <script src="js/prefs.js?v=398"></script>
-  <script src="js/lang.js?v=398"></script>
-  <script src="js/config.js?v=398"></script><script src="js/avatar.js?v=398"></script><script src="js/daylight.js?v=398"></script>
-  <script src="js/install.js?v=398"></script>
-  <script src="js/shelf3d.js?v=398"></script>
-  <script src="js/auth.js?v=398"></script>
-  <script src="js/sounds.js?v=398"></script>
-  <script src="js/community.js?v=398"></script>
-  <script src="js/gold.js?v=398"></script>
-  <script src="js/paywall.js?v=398"></script>
-  <script src="js/podcast-data.js?v=398"></script>
-  <script src="js/audioplayer.js?v=398"></script>
-  <script src="js/bar.js?v=398" defer></script>
-  <script src="js/soft-motion.js?v=398" defer></script>
-  <script src="js/showcase.js?v=398"></script>
-  <script src="js/guide.js?v=398"></script>
+  <script src="./js/bootguard.js?v=401"></script>
+  <script src="js/prefs.js?v=401"></script>
+  <script src="js/lang.js?v=401"></script>
+  <script src="js/config.js?v=401"></script><script src="js/avatar.js?v=401"></script><script src="js/daylight.js?v=401"></script>
+  <script src="js/install.js?v=401"></script>
+  <script src="js/shelf3d.js?v=401"></script>
+  <script src="js/auth.js?v=401"></script>
+  <script src="js/sounds.js?v=401"></script>
+  <script src="js/community.js?v=401"></script>
+  <script src="js/gold.js?v=401"></script>
+  <script src="js/paywall.js?v=401"></script>
+  <script src="js/podcast-data.js?v=401"></script>
+  <script src="js/audioplayer.js?v=401"></script>
+  <script src="js/bar.js?v=401" defer></script>
+  <script src="js/soft-motion.js?v=401" defer></script>
+  <script src="js/showcase.js?v=401"></script>
+  <script src="js/guide.js?v=401"></script>
   <script>
     (function () {
       /* theme */
@@ -511,7 +516,7 @@ setTimeout(ready,20000);
   });
 })();
 </script>
-  <script src="js/onboard.js?v=398" defer></script>
+  <script src="js/onboard.js?v=401" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {
@@ -705,8 +710,10 @@ setTimeout(ready,20000);
     }
     function paint() {
       var look = get("tsb_bar_look", "float"), beh = get("tsb_bar_behave", "auto");
+      var labs = get("tsb_bar_labels", "labels");
       if (look !== "float") look = "glass";
-      phone.setAttribute("data-look", look); phone.setAttribute("data-labels", "labels");
+      phone.setAttribute("data-look", look);
+      phone.setAttribute("data-labels", labs === "icons" ? "icons" : "labels");
       var cells = slots.map(function (k, i) {
         return '<button type="button" class="bs-it' + (i === 0 ? " on" : "") + (i === sel ? " sel" : "") + '" data-i="' + i + '" aria-label="Spot ' + (i + 1) + ": " + (NAMES[k] || k) + '">' + ico(k) + "<b>" + (NAMES[k] || k) + "</b></button>";
       });
@@ -718,7 +725,7 @@ setTimeout(ready,20000);
         return '<button type="button" class="bs-p' + (on ? " in" : "") + (here ? " here" : "") + '" data-p="' + k + '">' + ico(k) + "<span>" + NAMES[k] + "</span></button>";
       }).join("");
       document.querySelectorAll(".bs-seg").forEach(function (g) {
-        var cur = { look: look, behave: beh }[g.getAttribute("data-bs")];
+        var cur = { look: look, behave: beh, labels: labs === "icons" ? "icons" : "labels" }[g.getAttribute("data-bs")];
         g.querySelectorAll("[data-v]").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-v") === cur); });
       });
     }
@@ -738,7 +745,7 @@ setTimeout(ready,20000);
     document.querySelectorAll(".bs-seg").forEach(function (g) {
       g.addEventListener("click", function (e) {
         var b = e.target.closest("[data-v]"); if (!b) return;
-        var key = { look: "tsb_bar_look", behave: "tsb_bar_behave" }[g.getAttribute("data-bs")];
+        var key = { look: "tsb_bar_look", behave: "tsb_bar_behave", labels: "tsb_bar_labels" }[g.getAttribute("data-bs")];
         try { localStorage.setItem(key, b.getAttribute("data-v")); } catch (e2) {}
         try { if (window.TSB_BARCTL) TSB_BARCTL.apply(); } catch (e3) {}
         paint();
@@ -754,11 +761,11 @@ setTimeout(ready,20000);
     if (window.TSB_BARCTL) paint(); else window.addEventListener("load", paint);
   })();
   </script>
-  <script src="js/stt.js?v=398"></script>
-  <script src="js/film.js?v=398" defer></script>
-  <script src="js/film2.js?v=398" defer></script>
-<script src="js/mark.js?v=398" defer></script>
-<script src="js/pip-mind.js?v=398" defer></script>
-<script src="js/pip-ui.js?v=398" defer></script>
+  <script src="js/stt.js?v=401"></script>
+  <script src="js/film.js?v=401" defer></script>
+  <script src="js/film2.js?v=401" defer></script>
+<script src="js/mark.js?v=401" defer></script>
+<script src="js/pip-mind.js?v=401" defer></script>
+<script src="js/pip-ui.js?v=401" defer></script>
 </body>
 </html>

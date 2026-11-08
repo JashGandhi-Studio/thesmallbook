@@ -340,60 +340,101 @@
     }
   });
 
-  /* ── v395 · a swipe a real thumb can make, one whole lesson per page ───
-     The page is one lesson and it scrolls, exactly as v340 had it. What was
-     wrong was the gesture, measured on this same screen:
+  /* ── v399 · a swipe that survives a real phone ────────────────────────
+     Two reports, one cause. It turned in a simulator and not on the device,
+     because a simulator never cancels a gesture and a phone does:
 
-       fast flick 150px / 120ms   turned
-       normal     120px / 300ms   turned
-       slow drag  200px / 900ms   IGNORED  (the 700ms ceiling)
-       diagonal   120x90 / 250ms  IGNORED  (the 1.4 ratio guard)
-       nudge       40px / 200ms   IGNORED  (the 50px floor)
+       · inside a scrollable page, iOS and Android cancel the touch the moment
+         they decide the gesture might be a pan. touchcancel fired, the swipe
+         was thrown away, and nothing happened.
+       · a swipe that began low on the screen began on the player dock, and
+         the old guard ignored anything starting there.
+       · the browser's own back-swipe could eat an edge swipe before we saw
+         the end of it.
 
-     Those three rules threw away most real thumbs. The guards are wider now,
-     and a vertical drag is still left alone so reading a long lesson by
-     scrolling never turns the page by accident. */
-  var gx = 0, gy = 0, gt = 0, glive = false;
+     Now the gesture is tracked through every move, so a cancelled touch still
+     knows where it finished; the end of a cancelled gesture is treated as the
+     end of a gesture, not as nothing; a horizontal drag is honoured wherever
+     it starts, including over the dock (a TAP on the dock is still a tap);
+     and the CSS tells the browser that horizontal is ours, which is what stops
+     the cancel in the first place. Pointer events run alongside touch events
+     for the browsers that send only one of them, with a timestamp guard so one
+     gesture can never turn two pages. */
+  var g = { live: false, x: 0, y: 0, lx: 0, ly: 0, t: 0, last: 0, id: 0 };
 
-  function dockOwns(target) {
+  function inDock(target) {
     try {
-      return !!(target && target.closest && target.closest(".frd-dock, .rm-footer, #rmDock, .rm-tools-popover"));
+      return !!(target && target.closest && target.closest(".frd-dock, #rmDock, .rm-footer, .rm-tools-popover, #rmContents, select, input, a"));
     } catch (e) { return false; }
   }
 
-  function gestureStart(x, y, target) {
-    glive = !dockOwns(target);
-    gx = x; gy = y; gt = Date.now();
+  function begin(x, y) {
+    g.live = true;
+    g.x = g.lx = x;
+    g.y = g.ly = y;
+    g.t = Date.now();
+    g.id = 0;
   }
 
-  function gestureEnd(x, y) {
-    if (!glive) return;
-    glive = false;
-    var dx = x - gx, dy = y - gy, dt = Date.now() - gt;
+  function move(x, y) {
+    if (!g.live) return;
+    g.lx = x;
+    g.ly = y;
+    /* the moment the finger is clearly travelling sideways, claim the gesture
+       so the page underneath does not also scroll */
+    if (Math.abs(x - g.x) > 14 && Math.abs(x - g.x) > Math.abs(y - g.y) * 1.2) {
+      try { document.documentElement.style.overscrollBehaviorX = "none"; } catch (e) {}
+    }
+  }
+
+  function finish(x, y) {
+    if (!g.live) return;
+    g.live = false;
+    var now = Date.now();
+    /* one gesture, one page turn, whichever event family reported it */
+    if (now - g.last < 220) return;
+    var dx = x - g.x, dy = y - g.y, dt = now - g.t;
     var W = window.innerWidth || 375;
-    var floorPx = Math.max(26, Math.min(64, Math.round(W * 0.13)));
-    var sideways = Math.abs(dx) > Math.abs(dy) * 1.1;
+    var floorPx = Math.max(22, Math.min(56, Math.round(W * 0.11)));
+    var sideways = Math.abs(dx) > Math.abs(dy) * 0.9;
     var farEnough = Math.abs(dx) >= floorPx;
-    var flick = dt < 320 && Math.abs(dx) >= 16;
-    if (sideways && (farEnough || flick) && dt < 2600) goToPage(curPage + (dx < 0 ? 1 : -1));
+    var flick = dt < 320 && Math.abs(dx) >= 34;
+    if (!sideways) return;
+    if (!farEnough && !flick) return;
+    if (dt > 3000) return;
+    g.last = now;
+    goToPage(curPage + (dx < 0 ? 1 : -1));
   }
 
-  window.addEventListener('touchstart', function (e) {
-    if (!e.touches || e.touches.length !== 1) { glive = false; return; }
-    var t = e.touches[0];
-    gestureStart(t.clientX, t.clientY, e.target);
-  }, { passive: true });
+  window.addEventListener("touchstart", function (e) {
+    if (!e.touches || e.touches.length !== 1) { g.live = false; return; }
+    begin(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true, capture: true });
 
-  function touchDone(e) {
-    if (!glive || !e.changedTouches || !e.changedTouches.length) { glive = false; return; }
-    var t = e.changedTouches[0];
-    gestureEnd(t.clientX, t.clientY);
+  window.addEventListener("touchmove", function (e) {
+    if (!e.touches || e.touches.length !== 1) return;
+    move(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true, capture: true });
+
+  function touchOver(e) {
+    if (!e.changedTouches || !e.changedTouches.length) { finish(g.lx, g.ly); return; }
+    finish(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
   }
-  window.addEventListener('touchend', touchDone, { passive: true });
-  window.addEventListener('touchcancel', function () { glive = false; }, { passive: true });
+  window.addEventListener("touchend", touchOver, { passive: true, capture: true });
+  /* the line that was missing: a cancelled touch ends the gesture at the place
+     the finger last was, instead of throwing the gesture away */
+  window.addEventListener("touchcancel", touchOver, { passive: true, capture: true });
 
-  window.addEventListener('mousedown', function (e) { if (e.button === 0) gestureStart(e.clientX, e.clientY, e.target); });
-  window.addEventListener('mouseup', function (e) { if (glive) gestureEnd(e.clientX, e.clientY); });
+  /* pointer events too, for anything that reports only those */
+  window.addEventListener("pointerdown", function (e) {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    if (inDock(e.target) && e.pointerType === "mouse") return;
+    begin(e.clientX, e.clientY);
+  }, { passive: true, capture: true });
+  window.addEventListener("pointermove", function (e) { move(e.clientX, e.clientY); }, { passive: true, capture: true });
+  function pointerOver(e) { finish(e.clientX, e.clientY); }
+  window.addEventListener("pointerup", pointerOver, { passive: true, capture: true });
+  window.addEventListener("pointercancel", pointerOver, { passive: true, capture: true });
 
   // Read toggle and Milestone Awards
   function isRead() {

@@ -31,8 +31,37 @@
 (function () {
   "use strict";
 
-  var BUILD = "398";
+  var BUILD = "401";
 window.TSB_BUILD = BUILD;   /* v322: every page knows its era - the tutorial replays once per era */
+
+  /* v400: ONE place owns the version number.
+     About, Legal and Settings each printed their own, and all three were
+     wrong: the changelog had sat at v361 with build 333 entries while the
+     app was on 399. Anything carrying data-tsb-build is now stamped from
+     this constant at load, so the printed version cannot drift again.
+     Historical changelog entries keep their own numbers on purpose. */
+  function stampBuild() {
+    var full = "tsb-v" + BUILD;
+    /* an element that carries the version alone */
+    var els = document.querySelectorAll("[data-tsb-build]");
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      if (el.getAttribute("data-tsb-build") === "plain") el.textContent = "v" + BUILD;
+      else el.textContent = full;
+    }
+    /* an element that carries the version inside a sentence - the HTML already
+       prints the right build, this only repairs it if the two ever drift */
+    var txt = document.querySelectorAll("[data-tsb-build-text], .youfine");
+    for (var j = 0; j < txt.length; j++) {
+      var t = txt[j].textContent;
+      if (t && t.indexOf("tsb-v") >= 0) txt[j].textContent = t.replace(/tsb-v[0-9]{3}/g, full);
+    }
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", stampBuild);
+  } else {
+    stampBuild();
+  }
   var PHASE_A = "tsb_purge_a";
 
   /* returns through done(hadWorker). No worker anywhere = nothing to

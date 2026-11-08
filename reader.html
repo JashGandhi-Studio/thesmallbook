@@ -196,22 +196,34 @@
     else bindEarlyControls();
 
     /* the same gesture as the real reader, so the hand learns it once */
-    var eSX = 0, eSY = 0, eST = 0, eLive = false;
+    var eSX = 0, eSY = 0, eLX = 0, eLY = 0, eST = 0, eLive = false;
+    /* v399: the early reader now uses the same generous, cancel-proof gesture
+       as the real reader, so a swipe during the first seconds of a slow open
+       turns the page instead of being ignored. The old guards here were the
+       strict ones (700ms, 50px, forced horizontal) and dropped most thumbs. */
     window.addEventListener("touchstart", function (ev) {
       if (!window.__TSB_EARLY || !ev.touches || ev.touches.length !== 1) { eLive = false; return; }
       var t = ev.touches[0];
-      eSX = t.clientX; eSY = t.clientY; eST = Date.now();
-      eLive = t.clientY < window.innerHeight - 96;
-    }, { passive: true });
+      eSX = eLX = t.clientX; eSY = eLY = t.clientY; eST = Date.now(); eLive = true;
+    }, { passive: true, capture: true });
+    window.addEventListener("touchmove", function (ev) {
+      if (!eLive || !ev.touches || ev.touches.length !== 1) return;
+      eLX = ev.touches[0].clientX; eLY = ev.touches[0].clientY;
+    }, { passive: true, capture: true });
     function eEnd(ev) {
-      if (!window.__TSB_EARLY || !eLive || !ev.changedTouches || ev.changedTouches.length !== 1) return;
+      if (!window.__TSB_EARLY || !eLive) return;
       eLive = false;
-      var t = ev.changedTouches[0], dx = t.clientX - eSX, dy = t.clientY - eSY, dt = Date.now() - eST;
-      if (dt > 700 || Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
-      if (dx < 0) earlyRender(eCur + 1); else earlyRender(eCur - 1);
+      var x = eLX, y = eLY;
+      if (ev.changedTouches && ev.changedTouches.length === 1) { x = ev.changedTouches[0].clientX; y = ev.changedTouches[0].clientY; }
+      var dx = x - eSX, dy = y - eSY, dt = Date.now() - eST;
+      var floorPx = Math.max(22, Math.min(56, Math.round((window.innerWidth || 375) * 0.11)));
+      if (Math.abs(dx) <= Math.abs(dy) * 0.9) return;
+      if (!(Math.abs(dx) >= floorPx || (dt < 320 && Math.abs(dx) >= 34))) return;
+      if (dt > 3000) return;
+      if (dx < 0) earlyRender(Math.min(ePages.length - 1, eCur + 1)); else earlyRender(Math.max(0, eCur - 1));
     }
-    window.addEventListener("touchend", eEnd, { passive: true });
-    window.addEventListener("touchcancel", eEnd, { passive: true });
+    window.addEventListener("touchend", eEnd, { passive: true, capture: true });
+    window.addEventListener("touchcancel", eEnd, { passive: true, capture: true });
 
     window.addEventListener("tsb-one", paint);
     if (document.readyState !== "loading") paint();
@@ -231,7 +243,7 @@
   })();
   </script>
 
-  <!--tsb-pre--><link rel="preload" href="css/style.css?v=398" as="style"><link rel="preload" href="css/film.css?v=398" as="style"><link rel="preload" href="css/film2.css?v=398" as="style"><link rel="preload" href="css/desktop-v336.css?v=398" as="style">
+  <!--tsb-pre--><link rel="preload" href="css/style.css?v=401" as="style"><link rel="preload" href="css/film.css?v=401" as="style"><link rel="preload" href="css/film2.css?v=401" as="style"><link rel="preload" href="css/desktop-v336.css?v=401" as="style">
 
 <!--/tsb-pre-->
   <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
@@ -240,7 +252,7 @@
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=398">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=401">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <title>Reader | TheSmallBook</title>
@@ -274,7 +286,7 @@ window.TSB_SHELL={ready:ready,page:p};
 addEventListener("load",function(){setTimeout(ready,1200)});
 setTimeout(ready,20000);
 }catch(e){try{document.documentElement.classList.remove("tsb-boot")}catch(x){}}})();</script><!--/tsb-shell-->
-  <link rel="stylesheet" href="css/style.css?v=398"><link rel="stylesheet" href="css/lively.css?v=398">
+  <link rel="stylesheet" href="css/style.css?v=401"><link rel="stylesheet" href="css/lively.css?v=401">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <style>
@@ -938,20 +950,20 @@ setTimeout(ready,20000);
     html[data-rm] .fs-sheet { background: var(--surface) !important }
     html[data-rm] .frd-toast, html[data-rm] .tsb-player { background: var(--surface) !important; color: var(--ink) !important; border-color: var(--line) !important }
 </style>
-  <link rel="stylesheet" href="css/film.css?v=398">
-  <link rel="stylesheet" href="css/film2.css?v=398">
-  <link rel="stylesheet" href="css/desktop-v336.css?v=398">
+  <link rel="stylesheet" href="css/film.css?v=401">
+  <link rel="stylesheet" href="css/film2.css?v=401">
+  <link rel="stylesheet" href="css/desktop-v336.css?v=401">
   <script>/* v334: arriving from the opening book, the last frame of that move (the open first page) is painted before anything else and held until the reader is drawn, so there is never a blank or half-built page */
   try{var _b=+sessionStorage.getItem("tsb_bkx");if(_b&&Date.now()-_b<4000){sessionStorage.removeItem("tsb_bkx");var _de=document.documentElement;_de.classList.add("bkx-in");var _sh=sessionStorage.getItem("tsb_bkx_sheet")||"";sessionStorage.removeItem("tsb_bkx_sheet");var _hold=null;if(_sh){_hold=document.createElement("div");_hold.className="bkx bkx-hold";_hold.innerHTML='<div class="bkx-full" style="opacity:1">'+_sh+"</div>";_de.appendChild(_hold)}var _done=false;window.__bkxRelease=function(){if(_done)return;_done=true;if(_hold){_hold.style.transition="opacity .14s linear";_hold.style.opacity="0";setTimeout(function(){if(_hold.parentNode)_hold.parentNode.removeChild(_hold)},180)}setTimeout(function(){var _d=document.querySelector(".frd-dock");if(_d)_d.style.animation="none";_de.classList.remove("bkx-in")},400)};setTimeout(window.__bkxRelease,3000)}}catch(e){}</script>
   <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
-<script src="js/inapp-select.js?v=398" defer></script>
-<script src="js/motion-344.js?v=398" defer></script>
-<link rel="stylesheet" href="css/splash.css?v=398">
+<script src="js/inapp-select.js?v=401" defer></script>
+<script src="js/motion-344.js?v=401" defer></script>
+<link rel="stylesheet" href="css/splash.css?v=401">
 <script>/* v350: the opening screen is for readers who already set the app up, once per open. Decided before the first paint so nobody sees it flash. */try{var isEntry=/(^|\/)(index\.html)?$/.test(location.pathname);if(!isEntry||sessionStorage.getItem("tsb_splash")){document.documentElement.className+=" tsb-nosplash";}else{sessionStorage.setItem("tsb_splash","1");}}catch(e){document.documentElement.className+=" tsb-nosplash";}</script>
 </head>
 <body class="rm-page rm-booting">
 <div id="tsbSplash" aria-hidden="true"><div class="sp-stage"><div class="sp-mark"><span class="sp-leaf sp-l"><svg viewBox="0 0 32 64" aria-hidden="true"><path d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z" fill="var(--mk-a,#16130F)"/></svg></span><span class="sp-leaf sp-r"><svg viewBox="32 0 32 64" aria-hidden="true"><path d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z" fill="var(--mk-b,#FFC800)"/></svg></span><span class="sp-spine"></span></div></div><div class="sp-word">The<i>Small</i>Book</div><div class="sp-bar"><i></i></div></div>
-<script src="js/splash.js?v=398" defer></script>
+<script src="js/splash.js?v=401" defer></script>
   <header class="rm-header" translate="no">
     <a id="rmBack" class="rm-back" href="index.html" aria-label="Back to overview"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
     <div class="rm-header-title">
@@ -1089,10 +1101,10 @@ setTimeout(ready,20000);
     <button id="rmCloseDialog" class="rm-close-dialog" type="button">Done</button>
   </dialog>
 
-  <script defer src="js/bootguard.js?v=398"></script>
-  <script defer src="js/prefs.js?v=398"></script>
-  <script defer src="js/config.js?v=398"></script><script defer src="js/avatar.js?v=398"></script><script defer src="js/daylight.js?v=398"></script>
-  <script defer src="js/data.js?v=398"></script>
+  <script defer src="js/bootguard.js?v=401"></script>
+  <script defer src="js/prefs.js?v=401"></script>
+  <script defer src="js/config.js?v=401"></script><script defer src="js/avatar.js?v=401"></script><script defer src="js/daylight.js?v=401"></script>
+  <script defer src="js/data.js?v=401"></script>
   <!-- v385: the lesson text is requested by js/reader.js and the page rebuilds
        when it arrives. The old document.write injection raced the page code and
        lost on slower connections, which is how a book ended up wordless. -->
@@ -1117,22 +1129,22 @@ setTimeout(ready,20000);
       window.__TSB_LESSON_URL = url;
     } catch (e) {}
   })();</script>
-  <script defer src="js/lang.js?v=398"></script>
-  <script defer src="js/share.js?v=398"></script>
-  <script defer src="js/reader.js?v=398"></script>
-  <script src="js/soft-motion.js?v=398" defer></script>
-  <script defer src="js/stt.js?v=398"></script>
-  <script src="js/wordtap.js?v=398" defer></script>
+  <script defer src="js/lang.js?v=401"></script>
+  <script defer src="js/share.js?v=401"></script>
+  <script defer src="js/reader.js?v=401"></script>
+  <script src="js/soft-motion.js?v=401" defer></script>
+  <script defer src="js/stt.js?v=401"></script>
+  <script src="js/wordtap.js?v=401" defer></script>
   <!-- v336: the universal player rides along, so Listen in the reader always plays -->
-  <script src="js/tts-engine.js?v=398" defer></script>
-  <script src="js/podcast-data.js?v=398" defer></script>
-  <script src="js/audioplayer.js?v=398" defer></script>
-  <script src="js/film.js?v=398" defer></script>
-  <script src="js/film2.js?v=398" defer></script>
-<script src="js/backnav.js?v=398" defer></script>
-<script src="js/pip-mind.js?v=398" defer></script>
-<script src="js/pip-ui.js?v=398" defer></script>
-  <script src="js/timeline.js?v=398" defer></script>
+  <script src="js/tts-engine.js?v=401" defer></script>
+  <script src="js/podcast-data.js?v=401" defer></script>
+  <script src="js/audioplayer.js?v=401" defer></script>
+  <script src="js/film.js?v=401" defer></script>
+  <script src="js/film2.js?v=401" defer></script>
+<script src="js/backnav.js?v=401" defer></script>
+<script src="js/pip-mind.js?v=401" defer></script>
+<script src="js/pip-ui.js?v=401" defer></script>
+  <script src="js/timeline.js?v=401" defer></script>
 
 </body>
 </html>

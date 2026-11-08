@@ -436,12 +436,11 @@
     var AB = window.TSB_AUDIOBOOKS || {}, room = el("section", "fr");
     room.id = "fpRoom";
     var html = "";
-    var cc = null; try { cc = window.TSB_AUDIO && TSB_AUDIO.continueCard ? TSB_AUDIO.continueCard() : null; } catch (e) {}
-    if (cc) {
-      var cb = cc.bookId ? byId(cc.bookId) : (/^ab:/.test(cc.key || "") ? byId(cc.key.slice(3)) : null);
-      html += '<button type="button" class="fr-cont f-up" style="--d:.1" data-fr-resume>' + (cb ? '<span class="fr-cv"><img src="' + esc(cover(cb)) + '" alt=""></span>' : '<span class="fr-cv fr-cv--g">' + IC.ear + "</span>") +
-        '<span class="fr-cont__m"><small>CONTINUE LISTENING</small><b>' + esc(cc.title || "") + "</b><span>" + esc(cc.itemLabel || "") + '</span></span><span class="fr-play">' + IC.play + "</span></button>";
-    }
+    /* v400: the room's front door moved into js/audioroom.js.
+       It used to be a button on this rail, which meant the page carried a
+       "continue" card here AND nothing at all when you had never played
+       anything. The front door is now one card that knows both states, and
+       it sits above these rails, so this block is deliberately empty. */
     var hi = Object.keys(AB).filter(function (k) { return AB[k].lang === "hi"; });
     if (hi.length) {
       html += '<div class="fr-sec f-up" style="--d:.2"><h2>In <i translate="no">हिन्दी</i></h2><span>Full audiobooks</span></div><div class="fr-row">' +
@@ -461,7 +460,6 @@
     hero.parentNode.insertBefore(room, hero.nextSibling);
     room.addEventListener("click", function (e) {
       var A = window.TSB_AUDIO; if (!A) return;
-      if (e.target.closest("[data-fr-resume]")) { A.resume(); return; }
       var ab = e.target.closest("[data-fr-ab]"); if (ab) { A.playAudiobook(ab.getAttribute("data-fr-ab")); return; }
       var bk = e.target.closest("[data-fr-book]"); if (bk) { A.playBook(bk.getAttribute("data-fr-book"), 0); }
     });

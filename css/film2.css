@@ -1007,10 +1007,10 @@ body.fask .aq-srcs::-webkit-scrollbar { display: none; }
 body.fask .aq-src { display: grid !important; grid-template-columns: 52px 1fr; grid-template-rows: auto 1fr; gap: 3px 12px; align-items: start; flex: 0 0 248px; scroll-snap-align: start; margin: 0 0 8px !important; padding: 10px !important; border-radius: 18px !important; border: 1px solid var(--f-line) !important; background: #fff !important; box-shadow: 0 10px 22px -20px rgba(40, 28, 10, .5) !important; text-decoration: none !important; color: var(--f-ink) !important; transform: none !important; }
 body.fask .aq-src__img { grid-row: 1 / 3; width: 52px !important; height: 78px !important; object-fit: cover; border-radius: 2px 5px 5px 2px !important; box-shadow: 6px 8px 14px -8px rgba(40, 28, 10, .55) !important; margin: 0 !important; }
 body.fask .aq-src__book { font: 600 14px/1.25 var(--f-sans) !important; color: var(--f-ink) !important; text-transform: none !important; letter-spacing: 0 !important; }
-body.fask .aq-src__lesson { font: 400 13.5px/1.35 var(--f-serif) !important; color: var(--f-ink2, #3B352D) !important; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+body.fask .aq-src__lesson { font: 400 13.5px/1.35 var(--f-serif) !important; color: var(--f-ink2, #3B352D) !important; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 body.fask .aq-src__blurb, body.fask .aq-src__meta, body.fask .aq-src__go { display: none !important; }
 body.fask .aq-src--grave { grid-template-columns: 1fr; }
-body.fask .aq-src--grave .aq-src__blurb { display: -webkit-box !important; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font: 400 13px/1.35 var(--f-sans) !important; color: var(--f-mu) !important; }
+body.fask .aq-src--grave .aq-src__blurb { display: -webkit-box !important; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; font: 400 13px/1.35 var(--f-sans) !important; color: var(--f-mu) !important; }
 body.fask .aq-copyrow { margin-top: 8px !important; padding: 0 !important; border: 0 !important; background: none !important; }
 body.fask .aq-copy { display: inline-flex !important; align-items: center; gap: 6px; height: 32px; padding: 0 12px !important; border-radius: 999px !important; border: 1px solid var(--f-line) !important; background: transparent !important; color: var(--f-mu) !important; box-shadow: none !important; font: 600 12.5px var(--f-sans) !important; text-transform: none !important; letter-spacing: 0 !important; }
 body.fask .aq-follow { display: flex !important; flex-wrap: wrap; gap: 8px; padding: 0 0 0 40px !important; margin: -6px 0 0 !important; background: none !important; border: 0 !important; }
@@ -2393,3 +2393,499 @@ html.dark .tm-x, html.dark .tm-nav { background: rgba(255,255,255,.1) }
 .tm-head > div { min-width: 0 }
 .tm-title { font-size: 21px }
 .tm-nav:disabled { opacity: .3; cursor: default }
+
+/* ==========================================================================
+   v399 · THE SWIPE BELONGS TO THE READER
+   A scrollable page convinced iOS and Android that a horizontal drag was a
+   pan, so the browser cancelled the touch and the page never turned. Telling
+   the browser that vertical panning is the only thing it may take (pan-y)
+   hands the sideways gesture to the reader, which is where it belongs. The
+   back-swipe and rubber-band are contained so an edge swipe cannot become a
+   browser navigation either.
+   ========================================================================== */
+html.rm-page, body.rm-page { overscroll-behavior-x: none !important; }
+.rm-article, #rmArticle, .rm-wrap, .rm-main, .rm-page .rm-view {
+  touch-action: pan-y pinch-zoom;
+  overscroll-behavior-x: contain;
+}
+/* the dock is a control strip, not a barrier: a tap is a tap, a sideways drag
+   is a page turn */
+.frd-dock, #rmDock { touch-action: pan-y; }
+
+/* ==========================================================================
+   v399 · THE CLOSE BUTTON
+   It was a small glyph in the corner of the player, easy to miss and easy to
+   miss with. Every dismissal is now a real button: 44px, a soft surface, a
+   drawn cross with rounded caps, and a press state you can feel. Same shape in
+   the player sheet, the reader's tools and the full-screen listen room.
+   ========================================================================== */
+.ap-x, #tsbApSheet .ap-x {
+  width: 44px !important; height: 44px !important;
+  min-width: 44px; border-radius: 50% !important;
+  display: grid !important; place-items: center;
+  border: 1px solid rgba(255, 255, 255, .16) !important;
+  background: rgba(255, 255, 255, .10) !important;
+  color: #F4EFE6 !important;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  transition: transform .14s ease, background .18s ease;
+  padding: 0 !important;
+}
+.ap-x svg, #tsbApSheet .ap-x svg { width: 19px; height: 19px; stroke-width: 2.6 !important; }
+.ap-x:active { transform: scale(.92); background: rgba(255, 255, 255, .2) !important; }
+html:not(.dark) .ap-card .ap-x {
+  border-color: rgba(22, 19, 15, .12) !important;
+  background: rgba(22, 19, 15, .06) !important;
+  color: #16130F !important;
+}
+/* any other overlay's dismiss, so nothing is a bare glyph */
+.rm-tools-close, .rm-close, .sheet-x, .tsb-close {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center; border: 0;
+  background: rgba(127, 127, 127, .12); color: inherit;
+  transition: transform .14s ease;
+}
+.rm-tools-close:active, .rm-close:active, .sheet-x:active, .tsb-close:active { transform: scale(.92); }
+
+/* ==========================================================================
+   v399 · THE PLAYER IS THE SCREEN
+   It opened as a rounded card floating over the page, with the app's tab bar
+   sitting on top of its own controls at the bottom. A player is a place, not
+   a card: while it is open it owns the whole screen, the tab bar and the dock
+   step out of the way, and the card scrolls inside itself if the screen is
+   short. Closing it puts the page back exactly as it was.
+   ========================================================================== */
+body.tsb-ap-open { overflow: hidden; }
+body.tsb-ap-open .tsb-bar,
+body.tsb-ap-open [class*="tsb-bar__"],
+body.tsb-ap-open #tsbAp { display: none !important; }
+body.tsb-ap-open .ap-backdrop {
+  align-items: stretch !important;
+  padding: 0 !important;
+  background: var(--f-paper, #FBF7EE) !important;
+}
+body.tsb-ap-open .ap-card {
+  width: 100% !important;
+  max-width: 560px !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  margin: 0 auto !important;
+  border-radius: 0 !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  padding-top: calc(10px + env(safe-area-inset-top, 0px)) !important;
+  padding-bottom: calc(26px + env(safe-area-inset-bottom, 0px)) !important;
+  box-shadow: none !important;
+}
+@media (min-width: 700px) {
+  body.tsb-ap-open .ap-backdrop { background: rgba(12, 10, 8, .5) !important; align-items: center !important; }
+  body.tsb-ap-open .ap-card { height: min(86dvh, 900px) !important; border-radius: 28px !important; }
+}
+/* in the light theme the close button needs dark ink to be seen at all */
+html:not(.dark) #tsbApSheet .ap-x,
+html:not(.dark) body.tsb-ap-open .ap-x {
+  border-color: rgba(22, 19, 15, .14) !important;
+  background: rgba(22, 19, 15, .07) !important;
+  color: #16130F !important;
+}
+html:not(.dark) #tsbApSheet .ap-x svg { stroke: #16130F !important; }
+
+/* ==========================================================================
+   v400 · THE ACTION BAR
+   The yellow selection was a 64x34 pill behind the icon alone, with the label
+   hanging underneath, outside the colour. It read as a highlight that missed
+   half the button. The bar's own design rule is that the selection is painted
+   by the item's ::before, so that is where the fix belongs: the pill takes the
+   whole button now, icon and label together.
+
+     · labels on  : one soft yellow block around the icon and its label
+     · labels off : a yellow circle around the icon, plus a dot beneath it, so
+                    an icon-only bar still says where you are
+     · every item is a real touch target with a press state
+     · the bar keeps its safe-area padding and never clips its labels
+   ========================================================================== */
+html.film .tsb-bar,
+html.film #tsbBar {
+  padding-bottom: max(6px, env(safe-area-inset-bottom, 0px)) !important;
+  overflow: visible !important;
+}
+html.film .tsb-bar__item,
+html.film #tsbBar .tsb-bar__item {
+  position: relative;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center !important;
+  gap: 3px !important;
+  min-height: 56px;
+  padding: 6px 4px !important;
+  border-radius: 18px;
+  background: transparent !important;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .14s ease, color .18s ease;
+}
+html.film .tsb-bar__item svg {
+  height: 24px !important; width: 24px !important;
+  padding: 0 !important; flex: 0 0 auto; position: relative; z-index: 1;
+}
+html.film .tsb-bar__lbl,
+html.film #tsbBar .tsb-bar__lbl {
+  font: 600 10.5px/1.1 var(--f-sans) !important;
+  letter-spacing: .01em;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: relative; z-index: 1;
+}
+/* THE SELECTION: one block, icon and label together */
+html.film .tsb-bar__item::before,
+html.film #tsbBar .tsb-bar__item::before,
+html.film #tsbBar .tsb-bar__item.is-active::before,
+html.film #tsbBar .tsb-bar__item--active::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 1px 0 !important;
+  left: 0 !important; right: 0 !important; top: 1px !important; bottom: 1px !important;
+  width: auto !important; height: auto !important;
+  margin: 0 !important;
+  border-radius: 16px !important;
+  background: #FFC800 !important;
+  box-shadow: 0 10px 20px -14px rgba(176, 122, 0, .9) !important;
+  opacity: 0; transform: scale(.9);
+  transition: opacity .18s ease, transform .2s cubic-bezier(.2, .8, .2, 1);
+  z-index: 0;
+}
+html.film .tsb-bar__item.is-active::before,
+html.film .tsb-bar__item--active::before { opacity: 1 !important; transform: none !important; }
+html.film .tsb-bar__item.is-active,
+html.film .tsb-bar__item--active { color: #16130F !important; }
+html.film .tsb-bar__item.is-active svg,
+html.film .tsb-bar__item--active svg { color: #16130F !important; stroke: #16130F !important; }
+html.film .tsb-bar__item.is-active .tsb-bar__lbl,
+html.film .tsb-bar__item--active .tsb-bar__lbl { color: #16130F !important; font-weight: 800 !important; }
+html.film .tsb-bar__item:not(.is-active):active { transform: scale(.94); }
+
+/* icons only: a circle, and a dot under it, so the icon alone still reads */
+html.film[data-bar-labels="icons"] .tsb-bar__item,
+html.film.bar-nolabels .tsb-bar__item { min-height: 54px; padding: 0 !important; }
+html.film[data-bar-labels="icons"] .tsb-bar__lbl,
+html.film.bar-nolabels .tsb-bar__lbl {
+  display: block !important;
+  height: 0; font-size: 0 !important; line-height: 0; overflow: visible;
+}
+/* data-bar-labels lives on <html>, so the selector has to read it there;
+   the .is-active variants are spelled out so they tie with, and win over,
+   the labels-on rule above (same specificity, later in the sheet). */
+html.film[data-bar-labels="icons"] #tsbBar .tsb-bar__item::before,
+html.film[data-bar-labels="icons"] #tsbBar .tsb-bar__item.is-active::before,
+html.film[data-bar-labels="icons"] #tsbBar .tsb-bar__item--active::before,
+html.film.bar-nolabels #tsbBar .tsb-bar__item::before,
+html.film.bar-nolabels #tsbBar .tsb-bar__item.is-active::before,
+html.film.bar-nolabels #tsbBar .tsb-bar__item--active::before {
+  width: 44px !important; height: 44px !important;
+  top: 5px !important; bottom: auto !important;
+  left: 50% !important; right: auto !important;
+  margin-left: -22px !important;
+  border-radius: 50% !important;
+  transform: scale(.85);
+}
+html.film[data-bar-labels="icons"] #tsbBar .tsb-bar__item.is-active::before,
+html.film[data-bar-labels="icons"] #tsbBar .tsb-bar__item--active::before,
+html.film.bar-nolabels #tsbBar .tsb-bar__item.is-active::before,
+html.film.bar-nolabels #tsbBar .tsb-bar__item--active::before { transform: none !important; }
+html.film[data-bar-labels="icons"] .tsb-bar__item.is-active .tsb-bar__lbl::after,
+html.film.bar-nolabels .tsb-bar__item.is-active .tsb-bar__lbl::after {
+  content: ""; display: block; width: 4px; height: 4px; margin: 2px auto 0;
+  border-radius: 50%; background: #FFC800;
+}
+
+/* ==========================================================================
+   v400 · THE AUDIO ROOM
+   The Listen room opened with a sentence and a wall of covers. Nothing said
+   "you can start here", and nothing offered the chapter you had left. It now
+   opens with a front door, the size of the room in real numbers, and four
+   chips that go straight to a shelf. The covers themselves get bigger and
+   the play button stops eating a whole row under every card.
+   ========================================================================== */
+
+/* ---------- 1. THE HOLD CARD ---------- */
+html.film .ln-hold {
+  margin: 18px 0 0;
+  border-radius: 26px;
+  background: var(--f-ink);
+  color: #FFF9EC;
+  box-shadow: 0 22px 44px -26px rgba(22, 19, 15, .7);
+  overflow: hidden;
+  position: relative;
+}
+html.film.dark .ln-hold { background: var(--f-card); box-shadow: var(--f-sh-sm); }
+html.film .ln-hold:empty { display: none; }
+html.film .ln-hold__in {
+  display: block;
+  padding: 16px 16px 14px;
+}
+html.film .ln-hold__kick {
+  display: block;
+  font: 800 10.5px/1 var(--f-sans);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #FFC800;
+  margin-bottom: 12px;
+}
+html.film .ln-hold__row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+html.film .ln-hold__art {
+  flex: 0 0 auto;
+  width: 62px; height: 62px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .08);
+  box-shadow: 0 10px 20px -12px rgba(0, 0, 0, .9);
+  display: block;
+}
+html.film .ln-hold__art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+html.film .ln-hold__txt { flex: 1 1 auto; min-width: 0; display: block; }
+html.film .ln-hold__t {
+  display: block;
+  font: 800 16.5px/1.22 var(--f-sans);
+  color: #FFF9EC;
+  letter-spacing: -.01em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+html.film.dark .ln-hold__t { color: var(--f-ink); }
+html.film .ln-hold__s {
+  display: block;
+  margin-top: 4px;
+  font: 500 12.5px/1.35 var(--f-sans);
+  font-style: normal;
+  color: rgba(255, 249, 236, .62);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+html.film.dark .ln-hold__s { color: var(--f-mu); }
+html.film .ln-hold__go {
+  flex: 0 0 auto;
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  border: 0;
+  background: #FFC800;
+  color: #16130F;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 12px 22px -12px rgba(255, 200, 0, .8);
+  transition: transform .14s ease;
+}
+html.film .ln-hold__go:active { transform: scale(.92); }
+html.film .ln-hold__foot {
+  display: block;
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(255, 249, 236, .12);
+  font: 500 11.5px/1.4 var(--f-sans);
+  color: rgba(255, 249, 236, .55);
+}
+html.film.dark .ln-hold__foot { border-top-color: var(--f-line); color: var(--f-mu); }
+
+/* ---------- 2. THE ROOM, IN NUMBERS ---------- */
+html.film .ln-roomline {
+  margin: 12px 2px 0;
+  font: 600 11.5px/1.4 var(--f-sans);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--f-mu);
+}
+html.film .ln-roomline:empty { display: none; }
+
+/* ---------- 3. THE JUMP BAR ---------- */
+html.film .ln-jump {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  gap: 8px;
+  margin: 14px -18px 2px;
+  padding: 10px 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: linear-gradient(to bottom, var(--f-paper) 72%, rgba(251, 248, 241, 0));
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+html.film.dark .ln-jump { background: linear-gradient(to bottom, var(--f-paper) 72%, rgba(21, 18, 14, 0)); }
+html.film .ln-jump::-webkit-scrollbar { display: none; }
+html.film .ln-jump button {
+  flex: 0 0 auto;
+  border: 1.5px solid var(--f-line);
+  background: var(--f-card);
+  color: var(--f-ink2);
+  border-radius: 999px;
+  padding: 9px 15px;
+  font: 700 12.5px/1 var(--f-sans);
+  cursor: pointer;
+  transition: background .16s ease, color .16s ease, border-color .16s ease;
+}
+html.film .ln-jump button.on {
+  background: var(--f-ink);
+  border-color: var(--f-ink);
+  color: #FFF9EC;
+}
+html.film.dark .ln-jump button.on { background: var(--f-yel); border-color: var(--f-yel); color: #16130F; }
+
+/* ---------- 4. SLEEVE CARDS: bigger cover, one round play ---------- */
+html.film .pc-ab__grid {
+  gap: 12px !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+html.film .pc-ab__card {
+  padding: 10px 10px 12px !important;
+  display: flex !important;
+  flex-direction: column;
+  gap: 0 !important;
+}
+html.film .pc-ab__cover {
+  width: 100% !important;
+  aspect-ratio: 4 / 5;
+  height: auto !important;
+  object-fit: cover;
+  border-radius: 14px !important;
+  margin: 0 !important;
+  display: block;
+}
+html.film .pc-ab__artwrap { position: relative; display: block; margin: 0 0 10px; }
+/* the play button becomes the badge on the sleeve, not a row under it */
+html.film .pc-ab__card button:not(.pc-ab__save) {
+  position: absolute !important;
+  right: 10px;
+  bottom: 10px;
+  width: 44px !important;
+  height: 44px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--f-yel) !important;
+  color: #16130F !important;
+  box-shadow: 0 10px 20px -10px rgba(22, 19, 15, .55) !important;
+  z-index: 2;
+}
+html.film .pc-ab__card button:not(.pc-ab__save)::after {
+  content: "";
+  width: 0; height: 0;
+  border-left: 13px solid #16130F;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  margin-left: 3px;
+}
+html.film .pc-ab__card button:not(.pc-ab__save):active { transform: scale(.9); }
+html.film .pc-ab__card b {
+  font: 800 14.5px/1.25 var(--f-sans) !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0 0 3px !important;
+}
+html.film .pc-ab__card i {
+  font: 500 12px/1.3 var(--f-sans) !important;
+  font-style: normal !important;
+  color: var(--f-mu) !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0 0 7px !important;
+}
+html.film .pc-ab__why { display: none !important; }
+html.film .pc-ab__ch {
+  align-self: flex-start;
+  margin-top: auto;
+  font-size: 10.5px !important;
+}
+html.film .pc-ab__dev { display: none !important; }
+
+/* ---------- 5. AN EMPTY SHELF TAKES ONE LINE, NOT A CARD ---------- */
+html.fv-listen .pc-myshelf__empty {
+  padding: 13px 16px !important;
+  font: 600 12.5px/1.45 var(--f-sans) !important;
+  text-align: left !important;
+  border-radius: 16px !important;
+}
+
+/* v400: the Listen hero stops hogging the first screen. The front door of
+   the room has to be visible without scrolling, so on this page only, the
+   headline and hook step back a size. */
+html.fv-listen .pc-hero { padding-bottom: 2px !important; }
+html.fv-listen .pc-hero .dd-h1 {
+  font-size: clamp(2rem, 8.6vw, 2.5rem) !important;
+  line-height: 1.06 !important;
+  margin: 6px 0 8px !important;
+}
+html.fv-listen .pc-hero .dd-hook {
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  max-width: 38ch;
+  margin: 0 !important;
+}
+html.fv-listen .pc-kick { margin-bottom: 2px !important; }
+
+/* v400: two rows of pills that looked identical did two different jobs, which
+   is why the shows shelf felt heavy. The topic row says what it is, and the
+   category row reads as tabs rather than as more search. */
+html.film #pcSearchChips { position: relative; padding-top: 4px; }
+html.film #pcSearchChips button {
+  border: 1.5px solid var(--f-line) !important;
+  background: var(--f-card) !important;
+  color: var(--f-ink2) !important;
+  text-transform: lowercase;
+  letter-spacing: 0 !important;
+}
+html.film #pcCats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 18px;
+  margin: 6px 0 16px !important;
+  border-bottom: 1px solid var(--f-line);
+}
+html.film #pcCats button {
+  border: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  padding: 5px 0 13px !important;
+  border-radius: 0 !important;
+  color: var(--f-mu) !important;
+  font: 700 11.5px/1 var(--f-sans) !important;
+  letter-spacing: .1em !important;
+  text-transform: uppercase !important;
+  position: relative;
+}
+html.film #pcCats button.on, html.film #pcCats button[aria-pressed="true"] {
+  color: var(--f-ink) !important;
+}
+html.film #pcCats button.on::after, html.film #pcCats button[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 5px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--f-yel);
+}
+/* a session with no picture gets no empty box: the text takes the room */
+html.film .ln-hold__art--none { display: none !important; }
+
+/* v400: the Settings preview bar has to show the choice it offers, or the
+   switch is a claim. Titles hide, the icons keep the same yellow pill. */
+html.film #bsPhone[data-labels="icons"] .bs-it b { display: none !important; }
+html.film #bsPhone[data-labels="icons"] .bs-it { gap: 0 !important; }
+html.film #bsPhone[data-labels="icons"] .bs-it.on::before { top: 2px; height: 34px; width: 44px; }

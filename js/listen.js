@@ -739,7 +739,7 @@ window.TSB_LISTEN = (function () {
         var f0 = el(".r-foot"); if (f0) f0.classList.add("on"); footState();
       };
       paintGuest();
-      archive("best audiobooks", 14).then(function (pop) { if (pop && pop.length) { popL = pop; paintGuest(); } });
+      archive("best audiobooks", 14).then(function (pop) { if (pop && pop.length) { popL = popL.concat(pop).filter(function (x, i, a) { return a.map(function (y) { return y.id || y.title; }).indexOf(x.id || x.title) === i; }); paintGuest(); } });
       podcasts("storytelling", 8).then(function (p) { if (p && p.length) { podL = p; paintGuest(); } });
       archive("short stories", 10).then(function (s2) { if (s2 && s2.length) { finL = s2; paintGuest(); } });
       return;
@@ -766,10 +766,26 @@ window.TSB_LISTEN = (function () {
     var popular = (SEEDS.popular || []).slice(0, 14);
     var related = (SEEDS.related || []).slice(0, 12);
     var pods = (SEEDS.pods || []).slice(0, 8);
+    /* v399 · THE AUDIOBOOKS ARE ALWAYS THERE
+       The audiobook rail was filled only by a live Archive.org search. When
+       that request was slow or refused the room showed podcasts and nothing
+       else, which is exactly what "there are no audiobooks in the feed"
+       looks like from a phone. The bundled LibriVox shelf now leads, and the
+       network result is merged into it rather than replacing it. */
+    function mergeById(first, second) {
+      var seen = {}, out = [];
+      (first || []).concat(second || []).forEach(function (x) {
+        if (!x) return;
+        var k = String(x.id || x.title || "");
+        if (!k || seen[k]) return;
+        seen[k] = 1; out.push(x);
+      });
+      return out;
+    }
     setTimeout(function () {
       tick(0);
       archive("best audiobooks", 14).then(function (l) {
-        if (l && l.length) popular = l; tick(1);
+        if (l && l.length) popular = mergeById(popular, l); tick(1);
         var terms = ts.length ? ts.join(" ") : "classic novels";
         return archive(terms, 12);
       }).then(function (l) {
@@ -789,6 +805,7 @@ window.TSB_LISTEN = (function () {
             (memS.length ? rail("You were listening to", memS) : "") +
             (related.length ? rail(cont.length ? "Because you listened to " + shortName(cont[0].title) : "Start here", related) : "") +
             (pods.length ? rail("Podcasts", pods) : "") +
+            (popular.length ? rail("Audiobooks, free to listen", popular) : "") +
             rail("Popular now", popular) +
             (saved.length ? rail("Saved", saved) : "") +
             (cont.length ? rail("Continue", cont) : "") +

@@ -193,7 +193,7 @@
       ".ap-art--big img{width:100%;height:100%;object-fit:cover}" +
       ".ap-art--book{width:auto;height:auto;border:0;background:transparent;box-shadow:none;overflow:visible;transform:none}" +
       ".ap-npwrap{flex:1;min-width:0}" +
-      ".ap-np-t{display:block;font:800 19px/1.22 'Space Grotesk',sans-serif;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
+      ".ap-np-t{display:-webkit-box;font:800 19px/1.22 'Space Grotesk',sans-serif;color:var(--ink);overflow:hidden;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-clamp:2}" +
       ".ap-np-s{display:block;font:600 12px 'Space Grotesk',sans-serif;color:var(--ink);opacity:.62;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
       ".ap-np-x{display:inline-block;font:800 9px 'Space Grotesk','Arial Black',sans-serif;letter-spacing:.8px;color:var(--ink);background:var(--bg);border:var(--bw) solid var(--edge);border-radius:999px;padding:4px 9px;margin-top:8px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
       /* seek: fat track, yellow fill drawn by the tick */
@@ -340,7 +340,7 @@
         dock.style.transition = "transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.18s ease";
         dock.style.transform = "translateX(" + window.innerWidth + "px) rotate(7deg)";
         dock.style.opacity = "0";
-        setTimeout(function () { stopAll(); }, 190);
+        setTimeout(function () { parkSession(); }, 190);
       } else {
         dock.style.transition = "transform 0.24s cubic-bezier(.16, 1, .3, 1), opacity 0.2s ease";
         dock.style.transform = "translateX(0) rotate(0deg)";
@@ -563,13 +563,17 @@
             var on = isSaved(it.src);
             sv = '<button class="ap-qi__sv' + (on ? " on" : "") + '" data-sv="' + esc(it.src) + '" aria-label="Save this episode for offline">' + (on ? "✓ OFFLINE" : "⤓ SAVE") + '</button>';
           }
-          return '<div class="ap-qi' + (i === curItem ? " on" : "") + '" data-i="' + i + '"><span class="ap-num">' + (i === curItem ? IC.play : i + 1) + '</span><span style="min-width:0"><b>' + esc(it.label) + '</b><i>' + esc(it.sub || "") + '</i>' + sv + '</span>' + (i === curItem ? EQ : '') + '</div>';
+          return '<div class="ap-qi' + (i === curItem ? " on" : "") + '" data-i="' + i + '"><span class="ap-num">' + (i === curItem ? IC.play : i + 1) + '</span><span style="min-width:0"><b>' + esc(tidyLabel(it.label)) + '</b><i>' + esc(it.sub || "") + '</i>' + sv + '</span>' + (i === curItem ? EQ : '') + '</div>';
         }).join("") +
       '</div>' +
       upNextHtml() +
       (q.credit ? '<p class="ap-credit">' + q.credit + '</p>' : '') +
       '</div>';
     document.body.appendChild(sheet);
+    /* v399: the full player gets the whole screen. While it is open the app's
+       own bar and dock step aside, so the sheet is not a card with the tab bar
+       floating over its controls. */
+    try { document.body.classList.add("tsb-ap-open"); } catch (eOpen) {}
     bindRoom(sheet);
     /* v396: while a book plays, the player shows the book itself. The hero cover
        was a flat picture in a rounded box; it is now the same 3D book the shelves
@@ -604,7 +608,7 @@
       if (ch0 && q) {
         var it0 = q.items[curItem] || {};
         var kind0 = /^pod:/.test(q.key) ? "EPISODE" : (/^orig:/.test(q.key) ? "PART" : "CHAPTER");
-        ch0.innerHTML = "<b>" + kind0 + " " + (curItem + 1) + " OF " + q.items.length + "</b> " + esc((it0.label || "").slice(0, 64));
+        ch0.innerHTML = "<b>" + kind0 + " " + (curItem + 1) + " OF " + q.items.length + "</b> " + esc(tidyLabel(it0.label).slice(0, 64));
       }
     })();
     sheet.classList.toggle("ap-playing", !!playing());
@@ -665,7 +669,7 @@
     sheet._apTick = setInterval(function () {
       if (!sheet || !q) return;
       var it2 = q.items[curItem] || {};
-      var t2 = sheet.querySelector("#apNpT"); if (t2) t2.textContent = it2.label || q.title;
+      var t2 = sheet.querySelector("#apNpT"); if (t2) t2.textContent = tidyLabel(it2.label) || q.title;
       var s2 = sheet.querySelector("#apNpS"); if (s2) s2.textContent = q.title + " · " + (curItem + 1) + " of " + q.items.length;
       sheet.classList.toggle("ap-playing", !!playing());
       var bp2 = sheet.querySelector("#apBigPlay"); if (bp2) bp2.innerHTML = playing() ? IC.pauseBig : IC.playBig;
@@ -761,6 +765,7 @@
   }
   function closeSheet() {
     resetDockPose();
+    try { document.body.classList.remove("tsb-ap-open"); } catch (eCl) {}
     if (!sheet) return;
     try { clearInterval(sheet._apTick); } catch (e) {}
     var old = sheet; sheet = null;
@@ -801,6 +806,25 @@
       audioPosSave(q.key, curItem, AU.currentTime);
     } catch (e) {}
   }
+  /* v399: a LibriVox chapter label arrives as "01 Down the Rabbit Hole" and
+     the player already prints "1." in front of it, so the row read "1. 01 Down
+     the Rab..." and truncated the only part that matters. The track number is
+     stripped where it duplicates the number we print ourselves. */
+  function tidyLabel(label) {
+    var t = String(label == null ? "" : label).replace(/\s+/g, " ").trim();
+    t = t.replace(/^(chapter|part|track)\s*\d+\s*[:.\-]\s*/i, "");
+    /* v400: LibriVox labels carry TWO numbers in a row, "1. 00 - Introduction".
+       Stripping them one at a time left the bare "- " stranded in front of the
+       title, so the dock read "- Introduction". Two passes, then any separator
+       that survived at the front is a leftover, not part of the name. */
+    for (var i = 0; i < 2; i++) {
+      t = t.replace(/^\d{1,3}\s*[.):\-]\s*(?=\S)/, "");
+      t = t.replace(/^0\d{1,2}\s+(?=\S)/, "");   /* "01 Down the Rabbit Hole" */
+    }
+    t = t.replace(/^[\-:.,]\s*/, "");
+    return t || String(label || "");
+  }
+
   function fmtTime(t) {
     if (!isFinite(t) || t < 0) return "-:--";
     var m = Math.floor(t / 60), sec = Math.floor(t % 60);
@@ -925,6 +949,46 @@
       paintPlay();
     }, at - Date.now());
   }
+  /* ================= v399: PARK, DO NOT ERASE =================
+     Swiping the player away used to call stopAll(), which is the honest
+     "end this" button: it clears the session, forgets what you were listening
+     to, and blocks every page from rebuilding a dock. So a swipe ended the
+     book, and nothing could bring it back, not even reopening the app.
+
+     A swipe is a park, not a decision to forget. The queue, the chapter and
+     the second are all kept; the dock leaves the screen; the Listen room and
+     the Continue card can bring it back, and so can opening the app again.
+     stopAll() stays exactly as it was for the explicit Stop in the sheet. */
+  function parkSession() {
+    try {
+      if (q && q.type === "audio" && AU) audioPosSave(q.key, curItem, AU.currentTime || 0);
+      savePos();
+    } catch (e) {}
+    try { if (T) T.stop(); } catch (e) {}
+    try { if (AU) AU.pause(); } catch (e) {}
+    jset(PLAYKEY, 0);           /* parked means paused */
+    jset(CANCELKEY, 0);         /* and allowed to come back */
+    keepAliveOff();
+    unmountDock();
+    try { window.dispatchEvent(new CustomEvent("tsb:ap-parked", { detail: { key: q ? q.key : "" } })); } catch (e) {}
+    toast("Kept your place. Listen brings it back.");
+  }
+  function parked() {
+    var l = jget(LASTKEY, null);
+    return !!(l && l.type === "audio" && l.key && !jget(CANCELKEY, 0));
+  }
+  /* put the dock back for a session that is still alive, paused, at its place */
+  function resurface() {
+    try {
+      if (q) { mountDock(); paintAll(); return true; }
+      if (!parked()) return false;
+      jset(CANCELKEY, 0);
+      jset(PLAYKEY, 0);
+      bootRestore();
+      return true;
+    } catch (e) { return false; }
+  }
+
   function stopAll() {
     try { window.TSB_MEDIA.release("player"); } catch (e) {}
     jset(CANCELKEY, Date.now());   /* cancelled is cancelled: no dock on reload */
@@ -973,7 +1037,7 @@
         } catch (e3) {}
       }
     } catch (e) {}
-    dock.querySelector(".ap-t").textContent = it.label || q.title;
+    dock.querySelector(".ap-t").textContent = tidyLabel(it.label) || q.title;
     dock.querySelector(".ap-s").textContent = q.title + " · " + (curItem + 1) + "/" + q.items.length + (q.glyph ? "" : "");
     paintPlay();
     /* lesson highlight on book pages */
@@ -1002,7 +1066,7 @@
     try {
       if (!("mediaSession" in navigator)) return;
       var it = q.items[curItem] || {};
-      var md = { title: it.label || q.title, artist: q.title, album: "TheSmallBook" };
+      var md = { title: tidyLabel(it.label) || q.title, artist: q.title, album: "TheSmallBook" };
       var mca = curArt(); if (mca) md.artwork = [{ src: mca, sizes: "512x512", type: "image/jpeg" }];
       navigator.mediaSession.metadata = new MediaMetadata(md);
       navigator.mediaSession.setActionHandler("play", function () { if (mediaFree("player") && !playing()) { toggle(); } });
@@ -1905,6 +1969,17 @@
 
   function playAudiobook(bookId, opt) {
     var rec = (window.TSB_AUDIOBOOKS || {})[bookId];
+    /* v399: write it down, so the next open can rebuild the dock without
+       depending on whichever page started it */
+    try {
+      if (rec && rec.id) {
+        var got0 = JSON.parse(localStorage.getItem("tsb_ab_got") || "{}") || {};
+        got0[bookId] = { id: rec.id, title: rec.title || "", author: rec.author || "", dev: rec.dev || "", lang: rec.lang || "" };
+        var ks0 = Object.keys(got0);
+        while (ks0.length > 60) delete got0[ks0.shift()];
+        localStorage.setItem("tsb_ab_got", JSON.stringify(got0));
+      }
+    } catch (eG0) {}
     if (!rec && window.TSB_ABMORE && window.TSB_ABMORE.get) {
       rec = window.TSB_ABMORE.get(bookId);
     }
@@ -1952,8 +2027,10 @@
 
   function bootRestore() {
     if (q) return;
-    /* you swiped the player away: it stays gone. Only LISTEN TODAY's
-       continue (or starting anything new) brings audio back. */
+    /* v399: a parked session is not a cancelled one. Swiping the player away
+       keeps what you were listening to and where, so the dock comes back on
+       the next open, paused. Only the explicit Stop (which clears the record)
+       or the sleep timer running out keeps it gone. */
     if (jget(CANCELKEY, 0)) return;
     var l = jget(LASTKEY, null);
     if (!l || l.type !== "audio" || !l.key) return;
@@ -1965,6 +2042,17 @@
     if (l.key.indexOf("ab:") === 0) {
       var bid = l.key.slice(3);
       var rec = (window.TSB_AUDIOBOOKS || {})[bid];
+      /* v399: after a reload the bookmay no longer be in the in-memory
+         registry - it was put there by the page that started it. The record
+         can be rebuilt from what was saved, which is why the dock used to
+         vanish for good after any refresh. */
+      if (!rec) {
+        var got = {};
+        try { got = JSON.parse(localStorage.getItem("tsb_ab_got") || "{}") || {}; } catch (eG) {}
+        rec = got[bid] || { id: bid, title: l.title || String(bid).replace(/[_-]+/g, " ") };
+        window.TSB_AUDIOBOOKS = window.TSB_AUDIOBOOKS || {};
+        window.TSB_AUDIOBOOKS[bid] = rec;
+      }
       if (!rec) return;
       fetchAudiobook(rec, function (items) {
         if (q || !items.length) return;
@@ -2096,6 +2184,9 @@
     outline: function () { return q ? q.items.map(function (it) { return { label: it.label || "", part: it.part || 0 }; }) : []; },
     state: function () { return q ? { type: q.type, key: q.key, bookId: q.bookId || (/^ab:/.test(q.key) ? q.key.slice(3) : null), title: q.title, sub: q.sub, art: curArt(), showArt: q.art || "", cur: curItem, items: q.items.length, label: (q.items[curItem] || {}).label || "", playing: !!playing() } : null; },
     open: function () { openSheet(); },   /* v323: the live audio element, for tests and deep links */
+    park: parkSession,
+    parked: parked,
+    resurface: resurface,
     last: function () { return jget(LASTKEY, null); },
     continueCard: function () {
       var l = jget(LASTKEY, null);

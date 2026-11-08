@@ -169,21 +169,38 @@
   function interests() { var a = lsGet("tsb_interests", []); return Array.isArray(a) ? a : []; }
   function mindWords() { var m = lsGet("tsb_mind", []); return Array.isArray(m) ? m : []; }
   function finished(b) { var n = lessons(b); return n > 0 && readCount(b.id) >= n; }
+  /* v399 · TODAY'S PICK IS NEVER A LOCKED BOOK
+     The pick was free to land on a TheSmallBook Original, and every Original
+     but the first five is behind Gold - so the app's own first suggestion of
+     the day could be a book the reader cannot open. A recommendation that
+     cannot be taken is worse than no recommendation: it teaches the reader
+     that tapping things does not work. Every free book is fair game, and the
+     five open Originals too, but never one that will stop at the paywall. */
+  function lockedOriginal(b) {
+    if (!b) return true;
+    try {
+      var orig = (window.TSB_CONFIG && TSB_CONFIG.ORIGINALS) || [];
+      var at = orig.indexOf(b.id);
+      if (at < 0) return false;                 /* not an Original: open */
+      var free = (window.TSB_CONFIG && TSB_CONFIG.FREE_ORIGINALS) || 5;
+      return at >= free;                        /* an Original past the free five */
+    } catch (e) { return false; }
+  }
   function todaysPick() {
     try {
       if (window.TSB_TASTE && TSB_TASTE.picks) {
-        var personal = TSB_TASTE.picks(3);
-        if (personal && personal.length) return personal[0];
+        var personal = (TSB_TASTE.picks(6) || []).filter(function (b) { return b && !lockedOriginal(b); });
+        if (personal.length) return personal[0];
       }
     } catch (e) {}
     var shelf = lsGet("tsb_starter_shelf", []), pool = [];
-    (Array.isArray(shelf) ? shelf : []).forEach(function (id) { var b = byId(id); if (b && !finished(b)) pool.push(b); });
+    (Array.isArray(shelf) ? shelf : []).forEach(function (id) { var b = byId(id); if (b && !finished(b) && !lockedOriginal(b)) pool.push(b); });
     if (!pool.length) {
       var cats = interests(); if (!cats.length) cats = ["Self-Improvement"];
-      books().forEach(function (b) { if (cats.indexOf(b.category) >= 0 && !finished(b)) pool.push(b); });
+      books().forEach(function (b) { if (cats.indexOf(b.category) >= 0 && !finished(b) && !lockedOriginal(b)) pool.push(b); });
       pool = pool.slice(0, 30);
     }
-    if (!pool.length) pool = books().slice(0, 20);
+    if (!pool.length) pool = books().filter(function (b) { return !lockedOriginal(b); }).slice(0, 20);
     var day = Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 864e5);
     return pool[day % pool.length];
   }
