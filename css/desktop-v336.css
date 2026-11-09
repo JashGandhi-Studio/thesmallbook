@@ -403,3 +403,57 @@
     letter-spacing: -0.015em; text-transform: none; white-space: nowrap;
   }
 }
+
+/* ============================================================
+   v406 · DESKTOP MOTION REPAIR
+   On desktop the room felt frozen: cards only changed shadow,
+   the rail snapped instead of sliding, and sidebar items had
+   no travel at all. Motion is back, on a spring curve, and it
+   still switches fully off for reduced motion.
+   ============================================================ */
+@media (min-width: 700px) and (prefers-reduced-motion: no-preference) {
+  html.film #tsbBar.tsb-bar {
+    transition: transform .38s cubic-bezier(.22,1,.36,1), opacity .3s ease !important;
+  }
+  html.film #tsbBar .tsb-bar__item {
+    transition: background-color .22s ease, color .22s ease, transform .22s cubic-bezier(.22,1,.36,1);
+  }
+}
+@media (min-width: 700px) and (hover: hover) and (prefers-reduced-motion: no-preference) {
+  html.film #tsbBar .tsb-bar__item:hover { transform: translateX(3px); }
+  html.film .pc-ab__card, html.film .pc-show, html.film .ft-card, html.film .cm-feed > * {
+    transition: transform .28s cubic-bezier(.22,1,.36,1), box-shadow .28s cubic-bezier(.22,1,.36,1), background-color .22s ease;
+  }
+  html.film .pc-ab__card:hover, html.film .pc-show:hover, html.film .ft-card:hover, html.film .cm-feed > *:hover {
+    transform: translateY(-4px);
+  }
+  html.film .ft-card img, html.film .pc-ab__cover { transition: transform .45s cubic-bezier(.22,1,.36,1); }
+  html.film .ft-card:hover img, html.film .pc-ab__card:hover .pc-ab__cover { transform: scale(1.025); }
+}
+
+/* ============================================================
+   v409 · TABLET SCROLL, FIXED AT THE PAINT LAYER
+   Diagnosis on an iPad profile: the page itself scrolled fine,
+   but every frame repainted a full height backdrop blur on the
+   rail (blur 26px), a blurred top nav and large soft card
+   shadows. Real tablet GPUs pay for that per frame, which is
+   exactly "laggy, not even scrolling". At tablet widths the
+   glass becomes solid, shadows shrink to a whisper, and scroll
+   chaining stops at the page edge so a fling never lands on a
+   white rubber band in dark mode.
+   ============================================================ */
+@media (min-width: 700px) and (max-width: 1023px) {
+  html.film #tsbBar.tsb-bar, html.film .nav, html.film .ln-jump {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  html.film #tsbBar.tsb-bar { background: #FFFDF8 !important; }
+  html.dark #tsbBar.tsb-bar { background: #1D1915 !important; }
+  html.film .nav { background: var(--f-paper) !important; }
+  html.film .pc-show, html.film .pc-ab__card, html.film .ft-card, html.film .cm-feed > * {
+    box-shadow: 0 8px 18px -14px rgba(30, 25, 15, .28) !important;
+  }
+}
+@media (min-width: 700px) {
+  html.film, html.film body { overscroll-behavior: none; }
+}

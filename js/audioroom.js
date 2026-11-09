@@ -49,11 +49,32 @@
     return "assets/covers/" + bid + ".jpg";
   }
 
-  /* the first audiobook the shelf actually rendered, so "start here" is the
-     same book the eyes land on below */
+  /* "start here" used to be whichever book the shelf painted first.
+     v409: it is the shelf book closest to this listener's ear, scored
+     against the taste the room has learned and the minds chosen at
+     setup, and it says why it is standing at the door. With no taste
+     yet it stays the first book, exactly as before. */
   function firstBook() {
-    var btn = document.querySelector("#pcAudiobooks [data-ab]");
-    if (!btn) return null;
+    var btns = document.querySelectorAll("#pcAudiobooks [data-ab]");
+    if (!btns.length) return null;
+    var terms = [];
+    try { if (window.TSB_LISTEN_FEED && TSB_LISTEN_FEED.topTerms) terms = TSB_LISTEN_FEED.topTerms(6); } catch (e) {}
+    try {
+      var mind = jget("tsb_mind", []);
+      if (Array.isArray(mind)) mind.forEach(function (m) { terms.push(String(m || "").toLowerCase()); });
+      var ints = jget("tsb_interests", []);
+      if (Array.isArray(ints)) ints.forEach(function (x) { terms.push(String(x || "").toLowerCase()); });
+    } catch (e2) {}
+    var best = null, bestScore = 0;
+    for (var i = 0; i < btns.length; i++) {
+      var bid0 = btns[i].getAttribute("data-ab");
+      var rec0 = (window.TSB_AUDIOBOOKS || {})[bid0] || {};
+      var hay = ((rec0.title || "") + " " + (rec0.author || "") + " " + (rec0.desc || "")).toLowerCase();
+      var score = 0;
+      terms.forEach(function (w) { if (w && w.length > 2 && hay.indexOf(w) >= 0) score++; });
+      if (score > bestScore) { bestScore = score; best = btns[i]; }
+    }
+    var btn = best || btns[0];
     var bid = btn.getAttribute("data-ab");
     var card = btn.closest ? btn.closest(".pc-ab__card") : null;
     var title = "", author = "";
@@ -67,7 +88,8 @@
       id: bid,
       title: title || rec.title || "the first book",
       author: author || rec.author || "",
-      art: artFor(bid)
+      art: artFor(bid),
+      reason: bestScore > 0 ? "Picked for you, from what you have been listening to and reading" : ""
     };
   }
 
@@ -105,11 +127,9 @@
     var line = $("#lnRoomLine");
     if (!line) return;
     var c = counts();
-    var bits = [];
-    if (c.books) bits.push(c.books + (c.books === 1 ? " audiobook" : " audiobooks"));
-    if (c.shows) bits.push(c.shows + (c.shows === 1 ? " show" : " shows"));
-    if (c.dives) bits.push(c.dives + " narrated " + (c.dives === 1 ? "dive" : "dives"));
-    line.textContent = bits.length ? bits.join("  ·  ") : "A quiet room. Pick a book and press play.";
+    /* the counts stay in the sections where they help; the room line
+       sells the behaviour now, not the size of a starter shelf */
+    line.textContent = c.books ? "Fetched fresh every morning  ·  shaped by your ear  ·  and it grows daily" : "A quiet room. Pick a book and press play.";
   }
 
   function holdHtml() {
@@ -143,17 +163,18 @@
         '<div class="ln-hold__row"><span class="ln-hold__txt"><b class="ln-hold__t">Pick a book, press play.</b>' +
         '<i class="ln-hold__s">Full chapters, free, read by volunteers.</i></span></div></div>';
     }
-    return '<div class="ln-hold__in">' +
+    return '<div class="ln-hold__in ln-hold__in--start">' +
       '<span class="ln-hold__kick">Start here</span>' +
       '<div class="ln-hold__row">' +
         '<span class="ln-hold__art"><img src="' + esc(f.art) + '" alt="" onerror="this.style.display=\'none\'"></span>' +
         '<span class="ln-hold__txt">' +
           '<b class="ln-hold__t">' + esc(f.title) + '</b>' +
           '<i class="ln-hold__s">' + (f.author ? esc(f.author) : 'Full chapters, free to listen') + '</i>' +
+          (f.reason ? '<em class="ln-hold__why">' + esc(f.reason) + '</em>' : '') +
         '</span>' +
         '<button class="ln-hold__go" id="lnStart" type="button" data-ab="' + esc(f.id) + '" aria-label="Play ' + esc(f.title) + '">' + playIcon() + '</button>' +
       '</div>' +
-      '<span class="ln-hold__foot">Audiobooks, shows and our own dives. Nothing to install, nothing to pay.</span>' +
+      '<span class="ln-hold__foot">Fresh picks land here every morning. Nothing to install, nothing to pay.</span>' +
     '</div>';
   }
 
@@ -282,7 +303,7 @@
     if (stamp === forYouSig) return;
     forYouSig = stamp;
     if (!signedIn()) {
-      box.innerHTML = '<div class="ln-foryou__signin"><div><b>A feed that learns your ear.</b><p>Sign in and this rail follows your saved shows, audiobooks and reading interests. Your signals stay on this device.</p></div><a href="login.html?next=podcasts.html">Sign in</a></div>';
+      box.innerHTML = '<div class="ln-foryou__signin"><div><b>A feed that learns your ear.</b><p>Sign in and this rail follows your saved shows, audiobooks and reading interests. Your signals follow your account, not this device.</p></div><a href="login.html?next=audio.html">Sign in</a></div>';
       return;
     }
     var cards = forYouCards();

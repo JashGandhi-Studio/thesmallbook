@@ -36850,70 +36850,70 @@ const BOOKS = [
       {
         "title": "The 10,000-Hour Misread",
         "chapter": "Introduction",
-        "summary": "Ericsson's research described deliberate practice for world-class expertise; Gladwell's pop version became a myth that scares beginners. Useful skill takes far less: about 20 hours of focused practice reaches reasonable competence.",
+        "summary": "Ericsson's research described deliberate practice for world-class expertise; Gladwell's pop version became a myth that scares beginners. Useful skill takes far less: about 20 hours of focused practice reaches reasonable competence. Twenty hours will not make a master, and that is the liberation in it: the first twenty hours buy competence, the point where a skill stops being embarrassing and starts being useful. Kaufman aimed his method at that first, steepest stretch of the curve.",
         "example": "Kaufman learned ukulele well enough to perform in public with a month of lunch-break practice, not a decade.",
         "action": "Pick the skill you've been postponing as too big. Commit to 20 hours before judging yourself."
       },
       {
         "title": "Deconstruct the Skill",
         "chapter": "The Method",
-        "summary": "Big skills are bundles. Break the skill into the smallest sub-skills, then ask which few sub-skills deliver most of the result, and practice those first.",
+        "summary": "Big skills are bundles. Break the skill into the smallest sub-skills, then ask which few sub-skills deliver most of the result, and practice those first. His rule of thumb is to practise the sub-skills you will actually use most: for a language, the phrases that open conversations; for an instrument, the chords under most songs. The vital few carry the beginner further than a complete survey.",
         "example": "Relearning Go, Kaufman isolated opening principles and life-and-death reading, skipping exotic openings that win nothing at his level.",
         "action": "Write your skill as 8-12 sub-skills. Circle the two that matter most. Start there, ignore the rest for now."
       },
       {
         "title": "Learn Enough to Self-Correct",
         "chapter": "The Method",
-        "summary": "Research just enough to know what good looks like and to catch your own mistakes, then practice. Over-studying is procrastination dressed as preparation.",
+        "summary": "Research just enough to know what good looks like and to catch your own mistakes, then practice. Over-studying is procrastination dressed as preparation. Self-correction needs a reference: a chord chart, a recording of yourself, a checklist of what good form looks like. Buy or borrow just enough of that scaffolding, then let practice, not preparation, fill the hours.",
         "example": "Three to five resources, a quick scan, then straight to practice: the programmer who read one chapter then coded learned faster than the one who finished the book first.",
         "action": "Cap your research phase at 3 resources and 2 hours. Then practice, and let errors teach you what to look up next."
       },
       {
         "title": "Remove Practice Barriers",
         "chapter": "The Method",
-        "summary": "Every barrier between you and practice, the guitar in the case, the app on page three, the TV in the room, taxes your willpower. Make starting stupidly easy and make distractions hard.",
+        "summary": "Every barrier between you and practice, the guitar in the case, the app on page three, the TV in the room, taxes your willpower. Make starting stupidly easy and make distractions hard. He treats the environment as part of the method: the instrument out of its case, the book on the pillow, the phone in another room. Willpower is a worse designer than a well-arranged room.",
         "example": "Moving the guitar from its case to a stand multiplied practice sessions; the TV in the corner quietly ended them.",
         "action": "Tonight, put your practice tool where you'll trip over it, and put your biggest distraction one room away."
       },
       {
         "title": "Practice at Least 45 Minutes a Day",
         "chapter": "The Method",
-        "summary": "Skill grows from hours actually practiced. Short daily sessions beat weekend binges because sleep consolidates motor and mental patterns between sessions.",
+        "summary": "Skill grows from hours actually practiced. Short daily sessions beat weekend binges because sleep consolidates motor and mental patterns between sessions. The daily floor matters more than the heroic session because forgetting works nightly: forty-five minutes today beats five hours next Sunday. Kaufman tracked real minutes, which is why the twenty hours arrived in weeks rather than someday.",
         "example": "Kaufman's ukulele came from 45 minutes after breakfast, daily, for a month: by hour 20 he could play 20 songs.",
         "action": "Anchor 45 minutes to an existing daily habit, right after breakfast or before dinner, and log the hours."
       },
       {
         "title": "Create Fast Feedback Loops",
         "chapter": "The Method",
-        "summary": "The faster you see your errors, the faster you correct them. Feedback can be a coach, a recording, a test suite, a mirror, anything that shows the gap between intended and actual.",
+        "summary": "The faster you see your errors, the faster you correct them. Feedback can be a coach, a recording, a test suite, a mirror, anything that shows the gap between intended and actual. A recording is the cheapest coach in the book: it shows the error your memory edited out. Feedback that arrives in seconds lets you fix one thing per rep, which is how twenty hours outruns twenty months of vague repetition.",
         "example": "Windsurfing on a board with clear sail position: instant visual feedback replaced hours of confused guessing.",
         "action": "Add one feedback device to your practice this week: record yourself, time yourself, or have someone watch and comment."
       },
       {
         "title": "Practice by the Clock, in Bursts",
         "chapter": "The Method",
-        "summary": "Use a timer in short intensive bursts (Pomodoro-style) to keep intensity high and count real practice, not chair time. Twenty hours of actual practice, tracked, is the target.",
+        "summary": "Use a timer in short intensive bursts (Pomodoro-style) to keep intensity high and count real practice, not chair time. Twenty hours of actual practice, tracked, is the target. The timer protects intensity: short bursts with a visible clock make it harder to drift into comfortable noodling. Ending on time also keeps the next session welcome, and a practice you dread returning to is a practice about to be skipped.",
         "example": "Sessions counted in minutes made the total visible: 45 x 27 sessions = 20 hours, and the skill was real on schedule.",
         "action": "Get a timer and a tally. Count minutes actually practiced, not minutes near your instrument."
       },
       {
         "title": "Emotional Maturation: Feeling Stupid",
         "chapter": "The Method",
-        "summary": "The hardest part of learning is pre-verbal frustration: the gap between taste and ability. Naming it as a normal phase, the stupid gap, is the mental trick that gets beginners through hour one to hour twenty.",
+        "summary": "The hardest part of learning is pre-verbal frustration: the gap between taste and ability. Naming it as a normal phase, the stupid gap, is the mental trick that gets beginners through hour one to hour twenty. Kaufman names the frustration barrier as the real curriculum: the first hours feel stupid for everyone, and quitting there gets misread as lacking talent. Push through the awkward stretch and the same hours start returning visible progress.",
         "example": "The windsurfing disaster day, salt water everywhere, board flipped 40 times, was exactly the day before the breakthrough session.",
         "action": "Write this on paper where you practice: feeling stupid is the feeling of learning. It exits through the far side."
       },
       {
         "title": "Yoga, Programming, Touch Typing, Go: The Lab Notes",
         "chapter": "The Case Studies",
-        "summary": "The method applies to body, code and mind alike: relearning yoga by daily practice, programming by building a working thing immediately, typing by drilling rows, Go by playing games against slightly stronger players.",
+        "summary": "The method applies to body, code and mind alike: relearning yoga by daily practice, programming by building a working thing immediately, typing by drilling rows, Go by playing games against slightly stronger players. The lab notes earn their place because the domains differ wildly and the method does not: define the target performance, find the vital sub-skills, remove friction, practise with feedback. Yoga and Go obey the same first twenty hours.",
         "example": "Six skills, six months, roughly 20 hours each: none became world-class, all became useful, which was the point.",
         "action": "Choose skills by usefulness, not impressiveness: the ones that would compound in your life if you were merely good."
       },
       {
         "title": "The Principle of the Slat",
         "chapter": "The Last Word",
-        "summary": "Skill acquisition is like carpentry: a door slat is measured many times before it fits. Patience with the process, barriers removed, feedback running, hours logged, is the entire secret.",
+        "summary": "Skill acquisition is like carpentry: a door slat is measured many times before it fits. Patience with the process, barriers removed, feedback running, hours logged, is the entire secret. The door slat metaphor is about iteration tolerance: measure, fit, adjust, fit again, and expect the gap to close gradually. Beginners who expect the first attempt to fit blame their hands; the carpenter just reaches for the plane again.",
         "example": "The ukulele performance that felt impossible at hour three felt easy at hour twenty, with no talent added, only hours and methods.",
         "action": "Set your next skill's end-state (a song, an app, a dish) and schedule the 20 hours before you start."
       }
@@ -36948,70 +36948,70 @@ const BOOKS = [
       {
         "title": "The Amazon Operating System",
         "chapter": "Part 1",
-        "summary": "Amazon converts leadership principles into mechanisms: recurring processes with owners, checks and audits. Culture is what the mechanisms enforce, not what the posters say.",
+        "summary": "Amazon converts leadership principles into mechanisms: recurring processes with owners, checks and audits. Culture is what the mechanisms enforce, not what the posters say. The test of a mechanism is what happens on a bad week: if the review meeting still runs, the input metric still gets read and the owner still gets asked, the principle is real. If it quietly pauses under pressure, it was decoration.",
         "example": "The weekly business review where every metric has an owner, a trend and an explanation: miss one and the meeting stops.",
         "action": "Pick one broken commitment in your team and install a mechanism: owner, cadence, checklist, audit."
       },
       {
         "title": "Customer Obsession vs Competitor Obsession",
         "chapter": "Chapter 1",
-        "summary": "Amazon orients everything to the customer, not rivals: it lets the company ignore hype cycles and invest in unglamorous things (reviews, returns, shipping speed) that compound into trust.",
+        "summary": "Amazon orients everything to the customer, not rivals: it lets the company ignore hype cycles and invest in unglamorous things (reviews, returns, shipping speed) that compound into trust. The practical edge is patience: a customer-obsessed firm can lose a quarter to a rival's launch and still win the decade, because trust compounds quietly while hype resets every cycle. Competitor obsession spends that patience on reactions.",
         "example": "Zappos's returns policy looked financially insane until customer lifetime value justified every cent.",
         "action": "Write your last five big decisions and the customer outcome of each. If you can't name it, that's the finding."
       },
       {
         "title": "Working Backwards: PR-FAQ",
         "chapter": "Chapter 2",
-        "summary": "Before building, write the press release announcing the finished product and the FAQ with the hard questions. If the PR isn't compelling, no amount of engineering will save it.",
+        "summary": "Before building, write the press release announcing the finished product and the FAQ with the hard questions. If the PR isn't compelling, no amount of engineering will save it. The FAQ half matters as much as the press release: it forces the team to answer price, dependencies and failure modes while changing the plan is still cheap. A PR that cannot survive its own FAQ is a warning, not a green light.",
         "example": "Kindle, Prime and AWS all passed through PR-FAQ gauntlets that killed their weak early versions before code was written.",
         "action": "Draft a one-page PR for your next project before writing any code. If it's boring, fix the idea, not the prose."
       },
       {
         "title": "The Six-Pager",
         "chapter": "Chapter 3",
-        "summary": "PowerPoint hides shallow thinking; six-page narrative memos, read silently at the start of meetings, force completeness. Writing is thinking made auditable.",
+        "summary": "PowerPoint hides shallow thinking; six-page narrative memos, read silently at the start of meetings, force completeness. Writing is thinking made auditable. The silent reading is the load-bearing detail: twenty minutes of everyone reading the same words means the meeting argues about the document, not about who presented best. Remove the silence and the six-pager becomes homework nobody checks.",
         "example": "The memo that survived an hour of silent reading and hostile questions carried the decision; the slide deck that would have passed a hallway chat died in minutes.",
         "action": "Replace one deck this month with a two-page narrative memo and twenty silent reading minutes."
       },
       {
         "title": "Single-Threaded Owners",
         "chapter": "Chapter 4",
-        "summary": "Big innovations die by committee and diffusion. Amazon assigns single-threaded leaders, one person, one initiative, no shared priorities, with real resources. Ownership is singular or it's fiction.",
+        "summary": "Big innovations die by committee and diffusion. Amazon assigns single-threaded leaders, one person, one initiative, no shared priorities, with real resources. Ownership is singular or it's fiction. It also protects the work from calendar politics: a single-threaded owner does not need permission from five partner teams to move. The trade is accountability, because with one name on the initiative there is nowhere for a delay to hide.",
         "example": "AWS, Alexa and Prime each began with one leader whose only job was that thing, protected from the mother-ship's priorities.",
         "action": "Name one owner per initiative on your team. If someone owns two big things, they own neither."
       },
       {
         "title": "Bar Raisers and Hiring Above the Line",
         "chapter": "Chapter 5",
-        "summary": "Hiring quality compounds: every hire should raise the bar. The bar raiser, a trained interviewer from outside the team with veto power, protects standards from deadline pressure and hiring-manager bias.",
+        "summary": "Hiring quality compounds: every hire should raise the bar. The bar raiser, a trained interviewer from outside the team with veto power, protects standards from deadline pressure and hiring-manager bias. The veto is the point: a bar raiser can stop a hire the whole panel wants, which is exactly when standards usually bend. Amazon paired that power with training and rotation, so the role stayed a craft rather than becoming a personality.",
         "example": "Teams that skipped bar raisers under load filled seats and regressed a generation of quality within two years.",
         "action": "Institute one outside-the-team veto voice for your next three hires."
       },
       {
         "title": "Input Metrics Over Output Metrics",
         "chapter": "Chapter 6",
-        "summary": "Control inputs (controllable actions: pages speed, return rate, price) and outputs (revenue, share) follow. Vanity output metrics make teams negotiate; controllable inputs make teams act.",
+        "summary": "Control inputs (controllable actions: pages speed, return rate, price) and outputs (revenue, share) follow. Vanity output metrics make teams negotiate; controllable inputs make teams act. The discipline is choosing inputs a team can move this week: pages added, defects fixed, delivery promises kept. Review those weekly and the output number becomes an explanation to read, not a target to negotiate at quarter end.",
         "example": "The retailer that tracked registrations learned nothing; tracking the controllable inputs behind them turned the curve.",
         "action": "Replace one output KPI in your review with the two input metrics that drive it."
       },
       {
         "title": "Believe: Principles Need Practice",
         "chapter": "Chapter 7",
-        "summary": "Leadership principles only matter when violated: what happens to the person who skips customer obsession for a quarter's numbers? Visible, consistent consequences turn posters into culture.",
+        "summary": "Leadership principles only matter when violated: what happens to the person who skips customer obsession for a quarter's numbers? Visible, consistent consequences turn posters into culture. New joiners learn the real principles from stories of what happened to people who broke them and what happened to people who defended them at a cost. Orientation decks fade; consequences get retold for years.",
         "example": "The leader promoted despite missing targets for customer-first reasons taught the org what the principles actually weighed.",
         "action": "Identify one principle your team claims but doesn't practice. Create one consequence or ritual that makes it real."
       },
       {
         "title": "Operation Santa: The CEO Review",
         "chapter": "Part 2",
-        "summary": "Bezos personally reviewed the annual plans of every major initiative (Operation Santa), reading hundreds of six-pagers: the discipline signaled that thinking quality was the company's real product.",
+        "summary": "Bezos personally reviewed the annual plans of every major initiative (Operation Santa), reading hundreds of six-pagers: the discipline signaled that thinking quality was the company's real product. It scaled because the documents travelled: a six-pager written for the CEO review could be read by any team without a meeting. The cost was real executive time, which was precisely the signal that the thinking mattered.",
         "example": "A proposal surviving the Santa gauntlet arrived pre-hardened, with weak assumptions dead and owners pre-bought-in.",
         "action": "Institute a quarterly plan review where plans are read, not presented, and the hardest questions are mandatory."
       },
       {
         "title": "Transplanting Amazon DNA",
         "chapter": "Conclusion",
-        "summary": "Copying artifacts without the mechanisms fails: the six-pager without silent reading becomes theater, PR-FAQ without customer obsession becomes marketing copy. Transplant principles and mechanisms together, adapted to your scale.",
+        "summary": "Copying artifacts without the mechanisms fails: the six-pager without silent reading becomes theater, PR-FAQ without customer obsession becomes marketing copy. Transplant principles and mechanisms together, adapted to your scale. Start smaller than Amazon: one written page before a project, one named owner, one input metric reviewed weekly. The artifacts are easy to photocopy; the habits of reading, questioning and following inputs are the actual transplant.",
         "example": "Companies that adopted Amazon meetings but kept hierarchy got slower, not faster: the mechanism without the authority is a costume.",
         "action": "Adopt exactly one Amazon mechanism this quarter, fully, with its supporting authority, and audit it monthly."
       }
@@ -38026,70 +38026,70 @@ const BOOKS = [
       {
         "title": "The Chemical Story Is Partial",
         "chapter": "Chapter 1",
-        "summary": "The serotonin-deficiency story was always oversold: antidepressants change some people's lives, but the effect sizes over placebo are modest, and the biggest drivers of mood lie in how we live, not only in brain chemistry.",
+        "summary": "The serotonin-deficiency story was always oversold: antidepressants change some people's lives, but the effect sizes over placebo are modest, and the biggest drivers of mood lie in how we live, not only in brain chemistry. Hari's careful version is worth keeping: the drugs help some people, sometimes substantially, and he does not advise anyone to stop them. His charge is against the story told around them, which shrank a many-caused suffering into one chemical shortage and left the other causes untreated.",
         "example": "The World Health Organization's finding across countries: the wealthier and more unequal a society, the higher its depression rates ran, chemistry could not explain that gradient.",
         "action": "If you take or consider medication, treat it as one tool: ask your doctor also what in your life is disconnected, and start there too."
       },
       {
         "title": "Disconnected Work",
         "chapter": "Chapter 3",
-        "summary": "A job with no control, no using of your strengths and no visible point produces helplessness in anyone. It is not weakness: it is a normal brain responding to a work life that eats meaning.",
+        "summary": "A job with no control, no using of your strengths and no visible point produces helplessness in anyone. It is not weakness: it is a normal brain responding to a work life that eats meaning. The research he leans on is about control: jobs where effort and reward disconnect, and where the worker cannot influence pace or method, grind people down regardless of personality. Change the control and the same person often recovers in the same job.",
         "example": "The Baltimore city workers who found their jobs had no purpose, pushing papers to nowhere, slid into depression together: the office was the patient.",
         "action": "Score your work on control, contribution and visibility of results. The lowest score is your next career conversation."
       },
       {
         "title": "Disconnected People",
         "chapter": "Chapter 5",
-        "summary": "Loneliness is as health-corrosive as smoking, and modern life is engineered for it: we have contact without connection. Isolation breeds the rumination loop that depression feeds on.",
+        "summary": "Loneliness is as health-corrosive as smoking, and modern life is engineered for it: we have contact without connection. Isolation breeds the rumination loop that depression feeds on. He is careful with the loneliness evidence: it predicts illness and early death on a scale that surprised the researchers themselves. His examples of repair are unglamorous: regular, repeated, low-stakes contact that a community can actually sustain.",
         "example": "The GP who stopped prescribing pills to a lonely patient and prescribed a gardening group instead saw the depression lift as the plot filled with people.",
         "action": "Take one concrete step this week toward recurring human contact: a weekly group, class or standing call, not one-off networking."
       },
       {
         "title": "Disconnected Meaningful Values",
         "chapter": "Chapter 6",
-        "summary": "The more people organize life around material acquisition and status display, the more depressed and anxious they become: extrinsic values crowd out the intrinsic ones (growth, connection, contribution) that actually feed mood.",
+        "summary": "The more people organize life around material acquisition and status display, the more depressed and anxious they become: extrinsic values crowd out the intrinsic ones (growth, connection, contribution) that actually feed mood. The junk values argument names advertising as an engine: a culture that trains people to want display over experience should expect the anxiety that follows. His test is biographical: the happiest periods of most lives were not the best-decorated ones.",
         "example": "The advertising students who internalized materialist goals showed rising depression over semesters, the goals themselves were the slow poison.",
         "action": "Write your ten current goals and mark each intrinsic or extrinsic. If extrinsic dominates, rewrite three."
       },
       {
         "title": "Disconnected Childhood Trauma",
         "chapter": "Chapter 7",
-        "summary": "Adverse childhood experiences raise depression risk multiplicatively: trauma is not an excuse bank, it is a causal exposure, and unresolved it writes the adult's stress system.",
+        "summary": "Adverse childhood experiences raise depression risk multiplicatively: trauma is not an excuse bank, it is a causal exposure, and unresolved it writes the adult's stress system. The ACE studies give this chapter its weight: each category of early adversity raises later risk, which reframes a diagnosis as a biography. Hari insists the point of knowing is treatment, since trauma-informed care asks different questions than symptom checklists.",
         "example": "The doctor who scored patients on childhood adversity found depression risk climbing sevenfold from seven adverse experiences: the past was prescribing the present.",
         "action": "If your childhood had adversity, name it to one safe person or professional this month. Naming is the first reconnection."
       },
       {
         "title": "Disconnected Status and Respect",
         "chapter": "Chapter 4",
-        "summary": "Humans are status-tracking animals; where dignity is uncertain and comparison is constant, low mood follows. Humiliation is the acid of mental health, and inequality widens the burn.",
+        "summary": "Humans are status-tracking animals; where dignity is uncertain and comparison is constant, low mood follows. Humiliation is the acid of mental health, and inequality widens the burn. Status injury explains why relative position can hurt more than absolute poverty: being looked down on is a daily physiological event, not a vanity. Societies with gentler hierarchies carry lower rates, which is evidence the wound is social, not just personal.",
         "example": "The baboon troop whose hierarchical stress hormones mirrored human office politics: status threat registered in the body like a physical wound.",
         "action": "Name one place you feel chronically disrespected. Change the situation or change the room; rumination is not a plan."
       },
       {
         "title": "Disconnected Nature",
         "chapter": "Chapter 8",
-        "summary": "Time in green space measurably lowers rumination and low mood: the brain evolved outdoors, and the indoor, screen-lit life starves a circuit it still runs on.",
+        "summary": "Time in green space measurably lowers rumination and low mood: the brain evolved outdoors, and the indoor, screen-lit life starves a circuit it still runs on. The nature chapter leans on attention: rumination quiets measurably after time among trees, and prisoners with a view of fields saw the doctor less. His claim is evolutionary modesty: a brain built outdoors notices its cage.",
         "example": "The walking groups prescribed by doctors outperformed expectations not through fitness but through the combination of plants, people and horizon.",
         "action": "Give yourself two green hours this week, park, terrace, tree-lined street, phone on silent."
       },
       {
         "title": "Disconnected Hopeful Future",
         "chapter": "Chapter 9",
-        "summary": "Depression whispers that nothing will improve; secure, plausible hope is its antidote. Hope is not a mood, it is built from visible paths: debt plans, skill plans, community plans.",
+        "summary": "Depression whispers that nothing will improve; secure, plausible hope is its antidote. Hope is not a mood, it is built from visible paths: debt plans, skill plans, community plans. Hope here is engineered, not wished for: a plausible next step, a person expecting you, evidence from your own past that change happened before. Depression dismantles each of those; reconnection rebuilds them one kept appointment at a time.",
         "example": "The debt-counselling clients whose anxiety fell before their balances moved: a written plan converted dread into a schedule.",
         "action": "Write the bleakest financial or career fear, then write the three moves you would make if it happened. The plan is the hope."
       },
       {
         "title": "Reconnection as Treatment",
         "chapter": "Chapter 13",
-        "summary": "Social prescribing, purpose programs and community mental health teams treat disconnection directly: rebuilding the web, people, work, meaning, body, future, produces durable recovery that pills alone often do not.",
+        "summary": "Social prescribing, purpose programs and community mental health teams treat disconnection directly: rebuilding the web, people, work, meaning, body, future, produces durable recovery that pills alone often do not. Social prescribing works in his examples because it treats the prescription pad as too small a tool: choirs, gardening groups, debt advice, work with control restored. The medicine is reconnection, organised until it holds without him.",
         "example": "The East London doctor whose social prescribing, art classes, gardening, debt help, cut repeat depression visits far below the prescription-only baseline.",
         "action": "Design your own prescription: one connection per week for six weeks, and put all six in the calendar now."
       },
       {
         "title": "You Are Not Broken, You Are Disconnected",
         "chapter": "Conclusion",
-        "summary": "The book's core reframe: depression is often a signal, not a defect. Ask what happened to you, not what is wrong with you, and treat the disconnections as seriously as the chemistry.",
+        "summary": "The book's core reframe: depression is often a signal, not a defect. Ask what happened to you, not what is wrong with you, and treat the disconnections as seriously as the chemistry. The reframe is the book's gift and its limit: a signal points at a cause, but signals still deserve care while the cause is fixed. Hari's final ask is that we stop telling depressed people their brain is the whole address of the problem.",
         "example": "The patients who wrote letters to their younger selves were not doing theater: they were reconnecting to the person the story had cut out.",
         "action": "Write one paragraph: what happened to me this year that I have not mourned, fixed or named? That paragraph is your first appointment."
       }
@@ -38124,70 +38124,70 @@ const BOOKS = [
       {
         "title": "The State Is the Source",
         "chapter": "Chapter 1",
-        "summary": "Your state, the sum of your physiology and internal representations, determines what you can think, see and do in any moment. Excellence is state-dependent, and state is controllable through body and focus.",
+        "summary": "Your state, the sum of your physiology and internal representations, determines what you can think, see and do in any moment. Excellence is state-dependent, and state is controllable through body and focus. Robbins separates the event from the state you meet it in: the same feedback lands as threat or instruction depending on sleep, posture and self-talk that morning. His claim is not that events do not matter, but that state decides what you are able to do about them.",
         "example": "The athlete who could not solve a problem slouched in a chair solved it in minutes after jumping and breathing hard: the brain was the same, the state was not.",
         "action": "Before your next hard task, change your physiology first: stand, breathe, move for two minutes. Then start."
       },
       {
         "title": "Physiology First",
         "chapter": "Chapter 5",
-        "summary": "Motion creates emotion: posture, breathing rate and movement change biochemistry within minutes. Depression's posture and champion's posture are learnable, and the body does not know which one you are faking.",
+        "summary": "Motion creates emotion: posture, breathing rate and movement change biochemistry within minutes. Depression's posture and champion's posture are learnable, and the body does not know which one you are faking. Try his experiment honestly: shoulders down, shallow breath, eyes on the floor for two minutes, then try to feel unstoppable. The exercise is crude and repeatable, which is the book in miniature: change the body first and let the mind follow.",
         "example": "Actors asked to slump and breathe shallowly reported measurably darker thoughts within minutes; the same bodies, held tall, reported confidence back.",
         "action": "Pick your two power postures and your reset breath (deep, double exhale). Use them at fixed times daily for two weeks."
       },
       {
         "title": "Focus Determines Reality",
         "chapter": "Chapter 6",
-        "summary": "Whatever you focus on, you feel: the same event is a disaster or a lesson depending on the frame the mind holds. Focus is a steering wheel, not a mood that happens to you.",
+        "summary": "Whatever you focus on, you feel: the same event is a disaster or a lesson depending on the frame the mind holds. Focus is a steering wheel, not a mood that happens to you. His favourite lever is the question you ask on contact: 'why does this always happen to me' and 'what is useful here' point the same mind at different evidence. Focus, in his system, is a habit of questioning rather than a talent for optimism.",
         "example": "Two salespeople had the same ninety-rejection day: one counted the rejections, the other counted the pitch practice, and only one came back the next day.",
         "action": "End each day by writing three things that went right and why. This is focus training, not positivity."
       },
       {
         "title": "Reframing: Change the Meaning",
         "chapter": "Chapter 7",
-        "summary": "Nothing means anything until you assign meaning. Reframing, changing what an event represents, changes the emotion, and changed emotion changes action. Content stays; frame moves; life changes.",
+        "summary": "Nothing means anything until you assign meaning. Reframing, changing what an event represents, changes the emotion, and changed emotion changes action. Content stays; frame moves; life changes. Reframing has a discipline in his telling: the new meaning must be one you can actually believe, or the mind rejects the paint. A failed launch reframed as tuition works only if you can name the lesson it bought.",
         "example": "The founder who reframed his firing as tuition refund, the company had paid him to learn what not to do, started his best company within a year.",
         "action": "Take one current setback and write three alternative meanings for it, each truer than victim. Act from the strongest."
       },
       {
         "title": "Modeling Excellence",
         "chapter": "Chapter 2",
-        "summary": "Success leaves clues: find someone with the result you want, study their exact beliefs, physiology and approach, and copy the structure, not the surface. Modeling compresses decades into months.",
+        "summary": "Success leaves clues: find someone with the result you want, study their exact beliefs, physiology and approach, and copy the structure, not the surface. Modeling compresses decades into months. Modelling is more exact than admiration: Robbins wants the model's beliefs about what is possible, the order they do things in, even how they breathe under pressure. Copy the strategy before you copy the schedule.",
         "example": "Robbins modeled the top negotiators, therapists and athletes of his era, not their personalities but their patterns: posture, questions, sequencing.",
         "action": "Pick one person who has your desired result. List three specific patterns of theirs you can copy this month."
       },
       {
         "title": "Rapport: Matching and Mirroring",
         "chapter": "Chapter 9",
-        "summary": "People like people like themselves: rapport is built by matching tone, tempo, posture and words. Influence without rapport is pushing a rope; with it, communication becomes gravity.",
+        "summary": "People like people like themselves: rapport is built by matching tone, tempo, posture and words. Influence without rapport is pushing a rope; with it, communication becomes gravity. Matching works because it is mostly invisible: tempo and volume do more than mirrored gestures, which turn comic when noticed. The ethical line he draws is intent: rapport to understand someone lands differently from rapport to steer them.",
         "example": "The negotiator who unconsciously matched the other side's breathing pace found resistances dissolving before terms were even discussed.",
         "action": "In your next meeting, match pace and posture subtly for five minutes, then lead. Feel when they follow."
       },
       {
         "title": "Precise Outcomes",
         "chapter": "Chapter 3",
-        "summary": "Vague wishes produce vague results: an outcome must be stated specifically, sensorily, with evidence, deadline and ecology check (what it costs). The brain hits targets it can see.",
+        "summary": "Vague wishes produce vague results: an outcome must be stated specifically, sensorily, with evidence, deadline and ecology check (what it costs). The brain hits targets it can see. His outcome test has five checks: positive, specific, sensory evidence, resources within your control, and a size worth wanting. Most goals fail the control check, which is why they stay wishes no matter how vividly they are visualised.",
         "example": "I want to be fit dissolved into run 5k in 28 minutes by June 1, training three mornings weekly, and the vague wish finally had a body.",
         "action": "Rewrite your top goal today: specific, measurable, dated, and with the cost named honestly."
       },
       {
         "title": "Massive Action",
         "chapter": "Chapter 11",
-        "summary": "Half-hearted effort produces half-hearted feedback and teaches the wrong lessons. Massive action, deliberate overload of attempts, generates results fast enough to learn from and builds momentum fear cannot stop.",
+        "summary": "Half-hearted effort produces half-hearted feedback and teaches the wrong lessons. Massive action, deliberate overload of attempts, generates results fast enough to learn from and builds momentum fear cannot stop. Massive action in his sense includes massive correction: act, read the result, change the approach, act again. The volume matters because timid attempts return timid information, and people mistake that thin feedback for a verdict on the goal.",
         "example": "The salesman who set 100 calls a day instead of 10 failed at double the rate and succeeded at ten times it: the sample size was the strategy.",
         "action": "Pick one goal and design a 10x version of this week's effort. Run it for seven days and review only what it taught."
       },
       {
         "title": "Anchoring: Trigger Your Peak State",
         "chapter": "Chapter 8",
-        "summary": "Anchoring pairs a physical trigger (fist clench, phrase, posture) with a peak emotional state, so the state can be recalled on demand later. Athletes and speakers run anchors before they perform.",
+        "summary": "Anchoring pairs a physical trigger (fist clench, phrase, posture) with a peak emotional state, so the state can be recalled on demand later. Athletes and speakers run anchors before they perform. Anchoring is Pavlov with permission: build the state first, then fire the trigger at its peak, repeatedly, or the association stays weak. He is candid that a sloppy anchor is just a gesture; the reps are the mechanism.",
         "example": "The speaker who squeezed his wrist while reliving his best performance taught his nervous system a switch: months later, the squeeze backstage still lit the state.",
         "action": "Build one anchor: relive a peak memory vividly at maximum intensity, clench your fist at the peak, repeat daily for a week."
       },
       {
         "title": "Decision: The Ultimate Power",
         "chapter": "Chapter 12",
-        "summary": "The one power you always retain is decision: real decisions, cutting off alternatives, are the hinge of every biography. Most people treat preferences as decisions and wonder why nothing moves.",
+        "summary": "The one power you always retain is decision: real decisions, cutting off alternatives, are the hinge of every biography. Most people treat preferences as decisions and wonder why nothing moves. His definition of decision is the cut: not preferring an outcome but deleting the alternatives, publicly if possible. The decade since the book has softened some of his certainty, but the hinge he names, the moment behaviour actually changes, is still the decision point.",
         "example": "The smoker who had quit many times had never decided once: the day he announced it publicly and gave away the packs, quitting had already happened.",
         "action": "Make one true decision today: state it, set its first action within 24 hours, and remove one alternative that lets you back out."
       }
@@ -38320,70 +38320,70 @@ const BOOKS = [
       {
         "title": "The Monk Who Counted",
         "chapter": "Part 1",
-        "summary": "Mendel, failing his teaching exams, grew 28,000 pea plants and found the laws of inheritance: discrete units (genes) that pair, separate and recombine in ratios. The paper sat unread for thirty-four years.",
+        "summary": "Mendel, failing his teaching exams, grew 28,000 pea plants and found the laws of inheritance: discrete units (genes) that pair, separate and recombine in ratios. The paper sat unread for thirty-four years. Mendel published to near silence and died before anyone understood what he had found, which is the book's recurring ache: the laws of inheritance sat in a monastery journal for thirty-five years. When three scientists rediscovered them in 1900, biology finally had its atoms.",
         "example": "Smooth vs wrinkled peas gave 3:1 ratios generation after generation: the arithmetic of heredity hiding in a monastery garden.",
         "action": "Look for the discretes in your own messy data: the underlying units are usually counting something simple."
       },
       {
         "title": "The Missing Mechanism",
         "chapter": "Part 1",
-        "summary": "Darwin had variation and selection but no mechanism for how traits pass. The gene filled the gap: heredity is particulate, not blended, and mutations supply the variation selection edits.",
+        "summary": "Darwin had variation and selection but no mechanism for how traits pass. The gene filled the gap: heredity is particulate, not blended, and mutations supply the variation selection edits. Darwin felt the gap himself and guessed wrong about blending; discrete units solved the puzzle because they survive generations unmixed. Mukherjee uses the gap to show that a correct theory can still wait decades for its mechanism.",
         "example": "Fleeming Jenkin's 1867 objection, blending would dilute any beneficial trait into nothing, was fatal until Mendel's particles resurfaced.",
         "action": "In any system you study, find what carries information between generations, of habits, of customers, of culture, before theorizing change."
       },
       {
         "title": "Eugenics: The Science That Wasn't",
         "chapter": "Part 2",
-        "summary": "The gene's darkest chapter: American forced sterilizations and Nazi 'science' perverted heredity into politics. The lesson is permanent: the moment a science of human difference meets state power without ethics, atrocity follows.",
+        "summary": "The gene's darkest chapter: American forced sterilizations and Nazi 'science' perverted heredity into politics. The lesson is permanent: the moment a science of human difference meets state power without ethics, atrocity follows. He does not let the science share blame with the politics: eugenics took real vocabulary and built a programme of coercion on it, from American sterilisation wards to Nazi race law. The chapter is the book's warning about what happens when a young science meets state power and certainty.",
         "example": "Buck v. Bell (1927), where the US Supreme Court authorized sterilization, was never overturned: three generations of imbeciles are enough, wrote the Court.",
         "action": "When your field gains power over people, write its ethics down early and loudly. Science without a conscience is just efficiency."
       },
       {
         "title": "DNA: The Transforming Principle",
         "chapter": "Part 3",
-        "summary": "Avery, MacLeod and McCarty showed DNA carries heredity; Hershey-Chase confirmed it; Watson and Crick's double helix explained how it copies. The material of inheritance became readable, then writable.",
+        "summary": "Avery, MacLeod and McCarty showed DNA carries heredity; Hershey-Chase confirmed it; Watson and Crick's double helix explained how it copies. The material of inheritance became readable, then writable. The transforming principle experiments were resisted for years because protein seemed the richer molecule; the double helix settled it by showing how a structure could store information and copy itself. Mukherjee keeps the credit tangled, as it was: Franklin's data, Watson and Crick's model.",
         "example": "The 'transforming principle' that turned harmless bacteria lethal was DNA: identity itself could be transferred molecule to molecule.",
         "action": "Master the fundamentals of your field's 'DNA', the substrate everyone builds on, before chasing the fashionable applications."
       },
       {
         "title": "The Central Dogma and Its Surprises",
         "chapter": "Part 4",
-        "summary": "DNA makes RNA makes protein, the gene as a recipe. But regulation, splicing, epigenetics and switching complicate the story: the same genome builds a brain cell and a liver cell, and experience can silence genes.",
+        "summary": "DNA makes RNA makes protein, the gene as a recipe. But regulation, splicing, epigenetics and switching complicate the story: the same genome builds a brain cell and a liver cell, and experience can silence genes. The surprises since have humbled the recipe metaphor: one gene can be spliced into several proteins, switches outnumber genes, and chemical marks can silence a stretch without changing its letters. The genome behaves less like a blueprint and more like a library with librarians.",
         "example": "Identical twins diverge with age: their genomes match, their epigenetic marks drift with life. Nurture writes on nature's pages.",
         "action": "Hold nature-nurture as a dial, not a switch: in teams and children alike, the environment regulates what potential expresses."
       },
       {
         "title": "Genetic Disease: Reading the Ledger",
         "chapter": "Part 5",
-        "summary": "From sickle cell to Huntington's, single-gene diseases taught genetics its first hard lessons, and carrier screening, newborn tests and sequencing turned family history into readable risk.",
+        "summary": "From sickle cell to Huntington's, single-gene diseases taught genetics its first hard lessons, and carrier screening, newborn tests and sequencing turned family history into readable risk. Carrier screening turned that ledger into prevention: Tay-Sachs screening programmes cut births with the disease dramatically without touching anyone's genome. Huntington's taught the harder lesson, that a perfect prediction can arrive decades before any treatment exists to offer.",
         "example": "The Tuskegee shadow and the Ashkenazi Tay-Sachs screening program: two lessons in how genetic medicine must be done, with consent or with coercion.",
         "action": "Know your family's medical ledger and write it down. It is the cheapest genetic test you will ever take."
       },
       {
         "title": "Schizophrenia in the Family",
         "chapter": "Part 6",
-        "summary": "Mukherjee's uncles and cousins carried severe mental illness: polygenic, environmental, devastating. His father's line haunted the book: risk written in chords, not single notes, and inherited silence around it.",
+        "summary": "Mukherjee's uncles and cousins carried severe mental illness: polygenic, environmental, devastating. His father's line haunted the book: risk written in chords, not single notes, and inherited silence around it. His family's story refuses the tidy single-gene frame: risk scattered across hundreds of small variants, weathered by circumstance. It is the part of the book where the science becomes personal, and where Mukherjee admits how little a genome scan can still say to a worried parent.",
         "example": "The family's cycle, brilliant uncles lost to episodes, conversations never had, shows how genetic stigma silences exactly the conversations that inform the next generation.",
         "action": "Ask your family the health questions that went unasked. Silence compounds like interest."
       },
       {
         "title": "The Human Genome Project",
         "chapter": "Part 6",
-        "summary": "The 13-year, billions-of-dollars project read our three billion letters, and found fewer genes than expected: the genome is less a blueprint than a regulatory library, its complexity in the reading.",
+        "summary": "The 13-year, billions-of-dollars project read our three billion letters, and found fewer genes than expected: the genome is less a blueprint than a regulatory library, its complexity in the reading. Fewer protein-coding genes than a worm was the headline nobody expected, and it redirected the field toward regulation: the complexity is in the control system. The project also left a template for big biology, shared data released daily rather than hoarded.",
         "example": "Humans have roughly the same gene count as a nematode worm: the difference lies in regulation, splicing and the non-coding majority.",
         "action": "Complexity rarely lives in the count of parts; it lives in the rules of interaction. Study the rules."
       },
       {
         "title": "Editing the Code: CRISPR",
         "chapter": "Part 7",
-        "summary": "Bacterial immune machinery became a programmable scalpel: CRISPR-Cas9 can cut and rewrite genes with precision, raising the permanent question, who decides which edits, for therapy only or for enhancement?",
+        "summary": "Bacterial immune machinery became a programmable scalpel: CRISPR-Cas9 can cut and rewrite genes with precision, raising the permanent question, who decides which edits, for therapy only or for enhancement? He treats CRISPR with awe and a governor: editing a tumour's cells is one kind of act, editing an embryo is another, because the second writes into people who cannot consent. The He Jiankui affair arrived after the book as its cautionary footnote.",
         "example": "The 2018 CRISPR babies scandal in China crossed the line the field had drawn: the global response drew the line again, louder.",
         "action": "Follow the ethics as closely as the capability: the technology will be ready before the consensus is."
       },
       {
         "title": "Postgenomic: The Choices Ahead",
         "chapter": "Part 8",
-        "summary": "We now hold heredity's pen: embryo screening, gene therapy, polygenic scores. The gene's biography ends where our responsibility begins, the intimate history becomes everyone's history.",
+        "summary": "We now hold heredity's pen: embryo screening, gene therapy, polygenic scores. The gene's biography ends where our responsibility begins, the intimate history becomes everyone's history. The closing argument is that identity is not read off the code: genes load probabilities, lives pull triggers. Holding both, the power to edit and the humility about what editing cannot know, is the adulthood the book asks genetics to reach.",
         "example": "Parents choosing embryos by genetic score is already here in fertility clinics: the future arrived as a billing code.",
         "action": "Decide your own lines now, therapy yes, enhancement?, and join the conversation: silence leaves the choices to whoever shows up."
       }
@@ -38516,70 +38516,70 @@ const BOOKS = [
       {
         "title": "Two Industries, Two Cultures",
         "chapter": "Chapter 1",
-        "summary": "Aviation investigated every crash and shared findings globally; medicine hid its errors behind hierarchy and shame. Result: flying became ultra-safe while preventable medical error stayed a top cause of death.",
+        "summary": "Aviation investigated every crash and shared findings globally; medicine hid its errors behind hierarchy and shame. Result: flying became ultra-safe while preventable medical error stayed a top cause of death. Aviation earned this the hard way: every crash is investigated by people whose job is the system, not the scapegoat, and the findings are published for every airline. Industries that hide their black boxes repeat the same accident with new names.",
         "example": "United 173's crash led to Crew Resource Management, the co-pilot empowered to challenge the captain: checklists and flattened hierarchy followed, and deaths per flight collapsed.",
         "action": "Pick one failure in your organization this quarter and run a blameless postmortem: what happened, why, what changes, who shares it?"
       },
       {
         "title": "Cognitive Dissonance: The Ego's Spin Doctor",
         "chapter": "Chapter 2",
-        "summary": "When evidence contradicts self-image, the mind rewrites the evidence: I am competent, therefore the failure must be bad luck, bad data, or bad people. This protects feelings and blocks learning.",
+        "summary": "When evidence contradicts self-image, the mind rewrites the evidence: I am competent, therefore the failure must be bad luck, bad data, or bad people. This protects feelings and blocks learning. Syed's point is that the story we tell afterwards feels true precisely because it is tidy: memory edits out the hesitation and doubt that were present at the time. Working from the recorded data, not the retelling, is what makes the lesson usable.",
         "example": "The economists, politicians and coaches who doubled down after disconfirming evidence were not lying: dissonance had already edited the record they saw.",
         "action": "Write one place where you might be protecting your ego with explanations. Ask a trusted person to check the story."
       },
       {
         "title": "The Narrative Fallacy",
         "chapter": "Chapter 3",
-        "summary": "We construct stories that make outcomes feel inevitable and ourselves feel consistent. Post-hoc narrative is the enemy of honest review: the story edits the data before analysis begins.",
+        "summary": "We construct stories that make outcomes feel inevitable and ourselves feel consistent. Post-hoc narrative is the enemy of honest review: the story edits the data before analysis begins. The failures differ by scale but share the structure: a known risk, normalised over time, in a system where raising it carried a social cost. The narrative hides all three and leaves only the dramatic ending.",
         "example": "The entrepreneur who explained every failure as part of the journey stopped noticing the pattern his own customers were showing him.",
         "action": "In postmortems, write the timeline before the story. Data first; narrative later, and only where data is silent."
       },
       {
         "title": "Marginal Gains and the Failure Budget",
         "chapter": "Chapter 5",
-        "summary": "Progress compounds through small improvements found in small failures: break the system into components, measure each, improve by tiny margins. This is aviation's approach at scale and sport's newest edge.",
+        "summary": "Progress compounds through small improvements found in small failures: break the system into components, measure each, improve by tiny margins. This is aviation's approach at scale and sport's newest edge. The budget idea reframes error as R and D: a team that punishes every failed trial stops trialling, and then its improvement rate falls to zero. Pilots log thousands of simulator failures so that passengers never meet the first real one.",
         "example": "British Cycling's marginal gains, better pillows, warmer shorts, cleaner hands, built a dynasty from percentages: no single big fix existed.",
         "action": "Decompose your core process into ten components and measure each. Improve the worst one by 1 percent this month."
       },
       {
         "title": "Checklists Catch the Predictable",
         "chapter": "Chapter 4",
-        "summary": "Most failures are not exotic: they are predictable slips that checklists catch. The catch is cultural, checklists feel beneath experts, which is exactly why experts keep making the dumb mistakes.",
+        "summary": "Most failures are not exotic: they are predictable slips that checklists catch. The catch is cultural, checklists feel beneath experts, which is exactly why experts keep making the dumb mistakes. Checklists fail when they become tick-box theatre, so the good ones are short, built by the people who do the work, and timed for the pause points where slips actually happen. Five items used beat fifty items laminated.",
         "example": "The surgical checklist trialed across eight hospitals cut deaths nearly in half, yet adoption stalled for years because surgeons found it demeaning.",
         "action": "Write a five-point pre-flight checklist for your most repeated complex task, and actually run it for two weeks."
       },
       {
         "title": "Create a Culture Where Failure Surfaces",
         "chapter": "Chapter 7",
-        "summary": "Organizations learn only at the rate their failures surface: psychological safety, blameless reviews and error reporting systems determine whether truth travels upward or gets buried with the mistake.",
+        "summary": "Organizations learn only at the rate their failures surface: psychological safety, blameless reviews and error reporting systems determine whether truth travels upward or gets buried with the mistake. Blameless does not mean consequence-free: it means the first question is what the system allowed, and recklessness is still answered for. Teams report more near misses under that bargain, and near misses are free lessons that accidents charge full price for.",
         "example": "Airlines' ASRS system grants near-immunity for self-reported errors: pilots share, everyone learns, the same mistake is engineered away for all.",
         "action": "Install an error log on your team: no names, no blame, weekly review. Protect the first person who uses it."
       },
       {
         "title": "The Hierarchy Tax",
         "chapter": "Chapter 6",
-        "summary": "Steep hierarchies silence the people closest to the failure: the junior nurse, the junior engineer. Flattening the channel between observation and decision is a safety intervention.",
+        "summary": "Steep hierarchies silence the people closest to the failure: the junior nurse, the junior engineer. Flattening the channel between observation and decision is a safety intervention. The cost shows up in information: the closer someone is to the work, the more they know and the less safe it feels to say it upward. Leaders who want the truth have to make the first report visibly painless, every time.",
         "example": "Korean Air's crash record fell when the airline adopted English cockpit language and Western communication norms: deference was the defect.",
         "action": "In your next review, ask the most junior person to speak first. Then wait. The information was always in the room."
       },
       {
         "title": "Practice With Feedback Beats Experience",
         "chapter": "Chapter 8",
-        "summary": "Years of experience without feedback loops just repeats year one. Deliberate environments, simulators, drills, data, turn failure into practice; real life hides it.",
+        "summary": "Years of experience without feedback loops just repeats year one. Deliberate environments, simulators, drills, data, turn failure into practice; real life hides it. Simulators work because the feedback is immediate and specific: not ten years of flying, but one landing reviewed against data. Any craft improves at the speed of its feedback loop, and experience without one mostly builds confidence.",
         "example": "Pilots train crashes in simulators monthly; surgeons of the same age vastly differ in outcomes because some never rehearse complications at all.",
         "action": "Build one low-stakes rehearsal for your highest-stakes moment: mock pitch, dry run, tabletop incident drill."
       },
       {
         "title": "Testing Is Institutional Humility",
         "chapter": "Chapter 9",
-        "summary": "A/B tests, pilots and pre-mortems are black box thinking at the idea level: assume you might be wrong, measure, let reality vote. Organizations without testing run on the founder's narrative.",
+        "summary": "A/B tests, pilots and pre-mortems are black box thinking at the idea level: assume you might be wrong, measure, let reality vote. Organizations without testing run on the founder's narrative. A pre-mortem borrows the black box before the crash: imagine the project failed and write the story of why. Teams surface risks in that exercise that politeness kept out of the planning meeting.",
         "example": "The website team that tested their sure-thing redesign learned customers preferred the old page: the vote was theirs to lose only if untested.",
         "action": "Pick one decision this month and pre-commit to a test: what result would change your mind, and when will you look?"
       },
       {
         "title": "Progress Is a Rate, Not an Event",
         "chapter": "Conclusion",
-        "summary": "The formula generalizes: progress = (failures surfaced) x (lessons extracted) x (changes shipped). Any system, body, team, company, that raises these rates outruns bigger, blinder competitors.",
+        "summary": "The formula generalizes: progress = (failures surfaced) x (lessons extracted) x (changes shipped). Any system, body, team, company, that raises these rates outruns bigger, blinder competitors. Measure the rate, not the ceremony: how many failures surfaced this month, how many became lessons, how many lessons became changes. If the first number is zero, the system is not safe; it is silent.",
         "example": "The airline and hospital pair remains the book's parable: same humans, same era, opposite compounding, one of them became safe.",
         "action": "Score your team on the three rates today. The lowest one is next quarter's project."
       }
@@ -38614,70 +38614,70 @@ const BOOKS = [
       {
         "title": "Growth Is the Engine",
         "chapter": "Chapter 1",
-        "summary": "Over decades, exceptional growth companies compound far beyond the market: the wealth is made by owning the few businesses whose value multiplies, not by trading the many that drift.",
+        "summary": "Over decades, exceptional growth companies compound far beyond the market: the wealth is made by owning the few businesses whose value multiplies, not by trading the many that drift. Fisher's horizon was decades, which changes what counts as evidence: a great quarter is noise, a research pipeline and a widening market are signal. The compounding he describes needs both growth and the time most holders never give it.",
         "example": "Fisher held Motorola for decades through every wobble: the original growth thesis kept compounding through management's reinvestments.",
         "action": "For each holding, write the growth engine in one sentence: what doubles this company's value in ten years?"
       },
       {
         "title": "The 15 Points",
         "chapter": "Chapter 3",
-        "summary": "Fisher's checklist: market potential for years of growth, management developing new products to keep growing, good margins, effective R&D, strong sales organization, high margins of safety, integrity, and long-run orientation of executives.",
+        "summary": "Fisher's checklist: market potential for years of growth, management developing new products to keep growing, good margins, effective R&D, strong sales organization, high margins of safety, integrity, and long-run orientation of executives. Score a company point by point and the checklist becomes a research agenda rather than a rating: each weak point names the conversation you still need to have. Fisher re-ran the points over years, because management answers expire.",
         "example": "Companies failing on management integrity or long-term orientation scored well elsewhere and still destroyed capital: the soft points carried the hard consequences.",
         "action": "Score one company you own against all 15 points. Where management integrity is the weak score, reduce."
       },
       {
         "title": "Scuttlebutt: Research From Every Angle",
         "chapter": "Chapter 4",
-        "summary": "Fisher's method: talk to everyone who touches the business, customers, suppliers, competitors, ex-employees, scientists, until a picture forms from independent angles. Then, only then, read the financials.",
+        "summary": "Fisher's method: talk to everyone who touches the business, customers, suppliers, competitors, ex-employees, scientists, until a picture forms from independent angles. Then, only then, read the financials. The method is deliberately unfashionable: it cannot be done from a screen, and competitors' complaints often reveal more than the company's own brochure. He weighted what customers and ex-employees said when nobody was selling him anything.",
         "example": "The scuttlebutt interview with a rival's engineer revealed the competitor's new product was stalled: the market had priced in a launch that would not come.",
         "action": "For your next investment or business decision, interview three people adjacent to it before reading a single report."
       },
       {
         "title": "Buy When the Market Frowns",
         "chapter": "Chapter 6",
-        "summary": "Great companies occasionally fall out of favor for reasons that do not touch their long-run engine, a bad quarter, a missed estimate: those moments offer the entries worth having.",
+        "summary": "Great companies occasionally fall out of favor for reasons that do not touch their long-run engine, a bad quarter, a missed estimate: those moments offer the entries worth having. A disappointing quarter at a company whose research, market and management are intact is a pricing event, not a thesis event. Fisher's discipline was separating the two while the headlines insisted they were the same.",
         "example": "The growth stock that dropped 40 percent on one soft quarter, while orders and market share kept growing, rewarded whoever scuttlebutted the fundamentals first.",
         "action": "Keep a watchlist of exceptional companies with their buy-on-disaster price notes, and honor them when the market frowns."
       },
       {
         "title": "The Fat Pitch of Concentration",
         "chapter": "Chapter 9",
-        "summary": "Fisher concentrated: a few companies, deeply understood, beaten diversification. Know twenty things deeply rather than two hundred superficially; size positions by conviction and understanding, not by fear.",
+        "summary": "Fisher concentrated: a few companies, deeply understood, beaten diversification. Know twenty things deeply rather than two hundred superficially; size positions by conviction and understanding, not by fear. Concentration only earns its risk when the understanding is real: Fisher held few names because his research was deep, not as a shortcut around it. Copied without the scuttlebutt, concentration is just a louder way to be wrong.",
         "example": "The investor holding forty names he could not explain underperformed the concentrated few he could: diversification was masking ignorance.",
         "action": "List your holdings. Cross off any you could not pitch in one minute from memory. That is the study list."
       },
       {
         "title": "Almost Never Sell",
         "chapter": "Chapter 7",
-        "summary": "Selling triggers taxes, transaction costs and the risk of never re-entering. Fisher's sell rules: the thesis broke, management degraded, or a demonstrably better use appeared. Everything else is noise or tax.",
+        "summary": "Selling triggers taxes, transaction costs and the risk of never re-entering. Fisher's sell rules: the thesis broke, management degraded, or a demonstrably better use appeared. Everything else is noise or tax. His three sell reasons are worth memorising: the original judgement was wrong, the company has changed for the worse, or a clearly better opportunity needs the capital. A rising price, boredom and fear are not on the list.",
         "example": "The holder who sold a compounder to time a correction waited decades to re-enter at higher prices: the timing cost the whole compounding curve.",
         "action": "Write your three sell triggers for each holding now. Anything outside those triggers is not a sell reason."
       },
       {
         "title": "Profits From Patience, Not Timing",
         "chapter": "Chapter 8",
-        "summary": "The real money comes from years of holding, dividends reinvested, growth compounding, not from catching swings. Market timing looks like skill in hindsight and is luck in distribution.",
+        "summary": "The real money comes from years of holding, dividends reinvested, growth compounding, not from catching swings. Market timing looks like skill in hindsight and is luck in distribution. The arithmetic behind the patience is reinvestment: earnings retained by a company earning high returns on capital do the compounding inside the share. Trading in and out keeps handing that engine's output to taxes and spreads.",
         "example": "The decade-long holder of the same stock the trader churned eight times ended with multiples more, and lower taxes to show for it.",
         "action": "Check your portfolio turnover from last year. If it is high, write down what the churn actually earned after tax and fees."
       },
       {
         "title": "Management Is the Moat's Keeper",
         "chapter": "Chapter 10",
-        "summary": "Numbers describe the past; management decides the future. Fisher weighted integrity, candor with shareholders and long-term orientation above current margins: a great business run badly is a bad investment.",
+        "summary": "Numbers describe the past; management decides the future. Fisher weighted integrity, candor with shareholders and long-term orientation above current margins: a great business run badly is a bad investment. Candour in bad years was his favourite tell: managements that explain a setback plainly usually run the business plainly too. He distrusted promotional flair because it tends to arrive exactly when the numbers need distracting from.",
         "example": "The company with the industry's best product decayed within a decade once founders handed control to managers who optimized for the next quarter.",
         "action": "Read the last three years of management letters from one company you own. Count promises made versus kept."
       },
       {
         "title": "Don't Crowd the Trade of the Crowd",
         "chapter": "Chapter 5",
-        "summary": "What everyone knows has no edge: Fisher bought unfashionable quality early and ignored tips, fads and consensus enthusiasm. The edge is in the scuttlebutt, not the headline.",
+        "summary": "What everyone knows has no edge: Fisher bought unfashionable quality early and ignored tips, fads and consensus enthusiasm. The edge is in the scuttlebutt, not the headline. Being early to quality looks like being wrong for a while, which is the toll this style charges. Fisher paid it by knowing the business well enough that an unfashionable price read as information about the crowd, not the company.",
         "example": "The hot sector fund everyone bought at the top underperformed the boring unloved compounder nobody discussed.",
         "action": "Audit one popular holding: if your thesis came from headlines, either find the primary source or admit it is a bet on fashion."
       },
       {
         "title": "Ruminate, Then Act Decisively",
         "chapter": "Chapter 11",
-        "summary": "Fisher researched slowly and exhaustively, then acted decisively in size when the rare qualified opportunity appeared. The bottleneck is judgment, not speed; but when judgment lands, act.",
+        "summary": "Fisher researched slowly and exhaustively, then acted decisively in size when the rare qualified opportunity appeared. The bottleneck is judgment, not speed; but when judgment lands, act. Decisive did not mean frequent: he might study a company for years and then commit heavily in days. The long rumination is what made the fast action safe; skipping the first half turns decisiveness into gambling.",
         "example": "Years of watching one company ended in a single large purchase on a market-frown day: the patience was the position.",
         "action": "Start a research file on one exceptional company today. Add to it weekly. Let the entry decide itself when your 15-point score is ready."
       }
@@ -38819,49 +38819,49 @@ const BOOKS = [
       {
         "title": "The Zero Liability Incentive",
         "chapter": "CHAPTER 1",
-        "summary": "Intellectuals rarely pay any personal penalty for being wrong, unlike engineers or surgeons whose failures carry immediate liability.",
+        "summary": "Intellectuals rarely pay any personal penalty for being wrong, unlike engineers or surgeons whose failures carry immediate liability. A surgeon whose patient dies and an engineer whose bridge falls face verdicts that cannot be argued away. The intellectual whose policy fails faces, at worst, a smaller audience. Thomas Sowell's point is not that ideas people are villains; it is that their incentives reward being interesting and morally confident, not being right.",
         "example": "Economists predicting hyperinflation who retain tenure and prestige even after decades of incorrect projections.",
         "action": "Always verify if the person proposing policy shares direct downside exposure."
       },
       {
         "title": "Articulate Knowledge vs Mundane Knowledge",
         "chapter": "CHAPTER 2",
-        "summary": "Society runs on millions of tiny mundane facts held by ordinary workers, not grandiose master theories created from desks.",
+        "summary": "Society runs on millions of tiny mundane facts held by ordinary workers, not grandiose master theories created from desks. The knowledge that runs a society is mostly mundane and dispersed: what a trucker knows about a route, what a plumber knows about a building. No committee can gather it, because much of it cannot even be articulated. Plans drawn from desks fail by ignoring the million small facts that never reach the desk.",
         "example": "A local farmer knowing soil moisture nuances that central planning bureaus consistently misjudge.",
         "action": "Look for street-level feedback before implementing top-down company rules."
       },
       {
         "title": "The Vision of the Anointed",
         "chapter": "CHAPTER 3",
-        "summary": "Those who see themselves as moral guides often mistake disagreement for malice or ignorance in others.",
+        "summary": "Those who see themselves as moral guides often mistake disagreement for malice or ignorance in others. Thomas Sowell calls this the vision of the anointed: the belief that one side holds not just better arguments but better motives. Once disagreement is read as corruption or stupidity, evidence stops mattering. The habit feels like virtue from inside, which is exactly why it survives so much failure.",
         "example": "Institutional committees rejecting shopfloor input as uneducated resistance.",
         "action": "Separate someone's moral credentials from the economic viability of their proposals."
       },
       {
         "title": "Filtering Reality Through Ideology",
         "chapter": "CHAPTER 4",
-        "summary": "When facts contradict a polished theory, intellectuals often blame reality rather than revise the theory.",
+        "summary": "When facts contradict a polished theory, intellectuals often blame reality rather than revise the theory. Every failed theory offers a choice: revise the theory or indict the world. Thomas Sowell documents how often prestige chooses the second, blaming implementation, funding or sabotage. A framework that can explain every failure except its own is no longer a theory; it is a loyalty badge.",
         "example": "Proponents of failed price controls claiming previous implementations were just not executed pure enough.",
         "action": "Set predetermined criteria for what evidence will prove your strategy wrong."
       },
       {
         "title": "Rhetoric as a Substitute for Truth",
         "chapter": "CHAPTER 5",
-        "summary": "Articulateness is not truth. A beautifully written thesis can still destroy an entire industry.",
+        "summary": "Articulateness is not truth. A beautifully written thesis can still destroy an entire industry. Beautiful prose can carry a bad idea further than a sound idea plainly stated, because fluency feels like evidence. Thomas Sowell's warning is to judge claims by their track record in the world, not by the elegance of their presentation. The most dangerous sentence is the one too well written to question.",
         "example": "Corporate consultants presenting slick pitch decks with zero operational grounding.",
         "action": "Force decision makers to present raw unit economics instead of abstract narrative."
       },
       {
         "title": "The Monopoly on Compassion",
         "chapter": "CHAPTER 6",
-        "summary": "Arguing against a flawed program does not mean you oppose the good outcome it claims to seek.",
+        "summary": "Arguing against a flawed program does not mean you oppose the good outcome it claims to seek. Thomas Sowell's cleanest distinction: opposing a programme is not opposing its goal. One can want the poor housed and still argue that a housing scheme raises rents. Debates rot when the method and the mission are fused, because then every critic must be cast as an enemy of the good itself.",
         "example": "Questioning a bloated housing initiative gets branded as hatred of shelter.",
         "action": "Judge policies exclusively by their measurable outcomes, never by their titles."
       },
       {
         "title": "Decentralized Wisdom",
         "chapter": "CHAPTER 7",
-        "summary": "The price mechanism and free exchange coordinate more human ingenuity than any council of geniuses.",
+        "summary": "The price mechanism and free exchange coordinate more human ingenuity than any council of geniuses. Prices carry information no planner can collect: scarcity, desire and cost, compressed into a number that strangers can act on. Thomas Sowell's case for exchange is not worship of markets but humility about knowledge. Millions of adjustments made by people spending their own money out-coordinate any council, however brilliant its members.",
         "example": "Millions of supply chain decisions made daily without a central coordinator.",
         "action": "Give frontline teams autonomy to react to local price and demand signals."
       }
@@ -38896,42 +38896,42 @@ const BOOKS = [
       {
         "title": "The Fresh Mind",
         "chapter": "CHAPTER 1",
-        "summary": "Holding fixed assumptions blinds you to what is actually happening in front of you.",
+        "summary": "Holding fixed assumptions blinds you to what is actually happening in front of you. Shunryu Suzuki's beginner's mind is a mind with few fixed conclusions, so the present moment can actually be seen. The expert's mind, full of what it already knows, filters everything before it arrives. Suzuki is not praising ignorance; he is praising the readiness to meet each thing as if for the first time, because in reality it is the first time.",
         "example": "Veteran executives failing to see smartphone disruption because they knew too much about desktop hardware.",
         "action": "Ask naive questions before offering seasoned opinions."
       },
       {
         "title": "Posture as Mind",
         "chapter": "CHAPTER 2",
-        "summary": "How you hold your body directly dictates how calm and attentive your thoughts remain.",
+        "summary": "How you hold your body directly dictates how calm and attentive your thoughts remain. Zazen begins with posture because the body is not separate from attention. A balanced spine, steady hands and quiet eyes give restless thoughts less to feed on. Suzuki treats posture as practice itself, not preparation for it: when you sit correctly, the mind is already being trained in honesty.",
         "example": "Slumping at a desk compounding fatigue versus upright breathing restoring clarity.",
         "action": "Check your physical posture three times today before checking email."
       },
       {
         "title": "Non-Attachment to Ideas",
         "chapter": "CHAPTER 3",
-        "summary": "Attaching your identity to a particular strategy makes failure feel like personal destruction.",
+        "summary": "Attaching your identity to a particular strategy makes failure feel like personal destruction. When the self is staked on being right, every setback becomes a wound. Zen practice loosens that knot by returning attention to the activity itself rather than the performer. You still work, plan and care; you simply stop demanding that reality certify who you are.",
         "example": "Founders holding onto dead business models because their ego wrote the press release.",
         "action": "Separate what you do from who you are."
       },
       {
         "title": "Breathing with the World",
         "chapter": "CHAPTER 4",
-        "summary": "Breath is the anchor that pulls racing projections back to the present second.",
+        "summary": "Breath is the anchor that pulls racing projections back to the present second. Counting and following the breath gives the mind one simple job, and in doing that job its noise becomes visible. Suzuki does not ask you to stop thinking. He asks you to notice thinking, the way you notice weather, until projections lose their false solidity and the present second becomes enough.",
         "example": "Pausing for three full exhalations before reacting to a hostile message.",
         "action": "Use slow exhalations to reset heart rate during high pressure moments."
       },
       {
         "title": "Simplicity in Action",
         "chapter": "CHAPTER 5",
-        "summary": "Doing one thing with total concentration yields more peace than juggling ten shallow concerns.",
+        "summary": "Doing one thing with total concentration yields more peace than juggling ten shallow concerns. To do one thing completely, whether sweeping a floor or drinking tea, is the whole teaching in miniature. The mind that is fully inside a single action is not bored by it, because boredom is usually the wish to be elsewhere. One thing at a time is not a productivity trick; it is how peace is made.",
         "example": "Closing all browser tabs except the single document you are drafting right now.",
         "action": "Block thirty uninterrupted minutes for your single most demanding task."
       },
       {
         "title": "Nothing Extraordinary",
         "chapter": "CHAPTER 6",
-        "summary": "Wisdom is not a secret magical state; it is showing up cleanly for ordinary life.",
+        "summary": "Wisdom is not a secret magical state; it is showing up cleanly for ordinary life. The point of practice is not a special state reserved for cushions and quiet rooms. Suzuki keeps returning students to ordinary activity done cleanly: eating when you eat, working when you work. Enlightenment, in his telling, looks less like fireworks and more like a life with nothing extra added.",
         "example": "Washing dishes just to wash dishes, not rushing to finish them.",
         "action": "Perform your least favorite routine chore today with complete, unhurried care."
       }
@@ -38966,49 +38966,49 @@ const BOOKS = [
       {
         "title": "The Forgotten Third Leg",
         "chapter": "CHAPTER 1",
-        "summary": "Modern debate fixates on government versus corporations while ignoring the local social fabric.",
+        "summary": "Modern debate fixates on government versus corporations while ignoring the local social fabric. Raghuram Rajan's third pillar is the community: the local web of relationships that stands between the individual, the state and the market. When it weakens, neither welfare cheques nor shopping can replace what it did. Much modern policy argues about the first two pillars while the third quietly collapses underneath both.",
         "example": "Industrial towns hollowed out by plant closures where both market and state failed to rebuild community cohesion.",
         "action": "Evaluate corporate relocations through impact on local families, not just tax write-offs."
       },
       {
         "title": "The Rise of Distance",
         "chapter": "CHAPTER 2",
-        "summary": "Global markets separate producers from consumers by thousands of miles, dissolving personal empathy.",
+        "summary": "Global markets separate producers from consumers by thousands of miles, dissolving personal empathy. A supply chain that spans oceans is efficient and anonymous. The person who made your shirt has no name, so their wages and safety exert no pull on your conscience. Rajan is not against trade; he shows its social cost, and asks how responsibility can survive distance.",
         "example": "Investors buying bundled mortgage paper without ever knowing the homeowners defaulting.",
         "action": "Maintain direct human contact with the end users your company serves."
       },
       {
         "title": "Centralized Incompetence",
         "chapter": "CHAPTER 3",
-        "summary": "State capitals cannot understand the distinct cultural and economic needs of small peripheral districts.",
+        "summary": "State capitals cannot understand the distinct cultural and economic needs of small peripheral districts. A district's real knowledge, which industries fit, which skills exist, which customs matter, lives locally and cannot be uploaded to a ministry. Central schemes fail quietly when they treat unlike places alike. Rajan's answer is subsidiarity with teeth: decisions taken at the lowest level that can actually carry them.",
         "example": "Uniform national education curriculums failing coastal fishing and mountain communities equally.",
         "action": "Push decision making to the lowest competent administrative tier."
       },
       {
         "title": "The Despair of the Displaced",
         "chapter": "CHAPTER 4",
-        "summary": "Loss of social status and communal purpose causes deeper despair than pure income reduction.",
+        "summary": "Loss of social status and communal purpose causes deeper despair than pure income reduction. The despair Rajan describes in left-behind places is about standing as much as salary. When the factory, the team and the church go, people lose the roles that told them they mattered. Populism feeds on that loss of purpose, and purely economic remedies keep missing the wound.",
         "example": "Spikes in addiction and mortality in regions where generational industrial identity disappeared.",
         "action": "Invest in local civic pride and public gathering spaces alongside raw jobs."
       },
       {
         "title": "Restoring Local Anchors",
         "chapter": "CHAPTER 5",
-        "summary": "Schools, libraries, and sports clubs act as anchors holding neighborhoods together through shocks.",
+        "summary": "Schools, libraries, and sports clubs act as anchors holding neighborhoods together through shocks. These institutions are where trust is manufactured. A child who plays in a local league and studies in a local library grows up inside a working theory of cooperation. When the anchors close, the neighbourhood does not just lose services; it loses the places where strangers became neighbours.",
         "example": "Communities rallying around municipal polytechnics to retrain laid-off machinists.",
         "action": "Direct philanthropic capital to local institutions with deep geographic roots."
       },
       {
         "title": "Inclusive Localism",
         "chapter": "CHAPTER 6",
-        "summary": "Community power must be open to newcomers, avoiding the trap of xenophobic tribalism.",
+        "summary": "Community power must be open to newcomers, avoiding the trap of xenophobic tribalism. Rajan insists the community must stay open: local pride that hardens into exclusion becomes another disease. The healthy version welcomes the newcomer into its schools, markets and clubs instead of treating them as a threat. Belonging that cannot expand will eventually shrink into resentment.",
         "example": "Town councils creating welcome programs for migrant workers into local trade unions.",
         "action": "Ensure local leadership bodies include diverse neighborhood voices."
       },
       {
         "title": "A Rebalanced Future",
         "chapter": "CHAPTER 7",
-        "summary": "True resilience requires healthy small enterprises, responsible local government, and close-knit neighbors.",
+        "summary": "True resilience requires healthy small enterprises, responsible local government, and close-knit neighbors. The balance Rajan wants is a triangle that can bear weight: competitive markets for prosperity, an accountable state for protection, and strong communities for meaning. Tip too far toward any one and the others deform. Resilience is not a policy; it is what a place with all three pillars does automatically in a crisis.",
         "example": "Regional cooperative banks outperforming speculative lenders during financial panics.",
         "action": "Keep a portion of your business cash reserves in local cooperative institutions."
       }
@@ -39043,56 +39043,56 @@ const BOOKS = [
       {
         "title": "Psycho-Logic Beats Logical Logic",
         "chapter": "CHAPTER 1",
-        "summary": "What people feel about an experience matters more than its objective mathematical metrics.",
+        "summary": "What people feel about an experience matters more than its objective mathematical metrics. Sutherland's alchemy is the value created by perception rather than engineering. A train journey that feels shorter beats one that is shorter but miserable, which is why the best investment for Eurostar might be better wifi rather than faster track. Logic optimises the measurable; alchemy optimises the experienced, and humans live in the experienced version.",
         "example": "Installing dot-matrix arrival countdown clocks on train platforms reducing passenger frustration without speeding up a single train.",
         "action": "Improve customer transparency before spending millions to speed up delivery."
       },
       {
         "title": "The Red Bull Paradox",
         "chapter": "CHAPTER 2",
-        "summary": "Products that test terribly in rational consumer focus groups often become global blockbusters.",
+        "summary": "Products that test terribly in rational consumer focus groups often become global blockbusters. The focus group is a machine for killing originality, because people judge the new by the standards of the old. Red Bull tasted awful in tests and built an empire anyway. Sutherland's lesson is that stated preference is a poor oracle: people cannot rate what they have never lived with.",
         "example": "Red Bull tasting medicinal, costing more than Coke, and coming in a tiny can, yet dominating energy drinks.",
         "action": "Do not kill an eccentric idea just because an analytical committee dislikes it."
       },
       {
         "title": "Signaling and Costly Displays",
         "chapter": "CHAPTER 3",
-        "summary": "Commitment is only believable when it carries obvious visible effort and sacrifice.",
+        "summary": "Commitment is only believable when it carries obvious visible effort and sacrifice. A brand that spends visibly on something with no direct return, a flagship store, a generous guarantee, a handwritten note, is sending a signal that is expensive to fake. Cheap talk persuades nobody for long. Costly signals work in nature and in marketing for the same reason: the cost is the proof.",
         "example": "Handwritten invitation cards carrying far higher emotional weight than bulk emails.",
         "action": "Show clients the manual care your team puts into their accounts."
       },
       {
         "title": "Solving for Meaning",
         "chapter": "CHAPTER 4",
-        "summary": "Change how people frame an event and you change their entire biological response to it.",
+        "summary": "Change how people frame an event and you change their entire biological response to it. The same wait feels different when you can see your place in the queue; the same medicine works differently in a confident white coat. Framing is not decoration added after the fact. It reaches into the body and changes the event itself, which is why Sutherland treats psychology as a technology, not a garnish.",
         "example": "A noisy hotel room framed as urban boutique energy rather than a cheap room.",
         "action": "Rewrite your product description to anchor its context advantageously."
       },
       {
         "title": "Satisficing Over Maximizing",
         "chapter": "CHAPTER 5",
-        "summary": "Humans do not look for the single best option; we look for the option least likely to be a disaster.",
+        "summary": "Humans do not look for the single best option; we look for the option least likely to be a disaster. Evolution did not tune us to be optimal; it tuned us not to be dead. So people choose the option they can defend, the brand that will not embarrass them, the route that is rarely terrible. Sutherland calls this the doorman's logic: avoiding catastrophe quietly beats chasing brilliance in most real decisions.",
         "example": "Tourists choosing McDonald's in foreign cities not for gourmet dining, but to avoid food poisoning.",
         "action": "Make your brand the zero-risk default choice in your category."
       },
       {
         "title": "Small Things that Trigger Big Shifts",
         "chapter": "CHAPTER 6",
-        "summary": "Micro-friction in forms kills conversion more than premium prices do.",
+        "summary": "Micro-friction in forms kills conversion more than premium prices do. A confusing form, a password rule from hell, a queue with no information: these cost more customers than a higher price, because price is understood and friction feels like disrespect. Sutherland's cheapest growth lever is usually removing the small stupid obstacle everyone inside the company has stopped seeing.",
         "example": "Removing mandatory account registration on checkout boosting retail revenue by hundreds of millions.",
         "action": "Cut one unnecessary form field from your sign-up flow today."
       },
       {
         "title": "The Value of Placebos",
         "chapter": "CHAPTER 7",
-        "summary": "Placebos work even when people know they are placebos because belief has physiological power.",
+        "summary": "Placebos work even when people know they are placebos because belief has physiological power. The honest placebo is Sutherland's favourite proof: a sugar pill labelled honestly still eases pain, because the ritual of care is itself a treatment. If belief can change physiology with the mechanism fully disclosed, then every experience a company designs is dosing its customers with something. The only choice is whether to design that dose or leave it to chance.",
         "example": "Luxury packaging making food taste objectively richer in blind taste tests.",
         "action": "Elevate the physical or sensory unboxing ritual of your service."
       },
       {
         "title": "Dare to Be Trivial",
         "chapter": "CHAPTER 8",
-        "summary": "Serious organizations overlook trivial fixes that deliver massive returns.",
+        "summary": "Serious organizations overlook trivial fixes that deliver massive returns. The spreadsheet cannot see the unmeasured, so organisations optimise what is counted and starve what is not. Yet a free map in a hotel lobby, a pilot who sounds calm, a doorman who remembers names: trivial costs, outsized returns. Alchemy begins by asking what would matter to a human that never appears in the model.",
         "example": "Adding hotel luggage tracking text messages transforming customer check-in anxiety.",
         "action": "Brainstorm ten cheap, playful tweaks that brighten customer interactions."
       }
@@ -39127,42 +39127,42 @@ const BOOKS = [
       {
         "title": "The Illusion of Regularity",
         "chapter": "CHAPTER 1",
-        "summary": "Modern bourgeois life assumes weather will remain predictable, treating extreme events as freak anomalies.",
+        "summary": "Modern bourgeois life assumes weather will remain predictable, treating extreme events as freak anomalies. Amitav Ghosh calls this the great derangement: a culture that builds glass towers on flood plains and then acts surprised by the water. Extreme weather is no longer the exception interrupting normal life; it is normal life announcing itself. The pretence of regularity survives because admitting otherwise would force changes to property, insurance, food and the stories we tell about progress.",
         "example": "Mumbai building coastal roads directly into rising sea corridors.",
         "action": "Plan physical business infrastructure for 100-year storm frequencies."
       },
       {
         "title": "The Failure of Literary Imagination",
         "chapter": "CHAPTER 2",
-        "summary": "Contemporary novels focus obsessively on individual personal dramas while nature reshapes entire continents.",
+        "summary": "Contemporary novels focus obsessively on individual personal dramas while nature reshapes entire continents. Ghosh argues that the modern novel, built around individual psychology and everyday routine, quietly edits out the improbable forces that actually shape lives. Climate enters fiction, when it enters at all, as scenery or metaphor, never as an agent. A literature that cannot imagine a storm surge cannot prepare a civilisation to think about one either.",
         "example": "Bestsellers tracking romance while entire agricultural river basins dry up unnoticed.",
         "action": "Broaden your reading to include ecological history and geographical dynamics."
       },
       {
         "title": "Colonial Geography",
         "chapter": "CHAPTER 3",
-        "summary": "Colonial powers built major trade ports on exposed sea coasts, reversing ancient Indian inland wisdom.",
+        "summary": "Colonial powers built major trade ports on exposed sea coasts, reversing ancient Indian inland wisdom. The port cities of Asia were placed where empire needed ships, not where geography was kind. Kolkata, Chennai and Mumbai grew around colonial trade, while older settlements often sat safer, near rivers but away from the cyclone's direct path. Those imperial choices are now permanent facts: millions live inside coastlines that were selected for commerce, not survival.",
         "example": "Ancient Indian capital cities placed safely inland along stable river bends.",
         "action": "Study historic indigenous settlement patterns before choosing land."
       },
       {
         "title": "The Carbon Economy as Power",
         "chapter": "CHAPTER 4",
-        "summary": "Fossil fuels triumphed not just because of energy density, but because coal allowed factory owners to control labor.",
+        "summary": "Fossil fuels triumphed not just because of energy density, but because coal allowed factory owners to control labor. Coal won, Ghosh shows, partly because it could be mined in one place and burned in another, which let factory owners move away from unruly workers near water power. Carbon was never just chemistry; it was a technology of control. That is why the energy system resists change so stubbornly: it is a power system in both senses.",
         "example": "Steam mills replacing water mills so factories could be placed near docile city workers.",
         "action": "Recognize the political power structures behind energy systems."
       },
       {
         "title": "Collective Action vs Individual Consumerism",
         "chapter": "CHAPTER 5",
-        "summary": "Buying bamboo toothbrushes will not stop ocean acidification; political coordination and treaty enforcement will.",
+        "summary": "Buying bamboo toothbrushes will not stop ocean acidification; political coordination and treaty enforcement will. Individual consumer virtue cannot renegotiate the physics of the atmosphere. What has worked historically is collective: treaties, regulation, public investment and movements that make governments act. Ghosh is sceptical of moralised shopping precisely because it privatises a problem that only politics, at scale, has ever solved.",
         "example": "Shifting carbon blame onto individual recycling while shipping empires burn heavy bunker fuel.",
         "action": "Participate in institutional policy reforms rather than just lifestyle branding."
       },
       {
         "title": "The Return of Non-Human Agency",
         "chapter": "CHAPTER 6",
-        "summary": "Nature is actively asserting its dominance over human hubris and concrete seawalls.",
+        "summary": "Nature is actively asserting its dominance over human hubris and concrete seawalls. Cyclones that behave strangely, rain that arrives all at once, seas that take back land: the non-human world is not a backdrop but a participant. Ghosh's warning is that our institutions still plan as if nature were passive. The seawall is the perfect symbol: concrete confidence facing a force that does not negotiate.",
         "example": "Unprecedented cyclonic rainfall overwhelming advanced city drainage in hours.",
         "action": "Design business operations with built-in emergency backup redundancies."
       }
@@ -43619,56 +43619,56 @@ const BOOKS = [
       {
         "title": "The Cycle",
         "chapter": "Chapter 1: The Cycle of Information Empires",
-        "summary": "Wu's cycle has three beats: a new medium arrives open and experimental, a system consolidates around whoever solves distribution, and the winner closes the gates it once fought to keep open.",
+        "summary": "Wu's cycle has three beats: a new medium arrives open and experimental, a system consolidates around whoever solves distribution, and the winner closes the gates it once fought to keep open. Tim Wu wrote the cycle after watching the internet, born as an open research network, grow its own gatekeepers. Radio, film, telephony and television each ran the same arc, usually within a generation.",
         "example": "Radio was a hobbyist's playground with thousands of stations, then a handful of networks, then a regulator effectively choosing one.",
         "action": "Take one platform you use and identify which beat it is in."
       },
       {
         "title": "Open Is a Stage",
         "chapter": "Chapter 2: Openness and its Enemies",
-        "summary": "Openness is a phase in a business, not a value a company holds. The same firm that fights for open networks becomes the reason networks must be opened.",
+        "summary": "Openness is a phase in a business, not a value a company holds. The same firm that fights for open networks becomes the reason networks must be opened. The pattern explains why founders' promises about openness expire so reliably. While a firm is small, open gates are free customers; once it owns the gate, openness is a subsidy to rivals.",
         "example": "A startup that lobbies for open protocols becomes the incumbent that builds a client nobody else can interoperate with.",
         "action": "Look at what your own industry called open five years ago and what it calls it now."
       },
       {
         "title": "The Man in the Middle",
         "chapter": "Chapter 3: The Telephone and the Monopoly",
-        "summary": "Power in information flows to whoever controls the connection between producer and audience. The gatekeeper rarely makes the content and always sets its terms.",
+        "summary": "Power in information flows to whoever controls the connection between producer and audience. The gatekeeper rarely makes the content and always sets its terms. Western Union understood this with telegrams, and the Associated Press understood it with news: control the wire and you tax every message without writing one. Wu's history is a tour of switches changing hands.",
         "example": "A phone monopoly that refuses to connect unapproved devices is doing the same thing a store that refuses unapproved apps does.",
         "action": "Find who sits between you and the people you serve, and read their terms."
       },
       {
         "title": "Hollywood's Closed System",
         "chapter": "Chapter 4: Film and Broadcasting",
-        "summary": "The studio system is the textbook closure: from a chaotic creative boom to a handful of firms controlling production, distribution and the theatres that showed the work.",
+        "summary": "The studio system is the textbook closure: from a chaotic creative boom to a handful of firms controlling production, distribution and the theatres that showed the work. The studios even owned the theatres, until antitrust forced the layers apart in 1948. Wu treats that separation as the model intervention: not breaking creativity up, but breaking the chokepoint's grip on it.",
         "example": "When one company owns the studio, the cinema and the actor's contract, competition on quality stops mattering.",
         "action": "Identify one place where three layers of your supply chain are quietly one company."
       },
       {
         "title": "The New Walled Gardens",
         "chapter": "Chapter 5: The Internet and the Return of the Cycle",
-        "summary": "Apple's tight control over one of the two dominant phone platforms is Wu's cycle inside a single product line: beautiful, coherent, and closed by design.",
+        "summary": "Apple's tight control over one of the two dominant phone platforms is Wu's cycle inside a single product line: beautiful, coherent, and closed by design. The separations principle is his one big prescription, and he is honest that it trades some efficiency for freedom. A single owner can make a smoother product; it can also decide which products may exist.",
         "example": "A company that once liberated computing from corridors of proprietary hardware now charges rent on the entrance to its own garden.",
         "action": "Count how many exits a user has from one platform you depend on."
       },
       {
         "title": "The Separations Principle",
         "chapter": "Chapter 6: Separation",
-        "summary": "The separations principle says the layers of an information industry should be kept apart: carriage should not own content, the platform should not own the competitors, the network should not own the message.",
+        "summary": "The separations principle says the layers of an information industry should be kept apart: carriage should not own content, the platform should not own the competitors, the network should not own the message. The quiet dependencies are where modern readers should look: who can raise prices, change ranking rules or cut access without asking anyone. That dependency, not the famous logo, is the switch.",
         "example": "A carrier that owns the content it delivers has both the means and the motive to favour its own.",
         "action": "Sketch your industry's layers and note where two of them are joined."
       },
       {
         "title": "Find the Chokepoint",
         "chapter": "Chapter 7: Chokepoints",
-        "summary": "The chokepoint is often not the headline product but the quiet dependency: the app store, the payments rail, the discovery algorithm, the cable in the ground.",
+        "summary": "The chokepoint is often not the headline product but the quiet dependency: the app store, the payments rail, the discovery algorithm, the cable in the ground. Wu ends neither cheerful nor hopeless: every closure so far has eventually been pried open by a new technology or a court. The cycle turns, but people who can see it have sometimes shortened the closed years.",
         "example": "A retailer can be replaced in a quarter; the payments network it depends on cannot be replaced in a decade.",
         "action": "Map your three biggest single points of failure and who owns them."
       },
       {
         "title": "Questions for a New Technology",
         "chapter": "Chapter 8: The Master Switch",
-        "summary": "For every new technology, Wu's questions are simple: who holds the switch, what would make them close it, and what keeps them honest if they do.",
+        "summary": "For every new technology, Wu's questions are simple: who holds the switch, what would make them close it, and what keeps them honest if they do. His three questions travel well: apply them to an app store, a social feed or an AI platform and the abstraction turns into names, fees and appeals processes. Whoever answers to no one while holding the switch is the story, whatever the technology.",
         "example": "A regulator who asks those three questions at launch has a better chance than one who asks them after a decade of consolidation.",
         "action": "Ask the switch question about one tool your team is adopting this year."
       }
@@ -45215,56 +45215,56 @@ const BOOKS = [
       {
         "title": "Why People Leave",
         "chapter": "Chapter 1: Departures",
-        "summary": "Migration is usually explained by what pulls people, and it is driven by what pushes them. Wilkerson's migrants left terror, exclusion, unpaid labour and the everyday architecture of a caste system.",
+        "summary": "Migration is usually explained by what pulls people, and it is driven by what pushes them. Wilkerson's migrants left terror, exclusion, unpaid labour and the everyday architecture of a caste system. Six million Black Americans left the South between 1915 and 1970, one of the largest internal migrations in history, and it was never in the schoolbooks as a migration at all. Wilkerson restores the word, because refugees from terror deserve the accuracy.",
         "example": "A family that stays through one bad harvest leaves after a lynching they know will not be investigated.",
         "action": "In one story of migration you know, ask what pushed rather than what pulled."
       },
       {
         "title": "Three Journeys",
         "chapter": "Chapter 2: The Stories",
-        "summary": "The book is built from three specific people, and the method is the argument: history is not a wave, it is a set of decisions made by people who were afraid and did it anyway.",
+        "summary": "The book is built from three specific people, and the method is the argument: history is not a wave, it is a set of decisions made by people who were afraid and did it anyway. Ida Mae Gladney, George Starling and Robert Foster carry the three great routes, to Chicago, New York and Los Angeles. Wilkerson interviewed more than a thousand migrants and chose three lives the way a novelist would, except every detail is documented.",
         "example": "One woman buys train tickets she cannot afford and does not tell anyone until she is gone.",
         "action": "Tell one family story from the place where the decision was made."
       },
       {
         "title": "What Was Carried",
         "chapter": "Chapter 3: Flight",
-        "summary": "Migrants carry practices, food, music, expectations, and fears, and the receiving city is shaped by them as much as the other way round. The leaving is not the end of a place, it travels.",
+        "summary": "Migrants carry practices, food, music, expectations, and fears, and the receiving city is shaped by them as much as the other way round. The leaving is not the end of a place, it travels. Chicago's stockyards, Harlem's numbers games and Los Angeles's defence plants were remade by Southern hands. The blues, gospel and eventually Motown are migration artifacts: the South, carried north in suitcases.",
         "example": "A church from Mississippi reappears in Chicago with the same hymns and a stricter building code.",
         "action": "Identify one thing you carry from a place you left."
       },
       {
         "title": "The Arrival",
         "chapter": "Chapter 4: Arrival",
-        "summary": "Arrival is not acceptance. The migration met exclusion housing, segregated unions and violence, which is why the north was not the simple opposite of the south.",
+        "summary": "Arrival is not acceptance. The migration met exclusion housing, segregated unions and violence, which is why the north was not the simple opposite of the south. Restrictive covenants and redlining met the trains at the station. The migrants had escaped Jim Crow's signs only to meet its paperwork, and the wealth gap those maps created is still compounding.",
         "example": "A newcomer finds that the only advertised rooms are above a certain street, which is a second boundary drawn without a sign.",
         "action": "Notice one boundary in your own field that is enforced without a sign."
       },
       {
         "title": "The North That Was Not Free",
         "chapter": "Chapter 5: The Promised Land",
-        "summary": "The receiving places had their own caste systems, sometimes subtler and sometimes more violent. The book refuses the story of liberation as a single event.",
+        "summary": "The receiving places had their own caste systems, sometimes subtler and sometimes more violent. The book refuses the story of liberation as a single event. The northern caste wore better clothes and spoke softer, which made it harder to fight. Wilkerson refuses both sentimental versions: the South was worse, and the North was not innocence.",
         "example": "Someone who moves to escape one hierarchy discovers another version of it at the workplace.",
         "action": "Check whether a change you have made changed the system or just the surroundings."
       },
       {
         "title": "The Cost of Uprooting",
         "chapter": "Chapter 6: The Real Cost",
-        "summary": "Uprooting has real costs that no wage rise offsets: lost family networks, expertise made useless, children raised without grandparents. Any worthwhile accounting has to hold both sides.",
+        "summary": "Uprooting has real costs that no wage rise offsets: lost family networks, expertise made useless, children raised without grandparents. Any worthwhile accounting has to hold both sides. What was lost was also real: land, dialect standing, the grandmother who raised you. Wilkerson holds the grief and the gain in the same chapters, the way the migrants had to hold them in the same lives.",
         "example": "A worker earns more and his mother is a thousand miles away when she dies.",
         "action": "Name one cost of a change you have made and stop pretending it was free."
       },
       {
         "title": "What They Built",
         "chapter": "Chapter 7: The Second Generation",
-        "summary": "The migrants built institutions, unions, churches, businesses, political machines and, in the second generation, a movement. What looks like assimilation is usually construction.",
+        "summary": "The migrants built institutions, unions, churches, businesses, political machines and, in the second generation, a movement. What looks like assimilation is usually construction. Out of storefront churches and union halls the migrants built the base that their children would march from. The civil rights movement, in her telling, is the second generation spending what the first one saved.",
         "example": "A church congregation funds the college that produces the next generation of leaders.",
         "action": "Find one institution in your life and who built it."
       },
       {
         "title": "The Inheritance",
         "chapter": "Chapter 8: The Legacy",
-        "summary": "The migration is inside living memory: Wilkerson is born into it, and the third generation inherits both the gains and the silence. The book ends asking what is carried forward without being explained.",
+        "summary": "The migration is inside living memory: Wilkerson is born into it, and the third generation inherits both the gains and the silence. The book ends asking what is carried forward without being explained. The book closes inside her own family, which is the argument completed: this history is not past. What gets carried forward is chosen, and choosing starts with knowing what your people actually did.",
         "example": "Family stories leave out the years nobody discusses, and those years shaped everything.",
         "action": "Ask one older relative what they never talk about, once, and listen."
       }
@@ -45299,56 +45299,56 @@ const BOOKS = [
       {
         "title": "The Word",
         "chapter": "Chapter 1: The Unknown Caste",
-        "summary": "Calling the system caste rather than race is a claim about mechanism. Race gives the visible marker; caste explains why the hierarchy survives changes in the marker, the law and the century.",
+        "summary": "Calling the system caste rather than race is a claim about mechanism. Race gives the visible marker; caste explains why the hierarchy survives changes in the marker, the law and the century. Wilkerson opens with an old house: America is an inherited structure, and you do not fix its foundations by arguing about the furniture. The metaphor carries the book: inspectors do not ask whether the house is good or bad, only what is load-bearing.",
         "example": "The same family can be treated differently in two countries because each has a ranked order with different labels.",
         "action": "Notice one ranking in your own world that is not about race and see what holds it up."
       },
       {
         "title": "Eight Pillars",
         "chapter": "Chapter 2: The Eight Pillars",
-        "summary": "Wilkerson lists eight pillars: divine will, natural law, endogamy, purity, occupational hierarchy, dehumanisation, terror and an assumed superiority. Each does a job, and together they make the order feel inevitable.",
+        "summary": "Wilkerson lists eight pillars: divine will, natural law, endogamy, purity, occupational hierarchy, dehumanisation, terror and an assumed superiority. Each does a job, and together they make the order feel inevitable. She studied three systems side by side, the United States, India and Nazi Germany, and the shock is how deliberately the third studied the first two. The comparison is not decoration; it is how she isolates the mechanism from any single country's story.",
         "example": "A marriage rule does more work than a law, because it controls who the next generation belongs to.",
         "action": "Pick one pillar and find where it operates in your own institution."
       },
       {
         "title": "Divine Will and Nature",
         "chapter": "Chapter 3: Divine Will",
-        "summary": "The first pillars put the ranking outside human hands: the gods did it, or nature did. A hierarchy that nobody chose is a hierarchy nobody has to defend.",
+        "summary": "The first pillars put the ranking outside human hands: the gods did it, or nature did. A hierarchy that nobody chose is a hierarchy nobody has to defend. A hierarchy blessed by heaven or biology does not need police at first. People enforce it on themselves and each other, which is why caste can survive long stretches with little visible violence.",
         "example": "A caste system justified by rebirth makes present inequality look like a receipt for a previous life.",
         "action": "Notice one inequality described as natural, and ask who benefits from the description."
       },
       {
         "title": "Endogamy",
         "chapter": "Chapter 4: Endogamy",
-        "summary": "Endogamy, who is allowed to marry whom, is the pillar that reproduces the system without requiring active cruelty. It is why caste survives legal abolition.",
+        "summary": "Endogamy, who is allowed to marry whom, is the pillar that reproduces the system without requiring active cruelty. It is why caste survives legal abolition. Marriage rules look private and romantic from inside, and structural from above. By controlling who may form a family with whom, caste quietly decides whose children inherit which rung.",
         "example": "Families that would never use a slur will still object to a marriage, and the objection is the mechanism.",
         "action": "Ask what marriage rules exist in your family, stated or not."
       },
       {
         "title": "Dehumanisation",
         "chapter": "Chapter 5: Dehumanisation",
-        "summary": "Dehumanisation is not decoration, it is operational. In every case Wilkerson examines, comparison to animals precedes the policies that follow.",
+        "summary": "Dehumanisation is not decoration, it is operational. In every case Wilkerson examines, comparison to animals precedes the policies that follow. The language of vermin and pollution always arrives before the laws do. Wilkerson shows the sequence repeating across continents: first the metaphor, then the policy, then the violence that the metaphor made feel like hygiene.",
         "example": "A group described as vermin can be moved, fenced and denied schooling without a public argument.",
         "action": "Watch your own language for the moment a person becomes a category."
       },
       {
         "title": "The Middle Castes",
         "chapter": "Chapter 6: The Middle",
-        "summary": "Most people are neither the top nor the bottom, and the middle is where the system is maintained. People defend a hierarchy because it protects them from the rung below.",
+        "summary": "Most people are neither the top nor the bottom, and the middle is where the system is maintained. People defend a hierarchy because it protects them from the rung below. The middle rungs get a small, real reward: someone beneath them. That bargain is the system's pension plan, and it explains why people who gain little from the order still defend it fiercely.",
         "example": "A family with little power refuses to be compared with the group beneath it, even at real cost to itself.",
         "action": "Identify where you sit in a hierarchy and what the position buys you."
       },
       {
         "title": "The Cost to Everyone",
         "chapter": "Chapter 7: The Price",
-        "summary": "A caste system costs the dominant group too: it caps who they can be, who they can love, and what they can learn, and it makes them fragile about status.",
+        "summary": "A caste system costs the dominant group too: it caps who they can be, who they can love, and what they can learn, and it makes them fragile about status. Her examples include the doctor who could not be treated as an expert and the baseball star still refused a hotel room. Talent buys exemptions, never membership, and the exemptions can be withdrawn at will.",
         "example": "A workplace that ranks people by background cannot hire well, because it filters out the people it needs.",
         "action": "Name one thing a hierarchy has cost you, not just others."
       },
       {
         "title": "Dismantling",
         "chapter": "Chapter 8: The Way Out",
-        "summary": "Dismantling needs the pillars named one at a time. Wilkerson is not offering a single policy, she is giving a vocabulary precise enough to argue with.",
+        "summary": "Dismantling needs the pillars named one at a time. Wilkerson is not offering a single policy, she is giving a vocabulary precise enough to argue with. The closing argument is radical empathy backed by inspection: learn the pillars, notice which ones your own life leans on, and refuse the ranking in small rooms first. She asks for awareness before policy because policy built on an unnamed system keeps rebuilding it.",
         "example": "A school that changes its admissions rule without touching the marriage rule has changed one pillar and left the others.",
         "action": "Pick one pillar and one practical move against it in your own sphere."
       }
@@ -46139,56 +46139,56 @@ const BOOKS = [
       {
         "title": "The First Week",
         "chapter": "Chapter 1: May 1940",
-        "summary": "The first week of any crisis sets the pattern, and Churchill's early decisions, to fight on, to speak plainly, to be seen, established what the country could imagine. Framing comes before policy.",
+        "summary": "The first week of any crisis sets the pattern, and Churchill's early decisions, to fight on, to speak plainly, to be seen, established what the country could imagine. Framing comes before policy. Larson shows the pattern forming in small rooms: who got summoned, which news got told straight, how quickly the machinery of government changed hands. The first week set a tempo the country then lived at for a year.",
         "example": "A leader who visits a bombed street on day one changes what people believe is possible on day thirty.",
         "action": "Decide what your first message is in the next crisis before it happens."
       },
       {
         "title": "Visiting the Ruins",
         "chapter": "Chapter 2: The Blitz Begins",
-        "summary": "Showing up at the damage is not photo opportunity, it is information and permission. It tells the people affected that their situation is the organisation's situation.",
+        "summary": "Showing up at the damage is not photo opportunity, it is information and permission. It tells the people affected that their situation is the organisation's situation. Churchill walked the bomb sites slowly and asked questions, and Larson is clear about the double function: he learned what the raids actually did to streets and morale, and Londoners learned the war had not moved him out of their city.",
         "example": "A manager who walks the floor after a bad week learns more than three dashboards.",
         "action": "Show up in person at the place where the damage happened, once."
       },
       {
         "title": "The Speeches",
         "chapter": "Chapter 3: Words",
-        "summary": "Speeches worked because they named the difficulty and refused to pretend, then offered a course of action. False reassurance is expensive because it spends trust it cannot repay.",
+        "summary": "Speeches worked because they named the difficulty and refused to pretend, then offered a course of action. False reassurance is expensive because it spends trust it cannot repay. The rhetoric worked because it admitted the odds before it defied them; people who are told the truth about danger can decide to endure it. Larson contrasts the speeches with the private minutes, where the same man worried the same facts in plainer language.",
         "example": "A team told the deadline is fine and then misses it loses more faith than a team told the truth.",
         "action": "Say one hard true thing plainly, and follow it with the next step."
       },
       {
         "title": "The Rooms Where It Was Run",
         "chapter": "Chapter 4: The Bunker",
-        "summary": "The war was run in basements by people taking minutes, and the unglamorous apparatus is what made decisions possible. Leadership without processes is a speech.",
+        "summary": "The war was run in basements by people taking minutes, and the unglamorous apparatus is what made decisions possible. Leadership without processes is a speech. Mary Churchill's diary and the secretaries' minutes do quiet work in this book: history at desk level, typed carbon copies while sirens sounded. The machinery mattered because decisions written down at midnight could still be executed at dawn.",
         "example": "A crisis room with a whiteboard and a shared log outperforms a chain of phone calls.",
         "action": "Write down the one place where decisions in your work are actually recorded."
       },
       {
         "title": "The Family",
         "chapter": "Chapter 5: Home",
-        "summary": "Churchill's family life ran in parallel with the war, with a daughter working in a factory and a son failing at things, and the strain was real. Public roles do not suspend private life, they compound it.",
+        "summary": "Churchill's family life ran in parallel with the war, with a daughter working in a factory and a son failing at things, and the strain was real. Public roles do not suspend private life, they compound it. It is not a warm portrait: Randolph's failures, the strains and absences, sit beside the public endurance. Larson's point is that the household paid for the war in its own currency while the country watched only the speeches.",
         "example": "A leader managing a crisis while a family member is ill is not less effective and is more tired.",
         "action": "Ask one person close to you what they need this week, not about your work."
       },
       {
         "title": "The City Under Attack",
         "chapter": "Chapter 6: The Streets",
-        "summary": "The people who lived through the bombing were not passive recipients of morale, they organised shelters, ran canteens and decided each morning to continue. The book is clear that endurance came from below.",
+        "summary": "The people who lived through the bombing were not passive recipients of morale, they organised shelters, ran canteens and decided each morning to continue. The book is clear that endurance came from below. The tube shelters, the wardens, the tea after a raid: Larson collects the ordinary organisation that morale speeches get credit for. London's steadiness was staffed, rostered and volunteered into existence, night after night.",
         "example": "A street that organises its own shelter does not need to be told to be brave.",
         "action": "Find the informal group that is actually holding something together."
       },
       {
         "title": "The Private Despair",
         "chapter": "Chapter 7: The Dark Hours",
-        "summary": "Churchill had dark periods and managed them with work, drink, baths and routine, and the book does not tidy this into heroism. Sustaining a public role requires private maintenance.",
+        "summary": "Churchill had dark periods and managed them with work, drink, baths and routine, and the book does not tidy this into heroism. Sustaining a public role requires private maintenance. He managed the darkness partly by refusing to sit still inside it: painting, building walls at Chartwell, long baths, relentless routine. Larson lets the melancholy stand without turning it into either excuse or legend.",
         "example": "A leader with a rigid morning routine is often protecting the capacity to be useful later.",
         "action": "Name the routine you need to protect, and protect it this week."
       },
       {
         "title": "What Held",
         "chapter": "Chapter 8: The Winter",
-        "summary": "What held was not optimism but a shared refusal to be defeated, maintained by ordinary repetition. That is a different and more durable resource than hope.",
+        "summary": "What held was not optimism but a shared refusal to be defeated, maintained by ordinary repetition. That is a different and more durable resource than hope. The closing claim is modest and earned: nothing held by itself, but a thousand maintained habits of refusal added up to a city that would not be governed by fear. Endurance, in this telling, is a practice with a rota.",
         "example": "A city that keeps the buses running teaches itself that it is still a city.",
         "action": "Do one ordinary thing well today and count it as maintenance."
       }
@@ -46391,56 +46391,56 @@ const BOOKS = [
       {
         "title": "The Certainty Trap",
         "chapter": "Chapter 1: Uncertainty",
-        "summary": "The demand for certainty before action is the trap, because certainty is not available and the waiting feels like diligence. Naming the trap is the first move.",
+        "summary": "The demand for certainty before action is the trap, because certainty is not available and the waiting feels like diligence. Naming the trap is the first move. Le Cunff's own turning point was treating a career change as a series of small tests instead of a single leap of faith. The experiment does not ask who you are; it asks what happens if you try this for two weeks.",
         "example": "Someone spends two years researching a career they could have tested in a month.",
         "action": "Pick one thing you are researching and turn it into a test."
       },
       {
         "title": "What an Experiment Is",
         "chapter": "Chapter 2: Method",
-        "summary": "An experiment has a hypothesis, a method, a duration and a result, and the formality is what makes it informative. Without a hypothesis, everything is just experience.",
+        "summary": "An experiment has a hypothesis, a method, a duration and a result, and the formality is what makes it informative. Without a hypothesis, everything is just experience. Her template fits on an index card: I will do X, for Y long, and I will know it worked if Z. Anything vaguer is a wish wearing a lab coat.",
         "example": "I think I will like working alone, tested for two weeks, produces a real answer rather than a preference.",
         "action": "Write one hypothesis about yourself in one sentence."
       },
       {
         "title": "Time Boxing",
         "chapter": "Chapter 3: Time",
-        "summary": "Time boxing is the mechanism that keeps experiments from turning into identities. A fixed ending makes it safe to try things badly.",
+        "summary": "Time boxing is the mechanism that keeps experiments from turning into identities. A fixed ending makes it safe to try things badly. A pact with a fixed end date also protects relationships and budgets, because everyone knows when the review comes. The deadline is not pressure; it is permission to stop without shame.",
         "example": "A month of writing every morning is easier to commit to than a new career as a writer.",
         "action": "Give your next experiment a start and an end date, today."
       },
       {
         "title": "Small Bets",
         "chapter": "Chapter 4: Scale",
-        "summary": "Small bets let you hold several options at once, which is how a portfolio beats a single guess. The point is not to avoid commitment, it is to commit only after evidence.",
+        "summary": "Small bets let you hold several options at once, which is how a portfolio beats a single guess. The point is not to avoid commitment, it is to commit only after evidence. She suggests running experiments in parallel across work, craft and curiosity, so one disappointment cannot take the whole season with it. Evidence from three small bets beats confidence in one big one.",
         "example": "Someone runs three small hobbies for a quarter and learns which one survives contact with their real week.",
         "action": "Start one experiment so small it cannot fail to be finished."
       },
       {
         "title": "Reviewing Without Judging",
         "chapter": "Chapter 5: Review",
-        "summary": "A review asks what happened, not whether you are good. Separating the result from your worth is what makes the next experiment possible.",
+        "summary": "A review asks what happened, not whether you are good. Separating the result from your worth is what makes the next experiment possible. The review is written, not remembered, because memory edits experiments into stories that flatter us. Ten honest lines at the end of a pact teach more than a month of impressions.",
         "example": "A trial that confirms you hate a thing is a successful trial.",
         "action": "Review one recent choice in terms of the result, not your character."
       },
       {
         "title": "When to Stop",
         "chapter": "Chapter 6: Stopping",
-        "summary": "Stopping is a skill, and the rule should be agreed before you start rather than negotiated when you are tired or embarrassed. Sunk cost is the enemy of the portfolio.",
+        "summary": "Stopping is a skill, and the rule should be agreed before you start rather than negotiated when you are tired or embarrassed. Sunk cost is the enemy of the portfolio. A stop rule decided in advance, if signups stay under this number I close it, turns quitting from a verdict into a result. The data retires the project; you do not have to.",
         "example": "An experiment with a stop rule ends cleanly; one without ends by drifting.",
         "action": "Write the stop rule for your current experiment before you need it."
       },
       {
         "title": "Curiosity as Practice",
         "chapter": "Chapter 7: Curiosity",
-        "summary": "Curiosity is treated as a mood and it is closer to a habit. Scheduling small explorations prevents the drift towards only what is already known.",
+        "summary": "Curiosity is treated as a mood and it is closer to a habit. Scheduling small explorations prevents the drift towards only what is already known. Her antidote to the highlight reel is a public log of small attempts, including the dull ones. Exploration scheduled weekly keeps identity flexible, which is the real asset.",
         "example": "A weekly hour for something unrelated produces ideas no planning meeting would have.",
         "action": "Schedule one hour of undirected curiosity this week."
       },
       {
         "title": "The Portfolio Life",
         "chapter": "Chapter 8: Portfolio",
-        "summary": "A portfolio life holds several roles, some paid and some not, and the point is resilience rather than fragmentation. It also requires deciding what each role is for.",
+        "summary": "A portfolio life holds several roles, some paid and some not, and the point is resilience rather than fragmentation. It also requires deciding what each role is for. The goal is not a scattered life but a resilient one: income, meaning and community held in more than one place. When one role breaks, the others keep the week standing.",
         "example": "Someone with a job, a small practice and a teaching role is more resilient than someone with one identity.",
         "action": "List your current roles and one line on what each gives you."
       }
@@ -46475,56 +46475,56 @@ const BOOKS = [
       {
         "title": "Three Faces",
         "chapter": "Chapter 1: What Perfectionism Is",
-        "summary": "Perfectionism has three faces: demands you place on yourself, demands you place on others, and the belief that others demand perfection from you. They look different and share the same fear.",
+        "summary": "Perfectionism has three faces: demands you place on yourself, demands you place on others, and the belief that others demand perfection from you. They look different and share the same fear. Thomas Curran, who studies perfectionism in the young, separates the three forms because they need different help. The third, believing everyone demands perfection of you, is the one rising fastest and hurting most.",
         "example": "Someone who is relaxed about their own work and harsh with colleagues is not free of the pattern.",
         "action": "Notice which of the three you run most often."
       },
       {
         "title": "The Pressure Is Outside",
         "chapter": "Chapter 2: Where It Comes From",
-        "summary": "The rise in socially prescribed perfectionism tracks rising competition, precarious work and constant comparison, which means the cause is not a personal failing.",
+        "summary": "The rise in socially prescribed perfectionism tracks rising competition, precarious work and constant comparison, which means the cause is not a personal failing. His data point is stark: socially prescribed perfectionism in students rose by about a third in a generation. A standard installed by an economy of comparison cannot be cured by telling individuals to relax.",
         "example": "A generation entering a housing market that requires two incomes will feel more judged, and the feeling is partly accurate.",
         "action": "Write one expectation you carry that came from a situation, not a person."
       },
       {
         "title": "Perfectionism and Burnout",
         "chapter": "Chapter 3: The Cost",
-        "summary": "Perfectionism is a better predictor of burnout than workload in much of the research, because the standard is internal and never declares the work finished. You cannot rest if nothing counts as done.",
+        "summary": "Perfectionism is a better predictor of burnout than workload in much of the research, because the standard is internal and never declares the work finished. You cannot rest if nothing counts as done. The burned-out perfectionist is rarely idle; they are exhausted by a finish line that moves at the speed of their own progress. Rest feels like evidence of laziness, so recovery itself gets scheduled and then failed.",
         "example": "Someone on a light week can be exhausted because the standard followed them home.",
         "action": "Notice one task you cannot call finished and ask what would make it finished."
       },
       {
         "title": "The Procrastination Link",
         "chapter": "Chapter 4: Delay",
-        "summary": "Procrastination and perfectionism are the same mechanism: if the work can never be good enough, starting is the moment you fail, so you do not start. Waiting is protection.",
+        "summary": "Procrastination and perfectionism are the same mechanism: if the work can never be good enough, starting is the moment you fail, so you do not start. Waiting is protection. Delay also protects the fantasy: the unwritten essay is still potentially perfect. Curran's remedy is exposure in small doses, shipping work at seventy percent and letting the world fail to end.",
         "example": "A writer with a blank page is not lazy, they are avoiding a judgement they have already passed.",
         "action": "Do five minutes of the thing badly, deliberately, today."
       },
       {
         "title": "Being Seen",
         "chapter": "Chapter 5: Shame",
-        "summary": "The root is the fear of being seen as flawed, which is why perfectionism survives success. Each achievement raises the standard, and the exposure never goes away.",
+        "summary": "The root is the fear of being seen as flawed, which is why perfectionism survives success. Each achievement raises the standard, and the exposure never goes away. Because the fear is social, achievement cannot cure it; applause only raises the audience's imagined standard. The exit is not more success but decoupling worth from evaluation, one kept standard at a time.",
         "example": "Someone who succeeds publicly becomes more afraid of the next failure, not less.",
         "action": "Tell one person about a mistake before you have fixed it."
       },
       {
         "title": "Standards Without Cruelty",
         "chapter": "Chapter 6: Standards",
-        "summary": "The alternative to perfectionism is not low standards, it is standards held with kindness. High standards plus self punishment produces avoidance; high standards plus acceptance produces work.",
+        "summary": "The alternative to perfectionism is not low standards, it is standards held with kindness. High standards plus self punishment produces avoidance; high standards plus acceptance produces work. The practical craft he recommends is deciding the standard before starting: what would make this good enough for its actual purpose. Professionals do this instinctively; perfectionists must do it on paper.",
         "example": "A craftsperson who is exacting and not cruel finishes things.",
         "action": "Set one standard and one limit for the same task."
       },
       {
         "title": "The Social Media Mirror",
         "chapter": "Chapter 7: The Mirror",
-        "summary": "Social media turns other people's curated output into a benchmark, which is why socially prescribed perfectionism is rising with screen time. You are comparing your backstage with their stage.",
+        "summary": "Social media turns other people's curated output into a benchmark, which is why socially prescribed perfectionism is rising with screen time. You are comparing your backstage with their stage. The feed is an unfair benchmark in a precise way: it shows outcomes without process, at scale, all day. Curran treats comparison hygiene, fewer feeds, longer horizons, as health behaviour, not weakness.",
         "example": "A designer who scrolls portfolios for an hour reports more dissatisfaction than one who reviews their own old work.",
         "action": "Take one day off a comparison feed and record the effect."
       },
       {
         "title": "Good Enough",
         "chapter": "Chapter 8: Enough",
-        "summary": "Good enough is a professional judgement about the purpose of the work, not a moral surrender. Deciding what good enough means for each task is the skill that replaces the impossible standard.",
+        "summary": "Good enough is a professional judgement about the purpose of the work, not a moral surrender. Deciding what good enough means for each task is the skill that replaces the impossible standard. Good enough done deliberately is how surgeons, editors and engineers actually work: fit for purpose, checked where it matters. The surrender is not of quality but of the belief that quality means flawless.",
         "example": "A internal document needs to be clear enough to decide with, and polishing it further is a choice with a cost.",
         "action": "Define good enough for one task in one sentence before you start."
       }
@@ -46559,56 +46559,56 @@ const BOOKS = [
       {
         "title": "Decide the Purpose",
         "chapter": "Chapter 1: Purpose",
-        "summary": "A gathering needs a specific purpose, not a category. A meeting about the project is a topic, a meeting to decide whether to cancel the launch is a purpose.",
+        "summary": "A gathering needs a specific purpose, not a category. A meeting about the project is a topic, a meeting to decide whether to cancel the launch is a purpose. Priya Parker worked as a facilitator in conflict zones before writing about dinner parties, and the transfer is the point: a ceasefire table and a birthday both fail or hold on design, not vibes. Purpose first, then everything else is downstream.",
         "example": "A dinner to reconnect the two people who have fallen out is a different evening from a dinner to meet the neighbours.",
         "action": "Rewrite one meeting you are hosting as a purpose rather than a topic."
       },
       {
         "title": "Who Is In the Room",
         "chapter": "Chapter 2: Guests",
-        "summary": "The guest list is the design. Who is excluded, how many strangers and how dense the existing ties are changes what is possible, and the biggest room is usually the wrong one.",
+        "summary": "The guest list is the design. Who is excluded, how many strangers and how dense the existing ties are changes what is possible, and the biggest room is usually the wrong one. She is blunt about exclusion: a gathering for everyone serves no one in particular. Leaving people out, kindly and on purpose, is what lets the people inside do something specific together.",
         "example": "A workshop of eight who do not know each other produces more than thirty who do.",
         "action": "Cut one person from a list and add one who is missing."
       },
       {
         "title": "The Temporary World",
         "chapter": "Chapter 3: Rules",
-        "summary": "A gathering creates a temporary world with its own permissions, and naming those rules is what makes them work. If you do not set them, the default rules of the outside apply.",
+        "summary": "A gathering creates a temporary world with its own permissions, and naming those rules is what makes them work. If you do not set them, the default rules of the outside apply. Her rule for hosts is generous authority: protect the guests from each other and from drift, and equalise them inside the room. The reluctant host who will not lead leaves the strongest personality in charge instead.",
         "example": "A family dinner that opens with everybody off phones succeeds only if someone says it out loud.",
         "action": "Set one rule for your next gathering and say it clearly at the start."
       },
       {
         "title": "Warm Up and Cool Down",
         "chapter": "Chapter 4: Openings",
-        "summary": "Openings and closings are where a gathering is made and lost. A deliberate opening gives people a way in, a deliberate ending gives the evening a shape they can remember.",
+        "summary": "Openings and closings are where a gathering is made and lost. A deliberate opening gives people a way in, a deliberate ending gives the evening a shape they can remember. Parker opens gatherings by marking the threshold, a question, a ritual, a moment that says the ordinary rules are paused. People cannot enter a temporary world nobody has declared open.",
         "example": "A ritual of one sentence each at the start changes the quality of the next two hours.",
         "action": "Design one opening line and one closing line for your next gathering."
       },
       {
         "title": "Rules and Permission",
         "chapter": "Chapter 5: Permission",
-        "summary": "People need permission to behave differently from their usual role, and the host grants it. Without permission, a gathering reverts to the hierarchy the guests came from.",
+        "summary": "People need permission to behave differently from their usual role, and the host grants it. Without permission, a gathering reverts to the hierarchy the guests came from. Permission can be as small as telling senior people to ask questions instead of giving answers for the first hour. Status follows instruction when the host is explicit enough to give it.",
         "example": "A team that is told it is allowed to disagree with the boss gets a different meeting.",
         "action": "Give one group explicit permission to do something they would not assume."
       },
       {
         "title": "The Shape of Time",
         "chapter": "Chapter 6: Flow",
-        "summary": "Time has a shape: a long open session with no structure produces a polite hour and then a rush. Alternating modes, small groups, whole room, movement, keeps energy in the room.",
+        "summary": "Time has a shape: a long open session with no structure produces a polite hour and then a rush. Alternating modes, small groups, whole room, movement, keeps energy in the room. She plans backward from the moment of highest energy and protects it ruthlessly, cutting the segment before it rather than the peak. Most agendas die of one item too many, not one too few.",
         "example": "An unstructured two hour event usually collapses into the same three conversations.",
         "action": "Put one change of mode in the middle of your next gathering."
       },
       {
         "title": "Protecting the Stranger",
         "chapter": "Chapter 7: Inclusion",
-        "summary": "A stranger in a room of friends is a design problem and the host's responsibility. Introducing, protecting and connecting the outsider is the actual work of hospitality.",
+        "summary": "A stranger in a room of friends is a design problem and the host's responsibility. Introducing, protecting and connecting the outsider is the actual work of hospitality. The guest who knows nobody is the host's test. Parker seats them with a job, introduces them with a story rather than a job title, and checks on them before checking on the food.",
         "example": "A newcomer left at a table of old friends leaves early and never returns.",
         "action": "Bring one newcomer into a conversation deliberately this week."
       },
       {
         "title": "Ending Well",
         "chapter": "Chapter 8: Closing",
-        "summary": "Endings need design, because gatherings that fade out do the opposite of what they intended. A closing that names what happened sends people out with something.",
+        "summary": "Endings need design, because gatherings that fade out do the opposite of what they intended. A closing that names what happened sends people out with something. Her closing move is to look inward, then outward: name what the gathering meant, then send people back to the world with it. The last fifteen minutes decide what the evening becomes in memory.",
         "example": "A meeting that ends by running out of time leaves everyone with a vague dissatisfaction.",
         "action": "End your next meeting with one sentence on what was decided."
       }
@@ -47063,56 +47063,56 @@ const BOOKS = [
       {
         "title": "Values, Not Interests",
         "chapter": "Chapter 1: Community",
-        "summary": "A group held together by a shared interest dissolves when the interest fades, and a community held by shared values survives the topic changing. The distinction decides what you build first.",
+        "summary": "A group held together by a shared interest dissolves when the interest fades, and a community held by shared values survives the topic changing. The distinction decides what you build first. Charles Vogl learned community building partly in the Peace Corps and partly by failing at it in cities. His first principle is unsentimental: people stay for shared values enacted together, not for content, perks or a charismatic founder.",
         "example": "A book club of people who like books survives a boring book; a book club of people who like being seen reading does not.",
         "action": "Write one value your people would act on, not just agree with."
       },
       {
         "title": "The Boundary",
         "chapter": "Chapter 2: Boundaries",
-        "summary": "Every community has an inside and an outside, and pretending otherwise makes the inside meaningless. A boundary is what makes belonging feel like something, and it needs to be explicit and fair.",
+        "summary": "Every community has an inside and an outside, and pretending otherwise makes the inside meaningless. A boundary is what makes belonging feel like something, and it needs to be explicit and fair. A boundary sounds unkind until you watch a group without one dissolve into an audience. Membership must mean something specific, or belonging is just attendance with better branding.",
         "example": "A group that says anyone can join and then behaves like a clique produces resentment rather than belonging.",
         "action": "Make your boundary explicit once and see who is surprised."
       },
       {
         "title": "Rituals of Welcome",
         "chapter": "Chapter 3: Welcome",
-        "summary": "Welcome is done with ritual, and small, specific actions work better than large gestures. The first ten minutes decide whether someone becomes a member or a visitor.",
+        "summary": "Welcome is done with ritual, and small, specific actions work better than large gestures. The first ten minutes decide whether someone becomes a member or a visitor. The welcome ritual he recommends is embarrassingly small: a name used, a seat saved, a first task within the hour. People decide whether they belong before the main event even starts.",
         "example": "Someone greeted by name and given a task in the first meeting returns.",
         "action": "Design one welcome for a newcomer this month."
       },
       {
         "title": "Rituals of Growth",
         "chapter": "Chapter 4: Growth",
-        "summary": "Communities also need rituals that mark growth, because people need to see their own progress and be seen by others. Without them, members plateau and leave.",
+        "summary": "Communities also need rituals that mark growth, because people need to see their own progress and be seen by others. Without them, members plateau and leave. Initiation and milestones let members watch themselves change rank inside the group. A community that never marks growth asks people to feel progress it never shows them.",
         "example": "A community that celebrates a person's first contribution, not just their tenth, retains more people.",
         "action": "Create one small way to mark a first time."
       },
       {
         "title": "Roles That Matter",
         "chapter": "Chapter 5: Roles",
-        "summary": "Roles matter more than titles: people stay where they have something specific to do that others rely on. Contributing is what converts a participant into a member.",
+        "summary": "Roles matter more than titles: people stay where they have something specific to do that others rely on. Contributing is what converts a participant into a member. Roles beat titles because a role is a promise others depend on: the one who brings the key, keeps the list, teaches the newcomer. Being needed is the strongest retention tool ever found.",
         "example": "The person who brings the chairs has more belonging than the person who signs the emails.",
         "action": "Give one person a specific, relied on role this week."
       },
       {
         "title": "The Story",
         "chapter": "Chapter 6: Stories",
-        "summary": "Stories carry the values, and the stories a community repeats teach what it will honour and forgive. A founder's story, a loss, a strange tradition, all do the work of transmission.",
+        "summary": "Stories carry the values, and the stories a community repeats teach what it will honour and forgive. A founder's story, a loss, a strange tradition, all do the work of transmission. Every community retells a few stories until they become law: how we treated the person who failed, who we forgave, what we refused. Change the repeated stories and the values follow.",
         "example": "A team that tells the story of the launch that failed teaches caution without a rule.",
         "action": "Tell one origin story on purpose, to one person."
       },
       {
         "title": "Conflict and Care",
         "chapter": "Chapter 7: Difficulties",
-        "summary": "Conflict is inevitable and the community's response is what defines it. A structure for addressing harm and a willingness to care for people through difficult exits is the difference between durable and fragile.",
+        "summary": "Conflict is inevitable and the community's response is what defines it. A structure for addressing harm and a willingness to care for people through difficult exits is the difference between durable and fragile. Vogl treats conflict as a belonging test rather than a malfunction. A fair, visible process for harm tells members the group will protect them; silence tells them it will protect itself.",
         "example": "A group that can remove someone and still care for them keeps its standards and its people.",
         "action": "Write down how your group would handle harm, before it happens."
       },
       {
         "title": "Sustaining It",
         "chapter": "Chapter 8: Longevity",
-        "summary": "Longevity comes from handing over responsibility and letting people create rituals of their own. A community that depends on one person is not a community, it is an audience.",
+        "summary": "Longevity comes from handing over responsibility and letting people create rituals of their own. A community that depends on one person is not a community, it is an audience. The final principle is succession: founders must hand over real authority while they are still loved, not after they are resented. A community that can replace its maker has become a place instead of a person.",
         "example": "A group where three people have started something new outlasts one whose founder runs every meeting.",
         "action": "Hand one recurring job to somebody else."
       }
@@ -47147,56 +47147,56 @@ const BOOKS = [
       {
         "title": "The Journey",
         "chapter": "Chapter 1: Departures",
-        "summary": "Humboldt went where the data was, for years, with instruments and notebooks, and the scale of the fieldwork is what gave his ideas weight. Authority came from having been there.",
+        "summary": "Humboldt went where the data was, for years, with instruments and notebooks, and the scale of the fieldwork is what gave his ideas weight. Authority came from having been there. Alexander von Humboldt climbed Chimborazo in 1802 with shattered instruments and bleeding feet, higher than any European had recorded, and came down with a new idea: nature is a web, not a warehouse. Andrea Wulf rebuilt the man behind the idea from his letters and journals.",
         "example": "A naturalist who spends two years on a river knows things no library supplies.",
         "action": "Name one thing you could only learn by going there."
       },
       {
         "title": "Seeing the Connections",
         "chapter": "Chapter 2: The Great Journey",
-        "summary": "His most important contribution was a habit of mind: spotting that vegetation zones on one mountain resembled zones across latitudes, and that a single cut forest affects everything downstream. Connections were the discovery.",
+        "summary": "His most important contribution was a habit of mind: spotting that vegetation zones on one mountain resembled zones across latitudes, and that a single cut forest affects everything downstream. Connections were the discovery. On that mountainside he saw the same bands of plants he had seen in the Alps and would see in Siberia, arranged by altitude like latitudes folded upright. The insight that climate zones repeat across the planet quietly founded ecology and biogeography.",
         "example": "Seeing one pattern in a familiar place is often what produces an insight about a distant one.",
         "action": "Draw two things that look unrelated and find a connection between them."
       },
       {
         "title": "Measurement With a Purpose",
         "chapter": "Chapter 3: Connection",
-        "summary": "Measurement was not neutral in Humboldt's hands, it was an argument. Numbers he collected were deployed to show that one system causes another, which made conservation a mathematical claim rather than a sentiment.",
+        "summary": "Measurement was not neutral in Humboldt's hands, it was an argument. Numbers he collected were deployed to show that one system causes another, which made conservation a mathematical claim rather than a sentiment. His Naturgemälde, a cross-section of a mountain with data in the margins, was an argument disguised as a picture: everything connected, measurable and comparable at a glance. Data visualisation begins here, in service of wonder.",
         "example": "A long temperature record is a political document as well as a scientific one.",
         "action": "Check whether a number you use would change an argument if it were higher."
       },
       {
         "title": "The Political Ecology",
         "chapter": "Chapter 4: Politics of Nature",
-        "summary": "He wrote about colonial violence and environmental damage as one subject, at a time when few did. His argument was that deforestation, water and empire were the same system.",
+        "summary": "He wrote about colonial violence and environmental damage as one subject, at a time when few did. His argument was that deforestation, water and empire were the same system. In South America he documented forests falling and lakes shrinking under colonial farming, and said so in print. He was writing about human caused environmental damage a century and a half before it had a name.",
         "example": "A regime that drains a lake to fund a war has made an environmental decision.",
         "action": "Notice one political decision you think is separate from the physical world."
       },
       {
         "title": "The Idea Travels",
         "chapter": "Chapter 5: Friends",
-        "summary": "The idea travelled through publications and personal contact, and it is hard to separate the theory from the mission to spread it. Ideas do not move without a carrier.",
+        "summary": "The idea travelled through publications and personal contact, and it is hard to separate the theory from the mission to spread it. Ideas do not move without a carrier. Humboldt spent his fortune and his health making the idea travel: books in many languages, letters to everyone, help for younger scientists he would never meet again. Darwin carried Humboldt on the Beagle and called him an inspiration for the whole voyage.",
         "example": "A concept spreads when someone explains it well to people who trust them.",
         "action": "Explain one idea you believe to someone outside your field, properly."
       },
       {
         "title": "Friends and Correspondents",
         "chapter": "Chapter 6: Fame",
-        "summary": "The book is full of friendships that did intellectual work: mutual support, argument, patronage and correspondence. Intellectual history is often social history.",
+        "summary": "The book is full of friendships that did intellectual work: mutual support, argument, patronage and correspondence. Intellectual history is often social history. The friendships were infrastructure: Goethe, Jefferson, Bolívar and hundreds of correspondents formed the network the theory moved through. Wulf's point is that lone genius is mostly a well kept address book plus stamina.",
         "example": "Two people who write to each other for twenty years produce work neither would have produced alone.",
         "action": "Write to one person whose thinking you value, without asking for anything."
       },
       {
         "title": "The Cost",
         "chapter": "Chapter 7: Later Life",
-        "summary": "Humboldt was often poor, often ill and dependent on others for money and access, and his achievement was not comfortable. Being prolific and being supported are related but not identical.",
+        "summary": "Humboldt was often poor, often ill and dependent on others for money and access, and his achievement was not comfortable. Being prolific and being supported are related but not identical. He died famous and nearly broke, having given away money, books and introductions for sixty years. The comfort of the achievement is an illusion created by how completely his ideas won; the life itself was precarious to the end.",
         "example": "A researcher without resources needs collaborators more than a wealthy one does.",
         "action": "Name what you would need to attempt your own version of a long project."
       },
       {
         "title": "The Inheritance",
         "chapter": "Chapter 8: The Legacy",
-        "summary": "His influence appears in people who were not obviously his students, including Thoreau, Haeckel and many conservation movements. The legacy is a way of seeing, which is the most portable kind of inheritance.",
+        "summary": "His influence appears in people who were not obviously his students, including Thoreau, Haeckel and many conservation movements. The legacy is a way of seeing, which is the most portable kind of inheritance. Thoreau read him, Haeckel named ecology under his influence, and the American conservation movement grew in his shade. Then the English speaking world largely forgot him, which is the loss Wulf wrote the book to repair.",
         "example": "A writer who read a single book at the right age can carry it for a lifetime.",
         "action": "Find the reading that changed how you see, and give it to someone younger."
       }

@@ -614,7 +614,7 @@
         if (show && show.rss) playFeed(show);
         return;
       }
-      if (e.target.closest("[data-unfind]")) { closeSheet(); location.href = "podcasts.html#shelf-shows"; }
+      if (e.target.closest("[data-unfind]")) { closeSheet(); location.href = "audio.html#shelf-shows"; }
     });
   }
 
@@ -1414,6 +1414,8 @@
 
   function startTTS(queue) {
     T = window.TSB_TTS || window.TTS_ENGINE;
+    try { if (window.TSB_LISTEN_FEED && TSB_LISTEN_FEED.learnPlay) TSB_LISTEN_FEED.learnPlay(queue); } catch (eL) {}
+    try { if (window.TSB_TASTE && TSB_TASTE.signal) TSB_TASTE.signal({ bookId: queue && queue.bookId, title: (queue && queue.title) || "", by: (queue && (queue.by || queue.author)) || "", kind: "listen" }); } catch (eT) {}
     var wantOpen = !!(queue && queue.open);
     /* v328: pages without the narrator (Listen, You) fetch it on demand */
     if ((!T || !T.playParts) && !queue._lazy) {
@@ -1458,6 +1460,10 @@
     var from = q.from || 0;
     if (from > 0) { curItem = from; }
     var startAt = (from > 0 && q.items && q.items[from]) ? q.items[from].part : 0;
+    /* v406: a restored spoken book mounts the same player, parked at
+       the lesson it stopped on, and waits for the tap. It never
+       starts shouting just because a page loaded. */
+    if (queue.restored) { savePos(); paintAll(); paintPlay(); try { parkNote(); } catch (eP) {} return true; }
     try { T.playParts(q.parts, startAt); } catch (e) { return false; }
     savePos(); paintAll();
     /* v397: the room opens the same full player; a book being read does not */
@@ -1609,6 +1615,10 @@
 
   function startAudio(queue) {
     try { if (T && T.stop) T.stop(); } catch (e) {}
+    /* v409: every play teaches the Listen room, so tomorrow's shelf
+       leans toward what you actually listened to today */
+    try { if (window.TSB_LISTEN_FEED && TSB_LISTEN_FEED.learnPlay) TSB_LISTEN_FEED.learnPlay(queue); } catch (eL) {}
+    try { if (window.TSB_TASTE && TSB_TASTE.signal) TSB_TASTE.signal({ bookId: queue && queue.bookId, title: (queue && queue.title) || "", by: (queue && (queue.by || queue.author)) || "", kind: "listen" }); } catch (eT) {}
     jset(CANCELKEY, 0);   /* starting anything new lifts an old cancel; PLAYKEY follows the element's own play/pause events */
     q = queue; curItem = queue.ch || 0;
     mountDock();
@@ -2216,7 +2226,31 @@
        or the sleep timer running out keeps it gone. */
     if (jget(CANCELKEY, 0)) return;
     var l = jget(LASTKEY, null);
-    if (!l || l.type !== "audio" || !l.key) return;
+    /* v406: a spoken book is a listening session too. It used to die
+       silently on every page change because only real audio records
+       were rebuilt. Fall back to the narrator's own session record
+       when the player record is missing. */
+    if (!l || !l.key) {
+      var ts = jget("tsb_tts_session", null);
+      if (ts && ts.book) l = { type: "book", key: "book:" + ts.book, bookId: ts.book, item: ts.item || 0, title: "" };
+    }
+    if (!l || !l.key) return;
+    if (l.type === "book" || (l.type === "doc" && l.bookId)) {
+      var sleepHoldB = !!jget(SLEEPKEY, 0);
+      var autoB = !sleepHoldB && jget(PLAYKEY, 0) === 1;
+      var bidB = l.bookId || String(l.key).replace(/^book:/, "");
+      var goB = function () {
+        if (q) return;
+        var qc = bookQueue(bidB, Math.max(0, (l.item || 1) - 0));
+        if (!qc) return;
+        qc.restored = !autoB;
+        qc.from = l.item || 0;
+        startTTS(qc);
+      };
+      if (window.TSB_LESSONS && TSB_LESSONS.ensure) TSB_LESSONS.ensure(bidB, goB); else goB();
+      return;
+    }
+    if (l.type !== "audio") return;
     /* the state you left in is the state you get back: paused stays
        parked at the same second, playing picks up where it was */
     var sleepHold = !!jget(SLEEPKEY, 0);   /* sleep ran out while away → restore silent */

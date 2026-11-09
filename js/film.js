@@ -311,7 +311,7 @@
     var PROMPTS = ["Which book changed one small habit for you?", "One line from a book you still think about.", "What did you try this week because of a book?", "A book you would hand to your younger self, and why."];
     var wk = Math.floor(Date.now() / (7 * 864e5));
     html += '<div class="ft-sec"><h2>More to <i>explore</i></h2></div><div class="ft-tiles">' +
-      '<a class="ft-tile" href="podcasts.html">' + ICON.listen + "<b>Listen</b><span>Audiobooks and shows, in your language</span></a>" +
+      '<a class="ft-tile" href="audio.html">' + ICON.listen + "<b>Listen</b><span>Audiobooks and shows, in your language</span></a>" +
       '<a class="ft-tile" href="scan.html"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><path d="M8 12h8"/></svg><b>Scan a book</b><span>Point at a cover or a barcode</span></a>' +
       '<a class="ft-tile" href="notes.html">' + ICON.pen + "<b>Notebook</b><span>Your highlights and notes</span></a>" +
       graveDoor("today") + '<a class="ft-tile ft-tile--gold" href="gold.html">' + ICON.crown + "<b>Gold</b><span>" + (function () { try { if (TSB_GOLD.isGold()) return "Yours. See what is on"; if (TSB_GOLD.hasPdf && TSB_GOLD.hasPdf()) return "PDF pass on. Upgrade"; } catch (e) {} return "Just \u20b999 a month"; })() + "</span></a></div>";
@@ -982,7 +982,7 @@
     var TILES = [
       ["dive", "Deep dives", "Long reads behind the big books, all open.", "deepdive.html?id=dd-atomic-identity"],
       ["pdf", "PDF cheat-sheets", "Unlimited, for every book. Open a book, tap Cheat-sheet.", "index.html#library"],
-      ["voice", "Natural voices", "Every book read aloud in a human-sounding voice.", "podcasts.html"],
+      ["voice", "Natural voices", "Every book read aloud in a human-sounding voice.", "audio.html"],
       ["studio", "Studio Pro", "Quote cards with Pro filters and no watermark.", "write.html"],
       ["flame", "Streak freeze", "Miss one day a month, keep your streak.", "you.html"],
       ["store", "Case files", "Every startup autopsy in the store, unlocked.", "store.html"]
@@ -1061,7 +1061,7 @@
     else if (page === "about.html") initAbout();
     else if (page === "you.html") initYou();
     else if (page === "gold.html") { root.classList.add("fv-gold"); polishGold(); }
-    else if (page === "podcasts.html") root.classList.add("fv-listen");
+    else if (page === "audio.html" || page === "podcasts.html") root.classList.add("fv-listen");
     else if (page === "reader.html") root.classList.add("fv-reader");
     polishNav();
     watchCalm();

@@ -1,0 +1,233 @@
+/* ============================================================
+   v408 · LISTEN, REBUILT LIKE A PODCAST APP
+   audio.html only. Big artwork, soft surfaces, one obvious
+   play per card, snap rails on the phone, calm rows for shows.
+   Movement is a short spring everywhere, and it all switches
+   off for reduced motion. Brand stays: paper, ink, yellow.
+   ============================================================ */
+body.ddpage { background: #F4F1EA; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+html.dark body.ddpage { background: #141109; }
+
+.al-h1 {
+  font: 800 46px/1.02 var(--f-sans, "Space Grotesk", system-ui, sans-serif) !important;
+  letter-spacing: -0.035em !important;
+  margin: 2px 0 8px !important;
+}
+.pc-hero .dd-hook {
+  font: 500 15.5px/1.5 var(--f-sans, "Space Grotesk", system-ui, sans-serif) !important;
+  color: var(--f-mu, #6E6658) !important;
+  max-width: 44ch;
+}
+.pc-kick { letter-spacing: 0.14em !important; }
+
+/* the continue card is the Up Next hero */
+.ln-hold__in {
+  border: 0 !important;
+  border-radius: 26px !important;
+  box-shadow: 0 24px 48px -24px rgba(30, 25, 15, .35) !important;
+}
+.ln-hold__go {
+  width: 58px !important; height: 58px !important;
+  box-shadow: 0 14px 26px -12px rgba(180, 130, 0, .65) !important;
+  transition: transform .25s cubic-bezier(.22,1,.36,1) !important;
+}
+.ln-hold__go:active { transform: scale(.92); }
+.ln-roomline { letter-spacing: .12em; opacity: .75; }
+
+/* section titles read like a podcast app, not a poster */
+html.film .pc-h2 {
+  font: 700 22px/1.15 var(--f-sans, "Space Grotesk", system-ui, sans-serif) !important;
+  letter-spacing: -0.02em !important;
+}
+html.film .pc-sub { font-size: 13.5px !important; line-height: 1.5 !important; }
+
+/* search: one soft pill */
+.pc-search {
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--f-card, #FFFDF8) !important;
+  box-shadow: 0 10px 26px -18px rgba(30, 25, 15, .35) !important;
+  min-height: 50px;
+}
+.pc-search input { font-size: 15px !important; }
+.ln-jump button, .pc-search__chips button, .pc-cats button {
+  border: 0 !important;
+  box-shadow: 0 6px 16px -10px rgba(30, 25, 15, .3);
+  transition: transform .22s cubic-bezier(.22,1,.36,1), background-color .2s ease, color .2s ease !important;
+}
+.ln-jump button:active, .pc-search__chips button:active, .pc-cats button:active { transform: scale(.95); }
+
+/* cards: soft, large, springy */
+.pc-ab__card, .pc-show, .pc-orig__card, .ln-foryou__card {
+  border: 0 !important;
+  border-radius: 22px !important;
+  background: var(--f-card, #FFFDF8) !important;
+  box-shadow: 0 14px 30px -20px rgba(30, 25, 15, .28) !important;
+  transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s cubic-bezier(.22,1,.36,1) !important;
+}
+.pc-ab__card:active, .pc-show:active { transform: scale(.98); }
+.pc-ab__cover, .pcx-art, .pc-orig__art { border-radius: 16px !important; }
+.pc-play {
+  border-radius: 999px !important;
+  transition: transform .22s cubic-bezier(.22,1,.36,1) !important;
+}
+.pc-play:active { transform: scale(.94); }
+.pc-browse { border-radius: 999px !important; }
+
+/* entrance: a quiet rise, staggered, never on repaint storms */
+@keyframes alRise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.ln-hold__in, .pc-ab__card, .pc-show { animation: alRise .5s cubic-bezier(.22,1,.36,1) backwards; }
+.pc-ab__grid > *:nth-child(2) { animation-delay: .04s; }
+.pc-ab__grid > *:nth-child(3) { animation-delay: .08s; }
+.pc-ab__grid > *:nth-child(4) { animation-delay: .12s; }
+.pc-ab__grid > *:nth-child(5) { animation-delay: .16s; }
+.pc-ab__grid > *:nth-child(6) { animation-delay: .2s; }
+.pc-ab__grid > *:nth-child(7) { animation-delay: .24s; }
+
+main.dd-main { padding-bottom: 150px; }
+
+/* phone: audiobooks become a snap rail of big sleeves */
+@media (max-width: 699px) {
+  .al-h1 { font-size: 40px !important; }
+  .pc-ab__grid {
+    display: flex !important;
+    overflow-x: auto;
+    gap: 14px !important;
+    padding: 6px 2px 14px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .pc-ab__grid::-webkit-scrollbar { display: none; }
+  .pc-ab__grid > .pc-ab__card { flex: 0 0 158px; scroll-snap-align: start; }
+  .pc-ab__grid > .pc-ab__mine { flex: 0 0 86%; scroll-snap-align: start; }
+  .pc-ab__grid > .pc-ab__more { flex: 0 0 132px; align-self: stretch; scroll-snap-align: start; }
+  .pcx-art { width: 72px !important; height: 72px !important; }
+}
+
+/* desktop: room to breathe, hover lift */
+@media (min-width: 1024px) {
+  .al-h1 { font-size: 54px !important; }
+  .pc-ab__grid { gap: 22px !important; }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .pc-ab__card:hover, .pc-show:hover, .pc-orig__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 28px 46px -26px rgba(30, 25, 15, .4) !important;
+  }
+  .ln-hold__go:hover { transform: scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .ln-hold__in, .pc-ab__card, .pc-show { animation: none !important; }
+  .pc-ab__card, .pc-show, .pc-play, .ln-hold__go { transition: none !important; }
+}
+
+/* ============================================================
+   v409 · THE ROOM BUILDS ITSELF
+   Fresh today and More like this ride the same soft cards as the
+   rest of the room. The Start here hero grows up: bigger art, a
+   warm gradient, and a line that says why this book is at the
+   door. The sticky jump bar stops being a ghost that content
+   bleeds through, and show cards below the fold stop costing
+   paint work until they are nearly on screen.
+   ============================================================ */
+.ln-hold__in--start {
+  background: linear-gradient(135deg, #FFFDF8 0%, #FFF3D2 58%, #FFE9A8 100%) !important;
+}
+html.dark .ln-hold__in--start {
+  background: linear-gradient(135deg, #241F16 0%, #2C2413 58%, #3A2F12 100%) !important;
+}
+.ln-hold__art { width: 84px !important; height: 84px !important; border-radius: 18px !important; }
+.ln-hold__why {
+  display: inline-block; margin-top: 7px; padding: 5px 10px; border-radius: 999px;
+  background: rgba(22, 19, 15, .07); color: var(--f-ink2, #3B352D);
+  font: 600 11px/1.3 var(--f-sans, "Space Grotesk", system-ui, sans-serif); font-style: normal;
+}
+html.dark .ln-hold__why { background: rgba(255, 200, 0, .14); color: #F3EDE2; }
+
+.ln-jump {
+  background: var(--f-paper, #FBF8F1) !important;
+  padding-top: 8px; padding-bottom: 8px;
+}
+html.dark .ln-jump { background: #15120E !important; }
+
+.ln-day__head { margin: 30px 0 12px; }
+.ln-day__head p {
+  margin: 4px 0 0; font: 500 13px/1.5 var(--f-sans, "Space Grotesk", system-ui, sans-serif);
+  color: var(--f-mu, #6E6658); max-width: 52ch;
+}
+.ln-day__rail {
+  display: flex; gap: 14px; overflow-x: auto; padding: 6px 2px 14px;
+  scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.ln-day__rail::-webkit-scrollbar { display: none; }
+.ln-day__card {
+  flex: 0 0 168px; scroll-snap-align: start;
+  display: flex; flex-direction: column; gap: 5px;
+  padding: 12px; border-radius: 22px;
+  background: var(--f-card, #FFFDF8);
+  box-shadow: 0 14px 30px -20px rgba(30, 25, 15, .28);
+  animation: alRise .5s cubic-bezier(.22,1,.36,1) backwards;
+}
+.ln-day__card b {
+  font: 700 13.5px/1.3 var(--f-sans, "Space Grotesk", system-ui, sans-serif);
+  color: var(--f-ink, #16130F);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.ln-day__art {
+  display: block; width: 100%; aspect-ratio: 1; border-radius: 16px; overflow: hidden;
+  background: linear-gradient(135deg, #EFE8DA, #E4D9C3);
+}
+html.dark .ln-day__art { background: linear-gradient(135deg, #2C2620, #241F19); }
+.ln-day__art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ln-day__art i {
+  display: grid; place-items: center; width: 100%; height: 100%;
+  font: 700 44px var(--f-serif, Newsreader, Georgia, serif); color: rgba(22, 19, 15, .45); font-style: normal;
+}
+.ln-day__sub { font: 500 11.5px/1.4 var(--f-sans, "Space Grotesk", system-ui, sans-serif); color: var(--f-mu, #6E6658); }
+.ln-day__acts { display: flex; align-items: center; gap: 8px; margin-top: auto; padding-top: 6px; }
+.ln-day__play {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border: 0; border-radius: 999px; padding: 9px 10px; cursor: pointer;
+  background: #FFC800; color: #16130F;
+  font: 800 11.5px var(--f-sans, "Space Grotesk", system-ui, sans-serif);
+  transition: transform .22s cubic-bezier(.22,1,.36,1);
+}
+.ln-day__play:active { transform: scale(.94); }
+.ln-day__save {
+  flex: 0 0 38px; width: 38px; height: 38px; border: 0; border-radius: 50%; cursor: pointer;
+  display: grid; place-items: center;
+  background: rgba(22, 19, 15, .05); color: var(--f-ink, #16130F);
+  transition: transform .22s cubic-bezier(.22,1,.36,1);
+}
+html.dark .ln-day__save { background: rgba(255, 255, 255, .07); }
+.ln-day__save:active { transform: scale(.9); }
+.ln-day__more {
+  width: 100%; border: 0; border-radius: 999px; padding: 13px; cursor: pointer;
+  background: var(--f-card, #FFFDF8); color: var(--f-ink, #16130F);
+  box-shadow: 0 10px 24px -18px rgba(30, 25, 15, .35);
+  font: 800 12px var(--f-sans, "Space Grotesk", system-ui, sans-serif);
+}
+.ln-day__more:disabled { opacity: .55; }
+
+/* shows below the fold paint when they approach, not before */
+#pcShowList .pc-show { content-visibility: auto; contain-intrinsic-size: auto 280px; }
+
+@media (min-width: 700px) {
+  .ln-day__rail { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); overflow: visible; }
+  .ln-day__card { flex: none; }
+}
+@media (min-width: 700px) and (max-width: 1023px) {
+  .pc-ab__card, .pc-show, .ln-day__card { box-shadow: 0 8px 18px -14px rgba(30, 25, 15, .3) !important; }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .ln-day__card:hover { transform: translateY(-4px); box-shadow: 0 28px 46px -26px rgba(30, 25, 15, .4) !important; }
+  .ln-day__card { transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s cubic-bezier(.22,1,.36,1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ln-day__card { animation: none !important; }
+}

@@ -253,6 +253,84 @@
     boot();
   }
 
+  /* v409: FRESH FOR A TERM. The daily shelf and the similar rail fetch
+     around one word or name without touching the search bar's cursor:
+     search "Raj Shamani" once and the room can go and find his
+     neighbours on its own, every morning, without being asked. */
+  function fresh(term, n, cb) {
+    var q = String(term || "").trim();
+    if (!q) { cb([]); return; }
+    itunesSearch(q, function (results) {
+      var k = known();
+      var out = results.map(shape).filter(function (s) {
+        return s && !k.feeds[s.rss] && !k.names[s.name.toLowerCase()];
+      }).slice(0, n || 4);
+      enrich(out, function (withDesc) {
+        if (withDesc.length) {
+          var got = jget(GOTKEY, {});
+          withDesc.forEach(function (s) { got[s.id] = s; });
+          var ks = Object.keys(got);
+          if (ks.length > GOT_CAP) ks.slice(0, ks.length - GOT_CAP).forEach(function (kk) { delete got[kk]; });
+          jset(GOTKEY, got);
+          boot();
+        }
+        cb(withDesc);
+      });
+    });
+  }
+
+  /* v409: MORE LIKE THIS ONE. Host first, because a listener who loves
+     a host usually loves the room that host moves in; genre second, so
+     the rail still fills when the host is one of a kind. The show
+     itself and anything already shelved are never offered back. */
+  function similar(show, cb) {
+    if (!show) { cb([]); return; }
+    var host = String(show.host || "").trim();
+    /* tags read REGION · GENRE: the genre half is the useful half, the
+       region half is the wider net when the genre runs dry */
+    var tagParts = String(show.tag || show.cat || "").split("·").map(function (x) { return x.trim(); }).filter(Boolean);
+    var genres = tagParts.length > 1 ? [tagParts[tagParts.length - 1], tagParts[0]] : tagParts;
+    var seenFeed = {}, seenName = {};
+    seenFeed[show.rss || ""] = 1;
+    seenName[String(show.name || "").toLowerCase()] = 1;
+    var anchorName = String(show.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+    function take(list, out) {
+      list.forEach(function (s) {
+        if (!s || out.length >= 6) return;
+        if (seenFeed[s.rss] || seenName[s.name.toLowerCase()]) return;
+        /* the same show wearing its host's name is still the same show */
+        var nn = s.name.toLowerCase().replace(/[^a-z0-9]+/g, "");
+        if (anchorName && (nn.indexOf(anchorName) >= 0 || anchorName.indexOf(nn) >= 0)) return;
+        seenFeed[s.rss] = 1; seenName[s.name.toLowerCase()] = 1;
+        out.push(s);
+      });
+    }
+    var out = [];
+    freshPool(host || show.name, function (first) {
+      take(first, out);
+      (function nextGenre(i) {
+        if (out.length >= 4 || i >= genres.length) { finish(out); return; }
+        if (genres[i].toLowerCase() === String(show.name || "").toLowerCase()) { nextGenre(i + 1); return; }
+        freshPool(genres[i], function (more) { take(more, out); nextGenre(i + 1); });
+      })(0);
+    });
+    function freshPool(term, done) {
+      if (!term) { done([]); return; }
+      itunesSearch(term, function (results) { done(results.map(shape).filter(Boolean)); });
+    }
+    function finish(out) {
+      enrich(out.slice(0, 6), function (withDesc) {
+        if (withDesc.length) {
+          var got = jget(GOTKEY, {});
+          withDesc.forEach(function (s) { if (!got[s.id]) got[s.id] = s; });
+          jset(GOTKEY, got);
+          boot();
+        }
+        cb(withDesc);
+      });
+    }
+  }
+
   boot();
-  window.TSB_SHOWMORE = { serve: serve, count: count, boot: boot, search: search, searchMore: searchMore, adopt: adopt, learn: learn };
+  window.TSB_SHOWMORE = { serve: serve, count: count, boot: boot, search: search, searchMore: searchMore, adopt: adopt, learn: learn, fresh: fresh, similar: similar };
 })();

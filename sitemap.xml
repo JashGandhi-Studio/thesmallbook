@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url><loc>https://thesmallbook.in/about.html</loc><lastmod>2026-11-05</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-<url><loc>https://thesmallbook.in/audio.html</loc><lastmod>2026-11-05</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
 <url><loc>https://thesmallbook.in/casefile.html</loc><lastmod>2026-11-05</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
 <url><loc>https://thesmallbook.in/deepdive.html</loc><lastmod>2026-11-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
 <url><loc>https://thesmallbook.in/graveyard.html</loc><lastmod>2026-11-05</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
+<url><loc>https://thesmallbook.in/audio.html</loc><lastmod>2026-11-09</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
 <url><loc>https://thesmallbook.in/index.html</loc><lastmod>2026-11-05</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
 <url><loc>https://thesmallbook.in/kids.html</loc><lastmod>2026-11-05</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
 <url><loc>https://thesmallbook.in/legal.html</loc><lastmod>2026-11-05</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
 <url><loc>https://thesmallbook.in/notes.html</loc><lastmod>2026-11-05</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
-<url><loc>https://thesmallbook.in/podcasts.html</loc><lastmod>2026-11-05</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
 <url><loc>https://thesmallbook.in/quotes.html</loc><lastmod>2026-11-05</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>
 <url><loc>https://thesmallbook.in/random.html</loc><lastmod>2026-11-05</lastmod><changefreq>weekly</changefreq><priority>0.5</priority></url>
 <url><loc>https://thesmallbook.in/review.html</loc><lastmod>2026-11-05</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>

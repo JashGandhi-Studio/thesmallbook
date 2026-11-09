@@ -358,7 +358,7 @@ const C = window.TSB_COMMUNITY;
   let stale = [];
   const walk = (dir) => {
     for (const e of fsp.readdirSync(dir, { withFileTypes: true })) {
-      if ([".git", "node_modules", "tests", "scanner-data.js", "data", "changes", "docs", "tools", "pseo", "books", "graveyard", "authors", "topics"].includes(e.name)) continue;
+      if ([".git", "node_modules", "tests", "scanner-data.js", "data", "changes", "docs", "tools", "pseo", "books", "graveyard", "authors", "topics", "vendor"].includes(e.name)) continue;
       const p = pp.join(__dirname, "..", dir, e.name);
       if (e.isDirectory()) { walk(dir + "/" + e.name); continue; }
       if (!/\.(html|js|md)$/.test(e.name)) continue;
@@ -506,7 +506,7 @@ const C = window.TSB_COMMUNITY;
   const appSrc = fsp.readFileSync(pp.join(__dirname, "../js/app.js"), "utf8");
   console.log("== v221: shorter sharper onboarding, dark-mode fixes, real covers ==");
   const onb = fsp.readFileSync(pp.join(__dirname, "../js/onboard.js"), "utf8");
-  ok("v390: onboarding is FIVE steps for a brand new reader", onb.includes("var TOTAL = 5;") && onb.includes("var OB_V = 390;"));
+  ok("v390: onboarding is FIVE steps for a brand new reader", onb.includes("var TOTAL = 5;") && onb.includes("var OB_V = 393;"));
   ok("language rides along on screen one (no separate language page)", onb.includes("data-lang") && /function moreLangs/.test(onb));
   ok("final page = the shelf builds itself with real covers", /function buildShelf/.test(onb) && /function coverOf/.test(onb) && onb.includes("data-swap"));
   ok("picker picks feed tsb_starter_shelf (home honours them)", onb.includes('set("tsb_starter_shelf", draft.picks.length ? draft.picks : buildShelf())') && appSrc.includes("tsb_starter_shelf"));
@@ -1135,7 +1135,7 @@ const C = window.TSB_COMMUNITY;
       const gd = rd("js/guide.js");
       ok("guide.js ships as a first-class module", gd.includes("window.TSB_GUIDE") && gd.includes("openGuide") && gd.includes("startTour"));
       ok("the tour is once per reader, skippable", gd.includes("tsb_tour_done") && gd.includes("skip the tour"));
-      ok("the guide lists every function with a real link", (gd.match(/h: "/g) || []).length >= 15 && gd.includes("index.html") && gd.includes("podcasts.html") && gd.includes("graveyard.html") && gd.includes("scan.html") && gd.includes("quotes.html") && gd.includes("chat.html"));
+      ok("the guide lists every function with a real link", (gd.match(/h: "/g) || []).length >= 15 && gd.includes("index.html") && gd.includes("audio.html") && gd.includes("graveyard.html") && gd.includes("scan.html") && gd.includes("quotes.html") && gd.includes("chat.html"));
       ok("the ? chip lives on home and opens the guide", rd("index.html").includes("tsbHelpChip") && rd("index.html").includes("TSB_GUIDE.openGuide"));
       ok("settings carries the plain-guide door", rd("settings.html").includes("index.html#guide"));
       ok("guide auto-opens on the #guide hash", gd.includes('location.hash === "#guide"'));
@@ -1144,7 +1144,7 @@ const C = window.TSB_COMMUNITY;
     /* --- v313 · the full walkthrough, swipe-to-clear, swipe-to-reply, grave depth --- */
     {
       const gd = rd("js/guide.js"), cm = rd("js/community.js"), css = rd("css/style.css");
-      const walkPages = ["index.html", "podcasts.html", "stories.html", "graveyard.html", "quotes.html", "chat.html", "notes.html", "deepdive.html", "login.html", "settings.html"];
+      const walkPages = ["index.html", "audio.html", "stories.html", "graveyard.html", "quotes.html", "chat.html", "notes.html", "deepdive.html", "login.html", "settings.html"];
       ok("the full tutorial ships: 21 hands-on stops across 10 pages, resumable", (gd.match(/p: "/g) || []).length === 21 && gd.includes('"tsb_walk"') && gd.includes('"tsb_walk_done"') && gd.includes("function walkGo"));
       ok("every walkthrough page loads guide.js", walkPages.every(pg => rd(pg).includes("js/guide.js")));
       ok("index.html loads guide.js exactly once", rd("index.html").split('<script src="js/guide.js').length === 2);
@@ -1181,14 +1181,14 @@ const C = window.TSB_COMMUNITY;
 
     /* --- v314 · WANT MORE: the shelf fetches its own next books --- */
     {
-      const disc = rd("js/ab-discovery.js"), pcst = rd("podcasts.html");
+      const disc = rd("js/ab-discovery.js"), pcst = rd("audio.html");
       ok("ab-discovery ships as a first-class module", disc.includes("window.TSB_ABMORE") && disc.includes("function serve"));
       ok("the starter pool is embedded and verified-shaped", (disc.match(/^\s*\["[a-z0-9_.-]+", "[^"]+", "[^"]+"\]/gm) || []).length >= 30);
       ok("every candidate must prove real mp3 chapters before it joins", disc.includes("/\\.mp3$/i.test(f.name"));
       ok("the pool refreshes from the live LibriVox search, offline falls back", disc.includes("advancedsearch.php") && disc.includes("archive.org/metadata/") && disc.includes("cb(POOL)"));
       ok("no second recording of a book the shelf already carries", disc.includes('"t:" +') && disc.includes("known[p[0]]"));
       ok("fetched books persist on the device and ride every reload", disc.includes('"tsb_ab_got"') && disc.includes("function boot()"));
-      ok("podcasts.html loads the module before its shelf paints", pcst.indexOf("ab-discovery.js") < pcst.indexOf("var AB = window.TSB_AUDIOBOOKS"));
+      ok("audio.html loads the module before its shelf paints", pcst.indexOf("ab-discovery.js") < pcst.indexOf("var AB = window.TSB_AUDIOBOOKS"));
       ok("WANT MORE sits where the shelf ends, with an honest fetching state", pcst.includes("abWant") && pcst.includes("FETCHING FROM LIBRIVOX"));
       ok("discovered covers degrade to a proper title block, not a broken img", pcst.includes("FRESH FROM LIBRIVOX"));
     }
@@ -1208,7 +1208,7 @@ const C = window.TSB_COMMUNITY;
 
     /* --- v316 · speed, endless shows, saved shows, the corner chip --- */
     {
-      const pcst = rd("podcasts.html"), sd = rd("js/show-discovery.js"), apv = rd("js/audioplayer.js"), gd = rd("js/guide.js"), mpv = rd("js/mindpick.js");
+      const pcst = rd("audio.html"), sd = rd("js/show-discovery.js"), apv = rd("js/audioplayer.js"), gd = rd("js/guide.js"), mpv = rd("js/mindpick.js");
       ok("the shelf warms itself: first screen's chapter lists prefetch", pcst.includes("function warmShelf()") && pcst.includes("TSB_AUDIO.fetchAudiobook(AB[bid]"));
       ok("a touch on PLAY fetches before the tap lands", pcst.includes('e.target.closest("[data-ab]")') && pcst.includes("pointerdown"));
       ok("the player exposes its cache so warming works", apv.includes("fetchAudiobook: fetchAudiobook"));
@@ -1242,7 +1242,7 @@ const C = window.TSB_COMMUNITY;
       ok("info pages stay open to everyone", g.includes("about\\.html|store\\.html|gold\\.html"));
       ok("our podcast is real audio, recorded, two hosts", pd.includes("TSB_PODCASTS.originals") && fsp.existsSync(pp.join(__dirname, "../assets/podcast/tsb-show-ep1-p1.mp3")) && fsp.existsSync(pp.join(__dirname, "../assets/podcast/tsb-show-ep5-p2.mp3")));
       ok("the player carries it: play, browse, restore", apv.includes("playOriginal: playOriginal") && apv.includes("originalBrowser") && apv.includes('"orig:"'));
-      ok("our show pins the shelf above every other show", rd("podcasts.html").includes("pc-show--orig") && rd("podcasts.html").includes("data-obrowse"));
+      ok("our show pins the shelf above every other show", rd("audio.html").includes("pc-show--orig") && rd("audio.html").includes("data-obrowse"));
       ok("the store keeps only honest offers", st.includes("no fake countdowns") && st.includes("WEEKEND SHEET PACK"));
       ok("the weekend bonus is real engine behavior", bt.includes("function weekendBonus") && bt.includes("weekend bonus on"));
       ok("the autopsy refuses to score a one-liner", rd("js/ideaaudit.js").includes("tooThin") && rd("js/ideaaudit.js").includes("TOO LITTLE TO AUTOPSY"));
@@ -1729,8 +1729,8 @@ const C = window.TSB_COMMUNITY;
     }
     const sw292 = rd292("sw.js");
     ok("service worker precaches ask-modes-data.js", sw292.includes('"./js/ask-modes-data.js"'));
-    ok("cache name and bootguard build both say 400", /CACHE_VERSION = "tsb-v405"/.test(sw292) && /var BUILD = "405";/.test(rd292("js/bootguard.js")));
-    ok("login and settings say Build tsb-v405", rd292("login.html").includes("Build tsb-v405") && rd292("settings.html").includes("Build tsb-v405"));
+    ok("cache name and bootguard build both say 409", /CACHE_VERSION = "tsb-v411"/.test(sw292) && /var BUILD = "411";/.test(rd292("js/bootguard.js")));
+    ok("login and settings say Build tsb-v411", rd292("login.html").includes("Build tsb-v411") && rd292("settings.html").includes("Build tsb-v411"));
     ok("about.html changelog documents v292 and the 8 modes", /log-item__ver">v292</.test(rd292("about.html")) && rd292("about.html").includes("8 modes"));
     ok("no page still carries an old ?v=291", !glob292.some(f => /\?v=29[12]\b/.test(rd292(f))), glob292.filter(f => /\?v=29[12]\b/.test(rd292(f))).join(",") || "clean");
 
@@ -1743,8 +1743,8 @@ const C = window.TSB_COMMUNITY;
     ok("css ships the modes sheet grid and dropped the strip", css292b.includes(".aq-mdgrid") && css292b.includes(".aq-chip--modes") && !css292b.includes(".aq-modechip"));
     const DASH_NEEDLES = [0x2014, 0x2013].map(c => String.fromCharCode(c))
       .concat(["&m" + "dash;", "&n" + "dash;", "&#8" + "212;", "&#8" + "211;", "&#x20" + "14;", "&#x20" + "13;"]);
-    const currentNewsCopy = (rd292("js/onboard.js").match(/var NEWS = \[[\s\S]*?\n  \];/) || [""])[0];
-    ok("v390 onboarding update cards use no em or en dashes", !!currentNewsCopy && DASH_NEEDLES.every(n => currentNewsCopy.indexOf(n) < 0));
+    const currentNewsCopy = (rd292("js/onboard.js").match(/function upLine\(\) \{[\s\S]*?\n  \}/) || [""])[0];
+    ok("v410: the one line on the update screen uses no em or en dashes", !!currentNewsCopy && DASH_NEEDLES.every(n => currentNewsCopy.indexOf(n) < 0));
   }
 
   /* ================= v303: the hands-free scroller is retired ================= */
@@ -1851,7 +1851,7 @@ const C = window.TSB_COMMUNITY;
     const ddJs = fsp.readFileSync(pp.join(__dirname, "../js/deepdive.js"), "utf8");
     ok("deep dives exist: six original chapter essays with a free sample", ddHtml.includes("deepdive-data.js") && (ddData.match(/id: "dd-/g) || []).length === 6 && ddData.includes("sample: true"));
     ok("deep dives are Gold\u2019s first real layer, sample free for everyone", ddJs.includes("sample") && ddJs.includes("isGold()") && ddJs.includes("UNLOCK WITH GOLD"));
-    ok("the audio room is real: shows on their own platforms + TSB originals", (() => { const pc = fsp.readFileSync(pp.join(__dirname, "../podcasts.html"), "utf8"); const pd = fsp.readFileSync(pp.join(__dirname, "../js/podcast-data.js"), "utf8"); return pc.includes("podcast-data.js") && (pd.match(/id: "/g) || []).length >= 9 && pc.includes("pcOriginals"); })());
+    ok("the audio room is real: shows on their own platforms + TSB originals", (() => { const pc = fsp.readFileSync(pp.join(__dirname, "../audio.html"), "utf8"); const pd = fsp.readFileSync(pp.join(__dirname, "../js/podcast-data.js"), "utf8"); return pc.includes("podcast-data.js") && (pd.match(/id: "/g) || []).length >= 9 && pc.includes("pcOriginals"); })());
     ok("founder access: every feature by email, honest free preview", fsp.readFileSync(pp.join(__dirname, "../js/paywall.js"), "utf8").includes("FOUNDER_EMAILS") && fsp.readFileSync(pp.join(__dirname, "../settings.html"), "utf8").includes("founderPreviewFree"));
     const sd = fsp.readFileSync(pp.join(__dirname, "../js/store-data.js"), "utf8");
     ok("the store keeps only what saves a reader money: no food, cabs or delivery", (sd.match(/id: "/g) || []).length === 100 && !sd.includes("swiggy-one") && !sd.includes("zomato-gold") && !sd.includes("uber-first"));
@@ -1872,7 +1872,7 @@ const C = window.TSB_COMMUNITY;
        ap.includes("continueCard") && ap.includes("playBook") && ap.includes("playDoc"));
     ok("the player keeps playing past the lockscreen: MediaSession + the engine keep-alive",
        ap.includes("mediaSession") && ap.includes("nexttrack") && ap.includes("setActionHandler"));
-    ["book.html","deepdive.html","stories.html","podcasts.html"].forEach(p =>
+    ["book.html","deepdive.html","stories.html","audio.html"].forEach(p =>
        ok("the player rides on " + p, rd302(p).includes("js/audioplayer.js")));
     const bk302 = rd302("js/book.js");
     ok("lesson LISTEN queues the whole book through the player",
@@ -1931,7 +1931,7 @@ const C = window.TSB_COMMUNITY;
     ok("the rulebook rides offline in the app shell", rd302("sw.js").includes('"./legal.html"'));
     // 8. v319 - the app opens like it is already on the phone
     ok("the player warms show feeds in idle time (tap = sound, not wait)",
-       rd302("js/audioplayer.js").includes("warmShow") && rd302("podcasts.html").includes("TSB_AUDIO.warmShow"));
+       rd302("js/audioplayer.js").includes("warmShow") && rd302("audio.html").includes("TSB_AUDIO.warmShow"));
     ok("the show cover travels light (jpg, not the 1MB png)",
        rd302("js/podcast-data.js").includes("tsb-show-cover.jpg") && !rd302("js/podcast-data.js").includes("tsb-show-cover.png"));
     ok("the offline shell no longer precaches the 24 quote wallpapers",
@@ -1965,8 +1965,8 @@ const C = window.TSB_COMMUNITY;
     // 12. v321 - the search bar and the words of the shows themselves
     const sd321 = rd302("js/show-discovery.js");
     ok("the show search bar exists: topic in, five verified shows out, five more on demand",
-       rd302("podcasts.html").includes('id="pcSearchIn"') && rd302("podcasts.html").includes('id="pcSearchGo"') &&
-       rd302("podcasts.html").includes('id="pcSearchMore"') && sd321.includes("searchMore"));
+       rd302("audio.html").includes('id="pcSearchIn"') && rd302("audio.html").includes('id="pcSearchGo"') &&
+       rd302("audio.html").includes('id="pcSearchMore"') && sd321.includes("searchMore"));
     ok("fetched shows carry their own feed's description, not one shared sentence",
        sd321.includes("fetchDesc") && sd321.includes("tsb_show_desc") && sd321.includes(":scope > description"));
     ok("about wears the folds: the lab and the stack tuck away",
@@ -1980,11 +1980,11 @@ const C = window.TSB_COMMUNITY;
     ok("the shelf learns: plays and hearts feed the taste engine",
        rd302("js/show-discovery.js").includes("function learn(") && rd302("js/audioplayer.js").includes("TSB_SHOWMORE.learn(show, 2)"));
     ok("the search flies: skeletons, stale-guard, recents",
-       rd302("podcasts.html").includes("pc-skel") && rd302("podcasts.html").includes("var my = ++flight;") && rd302("podcasts.html").includes("tsb_show_recent"));
+       rd302("audio.html").includes("pc-skel") && rd302("audio.html").includes("var my = ++flight;") && rd302("audio.html").includes("tsb_show_recent"));
     ok("no show-home exits anywhere",
-       !rd302("podcasts.html").includes("show home") && !rd302("js/audioplayer.js").includes("show home"));
+       !rd302("audio.html").includes("show home") && !rd302("js/audioplayer.js").includes("show home"));
     ok("boost only where it truly works - the LibriVox room",
-       !rd302("podcasts.html").includes("ap-bo") || true);
+       !rd302("audio.html").includes("ap-bo") || true);
     ok("feed fetches carry deadlines and a retry door",
        rd302("js/audioplayer.js").includes("fetchWithDeadline") && rd302("js/audioplayer.js").includes("tssRetry"));
     ok("the safari hunt: no optional-chaining, no bare catch anywhere",
@@ -2058,7 +2058,7 @@ const C = window.TSB_COMMUNITY;
     ok("the share sheet grows out of the tapped button",
        /sm-radial/.test(sm324) && /@keyframes smRadial/.test(css324));
     ok("soft-motion.js rides every page that has the bar, and the reader",
-       ["index.html", "book.html", "stories.html", "podcasts.html", "graveyard.html", "reader.html"].every(f => /js\/soft-motion\.js\?v=\d+/.test(rd324(f))));
+       ["index.html", "book.html", "stories.html", "audio.html", "graveyard.html", "reader.html"].every(f => /js\/soft-motion\.js\?v=\d+/.test(rd324(f))));
     console.log("== v324: translate sheet, reader, tune-up ==");
     ok("translate drops from the top, every language in its own script, with a finder",
        /className = "langsheet"/.test(lang324) && /langsheet__find/.test(lang324) && /lstile__native/.test(lang324) && /\.langsheet__card \{/.test(css324));
@@ -2132,9 +2132,9 @@ const C = window.TSB_COMMUNITY;
     ok("v326: parents get a door to story time from the first screen", ob.includes("data-kids") && ob.includes("kids.html"));
     ok("v326: Today greets by name and time of day, with a pick and a because-you row", /Good morning/.test(fj) && /Good evening/.test(fj) && /function todaysPick/.test(fj) && /Because you picked/.test(fj));
     ok("v326: voice search uses the browser speech recogniser and only shows when it exists", /webkitSpeechRecognition/.test(fj) && /function voiceSearch/.test(fj) && /SR \? /.test(fj));
-    ok("v326: a real You page with the reading year ring", /id="filmYou"/.test(you) && /function initYou/.test(fj) && /js\/film\.js\?v=405/.test(you));
+    ok("v326: a real You page with the reading year ring", /id="filmYou"/.test(you) && /function initYou/.test(fj) && /js\/film\.js\?v=411/.test(you));
     ok("v326: the tab bar is Today, Library, Listen, You", /"Today"/.test(bar) && /"Listen"/.test(bar) && /you\.html/.test(bar) && bar.includes('["home", "library", "audio", "you"]'));
-    ok("v326: film styles and script ride on the main pages", ["index.html", "book.html", "about.html", "gold.html", "podcasts.html", "reader.html", "kids.html", "stories.html", "settings.html"].every(f => rd326(f).includes("css/film.css?v=405") && rd326(f).includes("js/film.js?v=405")));
+    ok("v326: film styles and script ride on the main pages", ["index.html", "book.html", "about.html", "gold.html", "audio.html", "reader.html", "kids.html", "stories.html", "settings.html"].every(f => rd326(f).includes("css/film.css?v=411") && rd326(f).includes("js/film.js?v=411")));
     ok("v326: the worker precaches the film files and the You page", sw.includes('"./css/film.css"') && sw.includes('"./js/film.js"') && sw.includes('"./you.html"'));
     ok("v326: Gold goes dark and gold, with honest monthly and yearly prices", /html\.fv-gold body/.test(fc) && /#0E0C09/.test(fc) && rd326("gold.html").includes("₹99 for 30 days") && rd326("gold.html").includes("No auto-renewal"));
     ok("v326: dark mode is warm night, not pure black", /#15120E/.test(fc));
@@ -2147,7 +2147,7 @@ const C = window.TSB_COMMUNITY;
     const f2 = rd328("js/film2.js"), c2 = rd328("css/film2.css"), fj = rd328("js/film.js"), ap = rd328("js/audioplayer.js"), sw = rd328("sw.js");
     console.log("== v328: the film-quality pass ==");
     const rd358 = f => require("fs").readFileSync(require("path").join(__dirname, "..", f), "utf8");
-    ok("v328: film2 styles and script ride on the main pages", ["index.html", "book.html", "reader.html", "settings.html", "about.html", "login.html", "podcasts.html", "you.html"].every(f => rd328(f).includes("js/film2.js?v=405") && rd328(f).includes("css/film2.css?v=405")));
+    ok("v328: film2 styles and script ride on the main pages", ["index.html", "book.html", "reader.html", "settings.html", "about.html", "login.html", "audio.html", "you.html"].every(f => rd328(f).includes("js/film2.js?v=411") && rd328(f).includes("css/film2.css?v=411")));
     ok("v328: the worker precaches film2", sw.includes('"./css/film2.css"') && sw.includes('"./js/film2.js"'));
     ok("v359: ONE question a day: the flippable mind pick card in the Today stream, and mindpick draws no second card", /function mindPickHtml/.test(rd358("js/film.js")) && rd358("js/film.js").includes("html += mindPickHtml();") && !/TODAY, ONE QUESTION/.test(rd358("js/mindpick.js").split("function placeDaily")[1].split("return;")[0] || "") && /return;/.test(rd358("js/mindpick.js")));
     ok("v328: the player follows the spoken line, in the full player and the mini player", ap.includes("tsb:ap-line") && f2.includes("tsb:ap-line") && f2.includes("fp-line") && f2.includes("ap-line"));
@@ -2176,7 +2176,7 @@ const C = window.TSB_COMMUNITY;
     ok("v329: TSB_ED spines match the edition palette", Object.keys(last).every(id => ED[id] === enc(last[id].bg) + enc(last[id].fg) + enc(last[id].ac)));
     ok("v329: Originals keep their own house covers", eds.filter(e => e.keep).length >= 30);
     ok("v329: Today has a TheSmallBook Originals shelf", fj.includes("function originalsHtml") && fj.includes("TheSmallBook Originals") && c2.includes(".ft-orig"));
-    ok("v329: Today and Stories ask the same weekly prompt", fj.includes("TSB_WEEKLY.current()") && rd329("index.html").includes("js/weekly.js?v=405"));
+    ok("v329: Today and Stories ask the same weekly prompt", fj.includes("TSB_WEEKLY.current()") && rd329("index.html").includes("js/weekly.js?v=411"));
     ok("v329: onboarding builds four picks plus one Original, each with a reason, swappable", ob.includes("origPool") && ob.includes("whyOf") && ob.includes("swapPick"));
     ok("v329: translation waits behind a frosted card, then lifts in place", f2.includes("TSB_TXVEIL") && f2.includes("f-txcard") && f2.includes("tsb:tx-fail") && lg.includes("tsb:tx-fail"));
     ok("v329: Stories feed is rebuilt (weekly prompt, quiet cards, offline library shelf)", /class="cmpage fst"/.test(st) && st.includes("stPrompt") && st.includes("niceDate") && c2.includes("body.fst"));
@@ -2210,7 +2210,7 @@ const C = window.TSB_COMMUNITY;
     const R = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
     const gj = R("js/gold.js"), gp = R("js/goldpay.js"), gh = R("gold.html"), au = R("js/auth.js"), ob = R("js/onboard.js");
     const bar = R("js/bar.js"), f1 = R("js/film.js"), f2 = R("js/film2.js"), c2 = R("css/film2.css"), tts = R("js/tts-engine.js");
-    const pc = R("podcasts.html"), ap = R("js/audioplayer.js"), sw = R("sw.js");
+    const pc = R("audio.html"), ap = R("js/audioplayer.js"), sw = R("sw.js");
     const wh = R("supabase/functions/youpi-webhook/index.ts"), go = R("supabase/functions/gold-order/index.ts"), sq = R("supabase/sql/UPDATE-v331-payments-profiles.sql");
     ok("v331: Gold is read from the server only, no local or founder unlocks", gj.includes("gold_members?user_id=eq.") && !/localStorage\.setItem\(["']tsb_gold/.test(gj + gh + gp) && !/FOUNDER_EMAILS/.test(gj + gh + gp));
     ok("v331: checkout goes through TSB_GOLDPAY and server-priced orders", gp.includes("TSB_GOLDPAY") && gp.includes("gold-order") && gh.includes("TSB_GOLDPAY") && /gold_monthly/.test(go) && /gold_yearly/.test(go));
@@ -2261,7 +2261,7 @@ const C = window.TSB_COMMUNITY;
     ok("v334: Read turns the real 3D book to you, swings the cover open and the first page becomes the reader (transform, opacity and clip only)", f23.includes("v334 READ") && f23.includes("bkx-lid") && f23.includes("bkx-inside") && f23.includes("rotateY(-168deg)") && f23.includes("bkxRestore") && !/bkx[^\n]*\.style\.(width|height|left|top) *=/.test(f23.split("v334 READ")[1].split("SMOOTH TAPS")[0].replace('bk.style.cssText', '')));
     ok("v334: the reader is simply there when the page lands (no fade, no wait)", rdr3.includes('classList.add("bkx-in")') && !c23.includes("html.bkx-in body") && f23.includes("setTimeout(go, 1500)"));
     ok("v333: page changes cross fade (view transitions), off for reduced motion", c23.includes("@view-transition { navigation: auto; }") && c23.includes("@view-transition { navigation: none; }"));
-    ok("v333: every podcast, even a fetched one, gets its own artwork", ap3.includes("function artFor") && ap3.includes("itunes.apple.com/search") && ap3.includes("tsb_podart") && rd3("podcasts.html").includes("data-art-for"));
+    ok("v333: every podcast, even a fetched one, gets its own artwork", ap3.includes("function artFor") && ap3.includes("itunes.apple.com/search") && ap3.includes("tsb_podart") && rd3("audio.html").includes("data-art-for"));
     ok("v333: book requests survive a bad network (outbox and a mail fallback)", rq3.includes("tsb_rq_outbox") && rq3.includes("mailto:") && rq3.includes("FormData"));
     ok("v333: the Ask bar floats clear of the edge and the safe area", c23.includes("body.fask .aq-inputrow { padding: 8px 14px max(18px, calc(env(safe-area-inset-bottom) + 12px))"));
     ok("v333: the Ask page fits a 320px phone", c23.includes("body.fask #tsb-panel { grid-template-columns: minmax(0, 1fr)"));
@@ -2320,21 +2320,21 @@ const C = window.TSB_COMMUNITY;
     const sync6 = rd6("supabase/sql/UPDATE-v337-reading-sync.sql"), retire6 = rd6("supabase/sql/RETIRE-v337-WEEKLY-DIGEST.sql");
     ok("v336: the shelf is 600 books and 4,343 long lessons", djArr.length === 600 && djArr.reduce((n, b) => n + b.lessons.length, 0) === 4343 && djArr.filter(b => b.author === "Unknown").length === 50);
     ok("v336: every new long lesson is loadable on demand", ["the-attention-garden", "the-scout-mindset", "the-age-of-ai", "the-listening-bench"].every(function (id) { return fsp.existsSync(pp.join(__dirname, "../data/lessons/" + id + ".js")) && djArr.some(b => b.id === id && b.lessons.length >= 8); }));
-    ok("v336: Read adds a real visual map, including Atomic Habits one-percent compounding", rd6("js/book.js").includes("function lessonVisual") && rd6("js/book.js").includes("THE 1% CURVE") && rd6("js/book.js").includes("37× POTENTIAL") && rd6("css/style.css").includes(".lv--atomic"));
+    ok("v406: lesson cards carry no generated visual handle graphic", !rd6("js/book.js").includes("lessonVisual") && !rd6("js/book.js").includes("visual handle for this exact idea"));
     ok("v336: TheSmallBook Voice Model is an opt-in on-device model", vp.includes("TheSmallBook Voice Model") && vp.includes("navigator.storage.getDirectory") && vp.includes("thesmallbook-voice-model") && vp.includes("hi_IN-pratham-medium") && te.includes("function speakModel") && te.includes("function openVoiceModel"));
     ok("v336: the full player opens the exact same voice chooser", rd6("js/audioplayer.js").includes("apVoiceModel") && rd6("js/audioplayer.js").includes("openVoiceModel"));
-    ok("v336: tablet and desktop redraw as a reading desk", desk.includes("min-width: 700px") && desk.includes("min-width: 1024px") && desk.includes("#tsbBar.tsb-bar") && rd6("index.html").includes("desktop-v336.css?v=405"));
+    ok("v336: tablet and desktop redraw as a reading desk", desk.includes("min-width: 700px") && desk.includes("min-width: 1024px") && desk.includes("#tsbBar.tsb-bar") && rd6("index.html").includes("desktop-v336.css?v=411"));
     ok("v349: a reader who set the app up sees the banner and is never taken through setup again",
-       ob6.includes("var OB_V = 390") && ob6.includes("function alreadySetUp") && /if \(UPDATE\) return true;/.test(ob6) &&
+       ob6.includes("var OB_V = 393") && ob6.includes("function alreadySetUp") && /if \(UPDATE\) return true;/.test(ob6) &&
        /if \(alreadySetUp\(\)\) \{ set\("tsb_onboarded", true\); set\("tsb_onboard_v", OB_V\); return false; \}/.test(ob6) &&
        /if \(updating\) \{ save\(\); finish\(\); return; \}/.test(ob6) &&
        /function total\(\) \{ return updating \? 1 :/.test(ob6));
     ok("v349: the update card is the first slide, once, and it is personal",
-       ob6.includes('"WHAT IS NEW IN "') && ob6.includes("data-restart") && ob6.includes("function upLine") &&
+       ob6.includes('"WHAT IS NEW ') && ob6.includes("fo-up-row") && ob6.includes("data-restart") && ob6.includes("function upLine") &&
        ob6.includes('updating ? "Continue " + ARROW') && ob6.includes("WELCOME TO THESMALLBOOK"));
     ok("v336: People is visible with follow and message actions", st6.includes('data-tab="people">People</button>') && st6.includes("data-pfol") && st6.includes("dm.html?u="));
     ok("v337: daily phone push remains while the retired weekly email is safely disabled", lg6.includes("Daily phone note") && !lg6.includes("youDigestBtn") && sync6.includes("create table if not exists public.reading_state") && sync6.includes("own reading state update") && retire6.includes("cron.unschedule('tsb-weekly-digest')"));
-    ok("v337: every lesson has a varied visual handle, and Atomic Habits keeps its curve", rd6("js/book.js").includes("every lesson earns a compact visual model") && rd6("js/book.js").includes("lv--loop") && rd6("js/book.js").includes("THE 1% CURVE"));
+    ok("v406: the lesson visual generator is fully retired", !rd6("js/book.js").includes("lv--loop") && !rd6("js/book.js").includes("THE 1% CURVE"));
     ok("v337: a signed-in account syncs reading work but not device settings", rd6("js/auth.js").includes("function syncReadingState") && rd6("js/auth.js").includes("TABLE_STATE") && rd6("js/auth.js").includes("action-bar layout") && rd6("js/reader.js").includes("tsb_reader_pos_updated_"));
     ok("v337: reading-state migration and merge never wipe existing progress", !/drop\s+table|delete\s+from|truncate\s+table/i.test(sync6) && rd6("js/auth.js").includes("monotonic unions") && rd6("js/auth.js").includes("empty new device can never erase"));
     ok("v337: kids adds original stories and can open the private voice model", rd6("js/kids-data.js").includes("little-lamp") && rd6("js/kids-data.js").includes("mango-tree-promise") && rd6("js/kids.js").includes("TTS_ENGINE.openVoiceModel") && rd6("kids.html").includes("js/tts-engine.js"));
@@ -2482,7 +2482,7 @@ const C = window.TSB_COMMUNITY;
 
     const film390 = read390("js/film.js"), onboard390 = read390("js/onboard.js"), sw390 = read390("sw.js"), boot390 = read390("js/bootguard.js");
     ok("Today uses taste picks, never a locked Original, and keeps the lunch line out of the morning", film390.includes("TSB_TASTE.picks(6)") && film390.includes("lockedOriginal") && film390.includes("function mindPickIds") && !film390.includes("Had lunch?") && film390.includes("h < 12 ? \"The day has room for one small idea.\""));
-    ok("build 400 rotates caches and delivers refreshed update content once", sw390.includes("tsb-v405") && boot390.includes('var BUILD = "405"') && onboard390.includes("var OB_V = 390") && onboard390.includes("Shows keep their feed"));
+    ok("build 410 rotates caches and delivers refreshed update content once", sw390.includes("tsb-v411") && boot390.includes('var BUILD = "411"') && onboard390.includes("var OB_V = 393") && onboard390.includes("fo-up-row"));
   }
   {
     const { JSDOM } = require("jsdom");
@@ -2508,6 +2508,130 @@ const C = window.TSB_COMMUNITY;
     const queuedUserMessages = w.document.querySelectorAll("#tsb-msgs .aq-msg--user").length;
     ok("Ask keeps every question sent while lessons and failures load", queuedUserMessages === 2, "queued user messages: " + queuedUserMessages);
     dom.window.close();
+  }
+
+  /* ================= v406: accounts, one player, Kokoro, depth ================= */
+  {
+    console.log("== v406: account vault, spoken book restore, Kokoro, Listen, depth ==");
+    const rdA = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const authA = rdA("js/auth.js"), apA = rdA("js/audioplayer.js"), teA = rdA("js/tts-engine.js");
+    ok("v406: account work is parked per account, never shared on one device",
+       authA.includes("tsb_state_vault_") && authA.includes("function switchAccount") && authA.includes("function reconcileAccount") && authA.includes("adoptGuestVault"));
+    ok("v406: device comforts stay out of the account vault",
+       authA.includes("Device comforts (theme, action bar layout, text size)") && !/ACCOUNT_EXACT = \[[^\]]*tsb_theme/.test(authA));
+    ok("v406: listening state rides the same account snapshot",
+       authA.includes("function stateListen") && authA.includes("saved_episodes") && authA.includes("tsb_tts_pos_") && authA.includes("mergeListen"));
+    ok("v406: a spoken book session is restored parked, not shouting",
+       apA.includes('tsb_tts_session') && apA.includes("qc.restored = !autoB") && apA.includes("if (queue.restored)"));
+    ok("v406: kids gets the one shared player too", rdA("kids.html").includes("js/audioplayer.js?v=411"));
+    ok("v406: Kokoro English is a real voice choice and Hindi keeps Piper",
+       teA.includes("Kokoro English") && teA.includes("tts-kokoro.mjs") && teA.includes('if (choice === "kokoro") choice = "basic"') &&
+       fsp.existsSync(pp.join(__dirname, "../js/vendor/kokoro.web.js")) && fsp.existsSync(pp.join(__dirname, "../js/tts-kokoro.mjs")));
+    ok("v406: the Listen room explains an empty shelf instead of showing a blank",
+       rdA("audio.html").includes("The audiobook shelf could not load") && rdA("css/film2.css").includes("v406 · LISTEN"));
+    ok("v406: desktop motion is back on a spring, off for reduced motion",
+       rdA("css/desktop-v336.css").includes("v406 · DESKTOP MOTION REPAIR") && rdA("css/desktop-v336.css").includes("prefers-reduced-motion: no-preference") && rdA("css/desktop-v336.css").includes("translateX(3px)"));
+    ok("v406: the five thinnest books now carry real lessons",
+       ["the-great-derangement", "zen-mind-beginners-mind", "the-third-pillar", "the-intellectuals-and-society", "alchemy-rory-sutherland"].every(function (id) {
+         const t = rdA("data/lessons/" + id + ".js");
+         return t.split(/\s+/).length > 500;
+       }));
+    ok("v406: retired files stay retired",
+       !fsp.existsSync(pp.join(__dirname, "../admin.html")) && !fsp.existsSync(pp.join(__dirname, "../js/admin.js")) && !fsp.existsSync(pp.join(__dirname, "../js/smallscroller.js")) && !fsp.existsSync(pp.join(__dirname, "../js/freeshelf.js")));
+  }
+
+  /* ================= v407: one Listen room, voice in Settings, deeper books ================= */
+  {
+    console.log("== v407: one Listen room, voice in Settings, deeper books ==");
+    const rdB = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    ok("v408: audio.html is the rebuilt Listen room and the tab opens it",
+       rdB("js/bar.js").includes('url: "audio.html", lbl: "Listen"') && rdB("audio.html").includes("css/listen-apple.css") && rdB("audio.html").includes('id="pcAudiobooks"') && rdB("podcasts.html").includes('location.replace("audio.html"'));
+    ok("v408: the sitemap lists the rebuilt room",
+       rdB("sitemap.xml").includes("audio.html") && !rdB("sitemap.xml").includes("podcasts.html"));
+    ok("v407: Settings owns the listening voice, with honest download sizes",
+       rdB("settings.html").includes('id="voiceCard"') && rdB("settings.html").includes("about 90 MB") && rdB("settings.html").includes("Hindi keeps its own voice model"));
+    ok("v407: eight more thin books now carry real lessons",
+       ["tiny-experiments", "caste", "the-master-switch", "the-art-of-gathering", "the-perfection-trap", "the-warmth-of-other-suns", "the-art-of-community", "the-invention-of-nature"].every(function (id) {
+         return rdB("data/lessons/" + id + ".js").split(/\s+/).length > 650;
+       }));
+  }
+
+  /* ================= v408: audio.html rebuilt like a podcast app ================= */
+  {
+    console.log("== v408: audio.html rebuilt like a podcast app ==");
+    const rdC = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const auC = rdC("audio.html"), apC = rdC("css/listen-apple.css");
+    ok("v408: audio.html carries the whole room, not a redirect",
+       auC.includes('id="lnHold"') && auC.includes('id="pcShowList"') && auC.includes('id="pcOriginals"') && auC.includes('id="pcMyShelfList"') && auC.includes("js/audioroom.js") && !auC.includes('location.replace("podcasts.html"'));
+    ok("v408: the Apple style layer is smooth, snapping and reduced-motion safe",
+       apC.includes("scroll-snap-type: x mandatory") && apC.includes("cubic-bezier(.22,1,.36,1)") && apC.includes("prefers-reduced-motion: reduce") && apC.includes("@keyframes alRise"));
+    ok("v408: one room only, the old podcasts address forwards to it",
+       rdC("podcasts.html").includes('location.replace("audio.html"') && rdC("js/bar.js").includes('url: "audio.html", lbl: "Listen"'));
+  }
+
+  /* ================= v409: the room builds itself ================= */
+  {
+    console.log("== v409: the room builds itself ==");
+    const rdD = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const auD = rdD("audio.html"), lfD = rdD("js/listen-feed.js"), arD = rdD("js/audioroom.js"),
+          sdD = rdD("js/show-discovery.js"), apD = rdD("js/audioplayer.js"), au9 = rdD("js/auth.js"),
+          obD = rdD("js/onboard.js"), dskD = rdD("css/desktop-v336.css"), filmD = rdD("css/film.css");
+    ok("v409: audio.html loads the self-building room engine",
+       auD.includes("js/listen-feed.js?v=411") && auD.includes('id="lnDaily"') && auD.includes('id="lnSimilar"') && auD.includes("data-jump=\"lnDaily\""));
+    ok("v409: the room fetches fresh audiobooks and shows daily into a dated shelf",
+       lfD.includes("TSB_LISTEN_FEED") && lfD.includes("tsb_listen_daily") && lfD.includes("TSB_ABMORE.searchTopic") && lfD.includes("TSB_SHOWMORE.fresh") && lfD.includes("refreshDaily: ensureDaily"));
+    ok("v409: taste learns from plays, searches and saves, ranked terms first",
+       lfD.includes("function learn(sig, weight)") && lfD.includes("function topTerms") && lfD.includes("tsb_listen_taste") && lfD.includes("noteSearch") && lfD.includes("noteSave") && apD.includes("learnPlay(queue)"));
+    ok("v409: similar shows follow hosts, genres, and your taste, capped at six",
+       sdD.includes("function similar(") && sdD.includes("function fresh(") && lfD.includes("TSB_SHOWMORE.similar") && lfD.includes("savedSet"));
+    ok("v409: podcast search reaches the entire directory, not just the seed shelf",
+       auD.includes("function liveAudioSearch") && auD.includes("SHOWS MATCHING") && auD.includes("data-liveplay-feed") && auD.includes("data-livebrowse"));
+    ok("v409: everything saved waits on the shelf and plays from it",
+       lfD.includes('data-dplay-feed') && lfD.includes("playFeed") && lfD.includes("playAudiobook") && lfD.includes("TSB.bookmarks"));
+    ok("v409: listening taste and the fetched shelf travel with the account",
+       au9.includes('"tsb_listen_taste"') && au9.includes("shelf_shows") && au9.includes("shelf_books") && au9.includes("listen_taste") && au9.includes("function mergeListen"));
+    ok("v409: Start here carries the bigger art and a reason from your taste",
+       arD.includes("ln-hold__why") && arD.includes("function firstBook()") && arD.includes("grows daily") && arD.includes("ln-hold__in--start"));
+    ok("v409: tablets stop paying for glass while scrolling",
+       dskD.includes("v409 \u00b7 TABLET SCROLL") && dskD.includes("backdrop-filter: none !important") && dskD.includes("overscroll-behavior: none"));
+    ok("v409: dark mode paints the page canvas dark, not cream",
+       filmD.includes("html.film.dark { background: #15120E; }") && rdD("css/style.css").includes("html.dark {\nbackground: #16130e;"));
+    ok("v409: the update screen finally shows its book fan",
+       obD.includes("var OB_V = 393") && obD.includes("fo-up-row") && obD.includes("TSB_BUILD || OB_V") && obD.includes("fo-upbk"));
+    ok("v409: eight more thin books carry full lessons in both stores",
+       ["working-backwards", "lost-connections", "the-gene"].every(function (id) {
+         return rdD("data/lessons/" + id + ".js").split(/\s+/).length > 650 && rdD("js/data-full.js").includes(id);
+       }) && lfD.includes("v409"));
+  }
+
+  /* ================= v410: simple update screen, one ecosystem ================= */
+  {
+    console.log("== v410: simple update screen, one ecosystem ==");
+    const rdE = (f) => fsp.readFileSync(pp.join(__dirname, "../" + f), "utf8");
+    const obE = rdE("js/onboard.js"), taE = rdE("js/taste.js"), apE = rdE("js/audioplayer.js"),
+          lfE = rdE("js/listen-feed.js"), bkE = rdE("js/book.js"), fm2E = rdE("css/film2.css");
+    ok("v410: the update screen is one calm screen, books in a straight row",
+       obE.includes("fo-up-row") && obE.includes('"fo-upbk"') && !obE.includes("fo-news") && !obE.includes("var NEWS") && fm2E.includes("v410 \u00b7 THE UPDATE SCREEN, MADE SIMPLE") && fm2E.includes("align-items: flex-end"));
+    ok("v410: every play signals the one taste profile, not a page notebook",
+       apE.includes("TSB_TASTE.signal") && apE.includes('kind: "listen"') && taE.includes("function signal(o)") && taE.includes("function topWords(n)"));
+    ok("v410: Listen learns into the ledger and seeds from what was read",
+       lfE.includes("TSB_TASTE.signal") && lfE.includes("TSB_TASTE.topWords(3)") && taE.includes("tsb_listen_taste"));
+    ok("v410: opening and saving a book are recorded signals",
+       bkE.includes('TSB_TASTE.note(book.id, "open")') && bkE.includes('TSB_TASTE.note(book.id, "save")') && rdE("book.html").includes("js/taste.js") && rdE("audio.html").includes("js/taste.js"));
+    ok("v410: a library search teaches the same ledger",
+       rdE("js/app.js").includes('kind: "search"') && taE.includes("search: 0.35"));
+    ok("v410: first-load signals survive the account vault's first decision",
+       rdE("js/auth.js").includes('parkAccount("guest")') && rdE("js/auth.js").includes("first identity decision"));
+    ok("v410: listened and searched words steer book taste in the model",
+       taE.includes("wordBag") && taE.includes("lift = Math.min(0.5") && taE.includes("signal: signal, topWords: topWords"));
+  }
+
+  /* ================= v411: the simple screen fills the phone ================= */
+  {
+    console.log("== v411: the simple screen fills the phone ==");
+    const fmF = fsp.readFileSync(pp.join(__dirname, "../css/film2.css"), "utf8");
+    ok("v411: update screen composes full height, action anchored at the bottom",
+       fmF.includes("v411 \u00b7 FILL THE SCREEN, SIMPLY") && fmF.includes(".fo-up .fo-foot { margin-top: auto !important; }") && fmF.includes("width: 104px !important; height: 156px !important"));
   }
 
   console.log("RESULT: " + PASS + " passed, " + FAIL + " failed");
@@ -2601,22 +2725,22 @@ const C = window.TSB_COMMUNITY;
   console.log("== v400: the version, the bar, the room ==");
 
   const boot4 = rd4("js/bootguard.js");
-  ok("v400: one constant owns the build number", /var BUILD = "405";/.test(boot4) && /function stampBuild/.test(boot4));
+  ok("v400: one constant owns the build number", /var BUILD = "411";/.test(boot4) && /function stampBuild/.test(boot4));
   ok("v400: anything marked is stamped, so a page cannot print a stale build",
      boot4.indexOf("data-tsb-build") > 0 && boot4.indexOf("tsb-v[0-9]{3}") > 0);
 
   const about4 = rd4("about.html");
   ok("v400: About prints the latest build in three places",
-     about4.indexOf("You are on the latest build, tsb-v405") > 0 &&
-     about4.indexOf("Latest build: tsb-v405") > 0 &&
-     about4.indexOf("Build tsb-v405") > 0);
+     about4.indexOf("You are on the latest build, tsb-v411") > 0 &&
+     about4.indexOf("Latest build: tsb-v411") > 0 &&
+     about4.indexOf("Build tsb-v411") > 0);
   ok("v400: the changelog leads with this build, not with v361",
      /log-item__ver">v400</.test(about4) && /log-item__ver">v399</.test(about4) &&
      about4.indexOf("Build 400:") > 0 && about4.indexOf('log-item__ver">v361</') < 0);
   ok("v400: Legal and Settings print the same build",
-     rd4("legal.html").indexOf("Build tsb-v405") > 0 &&
-     rd4("settings.html").indexOf("Build tsb-v405") > 0 &&
-     rd4("login.html").indexOf("Build tsb-v405") > 0);
+     rd4("legal.html").indexOf("Build tsb-v411") > 0 &&
+     rd4("settings.html").indexOf("Build tsb-v411") > 0 &&
+     rd4("login.html").indexOf("Build tsb-v411") > 0);
 
   /* the selection used to be a pill behind the icon alone */
   ok("v400: the yellow selection wraps the icon AND the label",
@@ -2631,10 +2755,10 @@ const C = window.TSB_COMMUNITY;
 
   /* the room */
   const room4 = rd4("js/audioroom.js");
-  const pods4 = rd4("podcasts.html");
+  const pods4 = rd4("audio.html");
   ok("v400: the room has a front door, a room line and a jump bar",
      pods4.indexOf('id="lnHold"') > 0 && pods4.indexOf('id="lnRoomLine"') > 0 &&
-     pods4.indexOf('id="lnJump"') > 0 && pods4.indexOf("js/audioroom.js?v=405") > 0);
+     pods4.indexOf('id="lnJump"') > 0 && pods4.indexOf("js/audioroom.js?v=411") > 0);
   ok("v400: the door continues a real session, it does not invent one",
      /continueCard\(\)/.test(room4) && /id="lnResume"/.test(room4) && /TSB_AUDIO\.resume\(\{ open: true \}\)/.test(room4));
   ok("v400: with nothing played yet the door starts the first book on the shelf",

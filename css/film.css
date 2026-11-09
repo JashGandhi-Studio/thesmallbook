@@ -17,6 +17,8 @@ html.dark {
 --f-line: #2C2620; --f-yelSoft: #3A2F12;
 --f-sh: 0 18px 40px -18px rgba(0, 0, 0, .6); --f-sh-sm: 0 10px 24px -14px rgba(0, 0, 0, .6);
 }
+html.film { background: var(--f-paper); }
+html.film.dark { background: #15120E; }
 html.film body { background: var(--f-paper) !important; color: var(--f-ink); }
 html.film .ticker { display: none !important; }
 html.film ::selection { background: var(--f-yelSoft); color: var(--f-ink); }

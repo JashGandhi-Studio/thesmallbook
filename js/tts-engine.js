@@ -324,6 +324,7 @@ window.TTS_ENGINE = (function () {
     try {
       var c = localStorage.getItem("tsb_voice_model") || "";
       if (c === "plus" && !goldVoice()) return storedChoice === "basic" ? "basic" : "";
+      if (c === "kokoro") return "kokoro";
       if (c === "basic" || c === "plus") return c;
       /* v346: the device said a model is here - that is the choice */
       if (storedChoice === "plus" && !goldVoice()) return "";
@@ -331,8 +332,8 @@ window.TTS_ENGINE = (function () {
     } catch (e) { return storedChoice || ""; }
   }
   function setModelChoice(c) {
-    try { localStorage.setItem("tsb_voice_model", c === "plus" ? "plus" : c === "basic" ? "basic" : ""); } catch (e) {}
-    storedChoice = c === "plus" ? "plus" : c === "basic" ? "basic" : "";
+    try { localStorage.setItem("tsb_voice_model", c === "plus" ? "plus" : c === "basic" ? "basic" : c === "kokoro" ? "kokoro" : ""); } catch (e) {}
+    storedChoice = c === "plus" ? "plus" : c === "basic" ? "basic" : c === "kokoro" ? "kokoro" : "";
   }
   /* ============================================================
      v346 · A DOWNLOADED VOICE IS THE DEFAULT VOICE
@@ -355,6 +356,12 @@ window.TTS_ENGINE = (function () {
       w.forEach(function (fn) { try { fn(v); } catch (e) {} });
       return v;
     };
+    var savedK = ""; try { savedK = localStorage.getItem("tsb_voice_model") || ""; } catch (eK) {}
+    if (savedK === "kokoro") {
+      var kReady = false; try { kReady = localStorage.getItem("tsb_kokoro_ready") === "1"; } catch (eK2) {}
+      if (kReady) { storedChoice = "kokoro"; return Promise.resolve(finish("kokoro")); }
+      setModelChoice(""); storedChoice = ""; return Promise.resolve(finish(""));
+    }
     return getModelApi().then(function (api) {
       return api.status().then(function (all) {
         var lang = modelLang(currentLang()) || "en";
@@ -389,7 +396,7 @@ window.TTS_ENGINE = (function () {
   }
   function modelVoiceName() {
     var c = modelChoice();
-    return c === "plus" ? "TheSmallBook Voice Model Plus" : c === "basic" ? "TheSmallBook Voice Model" : "Phone voice";
+    return c === "kokoro" ? "Kokoro English" : c === "plus" ? "TheSmallBook Voice Model Plus" : c === "basic" ? "TheSmallBook Voice Model" : "Phone voice";
   }
   function playModelBlob(blob, text, speedV, done) {
     var u = URL.createObjectURL(blob), audio = new Audio();
@@ -502,11 +509,27 @@ window.TTS_ENGINE = (function () {
       }).then(function () { clearFirst(); sourceDone = true; if (!paused) pump(); }).catch(function () { clearFirst(); sourceDone = true; if (!heard) finish(false); else if (!paused) pump(); });
     });
   }
+  /* v406 · Kokoro speaks English. It is the best quality voice we can
+     run on a phone with no server. Hindi keeps the Piper model, which
+     Kokoro cannot pronounce. */
+  function speakKokoro(text, speedV, keep) {
+    provider = "model";
+    var ready = false; try { ready = localStorage.getItem("tsb_kokoro_ready") === "1"; } catch (e) {}
+    if (!ready) return Promise.resolve({ ok: false, heard: 0, missing: true });
+    return import("./tts-kokoro.mjs?v=411").then(function (m) { return m.kokoroSpeak(text, speedV || 1.08); }).then(function (blob) {
+      return new Promise(function (resolve) {
+        if (keep !== gen || !playing) { resolve({ ok: false, heard: 0 }); return; }
+        playModelBlob(blob, text, speedV, function (ok) { if (ok) modelPlayed = true; resolve({ ok: !!ok, heard: ok ? 1 : 0 }); });
+      });
+    }).catch(function () { return { ok: false, heard: 0 }; });
+  }
   function speakModel(text, lang, speedV) {
     var choice = modelChoice(), ml = modelLang(lang);
     if (!choice || !ml) return Promise.resolve(false);
     provider = "model";
     var keep = gen;
+    if (choice === "kokoro" && ml === "en") return speakKokoro(text, speedV, keep);
+    if (choice === "kokoro") choice = "basic";
     return getModelApi().then(function (api) {
       return api.status().then(function (all) {
         var row = all.filter(function (x) { return x.tier === choice && x.lang === ml; })[0];
@@ -635,7 +658,7 @@ window.TTS_ENGINE = (function () {
       var allowed = tier !== "plus" || goldVoice(), on = modelChoice() === tier;
       return '<button data-vm-tier="' + tier + '" ' + (allowed ? "" : "disabled") + ' style="width:100%;margin-top:8px;padding:14px;text-align:left;border:1px solid ' + (on ? '#d6ab18' : '#e7dfd0') + ';border-radius:16px;background:' + (on ? '#fff4c6' : '#fff') + ';color:#16130f;font:600 14px Space Grotesk,system-ui;cursor:' + (allowed ? 'pointer' : 'default') + '"><b>' + label + '</b><small style="display:block;margin-top:3px;font:500 12px Space Grotesk,system-ui;color:#6e6658">' + note + '</small></button>';
     }
-    opts.innerHTML = row("basic", "TheSmallBook Voice Model", "Warm on-device voice · English and Hindi") + row("plus", "TheSmallBook Voice Model Plus", goldVoice() ? "Gold voice · richer detail, downloaded only when you choose" : "Gold voice · available with Gold") + (goldVoice() ? '<div data-plus-voices style="margin-top:8px"></div>' : "");
+    opts.innerHTML = row("basic", "TheSmallBook Voice Model", "Warm on-device voice · English and Hindi") + row("plus", "TheSmallBook Voice Model Plus", goldVoice() ? "Gold voice · richer detail, downloaded only when you choose" : "Gold voice · available with Gold") + (lang === "en" ? row("kokoro", "Kokoro English", "Best quality English voice · one larger download, then it works offline on this device") : "") + (goldVoice() ? '<div data-plus-voices style="margin-top:8px"></div>' : "");
     if (goldVoice()) getModelApi().then(function(api){ var host=d.querySelector("[data-plus-voices]"); if(!host) return; host.innerHTML=(api.PLUS_VOICES[lang]||[]).map(function(v){return '<button type="button" data-plus-voice="'+v.id+'" style="margin:5px 5px 0 0;border:1px solid #e7dfd0;border-radius:999px;padding:7px 10px;background:#fff;color:#16130f;font:600 12px Space Grotesk,system-ui;cursor:pointer">'+v.name+'</button>';}).join(""); }).catch(function(){});
     d.addEventListener("click", function (e) {
       if (e.target.closest("[data-vm-phone]")) { voiceBusy = false; setModelChoice(""); skipVoiceFor(30); finishVoice(false); return; }
@@ -652,6 +675,24 @@ window.TTS_ENGINE = (function () {
       var tier = b.getAttribute("data-vm-tier"); b.disabled = true; b.querySelector("small").textContent = "Checking this device…";
       /* v356: from the first tap to the finished file, nothing speaks */
       voiceBusy = true;
+      if (tier === "kokoro") {
+        import("./tts-kokoro.mjs?v=411").then(function (m) {
+          return m.loadKokoro(function (pr) {
+            if (pr.phase === "model" && pr.total) b.querySelector("small").textContent = "Downloading " + Math.min(99, Math.round(pr.loaded / pr.total * 100)) + "%";
+            else b.querySelector("small").textContent = "Making it available offline…";
+          });
+        }).then(function () {
+          setModelChoice("kokoro");
+          b.querySelector("small").textContent = "Ready on this device";
+          if (window.TSB && TSB.toast) try { TSB.toast("Kokoro English is ready. It reads from the next line."); } catch (e2) {}
+          voiceBusy = false;
+          setTimeout(function () { finishVoice(true); }, 250);
+        }).catch(function () {
+          voiceBusy = false;
+          b.disabled = false; b.querySelector("small").textContent = "Could not download. Try again when online.";
+        });
+        return;
+      }
       getModelApi().then(function (api) { return api.status().then(function (a) { var x = a.filter(function (z) { return z.tier === tier && z.lang === lang; })[0]; if (x && x.stored) return null; return api.download(tier, lang, function (p) { if (p.phase === "model" && p.total) b.querySelector("small").textContent = "Downloading " + Math.min(99, Math.round(p.loaded / p.total * 100)) + "%"; else if (p.phase === "engine") b.querySelector("small").textContent = "Making it available offline…"; }); }); }).then(function () {
         setModelChoice(tier); b.querySelector("small").textContent = "Ready on this device";
         if (window.TSB && TSB.toast) try { TSB.toast("Voice ready. It reads from the next line."); } catch (e2) {}
@@ -671,6 +712,11 @@ window.TTS_ENGINE = (function () {
     /* A phone voice remains the only possible route for languages for which
        this on-device model has no pronunciation model yet. */
     if (!ml) return Promise.resolve(true);
+    if (modelChoice() === "kokoro") {
+      var kHere = false; try { kHere = localStorage.getItem("tsb_kokoro_ready") === "1"; } catch (eK3) {}
+      if (kHere) return Promise.resolve(true);
+      return new Promise(function (resolve) { openVoiceModel("kokoro", resolve); });
+    }
     return getModelApi().then(function (api) { return api.status(); }).then(function (all) {
       var choice = modelChoice(), stored = function (tier) { var r = all.filter(function (x) { return x.tier === tier && x.lang === ml; })[0]; return !!(r && r.stored); };
       if (choice && stored(choice)) return true;

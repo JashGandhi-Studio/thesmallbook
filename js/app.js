@@ -223,6 +223,18 @@
   /* FIND IT button + Enter key → glide down to the filtered shelf */
   const searchGo = document.getElementById("searchGo");
   if (searchGo) searchGo.addEventListener("click", smoothScrollToShelf);
+  /* v410: what a reader searches for is taste too; one settled
+     query teaches the same ledger Listen reads from */
+  let tsbSearchTimer = 0, tsbSearchLast = "";
+  searchInput.addEventListener("input", () => {
+    clearTimeout(tsbSearchTimer);
+    tsbSearchTimer = setTimeout(() => {
+      const q = (searchInput.value || "").trim();
+      if (q.length < 3 || q.toLowerCase() === tsbSearchLast) return;
+      tsbSearchLast = q.toLowerCase();
+      try { if (window.TSB_TASTE && TSB_TASTE.signal) TSB_TASTE.signal({ title: q, kind: "search" }); } catch (e) {}
+    }, 900);
+  });
   searchInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") { e.preventDefault(); smoothScrollToShelf(); }
   });

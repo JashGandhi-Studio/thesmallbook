@@ -2982,3 +2982,101 @@ body.tsb-ap-open .ap-backdrop.fp .ap-card {
 /* v404: the sidebar brand sign lives in the bar, hidden wherever the bar
    is still the phone's bottom bar. */
 .tsb-bar__brand { display: none; }
+
+/* ============================================================
+   v406 · LISTEN, FINISHED LIKE A PODCAST APP
+   Big artwork, calm rows, one obvious play per card. The room
+   reads top to bottom: continue, for you, audiobooks, shows,
+   deep dives. Nothing shouts except the play button.
+   ============================================================ */
+html.film .pc-h2 {
+  font: 600 25px/1.12 Newsreader, Georgia, serif !important;
+  letter-spacing: -0.01em;
+}
+html.film .pc-sub { font-size: 13.5px !important; line-height: 1.5 !important; max-width: 62ch; }
+html.film .pc-ab__card {
+  border-radius: 20px !important;
+  transition: transform .28s cubic-bezier(.22,1,.36,1), box-shadow .28s cubic-bezier(.22,1,.36,1);
+}
+html.film .pc-ab__cover { border-radius: 16px !important; }
+html.film .pc-show {
+  border-radius: 18px !important;
+  transition: transform .28s cubic-bezier(.22,1,.36,1), box-shadow .28s cubic-bezier(.22,1,.36,1);
+}
+html.film .pc-ab__empty {
+  grid-column: 1 / -1;
+  display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
+  background: var(--f-card, #FFFDF8); border: 1px solid var(--line, #E7DFD0);
+  border-radius: 20px; padding: 20px;
+  font: 500 13.5px/1.5 var(--f-sans, "Space Grotesk", system-ui);
+  color: var(--f-mu, #6E6658);
+}
+html.film .pc-ab__empty b { font: 700 16px/1.25 var(--f-sans, "Space Grotesk", system-ui); color: var(--f-ink, #16130F); }
+html.film .pc-ab__empty button {
+  margin-top: 6px; border: 0; border-radius: 999px; padding: 11px 18px;
+  background: var(--f-yel, #FFC800); color: #16130F;
+  font: 700 13px var(--f-sans, "Space Grotesk", system-ui); cursor: pointer;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  html.film .pc-ab__card:hover, html.film .pc-show:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 26px 44px -26px rgba(30, 25, 15, .38) !important;
+  }
+}
+@media (max-width: 699px) {
+  html.film .pc-h2 { font-size: 23px !important; }
+  html.film .pc-ab__card b { font-size: 15px !important; }
+}
+
+/* ============================================================
+   v410 · THE UPDATE SCREEN, MADE SIMPLE
+   The fan is retired: rotated, overlapping, clipped covers read
+   as noise on a small screen. Three books now stand in one
+   straight row, same size, same baseline, honest gaps, and the
+   screen carries one headline and one line. Nothing else.
+   ============================================================ */
+.fo-up .fo-up-row {
+  display: flex; align-items: flex-end; justify-content: center;
+  gap: 16px; margin: 30px auto 6px; padding: 0 24px; width: 100%;
+}
+.fo-up .fo-upbk {
+  position: static !important; flex: 0 0 auto;
+  width: 92px !important; height: 138px !important;
+  border-radius: 5px 10px 10px 5px; overflow: hidden;
+  box-shadow: 0 20px 32px -16px rgba(0, 0, 0, .75), inset 3px 0 0 rgba(255, 255, 255, .14);
+  animation: foRise410 .7s cubic-bezier(.22, 1, .36, 1) backwards;
+}
+.fo-up .fo-upbk:nth-child(2) { animation-delay: .08s; }
+.fo-up .fo-upbk:nth-child(3) { animation-delay: .16s; }
+.fo-up .fo-upbk img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@keyframes foRise410 { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (max-height: 700px) {
+  .fo-up .fo-upbk { width: 76px !important; height: 114px !important; }
+  .fo-up .fo-up-row { margin-top: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fo-up .fo-upbk { animation: none; }
+}
+
+/* ============================================================
+   v411 · FILL THE SCREEN, SIMPLY (Apple's first impression)
+   The simple screen from 410 sat in the top half and left the
+   bottom of the phone empty. Now the screen is composed the
+   way Apple composes its first screens: kicker at the top,
+   books large in the upper middle with air around them, the
+   headline under them, and the action anchored to the bottom
+   of the screen. Same five elements, nothing added.
+   ============================================================ */
+.fo-s0.fo-up {
+  justify-content: flex-start !important;
+  padding-left: 20px !important; padding-right: 20px !important;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 30px) !important;
+}
+.fo-up .fo-up-row { margin-top: clamp(34px, 8vh, 84px) !important; gap: 14px !important; }
+.fo-up .fo-upbk { width: 104px !important; height: 156px !important; }
+.fo-up .fo-h1 { margin-top: clamp(30px, 6vh, 56px) !important; font-size: clamp(34px, 9.2vw, 46px) !important; }
+.fo-up .fo-foot { margin-top: auto !important; }
+@media (max-height: 700px) {
+  .fo-up .fo-upbk { width: 84px !important; height: 126px !important; }
+  .fo-up .fo-up-row { margin-top: 22px !important; }
+}

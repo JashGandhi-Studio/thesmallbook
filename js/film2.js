@@ -431,7 +431,7 @@
      4 · THE LISTEN ROOM: continue, in Hindi, spoken by the app, little ears
      ========================================================================== */
   function listenRoom() {
-    if (page !== "podcasts.html") return;
+    if (page !== "audio.html" && page !== "podcasts.html") return;
     var hero = $(".pc-hero"); if (!hero || $("#fpRoom")) return;
     var AB = window.TSB_AUDIOBOOKS || {}, room = el("section", "fr");
     room.id = "fpRoom";
@@ -1022,7 +1022,7 @@
     var fab = el("div", "fab");
     var inside = [
       [AIC.book, "The library", "Every book, cracked open into the few lessons that matter.", "index.html#library"],
-      [AIC.ear, "Listen", "Every lesson read aloud" + (nab ? ", plus " + nab + " full audiobooks" : "") + ", even in Hindi.", "podcasts.html"],
+      [AIC.ear, "Listen", "Every lesson read aloud" + (nab ? ", plus " + nab + " full audiobooks" : "") + ", even in Hindi.", "audio.html"],
       [AIC.globe, "Your language", "Read in " + langs + " languages, each in its own script.", "settings.html"],
       [AIC.chat, "Ask the books", "Ask a question, get an answer from the books, with the page it came from.", "chat.html"],
       [AIC.skull, "The Graveyard", "Real companies and empires that failed, and the one lesson each left.", "graveyard.html"],

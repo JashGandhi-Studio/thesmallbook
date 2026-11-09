@@ -32,7 +32,7 @@
      rhythm goes straight into the app on every future open and every future
      update. A new version may show a quiet "what is new" card, and that card
      never leads back into the four screens. */
-  var OB_V = 390;
+  var OB_V = 393;
   function alreadySetUp() {
     try { if (get("tsb_onboarded", false)) return true; } catch (e) {}
     try {
@@ -229,14 +229,6 @@
   }
 
   /* ---------- screens ---------- */
-  var NEWS = [
-    ['<path d="M12 3v18"/><path d="M5 8h14"/><path d="M5 16h14"/>',
-      "Your choices shape Today", "Recommendations learn from books you open, finish, save and highlight."],
-    ['<path d="M3 14v-3a9 9 0 0 1 18 0v3"/><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="17" y="12" width="4" height="9" rx="1"/>',
-      "Shows keep their feed", "Podcast search carries each show's RSS link through to the player."],
-    ['<path d="M5 12h14"/><path d="M12 5l7 7-7 7"/>',
-      "Fewer dropped questions", "The Reader receives early chapter text, and Ask queues questions while the library loads."],
-  ];
   function upLine() {
     var mind = [];
     try { var m = get("tsb_mind", null); if (Array.isArray(m)) mind = m; } catch (e) {}
@@ -248,24 +240,19 @@
   function screen(i) {
     try { document.body.classList.toggle("fo-updating", !!updating); } catch (e) {}
     if (i === -1) {
-      var upIds = UPBOOKS.slice(0, 5);
-      while (upIds.length < 5) { var extra = FAN[upIds.length % FAN.length]; if (upIds.indexOf(extra) < 0) upIds.push(extra); else break; }
-      var upBooks = upIds.map(function (id, k) { return bookEl(byId(id), 92, 138, "fo-upb fo-upb" + k); }).join("");
+      /* v410: one calm screen. Three books standing in a straight,
+         aligned row, one headline, one line, one button. Nothing
+         rotated, nothing clipped, nothing competing for the eye. */
+      var upBooks = UPBOOKS.slice(0, 3).map(function (id) { return bookEl(byId(id), 92, 138, "fo-upbk"); }).join("");
       return '<section class="fo-s fo-s0 fo-up fo-wlc">' +
-        '<div class="lw__stage" aria-hidden="true">' +
-          '<div class="lw__pips"><i></i><i></i><i></i></div>' +
-          '<div class="lw__pip">' + (window.TSB_PIP ? TSB_PIP("pip--lg") : "") + "</div>" +
-        "</div>" +
-        '<div class="fo-upk">' + (updating ? "WHAT IS NEW IN " + esc(String(OB_V)) : "WELCOME TO THESMALLBOOK") + '</div>' +
-        (total() > 1 ? '<div class="fo-upstep">1 of ' + total() + "</div>" : "") +
+        '<div class="fo-up-sky" aria-hidden="true"><i></i><i></i></div>' +
+        '<div class="fo-upk">' + (updating ? "WHAT IS NEW \u00b7 BUILD " + esc(String(window.TSB_BUILD || OB_V)) : "WELCOME TO THESMALLBOOK") + '</div>' +
+        (upBooks ? '<div class="fo-up-row" aria-hidden="true">' + upBooks + '</div>' : "") +
         (draft.name ? '<p class="fo-up-hi">Welcome back, ' + niceName() + ".</p>" : "") +
         '<h1 class="fo-h1">' + (updating ? "TheSmallBook,<br><i>made new.</i>" : "A small read.<br><i>A different year.</i>") + '</h1>' +
-        '<div class="fo-news">' + NEWS.map(function (n, k) {
-          return '<div class="fo-new" style="--i:' + k + '"><span class="fo-new__ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + n[0] + '</svg></span><span class="fo-new__t"><b>' + n[1] + "</b><span>" + n[2] + "</span></span></div>";
-        }).join("") + "</div>" +
         '<p class="fo-p fo-p--safe">' + (updating ? upLine() : "The biggest ideas, in the smallest time you actually have.") + '</p>' +
         '<div class="fo-foot"><button class="fo-btn" type="button" data-next>' +
-          (updating ? "Continue " + ARROW : "Let’s begin " + ARROW) + "</button>" +
+          (updating ? "Continue " + ARROW : "Let\u2019s begin " + ARROW) + "</button>" +
         (updating ? '<button class="fo-tiny" type="button" data-restart>Set up again</button>' : "") +
         "</div></section>";
     }

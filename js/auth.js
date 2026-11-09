@@ -749,6 +749,10 @@
   }
 
   function signOut() {
+    /* v406: park this account's work in its vault before the session
+       goes, so the next person on this phone starts from their own
+       shelf, never from yours. */
+    try { switchAccount(""); } catch (e) {}
     session = null;
     try { localStorage.removeItem(AUTH_KEY); } catch (e) {}
     try { window.dispatchEvent(new CustomEvent("tsb:auth")); } catch (e) {}
@@ -924,6 +928,89 @@
      chose. It never carries appearance, action-bar layout, text size, theme,
      notification sounds or other device comfort settings. */
   const STATE_KEYS = ["tsb_interests", "tsb_ob_lead", "tsb_mind", "tsb_read_minutes", "tsb_read_style", "tsb_read_when", "tsb_starter_shelf", "tsb_plans", "tsb_days", "tsb_birthday", "tsb_read_books", "tsb_highlights_v1", "tsb_last_book", "tsb_pack", "tsb_min_log", "tsb_taste_events", "tsb_kids_stars", "tsb_notes_v1"];
+  /* ================= v406: the account vault =================
+     Reading and listening data used to live under global localStorage
+     keys. On a shared phone, signing in as a second person inherited
+     the first person's shelf, minutes and positions, and the union
+     merge then pushed that mixture into the second account's cloud
+     row. From v406 every account's work is parked in its own vault
+     (tsb_state_vault_<uid>) whenever a different identity becomes
+     active, and only that account's vault is restored into the live
+     keys. Device comforts (theme, action bar layout, text size) are
+     deliberately NOT in this list: they belong to the phone, not
+     the person. */
+  const ACCOUNT_EXACT = ["tsb_progress", "tsb_bookmarks", "tsb_streak", "tsb_reading_state_updated_at", "tsb_ep_saved", "tsb_audio_last", "tsb_audio_playing", "tsb_audio_cancelled", "tsb_tts_session",
+    /* v409: the Listen room's memory is the listener's, not the phone's.
+       Fetched audiobooks and shows, the taste profile, today's fresh
+       shelf: a second account on this phone starts with its own ear,
+       and the first account finds its shelf exactly as it left it. */
+    "tsb_ab_got", "tsb_ab_pool", "tsb_ab_pool_at", "tsb_show_got", "tsb_show_seen", "tsb_show_desc", "tsb_show_taste", "tsb_show_recent", "tsb_listen_taste", "tsb_listen_daily"].concat(STATE_KEYS);
+  const ACCOUNT_PREFIXES = ["tsb_reader_pos_", "tsb_reader_pos_updated_", "tsb_audio_pos_", "tsb_tts_pos_"];
+  const ACTIVE_UID_KEY = "tsb_active_uid";
+  function accountLiveKeys() {
+    const out = [];
+    try {
+      ACCOUNT_EXACT.forEach((k) => { if (localStorage.getItem(k) !== null) out.push(k); });
+      for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i) || ""; if (ACCOUNT_PREFIXES.some((p) => k.indexOf(p) === 0) && out.indexOf(k) < 0) out.push(k); }
+    } catch (e) {}
+    return out;
+  }
+  function clearAccountKeys() {
+    try { accountLiveKeys().forEach((k) => { try { localStorage.removeItem(k); } catch (e) {} }); } catch (e) {}
+  }
+  function parkAccount(uid) {
+    if (!uid) return;
+    try {
+      const keys = accountLiveKeys(); if (!keys.length && localStorage.getItem("tsb_state_vault_" + uid)) return;
+      const vault = {}; keys.forEach((k) => { const v = localStorage.getItem(k); if (v !== null) vault[k] = v; });
+      localStorage.setItem("tsb_state_vault_" + uid, JSON.stringify(vault));
+    } catch (e) {}
+  }
+  function restoreVault(uid) {
+    try {
+      const raw = localStorage.getItem("tsb_state_vault_" + uid); if (!raw) return false;
+      const vault = JSON.parse(raw) || {}; clearAccountKeys();
+      Object.keys(vault).forEach((k) => { try { localStorage.setItem(k, vault[k]); } catch (e) {} });
+      return true;
+    } catch (e) { return false; }
+  }
+  /* Guest work is adopted by the first real account that signs in on
+     this device, and only when that account has no vault of its own.
+     After adoption the guest vault is gone, so a second account can
+     never inherit it. */
+  function adoptGuestVault(uid) {
+    try {
+      if (localStorage.getItem("tsb_state_vault_" + uid)) return false;
+      if (!localStorage.getItem("tsb_state_vault_guest")) return false;
+      const ok = restoreVault("guest");
+      if (ok) { localStorage.removeItem("tsb_state_vault_guest"); parkAccount(uid); }
+      return ok;
+    } catch (e) { return false; }
+  }
+  function switchAccount(newUid) {
+    try {
+      const cur = localStorage.getItem(ACTIVE_UID_KEY) || "";
+      const next = newUid || "guest";
+      if (cur === next) return;
+      /* v410: on the first identity decision there is no current
+         account, but the live keys may already hold this session's
+         first signals (a book opened before auth settled). Park them
+         as the guest's work instead of clearing them into nothing;
+         the guest restore below, or adoption by the first account,
+         hands them straight back. */
+      if (cur) { parkAccount(cur); }
+      else { parkAccount("guest"); }
+      clearAccountKeys();
+      if (next !== "guest") { if (!restoreVault(next)) adoptGuestVault(next); }
+      else { restoreVault("guest"); }
+      localStorage.setItem(ACTIVE_UID_KEY, next);
+      try { window.dispatchEvent(new CustomEvent("tsb:account-switch")); } catch (e) {}
+    } catch (e) {}
+  }
+  function reconcileAccount() {
+    const u = user();
+    switchAccount(u ? (u.id || "") : "");
+  }
   function rawGet(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
   function rawSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   function union(a, b) { return [...new Set([].concat(Array.isArray(a) ? a : [], Array.isArray(b) ? b : []))]; }
@@ -935,7 +1022,61 @@
   function stateSnapshot() {
     const journey = {};
     ["tsb_interests", "tsb_ob_lead", "tsb_mind", "tsb_read_minutes", "tsb_read_style", "tsb_read_when", "tsb_starter_shelf", "tsb_pack", "tsb_min_log", "tsb_taste_events", "tsb_kids_stars", "tsb_notes_v1"].forEach((k) => { journey[k] = rawGet(k, null); });
-    return { v: 1, progress: lsGet(PROGRESS_KEY, {}), bookmarks: lsGet(MARKS_KEY, []), streak: rawGet("tsb_streak", null), plans: rawGet("tsb_plans", {}), days: rawGet("tsb_days", []), birthday: rawGet("tsb_birthday", ""), read_books: rawGet("tsb_read_books", []), highlights: rawGet("tsb_highlights_v1", {}), last_book: rawGet("tsb_last_book", ""), reader_positions: statePositions(), journey: journey, updated_at: +(rawGet("tsb_reading_state_updated_at", Date.now()) || Date.now()) };
+    return { v: 1, progress: lsGet(PROGRESS_KEY, {}), bookmarks: lsGet(MARKS_KEY, []), streak: rawGet("tsb_streak", null), plans: rawGet("tsb_plans", {}), days: rawGet("tsb_days", []), birthday: rawGet("tsb_birthday", ""), read_books: rawGet("tsb_read_books", []), highlights: rawGet("tsb_highlights_v1", {}), last_book: rawGet("tsb_last_book", ""), reader_positions: statePositions(), journey: journey, listen: stateListen(), updated_at: +(rawGet("tsb_reading_state_updated_at", Date.now()) || Date.now()) };
+  }
+  /* v406: listening follows the account too. Saved episodes, per show
+     and audiobook positions, the last thing in the player and the
+     spoken book session all ride in the same snapshot. Theme, action
+     bar layout and text size stay on the device on purpose. */
+  function prefixedPositions(prefix) {
+    const out = {};
+    try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i) || ""; if (k.indexOf(prefix) === 0) { const v = rawGet(k, null); if (v !== null) out[k.slice(prefix.length)] = v; } } } catch (e) {}
+    return out;
+  }
+  function stateListen() {
+    /* v409: the shelf itself travels. A heart on this phone saves an id
+       in tsb_bookmarks (already synced); the record behind that id, the
+       fetched show or audiobook, now rides along in compact form, so
+       the shelf on a new device has something real to play. Taste
+       weights merge by keeping the stronger signal per word. */
+    const compactShows = [];
+    const gotShows = rawGet("tsb_show_got", {}) || {};
+    Object.keys(gotShows).slice(-60).forEach((k) => { const s = gotShows[k] || {}; if (s.id && s.rss) compactShows.push({ id: s.id, name: s.name || "", host: s.host || "", rss: s.rss, art: s.art || "", tag: s.tag || "", cat: s.cat || "all", why: String(s.why || "").slice(0, 175) }); });
+    const compactBooks = [];
+    const gotBooks = rawGet("tsb_ab_got", {}) || {};
+    Object.keys(gotBooks).slice(-120).forEach((k) => { const r = gotBooks[k] || {}; if (r.id) compactBooks.push({ key: k, id: r.id, title: r.title || "", author: r.author || "", desc: String(r.desc || "").slice(0, 220), lang: r.lang || "en", discovered: true }); });
+    return { saved_episodes: rawGet("tsb_ep_saved", []), audio_positions: prefixedPositions("tsb_audio_pos_"), tts_positions: prefixedPositions("tsb_tts_pos_"), last: rawGet("tsb_audio_last", null), tts_session: rawGet("tsb_tts_session", null), shelf_shows: compactShows, shelf_books: compactBooks, listen_taste: rawGet("tsb_listen_taste", null), show_taste: rawGet("tsb_show_taste", null) };
+  }
+  function mergePositions(a, b) {
+    const out = Object.assign({}, a || {});
+    Object.keys(b || {}).forEach((k) => { const r = out[k], l = b[k]; if (!r || +((l && l.at) || 0) >= +((r && r.at) || 0)) out[k] = l; });
+    return out;
+  }
+  function mergeListen(local, remote) {
+    local = local || {}; remote = remote || {};
+    function unionRecs(a, b, idOf) {
+      const seen = {}, out = [];
+      [].concat(Array.isArray(b) ? b : [], Array.isArray(a) ? a : []).forEach((x) => { if (!x) return; const k = idOf(x); if (!k || seen[k]) return; seen[k] = 1; out.push(x); });
+      return out;
+    }
+    function mergeTaste(a, b) {
+      if (!a) return b || null;
+      if (!b) return a;
+      const out = { terms: {}, hosts: {}, cats: {}, plays: Math.max(+(a.plays || 0), +(b.plays || 0)), at: Math.max(+(a.at || 0), +(b.at || 0)) };
+      ["terms", "hosts", "cats"].forEach((bag) => { Object.keys(b[bag] || {}).forEach((k) => { out[bag][k] = +((b[bag] || {})[k] || 0); }); Object.keys(a[bag] || {}).forEach((k) => { out[bag][k] = Math.max(out[bag][k] || 0, +((a[bag] || {})[k] || 0)); }); });
+      return out;
+    }
+    return {
+      saved_episodes: union(remote.saved_episodes, local.saved_episodes),
+      audio_positions: mergePositions(remote.audio_positions, local.audio_positions),
+      tts_positions: mergePositions(remote.tts_positions, local.tts_positions),
+      last: local.last || remote.last || null,
+      tts_session: local.tts_session || remote.tts_session || null,
+      shelf_shows: unionRecs(local.shelf_shows, remote.shelf_shows, (x) => x.id).slice(-60),
+      shelf_books: unionRecs(local.shelf_books, remote.shelf_books, (x) => x.key || x.id).slice(-120),
+      listen_taste: mergeTaste(local.listen_taste, remote.listen_taste),
+      show_taste: local.show_taste || remote.show_taste || null
+    };
   }
   function mergeMapArrays(a, b) {
     const out = Object.assign({}, a || {}); Object.keys(b || {}).forEach((k) => { out[k] = union(out[k], b[k]).map(Number).filter((n) => Number.isFinite(n)).sort((x, y) => x - y); }); return out;
@@ -980,6 +1121,7 @@
     out.journey.tsb_notes_v1 = localJourney.tsb_notes_v1 || remoteJourney.tsb_notes_v1 || null;
     out.last_book = !local.last_book ? (remote.last_book || "") : !remote.last_book ? local.last_book : (newerRemote ? remote.last_book : local.last_book);
     out.reader_positions = Object.assign({}, remote.reader_positions || {}); Object.keys(local.reader_positions || {}).forEach((id) => { const r = out.reader_positions[id], l = local.reader_positions[id]; if (!r || +(l.updated_at || 0) >= +(r.updated_at || 0)) out.reader_positions[id] = l; });
+    out.listen = mergeListen(local.listen, remote.listen);
     out.updated_at = Date.now(); return out;
   }
   function applyReadingState(st) {
@@ -988,6 +1130,29 @@
     if (st.streak) rawSet("tsb_streak", st.streak); if (st.birthday) rawSet("tsb_birthday", st.birthday); if (st.last_book) rawSet("tsb_last_book", st.last_book); if (st.journey && st.journey.tsb_pack) rawSet("tsb_pack", st.journey.tsb_pack);
     Object.keys(st.journey || {}).forEach((k) => { if (STATE_KEYS.indexOf(k) >= 0 && st.journey[k] !== null && st.journey[k] !== undefined) rawSet(k, st.journey[k]); });
     Object.keys(st.reader_positions || {}).forEach((id) => { const p = st.reader_positions[id] || {}; if (Number.isFinite(+p.page)) { try { localStorage.setItem("tsb_reader_pos_" + id, String(+p.page)); rawSet("tsb_reader_pos_updated_" + id, +(p.updated_at || Date.now())); } catch (e) {} } });
+    if (st.listen) {
+      if (Array.isArray(st.listen.saved_episodes)) rawSet("tsb_ep_saved", st.listen.saved_episodes);
+      Object.keys(st.listen.audio_positions || {}).forEach((k) => { rawSet("tsb_audio_pos_" + k, st.listen.audio_positions[k]); });
+      Object.keys(st.listen.tts_positions || {}).forEach((k) => { rawSet("tsb_tts_pos_" + k, st.listen.tts_positions[k]); });
+      if (st.listen.last && !rawGet("tsb_audio_last", null)) rawSet("tsb_audio_last", st.listen.last);
+      if (st.listen.tts_session && !rawGet("tsb_tts_session", null)) rawSet("tsb_tts_session", st.listen.tts_session);
+      /* v409: put the travelled shelf back where the room reads it,
+         then let the discovery modules adopt it into the live lists */
+      if (Array.isArray(st.listen.shelf_shows) && st.listen.shelf_shows.length) {
+        const curS = rawGet("tsb_show_got", {}) || {};
+        st.listen.shelf_shows.forEach((s) => { if (s && s.id && !curS[s.id]) curS[s.id] = s; });
+        rawSet("tsb_show_got", curS);
+      }
+      if (Array.isArray(st.listen.shelf_books) && st.listen.shelf_books.length) {
+        const curB = rawGet("tsb_ab_got", {}) || {};
+        st.listen.shelf_books.forEach((r) => { if (r && r.key && !curB[r.key]) curB[r.key] = r; });
+        rawSet("tsb_ab_got", curB);
+      }
+      if (st.listen.listen_taste && !rawGet("tsb_listen_taste", null)) rawSet("tsb_listen_taste", st.listen.listen_taste);
+      if (st.listen.show_taste && !rawGet("tsb_show_taste", null)) rawSet("tsb_show_taste", st.listen.show_taste);
+      try { if (window.TSB_SHOWMORE && TSB_SHOWMORE.boot) TSB_SHOWMORE.boot(); } catch (e) {}
+      try { if (window.TSB_ABMORE && TSB_ABMORE.boot) TSB_ABMORE.boot(); } catch (e) {}
+    }
     rawSet("tsb_reading_state_updated_at", +(st.updated_at || Date.now()));
     try { window.dispatchEvent(new CustomEvent("tsb:reading-state")); window.dispatchEvent(new CustomEvent("tsb:sync")); } catch (e) {}
   }
@@ -1229,6 +1394,10 @@
   /* ---------------- boot ---------------- */
   /* ---- common post-login steps (GIS popup or redirect callback) ---- */
   function afterLogin(showToastMsg) {
+    /* v406: swap the live keys to this account before any sync runs,
+       so nothing from the previous person on this device can merge
+       upward into this account. */
+    try { const u = user(); if (u && u.id) switchAccount(u.id); } catch (e) {}
     /* logged-in users are returning users, never re-ask the onboarding */
     try { localStorage.setItem("tsb_onboarded", JSON.stringify(true)); } catch (e) {}
     try { sessionStorage.removeItem("tsb_onboarded_pending"); } catch (e2) {}
@@ -1305,6 +1474,9 @@
         window.TSB_AUTH = { enabled: false, user: () => null, openSheet, closeSheet, token: async () => "", displayName: () => "", setDisplayName: () => {} };
         return;
       }
+      /* v406: before anything reads the shelf, make sure the live keys
+         belong to whoever is signed in on this device. */
+      try { reconcileAccount(); } catch (e) {}
       const didCallback = await handleCallback();
       const didFragment = didCallback ? false : await handleFragmentSession();
       if ((didCallback || didFragment) && user()) {
@@ -1333,6 +1505,8 @@
         syncProgress,
         queueSync,
         syncReadingState,
+        switchAccount,
+        reconcileAccount,
         queueStateSync,
         track,
         onBookComplete,

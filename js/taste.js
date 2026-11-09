@@ -38,18 +38,67 @@
     return Array.isArray(e) ? e : [];
   }
 
-  /* the reader does something; we remember one small row, nothing else */
+  var STOPW = ["the", "and", "for", "with", "how", "why", "what", "your", "you", "are", "book", "books", "show", "podcast", "episode", "part", "vol"];
+  function titleWords(b) {
+    if (!b) return [];
+    return String((b.title || "") + " " + (b.tags || []).join(" ") + " " + (b.author || "")).toLowerCase()
+      .replace(/[^a-z0-9\u0900-\u097f]+/g, " ").split(/\s+/)
+      .filter(function (w) { return w.length > 2 && STOPW.indexOf(w) < 0; }).slice(0, 8);
+  }
+  function wordsOf(str) {
+    return String(str || "").toLowerCase().replace(/[^a-z0-9\u0900-\u097f]+/g, " ").split(/\s+/)
+      .filter(function (w) { return w.length > 2 && STOPW.indexOf(w) < 0; }).slice(0, 8);
+  }
+
+  /* the reader does something; we remember one small row, nothing else.
+     v410: the row carries the book's own words too, so the Listen room
+     can fetch around what was read, not only what was played. */
   function note(id, kind) {
     if (!id) return;
     var e = events();
-    e.unshift({ i: id, k: kind || "open", t: now() });
+    var b = byId(id);
+    e.unshift({ i: id, k: kind || "open", t: now(), w: titleWords(b), c: catOf(b) });
     set("tsb_taste_events", e.slice(0, 400));
     /* a tasted book changes the anchor for tomorrow, never for today */
     var slots = get("tsb_taste_slots", null);
     if (slots && slots.day === dayKey()) return;
   }
 
-  var WEIGHT = { finish: 1.0, save: 0.55, highlight: 0.45, listen: 0.7, open: 0.18, shown: -0.04, skip: -0.12 };
+  /* v410 · ONE ECOSYSTEM LEDGER. A show played, an audiobook saved, a
+     word searched: none of these are catalogue books, so they used to
+     live in a Listen-only notebook that book picks never read. They
+     now land in the same event ledger (already account-synced), as
+     words, and model() folds the strongest of them into book taste
+     while topWords() hands them back to the Listen room. Everything
+     the reader does teaches everything the app recommends. */
+  function signal(o) {
+    try {
+      o = o || {};
+      if (o.bookId) { note(o.bookId, o.kind || "listen"); return; }
+      var ws = wordsOf((o.title || "") + " " + (o.by || ""));
+      if (o.words) ws = ws.concat(wordsOf(Array.isArray(o.words) ? o.words.join(" ") : o.words));
+      ws = ws.filter(function (w, i) { return ws.indexOf(w) === i; }).slice(0, 8);
+      if (!ws.length && !o.host) return;
+      var e = events();
+      e.unshift({ w: ws, h: o.host || "", c: o.cat || "", k: o.kind || "listen", m: o.mult || 1, t: now() });
+      set("tsb_taste_events", e.slice(0, 400));
+    } catch (err) {}
+  }
+  function topWords(n) {
+    var bag = {};
+    events().forEach(function (e) {
+      var age = Math.max(0, (now() - (e.t || now())) / DAY);
+      var w = (WEIGHT[e.k] != null ? WEIGHT[e.k] : 0.3) * Math.exp(-age / 45) * (e.m || 1);
+      (e.w || []).forEach(function (word) { if (word && word.length > 2) bag[word] = (bag[word] || 0) + Math.max(0.05, w); });
+    });
+    try {
+      var lt = get("tsb_listen_taste", null);
+      if (lt && lt.terms) Object.keys(lt.terms).forEach(function (word) { bag[word] = (bag[word] || 0) + Math.min(2, lt.terms[word] || 0); });
+    } catch (err) {}
+    return Object.keys(bag).sort(function (a, b) { return bag[b] - bag[a]; }).slice(0, n || 5);
+  }
+
+  var WEIGHT = { finish: 1.0, save: 0.55, highlight: 0.45, listen: 0.7, search: 0.35, open: 0.18, shown: -0.04, skip: -0.12 };
 
   function model() {
     var cats = {}, seen = {}, finishedIds = {};
@@ -122,6 +171,26 @@
         seen[id] = seen[id] || now() - 5 * DAY;
       });
     }
+
+    /* v410: what was listened to or searched steers book taste too.
+       The strongest ledger words lift the categories of books that
+       carry them, bounded so one binge cannot rebuild the shelf. */
+    var wordBag = {};
+    events().forEach(function (e) {
+      if (e.i) return;
+      var age = Math.max(0, (now() - (e.t || now())) / DAY);
+      var w = (WEIGHT[e.k] != null ? WEIGHT[e.k] : 0.3) * Math.exp(-age / 45) * (e.m || 1);
+      (e.w || []).forEach(function (word) { if (word.length > 3) wordBag[word] = (wordBag[word] || 0) + w; });
+      if (e.c && e.c !== "podcast" && e.c !== "audiobook") cats[e.c] = (cats[e.c] || 0) + w * 0.4;
+    });
+    Object.keys(wordBag).sort(function (a, b) { return wordBag[b] - wordBag[a]; }).slice(0, 10).forEach(function (word) {
+      var lift = Math.min(0.5, wordBag[word] * 0.2);
+      if (lift <= 0.02) return;
+      books().forEach(function (b) {
+        var tag = ((b.category || "") + " " + (b.tags || []).join(" ") + " " + (b.title || "")).toLowerCase();
+        if (tag.indexOf(word) >= 0) cats[catOf(b)] = (cats[catOf(b)] || 0) + lift;
+      });
+    });
 
     /* normalise, floor at zero */
     var keys = Object.keys(cats), total = 0;
@@ -266,6 +335,6 @@
 
   window.TSB_TASTE = {
     model: model, note: note, picks: picks, why: why, journeys: journeys,
-    drift: drift, events: events
+    drift: drift, events: events, signal: signal, topWords: topWords
   };
 })();
