@@ -140,24 +140,49 @@
 
   /* ---------- a quiet minutes log: real time with a book or a player ---------- */
   (function minutes() {
-    /* v391: only pages with a book or a player were counted, so a reader who
-       spent half an hour on Today, Library and You saw zero minutes on their
-       card and thought the app was not recording. Time in the app is time in
-       the app. Only the setup screens are excluded, because nobody counts
-       filling a form as reading. */
+    /* v404: foreground time is app time. The old recorder stopped after 90
+       seconds without a tap or scroll, so a person could read or listen for
+       23 minutes and see nothing. It also threw away most of a throttled
+       background interval. This recorder checkpoints every five seconds,
+       flushes when the page hides or closes, splits a segment at midnight,
+       and keeps counting behind a locked screen only while audio is playing.
+       Only the setup screens are excluded. */
     if (/^(login|onboard|welcome|start)\.html$/.test(page)) return;
-    var last = Date.now(), active = Date.now();
-    ["pointerdown", "keydown", "scroll", "touchstart"].forEach(function (ev) { window.addEventListener(ev, function () { active = Date.now(); }, { passive: true }); });
-    function playing() { var a = document.querySelectorAll("audio"); for (var i = 0; i < a.length; i++) if (!a[i].paused) return true; try { return !!(window.speechSynthesis && speechSynthesis.speaking); } catch (e) { return false; } }
-    setInterval(function () {
-      var now = Date.now(), dt = Math.min(20, (now - last) / 1000); last = now;
-      if (document.hidden && !playing()) return;
-      if (now - active > 90000 && !playing()) return;
-      var log = lsGet("tsb_min_log", {}) || {}, k = dayKey();
-      log[k] = Math.round((log[k] || 0) + dt);
-      var keys = Object.keys(log).sort(); while (keys.length > 400) delete log[keys.shift()];
+    var last = Date.now(), wasVisible = !document.hidden;
+    function playing() {
+      var a = document.querySelectorAll("audio");
+      for (var i = 0; i < a.length; i++) if (!a[i].paused) return true;
+      try { return !!(window.speechSynthesis && speechSynthesis.speaking); } catch (e) { return false; }
+    }
+    function addSegment(startMs, seconds) {
+      var log = lsGet("tsb_min_log", {}) || {};
+      if (!log || typeof log !== "object" || Array.isArray(log)) log = {};
+      var cursorMs = startMs, left = seconds;
+      while (left > 0) {
+        var d = new Date(cursorMs);
+        var midnight = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1, 0, 0, 0, 0).getTime();
+        var take = Math.min(left, Math.max(1, (midnight - cursorMs) / 1000));
+        var k = dayKey(d);
+        log[k] = Math.round((Number(log[k]) || 0) + take);
+        cursorMs += take * 1000;
+        left -= take;
+      }
+      var keys = Object.keys(log).sort();
+      while (keys.length > 400) delete log[keys.shift()];
       lsSet("tsb_min_log", log);
-    }, 15000);
+    }
+    function accrue() {
+      var now = Date.now();
+      var elapsed = (now - last) / 1000;
+      var startMs = last;
+      last = now;
+      if (elapsed > 0 && (wasVisible || playing())) addSegment(startMs, Math.min(120, elapsed));
+      wasVisible = !document.hidden;
+    }
+    setInterval(accrue, 5000);
+    document.addEventListener("visibilitychange", accrue);
+    window.addEventListener("pagehide", accrue);
+    window.addEventListener("beforeunload", accrue);
   })();
   function weekMinutes() {
     var log = lsGet("tsb_min_log", {}) || {}, out = [], d = new Date(), dow = (d.getDay() + 6) % 7;

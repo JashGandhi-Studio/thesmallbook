@@ -41,6 +41,10 @@
 
   /* ------------------------------------------------------------ 1. TODAY */
   function mountToday() {
+    /* v404: the owner removed the Today Pip line. Pip still asks at the end
+       of a chapter and keeps the You shelf, but it no longer puts a line
+       above the daily book on any device. */
+    return;
     if (path() !== "index.html" && path() !== "") return;
     var line = P.say("today");
     if (!line) return;

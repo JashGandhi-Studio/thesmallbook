@@ -15,7 +15,7 @@
   if (window.TSB_STORE) return;
 
   /* 👑 FOUNDER: your Gmail - you get the whole store free on login. */
-  var FOUNDER_EMAILS = ["acimotreyothy@gmail.com"];
+  var FOUNDER_EMAILS = ["acimotreyothy@gmail.com", "jashgandhicreator07@gmail.com"];
   var INSIDER_POSTS = 3;   /* stories a writer must publish to unlock free */
   var FREE_TEASERS = 6;    /* first 6 offers visible without unlocking, remainder locked */
   var LOGO_DIR = "assets/logos/";

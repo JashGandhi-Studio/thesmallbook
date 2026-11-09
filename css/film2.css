@@ -2393,6 +2393,24 @@ html.dark .tm-x, html.dark .tm-nav { background: rgba(255,255,255,.1) }
 .tm-head > div { min-width: 0 }
 .tm-title { font-size: 21px }
 .tm-nav:disabled { opacity: .3; cursor: default }
+.tm-bar { position: relative }
+.tm-bar__fav { position: absolute; top: 0; right: 5px; color: #B8860B; line-height: 1 }
+.tm-favbtn { display: inline-flex; align-items: center; gap: 7px; min-height: 38px; margin: -4px 0 14px; padding: 8px 12px; border: 1px solid rgba(22,19,15,.12); border-radius: 999px; background: transparent; color: inherit; font: 700 12.5px var(--f-sans); cursor: pointer }
+.tm-favbtn.on { background: #FFC800; border-color: #FFC800; color: #16130F }
+.tm-month__title { display: inline-flex; align-items: center; gap: 6px; border: 0; background: transparent; color: inherit; padding: 8px 6px; margin: 0; font: 600 18px var(--f-serif, Georgia, serif); cursor: pointer }
+.tm-jump { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-top: 14px; padding: 12px; border-radius: 16px; background: rgba(22,19,15,.045) }
+.tm-jump label { display: grid; gap: 5px; font: 700 10px var(--f-sans); letter-spacing: .1em; text-transform: uppercase; color: var(--f-mu, #6E6658) }
+.tm-jump select { min-height: 40px; border: 1px solid rgba(22,19,15,.12); border-radius: 11px; background: var(--f-paper, #FBF7EE); color: var(--f-ink, #16130F); padding: 0 9px; font: 600 13px var(--f-sans); letter-spacing: 0; text-transform: none }
+.tm-jump button { min-height: 40px; border: 0; border-radius: 11px; background: #16130F; color: #FBF7EE; font: 700 13px var(--f-sans); cursor: pointer }
+.tm-jump button + button { background: rgba(22,19,15,.07); color: inherit }
+.tm-mo__d { position: relative }
+.tm-mo__d .tm-favico { position: absolute; top: 3px; right: 4px; color: #8A6500 }
+.tm-mo__d.fav { box-shadow: inset 0 0 0 1.5px rgba(138,101,0,.55) }
+.tm-month__legend > span:first-child { margin-right: auto }
+html.dark .tm-favbtn { border-color: rgba(255,255,255,.16) }
+html.dark .tm-jump { background: rgba(255,255,255,.07) }
+html.dark .tm-jump select { background: #241F19; color: #F4EFE6; border-color: rgba(255,255,255,.14) }
+html.dark .tm-jump button + button { background: rgba(255,255,255,.1) }
 
 /* ==========================================================================
    v399 · THE SWIPE BELONGS TO THE READER
@@ -2889,3 +2907,78 @@ html.film .ln-hold__art--none { display: none !important; }
 html.film #bsPhone[data-labels="icons"] .bs-it b { display: none !important; }
 html.film #bsPhone[data-labels="icons"] .bs-it { gap: 0 !important; }
 html.film #bsPhone[data-labels="icons"] .bs-it.on::before { top: 2px; height: 34px; width: 44px; }
+
+/* ==========================================================================
+   v404 · FOR YOU, AND A ROOM THAT READS LIKE A ROOM
+   Personal suggestions sit directly under the front door. They borrow the
+   room's real covers and reasons, and every play control opens the player.
+   ========================================================================== */
+html.film .ln-foryou { margin: 24px 0 6px; }
+html.film .ln-foryou:empty { display: none; }
+html.film .ln-foryou__head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 0 2px 13px; }
+html.film .ln-foryou__head h2 { margin: 0; font: 400 clamp(25px, 6vw, 34px)/1.05 var(--f-serif); letter-spacing: -.025em; }
+html.film .ln-foryou__head p { margin: 0; max-width: 34ch; text-align: right; font: 500 12px/1.4 var(--f-sans); color: var(--f-mu); }
+html.film .ln-foryou__rail { display: flex; gap: 14px; overflow-x: auto; overflow-y: hidden; padding: 2px 2px 10px; scroll-snap-type: x proximity; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+html.film .ln-foryou__rail::-webkit-scrollbar { display: none; }
+html.film .ln-foryou__card { flex: 0 0 148px; width: 148px; padding: 0; border: 0; background: none; color: var(--f-ink); text-align: left; cursor: pointer; scroll-snap-align: start; -webkit-tap-highlight-color: transparent; }
+html.film .ln-foryou__art { position: relative; display: block; aspect-ratio: 1; overflow: hidden; border-radius: 19px; background: var(--f-line); box-shadow: var(--f-sh-sm); }
+html.film .ln-foryou__art img { width: 100%; height: 100%; display: block; object-fit: cover; }
+html.film .ln-foryou__art i { position: absolute; inset: 0; display: grid; place-items: center; font: italic 400 42px var(--f-serif); font-style: italic; color: var(--f-mu); }
+html.film .ln-foryou__play { position: absolute; right: 9px; bottom: 9px; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 200, 0, .94); color: #16130F; box-shadow: 0 10px 22px -12px rgba(22,19,15,.7); }
+html.film .ln-foryou__play svg { width: 16px; height: 16px; margin-left: 2px; }
+html.film .ln-foryou__card b { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.55em; margin: 9px 1px 0; font: 700 13px/1.28 var(--f-sans); }
+html.film .ln-foryou__card span:last-child { display: block; margin: 4px 1px 0; font: 500 11px/1.35 var(--f-sans); color: var(--f-mu); }
+html.film .ln-foryou__card:active .ln-foryou__art { transform: scale(.975); }
+html.film .ln-foryou__art { transition: transform .16s ease; }
+html.film .ln-foryou__signin { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 18px; border-radius: 22px; background: var(--f-card); box-shadow: var(--f-sh-sm); }
+html.film .ln-foryou__signin b { display: block; font: 400 21px/1.15 var(--f-serif); }
+html.film .ln-foryou__signin p { margin: 5px 0 0; font: 500 12.5px/1.45 var(--f-sans); color: var(--f-mu); }
+html.film .ln-foryou__signin a { flex: 0 0 auto; padding: 11px 16px; border-radius: 999px; background: var(--f-yel); color: #16130F; font: 800 12px var(--f-sans); text-decoration: none; }
+@media (min-width: 700px) {
+  html.film .ln-foryou__card { flex-basis: 168px; width: 168px; }
+}
+
+/* v404: the full player keeps its dark stage. A later full screen rule had
+   left pale player text standing on the paper page underneath. */
+body.tsb-ap-open .ap-backdrop.fp {
+  background: linear-gradient(180deg, var(--fp-top, #24446E) 0%, var(--fp-bot, #101B2B) 82%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.45);
+  backdrop-filter: blur(22px) saturate(1.45);
+}
+body.tsb-ap-open .ap-backdrop.fp .ap-card {
+  background: rgba(10, 13, 20, .16) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  backdrop-filter: blur(18px) saturate(1.35);
+}
+.ap-backdrop.fp .ap-actions { margin: 14px 0 8px; }
+.ap-backdrop.fp .ap-actionbtn {
+  background: rgba(255, 255, 255, .1) !important;
+  border-color: rgba(255, 255, 255, .14) !important;
+  color: #F4ECDD !important;
+  box-shadow: none !important;
+}
+.ap-backdrop.fp .ap-actionbtn.on {
+  background: #FFC800 !important;
+  border-color: transparent !important;
+  color: #16130F !important;
+}
+.ap-backdrop.fp .ap-qi__mark { color: #FFC800; }
+@media (min-width: 700px) {
+  body.tsb-ap-open .ap-backdrop.fp { padding: 24px !important; }
+  body.tsb-ap-open .ap-backdrop.fp .ap-card {
+    border: 1px solid rgba(255, 255, 255, .14) !important;
+    border-radius: 30px !important;
+    box-shadow: 0 34px 80px -34px rgba(0, 0, 0, .8) !important;
+    overflow-y: auto !important;
+  }
+}
+#tsbApSheet.ap-backdrop.fp .ap-x {
+  background: rgba(255, 255, 255, .12) !important;
+  border-color: rgba(255, 255, 255, .08) !important;
+  color: #F4ECDD !important;
+}
+#tsbApSheet.ap-backdrop.fp .ap-x svg { stroke: #F4ECDD !important; }
+
+/* v404: the sidebar brand sign lives in the bar, hidden wherever the bar
+   is still the phone's bottom bar. */
+.tsb-bar__brand { display: none; }

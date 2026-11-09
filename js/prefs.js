@@ -625,5 +625,114 @@ try {
   document.addEventListener("touchstart", onPointer, { capture: true, passive: true });
 })();
 
+/* v404: one quiet housekeeping pass. Old Gold code flags, feed caches that
+   have gone stale, and shelf or progress rows pointing at books, shows or
+   audiobooks the catalogue no longer contains are removed. Anything still
+   in the catalogue, and anything the cleanup cannot identify, is left alone. */
+(function cleanupStaleData() {
+  function parse(key) {
+    try { return JSON.parse(localStorage.getItem(key) || "null"); } catch (e) { return null; }
+  }
+  function write(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
+  }
+  function basicCleanup() {
+    if (localStorage.getItem("tsb_cleanup_404") === "1") return;
+    ["tsb_gold_active", "tsb_verified_membership", "gold_member_pass", "plan_tier", "ypg_payment_verified"].forEach(function (key) {
+      try { localStorage.removeItem(key); } catch (e) {}
+    });
+    var last = parse("tsb_audio_last");
+    var lastKey = last && last.key ? String(last.key) : "";
+    var keys = [];
+    for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k) keys.push(k); }
+    keys.forEach(function (key) {
+      if (key.indexOf("tsb_feed_") === 0 || key.indexOf("tsb_feed_good_") === 0) {
+        var feed = parse(key);
+        if (!feed || !feed.at || Date.now() - Number(feed.at) > 30 * 864e5) {
+          try { localStorage.removeItem(key); } catch (e) {}
+        }
+      }
+      if (key.indexOf("tsb_audio_pos_") === 0) {
+        var pos = parse(key);
+        var queueKey = key.slice("tsb_audio_pos_".length);
+        if (queueKey !== lastKey && pos && pos.at && Date.now() - Number(pos.at) > 180 * 864e5) {
+          try { localStorage.removeItem(key); } catch (e2) {}
+        }
+      }
+      var nowD = new Date();
+      var todayKey = nowD.getFullYear() + "-" + String(nowD.getMonth() + 1).padStart(2, "0") + "-" + String(nowD.getDate()).padStart(2, "0");
+      if (key.indexOf("tsb_spark_done_") === 0 && key !== "tsb_spark_done_" + todayKey) {
+        try { localStorage.removeItem(key); } catch (e3) {}
+      }
+    });
+    try { localStorage.setItem("tsb_cleanup_404", "1"); } catch (e4) {}
+  }
+  function catalogCleanup() {
+    if (localStorage.getItem("tsb_cleanup_catalog_404") === "1") return true;
+    var books = window.BOOKS || window.TSB_BOOKS || [];
+    if (!books.length) return false;
+    var bookIds = {};
+    books.forEach(function (b) { if (b && b.id) bookIds[b.id] = 1; });
+    var abIds = {};
+    var AB = window.TSB_AUDIOBOOKS || {};
+    Object.keys(AB).forEach(function (id) { abIds[id] = 1; });
+    var gotAb = parse("tsb_ab_got") || {};
+    Object.keys(gotAb || {}).forEach(function (id) { abIds[id] = 1; });
+    var showIds = {};
+    var D = window.TSB_PODCASTS || {};
+    (D.shows || []).concat(window.TSB_SHOWS_EXTRA || []).forEach(function (s) { if (s && s.id) showIds[s.id] = 1; });
+    if (D.originals && D.originals.id) showIds[D.originals.id] = 1;
+    var gotShows = parse("tsb_show_got") || {};
+    Object.keys(gotShows || {}).forEach(function (id) { showIds[id] = 1; });
+
+    var marks = parse("tsb_bookmarks");
+    if (Array.isArray(marks)) {
+      write("tsb_bookmarks", marks.filter(function (id) {
+        if (typeof id !== "string") return false;
+        if (id.indexOf("ab:") === 0) return !Object.keys(abIds).length || !!abIds[id.slice(3)];
+        if (id.indexOf("show:") === 0) return !Object.keys(showIds).length || !!showIds[id.slice(5)];
+        if (id.indexOf(":") >= 0) return true;
+        return !!bookIds[id];
+      }));
+    }
+    var progress = parse("tsb_progress");
+    if (progress && typeof progress === "object" && !Array.isArray(progress)) {
+      Object.keys(progress).forEach(function (id) { if (!bookIds[id]) delete progress[id]; });
+      write("tsb_progress", progress);
+    }
+    var readBooks = parse("tsb_read_books");
+    if (Array.isArray(readBooks)) write("tsb_read_books", readBooks.filter(function (id) { return !!bookIds[id]; }));
+    var highlights = parse("tsb_highlights_v1");
+    if (highlights && typeof highlights === "object" && !Array.isArray(highlights)) {
+      Object.keys(highlights).forEach(function (id) { if (!bookIds[id]) delete highlights[id]; });
+      write("tsb_highlights_v1", highlights);
+    }
+    var keys = [];
+    for (var i = 0; i < localStorage.length; i++) { var key = localStorage.key(i); if (key) keys.push(key); }
+    keys.forEach(function (key) {
+      var id = "";
+      if (key.indexOf("tsb_reader_pos_") === 0 && key.indexOf("tsb_reader_pos_updated_") !== 0) id = key.slice("tsb_reader_pos_".length);
+      if (key.indexOf("tsb_reader_pos_updated_") === 0) id = key.slice("tsb_reader_pos_updated_".length);
+      if (id && !bookIds[id]) {
+        try { localStorage.removeItem(key); } catch (e) {}
+      }
+    });
+    try { localStorage.setItem("tsb_cleanup_catalog_404", "1"); } catch (e2) {}
+    return true;
+  }
+  try {
+    basicCleanup();
+    if (!catalogCleanup()) {
+      document.addEventListener("DOMContentLoaded", function () {
+        var tries = 0;
+        var timer = setInterval(function () {
+          tries++;
+          if (catalogCleanup() || tries > 20) clearInterval(timer);
+        }, 250);
+      });
+    }
+  } catch (e) {}
+})();
+
 /* v275: the page booted, tell the watchdog it can stand down */
 window.TSB_BOOT_OK = true;

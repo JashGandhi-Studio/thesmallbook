@@ -24,6 +24,11 @@
   function isFounder() {
     try {
       var u = (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) || null;
+      if (!u) {
+        var raw = localStorage.getItem("tsb_auth_session");
+        var sess = raw ? JSON.parse(raw) : null;
+        u = sess && sess.user ? sess.user : null;
+      }
       var em = ((u && u.email) || "").toLowerCase();
       return !!em && FOUNDER_EMAILS.indexOf(em) >= 0;
     } catch (e) { return false; }

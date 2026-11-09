@@ -124,7 +124,9 @@
     x: '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>',
     back15: '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.2 5v4.5h4.5"/><path d="M4.6 9.2A8.2 8.2 0 1 1 12 20.3"/></svg>',
     fwd30: '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19.8 5v4.5h-4.5"/><path d="M19.4 9.2A8.2 8.2 0 1 0 12 20.3"/></svg>',
-    cont: '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h13.5"/><path d="M12.5 6.8 17.8 12l-5.3 5.2"/></svg>'
+    cont: '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h13.5"/><path d="M12.5 6.8 17.8 12l-5.3 5.2"/></svg>',
+    mark: '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3.5h11V21l-5.5-3.8L6.5 21z"/></svg>',
+    moment: '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>'
   };
   var EQ = '<span class="ap-eq" aria-hidden="true"><i></i><i></i><i></i></span>';
 
@@ -232,6 +234,23 @@
       ".ap-qi.on .ap-num{background:var(--ink);color:var(--yellow)}" +
       ".ap-qi .ap-eq{margin-left:auto;flex:0 0 auto;color:var(--ink)}" +
       ".ap-credit{font:600 10.5px/1.6 'Space Grotesk',sans-serif;color:var(--ink);opacity:.6;border-top:2.5px dashed var(--ink);margin:16px 0 0;padding:13px 2px 0}" +
+      /* v404: one translucent floating player, and places to keep things */
+      "#tsbAp{left:12px;right:12px;width:min(680px,calc(100vw - 24px));margin-left:auto;margin-right:auto;background:rgba(255,253,248,.78)!important;border:1px solid rgba(22,19,15,.13)!important;border-radius:27px!important;box-shadow:0 24px 55px -24px rgba(31,22,8,.5)!important;-webkit-backdrop-filter:blur(22px) saturate(1.65);backdrop-filter:blur(22px) saturate(1.65)}" +
+      "html.dark #tsbAp{background:rgba(29,25,20,.76)!important;border-color:rgba(244,239,230,.13)!important;box-shadow:0 24px 55px -22px rgba(0,0,0,.75)!important}" +
+      "#tsbAp .ap-art{border:0!important;border-radius:16px!important;box-shadow:0 8px 18px -10px rgba(22,19,15,.45)!important}" +
+      "#tsbAp .ap-play{border:0!important;box-shadow:0 10px 22px -10px rgba(120,78,0,.65)!important}" +
+      "#tsbAp .ap-list{border:0!important;background:rgba(22,19,15,.06)!important;box-shadow:none!important}" +
+      "html.dark #tsbAp .ap-list{background:rgba(255,255,255,.08)!important}" +
+      ".ap-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:10px 0 4px}" +
+      ".ap-actionbtn{min-height:48px;border:1px solid rgba(22,19,15,.12);background:rgba(22,19,15,.045);border-radius:16px;color:var(--ink);font:700 12px 'Space Grotesk',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 10px;transition:transform .14s ease,background .18s ease,border-color .18s ease}" +
+      ".ap-actionbtn:active{transform:scale(.97)}" +
+      ".ap-actionbtn.on{background:var(--yellow);border-color:transparent;color:#16130F}" +
+      ".ap-actionbtn svg{flex:0 0 auto}" +
+      ".ap-actionbtn.on svg path{fill:currentColor}" +
+      ".ap-qi__mark{margin-left:auto;flex:0 0 auto;color:#9A7400;display:inline-flex}" +
+      "html.dark .ap-actionbtn{border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.06)}" +
+      "@media (min-width:700px){#tsbAp{width:min(720px,calc(100vw - 48px));bottom:24px!important}.ap-actions{gap:11px}}" +
+      "@media (min-width:1024px){#tsbAp{cursor:grab}#tsbAp.ap-dragging{cursor:grabbing;animation:none!important}}" +
       /* small phones: keep the transport comfortable */
       "@media (max-width:360px){.ap-playbig{width:72px;height:72px}.ap-art--big{width:100px;height:100px}.ap-hero{gap:12px}}" +
       /* dark keeps every colour readable */
@@ -285,6 +304,10 @@
       '<button class="ap-next" aria-label="Next chapter">' + IC.next + '</button>' +
       '<button class="ap-list" aria-label="Queue and settings">' + IC.list + '</button>';
     document.body.appendChild(dock);
+    applyDockPos();
+    dock.addEventListener("click", function (e) {
+      if (Date.now() < suppressDockClickUntil) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
     dock.querySelector(".ap-play").addEventListener("click", function () { toggle(); });
     dock.querySelector(".ap-next").addEventListener("click", function () { nextItem(); });
     dock.querySelector(".ap-prev").addEventListener("click", function () { prevItem(); });
@@ -297,6 +320,27 @@
 
   /* swipe the dock fully right to cancel: finger follows, past a third of
      the screen it flies out and the player closes (your spot is kept) */
+  /* v404: on a desktop the floating player can live where the listener
+     puts it. The spot is remembered per device; phones and tablets keep
+     the composed bottom pose. */
+  var DOCKPOSKEY = "tsb_ap_dock_pos";
+  var suppressDockClickUntil = 0;
+  function desktopDock() {
+    try { return window.matchMedia("(min-width: 1024px)").matches; } catch (e) { return false; }
+  }
+  function applyDockPos() {
+    if (!dock) return;
+    if (!desktopDock()) {
+      dock.style.left = ""; dock.style.top = ""; dock.style.right = ""; dock.style.bottom = ""; dock.style.margin = "";
+      return;
+    }
+    var pos = jget(DOCKPOSKEY, null);
+    if (!pos || !isFinite(pos.x) || !isFinite(pos.y)) return;
+    var w = dock.offsetWidth || 680, h = dock.offsetHeight || 76;
+    var x = Math.max(8, Math.min(Number(pos.x), Math.max(8, window.innerWidth - w - 8)));
+    var y = Math.max(8, Math.min(Number(pos.y), Math.max(8, window.innerHeight - h - 8)));
+    dock.style.left = x + "px"; dock.style.top = y + "px"; dock.style.right = "auto"; dock.style.bottom = "auto"; dock.style.margin = "0";
+  }
   /* v322: the dock's home pose. Whatever happens - drag, sheet, app switch -
      it always returns here, pinned to the bottom, never drifting or
      freezing mid-air. */
@@ -305,9 +349,10 @@
     dock.style.transition = "";
     dock.style.transform = "";
     dock.style.opacity = "";
+    applyDockPos();
   }
   function bindSwipe() {
-    var sx = 0, sy = 0, dx = 0, drag = false;
+    var sx = 0, sy = 0, dx = 0, dy = 0, drag = false, freeDrag = false, startRect = null;
     try { dock.style.touchAction = "pan-y"; } catch (eT) {}
     dock.addEventListener("touchstart", function (e) {
       if (e.target.closest("button")) return;
@@ -318,24 +363,45 @@
     }, { passive: true });
     dock.addEventListener("pointerdown", function (e) {
       if (e.target.closest("button")) return;
-      drag = true; sx = e.clientX; sy = e.clientY; dx = 0;
+      drag = true; sx = e.clientX; sy = e.clientY; dx = 0; dy = 0; freeDrag = false;
+      startRect = dock.getBoundingClientRect();
       try { if (e.target.setPointerCapture) e.target.setPointerCapture(e.pointerId); } catch (eC) {}
       try { dock.style.transition = "none"; } catch (e2) {}
     });
     dock.addEventListener("pointermove", function (e) {
       if (!drag) return;
-      /* horizontal is the dock's only axis: vertical finger movement never
-         lifts or drops it (that was the "player floated up and froze" bug) */
-      if (Math.abs(e.clientY - sy) > Math.abs(e.clientX - sx)) return;
-      dx = Math.max(0, e.clientX - sx);
+      dx = e.clientX - sx; dy = e.clientY - sy;
+      if (desktopDock() && startRect) {
+        if (!freeDrag && Math.sqrt(dx * dx + dy * dy) > 8) { freeDrag = true; dock.classList.add("ap-dragging"); }
+        if (freeDrag) {
+          var x = Math.max(8, Math.min(startRect.left + dx, Math.max(8, window.innerWidth - startRect.width - 8)));
+          var y = Math.max(8, Math.min(startRect.top + dy, Math.max(8, window.innerHeight - startRect.height - 8)));
+          dock.style.left = x + "px"; dock.style.top = y + "px"; dock.style.right = "auto"; dock.style.bottom = "auto"; dock.style.margin = "0"; dock.style.transform = "none"; dock.style.opacity = "1";
+          return;
+        }
+      }
+      /* On phones and tablets horizontal is the dock's dismiss axis:
+         vertical finger movement never lifts or drops it. */
+      if (Math.abs(dy) > Math.abs(dx)) return;
+      dx = Math.max(0, dx);
       dock.style.transform = "translateX(" + dx + "px) rotate(" + (dx * 0.03) + "deg)";
       dock.style.opacity = Math.max(0.1, 1 - (dx / (window.innerWidth * 0.6)));
     });
     function end(e) {
       if (!drag) return;
       drag = false;
+      if (freeDrag) {
+        freeDrag = false;
+        dock.classList.remove("ap-dragging");
+        suppressDockClickUntil = Date.now() + 300;
+        var r = dock.getBoundingClientRect();
+        jset(DOCKPOSKEY, { x: Math.round(r.left), y: Math.round(r.top) });
+        try { dock.style.transition = ""; } catch (eD) {}
+        return;
+      }
       /* v315: a tap (not a swipe) on the title or art opens the full player */
-      if (dx < 8 && e && e.target && !e.target.closest("button")) { openSheet(); return; }
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && e && e.target && !e.target.closest("button")) { openSheet(); return; }
+      if (!desktopDock() && dy < -55 && Math.abs(dy) > Math.abs(dx)) { resetDockPose(); openSheet(); return; }
       if (dx > Math.min(140, window.innerWidth * 0.35)) {
         dock.style.transition = "transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.18s ease";
         dock.style.transform = "translateX(" + window.innerWidth + "px) rotate(7deg)";
@@ -351,6 +417,7 @@
     dock.addEventListener("pointerup", end);
     dock.addEventListener("pointercancel", end);
     window.addEventListener("pointerup", function () { if (drag) { drag = false; resetDockPose(); } });
+    window.addEventListener("resize", applyDockPos);
   }
 
   function unmountDock() {
@@ -430,6 +497,77 @@
   /* the shows you keep, for the up-next strip */
   function savedShowIds() {
     try { return (window.TSB && TSB.bookmarks) ? TSB.bookmarks.list().filter(function (x) { return x.indexOf("show:") === 0; }).map(function (x) { return x.slice(5); }) : []; } catch (e) { return []; }
+  }
+  /* v404: the player can keep the whole thing, or the exact moment. Whole
+     books and shows use the app's one bookmark shelf. Moments belong to the
+     player, with the queue key, item and second needed to return to them. */
+  var MOMENTKEY = "tsb_audio_marks";
+  function bookmarkList() {
+    try { if (window.TSB && TSB.bookmarks) return TSB.bookmarks.list(); } catch (e) {}
+    var l = jget("tsb_bookmarks", []);
+    return Array.isArray(l) ? l : [];
+  }
+  function hasBookmark(key) { return !!key && bookmarkList().indexOf(key) >= 0; }
+  function toggleBookmark(key) {
+    if (!key) return false;
+    var on = false;
+    try {
+      if (window.TSB && TSB.bookmarks) on = !!TSB.bookmarks.toggle(key);
+      else {
+        var l = bookmarkList(), i = l.indexOf(key);
+        if (i >= 0) l.splice(i, 1); else { l.push(key); on = true; }
+        jset("tsb_bookmarks", l);
+      }
+    } catch (e) { on = hasBookmark(key); }
+    try { window.dispatchEvent(new CustomEvent("tsb:bookmark", { detail: { key: key, on: on } })); } catch (e2) {}
+    return on;
+  }
+  function queueBookmarkKey() {
+    if (!q) return "";
+    if (/^ab:/.test(q.key || "")) return q.key;
+    if (/^(pod|orig):/.test(q.key || "")) return "show:" + String(q.key).slice(4);
+    if (q.bookId) return q.bookId;
+    return "";
+  }
+  function momentList() {
+    var l = jget(MOMENTKEY, []);
+    return Array.isArray(l) ? l : [];
+  }
+  function currentMoment() {
+    if (!q) return null;
+    var it = q.items[curItem] || {};
+    return {
+      key: q.key || "", item: curItem, src: it.src || "",
+      t: q.type === "audio" && AU ? Math.floor(AU.currentTime || 0) : 0,
+      title: q.title || "", label: it.label || "", at: Date.now()
+    };
+  }
+  function momentIndex(list, m) {
+    if (!m) return -1;
+    for (var i = 0; i < list.length; i++) {
+      var x = list[i];
+      if (x && x.key === m.key && Number(x.item) === Number(m.item) && Math.abs((Number(x.t) || 0) - (Number(m.t) || 0)) < 15) return i;
+    }
+    return -1;
+  }
+  function paintMarkButtons() {
+    if (!sheet || !q) return;
+    var titleBtn = sheet.querySelector("#apMarkTitle");
+    if (titleBtn) {
+      var key = queueBookmarkKey(), on = hasBookmark(key);
+      titleBtn.classList.toggle("on", on);
+      titleBtn.setAttribute("aria-pressed", on ? "true" : "false");
+      titleBtn.querySelector("span").textContent = on ? "Bookmarked" : "Bookmark";
+      titleBtn.disabled = !key;
+      titleBtn.style.opacity = key ? "" : ".45";
+    }
+    var momentBtn = sheet.querySelector("#apMarkMoment");
+    if (momentBtn) {
+      var m = currentMoment(), list = momentList(), savedMoment = momentIndex(list, m) >= 0;
+      momentBtn.classList.toggle("on", savedMoment);
+      momentBtn.setAttribute("aria-pressed", savedMoment ? "true" : "false");
+      momentBtn.querySelector("span").textContent = savedMoment ? "Moment saved" : (q.type === "audio" ? "Save this moment" : "Save this part");
+    }
   }
   function upNextHtml() {
     if (!q || q.type !== "audio" || !/^(pod|orig):/.test(q.key)) return "";
@@ -514,6 +652,10 @@
         ? '<div class="ap-seekrow"><span class="ap-time" id="apT0">0:00</span><input class="ap-seek" id="apSeek" type="range" min="0" max="1000" value="0" aria-label="Seek"><span class="ap-time ap-time--r" id="apT1">-:--</span></div>' +
           '<div class="ap-chap" id="apChap"></div>'
         : '<div class="ap-part" id="apPart"></div>') +
+      '<div class="ap-actions">' +
+        '<button class="ap-actionbtn" id="apMarkTitle" type="button" aria-pressed="false">' + IC.mark + '<span>Bookmark</span></button>' +
+        '<button class="ap-actionbtn" id="apMarkMoment" type="button" aria-pressed="false">' + IC.moment + '<span>Save this moment</span></button>' +
+      '</div>' +
       '<div class="ap-ctl">' +
         '<button class="ap-jump" id="apPrevC" aria-label="Previous chapter">' + IC.prev + '</button>' +
         (isAudio ? '<button class="ap-skip" id="apBack" aria-label="Back 15 seconds">' + IC.back15 + '<b>15</b></button>' : '') +
@@ -563,7 +705,8 @@
             var on = isSaved(it.src);
             sv = '<button class="ap-qi__sv' + (on ? " on" : "") + '" data-sv="' + esc(it.src) + '" aria-label="Save this episode for offline">' + (on ? "✓ OFFLINE" : "⤓ SAVE") + '</button>';
           }
-          return '<div class="ap-qi' + (i === curItem ? " on" : "") + '" data-i="' + i + '"><span class="ap-num">' + (i === curItem ? IC.play : i + 1) + '</span><span style="min-width:0"><b>' + esc(tidyLabel(it.label)) + '</b><i>' + esc(it.sub || "") + '</i>' + sv + '</span>' + (i === curItem ? EQ : '') + '</div>';
+          var hasMoment = momentList().some(function (x) { return x && x.key === q.key && Number(x.item) === i; });
+          return '<div class="ap-qi' + (i === curItem ? " on" : "") + '" data-i="' + i + '"><span class="ap-num">' + (i === curItem ? IC.play : i + 1) + '</span><span style="min-width:0"><b>' + esc(tidyLabel(it.label)) + '</b><i>' + esc(it.sub || "") + '</i>' + sv + '</span>' + (hasMoment ? '<span class="ap-qi__mark" title="A saved moment is here">' + IC.mark + '</span>' : '') + (i === curItem ? EQ : '') + '</div>';
         }).join("") +
       '</div>' +
       upNextHtml() +
@@ -575,6 +718,7 @@
        floating over its controls. */
     try { document.body.classList.add("tsb-ap-open"); } catch (eOpen) {}
     bindRoom(sheet);
+    paintMarkButtons();
     /* v396: while a book plays, the player shows the book itself. The hero cover
        was a flat picture in a rounded box; it is now the same 3D book the shelves
        show, standing in the player with its spine, so an audiobook looks like a
@@ -665,6 +809,28 @@
       var grip2 = head2.querySelector(".ap-grip");
       if (grip2) grip2.style.touchAction = "none";
     })();
+    /* v404: on touch screens, a clean sideways swipe across the artwork
+       moves through the queue. It is deliberately limited to the hero so
+       it never fights the seek slider or the scrolling queue. */
+    (function () {
+      var hero = sheet.querySelector(".ap-hero");
+      if (!hero) return;
+      var hx = 0, hy = 0, live = false;
+      hero.addEventListener("pointerdown", function (e) {
+        if (e.target.closest("button") || e.target.closest("input")) return;
+        live = true; hx = e.clientX; hy = e.clientY;
+      });
+      hero.addEventListener("pointerup", function (e) {
+        if (!live) return;
+        live = false;
+        var dx = e.clientX - hx, dy = e.clientY - hy;
+        if (Math.abs(dx) > 64 && Math.abs(dx) > Math.abs(dy) * 1.35) {
+          if (dx < 0) nextItem(); else prevItem();
+          try { if (navigator.vibrate) navigator.vibrate(10); } catch (err) {}
+        }
+      });
+      hero.addEventListener("pointercancel", function () { live = false; });
+    })();
     /* live repaint: seek slider, times, big play glyph, sleep countdown */
     sheet._apTick = setInterval(function () {
       if (!sheet || !q) return;
@@ -673,6 +839,7 @@
       var s2 = sheet.querySelector("#apNpS"); if (s2) s2.textContent = q.title + " · " + (curItem + 1) + " of " + q.items.length;
       sheet.classList.toggle("ap-playing", !!playing());
       var bp2 = sheet.querySelector("#apBigPlay"); if (bp2) bp2.innerHTML = playing() ? IC.pauseBig : IC.playBig;
+      paintMarkButtons();
       if (q.type === "audio" && AU) {
         var d = AU.duration, sk = sheet.querySelector("#apSeek");
         if (sk && !apSeeking && isFinite(d) && d > 0) {
@@ -721,6 +888,22 @@
     }
     var vm = sheet.querySelector("#apVoiceModel");
     if (vm) vm.addEventListener("click", function () { try { if (T && T.openVoiceModel) T.openVoiceModel(); } catch (e) {} });
+    var markTitle = sheet.querySelector("#apMarkTitle");
+    if (markTitle) markTitle.addEventListener("click", function () {
+      var on = toggleBookmark(queueBookmarkKey());
+      paintMarkButtons();
+      toast(on ? "Bookmarked. It is on your shelf." : "Bookmark removed.");
+    });
+    var markMoment = sheet.querySelector("#apMarkMoment");
+    if (markMoment) markMoment.addEventListener("click", function () {
+      var m = currentMoment(); if (!m) return;
+      var list = momentList(), at = momentIndex(list, m);
+      if (at >= 0) list.splice(at, 1); else list.push(m);
+      list.sort(function (a, b) { return (b.at || 0) - (a.at || 0); });
+      jset(MOMENTKEY, list.slice(0, 200));
+      paintMarkButtons();
+      toast(at >= 0 ? "Moment removed." : "Moment saved in this player.");
+    });
     var c = sheet.querySelector("#apCont");
     if (c) c.addEventListener("click", function () {
       var at = q.type === "audio" ? (audioPos(q.key) || {}).ch : (jget(LASTKEY, {}).item || 0);
@@ -1717,7 +1900,7 @@
     if (latestBtn) {
       latestBtn.addEventListener("click", function () {
         closeShowSheet();
-        playFeed(show, 0);
+        playFeed(show, 0, null, { open: true });
       });
     }
     var st = { all: [], shown: 0, art: "" };
@@ -1738,7 +1921,7 @@
         b.addEventListener("click", function () {
           var i = Number(b.getAttribute("data-i"));
           closeShowSheet();
-          playFeed(show, i);
+          playFeed(show, i, null, { open: true });
         });
       });
     }
@@ -1897,7 +2080,7 @@
     sh.querySelectorAll("[data-oep]").forEach(function (b) {
       b.addEventListener("click", function () {
         sh.remove();
-        playOriginal(Number(b.getAttribute("data-oep")));
+        playOriginal(Number(b.getAttribute("data-oep")), undefined, undefined, { open: true });
       });
     });
   }
@@ -2152,7 +2335,12 @@
   /* v319: pre-fetch a show's episode list in idle time so the first tap plays, not waits */
   warmShow: function (show) { try { fetchFeed(show.rss || show.url || show.feed || "", function () {}); } catch (e) {} },
     playBook: function (bookId, fromLesson) {
-      var go = function () { var qc = bookQueue(bookId, fromLesson); if (qc) startTTS(qc); };
+      /* v402: Listen inside a book opens the same full player the Listen room
+         opens. Until now the book page left a thin dock and everything else
+         (chapter list, speed, sleep timer, voice, offline) lived one tap away
+         behind a list button, which read as a stripped down player. One
+         player, one shape, wherever it is started from. */
+      var go = function () { var qc = bookQueue(bookId, fromLesson); if (qc) { qc.open = true; startTTS(qc); } };
       var run = function () { if (window.TSB_LESSONS) TSB_LESSONS.ensure(bookId, go); else go(); };
       /* v346: give membership a moment to answer before the queue is cut */
       try {
@@ -2171,7 +2359,7 @@
     showBrowser: showBrowser,
     playOriginal: playOriginal,       /* v317: TSB ORIGINALS */
     originalBrowser: originalBrowser,
-    playOriginalLatest: function () { playOriginal(0); },
+    playOriginalLatest: function (opt) { playOriginal(0, undefined, undefined, opt); },
     playAudiobook: playAudiobook,
     audiobookFor: function (bookId) { return (window.TSB_AUDIOBOOKS || {})[bookId] || null; },
     fetchAudiobook: fetchAudiobook,   /* v316: the shelf warms its own cache */
@@ -2204,12 +2392,12 @@
       if (!it) it = "Part " + ((l.item || 0) + 1);
       return { title: l.title, key: l.key, type: l.type, bookId: l.bookId, item: l.item, itemLabel: it, at: l.at };
     },
-    resume: function () {
+    resume: function (opt) {
       var l = jget(LASTKEY, null);
       if (!l) return;
       jset(CANCELKEY, 0);   /* continue is the one key that undoes a cancel */
       if (l.type === "book" && l.bookId) {
-        var goR = function () { var qc = bookQueue(l.bookId, l.item || 0); if (qc) startTTS(qc); };
+        var goR = function () { var qc = bookQueue(l.bookId, l.item || 0); if (qc) { qc.open = !!(opt && opt.open); startTTS(qc); } };
         if (window.TSB_LESSONS) TSB_LESSONS.ensure(l.bookId, goR); else goR();
       } else if (l.type === "audio") {
         if (/^ab:/.test(l.key)) {
@@ -2220,7 +2408,7 @@
               if (!items.length) return;
               var pos = audioPos("ab:" + bid);
               var hiRec = (window.TSB_AUDIOBOOKS || {})[bid] || {};
-              startAudio(audioQueue({ key: "ab:" + bid, title: l.title, sub: hiRec.lang === "hi" ? "Hindi mein poora audiobook · LibriVox" : "full audiobook · LibriVox", glyph: hiRec.dev || "", art: window.TSB_ABART ? TSB_ABART(bid, hiRec, null) : "", items: items, ch: pos ? pos.ch : 0, seek: pos ? pos.t : 0, autoplay: true, credit: "Read by volunteers for LibriVox (public domain), streamed from Archive.org." }));
+              startAudio(audioQueue({ open: !!(opt && opt.open), key: "ab:" + bid, title: l.title, sub: hiRec.lang === "hi" ? "Hindi mein poora audiobook · LibriVox" : "full audiobook · LibriVox", glyph: hiRec.dev || "", art: window.TSB_ABART ? TSB_ABART(bid, hiRec, null) : "", items: items, ch: pos ? pos.ch : 0, seek: pos ? pos.t : 0, autoplay: true, credit: "Read by volunteers for LibriVox (public domain), streamed from Archive.org." }));
             });
           }
         } else if (/^pod:/.test(l.key)) {
@@ -2233,6 +2421,7 @@
             if (!items.length) return;
             var pos = audioPos(l.key) || {};
             startAudio(audioQueue({
+              open: !!(opt && opt.open),
               key: l.key,
               title: l.title || show.name,
               sub: "Latest episodes, streaming from the show's own feed",

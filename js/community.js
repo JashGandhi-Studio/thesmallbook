@@ -953,17 +953,24 @@
   }
 
   /* ---- public read API ---- */
-  function notifMarkRead(keys) { markIn(NOTIF_READ, keys, LEGACY_TOAST); }
+  function notifMarkRead(keys) {
+    markIn(NOTIF_READ, keys, LEGACY_TOAST);
+    /* v404: opening a thing is also the end of its banner life. Read used
+       to leave the popped ledger untouched, so a message first opened in
+       its thread could still arrive as a banner later on another page. */
+    markIn(NOTIF_POPPED, keys, null);
+  }
   function toastMark(keys) { notifMarkRead(keys); }                 /* back-compat */
   function toastSeen() { return Object.keys(readStore(NOTIF_READ, LEGACY_TOAST)); }
   function notifPopped(keys) { markIn(NOTIF_POPPED, keys, null); }
   function notifIsRead(n) { return !!readStore(NOTIF_READ, LEGACY_TOAST)[notifKey(n)]; }
   function notifUnread(items) {
     var read = readStore(NOTIF_READ, LEGACY_TOAST);
+    var cleared = readStore(NOTIF_CLEARED, null);
     var legacyTs = 0;
     try { legacyTs = +(localStorage.getItem(LEGACY_SEEN) || 0); } catch (e) {}
     return (items || []).filter(function (n) {
-      if (read[notifKey(n)]) return false;
+      if (read[notifKey(n)] || cleared[notifKey(n)]) return false;
       /* items older than the last pre-v250 bell visit were already seen */
       if (legacyTs && Date.parse(n.at) <= legacyTs) return false;
       return true;
@@ -1089,6 +1096,7 @@
     var av = avaUrl(n.name, n.avatar, n.who);
     el.innerHTML = '<div class="cm-ava">' + (av ? '<img src="' + esc(av) + '" alt="">' : "<span>" + esc((n.name || "R").charAt(0).toUpperCase()) + "</span>") + "</div>" +
       "<div><b>" + esc(n.name) + (isOfficial(n.who) ? ' <span class="cm-vtick">\u2714</span>' : "") + "</b> " + what + "<em>" + ago(n.at) + " \u00B7 tap to open</em></div>";
+    el.addEventListener("click", function () { toastOpened(n); });
     wrap.appendChild(el);
     requestAnimationFrame(function () { el.classList.add("in"); });
     setTimeout(function () { el.classList.remove("in"); el.classList.add("out"); setTimeout(function () { el.remove(); }, 450); }, 5200);
@@ -1104,19 +1112,48 @@
   function onReadingPage() {
     try { return /(^|\/)book\.html/i.test(String(location.pathname || "")); } catch (e) { return false; }
   }
+  function onMessagesPage() {
+    try { return /(^|\/)dm\.html/i.test(String(location.pathname || "")); } catch (e) { return false; }
+  }
+  function openPeerId() {
+    try { return new URLSearchParams(location.search).get("u") || ""; } catch (e) { return ""; }
+  }
   function popupsWanted() {
     if (onReadingPage()) return false;
+    if (onMessagesPage()) return false;
     return localStorage.getItem("tsb_notif_pop") !== "0";
+  }
+  /* v404: tapping a toast is opening the thing itself, so it is read. The
+     pop alone only records that it popped; the two ledgers stay separate. */
+  function toastOpened(n) {
+    notifMarkRead([notifKey(n)]);
   }
   async function toastPoll() {
     try {
       if (document.hidden || !ENABLED || !signedIn()) return;
       var items = await notifications();
-      paintNotifUI(items);                       /* every badge stays truthful */
       var popped = readStore(NOTIF_POPPED, null);
-      var freshAll = items.filter(function (n) {
-        return !popped[notifKey(n)] && (Date.now() - Date.parse(n.at)) < 36e5;
+      var read = readStore(NOTIF_READ, LEGACY_TOAST);
+      var cleared = readStore(NOTIF_CLEARED, null);
+      var freshAll = [], soundOnly = false, peer = onMessagesPage() ? openPeerId() : "";
+      items.forEach(function (n) {
+        var k = notifKey(n);
+        if (popped[k] || read[k] || cleared[k]) return;
+        if (!((Date.now() - Date.parse(n.at)) < 36e5)) return;
+        if (onMessagesPage() && n.type === "dm") {
+          /* v404: inside Messages there is no banner for a message. The
+             open thread is already read; a different sender gets one sound
+             and stays unread in the list, but never becomes a late banner. */
+          notifPopped([k]);
+          if (peer && n.who === peer) notifMarkRead([k]); else soundOnly = true;
+          return;
+        }
+        freshAll.push(n);
       });
+      paintNotifUI(items);                       /* every badge stays truthful */
+      if (soundOnly) {
+        try { if (window.TSB && window.TSB.sound) window.TSB.sound.play(); } catch (e2) {}
+      }
       if (popupsWanted()) freshAll.slice(0, 2).forEach(toastShow);
     } catch (e) {}
   }
@@ -1385,7 +1422,7 @@
   }
 
   var OFFICIAL_ID = "11111111-1111-1111-1111-111111111111";
-  var FOUNDER_EMAILS = ["acimotreyothy@gmail.com"];
+  var FOUNDER_EMAILS = ["acimotreyothy@gmail.com", "jashgandhicreator07@gmail.com"];
   var FOUNDER_IDS_KEY = "tsb_founder_ids";
   function loadFounderIds(){ try{ return JSON.parse(localStorage.getItem(FOUNDER_IDS_KEY)||"[]"); }catch(e){ return []; } }
   var FOUNDER_IDS = loadFounderIds();

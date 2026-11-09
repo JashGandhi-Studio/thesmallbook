@@ -26,9 +26,12 @@
      when they do, so the state lives on the document where the CSS can see it */
   function labelsState() {
     try {
-      var off = localStorage.getItem("tsb_bar_labels") === "0" || localStorage.getItem("tsb_bar_labels") === '"0"';
+      var rawLabels = localStorage.getItem("tsb_bar_labels");
+      var off = rawLabels === "icons" || rawLabels === "0" || localStorage.getItem("tsb_bar_labels") === '"0"';
       document.documentElement.classList.toggle("bar-nolabels", off);
       document.body && document.body.classList.toggle("bar-nolabels", off);
+      if (off) document.documentElement.setAttribute("data-bar-labels", "icons");
+      else if (rawLabels === "labels" || rawLabels === "1") document.documentElement.removeAttribute("data-bar-labels");
     } catch (e) {}
   }
   try { labelsState(); document.addEventListener("DOMContentLoaded", labelsState); } catch (e) {}
@@ -99,21 +102,37 @@
     try { return !!(window.TSB_GOLD && typeof window.TSB_GOLD.isGold === "function" && window.TSB_GOLD.isGold()); } catch (e) { return false; }
   }
 
-  /* Load active custom slots or fallback to clean 4-item bar */
+  /* Load active custom slots or fallback to clean 4-item bar. Saved slots
+     are healed, never merely trusted: invalid names and duplicates are
+     removed, missing core buttons are restored, and a Gold fifth button
+     stays in storage even on a paint that happens before Gold answers. */
+  function normalizeSlots(saved, keepFifth) {
+    var out = [];
+    if (Array.isArray(saved)) {
+      saved.forEach(function (k) { if (ITEM_DEFS[k] && out.indexOf(k) < 0) out.push(k); });
+    }
+    ["home", "library", "audio", "you"].forEach(function (k) { if (out.indexOf(k) < 0) out.push(k); });
+    return out.slice(0, keepFifth ? 5 : 4);
+  }
+  function storedSlots() {
+    try { return normalizeSlots(JSON.parse(localStorage.getItem("tsb_custom_bar")), true); } catch (e) { return normalizeSlots(null, true); }
+  }
+  function saveSlots(forceFour) {
+    var out = activeSlots.slice(0, 5);
+    var stored = storedSlots();
+    if (!forceFour && out.length === 4 && stored.length === 5 && out.indexOf(stored[4]) < 0) out.push(stored[4]);
+    try { localStorage.setItem("tsb_custom_bar", JSON.stringify(out)); } catch (e) {}
+  }
   function getActiveSlots() {
     var gold = checkIsGold();
+    var full = storedSlots();
+    /* Heal a corrupt saved set once, while preserving its fifth button. */
     try {
-      var saved = JSON.parse(localStorage.getItem("tsb_custom_bar"));
-      if (Array.isArray(saved) && saved.length >= 4) {
-        var valid = saved.filter(function (k) { return !!ITEM_DEFS[k]; });
-        if (valid.length >= 4) {
-          /* v331: the fifth button is Gold, decided by the server */
-          return valid.slice(0, gold ? 5 : 4);
-        }
-      }
+      var raw = JSON.parse(localStorage.getItem("tsb_custom_bar"));
+      if (JSON.stringify(raw) !== JSON.stringify(full)) localStorage.setItem("tsb_custom_bar", JSON.stringify(full));
     } catch (e) {}
-    /* v326: the film's four tabs: Today, Library, Listen, You */
-    return ["home", "library", "audio", "you"];
+    /* v331: the fifth button is Gold, decided by the server */
+    return full.slice(0, gold ? 5 : 4);
   }
 
   var activeSlots = getActiveSlots();
@@ -139,6 +158,11 @@
     try { look = localStorage.getItem("tsb_bar_look") || "float"; } catch (e) {}
     try { lbl = localStorage.getItem("tsb_bar_labels") || "labels"; } catch (e) {}
     try { barBehave = localStorage.getItem("tsb_bar_behave") || "auto"; } catch (e) {}
+    lbl = String(lbl).replace(/^\"|\"$/g, "");
+    if (lbl === "0" || lbl === "false") lbl = "icons";
+    if (lbl === "1" || lbl === "true") lbl = "labels";
+    if (["labels", "icons", "active"].indexOf(lbl) < 0) lbl = "labels";
+    try { if (localStorage.getItem("tsb_bar_labels") !== lbl) localStorage.setItem("tsb_bar_labels", lbl); } catch (e) {}
     if (["glass", "solid", "ink", "float"].indexOf(look) < 0) look = "float";
     R.setAttribute("data-bar-look", look);
     R.setAttribute("data-bar-behave", barBehave);
@@ -164,6 +188,20 @@
   bar.innerHTML = buildBarHtml(activeSlots);
 
   document.body.appendChild(bar);
+
+  /* v404: the sidebar carries the app's own front door sign, the same mark
+     and word the reader sees at the top of every page, not a plain text
+     stand-in. It only shows where the bar stands up as a sidebar. */
+  try {
+    var brand = document.createElement("a");
+    brand.className = "tsb-bar__brand";
+    brand.href = "index.html";
+    brand.setAttribute("aria-label", "TheSmallBook, back to Today");
+    brand.innerHTML =
+      '<span class="tsb-bar__mark"><svg class="tsb-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path class="tsb-mark__a" d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z"/><path class="tsb-mark__b" d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z"/><path class="tsb-mark__sp" d="M32 18v34"/></svg><img class="tsb-bar__icon" src="assets/brand-book.png" alt="" width="512" height="512"></span>' +
+      '<span class="tsb-bar__word">The<span class="tsb-bar__small">Small</span>Book</span>';
+    bar.insertBefore(brand, bar.firstChild);
+  } catch (eBrand) {}
   document.documentElement.classList.add("tsb-hasbar");
 
   /* v324 · the pill SLIDES: the active ::before starts where the old one
@@ -407,29 +445,36 @@
 
   /* ---------- hide on scroll-down, reveal on scroll-up (rAF-smooth) ---------- */
   if (!reduce) {
-    var lastY = window.scrollY || 0;
-    var ticking = false;
+    var lastY = window.scrollY || 0, anchorY = lastY, ticking = false;
     var onScroll = function () {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(function () {
         ticking = false;
-        if (!pageScrolls() || barBehave === "fixed") { if (hidden) setBarOff(false); return; }
+        if (isEditMode) { if (hidden) setBarOff(false); anchorY = window.scrollY || 0; return; }
+        if (!pageScrolls() || barBehave === "fixed") { if (hidden) setBarOff(false); anchorY = window.scrollY || 0; return; }
         var y = window.scrollY || 0;
-        var dy = y - lastY;
-        if (Math.abs(dy) < 6) return;
         lastY = y;
         if (y < 90) {
           if (hidden) setBarOff(false);
+          anchorY = y;
           return;
         }
-        if (y + window.innerHeight >= document.documentElement.scrollHeight - 6 && Math.abs(dy) < 40) {
-          /* settled at the page end, tuck again */
-          if (!hidden) setBarOff(true);
-          return;
+        /* Direction is judged from the last place the bar changed state,
+           not from every tiny scroll frame. Small hand tremor and browser
+           rubber-banding therefore cannot make it flap in and out. */
+        if (!hidden && y - anchorY > 38) {
+          setBarOff(true);
+          anchorY = y;
+        } else if (hidden && anchorY - y > 14) {
+          setBarOff(false);
+          anchorY = y;
+        } else if (!hidden && y < anchorY) {
+          anchorY = y;
+        } else if (hidden && y > anchorY) {
+          anchorY = y;
         }
-        if (dy > 0 && !hidden) setBarOff(true);
-        else if (dy < 0 && hidden) setBarOff(false);
+        if (y + window.innerHeight >= document.documentElement.scrollHeight - 6) anchorY = y;
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -858,7 +903,7 @@
               var movedSlot = activeSlots.splice(a, 1)[0];
               activeSlots.splice(b, 0, movedSlot);
               selectedSlotIdx = b;
-              try { localStorage.setItem("tsb_custom_bar", JSON.stringify(activeSlots)); } catch (eS) {}
+              try { saveSlots(); } catch (eS) {}
               bar.innerHTML = buildBarHtml(activeSlots);
               try { if (navigator.vibrate) navigator.vibrate(8); } catch (eV) {}
               renderLiveDock();
@@ -916,7 +961,7 @@
       slotToggleBtn.addEventListener("click", function () {
         if (activeSlots.length >= 5) {
           activeSlots = activeSlots.slice(0, 4);
-          try { localStorage.setItem("tsb_custom_bar", JSON.stringify(activeSlots)); } catch (e) {}
+          try { saveSlots(true); } catch (e) {}
           bar.innerHTML = buildBarHtml(activeSlots);
           if (selectedSlotIdx >= 4) selectedSlotIdx = 3;
           try { if (navigator.vibrate) navigator.vibrate(15); } catch (e) {}
@@ -937,7 +982,7 @@
             }
           }
           activeSlots.push(nextTool);
-          try { localStorage.setItem("tsb_custom_bar", JSON.stringify(activeSlots)); } catch (e) {}
+          try { saveSlots(); } catch (e) {}
           bar.innerHTML = buildBarHtml(activeSlots);
           selectedSlotIdx = activeSlots.length - 1;
           try { if (navigator.vibrate) navigator.vibrate([25, 30]); } catch (e) {}
@@ -965,7 +1010,7 @@
             activeSlots[selectedSlotIdx] = toolKey;
             cleanToast((ITEM_DEFS[toolKey].lbl || toolKey) + " replaced this spot.");
           }
-          try { localStorage.setItem("tsb_custom_bar", JSON.stringify(activeSlots)); } catch (e) {}
+          try { saveSlots(); } catch (e) {}
           bar.innerHTML = buildBarHtml(activeSlots);
           try { if (navigator.vibrate) navigator.vibrate(15); } catch (e) {}
           updateSlotHighlight();
@@ -1046,7 +1091,7 @@
       dragIdx = targetIdx;
       selectedSlotIdx = targetIdx;
 
-      try { localStorage.setItem("tsb_custom_bar", JSON.stringify(activeSlots)); } catch (e) {}
+      try { saveSlots(); } catch (e) {}
       bar.innerHTML = buildBarHtml(activeSlots);
       updateSlotHighlight();
       try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) {}
