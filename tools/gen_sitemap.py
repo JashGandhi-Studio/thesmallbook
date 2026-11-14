@@ -26,7 +26,6 @@ TODAY = "2026-11-05"
 ROOT_PAGES = {
     "index.html": ("1.0", "daily"),
     "audio.html": ("0.9", "weekly"),
-    "podcasts.html": ("0.7", "weekly"),
     "stories.html": ("0.7", "weekly"),
     "deepdive.html": ("0.7", "weekly"),
     "about.html": ("0.6", "monthly"),
@@ -46,8 +45,10 @@ ROOT_PAGES = {
 SECTIONS = [
     ("books", "0.8", "monthly"),
     ("graveyard", "0.6", "monthly"),
+    ("graveyard/causes", "0.7", "monthly"),
     ("authors", "0.6", "monthly"),
     ("topics", "0.7", "monthly"),
+    ("ask", "0.8", "weekly"),
     ("pseo", "0.7", "weekly"),
     ("pseo/vs", "0.6", "monthly"),
     ("pseo/best-books-on", "0.6", "monthly"),

@@ -231,3 +231,25 @@ html.dark .ln-day__save { background: rgba(255, 255, 255, .07); }
 @media (prefers-reduced-motion: reduce) {
   .ln-day__card { animation: none !important; }
 }
+
+/* v412: one search, one calm order. The quick topics stay attached to the
+   search they filter, and the personal rails sit inside the page flow. */
+.ln-search { margin: 16px 0 6px; }
+.ln-search__bar { margin: 0 !important; }
+.ln-search__out { margin-top: 12px; }
+.ln-quick { margin: 10px 0 20px !important; }
+.ln-similar:empty, .ln-foryou:empty { display: none; }
+.ln-hold__in--start .ln-hold__t { color: #16130F !important; }
+.ln-hold__in--start .ln-hold__s { color: rgba(22, 19, 15, .68) !important; }
+.ln-hold__in--start .ln-hold__foot { border-top-color: rgba(22, 19, 15, .14) !important; color: rgba(22, 19, 15, .62) !important; }
+.ln-hold__in--start .ln-hold__kick { color: #8A6300 !important; }
+html.dark .ln-hold__in--start .ln-hold__t { color: #F7EFDF !important; }
+html.dark .ln-hold__in--start .ln-hold__s { color: rgba(247, 239, 223, .68) !important; }
+html.dark .ln-hold__in--start .ln-hold__foot { border-top-color: rgba(247, 239, 223, .16) !important; color: rgba(247, 239, 223, .62) !important; }
+html.dark .ln-hold__in--start .ln-hold__kick { color: #FFC800 !important; }
+@media (max-width: 699px) {
+  .ln-search { margin-top: 12px; }
+  .ln-quick { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .ln-quick::-webkit-scrollbar { display: none; }
+  .ln-quick button { flex: 0 0 auto; }
+}

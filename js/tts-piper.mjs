@@ -94,6 +94,7 @@ async function cacheRuntime() {
      reader who prepared it once can listen on a train without a network. */
   if (!window.caches) return;
   const files = [
+    "./js/tts-piper.mjs?v=413", "./js/tts-piper-worker.js?v=413",
     ROOT + "ort-wasm.min.js", ROOT + "ort-wasm-simd.wasm", ROOT + "ort-wasm.wasm",
     ROOT + "piper-phonemize.mjs", ROOT + "piper-phonemize.wasm", ROOT + "piper-phonemize.data"
   ];
@@ -236,7 +237,7 @@ function workerCall(payload, transfer, onChunk) {
 }
 function workerForVoice() {
   if (voiceWorker) return voiceWorker;
-  voiceWorker = new Worker(new URL("./tts-piper-worker.js?v=343", import.meta.url));
+  voiceWorker = new Worker(new URL("./tts-piper-worker.js?v=413", import.meta.url));
   voiceWorker.onmessage = function (event) {
     const d = event.data || {}, w = workerWaiters.get(d.id); if (!w) return;
     if (d.type === "progress") { if (w.progress) w.progress({ loaded: d.loaded, total: d.total, phase: "speaking" }); return; }

@@ -391,7 +391,10 @@ window.TTS_ENGINE = (function () {
   function getModelApi() {
     if (modelApi) return Promise.resolve(modelApi);
     if (modelLoading) return modelLoading;
-    modelLoading = import("./tts-piper.mjs?v=343").then(function (m) { modelApi = m; return m; }).catch(function (e) { modelLoading = null; throw e; });
+    /* v412: Piper is a large model stack. It is imported lazily, only when
+       speech or the voice picker actually needs it, so opening a reader can
+       never be held up by the voice runtime or its wasm files. */
+    modelLoading = import("./tts-piper.mjs?v=413").then(function (m) { modelApi = m; return m; }).catch(function (e) { modelLoading = null; throw e; });
     return modelLoading;
   }
   function modelVoiceName() {
@@ -509,14 +512,14 @@ window.TTS_ENGINE = (function () {
       }).then(function () { clearFirst(); sourceDone = true; if (!paused) pump(); }).catch(function () { clearFirst(); sourceDone = true; if (!heard) finish(false); else if (!paused) pump(); });
     });
   }
-  /* v406 · Kokoro speaks English. It is the best quality voice we can
-     run on a phone with no server. Hindi keeps the Piper model, which
-     Kokoro cannot pronounce. */
+  /* v412 · Kokoro is opt-in only. It is the large English model, so it is
+     never imported, probed or warmed while a page or reader is opening.
+     Hindi keeps the Piper model, which Kokoro cannot pronounce. */
   function speakKokoro(text, speedV, keep) {
     provider = "model";
     var ready = false; try { ready = localStorage.getItem("tsb_kokoro_ready") === "1"; } catch (e) {}
     if (!ready) return Promise.resolve({ ok: false, heard: 0, missing: true });
-    return import("./tts-kokoro.mjs?v=411").then(function (m) { return m.kokoroSpeak(text, speedV || 1.08); }).then(function (blob) {
+    return import("./tts-kokoro.mjs?v=413").then(function (m) { return m.kokoroSpeak(text, speedV || 1.08); }).then(function (blob) {
       return new Promise(function (resolve) {
         if (keep !== gen || !playing) { resolve({ ok: false, heard: 0 }); return; }
         playModelBlob(blob, text, speedV, function (ok) { if (ok) modelPlayed = true; resolve({ ok: !!ok, heard: ok ? 1 : 0 }); });
@@ -676,7 +679,7 @@ window.TTS_ENGINE = (function () {
       /* v356: from the first tap to the finished file, nothing speaks */
       voiceBusy = true;
       if (tier === "kokoro") {
-        import("./tts-kokoro.mjs?v=411").then(function (m) {
+        import("./tts-kokoro.mjs?v=413").then(function (m) {
           return m.loadKokoro(function (pr) {
             if (pr.phase === "model" && pr.total) b.querySelector("small").textContent = "Downloading " + Math.min(99, Math.round(pr.loaded / pr.total * 100)) + "%";
             else b.querySelector("small").textContent = "Making it available offline…";
@@ -1638,14 +1641,14 @@ window.TTS_ENGINE = (function () {
     if (!silentStart) ensurePlayer(book);
     silentStart = false;
     updatePlayer();   // paint eq/state immediately (no wait for intro)
-    /* v346 · SMOOTH START: the probe is already warm from page load, and a
-       stored voice is woken here so the first sentence lands in about a
-       second rather than after the model cold-starts. Neither call blocks
-       the queue - reading begins on this tick either way. */
+    /* v412 · START ONLY AFTER LISTEN: a stored voice is probed and woken
+       here, after the reader has asked for sound, so the first sentence
+       can land quickly without making a page load carry the model.
+       Neither call blocks the queue; reading begins on this tick. */
     try {
       if (probeState === "idle") probeModel().catch(function () {});
       var c0 = modelChoice();
-      if (c0) getModelApi().then(function (api) { if (api && api.warm) api.warm(c0, modelLang(currentLang())); }).catch(function () {});
+      if (c0 === "basic" || c0 === "plus") getModelApi().then(function (api) { if (api && api.warm) api.warm(c0, modelLang(currentLang())); }).catch(function () {});
     } catch (eWarm) {}
     next();
   }
@@ -1862,53 +1865,16 @@ window.TTS_ENGINE = (function () {
     onProgress: (fn) => { onProgress = fn; }
   };
 
-  /* ---------- v347.1 · CONTINUE WHERE THE READER STOPPED ----------
-     If a book was playing when the page changed, the next page resumes the same
-     item without a player, a sheet or a toast. It only ever resumes onto the
-     downloaded voice: if there is no model, nothing starts. */
-  function continueSession(sn) {
-    const st = sn || sGet(SESSIONKEY);
-    if (!st || !st.book || !st.on) return false;
-    if (Date.now() - (st.at || 0) > 4 * 3600e3) { clearSession(); return false; }
-    const book = (window.BOOKS || []).find(function (b) { return b.id === st.book; });
-    if (!book) { clearSession(); return false; }
-    probeModel().then(function (choice) {
-      if (!choice) { clearSession(); return; }
-      const go = function () { silentStart = true; playBook(book, null, st.item | 0); };
-      if (window.TSB_LESSONS && window.TSB_LESSONS.ensure) TSB_LESSONS.ensure(book.id, go); else go();
-    }).catch(function () {});
-    return true;
+  /* v412: this engine no longer restarts a book by itself when a page
+     opens. The shared player owns session restore, so a page load cannot
+     probe a voice model, start a worker, or begin speaking behind the
+     reader. The saved session stays available for that player to read. */
+  function continueSession() {
+    return false;
   }
-  try {
-    const pending = sGet(SESSIONKEY);
-    if (pending && pending.on) {
-      const later = function () {
-        const st = sGet(SESSIONKEY);
-        if (!st || !st.on || !(Date.now() - (st.at || 0) < 4 * 3600e3)) return;
-        /* only on a page that is not already about to play something */
-        if (!playing) continueSession(st);
-      };
-      if (window.requestIdleCallback) window.requestIdleCallback(later, { timeout: 4000 }); else setTimeout(later, 2600);
-    }
-  } catch (e) {}
 
-  /* v343 · A VOICE THAT IS ALREADY AWAKE
-     Reading the 63 MB model into the worker takes a few seconds on a phone.
-     Doing it when the reader taps Listen is what made the first sentence late
-     even after the download. If this device already owns a voice, wake it in
-     the background while the page settles: nothing plays, nothing prompts,
-     and the next Listen makes sound in about a second. */
-  try {
-    var warmIdle = window.requestIdleCallback || function (fn) { return setTimeout(fn, 1400); };
-    warmIdle(function () {
-      /* v346: ask the device, not one key. A stored voice is woken before the
-         reader taps anything, so the first sentence is not the price of it. */
-      probeModel().then(function (choice) {
-        if (!choice || voiceSkipped()) return;
-        return getModelApi().then(function (api) {
-          if (api && api.warm) return api.warm(choice, modelLang(currentLang()));
-        });
-      }).catch(function () {});
-    }, { timeout: 3000 });
-  } catch (e) {}
+  /* No voice model is warmed when a page opens. The Piper and Kokoro
+     runtimes can claim tens of megabytes and real CPU on a phone; reader
+     loading must stay separate from that work. startQueue warms a stored
+     voice only after the reader taps Listen. */
 })();

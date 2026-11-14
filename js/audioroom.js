@@ -354,13 +354,13 @@
     });
   }
 
-  /* the front door belongs above the rails, so it is moved there by hand:
-     film2.js drops its rails straight under the hero, and the door has to be
-     the first thing the room says. */
+  /* the front door and the jump bar belong directly under the hero, so
+     they are moved there by hand. The personal rails keep the calmer
+     order written in audio.html. */
   function lift() {
     var hero = $(".pc-hero");
     if (!hero || !hero.parentNode) return;
-    var nodes = [room, $("#lnRoomLine"), $("#lnForYou"), jump];
+    var nodes = [room, $("#lnRoomLine"), jump];
     var anchor = hero;
     for (var i = 0; i < nodes.length; i++) {
       var n = nodes[i];
@@ -397,10 +397,6 @@
     var tries = 0;
     var tick = setInterval(function () {
       tries++;
-      /* film2.js drops its rails under the hero when it wakes, which can land
-         above the door. Put the door back in front of them. */
-      var fp = document.getElementById("fpRoom");
-      if (fp && room && (fp.compareDocumentPosition(room) & Node.DOCUMENT_POSITION_FOLLOWING)) lift();
       paintHold(false);
       if (tries > 12) clearInterval(tick);
     }, 400);

@@ -46,7 +46,7 @@
          function used to lock a paying member out for the whole page load.
          Two more tries, then we admit we do not know rather than say "free". */
       if (!res.ok) {
-        if (attempt < 2) { attempt++; await new Promise(function (r) { setTimeout(r, 400 * attempt); }); return fresh(); }
+        if (attempt < 2) { attempt++; await new Promise(function (r) { setTimeout(r, 400 * attempt); }); return fresh(attempt); }
         known = false; return cached;
       }
       var rows = await res.json();
@@ -62,7 +62,7 @@
       known = true;
     } catch (e) {
       /* a thrown fetch is a network problem, not an answer */
-      if (attempt < 2) { attempt++; known = false; await new Promise(function (r) { setTimeout(r, 400 * attempt); }); return fresh(); }
+      if (attempt < 2) { attempt++; known = false; await new Promise(function (r) { setTimeout(r, 400 * attempt); }); return fresh(attempt); }
       known = false; return cached;
     }
     /* v346: always tell the page what we learned, even when nothing changed,

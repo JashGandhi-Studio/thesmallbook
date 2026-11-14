@@ -575,6 +575,8 @@
     var row = root.querySelector(".aq-inputrow");
     var snd = root.querySelector("#tsb-send");
     if (!row || !snd || row.querySelector(".fa-plus")) return;
+    var oldPlus = row.querySelector("#tsb-plus");
+    if (oldPlus) oldPlus.remove();
     var plus = document.createElement("button");
     plus.className = "fa-plus"; plus.type = "button";
     plus.setAttribute("aria-label", "Ways to ask"); plus.title = "Ways to ask";

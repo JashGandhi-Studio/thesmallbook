@@ -1,10 +1,8 @@
 /* ============================================================
    THESMALLBOOK - 🛍️ TSB STORE (store.js) · v225
-   The reader deals store. Access unlocks three ways:
-     1. 💛 TSB Gold            (paid plan)
+   The reader deals store. Access unlocks two ways:
+     1. 💛 TSB Gold            (paid plan, decided by the server)
      2. ✍️ 3 published stories  (the Insider path - grows community)
-     3. 👑 Founder             (FOUNDER_EMAILS below, or the
-        official ✔ account id in js/community.js OFFICIAL_ID)
    Offers come from js/store-data.js - curated official brand
    programs with real, locally-shipped logos (assets/logos/).
    Paying links can be affiliate-tagged via js/affiliate.js
@@ -14,8 +12,6 @@
   "use strict";
   if (window.TSB_STORE) return;
 
-  /* 👑 FOUNDER: your Gmail - you get the whole store free on login. */
-  var FOUNDER_EMAILS = ["acimotreyothy@gmail.com", "jashgandhicreator07@gmail.com"];
   var INSIDER_POSTS = 3;   /* stories a writer must publish to unlock free */
   var FREE_TEASERS = 6;    /* first 6 offers visible without unlocking, remainder locked */
   var LOGO_DIR = "assets/logos/";
@@ -102,10 +98,6 @@
       if (C && C.signedIn()) {
         a.signed = true;
         var me = C.me() || {};
-        var email = (me.email || "").toLowerCase();
-        if (FOUNDER_EMAILS.indexOf(email) >= 0 || (C.isOfficial && C.isOfficial(me.id))) {
-          a.ok = true; a.via = "founder";
-        }
         if (!a.ok) {
           var rows = [];
           try { rows = await C.listPosts({ author: me.id }); } catch (e) {}
@@ -384,5 +376,5 @@
     if (m) { var o = byId(m[1]); if (o && isOpen(o, a)) setTimeout(function () { openOffer(o); }, 350); }
   }
 
-  window.TSB_STORE = { access: access, INSIDER_POSTS: INSIDER_POSTS, FREE_TEASERS: FREE_TEASERS, FOUNDER_EMAILS: FOUNDER_EMAILS, init: init, open: function (id) { var o = byId(id); if (o) openOffer(o); } };
+  window.TSB_STORE = { access: access, INSIDER_POSTS: INSIDER_POSTS, FREE_TEASERS: FREE_TEASERS, init: init, open: function (id) { var o = byId(id); if (o) openOffer(o); } };
 })();

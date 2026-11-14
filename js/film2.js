@@ -431,38 +431,10 @@
      4 · THE LISTEN ROOM: continue, in Hindi, spoken by the app, little ears
      ========================================================================== */
   function listenRoom() {
-    if (page !== "audio.html" && page !== "podcasts.html") return;
-    var hero = $(".pc-hero"); if (!hero || $("#fpRoom")) return;
-    var AB = window.TSB_AUDIOBOOKS || {}, room = el("section", "fr");
-    room.id = "fpRoom";
-    var html = "";
-    /* v400: the room's front door moved into js/audioroom.js.
-       It used to be a button on this rail, which meant the page carried a
-       "continue" card here AND nothing at all when you had never played
-       anything. The front door is now one card that knows both states, and
-       it sits above these rails, so this block is deliberately empty. */
-    var hi = Object.keys(AB).filter(function (k) { return AB[k].lang === "hi"; });
-    if (hi.length) {
-      html += '<div class="fr-sec f-up" style="--d:.2"><h2>In <i translate="no">हिन्दी</i></h2><span>Full audiobooks</span></div><div class="fr-row">' +
-        hi.slice(0, 8).map(function (k) { var r = AB[k], b = byId(k); return '<button type="button" class="fr-bk" data-fr-ab="' + esc(k) + '"><span class="fr-cv2">' + (b || r.art || r.discovered ? '<img src="' + esc(b ? cover(b) : (window.TSB_ABART ? TSB_ABART(k, r, null) : r.art)) + '" alt="" loading="lazy">' : '<span class="fr-dev" translate="no">' + esc(r.dev || r.title) + "</span>") + '</span><b translate="no">' + esc(r.dev || r.title) + "</b><span>" + IC.ear + " " + esc(r.author || "") + "</span></button>"; }).join("") + "</div>";
-    }
-    /* books the app reads aloud: what you picked first */
-    var cats = lsGet("tsb_interests", []); cats = Array.isArray(cats) ? cats : [];
-    var pool = books().filter(function (b) { return b.lessons && b.lessons.length && (!cats.length || cats.indexOf(b.category) >= 0); });
-    var s = seed(dayKey() + "listen"), spoken = [];
-    for (var i = 0; i < pool.length && spoken.length < 8; i++) { var bb = pool[(i * 11 + s) % pool.length]; if (spoken.indexOf(bb) < 0) spoken.push(bb); }
-    if (spoken.length) {
-      html += '<div class="fr-sec f-up" style="--d:.3"><h2>Spoken <i>for you</i></h2><span>Every lesson, read aloud</span></div><div class="fr-row">' +
-        spoken.map(function (b) { var m = parseInt(b.readTime, 10) || 10; return '<button type="button" class="fr-bk" data-fr-book="' + esc(b.id) + '"><span class="fr-cv2"><img src="' + esc(cover(b)) + '" alt="" loading="lazy"></span><b>' + esc(b.title) + "</b><span>" + IC.ear + " " + (m + 3) + " min</span></button>"; }).join("") + "</div>";
-    }
-    /* v334: Story time lives only in You */
-    room.innerHTML = html;
-    hero.parentNode.insertBefore(room, hero.nextSibling);
-    room.addEventListener("click", function (e) {
-      var A = window.TSB_AUDIO; if (!A) return;
-      var ab = e.target.closest("[data-fr-ab]"); if (ab) { A.playAudiobook(ab.getAttribute("data-fr-ab")); return; }
-      var bk = e.target.closest("[data-fr-book]"); if (bk) { A.playBook(bk.getAttribute("data-fr-book"), 0); }
-    });
+    /* v412: the Listen room is written once in audio.html. This layer no
+       longer drops a second Hindi rail or a second spoken-for-you rail
+       under the hero; one room, one order, one set of play buttons. */
+    return;
   }
 
   /* ==========================================================================
@@ -990,8 +962,6 @@
     if (lv) mg.appendChild(row(SIC.grid, "Library view", null, lv));
     if (sr) { var srow = row(SIC.bell, "Sound", null, sr); if (st) { st.className = "fs2-mini"; st.textContent = "Play a test sound"; srow.querySelector(".fs2-ctl").appendChild(st); } mg.appendChild(srow); }
     if (inst) { var ir = row(SIC.dl, "Install the app", "Full screen, works offline", null, { cls: "fs2-row--inst" }); inst.classList.add("fs2-instwrap"); ir.appendChild(inst); mg.appendChild(ir); }
-    var fc = take("#founderCard");
-    if (fc) { var fr2 = row(SIC.crown, "Founder preview", null, null, { cls: "fs2-row--founder" }); var fw2 = el("div", "fs2-ctl"); $$(".setrow, #founderState", fc).forEach(function (n) { fw2.appendChild(n); }); fr2.appendChild(fw2); fr2.hidden = fc.hidden; if (window.MutationObserver) new MutationObserver(function () { fr2.hidden = fc.hidden; }).observe(fc, { attributes: true, attributeFilter: ["hidden"] }); mg.appendChild(fr2); }
     if (cc) mg.appendChild(row(SIC.trash, "Clear chat history", "Books, streaks and shelf stay", null, { btn: true, cls: "fs2-row--danger", click: function () { cc.click(); } }));
     more.appendChild(mg);
     wrap.appendChild(more);

@@ -25,7 +25,7 @@
   var LASTKEY = "tsb_audio_last";
   var SPEEDKEY = "tsb_audio_speed";
   var PLAYKEY = "tsb_audio_playing";      /* 1 = it was playing when you left, 0 = you paused it */
-  var CANCELKEY = "tsb_audio_cancelled";  /* a swipe-away cancel survives reloads; only Continue lifts it */
+  var CANCELKEY = "tsb_audio_cancelled";  /* a swipe-away dismissal survives reloads; only an explicit new play or Continue lifts it */
   var FEEDCACHE = "tsb_feed_";
 
   function jget(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
@@ -976,8 +976,8 @@
       return;
     }
     if (!T) return;
-    if (T.playing && !T.paused) { T.pause(); paintPlay(); }
-    else if (T.paused) { T.resume(); paintPlay(); }
+    if (T.playing && !T.paused) { T.pause(); jset(PLAYKEY, 0); paintPlay(); }
+    else if (T.paused) { T.resume(); jset(PLAYKEY, 1); paintPlay(); }
     else { seekItem(curItem); }
   }
   function nextItem() { if (q && curItem < q.items.length - 1) { if (q.type === "audio") playChapter(curItem + 1, 0); else seekItem(curItem + 1); } }
@@ -1132,38 +1132,43 @@
       paintPlay();
     }, at - Date.now());
   }
-  /* ================= v399: PARK, DO NOT ERASE =================
-     Swiping the player away used to call stopAll(), which is the honest
-     "end this" button: it clears the session, forgets what you were listening
-     to, and blocks every page from rebuilding a dock. So a swipe ended the
-     book, and nothing could bring it back, not even reopening the app.
-
-     A swipe is a park, not a decision to forget. The queue, the chapter and
-     the second are all kept; the dock leaves the screen; the Listen room and
-     the Continue card can bring it back, and so can opening the app again.
-     stopAll() stays exactly as it was for the explicit Stop in the sheet. */
+  /* ================= v412: SWIPE AWAY MEANS DISMISSED =================
+     A swipe is a real dismissal. The place in the book is kept for the
+     Continue card, but the player itself stays away across refresh, reload
+     and later visits until the reader explicitly plays or continues
+     something. That explicit play is the only thing that clears the
+     dismissed flag. stopAll() remains the harder Stop action: it also
+     forgets the session. */
   function parkSession() {
+    var parkedItem = curItem;
     try {
       if (q && q.type === "audio" && AU) audioPosSave(q.key, curItem, AU.currentTime || 0);
       savePos();
     } catch (e) {}
     try { if (T) T.stop(); } catch (e) {}
     try { if (AU) AU.pause(); } catch (e) {}
-    jset(PLAYKEY, 0);           /* parked means paused */
-    jset(CANCELKEY, 0);         /* and allowed to come back */
+    /* stopping the narrator reports item zero through its progress
+       callback; put the real place back before anything can read it */
+    curItem = parkedItem;
+    try { savePos(); } catch (e2) {}
+    jset(PLAYKEY, 0);           /* dismissed means paused */
+    jset(CANCELKEY, Date.now()); /* and stays dismissed until a new play */
     keepAliveOff();
     unmountDock();
-    try { window.dispatchEvent(new CustomEvent("tsb:ap-parked", { detail: { key: q ? q.key : "" } })); } catch (e) {}
-    toast("Kept your place. Listen brings it back.");
+    try { window.dispatchEvent(new CustomEvent("tsb:ap-parked", { detail: { key: q ? q.key : "" } })); } catch (e3) {}
+    toast("Player closed. Your place is kept.");
   }
   function parked() {
     var l = jget(LASTKEY, null);
-    return !!(l && l.type === "audio" && l.key && !jget(CANCELKEY, 0));
+    return !!(l && l.type === "audio" && l.key);
   }
-  /* put the dock back for a session that is still alive, paused, at its place */
+  function dismissed() {
+    return !!jget(CANCELKEY, 0);
+  }
+  /* only an explicit Continue or a new play calls this */
   function resurface() {
     try {
-      if (q) { mountDock(); paintAll(); return true; }
+      if (q) { jset(CANCELKEY, 0); mountDock(); paintAll(); return true; }
       if (!parked()) return false;
       jset(CANCELKEY, 0);
       jset(PLAYKEY, 0);
@@ -1184,6 +1189,12 @@
     try { if (T) T.stop(); } catch (e) {}
     try { if (AU) { AU.pause(); AU.src = ""; } } catch (e) {}
     q = null; curItem = 0;
+    /* the narrator progress callback can rewrite the last-played record
+       while it stops, so the erase is repeated after the queue is gone */
+    try { jset(LASTKEY, null); } catch (eL3) {}
+    try { localStorage.removeItem("tsb_last_played"); } catch (eL4) {}
+    jset(PLAYKEY, 0);
+    jset(CANCELKEY, Date.now());
     unmountDock();
   }
 
@@ -1413,6 +1424,7 @@
   /* ================= engine A: TTS ================= */
 
   function startTTS(queue) {
+    jset(CANCELKEY, 0);   /* an explicit new play lifts a swipe dismissal */
     T = window.TSB_TTS || window.TTS_ENGINE;
     try { if (window.TSB_LISTEN_FEED && TSB_LISTEN_FEED.learnPlay) TSB_LISTEN_FEED.learnPlay(queue); } catch (eL) {}
     try { if (window.TSB_TASTE && TSB_TASTE.signal) TSB_TASTE.signal({ bookId: queue && queue.bookId, title: (queue && queue.title) || "", by: (queue && (queue.by || queue.author)) || "", kind: "listen" }); } catch (eT) {}
@@ -1445,6 +1457,7 @@
     try { var b0 = jget(BOOSTKEY, 1); if (b0 !== 1 && T.setBoost) T.setBoost(b0); } catch (eB) {}
     T.onProgress(function (idx, total, playing2) {
       if (!q) return;
+      jset(PLAYKEY, playing2 ? 1 : 0);
       var item = 0;
       for (var i = 0; i < q.items.length; i++) if (idx >= q.items[i].part) item = i;
       if (item !== curItem) { curItem = item; savePos(); }
@@ -1463,8 +1476,9 @@
     /* v406: a restored spoken book mounts the same player, parked at
        the lesson it stopped on, and waits for the tap. It never
        starts shouting just because a page loaded. */
-    if (queue.restored) { savePos(); paintAll(); paintPlay(); try { parkNote(); } catch (eP) {} return true; }
+    if (queue.restored) { jset(PLAYKEY, 0); savePos(); paintAll(); paintPlay(); try { parkNote(); } catch (eP) {} return true; }
     try { T.playParts(q.parts, startAt); } catch (e) { return false; }
+    jset(PLAYKEY, 1);
     savePos(); paintAll();
     /* v397: the room opens the same full player; a book being read does not */
     if (wantOpen) setTimeout(function () { if (q === queue) openSheet(); }, 60);
@@ -2220,10 +2234,10 @@
 
   function bootRestore() {
     if (q) return;
-    /* v399: a parked session is not a cancelled one. Swiping the player away
-       keeps what you were listening to and where, so the dock comes back on
-       the next open, paused. Only the explicit Stop (which clears the record)
-       or the sleep timer running out keeps it gone. */
+    /* v412: a session that was never dismissed restores on the next page
+       exactly as it was left, paused stays paused and playing resumes.
+       A swiped-away player has the dismissed flag set, so this returns
+       quietly and the dock stays away until an explicit play. */
     if (jget(CANCELKEY, 0)) return;
     var l = jget(LASTKEY, null);
     /* v406: a spoken book is a listening session too. It used to die
@@ -2294,7 +2308,7 @@
          fetch, parked at the saved second unless the browser allows play */
       var O0 = originals(), oid = l.key.slice(5), oi = -1;
       if (O0) for (var oi2 = 0; oi2 < O0.episodes.length; oi2++) { if (O0.episodes[oi2].id === oid) { oi = oi2; break; } }
-      if (oi >= 0) playOriginal(oi, undefined, false);
+      if (oi >= 0) playOriginal(oi, undefined, auto);
     } else if (l.key.indexOf("pod:") === 0) {
       var pid = l.key.slice(4);
       var show = findShowAnywhere(pid);   /* curated AND fetched shows restore */
@@ -2319,7 +2333,7 @@
     }
   }
   function savePlayState() {
-    try { if (q && q.type === "audio" && AU) jset(PLAYKEY, AU.paused ? 0 : 1); } catch (e) {}
+    try { if (q) jset(PLAYKEY, playing() ? 1 : 0); } catch (e) {}
   }
   window.addEventListener("pagehide", savePlayState);
   /* v320: switching apps or tabs also freezes the honest state, so what you
@@ -2337,7 +2351,7 @@
          park it. Real audio keeps streaming by itself; the narration keeps
          its place and continues from the sentence it stopped on. */
       keepAliveOn();
-      if (q && !playing()) { needResume = true; }
+      if (q && jget(PLAYKEY, 0) === 1) { needResume = true; }
     } else {
       keepAliveOff();
       if (needResume) resyncAfterBackground();
@@ -2350,10 +2364,10 @@
     needResume = false;
     try {
       if (!q) return;
-      if (q.type === "audio" && AU && !AU.paused === false && jget(PLAYKEY, 0) === 1 && AU.paused) {
+      if (q.type === "audio" && AU && jget(PLAYKEY, 0) === 1 && AU.paused) {
         AU.play().catch(function () {});
       }
-      if (q.type !== "audio" && T && T.resume) T.resume();
+      if (q.type !== "audio" && T && T.resume && jget(PLAYKEY, 0) === 1 && T.paused) T.resume();
     } catch (e) {}
   }
   setTimeout(bootRestore, 150);
@@ -2408,6 +2422,7 @@
     open: function () { openSheet(); },   /* v323: the live audio element, for tests and deep links */
     park: parkSession,
     parked: parked,
+    dismissed: dismissed,
     resurface: resurface,
     last: function () { return jget(LASTKEY, null); },
     continueCard: function () {
@@ -2468,6 +2483,10 @@
               art: show.art || ""
             }));
           });
+        } else if (/^orig:/.test(l.key)) {
+          var O1 = originals(), oid1 = l.key.slice(5), oi1 = -1;
+          if (O1) for (var oj = 0; oj < O1.episodes.length; oj++) { if (O1.episodes[oj].id === oid1) { oi1 = oj; break; } }
+          if (oi1 >= 0) playOriginal(oi1, undefined, true, opt);
         }
       }
     },

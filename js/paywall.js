@@ -14,29 +14,10 @@
   function cfg() {
     return (window.TSB_CONFIG && window.TSB_CONFIG.PAYWALL) || { ENABLED: false, GATED: [] };
   }
-  /* 👑 FOUNDER: the founder's own accounts see every Gold feature, on every
-     device they sign into, and can flip a session preview to experience the
-     app exactly like a free reader (preview lasts until the tab closes). */
-  var FOUNDER_EMAILS = ["jashgandhicreator07@gmail.com", "acimotreyothy@gmail.com"];
-  function founderPreview() {
-    try { return sessionStorage.getItem("tsb_founder_preview") === "free"; } catch (e) { return false; }
-  }
-  function isFounder() {
-    try {
-      var u = (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) || null;
-      if (!u) {
-        var raw = localStorage.getItem("tsb_auth_session");
-        var sess = raw ? JSON.parse(raw) : null;
-        u = sess && sess.user ? sess.user : null;
-      }
-      var em = ((u && u.email) || "").toLowerCase();
-      return !!em && FOUNDER_EMAILS.indexOf(em) >= 0;
-    } catch (e) { return false; }
-  }
+  /* Premium is decided only by gold.js, which reads the signed-in
+     account's server record. This gate has no email shortcut, preview
+     switch or storage flag that can turn Gold on or off. */
   function isGold() {
-    /* v331: the founder previewing as a free reader sees the free app; nobody
-       gets Gold from an email check in the browser any more. */
-    if (isFounder() && founderPreview()) return false;
     try { return !!(window.TSB_GOLD && TSB_GOLD.isGold()); } catch (e) { return false; }
   }
   function enabled() {
@@ -67,9 +48,6 @@
   }
 
   window.TSB_PAYWALL = {
-    isFounder: isFounder,
-    founderPreview: founderPreview,
-    setFounderPreview: function (on) { try { if (on) sessionStorage.setItem("tsb_founder_preview", "free"); else sessionStorage.removeItem("tsb_founder_preview"); } catch (e) {} },
     cfg: cfg,
     enabled: enabled,
     isGold: isGold,

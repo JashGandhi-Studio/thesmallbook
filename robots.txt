@@ -8,4 +8,12 @@ Disallow: /tools/
 Disallow: /docs/
 Disallow: /whatsapp-bot/
 
+Disallow: /chat.html
+Disallow: /login.html
+Disallow: /settings.html
+Disallow: /you.html
+Disallow: /profile.html
+Disallow: /dm.html
+Disallow: /notifications.html
+Disallow: /scan.html
 Sitemap: https://thesmallbook.in/sitemap.xml
