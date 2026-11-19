@@ -189,12 +189,13 @@
   if (!isNaN(urlPage) && urlPage >= 0 && urlPage < pages.length) {
     curPage = urlPage;
   } else {
-    var savedPos = parseInt(localStorage.getItem('tsb_reader_pos_' + book.id), 10);
+    var savedPos = parseInt((window.TSB && TSB.store) ? TSB.store.rawGet('tsb_reader_pos_' + book.id, '') : localStorage.getItem('tsb_reader_pos_' + book.id), 10);
     if (!isNaN(savedPos) && savedPos >= 0 && savedPos < pages.length) {
       curPage = savedPos;
     }
   }
 
+  try { if (window.TSB && TSB.telemetry) TSB.telemetry.log('book_open', { id: book.id }); } catch (e) {}
   var articleEl = document.getElementById('rmArticle');
   var posEl = document.getElementById('rmPos');
   var prevBtn = document.getElementById('rmPrev');
@@ -254,7 +255,7 @@
   function renderPage(idx) {
     if (idx < 0 || idx >= pages.length) return;
     curPage = idx;
-    localStorage.setItem('tsb_reader_pos_' + book.id, curPage);
+    if (window.TSB && TSB.store) TSB.store.rawSet('tsb_reader_pos_' + book.id, curPage); else localStorage.setItem('tsb_reader_pos_' + book.id, curPage);
     try { localStorage.setItem('tsb_reader_pos_updated_' + book.id, JSON.stringify(Date.now())); if (window.TSB_AUTH && TSB_AUTH.track) TSB_AUTH.track(); } catch (e) {}
 
     var p = pages[curPage];
@@ -312,7 +313,7 @@
       if (target) {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         curPage = idx;
-        localStorage.setItem('tsb_reader_pos_' + book.id, curPage);
+        if (window.TSB && TSB.store) TSB.store.rawSet('tsb_reader_pos_' + book.id, curPage); else localStorage.setItem('tsb_reader_pos_' + book.id, curPage);
     try { localStorage.setItem('tsb_reader_pos_updated_' + book.id, JSON.stringify(Date.now())); if (window.TSB_AUTH && TSB_AUTH.track) TSB_AUTH.track(); } catch (e) {}
         if (contentsSelect) contentsSelect.value = curPage;
       }
@@ -474,6 +475,9 @@
         }
         localStorage.setItem('tsb_read_books', JSON.stringify(readList));
         updateReadButton();
+        /* v415: finishing a book is the strongest taste signal there is,
+           and nothing used to emit it. The profile only ever saw opens. */
+        try { if (newlyFinished && window.TSB_TASTE && TSB_TASTE.note) TSB_TASTE.note(book.id, "finish"); } catch (eT2) {}
 
         // Award milestones if newly finished
         if (newlyFinished && window.TSB && window.TSB.achv) {
@@ -485,6 +489,23 @@
       } catch(e) {}
     });
   }
+
+  /* v415: leaving a book early is a signal too. Opened, read a page or
+     two, never finished: the profile should lean away, gently. Fires
+     once per visit, only when the book was actually started. */
+  var abandonSent = false;
+  function noteAbandon() {
+    if (abandonSent) return;
+    try {
+      var readList2 = JSON.parse(localStorage.getItem('tsb_read_books') || '[]');
+      if (readList2.indexOf(book.id) !== -1) return;
+      if (curPage < 1) return;
+      abandonSent = true;
+      if (window.TSB_TASTE && TSB_TASTE.note) TSB_TASTE.note(book.id, "abandon");
+    } catch (eA) {}
+  }
+  window.addEventListener('pagehide', noteAbandon);
+  document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') noteAbandon(); });
 
   // Cross-tab synchronization
   window.addEventListener('storage', function(e) {

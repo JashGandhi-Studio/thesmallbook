@@ -98,7 +98,7 @@
     return Object.keys(bag).sort(function (a, b) { return bag[b] - bag[a]; }).slice(0, n || 5);
   }
 
-  var WEIGHT = { finish: 1.0, save: 0.55, highlight: 0.45, listen: 0.7, search: 0.35, open: 0.18, shown: -0.04, skip: -0.12 };
+  var WEIGHT = { finish: 1.0, save: 0.55, highlight: 0.45, listen: 0.7, search: 0.35, open: 0.18, shown: -0.04, skip: -0.12, abandon: -0.06 };
 
   function model() {
     var cats = {}, seen = {}, finishedIds = {};

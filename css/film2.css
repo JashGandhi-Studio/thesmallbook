@@ -1183,6 +1183,8 @@ html.fv-gold .fgy-soon small { display: block; line-height: 1.4; margin-top: 2px
 .fs-acts--5 .fs-act > span { width: 54px !important; height: 54px !important; border-radius: 18px !important; }
 .fs-act--wa > span { background: #25D366 !important; box-shadow: none !important; }
 .fs-act--ig > span { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%) !important; box-shadow: none !important; }
+@media (max-width: 699px) {
+/* v416: phone bar looks stay on the phone; the sidebar owns 700px and up */
 html.film[data-bar-look="glass"] .tsb-bar { background: rgba(251, 248, 241, .7) !important; -webkit-backdrop-filter: saturate(1.8) blur(22px) !important; backdrop-filter: saturate(1.8) blur(22px) !important; }
 html.film.dark[data-bar-look="glass"] .tsb-bar { background: rgba(21, 18, 14, .68) !important; }
 html.film[data-bar-look="solid"] .tsb-bar { background: var(--f-paper, #FBF8F1) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
@@ -1197,6 +1199,7 @@ html.film.dark[data-bar-look="float"] .tsb-bar { background: rgba(27, 23, 18, .7
 html.film[data-bar-look="float"] .tsb-bar--off { transform: translateX(-50%) translateY(calc(100% + 40px)) !important; }
 html.film .tsb-bar--active-only .tsb-bar__item:not(.is-active) .tsb-bar__lbl { opacity: 0; transform: translateY(4px); }
 html.film .tsb-bar--active-only .tsb-bar__lbl { transition: opacity .25s, transform .25s; }
+}
 .bs-prev { margin: 6px 0 4px; padding: 18px 0 0; border-radius: 22px; background: linear-gradient(180deg, #EFE7D6, #E4D9C2); overflow: hidden; display: flex; justify-content: center; }
 html.dark .bs-prev { background: linear-gradient(180deg, #2A241C, #1C1813); }
 .bs-phone { position: relative; width: 250px; height: 150px; border-radius: 26px 26px 0 0; background: var(--f-paper, #FBF8F1); border: 6px solid #16130F; border-bottom: 0; overflow: hidden; }
@@ -1331,6 +1334,8 @@ html.dark .fsx-r > svg:first-child { background: rgba(255, 200, 0, .14); color: 
 .fsx-r > svg:last-child { flex: none; opacity: .45; }
 .fsx-r--pass > svg:first-child { background: #DCF5E3; color: #157A3B; }
 html.dark .fsx-r--pass > svg:first-child { background: rgba(37, 211, 102, .14); color: #4ADE80; }
+@media (max-width: 699px) {
+/* v416: phone bar looks stay on the phone; the sidebar owns 700px and up */
 html.film[data-bar-look="float"] { --tsb-bar-gap: 18px; }
 html.film[data-bar-look="float"] .tsb-bar {
 bottom: max(12px, calc(env(safe-area-inset-bottom) - 4px)) !important;
@@ -1349,6 +1354,7 @@ html.film[data-bar-look="float"] .tsb-bar__lbl { font-size: 11px !important; }
 html.film[data-bar-look="float"] .tsb-bar--off { transform: translateX(-50%) translateY(calc(100% + 60px)) !important; }
 html.film[data-bar-look="glass"] .tsb-bar { background: rgba(251, 248, 241, .93) !important; -webkit-backdrop-filter: saturate(1.6) blur(24px) !important; backdrop-filter: saturate(1.6) blur(24px) !important; padding-bottom: max(6px, env(safe-area-inset-bottom)) !important; }
 html.film.dark[data-bar-look="glass"] .tsb-bar { background: rgba(21, 18, 14, .93) !important; }
+}
 html.film .tsb-bar__item { -webkit-tap-highlight-color: transparent; }
 html.film .tsb-bar__item:active svg { transform: scale(.9); transition: transform .12s; }
 .bs-hint { margin: 14px 0 10px; font: 500 13px/1.5 var(--f-sans); color: var(--f-mu); }
@@ -2522,6 +2528,10 @@ html:not(.dark) #tsbApSheet .ap-x svg { stroke: #16130F !important; }
      · every item is a real touch target with a press state
      · the bar keeps its safe-area padding and never clips its labels
    ========================================================================== */
+/* v416: the phone action bar rules below are phone-only now. At 700px and
+   up the sidebar in desktop-v336.css owns the bar completely, which is what
+   lets that layer work without a single !important. */
+@media (max-width: 699px) {
 html.film .tsb-bar,
 html.film #tsbBar {
   padding-bottom: max(6px, env(safe-area-inset-bottom, 0px)) !important;
@@ -2616,6 +2626,7 @@ html.film[data-bar-labels="icons"] .tsb-bar__item.is-active .tsb-bar__lbl::after
 html.film.bar-nolabels .tsb-bar__item.is-active .tsb-bar__lbl::after {
   content: ""; display: block; width: 4px; height: 4px; margin: 2px auto 0;
   border-radius: 50%; background: #FFC800;
+}
 }
 
 /* ==========================================================================

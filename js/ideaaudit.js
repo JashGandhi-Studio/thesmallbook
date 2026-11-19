@@ -97,7 +97,7 @@
       fix: "Map the permission ladder BEFORE writing code: what needs approval, from whom, in how many months, and what's plan B if the answer is no. Regulatory risk is a timeline, not a footnote." },
     { id: "too-early", w: 10,
       test: function (c) { return has(c.text, ["vr", "ar ", "metaverse", "web3", "blockchain", "brain", "neural", "autonomous", "flying", "quantum"]); },
-      t: "Right idea, wrong decade", grave: "gowork-gm",
+      t: "Right idea, wrong decade", grave: "general-magic",
       why: "Being early is statistically the same as being wrong, the graveyard is full of beautiful products whose customers hadn't been born yet.",
       fix: "Ask what must already be true for this to work (hardware, behaviour, regulation, cost curves). If two or more aren't true today, shrink to the wedge that works NOW or wait with intent." },
     { id: "founder-plays-everything", w: 11,

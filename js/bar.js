@@ -74,8 +74,7 @@
     scan:      { id: "scan", url: "scan.html", lbl: "Scan", ico: ICO.scan, cls: "tsb-bar__item--scan" },
     notes:     { id: "notes", url: "notes.html", lbl: "Notebook", ico: ICO.notes, cls: "tsb-bar__item--notes" },
     random:    { id: "random", url: "random.html", lbl: "3D Discovery", ico: ICO.random, cls: "tsb-bar__item--random" },
-    graveyard: { id: "graveyard", url: "graveyard.html", lbl: "Graveyard", ico: ICO.graveyard, cls: "tsb-bar__item--graveyard" },
-    plus:      { id: "plus", url: "stories.html#write", lbl: "Plus", ico: ICO.plus, cls: "tsb-bar__item--plus", isPlus: true }
+    graveyard: { id: "graveyard", url: "graveyard.html", lbl: "Graveyard", ico: ICO.graveyard, cls: "tsb-bar__item--graveyard" }
   };
 
   /* ---------- active tab for this page (follows your selection) ---------- */
@@ -973,7 +972,7 @@
             showGoldModal();
             return;
           }
-          var candidates = ["ask", "plus", "messages", "library", "notes", "random", "graveyard", "scan", "continue"];
+          var candidates = ["ask", "messages", "library", "notes", "random", "graveyard", "scan", "continue"];
           var nextTool = "ask";
           for (var c = 0; c < candidates.length; c++) {
             if (activeSlots.indexOf(candidates[c]) === -1) {

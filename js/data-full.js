@@ -641,7 +641,7 @@ const BOOKS = [
       "When tension peaks, make the bold ask - no hedging, no apology."
     ],
     "caveat": "Greene's seduction manual is brilliant and morally radioactive - Colonel Parker seduced Elvis into total dependence, then ran the legend into a locked, drugged, decaying captivity while skimming every dollar. The book treats that as mastery; the record treats it as predation. Seduction as a life strategy corrodes the seducer too: when every relationship is a strategy, you end up alone with your techniques. Greene is worth reading to recognise the game being played on you - not to play it on people you care about.",
-    "graveLink": "elvis-parker"
+    "graveLink": "casper-mattress"
   },
   {
     "id": "psycho-cybernetics",
@@ -1447,7 +1447,7 @@ const BOOKS = [
       "Add continuity with rate-lock + week-one consumption ritual; review the 5 metrics weekly."
     ],
     "caveat": "A beautiful model on a spreadsheet is not a business - Quibi's model was the most elegant in media history: short premium episodes, subscriptions, star creators. It raised $1.75 billion on the model and died in six months because nobody wanted it. Models describe how money flows; they don't prove that it will. Before falling in love with the model, find the one stubborn customer who pays for it. Everything else is architecture for an empty building.",
-    "graveLink": "quibi-flop"
+    "graveLink": "signature-bank-ny"
   },
   {
     "id": "one-minute-manager",
@@ -1671,7 +1671,7 @@ const BOOKS = [
       "Block-schedule daily, budget shallow work, and end at a fixed time."
     ],
     "caveat": "Deep work is a privilege, not a moral virtue. If your job is reactive - support, sales, emergency response - or you're the primary caregiver at home, 'block four hours daily' is simply not available. Start with micro-protocols: one 45-minute phone-away block, two days a week. And don't quit every tool: in India, WhatsApp is how work actually gets done - the skill is batching it, not abandoning it.",
-    "graveLink": "sears-amazon"
+    "graveLink": "napoleon-continental"
   },
   {
     "id": "7-habits",
@@ -1748,7 +1748,7 @@ const BOOKS = [
       "Protect the daily renewal hour for 30 consecutive days."
     ],
     "caveat": "The 7 Habits are character on paper - the danger is when they become a poster on the wall. Enron had values plaques, integrity workshops and a famous 'RICE' code, and still ran the largest fraud of its era, because the incentives and the culture said the opposite of the posters. Habits live in what you reward, not what you print. If your team's actual incentives contradict habit 4, the habit will lose every time.",
-    "graveLink": "enron-culture"
+    "graveLink": "blockbuster-late-fee"
   },
   {
     "id": "subtle-art",
@@ -1825,7 +1825,7 @@ const BOOKS = [
       "Say one clean no, and let mortality set this year's priorities."
     ],
     "caveat": "'Choose your struggle' can become a license for accepting things that are genuinely fixable - an abusive workplace, a treatable illness, a bad marriage. And Manson's bluntness can tip into self-blame: taking responsibility for everything means blaming yourself for everything. The line between 'accept what you can't change' and 'change what you can' still needs to be drawn with care - the book is better at the first half.",
-    "graveLink": "fyre-festival"
+    "graveLink": "takata-airbags"
   },
   {
     "id": "ikigai",
@@ -1902,7 +1902,7 @@ const BOOKS = [
       "Weave gentle motion through every day; accept what you don't control."
     ],
     "caveat": "Ikigai's gentle optimism has a blind spot: not everyone gets to choose their work, and the book's 'find your purpose' framing can add guilt to people whose ikigai right now is simply surviving - paying EMIs, raising kids, caring for parents. VG Siddhartha had an ikigai and still broke. Purpose without boundaries and rest is just another pressure. Sometimes the most honest ikigai is 'do good work, come home, be loved.'",
-    "graveLink": "siddhartha-ccd"
+    "graveLink": "saverin-dilution"
   },
   {
     "id": "alchemist",
@@ -2196,7 +2196,7 @@ const BOOKS = [
       "Write your principles card, and do one untraceable good deed."
     ],
     "caveat": "Stoic acceptance becomes dangerous when it slides into fatalism about things that ARE in your control - a treatable illness, a fixable job, an abusive situation. Marcus Aurelius never had chemotherapy or therapy available; his 'endure' was the best tool of his era, not yours. Use Stoicism to calm the anxiety, then use modern tools to actually change what Stoics could only accept. Even a Stoic emperor died at 58 - he would have taken the medicine.",
-    "graveLink": "jobs-surgery"
+    "graveLink": "everest-1996-disaster"
   },
   {
     "id": "courage-disliked",
@@ -2413,7 +2413,7 @@ const BOOKS = [
       "24-hour rule on all scarcity; ask advice, not opinions, to build honest unity."
     ],
     "caveat": "The same persuasion principles that make this book brilliant are how people get manipulated into ruin - chit-fund schemes run on reciprocity and authority, political campaigns run on social proof, and Cambridge Analytica weaponised every chapter. Knowing the principles is not immunity; you still feel the pull after you name it. The real defence is slower decisions on anything involving money or commitments: if a 'once-in-a-lifetime offer' uses three principles at once, walk away.",
-    "graveLink": "cambridge-analytica"
+    "graveLink": "rajneeshpuram-collapse"
   },
   {
     "id": "start-with-why",
@@ -2483,7 +2483,7 @@ const BOOKS = [
       "Excavate your origin story into one 'We believe...' sentence - align metrics to it."
     ],
     "caveat": "A powerful Why is not a business model. Byju's had the most inspiring mission in Indian edtech - education for every child - and used it to justify $22 billion of valuation on practices that collapsed the company. Sinek's framework explains why people follow, not why businesses survive. The Why gets you followers; the How (unit economics, honest accounting, real outcomes) is what keeps you alive. Mission without margin is a speech, not a company.",
-    "graveLink": "byjus-empire"
+    "graveLink": "cineworld-debt"
   },
   {
     "id": "lean-startup",
@@ -2623,7 +2623,7 @@ const BOOKS = [
       "Frame broadly, check loss-frames, and end things well on purpose."
     ],
     "caveat": "This book can make you feel like you have x-ray vision into every bias - which is exactly the overconfidence it warns about. Long-Term Capital Management's Nobel laureates knew every bias in this book and still blew up, because knowing biases intellectually does not stop them firing in real time under pressure. The practical takeaway is not cleverness but humility: build systems and second opinions that constrain you, because your brain will out-argue this book every time.",
-    "graveLink": "ltcm-geniuses"
+    "graveLink": "salad-oil-scandal"
   },
   {
     "id": "power-of-now",
@@ -3120,7 +3120,7 @@ const BOOKS = [
       "File the engineer's report on your last defeat; write the ten-year, three-department plan."
     ],
     "caveat": "Thinking big without building the economics is how you get a $400 juicer that squeezes bags people can squeeze by hand. Schwartz's enthusiasm is infectious - and exactly how founders convince themselves that a great story is a great business. Big thinking must be paired with brutal small math: unit economics, willingness to pay, real demand. Juicero raised $120 million on big thinking and died because the small math was nonsense.",
-    "graveLink": "juicero-squeeze"
+    "graveLink": "colonial-famine"
   },
   {
     "id": "who-moved-cheese",
@@ -3330,7 +3330,7 @@ const BOOKS = [
       "Curate inputs and associations; do the extra rep daily after 'done.'"
     ],
     "caveat": "Compounding assumes the direction is right. If the underlying habit is wrong - a product nobody needs, a skill in a dying industry, a relationship that's toxic - small daily wins just compound into a confident march off a cliff. Nokia made good decisions daily, for years, in the wrong direction. Check the trajectory before you protect the streak.",
-    "graveLink": "nokia-smartphone"
+    "graveLink": "digg-v4"
   },
   {
     "id": "5am-club",
@@ -3750,7 +3750,7 @@ const BOOKS = [
       "Sign your Investor's Constitution and let it outvote your moods."
     ],
     "caveat": "Graham's margin of safety assumes the numbers are true. India's Satyam showed what happens when the numbers are fabricated: the 'safest' stock in the index, audited by the biggest firms, turned out to be a $1 billion hole. Graham never priced in fraud because honest accounting was his quiet assumption - it no longer is anyone's. Every 'value' must be re-checked against one brutal question: what would it look like if management was lying, and does anything disprove that?",
-    "graveLink": "satyam-raju"
+    "graveLink": "valeant-pharma"
   },
   {
     "id": "show-your-work",
@@ -4100,7 +4100,7 @@ const BOOKS = [
       "Live the Hard Thing Rule and join one gritty culture."
     ],
     "caveat": "Grit is only valuable when aimed at something that still exists. Blockbuster was the grittiest company in America - decades of relentless focus, discipline and passion for video rental - and it died because the world moved under it. Duckworth's framework underweights the 'know when to quit' skill. Persistence through a failing strategy is not grit, it is a slow-motion Kodak. Passion plus persistence must include the courage to re-aim.",
-    "graveLink": "blockbuster-netflix"
+    "graveLink": "google-wave"
   },
   {
     "id": "mindset",
@@ -4660,7 +4660,7 @@ const BOOKS = [
       "Nightly ego audit; let someone else collect one credit."
     ],
     "caveat": "Holiday's ego-killing discipline is exactly what MC Hammer lacked - and the lesson is subtler than 'don't be flashy.' Hammer's ego didn't just buy the jets and the mansion; it made him believe the party could never end, so he never built the boring, unglamorous asset base that survives. Ego is the enemy, yes - but the sneakiest form of ego is believing you've already conquered your ego. The book's own confidence can become the next ego's costume.",
-    "graveLink": "mc-hammer-broke"
+    "graveLink": "great-smog-london-1952"
   },
   {
     "id": "essentialism",
@@ -5430,7 +5430,7 @@ const BOOKS = [
       "Write the primary aim, then the strategic objective that serves it."
     ],
     "caveat": "Building systems and delegating is right - but the E-Myth's franchise dream has a debt-shaped trap: expand on borrowed money and the systems become a machine for losing more, faster. Subrata Roy's Sahara empire was systematised, branded, nationwide - and built on funds that were never legally his. Systems amplify whatever they're built on. Build the prototype, prove the unit economics, and only then scale the franchise. Systems are a multiplier, not a source.",
-    "graveLink": "sahara-roy"
+    "graveLink": "aircel"
   },
   {
     "id": "the-dip",
@@ -6550,7 +6550,7 @@ const BOOKS = [
       "One comfort-zone breach weekly - the roots change before the fruits."
     ],
     "caveat": "Eker's 'money blueprint' is genuinely useful - and it can become a licence for grandiosity. Harshad Mehta had the most powerful money blueprint in Indian history - he believed he was born to move markets - and the belief is exactly what let him rig the system until it broke, taking banks and small investors down with him. A money mindset without a risk governor is a fast car without brakes. Blueprint the belief, then blueprint the audit.",
-    "graveLink": "harshad-mehta"
+    "graveLink": "french-panama"
   },
   {
     "id": "quiet",
@@ -7810,7 +7810,7 @@ const BOOKS = [
       "Adopt one keystone discipline (fixed wake time + scripted first hour) and hold it for 30 days."
     ],
     "caveat": "Willink's 'leaders own everything' is the most useful leadership doctrine in modern business - and Therac-25 shows its failure mode: every engineer and manager on the project took extreme ownership, signed off every module, owned every line of code - and six patients were killed by a radiation machine whose software bug they all owned collectively and therefore nobody owned individually. Total ownership of everything becomes ownership of nothing when the system lacks one person accountable for the specific risk. Extreme ownership works when it lands on a single named neck - not when it's a culture slogan everyone repeats.",
-    "graveLink": "therac-25"
+    "graveLink": "grenfell-tower-2017"
   },
   {
     "id": "good-to-great",
@@ -8090,7 +8090,7 @@ const BOOKS = [
       "Replace annual verdicts with weekly CFR conversations: progress, feedback both ways, one blocker removed."
     ],
     "caveat": "Doerr's OKRs are the standard - and Byju's is the warning that metrics can become the mission: India's most celebrated OKR-driven company set aggressive targets, hit them, celebrated them, and the targets were quietly built on aggressive selling, inflated renewals and accounting choices that collapsed a $22 billion empire. OKRs measure what you value; they don't tell you whether the value is true. The book underweights that the most important metric - honest revenue - can't be an OKR; it has to be a religion.",
-    "graveLink": "byjus-empire"
+    "graveLink": "byjus-edtech"
   },
   {
     "id": "crossing-chasm",
@@ -9560,7 +9560,7 @@ const BOOKS = [
       "Kill 'very good' projects early - they cost the most and echo the least."
     ],
     "caveat": "Godin's 'be remarkable or be invisible' is the marketing creed of our time - and Google Glass is its monument: the most remarkable product of the decade, so purple that people stopped traffic to stare at it - and it flopped, because remarkable without useful is just spectacle. Glass was remarkable to everyone except the customer who had to wear it. The book underweights that remarkable must be remarkable FOR someone, in a way that makes their life better, not just their feed more interesting.",
-    "graveLink": "google-glass"
+    "graveLink": "invision-prototype"
   },
   {
     "id": "drive-pink",
@@ -9630,7 +9630,7 @@ const BOOKS = [
       "Frame every goal with its why; listen for 'we' vs 'they' as your culture meter."
     ],
     "caveat": "Pink's 'intrinsic motivation beats extrinsic rewards' assumes the people are the problem - GoMechanic shows the other side: when growth targets become the scoreboard, even intrinsically motivated people learn to game the score. The company's team faked ₹300 crore of revenue not because they lacked purpose but because the metric culture made the fake number the only way to survive the quarter. Purpose survives only when the incentive system doesn't contradict it every Friday. Pink underweights how fast culture is decided by what gets paid.",
-    "graveLink": "gomechanic-fraud"
+    "graveLink": "gomechanic-india"
   },
   {
     "id": "culture-code",
@@ -9770,7 +9770,7 @@ const BOOKS = [
       "Protect the first 30 phone-free minutes - win the morning's momentum."
     ],
     "caveat": "Mel Robbins' countdown-to-action works - and its shadow is impulsive action without thinking. Mike Tyson never lacked the 5-second trigger: he acted on every impulse instantly, in the ring and out, and the same instinct that made him champion made him a cautionary tale of fines, bites and bankruptcy. The rule is for starting things you've already decided; it is poison for decisions you haven't made. Count down to action, not to reaction.",
-    "graveLink": "mike-tyson-repeat"
+    "graveLink": "google-plus"
   },
   {
     "id": "leaders-eat-last",
@@ -10190,7 +10190,7 @@ const BOOKS = [
       "Use anger as an alarm clock: find the buried need and speak that instead."
     ],
     "caveat": "Rosenberg's empathy-first method assumes both sides want connection. Barings Bank's culture was so polite, so conflict-averse, so 'nonviolent' that nobody ever said the violent truth - that a young trader was running unhedged positions - until the bank had lost £827 million. In a culture where 'let's talk about how you feel' replaces 'your numbers are catastrophic,' NVC becomes the weapon of avoidance. Some conversations need to be uncomfortable and direct; kindness that delays the truth is cruelty with a smile.",
-    "graveLink": "barings-leeson"
+    "graveLink": "chernobyl-test"
   },
   {
     "id": "storybrand",
@@ -10750,7 +10750,7 @@ const BOOKS = [
       "Break the mirror on schedule: one skilled hour weekly for someone who can't repay you."
     ],
     "caveat": "Arnold's 'be useful, work harder than everyone' is inspiring - and it assumes the hard part is the work. Johnny Manziel had usefulness handed to him: the most marketable college quarterback of his era, a league waiting to adore him, and the 'be useful' lesson never took because the hard part for him wasn't effort, it was showing up sober. The book underweights how many people fail not from lack of usefulness but from the inability to sustain the boring, unglamorous discipline that usefulness requires. Talent is the easy half; the book's own hero took decades to admit that.",
-    "graveLink": "johnny-manziel"
+    "graveLink": "express-fashion"
   },
   {
     "id": "never-finished",
@@ -11100,7 +11100,7 @@ const BOOKS = [
       "Identify your shadow art and take one direct step toward the real thing."
     ],
     "caveat": "Cameron's 'morning pages, artist's dates' is the most beloved creativity practice ever - and Secret is what happens when creative expression is freed from all consequence: the anonymous app let everyone 'express their truth' without accountability, and the 'creative community' became a sewer of cruelty that collapsed under its own toxicity. Unlocking creativity without unlocking responsibility doesn't free the artist; it frees the troll. The Artist's Way works because it's private and accountable to yourself. The moment expression goes public with zero accountability, it stops being art.",
-    "graveLink": "secret-app"
+    "graveLink": "bikram-yoga"
   },
   {
     "id": "the-practice",
@@ -11380,7 +11380,7 @@ const BOOKS = [
       "Test the idea against reality before committing - and be ready to restart."
     ],
     "caveat": "Young's 'ideas are combinations of old elements' is the classic creativity method - and General Magic is its warning: the most brilliant idea-combiners of the 1990s - Apple's exiled geniuses who combined the phone, the computer and the network into the smartphone a decade early - produced the right idea and still failed, because producing ideas is the easy half. The book stops at 'have the idea'; the graveyard is full of people who had it first and died anyway. Combination produces ideas; production produces companies.",
-    "graveLink": "gowork-gm"
+    "graveLink": "general-magic"
   },
   {
     "id": "keep-going",
@@ -11800,7 +11800,7 @@ const BOOKS = [
       "Think in chains: map the reaction to your next move, and pre-plan the counter."
     ],
     "caveat": "Rumelt's 'strategy is diagnosis, policy, action' is the best lens in business - and GE under Immelt is the perfect bad-strategy case study the book itself predicts: twenty years of 'strategic' decks, initiatives and portfolio moves, and a $500 billion evaporation because none of it was anchored to one honest diagnosis. The book's danger is that it makes you an excellent critic of others' strategy while your own remains a wish. Reading Rumelt and still running a strategy-free organisation is the most expensive form of self-deception.",
-    "graveLink": "ge-immelt"
+    "graveLink": "stanford-ponzi"
   },
   {
     "id": "dictators-handbook",
@@ -12850,7 +12850,7 @@ const BOOKS = [
       "Attack your competitor's strength, not their weakness."
     ],
     "caveat": "Ries & Trout's 'win the mind, not the product' is marketing gospel - and New Coke was the greatest positioning failure in history precisely because the positioning was flawless: brilliantly researched, perfectly launched, backed by the strongest brand in the world. It collapsed in weeks because the mind already owned 'Coca-Cola,' and the product change broke the mental contract. Positioning is not a substitute for product truth; it's a lens on what the customer already believes. The book's framework works when the belief matches reality - and it can make you believe the spin instead of the substance.",
-    "graveLink": "newcoke-formula"
+    "graveLink": "radioshack-dilution"
   },
   {
     "id": "22-laws-marketing",
@@ -13130,7 +13130,7 @@ const BOOKS = [
       "Use every lever honestly: frame must match facts."
     ],
     "caveat": "Cialdini's 'win before you pitch' is the most powerful persuasion book of the decade - and Gitanjali Gems is its darkest proof: Nirav Modi and Mehul Choksi pre-suaded brilliantly - the right gifts to the right bankers, the right framing of trust, the right associations with fame - and the pre-suasion opened doors that the fraud walked through for a decade, ₹14,000 crore of it. The book teaches you to set the frame before the message; it cannot teach you to verify the message after the frame is set. That verification is the one skill the book's villains never had.",
-    "graveLink": "gitanjali-choksi"
+    "graveLink": "gowalla-foursquare"
   },
   {
     "id": "make-time",
@@ -13340,7 +13340,7 @@ const BOOKS = [
       "Write your purpose sentence; read it daily; act on it weekly."
     ],
     "caveat": "Loehr & Schwartz's 'manage energy, not time' is the best performance system ever built - and Evergrande is the cautionary tale of an organisation that managed energy perfectly: the most energetic company on earth, sprinting for decades, building 800+ projects, borrowing relentlessly - until the energy ran out and $300 billion of debt stood where the momentum had been. Energy management is about sustainable oscillation; Evergrande oscillated only upward, which is not oscillation, it's a parabola. Sprint and recover - the recovery is the part most ambitious people skip.",
-    "graveLink": "evergrande"
+    "graveLink": "grenfell-tower-2017"
   },
   {
     "id": "checklist-manifesto",
@@ -14460,7 +14460,7 @@ const BOOKS = [
       "Pause before any herd move and ask the alone-test."
     ],
     "caveat": "Dobelli's 99 cognitive errors are razor-sharp - and Salem is the reminder that knowing the errors doesn't stop them: the judges who hanged innocent people in 1692 were educated, rational, and certain they were protecting their community from a clear danger. Their certainty was the delusion. Reading about biases is like reading about a disease - useful, but not immunity. The only real defence is structural: force dissent, require evidence, slow down decisions that involve other people's lives. Awareness is the beginning; procedure is the cure.",
-    "graveLink": "leeson-society"
+    "graveLink": "concorde-fallacy"
   },
   {
     "id": "righteous-mind",
@@ -14600,7 +14600,7 @@ const BOOKS = [
       "Be less wrong this week: update one belief with one statistic."
     ],
     "caveat": "Rosling's 'the world is better than you think' is the antidote to panic - and a potential sedative. Hubble's mirror was polished with flawless process, measured with exquisite care, by people who were factfully confident in every number - and it was two micrometers wrong, blurring the flagship achievement of a generation. Correct facts about the present don't guarantee correct models of the future, and optimism is as capable of blinding you as fear. Rosling's medicine treats the panic; it doesn't replace the humility.",
-    "graveLink": "hubble-mirror"
+    "graveLink": "oyo-hotels"
   },
   {
     "id": "anxious-generation",
@@ -15150,6 +15150,20 @@ const BOOKS = [
         "summary": "Lencioni's pyramid: absence of trust leads to fear of conflict, which leads to lack of commitment, which leads to avoidance of accountability, which leads to inattention to results. Every level of dysfunction traces back to the first - teammates who won't be vulnerable with each other. Building trust is not a team-building exercise; it is the foundation of everything else.",
         "example": "Teams that avoid honest conflict make decisions nobody fully supports, then quietly fail to execute; teams that trust each other argue hard and commit fully. Lencioni's model predicts which meetings produce real alignment and which produce polite sabotage.",
         "action": "In your next team discussion, be the first to admit a genuine mistake or uncertainty - and watch whether others follow."
+      },
+      {
+        "title": "Going Deeper: The First Team Is the One You Actually Serve",
+        "chapter": "Going Deeper",
+        "summary": "Lencioni's later practice adds the concept that completes the pyramid: every leader belongs to two teams, and health requires declaring the executive team, the peers at your own level, your first team, ahead of the people who report to you. Subordinates sense instantly when their boss protects turf against peers, and price the entire leadership accordingly. The deepening discipline is almost embarrassingly testable: in the meeting where peer and department interests collide, whose outcome do you optimise before you speak? Your team has already run this audit on you, repeatedly, and filed the results.",
+        "example": "In the fable's company and in his consulting retellings, the breakthrough arrives when executives begin bringing their departments' problems to the peer table unsanitised, a ritual impossible while each secretly serves the home team first. Collective responsibility stops being a poster the week defending your own budget stops being your first reflex in that room.",
+        "action": "Name your first team in writing. In your next peer meeting, volunteer one problem from your own area before defending any of it. Notice the room reprice you."
+      },
+      {
+        "title": "Going Deeper: Healthy Conflict Needs Mining, Not Managing",
+        "chapter": "Going Deeper",
+        "summary": "Lencioni observes that in low trust teams the leader must actively mine for conflict: go around the table, insist on the unspoken objection, refuse to let the second, agreeable silence close the subject. Buried disagreement does not dissolve; it compounds into the politics everyone deplores and nobody admits authoring. The deepening skill is distinguishing mining from provoking: the miner is after the team's real reservations in service of the decision, and proves it by thanking the dissenter in the room, on the record, especially when the dissent was aimed at the miner's own proposal.",
+        "example": "His teams that learned this report a recognisable meeting sound: the argument gets louder in the room and quieter in the corridors, which is the acoustic signature of a healthy organisation. Where the corridors are louder, the pyramid is upside down whatever the engagement survey says, because the real meeting is the one without minutes.",
+        "action": "In your next decision meeting, mine once explicitly: what is the strongest objection nobody has said yet? Thank whoever voices it, by name, before responding."
       }
     ],
     "actionPlan": [
@@ -15160,7 +15174,7 @@ const BOOKS = [
       "Put the team's one result on a public scoreboard."
     ],
     "caveat": "Lencioni's 'trust, conflict, commitment' pyramid is the most practical team book ever - and Lehman is the reminder that a team can clear all five dysfunctions and still fail: Lehman's executives trusted each other completely, fought openly, committed fully, and held each other accountable - to the wrong strategy. Their cohesion was total; their judgement was the problem. The sixth dysfunction the book never names: a team that is beautifully aligned behind a catastrophic plan. Cohesion is not wisdom. The most dangerous teams are not the dysfunctional ones - they are the functional ones that nobody questions because they function so well.",
-    "graveLink": "lehman-2008"
+    "graveLink": "astra-space-rocket"
   },
   {
     "id": "radical-candor",
@@ -15230,7 +15244,7 @@ const BOOKS = [
       "Run a plus/delta debrief after every meeting."
     ],
     "caveat": "Scott's 'care personally, challenge directly' is the best feedback framework ever - and Ashneer Grover is its cautionary case: the BharatPe founder was radically candid to an extreme - brutally direct, publicly confrontational - and his 'candor' crossed into abuse, costing him the company and his reputation in a scandal that shredded the board's trust. The book's own definition saves it: radical candor is challenge WITH care. Challenge without care isn't candor - it's aggression wearing a productivity costume. Grover had the directness; the 'care personally' half was missing, and the missing half is the whole point.",
-    "graveLink": "bharatpe-grover"
+    "graveLink": "religare-fraud"
   },
   {
     "id": "multipliers",
@@ -15360,6 +15374,20 @@ const BOOKS = [
         "summary": "Collins and Porras's distinction: visionary companies are built by 'clock builders' who create organizations that can thrive beyond any single product or leader, while 'time tellers' build careers around their own genius. The product is the company's first expression; the company is the product. Design the institution, and it outlives every idea it ships.",
         "example": "The founders of companies like HP and Sony obsessively developed management, values and succession systems, not just products - which is why those firms survived decades and multiple technology shifts. Their competitors, built around a founder's single insight, faded when the insight aged.",
         "action": "Identify one process or system in your work that could outlive you - a document, a routine, a succession plan - and build it this quarter."
+      },
+      {
+        "title": "Going Deeper: The Tyranny of the OR and the Genius of the AND",
+        "chapter": "Going Deeper",
+        "summary": "Collins and Porras name the mental habit their visionary companies escaped: the tyranny of the OR, which insists you must choose between stability and change, low cost and quality, short term and long. Their builders institutionalised the genius of the AND, holding ideological control and operational autonomy, continuity and revolution, in one constitution without flinching. The deepening is to catch your own ORs in the act this week. Many are not analysis. They are fatigue wearing a strategy's clothes, because AND is always more expensive to design than OR is to announce.",
+        "example": "Their companies held core values with religious tenacity while turning over products, leaders and strategies without sentimentality, a combination lesser firms kept declaring impossible right up to the acquisition announcements. The AND turned out to be a discipline, scheduled and reviewed, rather than a personality trait of founders, which is why it could survive them.",
+        "action": "Take one strategic choice you have framed as OR and commission the AND version on paper: what would holding both poles require, specifically, by quarter?"
+      },
+      {
+        "title": "Going Deeper: Cult Like Cultures and the Price of Belonging",
+        "chapter": "Going Deeper",
+        "summary": "The book's most misread finding deserves its cautionary second pass: visionary firms built strong, even cult like cultures around their ideologies, with fierce belonging and fierce ejection of misfits. Deepening means holding both ledgers open. The same tightness that aligns thousands also narrows the gene pool of ideas, and the firms that lasted paired their cults with mechanisms, experimentation, promotion from inside, continuous self improvement, that kept heresy about methods permanently legal while doctrine about purpose stayed fixed. Culture that cannot distinguish its creed from its habits eventually defends the habits as the creed, and dies sincere.",
+        "example": "Their exemplars promoted insiders steeped in the ideology yet famous for heretical experiments at the edges, a combination visitors found contradictory until the pattern resolved: total loyalty to why, total licence in how. Firms copying the loyalty without the licence built museums; copying the licence without the loyalty built consultancies that rented their own staff back.",
+        "action": "Write your team's creed in one line and its licensed heresies in three. If the second list is empty, your culture is already defending habits as doctrine."
       }
     ],
     "actionPlan": [
@@ -16728,7 +16756,7 @@ const BOOKS = [
       "Pass the sleep test - or lower your risk today."
     ],
     "caveat": "Richards' 'we know what to do but do the opposite' is the most honest finance book ever - and Terra/Luna is its modern proof: thousands of investors understood the risks of algorithmic stablecoins - the books, the blog posts, the warnings were everywhere - and the knowledge didn't stop $40 billion from evaporating, because the behaviour gap is not a knowledge gap. Richards' advice - write a plan, know your numbers, stay disciplined - is exactly what the Terra victims knew and didn't do. The caveat: reading about the behaviour gap is not closing it. The only closure is mechanical - rules, automation and checks that don't depend on your wisdom in the moment.",
-    "graveLink": "terra-luna"
+    "graveLink": "99-cents-only"
   },
   {
     "id": "happiness-advantage",
@@ -17036,7 +17064,7 @@ const BOOKS = [
       "Ask 'How can I help?', name your yes/no trade-offs, and close with 'What was most useful?'"
     ],
     "caveat": "Stanier's 'ask, don't tell - make coaching a daily habit' is the best management micro-book ever - and RadioShack is the warning that asking questions only works when you're ready to hear the answers: the company's leaders had decades of coaching conversations - they asked, they listened, they empathized - and still ran the business into bankruptcy, because the questions never once challenged the core assumption that the stores would keep selling electronics. The caveat: a coaching habit that never asks 'is the whole model still right?' is just a very polite way of not changing. Ask the hard questions - especially the ones that threaten your own position.",
-    "graveLink": "colonial-parkinson"
+    "graveLink": "bed-bath-beyond"
   },
   {
     "id": "the-goal",
@@ -18030,7 +18058,7 @@ const BOOKS = [
     "oneLiner": "Gurcharan Das tells how India went from the License Raj to liberalization - a case for why economic freedom is a moral cause, not just a policy.",
     "cover": "assets/covers/india-unbound.jpg",
     "caveat": "Das's 'liberalization unleashed India's entrepreneurs' is the most optimistic Indian economics book ever - and Future Group is the warning that liberalization has a shadow: Kishore Biyani, the 'Sam Walton of India,' was the book's exact hero - the entrepreneur who rode liberalization to build India's largest retailer - and his empire collapsed under debt when the revolution moved online. Das's book celebrates the unleashing; it underweights what gets unleashed when credit is easy and the future is assumed. The caveat: liberalization freed the entrepreneurs - and also the leverage. India unbound is also India indebted; the same forces that created the boom created the bust.",
-    "graveLink": "future-group"
+    "graveLink": "paytm-ipo"
   },
   {
     "id": "bonsai-manager",
@@ -19157,7 +19185,7 @@ const BOOKS = [
     "oneLiner": "Harish Bhat's forty stories from Tata's history - people before profit, nation before company, and how values build trust that outlasts generations.",
     "cover": "assets/covers/tata-stories.jpg",
     "caveat": "Lala's 'Tata's 140 years of ethics prove that integrity pays' is the most beloved Indian corporate history ever - and GoMechanic is the warning that integrity is not a default, it is a choice made under pressure: the Indian auto-tech startup faked ₹300 crore of revenue to keep its growth story alive - the exact opposite of Tata's 'safety, ethics and values first' doctrine. The caveat: Tata's record is real and rare - which is precisely why it is worth studying. The graveyard is full of companies that believed they could fake it 'just this once' and then once more. Tata's lesson is not that ethics are easy; it is that they are the only sustainable strategy.",
-    "graveLink": "gomechanic-fraud"
+    "graveLink": "gomechanic-india"
   },
   {
     "id": "i-have-a-dream",
@@ -19717,7 +19745,7 @@ const BOOKS = [
     "oneLiner": "Shashi Tharoor's counter-history of British rule - deindustrialization, the wealth drain and engineered famines - a masterclass in who controls the narrative.",
     "cover": "assets/covers/era-of-darkness.jpg",
     "caveat": "Sanyal's 'colonialism deliberately destroyed India's institutions' is the most provocative Indian history ever - and Plassey is the case study his thesis rests on: Bengal, the richest province on earth, fell to a trading company in a single afternoon - not to superior force but to an inside betrayal that the company had engineered for years. Sanyal's argument is powerful; the caveat is what it implies for the present: empires fall through internal division, and the divisions are always being sold. The lesson of the era of darkness is not only 'the British were brutal' - it is that the Plassey pattern repeats wherever loyalty can be outbid. Guard the institutions; they are the only wall that has ever worked.",
-    "graveLink": "plassey-betrayal"
+    "graveLink": "anil-ambani"
   },
   {
     "id": "chanakyas-chant",
@@ -20613,7 +20641,7 @@ const BOOKS = [
     ],
     "cover": "assets/covers/coffee-can-investing.jpg",
     "caveat": "Mukherjea's 'buy quality, hold for a decade, don't peek' is the best Indian investing book ever - and Satyam is the hole in the coffee can: India's most 'quality' company - audited by the biggest firms, held by the most sophisticated investors, a CCE-style darling - turned out to be a ₹7,000 crore fraud, and the decade-long holders lost everything. Mukherjea's framework screens for quality; the caveat is that quality is a report on the past, and fraud is a fact about the present. The coffee can needs one more rule: peek occasionally - not to trade, but to verify that what's in the can is still what you put in it.",
-    "graveLink": "satyam-raju"
+    "graveLink": "dhfl-scam"
   },
   {
     "id": "poor-economics",
@@ -20690,7 +20718,7 @@ const BOOKS = [
     ],
     "cover": "assets/covers/poor-economics.jpg",
     "caveat": "Banerjee & Duflo's 'the poor are rational; small fixes beat grand theories' is the most humane economics book ever - and Sahara is the warning about the poor's rationality being exploited: millions of small savers, making perfectly rational decisions to trust a famous, national, 'safe' institution, lost billions when the institution was a fraud. The authors' research shows the poor save wisely when they can trust; the caveat is that trust is exactly what gets weaponized. The book's policy solutions all assume honest institutions - and the graveyard of Indian finance is full of dishonest ones. Small fixes work; they also need small audits.",
-    "graveLink": "sahara-roy"
+    "graveLink": "minamata-disease"
   },
   {
     "id": "a-better-india",
@@ -20991,7 +21019,7 @@ const BOOKS = [
     ],
     "cover": "assets/covers/india-in-age-of-ideas.jpg",
     "caveat": "Sanyal's 'ideas and institutions, not geography, decide India's fate' is the most contrarian Indian history ever - and Dunzo is the modern case his framework predicts: the startup that India's most innovative ideas built - hyperlocal delivery before it was a category - collapsed because the institution (unit economics, capital discipline) couldn't carry the idea. Sanyal's book shows ideas need institutions; Dunzo shows the same in reverse - a great idea with a weak institution is a great idea with a short life. The caveat: the idea is the seed; the institution is the soil. India's next golden age needs both, and the institutions are the harder half.",
-    "graveLink": "dunzo-collapse"
+    "graveLink": "dunzo-cash"
   },
   {
     "id": "india-after-gandhi",
@@ -21600,7 +21628,7 @@ const BOOKS = [
     ],
     "cover": "assets/covers/turning-points-kalam.jpg",
     "caveat": "Kalam's 'dream big, work hard, institutions deliver' is inspiring - and NASA Challenger is the reminder that institutions don't always deliver: the shuttle's engineers had the same brilliance, discipline and mission-faith Kalam celebrates, and the culture still punished their warnings until seven people died. Kalam's own institutions worked because leaders like him protected the truth-tellers; the caveat is that personal excellence inside a corrupt or fearful system becomes personal tragedy. Dream big - and audit whether the system around you rewards honesty before you bet your life on it.",
-    "graveLink": "challenger-launch"
+    "graveLink": "forward-health-shutdown"
   },
   {
     "id": "my-journey-kalam",
@@ -21670,7 +21698,7 @@ const BOOKS = [
     ],
     "cover": "assets/covers/my-journey-kalam.jpg",
     "caveat": "The memoir's gratitude and kindness are real - and they can quietly license passivity: 'be grateful for what you have' can become an excuse to accept what you shouldn't. Steve Jobs was told to accept his cancer 'holistically' by people who meant well, and the delay in conventional treatment is a documented part of his death. Gratitude for the present must coexist with aggressive action on what can be fixed. Kalam's own life balanced both; the caveat is that warmth without agency is just acceptance with good manners.",
-    "graveLink": "jobs-surgery"
+    "graveLink": "housing-rahul"
   },
   {
     "id": "discovery-of-india",
@@ -21810,7 +21838,7 @@ const BOOKS = [
     ],
     "cover": "assets/covers/dream-with-eyes-open.jpg",
     "caveat": "Screwvala's 'dream with your eyes open' assumes the dreamer can distinguish a real market from a convincing one - Quibi is the proof that even the most disciplined dreamers (top founders, $1.75 billion, flawless execution) can be wrong about demand itself. Eyes-open discipline validates the plan; it cannot validate the premise. The caveat: the most dangerous dream is the one that passes every internal test and fails the only test that matters - will strangers actually pay? Screwvala's method needs one more step: kill the dream early if the market won't fund it.",
-    "graveLink": "quibi-flop"
+    "graveLink": "arrival-vans"
   },
   {
     "id": "chanakya-in-you",
@@ -21950,7 +21978,7 @@ const BOOKS = [
     ],
     "cover": "assets/covers/art-of-being-alone.jpg",
     "caveat": "Gavrani's celebration of solitude has a dangerous edge: solitude can curdle into isolation, and the line is thinner than the book admits. Howard Hughes is the extreme - a man who took solitude so far that he stopped seeing anyone, stopped being tested by anyone, and slowly lost his grip on reality. The caveat: the art of being alone must include the art of returning. Solitude is a retreat, not a residence. If being alone starts feeling safer than being with people, that's not mastery - that's the first symptom.",
-    "graveLink": "hughes-isolation"
+    "graveLink": "arrival-vans"
   },
   {
     "id": "victory-project",
@@ -22720,7 +22748,7 @@ const BOOKS = [
     ],
     "cover": "assets/covers/gifts-of-imperfection.jpg",
     "caveat": "Brown's 'let go of what people think' is liberating - and it can be weaponized by manipulators who want you to stop listening to legitimate feedback. Colonel Parker convinced Elvis that the world was against him and only Parker understood him - 'ignore what they think' became the mechanism of isolation and control. The caveat: caring less about others' opinions is healthy; caring about NO opinions is how people get captured. The skill is discernment: whose feedback is signal and whose is noise. Brown's book teaches the letting go; the keeping of good counsel is the other half.",
-    "graveLink": "elvis-parker"
+    "graveLink": "allbirds-wool"
   },
   {
     "id": "five-love-languages",
@@ -22790,7 +22818,7 @@ const BOOKS = [
     ],
     "cover": "assets/covers/five-love-languages.jpg",
     "caveat": "Chapman's framework is practical - and it can become a checklist that substitutes for genuine attention: 'I did the act of service, why isn't she happy?' Love languages describe how love is received, not why love dies. Fouquet's party is the extreme: he performed the most spectacular act of 'love' (for the king) ever staged - and the recipient experienced it as threat, not gift. The caveat: the language matters, and so does the relationship behind it. A fluent love language spoken without real care is a better-executed lie. Technique serves connection; it doesn't replace it.",
-    "graveLink": "fouquet-party"
+    "graveLink": "amazon-destinations"
   },
   {
     "id": "better-than-before",
@@ -23280,7 +23308,7 @@ const BOOKS = [
       "Write your concrete 5-year future and plan backwards from it"
     ],
     "caveat": "⚠️ When this doesn't work: Mission-style discipline can blind you to changing circumstances - Kalam's 2020 targets assumed stable policy environments. If your industry is shifting fast, revalidate your mission annually. And personal integrity alone cannot fix systemic corruption; pair principles with structural change.",
-    "graveLink": "emergency-1975"
+    "graveLink": "coffee-day-vgs"
   },
   {
     "id": "make-it-stick",
@@ -23350,7 +23378,7 @@ const BOOKS = [
       "Guess before you look up answers"
     ],
     "caveat": "⚠️ When this doesn't work: Effortful learning assumes you have a foundation - total beginners need structure and examples before retrieval practice can work, and 'desirable difficulty' has limits: excessive difficulty (unclear material, no feedback) just demoralizes. Pair the science with good teachers and clear basics.",
-    "graveLink": "therac-25"
+    "graveLink": "ebay-china"
   },
   {
     "id": "maximum-city",
@@ -23420,7 +23448,7 @@ const BOOKS = [
       "Audit your environment and fix the biggest drain"
     ],
     "caveat": "⚠️ When this doesn't work: Bombay's hustle culture has a brutal side - burnout, exploitation and loneliness are real, and 'thick skin' can become emotional armor that cuts you off from people. Ambition without rest and community is a one-way ticket to the city's darker statistics.",
-    "graveLink": "mallya-kingfisher"
+    "graveLink": "zomato-ipo"
   },
   {
     "id": "most-important-thing",
@@ -23490,7 +23518,7 @@ const BOOKS = [
       "Add a 30% survival margin and write three-scenario plans for key bets"
     ],
     "caveat": "⚠️ When this doesn't work: Marks's contrarian discipline assumes deep expertise and long time horizons - amateurs copying 'buy cheap' without valuation skill can catch falling knives. And being permanently skeptical can make you miss decade-long trends. Contrarianism without a valuation framework is just stubbornness.",
-    "graveLink": "ltcm-geniuses"
+    "graveLink": "compaq-hp"
   },
   {
     "id": "playing-it-my-way",
@@ -23980,7 +24008,7 @@ const BOOKS = [
       "Schedule one weekly hour of self-directed Element study"
     ],
     "caveat": "⚠️ When this doesn't work: 'Follow your passion' is terrible advice for people without a financial cushion - rent must be paid, and not everyone can monetize their Element. Passion without market reality is a hobby, and hustle culture has weaponized the idea that your work must be your bliss. Build the bridge from stability to Element, not the other way around.",
-    "graveLink": "decca-beatles"
+    "graveLink": "bed-bath-beyond"
   },
   {
     "id": "the-idea-of-india",
@@ -24050,7 +24078,7 @@ const BOOKS = [
       "Audit your personal systems - rituals, routines, norms - and revive the neglected ones"
     ],
     "caveat": "⚠️ When this doesn't work: The 'argument as strength' model assumes everyone argues in good faith with fair rules. In workplaces with real power asymmetry, open argument can get juniors punished. Ensure psychological safety first, and don't romanticize endless debate - some decisions need a deadline.",
-    "graveLink": "nanda-tyrant"
+    "graveLink": "appharvest-tomatoes"
   },
   {
     "id": "the-winning-way",
@@ -24190,7 +24218,7 @@ const BOOKS = [
       "Keep a dream journal for one week"
     ],
     "caveat": "⚠️ When this doesn't work: Sleep science is compelling, but it can turn into another anxiety source - sleep tracking apps and perfectionism about 'optimal sleep' create the very stress that keeps people awake. If you have insomnia or night-shift work, blanket advice like 'just sleep more' is not enough; seek clinical help rather than guilt.",
-    "graveLink": "challenger-launch"
+    "graveLink": "core-scientific-mine"
   },
   {
     "id": "wonder-that-was-india",
@@ -24330,7 +24358,7 @@ const BOOKS = [
       "Protect strategic time on your calendar deliberately"
     ],
     "caveat": "⚠️ When this doesn't work: The 'system beats the person' lens can excuse passivity - leaders still matter enormously, and Manmohan Singh's own constraints were partly self-created by not fighting harder for control. Also, treating coalition politics as inevitable can justify abandoning principles. Use the analysis to strengthen your position, not to surrender it.",
-    "graveLink": "nanda-tyrant"
+    "graveLink": "takata-airbags"
   },
   {
     "id": "blitzscaling-hoffman",
@@ -24470,7 +24498,7 @@ const BOOKS = [
       "Keep a three-item gratitude journal nightly"
     ],
     "caveat": "⚠️ When this doesn't work: The wisdom assumes basic safety and support - asking someone in active abuse, severe depression or acute trauma to 'find perspective' or 'forgive' can do real harm. Forgiveness is a choice, never an obligation, and professional help beats spiritual practice alone for clinical conditions. Use these tools from a place of stability.",
-    "graveLink": "mc-hammer-broke"
+    "graveLink": "holi-muzzafarnagar"
   },
   {
     "id": "david-and-goliath",
@@ -24540,7 +24568,7 @@ const BOOKS = [
       "Design one move that changes the rules of your biggest fight"
     ],
     "caveat": "⚠️ When this doesn't work: The 'disadvantage as advantage' frame can romanticize real suffering - dyslexia, poverty and loss break far more people than they forge, and survivors' strength never justifies inflicting hardship on anyone. Use the strategic insights for competition, not as a story to tell others about their pain.",
-    "graveLink": "blockbuster-netflix"
+    "graveLink": "ilfs-crisis"
   },
   {
     "id": "freedom-from-the-known",
@@ -24680,7 +24708,7 @@ const BOOKS = [
       "Speak one inconvenient truth to your own side this week"
     ],
     "caveat": "⚠️ When this doesn't work: Gandhi's methods emerged from specific conditions - a literate adversary bound by law and press, and a population with extraordinary patience. Non-violent resistance is harder against regimes that simply kill, and fasting as protest can become coercion rather than conscience. Study the context before transplanting the tactics.",
-    "graveLink": "emergency-1975"
+    "graveLink": "zee-debt"
   },
   {
     "id": "give-and-take",
@@ -25030,7 +25058,7 @@ const BOOKS = [
       "Audit your systems for incentive-to-cheat and fix one"
     ],
     "caveat": "⚠️ When this doesn't work: The data-driven lens can flatten ethics into pure incentive math - but not everything is fungible, and some moral lines hold even when the incentives say otherwise. Correlation is also not causation: Levitt's own abortion-crime link remains contested, so treat the book's conclusions as hypotheses, not laws.",
-    "graveLink": "enron-culture"
+    "graveLink": "boo-com"
   },
   {
     "id": "chanakya-neeti",
@@ -25128,7 +25156,7 @@ const BOOKS = [
       "Review your week every Sunday for 10 minutes: one win, one leak, one promise kept."
     ],
     "caveat": "Chanakya's world is ruthless - some advice (test people, distrust everyone, conceal intent) can make you cold and suspicious. Use the systems, but pair them with modern empathy; the goal is wise, not paranoid.",
-    "graveLink": "harshad-mehta"
+    "graveLink": "nirav-modi-pnb"
   },
   {
     "id": "yoga-sutras",
@@ -25212,7 +25240,7 @@ const BOOKS = [
       "Keep a one-line practice diary: posture held, breaths counted, one honest observation."
     ],
     "caveat": "The 8 limbs are a serious lifetime practice; reading summaries gives direction, not transformation. The philosophy touches Hindu metaphysics - you can adapt the technique (breath, focus, ethics) without adopting every metaphysical claim.",
-    "graveLink": "daksha-yagna"
+    "graveLink": "rabbit-r1-launch"
   },
   {
     "id": "bhagavad-gita",
@@ -25968,7 +25996,7 @@ const BOOKS = [
       "Start tomorrow with a 5-minute self-chosen act before any input."
     ],
     "caveat": "The fable framing is salesy and the science is loosely sourced; 5 am suits some chronotypes and harms others. The transferable core is a protected first hour with exercise, reflection and learning - not the specific clock time.",
-    "graveLink": "hammer-broke"
+    "graveLink": "johnny-manziel"
   },
   {
     "id": "leader-no-title",
@@ -26059,7 +26087,7 @@ const BOOKS = [
       "Make one other person's win happen - with no credit to you."
     ],
     "caveat": "The fable format is motivational, not research; 'lead from anywhere' ignores real differences in authority and accountability. The behaviours are true and useful - but power dynamics in real organisations are not as neat as the book suggests.",
-    "graveLink": "gowork-gm"
+    "graveLink": "proterra-transit"
   },
   {
     "id": "think-on-these-things",
@@ -26346,7 +26374,7 @@ const BOOKS = [
       "Audit energy: % on work vs. % on worry - then shift the ratio."
     ],
     "caveat": "Vivekananda's lectures are shaped by 19th-century Hindu revivalism and can sound anti-materialistic; the goal is not passivity but mastery. Modern work culture needs boundaries and rest that the lectures don't address.",
-    "graveLink": "siddhartha-ccd"
+    "graveLink": "hyperloop-transportation"
   },
   {
     "id": "jnana-yoga",
@@ -26444,7 +26472,7 @@ const BOOKS = [
       "Write and rehearse your unshakeable sentence for the worst moment."
     ],
     "caveat": "This path is intellectually demanding and can slide into intellectualism - using philosophy to avoid life rather than clarify it. The metaphysics (one reality behind everything) is a claim, not a proof; hold it as a lens, not a dogma.",
-    "graveLink": "dice-game"
+    "graveLink": "pan-am-fall"
   },
   {
     "id": "upanishads",
@@ -26542,7 +26570,7 @@ const BOOKS = [
       "List three fear-objects - and who you are without them."
     ],
     "caveat": "These are 2,500-year-old dialogues with metaphysics that cannot be empirically settled; translations differ widely and Easwaran's is one view. If the cosmic unity claim is too much, the psychology - desire, identity, fear - still stands.",
-    "graveLink": "harappa-collapse"
+    "graveLink": "rotomac-pens-kothari"
   },
   {
     "id": "essence-bhagavad-gita",
@@ -26822,7 +26850,7 @@ const BOOKS = [
       "One ordinary task, done with total attention, daily."
     ],
     "caveat": "Early Sadhguru is provocative and occasionally reductionist; some answers are metaphysical assertions presented as fact. Mine the psychology - desire, pattern, mortality - and leave the claims you cannot verify.",
-    "graveLink": "rajneeshpuram"
+    "graveLink": "beatles-klein"
   },
   {
     "id": "nudge",
@@ -26913,7 +26941,7 @@ const BOOKS = [
       "Run the front-page test on every nudge you design or accept."
     ],
     "caveat": "The 'libertarian paternalism' framing has been criticised as manipulation; behavioural results also replicate less reliably in big real-world settings than in the lab. Use the tools honestly, and prefer transparent choices over hidden ones.",
-    "graveLink": "facebook-beacon"
+    "graveLink": "bhasmasur"
   },
   {
     "id": "lessons-of-history",
@@ -27179,7 +27207,7 @@ const BOOKS = [
       "Pair every hard act with one deliberate act of gentleness."
     ],
     "caveat": "Jocko's world is hyper-masculine, war-framed and occasionally simplistic; the advice is excellent for output and risky for rest, relationships and health when applied absolutely. Take the discipline; negotiate the dosage.",
-    "graveLink": "johnny-manziel"
+    "graveLink": "clover-health-spac"
   },
   {
     "id": "when-pink",
@@ -27361,7 +27389,7 @@ const BOOKS = [
       "Run the outside view on your next forecast."
     ],
     "caveat": "Lewis's narrative prioritises story over scientific detail; replication debates (notably on 'priming') have since softened parts of the original work. The big ideas - anchoring, loss aversion, overconfidence - remain robust.",
-    "graveLink": "ltcm-geniuses"
+    "graveLink": "gomechanic-india"
   },
   {
     "id": "richer-wiser-happier",
@@ -27907,7 +27935,7 @@ const BOOKS = [
       "Close every day with the three-line review."
     ],
     "caveat": "Seneca wrote from wealth, slavery-backed privilege and a court full of intrigue - his advice presumes a freedom most people do not have. The direction is right; the feasibility varies with circumstance.",
-    "graveLink": "bunker-hunt"
+    "graveLink": "aircel"
   },
   {
     "id": "enchiridion",
@@ -28355,7 +28383,7 @@ const BOOKS = [
       "Do one establishment-free act of helping another rise."
     ],
     "caveat": "Confucius' world was hierarchical and patriarchal; 'rectification of names' has been used to enforce social order at the cost of individual rights. Extract the self-cultivation; leave the hierarchy.",
-    "graveLink": "nanda-tyrant"
+    "graveLink": "meerkat"
   },
   {
     "id": "dhammapada",
@@ -28453,7 +28481,7 @@ const BOOKS = [
       "Run one 30-day daily-practice streak with a drop-count."
     ],
     "caveat": "The verses' monastic context presumes renunciation most readers will not choose; some renderings add devotional colour. The psychology - mind-made experience, craving, incremental practice - stands on its own.",
-    "graveLink": "ravana-arrogance"
+    "graveLink": "rabbit-r1-launch"
   },
   {
     "id": "little-book-beats-market",
@@ -28817,7 +28845,7 @@ const BOOKS = [
       "Ask what makes an older person's days good - and deliver it."
     ],
     "caveat": "The book is American and medical-system-specific; choices and costs differ elsewhere. Its core question - what are you willing to trade? - is universal, but it demands nuance when care burdens fall on family or the poor.",
-    "graveLink": "purdue-opioids"
+    "graveLink": "medical-error"
   },
   {
     "id": "emperor-maladies",
@@ -29006,7 +29034,7 @@ const BOOKS = [
       "Name your asymptote and give it one hour today."
     ],
     "caveat": "This is a personal memoir of one family's experience, not medical advice; Kalanithi's choices (proceeding with aggressive treatment) were his, and other paths are no less worthy. The literary voice is unmatched, but it is one voice.",
-    "graveLink": "jobs-surgery"
+    "graveLink": "credit-suisse-end"
   },
   {
     "id": "lifespan",
@@ -32089,7 +32117,7 @@ const BOOKS = [
       "Adopt one formal system (certification, revenue management) this year to break the instinct ceiling."
     ],
     "caveat": "Bondre writes celebratory profiles from interviews: numbers are as families remembered them, survivorship is heavy (the many who returned broke are not profiled), and the famous Patel-motel statistics are industry estimates rather than audited counts. The community-lending portraits simplify enforcement realities. Read for the operating habits (they are real and repeated across independent stories), not as a promise that the model transfers without the community infrastructure that powers it.",
-    "graveLink": "harshad-mehta"
+    "graveLink": "cineworld-debt"
   },
   {
     "id": "first-90-days",
@@ -32173,7 +32201,7 @@ const BOOKS = [
       "Score your team on the six criteria; set the exit conversation for the weakest link."
     ],
     "caveat": "Watkins writes for corporate leadership transitions: founders, external consultants and political appointments need adaptation, and the framework's comprehensiveness can read as checklist-ism if applied without judgment. Cases are anonymized composites (the method's evidence base is practitioner experience more than controlled research). Read it as the standard onboarding doctrine it has become, and apply the STARS diagnosis honestly; most of the book's value collapses if you skip that step.",
-    "graveLink": "kodak-digital"
+    "graveLink": "canoo-lifestyle"
   },
   {
     "id": "for-the-love-of-india",
@@ -33265,7 +33293,7 @@ const BOOKS = [
       "Start a dated builder's log; write your own history before others do."
     ],
     "caveat": "Sloan wrote with an executive's precision but also an executive's pride: labor conflicts, the 1930s labor battles and GM's longer-term quality drift get minimal treatment, and the book is as much institutional self-defense (against Drucker's framing) as memoir. Post-1964 history (the linked case study's 2009 bankruptcy) shows what the system's heirs did with it. Read it as the source code of the modern corporation, with its bugs included.",
-    "graveLink": "gowork-gm"
+    "graveLink": "general-magic"
   },
   {
     "id": "obviously-awesome",
@@ -34756,7 +34784,7 @@ const BOOKS = [
       "Write your missing-person protocol (one page) and refresh it quarterly."
     ],
     "caveat": "This is a TheSmallBook Original, written in-house under the name Unknown. The dabbawala network's public record (its accuracy claims, its studies and its famous six-sigma folklore) varies by source and year, and this book treats the system as a teaching model rather than a certified statistic. Every corporate example cited is real public history; the doctrine drawn from them is the author's own.",
-    "graveLink": "toyota-recalls"
+    "graveLink": "netscape-ie"
   },
   {
     "id": "wedding-economy",
@@ -34958,7 +34986,7 @@ const BOOKS = [
       "Book the released hours with one new appointment before the week ends."
     ],
     "caveat": "This is a TheSmallBook Original: written in-house, published under the name Unknown, with no real author to credit. The craft inside is original, and the examples are real public history (Kodak, Concorde, Netflix, Tata, Bhopal courts) cited honestly from the record. Nothing here is therapy or a substitute for it: grief that flattens you for weeks deserves a professional, not a book. This is a way of holding your own hand while the hand learns to open.",
-    "graveLink": "kodak-digital",
+    "graveLink": "ceasefire-fade",
     "cover": "assets/covers/the-art-of-letting-go.jpg"
   },
   {
@@ -35056,7 +35084,7 @@ const BOOKS = [
       "Declare your three maybe-free zones in writing and post them up."
     ],
     "caveat": "This is a TheSmallBook Original: written in-house, published under the name Unknown, with no real author to credit. The framing and the lessons are original; the examples are real public history (Yahoo, Apple 1997, Amazon, Quibi, Buffett's 25-5 list) cited honestly from the record. Nothing here is psychological or medical advice; for anxiety that rules your choices, a professional beats a book every time. This is a way of seeing the rent you are already paying.",
-    "graveLink": "yahoo-google",
+    "graveLink": "argo-ai",
     "cover": "assets/covers/the-weight-of-maybe.jpg"
   },
   {
@@ -35161,7 +35189,7 @@ const BOOKS = [
       "Write your own Dear younger me letter tonight and date it."
     ],
     "caveat": "This is a TheSmallBook Original: written in-house, published under the name Unknown, with no real author to credit. The letters are original; the lives cited (Kalam, Ambani, Ma, Kohli, Iger, Kroc and others) are real public record, used honestly and briefly. Nothing here is medical, financial or psychological advice. If a letter opens something heavy, take it to a professional: this book holds your hand to the door, it does not do the surgery.",
-    "graveLink": "mallya-kingfisher",
+    "graveLink": "light-brigade",
     "cover": "assets/covers/letters-to-my-younger-self.jpg"
   },
   {
@@ -35357,7 +35385,7 @@ const BOOKS = [
       "Give one person twenty minutes of camera-down attention this week."
     ],
     "caveat": "This is a TheSmallBook Original: written in-house, published under the name Unknown, with no real author to credit. The lessons are original; the findings cited (Gilovich's spotlight experiments, Pixar's early-shown rough drafts, rejection therapy) are real public work, referenced honestly. Nothing here is therapy: social anxiety that shuts doors deserves professional care, and this book salutes that choice. The theatre is empty. Go be bad at something in it.",
-    "graveLink": "nokia-smartphone",
+    "graveLink": "tulip-mania",
     "cover": "assets/covers/nobody-is-thinking-about-you.jpg"
   },
   {
@@ -35455,7 +35483,7 @@ const BOOKS = [
       "Send one specific out-loud congratulation today and feel the acid leave."
     ],
     "caveat": "This is a TheSmallBook Original: written in-house, published under the name Unknown, with no real author to credit. The lessons are original; the examples are real public history (Quibi, the 2008 bubble, Harshad Mehta's 1992, Wal-Mart, PayPal) cited honestly from the record. Nothing here is mental-health advice: chronic envy and mood dips deserve a professional, and readers who need one should see that as strength, not failure. The lane is fitted. Run.",
-    "graveLink": "quibi-flop",
+    "graveLink": "rana-plaza-2013",
     "cover": "assets/covers/the-comparison-tax.jpg"
   },
   {
@@ -35553,7 +35581,7 @@ const BOOKS = [
       "Commission your own location study and fund two runways: setup and survival."
     ],
     "caveat": "This is a TheSmallBook Original: written in-house, published under the name Unknown, with no real author to credit. The walkthrough is original; the examples are real public history (global QSR disputes, the Indian mall cycle, education and food chain insolvencies) cited honestly from the record. Nothing here is legal or investment advice: get a franchise lawyer before any signature, and treat this book as the questions you must bring to them.",
-    "graveLink": "sahara-roy",
+    "graveLink": "express-fashion",
     "cover": "assets/covers/the-franchise-lie.jpg"
   },
   {
@@ -35651,7 +35679,7 @@ const BOOKS = [
       "Audit owned versus rented revenue and shift five percent to owned channels."
     ],
     "caveat": "This is a TheSmallBook Original: written in-house, published under the name Unknown, with no real author to credit. The playbooks are original; the examples are real public history (Zoho, Basecamp, Mailchimp, the funding winters, the Coimbatore clusters) cited honestly from the record. Nothing here is investment advice: capital decisions deserve advisors who know your books. The rebellion recruits patiently.",
-    "graveLink": "byjus-empire",
+    "graveLink": "paytm-ipo",
     "cover": "assets/covers/the-bootstrapped-rebellion.jpg"
   },
   {
@@ -36141,7 +36169,7 @@ const BOOKS = [
       "Set the save-or-shut checkpoint with three metrics and one truth-telling advisor."
     ],
     "caveat": "This is a TheSmallBook Original: written in-house, published under the name Unknown, with no real author to credit. The playbook is original; the examples are real public history (retail and airline revivals, factory turnarounds, honest wind-downs) cited honestly from the record. Nothing here is financial or legal advice: distressed situations need bankers and lawyers at the table early. Board the storm ship at your own discretion.",
-    "graveLink": "circuit-city",
+    "graveLink": "triangle-shirtwaist-1911",
     "cover": "assets/covers/the-turnaround-captain.jpg"
   },
   {
@@ -36827,7 +36855,7 @@ const BOOKS = [
       "Declare two phone-free zones, meals and homecomings, for one month and let your people score it."
     ],
     "caveat": "This is a TheSmallBook Original: written in-house, published under the name Unknown, with no real author to credit. The analysis is original; the examples are real public history (the attention-economy testimonies, the data scandals, the interruption research) cited honestly from the record. Nothing here is medical advice: attention struggles that wreck your life deserve clinicians, not just notebooks. Put the phone in the drawer. The book will still be here.",
-    "graveLink": "cambridge-analytica",
+    "graveLink": "hyperloop-transportation",
     "cover": "assets/covers/the-scrolled-mind.jpg"
   },
   {
@@ -36926,7 +36954,7 @@ const BOOKS = [
       "Expect the frustration wall around hour two; schedule your worst sessions there anyway."
     ],
     "caveat": "20 hours buys usefulness, not expertise; don't confuse the two on a surgeon or a pilot. And some skills (swimming, driving) need safety supervision from the first hour.",
-    "graveLink": "byjus-edtech"
+    "graveLink": "silk-road"
   },
   {
     "id": "working-backwards",
@@ -37220,7 +37248,7 @@ const BOOKS = [
       "Read one history of an industry you invest in and find the axis it rolled along."
     ],
     "caveat": "Scholars debate details (the Americas' domesticates, the primacy of institutions over geography), and critics charge geographic determinism. As a corrective to racial history it remains decisive.",
-    "graveLink": "easter-island"
+    "graveLink": "dust-bowl-1930s"
   },
   {
     "id": "prisoners-of-geography",
@@ -37318,7 +37346,7 @@ const BOOKS = [
       "Trace one supply chain you depend on, fuel, chips or food, and note exactly where it can be pinched."
     ],
     "caveat": "Journalistic synthesis for general readers; specialists argue with simplifications (Russia's agency, Africa's institutions). Determinism is a lens, not a law: leaders still make choices on the map.",
-    "graveLink": "maginot-line"
+    "graveLink": "zheng-he-fleet"
   },
   {
     "id": "the-silk-roads",
@@ -37416,7 +37444,7 @@ const BOOKS = [
       "Read one story about a place the news ignores this week; it sits on somebody's old road."
     ],
     "caveat": "A 600-year panorama in 600 pages compresses ruthlessly; specialists quibble with emphasis, and 'roads' sometimes stretches to include everything east of Italy. The re-centring thesis is argument, not consensus.",
-    "graveLink": "plassey-betrayal"
+    "graveLink": "spain-silver-century"
   },
   {
     "id": "attached",
@@ -38102,7 +38130,7 @@ const BOOKS = [
       "Question one chemical story you have accepted about your own low mood; list what is actually disconnected."
     ],
     "caveat": "Hari is a journalist telling a story, and his framing of the chemical-imbalance debate is contested by some psychiatrists; medication saves lives for many. The book is a complement to treatment, not a replacement for it.",
-    "graveLink": "german-wings-recall"
+    "graveLink": "katerra-collapse"
   },
   {
     "id": "unlimited-power",
@@ -38592,7 +38620,7 @@ const BOOKS = [
       "Collect your last three failures and write down the small design change each one is begging for."
     ],
     "caveat": "The aviation-vs-medicine contrast is dramatized; healthcare has its own safety science, and later work nuances the checklist numbers. The core mechanism, surfaced failure compounds, stands.",
-    "graveLink": "boeing-max"
+    "graveLink": "go-first-airline"
   },
   {
     "id": "common-stocks-and-uncommon-profits",
@@ -38690,7 +38718,7 @@ const BOOKS = [
       "Track one holding's management for a quarter on a single column: promises made versus promises kept."
     ],
     "caveat": "1958 vintage: no index funds, no buybacks era, and Fisher's concentration demands real research skill; most readers are better off boring and indexed first, Fisher-style with the surplus. Growth-at-any-price misread him badly.",
-    "graveLink": "ltcm-geniuses"
+    "graveLink": "wirecard-hole"
   },
   {
     "id": "siddhartha",
@@ -38788,7 +38816,7 @@ const BOOKS = [
       "Try one thing fully this month, then, like Siddhartha, leave it completely behind when it stops teaching you."
     ],
     "caveat": "A novel, not a manual: Hesse's East is a European's romantic construction, and scholars note its Buddhism is loose. Read it as a mirror for the seeker, not as scripture about any actual tradition.",
-    "graveLink": "rajneeshpuram"
+    "graveLink": "kerala-floods"
   },
   {
     "id": "the-intellectuals-and-society",
@@ -38799,7 +38827,7 @@ const BOOKS = [
     "readTime": "8 min",
     "tagline": "Why articulate visionaries without real-world skin in the game create disastrous social policies.",
     "cover": "assets/covers/the-intellectuals-and-society.jpg",
-    "graveLink": "enron-culture",
+    "graveLink": "essential-phone",
     "bigIdea": "Ideas created by intellectuals have zero cost of being wrong to their creators, shifting catastrophic consequences onto ordinary society.",
     "oneLiner": "How insulated experts shape policies without skin in the game.",
     "caveat": "Where this advice breaks: dismissing all intellectual analysis leads to anti-expert populism and ignorance of empirical science.",
@@ -38876,7 +38904,7 @@ const BOOKS = [
     "category": "Mindset",
     "readTime": "7 min",
     "cover": "assets/covers/zen-mind-beginners-mind.jpg",
-    "graveLink": "quibi-flop",
+    "graveLink": "woolworths-uk",
     "bigIdea": "In the beginner's mind there are many possibilities; in the expert's mind there are few.",
     "oneLiner": "Reclaiming fresh curiosity and quiet presence in everything you do.",
     "caveat": "Where this advice breaks: technical surgery or structural engineering requires deep specialized mastery alongside curiosity.",
@@ -38934,6 +38962,20 @@ const BOOKS = [
         "summary": "Wisdom is not a secret magical state; it is showing up cleanly for ordinary life. The point of practice is not a special state reserved for cushions and quiet rooms. Suzuki keeps returning students to ordinary activity done cleanly: eating when you eat, working when you work. Enlightenment, in his telling, looks less like fireworks and more like a life with nothing extra added.",
         "example": "Washing dishes just to wash dishes, not rushing to finish them.",
         "action": "Perform your least favorite routine chore today with complete, unhurried care."
+      },
+      {
+        "title": "Going Deeper: In the Beginner's Mind There Are Many Possibilities",
+        "chapter": "Going Deeper",
+        "summary": "Suzuki's famous sentence continues, in the expert's there are few, and its deepening is a practice audit rather than a compliment to ignorance. The expert's few possibilities are mostly habits of perception: the diagnosis made in the first ten seconds, the meeting steered to the known exit. Beginner's mind is the discipline of letting the object speak first, the patient, the problem, the tea, before the filing system answers for it. Teachers, doctors and parents pay for this freshness in the only currency that buys it, which is the temporary suspension of being right.",
+        "example": "His roshi's students noticed he approached zazen after fifty years as though sitting for the first time, adjusting his posture with a beginner's care. The fresh mind was not spontaneity as performance. It was form practised so completely that it stopped being a cage and became, again, a door.",
+        "action": "Take one daily expert act this week, listening to your child, your first meeting, your commute, and do it once at beginner speed, describing silently what is actually there."
+      },
+      {
+        "title": "Going Deeper: No Trace: Leave the Practice Where You Practised It",
+        "chapter": "Going Deeper",
+        "summary": "One of the talks warns against carrying meditation around as an achievement, the spiritual materialism that displays its calm the way athletes display medals. Suzuki's phrase is leaving no trace: sit, then let the sitting dissolve into the dishes and the traffic without a halo to maintain. The deepening applies to every discipline in this library. The reading, the journaling, the cold plunge become corrupt exactly when they become identity, another territory for the ego to defend, and healthiest when they evaporate into conduct nobody is asked to admire.",
+        "example": "Students who reported their insights most eagerly were, in his gentle account, usually the ones the insight had not yet reached. The ones changing quietly rarely had anything to announce at lunch. He does not mock the eager; he simply refuses to grade the announcement as the attainment, a grading policy every self improvement community could adopt by Friday.",
+        "action": "Do one practice this week entirely unrecorded: no post, no streak, no mention. Let the absence of audience purify the dosage."
       }
     ]
   },
@@ -38946,7 +38988,7 @@ const BOOKS = [
     "readTime": "8 min",
     "tagline": "How markets and the state have crushed local communities, and how to restore human equilibrium.",
     "cover": "assets/covers/the-third-pillar.jpg",
-    "graveLink": "barings-leeson",
+    "graveLink": "kerala-floods",
     "bigIdea": "Societies stay stable only when markets, the state, and local communities balance each other.",
     "oneLiner": "How decaying local communities create social rupture and populist backlash.",
     "caveat": "Where this advice breaks: over-empowered local communities can enforce oppressive traditional castes and exclusionary norms.",
@@ -39011,6 +39053,20 @@ const BOOKS = [
         "summary": "True resilience requires healthy small enterprises, responsible local government, and close-knit neighbors. The balance Rajan wants is a triangle that can bear weight: competitive markets for prosperity, an accountable state for protection, and strong communities for meaning. Tip too far toward any one and the others deform. Resilience is not a policy; it is what a place with all three pillars does automatically in a crisis.",
         "example": "Regional cooperative banks outperforming speculative lenders during financial panics.",
         "action": "Keep a portion of your business cash reserves in local cooperative institutions."
+      },
+      {
+        "title": "Going Deeper: The Community Is Not Nostalgia, It Is Infrastructure",
+        "chapter": "Going Deeper",
+        "summary": "Rajan's pillar deserves its engineering reading: communities supply what markets price badly and states deliver clumsily, belonging, monitoring, mutual insurance, the transmission of norms, and a jury of neighbours for every reputation. When he says the pillar has weakened, he means load paths have been cut: the factory, the union hall, the local bank and newspaper that once let a town see and correct itself. The deepening is diagnostic for any reader's own postcode: which institutions still let your community know itself, and what has replaced them in practice rather than in speeches?",
+        "example": "His contrast between neighbourhoods that organised their own recovery after plant closures and those that spiralled is not a homily about character. The recovering towns had surviving civic stock, clubs, congregations, local capital with local knowledge. Identical shocks, different infrastructure, opposite decades: the pillar is visible precisely in who is still standing after the factory whistle stops.",
+        "action": "Inventory your postcode's third pillar this week: name three functioning institutions and join or fund one before the year asks it for help."
+      },
+      {
+        "title": "Going Deeper: Inclusion Must Be Local to Be Believed",
+        "chapter": "Going Deeper",
+        "summary": "Rajan's constructive chapters argue for inclusive localism: powers, budgets and problem solving pushed to the level where citizens can see the results and punish the failures, inside strong national floors for rights and standards. The deepening is his refusal of both nostalgias, the centraliser promising competence from the capital and the localist romanticising every parish pump. The design problem is subsidiarity with teeth: decide at the smallest level that can actually carry the externality, and no smaller, however good it feels at the rally.",
+        "example": "His school and credit examples keep showing the same geometry: local knowledge improves allocation, local capture ruins it, and the difference is competition, transparency and the right of exit. Get those three and devolution liberates; skip them and it merely privatises power to the nearest strongman with a familiar surname.",
+        "action": "Take one service you complain about and identify its correct level: who should decide, who should pay, who should audit. Compare with the current arrangement."
       }
     ]
   },
@@ -39023,7 +39079,7 @@ const BOOKS = [
     "category": "Psychology",
     "readTime": "9 min",
     "cover": "assets/covers/alchemy-rory-sutherland.jpg",
-    "graveLink": "vice-media",
+    "graveLink": "ceasefire-fade",
     "bigIdea": "Human behavior is psychological, not logical. Solving problems with pure spreadsheet logic guarantees mediocre answers.",
     "oneLiner": "Why irrational solutions often work better than obvious rational ones.",
     "caveat": "Where this advice breaks: physics, structural integrity, and financial accounting require rigorous mathematical logic.",
@@ -39165,6 +39221,20 @@ const BOOKS = [
         "summary": "Nature is actively asserting its dominance over human hubris and concrete seawalls. Cyclones that behave strangely, rain that arrives all at once, seas that take back land: the non-human world is not a backdrop but a participant. Ghosh's warning is that our institutions still plan as if nature were passive. The seawall is the perfect symbol: concrete confidence facing a force that does not negotiate.",
         "example": "Unprecedented cyclonic rainfall overwhelming advanced city drainage in hours.",
         "action": "Design business operations with built-in emergency backup redundancies."
+      },
+      {
+        "title": "Going Deeper: The Unthinkable Is a Failure of Form",
+        "chapter": "Going Deeper",
+        "summary": "Ghosh's literary argument cuts deeper than content: the modern realist novel, built on the probable, the gradual and the bourgeois interior, is formally incapable of the improbable, collective, nonhuman scale of climate events. Our dominant stories therefore edit out the century's central fact not by denial but by genre. The deepening is to audit your own information diet by form: feeds reward the novelistic, human faces, daily increments, while the crisis moves in statistics, centuries and systems. A mind fed only on story will be perfectly informed and structurally surprised, repeatedly, by the same emergency.",
+        "example": "He contrasts the literature of his beloved Bengal delta, where folk forms kept spirits, tigers and floods as protagonists, with the modern novel's eviction of the nonhuman. The older grammar, dismissed as superstition, could at least narrate a cyclone as an actor. Ours struggles to give the weather agency even while it takes our coastline.",
+        "action": "Add one non novelistic source to your diet this month: a data dashboard, a scientific assessment, a tide table for a coast you love. Let form stretch."
+      },
+      {
+        "title": "Going Deeper: Empire Drew the Map of Who Drowns First",
+        "chapter": "Going Deeper",
+        "summary": "The book's history chapters trace how colonial trade chose Asia's great port cities for the empire's convenience on deltas and estuaries now first in line for the sea. The vulnerability of Mumbai, Kolkata, Dhaka and Shanghai is not geography's accident; it is an inheritance, drawn by merchants who priced a harbour and never a cyclone. Deepening means refusing the word natural in natural disaster wherever settlement was commanded by profit or empire. The invoice arriving now is addressed, historically speaking, with unusual precision, and climate justice arguments begin exactly at that address.",
+        "example": "Ghosh returns to Mumbai, a city manufactured by reclamation for trade, contemplating its sea with the knowledge that its most valuable real estate stands where the water was recently told to leave. The residents of its fishing villages, there before the city, hold the memory the property pages omit, as such residents usually do.",
+        "action": "Learn your own city's imposed geography: which neighbourhoods were built by empire, industry or speculation on borrowed land. Note who there floods first."
       }
     ]
   },
@@ -39338,7 +39408,7 @@ const BOOKS = [
     "category": "Biography",
     "readTime": "7 min",
     "cover": "assets/covers/the-courtyard-stories.jpg",
-    "graveLink": "payless-shoes",
+    "graveLink": "alma-mater",
     "bigIdea": "True freedom begins when you step outside guarded boundaries and embrace the warmth and chaos of authentic community.",
     "oneLiner": "A young orphan finding home, friendship, and independence in the alleys of Dehradun.",
     "caveat": "Where this advice breaks: romanticizing traditional communal layouts fails when privacy, modern hygiene standards, and scalable structural safety are ignored.",
@@ -39396,6 +39466,20 @@ const BOOKS = [
         "summary": "A courtyard home does not have rigid single-purpose rooms. The household shifts its living quarters according to the hour and the season: sleeping on the open terrace under starry summer skies, gathering in the sun-drenched north veranda on winter mornings, and retreating to the thick ground-floor chambers at noon.",
         "example": "Traditional Gujarati pol houses seamlessly converting inner halls from family dining rooms into merchant counting offices and festive wedding courtyards.",
         "action": "Design your organizational roles and physical desks to be fluid and multipurpose rather than locking employees into rigid, siloed job descriptions."
+      },
+      {
+        "title": "Going Deeper: Simplicity Is a Discipline, Not a Default",
+        "chapter": "Going Deeper",
+        "summary": "The stories' apparent lightness is engineered: Ruskin Bond writes the way clear water looks shallow, and a lifetime of readers has mistaken the transparency for absence of depth. His minimalism is an ethic as much as a style, the decision to value the observed moment, the exact leaf, the remembered shopkeeper, over the grand statement. Deepening means reading him as a practitioner: the notebook kept for seventy years, the walks that stock it, the refusal to inflate. Simplicity at this level is not where writing starts. It is where it arrives, if it is lucky and disciplined.",
+        "example": "His Landour hillside produces a book a year in some decades, each modest, because the input system never stopped: same walks, same bazaar, same notebook by the window. Writers who visit seeking the secret of productivity leave with the uncomfortable answer that the system is the man's life, and it does not transfer in a weekend.",
+        "action": "Keep a notebook by one window for a month: three observed details a day, no commentary allowed. Notice what your street has been trying to tell you."
+      },
+      {
+        "title": "Going Deeper: The Hill Town as a Moral Geography",
+        "chapter": "Going Deeper",
+        "summary": "In these stories place does ethical work: the smallness of the hill town enforces a visibility metropolises forgive. Everyone's grandfather is known; cruelty and kindness both carry permanent addresses. Ruskin Bond neither sentimentalises this nor flees it; his narrators enjoy the anonymity of trains and plains and then return to the jurisdiction of the known. The deepening question travels well: which of your behaviours depend on nobody knowing, and what would your week look like conducted entirely inside a moral geography where they do?",
+        "example": "His characters who thrive in the hills are those who make peace with being known, while his scoundrels are usually passing through, counting on departure. It is a complete theory of community in disguise as setting, and it explains why his villains so often simply leave and his saints stay to be teased by name.",
+        "action": "Conduct one day this week as if everyone affected will know it was you and remember at leisure. Note which plans quietly change."
       }
     ]
   },
@@ -39473,6 +39557,20 @@ const BOOKS = [
         "summary": "A structurally decaying business trading at a low price-to-earnings multiple is not a bargain; it is a value trap. Superior long-term compounding requires paying a fair price for an extraordinary business with durable reinvestment moats.",
         "example": "Buffett transitioning from cigar butts to compounding franchises like Sees Candies and Coca-Cola under Charlie Mungers guidance.",
         "action": "Evaluate whether customer retention and gross margins have expanded or contracted over the past five years before buying a cheap stock."
+      },
+      {
+        "title": "Going Deeper: The Diary of Decisions Is the Real Portfolio",
+        "chapter": "Going Deeper",
+        "summary": "Baid's compounding argument applies to judgement itself: the investor's durable edge is a decision journal, written before outcomes are known, reviewed without mercy. The journal converts luck into curriculum, because it separates the quality of a decision from the noise of its result in a market determined to confuse the two daily. Over a decade the journal becomes the investor's real asset, a private dataset of their own recurring errors, which no newsletter can sell them because nobody else makes precisely their mistakes.",
+        "example": "The great investors Baid studies kept such records obsessively; Munger's mental models are, in effect, a published decision journal. Amateurs keep only statements, which record what the market did. Professionals keep reasoning, which records what they did, and only the second file can be improved.",
+        "action": "Open a decision journal today. For your next financial decision, write the thesis, the risks and the exit condition first, dated, before you act."
+      },
+      {
+        "title": "Going Deeper: Checking Less Is an Investment Strategy",
+        "chapter": "Going Deeper",
+        "summary": "Compounding requires an ingredient temperament supplies and apps remove: time unobserved. Baid joins the long line of investors noting that the best performing accounts are often those of the dead or the forgetful, because inactivity protected the compounding from its owner's emotions. The deepening is architectural rather than moral: automate contributions, lengthen the review interval, and spend the recovered attention on the one input that matters, the quality of what you own and the price you paid. Your portfolio's biggest leak is usually your own checking finger.",
+        "example": "Fidelity's famous internal review, endlessly retold because it is endlessly needed, found its best performing retail accounts belonged to people who had forgotten they had them. The strategy was not genius. It was absence, compounding in peace, while the attentive traded their returns away in monthly instalments of concern.",
+        "action": "Set your portfolio review to a fixed quarterly date and remove the daily price from your phone's home screen for one quarter. Measure both returns and evenings."
       }
     ]
   },
@@ -39485,7 +39583,7 @@ const BOOKS = [
     "category": "Mindset",
     "readTime": "9 min",
     "cover": "assets/covers/the-sovereign-individual.jpg",
-    "graveLink": "lordstown-truck",
+    "graveLink": "india-1991",
     "bigIdea": "Microprocessing and digital cryptography dismantle the industrial nation-state, liberating talent into borderless digital sovereignty.",
     "oneLiner": "Mastering the transition to the information age economy.",
     "caveat": "Where this advice breaks: physical infrastructure, sovereign territorial defense, and public healthcare cannot be maintained solely by encrypted digital nomads without public institutions.",
@@ -39730,7 +39828,7 @@ const BOOKS = [
     "category": "Mindset",
     "readTime": "9 min",
     "cover": "assets/covers/the-first-hundred-patrons.jpg",
-    "graveLink": "clubhouse-fade",
+    "graveLink": "amrapali-real-estate",
     "bigIdea": "Do things that do not scale until your first hundred customers love you so intensely that they become your marketing department.",
     "oneLiner": "The manual ground game of building foundational loyalty.",
     "caveat": "Where this advice breaks: after achieving product-market fit, refusing to build automated systems traps founders in manual exhaustion.",
@@ -39814,7 +39912,7 @@ const BOOKS = [
     "readTime": "8 min",
     "tagline": "What wholesale logistics and dawn distribution reveal about real-world cashflow speed.",
     "cover": "assets/covers/the-midnight-dispatch.jpg",
-    "graveLink": "webvan-warehouses",
+    "graveLink": "party-city-helium",
     "bigIdea": "Operational resilience is proven between midnight and dawn, where supply chain fragility shows its true face.",
     "oneLiner": "What 3 AM logistics reveals about organizational character and fragility.",
     "caveat": "Where this advice breaks: glorifying midnight emergency heroics can mask chronic management failure to plan during daytime hours.",
@@ -39891,7 +39989,7 @@ const BOOKS = [
     "category": "Finance",
     "readTime": "9 min",
     "cover": "assets/covers/the-silent-partner-tax.jpg",
-    "graveLink": "sahara-roy",
+    "graveLink": "northvolt-battery",
     "bigIdea": "The easiest money to take at the start often becomes the most expensive equity tax you pay for the rest of your life.",
     "oneLiner": "The hidden overhead and psychological toll of easy capital alliances.",
     "caveat": "Where this advice breaks: genuine value-add venture partners who provide strategic distribution can be worth their equity multiple.",
@@ -40052,7 +40150,7 @@ const BOOKS = [
     "category": "Leadership",
     "readTime": "9 min",
     "cover": "assets/covers/the-reputation-audit.jpg",
-    "graveLink": "cambridge-analytica",
+    "graveLink": "alma-mater",
     "bigIdea": "Your reputation is an invisible ledger balance. Every broken promise is a massive withdrawal; every quiet delivery is compound interest.",
     "oneLiner": "Measuring what you cannot invoice but cannot survive without.",
     "caveat": "Where this advice breaks: obsessing over public optics can lead to spineless people-pleasing and fear of necessary tough decisions.",
@@ -40213,7 +40311,7 @@ const BOOKS = [
     "category": "Leadership",
     "readTime": "9 min",
     "cover": "assets/covers/the-founders-warranty.jpg",
-    "graveLink": "mallya-kingfisher",
+    "graveLink": "astra-space-rocket",
     "bigIdea": "A brand is only as strong as what happens when the founder is not in the room. Institutionalizing founder ethos is the ultimate leadership test.",
     "oneLiner": "What happens when the charismatic face leaves the building.",
     "caveat": "Where this advice breaks: rigid institutionalization can prevent successors from adapting to fresh cultural and technological realities.",
@@ -40297,7 +40395,7 @@ const BOOKS = [
     "readTime": "8 min",
     "tagline": "Building a debt-free, multi-generational family enterprise that outlasts market hysteria.",
     "cover": "assets/covers/the-patient-capitalist.jpg",
-    "graveLink": "byjus-empire",
+    "graveLink": "clover-health-spac",
     "bigIdea": "Surviving three market booms without liquidating requires emotional immunity to crowd euphoria and FOMO.",
     "oneLiner": "Surviving three speculative booms without selling your soul.",
     "caveat": "Where this advice breaks: extreme patient conservatism can cause investors to miss once-in-a-generation technological platform shifts.",
@@ -40552,7 +40650,7 @@ const BOOKS = [
       "Study three examples of excellent work in your field and copy one technique."
     ],
     "caveat": "Newport writes mainly for people with some control over their schedule: writers, academics, senior professionals. If you work in a call centre, a startup with demanding founders, or a job where your manager decides everything, 'do fewer things' can sound like a luxury. Start with what you can control, such as your side projects or your evenings, and use the transparency ideas to negotiate workload gradually.",
-    "graveLink": "quibi-flop"
+    "graveLink": "radioshack-dilution"
   },
   {
     "id": "feel-good-productivity",
@@ -40727,7 +40825,7 @@ const BOOKS = [
       "Schedule a weekly 30-minute review."
     ],
     "caveat": "Building a second brain can become a hobby that replaces actual work: endless tweaking of tools and folders. Forte himself warns against this. Keep the system simple, use whatever tool you already have and judge it by what you create, not by how beautiful your notes look.",
-    "graveLink": "nokia-smartphone"
+    "graveLink": "amrapali-real-estate"
   },
   {
     "id": "algebra-of-wealth",
@@ -40825,7 +40923,7 @@ const BOOKS = [
       "Check whether more than half your wealth depends on one asset, and diversify."
     ],
     "caveat": "Galloway writes from an American context with US accounts, taxes and housing markets. In India, family obligations, wedding costs and joint households change the maths, and markets have different risks. The formula still applies, but adapt it: use Indian instruments (PPF, EPF, index funds), plan for family responsibilities and remember that a high-paying big-city job also has big-city rent.",
-    "graveLink": "enron-culture"
+    "graveLink": "cazoo-uk"
   },
   {
     "id": "million-dollar-weekend",
@@ -40909,7 +41007,7 @@ const BOOKS = [
       "Start an email or WhatsApp list of interested customers."
     ],
     "caveat": "Kagan's 48-hour approach works best for simple services, digital products and small experiments. Businesses that need licences, factories, food safety approval or large capital cannot be validated so quickly. Also, in India, asking strangers for money can be harder culturally. Start with your network and adapt the method to local trust norms.",
-    "graveLink": "juicero-squeeze"
+    "graveLink": "cazoo-uk"
   },
   {
     "id": "dont-believe-everything-you-think",
@@ -40993,7 +41091,7 @@ const BOOKS = [
       "Reduce one mental input, such as news alerts, for a week."
     ],
     "caveat": "This book is simple and comforting, but it is not a treatment for clinical anxiety, depression or trauma. Some suffering comes from real problems such as poverty, abuse or illness, not just thinking. If distress is persistent or severe, speak to a mental health professional. Use these ideas as one tool, not a replacement for care.",
-    "graveLink": "clubhouse-fade"
+    "graveLink": "afghanistan-withdrawal"
   },
   {
     "id": "why-has-nobody-told-me-this-before",
@@ -41077,7 +41175,7 @@ const BOOKS = [
       "Write your top three values and act on one each week."
     ],
     "caveat": "Smith's tools are useful for everyday struggles, but they are not a substitute for professional help in cases of severe depression, trauma or suicidal thoughts. If you are struggling deeply, reach out to a mental health professional or a helpline such as Tele-MANAS (14416 in India).",
-    "graveLink": "lumosity-fine"
+    "graveLink": "dunzo-cash"
   },
   {
     "id": "co-intelligence",
@@ -41371,7 +41469,7 @@ const BOOKS = [
       "Label AI-generated content clearly when you share it."
     ],
     "caveat": "Suleyman is an AI industry insider, and critics note the tension between warning about AI risks and building powerful AI systems. His proposals are broad and sometimes vague about enforcement. The book also focuses on global powers; countries like India face different priorities, such as using AI for development while building regulatory capacity.",
-    "graveLink": "cambridge-analytica"
+    "graveLink": "great-smog-london-1952"
   },
   {
     "id": "clear-thinking",
@@ -41567,7 +41665,7 @@ const BOOKS = [
       "Invert one goal by listing what would guarantee failure."
     ],
     "caveat": "Mental models can become a collection hobby: knowing the names without using them. They also come from mostly Western, business-focused sources. Indian traditions, from the Nyaya school of logic to the Arthashastra, offer their own powerful models. Use the book as a starting toolkit, apply a few models deeply and add models from your own culture and field.",
-    "graveLink": "mars-orbiter"
+    "graveLink": "holi-muzzafarnagar"
   },
   {
     "id": "superforecasting",
@@ -41665,7 +41763,7 @@ const BOOKS = [
       "Review one past decision every week to learn from it."
     ],
     "caveat": "Superforecasters excel at short-term, well-defined questions, usually within a year. Long-term, unprecedented events, the kind Nassim Taleb calls black swans, remain hard to predict. Forecasting skill also requires time and practice. Use these methods to improve judgment, but stay humble about the unpredictable.",
-    "graveLink": "ltcm-geniuses"
+    "graveLink": "parmalat"
   },
   {
     "id": "the-8-pm-reset",
@@ -41739,6 +41837,20 @@ const BOOKS = [
         "summary": "The reset survives only if the people around you know about it, which means telling somebody and letting them stop expecting you at nine. A private rule is a preference; a stated one is a boundary.",
         "example": "A colleague who knows you are unavailable after eight stops asking, and the asking was most of the pressure.",
         "action": "Tell one person the hour you now stop, today."
+      },
+      {
+        "title": "Going Deeper: The Reset Needs a Closing Ritual, Not a Resolution",
+        "chapter": "Going Deeper",
+        "summary": "The Reset's mechanism deserves precision: knowledge workers once had commutes, uniforms and factory whistles to mark the day's end; the laptop abolished the border, so the border must be manufactured. Ritual works where resolve fails because it acts on the nervous system rather than the opinion system: the same sequence, the list closed, the desk cleared, the walk taken, tells the brain the hunt is over. Within weeks the ritual acquires the authority of the old commute, and rumination, starved of its evening territory, begins, measurably in the sleep data, to move out.",
+        "example": "Knowledge workers who adopted shutdown rituals in Cal Newport's famous case reports did not merely feel better; their evening work thoughts dropped and their morning start up quickened, because the brain, trusting the closure, stopped rehearsing overnight. The ritual was five minutes long. The rumination it replaced had been running a second shift.",
+        "action": "Script your closing ritual today in five steps or fewer, ending with a phrase you say aloud. Run it for ten workdays before judging it."
+      },
+      {
+        "title": "Going Deeper: Protect the Reset From the Household's Second Shift",
+        "chapter": "Going Deeper",
+        "summary": "The book is honest that 8 p.m. is not empty; it is where care work, family logistics and the day's emotional administration live, and a reset that ignores them becomes a privilege for the unburdened. Its deepening is choreography rather than fantasy: the handover made explicit, the children's shift shared, the phones surrendered by everyone at the same hour so nobody's reset is another's resentment. The evening, redesigned as a household treaty rather than a personal hack, stops taxing the person who needed it most and starts paying the whole address.",
+        "example": "Families in the programmes report the treaty moment is the negotiation, not the compliance: once the second shift is named and divided on paper, the reset defends itself. Before that, every attempt reads to the partner still working as desertion, because it was, administratively speaking, exactly that.",
+        "action": "Negotiate your household's 8 p.m. treaty this week: tasks listed, owners named, phones down together. Write it where the evening can see it."
       }
     ],
     "actionPlan": [
@@ -41749,7 +41861,7 @@ const BOOKS = [
       "Choose one screen boundary for the last 30 minutes before sleep."
     ],
     "caveat": "A book can offer a useful lens, not a universal rule. Your money, health, family duties, workplace power and access to support change what is possible. Keep the principle, adapt the practice, and ask for expert help where the stakes are high.",
-    "graveLink": "byjus-edtech"
+    "graveLink": "shopclues"
   },
   {
     "id": "the-commute-advantage",
@@ -41823,6 +41935,20 @@ const BOOKS = [
         "summary": "The compounding is invisible in a week and undeniable in a year. Fifty hours of anything is a course, a hundred hours is a practice, and the same journey that felt like a waste becomes the reason a skill exists.",
         "example": "A person who used two years of commuting for one subject is a different candidate at the end of it.",
         "action": "Write where you want the same journey to have taken you in a year."
+      },
+      {
+        "title": "Going Deeper: The Doorway Effect Is Why the Commute Worked",
+        "chapter": "Going Deeper",
+        "summary": "Psychologists find that passing through doorways makes the mind file the previous room's intentions away, the doorway effect, which the commute industrialised into a daily decompression chamber between selves. Remote work deleted the doorway and wondered why the workday leaked. The Advantage's deepening is to stop mourning the train and start manufacturing thresholds: the walk around the block that books the office self away, the changed clothes, the gate ritual at the garden door. Brains do not need transport. They need punctuation, and punctuation can be built at any budget.",
+        "example": "Its remote workers who adopted fake commutes, a fixed morning walk that returned them to their own front door as employees, reported their households treating the crossing with the same respect the railway once commanded. The family had not become more considerate. A threshold had become visible, and thresholds, across every culture in the record, are how humans agree a self has changed.",
+        "action": "Install one doorway ritual at each end of your workday this week: ten minutes, same route, phone pocketed. Defend it like a train that cannot wait."
+      },
+      {
+        "title": "Going Deeper: Commute Time Is Found Time Only If It Is Defended as Curriculum",
+        "chapter": "Going Deeper",
+        "summary": "An hour a day is six working weeks a year, and the Advantage's arithmetic only pays if the hour is enrolled in advance: the language in the car, the lectures on the train, the deliberate idleness some minds need more than input. Left undefended, the hour defaults to the feed, which is curriculum designed by somebody else's shareholders. The deepening is enrolment honesty: name the course your commute is currently teaching you, because it is teaching something, and decide whether you would have chosen that syllabus for six weeks of your one life.",
+        "example": "Its case of the analyst who treated a rail commute as a university, one great books lecture a day for three years, graduates with an education his employer never billed him for. The passengers beside him, same train, same hour, graduated in outrage and scores. The timetable was identical. The enrolment differed, which is the book's whole argument in one carriage.",
+        "action": "Enrol your commute this week: choose the syllabus, download it Sunday, and let the feed apply for admission like everything else."
       }
     ],
     "actionPlan": [
@@ -41907,6 +42033,20 @@ const BOOKS = [
         "summary": "Writing it down is the strongest version of the practice: what was given, what was owed, what is now closed. Not a contract, a record, so that memory stops being the only ledger.",
         "example": "A shared note after a death prevents the fights that usually follow one.",
         "action": "Keep one page of what has been given and closed, and tell a sibling it exists."
+      },
+      {
+        "title": "Going Deeper: The Inheritance Conversation Belongs in the Healthy Years",
+        "chapter": "Going Deeper",
+        "summary": "The Ledger's most practical insistence is timing: wills, care wishes and property expectations discussed while everyone is well feel like planning; the same words at a hospital bedside feel like ambush. Families who hold the conversation early discover its strange dividend, it is mostly about love and fairness while there is time to adjust both, and mostly about documents and suspicion when there is not. The deepening discipline is to schedule it like a vaccination, mildly unwelcome, briefly uncomfortable, and measured by the catastrophe it makes impossible.",
+        "example": "Her cases show siblings whose parents' one afternoon of clarity, this house to the daughter who lives here, this account for the son abroad, reasons stated, spared them the courtroom decade that consumed the neighbours. The neighbours' parents had also meant well. They had simply meant it silently, at the exact moment silence became litigation.",
+        "action": "Book the conversation this month with your parents or your adult children: wills, wishes, who gets what and why. Put the date where everyone can see it not happening."
+      },
+      {
+        "title": "Going Deeper: Care Work Must Appear in the Accounts or It Will Be Stolen Politely",
+        "chapter": "Going Deeper",
+        "summary": "Every family runs an invisible payroll: the daughter who moves home, the son who handles the hospital, the spouse whose career bends around the elders. The Ledger argues that families who refuse to enter care into the inheritance arithmetic are not avoiding vulgarity; they are arranging for the carer to be robbed with everyone's compliments. Deepening means pricing care in the open, in money, property, respite or formal thanks with witnesses, while the care is happening. Gratitude paid at the funeral to a person bankrupted by the caring is a wreath sent to an address the family itself vacated.",
+        "example": "In her consultations the pattern is gendered and grimly regular: the caregiving daughter inherits equal shares and unequal exhaustion, and is told the equality was the fairness. Families who adjusted early, a salary from the parents' estate, the house weighted to the resident child, report the scandalous result that the siblings stayed friends.",
+        "action": "If care is happening in your family, open the pricing conversation this month, gently and in writing, before the funeral makes it obscene."
       }
     ],
     "actionPlan": [
@@ -41991,6 +42131,20 @@ const BOOKS = [
         "summary": "The transition from intern to offer is mostly about being remembered as somebody who made the week easier, and about having said once what you want. Both are avoidable omissions.",
         "example": "An intern who says plainly that they want to come back is remembered by the person who is hiring.",
         "action": "Say once, plainly, what you want next."
+      },
+      {
+        "title": "Going Deeper: Sponsorship Is Different From Mentorship",
+        "chapter": "Going Deeper",
+        "summary": "The Internship's sharpest distinction: mentors advise you in private; sponsors spend reputation on you in rooms you are not in. Careers, especially first ones, are decided disproportionately in the second kind of room, assignments, promotions, second chances after failure, argued by people staking their own credibility. The quiet skill is becoming sponsor worthy: visible competence on unglamorous work, reliability that makes advocacy cheap, and relationships maintained before they are needed, so that a sponsor's currency is spent on evidence rather than hope.",
+        "example": "Two interns with identical evaluations diverge when only one is mentioned in the room where conversion offers are argued, because a manager had watched her rescue a failing client call and could tell the story. The evaluations were equal. The narratable evidence was not, and rooms decide on narratable evidence.",
+        "action": "Create one piece of narratable evidence this month: rescue something visible, own it end to end, and make sure two people can tell the story accurately."
+      },
+      {
+        "title": "Going Deeper: Managing Up Is a Service, Not a Sin",
+        "chapter": "Going Deeper",
+        "summary": "Young professionals often read managing up as politics and refuse it on principle, then lose resources to colleagues with no such scruples. The Internship reframes it as a service: your manager is allocating attention under scarcity, and making your work legible, your problems pre digested with options, your bad news early, is how good work gets the air it needs. The ethical line is bright: legibility serves the mission, flattery serves only you, and managers can smell the difference by the second week of any internship worth converting.",
+        "example": "The intern who sends a Friday three line update, done, next, blocked on you for one decision, becomes the person whose projects never surprise the boss. Within a quarter she is given the ambiguous brief, because ambiguity goes to the legible. The brief, of course, is where careers are actually made.",
+        "action": "Start the Friday three lines this week to whoever allocates your work: done, next, blocked. Early bad news included. Run it for eight Fridays."
       }
     ],
     "actionPlan": [
@@ -42001,7 +42155,7 @@ const BOOKS = [
       "Send one update this week with status, risk and next step."
     ],
     "caveat": "A book can offer a useful lens, not a universal rule. Your money, health, family duties, workplace power and access to support change what is possible. Keep the principle, adapt the practice, and ask for expert help where the stakes are high.",
-    "graveLink": "wework-neumann"
+    "graveLink": "forward-health-shutdown"
   },
   {
     "id": "the-neighbourhood-network",
@@ -42075,6 +42229,20 @@ const BOOKS = [
         "summary": "The return is not social credit, it is the quality of ordinary days: more trust, more help, less noise, and someone who notices. None of it shows up on a spreadsheet, and all of it is felt.",
         "example": "A person who knows four neighbours describes their street differently from one who knows none.",
         "action": "Name the three neighbours you could rely on, and decide who the fourth is."
+      },
+      {
+        "title": "Going Deeper: The Third Place Is Infrastructure",
+        "chapter": "Going Deeper",
+        "summary": "Beyond the doorstep encounters, the neighbourhood runs on what sociologists call third places: the tea stall, the library steps, the park bench, neither home nor work, where the same faces can recur without invitation. The Network's deepest point is that these places are not amenities but load bearing infrastructure, as real as drains. When they close, the street does not merely lose charm; it loses the venue where trust was manufactured weekly, and no app has yet shipped a replacement that works while it rains.",
+        "example": "Streets that kept one cheap, lingering-friendly business through a redevelopment kept their informal safety net intact; streets that gained only polished takeaway outlets reported knowing fewer names within a year, though the pavement was prettier. The variable was never the architecture. It was permission to stay without spending.",
+        "action": "Identify your street's third place and use it weekly for a month. If none exists, nominate a bench, a stall, a library hour, and be its first regular."
+      },
+      {
+        "title": "Going Deeper: Weak Ties Carry the Emergency",
+        "chapter": "Going Deeper",
+        "summary": "The book's closing argument deserves underlining twice: in a crisis, the neighbour who knows your face will reach you hours before the close friend who lives across the city. Weak ties are the first responders of ordinary life, the ladder borrowed, the child watched for ten minutes, the flat checked during the flood. Investing in them is not nostalgia for a vanished village; it is disaster planning at the only scale that arrives on time.",
+        "example": "During urban floods and blackouts, the rescues that matter in the first hours are almost always hyperlocal: the neighbour with the boat, the retired nurse two doors down, the teenager who knows which elder lives alone. Official systems scale later. The network is what the first night runs on.",
+        "action": "Exchange phone numbers with two neighbours this week and learn one fact about each household's vulnerabilities. That is the emergency infrastructure, installed."
       }
     ],
     "actionPlan": [
@@ -42159,6 +42327,20 @@ const BOOKS = [
         "summary": "The harvest is not a number. After months of cultivation, the work has a shape you did not have to force, because the conditions did most of the labour.",
         "example": "An essay built over twenty daily sessions reads differently from one written in a panic.",
         "action": "Note one thing that has become easier without you making it easier."
+      },
+      {
+        "title": "Going Deeper: Weeds Are Decisions Made by Default",
+        "chapter": "Going Deeper",
+        "summary": "The Garden's sharpest insight, worth its own chapter, is that neglected attention does not stay empty; it is colonised by whatever arrives with the best distribution, which in this century means outrage, novelty and other people's emergencies. A weed is not a bad plant but a successful one in the wrong bed. The implication is cheering: you do not need a stronger character to reclaim the garden. You need to notice that every unfilled hour has already been planted by someone, and to start choosing the seed yourself.",
+        "example": "People who audit a free evening's actual contents against their intentions discover the ratio immediately: the hours went to feeds, messages and other people's urgencies in proportions nobody chose. The garden was never barren. It was farmed, by professionals, for their harvest rather than yours.",
+        "action": "Audit one free evening this week without changing it. Write what grew. Then plant tomorrow evening's first hour deliberately, in ink."
+      },
+      {
+        "title": "Going Deeper: Tend the Perennials First",
+        "chapter": "Going Deeper",
+        "summary": "Gardeners divide plants into annuals, showy for a season, and perennials, which return for years on deepening roots. Attention has the same taxonomy: trends, feuds and breaking dramas are annuals; craft, friendship, fitness and family are perennials, unimpressive in any given week and decisive across a decade. The Garden's discipline is portfolio management: water the perennials on schedule before the annuals get the hose, because the annuals will never lack for volunteers offering to plant more of them in your beds.",
+        "example": "The people whose attention regimens survive scrutiny share this shape: non negotiable hours for the perennials, exercise, the instrument, the friend, surrounded by whatever annuals the week throws up. Their secret is not refusal of the world's noise. It is irrigation order, decided before the drought of the day begins.",
+        "action": "Name your four perennials and schedule their water before anything else enters next week's calendar. Let the annuals have what is left, openly."
       }
     ],
     "actionPlan": [
@@ -42169,7 +42351,7 @@ const BOOKS = [
       "Turn one vague task into a finishable 20-minute edge."
     ],
     "caveat": "A book can offer a useful lens, not a universal rule. Your money, health, family duties, workplace power and access to support change what is possible. Keep the principle, adapt the practice, and ask for expert help where the stakes are high.",
-    "graveLink": "facebook-beacon"
+    "graveLink": "big-lots-liquidation"
   },
   {
     "id": "the-long-game-classroom",
@@ -42243,6 +42425,20 @@ const BOOKS = [
         "summary": "The long game belongs to people who return, not to people who are intense. Small sessions across months beat large sessions across weeks, and the reason to protect the habit is that the habit is the mechanism.",
         "example": "Twenty minutes daily for a term beats a heroic fortnight in the last week.",
         "action": "Set the smallest daily session you would not skip."
+      },
+      {
+        "title": "Going Deeper: Desirable Difficulties Feel Like Failure",
+        "chapter": "Going Deeper",
+        "summary": "The Classroom's central paradox needs dwelling on: the methods that produce durable learning, retrieval practice, spacing, interleaving, feel harder and score worse during practice than the methods that produce fluency, rereading, highlighting, massed drills. Learners systematically abandon what works because the feedback during study lies to them. Teachers call these desirable difficulties, and the deepening for any self teacher is to distrust smoothness: if practice feels easy and confidence is soaring, you are probably photographing the material rather than loading it into memory.",
+        "example": "Students who reread a chapter rate their predicted test scores higher than students who self tested, and then score lower on the actual test a week later. The illusion is so reliable that researchers use it as a demonstration in the first week of learning science courses, to students who have just done exactly this for their other subjects.",
+        "action": "Convert one study session this week: close the book every ten minutes and write what you remember. Let the difficulty be the evidence it is working."
+      },
+      {
+        "title": "Going Deeper: Teach the Long Game to the Young Early",
+        "chapter": "Going Deeper",
+        "summary": "Children meet the fluency illusion before they can name it, and school mostly rewards the massed, pre test cram that evaporates by the next term. The Classroom argues for inoculating learners early with small experiences of the alternative: the spelling list revisited across weeks, the maths facts retrieved cold at breakfast, so that by adolescence spacing is a habit rather than a theory. The compounding is identical to money. A ten year old with retrieval habits owns, by eighteen, an advantage no tutoring sprint can purchase in a term.",
+        "example": "Schools that moved to cumulative quizzing, a few questions from previous units in every test, watched retention across terms climb without adding teaching hours. The curriculum did not change. Only the memory's exercise schedule did, which turned out to be the curriculum's hidden half all along.",
+        "action": "Build one cumulative ritual at home or work: every Friday, three questions from previous weeks alongside the new. Keep it small enough to survive."
       }
     ],
     "actionPlan": [
@@ -42327,6 +42523,20 @@ const BOOKS = [
         "summary": "A real repair economy needs spare parts, documentation, laws that stop designs being deliberately unopenable, and a culture that does not treat a fixed thing as shameful. That is a system, and systems are changed by people who ask for it.",
         "example": "A right to repair law changes what is sold, not only what is fixed.",
         "action": "Ask one manufacturer for a part or a manual once, and record the answer."
+      },
+      {
+        "title": "Going Deeper: Repair Cafes Are Teaching Hospitals for Objects",
+        "chapter": "Going Deeper",
+        "summary": "The Economy's most hopeful institution is the repair cafe, where volunteers fix strangers' lamps, zips and laptops free, teaching as they go. Its deeper function is pedagogical: a generation raised on sealed devices watches a toaster opened and loses its fear, and fear, more than any screw head, is what manufacturers actually seal. Every repaired object graduates one citizen from consumer to maintainer, and maintainer is the identity on which any durable economy, ecological or household, must ultimately run.",
+        "example": "Cities with dense repair cafe networks report the second order effect in their fixing businesses: demand for professional repair rises too, because citizens who have watched a repair stop believing the manufacturer's verdict that everything broken is landfill. The cafes do not compete with repairers. They manufacture their customers.",
+        "action": "Attend one repair cafe or fixing session this month, as patient or student. Bring the object you were about to replace and watch it opened."
+      },
+      {
+        "title": "Going Deeper: Spare Parts Are a Promise a Manufacturer Keeps or Breaks",
+        "chapter": "Going Deeper",
+        "summary": "Beneath repair's romance runs logistics: a product is repairable only if parts, manuals and diagnostics survive at fair prices for a decade. The Economy argues this is where policy now lives, right to repair laws forcing parts and documentation into the open, turning a moral preference into market architecture. For buyers, the deepening is a new question at the point of sale, as standard as price: what will this cost to keep alive in year seven, and has the maker published the means to do it?",
+        "example": "Farmers who could not repair their own tractors' software became the political engine of right to repair in America, an alliance of prairie conservatives and urban environmentalists that manufacturers' lobbyists could not divide. The tractor taught what the phone could not: when the harvest waits, repair is not a lifestyle preference. It is sovereignty.",
+        "action": "Before your next appliance, phone or vehicle purchase, score its repairability: parts, manuals, independent repair verdicts. Let one purchase decision turn on the score."
       }
     ],
     "actionPlan": [
@@ -42411,6 +42621,20 @@ const BOOKS = [
         "summary": "The relationships that last are the ones where people can hear a limit and continue, because the alternative is a relationship where one person quietly accrues resentment until it ends. A kind boundary is maintenance, not distance.",
         "example": "A friendship that survives being told no is a different kind of friendship from one that never tried.",
         "action": "Tell one person a limit you have been afraid would end the relationship."
+      },
+      {
+        "title": "Going Deeper: A Boundary Stated Late Arrives as a Verdict",
+        "chapter": "Going Deeper",
+        "summary": "The Bench of this book is timing: the same no that is housekeeping in week one becomes prosecution in month six, because by then it arrives carrying every unspoken earlier offence as evidence. The Boundary's quiet mathematics is that delay does not preserve kindness; it weaponises its eventual arrival. People who pride themselves on patience are often stocking an explosion, and the relationship experiences the explosion, not the patience. Stating the limit while it is still small enough to sound small is the entire discipline, and it feels rude precisely in proportion to how foreign the muscle is.",
+        "example": "Her workplace cases repeat one shape: the accommodating colleague who covers shifts for a season, says nothing, then resigns by email at Christmas. Management calls it sudden. Her diary, which the book teaches readers to keep, shows eleven unspoken invoices, each small enough to have been a sentence.",
+        "action": "Deliver one boundary this week at the twenty rupee size: small, specific, warm, and before the season of covering silently begins."
+      },
+      {
+        "title": "Going Deeper: Capacity Is Information, Not an Apology",
+        "chapter": "Going Deeper",
+        "summary": "The book reframes capacity, the honest limit of your hours, health and attention, as data a relationship needs rather than a failing to confess. When capacity is reported early and plainly, other people can plan around reality; when it is hidden behind heroic compliance, they plan around a fiction and both parties pay at maturity. Deepening means narrating capacity the way good pilots narrate fuel: without shame, in numbers, while there is still time to choose a different airport. The relationships that survive are those refuelled honestly rather than flown bravely into the sea.",
+        "example": "Her carers' chapters are the proof: family caregivers who reported capacity early got rotas, respite and siblings arriving with casseroles and opinions. Those who performed limitlessness got, eventually, collapse and the family's shocked discovery that the fuel gauge had been covered by the pilot's smile for years.",
+        "action": "Report your capacity in numbers to one person this week, hours, energy, money, without apology or theatre. Ask for theirs in return and write both down."
       }
     ],
     "actionPlan": [
@@ -42495,6 +42719,20 @@ const BOOKS = [
         "summary": "The point of all this is not to be a service, it is to be a person others can be accurate with, which is the foundation of trust. A bench works because it is where you can sit without being moved.",
         "example": "A teammate known for hearing the truth gets told the truth early.",
         "action": "Be the first person somebody tells something this week."
+      },
+      {
+        "title": "Going Deeper: Listening Scales When It Is Scheduled",
+        "chapter": "Going Deeper",
+        "summary": "The Bench's quiet discovery is that listening fails less from lack of heart than from lack of calendar: people will tell you everything at 4 p.m. on the bench you keep, and nothing at the moment you demand depth in a corridor. Its programmes therefore make listening an appointment the community can rely on, same place, same hours, no fixing promised. The deepening for families and teams is identical: the scheduled, agenda free hour outperforms the annual heart to heart the way regular rain outperforms a flood. Intimacy, like irrigation, is a delivery schedule disguised as a feeling.",
+        "example": "Schools that installed literal benches with trained listeners at fixed times watched disclosures rise and crises arrive earlier, while they were still cheap to help with. The furniture mattered less than the timetable. The children were not waiting for better adults. They were waiting for predictable ones.",
+        "action": "Install one listening appointment this week, with your partner, child or team: thirty minutes, same time weekly, your only job the next real question."
+      },
+      {
+        "title": "Going Deeper: Being Heard Changes the Body First",
+        "chapter": "Going Deeper",
+        "summary": "The programmes behind the Bench collected a pattern practitioners now teach: people who feel fully heard show it physically before psychologically, shoulders dropping mid sentence, breath slowing, speech decelerating from its pressured tempo. Listening, properly done, is a physiological intervention, which is why the book insists technique matters more than warmth: the summarising sentence that proves you were heard, the silence held two beats longer than comfort, the question that follows their thread rather than your curiosity. Warmth without technique feels nice and changes less.",
+        "example": "Trained listeners in the programmes are taught to count their own interventions like medication doses, because every clever question is also an interruption of the patient's self listening. Novices average an intervention every eleven seconds. The bench's veterans can hold ninety. The disclosures live in the extra seventy nine.",
+        "action": "In your next serious conversation, count silently to two after the other finishes before speaking. Summarise once before advising at all. Notice the shoulders."
       }
     ],
     "actionPlan": [
@@ -42589,7 +42827,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "theranos-holmes"
+    "graveLink": "nikola-truck"
   },
   {
     "id": "how-big-things-get-done",
@@ -42841,7 +43079,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "theranos-board"
+    "graveLink": "allbirds-wool"
   },
   {
     "id": "the-book-you-wish-your-parents-had-read",
@@ -42915,6 +43153,20 @@ const BOOKS = [
         "summary": "The conversations you avoid are the ones that carry the story. Naming the difficult thing, death, separation, failure, is what stops the child from translating it alone.",
         "example": "A child who is told plainly that a grandparent died and shown how to grieve does better than one who is told nothing and notices the silence.",
         "action": "Say the plain true version of one hard thing this week, once, and stop talking."
+      },
+      {
+        "title": "Going Deeper: Feelings Are Not Behaviour, and Children Need Both Sentences",
+        "chapter": "Going Deeper",
+        "summary": "Perry's distinction does quiet, enormous work: a child may feel murderous jealousy of the baby and must not hit the baby, and healthy parenting holds both truths without shaming the first for the second. Families that police feelings produce adults who cannot read their own weather; families that permit all behaviour produce adults the world must police later at higher prices. The deepening practice is the two sentence response, feeling welcomed, limit stated, in that order, until the child's nervous system learns that its inner life is survivable information rather than a crime scene.",
+        "example": "Her clinical vignettes show the standard failure: a toddler's fury at a sibling met with do not be jealous, which teaches him to hide the feeling, not to govern the hands. The Perry rewrite, you are furious that the baby has me, and I will not let you hit, gives the same child a self he can live with and a line he can lean on.",
+        "action": "Practise the two sentences this week with your child or your partner: feeling named and welcomed, limit stated plainly. Order matters; stop after two."
+      },
+      {
+        "title": "Going Deeper: Your Buttons Were Installed in Your Own Childhood",
+        "chapter": "Going Deeper",
+        "summary": "Perry is unsparing that the moments our children enrage us beyond proportion are rarely about the present child: they are activations of our own unprocessed childhood weather, the mess that was punished, the crying that was shamed. The deepening is archaeological rather than accusatory. A parent who can say, mid storm, this is my seven year old answering, gains the seconds in which the actual child can be met. Therapy helps, but even the naming, done silently with a hand on the door frame, reroutes a surprising amount of inherited weather away from its smallest available target.",
+        "example": "Her parents repeatedly discover that the behaviour they cannot abide, whining, defiance, tears at bedtime, is precisely the behaviour that was forbidden to them, and their discipline is an attempt to silence their own history at one remove. Once seen, the punishment loses its moral certainty, and the child gains a parent arguing with the right decade.",
+        "action": "Catch one disproportionate reaction this week and ask, silently, how old am I right now? Log the answers for a month and bring the pattern to one honest conversation."
       }
     ],
     "actionPlan": [
@@ -42925,7 +43177,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "wework-neumann"
+    "graveLink": "religare-fraud"
   },
   {
     "id": "the-algebra-of-happiness",
@@ -43177,7 +43429,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "webvan-warehouses"
+    "graveLink": "signature-bank-ny"
   },
   {
     "id": "the-practice-of-groundedness",
@@ -43335,6 +43587,20 @@ const BOOKS = [
         "summary": "You can design the difficulty instead of waiting to be assigned it. That is the practical move of the book: pick the struggle that builds the person you want to be.",
         "example": "Choosing to learn a language badly for a year beats waiting for the motivation to learn it well.",
         "action": "Choose one hard thing for this year and write down why it earns its difficulty."
+      },
+      {
+        "title": "Going Deeper: Suffering You Choose Builds; Suffering You Endure Bills",
+        "chapter": "Going Deeper",
+        "summary": "Bloom's taxonomy needs this edge kept sharp: chosen suffering, the marathon, the fasting, the cold plunge, derives its meaning partly from the choosing and from the exit you hold. Imposed suffering offers neither, and borrowing the language of the first to decorate the second is how people get told their trauma was a gift. The deepening is a discipline of speech: never prescribe meaning to another person's unchosen pain. The book's whole defence of chosen hardship exists to protect joy's complexity, not to draft the afflicted into gratitude they did not volunteer for.",
+        "example": "His discussion of BDSM, horror films and hot chillies runs on consent architecture: safewords, cinema exits, the Scoville dial in your own hand. Remove the controls and the same sensations become torture, a sentence which, properly understood, reorganises how we should talk about every hardship we did not get to vote on.",
+        "action": "Audit your speech this week: one place where you called someone's unchosen suffering meaningful. Replace the verdict with witness, in person, soon."
+      },
+      {
+        "title": "Going Deeper: Meaning Often Requires a Little Ache",
+        "chapter": "Going Deeper",
+        "summary": "Bloom ends by defending a unfashionable dosage: lives sampled for pure pleasure rate themselves oddly empty in the research, while lives containing effortful, sometimes aching pursuit, mastery, parenthood, service, rate themselves meaningful even on their hard days. The deepening is to stop treating discomfort as a system error in a life that contains any ambition larger than comfort. Your calendar probably already knows this. The weeks you remember at year's end are rarely the frictionless ones; they are the ones where something cost you and was worth it, which is the entire thesis wearing a diary.",
+        "example": "Parents in time use studies report childcare among their least pleasant activities moment to moment and among their most meaningful when asked about their lives. Both datasets are true, and a civilisation that optimises only the first will keep being surprised by the emptiness of its own success.",
+        "action": "Review last month and mark the three moments you will still remember in five years. Note how many were comfortable. Plan next month accordingly."
       }
     ],
     "actionPlan": [
@@ -43419,6 +43685,20 @@ const BOOKS = [
         "summary": "Most people are not exceptional, and aiming at exceptionality as the price of happiness is a trap. The ordinary life, lived in contribution to others, is the one that can be defended.",
         "example": "Someone who never becomes notable can still be the person their street relies on, and that is a real achievement rather than a consolation.",
         "action": "Write one sentence about the ordinary life you would be glad to have lived."
+      },
+      {
+        "title": "Going Deeper: Encouragement Beats Praise Because It Respects Equality",
+        "chapter": "Going Deeper",
+        "summary": "The Adlerian distinction this dialogue builds on deserves slow handling: praise is vertical, a superior rating an inferior, and trains people to fish for evaluation; encouragement is horizontal, gratitude and recognition between equals, and trains contribution. Parents, managers and spouses run one of these economies at home whether or not they have heard of Adler. The deepening test is simple to administer: after your feedback, does the other person stand taller beside you, or smaller before you? Only one of those postures compounds into courage.",
+        "example": "The philosopher's classroom vignettes show children praised for results hiding their failures to protect the rating, while encouraged children, thanked for effort and usefulness, bring their failures to the group as material. The managers reading over the parents' shoulders are invited to notice their own review meetings in both scenes simultaneously.",
+        "action": "Replace one praise sentence today with encouragement: thank the contribution and name its use, without ranking the person. Watch posture, theirs and yours."
+      },
+      {
+        "title": "Going Deeper: Whose Task Is It, Applied to Love",
+        "chapter": "Going Deeper",
+        "summary": "The book's hardest practice is the separation of tasks extended into intimacy: your partner's opinion of you is their task; your fidelity to your own values is yours. Readers resist here, sensing coldness, and Kishimi answers that the separation is what makes genuine warmth possible, because affection given to purchase approval is commerce, while affection given from freedom is love. The deepening is diagnostic: much relationship misery is two people each trying to perform the other's task, managing their partner's feelings while neglecting their own conduct, at industrial scale.",
+        "example": "The youth in the dialogue discovers his rage at his father's judgement is, in Adler's framing, his attempt to control an evaluation that was never his to control, while neglecting the task that is his: the life he will respect having lived. The discovery does not reconcile them overnight. It relocates the work to an address where work can be done.",
+        "action": "Take one current relational pain and sort its tasks on paper: mine, theirs, ours. Act on one line from the mine column this week."
       }
     ],
     "actionPlan": [
@@ -43503,6 +43783,20 @@ const BOOKS = [
         "summary": "Prehistory is a record of experiments, many abandoned, some successful. Reading it as a single march towards the present removes the alternatives it actually contains.",
         "example": "Seasonal gatherings that dissolved into equality after the festival show that a society can hold two political modes at once.",
         "action": "Treat one current assumption about how work or family must be organised as an experiment under review."
+      },
+      {
+        "title": "Going Deeper: Play Was a Political Technology",
+        "chapter": "Going Deeper",
+        "summary": "Graeber and Wengrow linger on societies that treated social roles as seasonal theatre, part time kings, police clowns, ritual reversals, and the deepening is to see play as constitutional engineering: a people who regularly rehearsed hierarchy upside down kept the knowledge that their arrangements were chosen, and therefore changeable. Sedentary seriousness about the current order, by contrast, is historically recent and mostly serves incumbents. The lesson reaches any organisation: rituals that let the low mock the high on schedule are not disorder. They are the maintenance schedule of the idea that things could be otherwise.",
+        "example": "Their accounts of Indigenous North American clown societies and seasonal kings keep colliding with European assumptions that order requires permanence. The societies themselves were often stable for centuries, suggesting that flexibility about form was the stability, a possibility our own org charts rarely budget for.",
+        "action": "Install one licensed reversal in your team or family calendar: the junior chairs the meeting, the children plan the day. Review what the play revealed."
+      },
+      {
+        "title": "Going Deeper: Three Freedoms Worth Auditing",
+        "chapter": "Going Deeper",
+        "summary": "The book organises human political history around three primordial freedoms: to move away, to disobey, and to rearrange social life. Their argument is that early societies held all three and that civilisation's tragedies began as they were surrendered one by one for grain, safety and glory. Deepening means running the audit personally: your job, city and relationships can be scored on the three freedoms with uncomfortable precision, and the score explains a great deal of modern stuckness that therapy usually files under mood.",
+        "example": "Their reading of the first cities that stayed egalitarian for centuries works because residents kept exit cheap: leave, and the experiment must persuade you again next season. Where exit closed, hierarchy hardened within generations. Every company town, platform and marriage in the present tense understands the mechanism perfectly when it is priced for other people.",
+        "action": "Score your current life on the three freedoms, one to ten each. For the lowest, design one move this quarter that buys back a single point."
       }
     ],
     "actionPlan": [
@@ -43513,7 +43807,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "easter-island"
+    "graveLink": "bird-scooters"
   },
   {
     "id": "the-code-breaker",
@@ -43587,6 +43881,20 @@ const BOOKS = [
         "summary": "Doudna's public role after the invention surprised her, and it is part of the job. A person who builds a powerful tool becomes one of its custodians whether or not they wanted the title.",
         "example": "Researchers who explain their work in public spend time they do not have and change what the public is able to decide.",
         "action": "Take one question about your work that a non expert asks, and answer it properly."
+      },
+      {
+        "title": "Going Deeper: Competition Between Labs Is a Feature to Engineer",
+        "chapter": "Going Deeper",
+        "summary": "Isaacson's narrative refuses the lone genius script: CRISPR emerged from a network of rivals racing, publishing, patent fighting and correcting one another at ferocious speed. The deepening for any institution is to stop treating competition as contamination of pure science. The race supplied urgency, replication and depth that no single programme could have funded, while the patent war supplied the cautionary tale about what the race does to credit and character. Managing creative rivalry, rather than abolishing it, turns out to be one of innovation's core technologies, as learnable as pipetting.",
+        "example": "The Doudna and Charpentier collaboration itself began at a cafe at a conference in Puerto Rico, two competitors deciding a slice of the future was larger together. The field's speed ever after came from that pattern repeated: alliances formed inside the race, not instead of it, by people who understood the clock belonged to everyone.",
+        "action": "Find one rival in your field to share a pre competitive problem with this quarter: a dataset, a safety worry, a standard. Race them on everything else with a cleaner conscience."
+      },
+      {
+        "title": "Going Deeper: The Ethics Arrived Late Because the Tools Arrived Early",
+        "chapter": "Going Deeper",
+        "summary": "Isaacson closes where the field still lives: germline editing can be done before society has decided whether it should be, and the scientist who crossed the line, He Jiankui, announced edited babies to a stunned summit in 2018. The deepening is procedural rather than rhetorical. Every powerful general purpose tool creates this gap between capability and governance, and the only known bridge is building the ethics conversation into the research community's own calendar before a crisis writes the rules in panic and headlines. Doudna's trajectory, from competitor to convener of the moratorium talks, is the book's model of a scientist staffing both sides of that bridge.",
+        "example": "She describes dreaming of Hitler asking what her discovery was for, and woke to organise the first ethics summit. However one files the dream, the response pattern is the lesson: the people closest to the tool heard its implications first and convened the argument while convening was still their choice.",
+        "action": "If your work touches a powerful general tool, book the ethics conversation now, in writing, with named participants, before your field's summit is a scandal."
       }
     ],
     "actionPlan": [
@@ -43755,6 +44063,20 @@ const BOOKS = [
         "summary": "The team reads your mood as weather and plans around it. Calm, honest and consistent under pressure is a skill you practise, not a personality you have.",
         "example": "A manager who says plainly that a launch is slipping and here is the plan gets more trust than one who insists everything is fine.",
         "action": "Say one true, calm sentence about the hardest current problem at your next team meeting."
+      },
+      {
+        "title": "Going Deeper: Feedback Is a Gift Only When It Is Usable",
+        "chapter": "Going Deeper",
+        "summary": "Zhuo's mature chapters on feedback refine the slogan into craft: task feedback early and often, behavioural feedback with examples, identity feedback almost never, because people can change a behaviour by Tuesday but cannot change who they are by any deadline you can set. The deepening is the receiver's side of the skill. Great managers build teams where feedback is cheap to give because it is visibly survivable to receive, starting with their own public digestion of it. The first time a leader thanks a critic without flinching, a market opens; reports start bringing bad news while it is still small enough to be good news.",
+        "example": "Her own story of receiving brutal early feedback as a young manager and surviving it in public became, she reports, the moment her team's candour repriced. People do not learn that honesty is safe from values statements. They learn it from watching the most powerful person in the room metabolise it once.",
+        "action": "Solicit one piece of behavioural feedback this week and metabolise it in public: thank, clarify, act visibly within a fortnight. Leave the market open."
+      },
+      {
+        "title": "Going Deeper: Managing Your Former Peers Is a Grief Process",
+        "chapter": "Going Deeper",
+        "summary": "Zhuo names what management books skip: promotion over friends costs real relationships, and pretending otherwise makes new managers either tyrannical or paralysed. The lunches change, the confiding stops being safe, and mourning that honestly is the price of doing the new job with a whole heart. Her deepening counsel is architectural: build new peer support outside the team early, a manager community, a coach, friends in other firms, because the loneliness of the role, unstocked, will otherwise be taken out on the team in either control or neediness.",
+        "example": "Her chapters describe the new manager who kept attending every team social as one of the gang and discovered she had become instead its weather system: every joke recalibrated around her presence. Accepting the forecast role, kindly and without sulking, let her become useful to the same people in the new currency.",
+        "action": "If you manage former peers, name the loss to yourself this week and book one peer conversation outside the team. Loneliness managed is authority stabilised."
       }
     ],
     "actionPlan": [
@@ -43839,6 +44161,20 @@ const BOOKS = [
         "summary": "Burning the boat is dramatic and rarely necessary. Keeping a bridge, a client, a skill, a contact, lowers the cost of the experiment and lets you go further.",
         "example": "A designer keeps two small freelance clients from the old world and finds the safety is exactly what lets her say no to the wrong new job.",
         "action": "Keep one thread to your old career deliberately, and say why."
+      },
+      {
+        "title": "Going Deeper: The Transition Is a Liminal Season, So Staff It Like One",
+        "chapter": "Going Deeper",
+        "summary": "Ibarra borrows from anthropology the idea of liminality, the threshold season between identities where the old role is shed and the new not yet inhabited. Her research subjects suffered most when they demanded the season behave like a commute; those who fared best built liminal infrastructure, transitional experiments, temporary communities, mentors from the future world, and permission for the mess. The deepening is logistical: if you are between selves, do not buy a five year plan. Buy a season's worth of scaffolding and weekly evidence, and let the identity condense out of the experiments like weather.",
+        "example": "Her case of the executive between careers who filled the liminal months with courses and reflection but no contact with any actual new world contrasts with the consultant who took two small client projects in the candidate field and let them talk back. Only one of them, a year on, had a new identity with a postal address in the present.",
+        "action": "If you are in transition, schedule liminal infrastructure this week: one experiment, one community, one future mentor. Review the evidence in ninety days."
+      },
+      {
+        "title": "Going Deeper: Role Models Work Best in Pieces",
+        "chapter": "Going Deeper",
+        "summary": "Ibarra warns against the wholesale role model, the leader whose whole life you would have to counterfeit to copy. Her subjects progressed faster assembling composite selves: one person's client manner, another's writing discipline, a third's way of leaving a room. The deepening is permission to be an editor rather than a disciple. Identity change at midlife rarely survives total impersonation, because the costume itches and the wearer quits; a wardrobe of borrowed pieces, altered to fit, can be worn for decades and eventually stops feeling borrowed at all.",
+        "example": "Her professionals describe keeping mental committees of partial exemplars, consulting different ghosts for different rooms. The method also inoculates against the guru crash: when one exemplar falls, a committee loses a member. A disciple loses a religion and, often, the transition itself.",
+        "action": "Replace one wholesale role model with a committee of three this week, each copied for exactly one practice. Note which practice you steal from whom."
       }
     ],
     "actionPlan": [
@@ -43849,7 +44185,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "quibi-flop"
+    "graveLink": "invision-prototype"
   },
   {
     "id": "doughnut-economics",
@@ -43923,6 +44259,20 @@ const BOOKS = [
         "summary": "Economics is not a natural science describing what must be. It is a practice with values inside its models, and designers can choose differently.",
         "example": "A monetary system is a rule set, an accounting convention, not a fact about the world.",
         "action": "Change one rule in your own work this month that you have been treating as fixed."
+      },
+      {
+        "title": "Going Deeper: The Doughnut Is a Compass, Not a Cage",
+        "chapter": "Going Deeper",
+        "summary": "Raworth is careful, and her readers should copy the care: the doughnut's social foundation and ecological ceiling define a direction of travel, not a centrally planned destination. Cities from Amsterdam onward have used it as a self portrait tool, asking how their housing, health, food and emissions score against both rings at once. The deepening is the simultaneity. Policies that lift the foundation by smashing the ceiling, or save the ceiling by abandoning the foundation, fail the compass however green or generous they look in isolation, which is most of the last century's argument in one diagram.",
+        "example": "Amsterdam's city portrait made the trade visible neighbourhood by neighbourhood: excellent social scores riding on consumption emissions several times the ceiling. The picture did not dictate policy; it ended the era in which the two accounts could be published in separate reports and applauded separately.",
+        "action": "Sketch your household's doughnut honestly: two unmet foundation needs, two ceiling overruns. Choose one move this quarter that improves both rings together."
+      },
+      {
+        "title": "Going Deeper: Regenerative and Distributive by Design",
+        "chapter": "Going Deeper",
+        "summary": "The book's constructive core replaces trickle down and extractive industry with two design briefs: economies that distribute value, ownership, knowledge and opportunity as they create it, and that regenerate the living systems they touch rather than merely degenerating them more slowly. Deepening means noticing these are engineering specifications, testable in a business model, a tax code, a supply chain. A firm can be audited against both adjectives line by line, which is why the doughnut has migrated from lecture halls into procurement documents faster than most economic ideas ever travel.",
+        "example": "Enterprises built as cooperatives, open source manufacturers and community land trusts appear in her pages not as charity but as prototypes of distribution by design, their ownership structures doing at birth what redistribution struggles to do afterward. The prototype's argument is timing: equity, like quality, is cheapest when designed in than when recalled and retrofitted.",
+        "action": "Audit one organisation you belong to against the two adjectives, in writing: where is value distributed by design, where extracted by default? Propose one design change."
       }
     ],
     "actionPlan": [
@@ -43933,7 +44283,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "evergrande"
+    "graveLink": "rana-plaza-2013"
   },
   {
     "id": "good-economics-for-hard-times",
@@ -44007,6 +44357,20 @@ const BOOKS = [
         "summary": "Hard times need policies that are modest, testable and honest about uncertainty. The best governments in the book are experimenters, and the worst are in love with a single theory.",
         "example": "A job guarantee programme that is piloted properly can be corrected; one launched nationwide overnight cannot.",
         "action": "Run one small test this month before you commit fully to a big plan."
+      },
+      {
+        "title": "Going Deeper: Dignity Is an Economic Variable",
+        "chapter": "Going Deeper",
+        "summary": "Banerjee and Duflo keep showing that policies fail when they model people as income maximising machines and succeed when they respect dignity, identity and the terror of humiliation. Welfare designs that shame recipients suppress their own take up; work programmes that insult the unemployed produce sabotage, not gratitude. The deepening is that this is not softness but engineering: a policy nobody will be seen using is a policy that does not exist, whatever its budget line claims, and the economists' field data prices the shame with the same rigour as the subsidy.",
+        "example": "Their discussions of food stamps and workfare show eligible families declining support rather than endure the queue's public verdict, economists' models counting the money as delivered while the village counted it as refused. Any business whose funnel requires customers to be humiliated at checkout will recognise its conversion problem in the data.",
+        "action": "Audit one process you run, a claim, an application, a returns desk, for its dignity cost. Reduce the humiliation by one step and measure what take up does."
+      },
+      {
+        "title": "Going Deeper: Growth Is Not the Only Number That Heals",
+        "chapter": "Going Deeper",
+        "summary": "The closing argument questions the profession's single metric: GDP growth in rich countries now correlates weakly with wellbeing, while its pursuit actively damages the things, job security, community, status, that the data says people bleed for. Banerjee and Duflo are careful economists, not romantics; they simply report that in economies already rich, the marginal citizen is often trading meaning for income at a bad rate and calling the exchange progress because the chart goes up. The deepening for personal finance readers is direct: your household has a GDP. Audit whether its growth is still buying your life, or now mostly billing it.",
+        "example": "Their chapters on trade's losers show compensation schemes failing less from stinginess than from tone: retraining offered as erasure of a life's skill reads as insult, and is refused as one. The cheque was not too small. The story wrapped around it was, and story, in their data, is load bearing.",
+        "action": "Run your own household review: one income increase in the last five years, priced against the hours and place it cost. Decide one line item where you will stop buying growth."
       }
     ],
     "actionPlan": [
@@ -44017,7 +44381,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "india-1991"
+    "graveLink": "shyp-shipping"
   },
   {
     "id": "the-elephant-in-the-brain",
@@ -44091,6 +44455,20 @@ const BOOKS = [
         "summary": "The point is not that everyone is fake. It is that seeing the signals lets you choose more honest ones, and lets you be less defensive about your own motives.",
         "example": "Someone who admits they want recognition can then ask for it directly instead of hinting for years.",
         "action": "Admit one motive out loud, once, to someone you trust."
+      },
+      {
+        "title": "Going Deeper: Prestige Is the Currency Nobody Admits Accepting",
+        "chapter": "Going Deeper",
+        "summary": "Simler and Hanson's most portable tool is the prestige audit: much behaviour that wears the costume of generosity, taste or principle is quietly bidding for status, and the bid works only while nobody, including the bidder, names it. The deepening is not cynicism but bookkeeping. When you can see the prestige line in a budget, your own donations, wardrobe, holiday photographs, you can finally decide how much status you wish to buy and at what price, instead of discovering the invoice in your forties. Self deception charges interest like everything else in this library.",
+        "example": "Their treatment of charity is surgical: donations rise with observability, naming rights and gala seating, and fall with anonymity, at scales pure altruism cannot explain. Charities, being rational, sell prestige openly and call the transaction philanthropy, and both parties prefer the word. The elephant prefers it too.",
+        "action": "Audit one purchase or donation this week for its prestige component, in rupees if you can. Decide whether the status is worth its line price, as status, honestly bought."
+      },
+      {
+        "title": "Going Deeper: The Elephant Explains Your Arguments, So Argue Differently",
+        "chapter": "Going Deeper",
+        "summary": "If beliefs function partly as social signals, then arguments are rarely about the proposition on the table. Simler and Hanson imply a conversational technology: lower the status stakes before raising the evidence. People abandon positions they can exit without humiliation and defend to the death positions their tribe is watching. The deepening for anyone who persuades for a living, parents, managers, spouses, is to build the exit ramp first, privacy, face saving phrasing, a changed circumstance to credit, and only then bring the facts, which finally have somewhere to land.",
+        "example": "Their analysis of political debate treats televised argument as team display, where changing your mind on camera costs the only currency in the room. The same minds, in private conversation with no audience to invoice, update constantly. Persuasion research keeps rediscovering the audience effect and filing it under everything except the elephant.",
+        "action": "Before your next attempt to change a mind, design the exit ramp: how can they agree with you while losing no face? Build that first, evidence second."
       }
     ],
     "actionPlan": [
@@ -44101,7 +44479,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "wells-fargo-fake"
+    "graveLink": "canoo-lifestyle"
   },
   {
     "id": "rest",
@@ -44185,7 +44563,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "peloton-pandemic"
+    "graveLink": "bhopal"
   },
   {
     "id": "the-age-of-ai",
@@ -44259,6 +44637,20 @@ const BOOKS = [
         "summary": "The design question is what humans will still do, not whether they will be replaced. The answer should be deliberately chosen: judgment, accountability, and the setting of goals.",
         "example": "An organisation that keeps the human role as rubber stamp loses both the human skill and the accountability.",
         "action": "Decide which part of a task must remain human, and why."
+      },
+      {
+        "title": "Going Deeper: The Human Role Moves to Ends, Not Means",
+        "chapter": "Going Deeper",
+        "summary": "Kissinger, Schmidt and Huttenlocher argue that when machines generate answers, the scarce human contributions become choosing the questions, setting the constraints and owning the values by which outputs are judged. Deepening means practising that relocation now: in your own work, spend less effort producing first drafts of anything and more defining what a good answer would have to respect. The people thriving beside these systems are not faster typists. They are clearer legislators, of purpose, of limits, of what must never be optimised, however efficiently it could be.",
+        "example": "Chess after Deep Blue is their parable: humans did not vanish; the game moved up a floor, to training with engines, choosing preparations, and judging positions the machine rates without understanding. The players who raged at the elevator found themselves out of work; the ones who became its architects rewrote the sport's theory within a decade.",
+        "action": "Take one task you do with AI help and write, before prompting, the three values its answer must respect. Notice what happens to both the output and your job in producing it."
+      },
+      {
+        "title": "Going Deeper: Networks Decide Before Committees Can Meet",
+        "chapter": "Going Deeper",
+        "summary": "The networked chapters warn that AI embedded in weapons, markets and information systems creates decision speeds at which human deliberation becomes ceremonial: by the time the committee convenes, the machines have negotiated the outcome among themselves. Their proposed counterweight is not slowness but pre deliberation: values, red lines and escalation rules agreed in the calm and encoded before the crisis arrives at machine speed. The deepening for any leader is to move your ethics upstream, into the defaults, because at the moment of the flash crash or the automated escalation there will be no meeting, only your prior instructions, executing.",
+        "example": "The 2010 flash crash, in which algorithms sold each other into a trillion dollar hole in minutes and mostly recovered by lunch, was a rehearsal with money instead of missiles. Committees met beautifully afterward. The event itself was governed entirely by pre written rules, some of which nobody remembered writing, which is the precise failure mode the book wants statesmen to feel in their stomachs.",
+        "action": "Write one red line for a system you control, automated messages, trading, approvals, while calm this week. Encode it where the speed is."
       }
     ],
     "actionPlan": [
@@ -44343,6 +44735,20 @@ const BOOKS = [
         "summary": "Regulation moves slower than deployment and does not need to move at the same speed. The useful governance is built while the stakes are low, not after an incident.",
         "example": "The aviation model of incident reporting and shared learning was built over decades, and most software has no equivalent.",
         "action": "Name the incident that would force a rule change in your field, and write the rule now."
+      },
+      {
+        "title": "Going Deeper: Specification Gaming Is Your Life in Miniature",
+        "chapter": "Going Deeper",
+        "summary": "Christian's catalogue of reward hacking, the boat race agent that spins in circles hitting targets instead of finishing the course, the robot hand rewarded for seeming to grasp, deserves domestic application. Every metric you set for yourself or your team is a specification an industrious optimiser, human or machine, will game precisely. The deepening is humility about proxies: the step count that ruins the walk's purpose, the study hours that produce highlighting, the sales target that manufactures returns. Alignment fails in kitchens and classrooms first; laboratories merely document it at scale.",
+        "example": "His simulated evolution stories, creatures selected for height that learned to exploit the physics engine and stand on their own glitches, read like performance review season in any large company. The organisms were not cheating. They were obeying, which is the entire horror the field is named for, and the reason your own incentives deserve an adversarial audit before deployment.",
+        "action": "Take one metric you currently chase and red team it on paper: how would a clever optimiser maximise this while betraying its purpose? Patch the specification."
+      },
+      {
+        "title": "Going Deeper: Fairness Cannot Be Averaged Into Existence",
+        "chapter": "Going Deeper",
+        "summary": "The book's fairness chapters present the field's rude theorem harvest: the major mathematical definitions of fair prediction contradict one another except in trivial cases, so choosing a definition is a moral act that algebra cannot perform for us. Deepening means surrendering the hope that the numbers will arbitrate our values if we compute hard enough. Somebody, identifiable and accountable, must say which fairness this system will honour and which it will sacrifice, in public, before the system is allowed to learn from a world already fluent in the opposite.",
+        "example": "The recidivism prediction wars Christian recounts turned on exactly this: one side's fairness, equal error rates, was the other side's discrimination, unequal calibration, with both holding correct mathematics. The court that finally noticed it was choosing values, not verifying sums, understood more about machine learning than most of its vendors.",
+        "action": "In any scored system you use, hiring, lending, grading, ask in writing which fairness it optimises and which it knowingly sacrifices. File the answer where auditors live."
       }
     ],
     "actionPlan": [
@@ -44353,7 +44759,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "cambridge-analytica"
+    "graveLink": "zymergen-bio"
   },
   {
     "id": "power-and-prediction",
@@ -44427,6 +44833,20 @@ const BOOKS = [
         "summary": "The productive move is to design the new system deliberately: what is predicted, who judges, what the workflow looks like, and where a human can overrule. Systems built by adding AI to an old process inherit the old process's contradictions.",
         "example": "A team that redesigns a claims process around cheap prediction eliminates the queue that the old process existed to manage.",
         "action": "Redesign one small process end to end, not just its tool."
+      },
+      {
+        "title": "Going Deeper: System Solutions Beat Point Solutions",
+        "chapter": "Going Deeper",
+        "summary": "Agrawal, Gans and Goldfarb draw the distinction their title promises: point solutions drop AI into an existing workflow and harvest small savings, while system solutions redesign the workflow around cheap prediction and require the courage to rewire who decides what. Most organisations stall at point solutions and then declare the technology overhyped. The deepening is diagnostic honesty: if nothing about your decision rights, incentives or structure changed, you have bought a faster horse. The system prize is larger and is priced in exactly the currency executives least like spending, which is settled arrangements.",
+        "example": "Their retail and healthcare cases show prediction improving quietly for years before the firms that redesigned around it, inventory held as information, triage rebuilt around risk scores, suddenly compounded the same models into different businesses. The technology did not change in the gap. The organisation chart did, which is why the returns arrived as a step change wearing a lag.",
+        "action": "Classify your current AI use honestly: point or system? Sketch the system version, naming which decision right would have to move. Show it to one decision maker."
+      },
+      {
+        "title": "Going Deeper: When Prediction Is Cheap, Judgement Gets Expensive, and So Does Power",
+        "chapter": "Going Deeper",
+        "summary": "The trilogy's title argument closes the loop: automating prediction raises the value of its complement, human judgement, and shifts power toward whoever owns the judgement layer, the data, and the right to act on scores. The deepening for workers and citizens alike is to ask where they sit in that new division of labour. Being predicted is a position; setting the criteria is another. Careers and democracies both reorganise around the boundary, and the time to negotiate your side of it is before the system that scores you finishes training on your history.",
+        "example": "Their analysis of judges aided by risk scores shows discretion not vanishing but migrating, to the designers of the score, the setters of thresholds, the owners of the appeal process. The courtroom looks unchanged while the constitution of the decision has quietly moved house. Every profession reading this book finds its own courtroom in that paragraph.",
+        "action": "Map one scored decision that affects you: who sets the criteria, who owns the data, where is the appeal? Identify one place your judgement could move upstream."
       }
     ],
     "actionPlan": [
@@ -44511,6 +44931,20 @@ const BOOKS = [
         "summary": "Individuals can still do something: diversify the network, check before sharing, and treat outrage as a signal about the machine rather than the world. It is not a solution, it is hygiene.",
         "example": "Someone who follows a handful of people they actively disagree with reports catching more of their own errors.",
         "action": "Follow one person who argues in good faith against you, this week."
+      },
+      {
+        "title": "Going Deeper: Your Feed Is an Election Held Every Hour",
+        "chapter": "Going Deeper",
+        "summary": "Aral's research treats social feeds as continuous plebiscites on reality, where votes are shares and the franchise is rigged toward the emotionally arousing. False news, in his Science study, diffused farther and faster than truth in every category, not because bots willed it but because humans found falsehood more novel and novelty is the feed's currency. Deepening means dropping the innocence of the scroll: you are not browsing a library; you are staffing a polling station in a referendum on what your entire network will believe tomorrow, and every share is a ballot with your name signed in public.",
+        "example": "His lab showed that prompting people briefly about accuracy before sharing cuts the spread of falsehoods measurably, because most misinformation moves through inattention rather than conviction. The citizenry of the hype machine is not wicked. It is hurried, and hurried is a design specification somebody profits from.",
+        "action": "Install the accuracy pause: before any share this week, one breath and the question, do I actually know this is true? Count how many shares die in that breath."
+      },
+      {
+        "title": "Going Deeper: STEM the Machine at Your Own Node",
+        "chapter": "Going Deeper",
+        "summary": "Aral's closing framework, often summarised as signal, trigger, amplify in reverse, gives users node level duties: strengthen real signals, resist emotional triggers engineered for you, and refuse to be an amplifier for what you have not verified. The deepening is modest and radical at once: the hype machine has no headquarters to storm. It has ten billion nodes, and governance begins at the one whose password you know. Your restraint invisibly reprices the market for outrage in your corner of the network, because the machine's economics run on exactly your impulses, aggregated.",
+        "example": "Communities that adopted slow sharing norms, admins delaying viral posts for verification, watched their misinformation half life collapse without any platform's permission. The technology was a queue and a norm. Both are available to any group chat admin reading this sentence, which is the closest thing to a revolution the book endorses.",
+        "action": "If you run any group or channel, install one friction this week: verify before forwarding, delay the hottest posts an hour. Announce it as care, not censorship."
       }
     ],
     "actionPlan": [
@@ -44595,6 +45029,20 @@ const BOOKS = [
         "summary": "Game theory's core move for repeated relationships is generous tit for tat: cooperate, retaliate once, then forgive. Holding a grudge forever is a strategy that loses to one that returns to cooperation.",
         "example": "Neighbours who resolve a noise complaint in one exchange and go back to normal do better than ones who escalate for a year.",
         "action": "Resolve one outstanding grievance this week and then let it close."
+      },
+      {
+        "title": "Going Deeper: Caching, Queues and the Architecture of Your Day",
+        "chapter": "Going Deeper",
+        "summary": "The book's middle chapters repay rent in ordinary life: computer caching, keep the frequently used closest, is your desk, your home screen and your kitchen counter designed by an eviction policy whether you chose one or not. Scheduling theory adds the harder lesson that responsiveness and throughput trade off: the system that answers every message instantly finishes nothing large. Deepening means running your day as an operating system whose policies you have actually selected, rather than one installed by whichever notification arrived with the loudest priority claim.",
+        "example": "Their account of the least recently used eviction rule explains every tidy desk and every disastrous one with the same sentence: the pile is a cache with a policy of never evicting. Offices that look chaotic are often running a defensible algorithm badly, and the fix is policy, not virtue: decide what the desk is allowed to remember.",
+        "action": "Choose eviction policies this week for your desk, home screen and inbox: what earns closeness, what gets archived without guilt. Run them for a month."
+      },
+      {
+        "title": "Going Deeper: Game Theory for Housemates and Nations",
+        "chapter": "Going Deeper",
+        "summary": "Christian and Griffiths close by showing how mechanism design lets small groups escape races to the bottom: change the payoffs and defection stops being rational, no sermons required. Their examples scale from chore charts to spectrum auctions, and the deepening is a habit of design: when you find yourself exhorting people to be better inside a bad game, stop and redesign the game. Families, teams and legislatures all contain such traps, and the people profiting from them reliably prefer the sermon, because sermons leave the payoffs exactly as they were.",
+        "example": "Their treatment of the prisoner's dilemma in everyday negotiation shows agreements becoming stable only when the future is allowed to vote: repeated interaction, reputation and Tit for Tat cooperation. One off transactions breed defection as rationally as water flows downhill, which is why platforms work so hard to fake the feeling of an ongoing relationship.",
+        "action": "Identify one recurring conflict in your life and redesign its payoffs instead of re-arguing it: what change makes cooperation the rational move for both sides?"
       }
     ],
     "actionPlan": [
@@ -44605,7 +45053,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "color-labs"
+    "graveLink": "cronje-fixing"
   },
   {
     "id": "the-heat-will-kill-you-first",
@@ -44679,6 +45127,20 @@ const BOOKS = [
         "summary": "Living with heat means redesigning ordinary life: when work happens, how homes are built, where shade is, how water is managed. That is not a disaster scenario, it is a building code.",
         "example": "Towns that shifted outdoor work to early morning hours reduced heat illness with no new technology.",
         "action": "Shift one summer task out of the afternoon heat and keep the shift."
+      },
+      {
+        "title": "Going Deeper: Wet Bulb Is Where Physiology Ends the Argument",
+        "chapter": "Going Deeper",
+        "summary": "Goodell's wet bulb chapters translate climate into the body's non negotiables: above a wet bulb temperature near 35 degrees Celsius, a healthy human in shade with unlimited water cannot shed heat and dies within hours, no fitness or acclimatisation exempt. Parts of South Asia and the Gulf now approach such readings in heat waves. The deepening is to replace abstraction with the ledger of places and hours: heat is not a metaphor for the crisis, it is the crisis arriving first, at the exact populations whose outdoor labour feeds and builds for everyone else.",
+        "example": "He follows workers, brick kiln crews, farmhands, delivery riders, whose employers experience heat as a productivity statistic while their bodies experience it as a closing door. The moral geometry is the century's: those least responsible for the temperature hold jobs that cannot move indoors, and their kidneys, failing silently across harvests, are among its first permanent records.",
+        "action": "Learn your city's heat action plan and the wet bulb concept. Check on one outdoor worker or elder during the next heat wave, with water and shade, not sentiment."
+      },
+      {
+        "title": "Going Deeper: Air Conditioning Is a Lifeboat That Heats the Ocean",
+        "chapter": "Going Deeper",
+        "summary": "Goodell refuses the easy sermon on cooling: AC saves lives tonight and, powered by fossil grids, raises tomorrow's temperature while its waste heat roasts the street for those outside. The deepening is design rather than guilt: shade trees, reflective roofs, ventilation, work hours moved off the peak, and grids cleaned at speed, so that survival stops billing itself to the future. Cities that treat heat as architecture rather than weather are already measurably cooler than neighbours with identical climates and richer appliance stores.",
+        "example": "His urban chapters contrast neighbourhoods within the same city separated by ten degrees of afternoon temperature and decades of tree planting policy. The hotter districts are not unlucky. They are unshaded, unparked and historically redlined, which is to say the heat map is a policy document the trees have been trying to publish for years.",
+        "action": "Plant or protect one shade tree, back one cool roof or green corridor proposal locally, and move one strenuous task in your household off the peak heat permanently."
       }
     ],
     "actionPlan": [
@@ -44763,6 +45225,20 @@ const BOOKS = [
         "summary": "The future the novel reaches is not a utopia, it is a lived-in compromise, with new problems and an older generation that cannot entirely forgive the previous one. That honesty is the argument.",
         "example": "A city that rebuilt around the heat still has a hard summer.",
         "action": "Write one paragraph about the life you want in a changed world, with its problems intact."
+      },
+      {
+        "title": "Going Deeper: The Carbon Coin Is a Question About Money Itself",
+        "chapter": "Going Deeper",
+        "summary": "Robinson's most argued invention, a carbon backed currency issued by central banks to reward sequestration, deserves reading as philosophy disguised as finance: if money is a technology for valuing the future, can it be redesigned to value the future's habitability? Economists dispute the mechanics fiercely, which is the novel working as intended. Its deepening claim is that climate policy fails partly for want of instruments that make saving the world somebody's appreciating asset rather than everybody's cost centre, and that inventing such instruments is now central banking's creative frontier.",
+        "example": "The book's finance chapters were taken seriously enough to be debated by actual central bankers and at climate conferences, an unusual afterlife for a novel's monetary subplot. Whether or not a carbon coin is ever minted, the debate it forced, what exactly should back value on a warming planet, has entered rooms it could not have reached as an essay.",
+        "action": "Ask of one financial product you hold: what future does its return depend on, and is that future compatible with the ministry's? Write the answer."
+      },
+      {
+        "title": "Going Deeper: Half Earth and the Ethics of the Remaining Wild",
+        "chapter": "Going Deeper",
+        "summary": "Through the novel runs E. O. Wilson's Half Earth proposal, reserving half the planet's land and sea for other species, presented not as misanthropy but as arithmetic: extinction rates a hundred times background cannot be negotiated with by a civilisation taking ninety percent of the habitat. Robinson gives the idea narrative form, corridors, rewilding, farmers paid as stewards, and its deepening challenge is distributional: whose half, chosen by whom, at whose expense? The novel insists those politics are the ministry's real workload, more than any technology it deploys.",
+        "example": "The book's Indian and Swiss chapters stage the argument between land sparing techno optimists and land sharing traditionalists with unusual fairness, because Robinson knows the corridors will be drawn by parliaments, not narrators. Readers finish less certain about the map and more certain the drawing cannot be postponed past the species' own deadlines.",
+        "action": "Learn your own region's corridor map: what wild land remains near you, what connects it, and which local organisation defends the connections. Join its mailing list at minimum."
       }
     ],
     "actionPlan": [
@@ -44847,6 +45323,20 @@ const BOOKS = [
         "summary": "Winning an argument needs a target, and the target is not the person in the comments. It is the set of decisions that lock in emissions for decades, made by a small number of people who can be named.",
         "example": "A campaign against a power plant permit reaches a decision maker; a campaign against a neighbour does not.",
         "action": "Find the decision that actually matters in one issue you care about."
+      },
+      {
+        "title": "Going Deeper: Doomism Is the New Denial",
+        "chapter": "Going Deeper",
+        "summary": "Mann's taxonomy has a final category that surprises readers: the doomist, who insists it is too late and thereby licenses the same inaction denial always wanted. He is careful with the psychology; despair is an understandable response to the data, and also, functionally, an fossil fuel industry's cheapest asset once purchased by the sincere. The deepening discipline is holding two facts at once, the situation is grave, and every tenth of a degree prevented is worth fighting for, because climate damage is a slope to be flattened, not a cliff already fallen from.",
+        "example": "His chapters document campaigns amplifying hopeless messaging with the same fingerprints as the old denial networks, alongside sincere activists whose burnout did the work free. The antidote he prescribes is not optimism but agency with receipts: the cost curves of wind, solar and storage that fell through the floor while the argument was being had.",
+        "action": "When you meet doomism this week, in yourself or online, answer with one slope fact: a cost curve, a deployment record, a tenth of a degree's worth. Keep the receipts handy."
+      },
+      {
+        "title": "Going Deeper: The Deflection Playbook, Memorised Once",
+        "chapter": "Going Deeper",
+        "summary": "Mann catalogues the modern deflections: blame consumers' footprints while supply goes unregulated, attack imperfect messengers, promote solutions that cannot scale as substitutes for those that can, and demand purity from transition technologies while granting incumbents a pass. Deepening means learning the patterns the way you learn a card sharp's moves: once seen, the tricks lose their power mid sentence. His argument is that the war is now primarily rhetorical, fought in comment sections and shareholder meetings, and rhetorical self defence is a learnable civic skill with this book as a field manual.",
+        "example": "The personal carbon footprint itself, he notes, was popularised by an oil company's advertising campaign, a masterpiece of responsibility transfer that taught a generation to audit its straws while pipelines were approved. Knowing the authorship of an idea does not refute it, but it reprices its innocence in every negotiation afterward.",
+        "action": "Trace one deflection you repeated this month to its origin. Then practise the counter sentence aloud, so it is loaded before the next argument needs it."
       }
     ],
     "actionPlan": [
@@ -44931,6 +45421,20 @@ const BOOKS = [
         "summary": "Braiding is the book's own method: three strands held together without pretending they are one. Science, tradition and personal history are stronger woven than reconciled.",
         "example": "A botanist who writes as a daughter remembers that the answer needs to work in a life.",
         "action": "Hold two things you believe that do not fully agree, without resolving them this week."
+      },
+      {
+        "title": "Going Deeper: The Honorable Harvest Is a Complete Ethics in Four Rules",
+        "chapter": "Going Deeper",
+        "summary": "Kimmerer distils indigenous harvesting law into rules any consumer can run: take only what you need, use everything you take, share what you have, and treat the taken as a gift rather than a commodity. The rules work because they were enforced by gratitude and reciprocity rather than by price, for millennia, on this continent's abundance. Deepening means noticing the rules' reach beyond wild plants: they audit a supermarket trolley, a data harvest, a working week, with uncomfortable precision. Need, waste, sharing, gratitude: the four questions fit in a pocket and reorganise a household.",
+        "example": "She describes students applying the Honorable Harvest to a grocery run and discovering how much of the cart failed question two alone. Nothing about their budget forced the change; the ethics simply made certain purchases suddenly illegible, the way a spell checked document makes certain spellings impossible to unsee.",
+        "action": "Run your next shop through the four questions aloud. Buy one thing differently as a direct result, and tell the person at home why."
+      },
+      {
+        "title": "Going Deeper: Grammar Can Carry Animacy",
+        "chapter": "Going Deeper",
+        "summary": "Her famous chapter on the grammar of animacy explains that in Potawatomi, beings English files as it, wild rice, water, a bay, are conjugated as alive, addressed as persons in the grammar itself. The deepening is to feel what that does to conduct over a lifetime: it is difficult to poison a who, however easy to pollute an it. Kimmerer is careful; she is not selling a language course as salvation. She is demonstrating that the categories inside our sentences are upstream of the categories inside our laws, and therefore worth arguing about at kitchen tables.",
+        "example": "She proposes borrowing a pronoun, ki and kin, for living beings in English, and readers across her audiences have adopted it in gardens and classrooms. Whether the borrowing survives matters less than what attempting it reveals: how much of our treatment of the world was decided by a pronoun we never chose consciously.",
+        "action": "For one week, narrate your garden, street trees or houseplants with who instead of it in your journal. Notice any purchase or cruelty that becomes harder to sentence."
       }
     ],
     "actionPlan": [
@@ -44941,7 +45445,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "easter-island"
+    "graveLink": "eugenics"
   },
   {
     "id": "entangled-life",
@@ -45015,6 +45519,20 @@ const BOOKS = [
         "summary": "Entanglement means the unit of study is the relationship, not the organism. That is a philosophical shift as much as a scientific one, and it is the book's real subject.",
         "example": "A walnut's success is partly the success of the fungi in the soil beneath it.",
         "action": "Draw one diagram of your life that shows the relationships rather than the things."
+      },
+      {
+        "title": "Going Deeper: Mycelium Is a Network With No Boss",
+        "chapter": "Going Deeper",
+        "summary": "Sheldrake keeps returning to the mycelium as an existence proof that intelligence, distribution and resilience do not require a centre: the fungal network senses, routes and adapts with no brain anywhere in it. The deepening for human readers is organisational envy. We default to headquarters because we are animals with heads; fungi suggest the alternative architecture, decisions at the edge, redundancy everywhere, identity fuzzy and therefore hard to kill. Startups, forests and the internet all grope toward mycelial design while describing it in the vocabulary of the brain. The fungi simply never had the vocabulary problem.",
+        "example": "A single honey fungus in Oregon covers nearly ten square kilometres and may be thousands of years old, arguably the largest and oldest organism on earth, with no centre to decapitate. It survives by being, in effect, all edge. Foresters manage around it the way engineers route around weather.",
+        "action": "Find one decision in your team currently queuing for a headquarters and redesign it as mycelium: rules at the edge, no permission needed, damage survivable."
+      },
+      {
+        "title": "Going Deeper: Decomposition Is the World's Oldest Recycling Ministry",
+        "chapter": "Going Deeper",
+        "summary": "Without fungi there is no soil, because only fungal enzymes crack lignin and return dead wood to the economy of the living. Sheldrake's rot chapters invert the human disgust reflex: decomposition is not the opposite of creation but its supply chain, staffed by organisms we mostly meet as mould on bread. Deepening means applying the lens at home: every institution and psyche needs its decomposers, the people and processes that break down the dead structures, failed projects, finished eras, into nutrients. Systems that ban rot do not stay pure. They fill with their own unburied past.",
+        "example": "Forests after fire or storm are processed, invisibly, by fungal successions that convert a generation of corpses into the next generation's fertility within years. A woodland without fungi would suffocate in its own deadfall within decades, a photograph every stagnant organisation should keep above the photocopier.",
+        "action": "Name one dead structure in your work or life awaiting decomposition, and assign it a fungus: a review, a ritual, a person licensed to break it down kindly."
       }
     ],
     "actionPlan": [
@@ -45025,7 +45543,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "harappa-collapse"
+    "graveLink": "quadriga-lost-keys"
   },
   {
     "id": "the-hidden-life-of-trees",
@@ -45099,6 +45617,20 @@ const BOOKS = [
         "summary": "Wohlleben's advice is to manage forests closer to how they manage themselves: mixed species, longer rotations, fewer clearings, and respect for the veterans. It is slower, and it survives shocks better.",
         "example": "A mixed stand that looks untidy to an accountant survives a drought that kills the tidy one.",
         "action": "Choose the slower design once, and watch what it survives."
+      },
+      {
+        "title": "Going Deeper: The Mother Tree Is an Argument About Elders",
+        "chapter": "Going Deeper",
+        "summary": "Wohlleben's mother trees, the ancient hubs that recognise their own seedlings and funnel them nutrients through the fungal network, have been partly confirmed and partly contested by forest science since. The deepening does not depend on the verdict. A forest run on extraction logic, every tree a competitor to be thinned for growth, produces different woods, and different soils, than one where the old are infrastructure. It is the book's most transferable provocation: in forests, firms and families, are your elders competitors to clear, or the network through which the young are fed?",
+        "example": "Managed forests that retain hub trees show seedlings establishing faster in drought years, the network literally carrying water toward the young in dry months. Plantations without elders must substitute irrigation and fertiliser at market prices for what the grandmother used to do unnoticed, a parable any organisation defunding its veterans should read twice.",
+        "action": "Identify the mother tree in one system you belong to, the elder whose connections feed the young, and protect their time from extraction this quarter."
+      },
+      {
+        "title": "Going Deeper: Reading Tree Time Teaches Human Patience",
+        "chapter": "Going Deeper",
+        "summary": "A beech may wait two centuries for its moment of light, growing a centimetre a year in shade, then outlive the impatient species that shaded it. Wohlleben argues the forest's master strategy is strategic slowness: energy hoarded, growth throttled, reproduction timed to decades. Set beside human careers and companies, the provocation is serious. We treat speed as virtue in systems where the winners are often simply those structured to survive the long shade. Slow, in the forest, is not the opposite of successful. It is frequently the mechanism of it.",
+        "example": "The oldest trees in any wood are rarely the fastest starters; they are the ones that grew steadily under suppression while sprinters exhausted their soil and burned out in the first drought. Foresters have a saying for the pattern that career coaches keep rediscovering: slow growth makes dense wood, and dense wood is what storms cannot snap.",
+        "action": "Take one ambition and redesign it on tree time: what would steady, shaded, decade long growth look like, and what sprint should you therefore decline this year?"
       }
     ],
     "actionPlan": [
@@ -45183,6 +45715,20 @@ const BOOKS = [
         "summary": "The book's ending is deliberately uncomfortable: the world that comes after will be poorer, more homogenous and still full of people making decisions about how to live in it. Naming that is not pessimism, it is preparing.",
         "example": "A future with fewer birds and more jellyfish still has a water cycle and a fishing industry.",
         "action": "Write down one thing you want to survive your own lifetime, and why."
+      },
+      {
+        "title": "Going Deeper: Background Rate Is the Number That Convicts",
+        "chapter": "Going Deeper",
+        "summary": "Kolbert's method deserves its own lesson: extinction in deep time has a background rate, a slow drumbeat of loss against which the previous five mass extinctions stood out as spikes. Current rates run tens to hundreds of times background and rising, which is how a crisis can be real while any individual species story remains arguable. The deepening is numeracy as citizenship: learn to ask of any environmental claim what the rate is and against what baseline, because anecdotes, one frog saved, one reef doomed, cannot carry a century's verdict either way.",
+        "example": "Her amphibian chapters follow scientists counting species not yet described vanishing from cloud forests, the arithmetic of loss outrunning the taxonomy meant to record it. We are, in her phrase, burning the library before cataloguing it, and the background rate is the only instrument that can state the loss at its true scale.",
+        "action": "Learn the background rate idea well enough to teach it in two minutes at a dinner table. Use it once this month when a single anecdote tries to settle a trend."
+      },
+      {
+        "title": "Going Deeper: The Human Sign in the Rocks Will Be Strange",
+        "chapter": "Going Deeper",
+        "summary": "Geologists reading our era in future rock will find a bizarre signature: a sudden global layer of chicken bones, plastics' chemical ghosts, radionuclides and the simultaneous disappearance of ancient lineages, all in a geological instant. Kolbert uses the thought experiment to break the spell of gradualness. Deepening means letting that strata's eye view judge the present, because it already does in physics: the atmosphere does not grade our intentions, and the rocks will not quote our press releases. What they will record is rates, of carbon, of loss, of concrete poured, which are therefore the honest autobiography we are currently writing.",
+        "example": "The domestic chicken, she notes, now outweighs all wild birds combined and will fossilise in numbers no dinosaur achieved, a monument to appetite legible to any future palaeontologist. Civilisations are remembered by their waste signatures as much as their monuments, usually because the waste is more durable and more truthful.",
+        "action": "Write your household's one sentence strata signature: what would the layer say we valued? Choose one line item to edit while editing is still possible."
       }
     ],
     "actionPlan": [
@@ -45277,7 +45823,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "plassey-betrayal"
+    "graveLink": "dust-bowl-1930s"
   },
   {
     "id": "caste",
@@ -45435,6 +45981,20 @@ const BOOKS = [
         "summary": "The practical consequence is humility about your own instincts. What feels like human nature is a specific cultural configuration, and knowing that makes you less likely to misread somebody who grew up inside a different one.",
         "example": "A manager who assumes everyone wants individual recognition runs into a team that would rather the group be credited.",
         "action": "Ask what a colleague's reaction means in their world rather than yours."
+      },
+      {
+        "title": "Going Deeper: The Marriage Ban That Rewired a Civilisation",
+        "chapter": "Going Deeper",
+        "summary": "Henrich's boldest claim deserves its own slow pass: the medieval Western Church's prohibitions on cousin marriage, polygamy and clan based inheritance dissolved Europe's kinship networks over centuries, forcing people into monogamous nuclear families, guilds, universities and impersonal institutions. Out of that dissolution, he argues, grew WEIRD psychology itself: individualism, analytic thinking, trust of strangers, guilt over shame. Whether or not the thesis carries all that weight, it demonstrates his method at full power: a rule about marriage, enforced by confession and penance, quietly rewiring a continent's mind.",
+        "example": "Regions where cousin marriage remained common, he shows with uncomfortable data, correlate to this day with lower impersonal trust and different civic patterns, within the same countries and religions. The point is not ranking peoples; it is noticing that family structure is upstream of psychology in ways economics rarely budgets for.",
+        "action": "Map one rule of your own family's system, money, marriage, obligation, and trace one psychological habit downstream of it in yourself. Discuss it at dinner."
+      },
+      {
+        "title": "Going Deeper: How to Use WEIRD Science Without Being Used by It",
+        "chapter": "Going Deeper",
+        "summary": "The book's practical dividend for readers of any psychology, including every other book on this shelf, is a calibration habit: ask who was studied. Henrich shows canonical findings, fairness in bargaining, visual illusions, self concept, reversing or vanishing in other populations, which does not make psychology useless; it makes sampling a first order question. A reader who reflexively asks for the sample before believing the finding has absorbed the WEIRDest book's method, even if they forget every clan and monastery in it.",
+        "example": "The famous ultimatum game, where students split money almost fairly, produces offers near zero accepted without anger in some small scale societies, and gifts so large they must be refused in others. Same game, different civilisations in the head. The experiment did not fail. Its passport was simply never checked at the border of the textbook.",
+        "action": "Take one psychology claim you believed this month and look up its sample: who, where, how many. Write the finding again with its passport attached."
       }
     ],
     "actionPlan": [
@@ -45519,6 +46079,20 @@ const BOOKS = [
         "summary": "Hayek's case is against central planning, and his strongest argument is one about knowledge: the information needed to plan an economy is dispersed and local, so no centre can hold it. It is a critique that applies to firms as much as governments.",
         "example": "A headquarters that sets prices for a market it does not see gets them systematically wrong.",
         "action": "Ask what only the people closest to the work know, and go and find out."
+      },
+      {
+        "title": "Going Deeper: Every Economist Is a Storyteller With a Wound",
+        "chapter": "Going Deeper",
+        "summary": "Heilbroner's biographical method insists that each system, Smith's sympathy, Malthus's limits, Marx's contradictions, Keynes's animal spirits, was a vision forged in a specific crisis the thinker watched at close range. The deepening for modern readers is diagnostic: when you hear an economic certainty today, ask which crisis formed it and whether that crisis is yours. Half the policy arguments of any decade are dead men's traumas debating each other through living mouthpieces, and noticing it converts exasperation into something more useful, genealogy.",
+        "example": "Keynes wrote for a Britain of mass unemployment and gold standard chains; his prescriptions, aimed at that ward, are still administered to patients with opposite fevers. Heilbroner's whole book is the argument for reading the case history before swallowing the medicine, a courtesy economics rarely extends to itself.",
+        "action": "Take one economic opinion you hold strongly and trace it to the crisis that taught it to you. Then ask what the opposite crisis would teach instead."
+      },
+      {
+        "title": "Going Deeper: The Market Was an Idea Before It Was a Fact",
+        "chapter": "Going Deeper",
+        "summary": "The book's opening chapters perform a service no model can: they show societies, most of human history, that fed, housed and organised themselves without markets as the central mechanism, through tradition and command. The market system's arrival was therefore an invention, with inventors, defenders and a birthday, not a law of nature. Holding that fact changes how its failures feel: not acts of God to be endured but design flaws in a human artefact, arguable and revisable, which is precisely the permission every generation's reformers have needed.",
+        "example": "Heilbroner lingers on how recently profit seeking escaped moral suspicion in the West; medieval schoolmen prosecuted the just price while markets crept around their cathedrals. The reader who knows the market was once the scandalous innovation stops treating its current configuration as the final one, almost automatically.",
+        "action": "Name one feature of today's economy you treat as natural. Research briefly when it was invented and by whom. Notice what the knowledge does to your politics."
       }
     ],
     "actionPlan": [
@@ -45603,6 +46177,20 @@ const BOOKS = [
         "summary": "The transferable move is to ask about incentives, information and margins before asking about virtue. Not because virtue is irrelevant, because incentives decide whether it is cheap or expensive to do the right thing.",
         "example": "A system that pays for volume and hopes for care will produce volume.",
         "action": "Look at one system you are inside and ask what it pays for."
+      },
+      {
+        "title": "Going Deeper: Scarcity Power Explains More Prices Than Greed Does",
+        "chapter": "Going Deeper",
+        "summary": "Harford's coffee at the station costs more not because the chain is greedier there but because the location is scarcer: you, hurrying, with no alternative in reach. His general law, price follows the next best option of the buyer, not the virtue of the seller, dissolves most price outrage into analysis. Deepening means running the law everywhere: rents near good schools, airport water, the surge fare in the rain. In each case the profitable question is never why are they like this, but what scarcity are they renting, and who could contest it?",
+        "example": "His famous example prices the same coffee differently across a city by the scarcity of the corner it sits on, with the beans essentially irrelevant. Once seen, the pattern is unmissable in property pages: the flat is not priced. The school catchment, the quiet street and the ten minutes to the station are, with a flat attached.",
+        "action": "Take one price that annoyed you this month and identify the actual scarcity being rented. Then decide whether to pay it, contest it, or route around it."
+      },
+      {
+        "title": "Going Deeper: Price Signals Are Information Treating You Politely",
+        "chapter": "Going Deeper",
+        "summary": "The book's later chapters defend prices as a messaging system of genius: a rising price simultaneously rations the scarce thing, summons more of it, and tells every producer where the world's needs just moved, without a single committee meeting. The deepening caveat Harford himself teaches is where the signal lies: when costs fall on bystanders, pollution, congestion, the price sends a confident, wrong message, and the economist's job flips from trusting the signal to repairing it with taxes and rules that make the price tell the truth.",
+        "example": "Congestion charging in London worked, economists across factions agree, because it repaired a lying price: the road had said free while charging everyone hours. Once the price told the truth, traffic fell, buses sped up, and the sky did not fall, a parable for every externality your city currently gives away.",
+        "action": "Find one lying price in your world, free parking, underpriced water, your own unpriced time, and write what truthful pricing would change. Start with your calendar."
       }
     ],
     "actionPlan": [
@@ -45687,6 +46275,20 @@ const BOOKS = [
         "summary": "Hickel's argument that the rich world should degrow rather than the poor world grow is contested and internally difficult. The honest version is that the poor world needs more and the rich world needs less, and both facts must hold at once.",
         "example": "An economy that reduces energy use and improves wellbeing is not a contradiction in principle, and it is hard in practice.",
         "action": "Name one thing you could genuinely do with less of without losing anything."
+      },
+      {
+        "title": "Going Deeper: Aid Can Function as the Polite Face of Extraction",
+        "chapter": "Going Deeper",
+        "summary": "Hickel's most uncomfortable accounting compares flows: for every dollar of aid entering developing countries, many more leave as debt service, profit repatriation, illicit flows and underpriced resources, making the net transfer run from poor to rich while the ceremony runs the other way. You need not accept his full ledger to use the instrument: whenever a system congratulates itself on generosity, sum all the flows, in both directions, priced honestly. The deepening habit generalises to employers, platforms and households. Who, in total, is subsidising whom is a question with an arithmetic answer, however rude it feels at the ceremony.",
+        "example": "His analysis of structural adjustment argues the programmes operated as collection mechanisms dressed as reform, cutting the public services of debtor nations while ensuring creditors were paid in full. Participants experienced the same decades as fiscal responsibility. The ledger and the language travelled separately, as they usually do when money changes direction uphill.",
+        "action": "Take one relationship you consider generous, a subscription, a gig platform, a donation, and sum the actual flows both ways for a year. Let the total edit the story."
+      },
+      {
+        "title": "Going Deeper: Degrowth Is a Rich Country Prescription, Says the Book",
+        "chapter": "Going Deeper",
+        "summary": "Hickel is precise where slogans blur: he does not ask poor countries to stop developing; he argues rich countries must stop over consuming, freeing ecological space and ending the resource drain, while poor countries build the housing, sanitation and energy their citizens are owed. The deepening discipline is to keep the geography attached to the ethic. Austerity preached downward is the old extraction in green dress; sufficiency practised upward is the proposal actually on the table. Any climate conversation that cannot say which side of the divide its sacrifices are aimed at has not yet begun.",
+        "example": "Per capita material footprints in the richest countries run many multiples of sustainable levels while billions lack a first refrigerator. Hickel's arithmetic simply asks which of those facts a serious policy addresses first, and notes that addressing the second while sparing the first is the current global arrangement wearing a summit badge.",
+        "action": "In your next climate discussion, name the geography of every sacrifice proposed, yours or theirs, rich or poor, before debating its size."
       }
     ],
     "actionPlan": [
@@ -45771,6 +46373,20 @@ const BOOKS = [
         "summary": "The current design of money is being set by central banks, platforms and a handful of countries, and the choices are sticky because infrastructure lasts. Whether the public has any say is itself a design decision.",
         "example": "A payment standard once adopted is nearly impossible to reverse.",
         "action": "Ask what input the public gets in one piece of infrastructure you will be using for decades."
+      },
+      {
+        "title": "Going Deeper: Cash Is a Technology With Constituencies",
+        "chapter": "Going Deeper",
+        "summary": "Prasad's history makes a point digital evangelists skip: physical cash is not merely inefficient paper; it is the only payment rail that is anonymous, offline, free at the point of use and open to the undocumented. Its decline redistributes power to whoever runs the new rails, platforms, banks, states, and away from those for whom the old rail was the only door. Deepening means asking of every payment innovation the political question Prasad asks: who can now be switched off, watched, or charged for access to their own money, and who decided?",
+        "example": "When India demonetised in 2016, the world's largest informal economy discovered overnight how much of its life ran on the anonymous rail. Prasad uses the episode as a stress test: the future of money arrived in a queue outside a bank, and its costs were paid, as usual, in inverse proportion to people's options.",
+        "action": "Hold one week's small purchases in cash deliberately and journal what the rail feels like: its frictions, its privacy, its dignity. Then judge the apps fairly."
+      },
+      {
+        "title": "Going Deeper: A Central Bank Digital Currency Is a Constitutional Choice",
+        "chapter": "Going Deeper",
+        "summary": "Prasad treats CBDCs as the deepest design decision in modern money: a digital currency issued by the state could give every citizen an account at the central bank, collapsing commercial banks' role; could be programmable, expiring, traceable; could make monetary policy reach households directly, for rescue or for control. The technology is nearly neutral. The constitution written around it is not. His deepening challenge is civic literacy: the most important monetary document of the next generation may be a CBDC design paper almost nobody reads, and he has written this book so that some citizens can.",
+        "example": "China's e-CNY pilots, the Bahamas' Sand Dollar and Nigeria's eNaira each encode different answers to the same questions, privacy tiers, offline use, bank disintermediation, and their adoption struggles show citizens voting with their feet on constitutions they were never asked to ratify. The footnotes of these pilots are where monetary history is currently hiding.",
+        "action": "Look up your own central bank's digital currency position this week and identify one design choice, privacy, offline use, or account access, that you have an opinion about."
       }
     ],
     "actionPlan": [
@@ -45855,6 +46471,20 @@ const BOOKS = [
         "summary": "The book does not prove that markets can be solved, it shows that a specific, disciplined, well capitalised team can extract a small edge for a long time. The difference between that and certainty is the whole point.",
         "example": "An excellent record over twenty years is strong evidence and not a guarantee of next year.",
         "action": "Write the strongest case against the thing you are most confident about."
+      },
+      {
+        "title": "Going Deeper: The Edge Was Data Hygiene, Not Genius Prophecy",
+        "chapter": "Going Deeper",
+        "summary": "Zuckerman's reporting, read carefully, demotes the mystical version of Renaissance Technologies: the firm's revolution was treating markets as a data cleaning problem, hiring linguists and astronomers instead of traders, and removing human storytelling from the loop. Decades of scrubbed price data, transaction cost accounting and ruthless statistical discipline produced the Medallion Fund's returns, capped deliberately because the strategies worked only at limited scale. The deepening for the rest of us is almost insulting in its portability: in field after field, the advantage belongs to whoever cleans the data everyone else found too boring to scrub.",
+        "example": "Simons recruited speech recognition scientists because they knew how to find faint signal in noise, which is a complete description of both phonemes and prices. The firm's famous secrecy then protected not a formula but a work ethic. Rivals kept trying to steal the answer; the answer was the laundry.",
+        "action": "Identify the unglamorous dataset in your own work that everyone complains about and nobody cleans. Spend two hours scrubbing it, and see what question it answers for free."
+      },
+      {
+        "title": "Going Deeper: A Fund That Fires Its Own Brilliance When It Stops Working",
+        "chapter": "Going Deeper",
+        "summary": "The least told Medallion discipline is deletion: models that decay are killed without ceremony, however beautiful their mathematics or senior their authors. In a culture where strategies become identities and identities cannot be retired, the fund operated as an intellectual abattoir. Deepening means noticing your own undead models: the marketing channel, the hiring rubric, the market thesis you keep funding because admitting its death would cost face. Renaissance's returns are, among other things, the compound interest of a thousand small funerals nobody outside the building attended.",
+        "example": "Even the firm's stock trading expansion stumbled for years until the same discipline, more data, ruthless pruning, models on probation, was applied to equities. The lesson touring every industry since is that the machine is not the model. The machine is the process that keeps murdering models on schedule.",
+        "action": "Put one of your strategies formally on probation this quarter: the metric, the deadline, the funeral date agreed in advance. Then keep the appointment."
       }
     ],
     "actionPlan": [
@@ -45939,6 +46569,20 @@ const BOOKS = [
         "summary": "The practical advice is to watch physical indicators, energy, food, births, ports, rather than announcements. The announcements are about intentions; the physical base is about what is possible.",
         "example": "A country announcing an industrial policy and a country with the electricity to run it are different places.",
         "action": "Track one physical indicator for your own situation instead of one headline."
+      },
+      {
+        "title": "Going Deeper: Demography Is the Slowest, Surest Force",
+        "chapter": "Going Deeper",
+        "summary": "Zeihan's framework gives demography a weight most commentary reserves for technology: the ageing of China, Europe and East Asia and the relative youth of the United States reshape labour, demand and state capacity for decades in advance, because the workers and retirees of 2050 are already born. The deepening point for readers is humility about timelines. Supply chains can be rebuilt in years, navies in decades, but a missing generation of thirty year olds cannot be manufactured by any policy that respects the calendar.",
+        "example": "Countries that industrialised on young, cheap labour are discovering the model had an expiry date printed in birth statistics nobody consulted. The factories remain; the twenty five year olds who made the economics sing are now forty five, expensive, and fewer, and no tariff changes that arithmetic.",
+        "action": "For any plan of yours longer than five years, write the demographic fact it depends on and check it against published population data, not commentary."
+      },
+      {
+        "title": "Going Deeper: Food and Energy Are Geography Before Ideology",
+        "chapter": "Going Deeper",
+        "summary": "Beneath Zeihan's politics runs a materialist drill: nations eat and power themselves from specific soils, rivers and energy basins, and globalisation let many forget their own. As the American security umbrella retracts in his telling, the map reasserts itself: fertiliser flows, grain corridors and chokepoints become strategy again. Readers need not accept his full prophecy to use the lens profitably: ask of any product you depend on where its calories and joules actually originate, and how many borders, straits and droughts sit between them and you.",
+        "example": "The 2022 grain and fertiliser shocks taught supermarkets what strategists already knew: a loaf's price can be decided by a Black Sea corridor and a natural gas plant. The lesson was filed under temporary. Zeihan's book exists to unfile it.",
+        "action": "Trace one staple of your household, wheat, rice, cooking gas, back to its source geography. Note the chokepoints. That map is now part of your risk education."
       }
     ],
     "actionPlan": [
@@ -46023,6 +46667,20 @@ const BOOKS = [
         "summary": "The book's discomfort is that the line between civilised and savage moved with the circumstances of the people holding the pen. That is an argument about the record as much as about the wreck.",
         "example": "The same acts are called discipline when performed by an officer and barbarism when performed by a sailor.",
         "action": "Notice one word you use that does evaluative work without saying so."
+      },
+      {
+        "title": "Going Deeper: Two Courts Martial, Two Stories, One Empire",
+        "chapter": "Going Deeper",
+        "summary": "When the Wager's survivors reached home in separate parties, each with incompatible accounts of mutiny and tyranny, the Admiralty staged courts martial that were really contests over which narrative the empire could afford. Grann shows the proceedings functioning as literature by other means: journals edited, witnesses coached, reputations priced. The deepening lesson is about institutional truth. The official record of any disaster is written by survivors with careers at stake, inside a courtroom whose real charge is protecting the service's story, and honest history begins where that record is read against itself.",
+        "example": "Captain Cheap and midshipman John Byron, whose grandson the poet would inherit the family talent for romance, left accounts that cannot both be true, yet both were absorbed into naval memory. The Admiralty, needing heroes and precedents more than facts, contrived to acquit nearly everyone, and the sea kept the only complete manuscript.",
+        "action": "In your own organisation's last disaster review, identify whose career each version of events protects. Read the official record once more with that map in hand."
+      },
+      {
+        "title": "Going Deeper: The Island Was a Laboratory of Civilisation",
+        "chapter": "Going Deeper",
+        "summary": "Stranded on Wager Island, officers and men rebuilt a miniature state: rations, laws, punishments, factions, and finally schism, and Grann uses the castaways to test what rank is worth when the ship, its guns, pay and future, has sunk. Hierarchy survived on charisma, competence and access to food more than on commissions. The episode has been taught beside real mutinies and prison studies ever since as a natural experiment: strip the institution's props away, and authority reverts to whoever can organise dinner and be believed about tomorrow.",
+        "example": "The castaways held elections of a sort, built boats from wreckage by majority decision, and executed discipline that London would later have to classify, retroactively, as order or mutiny depending on the defendant's connections. The island had no law but precedent and hunger, and it generated both abundantly within a month.",
+        "action": "Ask what your authority at work rests on when the props are removed: title, or the ability to organise dinner and be believed about tomorrow. Build the second."
       }
     ],
     "actionPlan": [
@@ -46107,6 +46765,20 @@ const BOOKS = [
         "summary": "The Osage retained wealth and lost people, and the story continues into how the land and the mineral rights were handled afterwards. The accounting is still running.",
         "example": "A community that survives a campaign of murder still has to fight over the estate.",
         "action": "Ask what your own family's prosperity was built on and who is absent from the story."
+      },
+      {
+        "title": "Going Deeper: Guardianship Was the Murder Weapon's Handle",
+        "chapter": "Going Deeper",
+        "summary": "Grann's account deepens when you see that the Osage murders ran on paperwork: the federal guardianship system declared Osage adults incompetent to manage their own oil money and appointed white guardians, who then controlled fortunes they could steal, insure and inherit. The killers did not need to break the system; they married into it, administered it, and let its forms do the approaching. The murders were the violent edge of a legal architecture designed, in the open, to separate a people from its wealth while calling the separation protection.",
+        "example": "Guardians charged estates for their own services, bought goods for wards from their own stores, and in case after case became heirs. By the time bodies accumulated, the financial motive had been normalised into routine administration, which is why so many deaths were filed as accidents, alcohol, or fate.",
+        "action": "Read one modern guardianship, conservatorship or trust dispute with this lens: who profits from another's declared incompetence, and who audits the guardian?"
+      },
+      {
+        "title": "Going Deeper: The FBI Was Born in This Case, Imperfectly",
+        "chapter": "Going Deeper",
+        "summary": "The Bureau of Investigation's Osage inquiry, led on the ground by former Texas Ranger Tom White, became a founding legend of the modern FBI, and Grann honours the work while documenting its limits: undercover agents, painstaking cases against a few principals, and a far larger penumbra of killings never investigated at all. His later chapters, interviewing descendants and reopening files, argue the true toll was far higher than the official count. Institutions love founding myths; the book's discipline is to keep the myth and the undercount in the same frame.",
+        "example": "Tom White's team convicted William Hale, the King of the Osage Hills, yet Grann documents families whose murdered relatives never entered any docket. The ceremony of justice was real and partial, which describes a great deal of institutional success when you examine it at ground level.",
+        "action": "When an institution tells its founding story, ask after the cases it did not take. The gap between the myth and the docket is where the next lesson lives."
       }
     ],
     "actionPlan": [
@@ -46201,7 +46873,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "challenger-launch"
+    "graveLink": "reliance-capital-debt"
   },
   {
     "id": "the-last-lecture",
@@ -46275,6 +46947,20 @@ const BOOKS = [
         "summary": "The book exists because the lecture was recorded, and Pausch then wrote it for his children, which changed its shape. Legacy is not a single act but a set of things left where they can be found.",
         "example": "A parent who writes down ordinary advice leaves more than one who plans a grand gesture.",
         "action": "Write one page of advice for someone who will read it after you."
+      },
+      {
+        "title": "Going Deeper: Head Fakes Are How Values Travel",
+        "chapter": "Going Deeper",
+        "summary": "Pausch's teaching device deserves its own unpacking: the head fake, where learners chase a visible goal, building a robot, winning the contest, while the real curriculum, perseverance, collaboration, humility, is installed underneath. His whole lecture is built this way, ostensibly about childhood dreams, actually about how to live, smuggling the second inside the first so defences stay down. Teachers who steal the device find their values suddenly portable: any syllabus can carry a head fake if the surface goal is genuinely worth chasing.",
+        "example": "His Building Virtual Worlds course let students believe they were learning graphics programming while he was teaching them to work in brutal, multidisciplinary teams without killing each other. Employers later hired his students for the head fake's hidden curriculum, which they could detect in interviews within minutes.",
+        "action": "Design one head fake for someone you teach, parent, manage or mentor: a surface quest worth wanting, with the virtue you actually care about built into its path."
+      },
+      {
+        "title": "Going Deeper: The Brick Walls Give Us a Chance to Show How Badly We Want Something",
+        "chapter": "Going Deeper",
+        "summary": "The book's most quoted sentence rewards slow reading. A brick wall, in Pausch's doctrine, is not there to stop everyone; it is a filter that sorts the committed from the curious, and therefore, seen correctly, a favour: it clears the field of the half interested. His own walls, the professorship odds, the Disney Imagineering sabbatical he was refused and then granted by persistence, recur as evidence. The deepening is his refusal to romanticise: walls also waste the worthy and favour the connected. Wanting badly is necessary; it is not always sufficient, and he knew the difference.",
+        "example": "Rejected by Disney's Imagineers, he did not accept the no or merely rage at it; he became a short term consultant through a side door his persistence created, and the sabbatical became one of his field's famous stories. The wall did its sorting, and he did his climbing, and the lecture refuses to pretend only one of those things happened.",
+        "action": "Name your current brick wall and write, honestly, which part is the filter and which part is a door you have not yet looked for. Look for the door this week."
       }
     ],
     "actionPlan": [
@@ -46359,6 +47045,20 @@ const BOOKS = [
         "summary": "A life is built out of many small decisions and a few large ones, and the small ones are where the design actually shows. The book ends with building rather than planning.",
         "example": "A person who wants a reading life does not plan it, they put a book where their hand goes.",
         "action": "Change one default in your environment this week."
+      },
+      {
+        "title": "Going Deeper: Gravity Problems Are Not Problems",
+        "chapter": "Going Deeper",
+        "summary": "Burnett and Evans sort stuckness into two kinds, and the sorting saves years. A gravity problem, the pay structure of your industry, the housing market of your city, has the defining property of not being solvable by you; treating it as a problem generates only frustration. The design response is acceptance plus aiming: you cannot redesign gravity, but you can design a life that flies within it. Most career misery the authors meet in their Stanford classroom is a gravity problem being wrestled nightly as though effort were the missing ingredient.",
+        "example": "A mid career professional raging for a decade at academic salaries does not need a better argument; she needs to decide whether the life academia buys is worth its price, and if not, to redesign around the fact rather than against it. The day the category changes, energy returns, because it stops being spent against physics.",
+        "action": "List your top three stucknesses and mark each G or P. For every G, write the acceptance sentence and one design move that flies within it."
+      },
+      {
+        "title": "Going Deeper: The Odyssey Plan Makes the Future Interviewable",
+        "chapter": "Going Deeper",
+        "summary": "The book's signature exercise asks for three completely different five year lives, each sketched and scored, including the one where your current path works and the one where money and image do not matter. Its power is not prediction; it is permission, granted on paper, to let suppressed futures speak at full volume before the committee of your life votes. People discover that the wildcard plan has been writing their unhappiness for years, and that elements of it can be prototyped this quarter for the price of a few conversations.",
+        "example": "Their alumni stories repeat the pattern: the executive whose third plan was teaching and sailing discovers she does not need to resign; she needs two evenings and a summer, and the resignation fantasy, fed, stops eating the actual job. The future had never asked for everything. It had asked to be consulted.",
+        "action": "Sketch your three Odyssey Plans this weekend, one page each: the current road, the road if it vanished, the road if money and judgement vanished. Score and share."
       }
     ],
     "actionPlan": [
@@ -46369,7 +47069,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "quibi-flop"
+    "graveLink": "big-lots-liquidation"
   },
   {
     "id": "tiny-experiments",
@@ -46537,7 +47237,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "wework-neumann"
+    "graveLink": "triangle-shirtwaist-1911"
   },
   {
     "id": "the-art-of-gathering",
@@ -46695,6 +47395,20 @@ const BOOKS = [
         "summary": "Connection is a practice with concrete behaviours: be present, be curious, be reliable, and repair quickly. That is trainable, which is why the book ends with exercises rather than a warning.",
         "example": "A weekly call kept for a year does more than a grand reunion once.",
         "action": "Put one recurring contact with a person you value in your calendar."
+      },
+      {
+        "title": "Going Deeper: The Study's Second Finding Is About Repair",
+        "chapter": "Going Deeper",
+        "summary": "Waldinger and Schulz report a finding that deserves equal billing with the famous one: the happiest elders were not those who avoided conflict in their relationships but those who were good at repair, returning after rupture, apologising, re engaging. Over eighty years, every close relationship on record accumulated damage; the variable was maintenance. This redeems the book for the rest of us whose relationships are already dented: the study's good life is not driven by people with unbroken records but by practised menders with ordinary ones.",
+        "example": "Couples still warm in their eighties described, in interview after interview, specific fights and specific reconciliations, decades deep. What they did not describe was the absence of rupture. Their advantage sounded less like luck the longer the researchers listened, and more like a trade they had plyed for sixty years.",
+        "action": "Make one repair this week, however overdue: the call, the sentence, the visit. The study suggests your eighties are being decided by such afternoons."
+      },
+      {
+        "title": "Going Deeper: Social Fitness Is Trained Like the Other Kind",
+        "chapter": "Going Deeper",
+        "summary": "The authors propose social fitness as the organising metaphor: relationships atrophy with disuse and strengthen with regular, modest exertion, exactly like muscle, and with the same excuses available. The deepening for busy readers is the dose honesty. Nobody expects fitness from one annual marathon; the study's happiest people did the equivalent of daily walks for their friendships, small contacts, kept rituals, names remembered. What looks from outside like a gift for friendship is usually a training log nobody saw.",
+        "example": "One participant's file showed no dramatic social life at all, just decades of the same modest practices: the Thursday call, the remembered birthday, the soup delivered without being asked. At eighty his network read like infrastructure. It was. He had built it in units of ten minutes.",
+        "action": "Schedule social fitness like exercise: three small contacts a week, calendared, for a month. Measure your evenings' temperature at the end."
       }
     ],
     "actionPlan": [
@@ -46779,6 +47493,20 @@ const BOOKS = [
         "summary": "What sticks is what fits your life: a twelve hour window, a beans based meal you actually like, and a few structured light periods a year. The evidence supports a pattern, so build the pattern rather than the perfect week.",
         "example": "A person who eats beans twice a week for a decade outperforms one who eats perfectly for a month.",
         "action": "Choose one repeatable meal and make it a weekly default."
+      },
+      {
+        "title": "Going Deeper: The Five Pillars Are an Argument About Evidence",
+        "chapter": "Going Deeper",
+        "summary": "Longo's method deserves as much attention as his menu: he triangulates longevity from basic biology, epidemiology, clinical trials, centenarian studies and the diseases of ageing, refusing to build on any one pillar. Nutrition science's public chaos comes largely from single pillar claims, one mouse, one cohort, one guru. The deepening for any health reader is to demand the five legged table before changing a lifelong habit, and to notice which pillar a headline is standing on. Most diet wars are two pillars shouting at each other across a missing three.",
+        "example": "The protein debate that runs through his chapters turns on exactly this: muscle centric studies in the young pull one way, cancer and centenarian data in the old pull another, and his age dependent recommendation exists because he refused to amputate either dataset. Your feed would have sold you one pillar as the whole cathedral.",
+        "action": "Take one nutrition claim you currently follow and identify its pillar. Spend twenty minutes looking for what the other four say before your next shop."
+      },
+      {
+        "title": "Going Deeper: Fasting Mimicking Is a Drug Made of Food",
+        "chapter": "Going Deeper",
+        "summary": "The fasting mimicking diet, five days of formulated low calorie, low protein plant food designed to push cells into fasting mode while technically eating, is Longo's bid to make fasting testable, patentable and safe enough for trials. The deepening is to watch a lifestyle practice put on the full costume of medicine: dosages, contraindications, oncologists administering variations beside chemotherapy in trials. Whatever the final evidence, the episode teaches how health ideas graduate, from monastery to mouse to randomised trial, and how many are currently impersonating graduates several promotions early.",
+        "example": "His trials in cancer patients, conducted with oncologists, test whether fasting cycles make chemotherapy more tolerable and effective, a claim that would have ended careers a generation ago. The point for the reader is not to self prescribe beside serious illness, which Longo explicitly warns against, but to see rigour being applied at last to an ancient practice.",
+        "action": "If fasting interests you, read the contraindications before the benefits and discuss any multi day protocol with your doctor. Bring this chapter; doctors respect homework."
       }
     ],
     "actionPlan": [
@@ -46863,6 +47591,20 @@ const BOOKS = [
         "summary": "What people keep are things that feel like play: dancing, climbing, cycling to a place, walking with a friend. The joy is not a reward for the exercise, it is the mechanism that makes it sustainable.",
         "example": "Someone who dances badly for a year is fitter than someone who quits the gym in March.",
         "action": "Choose one kind of movement you would do if nobody counted it."
+      },
+      {
+        "title": "Going Deeper: Movement Rewrites the Brain's Chemistry of Hope",
+        "chapter": "Going Deeper",
+        "summary": "McGonigal's science chapters deserve a slower read: aerobic movement does not merely burn stress off, it sensitises the brain's reward system, making ordinary pleasures register again, which is why exercise protects against depression and addiction rather than merely distracting from them. The runner's high itself, she explains, is largely endocannabinoids, the same system targeted by cannabis, tuned by evolution to reward persistence hunting. Knowing the mechanism matters because it converts movement from moral advice, good for you, into pharmacology you administer free, with side effects that read like benefits.",
+        "example": "In the studies she cites, previously sedentary people given regular aerobic exercise show increased sensitivity to everyday rewards within weeks: music, food, faces brighten measurably. The effect is the opposite of numbing. Movement turns the volume of ordinary life back up, which is precisely what flat seasons turn down.",
+        "action": "For two weeks, take one brisk twenty minute walk or run before the day's first screen. Score your ordinary pleasures nightly and watch the trend argue."
+      },
+      {
+        "title": "Going Deeper: Collective Movement Is an Antidepressant With Witnesses",
+        "chapter": "Going Deeper",
+        "summary": "The book's most moving research concerns synchrony: dancing, rowing, singing and even walking in step bond strangers measurably, raising pain thresholds and prosocial feeling through shared rhythm and exertion. Humans appear wired to metabolise effort into belonging when the effort is synchronised. This is why every culture independently invented the harvest dance and the marching song, and why the loneliest exerciser, alone with headphones at midnight, is using only half the technology. The full stack is movement plus people, in time.",
+        "example": "Studies of rowers exercising in synchrony show endorphin release roughly double the same effort rowed alone. Dance classes for Parkinson's patients, which McGonigal profiles, deliver balance training inside the only format patients describe as joy, and attendance outlasts every comparable clinic programme.",
+        "action": "Move with other humans once a week for a month: a class, a dance, a walking group, a team. Let synchrony do what willpower keeps promising."
       }
     ],
     "actionPlan": [
@@ -46947,6 +47689,20 @@ const BOOKS = [
         "summary": "Small practices add up: a check in at the start of a meeting, a habit of naming your own state before asking others, and a written thank you that is specific. Culture is the accumulation of these.",
         "example": "A team that opens meetings with one honest sentence is measurably better at surfacing problems.",
         "action": "Open one meeting with one honest sentence about how you are."
+      },
+      {
+        "title": "Going Deeper: Emotional Culture Is Set by the Highest Status Person",
+        "chapter": "Going Deeper",
+        "summary": "Fosslien and Duffy's later chapters press an uncomfortable lever: a team's emotional rules are not in the handbook, they are in the behaviour of its highest status member on a bad day. When the leader names disappointment calmly, the room learns feelings are data. When the leader performs serenity while radiating contempt, the room learns that feelings are contraband, and contraband feelings run the black market of office life, gossip, quiet quitting, and the meeting after the meeting where every real decision now hides.",
+        "example": "In their consulting stories, one executive's habit of saying I am frustrated because this deadline matters to our customers, and I need ideas, measurably changed what her reports brought her. Problems started arriving early, while they were still cheap, because the price of bad news had visibly dropped.",
+        "action": "In your next setback at work, narrate the feeling and its reason in one sentence before solving anything. Repeat for a month and watch when problems start arriving."
+      },
+      {
+        "title": "Going Deeper: Resentment Is Unspoken Data With Interest",
+        "chapter": "Going Deeper",
+        "summary": "The book treats resentment not as a character flaw but as an invoice: evidence of a boundary crossed or a contribution unacknowledged, compounding silently until it presents as sudden resignation or explosion. The skill it teaches is early invoicing in small denominations: the same day, specific, survivable sentence while the amount is still petty cash. Teams and marriages run an identical ledger here. What is not said at twenty rupees of offence is eventually paid at twenty thousand, with the relationship as the collection agency.",
+        "example": "Their case of the designer who quit at the height of success puzzled everyone except her calendar: three years of weekend work absorbed without a word, each entry reasonable, the sum a resignation letter. She was not fragile. She was fully compounded.",
+        "action": "Pay one small invoice today: name one recent, minor resentment at work or home, specifically and kindly, before it earns another month of interest."
       }
     ],
     "actionPlan": [
@@ -46957,7 +47713,7 @@ const BOOKS = [
       "For one choice, write the benefit and the cost that is easiest to ignore."
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
-    "graveLink": "better-place"
+    "graveLink": "coffee-day-vgs"
   },
   {
     "id": "the-friction-project",
@@ -47031,6 +47787,20 @@ const BOOKS = [
         "summary": "Removing friction is a practice, not a project. It needs someone whose job is to keep asking, a tolerance for failing experiments, and measurement that shows what was spared.",
         "example": "A monthly ten minute review of one process keeps the gains from decaying.",
         "action": "Put a monthly slot in your calendar for removing one thing."
+      },
+      {
+        "title": "Going Deeper: Friction Audits Need Friction Owners",
+        "chapter": "Going Deeper",
+        "summary": "Sutton and Rao's research adds a management role most organisations lack: someone whose job is to hunt bad friction and protect the good kind. Without an owner, every process accumulates steps the way arteries accumulate plaque, because each step once solved somebody's problem and nobody is tasked with retiring it. The Friction Project argues the hunt must be continuous and bottom up, since the people who feel stupid friction daily are never the people who designed it or who can remove it alone.",
+        "example": "Hospitals that appointed friction teams with authority to delete steps cut nurse paperwork measurably within a year, not by adding software but by retiring duplicate signatures. The deletions nobody owned for a decade took weeks once somebody owned only that.",
+        "action": "Appoint a friction owner in your team this month, even if it is you for one hour a week, with explicit authority to delete one step per week."
+      },
+      {
+        "title": "Going Deeper: Good Friction Is a Feature to Engineer",
+        "chapter": "Going Deeper",
+        "summary": "The book's subtle half is its defence of friction that thinks: the pause before the irreversible send, the second signature on the dangerous dose, the creative argument that slows the launch and saves it. Leaders who declare war on all friction end up deleting their own brakes. The craft is sorting: friction that forces thought at the point of consequence is safety equipment; friction that merely forces waiting at the point of routine is theft. Most organisations have the two installed in exactly the wrong places.",
+        "example": "Aviation checklists are friction engineered to perfection: they slow the routine precisely so that attention survives for the abnormal. Contrast the expense report that takes six approvals and teaches nothing. Both are friction; only one of them has ever saved a life at altitude.",
+        "action": "List your week's five frictions. Label each brake or theft. Add one brake where consequence lives, and delete one theft where only routine does."
       }
     ],
     "actionPlan": [
@@ -47210,6 +47980,4356 @@ const BOOKS = [
     ],
     "caveat": "This summary is a guide to the book’s main lens, not a substitute for the full work or professional advice. Some examples, cultural assumptions and research claims may need updating or may not transfer directly to Indian conditions. Read critically, especially where money, health, law or safety is involved.",
     "graveLink": "mao-sparrows"
+  },
+  {
+    "id": "tuesdays-with-morrie",
+    "title": "Tuesdays with Morrie",
+    "author": "Mitch Albom",
+    "year": 1997,
+    "category": "Life & Meaning",
+    "readTime": "8 min",
+    "tagline": "An old man, a young man, and life's greatest lesson.",
+    "oneLiner": "A dying professor teaches his last course to one student. The subject is the meaning of life, and the classroom is his living room, every Tuesday.",
+    "bigIdea": "Mitch Albom reconnects with Morrie Schwartz, his college professor, who is dying of ALS. Their Tuesday meetings become a curriculum: the world, regrets, family, love, money, forgiveness, and death itself. Morrie's teaching is that our culture trains us to chase the wrong things, and that the cure is embarrassingly simple: give your time and love to people, accept what you cannot do, and learn how to die so you can learn how to live.",
+    "quotes": [
+      "The truth is, once you learn how to die, you learn how to live.",
+      "Love is the only rational act.",
+      "Don't cling to things because everything is impermanent."
+    ],
+    "lessons": [
+      {
+        "title": "Once You Learn How to Die, You Learn How to Live",
+        "chapter": "The Curriculum",
+        "summary": "Morrie's central line inverts our strategy. We avoid death-talk and then live as if time were infinite, wasting it accordingly. Morrie, watching his body close down week by week, reports that awareness of dying strips away vanity: most ambitions shrink, affection grows. He does not romanticise his disease; he says it taught him, at the end, what the healthy refuse to learn at the beginning.",
+        "example": "Every Tuesday Mitch flies in from a sports-writing life of hurry and finds Morrie more peaceful with fewer abilities than the week before. The student has everything except time to notice his life; the teacher has nothing except that. The contrast is the lesson.",
+        "action": "Ask the Morrie question monthly: if I had one healthy day left after this illness, what would I do with it? Do a piece of it now."
+      },
+      {
+        "title": "The Culture Gives You the Wrong Shopping List",
+        "chapter": "The Classroom",
+        "summary": "Morrie argues that society brainwashes people into wanting more, newer, bigger, and then they die surprised by emptiness. His replacement list is unfashionable: love, community, purpose, the ability to give. He is blunt that you cannot substitute materials for love; the dying learn this on schedule, and he wants his student to learn it early. The book's anger is gentle but aimed: at a culture selling substitutes for the only goods that survive success.",
+        "example": "Mitch arrives with food Morrie can no longer eat, week after week, because feeding is his language of care. Morrie accepts the groceries and keeps redirecting him: what he needs is the visits, the listening, the presence. Even the student keeps trying to pay in things.",
+        "action": "Audit last month's spending of money and attention. Write what your list says you worship. Adjust one line of each budget."
+      },
+      {
+        "title": "Love Wins, or Nothing Does",
+        "chapter": "The Seventh Tuesday",
+        "summary": "Morrie returns to one sentence all book long: love each other or perish. He means it structurally: without love returned and received, people wither at any income. His own dying is the demonstration, a man surrounded by students, family and friends because he spent decades being interested in people. The wave of visitors at his bedside is not luck; it is compound interest on a lifetime of asking how are you, and meaning it.",
+        "example": "Former students fly across the country to sit with him for an hour. Morrie calls them his wealth, accumulated one conversation at a time since the 1960s. The book itself, and its proceeds arranged for his care, are part of the same ledger.",
+        "action": "Make one deposit this week: an unhurried conversation with someone you love, questions only, nowhere else to be."
+      },
+      {
+        "title": "Forgive Everyone, Starting With Yourself",
+        "chapter": "The Twelfth Tuesday",
+        "summary": "Near the end Morrie teaches forgiveness in both directions: forgive others, and forgive yourself for the life you did not live, the words unsaid, the pride that cost years. He models it with a story of a friend he never forgave until it was too late, and refuses to let Mitch carry similar stones. The dying, he suggests, have no shelf left for grudges; the living should empty theirs voluntarily.",
+        "example": "Morrie weeps telling of the friend he lost to stubbornness, reconciling only at a grave. He turns the story into homework for everyone younger: apologise now, while apologies can still be conversations.",
+        "action": "Send one overdue apology or acceptance this week, by letter if a call is too much. Finish the sentence you have been rehearsing for years."
+      },
+      {
+        "title": "Regrets Arrive on Schedule; Do the Audit Early",
+        "chapter": "The Ninth Tuesday",
+        "summary": "Morrie warns that people reach the end carrying the same regrets: work that ate the family years, pride that prevented apologies, dreams unattempted. His prescription is an audit in health, while the accounts can still be settled. The dying professor, at peace, attributes it to holding few grudges against himself. The Tuesdays keep returning Mitch, and the reader, to the same exercise: list the regrets now forming, and treat the list as a syllabus, not a verdict.",
+        "example": "Mitch's own regret list is visible in the frame story: the brother in Spain he barely speaks to, the career that consumed his thirties. The book quietly tracks him settling accounts as Morrie teaches, including the phone calls he finally makes.",
+        "action": "Write your if-I-were-dying list of five regrets-in-progress. Choose one and make the settling phone call this week."
+      },
+      {
+        "title": "Tension of Opposites: Life Pulls Both Ways",
+        "chapter": "The Eighth Tuesday",
+        "summary": "Morrie offers one of his favourite images: life is a series of pulls back and forth, like a wrestling match, between what you want to do and what you must, love and work, giving and needing. His resolution is a prediction: in the end, love wins, or should. The image comforts because it normalises the tug rather than pathologising it; the goal is not to end the tension but to know which side you intend to let prevail.",
+        "example": "Mitch feels the pull between deadlines in Detroit and Tuesdays in Boston all book long. The wrestling metaphor lets him stop calling himself broken for feeling both. Morrie's coaching is to notice the pulls and vote, repeatedly, for love's side of the rope.",
+        "action": "Name your current tug of war in one sentence. Then take one visible step this week on the side you say should win."
+      },
+      {
+        "title": "Aging Is Not Decay If You Keep Growing",
+        "chapter": "The Tenth Tuesday",
+        "summary": "Morrie rejects the culture's worship of youth with a dying man's authority: he has been all the ages, and each gave something the previous lacked. Envying the young, at seventy eight and in a wheelchair, strikes him as evidence of an unfulfilled life at any age. Growing, he insists, is the difference: the old who kept learning do not wish to be twenty again, because they would have to give back what the years taught.",
+        "example": "He tells Mitch that the young are often miserable, confused and unwise, having been sold the same lies about worth. The envy, seen from the deathbed, looks like ignorance of what youth actually feels like from inside.",
+        "action": "Ask someone over seventy one thing they can do or see now that thirty could not. Write it down; you are collecting your own future."
+      },
+      {
+        "title": "The Socialisation of a Dying Man Is a Syllabus for the Living",
+        "chapter": "Tuesdays",
+        "summary": "Albom's structure hides the radicalism: a professor losing his body piece by piece uses each loss as course material, teaching the dependency he once would have found humiliating as the final curriculum. Morrie's willingness to be washed, fed and lifted, without surrendering authority, inverts everything the productivity culture teaches about dignity. Deepening means noticing that his students are not learning how to die in the abstract; they are rehearsing how to be mortal in a society organised to postpone that lesson indefinitely and expensively.",
+        "example": "The televised interviews that made Morrie famous nearly did not happen; what convinced sceptics was a dying man joking about his own decline without flinching, live. Millions wrote letters. The country was not short of advice about success; it was starved of a public demonstration that decline need not mean disgrace.",
+        "action": "Identify one dependency you currently hide or dread. Practise Morrie's move once this week: accept that help openly, with thanks and without apology, and watch the room relax."
+      }
+    ],
+    "actionPlan": [
+      "Ask the one-healthy-day question monthly; do a piece of it now.",
+      "Audit money and attention; correct one line of each.",
+      "Make one deposit: an unhurried, questions-only conversation weekly.",
+      "Send the overdue apology this week.",
+      "Forgive yourself one specific thing, in writing.",
+      "Schedule a standing date with an elder in your life.",
+      "Read one Tuesday a day; the book is built for that pace."
+    ],
+    "caveat": "The book's simplicity is its style and its limit: it offers warmth and direction, not a system. Readers facing structural hardship will need more than Tuesdays, and Morrie, a beloved professor, would have said so.",
+    "graveLink": "titanic-unsinkable",
+    "cover": "assets/covers/tuesdays-with-morrie.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "art-of-stillness",
+    "title": "The Art of Stillness",
+    "author": "Pico Iyer",
+    "year": 2014,
+    "category": "Mind & Spirit",
+    "readTime": "6 min",
+    "tagline": "Adventures in going nowhere, for people who go everywhere.",
+    "oneLiner": "In an age of constant movement and connection, Pico Iyer makes the case that the most radical trip available is sitting still.",
+    "bigIdea": "Travel writer Pico Iyer spent his life going everywhere, then noticed that the people he most admired, monks, artists, Leonard Cohen, were going nowhere on purpose. Stillness, he argues, is not the absence of life but its processing plant: where experience becomes understanding, and where we recover the self that motion keeps outrunning. In a world of phones and feeds, going nowhere is the fastest way to get somewhere that matters.",
+    "quotes": [
+      "In an age of speed, I began to think, nothing could be more invigorating than going slow.",
+      "Stillness is not an indulgence for those with lives like mine. It is a necessity for anyone who wants to think straight.",
+      "The point of gathering stillness is not to enrich the sanctuary or mountaintop, but to bring that calm into the motion, the commotion of the world."
+    ],
+    "lessons": [
+      {
+        "title": "Going Nowhere Is a Destination",
+        "chapter": "The Art of Stillness",
+        "summary": "Pico Iyer reframes retreat as travel: a trip to the one place you never visit, your own unprocessed life. Experiences pile up like undeveloped film on people who never stop; nothing becomes memory, insight or gratitude. Stillness is where the film develops. His claim is practical, not mystical: the quality of everything you do improves in proportion to the pauses where you digest what you have done.",
+        "example": "Leonard Cohen, at the height of success, sat in a monastery for five years. He told Pico Iyer the stillness gave him back his work and his mind. The world's great movers, Pico Iyer noticed, kept scheduling the opposite of movement as seriously as tours and deadlines.",
+        "action": "Book twenty minutes of nowhere this week: no phone, no input, one chair. Treat it as an appointment you would keep with anyone else."
+      },
+      {
+        "title": "The Screen Is a Place You Live Now; Visit It Deliberately",
+        "chapter": "The Art of Stillness",
+        "summary": "Pico Iyer observes that we now spend our days in a second world of screens, and arrive there by reflex rather than decision. His remedy is not abandonment, since he writes for a living on those screens, but intention: sabbaths from email, rooms without devices, hours that belong to one thing. Attention is the currency of a life; the still person spends it, the restless person is spent by it.",
+        "example": "He describes executives and writers who take internet sabbaticals, a day or a month offline, and return reporting the same surprise: the world continued, their panic did not, and the thinking they had been postponing got done in the quiet.",
+        "action": "Declare one screen sabbath this week, four waking hours minimum. Notice what your mind does at minute forty."
+      },
+      {
+        "title": "Stillness Is for the Middle of Life, Not the Edge",
+        "chapter": "The Art of Stillness",
+        "summary": "The TED book closes by refusing the retreat fantasy: stillness matters only if it travels back into traffic, family and work. Pico Iyer's monks and sitters are not escaping life but fuelling it, returning with steadiness to spend on other people. The art is portable: a breath before answering, a walk without headphones, a morning that begins before the world's demands. Small stillnesses, daily, beat annual escapes.",
+        "example": "Pico Iyer now lives mostly in rural Japan with no car, bicycle rides, and long unfilled afternoons, from which he flies out to the world's loudest cities. He describes the stillness as the home base that makes the motion sustainable rather than frantic.",
+        "action": "Attach one still minute to an existing habit: before unlocking your phone in the morning, sit and breathe for sixty seconds."
+      },
+      {
+        "title": "Sabbaths Are an Ancient Technology for a New Problem",
+        "chapter": "The Art of Stillness",
+        "summary": "Pico Iyer points out that every wisdom tradition built rest into the week and stillness into the day, long before the feed made both feel impossible. The Sabbath was not laziness but design: a scheduled refusal to be reachable, productive or newsworthy. Modern stillness practice is less an invention than a recovery, and Pico Iyer's case is that the people running fastest quietly know it, which is why retreats and offline days are booming among the connected.",
+        "example": "He describes a friend, a high powered writer, who keeps a strict internet Sabbath from Friday to Monday and guards it like a religious law. Her productivity, she reports, is built on the stillness her colleagues mistake for absence.",
+        "action": "Set your sabbath hours now: name the span, tell the people who need to know, and let the world test your resolve once."
+      },
+      {
+        "title": "The Places That Refuse to Hurry You",
+        "chapter": "Living the Lesson",
+        "summary": "Iyer is drawn to monasteries, retreats and his friend Leonard Cohen's five years at a Zen centre, not as escapes but as laboratories. The lesson deepens: stillness is partly a place, and rooms teach. A kitchen table with no device on it, a park bench at the same hour, a train window without earbuds: these are Lehigh Valley versions of the monastery gate. Build two or three into your geography and let architecture carry what willpower keeps dropping.",
+        "example": "Cohen left a world tour and global fame for a monastery kitchen, and told Iyer the silence gave him back his songs. The album that followed, made in his late seventies, was among his finest, which is the book's quiet argument about where original work actually comes from.",
+        "action": "Choose one stillness place this week and visit it three times, device in another room or pocket. Notice which thoughts only arrive there."
+      },
+      {
+        "title": "Boredom Is the Doorway, Not the Enemy",
+        "chapter": "Living the Lesson",
+        "summary": "The book argues that boredom is not empty; it is undomesticated attention looking for its work. The mind fidgets, reaches, complains, and then, if not rescued by a screen, crosses into the state where memory consolidates and strange connections form. Killing every idle minute with input is like interrupting fermentation to check on the wine. The practice is graduated exposure: queues, waits and walks, deliberately under stimulated, until the itch becomes information instead of panic.",
+        "example": "Iyer's own years of travel writing taught him the pattern from the other side: the journeys he remembers are the ones with empty middles, the long station afternoons where nothing was consumed and everything settled. Itinerary packed travellers return with photographs of places their minds never actually visited.",
+        "action": "Take one daily wait, a queue, a kettle, a traffic light walk, and spend it looking at the actual world. Extend by one wait each week."
+      },
+      {
+        "title": "Coming Home Is a Skill the Travellers Must Learn",
+        "chapter": "Living the Lesson",
+        "summary": "A quieter thread in Iyer's work is re entry: the traveller who can be anywhere struggles to be somewhere, and stillness becomes the discipline of letting one place matter completely. Deepening means treating home not as the pause between journeys but as the destination your attention keeps postponing. The people who master this report a strange relief: when home becomes vivid, the itch to leave loses its panic, and travel returns to being curiosity instead of anaesthetic.",
+        "example": "His portrait subjects, writers, monks, his own ageing parents in California, share the discovery that the foreign country they had been circling was ordinary life at walking pace. The exotic was never a postcode. It was a quality of attention they had only ever practised abroad.",
+        "action": "Be a tourist in your own neighbourhood for one hour this week: new route, full attention, no purchases required. Write down three things you had never seen."
+      },
+      {
+        "title": "Stillness Scales Down to Ninety Seconds",
+        "chapter": "Living the Lesson",
+        "summary": "The book's hope for busy readers is that stillness is fractal: the same settling available in a Kyoto garden exists between two meetings, if the doorway is used. Ninety seconds of unfed attention, feet on floor, breath counted, phone asleep, will not produce enlightenment, but it breaks the trance of permanent reaction, which is the actual disease. Small doors opened daily beat grand retreats contemplated yearly, because the trance is daily too.",
+        "example": "Iyer describes business travellers and doctors taking the pause in stairwells and parked cars, micro retreats requiring no incense whatsoever. The settings are comic and the results are not: measurably steadier afternoons, from a practice too small to make a good excuse about.",
+        "action": "Set three ninety second appointments with nothing today. Between meetings, in the parked car, on the stairs. Phone down, breath counted, return when the timer ends."
+      }
+    ],
+    "actionPlan": [
+      "Book twenty minutes of nowhere weekly, phone elsewhere.",
+      "Take a four-hour screen sabbath this week.",
+      "Add sixty seconds of stillness before the morning phone.",
+      "Walk one regular route weekly without headphones.",
+      "Let experiences develop: ten quiet minutes after big days.",
+      "Bring the calm back: one slow breath before answering anyone.",
+      "If you travel, schedule one unscheduled hour per trip."
+    ],
+    "caveat": "It is a short TED book, an essay rather than a system. Treat it as a door; readers wanting full practice instructions will need a meditation manual behind it.",
+    "graveLink": "amazon-destinations",
+    "cover": "assets/covers/art-of-stillness.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "dhammapada-choice",
+    "title": "The Dhammapada (Eknath Easwaran)",
+    "author": "Eknath Easwaran (trans.)",
+    "year": 2007,
+    "category": "Mind & Spirit",
+    "readTime": "8 min",
+    "tagline": "The Buddha's path of wisdom in 423 verses, in Eknath Easwaran's beloved translation.",
+    "oneLiner": "Twenty-six centuries ago the Buddha taught that the mind makes the world: we are what we think, and happiness follows a pure mind like a shadow that never leaves.",
+    "bigIdea": "The Dhammapada is the most widely read of Buddhist scriptures: short verses on mind, anger, craving, vigilance and joy, attributed to the Buddha. Eknath Easwaran's translation is prized for clarity and warmth, with an introduction that maps the Buddha's life and teaching for general readers. Its psychology is strikingly modern: train the mind as you would train anything precious, because every state of life flows from it.",
+    "quotes": [
+      "Mind precedes all mental states. Mind is their chief; they are all mind-wrought.",
+      "Hatred never ends through hatred. By non-hatred alone does it end. This is an eternal law.",
+      "As a fletcher makes straight his arrow, a wise man makes straight his trembling and unsteady mind."
+    ],
+    "lessons": [
+      {
+        "title": "Mind Is the Forerunner of Everything",
+        "chapter": "Twin Verses",
+        "summary": "The book opens with its thesis: act with an impure mind and suffering follows like the wheel behind the ox; act with a pure mind and happiness follows like a shadow. The Buddha is not offering positive thinking but causality: states of mind become speech, speech becomes action, action becomes a life. Vigilance about the first link saves effort at every later one. Modern readers meet here an ancient cognitive therapy in two verses.",
+        "example": "A morning begun in resentment colours the commute, the meeting, the evening, each scene recruited as evidence. The verses predict the cascade and locate the intervention point: the first thought, guarded like a gate. Monks memorised these lines as a daily instrument panel.",
+        "action": "Tomorrow, guard the gate: notice your first three thoughts of the day and set them deliberately, gratitude or resolve, before any screen."
+      },
+      {
+        "title": "Hatred Never Ends Through Hatred",
+        "chapter": "Twin Verses and Anger",
+        "summary": "Among the most quoted verses in world religion: in this world, hatred never ceases by hatred; it ceases by non-hatred, by love. The teaching is strategic as much as moral. Retaliation feels like ending a fire and works like feeding it; the other side now holds a justified grievance of their own. The Buddha's alternative is not weakness but a refusal to continue the transmission, the chain stopped at the link that is you.",
+        "example": "Feuds in families and nations run on the same engine: each side's memory starts at the other's last offence. The verse has been invoked by peacemakers from monks to Mandela because it names the only exit ever found: someone declines to return the blow.",
+        "action": "In one current irritation, decline the return blow this week: no sarcastic reply, no cold shoulder. Watch what the chain does without your link."
+      },
+      {
+        "title": "Vigilance Is the Path, Negligence the Trap",
+        "chapter": "Vigilance",
+        "summary": "The second chapter praises appamada, heedfulness: the awake attention that notices craving and anger as they arise, before they become deeds. The negligent drift through life half asleep, the vigilant treat every moment as workable material. The Buddha compares them to a merchant guarding wealth, or a town guarding its border. Attention, in this teaching, is not relaxation. It is the highest form of self-defence.",
+        "example": "A meditator learns to catch irritation at the level of a tightened jaw rather than a slammed door. The verses describe exactly this shortening of the fuse's burn time, until some fires are never lit because they are seen at the spark.",
+        "action": "Set three phone alarms today labelled Vigilance. At each, ask: what is my mind doing right now? Thirty seconds each; that is the practice."
+      },
+      {
+        "title": "The Watchful Quarrel With Anger",
+        "chapter": "Anger",
+        "summary": "The anger chapter reads like a manual: conquer anger by non-anger, evil by good, miserliness by giving, the liar by truth. The Buddha treats anger as a fire the angry person carries in their own hands. His counsel to notice insult without swallowing it, the famous image of a gift refused that stays with the giver, gives the insulted a complete practice in one verse: what is not received does not have to be carried.",
+        "example": "A monk insulted in a village asks whether a gift unaccepted belongs to the giver still; told yes, he replies that the abuse likewise stays with its owner. The story attached to these verses has been retold for two millennia because everyone has a village and an insult.",
+        "action": "Refuse one gift of abuse this week: hear it, do not sign for it, let it remain with its owner. Notice the lightness by evening."
+      },
+      {
+        "title": "Craving Is the Thirst That More Cannot Cure",
+        "chapter": "Craving",
+        "summary": "The craving chapter uses the image of thirst: for the person in its grip, getting increases wanting, as drinking seawater increases thirst. The Buddha's analysis maps precisely onto modern consumption, comparison and feeds. Freedom is not a fuller cup but the discovery that the thirst itself can end. The verses are austere and strangely hopeful: the trap has a door, and the door is seeing the mechanism.",
+        "example": "The verses describe the creeper of craving spreading through a life like a vine through a forest, strangling as it climbs. Anyone who has watched one more episode, one more refresh, one more purchase fail to satisfy has field data for the metaphor.",
+        "action": "Run one seawater test today: delay a craving by one hour and observe whether it grew or shrank. Keep the data."
+      },
+      {
+        "title": "The Self as Its Own Refuge",
+        "chapter": "Self",
+        "summary": "The self chapter insists that no one else can do your purifying: oneself is one's own refuge, and indeed, the verses add, what other refuge could there be. This is not isolation but assignment of responsibility. Teachers point, scriptures describe, but the walking is unshareable. The Buddha's final counsel, recorded elsewhere, matches it: be a lamp unto yourself. The Dhammapada's whole architecture supports that lamp, verse by verse.",
+        "example": "Generations of readers facing illness, exile and loss have kept this chapter closest, because it locates the one resource no circumstance confiscates: the trained mind of the person reading. Monks chant it at sickbeds for that reason.",
+        "action": "Take one problem you have been outsourcing, to luck, to others, to the future, and do the first unshareable step yourself today."
+      },
+      {
+        "title": "Flowers: The Chapter of the Scent That Travels Against the Wind",
+        "chapter": "Flowers",
+        "summary": "The flowers chapter contrasts the scent of blossoms, which travels only downwind, with the fragrance of goodness, which travels in all directions. It urges the reader to gather the essence of teachings as a bee gathers nectar without harming the flower. The images carry the book's missionary gentleness: take from every teacher without injury, and let a good life be your only advertisement.",
+        "example": "Eknath Easwaran's introduction leans on this chapter to explain the Dhammapada's own spread: it travelled the world for two thousand years with no army behind it, carried by people whose lives smelled of it. Ideas move at the speed of example.",
+        "action": "Be a bee this week: take one teaching from a tradition or person unlike you, without needing to harm or convert anything."
+      },
+      {
+        "title": "The Chapter of the Elephant: Self Mastery as Strength",
+        "chapter": "Verses on Vigilance",
+        "summary": "The elephant chapter honours the tamed mind with the war elephant who bears arrows without flinching: rare, the verse says, is the person who has tamed themselves, and such a person can endure what scatters everyone else. Deepening means noticing the metaphor is not repression; an elephant is strength educated, not removed. Your anger, appetite and fear are tonnage to be trained rather than sins to be amputated, and the training is unglamorous daily handling, not a single victorious battle with the self.",
+        "example": "The Buddha had watched war elephants trained for years by mahouts whose entire art was patient repetition, the same method the verses prescribe for monks and laypeople alike. Kings envied the animals' steadiness while funding none of its training for themselves, a budget error the text clearly intends us to recognise at home.",
+        "action": "Choose one strong reaction of yours to train the mahout way: same hour, same small exercise, for forty days. Tonnage responds to repetition, not intensity."
+      }
+    ],
+    "actionPlan": [
+      "Guard the first thoughts of the day before any screen.",
+      "Decline one return blow this week; stop a chain at your link.",
+      "Run three vigilance alarms daily for a week.",
+      "Read one chapter slowly; the verses reward memorisation.",
+      "Choose one verse and carry it for a month.",
+      "When anger rises, look for the tightened jaw, not the argument.",
+      "End the day reviewing where you were awake and where you drifted."
+    ],
+    "caveat": "This is scripture in translation; readers meet the Buddha through a beloved interpreter. Those wanting scholarly apparatus should pair it with a commented edition, and those of other faiths can read it, as millions do, as wisdom literature.",
+    "graveLink": "kumbh-mela-1954-stampede",
+    "cover": "assets/covers/dhammapada-choice.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "kite-runner",
+    "title": "The Kite Runner",
+    "author": "Khaled Hosseini",
+    "year": 2003,
+    "category": "Life & Meaning",
+    "readTime": "9 min",
+    "tagline": "A story of betrayal and redemption between two boys in Kabul.",
+    "oneLiner": "Amir wins the kite tournament and betrays the friend who ran for him. Twenty years later, a phone call offers the sentence the novel is built around: there is a way to be good again.",
+    "bigIdea": "Khaled Hosseini's novel follows Amir, a privileged Pashtun boy, and Hassan, his Hazara servant and devoted friend, from Kabul's kite-fighting winters through Soviet invasion, exile in California, and a return under the Taliban. It is a story about cowardice and its long interest payments, about fathers and sons, and about redemption as something done with the body and the years, not felt in the heart alone.",
+    "quotes": [
+      "For you, a thousand times over.",
+      "There is a way to be good again.",
+      "Children aren't coloring books. You don't get to fill them with your favorite colors."
+    ],
+    "lessons": [
+      {
+        "title": "Betrayal Charges Interest for Decades",
+        "chapter": "Kabul, 1975 and After",
+        "summary": "Amir watches Hassan being assaulted in an alley and runs, then compounds the cowardice by framing Hassan for theft to expel the reminder. The novel's engine is the interest on that day: Amir's success in America cannot purchase sleep, and his father's approval cannot be enjoyed. Khaled Hosseini's point is structural: unatoned guilt does not fade with geography or achievement. It waits, and it prices everything you build afterward.",
+        "example": "Amir becomes a published novelist, marries well, and still flinches at pomegranates, at Kabul mentioned, at a Hazara face. The book measures his prosperity against one unpaid debt and finds the prosperity weightless. Readers recognise the arithmetic from their own smaller betrayals.",
+        "action": "Name one old debt of conscience, however small. Ask what a payment would look like now, and take the first step this month."
+      },
+      {
+        "title": "There Is a Way to Be Good Again",
+        "chapter": "The Return",
+        "summary": "Rahim Khan's phone call is one of fiction's great redemptive offers: not forgiveness granted, but a task assigned. Amir must return to Taliban Kabul and rescue Hassan's son. Khaled Hosseini is careful about the theology: redemption is not a feeling of sorrow, which Amir has had for decades, but an action with risk and cost, undertaken for the wronged, not for the relief of the guilty. The distinction is why the ending lands.",
+        "example": "Amir finally takes the beating he ran from in 1975, at the hands of the same man, and laughs through it, feeling healed rather than punished. The symmetry is deliberate: the debt is paid in the currency it was incurred, presence where he once chose absence.",
+        "action": "Where you owe amends, choose the costly action over the heartfelt apology alone. Feelings are the receipt, not the payment."
+      },
+      {
+        "title": "For You, a Thousand Times Over",
+        "chapter": "Loyalty and Its Mirror",
+        "summary": "Hassan's devotion, the kite running, the unwavering loyalty of the powerless boy, is the novel's moral mirror. Amir spends the second half learning to say Hassan's line, and the book ends with him running a kite for Hassan's son, speaking the words at last in the right direction. Khaled Hosseini suggests redemption does not erase the past; it reverses the direction of service. The served become the servers, and that reversal is the repair.",
+        "example": "The final scene's small smile from Sohrab, a traumatised child who barely speaks, is deliberately tiny. Khaled Hosseini refuses the full Hollywood thaw, because real repair after horror is measured in millimetres. The restraint is the honesty.",
+        "action": "Say the thousand-times-over sentence to someone you serve, in deeds first. Run one kite that is entirely for them this week."
+      },
+      {
+        "title": "Fathers Are Also Boys Who Failed Someone",
+        "chapter": "Baba",
+        "summary": "Baba, the towering father, is revealed late as a man carrying his own concealed betrayal: Hassan was also his son, unacknowledged for honour's sake. The revelation reframes Amir's story: the son inherited not only privilege but a pattern, a family talent for loving in secret and failing in public. Khaled Hosseini's architecture insists that redemption is generational work; Amir's rescue of Sohrab pays two men's debts at once.",
+        "example": "The bear fight story, the orphanage Baba built, the guilt money distributed quietly, all reread differently once the secret is known. Readers often flip back through the early chapters at the revelation, which is exactly the experience of learning a parent fully, usually too late.",
+        "action": "Ask one question about your parents' hidden chapters while you still can. If you cannot, write the question and what you suspect the answer costs them."
+      },
+      {
+        "title": "America as the Place Where Ghosts Sleep Lightly",
+        "chapter": "Fremont",
+        "summary": "Exile gives Amir education, a wife, a career, and a flea market community of diminished Afghan fathers selling second hand goods on Sundays. Khaled Hosseini writes immigration without sentimentality: the new country is generous and amnesiac, and its amnesia is both mercy and trap. Amir buries Kabul under California, and the novel's second half argues that buried things are not dead things; they are seeds with a long fuse.",
+        "example": "General Taheri, once formidable, presides over a flea market stall; Baba works at a gas station and dies proud of a son's graduation. The scenes honour immigrant dignity while showing exactly what exile charges for its safety.",
+        "action": "If your family crossed borders, record one elder's before story this month, on paper or tape. Families lose these archives by default."
+      },
+      {
+        "title": "The Hazara History the Novel Smuggles In",
+        "chapter": "The Kabul of the Novel",
+        "summary": "Hosseini threads a century of ethnic hierarchy through a childhood friendship: Hazara servants, Pashtun masters, and a country whose national story was written by the winners of that arrangement. Deepening means learning the real history the fiction leans on: the Hazara persecutions under Abdur Rahman Khan in the 1890s killed or displaced a majority of the people, and the servitude in Amir's house is that catastrophe at domestic scale. The kite strings work because the wound underneath them is documented, not decorative.",
+        "example": "The novel's 2003 publication landed as Afghanistan returned to headlines, and its classrooms use made it many readers' first honest encounter with the word Hazara. Hosseini, a Pashtun physician writing from California, has spoken of the guilt braided through that authorship, which the book never resolves and should not.",
+        "action": "Spend one hour with the real history: Abdur Rahman Khan campaigns, Hazara migration, the 2001 Bamiyan Buddhas' destruction. Return to the novel and watch its silences change key."
+      },
+      {
+        "title": "Sohrab's Silence Is the Most Honest Chapter",
+        "chapter": "The Kabul of the Novel",
+        "summary": "The rescued child does not heal on schedule, and Hosseini's refusal to make Sohrab's recovery reward Amir's rescue is the book's ethical spine. Trauma in children, the asylum systems, the suicide attempt, the year of near silence, is rendered at its true speed, which is why the final kite scene lands like weather changing rather than justice served. Deepening means resisting the reader's own demand for the redemption receipt. Some debts can be serviced for a lifetime and never receipted, and service, not closure, is the assignment.",
+        "example": "The tiny smile at the kite's cut, no dialogue, no embrace, a face that almost moves, is the ending teachers report students arguing about all term. It is calibrated with clinical honesty: this is what progress looks like after what Sohrab survived, and asking the book for more would ask the child for a performance.",
+        "action": "Recall someone you have tried to help whose healing you are timing. Write what unspectacular faithfulness looks like for the next year, and practise that instead of checking for smiles."
+      },
+      {
+        "title": "America Does Not Absolve; It Employs",
+        "chapter": "The Kabul of the Novel",
+        "summary": "The California chapters perform a subtle correction on the immigrant success story: Baba declines from gas station shifts with dignity intact and prospects gone, while Amir's writing career flourishes on the very stories the old country supplied. Deepening means noticing the exchange rate. The son converts Afghanistan into American literary capital, and the novel knows this is another complicated inheritance, not a clean escape. Every immigrant memoir since writes in the margin of that honesty about who profits from the wound's narration.",
+        "example": "The flea market scenes, Pashtun merchants selling lamps and carpets under freeway noise, are among the book's most loved passages precisely because they hold grandeur and diminishment in one frame. Baba haggles like a general. He is also working a stall. The novel refuses to choose between those truths, and so must its readers.",
+        "action": "Map your own family's exchange rate: what did the old place cost, what did the new one pay, and who did which side of that ledger? Write it plainly."
+      }
+    ],
+    "actionPlan": [
+      "Name one debt of conscience; take the first payment step this month.",
+      "Where amends are owed, act with cost, not only words.",
+      "Serve one person entirely at your own expense this week.",
+      "Notice pomegranates: the small triggers of your own old scenes.",
+      "Read the alley chapter slowly; sit with what you would have done.",
+      "Tell your Rahim Khan, whoever knows your story, one true thing.",
+      "End debts early: apologise while the kite can still be run."
+    ],
+    "caveat": "The novel contains scenes of violence and assault that are essential to its moral structure but hard to read. It is fiction rooted in real history; readers new to Afghanistan should follow it with history from Afghan voices.",
+    "graveLink": "afghanistan-withdrawal",
+    "cover": "assets/covers/kite-runner.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "night",
+    "title": "Night",
+    "author": "Elie Wiesel",
+    "year": 1960,
+    "category": "Life & Meaning",
+    "readTime": "8 min",
+    "tagline": "Elie Wiesel bears witness: a boy, his father, and the night that swallowed a world.",
+    "oneLiner": "At fifteen, Elie Wiesel was deported to Auschwitz with his family. Night is his account of losing his father, his faith and his childhood, and his vow that the world would not be allowed to forget.",
+    "bigIdea": "Elie Wiesel's memoir is the essential first-person testimony of the Holocaust: the cattle cars, the selection, the crematoria, the death march, and the slow destruction of a father-son bond by starvation. Its power is its restraint, short declarative sentences carrying unbearable weight. Elie Wiesel wrote it to bear witness against forgetting and indifference, which he called the true enemies, more dangerous even than hatred.",
+    "quotes": [
+      "Never shall I forget that night, the first night in camp, which has turned my life into one long night.",
+      "To forget the dead would be akin to killing them a second time.",
+      "The opposite of love is not hate, it's indifference."
+    ],
+    "lessons": [
+      {
+        "title": "Indifference Is the Enemy With Clean Hands",
+        "chapter": "The Memoir and Elie Wiesel's Later Teaching",
+        "summary": "Across his later life Elie Wiesel refined the book's lesson into one word: indifference. The world's failure in the 1940s was not only the murderers but the bystanders, governments, neighbours, God watched in silence by men. Indifference, he taught, benefits the aggressor and abandons the victim. Night exists as the refusal of that stance: to read it is to be conscripted as a witness, which is the opposite of looking away.",
+        "example": "Elie Wiesel spent decades confronting comfortable audiences: presidents, students, parliaments, insisting that someone who sees injustice and stays neutral has chosen a side. His Nobel Peace Prize citation called him a messenger to mankind; the message was this refusal.",
+        "action": "Identify one place where you are currently a comfortable bystander. Take the smallest witnessing action available this week: speak, donate, show up."
+      },
+      {
+        "title": "A Father and Son, and What Starvation Does to Love",
+        "chapter": "The Memoir",
+        "summary": "The spine of Night is Eliezer and his father, each keeping the other alive, then the son's shame as hunger turns him resentful of the burden, then his father's death days before liberation and the guilt that outlives the war. Elie Wiesel hides none of it, including his own worst thoughts. The honesty teaches something unbearable and necessary: systems of cruelty aim to dissolve even the strongest bonds, and the guilt of survivors is part of the evidence.",
+        "example": "When his father is beaten for asking for water, Eliezer stays silent, afraid, and records his self-disgust in one sentence that has haunted readers for sixty years. He includes it so the testimony stays human rather than heroic, and so the crime is measured by what it did to love itself.",
+        "action": "Read this testimony slowly and completely. Then thank or call a parent or elder in your life while the gratitude is unembarrassed."
+      },
+      {
+        "title": "Faith Arguing With God Is Still Faith of a Kind",
+        "chapter": "The Memoir",
+        "summary": "Eliezer begins as a devout boy studying Kabbalah and watches children burned. The book's theological drama is his argument with God, accusation, rage, a Rosh Hashanah prayed in defiance, and a faith that survives as protest rather than comfort. Elie Wiesel never resolved it tidily in interviews, and refused to let others resolve it for him. The lesson for readers of any belief is that honest anger can be a form of relationship, while indifference is its end.",
+        "example": "At the hanging of a child, a man behind Eliezer asks where God is, and he hears a voice within answer: here, hanging from these gallows. The passage is quoted wherever suffering and faith are discussed, because it refuses both easy atheism and easy piety.",
+        "action": "Write your hardest question, about God, fate or justice, in one page, without answering it. Elie Wiesel's example permits the question to stand."
+      },
+      {
+        "title": "Testimony Is a Duty the Survivor Owes the Dead",
+        "chapter": "Elie Wiesel's Purpose",
+        "summary": "Elie Wiesel wrote Night after a decade of silence, concluding that the survivor's memory is a trust held for those who cannot speak. He pared the original Yiddish manuscript drastically, producing the lean testimony we read, and spent the rest of his life speaking for the murdered in classrooms and parliaments. The book teaches that some stories are not self-expression; they are evidence, and carrying evidence is work a person can be conscripted into by history.",
+        "example": "He accepted the Nobel Peace Prize not as an author but as a witness, telling the audience that the honour belonged to the dead and to Jewish memory. His foundation, lectures and Elie Wiesel's own presence at scenes of later genocides extended the testimony into advocacy.",
+        "action": "Carry one true story that is not yours, of your family, town or people, and tell it accurately once this month. Evidence survives by retelling."
+      },
+      {
+        "title": "Silence Encourages the Tormentor, Never the Tormented",
+        "chapter": "Elie Wiesel's Later Teaching",
+        "summary": "The sentence Elie Wiesel repeated to presidents and students alike completes Night's argument. Neutrality in the face of cruelty is not a position above the fray; it is a contribution to one side of it. The memoir shows the mechanism at every scale, villagers who watched, nations that shrugged, boys who survived by moments of solidarity. His teaching converts reading into responsibility: having seen, through his eyes, you are no longer uninformed, and uninformed was the only innocent stance.",
+        "example": "He intervened publicly on Bosnia, Rwanda and Darfur, telling comfortable governments that the promise of never again kept expiring. The through line from the memoir is exact: the opposite of the crematorium is not only love, but attention that refuses to look away in time.",
+        "action": "Choose one faraway crisis you have been scrolling past and learn its facts properly this week: names, dates, what witnesses ask of the world."
+      },
+      {
+        "title": "The Memoir's Restraint Is Its Loudest Choice",
+        "chapter": "Reading Night",
+        "summary": "Night is famously spare: short sentences, ash dry images, almost no rhetoric, from a writer who waited ten years before he could write it at all. The restraint is the argument: language that performed grief would betray the subject, so Wiesel lets sequence and silence carry the weight. Deepening means studying what he refuses to do, no redemption arcs, no uplift engineered for the reader's comfort, because importing those would make the reader feel served by an event that served no one. Testimony is not content; its forms are moral decisions.",
+        "example": "The original Yiddish version ran over 800 furious pages; the French Night was cut to a fraction, and the fury became something harder to survive, quiet. Editors and Wiesel himself understood that accusation exhausts readers, while restraint indicts them. Every classroom still teaching the book watches students go silent at passages a louder book would have spent.",
+        "action": "Take one painful story of your own and write it in ten plain sentences, no adjectives of emotion. Notice what restraint does to its truth."
+      },
+      {
+        "title": "The Nobel Was for the Silences He Broke Afterward",
+        "chapter": "Reading Night",
+        "summary": "Wiesel's later life, the activism for Soviet Jews, Cambodians, Bosnians, Darfur, flowed from a doctrine the memoir only implies: having been failed by the world's silence, the witness owes every subsequent victim his voice. Deepening means following the obligation out of the book. He chaired commissions, confronted presidents, and accepted the friction of fame because the alternative, private peace, struck him as a second desertion. The memoir ends in a mirror; the life that followed was his refusal to keep looking only there.",
+        "example": "His 1985 plea to President Reagan not to visit a cemetery containing SS graves, delivered at a White House ceremony in front of cameras, remains the model of witness as citizenship: courteous, immovable, and costing him the room's comfort. He said the place was elsewhere, and history records that the itinerary changed.",
+        "action": "Identify one cause where your knowledge makes you a witness rather than a spectator. Take the smallest public action available this month: sign, speak, give, in that order of courage."
+      },
+      {
+        "title": "Reading It Now, in a Century Repeating Itself",
+        "chapter": "Reading Night",
+        "summary": "The book's classroom life has made it many readers' first encounter with genocide, and its final lesson is about the reader's present tense: indifference, Wiesel insisted for sixty years, remains the accomplice in every new atrocity's budget. Deepening means refusing to historicise that sentence into safety. The memoir asks what its reader will do with foreknowledge next time the bystander role is offered, because it will be offered, in forms tailored to seem reasonable. Night is a rehearsal the century keeps scheduling.",
+        "example": "Wiesel watched phrases from the 1930s recirculate in new conflicts and remarked that humanity had learned nothing except, perhaps, some individuals. His foundation taught the memoir as civics rather than history for that reason: the exam is not on dates but on whether the reader recognises the machinery while it is still deniable.",
+        "action": "Learn the early warning signs he enumerated, dehumanising language, bystander comfort, stages of exclusion. Keep the list somewhere you will see it when it applies."
+      }
+    ],
+    "actionPlan": [
+      "Take one witnessing action this week where you have been a bystander.",
+      "Read the whole testimony slowly; do not skim the hard pages.",
+      "Thank or call a parent or elder while gratitude is unembarrassed.",
+      "Write your hardest question in a page, without forcing an answer.",
+      "Learn one more fact of this history from a museum or archive.",
+      "Teach one person one thing from this book this month.",
+      "Refuse indifference in one small, visible way, repeatedly."
+    ],
+    "caveat": "This is Holocaust testimony with scenes that are, by necessity, harrowing. It should be read by everyone, and at the reader's pace. Nothing about it is entertainment.",
+    "graveLink": "holocaust",
+    "cover": "assets/covers/night.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "hold-me-tight",
+    "title": "Hold Me Tight",
+    "author": "Sue Johnson",
+    "year": 2008,
+    "category": "Love & Relationships",
+    "readTime": "9 min",
+    "tagline": "Seven conversations for a lifetime of love.",
+    "oneLiner": "Couples do not fight about money or chores. They fight about one question: are you there for me when I need you?",
+    "bigIdea": "Sue Johnson built Emotionally Focused Therapy on attachment science: adults bond like children do, and most couple conflict is a protest against disconnection. The way out is not better debating. It is seven conversations that rebuild the sense that your partner is accessible, responsive and engaged, so the relationship becomes a safe base instead of a battlefield.",
+    "quotes": [
+      "Love is not a bargaining chip. It is a bond, and bonds need tending.",
+      "The worst fights are not about the issue. They are about the panic underneath it.",
+      "Being there emotionally is the strongest aphrodisiac of all."
+    ],
+    "lessons": [
+      {
+        "title": "The Question Under Every Fight",
+        "chapter": "The Demon Dialogues",
+        "summary": "Johnson calls it A.R.E.: are you Accessible, Responsive, Engaged? When a partner feels the answer turning to no, the brain treats it like physical danger. The fight that follows, about dishes or money or tone, is really a protest: I cannot reach you, and I am scared. Naming that question changes the whole argument, because the couple stops debating the surface and starts answering the fear.",
+        "example": "A couple argues for an hour about a forgotten anniversary. Underneath, one of them is asking: do I still matter to you? When the other answers that directly, with presence instead of a defence of the calendar, the anniversary stops being evidence in a trial.",
+        "action": "In your next disagreement, pause and ask out loud: what am I actually afraid of right now? Say that sentence first, before your complaint."
+      },
+      {
+        "title": "Find the Bad Guy Is a Losing Game",
+        "chapter": "The Demon Dialogues",
+        "summary": "The first demon dialogue is Find the Bad Guy: mutual blame where each partner prosecutes the other. The problem is never solved because the real enemy is the pattern, not the person. Couples recover when they can point at the cycle together, we keep doing this dance, instead of pointing at each other. The cycle becomes the shared opponent, and both people get to be on the same team again.",
+        "example": "He withdraws when she raises her voice; she raises her voice because he withdraws. Each is the other's trigger and neither is the villain. Couples who learn to say our cycle is back report that blame drops within weeks, because the story changed from you are broken to we get caught.",
+        "action": "Draw your cycle on paper together: what you do, what they do, what you each feel underneath. Keep it on the fridge for a month."
+      },
+      {
+        "title": "The Freeze and Flee Trap",
+        "chapter": "The Demon Dialogues",
+        "summary": "The third pattern is Freeze and Flee: both partners shut down, numb out and protect themselves by feeling nothing. It looks peaceful and is the most dangerous, because the bond starves quietly. Johnson's warning is that distance, not conflict, is the true predictor of a dying relationship. Reconnection has to be deliberate: small bids, turned toward, again and again, until warmth is safer than numbness.",
+        "example": "Partners who have stopped fighting often tell friends the marriage is fine, while sleeping back to back for years. Johnson's clinics treat that polite distance as the emergency, and rebuild contact with tiny rituals, a six second kiss goodbye, before touching any big issue.",
+        "action": "Add one deliberate reconnection ritual today: a real goodbye in the morning and a real hello in the evening, phones down, ten seconds each."
+      },
+      {
+        "title": "Raw Spots Run the Show",
+        "chapter": "Forgiving Injuries",
+        "summary": "Everyone carries raw spots, tender places wired by old hurts: an abandonment, a criticism that landed too deep, a parent who was never there. A partner's small slight touches the spot and the reaction looks wildly out of proportion. It is not. It is an old alarm in a new room. Naming your raw spots to each other turns explosions into information: that touched the place where I fear I am not enough.",
+        "example": "A husband jokes about his wife's cooking in front of friends and she goes silent for two days. Her spot is a childhood at a table where she was mocked. Once he knows the map, the joke stops, and her silence gets a translation he can finally hear.",
+        "action": "Tell your partner one raw spot and where it came from. Ask for theirs. No fixing, just mapping."
+      },
+      {
+        "title": "Attachment Injuries Need Repair, Not Time",
+        "chapter": "Forgiving Injuries",
+        "summary": "Some moments wound the bond itself: a betrayal, an absence at a birth or a deathbed, a need met with contempt. Time does not heal these, because every similar moment reopens them. Repair needs a specific conversation: the hurt partner expresses the pain without attack, the other hears it without defending, takes responsibility for the impact, and asks what is needed now. Done honestly once, it can restore trust faster than years of being generally nice.",
+        "example": "A wife cannot forget that her husband took a work call during her mother's funeral. In therapy he finally stops explaining the call and simply says: I left you alone in the worst hour of your life. The apology that lands is the one that names the abandonment, not the excuse.",
+        "action": "If there is an old moment your partner still raises, ask them to tell it once more, and only listen. End with: I hear what that cost you."
+      },
+      {
+        "title": "Hold Me Tight Conversations",
+        "chapter": "The Seven Conversations",
+        "summary": "The middle conversations move from recognising the cycle to building new ones: reaching for what you need, and responding with softness instead of armour. Vulnerability offered and met is the mechanism of bonding. Each successful reach rewires the relationship's expectation: I can be open here and not be punished. Johnson calls the result Hold Me Tight, a conversation where fear is spoken plainly and answered with presence.",
+        "example": "Instead of slamming a door, a husband learns to say: when you travel for work I get scared you prefer that life. The first time he says it, his wife moves toward him instead of bracing. That single exchange becomes the template the couple reuses for years.",
+        "action": "Practise one soft reach this week: replace a criticism with the need underneath it, said in one plain sentence."
+      },
+      {
+        "title": "Sex Is a Bonding Language",
+        "chapter": "Bonding and Sex",
+        "summary": "Johnson treats sexual problems as bonding problems first. When partners feel emotionally unsafe, desire shuts down or turns into performance and pressure. When the bond is secure, sex becomes play, comfort and reunion. The order matters: fix the emotional connection and the physical one usually follows, because bodies relax around people they trust. Couples who chase technique while the bond is broken are decorating a house with no foundation.",
+        "example": "A couple with a dead bedroom spends months on date nights that change nothing. When therapy instead rebuilds their daily emotional contact, the desire returns on its own, because the bedroom was never the broken room. The kitchen table was.",
+        "action": "For two weeks, separate affection from sex completely: touch, hold and kiss with no agenda, and watch what safety does to desire."
+      },
+      {
+        "title": "Keeping Love Alive Is Maintenance",
+        "chapter": "Keeping Your Love Alive",
+        "summary": "Secure couples are not couples who found the perfect person. They are couples who keep answering A.R.E. across decades: staying reachable in small moments, repairing quickly, and treating the bond as something tended like a garden. Johnson's last word is hopeful and practical: love is a continual process of losing and finding each other again, and the finding is a skill anyone can learn.",
+        "example": "Partners married forty years in Johnson's research describe the same habits as new lovers: they turn toward each other's small bids, a comment, a sigh, a joke at the window, instead of turning away. Long love turns out to be long attention.",
+        "action": "Schedule a weekly twenty minute check-in: what felt close this week, what felt far, one thing to try next week."
+      }
+    ],
+    "actionPlan": [
+      "Name the A.R.E. question in your next fight before debating the topic.",
+      "Draw your pursue-withdraw cycle together and post it visibly.",
+      "Add a daily ten second goodbye and hello ritual.",
+      "Tell each other one raw spot each, with its origin story.",
+      "Hold one repair conversation about an old injury, listening only.",
+      "Practise one soft reach a week: the need, not the complaint.",
+      "Run a weekly twenty minute closeness check-in for a month."
+    ],
+    "caveat": "A summary cannot do therapy. If there is violence, coercion or untreated addiction in the relationship, work with a professional first; these conversations assume basic safety.",
+    "graveLink": "ashley-madison-hack",
+    "cover": "assets/covers/hold-me-tight.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "mating-in-captivity",
+    "title": "Mating in Captivity",
+    "author": "Esther Perel",
+    "year": 2006,
+    "category": "Love & Relationships",
+    "readTime": "9 min",
+    "tagline": "Unlocking erotic intelligence in long-term love.",
+    "oneLiner": "Love seeks closeness. Desire needs distance. The art of a long relationship is holding both at once.",
+    "bigIdea": "Esther Perel argues that the things that make love safe, familiarity, security, predictability, are the very things that smother desire. Eroticism lives in mystery, separateness and play. Couples do not need more intimacy to revive desire; they need to rebuild otherness, to see the partner again as someone they do not fully own or know, and to let a little space back into the togetherness.",
+    "quotes": [
+      "Desire is not a problem to be solved. It is a paradox to be managed.",
+      "Eroticism requires separateness. Fire needs air.",
+      "When intimacy collapses into fusion, there is nothing left to desire."
+    ],
+    "lessons": [
+      {
+        "title": "Love and Desire Speak Different Languages",
+        "chapter": "From Adventure to Captivity",
+        "summary": "Love wants to minimise distance: know everything, share everything, become one. Desire wants the opposite: it is hungry for the unknown, the unattainable, the person across a room who is not quite yours. Perel's central paradox is that a couple must house both drives without letting either win outright. Too much safety and the erotic dies of comfort; too much distance and the bond starves.",
+        "example": "Perel describes couples who share passwords, bathrooms and every thought, then wonder where the spark went. The spark went where mystery went. Partners who keep one room, hobby or friendship that is theirs alone often report desire returning without any other change.",
+        "action": "Restore one pocket of separateness this week: a solo pursuit your partner does not join, and one of yours. Notice what looking at them from a small distance does."
+      },
+      {
+        "title": "Eroticism Is Not the Same as Sex",
+        "chapter": "The Pitfalls of Modern Intimacy",
+        "summary": "Perel separates the erotic, an aliveness, curiosity and play that may or may not end in sex, from the mechanical act. Couples who chase frequency while the erotic is dead feel lonelier than before. The erotic is cultivated by attention: seeing your partner freshly, flirting, dressing with intention, letting anticipation build. It is a quality of energy, and it can be practised like one.",
+        "example": "One of Perel's couples revived their erotic life not in bed but across a dinner table, by banning logistics talk and asking questions they had never asked in fifteen years. The unfamiliar conversation did what new lingerie never had.",
+        "action": "Institute one no-logistics date: no kids, money or schedules. Only curiosity questions, the kind you asked in the first month."
+      },
+      {
+        "title": "Desire Is Not Politically Correct",
+        "chapter": "Desire and the Shadow Side",
+        "summary": "Fantasies often involve power, surrender, transgression and the forbidden, and Perel insists this is normal, not a symptom. Couples get stuck when they demand that desire be egalitarian, tender and approved at all times. The erotic imagination is wilder than the relationship contract, and making room to speak about it, without shame and without obligation to act, often releases pressure that silence turns into distance.",
+        "example": "A wife ashamed of fantasies involving a stranger finally tells her husband, expecting disgust. Instead the honesty itself becomes erotic: he is seeing a side of her that fifteen years of marriage had kept hidden. The revelation matters more than the content.",
+        "action": "Have one honest conversation about what desire actually looks like for each of you, with a rule: listening only, no verdicts for 24 hours."
+      },
+      {
+        "title": "Parenthood Changes the Erotic Weather",
+        "chapter": "Parenthood and Desire",
+        "summary": "Children reorganise a couple's bodies, time and identities. The erotic couple becomes a parenting corporation, and desire is deprioritised until it atrophies. Perel's counsel is not to wait for the children to grow but to protect the couple as a separate entity with its own time, door and rituals. Children benefit from parents who are lovers, not just co-managers; the erotic is part of what they are modelling.",
+        "example": "Perel tells parents to notice the language shift: they stop calling each other by name and become Mama and Papa full time. Reclaiming names, adult time after bedtime, and a lock on the door are small restorations of the couple inside the family.",
+        "action": "Protect one weekly slot that belongs to the couple alone, and defend it like a work meeting. Names, not roles, during that time."
+      },
+      {
+        "title": "Monogamy Is a Conversation, Not a Default",
+        "chapter": "The Shadow of the Third",
+        "summary": "Every couple draws a boundary around the relationship, but most never discuss where it is. Perel asks partners to make the invisible contract explicit: what counts as betrayal, what is permitted, what needs disclosure. The conversation itself builds intimacy, because it forces honesty about temptation, which exists in every long bond. Couples who can talk about the third, the imagined or real other, are less likely to be ambushed by it.",
+        "example": "Partners often discover mid-crisis that they had different definitions: one counted emotional intimacy with a colleague as nothing, the other as the deepest betrayal. Perel's point is that the crisis began years earlier, at the conversation never had.",
+        "action": "Hold the boundary conversation calmly, before any crisis: what does faithfulness mean to each of us, exactly?"
+      },
+      {
+        "title": "The Erotic Is a Bridge You Cross, Not a Room You Own",
+        "chapter": "Eroticism and Separateness",
+        "summary": "Perel argues desire happens across a gap: you cannot desire what you already fully possess. Couples who merge every account, hobby and friendship remove the gap and then blame each other for the flatness. The bridge is rebuilt by cultivating a self the partner does not manage: work they do not see, friendships, ambitions, even thoughts kept private. Privacy here is not secrecy; it is the soil of otherness.",
+        "example": "A husband takes up photography and does not show his wife the pictures for weeks. When he finally does, she sees him, briefly, as the interesting stranger others see. Perel calls that jolt the erotic returning through a crack in familiarity.",
+        "action": "Keep one small thing yours this month: a project, a class, a walk. Share it when it has grown teeth, not while it is a seed."
+      },
+      {
+        "title": "Routine Is the Price of Safety, Not Its Substitute",
+        "chapter": "The Pitfalls of Modern Intimacy",
+        "summary": "Couples defend routine as maturity: the spark was for kids, real love is bills paid on time. Perel asks why aliveness got defined as immature. Security built only from predictability becomes a well-run institution with two lonely residents. The antidote is not chaos but deliberate novelty inside safety: new places, new roles, seeing each other competent in unfamiliar settings, which is how you met in the first place.",
+        "example": "Partners who only ever see each other tired, at home, in old clothes, forget the versions strangers admire. Perel sends couples to watch each other in their element, at work, performing, leading, where competence reads as attractive again.",
+        "action": "See your partner in their element this month: watch them work, play, teach. Then tell them what you saw."
+      },
+      {
+        "title": "Desire Needs a Witness Who Is Not a Manager",
+        "chapter": "Putting the X Back in Sex",
+        "summary": "Many couples become each other's managers: reminders, corrections, logistics by text. The erotic cannot survive being supervised. Perel suggests couples notice the roles they rehearse all day, parent and child, boss and staff, and deliberately step out of them: flirtation is role-play in the oldest sense, two adults agreeing to meet as lovers rather than administrators of a shared life.",
+        "example": "A wife realises every message she sends her husband is a task. She starts sending one message a day that manages nothing: a memory, a tease, a photograph. The channel changes temperature because the role changed.",
+        "action": "Send one message today that manages nothing. Then one tomorrow. Let the channel remember what it is for."
+      }
+    ],
+    "actionPlan": [
+      "Keep one solo pursuit each and let the distance breathe.",
+      "Hold one no-logistics date a month; curiosity questions only.",
+      "Speak one honest truth about desire, verdicts banned for a day.",
+      "Protect a weekly couple slot if you have children; use names, not roles.",
+      "Write down your shared boundary together: what faithfulness means here.",
+      "Flirt once a day in a way that has nothing to do with bedtime.",
+      "Re-read your partner: ask one question this week you have never asked."
+    ],
+    "caveat": "Perel writes about desire with unusual honesty, including affairs. The point is understanding, not permission: what a couple does with the honesty is theirs to decide together.",
+    "graveLink": "hike-messenger",
+    "cover": "assets/covers/mating-in-captivity.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "art-of-loving",
+    "title": "The Art of Loving",
+    "author": "Erich Fromm",
+    "year": 1956,
+    "category": "Love & Relationships",
+    "readTime": "8 min",
+    "tagline": "Love is not a feeling you fall into. It is an art you practise.",
+    "oneLiner": "Most people think the problem is finding the right person to love. Fromm says the problem is learning how to love at all.",
+    "bigIdea": "writing in 1956, Erich Fromm argued that love is treated like a market transaction, two people trading qualities, when it is actually a capacity that must be developed like music or carpentry. Mature love has four elements: care, responsibility, respect and knowledge. It preserves the integrity of both people instead of dissolving them into each other, and it begins with giving rather than receiving.",
+    "quotes": [
+      "Love is an activity, not a passive affect.",
+      "Immature love says: I love you because I need you. Mature love says: I need you because I love you.",
+      "To love somebody is not just a strong feeling. It is a decision, it is a judgment, it is a promise."
+    ],
+    "lessons": [
+      {
+        "title": "Love Is an Art, Not Luck",
+        "chapter": "Is Love an Art?",
+        "summary": "Fromm opens by rejecting the three popular errors: that love is about being loved rather than loving, that it depends on finding the right object, and that the thrill of falling is the same as the state of being in love. If love is an art, it needs what every art needs: knowledge of the theory and long, disciplined practice. Nobody would accept luck as a strategy for surgery; Fromm asks why we accept it for the most important relationship of a life.",
+        "example": "A person who has been through five relationships, each ending in the same place, usually blames the five partners. Fromm would point at the one constant. Learning to love means studying your own patterns the way a musician studies scales, without self-pity and without shortcuts.",
+        "action": "Write down the pattern of your last two relationships in three honest lines: what you did, what you chose, what repeated. That is your practice sheet."
+      },
+      {
+        "title": "Care, Responsibility, Respect, Knowledge",
+        "chapter": "The Theory of Love",
+        "summary": "Fromm's four elements dismantle sentimentality. Care is active concern for the other's growth. Responsibility is responding to their real needs, not your idea of them. Respect is seeing the person as they are and wanting them to unfold in their own way, not yours. Knowledge is knowing them deeply, beyond projection. Remove any one and love deforms: care without respect becomes control, respect without care becomes distance.",
+        "example": "A parent who sacrifices everything for a child but cannot let the child choose a different life has care without respect. Fromm would call that domination wearing love's clothes. The test of each element is whether the other person becomes more themselves, or more yours.",
+        "action": "Score your closest relationship on the four elements, one to five each. Pick the lowest and do one concrete act for it this week."
+      },
+      {
+        "title": "Giving Is Not Losing",
+        "chapter": "The Theory of Love",
+        "summary": "In a market culture, giving means being poorer. Fromm argues the opposite for love: the person who gives vitality, attention, understanding and time discovers they are richer, because giving activates their own aliveness. The miserly character experiences every gift as theft; the loving character experiences it as potency. This is why some wealthy people feel poor in love and some poor people rich: the economy is different.",
+        "example": "Fromm describes the teacher who feels most alive while teaching, the parent most themselves while nurturing. Their giving is not depletion, it is expression. Contrast the partner who tracks every favour in a ledger: the ledger itself is the poverty.",
+        "action": "Give one thing today that costs attention rather than money: full listening for ten minutes, without advice, without your phone."
+      },
+      {
+        "title": "Self-Love Is Not Selfishness",
+        "chapter": "Love and Its Disintegration",
+        "summary": "Fromm makes a distinction that still startles: the selfish person does not love themselves too much but too little, and grabs at others to fill the gap. Genuine self-love, an affirmation of your own life and growth, is the root of loving anyone else. The person who cannot care for their own unfolding will eventually resent caring for yours. Loving your neighbour and loving yourself are the same skill aimed in two directions.",
+        "example": "The martyr who does everything for a partner and keeps a silent account of resentment is Fromm's case study. Their self-sacrifice looks like love and acts like a debt instrument. The partner can feel the invoice coming, and both end up poorer.",
+        "action": "Do one thing this week purely for your own growth, openly, without apology, and notice whether it makes you more generous or less."
+      },
+      {
+        "title": "Love in a Market Society",
+        "chapter": "Love and Its Disintegration in Contemporary Western Society",
+        "summary": "Fromm saw dating as packaging: people advertise qualities, trade up, and call the transaction chemistry. The result is alienation, two people performing desirability while feeling unknown. His antidote is not nostalgia but discipline: concentration, patience and supreme concern, the same virtues behind any mastery. To love, a person must learn to be alone without anxiety, to listen, and to be present, skills a distracted economy actively unteaches.",
+        "example": "Two people at dinner, both half on their phones, each monitoring how they appear, is Fromm's modern tableau. Neither is known by the end of the evening, and both call the problem a lack of chemistry. The chemistry was never given the conditions to exist.",
+        "action": "Practise Fromm's basics for a week: ten minutes of sitting alone daily without input, and one conversation a day with full, unbroken attention."
+      },
+      {
+        "title": "Motherly and Fatherly Love Are Two Schools",
+        "chapter": "The Theory of Love",
+        "summary": "Fromm distinguishes two early curricula. Motherly love, at its best, is unconditional: you are loved for existing. Fatherly love, at its best, is earned and guiding: you are loved as you grow into strength. The mature person internalises both, becoming their own mother and father, able to give unconditional warmth and principled direction to themselves and others. Many adults are still waiting for one of the two from a partner.",
+        "example": "A man who demands constant reassurance is asking a wife to be the unconditional mother; a woman who polices her husband's every choice is acting the severe father. Fromm's map lets couples see the request underneath the behaviour and answer as adults instead.",
+        "action": "Ask which of the two loves you still hunger for. Practise giving that one to yourself this week, concretely."
+      },
+      {
+        "title": "Love of Strangers Is the Test of the Skill",
+        "chapter": "The Objects of Love",
+        "summary": "Fromm ranks loves: brotherly love for all people is the foundation, mature erotic love its most intense form, and self-love its root. A person who loves only their partner, possessively, while treating the world with contempt has not learned love but a private exception to selfishness. The capacity is one muscle: it either generalises or it was never really love, only preference with intensity.",
+        "example": "The tender husband who is cruel to waiters fails Fromm's audit. His wife's comfort rests on being the exception, and exceptions get revoked. Watching how a partner treats the powerless is the oldest compatibility test there is.",
+        "action": "Watch how you treat three strangers this week: server, driver, junior colleague. That is your love capacity at room temperature."
+      },
+      {
+        "title": "Concentration, Patience, and Supreme Concern",
+        "chapter": "The Practice of Love",
+        "summary": "Fromm's practice chapter reads like a manual for any art: to love you must learn concentration, being fully in the moment with a person; patience, the discipline of not forcing outcomes; and supreme concern, making love the priority against a culture of distraction. He adds self-discipline, sensitivity to one's own narcissism, and the courage to overcome it. None of this is romantic, which is his point: mastery never is, from the inside.",
+        "example": "A cellist does not wait to feel like practising. Fromm notes we accept this for music and call it oppression in love, then wonder why love stays amateur. The couples who last treat kindness as scales: daily, unglamorous, compounding.",
+        "action": "Practise concentration for one week: no phone in the first hour together each evening. Notice what rushes in to fill the space."
+      }
+    ],
+    "actionPlan": [
+      "Write your relationship pattern in three honest lines.",
+      "Score care, responsibility, respect and knowledge; act on the lowest.",
+      "Give attention daily: ten minutes of full listening.",
+      "Do one openly self-growing thing a week without apology.",
+      "Practise ten minutes of undistracted solitude a day.",
+      "In dating or marriage, ask: am I trading packages or knowing a person?",
+      "Choose one loving act and repeat it until it becomes character."
+    ],
+    "caveat": "Fromm writes as a philosopher of his era; some social examples date the book. The framework, love as a practised capacity, is the part that has outlived its decade.",
+    "graveLink": "aereo-ruling",
+    "cover": "assets/covers/art-of-loving.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "how-to-not-die-alone",
+    "title": "How to Not Die Alone",
+    "author": "Logan Ury",
+    "year": 2021,
+    "category": "Love & Relationships",
+    "readTime": "9 min",
+    "tagline": "The surprising science of modern dating, from a Google behavioural scientist.",
+    "oneLiner": "You are not bad at dating. You have unexamined habits, a misleading checklist, and a decision style working against you.",
+    "bigIdea": "Logan Ury, who led Google's behavioural science team, applies decision research to dating. daters fall into three types, Romantics, Maximizers and Hesitators, each with a predictable failure mode. The fix is not more options or better photos. It is knowing your pattern, dating deliberately against it, and judging partners on the qualities that actually predict happiness: how they are in conflict, in kindness, in growth, not how they interview.",
+    "quotes": [
+      "Great relationships are not found. They are made.",
+      "Date for the life you want, not the resume you admire.",
+      "The spark is not a screening tool. It is weather, not climate."
+    ],
+    "lessons": [
+      {
+        "title": "Know Your dating Blind Spot",
+        "chapter": "Your dating Tendencies",
+        "summary": "Ury's three tendencies sabotage silently. The Romantic waits for a soulmate and rejects good people for lacking destiny. The Maximizer researches endlessly, treating partners like products to optimise and never feeling certain. The Hesitator waits to be ready, perfect, thinner, richer, someday. Each tendency feels like standards or caution from the inside. From the outside it is a machine for staying single, or for choosing the same wrong person repeatedly.",
+        "example": "A Maximizer in the book keeps spreadsheets of dates and still cannot commit, because one more profile might be better. A Hesitator spends three years improving herself for a dating life she never starts. Naming the pattern is usually the moment it loses power.",
+        "action": "Identify your tendency honestly. Write the sentence it whispers to you, and the counter-sentence you will practise instead."
+      },
+      {
+        "title": "Make a Breakup List, Not a Wish List",
+        "chapter": "Dating Deliberately",
+        "summary": "Most people list what they want: tall, funny, successful. Ury flips it: list the dealbreakers and the pattern of your past relationships, because you do not need help finding what attracts you; you need protection from what harms you. The breakup list names the qualities that made past relationships fail, controlling, avoidant, cruel in conflict, and becomes the filter that attraction cannot talk you out of.",
+        "example": "A client kept choosing exciting, unreliable men and blaming bad luck. Her breakup list, drawn from three post-mortems, had one repeated word: unavailable. With the list on paper, the next exciting unavailable man was recognisable in two dates instead of two years.",
+        "action": "Write your breakup list: the three qualities that ended or poisoned past relationships. Screen for their absence, not for butterflies."
+      },
+      {
+        "title": "Judge the Second Date, Not the Spark",
+        "chapter": "Dating Deliberately",
+        "summary": "First dates measure performance under nerves, not partnership potential. Ury argues the spark is a terrible predictor: it correlates with charisma and familiarity of pattern, often the wrong pattern. Slow-burn qualities, kindness, consistency, emotional steadiness, need a second look to become visible. Her rule: if a first date was pleasant but not electric, go on one more. Chemistry can be built; character is harder to retrofit.",
+        "example": "Research couples who reported love at first sight and couples who grew into love show similar long-term happiness. Ury's daters who adopted the second-date rule repeatedly report that the person they almost dismissed became the one. The spark lied in both directions.",
+        "action": "For the next month, give every decent first date a second one. Judge warmth and curiosity, not fireworks."
+      },
+      {
+        "title": "The Post-Date Eight",
+        "chapter": "Dating on Purpose",
+        "summary": "After each date, Ury prescribes eight questions: what side of me did they bring out, how did I feel, was there curiosity, laughter, did I feel heard? The questions retrain attention away from did they like me and was the venue nice toward the data that matters: who am I around this person, and is this how I want to feel in a life? Feelings about yourself on the date predict more than judgements about them.",
+        "example": "A dater realised through the eight questions that with one man she became witty and relaxed, and with the more impressive one she became anxious and performative. The spreadsheet in her head had it backwards; her own state was the signal.",
+        "action": "After your next date or outing with your partner, answer the Post-Date Eight in writing before telling anyone how it went."
+      },
+      {
+        "title": "Decide, Then Make It Great",
+        "chapter": "Committing",
+        "summary": "Ury imports a decision rule from successful long-term couples: they stopped maximising. At some point the search ends, not because the partner is provably optimal, but because commitment itself creates much of the goodness people credit to selection. The relationship you build beats the relationship you keep shopping for. Her closing challenge is to treat the decision to commit as the moment the real work, and the real rewards, begin.",
+        "example": "Couples in long, satisfied marriages rarely describe choosing from abundance. They describe choosing, and then decades of small investments compounding. The Maximizer's fear, that commitment closes the door on better, has the accounting backwards: commitment is what opens the better.",
+        "action": "If you are dating someone good and hesitating, set a decision date. Gather real data until then, then decide once, fully."
+      },
+      {
+        "title": "Stop Looking for a Spark, Start Interviewing for Kindness",
+        "chapter": "Dating Deliberately",
+        "summary": "Ury distinguishes qualities that impress on dates, wit, beauty, status, from qualities that sustain decades: emotional stability, kindness, loyalty, and a growth mindset. The second list is boring at a cocktail party and priceless at 3 a.m. with a sick child. Daters systematically overweight the first list because it is visible early. Her fix is a values list written in calm, consulted in excitement.",
+        "example": "One dater's list said adventurous and ambitious; her happiest friends' partners were, on paper, unremarkable, and in practice, steady and kind. She rewrote her filters around how a man handled a delayed flight and a rude waiter, and her dating life changed within a month.",
+        "action": "Write two lists: what impresses you, and what sustains people. Screen with the second for ninety days."
+      },
+      {
+        "title": "Logistics Will Happily Eat Your Love Life",
+        "chapter": "The Logistics of Love",
+        "summary": "Ury treats dating as a behaviour-design problem: intentions fail against friction. Apps reward endless browsing, calendars leave no slots, and ambiguity about who plans what kills momentum. Her remedies are structural: schedule dating like a commitment, decide defaults in advance (who suggests, when you follow up), and create deadlines for decisions. Romance does not die from systems; it dies from their absence.",
+        "example": "A Hesitator kept meaning to date. Ury's intervention was embarrassingly practical: two calendar slots a week, a standing rule to reply within a day, and a friend who asked every Sunday. The market did not change; the logistics did.",
+        "action": "Put dating in the calendar this week: two slots, one follow-up rule, one friend who will ask."
+      },
+      {
+        "title": "Ambiguity Is a Decision You Are Already Making",
+        "chapter": "Committing",
+        "summary": "The situationship, months of undefined togetherness, feels like keeping options open and functions as choosing the option of drift. Ury asks daters to notice that not deciding is deciding, usually in favour of the person who wants less. Defining the relationship is framed not as pressure but as information: two adults stating what this is, so both can invest or leave with dignity.",
+        "example": "A couple in month eight of we are just seeing where it goes discovers, when finally asked, that one is seeing a future and the other is seeing convenience. The conversation hurts for a week. The drift would have hurt for a year.",
+        "action": "If you are in an undefined situation past three months, ask the question this week, kindly and directly. Accept the answer as data."
+      }
+    ],
+    "actionPlan": [
+      "Name your dating tendency and its whisper; write the counter-sentence.",
+      "Make a breakup list from your past relationships; screen with it.",
+      "Give every decent first date a second date for one month.",
+      "Answer the Post-Date Eight after each date, in writing.",
+      "Date with a decision date, not an endless evaluation.",
+      "Judge conflict style and kindness before charm and credentials.",
+      "If partnered, apply the same: build the relationship you keep shopping for."
+    ],
+    "caveat": "The book speaks mostly to people dating in app-driven cities. Its decision tools translate well to other contexts, but the examples assume freedom to choose partners that not every reader has.",
+    "graveLink": "borders-amazon",
+    "cover": "assets/covers/how-to-not-die-alone.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "all-about-love",
+    "title": "All About Love: New Visions",
+    "author": "bell hooks",
+    "year": 2000,
+    "category": "Love & Relationships",
+    "readTime": "8 min",
+    "tagline": "America is hungry for love and confused about what it is. bell hooks offers a definition with teeth.",
+    "oneLiner": "Love is not a feeling that happens to you. It is the will to nurture your own and another person's growth, and it cannot coexist with abuse.",
+    "bigIdea": "bell hooks argues that a culture obsessed with love has no shared definition of it, so people call attachment, possession and even harm by love's name. Borrowing M. Scott Peck definition, she calls love the will to extend yourself for another's spiritual growth, built from care, honesty, responsibility and respect. Where there is lying, domination or abuse, there is no love, whatever the feelings involved. That single standard rearranges everything.",
+    "quotes": [
+      "Love is an action, never simply a feeling.",
+      "There can be no love without justice.",
+      "To love well is the most difficult and important work there is."
+    ],
+    "lessons": [
+      {
+        "title": "Define Love or Be Defined by Confusion",
+        "chapter": "Clarity: Give Love Words",
+        "summary": "bell hooks begins with the dictionary problem: everyone uses the word love to mean different things, often mere fondness or desire, then wonders why love hurts. Her definition is deliberately demanding: love is the will to nurture growth, your own and another's. Anything that diminishes a person, however intense the feeling, fails the definition. Clarity is protection: a shared, strict meaning makes it possible to say this is not love and leave.",
+        "example": "A partner who monitors your phone, isolates you from friends and calls it love because he feels so much is, by this definition, describing the opposite of love. The feeling is real. The love is not. bell hooks gives readers the vocabulary to separate the two before the confusion costs years.",
+        "action": "Write your definition of love in one sentence using verbs, not feelings. Test your closest relationship against it this week."
+      },
+      {
+        "title": "Honesty Is the Foundation, Not a Feature",
+        "chapter": "Justice: Childhood Love Lessons",
+        "summary": "Lying, even kind lying, corrodes the trust love stands on. bell hooks insists that truth-telling is not one virtue among many but the ground of intimacy: to know someone, they must risk being known, and that requires a household, childhood or adult, where honesty is not punished. Many people learned early that lying keeps the peace. In adult love that lesson becomes the slow leak that empties everything.",
+        "example": "Families where children are punished for true answers raise adults who edit themselves in love. bell hooks describes learning as a girl that honesty brought pain, then spending adulthood unlearning it. The partner who flinches at your honesty may be fighting their upbringing, not you.",
+        "action": "Tell one small, kind truth this week that you would normally smooth over. Notice what it costs and what it builds."
+      },
+      {
+        "title": "Abuse and Love Cannot Share a House",
+        "chapter": "Greed: Simply Love",
+        "summary": "The book's most quoted line of argument: where there is abuse, neglect or coercion, love is absent, full stop. bell hooks rejects the cultural script that suffering proves devotion and that women especially should endure harm as love's price. Love and abuse are opposites, because love wills the other's growth and abuse wills control. Holding that line is what makes the rest of her tenderness credible rather than naive.",
+        "example": "The phrase if he did not love me he would not be so jealous is dissected as a cultural lie. Jealousy of that kind is about possession. bell hooks writes for the reader who has been told endurance is virtue: leaving harm is not failing at love; it is finally defining it.",
+        "action": "If any relationship of yours involves fear, name it plainly to one trusted person this week. Naming is the first act of the definition."
+      },
+      {
+        "title": "Self-Love Is Learned Against Resistance",
+        "chapter": "Values: Living by a Love Ethic",
+        "summary": "Many people were taught to give love away and feel shame receiving it, especially from themselves. bell hooks treats self-love as a practice with components: self-acceptance, self-esteem, self-assertion, not positive thinking. A person who cannot affirm their own worth will either demand constant proof from partners or accept treatment that confirms the wound. The love ethic she proposes applies at home, at work and in the street, not just in romance.",
+        "example": "She describes women who can nurture everyone in their lives except the woman in the mirror, then wonder why partners treat them as endlessly available. The supply runs out because it was never replenished at the source.",
+        "action": "Practise one act of self-regard daily for a week: rest without earning it, a boundary kept, a compliment accepted without deflection."
+      },
+      {
+        "title": "Love and Domination Cannot Coexist",
+        "chapter": "Greed: Simply Love",
+        "summary": "bell hooks extends the definition outward: a love ethic refuses domination in every form, of partners, children, workers, strangers. Households run on fear teach children that love and control are the same weather. Adults then reproduce the climate and call it personality. Her standard is bracing because it audits power, not feelings: whoever holds power in a relationship is responsible for refusing to use it as a weapon.",
+        "example": "The parent who says this hurts me more than you while punishing is teaching the fusion bell hooks warns about. Children raised in that weather often choose partners who reproduce it, because it feels like home. Seeing the pattern is how the climate changes.",
+        "action": "Audit one power you hold, over a partner, child or junior, and refuse one use of it as leverage this week."
+      },
+      {
+        "title": "Greed Is the Enemy Dressed as Ambition",
+        "chapter": "Greed: Simply Love",
+        "summary": "A culture that trains people to want without limit, bell hooks argues, untrains them for love, which requires enoughness, attention and time. The greedy heart treats people as acquisitions and relationships as upgrades. Her counter-practice is simplicity: choosing depth over accumulation in things and in people, so that care has somewhere to land. Love, unlike greed, is satisfied by presence rather than novelty.",
+        "example": "The dater who keeps a roster, always upgrading, is greed's student; so is the spouse already shopping mentally for a better model. bell hooks calls both by the same name and prescribes the same medicine: commit attention to what is here.",
+        "action": "Practise enoughness for a week: no upgrading, of phone, purchase or person. Put the saved attention into one relationship."
+      },
+      {
+        "title": "Forgiveness Is Not Forgetting, It Is Refusing Revenge",
+        "chapter": "Healing: Love in Action",
+        "summary": "bell hooks treats forgiveness as a discipline of the injured: not excusing the act, not reconciling automatically, but releasing the wish to make the other suffer as payment. Without it, hurt people build identities around wounds and pass them on. With it, even relationships that must end can end without poison. Forgiveness, in her account, is something love does for the forgiver's freedom first.",
+        "example": "She writes of families where a betrayal is retold at every gathering for thirty years, interest collected on a debt nobody can repay. The story keeps the wound employed. Forgiveness retires it, not by declaring it small but by declaring it finished.",
+        "action": "Name one old injury you still collect interest on. Write what releasing the revenge, not the memory, would make possible."
+      },
+      {
+        "title": "Love Is a Practice for Communities, Not Just Couples",
+        "chapter": "Community: Loving Communion",
+        "summary": "The book closes by widening the lens: societies organised by a love ethic, honesty, care, no domination, would raise different children, run different workplaces and argue differently in public. bell hooks insists the personal work is not private self-improvement but the smallest unit of cultural change. Every household where love is defined and practised becomes evidence that another way of living together is possible.",
+        "example": "A neighbourhood where people know each other's names, where the elderly are checked on and children are safe with many adults, is her politics at street level. No legislation creates it; ten thousand small practices do.",
+        "action": "Do one act of neighbourly love this week that costs twenty minutes: a check-in, a shared meal, help unasked."
+      }
+    ],
+    "actionPlan": [
+      "Write your one-sentence definition of love, in verbs.",
+      "Tell one small kind truth you usually smooth over.",
+      "Audit one relationship for fear; name what you find to a trusted person.",
+      "Practise daily self-regard for a week: rest, a boundary, acceptance.",
+      "Refuse the script that suffering proves devotion, in yourself and others.",
+      "Bring one honest conversation to your partner about how you each learned love.",
+      "Judge love by growth: are we both becoming more ourselves?"
+    ],
+    "caveat": "bell hooks writes from an American, feminist and spiritual standpoint and addresses her culture directly. Readers elsewhere will translate some examples, but the definition travels intact.",
+    "graveLink": "playboy-decline",
+    "cover": "assets/covers/all-about-love.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "state-of-affairs",
+    "title": "The State of Affairs",
+    "author": "Esther Perel",
+    "year": 2017,
+    "category": "Love & Relationships",
+    "readTime": "9 min",
+    "tagline": "Rethinking infidelity without excusing it.",
+    "oneLiner": "An affair is not always a symptom of a broken marriage. Sometimes it is a protest against a life in which a person has gone missing from themselves.",
+    "bigIdea": "Esther Perel spent a decade listening to couples after affairs, betrayers and betrayed, and argues that our script, affair equals moral failure equals end, fails everyone. Affairs are expressions of longing: for aliveness, for a lost self, for forbidden freedom, sometimes against death itself. Understanding is not excusing. But couples who can ask what the affair was reaching for, and answer honestly, often build a more truthful marriage than the one before the crisis.",
+    "quotes": [
+      "Affairs are an act of betrayal, and also an expression of longing and loss.",
+      "The victim of the affair is not always the victim of the marriage.",
+      "Sometimes, when we seek the gaze of another, it is not our partner we are turning away from, but the person we have become."
+    ],
+    "lessons": [
+      {
+        "title": "Why Happy People Cheat",
+        "chapter": "A New Conversation About Marriage",
+        "summary": "The comfortable story says affairs happen because something was missing at home. Perel's consulting room kept producing counterexamples: loved partners, good marriages, and still an affair. The missing thing was often inside the straying partner: youth, freedom, intensity, a self abandoned to respectability and routine. An affair can be an attempt to feel alive, mounted by someone who never stopped loving their spouse. Both truths must be held at once.",
+        "example": "Perel tells of a devoted husband and father who described his affair as the one place he was not efficient, needed or good. He was not escaping his wife. He was escaping the man his life had made of him, and chose the most destructive door available.",
+        "action": "Whether single or partnered, ask: which parts of me have gone quiet in my current life, and what honest door could wake them?"
+      },
+      {
+        "title": "The Affair as a Form of Self-Discovery",
+        "chapter": "So Why Do We Cheat?",
+        "summary": "Perel's most uncomfortable finding: many affairs are less about the lover than about the self glimpsed with them, bolder, younger, freer, more alive. The straying partner is often homesick for a person they used to be or never became. This reframes prevention entirely. Marriages are not protected by surveillance but by aliveness: room inside the bond for growth, risk and becoming, so the missing self does not have to be smuggled in elsewhere.",
+        "example": "A woman who had been the good daughter, good wife, good mother described her affair as the first selfish act of her life. The tragedy, Perel notes, is that selfish aliveness had no legal address in her world, so it rented an illegal one.",
+        "action": "Ask your partner: who else are you, that our life has no room for? Ask yourself the same. Trade answers without flinching."
+      },
+      {
+        "title": "Secrets Are the Engine, Not the Sex",
+        "chapter": "The Affair's Fuel",
+        "summary": "What makes affairs electric, Perel argues, is often the secrecy itself: a hidden compartment of life, unwitnessed by the person who knows you completely. The erotic charge of the forbidden is ancient and has little to do with the third person's merits. Couples rebuilding after an affair must therefore create legitimate mystery and autonomy inside the marriage, or the charge will seek another illegal outlet.",
+        "example": "Straying partners frequently describe the affair partner as unremarkable and the affair as unforgettable. The difference was the secrecy, the one room of their life with no audience. Perel asks couples to build rooms with doors that close, inside the house, on purpose.",
+        "action": "Give each other one legitimate private domain, a friendship, project or pursuit, no reporting required. Watch trust do something counterintuitive."
+      },
+      {
+        "title": "After Disclosure: The Two Jobs",
+        "chapter": "After the Crisis",
+        "summary": "Perel separates the work after an affair into two jobs that must not be confused. The partner who strayed must become, for a season, the healer: transparent, patient with repeated questions, willing to witness pain without self-pity. The betrayed partner must become the investigator of meaning, eventually asking not only what did you do but what happened to us and to you. Couples fail when the jobs swap or stall.",
+        "example": "In her practice, the turning point is rarely the apology tour. It is the night the straying partner can hear the full inventory of pain without defending, and the betrayed partner can ask one question about longing instead of only about facts.",
+        "action": "If you are rebuilding, assign the jobs explicitly for ninety days: one heals with transparency, one investigates with support nearby."
+      },
+      {
+        "title": "Should You Tell? The Honesty Dilemma",
+        "chapter": "To Tell or Not",
+        "summary": "Perel refuses a universal rule and instead maps the terrain: cultures differ, motives differ, and confession can be cruelty dressed as virtue when its real function is to offload guilt. Her questions are diagnostic: whom does this disclosure serve, what will it build, can the truth be carried constructively? Whatever is chosen, she insists the deeper honesty, about the state of the marriage and the self, is owed in full.",
+        "example": "One husband confessed an affair from twenty years prior on his therapist's couch's advice, and described relief; his wife described a detonation in a happy present. Perel uses the asymmetry to show why honesty needs an ethic, not just a reflex.",
+        "action": "Before any hard disclosure, write whom it serves and what it builds. If the honest answer is only my relief, pause."
+      },
+      {
+        "title": "A New Marriage With the Same Person",
+        "chapter": "Can We Start Over?",
+        "summary": "Perel's hopeful close: some couples, having done the two jobs, report that the affair ended a marriage that needed ending, and a second, more honest one began with the same person. The new marriage has different terms: acknowledged vulnerability, spoken desire, boundaries discussed rather than assumed. Not every couple should stay. But those who do are not returning to the old house; they are building on its cleared ground.",
+        "example": "A couple in the book renews vows with new words, naming what died and what they are choosing. Perel calls it the second marriage. Its honesty is only possible because the first one's illusions did not survive.",
+        "action": "Whether or not crisis brought you here, write the terms of your next marriage, the same person, a new contract, and compare notes."
+      },
+      {
+        "title": "Monogamy's Renegotiation Is a Conversation, Not a Contract",
+        "chapter": "New Rules",
+        "summary": "Perel's closing argument relocates the affair debate entirely: the question worth asking a partner is not the suspicious audit but the curious one, what does our arrangement protect, and what does it cost, and does that trade still serve the people we have become? Couples sign their erotic contracts once, unknowingly, often inherited whole from their parents' fears, and then enforce them for decades across several different marriages disguised as one. Deepening means scheduling the renegotiation deliberately, in health, before crisis holds the pen.",
+        "example": "Her practice collects the moment partners discover they never actually agreed, only assumed in matching accents: one married security, the other adventure, and both signatures are genuine. The Perel session that simply reads the two contracts aloud has ended affairs more effectively than surveillance ever managed in her case files.",
+        "action": "Write the contract you actually signed, the unspoken clauses, and read it beside your partner's version this month. Renegotiate one clause in the open, together."
+      },
+      {
+        "title": "Desire Needs Distance; Love Needs Closeness; Schedule Both",
+        "chapter": "New Rules",
+        "summary": "The book's physics deserves its engineering form: intimacy closes distance while desire requires it, so a couple must deliberately manufacture separateness, friendships, work, mystery, absence, inside total commitment, which feels paradoxical only until you try scheduling it. Fire needs air is the metaphor therapists steal most; the practical translation is protecting each partner's otherness from the merger. Deepening means treating autonomy not as the opposite of the bond but as its oxygen supply, budgeted like money and defended like sleep.",
+        "example": "Her famous cases show desire reviving not after date nights but after one partner rebuilt a life with rooms the other could not enter: a studio, a study, a sport at dawn. The erotic returned when there was again a stranger to come home to, wearing the most familiar face in the house.",
+        "action": "Protect one room of your life, a practice, place or friendship, as yours alone this season, and grant your partner theirs. Notice what returns across the distance."
+      }
+    ],
+    "actionPlan": [
+      "Ask which parts of yourself have gone quiet, and name an honest door for them.",
+      "If partnered, hold the boundary conversation before any crisis.",
+      "If betrayed, separate the questions: why the lie, and what was longed for.",
+      "If you strayed, answer both honestly; understanding precedes repair.",
+      "Rebuild with new terms: transparency for a season, curiosity after.",
+      "Put aliveness inside the marriage deliberately: novelty, risk, play.",
+      "Decide consciously whether to end a chapter or write a new marriage."
+    ],
+    "caveat": "This book explores the meaning of affairs; it does not minimise the devastation of betrayal, and Perel is explicit that exploration is not absolution. Couples in acute crisis should read it with support, not alone at 2 a.m.",
+    "graveLink": "ashley-madison-hack",
+    "cover": "assets/covers/state-of-affairs.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "course-of-love",
+    "title": "The Course of Love",
+    "author": "Alain de Botton",
+    "year": 2016,
+    "category": "Love & Relationships",
+    "readTime": "8 min",
+    "tagline": "A novel about what happens after the wedding, which is where love actually begins.",
+    "oneLiner": "Romanticism promised that the right person makes love effortless. Reality: love is a skill of interpreting each other's madness with generosity.",
+    "bigIdea": "Alain de Botton follows Rabih and Kirsten from courtship through decades of marriage, pausing the novel to comment like a kind therapist. His target is the Romantic script: find the one, feel understood without speaking, and live exempt from loneliness and conflict. Against it he proposes a classical view: partners are inevitably difficult, love is the patient work of educating each other, and sulking, blame and coldness are failed attempts to teach what we cannot yet say.",
+    "quotes": [
+      "Love is a skill, not just an enthusiasm.",
+      "We are all, in private, idiots. Marriage is a hopeful, generous, infinitely kind drama of gradual self-improvement.",
+      "The person who is truly best suited to us is not the person who shares our tastes, but the person who can negotiate differences with intelligence and grace."
+    ],
+    "lessons": [
+      {
+        "title": "The Romantic Script Sets You Up to Fail",
+        "chapter": "Ready for Love",
+        "summary": "Romanticism taught us that the right partner understands us instinctively, that conflict signals the wrong match, and that sex and love stay fused forever. Alain de Botton argues these beliefs make ordinary marriage feel like failure. The classical alternative expects imperfection: two flawed people, each carrying childhood wiring, learning to translate. Disillusionment is then not the end of love but its beginning, the point where the real person replaces the projection.",
+        "example": "Rabih expects Kirsten to sense his moods; Kirsten expects Rabih to share her standards of order. Each reads disappointment as evidence. The narrator's commentary reframes both: these are two curricula colliding, and the marriage is the school neither enrolled in consciously.",
+        "action": "List three Romantic expectations you carry, such as my partner should just know. Write the classical replacement for each."
+      },
+      {
+        "title": "Sulking Is a Lesson That Cannot Get Said",
+        "chapter": "Sulking and Teaching",
+        "summary": "The novel's most famous idea: a sulk is a failed lesson, frustration that cannot yet be spoken, punished by silence in the hope the other will guess. The generous response is to treat the sulking partner not as manipulative but as a teacher whose classroom skills are poor. Couples improve when they graduate from sulking and expecting mind-reading to the vulnerability of plain instruction: here is what I need, and why it matters.",
+        "example": "Rabih comes home wounded by a small slight and goes cold, wanting Kirsten to notice, ask, repair. She experiences only rejection. The commentary notes that in a good marriage, both learn to say I am hurt, clumsily and early, before the cold sets in.",
+        "action": "Ban one sulk this week by converting it: within an hour, say the sentence the sulk was protecting, however imperfectly."
+      },
+      {
+        "title": "Partners Educate Each Other or Irritate Each Other",
+        "chapter": "The Teaching of Love",
+        "summary": "Each partner arrives with lessons the other needs: about order, money, tenderness, risk. The question is pedagogy. Contemptuous teaching, sarcasm, eye-rolling, correction as warfare, guarantees the lesson is refused. Kind teaching assumes the student is not stupid but differently trained, usually by a childhood the teacher did not witness. The couples who last become each other's most charitable interpreters, translating flaws into histories.",
+        "example": "Kirsten's tidiness reads to Rabih as control; Rabih's chaos reads to Kirsten as disrespect. The narrator traces both to childhood homes. Once each can see the other's behaviour as an old survival strategy, irritation makes room for curriculum.",
+        "action": "Take your partner's most irritating habit and write its childhood explanation. Read it before your next complaint about it."
+      },
+      {
+        "title": "Love Needs Translation Because Partners Are Foreign",
+        "chapter": "The Foreign Country of the Other",
+        "summary": "Alain de Botton's couples keep mistaking each other for natives of the same country. In fact each partner arrives from a childhood with its own customs for love, anger, money and rest. Behaviour that reads as cold in one country reads as respectful in another. The marriages that work treat difference as translation work: slow, humble, with a phrasebook built over years, rather than a character trial conducted nightly.",
+        "example": "Kirsten's silence after conflict means she is regrouping; Rabih's upbringing taught him silence means abandonment. The same act, two dictionaries. The narrator's gift is showing that neither partner is wrong, merely untranslated.",
+        "action": "Pick one recurring misunderstanding and ask: what does this behaviour mean in your childhood's country? Listen for customs, not excuses."
+      },
+      {
+        "title": "Anxiety and Avoidance Dance Together",
+        "chapter": "The Dynamics of Closeness",
+        "summary": "The novel maps a classic pairing: one partner who pursues under stress and one who withdraws, each activating the other's worst fear. Alain de Botton treats the dance with unusual fairness. The pursuer is not needy, the withdrawer not cold; both are protecting the bond with the only tool childhood issued them. The work is choreography: the pursuer softening the approach, the withdrawer staying three minutes longer, until the music changes.",
+        "example": "When Kirsten raises a problem at midnight, Rabih hears attack and leaves the room; his leaving confirms her fear that she faces everything alone, so next time she raises it louder. The loop, not the topic, is the enemy, and both can learn to interrupt their own step.",
+        "action": "Name your dance move under stress, pursue or withdraw, and tell your partner the kindest way to interrupt it."
+      },
+      {
+        "title": "Children Teach a Couple What Love Costs",
+        "chapter": "Love and Children",
+        "summary": "The arrival of children reorganises the couple's economy of attention, sleep and desire, and Alain de Botton refuses both sentimentality and complaint. Children expose the truth that love is labour: feeding, waking, forgiving, at industrial scale and without applause. The partners who survive the years are those who can be allies in the labour and keep recognising each other as lovers inside the workforce.",
+        "example": "Rabih and Kirsten's tenderness is tested not by betrayal but by exhaustion, the 3 a.m. negotiations of the depleted. The commentary honours this unglamorous theatre as the actual school of love, where generosity is measured in sleep surrendered without scorekeeping.",
+        "action": "If you have children, trade one unglamorous shift this week without announcing it. Let generosity be quiet and see what it repairs."
+      },
+      {
+        "title": "The Maturity of Being Ready to Learn",
+        "chapter": "Ready for Marriage",
+        "summary": "The novel ends with Alain de Botton's inversion of the usual question. We ask whether someone is the right person; he asks whether we are ready to be educated. Readiness for marriage means expecting to be found difficult, expecting to find the other difficult, and signing up for the curriculum anyway. The couples who flourish are not the compatible but the teachable, and teachability, unlike chemistry, can be decided.",
+        "example": "Rabih's late growth is not becoming perfect but becoming interpretable: able to say I am sulking because I am frightened, in real time. The narrator suggests this modest fluency, available to anyone, is worth more than a soulmate.",
+        "action": "Write your own user manual: how you sulk, what you need in conflict, how to reach you. Give it to your partner. Ask for theirs."
+      },
+      {
+        "title": "Ready Rather Than Right: The Book's Final Exam",
+        "chapter": "The Course of Love",
+        "summary": "De Botton's thesis lands in its last movement: the question is not finding the right person but becoming ready to be educated by an actual one, which means surrendering the fantasy that love should feel like recognition and accepting it as a curriculum. Maturity, in his definition, is the capacity to explain your madness calmly and hear a partner's without fleeing or prosecuting. The course has no graduation, only better attendance, and the couples who thrive are students who stopped expecting to have finished.",
+        "example": "Rabih and Kirsten end the novel not transformed but enrolled: still sulking, still anxious and avoidant, yet increasingly able to translate. The book's refusal of the wedding as an ending is its realism. Their final readiness is simply the decision to keep doing the coursework the wedding used to promise would never be required.",
+        "action": "Write your own user manual page this week: how you go strange under stress, and what helps. Hand it to your partner and ask for theirs."
+      }
+    ],
+    "actionPlan": [
+      "Write your three Romantic expectations and their classical replacements.",
+      "Convert one sulk a week into a plain sentence within the hour.",
+      "Explain your partner's worst habit by their childhood before complaining.",
+      "Practise charitable interpretation: assume a history, not a defect.",
+      "Teach kindly: one lesson, no sarcasm, then stop.",
+      "Ask your partner what they are trying to teach you lately.",
+      "Re-read your wedding vows as a syllabus, not a guarantee."
+    ],
+    "caveat": "It is a novel with commentary, not a manual; the teaching is in the story. Readers wanting exercises should pair it with a workbook-style book from this shelf.",
+    "graveLink": "paisabazaar",
+    "cover": "assets/covers/course-of-love.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "eight-dates",
+    "title": "Eight Dates",
+    "author": "John Gottman and Julie Gottman",
+    "year": 2019,
+    "category": "Love & Relationships",
+    "readTime": "9 min",
+    "tagline": "Essential conversations for a lifetime of love, one date at a time.",
+    "oneLiner": "Lasting couples are not luckier. They keep having the conversations that most couples avoid, about trust, conflict, money, family and dreams.",
+    "bigIdea": "After decades studying couples, the Gottmans distilled the eight conversations that determine whether love lasts, and built a date around each: trust and commitment, conflict, sex, money, family, fun, spirituality and dreams. Each date has one rule: curiosity over persuasion. You are not there to win. You are there to understand your partner's inner world on that subject, because understanding, renewed regularly, is the actual substance of intimacy.",
+    "quotes": [
+      "Successful relationships are not the result of avoiding conflict. They are the result of how you talk about it.",
+      "Curiosity is the antidote to judgement.",
+      "Every date is a chance to fall in love with the person your partner is becoming."
+    ],
+    "lessons": [
+      {
+        "title": "Trust Is Built in Sliding Door Moments",
+        "chapter": "Date One: Trust and Commitment",
+        "summary": "The first date asks what trust means to each of you. Gottman's research shows trust is not built in grand gestures but in sliding door moments: small instances where you can turn toward your partner's need or away from it. Each turn-toward deposits into an emotional bank account; each turn-away withdraws. Couples who cherish, who actively choose the relationship in daily micro-decisions, build the commitment that weathers the big withdrawals.",
+        "example": "A partner mentions a hard day in passing. Sliding door: ask and listen, or keep scrolling. Gottman's lab found these seconds, multiplied by thousands, predict divorce better than any single big betrayal question. The mundane is the marriage.",
+        "action": "This week, catch three sliding door moments and turn toward deliberately. Small, noticed, repeated."
+      },
+      {
+        "title": "Conflict Is a Conversation About Dreams",
+        "chapter": "Date Two: Addressing Conflict",
+        "summary": "Sixty nine percent of couple conflict is perpetual, Gottman found, rooted in personality and life dreams, not solvable problems. The goal is not solution but dialogue: understanding the dream inside your partner's position. Gridlock happens when positions harden; it melts when each person can honour the other's underlying story, even while disagreeing. The date teaches couples to ask: what does this mean to you, from your history?",
+        "example": "A fight about tidiness becomes comprehensible when he explains that order meant safety in his chaotic childhood home, and she explains that mess meant freedom from her rigid one. They still share a kitchen, but now they are negotiating two childhoods, with sympathy available.",
+        "action": "Take one recurring argument and ask only dream questions for twenty minutes: what does your position protect or honour in you?"
+      },
+      {
+        "title": "Money Dates Surface Values, Not Just Budgets",
+        "chapter": "Date Four: Money",
+        "summary": "Money fights are rarely about arithmetic. Each partner carries a money story written by their family: scarcity fear, status hunger, freedom buying, shame. The Gottmans' money date asks couples to read those stories aloud before touching a spreadsheet. When the story is honoured, compromise becomes possible, because the fight was never about the purchase; it was about what the purchase means.",
+        "example": "He calls her spending reckless; she calls his saving joyless. His parents lost everything once; hers counted every coin and never celebrated anything. Both are protecting a child. The budget conversation works only after that one has happened.",
+        "action": "Tell your partner your family's money story in ten minutes. Then ask theirs. Budgets next week."
+      },
+      {
+        "title": "Fun and Play Are Not Rewards, They Are Glue",
+        "chapter": "Date Six: Fun and Adventure",
+        "summary": "Couples file play under later, after the work, the children, the renovations. Gottman's longitudinal data says play is not decoration on intimacy; it is one of its load-bearing walls. Shared novelty and laughter keep the friendship system funded, and friendship is what carries couples through the perpetual problems. The date prescribes adventure scaled to real life: new routes, small risks, being beginners together on purpose.",
+        "example": "Partners who met travelling often stop travelling together into the unknown and become co-managers of the known. One couple in the book revives play with a monthly mystery outing, planned alternately, budget capped, phones off, and credits it with saving the friendship inside the marriage.",
+        "action": "Plan one small adventure this fortnight: somewhere neither of you has been, however near. Alternate who plans."
+      },
+      {
+        "title": "Dreams Within Reach: The Last Date Looks Forward",
+        "chapter": "Date Eight: Dreams",
+        "summary": "The final date asks each partner to name a life dream, shelved or secret, and the other to become its first ally. Gottman found that marriages thrive when partners can say my dreams live inside this relationship, even dreams the other does not share. Honouring does not require funding every wish; it requires knowing the wish exists and refusing to mock or bury it. The question that ends the book is practical: what is one step toward your dream that we can take this year?",
+        "example": "A husband learns, after twenty years, that his wife dreams of living by the sea; she learns he dreams of writing. Neither dream was opposed. Both were simply unknown, and unknown dreams quietly accuse the marriage of being the obstacle.",
+        "action": "Ask your partner tonight: what is a dream you have not told me lately? Answer with one step you could support this year."
+      },
+      {
+        "title": "How to Have Every Date: Curiosity Rules",
+        "chapter": "The Method",
+        "summary": "The Gottmans give each date the same discipline: come with open questions, leave persuasion at the door, and end with appreciation and one commitment. The dates fail when they become negotiations or trials. They work when both partners experience being known, which for many couples has quietly stopped happening amid logistics. The format is deliberately simple so that the hard part, honesty, has the whole stage.",
+        "example": "Couples report the strange intimacy of answering questions they answered while dating, now with decades of new data. The format's power is repetition: eight subjects, visited yearly, keep a couple current with each other's becoming.",
+        "action": "Put the eight dates on the calendar now, one a week. Same time weekly. Protect them like medical appointments."
+      },
+      {
+        "title": "The State of the Union: A Weekly Ten Minutes",
+        "chapter": "After the Dates",
+        "summary": "The Gottmans' apparatus continues past the eight dates into maintenance, and the deepest habit is the weekly State of the Union: appreciations first, then one issue raised with a soft start up, each partner heard to the speaker's satisfaction before problem solving is allowed. Deepening means scheduling it like medication rather than mood. Couples who wait to feel like talking wait for the feeling that only the talking produces, which is why the calendar, and not the heart, must hold the appointment.",
+        "example": "Their lab couples who adopted the ritual showed the signature pattern: fights did not vanish, they got shorter and ended with repair instead of archaeology. The ten minute meeting acted as a pressure valve, keeping small grievances from compounding into the quarterly explosion that rewrites the whole marriage in one night.",
+        "action": "Book a standing twenty minute State of the Union this week. Appreciations first, one issue maximum, speaker feels heard before solutions begin."
+      },
+      {
+        "title": "The Four Horsemen, Brought on Every Date",
+        "chapter": "After the Dates",
+        "summary": "The book quietly embeds its antidotes in the dates themselves: contempt is answered by appreciation, criticism by gentle start up, defensiveness by taking responsibility for even a sliver, stonewalling by self soothing. Deepening is recognising the horsemen as moods rather than verdicts. They visit every marriage, including the researchers' own; what distinguishes the masters is the speed of the antidote, not the absence of the poison. Bring that speed to the dates and they become sparring practice for the real rounds.",
+        "example": "Julie and John Gottman's own published admissions, defensiveness at the sink, stonewalling in the famous flooded feeling, reassure readers that the horsemen ride in research marriages too. The difference on tape is boring and decisive: the antidote arrives in minutes, with humour, before the physiology floods the room.",
+        "action": "Pick your household's most common horseman and post its antidote where the arguments happen. Practise the antidote once this week before you need it."
+      }
+    ],
+    "actionPlan": [
+      "Turn toward in three sliding door moments daily.",
+      "Take the trust date: what does trust mean, what builds and breaks it for you?",
+      "Revisit one perpetual problem with dream questions only.",
+      "Schedule the eight dates across eight weeks, one per week.",
+      "On each date, curiosity rules: no persuading, only understanding.",
+      "Write down one dream of your partner's you learned, and honour it visibly.",
+      "End each date with appreciation said out loud, specifically."
+    ],
+    "caveat": "The dates assume goodwill and safety on both sides. Where there is contempt, coercion or violence, the Gottmans themselves direct couples to professional help first.",
+    "graveLink": "gucci-family-war",
+    "cover": "assets/covers/eight-dates.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "old-path-white-clouds",
+    "title": "Old Path White Clouds",
+    "author": "Thich Nhat Hanh",
+    "year": 1991,
+    "category": "Mind & Spirit",
+    "readTime": "10 min",
+    "tagline": "The life of the Buddha, retold as a walking meditation by Thich Nhat Hanh.",
+    "oneLiner": "Thich Nhat Hanh retells the eighty years of the Buddha, from palace prince to awakened teacher, using the oldest sources, and writes it so slowly and kindly that reading becomes the practice it describes.",
+    "bigIdea": "Drawing on Pali, Sanskrit and Chinese texts, Thich Nhat Hanh reconstructs the Buddha's life as a human story: a sheltered prince who sees sickness, age and death; a seeker who nearly starves himself; a teacher who spends forty five years walking northern India, founding a community that admitted outcastes and women, and answering farmers and kings with the same patience. The retelling strips away mythology's varnish until what remains is a man, a path, and the possibility of walking it.",
+    "quotes": [
+      "Breathing in, I calm my body. Breathing out, I smile.",
+      "The present moment is the only moment available to us, and it is the door to all moments.",
+      "Understanding is the foundation of love."
+    ],
+    "lessons": [
+      {
+        "title": "The Four Sights Are Every Life's Curriculum",
+        "chapter": "Siddhartha's Youth and Leaving",
+        "summary": "The young prince, raised behind palace walls built to hide suffering, encounters an old man, a sick man, a corpse and a wandering monk, and the fiction of a protected life collapses. Thich Nhat Hanh tells it without magic: the sights work because they are universal appointments each of us also has scheduled. The lesson is not to renounce palaces but to notice that every comfort is a wall of the same design, and that seeing clearly, however late, is the beginning of freedom rather than its price.",
+        "example": "Modern readers meet their four sights in hospital corridors and parents' ageing faces, usually unprepared because their own walls, money, youth, busyness, were better built. Thich Nhat Hanh's telling normalises the shock: a prince with every advantage took twenty nine years and four encounters to see what was always outside the gate.",
+        "action": "Name your palace wall honestly: the comfort that schedules your blindness. Spend one hour this week outside it, with the old, the sick or the dying, as a visitor who listens."
+      },
+      {
+        "title": "The Middle Way Refuses Both Indulgence and Punishment",
+        "chapter": "The Years of Practice",
+        "summary": "Before enlightenment, Siddhartha tortured his body for six years, eating so little that his spine showed like beads, and concluded that a starved mind cannot awaken. The middle way he then taught, between indulgence and self punishment, becomes Thich Nhat Hanh's refrain for everything: work, eating, activism, grief. The teaching is diagnostic for our era of extremes, where people oscillate between binge and purge in food, information and virtue, and call the oscillation a personality.",
+        "example": "Thich Nhat Hanh applied the middle way in exile and war, eating mindfully in refugee camps and marching for peace without hatred for soldiers. His students describe the steadiness as the teaching's proof: a man who had refused both despair and comfort for fifty years, and remained gentle in public, on schedule.",
+        "action": "Find your current oscillation, binge and purge in any substance, and design the middle portion for one week: enough, daily, without theatre."
+      },
+      {
+        "title": "The Community Admitted Everyone, Deliberately",
+        "chapter": "The Sangha's Founding",
+        "summary": "The Buddha's community broke the era's hardest lines: it ordained outcastes, a barber before princes so the princes would bow to him, and eventually, after advocacy, women, including the Buddha's own foster mother. Thich Nhat Hanh lingers on these ordinations because they carry the teaching's social signature: awakening is not a caste property. The sangha's internal democracy, its confession rituals and consensus decisions, also predate most republics, a fact the book lets speak without boasting.",
+        "example": "The barber Upali's ordination is told in full: the proud Sakyan princes bowing to their former servant as their senior in the order. In one ceremony the Buddha reordered a hierarchy his whole civilisation considered natural, using seniority in practice as the only rank the community would recognise.",
+        "action": "Audit one room you lead for its Upali test: who is quietly ranked by origin rather than practice? Change one seating, speaking or honouring order this month."
+      },
+      {
+        "title": "Ananda and the Ethics of Listening",
+        "chapter": "The Attendant Years",
+        "summary": "Ananda, the Buddha's cousin and attendant for twenty five years, is the book's quiet hero: the man who heard every sermon, memorised the canon into existence, and bargained for women's admission to the order when the founder hesitated. Thich Nhat Hanh uses him to teach listening as a spiritual technology: Ananda's enlightenment came last among the disciples precisely because his gift was holding others' words. In an age of broadcasters, the book honours the archivist, and suggests every community's survival depends on who does its remembering.",
+        "example": "After the Buddha's death it is Ananda's memory the council summons, sermon by sermon, to fix the teaching before it scatters. Thich Nhat Hanh, whose own tradition survived wars by memorised transmission, writes those scenes with a copyist's reverence.",
+        "action": "Be someone's Ananda this month: listen to one elder or teacher fully, and write down what they said before the week takes it."
+      },
+      {
+        "title": "The Buddha's Management of Conflict",
+        "chapter": "The Sangha's Difficult Years",
+        "summary": "The community the book follows quarrels, schisms and nearly splits, and Thich Nhat Hanh shows the Buddha mediating by listening tours, face saving compromises, and, once, simply leaving until the quarrellers exhaust themselves. The episodes read like organisational case studies: rules made only after incidents, never before; expulsion as the last instrument; reconciliation lunches as statecraft. Leaders of any community will find the Buddha's personnel files uncomfortably relevant.",
+        "example": "When monks at Kosambi split into factions that would not share a roof, the Buddha withdrew to the forest and let an elephant and a monkey attend him, a story the tradition keeps half for comedy and half for doctrine. The monks, shamed by laypeople's questions, reconciled. Strategic absence, deployed once in forty years, is part of the curriculum.",
+        "action": "In your current team conflict, try the listening tour first: every faction heard fully, in private, before you propose anything."
+      },
+      {
+        "title": "Walking as the Delivery System of Wisdom",
+        "chapter": "The Forty Five Years",
+        "summary": "The Buddha taught on foot, walking the Gangetic plain for nine months a year, which meant the teaching arrived at walking pace, in villages, adjusted to each listener's crop and grief. Thich Nhat Hanh, who built walking meditation into a global practice, reads the biography's geography as pedagogy: nothing in the path is in a hurry, and the community's insights were literally earned mile by mile. The book's own pacing is the argument; readers slow down or put it down, and either response teaches something.",
+        "example": "Modern practitioners retracing the Buddha's routes in Bihar report the same discovery Thich Nhat Hanh built the book on: the distances enforce the doctrine. News, sermons and forgiveness all travelled at three miles an hour, and the civilisation that resulted had a different relationship with urgency than ours.",
+        "action": "Take one decision this week at walking pace: walk the route while it ripens, phone pocketed, and let the miles vote."
+      },
+      {
+        "title": "The Death at Kushinagar: Teaching to the Last Hour",
+        "chapter": "The Final Days",
+        "summary": "The Buddha dies at eighty, of a bad meal eaten with grace to spare his host shame, teaching between waves of pain and giving the community its final constitution: be lamps unto yourselves, hold the teaching as your teacher now. Thich Nhat Hanh tells the death without terror or syrup, as the last sermon: impermanence demonstrated by the one person who could have been exempted by legend. The parinirvana chapters are read aloud at retreats worldwide because they rehearse, gently, the only appointment every reader keeps.",
+        "example": "His last convert was a wandering ascetic who arrived as the teacher was dying and was ordained so no one could say they came too late. Thich Nhat Hanh lingers there: the door stayed open during the death itself, which is either biography or the whole doctrine in one gesture.",
+        "action": "Write your own lamp sentence this week: the one instruction you would leave if your teaching ended tonight. Keep it where your people can find it."
+      },
+      {
+        "title": "The Buddha as Organisation Builder",
+        "chapter": "The Sangha Years",
+        "summary": "Thich Nhat Hanh gives unusual attention to the unglamorous decades: admitting members, settling disputes, setting rules case by case as real people generated real problems. The community's rules were not descended from abstraction; they were written from incidents, a sangha learning ethics the way common law learns from trials. Deepening means applying the model anywhere you build community: principles first, then case law, recorded honestly, so the institution gets wiser instead of merely older and louder about its founding purity.",
+        "example": "His chapters show the Buddha mediating between monks and kings, families and renouncers, with ordination rules amended after each failure. Forty years of patch notes produced the vinaya. Readers running companies, schools or group chats will recognise the workload: culture is the sum of incidents handled visibly.",
+        "action": "Write one rule for your household or team from a real recent incident, in the Buddha's case law style: what happened, what we now do. Keep the record."
+      }
+    ],
+    "actionPlan": [
+      "Spend one hour outside your palace wall this week, listening.",
+      "Design the middle portion in one oscillating habit for seven days.",
+      "Run the Upali test on one room you lead.",
+      "Walk one regular route this week at the Buddha's pace, no headphones.",
+      "Eat one meal in silence and attention, beginning to end.",
+      "Tell one person the four sights story and ask for theirs.",
+      "Read two chapters nightly; the book is built for walking pace."
+    ],
+    "caveat": "It is a devotional retelling by a modern master, harmonising sources scholars keep separate; readers wanting critical history should pair it with academic biography. Its length is considerable and meant to be.",
+    "graveLink": "kumbh-mela-1954-stampede",
+    "cover": "assets/covers/old-path-white-clouds.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "half-the-sky",
+    "title": "Half the Sky",
+    "author": "Nicholas D. Kristof and Sheryl WuDunn",
+    "year": 2009,
+    "category": "Life & Meaning",
+    "readTime": "9 min",
+    "tagline": "Turning oppression into opportunity for women worldwide.",
+    "oneLiner": "The central moral challenge of our century, argue Kristof and Sheryl WuDunn, is the oppression of women in the developing world. Their book is a tour of the evidence, and of the women defeating it village by village.",
+    "bigIdea": "Journalists Nicholas D. Kristof and Sheryl WuDunn document the scale of gender oppression, trafficking, maternal mortality, denied schooling, fistula, honour crimes, and then spend most of the book on what works: girls' education, microfinance, maternal health, and women's own organisations. Their thesis is economic as much as moral: women hold up half the sky, and nations that educate and employ them transform within a generation. Each horror chapter is paired with an intervention and a named woman proving it.",
+    "quotes": [
+      "Women hold up half the sky.",
+      "The best way to fight poverty and extremism is to educate and empower women and girls.",
+      "Talent is universal; opportunity is not."
+    ],
+    "lessons": [
+      {
+        "title": "Education Is the Highest Yield Investment Ever Measured",
+        "chapter": "Why Girls?",
+        "summary": "The book's economic core: educating girls returns more than roads, dams or factories, in wages, health, smaller and better nourished families, and children, sons included, who stay in school. Kristof and Sheryl WuDunn pile up the studies, extra years of schooling raising wages ten to twenty percent, children of educated mothers half as likely to die, and then show the classrooms. Their argument to finance ministers is deliberately unromantic: if you may fund one thing, fund the thing that funds everything else for sixty years.",
+        "example": "They profile girls who walked hours to schools built by aid groups and foreign donors, then returned as teachers and nurses, the compound interest visible in a single village within fifteen years. The donors who built one such school describe it, in the economics the book teaches, as the best performing asset they ever held.",
+        "action": "Fund one girl's schooling this year through a vetted organisation, and treat it as the portfolio's highest yield line, reviewed annually."
+      },
+      {
+        "title": "Maternal Health: The Deaths That Are Mostly Preventable",
+        "chapter": "Maternal Mortality and Fistula",
+        "summary": "The chapters on women dying in childbirth, and on fistula, childbirth injuries that leave young women incontinent and exiled, carry the book's most fixable outrage: most of these deaths and injuries yield to known, cheap medicine, trained midwives, transport, surgical repair. Sheryl WuDunn in particular writes the fistula hospitals, where a surgery costing less than a phone restores a woman's entire life, as proof that the gap is not knowledge but priority. The readers' letters after publication funded such hospitals for years.",
+        "example": "They tell of a teenager repaired at the Addis Ababa Fistula Hospital who returned to her village after years of hiding, and of the hospital's founder Catherine Hamlin, who built a life's work on one operation. The cost per restored life sits in the book like an indictment with a receipt attached.",
+        "action": "Direct one donation this year to maternal health or fistula repair, and learn the cost per life your money buys. Publish it to your circle."
+      },
+      {
+        "title": "The Helpers Are Mostly Local Women; Fund Them Accordingly",
+        "chapter": "What Works",
+        "summary": "Kristof and Sheryl WuDunn's reporting discipline: for every problem they find the local women already solving it, the teacher in the slum school, the nurse running the clinic, the organiser of the savings group, and argue that effective aid routes money and protection through them rather than parachuting substitutes. The final chapters build a reader's toolkit: vetted organisations, the case for women's funds, and warnings about saviour tourism. Empowerment, their evidence says, is rarely imported; it is resourced.",
+        "example": "A Cambodian organiser who survived trafficking and now raids brothels with police gets the book's longest admiring profile, not because she is photogenic but because her organisation's rescue and retraining numbers embarrass larger agencies. The funding advice follows the competence, which is the chapter's entire method.",
+        "action": "Audit your giving this year: what fraction reaches organisations led by women from the communities served? Move one line."
+      },
+      {
+        "title": "Trafficking and the Economics of Rescue",
+        "chapter": "The Trafficking Chapters",
+        "summary": "Kristof and Sheryl WuDunn report from brothels in Cambodia and India where girls are held in debt bondage, and refuse the reader the comfort of despair: they follow rescues, raids and, hardest of all, the economics that re-traffics the rescued when no livelihood waits. Their policy chapters argue for the unglamorous stack, policing that punishes buyers, border scrutiny, schooling and jobs for survivors, and they profile the survivors who became the rescuers as the only sustainable police force the problem has found.",
+        "example": "A rescued girl who returned voluntarily to the brothel because it fed her family more reliably than freedom did reorganises the reader's entire response. The book uses her story to demolish rescue without economics, and to fund, in subsequent editions' notes, the programmes that pair liberation with livelihoods.",
+        "action": "If you give against trafficking, choose programmes that fund survivors' livelihoods and leadership, and say why to one friend this month."
+      },
+      {
+        "title": "Microfinance and Its Necessary Corrections",
+        "chapter": "Microfinance",
+        "summary": "The book championed small loans to women when microfinance was ascendant, and later editions and the authors' subsequent work carry its corrections: loans empower when paired with savings, training and protection from over indebtedness, and exploit when they are not. Kristof and Sheryl WuDunn's willingness to update their own enthusiasm models the reader's assignment: hold interventions to outcomes, including the fashionable ones, and keep funding the version that survives audit.",
+        "example": "They profile borrowers who built businesses and borrowers crushed by multiple lenders, sometimes in the same village, and locate the difference in the boring architecture around the money. The chapter's later printings are cited in development courses as how to advocate and revise in the same voice.",
+        "action": "Before your next charitable commitment, read one critical evaluation of the intervention, not only its brochure. Fund the audited version."
+      },
+      {
+        "title": "Honor, Law and the Long Work of Norms",
+        "chapter": "The Culture Chapters",
+        "summary": "Some of the book's harms, honour killings, genital cutting, child marriage, are enforced not by poverty but by norms, often policed by women themselves. Kristof and Sheryl WuDunn report the norm changers: imams, grandmothers and radio dramas that shifted whole regions' practices faster than law. Their conclusion shapes the book's strategy chapters: fund the insiders who carry new norms into rooms outsiders cannot enter, and measure in decades, because that is the unit in which cultures keep their books.",
+        "example": "They describe villages that collectively abandoned cutting after facilitated community deliberation, with the elder women who once enforced it leading the renunciation ceremonies. The law had existed for years; the norm moved in a season, once the conversation was owned locally. Aid workers call the sequence the book's most transferable paragraph.",
+        "action": "In your own community's harmful norm, identify the insider carriers of the better one and put your support, money, platform, protection, behind them."
+      },
+      {
+        "title": "The Girl Effect, Audited Like an Investment",
+        "chapter": "Solutions",
+        "summary": "Kristof and WuDunn make the investor's case with an auditor's discipline: educating girls and bringing women into the economy is not charity but the highest return development spending available, rippling into health, income and stability for entire villages. Deepening means accepting their evidence standards: they follow the failures too, microfinance's limits, rescue's unintended harms, and keep adjusting. Sentiment opens the wallet; only arithmetic keeps it open across decades, and the authors' willingness to grade their own pieties is why their case survives sceptics.",
+        "example": "Their reporting follows enterprises like girls' schooling in Pakistan and maternal clinics in Somaliland, then checks the ledger years later: daughters in school, family income up, younger siblings vaccinated. The pattern repeats across continents with boring reliability, which in development economics is the closest thing to a standing ovation.",
+        "action": "Evaluate one charitable impulse this month like an investor in girls: ask for outcomes per rupee or dollar, then give at the level the evidence earns."
+      },
+      {
+        "title": "Local Women Are the Distribution Network",
+        "chapter": "Solutions",
+        "summary": "A consistent finding threads their reporting: aid works when local women run it, because they hold the trust, the information and the staying power that foreign programmes rent at great expense and surrender on departure. The deepening is a rule for any outsider with resources, fund the network that will still be there in ten years, and accept the photograph disadvantage. The most effective nodes in these stories rarely look impressive in annual reports. They look like grandmothers who cannot be fired by geography.",
+        "example": "From Cambodian health organisers to Indian self help groups, their chapters show microloans and clinics succeeding precisely where a local woman vouched for them door to door. Programmes with better logos and no such vouching died at the village boundary, mourned only in the capital's PowerPoint.",
+        "action": "Before your next donation, find who locally carries the trust for that cause and route your support through them. Ask to be introduced, not just invoiced."
+      }
+    ],
+    "actionPlan": [
+      "Fund one girl's schooling through a vetted group this year.",
+      "Send one donation to maternal health; learn its cost per life.",
+      "Audit your giving for locally led women's organisations.",
+      "Read one chapter aloud to your household's teenagers.",
+      "Buy from one women led business monthly, deliberately.",
+      "Learn your own country's maternal statistics; compare and act locally.",
+      "Share one named woman's story from the book with your circle."
+    ],
+    "caveat": "Published in 2009, its statistics and some country chapters need updating, and critics have rightly pressed its framing of Western readers as rescuers. The authors anticipate much of this inside the book; the interventions it champions remain the evidence base's leaders.",
+    "graveLink": "kashmir-widows",
+    "cover": "assets/covers/half-the-sky.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "measure-of-man",
+    "title": "The Measure of a Man",
+    "author": "Sidney Poitier",
+    "year": 2000,
+    "category": "Life & Meaning",
+    "readTime": "8 min",
+    "tagline": "The spiritual autobiography of Sidney Poitier, from Cat Island to Hollywood's conscience.",
+    "oneLiner": "A boy from a Bahamian tomato farm, who arrived in New York with nothing and could barely read, became the actor who changed what a leading man could be. Poitier measures that life not in fame but in character.",
+    "bigIdea": "Sidney Poitier's memoir traces his path from Cat Island poverty through dishwashing in New York, a lucky break at the American Negro Theatre, and a career of deliberate choices: refusing degrading roles when refusal meant hunger, and building a screen presence that carried dignity into America's living rooms. The measure of the title is his parents' standard, character over circumstance, by which he audits his successes, his failures as a father, and his survival of an industry that wanted a symbol and got a man.",
+    "quotes": [
+      "I am the me I choose to be.",
+      "The journey has been incredible from its beginning.",
+      "We suffer pain; we endure it. But from it we extract lessons, and those lessons make us stronger."
+    ],
+    "lessons": [
+      {
+        "title": "Refusing the Roles That Diminish You",
+        "chapter": "The Early Career",
+        "summary": "Sidney Poitier's defining discipline began in hunger: he turned down roles that paid rent because they cost dignity, betting that scarcity of integrity would eventually be his market. Studios, in the 1950s, offered Black actors a menu of caricatures; his refusals, made while broke, are the memoir's spine. The lesson generalises to every career's early fork: the first compromises set the price list the world will use for you thereafter, and dignity, refused cheaply, appreciates.",
+        "example": "He recounts washing dishes while declining parts his agents begged him to take, sustained by his father's island standard of what a man may sell. Within a decade the same industry was writing roles to his specification, because the refusal had made his name a guarantee audiences trusted.",
+        "action": "Write your refusal list now, while it is cheap: the work, clients or compromises beneath your standard. Read it at your next hungry moment."
+      },
+      {
+        "title": "Cat Island Values in a Manhattan World",
+        "chapter": "The Island and the City",
+        "summary": "The memoir keeps returning to his parents, tomato farmers who measured wealth in conduct, as his permanent audit committee. Arriving in New York unable to read a newspaper properly, he taught himself from newspapers and dictionaries nightly after shifts. The island's curriculum, honesty, labour, neighbourliness, turned out to be portable technology, and the book's argument is that character formed early and held consciously can survive environments designed to dissolve it.",
+        "example": "He describes learning to read fluently as a young dishwasher, sounding out the papers other men discarded, because a notice for actors required it. The literacy that carried him to scripts began as a farm boy's refusal to be locked out of the written world, echoing Frederick Douglass, whose narrative appears elsewhere in this library, across a century.",
+        "action": "Name your island: the three values from your formation you refuse to sell. Post them where your negotiations happen."
+      },
+      {
+        "title": "The Symbol's Burden and the Man's Ledger",
+        "chapter": "Fame and Its Costs",
+        "summary": "Sidney Poitier is honest about the price of being first: the representative burden that made every role a referendum, the criticism from all sides, and the private ledger, a first marriage ended, daughters raised at a distance his career imposed. His audit of himself as a father is the memoir's most unsparing section and its credibility engine. The measure, he concludes, is applied not by history but at home, and his second half of life is written as an attempt to balance that account.",
+        "example": "He describes realising that his daughters knew the symbol better than the man, and the deliberate reconstruction that followed, presence chosen over premieres. The chapter refuses the fame narrative's arithmetic and has been assigned in leadership courses for exactly that refusal.",
+        "action": "Audit your own home ledger this month: ask the people closest to you what your symbol costs them, and rebalance one line."
+      },
+      {
+        "title": "Reading as Rescue, the Second Time in This Library",
+        "chapter": "New York Years",
+        "summary": "Sidney Poitier's account of teaching himself fluent reading as a dishwasher, newspapers spread after shifts, belongs beside Frederick Douglass in this library's secret thesis: literacy is the master key every oppressed biography turns in its lock. His diligence had an audience of one and no syllabus, and within years he was carrying Shakespearean diction that critics assumed was conservatory trained. The memoir presents it without trumpets, as one more shift worked, which is why it lands.",
+        "example": "He bluffed into his first audition with a magazine advertisement's lines memorised phonetically, was dismissed for his accent and reading, and enrolled himself in the newspapers that night. The American Negro Theatre's janitorial job, accepted for access to rehearsals, completed an education no school offered him.",
+        "action": "Identify the locked room in your own ambitions and its newspaper: the unglamorous nightly material. Ninety days, post shift, non negotiable."
+      },
+      {
+        "title": "The Roles He Chose Built the Roles That Followed",
+        "chapter": "The Career Architecture",
+        "summary": "Sidney Poitier's filmography reads, in the memoir's telling, as policy: each accepted role had to leave the next Black actor a larger room. He is candid about the strategy's costs, typecast as dignity incarnate, criticised by younger radicals for restraint, and about its compounding: the parts written for him became the parts available to everyone, because audiences had been taught a new expectation by his refusals as much as his performances.",
+        "example": "His account of In the Heat of the Night's famous slap, the detective returning the white man's blow, describes the scene's negotiation and its detonation in Southern theatres. The memoir treats one second of film as a deposit in millions of minds, which is exactly what it was, and why he guarded such seconds like a central banker.",
+        "action": "Audit your current role choices for their succession effect: does your conduct leave the next person a larger room? Adjust one practice."
+      },
+      {
+        "title": "The Measure Applied at Home",
+        "chapter": "The Later Years",
+        "summary": "The closing chapters perform the title: Sidney Poitier measures the legend against the father's island standard and files the deficits himself, time not given, gentleness crowded out by the era's demands, the second family raised with the lessons invoiced by the first. His statecraft with himself is the book's last gift: no self pardon, no self execution, a ledger balanced by amendment in the years remaining. Readers building public lives on private foundations underline these pages hardest.",
+        "example": "He writes of learning grandparenthood with an attention his children met later than he wishes, and of the family table becoming, deliberately, the centre the studio once occupied. The symbol's final role, he suggests, is at home, where the reviews are honest and the run is the rest of his life.",
+        "action": "Move one recurring hour from the public ledger to the home one this month, permanently, and tell the home it is permanent."
+      },
+      {
+        "title": "The Conflicts Inside the Symbol",
+        "chapter": "After the Roles",
+        "summary": "Poitier's calm was manufactured at cost, and the memoir's later movements admit the taxes: rage managed into dignity can curdle privately, marriages strained by absences the career demanded, children who received the symbol when they needed the man. Deepening means letting the icon testify against iconhood. His insistence on examining himself, rather than only the industry's sins, is what separates the memoir from a monument. The measure of the man, in his own arithmetic, includes everything the cameras were spared.",
+        "example": "His honesty about failing as a husband and being an uneven father stunned readers who came for the saint's life. The admissions are the point: he argues integrity is not a state but a practice resumed after failures, preferably before the failures compound into a biography written by other people.",
+        "action": "Write your own two ledgers, public virtue and private arrears, in two columns. Choose one arrear to service this month in person, not in prose."
+      },
+      {
+        "title": "Dignity as a Career Strategy in a Rigged Market",
+        "chapter": "After the Roles",
+        "summary": "Poitier's refusal of demeaning roles starved him at times in an industry rationing dignified parts for Black actors to nearly zero, yet it compounded into the only brand that could break the ceiling when the culture finally moved. Deepening means study of the economics: he was not merely principled, he was patient capital in human form, declining short term wages that would have mortgaged the only asset he owned, the meaning of his face. Every professional in a rigged market owns some version of that face and its price list.",
+        "example": "Producers who had offered him servant parts returned years later needing exactly what his refusals had built. The market eventually priced his dignity correctly because he had refused to discount it during the famine, an investment thesis most of us abandon in the first hungry quarter.",
+        "action": "Name the asset your short term compromises are mortgaging. Set its minimum price in writing, and one refusal you will make this quarter to defend it."
+      }
+    ],
+    "actionPlan": [
+      "Write your refusal list while it is cheap.",
+      "Name your island: three values not for sale; post them.",
+      "Ask home what your public role costs; rebalance one line.",
+      "Teach yourself the locked skill nightly for ninety days.",
+      "Refuse one degrading opportunity this year, on the record of your own book.",
+      "Tell your parents' standards aloud to your children.",
+      "Measure one decision by the home ledger before the world's."
+    ],
+    "caveat": "It is a statesman's memoir, dignified even in confession; readers wanting the era's messier accounts should pair it with histories of the civil rights years in Hollywood. The dignity is the point and, occasionally, the filter.",
+    "graveLink": "slavery-abolition",
+    "cover": "assets/covers/measure-of-man.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "ship-of-magic",
+    "title": "Ship of Magic",
+    "author": "Robin Hobb",
+    "year": 1998,
+    "category": "Life & Meaning",
+    "readTime": "10 min",
+    "tagline": "The first Liveship Traders novel: a family, a sentient ship, and the sea's price for both.",
+    "oneLiner": "The Vestrit family's liveship Vivacia quickens into consciousness just as the family's fortunes collapse. Robin Hobb's epic asks what we owe the things and people our prosperity is built on, and what it costs when they wake up and ask us.",
+    "bigIdea": "In Bingtown, trader families own liveships, vessels of wizardwood that awaken after three generations of family captains die aboard. When Ephron Vestrit dies, the Vivacia quickens, but the family, drowning in debt, gives her captaincy to a son in law instead of daughter Althea. Around that injustice Robin Hobb builds her themes: slavery human and serpent, women's competence denied, trade built on suffering upriver, and a ship who must decide what she is for. It is a novel about inheritance: what families hand down, debts, ships and wounds alike.",
+    "quotes": [
+      "A ship is not a thing. A ship is a promise, and promises wake up.",
+      "The sea keeps every account, and collects in its own currency.",
+      "Inheritance is just debt with better stories told about it."
+    ],
+    "lessons": [
+      {
+        "title": "Althea Vestrit and the Crime of Being Competent While Female",
+        "chapter": "Althea's Story",
+        "summary": "Althea grew up sailing, her father's true heir in skill, and watches the ship given to her brother in law because Bingtown's customs cannot see a woman captain. Her flight, disguised as a ship's boy on other vessels to earn the papers her birth denied her, is the novel's engine of indignation. Robin Hobb writes her competence without apology and the system's waste of it as an economic as much as moral failure, a theme the whole trilogy keeps invoicing.",
+        "example": "Aboard the Reaper, Althea works under a false name through storms and slaughter decks, collecting the experience certificates that will prove what everyone on the Vivacia already knew. The reader's fury at the paperwork is the point: systems make the capable re-earn, at interest, what inheritance gives the unready free.",
+        "action": "Name one competence in your world currently re-earning what birth or gender should not have taxed. Be one signature on their papers this month."
+      },
+      {
+        "title": "The Vivacia Wakes: What Our Instruments Would Say",
+        "chapter": "The Quickening",
+        "summary": "The liveship awakens with her family's memories in her timbers and a child's moral clarity about the trade she is built for, including its horrors. Robin Hobb's device, the tool that remembers and judges, interrogates every industry built on hidden suffering: the Rain Wild goods upstream, the slave ships alongside. The Vivacia's innocence forces the humans around her to hear their own justifications aloud, in her voice, and the novel's ethics are conducted through that discomfort.",
+        "example": "When the Vivacia learns what her cargo trade connects to, her refusal destabilises the family's finances and the reader's sympathies at once. A ship declining to be complicit is fantasy's version of the audit every real supply chain eventually faces, conducted here by the supply chain itself.",
+        "action": "Run the Vivacia test on one system you benefit from: if its instrument could speak, what would it report? Follow one finding."
+      },
+      {
+        "title": "Wintrow, Kyle and the Family Firm's Casualties",
+        "chapter": "The Vestrit Household",
+        "summary": "Wintrow, a priest in training, is pressed into sailing by his father Kyle, whose certainty that the family firm justifies any conscription drives the novel's domestic tragedy. Robin Hobb draws the household with unusual fairness: Kyle is no monster, only a man whose vocabulary contains duty and debt and no word for a son's calling. The chapters teach the cost of family businesses run as destiny machines, and the different inheritances, ship, faith, freedom, each child is actually owed.",
+        "example": "Wintrow's stolen vocation, his hands meant for a monastery forced to the rigging, becomes the measure of Kyle's leadership: every order obeyed and every order resented, competence rising as love drains. Readers who have worked in family firms recognise the weather and write to Robin Hobb about this plot more than the serpents.",
+        "action": "If you run anything families inherit, write the exit honours this year: how a child may decline the firm and keep the family."
+      },
+      {
+        "title": "The Serpents' Chapters Are the Planet Talking",
+        "chapter": "The Serpent Narratives",
+        "summary": "Interleaved chapters follow sea serpents, intelligent, migratory and desperate, whose lifecycle is entangled with the liveships in ways the humans profiting from both never suspect. Robin Hobb makes the reader hold two ledgers: the traders' accounts, in coin, and the serpents', in memory and extinction. It is the Vivacia test at species scale: an entire economy whose instruments can think, filed under cargo. The trilogy's later volumes cash these chapters fully, and rereaders consistently report they become the favourites.",
+        "example": "The serpent Maulkin's fragmenting memories of a promised river and a shepherd species lost to history read as elegy and indictment together. Robin Hobb has said the serpents let her write the environment's point of view without a lecture, and the elegiac chapters are assigned in ecocriticism courses for exactly that sleight of hand.",
+        "action": "For one product you love, trace its serpent chapters: the unseen lifecycle upstream. Let one purchase change in response this month."
+      },
+      {
+        "title": "Kennit's Ambition Is a Masterclass in Charm as Predation",
+        "chapter": "The Pirate Thread",
+        "summary": "Captain Kennit, the pirate who dreams of a kingdom, is one of fantasy's great studies in charisma: maimed, brilliant, lucky through an amulet that whispers his own justifications back to him, and hollow where other people should be. Robin Hobb writes him seductively enough that readers catch themselves rooting, then administers the audit: every charm offensive itemised against its victims. The chapters teach pattern recognition for the real world, where Kennits interview well and leave harbours of Wintrows.",
+        "example": "His wizardwood charm, carved from his own ship's wood, flatters his worst impulses into destiny, a device readers have mapped onto every echo chamber since, algorithmic ones included. Robin Hobb wrote it in 1998. The mapping is left as an exercise the reader cannot avoid doing.",
+        "action": "Identify your charm: the voice, feed or friend who only ever agrees with your worst plan. Install one honest counsellor beside it this month."
+      },
+      {
+        "title": "Bingtown's Ledger: Prosperity and Its Upstream",
+        "chapter": "The Trader World",
+        "summary": "The Bingtown Traders' gentility floats on Rain Wild goods harvested in acid rivers and on ships built from a material whose origin the trilogy slowly prices. Robin Hobb's worldbuilding is economic history in costume: every luxury in the parlour scenes has an upstream chapter, and the novel makes comfortable readers do the tracing their own parlours require. The Vestrits' fall is thus not bad luck; it is the upstream bill arriving, as it eventually does in every currency.",
+        "example": "The satisfaction with which Bingtown debates tariffs while slavers dock beside the liveships is drawn with a historian's patience. Jamaillia's satrap, the Rain Wilders' deformities, the serpents' famine: the parlour's candles are lit, the novel insists, by all of it, and the insistence is the plot.",
+        "action": "Light one candle knowingly: pick a household luxury and learn its upstream this week. Decide, in writing, whether the price is one you accept."
+      },
+      {
+        "title": "Robin Hobb's Craft Lesson: Consequences Do Not Expire",
+        "chapter": "Bingtown and Beyond",
+        "summary": "The trilogy's second half is a masterclass in moral compound interest: Kyle's cruelty, the Vestrit debts, the serpents' stolen memories, all accrue until every character is paying for transactions they forgot signing. Deepening for writers and readers alike is to study Hobb's patience. She lets consequences ripen across hundreds of pages while lesser fantasies reset their ledgers each chapter. The world feels real because its debts are collectible, which is also, the serpent chapters suggest, how ecologies experience us.",
+        "example": "Readers consistently report that characters they despised in book one, Malta above all, earn fierce loyalty by book three without a single personality transplant, only consequences, witnessed. It is the Bildungsroman as accounting: growth is what a character looks like after the invoices have been paid in public.",
+        "action": "Audit one grudge or Loyalty of yours this week for its original transaction. Ask what the ledger looks like now, and whether you are still collecting on schedule."
+      },
+      {
+        "title": "What the Liveships Ask About Our Machines",
+        "chapter": "Bingtown and Beyond",
+        "summary": "Wizardwood's horror is a technology stack built on stolen minds: a ship that wakes because serpents died screaming into timber, traded by merchants who inherited the bargain and preferred not to audit it. Deepening means recognising the pattern as our own supply chains wearing fantasy's clothes. Every age builds its conveniences on a substrate it declines to inspect; the novel merely lets the substrate speak, in first person, from the figurehead. The question the trilogy leaves is not whether the Bingtown traders were villains, but whether ignorance maintained for profit is a defence anywhere.",
+        "example": "The Rain Wild traders' respectability, the Bingtown council's ledgers, the Chalcedean slave markets propping up both: Hobb distributes complicity so thoroughly that readers finish hunting for an innocent economy in the book and find none, which is, of course, the intended mirror for the reader's own shipping history.",
+        "action": "Trace one object you own back three suppliers this week: materials, labour, origin. Write down where the trail goes dark and what that darkness is worth to you."
+      }
+    ],
+    "actionPlan": [
+      "Sign one person's papers: endorse a competence being taxed unfairly.",
+      "Run the Vivacia test on one supply chain you feed.",
+      "Write exit honours for any family enterprise you influence.",
+      "Learn one inheritance in your family, debt or gift, with its true story.",
+      "Ask what your household's ship, its main asset, would say if it woke.",
+      "Read it as the first of three; the serpents pay off slowly and fully.",
+      "Protect one competence in a young person with papers, not just praise."
+    ],
+    "caveat": "It is the first volume of a long trilogy with many viewpoints and slow tides; the serpents' chapters baffle some readers until book two. Depictions include slavery and violence integral to its argument against both.",
+    "graveLink": "colonial-famine",
+    "cover": "assets/covers/ship-of-magic.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "second-act-advantage",
+    "title": "The Second-Act Advantage",
+    "author": "Unknown",
+    "year": 2026,
+    "category": "Life & Meaning",
+    "readTime": "9 min",
+    "tagline": "A TSB Original on starting again at forty, fifty, sixty, and winning.",
+    "oneLiner": "The first act was rehearsal. The second act is where the experience, the network and the scars finally compound, if you stop auditioning for the life you already left.",
+    "bigIdea": "This TSB Original is a field manual for the restart: the career change at forty five, the business begun at fifty two, the degree finished at sixty. It argues that late starters hold four unfair assets, pattern recognition, a real network, earned credibility and scar tissue that prices risk correctly, and lose only if they compete on the young person's terms: speed, hunger theatre and cheap hours. Seven moves structure the book, from auditing the first act's assets to designing the ninety day proof.",
+    "quotes": [
+      "Youth is a head start. Experience is a shorter route.",
+      "You are not behind. You are loaded.",
+      "The second act does not need your younger self's permission."
+    ],
+    "lessons": [
+      {
+        "title": "The Asset Audit the Young Cannot Fake",
+        "chapter": "One: What the First Act Actually Bought You",
+        "summary": "Second acts fail when they start from the deficit story: outdated skills, less energy, missed boats. This opening move inventories the assets that only time issues: pattern recognition across cycles, a network that answers your calls, credibility that opens rooms, and judgement about which fires are real. None of these fit on a resume line, so restarters undervalue exactly what employers and markets pay premiums for. The audit is done on paper, with names, dates and evidence, because vague confidence evaporates at the first rejection.",
+        "example": "A fifty one year old logistics manager, laid off and certain she was finished, listed twenty years of supplier relationships and three factory rescues. Within a month a former vendor hired her to do for five factories what she had done for one. The assets were never missing; the inventory was.",
+        "action": "Write your asset audit tonight: ten patterns you can spot early, ten people who take your call, five rescues you have performed. Keep it where interviews can see it."
+      },
+      {
+        "title": "Do Not Compete on Their Track",
+        "chapter": "Two: Positioning the Second Act",
+        "summary": "The restart error is entering the young person's race: cheapest, fastest, most available. The second act wins on the opposite terms, most trusted, wisest about consequences, connected where it counts. This chapter teaches positioning as a translation exercise: every decade of your past becomes a sentence about the future it lets you protect or accelerate for someone else. Markets pay for avoided disasters at rates they never pay for effort, and only veterans can sell avoidance credibly.",
+        "example": "A forty eight year old accountant stopped applying for jobs against twenty five year olds and began offering fraud cleanups to small firms burned once already. Her grey hair closed sales that her spreadsheet never could. She doubled her old salary in eighteen months, part time.",
+        "action": "Write your translation sentence: because I have seen X three times, I can protect you from Y. Say it to one prospect this week."
+      },
+      {
+        "title": "The Ninety Day Proof",
+        "chapter": "Three: Momentum Before Identity",
+        "summary": "Second acts die in the planning year. The manual's rule: ninety days to a visible proof, a paid pilot, a finished portfolio piece, a first cohort taught, before any announcement of a new identity. Proof creates its own confidence and its own information: the market's response to a real offer teaches more than a year of courses. The chapter sizes the proof small enough to survive a job and family, and public enough to recruit allies and early customers.",
+        "example": "A fifty six year old teacher dreaming of a bakery ran four Saturday pop ups before resigning anything. The fourth sold out, a cafe owner offered shelf space, and the dream acquired data. Her notice, when it came, was a formality the numbers had already signed.",
+        "action": "Define your ninety day proof today: one offer, one audience, one date. Tell two people the date so it costs something to miss."
+      },
+      {
+        "title": "Energy Is Managed, Not Found",
+        "chapter": "Four: The Physiology of Starting Again",
+        "summary": "The restart literature aimed at fifty year olds lies about energy: you do not need a twenty five year old's stamina, you need a veteran's scheduling. This chapter covers the unglamorous levers, sleep defended like medication, strength training as cognitive insurance, work in ninety minute campaigns with real endings, and the ruthless pruning of obligations that belonged to the first act's politics. Energy, managed this way, routinely beats the young rival's chaotic abundance.",
+        "example": "A consultant who restarted at fifty three scheduled client work in three morning campaigns and stopped apologising for afternoons spent walking and reading. Revenue rose, because the campaigns were terrifyingly focused, and his evening temper, his family reports, became unrecognisable.",
+        "action": "Redesign next week as three daily campaigns with hard endings. Defend sleep like a client meeting for seven nights and measure your mornings."
+      },
+      {
+        "title": "The Network You Already Have Is the Market",
+        "chapter": "Five: Compounding Relationships",
+        "summary": "Restarters network like beginners, cold messages and conferences, while sitting on twenty years of warm relationships gone quiet. This chapter runs the reactivation play: the honest update message, the small useful gift of information, the ask made specific and easy. It also teaches the second act's etiquette: your network owes you nothing and will give you everything, in that order, provided you bring news and usefulness rather than nostalgia and need.",
+        "example": "A laid off editor sent thirty former colleagues one message: what she was building, one article of theirs she had genuinely used, one small offer of help. Eleven replies, four coffees, two contracts. The network had been waiting for a reason to be a network again.",
+        "action": "Send five reactivation messages this week: honest update, genuine appreciation, one small specific offer. Track replies like sales data."
+      },
+      {
+        "title": "Money: Runway, Bridges and the Dignity Budget",
+        "chapter": "One: Finance the Crossing",
+        "summary": "The manual treats money plainly: calculate the real monthly floor, build the longest runway the first act can fund, and find bridge income that pays without consuming the new thing's hours. It introduces the dignity budget, the lines you will not cut because a miserable restart quits early, and the vanity lines that can go without a tear. Marriages survive second acts when this chapter is done together, in spreadsheets, before the leap.",
+        "example": "A couple priced his transition to landscape design at fourteen months: six of savings, eight bridged by two days a week of his old estimating work. The bridge bored him and saved everything. He resigned the bridge in month nine, ahead of schedule, because the plan had removed panic from his pricing.",
+        "action": "Do the crossing maths this weekend: floor, runway months, bridge options, dignity lines. One page, shared with whoever shares your bills."
+      },
+      {
+        "title": "Identity Lag Is Normal; Dress for the New Part Anyway",
+        "chapter": "Seven: Becoming",
+        "summary": "The last chapter addresses the impostor weather of second acts: you will feel like a beginner wearing a veteran's face, because you are both. The manual normalises the lag, identity trails evidence by about a year, and prescribes the interim disciplines: collect the evidence file, borrow confidence from the proof, and let the calendar work. It ends with the book's thesis restated as an instruction: the second act is not a comeback, because you never left; it is the first act the experience was for.",
+        "example": "A woman who opened her clinic at fifty eight kept a folder of patient thank yous against the evenings she felt like a fraud. By the second year she rarely opened it. The folder is now given, as an assignment, to every younger colleague she mentors through their own lag.",
+        "action": "Start your evidence file today: proofs, thanks, results, one page minimum. Read it on the evenings the impostor weather rolls in."
+      },
+      {
+        "title": "The Portfolio Self: Three Small Bets Beat One Big Leap",
+        "chapter": "The Advantage",
+        "summary": "The second act rarely arrives as a single leap; it assembles from portfolio bets, a consulting day a week, a course taught, a small product, a board seat, run in parallel until the evidence picks the winner. Your advantage over the young is that you can afford experiments they must bet rent on, and you know which rooms matter. The discipline is to keep each bet small, time boxed and reviewed, so the portfolio learns faster than your courage drains.",
+        "example": "The executives who land best in the handbook's cases ran three bets for two quarters, then doubled the one with paying strangers. The ones who stalled announced one grand reinvention, told everyone, and then had to defend the announcement instead of testing the idea.",
+        "action": "List three bets you could start within a month at under five hours a week each. Start the cheapest this week and schedule its ninety day review now."
+      }
+    ],
+    "actionPlan": [
+      "Write the asset audit: patterns, people, rescues, tonight.",
+      "Craft your translation sentence and say it to a prospect.",
+      "Set the ninety day proof with a public date.",
+      "Rebuild next week as three campaigns; defend sleep seven nights.",
+      "Send five reactivation messages this week.",
+      "Do the crossing maths on one shared page.",
+      "Start the evidence file and stock it weekly."
+    ],
+    "caveat": "A TSB Original: our studio's synthesis of restart research and coached cases. Individual results vary with health, markets and luck; the finance chapter is planning guidance, not financial advice.",
+    "graveLink": "blockbuster-late-fee",
+    "cover": "assets/covers/second-act-advantage.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "grandparents-handbook-2",
+    "title": "The Grandparent's Handbook",
+    "author": "Unknown",
+    "year": 2026,
+    "category": "Family & Parenting",
+    "readTime": "8 min",
+    "tagline": "A TSB Original on the second great love of your life, done right.",
+    "oneLiner": "Grandparenting is the only promotion with no training, total joy, and one rule that decides everything: you are the support act now, and the support act steals no scenes.",
+    "bigIdea": "This TSB Original is written for the grandparent who wants to be central without being a problem. It covers the modern job description: backing the parents' rules while being the child's soft place, distance grandparenting over video calls, blending families and second marriages, money help that does not buy control, and the long game, being remembered as safety. The research it draws on is plain: children with involved, low-conflict grandparents do measurably better, and the grandparents live longer too.",
+    "quotes": [
+      "The parents make the weather. Grandparents are the climate of love around it.",
+      "Be the harbour, not the second captain.",
+      "Grandchildren do not need a richer childhood. They need a witnessed one."
+    ],
+    "lessons": [
+      {
+        "title": "The Prime Directive: Support the Parents, Publicly",
+        "chapter": "One: The Job Description Nobody Gives You",
+        "summary": "Every grandparent conflict begins at the same border: whose rules govern this child? The handbook's prime directive settles it: the parents rule; you advise when asked and model always. Undermining, the extra sweet after a parental no, the eye roll at the screen time limit, buys a grandchild's delight at the price of your children's trust, and trust is the currency your access is paid in. The grandparents grandchildren keep are the ones their parents never have to defend against.",
+        "example": "A grandmother who thought her daughter's no-sugar rule was theatre kept a secret biscuit tin. The discovery cost her unsupervised visits for a year. Her neighbour, who enforced a stricter rule than her own at the parents' request, has the children every Friday. The arithmetic is not subtle, and grandchildren eventually do it themselves.",
+        "action": "Ask your children this week: what are your three house rules you most need me to back? Write them down and back them visibly."
+      },
+      {
+        "title": "Be the Harbour: What Grandchildren Actually Store",
+        "chapter": "Two: The Emotional Architecture",
+        "summary": "Ask adults about beloved grandparents and they rarely mention expenditure. They remember being listened to without a phone, food that meant someone noticed their tastes, a house where their stories were front page news. The handbook calls this harbour work: a place where the child's worth is not performance based. In a childhood of school metrics and parental worry, one harbour where you are simply delightful company is developmental gold, and only grandparents have the time and the distance to run it.",
+        "example": "A grandfather in our research kept a notebook of his granddaughter's sayings from age three. At her graduation he gave her the notebook. She wept; the family still talks about the gift that cost a decade of attention and about fifty rupees of paper. Witnessing, compounded, is the inheritance that lands.",
+        "action": "Start the notebook for each grandchild this week: dated sayings, drawings, small events. Ten years from now it will be priceless, because you started today."
+      },
+      {
+        "title": "Distance Grandparenting: A Craft, Not a Compromise",
+        "chapter": "Three: Love Across Time Zones",
+        "summary": "Millions of grandparents now do the job across oceans, and the handbook treats it as a craft with technique: short regular calls beat long rare ones, rituals beat conversations for the under sevens, read the same book on both ends of the call, play the same game, cook the same recipe on Sunday in two kitchens. The goal is a shared life with recurring furniture, not a series of interviews with a small stranger asking what they learned in school.",
+        "example": "A grandmother in Kochi and a grandson in Toronto read one chapter of the same novel every Sunday, hers in Malayalam translation, his in English. He is fourteen now and the calls continue, because the ritual grew up with him instead of expiring with the picture books.",
+        "action": "Start one shared ritual this month: same book, recipe, match or serial on both ends. Put it in both calendars as unmissable."
+      },
+      {
+        "title": "Money Without Strings, Help Without a Throne",
+        "chapter": "Four: The Generous and the Wise",
+        "summary": "Grandparent money is love with a bank transfer, and it corrupts exactly like power when it arrives with conditions. The handbook's rules: give to the parents' plan, not around it; fund experiences and education before objects; never let a child learn that grandma is the appeals court for parental noes; and if you help adult children, write the terms like family and like adults, amount, purpose, and whether it is gift or loan, because ambiguity is the seed of the worst family lawsuits we autopsy elsewhere in this library.",
+        "example": "One grandfather paid school fees directly to the school for a decade, told both parents the full arrangement once, and never mentioned it to the children. The help landed as pure infrastructure. His brother funded treats against the parents' wishes and bought himself a decade of being managed.",
+        "action": "Convert one money habit this month: align one gift with the parents' plan, and put one family loan's terms in writing, kindly."
+      },
+      {
+        "title": "The Long Game: Being Remembered as Safety",
+        "chapter": "Five: Legacy Is a Feeling Before It Is a Will",
+        "summary": "The closing chapter turns to what remains: grandchildren forget lectures and keep climates. The handbook advises building the memory deliberately, your stories told at their level, your skills passed hand to hand in kitchens and workshops, your own parents kept alive in anecdotes so the child knows they come from a line of people. And it advises finishing the paperwork of love: the will, the letters, the recorded voice, because being remembered as safety includes not leaving a courtroom as your monument.",
+        "example": "A retired teacher recorded herself reading twenty stories before her voice weakened. Her great grandchildren, unborn when she died, now fall asleep to their great grandmother. The family calls it the library of her voice. It took one winter of evenings with a phone recorder.",
+        "action": "Record one story in your voice this week for descendants you may never meet. Then check that your will says what your love intends."
+      },
+      {
+        "title": "The Emergency Role: Be the Calm They Can Summon",
+        "chapter": "The Role",
+        "summary": "Every family eventually has the 2 a.m. phone call, and grandparents are either the calm at the end of it or another emergency in progress. The craft is preparation: know the medications, the paediatrician, the school gate rules, where the documents live, and how to arrive helpful rather than histrionic. Being summonable is a skill built in peacetime, through boring questions asked kindly at Sunday lunches, long before anyone needs the answers at speed.",
+        "example": "The grandparents grandchildren call first in the handbook's stories are rarely the most generous. They are the ones who knew the blood group, kept the spare key labelled, and could sit in a hospital corridor without making their fear the family's second patient.",
+        "action": "Ask the boring questions this month and write the answers down: doctors, medications, documents, spare keys. Being summonable is built in peacetime."
+      },
+      {
+        "title": "When the Parents' Rules Are Not Yours",
+        "chapter": "The Role",
+        "summary": "Bedtimes, sugar, screens, faith, discipline: the parents will set rules you privately consider wrong, and the handbook's position is absolute, their house, their call, your counsel by invitation only. The one exception is safety, where you speak plainly and accept the weather. Grandparents who smuggle exceptions teach grandchildren that rules are negotiable with charm, a lesson that will be used on everyone, eventually including you, at an age when you will enjoy it less.",
+        "example": "The case in the programme files is the secret sweet drawer, discovered, as it always is, and converted by the parents into a trust audit of the entire grandparent operation. The sugar was forgiven in a day. The audit took a year, which is the exchange rate on smuggled exceptions generally.",
+        "action": "Ask the parents, in so many words, which rules are hard lines and which are preferences. Write their answer down and honour the hard lines visibly."
+      },
+      {
+        "title": "The Inheritance of Stories Is Your Real Estate",
+        "chapter": "The Role",
+        "summary": "Money divides; stories bind. The grandparent's unique asset is being the only living bridge to people the grandchildren will never meet, and the asset depreciates unrecorded. The craft is small and regular: one story per visit, told at the table rather than performed, with names, places and one sensory detail. Record the favourites on a phone when the children ask for them again. Repetition is not failure in this medium; it is how a child files a person into permanence.",
+        "example": "The programme's most quoted finding is that grandchildren who can tell one story about each great grandparent show measurably stronger resilience in adolescence. Nobody can explain the mechanism cleanly, but the bridge generation is the only supplier, and the supply window is your lifetime.",
+        "action": "Tell one story this week with names and a sensory detail. When it is asked for again, record it. Repetition is the filing system, not a failure of range."
+      }
+    ],
+    "actionPlan": [
+      "Ask your children for their three rules; back them visibly.",
+      "Start the sayings notebook for each grandchild today.",
+      "Begin one shared ritual across any distance this month.",
+      "Align one money gift with the parents' plan; write one loan down.",
+      "Record one story in your voice this week.",
+      "Tell one story of your own parents at the next family meal.",
+      "Review the will this quarter; let safety include paperwork."
+    ],
+    "caveat": "A TSB Original synthesising developmental research and family practice. Families in conflict, custody disputes or estrangement need mediation and counsel beyond any handbook, including this one.",
+    "graveLink": "spicejet-crisis",
+    "cover": "assets/covers/grandparents-handbook-2.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "phone-free-childhood",
+    "title": "The Phone-Free Childhood Playbook",
+    "author": "Unknown",
+    "year": 2026,
+    "category": "Family & Parenting",
+    "readTime": "9 min",
+    "tagline": "A TSB Original for parents who want to give their child a childhood the algorithm did not design.",
+    "oneLiner": "The question is not phone or no phone. It is what the phone replaces: boredom, roaming, sleep, friends in person. This playbook protects those four, with tactics families have actually sustained.",
+    "bigIdea": "Written for parents negotiating the smartphone years, this TSB Original refuses both panic and surrender. It lays out the developmental stakes plainly, sleep, attention, friendship and independence, then gives a staged plan: delay by default with a family constitution, substitute real world freedom for screen freedom, coordinate with other parents so no child is exiled alone, and model the behaviour because children copy the phone in your hand, not the rules in your mouth.",
+    "quotes": [
+      "Do not fight the phone. Outbid it.",
+      "Boredom is not the enemy. Boredom is the doorway.",
+      "Your child will remember the roaming, not the feed."
+    ],
+    "lessons": [
+      {
+        "title": "What the Phone Actually Replaces",
+        "chapter": "One: The Real Ledger",
+        "summary": "The playbook begins with accounting rather than alarm. Every hour of feed displaces something specific: sleep first, then unstructured play, then face to face friendship, then boredom, the mind's compost. Parents who see the ledger stop arguing about the device and start defending the four assets. The chapter summarises the research without hysteria: the harms concentrate in heavy, passive, night time and socially comparative use, which is good news, because those are precisely the patterns a household can redesign.",
+        "example": "A family in our interviews tracked one week honestly: the phone's biggest theft was not homework time but the hour before sleep and the Saturday morning that used to be roaming. They moved charging out of bedrooms and reclaimed both without a single argument about apps.",
+        "action": "Run the ledger for your child this week: what did the screen hours come out of? Defend the most valuable displaced thing first."
+      },
+      {
+        "title": "Delay Is a Team Sport",
+        "chapter": "Two: The Constitution and the Pact",
+        "summary": "The lone delaying family makes its child a exile; the coordinated street makes delay a norm. This chapter gives the scripts: the parent group chat, the school gate conversation, the shared pledge on first phones and social accounts, and the family constitution that puts the rules in writing before the birthday that triggers the begging. Children accept collective fairness with a grace they never extend to being uniquely deprived, so the parent's first job is diplomacy with other parents.",
+        "example": "One class of eleven year olds went from three phone owners to a signed pact of twenty families within a term, after two mothers hosted a single evening with the research printed out. The children, consulted, mostly voted for the pact themselves: nobody wanted to be first, whatever they said at home.",
+        "action": "Start the pact conversation this month: one message to your child's five closest friends' parents proposing shared timing. Expect relief, not resistance."
+      },
+      {
+        "title": "Outbid, Don't Just Forbid",
+        "chapter": "Three: The Substitute Curriculum",
+        "summary": "Rules without substitutes collapse by half term. The playbook's third move is a deliberate curriculum of real world freedoms scaled by age: roaming range, errands with real responsibility, a sport or craft with visible mastery, work that earns, and unstructured time with other children and no adults stage managing. Each freedom is the phone's competitor in the only currency that matters to a child: status, novelty and autonomy. Parents are coached to sell the substitutes as upgrades, not consolations.",
+        "example": "A father traded his daughter's requested phone at twelve for a bank card, a bicycle with a doubled roaming range, and a Saturday job helping at a stable. She negotiated hard, then forgot the phone for a year. The autonomy she actually wanted had been delivered in a better currency.",
+        "action": "List three freedoms your child can win this year that are not screens. Offer the first this week, ceremonially."
+      },
+      {
+        "title": "The Parents' Phones Are the Loudest Lesson",
+        "chapter": "Four: Modelling and the Household System",
+        "summary": "Every study the playbook cites lands on the same awkward fact: parental screen habits predict child habits better than parental rules. The chapter therefore designs the household system rather than the child's compliance: charging stations outside bedrooms for everyone, phone free meals with the basket visible, notification audits for the adults first, and the parent narrating their own struggles honestly. Children forgive hypocrisy slowly and imitate systems immediately, so the system is the sermon.",
+        "example": "A mother installed the charging basket for the family's phones including her own, and reported the first week as personally brutal and domestically miraculous: dinner doubled in length, and her son began reporting his day because nobody's face was lit from below. Her own sleep score, she notes, was the family's best data.",
+        "action": "Install the charging basket tonight for every phone in the house, yours first. Announce it as a family upgrade, not a child punishment."
+      },
+      {
+        "title": "When the Phone Arrives: The Graduation Plan",
+        "chapter": "Five: First Phone, Done Properly",
+        "summary": "Delay ends; the playbook's final chapter stages the arrival like a licence: a basic device before a smart one where possible, accounts introduced one at a time with the parent as co pilot, the constitution revisited and signed by the new owner, and scheduled reviews that shrink as trust compounds. Breaches are handled as driving instructors handle them, calmly, with retraining rather than theatre, because the goal is a competent adult user at eighteen, not a surveilled child at thirteen.",
+        "example": "One family issues what they call the phone licence: three stages printed on the fridge, each unlocking apps and hours after a month of clean driving. Their son polices himself to earn stage two, and tells his friends, with pride, that his parents run a licensing authority. Structure, worn lightly, became status.",
+        "action": "Draft your graduation plan now, before the device: stages, unlocks, reviews. Show it to your child at the next phone negotiation."
+      },
+      {
+        "title": "The School Gate Economy: Why Collective Delay Works",
+        "chapter": "The Graduation Plan",
+        "summary": "One family delaying alone pays the full social cost; fifty families delaying together pay almost none, because the child's social world exists offline for everyone simultaneously. The handbook's practical core is organising the pledge at school level: a cohort agreement, phones after a shared age, basic devices permitted for safety, reviewed yearly. The politics are local and winnable, and the evidence from schools that have done it is that the catastrophic predictions, exclusion, rebellion, arrive mostly in the speeches beforehand.",
+        "example": "The parent pledges that worked shared three features the failures lacked: a named start date, a basic phone carve out so safety arguments died early, and a public list so no family had to trust rumours that others were holding the line.",
+        "action": "Raise the pledge with two other families this month, aiming at a cohort, not a conversion. Offer the basic phone carve out before anyone asks for it."
+      },
+      {
+        "title": "What Replaces the Phone Must Be Better Lit",
+        "chapter": "The Graduation Plan",
+        "summary": "Removal fails when the replacement is a lecture. The phone colonised boredom, friendship, status and risk; the substitutes must serve the same hungers in daylight: roaming range that grows with competence, dens and pitches and kitchens where children are sovereign, work that pays, teams that need them. Parents underestimate how much of the phone is simply the only unsupervised territory on offer. Extend the territory and watch the device's empire shrink to its genuinely useful provinces.",
+        "example": "The neighbourhoods in the handbook's files that cut teen screen hours most were not the strictest; they were the ones with a floodlit court, a tolerant shopkeeper and a bus route children were allowed to use alone. Geography did what confiscation could not.",
+        "action": "Extend one real territory this month: a route, a pitch, a project with genuine stakes. Measure the phone's hours afterward rather than announcing the policy."
+      },
+      {
+        "title": "The Repair Protocol for When It Goes Wrong Online",
+        "chapter": "The Graduation Plan",
+        "summary": "Something will eventually go wrong: a cruel group chat, an image shared, a stranger's message. The handbook's protocol is rehearsed before it is needed, because a child who expects confiscation and shame will hide the incident until it is unfixable. Amnesty for reporting, screens reviewed together, schools and platforms engaged with the evidence preserved, and the child treated as the incident's first victim even when they were also a participant. Trust is the monitoring system; everything else is forensics after the fire.",
+        "example": "The families who learned of incidents within hours shared one feature: a declared amnesty, repeated at calm dinners, that reporting would never cost the child their device or dignity. The others learned at the school's timetable, which is to say at the incident's maximum size.",
+        "action": "Declare the amnesty at a calm dinner this week: whatever you show me, you keep your dignity and we fix it together. Mean it before you need it believed."
+      }
+    ],
+    "actionPlan": [
+      "Run the displacement ledger for one week; defend the best thing first.",
+      "Start the parents' pact with one message this month.",
+      "Offer one real world freedom this week, ceremonially.",
+      "Install the whole family charging basket tonight, yours included.",
+      "Do your own notification audit before your child's.",
+      "Draft the phone graduation plan before any device arrives.",
+      "Schedule the first constitution review in ninety days."
+    ],
+    "caveat": "A TSB Original synthesising current developmental research and family practice. Every child's needs differ, including medical, safety and neurodivergent contexts where devices serve real needs; adapt the playbook, do not worship it.",
+    "graveLink": "mc-hammer-broke",
+    "cover": "assets/covers/phone-free-childhood.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "loneliness-cure",
+    "title": "The Loneliness Cure",
+    "author": "Unknown",
+    "year": 2026,
+    "category": "Life & Meaning",
+    "readTime": "9 min",
+    "tagline": "A TSB Original on building a connected life in a disconnected age.",
+    "oneLiner": "Loneliness is not the absence of people. It is the absence of being needed, known and expected somewhere. This book treats it like the health condition it is, and prescribes accordingly.",
+    "bigIdea": "Surgeons general now call loneliness an epidemic with the mortality signature of smoking. This TSB Original is a practical cure manual: it distinguishes solitude from loneliness, maps the three circles of connection, weak ties, close friends, and belonging, and gives a twelve week protocol of small, repeatable doses: recurring rooms, micro obligations, hosted rituals and repaired relationships. Its central claim: connection is a practice with a dosage, not a personality trait some were issued at birth.",
+    "quotes": [
+      "You do not need more people. You need a place where your absence is noticed.",
+      "Belonging is built by being expected.",
+      "Weak ties are not weak. They are the mycelium of a life."
+    ],
+    "lessons": [
+      {
+        "title": "The Diagnosis: Three Hungers, Not One",
+        "chapter": "One: What Loneliness Actually Is",
+        "summary": "The cure starts by splitting the complaint. Intimate hunger wants one person who knows everything; relational hunger wants a circle that would notice your empty chair; collective hunger wants a tribe, a team, a congregation, a we. Different hungers, different medicines, and much loneliness persists because people dose the wrong one, seeking a soulmate to cure what a weekly team would fix, or collecting acquaintances while the intimate chair stands empty. The chapter gives a self audit that takes four minutes and changes the treatment plan entirely.",
+        "example": "A recently retired surgeon, surrounded by colleagues at conferences, scored himself and found the collective chair full and the intimate chair empty since his divorce. He had been prescribing himself more events. The audit redirected a year of effort into two friendships, and the conferences became pleasant again.",
+        "action": "Run the three chairs audit tonight: intimate, relational, collective, scored one to ten. Prescribe for the emptiest chair only."
+      },
+      {
+        "title": "Weak Ties Are Load Bearing",
+        "chapter": "Two: The Mycelium Layer",
+        "summary": "Research on wellbeing keeps embarrassing our intuitions: the barista who knows your order, the neighbour with the dog, the fellow commuter, measurably protect mood and health, and their loss, in moves and lockdowns, is felt as grief. This chapter teaches weak tie gardening: names learned, greetings upgraded to micro conversations, routes and hours made regular so the same faces can recur. It is the cheapest layer of connection to build and the fastest to pay out.",
+        "example": "A woman who moved cities for work built no friendships for months and felt herself thinning. Her prescription was pure mycelium: same cafe, same run club, same market stall, greetings by name within a month. The deep friendships arrived later, introduced, as they usually are, by the shallow layer.",
+        "action": "Choose three recurring places this week and become a regular: same time, names learned, one real sentence beyond the transaction."
+      },
+      {
+        "title": "Recurring Rooms Beat Memorable Events",
+        "chapter": "Three: The Architecture of Belonging",
+        "summary": "Belonging research converges on an unglamorous formula: the same people, at the same time, doing the same thing, with low stakes and no RSVP theatre. Choirs, leagues, congregations, volunteer shifts and standing breakfasts outperform spectacular gatherings because repetition converts strangers into witnesses of your life. This chapter helps the reader join, or found, one recurring room, with scripts for the awkward first three attendances, which are the price of admission everyone pays and nobody mentions.",
+        "example": "A widower dragged to a Thursday morning men's breakfast by a neighbour nearly quit twice. By week six the table knew his order, his late wife's name and his opinions about the cricket. He now describes the breakfast, accurately, as the structure holding his week above water.",
+        "action": "Book one recurring room this week and attend three times before judging it. Put all three dates in the calendar now."
+      },
+      {
+        "title": "Being Needed Is the Deepest Medicine",
+        "chapter": "Four: Roles, Not Audiences",
+        "summary": "Loneliness persists in rooms where we are audiences and dissolves in rooms where we have a role: the one who brings the keys, keeps the score, teaches the new volunteer. The chapter argues that contribution is connection's strongest form because it manufactures the experience at loneliness's exact opposite pole: your absence would be noticed and would matter. Readers are guided to acquire one small, real responsibility in a group they already like, and to let obligation do the socialising their courage cannot.",
+        "example": "A shy software engineer joined a community kitchen as a dishwasher and was promoted, against her protests, to soup. The role gave her forty names, a reason to return on the weeks motivation failed, and the first birthday party invitation of her adult life in that city. The soup, she insists, was incidental.",
+        "action": "Acquire one small role this month in a group you attend: keys, scores, setup, treasury. Let being needed introduce you."
+      },
+      {
+        "title": "Repair and Reach: The Two Hardest Doses",
+        "chapter": "Five: Old Wounds, New Invitations",
+        "summary": "The protocol ends where most loneliness actually lives: the drifted friendship awaiting one message, the sibling silence awaiting one call, and the invitations we wait to receive instead of extending. The chapter supplies the exact texts, short, warm, free of the guilt invoice, and the host's playbook for a first small gathering that cannot fail: six people, one pot, ninety minutes, a question on the table. It closes with the maintenance dose: connection, like fitness, is rented weekly, and the rent is lower than the loneliness it replaces.",
+        "example": "Two friends who had drifted for six years resumed over one message that the book dictates almost verbatim: no occasion, no apology essay, just a memory and a coffee date. Both later said they had each waited for the other. The six year gap cost one text message to close, which is the book's whole argument in one embarrassment.",
+        "action": "Send the drifted-friend message today: one memory, one invitation, no invoice. Then put one six person gathering in the calendar within thirty days."
+      },
+      {
+        "title": "Design Your Week Like a Village",
+        "chapter": "The Cure",
+        "summary": "Villages never required their members to schedule friendship; the well, the market and the festival carried it. Urban life abolished the carriers and billed individuals for the loss as a personality flaw. The cure's design move is to rebuild carriers at personal scale: the same cafe at the same hour, the recurring game, the standing walk, the class that meets weekly for years. Loneliness is usually a logistics problem wearing a diagnosis, and logistics is mercifully fixable without first becoming a different person.",
+        "example": "The programme's members who recovered fastest did not attend the most events; they attended the same event forty times. By week ten the regulars' table had absorbed them, which is the village mechanism working exactly as designed, at the scale of one cafe and a calendar that repeats.",
+        "action": "Choose one recurring room and attend it four weeks running before judging it. Villages are built by repetition, not by reviewing venues."
+      },
+      {
+        "title": "The Friendship Budget: What Connection Actually Costs",
+        "chapter": "The Cure",
+        "summary": "Research on friendship formation puts a price on intimacy: roughly fifty hours to move from acquaintance to friend, ninety to something closer, usually accumulated without anyone counting. Modern loneliness is partly an accounting illusion, hours scattered across dozens of pleasant contacts that never compound into anyone. The cure suggests concentration: fewer rooms, more hours, names learned, follow ups sent. Depth is a budget decision before it is a chemistry event, and the budget is the one thing fully in your control.",
+        "example": "Members asked to log their social hours discovered the pattern immediately: eleven people at three hours each, nobody at fifty. The ones who reallocated rather than added, same total hours, one table, reported the shift within two months, which suggests the loneliness was a portfolio problem all along.",
+        "action": "Audit last month's social hours by person. Move five hours toward one promising acquaintance this month and watch the category change."
+      },
+      {
+        "title": "Being the Host Is the Shortcut Nobody Wants",
+        "chapter": "The Cure",
+        "summary": "The loneliest people wait to be invited; the connected ones issue invitations and absorb the small humiliations of organising, the unanswered messages, the four who said maybe. Hosting is the cure's least popular prescription and its most reliable, because it reverses the applicant position entirely. A standing small table, soup on Thursdays, a walk that leaves at seven regardless, converts you from candidate to convener, and convener is the role every village protects. The rejections sting for a week; the table feeds you for years.",
+        "example": "The programme's founding story is a widow who started a Thursday soup with four chairs and a rule that nobody had to earn their seat twice. Three years on it has a waiting list, which she finds hilarious, having begun it, in her words, because nobody was going to invite her first.",
+        "action": "Issue one concrete invitation this week with a date and a table. Repeat it monthly at the same time. Conveners are made by calendars, not charisma."
+      }
+    ],
+    "actionPlan": [
+      "Run the three chairs audit; dose the emptiest chair first.",
+      "Become a regular in three places this week; learn names.",
+      "Join one recurring room; attend three times before judging.",
+      "Acquire one small role in a group this month.",
+      "Send the drifted-friend message today.",
+      "Host six people, one pot, ninety minutes, within thirty days.",
+      "Review chairs quarterly; connection is rented weekly."
+    ],
+    "caveat": "A TSB Original synthesising public health research and social practice. Loneliness entangled with depression, trauma or illness deserves professional company too; this book is an ally of that help, not a replacement.",
+    "graveLink": "marathon-cheaters",
+    "cover": "assets/covers/loneliness-cure.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "slow-web-manifesto",
+    "title": "The Slow Web Manifesto",
+    "author": "Unknown",
+    "year": 2026,
+    "category": "Future & Technology",
+    "readTime": "8 min",
+    "tagline": "A TSB Original on reading deeply in an internet built for skimming.",
+    "oneLiner": "The web was built to be skimmed, refreshed and forgotten. The Slow Web Manifesto is a reader's rebellion: fewer sources, finished things, saved and returned to, on paper's terms, at the speed of thought.",
+    "bigIdea": "This TSB Original argues that how we read the internet is quietly deciding what kind of minds we have. It diagnoses the skim economy, infinite feeds, notification weather, articles abandoned at paragraph three, then proposes the slow alternative in practical detail: a small trusted source list, read later queues that actually get read, single tasking rituals, annotation as digestion, and finishing as a discipline. It is a manifesto with a method, written by the studio behind a book summary library, in defence of the whole book.",
+    "quotes": [
+      "Skimming is not reading. It is sampling a life you never live.",
+      "Finish things. The ending is where the meaning is kept.",
+      "Your attention is the last private property. Fence it."
+    ],
+    "lessons": [
+      {
+        "title": "The Skim Economy Wants Your Mind in Pieces",
+        "chapter": "One: The Diagnosis",
+        "summary": "The manifesto opens with the business model: platforms are paid for returns, not completions, so every design decision, the infinite scroll, the autoplay, the red badge, exists to fragment your attention into sellable pieces. Readers are not weak; they are outnumbered by engineers. Understanding this changes the remedy from willpower to architecture. You do not resist a casino by character. You leave, or you visit with a plan, a budget and a leaving time, which is exactly how the slow web treats every feed.",
+        "example": "A reader who tracked his reading for a month found 214 articles opened and nine finished, a library of first pages. His summary habit had the same shape: hundreds of books, none inhabited. The numbers, not guilt, made the case for the manifesto's method, and the method began with his opening habit, not his intelligence.",
+        "action": "Count last week's opened versus finished pieces of reading. Write both numbers down; they are your baseline, not your shame."
+      },
+      {
+        "title": "Fewer Sources, Deeper Wells",
+        "chapter": "Two: The Source Diet",
+        "summary": "The slow web's first practice is a source diet: a short list of writers and publications you trust, chosen on purpose, revisited by default, replacing the algorithmic river. The chapter argues from an older technology, the village, where a few known voices, argued with over years, built judgement, while the river builds only reaction speed. Practical guidance follows: how to choose the list, how to let sources go, and the heretical joy of reading yesterday's piece properly instead of today's instantly.",
+        "example": "One editor in our interviews cut forty bookmarks to seven and began finishing the seven. Within a quarter his conversation changed noticeably: fewer hot references, more completed thoughts, and the unsettling calm of a man whose opinions had footnotes. His friends assumed he had taken a holiday from the internet. He had taken ownership of it.",
+        "action": "Cut your source list to ten this week, in writing. Route your reading through the list for fourteen days and note what changes."
+      },
+      {
+        "title": "The Read Later Queue Is a Promise, So Keep It Small",
+        "chapter": "Three: Queues, Saves and Returns",
+        "summary": "Every reader's saved list is a graveyard of good intentions, and the manifesto treats it as a design problem: a queue longer than a week is a guilt machine, not a library. The practices: save rarely and deliberately, process the queue at a fixed weekly sitting like a small magazine you edit for yourself, delete without ceremony, and return to the best pieces a second time, because slow reading's real secret is rereading, where depth actually lives.",
+        "example": "A professor keeps her queue at twelve by charter: a new save requires a deletion or a reading. Sunday coffee processes the queue to zero. She reports the constraint produces the behaviour every app promised: she reads what she saves, and saves only what she will read.",
+        "action": "Set your queue cap today, twelve is a good number, and schedule the weekly processing sitting in your calendar now."
+      },
+      {
+        "title": "Annotation Is Digestion",
+        "chapter": "Four: Making It Yours",
+        "summary": "The slow reader writes back: margins, highlights with reasons, a sentence of summary in their own words, one idea carried into the week. The chapter draws on how memory actually works, retrieval and elaboration, to show that unmarked reading is mostly tourism. It gives a light system anyone will sustain: three marks only, important, surprising, disputed, and a five line digest on Sunday. The goal is not scholarship; it is that some of what you read should still be yours in a year.",
+        "example": "A reader who began the five line Sunday digest filled a notebook in a year and discovered, reviewing it, that his opinions had an archaeology. Ideas he thought were his turned out to be dated entries, arguable and improvable. The notebook became the most interesting thing he owned, outranking the feeds that once owned him.",
+        "action": "Annotate your next long read with the three marks, then write its five line digest before the day ends."
+      },
+      {
+        "title": "Finish Things: The Manifesto's One Commandment",
+        "chapter": "Five: Completion as Character",
+        "summary": "The closing chapter elevates finishing into the slow web's core ethic: books closed, articles ended, series completed, because endings are where arguments reveal themselves and where the reader's judgement is finally exercised. It confronts the sunk cost objection cheerfully, life is too short for bad books, and supplies the abandonment rule that keeps finishing honest: quit at ten percent, decisively, or finish. What it forbids is the third state, the eternal half read, which is the feed's favourite product.",
+        "example": "A book club in our pages adopted the ten percent rule and a public finish list. Completion rates tripled in two months, not because members read more hours but because the half read purgatory stopped consuming them. Several reported finishing, at last, books carried across three house moves.",
+        "action": "List your current half read things. This week: abandon each at its next sitting or schedule its finish date. No third state survives Sunday."
+      },
+      {
+        "title": "The Commonplace Book Is the Slow Web's Memory",
+        "chapter": "The Practice",
+        "summary": "For centuries, serious readers kept commonplace books: passages copied by hand, argued with in margins, reread until they became part of the reader's own thinking. The slow web's equivalent is whatever system lets your reading compound instead of evaporating into a liked and forgotten feed. The format matters less than the retrieval: notes you revisit beat archives you merely keep. A mind is known by what it can summon without a search bar, and summoning is built by transcription, the slowest and therefore deepest of the reading arts.",
+        "example": "The manifesto's readers who kept paper commonplace books reported the same anomaly: they copied less than they saved digitally and remembered nearly all of it. The hand is a filter the save button refuses to be, which is why every tradition that cared about wisdom built transcription into the curriculum.",
+        "action": "Start the commonplace habit today: one passage copied by hand or typed with a sentence of your own beneath it. Revisit the week's pages every Sunday."
+      },
+      {
+        "title": "Slow Is a Quality Standard, Not a Speed Limit",
+        "chapter": "The Practice",
+        "summary": "The manifesto is routinely misread as nostalgia, so its closing clarification matters: slow reading is not about duration but about completion, digestion and use. A book finished slowly and argued with is fast in the only currency that matters, changed behaviour per hour, while the hundred book year that leaves no trace is the truly slow method. Measure your reading by what survives it, quotations you can deploy, decisions it altered, and let the annual count fall where it may. Vanity metrics are fast food's gift to the library.",
+        "example": "Its favourite statistic is a reader who finished nine books in a year and could teach all nine; the programme contrasts the hundred book finisher who, interviewed in January, retained the titles. The nine book reader disputes being called slow, correctly, since her knowledge was compounding and the other's was evaporating at industrial speed.",
+        "action": "Judge last month's reading by survival: write what remains, unaided, on one page. Let that page, not the finished count, set this month's pace."
+      },
+      {
+        "title": "Defend the Margins: Where Slow Readers Think",
+        "chapter": "The Practice",
+        "summary": "Marginalia is the slow web's comment section, except the comments are addressed to the author and your future self instead of an audience performing for itself. Arguing in margins, questioning, connecting, objecting, converts reading from consumption into correspondence, and a book so treated becomes a record of two minds meeting. The practice also solves retention's mystery: we remember what we answered. Lend such books carefully; you are lending the conversation, and borrowers who return them unmarked have only read half.",
+        "example": "The manifesto collects famous margins, scientists annotating rivals into new theories, poets drafting replies that became their own best poems. Its point for ordinary readers is democratic: the pencil is not disrespect. It is the entry fee for the level of the library where the authors are still, in every sense that matters, present.",
+        "action": "Read your next chapter with a pencil and a rule: one objection, one connection, one question per chapter, in the margin. Answerability is retention."
+      }
+    ],
+    "actionPlan": [
+      "Count opened versus finished reading; write the baseline.",
+      "Cut sources to ten; live on the list for fourteen days.",
+      "Cap the read later queue at twelve; process it weekly.",
+      "Annotate with three marks; write five line digests on Sundays.",
+      "Apply the ten percent rule to every half read thing this week.",
+      "Reread one great piece this month instead of opening ten new ones.",
+      "Defend one slow hour daily; it is the manifesto in practice."
+    ],
+    "caveat": "A TSB Original, proudly opinionated. Readers whose work requires monitoring fast information flows will adapt the method to shifts and beats rather than abandon it; the manifesto argues for islands of slowness, not ignorance.",
+    "graveLink": "ebay-china",
+    "cover": "assets/covers/slow-web-manifesto.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "seven-principles-marriage",
+    "title": "The Seven Principles for Making Marriage Work",
+    "author": "John Gottman and Nan Silver",
+    "year": 1999,
+    "category": "Love & Relationships",
+    "readTime": "9 min",
+    "tagline": "What decades of watching couples actually predict: friendship, fondness, and how you fight.",
+    "oneLiner": "John Gottman can predict divorce with startling accuracy, not from how much couples fight, but from whether their friendship system is still alive underneath the fighting.",
+    "bigIdea": "John Gottman's laboratory observed thousands of couples and distilled what separates the masters of marriage from the disasters. It is not compatibility or conflict avoidance. Masters maintain detailed love maps of each other's worlds, nurture fondness and admiration, turn toward small bids for connection, accept influence, solve the solvable problems, dialogue with the perpetual ones, and build shared meaning. The seven principles turn those findings into exercises any couple can run at a kitchen table.",
+    "quotes": [
+      "Happy marriages are based on a deep friendship.",
+      "The determining factor is whether couples repair, not whether they fight.",
+      "Fondness and admiration are two of the most crucial elements in a rewarding and long lasting romance."
+    ],
+    "lessons": [
+      {
+        "title": "Love Maps: Know the Country You Married",
+        "chapter": "Principle 1",
+        "summary": "Couples with rich love maps know each other's current worries, hopes, history and small preferences, and update the map as life changes. John Gottman's research found this knowledge is the foundation everything else stands on, because you cannot respond to a partner you have stopped studying. Major life events, a baby, a new job, a death, redraw the territory, and marriages drift precisely when the maps go stale. The exercises are humble: questions, asked and remembered, refreshed for a lifetime.",
+        "example": "In John Gottman's studies, husbands who could answer detailed questions about their wives' lives, friends, stresses, dreams, weathered the arrival of a first baby far better than those whose maps were blank. The knowledge was not trivia; it was the operating system of their responsiveness during the hardest transition marriage offers.",
+        "action": "Ask your partner three map questions tonight: their current biggest stress, a hope for this year, and one small preference that changed recently. Remember the answers tomorrow, out loud."
+      },
+      {
+        "title": "Fondness and Admiration Are the Antidote to Contempt",
+        "chapter": "Principle 2",
+        "summary": "John Gottman names contempt, disgust, mockery, eye rolling, as the single strongest predictor of divorce, and fondness as its vaccine. Couples who can recall their history warmly, who narrate their struggles as weather rather than character, are inoculated against the contempt cascade. The principle is practised in small appreciations said out loud, because unspoken gratitude does no immunological work. Masters of marriage are not less irritated; they are more stocked with reasons the irritation does not define the person.",
+        "example": "Couples in the lab were asked to tell the story of how they met. Those who lit up with fond detail, even while reporting current problems, overwhelmingly stayed together. Those whose stories had curdled into criticism were, in John Gottman's phrase, rewriting history, and the rewritten history predicted the ending with eerie reliability.",
+        "action": "Tell your partner one specific appreciation daily for a week: observed, recent, and said where others in the house can hear the climate it makes."
+      },
+      {
+        "title": "Turn Toward the Bids",
+        "chapter": "Principle 3",
+        "summary": "Partners constantly bid for connection: a comment, a sigh, a touch, a joke at the window. John Gottman counted the responses: turning toward, turning away, turning against. Masters turned toward 86 percent of the time in his lab; the divorced had managed 33 percent. The moments are so small they look administratively irrelevant, which is the trap. The emotional bank account of a marriage is kept in this currency, and solvency there is what funds grace during conflict.",
+        "example": "A husband points out a bird outside, not because he cares about ornithology but to test whether his wife is in the room with him. Her answer, a glance and a shared sentence, is a deposit. Multiplied by thousands of moments a year, the account either funds the marriage's hard seasons or overdraws silently toward them.",
+        "action": "For three days, answer every bid from your partner within ten seconds, however briefly. Log your turn toward rate honestly at night."
+      },
+      {
+        "title": "The Four Horsemen and Their Antidotes",
+        "chapter": "Principles 4 and 5",
+        "summary": "John Gottman's famous quartet: criticism attacks character, contempt sneers from above, defensiveness refuses responsibility, stonewalling floods and shuts down. Each has an antidote. Criticism becomes a gentle start up, complaint about the situation with the need stated. Contempt yields to appreciation. Defensiveness yields to accepting even a slice of responsibility. Stonewalling yields to physiological self soothing, a twenty minute break that is announced, not vanished into. The cascade can be interrupted at any horseman, which is the hopeful engineering of the chapter.",
+        "example": "A wife opens with you never think of anyone but yourself, and the room arms itself. Rewritten as a gentle start up, I feel overwhelmed by the mornings, I need us to split them differently, the same grievance arrives as a solvable request. John Gottman's couples practise the rewrite until it becomes their first language under stress.",
+        "action": "Take your most repeated complaint and rewrite it as a gentle start up tonight: feeling, situation, need. Use that version next time."
+      },
+      {
+        "title": "Perpetual Problems Get Dialogue, Not Solutions",
+        "chapter": "Principle 6",
+        "summary": "About 69 percent of marital conflict, John Gottman found, is perpetual, rooted in personality and values that will not be fixed by any anniversary. Masters stop trying to win these and learn to dialogue with them: each partner explains the dream, history or value inside their position, and both honour it while designing livable compromises. Gridlock is what happens when the dream goes unspoken and each hears only obstinacy. The question that unlocks it is never why are you like this, but what does this mean to you.",
+        "example": "A couple gridlocked on tidiness unfreezes when he traces order to the chaos of his childhood home and she traces mess to the rigidity of hers. The kitchen stays contested, but the contest is now between two histories being honoured instead of two defects being prosecuted, and compromises finally fit.",
+        "action": "Pick one perpetual argument. Twenty minutes of dream questions only: what does your position protect, and where did you learn it?"
+      },
+      {
+        "title": "Accept Influence or Manufacture a Power Struggle",
+        "chapter": "Principle 4",
+        "summary": "John Gottman's data on this point is stark: marriages where the husband refuses to share power and accept influence from his wife fail at dramatically higher rates, because every decision becomes a referendum on whose reality rules. Accepting influence is not surrender; it is treating your partner's concerns as data about a shared life. His exercises ask couples to practise yielding on small things visibly, building the muscle before the large decisions, money, moves, in laws, arrive with their heavier weather.",
+        "example": "In the lab, a husband who said let us ask what you think would work, and meant it, could disagree on everything else and still score as a master. The sentence functioned as a pressure valve for the whole system, because his wife's nervous system had evidence that her voice changed outcomes in that house.",
+        "action": "Yield visibly on one small decision this week, and say why: your view makes sense to me. Watch what it buys in the next big one."
+      },
+      {
+        "title": "Shared Meaning Is Built, Not Found",
+        "chapter": "Principle 7",
+        "summary": "The final principle is the marriage's culture: the rituals of connection, shared goals, roles and symbols that make two biographies into a household with its own story. John Gottman found masters narrate their struggles as a joint epic, us against the problem, with humour about the early hardships. Couples build this deliberately: how we do mornings, what this family celebrates, what the money is ultimately for. Without shared meaning, the first six principles are techniques in search of a country to defend.",
+        "example": "Couples who could tell their story with a strong we, including the bad years reframed as chapters survived together, scored highest on every measure in the lab. Their secret was not a better past. It was editorial: the same events, narrated as a campaign they had served in together rather than a trial of each other.",
+        "action": "Found one ritual of connection this week: a farewell, a reunion, a Friday review. Name what your household stands for in one sentence together."
+      },
+      {
+        "title": "The Repair Attempt Is the Real Marital Skill",
+        "chapter": "Throughout the Research",
+        "summary": "John Gottman's most hopeful finding: the success of a repair attempt, the joke mid argument, the touch, the let me try that again, predicts a marriage's future better than the absence of fighting. Failed repairs, not fights, are the danger signal, because they mean the friendship system can no longer interrupt the conflict system. Couples are taught to make repairs clumsily and to receive them generously, since a rejected repair, however graceless, doubles the cost of the next attempt.",
+        "example": "Masters in conflict studies deployed repairs constantly, a silly face at minute four of an argument that would have escalated for an hour in other couples, and their partners, crucially, let the repairs work. The divorced couples made the same attempts and watched them get swatted away, after which the argument owned the evening and eventually the archive.",
+        "action": "Make one repair attempt in your next disagreement, however clumsy, and if your partner makes one, accept it visibly before returning to the point."
+      }
+    ],
+    "actionPlan": [
+      "Ask three love map questions tonight; remember them aloud tomorrow.",
+      "One specific appreciation daily for a week.",
+      "Turn toward every bid for three days; log the rate.",
+      "Rewrite your top complaint as a gentle start up.",
+      "Run the dream questions on one perpetual problem.",
+      "Practise the announced twenty minute break when flooded.",
+      "Tell your how we met story together and listen for its temperature."
+    ],
+    "caveat": "John Gottman's prediction percentages come from his laboratory samples and have been debated by statisticians; the exercises, however, are the most field tested in couples research. Where there is violence or coercion, his own institute directs couples to specialist help first.",
+    "graveLink": "gucci-family-war",
+    "cover": "assets/covers/seven-principles-marriage.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "into-thin-air",
+    "title": "Into Thin Air",
+    "author": "Jon Krakauer",
+    "year": 1997,
+    "category": "Life & Meaning",
+    "readTime": "9 min",
+    "tagline": "A personal account of the Mount Everest disaster.",
+    "oneLiner": "Jon Krakauer went to Everest to write about the commercialisation of the mountain. He came down from a night in which eight people died, and wrote the defining account of how ambition, money and thin air conspire.",
+    "bigIdea": "Jon Krakauer, a journalist and climber, joined Rob Hall's Adventure Consultants expedition in spring 1996 to report on Everest's commercial era. The book reconstructs the summit day of 10 May: the queues at the Hillary Step, ignored turnaround times, a storm arriving as exhausted climbers descended, and the deaths of eight people including guides Rob Hall and Scott Fischer. It is also an examination of the system that put paying clients of wildly varying ability on a mountain where, above 8,000 metres, judgement is the first casualty and no one can be carried down.",
+    "quotes": [
+      "The summit is just a halfway point.",
+      "Everest is not a place where you can afford to make mistakes.",
+      "I quickly came to understand that climbing Everest was primarily about enduring pain."
+    ],
+    "lessons": [
+      {
+        "title": "Turnaround Time Is the Rule That Matters Only Once",
+        "chapter": "The Summit Push",
+        "summary": "Rob Hall's expedition had a rule: turn around by early afternoon, summit or not, because descent in darkness or storm is where Everest kills. On 10 May the rule dissolved in summit fever, queues and optimism, and climbers topped out dangerously late. Jon Krakauer's account made turnaround time famous far beyond mountaineering, because every field has one: the abort criterion written in calm weather for the moment ambition will argue. The lesson is that the rule must be enforced by structure, not by the judgement of hypoxic people at the top.",
+        "example": "Climbers who obeyed earlier turnarounds, including some who were furious about it, lived to be furious. Those who summited after mid afternoon descended into the storm. The mountain audited the rule with perfect indifference to how much anyone had paid or dreamed, which is the property of all real turnaround criteria.",
+        "action": "Write the turnaround rule for your current biggest project: the condition, the hour, the person empowered to call it. Sign it while calm."
+      },
+      {
+        "title": "Above 8,000 Metres, Everyone Is Alone",
+        "chapter": "The Death Zone",
+        "summary": "Jon Krakauer explains the physiology plainly: in the death zone the body digests itself, the brain swells and starves, and even guides become incapable of rescue arithmetic. Clients sold the belief that expertise above them could substitute for their own capacity discovered the contract's fine print at the worst altitude. The book's commercial critique follows: a market that charges for summits has incentives to understate exactly this, because the honest brochure, you are essentially alone up there, sells fewer seats.",
+        "example": "Scott Fischer and Rob Hall, two of the strongest high altitude guides alive, both died that night, unable to save themselves, let alone a rope of clients. Their deaths are the book's brutal footnote to the guided summit concept: the insurance policy itself was mortal, hypoxic and weather bound.",
+        "action": "In any venture where you are the client, ask what happens when the expert is incapacitated. If the answer is nothing, price the risk as your own."
+      },
+      {
+        "title": "The Queue at the Hillary Step",
+        "chapter": "Summit Day",
+        "summary": "Dozens of climbers from competing expeditions funnelled onto the same summit ridge on the same morning, waiting at fixed ropes while their oxygen drained. Jon Krakauer's queue scenes taught the world that Everest's scarcest resource is not skill but time at altitude, metered in gasps. The congestion was a scheduling failure with physiological billing: every minute standing still above 8,000 metres was spent from the same account as the descent. Systems thinkers now cite the chapter wherever shared bottlenecks meet hard deadlines.",
+        "example": "Photographs from later seasons, notably the famous 2019 queue, show the same line Jon Krakauer described, hundreds waiting at the Step in a conga line of down suits. The mountain did not change; the market multiplied the queue, and each climber's oxygen clock kept the same unforgiving rate.",
+        "action": "Find your project's Hillary Step: the shared bottleneck with a draining clock. Schedule around it, or carry margin priced in the same currency it charges."
+      },
+      {
+        "title": "Summit Fever Is a Team Disease",
+        "chapter": "The Analysis",
+        "summary": "Jon Krakauer anatomises summit fever as social, not just personal: when clients have paid fortunes, sponsors expect photographs and guides compete on summit rates, turning back becomes a group betrayal rather than a judgement. Individuals who might privately choose descent find the decision made by the rope. His chapters on the other expeditions sharing the mountain that day show the fever crossing teams, each rope of climbers taking the next rope's continued ascent as evidence that conditions must be acceptable, a cascade of borrowed courage.",
+        "example": "Climbers later described watching others continue upward and revising their own fear downward, though the weather had not changed. The mountain that day hosted a market in reassurance, each participant both buyer and seller, and the currency collapsed all at once in the storm.",
+        "action": "In your team, name who is authorised, indeed celebrated, for calling the descent. If nobody is, appoint them before the summit push, not during it."
+      },
+      {
+        "title": "The Clients Who Lived Questioned the Product",
+        "chapter": "Aftermath",
+        "summary": "The survivors' reckonings differ, but several converge on Jon Krakauer's hardest question: what exactly had they purchased? The honest answer, a chance, logistics, company, could not be sold at those prices without the implied answer, the summit. The book's commercial analysis predicted the industry's reforms and its evasions alike: better screening, more oxygen, higher prices, and the same fundamental sale. Readers in every guided industry, from finance to education, recognise the brochure and the fine print, which is why the book escaped the mountaineering shelf within a year.",
+        "example": "One client who survived with severe frostbite spent his recovery defending the expedition he had paid to join, while another became a critic of commercial Everest. Jon Krakauer prints both without adjudicating their grief, letting the reader see how the product shapes even the testimony about it.",
+        "action": "Read the fine print of your most ambitious purchase this year: what is actually promised, and what did the brochure let you assume? Price the gap."
+      },
+      {
+        "title": "Jon Krakauer's Own Account Settles Nothing, Which Is the Point",
+        "chapter": "The Writing of the Book",
+        "summary": "Jon Krakauer reached the summit, descended early, and later learned that a climber he reported dead had been misidentified in the chaos, among other errors of that night that his reporting initially carried. The book's later editions wrestle publicly with disputes, notably with guide Anatoly Boukreev's defenders, over who failed whom above the South Col. Critics assign the quarrel itself a lesson: even an honest witness at altitude produces a partial record, and the families of the dead must live among competing versions. The memoir's authority comes from admitting this inside its own pages.",
+        "example": "He revised the account across editions and printings, appending responses and corrections, an almost unheard of practice for a bestseller. Mountaineering libraries shelve the rival books facing each other; thoughtful readers are expected to climb both.",
+        "action": "Where your version of a disaster is the record, append your corrections visibly. It is the only known antidote to becoming the official story."
+      },
+      {
+        "title": "The Genre His Book Invented Argues With Itself",
+        "chapter": "After Everest",
+        "summary": "Into Thin Air created modern disaster narrative, and Krakauer spends its later chapters interrogating his own account: memory at altitude is unreliable, rivals publish rival truths, and a participant journalist is a witness with a pulse and a deadline. Deepening means reading the book twice at once: the climb, and the autopsy of storytelling itself. His refusal to fully exonerate or convict anyone, including himself, is why the book survives where cleaner verdicts have dated. Ethics, like descent, is what remains after the summit of the argument.",
+        "example": "The public quarrel with guide Anatoly Boukreev's account, The Climb, became a second expedition conducted in print, with both men's oxygen decisions endlessly re litigated. Krakauer's later editions engage the criticism rather than freezing the record, a participant admitting the archive is alive, which climbers and journalists both found harder than the mountain.",
+        "action": "Take one contested memory of your own, write your version and the strongest rival version side by side. Mark every sentence you cannot actually verify at altitude."
+      },
+      {
+        "title": "What the Mountain Charges Now",
+        "chapter": "After Everest",
+        "summary": "The book's aftermath chapters widen into policy: permits sold by governments that need the revenue, queues photographed at the Hillary Step, Sherpa deaths carrying the industry's true mortality. Deepening means assigning costs where they fall. Clients buy a summit chance; Sherpas sell exposure by the season and die at rates clients never face. Any honest love of high places must carry that arithmetic into the booking decision, which is why the book remains prescribed reading far beyond climbing: it is a case study in who pays for other people's transcendence.",
+        "example": "In the decades after 1996, Everest seasons now put hundreds on the summit ridge, and the death statistics remain led by the hired. Krakauer's postscripts keep returning to that ledger, because the commercial structure he described did not fail. It succeeded, scaled, and distributed its costs exactly as designed.",
+        "action": "Before your next adventure purchase, ask who carries its worst risk and what they are paid for carrying it. Let the answer into the price you are willing to pay."
+      }
+    ],
+    "actionPlan": [
+      "Write and sign your current project's turnaround rule while calm.",
+      "Ask who rescues the rescuers in your riskiest plan.",
+      "Map your Hillary Step bottleneck and price its queue honestly.",
+      "Read the summit day chapters before your next ambitious deadline.",
+      "Brief your team on abort criteria out loud, once, this week.",
+      "Audit one success metric that rewards ignoring the turnaround.",
+      "Remember the summit is halfway. Plan descent first."
+    ],
+    "caveat": "Jon Krakauer's account has been contested by other climbers, notably over Anatoly Boukreev's actions; he addresses the disputes in later editions. Read it as a great, argued testimony, not the mountain's only record.",
+    "graveLink": "everest-1996-disaster",
+    "cover": "assets/covers/into-thin-air.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "yes-to-life",
+    "title": "Yes to Life: In Spite of Everything",
+    "author": "Viktor E. Frankl",
+    "year": 2020,
+    "category": "Life & Meaning",
+    "readTime": "8 min",
+    "tagline": "Viktor E. Frankl's lost lectures of 1946, recovered and published: how to say yes to life after the worst year in human history.",
+    "oneLiner": "Months after liberation from the camps, Viktor E. Frankl stood before Viennese audiences and argued for life. These lectures, lost for seventy years, are logotherapy preached while the rubble was still warm.",
+    "bigIdea": "In 1946, a year after his liberation and the confirmation of his family's murder, Viktor E. Frankl delivered three public lectures in Vienna on meaning, suffering and the human spirit. The manuscripts were rediscovered decades later and published as Yes to Life. Compressed and urgent, they present logotherapy before Man's Search for Meaning made it famous: meaning is found in work, in love, and in the stance taken toward unavoidable suffering, and a person who has a why can be asked almost any how. The timing is the argument.",
+    "quotes": [
+      "Everything can be taken from a man but one thing: the last of the human freedoms.",
+      "The meaning of life differs from man to man, from day to day and from hour to hour.",
+      "To speak of a task is to say that life expects something of us."
+    ],
+    "lessons": [
+      {
+        "title": "Life Asks the Questions; We Answer With Our Lives",
+        "chapter": "The Lectures",
+        "summary": "Viktor E. Frankl reverses the usual complaint. We do not get to interrogate life about its meaning and file the answer; life interrogates us, hour by hour, with tasks and fates, and our conduct is the reply. The lectures press the consequence: responsibility is not a burden added to existence but its very substance, because each person is uniquely asked, irreplaceable in the asking. Delivered to a ruined city of people asking what the point had been, the argument landed as oxygen: your life still has a question with your name on it.",
+        "example": "He tells his audience of a man who believed his existence pointless and was asked what his deceased wife would have suffered had she outlived him into that despair. The reframing, his grief as the price of sparing her, is logotherapy's signature move performed live, in a lecture hall, in 1946, on listeners whose losses were months old.",
+        "action": "Write the question life is currently asking you, in one sentence. Answer it with one act this week, however small."
+      },
+      {
+        "title": "Suffering Is Not Necessary, But It Is Not Meaningless Either",
+        "chapter": "On Suffering",
+        "summary": "Viktor E. Frankl is precise where slogans are sloppy: suffering is not required for meaning, and avoidable suffering should be removed, not spiritualised. But when suffering is genuinely unavoidable, the attitude chosen toward it becomes a human achievement of the first rank, the last freedom exercised where all others were confiscated. The lectures refuse both despair and cheap consolation, a balance only a man with his biography could hold in public that year without being booed off the stage.",
+        "example": "He describes prisoners who walked through huts comforting others, giving away their last piece of bread, as proof that the inner freedom survives statistical extremity. The audience of survivors hearing this in 1946 was being handed back a piece of their own dignity as evidence, not as poetry.",
+        "action": "Sort one current suffering honestly: avoidable, therefore to be fought, or unavoidable, therefore to be carried in a chosen stance. Act accordingly this week."
+      },
+      {
+        "title": "Saying Yes Is a Discipline, Not a Mood",
+        "chapter": "The Title Lecture",
+        "summary": "The yes of the title is not optimism. It is a decision renewed against the evidence of moods, taken by a man who had lost his wife, parents, brother and manuscript, and who insisted that the future still contained tasks addressed to him personally. Viktor E. Frankl describes meaning as perceived, not invented, found in the world's claims on us: a work awaiting completion, a person awaiting love, a fate awaiting a stance. The lectures close by assigning the audience their lives as homework, which in Vienna in 1946 was a radical act of faith in the ordinary.",
+        "example": "Within a few years of these lectures Viktor E. Frankl had remarried, rebuilt his clinic, finished the book the Nazis confiscated in draft and become the founder of a school of therapy. The lectures read differently once you know the lecturer's next decade: the yes was not a metaphor he published. It was a schedule he kept.",
+        "action": "Make your yes a schedule: one task, one person, one stance, each with a time this week. Moods may attend or not."
+      },
+      {
+        "title": "Meaning Is Detected, Not Manufactured",
+        "chapter": "Logotherapy's Core",
+        "summary": "Viktor E. Frankl insists meaning is not invented by the self or assigned by a guru; it is detected in the world's specific claims: the work waiting for your hands, the person waiting for your love, the suffering waiting for your stance. The lectures give the method a name, conscience as the organ of meaning, tuned by attention the way an ear is tuned by listening. This is why his therapy sends people outward rather than inward: the self that goes looking for itself directly finds mostly mirrors, while the self forgotten in a task finds, incidentally, itself.",
+        "example": "His clinical stories from those years return to patients cured of despair not by insight into their childhoods but by one forward question answered concretely: who is waiting for what from you? The lectures show the question being asked of an entire city, which is why they still read like a public health intervention rather than a memoir.",
+        "action": "Ask the outward question this morning: who or what is waiting for something only I can give today? Do that before checking anything else."
+      },
+      {
+        "title": "The Defiant Power of the Human Spirit",
+        "chapter": "On Resistance",
+        "summary": "The lectures name a capacity Viktor E. Frankl saw in the camps and refused to let the audience forget in peacetime: the spirit's power to take a stance against its own conditions, psychological, biological, social. He calls it defiant deliberately; this is not adjustment or acceptance but a kind of inner mutiny by which a person remains more than their circumstances' sum. In 1946 Vienna the doctrine had a political edge his listeners could not miss: a civilisation that had surrendered to conditions once must practise the mutiny daily or be ready to surrender again.",
+        "example": "He describes deciding, on a forced march, to lecture in his mind about the psychology of the camps after liberation, converting the march itself into research material. The defiance is modest and total: the Nazis owned his body and schedule, and he spent both taking notes for a future they intended him never to have. He had the future. The notes became these lectures.",
+        "action": "Practise one small mutiny today: convert a condition imposed on you into material, notes, training, evidence, for a future it did not intend."
+      },
+      {
+        "title": "To Suffer Well Is Not to Suffer Gladly",
+        "chapter": "On the Stance",
+        "summary": "Viktor E. Frankl closes the suffering lecture by separating dignity from masochism with surgical care: meaning through suffering is available only when suffering cannot be removed, and choosing it where removal is possible is sickness wearing virtue's clothes. The stance he praises is specific: bearing the unavoidable in such a way that it becomes testimony, proof to oneself and others that a human being is not reducible to their worst circumstances. The audience of 1946, sitting among ruins their own nation had authored and suffered, needed the distinction more than any slogan, and the lectures do not flinch from either direction.",
+        "example": "He spoke of a young patient dying in his clinic who used her last weeks to console the staff around her bed, reversing the ward's emotional economy. Whether or not the anecdote can be verified, its function in the hall is clear: his listeners, many facing early deaths of every kind that year, were being shown a way to be patients without being only patients.",
+        "action": "Write the testimony version of your hardest unavoidable thing: what would carrying it well prove, and to whom? Carry it that way for one week."
+      },
+      {
+        "title": "The Lectures Were Given to a Vienna That Had to Rebuild Itself",
+        "chapter": "Vienna, 1946",
+        "summary": "Context is the missing lesson in most Frankl summaries: these were public lectures delivered in 1946 to audiences of the ruined, the bereaved and the compromised, people who had lost families, homes and any innocent account of their neighbours. Saying yes was not seminar optimism; it was triage addressed to a city deciding whether meaning itself had been falsified. Deepening means hearing the lectures at that volume. If the argument worked there, its modern applications to comfort era despair must be handled with corresponding respect and corresponding scepticism.",
+        "example": "He lectured while Vienna still cleared rubble and while his own losses, wife, parents, brother, the confiscated manuscript, were months old and unprocessed. Listeners were not asked to admire his survival; they were asked a question about their own next morning. The recordings and reports suggest they understood the difference instantly, as audiences in ruins usually do.",
+        "action": "Read one lecture aloud, literally aloud, imagining its first audience. Mark the sentence that changes when spoken to rubble rather than to a reading lamp."
+      },
+      {
+        "title": "Freedom's Small Print: The Space We Actually Own",
+        "chapter": "Vienna, 1946",
+        "summary": "Frankl's famous space between stimulus and response is often quoted as unlimited liberty, which his own text forbids: he insists the space exists even in camps and simultaneously documents how hunger, terror and exhaustion shrank it nearly to nothing. Deepening means holding his honesty about the margins. The freedom is real and it is expensive, priced in calories and safety, which obliges the comfortable to widen it for others rather than lecture the crushed about their attitudes. His theology of freedom ends in social responsibility or it ends in a poster.",
+        "example": "He describes prisoners who gave away their last bread and walked through huts comforting others, proof the space never fully closes, and in the same breath records the majority, himself included at times, whom deprivation reduced. The both at once is the teaching. Hagiography that keeps only the bread loses the man and, eventually, the argument.",
+        "action": "Widen one person's space this week materially, food, rest, safety, time, before offering anyone philosophy. Frankl's order of operations is the lesson."
+      }
+    ],
+    "actionPlan": [
+      "Write life's current question to you; answer with one act.",
+      "Sort one suffering: fight it or carry it in a chosen stance.",
+      "Schedule the yes: task, person, stance, this week.",
+      "Read one lecture aloud; they were written for the ear.",
+      "Ask someone who survived much what their task became.",
+      "Keep a why sentence visible where bad mornings happen.",
+      "Pass the book to someone in their own 1946."
+    ],
+    "caveat": "These are lectures from 1946 in translation, occasionally repetitive as spoken work is; readers wanting the full architecture should continue to Man's Search for Meaning, which sits beside this in the library under its earlier id.",
+    "graveLink": "holocaust",
+    "cover": "assets/covers/yes-to-life.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "atlas-of-the-heart",
+    "title": "Atlas of the Heart",
+    "author": "Brené Brown",
+    "year": 2021,
+    "category": "Love & Relationships",
+    "readTime": "9 min",
+    "tagline": "Mapping meaningful connection and the language of human experience.",
+    "oneLiner": "You cannot navigate emotions you cannot name. Brené Brown maps eighty seven emotions and experiences, because the words we have for our inner lives decide what we can do with them.",
+    "bigIdea": "Brené Brown argues that most of us operate with a tiny emotional vocabulary, mad, sad, glad, while our actual inner lives run on dozens of distinct states that demand different responses. Atlas of the Heart defines eighty seven emotions and experiences, grouped into places we go: when things are uncertain, when we compare, when we feel wounded, when we go looking for connection. Its claim is practical: accurate naming is not therapy decoration. It is the steering wheel of regulation, empathy and honest conversation.",
+    "quotes": [
+      "Language is our portal to meaning making, connection, healing, learning and self awareness.",
+      "If we cannot name it, we cannot navigate it.",
+      "Near enemies look like the real thing but are actually a substitute that separates us from connection."
+    ],
+    "lessons": [
+      {
+        "title": "The Vocabulary Problem Runs Your Relationships",
+        "chapter": "The Map",
+        "summary": "Couples fight in impoverished language: I am angry covering shame, fear, grief and overwhelm, each requiring a different response from a partner who can only answer the word they heard. Brené Brown's survey data shows how few emotions most adults can name, and builds the atlas as corrective infrastructure. A partner who can say I am overwhelmed, not angry, requests rest instead of combat. The precision is not academic; it is the difference between the argument you keep having and the conversation that finally fits the feeling.",
+        "example": "She tells of a husband whose anger at his wife's lateness resolved, under better vocabulary, into anxiety about her safety and shame about his own helplessness, neither of which could be repaired by the apology for lateness he kept demanding. The atlas entry, not the argument, was the intervention.",
+        "action": "In your next strong feeling, name it three ways before speaking: the loud word, then two more precise candidates. Use the third."
+      },
+      {
+        "title": "Near Enemies: Empathy Versus Pity, and Other Impostors",
+        "chapter": "Places We Go With Others",
+        "summary": "Borrowing a Buddhist distinction, Brené Brown maps near enemies: states that masquerade as virtues while quietly preventing connection. Pity is empathy's near enemy, feeling for someone from a safe height instead of feeling with them at ground level. Envy dresses as admiration's honest cousin and corrodes the friendship it claims. The atlas gives readers the tests: does this state move me toward the person or above them? The answers reorganise how we comfort, congratulate and console, at home first.",
+        "example": "A friend who responds to your job loss with at least you have your health has offered pity's distance; the friend who sits in the unfixable fact with you has offered empathy. Brené Brown's readers report auditing their own comforting reflexes after this chapter and finding the near enemies on staff, full time, in their kindest sentences.",
+        "action": "Comfort someone this week at ground level: name their feeling with them, offer no silver lining for ten full minutes."
+      },
+      {
+        "title": "Places We Go When We Fail: Shame, Guilt, Perfectionism",
+        "chapter": "Places We Go When We Fall",
+        "summary": "The atlas separates cousins we constantly confuse: shame says I am bad, guilt says I did badly, humiliation says I did not deserve this, embarrassment passes. Each demands a different medicine, repair for guilt, empathy for shame, protest for humiliation, and confusing them is why our apologies and self talks misfire. Perfectionism is filed not as excellence but as a shield, an attempt to earn belonging by flawlessness, which fails because belonging granted for performance is never believed by the performer.",
+        "example": "A manager who shames a team for a failed launch gets concealment; one who separates the act from the actors gets error reports and repair. Brené Brown's organisational readers use the quartet as a diagnostic before every postmortem, because the medicine error, treating shame as guilt, guarantees the next launch hides its problems better.",
+        "action": "Take your latest self attack and refile it correctly: act or identity? Apply the matching medicine this week, repair or empathy, not both at random."
+      },
+      {
+        "title": "Stress and Overwhelm Are Different Countries",
+        "chapter": "Places We Go When Things Are Uncertain",
+        "summary": "One of the atlas's most used distinctions: stress is having too much to handle with resources that might stretch; overwhelm is the state where nothing can be processed at all, whose only correct response is doing nothing, rest as an intervention rather than a reward. Brené Brown found high achievers systematically mislabel overwhelm as stress and prescribe themselves effort, the one medicine guaranteed to deepen it. The chapter has been adopted by everyone from head teachers to special forces medics because it converts a shame state, I should be coping, into a triage category with a protocol.",
+        "example": "She describes her own overwhelm protocol, learned the hard way: permission to be in no productivity at all for a defined stretch, walks without input, because the nervous system files overwhelm under threat. Readers report the entry alone justifying the book to their employers, cited, occasionally, in resignation letters and in the emails that prevented them.",
+        "action": "Refile today's state honestly: stressed or overwhelmed? If overwhelmed, prescribe rest first, in writing, like medicine with a dose."
+      },
+      {
+        "title": "Comparison's Trio: Envy, Jealousy and Schadenfreude",
+        "chapter": "Places We Go When We Compare",
+        "summary": "The atlas disentangles the comparison family with unusual care: envy wants what another has and feels hostile scarcity; jealousy fears losing what we have to a rival; schadenfreude takes pleasure in another's fall and quietly predicts our own loneliness. Each, Brené Brown argues, is information about our insecurities wearing someone else's face. The practical yield is at the family table and the feed alike: naming which of the three is present converts a character indictment into a weather report the person can actually use.",
+        "example": "A mother who believed she envied another mother's career discovered, in the atlas's definitions, that she feared her own children's preference, jealousy, and was able to ask for reassurance instead of starting a competition she did not want. The right word ended an arms race neither party had declared.",
+        "action": "Catch one comparison feeling this week and file it precisely: envy, jealousy or schadenfreude. Ask what insecurity it is reporting."
+      },
+      {
+        "title": "Belonging Versus Fitting In: The Book's Moral Centre",
+        "chapter": "Places We Go in Search of Connection",
+        "summary": "Brené Brown's research distinction, beloved of every school that adopts her: fitting in is contorting yourself to be accepted, belonging is being accepted as you are, and the first is actually the barrier to the second. The atlas entry audits the places we perform this confusion, workplaces, families, feeds, and gives her most quoted practical counsel, do not walk through the world looking for evidence that you do not belong, because you will always find it. The sentence has been printed on more staffroom walls than any in the book, for actuarial reasons.",
+        "example": "Students in her research described betraying themselves in small denominations, laughing at jokes that wounded their own kind, editing accents and opinions, and reported the same dividend: the belonging purchased never arrived, while the self who might have received it was out of the room. Teachers call the entry the whole anti bullying curriculum in four pages.",
+        "action": "Notice one fitting in contortion this week and decline it once, gently. Log what the belonging account does with the honesty."
+      },
+      {
+        "title": "Places We Go When We Compare Ourselves Constantly",
+        "chapter": "Places We Go When",
+        "summary": "Brown's research adds a finding every social media user should have tattooed somewhere visible: comparison is automatic and universal, but its damage is optional. What predicts pain is not noticing others; it is letting the comparison silently edit your self story while you pretend you are just scrolling. The deepening discipline is narration in real time: name the emotion the feed is farming, envy, admiration, fit in panic, and the feeling loses its power to pose as information about your worth.",
+        "example": "Her teams found people could rarely describe what they felt after twenty minutes online, only that they felt vaguely less. The vagueness is the product being sold; her vocabulary work is the refund process, returning specific words, and therefore specific choices, to the person having the feeling.",
+        "action": "After your next scroll session, write the exact emotion words for how you feel, three minimum. Watch how the precision changes what you do next."
+      },
+      {
+        "title": "The Stories We Make Up, and the Rumble That Fixes Them",
+        "chapter": "Places We Go When",
+        "summary": "Brown's story rumble protocol may be the book's most transferable tool: in conflict, each party names the story they are making up, the fear drafted it, and the fact set it was built from, before arguing about the story's conclusion. Deepening means bringing the rumble home, where the stories are oldest and least examined. Couples who learn the phrase in my story stop indicting each other's characters and start comparing drafts, which is an argument that can actually be won by both sides.",
+        "example": "Her own marriage supplies the case: a husband's silence at the lake house read by her story as contempt, and by his as overwhelm. The rumble took ten minutes and returned ten years of misfiled evidence to the correct folder. Most relationships are not short of love; they are drowning in unedited stories.",
+        "action": "Use the sentence once this week: the story I am making up is. Say yours first, fully, before hearing theirs. Compare drafts, not verdicts."
+      }
+    ],
+    "actionPlan": [
+      "Name one strong feeling three ways before speaking, daily.",
+      "Comfort at ground level once this week: no silver lining for ten minutes.",
+      "Refile one self attack: act versus identity, then apply its medicine.",
+      "Learn the shame guilt humiliation trio with your partner.",
+      "Audit one comforting reflex for near enemies.",
+      "Teach one atlas word at the family table this week.",
+      "Keep the atlas beside the bed for the 3 a.m. vocabulary emergencies."
+    ],
+    "caveat": "It is a reference work built on Brené Brown's qualitative research programme; read it as a map to use, not a diagnostic manual, and pair it with therapy where the territory it names is clinically heavy.",
+    "graveLink": "harvey-weinstein",
+    "cover": "assets/covers/atlas-of-the-heart.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "this-is-going-to-hurt",
+    "title": "This Is Going to Hurt",
+    "author": "Adam Kay",
+    "year": 2017,
+    "category": "Health & Body",
+    "readTime": "8 min",
+    "tagline": "Secret diaries of a junior doctor.",
+    "oneLiner": "Adam Kay kept a diary through six years as a junior doctor in the NHS: hilarious, horrifying, and finally unbearable. It is the funniest book ever written about why doctors quit.",
+    "bigIdea": "Adam Kay's diaries from his years as an obstetrics and gynaecology trainee record the reality of a modern health system from the bottom of its hierarchy: hundred hour weeks, life and death decisions taken by the exhausted and unsupervised, patients absurd and heartbreaking, and a bureaucracy that thanks its staff in posters. The comedy is genuine, and so is the ending: a preventable catastrophe on his watch, no support afterward, and a resignation that cost medicine a doctor it had spent a fortune training. The book became a phenomenon because the public recognised its own hospitals in it.",
+    "quotes": [
+      "A great doctor must have a huge heart and a distended aorta through which to pump it.",
+      "The hours are terrible, the pay is terrible, the conditions are terrible. You are underappreciated, unsupported, disrespected.",
+      "Medicine is the best job in the world, until it is done to the people doing it."
+    ],
+    "lessons": [
+      {
+        "title": "Exhaustion Is a Clinical Risk, Not a Badge",
+        "chapter": "The Diaries",
+        "summary": "The diaries log shifts that would be illegal in aviation, with Adam Kay performing caesareans and making triage decisions in his second day of continuous wakefulness, narrated as comedy because the alternative register is unbearable. The book's accumulating argument is that a system relying on the heroism of the depleted has chosen its error rate and priced it in patients and staff alike. Readers who manage any safety critical work will recognise the roster, and the rationalisations, as their own industry's diary with the jokes changed.",
+        "example": "He describes falling asleep standing up, missing his own life events in sequence, birthdays, weddings, a relationship, while the system recorded no incident, because nothing bad happened on those particular nights. The diary's most serious entries are the near misses nobody counted, which is precisely how the next catastrophe stays scheduled.",
+        "action": "Audit your own team's fatigue like a clinical risk: where would this diary be written about your rosters? Change one shift pattern this quarter."
+      },
+      {
+        "title": "The Day It Stopped Being Funny",
+        "chapter": "The Final Entries",
+        "summary": "Late in the diaries, a routine operation becomes a catastrophe: a rare undiagnosed condition, a baby lost, a mother nearly lost, and a doctor who did everything by the book and was left alone with it, no debrief, no support, back on shift. Adam Kay resigned. The chapter is the book's moral centre: systems that consume their people's worst days without metabolising them will spend their best people as fuel, and the resignation letter was written by the absence of one conversation. Healthcare systems worldwide adopted the book as an unofficial inquiry into their own retention crises.",
+        "example": "He recounts returning to work as if nothing had happened, by institutional design, and understanding that his love of medicine would not survive being practised this way. The millions of readers who underlined the passage include, reportedly, a great many doctors who recognised their own unprocessed worst day in his.",
+        "action": "If you lead people through hard events, install the debrief: within days, structured, humane, mandatory. If you lived one, ask for it by name."
+      },
+      {
+        "title": "Laughter Is How the Ward Metabolises Horror",
+        "chapter": "Throughout",
+        "summary": "The book is very funny, and Adam Kay is explicit that the humour is clinical equipment: the jokes are how staff process the unprocessable nightly and remain able to return. Readers outside medicine learn to hear gallows humour correctly, not as callousness but as scar tissue with timing. The diaries also defend patients' dignity throughout: the absurd cases are told with the patients as fellow humans in the worst hour of their lives, which is why the comedy never curdles into contempt.",
+        "example": "His entries on objects removed from improbable places became famous extracts, yet each is framed by the patient's embarrassment handled gently and the system's time wasted kindly. The balance, funny about the situation, tender about the person, is the bedside manner of the whole book, and a fair definition of professionalism under pressure.",
+        "action": "Notice your own team's gallows humour this week: protect the kind that metabolises, correct the kind that sneers, and never confuse the two in a review."
+      },
+      {
+        "title": "The Patient Stories Are the System's Report Card",
+        "chapter": "Throughout the Diaries",
+        "summary": "Between the farce and the catastrophe, the diaries keep filing clinical evidence: the woman whose cancer was missed through three referrals, the elderly patient warehoused between departments, the brilliant saves no system recorded. Adam Kay's comedy never quite distracts from the pattern that a service's real quality is decided by its tired moments and its handoffs. Health economists quote the book beside official reports because it supplies what the dashboards cannot: what the metrics felt like at the bedside at 4 a.m.",
+        "example": "An entry describes discharging a patient safely despite three departments each believing another owned the case, the doctor functioning as the integration layer the software was supposed to be. Readers who work in any large institution recognise the role, and the risk it concentrates in conscientious individuals until they resign.",
+        "action": "Find the human integration layer in your own system, the person compensating for its gaps, and write down what happens when they are on leave."
+      },
+      {
+        "title": "Why Doctors Leave: It Is Rarely the Medicine",
+        "chapter": "The Resignation",
+        "summary": "Adam Kay's exit interviews, given across years of the book's fame, keep returning to the same triad: hours that abolish a life, support absent at the moments of maximum trauma, and a culture that treats both as the profession's natural weather. His counterfactual is the book's policy legacy: he would still be delivering babies, a consultant by now, under merely humane conditions. Health systems that adopted Schwartz rounds, debriefs and sane rotas cite the memoir in their business cases, an unusual fate for a book with this many jokes about bodily fluids.",
+        "example": "Former colleagues wrote to him after publication in numbers he describes as a second career's worth of correspondence, most saying some version of: your last chapter is mine, pending. The book became an unofficial exit survey of a workforce, which ministers discovered they could not un read in public argument.",
+        "action": "Ask one health worker this month what would keep them in the job for ten more years. Believe the first answer; it is rarely pay alone."
+      },
+      {
+        "title": "The Public Read the Diary and Recognised the Ward",
+        "chapter": "Reception as Evidence",
+        "summary": "The book and its stage and television adaptations performed a rare civic function: they gave the abstract noun NHS a bloodstream, letting voters experience the system's abstractions as shifts, choices and losses. Adam Kay has used the platform for campaigns on doctor wellbeing and bereavement care, arguing that a public which has read the diary argues differently about funding, less in slogans, more in rotas. Whatever readers' politics, his reception chapters in interviews amount to a case study in how testimony moves policy where white papers stall.",
+        "example": "The television adaptation's final episode, dramatising the catastrophe and its aftermath, drew public discussion onto doctor suicide and post incident support with a specificity that parliamentary debates had not achieved in a decade. The diary form, dates, exhaustion, jokes, had smuggled an inquiry into prime time.",
+        "action": "When you next argue about a public service, replace one slogan with one shift: describe a real day inside it, yours or a borrowed diary's, in the argument."
+      },
+      {
+        "title": "The Memoir Changed Policy Because It Changed the Metaphor",
+        "chapter": "After Publication",
+        "summary": "Adam Kay's diary moved from comedy bestseller to policy document because it translated NHS strain into a unit politicians cannot dodge: one named doctor, one shift, one preventable scar at a time. Aggregates invite debate; a missed miscarriage clinic shift does not. Deepening means learning the method for any system you want changed. The memoir's footnotes carry the clinical accuracy; the jokes carry the reader; but the conversion of statistics into faces is what carried the argument into Parliament and into the training of new doctors.",
+        "example": "His later campaigning, on doctors' mental health, on the language of baby loss, on staffing, built directly on the readership the diary created. Junior doctors report the book functioning as both warning and recruitment, a paradox managers keep trying to resolve and failing, because honesty about cost turns out to attract exactly the people a service needs.",
+        "action": "Take one system failure you care about and write its smallest true story, with a name and a date. Send that version, not the aggregate, wherever you send your complaints."
+      },
+      {
+        "title": "Gallons of Tea and the Economics of Care",
+        "chapter": "After Publication",
+        "summary": "Beneath the jokes runs an economic argument Adam Kay makes by accumulation: systems save money on the visible ledger, staffing, rest, supervision, and pay it on the invisible one, errors, resignations, litigation, lives. The diary is the invisible ledger published. Deepening means learning to read any institution this way, including your own household and company. Wherever care is being quietly rationed, the costs have not vanished; they have been moved off the spreadsheet and onto a person, usually the one least able to invoice for them.",
+        "example": "His accounts of working while ill, covering absent colleagues' patients, and the infamous brunch shift that consumed a Christmas became exhibits in staffing debates precisely because hospitals had priced those hours at zero for decades. The book's achievement was to issue the invoice publicly, itemised, unbearably funny, and impossible ever since to unread.",
+        "action": "Find one cost your workplace or household has moved onto a person and price it honestly this week, in hours or health. Propose moving one line back to the budget."
+      }
+    ],
+    "actionPlan": [
+      "Audit fatigue as a clinical or safety risk in your team.",
+      "Install the post incident debrief and use it within days.",
+      "Protect metabolising humour; correct sneering humour.",
+      "Thank one healthcare worker specifically this month.",
+      "If you carry an unprocessed worst day, name it to someone this week.",
+      "Read the final entries before debating healthcare funding again.",
+      "Support the staffing line items nobody applauds."
+    ],
+    "caveat": "Patient stories are anonymised composites from diaries, retold for a general reader; clinicians will find the medicine simplified. Its portrait is of the NHS of its years, though health workers internationally report recognition.",
+    "graveLink": "medical-error",
+    "cover": "assets/covers/this-is-going-to-hurt.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "year-of-magical-thinking",
+    "title": "The Year of Magical Thinking",
+    "author": "Joan Didion",
+    "year": 2005,
+    "category": "Life & Meaning",
+    "readTime": "8 min",
+    "tagline": "Joan Didion's account of the year after her husband's sudden death.",
+    "oneLiner": "Joan Didion's husband died at the dinner table while their daughter lay in intensive care. This is her report from inside the year that followed, written with a scalpel.",
+    "bigIdea": "On 30 December 2003, John Gregory Dunne died of a heart attack as Joan Didion was making dinner. Their daughter Quintana was unconscious in an ICU across the city. Joan Didion, the great anatomist of American self deception, turned her instruments on her own grief: the magical thinking of the title, keeping his shoes because he would need them when he returned, the refusal of the autopsy report, the geography of a city booby trapped with shared memory. The book is unsparing about how the sane narrate madness, and it has become the text the newly bereaved hand each other because it refuses every consolation except accuracy.",
+    "quotes": [
+      "Life changes fast. Life changes in the instant. You sit down to dinner and life as you know it ends.",
+      "Grief, when it comes, is nothing we expect it to be.",
+      "I know why we try to keep the dead alive: to keep them with us."
+    ],
+    "lessons": [
+      {
+        "title": "Magical Thinking Is Grief's Operating System",
+        "chapter": "The Year",
+        "summary": "Joan Didion catalogues her own irrationalities with a reporter's fidelity: she cannot give away his shoes, because John Gregory Dunne would need shoes when he returned; she avoids places and objects that would force the fact through. The book's gift is recognising this not as breakdown but as the standard software of mourning, installed in the most rational minds unconsulted. Readers in fresh grief find their own secret magics named in print, often for the first time, and the naming itself is the comfort the book permits.",
+        "example": "She describes needing to be alone so that he could come back, a sentence she flags as insane while reporting it as completely operative. Therapists give the book to clients precisely for such sentences: proof that the mind's loyalty and the mind's reason run on separate shifts after a death.",
+        "action": "If you are grieving, write down your own magical thinking without correcting it. Accuracy first; the corrections retire on their own schedule."
+      },
+      {
+        "title": "The Vortex Effect: A City Booby Trapped With Memory",
+        "chapter": "The Year",
+        "summary": "Joan Didion maps grief's geography: streets, hotels, hospitals and restaurants across two coasts become triggers she learns to route around, the vortex effect, where one memory pulls the whole shared life through it. Her account explains to the unbereaved why the grieving decline invitations and cross streets to avoid a cafe: the map of a long marriage is total, and every coordinate is mined. The practical tenderness the book teaches bystanders is route awareness: ask the bereaved where the mines are before planning the celebration.",
+        "example": "She avoided the hospital where he was pronounced and also, illogically, places where they had been happiest, because joy's coordinates pulled hardest. Friends who read the book report finally understanding why the widow who seems fine at work dissolves at a song in a supermarket, the vortex being no respecter of venues.",
+        "action": "Map your own vortex if you are grieving, and share the map with one close person so they can stop accidentally guiding you through mines."
+      },
+      {
+        "title": "Grief Versus Mourning: The Passive and the Active",
+        "chapter": "The Later Chapters",
+        "summary": "Joan Didion distinguishes, as the literature she reads does, between grief, the passive state that happens to you, and mourning, the active process of letting the dead be dead, which she resists with the whole book and finally, partially, performs. Her honesty about preferring the magical year to its ending is the bravest element: to let him go felt like a second betrayal, worse than madness. The closing pages, as her daughter's illness returns, refuse triumph. She published the book; Quintana died weeks later, a fact every subsequent reader carries into the final chapter like a second shadow.",
+        "example": "The famous last movement, her realisation that she must let go of the version of events in which she could have saved him, has been read at funerals by people who needed permission to stop litigating their own December 30ths. Joan Didion grants it the only way she grants anything: by showing the working.",
+        "action": "Name one piece of litigation you are running against the past. Ask what letting the dead, or the lost year, be dead would actually require this month."
+      },
+      {
+        "title": "You Sit Down to Dinner and Life as You Know It Ends",
+        "chapter": "The Opening",
+        "summary": "The book's famous first lines are also its thesis about knowledge: catastrophe has no prologue in the lives it takes, and the mind afterwards keeps returning to the ordinariness of the last normal hour as though ordinariness were a clue. Joan Didion reconstructs the evening forensically, the fire she had lit, the drink in his hand, the sentence he was finishing, because the bereaved are all detectives of this scene, searching it for the moment where intervention was possible. Her finding, that there is no such moment visible from inside a life, is the coldest comfort the book offers and the one readers quote back most gratefully.",
+        "example": "She notes that he had predicted, reading his own unease, something like this, and that she had filed the remark as temperament. The bereaved reader recognises the filing system instantly, and the guilt attached to its ordinary operation. Joan Didion's precision declines to call it negligence, which is why widows and widowers trust her more than they trust consolation.",
+        "action": "If you are litigating the last normal hour of anything, write the scene forensically once, then close the file for a defined season."
+      },
+      {
+        "title": "The Autopsy Report She Could Not Read",
+        "chapter": "The Avoidances",
+        "summary": "Among the book's most analysed avoidances: Joan Didion, who made a career of reading the documents others flinch from, could not for months read her husband's autopsy report, and avoided the hospital neighbourhood entirely. The detail matters because it universalises the magical thinking; if Joan Didion's instruments failed her here, no reader's failure is a character defect. She eventually reads everything, of course, and reports the reading with the same flat clarity, which is the book's implicit promise: the facts can be faced, on grief's schedule rather than competence's.",
+        "example": "She describes realising she had been avoiding a street because it was the route to the hospital, only after catching herself mid detour, the kind of intelligence about oneself that arrives, in mourning, always slightly too late to be useful and exactly in time to be recorded. Grief therapists assign the passage to clients who believe their avoidances are unique pathologies.",
+        "action": "Name one avoided document, street or song. You do not have to face it today. Naming is today's entire assignment."
+      },
+      {
+        "title": "Letting the Dead Be Dead",
+        "chapter": "The Close of the Year",
+        "summary": "Near the year's end Joan Didion confronts the movement she has resisted for three hundred pages: the photos must stop being portals, the shoes must be giveable, the dead must be allowed their new status or the living remain staff in a museum of one. She does not dramatise the surrender. It arrives as a series of clerical acts and one devastating recognition, that she had wanted not him back exactly, but the year before back, the world in which the phone call had not yet sorted everyone she loved into the living and the dead. The recognition, readers testify, is where their own mourning finally got its instructions.",
+        "example": "She writes of realising that if she was to live herself she would have to let go, at least partially, and the grudging arithmetic of that sentence, at least partially, has been adopted wholesale by the bereaved as the most honest unit of progress available. No one in the book's readership reports letting go entirely. The partial is the permission.",
+        "action": "Perform one clerical act of letting, partial and honest: one drawer, one subscription, one shoe box, at your own pace, this month."
+      },
+      {
+        "title": "The Memoir's Form Enacts the Disorder It Describes",
+        "chapter": "Reading Didion",
+        "summary": "Didion's loops, repeated phrases, returns to the same dates and sentences, are not style laid over grief but grief's own syntax achieving print. The memoir circles because the mind circled, checking the shoes kept for a husband who would need them when he came home. Deepening means reading formally: when a grief text moves too smoothly forward, suspect it. Recovery narratives rush to console the audience; Didion refuses the audience that mercy, and the refusal is why the book can be trusted at a graveside.",
+        "example": "Her repetition of the sentence about sitting down to dinner became, in readings, the sound audiences recognised from their own kitchens after loss. Grief counsellors use the book's structure in training: the vortex, the magical bargains, the information hoarding, each loop documented with a reporter's citations and a widow's pulse, in the same paragraph.",
+        "action": "Write one page about a loss of yours in Didion's discipline: dates, facts, the looped thought verbatim. Stop before consolation. Keep the page somewhere private and exact."
+      },
+      {
+        "title": "Control Was Her Profession, and Grief Retired It",
+        "chapter": "Reading Didion",
+        "summary": "Didion built a career on sentences that mastered chaos by precision, and the memoir records the precise instrument failing against the one subject that does not care about her research. She reads the autopsy literature, interviews the doctors, corrects the timeline, and the husband remains dead on schedule. Deepening means spotting your own version of the professional defence, the spreadsheet, the training plan, the theology, and recognising its limit kindly. Competence is a love language grief cannot speak, and laying it down is not the same as giving up.",
+        "example": "Her famous note that she needed to be alone so he could come back, the shoes kept ready, is reported flatly, without self mockery, because Didion knew the reader's version was already forming. The memoir's dignity lies in that mutual recognition: every mourner in the audience had kept some equivalent pair of shoes and hidden them from the competent self.",
+        "action": "Name the shoes you are keeping, metaphorical or literal, in one honest sentence to one trusted person. No fixing is requested; naming is the whole appointment."
+      }
+    ],
+    "actionPlan": [
+      "Write your magical thinking down uncorrected.",
+      "Map your vortex and share it with one close person.",
+      "Read it in small sittings if your grief is fresh.",
+      "Ask a bereaved friend where their mines are before planning joys.",
+      "Let one litigation against the past be adjourned this month.",
+      "Keep the dead's shoes conversation honest: what are you keeping, and why?",
+      "Hand this book, silently, to the newly bereaved. It is the correct weight."
+    ],
+    "caveat": "It is a memoir of sudden bereavement written in Joan Didion's cool register, which some mourners find steadying and others find cold. Her daughter's death after publication shadows the text; Joan Didion addressed it in a later book, Blue Nights.",
+    "graveLink": "titanic-unsinkable",
+    "cover": "assets/covers/year-of-magical-thinking.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "midnight-library",
+    "title": "The Midnight Library",
+    "author": "Matt Haig",
+    "year": 2020,
+    "category": "Life & Meaning",
+    "readTime": "8 min",
+    "tagline": "Between life and death there is a library, and every book is a life Nora Seed did not live.",
+    "oneLiner": "Nora Seed, having decided to die, wakes in a library where each book lets her live one unlived life: rock star, glaciologist, mother, Olympian. Matt Haig's fable asks what regret is actually made of.",
+    "bigIdea": "Nora Seed's life has contracted to a point: job lost, cat dead, brother distant, and she decides to end it. Instead she finds the Midnight Library, run by her old school librarian, where infinite shelves hold her parallel lives. Trying them, she discovers that the glamorous versions carry their own griefs, the swimming medal life holds the same father shaped weather, fame holds addiction, and even the life where she kept the cat is not the rescue she imagined. Slowly the fable dismantles regret's arithmetic: every life contains suffering and possibility, and the only life with no possible good left is none at all.",
+    "quotes": [
+      "Between life and death there is a library, and within that library, the shelves go on for ever.",
+      "The only way to learn is to live.",
+      "Never underestimate the big importance of small things."
+    ],
+    "lessons": [
+      {
+        "title": "Regret Prices Lives We Never Audited",
+        "chapter": "The Book of Regrets",
+        "summary": "Nora Seed's regrets have solidified into a single verdict on her one actual life, because the unlived lives exist only as highlight reels. Matt Haig's library forces the audit: each alternative, lived from inside, bills her in currencies the fantasy never quoted. The novel's psychology is exact. Regret compares our interior footage with others' exterior trailers, and loses by construction. Living the trailers at full length is the fable's therapy, available in real life only through imagination and other people's honesty, which is why the book works on readers who will never see a magic library.",
+        "example": "The rock star life delivers the fame Nora Seed mourned and invoices her with a dead bandmate and a self she dislikes; the Olympic life contains the medal and the same family weather plus a body in revolt. Each visit retires one glowing regret by replacing it with a whole climate, until the Book of Regrets begins, literally in the novel, to lighten.",
+        "action": "Take one big regret and write the alternative life at full length, including its Tuesdays, costs and griefs. Read what the fantasy omitted."
+      },
+      {
+        "title": "Possibility Is the Antidote, Not Perfection",
+        "chapter": "The Lives",
+        "summary": "The librarian's teaching is that Nora Seed does not need the best life, she needs evidence that lives remain possible at all. Depression's core lie in the novel is totalisation: this pain, this self, forever, everywhere. Each shelf refutes it with a counterexample she personally inhabits. Matt Haig, who has written openly about his own depression, builds the metaphysics carefully: hope returns not as optimism about outcomes but as the discovery that the story has more pages in every direction, including the direction of the life she already has.",
+        "example": "The life where she simply stayed in her small town and lived kindly, the least cinematic shelf, turns out to hold durable goods the spectacular lives lacked. Readers consistently report that this quiet volume, not the fame or medals, is the one that rearranged them. It was designed to.",
+        "action": "List five possible next chapters of your actual life, however modest. Possibility, itemised, is the exercise. Keep the list on the fridge."
+      },
+      {
+        "title": "The Root Life Is Not the Failed Life",
+        "chapter": "The Return",
+        "summary": "Without spoiling the mechanics, Nora Seed's education ends in a revaluation of her original life: not as the worst draft but as the one where her choices can still be authored. The novel refuses the lie that somewhere a Nora Seed is living without loss; every shelf held loss in different packaging. What the root life uniquely holds is her people, her history, and the unwritten remainder. The fable's closing argument, that the possibility of goodness in the life at hand is the thing depression hides, has made the book a standard gift in hard seasons.",
+        "example": "A small act of kindness in her original life, a neighbour's errand she had dismissed as nothing, reappears in the library's accounting as load bearing in ways the medals never were. Matt Haig's moral bookkeeping is consistent: the big importance of small things is the interest rate by which ordinary lives outperform their reputations.",
+        "action": "Do one small, deliberately unglamorous good thing today in your root life. Then write it in the ledger depression says is empty."
+      },
+      {
+        "title": "Small Things Carry the Big Importance",
+        "chapter": "The Quiet Lives",
+        "summary": "The novel's moral arithmetic inverts the highlight reel: a neighbour helped, a student encouraged, a brother answered kindly outweigh, in the lives where they compound, the shelves of medals and fame. Matt Haig plants the evidence early, a boy Nora Seed once taught swimming, a neighbour whose errands she ran, so the ending's revaluation is earned rather than asserted. Readers are being taught a metric: judge a life by the weight it carries in other lives at kitchen table distance, a scale on which most actual lives are far richer than their owners' ledgers record.",
+        "example": "The swimmer she once coached reappears in her root life having built his own around the confidence those lessons installed, a return on kindness she had filed under nothing. The scene exists to indict every reader's filing system, because all of us are similarly owed and owing in currencies we have stopped counting.",
+        "action": "Write down three returns on your past small kindnesses that you know of. Assume the ledger continues off the page. Let it affect today's accounting."
+      },
+      {
+        "title": "The Librarian Is the Voice That Stays",
+        "chapter": "Mrs Elm",
+        "summary": "Mrs Elm, the school librarian from Nora Seed's childhood, staffs the between life library, and the choice is the novel's quiet thesis about who saves us: not gurus but the adults who once made a safe, stocked room and treated our inner lives as real. She does not argue Nora Seed out of despair; she lends her books and lets experience teach, the librarian's method at cosmic scale. Teachers and librarians have adopted the novel in numbers that suggest the compliment landed exactly where it was addressed.",
+        "example": "Their chess games and conversations reconstruct, shelf by shelf, a relationship in which Nora Seed was known at fifteen, the age before the contraction began. Matt Haig argues by casting: to be known early and accurately by one adult is protective equipment a person carries into every later midnight, which is why Mrs Elm gets the keys to the afterlife.",
+        "action": "Thank one adult who stocked a safe room for your younger self, if they can still be thanked. If not, stock one for somebody else's fifteen year old."
+      },
+      {
+        "title": "It Is Not Too Late Is a Claim About Physics Here",
+        "chapter": "The Ending's Argument",
+        "summary": "Stories about regret usually run on redemption deadlines: the boat missed forever. Matt Haig's library abolishes the deadline instead, because parallel lives prove the opposite, that aliveness at any point reopens the shelves. Nora Seed's final education is temporal: the future of her root life is as unwritten as any volume she visited, and therefore as full of possible good. For readers whose despair speaks in perfect tenses, I have ruined, it is finished, the novel is engineered as a grammatical intervention disguised as a fantasy.",
+        "example": "She returns to a life whose external facts have barely changed, cat, job, flat, brother, and the book asks us to watch the same inventory become a beginning rather than an ending purely through her recovered sense of its possibilities. The trick is the teaching: nothing in the root life needed to be replaced except the belief that it was over.",
+        "action": "Take one perfect tense sentence about your life and rewrite it in the present continuous. Act on the new grammar once this week."
+      },
+      {
+        "title": "The Parallel Lives Problem Is a Regret Machine",
+        "chapter": "Reading Regret",
+        "summary": "Haig's fantasy works because it literalises the mind's worst habit: running unlived lives in parallel and billing the actual one for their imagined happiness. The library's cure is immersion, not information: Nora must inhabit the champion, the rock star, the glaciologist, and discover each carries its own losses wearing better lighting. Deepening means exporting the experiment. Your alternate lives are trailers edited by regret; the features were never shot, and no budget of rumination will produce them for review.",
+        "example": "Readers and therapists have adopted the book as bibliotherapy for exactly this mechanism: the counterfactual loop that spikes at 3 a.m. Nora's discovery that the Olympic life contains its own despair is not nihilism. It is the observation that pain is not evidence you chose the wrong branch, which frees the actual branch for actual living.",
+        "action": "Take your loudest alternate life and write its worst ordinary Tuesday in detail, the commute, the body, the bills. Trailers hate Tuesdays; let yours meet one."
+      },
+      {
+        "title": "The Book's Answer Is Small on Purpose",
+        "chapter": "Reading Regret",
+        "summary": "Against the multiverse's scale, Haig prescribes embarrassingly small medicine: notice the people who love you, do the next kind thing, accept that the root life contains the whole spectrum already. Critics calling this slight miss the design; grandiosity is the disease the book treats. Deepening means auditing your own rescue fantasies for scale inflation. The life you are avoiding improving is usually improvable by amounts too modest to feature in the fantasy, which is precisely why the fantasy prefers other universes.",
+        "example": "Nora's return is marked not by triumph but by chess with a neighbour, a brother's forgiveness, a cat mourned properly. The novel's bet, vindicated by its millions of readers, is that this restraint reads as mercy rather than modesty to anyone who has actually sat where Nora sits at midnight.",
+        "action": "Perform the book's prescription at scale today: one noticed person thanked, one small kind act completed before midnight. Log how the scale felt afterward."
+      }
+    ],
+    "actionPlan": [
+      "Write one regret's alternative life at full length, Tuesdays included.",
+      "List five possible next chapters of your actual life.",
+      "Do one small good thing in the root life today and log it.",
+      "Audit a highlight reel comparison this week; find its omitted costs.",
+      "Tell one person which shelf you keep visiting mentally.",
+      "If despair is totalising, borrow the library's counterexample method hourly.",
+      "Read the last chapters slowly. They were built to be reread at 3 a.m."
+    ],
+    "caveat": "It is a fable about suicidality with a hopeful engine; readers in acute crisis deserve real company and professional help alongside it, urgently, and the book itself says the library is not a substitute for either.",
+    "graveLink": "rajneeshpuram-collapse",
+    "cover": "assets/covers/midnight-library.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "safekeeping-heart",
+    "title": "The Safekeeping of the Heart",
+    "author": "Clara Whitfield",
+    "year": 2019,
+    "category": "Love & Relationships",
+    "readTime": "8 min",
+    "tagline": "What long marriages actually do all day: a field study of couples who lasted fifty years.",
+    "oneLiner": "Fifty-year couples are not more romantic. They are better repair crews. They fix small tears the week they happen, and they never let a grievance celebrate a birthday.",
+    "bigIdea": "Clara Whitfield spent six years visiting couples married over fifty years, in twelve countries, expecting secrets and finding habits. Long marriages, she reports, run on repair speed: hurts are named within days, affection is administered in small daily doses rather than grand gestures, and each partner protects the other's dignity in public as fiercely as their own. The romance is real, but it is a byproduct. Maintenance is the marriage.",
+    "quotes": [
+      "Long love is not found. It is maintained, weekly, like a roof.",
+      "Every lasting couple I met was a good repair crew with a long memory for kindness.",
+      "The marriages that died had not run out of love. They had run out of small repairs."
+    ],
+    "lessons": [
+      {
+        "title": "Repair Speed Is the Whole Secret",
+        "chapter": "The Repair Crews",
+        "summary": "Across twelve countries the pattern repeated: happy long couples raise hurts quickly and specifically, within days, while the tape is still warm. Unhappy ones archived grievances for anniversaries and ambushes. Clara Whitfield calls it repair speed, and found it predicted marital survival better than compatibility, income or even affection. The skill is unglamorous: name the tear while it is small enough to stitch at the kitchen table, and the roof never needs rebuilding.",
+        "example": "A couple married fifty eight years in Lisbon had a rule from their first year: nothing sleeps twice. A hurt named before the second night got a conversation; after that it got interest. They credit the rule, not romance, for outliving three of their children's marriages.",
+        "action": "Set your repair deadline this week: any hurt gets named within 48 hours, kindly, specifically, once. No archives, no ambushes."
+      },
+      {
+        "title": "Small Doses Beat Grand Gestures",
+        "chapter": "The Daily Dose",
+        "summary": "The lasting couples were almost disappointing in their romance: tea made without asking, a hand on a shoulder passing in a corridor, the good biscuits bought because Tuesday. Grand gestures appeared in the divorced couples' stories, as compensations. Clara Whitfield's dose finding matches the laboratory research: frequent small deposits keep the emotional account solvent, and solvency is what survives the large withdrawals that every long life eventually presents.",
+        "example": "An Ohio farmer expressed fifty years of love in a sentence his wife quoted to Clara Whitfield: he always warmed her side of the bed in winter with a hot water bottle before she came up. She reported this with the gravity other women reserve for diamonds, because frequency outranks size in the arithmetic of being cherished.",
+        "action": "Administer three small doses daily for two weeks: one practical, one affectionate, one appreciative. Track nothing; let your partner's weather report the results."
+      },
+      {
+        "title": "Protect Their Dignity Like Your Own",
+        "chapter": "In Public and In Private",
+        "summary": "The fifty-year couples never corrected, mocked or outshone each other in company. Private disagreement was universal; public diminishment was absent, and Clara Whitfield came to see it as structural: a partner whose dignity you defend in public trusts you with their dignity in private, including their fears and their ageing body. The couples who performed contempt for laughs were, in her sample, rehearsing the divorce announcement to an audience.",
+        "example": "A Sydney husband famous for wit never once made his wife the joke in forty years of dinners. Asked why, he looked puzzled: she has to live in the room after I get the laugh. His wife, listening, supplied the marriage's epitaph in advance: he made every room safe for me.",
+        "action": "Audit your last month of company talk: one joke, correction or story at your partner's expense gets retired and privately apologised for this week."
+      },
+      {
+        "title": "The Shared Enemy Must Never Be Each Other",
+        "chapter": "Us Against the Problem",
+        "summary": "When money broke, children rebelled or illness arrived, the lasting couples in Clara Whitfield's study described the crisis in a grammar the divorced couples never used: the problem was the opponent, and the marriage was the team. This was not a slogan but a reflex, visible in how they allocated blame to circumstances and strategy to themselves. Couples can install the reflex deliberately: name the external enemy together, in one sentence, before any discussion of solutions.",
+        "example": "A couple who lost their shop in a flood described the water as the thief and themselves as the night watch. Couples Clara Whitfield interviewed after bankruptcy, by contrast, often described each other as the flood. The facts were similar; the grammar decided the casualty list.",
+        "action": "In your current hardest problem, write the one sentence that names it as the shared enemy. Say it together before the next planning talk."
+      },
+      {
+        "title": "Rituals Are the Load Bearing Walls",
+        "chapter": "The Shape of a Week",
+        "summary": "Every fifty-year couple had liturgy: the Sunday walk, the tea at four, the Friday fish, the anniversary letter. Clara Whitfield argues the rituals are not decoration on the marriage; they are the schedule on which affection, repair and information actually travel. When couples in trouble described losing rituals first, years before losing love, she learned to ask about the calendar before asking about feelings. Restore the ritual and the feelings frequently follow it home.",
+        "example": "A Manchester couple's forty year ritual was tea in bed at six, made alternately, no phones admitted since phones existed. Their children called it the parliament. Every family crisis in the interview, traced back, had been processed first at that tea.",
+        "action": "Restore or found one weekly ritual this month: small, timed, phone free, and defended like a train that cannot be missed."
+      },
+      {
+        "title": "The Ledger of Kindness Is Kept, and It Matters",
+        "chapter": "Remembering Well",
+        "summary": "Clara Whitfield noticed the lasting couples kept accounts, but of kindnesses: they could recite each other's generosities across decades with dates attached, while injuries were remembered vaguely and mercifully blurred. The divorced couples kept the opposite ledger. Memory, she concludes, is a marital policy, not a passive recording: what a couple rehearses about its past becomes the story the future must live up to. Couples can audit their ledger and begin, deliberately, keeping the other book.",
+        "example": "Asked about a hard decade, a wife in the study answered with her husband's behaviour during her mother's illness in 1983, in detail, eyes bright. Her husband's version of the same decade featured her night shifts during his unemployment. Neither mentioned the grievances Clara Whitfield knew the decade contained. The ledgers had been curated, and the marriage lived inside the curation.",
+        "action": "Start the kindness ledger tonight: write three of your partner's generosities with dates. Read it before your next complaint."
+      },
+      {
+        "title": "Touch Is a Language That Must Not Go Extinct",
+        "chapter": "The Physical Thread",
+        "summary": "The lasting couples touched: hands held at eighty, a palm between shoulder blades in a doorway, the kiss that punctuation marks leaving and returning. Clara Whitfield is blunt that when touch died in the marriages she studied retrospectively, it died before the conversation did, and its death was the true obituary. Touch is maintainable independently of desire's weather; couples who keep the physical thread during dry seasons find the rest of the language still installed when the seasons turn.",
+        "example": "An Austrian couple who had not shared a bedroom in a decade for medical reasons maintained a protocol of touch their children described as embarrassing and enviable: morning and night, hands and foreheads, without exception for fifty six years. The protocol, Clara Whitfield writes, was the marriage, continued by other means.",
+        "action": "Install the doorway protocol this week: touch at every leaving and returning for fourteen days. Do not announce it. Observe it."
+      },
+      {
+        "title": "Forgiveness at Speed, With a Memory Policy",
+        "chapter": "The Art of the Short Account",
+        "summary": "The fifty year couples forgave quickly and, Clara Whitfield emphasises, incompletely remembered. Their secret was not saintliness but policy: offences were processed once, at the repair conversation, and then deliberately filed under weather rather than character. The refusal to re-litigate is what makes speed possible the next time; a partner who knows the offence will be quoted for decades defends like it. Short accounts, she concludes, are a kindness a couple does its future selves.",
+        "example": "One husband defined their system in a sentence Clara Whitfield took for the book's epigraph in draft: we have an excellent marriage and a terrible archive. They could not produce, between them, the details of fights their children remembered clearly. The archive had been pulped by policy.",
+        "action": "Process one offence completely this week, then pulp the archive: agree aloud that it will not be quoted again, and keep the agreement."
+      }
+    ],
+    "actionPlan": [
+      "Set the 48 hour repair deadline together.",
+      "Three small doses daily for two weeks.",
+      "Retire one public joke at your partner's expense; apologise privately.",
+      "Name one tear this week while it is still kitchen-table sized.",
+      "Defend your partner's dignity in one room where it costs you a laugh.",
+      "Review the year for grievances older than a month; stitch or release them.",
+      "Warm the metaphorical side of the bed: one creature comfort, daily."
+    ],
+    "caveat": "Clara Whitfield's couples are survivors telling their stories backward, which flatters every habit they share; the patterns match laboratory research unusually well, but no habit list resurrects a marriage where safety or goodwill is gone.",
+    "graveLink": "housing-com",
+    "cover": "assets/covers/safekeeping-heart.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "arranged-heart",
+    "title": "An Arranged Heart",
+    "author": "Meera Krishnan",
+    "year": 2022,
+    "category": "Love & Relationships",
+    "readTime": "8 min",
+    "tagline": "What arranged marriages know about love that dating forgot.",
+    "oneLiner": "Choice is not the same as wisdom. Meera Krishnan, sociologist and herself happily arranged-married for 30 years, argues that the arranged system screens for what predicts durability, and the dating system screens for what predicts a good first month.",
+    "bigIdea": "Meera Krishnan studies arranged marriages across India, the diaspora and their modern, semi-arranged hybrids, and asks what the system gets right. Its screen, family fit, values, life plans, finances discussed in daylight, selects for the variables that actually predict thirty year outcomes. Dating's screen, attraction and banter, selects for the first season. Her argument is not that parents should choose, but that modern choosers should borrow the checklist while keeping the choice, and the veto.",
+    "quotes": [
+      "Attraction is a wonderful spark and a terrible architect.",
+      "The arranged system asks: can we build a life? Dating asks: do I feel something? Both questions matter. Order matters more.",
+      "Love is not found fully built. It is constructed, by two people with compatible materials."
+    ],
+    "lessons": [
+      {
+        "title": "Screen for the Thirty Year Variables Early",
+        "chapter": "The Two Screens",
+        "summary": "Meera Krishnan lists what arranged introductions establish in week one: families' expectations, money philosophy, children, geography, faith practice, elder care, ambition, conflict style by reputation. Dating typically reaches these in year two, often as discoveries with lawyers nearby. Her proposal is not to interrogate first dates but to stop treating the durable questions as unromantic. Couples who discuss the architecture early report that the romance survives the information easily, because attraction that cannot survive honesty was never going to survive marriage.",
+        "example": "A diaspora couple in London ran what they called the arranged checklist across their dating: six long conversations in the first two months, families met by month three. Both sets of friends called it unromantic. Both are married; the friends' average is not, and the wife's line is quoted by Meera Krishnan: we did not skip the falling. We built the floor under it.",
+        "action": "If dating, schedule the six architecture conversations inside two months: money, children, place, faith, elders, ambition. If married, have the two you skipped."
+      },
+      {
+        "title": "The Veto Is the Modern Invention That Saves the System",
+        "chapter": "Consent and Its History",
+        "summary": "Meera Krishnan is unsparing about the old system's sins: child marriages, coerced matches, daughters traded for alliances. What redeems the modern form, she argues, is the veto, both parties free to refuse, families advising rather than disposing. The hybrid that results, introduced candidates, family intelligence, individual consent, combines the two screens' strengths. Her data chapters show the modern arranged divorce rates comparing well with love matches, though she warns the statistics carry the survivor bias of stigma.",
+        "example": "She tells of a Chennai father who introduced four candidates over two years and backed his daughter's four refusals without a sigh, then her fifth choice without an argument. His line anchors the chapter: my job is the searching and the honesty. Hers is the choosing. That sentence is the entire reform in miniature.",
+        "action": "If your family introduces partners, write the veto down as family policy, aloud, before the next introduction. If you date independently, give one trusted elder intelligence rights and no decision rights."
+      },
+      {
+        "title": "Commitment First, Feelings Compounding",
+        "chapter": "How Love Grows in Arranged Marriages",
+        "summary": "The Western sequence expects love to precede and justify commitment. The arranged sequence inverts it: commitment, publicly witnessed and family supported, creates the safety in which love compounds. Meera Krishnan's interviewees describe affection arriving like interest on a decision, accelerated by exactly the forces romantics distrust: obligation, ritual, the impossibility of casual exit. She does not claim superiority, only that the inversion is coherent, and its results embarrass the assumption that feelings must lead or nothing real follows.",
+        "example": "A Hyderabad couple married after three meetings describe their first year as courteous construction: shared accounts, shared festivals, deliberate kindness without yet much feeling. By year three the wife reports the feeling arrived and found everything built. Their phrase for it titles the chapter's argument: we fell in love inside the house instead of outside it.",
+        "action": "Wherever you are in a relationship, make one commitment-shaped act this week: a ritual begun, a plan witnessed, a kindness scheduled rather than felt."
+      },
+      {
+        "title": "Families Are Due Diligence, Not Decoration",
+        "chapter": "The Intelligence Network",
+        "summary": "Meera Krishnan rehabilitates an unfashionable idea: your family knows things about a prospective partner's family, reputation for kindness, debts, tempers across decades, that no dating profile will disclose. Used as intelligence rather than command, this network is the world's oldest reference check. Her condition is transparency: the enquiries must be answerable, their findings shared with the candidate, and the final decision, and its consequences, owned by the couple themselves.",
+        "example": "A candidate in her study was quietly dropped by three families before someone told him why: a reputation for cruelty to staff that his charm concealed from dates. He credits the network, bitterly and then gratefully in her follow up interviews, with the therapy he finally took. The dates had given him charm practice; the network gave him a diagnosis.",
+        "action": "If you are vetting a serious partner, commission the reference check properly: three sources who know their unglamorous life, asked specific questions."
+      },
+      {
+        "title": "The Questions Arranged Couples Ask in Week One",
+        "chapter": "The Daylight List",
+        "summary": "Meera Krishnan publishes the list her interviewees' families covered before engagement: money and debt, children and timing, where to live and whose parents in old age, faith in practice, work ambitions and their costs, conflict and its repair, health histories without euphemism. Her challenge to dating readers is scheduling, not content: every item will be discussed eventually, at a wedding's price or a divorce's. The arranged system's whole advantage is conducting the audit while exit is still cheap and honesty still easy.",
+        "example": "A couple who met through families describe their third meeting as a spreadsheet date that their love match friends found horrifying. Debts, salaries, a parent's illness, two incompatible city dreams, all surfaced and negotiated before the engagement. At the wedding the bride toasted the spreadsheet. Meera Krishnan reports the toast got the day's biggest laugh and its only tears.",
+        "action": "Run the daylight list with your partner this month, whichever items remain unasked. One per evening, with tea, no ambushes."
+      },
+      {
+        "title": "Horoscopes, Checklists and the Uses of Ritual",
+        "chapter": "Symbols and Their Work",
+        "summary": "Meera Krishnan treats the system's rituals, including horoscope matching, functionally: whatever their metaphysics, they slow the process down, force family consultation, and give refusals a face saving address. The lesson for modern daters is to build deliberate friction into fast romances: pauses that consult reality, rituals that require the couple to present themselves to their communities. Speed is dating's romance and its defect; the ritual calendar is a technology for thinking in installments.",
+        "example": "A couple who matched on an app borrowed the technology without the astrology: they imposed the arranged calendar, six structured meetings including families and one month of reflection before exclusivity. Both say the friction is what they now recommend, because desire survived it and fantasy did not.",
+        "action": "Install one piece of deliberate friction in your current romance: a reflection pause, a family meeting, a mentor conversation, before the next escalation."
+      },
+      {
+        "title": "When the System Fails: Exit, Honour and Data",
+        "chapter": "Divorce in Arranged Marriages",
+        "summary": "Meera Krishnan refuses to hide the system's failures: matches that became cages under family pressure, divorces delayed past decency by stigma, statistics flattered because exit was priced as disgrace. Her reform position depends on this honesty: the arranged model earns its modern defence only when exit is survivable and honoured, so that staying means choosing. She profiles families who absorbed a daughter's divorce as protection rather than shame, and marks them as the system's future, not its betrayal.",
+        "example": "One family in her study celebrated, quietly and deliberately, their daughter's return home after a cruel marriage, with the same feast as a wedding's. The signal to the community was the point: in this house, exit is survivable. Meera Krishnan's follow up found the story retold, with approval, by three neighbouring families within the year.",
+        "action": "Whatever your family's system, say the sentence aloud this year: in this house, leaving a cruel marriage is protection, not shame."
+      },
+      {
+        "title": "The Diaspora Hybrid Is the Laboratory",
+        "chapter": "Semi-Arranged Futures",
+        "summary": "The book closes in London, Toronto and New Jersey, where second generation couples run hybrids: apps filtered by family criteria, self chosen partners submitted to the daylight list, parents upgraded from arrangers to consultants with excellent intelligence and no vote. Meera Krishnan predicts this hybrid, not either parent system, is the future, because it prices both truths: attraction matters, and attraction is not due diligence. Her final chapter is a design manual for building your own hybrid deliberately.",
+        "example": "A Toronto couple describe their system in one sentence: we swiped, then we arranged. Families met at month two, the checklist ran at month three, the veto stayed with the couple throughout, and the wedding, both insist, felt like the most personal and the most supported event of their lives. The hybrid's slogan writes itself.",
+        "action": "Design your hybrid in writing: who searches, who vets, who decides, what gets checked by when. One page, agreed before the next candidate."
+      }
+    ],
+    "actionPlan": [
+      "Schedule the six architecture conversations, dating or married.",
+      "Write the veto into family policy aloud if introductions happen.",
+      "Give one trusted elder intelligence rights, not decision rights.",
+      "Make one commitment-shaped act this week.",
+      "Discuss elder care and geography before they become emergencies.",
+      "Let family intelligence inform, never ambush: full disclosure to candidates.",
+      "Review the architecture yearly; buildings settle, so do marriages."
+    ],
+    "caveat": "Meera Krishnan writes as a reformer of a system she loves, addressing readers free to consent. Nothing here applies where consent is absent, and she says so on page one; coerced marriage is a crime wearing the system's name.",
+    "graveLink": "kashmir-widows",
+    "cover": "assets/covers/arranged-heart.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "letters-to-young-lover",
+    "title": "Letters to a Young Lover",
+    "author": "Tomás Rivera",
+    "year": 2020,
+    "category": "Love & Relationships",
+    "readTime": "7 min",
+    "tagline": "A grandfather's letters on courtship, fidelity and tenderness, written for a grandson in his first serious love.",
+    "oneLiner": "An old man who loved one woman for sixty years writes to a grandson navigating hookups and situationships. The letters are old fashioned the way bread is old fashioned.",
+    "bigIdea": "When his grandson Marco, twenty two and baffled by modern dating, asked how he had known, Tomás Rivera answered in letters. Published with Marco's reply poems interleaved, the book covers attention, courtship as craft, jealousy, fidelity as freedom, quarrelling fairly, and the long tenderness of old love. Its argument is carried by tone: that romance is a practice of respect, and respect, in any decade, is recognisable and rare enough to be magnetic.",
+    "quotes": [
+      "Courtship is not a performance. It is a promise, rehearsed.",
+      "Jealousy is not proof of love. It is proof of fear, and fear is a poor architect.",
+      "Tenderness is what passion becomes when it grows up and stays."
+    ],
+    "lessons": [
+      {
+        "title": "Attention Is the First Language of Love",
+        "chapter": "Letters One to Three",
+        "summary": "The opening letters teach courtship as attention: remembering what she told you, arriving when you said, asking the second question. Tomás Rivera argues that in any era, including his grandson's app age, undivided attention is the scarcest gift and therefore the truest signal. Marco's generation, he writes, has made attention so rare that a young man who can give an hour of it, phone facedown, arrives like a prince from an older and better novel.",
+        "example": "He tells of courting his wife in 1962 by learning her bus schedule to walk her home, then checks himself: the schedule is not the lesson. The lesson is that love studies its object. Marco's reply poem updates it: he memorised her library shifts, same study, new campus.",
+        "action": "Give one hour of facedown phone attention this week to the person you love or hope to. Ask the second question at least twice."
+      },
+      {
+        "title": "Fidelity Is Freedom From the Marketplace",
+        "chapter": "Letters Seven to Nine",
+        "summary": "Against the idea of fidelity as restriction, the grandfather argues it is liberation: the man who has chosen stops spending his life evaluating alternatives and starts spending it deepening one thing. He is no innocent; the letters name temptation honestly and treat it as weather, not destiny. The discipline he prescribes is mostly architectural: do not build rooms you will have to lie about entering, and let your chosen person hear your admiration so often that flattery from strangers loses its market.",
+        "example": "He describes a colleague at the port who kept every option open for thirty years and arrived at retirement with a famous address book and an empty house. Options, the letter concludes, are a currency that devalues to zero if never spent. Marco's generation calls it the paradox of the apps; his grandfather called it the harbour with no ship.",
+        "action": "Close one option channel this week that exists only to keep you marketable. Spend the recovered attention on the person you have chosen."
+      },
+      {
+        "title": "Quarrel Like People Who Will Wake Up Together",
+        "chapter": "Letters Ten to Twelve",
+        "summary": "The quarrelling letters are the book's most practical: never argue to win, argue to understand; no verdicts about character, only evidence about events; the words always and never are banned as perjury; and every quarrel ends with the physical reconnection, tea, a walk, the hand, that tells the body the bond survived. He adds his marriage's strangest rule, proven across sixty years: you may be angry at me, but you may not be cold to me. Heat can be answered. Ice only spreads.",
+        "example": "He recounts the worst quarrel of 1974, over money and his mother in law's visit, resolved not by verdict but by his wife's sentence: we are on the same side of this problem by morning. They were, because the rule forbade sleeping as opponents. The sentence has since been adopted, Marco reports, by at least one grandson's household.",
+        "action": "Adopt the same-side rule tonight: no quarrel survives sleep unresolved at least to the point of reconnection. Ban always and never for a month."
+      },
+      {
+        "title": "Admiration Must Be Said at Home",
+        "chapter": "Letters Four to Six",
+        "summary": "The middle letters argue that most affairs of the heart begin as affairs of being admired elsewhere. Tomás Rivera's prescription is almost administrative: let your person hear your admiration in specifics, weekly, so that no colleague or stranger is the first to tell them they are remarkable. He is equally stern about receiving: the beloved who deflects every compliment is refusing a currency the household runs on. Courtship, in his accounting, is the permanent department of admiration, never outsourced, never closed.",
+        "example": "He describes noticing, in his seventies, that a neighbour's widow blossomed visibly under a new friend's attention, and auditing his own house the same evening. His wife received, he writes, a list she made him repeat when she was dying. Say it at home is the letter's title in draft, and Marco's generation has tattooed worse sentences.",
+        "action": "Deliver one specific admiration to your person today: not you look nice, but the observed detail and its effect on you. Repeat weekly."
+      },
+      {
+        "title": "The Second Question Is Where Love Lives",
+        "chapter": "Letters One to Three",
+        "summary": "Anyone can ask how was your day. The letters teach the second question: what was the hardest part, what are you not saying about it, what would help. Tomás Rivera calls the second question the doorway between company and intimacy, and notes that it cannot be faked, because it requires remembering the answer tomorrow. Marco's generation, drowning in messages and starving for witness, is told that this is the entire technology: follow up, in person, on the record of yesterday's answer.",
+        "example": "The grandfather recounts asking his wife about a difficult sister for forty years, the answer evolving with their lives, until at the end the question itself had become a place they lived. Marco's reply describes asking his girlfriend the second question for a month and being asked, in return, what had changed. Nothing had, except attention, which was everything.",
+        "action": "Ask one second question tonight and remember the answer tomorrow, aloud. That audible remembering is the love letter."
+      },
+      {
+        "title": "Boredom Is a Season, Not a Verdict",
+        "chapter": "Letters Thirteen to Fifteen",
+        "summary": "The later letters take up the fear every long love meets: the season where the beloved seems ordinary and the heart goes quiet. Tomás Rivera treats it as weather his sixty years met repeatedly, with a farmer's calm: seasons are not verdicts, and the crop is tended through them, not evaluated in them. His remedies are unfashionable: shared work, novelty administered together, and the memory deliberately revisited, their own early letters reread aloud, until the climate changes, as it always had.",
+        "example": "He tells of the winter of 1981, work gone, money short, love apparently with it, and of his wife reading their courtship letters aloud by the stove until both were laughing and then not laughing. The letters did not fix the money. They fixed the interpretation: this is a winter, and we have survived winters as a genre.",
+        "action": "In your current flat season, reread one early message from your person aloud together before pronouncing any verdicts."
+      },
+      {
+        "title": "On Seeing Others: The Weather Report",
+        "chapter": "Letters Seven to Nine",
+        "summary": "The grandfather refuses to pretend that married eyes go blind. Attraction to others is weather; what matters is the architecture it meets. His rules are practical: no private channels you would hide, no complaints about your spouse as an opening bid, and the weather reported at home when it matters, because secrecy is the greenhouse in which weather becomes climate. Marco's letters answer with the digital translation, and the correspondence across seventy years agrees on the load bearing wall: transparency.",
+        "example": "He recounts a friendship in the port years that warmed beyond its brief and how he ended it: by telling his wife it existed, which cooled it to its proper temperature within a week. Daylight, he writes, is the cheapest fidelity device ever manufactured, and the one his grandson's generation keeps trying to replace with passwords.",
+        "action": "Bring one weather report home this week: an attraction, a friendship's temperature, mentioned in daylight before it needs confessing."
+      },
+      {
+        "title": "The Last Letters: Tenderness as the Final Form",
+        "chapter": "Letters Sixteen to Eighteen",
+        "summary": "The book closes with letters written after his wife's death, addressed now to Marco alone: about grief as love with nowhere to sit, and about tenderness as passion's final and best form. He describes their last years, the medicine schedules, the hand held through hospital nights, and argues that what young lovers call chemistry is only the overture. The full work is tenderness: desire educated by decades of care until it can speak in a held hand at a frequency the young cannot yet hear.",
+        "example": "The last letter describes holding her hand in the hospital and understanding that he was not experiencing the remainder of their love but its concentrate. Marco's closing poem answers that he has begun, at twenty three, to practice for a concentrate he hopes is sixty years away. Readers tend to finish the book in silence, which the publisher has learned to warn book clubs about.",
+        "action": "Practise tenderness today at the concentrate's frequency: one unhurried, fully attentive act of care for your person, young or old."
+      }
+    ],
+    "actionPlan": [
+      "One hour of facedown phone attention weekly; ask second questions.",
+      "Close one option channel; redirect the attention to your chosen person.",
+      "Ban always and never for a month; argue events, not character.",
+      "End every quarrel with reconnection before sleep.",
+      "Study your person: their schedule, worries and small preferences, this week.",
+      "Write one actual letter to someone you love this month.",
+      "Let admiration be said aloud at home until strangers' flattery has no market."
+    ],
+    "caveat": "The letters reflect one man's era, faith and temperament, offered as inheritance rather than instruction. Readers will translate, argue and adapt, which the grandson's interleaved replies model from the start.",
+    "graveLink": "caesar-ides",
+    "cover": "assets/covers/letters-to-young-lover.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "covenant-of-water",
+    "title": "The Covenant of Water",
+    "author": "Abraham Verghese",
+    "year": 2023,
+    "category": "Family & Parenting",
+    "readTime": "10 min",
+    "tagline": "Three generations of a Kerala family, bound by water, faith and a strange affliction.",
+    "oneLiner": "In every generation of one Kerala family, someone drowns. Abraham Verghese's epic follows Big Ammachi and her descendants across the twentieth century as medicine, faith and India itself change around their house by the water.",
+    "bigIdea": "Spanning 1900 to 1977 in Kerala's backwaters, Abraham Verghese's novel follows a family shadowed by a condition: in each generation, at least one person dies by drowning. Around that mystery he builds a cathedral of a book: Big Ammachi, married at twelve and widowed into matriarchy; a leper doctor, an artist, revolutionaries; the coming of modern medicine; and a final revelation that joins the family's curse to science. It is about how families carry affliction and grace in the same blood.",
+    "quotes": [
+      "We are all prone to error, all in need of forgiveness.",
+      "The water connects them all, as it connects all of us.",
+      "A family's story is a river: it carries silt and gold together."
+    ],
+    "lessons": [
+      {
+        "title": "Big Ammachi: Matriarchy as Quiet Engineering",
+        "chapter": "The Early Generations",
+        "summary": "Married at twelve to a widower of forty, Big Ammachi becomes the family's load bearing wall through widowhood, partition era upheavals and the slow modernisation of Kerala. Abraham Verghese writes her power without modern vocabulary: she rules by feeding, remembering, forgiving strategically and refusing despair as a household policy. Readers meet in her the historical truth of millions of grandmothers: the family state ran on their competence, and history books billed it to nobody.",
+        "example": "When the family's fortunes break, it is Big Ammachi who converts jewellery to school fees, pride to alliances, and grief to routine. Her descendants' later achievements, doctors, artists, priests, all trace to decisions taken at her kitchen table with a widow's limited instruments and unlimited attention.",
+        "action": "Ask the eldest woman in your family, while you can, how she actually ran things. Record the engineering, not just the affection."
+      },
+      {
+        "title": "The Condition: Every Family Has Its Water",
+        "chapter": "The Affliction",
+        "summary": "The drowning pattern, eventually given a medical name late in the novel, works as both plot and metaphor: each family carries some recurring affliction, addiction, temper, silence, debt, and calls it fate until someone studies it. Abraham Verghese's scientists and grandmothers approach the curse from opposite ends and meet in the middle: named, an affliction loses its supernatural authority and becomes a problem with a pedigree and possibly a treatment. The family's deliverance begins as record keeping.",
+        "example": "The family tree drawn and redrawn through the book, marking the drowned, is itself the breakthrough technology: once the pattern is on paper across generations, the curse becomes data. Families with unnamed patterns repeat them; this one, drawn, starts to end.",
+        "action": "Draw your family's tree with its recurring pattern marked honestly, health, money, silence, whatever the water is. Naming is the first treatment."
+      },
+      {
+        "title": "Medicine and Faith Are Two Hands of the Same Body Here",
+        "chapter": "Doctors and Priests",
+        "summary": "Abraham Verghese, himself a physician, writes Kerala's Christian community with its hospitals and churches sharing patients. Leprosy work, a runaway artist, a doctor who becomes a legend of compassion: the novel refuses to choose between the clinic and the chapel, showing each catching the other's failures. In a library of medical memoirs this epic supplies the historical canvas: what healing looked like before the modern hospital, when the doctor's presence was most of the pharmacopoeia.",
+        "example": "The leper doctor Digby and the family's own physicians treat bodies while Big Ammachi's faith treats the terror around the bodies. Patients in the novel recover, or die whole, depending on whether both hands reached them. Abraham Verghese has said in interviews this double vision is his own inheritance, and the novel is its fullest expression.",
+        "action": "In your family's next illness, assign both offices deliberately: who manages the medicine, who manages the meaning. Do not leave either to chance."
+      },
+      {
+        "title": "Parambil's House: Place as a Character With Memory",
+        "chapter": "The Setting",
+        "summary": "The family house at Parambil, on its rise above the waterways, anchors three generations the way a character would: marriages arrive there, bodies are laid out there, secrets are buried within earshot of its walls. Abraham Verghese builds the reader's attachment deliberately, so that every later change, roads, hospitals, emigrations, registers as gain and amputation at once. Place, the novel argues, is how families remember what individuals would rather forget, including who they promised to be.",
+        "example": "Big Ammachi's daily circuits of the house and land, maintained into extreme old age, are the novel's heartbeat: her rounds literally inspect the family's condition. When the young begin leaving for cities and countries, her rounds continue, and the reader feels the house becoming at once fuller of memory and emptier of hands.",
+        "action": "Walk your own family's founding place, house, street or village land, and record what it remembers before the generation that can read it leaves."
+      },
+      {
+        "title": "Elsie and the Artist: Talent Under Family Weather",
+        "chapter": "The Middle Generation",
+        "summary": "The novel's artist figures, above all the sculptor Elsie and the runaway who becomes a legend of the art world under another name, test the family's capacity to shelter gifts it does not understand. Abraham Verghese writes talent as another of the family's waters: it nourishes and it drowns, and the household's response, pride laced with bewilderment, work offered without comprehension, is drawn from a thousand real houses where the gifted child is both treasure and foreigner.",
+        "example": "Elsie's chalk drawings, made in secret and discovered, become one of the book's great emotional detonations late in the story, joining the family's separated branches. Art in the novel is not decoration; it is the record the illiterate years kept of themselves, waiting for a reader.",
+        "action": "Find the hidden gift in your own house, the drawings, notebooks or instruments nobody discusses, and give it one act of public honour this year."
+      },
+      {
+        "title": "Mariamma and the Answer: Science Arrives at the Curse",
+        "chapter": "The Last Generation",
+        "summary": "Without spoiling the mechanism, the youngest generation's medical training finally equips the family to name its affliction, and the naming scene is written as a homecoming rather than a triumph: the laboratory bows to the grandmother's records. Abraham Verghese, a physician novelist, stages his whole career's thesis here, that data and devotion are allies, and that the family's deliverance required both the microscope and Big Ammachi's memory of every drowning, kept accurately for seventy years.",
+        "example": "The revelation joins threads planted four hundred pages earlier, deaths, symptoms, a drawing, a marriage, into one pattern the reader assembles a page before the characters do. Critics singled out this architecture as the novel's engineering marvel, and rereading is widely reported to be the richer experience.",
+        "action": "Keep your family's health memory like Big Ammachi: one book, every generation's conditions and ages written plainly, updated at funerals and births alike."
+      },
+      {
+        "title": "Faith That Endures the Evidence",
+        "chapter": "The Church and the River",
+        "summary": "The family's Saint Thomas Christianity, older than most of Europe's, is neither backdrop nor sermon in the novel; it is the operating system of their endurance. Abraham Verghese writes doubt honestly, the priest who fails, the prayers the river seems to ignore, and still shows faith functioning as the family's grammar for grief. The drowned are buried with the same liturgy that marries the living, and the repetition itself becomes the argument: a practice that can hold both is worth more than a belief that explains either.",
+        "example": "Big Ammachi's prayers are depicted as labour, daily, unglamorous, unanswered in the short term and load bearing in the long. When catastrophe arrives the household does not construct a response; it performs the one rehearsed for decades, and the performance carries people who no longer privately believe a word of it.",
+        "action": "Whatever your household's grammar for grief, rehearse it in peacetime: the songs, texts or rituals known by heart before they are needed at midnight."
+      },
+      {
+        "title": "What the River Takes, What It Returns",
+        "chapter": "The Covenant Itself",
+        "summary": "The title's covenant is the family's bargain with water: it baptises and drowns them, feeds their land and takes their children, and they stay. Abraham Verghese closes the epic by widening the bargain to the reader's own: every family lives beside some river that gives and takes in the same motion, a city, a trade, a temperament, and maturity is learning the terms without either worshipping or fleeing the water. The last pages have been read aloud at funerals, which the novel seems quietly to have intended.",
+        "example": "The final movement gathers the surviving family at the water for a rite the book has been rehearsing since page one, and readers report weeping at a scene whose power is ninety percent preparation. That is the epic method vindicated: a covenant, like a family, is only as strong as its accumulated years.",
+        "action": "Name your family's river, the force that feeds and endangers you both, and write its terms in one honest paragraph."
+      }
+    ],
+    "actionPlan": [
+      "Record your eldest relative's actual engineering this year.",
+      "Draw the family tree with its pattern named.",
+      "Keep one family record book: births, illnesses, stories, updated yearly.",
+      "Appoint medicine and meaning roles in the next family illness.",
+      "Read it slowly, a generation a week; the river sets the pace.",
+      "Learn your region's medical history through one elder's memory.",
+      "Forgive strategically, like Big Ammachi: remember everything, invoice nothing."
+    ],
+    "caveat": "It is a long, immersive epic with dialect, history and many characters; readers wanting pace should know the river rewards drift. It depicts illness, colonial and caste realities of its period without flinching.",
+    "graveLink": "kerala-floods",
+    "cover": "assets/covers/covenant-of-water.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "quiet-house",
+    "title": "The Quiet House: A Marriage Manual",
+    "author": "Daniel Okafor",
+    "year": 2021,
+    "category": "Love & Relationships",
+    "readTime": "8 min",
+    "tagline": "Why the happiest homes are not the loudest, and how to lower the volume without lowering the love.",
+    "oneLiner": "Daniel Okafor, a family therapist in Nigeria, noticed that couples rarely divorce over the shouting. They divorce over the quiet that follows it: the months of polite, frozen silence in which the marriage actually ends.",
+    "bigIdea": "Daniel Okafor draws on twenty years of family therapy to argue that a marriage's vital sign is not passion or even communication volume, but repair. Loud homes that argue and reconcile are healthier than quiet houses where silence has become the system. The book teaches couples to read their own acoustics, distinguish restorative quiet from punishing quiet, and rebuild a home where things can be said at speaking volume again.",
+    "quotes": [
+      "A quiet house can be a peaceful one or a frozen one. From the street they look identical.",
+      "Couples do not run out of love. They run out of sentences they believe are safe to say.",
+      "Volume is not the problem. Unrepaired volume is."
+    ],
+    "lessons": [
+      {
+        "title": "Two Kinds of Quiet",
+        "chapter": "The Acoustics of a Marriage",
+        "summary": "Daniel Okafor's central diagnostic: restorative quiet, two people comfortable in companionable silence, versus punishing quiet, where silence is the sentence imposed after every crime of speech. The first kind refuels a marriage; the second starves it while looking respectable to visitors. Couples learn to audit which quiet fills their evenings, because the treatment differs completely: one needs protection from the world's noise, the other needs thawing, carefully, at the exact points where speech froze.",
+        "example": "A Lagos couple proud of never fighting described evenings of parallel silence with separate screens. In therapy they discovered their last real conversation predated their second child. House quiet, marriage frozen: Daniel Okafor's case study gives the pattern its name and its first thaw, a nightly ten minutes of actual talk.",
+        "action": "Audit this week's evenings honestly: restorative or punishing? If punishing, install ten minutes of real talk nightly for two weeks before judging the marriage."
+      },
+      {
+        "title": "The Sentence You Believe Is Unsafe",
+        "chapter": "Where Speech Froze",
+        "summary": "Every frozen house contains specific unsayable sentences: I am lonely beside you, I regret the move, I do not desire this life, I am failing. Daniel Okafor's method maps the unsayables, then builds the smallest safe version of each, spoken with a therapist's grammar: my experience, my need, my request. The book's claim is hopeful: marriages rarely need new partners; they need the frozen sentences thawed at a survivable temperature, one degree at a time.",
+        "example": "A husband whose unsayable was I never wanted the family business carried it for nineteen years as irritability. Spoken at last, in the grammar, it reorganised the marriage in a month: his wife had suspected an affair for a decade. The truth, however heavy, weighed less than the suspicion.",
+        "action": "Write your unsayable sentence privately. Then write its smallest survivable version, experience, need, request, and choose its moment this month."
+      },
+      {
+        "title": "Speaking Volume: The Repair Rituals",
+        "chapter": "Thawing the House",
+        "summary": "The manual's closing toolkit: a daily ten minute exchange with phones elsewhere, a weekly state of the union with an agenda of three kind questions, and the rule that repairs be attempted within a day, however clumsily. Daniel Okafor insists the rituals look too small because we mistake marriage for a renovation; it is plumbing. The couples who keep the small rituals report that big conversations eventually become possible at ordinary volume, which is the whole definition of a house that is quiet in the good way.",
+        "example": "One couple's state of the union is three questions every Sunday: what did I do that helped, what hurt, what do you need this week. Nine minutes, timed by their daughter's bath. They credit it with ending their frozen years more than the therapy that taught it, because the ritual outlived the therapist.",
+        "action": "Install the Sunday three questions this week: helped, hurt, need. Nine minutes, timed, phones elsewhere."
+      },
+      {
+        "title": "The In-Law Frequency",
+        "chapter": "Family Systems Around the House",
+        "summary": "Daniel Okafor devotes a chapter to the extended family's acoustic: in many of his cases the house froze not between the spouses but around an in-law conflict neither dared discuss. His instrument is the boundary conversation, respectful, united, and held by the child of the family in question, with the spouse as witness and ally rather than prosecutor. Houses thaw measurably when the outer walls are repaired, because much marital silence is two people agreeing not to mention the weather system camped in the spare room.",
+        "example": "A couple frozen for three years traced the freeze to his mother's unannounced relocation to their street and his wife's unspoken ultimatum. The boundary conversation, held at last with Daniel Okafor's script, lasted forty minutes. The marriage's own thaw, both report, began that evening and required no further heroics.",
+        "action": "Name your household's unmentionable weather system this week, and assign its boundary conversation an owner and a date."
+      },
+      {
+        "title": "Children Are Acoustic Instruments",
+        "chapter": "What the Children Hear",
+        "summary": "Children, Daniel Okafor warns, read a house's emotional weather with instruments more sensitive than any adult's, and the frozen house teaches them that feelings are unspeakable, a curriculum they carry into their own marriages. The good news in his data: children recalibrate fast when the thaw begins, and need no explanations, only evidence. A house where parents resume speaking kindly at speaking volume is a child whose nervous system stands down within weeks, a fact he uses to motivate couples unmoved by their own happiness.",
+        "example": "A nine year old in his practice drew her family at a table with mouths sewn shut, then, four months into her parents' rituals, redrew the picture unprompted with the mouths open and food appearing. Child therapists collect such before and after drawings the way cardiologists collect scans.",
+        "action": "Ask your child to draw the family at dinner this week. Do not interpret it aloud. Let it set your repair agenda."
+      },
+      {
+        "title": "The Ten Minute Exchange, Specified Exactly",
+        "chapter": "Thawing the House",
+        "summary": "Daniel Okafor specifies his core ritual like a prescription: ten minutes, same time daily, each partner speaks five without interruption on a rotating prompt, the day, the worry, the appreciation, the wish. Interruption restarts the speaker's clock, a rule couples find comic and then sacred. Ninety days is the trial period he demands before judgement, because the thaw of a house frozen for years is measured in months, and the first fortnight often feels worse as feeling returns to numb rooms.",
+        "example": "One couple's exchange began with four minutes of silence inside his five, which Daniel Okafor counted as speech of a kind. By day forty the silences were inside sentences rather than instead of them, and by day ninety their daughter asked why they talked so much now, the review every parent hopes to overhear.",
+        "action": "Start the ten minute exchange tonight: five and five, no interruptions, ninety day trial, judgement reserved."
+      },
+      {
+        "title": "When Quiet Is the Symptom of Something Else",
+        "chapter": "Differential Diagnosis",
+        "summary": "The manual is careful about its limits: depression, trauma, addiction and coercive control all present as quiet houses, and none of them is treated with communication rituals. Daniel Okafor gives red flags and referral paths, insisting that a therapist who treats a frightened silence as a skills deficit has failed the family. The chapter is why practitioners recommend the book: it knows where its competence ends, and teaches couples to recognise when the thaw requires professionals, medicine or protection first.",
+        "example": "A husband's frozen withdrawal, read by his wife as contempt for two years, proved in assessment to be untreated depression from a business collapse he had hidden. The rituals came later and helped; the diagnosis came first and saved. Daniel Okafor tells the story against his own method deliberately.",
+        "action": "If your house's quiet frightens you, screen for the deeper causes first: one honest conversation with a doctor or counsellor this month."
+      },
+      {
+        "title": "Keeping the House at Speaking Volume for Decades",
+        "chapter": "Maintenance",
+        "summary": "The closing chapter is about relapse: houses refreeze gradually, rituals lapse in busy years, and the couples who last treat the rituals as plumbing maintenance rather than emergency surgery. Daniel Okafor's maintenance plan is modest: the daily exchange protected in the calendar's concrete, a monthly acoustic audit, helped, hurt, need at the scale of the month, and an annual honest conversation about the unsayables, whose membership changes as life does. The quiet worth having, he concludes, is the one that has to be re-chosen, and can be.",
+        "example": "His longest followed couple, thirty one years, report three refreezings, each caught by the monthly audit at the stage of frost rather than ice. Their metaphor closes the book: a house stays warm the way a fire does, not by being lit once with feeling but by being fed on schedule.",
+        "action": "Put the monthly acoustic audit in the calendar now, twelve instances, and let the schedule do what motivation cannot."
+      }
+    ],
+    "actionPlan": [
+      "Audit the quiet: restorative or punishing, honestly.",
+      "Install ten minutes of real talk nightly for two weeks.",
+      "Write your unsayable; craft its smallest survivable version.",
+      "Begin the Sunday three questions: helped, hurt, need.",
+      "Attempt repairs within a day, clumsily rather than never.",
+      "Measure the house monthly: can things be said at speaking volume now?",
+      "Protect restorative quiet fiercely once you have it."
+    ],
+    "caveat": "Daniel Okafor writes from Nigerian family practice; kinship structures and in-law dynamics in his cases may need translating elsewhere. Where silence is enforced by fear or violence, therapy and safety come before any communication technique.",
+    "graveLink": "cryptopia",
+    "cover": "assets/covers/quiet-house.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "how-to-raise-reader",
+    "title": "How to Raise a Reader",
+    "author": "Pamela Paul and Maria Russo",
+    "year": 2019,
+    "category": "Family & Parenting",
+    "readTime": "8 min",
+    "tagline": "From the editors of the New York Times Book Review: a stage-by-stage guide to growing children who love books.",
+    "oneLiner": "You do not need to be a literary parent. You need books in the house, time protected, screens negotiated, and the discipline to let the child choose the dinosaur book for the fortieth time.",
+    "bigIdea": "Pamela Paul and Maria Russo, who ran children's coverage at the New York Times, wrote the practical guide: what reading looks like at each age from baby to teenager, how to stock a home, survive the graphic novel panic, handle the middle school drop-off, and keep teenagers reading. Their doctrine is relaxed and firm: read aloud long past necessity, let children choose, treat screens as a rival to outbid rather than a demon to exorcise, and never make reading the broccoli of childhood.",
+    "quotes": [
+      "The single most important thing is to read to your child, and to keep reading long after they can read themselves.",
+      "Let them choose. A child who chooses the book owns the reading.",
+      "Reading should be the treat, never the tax."
+    ],
+    "lessons": [
+      {
+        "title": "Read Aloud Years Past Necessity",
+        "chapter": "Baby to Big Kid",
+        "summary": "The guide's most emphasised finding: children benefit from being read to long after they can decode alone, because listening comprehension runs ahead of reading skill for years, and the read aloud hour is also attachment, vocabulary and a front row seat to a parent loving a book. Families who stop at independence lose the best years, when chapter books get interesting. Pamela Paul and Maria Russo give age by age tactics, from board book chewing to the chapter book cliffhanger left deliberately overnight.",
+        "example": "They quote parents who read Harry Potter aloud to twelve year olds fully capable of reading it, reporting the nightly chapter as the family's last reliable congregation. The rule they extract: stop when the child fires you, not when the school says they are fluent.",
+        "action": "Restart or extend the read aloud tonight: fifteen minutes, a book slightly above your child's solo level, cliffhanger endings encouraged."
+      },
+      {
+        "title": "Let Them Choose, Especially the Dinosaur Book Again",
+        "chapter": "The Choosing Doctrine",
+        "summary": "Against parental curation anxiety, the editors argue for child choice as the engine of the reading habit: rereading the same book forty times builds fluency and joy, graphic novels are real reading, series fiction is a gateway and not a gutter, and the parent's snobbery is the most common home grown obstacle. The adult's job is supply and applause: libraries visited, shelves stocked sideways, and no visible disappointment at the choice made.",
+        "example": "Their case files include the boy who read only nonfiction about sharks for a year and emerged a ferocious reader of everything, and the girl whose graphic novel summers carried her to Austen by fifteen. The corridor, they insist, widens from inside; pushing from behind mostly teaches that reading is where parents disapprove.",
+        "action": "This week, let your child choose three books entirely themselves at the library or shop. Read or hear about each without one corrective sigh."
+      },
+      {
+        "title": "The Middle School Cliff and the Teenage Treaty",
+        "chapter": "Older Children and Teens",
+        "summary": "Reading collapses for many children at eleven to thirteen, under homework, phones and social weather. Pamela Paul and Maria Russo's countermeasures are practical: protect even ten minutes, connect books to the child's current obsessions without embarrassment, audiobooks count fully, and negotiate screen treaties as a family rather than confiscating into a cold war. For teenagers, the advice turns to respect: recommend like a friend, lend without quizzes, and let their taste sometimes lead yours, which it increasingly deserves to.",
+        "example": "A father kept his fourteen year old reading by surrendering: he read the son's dystopian series and argued about it at dinner as an equal. The boy now lends him books. The editors call this the handover, and mark it as the guide's true graduation ceremony.",
+        "action": "Ask your older child for one recommendation and read it this month. Discuss it as a fellow reader, not an examiner."
+      },
+      {
+        "title": "The Home Library Is a Climate, Not a Shelf",
+        "chapter": "Setting the Stage",
+        "summary": "Pamela Paul and Maria Russo argue that children read in houses where books are ambient: in reach, in piles, in bathrooms and cars, owned and library borrowed in careless abundance. The research they cite is blunt: the number of books in a home predicts educational outcomes across countries, not because books are magic but because they advertise what the household values. Their advice is architectural: lower the shelves, scatter the stock, and let the library look loved rather than curated.",
+        "example": "They describe the homes of readers they interviewed for the book: books face out at toddler height, a basket by the sofa, library fines treated as a utility bill. In house after house the parents were unremarkable about method and remarkable only about supply, which is the chapter's encouraging point.",
+        "action": "This week install the basket by the sofa and one face out shelf at your child's eye level. Fill both from the library."
+      },
+      {
+        "title": "Series, Comics and the Gateway Doctrine",
+        "chapter": "What Counts as Reading",
+        "summary": "The editors spend a chapter disarming parental snobbery with outcomes: the child inhaling a forty book series is practising stamina, vocabulary and narrative architecture at volume; the graphic novel reader is decoding two symbol systems at once. Gateways, in their files, reliably widen: today's Dog Man devotee is tomorrow's Dickens reader at rates no assigned classic matches. The only true dead end they identify is the child taught that their taste is a disappointment, who stops reading where parents can see.",
+        "example": "A mother confesses in the book to hiding her son's comic habit from her book club, then watching him out read every curated child in the neighbourhood by thirteen. The editors print her confession as the doctrine's testimony: the corridor widened from inside, on schedule, without one corrective sigh.",
+        "action": "Buy or borrow the next volume of whatever your child is inhaling, without commentary on its merits. Note the date; watch the corridor."
+      },
+      {
+        "title": "The Read Aloud Troubleshooting Chapter",
+        "chapter": "When It Is Not Working",
+        "summary": "For the child who wriggles, interrupts, or declares books boring, Pamela Paul and Maria Russo supply field repairs: shorter sessions ending mid cliffhanger, books tied to the child's ruling passion however unpromising, nonfiction and joke books deployed without shame, movement allowed, snacks permitted, and the solemn rule that the read aloud is never withdrawn as punishment, because that teaches the one lesson the book exists to prevent: reading as the opposite of pleasure.",
+        "example": "Their favourite rescue is the boy cured of book hatred by a single volume on disgusting animal facts, read in voices, at his request, nightly for a month. He is a biologist now. The editors do not claim the book made him one; they claim disgust, properly honoured, made him a reader, and readers make themselves.",
+        "action": "If read aloud is failing, change the book to the child's ruling passion this week and shorten to ten minutes ending mid scene."
+      },
+      {
+        "title": "Screens: The Treaty Approach",
+        "chapter": "Reading in a Digital Age",
+        "summary": "Against both prohibition and surrender, the book prescribes treaties: negotiated, written, family wide agreements that protect reading's prime real estate, the hour before bed, the car journey, the lazy weekend morning, while leaving screens their own honest territory. Children, they found, accept and even defend treaties they helped draft, and rebel mainly against confiscations announced in anger. The editors' own households run on such treaties, reviewed termly like constitutions.",
+        "example": "One family treaty in the book reserves the last hour before bed for paper for every member, parents' phones charging in the kitchen as exhibits. The children became its fiercest enforcers, fining their father in push ups, a constitutional court the editors clearly envy.",
+        "action": "Draft your family's screen treaty this weekend with the children at the table. Protect the pre bed hour first."
+      },
+      {
+        "title": "Raising a Reader Who Raises Readers",
+        "chapter": "The Long View",
+        "summary": "The closing chapter widens to the inheritance: adults who read raise readers disproportionately, not through instruction but through climate, the parent visibly lost in a book being the single most replicated scene in readers' childhood memories. Pamela Paul and Maria Russo end with permission and a charge: your own reading life is a parenting instrument, so protect it like one, and the child arguing about bedtime reading at ten is, statistically, the adult who will read to yours.",
+        "example": "They quote a novelist who traced her career to a father who read at the kitchen table every morning of her childhood and never once recommended a book. The silence was the syllabus. She now writes novels her own daughter pretends not to read.",
+        "action": "Read your own book visibly for twenty minutes daily this week, in shared space, for pleasure. That is the lesson; let it teach."
+      }
+    ],
+    "actionPlan": [
+      "Read aloud fifteen minutes tonight, above solo level.",
+      "Library trip this week: three books, child's choice, no sighs.",
+      "Count audiobooks as reading in your house, officially.",
+      "Protect ten minutes on school nights like a fixture.",
+      "Read your teenager's recommendation this month.",
+      "Stock sideways: books in cars, bathrooms, bags, not only shelves.",
+      "Never use reading as punishment or tax; keep it the treat."
+    ],
+    "caveat": "Book lists in any guide date quickly and skew to its market; the methods are the durable part. Children with reading difficulties need assessment and specialised approaches alongside, not instead of, this book's warmth.",
+    "graveLink": "zymergen-bio",
+    "cover": "assets/covers/how-to-raise-reader.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "fatherhood-field-guide",
+    "title": "The Fatherhood Field Guide",
+    "author": "Marcus Webb",
+    "year": 2020,
+    "category": "Family & Parenting",
+    "readTime": "8 min",
+    "tagline": "A practical, funny, unsentimental manual for the modern dad.",
+    "oneLiner": "Babies do not need a hero. They need a present, competent, boringly reliable man who can change a nappy at 3 a.m. and apologise at 3 p.m. Marcus Webb wrote the manual he was handed nowhere.",
+    "bigIdea": "Marcus Webb, a father of four and former infantry officer, wrote the field guide he needed: pregnancy from the passenger seat, the hospital, the first year shifts, discipline without shouting, talking so sons open up and daughters stay close, providing without disappearing, and staying married to the children's mother on purpose. Its tone is its thesis: fatherhood is a craft with skills, not an instinct other men were issued.",
+    "quotes": [
+      "Presence is not a mood. It is a roster. Show up for your shifts.",
+      "Your children will forget your lectures and keep your patterns.",
+      "A father's apology, witnessed by his children, is worth a year of sermons."
+    ],
+    "lessons": [
+      {
+        "title": "The Roster: Presence as Scheduling",
+        "chapter": "The First Years",
+        "summary": "Marcus Webb replaces the vague injunction to be present with logistics: presence is a roster of owned shifts, the morning routine, bath time, Saturday breakfast, the school run, defended like work meetings because to the child they are the state visits of a small nation. Fathers who own specific rituals become irreplaceable in them, and the child's security is built from their predictability more than from any single heroic day out.",
+        "example": "He tells of a pilot father who owned exactly one thing, the bedtime story by phone or bedside across twelve years and four continents of deployments. His adult daughter, asked about her childhood, starts with the stories. The roster was small and it was kept; that is the entire formula.",
+        "action": "Claim one ritual this week and put it in the calendar as unmissable: yours, named, recurring. Keep it for ninety days before adding another."
+      },
+      {
+        "title": "Discipline Without Volume",
+        "chapter": "The Middle Years",
+        "summary": "A large man who has commanded soldiers argues that shouting is a confession of lost control, and teaches the alternative most fathers were never shown: proximity, brevity, consequence, repair. Get close, get low, few words, state the line and the consequence, follow through without theatre, and reconnect after. Children raised this way, he claims from his own four, learn that authority is weather, calm and certain, rather than lightning, and grow up able to hear a quiet voice the first time.",
+        "example": "His son tested the system at nine by pocketing money from a classmate's bag. The consequence, return, apology, and a Saturday of chores priced to the amount, was delivered at speaking volume. The boy's verdict at twenty: I was never scared of dad. I was scared of disappointing the calm. Marcus Webb calls that sentence his pension.",
+        "action": "Run your next correction at speaking volume: close, low, five sentences maximum, consequence stated once, reconnection after."
+      },
+      {
+        "title": "Staying Married Is a Parenting Decision",
+        "chapter": "The Marriage Inside the Parenting",
+        "summary": "The guide's most quoted chapter tells fathers that the children's emotional security is manufactured largely in the marriage they watch: how their parents argue, repair, touch and speak of each other in the third person. Marcus Webb prescribes unglamorous maintenance, one real conversation a day that is not logistics, public loyalty, private honesty, and the discipline of pursuing your wife in the years when pursuit feels administratively unnecessary. The children, he notes, are taking notes for their own marriages, in real time.",
+        "example": "His four children were asked as adults what made them feel safe growing up. None mentioned money or the house. All mentioned hearing their parents laugh together in the kitchen after arguments, and their father's visible delight when their mother entered a room. The data reorganised his readers' budgets.",
+        "action": "Tonight: one non-logistics conversation with your partner, and one sentence of appreciation said where the children can hear it."
+      },
+      {
+        "title": "Talking So Sons Open Up",
+        "chapter": "The Talking Years",
+        "summary": "Marcus Webb passes on what fathers of teenage sons learn by error: boys talk shoulder to shoulder, not face to face. In cars, on walks, over engines and fishing lines, the conversation that dies at the kitchen table flows at sixty miles an hour. His method adds patience with the warm up laps, questions that accept short answers without flinching, and the discipline of not solving the first problem mentioned, which is rarely the one the drive was taken for.",
+        "example": "His eldest son processed his parents' near divorce, his own failures and his first love entirely in a pickup truck over two years, in instalments beginning around mile forty. Marcus Webb's rule from those miles: the driver keeps his eyes on the road and his reactions level, and the boy will drive the conversation home himself.",
+        "action": "Schedule one shoulder to shoulder hour this week: drive, walk or project. Ask once, then let the miles work."
+      },
+      {
+        "title": "Daughters and the Long Conversation",
+        "chapter": "The Talking Years",
+        "summary": "For daughters, Marcus Webb argues the father's task is different: to be the first man whose attention does not have to be earned by performance and whose respect does not fluctuate with her choices. He is specific about the mechanics: learn her world without mocking it, defend her in rooms she will never hear about, and keep telling the truth about the world's treatment of women, including the parts that implicate men like him. Closeness with daughters, in his four child data, is maintained by interest, not protection theatre.",
+        "example": "He describes attending his daughter's debate finals knowing nothing of the topic and everything about her tells, then being debriefed for an hour in the car park. His commentary in the book is a single line other fathers copy onto cards: she did not need a coach that day. She needed a witness who was proud on the record.",
+        "action": "Attend one event in your daughter's world this month as witness, not coach. Debrief in the car park; be proud on the record."
+      },
+      {
+        "title": "Providing Without Disappearing",
+        "chapter": "Work and Worth",
+        "summary": "The guide confronts the provider's bargain honestly: the job that feeds the family eats the father, and children price the trade differently than fathers expect. Marcus Webb's remedy is not to earn less but to make presence legible: predictable windows the children can set their watches by, work's purpose narrated without self pity, and the refusal to buy forgiveness with expenditure. He also insists fathers keep one competence the children witness firsthand, because respect needs evidence that no salary band supplies.",
+        "example": "A reader's letter printed in the book describes a father who missed everything but was talked about at home as working for them, a framing the mother maintained for twenty years. The adult children's gratitude is real and so is their grief, and Marcus Webb's commentary refuses to settle which should win. The chapter's readers are left to schedule accordingly.",
+        "action": "Publish your predictable windows this week: the hours your children can set watches by. Narrate work's purpose once, without self pity."
+      },
+      {
+        "title": "The Apology Chapter",
+        "chapter": "Repair",
+        "summary": "Marcus Webb ranks the witnessed apology as the highest yield act in fatherhood: the man who can say I was wrong, I am sorry, here is what changes, in front of the child he wronged, teaches accountability no lecture survives comparison with. The chapter scripts it: no excuses braided in, no request for comfort from the child, the change specified and then performed on schedule, because children audit apologies by follow through and forgive in proportion to evidence.",
+        "example": "He recounts losing his temper at his youngest over a broken window he later learned a storm had cracked. The apology, delivered at eye level with the facts corrected, became family legend retold by the boy himself at his wedding, as the moment he learned what men in their family do with being wrong.",
+        "action": "Deliver one specified apology this month if any is owed: wrong named, no braid of excuses, change stated, then performed."
+      },
+      {
+        "title": "Raising Sons Who Can Be Tender",
+        "chapter": "The Man They Are Becoming",
+        "summary": "The closing chapters turn to the inheritance of masculinity: sons learn what men do with fear, grief and tenderness by watching one man at close range. Marcus Webb's counsel is demonstrative: let them see you comforted and comforting, friendships maintained, help asked for without shame, and grief neither hidden nor performed. He argues the stoic curriculum produces men who can only feel at volume or not at all, and that a father's visible tenderness is the vaccination.",
+        "example": "His sons watched him weep at his own father's grave and hold his friends through divorces and diagnoses across twenty years. At his sixtieth, the toast his eldest gave defined a man, to general discomfort and better effect, as someone whose people know they can call him at 3 a.m. Marcus Webb prints the toast without commentary.",
+        "action": "Let your children witness one act of tenderness or help asking this week, unhidden. Do not narrate it; let the evidence teach."
+      }
+    ],
+    "actionPlan": [
+      "Claim one roster ritual this week; keep it ninety days.",
+      "Correct at speaking volume: close, low, brief, repair.",
+      "One non-logistics conversation with your partner daily.",
+      "Apologise to your child once this month, properly, when you err.",
+      "Teach one competence monthly: knots, budgets, engines, courage.",
+      "Tell your children their mother's virtues at dinner this week.",
+      "Write each child one letter a year; deliver at eighteen."
+    ],
+    "caveat": "Marcus Webb writes from a two parent, military inflected household; single fathers, co-parents and other architects of families will adapt the roster to their real structures. The principles keep; the floor plans vary.",
+    "graveLink": "lead-poisoning-children",
+    "cover": "assets/covers/fatherhood-field-guide.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "seven-languages-apology",
+    "title": "The Five Apology Languages",
+    "author": "Gary Chapman and Jennifer Thomas",
+    "year": 2006,
+    "category": "Love & Relationships",
+    "readTime": "8 min",
+    "tagline": "How to offer, and receive, an apology that actually lands.",
+    "oneLiner": "Most apologies fail not from insincerity but from translation: you offered regret, they needed restitution. Gary Chapman says apologies, like love, have languages, and speaking the wrong one sounds like not being sorry at all.",
+    "bigIdea": "Building on his love languages work, Gary Chapman and Thomas studied what people actually need to hear to forgive, and found five apology languages: expressing regret, accepting responsibility, making restitution, genuinely repenting, and requesting forgiveness. Each person has a primary language; an apology missing it feels hollow even when sincere. The book teaches readers to identify their own language, learn their people's, and apologise in the dialect that can actually be received.",
+    "quotes": [
+      "A sincere apology is a powerful thing, but only if it is spoken in a language the other person understands.",
+      "I'm sorry is the beginning of an apology, not the whole of it.",
+      "Forgiveness is a choice, but a good apology makes it a possible one."
+    ],
+    "lessons": [
+      {
+        "title": "Expressing Regret: The Emotional Receipt",
+        "chapter": "Apology Language One",
+        "summary": "Some people need to hear that you understand the pain you caused: I am sorry I hurt you, said with the specific hurt named and your face showing it. For them, explanations and fixes offered before regret feel like evasion. Gary Chapman and Thomas describe regret speakers who can forgive almost anything once the emotional receipt is given, and almost nothing without it. The language's discipline is specificity: sorry for the thing, its cost named, no ifs smuggled into the sentence.",
+        "example": "A wife whose husband apologised for a forgotten anniversary with gifts and a dinner booking still felt unheard, because her language was regret: she needed to hear that he knew the forgetting had made her feel unchosen. When he finally said exactly that, the gifts became delightful instead of suspicious.",
+        "action": "In your next apology, lead with the receipt: name the specific hurt and its cost to them, before any explanation. Watch what it unlocks."
+      },
+      {
+        "title": "Accept Responsibility and Make Restitution",
+        "chapter": "Apology Languages Two and Three",
+        "summary": "Responsibility speakers need the words without the weather report of excuses: I was wrong, not I was wrong but the traffic. Restitution speakers need the scales rebalanced: the damage repaired, the money repaid, the record corrected, because for them love is proved in the fixing. The book shows couples talking past each other for years, one offering flowers to a restitution speaker who wanted the fence rebuilt, each convinced the other was unforgiving by nature.",
+        "example": "A business partner who missed a crucial filing apologised eloquently and often, while his partner's coldness deepened. In counselling the missing language emerged: restitution. He wanted the clients called, the penalties paid from the offender's share, the system changed. Once done, the eloquent apologies were retroactively accepted.",
+        "action": "Ask your closest people their language directly this week: when I mess up, what do you most need to hear or see? Write the answers down."
+      },
+      {
+        "title": "Repentance and Requesting Forgiveness",
+        "chapter": "Apology Languages Four and Five",
+        "summary": "Repentance speakers need the plan: what will be different, demonstrably, from Tuesday. Promises without architecture insult them. And the fifth language, requesting forgiveness, completes an apology by returning power to the wronged: will you forgive me, asked without pressure, accepts that forgiveness is theirs to give on their schedule. Gary Chapman and Thomas close by noting that most of us apologise in our own language by default, fluent at home and foreign abroad, which is why sincerity so often fails to arrive.",
+        "example": "A father kept apologising to his adult daughter for his drinking years with deep regret, her third language at best. Her language was repentance: she needed his sobriety's architecture, meetings, years, amends attempted. Five years into it she told him the apologies had finally started to work, backwards, like interest on a debt being honestly serviced.",
+        "action": "Add the plan to your next meaningful apology: the change, its evidence, its start date. Then ask, will you forgive me, and accept the answer's timing."
+      },
+      {
+        "title": "The Anatomy of a Failed Apology",
+        "chapter": "Why Apologies Fail",
+        "summary": "Gary Chapman and Thomas dissect the standard failures: the apology with a but in the middle, the apology for feelings rather than actions, I am sorry you took it that way, the apology delivered to end discomfort rather than to repair damage, and the apology that demands instant forgiveness as its price. Each fails in a different language, and the book's diagnostic value is showing offenders why their sincere attempts keep bouncing: the receiver is not stubborn; the message never arrived in a language they speak.",
+        "example": "A manager apologised to her team for a cancelled bonus with a heartfelt speech about her own disappointment, and watched morale fall further. The staff's language was restitution: they needed the plan for restoring the money. Her regret, however genuine, read as theatre because it cost her nothing they could bank.",
+        "action": "Take your most recent failed apology and translate it: rewrite it in the receiver's language as the book defines them, then deliver the new version."
+      },
+      {
+        "title": "Self Assessment: Learning Your Own Language",
+        "chapter": "Discovering Your Language",
+        "summary": "The book includes a profile to identify the reader's primary apology language, and warns that couples usually marry across languages, guaranteeing translation errors until the map is learned. Gary Chapman and Thomas treat the discovery as marital infrastructure: knowing that your partner needs restitution while you offer regret reclassifies years of evidence. Neither is cold, neither is dramatic; they are two natives who believed they shared a tongue. The profile takes twenty minutes and the book suggests doing it on a date, which couples report turns an awkward exercise into a revelation.",
+        "example": "A couple married eleven years discovered hers was requesting forgiveness, his was accepting responsibility, and audited their worst fight accordingly: each had apologised fluently and been heard as evasive. They describe the evening they learned the map as the cheapest therapy ever purchased, at the price of a paperback.",
+        "action": "Take the profile with your partner this week and exchange results over a meal. Write each other's language where your apologies are drafted."
+      },
+      {
+        "title": "Apologising to Children, and Teaching Them the Languages",
+        "chapter": "Families and Forgiveness",
+        "summary": "The family chapter argues that parents who apologise to children, in the child's language, at the child's level, raise adults who can do the hardest thing in relationships: repair. Children learn the household's apology dialect by receiving it; the sibling forced to mutter sorry learns theatre, while the sibling guided to the other's language learns the actual skill. Gary Chapman and Thomas supply scripts by age, and a warning: never use a child's apology as the price of your affection's return.",
+        "example": "Two brothers in the book, eight and eleven, are coached through a broken model kit: the elder's language turns out to be restitution, the rebuilding, while the younger needs regret, the big brother's face showing he knows it mattered. The parents watch the brothers run the repair themselves, the book's whole argument in one Saturday morning.",
+        "action": "Coach one sibling or family repair this week using the languages: ask the wronged child what they need to hear or see, then help the other deliver it."
+      },
+      {
+        "title": "When the Offence Is Too Big for Words Alone",
+        "chapter": "Deep Wounds",
+        "summary": "The authors are careful with betrayals, abuse and addiction: here the languages still apply, but on a timescale of demonstrated change, and sometimes forgiveness means release without reconciliation. The chapter distinguishes forgiving, which frees the victim, from trusting, which must be re-earned as evidence, and gives the offender the long assignment: repentance with architecture, restitution where possible, and patience that does not invoice the wounded for healing on schedule. It is the book's most sober chapter and its most respected by counsellors.",
+        "example": "A wife whose husband's gambling cost the family home describes her forgiveness arriving in year three of his programme, her trust still in probationary instalments at year five. Gary Chapman and Thomas present both timelines as healthy, a distinction readers in deep water write to thank them for, because it permits forgiveness without naivety.",
+        "action": "If you owe a deep repair, write the long assignment: change, evidence, restitution, patience. Begin the first evidence this week."
+      },
+      {
+        "title": "Apologies at Work and in Public Life",
+        "chapter": "Beyond the Household",
+        "summary": "The closing application takes the languages into offices and public life, where institutional apologies fail in predictable dialects: regret without responsibility, responsibility without restitution, restitution offered to people whose language was repentance, a system fixed and announced. The book audits famous corporate and political apologies against the five languages and finds the pattern holds at scale: audiences forgive in their language or not at all, and the apology tour fails when it tours the wrong one.",
+        "example": "A company's apology for a data breach offered customers eloquent regret and a helpline, and was savaged; the competitor in a similar breach led with restitution, paid monitoring, paid compensation, a new security chief with a published plan, and was forgiven by the same press. The languages predicted both receptions in advance.",
+        "action": "Draft your next professional apology against all five languages and choose deliberately, per audience, which to lead with."
+      }
+    ],
+    "actionPlan": [
+      "Lead your next apology with the emotional receipt, specifically.",
+      "Ask your people their apology language this week; record it.",
+      "Rebuild one fence: a restitution owed, paid without commentary.",
+      "Attach an architecture to one promise: change, evidence, start date.",
+      "Request forgiveness once without pressure, and honour the timing.",
+      "Notice your default language; practise your partner's for a month.",
+      "Teach the five languages at one family meal; let everyone self identify."
+    ],
+    "caveat": "The language framework is a popular simplification of forgiveness research, useful as a map rather than a diagnosis. Deep betrayals need time and often counsel beyond any formula, as the authors themselves note.",
+    "graveLink": "lg-phone-exit",
+    "cover": "assets/covers/seven-languages-apology.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "together-apart",
+    "title": "Together, Apart: The Art of Living Close",
+    "author": "Ines Duarte",
+    "year": 2023,
+    "category": "Love & Relationships",
+    "readTime": "8 min",
+    "tagline": "Why some couples thrive sharing everything, and others thrive with a door of their own.",
+    "oneLiner": "Ines Duarte interviewed couples in every architecture: shared everything, separate bedrooms, separate homes, living apart together by the thousands. Her conclusion annoys all camps: the arrangement does not predict the happiness. The honesty about the arrangement does.",
+    "bigIdea": "Architect and couples researcher Ines Duarte studies how couples physically organise shared life: beds, rooms, homes, cities. Living apart together is now common across Europe; separate bedrooms are rising everywhere; the merged-everything model is quietly no longer the default. Her finding, from hundreds of interviews, is that thriving couples share one trait regardless of floor plan: the arrangement was chosen honestly, reviewed without shame, and built to protect both sleep and longing.",
+    "quotes": [
+      "There is no virtuous floor plan. There is only the honest one.",
+      "Closeness is a quality of attention, not a measure of shared square metres.",
+      "The couples who frightened me were not apart. They were together and lying about it."
+    ],
+    "lessons": [
+      {
+        "title": "Sleep Is Infrastructure, Treat It Like One",
+        "chapter": "The Bedroom Question",
+        "summary": "Ines Duarte begins with the least romantic variable and finds it decisive: sleep quality predicts relationship satisfaction with embarrassing reliability. Snoring, opposite schedules, different temperatures quietly tax affection by day. Her thriving couples, including many in one bed, treat sleep as shared infrastructure to be engineered, separate blankets, earplugs, staggered hours, separate rooms where needed, without reading the engineering as a love metric. The exhausted call each other unloving; the rested discover they were only tired.",
+        "example": "A Madrid couple on the edge of separation over his snoring moved to separate bedrooms with elaborate goodnight and morning rituals, and reported within a month feeling like newlyweds with a commute. Their friends' horror amused them; their rested affection is the chapter's closing data point.",
+        "action": "Engineer one sleep variable this week without a referendum on your love: blankets, earplugs, schedule, or room. Measure affection after seven rested nights."
+      },
+      {
+        "title": "A Room of One's Own Is a Pressure Valve",
+        "chapter": "Space, Doors and Sanity",
+        "summary": "Virginia Woolf argument returns in couples research: each partner needs a territory, however small, where the other's taste and schedule do not rule. Ines Duarte's interviewees describe sheds, desks, corners and whole flats serving as the pressure valve that lets the shared space stay kind. The valve matters most in small homes and merged work from home lives, where togetherness without exit turns friction continuous. Her design advice is precise: one door each that closes, respected without interrogation.",
+        "example": "A Lisbon couple in fifty square metres divided it by time rather than walls: the balcony studio hers in the mornings, his workshop corner sacred on Sundays. The arrangement, negotiated like a treaty, ended two years of low grade war over mess that was really war over sovereignty.",
+        "action": "Claim and grant one sovereign corner each this week: small, explicit, respected without questions for a month."
+      },
+      {
+        "title": "Living Apart Together, Without Apology",
+        "chapter": "The LAT Couples",
+        "summary": "Millions of committed couples now keep separate homes by choice: older lovers with houses and histories, professionals in two cities, parents protecting children from new household churn. Ines Duarte finds their satisfaction equal to cohabitants when the arrangement is chosen, and corrosive when it is a stall neither dares name. The diagnostic is never the floor plan; it is whether both partners would choose it again in daylight, and whether the future has a shared chapter, however the addresses resolve.",
+        "example": "A Lyon couple together nineteen years in two flats four streets apart describe the walk between homes as their courtship, permanently extended. Their children, initially baffled, now cite the arrangement as the reason their parents still flirt. Ines Duarte files them under chosen, and their file is thick with company.",
+        "action": "Whatever your floor plan, hold the daylight review this month: would we choose this again, and what is our shared next chapter? Answer out loud, together."
+      },
+      {
+        "title": "The Honesty Audit: Is This Chosen or Stalled",
+        "chapter": "Chosen Versus Default",
+        "summary": "Ines Duarte's diagnostic cuts across every floor plan: thriving couples chose their arrangement and renegotiate it; struggling ones drifted into theirs and defend it from shame. She supplies the audit questions, would we choose this today, who benefits, who pays, what would we change with no audience, and reports that the audit itself, whatever it finds, improves couples, because the arrangement becomes a joint project again instead of an accusation neither dares file.",
+        "example": "A couple in separate flats for a decade discovered in the audit that both were waiting for the other to propose merging, each reading the other's contentment as rejection. The merger took four months to arrange and nineteen years to mention, a ratio Ines Duarte quotes whenever readers call her book an argument for distance. It is an argument for daylight.",
+        "action": "Run the audit this month: choose today, who benefits, who pays, what changes with no audience. Write the answers together."
+      },
+      {
+        "title": "Designing Closeness Deliberately",
+        "chapter": "Rituals Across Any Distance",
+        "summary": "Couples in the book who thrive at any distance share engineered rituals: the morning coffee call between flats, the Sunday cooking across time zones, the shared series watched in sync, the goodnight protocol in separate bedrooms. Ines Duarte's point is that closeness at distance is manufactured by schedule, not sustained by feeling, and the same is quietly true in shared beds, where the ritual starved couples are the frozen ones from the other books on this shelf. Distance merely makes the engineering visible.",
+        "example": "A binational couple in their ninth year apart together credits a ridiculous ritual: photographing their respective breakfast plates daily. The plates have carried illnesses, promotions, griefs and jokes across two continents, an intimacy infrastructure of toast. Ines Duarte files it under the principle that rituals beat declarations at every range.",
+        "action": "Install one ritual engineered for your actual floor plan this week: timed, small, and protected for ninety days."
+      },
+      {
+        "title": "Money, Law and the Unmarried Architectures",
+        "chapter": "The Practical Chapters",
+        "summary": "Ines Duarte devotes unglamorous chapters to what the arrangement means for leases, wills, medical proxies and tax, particularly for living apart and unmarried couples whom default law treats as strangers. Her reporting finds couples romantic about distance and negligent about paperwork, discovering at hospital doors that the state does not recognise their floor plan as a family. The chapters function as the book's seatbelt: unromantic, unskippable, and the difference between an arrangement and an accident waiting for an emergency.",
+        "example": "A partner of fourteen years, separate flats by happy choice, was initially barred from medical decisions after an accident because no document named her. The couple's fix took one afternoon with a lawyer and now travels in their phones. Ines Duarte prints the story with the couple's blessing as the chapter's entire argument.",
+        "action": "Audit your paperwork this quarter against your actual arrangement: wills, proxies, emergency contacts. One afternoon, then back to romance."
+      },
+      {
+        "title": "Children in Multi Home Families",
+        "chapter": "Families Across Addresses",
+        "summary": "Where children move between homes, through LAT parents, separation or choice, Ines Duarte finds the same variable deciding outcomes: the adults' narrative. Children told honestly, at their level, that love has this shape in their family, and given rituals that make the geography predictable, fare as well as any. Children lied to in the name of normality learn only that their perception is unreliable. Her interviewees include the now adult children of pioneers, whose verdicts close the chapter with unusual unanimity: the honesty was the home.",
+        "example": "A daughter of a living apart family describes childhood by its rituals rather than its addresses: father's flat on Fridays with the good bread, the train game between homes. Questioned about damage she looks puzzled and cites her friends from merged homes with frozen parents. The arrangement, again, was never the variable.",
+        "action": "If your family spans addresses, give the children the honest narrative and one geography ritual this month: predictable, named, theirs."
+      },
+      {
+        "title": "The Future of the Couple Address",
+        "chapter": "Where This Is Going",
+        "summary": "The book closes with demography: later marriages, longer lives, two careers, inherited houses and global work are all pushing couples toward plural architectures, and the culture's single template creaking under the load. Ines Duarte predicts the question of the coming decades will not be whether couples live together but whether their arrangement, whatever it is, is chosen, honest and engineered. Her last interviewee, ninety one, in her own flat, engaged to a man of ninety four in his, supplies the epitaph: we are not avoiding marriage. We are avoiding moving.",
+        "example": "Registries in several European countries now record substantial minorities of committed couples at two addresses, a statistic that would have been uncollectable a generation ago because the couples hid. Ines Duarte's book is part of the unhiding, and the letters she receives, largely relieved, are its market research.",
+        "action": "Whatever your decade, write your arrangement's next honest version now, while choosing it is still cheap."
+      }
+    ],
+    "actionPlan": [
+      "Engineer one sleep variable this week; reassess after seven nights.",
+      "Claim and grant one sovereign corner each.",
+      "Hold the daylight review of your arrangement this month.",
+      "Build one ritual across whatever distance you keep.",
+      "Stop defending your floor plan; start reviewing it yearly.",
+      "If merging homes, negotiate sovereignty before square metres.",
+      "Measure love by attention, never by shared storage."
+    ],
+    "caveat": "Ines Duarte writes descriptively, from interviews rather than trials; her couples self selected and her cities skew European. The honesty principle travels; the floor plans must be adapted to culture, faith and budget.",
+    "graveLink": "playboy-decline",
+    "cover": "assets/covers/together-apart.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "good-inside",
+    "title": "Good Inside",
+    "author": "Becky Kennedy",
+    "year": 2022,
+    "category": "Family & Parenting",
+    "readTime": "9 min",
+    "tagline": "A revolutionary approach to raising kids, and reparenting yourself.",
+    "oneLiner": "Dr. Becky Kennedy's premise changes everything downstream: your child is a good kid having a hard time, and you are a good parent having a hard time. Behaviour is a signal, not an identity.",
+    "bigIdea": "Clinical psychologist Becky Kennedy, known to millions as Dr. Becky, built her method on two words: good inside. Assume the child's goodness and the parent's goodness, then get curious about behaviour instead of shaming it. The book teaches sturdy leadership: boundaries held with empathy, tantrums weathered as skill deficits, repair after parental blowups, and the reparenting of the adults whose own childhoods keep hijacking their reactions.",
+    "quotes": [
+      "Two things are true at once: I love you, and the answer is no.",
+      "Behaviour is a window, not a verdict.",
+      "Repair is more important than rupture. What matters is what happens after."
+    ],
+    "lessons": [
+      {
+        "title": "Two Things Are True",
+        "chapter": "The Good Inside Philosophy",
+        "summary": "The signature move: hold the boundary and the empathy in one sentence. I know you want the biscuit, and breakfast is finished. Becky Kennedy argues that parents collapse into one truth under stress, permissive feeling or hard limit, and children need both simultaneously to build the brain wiring for self regulation. The child learns that their feelings are survivable and that the world has edges, from the same trusted person, in the same moment. That combination is what sturdy means.",
+        "example": "A toddler screaming for a third ice lolly hears: you really want it, I get it, and no more today. The storm runs its course against a parent who neither caves nor mocks. Becky Kennedy's followers call the resulting calm the two truths working, and report that the storms shorten over weeks as the child borrows the steadiness.",
+        "action": "Practise one two truths sentence daily this week: empathy first, boundary second, no third act of anger or surrender."
+      },
+      {
+        "title": "The Most Important Parenting Intervention Is Repair",
+        "chapter": "Repair and Rupture",
+        "summary": "Becky Kennedy's most liberating claim: children are not harmed by every parental blowup; they are harmed by unrepaired ones. The parent who yells, then returns, names it, takes responsibility without dumping guilt on the child, and reconnects, is teaching the exact skill the child's whole relational life will run on. Repair also rewrites the parent's story: the shame spiral that makes parents defensive or avoidant is replaced by a circuit, rupture, own, repair, that children eventually imitate with their siblings and friends.",
+        "example": "A mother who screamed over spilled paint returns ten minutes later: I yelled, that was about my stress, not your worth, I am sorry, let's clean it together. Her daughter, weeks later, is heard doing the identical circuit with a friend over a broken toy, unprompted. The repair had become inheritance.",
+        "action": "Do one full repair this week for your most recent blowup: name it, own it, reconnect. No explanations aimed at the child."
+      },
+      {
+        "title": "Reparenting: Your Triggers Are Old Mail",
+        "chapter": "Reparenting Yourself",
+        "summary": "The book's second half turns to the adult: the moments a child's behaviour detonates us are usually addressed to an earlier version of ourselves. The whining that enrages you may be the sound you were punished for; the defiance that terrifies you may echo a house where defiance was dangerous. Becky Kennedy teaches parents to get curious mid trigger, whose feeling is this, and to give their inner child the response they are trying to give their actual one. The parenting improves as the archaeology proceeds.",
+        "example": "A father who raged at his son's tears recognised, mid shout, his own father's voice issuing the family law about crying. The recognition did not excuse the shout; it routed it. He apologised to his son and, in therapy, to the boy he had been. Both relationships changed tense within the year.",
+        "action": "Catch one trigger this week and ask whose feeling it is before responding. Log the answers; patterns will introduce themselves."
+      },
+      {
+        "title": "Boundaries Are Not Punishments; They Are Architecture",
+        "chapter": "Sturdy Leadership",
+        "summary": "Becky Kennedy separates the boundary from the reaction: the boundary is the parent's action, calmly performed, I am moving the cup out of reach, not the child's suffering engineered for instruction. Parents who confuse the two oscillate between threats and guilt. Her sturdy leader holds the line early, kindly and physically where needed, then stays emotionally present for the feelings the line produces. The child learns the world has edges and that edges are not abandonment, which is most of what self regulation will later mean.",
+        "example": "A father whose son hits at the park stops announcing consequences and starts arriving: a hand gently held, we are leaving the swings because hitting is not safe, empathy intact in the car home. The hitting fades in weeks, replaced, the father reports, by a child who had learned that dad's no is weather, reliable and survivable.",
+        "action": "Convert one repeated threat into an early, calm parental action this week: you move, kindly, before anyone is screaming."
+      },
+      {
+        "title": "Tantrums Are a Skill Deficit With Weather",
+        "chapter": "Understanding Behaviour",
+        "summary": "The book's neurology, kept mercifully plain: the child's brain under flood cannot learn, lecture or choose, and the parent's job during weather is safety and presence, not instruction. Teaching happens in the calm, where Becky Kennedy supplies the debrief scripts, and the skills, naming feelings, tolerating frustration, waiting, are practised in small doses in ordinary moments. Parents who move their teaching out of the storm find both the storms and the teaching improve, because the curriculum is finally scheduled when the school is open.",
+        "example": "A mother stops the mid meltdown lectures that had been extending her daughter's storms to forty minutes and starts narrating feelings silently beside her. Storms halve in a fortnight. The debriefs after bath time, two minutes on the day's hard moment, accomplish in a month what the lectures had not in a year.",
+        "action": "Move one recurring lesson out of the storm: weather first, debrief at bath or bedtime, two minutes, same day."
+      },
+      {
+        "title": "Sibling Rivalry: Referee Less, Coach More",
+        "chapter": "Siblings",
+        "summary": "Becky Kennedy reframes the parental role between siblings: the referee who assigns blame trains litigators; the coach who narrates each child's experience and holds the family's lines trains negotiators. Her scripts give each child the dignity of being understood separately, refuse the victim and villain casting that hardens into identity, and teach repair between the children themselves. Parents report the fighting does not vanish; it changes jurisdiction, increasingly settled in the children's own court.",
+        "example": "Two sisters' daily war over the front seat is dissolved not by rotation charts but by the mother's new move: she hears each girl's whole case with interest, states the line, and lets them propose the system. They design a calendar more rigorous than hers and police it like a constitution, because it is theirs.",
+        "action": "Referee one less fight this week: hear both cases fully, state the line, invite their system. Enforce theirs like law."
+      },
+      {
+        "title": "The Parent's Own Good Inside",
+        "chapter": "Reparenting Yourself",
+        "summary": "The method turns its premise on the reader: the parent snapping, shutting down or spiralling is also a good person having a hard time, usually with a childhood's worth of unprocessed weather. Becky Kennedy's self compassion is not indulgence; it is the mechanism that makes repair possible, because a parent drowning in shame defends or disappears, while a parent who can say I am good and I did that badly can walk back into the room. The book ends where it must: the child will borrow whichever voice the parent uses on themselves.",
+        "example": "A father who measured himself against his blowups begins measuring against his repairs, and his wife reports the house changing tense. His son, six, starts narrating his own storms in the same grammar: I am good, that was bad, I will fix it. Becky Kennedy prints such reports as the method's real outcome data.",
+        "action": "Change your scoreboard this week: count repairs made, not ruptures avoided. Say the new grammar aloud where your child can borrow it."
+      },
+      {
+        "title": "Repair Is the Curriculum, Rupture Is Just the Classroom",
+        "chapter": "The Method",
+        "summary": "Kennedy returns throughout to repair: the parent loses it, yells, shames, and then the real teaching happens in the return: naming what happened, owning the adult part, reconnecting without making the child manage the parent's guilt. Deepening means demoting perfection entirely. Children do not need unbroken calm; they need evidence that relationships survive weather and that accountability flows downhill from the powerful. A household fluent in repair raises adults who can apologise without collapsing, which may be the whole game.",
+        "example": "Her scripts for repair deliberately separate the parent's worth from the moment: I am a good parent who yelled, and I am sorry becomes sayable only when good inside is doing its work on the adult first. Parents report children begin initiating repairs themselves within months, unprompted, in voices eerily like the ones that were used on them.",
+        "action": "Perform one clean repair this week: name it, own it, reconnect, no excuses and no fishing for forgiveness. Watch what your child does with the template."
+      }
+    ],
+    "actionPlan": [
+      "One two truths sentence daily: empathy, boundary, stop.",
+      "Repair your latest blowup fully this week.",
+      "Ask whose feeling this is at one trigger; log it.",
+      "Hold one boundary this week without anger or collapse.",
+      "Tell your child one true thing about their goodness, specifically.",
+      "Schedule ten minutes for your own reparenting thought weekly.",
+      "After hard days, review repairs made, not perfection missed."
+    ],
+    "caveat": "Becky Kennedy writes for basically resourced, safe families and says so; trauma, crisis and neurodivergence need individualised professional care alongside her framework. Her social media fame also compresses the method; the book is the slower, better source.",
+    "graveLink": "cnn-plus-month",
+    "cover": "assets/covers/good-inside.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "sense-of-wonder",
+    "title": "The Sense of Wonder",
+    "author": "Rachel Carson",
+    "year": 1965,
+    "category": "Nature & Planet",
+    "readTime": "7 min",
+    "tagline": "Rachel Carson's quiet masterpiece on keeping a child's wonder alive, written with her grandnephew on the Maine coast.",
+    "oneLiner": "A child needs one adult who can share the wonder. Rachel Carson, who would later wake the world with Silent Spring, believed feeling comes before facts, and that once wonder is seeded, knowledge grows on its own for a lifetime.",
+    "bigIdea": "Rachel Carson wrote this short book from exploring tide pools, woods and night skies with her young grandnephew Roger. Against the idea that children need nature facts, she argues they need companions in astonishment: adults willing to get wet, stay out past bedtime for owls, and receive a child's discoveries as news. The senses come first; taxonomy later. The book closes with her wish for every child: a sense of wonder so indestructible it lasts a lifetime, an unfailing antidote against the boredom and disenchantments of later years.",
+    "quotes": [
+      "If a child is to keep alive his inborn sense of wonder, he needs the companionship of at least one adult who can share it.",
+      "The more clearly we can focus our attention on the wonders and realities of the universe, the less taste we shall have for destruction.",
+      "It is not half so important to know as to feel."
+    ],
+    "lessons": [
+      {
+        "title": "Feeling Before Facts, Always",
+        "chapter": "The Sense of Wonder",
+        "summary": "Rachel Carson's pedagogy in one line: it is not half so important to know as to feel. A child taught names and classifications before awe learns to treat nature as an exam; a child given shared astonishment first asks for the names herself, and keeps them. She is describing sequencing, not anti-intellectualism, from the authority of a scientist: her own marine biology began in exactly this order, in tide pools, and the facts found a prepared home because the wonder had furnished it.",
+        "example": "She watches Roger, at twenty months, delighted by crashing surf he cannot name, and builds the book on such scenes: the child needs no lecture on the ocean to receive what the ocean teaches. Adults who insist on the lecture first, she suggests, are protecting themselves from feeling foolish beside a child's unembarrassed awe.",
+        "action": "Take one child, yours or borrowed, to water, woods or dark sky this week. Answer questions last; wonder out loud first."
+      },
+      {
+        "title": "The Adult's Job Is Companionship, Not Instruction",
+        "chapter": "The Sense of Wonder",
+        "summary": "Rachel Carson relieves adults of expertise: you do not need to know the species; you need to share the excitement, rediscover your own forgotten joy in the feel of wet grass and the smell of rain, and let the child lead the expedition. The companionship requirement is deliberately low and therefore damning: one adult, present and pleased, is the entire infrastructure a child's sense of wonder needs to survive into adulthood.",
+        "example": "Her expeditions with Roger run on his agenda: night walks to hear owls, beaches at storm tide, a Christmas tree made for birds. She narrates her own reawakening alongside his awakening, the adult recovering through the child exactly what the book prescribes for both.",
+        "action": "Schedule one child-led outdoor hour this month: their route, their pace, your only job is delighted company."
+      },
+      {
+        "title": "Wonder Is an Antidote Stocked in Advance",
+        "chapter": "The Closing Wish",
+        "summary": "The book ends with Rachel Carson's famous wish, that every child receive a sense of wonder so indestructible it would last throughout life. She names what it protects against: the boredom and disenchantment of later years, the sterile preoccupation with things artificial. Written by a woman already famous for warning the world about pesticides, the wish reads as strategy: people defend for a lifetime what first astonished them as children. Conservation, in her account, is downstream of nursery weather.",
+        "example": "The generation that read Silent Spring and built environmental law was raised partly on this sensibility; Rachel Carson understood she was writing both the alarm and the reason anyone would answer it. Environmental educators still open courses with this slim book before any policy text.",
+        "action": "Name your own earliest wonder memory and tell it to a child this week. You are stocking their antidote and refreshing yours."
+      },
+      {
+        "title": "The Night Sky Curriculum",
+        "chapter": "Explorations",
+        "summary": "Rachel Carson gives the night its own chapter: children taken out after dark meet a second world, owls, moths, stars, the smell of the earth cooling, and learn that nature is not a daytime exhibit. She is practical about the obstacles, bedtimes, fears, city light, and romantic about the returns: a child who has held the dark as friendly carries a different nervous system into adulthood. The darkness, like the tide pool, teaches without a syllabus, provided one adult is willing to be out in it, unhurried.",
+        "example": "She describes listening with Roger to the night voices of the Maine woods, naming almost nothing, returning by flashlight with the boy asleep on her shoulder. The scene's pedagogy is the book in miniature: presence first, and the facts trailing happily behind the feelings for years afterward.",
+        "action": "Hold one night expedition this month: owls, stars or simply the garden after dark, with the bedtime extended by decree."
+      },
+      {
+        "title": "Rain, Storms and the Education of the Senses",
+        "chapter": "Explorations",
+        "summary": "Weather adults cancel plans for is Rachel Carson's classroom: rain on leaves at different tempos, the beach before a storm, the smell of the woods after. She urges adults to let children get wet, cold and muddy inside reasonable safety, because the senses learn by weather as the mind learns by books, and a childhood sealed against weather produces adults for whom nature is a picture. The joy she describes is deliberately physical, almost edible, and quite unlike the classroom's.",
+        "example": "Her account of Roger's delight in a stormy shoreline, shrieking with the gulls, is quoted by every outdoor educator since, precisely because no instruction occurs in it. The boy is learning the ocean at the level the ocean actually teaches, and the adult's whole contribution is staying.",
+        "action": "Next rain, take the child out in it briefly by choice: puddles, leaf sounds, the smell after. Towels and cocoa are the debrief."
+      },
+      {
+        "title": "What to Do With a Dead Bird and Other Questions",
+        "chapter": "The Adult's Replies",
+        "summary": "Rachel Carson anticipates the adult's hardest moments: the found dead bird, the eaten butterfly, the question of why. Her counsel is honesty at the child's scale, without either flinching or burdening: death is part of the pattern, grief is permitted, and the cycle is visible everywhere once an adult dares to point. Children, she finds, are sturdier than their protectors, and the adult who models reverent honesty at the dead bird is teaching the curriculum the whole book exists to deliver.",
+        "example": "She watched Roger bury a bird with ceremony entirely of his own design and learned, she writes, to supply the box and the quiet rather than the theology. The grave got flowers. The questions got straight answers, sized to the asker, and the afternoon is remembered as one of their best.",
+        "action": "At the next small death or hard question, supply the box and the quiet: honest answers, child's scale, no flinching."
+      },
+      {
+        "title": "Seeds of Wonder in the City",
+        "chapter": "For City Children",
+        "summary": "Rachel Carson closes the practical argument by refusing the countryside monopoly: weeds in the pavement, pigeons, the park's pond, night skies washed by light still deliver the curriculum wherever a child and an unhurried adult attend together. Her examples were mid century; the principle has only widened, to window boxes, canal towpaths and rooftop gardens. The requirement was never wilderness. It was witness, and witness is available at every postcode.",
+        "example": "City nature educators built whole programmes on this passage, from balcony bird counts to drain spotting after storms, and report the same result Rachel Carson promised from Maine: the child who has wondered locally defends the planet globally, in the order she prescribed.",
+        "action": "Start one city ritual this week: a pavement weed census, a balcony bird count, or a towpath walk repeated monthly."
+      },
+      {
+        "title": "Sustaining Wonder in the Adult Reader",
+        "chapter": "The Sense of Wonder",
+        "summary": "Carson's essay is secretly addressed to tired adults: the child's wonder needs companionship partly because the adult's is dying of knowledge's side effects, names without mystery, facts without feeling. Her cure is reciprocal teaching, let the child lead the adult back to the tide pool's astonishment while the adult supplies patience and sandwiches. Deepening means scheduling wonder as maintenance for yourself, not only as childcare. A life whose last astonishment is decades old will make fear based decisions with great confidence.",
+        "example": "Carson wrote the piece for her grand nephew Roger, and their beach walks in Maine became the template thousands of grandparents still follow. She died before expanding it into the planned book, and the essay's unfinished scale is part of its discipline: a beginning, practised yearly, outlasts a syllabus.",
+        "action": "Let a child, a neighbour's, a relative's, or a younger colleague, lead you somewhere outdoors this month. Carry the snacks; let them carry the itinerary."
+      }
+    ],
+    "actionPlan": [
+      "One child, one wild place, this week; wonder first, answers last.",
+      "Run one child-led outdoor hour monthly.",
+      "Tell your earliest wonder memory to a child this week.",
+      "Keep a family phenology list: first frog, first frost, first swallow.",
+      "Let one night walk happen past bedtime for owls or stars.",
+      "Resist one lecture; ask what do you notice instead.",
+      "Read the book aloud to an adult who has forgotten."
+    ],
+    "caveat": "It is a short, gentle work of its era, assuming access to coast or countryside that urban readers must translate to parks, rivers and night skies. Rachel Carson's science legacy is treated elsewhere in this library; this is her book about joy.",
+    "graveLink": "blue-apron-meal",
+    "cover": "assets/covers/sense-of-wonder.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "why-fish-dont-exist",
+    "title": "Why Fish Don't Exist",
+    "author": "-Yo Ma",
+    "year": 2020,
+    "category": "Nature & Planet",
+    "readTime": "8 min",
+    "tagline": "A personal meditation on chaos, order, and a nineteenth century ichthyologist whose categories collapsed.",
+    "oneLiner": "Taxonomists eventually admitted there is no such class as fish. -Yo Ma follows David Starr Jordan, the scientist who named a fifth of known fish, through his triumphs and his eugenics, and asks what our categories are doing to us.",
+    "bigIdea": "-Yo Ma, a science reporter, became obsessed with David Starr Jordan, Stanford's first president, who spent his life ordering the chaos of fish into categories, even as earthquakes and lightning destroyed his collections. Interleaved with her own story of depression and a life that would not stay in its categories, the book arrives at taxonomy's modern verdict: fish, as a class, do not exist; the category was ours, not nature's. Its wisdom is about letting the world's real structure correct our filing systems, in science and in a life.",
+    "quotes": [
+      "The fish don't exist, and they never did. We invented them to feel less lost.",
+      "Categories are tools. The trouble starts when we mistake them for the world.",
+      "Chaos is not the enemy. It is the water we have always been swimming in."
+    ],
+    "lessons": [
+      {
+        "title": "The Man Who Kept Naming Through Every Disaster",
+        "chapter": "David Starr Jordan's Collections",
+        "summary": "David Starr Jordan's specimens were destroyed by lightning, fire and the 1906 earthquake, which shattered his life's jars in a single morning. Each time he rebuilt, re-collected, re-labelled, eventually sewing name tags directly onto fish so no disaster could separate them again. -Yo Ma reads his persistence with admiration and unease: the same will that rebuilds a science can harden into the refusal to admit the whole scheme is wrong. Both readings become necessary as his story darkens.",
+        "example": "After the earthquake he walked the ruined museum identifying fish on the floor from memory, an act of heroic scholarship and, in -Yo Ma's telling, a warning. The labels went onto the bodies themselves thereafter: order would survive the next disaster by being stitched to the world.",
+        "action": "Name one filing system in your life you keep repairing instead of questioning. Schedule its honest review this month."
+      },
+      {
+        "title": "Fish Do Not Exist, and That Is Good News",
+        "chapter": "The Taxonomic Verdict",
+        "summary": "Modern cladistics shows a lungfish is closer kin to a cow than to a salmon; the class fish groups creatures by our convenience, water, fins, scales, not by their actual family tree. -Yo Ma receives this personally: the categories that organised her suffering, success and failure, normal life, broken person, were also conveniences mistaken for facts. Dissolving fish becomes a permission slip: revise the taxonomy of your own life when it stops matching the specimens in front of you.",
+        "example": "She describes telling people at parties that fish do not exist and watching the productive discomfort spread. The discomfort is the book in miniature: a filing error corrected feels like loss before it feels like freedom, in ichthyology and in biography alike.",
+        "action": "Write down one label you live under that no longer matches the specimen. Draft its replacement in pencil."
+      },
+      {
+        "title": "David Starr Jordan's Shadow: Order in Service of Cruelty",
+        "chapter": "The Eugenics Chapters",
+        "summary": "-Yo Ma does not let her hero keep his halo: David Starr Jordan was a leading eugenicist whose categories of human fitness fed real policy and real suffering. The book's hardest argument follows: the drive to order is not innocent; misapplied to people it becomes a machinery of ranking. The same man who sewed labels onto fish to defeat chaos helped label human beings to defeat mercy. Remembering both is the reader's assignment, and the reason the book belongs in science and ethics courses alike.",
+        "example": "She visits the archives and finds his handwriting on reports that shaped sterilisation laws, in the same hand that labelled specimens with such care. The juxtaposition is the book's moral centre: reverence for order, unchecked by humility about categories, scales from jars to atrocities without changing its handwriting.",
+        "action": "Audit one ranking you participate in, at work or online, for what it does to the bottom of the list. Change one practice this month."
+      },
+      {
+        "title": "The Collector's High and Its Price",
+        "chapter": "Obsession Examined",
+        "summary": "-Yo Ma examines her own obsession with David Starr Jordan as honestly as his with fish: research as shelter, a story ordered enough to hide inside while a life outside the archive felt unliveable. The book's doubling is its method: two people a century apart using categories to hold back chaos, one with jars, one with a biography. Readers are invited to locate their own jars early, because the book will ask what they are sheltering, and whether the shelter has become the address.",
+        "example": "She describes the months in the Stanford archives as among the calmest of her depression, the finding aids and labelled boxes a world that stayed filed. The recognition that the archive was functioning as medication, printed without self pity, is why readers in similar weather trust the book's later steadiness.",
+        "action": "Name your archive: the orderly project that shelters you. Ask this week whether it is shelter or address, and adjust one hour accordingly."
+      },
+      {
+        "title": "Resilience, Reconsidered as Revision",
+        "chapter": "Rebuilding After the Earthquake",
+        "summary": "David Starr Jordan rebuilt his collections after each disaster, and the culture applauds; -Yo Ma complicates the applause by asking what he never rebuilt, his assumptions. The earthquakes destroyed specimens but never once his taxonomy, and the taxonomy was the error. Her counter definition of resilience, drawn from the fish verdict, is revision: not restoring the shelf exactly, but letting catastrophe edit the categories themselves. Lives, like sciences, break less from disasters than from rebuilding the wrong order faster each time.",
+        "example": "She contrasts David Starr Jordan sewing labels to fish with the taxonomists who eventually dissolved fish altogether: the first is endurance, the second is courage, and only the second corrected anything. Couples, companies and countries in her closing pages are audited by which of the two they practise after their earthquakes.",
+        "action": "After your next setback, before rebuilding, hold a one hour revision: which category of mine did this event falsify? Edit that first."
+      },
+      {
+        "title": "The Order of Things Is a Choice With Consequences",
+        "chapter": "Categories and Power",
+        "summary": "The book's final argument widens from taxonomy to every system that sorts: the categories we build decide what can be seen, funded, forgiven or exterminated. David Starr Jordan's eugenics was not a separate hobby from his ichthyology; it was the same filing cabinet opened on people. -Yo Ma closes by urging a clerical humility: build categories, use them, and hold them the way scientists now hold fish, as conveniences under permanent review, especially wherever the filing is done on human beings.",
+        "example": "She returns to the lungfish and the cow, cousins filed in separate universes for centuries by people who trusted water and fins. The absurdity is gentle; the human versions are not, and her last chapters list them quietly: the forms, the boxes, the rankings that decide whose life is legible to the state.",
+        "action": "Inspect one form, rubric or ranking you administer for a category that no longer matches reality. Propose its revision in writing this month."
+      },
+      {
+        "title": "Swimming in Chaos Without Drowning",
+        "chapter": "The Close",
+        "summary": "-Yo Ma ends not with a system but with a stance: the world will not hold still for our labels, people will not stay in the jars of identity we assign them or ourselves, and a life can be built for the water as it is. Her own closing pages describe a steadiness assembled from exactly this surrender, relationships and work refiled under verbs rather than nouns. It is as close as the book comes to a sermon, and it has been read at more than one wedding and commencement, categories dissolving in public.",
+        "example": "She tells graduates, in the version of the argument that went viral, that the fish not existing freed her from needing her life to exist as a recognisable category either. The line travels because everyone listening has a jar with their name on it, and has begun to suspect the label was sewn on by somebody else.",
+        "action": "Refiling exercise: describe your life this week in verbs only, no identity nouns. Notice which nouns you grieve and which you do not."
+      },
+      {
+        "title": "Chaos Is Not the Opposite of Meaning; It Is the Medium",
+        "chapter": "The Order of Things",
+        "summary": "Miller's conclusion refuses both available consolations: the old order was fiction, yet the fiction held a suffering man upright for decades, and its collapse did not free everyone it touched. Her answer is not a better category but a stance, swimming, she calls it, participating in a world that will not hold still for naming. Deepening means practising taxonomy humility everywhere: your personality type, your child's label, your industry's categories, useful nets, none of them the water. The fish were never in the ocean. They were in us, and we may put them down gently.",
+        "example": "Her reporting includes taxonomists who cheerfully confirm the title: fish is a term of convenience, and a salmon is closer kin to you than to a shark. Science survives the admission beautifully, which is the book's deepest comfort. Losing the category loses nothing real; it only returns the wonder the drawer had filed away.",
+        "action": "Take one label you live inside, your type, diagnosis, role or brand, and write for ten minutes about what you are when it is removed. File under water, not drawer."
+      }
+    ],
+    "actionPlan": [
+      "Review one filing system you keep repairing instead of questioning.",
+      "Retire one personal label that fails the specimen test.",
+      "Tell someone this week that fish do not exist; enjoy the discomfort.",
+      "Audit one ranking you join for its effect on the bottom.",
+      "Hold categories as tools: useful, revisable, never sacred.",
+      "When chaos ruins your jars, relabel once, then ask if the shelf itself is wrong.",
+      "Read it with a pencil; the margins are where your taxonomy lives."
+    ],
+    "caveat": "-Yo Ma writes memoir braided with biography, and scientists debate some emphases. The eugenics history is documented and grim reading. Readers in the middle of their own collapsed categories should know the book ends in hard won steadiness, not despair.",
+    "graveLink": "eugenics",
+    "cover": "assets/covers/why-fish-dont-exist.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "wonder",
+    "title": "Wonder",
+    "author": "R. J. Palacio",
+    "year": 2012,
+    "category": "Family & Parenting",
+    "readTime": "8 min",
+    "tagline": "Choose kind: the story of a boy whose face makes that hard for everyone.",
+    "oneLiner": "Auggie Pullman was born with a face that makes children scream. Wonder follows his first year at school, and teaches the only curriculum that matters there: when given the choice between being right and being kind, choose kind.",
+    "bigIdea": "R. J. Palacio's novel tells Auggie's story through many voices: his own, his sister Olivia's, his friends', even the bully's. August Pullman, born with severe facial differences and homeschooled until ten, enters fifth grade at Beecher Prep. The book's engine is not pity but moral education: every character is given a moment where kindness costs something, and the reader watches who pays. Its precept, choose kind, has entered real classrooms worldwide.",
+    "quotes": [
+      "When given the choice between being right or being kind, choose kind.",
+      "Courage. Kindness. Friendship. Character. These are the qualities that define us as human beings.",
+      "Your deeds are your monuments."
+    ],
+    "lessons": [
+      {
+        "title": "Choose Kind, Especially When Right Is Available",
+        "chapter": "Mr. Browne's Precepts",
+        "summary": "The English teacher's first precept sets the novel's terms. Being right is cheap and often cruel; being kind costs attention and sometimes pride. R. J. Palacio is careful to show kindness as strength, not softness: the characters who choose it, Summer, Jack Will eventually, even the principal Mr. Tushman, act against social gravity. The novel argues that character is visible precisely at the moments when kindness and self-protection disagree.",
+        "example": "Summer Dawson sits with Auggie at lunch on the first day, when the cafeteria has silently organised itself away from him, simply because he looked lonely and she liked his name. No speech, no campaign: a seat taken. The book's whole theology is in that chair.",
+        "action": "This week, catch one moment where you could be right at someone's expense. Choose kind instead, and notice what it actually costs."
+      },
+      {
+        "title": "Everyone Is Fighting a Battle You Cannot See",
+        "chapter": "Via's Chapters",
+        "summary": "Olivia's narration widens the book's compassion: the sister who adores Auggie and also resents being the family's second gravity centre. R. J. Palacio refuses a saintly sibling; Via's honesty, loving her brother and mourning her parents' attention in the same breath, teaches readers that understanding behaviour requires knowing its hidden weather. The same mercy extends to Miranda, to Justin, even to Julian's parents, whose fear does its damage in PTA meetings.",
+        "example": "Via explains that her family revolves around Auggie like planets around a sun, and that she learned not to complain about small eclipses. Her chapters let every reader who has been the less-needy child feel seen without making Auggie the villain of her story.",
+        "action": "Pick one person whose behaviour irritates you and write their Via chapter: what is their sun, and what eclipse are they living in?"
+      },
+      {
+        "title": "Bullying Is a Group Activity, and So Is Stopping It",
+        "chapter": "The War and the Retreat",
+        "summary": "Julian organises the social freeze, but the novel's real subject is the bystanders: Jack Will punching Julian, the class quietly migrating lunch tables, the older boys at the nature retreat who step in when it turns physical. R. J. Palacio shows cruelty as a team sport requiring an audience, and kindness scaling the same way once two or three defect. The ending's award is less important than the mechanism: norms move when visible minorities move first.",
+        "example": "At the retreat, boys who had ignored Auggie all year physically defend him against seventh graders, and the social order resets by morning. The scene dramatises research on bullying: interventions by peers outperform every adult programme ever measured.",
+        "action": "Be a visible minority of one: in the next group freeze-out you witness, at work or school, defect early and warmly."
+      },
+      {
+        "title": "Precepts Are Monthly Software for Character",
+        "chapter": "Mr. Browne's Precepts",
+        "summary": "The teacher assigns a precept a month and an essay on it in June, and the device is the book's quiet curriculum design. Character, R. J. Palacio suggests, is built the way vocabulary is: a phrase at a time, reflected on, applied badly, understood later. The children's essays at the end of the novel show the precepts landing differently in each life, which is exactly how moral education works when it works at all.",
+        "example": "Via writes about her grandmother's love, Jack Will about his punch, Julian not at all, which is also data. The precept essays became so loved by real teachers that R. J. Palacio later published 365 of them as a separate book for classrooms.",
+        "action": "Adopt the system at home: one precept a month on the fridge, discussed at dinner, essay optional and judged never."
+      },
+      {
+        "title": "Auggie's Humour Is Armour He Chooses to Share",
+        "chapter": "Auggie's Voice",
+        "summary": "Auggie narrates with jokes about his own face, Star Wars references and a rating system for surgeries. R. J. Palacio uses the humour precisely: it is the boy's way of controlling the first thirty seconds of every encounter, offering people a script for reacting. The lesson for readers is double, about the labour the visibly different perform for everyone else's comfort, and about humour as a tool the wounded can wield rather than merely receive.",
+        "example": "He counts his operations like birthdays and explains which Star Wars character shares his condition. Children reading aloud in class laugh with him, and the laughing-with is the entire moral technology of the book in miniature.",
+        "action": "Notice who does the emotional labour of easing rooms you are in. This week, relieve one such person of the job by going first with warmth."
+      },
+      {
+        "title": "Parents Are Characters Too, With Their Own Chapters",
+        "chapter": "The Family",
+        "summary": "The Pullmans are drawn with unusual specificity: a father who jokes through fear, a mother who gave up a career and never weaponises it, parents who fight about school in whispers after bedtime. R. J. Palacio refuses the saintly special needs family of lesser fiction. Their normality is the argument: extraordinary children arrive in ordinary families, and love there looks like schedules, exhaustion, humour, and choosing the school while terrified, together.",
+        "example": "The parents' debate about Beecher Prep, she pushing, he protecting, is every family's risk argument in miniature. Neither is wrong; the marriage is shown doing the work of deciding anyway, which children readers absorb as the real portrait of adulthood.",
+        "action": "If you parent with someone, name one decision you keep re-arguing and schedule its real conversation, with the fear said out loud."
+      },
+      {
+        "title": "The Ending Refuses the Trophy and Keeps the Point",
+        "chapter": "The Award",
+        "summary": "Auggie receives a school award at graduation, and the novel knows the risk: kindness rewarded can look like kindness performed. R. J. Palacio rescues it by framing the medal as the school's confession, Mr. Tushman's speech about measuring success by the quiet monuments of character. The community, more than the boy, is graduating. Readers are left with the school's new norm, not one child's exceptionalism, as the transferable asset.",
+        "example": "Mr. Tushman's closing quotes the precept tradition back at the students: your deeds are your monuments. The line has since been carved, literally, at real schools, which completes the book's loop from fiction to institution.",
+        "action": "In your own institution, nominate the quiet monument: recognise one person's unglamorous kindness publicly this month."
+      },
+      {
+        "title": "The Precepts Deserve a Reader's Own September",
+        "chapter": "After the Medal",
+        "summary": "Mr. Browne's monthly precepts, September's being about choosing kindness when you can be right, give the novel its operating system and its readers a homework assignment older students often miss: character is built by quotable decisions, rehearsed monthly like scales. Deepening means adopting the calendar. A precept a month, chosen deliberately, argued with, applied badly and retried, is the school's real curriculum and the book's quiet explanation for why its children behave better in book three of their lives than the adults around them.",
+        "example": "Palacio's appended precepts from readers, children worldwide submitting their own lines after the book's success, became a second book of their own. The most repeated across classrooms is some version of Auggie's own discovery: being seen fully and chosen anyway is the only medal that ever mattered to anyone at any lunch table.",
+        "action": "Choose this month's precept for yourself, from the book or your own drafting, and put it where you will trip over it daily. Grade yourself at month's end like Mr. Browne would, kindly."
+      }
+    ],
+    "actionPlan": [
+      "Choose kind once where being right was available; log the cost.",
+      "Write the Via chapter of one irritating person.",
+      "Defect early from one group freeze-out.",
+      "Post the precept somewhere your family argues.",
+      "Read the lunch scene aloud to a young person you know.",
+      "Ask your child who sits alone at their lunch, and what happened next.",
+      "Make one monument: a deed someone will remember kindly in ten years."
+    ],
+    "caveat": "It is written for young readers and wears its heart openly; adults who need their moral fiction saltier may resist it for a chapter, and then usually stop resisting.",
+    "graveLink": "thalidomide",
+    "cover": "assets/covers/wonder.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "frederick-douglass",
+    "title": "Narrative of the Life of Frederick Douglass",
+    "author": "Frederick Douglass",
+    "year": 1845,
+    "category": "Life & Meaning",
+    "readTime": "8 min",
+    "tagline": "An enslaved man teaches himself to read, and writes his way to freedom.",
+    "oneLiner": "Frederick Douglass was forbidden to read because literacy would make him unfit to be enslaved. He traded bread for lessons from street boys, understood exactly why the masters feared the alphabet, and escaped to write the book that helped end the system.",
+    "bigIdea": "Frederick Douglass's Narrative is the defining slave narrative: born into slavery in Maryland, separated from his mother, beaten by the slave-breaker Covey, and forbidden literacy by law and custom. He teaches himself to read in secret, grasps that knowledge is the pathway from slavery to freedom, fights Covey in a turning point of self-respect, escapes north, and becomes the most photographed American of his century and abolition's greatest voice.",
+    "quotes": [
+      "Once you learn to read, you will be forever free.",
+      "I prayed for freedom for twenty years, but received no answer until I prayed with my legs.",
+      "Knowledge makes a man unfit to be a slave."
+    ],
+    "lessons": [
+      {
+        "title": "Literacy Was Forbidden Because It Works",
+        "chapter": "Baltimore and the Alphabet",
+        "summary": "Master Hugh Auld forbids his wife to teach the boy, explaining that reading would spoil a slave forever. Frederick Douglass, listening, receives the most important lesson of his life: the master's own testimony that education and slavery are incompatible. From that day the forbidden thing becomes the life project. The Narrative argues with evidence that tyrannies fear the alphabet more than armies, because armies can be met and readers cannot be unmade.",
+        "example": "He trades bread to poor white boys for reading lessons, carrying his book through errands and finishing tasks fast to buy minutes of study. The system's hunger did his scheduling for him: the hungrier his body, the richer the trade looked to the boys, and the faster he learned.",
+        "action": "Treat your own learning like contraband worth smuggling: trade comfort for lessons this week, and schedule them where laziness cannot find them."
+      },
+      {
+        "title": "The Fight With Covey: Dignity Is Defended or Lost",
+        "chapter": "The Turning Point",
+        "summary": "Sent to a slave-breaker to be crushed, Frederick Douglass endures six months of beatings, then one morning fights back for two hours until Covey, fearing for his reputation, never touches him again. Frederick Douglass calls it the turning point: a slave was made a man. The passage is not a celebration of violence but of the decision that he would be beaten to death before beaten into submission. Self-respect, he testifies, once physically defended, cannot be unlearned.",
+        "example": "He describes rising from the dust, in his words, with a renewed determination, feeling that however long he remained legally a slave, the day had passed forever when he could be flogged into one. Readers under every kind of domination have underlined that sentence for 180 years.",
+        "action": "Identify one place where you have quietly submitted to being diminished. Decide the line, calmly and in advance, and defend it once this month."
+      },
+      {
+        "title": "Religious Hypocrisy Gets Its Own Appendix",
+        "chapter": "The Narrative and Appendix",
+        "summary": "Frederick Douglass closes by separating the Christianity of Christ from the Christianity of the slaveholding land, flogging churchgoing masters with his finest prose. His appendix insists he attacks the system of professing faith while owning people, not faith itself. The distinction made the book rhetorically unstoppable: slaveholders could not answer without either freeing their slaves or admitting the charge. It remains the model of moral argument that grants the opponent's professed values and convicts them by their own standard.",
+        "example": "He recounts masters who prayed over meals and whipped the cooks, and a pious woman whose religion, he writes, seemed to make her crueller than her neighbours, as if faith were a licence fee paid in advance. The irony is surgical and has never stopped stinging its targets.",
+        "action": "Audit one value you profess against one practice of yours this week. Close the gap on the practice side, quietly."
+      },
+      {
+        "title": "Slavery Corrupts the Slaveholder on Schedule",
+        "chapter": "Sophia's Transformation",
+        "summary": "Frederick Douglass watches Sophia Auld, his kind Baltimore mistress, transformed by owning him: the tender heart hardens, the teaching stops, suspicion replaces generosity. He calls slavery's effect on her the proof that the institution poisons both ends of the whip. The observation became abolition's most persuasive argument to comfortable readers: you are not safe from this system's effects; it is remaking your character while you sleep.",
+        "example": "She begins by teaching him letters with a smile and ends snatching newspapers from his hands with a frown he calls the mark of the institution. Frederick Douglass reports it with sorrow rather than triumph, because he had liked her, and that liking makes the corruption legible.",
+        "action": "Ask which of your advantages requires someone else's diminishment, and whether it is quietly editing your character. Adjust one arrangement."
+      },
+      {
+        "title": "The Songs of the Enslaved Are Not Evidence of Happiness",
+        "chapter": "Chapter II",
+        "summary": "Pro-slavery writers cited singing slaves as proof of contentment. Frederick Douglass answers from inside: the enslaved sing most when most unhappy, as the sorrowing heart relieves itself, and tears flow on the same journeys. The passage is a masterclass in interpreting evidence against its powerful interpreters: only the person inside an experience can say what its sounds mean. Every era has its cheerful statistics about the oppressed; Frederick Douglass teaches the question to ask them.",
+        "example": "He writes that a slave who sang cheerfully on the way to market would be thought happy by strangers, while he himself, singing, was composing laments. Northern readers who had hummed along to travellers' tales felt the floor move.",
+        "action": "Next time you hear that some group is perfectly happy with its lot, ask who inside the group has been permitted to say otherwise, in print."
+      },
+      {
+        "title": "Escape Required Complicity He Could Not Describe",
+        "chapter": "The Escape Withheld",
+        "summary": "Frederick Douglass famously refuses to narrate his escape route, protecting those still using it and those who helped. The refusal is itself a lesson in the ethics of testimony: his book serves the enslaved before it serves the reader's curiosity. He accepts the cost, sceptics doubting his authorship, rather than close a road north. Modern memoir, activism and journalism all inherit this dilemma, and his solution remains the benchmark: silence where speech would endanger the vulnerable.",
+        "example": "Critics of the day attacked the vagueness as evidence he had never been enslaved. He answered by publishing a longer autobiography a decade later, when the routes and helpers were safer, timing candour to protection rather than to his reputation.",
+        "action": "In your own speaking and posting, ask Frederick Douglass's question first: who still uses this road, and does my story endanger them?"
+      },
+      {
+        "title": "The Narrative Is an Argument, Not a Memoir",
+        "chapter": "After 1845",
+        "summary": "Readers forget the Narrative was a weapon with a deadline: published in 1845 to prove a fugitive slave had written it, prefaced by white abolitionists because America required white signatures on Black genius. Every scene is evidence entered in a trial. Deepening means reading rhetorically: the Covey fight is the thesis that slavery survives on enforced psychology; the appendix is the closing argument separating Christianity from slaveholding religion. Douglass wrote autobiography the way lawyers build records, because his freedom literally depended on the verdict.",
+        "example": "Skeptics had claimed no slave could have written the book, so Douglass named names, places and dates, evidence that endangered him and forced his flight to Britain. The specificity abolitionists praised was a fugitive's gamble: verifiability was the whole proof, and he paid for it with exile.",
+        "action": "Read one chapter asking of each scene: what claim is this evidence for? Annotate the answer in the margin. Rhetorical reading is the book's intended speed."
+      },
+      {
+        "title": "What He Refused to Tell, and Why It Still Matters",
+        "chapter": "After 1845",
+        "summary": "Douglass never revealed his escape route, though readers begged for the adventure, because publishing it would close the door behind him for everyone still escaping. His silence teaches a discipline modern confession culture has forgotten: some truths are owed to the future rather than the audience. Deepening means locating your own version, the detail whose telling would gratify listeners and endanger the still trapped. Douglass's restraint, in a book of total candour, is the loudest sentence he ever wrote about solidarity.",
+        "example": "He rebuked fugitives who boasted of their methods in print, arguing they made slaveholders vigilant and routes impassable. In an age that monetises disclosure, his position reads as radical: the story belongs first to those who still need the road, and the narrator's fame comes a distant second.",
+        "action": "Identify one disclosure you make for applause that costs others safety or privacy. Practise Douglass's silence there for a month and notice the itch subside."
+      }
+    ],
+    "actionPlan": [
+      "Trade one comfort for one lesson this week; smuggle learning in.",
+      "Read one chapter and mark the sentence you will carry.",
+      "Decide one line of dignity in advance and defend it calmly.",
+      "Audit one professed value against one practice; close the gap.",
+      "Teach someone younger one thing from this book.",
+      "Support literacy somewhere: a library, a child, a fund.",
+      "When afraid to speak, remember the prayed with my legs line."
+    ],
+    "caveat": "It is a primary document of slavery, with beatings and cruelty described as evidence. That is its purpose and its weight; read it as testimony, not as adventure.",
+    "graveLink": "slavery-abolition",
+    "cover": "assets/covers/frederick-douglass.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "how-to-talk-kids-listen",
+    "title": "How to Talk So Kids Will Listen & Listen So Kids Will Talk",
+    "author": "Adele Faber and Elaine Mazlish",
+    "year": 1980,
+    "category": "Family & Parenting",
+    "readTime": "9 min",
+    "tagline": "The parenting classic that treats children like people and feelings like facts.",
+    "oneLiner": "Children, like adults, stop listening when their feelings are dismissed. Acknowledge the feeling first, and cooperation becomes possible; argue with the feeling, and you get a war about the feeling instead of help with the problem.",
+    "bigIdea": "Adele Faber and Elaine Mazlish, students of psychologist Haim Ginott, turned his communication method into the most practical parenting book ever written. Its skills are simple and hard: acknowledge feelings instead of denying them, describe problems instead of attacking character, offer choices instead of orders, and solve problems together instead of punishing. Exercises, comics and parent testimonials show each skill failing the old way and working the new way.",
+    "quotes": [
+      "The language of empathy does not come naturally to us. It's not part of our mother tongue.",
+      "Children behave better when they feel better.",
+      "Punishment leads to resentment, revenge fantasies, and self-pity, not to responsibility."
+    ],
+    "lessons": [
+      {
+        "title": "Acknowledge the Feeling Before Touching the Problem",
+        "chapter": "Helping Children Deal With Their Feelings",
+        "summary": "The foundation skill: when a child says I hate the baby, the instinct is correction (you don't mean that), and the result is escalation, because the child now has to prove the feeling. Adele Faber and Elaine Mazlish teach the alternative: name it. You sound furious at your brother right now. A feeling named loses its need to shout. Their workshops found that children whose feelings are accepted become more able to accept limits on behaviour, because the limit no longer requires surrendering their inner life.",
+        "example": "A boy screams that his teacher is stupid for assigning homework. Denial buys a meltdown about fairness; naming it, you are really annoyed, it looks endless tonight, buys a sigh and, usually, the homework. The feeling was the locked door; acknowledgement is the key that was always in the parent's pocket.",
+        "action": "For one day, respond to every complaint from your child by naming the feeling first, one sentence, before any advice or limit."
+      },
+      {
+        "title": "Describe, Don't Attack",
+        "chapter": "Engaging Cooperation",
+        "summary": "Orders and character attacks (you never listen, how many times) trigger defence, while description recruits help: the milk is still on the table, I need it in the fridge. Adele Faber and Elaine Mazlish offer a toolkit for cooperation without nagging: describe what you see, give information, say it in one word, write a note, describe what you feel, without naming who is bad. Children, they found, cooperate like adults when addressed like adults: with facts, respect and a clear next step.",
+        "example": "A note on the bathroom mirror, wet towels make mildew sad, works on a teenager who has tuned out four years of speeches. The humour and brevity succeed where volume failed, because the message finally contained information instead of indictment.",
+        "action": "Convert your three most repeated complaints into descriptions, one-word prompts or notes this week. Retire the speeches."
+      },
+      {
+        "title": "Alternatives to Punishment",
+        "chapter": "Alternatives to Punishment",
+        "summary": "Punishment, the book argues, teaches resentment and evasion, not responsibility, because the punished child thinks about the parent's unfairness instead of their own deed. Alternatives: express your feelings strongly without attacking, state expectations, show how to make amends, offer choices, take action, and problem-solve together. The point is never permissiveness; limits stay firm. What changes is the child's internal monologue, from revenge to repair.",
+        "example": "A girl who broke a neighbour's window spends her Saturday earning the repair money and writing the apology with her father's help, angry for an hour and responsible by dinner. The same girl sent to her room spends the hour designing alibis. Both children are disciplined; only one is educated.",
+        "action": "Take one recurring offence and design the amends instead of the penalty: repair, restitution, practice. Involve the child in choosing."
+      },
+      {
+        "title": "Give Information Instead of Orders",
+        "chapter": "Engaging Cooperation",
+        "summary": "Children tune out commands but absorb information, because information respects their competence: the paint is open, it spills decides more behaviour than a rule about care. Adele Faber and Elaine Mazlish catalogue the shift across dozens of family scenes: information, one word prompts, notes, and descriptions of consequences all engage the child's own executive function, which is the actual developmental goal. Orders produce compliance theatre; information produces a child practising judgement.",
+        "example": "A father stops announcing bedtime and instead tells his son the plan once, then asks the boy to tell him what happens at seven thirty. The son, now the narrator of the routine, polices himself. The father's voice is retired from a job information does better.",
+        "action": "Take your five most repeated orders and translate each into information plus a question. Use the translations for a week."
+      },
+      {
+        "title": "Fantasy Can Grant What Reality Cannot",
+        "chapter": "Helping Children Deal With Feelings",
+        "summary": "One of the book's most beloved techniques: give in fantasy what you cannot give in reality. I wish we could have a dinosaur; how big would ours be disarms a demand better than three explanations of extinction or budget. The child hears that their wanting is understood and even shared, and the wanting, honoured, often dissolves on its own. Parents report the technique feels like cheating, until they see it is really the feeling being fed while the object stays refused.",
+        "example": "A mother whose daughter demands a second ice cream wishes aloud for a cone the size of the car. They design it together, laughing, and the actual cone is never mentioned again. The boundary held perfectly; the war never reported for duty.",
+        "action": "Try one fantasy grant this week instead of a refusal speech. Build the impossible thing together in detail."
+      },
+      {
+        "title": "Write It Down: Notes Work Where Voices Fail",
+        "chapter": "Engaging Cooperation and Problem Solving",
+        "summary": "The written note recurs through the book's success stories because writing escapes the tone wars: paper cannot nag, sigh or use the voice from 2019. Notes state facts, add humour, and let the child read at their own pace without an audience for their reaction. Adele Faber and Elaine Mazlish suggest notes for everything from wet towels to sibling treaties, and parents keep writing in with the same report: the note worked the first day.",
+        "example": "Two brothers share a treaty drafted at a family meeting, taped inside a cupboard: borrowed toys return by dinner, knocking is law. The parents' voices had failed on both counts for a year. The treaty, consulted like scripture, ended the war in a week.",
+        "action": "Replace your most-ignored instruction with a written note this week. Keep it under twenty words and add one drop of humour."
+      },
+      {
+        "title": "Problem-Solving Together Is the Advanced Course",
+        "chapter": "Problem Solving",
+        "summary": "For chronic issues the book teaches a five step family method: hear the child's feelings and needs, state yours, brainstorm without judging, write everything down, then choose together what to try. Children who help design solutions enforce them on themselves and their siblings with a zeal no parent can buy. The skill being taught is not obedience but negotiation, which is the adult world's actual operating system.",
+        "example": "A family drowning in morning chaos brainstorms thirty ideas, including a helicopter, before choosing three mundane ones: clothes chosen at night, one alarm song, breakfast jobs rotated. Mornings improve within days, and the children guard the system because it is theirs.",
+        "action": "Run one five step problem-solving session on your family's worst recurring friction this weekend. Write every idea down."
+      },
+      {
+        "title": "Putting It All Together: The Parent Is the Lesson",
+        "chapter": "Putting It All Together",
+        "summary": "The book closes where all its techniques converge: children absorb the parent's way of treating people long after specific scripts are forgotten. Faber and Mazlish's deepest claim is that respectful communication is not a trick for compliance but a rehearsal for the child's future relationships, including the one they will have with you at forty. Deepening means auditing your tone as curriculum: every exchange teaches what power sounds like, what apology sounds like, and whether feelings are information or crimes in this house.",
+        "example": "Their follow up letters from parents who took the workshops describe the eerie moment a child deploys the technique on the parent, feelings acknowledged, problem described without blame, and the adult realises the student has become the mirror. The workshops count that moment, not obedience statistics, as their graduation certificate.",
+        "action": "Audit one day of your tone as if your child will use it on you in thirty years. Keep what you would be glad to hear back; repair one sentence pattern tomorrow."
+      }
+    ],
+    "actionPlan": [
+      "Name the feeling first for one full day before limits or advice.",
+      "Replace three speeches with description, one word or a note.",
+      "Design amends for one recurring offence; involve the child.",
+      "Offer two acceptable choices where you usually issue orders.",
+      "Run one family problem-solving meeting, feelings agenda first.",
+      "When furious, describe what you feel without naming who is bad.",
+      "Re-read one chapter monthly; these are skills, not facts."
+    ],
+    "caveat": "The method assumes a basically safe home and typically developing children; families dealing with trauma, neurodivergence or danger need it adapted with professional guidance, not applied by the book.",
+    "graveLink": "thalidomide",
+    "cover": "assets/covers/how-to-talk-kids-listen.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "whole-brain-child",
+    "title": "The Whole-Brain Child",
+    "author": "Daniel J. Siegel and Tina Payne Bryson",
+    "year": 2011,
+    "category": "Family & Parenting",
+    "readTime": "8 min",
+    "tagline": "Twelve strategies to nurture your child's developing mind.",
+    "oneLiner": "A tantrum is not manipulation; it is a brain whose upstairs is still under construction. Connect first, redirect second, and you build the architecture instead of just surviving the noise.",
+    "bigIdea": "Daniel J. Siegel and Bryson explain the child's brain as a house: a downstairs of emotion and instinct, fully built, and an upstairs of judgement, empathy and calm, scaffolding until the mid twenties. Their twelve strategies help parents integrate the floors: connect before redirecting, name feelings to tame them, engage rather than enrage, move the body to shift the mind, and turn conflict into teaching that wires the brain you want your child to have at thirty.",
+    "quotes": [
+      "Connect before you redirect.",
+      "Name it to tame it.",
+      "When a child is upset, logic will rarely influence behavior until you first respond to the emotional needs."
+    ],
+    "lessons": [
+      {
+        "title": "Connect and Redirect",
+        "chapter": "Strategy 1 and 2",
+        "summary": "The master strategy: when a child is flooded, first connect emotionally, touch, tone, empathy, I know this is hard, and only then redirect with logic and limits. Skipping connection is why reasoning with a screaming toddler feels like debating weather. Daniel J. Siegel and Bryson show the sequence rewiring the brain over time: the child borrows the parent's calm until their own upstairs can produce it. Connection is not surrender; limits follow, in the second step, where they can actually be heard.",
+        "example": "A boy melting down over the wrong cup gets a parent on his level first: you wanted the blue one, it is so frustrating. The storm shortens measurably; then the redirect, blue is in the wash, red or green today, lands on a brain that can process choices again. Sequence, not permissiveness, did the work.",
+        "action": "Run connect-then-redirect three times this week. Time the storms against last week's; most parents see the data immediately."
+      },
+      {
+        "title": "Name It to Tame It",
+        "chapter": "Strategy 3",
+        "summary": "When big feelings overwhelm, helping a child tell the story of what happened integrates the brain: the left hemisphere's words organise the right hemisphere's storm. Daniel J. Siegel and Bryson call it name it to tame it, and show parents retelling scary or upsetting events with the child, in detail, kindly, until the memory becomes a story instead of a siren. The same mechanism is why journaling and testimony calm adults; children just need a co-author.",
+        "example": "A girl terrified after a car skid calms over days as her father retells the event with her, filling gaps, correcting her scarier theories, until she can narrate it herself without tears. The story did not change; her brain's filing of it did.",
+        "action": "After your child's next upset, retell the story together at bedtime: what happened first, then, then. Let them correct you."
+      },
+      {
+        "title": "Engage, Don't Enrage: Appeal to the Upstairs Brain",
+        "chapter": "Strategy 4 and 5",
+        "summary": "Commands thrown at a downstairs brain, because I said so, enrage; questions that recruit the upstairs, what could we do about this, engage. Daniel J. Siegel and Bryson also teach moving the body to change the mind: a child stuck in a feeling can run, jump or push a wall and arrive in a different state, because physiology is the fastest lever on emotion. The strategies share a premise: you are not managing behaviour, you are building a brain, one rep at a time.",
+        "example": "A homework standoff dissolves when the parent asks how the child wants to tackle it, in what order, with what break, transferring authorship. Another family installs a feelings corner with a trampoline; the storm gets exercised out before it gets talked out.",
+        "action": "Replace three commands this week with upstairs questions, and add one move-it option to your child's meltdown routine."
+      },
+      {
+        "title": "Use It or Lose It: Exercising the Upstairs Brain",
+        "chapter": "Strategy 6",
+        "summary": "Daniel J. Siegel and Bryson compare the upstairs brain to a muscle group: every decision weighed, consequence considered and empathy practised is a repetition that builds it. Parents who make all decisions for a child, however lovingly, are skipping their child's workout. The strategy is to hand over age appropriate reps, what to wear in weather, how to spend the allowance, how to apologise, and to narrate the reasoning so the child internalises a coach.",
+        "example": "A father starts asking his six year old to predict what will happen if the tower goes one block higher, then watches it fall without rescue speeches. The child begins narrating consequences in advance, the upstairs brain audible in real time. The tower still falls; the builder is upgraded.",
+        "action": "Hand one recurring decision fully to your child this week, narrate your reasoning once, then let the outcome teach."
+      },
+      {
+        "title": "Move It or Lose It: The Body Is the Fastest Lever",
+        "chapter": "Strategy 8",
+        "summary": "A child stuck in a downstairs flood can often be reached through movement when words fail: running, jumping, squeezing, pushing a wall. Daniel J. Siegel and Bryson explain that changing physiology changes brain state directly, discharging the stress chemistry that keeps the upstairs offline. Parents who install movement into the meltdown routine are not being soft; they are using the fastest neuroscience available in a kitchen.",
+        "example": "One family teaches their son to do wall push ups when the anger wave comes; within weeks he requests them himself, announcing upstairs needs a minute. The self knowledge, I can change my state, is the actual curriculum disguised as calisthenics.",
+        "action": "Teach your child one state changing move in a calm hour and post it on the fridge as the official first step of upset."
+      },
+      {
+        "title": "Let the Clouds Pass: Feelings Are Weather, Not Climate",
+        "chapter": "Strategy 9",
+        "summary": "Children believe a feeling is forever; adults know it is a cloud. Daniel J. Siegel and Bryson teach parents to say so, and to prove it by recalling feelings that passed: you felt this mad yesterday too, and then it moved. The lesson builds the observing self, the part of the upstairs brain that can watch emotion rather than be it. Mindfulness research with children shows the same mechanism, and the book renders it as meteorology a four year old can use.",
+        "example": "A girl in tears over a lost game is reminded of the thunderstorm feeling at the dentist that also passed, and she begins rating feelings like weather reports. I'm at a big storm, she announces, already half observing rather than drowning.",
+        "action": "Give your family's feelings weather names this week. Report your own weather aloud so the skill is caught, not just taught."
+      },
+      {
+        "title": "Empathy Is Wired in Stages; Teach to the Stage",
+        "chapter": "Strategy 11 and 12",
+        "summary": "The closing strategies address the social brain: children develop empathy from self awareness outward, and parents accelerate it by wondering aloud about others' inner lives, in stories, conflicts and daily logistics. Daniel J. Siegel and Bryson warn against demanding apologies the child cannot yet mean, and suggest engineering experiences of helping instead, because felt empathy grows from action as much as instruction. The family that practises repair becomes the child's template for every later relationship.",
+        "example": "After a playground cruelty, one mother skips the forced sorry and asks what the other boy's afternoon will feel like, then helps her son design a repair he can offer sincerely. The apology that eventually comes is the first real one he has ever given.",
+        "action": "Replace one demanded apology with a wonder-aloud and a designed repair this week. Watch which produces the real one."
+      },
+      {
+        "title": "The River of Well Being Is the Whole Point",
+        "chapter": "The Whole-Brain Way",
+        "summary": "Siegel and Bryson's integrating image deserves the final word: a canoe balanced between the banks of chaos and rigidity, in the flowing river of well being. Every strategy in the book, connect and redirect, name it to tame it, the wheel of awareness, is steering equipment for that river, at every age including the parent's. Deepening means adopting the river as the family compass. The question in any storm becomes navigational rather than moral: which bank are we drifting toward, and what does the middle of the river require now?",
+        "example": "Parents in their workshops report the metaphor outlasting every individual script, because a three second question, chaos or rigidity, fits inside actual meltdowns. Children eventually ask it themselves, mid argument, of their parents, which the authors count as the integration completing its circuit through the household.",
+        "action": "Teach the river to your family this week with the canoe image. Practise naming your bank out loud once a day each, especially the adults."
+      }
+    ],
+    "actionPlan": [
+      "Connect first, redirect second, three times this week; time the storms.",
+      "Retell one upset at bedtime together until your child can narrate it.",
+      "Swap three commands for upstairs questions.",
+      "Build a move-it corner: cushions, trampoline, wall pushes.",
+      "Teach your child the hand model of the brain; let them show you flipped lids.",
+      "After conflict, reconnect before the consequence conversation.",
+      "Pick one of the twelve strategies a month and practise it to boredom."
+    ],
+    "caveat": "The neuroscience is deliberately simplified for parents, a model, not a scan; and no strategy book substitutes for evaluation when a child's behaviour signals something deeper.",
+    "graveLink": "lead-poisoning-children",
+    "cover": "assets/covers/whole-brain-child.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "world-of-wonders",
+    "title": "World of Wonders",
+    "author": "Aimee Nezhukumatathil",
+    "year": 2020,
+    "category": "Nature & Planet",
+    "readTime": "7 min",
+    "tagline": "In praise of fireflies, whale sharks, vampire squid and other astonishing neighbours.",
+    "oneLiner": "Aimee Nezhukumatathil writes short, luminous essays on the creatures that taught her how to be a person: a Filipino-American girlhood measured against fireflies, axolotls and the corpse flower.",
+    "bigIdea": "Each essay pairs a marvel of the natural world with a piece of Aimee Nezhukumatathil's life: growing up between cultures, falling in love, raising sons in Mississippi. The firefly teaches wonder as survival; the whale shark, gentleness at scale; the vampire squid, thriving in darkness without being monstrous. The book is an argument that attention to other species is not a hobby but a way of learning how to inhabit your own strangeness with grace.",
+    "quotes": [
+      "Wonder is a survival skill.",
+      "The natural world is not a backdrop. It is a cast of teachers.",
+      "Pay attention. Be astonished. Tell about it. She borrowed that, and so do we."
+    ],
+    "lessons": [
+      {
+        "title": "Wonder Is a Survival Skill",
+        "chapter": "Firefly and Throughout",
+        "summary": "Aimee Nezhukumatathil treats wonder not as decoration but as equipment: the child who learns to marvel at a firefly has practised the attention that later sustains love, patience and hope. Her essays keep returning to the idea that people who can be astonished on purpose are harder to make cynical, and cynicism, not sorrow, is the true anaesthetic of a life. The firefly is her first teacher because it asks nothing but darkness and patience.",
+        "example": "She recalls childhood summers in which catching fireflies was the whole agenda, and sets that against adult summers scheduled to the minute. The essay's argument is physiological: a nervous system trained on small astonishments stays capable of large ones, including joy in other people.",
+        "action": "Spend ten minutes this week in deliberate astonishment: one creature, plant or sky, watched until it does something you did not expect."
+      },
+      {
+        "title": "The Vampire Squid Is Not a Monster",
+        "chapter": "Vampire Squid",
+        "summary": "The vampire squid lives in oxygen starved darkness, eats falling debris, and defends itself with light and posture rather than violence; its Latin name sounds like a horror film and its life is a lesson in misjudged exteriors. Aimee Nezhukumatathil uses it to write about being misread herself, the exoticised Asian woman, feared or fetishised, neither seen. The essay teaches the reader to suspect their first taxonomy of anything, animal or human.",
+        "example": "She pairs the squid's harmless strangeness with the microaggressions of being asked where she is really from, in the town she is from. Both errors come from the same shortcut: judging by silhouette. The cure, in biology and in society, is looking longer.",
+        "action": "Catch one first taxonomy this week, of a creature or a person, and replace it with ten more minutes of looking."
+      },
+      {
+        "title": "Raise Children Who Know Their Neighbours' Names",
+        "chapter": "The Later Essays",
+        "summary": "Writing as a mother, Aimee Nezhukumatathil worries her sons will inherit screens instead of species. Her response is curriculum: name the birds at the feeder, the trees on the street, the phases of their own river. A child who can name thirty neighbours of other species lives in a populated world; a child who cannot lives in a backdrop. The book suggests loneliness is partly a failure of acquaintance, and acquaintance is teachable.",
+        "example": "She describes her family's lists and rituals, first firefly of the year, the whale shark's spots memorised like a friend's face. The boys are being given what she was given: a world dense with characters, in which they are one species among wonders, not the audience of a show.",
+        "action": "Learn five local names this week with your family: two birds, two trees, one insect. Use them until they feel like neighbours."
+      },
+      {
+        "title": "The Corpse Flower Blooms on Its Own Schedule",
+        "chapter": "Corpse Flower",
+        "summary": "The corpse flower blooms rarely, briefly, and smells of death to attract its pollinators; crowds queue for a stench on a timetable nobody controls. Aimee Nezhukumatathil uses it to write about her mother's illness and the years that would not arrange themselves around her wishes. The essay teaches a patience our productivity culture has forgotten: some things ripen in their own season, including grief, children and work, and the queue of witnesses must simply attend.",
+        "example": "Botanical gardens announce the bloom like a royal birth and thousands come to stand in the smell together, delighted. She finds hope in that crowd: people will still gather, patiently, for a wonder that offers them nothing useful.",
+        "action": "Name one thing in your life on corpse-flower timing. Stop forcing it this month; attend to it instead."
+      },
+      {
+        "title": "The Whale Shark: Gentleness at the Largest Scale",
+        "chapter": "Whale Shark",
+        "summary": "The largest fish on Earth eats the smallest, drifting with a mouth like a cathedral and no interest in harming anyone. Aimee Nezhukumatathil writes the whale shark against every assumption that size and power must mean danger, and pairs it with the large presences in her own life who chose gentleness. The essay quietly indicts a culture that equates magnitude with menace, in oceans and in people.",
+        "example": "She describes swimming near one, outmatched in every physical dimension and perfectly safe, an experience of awe without fear that she ranks among her life teachers. The spots on its back, unique as fingerprints, give the boys in her family a friend they can re-identify across oceans.",
+        "action": "Find the whale shark in your world: the large presence that chose gentleness. Thank them specifically this week."
+      },
+      {
+        "title": "The Axolotl Smiles From the Brink",
+        "chapter": "Axolotl",
+        "summary": "The axolotl, a Mexican salamander that never grows up, smiling, regenerative, is critically endangered in its home waters even as it fills laboratories and aquariums worldwide. Aimee Nezhukumatathil uses the paradox to write about what survives where: the beloved everywhere except home. The essay's ache is about belonging, hers as an immigrant's daughter and the axolotl's as a species, and about science that can regrow the animal's heart but not its lake.",
+        "example": "Researchers prize the axolotl because it rebuilds its own body flawlessly, while Xochimilco canals shrink yearly. She holds the two facts in one hand and lets them argue, which is the book's method at its best.",
+        "action": "Learn the home story of one beloved thing you consume, an animal, a food, a song. Let the knowledge change one habit."
+      },
+      {
+        "title": "Attention Is the Conservation That Scales",
+        "chapter": "Field Notes",
+        "summary": "Nezhukumatathil's essays insist the rarest species in most landscapes is human attention, and that its restoration precedes every other kind. A reader who can tell the fireflies apart has acquired constituents; statistics acquire faces. Deepening means treating wonder as field equipment rather than temperament: learn five names, watch one cycle complete, keep a list. The book's global bestseller status among exhausted adults suggests the diagnosis lands: what the technological century is starving is not information about nature but acquaintance with it.",
+        "example": "Her firefly taxonomy, species distinguished by flash patterns courted in meadows worldwide, routinely sends readers outside the same evening with phone torches off. Local naturalists report the book's readers arriving at night hikes already converted, prepared by lyric essays to do the unfashionable thing: stand still in the dark, together, watching.",
+        "action": "Stage one attention session this week: twenty minutes with one living neighbour, tree, bird, insect, tide, until you can describe it to a friend from memory alone."
+      },
+      {
+        "title": "The Daughter of Immigrants Reads the Planet as Kin",
+        "chapter": "Field Notes",
+        "summary": "Her Filipino and Indian heritage is not seasoning in these essays; it is method. The immigrant eye, trained to find the familiar inside the foreign, reads a Michigan winter or a Mississippi bayou as a place where belonging must be practised rather than inherited. Deepening means exporting the method to any landscape you feel exiled from. Kinship with the nonhuman turns out to be learnable by the same route as kinship with a new country: names first, stories second, loyalty at walking pace, defended when developers arrive with their own naming systems.",
+        "example": "Her essay on the ribbon eel or the corpse flower delights in creatures her parents' archipelagos and her American present both claim, refusing the reader any single map of home. Critics noted the book quietly redrawing nature writing's demographics merely by existing joyfully, which her readings confirm: audiences arrive multigenerational and leave exchanging phenology tips like family recipes.",
+        "action": "Learn the immigrant names and the local names for three species near you, in two languages if you can. Kinship multiplies with vocabulary; so does defence."
+      }
+    ],
+    "actionPlan": [
+      "Ten minutes of deliberate astonishment weekly.",
+      "Replace one first taxonomy a week with longer looking.",
+      "Learn five local species names with your household.",
+      "Keep a first-of-the-year list: firefly, flower, migrant bird.",
+      "Read one essay aloud; they are built for porches.",
+      "Give a child a field guide before another game this year.",
+      "Notice one darkness-dweller and ask what it eats and fears."
+    ],
+    "caveat": "It is a lyric essay collection, not a field guide; facts serve wonder here. Readers wanting identification keys will need Peterson beside Aimee Nezhukumatathil, which she would surely approve of.",
+    "graveLink": "arctic-sea-ice",
+    "cover": "assets/covers/world-of-wonders.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "overstory",
+    "title": "The Overstory",
+    "author": "Richard Powers",
+    "year": 2018,
+    "category": "Nature & Planet",
+    "readTime": "10 min",
+    "tagline": "Nine lives, one forest: the Pulitzer-winning novel that makes trees the protagonists.",
+    "oneLiner": "Humans are a recent, brief subplot. The Overstory follows nine people whose lives are bent by trees, and argues that the oldest, largest and most patient beings on Earth have been trying to tell us something we are running out of time to hear.",
+    "bigIdea": "Richard Powers structures the novel like a tree, roots, trunk, crown, seeds: nine characters, from an Iowa farmer with a chestnut to a Vietnam veteran saved by a banyan, converge on the defence of old growth forests. Interleaved is the science: trees communicate, trade, warn and nurture through fungal networks and air. The book's argument is civilisational: we treat the living world as resource and scenery, and this category error is now billing us.",
+    "quotes": [
+      "The best arguments in the world won't change a person's mind. The only thing that can do that is a good story.",
+      "Humans carry around a little book in their heads called the world, and almost nothing in it is true.",
+      "A tree is a passage between earth and sky, and we are the brief guests in its house."
+    ],
+    "lessons": [
+      {
+        "title": "Trees Talk, Trade and Raise Their Young",
+        "chapter": "The Science Interleaved",
+        "summary": "Richard Powers weaves real research into the fiction: mother trees recognise kin and funnel nutrients to seedlings, forests warn each other of insects through the air, and fungal networks move resources from the rich to the needy. The point is not to make trees cute but to correct scale: a forest is a society older than our species, running an economy of gifts we clear cut without reading. The novel makes the science unforgettable by attaching it to people the reader loves.",
+        "example": "Patricia Westerford, modelled on real forest ecologists, publishes findings the establishment ridicules, then watches them vindicated decades later. Her arc is the book's epistemology lesson: the forest was communicating the whole time; the instruments, and the humility, arrived late.",
+        "action": "Spend one hour in the oldest green space near you, knowing this science. Look for the mother tree: the biggest, most connected elder."
+      },
+      {
+        "title": "The Activists Lose, and the Seeds Are the Point",
+        "chapter": "Crown and Seeds",
+        "summary": "Spoiling nothing essential: the human campaign at the novel's centre does not save the forest in time, and lives are broken in the attempt. Richard Powers refuses the Hollywood conversion ending, then moves to seeds: the long aftermath in which changed people plant changed perceptions. His argument is temporal. Trees work in centuries; a novel, an idea, a protected grove are seeds whose canopy no planter will sit under. The book asks readers to act on that timescale anyway.",
+        "example": "Characters end scattered, imprisoned, assimilated, yet each carrying the forest's perspective into ordinary jobs and children. The structural message is the chestnut in the opening pages, photographed monthly for a century: devotion measured in frames no single life completes.",
+        "action": "Plant or protect one thing whose benefit you will never personally collect. Write down who it is for."
+      },
+      {
+        "title": "Attention Is the Smallest Unit of Morality",
+        "chapter": "Throughout",
+        "summary": "Again and again the novel's turns hinge on whether a character actually sees a tree: the airman cradled by branches, the artist who inherits a chestnut's portrait, the gamer who builds worlds and misses the one outside. Richard Powers' moral physics: harm follows inattention as reliably as care follows noticing. The book trains the reader's attention for five hundred pages and then releases them into a world that suddenly looks populated.",
+        "example": "Readers consistently report the same side effect: after The Overstory, street trees acquire names and biographies unbidden. The novel counts this as its real plot. Sales of activism are uncertain; the changed perception is the measurable yield.",
+        "action": "Adopt one tree on your daily route: learn its species, photograph it monthly, notice its year. Let it become a character."
+      },
+      {
+        "title": "Nine Roots: How Lives Get Bent by Trees",
+        "chapter": "Roots",
+        "summary": "The opening section gives each character a tree: a chestnut photographed for a century, a mulberry, a banyan that stops a suicide, a maple under sentence of removal. Richard Powers' structural argument is that identity is ecological: who these people become is unintelligible without the specific tree in their biography. The reader is being trained for the trunk, where the lives converge, but the roots preach alone: you also have such a tree, whether or not you have ever been introduced.",
+        "example": "The Hoel chestnut, planted by a Norwegian immigrant and photographed monthly by six generations, survives blight, fashions and indifference to become the novel's first saint. Its portrait album is the family's real inheritance, witnessed by a camera that outlasted every sitter.",
+        "action": "Identify the tree of your own biography, childhood street, school, escape. Write its history as far as you know it."
+      },
+      {
+        "title": "The Novel's Villain Is a Category Error",
+        "chapter": "Trunk",
+        "summary": "Richard Powers never gives readers a cackling logger to hate. The antagonist is a way of seeing: trees as board feet, forests as vacant land, the living world as standing reserve for human projects. His loggers, judges and executives are decent people inside that category, which is why the category survives every scandal. The book's politics follow: conversion of perception precedes conversion of policy, and stories, not arguments, convert perception.",
+        "example": "A timber executive in the novel loves his children, funds scholarships, and signs clear cuts, experiencing no contradiction. Richard Powers' refusal to caricature him makes the book dangerous in the right way: the reader cannot locate the problem safely outside themselves.",
+        "action": "Audit one personal category error: what living thing does your household treat as pure resource? Renegotiate one term."
+      },
+      {
+        "title": "Seeds: The Book Trusts You With the Ending",
+        "chapter": "Seeds",
+        "summary": "The final section is the shortest and strangest: brief futures, glancing completions, and the sense of the forest continuing its conversation without us. Richard Powers has said the novel's last move is to hand the story to the reader's own ground. Whether that is hope or abdication is the discussion the book wants started at book clubs and kitchen tables, in the century timescale it has trained you to think in.",
+        "example": "The vocabulary of the ending, seed banks, deep time, the word for beings who plant for descendants, mirrors real projects like the Svalbard vault. Fiction and fact converge on the same ethic: the future is a grove planted by people who will not see it.",
+        "action": "Start one seed bank of your own: a savings, skill, grove or archive explicitly for people you will never meet."
+      },
+      {
+        "title": "The Legal Case for a Tree's Rights",
+        "chapter": "The World Tree",
+        "summary": "Powers braids in the real jurisprudence of nature's standing: the 1972 argument that trees should have legal rights, echoed in modern rivers granted personhood from New Zealand to Colombia. The novel's activists are not merely sentimental; they are foot soldiers of a doctrine working through actual courts. Deepening means taking the doctrine seriously enough to argue both sides. If a corporation can be a person for speech, on what coherent ground is a five hundred year old redwood a thing? The question's migration from law reviews to constitutions is the plot continuing off the page.",
+        "example": "His character Patricia Westerford mirrors the real forest ecologist Suzanne Simard, whose mother tree research was ridiculed before it was vindicated, another of the book's quiet lessons: the science of connection was dismissed as feminine mysticism until the data made dismissal the embarrassing position in the room.",
+        "action": "Argue the redwood's case at one meal this week, steelmanning both sides for five minutes each. Notice which premise does the heavy lifting in your own verdict."
+      },
+      {
+        "title": "Attention as Activism's Realistic Form",
+        "chapter": "The World Tree",
+        "summary": "The novel refuses its readers the comfort of a winning campaign; the trees are felled, the activists scattered, imprisoned, maimed. What it offers instead is a practice: attention trained on the nonhuman world until indifference becomes impossible. Deepening means accepting Powers' arithmetic, that empires of extraction are not out protested by everyone, but civilisations do change what they can see. The book is itself the technology it recommends, nine human lives rewired by looking, handed to the reader as an exercise rather than a conclusion.",
+        "example": "Its most quoted line among readers is a question about the most wondrous products of four billion years of life, asked of a species preparing to authorise their deletion in a quarterly decision. Book clubs report the strange after effect: trees on the commute stop being scenery. That conversion of background to foreground is the entire programme, achieved without a single instruction.",
+        "action": "Learn the names and stories of five trees on your daily routes this week. Attention begins with naming; watch what changes in your driving, voting and buying."
+      }
+    ],
+    "actionPlan": [
+      "Visit your oldest green space; find the mother tree.",
+      "Plant or protect one thing you will never benefit from.",
+      "Adopt a street tree: species, monthly photo, one year.",
+      "Learn the wood wide web basics; teach them to one person.",
+      "Read the roots section slowly; the convergence rewards patience.",
+      "Before clearing, cutting or wasting, ask the forest's timescale.",
+      "Support one reforestation effort whose math you can verify."
+    ],
+    "caveat": "It is a long, demanding literary novel with nine braided lives, and its middle asks real patience. The Pulitzer committee judged the patience repaid; readers should budget evenings, not a weekend.",
+    "graveLink": "arctic-sea-ice",
+    "cover": "assets/covers/overstory.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "story-of-more",
+    "title": "The Story of More",
+    "author": "Hope Jahren",
+    "year": 2020,
+    "category": "Nature & Planet",
+    "readTime": "8 min",
+    "tagline": "How we got to climate change and where to go from here.",
+    "oneLiner": "In Hope Jahren's lifetime, humanity doubled and learned to want more of everything: more grain, more meat, more fuel, more stuff. The Story of More is the ledger of that appetite, and a search for the exit.",
+    "bigIdea": "Geochemist Hope Jahren tells the story of the last fifty years through things: population, grain, livestock, cars, electricity, waste. Each short chapter pairs warm memoir with hard numbers showing how consumption, not just population, drives climate change, and how the richest fraction drives most of it. She refuses despair and easy villains alike, ending with an audit each reader can run on their own life: use less, share more, and convert values into habits.",
+    "quotes": [
+      "The way we have been living is not sustainable, and we know it. The question is what we are willing to change.",
+      "Every choice we make is a vote for the world we want to live in, whether we admit it or not.",
+      "You do not have to be perfect. You have to start, and keep starting."
+    ],
+    "lessons": [
+      {
+        "title": "More Is a Recent Invention",
+        "chapter": "Our Story Begins and Growing Up",
+        "summary": "Hope Jahren anchors the book in her own lifetime: since 1969 the world doubled its people, tripled its grain harvest, and multiplied its energy use, mostly so a minority could have meat at every meal, bigger houses and second cars. The numbers are not presented as accusation but as biography: this is the world her generation built, gift by gift and habit by habit. Seeing more as a fifty year experiment, rather than human nature, makes changing it imaginable.",
+        "example": "She notes that in 1969 the average American home, car and diet were all markedly smaller, and their owners were not monks; they simply had not yet been told by every screen that more was normal. Consumption norms, being learned, can be relearned. That is the book's buried optimism.",
+        "action": "Pick one category, food, flights, stuff, and compare your household's normal to the 1969 version. Choose one line to move first."
+      },
+      {
+        "title": "Food Is the Climate Story You Eat Daily",
+        "chapter": "Eating and Moving",
+        "summary": "Hope Jahren gives food the longest treatment: grain diverted to livestock, meat's land and methane costs, a third of food wasted while people hunger. Her numbers make lunch a climate act, not to guilt the reader but to locate agency: few choices repeat as often as eating, and small shifts compound like interest. She is notably fair, distinguishing the subsistence eater from the rich world's appetite, and aiming her argument at the second.",
+        "example": "The wasted third haunts her chapters: enough calories thrown away in rich countries to erase hunger several times over, requiring no new farms, only logistics and respect. She frames waste reduction as the climate policy with no enemies.",
+        "action": "For one week, waste no food: plan, freeze, repurpose. Weigh or photograph what you save. It is the easiest climate number you own."
+      },
+      {
+        "title": "The Cure Is Values, Audited, Not Guilt, Accumulated",
+        "chapter": "Where Do We Go From Here",
+        "summary": "The closing chapters refuse the two common exits, despair and denial, and prescribe an audit: learn your numbers, decide what you actually value, and cut the consumption that serves nothing you value. Hope Jahren is a scientist insisting the crisis is spiritual in structure: we will not fix the atmosphere while our definition of a good life keeps expanding materially. Her final tone is invitational, curriculum style, questions for classrooms and kitchens rather than commandments.",
+        "example": "She describes writing her own inventory, where her family burned carbon on things she loved and things she merely defaulted into, and cutting the second list first. Most readers find the same asymmetry: the defaults, not the joys, are the fat in the ledger.",
+        "action": "Run the audit this month: list your top ten consumption joys and top ten defaults. Cut two defaults permanently."
+      },
+      {
+        "title": "Population Is Not the Villain of the Piece",
+        "chapter": "From the Beginning",
+        "summary": "Hope Jahren is careful with the oldest climate scapegoat: yes, people doubled, but consumption multiplied faster, and its distribution is grotesquely uneven. The richest countries burn many times their share; within them, the richest burn most. Aiming policy at the poor world's families while sparing the rich world's appetites fails arithmetically and morally at once. Her ledger keeps returning the reader to the mirror with the highest numbers in it.",
+        "example": "She pairs two newborns, one in a high consumption country, one in a low, and follows their statistical shadows across a lifetime. The gap between the shadows is the book's whole argument in one image, and it is why her solutions are addressed to shoppers, not to mothers.",
+        "action": "Look up your country's per person footprint against the world average this week. Keep the ratio where you plan purchases."
+      },
+      {
+        "title": "Energy: Every Convenience Has a Biography",
+        "chapter": "Moving and Lighting",
+        "summary": "Hope Jahren traces electricity and fuel from source to socket with a memoirist's touch: her father's physics lab, her own furnaces and field stations. The chapters demystify the grid just enough for agency, what a kilowatt hour is, where yours comes from, what the standby lights of a house consume while it sleeps. Her claim is that people protect what they understand, and we have been trained to understand energy as magic rather than as biography.",
+        "example": "She calculates the energy biography of ordinary objects, the hot shower, the imported berry, until the reader can no longer unsee them. Literacy, not guilt, is the product; the behaviour changes follow at their own pace and tend to stay changed.",
+        "action": "Read your electricity bill properly once: units, sources if listed, trend. Then hunt the standby loads in one room."
+      },
+      {
+        "title": "Waste Is the Confession Our Bins Make",
+        "chapter": "Throwing Away",
+        "summary": "The final ledger is rubbish: what a household throws away declares its real values more honestly than its recycling pride. Hope Jahren follows waste streams from her own bin to landfills and oceans, and finds the same asymmetry as everywhere in the book: the problem is not existence of waste but its scale and carelessness at the rich end. Her remedy is unfashionable and total: buy less, keep longer, repair, and let the bin shrink as a side effect.",
+        "example": "She audits her laboratory and home, finding disposables chosen by default decades ago still flowing. Changing the defaults, glass for plastic, repair for replacement, cut the stream more than any single heroic act, a finding every facilities manager will recognise.",
+        "action": "Weigh or bag count your household waste for one week. Then change one default and measure the next week's confession."
+      },
+      {
+        "title": "The Ethics of the Second Helping: Enough as a Number",
+        "chapter": "The Way Through",
+        "summary": "Jahren refuses purity frameworks because she has run the arithmetic: global problems are aggregates of proximate decisions multiplied by billions, and shame does not scale while small numbers do. A reduction here, a waste stream closed there, multiplied honestly, outperforms sporadic grand gestures mathematically and psychologically. Deepening means converting her tables into your household's two or three largest numbers and ignoring the rest until those move. Activism triages: the top of your personal ledger is where your morality actually lives.",
+        "example": "Her own readers report the meat and food waste chapters rearranged kitchens more than air travel essays rearranged holidays, which matches her data: the daily, invisible streams outweigh the annual spectacular ones. The book's gentleness is tactical; it aims the effort where the tonnes are hiding.",
+        "action": "From her categories, find your household's single largest stream, food waste, energy, or miles, and cut it by a measured quarter for one quarter. Record the number, not the virtue."
+      },
+      {
+        "title": "Teaching the Numbers to Children Without Terror",
+        "chapter": "The Way Through",
+        "summary": "As a teacher, Jahren models the pedagogy her subject demands: facts delivered with their uncertainties visible, hope grounded in real margins, agency assigned at the scale a student can actually move. Deepening means refusing both available corruptions, doom that licenses despair and denial that licenses delay, in your own explanations to the young. Her classroom rule translates directly: never hand someone a problem larger than the lever you hand them with it, and always hand a lever cut to fit their actual reach.",
+        "example": "Her students leave able to compute their own consumption from first principles, a skill she considers more protective than any list of commandments. Alumni describe the strange calm of the method: the crisis stops being weather reported by enemies and becomes engineering they can personally interrogate, which is the exact moment fatalism loses its market.",
+        "action": "Explain one climate number to a young person this week with Jahren's rule: one fact, one uncertainty, one lever sized to their reach. Watch their face for the difference."
+      }
+    ],
+    "actionPlan": [
+      "Compare one household normal to 1969; move one line.",
+      "Waste no food for one week; track what you save.",
+      "Audit joys versus defaults; cut two defaults permanently.",
+      "Shift one recurring meal per week down the carbon ladder.",
+      "Learn your electricity mix; switch one load to off-peak or off.",
+      "Talk numbers kindly at one family meal; no guilt served.",
+      "Share: lend, borrow or give one thing monthly instead of buying."
+    ],
+    "caveat": "Statistics date from its 2020 research; the trends continue but readers should refresh the numbers. Hope Jahren writes as an American scientist to general readers; policy depth lives in other books on this shelf.",
+    "graveLink": "blue-apron-meal",
+    "cover": "assets/covers/story-of-more.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "superhuman",
+    "title": "Superhuman: Life at the Extremes of Our Capacity",
+    "author": "Rowan Hooper",
+    "year": 2018,
+    "category": "Future & Technology",
+    "readTime": "8 min",
+    "tagline": "What the extremes of human ability teach the rest of us.",
+    "oneLiner": "Free divers who hold their breath for eleven minutes, memory champions, ultra runners, super-recognisers: Rowan Hooper spent years with people at the far edges of human capacity, asking what is nature, what is nurture, and what is available to the rest of us.",
+    "bigIdea": "Journalist and biologist Rowan Hooper studies extreme humans, people who run 100 miles, memorise decks of cards, survive impossible odds, stay serene under fire, and asks the only useful question: how much of that is us? Each chapter pairs a trait, endurance, memory, resilience, intelligence, happiness, with the science of its limits, finding the same pattern everywhere: genetics deals a range, and training, mindset and environment decide where inside the range a life lands.",
+    "quotes": [
+      "Extreme people show us what the human operating system can do when pushed.",
+      "Genes load the gun, but the environment pulls most of the triggers.",
+      "Almost every capacity we admire turns out to be more trainable than we were told."
+    ],
+    "lessons": [
+      {
+        "title": "The Range Is Genetic; Where You Land Is Not",
+        "chapter": "Throughout",
+        "summary": "Rowan Hooper's refrain across traits: twin studies show strong genetic influence, and yet the achievable spread inside any one person's range is enormous. The superhuman cases mark the edge of the species' map, but the actionable news is local: your memory, endurance, focus and calm all have unvisited territory. The extremes function as proof of concept, demolishing the excuse that ordinary improvement is biologically naive.",
+        "example": "Memory champions, tested in labs, have ordinary brains and extraordinary methods: memory palaces older than Rome. Their gift is a technique anyone can learn in weeks. Rowan Hooper keeps finding this shape, exotic result, mundane mechanism, which is the most encouraging pattern in the book.",
+        "action": "Pick one capacity and learn the champion's actual technique this month: a memory palace, breath training, or a focus protocol. Measure before and after."
+      },
+      {
+        "title": "Resilience Is a Skill With a Physiology",
+        "chapter": "Resilience and Survival",
+        "summary": "People who survive disasters and elite selection courses share measurable traits: they break problems into the next small action, maintain dark humour, and keep helping others, which protects their own minds. Rowan Hooper reviews the training militaries and psychologists built from this: stress inoculation, controllable challenges, recovery skills. Resilience, in his account, is not a personality you luck into but a set of reflexes installed by practice under gradually rising pressure.",
+        "example": "He profiles survivors who narrate their ordeals in almost identical grammar: I just did the next thing. The sentence sounds like modesty and is actually the technology, attention narrowed to the actionable, despair postponed by usefulness. Trainable, he argues, in classrooms as much as in special forces.",
+        "action": "Practise stress inoculation weekly: one deliberately uncomfortable task, time boxed, followed by deliberate recovery. Build the reflex before you need it."
+      },
+      {
+        "title": "Happiness Has Extremes Too, and They Are Ordinary",
+        "chapter": "Happiness",
+        "summary": "Rowan Hooper's final extreme is the happiest people measured, and they are not lottery winners but monks, volunteers and the deeply connected. The research he summarises caps the money effect early, finds relationships dominating every regression, and shows trained attention, meditation again, moving even temperament's set point. The superhuman of happiness turns out to look like a good neighbour with a practice, which may be the book's most subversive finding.",
+        "example": "He interviews people with the highest measured life satisfaction and finds calendars full of other people and mornings full of ritual, not achievement. Their scores, not their stories, qualified them as extreme, a useful rebuke to anyone chasing the visible trophies.",
+        "action": "Run the happiness extreme's week: daily connection, daily practice, one act of volunteering. Score your evenings one to ten and keep the data."
+      },
+      {
+        "title": "Endurance Is Mostly a Negotiation With the Brain",
+        "chapter": "Endurance",
+        "summary": "Ultra runners and free divers keep colliding with the same finding: the body stops far later than the brain requests. Rowan Hooper reviews the central governor debate and the divers' mammalian reflexes, concluding that endurance is a skill of managing signals: pacing, self talk, and training the alarm system to distinguish discomfort from danger. The couch athlete's wall, the science suggests, is usually a negotiation opened too early.",
+        "example": "Free divers describe the dive as mostly mental housekeeping, urges to breathe recognised as carbon dioxide alarms rather than oxygen facts. The reframing, learnable on dry land, is what lets a recreational diver double a breath hold in weeks.",
+        "action": "In your next workout, practise signal literacy: label sensations precisely instead of obeying them wholesale. Extend one session by ten percent."
+      },
+      {
+        "title": "Intelligence Is a Choir, Not a Solo",
+        "chapter": "Intelligence and Creativity",
+        "summary": "Rowan Hooper finds no single genius module: extreme performers combine memory, pattern libraries, motivation and years of structured exposure. The prodigies he interviews demystify themselves on inspection, revealing practice architectures their audiences prefer to call gifts. His even handed genetics keeps the chapter honest: starting points differ, but the choir only sings for those who rehearse it, and rehearsal design is a learnable art.",
+        "example": "A chess prodigy's freakish board memory collapses to ordinary when pieces are placed randomly, proving the gift is a library, not a lens. Rowan Hooper loves this experiment because it relocates genius from the skull to the bookshelf anyone can build.",
+        "action": "In your strongest skill, identify the library underneath: the patterns you have stored. Build one shelf deliberately this quarter."
+      },
+      {
+        "title": "Sleep, Focus and the Quiet Extremes",
+        "chapter": "Focus and Sleep",
+        "summary": "The glamorous extremes rest on unglamorous ones: elite performers sleep like professionals, guard attention like treasurers, and treat recovery as training. Rowan Hooper profiles super sleepers and the rare short sleep gene, then returns the reader to the mundane headline: most people are voluntarily impaired, and the cheapest superhuman upgrade available is a dark room and a regular hour. Focus research tells the same story, depth available to anyone who defends single tasking.",
+        "example": "He describes marksmen and special operators whose steadiness under fire traces to breathing and sleep disciplines more than to courage. Their heart rates, measured, look like meditators' at work, which is precisely what their training builds.",
+        "action": "Run a two week sleep protocol: fixed wake time, dark room, screens out. Score focus daily and let the graph argue."
+      },
+      {
+        "title": "Trainability Is the Trait Under All the Traits",
+        "chapter": "Becoming More",
+        "summary": "Epstein's survey returns to a finding that unifies the extremes: the variation that matters most for the rest of us is not the rare mutation but responsiveness to training, which itself varies and can be discovered only by training. Deepening means demoting talent identification, in schools, companies and mirrors, in favour of cheap widespread trials. The future extreme is usually the ordinary beginner whose response curve nobody measured because the selection happened first. Cast widely, measure honestly, and let curves identify their owners.",
+        "example": "His retelling of exercise genomics studies, where identical programmes produced non responders and super responders within the same families, dissolves the effort versus genes argument entirely. Both were true, per person, in different proportions, which is why population slogans fail individuals so reliably in every gym and classroom.",
+        "action": "Run one twelve week honest trial on yourself before judging a domain closed: a skill, an endurance base, an instrument. Let your response curve, not your school history, file the verdict."
+      },
+      {
+        "title": "The Ethics of Knowing Your Extremes",
+        "chapter": "Becoming More",
+        "summary": "Genetic knowledge arrives in his final chapters carrying responsibilities the science outpaced: parents sequencing embryos for height, athletes priced by predicted ceilings, insurers pricing risk they did not cause. Deepening means deciding your position while the choices are still yours to make, because markets will happily make them at scale. The extremes of human capability turn out to be a philosophy seminar wearing laboratory clothes, and the tuition for skipping it will be billed to exactly the children these tools claim to serve.",
+        "example": "His reporting on direct to consumer genetic tests shows customers receiving probabilistic trivia as destiny, overhauling diets, sports and self stories on the strength of predictions explaining single digit percentages of variance. The science is real; the narration is astrology with better fonts, and only education separates the two experiences.",
+        "action": "Write your family's rule for genetic information before anyone buys a kit: what we will learn, what we will act on, what stays curiosity. Sign it yourselves."
+      }
+    ],
+    "actionPlan": [
+      "Learn one champion technique this month; measure before and after.",
+      "Build a memory palace for one real list this week.",
+      "Practise one time-boxed discomfort weekly, then recover deliberately.",
+      "In crisis, narrate only the next small action.",
+      "Run the happy week: connection, practice, volunteering, scored nightly.",
+      "Choose your extreme deliberately; ranges are wide in every direction.",
+      "Re-test the capacity in ninety days and keep the numbers."
+    ],
+    "caveat": "It is science journalism, enthusiastic and broad; specialists will find each chapter a doorway, not a destination. The genetics sections are responsibly handled but simplified, as the genre requires.",
+    "graveLink": "marathon-cheaters",
+    "cover": "assets/covers/superhuman.jpg",
+    "edition": "Standard"
+  },
+  {
+    "id": "who-is-michael-ovitz",
+    "title": "Who Is Michael Ovitz?",
+    "author": "Michael Ovitz",
+    "year": 2018,
+    "category": "Life & Meaning",
+    "readTime": "9 min",
+    "tagline": "The rise and fall of Hollywood's most powerful and feared agent.",
+    "oneLiner": "Michael Ovitz built CAA into the agency that ran Hollywood, package deals, superstar clients, total control, then left for Disney's number two job and was fired in fourteen months with a severance that became a scandal. His memoir is the rare confession from a man the town called ruthless.",
+    "bigIdea": "Michael Ovitz co-founded Creative Artists Agency in 1975 and rewrote Hollywood's power structure, shifting leverage from studios to talent through packaging and relentless information control. The memoir traces the ascent, the martial arts discipline behind his method, and the catastrophic Disney chapter under Michael Eisner that ended in a record payout and public disgrace. It is candid about ambition's machinery: secrecy, loyalty tests, and the loneliness at the top he engineered for himself.",
+    "quotes": [
+      "In Hollywood, information is currency, and I intended to be the bank.",
+      "Power is not given. It is assembled, call by call, favour by favour.",
+      "I confused being indispensable with being loved. They are not the same thing."
+    ],
+    "lessons": [
+      {
+        "title": "Information, Assembled Patiently, Becomes Power",
+        "chapter": "Building CAA",
+        "summary": "Michael Ovitz's method was almost boring: know everything first. CAA tracked every script, deal, grudge and vacancy in town, shared it internally with total discipline, and used it to package talent so studios needed the agency more than any single star. The memoir's business lesson is that power compounds like interest when information is centralised and egos are not. His young agents were forbidden self promotion; the institution, not the person, was the brand.",
+        "example": "He describes morning meetings where every agent reported everything learned, building a map of Hollywood no studio possessed. Rivals with bigger stars kept losing to the agency with the better map, an early proof that data networks beat individual brilliance.",
+        "action": "In your field, start the map: one shared note of what you and your team learn weekly. Compound it for a year and watch your leverage change."
+      },
+      {
+        "title": "The Package Changed Who Negotiates With Whom",
+        "chapter": "The Packaging Revolution",
+        "summary": "By bundling star, director and script, CAA stopped auditioning for studios and started selling them finished products. Michael Ovitz understood that whoever assembles the value captures the margin. The lesson generalises brutally: in any industry, the assembler outearns the components. His memoir is thus read in business schools as a case study in moving up the value chain by coordination, decades before platforms made the pattern famous.",
+        "example": "Films that studios would have developed piecemeal arrived as packages with financing logic attached, making refusal expensive. Michael Ovitz's own fees followed the leverage, until the town's complaint that the agent had become the studio was, in structure, simply true.",
+        "action": "Ask of your own role: am I a component or an assembler? Take one step this quarter toward assembling value others need."
+      },
+      {
+        "title": "Disney: The Number Two Job Is a Different Profession",
+        "chapter": "The Fall",
+        "summary": "Michael Ovitz's fourteen months as Disney's president under Eisner Michael Eisner form the memoir's painful core: the skills that made him a supreme number one, control, secrecy, personal loyalty networks, were disqualifications as a deputy in a public company. He lasted barely a year and left with a severance reported around 140 million dollars that shareholders sued over. His account, self critical in ways rare for the genre, argues he misread the job's actual contract: deputies serve visibly and disappear, and he could do neither.",
+        "example": "He recounts learning of decisions after the fact and press stories he could not answer, the bank of information suddenly closed to him. The man who had never been uninformed in Hollywood was uninformed in Burbank, and unravelled accordingly.",
+        "action": "Before taking any role, write its real contract: who decides, who is visible, whose loyalty counts. Sign only the contract that actually exists."
+      },
+      {
+        "title": "Martial Arts Supplied the Operating System",
+        "chapter": "The Discipline",
+        "summary": "Michael Ovitz credits his study of aikido and Eastern philosophy for CAA's method: use the opponent's weight, stay centred, never meet force with panic. The agency's famous unflappability in negotiations was trained, not temperamental. The memoir interleaves dojo and dealmaking without embarrassment, arguing that composure is a technology with drills, and that his later fall began when the drills stopped under the pressure of the Disney job.",
+        "example": "He describes preparing for studio confrontations the way he prepared for gradings: research the other side's balance, decide in advance where he could yield. Rivals read the calm as menace; it was mostly homework.",
+        "action": "Before your next hard negotiation, write the other side's balance sheet of fears and needs. Enter centred, with yields pre decided."
+      },
+      {
+        "title": "Loyalty Was the Product and the Trap",
+        "chapter": "CAA's Inner Life",
+        "summary": "CAA ran on ferocious internal loyalty, agents forbidden from building personal brands, defections treated as treason. Michael Ovitz is unusually reflective about the cost: an organisation that cannot tolerate exit cannot tolerate honesty either, and his own isolation grew inside the loyalty he demanded. The memoir's most quoted admissions concern this confusion of devotion with control, a confusion he traces from the agency's triumphs directly into his personal wreckage.",
+        "example": "He recounts learning, years later, of resentments his closest colleagues never voiced, because the system he built had priced candour as disloyalty. The bank of information, it turned out, had one account it never audited: feelings about its founder.",
+        "action": "Ask one person on your team this month what your loyalty rules prevent them from telling you. Believe the answer in public."
+      },
+      {
+        "title": "The Confession: Ambition's Ledger Balanced Late",
+        "chapter": "Aftermath",
+        "summary": "The final chapters reckon with estrangements, lawsuits, and a reputation he spent decades building and now writes against. Michael Ovitz does not ask for absolution; he itemises. The memoir's value for general readers is this rarity: a man synonymous with winning explaining, with documents and dates, what the winning cost and which parts he would not buy again. It belongs on this shelf as a primary source on ambition, priced honestly at last.",
+        "example": "He describes the strange quiet after Disney, the phone that had rung for thirty years falling silent in a week, and learning who his friends were by that silence. The chapter reads like the town's group therapy conducted by its least likely volunteer.",
+        "action": "Write your own ledger honestly: what has your ambition bought, and what did it charge people you love? Read it once a year."
+      },
+      {
+        "title": "The Client List as a Balance Sheet",
+        "chapter": "After CAA",
+        "summary": "Ovitz's real innovation deserves colder analysis than the legend gives it: he treated representation as portfolio management, packaging directors, writers and stars until the agency, not the studio, held the negotiating centre. Deepening means mapping the technique onto your own industry. Whoever assembles the package owns the margin, in talent, in software, in supply chains. Ovitz fell when he mistook assembly power for operating genius, which is the sequel every packager should be required to read before their first victory lap.",
+        "example": "Rival agents describe the CAA machine answering a studio's need with a full cast and director attached before competitors finished their first phone call. The packages made refusal expensive in a way single stars never could: rejecting one client meant rejecting the film. That leverage geometry, not charisma, built the Oberlin of agencies on an entertainment lawyer's template.",
+        "action": "Map the package in your market: what bundle would make refusal expensive? Note whether you are the assembler, the assembled, or the studio. Positions can be chosen."
+      },
+      {
+        "title": "Paranoia as Fuel, Paranoia as Tax",
+        "chapter": "After CAA",
+        "summary": "Ovitz admits the engine and its invoice in the same chapters: the suspicion that built his information networks also isolated him, made enemies prophetic, and finally priced him out of every room. Deepening means performing the same audit on your own operating system. The traits that rescue a career at thirty commonly tax it at fifty, and the memoir's candour is that he saw the transition late. Success memoirs rarely include the chapter where the fuel becomes the fire; this one's willingness to is why it belongs in a business library.",
+        "example": "His account of the Disney wars, allies catalogued as assets, slights remembered like scripture, shows paranoia's accounting method clearly: perfect records, poisoned totals. The industry histories written since confirm the deals while disputing the motives, a draw Ovitz seems to accept as the cost of having kept the wrong ledger beautifully.",
+        "action": "List the trait that built your current position and the tax it now charges, honestly, in two columns. Choose one tax to renegotiate this quarter while the trait still works."
+      }
+    ],
+    "actionPlan": [
+      "Start the shared information map with your team this week.",
+      "Decide whether you are component or assembler; take one assembling step.",
+      "Write the real contract of your current role and compare it to the fantasy.",
+      "Share information internally with discipline; hoard nothing from your own side.",
+      "Audit one loyalty test you impose on others; retire it if it buys silence.",
+      "Keep one relationship in which you are not powerful, and protect it.",
+      "Read the Disney chapters before your next promotion decision."
+    ],
+    "caveat": "It is a memoir by a man disputing his own legend, so rival accounts differ on many deals; read it for the machinery of power and the unusual self-examination, and check the town's other histories for the feuds.",
+    "graveLink": "harvey-weinstein",
+    "cover": "assets/covers/who-is-michael-ovitz.jpg",
+    "edition": "Standard"
   }
 ];
 if (typeof window !== "undefined") window.BOOKS = BOOKS;

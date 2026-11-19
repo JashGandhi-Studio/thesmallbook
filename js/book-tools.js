@@ -36,7 +36,16 @@
     "Business & Startups":{ a: "#ff6b35", b: "#ffe9df", c: "#ffd0bb", ink: "#2a0f04", accent: "#c22b2b" },
     "Creativity":         { a: "#ff90e8", b: "#ffe9fb", c: "#ffcdf4", ink: "#14110c", accent: "#a21caf" },
     "Productivity":       { a: "#3b82f6", b: "#e2edff", c: "#c6dcff", ink: "#0b1b3a", accent: "#1d4ed8" },
-    "History":            { a: "#a1723f", b: "#f3e8d6", c: "#e6d3b6", ink: "#2a1c0c", accent: "#7a4f22" }
+    "History":            { a: "#a1723f", b: "#f3e8d6", c: "#e6d3b6", ink: "#2a1c0c", accent: "#7a4f22" },
+    "Love & Relationships": { a: "#e5484d", b: "#ffe9ec", c: "#ffd3d9", ink: "#33090d", accent: "#c22b2b" },
+    "Life & Meaning":     { a: "#5b8c5a", b: "#e8f3e2", c: "#d3e7c8", ink: "#12260f", accent: "#3f6d3a" },
+    "Family & Parenting": { a: "#e88a00", b: "#fff1da", c: "#ffe3b3", ink: "#2a1a02", accent: "#b35f00" },
+    "Health & Body":      { a: "#0ba5a0", b: "#dcf5f3", c: "#c0ebe8", ink: "#05302e", accent: "#077a76" },
+    "Mind & Spirit":      { a: "#7c4dff", b: "#efe8ff", c: "#ddd0ff", ink: "#1d0f38", accent: "#5b32b8" },
+    "Future & Technology": { a: "#38618c", b: "#e3ecf7", c: "#c9daef", ink: "#0d1d30", accent: "#274a6e" },
+    "Nature & Planet":    { a: "#3e8914", b: "#e9f5dc", c: "#d7ecc2", ink: "#152a05", accent: "#2c660e" },
+    "Leadership":         { a: "#8a5a2b", b: "#f7ecd9", c: "#eedabb", ink: "#2a1a08", accent: "#6e451f" },
+    "Economics":          { a: "#51707e", b: "#e8eff2", c: "#d3e0e6", ink: "#12242c", accent: "#39535e" }
   };
   var FALLBACK = { a: "#ffc800", b: "#fff6d6", c: "#ffe08a", ink: "#14110c", accent: "#e88a00" };
 

@@ -1421,31 +1421,18 @@
     } catch (e) {}
   }
 
+  /* The app's own official account (announcements), kept distinct from
+     the founder-as-a-person below. */
   var OFFICIAL_ID = "11111111-1111-1111-1111-111111111111";
-  var FOUNDER_EMAILS = ["acimotreyothy@gmail.com", "jashgandhicreator07@gmail.com"];
-  var FOUNDER_IDS_KEY = "tsb_founder_ids";
-  function loadFounderIds(){ try{ return JSON.parse(localStorage.getItem(FOUNDER_IDS_KEY)||"[]"); }catch(e){ return []; } }
-  var FOUNDER_IDS = loadFounderIds();
-  function saveFounderId(id){ try{ if(!id||FOUNDER_IDS.indexOf(id)>=0) return; FOUNDER_IDS.push(id); localStorage.setItem(FOUNDER_IDS_KEY, JSON.stringify(FOUNDER_IDS)); try{ var ej=document.getElementById("founderIdBox"); if(ej) ej.textContent=id; }catch(e){} }catch(e){} }
-  // capture founder id the moment they sign in (works even before profiles table)
-  try{
-    var _mu = null; try{ _mu = (window.TSB_AUTH && TSB_AUTH.user && TSB_AUTH.user()) || (function(){ try { return JSON.parse(localStorage.getItem("tsb_auth_session")||"null").user; } catch (e) { return null; } })() || null; }catch(e){}
-    if(_mu && _mu.email && FOUNDER_EMAILS.indexOf(String(_mu.email).toLowerCase())>=0) saveFounderId(_mu.id);
-  }catch(e){}
-  // also watch for future sign-ins
-  try{ window.addEventListener("tsb:auth", function(){ try{ var u2=me(); if(u2&&FOUNDER_EMAILS.indexOf(String(u2.email||"").toLowerCase())>=0) saveFounderId(u2.id); }catch(e){} }); }catch(e){}
+  /* v415: founder identity lives in ONE place, js/founder.js
+     (window.TSB.isFounder, decided by signed-in email). The per-device
+     localStorage capture that used to live here is gone: it only ever
+     worked on the founder's own phone. */
+  function saveFounderId(id){ try{ var ej=document.getElementById("founderIdBox"); if(ej && id) ej.textContent=id; }catch(e){} }
   function isOfficial(id){
     if(id===OFFICIAL_ID) return true;
-    try{ if(FOUNDER_IDS.indexOf(id)>=0) return true; }catch(e){}
-    try{
-      var u=me();
-      if(u && FOUNDER_EMAILS.indexOf(String(u.email||"").toLowerCase())>=0 && u.id===id){
-        saveFounderId(id);
-        return true;
-      }
-      // also check static window list (set by founder.js if you hardcode the id later)
-      if(window.TSB_FOUNDER_IDS && window.TSB_FOUNDER_IDS.indexOf(id)>=0) return true;
-    }catch(e){}
+    try{ if(window.TSB && TSB.isFounder && TSB.isFounder(id)) return true; }catch(e){}
+    try{ if(window.TSB && TSB.isFounder && TSB.isFounder(me())) { var u=me(); if(u && u.id===id) return true; } }catch(e){}
     return false;
   }
   var OFFICIAL_AVATAR = "data:image/svg+xml," + encodeURIComponent(

@@ -850,7 +850,9 @@
       else {
         const remoteLessons = Array.isArray(r.lessons_done) ? r.lessons_done.map(Number) : [];
         const same = lessons.length === remoteLessons.length && lessons.every((v, i) => v === remoteLessons[i]);
-        if (!same || !!r.bookmarked !== bookmarked) tasks.push(pushRow(tok, id, [...new Set([...remoteLessons, ...lessons])].sort((a, b) => a - b), bookmarked || r.bookmarked).then(() => pushed++));
+        /* v415: the local bookmark flag is the truth here. OR-ing the remote
+           flag back in resurrected every removed bookmark on the next sync. */
+        if (!same || !!r.bookmarked !== bookmarked) tasks.push(pushRow(tok, id, [...new Set([...remoteLessons, ...lessons])].sort((a, b) => a - b), bookmarked).then(() => pushed++));
       }
     }
     for (const id of marks) {
@@ -927,7 +929,7 @@
      lessons, shelf, resume point, plans, streak history and the journey they
      chose. It never carries appearance, action-bar layout, text size, theme,
      notification sounds or other device comfort settings. */
-  const STATE_KEYS = ["tsb_interests", "tsb_ob_lead", "tsb_mind", "tsb_read_minutes", "tsb_read_style", "tsb_read_when", "tsb_starter_shelf", "tsb_plans", "tsb_days", "tsb_birthday", "tsb_read_books", "tsb_highlights_v1", "tsb_last_book", "tsb_pack", "tsb_min_log", "tsb_taste_events", "tsb_kids_stars", "tsb_notes_v1"];
+  const STATE_KEYS = ["tsb_interests", "tsb_ob_lead", "tsb_mind", "tsb_read_minutes", "tsb_read_style", "tsb_read_when", "tsb_starter_shelf", "tsb_plans", "tsb_days", "tsb_birthday", "tsb_read_books", "tsb_highlights_v1", "tsb_last_book", "tsb_pack", "tsb_min_log", "tsb_taste_events", "tsb_kids_stars", "tsb_notes_v1", "tsb_served"];
   /* ================= v406: the account vault =================
      Reading and listening data used to live under global localStorage
      keys. On a shared phone, signing in as a second person inherited
@@ -1021,7 +1023,7 @@
   }
   function stateSnapshot() {
     const journey = {};
-    ["tsb_interests", "tsb_ob_lead", "tsb_mind", "tsb_read_minutes", "tsb_read_style", "tsb_read_when", "tsb_starter_shelf", "tsb_pack", "tsb_min_log", "tsb_taste_events", "tsb_kids_stars", "tsb_notes_v1"].forEach((k) => { journey[k] = rawGet(k, null); });
+    ["tsb_interests", "tsb_ob_lead", "tsb_mind", "tsb_read_minutes", "tsb_read_style", "tsb_read_when", "tsb_starter_shelf", "tsb_pack", "tsb_min_log", "tsb_taste_events", "tsb_kids_stars", "tsb_notes_v1", "tsb_served"].forEach((k) => { journey[k] = rawGet(k, null); });
     return { v: 1, progress: lsGet(PROGRESS_KEY, {}), bookmarks: lsGet(MARKS_KEY, []), streak: rawGet("tsb_streak", null), plans: rawGet("tsb_plans", {}), days: rawGet("tsb_days", []), birthday: rawGet("tsb_birthday", ""), read_books: rawGet("tsb_read_books", []), highlights: rawGet("tsb_highlights_v1", {}), last_book: rawGet("tsb_last_book", ""), reader_positions: statePositions(), journey: journey, listen: stateListen(), updated_at: +(rawGet("tsb_reading_state_updated_at", Date.now()) || Date.now()) };
   }
   /* v406: listening follows the account too. Saved episodes, per show
@@ -1091,6 +1093,15 @@
     });
     return out;
   }
+  /* v418: served history merges as a union of days. Each side keeps,
+     per kind and item, the most recent day it was served, so two
+     devices never re-show each other what the other already saw. */
+  function mergeServed(a, b) {
+    const out = {};
+    [b, a].forEach((m) => { Object.keys(m || {}).forEach((kind) => { out[kind] = out[kind] || {}; Object.keys(m[kind] || {}).forEach((k) => { const d = +(m[kind][k] || 0); if (!(out[kind][k] >= d)) out[kind][k] = d; }); }); });
+    Object.keys(out).forEach((kind) => { Object.keys(out[kind]).sort((x, y) => out[kind][y] - out[kind][x]).slice(400).forEach((k) => { delete out[kind][k]; }); });
+    return out;
+  }
   function mergeMinLog(a, b) {
     const out = Object.assign({}, a || {});
     Object.keys(b || {}).forEach((d) => { out[d] = Math.max(Number(out[d] || 0), Number(b[d] || 0)); });
@@ -1100,9 +1111,18 @@
   function mergeReadingState(local, remote) {
     remote = remote && typeof remote === "object" ? remote : {}; const newerRemote = +(remote.updated_at || 0) > +(local.updated_at || 0);
     const out = Object.assign({}, local);
-    /* These fields are monotonic unions. An empty new device can never erase
-       a lesson tick, shelf item, plan, day, highlight or finished book. */
-    out.progress = mergeMapArrays(remote.progress, local.progress); out.bookmarks = union(remote.bookmarks, local.bookmarks); out.read_books = union(remote.read_books, local.read_books); out.days = union(remote.days, local.days).sort().slice(-400); out.plans = mergeMapArrays(remote.plans, local.plans); out.highlights = mergeHighlights(remote.highlights, local.highlights);
+    /* Lesson progress, plans, days and highlights are append-only in the
+       app (nothing un-ticks a lesson), so they merge as monotonic unions:
+       an empty new device can never erase them.
+       Bookmarks and finished books are different: both have a real toggle,
+       so a union would resurrect every deliberate removal on the other
+       device. Those two follow the newer side wholesale (v415). The first
+       sync from a brand new device still inherits the cloud copy, because
+       an empty local list only wins when it is genuinely the newer edit. */
+    out.progress = mergeMapArrays(remote.progress, local.progress);
+    out.bookmarks = newerRemote ? (Array.isArray(remote.bookmarks) ? remote.bookmarks.slice() : []) : union([], local.bookmarks);
+    out.read_books = newerRemote ? (Array.isArray(remote.read_books) ? remote.read_books.slice() : []) : union([], local.read_books);
+    out.days = union(remote.days, local.days).sort().slice(-400); out.plans = mergeMapArrays(remote.plans, local.plans); out.highlights = mergeHighlights(remote.highlights, local.highlights);
     const rs = remote.streak || null, ls = local.streak || null; out.streak = !ls ? rs : !rs ? ls : (String(rs.last || "") > String(ls.last || "") || (rs.last === ls.last && +(rs.count || 0) > +(ls.count || 0)) ? rs : ls);
     const localJourney = local.journey || {}, remoteJourney = remote.journey || {};
     out.birthday = local.birthday || remote.birthday || "";
@@ -1118,6 +1138,7 @@
       out.journey[k] = unionBy(localJourney[k], remoteJourney[k], (x) => String((x && (x.i || x.t || "")) + "|" + (x && (x.d || x.v || "")))).slice(-300);
     });
     out.journey.tsb_kids_stars = Object.assign({}, (remoteJourney.tsb_kids_stars || {}), (localJourney.tsb_kids_stars || {}));
+    out.journey.tsb_served = mergeServed(localJourney.tsb_served, remoteJourney.tsb_served);
     out.journey.tsb_notes_v1 = localJourney.tsb_notes_v1 || remoteJourney.tsb_notes_v1 || null;
     out.last_book = !local.last_book ? (remote.last_book || "") : !remote.last_book ? local.last_book : (newerRemote ? remote.last_book : local.last_book);
     out.reader_positions = Object.assign({}, remote.reader_positions || {}); Object.keys(local.reader_positions || {}).forEach((id) => { const r = out.reader_positions[id], l = local.reader_positions[id]; if (!r || +(l.updated_at || 0) >= +(r.updated_at || 0)) out.reader_positions[id] = l; });

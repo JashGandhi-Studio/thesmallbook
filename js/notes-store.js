@@ -29,13 +29,14 @@
   var MEDK = "tsb_note_media_";
   var HLKEY = "tsb_highlights_v1";
   var STATEKEY = "tsb_note_state_";
+  var OUTK = "tsb_outbox_v1_";
   var PUSH_DELAY = 2500;
 
   /* ---------- tiny utils ---------- */
   function escRaw(s) { return String(s == null ? "" : s); }
-  function jget(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
-  function jset(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
-  function jdel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+  function jget(k, d) { if (window.TSB && TSB.store) return TSB.store.get(k, d); try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
+  function jset(k, v) { if (window.TSB && TSB.store) return TSB.store.set(k, v); try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+  function jdel(k) { if (window.TSB && TSB.store) { TSB.store.remove(k); return; } try { localStorage.removeItem(k); } catch (e) {} }
   function uuid() {
     return "n" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
   }
@@ -72,8 +73,18 @@
      SYNC: push queue (debounced upserts) + pull-merge on sign-in
      ============================================================ */
   var pushTimer = null, pushBusy = false, dirty = {};
+  /* v418: the push queue is a durable outbox now. Pending note ids
+     live in tsb_outbox_v1_<uid> on disk, so a note written offline,
+     or in the last seconds before the app closes, is still owed to
+     the server on the next boot. Tombstones ride the same outbox
+     and are only pruned from the cache once the server has them. */
+  function outboxKey() { return OUTK + uid(); }
+  function outbox() { var v = jget(outboxKey(), []); return Array.isArray(v) ? v : []; }
+  function saveOutbox(ids) { jset(outboxKey(), ids); }
   function markDirty(id) {
     dirty[id] = true;
+    var ob = outbox();
+    if (ob.indexOf(id) < 0) { ob.push(id); saveOutbox(ob); }
     clearTimeout(pushTimer);
     pushTimer = setTimeout(flushPushes, PUSH_DELAY);
   }
@@ -81,7 +92,8 @@
     if (pushBusy) { clearTimeout(pushTimer); pushTimer = setTimeout(flushPushes, PUSH_DELAY); return; }
     var u = me();
     if (!u || u.id === "guest") return;                     /* offline mode, cache only */
-    var ids = Object.keys(dirty);
+    var ids = outbox();
+    Object.keys(dirty).forEach(function (id) { if (ids.indexOf(id) < 0) ids.push(id); });
     if (!ids.length) return;
     var tk = await token();
     if (!tk || !URL) return;
@@ -106,8 +118,8 @@
         break;
       }
     });
+    if (!rows.length) { saveOutbox(outbox().filter(function (x) { return ids.indexOf(x) < 0; })); ids.forEach(function (x) { delete dirty[x]; }); return; }
     dirty = {};
-    if (!rows.length) return;
     pushBusy = true;
     try {
       var res = await fetch(URL + "/rest/v1/tsb_notes?on_conflict=id", {
@@ -116,8 +128,13 @@
         body: JSON.stringify(rows)
       });
       if (!res.ok) {
-        /* put the work back in the queue, try again next change or boot */
+        /* the outbox on disk still owes these, try again next change or boot */
         rows.forEach(function (r) { dirty[r.id] = true; });
+      } else {
+        /* acknowledged: clear the debt, prune tombstones it carried */
+        saveOutbox(outbox().filter(function (x) { return ids.indexOf(x) < 0; }));
+        var cleaned = cache().filter(function (n) { return !(n.deleted && ids.indexOf(n.id) >= 0); });
+        if (cleaned.length !== cache().length) saveCache(cleaned);
       }
     } catch (e) {
       rows.forEach(function (r) { dirty[r.id] = true; });
@@ -189,10 +206,15 @@
       created: now, updated: now
     };
     if (n.pages === undefined) delete n.pages;
+    /* v418: a body-only note still gets its one page, the same shape
+       pull() builds from a server row, so every surface that renders
+       notes can assume pages exist. */
+    if (!Array.isArray(n.pages) && n.body) n.pages = [n.body];
     var all = cache();
     all.unshift(n);
     saveCache(all);
     markDirty(n.id);
+    try { if (window.TSB && TSB.telemetry) TSB.telemetry.log("note_create", { book: n.bookId || "" }); } catch (e) {}
     setLastNote(n.id);
     return n;
   }
@@ -216,15 +238,13 @@
     all = all.filter(function (n) { return n.id !== id; });
     saveCache(all);
     if (uid() !== "guest") {
-      /* tombstone so the delete reaches the laptop too */
+      /* tombstone so the delete reaches the laptop too. It stays in
+         the cache until the outbox flush is acknowledged (v418);
+         the old 30 second blind prune could bury a delete that
+         had never reached the server and resurrect the note. */
       all.push({ id: id, deleted: true, updated: Date.now() });
       saveCache(all);
       markDirty(id);
-      var self = all;
-      setTimeout(function () { /* prune the tombstone from cache after it had its chance */
-        var later = cache().filter(function (n) { return !(n.id === id && n.deleted); });
-        saveCache(later);
-      }, 30000);
     }
     return gone;
   }
@@ -410,9 +430,11 @@
     onAuth(async function () {
       absorbGuest();
       await pull();
+      try { flushPushes(); } catch (e) {}
       try { window.dispatchEvent(new CustomEvent("tsb:notes-synced")); } catch (e) {}
     });
   }
+  try { window.addEventListener("online", function () { flushPushes(); }); } catch (e) {}
   boot();
 
   window.TSB_NOTES_STORE = {

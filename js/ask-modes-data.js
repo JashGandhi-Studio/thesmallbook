@@ -153,7 +153,7 @@ window.TSB_ASK_MODES = {
     },
     {
       "flag": "A valuation that outruns the accountants",
-      "grave": "byjus-empire"
+      "grave": "byjus-edtech"
     },
     {
       "flag": "One failure mode with no plan B",

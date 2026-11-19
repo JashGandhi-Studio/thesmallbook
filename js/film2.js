@@ -579,7 +579,19 @@
     if (!bk) return;
     root.classList.add("frd-on");
     var sel = $("#rmContentsSelect");
-    var total = sel ? sel.options.length : 1; if (!total) total = 1;
+    /* v415: THE THREE BARS. This used to read sel.options.length ONCE, at
+       room setup, when the shell still carried its three placeholder pages
+       (big idea, contents, wrap-up). The progress segments were built from
+       that frozen 3 and Finish was decided from it, while swiping in
+       reader.js walked the rebuilt live list, so the bar said 3, Finish
+       appeared at 3, and the book kept going. One source of truth now:
+       the live reader's own total, re-read on every paint, with the
+       segments rebuilt whenever the count changes. */
+    function totalPages() {
+      var R = window.TSB_READER;
+      if (R && R.total) return Math.max(1, R.total);
+      return sel && sel.options.length ? sel.options.length : 1;
+    }
     function cur() { return sel ? (parseInt(sel.value, 10) || 0) : 0; }
     function scrollMode() { try { return (localStorage.getItem("tsb_rm_mode") || "pages") === "scroll"; } catch (e) { return false; } }
     function isRead() { var l = lsGet("tsb_read_books", []); return !!(l && l.indexOf && l.indexOf(bk.id) !== -1); }
@@ -587,9 +599,16 @@
     /* top bar */
     var back = $("#rmBack");
     if (back) { back.innerHTML = IC.back; back.setAttribute("aria-label", "Back to the book"); back.href = "book.html?id=" + encodeURIComponent(bk.id); }
-    var nSeg = Math.min(total, 12), segs = el("div", "frd-segs");
+    var nSeg = 0, segs = el("div", "frd-segs");
     segs.setAttribute("aria-hidden", "true");
-    for (var i = 0; i < nSeg; i++) segs.appendChild(el("i", "", "<b></b>"));
+    function paintSegs(total) {
+      var want = Math.min(total, 12);
+      if (want === nSeg && segs.childNodes.length === want) return;
+      nSeg = want;
+      segs.innerHTML = "";
+      for (var i = 0; i < nSeg; i++) segs.appendChild(el("i", "", "<b></b>"));
+    }
+    paintSegs(totalPages());
     var tbox = $(".rm-header-title"); if (tbox) tbox.appendChild(segs);
     var lb = $("#rmLanguage");
     function paintLang() {
@@ -641,6 +660,8 @@
       $(".frd-listen__t", bListen).innerHTML = on ? "Listening\u2026" : 'Listen<span class="frd-l2"> to this page</span>';
     }
     function paintDock() {
+      var total = totalPages();
+      paintSegs(total);
       var c = cur(), last = c >= total - 1, sm = scrollMode();
       var a = Math.floor(c * nSeg / total);
       $$("i", segs).forEach(function (s, k) { s.className = k < a ? "done" : (k === a ? "now" : ""); });
@@ -655,7 +676,7 @@
     bPrev.addEventListener("click", function () { var p = $("#rmPrev"); if (p) p.click(); });
     bNext.addEventListener("click", function () {
       var c = cur();
-      if (!scrollMode() && c < total - 1) { var n = $("#rmNext"); if (n) n.click(); return; }
+      if (!scrollMode() && c < totalPages() - 1) { var n = $("#rmNext"); if (n) n.click(); return; }
       if (!isRead()) { var r = $("#rmRead"); if (r) r.click(); finishCard(); paintDock(); return; }
       location.href = "book.html?id=" + encodeURIComponent(bk.id);
     });
@@ -681,7 +702,7 @@
         }
       } catch (e) { secs = []; }
       if (!secs.length) secs = [{ label: h ? h.textContent : bk.title, text: txt.slice(0, 2900) }];
-      var sub = scrollMode() ? "The whole book" : (secs.length > 1 ? "Pages " + (from + 1) + "\u2013" + (from + secs.length) + " of " + total : "Page " + (from + 1) + " of " + total);
+      var sub = scrollMode() ? "The whole book" : (secs.length > 1 ? "Pages " + (from + 1) + "\u2013" + (from + secs.length) + " of " + totalPages() : "Page " + (from + 1) + " of " + totalPages());
       TSB_AUDIO.playDoc(docKey(), bk.title, sub, secs, { art: bk.cover || "", bookId: bk.id });
       setTimeout(paintListen, 300);
     });

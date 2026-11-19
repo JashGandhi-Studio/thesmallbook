@@ -552,7 +552,11 @@
   }
   function paintMarkButtons() {
     if (!sheet || !q) return;
-    var titleBtn = sheet.querySelector("#apMarkTitle");
+    /* v415: cache the two buttons instead of re-querying every tick */
+    if (!sheet._apMarkEls || !sheet._apMarkEls.t || !sheet._apMarkEls.t.isConnected) {
+      sheet._apMarkEls = { t: sheet.querySelector("#apMarkTitle"), m: sheet.querySelector("#apMarkMoment") };
+    }
+    var titleBtn = sheet._apMarkEls.t;
     if (titleBtn) {
       var key = queueBookmarkKey(), on = hasBookmark(key);
       titleBtn.classList.toggle("on", on);
@@ -561,7 +565,7 @@
       titleBtn.disabled = !key;
       titleBtn.style.opacity = key ? "" : ".45";
     }
-    var momentBtn = sheet.querySelector("#apMarkMoment");
+    var momentBtn = sheet._apMarkEls.m;
     if (momentBtn) {
       var m = currentMoment(), list = momentList(), savedMoment = momentIndex(list, m) >= 0;
       momentBtn.classList.toggle("on", savedMoment);
@@ -831,39 +835,66 @@
       });
       hero.addEventListener("pointercancel", function () { live = false; });
     })();
-    /* live repaint: seek slider, times, big play glyph, sleep countdown */
+    /* live repaint: seek slider, times, big play glyph, sleep countdown.
+       v415: this used to run about a dozen querySelectors plus innerHTML
+       writes every second for as long as the sheet existed, repainting
+       values that had not changed (including swapping the big play glyph's
+       innerHTML each tick, which forces layout). Nodes are now found once
+       and cached on the sheet, every write is guarded by "did it actually
+       change", and the glyph only swaps when play state flips. The 1s
+       cadence stays: it drives the sleep countdown and seek thumb. */
+    var els = null;
+    function apEls() {
+      if (els && els.npT && els.npT.isConnected) return els;
+      els = {
+        npT: sheet.querySelector("#apNpT"), npS: sheet.querySelector("#apNpS"),
+        big: sheet.querySelector("#apBigPlay"), seek: sheet.querySelector("#apSeek"),
+        t0: sheet.querySelector("#apT0"), t1: sheet.querySelector("#apT1"),
+        chap: sheet.querySelector("#apChap"), part: sheet.querySelector("#apPart"),
+        slL: sheet.querySelector("#apSleepLeft"), slN: sheet.querySelector("#apSleepNote")
+      };
+      return els;
+    }
+    var lastPaint = {};
+    function setText(node, key, val) { if (node && lastPaint[key] !== val) { lastPaint[key] = val; node.textContent = val; } }
     sheet._apTick = setInterval(function () {
       if (!sheet || !q) return;
+      var E = apEls();
       var it2 = q.items[curItem] || {};
-      var t2 = sheet.querySelector("#apNpT"); if (t2) t2.textContent = tidyLabel(it2.label) || q.title;
-      var s2 = sheet.querySelector("#apNpS"); if (s2) s2.textContent = q.title + " · " + (curItem + 1) + " of " + q.items.length;
-      sheet.classList.toggle("ap-playing", !!playing());
-      var bp2 = sheet.querySelector("#apBigPlay"); if (bp2) bp2.innerHTML = playing() ? IC.pauseBig : IC.playBig;
+      setText(E.npT, "t", tidyLabel(it2.label) || q.title);
+      setText(E.npS, "s", q.title + " · " + (curItem + 1) + " of " + q.items.length);
+      var isP = !!playing();
+      if (lastPaint.playing !== isP) {
+        lastPaint.playing = isP;
+        sheet.classList.toggle("ap-playing", isP);
+        if (E.big) E.big.innerHTML = isP ? IC.pauseBig : IC.playBig;
+      }
       paintMarkButtons();
       if (q.type === "audio" && AU) {
-        var d = AU.duration, sk = sheet.querySelector("#apSeek");
+        var d = AU.duration, sk = E.seek;
         if (sk && !apSeeking && isFinite(d) && d > 0) {
-          sk.value = Math.round((AU.currentTime / d) * 1000);
-          /* v314: paint the yellow fill up to the thumb, the smooth way */
-          sk.style.background = "linear-gradient(90deg, var(--yellow) " + Math.round(sk.value / 10) + "%, var(--bg) " + Math.round(sk.value / 10) + "%)";
+          var sv = Math.round((AU.currentTime / d) * 1000);
+          if (lastPaint.seek !== sv) {
+            lastPaint.seek = sv;
+            sk.value = sv;
+            /* v314: paint the yellow fill up to the thumb, the smooth way */
+            sk.style.background = "linear-gradient(90deg, var(--yellow) " + Math.round(sv / 10) + "%, var(--bg) " + Math.round(sv / 10) + "%)";
+          }
         }
-        var t02 = sheet.querySelector("#apT0"); if (t02) t02.textContent = fmtTime(AU.currentTime);
-        var t12 = sheet.querySelector("#apT1"); if (t12) t12.textContent = isFinite(d) ? fmtTime(d) : "-:--";
+        setText(E.t0, "t0", fmtTime(AU.currentTime));
+        setText(E.t1, "t1", isFinite(d) ? fmtTime(d) : "-:--");
         /* v323: the room names where you are - chapter/episode number and title */
-        var ch3 = sheet.querySelector("#apChap");
-        if (ch3) {
-          var it3 = q.items[curItem] || {};
+        if (E.chap) {
           var kind3 = /^pod:/.test(q.key) ? "EPISODE" : (/^orig:/.test(q.key) ? "PART" : "CHAPTER");
-          ch3.innerHTML = "<b>" + kind3 + " " + (curItem + 1) + " OF " + q.items.length + "</b> " + esc((it3.label || "").slice(0, 64));
+          var chapHtml = "<b>" + kind3 + " " + (curItem + 1) + " OF " + q.items.length + "</b> " + esc((it2.label || "").slice(0, 64));
+          if (lastPaint.chap !== chapHtml) { lastPaint.chap = chapHtml; E.chap.innerHTML = chapHtml; }
         }
       } else {
-        var p2 = sheet.querySelector("#apPart"); if (p2) p2.textContent = (/^pod:/.test(q.key) ? "EPISODE " : "PART ") + (curItem + 1) + " OF " + q.items.length;
+        setText(E.part, "p", (/^pod:/.test(q.key) ? "EPISODE " : "PART ") + (curItem + 1) + " OF " + q.items.length);
       }
       var slLeft = sleepAt ? Math.max(0, Math.round((sleepAt - Date.now()) / 60000)) : 0;
-      var slEl = sheet.querySelector("#apSleepLeft");
-      if (slEl) slEl.textContent = slLeft > 0 ? slLeft + " min left" : "any second now";
-      var slNote = sheet.querySelector("#apSleepNote");
-      if (slNote) slNote.textContent = slLeft > 0 ? "😴 pausing by itself in " + slLeft + " min" : "";
+      setText(E.slL, "sl", slLeft > 0 ? slLeft + " min left" : "any second now");
+      setText(E.slN, "sn", slLeft > 0 ? "😴 pausing by itself in " + slLeft + " min" : "");
     }, 1000);
     sheet.querySelector(".ap-x").addEventListener("click", closeSheet);
     var bp = sheet.querySelector("#apBigPlay");
@@ -980,7 +1011,20 @@
     else if (T.paused) { T.resume(); jset(PLAYKEY, 1); paintPlay(); }
     else { seekItem(curItem); }
   }
-  function nextItem() { if (q && curItem < q.items.length - 1) { if (q.type === "audio") playChapter(curItem + 1, 0); else seekItem(curItem + 1); } }
+  function nextItem() {
+    if (!q || curItem >= q.items.length - 1) return;
+    /* v415: skipping away early is a taste signal. Jumping ahead in the
+       first third of a chapter says "not this"; the profile hears it.
+       A skip near the end is just impatience, and teaches nothing. */
+    try {
+      var frac = 1;
+      if (q.type === "audio" && AU && isFinite(AU.duration) && AU.duration > 0) frac = AU.currentTime / AU.duration;
+      if (frac < 0.34 && window.TSB_TASTE && TSB_TASTE.signal) {
+        TSB_TASTE.signal({ bookId: q.bookId || "", title: q.title || "", kind: "skip" });
+      }
+    } catch (eS) {}
+    if (q.type === "audio") playChapter(curItem + 1, 0); else seekItem(curItem + 1);
+  }
   function skipSec(n) {
     if (!q || q.type !== "audio" || !AU) return;
     try {
@@ -1479,6 +1523,7 @@
     if (queue.restored) { jset(PLAYKEY, 0); savePos(); paintAll(); paintPlay(); try { parkNote(); } catch (eP) {} return true; }
     try { T.playParts(q.parts, startAt); } catch (e) { return false; }
     jset(PLAYKEY, 1);
+    try { if (window.TSB && TSB.telemetry) TSB.telemetry.log("listen_start", { type: "tts" }); } catch (e) {}
     savePos(); paintAll();
     /* v397: the room opens the same full player; a book being read does not */
     if (wantOpen) setTimeout(function () { if (q === queue) openSheet(); }, 60);
@@ -1980,6 +2025,7 @@
   }
 
   function playFeed(show, startAt, listOverride, opt) {
+    try { if (window.TSB && TSB.telemetry) TSB.telemetry.log("listen_start", { type: "podcast" }); } catch (e) {}
     try { if (window.TSB_SHOWMORE && window.TSB_SHOWS_EXTRA) TSB_SHOWMORE.learn(show, 2); } catch (eL) {}   /* v322: every play teaches the shelf */
     if (show) { show.rss = cleanAudioUrl(show.rss || ""); rememberShow(show); }
     /* v383: a caller that already holds the episode list hands it straight in,
@@ -2175,6 +2221,7 @@
   }
 
   function playAudiobook(bookId, opt) {
+    try { if (window.TSB && TSB.telemetry) TSB.telemetry.log("listen_start", { type: "audiobook", id: String(bookId || "") }); } catch (e) {}
     var rec = (window.TSB_AUDIOBOOKS || {})[bookId];
     /* v399: write it down, so the next open can rebuild the dock without
        depending on whichever page started it */

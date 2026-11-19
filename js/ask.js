@@ -259,7 +259,7 @@
   /* related failures for a book: its antidote graves + same-category famous ones */
   function relatedGraves(book) {
     var graves = (window.FAILURES || []).filter(function (f) { return f.book === book.id; });
-    var catMap = { "Self-Improvement": ["BUSINESS", "EGO"], "Business & Startups": ["STARTUP", "BUSINESS"], "Money & Finance": ["MONEY", "FRAUD"], "Psychology & People": ["EGO", "FAME"], "Productivity": ["BUSINESS"], "Creativity": ["STARTUP", "BUSINESS"], "Power & Strategy": ["EGO", "TRUST"] };
+    var catMap = { "Self-Improvement": ["BUSINESS", "EGO"], "Business & Startups": ["STARTUP", "BUSINESS"], "Money & Finance": ["MONEY", "FRAUD"], "Psychology & People": ["EGO", "FAME"], "Productivity": ["BUSINESS"], "Creativity": ["STARTUP", "BUSINESS"], "Power & Strategy": ["EGO", "TRUST"], "Love & Relationships": ["TRUST", "EGO"], "Life & Meaning": ["HISTORY", "EGO"], "Family & Parenting": ["TRUST", "HISTORY"], "Health & Body": ["TRUST"], "Mind & Spirit": ["HISTORY", "EGO"], "Future & Technology": ["TECH", "STARTUP"], "Nature & Planet": ["HISTORY"], "History": ["HISTORY"], "Leadership": ["BUSINESS", "EGO"] };
     var want = catMap[book.category] || ["BUSINESS"];
     var extra = (window.FAILURES || []).filter(function (f) {
       return f.book !== book.id && want.indexOf(f.category) !== -1 && graves.length < 5;
@@ -401,7 +401,7 @@
       '<div id="tsb-modes" class="aq-lib aq-lib--modes" role="dialog" aria-label="Ask modes">' +
         '<div class="aq-lib__head">' +
           '<span class="aq-lib__t">🎭 ' + t("ASK MODES") + "</span>" +
-          '<span class="aq-lib__s">' + t("7 formats · every answer from the real library") + "</span>" +
+          '<span class="aq-lib__s">' + t("One honest tool: compare two books, cover to cover") + "</span>" +
           '<button class="aq-lib__close" id="tsb-modesclose">✕</button>' +
         "</div>" +
         '<div class="aq-mdgrid" id="tsb-mdgrid"></div>' +
@@ -903,14 +903,61 @@
       (actB ? "<b>From " + esc(nB) + ":</b> " + esc(actB) : "") +
       " Do not start both on the same day. Three days on the first, then bring in the second.";
 
+    /* head to head facts, from the books' own data only */
+    function readPct(b) {
+      try {
+        if (window.TSB && TSB.progress && TSB.progress.forBook) {
+          var n = TSB.progress.forBook(b.id).length, total = (b.lessons || []).length || 1;
+          return Math.round((n / total) * 100);
+        }
+      } catch (e) { }
+      return -1;
+    }
+    var pctA = readPct(A), pctB = readPct(B);
+    var ownA = "", ownB = "";
+    (function () {
+      var ta = textOf(A), tb = textOf(B);
+      THEMES.forEach(function (thx) {
+        var ha = themeScore(thx, ta), hb = themeScore(thx, tb);
+        if (ha >= 4 && hb <= 1 && !ownA) ownA = THEME_SAY[thx.k] || thx.k;
+        if (hb >= 4 && ha <= 1 && !ownB) ownB = THEME_SAY[thx.k] || thx.k;
+      });
+    })();
+    var rows = [
+      ["Reading time", m1 + " min", m2 + " min"],
+      ["Lessons", String((A.lessons || []).length), String((B.lessons || []).length)],
+      ["Published", String(A.year || "n/a"), String(B.year || "n/a")],
+      ["Shelf", String(A.category || ""), String(B.category || "")],
+      ["Opens with", String(lA.title || ""), String(lB.title || "")],
+      ["Stands alone on", ownA || "its own ground", ownB || "its own ground"]
+    ];
+    if (pctA >= 0 && pctB >= 0) rows.push(["Your progress", pctA + "% read", pctB + "% read"]);
+    var facts = '<div class="cmp-facts"><div class="cmp-facts__hd"><img src="' + esc(coverOf(A)) + '" alt=""><span>vs</span><img src="' + esc(coverOf(B)) + '" alt=""></div>' +
+      rows.map(function (r) { return '<div class="cmp-frow"><span>' + esc(r[0]) + "</span><b>" + esc(r[1]) + "</b><b>" + esc(r[2]) + "</b></div>"; }).join("") + "</div>";
+
+    /* the bottom line: honest about why, including your own progress */
+    var verdict, why;
+    if (pctA >= 100 && pctB < 100) { verdict = B; why = "you have already finished " + nA + ", so the unfinished one earns the evening"; }
+    else if (pctB >= 100 && pctA < 100) { verdict = A; why = "you have already finished " + nB + ", so the unfinished one earns the evening"; }
+    else if (pctA > 0 && pctB === 0) { verdict = A; why = "you are already inside it, and finishing beats starting cold"; }
+    else if (pctB > 0 && pctA === 0) { verdict = B; why = "you are already inside it, and finishing beats starting cold"; }
+    else { verdict = first; why = "it is the shorter read at " + Math.min(m1, m2) + " minutes, and its first lesson lands sooner"; }
+    var drawn = false;
+    if (pctA >= 0 && pctB >= 0 && m1 === m2 && pctA === pctB && sameShelf) drawn = true;
+    var s6 = drawn
+      ? "Honestly, this one is a draw. Same shelf, same length, and you are equally far into both. Read <b>" + esc(nA) + "</b> first only because its opening, \u201C" + esc(String(lA.title || "")) + "\u201D, asks its question sooner; the other order would serve you just as well."
+      : "If you read only one this week, read <b>" + esc(verdict.title) + "</b>, because " + esc(why) + ". Keep <b>" + esc(verdict.id === A.id ? nB : nA) + "</b> for next week; this is an order, not a dismissal.";
+
     var html =
       '<div class="cmp-ans">' +
         '<p class="cmp-lead"><b>' + esc(nA) + "</b> by " + esc(A.author || "an author") + ", and <b>" + esc(nB) + "</b> by " + esc(B.author || "an author") + ". Two books, one honest comparison, no scores.</p>" +
+        facts +
         '<div class="cmp-sec"><span>WHAT EACH ONE IS</span><p>' + s1 + "</p></div>" +
         '<div class="cmp-sec"><span>WHERE THEY AGREE</span><p>' + s2 + "</p></div>" +
         '<div class="cmp-sec"><span>WHERE THEY SPLIT</span><p>' + s3 + "</p></div>" +
         '<div class="cmp-sec"><span>WHICH ONE FIRST</span><p>' + s4 + "</p></div>" +
         '<div class="cmp-sec"><span>TRY THIS WEEK</span><p>' + s5 + "</p></div>" +
+        '<div class="cmp-sec cmp-sec--verdict"><span>THE BOTTOM LINE</span><p>' + s6 + "</p></div>" +
       "</div>" +
       sourceHead(2, t("THE TWO BOOKS")) +
       '<div class="aq-srcs">' +
@@ -963,6 +1010,13 @@
       el.classList.toggle("is-on", cmpSlot === k);
       el.classList.toggle("is-set", !!b);
       el.querySelector("b").textContent = b ? b.title : "Add a book";
+      var old = el.querySelector(".cmp-slot__img");
+      if (old) old.remove();
+      if (b) {
+        var im = document.createElement("img");
+        im.className = "cmp-slot__img"; im.src = coverOf(b); im.alt = "";
+        el.insertBefore(im, el.firstChild);
+      }
       var i = el.querySelector("i");
       if (i) i.textContent = b ? "✓" : "+";
     });

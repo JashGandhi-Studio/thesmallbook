@@ -171,6 +171,8 @@ html.dark .fo-plank { background: #3a3125; }
 @keyframes foSpark { 0% { opacity: 0; transform: scale(0) rotate(0); } 50% { opacity: 1; transform: scale(1.2) rotate(45deg); } 100% { opacity: 0; transform: scale(0) rotate(90deg); } }
 .fo-hint { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 18px 0 0; font: 600 13px var(--f-sans); color: var(--f-mu); animation: fUp .6s var(--f-out) 1.7s both; }
 .fo-s4 .fo-btn { animation-delay: 1.8s; }
+@media (max-width: 699px) {
+/* v416: the phone bar design stays on the phone; the sidebar owns 700px and up */
 html.film .tsb-bar { bottom: 0 !important; width: 100% !important; max-width: none !important; border-radius: 0 !important; border: 0 !important; border-top: 1px solid var(--f-line) !important; background: rgba(251, 248, 241, .9) !important; -webkit-backdrop-filter: saturate(1.6) blur(18px); backdrop-filter: saturate(1.6) blur(18px); box-shadow: none !important; padding: 0 8px env(safe-area-inset-bottom, 0px) !important; }
 html.film.dark .tsb-bar { background: rgba(21, 18, 14, .86) !important; border-top-color: rgba(255, 255, 255, .06) !important; }
 html.film { --tsb-bar-gap: 0px; --tsb-bar-h: 64px; }
@@ -186,6 +188,7 @@ html.film .tsb-bar--off { transform: translateX(-50%) translateY(calc(100% + 20p
 @media (min-width: 760px) {
 html.film .tsb-bar { bottom: 16px !important; width: 440px !important; border-radius: 26px !important; border: 1px solid var(--f-line) !important; box-shadow: var(--f-sh) !important; padding: 0 8px !important; }
 html.film { --tsb-bar-gap: 16px; }
+}
 }
 html.film .nav { background: rgba(251, 248, 241, .86) !important; -webkit-backdrop-filter: saturate(1.5) blur(16px); backdrop-filter: saturate(1.5) blur(16px); border: 0 !important; border-bottom: 1px solid var(--f-line) !important; box-shadow: none !important; }
 html.film.dark .nav { background: rgba(21, 18, 14, .86) !important; border-bottom-color: rgba(255,255,255,.06) !important; }
@@ -483,7 +486,11 @@ html.fv-book .nb-act-btn, html.fv-book .podcastbtn { min-width: 0 !important; wi
 html.fv-book .bookhero__cat { display: none !important; }
 html.fv-book .bigidea__label { position: static !important; transform: none !important; margin: 0 !important; display: block !important; }
 html.fv-listen .nav { display: none !important; }
-html.fv-listen .dd-main { max-width: 640px !important; padding-top: calc(18px + env(safe-area-inset-top, 0px)) !important; }
+/* v416: the 640px Listen cap is a phone measure; from 700px up the
+   desktop layer gives the room its full width (see desktop-v336.css) */
+@media (max-width: 699px) {
+  html.fv-listen .dd-main { max-width: 640px !important; padding-top: calc(18px + env(safe-area-inset-top, 0px)) !important; }
+}
 html.fv-listen .pc-hero { background: none !important; border: 0 !important; box-shadow: none !important; padding: 8px 4px 0 !important; text-align: left !important; }
 html.fv-listen .pc-kick { background: none !important; color: #8A5A00 !important; border: 0 !important; box-shadow: none !important; padding: 0 !important; font: 700 11px var(--f-sans) !important; letter-spacing: .14em !important; }
 html.dark.fv-listen .pc-kick { color: var(--f-gold) !important; }

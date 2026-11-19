@@ -197,9 +197,14 @@ window.TSB_ASK_DATA = [
    "atma vishwas",
    "self doubt",
    "doubt myself",
-   "imposter"
+   "imposter",
+   "confident",
+   "self confidence",
+   "confidence kaise",
+   "belief in myself",
+   "low confidence"
   ],
-  "answer": "Confidence is not a feeling you wait for, it's a track record you build. Small wins, rehearsed success, and a self-image you consciously update.",
+  "answer": "Confidence is built from evidence, not affirmations. Keep small promises to yourself, stack visible wins, and rehearse the uncomfortable thing until it's boring. The person who has done the thing 50 times doesn't need to feel confident, they know.",
   "books": [
    {
     "id": "psycho-cybernetics",
@@ -220,6 +225,11 @@ window.TSB_ASK_DATA = [
     "id": "you-can-win",
     "lesson": "Attitude: The Foundation Everything Sits On",
     "blurb": "You are what you think you are. Feed the mind winning pictures and it starts producing them."
+   },
+   {
+    "id": "presence-cuddy",
+    "lesson": "Fake It Till You Become It",
+    "blurb": "Posture and small wins rewire how you're perceived, and how you perceive yourself."
    }
   ],
   "graves": [
@@ -625,9 +635,13 @@ window.TSB_ASK_DATA = [
    "team lead",
    "lead team",
    "neta",
-   "leading people"
+   "leading people",
+   "become leader",
+   "leading",
+   "leadership skills",
+   "team leader"
   ],
-  "answer": "Leadership is not a title, it's ownership plus safety. Own every outcome, protect your people first, and build a culture where truth travels upward.",
+  "answer": "Leadership is service with a bigger platform: protect your team, remove their obstacles, and own the failures publicly while giving away the credit. People follow those who carry weight, not those who collect titles. The best leaders are the ones who make themselves replaceable.",
   "books": [
    {
     "id": "extreme-ownership",
@@ -648,6 +662,11 @@ window.TSB_ASK_DATA = [
     "id": "effective-executive",
     "lesson": "Focus on Contribution",
     "blurb": "Ask 'what results are required of me?', not 'how hard am I working?'. Results lead."
+   },
+   {
+    "id": "high-output-management",
+    "lesson": "Output Is the Metric",
+    "blurb": "Manage by results, not activity, the output of your org is your output."
    }
   ],
   "graves": [
@@ -959,9 +978,14 @@ window.TSB_ASK_DATA = [
    "bhay",
    "nervous",
    "hesitate",
-   "hesitation"
+   "hesitation",
+   "overcome fear",
+   "fear of",
+   "dar",
+   "fear kaise",
+   "courage"
   ],
-  "answer": "Fear never leaves, you just decide what it gets to drive. Feel the fear, name it, and act anyway. Courage is fear taking the back seat.",
+  "answer": "Fear shrinks when you name it, plan it, and do it in small doses. Write the worst case, the probability, and your plan B, concrete plans dissolve imagined terrors. Courage is not the absence of fear; it's fear that has been given a schedule.",
   "books": [
    {
     "id": "daring-greatly",
@@ -982,6 +1006,11 @@ window.TSB_ASK_DATA = [
     "id": "5-second-rule",
     "lesson": "Everyday Courage",
     "blurb": "Courage is a rep count, not a personality. Do one scary small thing daily."
+   },
+   {
+    "id": "letters-from-a-stoic",
+    "lesson": "We Suffer More in Imagination",
+    "blurb": "Most fears never arrive, the rehearsal is the real torture."
    }
   ],
   "graves": [
@@ -1279,9 +1308,13 @@ window.TSB_ASK_DATA = [
    "why",
    "calling",
    "passion find",
-   "direction life"
+   "direction life",
+   "find purpose",
+   "life purpose",
+   "why am i here",
+   "life ka matlab"
   ],
-  "answer": "Purpose isn't found by thinking, it's found by doing. Explore the overlap of what you love, what you're good at, what the world needs, and what you can be paid for.",
+  "answer": "Purpose is not found in a vision quest, it's detected in patterns. Notice what you do for free, what makes time vanish, and what problems you can't stop noticing. Then test it in small service: purpose is a hypothesis you confirm by helping one person.",
   "books": [
    {
     "id": "ikigai",
@@ -1302,6 +1335,11 @@ window.TSB_ASK_DATA = [
     "id": "alchemist",
     "lesson": "Personal Legend",
     "blurb": "When you want something, the whole universe conspires to help you achieve it, but only if you start walking."
+   },
+   {
+    "id": "second-mountain",
+    "lesson": "The Life of Commitment",
+    "blurb": "Purpose is built from commitments, find what you'd suffer for."
    }
   ],
   "graves": [
@@ -1413,9 +1451,16 @@ window.TSB_ASK_DATA = [
    "padhai",
    "reading faster",
    "skill learn",
-   "new skill"
+   "new skill",
+   "learn fast",
+   "learn faster",
+   "study tips",
+   "skill learning",
+   "seekhna",
+   "learn new skill",
+   "study smart"
   ],
-  "answer": "Learning is not reading, it's recalling and doing. Active recall, spaced repetition, and teaching others beat re-reading every time.",
+  "answer": "Learn by doing, not by consuming: after every input, close the material and recall it. Test yourself instead of rereading. Work at the edge of your ability, comfortable practice is maintenance, not growth. Feedback is the fuel; without it, practice just repeats.",
   "books": [
    {
     "id": "limitless",
@@ -1436,6 +1481,21 @@ window.TSB_ASK_DATA = [
     "id": "range",
     "lesson": "Deliberate Amateurs: Keep a Foot Outside Your Field",
     "blurb": "Exploration beats early specialization. Sample widely, the connections come later."
+   },
+   {
+    "id": "ultralearning",
+    "lesson": "Metalearning First",
+    "blurb": "Map the skill before you start, 10% planning saves 50% time."
+   },
+   {
+    "id": "peak-ericsson",
+    "lesson": "Deliberate Practice",
+    "blurb": "Practice at the edge of failure with feedback, that's where skill is built."
+   },
+   {
+    "id": "mind-for-numbers",
+    "lesson": "Focused vs Diffuse Mode",
+    "blurb": "Alternate intense focus with rest, the diffuse mode does the pattern-matching."
    }
   ],
   "graves": [
@@ -3035,37 +3095,6 @@ window.TSB_ASK_DATA = [
   ]
  },
  {
-  "id": "become-confident",
-  "q": "How do I become more confident?",
-  "keywords": [
-   "confidence",
-   "confident",
-   "self confidence",
-   "confidence kaise",
-   "belief in myself",
-   "self belief",
-   "low confidence"
-  ],
-  "answer": "Confidence is built from evidence, not affirmations. Keep small promises to yourself, stack visible wins, and rehearse the uncomfortable thing until it's boring. The person who has done the thing 50 times doesn't need to feel confident, they know.",
-  "books": [
-   {
-    "id": "psycho-cybernetics",
-    "lesson": "Self-Image Psychology",
-    "blurb": "Your brain steers toward the image it holds, update the image with evidence."
-   },
-   {
-    "id": "5-second-rule",
-    "lesson": "Countdown to Action",
-    "blurb": "Move before the fear finishes its argument, action is the confidence machine."
-   },
-   {
-    "id": "presence-cuddy",
-    "lesson": "Fake It Till You Become It",
-    "blurb": "Posture and small wins rewire how you're perceived, and how you perceive yourself."
-   }
-  ]
- },
- {
   "id": "focus-deep-work",
   "q": "How do I focus without distractions?",
   "keywords": [
@@ -3158,38 +3187,6 @@ window.TSB_ASK_DATA = [
     "id": "how-to-talk",
     "lesson": "The Vocabulary of Confidence",
     "blurb": "Simple, concrete words said slowly beat fancy words said nervously."
-   }
-  ]
- },
- {
-  "id": "become-leader",
-  "q": "How do I become a better leader?",
-  "keywords": [
-   "leader",
-   "leadership",
-   "become leader",
-   "lead team",
-   "manager",
-   "leading",
-   "leadership skills",
-   "team leader"
-  ],
-  "answer": "Leadership is service with a bigger platform: protect your team, remove their obstacles, and own the failures publicly while giving away the credit. People follow those who carry weight, not those who collect titles. The best leaders are the ones who make themselves replaceable.",
-  "books": [
-   {
-    "id": "leaders-eat-last",
-    "lesson": "Leaders Sacrifice First",
-    "blurb": "The leader's job is the team's safety, eat last, literally and figuratively."
-   },
-   {
-    "id": "extreme-ownership",
-    "lesson": "Own Everything",
-    "blurb": "Every failure is yours to own, blame is a tax on trust."
-   },
-   {
-    "id": "high-output-management",
-    "lesson": "Output Is the Metric",
-    "blurb": "Manage by results, not activity, the output of your org is your output."
    }
   ]
  },
@@ -3323,72 +3320,6 @@ window.TSB_ASK_DATA = [
   ]
  },
  {
-  "id": "overcome-fear",
-  "q": "How do I overcome fear?",
-  "keywords": [
-   "fear",
-   "overcome fear",
-   "scared",
-   "fear of",
-   "dar",
-   "darr",
-   "afraid",
-   "fear kaise",
-   "courage"
-  ],
-  "answer": "Fear shrinks when you name it, plan it, and do it in small doses. Write the worst case, the probability, and your plan B, concrete plans dissolve imagined terrors. Courage is not the absence of fear; it's fear that has been given a schedule.",
-  "books": [
-   {
-    "id": "letters-from-a-stoic",
-    "lesson": "We Suffer More in Imagination",
-    "blurb": "Most fears never arrive, the rehearsal is the real torture."
-   },
-   {
-    "id": "5-second-rule",
-    "lesson": "Countdown to Action",
-    "blurb": "Move before the fear finishes talking, courage is a countdown, not a feeling."
-   },
-   {
-    "id": "war-of-art",
-    "lesson": "Resistance Is the Enemy",
-    "blurb": "Fear is resistance in costume, the professional does it afraid."
-   }
-  ]
- },
- {
-  "id": "find-purpose",
-  "q": "How do I find my purpose?",
-  "keywords": [
-   "purpose",
-   "find purpose",
-   "life purpose",
-   "meaning",
-   "calling",
-   "why am i here",
-   "mission",
-   "life ka matlab",
-   "ikigai"
-  ],
-  "answer": "Purpose is not found in a vision quest, it's detected in patterns. Notice what you do for free, what makes time vanish, and what problems you can't stop noticing. Then test it in small service: purpose is a hypothesis you confirm by helping one person.",
-  "books": [
-   {
-    "id": "ikigai",
-    "lesson": "Find Your Ikigai",
-    "blurb": "The overlap of what you love, what you're good at, what the world needs, and what pays."
-   },
-   {
-    "id": "mans-search",
-    "lesson": "Meaning Is Found, Not Given",
-    "blurb": "Meaning appears when you're responsible for something beyond yourself."
-   },
-   {
-    "id": "second-mountain",
-    "lesson": "The Life of Commitment",
-    "blurb": "Purpose is built from commitments, find what you'd suffer for."
-   }
-  ]
- },
- {
   "id": "become-writer",
   "q": "How do I become a better writer?",
   "keywords": [
@@ -3451,38 +3382,6 @@ window.TSB_ASK_DATA = [
     "id": "miracle-morning",
     "lesson": "The SAVERS Routine",
     "blurb": "A fixed morning starts a fixed night, the day shapes the sleep."
-   }
-  ]
- },
- {
-  "id": "learn-fast",
-  "q": "How do I learn anything faster?",
-  "keywords": [
-   "learn fast",
-   "learning",
-   "learn faster",
-   "study tips",
-   "skill learning",
-   "seekhna",
-   "learn new skill",
-   "study smart"
-  ],
-  "answer": "Learn by doing, not by consuming: after every input, close the material and recall it. Test yourself instead of rereading. Work at the edge of your ability, comfortable practice is maintenance, not growth. Feedback is the fuel; without it, practice just repeats.",
-  "books": [
-   {
-    "id": "ultralearning",
-    "lesson": "Metalearning First",
-    "blurb": "Map the skill before you start, 10% planning saves 50% time."
-   },
-   {
-    "id": "peak-ericsson",
-    "lesson": "Deliberate Practice",
-    "blurb": "Practice at the edge of failure with feedback, that's where skill is built."
-   },
-   {
-    "id": "mind-for-numbers",
-    "lesson": "Focused vs Diffuse Mode",
-    "blurb": "Alternate intense focus with rest, the diffuse mode does the pattern-matching."
    }
   ]
  }

@@ -22,11 +22,13 @@
 
   /* ---------- tiny storage helpers ---------- */
   function get(key, def) {
+    if (window.TSB && TSB.store) return TSB.store.get(key, def);
     try { const v = JSON.parse(localStorage.getItem(key)); return v === null || v === undefined ? def : v; }
     catch (e) { return def; }
   }
   function set(key, val) {
-    try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
+    if (window.TSB && TSB.store) TSB.store.set(key, val);
+    else try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
     /* v337: reading work syncs, device appearance never does. */
     if (/^tsb_(progress|bookmarks|plans|streak|days|birthday|read_books|highlights_v1|interests|ob_lead|mind|read_minutes|read_style|read_when|starter_shelf|last_book)$/.test(key)) {
       try { window.dispatchEvent(new CustomEvent("tsb:reading-change", { detail: { key: key } })); } catch (e2) {}
@@ -462,7 +464,10 @@
       if (pr && pr.catch) pr.catch(function () {});
     } catch (e) {}
   }
-  window.TSB = { get, set, theme, bookmarks, progress, plans, streak, levelFor, achv, lastRead, backup, isIndianBook, completedCount, interest, sound: { get: soundGet, set: soundSet, play: soundPlay } };
+  /* v418: merge, never replace. TSB.store, TSB.telemetry and the
+     founder identity register on the same object; wiping it here
+     used to silently unregister every service loaded earlier. */
+  window.TSB = Object.assign(window.TSB || {}, { get, set, theme, bookmarks, progress, plans, streak, levelFor, achv, lastRead, backup, isIndianBook, completedCount, interest, sound: { get: soundGet, set: soundSet, play: soundPlay } });
 
   /* Amazon affiliate link builder, direct product page when we know the
      ASIN (converts better), search fallback for everything else. */

@@ -16,26 +16,26 @@
   const statMins = document.getElementById("statMins");
 
   const LATEST_20_NEW = new Set([
-    "the-intellectuals-and-society",
-    "zen-mind-beginners-mind",
-    "the-third-pillar",
-    "alchemy-rory-sutherland",
-    "the-great-derangement",
-    "the-effective-engineer",
-    "the-brahmagupta-scrolls",
-    "the-courtyard-stories",
-    "the-curious-investor",
-    "the-sovereign-individual",
-    "the-kirana-ledger",
-    "the-zero-discount-diner",
-    "the-first-hundred-patrons",
-    "the-midnight-dispatch",
-    "the-silent-partner-tax",
-    "the-unclaimed-shelf",
-    "the-reputation-audit",
-    "the-apprentice-hour",
-    "the-founders-warranty",
-    "the-patient-capitalist"
+    "tuesdays-with-morrie",
+    "art-of-stillness",
+    "dhammapada-choice",
+    "kite-runner",
+    "night",
+    "hold-me-tight",
+    "mating-in-captivity",
+    "art-of-loving",
+    "how-to-not-die-alone",
+    "all-about-love",
+    "state-of-affairs",
+    "course-of-love",
+    "eight-dates",
+    "old-path-white-clouds",
+    "half-the-sky",
+    "measure-of-man",
+    "ship-of-magic",
+    "second-act-advantage",
+    "grandparents-handbook-2",
+    "phone-free-childhood"
   ]);
 
   function isNew(id) { return LATEST_20_NEW.has(id); }
@@ -418,7 +418,10 @@
   const CAT_EMOJI = {
     "Self-Improvement": "🌱", "Power & Strategy": "👑", "Money & Finance": "💰",
     "Psychology & People": "🧠", "Business & Startups": "🚀",
-    "Creativity": "🎨", "Productivity": "⚡"
+    "Creativity": "🎨", "Productivity": "⚡",
+    "Love & Relationships": "❤", "Life & Meaning": "🌿", "Family & Parenting": "🏠",
+    "Health & Body": "💪", "Mind & Spirit": "🕯", "Future & Technology": "🔮",
+    "Nature & Planet": "🌍", "History": "🏛", "Leadership": "🧭", "Economics": "📊"
   };
 
   function cardHTML(b) {

@@ -9510,9 +9510,15 @@ html.dark .pc-show--orig { background:linear-gradient(135deg,#2a2318,#1b1712 55%
 .cs3-chips i { display:block; margin-top:2px; }
 .pc-ab__why { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; font:600 11px/1.45 'Space Grotesk',sans-serif; color:var(--ink,#14110c); opacity:.72; margin:2px 0 4px; }
 .cs3-chips i { display:block; margin-top:2px; }
-html[data-ts="s"] .lessons, html[data-ts="s"] .cm-post, html[data-ts="s"] .nt-wrap { zoom: 0.92; }
-html[data-ts="l"] .lessons, html[data-ts="l"] .cm-post, html[data-ts="l"] .nt-wrap { zoom: 1.12; }
-html[data-ts="xl"] .lessons, html[data-ts="xl"] .cm-post, html[data-ts="xl"] .nt-wrap { zoom: 1.25; }
+/* v415: text size used to be the non-standard `zoom` property on these
+   three containers (0.92 / 1.12 / 1.25). Zoom rescales layout, blurs text
+   and breaks fixed positioning, which is why some phones felt "too zoomed
+   in" with no way back. The setting now moves the root font size, so every
+   rem-based reading surface (lessons, community posts, notes) scales its
+   text while the app chrome keeps its size. */
+html[data-ts="s"] { font-size: 14.75px; }
+html[data-ts="l"] { font-size: 18px; }
+html[data-ts="xl"] { font-size: 20px; }
 .cs3-foot__brand i { font-style: normal; opacity: .6; letter-spacing: .2px; }
 @media (max-width: 360px) {
 .hero__title, .ahero h1 { font-size: clamp(24px, 8.4vw, 34px); }
@@ -11873,3 +11879,16 @@ html[data-rm] body #rmArticle .frd-share svg {
 color: #FBF8F1 !important; -webkit-text-fill-color: #FBF8F1 !important; fill: currentColor !important;
 }
 html[data-rm] body #rmArticle .frd-share { background: #16130F !important; border-color: #16130F !important }
+/* v414 comparison: cover-versus-cover facts + bottom line */
+.cmp-slot__img { width: 30px; height: 45px; object-fit: cover; border-radius: 4px; margin-bottom: 4px; }
+.cmp-facts { border: var(--bw) solid var(--edge); border-radius: 16px; background: #fffdf6; padding: 10px 12px; margin: 0 0 12px; }
+.cmp-facts__hd { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.cmp-facts__hd img { width: 44px; height: 66px; object-fit: cover; border-radius: 5px; border: 1px solid var(--edge); }
+.cmp-facts__hd span { font-family: "Archivo Black", sans-serif; font-size: .68rem; color: #8f8a80; }
+.cmp-frow { display: grid; grid-template-columns: 92px 1fr 1fr; gap: 8px; padding: 5px 0; border-top: 1px solid #eee5cf; font-size: .78rem; }
+.cmp-frow span { color: #8f8a80; font-weight: 700; }
+.cmp-frow b { font-weight: 600; }
+.cmp-sec--verdict { background: var(--yellow); border: var(--bw) solid var(--edge); border-radius: 14px; padding: 10px 12px; box-shadow: var(--sh-1); }
+.cmp-sec--verdict span { color: #6b5a00; }
+html.dark .cmp-facts { background: #241f18; }
+html.dark .cmp-frow { border-top-color: #3a332a; }

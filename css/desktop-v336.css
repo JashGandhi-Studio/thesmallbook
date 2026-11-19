@@ -1,459 +1,444 @@
-/* v403: desktop and tablet are a standalone layer (Sample 2, Apple Media Pro).
-   Nothing below applies under 700px, so the phone app is byte for byte the
-   same experience. The wordmark keeps the app's own serif (Newsreader). */
+/* v417: every desk query also requires height (min-height: 560px).
+   A phone in landscape is wide but short; it keeps its phone bar,
+   which was already perfect. The sidebar belongs to desktop and
+   tablet only. */
+/* ==========================================================================
+   THESMALLBOOK · DESKTOP AND TABLET LAYER (rebuilt in v416)
 
-/* ============================ TABLET 700-1023 ============================ */
-@media (min-width: 700px) and (max-width: 1023px) {
-  /* iPad style rail: icons with small labels, content gets the rest. */
-  html.film #tsbBar.tsb-bar { left:16px !important; right:auto !important; top:20px !important; bottom:20px !important; transform:none !important; width:78px !important; max-width:78px !important; height:auto !important; min-height:0 !important; border-radius:24px !important; border:1px solid rgba(20,18,14,.08) !important; background:rgba(255,255,255,.92) !important; padding:14px 0 !important; display:flex !important; flex-direction:column !important; justify-content:center !important; gap:4px !important; box-shadow:0 22px 44px -28px rgba(40,28,10,.35) !important; }
-  html.film #tsbBar.tsb-bar.tsb-bar--off { transform:translateX(-120px) !important; }
-  html.film #tsbBar .tsb-bar__item { width:100% !important; min-height:56px !important; flex:0 0 auto !important; justify-content:center !important; padding:6px 0 !important; gap:3px !important; }
-  html.film #tsbBar .tsb-bar__item::before { inset:4px 8px !important; border:0 !important; border-radius:14px !important; }
-  html.film #tsbBar .tsb-bar__lbl { display:block !important; font-size:9.5px !important; }
-  html.film #tsbBar .tsb-bar__item svg { width:21px !important; height:21px !important; }
+   Three layers, in order, in this one file so the site keeps working as a
+   static site with no build step:
+     1. TOKENS     the desk's sizes, colours and focus ring.
+     2. SHELL      one CSS grid for every page: a sticky sidebar column and
+                   a minmax(0, 1fr) content column. The body IS the shell,
+                   so pages do not need a wrapper div and pages whose DOM
+                   differs (book.html has no <main>) still land in the desk.
+     3. COMPONENTS the sidebar itself, then per-page widths and grids.
+     4. STATES     hover and :focus-visible with the same visual weight,
+                   fluid type, and the motion rules.
 
-  html.film body > main:not(#rmApp), html.film .cm-head, html.film .cm-tabs, html.film .cm-top, html.film .footer { margin-left:108px !important; margin-right:24px !important; }
-  html.film .dd-main .pc-ab__grid { grid-template-columns:repeat(auto-fill,minmax(148px,1fr)) !important; gap:20px !important; }
-  html.film #pcShowList { display:grid !important; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)) !important; gap:16px !important; }
+   Nothing here is scoped to the film behaviour class any more. film.js still runs for
+   behaviour, but whether the desktop styles apply is decided by the media
+   queries below alone, so the desk is correct before any script runs and
+   stays correct if a script fails. Nothing below 700px is touched: the
+   phone experience is byte for byte the one it was. This file contains no
+   important-flagged declarations at all; where it must beat an older rule
+   it wins by loading last with a more specific selector, and the one place
+   that used to need force (the phone action bar rules) is now phone-only.
+   ========================================================================== */
 
-  /* Today becomes a spread, not a phone column with empty margins. */
-  html.fv-today .ft { max-width:920px; padding:38px 32px 118px; display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:18px; align-items:start; }
-  html.fv-today .ft-hd, html.fv-today .ft-search { grid-column:1 / span 7; }
-  html.fv-today .ft-search { margin-top:20px; }
-  html.fv-today .ft-hero { grid-column:1 / span 7; margin-top:18px; padding:20px; }
-  html.fv-today .ft-hero .f-cover { width:96px; height:144px; }
-  html.fv-today .ft-hero__t { font-size:25px; }
-  html.fv-today .ft-mp { grid-column:8 / -1; grid-row:1 / span 3; height:262px; margin-top:0; align-self:end; }
-  html.fv-today .ft-mp__f, html.fv-today .ft-mp__b { padding:20px; }
-  html.fv-today .ft-mp__q, html.fv-today .ft-mp__line { font-size:21px; }
-  html.fv-today .ft-cont { grid-column:1 / span 5; margin-top:20px; }
-  html.fv-today .ft-orig { grid-column:6 / -1; margin-top:20px; }
-  html.fv-today .ft-sec, html.fv-today .ft-row, html.fv-today .ft-foot { grid-column:1 / -1; }
-  html.fv-today .ft-tiles { grid-column:1 / span 7; margin-top:14px; }
-  html.fv-today .ft-prompt { grid-column:8 / -1; margin-top:14px; }
-}
-
-/* ============================ DESKTOP 1024+ ============================== */
-@media (min-width: 1024px) {
-  html.film { scroll-behavior:smooth; }
-  html.film:not(.dark):not(.fv-reader) body { background:#f5f5f7; }
-
-  /* ---- the sidebar: the phone action bar, standing up ---- */
-  html.film #tsbBar.tsb-bar { left:22px !important; right:auto !important; top:22px !important; bottom:22px !important; transform:none !important; width:234px !important; max-width:234px !important; height:auto !important; min-height:0 !important; border-radius:26px !important; border:1px solid rgba(20,18,14,.07) !important; background:rgba(255,255,255,.94) !important; padding:20px 14px !important; display:flex !important; flex-direction:column !important; justify-content:flex-start !important; align-items:stretch !important; gap:4px !important; box-shadow:0 26px 54px -34px rgba(30,25,15,.35) !important; }
-  html.dark #tsbBar.tsb-bar { background:rgba(29,26,21,.96) !important; border-color:rgba(245,239,226,.1) !important; }
-  html.film #tsbBar.tsb-bar::before { content:"TheSmallBook"; display:block; font-family:var(--font-head, "Newsreader", Georgia, serif); font-size:23px; font-weight:600; letter-spacing:-.01em; color:#1d1d1f; padding:4px 12px 20px; }
-  html.dark #tsbBar.tsb-bar::before { color:#f5efe2; }
-  html.film #tsbBar.tsb-bar.tsb-bar--off { transform:translateX(-290px) !important; opacity:0 !important; }
-  html.film #tsbBar .tsb-bar__item { width:100% !important; min-height:46px !important; flex:0 0 auto !important; flex-direction:row !important; justify-content:flex-start !important; align-items:center !important; padding:0 13px !important; gap:12px !important; border-radius:13px !important; color:#3a3a3c !important; }
-  html.dark #tsbBar .tsb-bar__item { color:#b8ae99 !important; }
-  html.film #tsbBar .tsb-bar__item::before { inset:0 !important; border:0 !important; border-radius:13px !important; }
-  html.film #tsbBar .tsb-bar__item.is-active { color:#14120e !important; }
-  html.film #tsbBar .tsb-bar__item svg { width:21px !important; height:21px !important; flex:none; }
-  html.film #tsbBar .tsb-bar__lbl, html.film[data-bar-labels="icons"] #tsbBar .tsb-bar__lbl, html.film .tsb-bar--icons-only .tsb-bar__lbl { display:block !important; font-size:14px !important; font-weight:600 !important; letter-spacing:0 !important; margin:0 !important; text-align:left !important; }
-  html.film #tsbBar .tsb-bar__item svg { margin:0 !important; }
-  html.film #tsbBar .tsb-bar__item--plus { justify-content:flex-start !important; }
-  html.film #tsbBar .tsb-bar__plus { width:38px; height:38px; border-radius:12px; border:0; }
-
-  /* ---- every page sits in the same desk ---- */
-  html.film body > main:not(#rmApp) { margin-left:max(282px, calc(258px + (100vw - 258px - 1180px)/2)) !important; margin-right:max(34px, calc((100vw - 258px - 1180px)/2)) !important; max-width:1180px !important; }
-  html.film .cm-head, html.film .cm-tabs, html.film .cm-top, html.film .sty-top { margin-left:max(282px, calc(258px + (100vw - 258px - 1180px)/2)) !important; margin-right:max(34px, calc((100vw - 258px - 1180px)/2)) !important; max-width:1180px; }
-  html.film .footer { padding-left:max(300px, calc(276px + (100vw - 258px - 1180px)/2)); padding-right:max(40px, calc((100vw - 258px - 1180px)/2)); }
-
-  /* ---- Today: the daily book, quotes and shelves as one desk ---- */
-  html.fv-today .ft { max-width:none; margin-left:max(124px,calc((100vw - 1180px)/2)); margin-right:max(34px,calc((100vw - 1180px)/2)); padding:54px 0 124px; display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:24px; align-items:start; }
-  html.fv-today .ft > .pip-line { grid-column:1 / span 7; width:auto !important; }
-  html.fv-today .ft-hd { grid-column:1 / span 7; padding:5px 0 0; }
-  html.fv-today .ft-search { grid-column:1 / span 7; margin-top:24px; }
-  html.fv-today .ft-hero { grid-column:1 / span 7; margin-top:22px; min-height:244px; padding:26px 28px; }
-  html.fv-today .ft-hero .f-cover { width:144px; height:216px; }
-  html.fv-today .ft-hero__t { font-size:34px; }
-  html.fv-today .ft-hero__a { font-size:15px; }
-  html.fv-today .ft-mp { grid-column:8 / -1; grid-row:1 / span 3; height:332px; margin-top:0; align-self:end; }
-  html.fv-today .ft-mp__f, html.fv-today .ft-mp__b { padding:28px; border-radius:30px; }
-  html.fv-today .ft-mp__q, html.fv-today .ft-mp__line { font-size:28px; line-height:1.12; }
-  html.fv-today .ft-cont { grid-column:1 / span 4; margin-top:24px; }
-  html.fv-today .ft-orig { grid-column:5 / -1; margin-top:24px; }
-  html.fv-today .ft-sec { grid-column:1 / -1; margin-top:36px; }
-  html.fv-today .ft-row { grid-column:1 / -1; max-width:none; overflow:visible; gap:18px; }
-  html.fv-today .ft-tiles { grid-column:1 / span 7; grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:14px; }
-  html.fv-today .ft-prompt { grid-column:8 / -1; margin-top:14px; min-height:126px; box-sizing:border-box; }
-  html.fv-today .ft-foot { grid-column:1 / -1; margin-top:44px; }
-  html.fv-today .ft-rb { width:150px; flex:0 0 150px; }
-  html.fv-today .ft-rb .f-cover { width:150px; height:225px; }
-  html.film:not(.dark) .ft-hero, html.film:not(.dark) .ft-cont, html.film:not(.dark) .ft-orig, html.film:not(.dark) .ft-prompt { background:#ffffff; border:1px solid rgba(20,18,14,.06); border-radius:26px; box-shadow:0 22px 44px -32px rgba(30,25,15,.28); }
-
-  /* ---- Listen room: shelves become a media library ---- */
-  html.film .dd-main .pc-ab__grid { grid-template-columns:repeat(auto-fill,minmax(158px,1fr)) !important; gap:24px !important; }
-  html.film #pcShowList { display:grid !important; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)) !important; gap:18px !important; align-items:start; }
-  html.film .dd-main .pc-hero h1, html.film .dd-main .pc-hero h2 { letter-spacing:-.01em; }
-  html.film .dd-main .ln-jump { top:14px; z-index:40; }
-  html.film:not(.dark) .dd-main .pc-ab__card, html.film:not(.dark) .dd-main .pc-show, html.film:not(.dark) .dd-main .pc-myshelf { background:#ffffff; border:1px solid rgba(20,18,14,.06); border-radius:22px; box-shadow:0 18px 38px -30px rgba(30,25,15,.25); }
-
-  /* ---- Stories: the feed reads in two clean columns ---- */
-  html.film .cm-feed { display:grid !important; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)) !important; gap:20px !important; align-items:start; }
-  html.film .cm-feed .cm-rail, html.film .cm-feed .cm-sect { grid-column:1 / -1; }
-  html.film:not(.dark) .cm-feed > * { background:#ffffff; border:1px solid rgba(20,18,14,.06); border-radius:22px; box-shadow:0 18px 38px -30px rgba(30,25,15,.22); }
-
-  /* ---- a book page: cover and text side by side, then a calm column ---- */
-  html.fv-book .bookhero, html.fv-book .bigidea, html.fv-book .section-head, html.fv-book .lessons, html.fv-book .quotes, html.fv-book .bookkit { margin-left:max(282px, calc(258px + (100vw - 258px - 1020px)/2)) !important; margin-right:max(34px, calc((100vw - 258px - 1020px)/2)) !important; max-width:1020px; }
-  html.fv-book .bigidea, html.fv-book .lessons, html.fv-book .quotes, html.fv-book .bookkit { max-width:860px !important; }
-  html.fv-book .nav { margin-left:258px; }
-
-  /* ---- reading columns stay reading columns, just centred in the desk ---- */
-  html.film #post.cm-post, html.film .seopage { max-width:760px !important; margin-left:max(300px, calc(258px + (100vw - 258px - 760px)/2)) !important; margin-right:auto !important; }
-  html.film body.cmpage, html.film body.fnt, html.film body.frd, html.film body.fwr, html.film body.dmpage { margin:0 !important; max-width:none !important; }
-  html.film .seopage { max-width:920px; margin-left:max(300px,calc(258px + (100vw - 258px - 920px)/2)); margin-right:auto; }
-
-  /* ---- account, settings, notes, notifications: quiet centred cards ---- */
-  html.film body > main.set:not(#rmApp), html.film body > main.fy:not(#rmApp) { max-width:720px !important; }
-  html.film body > main.nt-wrap:not(#rmApp) { max-width:900px !important; }
-  html.film body > main.cm-wrap:not(#rmApp) { max-width:820px !important; }
-  html.film #tsb-ask-root { margin-left:258px; }
-  html.film .qw-head { padding-left:282px; }
-  html.film .qw-vp { margin-left:258px; width:calc(100vw - 258px); }
-
-  /* hover is a surface change, never a jump (unslop motion pass) */
-  html.film .pc-ab__card, html.film .pc-show, html.film .cm-feed > *, html.film .ft-rb { transition:box-shadow .18s ease, background-color .18s ease; }
-  html.film .pc-ab__card:hover, html.film .pc-show:hover, html.film .cm-feed > *:hover { box-shadow:0 26px 48px -30px rgba(30,25,15,.35); }
-}
-@media (min-width: 1440px) {
-  html.fv-today .ft { grid-template-columns:repeat(12,minmax(0,1fr)); column-gap:30px; }
-  html.fv-today .ft-hero { min-height:268px; }
-  html.fv-today .ft-mp { height:356px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  html.film { scroll-behavior:auto; }
-}
-
-/* v404: the real front door sign replaces the plain text wordmark. */
-@media (min-width: 700px) and (max-width: 1023px) {
-  html.film #tsbBar .tsb-bar__brand {
-    display: flex; align-items: center; justify-content: center;
-    padding: 4px 0 12px; text-decoration: none;
+/* ============================ 1. TOKENS ============================ */
+@media (min-width: 700px) and (min-height: 560px) {
+  html {
+    --desk-nav: 88px;
+    --desk-max: 1180px;
+    --desk-gap: 20px;
+    --desk-pad: 22px;
+    --desk-ink: #1d1d1f;
+    --desk-ink2: #3a3a3c;
+    --desk-card: rgba(255, 255, 255, .94);
+    --desk-soft: rgba(22, 19, 15, .05);
+    --desk-shadow: 0 22px 44px -28px rgba(40, 28, 10, .35);
+    --desk-focus: #FFC800;
   }
-  html.film #tsbBar .tsb-bar__mark {
-    width: 40px; height: 40px; border-radius: 12px; background: var(--f-yel, #FFC800);
-    display: grid; place-items: center; transform: rotate(-6deg);
-    box-shadow: 0 8px 16px -8px rgba(40, 28, 10, .5);
+  html.dark {
+    --desk-ink: #f5efe2;
+    --desk-ink2: #b8ae99;
+    --desk-card: rgba(29, 26, 21, .96);
+    --desk-soft: rgba(245, 239, 226, .07);
+    --desk-shadow: 0 22px 44px -28px rgba(0, 0, 0, .6);
   }
-  html.film #tsbBar .tsb-bar__mark svg { width: 24px; height: 24px; }
-  html.film #tsbBar .tsb-bar__word { display: none; }
 }
-@media (min-width: 1024px) {
-  html.film #tsbBar.tsb-bar::before { content: none; }
-  html.film #tsbBar .tsb-bar__brand {
-    display: flex; align-items: center; gap: 11px;
-    padding: 2px 10px 20px; text-decoration: none; color: #1d1d1f;
-  }
-  html.dark #tsbBar .tsb-bar__brand { color: #f5efe2; }
-  html.film #tsbBar .tsb-bar__mark {
-    width: 42px; height: 42px; flex: none; border-radius: 12px; background: #FFC800;
-    display: grid; place-items: center; transform: rotate(-6deg);
-    box-shadow: 0 10px 18px -10px rgba(120, 78, 0, .55);
-    transition: transform .2s ease;
-  }
-  html.film #tsbBar .tsb-bar__brand:hover .tsb-bar__mark { transform: rotate(4deg) scale(1.04); }
-  html.film #tsbBar .tsb-bar__mark svg { width: 25px; height: 25px; }
-  html.film #tsbBar .tsb-bar__word {
-    font-family: var(--font-head, Newsreader, Georgia, serif);
-    font-size: 19px; font-weight: 700; letter-spacing: .01em; text-transform: uppercase;
-    white-space: nowrap;
-  }
-  html.film #tsbBar .tsb-bar__small { color: #D23A3A; }
-  html.dark #tsbBar .tsb-bar__small { color: #FF7A6B; }
+@media (min-width: 1181px) and (min-height: 560px) {
+  html { --desk-nav: 258px; --desk-gap: 24px; }
 }
 
-/* v404: Settings reads as a desk of cards, not one endless corridor. */
-@media (min-width: 700px) and (max-width: 1023px) {
-  html.film main.set { max-width: 760px !important; }
-}
-@media (min-width: 1024px) {
-  html.film main.set {
+/* ============================ 2. THE SHELL ============================ */
+@media (min-width: 700px) and (min-height: 560px) {
+  html { overflow-x: clip; }
+  html:not(.dark) body { background: #f5f5f7; }
+
+  body {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px 22px;
+    grid-template-columns: var(--desk-nav) minmax(0, 1fr);
+    column-gap: var(--desk-gap);
     align-items: start;
-    max-width: var(--desk-max) !important;
+    padding: 16px var(--desk-pad) 48px 16px;
+    box-sizing: border-box;
   }
-  html.film main.set > * { min-width: 0; }
-  html.film main.set > .set-cat,
-  html.film main.set > :first-child { grid-column: 1 / -1; }
-  html.film main.set #barCustomCard { grid-column: 1 / -1; }
-  html.film main.set .setcard { margin: 0 !important; height: 100%; box-sizing: border-box; }
-  html.film main.set .set-cat { margin-top: 14px; }
+  body > * { grid-column: 2; min-width: 0; }
+  /* the sidebar spans every row the content creates, so its sticky travel
+     is the full page height, not just the first row's */
+  body > #tsbBar { grid-column: 1; grid-row: 1 / span 999; }
+
+  /* centred content column: the desk every page sits in */
+  body > main {
+    width: 100%;
+    max-width: var(--desk-max);
+    margin-inline: auto;
+  }
+  body > main > * { min-width: 0; }
+  img, video, svg { max-width: 100%; }
 }
 
-/* ============================================================
-   v404 DESKTOP AND TABLET
-   One shell for every page: the rail on the left, a single
-   aligned content column, wider artwork, stronger hierarchy.
-   The phone keeps the layout it already had.
-   ============================================================ */
-@media (min-width: 700px) and (max-width: 1023px) {
-  html.film body {
-    padding-left: 118px !important;
-    padding-right: max(22px, env(safe-area-inset-right));
-  }
-  html.film body > main,
-  html.film body > #shellEnd {
-    width: min(880px, 100%);
-    margin-left: auto;
-    margin-right: auto;
-  }
-  html.film #tsbBar.tsb-bar {
-    width: 104px; top: 0; bottom: 0;
-    border-radius: 0;
-    border-right: 1px solid var(--f-line, #E7DFCE);
-    padding: 22px 10px 18px;
-  }
-  html.film .tsb-bar__link { min-height: 64px; }
-  html.film .ft,
-  html.film #shellEnd .ln {
-    max-width: 880px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  html.film .ft-hero {
-    background-size: auto 116%, auto 116%, auto 116%, cover !important;
-    background-position: 0 0, 0 0, 0 0, center 24% !important;
-  }
-  html.film .ft-book__t { font-size: clamp(34px, 5.6vw, 46px); }
-  html.film .ft-mp__q, html.film .ft-mp__line { font-size: 23px; line-height: 1.18; }
-  html.film .ln-hm { grid-template-columns: 1.06fr .94fr; gap: 22px; }
-  html.film .ln-shows { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  html.film .ln-foryou__track { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* the 1024-1180 band keeps the rail, so sidebar + content always fit */
+@media (min-width: 1024px) and (max-width: 1180px) and (min-height: 560px) {
+  html { --desk-pad: 18px; }
 }
 
-@media (min-width: 1024px) {
-  html.film {
-    --desk-max: 1170px;
-    --desk-side: 220px;
+/* ============================ 3. COMPONENTS ============================ */
+/* ---- the sidebar: a real component, not the phone bar stood up ---- */
+@media (min-width: 700px) and (min-height: 560px) {
+  html body #tsbBar.tsb-bar {
+    position: sticky;
+    top: 16px;
+    left: auto;
+    bottom: auto;
+    width: 100%;
+    max-width: none;
+    height: calc(100vh - 32px);
+    height: calc(100dvh - 32px);
+    transform: none;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 4px;
+    background: var(--desk-card);
+    border: 0;
+    border-radius: 24px;
+    box-shadow: var(--desk-shadow);
+    padding: 18px 10px;
+    z-index: 260;
   }
-  html.film body {
-    padding-left: calc(var(--desk-side) + 30px) !important;
-    padding-right: max(30px, env(safe-area-inset-right));
+  html body #tsbBar.tsb-bar.tsb-bar--off {
+    transform: translateX(-118%);
+    opacity: 0;
+    pointer-events: none;
   }
-  html.film body > main,
-  html.film body > #shellEnd {
-    width: min(var(--desk-max), calc(100vw - var(--desk-side) - 60px));
-    margin-left: auto;
-    margin-right: auto;
+  #tsbBar .tsb-bar__brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 2px 6px 16px;
+    text-decoration: none;
+    color: var(--desk-ink);
   }
+  #tsbBar .tsb-bar__mark {
+    width: 42px; height: 42px; flex: none;
+    border-radius: 12px;
+    background: transparent;
+    display: grid; place-items: center;
+    overflow: hidden;
+  }
+  #tsbBar .tsb-bar__mark svg { display: none; }
+  #tsbBar .tsb-bar__icon { display: block; width: 100%; height: 100%; object-fit: cover; }
+  #tsbBar .tsb-bar__word {
+    font-family: var(--font-head, "Newsreader", Georgia, serif);
+    font-size: 21px; font-weight: 700; line-height: 1;
+    letter-spacing: -.015em; white-space: nowrap;
+  }
+  #tsbBar .tsb-bar__small { color: #D23A3A; }
+  html.dark #tsbBar .tsb-bar__small { color: #FF7A6B; }
 
-  /* the rail: one edge, one rhythm, the app's own front-door sign */
-  html.film #tsbBar.tsb-bar {
-    width: var(--desk-side); top: 0; bottom: 0;
-    border-radius: 0;
-    border-right: 1px solid var(--f-line, #E7DFCE);
-    padding: 26px 16px 20px;
+  html body #tsbBar .tsb-bar__item {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    width: 100%;
+    min-height: 54px;
+    flex: 0 0 auto;
+    padding: 6px 4px;
+    border: 0;
+    border-radius: 14px;
+    background: none;
+    color: var(--desk-ink2);
+    text-decoration: none;
+    cursor: pointer;
   }
-  html.film .tsb-bar__link {
-    min-height: 52px;
-    padding: 8px 12px;
-    margin: 2px 0;
+  html body #tsbBar .tsb-bar__item::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background: transparent;
+    z-index: -1;
   }
-  html.film .tsb-bar__sh {
-    inset: 8px auto 8px 0;
-    border-radius: 0 14px 14px 0;
+  html body #tsbBar .tsb-bar__item svg { width: 21px; height: 21px; flex: none; position: relative; margin: 0; }
+  html body #tsbBar .tsb-bar__lbl {
+    display: block;
+    margin: 0;
+    position: relative;
+    font-size: 9.5px; font-weight: 600; line-height: 1.1;
+    white-space: nowrap; letter-spacing: 0;
   }
+  html body #tsbBar .tsb-bar__item.is-active { color: #16130F; }
+  html body #tsbBar .tsb-bar__item.is-active::before {
+    background: var(--f-yel, #FFC800);
+    box-shadow: 0 10px 20px -14px rgba(176, 122, 0, .9);
+  }
+  html body #tsbBar .tsb-bar__item.is-active .tsb-bar__lbl { font-weight: 800; }
+  #tsbBar .tsb-bar__plus {
+    width: 38px; height: 38px; border-radius: 12px; border: 0;
+    display: grid; place-items: center;
+  }
+  /* icons-only is a user setting, and it holds at desk widths too */
+  html[data-bar-labels="icons"] body #tsbBar .tsb-bar__lbl { display: none; }
+  html[data-bar-labels="icons"] body #tsbBar .tsb-bar__item { min-height: 48px; }
+}
 
-  /* Today: a twelve column grid with one shared left edge */
-  html.film .ft {
+/* full sidebar from 1181px: icon plus label in a row, wordmark showing */
+@media (min-width: 1181px) and (min-height: 560px) {
+  html body #tsbBar.tsb-bar { border-radius: 26px; padding: 20px 14px; }
+  #tsbBar .tsb-bar__brand { justify-content: flex-start; padding: 2px 8px 20px; }
+  #tsbBar .tsb-bar__mark { width: 46px; height: 46px; border-radius: 13px; }
+  html body #tsbBar .tsb-bar__item {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    min-height: 48px;
+    padding: 0 13px;
+    border-radius: 13px;
+  }
+  html body #tsbBar .tsb-bar__item::before { border-radius: 13px; }
+  html body #tsbBar .tsb-bar__lbl { font-size: 14px; text-align: left; }
+  html[data-bar-labels="icons"] body #tsbBar .tsb-bar__item { justify-content: center; }
+}
+
+/* the rail at tablet width and in the 1024-1180 band: mark only, labels under icons */
+@media (min-width: 700px) and (max-width: 1180px) and (min-height: 560px) {
+  #tsbBar .tsb-bar__word { display: none; }
+  #tsbBar .tsb-bar__brand { padding-bottom: 12px; }
+}
+
+/* ---- per-page content widths (T6) ---- */
+@media (min-width: 700px) and (min-height: 560px) {
+  body > main.nt-wrap { max-width: 900px; }              /* Notes */
+  body > main.fy { max-width: 720px; }                   /* You */
+  body > main.cm-profile { max-width: 720px; }           /* Profile */
+  body > main.set { max-width: 720px; }                  /* Settings */
+  body > main.cm-post { max-width: 820px; }              /* a single Story */
+  body > main.cf-wrap { max-width: 820px; }              /* a case file */
+  body > #rmApp {
+    max-width: 680px;                                    /* the Reader measure */
+    margin-inline: auto;
+    width: 100%;
+  }
+  #rmApp .rm-article p { line-height: 1.8; margin-bottom: 1.05em; }
+  /* book.html has no <main>: its sections are the columns */
+  .bookhero, .bigidea, .section-head, .lessons, .quotes, .bookkit {
+    max-width: 1020px;
+    margin-inline: auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .bigidea, .lessons, .quotes, .bookkit { max-width: 860px; }
+  .seopage { max-width: 920px; margin-inline: auto; }
+}
+
+/* ---- Today and Library (index) ---- */
+@media (min-width: 700px) and (max-width: 1023px) and (min-height: 560px) {
+  .ft {
+    max-width: 920px; margin-inline: auto;
+    padding: 38px 32px 118px;
+    display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 18px; align-items: start;
+  }
+  .ft-hd, .ft-search { grid-column: 1 / span 7; }
+  .ft-search { margin-top: 20px; }
+  .ft-hero { grid-column: 1 / span 7; margin-top: 18px; padding: 20px; }
+  .ft-hero .f-cover { width: 96px; height: 144px; }
+  .ft-hero__t { font-size: 25px; }
+  .ft-mp { grid-column: 8 / -1; grid-row: 1 / span 3; height: 262px; margin-top: 0; align-self: end; }
+  .ft-mp__f, .ft-mp__b { padding: 20px; }
+  .ft-mp__q, .ft-mp__line { font-size: 21px; }
+  .ft-cont { grid-column: 1 / span 5; margin-top: 20px; }
+  .ft-orig { grid-column: 6 / -1; margin-top: 20px; }
+  .ft-sec, .ft-row, .ft-foot { grid-column: 1 / -1; }
+  .ft-tiles { grid-column: 1 / span 7; margin-top: 14px; }
+  .ft-prompt { grid-column: 8 / -1; margin-top: 14px; }
+}
+@media (min-width: 1024px) and (min-height: 560px) {
+  .ft {
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: 24px;
-    max-width: none;
+    max-width: var(--desk-max);
+    margin-inline: auto;
     padding-top: 40px;
     padding-bottom: var(--film-bottom-pad, 56px);
   }
-  html.film .ft > * { min-width: 0; margin-top: 0 !important; }
-  html.fv-today .ft-hd { grid-column: 1 / span 7; grid-row: 1; align-self: start; }
-  html.fv-today h1.ft-hd__g { font-size: clamp(38px, 3.6vw, 50px); }
-  html.fv-today .ft-hd__d { margin-top: 12px; }
-  html.fv-today .ft-hd__st { margin-top: 8px; }
-  html.fv-today .ft-search { grid-column: 1 / span 7; grid-row: 2; }
-  html.fv-today .ft-hero {
+  .ft > * { min-width: 0; margin-top: 0; }
+  .ft-hd { grid-column: 1 / span 7; grid-row: 1; align-self: start; padding: 5px 0 0; }
+  h1.ft-hd__g { font-size: clamp(38px, 3.6vw, 50px); }
+  .ft-hd__d { margin-top: 12px; }
+  .ft-hd__st { margin-top: 8px; }
+  .ft-search { grid-column: 1 / span 7; grid-row: 2; margin-top: 24px; }
+  .ft-hero {
     grid-column: 1 / span 7; grid-row: 3;
     width: auto; height: 100%; min-height: 368px; margin: 0;
     padding: 28px 30px;
-    background-size: auto 108%, auto 108%, auto 108%, cover !important;
-    background-position: 0 0, 0 0, 0 0, center 24% !important;
   }
-  html.fv-today .ft-mp {
+  .ft-hero .f-cover { width: 144px; height: 216px; }
+  .ft-hero__t { font-size: clamp(30px, 2.4vw, 38px); }
+  .ft-hero__a { font-size: 15px; }
+  .ft-mp {
     grid-column: 8 / -1; grid-row: 1 / span 3;
-    width: auto; height: 100%; min-height: 348px; margin: 0 !important;
+    width: auto; height: 100%; min-height: 348px; margin: 0;
     align-self: stretch;
   }
-  html.fv-today .ft-mp__f, html.fv-today .ft-mp__b {
-    padding: 28px; border-radius: 30px; height: 100%; box-sizing: border-box;
+  .ft-mp__f, .ft-mp__b { padding: 28px; border-radius: 30px; height: 100%; box-sizing: border-box; }
+  .ft-mp__q, .ft-mp__line { font-size: 27px; line-height: 1.16; }
+  .ft-book__t { font-size: clamp(38px, 3.5vw, 48px); }
+  .ft-book__m { max-width: 480px; }
+  .ft-row, .ft-tiles { grid-column: 1 / -1; }
+  .ft-row { max-width: none; overflow: visible; gap: 18px; }
+  .ft-cont { grid-column: 1 / span 4; margin-top: 24px; }
+  .ft-orig { grid-column: 5 / span 4; margin-top: 24px; }
+  .ft-prompt { grid-column: 8 / -1; margin-top: 14px; min-height: 126px; box-sizing: border-box; }
+  .ft-sec { grid-column: 1 / -1; margin-top: 36px; }
+  .ft-foot { grid-column: 1 / -1; margin-top: 44px; }
+  .ft-rb { width: 150px; flex: 0 0 150px; }
+  .ft-rb .f-cover { width: 150px; height: 225px; }
+  html:not(.dark) .ft-hero, html:not(.dark) .ft-cont,
+  html:not(.dark) .ft-orig, html:not(.dark) .ft-prompt {
+    background: #ffffff;
+    border: 1px solid rgba(20, 18, 14, .06);
+    border-radius: 26px;
+    box-shadow: 0 22px 44px -32px rgba(30, 25, 15, .28);
   }
-  html.fv-today .ft-mp__q, html.fv-today .ft-mp__line { font-size: 27px; line-height: 1.16; }
-  html.fv-today .ft-book__t { font-size: clamp(38px, 3.5vw, 48px); }
-  html.fv-today .ft-book__m { max-width: 480px; }
-  html.fv-today .ft-row,
-  html.fv-today .ft-tiles { grid-column: 1 / -1; }
-  html.fv-today .ft-orig { grid-column: 5 / span 4; }
-  html.fv-today .ft-prompt { grid-column: 8 / -1; }
-
-  /* Listen: the audio room fills the same wide desk */
-  html.film #shellEnd .ln {
-    max-width: none;
-    padding-top: 40px;
-  }
-  html.film #shellEnd .ln-foryou,
-  html.film #shellEnd .ln-hmwrap { grid-column: 1 / -1; }
-  html.film .ln-hm { grid-template-columns: 1.12fr .88fr; gap: 26px; }
-  html.film .ln-foryou__track { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  html.film .ln-shows { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  html.film .ln-jump { margin-left: 0; margin-right: 0; }
-
-  /* the reader's wide desk matches, footnotes and progress included */
-  html.film #rmApp { max-width: 1240px; }
-  html.film .rm-progress-line { right: 0; }
-
-  /* You: stats and shelves breathe at desk width */
-  html.film .you-hero__row { max-width: var(--desk-max); }
+}
+@media (min-width: 1440px) and (min-height: 560px) {
+  .ft { column-gap: 30px; }
+  .ft-hero { min-height: 268px; }
+  .ft-mp { height: 356px; }
 }
 
-/* ============================================================
-   v404 ALIGNMENT REPAIR
-   The earlier desk mixed two offset systems at once: the body
-   was padded for a rail and every page was also margined for
-   it, so content started twice as far in and ran off the right
-   edge. One system now: a flush rail, and every page margined
-   from that same edge by the same formula.
-   ============================================================ */
-@media (min-width: 700px) and (max-width: 1023px) {
-  html.film #tsbBar.tsb-bar {
-    left: 0 !important; top: 0 !important; bottom: 0 !important;
-    width: 88px !important; max-width: 88px !important;
-    border-radius: 0 !important; border: 0 !important;
-    border-right: 1px solid var(--f-line, #E7DFCE) !important;
-    box-shadow: none !important;
-    background: rgba(255, 255, 255, .9) !important;
-    justify-content: flex-start !important;
-    padding: 20px 0 !important;
+/* ---- Listen (audio room) ---- */
+@media (min-width: 700px) and (min-height: 560px) {
+  #shellEnd .ln { max-width: var(--desk-max); margin-inline: auto; padding-top: 40px; }
+  body > main.dd-main { max-width: var(--desk-max); margin-inline: auto; width: 100%; }
+  .ln-hm { grid-template-columns: 1.12fr .88fr; gap: 26px; }
+  .ln-foryou__track { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .ln-shows { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .ln-jump { margin-left: 0; margin-right: 0; }
+  .dd-main .pc-ab__grid { grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 24px; }
+  #pcShowList { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 18px; align-items: start; }
+  html:not(.dark) .dd-main .pc-ab__card, html:not(.dark) .dd-main .pc-show,
+  html:not(.dark) .dd-main .pc-myshelf {
+    background: #ffffff; border: 1px solid rgba(20, 18, 14, .06);
+    border-radius: 22px; box-shadow: 0 18px 38px -30px rgba(30, 25, 15, .25);
   }
-  html.dark #tsbBar.tsb-bar { background: rgba(29, 26, 21, .96) !important; }
-  html.film body { padding-left: 0 !important; padding-right: 0 !important; }
-  html.fv-today .ft-mp { align-self: stretch; height: auto; min-height: 300px; }
+}
+@media (min-width: 700px) and (max-width: 1023px) and (min-height: 560px) {
+  .ln-hm { grid-template-columns: 1.06fr .94fr; gap: 22px; }
+  .ln-shows, .ln-foryou__track { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .dd-main .pc-ab__grid { grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 20px; }
+  #pcShowList { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
 }
 
-@media (min-width: 1024px) {
-  html.film body { padding-left: 0 !important; padding-right: 0 !important; }
-  html.film #tsbBar.tsb-bar {
-    left: 0 !important; top: 0 !important; bottom: 0 !important;
-    width: 240px !important; max-width: 240px !important;
-    border-radius: 0 !important; border: 0 !important;
-    border-right: 1px solid var(--f-line, #E7DFCE) !important;
-    box-shadow: none !important;
-    background: rgba(255, 255, 255, .88) !important;
-    padding: 26px 16px 20px !important;
+/* ---- Stories feed and community columns ---- */
+@media (min-width: 700px) and (min-height: 560px) {
+  body > main.cm-feed {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 20px;
+    align-items: start;
   }
-  html.film body > main:not(#rmApp),
-  html.film .cm-head, html.film .cm-tabs, html.film .cm-top, html.film .sty-top {
-    margin-left: calc(240px + max(36px, (100vw - 240px - 1180px) / 2)) !important;
-    margin-right: max(36px, (100vw - 240px - 1180px) / 2) !important;
-    width: auto !important;
-    max-width: 1180px !important;
+  .cm-feed .cm-rail, .cm-feed .cm-sect { grid-column: 1 / -1; }
+  html:not(.dark) .cm-feed > * {
+    background: #ffffff; border: 1px solid rgba(20, 18, 14, .06);
+    border-radius: 22px; box-shadow: 0 18px 38px -30px rgba(30, 25, 15, .22);
   }
-  html.film body > #shellEnd:has(.ln) {
-    margin-left: calc(240px + max(36px, (100vw - 240px - 1180px) / 2));
-    margin-right: max(36px, (100vw - 240px - 1180px) / 2);
-    max-width: 1180px;
+  .cm-head, .cm-tabs, .cm-top, .sty-top {
+    max-width: var(--desk-max);
+    margin-inline: auto;
+    width: 100%;
+    box-sizing: border-box;
   }
-  html.film .footer {
-    padding-left: calc(240px + max(52px, (100vw - 240px - 1180px) / 2));
-    padding-right: max(52px, (100vw - 240px - 1180px) / 2);
-  }
-  html.fv-book .bookhero, html.fv-book .bigidea, html.fv-book .section-head,
-  html.fv-book .lessons, html.fv-book .quotes, html.fv-book .bookkit {
-    margin-left: calc(240px + max(36px, (100vw - 240px - 1020px) / 2)) !important;
-    margin-right: max(36px, (100vw - 240px - 1020px) / 2) !important;
-  }
-  html.fv-book .nav { margin-left: 240px; }
-  html.film #post.cm-post, html.film .seopage {
-    margin-left: calc(240px + max(36px, (100vw - 240px - 820px) / 2)) !important;
-    margin-right: auto !important;
-  }
-  html.film body > main.set:not(#rmApp) { max-width: 1180px !important; }
-  html.film #tsb-ask-root { margin-left: 240px; }
-  html.film .qw-head { padding-left: 276px; }
-  html.film .qw-vp { margin-left: 240px; width: calc(100vw - 240px); }
-  /* the rail is flush, so the hidden state slides fully away */
-  html.film #tsbBar.tsb-bar.tsb-bar--off { transform: translateX(-260px) !important; }
 }
 
-/* v405: the supplied book icon leads on desktop, with a bookstore wordmark. */
-.tsb-bar__icon { display: none; }
-@media (min-width: 1024px) {
-  html.film #tsbBar .tsb-bar__brand { gap: 10px; padding: 0 8px 22px; }
-  html.film #tsbBar .tsb-bar__mark {
-    width: 46px; height: 46px; border-radius: 13px;
-    background: transparent; box-shadow: none; transform: none; overflow: hidden;
+/* ---- You, Ask, footer odds and ends ---- */
+@media (min-width: 700px) and (min-height: 560px) {
+  .you-hero__row { max-width: var(--desk-max); }
+  #tsb-ask-root { width: 100%; }
+  .qw-vp { width: 100%; }
+  .footer { max-width: var(--desk-max); margin-inline: auto; box-sizing: border-box; }
+}
+
+/* v409 · TABLET SCROLL, FIXED AT THE PAINT LAYER (kept in v416)
+   On tablet GPUs a full height backdrop blur on the rail repaints
+   every scroll frame, which reads as lag. At tablet widths the
+   glass becomes solid and card shadows shrink to a whisper; scroll
+   chaining stops at the page edge at every desk width. The v416
+   layer needs no importance hacks here: the phone glass rules it
+   used to fight now live below 700px where they belong. */
+@media (min-width: 700px) and (max-width: 1023px) and (min-height: 560px) {
+  html body #tsbBar.tsb-bar, html body .nav, html body .ln-jump {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
-  html.film #tsbBar .tsb-bar__brand:hover .tsb-bar__mark { transform: none; }
-  html.film #tsbBar .tsb-bar__mark svg { display: none; }
-  html.film #tsbBar .tsb-bar__icon {
-    display: block; width: 100%; height: 100%; object-fit: cover;
+  html body #tsbBar.tsb-bar { background: #FFFDF8; }
+  html.dark body #tsbBar.tsb-bar { background: #1D1915; }
+  html body .nav { background: var(--desk-paper); }
+  .pc-show, .pc-ab__card, .ft-card, .cm-feed > * {
+    box-shadow: 0 8px 18px -14px rgba(30, 25, 15, .28);
   }
-  html.film #tsbBar .tsb-bar__word {
-    font-family: Newsreader, Georgia, serif;
-    font-size: 21px; font-weight: 700; line-height: 1;
-    letter-spacing: -0.015em; text-transform: none; white-space: nowrap;
+}
+@media (min-width: 700px) and (min-height: 560px) {
+  html, body { overscroll-behavior: none; }
+}
+
+/* ============================ 4. STATES ============================ */
+/* hover and keyboard focus get the same visual weight (T8) */
+@media (min-width: 700px) and (min-height: 560px) {
+  html body #tsbBar .tsb-bar__item:hover::before { background: var(--desk-soft); }
+  html body #tsbBar .tsb-bar__item.is-active:hover::before { background: var(--f-yel, #FFC800); }
+  .pc-ab__card, .pc-show, .cm-feed > *, .ft-rb {
+    transition: box-shadow .18s ease, background-color .18s ease;
   }
+  .pc-ab__card:hover, .pc-show:hover, .cm-feed > *:hover {
+    box-shadow: 0 26px 48px -30px rgba(30, 25, 15, .35);
+  }
+  a:focus-visible, button:focus-visible, input:focus-visible,
+  select:focus-visible, textarea:focus-visible, summary:focus-visible,
+  [tabindex]:focus-visible, [role="button"]:focus-visible {
+    outline: 3px solid var(--desk-focus);
+    outline-offset: 2px;
+    border-radius: 10px;
+  }
+  html body #tsbBar .tsb-bar__item:focus-visible {
+    outline: 3px solid var(--desk-focus);
+    outline-offset: 2px;
+  }
+  /* fluid type and spacing: the desk breathes between 1024 and 1920 (T9) */
+  body > main { padding-inline: clamp(0px, 1.2vw, 10px); }
+  .pc-hero h1, .dd-main h1 { font-size: clamp(30px, 2.2vw + 14px, 42px); }
+  .cm-feed h1, .gravegrid h1 { font-size: clamp(28px, 2vw + 12px, 40px); }
 }
 
 /* ============================================================
    v406 · DESKTOP MOTION REPAIR
-   On desktop the room felt frozen: cards only changed shadow,
-   the rail snapped instead of sliding, and sidebar items had
-   no travel at all. Motion is back, on a spring curve, and it
-   still switches fully off for reduced motion.
+   Motion on a spring curve, and fully off for reduced motion.
    ============================================================ */
-@media (min-width: 700px) and (prefers-reduced-motion: no-preference) {
-  html.film #tsbBar.tsb-bar {
-    transition: transform .38s cubic-bezier(.22,1,.36,1), opacity .3s ease !important;
+@media (min-width: 700px) and (min-height: 560px) and (prefers-reduced-motion: no-preference) {
+  html body #tsbBar.tsb-bar {
+    transition: transform .38s cubic-bezier(.22, 1, .36, 1), opacity .3s ease;
   }
-  html.film #tsbBar .tsb-bar__item {
-    transition: background-color .22s ease, color .22s ease, transform .22s cubic-bezier(.22,1,.36,1);
+  html body #tsbBar .tsb-bar__item {
+    transition: background-color .22s ease, color .22s ease, transform .22s cubic-bezier(.22, 1, .36, 1);
   }
+  html body #tsbBar .tsb-bar__item:hover { transform: translateX(3px); }
+  #tsbBar .tsb-bar__brand:hover .tsb-bar__mark { transform: rotate(4deg) scale(1.04); }
+  #tsbBar .tsb-bar__mark { transition: transform .2s ease; }
 }
-@media (min-width: 700px) and (hover: hover) and (prefers-reduced-motion: no-preference) {
-  html.film #tsbBar .tsb-bar__item:hover { transform: translateX(3px); }
-  html.film .pc-ab__card, html.film .pc-show, html.film .ft-card, html.film .cm-feed > * {
-    transition: transform .28s cubic-bezier(.22,1,.36,1), box-shadow .28s cubic-bezier(.22,1,.36,1), background-color .22s ease;
-  }
-  html.film .pc-ab__card:hover, html.film .pc-show:hover, html.film .ft-card:hover, html.film .cm-feed > *:hover {
-    transform: translateY(-4px);
-  }
-  html.film .ft-card img, html.film .pc-ab__cover { transition: transform .45s cubic-bezier(.22,1,.36,1); }
-  html.film .ft-card:hover img, html.film .pc-ab__card:hover .pc-ab__cover { transform: scale(1.025); }
+@media (min-width: 700px) and (min-height: 560px) {
+  html { scroll-behavior: smooth; }
 }
-
-/* ============================================================
-   v409 · TABLET SCROLL, FIXED AT THE PAINT LAYER
-   Diagnosis on an iPad profile: the page itself scrolled fine,
-   but every frame repainted a full height backdrop blur on the
-   rail (blur 26px), a blurred top nav and large soft card
-   shadows. Real tablet GPUs pay for that per frame, which is
-   exactly "laggy, not even scrolling". At tablet widths the
-   glass becomes solid, shadows shrink to a whisper, and scroll
-   chaining stops at the page edge so a fling never lands on a
-   white rubber band in dark mode.
-   ============================================================ */
-@media (min-width: 700px) and (max-width: 1023px) {
-  html.film #tsbBar.tsb-bar, html.film .nav, html.film .ln-jump {
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-  }
-  html.film #tsbBar.tsb-bar { background: #FFFDF8 !important; }
-  html.dark #tsbBar.tsb-bar { background: #1D1915 !important; }
-  html.film .nav { background: var(--f-paper) !important; }
-  html.film .pc-show, html.film .pc-ab__card, html.film .ft-card, html.film .cm-feed > * {
-    box-shadow: 0 8px 18px -14px rgba(30, 25, 15, .28) !important;
-  }
-}
-@media (min-width: 700px) {
-  html.film, html.film body { overscroll-behavior: none; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }

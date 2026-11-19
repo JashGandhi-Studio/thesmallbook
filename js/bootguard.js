@@ -28,10 +28,72 @@
   window.TSB_LFILL_HOLD = held;
 })();
 
+/* v415 · STORAGE GUARD
+   Every module in this app wraps its localStorage writes in a quiet
+   try/catch, which kept crashes away but also kept the truth away: when a
+   phone's storage fills up (about 5 MB, and note photos live there until
+   they upload), saves began failing with nobody told. This guard wraps
+   setItem once, app-wide: a quota failure is recorded, announced with one
+   honest banner per session, and rethrown so existing callers behave
+   exactly as before. window.TSB_STORAGE.usage() reports real bytes used. */
+(function () {
+  if (typeof window === "undefined" || !window.localStorage) return;
+  if (window.TSB_STORAGE) return;
+  var state = { full: false, warned: false, lastError: "" };
+  function usage() {
+    var bytes = 0, keys = 0;
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i) || "";
+        bytes += (k.length + (localStorage.getItem(k) || "").length) * 2;
+        keys++;
+      }
+    } catch (e) {}
+    return { bytes: bytes, keys: keys, full: state.full };
+  }
+  function warn() {
+    if (state.warned) return;
+    state.warned = true;
+    try { window.dispatchEvent(new CustomEvent("tsb:storage-full", { detail: usage() })); } catch (e) {}
+    function show() {
+      if (!document.body || document.getElementById("tsbStorageWarn")) return;
+      var d = document.createElement("div");
+      d.id = "tsbStorageWarn";
+      d.setAttribute("role", "alert");
+      d.style.cssText = "position:fixed;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom, 0px) + 86px);z-index:9990;background:#16130F;color:#FFFDF7;border-radius:16px;padding:12px 14px;font:400 13.5px/1.45 system-ui,sans-serif;box-shadow:0 14px 34px -12px rgba(0,0,0,.65)";
+      d.innerHTML = "<b style=\"display:block;margin-bottom:2px\">This device is out of room for the app</b>" +
+        "New saves cannot be kept on this phone until space frees up. Sign in so your work lives in your account, and download a copy from Settings, under Data &amp; library." +
+        "<button type=\"button\" style=\"display:block;margin-top:9px;font:inherit;font-weight:800;background:#FFC800;color:#16130F;border:0;border-radius:999px;padding:7px 14px;cursor:pointer\">Got it</button>";
+      d.querySelector("button").addEventListener("click", function () { d.remove(); });
+      document.body.appendChild(d);
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", show);
+    else show();
+  }
+  window.TSB_STORAGE = { usage: usage, state: state };
+  try {
+    var proto = Object.getPrototypeOf(localStorage);
+    var orig = proto && proto.setItem;
+    if (orig && !orig.__tsbGuarded) {
+      var wrapped = function (k, v) {
+        try { return orig.call(this, k, v); }
+        catch (err) {
+          state.full = true;
+          state.lastError = String((err && err.name) || err || "quota");
+          warn();
+          throw err;
+        }
+      };
+      wrapped.__tsbGuarded = true;
+      proto.setItem = wrapped;
+    }
+  } catch (e) {}
+})();
+
 (function () {
   "use strict";
 
-  var BUILD = "413";
+  var BUILD = "418";
 window.TSB_BUILD = BUILD;   /* v322: every page knows its era - the tutorial replays once per era */
 
   /* v400: ONE place owns the version number.

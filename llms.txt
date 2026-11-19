@@ -14,7 +14,7 @@ Free book summaries, lessons and failure case studies in simple English, with Hi
 - Books on learning: https://thesmallbook.in/topics/learning.html
 
 ## Counts
-- 600 books
-- 4,343 lessons
-- 530 failure case studies
-- 83 Ask the Library questions
+- 650 books
+- 4,853 lessons
+- 559 failure case studies
+- 78 Ask the Library questions

@@ -7,7 +7,7 @@ Run after any change to js/data-full.js:  python3 tools/split_data.py"""
 import json, os, re, glob
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 src = open(os.path.join(ROOT, "js/data-full.js"), encoding="utf-8").read()
-arr = json.loads(src[src.index("["): src.index("];\nif (typeof window") + 1])
+arr = json.loads(src[src.index("["): src.index("];\nif") + 1])
 BODY = ("summary", "example", "action")
 EXTRA = ("caveat", "actionPlan")          # only the book page needs these
 fsrc = open(os.path.join(ROOT, "js/failures.js"), encoding="utf-8").read()
@@ -93,6 +93,10 @@ LOADER = r'''
   /* the open book's text is written in by the page itself (book and reader) */
 })();
 '''
-out = "const BOOKS = " + json.dumps(lite, ensure_ascii=False, separators=(",", ":")) + ";\nif (typeof window !== \"undefined\") window.BOOKS = BOOKS;\n" + LOADER
+_old = open(os.path.join(ROOT, "js/data.js"), encoding="utf-8").read() if os.path.exists(os.path.join(ROOT, "js/data.js")) else ""
+_lines = _old.split("\n")
+_tail = "\n".join(_lines[2:]) if len(_lines) > 2 and "TSB_LFILL_HOLD" in _old else None
+_first = "const BOOKS = " + json.dumps(lite, ensure_ascii=False, separators=(",", ":")) + ";\nif (typeof window !== \"undefined\") window.BOOKS = BOOKS;\n"
+out = _first + (_tail if _tail else LOADER)
 open(os.path.join(ROOT, "js/data.js"), "w", encoding="utf-8").write(out)
 print("books", len(lite), "data.js %.0f KB" % (len(out.encode()) / 1024), "lesson files", len(keep))

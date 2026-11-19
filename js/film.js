@@ -21,6 +21,37 @@
   function $(s, r) { return (r || document).querySelector(s); }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function lsGet(k, d) { try { var r = localStorage.getItem(k); if (r === null) return d; try { return JSON.parse(r); } catch (e) { return r; } } catch (e2) { return d; } }
+  /* v417: served history. Everything the Today screen shows gets
+     logged here with the day it was served, and nothing is served
+     again inside 30 days while fresher material exists. Same-day
+     renders stay stable: today's own entry never counts against
+     itself. v418: the map rides TSB.store and joins the account
+     sync, so a second device inherits what Today already showed. */
+  function servedAll() {
+    if (window.TSB && TSB.store) return TSB.store.get("tsb_served", {}) || {};
+    try { return JSON.parse(localStorage.getItem("tsb_served") || "{}") || {}; } catch (e) { return {}; }
+  }
+  function epochDay() { return Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 864e5); }
+  function servedAge(map, kind, key) {
+    var d = map && map[kind] && map[kind][key];
+    return (typeof d === "number") ? epochDay() - d : 9999;
+  }
+  function servedStale(map, kind, key) { var a = servedAge(map, kind, key); return a >= 1 && a <= 30; }
+  function markServed(kind, key) {
+    try {
+      var map = servedAll(), today = epochDay();
+      map[kind] = map[kind] || {};
+      map[kind][key] = today;
+      Object.keys(map).forEach(function (k) {
+        var bucket = map[k] || {}, keys = Object.keys(bucket);
+        keys.forEach(function (kk) { if (today - bucket[kk] > 45) delete bucket[kk]; });
+        keys = Object.keys(bucket);
+        if (keys.length > 400) keys.slice(0, keys.length - 400).forEach(function (kk) { delete bucket[kk]; });
+      });
+      if (window.TSB && TSB.store) TSB.store.set("tsb_served", map); else localStorage.setItem("tsb_served", JSON.stringify(map));
+    } catch (e) {}
+  }
+  function quoteKey(q) { return "q" + seed(String((q && q.text) || "")).toString(36); }
   function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   function books() { return window.BOOKS || []; }
   var _idx = null;
@@ -215,7 +246,12 @@
     try {
       if (window.TSB_TASTE && TSB_TASTE.picks) {
         var personal = (TSB_TASTE.picks(6) || []).filter(function (b) { return b && !lockedOriginal(b); });
-        if (personal.length) return personal[0];
+        if (personal.length) {
+          var servedP = servedAll(), pickP = personal[0];
+          for (var pi = 0; pi < personal.length; pi++) { if (!servedStale(servedP, "b", personal[pi].id)) { pickP = personal[pi]; break; } }
+          if (pickP) markServed("b", pickP.id);
+          return pickP;
+        }
       }
     } catch (e) {}
     var shelf = lsGet("tsb_starter_shelf", []), pool = [];
@@ -227,25 +263,47 @@
     }
     if (!pool.length) pool = books().filter(function (b) { return !lockedOriginal(b); }).slice(0, 20);
     var day = Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 864e5);
-    return pool[day % pool.length];
+    var served = servedAll(), start = day % pool.length, pick = pool[start];
+    for (var i = 0; i < pool.length; i++) {
+      var cand = pool[(start + i) % pool.length];
+      if (!servedStale(served, "b", cand.id)) { pick = cand; break; }
+    }
+    if (pick) markServed("b", pick.id);
+    return pick;
   }
   function mindPickIds(problem) {
-    var ids = (problem && problem.ids || []).filter(function (id) { return !!byId(id); });
+    /* v417: the pool is the whole catalogue, not a fixed shelf. The
+       curated ids keep a head start, books matching the problem's
+       words join them, and the score is per person: taste first,
+       finished and recently served books fall away. */
+    var curated = (problem && problem.ids || []).filter(function (id) { return !!byId(id); });
+    var pool = curated.slice();
     try {
-      if (window.TSB_TASTE && TSB_TASTE.model) {
-        var taste = TSB_TASTE.model(), weights = taste.cats || {};
-        ids.sort(function (a, b) {
-          var ba = byId(a), bb = byId(b);
-          var sa = (weights[ba.category || ba.cat] || 0) * 3 + (taste.seen[a] ? 0 : 0.18) - (taste.finished[a] ? 3 : 0);
-          var sb = (weights[bb.category || bb.cat] || 0) * 3 + (taste.seen[b] ? 0 : 0.18) - (taste.finished[b] ? 3 : 0);
-          return sb - sa;
+      var words = (problem && problem.words) || [];
+      if (words.length) {
+        books().forEach(function (bk) {
+          if (!bk || pool.indexOf(bk.id) >= 0 || lockedOriginal(bk)) return;
+          var hay = ((bk.title || "") + " " + (bk.category || "") + " " + (bk.tagline || "")).toLowerCase();
+          for (var i = 0; i < words.length; i++) { if (hay.indexOf(words[i]) >= 0) { pool.push(bk.id); break; } }
         });
       }
     } catch (e) {}
-    return ids.slice(0, 3);
+    var served = servedAll();
+    try {
+      var taste = (window.TSB_TASTE && TSB_TASTE.model) ? TSB_TASTE.model() : null, weights = (taste && taste.cats) || {};
+      pool.sort(function (a, b) {
+        var ba = byId(a), bb = byId(b); if (!ba || !bb) return 0;
+        var sa = (weights[ba.category || ba.cat] || 0) * 3 + (curated.indexOf(a) >= 0 ? 1 : 0) + ((taste && taste.seen[a]) ? 0 : 0.18) - ((taste && taste.finished[a]) ? 3 : 0) - (servedStale(served, "b", a) ? 2.5 : 0);
+        var sb = (weights[bb.category || bb.cat] || 0) * 3 + (curated.indexOf(b) >= 0 ? 1 : 0) + ((taste && taste.seen[b]) ? 0 : 0.18) - ((taste && taste.finished[b]) ? 3 : 0) - (servedStale(served, "b", b) ? 2.5 : 0);
+        return sb - sa;
+      });
+    } catch (e) {}
+    var out = pool.slice(0, 3);
+    out.forEach(function (id) { markServed("b", id); });
+    return out;
   }
   function rowFor(cat, skip, n) {
-    var out = [], s = seed(dayKey() + cat);
+    var out = [], s = seed(dayKey() + cat + (name() || "r"));
     var list = books().filter(function (b) { return b.category === cat && skip.indexOf(b.id) < 0; });
     for (var i = 0; i < list.length && out.length < n; i++) out.push(list[(i + s) % list.length]);
     return out;
@@ -388,7 +446,13 @@
   function mindPickHtml() {
     var M = window.TSB_MINDPICK; if (!M || !M.daily || !M.problems) return "";
     var day = Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 864e5);
-    var q = M.daily[(day + seed(name() || "r") % 7) % M.daily.length], p = null;
+    var servedQ = servedAll(), startQ = (day + seed(name() || "r") % 7) % M.daily.length, q = M.daily[startQ];
+    for (var qi = 0; qi < M.daily.length; qi++) {
+      var candQ = M.daily[(startQ + qi) % M.daily.length];
+      if (!servedStale(servedQ, "q", quoteKey(candQ))) { q = candQ; break; }
+    }
+    if (q) markServed("q", quoteKey(q));
+    var p = null;
     M.problems.forEach(function (x) { if (x.key === q.pick) p = x; });
     if (!p) p = M.problems[0];
     var ids = mindPickIds(p);
@@ -1066,6 +1130,81 @@
     polishNav();
     watchCalm();
   }
+  /* v416: desktop keyboard shortcuts (700px and up only, so the phone
+     never sees them). "/" or Ctrl/Cmd+K jumps to the page's search box;
+     the reader's arrow keys already turn pages (reader.js), and Space
+     toggles play while the player is open. Shortcuts are surfaced on the
+     search box itself through its title and aria-keyshortcuts. */
+  function deskKeys() {
+    try { if (!window.matchMedia || !window.matchMedia("(min-width: 700px) and (min-height: 560px)").matches) return; } catch (e) { return; }
+    function visBox(el) {
+      try { if (el.checkVisibility) return el.checkVisibility({ checkOpacity: false, checkVisibilityCSS: true }); } catch (eV) {}
+      var r = el.getBoundingClientRect(), cs = getComputedStyle(el);
+      return r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && cs.display !== "none";
+    }
+    function searchBox() {
+      var all = document.querySelectorAll('input[type="search"], .ft-search input, input[id*="earch"], input[placeholder*="earch"]');
+      for (var i = 0; i < all.length; i++) { if (visBox(all[i])) return all[i]; }
+      return null;
+    }
+    /* some pages wear a search-shaped button that opens the real search
+       sheet; the shortcut presses it, then lands in the sheet's box */
+    function openSearch() {
+      var s = searchBox();
+      if (s) { s.focus(); try { s.select(); } catch (eS) {} return; }
+      var trig = document.querySelector(".ft-search") || document.querySelector(".search button, .search a");
+      if (trig) {
+        trig.click();
+        var tries = 0;
+        var iv = setInterval(function () {
+          tries++;
+          var s2 = searchBox();
+          if (s2) { s2.focus(); clearInterval(iv); }
+          else if (tries > 6) clearInterval(iv);
+        }, 160);
+      }
+    }
+    function mark() {
+      var s = searchBox();
+      if (s && !s.getAttribute("aria-keyshortcuts")) {
+        s.setAttribute("aria-keyshortcuts", "/ Control+K");
+        if (!s.getAttribute("title")) s.setAttribute("title", "Search ( / )");
+      }
+    }
+    mark();
+    setTimeout(mark, 1500);
+    document.addEventListener("keydown", function (e) {
+      var tag = (e.target && e.target.tagName) || "";
+      var typing = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || (e.target && e.target.isContentEditable);
+      if ((e.key === "/" && !typing) || ((e.ctrlKey || e.metaKey) && String(e.key).toLowerCase() === "k")) {
+        e.preventDefault();
+        openSearch();
+        return;
+      }
+      if (e.key === " " && !typing && document.body.classList.contains("tsb-ap-open")) {
+        if (tag === "BUTTON" || tag === "A") return;
+        e.preventDefault();
+        try { if (window.TSB_AUDIO && TSB_AUDIO.toggle) TSB_AUDIO.toggle(); } catch (eA) {}
+      }
+    });
+  }
+  deskKeys();
+
+  /* v416: reader.html and gold.html never load the action bar at all, so
+     at desk widths they had no sidebar. Load it there only when the
+     viewport is tablet or wider; below 700px nothing changes, and the
+     reader keeps its own dock on phones exactly as before. */
+  try {
+    if (window.matchMedia && window.matchMedia("(min-width: 700px) and (min-height: 560px)").matches &&
+        !/reader\.html/.test(location.pathname) &&
+        !document.getElementById("tsbBar") && !document.querySelector('script[src*="bar.js"]')) {
+      var bs = document.createElement("script");
+      bs.src = "js/bar.js?v=418";
+      bs.defer = true;
+      document.body.appendChild(bs);
+    }
+  } catch (eB) {}
+
   window.TSB_FILM = { version: "331", weekMinutes: weekMinutes, todaysPick: todaysPick };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
 })();
