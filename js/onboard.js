@@ -33,6 +33,15 @@
      update. A new version may show a quiet "what is new" card, and that card
      never leads back into the four screens. */
   var OB_V = 393;
+  /* v419: OB_V remembers when the setup QUESTIONS last changed. The
+     "what is new" card, though, belongs to the shipped build - and
+     OB_V was never moved after 393, so builds 394-418 arrived with no
+     card at all and readers never saw one. The card is now keyed to
+     window.TSB_BUILD: an existing reader sees it once per build, it
+     still never leads back into the four questions, and finishing
+     setup stamps the current build so it cannot repeat. */
+  var BUILD_NOW = parseInt(window.TSB_BUILD || "", 10) || OB_V;
+  if (BUILD_NOW < OB_V) BUILD_NOW = OB_V;
   function alreadySetUp() {
     try { if (get("tsb_onboarded", false)) return true; } catch (e) {}
     try {
@@ -41,12 +50,12 @@
     } catch (e) {}
     return false;
   }
-  var UPDATE = alreadySetUp() && (get("tsb_onboard_v", 0) || 0) < OB_V;
+  var UPDATE = alreadySetUp() && (get("tsb_onboard_v", 0) || 0) < BUILD_NOW;
   /* the Open Leaf mark, inline so it is there before any image loads */
   var MARK = '<svg class="tsb-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path class="tsb-mark__a" d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z"/><path class="tsb-mark__b" d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z"/><path class="tsb-mark__sp" d="M32 18v34"/></svg>';
   function shouldShow() {
-    try { if (sessionStorage.getItem("tsb_onboarded_pending")) { set("tsb_onboarded", true); set("tsb_onboard_v", OB_V); sessionStorage.removeItem("tsb_onboarded_pending"); } } catch (e) {}
-    if ((get("tsb_onboard_v", 0) || 0) >= OB_V) return false;
+    try { if (sessionStorage.getItem("tsb_onboarded_pending")) { set("tsb_onboarded", true); set("tsb_onboard_v", BUILD_NOW); sessionStorage.removeItem("tsb_onboarded_pending"); } } catch (e) {}
+    if ((get("tsb_onboard_v", 0) || 0) >= BUILD_NOW) return false;
     if (/404\.html|login\.html|story\.html|chat\.html|settings\.html|kids\.html/.test(location.pathname)) return false;
     if (/[?&]code=/.test(location.search)) return false;
     /* v347: a reader who has already set up is never sent back through the
@@ -54,7 +63,7 @@
        shown once, then remembered. */
     if (UPDATE) return true;
     /* an existing setup is never overwritten by a new build */
-    if (alreadySetUp()) { set("tsb_onboarded", true); set("tsb_onboard_v", OB_V); return false; }
+    if (alreadySetUp()) { set("tsb_onboarded", true); set("tsb_onboard_v", BUILD_NOW); return false; }
     /* a signed-in reader still owes the profile step first (auth.js sends them there) */
     try {
       var s = JSON.parse(localStorage.getItem("tsb_auth_session"));
@@ -474,7 +483,7 @@
     var cats = catsPicked();
     set("tsb_onboard_draft", draft);
     set("tsb_onboarded", true);
-    set("tsb_onboard_v", OB_V);
+    set("tsb_onboard_v", BUILD_NOW);
     set("tsb_walk_done", window.TSB_BUILD || "390");
     set("tsb_tour_done", true);
     set("tsb_interests", cats);
@@ -502,7 +511,7 @@
     }, 460);
   }
   function dismiss(mark) {
-    if (mark) { set("tsb_onboarded", true); set("tsb_onboard_v", OB_V); }
+    if (mark) { set("tsb_onboarded", true); set("tsb_onboard_v", BUILD_NOW); }
     if (!wrap) return;
     var w = wrap; wrap = null;
     w.classList.add("fo--leave");

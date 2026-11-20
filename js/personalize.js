@@ -85,8 +85,17 @@
     var books = window.BOOKS || [];
     if (!books.length) return [];
 
-    /* v353: js/taste.js holds a behavioural model and anchors the trio, so one
-       new interest no longer rebuilds the whole feed. */
+    /* v419: one recommendation engine (js/reco.js) ranks the trio -
+       taste and goal, minus finished and recently served, plus a
+       daily exploration step. The older taste model and this file's
+       own category list remain only as fallbacks if the engine is
+       somehow absent. */
+    try {
+      if (window.TSB && TSB.recommend) {
+        var rp = TSB.recommend(3);
+        if (rp && rp.length === 3) return rp;
+      }
+    } catch (e) {}
     try {
       if (window.TSB_TASTE && TSB_TASTE.picks) {
         var tp = TSB_TASTE.picks(3);

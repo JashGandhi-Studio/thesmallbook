@@ -250,13 +250,18 @@
     __localBooksLoaded = true;
     return fetch("js/data.js", {cache:"force-cache"}).then(function(r){ return r.text(); }).then(function(txt){
       try{
-        // js/data.js is `const BOOKS = [...]` ; evaluate safely to extract
+        // js/data.js is `const BOOKS = [...]` ; parse the JSON, never
+        // evaluate it (v419: the evaluate-a-fetched-file fallback is gone - if the
+        // data file is ever served wrong, a parse error is the worst
+        // that can happen, not code execution)
         var m = txt.match(/const BOOKS\s*=\s*(\[[\s\S]*?\]);/);
         if(m && m[1]){
           try{ var arr = JSON.parse(m[1]); window.BOOKS = arr; return arr; }catch(e){}
         }
-        // fallback eval
-        eval(txt);
+        var m2 = txt.match(/BOOKS\s*=\s*(\[[\s\S]*\]);?\s*$/);
+        if(m2 && m2[1]){
+          try{ var arr2 = JSON.parse(m2[1]); window.BOOKS = arr2; return arr2; }catch(e){}
+        }
         return window.BOOKS||[];
       }catch(e){ return window.BOOKS||[]; }
     }).catch(function(){ return window.BOOKS||[]; });

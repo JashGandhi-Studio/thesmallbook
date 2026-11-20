@@ -552,22 +552,22 @@
       var inList = posts.map(function (p) { return p.id; }).join(",");
       var likes = await safe(api("likes?post_id=in.(" + inList + ")&select=*&order=created_at.desc&limit=60", {}));
       (likes || []).forEach(function (l) {
-        if (l.user_id !== u.id) out.push({ type: "like", who: l.user_id, post: l.post_id, title: (byId[l.post_id] || {}).title || "your story", at: l.created_at });
+        if (l.user_id !== u.id) out.push({ type: "like", who: l.user_id, post: l.post_id, title: (byId[l.post_id] || {}).title || "your story", at: l.created_at, id: l.id ? "like:" + l.id : "" });
       });
       var cmts = await safe(api("comments?post_id=in.(" + inList + ")&select=*&order=created_at.desc&limit=40", {}));
       (cmts || []).forEach(function (c) {
-        if (c.author_id !== u.id) out.push({ type: "comment", who: c.author_id, post: c.post_id, title: (byId[c.post_id] || {}).title || "your story", body: c.body, at: c.created_at });
+        if (c.author_id !== u.id) out.push({ type: "comment", who: c.author_id, post: c.post_id, title: (byId[c.post_id] || {}).title || "your story", body: c.body, at: c.created_at, id: c.id ? "comment:" + c.id : "" });
       });
     }
     var fols = await safe(api("follows?author_id=eq." + u.id + "&select=*&order=created_at.desc&limit=40", {}));
     (fols || []).forEach(function (fl) {
-      if (fl.follower_id !== u.id) out.push({ type: "follow", who: fl.follower_id, at: fl.created_at });
+      if (fl.follower_id !== u.id) out.push({ type: "follow", who: fl.follower_id, at: fl.created_at, id: fl.id ? "follow:" + fl.id : "" });
     });
     var dms = await safe(api("messages?receiver_id=eq." + u.id + "&select=*&order=created_at.desc&limit=30", {}));
     (dms || []).forEach(function (m) {
       /* v250: carry audio_url + read flag so the bell can say "voice message"
          and so opening a thread can mark exactly these notifications read */
-      out.push({ type: "dm", who: m.sender_id, body: m.body, at: m.created_at, audio: !!m.audio_url, msg: m.id });
+      out.push({ type: "dm", who: m.sender_id, body: m.body, at: m.created_at, audio: !!m.audio_url, msg: m.id, id: m.id ? "dm:" + m.id : "" });
     });
     // resolve names + avatars
     var seen = {}, uids = [];
@@ -653,7 +653,7 @@
 
      One row per person, overwritten while they type: your id, the thread
      you are in, the second you last typed. The other side polls that row
-     and, if it is fresher than six seconds, shows three dots. Nothing
+     and, if it is fresher than eight seconds, shows three dots. Nothing
      about WHAT you typed is stored, and a person who stops typing simply
      lets the row go stale - six seconds and the dots are gone on their own.
 
@@ -699,7 +699,7 @@
       var at = rows && rows[0] && Date.parse(rows[0].at);
       if (!at) return 0;
       var age = Date.now() - at;
-      return age >= 0 && age < 15000 ? Math.max(age, 1) : 0;   /* a device clock can run fast */
+      return age >= 0 && age < 8000 ? Math.max(age, 1) : 0;   /* v419: typing is an 8-second truth, never a quarter minute */
     } catch (e) { return 0; }
   }
   async function typingClear() {
@@ -906,8 +906,24 @@
   var LEGACY_SEEN = "tsb_notif_seen";
   var LEDGER_CAP = 600;
 
-  function notifKey(n) { return [n.type, n.who || "", n.post || "", n.at].join(":"); }
+  /* v419: a notification is keyed by the stable id of the server row
+     that caused it (like/comment/follow/message id), never by its
+     timestamp. The old key ended in `at`, so the same event re-keyed
+     whenever its derived time moved and a seen notification could
+     rise again as unread. Ledgers written by older builds hold
+     type:who:post:at keys; storeHas() still honours them by prefix,
+     so upgrading never re-flags a reader's history. */
+  function notifKey(n) {
+    if (n && n.id) return "srv:" + n.id;
+    return [n.type, n.who || "", n.post || "", n.msg || ""].join(":");
+  }
   function toastKey(n) { return notifKey(n); }          /* back-compat alias */
+  function storeHas(store, n) {
+    if (!store || !n) return false;
+    if (store[notifKey(n)]) return true;
+    var p = [n.type, n.who || "", n.post || ""].join(":") + ":";
+    return Object.keys(store).some(function (k) { return k.indexOf(p) === 0; });
+  }
 
   function readStore(key, legacyArrayKey) {
     var out = {};
@@ -955,6 +971,10 @@
   /* ---- public read API ---- */
   function notifMarkRead(keys) {
     markIn(NOTIF_READ, keys, LEGACY_TOAST);
+    /* v419: the read ledger rides the account sync (auth.js carries the
+       last 30 days), so queue a state sync and the read follows the
+       reader to their other devices. */
+    try { if (window.TSB_AUTH && TSB_AUTH.queueStateSync) TSB_AUTH.queueStateSync(); } catch (e) {}
     /* v404: opening a thing is also the end of its banner life. Read used
        to leave the popped ledger untouched, so a message first opened in
        its thread could still arrive as a banner later on another page. */
@@ -963,14 +983,14 @@
   function toastMark(keys) { notifMarkRead(keys); }                 /* back-compat */
   function toastSeen() { return Object.keys(readStore(NOTIF_READ, LEGACY_TOAST)); }
   function notifPopped(keys) { markIn(NOTIF_POPPED, keys, null); }
-  function notifIsRead(n) { return !!readStore(NOTIF_READ, LEGACY_TOAST)[notifKey(n)]; }
+  function notifIsRead(n) { return storeHas(readStore(NOTIF_READ, LEGACY_TOAST), n); }
   function notifUnread(items) {
     var read = readStore(NOTIF_READ, LEGACY_TOAST);
     var cleared = readStore(NOTIF_CLEARED, null);
     var legacyTs = 0;
     try { legacyTs = +(localStorage.getItem(LEGACY_SEEN) || 0); } catch (e) {}
     return (items || []).filter(function (n) {
-      if (read[notifKey(n)] || cleared[notifKey(n)]) return false;
+      if (storeHas(read, n) || storeHas(cleared, n)) return false;
       /* items older than the last pre-v250 bell visit were already seen */
       if (legacyTs && Date.parse(n.at) <= legacyTs) return false;
       return true;
@@ -1138,7 +1158,7 @@
       var freshAll = [], soundOnly = false, peer = onMessagesPage() ? openPeerId() : "";
       items.forEach(function (n) {
         var k = notifKey(n);
-        if (popped[k] || read[k] || cleared[k]) return;
+        if (storeHas(popped, n) || storeHas(read, n) || storeHas(cleared, n)) return;
         if (!((Date.now() - Date.parse(n.at)) < 36e5)) return;
         if (onMessagesPage() && n.type === "dm") {
           /* v404: inside Messages there is no banner for a message. The
@@ -1160,12 +1180,67 @@
   function toastStart() {
     setTimeout(toastPoll, 4500);
     setInterval(toastPoll, 25000);
+    rtConnect();
     document.addEventListener("visibilitychange", function () { if (!document.hidden) toastPoll(); });
     /* v250: paint the badges immediately on load too, not only after the
        first 4.5 s poll, the bell used to look empty for a moment. */
     if (ENABLED && signedIn()) { try { notifRefresh(); } catch (e) {} }
-    window.addEventListener("tsb:auth", function () { try { notifRefresh(); boot(); } catch (e) {} });
+    window.addEventListener("tsb:auth", function () { try { notifRefresh(); boot(); rtConnect(); } catch (e) {} });
   }
+  /* v419: live first, poll as the safety net. Supabase Realtime over a
+     plain WebSocket (the Phoenix protocol): a new message or a typing
+     row for THIS reader wakes toastPoll() at once instead of waiting
+     out the 25-second poll, and pages listening for "tsb:realtime" can
+     repaint the open thread. The poll never goes away - if the socket
+     cannot open, drops, or replication is not enabled on the project,
+     the app behaves exactly as it did before, just polled. Typing rows
+     also expire server-side after eight seconds (RUN-THIS-v419.sql),
+     so a crashed tab can no longer type forever. */
+  var RT = { ws: null, tries: 0, timer: 0 };
+  function rtRetry() {
+    if (RT.timer) return;
+    RT.tries = Math.min(RT.tries + 1, 6);
+    RT.timer = setTimeout(function () { RT.timer = 0; rtConnect(); }, Math.min(30000, 3000 * RT.tries));
+  }
+  async function rtConnect() {
+    if (RT.ws || !ENABLED || !signedIn() || typeof WebSocket === "undefined") return;
+    var u = me(); if (!u) return;
+    var tk = ""; try { tk = await authToken(); } catch (e) {}
+    if (!tk) return;
+    var ws;
+    try { ws = new WebSocket(URL.replace(/^http/, "ws") + "/realtime/v1/websocket?apikey=" + encodeURIComponent(ANON) + "&vsn=2.0.0"); }
+    catch (e) { rtRetry(); return; }
+    RT.ws = ws;
+    var ref = 0, beat = 0;
+    function send(o) { try { ws.send(JSON.stringify(o)); } catch (e) {} }
+    ws.onopen = function () {
+      RT.tries = 0;
+      send({ topic: "realtime:public:tsb-live", event: "phx_join", payload: {
+        config: { broadcast: { ack: false, self: false }, presence: { key: "" },
+          postgres_changes: [
+            { event: "INSERT", schema: "public", table: "messages", filter: "receiver_id=eq." + u.id },
+            { event: "*", schema: "public", table: "dm_typing", filter: "peer_id=eq." + u.id }
+          ] },
+        access_token: tk
+      }, ref: String(++ref), join_ref: "1" });
+      beat = setInterval(function () { send({ topic: "phoenix", event: "heartbeat", payload: {}, ref: String(++ref) }); }, 25000);
+    };
+    ws.onmessage = function (ev) {
+      try {
+        var m = JSON.parse(ev.data || "{}");
+        if (m && m.event === "postgres_changes") {
+          try { window.dispatchEvent(new CustomEvent("tsb:realtime", { detail: m.payload || {} })); } catch (e) {}
+          toastPoll();
+        }
+      } catch (e) {}
+    };
+    ws.onclose = ws.onerror = function () {
+      clearInterval(beat);
+      if (RT.ws === ws) RT.ws = null;
+      rtRetry();
+    };
+  }
+
   if (typeof document !== "undefined") {
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { toastStart(); bootStart(); });
     else { toastStart(); bootStart(); }

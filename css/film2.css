@@ -878,7 +878,7 @@ html.dark .wr-gate__btn { background: #FFC800; color: #16130F !important; }
 .ft-orig h2 i { color: #E9C46A; }
 .ft-orig__n { flex: 0 0 auto; font: 600 12px var(--f-sans); color: #A39A8A; }
 .ft-orig .ft-rb { color: #F3EDE2; }
-.ft-orig .ft-rb span { color: #A39A8A !important; }
+.ft-orig .ft-rb span { color: #A39A8A; }   /* v419: no !important - the desktop light-mode rule outranks this by specificity alone */
 .ft-orig .ft-row { margin: 0 !important; padding: 2px 20px 12px !important; scroll-padding-left: 20px; }
 html.dark .ft-orig { background: #221D16; border: 1px solid rgba(255, 255, 255, .06); }
 body.fnt { background: var(--f-paper, #FBF8F1) !important; }

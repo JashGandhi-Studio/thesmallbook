@@ -1,0 +1,60 @@
+# TheSmallBook content pipeline (v419)
+# One chained check for every content or code change: the data files
+# parse, the client suite passes, and no cover in the library is a
+# broken image. The site stays a static deploy - this only guards it.
+name: content
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install (suite only - the site itself has no build)
+        run: npm install --ignore-scripts
+
+      - name: Data files parse and agree
+        run: |
+          node -e "
+            const fs = require('fs');
+            const t = fs.readFileSync('js/data.js', 'utf8');
+            const books = JSON.parse(t.slice(t.indexOf('['), t.lastIndexOf(']') + 1));
+            if (!books.length) throw new Error('no books');
+            const ids = new Set(books.map(b => b.id));
+            if (ids.size !== books.length) throw new Error('duplicate book ids');
+            for (const b of books) {
+              if (!b.id || !b.title || !Array.isArray(b.lessons)) throw new Error('bad book: ' + b.id);
+              if (!fs.existsSync(b.cover)) throw new Error('missing cover: ' + b.cover);
+            }
+            console.log(books.length + ' books, covers present');
+          "
+
+      - name: Client suite
+        run: node tests/client-suite.js
+
+      - name: Covers are real renders
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from PIL import Image
+          t = open('js/data.js', encoding='utf-8').read()
+          books = json.loads(t[t.index('['):t.rindex(']') + 1])
+          bad = []
+          for b in books:
+              try:
+                  im = Image.open(b['cover'])
+                  if im.size[0] < 200: bad.append(b['id'])
+              except Exception:
+                  bad.append(b['id'])
+          assert not bad, bad[:5]
+          print(len(books), 'covers open cleanly')
+          PY

@@ -14,8 +14,17 @@
                        seeded or rounded into existence.
 
    The log stays on the device (TSB.store marks it "device");
-   if a server rollup is ever wanted, summary() is the shape
-   it should send, aggregates only, never the raw trail.
+   summary() is the shape an admin view reads.
+
+   v419: flush() offers the batch to the server rollup
+   (public.events, RUN-THIS-v419.sql) - event names and counts the
+   app already records here, nothing about the reader's words,
+   nothing that tracks across sites, no advertising profile.
+   It sends at most every 30 seconds and once more as the page
+   hides, only what has not already been sent (a watermark, so a
+   crash can duplicate a batch but never lose one quietly into a
+   second identity), and it is a silent no-op when signed out,
+   offline, or when the table is not there yet.
    ============================================================ */
 (function () {
   "use strict";
@@ -87,6 +96,50 @@
     };
   }
 
+  var SENT_KEY = "tsb_telemetry_sent";
+  function sentAt() { try { return +(localStorage.getItem(SENT_KEY) || 0); } catch (e) { return 0; } }
+  function markSent(t) { try { localStorage.setItem(SENT_KEY, String(t)); } catch (e) {} }
+
+  var flushing = false;
+  function flush() {
+    if (flushing) return Promise.resolve(false);
+    var cfg = window.TSB_CONFIG || window.CFG || {};
+    var base = (cfg.SUPABASE_URL || "").replace(/\/$/, "");
+    var anon = cfg.SUPABASE_ANON_KEY || "";
+    if (!base || !anon) return Promise.resolve(false);
+    var since = sentAt();
+    var batch = read().filter(function (x) { return x.t > since; }).slice(0, 100);
+    if (!batch.length) return Promise.resolve(false);
+    var uid = null, tok = anon;
+    try {
+      var sess = JSON.parse(localStorage.getItem("tsb_auth_session") || "null");
+      if (sess && sess.user && sess.user.id) { uid = sess.user.id; tok = sess.access_token || anon; }
+    } catch (e) {}
+    if (!uid) return Promise.resolve(false);   /* signed-in readers only */
+    var rows = batch.map(function (x) {
+      return { user_id: uid, name: String(x.e || "event").slice(0, 60), props: x.d || {}, at: new Date(x.t).toISOString() };
+    });
+    flushing = true;
+    return fetch(base + "/rest/v1/events", {
+      method: "POST",
+      headers: { apikey: anon, Authorization: "Bearer " + tok, "Content-Type": "application/json", Prefer: "return=minimal" },
+      body: JSON.stringify(rows),
+      keepalive: true
+    }).then(function (r) {
+      flushing = false;
+      if (r.ok) { markSent(batch[batch.length - 1].t); return true; }
+      return false;
+    }).catch(function () { flushing = false; return false; });
+  }
+
+  /* batch quietly: every 30 s while the page lives, and once more
+     as it hides, so a short visit still lands */
+  try {
+    setInterval(function () { if (!document.hidden) flush(); }, 30000);
+    document.addEventListener("visibilitychange", function () { if (document.hidden) flush(); });
+    window.addEventListener("pagehide", function () { flush(); });
+  } catch (e) {}
+
   window.TSB = window.TSB || {};
-  window.TSB.telemetry = { log: log, events: read, summary: summary, KEY: KEY };
+  window.TSB.telemetry = { log: log, events: read, summary: summary, flush: flush, KEY: KEY };
 })();

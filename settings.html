@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!--tsb-pre--><link rel="preload" href="css/style.css?v=418" as="style"><link rel="preload" href="css/film.css?v=418" as="style"><link rel="preload" href="css/film2.css?v=418" as="style"><link rel="preload" href="css/desktop-v336.css?v=418" as="style">
+  <!--tsb-pre--><link rel="preload" href="css/style.css?v=420" as="style"><link rel="preload" href="css/film.css?v=420" as="style"><link rel="preload" href="css/film2.css?v=420" as="style"><link rel="preload" href="css/desktop-v336.css?v=420" as="style">
 <!--/tsb-pre-->
   <meta http-equiv="Content-Security-Policy" content="object-src 'self' blob: data: https:; base-uri 'self'; form-action 'self' https://api.web3forms.com">
     <meta property="og:title" content="Settings, TheSmallBook">
   <meta property="og:description" content="Theme, language, privacy and everything else, exactly how you like it.">
-  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=418">
+  <meta property="og:image" content="https://thesmallbook.in/assets/og-image.png?v=420">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://thesmallbook.in/settings.html">
@@ -54,26 +54,26 @@ window.TSB_SHELL={ready:ready,page:p};
 addEventListener("load",function(){setTimeout(ready,1200)});
 setTimeout(ready,20000);
 }catch(e){try{document.documentElement.classList.remove("tsb-boot")}catch(x){}}})();</script><!--/tsb-shell-->
-  <link rel="stylesheet" href="css/style.css?v=418">
+  <link rel="stylesheet" href="css/style.css?v=420">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" type="image/png" sizes="512x512" href="favicon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="css/film.css?v=418">
-  <link rel="stylesheet" href="css/film2.css?v=418">
-  <link rel="stylesheet" href="css/desktop-v336.css?v=418">
+  <link rel="stylesheet" href="css/film.css?v=420">
+  <link rel="stylesheet" href="css/film2.css?v=420">
+  <link rel="stylesheet" href="css/desktop-v336.css?v=420">
   <script>try{var _l=JSON.parse(localStorage.getItem("tsb_lang")||"\"en\"");if(_l&&_l!=="en")document.documentElement.classList.add("f-txw")}catch(e){}</script>
-<script src="js/tsb-store.js?v=418"></script>
-  <script src="js/telemetry.js?v=418"></script>
-  <script src="js/inapp-select.js?v=418" defer></script>
-<script src="js/motion-344.js?v=418" defer></script>
-<link rel="stylesheet" href="css/splash.css?v=418">
+<script src="js/tsb-store.js?v=420"></script>
+  <script src="js/telemetry.js?v=420"></script>
+  <script src="js/inapp-select.js?v=420" defer></script>
+<script src="js/motion-344.js?v=420" defer></script>
+<link rel="stylesheet" href="css/splash.css?v=420">
 <script>/* v350: the opening screen is for readers who already set the app up, once per open. Decided before the first paint so nobody sees it flash. */try{var isEntry=/(^|\/)(index\.html)?$/.test(location.pathname);if(!isEntry||sessionStorage.getItem("tsb_splash")){document.documentElement.className+=" tsb-nosplash";}else{sessionStorage.setItem("tsb_splash","1");}}catch(e){document.documentElement.className+=" tsb-nosplash";}</script>
-<link rel="stylesheet" href="css/lively.css?v=418">
+<link rel="stylesheet" href="css/lively.css?v=420">
 </head>
 <body class="setpage">
 <div id="tsbSplash" aria-hidden="true"><div class="sp-stage"><div class="sp-mark"><span class="sp-leaf sp-l"><svg viewBox="0 0 32 64" aria-hidden="true"><path d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z" fill="var(--mk-a,#16130F)"/></svg></span><span class="sp-leaf sp-r"><svg viewBox="32 0 32 64" aria-hidden="true"><path d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z" fill="var(--mk-b,#FFC800)"/></svg></span><span class="sp-spine"></span></div></div><div class="sp-word">The<i>Small</i>Book</div><div class="sp-bar"><i></i></div></div>
-<script src="js/splash.js?v=418" defer></script>
+<script src="js/splash.js?v=420" defer></script>
   <header class="accbar">
     <a class="logo" href="index.html"><span class="logo__mark"><svg class="tsb-mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path class="tsb-mark__a" d="M32 18c-6-5-13-6-20-6v34c7 0 14 1 20 6V18z"/><path class="tsb-mark__b" d="M32 18c6-5 13-6 20-6v34c-7 0-14 1-20 6V18z"/><path class="tsb-mark__sp" d="M32 18v34"/></svg></span><span>The<span class="logo__small">Small</span>Book</span></a>
     <div class="accbar__acts">
@@ -157,7 +157,7 @@ setTimeout(ready,20000);
       </div>
       <p class="sethint" id="voiceNow">Checking this device...</p>
       <p class="sethint">Kokoro English is the clearest voice: one larger download (about 90 MB, Wi-Fi recommended), then it reads fully offline on this device. Hindi keeps its own voice model. The standard model is about 63 MB per language.</p>
-      <script>(function(){var btn=document.getElementById("voiceChoose"),now=document.getElementById("voiceNow");function paint(){var c="";try{c=localStorage.getItem("tsb_voice_model")||""}catch(e){}var k=false;try{k=localStorage.getItem("tsb_kokoro_ready")==="1"}catch(e){}now.textContent=c==="kokoro"?(k?"Now reading in: Kokoro English.":"Kokoro English is chosen, download it to finish setting it up."):c==="plus"?"Now reading in: TheSmallBook Voice Model Plus.":c==="basic"?"Now reading in: TheSmallBook Voice Model.":"Now reading in: your phone voice. Pick a model for private, offline listening."}btn.addEventListener("click",function(){function open(){if(window.TTS_ENGINE&&TTS_ENGINE.openVoiceModel){TTS_ENGINE.openVoiceModel();setTimeout(paint,800)}else if(window.TSB_AUDIO&&TSB_AUDIO.openVoiceModel){TSB_AUDIO.openVoiceModel();setTimeout(paint,800)}}if(window.TTS_ENGINE||window.TTS){open();return}var s=document.createElement("script");s.src="js/tts-engine.js?v=418";s.onload=open;s.onerror=function(){now.textContent="The voice chooser could not load. Try again from any book's Listen button."};document.head.appendChild(s)});paint()})();</script>
+      <script>(function(){var btn=document.getElementById("voiceChoose"),now=document.getElementById("voiceNow");function paint(){var c="";try{c=localStorage.getItem("tsb_voice_model")||""}catch(e){}var k=false;try{k=localStorage.getItem("tsb_kokoro_ready")==="1"}catch(e){}now.textContent=c==="kokoro"?(k?"Now reading in: Kokoro English.":"Kokoro English is chosen, download it to finish setting it up."):c==="plus"?"Now reading in: TheSmallBook Voice Model Plus.":c==="basic"?"Now reading in: TheSmallBook Voice Model.":"Now reading in: your phone voice. Pick a model for private, offline listening."}btn.addEventListener("click",function(){function open(){if(window.TTS_ENGINE&&TTS_ENGINE.openVoiceModel){TTS_ENGINE.openVoiceModel();setTimeout(paint,800)}else if(window.TSB_AUDIO&&TSB_AUDIO.openVoiceModel){TSB_AUDIO.openVoiceModel();setTimeout(paint,800)}}if(window.TTS_ENGINE||window.TTS){open();return}var s=document.createElement("script");s.src="js/tts-engine.js?v=420";s.onload=open;s.onerror=function(){now.textContent="The voice chooser could not load. Try again from any book's Listen button."};document.head.appendChild(s)});paint()})();</script>
     </section>
 
     <section class="setcard">
@@ -223,6 +223,77 @@ setTimeout(ready,20000);
       <div class="setrow" style="margin-top:10px;">
         <button class="setbtn" id="soundTest">▶ Play test sound</button>
       </div>
+    </section>
+
+    <section class="setcard">
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>Push notifications</h2>
+      <div class="setrow" id="pushRow">
+        <button class="setopt" data-pushpref="dm">Messages</button>
+        <button class="setopt" data-pushpref="likes">Likes</button>
+        <button class="setopt" data-pushpref="comments">Comments</button>
+        <button class="setopt" data-pushpref="follows">New followers</button>
+        <button class="setopt" data-pushpref="stories">New stories</button>
+        <button class="setopt" data-pushpref="daily">Daily nudge</button>
+      </div>
+      <p class="sethint">Choose what may reach your phone. A switch off here is off everywhere - the push server honours the same switches.</p>
+      <script>(function(){var row=document.getElementById("pushRow");if(!row)return;function load(){try{return JSON.parse(localStorage.getItem("tsb_notify_prefs")||"{}")||{}}catch(e){return{}}}function paint(){var p=load();row.querySelectorAll("[data-pushpref]").forEach(function(b){var on=p[b.getAttribute("data-pushpref")]!==false;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on?"true":"false")})}function sync(p){try{var u=window.TSB_AUTH&&TSB_AUTH.user&&TSB_AUTH.user();if(!u||!u.id||!window.TSB_COMMUNITY||!TSB_COMMUNITY.api)return;TSB_COMMUNITY.api("profiles?id=eq."+u.id,{method:"PATCH",body:{notify_prefs:p}}).catch(function(){})}catch(e){}}row.addEventListener("click",function(e){var b=e.target.closest("[data-pushpref]");if(!b)return;var k=b.getAttribute("data-pushpref");var p=load();p[k]=p[k]===false?true:false;try{localStorage.setItem("tsb_notify_prefs",JSON.stringify(p))}catch(x){}paint();sync(p)});paint();try{var u2=window.TSB_AUTH&&TSB_AUTH.user&&TSB_AUTH.user();if(u2&&u2.id&&window.TSB_COMMUNITY&&TSB_COMMUNITY.api){TSB_COMMUNITY.api("profiles?id=eq."+u2.id+"&select=notify_prefs").then(function(r){var srv=r&&r[0]&&r[0].notify_prefs;if(srv&&typeof srv==="object"){try{localStorage.setItem("tsb_notify_prefs",JSON.stringify(srv))}catch(x){}paint()}}).catch(function(){})}}catch(e){}})();</script>
+    </section>
+    <section class="setcard" id="analyticsCard" hidden>
+      <h2><svg class="inline-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;"><path d="M3 3v18h18"></path><path d="M7 15l4-5 3 3 5-7"></path></svg>Analytics</h2>
+      <p class="sethint">Only you see this - it appears only on the founder account. Counted on our own server: every visit, every page, and where readers arrived from. Signed-in readers show their name and email; everyone else is a number, never a name.</p>
+      <div class="setrow" id="anaRange">
+        <button class="setopt" data-days="7">7 days</button>
+        <button class="setopt on" data-days="30">30 days</button>
+        <button class="setopt" data-days="90">90 days</button>
+        <button class="setbtn" id="anaRefresh">Refresh</button>
+      </div>
+      <div id="anaBody" style="margin-top:12px;"><p class="sethint">Loading your numbers\u2026</p></div>
+      <script>(function(){
+        var card=document.getElementById("analyticsCard"),body=document.getElementById("anaBody"),days=30;
+        function esc(x){return String(x==null?"":x).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+        function cfg(){var c=window.TSB_CONFIG||window.CFG||{};return {u:(c.SUPABASE_URL||"").replace(/\/$/,""),k:c.SUPABASE_ANON_KEY||""}}
+        function isFounder(){
+          try{if(window.TSB&&TSB.identity&&TSB.identity.user&&TSB.identity.isAdmin(TSB.identity.user()))return true}catch(e){}
+          try{var s=JSON.parse(localStorage.getItem("tsb_auth_session")||"null");var em=s&&s.user&&String(s.user.email||"").toLowerCase();var list=window.TSB_FOUNDER_EMAILS||[];return !!em&&list.indexOf(em)>=0}catch(e){return false}
+        }
+        function stat(label,val,sub){return '<div style="flex:1 1 40%;min-width:120px;background:var(--paper,#FFFDF8);border:1px solid rgba(20,18,14,.1);border-radius:14px;padding:12px 14px;"><div style="font-size:26px;font-weight:800;line-height:1.1;">'+esc(val)+'</div><div style="font-size:12px;opacity:.75;margin-top:2px;">'+esc(label)+(sub?' \u00b7 '+esc(sub):"")+'</div></div>'}
+        function table(rows,cols){if(!rows||!rows.length)return '<p class="sethint">Nothing yet.</p>';var h='<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:13px;">';rows.forEach(function(r){h+="<tr>"+cols.map(function(c){return '<td style="padding:6px 8px;border-bottom:1px solid rgba(20,18,14,.08);white-space:nowrap;">'+esc(c(r))+"</td>"}).join("")+"</tr>"});return h+"</table></div>"}
+        function when(t){try{return new Date(t).toLocaleString()}catch(e){return t||""}}
+        function render(d){
+          var t=d.today||{};
+          var h='<div style="display:flex;flex-wrap:wrap;gap:10px;">'
+            +stat("Visitors (devices)",d.visitors,"all-time "+(d.visitors_total||0))
+            +stat("Visits",d.visits,"sessions started")
+            +stat("Page views",d.page_views,"")
+            +stat("Signed-in readers",d.signed_in,"with accounts")
+            +"</div>";
+          h+='<p class="sethint" style="margin-top:10px;">Today so far: '+esc(t.visitors||0)+' visitors \u00b7 '+esc(t.visits||0)+' visits \u00b7 '+esc(t.page_views||0)+' page views.</p>';
+          h+="<h3 style=\"margin:16px 0 6px;font-size:15px;\">Where they came from</h3>"+table(d.sources,[function(r){return r.src},function(r){return r.visits+" visits"}]);
+          h+="<h3 style=\"margin:16px 0 6px;font-size:15px;\">Most opened pages</h3>"+table(d.pages,[function(r){return r.path},function(r){return r.views+" views"}]);
+          h+="<h3 style=\"margin:16px 0 6px;font-size:15px;\">Day by day</h3>"+table((d.by_day||[]).slice(-14).reverse(),[function(r){return r.d},function(r){return r.visitors+" visitors"},function(r){return r.visits+" visits"},function(r){return r.views+" views"}]);
+          h+="<h3 style=\"margin:16px 0 6px;font-size:15px;\">Signed-in readers seen</h3>"+table(d.readers,[function(r){return (r.name||"Reader")+" \u00b7 "+(r.email||"")},function(r){return r.visits+" visits"},function(r){return "last "+when(r.last_seen)}]);
+          body.innerHTML=h;
+        }
+        function load(){
+          var c=cfg();if(!c.u){body.innerHTML='<p class="sethint">Analytics is not configured.</p>';return}
+          var tok="";try{var s=JSON.parse(localStorage.getItem("tsb_auth_session")||"null");tok=(s&&s.access_token)||""}catch(e){}
+          body.innerHTML='<p class="sethint">Loading your numbers\u2026</p>';
+          fetch(c.u+"/rest/v1/rpc/tsb_analytics",{method:"POST",headers:{apikey:c.k,Authorization:"Bearer "+(tok||c.k),"Content-Type":"application/json"},body:JSON.stringify({p_days:days})})
+            .then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.json()})
+            .then(render)
+            .catch(function(){body.innerHTML='<p class="sethint">No numbers yet. If this is the first build with analytics, run supabase/sql/RUN-THIS-v420.sql once in the SQL Editor, then refresh.</p>'});
+        }
+        var started=false;
+        function boot(){
+          if(started||!isFounder())return;
+          started=true;
+          card.hidden=false;load();
+          document.getElementById("anaRange").addEventListener("click",function(e){var b=e.target.closest("[data-days]");if(b){days=+b.getAttribute("data-days");document.querySelectorAll("#anaRange [data-days]").forEach(function(x){x.classList.toggle("on",x===b)});load()}if(e.target.id==="anaRefresh")load()});
+        }
+        boot();
+        var tries=0,iv=setInterval(function(){tries++;boot();if(started||tries>=24)clearInterval(iv)},500);
+        window.addEventListener("tsb:auth",boot);
+      })();</script>
     </section>
 
     <!-- 🧭 CATEGORY 3: ACTION BAR -->
@@ -357,27 +428,27 @@ setTimeout(ready,20000);
       <p class="sethint" id="upDiagHint">Cover / quote images, burst videos, voice notes and profile photos live in your own Supabase storage. If any of them fail, this test names the exact missing piece, and the 30-second SQL fix for it.</p>
     </section>
 
-    <p class="youfine" data-tsb-build-text>Settings save on this device and sync with your account when signed in. Build tsb-v418.</p>
+    <p class="youfine" data-tsb-build-text>Settings save on this device and sync with your account when signed in. Build tsb-v420.</p>
   </main>
 
-  <script src="./js/bootguard.js?v=418"></script>
-  <script src="js/prefs.js?v=418"></script>
-  <script src="js/lang.js?v=418"></script>
-  <script src="js/config.js?v=418"></script><script src="js/avatar.js?v=418"></script><script src="js/daylight.js?v=418"></script>
-  <script src="js/install.js?v=418"></script>
-  <script src="js/shelf3d.js?v=418"></script>
-  <script src="js/auth.js?v=418"></script>
-  <script src="js/sounds.js?v=418"></script>
-  <script src="js/founder.js?v=418"></script>
-<script src="js/community.js?v=418"></script>
-  <script src="js/gold.js?v=418"></script>
-  <script src="js/paywall.js?v=418"></script>
-  <script src="js/podcast-data.js?v=418"></script>
-  <script src="js/audioplayer.js?v=418"></script>
-  <script src="js/bar.js?v=418" defer></script>
-  <script src="js/soft-motion.js?v=418" defer></script>
-  <script src="js/showcase.js?v=418"></script>
-  <script src="js/guide.js?v=418"></script>
+  <script src="./js/bootguard.js?v=420"></script>
+  <script src="js/prefs.js?v=420"></script>
+  <script src="js/lang.js?v=420"></script>
+  <script src="js/config.js?v=420"></script><script src="js/avatar.js?v=420"></script><script src="js/daylight.js?v=420"></script>
+  <script src="js/install.js?v=420"></script>
+  <script src="js/shelf3d.js?v=420"></script>
+  <script src="js/auth.js?v=420"></script>
+  <script src="js/sounds.js?v=420"></script>
+  <script src="js/founder.js?v=420"></script>
+<script src="js/community.js?v=420"></script>
+  <script src="js/gold.js?v=420"></script>
+  <script src="js/paywall.js?v=420"></script>
+  <script src="js/podcast-data.js?v=420"></script>
+  <script src="js/audioplayer.js?v=420"></script>
+  <script src="js/bar.js?v=420" defer></script>
+  <script src="js/soft-motion.js?v=420" defer></script>
+  <script src="js/showcase.js?v=420"></script>
+  <script src="js/guide.js?v=420"></script>
   <script>
     (function () {
       /* theme */
@@ -560,7 +631,7 @@ setTimeout(ready,20000);
   });
 })();
 </script>
-  <script src="js/onboard.js?v=418" defer></script>
+  <script src="js/onboard.js?v=420" defer></script>
 <script>
       /* 🔤 font style */
       function paintFontStyle() {
@@ -793,11 +864,12 @@ setTimeout(ready,20000);
     if (window.TSB_BARCTL) paint(); else window.addEventListener("load", paint);
   })();
   </script>
-  <script src="js/stt.js?v=418"></script>
-  <script src="js/film.js?v=418" defer></script>
-  <script src="js/film2.js?v=418" defer></script>
-<script src="js/mark.js?v=418" defer></script>
-<script src="js/pip-mind.js?v=418" defer></script>
-<script src="js/pip-ui.js?v=418" defer></script>
+  <script src="js/stt.js?v=420"></script>
+  <script src="js/film.js?v=420" defer></script>
+  <script src="js/film2.js?v=420" defer></script>
+<script src="js/mark.js?v=420" defer></script>
+<script src="js/pip-mind.js?v=420" defer></script>
+<script src="js/pip-ui.js?v=420" defer></script>
+<script src="js/visit.js?v=420" defer></script>
 </body>
 </html>

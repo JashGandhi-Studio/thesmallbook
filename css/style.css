@@ -3424,14 +3424,21 @@ html.dark .lessonnav__item--plan:hover { background: var(--yellow); }
 @media (prefers-reduced-motion: reduce) {
 .lessonnav__fab, .lessonnav__panel.open { animation: none !important; transition: opacity .1s !important; }
 }
+/* v419: the NEW tag hangs below the cover, in the centre - a pill on
+   its own centred row, overlapping the cover's foot, instead of a
+   ribbon pinned to the top where it fought the category label. */
+.card__newrow {
+display: flex; justify-content: center;
+margin: -11px 0 1px; position: relative; z-index: 3; pointer-events: none;
+}
 .card__new {
-position: absolute; top: -3px; left: 50%; transform: translateX(-50%); z-index: 3;
+position: relative;
 font-family: var(--font-head); font-size: .55rem; letter-spacing: 1.5px;
-padding: 6px 14px 8px;
+padding: 5px 13px 6px;
 background: linear-gradient(135deg, #ffd94d, var(--yellow) 55%, #e6b400);
 color: #111;
-border: var(--bw) solid var(--edge); border-top: none;
-border-radius: 0 0 8px 8px;
+border: var(--bw) solid var(--edge);
+border-radius: 999px;
 box-shadow: var(--sh-2);
 overflow: hidden;
 }
@@ -11892,3 +11899,9 @@ html[data-rm] body #rmArticle .frd-share { background: #16130F !important; borde
 .cmp-sec--verdict span { color: #6b5a00; }
 html.dark .cmp-facts { background: #241f18; }
 html.dark .cmp-frow { border-top-color: #3a332a; }
+
+/* v419: the keyboard gets the same welcome as the mouse. Anything a
+   pointer can hover, a keyboard can reach - and now visibly land on,
+   with the brand ring, in both themes. */
+:focus-visible { outline: 2px solid #8A6D00; outline-offset: 2px; }
+html.dark :focus-visible { outline-color: #FFC800; }

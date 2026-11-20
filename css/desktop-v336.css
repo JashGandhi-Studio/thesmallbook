@@ -296,7 +296,10 @@
   .ft-book__t { font-size: clamp(38px, 3.5vw, 48px); }
   .ft-book__m { max-width: 480px; }
   .ft-row, .ft-tiles { grid-column: 1 / -1; }
-  .ft-row { max-width: none; overflow: visible; gap: 18px; }
+  /* v419: a book row that cannot fit must scroll inside itself, never
+     spill past the grid and clip at the window's edge (1024-1440px) */
+  .ft-row { max-width: 100%; overflow-x: auto; overflow-y: hidden; gap: 18px; scroll-snap-type: x proximity; padding-inline: 4px; box-sizing: border-box; scrollbar-width: none; }
+  .ft-row::-webkit-scrollbar { display: none; }
   .ft-cont { grid-column: 1 / span 4; margin-top: 24px; }
   .ft-orig { grid-column: 5 / span 4; margin-top: 24px; }
   .ft-prompt { grid-column: 8 / -1; margin-top: 14px; min-height: 126px; box-sizing: border-box; }
@@ -311,6 +314,16 @@
     border-radius: 26px;
     box-shadow: 0 22px 44px -32px rgba(30, 25, 15, .28);
   }
+  /* v419: the Originals card turns white in light mode, so its text
+     must turn too - cream on white washes out (it measured under
+     1.2:1). These are all 4.5:1 or better on the white card. */
+  html:not(.dark) .ft-orig { color: #211C12; }
+  html:not(.dark) .ft-orig h2 { color: #211C12; }
+  html:not(.dark) .ft-orig h2 i { color: #8A6D00; }
+  html:not(.dark) .ft-orig__k { color: #8A6D00; }
+  html:not(.dark) .ft-orig__n { color: #5C5342; }
+  html:not(.dark) .ft-orig .ft-rb { color: #211C12; }
+  html:not(.dark) .ft-orig .ft-rb span { color: #5C5342; }
 }
 @media (min-width: 1440px) and (min-height: 560px) {
   .ft { column-gap: 30px; }

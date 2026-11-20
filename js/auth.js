@@ -1021,10 +1021,18 @@
     try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i) || ""; if (k.indexOf("tsb_reader_pos_") === 0) { const n = parseInt(localStorage.getItem(k), 10); if (!isNaN(n)) out[k.slice(15)] = { page: n, updated_at: +(rawGet("tsb_reader_pos_updated_" + k.slice(15), 0) || 0) }; } } } catch (e) {}
     return out;
   }
+  /* v419: the last 30 days of the notification read ledger, pruned -
+     the shape that rides in the reading state (see mergeReadingState) */
+  function notifLedger30() {
+    const raw = rawGet("tsb_notif_read", {}) || {};
+    const cut = Date.now() - 30 * 864e5, out = {};
+    Object.keys(raw).forEach((k) => { const t = +raw[k]; if (t >= cut) out[k] = t; });
+    return out;
+  }
   function stateSnapshot() {
     const journey = {};
     ["tsb_interests", "tsb_ob_lead", "tsb_mind", "tsb_read_minutes", "tsb_read_style", "tsb_read_when", "tsb_starter_shelf", "tsb_pack", "tsb_min_log", "tsb_taste_events", "tsb_kids_stars", "tsb_notes_v1", "tsb_served"].forEach((k) => { journey[k] = rawGet(k, null); });
-    return { v: 1, progress: lsGet(PROGRESS_KEY, {}), bookmarks: lsGet(MARKS_KEY, []), streak: rawGet("tsb_streak", null), plans: rawGet("tsb_plans", {}), days: rawGet("tsb_days", []), birthday: rawGet("tsb_birthday", ""), read_books: rawGet("tsb_read_books", []), highlights: rawGet("tsb_highlights_v1", {}), last_book: rawGet("tsb_last_book", ""), reader_positions: statePositions(), journey: journey, listen: stateListen(), updated_at: +(rawGet("tsb_reading_state_updated_at", Date.now()) || Date.now()) };
+    return { v: 1, notif_read: notifLedger30(), progress: lsGet(PROGRESS_KEY, {}), bookmarks: lsGet(MARKS_KEY, []), streak: rawGet("tsb_streak", null), plans: rawGet("tsb_plans", {}), days: rawGet("tsb_days", []), birthday: rawGet("tsb_birthday", ""), read_books: rawGet("tsb_read_books", []), highlights: rawGet("tsb_highlights_v1", {}), last_book: rawGet("tsb_last_book", ""), reader_positions: statePositions(), journey: journey, listen: stateListen(), updated_at: +(rawGet("tsb_reading_state_updated_at", Date.now()) || Date.now()) };
   }
   /* v406: listening follows the account too. Saved episodes, per show
      and audiobook positions, the last thing in the player and the
@@ -1143,6 +1151,11 @@
     out.last_book = !local.last_book ? (remote.last_book || "") : !remote.last_book ? local.last_book : (newerRemote ? remote.last_book : local.last_book);
     out.reader_positions = Object.assign({}, remote.reader_positions || {}); Object.keys(local.reader_positions || {}).forEach((id) => { const r = out.reader_positions[id], l = local.reader_positions[id]; if (!r || +(l.updated_at || 0) >= +(r.updated_at || 0)) out.reader_positions[id] = l; });
     out.listen = mergeListen(local.listen, remote.listen);
+    /* v419: the notification read ledger travels with the account (last
+       30 days), so a notification opened on one device can never rise
+       again as unread on another. Union merge: a read anywhere is a
+       read everywhere. */
+    out.notif_read = Object.assign({}, remote.notif_read || {}, local.notif_read || {});
     out.updated_at = Date.now(); return out;
   }
   function applyReadingState(st) {
@@ -1173,6 +1186,11 @@
       if (st.listen.show_taste && !rawGet("tsb_show_taste", null)) rawSet("tsb_show_taste", st.listen.show_taste);
       try { if (window.TSB_SHOWMORE && TSB_SHOWMORE.boot) TSB_SHOWMORE.boot(); } catch (e) {}
       try { if (window.TSB_ABMORE && TSB_ABMORE.boot) TSB_ABMORE.boot(); } catch (e) {}
+    }
+    if (st.notif_read) {
+      const curN = rawGet("tsb_notif_read", {}) || {}; let dirtyN = false;
+      Object.keys(st.notif_read).forEach((k) => { if (!curN[k] || +st.notif_read[k] > +curN[k]) { curN[k] = st.notif_read[k]; dirtyN = true; } });
+      if (dirtyN) rawSet("tsb_notif_read", curN);
     }
     rawSet("tsb_reading_state_updated_at", +(st.updated_at || Date.now()));
     try { window.dispatchEvent(new CustomEvent("tsb:reading-state")); window.dispatchEvent(new CustomEvent("tsb:sync")); } catch (e) {}

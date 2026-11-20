@@ -15,30 +15,15 @@
   const statCats = document.getElementById("statCats");
   const statMins = document.getElementById("statMins");
 
-  const LATEST_20_NEW = new Set([
-    "tuesdays-with-morrie",
-    "art-of-stillness",
-    "dhammapada-choice",
-    "kite-runner",
-    "night",
-    "hold-me-tight",
-    "mating-in-captivity",
-    "art-of-loving",
-    "how-to-not-die-alone",
-    "all-about-love",
-    "state-of-affairs",
-    "course-of-love",
-    "eight-dates",
-    "old-path-white-clouds",
-    "half-the-sky",
-    "measure-of-man",
-    "ship-of-magic",
-    "second-act-advantage",
-    "grandparents-handbook-2",
-    "phone-free-childhood"
-  ]);
+  /* v419: "new" means what the library says is new. The badge used to
+     answer to a hand-kept list of twenty ids buried in this file, so
+     most of the books in TSB_CONFIG.NEW_THIS_WEEK - the list the
+     library actually maintains - never wore the tag anywhere. One
+     list now: config declares, every surface obeys. */
+  const NEW_IDS = ((window.TSB_CONFIG && TSB_CONFIG.NEW_THIS_WEEK) || []).filter(Boolean);
+  const NEW_SET = new Set(NEW_IDS);
 
-  function isNew(id) { return LATEST_20_NEW.has(id); }
+  function isNew(id) { return NEW_SET.has(id); }
   function isOrig(id) { try { return ((window.TSB_CONFIG && TSB_CONFIG.ORIGINALS) || []).indexOf(id) >= 0; } catch (e) { return false; } }
 
   let activeCat = "ALL";
@@ -365,13 +350,13 @@
       a.style.animationDelay = `${Math.min(i, 10) * 40}ms`;
       a.innerHTML = `
         <div class="card__top">
-          ${isNew(b.id) ? `<span class="card__new" translate="no">✦ NEW</span>` : ""}
           ${isOrig(b.id) ? `<span class="card__orig" translate="no">✦ TSB ORIGINAL</span>` : ""}
           <span class="card__cat">${b.category}</span>
           <span class="card__time">⏱ ${b.readTime}</span>
           <img class="card__cover" src="${b.cover}" alt="${b.title} cover" loading="lazy">
           <button class="card__fav ${fav ? "on" : ""}" data-fav="${b.id}" aria-label="Save to my shelf">${fav ? HEART_ON : HEART_OFF}</button>
         </div>
+        ${isNew(b.id) ? `<span class="card__newrow"><span class="card__new" translate="no">✦ NEW</span></span>` : ""}
         ${pct > 0 ? `<div class="card__progress"><em>${pct === 100 ? "✓ DONE" : pct + "%"}</em><span style="width:${pct}%"></span></div>` : ""}
         <div class="card__body">
           <div class="card__title">${b.title}</div>
@@ -430,13 +415,13 @@
     const fav = TSB.bookmarks.has(b.id);
     return `
       <div class="card__top">
-        ${isNew(b.id) ? `<span class="card__new" translate="no">✦ NEW</span>` : ""}
-        ${isOrig(b.id) ? `<span class="card__orig" translate="no">✦ TSB ORIGINAL</span>` : ""}
+          ${isOrig(b.id) ? `<span class="card__orig" translate="no">✦ TSB ORIGINAL</span>` : ""}
         <span class="card__cat">${b.category}</span>
         <span class="card__time">⏱ ${b.readTime}</span>
         <img class="card__cover" src="${b.cover}" alt="${b.title} cover" loading="lazy">
         <button class="card__fav ${fav ? "on" : ""}" data-fav="${b.id}" aria-label="Save to my shelf">${fav ? HEART_ON : HEART_OFF}</button>
       </div>
+      ${isNew(b.id) ? `<span class="card__newrow"><span class="card__new" translate="no">✦ NEW</span></span>` : ""}
       ${pct > 0 ? `<div class="card__progress"><em>${pct === 100 ? "✓ DONE" : pct + "%"}</em><span style="width:${pct}%"></span></div>` : ""}
       <div class="card__body">
         <div class="card__title">${b.title}</div>
@@ -495,7 +480,7 @@
     /* 3 saved books */
     add("My shelf", all.filter((b) => TSB.bookmarks.has(b.id)), "❤️ MY SHELF", null);
     /* 4 new and original */
-    add("New this week", all.filter((b) => isNew(b.id)), null, null);
+    add("New this week", NEW_IDS.map((id) => byId[id]).filter(Boolean), null, null);
     add("TheSmallBook Originals", all.filter((b) => isOrig(b.id)), null, "Written here, nowhere else");
     /* 5 the shelves you care about first, then the rest */
     let lead = [];
