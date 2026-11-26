@@ -32,8 +32,8 @@
     try { id = new URLSearchParams(location.search).get("id") || ""; } catch (e0) {}
     var book = null;
     try { if (typeof BOOKS !== "undefined") { for (var i = 0; i < BOOKS.length; i++) if (BOOKS[i].id === id) { book = BOOKS[i]; break; } } } catch (e1) {}
-    var w = Math.min(236, Math.max(150, (box.getBoundingClientRect().width || 236) - 60));
     box.classList.add("b3d-box");
+    var w = Math.min(236, Math.max(150, (box.getBoundingClientRect().width || 236) - 60));
     window.TSB3D.wrap(img, {
       w: w,
       ajar: true,

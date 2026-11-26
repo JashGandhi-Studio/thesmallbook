@@ -86,19 +86,30 @@ window.TSB3D = (function () {
     img.setAttribute("draggable", "false");
 
     /* keep colours in sync if the page swaps the cover later */
+    /* v421: keep the front face TRUE to the cover's aspect at whatever
+       width the layout finally gives it. The hero box can shrink after
+       this build runs (the film layer caps it at 168px), and a face left
+       at the old height made object-fit:cover crop the cover's sides -
+       titles lost their first letter. Height now follows rendered width. */
+    function syncSize() {
+      try {
+        var rw = root.getBoundingClientRect().width;
+        if (rw > 40) {
+          var r = (img.naturalWidth && img.naturalHeight) ? img.naturalHeight / img.naturalWidth : ratio;
+          if (isFinite(r) && r > .9 && r < 1.8) root.style.setProperty("--h", Math.round(rw * r) + "px");
+        }
+      } catch (eS) {}
+    }
     try {
       new MutationObserver(function () {
         var c = colours(img.getAttribute("src"));
         root.style.setProperty("--bg", c.bg); root.style.setProperty("--fg", c.fg);
-        if (img.naturalWidth) {
-          var r = img.naturalHeight / img.naturalWidth;
-          if (isFinite(r) && r > .9 && r < 1.8) root.style.setProperty("--h", Math.round(w * r) + "px");
-        }
+        syncSize();
       }).observe(img, { attributes: true, attributeFilter: ["src"] });
-      img.addEventListener("load", function () {
-        var r = img.naturalHeight / img.naturalWidth;
-        if (isFinite(r) && r > .9 && r < 1.8) root.style.setProperty("--h", Math.round(w * r) + "px");
-      });
+      img.addEventListener("load", syncSize);
+      if (window.ResizeObserver) new ResizeObserver(syncSize).observe(root);
+      window.addEventListener("resize", syncSize);
+      setTimeout(syncSize, 400); setTimeout(syncSize, 1400);
     } catch (e) {}
 
     /* ---------- pose + light ---------- */

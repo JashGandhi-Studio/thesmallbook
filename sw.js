@@ -4,7 +4,7 @@
    Bump CACHE_VERSION when you deploy changes.
    ============================================================ */
 
-const CACHE_VERSION = "tsb-v420";
+const CACHE_VERSION = "tsb-v422";
 /* NOTE: the assets/logos/* entries below mirror js/store-data.js exactly.
    every tile the store links to must be precached, or the offline store
    shows broken images. tests/client-suite.js asserts they never drift. */

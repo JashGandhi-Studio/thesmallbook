@@ -1199,7 +1199,7 @@
         !/reader\.html/.test(location.pathname) &&
         !document.getElementById("tsbBar") && !document.querySelector('script[src*="bar.js"]')) {
       var bs = document.createElement("script");
-      bs.src = "js/bar.js?v=420";
+      bs.src = "js/bar.js?v=422";
       bs.defer = true;
       document.body.appendChild(bs);
     }

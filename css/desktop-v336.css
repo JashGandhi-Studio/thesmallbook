@@ -455,3 +455,10 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* v421: one front-door sign per screen. Where the sidebar stands full
+   height with its wordmark (1181px+), the page header's own logo steps
+   aside - pages used to carry the brand twice. */
+@media (min-width: 1181px) and (min-height: 560px) {
+  html.tsb-hasbar .logo { display: none; }
+}

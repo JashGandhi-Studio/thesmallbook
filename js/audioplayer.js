@@ -286,7 +286,16 @@
       /* dock placement rides the bar, tucks when it hides (physics, untouched) */
       "html.tsb-hasbar #tsbAp{bottom:calc(var(--bar-total) + 22px)}" +
       "#tsbAp{transition:transform .32s cubic-bezier(.22,.9,.35,1);touch-action:pan-y}" +
-      "html.tsb-bar-hidden #tsbAp{transform:translateY(calc(var(--bar-total) + 12px))}";
+      /* v421: the dock NEVER hides itself. It used to tuck below the fold
+         with the scrolling bar (html.tsb-bar-hidden) and stay there until
+         the reader scrolled back up - readers read that as the player
+         vanishing mid-book, so the tuck is gone for good. */
+      "@media (min-width:700px) and (max-width:1023px){#tsbAp.fp-dock{left:118px!important;right:14px!important;width:auto!important;margin:0!important}}" +
+      "#tsbAp.fp-dock .ap-close{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:#F4ECDD}" +
+      ".ap-close{flex:0 0 auto;width:36px;height:36px;margin-left:2px;border-radius:50%;border:1px solid rgba(22,19,15,.14);background:rgba(22,19,15,.05);color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}" +
+      ".ap-close:active{transform:scale(.92)}" +
+      "html.dark .ap-close{border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.07)}" +
+      ".ap-close svg{width:15px;height:15px}";
     document.head.appendChild(st);
   }
 
@@ -302,7 +311,8 @@
       '<button class="ap-prev" aria-label="Previous chapter">' + IC.prev + '</button>' +
       '<button class="ap-play" aria-label="Play or pause">' + IC.pause + '</button>' +
       '<button class="ap-next" aria-label="Next chapter">' + IC.next + '</button>' +
-      '<button class="ap-list" aria-label="Queue and settings">' + IC.list + '</button>';
+      '<button class="ap-list" aria-label="Queue and settings">' + IC.list + '</button>' +
+      '<button class="ap-close" aria-label="Close player">' + IC.x + '</button>';
     document.body.appendChild(dock);
     applyDockPos();
     dock.addEventListener("click", function (e) {
@@ -312,14 +322,17 @@
     dock.querySelector(".ap-next").addEventListener("click", function () { nextItem(); });
     dock.querySelector(".ap-prev").addEventListener("click", function () { prevItem(); });
     dock.querySelector(".ap-list").addEventListener("click", function () { openSheet(); });
+    dock.querySelector(".ap-close").addEventListener("click", function () { parkSession(); });
     dock.querySelector(".ap-mid").addEventListener("click", function () { openSheet(); });
     dock.querySelector(".ap-artwrap").addEventListener("click", function () { openSheet(); });   /* v314: the whole left side opens the player */
     bindSwipe();
     document.body.classList.add("tsb-audio-live");
   }
 
-  /* swipe the dock fully right to cancel: finger follows, past a third of
-     the screen it flies out and the player closes (your spot is kept) */
+  /* swipe the dock sideways - either way - to close it: the finger
+     follows, past a third of the screen it flies out and the player
+     closes (your spot is kept). The dock also carries an ✕ button
+     doing the same job for anyone who does not swipe. */
   /* v404: on a desktop the floating player can live where the listener
      puts it. The spot is remembered per device; phones and tablets keep
      the composed bottom pose. */
@@ -328,18 +341,31 @@
   function desktopDock() {
     try { return window.matchMedia("(min-width: 1024px)").matches; } catch (e) { return false; }
   }
+  function dockPosClear() {
+    if (!dock) return;
+    ["left", "top", "right", "bottom", "margin"].forEach(function (prop) {
+      try { dock.style.removeProperty(prop); } catch (e) {}
+    });
+  }
+  function dockPosSet(x, y) {
+    if (!dock) return;
+    try {
+      dock.style.setProperty("left", x + "px", "important");
+      dock.style.setProperty("top", y + "px", "important");
+      dock.style.setProperty("right", "auto", "important");
+      dock.style.setProperty("bottom", "auto", "important");
+      dock.style.setProperty("margin", "0", "important");
+    } catch (e) {}
+  }
   function applyDockPos() {
     if (!dock) return;
-    if (!desktopDock()) {
-      dock.style.left = ""; dock.style.top = ""; dock.style.right = ""; dock.style.bottom = ""; dock.style.margin = "";
-      return;
-    }
+    if (!desktopDock()) { dockPosClear(); return; }
     var pos = jget(DOCKPOSKEY, null);
-    if (!pos || !isFinite(pos.x) || !isFinite(pos.y)) return;
+    if (!pos || !isFinite(pos.x) || !isFinite(pos.y)) { dockPosClear(); return; }
     var w = dock.offsetWidth || 680, h = dock.offsetHeight || 76;
     var x = Math.max(8, Math.min(Number(pos.x), Math.max(8, window.innerWidth - w - 8)));
     var y = Math.max(8, Math.min(Number(pos.y), Math.max(8, window.innerHeight - h - 8)));
-    dock.style.left = x + "px"; dock.style.top = y + "px"; dock.style.right = "auto"; dock.style.bottom = "auto"; dock.style.margin = "0";
+    dockPosSet(x, y);
   }
   /* v322: the dock's home pose. Whatever happens - drag, sheet, app switch -
      it always returns here, pinned to the bottom, never drifting or
@@ -352,7 +378,7 @@
     applyDockPos();
   }
   function bindSwipe() {
-    var sx = 0, sy = 0, dx = 0, dy = 0, drag = false, freeDrag = false, startRect = null;
+    var sx = 0, sy = 0, dx = 0, dy = 0, drag = false, freeDrag = false, startRect = null, gone = false, downTarget = null, captured = false;
     try { dock.style.touchAction = "pan-y"; } catch (eT) {}
     dock.addEventListener("touchstart", function (e) {
       if (e.target.closest("button")) return;
@@ -362,61 +388,93 @@
       if (drag) e.stopPropagation();
     }, { passive: true });
     dock.addEventListener("pointerdown", function (e) {
-      if (e.target.closest("button")) return;
-      drag = true; sx = e.clientX; sy = e.clientY; dx = 0; dy = 0; freeDrag = false;
+      /* v422: a swipe may begin on ANY part of the dock, including a
+         button. The down target is remembered: a still tap reaches that
+         button untouched, while real movement becomes a drag and the
+         trailing click is suppressed below. */
+      drag = true; gone = false; sx = e.clientX; sy = e.clientY; dx = 0; dy = 0; freeDrag = false;
+      downTarget = e.target; captured = false;
       startRect = dock.getBoundingClientRect();
-      try { if (e.target.setPointerCapture) e.target.setPointerCapture(e.pointerId); } catch (eC) {}
+      if (!(downTarget && downTarget.closest && downTarget.closest("button"))) {
+        try { dock.setPointerCapture(e.pointerId); captured = true; } catch (eC) {}
+      }
       try { dock.style.transition = "none"; } catch (e2) {}
     });
     dock.addEventListener("pointermove", function (e) {
-      if (!drag) return;
+      if (!drag || gone) return;
       dx = e.clientX - sx; dy = e.clientY - sy;
+      if (!captured && Math.sqrt(dx * dx + dy * dy) > 8) {
+        try { dock.setPointerCapture(e.pointerId); captured = true; } catch (eC2) {}
+      }
       if (desktopDock() && startRect) {
-        if (!freeDrag && Math.sqrt(dx * dx + dy * dy) > 8) { freeDrag = true; dock.classList.add("ap-dragging"); }
+        if (!freeDrag && Math.sqrt(dx * dx + dy * dy) > 8) { freeDrag = true; dock.classList.add("ap-dragging"); try { dock.style.animation = "none"; } catch (eA) {} }
         if (freeDrag) {
           var x = Math.max(8, Math.min(startRect.left + dx, Math.max(8, window.innerWidth - startRect.width - 8)));
           var y = Math.max(8, Math.min(startRect.top + dy, Math.max(8, window.innerHeight - startRect.height - 8)));
-          dock.style.left = x + "px"; dock.style.top = y + "px"; dock.style.right = "auto"; dock.style.bottom = "auto"; dock.style.margin = "0"; dock.style.transform = "none"; dock.style.opacity = "1";
+          /* v422: film's fp-dock pins left/right/bottom with !important.
+             Ordinary inline left/top lost that fight, so the dock stayed
+             at x=12 and stretched taller instead of following the mouse.
+             Important inline edges are the only way the saved spot can
+             actually be the spot. */
+          dockPosSet(x, y);
+          dock.style.transform = "none"; dock.style.opacity = "1";
           return;
         }
       }
       /* On phones and tablets horizontal is the dock's dismiss axis:
-         vertical finger movement never lifts or drops it. */
+         vertical finger movement never lifts or drops it. v421: the finger
+         leads BOTH ways - the old build clamped dx at 0, so a leftward
+         flick (the natural one) moved nothing and the dock felt nailed
+         down. A firm swipe UP still opens the full player. */
       if (Math.abs(dy) > Math.abs(dx)) return;
-      dx = Math.max(0, dx);
       dock.style.transform = "translateX(" + dx + "px) rotate(" + (dx * 0.03) + "deg)";
-      dock.style.opacity = Math.max(0.1, 1 - (dx / (window.innerWidth * 0.6)));
+      dock.style.opacity = Math.max(0.1, 1 - (Math.abs(dx) / (window.innerWidth * 0.6)));
     });
+    function springBack() {
+      dock.style.transition = "transform 0.24s cubic-bezier(.16, 1, .3, 1), opacity 0.2s ease";
+      dock.style.transform = "translateX(0) rotate(0deg)";
+      dock.style.opacity = "1";
+      setTimeout(function () { resetDockPose(); }, 250);
+    }
     function end(e) {
       if (!drag) return;
-      drag = false;
+      drag = false; captured = false;
+      if (gone) return;
       if (freeDrag) {
         freeDrag = false;
+        /* measure BEFORE the dragging class comes off: its removal used to
+           replay the entrance animation and shift this rect by its 120px
+           rise, so the remembered spot was never the dropped spot */
+        var r = dock.getBoundingClientRect();
         dock.classList.remove("ap-dragging");
         suppressDockClickUntil = Date.now() + 300;
-        var r = dock.getBoundingClientRect();
         jset(DOCKPOSKEY, { x: Math.round(r.left), y: Math.round(r.top) });
         try { dock.style.transition = ""; } catch (eD) {}
         return;
       }
-      /* v315: a tap (not a swipe) on the title or art opens the full player */
-      if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && e && e.target && !e.target.closest("button")) { openSheet(); return; }
+      if (Math.abs(dx) > 10 || Math.abs(dy) > 10) suppressDockClickUntil = Date.now() + 350;
+      /* a tap (not a swipe) on the title or art opens the full player */
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && downTarget && !(downTarget.closest && downTarget.closest("button"))) { openSheet(); return; }
       if (!desktopDock() && dy < -55 && Math.abs(dy) > Math.abs(dx)) { resetDockPose(); openSheet(); return; }
-      if (dx > Math.min(140, window.innerWidth * 0.35)) {
+      if (Math.abs(dx) > Math.min(120, window.innerWidth * 0.3)) {
+        gone = true;
+        var dir = dx > 0 ? 1 : -1;
         dock.style.transition = "transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.18s ease";
-        dock.style.transform = "translateX(" + window.innerWidth + "px) rotate(7deg)";
+        dock.style.transform = "translateX(" + (dir * window.innerWidth) + "px) rotate(" + (dir * 7) + "deg)";
         dock.style.opacity = "0";
         setTimeout(function () { parkSession(); }, 190);
       } else {
-        dock.style.transition = "transform 0.24s cubic-bezier(.16, 1, .3, 1), opacity 0.2s ease";
-        dock.style.transform = "translateX(0) rotate(0deg)";
-        dock.style.opacity = "1";
-        setTimeout(function () { resetDockPose(); }, 250);
+        springBack();
       }
     }
     dock.addEventListener("pointerup", end);
-    dock.addEventListener("pointercancel", end);
-    window.addEventListener("pointerup", function () { if (drag) { drag = false; resetDockPose(); } });
+    dock.addEventListener("pointercancel", function () {
+      if (!drag || gone) return;
+      drag = false; freeDrag = false; captured = false; downTarget = null;
+      dock.classList.remove("ap-dragging");
+      springBack();
+    });
+    window.addEventListener("pointerup", function () { if (drag && !gone) { drag = false; freeDrag = false; captured = false; downTarget = null; dock.classList.remove("ap-dragging"); resetDockPose(); } });
     window.addEventListener("resize", applyDockPos);
   }
 
@@ -715,6 +773,9 @@
       '</div>' +
       upNextHtml() +
       (q.credit ? '<p class="ap-credit">' + q.credit + '</p>' : '') +
+      '<div class="ap-lab">PLAYER</div><div class="ap-row">' +
+        '<button class="ap-chip" id="apClosePlayer" type="button">✕ CLOSE PLAYER · KEEP MY PLACE</button>' +
+      '</div>' +
       '</div>';
     document.body.appendChild(sheet);
     /* v399: the full player gets the whole screen. While it is open the app's
@@ -897,6 +958,8 @@
       setText(E.slN, "sn", slLeft > 0 ? "😴 pausing by itself in " + slLeft + " min" : "");
     }, 1000);
     sheet.querySelector(".ap-x").addEventListener("click", closeSheet);
+    var cpBtn = sheet.querySelector("#apClosePlayer");
+    if (cpBtn) cpBtn.addEventListener("click", function () { closeSheet(); parkSession(); });
     var bp = sheet.querySelector("#apBigPlay");
     if (bp) bp.addEventListener("click", function () { toggle(); });
     var pc2 = sheet.querySelector("#apPrevC"); if (pc2) pc2.addEventListener("click", function () { prevItem(); });
@@ -1443,7 +1506,7 @@
       bottom = "calc(var(--bar-total) + 24px)";
     }
     var t = document.createElement("div");
-    t.style.cssText = "position:fixed;left:50%;transform:translateX(-50%);bottom:" + bottom + ";z-index:280;background:var(--ink);color:var(--paper);border-radius:999px;padding:10px 16px;font:800 12px 'Space Grotesk',sans-serif;max-width:86vw;text-align:center;box-shadow:0 6px 18px rgba(0,0,0,.25)";
+    t.style.cssText = "position:fixed;left:50%;transform:translateX(-50%);bottom:" + bottom + ";z-index:280;background:var(--ink);color:var(--paper);border-radius:999px;padding:10px 16px;font:800 12px 'Space Grotesk',sans-serif;max-width:86vw;text-align:center;box-shadow:0 6px 18px rgba(0,0,0,.25);pointer-events:none";
     t.textContent = msg;
     document.body.appendChild(t);
     setTimeout(function () { t.remove(); }, 3200);
@@ -1885,6 +1948,11 @@
             });
         });
     }
+    /* v422: hosts that are known to refuse browser CORS (Spreaker and
+       Substack) go straight to the mirrors. Trying them directly first
+       never worked, took seconds, and filled the console with failures
+       before the same mirror fallback rescued the show anyway. */
+    if (/(?:spreaker|substack)\.com/i.test(url)) { viaMirror(); return; }
     fetchWithDeadline(url, 9000).then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.text(); }).then(function (xml) {
       var doc = new DOMParser().parseFromString(xml, "text/xml");
       var ch = doc.querySelector("channel") || doc.documentElement;

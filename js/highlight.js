@@ -241,7 +241,7 @@
       sh.remove();
       try {
         var t = document.createElement("div");
-        t.style.cssText = "position:fixed;left:50%;transform:translateX(-50%);bottom:110px;z-index:280;background:var(--ink);color:var(--paper);border-radius:999px;padding:10px 16px;font:800 12px 'Space Grotesk',sans-serif";
+        t.style.cssText = "position:fixed;left:50%;transform:translateX(-50%);bottom:110px;z-index:280;background:var(--ink);color:var(--paper);border-radius:999px;padding:10px 16px;font:800 12px 'Space Grotesk',sans-serif;pointer-events:none";
         t.textContent = "📝 In your notebook, with the line you underlined";
         document.body.appendChild(t);
         setTimeout(function () { t.remove(); }, 2600);

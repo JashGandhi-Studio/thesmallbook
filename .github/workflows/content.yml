@@ -1,4 +1,4 @@
-# TheSmallBook content pipeline (v419)
+# TheSmallBook content pipeline (v422)
 # One chained check for every content or code change: the data files
 # parse, the client suite passes, and no cover in the library is a
 # broken image. The site stays a static deploy - this only guards it.
@@ -13,21 +13,26 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: "20"
+          node-version: "22"
+          cache: npm
 
       - name: Install (suite only - the site itself has no build)
-        run: npm install --ignore-scripts
+        run: npm ci --ignore-scripts
 
       - name: Data files parse and agree
         run: |
           node -e "
             const fs = require('fs');
             const t = fs.readFileSync('js/data.js', 'utf8');
-            const books = JSON.parse(t.slice(t.indexOf('['), t.lastIndexOf(']') + 1));
+            const marker = t.indexOf('const BOOKS =');
+            const start = t.indexOf('[', marker);
+            const end = t.indexOf('];', start);
+            if (marker < 0 || start < 0 || end < 0) throw new Error('BOOKS array not found');
+            const books = JSON.parse(t.slice(start, end + 1));
             if (!books.length) throw new Error('no books');
             const ids = new Set(books.map(b => b.id));
             if (ids.size !== books.length) throw new Error('duplicate book ids');
@@ -43,11 +48,15 @@ jobs:
 
       - name: Covers are real renders
         run: |
+          python3 -m pip install --quiet --disable-pip-version-check pillow
           python3 - <<'PY'
           import json, os
           from PIL import Image
           t = open('js/data.js', encoding='utf-8').read()
-          books = json.loads(t[t.index('['):t.rindex(']') + 1])
+          marker = t.index('const BOOKS =')
+          start = t.index('[', marker)
+          end = t.index('];', start)
+          books = json.loads(t[start:end + 1])
           bad = []
           for b in books:
               try:

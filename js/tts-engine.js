@@ -394,7 +394,7 @@ window.TTS_ENGINE = (function () {
     /* v412: Piper is a large model stack. It is imported lazily, only when
        speech or the voice picker actually needs it, so opening a reader can
        never be held up by the voice runtime or its wasm files. */
-    modelLoading = import("./tts-piper.mjs?v=420").then(function (m) { modelApi = m; return m; }).catch(function (e) { modelLoading = null; throw e; });
+    modelLoading = import("./tts-piper.mjs?v=422").then(function (m) { modelApi = m; return m; }).catch(function (e) { modelLoading = null; throw e; });
     return modelLoading;
   }
   function modelVoiceName() {
@@ -519,7 +519,7 @@ window.TTS_ENGINE = (function () {
     provider = "model";
     var ready = false; try { ready = localStorage.getItem("tsb_kokoro_ready") === "1"; } catch (e) {}
     if (!ready) return Promise.resolve({ ok: false, heard: 0, missing: true });
-    return import("./tts-kokoro.mjs?v=420").then(function (m) { return m.kokoroSpeak(text, speedV || 1.08); }).then(function (blob) {
+    return import("./tts-kokoro.mjs?v=422").then(function (m) { return m.kokoroSpeak(text, speedV || 1.08); }).then(function (blob) {
       return new Promise(function (resolve) {
         if (keep !== gen || !playing) { resolve({ ok: false, heard: 0 }); return; }
         playModelBlob(blob, text, speedV, function (ok) { if (ok) modelPlayed = true; resolve({ ok: !!ok, heard: ok ? 1 : 0 }); });
@@ -679,7 +679,7 @@ window.TTS_ENGINE = (function () {
       /* v356: from the first tap to the finished file, nothing speaks */
       voiceBusy = true;
       if (tier === "kokoro") {
-        import("./tts-kokoro.mjs?v=420").then(function (m) {
+        import("./tts-kokoro.mjs?v=422").then(function (m) {
           return m.loadKokoro(function (pr) {
             if (pr.phase === "model" && pr.total) b.querySelector("small").textContent = "Downloading " + Math.min(99, Math.round(pr.loaded / pr.total * 100)) + "%";
             else b.querySelector("small").textContent = "Making it available offline…";

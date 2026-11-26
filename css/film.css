@@ -681,7 +681,7 @@ html.dark.film .pc-browse, html.dark.film #abMore, html.dark.film #pcMoreShows, 
 html.fv-gold .nav { display: none !important; }
 html.fg-collapsed.fv-gold .goldwrap > *:not(#fgPanel) { display: none !important; }
 html.fv-gold .goldwrap { padding-top: 0 !important; }
-html.fv-gold .fg { position: relative; max-width: 440px; margin: 0 auto; padding: 64px 4px 26px; text-align: center; color: #EFE6D3; }
+html.fv-gold .fg { position: relative; overflow: clip; max-width: 440px; margin: 0 auto; padding: 64px 4px 26px; text-align: center; color: #EFE6D3; }
 html.fv-gold .fg::before { content: ""; position: absolute; left: 50%; top: -60px; width: 520px; height: 440px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(233, 196, 106, .26), rgba(233, 196, 106, 0)); pointer-events: none; animation: fgGlow 5s ease-in-out infinite; z-index: 0; }
 html.fv-gold .fg > * { position: relative; z-index: 1; }
 @keyframes fgGlow { 50% { opacity: .55; } }
@@ -810,3 +810,27 @@ body:has(#tsbAp.ap-on) .achvpop, body.tsb-audio-live .achvpop { bottom: calc(var
    tap on Next after opening a book sometimes did nothing.
    ========================================================================== */
 .achvpop, html.film .achvpop { pointer-events: none !important; }
+
+/* v421: on tablet and desktop the Mind Pick card was the phone's 196px box
+   stretched wide, and its question hit the 3-line clamp mid-sentence. A
+   little more height and a fourth line let it finish what it asks. */
+@media (min-width: 641px) {
+  .ft-mp { height: 228px; }
+  .ft-mp__q { -webkit-line-clamp: 5; }
+}
+
+/* v421: tap targets that were under 36px - section "See all" links and
+   the book-page chips - get a full-height touch area. */
+.ft-sec a { display: inline-flex; align-items: center; min-height: 38px; padding: 0 6px; margin-right: -6px; }
+html.fv-book .fb-chip { min-height: 38px; }
+
+/* v421: on wide desktops the book page no longer keeps the phone's 560px
+   measure - the hero and its sections breathe to 780px. Tablets keep the
+   reading column they already had. */
+@media (min-width: 1181px) {
+  html.fv-book .bookhero, html.fv-book .bigidea, html.fv-book .section-head,
+  html.fv-book section.lessons, html.fv-book section.quotes, html.fv-book section.plan,
+  html.fv-book section.bookkit, html.fv-book section.related, html.fv-book .booknav {
+    max-width: 780px !important;
+  }
+}

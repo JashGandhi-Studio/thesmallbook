@@ -212,3 +212,7 @@ html.dark .gyc-veil { background: rgba(0, 0, 0, .6); }
 .gyc-nb__t em { font: 500 12px/1.3 var(--f-sans); color: var(--f-mu); font-style: normal; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .gyc-nb__y { flex: none; font: 600 12px var(--f-sans); color: var(--f-mu); }
 @media (max-width: 380px) { .gyc-books { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* v422 · graveyard filter chips meet the same 40px thumb rule. */
+.gy-chip { height: 40px; min-height: 40px; }
+.gy-sort button { height: 40px; min-height: 40px; }

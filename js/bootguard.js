@@ -190,7 +190,7 @@
 (function () {
   "use strict";
 
-  var BUILD = "420";
+  var BUILD = "422";
 window.TSB_BUILD = BUILD;   /* v322: every page knows its era - the tutorial replays once per era */
 
   /* v400: ONE place owns the version number.

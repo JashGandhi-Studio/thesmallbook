@@ -253,3 +253,6 @@ html.dark .ln-hold__in--start .ln-hold__kick { color: #FFC800 !important; }
   .ln-quick::-webkit-scrollbar { display: none; }
   .ln-quick button { flex: 0 0 auto; }
 }
+
+/* v421: shelf filter chips get a full tap height */
+.pc-search__chips button, .pc-cats button { min-height: 38px; }

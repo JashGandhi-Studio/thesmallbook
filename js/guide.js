@@ -568,7 +568,7 @@
 
   function toast(msg) {
     var t = document.createElement("div");
-    t.style.cssText = "position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--bar-total, 68px) + 24px);z-index:280;background:var(--ink);color:var(--paper);border-radius:999px;padding:10px 16px;font:800 12px 'Space Grotesk',sans-serif;max-width:86vw;text-align:center";
+    t.style.cssText = "position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--bar-total, 68px) + 24px);z-index:280;background:var(--ink);color:var(--paper);border-radius:999px;padding:10px 16px;font:800 12px 'Space Grotesk',sans-serif;max-width:86vw;text-align:center;pointer-events:none";
     t.textContent = msg;
     document.body.appendChild(t);
     setTimeout(function () { t.remove(); }, 3000);

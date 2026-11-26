@@ -104,7 +104,11 @@
     if (dsc[rss]) { cb(dsc[rss]); return; }
     var done = false;
     var timer = setTimeout(function () { if (!done) { done = true; cb(""); } }, 4500);
-    fetch(rss).then(function (r) { return r.ok ? r.text() : ""; }).then(function (xml) {
+    /* v422: read the maker's words through the same CORS-safe mirror the
+       player already trusts. A direct fetch is blocked by hosts such as
+       Spreaker and Substack, which only filled the console with errors
+       and left the show with no description at all. */
+    fetch("https://api.allorigins.win/raw?url=" + encodeURIComponent(rss)).then(function (r) { return r.ok ? r.text() : ""; }).then(function (xml) {
       if (done) return;
       done = true; clearTimeout(timer);
       if (!xml) { cb(""); return; }

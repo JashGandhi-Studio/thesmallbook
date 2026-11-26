@@ -111,6 +111,22 @@
   var KINDS = "(wall-note,wall-photo)";
   var notes = [];
   var view = { x: 0, y: 0, s: 0.85 }; /* start a touch zoomed out: a wall, not one note */
+  /* v421: the wall used to open at a fixed 0.85 zoom wherever it was -
+     on a phone that left the right-hand notes cut in half. It now opens
+     fitted: the whole board inside the viewport, centred, and the
+     reader zooms from there. */
+  var qwFitted = false;
+  function fitView() {
+    if (!vp || !board) return;
+    var bw = parseFloat(board.style.width) || board.offsetWidth;
+    var vw2 = vp.clientWidth;
+    if (!bw || !vw2) return;
+    view.s = Math.min(0.85, (vw2 - 8) / bw);
+    view.x = Math.max(0, (vw2 - bw * view.s) / 2);
+    view.y = 6;
+    apply();
+    qwFitted = true;
+  }
   var board = null, vp = null;
 
   /* ---------- layout: deterministic scatter, columns that grow ---------- */
@@ -223,6 +239,7 @@
     board.innerHTML = html +
       '<div class="qw-corner">Pin something. The board never runs out of space.</div>';
     board.style.width = (26 * 2 + Math.min(6, Math.max(3, Math.round(Math.sqrt(Math.max(4, all.length)) * 1.15))) * 236 + 40) + "px";
+    if (!qwFitted) fitView();
     board.style.height = "1350px";
     board.querySelectorAll("[data-del]").forEach(function (b) {
       b.addEventListener("click", function (e) {
@@ -461,7 +478,7 @@
         var d = Math.hypot(a.x - b.x, a.y - b.y);
         var mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
         if (lastDist > 10) {
-          var ns = Math.max(0.45, Math.min(2.6, view.s * (d / lastDist)));
+          var ns = Math.max(0.18, Math.min(2.6, view.s * (d / lastDist)));
           view.x = mid.x - (mid.x - view.x) * (ns / view.s);
           view.y = mid.y - (mid.y - view.y) * (ns / view.s);
           view.s = ns; apply();
@@ -483,13 +500,13 @@
     vp.addEventListener("pointercancel", drop);
     vp.addEventListener("wheel", function (e) {
       e.preventDefault();
-      var ns = Math.max(0.45, Math.min(2.6, view.s * (e.deltaY < 0 ? 1.12 : 0.89)));
+      var ns = Math.max(0.18, Math.min(2.6, view.s * (e.deltaY < 0 ? 1.12 : 0.89)));
       view.x = e.clientX - (e.clientX - view.x) * (ns / view.s);
       view.y = e.clientY - (e.clientY - view.y) * (ns / view.s);
       view.s = ns; apply();
     }, { passive: false });
     $("qwZin").addEventListener("click", function () { view.s = Math.min(2.6, view.s * 1.2); apply(); });
-    $("qwZout").addEventListener("click", function () { view.s = Math.max(0.45, view.s / 1.2); apply(); });
+    $("qwZout").addEventListener("click", function () { view.s = Math.max(0.18, view.s / 1.2); apply(); });
     $("qwZfit").addEventListener("click", function () { view.s = 1; view.x = 0; view.y = 0; apply(); });
   }
 
@@ -883,5 +900,5 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
 
-  window.TSB_QUOTEWALL = { reload: load };
+  window.TSB_QUOTEWALL = { reload: load, fit: fitView };
 })();
